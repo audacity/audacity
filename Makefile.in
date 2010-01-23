@@ -1,0 +1,129 @@
+
+INSTALL = @INSTALL@
+exec_prefix= @exec_prefix@
+prefix= @prefix@
+datarootdir= @datarootdir@
+BINDIR= @bindir@
+DATADIR= @datadir@
+DATAROOTDIR = @datarootdir@
+MANDIR= @mandir@
+AUDACITY_NAME = @AUDACITY_NAME@
+EXTRAINSTALLTARGETS= @EXTRAINSTALLTARGETS@
+EXTRAUNINSTALLTARGETS= @EXTRAUNINSTALLTARGETS@
+
+.PHONY: all
+all: audacity help/audacity.1.gz
+
+.PHONY: audacity
+audacity:
+	$(MAKE) -C lib-src
+	$(MAKE) -C src
+	$(MAKE) -C locale
+
+.PHONY: src/libaudacity.a
+src/libaudacity.a:
+	$(MAKE) -C src libaudacity.a
+
+.PHONY: install
+install: audacity $(EXTRAINSTALLTARGETS)
+	# install the binary
+	$(INSTALL) -d $(DESTDIR)$(BINDIR)
+	$(INSTALL) -m 755 audacity $(DESTDIR)$(BINDIR)/$(AUDACITY_NAME)
+
+	# install docs
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/doc/$(AUDACITY_NAME)
+	$(INSTALL) -m 644 README.txt $(DESTDIR)$(DATADIR)/doc/$(AUDACITY_NAME)/README.txt
+	$(INSTALL) -m 644 LICENSE.txt $(DESTDIR)$(DATADIR)/doc/$(AUDACITY_NAME)/LICENSE.txt
+
+	# install manpage
+	$(INSTALL) -d $(DESTDIR)$(MANDIR)/man1
+	-test -f help/audacity.1.gz && \
+		$(INSTALL) -m 644 help/audacity.1.gz \
+		$(DESTDIR)$(MANDIR)/man1/$(AUDACITY_NAME).1.gz
+
+	# install nyquist
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist
+	$(INSTALL) -m 644 nyquist/*.lsp $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist
+
+	# install plug-ins
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/plug-ins
+	$(INSTALL) -m 644 plug-ins/*.ny $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/plug-ins
+
+	# install locales
+	$(MAKE) -C locale install
+
+	# install an icon for audacity
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/pixmaps/
+	$(INSTALL) -m 644 images/AudacityLogo48x48.xpm $(DESTDIR)$(DATADIR)/pixmaps/audacity.xpm
+
+.PHONY: install-extra-data
+install-extra-data:
+	# install desktop file
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/applications
+	$(INSTALL) -m 644 src/audacity.desktop $(DESTDIR)$(DATADIR)/applications
+
+	# install MIME information
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/mime/packages
+	$(INSTALL) -m 644 src/audacity.xml $(DESTDIR)$(DATADIR)/mime/packages
+
+.PHONY: install-lrdf-data
+install-lrdf-data:
+	# install basic LRDF ontology file
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf
+	$(INSTALL) -m 644 lib-src/liblrdf/examples/ladspa.rdfs $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf
+
+.PHONY: uninstall
+uninstall: $(EXTRAUNINSTALLTARGETS)
+	rm -rf $(DESTDIR)$(BINDIR)/$(AUDACITY_NAME)
+	rm -rf $(DESTDIR)$(DATADIR)/doc/$(AUDACITY_NAME)
+	rm -rf $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)
+	rm -rf $(DESTDIR)$(MANDIR)/man1/$(AUDACITY_NAME).1.gz
+	rm -rf $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/audacity.xpm
+	$(MAKE) -C locale uninstall
+
+.PHONY: uninstall-extra-data
+uninstall-extra-data:
+	rm -f $(DESTDIR)$(DATADIR)/applications/audacity.desktop
+	rm -f $(DESTDIR)$(DATADIR)/mime/packages/audacity.xml
+
+.PHONY: uninstall-lrdf-data
+uninstall-lrdf-data:
+	rm -f $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf/ladspa.rdfs
+
+help/audacity.1.gz:
+	# gzipping the file this way prevents audacity.1 from getting deleted
+	cat help/audacity.1 | gzip -9 > help/audacity.1.gz
+
+dox: audacity.dox
+	doxygen audacity.dox
+
+check: src/libaudacity.a
+	-$(MAKE) -C tests check
+
+dep:
+	$(MAKE) -C src dep
+
+clean:
+	$(MAKE) -C lib-src clean
+	$(MAKE) -C src clean
+	-$(MAKE) -C tests clean
+	rm -f audacity
+	rm -f help/audacity.1.gz
+	rm -rf Audacity.app
+
+veryclean: clean
+	rm -f Makefile src/Makefile lib-src/Makefile
+	rm -f src/configunix.h
+	rm -f `find . -name "*~"`
+	rm -f `find . -name core`
+
+distclean: clean
+	$(MAKE) -C locale distclean
+	$(MAKE) -C lib-src distclean
+	-$(MAKE) -C tests distclean
+
+	rm -f Makefile src/Makefile lib-src/Makefile
+	rm -f locale/Makefile src/configunix.h
+	rm -f config.log config.status config.cache
+

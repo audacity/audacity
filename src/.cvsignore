@@ -1,0 +1,6 @@
+*.swp
+.AppleDouble
+.depend
+Makefile
+configunix.h
+obj

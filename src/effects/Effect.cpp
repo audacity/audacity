@@ -1,0 +1,641 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  Effect.cpp
+
+  Dominic Mazzoni
+  Vaughan Johnson
+  Martyn Shaw
+
+*******************************************************************//**
+
+\class Effect
+\brief Base class for many of the effects in Audacity.
+
+*//****************************************************************//**
+
+\class EffectDialog
+\brief New (Jun-2006) base class for effects dialogs.  Likely to get 
+greater use in future.
+
+*//*******************************************************************/
+
+#include "../Audacity.h"
+
+#include <wx/defs.h>
+#include <wx/string.h>
+#include <wx/msgdlg.h>
+#include <wx/progdlg.h>
+#include <wx/sizer.h>
+#include <wx/timer.h>
+#include <wx/hashmap.h>
+
+#include "Effect.h"
+#include "../AudioIO.h"
+#include "../Mix.h"
+#include "../Prefs.h"
+#include "../Project.h"
+#include "../WaveTrack.h"
+#include "../widgets/ProgressDialog.h"
+#include "../ondemand/ODManager.h"
+#include "TimeWarper.h"
+
+WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
+
+//
+// public static methods
+//
+
+double Effect::sDefaultGenerateLen = 30.0;
+
+
+wxString Effect::StripAmpersand(const wxString& str)
+{
+   wxString strippedStr = str;
+   strippedStr.Replace(wxT("&"), wxT(""));
+   return strippedStr;
+}
+
+
+//
+// public methods
+//
+
+Effect::Effect()
+   : mWarper(NULL)
+{
+   mTracks = NULL;
+   mOutputTracks = NULL;
+   mOutputTracksType = Track::None;
+   mLength = 0;
+   mNumTracks = 0;
+   mNumGroups = 0;
+
+   // Can change effect flags later (this is the new way)
+   // OR using the old way, over-ride GetEffectFlags().
+   mFlags = BUILTIN_EFFECT | PROCESS_EFFECT | ADVANCED_EFFECT;
+}
+
+Effect::~Effect() {
+   if (mWarper != NULL)
+      delete mWarper;
+}
+
+bool Effect::DoEffect(wxWindow *parent, int flags,
+                      double projectRate,
+                      TrackList *list,
+                      TrackFactory *factory,
+                      double *t0, double *t1, wxString params)
+{
+   wxASSERT(*t0 <= *t1);
+
+   if (mOutputTracks) {
+      delete mOutputTracks;
+      mOutputTracks = NULL;
+   }
+
+   mFactory = factory;
+   mProjectRate = projectRate;
+   mParent = parent;
+   mTracks = list;
+   mT0 = *t0;
+   mT1 = *t1;
+   CountWaveTracks();
+
+   // Note: Init may read parameters from preferences
+   if (!Init())
+      return false;
+
+   // If a parameter string was provided, it overrides any remembered settings
+   // (but if the user is to be prompted, that takes priority)
+   if (!params.IsEmpty())
+   {
+      ShuttleCli shuttle;
+      shuttle.mParams = params;
+      shuttle.mbStoreInClient=true;
+      if( !TransferParameters( shuttle ))
+      {
+         wxMessageBox(
+            wxString::Format(
+               _("Could not set parameters of effect %s\n to %s."),
+               GetEffectName().c_str(),
+               params.c_str()
+            )
+         );
+         return false;
+      }
+   }
+
+   // Don't prompt user if we are dealing with a 
+   // effect that is already configured, e.g. repeating
+   // the last effect on a different selection.
+   if( (flags & CONFIGURED_EFFECT) == 0)
+   {
+      if (!PromptUser())
+         return false;
+   }
+
+   bool returnVal = true;
+   bool skipFlag = CheckWhetherSkipEffect();
+   if (skipFlag == false) {
+      mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
+                                     GetEffectAction());
+      returnVal = Process();
+      delete mProgress;
+   }
+
+   End();
+
+   if (mOutputTracks) {
+      delete mOutputTracks;
+      mOutputTracks = NULL;
+   }
+
+   if (returnVal) {
+      *t0 = mT0;
+      *t1 = mT1;
+   }
+   
+   return returnVal;
+}
+
+bool Effect::TotalProgress(double frac)
+{
+   int updateResult = mProgress->Update(frac);
+   if (updateResult == eProgressSuccess)
+     return false;
+   return true;
+}
+
+bool Effect::TrackProgress(int whichTrack, double frac)
+{
+   int updateResult = mProgress->Update(whichTrack + frac, (double) mNumTracks);
+   if (updateResult == eProgressSuccess)
+     return false;
+   return true;
+}
+
+bool Effect::TrackGroupProgress(int whichGroup, double frac)
+{
+   int updateResult = mProgress->Update(whichGroup + frac, (double) mNumGroups);
+   if (updateResult == eProgressSuccess)
+     return false;
+   return true;
+}
+
+void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
+{
+   double trackStart = track->GetStartTime();
+   double trackEnd = track->GetEndTime();
+   double t0 = mT0 < trackStart ? trackStart : mT0;
+   double t1 = mT1 > trackEnd ? trackEnd : mT1;
+
+   if (mFlags & INSERT_EFFECT) {
+      t1 = t0 + mLength;
+      if (mT0 == mT1) {
+         // Not really part of the calculation, but convenient to put here
+         track->InsertSilence(t0, t1);
+      }
+   }
+
+   if (t1 > t0) {
+      *start = track->TimeToLongSamples(t0);
+      sampleCount end = track->TimeToLongSamples(t1);
+      *len = (sampleCount)(end - *start);
+   }
+   else {
+      *start = 0;
+      *len  = 0;
+   }
+}
+
+void Effect::SetTimeWarper(TimeWarper *warper)
+{
+   if (mWarper != NULL)
+   {
+      delete mWarper;
+      mWarper = NULL;
+   }
+
+   wxASSERT(warper != NULL);
+   mWarper = warper;
+}
+
+TimeWarper *Effect::GetTimeWarper()
+{
+   wxASSERT(mWarper != NULL);
+   return mWarper;
+}
+
+//
+// private methods
+//
+// Use these two methods to copy the input tracks to mOutputTracks, if 
+// doing the processing on them, and replacing the originals only on success (and not cancel).
+// Copy the group tracks that have tracks selected
+void Effect::CopyInputTracks(int trackType)
+{
+   // Reset map
+   mIMap.Clear();
+   mOMap.Clear();
+
+   mOutputTracks = new TrackList();
+   mOutputTracksType = trackType;
+
+   //iterate over tracks of type trackType (All types if Track::All)
+   TrackListOfKindIterator aIt(trackType, mTracks);
+   t2bHash added;
+
+   //for each track that is selected
+   for (Track *aTrack = aIt.First(); aTrack; aTrack = aIt.Next()) {
+      if (!aTrack->GetSelected()) {
+         continue;
+      }
+
+      TrackGroupIterator gIt(mTracks);
+      Track *gTrack = gIt.First(aTrack);
+
+      //if the track is part of a group
+      if (trackType == Track::All && gTrack != NULL) {
+         //go to the project tracks and add all the tracks in the same group
+         for( ; gTrack; gTrack = gIt.Next() ) {
+            // only add if the track was not added before
+            if (added.find(gTrack) == added.end()) {
+               added[gTrack]=true;
+               Track *o = gTrack->Duplicate();
+               mOutputTracks->Add(o);
+               mIMap.Add(gTrack);
+               mOMap.Add(o);
+            }
+         }
+      }
+      //otherwise just add the track
+      else {
+         Track *o = aTrack->Duplicate();
+         mOutputTracks->Add(o);
+         mIMap.Add(aTrack);
+         mOMap.Add(o);
+      }
+   }
+}
+
+void Effect::AddToOutputTracks(Track *t)
+{
+   mOutputTracks->Add(t);
+   mIMap.Add(NULL);
+   mOMap.Add(t);
+}
+
+// If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
+// Else clear and delete mOutputTracks copies.
+void Effect::ReplaceProcessedTracks(const bool bGoodResult)
+{
+   wxASSERT(mOutputTracks != NULL); // Make sure we at least did the CopyInputTracks().
+
+   if (!bGoodResult) {
+      // Processing failed or was cancelled so throw away the processed tracks.
+      mOutputTracks->Clear(true); // true => delete the tracks
+      
+      // Reset map
+      mIMap.Clear();
+      mOMap.Clear();
+
+      //TODO:undo the non-gui ODTask transfer
+      return;
+   }
+
+   TrackListIterator iterOut(mOutputTracks);
+
+   Track *x;
+   size_t cnt = mOMap.GetCount();
+   size_t i = 0;
+
+   for (Track *o = iterOut.First(); o; o = x, i++) {
+      // If tracks were removed from mOutputTracks, then there will be
+      // tracks in the map that must be removed from mTracks.
+      while (i < cnt && mOMap[i] != o) {
+         Track *t = (Track *) mIMap[i];
+         if (t) {
+            mTracks->Remove(t, true);
+         }
+         i++;
+      }
+
+      // This should never happen
+      wxASSERT(i < cnt);
+
+      // Remove the track from the output list...don't delete it
+      x = iterOut.RemoveCurrent(false);
+
+      Track *t = (Track *) mIMap[i];
+      if (t == NULL)
+      {
+         // This track is a new addition to output tracks; add it to mTracks
+         mTracks->Add(o);
+      }
+      else
+      {
+         // Replace mTracks entry with the new track
+         mTracks->Replace(t, o, false);
+
+         // Swap the wavecache track the ondemand task uses, since now the new
+         // one will be kept in the project
+         if (ODManager::IsInstanceCreated()) {
+            ODManager::Instance()->ReplaceWaveTrack((WaveTrack *)t,
+                                                    (WaveTrack *)o);
+         }
+
+         // No longer need the original track
+         delete t;
+      }
+   }
+
+   // If tracks were removed from mOutputTracks, then there may be tracks
+   // left at the end of the map that must be removed from mTracks.
+   while (i < cnt) {
+      Track *t = (Track *) mIMap[i];
+      if (t) {
+         mTracks->Remove((Track *)mIMap[i], true);
+      }
+      i++;
+   }
+
+   // Reset map
+   mIMap.Clear();
+   mOMap.Clear();
+
+   // Make sure we processed everything
+   wxASSERT(iterOut.First() == NULL);
+   
+   // The output list is no longer needed
+   delete mOutputTracks;
+   mOutputTracks = NULL;
+   mOutputTracksType = Track::None;
+}
+
+void Effect::CountWaveTracks()
+{
+   mNumTracks = 0;
+   mNumGroups = 0;
+
+   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   Track *t = iter.First();
+
+   while(t) {
+      if (!t->GetSelected()) {
+         t = iter.Next();
+         continue;
+      }
+      
+      if (t->GetKind() == Track::Wave) {
+         mNumTracks++;
+         if (!t->GetLinked())
+            mNumGroups++;
+      }
+      t = iter.Next();
+   }
+}
+
+float TrapFloat(float x, float min, float max)
+{
+   if (x <= min)
+      return min;
+   else if (x >= max)
+      return max;
+   else
+      return x;
+}
+
+double TrapDouble(double x, double min, double max)
+{
+   if (x <= min)
+      return min;
+   else if (x >= max)
+      return max;
+   else
+      return x;
+}
+
+long TrapLong(long x, long min, long max)
+{
+   if (x <= min)
+      return min;
+   else if (x >= max)
+      return max;
+   else
+      return x;
+}
+
+wxString Effect::GetPreviewName()
+{
+   return _("Pre&view");
+}
+
+void Effect::Preview()
+{
+   wxWindow* FocusDialog = wxWindow::FindFocus();
+   if (gAudioIO->IsBusy())
+      return;
+
+   // Mix a few seconds of audio from all of the tracks
+   double previewLen = 3.0;
+   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+   
+   WaveTrack *mixLeft = NULL;
+   WaveTrack *mixRight = NULL;
+   double rate = mProjectRate;
+   double t0 = mT0;
+   double t1 = t0 + previewLen;
+
+   if (t1 > mT1)
+      t1 = mT1;
+
+   if (t1 <= t0)
+      return;
+
+   bool success = ::MixAndRender(mTracks, mFactory, rate, floatSample, t0, t1,
+                                 &mixLeft, &mixRight);
+
+   if (!success) {
+      return;
+   }
+
+   // Save the original track list
+   TrackList *saveTracks = mTracks;
+
+   // Build new tracklist from rendering tracks
+   mTracks = new TrackList();
+   mixLeft->SetSelected(true);   
+   mTracks->Add(mixLeft);
+   if (mixRight) {
+      mixRight->SetSelected(true);   
+      mTracks->Add(mixRight);
+   }
+
+   // Update track/group counts
+   CountWaveTracks();
+
+   // Reset times
+   t0 = 0.0;
+   t1 = mixLeft->GetEndTime();
+
+   double t0save = mT0;
+   double t1save = mT1;
+   mT0 = t0;
+   mT1 = t1;
+
+   // Apply effect
+
+   // Effect is already inited; we call Process, End, and then Init
+   // again, so the state is exactly the way it was before Preview
+   // was called.
+   mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
+                                  _("Preparing preview"));
+   bool bSuccess = Process();
+   delete mProgress;
+   End();
+   Init();
+   if (bSuccess)
+   {
+      mT0 = t0save;
+      mT1 = t1save;
+
+      WaveTrackArray playbackTracks;
+      WaveTrackArray recordingTracks;
+      // Probably not the same tracks post-processing, so can't rely on previous values of mixLeft & mixRight.
+      TrackListOfKindIterator iter(Track::Wave, mTracks); 
+      mixLeft = (WaveTrack*)(iter.First());
+      mixRight = (WaveTrack*)(iter.Next());
+      playbackTracks.Add(mixLeft);
+      if (mixRight)
+         playbackTracks.Add(mixRight);
+
+      // Start audio playing
+      int token =
+         gAudioIO->StartStream(playbackTracks, recordingTracks, NULL,
+#ifdef EXPERIMENTAL_MIDI_OUT
+                               NULL,
+#endif
+                               rate, t0, t1, NULL);
+
+      if (token) {
+         int previewing = eProgressSuccess;
+
+         mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
+                                        _("Previewing"), pdlgHideCancelButton);
+
+         while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
+            ::wxMilliSleep(100);
+            previewing = mProgress->Update(gAudioIO->GetStreamTime(), t1);
+         }
+         gAudioIO->StopStream();
+
+         while (gAudioIO->IsBusy()) {
+            ::wxMilliSleep(100);
+         }
+
+         delete mProgress;
+      }
+      else {
+         wxMessageBox(_("Error while opening sound device. Please check the output device settings and the project sample rate."),
+                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
+      }
+   }
+
+   if (FocusDialog) {
+      FocusDialog->SetFocus();
+   }
+
+   delete mOutputTracks;
+   mOutputTracks = NULL;
+
+   mTracks->Clear(true); // true => delete the tracks
+   delete mTracks;
+
+   mTracks = saveTracks;
+}
+
+EffectDialog::EffectDialog(wxWindow * parent,
+                           const wxString & title,
+                           int type,
+                           int flags)
+: wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, flags)
+{
+   mType = type;
+}
+
+void EffectDialog::Init()
+{
+   ShuttleGui S(this, eIsCreating);
+   
+   S.SetBorder(5);
+   S.StartVerticalLay(true);
+   {
+      PopulateOrExchange(S);
+
+      long buttons = eOkButton;
+
+      if (mType == PROCESS_EFFECT || mType == INSERT_EFFECT)
+      {
+         buttons |= eCancelButton;
+         if (mType == PROCESS_EFFECT)
+         {
+            buttons |= ePreviewButton;
+         }
+      }
+      S.AddStandardButtons(buttons);
+   }
+   S.EndVerticalLay();
+
+   Layout();
+   Fit();
+   SetMinSize(GetSize());
+   Center();
+}
+
+/// This is a virtual function which will be overridden to
+/// provide the actual parameters that we want for each
+/// kind of dialog.
+void EffectDialog::PopulateOrExchange(ShuttleGui & S)
+{
+   return;
+}
+
+bool EffectDialog::TransferDataToWindow()
+{
+   ShuttleGui S(this, eIsSettingToDialog);
+   PopulateOrExchange(S);
+
+   return true;
+}
+
+bool EffectDialog::TransferDataFromWindow()
+{
+   ShuttleGui S(this, eIsGettingFromDialog);
+   PopulateOrExchange(S);
+
+   return true;
+}
+
+bool EffectDialog::Validate()
+{
+   return true;
+}
+
+void EffectDialog::OnPreview(wxCommandEvent & event)
+{
+   return;
+}
+
+// Indentation settings for Vim and Emacs and unique identifier for Arch, a
+// version control system. Please do not modify past this point.
+//
+// Local Variables:
+// c-basic-offset: 3
+// indent-tabs-mode: nil
+// End:
+//
+// vim: et sts=3 sw=3
+// arch-tag: 113bebd2-dbcf-4fc5-b3b4-b52d6ac4efb2
+

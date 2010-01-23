@@ -1,0 +1,112 @@
+#!/usr/bin/perl
+
+# Copyright 2003, 2004, 2005 Dominic Mazzoni and Matt Brubeck
+# Distributed under the GNU General Public License 2.0.
+# See the file LICENSE.txt for details.
+
+print "maketarball 1.3.0 -- make Audacity distribution tarball\n";
+
+unless(-f "src/Audacity.h") {
+	print "Must be run from Audacity directory\n";
+	exit;
+}
+
+# find version number
+open(HEADER, "src/Audacity.h");
+@lines = <HEADER>;
+$lines = join " ", @lines;
+$lines =~ /AUDACITY_VERSION_STRING "([0-9\-.a-z]*)"/;
+$version = $1;
+print "version set to $version...\n";
+close(HEADER);
+
+print "making copy of source directory...\n";
+`cp -r . ../audacity-src-$version`;
+chdir "../audacity-src-$version";
+
+print "making distclean...\n";
+`make distclean`;
+
+print "removing CVS directories...\n";
+`find . -name "CVS" -exec rm -rf '{}' \\; 2> /dev/null`;
+`find . -name ".cvsignore" -exec rm -rf '{}' \\; 2> /dev/null`;
+
+print "removing emacs temp files...\n";
+`find . -name "*~" -exec rm -rf '{}' \\; 2> /dev/null`;
+
+print "removing executable and other intermediate files...\n";
+`rm -rf audacity .depend obj config.cache config.status config.log Makefile`;
+
+print "removing bugs and todo lists\n";
+`rm -f bugs.txt todo.txt`;
+
+print "removing scripts...\n";
+`rm -rf scripts`;
+
+print "removing libraries that should be installed locally...\n";
+`rm -rf lib-src/libogg lib-src/libvorbis lib-src/libmad lib-src/id3lib`;
+`rm -rf lib-src/libid3tag`;
+`rm -rf lib-src/iAVC lib-src/libsamplerate`;
+`rm -rf lib-src/wave++ lib-src/libflac`;
+`rm -rf lib-src/twolame`;
+
+print "removing qa\n";
+`rm -rf qa`;
+
+print "removing doxygen files (unfinished)\n";
+`rm audacity.dox`;
+
+print "removing webbrowser help files\n";
+`rm -rf help/webbrowser`;
+
+print "removing unused portaudio-v19 dirs\n";
+`rm -rf lib-src/portaudio-v19/docs`;
+`rm -rf lib-src/portaudio-v19/pa_asio`;
+`rm -rf lib-src/portaudio-v19/pa_sgi`;
+`rm -rf lib-src/portaudio-v19/pa_mac_sm`;
+`rm -f lib-src/portaudio-v19/pa_tests/debug*`;
+
+print "removing wxstd locale files (since they should come with wxWidgets)\n";
+`rm -rf locale/wxstd`;
+
+print "removing Nyquist plug-ins that are just for show\n";
+`rm -f plug-ins/analyze.ny plug-ins/fadein.ny plug-ins/fadeout.ny`;
+`rm -f plug-ins/beat.ny plug-ins/undcbias.ny`;
+
+print "Giving VC++ project/workspace files DOS line endings\n";
+@projfiles = split("\n", `find . -name "*.ds?"`);
+foreach $f (@projfiles) {
+	 print `unix2dos "$f"`;
+}
+
+print "Changing Windows header so that it doesn't build with\n";
+print "support for libmad, libid3tag, libtwolame or libvorbis by default.\n";
+print "\n";
+
+open FP, ">>win/configwin.h";
+print FP "\n\n";
+print FP "// The Audacity source tarball does NOT come with\n";
+print FP "// libmad, libid3tag, libtwolame, libogg, or libvorbis.\n";
+print FP "\n";
+print FP "// Delete the following lines if you install them manually.\n";
+print FP "\n";
+print FP "#undef MP3SUPPORT\n";
+print FP "#undef USE_LIBID3TAG\n";
+print FP "#undef USE_LIBMAD\n";
+print FP "#undef USE_LIBVORBIS\n";
+print FP "#undef USE_LIBTWOLAME\n";
+close FP;
+
+#print "Using the VC++ workspace that doesn't depend on libmad, libid3tag,\n";
+#print "libogg, libvorbis, libsamplerate, or libflac.\n";
+#print "\n";
+#TODO: Update this to use .vcproj/.sln files?
+#
+#`cp win/audacity-nomp3ogg.dsw win/audacity.dsw`;
+#`rm win/audacity-nomp3ogg.dsw`;
+
+#print "making tarball audacity-src-$version.tgz...\n";
+chdir "..";
+#`tar zcf audacity-src-$version.tgz audacity-src-$version`;
+
+print "done.\n";

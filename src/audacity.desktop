@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Audacity
+Name[de]=Audacity
+Name[ru]=Audacity
+GenericName=Sound Editor
+GenericName[de]=Audio-Editor
+GenericName[ru]=Редактор звуковых файлов
+Comment=Record and edit audio files
+Comment[de]=Audio-Dateien aufnehmen und bearbeiten
+Comment[ru]=Запись и редактирование звуковых файлов
+
+Icon=audacity
+
+Type=Application
+Categories=AudioVideo;Audio;AudioVideoEditing;
+
+Exec=audacity
+StartupNotify=false
+Terminal=false
+MimeType=application/ogg;audio/basic;audio/mpeg;audio/x-aiff;audio/x-mp3;audio/x-wav;application/x-audacity-project;

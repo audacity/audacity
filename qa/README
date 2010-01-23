@@ -1,0 +1,4 @@
+This directory contains a series of instructions for
+comprehensively testing the Audacity application.  They
+should be performed on all platforms prior to a release to
+help detect obvious bugs and regressions. 

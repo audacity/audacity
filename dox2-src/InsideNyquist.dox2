@@ -1,0 +1,18 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  InsideNyquist.dox2
+
+  James Crook
+
+********************************************************************//**
+
+\page InsideNyquist Inside Nyquist
+
+\section NyquistIntro Introduction
+
+Nyquist is a LISP interpreter, based on XLISP.
+
+
+*//********************************************************************/

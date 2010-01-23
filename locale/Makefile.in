@@ -1,0 +1,116 @@
+# locale/Makefile
+#
+# Matt Brubeck 2002-01-12
+# based on the locale makefile from wxWindows 2.2.9
+#  
+# This is the makefile for generating the message catalog file and
+# building lang.mo files from the translated lang.po catalogs.
+# This makefile may be invoked to build either audacity.pot or any lang.mo
+
+PROGNAME=audacity
+LINGUAS=af ar bn bg bs ca ca@valencia cs cy da de el es eu fa fi fr ga gl he hi hu id it ja ka km ko lt mk nb nl oc pl pt pt_BR ro ru sk sl sv tg tr uk vi zh zh_TW
+# these languages are not generated because they are currently unmaintained and
+# overlapped by another one:
+# currently none - Cleber produced a pt_PT translation August 2009.
+
+prefix=@prefix@
+datarootdir=@datarootdir@
+DATADIR=@datadir@
+DATAROOTDIR=@datarootdir@
+# this is where locale-dependant stuff (i.e. .mo files) goes
+LOCALEDIR=@localedir@
+INSTALL=@INSTALL@
+AUDACITY_NAME=@AUDACITY_NAME@
+
+# because we are in a subdirectory setting DESTDIR to a relative path doesn't
+# work - it gets interpreted relative to the locale directory in the source
+# tree. This is because relative DESTDIRs aren't supported. It could be worked
+# around by something along the lines of
+#  if (DESTDIR is relative)
+#  	DESTDIR=$top_srcdir/DESTDIR
+#  fi
+#  but I can't see how to implement this. So for the moment stick to absolute
+#  paths in DESTDIR
+
+all: allmo
+
+# Merge POT file with all existing message catalogs
+allpo: $(LINGUAS:%=%.po) FORCE
+allmo: $(LINGUAS:%=%/$(PROGNAME).mo) FORCE
+
+# Update the POT template file.
+POTFILE=audacity.pot
+update: force-update $(POTFILE) updatepo FORCE
+
+# the programs we use (TODO: use configure to detect them)
+MSGFMT=msgfmt -v
+XGETTEXT=xgettext
+XARGS=xargs
+
+# xgettext args:
+#             -C: C++ syntax
+#             -k: mark the functions that wrap translatable strings
+#             -F: sort by file
+XGETTEXT_ARGS=-F -C -k_ -k_NoAcc -kwxTRANSLATE \
+	--add-comments="i18n-hint" \
+	--msgid-bugs-address="audacity-translation@lists.sourceforge.net"
+
+# implicit rules
+
+%/$(PROGNAME).mo: %.po $(POTFILE)
+	@test -d $* || mkdir $*
+	$(MSGFMT) -o $@ $<
+
+updatepo: $(POTFILE)
+	linguas='$(LINGUAS)'; for lang in $$linguas ; do \
+	    pofile="$$lang.po"; \
+	    if [ -f $$pofile ]; then \
+		    echo "Updating catalog: $$pofile"; \
+		    ./smartmsgmerge.py $$pofile $(POTFILE) $$pofile.new && mv $$pofile.new $$pofile; \
+	    else \
+		    echo "Creating new catalog: $$pofile"; \
+		    cp $(POTFILE) $$pofile; \
+	    fi; \
+	done
+
+$(POTFILE):
+	touch $@
+	cd ../src && find . -name "*.cpp" -or -name "*.h" \
+	  | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) \
+	  -o ../locale/$(POTFILE).template
+	cd ../locale && sed \
+	  -e 's/PACKAGE VERSION/Audacity 2.0.0/' \
+	  -e 's/SOME DESCRIPTIVE TITLE/Audacity Strings for Translation/' \
+	  -e 's/YEAR-MO-DA HO:MI+ZONE/1999 and beyond/' \
+	  -e 's/THE PACKAGE.S COPYRIGHT HOLDER/Audacity Development Team/' \
+	  -e 's/the PACKAGE package/Audacity/' \
+	  -e 's/FIRST AUTHOR/Audacity Team/' \
+	  -e 's/EMAIL@ADDRESS/audacity-translation@lists.sourceforge.net/' \
+	  $(POTFILE).template > $(POTFILE)
+	rm -f $(POTFILE).template
+
+force-update: FORCE
+	rm -f $(POTFILE)
+
+FORCE:
+
+install: allmo
+	linguas='$(LINGUAS)'; for lang in $$linguas ; do \
+	   $(INSTALL) -d $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES ; \
+	   $(INSTALL) -m 644 $$lang/audacity.mo $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES/$(AUDACITY_NAME).mo ; \
+	done
+
+uninstall:
+	linguas='$(LINGUAS)'; for lang in $$linguas ; do \
+	   rm -f $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES/$(AUDACITY_NAME).mo ; \
+	done
+
+clean:
+	-linguas='$(LINGUAS)'; for lang in $$linguas ; do \
+	   rm -rf $$lang ; \
+	   rm -f audacity.pot ; \
+	done
+
+distclean: clean
+	rm -f Makefile
+

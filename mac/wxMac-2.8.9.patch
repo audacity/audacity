@@ -1,0 +1,422 @@
+diff -wruN wxWidgets-2.8.9-orig/include/wx/mac/carbon/sound.h wxWidgets-2.8.9/include/wx/mac/carbon/sound.h
+--- wxWidgets-2.8.9-orig/include/wx/mac/carbon/sound.h	2008-09-15 04:29:32.000000000 -0500
++++ wxWidgets-2.8.9/include/wx/mac/carbon/sound.h	2009-01-10 16:53:37.000000000 -0600
+@@ -21,13 +21,14 @@
+ {
+ public:
+   wxSound();
+-  wxSound(const wxString& fileName, bool isResource = FALSE);
++  wxSound(const wxString& fileName, bool isResource = false);
+   wxSound(int size, const wxByte* data);
+   virtual ~wxSound();
+ 
+ public:
+-  bool  Create(const wxString& fileName, bool isResource = FALSE);
+-  bool  IsOk() const { return !m_sndname.IsEmpty(); }
++  bool  Create(const wxString& fileName, bool isResource = false);
++  bool  Create(int size, const wxByte* data);
++  bool  IsOk() const { return !m_sndname.IsEmpty() || m_hSnd; }
+   static void  Stop();
+   static bool IsPlaying();
+ 
+diff -wruN wxWidgets-2.8.9-orig/src/common/menucmn.cpp wxWidgets-2.8.9/src/common/menucmn.cpp
+--- wxWidgets-2.8.9-orig/src/common/menucmn.cpp	2008-09-15 04:28:18.000000000 -0500
++++ wxWidgets-2.8.9/src/common/menucmn.cpp	2009-01-10 16:53:27.000000000 -0600
+@@ -194,7 +194,11 @@
+     {
+         if ( (label[n] == '+') || (label[n] == '-') )
+         {
++            // differentiate between a ctrl that will be translated to cmd on mac
++            // and an explicit xctrl that will not be translated and remains a ctrl
+             if ( CompareAccelString(current, wxTRANSLATE("ctrl")) )
++                accelFlags |= wxACCEL_CMD;
++            else if ( CompareAccelString(current, wxTRANSLATE("xctrl")) )
+                 accelFlags |= wxACCEL_CTRL;
+             else if ( CompareAccelString(current, wxTRANSLATE("alt")) )
+                 accelFlags |= wxACCEL_ALT;
+@@ -312,8 +316,12 @@
+     int flags = GetFlags();
+     if ( flags & wxACCEL_ALT )
+         text += _("Alt-");
+-    if ( flags & wxACCEL_CTRL )
++    if ( flags & wxACCEL_CMD )
+         text += _("Ctrl-");
++#ifdef __WXMAC__
++    if ( flags & wxACCEL_CTRL )
++        text += _("XCtrl-");
++#endif
+     if ( flags & wxACCEL_SHIFT )
+         text += _("Shift-");
+ 
+diff -wruN wxWidgets-2.8.9-orig/src/mac/carbon/sound.cpp wxWidgets-2.8.9/src/mac/carbon/sound.cpp
+--- wxWidgets-2.8.9-orig/src/mac/carbon/sound.cpp	2008-09-15 04:29:28.000000000 -0500
++++ wxWidgets-2.8.9/src/mac/carbon/sound.cpp	2009-01-10 16:53:37.000000000 -0600
+@@ -86,6 +86,7 @@
+ #endif
+ 
+ #if USE_QUICKTIME
++
+ // ------------------------------------------------------------------
+ //          wxQTTimer - Handle Asyncronous Playing
+ // ------------------------------------------------------------------
+@@ -154,65 +155,6 @@
+ 
+ };
+ 
+-
+-class wxSMTimer : public wxTimer
+-{
+-public:
+-    wxSMTimer(void* hSnd, void* pSndChannel, bool bLoop, bool* playing)
+-        : m_hSnd(hSnd), m_pSndChannel(pSndChannel), m_bLoop(bLoop), m_pbPlaying(playing)
+-    {
+-    }
+-
+-    virtual ~wxSMTimer()
+-    {
+-        if(m_pbPlaying)
+-            *m_pbPlaying = false;
+-        SndDisposeChannel((SndChannelPtr)m_pSndChannel, TRUE);
+-        Stop();
+-    }
+-
+-    void Notify()
+-    {
+-        if (m_pbPlaying && !*m_pbPlaying)
+-        {
+-            Shutdown();
+-        }
+-
+-        SCStatus stat;
+-
+-        if (SndChannelStatus((SndChannelPtr)m_pSndChannel, sizeof(SCStatus), &stat) != 0)
+-            Shutdown();
+-
+-        //if the sound isn't playing anymore, see if it's looped,
+-        //and if so play it again, otherwise close things up
+-        if (stat.scChannelBusy == FALSE)
+-        {
+-            if (m_bLoop)
+-            {
+-                if(SndPlay((SndChannelPtr)m_pSndChannel, (SndListHandle) m_hSnd, true) != noErr)
+-                    Shutdown();
+-            }
+-            else
+-                Shutdown();
+-        }
+-    }
+-
+-    void Shutdown()
+-    {
+-        delete this;
+-    }
+-
+-    void* GetChannel() {return m_pSndChannel;}
+-
+-protected:
+-    void* m_hSnd;
+-    void* m_pSndChannel;
+-    bool m_bLoop;
+-
+-public:
+-    bool* m_pbPlaying;
+-};
+-
+ // ------------------------------------------------------------------
+ //          wxSound
+ // ------------------------------------------------------------------
+@@ -265,8 +207,9 @@
+ }
+ 
+ wxSound::wxSound(int size, const wxByte* data)
+-: m_hSnd((char*)data), m_waveLength(size), m_pTimer(NULL), m_type(wxSound_MEMORY)
++: m_hSnd(NULL), m_waveLength(0), m_pTimer(NULL), m_type(wxSound_NONE)
+ {
++   Create(size, data);
+ }
+ 
+ wxSound::~wxSound()
+@@ -277,19 +220,25 @@
+ {
+     Stop();
+ 
++    m_sndname.Empty();
++
+     if (isResource)
+     {
+ #ifdef __WXMAC__
+-        m_type = wxSound_RESOURCE;
+-
+-        Str255 lpSnd ;
+-
+-        wxMacStringToPascal( fileName , lpSnd ) ;
++        CFURLRef url;
++        CFStringRef path;
+ 
+-        m_sndname = fileName;
+-        m_hSnd = (char*) GetNamedResource('snd ', (const unsigned char *) lpSnd);
+-#else
+-        return false;
++        url = CFBundleCopyResourceURL(CFBundleGetMainBundle(),
++                                      wxMacCFStringHolder(fileName,wxLocale::GetSystemEncoding()),
++                                      NULL,
++                                      NULL);
++        if (url)
++        {
++            path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
++            CFRelease(url);
++            m_type = wxSound_FILE;
++            m_sndname = wxMacCFStringHolder(path).AsString(wxLocale::GetSystemEncoding());
++        }
+ #endif
+     }
+     else
+@@ -298,6 +247,15 @@
+         m_sndname = fileName;
+     }
+ 
++    return !m_sndname.IsEmpty();
++}
++
++bool wxSound::Create(int size, const wxByte* data)
++{
++   m_hSnd = (char *)data;
++   m_waveLength = size;
++   m_type = wxSound_MEMORY;
++
+     return true;
+ }
+ 
+@@ -308,107 +266,70 @@
+ #if USE_QUICKTIME
+ 
+     Movie movie;
++    Handle dataRef = nil;
++    OSType dataRefType;
++    OSErr err = noErr;
++    
++    if (!wxInitQT())
++        return false;
+ 
+     switch(m_type)
+     {
+     case wxSound_MEMORY:
+         {
+-            if (!wxInitQT())
+-                return false;
+-            Handle myHandle, dataRef = nil;
+-            MovieImportComponent miComponent;
+-            Track targetTrack = nil;
+-            TimeValue addedDuration = 0;
+-            long outFlags = 0;
+-            OSErr err;
+-            ComponentResult result;
+-
+-            myHandle = NewHandleClear((Size)m_waveLength);
+-
+-            BlockMove(m_hSnd, *myHandle, m_waveLength);
+-
+-            err = PtrToHand(&myHandle, &dataRef, sizeof(Handle));
++            Handle myHandle = nil;
++            unsigned long type;
++            unsigned long atoms[5];
+ 
+             if (memcmp(&m_hSnd[8], "WAVE", 4) == 0)
+-                miComponent = OpenDefaultComponent(MovieImportType, kQTFileTypeWave);
++                type = kQTFileTypeWave;
+             else if (memcmp(&m_hSnd[8], "AIFF", 4) == 0)
+-                miComponent = OpenDefaultComponent(MovieImportType, kQTFileTypeAIFF);
++                type = kQTFileTypeAIFF;
+             else if (memcmp(&m_hSnd[8], "AIFC", 4) == 0)
+-                miComponent = OpenDefaultComponent(MovieImportType, kQTFileTypeAIFC);
++                type = kQTFileTypeAIFC;
+             else
+             {
+                 wxLogSysError(wxT("wxSound - Location in memory does not contain valid data"));
+                 return false;
+             }
+ 
+-            movie = NewMovie(0);
+-
+-            result = MovieImportDataRef(miComponent,                dataRef,
+-                                        HandleDataHandlerSubType,   movie,
+-                                        nil,                        &targetTrack,
+-                                        nil,                        &addedDuration,
+-                                        movieImportCreateTrack,     &outFlags);
+-
+-            if (result != noErr)
+-            {
+-                wxLogSysError(wxString::Format(wxT("Couldn't import movie data\nError:%i"), (int)result));
+-            }
+-
+-            SetMovieVolume(movie, kFullVolume);
+-            GoToBeginningOfMovie(movie);
++            atoms[0] = EndianU32_NtoB(sizeof(long) * 3);
++            atoms[1] = EndianU32_NtoB(kDataRefExtensionMacOSFileType);
++            atoms[2] = EndianU32_NtoB(type);
++            atoms[3] = EndianU32_NtoB(sizeof(long) * 2 + m_waveLength);
++            atoms[4] = EndianU32_NtoB(kDataRefExtensionInitializationData);
++
++            err = 0;
++            err |= PtrToHand(&myHandle, &dataRef, sizeof(Handle));
++            err |= PtrAndHand("\p", dataRef, 1);
++            err |= PtrAndHand(atoms, dataRef, sizeof(long) * 5);
++            err |= PtrAndHand(m_hSnd, dataRef, m_waveLength);
+ 
+-            DisposeHandle(myHandle);
++            dataRefType = HandleDataHandlerSubType;
+         }
+         break;
+-    case wxSound_RESOURCE:
+-        {
+-            SoundComponentData data;
+-            unsigned long numframes, offset;
+-
+-            ParseSndHeader((SndListHandle)m_hSnd, &data, &numframes, &offset);
+-            //m_waveLength = numFrames * data.numChannels;
+-
+-            SndChannelPtr pSndChannel;
+-            SndNewChannel(&pSndChannel, sampledSynth,
+-                initNoInterp
+-                + (data.numChannels == 1 ? initMono : initStereo), NULL);
+-
+-            if(SndPlay(pSndChannel, (SndListHandle) m_hSnd, flags & wxSOUND_ASYNC ? 1 : 0) != noErr)
+-                return false;
+-
+-            if (flags & wxSOUND_ASYNC)
++    case wxSound_FILE:
+             {
+-                lastSoundTimer = ((wxSMTimer*&)m_pTimer)
+-                    = new wxSMTimer(pSndChannel, m_hSnd, flags & wxSOUND_LOOP ? 1 : 0,
+-                                    &lastSoundIsPlaying);
+-                lastSoundIsPlaying = true;
+-
+-                ((wxTimer*)m_pTimer)->Start(MOVIE_DELAY, wxTIMER_CONTINUOUS);
+-            }
+-            else
+-                SndDisposeChannel(pSndChannel, TRUE);
+-
+-            return true;
++            err = QTNewDataReferenceFromFullPathCFString(wxMacCFStringHolder(m_sndname,wxLocale::GetSystemEncoding()),
++                                                         (UInt32)kQTNativeDefaultPathStyle,
++                                                         0,
++                                                         &dataRef,
++                                                         &dataRefType);
+         }
+         break;
+-    case wxSound_FILE:
+-        {
+-            if (!wxInitQT())
++    default:
+                 return false;
+-
+-            OSErr err = noErr ;
+-
+-            Handle dataRef = NULL;
+-            OSType dataRefType;
+-
+-            err = QTNewDataReferenceFromFullPathCFString(wxMacCFStringHolder(m_sndname,wxLocale::GetSystemEncoding()),
+-                (UInt32)kQTNativeDefaultPathStyle, 0, &dataRef, &dataRefType);
++    }//end switch(m_type)
+ 
+             wxASSERT(err == noErr);
+ 
+             if (NULL != dataRef || err != noErr)
+             {
+-                err = NewMovieFromDataRef( &movie, newMovieDontAskUnresolvedDataRefs , NULL, dataRef, dataRefType );
++        err = NewMovieFromDataRef(&movie,
++                                  0,
++                                  nil,
++                                  dataRef,
++                                  dataRefType);
+                 wxASSERT(err == noErr);
+                 DisposeHandle(dataRef);
+             }
+@@ -416,17 +337,13 @@
+             if (err != noErr)
+             {
+                 wxLogSysError(
+-                    wxString::Format(wxT("wxSound - Could not open file: %s\nError:%i"), m_sndname.c_str(), err )
++            wxString::Format(wxT("wxSound - Could not create movie\nError:%i"), err)
+                     );
+                 return false;
+             }
+-        }
+-        break;
+-    default:
+-        return false;
+-    }//end switch(m_type)
+ 
+-    //Start the movie!
++    SetMovieVolume(movie, kFullVolume);
++    GoToBeginningOfMovie(movie);
+     StartMovie(movie);
+ 
+     if (flags & wxSOUND_ASYNC)
+@@ -473,12 +390,8 @@
+ void* wxSound::GetHandle()
+ {
+ #if USE_QUICKTIME
+-    if(m_type == wxSound_RESOURCE)
+-        return (void*)  ((wxSMTimer*)m_pTimer)->GetChannel();
+-
+     return (void*) ((wxQTTimer*) m_pTimer)->GetMovie();
+ #endif
+     return NULL;
+ }
+-
+ #endif //wxUSE_SOUND
+diff -wruN wxWidgets-2.8.9-orig/src/mac/carbon/uma.cpp wxWidgets-2.8.9/src/mac/carbon/uma.cpp
+--- wxWidgets-2.8.9-orig/src/mac/carbon/uma.cpp	2008-09-15 04:29:29.000000000 -0500
++++ wxWidgets-2.8.9/src/mac/carbon/uma.cpp	2009-01-10 16:53:27.000000000 -0600
+@@ -187,13 +187,20 @@
+ void UMASetMenuItemShortcut( MenuRef menu , MenuItemIndex item , wxAcceleratorEntry *entry )
+ {
+     if ( !entry )
++    {
++        SetMenuItemModifiers( menu, item , kMenuNoModifiers ); 
++        SetMenuItemKeyGlyph( menu, item , kMenuNullGlyph );        
++        SetItemCmd( menu, item , 0 ); 
+         return ;
++    }
+ 
+     UInt8 modifiers = 0 ;
+     SInt16 key = entry->GetKeyCode() ;
+     if ( key )
+     {
+-        bool explicitCommandKey = (entry->GetFlags() & wxACCEL_CTRL);
++        bool explicitCommandKey = (entry->GetFlags() & wxACCEL_CMD);
++        if ( !explicitCommandKey )
++            modifiers |= kMenuNoCommandModifier ;
+ 
+         if (entry->GetFlags() & wxACCEL_ALT)
+             modifiers |= kMenuOptionModifier ;
+@@ -201,12 +208,14 @@
+         if (entry->GetFlags() & wxACCEL_SHIFT)
+             modifiers |= kMenuShiftModifier ;
+ 
++        if (entry->GetFlags() & wxACCEL_CTRL)
++            modifiers |= kMenuControlModifier ;
++
++
+         SInt16 glyph = 0 ;
+         SInt16 macKey = key ;
+         if ( key >= WXK_F1 && key <= WXK_F15 )
+         {
+-            if ( !explicitCommandKey )
+-                modifiers |= kMenuNoCommandModifier ;
+ 
+             // for some reasons this must be 0 right now
+             // everything else leads to just the first function key item
+@@ -303,11 +312,6 @@
+                     macKey = toupper( key ) ;
+                     break ;
+             }
+-
+-            // we now allow non command key shortcuts
+-            // remove in case this gives problems
+-            if ( !explicitCommandKey )
+-                modifiers |= kMenuNoCommandModifier ;
+         }
+ 
+         // 1d and 1e have special meaning to SetItemCmd, so
