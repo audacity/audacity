@@ -1,0 +1,6 @@
+_:a <http://xmlns.com/foaf/0.1/knows> <http://www.example.org/#somebody> .
+_:a <http://xmlns.com/foaf/0.1/mailbox> <mailto:ivan@w3.org> .
+_:a <http://xmlns.com/foaf/0.1/name> "Ivan Herman" .
+_:b <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+_:b <http://xmlns.com/foaf/0.1/knows> <http://www.example.org/#somebody> .
+_:b <http://xmlns.com/foaf/0.1/name> "Mark Birbeck" .

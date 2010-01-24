@@ -1,0 +1,7 @@
+<?xml version="1.0" standalone="no"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:notrdf="http://www.w3.org/1999/02/22-rdf-syntax-ns">
+
+  <!-- Should give a warning above about notrdf namespace declaration -->
+
+</rdf:RDF>

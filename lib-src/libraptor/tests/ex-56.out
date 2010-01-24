@@ -1,0 +1,1 @@
+<http://example.org/mybase/subj> <http://example.org/ex/prop> "val"^^<http://example.org/mybase/type> .

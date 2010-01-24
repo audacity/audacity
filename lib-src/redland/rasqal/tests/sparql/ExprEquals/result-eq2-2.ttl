@@ -1,0 +1,104 @@
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix :        <http://example.org/things#> .
+
+[]    rdf:type    rs:ResultSet ;
+      rs:resultVariable  "v1" ;
+      rs:resultVariable  "v2" ;
+      rs:solution
+                  [ rs:binding  [ rs:value    :z ;
+                                  rs:variable  "v2"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz"^^:myType ;
+                                  rs:variable  "v1"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    :z ;
+                                  rs:variable  "v1"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz" ;
+                                  rs:variable  "v2"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    :z ;
+                                  rs:variable  "v2"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz" ;
+                                  rs:variable  "v1"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "1" ;
+                                  rs:variable  "v2"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz"^^:myType ;
+                                  rs:variable  "v1"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "1" ;
+                                  rs:variable  "v2"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz" ;
+                                  rs:variable  "v1"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "1" ;
+                                  rs:variable  "v2"
+                                ] ;
+                    rs:binding  [ rs:value    :z ;
+                                  rs:variable  "v1"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "zzz" ;
+                                  rs:variable  "v1"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz"^^:myType ;
+                                  rs:variable  "v2"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "1" ;
+                                  rs:variable  "v1"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz"^^:myType ;
+                                  rs:variable  "v2"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "zzz" ;
+                                  rs:variable  "v2"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz"^^:myType ;
+                                  rs:variable  "v1"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    :z ;
+                                  rs:variable  "v1"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz"^^:myType ;
+                                  rs:variable  "v2"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "1" ;
+                                  rs:variable  "v1"
+                                ] ;
+                    rs:binding  [ rs:value    "zzz" ;
+                                  rs:variable  "v2"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "1" ;
+                                  rs:variable  "v1"
+                                ] ;
+                    rs:binding  [ rs:value    :z ;
+                                  rs:variable  "v2"
+                                ]
+                  ] .

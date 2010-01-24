@@ -1,0 +1,61 @@
+#
+# Redland MySQL storage schema - InnoDB
+#
+# Turtle with variable substitution
+#
+
+@prefix mysql: <http://schemas.librdf.org/storage/mysql> .
+@prefix dbconfig: <http://schemas.librdf.org/2006/dbconfig#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+mysql:
+  rdfs:label "Redland MySQL Schema V2 InnoDB";
+
+  dbconfig:createTableStatements """
+CREATE TABLE IF NOT EXISTS $(STATEMENTS_NAME) (
+  Subject bigint unsigned NOT NULL,
+  Predicate bigint unsigned NOT NULL,
+  Object bigint unsigned NOT NULL,
+  Context bigint unsigned NOT NULL,
+  KEY Context (Context),
+  KEY SubjectPredicate (Subject,Predicate),
+  KEY PredicateObject (Predicate,Object),
+  KEY ObjectSubject (Object,Subject)
+) ENGINE=InnoDB DELAY_KEY_WRITE=1 MAX_ROWS=100000000 AVG_ROW_LENGTH=33
+""";
+
+  dbconfig:createTableLiterals """
+CREATE TABLE IF NOT EXISTS Literals (
+  ID bigint unsigned NOT NULL,
+  Value longtext NOT NULL,
+  Language text NOT NULL,
+  Datatype text NOT NULL,
+  PRIMARY KEY ID (ID)
+) ENGINE=InnoDB DELAY_KEY_WRITE=1 MAX_ROWS=100000000 AVG_ROW_LENGTH=44
+""";
+
+  dbconfig:createTableResources """
+CREATE TABLE IF NOT EXISTS Resources (
+  ID bigint unsigned NOT NULL,
+  URI text NOT NULL,
+  PRIMARY KEY ID (ID)
+) ENGINE=InnoDB DELAY_KEY_WRITE=1 MAX_ROWS=100000000 AVG_ROW_LENGTH=63
+""";
+
+  dbconfig:createTableBnodes """
+CREATE TABLE IF NOT EXISTS Bnodes (
+  ID bigint unsigned NOT NULL,
+  Name text NOT NULL,
+  PRIMARY KEY ID (ID)
+) ENGINE=InnoDB DELAY_KEY_WRITE=1 MAX_ROWS=100000000 AVG_ROW_LENGTH=33
+""";
+
+  dbconfig:createTableModels """
+CREATE TABLE IF NOT EXISTS Models (
+  ID bigint unsigned NOT NULL,
+  Name text NOT NULL,
+  PRIMARY KEY ID (ID)
+) ENGINE=InnoDB DELAY_KEY_WRITE=1
+""";
+
+.

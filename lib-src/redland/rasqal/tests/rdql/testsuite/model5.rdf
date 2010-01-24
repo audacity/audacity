@@ -1,0 +1,29 @@
+<?xml version='1.0'?>
+<!-- Written with RDF/XML-ABBREV -->
+
+<rdf:RDF
+    xmlns:RDFNsId1='http://never/'
+    xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    xmlns:s='http://never/'>
+
+    <rdf:Description rdf:about="http://never/something">
+	<s:contents1>
+	    <rdf:Bag>
+		<rdf:li>11</rdf:li>
+		<rdf:li>12</rdf:li>
+	    </rdf:Bag>
+	</s:contents1>
+	<s:contents2>
+	    <rdf:Bag rdf:about="http://never/bag">
+		<rdf:li>21</rdf:li>
+		<rdf:li>22</rdf:li>
+	    </rdf:Bag>
+	</s:contents2>
+	<s:otherstuff>Other Stuff</s:otherstuff>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://never/somethingElse">
+	<s:metadata>metadata</s:metadata>
+    </rdf:Description>
+	
+</rdf:RDF>

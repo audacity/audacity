@@ -1,0 +1,36 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:     <http://jena.hpl.hp.com/2003/03/result-set#> .
+
+[] rdf:type rs:ResultSet ;
+    rs:resultVariable "b" ;
+    rs:resultVariable "y" ;
+    rs:size "4" ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "b" ; rs:value _:b1 ] ;
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "y" ; rs:value "11" ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "b" ; rs:value _:b1 ] ;
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "y" ; rs:value "12" ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "b" ; rs:value <http://never/bag> ] ;
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "y" ; rs:value "21" ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "b" ; rs:value <http://never/bag> ] ;
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "y" ; rs:value "22" ] ;
+        ] ;
+    .

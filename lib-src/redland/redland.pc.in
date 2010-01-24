@@ -1,0 +1,14 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+swig=${prefix}/share/redland/Redland.i
+
+Name: Redland RDF API Library
+Description: Redland RDF API and triple store library
+Requires: raptor >= @RAPTOR_MIN_VERSION@, rasqal >= @RASQAL_MIN_VERSION@, rasqal <= @RASQAL_MAX_VERSION@
+Version: @VERSION@
+Libs: -L${libdir} -lrdf
+Libs.private: @LIBRDF_LDFLAGS@ @LIBRDF_PKGCONFIG_PRIVATE_LIBS@
+Cflags: -I${includedir}

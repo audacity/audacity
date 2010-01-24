@@ -1,0 +1,27 @@
+<!-- ##### SECTION Title ##### -->
+Files
+
+<!-- ##### SECTION Short_Description ##### -->
+File utility functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Portable utility functions for handling files.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION librdf_files_temporary_file_name ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-section-general">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-section-general.top_of_page">General library facilities</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>General library facilities</refname>
+<refpurpose>Version static variables.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-section-general.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+extern              const unsigned int <link linkend="librdf-version-decimal">librdf_version_decimal</link>;
+extern              const unsigned int <link linkend="librdf-version-major">librdf_version_major</link>;
+extern              const unsigned int <link linkend="librdf-version-release">librdf_version_release</link>;
+extern              const unsigned int <link linkend="librdf-version-minor">librdf_version_minor</link>;
+#define             <link linkend="REDLAND-DEPRECATED:CAPS">REDLAND_DEPRECATED</link>
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-section-general.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Version static variables.
+</para>
+</refsect1>
+
+<refsect1 id="redland-section-general.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-version-decimal" role="variable">
+<title>librdf_version_decimal</title>
+<indexterm zone="librdf-version-decimal"><primary>librdf_version_decimal</primary></indexterm><programlisting>extern const unsigned int librdf_version_decimal;
+</programlisting>
+<para>
+Library full version as a decimal integer.
+</para>
+<para>
+See also <link linkend="librdf-version-string"><type>librdf_version_string</type></link>.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-version-major" role="variable">
+<title>librdf_version_major</title>
+<indexterm zone="librdf-version-major"><primary>librdf_version_major</primary></indexterm><programlisting>extern const unsigned int librdf_version_major;
+</programlisting>
+<para>
+Library major version number as a decimal integer.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-version-release" role="variable">
+<title>librdf_version_release</title>
+<indexterm zone="librdf-version-release"><primary>librdf_version_release</primary></indexterm><programlisting>extern const unsigned int librdf_version_release;
+</programlisting>
+<para>
+Library release version number as a decimal integer.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-version-minor" role="variable">
+<title>librdf_version_minor</title>
+<indexterm zone="librdf-version-minor"><primary>librdf_version_minor</primary></indexterm><programlisting>extern const unsigned int librdf_version_minor;
+</programlisting>
+<para>
+Library minor version number as a decimal integer.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="REDLAND-DEPRECATED:CAPS" role="macro">
+<title>REDLAND_DEPRECATED</title>
+<indexterm zone="REDLAND-DEPRECATED:CAPS"><primary>REDLAND_DEPRECATED</primary></indexterm><programlisting>#define             REDLAND_DEPRECATED</programlisting>
+<para>
+When defined before a function, indicates that the function
+has been deprecated and may be replaced in a future release.
+With some versions of gcc this may give a compilation warning.
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

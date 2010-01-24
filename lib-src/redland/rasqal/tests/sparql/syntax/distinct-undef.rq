@@ -1,0 +1,2 @@
+SELECT DISTINCT ?foo ?s ?p ?o
+   WHERE { ?s ?p ?o }

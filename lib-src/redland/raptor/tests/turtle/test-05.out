@@ -1,0 +1,4 @@
+_:genid1 <http://example.org/base#a> <http://example.org/base#b> .
+_:genid1 <http://example.org/base#c> <http://example.org/base#d> .
+_:genid2 <http://example.org/base#g> <http://example.org/base#h> .
+<http://example.org/base#e> <http://example.org/base#f> _:genid2 .

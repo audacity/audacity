@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>World</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="objects.html" title="Objects in C">
+<link rel="next" href="redland-concepts.html" title="Concepts">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="objects.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-concepts.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-world.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-world.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-world"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-world.top_of_page"></a>World</span></h2>
+<p>World — Initialisation and termination of library</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-world.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a>;
+<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a>*       <a class="link" href="redland-world.html#librdf-new-world" title="librdf_new_world ()">librdf_new_world</a>                    (void);
+void                <a class="link" href="redland-world.html#librdf-free-world" title="librdf_free_world ()">librdf_free_world</a>                   (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);
+void                <a class="link" href="redland-world.html#librdf-world-open" title="librdf_world_open ()">librdf_world_open</a>                   (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);
+void                <a class="link" href="redland-world.html#librdf-world-init-mutex" title="librdf_world_init_mutex ()">librdf_world_init_mutex</a>             (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);
+void                <a class="link" href="redland-world.html#librdf-world-set-error" title="librdf_world_set_error ()">librdf_world_set_error</a>              (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *user_data,
+                                                         <a class="link" href="redland-log.html#librdf-log-level-func" title="librdf_log_level_func ()">librdf_log_level_func</a> error_handler);
+void                <a class="link" href="redland-world.html#librdf-world-set-warning" title="librdf_world_set_warning ()">librdf_world_set_warning</a>            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *user_data,
+                                                         <a class="link" href="redland-log.html#librdf-log-level-func" title="librdf_log_level_func ()">librdf_log_level_func</a> warning_handler);
+void                <a class="link" href="redland-world.html#librdf-world-set-logger" title="librdf_world_set_logger ()">librdf_world_set_logger</a>             (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *user_data,
+                                                         <a class="link" href="redland-log.html#librdf-log-func" title="librdf_log_func ()">librdf_log_func</a> log_handler);
+void                <a class="link" href="redland-world.html#librdf-world-set-digest" title="librdf_world_set_digest ()">librdf_world_set_digest</a>             (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name);
+#define             <a class="link" href="redland-world.html#LIBRDF-WORLD-FEATURE-GENID-BASE:CAPS" title="LIBRDF_WORLD_FEATURE_GENID_BASE">LIBRDF_WORLD_FEATURE_GENID_BASE</a>
+#define             <a class="link" href="redland-world.html#LIBRDF-WORLD-FEATURE-GENID-COUNTER:CAPS" title="LIBRDF_WORLD_FEATURE_GENID_COUNTER">LIBRDF_WORLD_FEATURE_GENID_COUNTER</a>
+<a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        <a class="link" href="redland-world.html#librdf-world-get-feature" title="librdf_world_get_feature ()">librdf_world_get_feature</a>            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature);
+int                 <a class="link" href="redland-world.html#librdf-world-set-feature" title="librdf_world_set_feature ()">librdf_world_set_feature</a>            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *value);
+void                <a class="link" href="redland-world.html#librdf-init-world" title="librdf_init_world ()">librdf_init_world</a>                   (char *digest_factory_name,
+                                                         void *not_used2);
+void                <a class="link" href="redland-world.html#librdf-destroy-world" title="librdf_destroy_world ()">librdf_destroy_world</a>                (void);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-world.description"></a><h2>Description</h2>
+<p>
+The Redland <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> class handles startup and termination of
+the library and cleanup of all allocated resources.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-world.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-world"></a><h3>librdf_world</h3>
+<pre class="programlisting">typedef struct librdf_world_s librdf_world;
+</pre>
+<p>
+Redland world class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-world"></a><h3>librdf_new_world ()</h3>
+<pre class="programlisting"><a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a>*       librdf_new_world                    (void);</pre>
+<p>
+Create a new Redland execution environment.
+</p>
+<p>
+Once this constructor is called to build a <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> object
+several functions may be called to set some parameters such as
+<a class="link" href="redland-world.html#librdf-world-set-error" title="librdf_world_set_error ()"><code class="function">librdf_world_set_error()</code></a>, <a class="link" href="redland-world.html#librdf-world-set-warning" title="librdf_world_set_warning ()"><code class="function">librdf_world_set_warning()</code></a>,
+<a class="link" href="redland-world.html#librdf-world-set-logger" title="librdf_world_set_logger ()"><code class="function">librdf_world_set_logger()</code></a>, <a class="link" href="redland-world.html#librdf-world-set-digest" title="librdf_world_set_digest ()"><code class="function">librdf_world_set_digest()</code></a>,
+<a class="link" href="redland-world.html#librdf-world-set-feature" title="librdf_world_set_feature ()"><code class="function">librdf_world_set_feature()</code></a>.
+</p>
+<p>
+The world object needs initializing using <a class="link" href="redland-world.html#librdf-world-open" title="librdf_world_open ()"><code class="function">librdf_world_open()</code></a>
+whether or not the above functions are called.  It will be
+automatically called by all object constructors in Redland 1.0.6
+or later, but for earlier versions it MUST be called before using
+any other part of Redland.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> or NULL on failure
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-free-world"></a><h3>librdf_free_world ()</h3>
+<pre class="programlisting">void                librdf_free_world                   (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);</pre>
+<p>
+Terminate the library and frees all allocated resources.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-open"></a><h3>librdf_world_open ()</h3>
+<pre class="programlisting">void                librdf_world_open                   (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);</pre>
+<p>
+Open a created redland world environment.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-init-mutex"></a><h3>librdf_world_init_mutex ()</h3>
+<pre class="programlisting">void                librdf_world_init_mutex             (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);</pre>
+<p>
+INTERNAL - Create the world mutex.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-set-error"></a><h3>librdf_world_set_error ()</h3>
+<pre class="programlisting">void                librdf_world_set_error              (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *user_data,
+                                                         <a class="link" href="redland-log.html#librdf-log-level-func" title="librdf_log_level_func ()">librdf_log_level_func</a> error_handler);</pre>
+<p>
+Set the world error handling function.
+</p>
+<p>
+The function will receive callbacks when the world fails.
+<a class="link" href="redland-world.html#librdf-world-set-logger" title="librdf_world_set_logger ()"><code class="function">librdf_world_set_logger()</code></a> provides richer access to all log messages
+and should be used in preference.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> user data to pass to function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> pointer to the function
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-set-warning"></a><h3>librdf_world_set_warning ()</h3>
+<pre class="programlisting">void                librdf_world_set_warning            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *user_data,
+                                                         <a class="link" href="redland-log.html#librdf-log-level-func" title="librdf_log_level_func ()">librdf_log_level_func</a> warning_handler);</pre>
+<p>
+Set the world warning handling function.
+</p>
+<p>
+The function will receive callbacks when the world gives a warning.
+<a class="link" href="redland-world.html#librdf-world-set-logger" title="librdf_world_set_logger ()"><code class="function">librdf_world_set_logger()</code></a> provides richer access to all log messages
+and should be used in preference.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> user data to pass to function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>warning_handler</code></em> :</span></p></td>
+<td> pointer to the function
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-set-logger"></a><h3>librdf_world_set_logger ()</h3>
+<pre class="programlisting">void                librdf_world_set_logger             (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *user_data,
+                                                         <a class="link" href="redland-log.html#librdf-log-func" title="librdf_log_func ()">librdf_log_func</a> log_handler);</pre>
+<p>
+Set the world log handling function.
+</p>
+<p>
+The function will receive callbacks when redland generates a log message</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td> user data to pass to function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>log_handler</code></em> :</span></p></td>
+<td> pointer to the function
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-set-digest"></a><h3>librdf_world_set_digest ()</h3>
+<pre class="programlisting">void                librdf_world_set_digest             (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name);</pre>
+<p>
+Set the default content digest name.
+</p>
+<p>
+Sets the digest factory for various modules that need to make
+digests of their objects.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> Digest factory name
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="LIBRDF-WORLD-FEATURE-GENID-BASE:CAPS"></a><h3>LIBRDF_WORLD_FEATURE_GENID_BASE</h3>
+<pre class="programlisting">#define LIBRDF_WORLD_FEATURE_GENID_BASE "http://feature.librdf.org/genid-base"
+</pre>
+<p>
+World feature to set the generated ID base.
+</p>
+<p>
+Must be set before the world is opened with <a class="link" href="redland-world.html#librdf-world-open" title="librdf_world_open ()"><code class="function">librdf_world_open()</code></a>.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="LIBRDF-WORLD-FEATURE-GENID-COUNTER:CAPS"></a><h3>LIBRDF_WORLD_FEATURE_GENID_COUNTER</h3>
+<pre class="programlisting">#define LIBRDF_WORLD_FEATURE_GENID_COUNTER "http://feature.librdf.org/genid-counter"
+</pre>
+<p>
+World feature to set the generated ID counter.
+</p>
+<p>
+Must be set before the world is opened with <a class="link" href="redland-world.html#librdf-world-open" title="librdf_world_open ()"><code class="function">librdf_world_open()</code></a>.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-get-feature"></a><h3>librdf_world_get_feature ()</h3>
+<pre class="programlisting"><a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        librdf_world_get_feature            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature);</pre>
+<p>
+Get the value of a world feature.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri"><span class="type">librdf_uri</span></a> feature property
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> feature value or NULL if no such feature
+exists or the value is empty.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-world-set-feature"></a><h3>librdf_world_set_feature ()</h3>
+<pre class="programlisting">int                 librdf_world_set_feature            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *value);</pre>
+<p>
+Set the value of a world feature.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri"><span class="type">librdf_uri</span></a> feature property
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> feature property value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure (negative if no such feature)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-init-world"></a><h3>librdf_init_world ()</h3>
+<pre class="programlisting">void                librdf_init_world                   (char *digest_factory_name,
+                                                         void *not_used2);</pre>
+<p>
+Initialise the library
+<em class="parameter"><code>deprecated</code></em>: Do not use.
+</p>
+<p>
+Use <a class="link" href="redland-world.html#librdf-new-world" title="librdf_new_world ()"><code class="function">librdf_new_world()</code></a> and <a class="link" href="redland-world.html#librdf-world-open" title="librdf_world_open ()"><code class="function">librdf_world_open()</code></a> on <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> object
+</p>
+<p>
+See <code class="function">librdf_world_set_digest_factory_name()</code> for documentation on arguments.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest_factory_name</code></em> :</span></p></td>
+<td> Name of digest factory to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>not_used2</code></em> :</span></p></td>
+<td> Not used
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-destroy-world"></a><h3>librdf_destroy_world ()</h3>
+<pre class="programlisting">void                librdf_destroy_world                (void);</pre>
+<p>
+Terminate the library
+<em class="parameter"><code>deprecated</code></em>: Do not use.
+</p>
+<p>
+Use <a class="link" href="redland-world.html#librdf-free-world" title="librdf_free_world ()"><code class="function">librdf_free_world()</code></a> on <a class="link" href="redland-world.html#librdf-world" title="librdf_world"><span class="type">librdf_world</span></a> object
+</p>
+<p>
+Terminates and frees the resources.</p>
+<p>
+
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

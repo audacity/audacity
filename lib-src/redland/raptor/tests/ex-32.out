@@ -1,0 +1,2 @@
+<http://example.org/node2> <http://example.org/ns/prop2> "literal" .
+<http://example.org/node1> <http://example.org/ns/prop1> <http://example.org/node2> .

@@ -1,0 +1,165 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="raptor-serializers">
+<title>Serializers in Raptor (triples to syntax)</title>
+
+<section id="raptor-serializers-intro">
+<title>Introduction</title>
+
+<para>This section describes the serializers that can be compiled into
+Raptor and their features.  The exact serializers supported may vary
+by different builds of raptor and can be queried at run-time by use of the
+<link linkend="raptor-serializers-enumerate"><function>raptor_serializers_enumerate</function></link>
+function</para>
+
+<para>The optional features that may be set on parsers can also
+be queried at run-time iwth the 
+<link linkend="raptor-serializer-features-enumerate"><function>raptor_serializer_features_enumerate</function></link>
+function.</para>
+
+</section>
+
+
+<section id="serializer-atom">
+<title>Atom 1.0 serializer (name <literal>atom</literal>)</title>
+
+<para>A serializer to the Atom 1.0 syndication format defined in IETF
+<ulink url="http://www.ietf.org/rfc/rfc4287.txt">RFC 4287</ulink>.
+This serializes an RDF graph written in the RSS 1.0 data model
+to Atom 1.0 plus optionally writes extra RDF triples.
+</para>
+<para>
+The extra RDF triples are written into an at:md metadata block, along
+with at:feedmap and at:entrymap elements to describe the RSS 1.0
+predicate to Atom 1.0 elements mappings for the feed and entry blocks
+respecively.  The extra triples are enabled when serializer feature
+'rssTriples' is set to string value 'atom-triples'.
+</para>
+
+</section>
+
+
+<section id="serializer-json">
+<title>JSON serializers (name <literal>json</literal> and name <literal>json-triples</literal>)</title>
+
+<para>Two serializers that write JSON in either a resource-centric
+format with name <literal>json</literal> and in a triple-dump format
+with name <literal>json-triples</literal>.  The resource-centric
+format is based on the Talis
+<ulink url="http://n2.talis.com/wiki/RDF_JSON_Specification">RDF/JSON</ulink>
+design and the triple-dump format based on the SPARQL query results in JSON
+design.
+</para>
+
+</section>
+
+
+<section id="serializer-ntriples">
+<title>N-Triples serializer - default (name <literal>ntriples</literal>)</title>
+
+<para>A serializer to the
+<ulink url="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</ulink>
+syntax as used by the 
+<ulink url="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</ulink>
+for the <ulink url="http://www.w3.org/TR/rdf-testcases/">RDF Test Cases</ulink>.
+</para>
+
+</section>
+
+
+<section id="serializer-rdfxml">
+<title>RDF/XML serializer (name <literal>rdfxml</literal>)</title>
+
+<para>A serializer to the standard
+<ulink url="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML syntax</ulink>
+as revised by the
+<ulink url="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</ulink>.
+This writes a plain triple-based RDF/XML serialization with no
+optimisation or pretty-printing.
+</para>
+
+</section>
+
+
+<section id="serializer-rdfxml-abbrev">
+<title>RDF/XML (Abbreviated) serializer (name <literal>rdfxml-abbrev</literal>)</title>
+
+<para>An RDF/XML serializer using several of the RDF/XML
+abbreviations to provide a more compact readable format, at the cost
+of some pre-processing.  This is suitable for small documents.
+</para>
+
+</section>
+
+
+<section id="serializer-rdfxml-xmp">
+<title>RDF/XML (XMP Profile) serializer (name <literal>rdfxml-xmp</literal>)</title>
+<para>A serializer to the Adobe XMP profile of RDF/XML suitable for
+embedding inside an external document.  Embedding means that the
+XML header is omitted, wheras for other XML serializings, it is
+always emitted.
+</para>
+
+</section>
+
+
+<section id="serializer-turtle">
+<title>Turtle serializer (name <literal>turtle</literal>)</title>
+<para>A serializer for the
+<ulink url="http://www.dajobe.org/2004/01/turtle/">Turtle Terse RDF Triple Language</ulink>
+syntax, designed as a useful subset of
+<ulink url="http://www.w3.org/DesignIssues/Notation3">Notation 3</ulink>.
+</para>
+
+</section>
+
+
+<section id="serializer-rss-1-0">
+<title>RSS 1.0 serializer (name <literal>rss-1.0</literal>)</title>
+<para>A serializer to the
+<ulink url="http://purl.org/rss/1.0/spec">RDF Site Summary (RSS) 1.0</ulink>
+format for describing a syndication feed of items.
+</para>
+
+<para>By default this only serializes the RDF triples that describe
+the RSS channel and items found.  If serialiser feature 'rssTriples'
+is set to value 'rdf-xml' then any additional triples found will
+be included in the channel or item output.
+</para>
+
+</section>
+
+
+<section id="serializer-dot">
+<title>GraphViz dot serializer (name <literal>dot</literal>)</title>
+<para>A serializer to the
+<ulink url="http://www.graphviz.org/">GraphViz</ulink> DOT format.
+</para>
+
+<para>This serializer has a set of associated serializer features
+that may be set to customise the output colors using
+<link linkend="raptor-serializer-set-feature"><function>raptor_serializer_set_feature()</function></link>
+with the appropriate feature name and value as given below.
+</para>
+
+<programlisting>
+RAPTOR_FEATURE_RESOURCE_BORDER 	Border color of resource nodes
+RAPTOR_FEATURE_LITERAL_BORDER 	Border color of literal nodes
+RAPTOR_FEATURE_BNODE_BORDER 	Border color of blank nodes
+RAPTOR_FEATURE_RESOURCE_FILL 	Fill color of resource nodes
+RAPTOR_FEATURE_LITERAL_FILL 	Fill color of literal nodes
+RAPTOR_FEATURE_BNODE_FILL 	Fill color of blank nodes
+</programlisting>
+
+
+</section>
+
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("raptor-docs.xml" "book" "part")
+End:
+-->

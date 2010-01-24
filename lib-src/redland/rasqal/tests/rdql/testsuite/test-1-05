@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 1-05 : bound subject and predicate
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (<http://rdf.hp.com/r-1>, <http://rdf.hp.com/p-1>, ?z)

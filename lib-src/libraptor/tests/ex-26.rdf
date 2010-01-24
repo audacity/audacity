@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!DOCTYPE rdf:RDF [
+	 <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	 <!ENTITY a 'http://example.org/#'>
+]>
+<!-- check entities get expanded in attributes -->
+<rdf:RDF xmlns:rdf="&rdf;"
+	 xmlns:a="&a;">
+  <a:foo rdf:about="&a;blah">
+    <a:prop>content</a:prop>
+  </a:foo>
+</rdf:RDF>

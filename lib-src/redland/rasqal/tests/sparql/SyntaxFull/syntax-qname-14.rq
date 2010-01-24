@@ -1,0 +1,5 @@
+BASE   <http://example.org/>
+PREFIX :  <#> 
+PREFIX x.y:  <x#> 
+SELECT *
+WHERE { :a.b  x.y:  : . }

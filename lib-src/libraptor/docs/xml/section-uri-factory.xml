@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-uri-factory">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-uri-factory.top_of_page">URI Factory</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>URI Factory</refname>
+<refpurpose>Provide an implementation for the URI class.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-uri-factory.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+<link linkend="raptor-uri">raptor_uri</link>*         (<link linkend="raptor-new-uri-func">*raptor_new_uri_func</link>)              (<link linkend="void">void</link> *context,
+                                                         unsigned <link linkend="char">char</link> *uri_string);
+<link linkend="raptor-uri">raptor_uri</link>*         (<link linkend="raptor-new-uri-from-uri-local-name-func">*raptor_new_uri_from_uri_local_name_func</link>)
+                                                        (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         unsigned <link linkend="char">char</link> *local_name);
+<link linkend="raptor-uri">raptor_uri</link>*         (<link linkend="raptor-new-uri-relative-to-base-func">*raptor_new_uri_relative_to_base_func</link>)
+                                                        (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri,
+                                                         unsigned <link linkend="char">char</link> *uri_string);
+<link linkend="raptor-uri">raptor_uri</link>*         (<link linkend="raptor-new-uri-for-rdf-concept-func">*raptor_new_uri_for_rdf_concept_func</link>)
+                                                        (<link linkend="void">void</link> *context,
+                                                         const <link linkend="char">char</link> *name);
+<link linkend="void">void</link>                (<link linkend="raptor-free-uri-func">*raptor_free_uri_func</link>)             (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);
+<link linkend="int">int</link>                 (<link linkend="raptor-uri-equals-func">*raptor_uri_equals_func</link>)           (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri1,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri2);
+<link linkend="raptor-uri">raptor_uri</link>*         (<link linkend="raptor-uri-copy-func">*raptor_uri_copy_func</link>)             (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);
+<link linkend="int">int</link>                 (<link linkend="raptor-uri-compare-func">*raptor_uri_compare_func</link>)          (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri1,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri2);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-uri-factory.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+A factory that allows registering an implementation for the URI
+class to override the simple internal one (<link linkend="raptor-uri"><type>raptor_uri</type></link> are char*).
+Normally used by redland to replace <link linkend="raptor-uri"><type>raptor_uri</type></link> with <link linkend="librdf-uri"><type>librdf_uri</type></link>
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-uri-factory.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-new-uri-func" role="function">
+<title>raptor_new_uri_func ()</title>
+<indexterm zone="raptor-new-uri-func"><primary>raptor_new_uri_func</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         (*raptor_new_uri_func)              (<link linkend="void">void</link> *context,
+                                                         unsigned <link linkend="char">char</link> *uri_string);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-new-uri"><function>raptor_new_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri_string</parameter>&nbsp;:</term>
+<listitem><simpara> URI string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new URI object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-uri-from-uri-local-name-func" role="function">
+<title>raptor_new_uri_from_uri_local_name_func ()</title>
+<indexterm zone="raptor-new-uri-from-uri-local-name-func"><primary>raptor_new_uri_from_uri_local_name_func</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         (*raptor_new_uri_from_uri_local_name_func)
+                                                        (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         unsigned <link linkend="char">char</link> *local_name);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-new-uri-from-uri-local-name"><function>raptor_new_uri_from_uri_local_name()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>local_name</parameter>&nbsp;:</term>
+<listitem><simpara> local name string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new URI object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-uri-relative-to-base-func" role="function">
+<title>raptor_new_uri_relative_to_base_func ()</title>
+<indexterm zone="raptor-new-uri-relative-to-base-func"><primary>raptor_new_uri_relative_to_base_func</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         (*raptor_new_uri_relative_to_base_func)
+                                                        (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri,
+                                                         unsigned <link linkend="char">char</link> *uri_string);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-new-uri-relative-to-base"><function>raptor_new_uri_relative_to_base()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> base URI object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri_string</parameter>&nbsp;:</term>
+<listitem><simpara> relative URI string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new URI object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-uri-for-rdf-concept-func" role="function">
+<title>raptor_new_uri_for_rdf_concept_func ()</title>
+<indexterm zone="raptor-new-uri-for-rdf-concept-func"><primary>raptor_new_uri_for_rdf_concept_func</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         (*raptor_new_uri_for_rdf_concept_func)
+                                                        (<link linkend="void">void</link> *context,
+                                                         const <link linkend="char">char</link> *name);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-new-uri-for-rdf-concept"><function>raptor_new_uri_for_rdf_concept()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> RDF term
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new URI object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-free-uri-func" role="function">
+<title>raptor_free_uri_func ()</title>
+<indexterm zone="raptor-free-uri-func"><primary>raptor_free_uri_func</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_free_uri_func)             (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-free-uri"><function>raptor_free_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-uri-equals-func" role="function">
+<title>raptor_uri_equals_func ()</title>
+<indexterm zone="raptor-uri-equals-func"><primary>raptor_uri_equals_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_uri_equals_func)           (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri1,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri2);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-uri-equals"><function>raptor_uri_equals()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri1</parameter>&nbsp;:</term>
+<listitem><simpara> URI object 1
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri2</parameter>&nbsp;:</term>
+<listitem><simpara> URI object 2
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if the URIs are equal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-uri-copy-func" role="function">
+<title>raptor_uri_copy_func ()</title>
+<indexterm zone="raptor-uri-copy-func"><primary>raptor_uri_copy_func</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         (*raptor_uri_copy_func)             (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-uri-copy"><function>raptor_uri_copy()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new URI object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-uri-compare-func" role="function">
+<title>raptor_uri_compare_func ()</title>
+<indexterm zone="raptor-uri-compare-func"><primary>raptor_uri_compare_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_uri_compare_func)          (<link linkend="void">void</link> *context,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri1,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri2);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-uri-equals"><function>raptor_uri_equals()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> URI context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri1</parameter>&nbsp;:</term>
+<listitem><simpara> URI object 1
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri2</parameter>&nbsp;:</term>
+<listitem><simpara> URI object 2
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> -1 if uri1 &lt; uri2, 0 if equal, 1 if uri1 &gt; uri2
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

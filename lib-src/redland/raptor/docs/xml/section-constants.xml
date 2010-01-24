@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-constants">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-constants.top_of_page">Constants</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Constants</refname>
+<refpurpose>Constant values and strings</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-constants.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+extern              const unsigned int <link linkend="raptor-rdf-namespace-uri-len">raptor_rdf_namespace_uri_len</link>;
+extern              const unsigned int <link linkend="raptor-xml-literal-datatype-uri-string-len">raptor_xml_literal_datatype_uri_string_len</link>;
+#define             <link linkend="RAPTOR-RDF-MS-URI:CAPS">RAPTOR_RDF_MS_URI</link>
+#define             <link linkend="RAPTOR-RDF-SCHEMA-URI:CAPS">RAPTOR_RDF_SCHEMA_URI</link>
+#define             <link linkend="RAPTOR-XMLSCHEMA-DATATYPES-URI:CAPS">RAPTOR_XMLSCHEMA_DATATYPES_URI</link>
+#define             <link linkend="RAPTOR-OWL-URI:CAPS">RAPTOR_OWL_URI</link>
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-constants.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Version numbers and often-used namespace URI strings.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-constants.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-rdf-namespace-uri-len" role="variable">
+<title>raptor_rdf_namespace_uri_len</title>
+<indexterm zone="raptor-rdf-namespace-uri-len"><primary>raptor_rdf_namespace_uri_len</primary></indexterm><programlisting>extern const unsigned int raptor_rdf_namespace_uri_len;
+</programlisting>
+<para>
+Length of <link linkend="raptor-rdf-namespace-uri"><type>raptor_rdf_namespace_uri</type></link> string</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-xml-literal-datatype-uri-string-len" role="variable">
+<title>raptor_xml_literal_datatype_uri_string_len</title>
+<indexterm zone="raptor-xml-literal-datatype-uri-string-len"><primary>raptor_xml_literal_datatype_uri_string_len</primary></indexterm><programlisting>extern const unsigned int raptor_xml_literal_datatype_uri_string_len;
+</programlisting>
+<para>
+Length of <link linkend="raptor-xml-literal-datatype-uri-string"><type>raptor_xml_literal_datatype_uri_string</type></link></para>
+<para>
+
+</para></refsect2>
+<refsect2 id="RAPTOR-RDF-MS-URI:CAPS" role="macro">
+<title>RAPTOR_RDF_MS_URI</title>
+<indexterm zone="RAPTOR-RDF-MS-URI:CAPS"><primary>RAPTOR_RDF_MS_URI</primary></indexterm><programlisting>#define RAPTOR_RDF_MS_URI raptor_rdf_namespace_uri
+</programlisting>
+<para>
+RDF Namespace URI (rdf:).
+</para>
+<para>
+Copy with <link linkend="raptor-uri-copy"><function>raptor_uri_copy()</function></link> to use.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="RAPTOR-RDF-SCHEMA-URI:CAPS" role="macro">
+<title>RAPTOR_RDF_SCHEMA_URI</title>
+<indexterm zone="RAPTOR-RDF-SCHEMA-URI:CAPS"><primary>RAPTOR_RDF_SCHEMA_URI</primary></indexterm><programlisting>#define RAPTOR_RDF_SCHEMA_URI raptor_rdf_schema_namespace_uri
+</programlisting>
+<para>
+RDF Schema Namespace URI (rdfs:).
+</para>
+<para>
+Copy with <link linkend="raptor-uri-copy"><function>raptor_uri_copy()</function></link> to use.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="RAPTOR-XMLSCHEMA-DATATYPES-URI:CAPS" role="macro">
+<title>RAPTOR_XMLSCHEMA_DATATYPES_URI</title>
+<indexterm zone="RAPTOR-XMLSCHEMA-DATATYPES-URI:CAPS"><primary>RAPTOR_XMLSCHEMA_DATATYPES_URI</primary></indexterm><programlisting>#define RAPTOR_XMLSCHEMA_DATATYPES_URI raptor_xmlschema_datatypes_namespace_uri
+</programlisting>
+<para>
+XML Schema Datatypes URI (xsd:).
+</para>
+<para>
+Copy with <link linkend="raptor-uri-copy"><function>raptor_uri_copy()</function></link> to use.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="RAPTOR-OWL-URI:CAPS" role="macro">
+<title>RAPTOR_OWL_URI</title>
+<indexterm zone="RAPTOR-OWL-URI:CAPS"><primary>RAPTOR_OWL_URI</primary></indexterm><programlisting>#define RAPTOR_OWL_URI raptor_owl_namespace_uri
+</programlisting>
+<para>
+OWL Namespace URI (owl:).
+</para>
+<para>
+Copy with <link linkend="raptor-uri-copy"><function>raptor_uri_copy()</function></link> to use.</para>
+<para>
+
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

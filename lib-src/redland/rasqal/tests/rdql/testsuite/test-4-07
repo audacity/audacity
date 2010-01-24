@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 4-07 : Anonymous nodes : ?x and ?y should be the same on model3.
+
+SELECT ?x, ?y
+SOURCE <model3.nt>
+WHERE  (?x, ?p1, "v-a-1"), (?y, ?p2, "v-a-2")
+

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-world">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-world.top_of_page">World</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>World</refname>
+<refpurpose>Initialisation and termination of library</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-world.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="librdf-world">librdf_world</link>;
+<link linkend="librdf-world">librdf_world</link>*       <link linkend="librdf-new-world">librdf_new_world</link>                    (void);
+<link linkend="void">void</link>                <link linkend="librdf-free-world">librdf_free_world</link>                   (<link linkend="librdf-world">librdf_world</link> *world);
+<link linkend="void">void</link>                <link linkend="librdf-world-open">librdf_world_open</link>                   (<link linkend="librdf-world">librdf_world</link> *world);
+<link linkend="void">void</link>                <link linkend="librdf-world-init-mutex">librdf_world_init_mutex</link>             (<link linkend="librdf-world">librdf_world</link> *world);
+<link linkend="void">void</link>                <link linkend="librdf-world-set-error">librdf_world_set_error</link>              (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-level-func">librdf_log_level_func</link> error_handler);
+<link linkend="void">void</link>                <link linkend="librdf-world-set-warning">librdf_world_set_warning</link>            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-level-func">librdf_log_level_func</link> warning_handler);
+<link linkend="void">void</link>                <link linkend="librdf-world-set-logger">librdf_world_set_logger</link>             (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-func">librdf_log_func</link> log_handler);
+<link linkend="void">void</link>                <link linkend="librdf-world-set-digest">librdf_world_set_digest</link>             (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name);
+#define             <link linkend="LIBRDF-WORLD-FEATURE-GENID-BASE:CAPS">LIBRDF_WORLD_FEATURE_GENID_BASE</link>
+#define             <link linkend="LIBRDF-WORLD-FEATURE-GENID-COUNTER:CAPS">LIBRDF_WORLD_FEATURE_GENID_COUNTER</link>
+<link linkend="librdf-node">librdf_node</link>*        <link linkend="librdf-world-get-feature">librdf_world_get_feature</link>            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature);
+<link linkend="int">int</link>                 <link linkend="librdf-world-set-feature">librdf_world_set_feature</link>            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature,
+                                                         <link linkend="librdf-node">librdf_node</link> *value);
+<link linkend="void">void</link>                <link linkend="librdf-init-world">librdf_init_world</link>                   (<link linkend="char">char</link> *digest_factory_name,
+                                                         <link linkend="void">void</link> *not_used2);
+<link linkend="void">void</link>                <link linkend="librdf-destroy-world">librdf_destroy_world</link>                (void);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-world.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The Redland <link linkend="librdf-world"><type>librdf_world</type></link> class handles startup and termination of
+the library and cleanup of all allocated resources.
+</para>
+</refsect1>
+
+<refsect1 id="redland-world.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-world" role="typedef">
+<title>librdf_world</title>
+<indexterm zone="librdf-world"><primary>librdf_world</primary></indexterm><programlisting>typedef struct librdf_world_s librdf_world;
+</programlisting>
+<para>
+Redland world class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-new-world" role="function">
+<title>librdf_new_world ()</title>
+<indexterm zone="librdf-new-world"><primary>librdf_new_world</primary></indexterm><programlisting><link linkend="librdf-world">librdf_world</link>*       librdf_new_world                    (void);</programlisting>
+<para>
+Create a new Redland execution environment.
+</para>
+<para>
+Once this constructor is called to build a <link linkend="librdf-world"><type>librdf_world</type></link> object
+several functions may be called to set some parameters such as
+<link linkend="librdf-world-set-error"><function>librdf_world_set_error()</function></link>, <link linkend="librdf-world-set-warning"><function>librdf_world_set_warning()</function></link>,
+<link linkend="librdf-world-set-logger"><function>librdf_world_set_logger()</function></link>, <link linkend="librdf-world-set-digest"><function>librdf_world_set_digest()</function></link>,
+<link linkend="librdf-world-set-feature"><function>librdf_world_set_feature()</function></link>.
+</para>
+<para>
+The world object needs initializing using <link linkend="librdf-world-open"><function>librdf_world_open()</function></link>
+whether or not the above functions are called.  It will be
+automatically called by all object constructors in Redland 1.0.6
+or later, but for earlier versions it MUST be called before using
+any other part of Redland.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="librdf-world"><type>librdf_world</type></link> or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-free-world" role="function">
+<title>librdf_free_world ()</title>
+<indexterm zone="librdf-free-world"><primary>librdf_free_world</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_free_world                   (<link linkend="librdf-world">librdf_world</link> *world);</programlisting>
+<para>
+Terminate the library and frees all allocated resources.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-open" role="function">
+<title>librdf_world_open ()</title>
+<indexterm zone="librdf-world-open"><primary>librdf_world_open</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_world_open                   (<link linkend="librdf-world">librdf_world</link> *world);</programlisting>
+<para>
+Open a created redland world environment.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-init-mutex" role="function">
+<title>librdf_world_init_mutex ()</title>
+<indexterm zone="librdf-world-init-mutex"><primary>librdf_world_init_mutex</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_world_init_mutex             (<link linkend="librdf-world">librdf_world</link> *world);</programlisting>
+<para>
+INTERNAL - Create the world mutex.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-set-error" role="function">
+<title>librdf_world_set_error ()</title>
+<indexterm zone="librdf-world-set-error"><primary>librdf_world_set_error</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_world_set_error              (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-level-func">librdf_log_level_func</link> error_handler);</programlisting>
+<para>
+Set the world error handling function.
+</para>
+<para>
+The function will receive callbacks when the world fails.
+<link linkend="librdf-world-set-logger"><function>librdf_world_set_logger()</function></link> provides richer access to all log messages
+and should be used in preference.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-set-warning" role="function">
+<title>librdf_world_set_warning ()</title>
+<indexterm zone="librdf-world-set-warning"><primary>librdf_world_set_warning</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_world_set_warning            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-level-func">librdf_log_level_func</link> warning_handler);</programlisting>
+<para>
+Set the world warning handling function.
+</para>
+<para>
+The function will receive callbacks when the world gives a warning.
+<link linkend="librdf-world-set-logger"><function>librdf_world_set_logger()</function></link> provides richer access to all log messages
+and should be used in preference.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warning_handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-set-logger" role="function">
+<title>librdf_world_set_logger ()</title>
+<indexterm zone="librdf-world-set-logger"><primary>librdf_world_set_logger</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_world_set_logger             (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-func">librdf_log_func</link> log_handler);</programlisting>
+<para>
+Set the world log handling function.
+</para>
+<para>
+The function will receive callbacks when redland generates a log message</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>log_handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-set-digest" role="function">
+<title>librdf_world_set_digest ()</title>
+<indexterm zone="librdf-world-set-digest"><primary>librdf_world_set_digest</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_world_set_digest             (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name);</programlisting>
+<para>
+Set the default content digest name.
+</para>
+<para>
+Sets the digest factory for various modules that need to make
+digests of their objects.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> Digest factory name
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="LIBRDF-WORLD-FEATURE-GENID-BASE:CAPS" role="macro">
+<title>LIBRDF_WORLD_FEATURE_GENID_BASE</title>
+<indexterm zone="LIBRDF-WORLD-FEATURE-GENID-BASE:CAPS"><primary>LIBRDF_WORLD_FEATURE_GENID_BASE</primary></indexterm><programlisting>#define LIBRDF_WORLD_FEATURE_GENID_BASE "http://feature.librdf.org/genid-base"
+</programlisting>
+<para>
+World feature to set the generated ID base.
+</para>
+<para>
+Must be set before the world is opened with <link linkend="librdf-world-open"><function>librdf_world_open()</function></link>.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="LIBRDF-WORLD-FEATURE-GENID-COUNTER:CAPS" role="macro">
+<title>LIBRDF_WORLD_FEATURE_GENID_COUNTER</title>
+<indexterm zone="LIBRDF-WORLD-FEATURE-GENID-COUNTER:CAPS"><primary>LIBRDF_WORLD_FEATURE_GENID_COUNTER</primary></indexterm><programlisting>#define LIBRDF_WORLD_FEATURE_GENID_COUNTER "http://feature.librdf.org/genid-counter"
+</programlisting>
+<para>
+World feature to set the generated ID counter.
+</para>
+<para>
+Must be set before the world is opened with <link linkend="librdf-world-open"><function>librdf_world_open()</function></link>.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-world-get-feature" role="function">
+<title>librdf_world_get_feature ()</title>
+<indexterm zone="librdf-world-get-feature"><primary>librdf_world_get_feature</primary></indexterm><programlisting><link linkend="librdf-node">librdf_node</link>*        librdf_world_get_feature            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature);</programlisting>
+<para>
+Get the value of a world feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-world"><type>librdf_world</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-uri"><type>librdf_uri</type></link> feature property
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="librdf-node"><type>librdf_node</type></link> feature value or NULL if no such feature
+exists or the value is empty.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-world-set-feature" role="function">
+<title>librdf_world_set_feature ()</title>
+<indexterm zone="librdf-world-set-feature"><primary>librdf_world_set_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_world_set_feature            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature,
+                                                         <link linkend="librdf-node">librdf_node</link> *value);</programlisting>
+<para>
+Set the value of a world feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-world"><type>librdf_world</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-uri"><type>librdf_uri</type></link> feature property
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> feature property value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure (negative if no such feature)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-init-world" role="function">
+<title>librdf_init_world ()</title>
+<indexterm zone="librdf-init-world"><primary>librdf_init_world</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_init_world                   (<link linkend="char">char</link> *digest_factory_name,
+                                                         <link linkend="void">void</link> *not_used2);</programlisting>
+<para>
+Initialise the library
+<parameter>deprecated</parameter>: Do not use.
+</para>
+<para>
+Use <link linkend="librdf-new-world"><function>librdf_new_world()</function></link> and <link linkend="librdf-world-open"><function>librdf_world_open()</function></link> on <link linkend="librdf-world"><type>librdf_world</type></link> object
+</para>
+<para>
+See <link linkend="librdf-world-set-digest-factory-name"><function>librdf_world_set_digest_factory_name()</function></link> for documentation on arguments.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest_factory_name</parameter>&nbsp;:</term>
+<listitem><simpara> Name of digest factory to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>not_used2</parameter>&nbsp;:</term>
+<listitem><simpara> Not used
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-destroy-world" role="function">
+<title>librdf_destroy_world ()</title>
+<indexterm zone="librdf-destroy-world"><primary>librdf_destroy_world</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_destroy_world                (void);</programlisting>
+<para>
+Terminate the library
+<parameter>deprecated</parameter>: Do not use.
+</para>
+<para>
+Use <link linkend="librdf-free-world"><function>librdf_free_world()</function></link> on <link linkend="librdf-world"><type>librdf_world</type></link> object
+</para>
+<para>
+Terminates and frees the resources.</para>
+<para>
+
+</para></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

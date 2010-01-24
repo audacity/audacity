@@ -1,0 +1,174 @@
+<!-- ##### SECTION Title ##### -->
+General library facilities
+
+<!-- ##### SECTION Short_Description ##### -->
+Startup and shutdown, memory handling, version checks and misc functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The functions in this section cover general library features such
+as startup and shutdown, checking the current library version and
+dealing with memory allocation and freeing.  It also provides
+functions to enumerate and check the supported query languages,
+their names, labels and URI.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF rasqal_world ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION rasqal_free_world ##### -->
+<para>
+
+</para>
+
+@world: 
+
+
+<!-- ##### FUNCTION rasqal_new_world ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### VARIABLE rasqal_version_decimal ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE rasqal_version_major ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE rasqal_version_minor ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE rasqal_version_release ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM rasqal_feature ##### -->
+<para>
+
+</para>
+
+@RASQAL_FEATURE_NO_NET: 
+@RASQAL_FEATURE_LAST: 
+
+<!-- ##### FUNCTION rasqal_language_name_check ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_languages_enumerate ##### -->
+<para>
+
+</para>
+
+@world: 
+@counter: 
+@name: 
+@label: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_alloc_memory ##### -->
+<para>
+
+</para>
+
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_calloc_memory ##### -->
+<para>
+
+</para>
+
+@nmemb: 
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_free_memory ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION rasqal_feature_from_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_feature_value_type ##### -->
+<para>
+
+</para>
+
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_features_enumerate ##### -->
+<para>
+
+</para>
+
+@feature: 
+@name: 
+@uri: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_get_feature_count ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### MACRO RASQAL_DEPRECATED ##### -->
+<para>
+When defined before a function, indicates that the function
+has been deprecated and may be replaced in a future release.
+With some versions of gcc this may give a compilation warning.
+</para>
+
+
+

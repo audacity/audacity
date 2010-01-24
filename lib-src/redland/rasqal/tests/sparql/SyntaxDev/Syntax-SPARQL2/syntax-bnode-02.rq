@@ -1,0 +1,4 @@
+PREFIX : <http://example.org/>
+# Tab
+SELECT * WHERE { [ ] :p [
+	] }

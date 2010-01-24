@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test-9-01 : Test escaping (and single quote strings)
+SELECT *
+FROM   <model1.nt>
+WHERE  (?x ?y ?z)
+AND    ?z EQ 'v-1\-1'

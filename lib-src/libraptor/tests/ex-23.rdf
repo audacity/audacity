@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns="http://www.example.org/ns1#" >
+
+  <!-- Test embedded parseType resources works ok -->
+
+  <foo> <!-- node subject genid 1 -->
+
+    <bar rdf:parseType="Resource"> <!-- object of 'bar' is genid 2 -->
+
+      <prop1 rdf:parseType="Resource"> <!-- object of 'prop1' is genid 3 -->
+        <rdf:type rdf:resource="http://www.example.org/ns1#Type1"/>
+      </prop1>
+
+      <prop2 rdf:parseType="Resource"> <!-- object of 'prop2' is genid 4 -->
+        <rdf:type rdf:resource="http://www.example.org/ns1#Type2"/>
+      </prop2>
+
+      <prop3 rdf:parseType="Resource"> <!-- object of 'prop3' is genid 5 -->
+        <rdf:type rdf:resource="http://www.example.org/ns1#Type3"/>
+      </prop3>
+
+    </bar>
+
+  </foo>
+
+</rdf:RDF>

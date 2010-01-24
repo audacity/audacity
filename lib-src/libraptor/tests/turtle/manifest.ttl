@@ -1,0 +1,215 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Turtle good syntax test cases (must pass)" ;
+    mf:entries
+    (
+     [  mf:name      "test-00" ;
+        rdfs:comment "Blank subject" ;
+        mf:action [ qt:data   <test-00.ttl> ] ;
+        mf:result  <test-00.out>
+     ]
+
+     [  mf:name      "test-01" ;
+        rdfs:comment "@prefix and qnames" ;
+        mf:action [ qt:data   <test-01.ttl> ] ;
+        mf:result  <test-01.out>
+     ]
+
+     [  mf:name      "test-02" ;
+        rdfs:comment ", operator" ;
+        mf:action [ qt:data   <test-02.ttl> ] ;
+        mf:result  <test-02.out>
+     ]
+
+     [  mf:name      "test-03" ;
+        rdfs:comment "; operator" ;
+        mf:action [ qt:data   <test-03.ttl> ] ;
+        mf:result  <test-03.out>
+     ]
+
+     [  mf:name      "test-04" ;
+        rdfs:comment "empty [] as subject and object" ;
+        mf:action [ qt:data   <test-04.ttl> ] ;
+        mf:result  <test-04.out>
+     ]
+
+     [  mf:name      "test-05" ;
+        rdfs:comment "non-empty [] as subject and object" ;
+        mf:action [ qt:data   <test-05.ttl> ] ;
+        mf:result  <test-05.out>
+     ]
+
+     [  mf:name      "test-06" ;
+        rdfs:comment "'a' as predicate" ;
+        mf:action [ qt:data   <test-06.ttl> ] ;
+        mf:result  <test-06.out>
+     ]
+
+     [  mf:name      "test-07" ;
+        rdfs:comment "simple collection" ;
+        mf:action [ qt:data   <test-07.ttl> ] ;
+        mf:result  <test-07.out>
+     ]
+
+     [  mf:name      "test-08" ;
+        rdfs:comment "empty collection" ;
+        mf:action [ qt:data   <test-08.ttl> ] ;
+        mf:result  <test-08.out>
+     ]
+
+     [  mf:name      "test-09" ;
+        rdfs:comment "integer datatyped literal" ;
+        mf:action [ qt:data   <test-09.ttl> ] ;
+        mf:result  <test-09.out>
+     ]
+
+     [  mf:name      "test-10" ;
+        rdfs:comment "decimal integer canonicalization" ;
+        mf:action [ qt:data   <test-10.ttl> ] ;
+        mf:result  <test-10.out>
+     ]
+
+     [  mf:name      "test-11" ;
+        rdfs:comment "- and _ in names and qnames" ;
+        mf:action [ qt:data   <test-11.ttl> ] ;
+        mf:result  <test-11.out>
+     ]
+
+     [  mf:name      "test-12" ;
+        rdfs:comment "tests for rdf:_<numbers> and other qnames starting with _" ;
+        mf:action [ qt:data   <test-12.ttl> ] ;
+        mf:result  <test-12.out>
+     ]
+
+     [  mf:name      "test-13" ;
+        rdfs:comment "bare : allowed" ;
+        mf:action [ qt:data   <test-13.ttl> ] ;
+        mf:result  <test-13.out>
+     ]
+
+     [  mf:name      "test-14" ;
+        rdfs:comment "10000 triples, more than the default Bison stack size" ;
+        mf:action [ qt:data   <test-14.ttl> ] ;
+        mf:result  <test-14.out>
+     ]
+
+     [  mf:name      "test-15" ;
+        rdfs:comment "10000 triple objects (10000 triples)" ;
+        mf:action [ qt:data   <test-15.ttl> ] ;
+        mf:result  <test-15.out>
+     ]
+
+     [  mf:name      "test-16" ;
+        rdfs:comment "10000 items (10000 triples)" ;
+        mf:action [ qt:data   <test-16.ttl> ] ;
+        mf:result  <test-16.out>
+     ]
+
+     [  mf:name      "test-17" ;
+        rdfs:comment "simple long literal" ;
+        mf:action [ qt:data   <test-17.ttl> ] ;
+        mf:result  <test-17.out>
+     ]
+
+     [  mf:name      "test-18" ;
+        rdfs:comment "long literals with escapes" ;
+        mf:action [ qt:data   <test-18.ttl> ] ;
+        mf:result  <test-18.out>
+     ]
+
+     [  mf:name      "test-19" ;
+        rdfs:comment "floating point number" ;
+        mf:action [ qt:data   <test-19.ttl> ] ;
+        mf:result  <test-19.out>
+     ]
+
+     [  mf:name      "test-20" ;
+        rdfs:comment "empty literals, normal and long variant" ;
+        mf:action [ qt:data   <test-20.ttl> ] ;
+        mf:result  <test-20.out>
+     ]
+
+     [  mf:name      "test-21" ;
+        rdfs:comment "positive integer, decimal and doubles" ;
+        mf:action [ qt:data   <test-21.ttl> ] ;
+        mf:result  <test-21.out>
+     ]
+
+     [  mf:name      "test-22" ;
+        rdfs:comment "negative integer, decimal and doubles" ;
+        mf:action [ qt:data   <test-22.ttl> ] ;
+        mf:result  <test-22.out>
+     ]
+
+     [  mf:name      "test-23" ;
+        rdfs:comment "long literal ending in double quote" ;
+        mf:action [ qt:data   <test-23.ttl> ] ;
+        mf:result  <test-23.out>
+     ]
+
+     [  mf:name      "test-24" ;
+        rdfs:comment "boolean literals" ;
+        mf:action [ qt:data   <test-24.ttl> ] ;
+        mf:result  <test-24.out>
+     ]
+
+     [  mf:name      "test-25" ;
+        rdfs:comment "comments" ;
+        mf:action [ qt:data   <test-25.ttl> ] ;
+        mf:result  <test-25.out>
+     ]
+
+     [  mf:name      "test-26" ;
+        rdfs:comment "no final mewline" ;
+        mf:action [ qt:data   <test-26.ttl> ] ;
+        mf:result  <test-26.out>
+     ]
+
+     [  mf:name      "test-27" ;
+        rdfs:comment "duplicate prefix" ;
+        mf:action [ qt:data   <test-27.ttl> ] ;
+        mf:result  <test-27.out>
+     ]
+
+     [  mf:name      "test-28" ;
+        rdfs:comment "decimal data types (serializing test)" ;
+        mf:action [ qt:data   <test-28.ttl> ] ;
+        mf:result  <test-28.out>
+     ]
+
+     [  mf:name      "test-29" ;
+        rdfs:comment "Escaping U+0001 to U+007F in a URI" ;
+        mf:action [ qt:data   <test-29.ttl> ] ;
+        mf:result  <test-29.out>
+     ]
+
+     [  mf:name      "test-30" ;
+        rdfs:comment "@base" ;
+        mf:action [ qt:data   <test-30.ttl> ] ;
+        mf:result  <test-30.out>
+     ]
+
+     [  mf:name      "rdf-schema" ;
+        rdfs:comment "RDF Namespace document converted into Turtle" ;
+        mf:action [ qt:data   <rdf-schema.ttl> ] ;
+        mf:result  <rdf-schema.out>
+     ]
+
+     [  mf:name      "rdfs-namespace" ;
+        rdfs:comment "RDFS Namespace document converted into Turtle" ;
+        mf:action [ qt:data   <rdfs-namespace.ttl> ] ;
+        mf:result  <rdfs-namespace.out>
+     ]
+
+     [  mf:name      "rdfq-results" ;
+        rdfs:comment "Example query result from http://www.w3.org/2003/03/rdfqr-tests/recording-query-results.html" ;
+        mf:action [ qt:data   <rdfq-results.ttl> ] ;
+        mf:result  <rdfq-results.out>
+     ]
+
+    # End of tests
+   ).

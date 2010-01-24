@@ -1,0 +1,15 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+@prefix t:    <http://www.w3.org/2001/sw/DataAccess/tests/data/ValueTesting/typePromotion-0#> .
+
+[]  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                rs:ResultSet ;
+    rs:resultVariable
+                "one", "two" ;
+    rs:solution [ rs:binding  [ rs:value    t:one ;
+                                rs:variable "one"
+                              ] ,
+                              [ rs:value    t:two ;
+                                rs:variable "two"
+                              ]
+                ] .

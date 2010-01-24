@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Heuristics</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="redland-hash.html" title="Hashes">
+<link rel="next" href="redland-iterator.html" title="Iterator">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="redland-hash.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-iterator.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-heuristics.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-heuristics.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-heuristics"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-heuristics.top_of_page"></a>Heuristics</span></h2>
+<p>Heuristics — Utility heuristic functions.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-heuristics.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+char*               <a class="link" href="redland-heuristics.html#librdf-heuristic-gen-name" title="librdf_heuristic_gen_name ()">librdf_heuristic_gen_name</a>           (const char *name);
+int                 <a class="link" href="redland-heuristics.html#librdf-heuristic-is-blank-node" title="librdf_heuristic_is_blank_node ()">librdf_heuristic_is_blank_node</a>      (const char *node);
+const char*         <a class="link" href="redland-heuristics.html#librdf-heuristic-get-blank-node" title="librdf_heuristic_get_blank_node ()">librdf_heuristic_get_blank_node</a>     (const char *node);
+int                 <a class="link" href="redland-heuristics.html#librdf-heuristic-object-is-literal" title="librdf_heuristic_object_is_literal ()">librdf_heuristic_object_is_literal</a>  (const char *object);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-heuristics.description"></a><h2>Description</h2>
+<p>
+Various utility functions for performing heuristics such as
+generating a name, guessing if a string is a URI or RDF literal.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-heuristics.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-heuristic-gen-name"></a><h3>librdf_heuristic_gen_name ()</h3>
+<pre class="programlisting">char*               librdf_heuristic_gen_name           (const char *name);</pre>
+<p>
+Generate a new name from an existing name.
+</p>
+<p>
+Adds an integer or increases the integer at the end of the name
+in order to generate a new one</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> the name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new name or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-heuristic-is-blank-node"></a><h3>librdf_heuristic_is_blank_node ()</h3>
+<pre class="programlisting">int                 librdf_heuristic_is_blank_node      (const char *node);</pre>
+<p>
+Try to guess if an node string is a blank node identifier.
+</p>
+<p>
+The guessing is done by assuming the object is a blank node if it matches
+^_: like N-Triples, N3 and related.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> string object to guess type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if node is probably a blank node identifier
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-heuristic-get-blank-node"></a><h3>librdf_heuristic_get_blank_node ()</h3>
+<pre class="programlisting">const char*         librdf_heuristic_get_blank_node     (const char *node);</pre>
+<p>
+Get a blank node identifier from a node string.
+</p>
+<p>
+Picks the blank node identifier out of a string.  Looks for things
+like _:ABC</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> string object to guess type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the blank node identifer string or NULL if the node does not seem to be a blank node identifier
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-heuristic-object-is-literal"></a><h3>librdf_heuristic_object_is_literal ()</h3>
+<pre class="programlisting">int                 librdf_heuristic_object_is_literal  (const char *object);</pre>
+<p>
+Try to guess if an object string is a literal or a resource.
+</p>
+<p>
+The guessing is done by assuming the object is a URL if it matches
+  ^[<code class="function">isalnum()</code>]+:[^<code class="function">isblank()</code>]+$
+</p>
+<p>
+This will be fooled by literals of form 'thing:non-blank-thing' but
+is good enough.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
+<td> string object to guess type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if object is probably a literal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

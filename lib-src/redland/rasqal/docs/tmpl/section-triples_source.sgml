@@ -1,0 +1,77 @@
+<!-- ##### SECTION Title ##### -->
+Triples Source
+
+<!-- ##### SECTION Short_Description ##### -->
+Source of matches to a triple pattern.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A factory that provides the raw triple matches for a triple pattern
+against some RDF graph.  The #rasqal_triples_source_factory
+must create use a new #rasqal_triples_source that can be used
+to initialise and build a #rasqal_triples_match for some
+#rasqal_triple (subject, predicate, object, origin URI).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT rasqal_triple_meta ##### -->
+<para>
+
+</para>
+
+@bindings: 
+@triples_match: 
+@context: 
+@parts: 
+@is_exact: 
+@executed: 
+
+<!-- ##### STRUCT rasqal_triples_match ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@bind_match: 
+@next_match: 
+@is_end: 
+@finish: 
+@world: 
+
+<!-- ##### STRUCT rasqal_triples_source ##### -->
+<para>
+
+</para>
+
+@query: 
+@user_data: 
+@init_triples_match: 
+@triple_present: 
+@free_triples_source: 
+
+<!-- ##### STRUCT rasqal_triples_source_factory ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@user_data_size: 
+@new_triples_source: 
+
+<!-- ##### FUNCTION rasqal_set_triples_source_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@register_fn: 
+@user_data: 
+
+

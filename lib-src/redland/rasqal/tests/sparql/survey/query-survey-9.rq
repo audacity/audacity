@@ -1,0 +1,6 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix ex: <http://example.org/survey-sample/ontology/>
+SELECT ?n WHERE  
+     { ?y ex:author [ rdf:_1 [ ex:name ?n] ].
+     }
+

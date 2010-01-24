@@ -1,0 +1,16 @@
+#! /bin/sh
+if (test "x$#" != "x1") ; then
+  echo "Usage: $0 [--libs | --cxxflags]"
+  exit;
+fi
+
+LIBRARY="@LIBS@ @frameworks@"
+CFLAGS="@audio_apis@"
+
+if (test "x$1" == "x--libs") ; then
+  echo "$LIBRARY"
+elif (test "x$1" == "x--cflags") ; then
+  echo "$CFLAGS"
+else
+  echo "Unknown option: $1"
+fi

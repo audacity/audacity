@@ -1,0 +1,4958 @@
+2003-12-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* utils/rdfproc.c: tweak help text
+
+	* librdf/rdf_parser.h:
+	Note parser syntax name, not raptor factory name, which is in the
+	raptor parser context.
+
+	* librdf/rdf_parser_raptor.c:
+	Separate registered name from raptor parser name for all calls of
+	raptor_new_parser.
+	(librdf_parser_raptor_init): Convert the legacy parser name
+	'raptor' into 'rdfxml' internally.
+	(librdf_parser_raptor_constructor): Use raptor_parsers_enumerate
+	and hard code mime types, URIs here for now.  Can use
+	raptor_syntaxes_enumerate later.
+
+	* raptor/raptor_rss.c, raptor/raptor_parse.c,
+	raptor/ntriples_parse.c, raptor/n3_parser.y: Use expanded
+	raptor_parser_register_factory with mime_type and uri_string args
+	where appropriate.
+
+	* raptor/libraptor.3, raptor/raptor.h: Added raptor_syntaxes_enumerate
+
+	* raptor/raptor_general.c (raptor_parser_register_factory):
+	Add mime_type and uri_string args, both optional.
+	(raptor_syntaxes_enumerate): Added to get syntax name, label,
+	mime_type or uri_string - all optional.
+	(raptor_parsers_enumerate): Uses raptor_syntaxes_enumerate.
+
+	* raptor/raptor_internal.h: Store parser mime_type, URI in
+	raptor_parser_factory Update raptor_parser_register_factory to
+	take mime_type, uri_string args.
+
+	* utils/rdfproc.c: tweak help formatting
+
+	* raptor/configure.ac: Bumped version to 1.2.0
+
+	* raptor/configure.ac:
+	Update RAPTOR_LIBTOOL_VERSION to reflect interfaces added,
+	none removed giving current 2:0:1
+
+	* raptor/libraptor.3: nroff/man style tweaks
+
+	* raptor/libraptor.3: Style
+
+2003-12-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/configure.ac: words
+
+	* raptor/configure.ac:
+	Make flex version warnings mention N-Triples Plus more
+
+	* librdf/rdf_model_storage.c, librdf/rdf_model.h,
+	librdf/rdf_model.c (librdf_model_get_storage): Added, with factory
+	method to match - optional.  The model_storage implementation
+	implements it.
+
+2003-12-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* utils/rdf-tree.c, utils/rdf-load.c: indented
+
+	* raptor/libraptor.3: bump date
+
+	* raptor/raptor_stringbuffer.c (main):
+	Do not free as_string returned strings
+
+	* raptor/raptor_stringbuffer.c: brackets
+
+	* raptor/raptor_stringbuffer.c (raptor_free_stringbuffer):
+	Free any constructed string.
+
+	* configure.ac: Add AC_DEFINE for local MD5, SHA1, RIPEMD160
+
+	* utils/rdfproc.c: Tweak help text to look better without getopt_long
+
+	* librdf/rdf_serializer_rdfxml.c:
+	Some more unsigned char fixes for URIs
+	(librdf_serializer_print_statement_as_rdfxml): Try harder to find a
+	maximal length legal property element name; now works for
+	foaf:mbox_sha1sum - patch from Morten
+
+	* docs/api.sgml.in, docs/Makefile.am:
+	Added storage_mysql storage_tstore
+
+	* raptor/raptor_xml_writer.c:
+	Use raptor_stringbuffer to better grow the output cdata.
+
+	* raptor/raptor_stringbuffer.c: stringbuffer now uses unsigned char
+	Removed raptor_new|free_stringbuffer_node - used once, now inlined.
+	(raptor_stringbuffer_append_string_common): Added with
+	common append code merged here.
+	(raptor_stringbuffer_append_counted_string,
+	raptor_stringbuffer_append_string): Added do_copy arg.
+	(main): Test code updated for api changes.
+
+	* raptor/raptor_internal.h:
+	Added prototypes for raptor_stringbuffer class to internal API
+
+	* raptor/Makefile.am:
+	Re-added raptor_stringbuffer.c and raptor_stringbuffer_test
+
+2003-12-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_uri.c, librdf/rdf_stream.c, librdf/rdf_statement.c, librdf/rdf_query.c, librdf/rdf_node.c, librdf/rdf_model.c, librdf/rdf_iterator.c, librdf/rdf_hash.c:
+	More C++ cast fixes mostly near URI and literal strings in test
+	code, the main function.
+
+	* librdf/Makefile.am: Added rdf_digest_sha1.c
+
+	* librdf/rdf_digest_sha1.c: SHA1 digest code
+
+2003-12-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rapper.1: Updated for 1.1.0, -a is gone.  Added ntriples-plus
+
+	* raptor/libraptor.3: parser name is ntriples-plus
+
+	* raptor/libraptor.3: Updated for 1.1.0
+
+	* raptor/raptor.h:
+	remove raptor_namespaces_end_namespace - does not exist.
+
+2003-12-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/Makefile.am:
+	Remove raptor_stringbuffer.c/test from dist - not used at present.
+
+	* raptor/configure.ac:
+	Added --with-xml-names to choose XML 1.0 name checking (default) or 1.1
+
+	* raptor/raptor_utf8.c (raptor_unicode_is_namestartchar):
+	Update to Namespaces in XML 1.1 WD
+	http://www.w3.org/TR/2003/PR-xml-names11-20031105/#NT-NCNameStartChar
+	and Extensible Markup Language (XML) 1.1 PR
+	http://www.w3.org/TR/2003/PR-xml11-20031105/#NT-NameStartChar
+	(raptor_unicode_is_namechar): Updated comment, no code changes
+	needed.
+
+	* raptor/tests/ntriplesplus/Makefile.am: No check-warn-rdf tests yet
+
+	* raptor/raptor_utf8.c:
+	Use RAPTOR_NFC_CHECK to wrap any use of the glib g_utf8_normalize.
+
+	* raptor/configure.ac: Define RAPTOR_NFC_CHECK when NFC check is needed
+
+	* raptor/configure.ac:
+	Added --disable-nfc-check to disable Unicode NFC checking even if a
+	suitable glib is present and providing it.  Otherwise, autodetects
+	as before.
+
+2003-12-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/Makefile.am: Removed REDLAND_LIBS
+
+2003-12-18  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.PL: OSX old perl before 5.8
+
+	* perl/Makefile.PL:
+	Another attempt to handle MakeMaker changes since perl5.8
+
+	* perl/Makefile.am:
+	Compile perl without the -W flags; it's just too noisy.
+
+	* librdf/redland.spec.in: Don't install perl twice.
+
+2003-12-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_serializer_rdfxml.c (rdf_serializer_rdfxml_print_as_xml_content): 
+	Redland strings are always UTF-8 and for now, the output encoding
+	is always UTF-8 so don't encode high bits, emit them.
+
+	* librdf/rdf_serializer_rdfxml.c: o
+
+	* librdf/rdf_serializer_rdfxml.c:
+	(librdf_serializer_rdfxml_serialize_model) Free rdf:RDF qname.
+
+	* raptor/raptor_parse.c, librdf/rdf_parser_raptor.c:
+	Update for changed raptor_generate_id handler calls - no const.
+
+	* raptor/raptor_general.c, raptor/raptor.h, raptor/raptor_internal.h:
+	raptor_generate_id handler does not take const string
+
+	* raptor/raptor_general.c, raptor/raptor.h, raptor/raptor_internal.h:
+	raptor_generate_id returns non const
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_line):
+	Casts, unsigned char* for blank node IDs.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_line):
+	Enforce predicate must be URIref
+
+2003-12-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/t/test1.t: Don't use last when not in a loop
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_line):
+	Pass blank node identifier generation
+	through raptor_generate_id.  Rewrite returns into setting rc and jump
+	to cleanup to ensure allocated blank node IDs are freed.
+
+	* utils/Makefile.am: Added EXTRA_PROGRAMS to CLEANFILES
+
+	* utils/rdf-load.c, utils/rdf-tree.c:
+	Put explicit \n in multiline strings
+
+	* utils/rdf-tree.c:
+	Updates from Morten to use openssl lhash - this isn't portable.
+
+	* librdf/rdf_storage_mysql.c:
+	(librdf_storage_mysql_context_serialise_next_statement):
+	Fixes for over-eager use of multi-line string - add spaces before
+	the newlines.
+	Correct subject and object node creations.
+
+	* librdf/redland.pc.in: Add @LIBRDF_LDFLAGS@ @LIBRDF_LIBS@ to libs
+
+	* librdf/Makefile.am:
+	Use LIBRDF_EXTERNAL_CPPFLAGS, LIBRDF_EXTERNAL_LIBS
+
+	* redland-src-config.in: Put redland cflags, links first
+
+	* redland-config.in: Use LIBRDF_EXTERNAL_CPPFLAGS, LIBRDF_EXTERNAL_LIBS
+
+	* configure.ac: Added LIBRDF_EXTERNAL_CPPFLAGS,
+	LIBRDF_EXTERNAL_LIBS used for system raptor
+
+	* raptor/raptor.pc.in: Restore LDFLAGS, LIBS
+
+	* perl/Makefile.PL: Don't need MEM_LIBS in OBJECT
+
+	* utils/rdfproc.1: store to store-name in header
+
+	* utils/rdfproc.c: Added file|uri to parsing help
+
+	* utils/rdfproc.1: Document -n, -s, -t and parsing now turns files
+	into URIs if they exist.
+
+	* raptor/raptor-src-config.in: Removed --static-libs
+
+	* utils/rdfproc.c:
+	Added -n new - default is not to overwrite, i.e. parsing now appends
+	Added -s storage
+	Added -t storage-options
+	Parsing now turns files into URIs if they exist.
+
+2003-12-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* php/test.php: tidy prints
+
+	* librdf/redland.pc.in: redland.pc.in
+
+	* php/test.php:
+	Better test code.  Serializing crashes it - to fix later.
+
+	* php/Makefile.am:
+	Reorder compile args so PHP libs are first and overridden if need be.
+
+	* redland-src-config.in: Kill --static-libs
+	Use @with_raptor@ to pick either raptor-src-config or raptor-config
+
+	* configure.ac: AC_SUBST with_raptor
+
+	* php/Makefile.am:
+	Apply redland_wrap.c.patch when building redland_wrap.c
+	Use  -d extension_dir=. for test-php
+
+	* php/redland_wrap.c.patch:
+	Patch to PHP wrapper to return empty string not C NULL
+
+	* librdf/Makefile.am: Install redland.pc to libdir/pkgconfig
+
+	* librdf/redland.spec.in: Updates:
+	 - require raptor 1.1.0
+	 - require libxml 2.4.0 or newer
+	 - added pkgconfig redland.pc
+	 - split redland/devel package shared libs correctly
+
+	* configure.ac: Added librdf/redland.pc
+
+	* librdf/Makefile.am: Added redland.pc.in
+
+	* raptor/raptor.pc.in: Just link -lraptor
+
+	* raptor/configure.ac: Remove use of have_redland for expat
+	sources (no longer shipped with redland anyway)
+
+	* raptor/configure.ac: Remove redland source check.
+
+	* configure.ac, Makefile.am:
+	Split SD subdirs into SD_PRE (must be made before librdf)
+	and SD_POST (after).  raptor goes into PRE so that it is
+	both compiled and installed before librdf.
+
+	* raptor/Makefile.am: No need for librdf.la rule
+
+	* raptor/rdfdump.c, raptor/raptor_stringbuffer.c,
+	raptor/raptor_set.c, raptor/raptor_namespace.c,
+	raptor/Makefile.am: Remove all RAPTOR_IN_REDLAND code use of
+	REDLAND_LIBS, REDLAND_CFLAGS.  Now the test and rdfdump programs
+	always just use raptor alone.
+
+2003-12-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am: Remove use of prefix; install where perl wants it
+
+	* perl/Makefile.PL:
+	Try again with the MakeMaker PM hash.  Remove double RDF/RDF
+
+	* librdf/rdf_serializer_rdfxml.c (librdf_serializer_rdfxml_terminate):
+	Allow raptor_free_namespaces to
+	free the entire stack, including pcontext->rdf_ns
+
+	* perl/Makefile.am, perl/update-perl-api.pl: Remove old API updater
+
+	* librdf/rdf_node.h:
+	librdf_node_get_literal_value_as_latin1 returning char*
+
+	* librdf/rdf_node.c:
+	(librdf_node_get_literal_value_as_latin1) Returning char*
+
+	* examples/example4.c:
+	Removed body of code since it was turned into rdfproc.
+
+	* librdf/rdf_parser.h:
+	Update librdf_parser_parse_string_as_stream prototype
+
+	* librdf/rdf_model.h: Update librdf_model_query_string prototype
+
+	* librdf/rdf_storage_mysql.c:
+	(librdf_storage_mysql_node_hash) Casts for node char const strings.
+
+	* utils/Makefile.am:
+	Add mysql-utils target, don't build the mysql utilities by default.
+
+	* utils/rdf-digest.c, utils/rdf-load.c, utils/rdf-tree.c:
+	Redland MySQL storage utilities by Morten Frederiksen
+
+	* utils/rdfproc.c:
+	Updates for raptor changes - all URI strings are unsigned char*
+	Update URI APIs here to match.
+	Update all use of literal (UTF-8) strings to unsigned char* also.
+	Add more casts to make C++ happy especially near string functions
+	and malloc.
+
+	* utils/Makefile.am: Add redland libs, cppflags, cflags
+
+	* librdf/rdf_storage_mysql.c:
+	(librdf_storage_mysql_node_hash) Fix to created digest to distinguish
+	URIs 'R', literals 'L' and blank node identifiers 'B' in database.
+	(librdf_storage_mysql_context_serialise_next_statement): Call error
+	functions with the right world value.
+
+	* examples/example4.c, examples/example3.c, examples/example2.c, examples/example1.c, librdf/rdf_uri.h, librdf/rdf_uri.c, librdf/rdf_stream.c, librdf/rdf_storage_mysql.c, librdf/rdf_storage_list.c, librdf/rdf_storage.c, librdf/rdf_statement.h, librdf/rdf_statement.c, librdf/rdf_serializer_rdfxml.c, librdf/rdf_serializer_raptor.c, librdf/rdf_serializer.h, librdf/rdf_serializer.c, librdf/rdf_query_triples.c, librdf/rdf_query.h, librdf/rdf_query.c, librdf/rdf_parser_raptor.c, librdf/rdf_parser.h, librdf/rdf_parser.c, librdf/rdf_node.h, librdf/rdf_node.c, librdf/rdf_model_storage.c, librdf/rdf_model.h, librdf/rdf_model.c, librdf/rdf_iterator.c, librdf/rdf_init.h, librdf/rdf_init.c, librdf/rdf_hash_memory.c, librdf/rdf_hash_bdb.c, librdf/rdf_hash.h, librdf/rdf_hash.c, librdf/rdf_concepts.c:
+	Updates for raptor changes - all URI strings are unsigned char*
+	Update URI APIs here to match.
+	Update all use of literal (UTF-8) strings to unsigned char* also.
+	Add more casts to make C++ happy especially near string functions
+	and malloc.
+
+	* raptor/raptor_general.c (raptor_print_statement_part_as_ntriples):
+	Update call of
+	raptor_print_ntriples_string
+
+	* raptor/raptor.h: Update raptor_print_ntriples_string prototype
+
+	* raptor/raptor_general.c (raptor_print_ntriples_string):
+	Take unsigned const char*
+
+2003-12-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: mysql version reporting
+
+	* configure.ac: make --with-threestore, --with-mysql take CONFIG|yes|no
+
+	* configure.ac: Add BDB 4.2 to the list.
+	Fixes for 3store (--with-threestore) else search for 3store-config;
+	add glib to cflags/libs using pkg-config.
+	Report raptor version.
+	Report triple stores found.
+
+2003-12-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_uri.h, librdf/rdf_uri.c, librdf/rdf_parser_raptor.c:
+	Updates for raptor API use of unsigned char* for URI strings.
+	Change redland URIs to take/return unsigned char* for URI strings
+
+	* librdf/rdf_hash.c (librdf_hash_print): replaced fprintf
+
+	* raptor/Makefile.am:
+	Narrower yyerrlabl fix since bison 1.875a no longer requires it
+
+	* raptor/examples/grapper.c:
+	Casts and updates to use URI strings from raptor as unsigned char*
+	and converting to/from gchar*
+
+	* raptor/rdfdump.c, raptor/raptor_xml_writer.c, raptor/raptor_xml.c, raptor/raptor_www_libxml.c, raptor/raptor_www.c, raptor/raptor_uri.c, raptor/raptor_sax2.c, raptor/raptor_rss.c, raptor/raptor_parse.c, raptor/raptor_namespace.c, raptor/n3_parser.y, raptor/n3_lexer.l:
+	Lots of casts for str* function args, return values between unsigned
+	char* as used for UTF8 and URI strings and char* used by str* functions.
+	Some further casts for strings from XML.
+
+	* raptor/raptor_www_test.c (write_bytes_fh): No return value.
+	(main) Test code casts unsigned char* for URI strings
+	Fix write_content_type and write_bytes_fh set handler methods.
+
+	* raptor/raptor_utf8.c (raptor_unicode_char_to_utf8):
+	unsigned char* arg.
+	(raptor_utf8_is_nfc): unsigned int, cast for unsigned char*
+
+	* raptor/raptor_sequence.c (raptor_sequence_ensure):
+	Use void** not void*.  C++ cares.
+	(main): Test code casts to void* for args.
+
+	* raptor/raptor_qname.c (raptor_qname_string_to_uri):
+	cast for signed/unsigned int
+	comparison.
+
+	* raptor/raptor_locator.c (raptor_format_locator):
+	Use raptor_uri_as_counted_string to save a strlen.
+
+	* raptor/raptor_identifier.c:
+	(raptor_identifier_print) fputs arg cast [function for RAPTOR_DEBUG only]
+
+	* raptor/raptor_general.c (raptor_parsers_enumerate): Unsigned int.
+	(raptor_parse_uri_write_bytes): unsigned char* cast.
+	Declare raptor_xml_literal_datatype_uri_string.
+	(raptor_print_statement_detailed): Replace several fprintf with fputs
+	and fputc.
+	(raptor_print_ntriples_string): Use unsigned long/size_t for counts.
+	(raptor_statement_part_as_counted_string): unsigned char*
+	Use raptor_xml_literal_datatype_uri_string.
+	(raptor_statement_part_as_string): unsigned char*
+	(raptor_print_statement_part_as_ntriples): unsigned char*.  Replace
+	several fprintf with fputs and fputc.
+	Use raptor_xml_literal_datatype_uri_string
+	(raptor_default_generate_id_handler): Casts for str* functions
+	(raptor_check_ordinal): unsigned char*
+
+	* raptor/ntriples_parse.c:
+	(raptor_ntriples_generate_statement,raptor_ntriples_string_as_utf8_string,
+	raptor_ntriples_parse_line):
+	Updated to take/return unsigned char* args and internals.  Update
+	raptor_uri calls for similar changes.
+	Use raptor_xml_literal_datatype_uri_string
+	Lots of casts for str* functions char* arguments.
+
+	* raptor/Makefile.am:
+	Remove maintainer only n3 lex/yacc rules (flex/bison)
+	Post process the bison output to remove unused label to make g++ happier.
+
+	* raptor/raptor_internal.h:
+	Added raptor_xml_literal_datatype_uri_string for the RDF datatype
+	literal URI string, used several times.
+	raptor_check_ordinal takes unsigned char*
+	A couple of lengths, counts become unsigned int.
+	raptor_unicode_char_to_utf8, raptor_format_sax2_element,
+	raptor_xml_writer_cdata, raptor_xml_writer_comment,
+	raptor_xml_writer_as_string changed to
+	take/return unsigned char* for UTF8 strings.
+
+	* raptor/raptor.h:
+	raptor_new_uri_func, raptor_new_uri_from_local_name_func,
+	raptor_new_uri_relative_to_base_func, raptor_uri_as_string_func,
+	raptor_uri_as_counted_string_func URI factory methods
+	changed to all take/return unsigned char* for URI strings
+	raptor_statement_part_as_counted_string,
+	raptor_statement_part_as_string,
+	raptor_new_uri, raptor_new_uri_from_uri_local_name,
+	raptor_new_uri_relative_to_base, raptor_uri_as_string,
+	raptor_uri_as_counted_string
+	URI methods changed to take/return unsigned char* for URI strings
+	raptor_ntriples_string_as_utf8_string changed to return unsigned
+	char* for UTF8 string
+	raptor_uri_resolve_uri_reference, raptor_uri_filename_to_uri_string,
+	raptor_uri_uri_string_to_filename,
+	raptor_uri_uri_string_to_filename_fragment, raptor_uri_is_file_uri
+	Changed to use unsigned char* for URI strings, char* for filenames
+
+2003-12-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_set.c (raptor_set_stats_print): Debug printing tweak.
+
+2003-11-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_internal.h:
+	raptor_check_ordinal with now unsigned char* arg
+	raptor_sax2 content_cdata now unsigned char*
+
+	* raptor/raptor_general.c (raptor_check_ordinal): unsigned char *name
+
+	* raptor/raptor_parse.c: Lots of char/unsigned char casting.
+
+	* raptor/n3_common.h: Undo n3_syntax_error back to raptor_parser arg.
+
+	* raptor/n3_parser.y: (n3_parser_error) aka yyerror; take a void arg.
+
+	* raptor/n3_common.h:
+	The n3_syntax_error aka yyerror function takes a void arg.
+
+	* raptor/n3_parser.y: Casts for rdf_parser, strings.
+
+	* raptor/n3_lexer.l:
+	Define INPUT_FN as yyinput (C++) or input (otherwise)
+	Add more casts for C++ near rdf_parser, yytext.
+	(copy_token): More casts for malloc and string functions.
+	(copy_string_token): More size_t, casts.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_term):
+	Use a size_t; cast for C++.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_term_valid,raptor_ntriples_term):
+	Change
+	argument names from class to term_class to avoid C++ keyword.
+
+	* raptor/raptor_getopt.h: Protect prototypes for C++
+
+	* raptor/raptor_stringbuffer.c: casts for RAPTOR_*ALLOC returns
+
+	* raptor/n3_parser.y: oops, raptort -> raptor
+
+	* raptor/n3_parser.y: another cast for RAPTOR_MALLOC return
+
+	* raptor/n3_parser.y: casts for RAPTOR_CALLOC returns
+
+	* raptor/configure.ac:
+	Move adding pkg-config glib2.0 cppflags/libs till after the other
+	libraries since that's more likely to be system wide and least
+	effect libxml2, other libraries that might be elsewhere.  Mostly
+	affects OSX which is more sensitive to link order.
+
+	* raptor/raptor_stringbuffer.c (main): declare at start of block
+
+	* raptor/configure.ac: Check for libxml/SAX2.h - the new SAX2 API
+
+	* raptor/raptor_libxml.c:
+	Added a pile of libxml2_* macros to use the libxml2 SAX2 functions
+	when they are present, otherwise the SAX1.  Not using the SAX2 parts
+	of the libxml2 API at present.
+
+	* raptor/strcasecmp.c: Add debug message arg casts.
+
+	* raptor/configure.ac:
+	Include libxml/parser.h when checking for other libxml2 headers
+
+	* raptor/ntriples_parse.c: Add some debug message arg casts.
+	(raptor_ntriples_parse_chunk): At end of input, check that there is
+	no remaining junk.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_chunk):
+	Fix line counting problems when \r\n
+	crosses a buffer or when a line ends at the end of a buffer.
+	last_char recorded in state.
+
+	* raptor/raptor_stringbuffer.c (main): Free returned strings.
+
+	* raptor/Makefile.am:
+	Added raptor_stringbuffer.c raptor_stringbuffer_test code
+
+	* raptor/raptor.h: Added raptor_stringbuffer.
+
+	* raptor/raptor_stringbuffer.c: Stringbuffer class for growing strings
+
+	* raptor/raptor_libxml.c (raptor_libxml_init):
+	With libxml2 use raptor_xml_characters_handler
+	for sax->characters.
+
+	* raptor/raptor_parse.c (raptor_cdata_grammar): Added is_cdata arg.
+	(raptor_xml_characters_handler): Added, calling raptor_cdata_grammar.
+	(raptor_xml_cdata_handler): Updated to call raptor_cdata_grammar with
+	is_cdata=1.
+	(raptor_xml_parse_init): With expat use raptor_xml_characters_handler
+	with XML_SetCharacterDataHandler.
+	(raptor_cdata_grammar): Tidy error reporting; do not use
+	raptor_xml_writer_as_string for a simple print.
+
+	* raptor/raptor_internal.h:
+	Added raptor_xml_characters_handler prototype.
+
+2003-11-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.PL:
+	List the .pm files explicitly since perl 5.8.1 broke scanning
+
+2003-11-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/manifest.pl: Add withdrawn tests check
+
+2003-11-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/ntriplesplus/Makefile.am:
+	Added more N-Triples Plus tests (1-7) and bad (0-3)
+
+	* raptor/tests/ntriplesplus/test-07.out, raptor/tests/ntriplesplus/test-07.ntp, raptor/tests/ntriplesplus/test-06.out, raptor/tests/ntriplesplus/test-06.ntp, raptor/tests/ntriplesplus/test-05.out, raptor/tests/ntriplesplus/test-05.ntp, raptor/tests/ntriplesplus/test-04.out, raptor/tests/ntriplesplus/test-04.ntp, raptor/tests/ntriplesplus/test-03.out, raptor/tests/ntriplesplus/test-03.ntp, raptor/tests/ntriplesplus/test-02.out, raptor/tests/ntriplesplus/test-02.ntp, raptor/tests/ntriplesplus/test-01.out, raptor/tests/ntriplesplus/test-01.ntp:
+	More N-Triples Plus tests
+
+	* raptor/tests/ntriplesplus/bad-00.ntp, raptor/tests/ntriplesplus/bad-01.ntp, raptor/tests/ntriplesplus/bad-02.ntp, raptor/tests/ntriplesplus/bad-03.ntp:
+	N-Triples Plus bad tests
+
+	* raptor/n3_lexer.l:
+	In prefix state, always return to initial on matching '.', then
+	error out.
+	(n3_syntax_error): Copy removed here.
+	(main): Init enough more of parser/locator so that n3_syntax_error
+	in main library can be used.
+
+2003-11-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rdfdump.c: extra newline in version
+
+	* raptor/rdfdump.c: extra newline in help
+
+2003-11-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_parser_raptor.c:
+	(librdf_parser_raptor_error_handler,librdf_parser_raptor_warning_handler):
+	Do not pass on buffer directly since it is not a format string and
+	might contain % such as when it is a URI.  This causes libc to abort
+	in the middle of vsnprintf with an assertion failure :/
+
+2003-11-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* demos/ntriples.pl: Style, HTML fixes.
+	Counting wasn't right.
+
+	* raptor/tests/Makefile.am:
+	Added check-ntriples-plus to check N-Triples Plus with the N-Triples
+	tests.
+
+	* raptor/n3_parser.y, raptor/n3_lexer.l, raptor/n3_common.h:
+	Added lineno to raptor_n3_parser context to track newlines for dos,
+	unix, mac since flex doesn't do that by default with yylineno.
+
+	* raptor/rdfdump.c: tidy help messages
+
+	* raptor/ntriples_parse.c:
+	Track newlines correctly for \r\n across chunks; move last_nl into
+	ntriples parser context.
+	(raptor_ntriples_parse_chunk,raptor_ntriples_parse_start): Use and
+	init last_nl in ntriples parser context.
+
+2003-11-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h: Added raptor_ntriples_string_as_utf8_string
+
+	* raptor/ntriples_parse.c (raptor_ntriples_term):
+	Added allow_utf8 argument and new class
+	RAPTOR_TERM_CLASS_FULL which uses all the passed in string.
+	(raptor_ntriples_string_as_utf8_string): Added, using
+	raptor_ntriples_term as above.
+	(raptor_ntriples_parse_line): Use size_t len args.
+
+	* utils/rdfproc.c: Replace a bunch of fprintf(..., "\n") with fputc
+
+	* raptor/rdfdump.c:
+	Use f/puts instead of print/fprintf when there are no %s
+
+	* librdf/rdf_heuristics.c (main):
+	Make test code silent unless LIBRDF_DEBUG > 1
+	Tidy code a little.
+
+	* librdf/rdf_digest.c, librdf/rdf_hash.c:
+	Replace a bunch of fprintf(..., "\n") with fputc
+
+	* raptor/raptor_uri.c (raptor_default_new_uri_for_rdf_concept):
+	Remove duplicate strlen(base_uri)
+
+2003-11-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_lexer.l: Document more ntriples plus
+	Error out if @prefix's name doesn't match name
+
+	* raptor/raptor_utf8.c (raptor_unicode_is_namestartchar):
+	Two | changed to ||.  Likely
+	worked anyway
+
+2003-11-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/libraptor.3: Noted raptor_set_feature with non_nfc_fatal
+
+	* raptor/raptor.h:
+	Added RAPTOR_FEATURE_NON_NFC_FATAL to pick between NFC errors or warnings.
+
+	* raptor/raptor_general.c (raptor_set_feature):
+	Added RAPTOR_FEATURE_NON_NFC_FATAL to pick
+	between NFC errors or warnings.
+	(raptor_set_parser_strict): Set feature_non_nfc_fatal default off.
+
+	* raptor/raptor_internal.h:
+	Added feature_non_nfc_fatal to pick between NFC errors or warnings.
+
+	* raptor/raptor_parse.c:
+	Put 'quotes' around element/attribute names in messages.
+	Use feature_non_nfc_fatal to pick between NFC errors or warnings.
+
+	* raptor/tests/Makefile.am: check-bad-nfc-rdf - use strict mode
+
+	* raptor/rdfdump.c: Document -m/--mode arg
+
+2003-11-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/configure.ac: Added tests/ntriplesplus
+
+	* raptor/tests/ntriplesplus/Makefile.am: N-Triples plus tests
+
+	* raptor/tests/ntriplesplus/test-00.ntp, raptor/tests/ntriplesplus/test-00.out:
+	N-Triples Plus default namespace test
+
+	* raptor/tests/Makefile.am: added ntriplesplus dir
+
+	* raptor/raptor_qname.c (raptor_qname_string_to_uri):
+	Keep original name around for error reporting.
+
+	* raptor/rdfdump.c, raptor/n3_parser.y: parser now called ntriples-plus
+
+	* raptor/n3_parser.y: parser called ntriplesplus
+
+	* raptor/n3_parser.y (production directive):
+	Fix declaring default namespace prefix
+
+2003-11-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/Makefile.am: added bad-20.rdf
+
+	* raptor/tests/bad-20.rdf:
+	check non-namespaced element does not crash parser
+
+	* raptor/raptor_qname.c (raptor_new_qname,raptor_new_qname_from_namespace_local_name):
+	Do not
+	die if no URI for qname is available.  It might be <a xmlns="">
+	which is at least needed for some error reports or for embedded
+	qnames.  Caused unnecessary crashes when parsing failed.
+
+2003-11-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac:
+	Added --with-mysql-config and automatic search for mysql_config program.
+	Added STORAGE_OBJS
+
+	* librdf/rdf_storage_mysql.c, librdf/rdf_storage_mysql.h:
+	RDF Storage in MySQL DB
+
+	* AUTHORS: Added Morten as MySQL store author
+
+	* librdf/rdf_storage.h, librdf/rdf_storage.c: Added mysql store
+
+	* librdf/Makefile.am: Added STORAGE_OBJS
+	Added rdf_storage_mysql.c rdf_storage_mysql.h
+
+	* librdf/librdf.h: Added LIBRDF_ERROR3
+
+	* raptor/raptor_xml.c (main): Make tests less chatty on success
+
+	* raptor/raptor_uri.c (main): Make it less chatty on success
+
+	* raptor/raptor_uri.c (raptor_uri_uri_string_to_filename_fragment):
+	Allow file://a|/ and file://a:/
+	(main): For WIN32, check the above works.
+
+	* librdf/rdf_parser_raptor.c:
+	Add mapping of rdf:nodeID values to redland generated IDs.
+	(librdf_parser_raptor_init): Create the userid->redlandID hash map.
+	(librdf_parser_raptor_terminate): Added to delete the hash map.
+	(librdf_parser_raptor_generate_id_handler): Do the mapping.
+
+	* raptor/autogen.sh, autogen.sh:
+	remove ltmain.sh libtool before libtoolize
+
+	* python/redlandtest.py (class RedlandGetsCase):
+	Add test for making a new anon (no arg) blank node
+
+	* raptor/manifest.pl:
+	Emit test-results.rdf in the style of http://www.w3.org/2003/08/owl-systems/test-results-out
+	for machine processing of test runs
+
+	* raptor/raptor_general.c (raptor_parse_uri_with_connection):
+	Fail before parsing if
+	raptor_www_fetch failed.
+
+	* raptor/raptor_internal.h:
+	Added raptor_www_error_varargs internal prototype.
+
+	* raptor/raptor_www_libxml.c (raptor_www_libxml_http_error):
+	This was just all wrong, printing to
+	stderr and then exit(1).  Change to use the proper
+	raptor_www_error_varargs callback.
+
+	* raptor/raptor_www.c (raptor_www_error_varargs):
+	Added, with va_list signature.
+
+	* raptor/raptor_general.c (raptor_parse_file):
+	When uri is given and base_uri is NULL, copy
+	the uri and free it later - fix to match the function documentation.
+
+2003-10-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_general.c (raptor_parse_file):
+	fclose only when fh is not NULL
+
+2003-10-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_serializer_rdfxml.c (librdf_serializer_rdfxml_terminate):
+	Free namespace before stack.
+
+	* librdf/rdf_serializer_rdfxml.c:
+	Use updated raptor_(new|free)_namespaces
+	(librdf_serializer_rdfxml_init, librdf_serializer_rdfxml_terminate):
+	Make the rdf namespace
+	(librdf_serializer_rdfxml_serialize_model): declare rdf:RDF
+	using raptor_new_qname_from_namespace_local_name
+
+	* raptor/raptor_parse.c (raptor_xml_end_element_handler):
+	For RAPTOR_DEBUG, declare
+	element_name at start of function.
+
+2003-10-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h:
+	raptor_namespace(s)_(new|free) renamed to raptor_(new|free)_namespace(s)
+	Added raptor_new_qname_from_namespace_local_name
+
+	* raptor/raptor_qname.c (raptor_new_qname_from_namespace_local_name):
+	Added.
+
+	* raptor/raptor_namespace.c:
+	raptor_namespaces_(new|free) renamed to raptor_(new|free)_namespaces
+
+	* raptor/raptor_namespace.c:
+	raptor_namespace_(new|free) renamed to raptor_(new|free)_namespace
+
+	* librdf/rdf_serializer_rdfxml.c:
+	Added a raptor_namespace_stack to the context.
+	(librdf_serializer_rdfxml_init): Updated with stack
+	(librdf_serializer_rdfxml_terminate): Added, to free stack.
+	(rdf_serializer_rdfxml_print_as_xml_attribute): Deleted.
+	(librdf_serializer_print_statement_as_rdfxml): Do less work in
+	finding max XML-name character for a property URI.
+	Replace use of rdf_serializer_rdfxml_print_as_xml_attribute
+	with calls to raptor_xml_escape_string.
+	(librdf_serializer_rdfxml_serialize_model): Use namespace stack
+	to declare rdf namespace - initial code.
+	(librdf_serializer_rdfxml_register_factory): Add terminate call.
+
+	* raptor/raptor_xml_writer.c:
+	raptor_namespaces_free renamed to raptor_namespaces_clear
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Use raptor_new_sax2_element.
+	raptor_namespaces_free renamed to raptor_namespaces_clear
+
+	* raptor/raptor_internal.h: Added raptor_new_sax2_element
+
+	* raptor/raptor_sax2.c (raptor_new_sax2_element): Added.
+
+	* raptor/raptor.h:
+	Added prototypes for raptor_namespaces_new, raptor_namespaces_clear
+
+	* raptor/raptor_namespace.c
+	(raptor_namespaces_new,raptor_namespaces_free): 
+	Added for constructor and destructor.
+	raptor_namespaces_free renamed to raptor_namespaces_clear for
+	emptying a statically allocated namespace stack.
+
+	* raptor/n3_parser.y:
+	raptor_namespaces_free renamed to raptor_namespaces_clear
+
+	* librdf/rdf_serializer_rdfxml.c
+        (librdf_serializer_rdfxml_raptor_error_handler): Added.
+	(rdf_serializer_rdfxml_print_xml_attribute): Take world arg.
+	Use raptor_xml_escape_string to do the escaping.
+	(librdf_serializer_print_statement_as_rdfxml): pass world arg to
+	calls to rdf_serializer_rdfxml_print_xml_attribute
+
+	* librdf/rdf_utf8.h: Make librdf_unicode_char_to_utf8 match code
+
+2003-10-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_parser.y: Moved n3 lexer/parser stuff to n3_common.h
+	Added uri field to union.
+	URI_LITERAL and QNAME_LITERAL now are uri.
+	PREFIX now expects an IDENTIFIER to follow.
+	Remove all make qname/uri and free(copied token) sequences since the
+	lexer does it.
+	Added fake yy_init_globals to stop dumb warning.
+
+	* raptor/n3_lexer.l:
+	Make raptor_uris here from lexer tokens (qnames or URIs)
+	For @prefix, recognise following token as an identifier specially
+	rather than try to make it a URI.
+	(n3_token_free): Free string or raptor_uri.
+	(main): Lots of fixups to fake enough n3 parser structure to
+	get it working fairly standalone.
+
+	* raptor/Makefile.am: Added n3_common.h
+	Fixup free of null inside flex-generated lexer.
+
+	* raptor/n3_common.h: N3 parser/lexer shared internals
+
+	* raptor/raptor_internal.h: Moved n3 lexer/parser stuff to n3_common.h
+
+	* raptor/n3_parser.y (n3_qname_to_uri):
+	Replace with call to raptor_qname_string_to_uri
+	and added length parameter.
+
+	* raptor/raptor_qname.c (raptor_new_qname):
+	Replace raptor_namespace_local_name_to_uri
+	with use of raptor_new_uri_from_uri_local_name.
+	(raptor_qname_string_to_uri): Added, making only the URI
+	equivalent to the qname and handling N3/RDQL-style special
+	cases such as "prefix:", ":" and NULL.
+
+	* raptor/raptor_internal.h, raptor/raptor.h:
+	Moved raptor_qname, raptor_namespace, raptor_namespace_stack
+	classes into public API.
+	Added raptor_qname_string_to_uri
+
+	* raptor/raptor_namespace.c (raptor_namespace_local_name_to_uri):
+	Removed - only used once
+	internally and was never public.
+
+2003-10-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_lexer.l (n3_token_free): Added, for cleanup in debugging.
+	(main): Init and clear token/lval.
+
+	* raptor/tests/Makefile.am: Added ex-53
+
+	* raptor/tests/ex-53.out, raptor/tests/ex-53.rdf:
+	Check allowing optional rdf:RDF
+
+	* raptor/rdfdump.c:
+	--assume/-a feature_assume_is_rdf deleted; rdf:RDF is optional.
+
+	* raptor/raptor_general.c, raptor/raptor_parse.c:
+	feature_assume_is_rdf deleted; rdf:RDF is optional.
+
+	* raptor/raptor_internal.h: feature_assume_is_rdf deleted
+
+2003-10-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_node.c: Fix debug calls when LIBRDF_DEBUG > 1
+
+2003-10-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/wine.out, raptor/tests/wine.rdf:
+	OWL Wine Ontology from http://www.w3.org/TR/owl-guide/wine.rdf
+
+	* raptor/tests/Makefile.am:
+	Added OWL Wine ontology from http://www.w3.org/TR/owl-guide/wine.rdf
+	as wine.rdf wine.out
+
+2003-09-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_parser.y:
+	Remove n3_parser_lex; re-#define yylex to call direct
+
+	* raptor/n3_lexer.l (copy_string_token):
+	Destroy malloced string on error return.
+
+	* raptor/n3_parser.y (n3_parse):
+	Don't delete buffer, pop buffer state; a successful lex
+	does that.
+
+	* raptor/raptor_internal.h: Remove n3_token_print
+
+	* raptor/n3_parser.y: Use reentrant yacc parser.
+	Store the lexer lval in the n3_parser context.
+	Lots of #define trickery to get flex/bison to talk nicely.
+	Make n3_parser_error take an rdf_parser arg (this isn't configurable
+	by bison itself, so is likely fragile).
+	Remove use of extern in lineno; get it from the lexer.
+	Remove N3_Parser global; use rdf_parser local.
+	(n3_parser_error): Update for having rdf_parser arg, update locator
+	lineno from scanner.
+	(n3_syntax_error, n3_qname_to_uri): Get lineno from scanner.
+	(n3_parse): Remove fixmes, no need for protecting globals.
+	(main): Update for reentrant parser; init locator from standalone
+	args.
+
+	* raptor/n3_lexer.l:
+	Remove n3_lexer.c/.h prototypes no longer(?) needed with re-entrant lexer.
+	Remove use of lineno; let lexer do it.
+	Change lexer call to pass in lval from reentrant parser.
+	(n3_token_print): Pass in lval.
+	(main): Update for api changes.
+
+2003-09-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_internal.h: Updates for reentrant lexer.
+
+	* raptor/n3_parser.y: Use reentrant lexer API.
+	Define YYLEX_PARAM to be scanner arg, from current grammar.
+	(n3_parser_lex): Take scanner arg.
+	(n3_syntax_error): Add rdf_parser arg.
+	(n3_parse): Init and destroy reentrant lexer.
+	(raptor_n3_parse_terminate): Tidy up any lexer stuff.
+	(main): Check for file not found, report it.
+
+	* raptor/n3_lexer.l:
+	Switch to reentrant lexer.  Pass rdf_parser into code, yyextra
+	internally.
+	(yywrap): Add scanner arg.
+	(copy_string_token, n3_syntax_error): Add rdf_parser arg.
+	(main): Use reentrant calls for lexer to set yyin, get_text.  Use
+	yylex_init/yylex_destroy.
+
+	* raptor/Makefile.am: n3_lexer_test depends on raptor_utf8
+
+	* raptor/raptor_parse.c:
+	Add EXPAT_UTF8_BOM_CRASH fix updates for sax2 changes.
+
+	* raptor/configure.ac: Tweak for old flex version output
+
+	* raptor/configure.ac: Try to check flex is new enough.
+
+2003-09-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: 3store linking fixes.
+
+	* librdf/rdf_storage_tstore.c: comment out unused context
+
+	* configure.ac: Bumped raptor min to 1.1.0
+	Added --with-threestore.
+
+	* librdf/rdf_storage.c (librdf_init_storage):
+	Call librdf_init_storage_tstore if HAVE_TSTORE
+	(librdf_storage_add_statements): Do add statements over a stream here
+	if lower level just has add_statement method.
+
+	* librdf/rdf_storage_tstore.h: RDF Storage using 3store
+
+	* librdf/Makefile.am: Added rdf_storage_tstore.c rdf_storage_tstore.h
+
+	* librdf/rdf_storage_tstore.c: RDF Storage using 3store
+
+2003-09-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_init.h: Added internal librdf_error_varargs
+
+	* librdf/rdf_init.c (librdf_error_varargs): Added, internal
+
+2003-09-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_parser.y: Minor C reformatting
+
+2003-09-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h: Added raptor_parsers_enumerate prototype
+
+	* raptor/n3_lexer.l: minor reformatting
+
+	* raptor/n3_lexer.l (copy_string_token): Make \r, \n and \t work
+
+	* raptor/raptor_general.c (raptor_init):
+	Ensure rdf/xml is default parser.
+	(raptor_parsers_enumerate): Added, to enumerate parsers, returning
+	their name & label.
+
+	* raptor/examples/grapper.c:
+	Use raptor_parsers_enumerate to get parser names, labels.
+
+	* raptor/n3_lexer.l: flex archaeology for options
+
+	* raptor/examples/Makefile.am: Don't build examples by default
+
+2003-09-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_www.c, raptor/raptor_general.c:
+	Revert to old API for raptor_uri_uri_string_to_filename
+
+	* raptor/raptor.h, raptor/raptor_uri.c
+	(raptor_uri_uri_string_to_filename): Restored to old API.
+	(raptor_uri_uri_string_to_filename_fragment): Added with fragment arg.
+
+	* librdf/rdf_hash_bdb.c: Use bdb->set_flags only when present
+
+	* configure.ac: Check for BDB DB->set_flags
+
+2003-09-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_parser.y (n3_qname_to_uri):
+	Handle NULL (":" in N3) returning the default
+	namespace.  It's not quite clear if this is legal.
+
+	* raptor/n3_parser.y (raptor_n3_generate_statement):
+	Do nothing if some part of the triple
+	is NULL.
+
+	* raptor/raptor_internal.h: n3_syntax_error now takes varargs
+
+	* raptor/n3_parser.y (n3_syntax_error): Now takes varargs
+
+	* raptor/n3_lexer.l: n3_syntax_error now takes varargs
+	(copy_string_token): Added \u, \U.  Fixed, \r, \n, \t
+
+	* raptor/n3_parser.y: Wrap a debugging printf
+
+	* raptor/n3_lexer.l:
+	For blank literal "_:abc", don't include _: in the id passed to the parser.
+
+	* raptor/n3_parser.y:
+	Throughout replace raptor_new_uri with raptor_copy_uri when copying
+	existing base URI.
+
+	* raptor/n3_parser.y:
+	Throughout: Handle NULL uri string meaning use the base URI
+
+	* raptor/n3_lexer.l:
+	Handle <> (returning NULL) as well as <> with content.
+	(n3_token_print): Update to match.
+	(n3_syntax_error): Simple standalone copy here.
+
+	* raptor/n3_parser.y (n3_parser_error):
+	Set lineno and call raptor_parser_simple_error to
+	pass on the parsing error.
+	(n3_syntax_error): Added. Set lineno and call raptor_parser_error
+	to pass on a general syntax error.
+	(n3_qname_to_uri): Init locator line before calling raptor_new_qname
+	that may fail, calling raptor_parser_simple_error.
+
+	* raptor/raptor_internal.h: Add n3_syntax_error
+
+	* raptor/n3_lexer.l: Call n3_syntax_error on a syntax error
+
+	* raptor/examples/grapper.c: Add n3 syntax
+
+	* raptor/n3_parser.y (propertyList): Handle NULL verb, two cases.
+	(raptor_n3_parse_start): No locator column, byte values just yet.
+
+	* raptor/n3_parser.y (n3_qname_to_uri):
+	Call raptor_new_qname with rdf_parser for errors
+
+2003-09-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_parser.y:
+	Don't raptor_free_uri shared uris made from qnames
+
+	* raptor/n3_parser.y (n3_parse): Tidy up flex buffers.
+	(raptor_n3_parse_terminate): Destroy any flex state on exit.
+
+	* raptor/n3_parser.y (n3_parse): delete buffer after parse.
+
+	* raptor/n3_parser.y: Free uri strings returned from URI_LITERAL.
+
+	* raptor/raptor_identifier.c (raptor_new_identifier):
+	Note uri, literal_datatype are shared and not copied.
+
+	* raptor/n3_parser.y: Free strings returned from QNAME_LITERAL.
+
+	* raptor/raptor_sequence.c (raptor_new_sequence): Use RAPTOR_MALLOC.
+	(raptor_free_sequence): Free the raptor_sequence.
+
+	* raptor/raptor_identifier.c (raptor_new_identifier):
+	Note id, literal, literal_language are
+	shared and not copied.
+
+	* raptor/n3_parser.y (statement): Free identifier used for subject
+	(propertyList): Free identifier used for verb
+
+	* raptor/n3_parser.y:
+	Track when an identifier is copied using is_malloced
+	(raptor_free_triple): Actually free the triple.
+
+	* raptor/raptor_internal.h, raptor/n3_parser.y:
+	raptor_triple now just has 3 items.
+
+	* raptor/n3_parser.y (raptor_n3_parse_terminate): Free namespaces
+
+	* raptor/n3_parser.y (n3_parse): Do not parser NULL or empty string.
+	(raptor_n3_parse_chunk): Do not parser empty buffer.
+
+	* raptor/rdfdump.c: (main) Don't free NULL uri
+
+	* raptor/n3_parser.y: More debugging messages.
+	Recover from errors, don't generate partial triples.
+	(n3_qname_to_uri): Return NULL if raptor_new_qname does not give a
+	URI (some error happened).
+
+	* raptor/n3_lexer.l: Remove END token, should only use EOF
+	Count lines right for \r\n|\r|\n
+	Handle EOF in comments
+
+	* raptor/n3_parser.y: Remove END token, should only use EOF
+	Add more debugging statements.
+	Throughtout, change raptor_new_uri to raptor_new_uri_relative_to_base.
+	(statement): Handle empty propertyList ("[]").
+	(propertyList 1): Copy verb into objectList, then append
+	propertyList items (if not empty "[]" again).
+	(objectList): Add empty item for "[]", returning NULL.
+	(resource): For [], handle NULL and generate statements here
+	before returning the generated id.
+	(n3_parser_print_statement): Added for test code
+	(main): In test code, init URI module only, create fake
+	static rdf_parser and n3_parser and initialise enough (base URI,
+	and context) so that it works.
+
+	* raptor/n3_parser.y: Add error recovery at '.'
+
+2003-09-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/n3_parser.y:
+	raptor_print_triple renamed to raptor_triple_print
+
+	* raptor/n3_parser.y: Only define raptor_print_triple if debugging.
+
+	* raptor/raptor_identifier.c, raptor/n3_parser.y:
+	raptor_print_identifier renamed to raptor_identifier_print
+
+	* raptor/n3_parser.y: Raptor N-Triples+/N3 parser
+
+	* raptor/n3_lexer.l: Raptor N-Triples+/N3 lexer
+
+	* raptor/raptor_identifier.c (raptor_identifier_print):
+	Added for debugging
+
+	* raptor/raptor_internal.h: When debugging, raptor_identifier_print
+
+	* raptor/raptor_identifier.c (raptor_new_identifier):
+	Add literal, literal_datatype,
+	literal_language args and handle them.
+	(raptor_init_identifier): Deleted, not used (enough).
+	(raptor_copy_identifier, raptor_free_identifier): Updated for
+	literal, literal language and literal datatype.
+
+	* raptor/rdfdump.c:
+	Use the syntax name (after validation) to intialise the parser rather
+	than an ever-growing set of flags.
+
+	* raptor/raptor_uri.c (raptor_default_new_uri):
+	If the filename had a fragment, re-append
+	it to the file:URI after updating it to be correct.
+	(raptor_uri_uri_string_to_filename): Add fragment_p arg to return
+	the URI fragment after a discovered filename in a file:URI.
+	(assert_uri_to_filename): Update call to
+	raptor_uri_uri_string_to_filename.
+
+	* raptor/raptor_parse.c (raptor_xml_parser): Add namespaces.
+	Elsewhere change rdf_parser->namespaces to
+	rdf_xml_parser->namespaces.
+	(raptor_xml_parse_start): Initialise the namespaces for rdf/xml.
+
+	* raptor/raptor_sequence.c: Raptor sequence ADT
+
+	* raptor/raptor_namespace.c (raptor_namespace_init):
+	Add defaults arg to control which
+	namespaces are added by default. 0=none, 1=xml, 2=... others
+	(main): Update test code to give new arg.
+
+	* raptor/raptor_general.c (raptor_init): Call raptor_init_parser_n3.
+	(raptor_start_parser, raptor_free_parser): Remove namespace code from
+	here; moves into specific parser context code.
+	(raptor_parse_file): Update for raptor_uri_uri_string_to_filename
+	extra arg.
+
+	* raptor/raptor_xml_writer.c:
+	(raptor_new_xml_writer) Update for raptor_namespaces_init defaults
+	arg.
+
+	* raptor/raptor_rss.c (raptor_rss_emit):
+	Use raptor_new_identifier rather than
+	raptor_init_identifier and make items dynamically allocated.
+
+	* raptor/raptor_www.c:
+	(raptor_www_file_fetch) Update for raptor_uri_uri_string_to_filename
+	extra argument.
+
+	* raptor/raptor.h:
+	Add literal, literal_datatype, literal_language to raptor_identifier
+	structure.
+	Add above arguments to raptor_new_identifier.
+	Remove raptor_init_identifier - not used.
+	Add fragment_p argument to raptor_uri_uri_string_to_filename.
+
+	* raptor/raptor_internal.h:
+	Remove namespaces from raptor_parser; now in per-syntax contexts.
+	Updated raptor_namespaces_init to take defaults arg.
+	Added N3 class prototypes, for n3_token_print, raptor_init_parser_n3,
+	n3_parser_lex.
+	Added raptor_triple structure.
+	Added sequence class prototypes.
+
+	* raptor/Makefile.am:
+	Add n3_lexer.c n3_lexer.h both generated from n3_lexer.l by flex;
+	add maintainer-only rules to do that.
+	Add n3_parser.tab.c n3_parser.tab.h generated from n3_parser.y by
+	yacc; add maintainer-only rules to do that.
+	Add raptor_sequence.c and test.
+
+	* raptor/configure.ac: Add lex (flex required) and yacc
+
+2003-09-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Redland.i:
+	Add prototypes for internal functions librdf_error, librdf_warning
+	along with warning that these aren't in the API.
+
+2003-09-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/RDF.py (Model): Added sync() calling librdf_model_sync
+
+	* python/redlandtest.py (RedlandModelGeneral): Test model.sync()
+
+2003-09-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/RDF.py:
+	(Node:_get_literal_value) Use dt_uri=Uri(string=... not (uri_string=...
+
+	* configure.ac: Bumped version to 0.9.15
+
+	* Snapshotted redland_0_9_14 for 0.9.14 release
+
+	* librdf/redland.spec.in: Require raptor 1.0.0
+
+
+	* librdf/rdf_hash_bdb.c (librdf_hash_bdb_open):
+	Restore previous call to db_create.
+	Add an extra clause to do nothing inside big #ifdef chain
+	if HAVE_DB_CREATE is present.
+
+	* configure.ac: Min raptor version is now 1.0.0
+
+	* raptor/configure.ac: Bumped version to 1.1.0
+
+	* Snapshotted raptor_1_0_0 for 1.0.0 release
+
+	* raptor/libraptor.3: new date
+
+	* raptor/ntriples.h,raptor/Makefile.am: Removed old header ntriples.h
+
+	* raptor/raptor_general.c, raptor/raptor.h, raptor/ntriples_parse.c:
+	Removed deprecated functions as promised. Changes are described in
+	the libraptor.3 man page.
+
+	* raptor/configure.ac: Updated for Raptor 1.0.0
+	Shared library soname major now 1
+
+	* configure.ac:
+	With only --with-bdb=PREFIX given, set the lib & include from that
+	value.
+	Use 'unknown' rather than none when some BDB bits given and no
+	guessing.
+
+	* raptor/win32_config.h: Added R_OK define for access()
+
+	* raptor/tests/Makefile.am: test wording for failures
+
+	* librdf/rdf_hash_bdb.c (librdf_hash_bdb_open):
+	Probably restore early DB3.0 to working with db_create.
+
+2003-09-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/Makefile.am: Added bad-05.nt
+
+	* raptor/tests/bad-05.nt: Bad Unicode character #x110000
+
+	* raptor/tests/test.out, raptor/tests/test.nt: fixes
+
+	* raptor/tests/test.nt:
+	Removed resource18-20 - illegal Unicode chars.  Added \U0010FFFF
+
+	* raptor/ntriples_parse.c (raptor_ntriples_term):
+	Forbid Unicode characters outside #x0-#x10FFFF
+
+2003-09-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* java/org/librdf/redland/World.java: Use librdf_version/copyright*
+
+	* Redland.i: Use librdf_version* and both librdf_copyright strings
+
+	* tcl/Makefile.am: clean more
+
+	* raptor/libraptor.3: Updated for 1.0.0
+	Added raptor_parse_file_stream.
+	Added new feature normalize_language.
+	Added list of all static variables exported.
+
+	* configure.ac: Remove a bunch of unused LIBRDF_VERSION_ AC_SUBST.
+	Remove LIBRDF_VERSION_INFO - not used
+	Define LIBRDF_VERSION_DECIMAL here and make it an AC_SUBST.
+
+	* librdf/rdf_init.c: Use LIBRDF_VERSION_DECIMAL define.
+
+	* raptor/configure.ac:
+	Define RAPTOR_VERSION_DECIMAL here and make it an AC_SUBST.
+
+	* raptor/raptor_general.c: Use RAPTOR_VERSION_DECIMAL define.
+
+	* redland-config.in: Added --version-decimal.
+
+	* redland-config.1, raptor/raptor-config.1:
+	Document --version-decimal and --libtool-libs
+
+	* raptor/raptor-config.in: Added --version-decimal.
+
+	* raptor/rdfdump.c: Allow filename "-" to be used as standard input. 
+	When a filename is given, use raptor_parse_file.
+	Adjust the error messages to mention file names when using
+	raptor_parse_file
+
+	* raptor/raptor.h: Added raptor_parse_file_stream
+
+	* raptor/raptor_general.c (raptor_parse_file_stream):
+	Added, allowing passing in of an existing
+	FILE* stream (with optional filename) and parsing rather than
+	raptor doing the fopen/fclose.
+	(raptor_parse_file): A NULL uri argument now means stdin.
+
+	* raptor/raptor_internal.h, raptor/raptor_parse.c:
+	Remove rdf_parser->fh
+
+	* utils/rdfproc.1:
+	Update parse, serailize commands to note optional syntax names, list
+	valid names and mention the default RDF/XML.
+
+	* utils/rdfproc.c:
+	Make syntax name option to parser commands, defauting to (default
+	parser) rdf/xml
+	Hide 'query' command further.
+	Print short copyright in usage, help.
+	Tidy help messages.
+	Delete rotten parser features
+
+	* librdf/rdf_parser_raptor.c (librdf_parser_raptor_constructor):
+	Register "rdfxml" name and mime
+	type, URL http://www.w3.org/TR/rdf-syntax-grammar.
+	Keep raptor name around
+
+	* raptor/rdfdump.c:
+	Use raptor_short_copyright_string in usage/help messages
+
+	* raptor/raptor_general.c, raptor/raptor.h:
+	Added raptor_short_copyright_string
+
+	* utils/rdfproc.c: Free options hash
+
+	* librdf/redland.spec.in: Add rdfproc.
+	Require raptor 0.9.12 min
+
+	* utils/rdfproc.1: tweak
+
+	* utils/Makefile.am: Added rdfproc.1
+
+	* utils/rdfproc.1: rdfproc manual page
+
+	* utils/rdfproc.c: help
+
+	* utils/rdfproc.c:
+	Tidy usage message - use triples & graphs, explain source, target, arc.
+	Add short copyright
+
+	* librdf/rdf_init.c, librdf/librdf.h:
+	Added librdf_short_copyright_string.
+	Made long one have line breaks and more URIs
+
+	* utils/rdfproc.c: statements now find
+	Added optional CONTEXT to add/add-typed/remove, warning if not enabled.
+
+	* utils/rdfproc.c: Use rdfproc_getopt.h
+
+	* configure.ac:
+	Enable public domain getopt in getopt.c & rdfproc_getopt.h for
+	rdfproc if there is no getopt or getopt_long
+
+	* utils/Makefile.am:
+	Enable public domain getopt in getopt.c & rdfproc_getopt.h
+
+	* utils/getopt.c, utils/rdfproc_getopt.h:
+	public domain getopt for rdfproc
+
+	* configure.ac: Look for getopt.h
+
+	* librdf/rdf_hash.h: Added librdf_hash_put_strings
+
+	* librdf/rdf_hash.c (librdf_hash_put_strings):
+	Added helper to add strings to hash easier.
+
+	* librdf/rdf_storage.c (librdf_new_storage_with_options):
+	Added, taking a librdf_hash
+	argument.  Similar to librdf_new_model_with_options.
+
+	* librdf/rdf_storage.h: Added librdf_new_storage_with_options
+
+	* librdf/rdf_init.c:
+	Renamed public statics to librdf_version* and librdf_copyright_string.
+	Added librdf_version_decimal.
+
+	* librdf/librdf.h: Added REDLAND_API
+	Added REDLAND_DEPRECATED
+	Added public statics librdf_version* and librdf_copyright_string.
+
+	* utils/Makefile.am: Added rdfproc
+
+	* utils/rdfproc.c:
+	Redland RDF processor - converted from examples/example4.c
+
+2003-09-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.PL: Updated for 0.9.13
+	Uses configure.ac
+	Pick the perl prefix to pass to configure.
+	make clean needs a little help else it just returns 'exit 2'.
+	install: Installs just the shared libraries for raptor and
+	redland, then perl.
+	Have a hand-crafted MANIFEST and MANIFEST.SKIP now.
+
+	* raptor/raptor_general.c (raptor_set_feature):
+	Add new feature normalize_language
+	(raptor_set_parser_strict): Set default for feature
+	normalize_language to true.
+
+	* raptor/raptor.h, raptor/raptor_internal.h:
+	Add new feature normalize_language
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Normalize language to lowercase.
+	After http://www.w3.org/TR/rdf-concepts/#dfn-language-identifier
+	Controlled by a new parser feature 'normalize_language'.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_line):
+	Normalize language to lowercase.
+	After http://www.w3.org/TR/rdf-concepts/#dfn-language-identifier
+
+2003-09-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/Makefile.am:
+	In AM_LDFLAGS, use @LIBRDF_LIBS@ for -L/-l libraries and
+	@LIBRDF_INTERNAL_LIBS@ for libtool things.
+	Remove not-needed $(LIBS) from test binaries link lines.
+
+	* examples/Makefile.am:
+	In AM_LDFLAGS, use @LIBRDF_LIBS@ for -L/-l libraries and
+	@LIBRDF_INTERNAL_LIBS@ for libtool things.
+
+	* Makefile.am: raptor subdirectory is now not always built
+
+	* configure.ac: TIdy some configure --with/--enable messages
+	Added RAPTOR_CONFIG program (default raptor-config)
+	Added --with-raptor=system or internal.  By default will pick the best.
+	Checks for minmum versions and warns if too old, but proceeds.
+	raptor subdirectory is now not always built.
+
+	* raptor/raptor-config.in: Oops, -lraptor with --libs
+
+	* redland-config.in:
+	Added --libtool-libs for compiling with librdf using libtool.
+
+	* configure.ac:
+	Added LIBRDF_LIBTOOLLIBS for compiling with librdf using libtool.
+
+	* raptor/configure.ac:
+	Added RAPTOR_LIBTOOL_LIBS for compiling with raptor using libtool.
+
+	* raptor/raptor-config.in:
+	Added exec_prefix to make --libs generate the right -L
+	Added --libtool-libs for compiling with raptor using libtool.
+
+2003-08-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac, raptor/configure.ac:
+	dmalloc enabled only if dmalloc.h is present
+
+	* raptor/tests/Makefile.am: Removed warn-01 re-added accidently.
+
+	* raptor/tests/warn-00.out, raptor/tests/warn-00.rdf:
+	Added rdf:bagID warning check
+
+	* raptor/tests/Makefile.am:
+	Added scanning tests and ex-52.svg/out for inside SVG
+
+	* raptor/tests/ex-52.out, raptor/tests/ex-52.svg:
+	Check scanning for rdf/xml in SVG
+
+	* raptor/raptor_general.c (raptor_set_parser_strict):
+	Scanning and assuming are never default
+	on, must be enabled
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Fix scanning for rdf:RDF.  Do
+	parent->child processing if the grammar has a state set up,
+	in this case it is expecting a list of node elements.
+
+	* raptor/rdfdump.c: Set strict before setting other features
+
+	* raptor/rdfdump.c: Use strict_mode
+
+	* raptor/tests/warn-00.out, raptor/tests/warn-00.rdf,
+	raptor/tests/warn-01.out, raptor/tests/warn-01.rdf,
+	raptor/tests/warn-03.rdf: These are now errors not wrarnings
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	 Non-namespaced elements are now
+	an error.
+	(raptor_process_property_attributes): Tidy non-namespaced element name.
+	(raptor_start_element_grammar): Give errors if an attempt is made
+	to proceed dealing with elements with no namespace for property or
+	node elements - attributes are caught above.
+
+	* raptor/tests/Makefile.am:
+	Add bad-18.rdf, bad-19.rdf for non-namespaced elements
+
+	* raptor/tests/bad-18.rdf, raptor/tests/bad-19.rdf:
+	Test node/property elements without namespaces fail
+
+	* raptor/raptor_internal.h:
+	Add raptor_parser field 'magic' for libxml2 error/warning callback
+	validation.  and declare RAPTOR_LIBXML_MAGIC to set use there
+
+	* raptor/raptor_general.c (raptor_new_parser):
+	Set RAPTOR_LIBXML_MAGIC field in structure for
+	libxml2 error/warning callback validation.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_term):
+	Check that the string/URI term was terminated
+	before the end of the string.
+
+	* raptor/tests/Makefile.am: Added bad-04.nt
+
+	* raptor/tests/bad-04.nt: Test for non-terminated URI
+
+	* raptor/raptor_libxml.c (raptor_libxml_warning,raptor_libxml_error):
+	Validate the ctx pointer
+	returned since sometimes it is a ctx, sometimes ctx->userData.  The
+	latter is what is expected.
+
+	* raptor/tests/Makefile.am:
+	Oops, run bad ntriples tests in N-Triples mode
+
+	* raptor/rapper.1: Added --version/-v
+
+	* raptor/rdfdump.c: Tidied up option error handling, messages.
+	Added --version/-v
+
+	* librdf/rdf_storage.c:
+	(librdf_storage_add_statement, librdf_storage_add_statements,
+	librdf_storage_remove_statement,
+	librdf_storage_context_add_statement,
+	librdf_storage_context_remove_statement)
+	For these optional methods that can change the store, return failure
+	if the factory does not implement them.
+	(librdf_storage_context_add_statements): Added either using the
+	factory method or librdf_storage_context_add_statement if that
+	is missing.
+	(librdf_storage_context_remove_statements): Added either using the
+	factory method or librdf_storage_context_remove_statement if that
+	is missing.
+	(librdf_storage_context_as_stream): Added, deprecating
+	librdf_storage_context_serialise.
+
+	* librdf/rdf_storage.h:
+	Added new context_add_statements and context_remove_statements
+	factory methods.  Note that those are optional and so are
+	all other context methods or methods that change the store (could be
+	read only)
+	Added prototypes for librdf_storage_context_add_statements,
+	librdf_storage_context_remove_statements.
+	Added prototype for librdf_storage_context_as_stream, deprecating
+	librdf_storage_context_serialise.
+
+	* librdf/rdf_model_storage.c:
+	(librdf_model_storage_context_add_statements) Added, calling
+	librdf_storage_context_add_statements
+	(librdf_model_context_remove_statements) Added, calling
+	librdf_storage_context_remove_statements
+
+	* librdf/rdf_model.c:
+	(librdf_model_context_add_statements) Use factory method if
+	present otherwise use existing code and
+	librdf_model_context_add_statement method.
+	(librdf_model_context_remove_statements) Use factory method if
+	present otherwise use existing code and
+	librdf_model_context_remove_statement method.
+
+	* librdf/rdf_model.h: model_factory - note sync is optional.
+	Add context_add_statements and context_remove_statements, both
+	optional that librdf_model will implement using the singular forms if
+	they are missing.
+
+	* librdf/rdf_node.c (librdf_node_equal): Remove unused var
+
+2003-08-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_stream.c (librdf_stream_update_current_element):
+	Do not do excessive work -
+	only do a lower level check is_updated is false.
+	(librdf_stream_next): Reset is_updated after an
+	stream->next_method is performed.
+	(librdf_stream_get_object): Do less work, just return
+	librdf_stream_update_current_element, always the current element or
+	NULL at the end.
+
+	* librdf/rdf_iterator.c (librdf_iterator_update_current_element):
+	Do not do excessive work -
+	only do a lower level check is_updated is false.
+	(librdf_iterator_next): Reset is_updated after an
+	iterator->next_method is performed.
+	(librdf_iterator_get_object): Do less work, just return
+	librdf_iterator_update_current_element, always the current element or
+	NULL at the end.
+
+	* librdf/rdf_stream.h, librdf/rdf_iterator.h: Add is_updated flag
+
+	* librdf/rdf_node.c (librdf_node_equals): Actually use interned nodes.
+
+	* librdf/rdf_uri.c (librdf_uri_equals): Actually use interned URIs.
+
+	* librdf/rdf_model.c (Main):
+	In test code, use librdf_parser_parse_string_as_stream rather
+	than write files, delete them.
+
+	* librdf/rdf_node.c:
+	Updates to share all librdf_node objects like for librdf_uri - usage
+	counts and shared pointers.
+	(librdf_init_node): Initialise the three hashes for resource,
+	literal, blank nodes.
+	(librdf_finish_node): Clean up the three hashes.
+	(librdf_new_node_from_uri_string_or_uri): Internal helper
+	function to do all resource node creation.  Does the
+	minimum of uri_string to/from uris objects conversion.
+	If the resource node isn't in the resource hash (H_RESOURCE), add it
+	otherwise just bump the usage count.
+	(librdf_new_node_from_uri_string, librdf_new_node_from_uri,
+	librdf_new_node_from_uri_local_name,
+	librdf_new_node_from_normalised_uri_string): Use
+	librdf_new_node_from_uri_string_or_uri.
+	(librdf_new_node_from_typed_literal): If the librdf_node_encode-ed
+	buffer of the literal node isn't in the literal hash (H_LITERAL),
+	add it, otherwise just bump the usage count.
+	(librdf_new_node_from_blank_identifier): If the identifier string
+	isn't in the blank hash (H_BLANK), add it, otherwise just bump the
+	usage count.
+	(librdf_new_node_from_node): Now 1 line.
+	(librdf_free_node): Decrement usage and then free and remove from the
+	appropriate hashes if the usage was 0.
+	(librdf_node_get_li_ordinal): Get the ordinal from the URI string
+	since it isn't/wasn't ever stored.
+
+	* librdf/rdf_node.h:
+	librdf_node - add usage count. Remove ordinal union part, never used.
+	Add key & size to literal part.
+
+	* librdf/rdf_statement.c, librdf/rdf_query.c,
+	librdf/rdf_concepts.c (main): Call librdf_init_node and
+	librdf_finish_node in the test code.
+
+	* librdf/rdf_init.h:
+	Added node mutext (when threading) and node hashes to world structure.
+
+	* librdf/rdf_init.c (librdf_world_open): Call librdf_init_uri.
+	(librdf_world_set_uris_hash): Deleted
+	(librdf_init_world): Don't use arg2.
+
+	* librdf/rdf_uri.c (librdf_new_uri): Fail if uri_string is NULL.
+	Tidy up cleanup and thread un-/locking.
+	(librdf_new_uri_from_uri): Actually use the interning of URIs.
+	(librdf_new_uri_from_uri_local_name): Fail if URI is NULL.
+	Tidy up cleanup and thread un-/locking.
+	(librdf_new_uri_normalised_to_base, librdf_new_uri_relative_to_base):
+	Fail if URI is NULL.
+
+	* raptor/configure.ac, configure.ac:
+	Added --with-dmalloc option default auto for maintainer, no otherwise.
+
+2003-08-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Redland/Parser.pm:
+	Use raptor in the example. Add a mime type example.
+
+	* demos/demo.pl: s/statement/triple/ in html
+
+	* demos/demo.pl: Update parser labels.
+	Add owl namespace.
+	Trim rdf content whitespace.
+	Become read only if db is not writable to this user.
+
+	* docs/Makefile.am: Added .pod.html rule
+
+2003-08-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/fix-python-xhtml:
+	Remove remaining broken fragments, example urls
+
+	* docs/fix-python-xhtml: Exclude __builtin__ class from links
+
+	* Released RPMs version 0.9.13-3 (patch redland-0.9.13-perl2.patch)
+
+	* librdf/redland.spec.in:
+	(0.9.13-2, 0.9.13-3) patches added to fix broken perl UNIVERSAL::isa
+
+	* perl/lib/RDF/Redland/URI.pm, perl/lib/RDF/Redland/Node.pm:
+	Use URI::URL in the isa
+
+	* Released RPMs version 0.9.13-2 (patch redland-0.9.13-perl1.patch)
+
+	* perl/lib/RDF/Redland/URI.pm, perl/lib/RDF/Redland/Node.pm:
+	Fix totally broken use of UNIVERSAL::isa
+
+	* perl/lib/RDF/Redland/URI.pm (new):
+	Fix arg promotion from URI objects.
+
+	* perl/lib/RDF/Redland/URI.pm (new): Fix cloning.
+
+	* configure.ac: Bumped version to 0.9.14
+
+	* Snapshotted redland_0_9_13 for 0.9.13 release
+
+	* docs/redland.pod: Note out of dateness
+
+	* docs/redland.pod, librdf/rdf_serializer_rdfxml.c,
+	librdf/rdf_serializer_raptor.c, utils/db_upgrade.c,
+	tcl/example.tcl, ruby/example.rb: Use librdf_model_as_stream
+
+	* java/org/librdf/redland/Model.java (as_stream):
+	Added - use Use librdf_model_as_stream or with a context
+	node, use librdf_model_context_as_stream
+
+	* python/RDF.py (Model.as_stream): Use librdf_model_context_as_stream
+
+	* perl/lib/RDF/Redland/Model.pm:
+	Fix uses of RDF::Redland::Node::_ensure($node) to use it as a redland
+	node.
+	(as_stream): Take optional context node, promote as necessary,
+	using librdf_model_context_as_stream. Add documentation.
+
+	* Redland.i: Added librdf_model_context_as_stream
+
+	* librdf/rdf_model.c, librdf/rdf_model.h:
+	Added librdf_model_context_as_stream, deprecating
+	librdf_model_context_serialize as confusing with the
+	librdf_serializer class and mixing US/UK spelling.
+
+	* perl/serialize.pl, demos/demo.pl, perl/example.pl: Use as_stream
+
+	* perl/lib/RDF/Redland/Model.pm (as_stream):
+	Added, deprecating serialise and serialise.
+
+	* librdf/rdf_model.c:
+	Added librdf_model_as_stream, deprecating librdf_model_serialise
+	as confusing with the librdf_serializer class.
+
+	* librdf/rdf_model.h, Redland.i: Added librdf_model_as_stream
+
+	* tcl/Makefile.am: TCL_INCLUDES
+
+	* php/php.ini: load shared library from .
+
+	* php/Makefile.am:
+	Remove libtool again.  Try "if OSX, else rest of world" approach.
+
+	* configure.ac:
+	TCL_INCLUDE now TCL_INCLUDES and blank if not found, otherwise -Idir
+
+	* tcl/Makefile.am:
+	Remove libtool again.  Try "if OSX, else rest of world" approach.
+
+	* configure.ac: default TCL_INCLUDE to /usr/include
+
+	* ruby/Makefile.am: minor depends
+
+	* ruby/Makefile.am:
+	Remove libtool again.  Try "if OSX, else rest of world" approach.
+	Package now 'redland' to match ruby convention.
+
+	* ruby/example.rb: Now redland
+
+	* tcl/Makefile.am: Don't -I-I@TCL_INCLUDE@
+
+	* configure.ac:
+	tcl version tweak -nonewline since OSX does silly things
+
+	* tcl/Makefile.am: Removed README
+
+	* tcl/README: Moved into ../docs/tcl.html
+
+	* tcl/Makefile.am:
+	Use @TCL_VERSION@ for the library name and -I@TCL_INCLUDE@
+
+	* configure.ac:
+	--with-perl/python/java/tcl/php/ruby now either enable the language
+	or enable and set the binary.  Always try to find the version of
+	the language before building the API automatically.
+	Hunt for Tcl tcl.h and Java JDK JNI headers in various places.
+	Report the languages available and language APIs built.
+
+	* php/Makefile.am: comments.
+	testing is optional, php program might not exist
+
+	* php/Makefile.am:
+	Very complex build and install using a libfake.la so I don't have to
+	care about details of building shared object and dynamically loaded
+	libraries.  No OSX specific fixes here since I can't see what
+	the convention is.
+
+	* tcl/Makefile.am: Be verbose in pkgIndex.tcl
+
+	* ruby/Makefile.am: docs
+
+	* tcl/Makefile.am: No -module here
+
+2003-08-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* tcl/Makefile.am:
+	Very complex build and install using a libfake.la so I don't have to
+	care about details of building shared object and dynamically loaded
+	libraries (such as on OSX).  The OSX specific naming is burnt in here
+	since the dynamically loaded library must be called Redland.dylib
+
+	* ruby/Makefile.am:
+	Very complex build and install using a libfake.la so I don't have to
+	care about details of building shared object and modules (such
+	as on OSX).  OSX specific naming have to be burnt in here since
+	shared modules must be called Redland.bundle
+
+	* ruby/Makefile.am, tcl/Makefile.am:
+	Make build and installing work again, without libtool.
+
+	* tcl/README: Update Tcl building info
+
+	* tcl/test.tcl: Back to auto_path .
+
+	* configure.ac: BDB check update again.
+	Report discovered BDB version in summary
+
+	* configure.ac: Use bdbc_ for temporary variables in BDB checking code.
+
+	* perl/Makefile.PL: Revert to working version.  No need for
+	builddir/srcdir things.
+
+	* perl/Makefile.am: Revert: Remove inplace editing of PERL_MAKEFILE
+
+	* configure.ac: Another major BDB hunt and validate.  This time
+	check for db.h with version numbers.
+
+	* perl/Makefile.PL: Set FULLEXT to RDF/Redland
+
+	* perl/Makefile.am: Make sure PERL really uses the right FULLEXT,
+	BASEEXT and BOOTSTRAP values
+
+	* librdf/rdf_hash_bdb.c:
+	Remove BDB_CLOSE/FD_2_ARGS ifdef sequence at start - now tested in
+	configure.
+	Rename to HAVE_BDB_CLOSE/FD_2_ARGS
+
+	* configure.ac: bdb_dbname test was inverted
+
+	* configure.ac: use "if test ...; then", not "if [ ... ]; then"
+
+	* configure.ac: I give up.  Put OSX fink hints here - look for /sw/bin.
+	Add more Sleepycat/Berkeley DB checks, more guesswork and hunting for
+	BDB headers in /usr/include/db* subdirectories.
+
+	* perl/Makefile.am: Use CFLAGS, not MEM.
+
+	* perl/Makefile.PL: Use CFLAGS, not MEM.
+	Use redland-src-config --libs not --static-libs
+
+	* librdf/rdf_hash_bdb.c (librdf_hash_bdb_open):
+	More BDB #ifdef mess for db->open 6 or 7
+	arguments.
+
+	* librdf/rdf_utf8.c, librdf/rdf_uri.c, librdf/rdf_stream.c,
+	librdf/rdf_storage.c, librdf/rdf_statement.c,
+	librdf/rdf_serializer.c, librdf/rdf_query.c, librdf/rdf_parser.c,
+	librdf/rdf_node.c, librdf/rdf_model.c, librdf/rdf_iterator.c,
+	librdf/rdf_heuristics.c, librdf/rdf_hash.c, librdf/rdf_files.c,
+	librdf/rdf_digest.c, librdf/rdf_concepts.c:
+	When running a standalone test which has a STANDALONE #define set
+	then do not compile the code from the module, but use the code in the
+	linked librdf - all the tests link with this.  This prevents
+	complaints about dual symbols from the OSX linker, and crashes with
+	statics that store the pointers to factories (models, storages,
+	parsers).
+
+2003-08-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: Added AC_HEADER_TIME and checks for time.h, sys/time.h
+	for gettimeofday
+
+	* librdf/rdf_parser_raptor.c
+	(librdf_parser_raptor_generate_id_handler): Added to use
+	librdf_world_get_genid to get a unique genid if the user does not
+	provide one.
+	(librdf_parser_raptor_parse_file_as_stream,
+	librdf_parser_raptor_parse_as_stream_common,
+	librdf_parser_raptor_parse_into_model_common): Use
+	librdf_parser_raptor_generate_id_handler to generate IDs.
+
+	* librdf/rdf_node.c (librdf_new_node_from_blank_identifier):
+	If a NULL identifier
+	is passed in, use librdf_world_get_genid to get a unique genid.
+
+	* librdf/rdf_init.c:
+	Added a slew of time related headers for gettimeofday
+	(librdf_new_world): Get the startup time to init world genid_base.
+	Set genid_counter to 1.
+	(librdf_world_set_feature): Support
+	LIBRDF_WORLD_FEATURE_GENID_BASE, LIBRDF_WORLD_FEATURE_GENID_COUNTER
+	both integers.
+	(librdf_world_get_genid): Added to return a new
+	genid of the form "r"+base+"r"+(counter++)
+
+	* librdf/rdf_init.h: World gains genid_base and genid_counter.
+	New world features LIBRDF_WORLD_FEATURE_GENID_BASE,
+	LIBRDF_WORLD_FEATURE_GENID_COUNTER
+	New internal librdf_world_get_genid
+
+	* docs/fix-python-xhtml: +email
+
+	* docs/fix-python-xhtml: -email
+
+	* docs/fix-python-xhtml: words
+
+	* docs/fix-python-xhtml: New pydoc, new bad use of ID.
+	Skip the huge #commented heading in the source.
+
+	* examples/example2.c:
+	Updated to a slightly more useful example - parsing from
+	string content and adding/checking/removing a statement.
+
+	* python/redlandtest.py (testIterateModel, testContains): Added.
+
+	* librdf/rdf_storage.c: Revert, remove contexts check here.
+
+	* librdf/rdf_storage_list.c (librdf_storage_list_contains_statement):
+	Handle contains with
+	contexts using librdf_storage_list_find_statements.
+
+	* librdf/rdf_storage_hashes.c
+	(librdf_storage_hashes_contains_statement): Handle contains with
+	contexts using librdf_storage_hashes_find_statements.
+
+	* librdf/rdf_parser_raptor.c: removed unused variable
+
+	* librdf/rdf_storage.c (librdf_storage_hashes_contains_statement):
+	Revert fix.
+
+	* librdf/rdf_storage_hashes.c
+	(librdf_storage_hashes_contains_statement): Move the fix for
+	stores with contexts into librdf_storage_contains_statement
+
+	* librdf/rdf_storage_list.c
+	(librdf_storage_list_contains_statement): Build a
+	librdf_storage_list_node to use to run librdf_list_contains.
+
+	* librdf/rdf_storage.h:
+	Added index_contexts flag to librdf_storage_factory_s.
+
+	* python/RDF.py (Model.__iter__): Fix to return an iter
+
+	* python/setup.py:
+	Remove MEM, MEM_LIBS code - rely on CFLAGS and LDFLAGS being passed in.
+	Move version code to top.
+
+	* python/Makefile.am: Pass on CFLAGS and LDFLAGS to python setup.py
+
+	* python/example.py: empty statement
+
+	* python/RDF.py: words in copyright
+
+	* python/test/test.py, python/example.py:
+	Updated to use 0.9 api features
+
+	* ruby/Makefile.am: test-ruby fix shared dir
+
+	* ruby/Makefile.am: LIBRUBYARG works 1.6-1.8
+
+	* python/redlandtest.py:
+	Update by Edd Dumbill to test the 0.9 RDF.py changes.
+
+	* python/RDF.py:
+	Major update to use Python 2.2+ idioms and features by Edd Dumbill.
+
+	General remarks
+
+	  * Removed string exceptions and replaced with RedlandError ones
+
+	  * Where underlying Redland C objects were unexpectedly null, raise
+	    exceptions rather than returning None, "" or [] as appropriate.
+
+	  * Raise exceptions if Redland C constructors fail in Python
+	    constructors.
+
+	  * Did quite a lot of documentation updating, where possible
+	    demonstrating preferred Pythonic usages.
+
+	  * Added more unit tests to test changed functionality.
+
+	RDF.Node
+
+	  * Constructor now accepts Uri to make a resource/property node, or
+	    a string to make a string literal
+
+	  * Removed usage of node_type() in favour of is_resource(), is_blank()
+	    etc methods.
+
+	  * DEPRECATED get_blank_identifier() etc methods in favour of
+	    node.blank_identifier etc properties.  Raise exception if properties
+	    inconsistent with the node type are requested.
+
+	RDF.Statement
+
+	  * No need to name subject, predicate, object in constructor any more.
+	    Uris or string literals accepted in place of nodes in constructor
+	    argument.
+
+	  * __getattr__ method deleted, using new-style property() for
+	    subject, predicate, object
+
+	RDF.Model
+
+	  * Deleted get_*_iterator methods
+
+	  * Renamed sources() to get_sources(), targets() to get_targets(),
+	    arcs() to get_predicates().  Retained old method names as aliases.
+
+	  * Added get_sources_context(), get_targets_context(),
+	    get_predicates_context() which return (node, context) tuples.
+
+	  * Amended get_source(), get_sources() etc methods so that Uri and
+	    string literals were acceptable as shortcut types for nodes.
+
+	  * Added find_statements_context() which returns (statement, context)
+	    tuples.
+
+	  * Renamed context_remove_statements() to
+	    remove_statements_with_context(). Retained old method name as an
+	    alias.
+
+	  * Added __delitem__ method so del[statement] and del[statement,
+	    context] work.
+
+	  * Added append() method so append(statement) and append(statement,
+	    context) work.  Suggest that append() is used in preference to
+	    add_statement() for Python idiomatic usage.
+
+	  * DEPRECATED serialise() in favour of as_stream().
+
+	  * Added as_stream_context() to serialise (statement, context) tuples.
+
+	  * Exception raised if len() is attempted on model with a non-countable
+	    storage.
+
+	  * DEPRECATED Model.add(), Model.add_typed_literal_statement() usages:
+	    now that constructing Statements is easier, it's incongruous to have
+	    these in the model.  Additionally it saves reproducing various bits
+	    of error checking that properly belong in the Node() constructor.
+
+	  * Implemented __contains__() so "if statement in model" and
+	    "if (statement, context) in model" work as expected using the more
+	    efficient Redland C methods where possible.
+
+	RDF.Stream
+
+	  * DEPRECATED Stream.context_iter().  Use in preference the _context
+	    variants of the appropriate Model methods.  This leads to fewer
+	    lines of code.
+
+	RDF.Uri
+
+	  * Amended constructor so strings or Uri instances can be passed as
+	    the first argument, without named parameters being required, and
+	    the right thing still happen.
+
+	----
+	I did some indenting and white space editing for consistency
+	with the existing code.
+
+	* librdf/rdf_list.c (librdf_list_iterator_get_method): Oops
+
+	* librdf/rdf_hash.c (librdf_hash_get_all_iterator_get_method): oops
+
+	* java/Makefile.am:
+	Use check-local again, since we don't actually make programs called
+	test1 and test2.
+
+	* Redland.i: Add prototypes for static, internal methods
+
+	* python/Makefile.am: Pass in CFLAGS to python
+
+	* librdf/rdf_hash.c (librdf_hash_get_all_iterator_get_method): Give
+	an error for an unknown method and return NULL.
+
+	* librdf/rdf_list.c (librdf_list_iterator_get_method):
+	Check method is get_object
+	and return an error if it isn't.
+
+	* librdf/rdf_storage.c
+	(librdf_storage_stream_to_node_iterator_get_method): Provide
+	iterator get_context method as well as get_object, using the
+	internal stream.
+
+	* ruby/Makefile.am: Made an rubylib make definition
+
+	* tcl/Makefile.am: Made an tcllib make definition
+
+	* tcl/Makefile.am:
+	Interrogate tclsh for versions, and then guess include paths and
+	library name.
+
+	* tcl/test.tcl, tcl/example.tcl: Back to redland
+
+	* tcl/test.tcl, tcl/example.tcl: Tcl package now Redland
+
+	* configure.ac: Look for tclsh for TCL
+
+	* ruby/Makefile.am: More libtool flags
+
+	* ruby/Makefile.am: Build shared objects again.
+
+	* ruby/Makefile.am: Don't depend on build-ruby
+
+	* librdf/rdf_storage_hashes.c
+	(librdf_storage_hashes_contains_statement): Use
+	librdf_storage_hashes_find_statements to make this work when
+	contexts are being used.
+
+	* librdf/rdf_node.c (librdf_node_equals): Doc fix
+
+	* librdf/rdf_storage_list.c (librdf_storage_list_node_equals):
+	When not using contexts, don't
+	check the context nodes.
+
+	* Redland.i (librdf_call_python_message, librdf_call_perl_message):
+	Fix use of
+	vsnprintf in perl and python message callbacks to properly copy
+	va_list using va_copy.  Same bug that happened in raptor.
+
+2003-08-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* java/Makefile.am: Added test-java again
+
+	* tcl/Makefile.am: Added test-tcl again
+
+	* ruby/Makefile.am: Added test-ruby again
+
+	* python/example.py: Modernise the python to 2.2+
+
+	* python/RDF.py: Throughout:
+	Updated to use new Python classes (2.2+)
+	Replace __getattr__/__setattr__ with property() method.
+
+	* python/Makefile.am: check-local now also does unittest-python
+
+	* raptor/configure.ac: Bumped version to 0.9.13
+
+	* raptor/raptor_parse.c (raptor_start_element_grammar):
+	With rdf:datatype, do not lose the
+	URI string pointer.  For rdf:ID, do not allocate the URI twice.
+
+	* raptor/raptor_parse.c (raptor_generate_statement):
+	Do not set language when a datatype is given.
+
+	* raptor/raptor_xml_writer.c (raptor_new_xml_writer):
+	Initialise writer buffer to an empty string
+	to start (i.e. just \0).
+	(raptor_xml_writer_start_element): Now assume buffer is always
+	present, remove empty buffer case.
+	(raptor_xml_writer_end_element,raptor_xml_writer_cdata): Handle 0
+	length case, no strncpy.
+
+	* raptor/tests/Makefile.am: Added ex-51.
+	Fix daml+oil test.
+
+	* raptor/tests/ex-51.out, raptor/tests/ex-51.rdf:
+	Check empty XML literal works
+
+	* raptor/tests/ex-41.out: No language for datatyped literals.
+
+	* raptor/tests/daml-oil.rdf, raptor/tests/daml-oil.out,
+	raptor/tests/Makefile.am: Updated to DAML+OIL schema 2001-03 as
+	defined in http://www.daml.org/2001/03/daml+oil-index.html
+
+	* raptor/tests/daml-oil.out, raptor/tests/daml-oil.rdf: Added
+	2000-11-30 http://www.cs.man.ac.uk/%7Ehorrocks/DAML-OIL/daml-oil.rdf
+
+	* raptor/tests/owl-schema.rdf, raptor/tests/owl-schema.out:
+	Updated OWL schema http://www.w3.org/2002/07/owl to match
+	that given in OWL Reference 2003-08-18 CR
+	at http://www.w3.org/TR/2003/CR-owl-ref-20030818/#appB
+
+	* raptor/libraptor.3: Updated for 0.9.12
+
+	* python/RDF.py (Statement._get_subject):
+	Missed accidently when updating to do more copies.
+
+	* configure.ac: No languages by default.
+
+2003-08-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.PL: Include -I builddir librdf dir to get rdf_config.h
+
+	* Makefile.am: make languages after core libs
+
+	* perl/Makefile.PL: More attempts at src/builddir fix.
+
+	* perl/Makefile.am: Fix src/builddir for output of MakeMaker
+
+	* tcl/Makefile.am: again
+
+	* tcl/Makefile.am: oops, -c to compile
+
+	* ruby/Makefile.am:
+	This dir is now compiled and installed conditional on ruby being
+	enabled with --with-ruby (off by default).
+	Move -local targets into standard 'make' and 'make install' ones.
+	Try to compile with the right Ruby shared library and install in
+	the Ruby libs dir.
+
+	* tcl/Makefile.am: Use @TCL@
+
+	* tcl/Makefile.am:
+	This dir is now compiled and installed conditional on tcl being
+	enabled with --with-tcl (off by default).
+	Move -local targets into standard 'make' and 'make install' ones.
+	Try to compile the Tcl shared library and install in the Tcl
+	libs dir.  Finding the tcl.h includes is impossible, so note
+	that in the README.
+
+	* tcl/README: Tcl building issues
+
+	* php/Makefile.am: php installs now
+
+	* configure.ac:
+	In checking for progs, hunt for perl, python etc. rather than  names.
+	Added --with-perl/python/java/php/tcl/ruby with optional
+	argument =PATH to set the script.  This enables the particular
+	language to be built.  Present defaults are perl and python are
+	enabled.
+	Move --with-ecma-cli to be nearby and accept 'no' also.
+	Moved --with-jdk to be nearby.
+	The subdirectories called with standard 'make' and 'make install'
+	now are based on languages.
+	Report the languages configured in the build summary.
+
+	* python/Makefile.am:
+	This dir is now compiled and installed conditional on python being
+	enabled with --with-python (by default).
+	Move -local targets into standard 'make' and 'make install' ones
+	and create a fake build and install to keep automake happy, since
+	we are using python's Distutils to do the real work.
+
+	* perl/Makefile.am:
+	This dir is now compiled and installed conditional on perl being
+	enabled with --with-perl (by default).
+	Move -local targets into standard 'make' and 'make install' ones
+	and create a fake build and install to keep automake happy, since
+	we are using perl's MakeMaker to do the real work.
+
+	* java/Makefile.am:
+	This dir is now compiled and installed conditional on java being
+	enabled with --with-java, so move -local targets into standard
+	'make' and 'make install' ones.
+	Install both the shared library and jar.
+
+	* java/Makefile.am: core_wrap.c without makefile variables
+
+	* java/Makefile.am:
+	EXTRA_LTLIBRARIES is broke - it won't build shared libraries.  So
+	fake it using lib_LTLIBRARIES and then override the installation for
+	install-javalibLTLIBRARIES: to do nothing.
+
+	* java/Makefile.am:
+	Shared library now librdf-java and built using libtool.
+
+	* java/org/librdf/redland/World.java, java/redland-fragment.java:
+	Now rdf-java (aka librdf-java under unixen)
+
+	* librdf/rdf_init.c: Now 2003
+
+2003-08-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* java/org/librdf/redland/Node.java:
+	(constructors) Update to always copy rather than deal with shared
+	nodes.
+	(isResource, isLiteral, isBlank): Added.
+
+	* java/org/librdf/redland/Statement.java:
+	(constructors, getSubject, getPredicate, getObject) Update node and
+	statements to always copy rather than deal with shared.
+
+	* java/org/librdf/redland/Stream.java:
+	Returning copied statements is default.
+
+	* java/org/librdf/redland/Iterator.java:
+	Returning copied nodes is default.
+
+	* configure.ac: For --with-jdk, hunt for the machine-dependent subdir
+
+	* java/Makefile.am: Use JDK_INCLUDES
+
+	* java/org/librdf/redland/Parser.java:
+	(parse) Added methods parsing content ina  string into a model
+	or as a stream of statements.
+
+	* java/org/librdf/redland/Model.java: sync has no return
+
+	* configure.ac: Added --with-jdk to specify where Java lives
+
+	* java/org/librdf/redland/Model.java,
+	perl/lib/RDF/Redland/Model.pm (sync): Added calling
+	librdf_model_sync
+
+	* Redland.i: Added librdf_model_sync
+
+	* librdf/rdf_model_storage.c (librdf_model_storage_sync):
+	Added, invoking librdf_storage_sync
+
+	* librdf/rdf_model.c (librdf_model_sync):
+	Added, invoking it in the implementation via new
+	factory method sync.
+
+	* librdf/rdf_model.h: Added librdf_model_sync and factory method.
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_sync):
+	Added, implementing sync method.
+
+	* librdf/rdf_storage.c: Added librdf_storage_sync
+
+	* librdf/rdf_storage.h: Added librdf_storage_sync and factory method.
+
+	* python/Makefile.am, perl/Makefile.am: clean more
+
+	* perl/serialize.pl: Updated API tweaks
+
+	* perl/lib/RDF/Redland/Node.pm (new_from_literal):
+	Ensure is_wf_xml is an integer.
+
+	* perl/lib/RDF/Redland/Model.pm (remote_statement):
+	Allow NODE NODE NODE [CONTEXT] args
+
+	* perl/lib/RDF/Redland/Statement.pm (new):
+	Promote node arguments to redland nodes using
+	RDF::Redland::Node::_ensure.
+
+	* perl/lib/RDF/Redland/Node.pm (_ensure):
+	Added, to promote other objects to redland nodes
+
+	* perl/lib/RDF/Redland/Model.pm (add): Now call add_statements.
+	(add_statements,remove_statement,add_statements,remove_statements,
+	remove_context_statements): Promote node arguments to redland nodes
+	using RDF::Redland::Node::_ensure.
+
+	* perl/lib/RDF/Redland/Statement.pm (new_from_nodes):
+	Fix call to constructor
+
+	* perl/example.pl:
+	Test add_statement(NODE, NODE, NODE) form - with same NODE
+
+	* perl/lib/RDF/Redland/Model.pm (add_statement):
+	Accept NODE NODE NODE [CONTEXT] as arguments too.
+
+2003-08-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Redland.i: typo
+
+	* perl/lib/RDF/Redland/Parser.pm:
+	(parse_string_as_stream, parse_string_into_model):
+	Added for parsing strings.  Note that the base_uri is required.
+
+	* python/RDF.py:
+	(Parser.parse_string_as_stream, Parser.parse_string_into_model):
+	Note base_uri is required in docs, raise an error if it isn't there.
+
+	* python/RDF.py:
+	(Parser.parse_string_as_stream, Parser.parse_string_into_model):
+	Added.
+
+	* librdf/rdf_parser_raptor.c
+	(librdf_parser_raptor_parse_as_stream_common,
+	(librdf_parser_raptor_parse_uri_into_model_common): Ensure
+	source_uri is set up correctly.  Refuse to work without a
+	base_uri.
+
+	* python/test/test.py: Added test with parser.parse_string_as_stream
+
+	* librdf/redland.spec.in: try to get perl install working again
+
+	* Redland.i: Added librdf_parser_parse_string_as_stream,
+	librdf_parser_parse_string_into_model 
+
+	* librdf/rdf_parser_raptor.c: Added new methods for implementing
+	librdf_parser_parse_string_as_stream,
+	librdf_parser_parse_string_into_model
+	(librdf_parser_raptor_parse_as_stream_common): New, core
+	work for both string and uri parsing into a stream.
+	(librdf_parser_raptor_parse_uri_into_model_common): New, core
+	work for both string and uri parsing into a model.
+
+	* librdf/rdf_parser.h (librdf_parser_parse_string_as_stream,
+	librdf_parser_parse_string_into_model): Added
+
+	* librdf/rdf_parser.c (librdf_parser_parse_string_as_stream,
+	librdf_parser_parse_string_into_model): Added
+
+2003-08-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/Makefile.am: Remove -static from test links
+
+	* raptor/raptor_uri.c (main):
+	Test xmlbase and retrievable URI tranforms.
+
+	* raptor/raptor_uri.c (raptor_uri_resolve_uri_reference):
+	Handle #s relative to a uri-reference with a #fragment.
+
+	* raptor/raptor_www.c:
+	(raptor_www_fetch) Use raptor_new_uri_for_retrieval to ensure
+	that the URI-reference fragments are removed, and the URI path exists.
+
+	* raptor/raptor.h: Added raptor_new_uri_for_retrieval
+
+	* raptor/raptor_uri.c (raptor_new_uri_for_retrieval):
+	Added, strips fragments and ensures / path is present.
+
+	* raptor/raptor_xml_writer.c (raptor_xml_writer_start_element,
+	raptor_xml_writer_end_element): Use size_t for lengths.
+
+	* raptor/raptor_xml_writer.c (raptor_xml_writer_start_element):
+	Set content_element_seen in parent
+	only if there is a parent.
+	(raptor_xml_writer_end_element): Change current_element to parent
+	only if there is a current element.
+
+	* raptor/tests/Makefile.am:
+	Pull out may-fail NFC checks into a separate set and don't exit 1
+	if they do fail.  Failure is possible since it requires GNOME glib2
+	which isn't always available.
+
+	* librdf/redland.spec.in: Fix perl CORE dir
+
+	* librdf/redland.spec.in: Removed duplicate perl CORE shared objects
+
+	* librdf/redland.spec.in: Added redland-db-upgrade.1 to devel
+
+2003-08-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.PL:
+	Use .. for redland-src-config and add check it is there.
+
+	* python/setup.py:
+	Use .. for redland-src-config and add an os.access check for it
+
+	* redland-src-config.in: test ! -r
+
+	* redland-src-config.in: Stop if cannot find raptor-src-config
+
+	* python/setup.py: append define_macros only on match.
+
+	* python/setup.py: Oh yes it is.
+
+	* python/setup.py: redland-src-config is not in top_srcdir
+
+	* python/redlandtest.py, python/setup.py, python/example.py:
+	Set #! to /usr/bin/python
+
+	* python/RDF.py:
+	Update classes to always return copies of Nodes, Statements
+	from streams, iterators such as model.find_statements.
+	The user should now not need care about shared versus copying
+	of returned values but just use them.
+
+	* python/setup.py, python/Makefile.am:
+	Pass MEM, MEM_LIBS to python compiling C
+
+	* perl/lib/RDF/Redland/Statement.pm:
+	(subject,predicate,object) Copy redland node for librdf set methods.
+
+	* perl/lib/RDF/Redland/Node.pm: POD fixes
+
+	* perl/example.pl: Minor updates to use newer API calls.
+
+	* perl/lib/RDF/Redland/Statement.pm:
+	(subject,predicate,object) Docs - note no copying neeeded.
+	(predicate): Minor typo
+
+	* perl/lib/RDF/Redland/RSS.pm (Model.DESTROY): Call super to tidy up
+	(Node.new): Debugging
+	(Node.DESTROY): Call super to tidy up
+	(properties): Do less work, no need to copy.
+
+	* perl/lib/RDF/Redland/Node.pm (new): Invoke clone properly.
+
+	* perl/lib/RDF/Redland/URI.pm (new):
+	Constructor now copies as well as building URIs.  Takes
+	string literals or URIs by sniffing for classes.
+	(new_from_uri): Replaced by new
+	(clone): Another way to copy a URI.
+	Document these changes
+
+	* perl/lib/RDF/Redland/Iterator.pm:
+	Update for Node API change and no need to copy here
+	(current, context): Do not copy returned node.
+
+	* perl/lib/RDF/Redland/Stream.pm:
+	Update for Statement API change and no need to copy here
+	(current, context): Do not copy returned statement.
+
+	* perl/lib/RDF/Redland/Model.pm:
+	Update for Node, Statement API changes and no need to copy here
+	(sources,targets,arcs): Don't copy statements to new lists.
+
+	* perl/lib/RDF/Redland/Statement.pm (new):
+	Constructor now copies as well as building statements.  Takes
+	string literals, URIs by sniffing for classes.
+	(new_from_statement,new_from_nodes): Replaced by new.
+	(clone): Another way to do new_from_statement
+	(subject,predicate,object): Do less work, always return a copy.
+	Document these changes
+
+	* perl/lib/RDF/Redland/Node.pm (new):
+	Constructor now builds resources, literals, URIs by sniffing
+	for classes.
+	(new_from_literal,new_from_typed_literal): Replaced with new_literal
+	(new_xml_litearl): Added
+	(new_from_node): Replaced with clone
+	Document these changes
+
+	* perl/rss-dump.pl:
+	Comment out (working) code that lets perl do the URI retrieval,
+	assume raptor has that.
+	Slight updates for changed perl API.
+
+	* librdf/rdf_node.c (main):
+	Test: Revert accidently removed librdf_free_uri
+
+	* perl/Makefile.am, perl/Makefile.PL:
+	Pass on MEM to CFLAGS when building perl.
+
+	* librdf/rdf_parser_raptor.c:
+	Use LIBRDF_FREE for data returned from raptor.  This is OK
+	as long as raptor is in the redland sources.  Otherwise it'll
+	need to be SYSTEM_FREE.
+
+	* librdf/rdf_hash_bdb.c:
+	Use SYSTEM_FREE for data allocated by BDB via malloc()
+
+	* librdf/rdf_init.c: Use SYSTEM_MALLOC/FREE for mutexes.
+	(librdf_system_malloc, librdf_system_free): Added for dmalloc
+	debugging.
+
+	* librdf/librdf.h:
+	Added SYSTEM_MALLOC and SYSTEM_FREE for routines that return
+	genuine malloc() and free()ed memory - outside Redland typically.
+
+	* raptor/raptor_general.c (raptor_check_ordinal):
+	parentheses just for gcc
+
+2003-08-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/setup.py: license now license apparently
+
+	* utils/redland-db-upgrade.1: fix db names
+
+	* utils/Makefile.am: Added redland-db-upgrade.1
+
+	* utils/redland-db-upgrade.1: Manpage for redland-db-upgrade
+
+	* librdf/rdf_node.c:
+	Make nodes immutable - remove all node class set methods.
+	(librdf_new_node_from_literal): Now just calls
+	librdf_new_node_from_typed_literal.
+	(librdf_new_node_from_typed_literal):
+	librdf_new_node_set_typed_literal_value inlined here.
+	(librdf_new_node_from_blank_identifier):
+	librdf_set_blank_identifier inlined here.
+	(librdf_new_node_from_node): Call the appropriate node constructors
+	rather than malloc a new node and use the set methods.
+	(librdf_node_set_uri, librdf_node_set_type,
+	librdf_node_set_typed_literal_value, 
+	librdf_node_set_blank_identifier): Deleted and inlined where used.
+	(librdf_node_set_li_ordinal,librdf_node_set_literal_value): Deleted,
+	never used in this module.
+	(librdf_node_decode): Call the appropriate node constructors
+	rather than malloc a new node and use the set methods.
+	(main): Remove node set methods from test code.
+
+	* librdf/rdf_node.h:
+	Make nodes immutable - removed all public set methods into rdf_node.c
+
+	* java/org/librdf/redland/Node.java:
+	Make nodes immutable - remove set methods setURI, setType,
+	setLiteralValue.
+
+	* perl/lib/RDF/Redland/Node.pm:
+	Make nodes immutable.  Remove set parts of methods uri,
+	blank_identifier and type.  Remove method set_literal_value.
+
+	* python/RDF.py (Class Node):
+	Make nodes immutable - remove set methods.
+
+	* Redland.i: Make nodes immutable - remove node class set methods.
+
+	* Redland.i: comment out calling python exceptions for now
+
+2003-08-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: Remove MEM=-DLIBRDF_MEMORY_DEBUG if no dmalloc present.
+
+	* librdf/rdf_uri.c, librdf/rdf_stream.c, librdf/rdf_storage.c,
+	librdf/rdf_statement.c, librdf/rdf_serializer.c,
+	librdf/rdf_query.c, librdf/rdf_parser.c, librdf/rdf_node.c,
+	librdf/rdf_model.c, librdf/rdf_iterator.c,
+	librdf/rdf_heuristics.c, librdf/rdf_hash.c, librdf/rdf_files.c,
+	librdf/rdf_digest.c, librdf/rdf_concepts.c (main): In test code,
+	remove calls to librdf_memory_report for old internal memory
+	debugging code.
+
+	* librdf/librdf.h:
+	Remove LIBRDF_MEMORY_DEBUG and internal memory loss debugging code.
+	External tools such as dmalloc work a lot better.
+
+	* librdf/Makefile.am: Removed rdf_memory.c
+
+	* librdf/rdf_memory.c: Memory debugging code superceeded by better
+	external tools such as dmalloc
+
+	* librdf/rdf_hash_bdb.c, configure.ac:
+	Added BDB 4.0 and 4.1 open interface support - 6 or 7 arguments.
+
+	* raptor/raptor_xml_writer.c:
+	(raptor_xml_writer_end_element) Reset the current_element pointer
+	on finishing.  Makes any succeeding cdata do the right thing.
+
+	* librdf/redland.spec.in: Updates for new perl module names
+
+	* raptor/rdfdump.c: Inside redland, don't call raptor_init/finish,
+	it's done by redland's world.
+
+2003-08-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_rss.c (raptor_rss_parse_chunk):
+	Stop working aftera a user abort of the parser.
+
+	* raptor/raptor_general.c (raptor_check_ordinal): c is not const
+
+	* raptor/rdfdump.c, raptor/raptor_xml_writer.c,
+	raptor/raptor_xml.c, raptor/raptor_www_libwww.c,
+	raptor/raptor_utf8.c, raptor/raptor_uri.c, raptor/raptor_set.c,
+	raptor/raptor_sax2.c, raptor/raptor_qname.c,
+	raptor/raptor_parse.c, raptor/raptor_namespace.c,
+	raptor/raptor_locator.c, raptor/raptor_libxml.c,
+	raptor/raptor_identifier.c, raptor/raptor_general.c,
+	raptor/ntriples_parse.c: Move dmalloc includes into
+	raptor_internal.h and use everywhere.
+
+	* raptor/raptor_internal.h:
+	Add raptor dmalloc includes here to ensure all raptor code uses it
+	or not consistently.
+
+	* librdf/rdf_parser_raptor.c: (librdf_parser_raptor_error_handler,
+	librdf_parser_raptor_warning_handler):
+	Remove inadvisable use of raptor_parser as a variable name.
+	(librdf_parser_raptor_parse_uri_into_model): Zap unused world.
+
+	* librdf/rdf_hash.c (librdf_hash_from_array_of_strings):
+	Fix return value.
+
+	* examples/Makefile.am: Added redland_dbus
+
+	* examples/redland_dbus.c: Initial import
+
+2003-08-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_uri.c, librdf/rdf_stream.c,
+	librdf/rdf_storage_list.c, librdf/rdf_storage_hashes.c,
+	librdf/rdf_storage.c, librdf/rdf_statement.c,
+	librdf/rdf_serializer_rdfxml.c, librdf/rdf_serializer.c,
+	librdf/rdf_query.c, librdf/rdf_parser_raptor.c,
+	librdf/rdf_parser.c, librdf/rdf_node.c, librdf/rdf_model.c,
+	librdf/rdf_init.c, librdf/rdf_hash_memory.c,
+	librdf/rdf_hash_bdb.c, librdf/rdf_hash.c, librdf/rdf_digest.c,
+	librdf/rdf_concepts.c:
+	Replaced most LIBRDF_FATAL1/2 calls with LIBRDF_ERROR1/2; both now
+	take world arguments.  The remaining fatal errors are either in
+	redland startup when there is no sensible way to recover or in out of
+	memory situations.  The LIBRDF_ERROR1/2 calls now give the error and
+	recover/fail the method if appropriate.  The documentation on several
+	methods were updated to note this.  The error notification isn't
+	always possible since some methods have way to return errors.
+	A new method on the world class is needed to test for this state.
+
+	* librdf/librdf.h:
+	Added LIBRDF_ERROR1 and LIBRDF_ERROR2 that take world argument and call
+	either librdf_error(world, ...) or #ifdef LIBRDF_DEBUG,  abort()
+
+	* librdf/rdf_parser_repat.c: Out of date, gone
+
+	* librdf/rdf_stream.c, librdf/rdf_storage_list.c,
+	librdf/rdf_storage.c, librdf/rdf_serializer_rdfxml.c,
+	librdf/rdf_parser_repat.c, librdf/rdf_parser_raptor.c,
+	librdf/rdf_node.c, librdf/rdf_hash_memory.c,
+	librdf/rdf_hash_bdb.c, librdf/rdf_digest.c: Replace most abort()
+	with calls to LIBRDF_FATAL2 which aborts but gives a message too.
+
+	* librdf/rdf_init.c (librdf_world_get_feature,
+	librdf_world_set_feature): Return failure
+	rather than crash - not implemented or exposed in APIs yet.
+
+2003-08-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_model.c (main):
+	Add test that librdf_model_add_statement fails on a partial statement.
+
+	* librdf/rdf_model.c (librdf_model_size):
+	Added warning that it might not return an answer.
+	(librdf_model_add_statement, librdf_model_add,
+	librdf_model_remove_statement, librdf_model_contains_statement,
+	librdf_model_context_add_statement,
+	librdf_model_context_remove_statement): Added check that the
+	statement used is complete, using new librdf_statement_is_complete
+
+	* librdf/rdf_statement.h: Added librdf_statement_is_complete
+
+	* librdf/rdf_statement.c (librdf_statement_is_complete):
+	Added to check that a statement has
+	all the subject, predicate, object fields.
+
+2003-08-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/Makefile.am: Added warn-03
+
+	* raptor/tests/warn-03.rdf: Handle deleting of default namespaces
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Handle when a name has a
+	namespace but that namespace has no URI such as xmlns="".  In
+	that case, the element has non-namespaced parts too, so skip.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_line):
+	Casts so isspace calls get int args.
+
+	* raptor/raptor_uri.c (raptor_uri_is_absolute):
+	Cast so isalpha and isalnum get int args.
+
+	* raptor/tests/Makefile.am: Addex ex-50
+
+	* raptor/tests/ex-50.out, raptor/tests/ex-50.rdf:
+	Check parseType with unknown value
+
+	* raptor/raptor_parse.c (raptor_start_element_grammar):
+	Handle parseType="Literal"
+	without duplicating code.
+
+	* raptor/raptor_parse.c (raptor_start_element_grammar):
+	Handle parseType="...." which
+	isn't any of the other known types identically to
+	parseType="Literal".
+
+	* raptor/raptor_general.c (raptor_check_ordinal):
+	Return <0 on failure such as no legal
+	characters at all.
+
+	* raptor/raptor_internal.h: Added raptor_check_ordinal.
+
+	* raptor/ntriples_parse.c (raptor_ntriples_generate_statement): Make
+	RAPTOR_IDENTIFIER_TYPE_ORDINAL predicates for property URI strings
+	that match the rdf:_<n> pattern with n a decimal integer>0.
+
+	* raptor/raptor_parse.c:
+	Use raptor_check_ordinal for checking <n> in rdf:_<n>
+
+	* raptor/raptor_general.c (raptor_check_ordinal):
+	Check the <n> in rdf:_<n>
+
+	* raptor/raptor_general.c (raptor_vsnprintf):
+	Non-portable use of va_list fixed by copying the
+	arguments with va_copy before passing to vsnprintf calls.  The
+	symptom was crashes on some architectures where this mattered, such
+	as powerpc.
+
+2003-08-07  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_parser_raptor.c: Track errors and warnings in parsing.
+	(librdf_parser_raptor_error_handler(): Call raptor_parse_abort
+
+	* librdf/rdf_statement.c (librdf_statement_decode_parts):
+	Updated for new librdf_node_decode API
+
+	* librdf/rdf_node.c (librdf_node_decode):
+	Updated for new API - returns a new allocated node
+	and sets the size pointer as a side effect.  This removes the only
+	use of librdf_new_node outside the node class.
+	(main): Updated the test code to match.
+
+	* librdf/rdf_node.h (librdf_node_decode): Updated for new API
+
+	* raptor/raptor_general.c (raptor_parse_uri_with_connection):
+	Return failure status.
+
+	* librdf/rdf_node.c (librdf_new_node): No args means make a blank node.
+	(librdf_new_node_from_blank_identifier): Docs
+
+	* python/RDF.py (Model.serialise):
+	Add optional contexts arg, to serialise contexts
+	as stream of statements.
+	(NS): New class to cache handy nodes from a namespace URI
+
+2003-08-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/Makefile.am:
+	Added bad N-Triples tests bad-0[0-3].nt and checks
+
+	* raptor/tests/bad-00.nt, raptor/tests/bad-01.nt,
+	raptor/tests/bad-02.nt, raptor/tests/bad-03.nt: Bad N-Triples
+
+	* raptor/ntriples_parse.c: raptor_ntriples_term_class Added for:
+	(raptor_ntriples_term_valid): Checking validity of a ntriples term -
+	this could be inlined.
+	(raptor_ntriples_string) Renamed to:
+	(raptor_ntriples_term) Use raptor_ntriples_term_valid.
+	(raptor_ntriples_parse_line): Add more checks that whitespec exists
+	between ntriples terms.
+	Error to have typed literals with languages.
+
+	* perl/Makefile.PL: Remove -Dbool=int - this can only cause trouble
+
+	* perl/lib/RDF/Redland/Node.pm:
+	Added methods is_resource, is_literal, is_blank using
+	librdf_node_is_resource, librdf_node_is_literal, librdf_node_is_blank
+
+	* python/RDF.py: Removed NODE_TYPE_LI
+	(Node) is_resource, is_literal, is_blank now use
+	librdf_node_is_resource, librdf_node_is_literal, librdf_node_is_blank
+
+	* Redland.i, librdf/rdf_node.h, librdf/rdf_node.c:
+	Added librdf_node_is_resource, librdf_node_is_literal,
+	librdf_node_is_blank
+
+	* librdf/rdf_node.h, librdf/rdf_node.c:
+	Delete LIBRDF_NODE_TYPE_LI - never used.  Reserve the allocated type 3.
+
+	* raptor/tests/test.out, raptor/tests/test.nt:
+	Updated to remove language from typed literals
+
+	* raptor/raptor_general.c (raptor_print_statement_detailed):
+	Fix datatype uri output <uri> not <uri<
+
+2003-07-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_general.c (raptor_parser_simple_error):
+	Call raptor_parser_error_varargs, don't
+	lose the arguments.
+
+2003-07-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: ECMA CLR=>ECMI CLI since it's not just the runtime.
+	ECMA CLI= ECMA  Common  Language  Infrastructure.
+
+	* configure.ac:
+	No need for CSHARP_COMPILE, dotGNU compiler accepts same args as mcs.
+
+2003-07-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: Also substitute CSHARP_COMPILE for csharp
+
+	* configure.ac:
+	Added --with-ecma-clr for mono or dotgnu versions of toolchain.
+	Sets CLRRUN and CSHARPCC for use in csharp dir
+
+	* Makefile.am: Added csharp dir
+
+	* raptor/configure.ac: Bumped version to 0.9.12
+
+	* raptor/raptor_sax2.c: struct nsd: use size_t for length.
+
+	* raptor/configure.ac:
+	Ensure the libxml2 xmlReader API is new enough (2.5.0+) such as
+	having xmlParserSeverities.
+
+2003-07-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h:
+	Update raptor_generate_id_handler to take user_bnodeid arg.
+
+	* raptor/raptor_rss.c: Update calls of raptor_generate_id with
+	user_bnodeid (NULL for existing calls)
+
+	* raptor/raptor_parse.c:
+	Update calls of raptor_generate_id with user_bnodeid (NULL for
+	existing calls)
+	Use it to wrap the rdf:nodeID values for subject and object cases.
+
+	* raptor/raptor_internal.h:
+	raptor_generate_id updated to add user_bnodeid
+
+	* raptor/raptor_general.c (raptor_set_generate_id_handler):
+	Document final argument
+	user_bnodeid from the rdf:nodeID attribute value.
+	(raptor_default_generate_id_handler): Add user_bnodeid, return it if
+	present.
+	(raptor_generate_id): Add user_bnodeid and pass on.
+
+	* raptor/raptor_internal.h: Added raptor_xml_writer_comment
+
+	* raptor/raptor_namespace.c (raptor_namespace_copy):
+	Don't copy uri and then lose it.
+
+	* raptor/raptor_xml_writer.c:
+	Added current_element for tracking empty/not empty elements.
+	(raptor_xml_writer_comment): Added, just concatenating the content
+	via raptor_xml_writer_cdata.
+
+	* raptor/raptor_parse.c (raptor_xml_comment_handler):
+	Call raptor_xml_writer_comment inside
+	parseType="Literal"
+
+	* raptor/raptor_xml_writer.c: raptor_xml_writer gains stack depth.
+	(raptor_free_xml_writer): Clear any content_cdata before finishing.
+	(raptor_xml_writer_start_element)
+	Add depth to raptor_format_sax2_element calls.  Increase it
+	(raptor_xml_writer_start_element,raptor_xml_writer_end_element):
+	Add depth to raptor_format_sax2_element calls.  Decrease it
+	and raptor_namespaces_end_for_depth each time.
+
+	* raptor/raptor_namespace.c:
+	Moved  error_handler and error_data arguments around.
+	(raptor_namespaces_start_namespace) Gets those as arguments
+	(raptor_namespaces_start_namespace) Added, simpler version of _full
+	(raptor_namespaces_start_namespace_full) Added, was the old interface
+	but less error arguments.
+	(raptor_namespaces_namespace_in_scope): Fix namespace URI comparison.
+	(raptor_namespace_new) Looses error arguments.
+	(raptor_namespace_copy) Added, copy to a new stack with a new depth.
+
+	* raptor/raptor_sax2.c (raptor_format_sax2_element):
+	Gain stack depth argument.
+	Only use namespace declarations when there is a namespace stack
+	present.
+	copy namespaces to new stack when new ones are needed.
+
+	* raptor/raptor_internal.h:
+	Add error_handler and error_data to namespace_stack.
+	raptor_namespaces_start_namespace gets those as arguments
+	raptor_namespace_new looses them
+	raptor_namespaces_start_namespace takes less args
+	raptor_namespaces_start_namespace_full added
+	raptor_namespace_copy added
+	content_cdata_seen and content_element_seen back into sax2_element
+
+	* raptor/raptor_parse.c:
+	Moved content_cdata_seen and content_element_seen back into
+	sax2_element.
+	Update for new raptor_namespaces_start_namespace calling convention.
+
+	* raptor/raptor_xml_writer.c: Debug
+
+	* raptor/raptor_namespace.c (raptor_namespaces_format):
+	Fix missing counting : when present
+
+	* raptor/tests/ex-11.rdf, raptor/tests/ex-11.out:
+	Updated to declare the html namespace as default, expect it in the
+	N-Triples output.
+
+	* raptor/raptor_namespace.c (raptor_namespaces_namespace_in_scope):
+	Added, checking if a given
+	namespace is declared in scope.
+	(raptor_namespaces_format): Added, returning a string to declare
+	the given namespace.
+
+	* raptor/raptor_xml_writer.c:
+	(raptor_xml_writer_start_element,raptor_xml_writer_end_element):
+	Updated for raptor_format_sax2_element new arguments
+
+	* raptor/raptor_sax2.c (raptor_format_sax2_element):
+	Add raptor_namespace_stack argument.
+	Create xmlns declarations for elements not declared in the current
+	stack state, using raptor_namespaces_format to create the string.
+
+	* raptor/raptor_internal.h:
+	Added prototypes for raptor_namespaces_namespace_in_scope,
+	raptor_namespaces_format
+	raptor_format_sax2_element now takes a raptor_namespace_stack
+
+2003-07-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_internal.h:
+	raptor_xml_writer prototypes take unsigned char*
+
+	* raptor/raptor_parse.c:
+	Move the code building parseType="Literal" strings to
+	raptor_xml_writer class.
+	(raptor_cdata_grammar): Added, just for symmetry mostly, with most
+	code taken from raptor_xml_cdata_handler.
+
+	* raptor/raptor_xml_writer.c:
+	Move the code building parseType="Literal" strings to
+	raptor_xml_writer class.
+
+	* raptor/Makefile.am: Added raptor_xml_writer.c
+
+	* raptor/raptor_xml_writer.c: Initial version
+
+	* raptor/raptor_parse.c:
+	Split content_cdata fields between sax2_element & (RDF/XML
+	specific) element.
+	raptor_element: Add xml_writer field.
+	Various calls changed to use the new raptor_simple_message_handler
+	for error handling implemented as raptor_parser_simple_error here.
+	(raptor_xml_parser_simple_error_handler): Added, matching the
+	raptor_simple_message_handler API and calling raptor_parser_error.
+	(raptor_start_element_grammar): When parseType="Literal" appears,
+	create a new raptor_xml_writer.
+	(raptor_end_element_grammar): When parseType="Literal" ends, delete
+	the raptor_xml_writer.
+
+	* raptor/raptor_sax2.c (raptor_format_sax2_element):
+	Use raptor_simple_message_handler.
+
+	* raptor/raptor_general.c (raptor_start_parse):
+	Use raptor_parser_simple_error with raptor_namespaces_init.
+	(raptor_parser_simple_error): Added, matching the
+	raptor_simple_message_handler API but same as raptor_parser_error.
+
+	* raptor/raptor_xml.c (raptor_xml_escape_string):
+	Use raptor_simple_message_handler.
+
+	* raptor/raptor_qname.c (raptor_new_qname):
+	Use raptor_simple_message_handler.
+
+	* raptor/raptor.h: raptor_sax2_element moved here, semi-public.
+	Re-ordered URI functions earlier.
+	Various methods changed to use (public) raptor_simple_message_handler
+	for error handling.
+
+	* raptor/raptor_internal.h: Delete raptor_internal_message_handler.
+	Added prototype raptor_parser_simple_error, implementing
+	raptor_simple_error_handler API.
+	Various methods changed to use (public) raptor_simple_message_handler
+	for error handling.
+	raptor_sax2_element moved to semi-public raptor.h
+	rdf/xml-specific cdata parts moved from raptor_sax2_element to
+	raptor_element.
+	Added raptor_xml_writer functions.
+
+	* raptor/raptor_namespace.c:
+	Use (public) raptor_simple_message_handler for error handling.
+
+2003-07-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_parse.c (raptor_process_property_attributes):
+	NFC error message tidy.
+	(raptor_end_element_grammar): Fix NFC error reporting and recovery.
+	Report NFC validation failures for XML Literals
+
+	* raptor/tests/Makefile.am: Added bad-15 bad-17 for bad NFC checking
+
+	* raptor/tests/bad-16.rdf, raptor/tests/bad-17.rdf,
+	raptor/tests/bad-15.rdf: Bad NFC tests for property attribute,
+	element, element ptl
+
+	* raptor/configure.ac:
+	Added check for g_utf8_normalize in glib 2.0 using pkgconfig.
+	Defines HAVE_G_UTF8_NORMALIZE if present.
+
+	* raptor/raptor_internal.h: Added raptor_utf8_is_nfc
+
+	* raptor/raptor_parse.c (raptor_process_property_attributes):
+	Check for valid NFC on property
+	attribute values.
+	(raptor_end_element_grammar): Check for valid NFC on plain literal
+	property element values.
+
+	* raptor/raptor_utf8.c (raptor_utf8_is_nfc):
+	Added Normal Form C checking, using GNOME glib
+	2.0 g_utf8_normalize initially.
+
+	* raptor/raptor_parse.c (raptor_start_element_grammar):
+	Forbid property attributes and all
+	rdf:* attributes (except rdf:ID) with rdf:parseType
+
+	* raptor/raptor_general.c:
+	(raptor_statement_part_as_counted_string,
+	raptor_print_statement_part_as_ntriples): Do not emit language for
+	datatyped literals.
+
+	* raptor/raptor_parse.c (raptor_process_property_attributes):
+	rdf:li is forbidden as a property attribute
+
+	* raptor/raptor_parse.c: rdf_syntax_terms_info table: rdf:li is
+	forbidden as a property attribute
+
+	* raptor/libraptor.3: Updated raptor_set_feature for
+	RAPTOR_FEATURE_ALLOW_BAGID and
+	RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST
+
+	* raptor/tests/owl-schema.out, raptor/tests/ex-39.out:
+	Updated to remove the <idList> rdf:type rdf:List triples
+
+	* raptor/raptor_general.c (raptor_set_feature,
+	raptor_set_parser_strict): Added a new feature
+	RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST (user argument) and
+	feature_allow_rdf_type_rdf_List (internal) to generate the rdf:type
+	rdf:List triple from rdf:parseType="Collection".  The default is no
+	after latest RDF/XML revisions.  Not relevant for daml:Collection
+	which get the daml:List always.
+
+	* raptor/raptor.h:
+	Added a new feature feature RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST
+	to control rdf:type rdf:List triple generation from
+	rdf:parseType="Collection" (default no)
+
+	* raptor/raptor_internal.h:
+	Added a new feature feature_allow_rdf_type_rdf_List
+	to control rdf:type rdf:List triple generation from
+	rdf:parseType="Collection" (default no)
+
+	* raptor/raptor_parse.c (raptor_start_element_grammar):
+	Remove rdf:type rdf:List triple
+	generation from rdf:parseType="Collection" by default.  Not
+	for daml:Collection.  Add a new feature
+	feature_allow_rdf_type_rdf_List to control this.
+
+2003-07-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_xml.c (raptor_valid_xml_ID, raptor_xml_escape_string):
+	unsigned long for
+	all unichars.
+
+	* raptor/raptor_internal.h:
+	Update raptor_utf8_to_unicode_char to use unsigned long output.
+
+	* raptor/raptor_utf8.c (raptor_utf8_to_unicode_char):
+	Take and use unsigned long for unichars.
+
+	* raptor/raptor_rss.c:
+	namespace->nspace since might be a C/C++ keyword sometime
+
+	* raptor/raptor_www_curl.c (raptor_www_curl_header_callback):
+	Turn void* into char*
+
+	* raptor/raptor_set.c: Casts
+
+	* raptor/rdfdump.c (rdfdump_error_handler):
+	Cast data into raptor_parser*
+
+	* raptor/raptor_www_curl.c:
+	(raptor_www_curl_write_callback,raptor_www_curl_header_callback):
+	Return unsigned int 0 on failure, cannot return -1 :)
+
+	* raptor/raptor_www.c: Some casts near mallocs
+
+	* raptor/tests/owl-schema.out: Updated to match 2003-03-18 version.
+
+	* raptor/tests/owl-schema.rdf:
+	Updated to 2003-03-18 version (just changed DOS line endings)
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_chunk):
+	Handle just the end marker being given
+	i.e. len=0 (and possibly s=NULL)
+
+	* raptor/raptor_parse.c (raptor_xml_end_element_handler):
+	When parsing has been aborted
+	(rdf_parser->failed), clean up used memory rather than just return.
+	element_name is not used except when debugging, so #ifdef it.
+
+2003-07-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h:
+	Export global statics raptor_copyright_string, raptor_version_string,
+	raptor_version_major, raptor_version_minor, raptor_version_release
+	and raptor_version_decimal
+
+	* raptor/raptor_general.c:
+	Added statics raptor_copyright_string, raptor_version_string,
+	raptor_version_major, raptor_version_minor, raptor_version_release
+	and raptor_version_decimal
+
+	* raptor/Makefile.am:
+	Removed raptor_cc code since ISO may charge a commercial use fee for
+	this list.
+
+	* raptor/raptor_cc.gperf: ISO 3166-1 'The use of ISO 3166-1 in
+	commercial products may be subject to a licence fee.' says the
+	maintenance agency.  Goodbye code.
+
+	* raptor/raptor_parse.c:
+	Free former rdf:about, rdf:resource attribute string values before
+	they are zapped.
+
+	* raptor/raptor_parse.c (raptor_xml_parse_terminate):
+	Delete the sax2 object when cleaning
+	up.
+
+	* raptor/rdfdump.c:
+	Free new uri_string when it's allocated for a filename
+
+	* raptor/rdfdump.c: Tidied usage and help information.
+
+	* raptor/rapper.1: Updated to match current rapper arguments.
+
+	* raptor/Makefile.am: Added raptor_identifier.c
+
+	* raptor/raptor_general.c, raptor/raptor_identifier.c:
+	Moved raptor_identifer classes to raptor_identifier.c
+
+2003-07-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rdfdump.c:
+	If first argument is a filename, make it into a file:/// uri.
+
+	* raptor/raptor_uri.c (raptor_default_new_uri):
+	Turn probably-bad file:filename 'URIs' into
+	proper file:///... etc. ones.
+
+	* raptor/raptor_parse.c:
+	Make use of forbidden rdf-namespaced property attributes into errors,
+	as they should be.
+	(raptor_forbidden_propertyAttribute_name): Now used.
+	Reword some error messages.
+
+	* raptor/tests/Makefile.am (check-bad-rdf):
+	Note when bad test succeeds instead of failing
+
+	* raptor/tests/Makefile.am: Added bad-13, bad-14
+
+	* raptor/tests/bad-14.rdf:
+	rdf:Description is not a legal property attribute
+
+	* raptor/tests/bad-13.rdf: A property element cannot take rdf:about
+
+	* raptor/raptor_uri.c (raptor_new_uri_for_xmlbase): Docs
+
+2003-07-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/libraptor.3: formatting
+
+	* raptor/libraptor.3: Added
+	raptor_set_default_generate_id_parameters,
+	raptor_set_generate_id_handler
+
+	* raptor/raptor_general.c (raptor_set_default_generate_id_parameters):
+	Fix it right this time.
+
+	* raptor/raptor_general.c (raptor_set_default_generate_id_parameters):
+	Fix base so the next
+	generated ID uses the integer given, not integer+1
+
+	* raptor/raptor_general.c (raptor_free_parser):
+	Free any user-set genid prefix.
+
+2003-07-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h:
+	raptor_genid_type enum added - for RAPTOR_GENID_TYPE_BNODEID, BAGID
+	Added prototypes for raptor_set_generate_id_handler,
+	raptor_set_default_generate_id_parameters.
+
+	* raptor/raptor_general.c (raptor_set_generate_id_handler):
+	Added, to sent the generate ID
+	handler implementation.
+	(raptor_set_default_generate_id_parameters): Added, to sent the
+	generate ID handler parameters for the default implementation
+	("gen"+integer).
+	(raptor_default_generate_id_handler): Added, moved default code from
+	raptor_generate_id
+	(raptor_generate_id): Use handler if it exists, otherwise the default
+	implementation.
+
+	* raptor/raptor_internal.h:
+	Added generate_id_handler data parts to raptor_parser internals.
+
+2003-06-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* redland-config.in: Make --libs pick the right libdir - add
+	exec_prefix variable declaration.
+
+	* utils/Makefile.am, librdf/Makefile.am, examples/Makefile.am:
+	Use @LIBS@ in LIBS to pick up any system-wide use.
+
+	* configure.ac:
+	Pick up any external CPPFLAGS, LDFLAGS, LIBS to start with.
+
+	* raptor/tests/Makefile.am: use top_builddir not ..
+
+	* raptor/Makefile.am: add libraptor.la to rapper dependencies
+
+2003-06-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/RDF.py: Statements, Model: more docs, usage.
+
+	* python/Makefile.am: Added redlandtest.py
+
+	* python/redlandtest.py: Redland Python unit tests
+
+	* python/RDF.py: v0.8
+	Updates from Matt Biddulph.
+	(class Model) Now takes optional storage, if omitted, a memory
+	storage model is created
+	(class StreamWithContextIter, class IteratorWithContextIter,
+	class IteratorIter, class StreamIter): Internal classes to create
+	python iterators out of redland stream/iterators.
+	(class Stream): New method context_iter that returns a python iterator
+	returning (stream, context node) tuple on each iteration.
+	(class HashStorage): Simple class to simplify creating hashed storage.
+	(class MemoryStorage): Simple class to simplify creating in-memory
+	storage.
+	(class Parser): Name is now optional, defaults to raptor and RDF/XML.
+	(class Parser): Methods parse_as_stream, parse_into_model will
+	autoconvert uri arguments that are strings into redland URIs.
+
+	* python/test/test.py: s/if not thing/if thing is None/
+
+	* raptor/rdfdump.c:
+	Added -e/--ignore-errors otherwise rapper stops parsing after 1st
+	error using raptor_parse_abort.
+
+2003-06-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_rss.c (raptor_rss_insert_identifiers):
+	Back to being legal C99.
+
+	* raptor/libraptor.3: Fix changes for 0.9.11
+
+	* raptor/libraptor.3: Updated for stuff since 0.9.10
+
+	* raptor/raptor_rss.c (raptor_rss_insert_identifiers):
+	Init identifier after item
+
+	* raptor/rdfdump.c, raptor/configure.ac:
+	Tweak RSS Tag Soup parser words
+
+2003-06-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Emit an error for namespace
+	declarations that are RDF namespace URI plus some chars.  Emit
+	a warning if a namespace is declared same as RDF one but 1 char
+	short.
+
+	* raptor/tests/Makefile.am: Added bad-12, warn-02
+
+	* raptor/tests/bad-12.rdf, raptor/tests/warn-02.out,
+	raptor/tests/warn-02.rdf: Check for bad rdf namespace URI
+	declarations and warn if last char of RDF namespace URI omitted
+
+2003-06-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_uri.c (librdf_new_uri_from_filename): Removed unused vars.
+
+2003-06-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/configure.ac:
+	Fix the check for RSS parser requirements and report it more
+	verbosely.
+
+	* raptor/configure.ac:
+	RSS parser only if libxml/reader.h present (for now).
+
+	* raptor/configure.ac: libcurl reporting
+
+	* raptor/raptor_parse.c (raptor_xml_parse_chunk_): Use sax2->first_read
+
+	* raptor/raptor_parse.c (raptor_xml_parse_start,raptor_xml_parse_chunk_):
+	Don't use first_read on newer libxml2.
+
+2003-06-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_internal.h:
+	raptor_sax2_s: Add first_read #if LIBXML_VERSION < 20425
+
+	* raptor/raptor_rss.c (raptor_rss_insert_identifiers):
+	Fix GCC-ism, declare variable at
+	start of block.
+
+	* raptor/raptor_parse.c (raptor_xml_parse_init):
+	Move declaration of expat xp to start of
+	function.
+
+	* raptor/examples/raptor_abort.c, raptor/examples/grapper.c,
+	raptor/strcasecmp.c, raptor/rdfdump.c, raptor/raptor_xml.c,
+	raptor/raptor_www_test.c, raptor/raptor_www_libxml.c,
+	raptor/raptor_www_libwww.c, raptor/raptor_www_curl.c,
+	raptor/raptor_www.c, raptor/raptor_win32.c, raptor/raptor_utf8.c,
+	raptor/raptor_uri.c, raptor/raptor_set.c, raptor/raptor_sax2.c,
+	raptor/raptor_rss.c, raptor/raptor_qname.c, raptor/raptor_parse.c,
+	raptor/raptor_namespace.c, raptor/raptor_locator.c,
+	raptor/raptor_libxml.c, raptor/raptor_general.c,
+	raptor/ntriples_parse.c, raptor/configure.ac: Merged patch from
+	Jose Kahan to switch to use raptor_config.h (helps people
+	compiling from source with multiple config.h)
+
+2003-06-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/grapper.c (fs_ok_button_callback):
+	Use raptor_uri_filename_to_uri_string
+	to make the file URI.
+	(main): If the argument is a filename, make a URI string out of it
+	via raptor_uri_filename_to_uri_string and use it instead of
+	assuming it is a URI.
+
+2003-06-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Redland.i, librdf/rdf_uri.h: Added librdf_new_uri_from_filename
+
+	* librdf/rdf_uri.c (librdf_new_uri_from_filename):
+	Added using raptor_uri_filename_to_uri_string
+
+	* autogen.sh: Report min SWIG version
+
+2003-05-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* demos/rss-show.pl: words
+
+2003-05-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_xml.c (raptor_xml_escape_string):
+	Changed API - does not require a parser arg.
+
+	* raptor/raptor_internal.h: Moved SAX2 parts and prototypes here.
+
+	* raptor/raptor_general.c:
+	Use RAPTOR_PARSER_RSS to wrap init of RSS parser
+
+	* raptor/raptor.h:
+	Changed prototype of raptor_xml_escape_string - does not require a
+	parser arg.
+
+	* raptor/raptor_parse.c:
+	Split raptor_element/raptor_rdf_xml_parser into SAX2/RDF bits.
+	Lots of function and structure renaming.
+
+	* raptor/configure.ac:
+	Define RAPTOR_PARSER_RSS only when libxml is around
+
+	* raptor/raptor_sax2.c: SAX2 API
+
+	* raptor/Makefile.am: Added raptor_sax2.c
+
+2003-04-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Redland/Model.pm:
+	Same as before but with right package names
+	(find_statements): Return copies of shared statements
+	(sources,arcs,targets): Return copies of shared nodes
+
+	* perl/lib/RDF/Redland/Model.pm (find_statements):
+	Return copies of shared statemetns
+	(sources,arcs,targets): Return copies of shared nodes
+
+2003-04-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_statement.c (librdf_statement_to_string):
+	Handle buffer size counting when parts are null
+
+	* librdf/rdf_heuristics.c (librdf_heuristic_gen_name):
+	Check loop doesn't go before start.
+
+	* librdf/rdf_utf8.c (librdf_utf8_print):
+	check length first before looking in what might
+	be a byte beyond the length
+
+2003-04-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_rss.c (raptor_rss_emit): Use raptor_free_identifier
+
+	* raptor/raptor_rss.c (raptor_rss_emit):
+	Properly init the raptor_identifier items
+
+2003-04-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_rss.c, raptor/raptor_parse.c, raptor/ntriples_parse.c:
+	Use raptor_parser_register_factory with label param.
+
+	* raptor/raptor.h: Added raptor_get_name, raptor_get_label
+
+	* raptor/raptor_general.c: Added parser label to factory
+	(raptor_parser_register_factory): Add label param, copy it.
+	(raptor_get_name): Added, return name of parser.
+	(raptor_get_label): Added, return label of parser.
+
+	* raptor/raptor_internal.h: Added parser label to factory
+
+	* raptor/examples/grapper.c: Remove some g_printfs
+	Remove use of display qnames - not impl.
+
+	* raptor/raptor_general.c (raptor_statement_part_as_counted_string):
+	Init len for literals with
+	the literal len included
+
+	* raptor/examples/grapper.c: Don't use triples_list for now.
+	(grapper_model_set_syntax): Fix output.
+	(grapper_model_statements_handler): Remove newlines from literals.
+
+	* raptor/raptor_general.c (raptor_statement_part_as_counted_string):
+	Init len for literals.
+
+2003-04-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_set.c: fix doccumment
+
+2003-04-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/grapper.c:
+	Replace N-Triples / RDF/XML with dropdown menu and add RSS tag soup.
+
+2003-04-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/redland.spec.in: Updated for Redhat 9 and RPM 4
+
+	* python/RDF.py: Added blank node is_blank() method example
+	(Node.__set_attr): Fix set_type
+	(Node.get_blank_identiifer, Node.set_blank_identiifer): Added
+
+	* python/RDF.py: some perlisms in the docs/comments
+
+	* python/RDF.py:
+	this one file is now also under BSD without advertising/MIT license
+
+2003-04-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rdfdump.c: Added -i/--input for rdfxml, ntriples, rss
+
+	* raptor/raptor_internal.h: More RAPTOR_DEBUG macros
+
+	* raptor/raptor_general.c:
+	(raptor_init) Added rss parser via raptor_init_parser_rss when
+	HAVE_LIBXML_XMLREADER_H
+
+	* raptor/Makefile.am: Added raptor_rss.c
+
+	* raptor/raptor_rss.c: Raptor RSS parser
+
+2003-04-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/configure.ac: Bumped version to 0.9.11
+
+	* raptor/libraptor.3: Added raptor_set_parser_strict
+	Added raptor_www_no_www_library_init_finish
+
+	* raptor/raptor.spec.in: Require curl
+	Added raptor-config, raptor.pc
+
+	* raptor/tests/Makefile.am:
+	Move rdf:bagID tests to list of tests with warnings for now (while
+	testing in lax mode)
+
+2003-04-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/fix-pod-xhtml: and a newline
+
+	* docs/fix-pod-xhtml: added xml decl
+
+	* docs/fix-pod-xhtml: More fixing
+
+	* docs/fix-pod-xhtml: New style POD to html cleanup
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_register):
+	Allow NULL name
+
+	* perl/lib/RDF/Redland/Storage.pm: add rest of storage options to docs
+
+	* raptor/rdfdump.c (print_statements):
+	Print the program name not "rdfdump" hardcoded.
+
+	* librdf/rdf_node.h, librdf/rdf_node.c:
+	Added librdf_node_get_literal_value_as_counted_string
+
+2003-04-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/configure.ac: Check for libxml/xmlreader.h
+
+2003-04-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/grapper.c: Added about box, triples count.
+	Free some allocated memory.  Rest seems lost in gtk.
+
+	* raptor/examples/Makefile.am: Add AM_CFLAGS, LIBS for debugging
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Don't copy an empty attributes array.
+
+	* raptor/configure.ac: Added raptor.pc
+
+	* raptor/Makefile.am:
+	Added raptor.pc pkgconfig file installing to $(libdir)/pkgconfig
+
+	* raptor/raptor.pc.in: pkgconfig for raptor
+
+2003-04-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/Makefile.am: Added rdf_model_storage.h
+
+	* librdf/rdf_model_storage.h: RDF Model Storage Interface definition
+
+2003-04-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_model.c:
+	Split model/storage into model/model factory/model storage factory
+	just like hashes, storage classes.
+	(librdf_init_model): Call librdf_init_model_storage
+	(librdf_finish_model): Call librdf_delete_model_factories
+	(librdf_delete_model_factories, librdf_model_register_factory,
+	librdf_get_model_factory):  Added, after rdf_storage.c similar names.
+	(librdf_new_model_with_options): Use storage factory create method.
+	(librdf_new_model_from_model): Use clone method.
+	(librdf_free_model): Use destroy method.
+	The remaining methods that depend on storage now use factory methods.
+	Some methods have slight edits to use the model method not the
+	storage one when it doesn't matter, or when no factory method is
+	present, and it is emulated at the model level.
+
+	* librdf/Makefile.am: Added rdf_model_storage.c
+
+	* librdf/rdf_model.h:
+	Added internal librdf_model_factory struct with factory methods
+	Added librdf_model_register_factory, librdf_get_model_factory
+
+	* librdf/librdf.h: added librdf_model_factory
+
+	* librdf/rdf_model_storage.c: RDF model over a storage
+
+2003-04-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h: void arg
+
+	* raptor/examples/raptor_abort.c: Zap curl cleanup.
+
+	* raptor/rdfdump.c:
+	Added -c flag to getopts - oops, missed in last release.
+	Added -m/--mode flag to set strict/lax.  Check the values and die
+	with usage.
+	Check the legal values of -o/--output and die with usage.
+	Zap curl cleanup.
+
+	* raptor/raptor_www.c (raptor_www_no_www_library_init_finish):
+	To control global WWW
+	library init/finish
+
+	* raptor/raptor_parse.c:
+	Make bagID optional - removed from language and gives errors
+	(strict), allowed with warnings (lax).
+	lax/strict controlled by feature_allow_bagID
+
+	* raptor/raptor_internal.h: Added feature_allow_bagID
+
+	* raptor/raptor_general.c: Several more docucomments for functions.
+	(raptor_new_parser): Use raptor_set_parser_strict
+	(raptor_set_feature): Added RAPTOR_FEATURE_ALLOW_BAGID
+	(raptor_set_parser_strict): Added to set strict/lax mode flags.
+
+	* raptor/raptor.h: Added RAPTOR_FEATURE_ALLOW_BAGID
+	Added raptor_set_parser_strict
+	Added raptor_www_no_www_library_init_finish
+
+2003-04-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/Makefile.am: Added warn-01
+
+	* raptor/tests/warn-01.out, raptor/tests/warn-01.rdf:
+	Check warning on non-prefixed property elements
+
+	* raptor/raptor_parse.c, raptor/tests/Makefile.am
+	(raptor_xml_start_element_handler): Error recovery - try to hide that
+	a bad element was found from a parent element, it thinks the element
+	is empty.  See tests/warn-00.rdf
+
+	* raptor/tests/warn-00.out, raptor/tests/warn-00.rdf: Check warnings
+
+2003-04-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am, raptor/configure.ac, raptor/Makefile.am, configure.ac:
+	debian dir elsewhere
+
+2003-04-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_parser_raptor.c
+	(librdf_parser_raptor_new_statement_handler): (re)add storing in a
+	model direct.
+	(librdf_parser_raptor_parse_uri_as_stream_write_bytes_handler): Added
+	to support librdf_parser_raptor_parse_uri_as_stream via raptor_www
+	(librdf_parser_raptor_parse_uri_as_stream): Added.  Calls
+	librdf_parser_raptor_parse_file_as_stream if that's possible.
+	(librdf_parser_raptor_parse_uri_into_model): Added, doing all of
+	librdf_parser_raptor_parse_file_into_model.
+	(librdf_parser_raptor_constructor): Register new functionality.
+
+	* raptor/raptor_uri.c (raptor_uri_uri_string_to_filename):
+	Use raptor_strcasecmp
+	(raptor_uri_is_file_uri): Use raptor_strncasecmp
+
+	* librdf/rdf_parser_libwww.c: No libwww parser
+
+2003-03-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/fix-groff-xhtml: more cols
+
+	* raptor/fix-groff-xhtml: More fixes
+
+	* raptor/Makefile.am: Added libraptor.html, fix-groff-xhtml
+
+	* raptor/fix-groff-xhtml: Fix groff output HTML
+
+	* raptor/libraptor.3: deleted repeated URI METHODS
+
+	* raptor/libraptor.3: Updated for 0.9.6->present
+
+2003-03-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/grapper.c: Use N-triples output style.
+	Pass in URL command line argument
+
+	* raptor/Makefile.am: Added raptor_xml.c
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	do XML attribute value
+	normalization for libxml2.  Cannot be done properly since the type of
+	the attribute is lost.  expat gets it right.
+	(raptor_xml_parse_init): Cast for expat XML_SetExternalEntityRefHandler
+
+	* raptor/raptor_xml.c:
+	Updated for C14N text/attribute node encoding rules.  Don't de-UTF8
+	at the same time.
+
+	* raptor/tests/ex-49.out: > in attribute appears raw
+
+	* raptor/raptor_general.c:
+	(main) Moved raptor_validate_xml_ID, raptor_xml_escape_string test
+	code to raptor_xml.c
+
+	* raptor/raptor_xml.c: Raptor XML routines
+
+	* raptor/raptor_general.c:
+	Moved raptor_validate_xml_ID, raptor_xml_escape_string to raptor_xml.c
+
+	* raptor/tests/Makefile.am: Added ex-49
+
+	* raptor/tests/ex-49.out, raptor/tests/ex-49.rdf:
+	Checking escaping in parseType Literal values with XML attributes
+
+	* raptor/raptor_parse.c (raptor_format_element):
+	Pass in parser for UTF-8 error handling.
+	Use raptor_xml_escape_string for attribute values but
+	only malloc/free if lengths changed.
+	(raptor_xml_end_element_handler): Update to new
+	raptor_xml_escape_string API and only malloc/free it if lengths
+	changed.
+
+	* raptor/raptor_parse.c (raptor_xml_cdata_handler):
+	Use updated raptor_xml_escape_string API
+
+	* raptor/raptor.h: Added raptor_statement_part_as_counted_string,
+	raptor_statement_part_as_string
+	Changed raptor_xml_escape_string API
+
+	* raptor/raptor_general.c
+	(raptor_statement_part_as_counted_string,
+	raptor_statement_part_as_string): Added, making N-triples style
+	output from parts of raptor_statement.
+	(raptor_xml_escape_string): Change API to take an existing
+	buffer/calculate length
+	(main): Update for raptor_xml_escape_string.
+
+	* raptor/examples/Makefile.am: Also clean grapper binary
+
+2003-03-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/grapper.c: Added N-Triples parsing
+
+	* raptor/examples/Makefile.am: Don't build grapper usually
+
+	* raptor/examples/grapper.c: Raptor GTK GUI example code
+
+	* python/RDF.py, librdf/rdf_parser_raptor.c, librdf/rdf_parser.h,
+	librdf/rdf_parser.c, librdf/Makefile.am, docs/redland.pod,
+	docs/api.sgml.in, docs/Makefile.am, demos/parser-tests.pl,
+	demos/demo.pl, configure.ac: Removed repat
+
+	* librdf/rdf_uri.c (librdf_free_uri): Move world defn inside ifdef
+
+	* raptor/examples/Makefile.am: Added grapper.c
+
+	* raptor/examples/Makefile.am: more deps
+
+	* raptor/raptor_internal.h:
+	Added raptor_print_statement_part_as_ntriples prototype
+
+	* raptor/raptor_general.c:
+	raptor_print_ntriples_string moved to raptor_general.c
+	(raptor_print_statement_part_as_ntriples): Added, internal.
+	(raptor_print_statement_as_ntriples): Now uses above.
+
+	* Makefile.am: Removed repat
+
+	* raptor/ntriples_parse.c:
+	raptor_print_ntriples_string moved to raptor_general.c
+
+	* librdf/Makefile.am: die recursive make
+
+2003-03-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/examples/Makefile.am: another deps attempt
+
+	* raptor/examples/Makefile.am: typo
+
+	* raptor/examples/Makefile.am: Use LDADD and hunt for @REDLAND_LIBS@
+	Added $(top_builddir)/../librdf/librdf.la
+
+	* raptor/configure.ac: Hunt for librdf.la in abs dir
+
+	* raptor/rapper.1: added -c/--count
+
+	* raptor/examples/Makefile.am: Fixes to make cross-dir building work.
+
+	* raptor/configure.ac, raptor/Makefile.am: Added examples dir
+
+	* raptor/raptor_general.c (raptor_parse_uri_with_connection): Added.
+	(raptor_parse_abort): Added.
+
+	* raptor/raptor.h: Added raptor_parse_uri_with_connection.
+	Added raptor_parse_abort.
+
+	* raptor/examples/raptor_abort.c, raptor/examples/Makefile.am: examples
+
+	* raptor/rdfdump.c:
+	Call curl_global_cleanup if using curl to free it's resources.
+
+	* raptor/raptor_www.c (raptor_www_init,raptor_www_finish):
+	Don't init/cleanup curl, we
+	can't guarantee doing this at most once if a handle is passed in.
+
+	* raptor/raptor_www_curl.c (raptor_www_curl_free): Tidy
+
+	* raptor/raptor_www_curl.c (raptor_www_curl_init,raptor_www_curl_free):
+	Use/mark field
+	curl_init_here to note when to cleanup a handle - don't destroy one
+	that was provided.
+
+	* raptor/raptor_internal.h:
+	for curl, record when curl_easy_init was done in raptor
+
+	* raptor/raptor_general.c (raptor_init): Call raptor_www_init
+	(raptor_finsh): Call raptor_www_finish
+	(raptor_parse_uri): Delete www object on failure.
+
+	* raptor/configure.ac: Bumped version to 0.9.10
+
+	* librdf/rdf_model.c: unused var
+
+	* librdf/rdf_stream.c, librdf/rdf_statement.c,
+	librdf/rdf_serializer.c, librdf/rdf_query.c, librdf/rdf_parser.c,
+	librdf/rdf_node.c, librdf/rdf_iterator.c, librdf/rdf_hash.c,
+	librdf/rdf_concepts.c:
+	Changes to test code after initial locking for threads support.
+	(main) Testcode - use librdf_world_init_mutex
+
+	* librdf/rdf_uri.c: Initial locking for threads from Seth Ladd
+	(librdf_new_uri): Lock/unlock world for new URI.
+	(librdf_free_uri): Lock/unlock world for destroying URI.
+	(main) Testcode - use librdf_world_init_mutex
+
+	* librdf/rdf_init.h: Initial locking for threads from Seth Ladd
+	Added mutex to world.
+	Added prototype for internal librdf_world_init_mutex
+
+	* librdf/rdf_init.c: Initial locking for threads from Seth Ladd
+	(librdf_free_world): Delete mutex on shutdown.
+	(librdf_world_init_mutex): Added (internal) to be used by tests
+	rather than initing all of redland.
+	(librdf_world_open): Create mutex on startup.
+
+	* configure.ac: Initial locking for threads from Seth Ladd
+	Added --with-threads for POSIX threads
+
+2003-03-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* demos/demo.pl: utf-8 output
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_grow_buffer):
+	Fix return code sense.
+	(librdf_storage_hashes_add_remove_statement): Use calculate length
+	for key/value len, not buffer sizes.
+	(librdf_storage_hashes_context_add_statement): Return failure if
+	contexts aren't enabled and this is called.
+
+	* librdf/rdf_model.c:
+	(main) Test code - check get_sources, get_targets, get_arcs
+
+	* python/RDF.py (Stream.context): Use self.stream
+
+2003-03-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_set.c:
+	Only use raptor_set_stats_print with RAPTOR_DEBUG
+
+	* raptor/raptor_general.c: Some comment tidying.
+	(raptor_start_parse): Docucomment.  Copy the uri into the parser
+	structure (base_uri, locator uri), don't just keep the pointer.
+	(raptor_free_parser): Free the base URI in the structure, if
+	present.
+
+	* raptor/raptor_parse.c (raptor_xml_parse_start):
+	Remove uri arg.   Fail if no base URI is
+	given - stored in the parser object
+
+	* raptor/ntriples_parse.c (raptor_ntriples_parse_start):
+	Remove uri arg.
+
+	* raptor/raptor_internal.h:
+	raptor_parser_factory start method: Remove (base) uri arg, it's in
+	the object data.
+
+	* raptor/raptor_www.c: Use RAPTOR_FREE,MALLOC,CALLOC
+	(raptor_www_free): Free the www object.  Doh.
+
+	* raptor/libraptor.3: raptor_parse_chunk: Takes unsigned char buffer.
+
+	* raptor/libraptor.3:
+	raptor_start_parse: Note NULL base URI ok for ntriples
+
+	* raptor/libraptor.3: Typo: raptor_start_parse not raptor_parse_start
+
+	* raptor/raptor_general.c (raptor_xml_escape_string):
+	Make it work with 10ffff again
+
+	* raptor/raptor_parse.c (raptor_xml_cdata_handler):
+	Cast around raptor_xml_escape_string
+
+	* raptor/raptor_general.c (raptor_xml_escape_string):
+	Null terminate new string
+
+	* raptor/raptor_www_libxml.c, raptor/raptor_www.c:
+	Use RAPTOR_WWW_BUFFER_SIZE for I/O buffers
+
+	* raptor/raptor_internal.h:
+	Define RAPTOR_WWW_BUFFER_SIZE for I/O buffers
+
+	* raptor/rdfdump.c: Declare raptor_stats_print when RAPTOR_DEBUG
+
+	* raptor/raptor_general.c: (raptor_stats_print) C99
+
+	* librdf/rdf_model.c (librdf_model_add_typed_literal_statement):
+	Don't free object here,
+	librdf_model_add does it as part of freeing the statement.
+
+2003-03-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* demos/rss-show.pl, demos/parser-tests.pl, demos/ntriples.pl,
+	demos/demo.pl: Updated to 0.9.12 API
+
+2003-03-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rdfdump.c: Call raptor_stats_print with RAPTOR_DEBUG
+
+	* raptor/raptor_set.c: Record set hits/misses with RAPTOR_DEBUG
+	(raptor_set_stats_print): Defined with RAPTOR_DEBUG
+
+	* raptor/raptor_internal.h:
+	Move raptor_xml_parser typedef here (still internal).
+	raptor_xml_parser_stats_print, raptor_set_stats_print: Defined with
+	RAPTOR_DEBUG
+
+	* raptor/raptor_parse.c (raptor_xml_parser_stats_print):
+	Defined with RAPTOR_DEBUG
+
+	* raptor/raptor_general.c (raptor_stats_print):
+	Defined with RAPTOR_DEBUG
+
+	* raptor/raptor_parse.c (raptor_xml_cdata_handler):
+	Use raptor_xml_escape_string when content
+	type is an XML literal
+
+	* raptor/raptor_general.c (raptor_xml_escape_string):
+	Now takes and returns lengths
+	Fix assumption of '\0' terminated strings.
+	(main): Update for counted strings
+
+	* raptor/raptor.h:
+	raptor_xml_escape_string now takes and returns lengths
+
+	* raptor/raptor.h: Added raptor_xml_escape_string
+
+	* raptor/Makefile.am: Added raptor_general_test
+
+	* raptor/raptor_general.c (raptor_xml_escape_string):
+	Added, XML-escapes UTF-8 strings.
+	(main): Added set of tests for raptor_xml_escape_string
+
+2003-03-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/ex-48.out, raptor/tests/ex-48.rdf:
+	ex-48 parse type literal with entity encoding
+
+	* raptor/tests/Makefile.am: Added ex-48
+
+	* raptor/raptor_www_libxml.c (raptor_www_libxml_fetch):
+	Make this work again
+
+	* raptor/raptor_parse.c (raptor_record_ID): Dealloc item after adding
+
+	* librdf/rdf_parser_raptor.c: raptor_free now raptor_free_parser
+	(librdf_raptor_uri_as_counted_string): Added
+	Use it to register the raptor_uri
+
+	* raptor/raptor_parse.c: typo
+
+	* raptor/raptor_parse.c:
+	Remove raptor_id_list implementation for ID checking to use raptor_set.
+	(raptor_xml_parse_init): Init raptor_set for ids.
+	(raptor_xml_parse_terminate): Use raptor_free_set.
+	(raptor_record_ID): Use raptor_set_add to check for unique "ID base-URI"
+	(raptor_free_ID_list): Gone
+
+	* raptor/raptor_uri.c (raptor_default_uri_as_counted_string,
+	(raptor_uri_as_counted_string): Added and used in default factory.
+
+	* raptor/raptor.h: Added raptor_uri_as_counted_string.
+
+	* raptor/raptor_internal.h:
+	Added raptor_set and raptor_new_set constructor, raptor_free_set
+	destructor and raptor_set_add only method
+
+	* raptor/Makefile.am: Added raptor_set.c, raptor_set_test
+
+	* raptor/raptor_set.c: Raptor sets for ID checking
+
+2003-03-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* demos/rss-show.pl: sort feeds case insensitively
+
+	* demos/rss-show.pl: Added Annotate module
+
+	* librdf/rdf_storage_hashes.c:
+	Add key/value buffers to hash context and share/grown them as needed
+	to prevent a lot of unncessary malloc/frees.
+	(librdf_storage_hashes_terminate): Delete shared key/value buffers.
+	(librdf_storage_hashes_grow_buffer): Added to grow them when needed.
+	(librdf_storage_hashes_add_remove_statement): Use
+	librdf_storage_hashes_grow_buffer and shared key/value buffers.
+
+	* librdf/rdf_hash_memory.c (librdf_hash_memory_expand_size):
+	Revert bucket rehashing code to the older, simpler, slightly
+	slower (2x work) since changed version failed.
+
+	* librdf/rdf_hash_memory.c:
+	Switched to same hash algorithm as perl, inlined it.
+	(librdf_hash_memory_expand_size): When expanding, only move the nodes
+	that need it, don't move everything.
+
+2003-03-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* examples/example4.c: Free nodes on failure of get_source/target/arc
+
+	* raptor/tests/Makefile.am: Added OWL namespace document / rdf
+	schema owl-schema.rdf, owl-schema.out
+
+	* raptor/raptor_www.c: No ghttp, init w3c libwww
+
+	* librdf/rdf_statement.c (librdf_statement_to_string):
+	Init statement_string_len to 0
+
+	* librdf/rdf_hash_memory.c (librdf_hash_memory_expand_size):
+	Quick hack to make hash grow.
+	Needs a proper fix.
+
+	* librdf/rdf_statement.c (librdf_statement_to_string):
+	Use librdf_node_to_counted_string to save on strlen calls.
+
+	* librdf/rdf_node.c (librdf_node_to_string):
+	Now uses librdf_node_to_counted_string.
+	(librdf_node_to_counted_string): Added, returns already known length.
+	Uses librdf_uri_to_counted_string to save on strlen calls.
+	(librdf_node_encode): Use librdf_uri_as_counted_string to save on
+	strlen calls.
+
+	* librdf/rdf_node.h: Added librdf_node_to_counted_string
+
+	* librdf/rdf_uri.c (librdf_uri_as_counted_string,
+	librdf_uri_to_counted_string): Added returning the already
+	stored/calculated length of the string.
+
+	* librdf/rdf_uri.h:
+	Added librdf_uri_as_counted_string, librdf_uri_to_counted_string
+
+	* raptor/tests/owl-schema.out, raptor/tests/owl-schema.rdf:
+	OWL namespace schema
+
+	* raptor/raptor_www_libwww.c: add fatal does-not-work error
+
+	* raptor/configure.ac, raptor/raptor_internal.h,
+	raptor/raptor_www_ghttp.c: Delete libghttp
+
+2003-03-18  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_www_libwww.c: Raptor WWW with W3C libwww
+
+	* raptor/rdfdump.c:
+	Added -c/--count option to just count triples, don't print anything.
+
+	* raptor/raptor_www_test.c: Use raptor_www_init/finish
+
+	* raptor/raptor_www_libxml.c, raptor/raptor_www_ghttp.c:
+	Handle www->failed and aborting transfer.
+
+	* raptor/raptor_www_curl.c: Handle www->failed and aborting transfer.
+	(raptor_www_curl_init): Use passed-in connection if available.
+
+	* raptor/raptor_www.c (raptor_www_init): Added, for once-only init.
+	(raptor_www_finish): Added, for once-only tidy.
+	(raptor_www_new): Now uses new constructor
+	(raptor_www_new_with_connection): Added, allows re-use of existing
+	www library connection - just curl at present.
+	(raptor_www_get_connection): Added, returns current libwww library
+	connection.
+	(raptor_www_abort): Added to stop a www transaction.
+	(raptor_www_file_fetch): Tidying of errors; handle abort.
+	(raptor_www_fetch): Uses raptor_www_file_fetch for all files.
+
+	* raptor/raptor_internal.h: Added W3C libwww prototypes.
+
+	* raptor/raptor_parse.c:
+	Throughout all SAX event handlers - if rdf_parser->failed set, return
+	immediately, doing no work.
+
+	* raptor/raptor_general.c (raptor_parse_uri_write_bytes):
+	Use raptor_www_abort if parsing
+	fails.
+	(raptor_parse_uri): Return error status.  Pass on is_end empty chunk.
+	(raptor_parser_abort): Added, setting failed flag.
+	(raptor_print_statement_detailed): Typo
+
+	* raptor/raptor.h: Added raptor_www_abort
+
+	* raptor/raptor.h: Add raptor_www_init, raptor_www_finish.
+	Add raptor_www_new_with_connection
+	Add raptor_www_get_connection
+
+	* raptor/configure.ac: Added w3c libwww configuring
+
+2003-03-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rdfdump.c: Use raptor_parse_uri
+
+	* raptor/raptor_general.c (raptor_parse_uri_write_bytes):
+	Added, to support:
+	(raptor_parse_uri): Added, using raptor_www to get and deal with all
+	the data in one go.
+
+	* raptor/raptor.h: raptor_parse_uri takes optional base_uri
+
+	* raptor/raptor_www_test.c: Use URI from context.
+	Take www arg on handlers
+	Use raptor_uri
+
+	* raptor/raptor_www_libxml.c, raptor/raptor_www_ghttp.c, raptor/raptor_www_curl.c:
+	Use URI from context.
+	Take www arg on handlers
+
+	* raptor/raptor_www.c (raptor_www_set_userdata): Gone
+	(raptor_www_free): Free request uri
+	(raptor_www_set_write_bytes_handler,
+	raptor_www_set_content_type_handler): Added
+	(raptor_www_file_fetch): pass www to write_bytes
+	(raptor_www_fetch): Don't pass URI on.
+
+	* raptor/raptor_internal.h: Store raptor_uri of request
+	Use new declared write_bytes, content_type handlers
+	*fetch methods don't take URI string
+
+	* raptor/raptor.h:
+	Declare handlers for raptor www write bytes, content type
+	raptor_www_fetch now takes a raptor_uri
+
+	* raptor/raptor_parse.c:
+	Fix broken-fix for broken-expat UTF8 BOM crash.
+	tokens_count is on the rdf_xml_parser not rdf_parser
+
+	* raptor/configure.ac: tweak
+
+	* raptor/configure.ac: tidy libcurl version
+
+	* raptor/raptor_internal.h, raptor/configure.ac:
+	No more gnome-xml/libxml.h
+
+	* raptor/configure.ac: Min libxml2 now 2.4.0
+
+	* raptor/configure.ac: Don't look for xml-config
+
+	* raptor/raptor_general.c (raptor_parse_file):
+	Tidy up if raptor_start_parse fails
+
+	* raptor/raptor_general.c:
+	Removed raptor_start_parse_file - merged into raptor_parse_file
+
+	* raptor/raptor_www.c (raptor_www_file_fetch): Used for RAPTOR_WWW_NONE
+	Report file open errors, correct file read eof handling.
+	(raptor_www_fetch) Use only raptor_www_file_fetch for RAPTOR_WWW_NONE
+
+	* raptor/raptor_general.c (raptor_start_parse_file):
+	Improve file open error message
+
+	* raptor/configure.ac:
+	Added --with-www=none option and RAPTOR_WWW_NONE to indicate it
+
+2003-03-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_www.c (raptor_www_error): Use RAPTOR_FREE
+
+	* raptor/raptor_www_ghttp.c (raptor_www_ghttp_fetch):
+	call raptor_www_error
+
+	* raptor/raptor_www_test.c: Call raptor_uri_init
+
+	* raptor/raptor_www_curl.c (raptor_www_curl_fetch):
+	call raptor_www_error
+
+	* raptor/raptor_internal.h: Use raptor_message_handler again
+
+	* raptor/raptor.h:
+	Use raptor_message_handler again in raptor_www_set_error_handler,
+	raptor_www_error
+
+	* raptor/raptor_www.c (raptor_www_free): Tidy locator URI
+	(raptor_www_set_error_handler, raptor_www_error): Use
+	raptor_message_handler again.
+	(raptor_www_error): Use raptor_locator in output, error handler.
+	(raptor_www_fetch): Store the URI string of request in the locator
+
+	* raptor/raptor.h: Declare raptor_www_message_handler (no locator)
+
+	* raptor/raptor_general.c: raptor_vsnprintf now internally visible.
+
+	* raptor/raptor_internal.h:
+	Use different error handler, no parser context.
+	raptor_vsnprintf now internally visible.
+	Added raptor_www_error prototype
+
+	* raptor/raptor_www.c:
+	Only enable raptor_www_file_fetch with libxml, libghttp
+	(raptor_www_set_error_handler): Use different error handler, no
+	parser context.
+
+	* raptor/configure.ac, raptor/Makefile.am:
+	Added raptor WWW enabling, configuring
+
+	* raptor/raptor_internal.h:
+	Added raptor WWW retrieval internal includes, structs, prototypes
+
+	* raptor/raptor.h: Added raptor WWW retrieval prototypes
+
+	* raptor/raptor_www.c, raptor/raptor_www_curl.c,
+	raptor/raptor_www_ghttp.c, raptor/raptor_www_libxml.c,
+	raptor/raptor_www_test.c: Raptor WWW retrieval
+
+2003-03-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_parser_raptor.c (librdf_parser_raptor_parse_file_as_stream):
+	Save copies of source
+	and base URI - don't assume they will be around for the life of a
+	parse.
+	(librdf_parser_raptor_serialise_finished): Free the copied uris.
+
+	* examples/example4.c: document parse-stream
+
+	* python/RDF.py (Node.__init__):
+	Add world arg to librdf_new_node_from_blank_identifier
+
+2003-03-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am: added demos dir
+
+	* demos/rss-show.pl, demos/ntriples.pl: absolutize some doc urls
+
+	* configure.ac, Makefile.am: added demos dir
+
+	* demos/rss-show.pl, demos/parser-tests.pl, demos/ntriples.pl,
+	demos/demo.pl: point to source code
+
+	* demos/rss-show.pl, demos/parser-tests.pl, demos/ntriples.pl,
+	demos/demo.pl: add source code
+
+	* demos/Makefile.am, demos/demo.pl, demos/ntriples.pl,
+	demos/parser-tests.pl, demos/rss-show.pl: Redland CGI demos
+
+2003-03-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/serialize.pl (format_element_content,format_attribute):
+	Added to escape &, <, > things  etc.
+
+2003-03-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/serialize.pl: Whitespace tidying.
+	(emit_literal_element): Added, for doing 1-line literals
+	Fix datatypes.
+	Emit multiple rdf:type properties too.
+
+	* python/RDF.py:
+	(Node.get_literal_value) Correct datatype URI method call to only
+	operate if there is a datatype URI.
+	(Stream._del_): Work when there is no redland Stream.
+	(Parse.parse_as_stream): Return None if parsing fails, not an
+	empty Stream.
+
+	* perl/lib/RDF/Redland/Node.pm (literal_datatype):
+	Added, return the URI of the literal datatype or
+	undef if not one.
+
+	* perl/lib/RDF/Redland/Parser.pm (parse_as_stream):
+	Return undef if parsing fails, don't return a stream
+
+	* perl/lib/RDF/Redland/Stream.pm (DESTROY):
+	Handle wrapping an empty stream - might happen when a
+	search fails straight away.
+
+	* librdf/rdf_parser_raptor.c
+	(librdf_parser_raptor_new_statement_handler): Handle XMLLiteral
+	and datatyped literal URIs - pass them on as appropriate statements.
+
+	* perl/serialize.pl (predicate_split): Fix
+	(emit_empty_element) Pull out some more element
+	building stuff - for now.
+	main - declare an OWL namespace just for testing
+
+	* perl/serialize.pl: added emit_start_element, emit_end_element
+	now rdf:RDF declares its namespaces
+
+	* perl/serialize.pl: Make blank node subject and objects work.
+
+2003-03-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h: Export raptor_free_parser with RAPTOR_API
+
+	* raptor/win32_config.h: add trailing #endif
+
+	* raptor/win32_config.h: s/WIN32_LEAD_AND_MEAN/WIN32_LEAN_AND_MEAN/
+
+	* raptor/raptor_parse.c (raptor_xml_comment_handler):
+	Added - nop at present.
+	(raptor_xml_parse_init): For expat, use raptor_xml_comment_handler
+
+	* raptor/raptor_libxml.c:
+	(raptor_libxml_init) Use raptor_xml_comment_handler
+
+	* raptor/raptor_internal.h: Add raptor_xml_comment_handler prototype
+
+	* raptor/configure.ac:
+	Try to make maintainer mode flags match redland's defaults.
+
+	* Makefile.am: expat sources not included
+
+	* configure.ac: expat sources not included
+	building against expat / libxml sources no longer supported.
+
+	* librdf/rdf_model.c (librdf_model_add_typed_literal_statement):
+	Document - nodes become owned by the model.
+
+	* python/RDF.py: Bogus quotes
+
+	* java/org/librdf/redland/Model.java:
+	(add) (nodes, typed nodes versions) Copy redland nodes before adding.
+
+	* perl/t/test2.t:
+	Added test of Model method add_typed_literal_statement
+	Added test of Serializer method serialize_model_to_file
+
+	* python/test/test.py: Added test of model.add_typed_literal_statement
+
+	* python/RDF.py (Model.add_typed_literal_statement):
+	Copy redland nodes before adding.
+
+2003-03-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am: make clean targets run when perl isn't enabled.
+
+	* perl/Makefile.PL: Grab version from redland-src-config
+
+	* perl/Makefile.am: Use $(srcdir)/Makefile.PL
+
+	* python/Makefile.am: Use $(srcdir)/setup.py
+
+	* java/Makefile.am:
+	clean-java - don't leap down subdirs to clean stuff too early -
+	confuses autoconf.
+
+	* configure.ac: More AC_CONFIG_FILES tidying
+
+	* raptor/configure.ac, raptor/Makefile.am:
+	Fix cflags/cppflags when in redland
+
+	* librdf/rdf_serializer_raptor.c
+	(librdf_serializer_print_statement_as_ntriple):
+	No need for fprintf.
+
+	* librdf/rdf_serializer_raptor.c: No need for ntriples.h
+	(librdf_serializer_print_statement_as_ntriple): Handle datatyped
+	literals.
+
+	* perl/lib/RDF/Redland/Node.pm (new_from_typed_literal):
+	Added, creating a datatyped literal.
+
+	* perl/lib/RDF/Redland/Model.pm (add, add_typed_literal_statement):
+	Copy the nodes before passing on
+	- more natural for perl.
+
+	* librdf/Makefile.am: s/AML_CFLAGS/AM_CFLAGS/
+	Give rdf_uri_test the raptor includes
+
+	* librdf/rdf_node.c (librdf_node_decode):
+	Correct datatype URI/lang decoded in wrong
+	order.
+	(main): Add de/encode of datatyped node.
+
+	* librdf/rdf_node.c (librdf_node_encode):
+	Copy datatype URI string not junk from the URI
+	object.
+	(main): Add use of librdf_new_node_from_typed_literal
+
+	* examples/example4.c:
+	Added add-typed command to use librdf_new_node_from_typed_literal
+
+	* autogen.sh: Require autoconf 2.53+
+
+	* configure.ac: Require autoconf 2.53+
+	Update AC_OUTPUT to new form
+
+	* Redland.i: Added librdf_new_node_from_typed_literal
+
+	* redland-src-config.in:
+	use abs_top_srcdir for all refs to raptor-src-config
+
+2003-03-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/ex-46.out, raptor/tests/ex-46.rdf:
+	make rdf:li and rdf_2 property elements generate different triples
+
+2003-02-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/ex-46.out: fix
+
+	* raptor/tests/Makefile.am: Added ex-47
+
+	* raptor/tests/ex-47.out, raptor/tests/ex-47.rdf:
+	Exercise all rdfs vocab
+
+	* raptor/tests/Makefile.am: Added ex-46
+
+	* raptor/tests/ex-46.out, raptor/tests/ex-46.rdf:
+	Exercise all rdf vocab
+
+2003-02-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/RDF.py (RDF.set_message_handler): Added. Make a class method
+	(message_handler): Moved out of RDF.World class.
+	(RDF.World): Use RDF.message_handler
+	(RDF.Stream): Docs.
+
+	* librdf/rdf_storage_hashes.c
+	(librdf_storage_hashes_node_iterator_create):
+	Handle node being NULL,
+	for example when dealing with a predicates index p2so.
+
+2003-02-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* repat/Makefile.am: Make only librepat.la
+
+	* Makefile.am: Add man pages to dist
+
+2003-02-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/win32/raptor.plg, raptor/win32/Makefile.am: deleted raptor.plg
+
+	* raptor/win32/raptor.dsp, raptor/win32/README:
+	Updated win32 config - from contributed patches
+
+2003-02-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_uri.c: Correct :'s turning into |'s in win32 file URIs
+
+2003-02-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* autogen.sh: export autotools to configure
+
+	* autogen.sh: Tidying
+
+	* raptor/autogen.sh, autogen.sh:
+	run libtoolize in each configure.ac dir
+
+	* Makefile.am: acconfig.h not needed
+
+	* utils/Makefile.am, repat/Makefile.am, librdf/Makefile.am,
+	expat/xmltok/Makefile.am, expat/xmlparse/Makefile.am,
+	examples/Makefile.am:
+	Updates for automake 1.5-1.7
+
+	* autogen.sh: Update to use automake 1.6, autoconf 2.52 min
+
+	* configure.ac: configure.ac replacing configure.in
+
+	* acconfig.h, configure.in:
+	Replace configure.in acconfig.h with configure.ac
+
+	* raptor/win32_config.h:
+	win32 has C99 compatible vsnprintf called _vsnprintf
+
+	* raptor/configure.ac:
+	Check for vsnprintf and check for C99 compatible return value.
+
+	* raptor/raptor_general.c (raptor_vsnprintf):
+	Added for handling compatibilty with vsnprintf
+	that doesn't match C99.
+
+2003-02-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/tests/Makefile.am:
+	Use $(ECHO) which may be different from sh's echo
+
+	* raptor/Makefile.am:
+	Changing, moved raptor_getopt.h to rapper_SOURCES after automake
+	manual recommendation.
+
+	* raptor/Makefile.am: Put raptor_getopt.h in noinst_HEADERS
+
+	* raptor/Makefile.am: No need for EXTRA_libraptor_la_SOURCES
+
+	* raptor/Makefile.am: Use LTLIBOBJS for extra libraptor objs
+
+	* raptor/raptor.h: again
+
+	* raptor/raptor.h: don't do deprecated on broken OSX gcc
+
+	* raptor/raptor_getopt.h, raptor/getopt.c: No need for prefix
+
+	* raptor/getopt.c: Duh - use raptor getopt header
+
+	* raptor/Makefile.am:
+	Use RAPPER_EXTRA_OBJS to optionally add getopt to rapper only
+
+	* raptor/configure.ac: Add getopt object to RAPPER_EXTRA_OBJS
+
+	* raptor/rdfdump.c: Add raptor_getopt.h for local version
+
+	* raptor/raptor_getopt.h: Define rest of getopt externs
+
+	* raptor/getopt.c: More prefixes
+
+	* raptor/raptor_getopt.h, raptor/getopt.c: Public domain getopt
+
+	* raptor/configure.ac: Check for getopt and add getopt.o if it missing.
+
+	* raptor/autogen.sh:
+	try asking the progs for their version - slower, but right
+
+	* raptor/autogen.sh: tidying
+
+	* raptor/acconfig.h: acconfig.h obsoleted
+
+	* raptor/Makefile.am: Use AM_CPPFLAGS
+
+	* raptor/autogen.sh:
+	Min versions are bumpled - 2.52 for autoconf, 1.6 for automake
+	Now hunts for newest, shinyest autoconf and automake/aclocal and uses
+	them whatever is available.
+
+2003-02-18  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/configure.ac: autoconf 2.5x configure.ac
+
+	* raptor/configure.in: Replaced with autoconf 2.5x configure.ac
+
+2003-02-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor.h: Move stuff around, consolidate deprecated bits
+
+	* raptor/ntriples_parse.c, raptor/rdfdump.c: No need for ntriples.h
+
+	* raptor/raptor.h: Moved all ntriples.h defines here.
+	Defined RAPTOR_DEPRECATED (with gcc 3.1+) and used on old api calls.
+
+	* raptor/ntriples.h:
+	Moved all definitions to raptor.h - this file is now deprecated.
+
+	* python/RDF.py: typo
+
+2003-02-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* debian/changelog, debian/libredland0-dev.install:
+	added redland-config.1
+
+	* debian/libredland0-dev.manpages: Added redland-config.1
+
+	* debian/Makefile.am: Added libredland0-dev.manpages
+
+	* Makefile.am: added redland-config.1
+
+	* redland-config.1: redland-config manual page
+
+	* redland-config.in, raptor/raptor-config.in: No exec-prefix
+
+	* raptor/raptor-config.1: Manual page for raptor-config
+
+	* raptor/Makefile.am: Added raptor-config.1
+
+	* debian/Makefile.am: missed a backslash
+
+	* debian/redland1.files, debian/manpage.1.ex, debian/shlibs.local.ex:
+	Not used
+
+	* debian/rules.in, debian/copyright, debian/control,
+	debian/changelog, debian/README.Debian, debian/Makefile.am:
+	Updated for debian packaging 0.9.12
+
+	* debian/libredland0-dev.docs, debian/libredland0-dev.files,
+	debian/libredland0-dev.install, debian/libredland0.files,
+	debian/libredland0.install, debian/libredland0.manpages:
+	Redland debian packaging
+
+	* debian/doc-base.package, debian/docs, debian/dirs: Not used
+
+	* raptor/rapper.1: EXAMPLE
+
+2003-02-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Redland.i: Added librdf_node_get_literal_value_datatype_uri
+
+	* raptor/tests/Makefile.am: $name=>$$name
+
+	* configure.in: Bumped version to 0.9.13
+
+	* Snapshotted redland_0_9_12 for 0.9.12 release
+
+	* raptor/raptor.spec.in: release is 1
+
+2003-02-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/redland.spec.in, Makefile.am: No RELEASE, TODO
+
+	* raptor/Makefile.am: Restore LICENSE.txt
+
+	* raptor/Makefile.am: No LICENSE.txt in dist
+
+	* java/org/librdf/redland/Makefile.am: Add Hash.ajva to dist
+
+	* librdf/redland.spec.in:
+	Move man pages around.  All headers now in devel.
+
+	* librdf/redland.spec.in: Don't put raptor man files in this rpm
+
+	* librdf/redland.spec.in: Require raptor 0.9.8
+
+	* raptor/raptor_uri.c (main):
+	Use lstat, reading a selection of dirs to try harder to test
+	relative file URIs.
+
+	* raptor/configure.in: check for sys/stat.h (for raptor_uri_test main)
+
+	* raptor/tests/Makefile.am: There is no portable test == operator
+
+	* raptor/raptor_parse.c (raptor_xml_start_element_handler):
+	Updated call to
+	raptor_namespaces_start_namespace to use error_handler, error_data
+	parameters
+
+	* raptor/raptor_general.c (raptor_start_parse):
+	Updated call to raptor_namespaces_init to use
+	error_handler, error_data parameters
+
+	* raptor/raptor_internal.h:
+	Updated raptor_namespaces_init, raptor_namespaces_start_namespace,
+	raptor_namespace_new with error_handler, error_data parameters
+
+	* raptor/raptor_namespace.c: (raptor_namespaces_init,
+	raptor_namespaces_start_namespace, raptor_namespace_new) 
+	Add error handler and data parameters and use to explain how
+	xmlns:foo="" isn't allowed
+
+	* utils/Makefile.am: Add update-api-0912.pl to dist
+
+2003-02-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_parse.c:
+	multiple objects of a property element (statement) is an error
+
+	* raptor/tests/Makefile.am:
+	Report warnings when they occur.  Print the warning text
+
+	* raptor/tests/bad-11.rdf: now xml
+
+	* raptor/tests/Makefile.am: typo - restult
+
+	* raptor/tests/bad-11.rdf:
+	Check xmlns with no namespace name (URI) fails
+
+	* raptor/tests/Makefile.am: Added bad-11
+
+	* raptor/raptor_libxml.c (raptor_libxml_update_document_locator):
+	Handle empty parser context.
+
+	* raptor/tests/Makefile.am: ex-46 now bad-10
+
+	* raptor/tests/bad-10.rdf, raptor/tests/ex-46.rdf,
+	raptor/tests/ex-46.out: Now bad-10
+
+	* raptor/raptor_parse.c (raptor_xml_parse_chunk_):
+	Make an empty rdf/xml bytestream an
+	illegal doc (like expat) and return an error.
+
+	* raptor/raptor_libxml.c (raptor_libxml_update_document_locator):
+	Don't use loc if it is NULL
+	such as errors before start of XML document.
+
+	* raptor/raptor_libxml.c:
+	Check for xmlSAXHandler externalSubset field, not present in old
+	libxml v1.  Whether raptor works after this is unlikely and untested.
+
+	* raptor/configure.in: Add old libxml V1 warning and suggestion
+
+	* raptor/acconfig.h: Added RAPTOR_LIBXML_XMLSAXHANDLER_EXTERNALSUBSET
+
+	* raptor/configure.in: Check for xmlSAXHandler externalSubset field
+
+2003-02-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/raptor_locator.c (raptor_print_locator):
+	Only print non-negative line numbers
+
+	* raptor/raptor_parse.c (raptor_xml_parse_chunk_):
+	For libxml, handle first chunk being
+	empty, when the XML parser context, xc, is attempted to be initialiased
+
+	* raptor/tests/Makefile.am:
+	Added ex-46 (Empty file should give 0 triples)
+
+	* raptor/tests/ex-46.out, raptor/tests/ex-46.rdf:
+	Empty file should give 0 triples
+
+2003-01-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am: utils now has buildable stuff
+
+	* librdf/rdf_hash_bdb.c:
+	Make BDB open failures return librdf_error even when debug set.
+
+	* configure.in, Makefile.am: scripts now utils
+
+	* utils/Makefile.am, utils/db_upgrade.c, utils/update-api-0912.pl:
+	scripts now utils, added redland-db-upgrade util
+
+	* librdf/redland.spec.in: Added redland-db-upgrade
+
+2003-01-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in: don't destroy passed in LDFLAGS value
+
+2003-01-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* tcl/Makefile.am:
+	Fix so it doesn't compile over the input file.  Bad $? / $< again
+
+	* java/org/librdf/redland/Model.java:
+	(add/remove) Added contexts version of methods
+	(context_remove): Added, remove all statements with given context.
+
+	* java/Makefile.am: $< wrong for build jars, add all files
+
+	* python/RDF.py:
+	(Model) Added contexts methods, as optional args to add/remove
+	statements methods.
+	New method: context_remove_statements
+
+	* perl/lib/RDF/Redland/Model.pm (add_statement, add_statements,
+	remove_statement): Add optional context arg.
+	(remove_context_statements): Added.
+
+	* configure.in:
+	Make xml parser prefer libxml, to match what raptor does.  Expat will
+	be added if required/available anyway, such as for repat.
+	If expat is needed for raptor, ensure it uses system expat first if
+	available rather than always use source version.
+
+	* php/php.ini: added safe_mode = Off, says Ron
+
+	* autogen.sh: require swig 1.3.14 min
+
+	* docs/api.sgml.in, docs/fix-python-xhtml,
+	docs/fix-pod-xhtml: dates
+
+	* configure.in, Makefile.am:
+	Renamed aux dir to scripts
+
+	* scripts/Makefile.am, scripts/update-api-0912.pl: Moved from aux dir
+
+2003-01-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* tcl/Makefile.am, ruby/Makefile.am, raptor/Makefile.am,
+	python/Makefile.am, perl/Makefile.am, java/Makefile.am,
+	docs/Makefile.am, php/Makefile.am:
+	Remove $? and replace with $< or full dependencies
+
+2003-01-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_register):
+	Return correct failure sense.
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_terminate):
+	Protect from empty arrays
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_register):
+	Don't leak full_name memory when
+	librdf_new_hash fails.
+
+	* librdf/rdf_storage_hashes.c (librdf_storage_hashes_init_common):
+	On failure to create lower level
+	hashes, don't free stuff here, librdf_storage_hashes_terminate will
+	do it, eventually.
+
+2003-01-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/ntriples_parse.c:
+	Fix macro IS_ASCII_DIGIT which refused to allow '0'.
+
+2003-01-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* raptor/rdfdump.1: rdfdump.1 renamed to rapper.1
+
+	* librdf/redland.spec.in:
+	Updated for redland 0.9.12 (requires installed raptor to build)
+
+	* raptor/raptor.spec.in, raptor/tests/Makefile.am,
+	raptor/Makefile.am, raptor/INSTALL.html: rdfdump now rapper
+
+	* raptor/rapper.1: rdfdump.1 renamed to rapper.1
+
+2003-01-07  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf/rdf_parser_sirpac.c: No longer needed
+
+2003-01-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* examples/Makefile.am: tweak clean
+
+	* librdf/rdf_model.c:
+	(librdf_model_get_source,librdf_model_get_target,librdf_model_get_arc):
+	Return a new copy of the shared node, restoring the declared API
+	behaviour.
+
+	* Makefile.am: Added RELEASE.html RELEASE
+
+	* librdf/rdf_parser_repat.c
+	(librdf_parser_repat_parse_file_into_model): Tidy up internal stream
+	after add_statements no longer frees it.
+
+	* librdf/rdf_parser_raptor.c
+	(librdf_parser_raptor_parse_file_into_model): Tidy up internal stream
+	after add_statements no longer frees it.
+
+2003-01-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* examples/example4.c: Revert temporary context dbd-store ifdef
+
+	* librdf/rdf_node.c (librdf_new_node_from_typed_literal):
+	Docucomment fix
+
+2003-01-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/api.sgml.in: Added general query, serializer doc parts
+
+	* aux/update-api-0912.pl: Add model add_statement changes checks
+
+	* aux/update-api-0912.pl: Docs
+
+	* aux/update-api-0912.pl: Try to catch stream/iterator api changes too

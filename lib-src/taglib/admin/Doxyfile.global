@@ -1,0 +1,192 @@
+OUTPUT_LANGUAGE        = English
+USE_WINDOWS_ENCODING   = NO
+BRIEF_MEMBER_DESC      = NO
+REPEAT_BRIEF           = YES
+ABBREVIATE_BRIEF       = 
+ALWAYS_DETAILED_SEC    = YES
+INLINE_INHERITED_MEMB  = NO
+FULL_PATH_NAMES        = NO
+STRIP_FROM_PATH        = 
+SHORT_NAMES            = NO
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = NO
+INHERIT_DOCS           = YES
+DISTRIBUTE_GROUP_DOC   = NO
+TAB_SIZE               = 4
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+SUBGROUPING            = YES
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = NO
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = YES
+HIDE_FRIEND_COMPOUNDS  = NO
+HIDE_IN_BODY_DOCS      = NO
+INTERNAL_DOCS          = NO
+CASE_SENSE_NAMES       = YES
+HIDE_SCOPE_NAMES       = NO
+SHOW_INCLUDE_FILES     = YES
+INLINE_INFO            = YES
+SORT_BRIEF_DOCS        = NO
+SORT_BY_SCOPE_NAME     = NO
+GENERATE_TESTLIST      = NO
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+ENABLED_SECTIONS       = 
+MAX_INITIALIZER_LINES  = 30
+SHOW_USED_FILES        = YES
+QUIET                  = YES
+WARNINGS               = NO
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+WARN_FORMAT            = 
+WARN_LOGFILE           = 
+INPUT                  = 
+FILE_PATTERNS          = *.h \
+                         *.cpp \
+                         *.cc \
+                         *.hpp \
+                         *.dox \
+                         *.c++ \
+                         *.cxx \
+                         *.h++ \
+                         *.hh
+RECURSIVE              = YES
+EXCLUDE                = 
+EXCLUDE_SYMLINKS       = NO
+EXCLUDE_PATTERNS       = *.moc.* \
+                         moc* \
+                         *.all_cpp.* \
+                         *unload.* \
+                         */test/* \
+                         */tests/* \
+                         *_p.h 
+EXAMPLE_PATH           = 
+EXAMPLE_PATTERNS       = 
+EXAMPLE_RECURSIVE      = NO
+IMAGE_PATH             = 
+INPUT_FILTER           = 
+FILTER_SOURCE_FILES    = NO
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+VERBATIM_HEADERS       = YES
+ALPHABETICAL_INDEX     = YES
+COLS_IN_ALPHA_INDEX    = 3
+HTML_OUTPUT            = 
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            = ../apidocs/common/header.html
+HTML_FOOTER            = ../apidocs/common/footer.html
+HTML_STYLESHEET        = ../apidocs/common/doxygen.css
+HTML_ALIGN_MEMBERS     = YES
+GENERATE_HTMLHELP      = NO
+CHM_FILE               = 
+HHC_LOCATION           = 
+GENERATE_CHI           = NO
+BINARY_TOC             = NO
+TOC_EXPAND             = NO
+DISABLE_INDEX          = YES
+ENUM_VALUES_PER_LINE   = 4
+GENERATE_TREEVIEW      = NO
+TREEVIEW_WIDTH         = 250
+GENERATE_LATEX         = NO
+LATEX_OUTPUT           = 
+LATEX_CMD_NAME         = latex
+MAKEINDEX_CMD_NAME     = makeindex
+COMPACT_LATEX          = NO
+PAPER_TYPE             = a4wide
+EXTRA_PACKAGES         = 
+LATEX_HEADER           = 
+PDF_HYPERLINKS         = NO
+USE_PDFLATEX           = NO
+LATEX_BATCHMODE        = NO
+LATEX_HIDE_INDICES     = NO
+GENERATE_RTF           = NO
+RTF_OUTPUT             = 
+COMPACT_RTF            = NO
+RTF_HYPERLINKS         = NO
+RTF_STYLESHEET_FILE    = 
+RTF_EXTENSIONS_FILE    = 
+GENERATE_MAN           = NO
+MAN_OUTPUT             = 
+MAN_EXTENSION          = .kde3
+MAN_LINKS              = YES
+GENERATE_XML           = NO
+XML_OUTPUT             = xml
+XML_SCHEMA             = 
+XML_DTD                = 
+XML_PROGRAMLISTING     = NO
+GENERATE_AUTOGEN_DEF   = NO
+GENERATE_PERLMOD       = NO
+PERLMOD_LATEX          = NO
+PERLMOD_PRETTY         = YES
+PERLMOD_MAKEVAR_PREFIX = 
+ENABLE_PREPROCESSING   = YES
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = 
+INCLUDE_FILE_PATTERNS  = 
+PREDEFINED             = QT_VERSION=320 \
+                         __cplusplus \
+                         Q_WS_X11
+EXPAND_AS_DEFINED      = 
+SKIP_FUNCTION_MACROS   = YES
+TAGFILES               = 
+GENERATE_TAGFILE       = 
+ALLEXTERNALS           = NO
+EXTERNAL_GROUPS        = NO
+PERL_PATH              = 
+CLASS_DIAGRAMS         = YES
+HIDE_UNDOC_RELATIONS   = NO
+HAVE_DOT               = NO
+UML_LOOK               = NO
+TEMPLATE_RELATIONS     = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = NO
+GRAPHICAL_HIERARCHY    = YES
+DOT_IMAGE_FORMAT       = png
+DOT_PATH               = 
+DOTFILE_DIRS           = 
+MAX_DOT_GRAPH_WIDTH    = 800
+MAX_DOT_GRAPH_HEIGHT   = 1024
+MAX_DOT_GRAPH_DEPTH    = 0
+GENERATE_LEGEND        = YES
+DOT_CLEANUP            = YES
+SEARCHENGINE           = NO
+
+### KDE Settings
+ALIASES = \
+	"intern=\par<b>Internal use only.</b>" \
+	"reimp=\par<b>Reimplemented from superclass.</b>" \
+	"obsolete=@deprecated" \
+	"feature=\xrefitem features \"Feature(s)\" \"Features\"" \
+	"maintainer=\xrefitem maintainers \"Maintainer(s)\" \"Maintainers\"" \
+	"unmaintained=\xrefitem unmaintained \"Unmaintained\" \"Unmaintained\"" \
+	"requirement=\xrefitem requirements \"Requirement(s)\" \"Requirements\"" \
+	"faq=\xrefitem FAQ \"F.A.Q.\" \"F.A.Q.\"" \
+	"authors=\xrefitem authors \"Author(s)\" \"Authors\"" \
+	"FIXME=\xrefitem fixme \"Fixme\" \"Fixme\""
+
+HTML_ALIGN_MEMBERS     = YES
+REFERENCED_BY_RELATION = NO
+REFERENCES_RELATION    = NO
+VERBATIM_HEADERS       = NO
+GENERATE_HTML          = YES
+SOURCE_BROWSER         = YES
+GENERATE_AUTOGEN_DEF   = NO
+DETAILS_AT_TOP         = YES
+SORT_MEMBER_DOCS       = YES
+GENERATE_TODOLIST      = YES
+IGNORE_PREFIX          = K
+GENERATE_HTML          = YES
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = NO
+
+
+MACRO_EXPANSION = YES
+EXPAND_ONLY_PREDEF = YES
+

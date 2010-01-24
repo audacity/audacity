@@ -1,0 +1,3 @@
+<http://www.w3.org/> <http://purl.org/dc/elements/1.1/title> "World Wide Web Consortium" .
+<http://www.w3.org/> <http://purl.org/dc/elements/1.1/source> <http://example.org/test1/test2/> .
+<http://www.w3.org/> <http://purl.org/dc/elements/1.1/relation> <http://example.org/test1/> .

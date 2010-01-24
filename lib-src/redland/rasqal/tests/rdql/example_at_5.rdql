@@ -1,0 +1,10 @@
+SELECT ?sal, ?t, ?x  
+FROM	<http://ilrt.org/discovery/2000/11/rss-query/jobs-rss.rdf>,
+	<http://ilrt.org/discovery/2000/11/rss-query/jobs.rss>
+WHERE 
+   (?x, job:advertises, ?y),
+   (?y, job:salary, ?sal),
+   (?y, job:title, ?t) 
+AND (?sal >= 100000)
+USING job for <http://ilrt.org/discovery/2000/11/rss-query/jobvocab.rdf#>
+

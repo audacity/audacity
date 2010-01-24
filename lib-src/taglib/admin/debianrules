@@ -1,0 +1,43 @@
+#!/usr/bin/perl -w
+
+use Shell qw(mv cp mkdir rm) ;
+use File::Find;
+use Cwd;
+
+$origPwd = `pwd`;
+chomp $origPwd;
+
+$kde_prefix	=	"/usr";
+$sysconfdir	=	"/etc";
+$kde_includedir	=	"$kde_prefix/include/kde";
+$infodir	=	"$kde_prefix/share/info";
+$mandir		=	"$kde_prefix/share/man";
+$qtdir		=	"/usr/share/qt3";
+
+$kde_cgidir	=	"$kde_prefix/lib/cgi-bin";
+$kde_confdir	=	"$sysconfdir/kde3";
+$kde_htmldir	=	"$kde_prefix/share/doc/kde/HTML";
+
+if (defined $ENV{DEB_BUILD_OPTIONS} &&
+    $ENV{DEB_BUILD_OPTIONS} =~ /\bnostrip\b/) {
+	$enable_debug="--enable-debug=full";
+} else {
+	$enable_debug="--disable-debug";
+}
+
+if (@ARGV && $ARGV[0] eq 'echodirs') {
+  print STDOUT "export kde_prefix=$kde_prefix\n";
+  print STDOUT "export sysconfdir=$sysconfdir\n";
+  print STDOUT "export kde_includedir=$kde_includedir\n";
+  print STDOUT "export infodir=$infodir\n";
+  print STDOUT "export mandir=$mandir\n";
+  print STDOUT "export qtdir=$qtdir\n";
+
+  print STDOUT "export kde_cgidir=$kde_cgidir\n";
+  print STDOUT "export kde_confdir=$kde_confdir\n";
+  print STDOUT "export kde_htmldir=$kde_htmldir\n";
+
+  print STDOUT "configkde=$enable_debug --disable-rpath --prefix=\$(kde_prefix) --sysconfdir=\$(sysconfdir) --includedir=\$(kde_includedir) --infodir=\$(infodir) --mandir=\$(mandir) --with-qt-dir=\$(qtdir)\n";
+
+  exit
+}

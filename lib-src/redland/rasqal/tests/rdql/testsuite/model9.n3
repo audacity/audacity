@@ -1,0 +1,14 @@
+@prefix :     <http://rdf.hp.com/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> . 
+@prefix ns:   <http://rdf.hp.com/ns#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:r :p1 "value"@en^^rdf:XMLLiteral .
+:r :p2 "value"@en .
+:r :p3 "value" .
+:r :p4 "value"@en^^ns:someType .
+:r :p5 5 . # Same as "1"^^xsd:integer
+
+# Turtle does not have doubles.
+:r :p5 "5.7"^^xsd:double . # Same as 5.7 in N3
+:r :p6 "true" .

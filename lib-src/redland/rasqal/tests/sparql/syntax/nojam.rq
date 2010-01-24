@@ -1,0 +1,4 @@
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?x
+where
+(?x foaf:name ?name) AND ? == "foo"

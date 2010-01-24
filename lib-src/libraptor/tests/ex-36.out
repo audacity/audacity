@@ -1,0 +1,4 @@
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.daml.org/2001/03/daml+oil#List> .
+_:genid1 <http://www.daml.org/2001/03/daml+oil#first> <http://example.org/resource1> .
+_:genid1 <http://www.daml.org/2001/03/daml+oil#rest> <http://www.daml.org/2001/03/daml+oil#nil> .
+<http://example.org/resource> <http://example.org/property> _:genid1 .

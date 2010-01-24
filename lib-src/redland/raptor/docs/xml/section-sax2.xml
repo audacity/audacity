@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-sax2">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-sax2.top_of_page">SAX2</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>SAX2</refname>
+<refpurpose>SAX2 XML Parsing API with namespaces and base URI support.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-sax2.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="raptor-sax2">raptor_sax2</link>;
+<link linkend="raptor-sax2">raptor_sax2</link>*        <link linkend="raptor-new-sax2">raptor_new_sax2</link>                     (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-error-handlers">raptor_error_handlers</link> *error_handlers);
+<link linkend="void">void</link>                <link linkend="raptor-free-sax2">raptor_free_sax2</link>                    (<link linkend="raptor-sax2">raptor_sax2</link> *sax2);
+<link linkend="void">void</link>                (<link linkend="raptor-sax2-start-element-handler">*raptor_sax2_start_element_handler</link>)
+                                                        (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element);
+<link linkend="void">void</link>                (<link linkend="raptor-sax2-end-element-handler">*raptor_sax2_end_element_handler</link>)  (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element);
+<link linkend="void">void</link>                (<link linkend="raptor-sax2-characters-handler">*raptor_sax2_characters_handler</link>)   (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element,
+                                                         unsigned <link linkend="char">char</link> *s,
+                                                         <link linkend="int">int</link> len);
+<link linkend="void">void</link>                (<link linkend="raptor-sax2-cdata-handler">*raptor_sax2_cdata_handler</link>)        (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element,
+                                                         unsigned <link linkend="char">char</link> *s,
+                                                         <link linkend="int">int</link> len);
+<link linkend="void">void</link>                (<link linkend="raptor-sax2-comment-handler">*raptor_sax2_comment_handler</link>)      (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element,
+                                                         unsigned <link linkend="char">char</link> *s);
+<link linkend="void">void</link>                (<link linkend="raptor-sax2-unparsed-entity-decl-handler">*raptor_sax2_unparsed_entity_decl_handler</link>)
+                                                        (<link linkend="void">void</link> *user_data,
+                                                         unsigned <link linkend="char">char</link> *entityName,
+                                                         unsigned <link linkend="char">char</link> *base,
+                                                         unsigned <link linkend="char">char</link> *systemId,
+                                                         unsigned <link linkend="char">char</link> *publicId,
+                                                         unsigned <link linkend="char">char</link> *notationName);
+<link linkend="int">int</link>                 (<link linkend="raptor-sax2-external-entity-ref-handler">*raptor_sax2_external_entity_ref_handler</link>)
+                                                        (<link linkend="void">void</link> *user_data,
+                                                         unsigned <link linkend="char">char</link> *context,
+                                                         unsigned <link linkend="char">char</link> *base,
+                                                         unsigned <link linkend="char">char</link> *systemId,
+                                                         unsigned <link linkend="char">char</link> *publicId);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-start-element-handler">raptor_sax2_set_start_element_handler</link>
+                                                        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-start-element-handler">raptor_sax2_start_element_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-end-element-handler">raptor_sax2_set_end_element_handler</link> (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-end-element-handler">raptor_sax2_end_element_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-characters-handler">raptor_sax2_set_characters_handler</link>  (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-characters-handler">raptor_sax2_characters_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-cdata-handler">raptor_sax2_set_cdata_handler</link>       (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-cdata-handler">raptor_sax2_cdata_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-comment-handler">raptor_sax2_set_comment_handler</link>     (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-comment-handler">raptor_sax2_comment_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-unparsed-entity-decl-handler">raptor_sax2_set_unparsed_entity_decl_handler</link>
+                                                        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-unparsed-entity-decl-handler">raptor_sax2_unparsed_entity_decl_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-external-entity-ref-handler">raptor_sax2_set_external_entity_ref_handler</link>
+                                                        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-external-entity-ref-handler">raptor_sax2_external_entity_ref_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-set-namespace-handler">raptor_sax2_set_namespace_handler</link>   (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-namespace-handler">raptor_namespace_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-sax2-parse-start">raptor_sax2_parse_start</link>             (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="raptor-sax2-parse-chunk">raptor_sax2_parse_chunk</link>             (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         <link linkend="int">int</link> is_end);
+const unsigned <link linkend="char">char</link>* <link linkend="raptor-sax2-inscope-xml-language">raptor_sax2_inscope_xml_language</link>   (<link linkend="raptor-sax2">raptor_sax2</link> *sax2);
+<link linkend="raptor-uri">raptor_uri</link>*         <link linkend="raptor-sax2-inscope-base-uri">raptor_sax2_inscope_base_uri</link>        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-sax2.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+A class providing a SAX2 XML parsing API with XML namespaces
+and XML base support.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-sax2.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-sax2" role="typedef">
+<title>raptor_sax2</title>
+<indexterm zone="raptor-sax2"><primary>raptor_sax2</primary></indexterm><programlisting>typedef struct raptor_sax2_s raptor_sax2;
+</programlisting>
+<para>
+Raptor SAX2 class</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-new-sax2" role="function">
+<title>raptor_new_sax2 ()</title>
+<indexterm zone="raptor-new-sax2"><primary>raptor_new_sax2</primary></indexterm><programlisting><link linkend="raptor-sax2">raptor_sax2</link>*        raptor_new_sax2                     (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-error-handlers">raptor_error_handlers</link> *error_handlers);</programlisting>
+<para>
+Constructor - Create a new SAX2 with error handlers</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> pointer context information to pass to handlers
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_handlers</parameter>&nbsp;:</term>
+<listitem><simpara> error handlers pointer
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-sax2"><type>raptor_sax2</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-free-sax2" role="function">
+<title>raptor_free_sax2 ()</title>
+<indexterm zone="raptor-free-sax2"><primary>raptor_free_sax2</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_free_sax2                    (<link linkend="raptor-sax2">raptor_sax2</link> *sax2);</programlisting>
+<para>
+Destructor - destroy a SAX2 object</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-start-element-handler" role="function">
+<title>raptor_sax2_start_element_handler ()</title>
+<indexterm zone="raptor-sax2-start-element-handler"><primary>raptor_sax2_start_element_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_sax2_start_element_handler)
+                                                        (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element);</programlisting>
+<para>
+SAX2 start element handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>xml_element</parameter>&nbsp;:</term>
+<listitem><simpara> XML element
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-end-element-handler" role="function">
+<title>raptor_sax2_end_element_handler ()</title>
+<indexterm zone="raptor-sax2-end-element-handler"><primary>raptor_sax2_end_element_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_sax2_end_element_handler)  (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element);</programlisting>
+<para>
+SAX2 end element handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>xml_element</parameter>&nbsp;:</term>
+<listitem><simpara> XML element
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-characters-handler" role="function">
+<title>raptor_sax2_characters_handler ()</title>
+<indexterm zone="raptor-sax2-characters-handler"><primary>raptor_sax2_characters_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_sax2_characters_handler)   (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element,
+                                                         unsigned <link linkend="char">char</link> *s,
+                                                         <link linkend="int">int</link> len);</programlisting>
+<para>
+SAX2 characters handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>xml_element</parameter>&nbsp;:</term>
+<listitem><simpara> XML element
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>s</parameter>&nbsp;:</term>
+<listitem><simpara> string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> string len
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-cdata-handler" role="function">
+<title>raptor_sax2_cdata_handler ()</title>
+<indexterm zone="raptor-sax2-cdata-handler"><primary>raptor_sax2_cdata_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_sax2_cdata_handler)        (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element,
+                                                         unsigned <link linkend="char">char</link> *s,
+                                                         <link linkend="int">int</link> len);</programlisting>
+<para>
+SAX2 CDATA section handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>xml_element</parameter>&nbsp;:</term>
+<listitem><simpara> XML element
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>s</parameter>&nbsp;:</term>
+<listitem><simpara> string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> string len
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-comment-handler" role="function">
+<title>raptor_sax2_comment_handler ()</title>
+<indexterm zone="raptor-sax2-comment-handler"><primary>raptor_sax2_comment_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_sax2_comment_handler)      (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-xml-element">raptor_xml_element</link> *xml_element,
+                                                         unsigned <link linkend="char">char</link> *s);</programlisting>
+<para>
+SAX2 XML comment handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>xml_element</parameter>&nbsp;:</term>
+<listitem><simpara> XML element
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>s</parameter>&nbsp;:</term>
+<listitem><simpara> string
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-unparsed-entity-decl-handler" role="function">
+<title>raptor_sax2_unparsed_entity_decl_handler ()</title>
+<indexterm zone="raptor-sax2-unparsed-entity-decl-handler"><primary>raptor_sax2_unparsed_entity_decl_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_sax2_unparsed_entity_decl_handler)
+                                                        (<link linkend="void">void</link> *user_data,
+                                                         unsigned <link linkend="char">char</link> *entityName,
+                                                         unsigned <link linkend="char">char</link> *base,
+                                                         unsigned <link linkend="char">char</link> *systemId,
+                                                         unsigned <link linkend="char">char</link> *publicId,
+                                                         unsigned <link linkend="char">char</link> *notationName);</programlisting>
+<para>
+SAX2 unparsed entity (NDATA) handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>entityName</parameter>&nbsp;:</term>
+<listitem><simpara> entity name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base</parameter>&nbsp;:</term>
+<listitem><simpara> base URI
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>systemId</parameter>&nbsp;:</term>
+<listitem><simpara> system ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>publicId</parameter>&nbsp;:</term>
+<listitem><simpara> public ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>notationName</parameter>&nbsp;:</term>
+<listitem><simpara> notation name
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-external-entity-ref-handler" role="function">
+<title>raptor_sax2_external_entity_ref_handler ()</title>
+<indexterm zone="raptor-sax2-external-entity-ref-handler"><primary>raptor_sax2_external_entity_ref_handler</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_sax2_external_entity_ref_handler)
+                                                        (<link linkend="void">void</link> *user_data,
+                                                         unsigned <link linkend="char">char</link> *context,
+                                                         unsigned <link linkend="char">char</link> *base,
+                                                         unsigned <link linkend="char">char</link> *systemId,
+                                                         unsigned <link linkend="char">char</link> *publicId);</programlisting>
+<para>
+SAX2 external entity reference handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> context
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base</parameter>&nbsp;:</term>
+<listitem><simpara> base URI
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>systemId</parameter>&nbsp;:</term>
+<listitem><simpara> system ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>publicId</parameter>&nbsp;:</term>
+<listitem><simpara> public ID
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> 0 if processing should not continue because of a
+fatal error in the handling of the external entity.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-start-element-handler" role="function">
+<title>raptor_sax2_set_start_element_handler ()</title>
+<indexterm zone="raptor-sax2-set-start-element-handler"><primary>raptor_sax2_set_start_element_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_start_element_handler
+                                                        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-start-element-handler">raptor_sax2_start_element_handler</link> handler);</programlisting>
+<para>
+Set SAX2 start element handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> start element handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-end-element-handler" role="function">
+<title>raptor_sax2_set_end_element_handler ()</title>
+<indexterm zone="raptor-sax2-set-end-element-handler"><primary>raptor_sax2_set_end_element_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_end_element_handler (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-end-element-handler">raptor_sax2_end_element_handler</link> handler);</programlisting>
+<para>
+Set SAX2 end element handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> end element handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-characters-handler" role="function">
+<title>raptor_sax2_set_characters_handler ()</title>
+<indexterm zone="raptor-sax2-set-characters-handler"><primary>raptor_sax2_set_characters_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_characters_handler  (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-characters-handler">raptor_sax2_characters_handler</link> handler);</programlisting>
+<para>
+Set SAX2 characters handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> characters handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-cdata-handler" role="function">
+<title>raptor_sax2_set_cdata_handler ()</title>
+<indexterm zone="raptor-sax2-set-cdata-handler"><primary>raptor_sax2_set_cdata_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_cdata_handler       (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-cdata-handler">raptor_sax2_cdata_handler</link> handler);</programlisting>
+<para>
+Set SAX2 CDATA handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> CDATA handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-comment-handler" role="function">
+<title>raptor_sax2_set_comment_handler ()</title>
+<indexterm zone="raptor-sax2-set-comment-handler"><primary>raptor_sax2_set_comment_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_comment_handler     (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-comment-handler">raptor_sax2_comment_handler</link> handler);</programlisting>
+<para>
+Set SAX2 XML comment handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> comment handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-unparsed-entity-decl-handler" role="function">
+<title>raptor_sax2_set_unparsed_entity_decl_handler ()</title>
+<indexterm zone="raptor-sax2-set-unparsed-entity-decl-handler"><primary>raptor_sax2_set_unparsed_entity_decl_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_unparsed_entity_decl_handler
+                                                        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-unparsed-entity-decl-handler">raptor_sax2_unparsed_entity_decl_handler</link> handler);</programlisting>
+<para>
+Set SAX2 XML unparsed entity declaration handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> unparsed entity declaration handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-external-entity-ref-handler" role="function">
+<title>raptor_sax2_set_external_entity_ref_handler ()</title>
+<indexterm zone="raptor-sax2-set-external-entity-ref-handler"><primary>raptor_sax2_set_external_entity_ref_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_external_entity_ref_handler
+                                                        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-sax2-external-entity-ref-handler">raptor_sax2_external_entity_ref_handler</link> handler);</programlisting>
+<para>
+Set SAX2 XML entity reference handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> entity reference handler
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-set-namespace-handler" role="function">
+<title>raptor_sax2_set_namespace_handler ()</title>
+<indexterm zone="raptor-sax2-set-namespace-handler"><primary>raptor_sax2_set_namespace_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_set_namespace_handler   (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-namespace-handler">raptor_namespace_handler</link> handler);</programlisting>
+<para>
+Set the XML namespace handler function.
+</para>
+<para>
+When a prefix/namespace is seen in an XML parser, call the given
+<parameter>handler</parameter> with the prefix string and the <link linkend="raptor-uri"><type>raptor_uri</type></link> namespace URI.
+Either can be NULL for the default prefix or default namespace.
+</para>
+<para>
+The handler function does not deal with duplicates so any
+namespace may be declared multiple times when a namespace is seen
+in different parts of a document.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-sax2"><type>raptor_sax2</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> new namespace callback function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-parse-start" role="function">
+<title>raptor_sax2_parse_start ()</title>
+<indexterm zone="raptor-sax2-parse-start"><primary>raptor_sax2_parse_start</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_sax2_parse_start             (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);</programlisting>
+<para>
+Start an XML SAX2 parse.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> sax2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> base URI
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-parse-chunk" role="function">
+<title>raptor_sax2_parse_chunk ()</title>
+<indexterm zone="raptor-sax2-parse-chunk"><primary>raptor_sax2_parse_chunk</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_sax2_parse_chunk             (<link linkend="raptor-sax2">raptor_sax2</link> *sax2,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         <link linkend="int">int</link> is_end);</programlisting>
+<para>
+Parse a chunk of XML data generating SAX2 events</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> sax2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> input buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> input buffer lenght
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>is_end</parameter>&nbsp;:</term>
+<listitem><simpara> non-0 if end of data
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-inscope-xml-language" role="function">
+<title>raptor_sax2_inscope_xml_language ()</title>
+<indexterm zone="raptor-sax2-inscope-xml-language"><primary>raptor_sax2_inscope_xml_language</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* raptor_sax2_inscope_xml_language   (<link linkend="raptor-sax2">raptor_sax2</link> *sax2);</programlisting>
+<para>
+Get the in-scope XML language</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the XML language or NULL if none is in scope.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-sax2-inscope-base-uri" role="function">
+<title>raptor_sax2_inscope_base_uri ()</title>
+<indexterm zone="raptor-sax2-inscope-base-uri"><primary>raptor_sax2_inscope_base_uri</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         raptor_sax2_inscope_base_uri        (<link linkend="raptor-sax2">raptor_sax2</link> *sax2);</programlisting>
+<para>
+Get the in-scope base URI</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>sax2</parameter>&nbsp;:</term>
+<listitem><simpara> SAX2 object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the in-scope base URI shared object or NULL if none is in scope.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

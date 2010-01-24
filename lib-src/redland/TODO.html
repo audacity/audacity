@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Redland RDF Application Framework - To Do List</title>
+</head>
+<body>
+
+<h1>Redland RDF Application Framework - To Do list</h1>
+
+<p>Bugs should be reported at the
+<a href="http://bugs.librdf.org/">Redland Issue Tracker</a>.
+</p>
+
+
+<h2>Bugs, Features, Requests For Enhancement</h2>
+
+<p>In no real order.  Help wanted.</p>
+
+<ul>
+<li>'triples' query language implementation seems to have rotted as of 1.0.0</li>
+<li>Docs: hard to find/know of raptor parser and serializer features</li>
+<li>RFE: model class method to load into model with context</li>
+<li>RFE: model class method to a remove/load into model for some context</li>
+<li>Docs: it was hard to find the legal (parser) feature URIs in
+the documentation, or what values to use.</li>
+<li>Documentation: describe the redland features available per class</li>
+<li>Update the RDF/RDFS terms/labels for the latest RDF Schema revision</li>
+<li>In-memory storage uses more memory than needed</li>
+<li>Defensive code - check object types are correct by adding magic fields to start of all objects</li>
+<li>Docs: note that compiling redland may also build raptor and rasqal, if they are needed</li>
+<li>Document the storage constructor hash options under the main class</li>
+<li>RFE: make add_statement method on model take URIs</li>
+<li>Add arcs_in/arcs_out model methods</li>
+<li>Add container class for manipulating RDF containers - Seq, Bag, Alt, ...</li>
+<li>If LGPL/Apache license, include compatible code OR add separate package?</li>
+<li>Write a C++ interface</li>
+<li>Provide any necessary support for RDF Schema (fast rdf:type lookups)</li>
+<li>Write some better example code</li>
+<li>Write a quickstart / howto document</li>
+<li>Maybe generate part of librdf.h automatically to make a 1-header file system.</li>
+<li>Fix the URI hash mechanism - currently stores URI/pointer pairs in hash - wrong</li>
+<li>The library does not do file locking on e.g. DB files</li>
+<li>For IRIX (and others?), try also linking with -lpthreads when testing for working Berkeley DB</li>
+<li>String encoding - needs iconv posix function and/or Unicode library.
+Some utility functions have been written for UTF-8 to/from ISO Latin-1.</li>
+</ul>
+
+<p>(Excluding issues near <tt>FIXME</tt>s in the source)</p>
+
+
+<h2>Done</h2>
+
+<p>The most recent changes are at the top, with the first
+release version where appropriate.</p>
+
+<ul>
+<li>Consider an AVL-tree in-memory store (<a href="http://www.msu.edu/user/pfaffben/avl/">libavl</a>) - done with 'trees' storage (1.0.8)</li>
+<li>Initialise the default genid base in <code>librdf_new_world</code> with something more fine-grained than seconds.  Add some microseconds digits (1.0.3)</li>
+<li>RFE: consider how to add parser guessing (via raptor) into the
+redland parser API - use the 'guess' parser name (1.0.3)</li>
+<li>RFE: add user mappings from URIs to namespace aliases to the serializer (Raptor 1.4.7)</li>
+<li>RFE: The parser should be able to adjust error and warning
+actions, stopping immediately or ignoring them by features. Document
+the defaults. (1.0.2)</li>
+<li>Add <tt>#ifdef WIN32</tt> around parts including the config file and create a win32 build (1.0.1 - third party)</li>
+<li>RFE: Add node.as_sha1 easy digest methods for literal nodes (1.0.1)</li>
+<li>RFE: return serialized models to syntax as strings (1.0.0)</li>
+<li>Removed the useless parser error/warning callbacks with a proper
+logging API that can be accessed by the application to and dealt with
+as desired. (0.9.17)</li>
+<li>Allow raptor parser features (<code>raptor_set_feature</code>) to be
+set via <code>librdf_parser_set_feature</code> (0.9.17)</li>
+<li>rdf_uri.h and rdf_node.h exported functions returning rdf_digest* which is a private structure, now made internal (0.9.16)</li>
+<li>Added some defensive code checks for NULL object parameters and
+abort when debugging (0.9.15)</li>
+<li>The serializer code crashed in PHP (0.9.15)</li>
+<li>raptor-uri-test in redland when compiled against
+system raptor failed to find raptor.h; fixed in raptor 1.1.0.</li>
+<li>Added <code>librdf_model_get_storage</code> method so storage
+object needn't be kept around when dealing with model (0.9.15).</li>
+<li>Fixed serializing URI http://xmlns.com/foaf/0.1/mbox_sha1 to a property element to breaks the namespace/URI after 'sha1' as the maximal legal XML name (0.9.15)</li>
+<li>Altered rdfproc to by default append to stores on parsing (0.9.15)</li>
+<li>Docs: note in language docs that 'make install' of the main
+library is generally needed before any of the language builds will work (0.9.15)</li>
+<li>BUG: Blank nodes with illegal nodeIDs (as far as RDF/XML are concerned)
+can be serialized.  Fixed by the change below; all internal nodeIDs are now serializable in RDF/XML or N-Triples (0.9.14)</li>
+<li>Rewrite incoming <code>rdf:nodeID</code> attribute values into same form as generated blank node IDs, ie. <code>r</code><em>redland-start-time</em><code>r</code><em>unique-sequence-counter</em> (0.9.14)</li>
+<li>example2.c is rather useless, replaced with a simple string parsing example (0.9.13)</li>
+<li>Replaced *_seriali[sz]e methods with *_to_stream in order to
+reduce confusion versus serializer class (0.9.13)</li>
+<li>BDB 4.1 causes problems - now supported (0.9.13)</li>
+<li>perl - if you didn't clone a node before trying to re-use it the whole thing would segfault (0.9.13)</li>
+<li>swig 1.3.14 may fail to work for some languages (perl,python ok) (0.9.13)</li>
+<li>New method for syncing of models to store - librdf_model_sync (0.9.13)</li>
+<li>Add proper error/warning reporting - world class has this now (0.9.13)</li>
+<li>Ensure non-file: URIs do not cause crashes - fixed by Raptor URI class (0.9.13)</li>
+<li>Add URI retrieval via external www libraries - done via raptor for retrieving URI content for parsing.  Not by a new module. (0.9.13)</li>
+<li>RFE: Add is_literal etc. methods to node class (0.9.13)</li>
+<li>storage hash-type="memory" with no name (not really needed) crashed (0.9.13)</li>
+<li>Initial thread support (0.9.13)</li>
+<li>Repat removed - not up-to-date, maintained (0.9.13)</li>
+<li>Crashed when contexts are attempted to be used when not enabled with
+contexts='yes' (0.9.13)</li>
+<li>parse_as_stream methods assumed the URI object lived throughout the
+parsing.  They may not, and had to be copied on the first call - fixed for raptor only (0.9.13)</li>
+<li>make librdf_statement_set_subject* free any existing node before setting (0.9.12)</li>
+<li>Pass RDF parser error messages to user code, scripting languages (0.9.12)</li>
+<li>Add a swig test in autogen.sh, abort if it is too old (0.9.12)</li>
+<li>swig 1.3.14 changed its default to shadow and failed to work out
+of the box.  Add -noproxy to the swig line for 1.3.14+ (0.9.12)</li>
+<li>Hacked around repat parser failing to pass bnode ids when as statement objects (0.9.12)</li>
+<li>Added relative URI parsing code from Repat (via raptor) (0.9.12)</li>
+<li>Handle xml:lang when the rdf parsers provide it (0.9.12)</li>
+<li>Add query language interfaces (0.9.12)</li>
+<li>Add support for blank nodes (were anonymous resources) (0.9.12)</li>
+<li>Removed all node types except for resource, literal, blank, li (statement (0.9.12))</li>
+<li>Use <a href="http://xmlsoft.org/">libxml</a> rather than expat as default xml parser (at least for raptor) Reasons: uses iconv to handle more content encodings and provides better error reporting (0.9.12)</li>
+<li>Link XML Libraries (-lexpat etc.) before libwww libraries to
+ensure correct XML library is used (0.9.11)</li>
+<li>Python interface to parsers now works (0.9.11)</li>
+<li>Multiple startup/shutdowns of entire library now works (0.9.11)</li>
+<li>Make the library work as a shared library (0.9.11)</li>
+<li>Model size method implemented (0.9.11)</li>
+<li>Added a <a href="docs/java.html">Java interface</a> (0.9.10)</li>
+<li><tt>librdf_hash_from_string()</tt> - \ escaping doesn't work properly (0.9.9)</li>
+<li>SiRPAC wrappers handle multi-line literal objects (0.9.9)</li>
+<li>Added <a href="docs/tcl.html">Tcl</a> interface (0.9.8)</li>
+<li>Add module - <a href="http://librdf.org/raptor/">Raptor</a> RDF parser - internal (0.9.8)</li>
+<li>Make API docbook sgml generate 1 big HTML file (0.9.6)</li>
+<li>Python interface (0.9.6)</li>
+<li>Add proper error/warning reporting for RDF/XML parsers (0.9.6)</li>
+<li>Perl interface (0.9.4)</li>
+<li>module - storage implemented as hashes</li>
+<li>made <tt>get</tt> methods in all hash impls. use iterators (side
+effecting - yuck)</li>
+<li>made BDB V2 and V3 use btree and handle duplicates</li>
+<li>removed GDBM from default code since doesn't handle duplicates</li>
+<li>removed references to factories from simple user code</li>
+<li>module - rdf parser - via libwww RDF parser</li>
+<li>annotate the functions with gnome-doc / kernel-doc style comments
+(after JavaDoc) with care taken to make sure it is clear who owns the
+memory of objects passed in or returned by functions</li>
+<li>module - rdf parser - via Java RDF API / SiRPAC</li>
+<li>module - in memory storage</li>
+<li>module - storage factory</li>
+<li>module - model</li>
+<li>module - memory allocation</li>
+<li>change all functions to start with librdf_</li>
+<li>a decent source-code based documentation system - GNOME / Linux kernel
+gnome-doc / kernel-doc programs based on the Javadoc formatted comments
+style, but for C</li>
+<li>wrap the code with <tt>#ifdef</tt> etc. to prevent exposing internals to user code</li>
+<li>module - berkeley DB hash</li>
+<li>change functions to all start with RDF_ - new and free functions</li>
+<li>decide on the license(s)  - GPL/LGPL and BSDish ???</li>
+<li>iterator interface and module for returning results</li>
+</ul>
+
+<h2>Decided to do differently, not to address</h2>
+
+<p>I reserve the right to change my mind again!</p>
+<ul>
+<li>RFE: model.parseString(format, "string"), model.parseURI(format, URI, baseURI=URI) creating and destroying temporary parser objects for <em>format</em>.
+Means no need to care about parser class if you just want simple things.  Similarly
+for model.serialize() and Serializer class, however take care with serialise() method.  Better as model.load(), model.save() or write()?  Addressed by the guess parser in raptor 1.4.7+.</li>
+<li>Make API docbook sgml generate decent PostScript / PDF output (1.0.3)</li>
+<li>Split the header files into internal / user ones - now most headers are user ones (1.0.1)</li>
+<li>Write stringbuffer for easy creation of growing in-memory strings - now being considered inside raptor.</li>
+<li>Provide a way to represent reified statements</li>
+<li>Redland does not work with GDBM hashes.  BDB is much better (0.9.12)</li>
+<li>Redland does not work with BerkeleyDB V1.  Not fixing since it works with V2,V3 and V4 (0.9.12)</li>
+<li>RFE: make Node and URI be the same class, change all methods using
+Nodes to take URI OR URI or Literal as appropriate.  The RDF abstract
+syntax has nodes that are (URI-refs or Literals or ...) so this design
+matches it well (0.9.12)</li>
+<li>These will not be made into modules at present, the internal RDF
+parser will use expat or libxml as necessary.
+<ul>
+<li>Add module - xml dom parser - external</li>
+<li>Add module - xml dom parser - libxml</li>
+<li>Add module - xml sax parser - libxml</li>
+<li>Add module - xml parser - sax</li>
+<li>Add module - xml parser - dom</li>
+<li>Modularise the library so some parts can be removed [already done]</li>
+</ul>
+</li>
+<li>This is not needed as a module, the internal RDF parser will do this.
+<ul>
+<li>module - xml namespaces</li>
+</ul>
+</li>
+</ul>
+
+<hr />
+
+<p>Copyright (C) 2000-2008 <a href="http://www.dajobe.org/">Dave Beckett</a><br />Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

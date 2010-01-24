@@ -1,0 +1,150 @@
+<!-- ##### SECTION Title ##### -->
+Stream of triples (#librdf_statement).
+
+<!-- ##### SECTION Short_Description ##### -->
+Sequence of RDF Triples.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Iterate a sequence of RDF triples from some object.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+Provides a way to operate across a sequence of RDF Triples that are
+generated one-by-one on demand.   The generated triples can be from
+some API call in the #librdf_model class, from listing a graph content
+as individual triples, from parsing a syntax or returning an RDF graph
+result from a query.  Streams can be passed into methods for the reverse
+operations such as adding to a graph, serializing a graph to a syntax.
+Streams pass individual triples (#librdf_statement) between objects
+and are usually lazily generated and consumed.
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_stream ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### USER_FUNCTION librdf_stream_map_handler ##### -->
+<para>
+
+</para>
+
+@stream: 
+@map_context: 
+@item: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION librdf_stream_map_free_context_handler ##### -->
+<para>
+
+</para>
+
+@map_context: 
+
+
+<!-- ##### FUNCTION librdf_new_stream ##### -->
+<para>
+
+</para>
+
+@world: 
+@context: 
+@is_end_method: 
+@next_method: 
+@get_method: 
+@finished_method: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_stream_from_node_iterator ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@statement: 
+@field: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_empty_stream ##### -->
+<para>
+
+</para>
+
+@world: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_stream ##### -->
+<para>
+
+</para>
+
+@stream: 
+
+
+<!-- ##### FUNCTION librdf_stream_end ##### -->
+<para>
+
+</para>
+
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_stream_next ##### -->
+<para>
+
+</para>
+
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_stream_get_object ##### -->
+<para>
+
+</para>
+
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_stream_get_context ##### -->
+<para>
+
+</para>
+
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_stream_add_map ##### -->
+<para>
+
+</para>
+
+@stream: 
+@map_function: 
+@free_context: 
+@map_context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_stream_print ##### -->
+<para>
+
+</para>
+
+@stream: 
+@fh: 
+
+

@@ -1,0 +1,193 @@
+<!-- ##### SECTION Title ##### -->
+XML Schema Decimals
+
+<!-- ##### SECTION Short_Description ##### -->
+XML Schema decimal number arithmetic.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A class for providing XSD Decimals with arbitrary length
+floating point decimals.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION rasqal_free_xsd_decimal ##### -->
+<para>
+
+</para>
+
+@dec: 
+
+
+<!-- ##### FUNCTION rasqal_new_xsd_decimal ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### TYPEDEF rasqal_xsd_decimal ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_add ##### -->
+<para>
+
+</para>
+
+@result: 
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_as_counted_string ##### -->
+<para>
+
+</para>
+
+@dec: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_as_string ##### -->
+<para>
+
+</para>
+
+@dec: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_compare ##### -->
+<para>
+
+</para>
+
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_divide ##### -->
+<para>
+
+</para>
+
+@result: 
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_equals ##### -->
+<para>
+
+</para>
+
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_get_double ##### -->
+<para>
+
+</para>
+
+@dec: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_is_zero ##### -->
+<para>
+
+</para>
+
+@d: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_multiply ##### -->
+<para>
+
+</para>
+
+@result: 
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_print ##### -->
+<para>
+
+</para>
+
+@dec: 
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_set_double ##### -->
+<para>
+
+</para>
+
+@dec: 
+@d: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_set_long ##### -->
+<para>
+
+</para>
+
+@dec: 
+@Param2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_set_string ##### -->
+<para>
+
+</para>
+
+@dec: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_subtract ##### -->
+<para>
+
+</para>
+
+@result: 
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_xsd_decimal_negate ##### -->
+<para>
+
+</para>
+
+@result: 
+@a: 
+@Returns: 
+
+

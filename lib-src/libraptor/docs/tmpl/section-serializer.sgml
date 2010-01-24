@@ -1,0 +1,226 @@
+<!-- ##### SECTION Title ##### -->
+Serializer
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF serializers - from RDF triples to a syntax
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The serializing class that allows creating a serializer for
+writing a particular syntax to an output string, file, file
+handle or user function (via #raptor_iostream).
+</para>
+
+<para>
+There are also methods to deal with handling errors, warnings and
+returned triples as well as setting options (features)
+that can adjust how serializing is performed.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_serializer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_serializer ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_serializer ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+
+
+<!-- ##### FUNCTION raptor_serialize_start ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@uri: 
+@iostream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_start_to_filename ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_start_to_string ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@uri: 
+@string_p: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_start_to_file_handle ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@uri: 
+@fh: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_set_namespace ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@uri: 
+@prefix: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_set_namespace_from_namespace ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@nspace: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_statement ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serialize_end ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_get_iostream ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_set_error_handler ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_serializer_set_warning_handler ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_serializer_get_locator ##### -->
+<para>
+
+</para>
+
+@rdf_serializer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_features_enumerate ##### -->
+<para>
+
+</para>
+
+@feature: 
+@name: 
+@uri: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_set_feature ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_set_feature_string ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_get_feature ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_serializer_get_feature_string ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@feature: 
+@Returns: 
+
+

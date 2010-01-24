@@ -1,0 +1,9 @@
+<rdf:RDF xmlns:ex="http://www.example.org/ns#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- check XML CDATA sections work -->
+
+  <rdf:Description rdf:about="http://example.org/node0">
+     <ex:prop><![CDATA[value]]></ex:prop>
+  </rdf:Description>
+</rdf:RDF>

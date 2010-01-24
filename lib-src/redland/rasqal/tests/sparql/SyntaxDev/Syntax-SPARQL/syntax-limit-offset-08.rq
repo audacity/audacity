@@ -1,0 +1,6 @@
+PREFIX :      <http://example.org/ns#> 
+SELECT *
+{ ?s ?p ?o }
+ORDER BY ?o
+LIMIT 5
+OFFSET 3

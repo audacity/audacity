@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://example.org/ns#">
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <prop1 rdf:parseType="Resource">
+      <name>prop1name</name>
+    </prop1>
+
+    <prop2 rdf:parseType="Resource">
+      <name>prop2name</name>
+    </prop2>
+
+    <prop3 rdf:parseType="Resource">
+      <name>prop3name</name>
+    </prop3>
+
+  </rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,5 @@
+PREFIX : <http://example.org/ns#>
+SELECT *
+{
+  { ?s ?p ?o } UNION { ?a ?b ?c } 
+}

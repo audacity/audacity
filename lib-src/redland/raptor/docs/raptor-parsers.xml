@@ -1,0 +1,233 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="raptor-parsers">
+<title>Parsers in Raptor (syntax to triples)</title>
+
+<section id="raptor-parsers-intro">
+<title>Introduction</title>
+
+<para>This section describes the parsers that can be compiled into
+Raptor and their features.  The exact parsers supported may vary
+by different builds of raptor and can be queried at run-time by
+use of the 
+<link linkend="raptor-parsers-enumerate"><function>raptor_parsers_enumerate</function></link>
+and
+<link linkend="raptor-syntaxes-enumerate"><function>raptor_syntaxes_enumerate</function></link>
+functions</para>
+
+<para>The optional features that may be set on parsers can also
+be queried at run-time iwth the 
+<link linkend="raptor-features-enumerate"><function>raptor_features_enumerate</function></link>
+function.</para>
+
+</section>
+
+
+<section id="parser-grddl">
+<title>GRDDL parser (name <literal>grddl</literal>)</title>
+<para>A parser for the
+<ulink url="http://www.w3.org/TR/2007/PR-grddl-20070716/">Gleaning Resource Descriptions from Dialects of Languages (GRDDL)</ulink>,
+W3C Proposed Recommendation of 2007-07-16 which allows reading XHTML
+and XML as RDF triples by using profiles in the document that declare
+XSLT transforms from the XHTML or XML content into RDF/XML or other
+RDF syntax which can then be parsed.</para>
+
+<para>The GRDDL parser is rather complex and different from the other
+parsers in that it retrieves URIs, reads HTML documents (possibly
+with errors), transforms the documents with XSLT and turns the result
+into a single graph.  The default configuration of the GRDDL parser
+also reads microformats (hcard, hcalendar) and follows &lt;link&gt;
+tags that point to RDF/XML.  Parts of the GRDDL process can be
+altered by configuration, which are describe below.
+</para>
+
+<para>The URIs that are processed during GRDDL operations can be checked
+and skipped if required using a handler set with the
+<link linkend="raptor-parser-set-uri-filter"><function>raptor_parser_set_uri_filter()</function></link>
+function.  If the handler returns non-0, the URI is rejected.
+This uses
+<link linkend="raptor-www-set-uri-filter"><function>raptor_www_set_uri_filter()</function></link>
+internally.
+</para>
+
+<para>If the value of feature
+<link linkend="RAPTOR-FEATURE-WWW-TIMEOUT:CAPS"><literal>RAPTOR_FEATURE_WWW_TIMEOUT</literal></link>
+if set to a number &gt;0, it is used as the timeout in seconds
+for retrieving of URIs during GRDDL processing.
+This uses
+<link linkend="raptor-www-set-connection-timeout"><function>raptor_www_set_connection_timeout()</function></link>
+internally.
+</para>
+
+<para>The hardcoded support for hcard and hcalendar
+microformats can be disabled by setting parser feature
+<link linkend="RAPTOR-FEATURE-MICROFORMATS:CAPS"><literal>RAPTOR_FEATURE_MICROFORMATS</literal></link>
+to 0
+or using
+<link linkend="raptor-set-parser-strict"><function>raptor_set_parser_strict()</function></link>
+with a value of 1.
+</para>
+
+<para>The GRDDL parser by default will try an XML parser on the
+content followed by a lax HTML parser.  This can be disabled by
+setting parser feature
+<link linkend="RAPTOR-FEATURE-HTML-TAG-SOUP:CAPS"><literal>RAPTOR_FEATURE_HTML_TAG_SOUP</literal></link>
+to 0
+or using 
+<link linkend="raptor-set-parser-strict"><function>raptor_set_parser_strict()</function></link>
+with a value of 1.
+</para>
+
+<para>The GRDDL parser by default will try to look for an HTML
+&lt;link&gt; tag that points to RDF/XML.  This can be disabled by
+setting parser feature
+<link linkend="RAPTOR-FEATURE-HTML-LINK:CAPS"><literal>RAPTOR_FEATURE_HTML_LINK</literal></link>
+to 0
+or using 
+<link linkend="raptor-set-parser-strict"><function>raptor_set_parser_strict()</function></link>
+with a value of 1.
+</para>
+
+</section>
+
+
+<section id="parser-guess">
+<title>Guess parser (name <literal>guess</literal>)</title>
+<para>
+This is a special parser that picks the actual parser to use based
+on the content type, the content bytes or the content identifier.  The
+content name can be either from a local file or from a URI.
+</para>
+
+<para>If the protocol that delivered the content (such as HTTP)
+provided a <emphasis>Content Type</emphasis> (aka MIME Type) then
+this will be the primary means for identifying th ecotnent.
+</para>
+
+<para>The secondary means to identify the content are the bytes of
+the content (if available), otherwise the content identifier is used,
+which is the least reliable.
+</para>
+
+</section>
+
+
+<section id="parser-ntriples">
+<title>N-Triples parser (name <literal>ntriples</literal>)</title>
+
+<para>A parser for the
+<ulink url="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</ulink>
+syntax as used by the 
+<ulink url="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</ulink>
+for the <ulink url="http://www.w3.org/TR/rdf-testcases/">RDF Test Cases</ulink>.
+</para>
+
+</section>
+
+
+<section id="parser-rdfa">
+<title>RDFa parser - (name <literal>rdfa</literal>)</title>
+<para>
+A parser for the
+<ulink url="http://www.w3.org/TR/2008/CR-rdfa-syntax-20080620/">RDFa</ulink>
+syntax, W3C Candidate Recommendation 20 June 2008 which allows reading XHTML
+and XML as RDF triples by interpreting attributes on elements to
+describe which ones have RDF semantics.   This is implemented via
+<ulink url="http://rdfa.digitalbazaar.com/librdfa/">librdfa</ulink>
+linked inside Raptor, written by Manu Sporny of Digital Bazaar,
+and licensed with the same license as Raptor.
+</para>
+
+<para>
+This parser is beta quality and passes all but 4 of the RDFa tests as
+of Raptor 1.4.18.
+</para>
+
+</section>
+
+
+<section id="parser-rdfxml">
+<title>RDF/XML parser - default (name <literal>rdfxml</literal>)</title>
+<para>
+A parser for the standard
+<ulink url="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML syntax</ulink>
+as revised by the
+<ulink url="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</ulink>.</para>
+
+<para>This is the default parser in Raptor.</para>
+
+<para>Features of this parser:</para>
+<itemizedlist>
+<listitem><para>Fully handles the <ulink url="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML syntax updates</ulink> for <ulink url="http://www.w3.org/TR/xmlbase/">XML Base</ulink>, <literal>xml:lang</literal>, RDF datatyping and Collections.</para></listitem>
+
+<listitem><para>Handles all RDF vocabularies such as <ulink url="http://www.foaf-project.org/">FOAF</ulink>, <ulink url="http://www.purl.org/rss/1.0/">RSS 1.0</ulink>, <ulink url="http://dublincore.org/">Dublin Core</ulink>, <ulink url="http://www.w3.org/TR/owl-features/">OWL</ulink>, <ulink url="http://usefulinc.com/doap">DOAP</ulink></para></listitem>
+
+<listitem><para>Handles <literal>rdf:resource</literal> / <literal>resource</literal> attributes</para></listitem>
+
+<listitem><para>Uses <ulink url="http://expat.sourceforge.net/">expat</ulink> and/or (GNOME) <ulink url="http://xmlsoft.org/">libxml</ulink> XML parsers as available or required</para></listitem>
+
+</itemizedlist>
+
+</section>
+
+
+<section id="parser-rss-tag-soup">
+<title>RSS Tag Soup parser (name <literal>rss-tag-soup</literal>)</title>
+
+<para>A parser for the multiple XML RSS formats that use the elements
+such as <literal>channel</literal>, <literal>item</literal>,
+<literal>title</literal>, <literal>description</literal>
+in different ways.
+This includes support for the Atom 1.0 syndication format defined in IETF
+<ulink url="http://www.ietf.org/rfc/rfc4287.txt">RFC 4287</ulink>
+</para>
+
+<para>The parser attempts to turn the input into
+<ulink url="http://www.purl.org/rss/1.0/">RSS 1.0</ulink>
+RDF triples in the RSS 1.0 model of a syndication feed.
+This includes triples for RSS Enclosures.
+</para>
+
+<para>
+True <ulink url="http://www.purl.org/rss/1.0/">RSS 1.0</ulink> when
+wanted to be used as a full RDF vocabulary, is best parsed by the
+RDF/XML parser (name <literal>rdfxml</literal>).
+</para>
+
+</section>
+
+
+<section id="parser-trig">
+<title>TRiG parser (name <literal>trig</literal>)</title>
+
+<para>A parser for the
+<ulink url="http://www.wiwiss.fu-berlin.de/suhl/bizer/TriG/Spec/">TriG - Turtle with Named Graphs</ulink>
+syntax.
+</para>
+
+<para>The parser is alpha quality and may not support the entire TRiG
+specification.</para>
+
+</section>
+
+
+<section id="parser-turtle">
+<title>Turtle Terse RDF Triple Language parser (name <literal>turtle</literal>)</title>
+
+<para>A parser for the
+<ulink url="http://www.dajobe.org/2004/01/turtle/">Turtle Terse RDF Triple Language</ulink>
+syntax, designed as a useful subset of
+<ulink url="http://www.w3.org/DesignIssues/Notation3">Notation 3</ulink>.
+</para>
+
+</section>
+
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("raptor-docs.xml" "book" "part")
+End:
+-->

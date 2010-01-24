@@ -1,0 +1,5 @@
+_:genid1 <http://example.org/ns#prop1> "foo" .
+_:genid1 <http://example.org/ns#prop2> "blah" .
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> _:genid1 .
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "2" .
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_3> "_3" .

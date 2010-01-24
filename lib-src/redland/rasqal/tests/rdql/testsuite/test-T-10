@@ -1,0 +1,13 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial exercise 2
+// Work phone number for John Smith
+
+SELECT ?telephoneNumber
+FROM <vc-db-3.rdf>
+WHERE (?person, <vCard:FN>, "John Smith") ,
+      (?person, <vCard:TEL>, ?tel) ,
+      (?tel, <rdf:type>, <vCard:work>) ,
+      (?tel, <rdf:value>, ?telephoneNumber)
+USING
+  vCard FOR <http://www.w3.org/2001/vcard-rdf/3.0#> ,
+  rdf   FOR <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

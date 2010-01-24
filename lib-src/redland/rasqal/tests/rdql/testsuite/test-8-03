@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test-8-03 : Regular expression testing
+SELECT ?x ?y ?z
+FROM   <model1.nt>
+WHERE  (?x ?y ?z)
+// Escape in the regex
+AND    ?x ~~ /r-1$/ && ?y =~ /p\-1$/

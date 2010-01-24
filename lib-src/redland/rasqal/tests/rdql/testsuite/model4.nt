@@ -1,0 +1,12 @@
+# Model 4 : Strange shapes
+
+# Resource and property the same URI
+<http://rdf.hp.com/uri1>  <http://rdf.hp.com/uri1>  "R==P" .
+
+# Property and value
+<http://rdf.hp.com/uri-r>  <http://rdf.hp.com/uri-p>    <http://rdf.hp.com/uri-p>.
+
+# Resource and value has been done in model2.
+
+# All the same!
+<http://rdf.hp.com/uri1>  <http://rdf.hp.com/uri1>  <http://rdf.hp.com/uri1> .

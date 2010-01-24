@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Unicode</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Raptor RDF Syntax Parsing and Serializing Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="prev" href="raptor-section-triples.html" title="Triples">
+<link rel="next" href="raptor-section-uri-factory.html" title="URI Factory">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="introduction.html" title="Raptor Overview">
+<link rel="part" href="tutorial.html" title="Part I. Raptor Tutorial">
+<link rel="chapter" href="tutorial-initialising-finishing.html" title="Initialising and Finishing using the Library">
+<link rel="chapter" href="tutorial-querying-functionality.html" title="Listing built-in functionality">
+<link rel="chapter" href="tutorial-parsing.html" title="Parsing syntaxes to RDF Triples">
+<link rel="chapter" href="tutorial-serializing.html" title="Serializing RDF triples to a syntax">
+<link rel="part" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="chapter" href="raptor-parsers.html" title="Parsers in Raptor (syntax to triples)">
+<link rel="chapter" href="raptor-serializers.html" title="Serializers in Raptor (triples to syntax)">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="raptor-section-triples.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Raptor RDF Syntax Parsing and Serializing Library Manual</th>
+<td><a accesskey="n" href="raptor-section-uri-factory.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#raptor-section-unicode.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#raptor-section-unicode.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="raptor-section-unicode"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="raptor-section-unicode.top_of_page"></a>Unicode</span></h2>
+<p>Unicode — Unicode and UTF-8 utility functions.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="raptor-section-unicode.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a>;
+int                 <a class="link" href="raptor-section-unicode.html#raptor-unicode-char-to-utf8" title="raptor_unicode_char_to_utf8 ()">raptor_unicode_char_to_utf8</a>         (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c,
+                                                         unsigned char *output);
+int                 <a class="link" href="raptor-section-unicode.html#raptor-utf8-to-unicode-char" title="raptor_utf8_to_unicode_char ()">raptor_utf8_to_unicode_char</a>         (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> *output,
+                                                         unsigned char *input,
+                                                         int length);
+int                 <a class="link" href="raptor-section-unicode.html#raptor-unicode-is-xml11-namestartchar" title="raptor_unicode_is_xml11_namestartchar ()">raptor_unicode_is_xml11_namestartchar</a>
+                                                        (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);
+int                 <a class="link" href="raptor-section-unicode.html#raptor-unicode-is-xml10-namestartchar" title="raptor_unicode_is_xml10_namestartchar ()">raptor_unicode_is_xml10_namestartchar</a>
+                                                        (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);
+int                 <a class="link" href="raptor-section-unicode.html#raptor-unicode-is-xml11-namechar" title="raptor_unicode_is_xml11_namechar ()">raptor_unicode_is_xml11_namechar</a>    (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);
+int                 <a class="link" href="raptor-section-unicode.html#raptor-unicode-is-xml10-namechar" title="raptor_unicode_is_xml10_namechar ()">raptor_unicode_is_xml10_namechar</a>    (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);
+int                 <a class="link" href="raptor-section-unicode.html#raptor-utf8-check" title="raptor_utf8_check ()">raptor_utf8_check</a>                   (unsigned char *string,
+                                                         size_t length);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-unicode.description"></a><h2>Description</h2>
+<p>
+Functions to support converting to and from Unicode written in UTF-8
+which is the native internal string format of all the redland libraries.
+Includes checking for Unicode names using either the XML 1.0 or XML 1.1
+rules.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-unicode.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="raptor-unichar"></a><h3>raptor_unichar</h3>
+<pre class="programlisting">typedef unsigned long raptor_unichar;
+</pre>
+<p>
+raptor Unicode codepoint</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-unicode-char-to-utf8"></a><h3>raptor_unicode_char_to_utf8 ()</h3>
+<pre class="programlisting">int                 raptor_unicode_char_to_utf8         (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c,
+                                                         unsigned char *output);</pre>
+<p>
+Convert a Unicode character to UTF-8 encoding.
+</p>
+<p>
+Based on <a
+href="/usr/share/gtk-doc/html/redland/redland-unicode.html#librdf-unicode-char-to-utf8"
+><code class="function">librdf_unicode_char_to_utf8()</code></a> with no need to calculate
+length since the encoded character is always copied into a buffer
+with sufficient size.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>c</code></em> :</span></p></td>
+<td> Unicode character
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>output</code></em> :</span></p></td>
+<td> UTF-8 string buffer or NULL
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> bytes encoded to output buffer or &lt;0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-utf8-to-unicode-char"></a><h3>raptor_utf8_to_unicode_char ()</h3>
+<pre class="programlisting">int                 raptor_utf8_to_unicode_char         (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> *output,
+                                                         unsigned char *input,
+                                                         int length);</pre>
+<p>
+Convert an UTF-8 encoded buffer to a Unicode character.
+</p>
+<p>
+If output is NULL, then will calculate the number of bytes that
+will be used from the input buffer and not perform the conversion.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>output</code></em> :</span></p></td>
+<td> Pointer to the Unicode character or NULL
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>input</code></em> :</span></p></td>
+<td> UTF-8 string buffer
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> bytes used from input buffer or &lt;0 on failure: -1 input buffer too short or length error, -2 overlong UTF-8 sequence, -3 illegal code positions, -4 code out of range U+0000 to U+10FFFF.  In cases -2, -3 and -4 the coded character is stored in the output.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-unicode-is-xml11-namestartchar"></a><h3>raptor_unicode_is_xml11_namestartchar ()</h3>
+<pre class="programlisting">int                 raptor_unicode_is_xml11_namestartchar
+                                                        (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);</pre>
+<p>
+Check if Unicode character is legal to start an XML 1.1 Name
+</p>
+<p>
+Namespaces in XML 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/<span class="type">NT-NameStartChar</span>
+updating
+  Extensible Markup Language (XML) 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/ sec 2.3, [4a]
+excluding the ':'</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>c</code></em> :</span></p></td>
+<td> Unicode character to check
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if legal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-unicode-is-xml10-namestartchar"></a><h3>raptor_unicode_is_xml10_namestartchar ()</h3>
+<pre class="programlisting">int                 raptor_unicode_is_xml10_namestartchar
+                                                        (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);</pre>
+<p>
+Check if Unicode character is legal to start an XML 1.0 Name
+</p>
+<p>
+Namespaces in XML REC 1999-01-14
+  http://www.w3.org/TR/1999/REC-xml-names-19990114/<span class="type">NT-NCName</span>
+updating
+  Extensible Markup Language (XML) 1.0 (Third Edition) REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml-20040204/
+excluding the ':'</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>c</code></em> :</span></p></td>
+<td> Unicode character to check
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if legal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-unicode-is-xml11-namechar"></a><h3>raptor_unicode_is_xml11_namechar ()</h3>
+<pre class="programlisting">int                 raptor_unicode_is_xml11_namechar    (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);</pre>
+<p>
+Check if a Unicode codepoint is a legal to continue an XML 1.1 Name
+</p>
+<p>
+Namespaces in XML 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/
+updating
+  Extensible Markup Language (XML) 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/ sec 2.3, [4a]
+excluding the ':'</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>c</code></em> :</span></p></td>
+<td> Unicode character
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if legal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-unicode-is-xml10-namechar"></a><h3>raptor_unicode_is_xml10_namechar ()</h3>
+<pre class="programlisting">int                 raptor_unicode_is_xml10_namechar    (<a class="link" href="raptor-section-unicode.html#raptor-unichar" title="raptor_unichar">raptor_unichar</a> c);</pre>
+<p>
+Check if a Unicode codepoint is a legal to continue an XML 1.0 Name
+</p>
+<p>
+Namespaces in XML REC 1999-01-14
+  http://www.w3.org/TR/1999/REC-xml-names-19990114/<span class="type">NT-NCNameChar</span>
+updating
+  Extensible Markup Language (XML) 1.0 (Third Edition) REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml-20040204/
+excluding the ':'</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>c</code></em> :</span></p></td>
+<td> Unicode character
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if legal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-utf8-check"></a><h3>raptor_utf8_check ()</h3>
+<pre class="programlisting">int                 raptor_utf8_check                   (unsigned char *string,
+                                                         size_t length);</pre>
+<p>
+Check a string is UTF-8.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> UTF-8 string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Non 0 if the string is UTF-8
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

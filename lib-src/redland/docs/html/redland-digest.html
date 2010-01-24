@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Digests</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="redland-concepts.html" title="Concepts">
+<link rel="next" href="redland-files.html" title="Files">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="redland-concepts.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-files.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-digest.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-digest.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-digest"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-digest.top_of_page"></a>Digests</span></h2>
+<p>Digests — Content digests.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-digest.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a>;
+typedef             <a class="link" href="redland-digest.html#librdf-digest-factory" title="librdf_digest_factory">librdf_digest_factory</a>;
+<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a>*      <a class="link" href="redland-digest.html#librdf-new-digest" title="librdf_new_digest ()">librdf_new_digest</a>                   (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name);
+void                <a class="link" href="redland-digest.html#librdf-free-digest" title="librdf_free_digest ()">librdf_free_digest</a>                  (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);
+void                <a class="link" href="redland-digest.html#librdf-digest-init" title="librdf_digest_init ()">librdf_digest_init</a>                  (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);
+void                <a class="link" href="redland-digest.html#librdf-digest-update" title="librdf_digest_update ()">librdf_digest_update</a>                (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest,
+                                                         unsigned char *buf,
+                                                         size_t length);
+void                <a class="link" href="redland-digest.html#librdf-digest-update-string" title="librdf_digest_update_string ()">librdf_digest_update_string</a>         (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest,
+                                                         unsigned char *string);
+void                <a class="link" href="redland-digest.html#librdf-digest-final" title="librdf_digest_final ()">librdf_digest_final</a>                 (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);
+void*               <a class="link" href="redland-digest.html#librdf-digest-get-digest" title="librdf_digest_get_digest ()">librdf_digest_get_digest</a>            (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);
+size_t              <a class="link" href="redland-digest.html#librdf-digest-get-digest-length" title="librdf_digest_get_digest_length ()">librdf_digest_get_digest_length</a>     (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);
+char*               <a class="link" href="redland-digest.html#librdf-digest-to-string" title="librdf_digest_to_string ()">librdf_digest_to_string</a>             (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);
+void                <a class="link" href="redland-digest.html#librdf-digest-print" title="librdf_digest_print ()">librdf_digest_print</a>                 (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest,
+                                                         FILE *fh);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-digest.description"></a><h2>Description</h2>
+<p>
+Create a message digest over a block of data.  Includes implementations
+of MD5, RMD160 and SHA1.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-digest.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-digest"></a><h3>librdf_digest</h3>
+<pre class="programlisting">typedef struct librdf_digest_s librdf_digest;
+</pre>
+<p>
+Redland content digest class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-factory"></a><h3>librdf_digest_factory</h3>
+<pre class="programlisting">typedef struct librdf_digest_factory_s librdf_digest_factory;
+</pre>
+<p>
+Redland digest factory class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-digest"></a><h3>librdf_new_digest ()</h3>
+<pre class="programlisting"><a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a>*      librdf_new_digest                   (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest"><span class="type">librdf_digest</span></a> object.
+</p>
+<p>
+After construction, data should be added to the digest using
+<a class="link" href="redland-digest.html#librdf-digest-update" title="librdf_digest_update ()"><span class="type">librdf_digest_update</span></a> or <a class="link" href="redland-digest.html#librdf-digest-update-string" title="librdf_digest_update_string ()"><span class="type">librdf_digest_update_string</span></a> with
+<a class="link" href="redland-digest.html#librdf-digest-final" title="librdf_digest_final ()"><span class="type">librdf_digest_final</span></a> to signify finishing.  Then the digest
+value can be returned directly with <a class="link" href="redland-digest.html#librdf-digest-get-digest" title="librdf_digest_get_digest ()"><span class="type">librdf_digest_get_digest</span></a>
+of <a class="link" href="redland-digest.html#librdf-digest-get-digest-length" title="librdf_digest_get_digest_length ()"><span class="type">librdf_digest_get_digest_length</span></a> bytes or as a hex encoded
+string with <a class="link" href="redland-digest.html#librdf-digest-to-string" title="librdf_digest_to_string ()"><span class="type">librdf_digest_to_string</span></a>.  The digest can be
+re-initialised for new data with <a class="link" href="redland-digest.html#librdf-digest-init" title="librdf_digest_init ()"><span class="type">librdf_digest_init</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> the digest name to use to create this digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new <a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest"><span class="type">librdf_digest</span></a> object or NULL
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-free-digest"></a><h3>librdf_free_digest ()</h3>
+<pre class="programlisting">void                librdf_free_digest                  (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);</pre>
+<p>
+Destructor- destroy a <a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest"><span class="type">librdf_digest</span></a> object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-init"></a><h3>librdf_digest_init ()</h3>
+<pre class="programlisting">void                librdf_digest_init                  (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);</pre>
+<p>
+(Re)initialise the librdf_digest object.
+</p>
+<p>
+This is automatically called on construction but can be used to
+re-initialise the digest to the initial state for digesting new
+data.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-update"></a><h3>librdf_digest_update ()</h3>
+<pre class="programlisting">void                librdf_digest_update                (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest,
+                                                         unsigned char *buf,
+                                                         size_t length);</pre>
+<p>
+Add more data to the librdf_digest object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
+<td> the data buffer
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> the length of the data
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-update-string"></a><h3>librdf_digest_update_string ()</h3>
+<pre class="programlisting">void                librdf_digest_update_string         (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest,
+                                                         unsigned char *string);</pre>
+<p>
+Add a string to the librdf_digest object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> string to add
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-final"></a><h3>librdf_digest_final ()</h3>
+<pre class="programlisting">void                librdf_digest_final                 (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);</pre>
+<p>
+Finish the digesting of data.
+</p>
+<p>
+The digest can now be returned via <a class="link" href="redland-digest.html#librdf-digest-get-digest" title="librdf_digest_get_digest ()"><code class="function">librdf_digest_get_digest()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-get-digest"></a><h3>librdf_digest_get_digest ()</h3>
+<pre class="programlisting">void*               librdf_digest_get_digest            (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);</pre>
+<p>
+Get the calculated digested value.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> pointer to the memory containing the digest.  It will
+be <a class="link" href="redland-digest.html#librdf-digest-get-digest-length" title="librdf_digest_get_digest_length ()"><span class="type">librdf_digest_get_digest_length</span></a> bytes in length.
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-get-digest-length"></a><h3>librdf_digest_get_digest_length ()</h3>
+<pre class="programlisting">size_t              librdf_digest_get_digest_length     (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);</pre>
+<p>
+Get length of the calculated digested.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> size of the digest in bytes
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-to-string"></a><h3>librdf_digest_to_string ()</h3>
+<pre class="programlisting">char*               librdf_digest_to_string             (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest);</pre>
+<p>
+Get a string representation of the digest object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a newly allocated string that represents the digest.
+This must be released by the caller using <code class="function">free()</code> 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-digest-print"></a><h3>librdf_digest_print ()</h3>
+<pre class="programlisting">void                librdf_digest_print                 (<a class="link" href="redland-digest.html#librdf-digest" title="librdf_digest">librdf_digest</a> *digest,
+                                                         FILE *fh);</pre>
+<p>
+Print the digest to a FILE handle.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>digest</code></em> :</span></p></td>
+<td> the digest
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fh</code></em> :</span></p></td>
+<td> file handle
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

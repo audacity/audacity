@@ -1,0 +1,6 @@
+<http://example.com/resource1/> <http://example.com/properties/foo> "err" .
+<http://example.com/resource1/> <http://example.com/properties/bar> "hmm" .
+<http://example.com/resource1/> <http://example.com/properties/baz> "umm" .
+<http://example.com/resource2/> <http://example.com/somewhere/foo> "apple" .
+<http://example.com/resource2/> <http://example.com/somewhere/bar> "banana" .
+<http://example.com/resource2/> <http://example.com/somewhere/baz> "pear" .

@@ -1,0 +1,20 @@
+@prefix rs:      <http://jena.hpl.hp.com/2003/03/result-set#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> . 
+
+[]    a       rs:ResultSet ;
+      rs:resultVariable "y" , "x" , "v" ;
+      rs:size "1" ;
+      rs:solution
+              [ rs:binding
+                        [ rs:value "5.7"^^xsd:double ;
+                          rs:variable "v"
+                        ] ;
+                rs:binding
+                        [ rs:value <http://rdf.hp.com/p5> ;
+                          rs:variable "y"
+                        ] ;
+                rs:binding
+                        [ rs:value <http://rdf.hp.com/r> ;
+                          rs:variable "x"
+                        ]
+              ] .

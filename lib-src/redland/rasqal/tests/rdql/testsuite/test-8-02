@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test-8-02 : Regular expression testing
+SELECT *
+FROM   <model1.nt>
+WHERE  (?x ?y ?z)
+AND    ?x !~ /r-1$/

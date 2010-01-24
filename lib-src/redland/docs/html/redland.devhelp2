@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
+<book xmlns="http://www.devhelp.net/book" title="Redland RDF Library Manual" link="index.html" author="" name="redland" version="2">
+  <chapters>
+    <sub name="Redland Overview" link="redland.html"/>
+    <sub name="Introduction" link="introduction.html"/>
+    <sub name="Tutorial" link="tutorial.html"/>
+    <sub name="Reference Manual" link="reference-manual.html">
+      <sub name="Objects in C" link="objects.html"/>
+      <sub name="World" link="redland-world.html"/>
+      <sub name="Concepts" link="redland-concepts.html"/>
+      <sub name="Digests" link="redland-digest.html"/>
+      <sub name="Files" link="redland-files.html"/>
+      <sub name="Hashes" link="redland-hash.html"/>
+      <sub name="Heuristics" link="redland-heuristics.html"/>
+      <sub name="Iterator" link="redland-iterator.html"/>
+      <sub name="List" link="redland-list.html"/>
+      <sub name="Logging." link="redland-log.html"/>
+      <sub name="RDF Graph (librdf_model)" link="redland-model.html"/>
+      <sub name="RDF term (librdf_node)" link="redland-node.html"/>
+      <sub name="Parsers" link="redland-parser.html"/>
+      <sub name="Querying" link="redland-query.html"/>
+      <sub name="Query results" link="redland-query-results.html"/>
+      <sub name="Serializers" link="redland-serializer.html"/>
+      <sub name="RDF Triple (librdf_statement)" link="redland-statement.html"/>
+      <sub name="Triple stores." link="redland-storage.html"/>
+      <sub name="Storage Modules" link="redland-storage-modules.html">
+        <sub name="Introduction" link="redland-storage-modules.html#redland-storage-module-intro"/>
+        <sub name="Store 'hashes'" link="redland-storage-module-hashes.html"/>
+        <sub name="Store 'memory'" link="redland-storage-module-memory.html"/>
+        <sub name="Store 'file'" link="redland-storage-module-file.html"/>
+        <sub name="Store 'mysql'" link="redland-storage-module-mysql.html"/>
+        <sub name="Store 'postgresql'" link="redland-storage-module-postgresql.html"/>
+        <sub name="Store 'sqlite'" link="redland-storage-module-sqlite.html"/>
+        <sub name="Store 'tstore'" link="redland-storage-module-tstore.html"/>
+        <sub name="Store 'uri'" link="redland-storage-module-uri.html"/>
+      </sub>
+      <sub name="Stream of triples (#librdf_statement)." link="redland-stream.html"/>
+      <sub name="Unicode" link="redland-unicode.html"/>
+      <sub name="URI" link="redland-uri.html"/>
+    </sub>
+    <sub name="Index" link="indexes.html"/>
+  </chapters>
+  <functions>
+    <keyword type="typedef" name="librdf_world" link="redland-world.html#librdf-world"/>
+    <keyword type="function" name="librdf_new_world ()" link="redland-world.html#librdf-new-world"/>
+    <keyword type="function" name="librdf_free_world ()" link="redland-world.html#librdf-free-world"/>
+    <keyword type="function" name="librdf_world_open ()" link="redland-world.html#librdf-world-open"/>
+    <keyword type="function" name="librdf_world_init_mutex ()" link="redland-world.html#librdf-world-init-mutex"/>
+    <keyword type="function" name="librdf_world_set_error ()" link="redland-world.html#librdf-world-set-error"/>
+    <keyword type="function" name="librdf_world_set_warning ()" link="redland-world.html#librdf-world-set-warning"/>
+    <keyword type="function" name="librdf_world_set_logger ()" link="redland-world.html#librdf-world-set-logger"/>
+    <keyword type="function" name="librdf_world_set_digest ()" link="redland-world.html#librdf-world-set-digest"/>
+    <keyword type="macro" name="LIBRDF_WORLD_FEATURE_GENID_BASE" link="redland-world.html#LIBRDF-WORLD-FEATURE-GENID-BASE:CAPS"/>
+    <keyword type="macro" name="LIBRDF_WORLD_FEATURE_GENID_COUNTER" link="redland-world.html#LIBRDF-WORLD-FEATURE-GENID-COUNTER:CAPS"/>
+    <keyword type="function" name="librdf_world_get_feature ()" link="redland-world.html#librdf-world-get-feature"/>
+    <keyword type="function" name="librdf_world_set_feature ()" link="redland-world.html#librdf-world-set-feature"/>
+    <keyword type="function" name="librdf_init_world ()" link="redland-world.html#librdf-init-world"/>
+    <keyword type="function" name="librdf_destroy_world ()" link="redland-world.html#librdf-destroy-world"/>
+    <keyword type="function" name="librdf_get_concept_resource_by_index ()" link="redland-concepts.html#librdf-get-concept-resource-by-index"/>
+    <keyword type="function" name="librdf_get_concept_uri_by_index ()" link="redland-concepts.html#librdf-get-concept-uri-by-index"/>
+    <keyword type="function" name="librdf_get_concept_ms_namespace ()" link="redland-concepts.html#librdf-get-concept-ms-namespace"/>
+    <keyword type="function" name="librdf_get_concept_schema_namespace ()" link="redland-concepts.html#librdf-get-concept-schema-namespace"/>
+    <keyword type="macro" name="LIBRDF_MS_Alt" link="redland-concepts.html#LIBRDF-MS-Alt"/>
+    <keyword type="macro" name="LIBRDF_MS_Alt_URI" link="redland-concepts.html#LIBRDF-MS-Alt-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_Bag" link="redland-concepts.html#LIBRDF-MS-Bag"/>
+    <keyword type="macro" name="LIBRDF_MS_Bag_URI" link="redland-concepts.html#LIBRDF-MS-Bag-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_Description" link="redland-concepts.html#LIBRDF-MS-Description"/>
+    <keyword type="macro" name="LIBRDF_MS_Description_URI" link="redland-concepts.html#LIBRDF-MS-Description-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_Property" link="redland-concepts.html#LIBRDF-MS-Property"/>
+    <keyword type="macro" name="LIBRDF_MS_Property_URI" link="redland-concepts.html#LIBRDF-MS-Property-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_RDF" link="redland-concepts.html#LIBRDF-MS-RDF:CAPS"/>
+    <keyword type="macro" name="LIBRDF_MS_RDF_URI" link="redland-concepts.html#LIBRDF-MS-RDF-URI:CAPS"/>
+    <keyword type="macro" name="LIBRDF_MS_Seq" link="redland-concepts.html#LIBRDF-MS-Seq"/>
+    <keyword type="macro" name="LIBRDF_MS_Seq_URI" link="redland-concepts.html#LIBRDF-MS-Seq-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_Statement" link="redland-concepts.html#LIBRDF-MS-Statement"/>
+    <keyword type="macro" name="LIBRDF_MS_Statement_URI" link="redland-concepts.html#LIBRDF-MS-Statement-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_aboutEach" link="redland-concepts.html#LIBRDF-MS-aboutEach"/>
+    <keyword type="macro" name="LIBRDF_MS_aboutEachPrefix" link="redland-concepts.html#LIBRDF-MS-aboutEachPrefix"/>
+    <keyword type="macro" name="LIBRDF_MS_aboutEachPrefix_URI" link="redland-concepts.html#LIBRDF-MS-aboutEachPrefix-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_aboutEach_URI" link="redland-concepts.html#LIBRDF-MS-aboutEach-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_li" link="redland-concepts.html#LIBRDF-MS-li"/>
+    <keyword type="macro" name="LIBRDF_MS_li_URI" link="redland-concepts.html#LIBRDF-MS-li-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_object" link="redland-concepts.html#LIBRDF-MS-object"/>
+    <keyword type="macro" name="LIBRDF_MS_object_URI" link="redland-concepts.html#LIBRDF-MS-object-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_predicate" link="redland-concepts.html#LIBRDF-MS-predicate"/>
+    <keyword type="macro" name="LIBRDF_MS_predicate_URI" link="redland-concepts.html#LIBRDF-MS-predicate-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_subject" link="redland-concepts.html#LIBRDF-MS-subject"/>
+    <keyword type="macro" name="LIBRDF_MS_subject_URI" link="redland-concepts.html#LIBRDF-MS-subject-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_type" link="redland-concepts.html#LIBRDF-MS-type"/>
+    <keyword type="macro" name="LIBRDF_MS_type_URI" link="redland-concepts.html#LIBRDF-MS-type-URI"/>
+    <keyword type="macro" name="LIBRDF_MS_value" link="redland-concepts.html#LIBRDF-MS-value"/>
+    <keyword type="macro" name="LIBRDF_MS_value_URI" link="redland-concepts.html#LIBRDF-MS-value-URI"/>
+    <keyword type="macro" name="LIBRDF_RS_List" link="redland-concepts.html#LIBRDF-RS-List"/>
+    <keyword type="macro" name="LIBRDF_RS_List_URI" link="redland-concepts.html#LIBRDF-RS-List-URI"/>
+    <keyword type="macro" name="LIBRDF_RS_XMLLiteral" link="redland-concepts.html#LIBRDF-RS-XMLLiteral"/>
+    <keyword type="macro" name="LIBRDF_RS_XMLLiteral_URI" link="redland-concepts.html#LIBRDF-RS-XMLLiteral-URI"/>
+    <keyword type="macro" name="LIBRDF_RS_first" link="redland-concepts.html#LIBRDF-RS-first"/>
+    <keyword type="macro" name="LIBRDF_RS_first_URI" link="redland-concepts.html#LIBRDF-RS-first-URI"/>
+    <keyword type="macro" name="LIBRDF_RS_nil" link="redland-concepts.html#LIBRDF-RS-nil"/>
+    <keyword type="macro" name="LIBRDF_RS_nil_URI" link="redland-concepts.html#LIBRDF-RS-nil-URI"/>
+    <keyword type="macro" name="LIBRDF_RS_nodeID" link="redland-concepts.html#LIBRDF-RS-nodeID"/>
+    <keyword type="macro" name="LIBRDF_RS_nodeID_URI" link="redland-concepts.html#LIBRDF-RS-nodeID-URI"/>
+    <keyword type="macro" name="LIBRDF_RS_rest" link="redland-concepts.html#LIBRDF-RS-rest"/>
+    <keyword type="macro" name="LIBRDF_RS_rest_URI" link="redland-concepts.html#LIBRDF-RS-rest-URI"/>
+    <keyword type="macro" name="LIBRDF_S_Class" link="redland-concepts.html#LIBRDF-S-Class"/>
+    <keyword type="macro" name="LIBRDF_S_Class_URI" link="redland-concepts.html#LIBRDF-S-Class-URI"/>
+    <keyword type="macro" name="LIBRDF_S_ConstraintProperty" link="redland-concepts.html#LIBRDF-S-ConstraintProperty"/>
+    <keyword type="macro" name="LIBRDF_S_ConstraintProperty_URI" link="redland-concepts.html#LIBRDF-S-ConstraintProperty-URI"/>
+    <keyword type="macro" name="LIBRDF_S_ConstraintResource" link="redland-concepts.html#LIBRDF-S-ConstraintResource"/>
+    <keyword type="macro" name="LIBRDF_S_ConstraintResource_URI" link="redland-concepts.html#LIBRDF-S-ConstraintResource-URI"/>
+    <keyword type="macro" name="LIBRDF_S_Container" link="redland-concepts.html#LIBRDF-S-Container"/>
+    <keyword type="macro" name="LIBRDF_S_ContainerMembershipProperty" link="redland-concepts.html#LIBRDF-S-ContainerMembershipProperty"/>
+    <keyword type="macro" name="LIBRDF_S_ContainerMembershipProperty_URI" link="redland-concepts.html#LIBRDF-S-ContainerMembershipProperty-URI"/>
+    <keyword type="macro" name="LIBRDF_S_Container_URI" link="redland-concepts.html#LIBRDF-S-Container-URI"/>
+    <keyword type="macro" name="LIBRDF_S_Literal" link="redland-concepts.html#LIBRDF-S-Literal"/>
+    <keyword type="macro" name="LIBRDF_S_Literal_URI" link="redland-concepts.html#LIBRDF-S-Literal-URI"/>
+    <keyword type="macro" name="LIBRDF_S_Resource" link="redland-concepts.html#LIBRDF-S-Resource"/>
+    <keyword type="macro" name="LIBRDF_S_Resource_URI" link="redland-concepts.html#LIBRDF-S-Resource-URI"/>
+    <keyword type="macro" name="LIBRDF_S_comment" link="redland-concepts.html#LIBRDF-S-comment"/>
+    <keyword type="macro" name="LIBRDF_S_comment_URI" link="redland-concepts.html#LIBRDF-S-comment-URI"/>
+    <keyword type="macro" name="LIBRDF_S_domain" link="redland-concepts.html#LIBRDF-S-domain"/>
+    <keyword type="macro" name="LIBRDF_S_domain_URI" link="redland-concepts.html#LIBRDF-S-domain-URI"/>
+    <keyword type="macro" name="LIBRDF_S_isDefinedBy" link="redland-concepts.html#LIBRDF-S-isDefinedBy"/>
+    <keyword type="macro" name="LIBRDF_S_isDefinedBy_URI" link="redland-concepts.html#LIBRDF-S-isDefinedBy-URI"/>
+    <keyword type="macro" name="LIBRDF_S_label" link="redland-concepts.html#LIBRDF-S-label"/>
+    <keyword type="macro" name="LIBRDF_S_label_URI" link="redland-concepts.html#LIBRDF-S-label-URI"/>
+    <keyword type="macro" name="LIBRDF_S_range" link="redland-concepts.html#LIBRDF-S-range"/>
+    <keyword type="macro" name="LIBRDF_S_range_URI" link="redland-concepts.html#LIBRDF-S-range-URI"/>
+    <keyword type="macro" name="LIBRDF_S_seeAlso" link="redland-concepts.html#LIBRDF-S-seeAlso"/>
+    <keyword type="macro" name="LIBRDF_S_seeAlso_URI" link="redland-concepts.html#LIBRDF-S-seeAlso-URI"/>
+    <keyword type="macro" name="LIBRDF_S_subClassOf" link="redland-concepts.html#LIBRDF-S-subClassOf"/>
+    <keyword type="macro" name="LIBRDF_S_subClassOf_URI" link="redland-concepts.html#LIBRDF-S-subClassOf-URI"/>
+    <keyword type="macro" name="LIBRDF_S_subPropertyOf" link="redland-concepts.html#LIBRDF-S-subPropertyOf"/>
+    <keyword type="macro" name="LIBRDF_S_subPropertyOf_URI" link="redland-concepts.html#LIBRDF-S-subPropertyOf-URI"/>
+    <keyword type="macro" name="LIBRDF_URI_RDF_MS" link="redland-concepts.html#LIBRDF-URI-RDF-MS:CAPS"/>
+    <keyword type="macro" name="LIBRDF_URI_RDF_SCHEMA" link="redland-concepts.html#LIBRDF-URI-RDF-SCHEMA:CAPS"/>
+    <keyword type="typedef" name="librdf_digest" link="redland-digest.html#librdf-digest"/>
+    <keyword type="typedef" name="librdf_digest_factory" link="redland-digest.html#librdf-digest-factory"/>
+    <keyword type="function" name="librdf_new_digest ()" link="redland-digest.html#librdf-new-digest"/>
+    <keyword type="function" name="librdf_free_digest ()" link="redland-digest.html#librdf-free-digest"/>
+    <keyword type="function" name="librdf_digest_init ()" link="redland-digest.html#librdf-digest-init"/>
+    <keyword type="function" name="librdf_digest_update ()" link="redland-digest.html#librdf-digest-update"/>
+    <keyword type="function" name="librdf_digest_update_string ()" link="redland-digest.html#librdf-digest-update-string"/>
+    <keyword type="function" name="librdf_digest_final ()" link="redland-digest.html#librdf-digest-final"/>
+    <keyword type="function" name="librdf_digest_get_digest ()" link="redland-digest.html#librdf-digest-get-digest"/>
+    <keyword type="function" name="librdf_digest_get_digest_length ()" link="redland-digest.html#librdf-digest-get-digest-length"/>
+    <keyword type="function" name="librdf_digest_to_string ()" link="redland-digest.html#librdf-digest-to-string"/>
+    <keyword type="function" name="librdf_digest_print ()" link="redland-digest.html#librdf-digest-print"/>
+    <keyword type="function" name="librdf_files_temporary_file_name ()" link="redland-files.html#librdf-files-temporary-file-name"/>
+    <keyword type="typedef" name="librdf_hash" link="redland-hash.html#librdf-hash"/>
+    <keyword type="typedef" name="librdf_hash_cursor" link="redland-hash.html#librdf-hash-cursor"/>
+    <keyword type="function" name="librdf_new_hash_from_string ()" link="redland-hash.html#librdf-new-hash-from-string"/>
+    <keyword type="function" name="librdf_new_hash_from_array_of_strings ()" link="redland-hash.html#librdf-new-hash-from-array-of-strings"/>
+    <keyword type="function" name="librdf_new_hash_from_hash ()" link="redland-hash.html#librdf-new-hash-from-hash"/>
+    <keyword type="function" name="librdf_free_hash ()" link="redland-hash.html#librdf-free-hash"/>
+    <keyword type="function" name="librdf_hash_get ()" link="redland-hash.html#librdf-hash-get"/>
+    <keyword type="function" name="librdf_hash_get_as_boolean ()" link="redland-hash.html#librdf-hash-get-as-boolean"/>
+    <keyword type="function" name="librdf_hash_get_as_long ()" link="redland-hash.html#librdf-hash-get-as-long"/>
+    <keyword type="function" name="librdf_hash_get_del ()" link="redland-hash.html#librdf-hash-get-del"/>
+    <keyword type="function" name="librdf_hash_put_strings ()" link="redland-hash.html#librdf-hash-put-strings"/>
+    <keyword type="function" name="librdf_hash_print ()" link="redland-hash.html#librdf-hash-print"/>
+    <keyword type="function" name="librdf_hash_print_keys ()" link="redland-hash.html#librdf-hash-print-keys"/>
+    <keyword type="function" name="librdf_hash_print_values ()" link="redland-hash.html#librdf-hash-print-values"/>
+    <keyword type="function" name="librdf_hash_interpret_template ()" link="redland-hash.html#librdf-hash-interpret-template"/>
+    <keyword type="function" name="librdf_heuristic_gen_name ()" link="redland-heuristics.html#librdf-heuristic-gen-name"/>
+    <keyword type="function" name="librdf_heuristic_is_blank_node ()" link="redland-heuristics.html#librdf-heuristic-is-blank-node"/>
+    <keyword type="function" name="librdf_heuristic_get_blank_node ()" link="redland-heuristics.html#librdf-heuristic-get-blank-node"/>
+    <keyword type="function" name="librdf_heuristic_object_is_literal ()" link="redland-heuristics.html#librdf-heuristic-object-is-literal"/>
+    <keyword type="typedef" name="librdf_iterator" link="redland-iterator.html#librdf-iterator"/>
+    <keyword type="function" name="librdf_iterator_map_handler ()" link="redland-iterator.html#librdf-iterator-map-handler"/>
+    <keyword type="function" name="librdf_iterator_map_free_context_handler ()" link="redland-iterator.html#librdf-iterator-map-free-context-handler"/>
+    <keyword type="function" name="librdf_new_iterator ()" link="redland-iterator.html#librdf-new-iterator"/>
+    <keyword type="function" name="librdf_free_iterator ()" link="redland-iterator.html#librdf-free-iterator"/>
+    <keyword type="function" name="librdf_iterator_end ()" link="redland-iterator.html#librdf-iterator-end"/>
+    <keyword type="function" name="librdf_iterator_have_elements ()" link="redland-iterator.html#librdf-iterator-have-elements"/>
+    <keyword type="function" name="librdf_iterator_next ()" link="redland-iterator.html#librdf-iterator-next"/>
+    <keyword type="function" name="librdf_iterator_get_object ()" link="redland-iterator.html#librdf-iterator-get-object"/>
+    <keyword type="function" name="librdf_iterator_get_context ()" link="redland-iterator.html#librdf-iterator-get-context"/>
+    <keyword type="function" name="librdf_iterator_get_key ()" link="redland-iterator.html#librdf-iterator-get-key"/>
+    <keyword type="function" name="librdf_iterator_get_value ()" link="redland-iterator.html#librdf-iterator-get-value"/>
+    <keyword type="function" name="librdf_iterator_add_map ()" link="redland-iterator.html#librdf-iterator-add-map"/>
+    <keyword type="function" name="librdf_new_empty_iterator ()" link="redland-iterator.html#librdf-new-empty-iterator"/>
+    <keyword type="typedef" name="librdf_list" link="redland-list.html#librdf-list"/>
+    <keyword type="function" name="librdf_new_list ()" link="redland-list.html#librdf-new-list"/>
+    <keyword type="function" name="librdf_free_list ()" link="redland-list.html#librdf-free-list"/>
+    <keyword type="function" name="librdf_list_clear ()" link="redland-list.html#librdf-list-clear"/>
+    <keyword type="function" name="librdf_list_add ()" link="redland-list.html#librdf-list-add"/>
+    <keyword type="function" name="librdf_list_unshift ()" link="redland-list.html#librdf-list-unshift"/>
+    <keyword type="function" name="librdf_list_shift ()" link="redland-list.html#librdf-list-shift"/>
+    <keyword type="function" name="librdf_list_pop ()" link="redland-list.html#librdf-list-pop"/>
+    <keyword type="function" name="librdf_list_remove ()" link="redland-list.html#librdf-list-remove"/>
+    <keyword type="function" name="librdf_list_contains ()" link="redland-list.html#librdf-list-contains"/>
+    <keyword type="function" name="librdf_list_size ()" link="redland-list.html#librdf-list-size"/>
+    <keyword type="function" name="librdf_list_set_equals ()" link="redland-list.html#librdf-list-set-equals"/>
+    <keyword type="function" name="librdf_list_get_iterator ()" link="redland-list.html#librdf-list-get-iterator"/>
+    <keyword type="function" name="librdf_list_foreach ()" link="redland-list.html#librdf-list-foreach"/>
+    <keyword type="function" name="librdf_log_level_func ()" link="redland-log.html#librdf-log-level-func"/>
+    <keyword type="function" name="librdf_log_func ()" link="redland-log.html#librdf-log-func"/>
+    <keyword type="enum" name="enum librdf_log_level" link="redland-log.html#librdf-log-level"/>
+    <keyword type="enum" name="enum librdf_log_facility" link="redland-log.html#librdf-log-facility"/>
+    <keyword type="function" name="librdf_log_message_code ()" link="redland-log.html#librdf-log-message-code"/>
+    <keyword type="function" name="librdf_log_message_level ()" link="redland-log.html#librdf-log-message-level"/>
+    <keyword type="function" name="librdf_log_message_facility ()" link="redland-log.html#librdf-log-message-facility"/>
+    <keyword type="function" name="librdf_log_message_message ()" link="redland-log.html#librdf-log-message-message"/>
+    <keyword type="function" name="librdf_log_message_locator ()" link="redland-log.html#librdf-log-message-locator"/>
+    <keyword type="typedef" name="librdf_model" link="redland-model.html#librdf-model"/>
+    <keyword type="typedef" name="librdf_model_factory" link="redland-model.html#librdf-model-factory"/>
+    <keyword type="function" name="librdf_model_enumerate ()" link="redland-model.html#librdf-model-enumerate"/>
+    <keyword type="function" name="librdf_new_model ()" link="redland-model.html#librdf-new-model"/>
+    <keyword type="function" name="librdf_new_model_with_options ()" link="redland-model.html#librdf-new-model-with-options"/>
+    <keyword type="function" name="librdf_new_model_from_model ()" link="redland-model.html#librdf-new-model-from-model"/>
+    <keyword type="function" name="librdf_free_model ()" link="redland-model.html#librdf-free-model"/>
+    <keyword type="function" name="librdf_model_size ()" link="redland-model.html#librdf-model-size"/>
+    <keyword type="function" name="librdf_model_add ()" link="redland-model.html#librdf-model-add"/>
+    <keyword type="function" name="librdf_model_add_string_literal_statement ()" link="redland-model.html#librdf-model-add-string-literal-statement"/>
+    <keyword type="function" name="librdf_model_add_typed_literal_statement ()" link="redland-model.html#librdf-model-add-typed-literal-statement"/>
+    <keyword type="function" name="librdf_model_add_statement ()" link="redland-model.html#librdf-model-add-statement"/>
+    <keyword type="function" name="librdf_model_add_statements ()" link="redland-model.html#librdf-model-add-statements"/>
+    <keyword type="function" name="librdf_model_remove_statement ()" link="redland-model.html#librdf-model-remove-statement"/>
+    <keyword type="function" name="librdf_model_contains_statement ()" link="redland-model.html#librdf-model-contains-statement"/>
+    <keyword type="function" name="librdf_model_has_arc_in ()" link="redland-model.html#librdf-model-has-arc-in"/>
+    <keyword type="function" name="librdf_model_has_arc_out ()" link="redland-model.html#librdf-model-has-arc-out"/>
+    <keyword type="function" name="librdf_model_as_stream ()" link="redland-model.html#librdf-model-as-stream"/>
+    <keyword type="function" name="librdf_model_serialise ()" link="redland-model.html#librdf-model-serialise"/>
+    <keyword type="function" name="librdf_model_find_statements ()" link="redland-model.html#librdf-model-find-statements"/>
+    <keyword type="macro" name="LIBRDF_MODEL_FIND_OPTION_MATCH_SUBSTRING_LITERAL" link="redland-model.html#LIBRDF-MODEL-FIND-OPTION-MATCH-SUBSTRING-LITERAL:CAPS"/>
+    <keyword type="function" name="librdf_model_find_statements_with_options ()" link="redland-model.html#librdf-model-find-statements-with-options"/>
+    <keyword type="function" name="librdf_model_get_sources ()" link="redland-model.html#librdf-model-get-sources"/>
+    <keyword type="function" name="librdf_model_get_arcs ()" link="redland-model.html#librdf-model-get-arcs"/>
+    <keyword type="function" name="librdf_model_get_targets ()" link="redland-model.html#librdf-model-get-targets"/>
+    <keyword type="function" name="librdf_model_get_source ()" link="redland-model.html#librdf-model-get-source"/>
+    <keyword type="function" name="librdf_model_get_arc ()" link="redland-model.html#librdf-model-get-arc"/>
+    <keyword type="function" name="librdf_model_get_target ()" link="redland-model.html#librdf-model-get-target"/>
+    <keyword type="function" name="librdf_model_get_arcs_in ()" link="redland-model.html#librdf-model-get-arcs-in"/>
+    <keyword type="function" name="librdf_model_get_arcs_out ()" link="redland-model.html#librdf-model-get-arcs-out"/>
+    <keyword type="function" name="librdf_model_add_submodel ()" link="redland-model.html#librdf-model-add-submodel"/>
+    <keyword type="function" name="librdf_model_remove_submodel ()" link="redland-model.html#librdf-model-remove-submodel"/>
+    <keyword type="function" name="librdf_model_print ()" link="redland-model.html#librdf-model-print"/>
+    <keyword type="function" name="librdf_model_context_add_statement ()" link="redland-model.html#librdf-model-context-add-statement"/>
+    <keyword type="function" name="librdf_model_context_add_statements ()" link="redland-model.html#librdf-model-context-add-statements"/>
+    <keyword type="function" name="librdf_model_context_remove_statement ()" link="redland-model.html#librdf-model-context-remove-statement"/>
+    <keyword type="function" name="librdf_model_context_remove_statements ()" link="redland-model.html#librdf-model-context-remove-statements"/>
+    <keyword type="function" name="librdf_model_context_as_stream ()" link="redland-model.html#librdf-model-context-as-stream"/>
+    <keyword type="function" name="librdf_model_context_serialize ()" link="redland-model.html#librdf-model-context-serialize"/>
+    <keyword type="function" name="librdf_model_contains_context ()" link="redland-model.html#librdf-model-contains-context"/>
+    <keyword type="function" name="librdf_model_query_execute ()" link="redland-model.html#librdf-model-query-execute"/>
+    <keyword type="function" name="librdf_model_sync ()" link="redland-model.html#librdf-model-sync"/>
+    <keyword type="function" name="librdf_model_get_storage ()" link="redland-model.html#librdf-model-get-storage"/>
+    <keyword type="function" name="librdf_model_load ()" link="redland-model.html#librdf-model-load"/>
+    <keyword type="function" name="librdf_model_to_counted_string ()" link="redland-model.html#librdf-model-to-counted-string"/>
+    <keyword type="function" name="librdf_model_to_string ()" link="redland-model.html#librdf-model-to-string"/>
+    <keyword type="function" name="librdf_model_find_statements_in_context ()" link="redland-model.html#librdf-model-find-statements-in-context"/>
+    <keyword type="function" name="librdf_model_get_contexts ()" link="redland-model.html#librdf-model-get-contexts"/>
+    <keyword type="macro" name="LIBRDF_MODEL_FEATURE_CONTEXTS" link="redland-model.html#LIBRDF-MODEL-FEATURE-CONTEXTS:CAPS"/>
+    <keyword type="function" name="librdf_model_get_feature ()" link="redland-model.html#librdf-model-get-feature"/>
+    <keyword type="function" name="librdf_model_set_feature ()" link="redland-model.html#librdf-model-set-feature"/>
+    <keyword type="function" name="librdf_model_transaction_commit ()" link="redland-model.html#librdf-model-transaction-commit"/>
+    <keyword type="function" name="librdf_model_transaction_get_handle ()" link="redland-model.html#librdf-model-transaction-get-handle"/>
+    <keyword type="function" name="librdf_model_transaction_rollback ()" link="redland-model.html#librdf-model-transaction-rollback"/>
+    <keyword type="function" name="librdf_model_transaction_start ()" link="redland-model.html#librdf-model-transaction-start"/>
+    <keyword type="function" name="librdf_model_transaction_start_with_handle ()" link="redland-model.html#librdf-model-transaction-start-with-handle"/>
+    <keyword type="typedef" name="librdf_node" link="redland-node.html#librdf-node"/>
+    <keyword type="enum" name="enum librdf_node_type" link="redland-node.html#librdf-node-type"/>
+    <keyword type="function" name="librdf_new_node ()" link="redland-node.html#librdf-new-node"/>
+    <keyword type="function" name="librdf_new_node_from_uri_string ()" link="redland-node.html#librdf-new-node-from-uri-string"/>
+    <keyword type="function" name="librdf_new_node_from_uri ()" link="redland-node.html#librdf-new-node-from-uri"/>
+    <keyword type="function" name="librdf_new_node_from_uri_local_name ()" link="redland-node.html#librdf-new-node-from-uri-local-name"/>
+    <keyword type="function" name="librdf_new_node_from_normalised_uri_string ()" link="redland-node.html#librdf-new-node-from-normalised-uri-string"/>
+    <keyword type="function" name="librdf_new_node_from_literal ()" link="redland-node.html#librdf-new-node-from-literal"/>
+    <keyword type="function" name="librdf_new_node_from_typed_literal ()" link="redland-node.html#librdf-new-node-from-typed-literal"/>
+    <keyword type="function" name="librdf_new_node_from_typed_counted_literal ()" link="redland-node.html#librdf-new-node-from-typed-counted-literal"/>
+    <keyword type="function" name="librdf_new_node_from_blank_identifier ()" link="redland-node.html#librdf-new-node-from-blank-identifier"/>
+    <keyword type="function" name="librdf_new_node_from_node ()" link="redland-node.html#librdf-new-node-from-node"/>
+    <keyword type="function" name="librdf_free_node ()" link="redland-node.html#librdf-free-node"/>
+    <keyword type="function" name="librdf_node_get_uri ()" link="redland-node.html#librdf-node-get-uri"/>
+    <keyword type="function" name="librdf_node_get_type ()" link="redland-node.html#librdf-node-get-type"/>
+    <keyword type="function" name="librdf_node_get_literal_value ()" link="redland-node.html#librdf-node-get-literal-value"/>
+    <keyword type="function" name="librdf_node_get_literal_value_as_counted_string ()" link="redland-node.html#librdf-node-get-literal-value-as-counted-string"/>
+    <keyword type="function" name="librdf_node_get_literal_value_as_latin1 ()" link="redland-node.html#librdf-node-get-literal-value-as-latin1"/>
+    <keyword type="function" name="librdf_node_get_literal_value_language ()" link="redland-node.html#librdf-node-get-literal-value-language"/>
+    <keyword type="function" name="librdf_node_get_literal_value_is_wf_xml ()" link="redland-node.html#librdf-node-get-literal-value-is-wf-xml"/>
+    <keyword type="function" name="librdf_node_get_literal_value_datatype_uri ()" link="redland-node.html#librdf-node-get-literal-value-datatype-uri"/>
+    <keyword type="function" name="librdf_node_get_li_ordinal ()" link="redland-node.html#librdf-node-get-li-ordinal"/>
+    <keyword type="function" name="librdf_node_get_blank_identifier ()" link="redland-node.html#librdf-node-get-blank-identifier"/>
+    <keyword type="function" name="librdf_node_is_resource ()" link="redland-node.html#librdf-node-is-resource"/>
+    <keyword type="function" name="librdf_node_is_literal ()" link="redland-node.html#librdf-node-is-literal"/>
+    <keyword type="function" name="librdf_node_is_blank ()" link="redland-node.html#librdf-node-is-blank"/>
+    <keyword type="function" name="librdf_node_encode ()" link="redland-node.html#librdf-node-encode"/>
+    <keyword type="function" name="librdf_node_decode ()" link="redland-node.html#librdf-node-decode"/>
+    <keyword type="function" name="librdf_node_to_string ()" link="redland-node.html#librdf-node-to-string"/>
+    <keyword type="function" name="librdf_node_to_counted_string ()" link="redland-node.html#librdf-node-to-counted-string"/>
+    <keyword type="function" name="librdf_node_print ()" link="redland-node.html#librdf-node-print"/>
+    <keyword type="function" name="librdf_node_equals ()" link="redland-node.html#librdf-node-equals"/>
+    <keyword type="function" name="librdf_node_static_iterator_create ()" link="redland-node.html#librdf-node-static-iterator-create"/>
+    <keyword type="typedef" name="librdf_parser" link="redland-parser.html#librdf-parser"/>
+    <keyword type="typedef" name="librdf_parser_factory" link="redland-parser.html#librdf-parser-factory"/>
+    <keyword type="function" name="librdf_parser_enumerate ()" link="redland-parser.html#librdf-parser-enumerate"/>
+    <keyword type="function" name="librdf_parser_guess_name ()" link="redland-parser.html#librdf-parser-guess-name"/>
+    <keyword type="function" name="librdf_parser_register_factory ()" link="redland-parser.html#librdf-parser-register-factory"/>
+    <keyword type="function" name="librdf_new_parser ()" link="redland-parser.html#librdf-new-parser"/>
+    <keyword type="function" name="librdf_new_parser_from_factory ()" link="redland-parser.html#librdf-new-parser-from-factory"/>
+    <keyword type="function" name="librdf_free_parser ()" link="redland-parser.html#librdf-free-parser"/>
+    <keyword type="function" name="librdf_parser_parse_as_stream ()" link="redland-parser.html#librdf-parser-parse-as-stream"/>
+    <keyword type="function" name="librdf_parser_parse_into_model ()" link="redland-parser.html#librdf-parser-parse-into-model"/>
+    <keyword type="function" name="librdf_parser_parse_file_handle_as_stream ()" link="redland-parser.html#librdf-parser-parse-file-handle-as-stream"/>
+    <keyword type="function" name="librdf_parser_parse_file_handle_into_model ()" link="redland-parser.html#librdf-parser-parse-file-handle-into-model"/>
+    <keyword type="function" name="librdf_parser_parse_string_as_stream ()" link="redland-parser.html#librdf-parser-parse-string-as-stream"/>
+    <keyword type="function" name="librdf_parser_parse_string_into_model ()" link="redland-parser.html#librdf-parser-parse-string-into-model"/>
+    <keyword type="function" name="librdf_parser_set_error ()" link="redland-parser.html#librdf-parser-set-error"/>
+    <keyword type="function" name="librdf_parser_set_warning ()" link="redland-parser.html#librdf-parser-set-warning"/>
+    <keyword type="function" name="librdf_parser_parse_counted_string_as_stream ()" link="redland-parser.html#librdf-parser-parse-counted-string-as-stream"/>
+    <keyword type="function" name="librdf_parser_parse_counted_string_into_model ()" link="redland-parser.html#librdf-parser-parse-counted-string-into-model"/>
+    <keyword type="macro" name="LIBRDF_PARSER_FEATURE_ERROR_COUNT" link="redland-parser.html#LIBRDF-PARSER-FEATURE-ERROR-COUNT:CAPS"/>
+    <keyword type="macro" name="LIBRDF_PARSER_FEATURE_WARNING_COUNT" link="redland-parser.html#LIBRDF-PARSER-FEATURE-WARNING-COUNT:CAPS"/>
+    <keyword type="function" name="librdf_parser_get_feature ()" link="redland-parser.html#librdf-parser-get-feature"/>
+    <keyword type="function" name="librdf_parser_set_feature ()" link="redland-parser.html#librdf-parser-set-feature"/>
+    <keyword type="function" name="librdf_parser_get_accept_header ()" link="redland-parser.html#librdf-parser-get-accept-header"/>
+    <keyword type="function" name="librdf_parser_get_namespaces_seen_count ()" link="redland-parser.html#librdf-parser-get-namespaces-seen-count"/>
+    <keyword type="function" name="librdf_parser_get_namespaces_seen_prefix ()" link="redland-parser.html#librdf-parser-get-namespaces-seen-prefix"/>
+    <keyword type="function" name="librdf_parser_get_namespaces_seen_uri ()" link="redland-parser.html#librdf-parser-get-namespaces-seen-uri"/>
+    <keyword type="function" name="librdf_parser_get_uri_filter ()" link="redland-parser.html#librdf-parser-get-uri-filter"/>
+    <keyword type="function" name="librdf_parser_set_uri_filter ()" link="redland-parser.html#librdf-parser-set-uri-filter"/>
+    <keyword type="typedef" name="librdf_query" link="redland-query.html#librdf-query"/>
+    <keyword type="typedef" name="librdf_query_factory" link="redland-query.html#librdf-query-factory"/>
+    <keyword type="function" name="librdf_query_register_factory ()" link="redland-query.html#librdf-query-register-factory"/>
+    <keyword type="function" name="librdf_new_query ()" link="redland-query.html#librdf-new-query"/>
+    <keyword type="function" name="librdf_new_query_from_query ()" link="redland-query.html#librdf-new-query-from-query"/>
+    <keyword type="function" name="librdf_new_query_from_factory ()" link="redland-query.html#librdf-new-query-from-factory"/>
+    <keyword type="function" name="librdf_free_query ()" link="redland-query.html#librdf-free-query"/>
+    <keyword type="function" name="librdf_query_execute ()" link="redland-query.html#librdf-query-execute"/>
+    <keyword type="function" name="librdf_query_get_limit ()" link="redland-query.html#librdf-query-get-limit"/>
+    <keyword type="function" name="librdf_query_set_limit ()" link="redland-query.html#librdf-query-set-limit"/>
+    <keyword type="function" name="librdf_query_get_offset ()" link="redland-query.html#librdf-query-get-offset"/>
+    <keyword type="function" name="librdf_query_set_offset ()" link="redland-query.html#librdf-query-set-offset"/>
+    <keyword type="typedef" name="librdf_query_results" link="redland-query-results.html#librdf-query-results"/>
+    <keyword type="function" name="librdf_query_results_as_stream ()" link="redland-query-results.html#librdf-query-results-as-stream"/>
+    <keyword type="function" name="librdf_query_results_get_count ()" link="redland-query-results.html#librdf-query-results-get-count"/>
+    <keyword type="function" name="librdf_query_results_next ()" link="redland-query-results.html#librdf-query-results-next"/>
+    <keyword type="function" name="librdf_query_results_finished ()" link="redland-query-results.html#librdf-query-results-finished"/>
+    <keyword type="function" name="librdf_query_results_get_bindings ()" link="redland-query-results.html#librdf-query-results-get-bindings"/>
+    <keyword type="function" name="librdf_query_results_get_binding_value ()" link="redland-query-results.html#librdf-query-results-get-binding-value"/>
+    <keyword type="function" name="librdf_query_results_get_binding_name ()" link="redland-query-results.html#librdf-query-results-get-binding-name"/>
+    <keyword type="function" name="librdf_query_results_get_binding_value_by_name ()" link="redland-query-results.html#librdf-query-results-get-binding-value-by-name"/>
+    <keyword type="function" name="librdf_query_results_get_bindings_count ()" link="redland-query-results.html#librdf-query-results-get-bindings-count"/>
+    <keyword type="function" name="librdf_query_results_to_counted_string ()" link="redland-query-results.html#librdf-query-results-to-counted-string"/>
+    <keyword type="function" name="librdf_query_results_to_string ()" link="redland-query-results.html#librdf-query-results-to-string"/>
+    <keyword type="function" name="librdf_query_results_to_file_handle ()" link="redland-query-results.html#librdf-query-results-to-file-handle"/>
+    <keyword type="function" name="librdf_query_results_to_file ()" link="redland-query-results.html#librdf-query-results-to-file"/>
+    <keyword type="function" name="librdf_free_query_results ()" link="redland-query-results.html#librdf-free-query-results"/>
+    <keyword type="function" name="librdf_query_results_is_bindings ()" link="redland-query-results.html#librdf-query-results-is-bindings"/>
+    <keyword type="function" name="librdf_query_results_is_boolean ()" link="redland-query-results.html#librdf-query-results-is-boolean"/>
+    <keyword type="function" name="librdf_query_results_is_graph ()" link="redland-query-results.html#librdf-query-results-is-graph"/>
+    <keyword type="function" name="librdf_query_results_is_syntax ()" link="redland-query-results.html#librdf-query-results-is-syntax"/>
+    <keyword type="function" name="librdf_query_results_get_boolean ()" link="redland-query-results.html#librdf-query-results-get-boolean"/>
+    <keyword type="function" name="librdf_new_query_results_formatter ()" link="redland-query-results.html#librdf-new-query-results-formatter"/>
+    <keyword type="function" name="librdf_new_query_results_formatter_by_mime_type ()" link="redland-query-results.html#librdf-new-query-results-formatter-by-mime-type"/>
+    <keyword type="function" name="librdf_free_query_results_formatter ()" link="redland-query-results.html#librdf-free-query-results-formatter"/>
+    <keyword type="function" name="librdf_query_results_formats_check ()" link="redland-query-results.html#librdf-query-results-formats-check"/>
+    <keyword type="function" name="librdf_query_results_formats_enumerate ()" link="redland-query-results.html#librdf-query-results-formats-enumerate"/>
+    <keyword type="typedef" name="librdf_query_results_formatter" link="redland-query-results.html#librdf-query-results-formatter"/>
+    <keyword type="function" name="librdf_query_results_formatter_write ()" link="redland-query-results.html#librdf-query-results-formatter-write"/>
+    <keyword type="typedef" name="librdf_serializer" link="redland-serializer.html#librdf-serializer"/>
+    <keyword type="typedef" name="librdf_serializer_factory" link="redland-serializer.html#librdf-serializer-factory"/>
+    <keyword type="function" name="librdf_serializer_enumerate ()" link="redland-serializer.html#librdf-serializer-enumerate"/>
+    <keyword type="function" name="librdf_serializer_register_factory ()" link="redland-serializer.html#librdf-serializer-register-factory"/>
+    <keyword type="function" name="librdf_new_serializer ()" link="redland-serializer.html#librdf-new-serializer"/>
+    <keyword type="function" name="librdf_new_serializer_from_factory ()" link="redland-serializer.html#librdf-new-serializer-from-factory"/>
+    <keyword type="function" name="librdf_free_serializer ()" link="redland-serializer.html#librdf-free-serializer"/>
+    <keyword type="function" name="librdf_serializer_serialize_model ()" link="redland-serializer.html#librdf-serializer-serialize-model"/>
+    <keyword type="function" name="librdf_serializer_serialize_model_to_file_handle ()" link="redland-serializer.html#librdf-serializer-serialize-model-to-file-handle"/>
+    <keyword type="function" name="librdf_serializer_serialize_model_to_file ()" link="redland-serializer.html#librdf-serializer-serialize-model-to-file"/>
+    <keyword type="function" name="librdf_serializer_serialize_model_to_string ()" link="redland-serializer.html#librdf-serializer-serialize-model-to-string"/>
+    <keyword type="function" name="librdf_serializer_serialize_model_to_counted_string ()" link="redland-serializer.html#librdf-serializer-serialize-model-to-counted-string"/>
+    <keyword type="function" name="librdf_serializer_serialize_model_to_iostream ()" link="redland-serializer.html#librdf-serializer-serialize-model-to-iostream"/>
+    <keyword type="function" name="librdf_serializer_serialize_stream_to_counted_string ()" link="redland-serializer.html#librdf-serializer-serialize-stream-to-counted-string"/>
+    <keyword type="function" name="librdf_serializer_serialize_stream_to_file ()" link="redland-serializer.html#librdf-serializer-serialize-stream-to-file"/>
+    <keyword type="function" name="librdf_serializer_serialize_stream_to_file_handle ()" link="redland-serializer.html#librdf-serializer-serialize-stream-to-file-handle"/>
+    <keyword type="function" name="librdf_serializer_serialize_stream_to_iostream ()" link="redland-serializer.html#librdf-serializer-serialize-stream-to-iostream"/>
+    <keyword type="function" name="librdf_serializer_serialize_stream_to_string ()" link="redland-serializer.html#librdf-serializer-serialize-stream-to-string"/>
+    <keyword type="function" name="librdf_serializer_set_error ()" link="redland-serializer.html#librdf-serializer-set-error"/>
+    <keyword type="function" name="librdf_serializer_set_warning ()" link="redland-serializer.html#librdf-serializer-set-warning"/>
+    <keyword type="function" name="librdf_serializer_get_feature ()" link="redland-serializer.html#librdf-serializer-get-feature"/>
+    <keyword type="function" name="librdf_serializer_set_feature ()" link="redland-serializer.html#librdf-serializer-set-feature"/>
+    <keyword type="function" name="librdf_serializer_set_namespace ()" link="redland-serializer.html#librdf-serializer-set-namespace"/>
+    <keyword type="typedef" name="librdf_statement" link="redland-statement.html#librdf-statement"/>
+    <keyword type="enum" name="enum librdf_statement_part" link="redland-statement.html#librdf-statement-part"/>
+    <keyword type="function" name="librdf_new_statement ()" link="redland-statement.html#librdf-new-statement"/>
+    <keyword type="function" name="librdf_new_statement_from_statement ()" link="redland-statement.html#librdf-new-statement-from-statement"/>
+    <keyword type="function" name="librdf_new_statement_from_nodes ()" link="redland-statement.html#librdf-new-statement-from-nodes"/>
+    <keyword type="function" name="librdf_statement_init ()" link="redland-statement.html#librdf-statement-init"/>
+    <keyword type="function" name="librdf_statement_clear ()" link="redland-statement.html#librdf-statement-clear"/>
+    <keyword type="function" name="librdf_free_statement ()" link="redland-statement.html#librdf-free-statement"/>
+    <keyword type="function" name="librdf_statement_get_subject ()" link="redland-statement.html#librdf-statement-get-subject"/>
+    <keyword type="function" name="librdf_statement_set_subject ()" link="redland-statement.html#librdf-statement-set-subject"/>
+    <keyword type="function" name="librdf_statement_get_predicate ()" link="redland-statement.html#librdf-statement-get-predicate"/>
+    <keyword type="function" name="librdf_statement_set_predicate ()" link="redland-statement.html#librdf-statement-set-predicate"/>
+    <keyword type="function" name="librdf_statement_get_object ()" link="redland-statement.html#librdf-statement-get-object"/>
+    <keyword type="function" name="librdf_statement_set_object ()" link="redland-statement.html#librdf-statement-set-object"/>
+    <keyword type="function" name="librdf_statement_is_complete ()" link="redland-statement.html#librdf-statement-is-complete"/>
+    <keyword type="function" name="librdf_statement_to_string ()" link="redland-statement.html#librdf-statement-to-string"/>
+    <keyword type="function" name="librdf_statement_print ()" link="redland-statement.html#librdf-statement-print"/>
+    <keyword type="function" name="librdf_statement_equals ()" link="redland-statement.html#librdf-statement-equals"/>
+    <keyword type="function" name="librdf_statement_match ()" link="redland-statement.html#librdf-statement-match"/>
+    <keyword type="function" name="librdf_statement_encode ()" link="redland-statement.html#librdf-statement-encode"/>
+    <keyword type="function" name="librdf_statement_encode_parts ()" link="redland-statement.html#librdf-statement-encode-parts"/>
+    <keyword type="function" name="librdf_statement_decode ()" link="redland-statement.html#librdf-statement-decode"/>
+    <keyword type="function" name="librdf_statement_decode_parts ()" link="redland-statement.html#librdf-statement-decode-parts"/>
+    <keyword type="typedef" name="librdf_storage" link="redland-storage.html#librdf-storage"/>
+    <keyword type="typedef" name="librdf_storage_factory" link="redland-storage.html#librdf-storage-factory"/>
+    <keyword type="function" name="librdf_storage_register_factory ()" link="redland-storage.html#librdf-storage-register-factory"/>
+    <keyword type="function" name="librdf_storage_enumerate ()" link="redland-storage.html#librdf-storage-enumerate"/>
+    <keyword type="function" name="librdf_new_storage ()" link="redland-storage.html#librdf-new-storage"/>
+    <keyword type="function" name="librdf_new_storage_with_options ()" link="redland-storage.html#librdf-new-storage-with-options"/>
+    <keyword type="function" name="librdf_new_storage_from_storage ()" link="redland-storage.html#librdf-new-storage-from-storage"/>
+    <keyword type="function" name="librdf_new_storage_from_factory ()" link="redland-storage.html#librdf-new-storage-from-factory"/>
+    <keyword type="function" name="librdf_free_storage ()" link="redland-storage.html#librdf-free-storage"/>
+    <keyword type="function" name="librdf_storage_open ()" link="redland-storage.html#librdf-storage-open"/>
+    <keyword type="function" name="librdf_storage_close ()" link="redland-storage.html#librdf-storage-close"/>
+    <keyword type="function" name="librdf_storage_size ()" link="redland-storage.html#librdf-storage-size"/>
+    <keyword type="function" name="librdf_storage_add_statement ()" link="redland-storage.html#librdf-storage-add-statement"/>
+    <keyword type="function" name="librdf_storage_add_statements ()" link="redland-storage.html#librdf-storage-add-statements"/>
+    <keyword type="function" name="librdf_storage_remove_statement ()" link="redland-storage.html#librdf-storage-remove-statement"/>
+    <keyword type="function" name="librdf_storage_contains_statement ()" link="redland-storage.html#librdf-storage-contains-statement"/>
+    <keyword type="function" name="librdf_storage_serialise ()" link="redland-storage.html#librdf-storage-serialise"/>
+    <keyword type="function" name="librdf_storage_find_statements ()" link="redland-storage.html#librdf-storage-find-statements"/>
+    <keyword type="function" name="librdf_storage_find_statements_with_options ()" link="redland-storage.html#librdf-storage-find-statements-with-options"/>
+    <keyword type="function" name="librdf_storage_get_sources ()" link="redland-storage.html#librdf-storage-get-sources"/>
+    <keyword type="function" name="librdf_storage_get_arcs ()" link="redland-storage.html#librdf-storage-get-arcs"/>
+    <keyword type="function" name="librdf_storage_get_targets ()" link="redland-storage.html#librdf-storage-get-targets"/>
+    <keyword type="function" name="librdf_storage_get_arcs_in ()" link="redland-storage.html#librdf-storage-get-arcs-in"/>
+    <keyword type="function" name="librdf_storage_get_arcs_out ()" link="redland-storage.html#librdf-storage-get-arcs-out"/>
+    <keyword type="function" name="librdf_storage_has_arc_in ()" link="redland-storage.html#librdf-storage-has-arc-in"/>
+    <keyword type="function" name="librdf_storage_has_arc_out ()" link="redland-storage.html#librdf-storage-has-arc-out"/>
+    <keyword type="function" name="librdf_storage_context_add_statement ()" link="redland-storage.html#librdf-storage-context-add-statement"/>
+    <keyword type="function" name="librdf_storage_context_add_statements ()" link="redland-storage.html#librdf-storage-context-add-statements"/>
+    <keyword type="function" name="librdf_storage_context_remove_statement ()" link="redland-storage.html#librdf-storage-context-remove-statement"/>
+    <keyword type="function" name="librdf_storage_context_remove_statements ()" link="redland-storage.html#librdf-storage-context-remove-statements"/>
+    <keyword type="function" name="librdf_storage_context_as_stream ()" link="redland-storage.html#librdf-storage-context-as-stream"/>
+    <keyword type="function" name="librdf_storage_context_serialise ()" link="redland-storage.html#librdf-storage-context-serialise"/>
+    <keyword type="function" name="librdf_storage_supports_query ()" link="redland-storage.html#librdf-storage-supports-query"/>
+    <keyword type="function" name="librdf_storage_query_execute ()" link="redland-storage.html#librdf-storage-query-execute"/>
+    <keyword type="function" name="librdf_storage_sync ()" link="redland-storage.html#librdf-storage-sync"/>
+    <keyword type="function" name="librdf_storage_find_statements_in_context ()" link="redland-storage.html#librdf-storage-find-statements-in-context"/>
+    <keyword type="function" name="librdf_storage_get_contexts ()" link="redland-storage.html#librdf-storage-get-contexts"/>
+    <keyword type="function" name="librdf_storage_get_feature ()" link="redland-storage.html#librdf-storage-get-feature"/>
+    <keyword type="function" name="librdf_storage_set_feature ()" link="redland-storage.html#librdf-storage-set-feature"/>
+    <keyword type="function" name="librdf_storage_transaction_commit ()" link="redland-storage.html#librdf-storage-transaction-commit"/>
+    <keyword type="function" name="librdf_storage_transaction_get_handle ()" link="redland-storage.html#librdf-storage-transaction-get-handle"/>
+    <keyword type="function" name="librdf_storage_transaction_rollback ()" link="redland-storage.html#librdf-storage-transaction-rollback"/>
+    <keyword type="function" name="librdf_storage_transaction_start ()" link="redland-storage.html#librdf-storage-transaction-start"/>
+    <keyword type="function" name="librdf_storage_transaction_start_with_handle ()" link="redland-storage.html#librdf-storage-transaction-start-with-handle"/>
+    <keyword type="function" name="librdf_storage_add_reference ()" link="redland-storage.html#librdf-storage-add-reference"/>
+    <keyword type="function" name="librdf_storage_remove_reference ()" link="redland-storage.html#librdf-storage-remove-reference"/>
+    <keyword type="typedef" name="librdf_stream" link="redland-stream.html#librdf-stream"/>
+    <keyword type="function" name="librdf_stream_map_handler ()" link="redland-stream.html#librdf-stream-map-handler"/>
+    <keyword type="function" name="librdf_stream_map_free_context_handler ()" link="redland-stream.html#librdf-stream-map-free-context-handler"/>
+    <keyword type="function" name="librdf_new_stream ()" link="redland-stream.html#librdf-new-stream"/>
+    <keyword type="function" name="librdf_new_stream_from_node_iterator ()" link="redland-stream.html#librdf-new-stream-from-node-iterator"/>
+    <keyword type="function" name="librdf_new_empty_stream ()" link="redland-stream.html#librdf-new-empty-stream"/>
+    <keyword type="function" name="librdf_free_stream ()" link="redland-stream.html#librdf-free-stream"/>
+    <keyword type="function" name="librdf_stream_end ()" link="redland-stream.html#librdf-stream-end"/>
+    <keyword type="function" name="librdf_stream_next ()" link="redland-stream.html#librdf-stream-next"/>
+    <keyword type="function" name="librdf_stream_get_object ()" link="redland-stream.html#librdf-stream-get-object"/>
+    <keyword type="function" name="librdf_stream_get_context ()" link="redland-stream.html#librdf-stream-get-context"/>
+    <keyword type="function" name="librdf_stream_add_map ()" link="redland-stream.html#librdf-stream-add-map"/>
+    <keyword type="function" name="librdf_stream_print ()" link="redland-stream.html#librdf-stream-print"/>
+    <keyword type="typedef" name="librdf_unichar" link="redland-unicode.html#librdf-unichar"/>
+    <keyword type="function" name="librdf_unicode_char_to_utf8 ()" link="redland-unicode.html#librdf-unicode-char-to-utf8"/>
+    <keyword type="function" name="librdf_utf8_to_unicode_char ()" link="redland-unicode.html#librdf-utf8-to-unicode-char"/>
+    <keyword type="function" name="librdf_utf8_to_latin1 ()" link="redland-unicode.html#librdf-utf8-to-latin1"/>
+    <keyword type="function" name="librdf_latin1_to_utf8 ()" link="redland-unicode.html#librdf-latin1-to-utf8"/>
+    <keyword type="function" name="librdf_utf8_print ()" link="redland-unicode.html#librdf-utf8-print"/>
+    <keyword type="typedef" name="librdf_uri" link="redland-uri.html#librdf-uri"/>
+    <keyword type="function" name="librdf_new_uri ()" link="redland-uri.html#librdf-new-uri"/>
+    <keyword type="function" name="librdf_new_uri_from_uri ()" link="redland-uri.html#librdf-new-uri-from-uri"/>
+    <keyword type="function" name="librdf_new_uri_from_uri_local_name ()" link="redland-uri.html#librdf-new-uri-from-uri-local-name"/>
+    <keyword type="function" name="librdf_free_uri ()" link="redland-uri.html#librdf-free-uri"/>
+    <keyword type="function" name="librdf_uri_as_string ()" link="redland-uri.html#librdf-uri-as-string"/>
+    <keyword type="function" name="librdf_uri_as_counted_string ()" link="redland-uri.html#librdf-uri-as-counted-string"/>
+    <keyword type="function" name="librdf_uri_print ()" link="redland-uri.html#librdf-uri-print"/>
+    <keyword type="function" name="librdf_uri_to_string ()" link="redland-uri.html#librdf-uri-to-string"/>
+    <keyword type="function" name="librdf_uri_to_counted_string ()" link="redland-uri.html#librdf-uri-to-counted-string"/>
+    <keyword type="function" name="librdf_uri_equals ()" link="redland-uri.html#librdf-uri-equals"/>
+    <keyword type="function" name="librdf_uri_is_file_uri ()" link="redland-uri.html#librdf-uri-is-file-uri"/>
+    <keyword type="function" name="librdf_uri_to_filename ()" link="redland-uri.html#librdf-uri-to-filename"/>
+    <keyword type="function" name="librdf_new_uri_normalised_to_base ()" link="redland-uri.html#librdf-new-uri-normalised-to-base"/>
+    <keyword type="function" name="librdf_new_uri_relative_to_base ()" link="redland-uri.html#librdf-new-uri-relative-to-base"/>
+    <keyword type="function" name="librdf_new_uri_from_filename ()" link="redland-uri.html#librdf-new-uri-from-filename"/>
+    <keyword type="function" name="librdf_uri_compare ()" link="redland-uri.html#librdf-uri-compare"/>
+    <keyword type="function" name="librdf_uri_filter_func ()" link="redland-uri.html#librdf-uri-filter-func"/>
+  </functions>
+</book>

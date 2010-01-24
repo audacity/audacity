@@ -1,0 +1,172 @@
+<!-- ##### SECTION Title ##### -->
+Graph patterns
+
+<!-- ##### SECTION Short_Description ##### -->
+Collections of triple patterns, sub-graph patterns with operators.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Graph patterns form a a tree structure that build a #rasqal_query
+top-level graph pattern (see rasqal_query_get_query_graph_pattern())
+which may have sub-graph patterns.  Graph patterns at the leaf of the
+tree operate over triple patterns (#rasqal_triple) matching the
+RDF triples in the data sources for %RASQAL_GRAPH_PATTERN_OPERATOR_BASIC
+or %RASQAL_GRAPH_PATTERN_OPERATOR_OPTIONAL.  Other graph patterns
+operators operate over sub graph patterns and group them, union them
+or apply a GRAPH matching keyword (%RASQAL_GRAPH_PATTERN_OPERATOR_GRAPH).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF rasqal_graph_pattern ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_add_constraint ##### -->
+<para>
+
+</para>
+
+@gp: 
+@expr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_add_sub_graph_pattern ##### -->
+<para>
+
+</para>
+
+@graph_pattern: 
+@sub_graph_pattern: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_constraint ##### -->
+<para>
+
+</para>
+
+@gp: 
+@idx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_constraint_sequence ##### -->
+<para>
+
+</para>
+
+@gp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_index ##### -->
+<para>
+
+</para>
+
+@gp: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_operator ##### -->
+<para>
+
+</para>
+
+@graph_pattern: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_sub_graph_pattern ##### -->
+<para>
+
+</para>
+
+@graph_pattern: 
+@idx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_sub_graph_pattern_sequence ##### -->
+<para>
+
+</para>
+
+@graph_pattern: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_get_triple ##### -->
+<para>
+
+</para>
+
+@graph_pattern: 
+@idx: 
+@Returns: 
+
+
+<!-- ##### ENUM rasqal_graph_pattern_operator ##### -->
+<para>
+
+</para>
+
+@RASQAL_GRAPH_PATTERN_OPERATOR_UNKNOWN: 
+@RASQAL_GRAPH_PATTERN_OPERATOR_BASIC: 
+@RASQAL_GRAPH_PATTERN_OPERATOR_OPTIONAL: 
+@RASQAL_GRAPH_PATTERN_OPERATOR_UNION: 
+@RASQAL_GRAPH_PATTERN_OPERATOR_GROUP: 
+@RASQAL_GRAPH_PATTERN_OPERATOR_GRAPH: 
+@RASQAL_GRAPH_PATTERN_OPERATOR_LAST: 
+
+<!-- ##### FUNCTION rasqal_graph_pattern_operator_as_string ##### -->
+<para>
+
+</para>
+
+@op: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_print ##### -->
+<para>
+
+</para>
+
+@gp: 
+@fh: 
+
+
+<!-- ##### USER_FUNCTION rasqal_graph_pattern_visit_fn ##### -->
+<para>
+
+</para>
+
+@query: 
+@gp: 
+@user_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_graph_pattern_visit ##### -->
+<para>
+
+</para>
+
+@query: 
+@gp: 
+@fn: 
+@user_data: 
+@Returns: 
+
+

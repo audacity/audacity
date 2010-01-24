@@ -1,0 +1,188 @@
+# MAKEFILE FOR PORTMIDI AND PORTTIME
+
+VFLAGS = -g
+
+
+# For debugging, define PM_CHECK_ERRORS
+PMFLAGS = -DPM_CHECK_ERRORS
+# Otherwise do not define PM_CHECK_ERRORS
+# PMFLAGS = 
+# Dynamic Lib is built without PM_CHECK_ERRORS
+PMDLFLAGS = 
+# Path for installation of dynamic libraries
+PF = /usr/local
+# Architecture for static libs
+ARCH = -arch ppc -arch i386
+
+pmlib = pm_mac/libportmidi.a
+
+CC = gcc $(VFLAGS) $(PMFLAGS) $(ARCH) -g -Ipm_common -Iporttime
+
+MACLIB = -framework CoreMIDI -framework CoreFoundation -framework CoreAudio \
+	 -framework CoreServices
+
+PMSRC =  pm_mac/pmmac.c pm_common/pmutil.c pm_common/portmidi.c \
+   pm_mac/pmmacosxcm.c pm_mac/readbinaryplist.c pm_mac/finddefault.c
+
+PTSRC = porttime/porttime.c porttime/ptmacosx_mach.c
+
+pmobjects = pm_common/pmutil.o pm_mac/pmmac.o  \
+	pm_common/portmidi.o pm_mac/pmmacosxcm.o \
+	pm_mac/finddefault.o pm_mac/readbinaryplist.o \
+	porttime/porttime.o porttime/ptmacosx_mach.o 
+
+current: all
+
+all: $(pmlib) $(ptlib) pm_test/test pm_test/sysex pm_test/midithread \
+	pm_test/latency pm_test/midithru pm_test/qtest pm_test/mm
+	echo $$'\n\
+**** For instructions: make -f pm_mac\Makefile.osx help ****\n'
+
+help:
+	echo $$'\n\n\
+This is help for portmidi/pm_mac/Makefile.osx\n\n\
+Flags for static library and apps are $(PMFLAGS)\n\
+Flags for dynamic library are $(PMDLFLAGS)\n\
+Installation path for dylib is $(PF)\n\
+You might want to change these.\n\n\
+To build a static library and test applications,\n        \
+make -f pm_mac/Makefile.osx\n\
+To build and install dynamic library, note you must use\n\
+"cleanest" to remove .o and dylib, especially if this\n\
+library uses different compiler flags:\n        \
+make -f pm_mac/Makefile.osx cleanest\n        \
+make -f pm_mac/Makefile.osx dylib\n\
+To install dynamic library to /usr/local,\n        \
+sudo make -f pm_mac/Makefile.osx install\n\
+To install universal dynamic library with xcode,\n        \
+make -f pm_mac/Makefile.osx install-with-xcode\n\
+To make dynamic library for Java,\n        \
+make -f pm_mac/Makefile.osx cleanest\n        \
+make -f pm_mac/Makefile.osx jni\n\
+To make PmDefaults Java application,\n        \
+make -f pm_mac/Makefile.osx pmdefaults\n\n'
+
+$(pmlib): pm_mac/Makefile.osx $(pmobjects)
+	rm -rf $(pmlib)
+	ar -crs $(pmlib) $(pmobjects)
+
+pm_mac/pmmacosxcm.o: pm_mac/Makefile.osx pm_mac/pmmacosxcm.c pm_mac/pmmacosxcm.h
+	$(CC) -c pm_mac/pmmacosxcm.c -o pm_mac/pmmacosxcm.o
+
+pm_mac/readbinaryplist.o: pm_mac/Makefile.osx pm_mac/readbinaryplist.c pm_mac/readbinaryplist.h
+	$(CC) -c -I/Developer/Headers/FlatCarbon \
+	pm_mac/readbinaryplist.c -o pm_mac/readbinaryplist.o
+
+pm_mac/finddefault.o: pm_mac/Makefile.osx pm_mac/finddefault.c pm_mac/pmmacosxcm.h
+	$(CC) -c pm_mac/finddefault.c -o pm_mac/finddefault.o
+
+pm_test/test: pm_mac/Makefile.osx pm_test/test.o $(pmlib)
+	$(CC) pm_test/test.o -o pm_test/test $(pmlib) $(MACLIB)
+
+pm_test/sysex: pm_mac/Makefile.osx pm_test/sysex.o $(pmlib)
+	$(CC) pm_test/sysex.o -o pm_test/sysex $(pmlib) $(MACLIB)
+
+pm_test/midithread: pm_mac/Makefile.osx pm_test/midithread.o $(pmlib)
+	$(CC) pm_test/midithread.o -o pm_test/midithread \
+        $(pmlib) $(MACLIB)
+
+pm_test/latency: pm_mac/Makefile.osx $(pmlib) pm_test/latency.o 
+	$(CC) pm_test/latency.o -o pm_test/latency $(pmlib) \
+        $(MACLIB) -lpthread -lm
+
+pm_test/midithru: pm_mac/Makefile.osx $(pmlib) pm_test/midithru.o 
+	$(CC) pm_test/midithru.o -o pm_test/midithru $(pmlib) \
+        $(MACLIB) -lpthread -lm
+
+pm_test/mm: pm_mac/Makefile.osx pm_test/mm.o $(pmlib)
+	$(CC) pm_test/mm.o -o pm_test/mm $(pmlib) $(MACLIB)
+
+porttime/ptlinux.o: pm_mac/Makefile.osx porttime/ptlinux.c
+	$(CC) -c porttime/ptlinux.c -o porttime/ptlinux.o
+
+pm_test/qtest: pm_mac/Makefile.osx pm_test/qtest.o $(pmlib)
+	$(CC) pm_test/qtest.o -o pm_test/qtest $(pmlib) $(MACLIB)
+
+clean:
+	rm -f *.o *~ core* */*.o */*~ */core* pm_test/*/pm_dll.dll 
+	rm -f *.opt *.ncb *.plg pm_win/Debug/pm_dll.lib pm_win/Release/pm_dll.lib
+	rm -f pm_test/*.opt pm_test/*.ncb
+	rm -f pm_java/pmjni/*.o pm_java/pmjni/*~ pm_java/*.h
+
+cleaner: clean
+	rm -rf pm_mac/build
+	rm -f *.dylib
+	rm -f pm_mac/*.dylib
+	rm -f pm_java/pmjni/*.jnilib
+
+cleanest: cleaner
+	rm -f $(pmlib) porttime/libporttime.dylib pm_mac/libportmidi.dylib
+	rm -f pm_test/test pm_test/sysex pm_test/midithread
+	rm -f pm_test/latency pm_test/midithru pm_test/qtest pm_test/mm
+	rm -f pm_java/*/*.class
+	rm -f pm_java/pmjni/jportmidi_JPortMidiApi_PortMidiStream.h
+
+backup: cleanest
+	cd ..; zip -r portmidi.zip portmidi
+
+dylib: pm_mac/libportmidi.dylib
+
+pm_mac/libportmidi.dylib: $(PMSRC) $(PTSRC)
+	cc -single_module -g $(PMDLFLAGS) -Iporttime -Ipm_common $(ARCH) \
+          -dynamiclib $(PMSRC) $(PTSRC) -o pm_mac/libportmidi.dylib \
+	  -flat_namespace -undefined suppress \
+	  -framework CoreMIDI -framework CoreFoundation \
+	  -framework CoreAudio -framework CoreServices
+
+install: porttime/porttime.h pm_common/portmidi.h \
+	   pm_mac/libportmidi.dylib
+	install porttime/porttime.h  $(PF)/include/
+	install pm_common/portmidi.h $(PF)/include
+	install pm_mac/libportmidi.dylib $(PF)/lib/
+
+# note - this uses xcode to build and install portmidi universal binaries
+install-with-xcode:
+	sudo xcodebuild -project pm_mac/pm_mac.xcodeproj \
+		-configuration Deployment install DSTROOT=/
+
+##### build java interface and application ######
+
+jni: pm_java/pmjni/libpmjni.jnilib
+
+pm_java/pmjni/libpmjni.jnilib: $(PMSRC) pm_java/jportmidi/JPortMidiApi.class pm_java/pmjni/jportmidi_JPortMidiApi.h pm_java/pmjni/pmjni.c
+	cc -single_module -g -Iporttime -Ipm_common \
+          -Ipm_java/pmjni -I/System/Library/Frameworks/JavaVM.framework/Headers \
+	  -I/Developer/Headers/FlatCarbon \
+          $(ARCH) -dynamiclib $(PMSRC) $(PTSRC) pm_java/pmjni/pmjni.c \
+          -o pm_java/pmjni/libpmjni.jnilib \
+          -flat_namespace -undefined suppress \
+          -framework CoreMIDI -framework CoreFoundation -framework CoreAudio \
+          -framework JavaVM
+
+pm_java/pmjni/jportmidi_JPortMidiApi.h: pm_java/jportmidi/JPortMidiApi.class
+	cd pm_java; javah jportmidi.JPortMidiApi
+	mv pm_java/jportmidi_JportMidiApi.h pm_java/pmjni
+
+JAVASRC = pmdefaults/PmDefaultsFrame.java \
+	    pmdefaults/PmDefaults.java \
+	    jportmidi/JPortMidiApi.java jportmidi/JPortMidi.java \
+	    jportmidi/JPortMidiException.java
+
+# this compiles ALL of the java code
+pm_java/jportmidi/JPortMidiApi.class: $(JAVASRC:%=pm_java/%)
+	cd pm_java; javac $(JAVASRC)
+
+pmdefaults: pm_java/pmjni/libpmjni.jnilib pm_java/jportmidi/JPortMidiApi.class
+	echo "pmdefaults java application is made"
+
+###### test plist reader #######
+PLHDR = pm_mac/readbinaryplist.h
+PLSRC = pm_mac/plisttest.c pm_mac/readbinaryplist.c
+pm_mac/plisttest: $(PLHDR) $(PLSRC)
+	cc -g -Ipm_mac \
+	    -I/Developer/Headers/FlatCarbon \
+	    -I/System/Library/Frameworks/CoreFoundation.framework/Headers \
+	    -I/System/Library/Frameworks/CoreServices.framework/Headers \
+	    $(PLSRC) -o pm_mac/plisttest \
+	    -framework CoreFoundation -framework CoreServices
+

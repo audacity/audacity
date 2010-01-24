@@ -1,0 +1,78 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/survey-sample/ontology/> .
+@prefix : <http://example.org/survey-sample/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix acm: <http://daml.umbc.edu/ontologies/topic-ont#> .
+
+:person01 a ex:Person ;
+	ex:name "John" .
+ex:name a rdf:Property ;
+	rdfs:domain ex:Person ;
+	rdfs:range <http://www.w3.org/2001/XMLSchema#STRING> .
+:person02 a ex:Person , ex:Human ;
+	ex:name "Bob" .
+ex:author a rdf:Property ;
+	rdfs:domain ex:Publication ;
+	rdfs:range rdf:Seq .
+ex:Person a rdfs:Class ;
+	rdfs:subClassOf ex:Human .
+ex:reified_triple a rdf:Statement ;
+	rdf:subject ex:Paper ;
+	rdf:predicate ex:isAbout ;
+	rdf:object <http://example.org/ACMTopic/Information_Systems/Database_Management/Languages/Query_Languages> ;
+	dc:creator :person01.
+:person03 ex:email "mary@example.org" ;
+	ex:name "Mary" .
+ex:year a rdf:Property ;
+	rdfs:domain ex:Publication .
+
+:Paper a ex:InProceedings ;
+       ex:isAbout <http://example.org/ACMTopic/Information_Systems/Database_Management/Languages/Query_Languages> ;
+       ex:year "2004" ;
+       ex:pages "08" ;
+       ex:title "An Overview of RDF Query Languages" ;
+       ex:author [ a rdf:Seq ;
+		   rdf:_1 :person01 ; 
+		   rdf:_2 :person02 ;
+		   rdf:_3 :person03 ;
+		   rdf:_4 :person04
+		  ] .
+
+ex:email a rdf:Property ;
+	rdfs:domain ex:Person ;
+	rdfs:range <http://www.w3.org/2001/XMLSchema#STRING> .
+
+<http://example.org/ACMTopic/Information_Systems> a acm:Topic ;
+	acm:SubTopic <http://example.org/ACMTopic/Information_Systems/Database_Management> ;
+	rdfs:label "Informationsysteme"@de , "Information Systems"@en .
+
+<http://example.org/ACMTopic/Information_Systems/Database_Management/Languages/Query_Languages> a acm:Topic ;
+	rdfs:label "Anfragesprachen"@de , "Query Languages"@en .
+
+<http://example.org/ACMTopic/Information_Systems/Database_Management/Languages> acm:SubTopic <http://example.org/ACMTopic/Information_Systems/Database_Management/Languages/Query_Languages> ;
+	a acm:Topic ;
+	rdfs:label "Sprachen"@de , "Languages"@en .
+ex:title a rdf:Property ;
+	rdfs:domain ex:Publication ;
+	rdfs:range <http://www.w3.org/2001/XMLSchema#STRING> .
+ex:InProceedings a rdfs:Class ;
+	rdfs:subClassOf ex:Publication .
+ex:isAbout a rdf:Property ;
+	rdfs:range ex:Topic .
+
+ex:Topic a rdfs:Class .
+
+<http://example.org/ACMTopic/Information_Systems/Database_Management> a acm:Topic ;
+	acm:SubTopic <http://example.org/ACMTopic/Information_Systems/Database_Management/Languages> ;
+	rdfs:label "Datenbankmanagement"@de , "Database Management"@en .
+:person04 a ex:Human ;
+	ex:name "Willy" .
+
+ex:Human a rdfs:Class ;
+	rdfs:subClassOf ex:Person .
+
+ex:Publication a rdfs:Class .
+ex:pages a rdf:Property ;
+	rdfs:domain ex:Publication ;
+	rdfs:range <http://www.w3.org/2001/XMLSchema#INTEGER> .

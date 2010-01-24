@@ -1,0 +1,7 @@
+PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX  : <http://example.org/things#>
+SELECT  ?x1 ?x2 ?v
+WHERE
+    { ?x1 :p ?v .
+      ?x2 :p ?v . 
+    }

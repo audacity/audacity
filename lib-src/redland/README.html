@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Redland RDF Application Framework</title>
+  <link rel="meta" type="application/rdf+xml" title="DOAP" href="redland.rdf" />
+</head>
+<body>
+
+<h1>Redland RDF Application Framework</h1>
+<h2><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
+  
+
+<h2>Overview</h2>
+
+<p><a href="http://librdf.org/">Redland</a> is a
+library that provides a high-level interface for
+the Resource Description Framework (RDF) allowing the RDF
+graph to be parsed from XML, stored, queried and manipulated.
+Redland implements each of the RDF concepts in its own class via an
+object based API, reflected into the language APIs, currently C#, Java,
+Perl, PHP, Python, Ruby and Tcl.  Several classes providing functionality
+such as for parsers, storage are built as modules that can be loaded
+at compile or run-time as required.</p>
+
+<p>This is a mature and stable RDF library developed since 2000
+used in multiple projects.  See the 
+<a href="FAQS.html">FAQS</a> for general information
+and the <a href="http://bugs.librdf.org/">Redland issue tracker</a>
+for known bugs and issues.  A summary
+of the changes can be found in the <a href="NEWS.html">NEWS</a> file,
+detailed API changes in the <a href="RELEASE.html">release notes</a>
+and file-by-file changes in the Subversion <a href="ChangeLog">ChangeLog</a>.</p>
+
+<p>Redland provides:</p>
+<ul>
+<li>A modular, <a href="docs/api/objects.html">object based</a> library written in C</li>
+<li>APIs for manipulating the RDF <a href="docs/api/model.html">graph</a> and parts - <a href="docs/api/statement.html">Statements</a>, <a href="docs/api/node.html">Resources and Literals</a></li>
+<li>Language Bindings in C#, Java, Perl, PHP, Python, Ruby and Tcl via the <a href="http://librdf.org/bindings/">Redland Bindings</a> package.</li>
+<li>Support for multiple syntaxes for reading and writing RDF with <a href="docs/api/parser.html">Parsers</a> and <a href="docs/api/serializer.html">Serializers</a> for <a href="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML</a>, <a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a> and <a href="http://www.dajobe.org/2004/01/turtle/">Turtle Terse RDF Triple Language</a> syntax via the <a href="http://librdf.org/raptor/">Raptor RDF Parser Toolkit</a>.</li>
+<li><a href="docs/api/storage.html">Storage</a> for graphs in memory and persistently with Sleepycat/Berkeley DB, MySQL 3-5, PostgreSQL, <a href="http://triplestore.aktors.org/">AKT Triplestore</a> library, <a href="http://www.sqlite.org/">SQLite</a>, files or URIs.</li>
+<li><a href="docs/api/query.html">Query language</a> support for RDQL using <a href="http://librdf.org/rasqal/">Rasqal</a>.</li>
+<li>APIs for accessing the graph by Statement (triples) or by Nodes and Arcs</li>
+<li>Redland contexts for managing aggregating graphs and recording provenance.</li>
+<li><a href="docs/api/stream.html">Statement Streams</a> for efficient construction, parsing and serialisation of graphs</li>
+<li><a href="utils/rdfproc.html">rdfproc</a> RDF processor utility program</li>
+<li>No memory leaks.</li>
+</ul>
+
+
+<h2>Sources and Binaries</h2>
+
+<p>The packaged sources are available from
+<a href="http://download.librdf.org/source/">http://download.librdf.org/source/</a> (master site) and also from the
+<a href="http://sourceforge.net/projects/librdf/">SourceForge site</a>.
+The development Subversion sources can also be
+<a href="http://svn.librdf.org/view/librdf/">browsed with ViewCV</a>.
+Binary packages of redland and related libraries are available from the
+<a href="http://download.librdf.org/">download site</a>.
+</p>
+
+
+<h2>License</h2>
+
+<p>This library is free software / open source software released
+under the LGPL (GPL) or Apache 2.0 licenses.  See 
+<a href="LICENSE.html">LICENSE.html</a> for full details.</p>
+
+
+<h2>Installation and Documentation</h2>
+
+<p>See <a href="INSTALL.html">INSTALL.html</a> for general
+installation and configuration information.</p>
+
+<p>Further documentation is available in the
+<a href="docs/README.html">documents area</a> including the
+<a href="docs/api/index.html">API reference document</a> and
+<a href="docs/storage.html">detailed storage modules information</a>.
+</p>
+
+
+<h2>Mailing Lists</h2>
+
+<p>The
+<a href="http://librdf.org/lists/">Redland mailing lists</a>
+discuss the development and use of Redland and Raptor as well as
+future plans and announcement of releases.</p>
+
+
+<hr />
+
+<p>Copyright (C) 2000-2008 <a href="http://www.dajobe.org/">Dave Beckett</a><br />Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

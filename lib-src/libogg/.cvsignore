@@ -1,0 +1,16 @@
+Makefile
+config.h
+config.log
+config.status
+libtool
+ogg-uninstalled.pc
+ogg.pc
+stamp-h1
+doc/Makefile
+doc/libogg/Makefile
+include/Makefile
+include/ogg/Makefile
+include/ogg/config_types.h
+src/.deps
+src/Makefile
+win32/Makefile

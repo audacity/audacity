@@ -1,0 +1,29 @@
+### FileDialog library Makefile
+
+CC       = @CC@
+CXX      = @CXX@
+AR       = @AR@
+RANLIB   = @RANLIB@
+
+CPPFLAGS += -I. @CPPFLAGS@ 
+CXXFLAGS += @CXXFLAGS@
+
+OBJS     = FileDialog.o @EXTRAOBJS@
+
+LIBRARY  = FileDialog.a
+
+all: $(LIBRARY)
+
+$(LIBRARY): $(OBJS)
+	$(AR) ruv $(LIBRARY) $(OBJS)
+	$(RANLIB) $(LIBRARY)
+
+$(OBJS): %.o: %.cpp @EXTRADEPS@
+	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
+
+clean: 
+	-$(RM) -f $(LIBRARY)
+	-$(RM) -f $(OBJS)
+
+distclean: clean
+	-$(RM) -rf config.log config.status autom4te.cache Makefile

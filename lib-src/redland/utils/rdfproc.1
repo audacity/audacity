@@ -1,0 +1,203 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\"
+.\" rdfproc.1 - Redland RDF processor utility manual page
+.\"
+.\" Copyright (C) 2003-2007 David Beckett - http://purl.org/net/dajobe/
+.\" Copyright (C) 2003-2005 University of Bristol - http://www.bristol.ac.uk/
+.\"
+.TH rdfproc 1 "2007-02-17"
+.\" Please adjust this date whenever revising the manpage.
+.SH NAME
+rdfproc \- Redland RDF processor utility
+.SH SYNOPSIS
+.B rdfproc
+.RB [ options ]
+.IR "store-name"
+.IR "command"
+.IR "arg..."
+.SH EXAMPLE
+.nf
+.B rdfproc test parse http://planetrdf.com/guide/rss.rdf
+.br
+.B rdfproc test print
+.br
+.B rdfproc test serialize ntriples
+.br
+.SH DESCRIPTION
+The
+.B rdfproc
+utility allows parsing, querying, manipulating and  serializing of
+RDF content using the
+.B Redland
+RDF library.   The \fIstore-name\fR is a Redland store name, typically
+a short identifier.  The arguments to \fIcommand\fR vary
+and are explained in section COMMANDS below.
+.SH OPTIONS
+rdfproc uses the usual GNU command line syntax, with long
+options starting with two dashes (`-') if supported by the
+getopt_long function.  Otherwise the short options are only available.
+.TP
+.B \-h, \-\-help
+Show a summary of the options.
+.TP
+.B \-c, \-\-contexts
+Use a store with Redland contexts.
+.TP
+.B \-n, \-\-new
+Make a new store, overwriting any existing one.
+.TP
+.B \-o, \-\-output \fIFORMAT\fR
+Set the output FORMAT for sequences of triples, such as from a search
+(find command) to a Redland serializer.  At present the alternatives
+are  'simple' (the default one if this option is omitted), 'ntriples'
+or 'rdfxml'.
+.TP
+.B \-p, \-\-password
+Read the storage option 'password' from standard input.  Terminated
+by end of line ('\\n') or end of file.  This is equivalent
+to setting it using \-t or \-\-storage-options but does not
+require exposing the password in the argument list.
+.TP
+.B \-r, \-\-results \fIFORMAT\fR
+Set the query results syntax format.
+.IP
+The exact list of formats depends on what libraptor(3) was built with
+but is given correct in the usage message with \-h.
+.TP
+.B \-s, \-\-storage \fITYPE\fR
+Set the Redland storage type (default 'hashes').  Alternatives
+are 'memory' which is always present
+and '3store', 'file', 'mysql', 'sqlite', 'uri' when support for those
+is compiled in If environment variable RDFPROC_STORAGE_TYPE is set,
+the storage type given here will override it.
+.TP
+.B \-t, \-\-storage-options \fIOPTIONS\fR
+Set options for the the Redland storage, default is "hash-type='bdb',dir='.'"
+to match the default storage "hashes".  For storages types such as 'mysql'
+that need extra options this would typically be something
+like "host='hostname',database='dbname',user='abc',password='pass'".
+If environment variable RDFPROC_STORAGE_OPTIONS is set, the storage
+options given here will be applied afterwards.
+.TP
+.B \-v, \-\-version
+Print the Redland version and exit.
+.SH COMMANDS
+Where a node is allowed, such as \fINODE\fP, \fISUBJECT\fP,
+\fIPREDICATE\fP or \fIOBJECT\fP below, simple heuristics are used to
+guess which are blank node identifiers, URIs or literals
+(to add a statement with a literal, use add-typed).  If the
+item starts with _: then it is assumed to be a blank node identifier,
+otherwise if it matches something:// it is assumed to be a URI,
+otherwise it is a literal.  Literals are only allowed as objects
+of statements and blank nodes are not allowed as predicates.
+.IP "\fBadd \fISUBJECT\fP \fIPREDICATE\fP \fIOBJECT\fP \fI[CONTEXT]\fP\fR"
+Add the given triple to graph, in the optional Redland context
+if the \fICONTEXT\fR node is given.
+
+.IP "\fBadd-typed \fISUBJECT\fP \fIPREDICATE\fP \fIOBJECT\fP \fIOBJECT-LANG\fP \fIOBJECT-URI\fP \fI[CONTEXT]\fP\fR"
+Add the triple with the datatyped literal object to the graph, in the
+optional Redland context if \fICONTEXT\fR is given.
+
+.IP "\fBarc \fISUBJECT\fP \fIOBJECT\fP\fR"
+.IP "\fBarcs \fISUBJECT\fP \fIOBJECT\fP\fR"
+Show one node/all nodes that match triples (\fISUBJECT\fP, ?, \fIOBJECT\fP)
+
+.IP "\fBarcs-in \fINODE\fP\fR"
+Show all properties of triples with \fINODE\fP as a subject.
+
+.IP "\fBarcs-out \fINODE\fP\fR"
+Show all properties of triples with \fINODE\fP as an object.
+
+.IP "\fBcontains \fISUBJECT\fP \fIPREDICATE\fP \fIOBJECT\fP\fR"
+Check if the given triple is in the graph.
+
+.IP "\fBcontexts\fR"
+List all the contexts in the graph (if contexts are enabled).
+
+.IP "\fBfind \fISUBJECT\fP|- \fIPREDICATE\fP|- \fIOBJECT\fP|- [\fICONTEXT\fP]\fR"
+Find matching triples to the given statement
+where - stands for a blank that matches any node.  If \fICONTEXT\fP
+is given, only search for triples in that context node.
+
+.IP "\fBhas-arc-in \fINODE\fP \fIARC\fP\fR"
+Check that there is a triple with \fINODE\fP as a subject
+and \fIARC\fP as a predicate.
+
+.IP "\fBhas-arc-out \fPNODE\fP \fIARC\fP\fR"
+Check that there is a triple with \fINODE\fP as a object
+and \fIARC\fP as a predicate.
+
+.IP "\fBparse \fIURI|FILENAME\fP [\fISYNTAX|\fP [\fIBASE URI\fP]]\fR"
+Parse syntax at \fIURI\fP into the graph using \fISYNTAX\fP which
+can be one of \fIrdfxml\fP (RDF/XML, default), \fIntriples\fP, \fIturtle\fP,
+\fIrss-tag-soup\fP (for all RSS and Atoms), \fIgrddl\fP and \fIguess\fP to
+use content hints and protocol information to work it out. (This list changes
+faster than this manual page)
+If \fIFILENAME\fP is a existing file, the appropriate URI will be
+generated for it.
+
+.IP "\fBparse-stream \fIURI|FILENAME\fP [\fISYNTAX\fP [\fIBASE URI\fP [\fICONTEXT\fP]]\fR"
+Streaming parse syntax at URI into the graph using \fISYNTAX\fP which
+can be one of \fIrdfxml\fP (RDF/XML, default) or \fIntriples\fP.
+If \fIFILENAME\fP is an existing file, the appropriate URI will be
+generated for it.  If the optional \fICONTEXT\fI URI is given,
+the triples are added to that context.
+
+.IP "\fBprint\fR"
+Print the graph triples in a simple format showing context nodes
+if present.
+
+.IP "\fBquery \fINAME\fP|- \fIURI\fP|- \fIQUERY-STRING\fP\fR"
+Run \fIQUERY-STRING\fI query in language \fINAME\fR returning
+variable bindings, a boolean or RDF graph depending on the query.
+Query language can be 'sparql' or 'rdql'.
+
+.IP "\fBremove \fISUBJECT\fP \fIPREDICATE\fP \fIOBJECT\fP \fI[CONTEXT]\fP\fR"
+Remove the given triple graph, in the optional Redland context
+if \fICONTEXT\fR is given.
+
+.IP "\fBremove-context \fICONTEXT\fP\fR"
+Remove all triples in the graph with the Redland context \fICONTEXT\fR.
+
+.IP "\fBserialize [\fISYNTAX\fP [\fIURI\fP [\fIMIME-TYPE\fP]]]\fR"
+Serializes the graph to a syntax with a particular \ISYNTAX\fI
+\fIURI\fR or Internet Media Type/MIME Type.  The default is
+RDF/XML (\fINAME\fR "rdfxml", MIME Type "application/rdf/xml")
+if none of the above are given.  Other alternatives
+are "ntriples" (no MIME Type).
+
+.IP "\fBsource \fIPREDICATE\fP \fIOBJECT\fP\fR"
+.IP "\fBsources \fIPREDICATE\fP \fIOBJECT\fP\fR"
+Show one node/all nodes that match triples (?, \fIPREDICATE\fP, \fIOBJECT\fP)
+
+.IP "\fBtarget \fISUBJECT\fP \fIPREDICATE\fP\fR"
+.IP "\fBtargets \fISUBJECT\fP \fIPREDICATE\fP\fR"
+Show one node/all nodes that match triples (\fISUBJECT\fP, \fIPREDICATE\fP, ?)
+
+.SH "ENVIRONMENT"
+RDFPROC_STORAGE_OPTIONS can be set to provide storage options
+instead of using the option \-t, \-\-storage-options \fIOPTIONS\fR.
+When both are given, command options are applied last.
+.LP
+RDFPROC_STORAGE_TYPE can be set to provide a storage type
+instead of using the option \-s, \-\-storage \fITYPE\fR.
+When both are given, the storage type from the command is used.
+.SH "CONFORMING TO"
+\fIRDF/XML Syntax (Revised)\fR,
+W3C Recommendation,
+.UR http://www.w3.org/TR/rdf-syntax-grammar/
+http://www.w3.org/TR/rdf-syntax-grammar/
+.UE
+
+\fIN-Triples\fR, in \fIRDF Test Cases\fR, Jan Grant and Dave Beckett (eds.)
+W3C Recommendation,
+.UR http://www.w3.org/TR/rdf-testcases/#ntriples
+http://www.w3.org/TR/rdf-testcases/#ntriples
+.UE
+.SH SEE ALSO
+redland(3), libraptor(3), rapper(1)
+.SH AUTHOR
+Dave Beckett - 
+.UR http://purl.org/net/dajobe/
+http://purl.org/net/dajobe/
+.UE

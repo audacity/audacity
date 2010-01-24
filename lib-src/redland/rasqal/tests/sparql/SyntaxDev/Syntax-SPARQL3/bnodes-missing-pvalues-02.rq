@@ -1,0 +1,2 @@
+# NegativeSyntax/bnodes-missing-pvalues-02.rq
+SELECT * WHERE {() . [,] . [,;] }

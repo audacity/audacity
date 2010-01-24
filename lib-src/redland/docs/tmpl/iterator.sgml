@@ -1,0 +1,153 @@
+<!-- ##### SECTION Title ##### -->
+Iterator
+
+<!-- ##### SECTION Short_Description ##### -->
+Iterate a sequence of objects across some other object.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Provides a way to operate across a sequence of objects that are
+generated one-by-one on demand.  The returned objects can be of any
+type but the main public methods are on the #librdf_model classs and
+return sequence of #librdf_node objects such as librdf_model_get_sources().
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_iterator ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### USER_FUNCTION librdf_iterator_map_handler ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@map_context: 
+@item: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION librdf_iterator_map_free_context_handler ##### -->
+<para>
+
+</para>
+
+@map_context: 
+
+
+<!-- ##### FUNCTION librdf_new_iterator ##### -->
+<para>
+
+</para>
+
+@world: 
+@context: 
+@is_end_method: 
+@next_method: 
+@get_method: 
+@finished_method: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_iterator ##### -->
+<para>
+
+</para>
+
+@iterator: 
+
+
+<!-- ##### FUNCTION librdf_iterator_end ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_have_elements ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_next ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_get_object ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_get_context ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_get_key ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_get_value ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_iterator_add_map ##### -->
+<para>
+
+</para>
+
+@iterator: 
+@map_function: 
+@free_context: 
+@map_context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_empty_iterator ##### -->
+<para>
+
+</para>
+
+@world: 
+@Returns: 
+
+

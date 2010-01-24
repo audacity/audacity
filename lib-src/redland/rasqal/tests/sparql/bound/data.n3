@@ -1,0 +1,5 @@
+@prefix : <http://example.org/ns#> .
+:a1 :b :c1 . 
+:c1 :d :e . 
+:a2 :b :c2 .
+:c2 :b :f .

@@ -1,0 +1,9 @@
+# Based on 
+# http://lists.w3.org/Archives/Public/public-rdf-dawg/2004OctDec/0554.html
+
+PREFIX : <http://example.org/ns#>
+SELECT $a $c
+WHERE { $a :b $c .
+        OPTIONAL { $c :d $e } .
+        FILTER ( !BOUND($e) )
+      }

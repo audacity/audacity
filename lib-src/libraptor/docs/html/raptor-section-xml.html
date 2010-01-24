@@ -1,0 +1,1474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>XML</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Raptor RDF Syntax Parsing and Serializing Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="prev" href="raptor-section-xml-qname.html" title="XML QName">
+<link rel="next" href="ix01.html" title="Index">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="introduction.html" title="Raptor Overview">
+<link rel="part" href="tutorial.html" title="Part I. Raptor Tutorial">
+<link rel="chapter" href="tutorial-initialising-finishing.html" title="Initialising and Finishing using the Library">
+<link rel="chapter" href="tutorial-querying-functionality.html" title="Listing built-in functionality">
+<link rel="chapter" href="tutorial-parsing.html" title="Parsing syntaxes to RDF Triples">
+<link rel="chapter" href="tutorial-serializing.html" title="Serializing RDF triples to a syntax">
+<link rel="part" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="chapter" href="raptor-parsers.html" title="Parsers in Raptor (syntax to triples)">
+<link rel="chapter" href="raptor-serializers.html" title="Serializers in Raptor (triples to syntax)">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="raptor-section-xml-qname.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Raptor RDF Syntax Parsing and Serializing Library Manual</th>
+<td><a accesskey="n" href="ix01.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#raptor-section-xml.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#raptor-section-xml.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="raptor-section-xml"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="raptor-section-xml.top_of_page"></a>XML</span></h2>
+<p>XML — XML and XML Writer</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="raptor-section-xml.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a>;
+<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a>* <a class="link" href="raptor-section-xml.html#raptor-new-xml-element" title="raptor_new_xml_element ()">raptor_new_xml_element</a>              (<a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a> *name,
+                                                         unsigned char *xml_language,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *xml_base);
+<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a>* <a class="link" href="raptor-section-xml.html#raptor-new-xml-element-from-namespace-local-name" title="raptor_new_xml_element_from_namespace_local_name ()">raptor_new_xml_element_from_namespace_local_name</a>
+                                                        (<a class="link" href="raptor-section-xml-namespace.html#raptor-namespace" title="raptor_namespace">raptor_namespace</a> *ns,
+                                                         unsigned char *name,
+                                                         unsigned char *xml_language,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *xml_base);
+void                <a class="link" href="raptor-section-xml.html#raptor-free-xml-element" title="raptor_free_xml_element ()">raptor_free_xml_element</a>             (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);
+<a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a>*       <a class="link" href="raptor-section-xml.html#raptor-xml-element-get-name" title="raptor_xml_element_get_name ()">raptor_xml_element_get_name</a>         (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);
+<a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a>**      <a class="link" href="raptor-section-xml.html#raptor-xml-element-get-attributes" title="raptor_xml_element_get_attributes ()">raptor_xml_element_get_attributes</a>   (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-element-get-attributes-count" title="raptor_xml_element_get_attributes_count ()">raptor_xml_element_get_attributes_count</a>
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-element-set-attributes" title="raptor_xml_element_set_attributes ()">raptor_xml_element_set_attributes</a>   (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element,
+                                                         <a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a> **attributes,
+                                                         int count);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-element-declare-namespace" title="raptor_xml_element_declare_namespace ()">raptor_xml_element_declare_namespace</a>
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element,
+                                                         <a class="link" href="raptor-section-xml-namespace.html#raptor-namespace" title="raptor_namespace">raptor_namespace</a> *nspace);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-element-is-empty" title="raptor_xml_element_is_empty ()">raptor_xml_element_is_empty</a>         (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);
+const unsigned char* <a class="link" href="raptor-section-xml.html#raptor-xml-element-get-language" title="raptor_xml_element_get_language ()">raptor_xml_element_get_language</a>    (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);
+<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a>*  <a class="link" href="raptor-section-xml.html#raptor-new-xml-writer" title="raptor_new_xml_writer ()">raptor_new_xml_writer</a>               (<a class="link" href="raptor-section-xml-namespace.html#raptor-namespace-stack" title="raptor_namespace_stack">raptor_namespace_stack</a> *nstack,
+                                                         const <a class="link" href="raptor-section-uri.html#raptor-uri-handler" title="raptor_uri_handler">raptor_uri_handler</a> *uri_handler,
+                                                         void *uri_context,
+                                                         <a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data,
+                                                         int canonicalize);
+void                <a class="link" href="raptor-section-xml.html#raptor-free-xml-writer" title="raptor_free_xml_writer ()">raptor_free_xml_writer</a>              (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-empty-element" title="raptor_xml_writer_empty_element ()">raptor_xml_writer_empty_element</a>     (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-start-element" title="raptor_xml_writer_start_element ()">raptor_xml_writer_start_element</a>     (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-end-element" title="raptor_xml_writer_end_element ()">raptor_xml_writer_end_element</a>       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-cdata" title="raptor_xml_writer_cdata ()">raptor_xml_writer_cdata</a>             (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-cdata-counted" title="raptor_xml_writer_cdata_counted ()">raptor_xml_writer_cdata_counted</a>     (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s,
+                                                         unsigned int len);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-raw" title="raptor_xml_writer_raw ()">raptor_xml_writer_raw</a>               (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-raw-counted" title="raptor_xml_writer_raw_counted ()">raptor_xml_writer_raw_counted</a>       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s,
+                                                         unsigned int len);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-comment" title="raptor_xml_writer_comment ()">raptor_xml_writer_comment</a>           (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s);
+void                <a class="link" href="raptor-section-xml.html#raptor-xml-writer-comment-counted" title="raptor_xml_writer_comment_counted ()">raptor_xml_writer_comment_counted</a>   (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s,
+                                                         unsigned int len);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-writer-features-enumerate" title="raptor_xml_writer_features_enumerate ()">raptor_xml_writer_features_enumerate</a>
+                                                        (const <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature,
+                                                         const char **name,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> **uri,
+                                                         const char **label);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-writer-set-feature" title="raptor_xml_writer_set_feature ()">raptor_xml_writer_set_feature</a>       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature,
+                                                         int value);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-writer-set-feature-string" title="raptor_xml_writer_set_feature_string ()">raptor_xml_writer_set_feature_string</a>
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature,
+                                                         unsigned char *value);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-writer-get-feature" title="raptor_xml_writer_get_feature ()">raptor_xml_writer_get_feature</a>       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature);
+const unsigned char* <a class="link" href="raptor-section-xml.html#raptor-xml-writer-get-feature-string" title="raptor_xml_writer_get_feature_string ()">raptor_xml_writer_get_feature_string</a>
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature);
+int                 <a class="link" href="raptor-section-xml.html#raptor-iostream-write-xml-element" title="raptor_iostream_write_xml_element ()">raptor_iostream_write_xml_element</a>   (<a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element,
+                                                         <a class="link" href="raptor-section-xml-namespace.html#raptor-namespace-stack" title="raptor_namespace_stack">raptor_namespace_stack</a> *nstack,
+                                                         int is_empty,
+                                                         int is_end,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data,
+                                                         int depth);
+typedef             <a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a>;
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-any-escape-string" title="raptor_xml_any_escape_string ()">raptor_xml_any_escape_string</a>        (unsigned char *string,
+                                                         size_t len,
+                                                         unsigned char *buffer,
+                                                         size_t length,
+                                                         char quote,
+                                                         int xml_version,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-escape-string" title="raptor_xml_escape_string ()">raptor_xml_escape_string</a>            (unsigned char *string,
+                                                         size_t len,
+                                                         unsigned char *buffer,
+                                                         size_t length,
+                                                         char quote,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);
+int                 <a class="link" href="raptor-section-xml.html#raptor-iostream-write-xml-any-escaped-string" title="raptor_iostream_write_xml_any_escaped_string ()">raptor_iostream_write_xml_any_escaped_string</a>
+                                                        (<a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         unsigned char *string,
+                                                         size_t len,
+                                                         char quote,
+                                                         int xml_version,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);
+int                 <a class="link" href="raptor-section-xml.html#raptor-iostream-write-xml-escaped-string" title="raptor_iostream_write_xml_escaped_string ()">raptor_iostream_write_xml_escaped_string</a>
+                                                        (<a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         unsigned char *string,
+                                                         size_t len,
+                                                         char quote,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);
+int                 <a class="link" href="raptor-section-xml.html#raptor-xml-name-check" title="raptor_xml_name_check ()">raptor_xml_name_check</a>               (unsigned char *string,
+                                                         size_t length,
+                                                         int xml_version);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-xml.description"></a><h2>Description</h2>
+<p>
+XML elements with optional attributes and an XML Writer class that
+can format <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element"><span class="type">raptor_xml_element</span></a> into output forms, with optional
+"pretty printing" features such as indenting and collapsing empty
+elements.
+</p>
+<p>
+Also includes a utility function <a class="link" href="raptor-section-xml.html#raptor-xml-name-check" title="raptor_xml_name_check ()"><span class="type">raptor_xml_name_check</span></a> for checking
+a name is legal in some XML version.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-xml.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element"></a><h3>raptor_xml_element</h3>
+<pre class="programlisting">raptor_xml_element* raptor_xml_element;
+</pre>
+<p>
+Raptor XML Element class</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-new-xml-element"></a><h3>raptor_new_xml_element ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a>* raptor_new_xml_element              (<a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a> *name,
+                                                         unsigned char *xml_language,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *xml_base);</pre>
+<p>
+Constructor - create a new XML element from a QName</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> The XML element name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_language</code></em> :</span></p></td>
+<td> the in-scope XML language (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_base</code></em> :</span></p></td>
+<td> the in-scope XML base URI (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element"><span class="type">raptor_xml_element</span></a> or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-new-xml-element-from-namespace-local-name"></a><h3>raptor_new_xml_element_from_namespace_local_name ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a>* raptor_new_xml_element_from_namespace_local_name
+                                                        (<a class="link" href="raptor-section-xml-namespace.html#raptor-namespace" title="raptor_namespace">raptor_namespace</a> *ns,
+                                                         unsigned char *name,
+                                                         unsigned char *xml_language,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *xml_base);</pre>
+<p>
+Constructor - create a new XML element from an XML namespace and a local name
+</p>
+<p>
+Added in 1.4.16.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>ns</code></em> :</span></p></td>
+<td> namespace
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> the XML element local name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_language</code></em> :</span></p></td>
+<td> the in-scope XML language (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_base</code></em> :</span></p></td>
+<td> base uri (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element"><span class="type">raptor_xml_element</span></a> or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-free-xml-element"></a><h3>raptor_free_xml_element ()</h3>
+<pre class="programlisting">void                raptor_free_xml_element             (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);</pre>
+<p>
+Destructor - destroy a raptor_xml_element object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-get-name"></a><h3>raptor_xml_element_get_name ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a>*       raptor_xml_element_get_name         (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);</pre>
+<p>
+Get the XML Name of an XML element</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The Name.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-get-attributes"></a><h3>raptor_xml_element_get_attributes ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a>**      raptor_xml_element_get_attributes   (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);</pre>
+<p>
+Get the array of attributes on the XML element.
+</p>
+<p>
+Use <a class="link" href="raptor-section-xml.html#raptor-xml-element-get-attributes-count" title="raptor_xml_element_get_attributes_count ()"><code class="function">raptor_xml_element_get_attributes_count()</code></a> to get the count
+of the array size.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the array of qnames or NULL if none are present.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-get-attributes-count"></a><h3>raptor_xml_element_get_attributes_count ()</h3>
+<pre class="programlisting">int                 raptor_xml_element_get_attributes_count
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);</pre>
+<p>
+Get the number of attributes on the XML element.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Integer number of attributes - 0 or more.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-set-attributes"></a><h3>raptor_xml_element_set_attributes ()</h3>
+<pre class="programlisting">void                raptor_xml_element_set_attributes   (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element,
+                                                         <a class="link" href="raptor-section-xml-qname.html#raptor-qname" title="raptor_qname">raptor_qname</a> **attributes,
+                                                         int count);</pre>
+<p>
+Set the attributes on an XML element.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>attributes</code></em> :</span></p></td>
+<td> Array of XML Qname attributes with values
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>count</code></em> :</span></p></td>
+<td> Length of array
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-declare-namespace"></a><h3>raptor_xml_element_declare_namespace ()</h3>
+<pre class="programlisting">int                 raptor_xml_element_declare_namespace
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element,
+                                                         <a class="link" href="raptor-section-xml-namespace.html#raptor-namespace" title="raptor_namespace">raptor_namespace</a> *nspace);</pre>
+<p>
+Declare a namespace on the XML Element.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>nspace</code></em> :</span></p></td>
+<td> raptor_namespace to declare
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if namespace cannot be declared 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-is-empty"></a><h3>raptor_xml_element_is_empty ()</h3>
+<pre class="programlisting">int                 raptor_xml_element_is_empty         (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);</pre>
+<p>
+Check if an XML Element is empty.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if the element is empty.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-element-get-language"></a><h3>raptor_xml_element_get_language ()</h3>
+<pre class="programlisting">const unsigned char* raptor_xml_element_get_language    (<a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *xml_element);</pre>
+<p>
+Get the XML language of the element.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_element</code></em> :</span></p></td>
+<td> XML Element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> XML language or NULL if none in scope
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-new-xml-writer"></a><h3>raptor_new_xml_writer ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a>*  raptor_new_xml_writer               (<a class="link" href="raptor-section-xml-namespace.html#raptor-namespace-stack" title="raptor_namespace_stack">raptor_namespace_stack</a> *nstack,
+                                                         const <a class="link" href="raptor-section-uri.html#raptor-uri-handler" title="raptor_uri_handler">raptor_uri_handler</a> *uri_handler,
+                                                         void *uri_context,
+                                                         <a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data,
+                                                         int canonicalize);</pre>
+<p>
+Constructor - Create a new XML Writer writing XML to a raptor_iostream</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>nstack</code></em> :</span></p></td>
+<td> Namespace stack for the writer to start with (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri_handler</code></em> :</span></p></td>
+<td> URI handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri_context</code></em> :</span></p></td>
+<td> URI handler context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iostr</code></em> :</span></p></td>
+<td> I/O stream to write to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> error handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_data</code></em> :</span></p></td>
+<td> error handler data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>canonicalize</code></em> :</span></p></td>
+<td> unused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer"><span class="type">raptor_xml_writer</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-free-xml-writer"></a><h3>raptor_free_xml_writer ()</h3>
+<pre class="programlisting">void                raptor_free_xml_writer              (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer);</pre>
+<p>
+Destructor - Free XML Writer</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-empty-element"></a><h3>raptor_xml_writer_empty_element ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_empty_element     (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);</pre>
+<p>
+Write an empty XML element to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td> XML element object
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-start-element"></a><h3>raptor_xml_writer_start_element ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_start_element     (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);</pre>
+<p>
+Write a start XML element to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.
+</p>
+<p>
+Indents the start element if XML writer feature AUTO_INDENT is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td> XML element object
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-end-element"></a><h3>raptor_xml_writer_end_element ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_end_element       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element);</pre>
+<p>
+Write an end XML element to the XML writer.
+</p>
+<p>
+Indents the end element if XML writer feature AUTO_INDENT is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td> XML element object
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-cdata"></a><h3>raptor_xml_writer_cdata ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_cdata             (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s);</pre>
+<p>
+Write CDATA XML-escaped to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
+<td> string to XML escape and write
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-cdata-counted"></a><h3>raptor_xml_writer_cdata_counted ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_cdata_counted     (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s,
+                                                         unsigned int len);</pre>
+<p>
+Write counted CDATA XML-escaped to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
+<td> string to XML escape and write
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-raw"></a><h3>raptor_xml_writer_raw ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_raw               (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s);</pre>
+<p>
+Write a string raw to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
+<td> string to write
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-raw-counted"></a><h3>raptor_xml_writer_raw_counted ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_raw_counted       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s,
+                                                         unsigned int len);</pre>
+<p>
+Write a counted string raw to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
+<td> string to write
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-comment"></a><h3>raptor_xml_writer_comment ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_comment           (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s);</pre>
+<p>
+Write an XML comment to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
+<td> comment string to write
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-comment-counted"></a><h3>raptor_xml_writer_comment_counted ()</h3>
+<pre class="programlisting">void                raptor_xml_writer_comment_counted   (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         unsigned char *s,
+                                                         unsigned int len);</pre>
+<p>
+Write a counted XML comment to the XML writer.
+</p>
+<p>
+Closes any previous empty element if XML writer feature AUTO_EMPTY
+is enabled.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> XML writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s</code></em> :</span></p></td>
+<td> comment string to write
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-features-enumerate"></a><h3>raptor_xml_writer_features_enumerate ()</h3>
+<pre class="programlisting">int                 raptor_xml_writer_features_enumerate
+                                                        (const <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature,
+                                                         const char **name,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> **uri,
+                                                         const char **label);</pre>
+<p>
+Get list of xml_writer features.
+</p>
+<p>
+If uri is not NULL, a pointer to a new raptor_uri is returned
+that must be freed by the caller with <a class="link" href="raptor-section-uri.html#raptor-free-uri" title="raptor_free_uri ()"><code class="function">raptor_free_uri()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> feature enumeration (0+)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> pointer to store feature short name (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td> pointer to store feature URI (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
+<td> pointer to feature label (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> 0 on success, &lt;0 on failure, &gt;0 if feature is unknown
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-set-feature"></a><h3>raptor_xml_writer_set_feature ()</h3>
+<pre class="programlisting">int                 raptor_xml_writer_set_feature       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature,
+                                                         int value);</pre>
+<p>
+Set xml_writer features with integer values.
+</p>
+<p>
+The allowed features are available via <a class="link" href="raptor-section-feature.html#raptor-features-enumerate" title="raptor_features_enumerate ()"><code class="function">raptor_features_enumerate()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> <a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer"><span class="type">raptor_xml_writer</span></a> xml_writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> feature to set from enumerated <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature"><span class="type">raptor_feature</span></a> values
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> integer feature value (0 or larger)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure or if the feature is unknown
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-set-feature-string"></a><h3>raptor_xml_writer_set_feature_string ()</h3>
+<pre class="programlisting">int                 raptor_xml_writer_set_feature_string
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature,
+                                                         unsigned char *value);</pre>
+<p>
+Set xml_writer features with string values.
+</p>
+<p>
+The allowed features are available via <a class="link" href="raptor-section-xml.html#raptor-xml-writer-features-enumerate" title="raptor_xml_writer_features_enumerate ()"><code class="function">raptor_xml_writer_features_enumerate()</code></a>.
+If the feature type is integer, the value is interpreted as an integer.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> <a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer"><span class="type">raptor_xml_writer</span></a> xml_writer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> feature to set from enumerated <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature"><span class="type">raptor_feature</span></a> values
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> feature value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure or if the feature is unknown
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-get-feature"></a><h3>raptor_xml_writer_get_feature ()</h3>
+<pre class="programlisting">int                 raptor_xml_writer_get_feature       (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature);</pre>
+<p>
+Get various xml_writer features.
+</p>
+<p>
+The allowed features are available via <a class="link" href="raptor-section-feature.html#raptor-features-enumerate" title="raptor_features_enumerate ()"><code class="function">raptor_features_enumerate()</code></a>.
+</p>
+<p>
+Note: no feature value is negative</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> <a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer"><span class="type">raptor_xml_writer</span></a> serializer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> feature to get value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> feature value or &lt; 0 for an illegal feature
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer-get-feature-string"></a><h3>raptor_xml_writer_get_feature_string ()</h3>
+<pre class="programlisting">const unsigned char* raptor_xml_writer_get_feature_string
+                                                        (<a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer">raptor_xml_writer</a> *xml_writer,
+                                                         <a class="link" href="raptor-section-feature.html#raptor-feature" title="enum raptor_feature">raptor_feature</a> feature);</pre>
+<p>
+Get xml_writer features with string values.
+</p>
+<p>
+The allowed features are available via <a class="link" href="raptor-section-feature.html#raptor-features-enumerate" title="raptor_features_enumerate ()"><code class="function">raptor_features_enumerate()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_writer</code></em> :</span></p></td>
+<td> <a class="link" href="raptor-section-xml.html#raptor-xml-writer" title="raptor_xml_writer"><span class="type">raptor_xml_writer</span></a> serializer object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> feature to get value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> feature value or NULL for an illegal feature or no value
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-iostream-write-xml-element"></a><h3>raptor_iostream_write_xml_element ()</h3>
+<pre class="programlisting">int                 raptor_iostream_write_xml_element   (<a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         <a class="link" href="raptor-section-xml.html#raptor-xml-element" title="raptor_xml_element">raptor_xml_element</a> *element,
+                                                         <a class="link" href="raptor-section-xml-namespace.html#raptor-namespace-stack" title="raptor_namespace_stack">raptor_namespace_stack</a> *nstack,
+                                                         int is_empty,
+                                                         int is_end,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data,
+                                                         int depth);</pre>
+<p>
+Write a formatted XML element to a <a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream"><span class="type">raptor_iostream</span></a></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iostr</code></em> :</span></p></td>
+<td> iostream object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>element</code></em> :</span></p></td>
+<td> XML element to format
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>nstack</code></em> :</span></p></td>
+<td> Namespace stack context to use in formatting
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>is_empty</code></em> :</span></p></td>
+<td> non-0 if element is empty
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>is_end</code></em> :</span></p></td>
+<td> non-0 if this is an end element (else is a start element)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> error handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_data</code></em> :</span></p></td>
+<td> error handler function data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>depth</code></em> :</span></p></td>
+<td> XML element depth
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-writer"></a><h3>raptor_xml_writer</h3>
+<pre class="programlisting">raptor_xml_writer* raptor_xml_writer;
+</pre>
+<p>
+Raptor XML Writer class</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-any-escape-string"></a><h3>raptor_xml_any_escape_string ()</h3>
+<pre class="programlisting">int                 raptor_xml_any_escape_string        (unsigned char *string,
+                                                         size_t len,
+                                                         unsigned char *buffer,
+                                                         size_t length,
+                                                         char quote,
+                                                         int xml_version,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);</pre>
+<p>
+Return an XML-escaped version a string.
+</p>
+<p>
+Follows Canonical XML rules on Text Nodes and Attribute Nodes
+  http://www.w3.org/TR/xml-c14n<span class="type">ProcessingModel</span>
+</p>
+<p>
+Both:
+  Replaces <code class="literal">&amp;</code> and <code class="literal">&lt;</code>
+  with <code class="literal">&amp;amp;</code> and <code class="literal">&amp;lt;</code>
+respectively, preserving other characters.
+</p>
+<p>
+Text Nodes:
+  <code class="literal">&gt;</code> is turned into <code class="literal">&amp;gt;</code>
+  #<span class="type">xD</span> is turned into <code class="literal">&amp;#<span class="type">xD</span>;</code>
+</p>
+<p>
+Attribute Nodes:
+  <code class="literal">&gt;</code> is generated not <code class="literal">&amp;gt</code>.
+  #<span class="type">x9</span>, #<span class="type">xA</span> and #<span class="type">xD</span> are turned into
+  <code class="literal">&amp;#<span class="type">x9</span>;</code>,
+  <code class="literal">&amp;#<span class="type">xA</span>;</code> and
+  <code class="literal">&amp;#<span class="type">xD</span>;</code>
+  entities.
+</p>
+<p>
+If <em class="parameter"><code>quote</code></em> is given it can be either of '\'' or '\"'
+which will be turned into <code class="literal">&amp;apos;</code> or
+<code class="literal">&amp;quot;</code> respectively.
+ASCII NUL ('\0') or any other character will not be escaped.
+</p>
+<p>
+If <em class="parameter"><code>buffer</code></em> is NULL, no work is done but the size of buffer
+required is returned.  The output in buffer remains in UTF-8.
+</p>
+<p>
+If the input <em class="parameter"><code>string</code></em> is empty, a single NUL will be written to the
+buffer.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> string to XML escape (UTF-8)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> the buffer to use for new string (UTF-8)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>quote</code></em> :</span></p></td>
+<td> optional quote character to escape for attribute content, or 0
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_version</code></em> :</span></p></td>
+<td> XML 1.0 (10) or XML 1.1 (11)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> error handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_data</code></em> :</span></p></td>
+<td> error handler user data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the number of bytes required / used or &lt;0 on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-escape-string"></a><h3>raptor_xml_escape_string ()</h3>
+<pre class="programlisting">int                 raptor_xml_escape_string            (unsigned char *string,
+                                                         size_t len,
+                                                         unsigned char *buffer,
+                                                         size_t length,
+                                                         char quote,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);</pre>
+<p>
+Return an XML 1.0-escaped version a string.
+</p>
+<p>
+See <a class="link" href="raptor-section-xml.html#raptor-xml-any-escape-string" title="raptor_xml_any_escape_string ()"><code class="function">raptor_xml_any_escape_string()</code></a> for the conditions on parameters.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> string to XML 1.0 escape (UTF-8)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> the buffer to use for new string (UTF-8)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>quote</code></em> :</span></p></td>
+<td> optional quote character to escape for attribute content, or 0
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> error handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_data</code></em> :</span></p></td>
+<td> error handler user data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the number of bytes required / used or &lt;0 on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-iostream-write-xml-any-escaped-string"></a><h3>raptor_iostream_write_xml_any_escaped_string ()</h3>
+<pre class="programlisting">int                 raptor_iostream_write_xml_any_escaped_string
+                                                        (<a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         unsigned char *string,
+                                                         size_t len,
+                                                         char quote,
+                                                         int xml_version,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);</pre>
+<p>
+Write an XML-escaped version of a string to an iostream.
+</p>
+<p>
+See <a class="link" href="raptor-section-xml.html#raptor-xml-escape-string" title="raptor_xml_escape_string ()"><code class="function">raptor_xml_escape_string()</code></a> for the escapes performed and
+the conditions on <em class="parameter"><code>quote</code></em> and <em class="parameter"><code>string</code></em>.  XML 1.1 allows additional
+characters in XML such as U+0001 to U+001F inclusive.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iostr</code></em> :</span></p></td>
+<td> the <a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream"><span class="type">raptor_iostream</span></a> to write to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> string to XML escape (UTF-8)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>quote</code></em> :</span></p></td>
+<td> optional quote character to escape for attribute content, or 0
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_version</code></em> :</span></p></td>
+<td> XML version - 10 (XML 1.0) or 11 (XML 1.1)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> error handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_data</code></em> :</span></p></td>
+<td> error handler data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-iostream-write-xml-escaped-string"></a><h3>raptor_iostream_write_xml_escaped_string ()</h3>
+<pre class="programlisting">int                 raptor_iostream_write_xml_escaped_string
+                                                        (<a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream">raptor_iostream</a> *iostr,
+                                                         unsigned char *string,
+                                                         size_t len,
+                                                         char quote,
+                                                         <a class="link" href="raptor-section-general.html#raptor-simple-message-handler" title="raptor_simple_message_handler ()">raptor_simple_message_handler</a> error_handler,
+                                                         void *error_data);</pre>
+<p>
+Write an XML 1.0-escaped version of a string to an iostream.
+</p>
+<p>
+See <a class="link" href="raptor-section-xml.html#raptor-iostream-write-xml-any-escaped-string" title="raptor_iostream_write_xml_any_escaped_string ()"><code class="function">raptor_iostream_write_xml_any_escaped_string()</code></a> for the escapes
+performed and the conditions on <em class="parameter"><code>quote</code></em> and <em class="parameter"><code>string</code></em>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iostr</code></em> :</span></p></td>
+<td> the <a class="link" href="raptor-section-iostream.html#raptor-iostream" title="raptor_iostream"><span class="type">raptor_iostream</span></a> to write to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> string to XML 1.0 escape (UTF-8)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>quote</code></em> :</span></p></td>
+<td> optional quote character to escape for attribute content, or 0
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_handler</code></em> :</span></p></td>
+<td> error handler function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>error_data</code></em> :</span></p></td>
+<td> error handler data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-xml-name-check"></a><h3>raptor_xml_name_check ()</h3>
+<pre class="programlisting">int                 raptor_xml_name_check               (unsigned char *string,
+                                                         size_t length,
+                                                         int xml_version);</pre>
+<p>
+Check a string is a legal XML name (and legal UTF8).
+</p>
+<p>
+xml_version is either 10 (for XML 1.0) or 11 for (XML 1.1). Any
+other version fails.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> UTF-8 name string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> length of string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>xml_version</code></em> :</span></p></td>
+<td> XML version
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Non 0 if the string is a legal XML name
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

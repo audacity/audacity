@@ -1,0 +1,8 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:     <http://jena.hpl.hp.com/2003/03/result-set#> .
+
+[] rdf:type rs:ResultSet ;
+    rs:resultVariable "x" ;
+    rs:resultVariable "y" ;
+    rs:size "0" ;
+    .

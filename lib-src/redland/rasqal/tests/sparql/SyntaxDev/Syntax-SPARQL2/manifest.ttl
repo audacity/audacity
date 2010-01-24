@@ -1,0 +1,179 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix mfx:    <http://jena.hpl.hp.com/2005/05/test-manifest-extra#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Syntax tests 2" ;
+    mf:entries
+    ( 
+      [  mf:name    "syntax-general-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-general-01.rq> ; 
+      ]
+      [  mf:name    "syntax-general-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-general-02.rq> ; 
+      ]
+      [  mf:name    "syntax-general-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-general-03.rq> ; 
+      ]
+      [  mf:name    "syntax-keywords-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-keywords-01.rq> ; 
+      ]
+      [  mf:name    "syntax-keywords-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-keywords-02.rq> ; 
+      ]
+      [  mf:name    "syntax-keywords-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-keywords-03.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-01.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-02.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-03.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-04.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-05.rq> ; 
+      ]
+      [  mf:name    "syntax-bnode-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnode-01.rq> ; 
+      ]
+      [  mf:name    "syntax-bnode-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnode-02.rq> ; 
+      ]
+      [  mf:name    "syntax-bnode-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnode-03.rq> ; 
+      ]
+      [  mf:name    "syntax-function-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-function-01.rq> ; 
+      ]
+      [  mf:name    "syntax-function-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-function-02.rq> ; 
+      ]
+      [  mf:name    "syntax-function-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-function-03.rq> ; 
+      ]
+      [  mf:name    "syntax-function-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-function-04.rq> ; 
+      ]
+      [  mf:name    "syntax-form-select-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-select-01.rq> ; 
+      ]
+      [  mf:name    "syntax-form-select-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-select-02.rq> ; 
+      ]
+      [  mf:name    "syntax-form-ask-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-ask-01.rq> ; 
+      ]
+      [  mf:name    "syntax-form-ask-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-ask-02.rq> ; 
+      ]
+      [  mf:name    "syntax-form-construct01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-construct01.rq> ; 
+      ]
+      [  mf:name    "syntax-form-construct02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-construct02.rq> ; 
+      ]
+      [  mf:name    "syntax-form-construct03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-construct03.rq> ; 
+      ]
+      [  mf:name    "syntax-form-construct04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-construct04.rq> ; 
+      ]
+      [  mf:name    "syntax-form-construct05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-construct05.rq> ; 
+      ]
+      [  mf:name    "syntax-form-construct06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-construct06.rq> ; 
+      ]
+      [  mf:name    "syntax-form-describe01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-describe01.rq> ; 
+      ]
+      [  mf:name    "syntax-form-describe02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-form-describe02.rq> ; 
+      ]
+      [  mf:name    "syntax-dataset-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-dataset-01.rq> ; 
+      ]
+      [  mf:name    "syntax-dataset-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-dataset-02.rq> ; 
+      ]
+      [  mf:name    "syntax-dataset-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-dataset-03.rq> ; 
+      ]
+      [  mf:name    "syntax-dataset-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-dataset-04.rq> ; 
+      ]
+      [  mf:name    "syntax-graph-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-graph-01.rq> ; 
+      ]
+      [  mf:name    "syntax-graph-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-graph-03.rq> ; 
+      ]
+      [  mf:name    "syntax-graph-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-graph-04.rq> ; 
+      ]
+      [  mf:name    "syntax-graph-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-graph-05.rq> ; 
+      ]
+      [  mf:name    "syntax-esc-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-esc-01.rq> ; 
+      ]
+      [  mf:name    "syntax-esc-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-esc-02.rq> ; 
+      ]
+      [  mf:name    "syntax-esc-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-esc-03.rq> ; 
+      ]
+      [  mf:name    "syntax-esc-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-esc-04.rq> ; 
+      ]
+    ) .

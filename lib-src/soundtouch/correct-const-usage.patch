@@ -1,0 +1,65 @@
+Index: include/FIFOSampleBuffer.h
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/soundtouch/include/FIFOSampleBuffer.h,v
+retrieving revision 1.4
+diff -u -r1.4 FIFOSampleBuffer.h
+--- include/FIFOSampleBuffer.h	18 Sep 2006 22:29:21 -0000	1.4
++++ include/FIFOSampleBuffer.h	17 Mar 2008 22:27:54 -0000
+@@ -160,7 +160,7 @@
+     virtual uint numSamples() const;
+ 
+     /// Sets number of channels, 1 = mono, 2 = stereo.
+-    void setChannels(uint numChannels);
++    void setChannels(const uint numChannels);
+ 
+     /// Returns nonzero if there aren't any samples available for outputting.
+     virtual int isEmpty() const;
+Index: source/SoundTouch/AAFilter.h
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/soundtouch/source/SoundTouch/AAFilter.h,v
+retrieving revision 1.4
+diff -u -r1.4 AAFilter.h
+--- source/SoundTouch/AAFilter.h	18 Sep 2006 22:29:22 -0000	1.4
++++ source/SoundTouch/AAFilter.h	17 Mar 2008 22:27:54 -0000
+@@ -63,14 +63,14 @@
+     /// Calculate the FIR coefficients realizing the given cutoff-frequency
+     void calculateCoeffs();
+ public:
+-    AAFilter(uint length);
++    AAFilter(const uint length);
+ 
+     ~AAFilter();
+ 
+     /// Sets new anti-alias filter cut-off edge frequency, scaled to sampling
+     /// frequency (nyquist frequency = 0.5). The filter will cut off the
+     /// frequencies than that.
+-    void setCutoffFreq(double newCutoffFreq);
++    void setCutoffFreq(const double newCutoffFreq);
+ 
+     /// Sets number of FIR filter taps, i.e. ~filter complexity
+     void setLength(uint newLength);
+Index: source/SoundTouch/RateTransposer.h
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/soundtouch/source/SoundTouch/RateTransposer.h,v
+retrieving revision 1.4
+diff -u -r1.4 RateTransposer.h
+--- source/SoundTouch/RateTransposer.h	18 Sep 2006 22:29:22 -0000	1.4
++++ source/SoundTouch/RateTransposer.h	17 Mar 2008 22:27:54 -0000
+@@ -134,7 +134,7 @@
+     AAFilter *getAAFilter() const;
+ 
+     /// Enables/disables the anti-alias filter. Zero to disable, nonzero to enable
+-    void enableAAFilter(BOOL newMode);
++    void enableAAFilter(const BOOL newMode);
+ 
+     /// Returns nonzero if anti-alias filter is enabled.
+     BOOL isAAFilterEnabled() const;
+@@ -144,7 +144,7 @@
+     virtual void setRate(float newRate);
+ 
+     /// Sets the number of channels, 1 = mono, 2 = stereo
+-    void setChannels(uint channels);
++    void setChannels(const uint channels);
+ 
+     /// Adds 'numSamples' pcs of samples from the 'samples' memory position into
+     /// the input of the object.

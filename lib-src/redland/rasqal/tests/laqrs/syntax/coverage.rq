@@ -1,0 +1,9 @@
+PREFIX ex: <http://example.org/ex#>
+EXPLAIN SELECT $number $name (3 + $number) AS foo COUNT(*) AS bar
+FROM <data.rdf>
+WHERE {
+ $r a ex:Class ;
+    ex:numPred $number ;
+    ex:stringPred $name .
+}
+GROUP BY $name ORDER BY $number

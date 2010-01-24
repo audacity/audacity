@@ -1,0 +1,10 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://www.example.org/ns#">
+
+  <!-- check a property element without a namespace fails -->
+
+  <rdf:Description rdf:about="http://example.org/node0">
+     <prop>content</prop>
+  </rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://example.org/ns#">
+
+  <!-- test warning for unknown rdf:parseType values (taken as Literal) -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <prop1 rdf:parseType="Fake">
+      <name>prop1name</name>
+    </prop1>
+
+    <!-- this is not a Collection but a bunch of XML -->
+    <prop2 rdf:parseType="collection">
+      <rdf:Description rdf:about="http://example.org/first" />
+      <rdf:Description rdf:about="http://example.org/second" />
+      <rdf:Description rdf:about="http://example.org/third" />
+    </prop2>
+  </rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial query 1
+
+SELECT ?x
+FROM <vc-db-1.rdf>
+WHERE (?x, <http://www.w3.org/2001/vcard-rdf/3.0#FN>, "John Smith")

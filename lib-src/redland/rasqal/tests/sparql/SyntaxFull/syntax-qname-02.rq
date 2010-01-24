@@ -1,0 +1,3 @@
+PREFIX : <http://example.org/ns#> 
+SELECT *
+WHERE { :x :p :z . }

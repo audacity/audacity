@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/foo#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- Check mixing rdf:li and rdf:_n works -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <rdf:li>1</rdf:li>
+    <rdf:_1>_1</rdf:_1>
+    <rdf:li>2</rdf:li>
+    <rdf:_3>_3</rdf:_3>
+  </rdf:Description>
+
+</rdf:RDF>

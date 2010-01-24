@@ -1,0 +1,299 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix mfx:    <http://jena.hpl.hp.com/2005/05/test-manifest-extra#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Syntax tests 1" ;
+    mf:entries
+    ( 
+      [  mf:name    "syntax-basic-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-basic-01.rq> ; 
+      ]
+      [  mf:name    "syntax-basic-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-basic-02.rq> ; 
+      ]
+      [  mf:name    "syntax-basic-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-basic-03.rq> ; 
+      ]
+      [  mf:name    "syntax-basic-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-basic-04.rq> ; 
+      ]
+      [  mf:name    "syntax-basic-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-basic-05.rq> ; 
+      ]
+      [  mf:name    "syntax-basic-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-basic-06.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-01.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-02.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-03.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-04.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-05.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-06.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-07.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-07.rq> ; 
+      ]
+      [  mf:name    "syntax-qname-08.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-qname-08.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-01.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-02.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-03.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-04.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-05.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-06.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-07.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-07.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-08.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-08.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-09.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-09.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-10.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-10.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-11.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-11.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-12.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-12.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-13.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-13.rq> ; 
+      ]
+      [  mf:name    "syntax-lit-14.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lit-14.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-01.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-02.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-03.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-04.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-05.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-06.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-07.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-07.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-08.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-08.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-09.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-09.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-10.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-10.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-11.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-11.rq> ; 
+      ]
+      [  mf:name    "syntax-struct-12.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-struct-12.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-01.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-02.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-03.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-04.rq> ; 
+      ]
+      [  mf:name    "syntax-lists-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-lists-05.rq> ; 
+      ]
+      [  mf:name    "syntax-bnodes-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnodes-01.rq> ; 
+      ]
+      [  mf:name    "syntax-bnodes-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnodes-02.rq> ; 
+      ]
+      [  mf:name    "syntax-bnodes-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnodes-05.rq> ; 
+      ]
+      [  mf:name    "syntax-bnodes-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnodes-06.rq> ; 
+      ]
+      [  mf:name    "syntax-bnodes-07.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-bnodes-07.rq> ; 
+      ]
+      [  mf:name    "syntax-forms-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-forms-01.rq> ; 
+      ]
+      [  mf:name    "syntax-forms-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-forms-02.rq> ; 
+      ]
+      [  mf:name    "syntax-union-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-union-01.rq> ; 
+      ]
+      [  mf:name    "syntax-union-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-union-02.rq> ; 
+      ]
+      [  mf:name    "syntax-expr-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-expr-01.rq> ; 
+      ]
+      [  mf:name    "syntax-expr-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-expr-02.rq> ; 
+      ]
+      [  mf:name    "syntax-expr-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-expr-03.rq> ; 
+      ]
+      [  mf:name    "syntax-expr-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-expr-04.rq> ; 
+      ]
+      [  mf:name    "syntax-expr-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-expr-05.rq> ; 
+      ]
+      [  mf:name    "syntax-order-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-order-01.rq> ; 
+      ]
+      [  mf:name    "syntax-order-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-order-02.rq> ; 
+      ]
+      [  mf:name    "syntax-order-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-order-03.rq> ; 
+      ]
+      [  mf:name    "syntax-order-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-order-04.rq> ; 
+      ]
+      [  mf:name    "syntax-order-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-order-05.rq> ; 
+      ]
+      [  mf:name    "syntax-order-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-order-06.rq> ; 
+      ]
+      [  mf:name    "syntax-limit-offset-07.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-limit-offset-07.rq> ; 
+      ]
+      [  mf:name    "syntax-limit-offset-08.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-limit-offset-08.rq> ; 
+      ]
+      [  mf:name    "syntax-limit-offset-09.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-limit-offset-09.rq> ; 
+      ]
+      [  mf:name    "syntax-pat-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-pat-01.rq> ; 
+      ]
+      [  mf:name    "syntax-pat-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-pat-02.rq> ; 
+      ]
+      [  mf:name    "syntax-pat-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-pat-03.rq> ; 
+      ]
+      [  mf:name    "syntax-pat-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syntax-pat-04.rq> ; 
+      ]
+    ) .

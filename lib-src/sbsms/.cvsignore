@@ -1,0 +1,8 @@
+Makefile
+aclocal.m4
+autom4te.cache
+config.log
+config.status
+libtool
+libsbsms.spec
+sbsms.pc

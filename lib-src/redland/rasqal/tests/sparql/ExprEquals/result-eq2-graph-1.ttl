@@ -1,0 +1,229 @@
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix :        <http://example.org/things#> .
+
+[]    rdf:type      rs:ResultSet ;
+      rs:resultVariable  "x2" ;
+      rs:resultVariable  "v" ;
+      rs:resultVariable  "x1" ;
+      rs:solution   [ rs:binding    [ rs:value      :xd2 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      "1.0e0"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd1 ;
+                                      rs:variable   "x1"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi3 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      01 ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi3 ;
+                                      rs:variable   "x1"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi3 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi1 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      1 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      "1"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd3 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd3 ;
+                                      rs:variable   "x2"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi1 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      1 ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi1 ;
+                                      rs:variable   "x1"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi1 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi2 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      1 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xp2 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xp2 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      "1" ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      "1"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd3 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd1 ;
+                                      rs:variable   "x2"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xu ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :z ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xu ;
+                                      rs:variable   "x1"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi3 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi2 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      01 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi2 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi2 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      1 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xd2 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      "1.0"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd2 ;
+                                      rs:variable   "x1"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      "1.0"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd2 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd1 ;
+                                      rs:variable   "x2"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi1 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi3 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      01 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xt1 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      "zzz"^^:myType ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xt1 ;
+                                      rs:variable   "x1"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi3 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi2 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      1 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xd3 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      "1"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd2 ;
+                                      rs:variable   "x2"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xd1 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd3 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      "1.0e0"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xd1 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      "1.0e0"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd1 ;
+                                      rs:variable   "x2"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xd2 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      "1.0"^^xsd:double ;
+                                      rs:variable   "v"
+                                    ] ;
+                      rs:binding    [ rs:value      :xd3 ;
+                                      rs:variable   "x2"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xp1 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      :xp1 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      "zzz" ;
+                                      rs:variable   "v"
+                                    ]
+                    ] ;
+      rs:solution   [ rs:binding    [ rs:value      :xi1 ;
+                                      rs:variable   "x1"
+                                    ] ;
+                      rs:binding    [ rs:value      :xi2 ;
+                                      rs:variable   "x2"
+                                    ] ;
+                      rs:binding    [ rs:value      1 ;
+                                      rs:variable   "v"
+                                    ]
+                    ] .

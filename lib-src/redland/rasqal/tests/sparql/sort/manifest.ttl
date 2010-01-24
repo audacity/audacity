@@ -1,0 +1,69 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+@prefix dawgt:   <http://www.w3.org/2001/sw/DataAccess/tests/test-dawg#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Sorting test cases." ;
+    mf:entries
+    ( 
+      [  mf:name    "sort-1" ;
+         rdfs:comment "Alphabetic sort (ascending) on untyped literals" ;
+         mf:action
+            [ qt:query  <query-sort-1.rq> ;
+              qt:data   <data-sort-1.ttl> ] ;
+         mf:result  <result-sort-1.rdf> ;
+	 dawgt:approvedBy <http://lists.w3.org/Archives/Public/public-rdf-dawg/2005AprJun/0248.html>;
+	 dawgt:approval dawgt:Approved
+      ]
+      [  mf:name    "sort-2" ;
+         rdfs:comment "Alphabetic sort (descending) on untyped literals" ;
+         mf:action
+            [ qt:query  <query-sort-2.rq> ;
+              qt:data   <data-sort-1.ttl> ] ;
+         mf:result  <result-sort-2.rdf>
+      ]
+      [  mf:name    "sort-3" ;
+         rdfs:comment "Sort on (possibly unbound) URIs" ;
+         mf:action
+            [ qt:query  <query-sort-3.rq> ;
+              qt:data   <data-sort-3.ttl> ] ;
+         mf:result  <result-sort-3.rdf>
+      ]
+      [  mf:name    "sort-4" ;
+         rdfs:comment "Sort on datatyped (integer) literals" ;
+         mf:action
+            [ qt:query  <query-sort-4.rq> ;
+              qt:data   <data-sort-4.ttl> ] ;
+         mf:result  <result-sort-4.rdf>
+      ]
+      [  mf:name    "sort-5" ;
+         rdfs:comment "Sort first on untyped literals (ascending), then on datatyped (integer) literals (descending" ;
+         mf:action
+            [ qt:query  <query-sort-5.rq> ;
+              qt:data   <data-sort-4.ttl> ] ;
+         mf:result  <result-sort-5.rdf>
+      ]
+      [  mf:name    "sort-6" ;
+         rdfs:comment "Sort on mixed result of uris and literals." ;
+         mf:action
+            [ qt:query  <query-sort-6.rq> ;
+              qt:data   <data-sort-6.ttl> ] ;
+         mf:result  <result-sort-6.rdf>
+      ]
+      [  mf:name    "sort-7" ;
+         rdfs:comment "Sort on comparable mixed typed literals (integer and float)" ;
+         mf:action
+            [ qt:query  <query-sort-4.rq> ;
+              qt:data   <data-sort-7.ttl> ] ;
+         mf:result  <result-sort-7.rdf>
+      ]
+      [  mf:name    "sort-8" ;
+         rdfs:comment "Sort on several mixed values (bnode, uri, literal)" ;
+         mf:action
+            [ qt:query  <query-sort-4.rq> ;
+              qt:data   <data-sort-8.ttl> ] ;
+         mf:result  <result-sort-8.rdf>
+      ]
+    ).

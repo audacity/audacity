@@ -1,0 +1,9 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Datatypes
+// No match: the value in the model is datatyped
+// and the query datatype is different
+
+SELECT ?x ?y
+FROM <model8.n3>
+WHERE (?x ?y "value"^^ex:someType)
+USING ex FOR <http://example.com/ns#>

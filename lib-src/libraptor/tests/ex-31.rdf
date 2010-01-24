@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/ns#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- Check rdf:li works on an parseType="Resource" property -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <rdf:li rdf:parseType="Resource">
+      <ex:prop1>foo</ex:prop1>
+      <ex:prop2>blah</ex:prop2>
+    </rdf:li>
+    <rdf:li>2</rdf:li>
+    <rdf:_3>_3</rdf:_3>
+  </rdf:Description>
+
+</rdf:RDF>

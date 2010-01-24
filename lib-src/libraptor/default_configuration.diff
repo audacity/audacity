@@ -1,0 +1,132 @@
+Only in .: autom4te.cache
+diff -ru /home/ll/gsoc/tarballs/raptor-1.4.17/configure ./configure
+--- /home/ll/gsoc/tarballs/raptor-1.4.17/configure	2008-03-17 08:37:20.000000000 +0100
++++ ./configure	2008-06-23 14:12:07.000000000 +0200
+@@ -1550,8 +1550,8 @@
+                           optimize for fast installation [default=yes]
+   --disable-libtool-lock  avoid locking (might break parallel builds)
+   --disable-nfc-check        Turn off Unicode NFC checking (default enabled).
+-  --enable-parsers=LIST      Use RDF parsers (default=all)
+-  --enable-serializers=LIST  Use RDF serializers (default=all)
++  --enable-parsers=LIST      Use RDF parsers (default=rdfxml)
++  --enable-serializers=LIST  Use RDF serializers (default=ntriples)
+   --enable-gtk-doc        use gtk-doc to build documentation [default=no]
+ 
+ Optional Packages:
+@@ -1566,9 +1566,9 @@
+   --with-xslt-config=PATH   Location of libxslt xslt-config
+   --with-curl-config=PATH   Location of libcurl curl-config
+   --with-libwww-config=PATH Location of W3C libwww libwww-config
+-  --with-xml-parser=NAME    Use XML parser - libxml (default), expat
++  --with-xml-parser=NAME    Use XML parser - libxml, expat (default)
+   --with-xml-names=1.1|1.0  Select XML version name checking (default=1.0)
+-  --with-www=NAME           Use WWW library - curl (default), xml, libfetch, none
++  --with-www=NAME           Use WWW library - curl, xml, libfetch, none (default)
+   --with-dmalloc            Use dmalloc debugging library (default=no)
+   --with-memory-signing     Sign allocated memory (default=no)
+   --with-html-dir=PATH    path to installed docs
+@@ -25058,7 +25058,7 @@
+ if test "${with_xml_parser+set}" = set; then
+   withval=$with_xml_parser; xml_parser="$withval"
+ else
+-  xml_parser="libxml"
++  xml_parser="expat"
+ fi
+ 
+ 
+@@ -25233,10 +25233,14 @@
+   enableval=$enable_parsers; parsers="$enableval"
+ fi
+ 
+-if test "X$parsers" = Xall -o "X$parsers" = X; then
++if test "X$parsers" = Xall; then
+   parsers="$rdf_parsers_available"
+   { echo "$as_me:$LINENO: result: all" >&5
+ echo "${ECHO_T}all" >&6; }
++elif test "X$parsers" = X; then
++  parsers="rdfxml"
++  { echo "$as_me:$LINENO: result: rdfxml" >&5
++echo "${ECHO_T}rdfxml" >&6; }
+ elif test "X$parsers" = Xnone; then
+   parsers=
+   { echo "$as_me:$LINENO: result: none" >&5
+@@ -25412,10 +25416,14 @@
+   enableval=$enable_serializers; serializers="$enableval"
+ fi
+ 
+-if test "X$serializers" = Xall -o "X$serializers" = X; then
++if test "X$serializers" = Xall;then
+   serializers="$rdf_serializers_available"
+   { echo "$as_me:$LINENO: result: all" >&5
+ echo "${ECHO_T}all" >&6; }
++elif test "X$serializers" = X; then
++  serializers="ntriples"
++  { echo "$as_me:$LINENO: result: ntriples" >&5
++echo "${ECHO_T}ntriples" >&6; }
+ elif test "X$serializers" = Xnone; then
+   serializers=
+   { echo "$as_me:$LINENO: result: none" >&5
+@@ -25876,7 +25884,7 @@
+ if test "${with_www+set}" = set; then
+   withval=$with_www; www="$withval"
+ else
+-  www="curl"
++  www="none"
+ fi
+ 
+ 
+diff -ru /home/ll/gsoc/tarballs/raptor-1.4.17/configure.ac ./configure.ac
+--- /home/ll/gsoc/tarballs/raptor-1.4.17/configure.ac	2008-03-17 04:57:11.000000000 +0100
++++ ./configure.ac	2008-06-23 14:11:52.000000000 +0200
+@@ -681,7 +681,7 @@
+ LIBS="$oLIBS"
+ 
+ 
+-AC_ARG_WITH(xml-parser, [  --with-xml-parser=NAME    Use XML parser - libxml (default), expat], xml_parser="$withval", xml_parser="libxml") 
++AC_ARG_WITH(xml-parser, [  --with-xml-parser=NAME    Use XML parser - libxml, expat (default)], xml_parser="$withval", xml_parser="expat") 
+ 
+ for xml_parser_name in $xml_parser libxml expat; do
+   case $xml_parser_name in
+@@ -786,10 +786,13 @@
+ fi
+ 
+ AC_MSG_CHECKING(RDF parsers required)
+-AC_ARG_ENABLE(parsers, [  --enable-parsers=LIST      Use RDF parsers (default=all)], parsers="$enableval") 
+-if test "X$parsers" = Xall -o "X$parsers" = X; then
++AC_ARG_ENABLE(parsers, [  --enable-parsers=LIST      Use RDF parsers (default=rdfxml)], parsers="$enableval") 
++if test "X$parsers" = Xall; then
+   parsers="$rdf_parsers_available"
+   AC_MSG_RESULT(all)
++elif test "X$parsers" = X; then
++  parsers="rdfxml"
++  AC_MSG_RESULT(rdfxml)
+ elif test "X$parsers" = Xnone; then
+   parsers=
+   AC_MSG_RESULT(none)
+@@ -866,10 +869,13 @@
+ fi
+ 
+ AC_MSG_CHECKING(RDF serializers required)
+-AC_ARG_ENABLE(serializers, [  --enable-serializers=LIST  Use RDF serializers (default=all)], serializers="$enableval") 
+-if test "X$serializers" = Xall -o "X$serializers" = X; then
++AC_ARG_ENABLE(serializers, [  --enable-serializers=LIST  Use RDF serializers (default=ntriples)], serializers="$enableval") 
++if test "X$serializers" = Xall;then
+   serializers="$rdf_serializers_available"
+   AC_MSG_RESULT(all)
++elif test "X$serializers" = X; then
++  serializers="ntriples"
++  AC_MSG_RESULT(ntriples)
+ elif test "X$serializers" = Xnone; then
+   serializers=
+   AC_MSG_RESULT(none)
+@@ -953,7 +959,7 @@
+ fi
+ 
+ 
+-AC_ARG_WITH(www, [  --with-www=NAME           Use WWW library - curl (default), xml, libfetch, none], www="$withval", www="curl") 
++AC_ARG_WITH(www, [  --with-www=NAME           Use WWW library - curl, xml, libfetch, none (default)], www="$withval", www="none") 
+ 
+ for www_name in $www curl xml libfetch none; do
+   case $www_name in
+Only in .: configure.ac~
+Only in .: default_configuration.diff

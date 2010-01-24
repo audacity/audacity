@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/@PACKAGE@
+
+Name: Rasqal RDF Query Library
+Description: Rasqal RDF Query parsing and execution library
+Requires: raptor >= @RAPTOR_MIN_VERSION@ @PKGCONFIG_REQUIRES@
+Version: @VERSION@
+Libs: -L${libdir} -lrasqal
+Libs.private: @LIBS@ @PKGCONFIG_LIBS@ @RASQAL_EXTERNAL_LIBS@
+Cflags: -I${includedir}
+

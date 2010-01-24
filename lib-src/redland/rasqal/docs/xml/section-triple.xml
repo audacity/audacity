@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="rasqal-section-triple">
+<refmeta>
+<refentrytitle role="top_of_page" id="rasqal-section-triple.top_of_page">Triples</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RASQAL Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Triples</refname>
+<refpurpose>Triple pattern or RDF triple.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="rasqal-section-triple.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+                    <link linkend="rasqal-triple">rasqal_triple</link>;
+enum                <link linkend="rasqal-triple-flags">rasqal_triple_flags</link>;
+<link linkend="rasqal-triple">rasqal_triple</link>*      <link linkend="rasqal-new-triple">rasqal_new_triple</link>                   (<link linkend="rasqal-literal">rasqal_literal</link> *subject,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> *predicate,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> *object);
+<link linkend="rasqal-triple">rasqal_triple</link>*      <link linkend="rasqal-new-triple-from-triple">rasqal_new_triple_from_triple</link>       (<link linkend="rasqal-triple">rasqal_triple</link> *t);
+<link linkend="void">void</link>                <link linkend="rasqal-free-triple">rasqal_free_triple</link>                  (<link linkend="rasqal-triple">rasqal_triple</link> *t);
+<link linkend="rasqal-literal">rasqal_literal</link>*     <link linkend="rasqal-triple-get-origin">rasqal_triple_get_origin</link>            (<link linkend="rasqal-triple">rasqal_triple</link> *t);
+enum                <link linkend="rasqal-triple-parts">rasqal_triple_parts</link>;
+<link linkend="void">void</link>                <link linkend="rasqal-triple-print">rasqal_triple_print</link>                 (<link linkend="rasqal-triple">rasqal_triple</link> *t,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);
+<link linkend="void">void</link>                <link linkend="rasqal-triple-set-origin">rasqal_triple_set_origin</link>            (<link linkend="rasqal-triple">rasqal_triple</link> *t,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> *l);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="rasqal-section-triple.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+An object for a triple pattern or an RDF triple in a query.  It
+contains the three parts of an RDF triple - subject, predicate,
+object as well as origin for matching triples in some graph (such as
+with the SPARQL <literal>GRAPH</literal>).
+</para>
+</refsect1>
+
+<refsect1 id="rasqal-section-triple.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rasqal-triple" role="struct">
+<title>rasqal_triple</title>
+<indexterm zone="rasqal-triple"><primary>rasqal_triple</primary></indexterm><programlisting>typedef struct {
+  rasqal_literal* subject;
+  rasqal_literal* predicate;
+  rasqal_literal* object;
+  rasqal_literal* origin;
+  unsigned int flags;
+} rasqal_triple;
+</programlisting>
+<para>
+A triple pattern or RDF triple.
+</para>
+<para>
+This is used as a triple pattern in queries and
+an RDF triple when generating RDF triples such as with SPARQL CONSTRUCT.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="rasqal-literal">rasqal_literal</link>&nbsp;*<structfield>subject</structfield>;</term>
+<listitem><simpara> Triple subject.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="rasqal-literal">rasqal_literal</link>&nbsp;*<structfield>predicate</structfield>;</term>
+<listitem><simpara> Triple predicate.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="rasqal-literal">rasqal_literal</link>&nbsp;*<structfield>object</structfield>;</term>
+<listitem><simpara> Triple object.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="rasqal-literal">rasqal_literal</link>&nbsp;*<structfield>origin</structfield>;</term>
+<listitem><simpara> Triple origin.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term>unsigned&nbsp;<link linkend="int">int</link>&nbsp;<structfield>flags</structfield>;</term>
+<listitem><simpara> Or of enum <link linkend="rasqal-triple-flags"><type>rasqal_triple_flags</type></link> bits.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triple-flags" role="enum">
+<title>enum rasqal_triple_flags</title>
+<indexterm zone="rasqal-triple-flags"><primary>rasqal_triple_flags</primary></indexterm><programlisting>typedef enum {
+
+  /* Not used - was only used internally in the execution engine */
+  RASQAL_TRIPLE_FLAGS_EXACT=1,
+
+  /* Not used - this is now a property of a graph pattern */
+  RASQAL_TRIPLE_FLAGS_OPTIONAL=2,
+
+  RASQAL_TRIPLE_FLAGS_LAST=RASQAL_TRIPLE_FLAGS_OPTIONAL
+} rasqal_triple_flags;
+</programlisting>
+<para>
+Flags for triple patterns.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="RASQAL-TRIPLE-FLAGS-EXACT:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_FLAGS_EXACT</literal></term>
+<listitem><simpara> Not used.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-FLAGS-OPTIONAL:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_FLAGS_OPTIONAL</literal></term>
+<listitem><simpara> Not used.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-FLAGS-LAST:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_FLAGS_LAST</literal></term>
+<listitem><simpara> Internal.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-new-triple" role="function">
+<title>rasqal_new_triple ()</title>
+<indexterm zone="rasqal-new-triple"><primary>rasqal_new_triple</primary></indexterm><programlisting><link linkend="rasqal-triple">rasqal_triple</link>*      rasqal_new_triple                   (<link linkend="rasqal-literal">rasqal_literal</link> *subject,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> *predicate,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> *object);</programlisting>
+<para>
+Constructor - create a new <link linkend="rasqal-triple"><type>rasqal_triple</type></link> triple or triple pattern.
+Takes ownership of the literals passed in.
+</para>
+<para>
+The triple origin can be set with <link linkend="rasqal-triple-set-origin"><function>rasqal_triple_set_origin()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>subject</parameter>&nbsp;:</term>
+<listitem><simpara> Triple subject.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>predicate</parameter>&nbsp;:</term>
+<listitem><simpara> Triple predicate.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>object</parameter>&nbsp;:</term>
+<listitem><simpara> Triple object.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="rasqal-triple"><type>rasqal_triple</type></link> or NULL on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-new-triple-from-triple" role="function">
+<title>rasqal_new_triple_from_triple ()</title>
+<indexterm zone="rasqal-new-triple-from-triple"><primary>rasqal_new_triple_from_triple</primary></indexterm><programlisting><link linkend="rasqal-triple">rasqal_triple</link>*      rasqal_new_triple_from_triple       (<link linkend="rasqal-triple">rasqal_triple</link> *t);</programlisting>
+<para>
+Copy constructor - create a new <link linkend="rasqal-triple"><type>rasqal_triple</type></link> from an existing one.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>t</parameter>&nbsp;:</term>
+<listitem><simpara> Triple to copy.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="rasqal-triple"><type>rasqal_triple</type></link> or NULL on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-free-triple" role="function">
+<title>rasqal_free_triple ()</title>
+<indexterm zone="rasqal-free-triple"><primary>rasqal_free_triple</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_free_triple                  (<link linkend="rasqal-triple">rasqal_triple</link> *t);</programlisting>
+<para>
+Destructor - destroy a <link linkend="rasqal-triple"><type>rasqal_triple</type></link> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>t</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-triple"><type>rasqal_triple</type></link> object.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triple-get-origin" role="function">
+<title>rasqal_triple_get_origin ()</title>
+<indexterm zone="rasqal-triple-get-origin"><primary>rasqal_triple_get_origin</primary></indexterm><programlisting><link linkend="rasqal-literal">rasqal_literal</link>*     rasqal_triple_get_origin            (<link linkend="rasqal-triple">rasqal_triple</link> *t);</programlisting>
+<para>
+Get the origin field of a <link linkend="rasqal-triple"><type>rasqal_triple</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>t</parameter>&nbsp;:</term>
+<listitem><simpara> The triple object. 
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The triple origin or NULL.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triple-parts" role="enum">
+<title>enum rasqal_triple_parts</title>
+<indexterm zone="rasqal-triple-parts"><primary>rasqal_triple_parts</primary></indexterm><programlisting>typedef enum {
+  RASQAL_TRIPLE_SUBJECT  = 1,
+  RASQAL_TRIPLE_PREDICATE= 2,
+  RASQAL_TRIPLE_OBJECT   = 4,
+  RASQAL_TRIPLE_ORIGIN   = 8,
+  RASQAL_TRIPLE_GRAPH    = RASQAL_TRIPLE_ORIGIN,
+  RASQAL_TRIPLE_SPO      = RASQAL_TRIPLE_SUBJECT | RASQAL_TRIPLE_PREDICATE | RASQAL_TRIPLE_OBJECT,
+  RASQAL_TRIPLE_SPOG     = RASQAL_TRIPLE_SPO | RASQAL_TRIPLE_GRAPH
+} rasqal_triple_parts;
+</programlisting>
+<para>
+Flags for parts of a triple.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="RASQAL-TRIPLE-SUBJECT:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_SUBJECT</literal></term>
+<listitem><simpara> Subject present in a triple.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-PREDICATE:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_PREDICATE</literal></term>
+<listitem><simpara> Predicate present in a triple.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-OBJECT:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_OBJECT</literal></term>
+<listitem><simpara> Object present in a triple.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-ORIGIN:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_ORIGIN</literal></term>
+<listitem><simpara> Origin/graph present in a triple.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-GRAPH:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_GRAPH</literal></term>
+<listitem><simpara>  Alias for RASQAL_TRIPLE_ORIGIN
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-SPO:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_SPO</literal></term>
+<listitem><simpara> Subject, Predicate and Object present in a triple.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-TRIPLE-SPOG:CAPS" role="constant">
+<term><literal>RASQAL_TRIPLE_SPOG</literal></term>
+<listitem><simpara> Subject, Predicate, Object, Graph present in a triple.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triple-print" role="function">
+<title>rasqal_triple_print ()</title>
+<indexterm zone="rasqal-triple-print"><primary>rasqal_triple_print</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_triple_print                 (<link linkend="rasqal-triple">rasqal_triple</link> *t,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);</programlisting>
+<para>
+Print a Rasqal triple in a debug format.
+</para>
+<para>
+The print debug format may change in any release.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>t</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-triple"><type>rasqal_triple</type></link> object.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara> The <link linkend="FILE:CAPS"><type>FILE</type></link>* handle to print to.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triple-set-origin" role="function">
+<title>rasqal_triple_set_origin ()</title>
+<indexterm zone="rasqal-triple-set-origin"><primary>rasqal_triple_set_origin</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_triple_set_origin            (<link linkend="rasqal-triple">rasqal_triple</link> *t,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> *l);</programlisting>
+<para>
+Set the origin field of a <link linkend="rasqal-triple"><type>rasqal_triple</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>t</parameter>&nbsp;:</term>
+<listitem><simpara> The triple object. 
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>l</parameter>&nbsp;:</term>
+<listitem><simpara> The <link linkend="rasqal-literal"><type>rasqal_literal</type></link> object to set as origin.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

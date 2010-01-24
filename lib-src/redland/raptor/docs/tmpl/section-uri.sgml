@@ -1,0 +1,301 @@
+<!-- ##### SECTION Title ##### -->
+URI
+
+<!-- ##### SECTION Short_Description ##### -->
+URI class and relative URI computation
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A class for absolute URIs used inside raptor and relative URI
+computation utility functions used inside the main Redland
+#librdf_uri class.  Only absolute URIs are provided, with no
+current access to internals of URIs such as URI scheme, path, authority.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT raptor_uri_handler ##### -->
+<para>
+
+</para>
+
+@new_uri: 
+@new_uri_from_uri_local_name: 
+@new_uri_relative_to_base: 
+@new_uri_for_rdf_concept: 
+@free_uri: 
+@uri_equals: 
+@uri_copy: 
+@uri_as_string: 
+@uri_as_counted_string: 
+@initialised: 
+@uri_compare: 
+
+<!-- ##### FUNCTION raptor_new_uri ##### -->
+<para>
+
+</para>
+
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_uri_from_uri_local_name ##### -->
+<para>
+
+</para>
+
+@uri: 
+@local_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_uri_relative_to_base ##### -->
+<para>
+
+</para>
+
+@base_uri: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_uri_from_id ##### -->
+<para>
+
+</para>
+
+@base_uri: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_uri_for_rdf_concept ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+
+
+<!-- ##### FUNCTION raptor_uri_compare ##### -->
+<para>
+
+</para>
+
+@uri1: 
+@uri2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_equals ##### -->
+<para>
+
+</para>
+
+@uri1: 
+@uri2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_copy ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_as_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_as_counted_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_uri_for_xmlbase ##### -->
+<para>
+
+</para>
+
+@old_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_uri_for_retrieval ##### -->
+<para>
+
+</para>
+
+@old_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_resolve_uri_reference ##### -->
+<para>
+
+</para>
+
+@base_uri: 
+@reference_uri: 
+@buffer: 
+@length: 
+
+
+<!-- ##### FUNCTION raptor_uri_filename_to_uri_string ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_uri_string_to_filename ##### -->
+<para>
+
+</para>
+
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_uri_string_to_filename_fragment ##### -->
+<para>
+
+</para>
+
+@uri_string: 
+@fragment_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_uri_string_is_file_uri ##### -->
+<para>
+
+</para>
+
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_is_file_uri ##### -->
+<para>
+
+</para>
+
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_to_relative_counted_uri_string ##### -->
+<para>
+
+</para>
+
+@base_uri: 
+@reference_uri: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_to_relative_uri_string ##### -->
+<para>
+
+</para>
+
+@base_uri: 
+@reference_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_print ##### -->
+<para>
+
+</para>
+
+@uri: 
+@stream: 
+
+
+<!-- ##### FUNCTION raptor_uri_to_counted_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_to_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_uri_set_handler ##### -->
+<para>
+
+</para>
+
+@handler: 
+@context: 
+
+
+<!-- ##### FUNCTION raptor_uri_get_handler ##### -->
+<para>
+
+</para>
+
+@handler: 
+@context: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_uri ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@uri: 
+@Returns: 
+
+

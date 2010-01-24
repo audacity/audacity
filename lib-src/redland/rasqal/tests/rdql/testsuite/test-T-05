@@ -1,0 +1,8 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial query 5
+
+SELECT ?resource
+FROM <vc-db-2.rdf>
+WHERE (?resource, <info:age>, ?age)
+AND ?age >= 24
+USING info FOR <http://somewhere/peopleInfo#>

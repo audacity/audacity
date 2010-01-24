@@ -1,0 +1,104 @@
+<!-- ##### SECTION Title ##### -->
+URI Factory
+
+<!-- ##### SECTION Short_Description ##### -->
+Provide an implementation for the URI class.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A factory that allows registering an implementation for the URI
+class to override the simple internal one (#raptor_uri are char*).
+Normally used by redland to replace #raptor_uri with #librdf_uri
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### USER_FUNCTION raptor_new_uri_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_new_uri_from_uri_local_name_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@uri: 
+@local_name: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_new_uri_relative_to_base_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@base_uri: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_new_uri_for_rdf_concept_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@name: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_free_uri_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@uri: 
+
+
+<!-- ##### USER_FUNCTION raptor_uri_equals_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@uri1: 
+@uri2: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_uri_copy_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@uri: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_uri_compare_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@uri1: 
+@uri2: 
+@Returns: 
+
+

@@ -1,0 +1,2 @@
+_:a <http://xmlns.com/foaf/0.1/name> "John Doe" .
+_:a <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:a="http://example.com/properties/">
+  <!-- Test rdf:Description with rdf value attribute-->
+  <rdf:Description rdf:about="http://example.com/resource1/" rdf:value="the content" />
+</rdf:RDF>

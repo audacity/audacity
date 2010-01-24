@@ -1,0 +1,5 @@
+prefix ex: <http://example.org/#>
+select distinct *
+from <data.n3>
+where { $x ex:bar ex:baz }
+

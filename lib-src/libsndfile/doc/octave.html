@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+	<TITLE>
+	libsndfile and GNU Octave
+	</TITLE>
+	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
+	<LINK REL=StyleSheet HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+</HEAD>
+
+<BODY>
+
+<BR>
+<H1><B>libsndfile and GNU Octave</B></H1>
+<P>
+	<A HREF="http://www.octave.org/">GNU Octave</A> is a high-level interactive 
+	language for numerical computations. 
+	There are currently two development streams, a stable 2.0.X series and a
+	development 2.1.X series.
+	Octave reads and writes data in binary formats that were originally developed
+	for 
+		<A HREF="http://www.mathworks.com/">MATLAB</A>.
+	Version 2.0.X of Octave uses binary data files compatible with MATLAB
+	version 4.2 while Octave 2.1.X uses binary data files compatible
+	with MATLAB version 5.0 as well as being able to read the older MATLAB 4.2 
+	format.
+</P>
+<P>
+	From version 1.0.1 of libsndfile onwards, libsndfile has the ability of reading 
+	and writing a small subset of the binary data files used by both versions 
+	of GNU Octave.
+	This gives people using GNU Octave for audio based work an easy method of
+	moving audio data between GNU Octave and other programs which use libsndfile.
+</P>
+<P>
+	For instance it is now possible to do the following:
+</P>
+	
+	<UL>
+	<LI> Load a WAV file into a sound file editor such as 
+		<A HREF="http://www.metadecks.org/software/sweep/">Sweep</A>.
+	<LI> Save it as a MAT4 file.
+	<LI> Load the data into Octave for manipulation.
+	<LI> Save the modified data. 
+	<LI> Reload it in Sweep.
+	</UL>
+<P>
+	Another example would be using the MAT4 or MAT5 file formats as a format which
+	can be easily loaded into Octave for viewing/analyzing as well as a format 
+	which can be played with command line players such as the one included with
+	libsndfile.
+</P>
+	
+<H2><B>Details</B></H2>
+<P>
+	Octave, like most programming languages, uses variables to store data, and
+	Octave variables can contain both arrays and matrices.
+	It is also able to store one or more of these variables in a file.
+	When reading Octave files, libsndfile expects a file to contain two
+	variables and their associated data.
+	The first variable should contain a variable holding the file sample rate
+	while the second variable contains the audio data.
+</P>
+<P>
+	For example, to generate a sine wave and store it as a binary file which
+	is compatible with libsndfile, do the following:
+</P>
+<PRE>
+        octave:1 > samplerate = 44100 ;
+        octave:2 > wavedata = sin ((0:1023)*2*pi/1024) ;
+        octave:3 > save sine.mat samplerate wavedata 
+</PRE>
+
+<P>
+	The process of reading and writing files compatible with libsndfile can be
+	made easier by use of two Octave script files :
+</P>
+<PRE>
+        octave:4 > [data fs] = sndfile_load ("sine.mat") ;
+        octave:5 > sndfile_save ("sine2.mat", data, fs) ;
+</PRE>
+<P>
+	In addition, libsndfile contains a command line program which which is able
+	to play the correct types of Octave files.
+	Using this command line player <B>sndfile-play</B> and a third Octave script 
+	file allows Octave data to be played from within Octave on any of the platforms
+	which <B>sndfile-play</B> supports (at the moment: Linux, MacOSX, Solaris and
+	Win32).
+</P>
+<PRE>
+        octave:6 > sndfile_play (data, fs) ;
+</PRE>
+<P>
+	These three Octave scripts are installed automatically in Octave's site
+	script directory when libsndfile is installed (except on Win32) ie when
+	libsndfile is being installed into /usr/local, the Octave scripts will
+	be installed in /usr/local/share/octave/site/m/.
+</P>
+
+<P>
+	There are some other Octave scripts for audio to be found 
+		<A HREF="http://octave.sourceforge.net/index/audio.html">here</A>.
+</P>
+
+<BR>
+<!-- ========================================================================= -->
+
+<HR>
+<P>
+	The libsndfile home page is here : 
+		<A HREF="http://www.mega-nerd.com/libsndfile/">
+			http://www.mega-nerd.com/libsndfile/</A>.
+</P>
+
+</BODY>
+</HTML>

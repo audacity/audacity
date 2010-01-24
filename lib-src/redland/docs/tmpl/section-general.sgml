@@ -1,0 +1,52 @@
+<!-- ##### SECTION Title ##### -->
+General library facilities
+
+<!-- ##### SECTION Short_Description ##### -->
+Version static variables.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Version static variables.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### VARIABLE librdf_version_decimal ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE librdf_version_major ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE librdf_version_release ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE librdf_version_minor ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO REDLAND_DEPRECATED ##### -->
+<para>
+When defined before a function, indicates that the function
+has been deprecated and may be replaced in a future release.
+With some versions of gcc this may give a compilation warning.
+</para>
+
+
+

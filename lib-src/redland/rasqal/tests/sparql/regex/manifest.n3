@@ -1,0 +1,43 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "SPARQL regex tests" ;
+    mf:entries (
+      [ mf:name    "regex-query-001" ;
+        rdfs:comment
+            "Simple unanchored match test" ;
+        mf:action
+            [ qt:query  <regex-query-001.rq> ;
+              qt:data   <regex-data-01.n3> ] ;
+        mf:result  <regex-result-001.n3>
+      ]
+      [ mf:name    "regex-query-002" ;
+        rdfs:comment
+            "Case insensitive unanchored match test" ;
+        mf:action
+            [ qt:query  <regex-query-002.rq> ;
+              qt:data   <regex-data-01.n3> ] ;
+        mf:result  <regex-result-002.n3>
+      ]
+      [ mf:name    "regex-query-003" ;
+        rdfs:comment
+            "Use/mention test" ;
+        mf:action
+            [ qt:query  <regex-query-003.rq> ;
+              qt:data   <regex-data-01.n3> ] ;
+        mf:result  <regex-result-003.n3>
+      ]
+      [ mf:name    "regex-query-004" ;
+        rdfs:comment
+            "str()+URI test" ;
+        mf:action
+            [ qt:query  <regex-query-004.rq> ;
+              qt:data   <regex-data-01.n3> ] ;
+        mf:result  <regex-result-004.n3>
+      ]
+
+    # End of tests
+   ).

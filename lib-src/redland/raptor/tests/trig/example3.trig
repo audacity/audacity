@@ -1,0 +1,26 @@
+
+
+# TriG Example Document 3
+# This document contains a default graph and two named graphs.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+# default graph
+    { 
+      <http://example.org/bob> dc:publisher "Bob" . 
+      <http://example.org/alice> dc:publisher "Alice" .
+    }
+
+<http://example.org/bob> 
+    { 
+       _:a foaf:name "Bob" . 
+       _:a foaf:mbox <mailto:bob@oldcorp.example.org> .
+    }
+ 
+<http://example.org/alice>
+    { 
+       _:a foaf:name "Alice" . 
+       _:a foaf:mbox <mailto:alice@work.example.org> .
+    }

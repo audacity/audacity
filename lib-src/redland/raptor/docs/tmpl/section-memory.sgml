@@ -1,0 +1,48 @@
+<!-- ##### SECTION Title ##### -->
+Memory
+
+<!-- ##### SECTION Short_Description ##### -->
+Memory handling functions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Wrappers around the free, malloc and calloc functions but
+called from inside the library.  Required by some systems
+to handle multiple-HEAPs and pass memory to and from the library.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION raptor_free_memory ##### -->
+<para>
+
+</para>
+
+@ptr: 
+
+
+<!-- ##### FUNCTION raptor_alloc_memory ##### -->
+<para>
+
+</para>
+
+@size: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_calloc_memory ##### -->
+<para>
+
+</para>
+
+@nmemb: 
+@size: 
+@Returns: 
+
+

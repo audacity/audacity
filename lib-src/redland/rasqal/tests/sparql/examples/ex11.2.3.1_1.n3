@@ -1,0 +1,5 @@
+@prefix a:          <http://www.w3.org/2000/10/annotation-ns#> .
+@prefix dc:         <http://purl.org/dc/elements/1.1/> .
+
+_:b   a:annotates   <http://www.w3.org/TR/rdf-sparql-query/> .
+_:b   dc:created    "2004-12-31T19:00:00-05:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .

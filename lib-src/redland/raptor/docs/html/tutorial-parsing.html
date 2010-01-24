@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Parsing syntaxes to RDF Triples</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Raptor RDF Syntax Parsing and Serializing Library Manual">
+<link rel="up" href="tutorial.html" title="Part I. Raptor Tutorial">
+<link rel="prev" href="tutorial-querying-functionality.html" title="Listing built-in functionality">
+<link rel="next" href="tutorial-parser-create.html" title="Create the Parser object">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="introduction.html" title="Raptor Overview">
+<link rel="part" href="tutorial.html" title="Part I. Raptor Tutorial">
+<link rel="chapter" href="tutorial-initialising-finishing.html" title="Initialising and Finishing using the Library">
+<link rel="chapter" href="tutorial-querying-functionality.html" title="Listing built-in functionality">
+<link rel="chapter" href="tutorial-parsing.html" title="Parsing syntaxes to RDF Triples">
+<link rel="chapter" href="tutorial-serializing.html" title="Serializing RDF triples to a syntax">
+<link rel="part" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="chapter" href="raptor-parsers.html" title="Parsers in Raptor (syntax to triples)">
+<link rel="chapter" href="raptor-serializers.html" title="Serializers in Raptor (triples to syntax)">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
+<td><a accesskey="p" href="tutorial-querying-functionality.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="tutorial.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Raptor RDF Syntax Parsing and Serializing Library Manual</th>
+<td><a accesskey="n" href="tutorial-parser-create.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="chapter" lang="en">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="tutorial-parsing"></a>Parsing syntaxes to RDF Triples</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial-parsing.html#tutorial-parsing-intro">Introduction</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-create.html">Create the Parser object</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-features.html">Parser features</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-set-triple-handler.html">Set RDF triple callback handler</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-set-error-warning-handlers.html">Set fatal error, error and warning handlers</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-set-id-handler.html">Set the identifier creator handler</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-set-namespace-handler.html">Set namespace declared handler</a></span></dt>
+<dt><span class="section"><a href="tutorial-parse-strictness.html">Set the parsing strictness</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-content.html">Provide syntax content to parse</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="tutorial-parser-content.html#parse-from-uri">Parse the content from a URI (<code class="function">raptor_parse_uri()</code>)</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-content.html#parse-from-www">Parse the content of a URI using an existing WWW connection (<code class="function">raptor_parse_uri_with_connection()</code>)</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-content.html#parse-from-filehandle">Parse the content of a C <code class="literal">FILE*</code> (<code class="function">raptor_parse_file_stream()</code>)</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-content.html#parse-from-file-uri">Parse the content of a file URI (<code class="function">raptor_parse_file()</code>)</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-content.html#parse-from-chunks">Parse chunks of syntax content provided by the application  (<code class="function">raptor_start_parse()</code> and <code class="function">raptor_parse_chunk()</code>)</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="restrict-parser-network-access.html">Restrict parser network access</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="restrict-parser-network-access.html#tutorial-filter-network-with-feature">Filtering parser network requests with feature <code class="literal">RAPTOR_FEATURE_NO_NET</code></a></span></dt>
+<dt><span class="section"><a href="restrict-parser-network-access.html#tutorial-filter-network-www-uri-filter">Filtering parser network requests with <code class="function">raptor_www_set_uri_filter()</code></a></span></dt>
+<dt><span class="section"><a href="restrict-parser-network-access.html#tutorial-filter-network-parser-uri-filter">Filtering parser network requests with <code class="function">raptor_parser_set_uri_filter()</code></a></span></dt>
+<dt><span class="section"><a href="restrict-parser-network-access.html#tutorial-filter-network-parser-timeout">Setting timeout for parser network requests with feature <code class="literal">RAPTOR_FEATURE_WWW_TIMEOUT</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="tutorial-parser-static-info.html">Querying parser static information</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-runtime-info.html">Querying parser run-time information</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-abort.html">Aborting parsing</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-destroy.html">Destroy the parser</a></span></dt>
+<dt><span class="section"><a href="tutorial-parser-example.html">Parsing example code</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="tutorial-parsing-intro"></a>Introduction</h2></div></div></div>
+<p>
+The typical sequence of operations to parse is to create a parser
+object, set various callback and features, start the parsing, send
+some syntax content to the parser object, finish the parsing and
+destroy the parser object.</p>
+<p>Several parts of this process are optional, including actually
+using the triple results, which is useful as a syntax checking
+process.
+</p>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:ex="http://example.org/ns/">
+
+  <!-- cannot have both a nodeElement content and property attributes -->
+
+   <rdf:Description>
+     <ex:pred rdf:value="bar"><rdf:Description/></ex:pred>
+   </rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,6 @@
+<http://example.org/bob> <http://purl.org/dc/elements/1.1/publisher> "Bob" .
+<http://example.org/alice> <http://purl.org/dc/elements/1.1/publisher> "Alice" .
+_:a <http://xmlns.com/foaf/0.1/name> "Bob" .
+_:a <http://xmlns.com/foaf/0.1/mbox> <mailto:bob@oldcorp.example.org> .
+_:a <http://xmlns.com/foaf/0.1/name> "Alice" .
+_:a <http://xmlns.com/foaf/0.1/mbox> <mailto:alice@work.example.org> .

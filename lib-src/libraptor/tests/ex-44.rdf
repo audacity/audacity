@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/ns#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xml:base="http://example.org/triples">
+
+  <!-- rdf:bagID on an empty property element (only type allowed)  -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <ex:prop1 rdf:bagID="bag1" ex:prop2="val2" />
+  </rdf:Description>
+
+</rdf:RDF>

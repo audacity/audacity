@@ -1,0 +1,10 @@
+LIBRARY	librdf
+EXPORTS
+librdf_version_major DATA
+librdf_version_minor DATA
+librdf_version_release DATA
+librdf_version_decimal DATA
+librdf_short_copyright_string DATA
+librdf_copyright_string DATA
+librdf_version_string DATA
+

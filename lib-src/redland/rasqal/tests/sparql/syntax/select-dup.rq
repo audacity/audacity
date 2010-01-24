@@ -1,0 +1,5 @@
+prefix ex: <http://example.org/#>
+select $a $b $a $b $a $b $c
+where {
+  $a ex:bar ex:baz .
+}

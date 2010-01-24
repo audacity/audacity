@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:ex="http://example.org/">
+
+  <!-- Check non-namespaced attributes on a property are reported --> 
+
+  <rdf:Description rdf:about="http://example.org/res">
+    <rdf:value cie="2" foo="3" bar="4">foo</rdf:value>
+  </rdf:Description>
+</rdf:RDF>

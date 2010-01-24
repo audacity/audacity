@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+# Copyright (C) 2002-2006 David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2002-2005 University of Bristol, UK http://www.bristol.ac.uk/
+# 
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
+# 
+# See LICENSE.html or LICENSE.txt at the top of this package for the
+# complete terms and further detail along with the license texts for
+# the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
+# 
+# 
+# 
+#
+
+usage()
+{
+	cat<<EOF
+Usage: raptor-src-config [OPTION]
+
+known values for OPTION are:
+
+  --libs                print library linking information
+  --cflags              print pre-processor and compiler flags
+  --help                display this help and exit
+  --version             output version information
+EOF
+  exit $1
+}
+
+
+if test $# -eq 0; then
+  usage 1 1>&2
+fi
+
+
+while test $# -gt 0; do
+  case "$1" in
+    -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+    *) optarg= ;;
+  esac
+
+  case $1 in
+    --version)
+      echo @VERSION@
+      exit 0
+      ;;
+    --cflags)
+      echo_cflags=yes
+      ;;
+    --libs)
+      echo_libs=yes
+      ;;
+    --help|usage)
+      usage 0
+      ;;
+    *)
+      usage 1 1>&2
+      ;;
+  esac
+
+  shift
+done
+  
+
+if test "$echo_cflags" = "yes"; then
+  echo -I@abs_top_srcdir@/src
+fi
+if test "$echo_libs" = "yes"; then
+  echo '-L@abs_top_builddir@/src/.libs -lraptor @LDFLAGS@ @LIBS@'
+fi

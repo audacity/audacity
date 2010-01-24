@@ -1,0 +1,148 @@
+<!-- ##### SECTION Title ##### -->
+XML QName
+
+<!-- ##### SECTION Short_Description ##### -->
+XML Namespace-qualified names.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Wraps an XML name inside an associated XML namespace in some XML document
+context (typically).  Mostly used inside parsing XML to manage qnames
+for XML element and attribute names.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_qname ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_qname ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@name: 
+@value: 
+@error_handler: 
+@error_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_qname_from_namespace_local_name ##### -->
+<para>
+
+</para>
+
+@ns: 
+@local_name: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_copy ##### -->
+<para>
+
+</para>
+
+@qname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_qname ##### -->
+<para>
+
+</para>
+
+@name: 
+
+
+<!-- ##### FUNCTION raptor_qname_equal ##### -->
+<para>
+
+</para>
+
+@name1: 
+@name2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_string_to_uri ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@name: 
+@name_len: 
+@error_handler: 
+@error_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_qname ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@qname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_get_counted_value ##### -->
+<para>
+
+</para>
+
+@name: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_get_local_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_get_namespace ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_get_value ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_qname_to_counted_name ##### -->
+<para>
+
+</para>
+
+@qname: 
+@length_p: 
+@Returns: 
+
+

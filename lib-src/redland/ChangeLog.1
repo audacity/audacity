@@ -1,0 +1,2578 @@
+2000-12-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* expat/Makefile.am, expat/xmltok/Makefile.am:
+	Moved rule using gennmtab to xmltok dir
+
+	* configure.in: expat,h -> expat.h
+
+2000-12-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* repat/Makefile.am: Added rdftests.i
+
+	* docs/Makefile.am:
+	Extra 'a' in api-big.html rule
+
+	* acconfig.h:
+	Added RDFPARSE_INCLUDE_XMLPARSE for expat headers
+
+	* configure.in:
+	Updated to handle Repat 2000-12-24 with rdftest and old/new expat
+	headers
+
+	* repat/Makefile.am:
+	Updated to handle Repat 2000-12-24 with rdftest
+
+	* repat/rdftest.c, repat/rdftests.i, repat/rdfparse.h,
+	repat/rdfparse.c, repat/rdfdump.c, repat/CHANGES:
+	Updated to Repat 2000-12-24
+
+	* repat/expat.h:
+	Deleted, fixed via configure
+
+2000-12-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* redland.spec.in:
+	Updated description
+	Tidied SMP code (never tested)
+	Made clean code be careful
+	Changed installed user/groups
+	Updated list of includes
+
+2000-12-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/dc.rdf:
+	Small test file for example.pl
+
+	* perl/Makefile.am:
+	Added dc.rdf test file to dist
+
+2000-11-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am:
+	Added example.pl to the release
+
+	* example4.c:
+	Updated for new concept names
+
+2000-11-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_utf8.h, rdf_utf8.c:
+	UTF-8 support
+
+	* Makefile.am:
+	Added rdf_utf8.c, rdf_utf8.h
+
+	* rdf_parser_sirpac.c:
+	Updated for new concept names
+
+	* rdf_concepts.h, rdf_concepts.c: Amended concepts to include
+	rdf:RDF and rdf:Description - useful for Redland's RDF parser.
+
+2000-11-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_uri.c (librdf_new_uri_normalised_to_base):
+	Handle fragment URIs relative to
+	base.
+
+	* rdf_uri.c (librdf_new_uri_normalised_to_base):
+	When URI is NULL or "" and
+	relative to a base URI, just make a new URI from the base URI.
+
+	* rdf_parser_repat.c:
+	XML literals - note problem with namespaces in results.
+
+2000-11-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* repat/Makefile.am:
+	Added expat.h - shim since Repat moved to new expat sources, header
+	files
+
+	* rdf_parser_repat.c:
+	Final changes to interface with repat to handle parseType=literal and
+	rdf:_'ordinal'
+	Pass on some more fatal errors and tidy up better when things go
+	wrong at RDF or XML layer.
+
+	* perl/rss-dump.pl:
+	Show namespaced-properties off channel.
+
+	* perl/lib/RDF/RSS.pm (items):
+	Return channel items in correct order (from rdf:_n properties)
+
+	* repat/repat.html, repat/rdfparse.h, repat/expat.h, repat/README,
+	repat/CHANGES: Synchronised with repat 2000-11-10 (no code changes)
+
+2000-11-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_statement.h:
+	Replaced #define-s for statement parts with enum; makes for
+	potentially better compiler checking
+
+2000-11-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/rss-dump.pl:
+	Updated to dump all & particular namespaced properties off nodes.
+
+	* perl/lib/RDF/Node.pm:
+	Defined node type constants for use with type method.
+
+	* perl/lib/RDF/RSS.pm (property):
+	Added, returns value of a property off a node.
+	(properties): Added, returns all properties off a node.
+	(properties_with_ns_prefix): Added, returns NS-prefixed properties
+	off a node.
+
+2000-11-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/RSS.pm:
+	Removed accessors since RDF::RSS is a RDF::Model and can use methods
+	from there.
+	Renamed method RDF::RSS::Node method url to image_url to lessen
+	confusion with uri method on RDF::Node
+
+2000-11-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_stream.c (librdf_stream_from_node_iterator_next_statement):
+	Added cast to librdf_node* from iterator get_next
+
+	* rdf_storage_hashes.c:
+	(librdf_storage_hashes_add_remove_statement,
+	librdf_storage_hashes_contains_statement,
+	librdf_storage_hashes_node_iterator_create)
+	Added some missing casts from return value of LIBRDF_MALLOC
+	Replaced some char* with unsigned char* when used as
+	encoding/decoding buffers
+	(librdf_storage_hashes_serialise_next_statement,
+	librdf_storage_storage_hashes_node_iterator_get_next): Added casts for
+	statement encode/decode parameters (from void*)
+
+	* rdf_parser_repat.c (librdf_parser_repat_serialise_finished):
+	Added cast to librdf_statement* from list pop
+
+	* rdf_parser_libwww.c (librdf_parser_libwww_parse_common):
+	Store pcontext (correct type)
+	rather than context (void*)
+	(librdf_parser_libwww_get_next_statement): Added cast to
+	librdf_statement* from list pop
+
+	* rdf_hash.c:
+	Added some missing casts from return value of LIBRDF_MALLOC
+	and some arguments to strlen
+
+	* perl/lib/RDF/RSS.pm:
+	RDF::RSS ISA RDF::Model now - makes code tidier too.
+
+2000-11-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am:
+	How did python references get in here?
+
+2000-11-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Redland.i:
+	Declare librdf_iterator_get_next returns librdf_node* which is true,
+	at the user level.
+
+	* configure.in:
+	Make 'make clean' work when python isn't available
+
+	* rdf_parser.c:
+	Tidy of warning / error message format
+
+	* perl/MANIFEST:
+	Added RDF::RSS and rss-dump.pl
+
+	* perl/rss-dump.pl:
+	RSS 1.0 test program for RDF::RSS
+
+	* perl/lib/RDF/URI.pm (_new_from_object):
+	Created.
+
+	* perl/lib/RDF/Node.pm (new_from_uri_string):
+	Die if no URI is given.
+	(uri): Return an RDF::URI object
+
+	* perl/lib/RDF/Model.pm (find_statements,get_arcs,get_sources,get_targets):
+	Retrieve all results if evaluated in a Perl list context.  Makes
+	this common thing easy to do.  In scalar context return a
+	Rdf::Stream of RDF::Statement-s or RDF::Iterator of RDF::Node-s as
+	before.
+
+	* perl/lib/RDF/Makefile.am: Added RSS.pm
+
+	* perl/lib/RDF/Iterator.pm (new):
+	Take a list of creators for the nodes that were used to create
+	the iteration.
+
+	* perl/lib/RDF/RSS.pm:
+	Redland Perl RSS 1.0 module
+
+2000-11-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in: Bump version to 0.9.7
+
+	* Snapshotted redland_0_9_6 for 0.9.6 release
+
+	* redland.spec.in: Tidy for 0.9.6 release
+
+	* python/setup.py:
+	Use string.strip for python 1.5/2.0 compatibility
+
+2000-11-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/api.sgml.in:
+	Minor updates to link to new modules.
+
+	* docs/Makefile.am:
+	Worked out a way to make 1 big HTML API document
+
+2000-11-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* redland.spec.in: Added Perl and Python docs
+
+	* docs/Makefile.am: Reordered doc sections
+	Added documentation for perl, python interfaces.
+
+	* Makefile.am:
+	Added SWIG 1.3a5 common perl/python interface file
+
+	* rdf_storage_hashes.c (librdf_storage_hashes_init_common):
+	On any hash creation failure,
+	end construction.
+	Correct the clean up during creation failures
+
+	* rdf_storage.c (librdf_new_storage_from_factory):
+	Don't free options on failure -
+	will be done by storage factory
+
+	* rdf_parser_repat.c, rdf_parser_redland.c:
+	Updated comment documentation for parser API changes
+
+	* example4.c:
+	Tidy up properly when parsing fails
+
+	* python/RDF.py: Updates for SWIG 1.3a5
+
+	* python/Makefile.am, python/MANIFEST.in, perl/MANIFEST,
+	perl/Makefile.PL, perl/Makefile.am:
+	Updates for SWIG 1.3a5 and common perl/python interface file
+
+	* Redland.i: Merged of perl/python versions
+
+	* perl/Redland.i, python/Redland.i:
+	Moved to root src dir
+
+	* perl/lib/RDF/Statement.pm
+	(new,new_from_statement,_new_from_object,new_from_nodes):
+	Return undef on failure to create an librdf_statement
+
+	* perl/lib/RDF/Node.pm
+	(new,new_from_uri_string,new_from_uri,new_from_literal,new_from_node,_new_from_object):
+	Return undef on failure to create an librdf_node
+
+	* perl/lib/RDF/URI.pm (new,new_from_uri):
+	Return undef on failure to create an librdf_uri
+
+	* perl/lib/RDF/Parser.pm (feature):
+	Use $uri consistently.
+
+	* perl/example.pl:
+	Use repat as test parser since it's always included.
+
+2000-11-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	Don't compile java classes here for the moment
+
+	* rdf_parser_libwww.c:
+	Updates for new parser API
+
+2000-11-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_sirpac.c:
+	Updated for changed parser API
+	Split for 2 SiRPAC implementations - W3C and Stanford
+	Support for streaming/static support via Java --streaming/--static
+	depending on whether the parser features aboutEach/prefix are set.
+
+	* rdf_parser_repat.c:
+	Updated for changed parser API
+	Start to gather parseType literal content - unfinished.
+
+	* rdf_parser_redland.c:
+	Updated for changed parser API
+	Other minor changes
+
+	* rdf_parser_libwww.c:
+	Updated for changed parser API
+
+	* rdf_parser.c:
+	Updated for changed parser API:
+	Constructor takes optional MIME type, URI of syntax
+	Added error/warning handling methods and callbacks
+	Added set/get parser features
+	Modifications for 2 SiRPACs
+
+	* rdf_parser.h: Changed parser API:
+	Constructor takes optional MIME type, URI of syntax
+	Added error/warning handling methods and callbacks
+	Added set/get parser features
+
+	* configure.in:
+	Added python support and configuration
+	Updated for 2 sirpac parsers, SAX and added lots more configuration
+
+	* rdf_concepts.h, rdf_concepts.c:
+	Fixed bad ordering of rdf:/rdfs: concepts.  They may be all
+	correct  now but since this hasn't been machine generated or
+	validated, no guarantee.
+
+	* example1.c:
+	Update for new parser constructor
+
+	* acconfig.h:
+	Updated Java parser defines for SiRPAC, SAX
+
+	* PrintParser.java:
+	Updated to have --streaming/--static flags to pick parser modes.
+	Tidied messages and error reporting.
+
+	* example4.c:
+	Update for new parser constructor
+	Set rdf:aboutEach/prefix parser features depending on the type of
+	parse: parse (model) - yes or parse-stream - no
+
+	* python/Makefile.am:
+	Remove obsolete fake lib stuff - not compiling separate C module
+
+	* python/setup.py:
+	Another attempt to get the linking libraries line right
+
+	* python/MANIFEST.in:
+	Tweaked to pick up test dir
+
+	* python/Makefile.am:
+	Need to use includes in top srcdir
+
+	* python/test/Makefile.am:
+	Added to make autoconf-able
+
+	* perl/example.pl:
+	Updated for new parser constructor api
+
+	* perl/Redland.i:
+	Updated for new parser APIs - constructor, features
+
+	* perl/Makefile.am:
+	Pass installation prefix on to perl commands
+
+	* perl/lib/RDF/Parser.pm (new):
+	Updated for parser constructor args
+	(feature): Added to get/set parser features
+
+	* python/test/test.py, python/setup.py, python/Makefile.am,
+	python/MANIFEST.in, python/RDF.py, python/README,
+	python/Redland.i, python/setup.cfg:
+	Python interface
+
+2000-10-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_repat.c, rdf_parser_libwww.c:
+	Updated for amended parser API with base URIs
+	Use the base URI to fix IDs relative to source URIs (file names)
+
+	* rdf_parser_redland.c, rdf_parser_sirpac.c:
+	Updated for amended parser API with base URIs
+
+	* rdf_parser.h:
+	Updated prototypes for librdf_parser_parse_as_stream and
+	librdf_parser_parse_into_model) to pass base URIs in.
+	Updated factory API to have general URI/file: URI versions of methods
+
+	* rdf_parser.c:
+	(librdf_parser_parse_as_stream,librdf_parser_parse_into_model):
+	Updated to pass base URIs to parsers and deal with parsers that only
+	do file: URIs (have no built in HTTP etc. networking code).
+
+	* example4.c:
+	Updated for amended parser API with base URIs
+	Split parse into parse into model / parse as stream into model
+
+	* example1.c:
+	Updated for amended parser API with base URIs
+
+	* repat/repat.html, repat/rdfparse.h, repat/rdfparse.c,
+	repat/rdfdump.c, repat/CHANGES:
+	Updated to Repat 2000-10-22
+
+	* perl/example.pl:
+	Updated to have parsing too.
+	Tidied message output
+
+	* perl/Makefile.PL, perl/Makefile.am:
+	Zap redland_perl.c - can do in perl land.
+
+	* perl/redland_perl.c:
+	Deleted, can do in perl land
+
+	* perl/Redland.i: Zap get_empty_* functions
+
+	* perl/Redland.i:
+	Update parse APIs now taking base uri parameters.
+
+	* perl/test.pl:
+	Update for strictness - use "" for undef-s in places.
+
+	* perl/lib/RDF/Iterator.pm (next):
+	Document why the returned librdf_node-s are wrapped this way.
+
+	* perl/lib/RDF/Model.pm (serialise):
+	Return stream of librdf_statement-s that should freed
+	(find_statements): Return stream of librdf_statement-s that should
+	NOT be freed
+
+	* perl/lib/RDF/Parser.pm (parse_as_stream,parse_into_model):
+	Update for base uris
+
+	* perl/lib/RDF/Statement.pm (new_from_nodes):
+	Use undef for C-land NULLs.
+	(_new_from_object): Allow control over freedom of wrapped
+	librdf_statement object.
+	(subject,predicate,object): Fixed using these to set a statment part
+	which didn't work at all.
+
+	* perl/lib/RDF/Stream.pm (new,next):
+	Track if streamed librdf_statement objects should be freed as
+	you go or left (shared, handled by librdf_stream destruction)
+
+	* perl/lib/RDF/Node.pm (new_from_node):
+	Use internal object reference not RDF:::Node one to
+	get copy of node
+	(_new_from_object): Don't free librdf_nodes attached this way, at
+	present they are shared.
+	(DESTROY): Support for freeing protection
+
+2000-10-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_node.h:
+	Added prototype for librdf_new_node_from_normalised_uri_string
+
+	* rdf_node.c (librdf_new_node_from_normalised_uri_string):
+	Added to create nodes
+	with URIs relative to new bases
+
+	* rdf_uri.h:
+	Added prototypes for librdf_new_uri_normalised_to_base,
+	librdf_uri_is_file_uri, librdf_uri_as_filename
+
+	* rdf_uri.c (librdf_new_uri_normalised_to_base):
+	Added to create URIs for objects
+	relative to new bases
+	(librdf_uri_is_file_uri): Return true if URI is a file
+	(librdf_uri_as_filename): Get the filename from URI (shared)
+	Updated test code to check the normalising works
+
+	* configure.in, acconfig.h:
+	Added JAVA_CLASS_DIR
+
+	* perl/lib/RDF.pm:
+	Call librdf_init_world with "" for empty char* field, swig is happier
+	that way.
+
+	* perl/lib/RDF/Parser.pm (new):
+	Return undef when object creation fails
+	(parse_into_model): Use correct internal reference
+
+	* perl/lib/RDF/Stream.pm (end, next):
+	Return empty stream when stream object undef
+
+2000-10-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+ 
+	* redland.spec.in: Added perl RPM
+
+	* configure.in: Bump version to 0.9.6
+
+	* redland.spec.in:
+	zap rdf_context.h from devel RPM
+
+	* Snapshotted redland_0_9_5 for 0.9.5 release
+
+	* rdf_parser.c (librdf_init_parser):
+	Make Repat the default RDF parser since it is
+	always available.
+
+	* configure.in:
+	Another round of XML parser configuration work, tests.
+	Now assumes expat and libxml may live in dirs called those names
+
+	* Makefile.am:
+	Added rdf_parser_repat.c to distribution
+
+	* repat/Makefile.am:
+	No need for CFLAGS changes
+
+2000-10-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_list.h, rdf_list.c:
+	Made list implementation be double-linked so can remove at both ends
+
+	* rdf_parser.h, rdf_parser.c:
+	Added repat
+
+	* rdf_parser_repat.c:
+	Repat RDF Parser implementation
+
+	* configure.in:
+	Added tests for repat RDF parser and configuring repat sub directory
+
+	* acconfig.h: Added HAVE_REPAT_RDF_PARSER
+
+	* repat/rdfdump.c, repat/rdfparse.c, repat/rdfparse.h,
+	repat/repat.html, repat/CHANGES, repat/Makefile.am, repat/README:
+	Imported Repat dated 2000-10-14
+
+2000-10-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in:
+	Check for XML_Parser_Create in xmlparse, don't need expat namespace
+	support any more
+
+	* Makefile.am:
+	Added concepts, removed contexts
+
+	* rdf_parser_redland.c:
+	Track namespace declarations in/out of XML parsing scope
+	(librdf_parser_redland_free): Created
+
+	* rdf_concepts.c:
+	Initialise namespace uri static pointers to NULLs
+
+2000-10-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf.h: Removed contexts
+
+	* rdf_statement.h:
+	Lots of changes throughout to make librdf_statement be librdf_node.
+	No user visible changes to the interface.
+	Removed all context interface references
+
+	* rdf_node.h:
+	Lots of changes throughout to make nodes be Statements (done) and
+	other RDF concepts (not done yet).
+
+	* rdf_statement.c:
+	Lots of changes throughout to make librdf_statement be librdf_node.
+	No user visible changes from this interface.
+	Removed all references to contexts - these will be done another way
+
+	* rdf_node.c:
+	Lots of changes throughout to make nodes be Statements (done) and
+	other RDF concepts (not done yet).
+	(librdf_finish_node): Added
+	Use const char* instead of char* where appropriate
+	(librdf_new_node_from_uri_qname): Added, to create a new from a
+	URI+qname
+
+	* rdf_uri.h:
+	Try using const char* instead of char*
+	Added librdf_new_uri_from_uri_qname
+
+	* rdf_uri.c:
+	(librdf_new_uri, ..) Try using const char* instead of char*
+	(librdf_new_uri_from_uri_qname): Create a URI from an existing URI
+	plus a qname
+
+	* rdf_init.c (librdf_destroy_world):
+	Reorder destruction order to be reverse of
+	creation
+	Added concepts init/finish stuff
+
+	* rdf_concepts.c, rdf_concepts.h:
+	RDF Model, Syntax and Schema concepts
+
+	* rdf_context.h: Not needed
+
+2000-10-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/example.pl:
+	Exercise the methods for retrieving statement parts and the as_string methods
+
+	* perl/lib/RDF/Statement.pm (object):
+	Extra return removed, oops.
+
+2000-10-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Statement.pm (subject,predicate,object):
+	Return new RDF::Node objects
+
+2000-10-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am:
+	make clean now tidies everything generated except for swig-derived
+	output
+
+	* perl/redland_perl.c, perl/Redland.i:
+	Added redland_perl_get_empty_hash
+
+2000-10-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am:
+	make clean now tidies everything generated except for swig-derived
+	output
+
+	* perl/redland_perl.c, perl/Redland.i:
+	Added redland_perl_get_empty_hash
+
+2000-10-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.PL:
+	Add all remaining libs to linkin from output of redland --libs
+
+	* perl/Redland.i:
+	Remove support for librdf_uri_as_string since librdf_uri_to_string is
+	better for Perl, it owns the new memory.
+
+	* perl/test.pl:
+	Added Redland:: and RDF:: versions of all tests.
+
+	* perl/lib/RDF/Statement.pm:
+	Add flag to avoid freeing a 'wrapped' object created and owned by
+	librdf
+
+	* perl/lib/RDF/Model.pm:
+	When creating streams or iterators, return a reference to this model
+	so that the objects can keep a reference to this object preventing
+	premature destruction before this object.
+
+	* perl/lib/RDF/URI.pm (as_string):
+	Use librdf_uri_to_string to prevent sharing a char*
+	pointer.
+
+	* perl/lib/RDF/Stream.pm:
+	Track the object that created the RDF::Stream object so we don't
+	get freed before it does.
+
+	* perl/lib/RDF/Iterator.pm:
+	Track the object that created the RDF::Iterator object so we don't
+	get freed before it does.
+
+2000-09-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in: Bump version to 0.9.4
+
+	* Snapshotted redland_0_9_4 for 0.9.4 release
+
+	* perl/example.pl:
+	Redland eaxmple Perl program
+
+	* perl/Makefile.PL:
+	Convert output of redland-config --libs into absolute dirs - hack.
+
+	* perl/Makefile.am: Added redland_perl.c
+
+	* perl/redland_perl.c:
+	Extra SWIG-perl / redland interfaces for Redland
+
+	* perl/Redland.i:
+	Added redland_perl_get_empty_node to get (librdf_node*)NULL pointers
+	- there must be an easier way to do this.
+
+	* perl/test.pl:
+	More warnings, error checking.
+	Turn on debugging if TEST_VERBOSE envariable defined
+	Check statement querying, serialising and printing
+
+	* perl/lib/RDF/URI.pm: Use $RDF::Debug
+
+	* perl/lib/RDF/Stream.pm: Use $RDF::Debug
+	(next) Fixed to return RDF::Statement objects
+
+	* perl/lib/RDF/Storage.pm: Use $RDF::Debug
+	Make constructors return undef on failure
+
+	* perl/lib/RDF/Statement.pm: Use $RDF::Debug
+	(new_from_nodes) Replace undef node references with NULL
+	librdf_node pointers and tidy up more carefully.
+	(_new_from_object): Created to make perl objects from
+	librdf_statement objects created by librdf
+
+	* perl/lib/RDF/Parser.pm: Use $RDF::Debug
+
+	* perl/lib/RDF/Node.pm: Use $RDF::Debug
+	(_new_from_object): Created to make perl objects from librdf_node
+	objects created by librdf
+
+	* perl/lib/RDF/Model.pm: Use $RDF::Debug
+	Make constructors return undef on failure
+	(add_statement): Don't zap things that don't exist.
+
+	* perl/lib/RDF/Iterator.pm: Use $RDF::Debug
+	(next) Renamed from get_next, fixed to return RDF::Node objects
+
+	* perl/lib/RDF.pm:
+	Added $RDF::Debug variable.
+
+2000-09-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_redland.c:
+	Redland RDF Parser implementation
+
+	* configure.in:
+	Check for libxml using xml-config program and insert xml-config
+	invocations into LIBS and CFLAGS when needed.
+	Don't build libwww rdf parser if RDF support isn't in it.
+
+	* Makefile.am: Added rdf_parser_redland.c
+
+	* configure.in:
+	Fix XML library checking tests
+	Add XML objects to librdf when using local copies from source
+	Added perl directory to subdirs list and use automakefiles there
+
+	* Makefile.am:
+	Added XML_OBJS to allow XML parser objects to be in librdf.a when
+	necessary
+
+	* perl/Makefile.PL:
+	Receive configuration values (package, version, top src dir) from
+	environment
+
+	* perl/Makefile.am:
+	Added perl build, check, install, clean etc support
+
+	* perl/lib/RDF/Makefile.am, perl/Makefile.am, perl/lib/Makefile.am:
+	Added automake for perl
+
+	* perl/Makefile.PL: Output to Makefile.perl
+	Ensure only .pm files are installed
+
+	* perl/MANIFEST, perl/MANIFEST.SKIP,
+	perl/lib/RDF/Storage.pm, perl/lib/RDF/Stream.pm,
+	perl/lib/RDF/URI.pm, perl/lib/RDF/Iterator.pm,
+	perl/lib/RDF/Model.pm, perl/lib/RDF/Node.pm,
+	perl/lib/RDF/Parser.pm, perl/lib/RDF/Statement.pm,
+	perl/Makefile.PL, perl/Redland.i, perl/lib/RDF.pm, perl/test.pl:
+	Added perl interface
+
+	* rdf_init.c:
+	export copyright and version constants
+
+2000-09-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser.c (librdf_init_parser):
+	Don't use redland RDF parser by default - not
+	working yet.
+
+	* expat/xmltok/Makefile.am:
+	Add -DXML_NS for expat - enabling namespace support.
+
+	* rdf_parser.h:
+	Prototype for redland librdf_parser_redland_constructor
+
+	* rdf_parser.c:
+	Initialise redland (internal) parser if present
+
+	* configure.in:
+	Added expat / libxml configuration - searching in system or source tree
+	Added configurable rdf parser option --enables-parsers
+
+	* acconfig.h:
+	Added NEED_EXPAT and NEED_LIBXML
+
+	* Makefile.am: Reorganised header macros
+	Added LICENSE.txt to dist
+
+2000-09-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* acconfig.h: Added HAVE_REDLAND_RDF_PARSER
+
+2000-08-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf.h, rdf_storage_hashes.c, rdf_hash.c, rdf_heuristics.c:
+	Use rdf_heuristics.h header
+
+	* rdf_init.c: Use rdf_init.h header
+
+	* rdf_init.h:
+	Overall library initialisation / termination prototypes
+
+	* rdf_heuristics.h:
+	Heuristic routines to guess things about RDF prototypes
+
+	* redland.spec.in: RPM spec file
+
+	* configure.in: Bump version to 0.9.4
+
+2000-08-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Snapshotted redland_0_9_3 for 0.9.3 release
+
+	* example4.c: oops - s/new/free/
+
+	* docs/Makefile.am: Tidy order of junk
+
+	* example4.c: Added parse command.
+
+	* example4.c: initialise cmd
+
+	* Makefile.am:
+	Added autogen.sh to distribution.
+
+	* autogen.sh:
+	Generates the initial makefiles from a pristine CVS tree
+
+	* configure.in: Configure Java sources
+
+	* Makefile.am:
+	Maintainer - compile the java classes
+	Add the sources and classes to the release
+
+2000-08-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* PrintParser.java:
+	Use streaming SiRPAC to parse RDF/XML content to triples
+
+	* PrintConsumer.java:
+	SiRPAC RDF consumer that prints out triple as they are added
+
+	* rdf_parser_sirpac.c:
+	Use SiRPAC in streaming mode via local PrintParser class
+
+	* configure.in:
+	Don't check for HTRDFParseFile yet
+
+	* rdf_stream.h:
+	Added prototype for librdf_new_stream_from_node_iterator
+
+	* rdf_stream.c (librdf_new_stream_from_node_iterator):
+	Added, creating a stream from
+	a node iterator and a partial statement.
+	(librdf_stream_from_node_iterator_end_of_stream,
+	librdf_stream_from_node_iterator_next_statement,
+	librdf_stream_from_node_iterator_finished): Added, implementing the
+	stream for the above function.
+
+	* rdf_storage_hashes.c:
+	Updated comments in storage hashes context structure.
+	(librdf_storage_hashes_find_sources,librdf_storage_hashes_find_arcs,librdf_storage_hashes_find_targest):
+	Added and implemented returning an interator over sources, arcs,
+	targets nodes for storage hashes.
+	(librdf_storage_storage_hashes_node_iterator_have_elements,
+	librdf_storage_storage_hashes_node_iterator_get_next,
+	librdf_storage_storage_hashes_node_iterator_finished): Added,
+	implementing the iterator API for the above node iterators
+	(librdf_storage_hashes_node_iterator_create): Added helper function
+	to create the iterator for the above node iterators.
+
+	* rdf_storage.c (librdf_storage_node_stream_to_node_create):
+	Added, implementing
+	duplicated code that was in get sources, targets and arcs methods.
+
+	* rdf_statement.h:
+	Update documentation about use of statement parts macros
+
+	* rdf_statement.c (librdf_new_statement_from_statement):
+	Copy partial statements
+	correctly and return an error only when a node copy fails.
+
+	* rdf_node.c (librdf_new_node_from_node):
+	Return NULL (fail) when given NULL node
+
+	* rdf_init.c (librdf_init_world):
+	 More documentation added.
+
+	* rdf_hash_memory.c:
+	Corrected librdf_hash_memory_exists return code documentation.
+
+	* rdf_hash_bdb.c (librdf_hash_bdb_exists):
+	Corrected return code documentation.
+	When want key/value, for earlier BDB V2, with no DB_GET_BOTH flag,
+	implement using cursor and for BDB V1, using sequence (V1 not tested)
+
+	* rdf_hash.c:
+	Corrected librdf_hash_exists return code documentation.
+
+	* Makefile.am: clean test databases
+
+	* example4.c:
+	Tidied code, removed some duplicate long expressions.
+	Added more detailed usage.
+
+	* configure.in:
+	Check for HTRDFParseFile in libwww
+
+	* docs/Makefile.am:
+	Added hash cursor, storage hashes, heuristics sections
+	Amended rules to build HTML api automatically when SGML changes
+
+	* docs/api.sgml.in:
+	Added hash cursor, storage hashes, heuristics sections
+
+2000-08-27  Dave Beckett <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_storage_hashes.c:
+	Updated for new hash API
+	(librdf_storage_hashes_init_common): Created from init method to
+	provide core code for init and clone.
+	(librdf_storage_hashes_clone): Created and works.
+	(librdf_storage_hashes_add_remove_statement): Create from
+	add_statement method to provide core code for add/remove statement
+	(librdf_storage_hashes_remove_statement): Implemented.
+
+	* example4.c:
+	Can now check for statements with contains, add and remove statements.
+
+	* example1.c:
+	Set new=yes to create new storage
+
+	* Makefile.am: Added examples target
+
+	* rdf_hash_memory.c, rdf_hash_bdb.c, rdf_hash.h, rdf_hash.c:
+	Updated for new hash API
+
+	* rdf_heuristics.c (librdf_heuristic_gen_name):
+	Fix an off-by-one error.
+
+	* rdf_model.h:
+	Removed librdf_new_model_from_stream prototype - not needed
+
+	* rdf_model.c (librdf_new_model_from_stream):
+	Deleted, not needed. A model can be
+	created using librdf_new_model and statements added from a stream
+	using librdf_model_add_statements
+
+	* rdf_uri.c: Updated for new hash API
+
+2000-08-26  Dave Beckett <Dave.Beckett@bristol.ac.uk>
+
+	* example3.c: option hash_type -> hash-type
+
+	* Makefile.am: Added example4
+
+	* example4.c:
+	Redland example code querying stored triples
+
+	* rdf_hash_gdbm.c:
+	Updated for cloning support but not tested - it compiles and that's all.
+
+	* example1.c: option hash_type -> hash-type
+
+	* rdf_hash_memory.c:
+	Update context for clone support
+	(librdf_hash_memory_create): Added object creation call
+	(librdf_hash_memory_destroy): Added object destruction call - memory
+	freeing is now done here.
+	(librdf_hash_memory_open): Now a nop
+	(librdf_hash_memory_close): Now a nop
+	(librdf_hash_memory_clone): Added clone method
+
+	* rdf_hash_bdb.c:
+	Update context for clone support
+	(librdf_hash_bdb_create): Added object creation call
+	(librdf_hash_bdb_destroy): Added object destruction call (nop)
+	(librdf_hash_bdb_open): Initialise more state for use by clone
+	(librdf_hash_bdb_clone): Added clone method, calling librdf_hash_bdb_open
+
+	* rdf_storage.c (librdf_new_storage_from_storage):
+	Correct order of storage initialisation
+
+	* rdf_storage.h: Added clone method
+
+	* example2.c: option hash_type -> hash-type
+
+	* rdf_hash.c (librdf_new_hash_from_factory):
+	Call factory create method
+	(librdf_new_hash_from_hash): Generate a new identifier for copy, pass
+	on to hash factory clone method to do work.
+	(librdf_free_hash): Call factory destroy method too.
+	(librdf_hash_open): Copy and store identifier for later use.
+	(librdf_hash_close): Free store identifier
+	Test code: test hash cloning and get as long and boolean methods
+
+	* rdf_hash.h:
+	Rename prototype arg to prevent clash with type defined in gdbm.h
+	hash object now stores identifier, for later use when cloning
+	In hash factory:
+	Amended clone method to take necessary parameters.
+	Added create and destroy methods for work at hash object creation / destruction
+
+	* librdf.h:
+	Made librdf_heuristic_object_is_literal public again - useful in user code.
+
+2000-08-25  Dave Beckett <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_storage_hashes.c:
+	Keep a copy of the hash_type and db_dir options, for use in cloneing
+	renamed "hash_type" option to "hash-type"
+
+	* rdf_storage.h:
+	Added storage factory clone function
+	Added librdf_new_storage_from_storage prototype.
+
+	* rdf_storage.c (librdf_new_storage_from_storage):
+	Added, uses clone method of
+	factory if defined (else dies at present)
+
+	* rdf_heuristics.c:
+	Added include to get strncpy prototype
+
+	* rdf_model.c (librdf_new_model_from_model):
+	Implemented by making
+	librdf_new_storage_from_storage to do all the work.
+
+	* Makefile.am: rdf_heuristics_test test added
+
+	* rdf_heuristics.c (librdf_heuristic_gen_name):
+	Added.
+	Test code - added for librdf_heuristic_gen_name
+
+	* configure.in:
+	Check for mkstemp mktemp tmpnam, used in librdf_heuristic_gen_name
+
+	* rdf_hash.h:
+	Added hash factory clone function
+	Added librdf_new_hash_from_hash prototype.
+
+	* rdf_hash.c (librdf_new_hash_from_hash):
+	Copy constructor added - requires hash
+	factory clone function to be implemented
+
+2000-08-22  Dave Beckett <Dave.Beckett@bristol.ac.uk>
+
+	* librdf.h:
+	Attempt to split public / private header files
+
+	* rdf_parser_sirpac.c:
+	Don't throw away SiRPAC stderr output (error messages), and display
+	warning if pipe closes or sirpac execution seems to fail.
+
+	* rdf_files.h, rdf_files.c:
+	RDF File and directory handling utilities
+
+	* configure.in: Bump version to 0.9.3
+
+	* example3.c:
+	Redland example code creating model, statement and storing it in 10 lines
+
+	* Makefile.am:
+	Added example3, renamed example to example1
+
+	* example.c, example1.c:
+	example.c renamed to example1.c
+
+	* rdf_statement.h:
+	Added librdf_new_statement_from_nodes prototype
+
+	* rdf_statement.c (librdf_new_statement_from_nodes):
+	Added, creates a new statement
+	from node objects - useful for chaining calls to create statements.
+
+	* rdf_digest.c:
+	Test code: check digest answers against known correct values
+
+2000-08-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Snapshotted redland_0_9_2 for 0.9.2 release
+
+	* acconfig.h, configure.in, rdf_init.c:
+	configure now splits and generates sub-version numbers
+
+	* Makefile.am:
+	Add api directory to distribution, remove it when really cleaning
+
+	* docs/Makefile.am:
+	Tidy up before building SGML file
+
+	* docs/build-docs:
+	Fix kernel-doc problem ignoring &librdf_foo stuff
+
+	* docs/api.sgml.in:
+	Added new section "Introduction to Objects in C" outlining
+	conventions for methods, constructors etc.
+
+	* docs/Makefile.am:
+	Added overview.pdf, some make targets for overview.*
+
+	* docs/overview.xfig: Added title, copyright.
+	Made a little smaller
+
+2000-08-18  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/Makefile.am: Added API overview files
+
+	* docs/overview.xfig: API overview XFig
+
+	* Snapshotted redland_0_9_1 for 0.9.1 release
+
+	* Updated for 0.9.1
+
+	* configure.in:
+	Emit warnings if no persistant storage or RDF parsers configured
+
+	* configure.in, rdf_init.c:
+	Bump version to 0.9.1
+
+	* configure.in:
+	BDB V1 does not work - make configure warn and disable BDB support if
+	only that version is found.
+
+	* rdf_hash_bdb.c (librdf_hash_bdb_cursor_init):
+	cursor creation failures were not
+	passed on.
+	(librdf_hash_bdb_cursor_get): Make it compile with BDB V1 - may not
+	work.
+
+	* Snapshotted redland_0_9_0 for 0.9.1 release
+
+	* configure.in: Now 0.9.0
+
+	* rdf_init.c:
+	Added copyright and version constants
+
+	* Makefile.am:
+	Moved headers around, tried to put correct ones installed.  No promises.
+	* example2.c, example.c:
+	Updated file descriptions
+
+	* rdf_uri.c, rdf_stream.c, rdf_storage_list.c,
+	rdf_storage_hashes.c, rdf_storage.c, rdf_statement.c,
+	rdf_parser_sirpac.c, rdf_parser_libwww.c, rdf_parser.c,
+	rdf_node.c, rdf_model.c, rdf_memory.c, rdf_list.c, rdf_iterator.c,
+	rdf_init.c, rdf_heuristics.c, rdf_hash_memory.c, rdf_hash_gdbm.c,
+	rdf_hash_cursor.c, rdf_hash_bdb.c, rdf_hash.c,
+	rdf_digest_openssl.c, rdf_digest_md5.c, rdf_digest.c: Inside
+	librdf - redland.h -> librdf.h
+
+	* redland.h: Fix macros
+
+	* redland.h:
+	Now just a main header, including component headers
+
+	* librdf.h: redland.h -> librdf.h
+
+	* Makefile.am, redland-config.in:
+	libredland -> librdf
+
+2000-08-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am, librdf.h, redland.h:
+	librdf.h->redland.h
+
+	* rdf_parser.c, rdf_parser_libwww.c, rdf_parser_sirpac.c,
+	rdf_statement.c, rdf_storage.c, rdf_storage_hashes.c,
+	rdf_storage_list.c, rdf_stream.c, rdf_uri.c, rdf_hash_cursor.c,
+	rdf_hash_gdbm.c, rdf_hash_memory.c, rdf_heuristics.c, rdf_init.c,
+	rdf_iterator.c, rdf_list.c, rdf_memory.c, rdf_model.c, rdf_node.c,
+	example.c, example2.c, rdf_digest.c, rdf_digest_md5.c,
+	rdf_digest_openssl.c, rdf_hash.c, rdf_hash_bdb.c: librdf.h ->
+	redland.h
+
+	* .cvsignore: librdf->redland
+
+	* MPL.html: Mozilla Public License V1.1
+
+	* librdf.h, Makefile.am, configure.in:
+	librdf->redland
+
+	* redland-config.in:
+	Renamed from librdf-config.in
+
+	* librdf-config.in:
+	Renamed to redland-config.in
+
+	* rdf_init.c, rdf_heuristics.c:
+	librdf->redland
+
+	* docs/build-docs: License now LGPL/MPL
+
+	* docs/api.sgml.in: librdf->redland
+	Reordered to put most public interfaces at top.
+
+	* Makefile.am: Put MPL.html in distribution.
+
+	* docs/Makefile.am:
+	Added README, README.html and build it
+
+	* configure.in:
+	Ooh lets call it redland, V0.9
+
+	* Makefile.am, configure.in:
+	librdf->redland
+
+	* configure.in, TODO.html, README.html, NEWS.html, Makefile.am,
+	LICENSE.html, INSTALL.html, FAQS.html, librdf-config.in,
+	rdf_digest_md5.c, rdf_storage_hashes.h, rdf_storage_list.c,
+	rdf_storage_list.h, rdf_stream.c, rdf_stream.h, rdf_types.h,
+	rdf_uri.c, rdf_uri.h, rdf_parser_sirpac.c, rdf_statement.c,
+	rdf_statement.h, rdf_storage.c, rdf_storage.h,
+	rdf_storage_hashes.c, rdf_iterator.c, rdf_iterator.h, rdf_list.c,
+	rdf_list.h, rdf_memory.c, rdf_model.c, rdf_model.h, rdf_node.c,
+	rdf_node.h, rdf_parser.c, rdf_parser.h, rdf_parser_libwww.c,
+	rdf_hash.h, rdf_hash_bdb.c, rdf_hash_bdb.h, rdf_hash_cursor.c,
+	rdf_hash_gdbm.c, rdf_hash_gdbm.h, rdf_hash_memory.c,
+	rdf_hash_memory.h, rdf_heuristics.c, rdf_init.c, example.c,
+	example2.c, librdf.h, rdf_context.h, rdf_digest.c, rdf_digest.h,
+	rdf_digest_openssl.c, rdf_hash.c: License now LGPL/MPL
+
+	* rdf_node.c: Correct module comment header
+
+	* example2.c:
+	Store triples on disk in BDB hashes
+
+	* example.c:
+	Update librdf_new_storage calls to include identifier and options
+	Only print search result streams if streams were created.
+
+	* rdf_storage.h:
+	Added new terminate storage method
+	Update librdf_new_storage* prototypes to include identifier
+
+	* rdf_storage.c:
+	Use and initialise the storage as hashes module.
+	Updated some comment documentation.
+	(librdf_new_storage): New API now gets name passed in -
+	since compulsory, no reason to stick in options.
+	Create options hash here and pass on to
+	librdf_new_storage_from_factory, which then owns it.
+	(librdf_new_storage_from_factory): New API including name.  Now owns
+	the options hash, so delete it on error or finishing.
+	(librdf_free_storage): Terminate storage class before freeing.
+	(librdf_storage_stream_to_node_iterator_finished): Delete partial
+	statement parts, stream only if allocated.
+	Test code: Update to new storage open api
+
+	* rdf_hash.h:
+	Updated librdf_hash_open and factory open method to new api
+
+	* rdf_hash.c (librdf_free_hash,librdf_hash_open,librdf_hash_close):
+	Make sure hash
+	is closed before freeing - easy to forget!
+	(librdf_hash_open): New api with is_writable and is_new fields -
+	compulsory for this internal interface so make them arguments not
+	stuck in the options.
+	(librdf_hash_get): Copy data out of value returned from
+	librdf_hash_get_one hash datum and \0 terminate since we want a
+	string.  Don't free the key string passed in.
+	(librdf_hash_get_one): Copy data out of hash datum returned by cursor
+	(shared) into new one, returned to caller.
+	(librdf_hash_from_string): More debugging code, remove 1 state,
+	handle keys with '-' and '_' in them.
+	Test code: Updated for new open api
+
+	* rdf_storage_list.c (librdf_storage_list_init):
+	Use new api. Free passed in options,
+	since not used here.
+	Added new storage terminate method
+	(librdf_storage_list_add_statements): Free stream after finishing
+	with it.
+
+	* rdf_parser_libwww.c:
+	Updated comment documentation.
+
+	* rdf_hash_bdb.c:
+	Changed hash open method to new api
+	(librdf_hash_bdb_open): Use the new is_new and is_writable flags to
+	do correct thing with options.  Use the mode argument for file
+	creation rather than the previous encoded 0644
+
+	* rdf_hash_memory.c:
+	Changed hash open method to new api
+	(librdf_hash_memory_find_node): Fail search if hash is empty
+	(librdf_hash_memory_cursor_get,librdf_hash_memory_cursor_finish):
+	Store last key, value found and free them during cursor use and when
+	finished.
+
+	* rdf_parser_sirpac.c:
+	sirparc -> sirpac throughout
+	(librdf_parser_sirpac_serialise_finished): Free statement used
+	internally on finish.
+
+	* rdf_uri.c (librdf_init_uri):
+	Updated to new librdf_hash_open args
+	(librdf_new_uri): Free hash value once pointer has been extracted.
+	This code still makes me ill to look at.
+
+	* rdf_stream.c (librdf_stream_end):
+	NULL streams are always finished - useful for
+	helping calling code to be smaller.
+
+	* rdf_statement.h:
+	Added prototypes_t for encode/decode routines
+
+	* rdf_statement.c (librdf_statement_encode,
+	librdf_statement_encode_parts,librdf_statement_decode):
+	Added for serialising/deserialising
+	statements into/out of buffers.
+	Test code: Added tests for above
+
+	* rdf_node.h, rdf_node.c:
+	Use size_t for encode/decode routine lengths
+
+	* rdf_model.c:
+	Update to new librdf_new_storage args
+
+	* configure.in:
+	Don't stomp over configure default CFLAGS
+
+2000-08-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am: Added rdf_storage_hashes.[ch]
+
+	* rdf_storage_hashes.h, rdf_storage_hashes.c:
+	Storage in multiple hashes
+
+2000-08-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_node.c:
+	Fix return values from librdf_node_set_uri - previously wrong or
+	ignored (however never fails at present)
+	(librdf_node_encode, librdf_node_decode): Serialise/deserialise node
+	to buffer
+	Test code - added encoding/decoding test
+
+	* rdf_parser_libwww.c (librdf_parser_libwww_parse_common):
+	Renamed from dumb name
+	librdf_parser_libwww_parse_as_stream2.
+	Parsing into model now works.
+
+	* example.c: Use parse_into_model method
+
+	* rdf_parser_sirpac.c, rdf_parser_libwww.c, rdf_parser.h, rdf_parser.c:
+	Renamed method parse_from_uri to parse_as_stream
+	and added parse_into_model method
+
+	* example.c:
+	Expanded to do querying using find_statement and get_targets methods
+	of model.
+
+	* rdf_storage.c:
+	(librdf_storage_get_sources,librdf_storage_get_arcs,librdf_storage_get_targets):
+	Added, either calling storage factory if supported, otherwise
+	provided using the storage factory method find_statements and
+	an iterator that converts the resulting librdf_stream into the
+	required nodes.
+
+	* rdf_storage.h:
+	Added get sources, arcs, targets methods to storage factory
+	Added prototypes for get sources, arcs, targets storage methods
+
+	* rdf_model.c:
+	(librdf_model_get_sources,librdf_model_get_arcs,librdf_model_get_targets):
+	Added, calling storage to implement them
+	Test code: free statement retrieved from stream
+
+	* rdf_model.h:
+	Added prototypes for get sources, arcs, targets methods
+
+	* rdf_node.c (librdf_new_node_from_node):
+	Copy node type.
+	Set literal value on new node, not old!
+	(librdf_node_print): Added
+	(librdf_node_equals): Correct the return values to match interface.
+
+	* rdf_node.h:
+	Added prototype for librdf_node_print
+
+	* rdf_stream.c (librdf_free_stream):
+	Free any stored next statement if present.
+	(librdf_stream_end): Return correct status using
+	stream->is_end_stream
+
+	* rdf_storage_list.c (librdf_storage_list_serialise_next_statement):
+	Create a duplicate
+	statement when serialising, don't pass on original statement pointer.
+
+	* rdf_memory.c (librdf_free):
+	abort() on duplicate free
+
+	* rdf_uri.c (librdf_uri_to_string):
+	Return NULL if NULL uri passed in
+
+	* rdf_statement.c (librdf_new_statement_from_statement):
+	Return NULL if NULL statement
+	passed in.
+	(librdf_statement_to_string): Output s, p, o in that order.
+	(librdf_statement_print): Added
+
+	* rdf_statement.h:
+	Added prototype for librdf_statement_print
+
+	* rdf_iterator.c (librdf_free_iterator):
+	Do nothing if NULL iterator passed in - makes
+	calling code easier to read
+
+2000-08-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash_cursor.c:
+	RDF Hash Cursor Implementation
+
+	* docs/.cvsignore: CVS ignore file
+
+	* example2.c, example.c:
+	Update librdf_init_world call
+
+	* rdf_hash.h, rdf_hash.c:
+	put method takes no flags
+
+	* rdf_uri.h:
+	When verbose debugging, count max URI usage
+
+	* rdf_uri.c:
+	Store URIs in a hash, so there is at most 1 object per URI.
+	Needs more work.
+
+	* rdf_node.c, rdf_statement.c:
+	Initialise/terminate more dependent modules.
+
+	* rdf_model.c:
+	Initialise/terminate all modules, this one needs them all
+
+	* rdf_hash_gdbm.c, rdf_hash_bdb.c, rdf_hash_memory.c:
+	put method takes no flags
+
+	* rdf_init.c:
+	(librdf_init_world) Now takes uris_hash
+	Reordered to init hash before uri
+
+	* librdf.h:
+	librdf_init_world now takes uris_hash
+
+	* acconfig.h: Use #undef not #define
+
+	* acconfig.h:
+	Added HAVE_BDB_CURSOR_4_ARGS, renamed some others
+
+	* configure.in:
+	More improvements to BDB version / capability checking
+
+	* rdf_hash_bdb.c (librdf_hash_bdb_cursor_get):
+	For LIBRDF_HASH_CURSOR_NEXT, with V2
+	and no DB_NEXT_NODUP, make sure loop is exited when there is no
+	previous key.
+
+	* rdf_hash_bdb.c:
+	Works with BDB V3, V2 with duplicates!
+
+	* rdf_hash_gdbm.c:
+	Allegedly might works for getting all key/values, keys, values of one
+	key.  However, no duplicates - do not use.
+
+	* rdf_hash_bdb.c:
+	Works for getting all key/values, keys, values of one key
+
+	* rdf_hash.h:
+	Added get iterator defs (internal)
+	Added prototypes for librdf_hash_print_values, hash cursor
+	functions (internal)
+
+	* rdf_hash_memory.c:
+	Works for getting all key/values, keys, values of one key
+
+	* rdf_hash.c
+	(librdf_hash_get_all,librdf_hash_get_all_iterator_have_elements,
+	librdf_hash_get_all_iterator_get_next,
+	librdf_hash_get_all_iterator_finished):
+	Updated - works with no leaks for memory, bdb.
+	(librdf_hash_print_values): Created
+	Added duplicate key, values to test code
+	Added print values to test code
+
+	* rdf_memory.c:
+	Added dmalloc memory debugging support
+	Improved some messages form
+
+	* librdf.h: Remove inline - not used
+	Added macros for dmalloc memory debugging
+
+	* configure.in:
+	Remove inline check - not needed
+	Check for dmalloc and define MEM, MEM_LIBS
+	Remove rest of gdbm configuration (not working)
+
+	* Makefile.am:
+	Added MEM, MEM_LIBS defines for memory debugging
+
+2000-08-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf.h: Added librdf_hash_cursor
+
+	* Makefile.am: Added rdf_hash_cursor.c
+
+	* rdf_hash_memory.c, rdf_hash.c:
+	Interface changed again to use librdf_hash_cursor
+	Zillions of lines changed
+
+	* rdf_hash.h:
+	Interface changed again to use librdf_hash_cursor
+
+2000-08-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash_memory.c:
+	Use much dumber hash key algorithm, probably good enough
+
+	* configure.in:
+	Turn on low level (and slow) memory debugging for maintainer
+
+	* rdf_memory.c:
+	Don't give detailed warnings unless LIBRDF_MEMORY_DEBUG > 1
+
+	* rdf_hash.c (librdf_hash_datum_new):
+	Fix memory leak - always allocated new
+	memory even if free list had spare datums
+
+	* docs/api.sgml.in:
+	Remove hash_gdbm, since not possible to use at present
+
+	* docs/build-docs:
+	construct the SGML docbook files from the parts
+
+	* docs/Makefile.am:
+	Remove hash_gdbm, since not possible to use at present
+	Invoke perl on build-docs so doesn't matter where perl is
+
+	* rdf_hash_memory.c:
+	Lots of changes to support new hash interface.
+	Created two iterator implementations for providing keys, values of a key.
+	Changed data structure so hash nodes have a list of values.
+	Now track more hash stats - keys, values, ...
+
+	* rdf_hash.c:
+	Updated interface using iterators for getting all keys, all values of a key
+	(librdf_hash_get_as_boolean,librdf_hash_get_as_long): Added
+	Created librdf_hash_datum object and factory to manage them
+	(librdf_init_hash_datums, librdf_free_hash_datums): factory
+	(librdf_hash_datum_new, librdf_hash_datum_free): constructor / destructor
+	Removed factories from user level constructor
+	Added factory constructor
+	(librdf_hash_get): Returns an arbitrary value of key
+	(librdf_hash_get_all): Gets all values of key
+	(librdf_hash_print): Use keys and values iterators
+	(librdf_hash_get_as_boolean, librdf_hash_get_as_long): Created utility routines for use with options e.g. in storage
+	Removed factory stuff from test code
+
+	* rdf_hash.h:
+	Updated interface usign iterators for getting all keys, all values of a key
+	(librdf_hash_get_as_boolean,librdf_hash_get_as_long): Added
+
+	* rdf_hash_gdbm.c:
+	Partially converted to new iterator sequence but not finished.  Will
+	abort() if used.
+
+	* rdf_parser_sirpac.c:
+	Updated for factories, debugging define changes
+
+	* configure.in:
+	Disable gdbm since it can't do dup keys
+
+	* Makefile.am: Clean example2
+
+	* Makefile.am: Compile rdf_parser_test
+	Added rdf_heuristics.c module
+
+	* rdf_node.c:
+	Updated for factories, debugging define changes
+	Added cast to keep C++ happy
+
+	* rdf_statement.c:
+	Updated for debugging define changes
+
+	* example.c:
+	Updated for factories, debugging define changes
+
+	* example2.c:
+	Moved object_is_literal code to rdf_heuristics module.
+	Updated for factories, debugging define changes
+
+	* rdf_parser_libwww.c:
+	Moved object_is_literal code to rdf_heuristics module.
+
+	* rdf_model.c:
+	Removed factory concept, hash options from user level constructors
+	Added extra constructor(s) for power users with factory and hash options.
+	Updated tests for above
+	Print extra debugging iff LIBRDF_DEBUG > 1
+
+	* rdf_memory.c:
+	Compile functions only if LIBRDF_MEMORY_DEBUG defined
+
+	* rdf_iterator.c (librdf_iterator_have_elements):
+	Return false if iterator object is
+	NULL - makes calling code neater since doesn't have to check if
+	iterator object was actually created OK.
+
+	* rdf_uri.c:
+	Updated code for removal of factories from default constructors
+	Enable memory debugging from new macro
+
+	* rdf_storage.c, rdf_parser.c:
+	Removed factory concept, hash options from user level constructors
+	Added extra constructor(s) for power users with factory and hash options.
+	Updated tests for above
+	Print extra debugging iff LIBRDF_DEBUG > 1
+
+	* rdf_storage.h, rdf_parser.h, rdf_model.h, rdf_digest.h:
+	Amended prototypes for constructors with/without factories, hash options
+
+	* rdf_digest.c:
+	Removed factory concept, hash options from user level constructors
+	Added extra constructor(s) for power users with factory and hash options.
+	Updated tests for above
+	Print extra debugging iff LIBRDF_DEBUG > 1
+
+	* rdf_heuristics.c:
+	Heuristic routines used by librdf to guess things
+
+	* librdf.h:
+	Separated memory debugging from general debugging.  Now only turned
+	on when LIBRDF_MEMORY_DEBUG defined.
+	Added prototypes from rdf_heuristics.c
+
+2000-08-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* BUGS.html, TODO.html, Makefile.am:
+	Merge BUGS.html into TODO.html
+
+	* Makefile.am: Send BUGS.html
+
+	* configure.in:
+	don't build expat Makefiles (not used at present)
+
+	* docs/api.sgml.in: Added librdf_digest_md5
+
+	* docs/Makefile.am:
+	Create docbook SGML and HTML
+
+	* Makefile.am: Removed rdf_config.h from dist
+
+	* rdf_digest_md5.c:
+	Make function names consistent with other code and document public
+	function
+
+	* rdf_digest.h, rdf_digest.c:
+	Make librdf local digest calls consistent with other code
+
+	* configure.in, Makefile.am, md5.c, rdf_digest_md5.c:
+	Renamed md5.c to rdf_digest_md5.c
+
+	* docs/api.sgml.in:
+	API documentation skeleton, includes parts derived automatically from source
+
+	* rdf_parser_sirpac.c, rdf_model.c:
+	comment structure typos
+
+	* rdf_node.h:
+	Added prototypes for librdf_node_get_literal_value_is_wf_xml, librdf_node_get_literal_value_xml_space
+
+	* rdf_node.c (librdf_node_get_literal_value_is_wf_xml, librdf_node_get_literal_value_xml_space):
+	Added
+
+	* rdf_uri.c, rdf_stream.c, rdf_storage.c, rdf_statement.c,
+	rdf_parser_sirpac.c, rdf_parser_libwww.c, rdf_parser.c,
+	rdf_node.c, rdf_model.c, rdf_list.c, rdf_iterator.c, rdf_init.c,
+	rdf_hash_memory.c, rdf_hash_gdbm.c, rdf_hash_bdb.c, rdf_hash.c,
+	rdf_digest_openssl.c, rdf_digest.c: Reformatted docu-comments to
+	have short descriptions.
+
+	* rdf_statement.c, rdf_parser_sirpac.c, rdf_parser_libwww.c,
+	rdf_node.h, rdf_node.c, rdf_model.h, rdf_model.c, example2.c:
+	Amend librdf_node object to have optional preservation of
+	xml:space property for literals.
+
+	* configure.in:
+	Don't compile expat dir even if present (just yet)
+
+2000-08-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_uri.c (librdf_new_uri_from_uri):
+	Fix arg documentation
+
+	* rdf_storage.c (librdf_new_storage):
+	Document missing arg
+
+	* rdf_parser_sirpac.c:
+	Remove typedef struct comments - not understood yet
+
+	* rdf_node.c:
+	Fix badly formatted structured comments
+
+	* rdf_iterator.c (librdf_iterator_set_map):
+	Document missing parameter
+
+	* rdf_hash.c:
+	Use hash memory default load factory, don't set it
+
+	* rdf_hash_memory.c (librdf_init_hash_memory):
+	Document default load factor parameter.
+
+	* rdf_hash.c: Indenting
+
+	* rdf_uri.c: Added comments for functions.
+
+	* rdf_parser_libwww.c: Tidy comments
+
+	* rdf_parser_libwww.c:
+	Added comments for functions.
+	Fixed bad use of new URI class.
+
+2000-08-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash_memory.h:
+	Renamed ratio to be load factor
+
+	* rdf_hash_memory.c:
+	Renamed ratio to be load factor and changed to 75%, out of 1000
+
+2000-08-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* example.c: Optionally pass in parser name
+
+2000-08-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_sirpac.c:
+	Use new URI string interface
+
+	* Makefile.am: Use new in memory hash code
+
+	* rdf_hash.c:
+	Use and regiser new in memory hash code
+
+	* rdf_hash_memory.h, rdf_hash_memory.c:
+	RDF hash in memory
+
+	* rdf_hash_list.c, rdf_hash_list.h:
+	Renamed to rdf_hash_memory
+
+	* Makefile.am: Added rdf_uri_test
+
+	* rdf_uri.c: Test URI digest code.
+
+	* rdf_uri.c:
+	Added tests, fixed bug in librdf_new_uri_from_uri
+
+	* rdf_uri.h, rdf_init.c:
+	Added librdf_finish_uri
+
+	* rdf_uri.h, rdf_uri.c, librdf.h:
+	librdf_uri objects are now structs rather than char* wrappers
+
+	* example2.c: Don't do progress markers
+
+	* librdf.h: Include rdf_node.h
+
+	* example2.c: Triple importer example
+
+	* Makefile.am: Added example2
+
+2000-08-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	example.c is not part of the library!
+
+	* configure.in:
+	One more cflags fix for maintainer
+
+	* Makefile.am: Put rdf parser sources in dist
+
+	* rdf_parser_libwww.c: First working version.
+
+	* rdf_node.c:
+	Don't use memcpy to copy a string, misses out the \0!
+
+	* rdf_list.h:
+	Prototype for librdf_list_pop added.
+
+	* rdf_list.c (librdf_list_pop):
+	Added, to get and remove item from head/top of
+	list
+
+	* configure.in:
+	Alter CFLAGS for debug flag at end of calculating what CFLAGS might
+	be
+
+	* expat/Makefile.am:
+	Add expat documentation to dist
+
+	* expat/xmltok/Makefile.am:
+	Automakefile for expat xmltok
+
+	* expat/xmltok/xmltok_impl.h, expat/xmltok/xmltok_ns.c, expat/xmltok/xmlrole.c, expat/xmltok/xmlrole.h, expat/xmltok/xmltok.c, expat/xmltok/xmltok.h, expat/xmltok/xmltok_impl.c, expat/xmltok/dllmain.c, expat/xmltok/iasciitab.h, expat/xmltok/latin1tab.h, expat/xmltok/nametab.h, expat/xmltok/utf8tab.h, expat/xmltok/xmldef.h, expat/xmltok/asciitab.h:
+	Sources for expat xmltok
+
+	* expat/xmltok/.cvsignore: CVS ignore file
+
+	* expat/xmlparse/Makefile.am:
+	automakefile for expat xmlparse
+
+	* expat/xmlparse/.cvsignore: CVS ignore file
+
+	* expat/xmlparse/xmlparse.h, expat/xmlparse/hashtable.c, expat/xmlparse/hashtable.h, expat/xmlparse/xmlparse.c:
+	xmlparse sources
+
+	* expat/gennmtab.c: gennmtab.c
+
+	* expat/expat.html: expat documentation
+
+	* expat/Makefile.am: Automakefile for expat
+
+	* expat/.cvsignore: CVS ignore file
+
+	* rdf_parser_libwww.c:
+	RDF Parser using libwww RDF implementation
+
+	* rdf_parser.h, rdf_parser.c:
+	Added libwww rdf parser
+
+	* rdf_hash_list.c (librdf_hash_list_put):
+	Init new_key to keep gcc happy
+
+	* rdf_hash.c:
+	Init some vars to keep gcc happy
+
+	* acconfig.h: Added libwww rdf parser def
+
+	* Makefile.am: Added full header
+	Added STANDARD_CFLAGS for compiling (external) code that won't work with
+	loads of gcc warning options.
+
+	* configure.in: Added full header
+	If gcc, only then add extra params to compiling
+	If libwww present, check for RDF support
+	If libwww RDF support, compile in libwww rdf parser
+	Compile expat dir if present (not used yet)
+
+	* rdf_hash_gdbm.c (librdf_hash_gdbm_get_seq):
+	If gdbm_nextkey returns no data, return
+	properly.
+
+2000-07-31  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am: example is not a test
+
+	* Makefile.am: Update tests
+
+	* Makefile.am:
+	install a binary - librdf-config, and a header file - librdf.h
+
+	* rdf_storage.c, rdf_statement.c, rdf_parser.c, rdf_node.c, rdf_model.c, rdf_hash.c, rdf_digest.c:
+	Don't turn on debugging by default when compiling STANDALONE
+
+	* rdf_stream.c (librdf_stream_get_next_mapped_statement):
+	Return end of list if
+	next_statement function returns NULL
+
+	* rdf_iterator.c (librdf_iterator_get_next_mapped_element):
+	Return end of list if
+	get_next function returns NULL
+
+	* rdf_hash_bdb.c: Comment fix
+
+	* rdf_hash_list.c: Added comments
+
+	* examples/.cvsignore: Ignore me
+
+	* rdf_hash.c: Small change
+
+	* rdf_hash_gdbm.c (librdf_hash_gdbm_open):
+	Don't add .gdbm to identifier name.
+
+	* rdf_hash_bdb.c: Small fix
+
+	* .cvsignore: Exclude old stuff, LICENSE
+
+	* rdf_hash.c: Added last function comment.
+
+	* rdf_digest.c: Comment typo
+
+	* rdf_hash_bdb.c: Added comments
+
+	* rdf_stream.c, rdf_storage.c, rdf_statement.c, rdf_parser_sirpac.c:
+	Added comments for functions.
+
+2000-07-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* example.c: Remove 1 sirpac reference
+
+	* example.c: Example code using RDF parser
+
+	* rdf_parser_sirpac.c:
+	RDF Parser SiRPAC (via pipe) implementation
+
+	* rdf_parser.h:
+	RDF Parser Factory / Parser interfaces and definition
+
+	* rdf_parser.c:
+	RDF Parser Factory implementation
+
+	* rdf_init.c:
+	Call init/finish for parser module
+
+	* rdf_hash.c: Indented
+
+	* librdf.h: Added librdf_parser references
+
+	* acconfig.h:
+	Added defs for java, Java RDF API jar file and using sirpac rdf
+	parser
+
+	* Makefile.am:
+	Added configurable rdf_parser_sirpac
+
+	* configure.in:
+	Check for java, Java RDF API jar file and configure that parser if
+	possible
+
+	* rdf_model.c:
+	Only report memory leaks when debugging
+
+	* rdf_storage_list.h:
+	RDF Storage List Interface definition
+
+	* rdf_storage.c: RDF Storage Implementation
+
+	* rdf_model.c (librdf_model_print):
+	Print something at start of model
+
+	* .cvsignore:
+	Ignore files generated from HTML
+	Rename config file
+
+	* rdf_storage_list.c (librdf_storage_list_find_map):
+	Return a statement, rather than bool.
+
+	* rdf_iterator.h, rdf_iterator.c:
+	Make mapping function return a (potentially new) node
+
+	* rdf_stream.c, rdf_stream.h:
+	RDF Statement Streams
+
+	* md5.c, rdf_digest.c, rdf_digest.h, rdf_digest_openssl.c, rdf_hash.c, rdf_hash.h, rdf_hash_bdb.c, rdf_hash_bdb.h, rdf_hash_gdbm.c, rdf_hash_gdbm.h, rdf_hash_list.c, rdf_hash_list.h:
+	Comment header change
+	Use new include files
+	Indented again
+
+	* rdf_init.c: Comment header change
+	Use new include files
+	Indented again
+	(librdf_init_world): Re-ordered to create digest factory first, since
+	it is used by other modules.
+
+	* rdf_iterator.c: Comment header change
+	Use new include files
+	Indented again
+	Added filtering/mapping of iterators via a user defined function
+	(librdf_iterator_get_next_mapped_element): Added to provide mapping
+	support.
+	(librdf_iterator_have_elements, librdf_iterator_get_next): Update to
+	provide mapping.
+	(librdf_iterator_set_map): Added to set the map function
+
+	* rdf_iterator.h: Comment header change
+	Use new include files
+	Indented again
+
+	* rdf_list.c: Comment header change
+	Use new include files
+	Indented again
+	(librdf_list_find_node): Uses user-defined 'equals' function if given.
+	(librdf_list_contains): Added
+	(librdf_list_size): Added
+	(librdf_list_set_equals): Added
+	(librdf_list_iterator_get_next): Fixed bug, always returned empty for
+	a 1 element list / missed first element.
+
+	* rdf_list.h, rdf_memory.c:
+	Comment header change
+	Use new include files
+	Indented again
+
+	* rdf_model.c: Comment header change
+	Use new include files
+	Indented again
+	First version working with storage
+	(librdf_free_model, librdf_model_add_submodel, librdf_model_remove_submodel): Sub models code (not tested).
+	(librdf_model_add_statement): Documented
+	(librdf_model_add, librdf_model_add_string_literal_statement):
+	Implemented.
+	(librdf_model_print): Added
+
+	* rdf_model.h: Comment header change
+	Use new include files
+	Indented again
+	Removed struct forward refs to librdf.h
+	Added prototypes for new functions
+
+	* rdf_node.c, rdf_node.h:
+	Comment header change
+	Use new include files
+	Indented again
+
+	* rdf_statement.c: Comment header change
+	Use new include files
+	Indented again
+	Removed never-used commented out bits of methods
+	(librdf_statement_to_string): Carefully handle empty s, p or o.
+	(librdf_statement_equals, librdf_statement_match): Added
+
+	* rdf_statement.h: Comment header change
+	Use new include files
+	Indented again
+	Removed struct forward refs to librdf.h
+	Added prototypes for equals and match methods
+
+	* rdf_storage.h: First working version
+
+	* rdf_uri.h: Comment header change
+	Use new include files
+	Indented again
+	Added librdf_uri_equals
+
+	* rdf_uri.c: Comment header change
+	Use new include files
+	Indented again
+
+	* rdf_types.h: Comment header change
+
+	* rdf_context.h:
+	Use a real struct, still a dummy though.
+
+	* rdf_config.h:
+	Now output of auto-configure process
+
+	* Makefile.am:
+	Added rdf_storage_list and rdf_stream bits
+	Added example.c - sirpac output filter
+
+	* rdf_storage_list.c:
+	RDF Storage List Interface Implementation
+
+	* configure.in:
+	Changes to only include -ldb once
+
+	* configure.in: macro typo
+
+	* configure.in:
+	config header now rdf_config.h
+
+	* librdf.h:
+	Include all rdf_*h headers until just interfaces can be extracted.
+
+2000-07-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* librdf.h: librdf main header
+
+2000-07-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_digest.c: Missed ,
+
+	* rdf_hash_bdb.c: Indented
+
+	* rdf_digest.c: Use calloc with 1 count
+
+	* Makefile.am: Added rdf_storage.[ch]
+
+	* rdf_list.c: Indented
+
+	* rdf_iterator.h: Indented
+	Added finished function / element.
+	Added protototypes for librdf_iterator_have_elements and librdf_iterator_get_next
+
+	* rdf_iterator.c:
+	Indenting, addeddd finished function / element.
+	(librdf_iterator_have_elements): Added
+	(librdf_iterator_get_next): Added
+
+	* rdf_statement.c (librdf_finish_statement):
+	Created
+	(librdf_new_statement_from_statement): Created - clone constructor
+
+	* rdf_statement.h:
+	Indenting, split struct/typdef
+	Added prototypes for librdf_new_statement_from_statement,
+	librdf_finish_statement
+
+	* rdf_init.c:
+	Indenting, added stream & storage
+
+	* rdf_hash.c: Indenting
+	Correct some comments re memory handling
+
+	* examples/libwww-rdf-dump.c: Added ID header
+
+	* examples/libwww-rdf-dump.c: Added header.
+	Output <Statement> instead of typed Description nodes
+
+	* examples/libwww-rdf-dump.c:
+	libwww program to dump RDF URI triples as reified RDF statements
+
+2000-07-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	Added TODO.html, TODO and renamed context
+
+	* rdf_assertion_context.h, rdf_context.h:
+	Renamed to rdf_context
+
+	* rdf_statement.h, rdf_statement.c:
+	Shortened name to rdf_context
+
+2000-07-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash_bdb.c:
+	Make db open/create functions alternatives
+
+	* Makefile.am: Added CC line
+
+	* rdf_hash_bdb.c:
+	Beginnings of BDB V1 support - not working yet
+
+	* acconfig.h: Added HAVE_DBOPEN
+
+	* configure.in: Test for dbopen
+
+	* .cvsignore: Added more autoconf bits
+
+	* configure.in:
+	Define HAVE_LOCAL_xxxx_DIGEST correctly
+
+	* md5.c: Fix wrong header files.
+
+	* rdf_hash.h:
+	Added prototype for librdf_finish_hash
+
+	* rdf_digest.h:
+	Added prototype for librdf_finish_digest
+
+	* Makefile.am: Added rdf_memory.c
+	Define -DLIBRDF_DEBUG for maintainer CFLAGS
+
+	* rdf_uri.c: Indented
+
+	* rdf_statement.c (librdf_statement_to_string):
+	Free strings for nodes before
+	returning.
+
+	* rdf_node.h: Indented.
+	Made node type be enum librdf_node_type instead of int.
+
+	* rdf_node.c:
+	Indented, add documentation for all functions.
+
+	* rdf_memory.c:
+	Added verbose memory debugging if LIBRDF_MEMORY_DEBUG defined
+
+	* rdf_init.c:
+	Moved prototypes to rdf_config.h
+	(librdf_destroy_world): Created.
+
+	* rdf_hash_list.c: Indented and tidied code.
+
+	* rdf_hash_gdbm.c (librdf_hash_gdbm_close):
+	Added missing free of gdbm current key
+
+	* rdf_hash.c (librdf_finish_hash):
+	Added to clean up module
+	(librdf_delete_hash_factories): Added to implement above
+	(librdf_free_hash): Added missing free of hash context.
+	(librdf_hash_print): Added missing free of hash value
+
+	* rdf_digest.c (librdf_finish_digest):
+	Added to clean up module
+	(librdf_delete_digest_factories): Added to implement above
+
+	* rdf_config.h:
+	Use librdf debugging memory functions if LIBRDF_DEBUG is defined
+	Added librdf_init_world and librdf_destroy_world prototypes.
+
+	* rdf_memory.c:
+	RDF Memory Debugging Implementation
+
+2000-07-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash.c, rdf_digest_openssl.c:
+	Comment all public functions, indented.
+
+	* rdf_digest.c:
+	Comment all functions, indented.
+
+	* configure.in:
+	Define correct macro for openssl crypto funcs
+
+	* configure.in: Really 0.1
+
+	* rdf_hash_gdbm.h, rdf_hash.h, rdf_config.h, rdf_uri.h, rdf_uri.c, rdf_types.h, rdf_storage.h, rdf_statement.h, rdf_statement.c, rdf_node.h, rdf_node.c, rdf_model.h, rdf_model.c, rdf_list.h, rdf_list.c, rdf_iterator.h, rdf_iterator.c, rdf_init.c, rdf_hash_list.h, rdf_hash_list.c, rdf_hash_gdbm.c, rdf_hash_bdb.h, rdf_hash_bdb.c, rdf_hash.c, rdf_digest_openssl.c, rdf_digest.h, rdf_digest.c, rdf_assertion_context.h, md5.c:
+	Renamed all functions to be librdf_* and all macros to be LIBRDF_*
+
+	* rdf_hash_list.c, rdf_hash_bdb.c, rdf_hash.h, rdf_hash.c:
+	Changed get_seq flags to use enum and called RDF_HASH_SEQUENCE* now
+
+	* Makefile.am: Don't need LICENSE.h rule
+
+	* rdf_hash_gdbm.c:
+	Comment all functions, indented.
+
+2000-07-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_node.c:
+	Allow literals to be set with boolean is_wf_xml asserting if is well
+	formed XML content.
+	(rdf_node_get_digest): Digest literal string value when node is a literal
+
+	* rdf_uri.c:
+	Call final when calculating digest
+
+	* rdf_statement.c, rdf_node.h:
+	Allow literals to be set with boolean is_wf_xml asserting if is well
+	formed XML content.
+
+2000-07-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/api.html, docs/packages.html:
+	Documentation, of sorts
+
+	* rdf_hash_list.c:
+	Use memcmp, not strcmp - the keys are blobs not strings
+
+	* Makefile.am:
+	Added memcmp.c to dist, not library sources
+
+	* memcmp.c: memcpy function
+
+	* Makefile.am:
+	Define SUBDIRS from configured content
+	Added (optional) memcmp.c for systems with broken libc
+
+	* configure.in: Look for an ANSI C compiler
+	Default libwww=no for present
+	Genercised digest check tests, thanks to another configure.in I read
+
+2000-07-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_uri.h, rdf_types.h, rdf_storage.h, rdf_statement.h,
+	rdf_node.h, rdf_model.h, rdf_list.h, rdf_iterator.h,
+	rdf_hash_list.h, rdf_hash_gdbm.h, rdf_hash_bdb.h, rdf_hash_bdb.c,
+	rdf_hash.h, rdf_digest.h, rdf_assertion_context.h: Added extern
+	"C" { ... } blocks protecting C types for C++
+
+	* configure.in, Makefile.am:
+	Added librdf-config.in
+
+	* librdf-config.in: librdf config program
+
+	* rdf_init.c, rdf_hash.h, rdf_hash.c, rdf_digest.h, rdf_digest.c:
+	renamed get_rdf_* functions to rdf_get_*
+
+	* Makefile.am:
+	Added rdf_hash_bdb.[ch] to distribution
+
+2000-07-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* acconfig.h:
+	Added macros for Berkeley DB tests
+
+	* rdf_hash_bdb.c:
+	Use configure tests, not hard coded defines.
+	Not tested with anything except V2
+
+	* configure.in:
+	Added Berkeley DB tests, only done with V2 at present
+
+	* rdf_hash_gdbm.c:
+	Determine file name from identifier + suffix (should this really be
+	here?  Probably not)
+
+	* rdf_hash.c: Added BDB inits, tests
+
+	* rdf_hash_bdb.c, rdf_hash_bdb.h:
+	Berkeley DB V2/3
+
+	* rdf_hash_db.c: junk
+
+	* Makefile.am:
+	Rule to create LICENSE.h for including in sources.
+
+	* rdf_hash_list.c (rdf_hash_list_exists):
+	Implemented new exists method
+
+	* rdf_hash_gdbm.c (rdf_hash_gdbm_exists):
+	Implemented new exists method
+
+	* rdf_hash.h: Added exists method
+	Made open take a rdf_hash* options
+	Reorded declarations so can do above.
+
+	* rdf_hash.c:
+	Added javadoc-y comments for all functions.
+	(rdf_hash_from_array_of_strings): Created, with test.
+	(rdf_hash_exists): Created.
+
+	* rdf_digest_openssl.c, rdf_digest.c:
+	Reorder digests to make SHA, RIPEMD160 then MD5 defaults
+
+	* rdf_config.h:
+	Make fatal errors call abort() - core dump, usually.
+
+	* rdf_hash.c:
+	Enable tedious hash factory registrations, now that they can be
+	trigged by debugging macros.
+
+	* Makefile.am:
+	Use -DSTANDALONE to trigger tests
+
+	* rdf_statement.c, rdf_node.c, rdf_model.c, rdf_hash.c, rdf_digest.c:
+	Use #ifdef STANDALONE to trigger tests and turn on debugging.
+	Tweak debugging macro names.
+
+	* md5.c, rdf_digest_openssl.c:
+	Allocate digests with context - don't store in a class static area.
+
+2000-07-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash.c:
+	Added (int) casts for is* calls which causes warnings on Solaris
+	where they are prototyped functions, not macros.
+
+	* rdf_model.h:
+	Added rdf_model_add_submodel and rdf_model_remove_submodel
+	prototypes.
+
+	* rdf_iterator.h:
+	Defined real structures and functions
+
+	* rdf_list.h, rdf_list.c:
+	Simple Lists
+
+	* rdf_iterator.c: Iterator implementation
+
+	* rdf_uri.c, rdf_uri.h, rdf_hash_gdbm.c, rdf_hash_gdbm.h,
+	rdf_hash_list.c, rdf_hash_list.h, rdf_init.c, rdf_model.c,
+	rdf_model.h, rdf_node.c, rdf_node.h, rdf_statement.c,
+	rdf_statement.h, rdf_digest.c, rdf_digest.h, rdf_hash.c,
+	rdf_hash.h: Renamed init_rdf_* to start rdf_init_*
+
+	* rdf_model.h, rdf_node.c, rdf_node.h, rdf_statement.c,
+	rdf_statement.h, rdf_uri.c, rdf_uri.h, rdf_digest.c, rdf_digest.h,
+	rdf_hash.c, rdf_hash.h, rdf_hash_list.c, rdf_model.c: Renamed
+	free_rdf_* and new_rdf_* functions to start rdf_free_* and
+	rdf_new_* respectively
+
+	* configure.in, Makefile.am:
+	Added docs subdir
+
+	* COPYING.LIB:
+	GNU LESSER GENERAL PUBLIC LICENSE
+
+	* APIs: Removed, just notes
+
+	* docs/Makefile.am: Added comment header
+
+	* docs/Makefile.am: Documentation
+
+	* rdf_hash_list.c: Use HAVE_STRING_H
+	Replace memcmp with strncmp
+
+	* md5.c: Use HAVE_STRING_H
+
+	* configure.in: Use AM_MAINTAINER_MODE
+	Check for string.h
+
+	* Makefile.am:
+	Added maintainer rules for setting extra CFLAGS
+
+	* Makefile.am:
+	Added rules to build text files from HTML sources
+
+	* NEWS, README:
+	Removed, now derived from HTML source
+
+	* INTERPRETATIONS: Removed
+
+	* configure.in:
+	Added check for libwww (via libwww-config program)
+
+	* acconfig.h: Added have_libwww macro
+
+2000-06-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* .cvsignore: Ignore GPL-ed dir
+
+	* rdf_digest_openssl.c:
+	RDF Digest OpenSSL Digest interface
+
+	* README: Slightly more structure and info
+
+	* rdf_assertion_context.h:
+	RDF Assertion Context definition
+
+	* aclocal.m4: Should not be in CVS
+
+	* acinclude.m4: Restored
+
+	* Makefile.am: Fix \ing problem
+
+	* ripemd160.h: Removed GPLed sources
+
+	* acinclude.m4: No longer needed
+
+	* rdf_statement.h, rdf_statement.c:
+	Added assertion context
+
+	* rdf_digest.h:
+	Removed version structure field.
+
+	* md5.c: Use rdf_types.h
+
+	* configure.in:
+	Test types with latest autoconf macros
+	Fix openssl crypto func test
+
+	* acconfig.h:
+	Changed type defines to latest autoconf standard
+
+	* Makefile.am: Removed GPLed sources
+
+	* bithelp.h: Not used
+
+	* ripemd160.c, sha1.c:
+	Removed GPLed sources
+
+	* types.h, rdf_types.h:
+	types.h now rdf_types.h
+
+	* md5.c: Tidied code
+
+	* md5.c:
+	Replaced GPLed version with public domain one
+
+	* rdf_digest.c:
+	Remove test OPENSSL digest names
+
+	* rdf_digest.h, rdf_digest.c:
+	Use new digest defines
+
+	* configure.in: Improve digest checks
+
+	* acconfig.h: Tidy openssl digest defs
+
+	* Makefile.am: Added rdf_assertion_context.h
+	Added ChangeLog to dist
+
+2000-06-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* .cvsignore, ChangeLog:
+	ChangeLog shouldn't be CVSed!
+
+	* rdf_node.c (new_rdf_node_from_uri_string):
+	Don't declare variables with the same
+	name as the class.
+
+	* rdf_model.c (new_rdf_model):
+	Tweak to function header.
+
+	* rdf_hash_list.c (rdf_hash_list_put):
+	Fixed when updating a value for an existing key.
+
+	* rdf_hash.h:
+	Added prototype for rdf_hash_from_string
+
+	* rdf_hash.c:
+	Removed rather tedious hash registering debugging messages.
+	(rdf_hash_from_string): Wrote - initialises as hash from a string of
+	form "key='value', key2='value2'" with \' escaping ' (not fully
+	tested yet)
+
+	* rdf_digest.h:
+	Added prototype for openssl digest constructor
+
+	* rdf_digest.c:
+	Initialise and test openssl crypto routines
+
+	* configure.in:
+	Rewrote crypto module checks to get them from the openssl crypto
+	library, if present, otherwise look for local implementations
+
+	* acconfig.h: Added more SSL crypto defs
+
+	* rdf_statement.h:
+	Added prototype for rdf_statement_to_string
+
+	* rdf_statement.c (new_rdf_statement):
+	Don't declare variables with the same name as
+	the class.
+
+	* Makefile.am: Renamed rmd* to ripemd160*
+	Added $(LIBS) to link lines
+	Added rdf_digest_openssl.c (optional)
+	Boosed gcc -W options
+
+	* ripemd160.c, ripemd160.h, rmd.h, rmd160.c:
+	Renamed rmd* to ripemd160*
+
+	* rdf_init.c: Added prototype
+
+	* rdf_model.h:
+	Use rdf_storage not rdf_model_storage
+	Declare prototype correctly
+
+	* rdf_storage.h:
+	Renamed from rdf_model_storage.h
+
+	* rdf_model_storage.h:
+	Renamed to rdf_storage.h
+
+2000-06-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* README: Added build proto-instructions
+
+	* rdf_model_storage.h:
+	RDF Model Storage definition
+
+	* rdf_model.c: RDF Model implementation
+
+	* rdf_iterator.h: RDF Iterator definition
+
+	* rdf_init.c:
+	Init digest, hash and model modules too
+
+	* rdf_model.h:
+	Model now has storage and sub models
+
+	* Makefile.am:
+	Added proto-model code, rdf_model_storage.h and rdf_iterator.h
+
+	* .cvsignore: Ignore more
+
+	* rdf_hash_list.c, rdf_hash_list.h, rdf_init.c, rdf_model.h,
+	rdf_node.c, rdf_node.h, rdf_statement.c, rdf_statement.h,
+	rdf_uri.c, rdf_uri.h, Makefile.am, rdf_config.h, rdf_digest.c,
+	rdf_digest.h, rdf_hash.c, rdf_hash.h, rdf_hash_gdbm.c,
+	rdf_hash_gdbm.h: CVS IDs
+
+	* rdf_hash_list.h, rdf_init.c, rdf_model.h, rdf_node.c,
+	rdf_node.h, rdf_statement.c, rdf_statement.h, rdf_uri.c,
+	rdf_uri.h, rmd.h, rmd160.c, sha1.c, types.h: Created directory
+	structure
+
+	* rdf_hash_list.h, rdf_init.c, rdf_model.h, rdf_node.c,
+	rdf_node.h, rdf_statement.c, rdf_statement.h, rdf_uri.c,
+	rdf_uri.h, rmd.h, rmd160.c, sha1.c, types.h: New file.
+
+	* aclocal.m4, bithelp.h, configure.in, md5.c, rdf_config.h,
+	rdf_digest.c, rdf_digest.h, rdf_hash.c, rdf_hash.h, rdf_hash_db.c,
+	rdf_hash_gdbm.c, rdf_hash_gdbm.h, rdf_hash_list.c: Created
+	directory structure
+
+	* aclocal.m4, bithelp.h, configure.in, md5.c, rdf_config.h,
+	rdf_digest.c, rdf_digest.h, rdf_hash.c, rdf_hash.h, rdf_hash_db.c,
+	rdf_hash_gdbm.c, rdf_hash_gdbm.h, rdf_hash_list.c: New file.
+
+	* .cvsignore, APIs, AUTHORS, COPYING, ChangeLog, INTERPRETATIONS,
+	Makefile.am, NEWS, README, acconfig.h, acinclude.m4: Created
+	directory structure
+
+	* .cvsignore, APIs, AUTHORS, COPYING, ChangeLog, INTERPRETATIONS,
+	Makefile.am, NEWS, README, acconfig.h, acinclude.m4: New file.
+
+2000-06-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* It compiles and builds as a GNU automake/conf suite with 
+	'make distcheck' and 'make check'

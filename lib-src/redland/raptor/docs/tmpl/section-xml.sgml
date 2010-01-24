@@ -1,0 +1,408 @@
+<!-- ##### SECTION Title ##### -->
+XML
+
+<!-- ##### SECTION Short_Description ##### -->
+XML and XML Writer
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+XML elements with optional attributes and an XML Writer class that
+can format #raptor_xml_element into output forms, with optional
+"pretty printing" features such as indenting and collapsing empty
+elements.
+</para>
+
+<para>
+Also includes a utility function #raptor_xml_name_check for checking
+a name is legal in some XML version.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_xml_element ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_xml_element ##### -->
+<para>
+
+</para>
+
+@name: 
+@xml_language: 
+@xml_base: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_xml_element_from_namespace_local_name ##### -->
+<para>
+
+</para>
+
+@ns: 
+@name: 
+@xml_language: 
+@xml_base: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_xml_element ##### -->
+<para>
+
+</para>
+
+@element: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_get_name ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_get_attributes ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_get_attributes_count ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_set_attributes ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@attributes: 
+@count: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_declare_namespace ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@nspace: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_is_empty ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_element_get_language ##### -->
+<para>
+
+</para>
+
+@xml_element: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_xml_writer ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@uri_handler: 
+@uri_context: 
+@iostr: 
+@error_handler: 
+@error_data: 
+@canonicalize: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_xml_writer ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_empty_element ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@element: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_start_element ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@element: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_end_element ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@element: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_cdata ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@s: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_cdata_counted ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@s: 
+@len: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_raw ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@s: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_raw_counted ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@s: 
+@len: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_comment ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@s: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_comment_counted ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@s: 
+@len: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_flush ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_newline ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_features_enumerate ##### -->
+<para>
+
+</para>
+
+@feature: 
+@name: 
+@uri: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_get_depth ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_set_feature ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_set_feature_string ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_get_feature ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_writer_get_feature_string ##### -->
+<para>
+
+</para>
+
+@xml_writer: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_xml_element ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@element: 
+@nstack: 
+@is_empty: 
+@is_end: 
+@error_handler: 
+@error_data: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### TYPEDEF raptor_xml_writer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_xml_any_escape_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@len: 
+@buffer: 
+@length: 
+@quote: 
+@xml_version: 
+@error_handler: 
+@error_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_escape_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@len: 
+@buffer: 
+@length: 
+@quote: 
+@error_handler: 
+@error_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_xml_any_escaped_string ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@len: 
+@quote: 
+@xml_version: 
+@error_handler: 
+@error_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_xml_escaped_string ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@len: 
+@quote: 
+@error_handler: 
+@error_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_xml_name_check ##### -->
+<para>
+
+</para>
+
+@string: 
+@length: 
+@xml_version: 
+@Returns: 
+
+

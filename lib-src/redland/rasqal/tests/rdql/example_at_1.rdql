@@ -1,0 +1,16 @@
+SELECT 	?x, ?title, ?a, ?moddate, ?createddate, ?name, ?creatormail
+FROM 	<http://rdfweb.org/people/danbri/2001/06/dcarch-test/dc3.rdf>
+WHERE
+	( ?x, dc:title, ?title),
+	( ?x, dcq:abstract, ?a),
+	( ?x, dcq:modified, ?m),
+	( ?x, dcq:created, ?cd),
+	( ?m, rdf:value, ?moddate),
+	( ?cd, rdf:value, ?createddate),
+	( ?x, dc:creator, ?cr),
+	( ?cr, vcard:FN, ?name),
+	( ?cr, vcard:EMAIL, ?creatormail)
+USING 	dcq for <http://dublincore.org/2000/03/13/dcq#>,
+	rdf for <http://www.w3.org/1999/02/22-rdf-syntax-ns#>,
+	vcard for <http://www.w3.org/2001/vcard-rdf/3.0#>,
+	dc for <http://purl.org/dc/elements/1.1/>

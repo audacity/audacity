@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/ns#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- Check rdf:datatype attribute on property elements -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <rdf:li rdf:datatype="http://example.org/datatype1">val1</rdf:li>
+    <ex:prop2 rdf:datatype="http://example.org/datatype2">val2</ex:prop2>
+    <ex:prop3 rdf:datatype="http://example.org/datatype3" xml:lang="de">val3</ex:prop3>
+  </rdf:Description>
+
+</rdf:RDF>

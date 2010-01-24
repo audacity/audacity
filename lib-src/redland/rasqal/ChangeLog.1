@@ -1,0 +1,258 @@
+2003-10-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdql_parser.y:
+	Add free handlers to all the rasqal_new_sequence calls.
+	(main): use dynamic request/free for rasqal_query so the sequences
+	get freed.
+
+	* rasqal.h: rasqal_parse_query, rdql_parse gain length argument
+
+	* rdql_parser.y (rdql_parse):
+	Updated with length argument.  Use the *scan_bytes method.
+	(main): Update test code for rdql_parse taking query length
+
+	* rasqal_query.c: Updates for rdql_parse taking query length
+
+	* rdql_lexer.l (rdql_token_free):
+	Free string (part of union) only when the token
+	type indicates a string is present.
+	(main): close fh, save memory.
+	Use raw free for raptor-returned memory when debugging.
+
+	* Makefile.am:
+	Gave up and machine-edit rdql_lexer.c output to put an if() around
+	a free with a NULL arg.
+
+	* rdql_parser.y, rdql_lexer.l:
+	(main) Use raptor to turn filename into a URI string
+
+	* Makefile.am: Make librasqal depend on RASQAL_INTERNAL_LIBS
+	Prune MEM lines
+	Make tests use librasqal.la not LIBS
+
+	* configure.ac: Split internal use of libraptor.la and external use of
+	the output of raptor-config --libs
+	Added RASQAL_EXTERNAL_LIBS, RASQAL_LIBTOOLLIBS
+
+	* rasqal-config.in: Tidy exec_prefix.
+	Make libs work right
+
+	* rasqal-config.in: added --libtool-libs
+
+	* configure.ac: Add --with-raptor=internal/system using raptor-config.
+	Handle working inside redland source tree; not tested.
+
+	* rdql_parser.y (rdql_parse): Add uri_string arg.
+	Added fake yy_init_globals to stop compiler warning; rdql_lexer.h
+	wrongly declares a prototype to a static function.
+	(rdql_query_error, rdql_syntax_error, rdql_syntax_warning): Use
+	uri_string, line fields from rdql_parser.
+	(main): Update test code to match changes.
+
+	* rdql_lexer.l:
+	Remove global filename; use uri_string field of rdql_parser
+	(main) Update test code to match.
+
+	* rdql_common.h: rdql_parser_s gains uri_string, line, column.
+
+	* rasqal_query.c:
+	(rasqal_parse_query) Add uri_string arg for base URI and/or error
+	reporting.
+
+	* rasqal.h:
+	rasqal_aprse_query and rdql_parse now take a uri_string for base URI
+	and/or error reporting.
+
+	* rdql_lexer.l: fix standalone error/warning reporting
+
+2003-10-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdql_lexer.l, rdql_parser.y: Add stdarg.h
+
+	* example_at_7.rdql: fix old rdql syntax
+
+	* rdql_lexer.l: Add debugging rdql_syntax_warning
+
+	* configure.ac: back to automake 1.6
+
+	* Makefile.am: Add rdql_common.h
+
+	* configure.ac: Automake 1.7
+
+	* rasqal_internal.h: Add more rdql internal prototypes
+
+	* rdql_parser.y, rdql_lexer.l:
+	Now re-entrant / shared lexer and parsers
+
+	* rdql_common.h: RDQL lexer/parser shared internals
+
+	* rdql_parser.y: Added (regex) flags to lval.
+	Removed bit operators.
+	Removed gramamr rules for bit operators: InclusiveOrExpression,
+	ExclusiveOrExpression, AndExpression no longer used.
+
+	* rdql_lexer.l:
+	Updates for pattern literal and identifier recognition from context.
+	Kill all bit operators.
+	Added regex abbreviations LANGUAGETOKEN, PREFIX, QNAME, QUOTEDURI
+	(copy_regex_token): Added for handling regexes and flags. Not quite
+	working yet.
+	Removed like token.
+
+2003-09-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdql_parser.y: Tidy up after lexing, delete buffers
+
+	* rdql_parser.y: Add PATTERN_LITERAL
+	Kill END (use EOF)
+
+	* rdql_lexer.l:
+	PATTERN_LITERAL now returned using lexer state <PATTERN>
+	Handle some \-escapes in the patterns - guessing
+
+	* rdql_parser.y: Removed term, merged into expression - added pattern.
+	Removed URI from expression, only use as literal uri.
+	Use specific rasql_new_expression* functions.
+
+	* rasqal_general.c:
+	Removed term, merged into expression - added pattern.
+	Remove the 1 use of URI from expression, only use as literal uri.
+	(rasqal_new_1op_expression, rasqal_new_2op_expression,
+	rasqal_new_string_op_expression, rasqal_new_literal_expression,
+	rasqal_new_variable_expression): Added.
+
+	* rasqal.h: Removed term, merged into expression
+
+	* rasqal_general.c:
+	Added start of expression evaluation; committing in order to redo it.
+
+	* rdql_lexer.l: Update notes after those for n3_lexer.l in raptor
+
+2003-08-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdql_lexer.l (skip_cpp_comment): Added
+
+	* rdql_parser.y:
+	Add optional COMMA in lists of vars, triples, inside triples.
+
+	* Makefile.am: Tidy link flags
+
+	* rasqal.h: Added rasqal_compare_strings and rasqal_sequence_sort
+	More RASQAL_API
+
+	* rasqal_sequence.c (rasqal_sequence_ensure): Set min size to 8.
+	(rasqal_sequence_grow): Just double, ensure will make sure
+	it's minimum size is sensible.
+	(rasqal_sequence_set_at): idx+1 is new size.
+	(rasqal_compare_strings): Helper for:
+	(rasqal_sequence_sort): Sort sequences.
+	(main): Add sorting to tests.
+
+	* rasqal_query.c (rasqal_query_print):
+	Update for rasqal_sequence_print calls without
+	print_handler arg.
+
+	* rasqal.h, rdql_parser.y:
+	Update for rasqal_new_sequence calls with print_handler arg.
+
+	* rasqal_sequence.c (rasqal_new_sequence):
+	Lose capacity.  Call now takes free and print
+	handlers.
+	(rasqal_sequence_print_string): Helper, added.
+	(rasqal_sequence_print): Lose print_handler.
+
+	* Makefile.am: Remove -o from $(LINK) lines
+
+	* Makefile.am: Added memory debugging flags
+	flex/yacc output now compile without warnings.
+
+	* rdql_lexer.l: Added missing prototypes not generated by flex.
+
+	* rdql_lexer.l: Tidy and document options.  No more interactive.
+	Fix boolean, null return values.
+
+	* rdql_parser.y: Move C code to section at end of file
+
+	* rdql_parser.y: Prototypes.
+
+	* rasqal_internal.h: Add dmalloc
+
+	* rasqal_query.c: Prototypes.
+	If optional last arg is missing or '-', read from stdin
+
+	* rasqal_query.c: note rdql uri
+
+	* Makefile.am: clean stuff
+	lex -oout
+
+	* rdql_parser.y, rasqal_query.c, rasqal_internal.h,
+	rasqal_general.c, rasqal.h, Makefile.am: Parse tree is now built
+	for RDQL in terms of rasqal sequences, terms, expressions,
+	variables and literals.
+
+	* rasqal_sequence.c:
+	Added rasqal_sequence_print taking a callback method to print the
+	items.
+
+2003-08-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rasqal_sequence.c: Added test suite and corrected.
+	Constructor gains a free_handler.
+
+2003-08-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdql_parser.y, rdql_lexer.l, rasqal_internal.h, Makefile.am:
+	Change to rely on flex features - AT&T lex is just too feature light,
+	and the distribution will ship with the generated files anyway.  Flex
+	is pretty widespread.
+	Change to use prefix setting for names inside the lexer
+	and the generated filenames.  Update the calling code to match.
+
+	* rdql_parser.y: Note where shift/reduce conflicts are
+
+2003-08-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am: Added example5.rdql
+
+	* example5.rdql: Initial import
+
+	* rdql_parser.y: +stdio
+
+	* rasqal.h: Added outline rasqal query and sequence API prototypes.
+
+	* Makefile.am: Added rasqal_query.c rasqal_sequence.
+
+	* rasqal_query.c, rasqal_sequence.c: Initial import
+
+2003-08-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.ac: Bump version to 1.1
+
+	* Snapshotted rasqal_1_0 for 1.0 release
+
+	* rdql_lexer.l: Add <string.h>
+
+	* rasqal.spec.in, Makefile.am: fixes for RPMs
+
+	* rasqal_config.h.in: Not meant to be in CVS
+
+	* fix-groff-xhtml: Import from raptor CVS
+
+	* MPL.html, AUTHORS, INSTALL.html, LICENSE.html: Initial import
+
+	* Makefile.am:
+	Added README.html,  NEWS.html, LICENSE.html, INSTALL.html and
+	librasqal.html
+
+	* NEWS.html, README.html, autogen.sh: Initial import
+
+	* configure.ac: words
+
+	* Makefile.am, configure.ac, example1.rdql, example2.rdql,
+	example3.rdql, example4.rdql, example_at_1.rdql,
+	example_at_2.rdql, example_at_3.rdql, example_at_4.rdql,
+	example_at_5.rdql, example_at_6.rdql, example_at_7.rdql,
+	librasqal.3, rasqal-config.1, rasqal-config.in,
+	rasqal-src-config.in, rasqal.h, rasqal.pc.in, rasqal.spec.in,
+	rasqal_config.h.in, rasqal_general.c, rasqal_internal.h,
+	rdql_lexer.l, rdql_parser.y, win32_config.h: Initial import

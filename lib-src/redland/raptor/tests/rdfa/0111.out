@@ -1,0 +1,2 @@
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/0111.xhtml> <http://www.w3.org/1999/xhtml/vocab#next> _:a .
+_:a <http://www.w3.org/1999/xhtml/vocab#next> _:b .

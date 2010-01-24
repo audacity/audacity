@@ -1,0 +1,56 @@
+<!-- ##### SECTION Title ##### -->
+Heuristics
+
+<!-- ##### SECTION Short_Description ##### -->
+Utility heuristic functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Various utility functions for performing heuristics such as
+generating a name, guessing if a string is a URI or RDF literal.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION librdf_heuristic_gen_name ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_heuristic_is_blank_node ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_heuristic_get_blank_node ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_heuristic_object_is_literal ##### -->
+<para>
+
+</para>
+
+@object: 
+@Returns: 
+
+

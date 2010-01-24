@@ -1,0 +1,19 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "DAWG bound test cases" ;
+    mf:entries
+    ([  mf:name    "dawg-bound-query-001" ;
+        rdfs:comment
+            "BOUND test case." ;
+        mf:action
+            [ qt:query  <bound1.rq> ;
+              qt:data   <data.n3> ] ;
+        mf:result  <bound1-result.n3>
+      ]
+
+    # End of tests
+   ).

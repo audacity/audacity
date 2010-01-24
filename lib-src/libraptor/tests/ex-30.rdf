@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<web:RDF xmlns:web="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://example.org/ns1#"
+         xmlns:ex="http://example.org/ns2#" >
+  <!-- test that (legacy) bare about works when a default
+       namespace is defined
+  -->
+  <web:Description about="http://example.org/node/">
+    <ex:prop1>blah</ex:prop1>
+  </web:Description>
+</web:RDF>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-xml-qname">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-xml-qname.top_of_page">XML QName</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>XML QName</refname>
+<refpurpose>XML Namespace-qualified names.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-xml-qname.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="raptor-qname">raptor_qname</link>;
+<link linkend="raptor-qname">raptor_qname</link>*       <link linkend="raptor-new-qname">raptor_new_qname</link>                    (<link linkend="raptor-namespace-stack">raptor_namespace_stack</link> *nstack,
+                                                         unsigned <link linkend="char">char</link> *name,
+                                                         unsigned <link linkend="char">char</link> *value,
+                                                         <link linkend="raptor-simple-message-handler">raptor_simple_message_handler</link> error_handler,
+                                                         <link linkend="void">void</link> *error_data);
+<link linkend="raptor-qname">raptor_qname</link>*       <link linkend="raptor-new-qname-from-namespace-local-name">raptor_new_qname_from_namespace_local_name</link>
+                                                        (<link linkend="raptor-namespace">raptor_namespace</link> *ns,
+                                                         unsigned <link linkend="char">char</link> *local_name,
+                                                         unsigned <link linkend="char">char</link> *value);
+<link linkend="raptor-qname">raptor_qname</link>*       <link linkend="raptor-qname-copy">raptor_qname_copy</link>                   (<link linkend="raptor-qname">raptor_qname</link> *qname);
+<link linkend="void">void</link>                <link linkend="raptor-free-qname">raptor_free_qname</link>                   (<link linkend="raptor-qname">raptor_qname</link> *name);
+<link linkend="int">int</link>                 <link linkend="raptor-qname-equal">raptor_qname_equal</link>                  (<link linkend="raptor-qname">raptor_qname</link> *name1,
+                                                         <link linkend="raptor-qname">raptor_qname</link> *name2);
+<link linkend="raptor-uri">raptor_uri</link>*         <link linkend="raptor-qname-string-to-uri">raptor_qname_string_to_uri</link>          (<link linkend="raptor-namespace-stack">raptor_namespace_stack</link> *nstack,
+                                                         unsigned <link linkend="char">char</link> *name,
+                                                         <link linkend="size-t">size_t</link> name_len,
+                                                         <link linkend="raptor-simple-message-handler">raptor_simple_message_handler</link> error_handler,
+                                                         <link linkend="void">void</link> *error_data);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-qname">raptor_iostream_write_qname</link>         (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="raptor-qname">raptor_qname</link> *qname);
+const unsigned <link linkend="char">char</link>* <link linkend="raptor-qname-get-counted-value">raptor_qname_get_counted_value</link>     (<link linkend="raptor-qname">raptor_qname</link> *name,
+                                                         <link linkend="size-t">size_t</link> *length_p);
+const unsigned <link linkend="char">char</link>* <link linkend="raptor-qname-get-local-name">raptor_qname_get_local_name</link>        (<link linkend="raptor-qname">raptor_qname</link> *name);
+const <link linkend="raptor-namespace">raptor_namespace</link>* <link linkend="raptor-qname-get-namespace">raptor_qname_get_namespace</link>      (<link linkend="raptor-qname">raptor_qname</link> *name);
+const unsigned <link linkend="char">char</link>* <link linkend="raptor-qname-get-value">raptor_qname_get_value</link>             (<link linkend="raptor-qname">raptor_qname</link> *name);
+unsigned <link linkend="char">char</link>*      <link linkend="raptor-qname-to-counted-name">raptor_qname_to_counted_name</link>        (<link linkend="raptor-qname">raptor_qname</link> *qname,
+                                                         <link linkend="size-t">size_t</link> *length_p);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-xml-qname.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Wraps an XML name inside an associated XML namespace in some XML document
+context (typically).  Mostly used inside parsing XML to manage qnames
+for XML element and attribute names.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-xml-qname.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-qname" role="typedef">
+<title>raptor_qname</title>
+<indexterm zone="raptor-qname"><primary>raptor_qname</primary></indexterm><programlisting>raptor_qname* raptor_qname;
+</programlisting>
+<para>
+Raptor XML qname class</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-new-qname" role="function">
+<title>raptor_new_qname ()</title>
+<indexterm zone="raptor-new-qname"><primary>raptor_new_qname</primary></indexterm><programlisting><link linkend="raptor-qname">raptor_qname</link>*       raptor_new_qname                    (<link linkend="raptor-namespace-stack">raptor_namespace_stack</link> *nstack,
+                                                         unsigned <link linkend="char">char</link> *name,
+                                                         unsigned <link linkend="char">char</link> *value,
+                                                         <link linkend="raptor-simple-message-handler">raptor_simple_message_handler</link> error_handler,
+                                                         <link linkend="void">void</link> *error_data);</programlisting>
+<para>
+Constructor - create a new XML qname.
+</para>
+<para>
+Create a new qname from the local element/attribute name,
+with optional (attribute) value.  The namespace stack is used
+to look up the name and find the namespace and generate the
+URI of the qname.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>nstack</parameter>&nbsp;:</term>
+<listitem><simpara> namespace stack to look up for namespaces
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> element or attribute name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> attribute value (else is an element)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_handler</parameter>&nbsp;:</term>
+<listitem><simpara> function to call on an error
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data for error function
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="raptor-qname"><type>raptor_qname</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-qname-from-namespace-local-name" role="function">
+<title>raptor_new_qname_from_namespace_local_name ()</title>
+<indexterm zone="raptor-new-qname-from-namespace-local-name"><primary>raptor_new_qname_from_namespace_local_name</primary></indexterm><programlisting><link linkend="raptor-qname">raptor_qname</link>*       raptor_new_qname_from_namespace_local_name
+                                                        (<link linkend="raptor-namespace">raptor_namespace</link> *ns,
+                                                         unsigned <link linkend="char">char</link> *local_name,
+                                                         unsigned <link linkend="char">char</link> *value);</programlisting>
+<para>
+Constructor - create a new XML qname.
+</para>
+<para>
+Create a new qname from the namespace and local element/attribute name,
+with optional (attribute) value.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>ns</parameter>&nbsp;:</term>
+<listitem><simpara> namespace of qname (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>local_name</parameter>&nbsp;:</term>
+<listitem><simpara> element or attribute name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> attribute value (else is an element)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="raptor-qname"><type>raptor_qname</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-copy" role="function">
+<title>raptor_qname_copy ()</title>
+<indexterm zone="raptor-qname-copy"><primary>raptor_qname_copy</primary></indexterm><programlisting><link linkend="raptor-qname">raptor_qname</link>*       raptor_qname_copy                   (<link linkend="raptor-qname">raptor_qname</link> *qname);</programlisting>
+<para>
+Copy constructor - copy an existing XML qname.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>qname</parameter>&nbsp;:</term>
+<listitem><simpara> existing qname
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="raptor-qname"><type>raptor_qname</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-free-qname" role="function">
+<title>raptor_free_qname ()</title>
+<indexterm zone="raptor-free-qname"><primary>raptor_free_qname</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_free_qname                   (<link linkend="raptor-qname">raptor_qname</link> *name);</programlisting>
+<para>
+Destructor - destroy a raptor_qname object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-qname"><type>raptor_qname</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-equal" role="function">
+<title>raptor_qname_equal ()</title>
+<indexterm zone="raptor-qname-equal"><primary>raptor_qname_equal</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_qname_equal                  (<link linkend="raptor-qname">raptor_qname</link> *name1,
+                                                         <link linkend="raptor-qname">raptor_qname</link> *name2);</programlisting>
+<para>
+Compare two XML Qnames for equality.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name1</parameter>&nbsp;:</term>
+<listitem><simpara> first <link linkend="raptor-qname"><type>raptor_qname</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name2</parameter>&nbsp;:</term>
+<listitem><simpara> second <link linkend="raptor-name"><type>raptor_name</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if the qnames are equal.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-string-to-uri" role="function">
+<title>raptor_qname_string_to_uri ()</title>
+<indexterm zone="raptor-qname-string-to-uri"><primary>raptor_qname_string_to_uri</primary></indexterm><programlisting><link linkend="raptor-uri">raptor_uri</link>*         raptor_qname_string_to_uri          (<link linkend="raptor-namespace-stack">raptor_namespace_stack</link> *nstack,
+                                                         unsigned <link linkend="char">char</link> *name,
+                                                         <link linkend="size-t">size_t</link> name_len,
+                                                         <link linkend="raptor-simple-message-handler">raptor_simple_message_handler</link> error_handler,
+                                                         <link linkend="void">void</link> *error_data);</programlisting>
+<para>
+Get the URI for a qname.
+</para>
+<para>
+Utility function to turn a string representing a QName in the
+N3 style, into a new URI representing it.  A NULL name or name ":"
+returns the default namespace URI.  A name "p:" returns
+namespace name (URI) for the namespace with prefix "p".
+</para>
+<para>
+Partially equivalent to 
+  qname=raptor_new_qname(nstack, name, NULL, error_handler, error_data);
+  uri=raptor_uri_copy(qname->uri);
+  raptor_free_qname(qname)
+but without making the qname, and it also handles the NULL and
+":" name cases as well as error checking.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>nstack</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-namespace-stack"><type>raptor_namespace_stack</type></link> to decode the namespace
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> QName string or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name_len</parameter>&nbsp;:</term>
+<listitem><simpara> QName string length
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_handler</parameter>&nbsp;:</term>
+<listitem><simpara> function to call on an error
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data for error function
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-uri"><type>raptor_uri</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-qname" role="function">
+<title>raptor_iostream_write_qname ()</title>
+<indexterm zone="raptor-iostream-write-qname"><primary>raptor_iostream_write_qname</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_qname         (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="raptor-qname">raptor_qname</link> *qname);</programlisting>
+<para>
+Write a formatted qname to an iostream</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iosteram
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>qname</parameter>&nbsp;:</term>
+<listitem><simpara> QName to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-get-counted-value" role="function">
+<title>raptor_qname_get_counted_value ()</title>
+<indexterm zone="raptor-qname-get-counted-value"><primary>raptor_qname_get_counted_value</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* raptor_qname_get_counted_value     (<link linkend="raptor-qname">raptor_qname</link> *name,
+                                                         <link linkend="size-t">size_t</link> *length_p);</programlisting>
+<para>
+Get the <link linkend="raptor-value"><type>raptor_value</type></link> of an XML QName.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-qname"><type>raptor_qname</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length_p</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to variable to store length of name (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the value
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-get-local-name" role="function">
+<title>raptor_qname_get_local_name ()</title>
+<indexterm zone="raptor-qname-get-local-name"><primary>raptor_qname_get_local_name</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* raptor_qname_get_local_name        (<link linkend="raptor-qname">raptor_qname</link> *name);</programlisting>
+<para>
+Get the <link linkend="raptor-local-name"><type>raptor_local_name</type></link> of an XML QName.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-qname"><type>raptor_qname</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the local_name
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-get-namespace" role="function">
+<title>raptor_qname_get_namespace ()</title>
+<indexterm zone="raptor-qname-get-namespace"><primary>raptor_qname_get_namespace</primary></indexterm><programlisting>const <link linkend="raptor-namespace">raptor_namespace</link>* raptor_qname_get_namespace      (<link linkend="raptor-qname">raptor_qname</link> *name);</programlisting>
+<para>
+Get the <link linkend="raptor-namespace"><type>raptor_namespace</type></link> of an XML QName.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-qname"><type>raptor_qname</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the namespace
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-get-value" role="function">
+<title>raptor_qname_get_value ()</title>
+<indexterm zone="raptor-qname-get-value"><primary>raptor_qname_get_value</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* raptor_qname_get_value             (<link linkend="raptor-qname">raptor_qname</link> *name);</programlisting>
+<para>
+Get the <link linkend="raptor-value"><type>raptor_value</type></link> of an XML QName.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-qname"><type>raptor_qname</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the value
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-qname-to-counted-name" role="function">
+<title>raptor_qname_to_counted_name ()</title>
+<indexterm zone="raptor-qname-to-counted-name"><primary>raptor_qname_to_counted_name</primary></indexterm><programlisting>unsigned <link linkend="char">char</link>*      raptor_qname_to_counted_name        (<link linkend="raptor-qname">raptor_qname</link> *qname,
+                                                         <link linkend="size-t">size_t</link> *length_p);</programlisting>
+<para>
+Get the string form of a QName name</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>qname</parameter>&nbsp;:</term>
+<listitem><simpara> QName to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length_p</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to variable to store length of name (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> string or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

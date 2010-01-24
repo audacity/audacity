@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.org/ns#">
+
+  <!-- Test rdf:type with a (URI) value gets propogated to the
+       generated blank node
+  -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <ex:prop rdf:type="http://example.org/ns#Thing"></ex:prop>
+  </rdf:Description> 
+</rdf:RDF>

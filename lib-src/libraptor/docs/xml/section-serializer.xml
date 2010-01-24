@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-serializer">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-serializer.top_of_page">Serializer</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Serializer</refname>
+<refpurpose>RDF serializers - from RDF triples to a syntax</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-serializer.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="raptor-serializer">raptor_serializer</link>;
+<link linkend="raptor-serializer">raptor_serializer</link>*  <link linkend="raptor-new-serializer">raptor_new_serializer</link>               (const <link linkend="char">char</link> *name);
+<link linkend="void">void</link>                <link linkend="raptor-free-serializer">raptor_free_serializer</link>              (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-start">raptor_serialize_start</link>              (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-iostream">raptor_iostream</link> *iostream);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-start-to-filename">raptor_serialize_start_to_filename</link>  (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         const <link linkend="char">char</link> *filename);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-start-to-string">raptor_serialize_start_to_string</link>    (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="void">void</link> **string_p,
+                                                         <link linkend="size-t">size_t</link> *length_p);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-start-to-file-handle">raptor_serialize_start_to_file_handle</link>
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-set-namespace">raptor_serialize_set_namespace</link>      (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         unsigned <link linkend="char">char</link> *prefix);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-set-namespace-from-namespace">raptor_serialize_set_namespace_from_namespace</link>
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-namespace">raptor_namespace</link> *nspace);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-statement">raptor_serialize_statement</link>          (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         const <link linkend="raptor-statement">raptor_statement</link> *statement);
+<link linkend="int">int</link>                 <link linkend="raptor-serialize-end">raptor_serialize_end</link>                (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-serializer-get-iostream">raptor_serializer_get_iostream</link>      (<link linkend="raptor-serializer">raptor_serializer</link> *serializer);
+<link linkend="void">void</link>                <link linkend="raptor-serializer-set-error-handler">raptor_serializer_set_error_handler</link> (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-serializer-set-warning-handler">raptor_serializer_set_warning_handler</link>
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);
+<link linkend="raptor-locator">raptor_locator</link>*     <link linkend="raptor-serializer-get-locator">raptor_serializer_get_locator</link>       (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer);
+<link linkend="int">int</link>                 <link linkend="raptor-serializer-features-enumerate">raptor_serializer_features_enumerate</link>
+                                                        (const <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         const <link linkend="char">char</link> **name,
+                                                         <link linkend="raptor-uri">raptor_uri</link> **uri,
+                                                         const <link linkend="char">char</link> **label);
+<link linkend="int">int</link>                 <link linkend="raptor-serializer-set-feature">raptor_serializer_set_feature</link>       (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         <link linkend="int">int</link> value);
+<link linkend="int">int</link>                 <link linkend="raptor-serializer-set-feature-string">raptor_serializer_set_feature_string</link>
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         unsigned <link linkend="char">char</link> *value);
+<link linkend="int">int</link>                 <link linkend="raptor-serializer-get-feature">raptor_serializer_get_feature</link>       (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);
+const unsigned <link linkend="char">char</link>* <link linkend="raptor-serializer-get-feature-string">raptor_serializer_get_feature_string</link>
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-serializer.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The serializing class that allows creating a serializer for
+writing a particular syntax to an output string, file, file
+handle or user function (via <link linkend="raptor-iostream"><type>raptor_iostream</type></link>).
+</para>
+
+<para>
+There are also methods to deal with handling errors, warnings and
+returned triples as well as setting options (features)
+that can adjust how serializing is performed.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-serializer.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-serializer" role="typedef">
+<title>raptor_serializer</title>
+<indexterm zone="raptor-serializer"><primary>raptor_serializer</primary></indexterm><programlisting>raptor_serializer* raptor_serializer;
+</programlisting>
+<para>
+Raptor Serializer class</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-new-serializer" role="function">
+<title>raptor_new_serializer ()</title>
+<indexterm zone="raptor-new-serializer"><primary>raptor_new_serializer</primary></indexterm><programlisting><link linkend="raptor-serializer">raptor_serializer</link>*  raptor_new_serializer               (const <link linkend="char">char</link> *name);</programlisting>
+<para>
+Constructor - create a new raptor_serializer object</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the serializer name
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="raptor-serializer"><type>raptor_serializer</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-free-serializer" role="function">
+<title>raptor_free_serializer ()</title>
+<indexterm zone="raptor-free-serializer"><primary>raptor_free_serializer</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_free_serializer              (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer);</programlisting>
+<para>
+Destructor - destroy a raptor_serializer object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-serializer"><type>raptor_serializer</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-start" role="function">
+<title>raptor_serialize_start ()</title>
+<indexterm zone="raptor-serialize-start"><primary>raptor_serialize_start</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_start              (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-iostream">raptor_iostream</link> *iostream);</programlisting>
+<para>
+Start serialization with given base URI</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara>  the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> base URI or NULL if no base URI is required
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>iostream</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-iostream"><type>raptor_iostream</type></link> to write serialization to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-start-to-filename" role="function">
+<title>raptor_serialize_start_to_filename ()</title>
+<indexterm zone="raptor-serialize-start-to-filename"><primary>raptor_serialize_start_to_filename</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_start_to_filename  (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         const <link linkend="char">char</link> *filename);</programlisting>
+<para>
+Start serializing to a filename.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara>  the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&nbsp;:</term>
+<listitem><simpara>  filename to serialize to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-start-to-string" role="function">
+<title>raptor_serialize_start_to_string ()</title>
+<indexterm zone="raptor-serialize-start-to-string"><primary>raptor_serialize_start_to_string</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_start_to_string    (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="void">void</link> **string_p,
+                                                         <link linkend="size-t">size_t</link> *length_p);</programlisting>
+<para>
+Start serializing to a string.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara>  the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> base URI or NULL if no base URI is required
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string_p</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to location to hold string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length_p</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to location to hold length of string (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-start-to-file-handle" role="function">
+<title>raptor_serialize_start_to_file_handle ()</title>
+<indexterm zone="raptor-serialize-start-to-file-handle"><primary>raptor_serialize_start_to_file_handle</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_start_to_file_handle
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);</programlisting>
+<para>
+Start serializing to a FILE*.
+</para>
+<para>
+NOTE: This does not fclose the handle when it is finished.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara>  the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> base URI or NULL if no base URI is required
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara>  FILE* to serialize to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-set-namespace" role="function">
+<title>raptor_serialize_set_namespace ()</title>
+<indexterm zone="raptor-serialize-set-namespace"><primary>raptor_serialize_set_namespace</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_set_namespace      (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         unsigned <link linkend="char">char</link> *prefix);</programlisting>
+<para>
+set a namespace uri/prefix mapping for serializing.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-uri"><type>raptor_uri</type></link> of namespace or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>prefix</parameter>&nbsp;:</term>
+<listitem><simpara> prefix to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-set-namespace-from-namespace" role="function">
+<title>raptor_serialize_set_namespace_from_namespace ()</title>
+<indexterm zone="raptor-serialize-set-namespace-from-namespace"><primary>raptor_serialize_set_namespace_from_namespace</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_set_namespace_from_namespace
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         <link linkend="raptor-namespace">raptor_namespace</link> *nspace);</programlisting>
+<para>
+Set a namespace uri/prefix mapping for serializing from an existing namespace.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>nspace</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-namespace"><type>raptor_namespace</type></link> to set
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-statement" role="function">
+<title>raptor_serialize_statement ()</title>
+<indexterm zone="raptor-serialize-statement"><primary>raptor_serialize_statement</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_statement          (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer,
+                                                         const <link linkend="raptor-statement">raptor_statement</link> *statement);</programlisting>
+<para>
+Serialize a statement.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-statement"><type>raptor_statement</type></link> to serialize to a syntax
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serialize-end" role="function">
+<title>raptor_serialize_end ()</title>
+<indexterm zone="raptor-serialize-end"><primary>raptor_serialize_end</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serialize_end                (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer);</programlisting>
+<para>
+End a serialization.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara>  the <link linkend="raptor-serializer"><type>raptor_serializer</type></link>
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-get-iostream" role="function">
+<title>raptor_serializer_get_iostream ()</title>
+<indexterm zone="raptor-serializer-get-iostream"><primary>raptor_serializer_get_iostream</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_serializer_get_iostream      (<link linkend="raptor-serializer">raptor_serializer</link> *serializer);</programlisting>
+<para>
+Get the current serializer iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-serializer"><type>raptor_serializer</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the serializer's current iostream or NULL if 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-set-error-handler" role="function">
+<title>raptor_serializer_set_error_handler ()</title>
+<indexterm zone="raptor-serializer-set-error-handler"><primary>raptor_serializer_set_error_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_serializer_set_error_handler (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);</programlisting>
+<para>
+Set the serializer error handling function.
+</para>
+<para>
+The function will receive callbacks when the serializer fails.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> the serializer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-set-warning-handler" role="function">
+<title>raptor_serializer_set_warning_handler ()</title>
+<indexterm zone="raptor-serializer-set-warning-handler"><primary>raptor_serializer_set_warning_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_serializer_set_warning_handler
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);</programlisting>
+<para>
+Set the serializer warning handling function.
+</para>
+<para>
+The function will receive callbacks when the serializer fails.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> the serializer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-get-locator" role="function">
+<title>raptor_serializer_get_locator ()</title>
+<indexterm zone="raptor-serializer-get-locator"><primary>raptor_serializer_get_locator</primary></indexterm><programlisting><link linkend="raptor-locator">raptor_locator</link>*     raptor_serializer_get_locator       (<link linkend="raptor-serializer">raptor_serializer</link> *rdf_serializer);</programlisting>
+<para>
+Get the serializer raptor locator object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_serializer</parameter>&nbsp;:</term>
+<listitem><simpara> raptor serializer
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> raptor locator
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-features-enumerate" role="function">
+<title>raptor_serializer_features_enumerate ()</title>
+<indexterm zone="raptor-serializer-features-enumerate"><primary>raptor_serializer_features_enumerate</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serializer_features_enumerate
+                                                        (const <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         const <link linkend="char">char</link> **name,
+                                                         <link linkend="raptor-uri">raptor_uri</link> **uri,
+                                                         const <link linkend="char">char</link> **label);</programlisting>
+<para>
+Get list of serializer features.
+</para>
+<para>
+If uri is not NULL, a pointer toa new raptor_uri is returned
+that must be freed by the caller with <link linkend="raptor-free-uri"><function>raptor_free_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature enumeration (0+)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to store feature short name (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to store feature URI (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to feature label (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> 0 on success, &lt;0 on failure, &gt;0 if feature is unknown
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-set-feature" role="function">
+<title>raptor_serializer_set_feature ()</title>
+<indexterm zone="raptor-serializer-set-feature"><primary>raptor_serializer_set_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serializer_set_feature       (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         <link linkend="int">int</link> value);</programlisting>
+<para>
+Set serializer features with integer values.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-serializer"><type>raptor_serializer</type></link> serializer object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to set from enumerated <link linkend="raptor-feature"><type>raptor_feature</type></link> values
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> integer feature value (0 or larger)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure or if the feature is unknown
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-set-feature-string" role="function">
+<title>raptor_serializer_set_feature_string ()</title>
+<indexterm zone="raptor-serializer-set-feature-string"><primary>raptor_serializer_set_feature_string</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serializer_set_feature_string
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         unsigned <link linkend="char">char</link> *value);</programlisting>
+<para>
+Set serializer features with string values.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-serializer-features-enumerate"><function>raptor_serializer_features_enumerate()</function></link>.
+If the feature type is integer, the value is interpreted as an integer.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-serializer"><type>raptor_serializer</type></link> serializer object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to set from enumerated <link linkend="raptor-feature"><type>raptor_feature</type></link> values
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> feature value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure or if the feature is unknown
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-get-feature" role="function">
+<title>raptor_serializer_get_feature ()</title>
+<indexterm zone="raptor-serializer-get-feature"><primary>raptor_serializer_get_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_serializer_get_feature       (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);</programlisting>
+<para>
+Get various serializer features.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.
+</para>
+<para>
+Note: no feature value is negative</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-serializer"><type>raptor_serializer</type></link> serializer object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to get value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> feature value or &lt; 0 for an illegal feature
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-serializer-get-feature-string" role="function">
+<title>raptor_serializer_get_feature_string ()</title>
+<indexterm zone="raptor-serializer-get-feature-string"><primary>raptor_serializer_get_feature_string</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* raptor_serializer_get_feature_string
+                                                        (<link linkend="raptor-serializer">raptor_serializer</link> *serializer,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);</programlisting>
+<para>
+Get serializer features with string values.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>serializer</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-serializer"><type>raptor_serializer</type></link> serializer object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to get value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> feature value or NULL for an illegal feature or no value
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

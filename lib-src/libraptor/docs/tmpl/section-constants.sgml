@@ -1,0 +1,59 @@
+<!-- ##### SECTION Title ##### -->
+Constants
+
+<!-- ##### SECTION Short_Description ##### -->
+Constant values and strings
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Version numbers and often-used namespace URI strings.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### VARIABLE raptor_rdf_namespace_uri_len ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE raptor_xml_literal_datatype_uri_string_len ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO RAPTOR_RDF_MS_URI ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO RAPTOR_RDF_SCHEMA_URI ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO RAPTOR_XMLSCHEMA_DATATYPES_URI ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO RAPTOR_OWL_URI ##### -->
+<para>
+
+</para>
+
+
+

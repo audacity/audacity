@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE rdf:RDF [
+        <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+        <!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+        <!ENTITY dc 'http://purl.org/dc/elements/1.1/'>
+        <!ENTITY ladspa 'http://ladspa.org/ontology#'>
+]>
+<rdf:RDF xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;"
+         xmlns:dc="&dc;"
+         xmlns:ladspa="&ladspa;">
+
+<ladspa:InputControlPort rdf:about="&ladspa;100.1">
+  <ladspa:hasScale>
+    <ladspa:Scale>
+      <ladspa:hasPoint>
+        <ladspa:Point rdf:value="1" ladspa:hasLabel="foo" />
+      </ladspa:hasPoint>
+      <ladspa:hasPoint>
+        <ladspa:Point rdf:value="2" ladspa:hasLabel="bar" />
+      </ladspa:hasPoint>
+      <ladspa:hasPoint>
+        <ladspa:Point rdf:value="3" ladspa:hasLabel="baz" />
+      </ladspa:hasPoint>
+    </ladspa:Scale>
+  </ladspa:hasScale>
+</ladspa:InputControlPort>
+
+</rdf:RDF>

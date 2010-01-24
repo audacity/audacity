@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 2-04 : 2 triple patterns
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (?x, ?y, ?z), (?x, ?a, ?z)

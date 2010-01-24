@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="rasqal-section-prefix">
+<refmeta>
+<refentrytitle role="top_of_page" id="rasqal-section-prefix.top_of_page">Prefixes</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RASQAL Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Prefixes</refname>
+<refpurpose>XML QName-style prefixes made from a URI and a short text prefix.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="rasqal-section-prefix.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+                    <link linkend="rasqal-prefix">rasqal_prefix</link>;
+<link linkend="rasqal-prefix">rasqal_prefix</link>*      <link linkend="rasqal-new-prefix">rasqal_new_prefix</link>                   (unsigned <link linkend="char">char</link> *prefix,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);
+<link linkend="void">void</link>                <link linkend="rasqal-free-prefix">rasqal_free_prefix</link>                  (<link linkend="rasqal-prefix">rasqal_prefix</link> *p);
+<link linkend="void">void</link>                <link linkend="rasqal-prefix-print">rasqal_prefix_print</link>                 (<link linkend="rasqal-prefix">rasqal_prefix</link> *p,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="rasqal-section-prefix.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Used inside a <link linkend="rasqal-query"><type>rasqal_query</type></link> to declare syntax prefix abbreviations
+for URIs.  Once a <link linkend="rasqal-query"><type>rasqal_query</type></link> is constructed, these are for information
+only.
+</para>
+</refsect1>
+
+<refsect1 id="rasqal-section-prefix.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rasqal-prefix" role="struct">
+<title>rasqal_prefix</title>
+<indexterm zone="rasqal-prefix"><primary>rasqal_prefix</primary></indexterm><programlisting>typedef struct {
+  const unsigned char *prefix;
+  raptor_uri* uri;
+  int declared;
+  int depth;
+} rasqal_prefix;
+</programlisting>
+<para>
+Namespace (prefix, uri) pair.
+</para>
+<para>
+Includes internal flags used for marking when prefixes are
+declared and at what XML element depth when used in XML formats.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="raptor-uri">raptor_uri</link>&nbsp;*<structfield>uri</structfield>;</term>
+<listitem><simpara> URI associated with the prefix.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>declared</structfield>;</term>
+<listitem><simpara> Internal flag.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>depth</structfield>;</term>
+<listitem><simpara> Internal flag.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-new-prefix" role="function">
+<title>rasqal_new_prefix ()</title>
+<indexterm zone="rasqal-new-prefix"><primary>rasqal_new_prefix</primary></indexterm><programlisting><link linkend="rasqal-prefix">rasqal_prefix</link>*      rasqal_new_prefix                   (unsigned <link linkend="char">char</link> *prefix,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);</programlisting>
+<para>
+Constructor - create a new <link linkend="rasqal-prefix"><type>rasqal_prefix</type></link>.
+Takes ownership of prefix and uri.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>prefix</parameter>&nbsp;:</term>
+<listitem><simpara> Short prefix string to stand for URI or NULL.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> Name <link linkend="raptor-uri"><type>raptor_uri</type></link>.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="rasqal-prefix"><type>rasqal_prefix</type></link> or NULL on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-free-prefix" role="function">
+<title>rasqal_free_prefix ()</title>
+<indexterm zone="rasqal-free-prefix"><primary>rasqal_free_prefix</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_free_prefix                  (<link linkend="rasqal-prefix">rasqal_prefix</link> *p);</programlisting>
+<para>
+Destructor - destroy a <link linkend="rasqal-prefix"><type>rasqal_prefix</type></link> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>p</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-prefix"><type>rasqal_prefix</type></link> object.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-prefix-print" role="function">
+<title>rasqal_prefix_print ()</title>
+<indexterm zone="rasqal-prefix-print"><primary>rasqal_prefix_print</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_prefix_print                 (<link linkend="rasqal-prefix">rasqal_prefix</link> *p,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);</programlisting>
+<para>
+Print a Rasqal prefix in a debug format.
+</para>
+<para>
+The print debug format may change in any release.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>p</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-prefix"><type>rasqal_prefix</type></link> object.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara> The <link linkend="FILE:CAPS"><type>FILE</type></link>* handle to print to.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

@@ -1,0 +1,8 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 4-06 : Anonymous nodes : "equality" in filters
+// This test was created to test the test code :-)
+
+SELECT *
+SOURCE <model3.nt>
+WHERE  (?x, ?p1, ?v1), (?y, ?p2, ?v2)
+AND ?x EQ ?y

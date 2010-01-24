@@ -1,0 +1,3 @@
+# With trailing dot
+SELECT *
+WHERE { ?x ?y ?z . }

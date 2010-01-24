@@ -1,0 +1,21 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+@prefix x:       <http://example.org/ns#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+[]    rdf:type    rs:ResultSet ;
+      rs:resultVariable  "title" ;
+      rs:resultVariable  "price" ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "TITLE 3" ;
+                                  rs:variable  "title"
+                                ]
+                  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value    "TITLE 1" ;
+                                  rs:variable  "title"
+                                ] ;
+                    rs:binding  [ rs:value    10 ;
+                                  rs:variable  "price"
+                                ]
+                  ] .

@@ -1,0 +1,97 @@
+<!-- ##### SECTION Title ##### -->
+Locator
+
+<!-- ##### SECTION Short_Description ##### -->
+Location information for errors, warnings and messages.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A small structure that can be optionally filled in when
+errors, warnings or other messages are generated and returned
+to user code.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT raptor_locator ##### -->
+<para>
+
+</para>
+
+@uri: 
+@file: 
+@line: 
+@column: 
+@byte: 
+
+<!-- ##### FUNCTION raptor_print_locator ##### -->
+<para>
+
+</para>
+
+@stream: 
+@locator: 
+
+
+<!-- ##### FUNCTION raptor_format_locator ##### -->
+<para>
+
+</para>
+
+@buffer: 
+@length: 
+@locator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_locator_line ##### -->
+<para>
+
+</para>
+
+@locator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_locator_column ##### -->
+<para>
+
+</para>
+
+@locator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_locator_byte ##### -->
+<para>
+
+</para>
+
+@locator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_locator_file ##### -->
+<para>
+
+</para>
+
+@locator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_locator_uri ##### -->
+<para>
+
+</para>
+
+@locator: 
+@Returns: 
+
+

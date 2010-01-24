@@ -1,0 +1,8 @@
+prefix ex: <http://example.org/survey-sample/ontology/>
+SELECT ?n ?addr 
+WHERE  
+     { ?y ex:author [ ?li ?who ].
+       ?who ex:name ?n.
+       OPTIONAL { ?who ex:email ?addr }
+     }
+

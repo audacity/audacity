@@ -1,0 +1,5 @@
+SELECT ?resource
+FROM   <http://example.org/someWebPage>
+WHERE  (?resource info:age ?age)
+AND    ?age >= 24
+USING  info FOR <http://example.org/peopleInfo#>

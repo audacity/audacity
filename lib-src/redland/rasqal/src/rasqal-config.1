@@ -1,0 +1,53 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\"
+.\" rasqal-config.1 - Rasqal RDF query library compiling utility manual page
+.\"
+.\" $Id: rasqal-config.1,v 1.1 2008-07-08 10:44:59 larsl Exp $
+.\"
+.\" Copyright (C) 2003-2006 David Beckett - http://purl.org/net/dajobe/
+.\" Copyright (C) 2003-2005 University of Bristol - http://www.bristol.ac.uk/
+.\"
+.TH rasqal-config 1 "2006-01-11"
+.\" Please adjust this date whenever revising the manpage.
+.SH NAME
+rasqal-config \- script to get information about the installed version of the RDF query library
+.SH SYNOPSIS
+.B rasqal-config
+[\-\-prefix\fI[=DIR]\fP] [\-\-libs]  [\-\-libtool\-libs]
+[\-\-cflags] [\-\-version] [\-\-version\-decimal] [\-\-help]
+.SH DESCRIPTION
+\fIrasqal-config\fP is a tool that is used to determine the compile and
+linker flags that should be used to compile and link programs that use
+the Rasqal RDF query library.
+.SH OPTIONS
+\fIrasqal-config\fP accepts the following options:
+.TP 8
+.B  \-\-version
+Print the currently installed version of rasqal on the
+standard output.
+.TP 8
+.B  \-\-version\-decimal
+Print the currently installed version of rasqal as a decimal integer.
+.TP 8
+.B  \-\-libs
+Print the linker flags that are necessary to link a program with Rasqal.
+.TP 8
+.B  \-\-libtool\-libs
+Print the path to the libtool file for rasqal.
+.TP 8
+.B  \-\-cflags
+Print the compiler flags that are necessary to compile a program
+with the RDF query language.
+.TP 8
+.B  \-\-prefix=PREFIX
+If specified, use PREFIX instead of the installation prefix that
+Rasqal was built with when computing the output for the
+\-\-cflags and \-\-libs options. This option must be specified before
+any \-\-libs or \-\-cflags options.
+.SH SEE ALSO
+.BR librasqal(3)
+.SH AUTHOR
+Dave Beckett - 
+.UR http://purl.org/net/dajobe/
+http://purl.org/net/dajobe/
+.UE

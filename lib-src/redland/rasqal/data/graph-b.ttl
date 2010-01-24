@@ -1,0 +1,4 @@
+@prefix : <http://example.org/> .
+:w :a "apple" .
+:x :b "orange" .
+:y :c "grape" .

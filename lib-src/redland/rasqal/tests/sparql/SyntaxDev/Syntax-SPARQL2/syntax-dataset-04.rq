@@ -1,0 +1,7 @@
+PREFIX : <http://example.org/>
+SELECT ?x
+FROM :g1
+FROM :g2
+FROM NAMED :graph1
+FROM NAMED :graph2
+WHERE {}

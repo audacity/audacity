@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<a:foo  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:a="http://example.org/"
+        rdf:about="http://example.org/resource"/>

@@ -1,0 +1,8 @@
+PREFIX ex: <http://example.org/ex#>
+DELETE
+FROM <data.rdf>
+WHERE {
+ $r a ex:Class ;
+    ex:numPred $number ;
+    ex:stringPred $name .
+}

@@ -1,0 +1,99 @@
+<!-- ##### SECTION Title ##### -->
+Variables
+
+<!-- ##### SECTION Short_Description ##### -->
+Variable with names and literal value.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A class to hold a variable with optional name and a
+#rasqal_literal value.  The name is not required for SPARQL
+anonymous variables, when constructed with
+rasqal_new_variable_typed() and type #RASQAL_VARIABLE_TYPE_ANONYMOUS.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT rasqal_variable ##### -->
+<para>
+
+</para>
+
+@value: 
+@offset: 
+@type: 
+@expression: 
+
+<!-- ##### FUNCTION rasqal_new_variable ##### -->
+<para>
+
+</para>
+
+@rq: 
+@name: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_variable_typed ##### -->
+<para>
+
+</para>
+
+@rq: 
+@type: 
+@name: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_variable_from_variable ##### -->
+<para>
+
+</para>
+
+@v: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_free_variable ##### -->
+<para>
+
+</para>
+
+@v: 
+
+
+<!-- ##### FUNCTION rasqal_variable_print ##### -->
+<para>
+
+</para>
+
+@v: 
+@fh: 
+
+
+<!-- ##### FUNCTION rasqal_variable_set_value ##### -->
+<para>
+
+</para>
+
+@v: 
+@l: 
+
+
+<!-- ##### ENUM rasqal_variable_type ##### -->
+<para>
+
+</para>
+
+@RASQAL_VARIABLE_TYPE_UNKNOWN: 
+@RASQAL_VARIABLE_TYPE_NORMAL: 
+@RASQAL_VARIABLE_TYPE_ANONYMOUS: 
+

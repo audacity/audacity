@@ -1,0 +1,572 @@
+<!-- Creator     : groff version 1.18.1 -->
+<!-- CreationDate: Mon Jun 23 22:04:09 2008 -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Raptor RDF Parser Toolkit - Raptor RDF parser utility</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+<h1>Raptor RDF Parser Toolkit - Raptor RDF parser utility</h1>
+<hr />
+<a name="NAME"></a>
+<h2>NAME</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>rapper &#8722; Raptor RDF parsing and serializing utility</p>
+</td>
+</tr>
+</table>
+<a name="SYNOPSIS"></a>
+<h2>SYNOPSIS</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>rapper</b> [<b>OPTIONS</b>] <i>INPUT-URI [INPUT-BASE-URI]</i></p>
+</td>
+</tr>
+</table>
+<a name="EXAMPLE"></a>
+<h2>EXAMPLE</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<pre>
+<b>rapper -o ntriples http://planetrdf.com/guide/rss.rdf
+rapper -i rss-tag-soup -o rss-1.0 pile-of-rss.xml http://example.org/base/
+rapper --count http://example.org/index.rdf
+
+</b>
+</pre></td>
+</tr>
+</table>
+<a name="DESCRIPTION"></a>
+<h2>DESCRIPTION</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The <b>rapper</b> utility allows parsing of RDF content by the <b>Raptor</b> RDF parser toolkit emitting the results as RDF triples in a choice of syntaxes. The <i>INPUT-URI</i> can be a file name, &#8217;-&#8217; for standard input or if Raptor is built with a WWW retrieval library, a general URI. The optional <i>INPUT-BASE-URI</i> is used as the document parser base URI if present otherwise defaults to the IINPUT-URI. A value of &#8217;-&#8217; means no base URI.</p>
+</td>
+</tr>
+</table>
+<a name="OPTIONS"></a>
+<h2>OPTIONS</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>rapper uses the usual GNU command line syntax, with long options starting with two dashes (&#8216;-&#8217;) if supported by the getopt_long function. Otherwise the short options are only available.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;h, &#8722;&#8722;help</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Show a summary of the options.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;i, &#8722;&#8722;input FORMAT</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the input <i>FORMAT</i> to one of &#8217;rdfxml&#8217; (RDF/XML, default), &#8217;ntriples&#8217; (N-Triples, see below), &#8217;turtle&#8217; (Turtle, see below) or &#8217;rss-tag-soup&#8217; (RSS Tag Soup). The RSS Tag Soup parser can turn the many XML RSS formats and Atom 0.3 into RDF triples.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>The list of parsers depends on how libraptor(3) was built. The list of supported parsers is given in the help summary given by &#8722;h.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;I, &#8722;&#8722;input-uri URI</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the input/parser base <i>URI</i> or use value &#8217;-&#8217; for no base. The default is the INPUT-URI argument value.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;o, &#8722;&#8722;output FORMAT</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the output <i>FORMAT</i> to &#8217;ntriples&#8217; (N-Triples, default), &#8217;rdfxml&#8217; (RDF/XML), &#8217;rdfxml-abbrev&#8217; (RDF/XML with abbreviations) or &#8217;rss-1.0&#8217; (RSS 1.0, also an RDF/XML syntax).</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>The list of serializers depends on how libraptor(3) was built. The list of supported serializers is given in the help summary given by &#8722;h.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;O, &#8722;&#8722;output-uri URI</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the output/serializer base <i>URI</i> or use value &#8217;-&#8217; for no base. The default is the input base uri, either set by the argument INPUT-BASE-URI or via options <b>&#8722;I, &#8722;&#8722;input-uri URI</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;c, &#8722;&#8722;count</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Only count the triples and produce no other output.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;e, &#8722;&#8722;ignore-errors</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Ignore errors, do not emit the messages and try to continue parsing.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;f, &#8722;&#8722;feature FEATURE[=VALUE]</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set a parser or serializer feature <i>FEATURE</i> to a value, or to 1 if <i>VALUE</i> is omitted, Use &#8722;f help to get lists of valid parser and serializer features.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>If the form &#8722;f &#8217;xmlns:<i>prefix</i>="<i>uri</i>"&#8217; is used, the prefix and namespace uri given will be set for serializing. The syntax matches XML in that either or both of <i>prefix</i> or <i>uri</i> can be omitted.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;g, &#8722;&#8722;guess</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Guess the parser to use from the source-URI rather than use the &#8722;i FORMAT.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;q, &#8722;&#8722;quiet</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>No extra information messages.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;r, &#8722;&#8722;replace-newlines</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Replace newlines in multi-line literals with spaces.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;s, &#8722;&#8722;scan</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Scan for &lt;rdf:RDF&gt; element in the RDF/XML source content.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;&#8722;show-graphs</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Print graph names (URIs) as they are seen in the input. This only has a meaning for parsers that support graph names such as the TRiG parser.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;&#8722;show-namespaces</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Print namespaces as they are seen in the input.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;t, &#8722;&#8722;trace</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Print URIs retrieved during parsing. Especially useful for monitoring what the guess and GRDDL parsers are doing.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;w, &#8722;&#8722;ignore-warnings</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Ignore warnings, do not emit the messages.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>&#8722;v, &#8722;&#8722;version</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Print the raptor version and exit.</p>
+</td>
+</tr>
+</table>
+<a name="EXAMPLES"></a>
+<h2>EXAMPLES</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>rapper -q -i ntriples -o rdfxml -f &#8217;xmlns:rss="http://purl.org/rss/1.0/"&#8217; -f &#8217;xmlns:ex="http://example.org/"&#8217; tests/test.nt<br />
+rapper -q -o rdfxml -f &#8217;xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"&#8217; tests/rdf-schema.rdf &#8217;http://www.w3.org/2000/01/rdf-schema#&#8217;</b></p>
+</td>
+</tr>
+</table>
+<a name="CONFORMING_TO"></a>
+<h2>CONFORMING TO</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><i>RDF/XML Syntax (Revised)</i>, W3C Recommendation, <a href="http://www.w3.org/TR/rdf-syntax-grammar/">http://www.w3.org/TR/rdf-syntax-grammar/</a></p>
+<!-- INDENTATION -->
+<p><i>N-Triples</i>, in <i>RDF Test Cases</i>, Jan Grant and Dave Beckett (eds.), W3C Recommendation, <a href="http://www.w3.org/TR/rdf-testcases/#ntriples">http://www.w3.org/TR/rdf-testcases/#ntriples</a></p>
+<!-- INDENTATION -->
+<p><i>Turtle Terse RDF Triple Language</i>, Dave Beckett, <a href="http://www.dajobe.org/2004/01/turtle/">http://www.dajobe.org/2004/01/turtle/</a></p>
+<!-- INDENTATION -->
+<p><i>RDFA in XHTML: Syntax and Processing</i>, Ben Adida, Mark Birbeck, Shane McCarron and Steven Pemberton (eds.), W3C Candidate Recommendation, 20 June 2008 <a href="http://www.w3.org/TR/2008/CR-rdfa-syntax-20080620/">http://www.w3.org/TR/2008/CR-rdfa-syntax-20080620/</a></p>
+<!-- INDENTATION -->
+<p><i>RDF Site Summary (RSS) 1.0</i>, 2000-12-06 <a href="http://purl.org/rss/1.0/spec">http://purl.org/rss/1.0/spec</a></p>
+</td>
+</tr>
+</table>
+<a name="SEE_ALSO"></a>
+<h2>SEE ALSO</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>libraptor(3),</b>raptor-config(1)</p>
+</td>
+</tr>
+</table>
+<a name="CHANGES"></a>
+<h2>CHANGES</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td>
+<td width="95%">
+<p><b>1.4.16</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Added -I/--input-uri and -O/--output-uri to set the input and output (parser and serializer) base URIs separately.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td>
+<td width="95%">
+<p><b>1.4.15</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Added -t/--trace to do URI traces.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td>
+<td width="95%">
+<p><b>1.4.5</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Updated to add serializer rdfxml-abbrev</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td>
+<td width="95%">
+<p><b>1.4.3</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Updated potential parser and serializers and described -f for defining namespaces.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td>
+<td width="95%">
+<p><b>1.3.0</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Added &#8722;f for features.<br />
+Added &#8722;g for guessing the parser to use.</p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="4%"></td>
+<td width="95%">
+<p><b>1.1.0</b></p>
+</td>
+</tr>
+</table>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Removed &#8722;a, &#8722;&#8722;assume since rdf:RDF is now always optional.</p>
+</td>
+</tr>
+</table>
+<a name="AUTHOR"></a>
+<h2>AUTHOR</h2>
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Dave Beckett - <a href="http://www.dajobe.org/">http://www.dajobe.org/</a></p>
+</td>
+</tr>
+</table>
+<hr />
+
+<p>Copyright 2002-2008 <a href="http://purl.org/net/dajobe/">Dave Beckett</a><br />2002-2008 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

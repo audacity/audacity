@@ -1,0 +1,240 @@
+<!-- ##### SECTION Title ##### -->
+RDF Triple (librdf_statement)
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF Triple.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+An object representing an RDF Triple of three RDF terms (#librdf_node).
+Triples can be created, accessed, destroyed and en/decoded into a binary
+form for use in storage.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_statement ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM librdf_statement_part ##### -->
+<para>
+
+</para>
+
+@LIBRDF_STATEMENT_SUBJECT: 
+@LIBRDF_STATEMENT_PREDICATE: 
+@LIBRDF_STATEMENT_OBJECT: 
+@LIBRDF_STATEMENT_ALL: 
+
+<!-- ##### FUNCTION librdf_new_statement ##### -->
+<para>
+
+</para>
+
+@world: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_statement_from_statement ##### -->
+<para>
+
+</para>
+
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_statement_from_nodes ##### -->
+<para>
+
+</para>
+
+@world: 
+@subject: 
+@predicate: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_init ##### -->
+<para>
+
+</para>
+
+@world: 
+@statement: 
+
+
+<!-- ##### FUNCTION librdf_statement_clear ##### -->
+<para>
+
+</para>
+
+@statement: 
+
+
+<!-- ##### FUNCTION librdf_free_statement ##### -->
+<para>
+
+</para>
+
+@statement: 
+
+
+<!-- ##### FUNCTION librdf_statement_get_subject ##### -->
+<para>
+
+</para>
+
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_set_subject ##### -->
+<para>
+
+</para>
+
+@statement: 
+@node: 
+
+
+<!-- ##### FUNCTION librdf_statement_get_predicate ##### -->
+<para>
+
+</para>
+
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_set_predicate ##### -->
+<para>
+
+</para>
+
+@statement: 
+@node: 
+
+
+<!-- ##### FUNCTION librdf_statement_get_object ##### -->
+<para>
+
+</para>
+
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_set_object ##### -->
+<para>
+
+</para>
+
+@statement: 
+@node: 
+
+
+<!-- ##### FUNCTION librdf_statement_is_complete ##### -->
+<para>
+
+</para>
+
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_to_string ##### -->
+<para>
+
+</para>
+
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_print ##### -->
+<para>
+
+</para>
+
+@statement: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_statement_equals ##### -->
+<para>
+
+</para>
+
+@statement1: 
+@statement2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_match ##### -->
+<para>
+
+</para>
+
+@statement: 
+@partial_statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_encode ##### -->
+<para>
+
+</para>
+
+@statement: 
+@buffer: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_encode_parts ##### -->
+<para>
+
+</para>
+
+@statement: 
+@context_node: 
+@buffer: 
+@length: 
+@fields: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_decode ##### -->
+<para>
+
+</para>
+
+@statement: 
+@buffer: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_statement_decode_parts ##### -->
+<para>
+
+</para>
+
+@statement: 
+@context_node: 
+@buffer: 
+@length: 
+@Returns: 
+
+

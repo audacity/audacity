@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="introduction">
+
+<title>Introduction</title>
+
+<para>This document describes the APIs provided by
+<ulink url="http://librdf.org/">Redland</ulink> to use the RDF
+model; manipulate statements, resources, predicates and objects in the model;
+parse RDF/XML syntax, query and store the models.</para>
+
+<para>See also the <ulink url="http://librdf.org/">Redland Home Page</ulink>
+and the <ulink url="../README.html">main document overview</ulink>.
+</para>
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("redland-docs.xml" "book" "chapter")
+End:
+-->

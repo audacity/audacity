@@ -1,0 +1,860 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RDF Triple (librdf_statement)</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="redland-serializer.html" title="Serializers">
+<link rel="next" href="redland-storage.html" title="Triple stores.">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="redland-serializer.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-storage.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-statement.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-statement.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-statement"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-statement.top_of_page"></a>RDF Triple (librdf_statement)</span></h2>
+<p>RDF Triple (librdf_statement) — RDF Triple.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-statement.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>;
+enum                <a class="link" href="redland-statement.html#librdf-statement-part" title="enum librdf_statement_part">librdf_statement_part</a>;
+<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>*   <a class="link" href="redland-statement.html#librdf-new-statement" title="librdf_new_statement ()">librdf_new_statement</a>                (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);
+<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>*   <a class="link" href="redland-statement.html#librdf-new-statement-from-statement" title="librdf_new_statement_from_statement ()">librdf_new_statement_from_statement</a> (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>*   <a class="link" href="redland-statement.html#librdf-new-statement-from-nodes" title="librdf_new_statement_from_nodes ()">librdf_new_statement_from_nodes</a>     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *subject,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *predicate,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *object);
+void                <a class="link" href="redland-statement.html#librdf-statement-init" title="librdf_statement_init ()">librdf_statement_init</a>               (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+void                <a class="link" href="redland-statement.html#librdf-statement-clear" title="librdf_statement_clear ()">librdf_statement_clear</a>              (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+void                <a class="link" href="redland-statement.html#librdf-free-statement" title="librdf_free_statement ()">librdf_free_statement</a>               (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+<a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        <a class="link" href="redland-statement.html#librdf-statement-get-subject" title="librdf_statement_get_subject ()">librdf_statement_get_subject</a>        (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+void                <a class="link" href="redland-statement.html#librdf-statement-set-subject" title="librdf_statement_set_subject ()">librdf_statement_set_subject</a>        (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);
+<a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        <a class="link" href="redland-statement.html#librdf-statement-get-predicate" title="librdf_statement_get_predicate ()">librdf_statement_get_predicate</a>      (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+void                <a class="link" href="redland-statement.html#librdf-statement-set-predicate" title="librdf_statement_set_predicate ()">librdf_statement_set_predicate</a>      (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);
+<a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        <a class="link" href="redland-statement.html#librdf-statement-get-object" title="librdf_statement_get_object ()">librdf_statement_get_object</a>         (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+void                <a class="link" href="redland-statement.html#librdf-statement-set-object" title="librdf_statement_set_object ()">librdf_statement_set_object</a>         (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);
+int                 <a class="link" href="redland-statement.html#librdf-statement-is-complete" title="librdf_statement_is_complete ()">librdf_statement_is_complete</a>        (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+unsigned char*      <a class="link" href="redland-statement.html#librdf-statement-to-string" title="librdf_statement_to_string ()">librdf_statement_to_string</a>          (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+void                <a class="link" href="redland-statement.html#librdf-statement-print" title="librdf_statement_print ()">librdf_statement_print</a>              (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         FILE *fh);
+int                 <a class="link" href="redland-statement.html#librdf-statement-equals" title="librdf_statement_equals ()">librdf_statement_equals</a>             (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement1,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement2);
+int                 <a class="link" href="redland-statement.html#librdf-statement-match" title="librdf_statement_match ()">librdf_statement_match</a>              (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *partial_statement);
+size_t              <a class="link" href="redland-statement.html#librdf-statement-encode" title="librdf_statement_encode ()">librdf_statement_encode</a>             (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         unsigned char *buffer,
+                                                         size_t length);
+size_t              <a class="link" href="redland-statement.html#librdf-statement-encode-parts" title="librdf_statement_encode_parts ()">librdf_statement_encode_parts</a>       (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context_node,
+                                                         unsigned char *buffer,
+                                                         size_t length,
+                                                         <a class="link" href="redland-statement.html#librdf-statement-part" title="enum librdf_statement_part">librdf_statement_part</a> fields);
+size_t              <a class="link" href="redland-statement.html#librdf-statement-decode" title="librdf_statement_decode ()">librdf_statement_decode</a>             (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         unsigned char *buffer,
+                                                         size_t length);
+size_t              <a class="link" href="redland-statement.html#librdf-statement-decode-parts" title="librdf_statement_decode_parts ()">librdf_statement_decode_parts</a>       (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> **context_node,
+                                                         unsigned char *buffer,
+                                                         size_t length);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-statement.description"></a><h2>Description</h2>
+<p>
+An object representing an RDF Triple of three RDF terms (<a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a>).
+Triples can be created, accessed, destroyed and en/decoded into a binary
+form for use in storage.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-statement.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-statement"></a><h3>librdf_statement</h3>
+<pre class="programlisting">typedef struct librdf_statement_s librdf_statement;
+</pre>
+<p>
+Redland statement class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-part"></a><h3>enum librdf_statement_part</h3>
+<pre class="programlisting">typedef enum {
+  LIBRDF_STATEMENT_SUBJECT   = 1 &lt;&lt; 0,
+  LIBRDF_STATEMENT_PREDICATE = 1 &lt;&lt; 1,
+  LIBRDF_STATEMENT_OBJECT    = 1 &lt;&lt; 2,
+
+  /* must be a combination of all of the above */
+  LIBRDF_STATEMENT_ALL       = (LIBRDF_STATEMENT_SUBJECT|
+                                LIBRDF_STATEMENT_PREDICATE|
+                                LIBRDF_STATEMENT_OBJECT)
+} librdf_statement_part;
+</pre>
+<p>
+Flags that are or-ed to indicate statement parts.
+</p>
+<p>
+Used in fields arguments to methods such as the public
+<a class="link" href="redland-statement.html#librdf-statement-encode-parts" title="librdf_statement_encode_parts ()"><code class="function">librdf_statement_encode_parts()</code></a> <a class="link" href="redland-statement.html#librdf-statement-decode-parts" title="librdf_statement_decode_parts ()"><code class="function">librdf_statement_decode_parts()</code></a>
+<a class="link" href="redland-stream.html#librdf-new-stream-from-node-iterator" title="librdf_new_stream_from_node_iterator ()"><code class="function">librdf_new_stream_from_node_iterator()</code></a> and the internal
+<code class="function">librdf_storage_node_stream_to_node_create()</code></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="LIBRDF-STATEMENT-SUBJECT:CAPS"></a><span class="term"><code class="literal">LIBRDF_STATEMENT_SUBJECT</code></span></p></td>
+<td> Subject of a statement.
+</td>
+</tr>
+<tr>
+<td><p><a name="LIBRDF-STATEMENT-PREDICATE:CAPS"></a><span class="term"><code class="literal">LIBRDF_STATEMENT_PREDICATE</code></span></p></td>
+<td> Predicate of a statement.
+</td>
+</tr>
+<tr>
+<td><p><a name="LIBRDF-STATEMENT-OBJECT:CAPS"></a><span class="term"><code class="literal">LIBRDF_STATEMENT_OBJECT</code></span></p></td>
+<td> Object of a statement.
+</td>
+</tr>
+<tr>
+<td><p><a name="LIBRDF-STATEMENT-ALL:CAPS"></a><span class="term"><code class="literal">LIBRDF_STATEMENT_ALL</code></span></p></td>
+<td> All parts of a statement.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-statement"></a><h3>librdf_new_statement ()</h3>
+<pre class="programlisting"><a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>*   librdf_new_statement                (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);</pre>
+<p>
+Constructor - create a new empty <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-statement-from-statement"></a><h3>librdf_new_statement_from_statement ()</h3>
+<pre class="programlisting"><a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>*   librdf_new_statement_from_statement (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Copy constructor - create a new librdf_statement from an existing librdf_statement.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> to copy
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> with copy or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-statement-from-nodes"></a><h3>librdf_new_statement_from_nodes ()</h3>
+<pre class="programlisting"><a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a>*   librdf_new_statement_from_nodes     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *subject,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *predicate,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *object);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> from existing <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects.
+</p>
+<p>
+The node objects become owned by the new statement (or freed on error).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subject</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>predicate</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> with copy or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-init"></a><h3>librdf_statement_init ()</h3>
+<pre class="programlisting">void                librdf_statement_init               (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Initialise a statically declared librdf_statement.
+</p>
+<p>
+This MUST be called on a statically declared librdf_statement
+to initialise it properly.  It is the responsibility of the
+user of the statically allocated librdf_statement to deal
+with deallocation of any statement parts (subject, predicate, object).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-clear"></a><h3>librdf_statement_clear ()</h3>
+<pre class="programlisting">void                librdf_statement_clear              (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Empty a librdf_statement of nodes.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-free-statement"></a><h3>librdf_free_statement ()</h3>
+<pre class="programlisting">void                librdf_free_statement               (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Destructor - destroy a <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-get-subject"></a><h3>librdf_statement_get_subject ()</h3>
+<pre class="programlisting"><a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        librdf_statement_get_subject        (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Get the statement subject.
+</p>
+<p>
+This method returns a SHARED pointer to the subject which must
+be copied by the caller if needed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a pointer to the <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> of the statement subject - 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-set-subject"></a><h3>librdf_statement_set_subject ()</h3>
+<pre class="programlisting">void                librdf_statement_set_subject        (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);</pre>
+<p>
+Set the statement subject.
+</p>
+<p>
+The subject passed in becomes owned by
+the statement object and must not be used by the caller after this call.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> of subject
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-get-predicate"></a><h3>librdf_statement_get_predicate ()</h3>
+<pre class="programlisting"><a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        librdf_statement_get_predicate      (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Get the statement predicate.
+</p>
+<p>
+This method returns a SHARED pointer to the predicate which must
+be copied by the caller if needed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a pointer to the <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> of the statement predicate - 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-set-predicate"></a><h3>librdf_statement_set_predicate ()</h3>
+<pre class="programlisting">void                librdf_statement_set_predicate      (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);</pre>
+<p>
+Set the statement predicate.
+</p>
+<p>
+The predicate passed in becomes owned by
+the statement object and must not be used by the caller after this call.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> of predicate
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-get-object"></a><h3>librdf_statement_get_object ()</h3>
+<pre class="programlisting"><a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        librdf_statement_get_object         (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Get the statement object.
+</p>
+<p>
+This method returns a SHARED pointer to the object which must
+be copied by the caller if needed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a pointer to the <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> of the statement object - 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-set-object"></a><h3>librdf_statement_set_object ()</h3>
+<pre class="programlisting">void                librdf_statement_set_object         (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);</pre>
+<p>
+Set the statement object.
+</p>
+<p>
+The object passed in becomes owned by
+the statement object and must not be used by the caller after this call.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> of object
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-is-complete"></a><h3>librdf_statement_is_complete ()</h3>
+<pre class="programlisting">int                 librdf_statement_is_complete        (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Check if statement is a complete and legal RDF triple.
+</p>
+<p>
+Checks that all subject, predicate, object fields are present
+and they have the allowed node types.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if the statement is complete and legal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-to-string"></a><h3>librdf_statement_to_string ()</h3>
+<pre class="programlisting">unsigned char*      librdf_statement_to_string          (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Format the librdf_statement as a string.
+</p>
+<p>
+Formats the statement as a newly allocate string that must be freed by
+the caller.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> the statement
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the string or NULL on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-print"></a><h3>librdf_statement_print ()</h3>
+<pre class="programlisting">void                librdf_statement_print              (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         FILE *fh);</pre>
+<p>
+Pretty print the statement to a file descriptor.
+</p>
+<p>
+This method is for debugging and the format of the output should
+not be relied on.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> the statement
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fh</code></em> :</span></p></td>
+<td> file handle
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-equals"></a><h3>librdf_statement_equals ()</h3>
+<pre class="programlisting">int                 librdf_statement_equals             (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement1,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement2);</pre>
+<p>
+Check if two statements are equal.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement1</code></em> :</span></p></td>
+<td> first <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement2</code></em> :</span></p></td>
+<td> second <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if statements are equal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-match"></a><h3>librdf_statement_match ()</h3>
+<pre class="programlisting">int                 librdf_statement_match              (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *partial_statement);</pre>
+<p>
+Match a statement against a 'partial' statement.
+</p>
+<p>
+A partial statement is where some parts of the statement -
+subject, predicate or object can be empty (NULL).
+Empty parts match against any value, parts with values
+must match exactly.  Node matching is done via <a class="link" href="redland-node.html#librdf-node-equals" title="librdf_node_equals ()"><code class="function">librdf_node_equals()</code></a></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> statement
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>partial_statement</code></em> :</span></p></td>
+<td> statement with possible empty parts
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on match
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-encode"></a><h3>librdf_statement_encode ()</h3>
+<pre class="programlisting">size_t              librdf_statement_encode             (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         unsigned char *buffer,
+                                                         size_t length);</pre>
+<p>
+Serialise a statement into a buffer.
+</p>
+<p>
+Encodes the given statement in the buffer, which must be of sufficient
+size.  If buffer is NULL, no work is done but the size of buffer
+required is returned.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> the statement to serialise
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> the buffer to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the number of bytes written or 0 on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-encode-parts"></a><h3>librdf_statement_encode_parts ()</h3>
+<pre class="programlisting">size_t              librdf_statement_encode_parts       (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context_node,
+                                                         unsigned char *buffer,
+                                                         size_t length,
+                                                         <a class="link" href="redland-statement.html#librdf-statement-part" title="enum librdf_statement_part">librdf_statement_part</a> fields);</pre>
+<p>
+Serialise parts of a statement into a buffer.
+</p>
+<p>
+Encodes the given statement in the buffer, which must be of sufficient
+size.  If buffer is NULL, no work is done but the size of buffer
+required is returned.
+</p>
+<p>
+The fields values are or-ed combinations of:
+LIBRDF_STATEMENT_SUBJECT LIBRDF_STATEMENT_PREDICATE
+LIBRDF_STATEMENT_OBJECT
+or LIBRDF_STATEMENT_ALL for subject,prdicate,object fields
+</p>
+<p>
+If context_node is given, it is encoded also</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> statement to serialise
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context_node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context node (can be NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> the buffer to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fields</code></em> :</span></p></td>
+<td> fields to encode
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the number of bytes written or 0 on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-decode"></a><h3>librdf_statement_decode ()</h3>
+<pre class="programlisting">size_t              librdf_statement_decode             (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         unsigned char *buffer,
+                                                         size_t length);</pre>
+<p>
+Decodes a statement from a buffer.
+</p>
+<p>
+Decodes the serialised statement (as created by <a class="link" href="redland-statement.html#librdf-statement-encode" title="librdf_statement_encode ()"><code class="function">librdf_statement_encode()</code></a> )
+from the given buffer.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> the statement to deserialise into
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> the buffer to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> number of bytes used or 0 on failure (bad encoding, allocation failure)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-statement-decode-parts"></a><h3>librdf_statement_decode_parts ()</h3>
+<pre class="programlisting">size_t              librdf_statement_decode_parts       (<a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> **context_node,
+                                                         unsigned char *buffer,
+                                                         size_t length);</pre>
+<p>
+Decodes a statement + context node from a buffer.
+</p>
+<p>
+Decodes the serialised statement (as created by <a class="link" href="redland-statement.html#librdf-statement-encode" title="librdf_statement_encode ()"><code class="function">librdf_statement_encode()</code></a> )
+from the given buffer.  If a context node is found and context_node is
+not NULL, a pointer to the new <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> is stored in *context_node.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> the statement to deserialise into
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context_node</code></em> :</span></p></td>
+<td> pointer to <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context_node to deserialise into
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td> the buffer to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td> buffer size
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> number of bytes used or 0 on failure (bad encoding, allocation failure)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+@prefix : <http://example.org/data/> .
+
+
+:y :y :x .
+:x :y :y .
+:y :x :y .
+

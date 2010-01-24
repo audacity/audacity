@@ -1,0 +1,192 @@
+<!-- ##### SECTION Title ##### -->
+URI
+
+<!-- ##### SECTION Short_Description ##### -->
+URI class
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A class for absolute URIs and relative URI computation utility
+functions.  Only absolute URIs are provided, with no current access
+to internals of URIs such as URI scheme, path, authority.  Relative
+URIs can be generated against some base or turned to and from local
+filenames.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_new_uri ##### -->
+<para>
+
+</para>
+
+@world: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_uri_from_uri ##### -->
+<para>
+
+</para>
+
+@old_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_uri_from_uri_local_name ##### -->
+<para>
+
+</para>
+
+@old_uri: 
+@local_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+
+
+<!-- ##### FUNCTION librdf_uri_as_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_as_counted_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_print ##### -->
+<para>
+
+</para>
+
+@uri: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_uri_to_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_to_counted_string ##### -->
+<para>
+
+</para>
+
+@uri: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_equals ##### -->
+<para>
+
+</para>
+
+@first_uri: 
+@second_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_is_file_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_to_filename ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_uri_normalised_to_base ##### -->
+<para>
+
+</para>
+
+@uri_string: 
+@source_uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_uri_relative_to_base ##### -->
+<para>
+
+</para>
+
+@base_uri: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_uri_from_filename ##### -->
+<para>
+
+</para>
+
+@world: 
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_uri_compare ##### -->
+<para>
+
+</para>
+
+@uri1: 
+@uri2: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION librdf_uri_filter_func ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@uri: 
+@Returns: 
+
+

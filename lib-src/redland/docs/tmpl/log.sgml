@@ -1,0 +1,128 @@
+<!-- ##### SECTION Title ##### -->
+Logging.
+
+<!-- ##### SECTION Short_Description ##### -->
+Message and error logging.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Provides structured access to debug, information, warning and error
+messages from the libraries.  Structured information is most often
+used from errors such as parsing where file or URI and line numbers
+can be returned via a #raptor_locator object pointer found by
+librdf_log_message_locator() on the #librdf_log_message.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### USER_FUNCTION librdf_log_level_func ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@message: 
+@arguments: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION librdf_log_func ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@message: 
+@Returns: 
+
+
+<!-- ##### ENUM librdf_log_level ##### -->
+<para>
+
+</para>
+
+@LIBRDF_LOG_NONE: 
+@LIBRDF_LOG_DEBUG: 
+@LIBRDF_LOG_INFO: 
+@LIBRDF_LOG_WARN: 
+@LIBRDF_LOG_ERROR: 
+@LIBRDF_LOG_FATAL: 
+@LIBRDF_LOG_LAST: 
+
+<!-- ##### ENUM librdf_log_facility ##### -->
+<para>
+
+</para>
+
+@LIBRDF_FROM_NONE: 
+@LIBRDF_FROM_CONCEPTS: 
+@LIBRDF_FROM_DIGEST: 
+@LIBRDF_FROM_FILES: 
+@LIBRDF_FROM_HASH: 
+@LIBRDF_FROM_INIT: 
+@LIBRDF_FROM_ITERATOR: 
+@LIBRDF_FROM_LIST: 
+@LIBRDF_FROM_MODEL: 
+@LIBRDF_FROM_NODE: 
+@LIBRDF_FROM_PARSER: 
+@LIBRDF_FROM_QUERY: 
+@LIBRDF_FROM_SERIALIZER: 
+@LIBRDF_FROM_STATEMENT: 
+@LIBRDF_FROM_STORAGE: 
+@LIBRDF_FROM_STREAM: 
+@LIBRDF_FROM_URI: 
+@LIBRDF_FROM_UTF8: 
+@LIBRDF_FROM_MEMORY: 
+@LIBRDF_FROM_LAST: 
+
+<!-- ##### FUNCTION librdf_log_message_code ##### -->
+<para>
+
+</para>
+
+@message: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_log_message_level ##### -->
+<para>
+
+</para>
+
+@message: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_log_message_facility ##### -->
+<para>
+
+</para>
+
+@message: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_log_message_message ##### -->
+<para>
+
+</para>
+
+@message: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_log_message_locator ##### -->
+<para>
+
+</para>
+
+@message: 
+@Returns: 
+
+

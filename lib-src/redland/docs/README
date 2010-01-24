@@ -1,0 +1,45 @@
+               Redland RDF Application Framework - Documentation
+
+DOCUMENTS
+
+   The latest documentation is on the Redland Web Site.
+     * Installation document
+     * Testing Redland
+     * Frequently Asked Questions
+     * To-do list
+     * News
+     * Release Notes
+     * License
+
+API DOCUMENTATION
+
+   The API DocBook documentation is generated automatically from the
+   source code using the Linux kernel kernel-doc program which you can get
+   as the file scripts/kernel-doc in the distribution. Each of the higher
+   level language APIs contains a mapping to the core C API and may also
+   include extra documentation describing the native APIs along with
+   examples of use.
+     * Redland API documentation (HTML)
+     * Redland storage implementations overview
+     * Redland C# (ECMA CLI) interface (redland bindings)
+     * Redland Java interface (redland bindings)
+     * Redland Perl interface (redland bindings)
+     * Redland PHP interface (redland bindings)
+     * Redland Python interface (redland bindings)
+     * Redland Ruby interface (redland bindings)
+     * Redland Tcl interface (redland bindings)
+
+PAPERS
+
+   The design and implementation of Redland are discussed in detail in the
+   paper The Design and Implementation of the Redland RDF Application
+   Framework presented at the WWW10 conference, May 2001. (pre-print).
+
+   The details of the technology of the WSE and RDN-WSE projects that are
+   based on Redland are reported in Web Crawling High-Quality Metadata
+   using RDF and Dublin Core, presented at the WWW2002 conference, May
+   2002.
+     __________________________________________________________________
+
+   Copyright 2000-2007 Dave Beckett, Copyright 2000-2004 University of
+   Bristol

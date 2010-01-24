@@ -1,0 +1,7 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- check a node element without a namespace fails -->
+
+  <foo rdf:about="http://example.org/node0" rdf:value="text" />
+
+</rdf:RDF>

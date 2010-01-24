@@ -1,0 +1,57 @@
+<TYPEDEF>
+<NAME>rasqal_world</NAME>
+rasqal_world* world;
+</TYPEDEF>
+
+<TYPEDEF>
+<NAME>rasqal_graph_pattern</NAME>
+rasqal_graph_pattern* graph_pattern;
+</TYPEDEF>
+
+<TYPEDEF>
+<NAME>rasqal_query</NAME>
+rasqal_graph_query* query;
+</TYPEDEF>
+
+<TYPEDEF>
+<NAME>rasqal_query_results</NAME>
+rasqal_graph_query_results* query_results;
+</TYPEDEF>
+
+<TYPEDEF>
+<NAME>rasqal_query_results_formatter</NAME>
+rasqal_graph_query_results_formatter* query_results_formatter;
+</TYPEDEF>
+
+<STRUCT>
+<NAME>rasqal_triples_match</NAME>
+typedef struct {
+  void *user_data;
+
+  rasqal_triple_parts (*bind_match)(struct rasqal_triples_match_s* rtm, void *user_data, rasqal_variable *bindings[4], rasqal_triple_parts parts);
+
+  void (*next_match)(struct rasqal_triples_match_s* rtm, void *user_data);
+
+  int (*is_end)(struct rasqal_triples_match_s* rtm, void *user_data);
+
+  void (*finish)(struct rasqal_triples_match_s* rtm, void *user_data);
+
+  rasqal_world *world;
+} rasqal_triples_match;
+</STRUCT>
+
+
+<STRUCT>
+<NAME>rasqal_triples_source</NAME>
+typedef struct {
+  rasqal_query* query;
+
+  void *user_data;
+
+  int (*init_triples_match)(rasqal_triples_match* rtm, struct rasqal_triples_source_s* rts, void *user_data, rasqal_triple_meta *m, rasqal_triple *t);
+
+  int (*triple_present)(struct rasqal_triples_source_s* rts, void *user_data, rasqal_triple *t);
+
+  void (*free_triples_source)(void *user_data);
+} rasqal_triples_source;
+</STRUCT>

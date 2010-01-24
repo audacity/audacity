@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-heuristics">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-heuristics.top_of_page">Heuristics</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Heuristics</refname>
+<refpurpose>Utility heuristic functions.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-heuristics.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+<link linkend="char">char</link>*               <link linkend="librdf-heuristic-gen-name">librdf_heuristic_gen_name</link>           (const <link linkend="char">char</link> *name);
+<link linkend="int">int</link>                 <link linkend="librdf-heuristic-is-blank-node">librdf_heuristic_is_blank_node</link>      (const <link linkend="char">char</link> *node);
+const <link linkend="char">char</link>*         <link linkend="librdf-heuristic-get-blank-node">librdf_heuristic_get_blank_node</link>     (const <link linkend="char">char</link> *node);
+<link linkend="int">int</link>                 <link linkend="librdf-heuristic-object-is-literal">librdf_heuristic_object_is_literal</link>  (const <link linkend="char">char</link> *object);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-heuristics.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Various utility functions for performing heuristics such as
+generating a name, guessing if a string is a URI or RDF literal.
+</para>
+</refsect1>
+
+<refsect1 id="redland-heuristics.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-heuristic-gen-name" role="function">
+<title>librdf_heuristic_gen_name ()</title>
+<indexterm zone="librdf-heuristic-gen-name"><primary>librdf_heuristic_gen_name</primary></indexterm><programlisting><link linkend="char">char</link>*               librdf_heuristic_gen_name           (const <link linkend="char">char</link> *name);</programlisting>
+<para>
+Generate a new name from an existing name.
+</para>
+<para>
+Adds an integer or increases the integer at the end of the name
+in order to generate a new one</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the name
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new name or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-heuristic-is-blank-node" role="function">
+<title>librdf_heuristic_is_blank_node ()</title>
+<indexterm zone="librdf-heuristic-is-blank-node"><primary>librdf_heuristic_is_blank_node</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_heuristic_is_blank_node      (const <link linkend="char">char</link> *node);</programlisting>
+<para>
+Try to guess if an node string is a blank node identifier.
+</para>
+<para>
+The guessing is done by assuming the object is a blank node if it matches
+^_: like N-Triples, N3 and related.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>node</parameter>&nbsp;:</term>
+<listitem><simpara> string object to guess type
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 if node is probably a blank node identifier
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-heuristic-get-blank-node" role="function">
+<title>librdf_heuristic_get_blank_node ()</title>
+<indexterm zone="librdf-heuristic-get-blank-node"><primary>librdf_heuristic_get_blank_node</primary></indexterm><programlisting>const <link linkend="char">char</link>*         librdf_heuristic_get_blank_node     (const <link linkend="char">char</link> *node);</programlisting>
+<para>
+Get a blank node identifier from a node string.
+</para>
+<para>
+Picks the blank node identifier out of a string.  Looks for things
+like _:ABC</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>node</parameter>&nbsp;:</term>
+<listitem><simpara> string object to guess type
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the blank node identifer string or NULL if the node does not seem to be a blank node identifier
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-heuristic-object-is-literal" role="function">
+<title>librdf_heuristic_object_is_literal ()</title>
+<indexterm zone="librdf-heuristic-object-is-literal"><primary>librdf_heuristic_object_is_literal</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_heuristic_object_is_literal  (const <link linkend="char">char</link> *object);</programlisting>
+<para>
+Try to guess if an object string is a literal or a resource.
+</para>
+<para>
+The guessing is done by assuming the object is a URL if it matches
+  ^[<link linkend="isalnum"><function>isalnum()</function></link>]+:[^<link linkend="isblank"><function>isblank()</function></link>]+$
+</para>
+<para>
+This will be fooled by literals of form 'thing:non-blank-thing' but
+is good enough.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>object</parameter>&nbsp;:</term>
+<listitem><simpara> string object to guess type
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 if object is probably a literal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

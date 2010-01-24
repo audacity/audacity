@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/ns#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xml:base="http://example.org/triples">
+
+  <!-- rdf:bagID when all the triples are given explicit rdf:IDs  -->
+
+  <rdf:Description rdf:about="http://example.org/node" rdf:bagID="bag">
+    <ex:prop1 rdf:ID="triple1">val1</ex:prop1>
+    <ex:prop2 rdf:ID="triple2">val2</ex:prop2>
+    <ex:prop3 rdf:ID="triple3" xml:lang="en">val3</ex:prop3>
+  </rdf:Description>
+
+</rdf:RDF>

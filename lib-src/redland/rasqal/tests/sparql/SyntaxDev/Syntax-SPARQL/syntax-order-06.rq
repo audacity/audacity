@@ -1,0 +1,5 @@
+PREFIX :      <http://example.org/ns#> 
+SELECT *
+{ ?s ?p ?o }
+ORDER BY 
+  DESC(?o+57) :func2(?o) ASC(?s)

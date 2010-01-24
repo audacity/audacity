@@ -1,0 +1,70 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\"
+.\" raptor-config.1 - Raptor compiling utility manual page
+.\"
+.\" Copyright (C) 2003-2008 David Beckett - http://www.dajobe.org/
+.\" Copyright (C) 2003-2005 University of Bristol - http://www.bristol.ac.uk/
+.\"
+.TH raptor-config 1 "2008-04-01"
+.\" Please adjust this date whenever revising the manpage.
+.SH NAME
+raptor-config \- script to get information about the installed version of Raptor
+.SH SYNOPSIS
+.B raptor-config
+[\-\-cflags]
+[\-\-options]
+[\-\-help]
+[\-\-libs]
+[\-\-libtool\-libs]
+[\-\-private\-libs]
+[\-\-prefix\fI[=DIR]\fP]
+[\-\-version\-decimal]
+[\-\-version]
+.SH DESCRIPTION
+\fIraptor-config\fP is a tool that is used to determine the compile and
+linker flags that should be used to compile and link programs that use
+the Raptor RDF parser library.
+.SH OPTIONS
+\fIraptor-config\fP accepts the following options:
+.TP 8
+.B  \-\-cflags
+Print the compiler flags that are necessary to compile a raptor program.
+.TP 8
+.B  \-\-options
+Print raptor compiled options such as parsers and serializers
+available, the XML parser used (if any) and the WWW retrieval library
+used (if any).
+.TP 8
+.B  \-\-help
+Print a help message summarising usage.
+.TP 8
+.B  \-\-libs
+Print the linker flags that are necessary to link a raptor program.
+This excludes linker arguments used to build the raptor shared library.
+.TP 8
+.B  \-\-libtool\-libs
+Print the path to the libtool file for raptor.
+.TP 8
+.B  \-\-private\-libs
+Print the linker flags that are necessary to build the raptor shared
+library.  This option is not usually needed because the raptor
+shared library has already been dynamically linked against these flags.
+.TP 8
+.B  \-\-prefix=PREFIX
+If specified, use PREFIX instead of the installation prefix that
+raptor was built with when computing the output for the
+\-\-cflags and \-\-libs options. This option must be specified before
+any \-\-libs or \-\-cflags options.
+.TP 8
+.B  \-\-version
+Print the currently installed version of raptor on the standard output.
+.TP 8
+.B  \-\-version\-decimal
+Print the currently installed version of raptor as a decimal integer.
+.SH SEE ALSO
+.BR libraptor(3)
+.SH AUTHOR
+Dave Beckett - 
+.UR http://www.dajobe.org/
+http://www.dajobe.org/
+.UE

@@ -1,0 +1,6 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+   <!-- check non-namespaced element does not crash parser -->
+
+   <t xmlns="" rdf:about="http://example.org/" />
+</rdf:RDF>

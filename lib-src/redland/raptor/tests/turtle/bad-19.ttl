@@ -1,0 +1,3 @@
+# Bad () in predicate position
+@prefix :  <http://example.org/ex#> .
+:a () :b .

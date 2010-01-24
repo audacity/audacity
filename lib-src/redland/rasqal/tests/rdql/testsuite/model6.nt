@@ -1,0 +1,3 @@
+# Predicate URI also in subject slot
+<http://rdf.hp.com/r1>  <http://rdf.hp.com/r2>  "r-1-2" .
+<http://rdf.hp.com/r2>  <http://rdf.hp.com/r1>  "r-2-1" .

@@ -1,0 +1,4 @@
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+<http://librdf.org/raptor/tests/ex-22.rdf#myid> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example/org/foo/thing> .
+<http://librdf.org/raptor/tests/ex-22.rdf#myid> <http://example/org/foo/prop> "value" .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://librdf.org/raptor/tests/ex-22.rdf#myid> .

@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Redland RDF Library Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="next" href="redland.html" title="Redland Overview">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="book" lang="en">
+<div class="titlepage">
+<div>
+<div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">Redland RDF Library Manual</p></th></tr></table></div>
+<div><div class="author">
+<h3 class="author">
+<span class="firstname">Dave</span> <span class="surname">Beckett</span>
+</h3>
+<div class="affiliation"><div class="address"><p><br>
+	  <span class="otheraddr"><a class="ulink" href="http://www.dajobe.org/" target="_top">http://www.dajobe.org/</a></span><br>
+	</p></div></div>
+</div></div>
+<div><p class="releaseinfo">Manual for <a class="ulink" href="http://librdf.org/" target="_top">Redland</a> 1.0.8
+</p></div>
+<div><p class="copyright">Copyright © 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007 Dave Beckett</p></div>
+<div><p class="copyright">Copyright © 2000, 2001, 2002, 2003, 2004, 2005 University of Bristol</p></div>
+<div><div class="legalnotice">
+<a name="id2525042"></a><p>
+      This documentation is Free Software / Open Source - you can
+      redistribute it and/or modify it under the same licenses as
+      <a class="ulink" href="http://librdf.org/" target="_top">Redland</a>.
+      It is licensed under the following three licenses as alternatives:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li><p>GNU Lesser General Public License (LGPL) V2.1 or any newer version</p></li>
+<li><p>GNU General Public License (GPL) V2 or any newer version</p></li>
+<li><p>Apache License, V2.0 or any newer version</p></li>
+</ol></div>
+<p>
+      You may not use this documentation except in compliance with at
+      least one of the above three licenses. See the
+      <a class="ulink" href="http://librdf.org/" target="_top">Redland</a>
+      site for the full license terms.
+    </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc"><dl>
+<dt><span class="chapter"><a href="redland.html">Redland Overview</a></span></dt>
+<dt><span class="chapter"><a href="introduction.html">Introduction</a></span></dt>
+<dt><span class="part"><a href="tutorial.html">I. Tutorial</a></span></dt>
+<dt><span class="part"><a href="reference-manual.html">II. Reference Manual</a></span></dt>
+<dd><dl>
+<dt><span class="chapter"><a href="objects.html">Objects in C</a></span></dt>
+<dt>
+<span class="refentrytitle"><a href="redland-world.html">World</a></span><span class="refpurpose"> — Initialisation and termination of library</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-concepts.html">Concepts</a></span><span class="refpurpose"> — Pre-defined URIS and Nodes in the RDF namespaces.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-digest.html">Digests</a></span><span class="refpurpose"> — Content digests.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-files.html">Files</a></span><span class="refpurpose"> — File utility functions.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-hash.html">Hashes</a></span><span class="refpurpose"> — Key:Value hashes or dictionaries.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-heuristics.html">Heuristics</a></span><span class="refpurpose"> — Utility heuristic functions.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-iterator.html">Iterator</a></span><span class="refpurpose"> — Iterate a sequence of objects across some other object.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-list.html">List</a></span><span class="refpurpose"> — Simple list class.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-log.html">Logging.</a></span><span class="refpurpose"> — Message and error logging.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-model.html">RDF Graph (librdf_model)</a></span><span class="refpurpose"> — RDF graph (set of triples) API.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-node.html">RDF term (librdf_node)</a></span><span class="refpurpose"> — RDF triple component</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-parser.html">Parsers</a></span><span class="refpurpose"> — RDF parsers from syntax to triples.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-query.html">Querying</a></span><span class="refpurpose"> — RDF query languages and execution.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-query-results.html">Query results</a></span><span class="refpurpose"> — RDF query results.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-serializer.html">Serializers</a></span><span class="refpurpose"> — RDF serializers from triples to syntax.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-statement.html">RDF Triple (librdf_statement)</a></span><span class="refpurpose"> — RDF Triple.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-storage.html">Triple stores.</a></span><span class="refpurpose"> — RDF Triple stores</span>
+</dt>
+<dt><span class="chapter"><a href="redland-storage-modules.html">Storage Modules</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="redland-storage-modules.html#redland-storage-module-intro">Introduction</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-hashes.html">Store 'hashes'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-memory.html">Store 'memory'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-file.html">Store 'file'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-mysql.html">Store 'mysql'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-postgresql.html">Store 'postgresql'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-sqlite.html">Store 'sqlite'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-tstore.html">Store 'tstore'</a></span></dt>
+<dt><span class="section"><a href="redland-storage-module-uri.html">Store 'uri'</a></span></dt>
+</dl></dd>
+<dt>
+<span class="refentrytitle"><a href="redland-stream.html">Stream of triples (#librdf_statement).</a></span><span class="refpurpose"> — Sequence of RDF Triples.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-unicode.html">Unicode</a></span><span class="refpurpose"> — Unicode utility functions.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="redland-uri.html">URI</a></span><span class="refpurpose"> — URI class</span>
+</dt>
+</dl></dd>
+<dt><span class="index"><a href="indexes.html">Index</a></span></dt>
+</dl></div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

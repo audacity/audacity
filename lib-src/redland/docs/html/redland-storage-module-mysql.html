@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Store 'mysql'</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="prev" href="redland-storage-module-file.html" title="Store 'file'">
+<link rel="next" href="redland-storage-module-postgresql.html" title="Store 'postgresql'">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
+<td><a accesskey="p" href="redland-storage-module-file.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="redland-storage-modules.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-storage-module-postgresql.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="redland-storage-module-mysql"></a>Store 'mysql'</h2></div></div></div>
+<p>This module is compiled in when MySQL 3 or 4 is available. This
+store provides storage using the
+<a class="ulink" href="http://www.mysql.com/" target="_top">MySQL</a>
+open source database including contexts.  It was added in Redland
+0.9.15.  It has however been tested with several million triples and
+deployed.</p>
+<p>There are several options required with the mysql storage
+in order to connect to the database.  These are:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="literal">host</code> for the database server hostname</p></li>
+<li><p><code class="literal">port</code> for the database server port (defaults to the MySQL port 3306 if not given)</p></li>
+<li><p><code class="literal">database</code> for the MySQL database name (not the storage name)</p></li>
+<li><p><code class="literal">user</code> for the database server user name</p></li>
+<li><p><code class="literal">password</code> for the database server password</p></li>
+</ul></div>
+<p>NOTE: Take care exposing the password as for example, program
+arguments or environment variables.  The rdfproc
+utility can with help this by reading the password from standard
+input.  Inside programs, one way to prevent storing the password in a
+string is to construct a Redland hash of the storage options such as
+via <code class="literal">librdf_hash_from_string</code> and use
+<code class="literal">librdf_new_storage_with_options</code> to create a storage.
+The rdfproc utility source code demonstrates this.
+</p>
+<p>The storage name parameter given to the storage constructor
+<code class="literal">librdf_new_storage</code> is used inside the mysql store to
+allow multiple stores inside one MySQL database instance as
+parameterised with the above optiosn.</p>
+<p>If boolean option <code class="literal">new</code> is given, any existing MySQL
+database named by the storage option <code class="literal">database</code>, say
+<span class="emphasis"><em>db</em></span> will be dropped and the appropriate new tables created.
+The MySQL database <span class="emphasis"><em>db</em></span> must already exist, such as made with
+the MySQL <code class="literal">create database </code><span class="emphasis"><em>db</em></span> command and the
+appropriate priviledges set so that the user and password work.
+</p>
+<p>If boolean option <code class="literal">reconnect</code> is given, MySQL
+reconnection will be enabled so that if the database conneciton
+is dropped, MySQL will attempt to reconnect.
+</p>
+<p>This store always provides contexts; the boolean storage option
+<code class="literal">contexts</code> is not checked.</p>
+<p>Examples:</p>
+<pre class="programlisting">
+  /* A new MySQL store */
+  storage=librdf_new_storage(world, "mysql", "db1",
+      "new='yes',host='localhost',database='red',user='foo','password='bar'");
+
+  /* A different, existing MySQL store db2 in the same database as above */
+  storage=librdf_new_storage(world, "mysql", "db2",
+      "host='localhost',database='red',user='foo','password='bar'");
+
+  /* An existing MySQL store on a different database server */
+  storage=librdf_new_storage(world, "mysql", "db3",
+      "host='db.example.org',database='abc',user='baz','password='blah'");
+
+  /* Opening with an options hash */
+  options=librdf_new_hash(world, NULL);
+  librdf_hash_from_string(options, 
+      "host='db.example.org',database='abc',user='baz'");
+  librdf_hash_put_strings(options, "password", user_password);
+  storage=librdf_new_storage_with_options(world, "mysql", "db4", options);
+</pre>
+<p>In PHP:</p>
+<pre class="programlisting">
+  # An existing store
+  $storage=librdf_new_storage($world, 'mysql', 'db4', 
+      "host='127.0.0.1',database='xyz',user='foo',password='blah'");
+
+</pre>
+<p>Summary:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>Persistent</p></li>
+<li><p>Suitable for very large models</p></li>
+<li><p>Indexed but not optimised</p></li>
+<li><p>Smaller disk usage than BDB</p></li>
+<li><p>Possibility of free text searching</p></li>
+<li><p>Contexts always provided</p></li>
+</ul></div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

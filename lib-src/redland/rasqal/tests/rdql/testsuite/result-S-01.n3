@@ -1,0 +1,11 @@
+@prefix rs:      <http://jena.hpl.hp.com/2003/03/result-set#> .
+
+[]    a       rs:ResultSet ;
+      rs:resultVariable "y" ;
+      rs:size "1" ;
+      rs:solution
+              [ rs:binding
+                        [ rs:value <http://rdf.hp.com/p1> ;
+                          rs:variable "y"
+                        ]
+              ] .

@@ -1,0 +1,6 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Test 1-10 : Unused variables in SELECT
+
+SELECT ?x, ?v
+SOURCE <model1.nt>
+WHERE  (<http://rdf.hp.com/r-1>, <http://rdf.hp.com/p-1>, ?v)

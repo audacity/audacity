@@ -1,0 +1,478 @@
+<!-- ##### SECTION Title ##### -->
+Triple stores.
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF Triple stores
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Provides classes to create triple stores to back the RDF graph
+interface (#librdf_model).  Most of the methods are for implementing
+the RDF model API and have the same name.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_storage ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_storage_factory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_storage_register_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@label: 
+@factory: 
+
+
+<!-- ##### FUNCTION librdf_storage_enumerate ##### -->
+<para>
+
+</para>
+
+@world: 
+@counter: 
+@name: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_storage ##### -->
+<para>
+
+</para>
+
+@world: 
+@storage_name: 
+@name: 
+@options_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_storage_with_options ##### -->
+<para>
+
+</para>
+
+@world: 
+@storage_name: 
+@name: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_storage_from_storage ##### -->
+<para>
+
+</para>
+
+@old_storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_storage_from_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@factory: 
+@name: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_storage ##### -->
+<para>
+
+</para>
+
+@storage: 
+
+
+<!-- ##### FUNCTION librdf_storage_open ##### -->
+<para>
+
+</para>
+
+@storage: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_close ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_size ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_add_statement ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_add_statements ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement_stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_remove_statement ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_contains_statement ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_serialise ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_find_statements ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_find_statements_with_options ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement: 
+@context_node: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_sources ##### -->
+<para>
+
+</para>
+
+@storage: 
+@arc: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_arcs ##### -->
+<para>
+
+</para>
+
+@storage: 
+@source: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_targets ##### -->
+<para>
+
+</para>
+
+@storage: 
+@source: 
+@arc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_arcs_in ##### -->
+<para>
+
+</para>
+
+@storage: 
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_arcs_out ##### -->
+<para>
+
+</para>
+
+@storage: 
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_has_arc_in ##### -->
+<para>
+
+</para>
+
+@storage: 
+@node: 
+@property: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_has_arc_out ##### -->
+<para>
+
+</para>
+
+@storage: 
+@node: 
+@property: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_context_add_statement ##### -->
+<para>
+
+</para>
+
+@storage: 
+@context: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_context_add_statements ##### -->
+<para>
+
+</para>
+
+@storage: 
+@context: 
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_context_remove_statement ##### -->
+<para>
+
+</para>
+
+@storage: 
+@context: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_context_remove_statements ##### -->
+<para>
+
+</para>
+
+@storage: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_context_as_stream ##### -->
+<para>
+
+</para>
+
+@storage: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_context_serialise ##### -->
+<para>
+
+</para>
+
+@storage: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_supports_query ##### -->
+<para>
+
+</para>
+
+@storage: 
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_query_execute ##### -->
+<para>
+
+</para>
+
+@storage: 
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_sync ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_find_statements_in_context ##### -->
+<para>
+
+</para>
+
+@storage: 
+@statement: 
+@context_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_contexts ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_get_feature ##### -->
+<para>
+
+</para>
+
+@storage: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_set_feature ##### -->
+<para>
+
+</para>
+
+@storage: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_transaction_commit ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_transaction_get_handle ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_transaction_rollback ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_transaction_start ##### -->
+<para>
+
+</para>
+
+@storage: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_transaction_start_with_handle ##### -->
+<para>
+
+</para>
+
+@storage: 
+@handle: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_storage_add_reference ##### -->
+<para>
+
+</para>
+
+@storage: 
+
+
+<!-- ##### FUNCTION librdf_storage_remove_reference ##### -->
+<para>
+
+</para>
+
+@storage: 
+
+

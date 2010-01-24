@@ -1,0 +1,342 @@
+<!-- ##### SECTION Title ##### -->
+RDF term (librdf_node)
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF triple component
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The (subject, predicate, object) parts of an RDF triple.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_node ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM librdf_node_type ##### -->
+<para>
+
+</para>
+
+@LIBRDF_NODE_TYPE_UNKNOWN: 
+@LIBRDF_NODE_TYPE_RESOURCE: 
+@LIBRDF_NODE_TYPE_LITERAL: 
+@LIBRDF_NODE_TYPE_BLANK: 
+@LIBRDF_NODE_TYPE_LAST: 
+
+<!-- ##### FUNCTION librdf_new_node ##### -->
+<para>
+
+</para>
+
+@world: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_uri_string ##### -->
+<para>
+
+</para>
+
+@world: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_uri ##### -->
+<para>
+
+</para>
+
+@world: 
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_uri_local_name ##### -->
+<para>
+
+</para>
+
+@world: 
+@uri: 
+@local_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_normalised_uri_string ##### -->
+<para>
+
+</para>
+
+@world: 
+@uri_string: 
+@source_uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@string: 
+@xml_language: 
+@is_wf_xml: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_typed_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@value: 
+@xml_language: 
+@datatype_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_typed_counted_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@value: 
+@value_len: 
+@xml_language: 
+@xml_language_len: 
+@datatype_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_blank_identifier ##### -->
+<para>
+
+</para>
+
+@world: 
+@identifier: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_node_from_node ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_node ##### -->
+<para>
+
+</para>
+
+@node: 
+
+
+<!-- ##### FUNCTION librdf_node_get_uri ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_type ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_literal_value ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_literal_value_as_counted_string ##### -->
+<para>
+
+</para>
+
+@node: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_literal_value_as_latin1 ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_literal_value_language ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_literal_value_is_wf_xml ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_literal_value_datatype_uri ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_li_ordinal ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_get_blank_identifier ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_is_resource ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_is_literal ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_is_blank ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_encode ##### -->
+<para>
+
+</para>
+
+@node: 
+@buffer: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_decode ##### -->
+<para>
+
+</para>
+
+@world: 
+@size_p: 
+@buffer: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_to_string ##### -->
+<para>
+
+</para>
+
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_to_counted_string ##### -->
+<para>
+
+</para>
+
+@node: 
+@len_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_print ##### -->
+<para>
+
+</para>
+
+@node: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_node_equals ##### -->
+<para>
+
+</para>
+
+@first_node: 
+@second_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_node_static_iterator_create ##### -->
+<para>
+
+</para>
+
+@nodes: 
+@size: 
+@Returns: 
+
+

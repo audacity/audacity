@@ -1,0 +1,20 @@
+# Model 2 : Paths
+
+# A path
+
+<http://rdf.hp.com/s1>  <http://rdf.hp.com/p>  <http://rdf.hp.com/s2> .
+<http://rdf.hp.com/s2>  <http://rdf.hp.com/p>  "Value" .
+
+
+# A loop /one node
+
+<http://rdf.hp.com/r>  <http://rdf.hp.com/p>  <http://rdf.hp.com/r>.
+
+# A loop : two nodes
+
+<http://rdf.hp.com/r-1>  <http://rdf.hp.com/p-r-1-2>  <http://rdf.hp.com/r-2> .
+<http://rdf.hp.com/r-2>  <http://rdf.hp.com/p-r-2-1>  <http://rdf.hp.com/r-1> .
+
+# Two dangling arcs, same property
+<http://rdf.hp.com/r-2>  <http://rdf.hp.com/p-r-2-3>  <http://rdf.hp.com/r-3a> .
+<http://rdf.hp.com/r-2>  <http://rdf.hp.com/p-r-2-3>  <http://rdf.hp.com/r-3b> .

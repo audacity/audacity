@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/foo#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- Check parseType daml:Collection with a typed node inside -->
+
+  <rdf:Description rdf:about="http://example.org/node1">
+    <ex:prop1 rdf:parseType="daml:collection">
+      <ex:node2>
+        <ex:prop2 rdf:resource="http://example.org/node3" />
+      </ex:node2>
+    </ex:prop1>
+  </rdf:Description>
+
+</rdf:RDF>

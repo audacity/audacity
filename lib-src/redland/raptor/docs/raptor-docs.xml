@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <title>Raptor RDF Syntax Parsing and Serializing Library Manual</title>
+    <releaseinfo>Manual for <ulink url="http://librdf.org/raptor/">Raptor</ulink> &version;</releaseinfo>
+
+    <author>
+      <firstname>Dave</firstname>
+      <surname>Beckett</surname>
+      <affiliation>
+	<address>
+	  <otheraddr><ulink url="http://www.dajobe.org/">http://www.dajobe.org/</ulink></otheraddr>
+	</address>
+      </affiliation>
+    </author>
+
+    <legalnotice>
+    <para>
+      This documentation is Free Software / Open Source - you can
+      redistribute it and/or modify it under the same licenses as
+      <ulink url="http://librdf.org/raptor/">Raptor</ulink>.
+      It is licensed under the following three licenses as alternatives:
+      <orderedlist>
+	<listitem><para>GNU Lesser General Public License (LGPL) V2.1 or any newer version</para></listitem>
+	<listitem><para>GNU General Public License (GPL) V2 or any newer version</para></listitem>
+	<listitem><para>Apache License, V2.0 or any newer version</para></listitem>
+      </orderedlist>
+      You may not use this documentation except in compliance with at
+      least one of the above three licenses. See the
+      <ulink url="http://librdf.org/raptor/">Raptor</ulink>
+      site for the full license terms.
+    </para>
+
+    </legalnotice>
+
+    <copyright>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+      <year>2006</year>
+      <year>2007</year>
+      <year>2008</year>
+      <holder>Dave Beckett</holder>
+    </copyright>
+    <copyright>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+      <holder>University of Bristol</holder>
+    </copyright>
+  </bookinfo>
+
+   <chapter id="introduction">
+    <title>Raptor Overview</title>
+    <para>
+<ulink url="http://librdf.org/raptor/">Raptor</ulink> is a library for RDF syntax parsing and serializing providing
+APIs to turn syntax to and from RDF triples.  It also includes supporting
+functionality for Unicode, UTF-8, URIs, WWW retrieval and XML writing.
+    </para>
+
+  </chapter>
+
+  <part id="tutorial"> 
+    <title>Raptor Tutorial</title>
+
+    <partintro id="tutorial-introduction">
+      <para>This part describes how to use the
+      <ulink url="http://librdf.org/raptor/">Raptor</ulink> APIs to
+      turn syntaxes into RDF triples and RDF triples into syntaxes.</para>
+
+      <para>The next part contains the
+      <link linkend="reference-manual">Raptor Reference Manual</link>
+      which comprehensively describes every class and function of the API.
+      </para>
+
+      <para>For the latest information, see the
+      <ulink url="http://librdf.org/raptor/">Raptor Home Page</ulink>
+      and the <ulink url="../README.html">main document overview</ulink>
+      in this document tree.
+      </para>
+    </partintro>
+
+    <xi:include href="raptor-tutorial-intro.xml"/>
+    <xi:include href="raptor-tutorial-querying-functionality.xml"/>
+    <xi:include href="raptor-tutorial-parsing.xml"/>
+    <xi:include href="raptor-tutorial-serializing.xml"/>
+  </part>
+
+
+  <part id="reference-manual">
+    <title>Raptor Reference Manual</title>
+
+    <partintro id="reference-manual-introduction">
+      <para>This part contains the Raptor Reference Manual
+      which comprehensively describes every class and function of the API.
+      </para>
+      
+      <para>The previous part contains the
+      <link linkend="tutorial">Raptor Tutorial</link>
+      explaining how to use the API parts.
+      </para>
+
+      <para>For the latest information, see the
+      <ulink url="http://librdf.org/raptor/">Raptor Home Page</ulink>
+      and the <ulink url="../README.html">main document overview</ulink>
+      in this document tree.
+      </para>
+    </partintro>
+
+    <xi:include href="raptor-parsers.xml"/>
+    <xi:include href="raptor-serializers.xml"/>
+
+
+    <xi:include href="xml/section-general.xml"/>
+    <xi:include href="xml/section-memory.xml"/>
+    <xi:include href="xml/section-constants.xml"/>
+    <xi:include href="xml/section-feature.xml"/>
+    <xi:include href="xml/section-iostream.xml"/>
+    <xi:include href="xml/section-locator.xml"/>
+    <xi:include href="xml/section-parser.xml"/>
+    <xi:include href="xml/section-sax2.xml"/>
+    <xi:include href="xml/section-sequence.xml"/>
+    <xi:include href="xml/section-serializer.xml"/>
+    <xi:include href="xml/section-stringbuffer.xml"/>
+    <xi:include href="xml/section-triples.xml"/>
+    <xi:include href="xml/section-unicode.xml"/>
+    <xi:include href="xml/section-uri-factory.xml"/>
+    <xi:include href="xml/section-uri.xml"/>
+    <xi:include href="xml/section-www.xml"/>
+    <xi:include href="xml/section-xml-namespace.xml"/>
+    <xi:include href="xml/section-xml-qname.xml"/>
+    <xi:include href="xml/section-xml.xml"/>
+
+    <!-- <xi:include href="xml/section-unused.xml"/> -->
+  </part>
+
+  <index>
+    <title>Index</title>
+  </index>
+</book>

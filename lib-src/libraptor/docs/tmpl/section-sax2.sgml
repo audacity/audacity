@@ -1,0 +1,231 @@
+<!-- ##### SECTION Title ##### -->
+SAX2
+
+<!-- ##### SECTION Short_Description ##### -->
+SAX2 XML Parsing API with namespaces and base URI support.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A class providing a SAX2 XML parsing API with XML namespaces
+and XML base support.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_sax2 ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_sax2 ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@error_handlers: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_sax2 ##### -->
+<para>
+
+</para>
+
+@sax2: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_start_element_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@xml_element: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_end_element_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@xml_element: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_characters_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@xml_element: 
+@s: 
+@len: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_cdata_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@xml_element: 
+@s: 
+@len: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_comment_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@xml_element: 
+@s: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_unparsed_entity_decl_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@entityName: 
+@base: 
+@systemId: 
+@publicId: 
+@notationName: 
+
+
+<!-- ##### USER_FUNCTION raptor_sax2_external_entity_ref_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@context: 
+@base: 
+@systemId: 
+@publicId: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_start_element_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_end_element_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_characters_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_cdata_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_comment_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_unparsed_entity_decl_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_external_entity_ref_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_set_namespace_handler ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_sax2_parse_start ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@base_uri: 
+
+
+<!-- ##### FUNCTION raptor_sax2_parse_chunk ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@buffer: 
+@len: 
+@is_end: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_sax2_inscope_xml_language ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_sax2_inscope_base_uri ##### -->
+<para>
+
+</para>
+
+@sax2: 
+@Returns: 
+
+

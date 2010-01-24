@@ -1,0 +1,261 @@
+<!-- ##### SECTION Title ##### -->
+XML Namespaces
+
+<!-- ##### SECTION Short_Description ##### -->
+Namespaces in XML include stacks of Namespaces
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Two classes that provide an XML namespace - short prefix (or none) and
+absolute URI (or none) to match the form <literal>xmlns...="..."</literal>
+seen in XML.  A stack of namespaces #raptor_namespace_stack is also
+provided to handle in-scope namespace calculations that happen inside
+XML documents where inner namespaces can override outer ones.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_namespace ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_namespace_from_uri ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@prefix: 
+@ns_uri: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_namespaces ##### -->
+<para>
+
+</para>
+
+@uri_handler: 
+@uri_context: 
+@error_handler: 
+@error_data: 
+@defaults: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_init ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@uri_handler: 
+@uri_context: 
+@error_handler: 
+@error_data: 
+@defaults: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_clear ##### -->
+<para>
+
+</para>
+
+@nstack: 
+
+
+<!-- ##### FUNCTION raptor_free_namespaces ##### -->
+<para>
+
+</para>
+
+@nstack: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_start_namespace ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@nspace: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_start_namespace_full ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@prefix: 
+@ns_uri_string: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_end_for_depth ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@depth: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_get_default_namespace ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_find_namespace ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@prefix: 
+@prefix_length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_find_namespace_by_uri ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@ns_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_namespace_in_scope ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@nspace: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_namespace ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@prefix: 
+@ns_uri_string: 
+@depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_namespace ##### -->
+<para>
+
+</para>
+
+@ns: 
+
+
+<!-- ##### FUNCTION raptor_namespace_copy ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@ns: 
+@new_depth: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespace_get_uri ##### -->
+<para>
+
+</para>
+
+@ns: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespace_get_prefix ##### -->
+<para>
+
+</para>
+
+@ns: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespace_get_counted_prefix ##### -->
+<para>
+
+</para>
+
+@ns: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_namespaces_format ##### -->
+<para>
+
+</para>
+
+@ns: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_namespace ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@ns: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_namespace_parts_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@prefix: 
+@uri_string: 
+@Returns: 
+
+
+<!-- ##### TYPEDEF raptor_namespace_stack ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_namespaces_qname_from_uri ##### -->
+<para>
+
+</para>
+
+@nstack: 
+@uri: 
+@xml_version: 
+@Returns: 
+
+

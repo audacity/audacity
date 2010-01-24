@@ -1,0 +1,6 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+
+SELECT *
+FROM   <model9.n3>
+WHERE  (?x ?y ?v)
+AND    ?v == 5

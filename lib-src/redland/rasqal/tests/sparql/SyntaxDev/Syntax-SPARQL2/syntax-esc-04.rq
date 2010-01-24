@@ -1,0 +1,3 @@
+PREFIX : <http://example/> 
+SELECT *
+WHERE { <\u0078> :\u0070 ?xx\u0078 }

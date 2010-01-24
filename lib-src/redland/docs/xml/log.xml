@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-log">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-log.top_of_page">Logging.</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Logging.</refname>
+<refpurpose>Message and error logging.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-log.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+<link linkend="int">int</link>                 (<link linkend="librdf-log-level-func">*librdf_log_level_func</link>)            (<link linkend="void">void</link> *user_data,
+                                                         const <link linkend="char">char</link> *message,
+                                                         <link linkend="va-list">va_list</link> arguments);
+<link linkend="int">int</link>                 (<link linkend="librdf-log-func">*librdf_log_func</link>)                  (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-message">librdf_log_message</link> *message);
+enum                <link linkend="librdf-log-level">librdf_log_level</link>;
+enum                <link linkend="librdf-log-facility">librdf_log_facility</link>;
+<link linkend="int">int</link>                 <link linkend="librdf-log-message-code">librdf_log_message_code</link>             (<link linkend="librdf-log-message">librdf_log_message</link> *message);
+<link linkend="librdf-log-level">librdf_log_level</link>    <link linkend="librdf-log-message-level">librdf_log_message_level</link>            (<link linkend="librdf-log-message">librdf_log_message</link> *message);
+<link linkend="librdf-log-facility">librdf_log_facility</link> <link linkend="librdf-log-message-facility">librdf_log_message_facility</link>         (<link linkend="librdf-log-message">librdf_log_message</link> *message);
+const <link linkend="char">char</link>*         <link linkend="librdf-log-message-message">librdf_log_message_message</link>          (<link linkend="librdf-log-message">librdf_log_message</link> *message);
+<link linkend="raptor-locator">raptor_locator</link>*     <link linkend="librdf-log-message-locator">librdf_log_message_locator</link>          (<link linkend="librdf-log-message">librdf_log_message</link> *message);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-log.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Provides structured access to debug, information, warning and error
+messages from the libraries.  Structured information is most often
+used from errors such as parsing where file or URI and line numbers
+can be returned via a <link linkend="raptor-locator"><type>raptor_locator</type></link> object pointer found by
+<link linkend="librdf-log-message-locator"><function>librdf_log_message_locator()</function></link> on the <link linkend="librdf-log-message"><type>librdf_log_message</type></link>.
+</para>
+</refsect1>
+
+<refsect1 id="redland-log.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-log-level-func" role="function">
+<title>librdf_log_level_func ()</title>
+<indexterm zone="librdf-log-level-func"><primary>librdf_log_level_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*librdf_log_level_func)            (<link linkend="void">void</link> *user_data,
+                                                         const <link linkend="char">char</link> *message,
+                                                         <link linkend="va-list">va_list</link> arguments);</programlisting>
+<para>
+Handler for one log level, for the warning and error levels ONLY.
+Used by <link linkend="librdf-world-set-warning"><type>librdf_world_set_warning</type></link> and <link linkend="librdf-world-set-error"><type>librdf_world_set_error</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> User data pointer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> Log message.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arguments</parameter>&nbsp;:</term>
+<listitem><simpara> Message arguments.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-zero to indicate log message has been handled 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-func" role="function">
+<title>librdf_log_func ()</title>
+<indexterm zone="librdf-log-func"><primary>librdf_log_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*librdf_log_func)                  (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="librdf-log-message">librdf_log_message</link> *message);</programlisting>
+<para>
+Handler for all log levels.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> User data pointer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> Log message structure pointer.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-zero to indicate log message has been handled 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-level" role="enum">
+<title>enum librdf_log_level</title>
+<indexterm zone="librdf-log-level"><primary>librdf_log_level</primary></indexterm><programlisting>typedef enum {
+  LIBRDF_LOG_NONE = 0,
+  LIBRDF_LOG_DEBUG,
+  LIBRDF_LOG_INFO,
+  LIBRDF_LOG_WARN,
+  LIBRDF_LOG_ERROR,
+  LIBRDF_LOG_FATAL,
+  LIBRDF_LOG_LAST=LIBRDF_LOG_FATAL
+} librdf_log_level;
+</programlisting>
+<para>
+Indicates the level of the log message.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="LIBRDF-LOG-NONE:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_NONE</literal></term>
+<listitem><simpara> No level
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-LOG-DEBUG:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_DEBUG</literal></term>
+<listitem><simpara> Debug.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-LOG-INFO:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_INFO</literal></term>
+<listitem><simpara> Information.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-LOG-WARN:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_WARN</literal></term>
+<listitem><simpara> Warning.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-LOG-ERROR:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_ERROR</literal></term>
+<listitem><simpara> Recoverable error.  Program can continue.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-LOG-FATAL:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_FATAL</literal></term>
+<listitem><simpara> Fatal error.  Program will abort if this is not caught.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-LOG-LAST:CAPS" role="constant">
+<term><literal>LIBRDF_LOG_LAST</literal></term>
+<listitem><simpara> Internal, never returned.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-facility" role="enum">
+<title>enum librdf_log_facility</title>
+<indexterm zone="librdf-log-facility"><primary>librdf_log_facility</primary></indexterm><programlisting>typedef enum {
+  LIBRDF_FROM_NONE = 0,
+  LIBRDF_FROM_CONCEPTS,
+  LIBRDF_FROM_DIGEST,
+  LIBRDF_FROM_FILES,
+  LIBRDF_FROM_HASH,
+  LIBRDF_FROM_INIT,
+  LIBRDF_FROM_ITERATOR,
+  LIBRDF_FROM_LIST,
+  LIBRDF_FROM_MODEL,
+  LIBRDF_FROM_NODE,
+  LIBRDF_FROM_PARSER,
+  LIBRDF_FROM_QUERY,
+  LIBRDF_FROM_SERIALIZER,
+  LIBRDF_FROM_STATEMENT,
+  LIBRDF_FROM_STORAGE,
+  LIBRDF_FROM_STREAM,
+  LIBRDF_FROM_URI,
+  LIBRDF_FROM_UTF8,
+  LIBRDF_FROM_MEMORY,
+  LIBRDF_FROM_LAST=LIBRDF_FROM_MEMORY
+} librdf_log_facility;
+</programlisting>
+<para>
+Indicates the part of the system that generated the log message.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="LIBRDF-FROM-NONE:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_NONE</literal></term>
+<listitem><simpara> Associated with no part.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-CONCEPTS:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_CONCEPTS</literal></term>
+<listitem><simpara> Concepts
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-DIGEST:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_DIGEST</literal></term>
+<listitem><simpara> Digest
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-FILES:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_FILES</literal></term>
+<listitem><simpara> Files
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-HASH:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_HASH</literal></term>
+<listitem><simpara> Hash
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-INIT:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_INIT</literal></term>
+<listitem><simpara> Init
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-ITERATOR:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_ITERATOR</literal></term>
+<listitem><simpara> Iterator
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-LIST:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_LIST</literal></term>
+<listitem><simpara> List
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-MODEL:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_MODEL</literal></term>
+<listitem><simpara> Model
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-NODE:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_NODE</literal></term>
+<listitem><simpara> Node
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-PARSER:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_PARSER</literal></term>
+<listitem><simpara> Parser
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-QUERY:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_QUERY</literal></term>
+<listitem><simpara> Query
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-SERIALIZER:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_SERIALIZER</literal></term>
+<listitem><simpara> Serializer
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-STATEMENT:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_STATEMENT</literal></term>
+<listitem><simpara> Statement
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-STORAGE:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_STORAGE</literal></term>
+<listitem><simpara> Storage
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-STREAM:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_STREAM</literal></term>
+<listitem><simpara> Stream
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-URI:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_URI</literal></term>
+<listitem><simpara> URI
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-UTF8:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_UTF8</literal></term>
+<listitem><simpara> UTF8
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-MEMORY:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_MEMORY</literal></term>
+<listitem><simpara> Memory
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="LIBRDF-FROM-LAST:CAPS" role="constant">
+<term><literal>LIBRDF_FROM_LAST</literal></term>
+<listitem><simpara> Internal, never returned.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-message-code" role="function">
+<title>librdf_log_message_code ()</title>
+<indexterm zone="librdf-log-message-code"><primary>librdf_log_message_code</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_log_message_code             (<link linkend="librdf-log-message">librdf_log_message</link> *message);</programlisting>
+<para>
+Retrieve error code from log message.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> log message
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> int error code
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-message-level" role="function">
+<title>librdf_log_message_level ()</title>
+<indexterm zone="librdf-log-message-level"><primary>librdf_log_message_level</primary></indexterm><programlisting><link linkend="librdf-log-level">librdf_log_level</link>    librdf_log_message_level            (<link linkend="librdf-log-message">librdf_log_message</link> *message);</programlisting>
+<para>
+Retrieve severity of log message.
+</para>
+<para>
+The log message severity level is defined in rdf_log.h as values
+of enum <link linkend="librdf-log-level"><type>librdf_log_level</type></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> log message
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> severity level
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-message-facility" role="function">
+<title>librdf_log_message_facility ()</title>
+<indexterm zone="librdf-log-message-facility"><primary>librdf_log_message_facility</primary></indexterm><programlisting><link linkend="librdf-log-facility">librdf_log_facility</link> librdf_log_message_facility         (<link linkend="librdf-log-message">librdf_log_message</link> *message);</programlisting>
+<para>
+Retrieve facility that generated the message.
+</para>
+<para>
+The log message facility is defined in rdf_log.h as values
+of enum <link linkend="librdf-log-facility"><type>librdf_log_facility</type></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> log message
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> ID of Redland facility that generated the log message.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-message-message" role="function">
+<title>librdf_log_message_message ()</title>
+<indexterm zone="librdf-log-message-message"><primary>librdf_log_message_message</primary></indexterm><programlisting>const <link linkend="char">char</link>*         librdf_log_message_message          (<link linkend="librdf-log-message">librdf_log_message</link> *message);</programlisting>
+<para>
+Retrieve text message from log entry.
+</para>
+<para>
+The string returned is shared and must be copied by the caller
+if required to be retained.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> log message
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> shared pointer to the log message string
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-log-message-locator" role="function">
+<title>librdf_log_message_locator ()</title>
+<indexterm zone="librdf-log-message-locator"><primary>librdf_log_message_locator</primary></indexterm><programlisting><link linkend="raptor-locator">raptor_locator</link>*     librdf_log_message_locator          (<link linkend="librdf-log-message">librdf_log_message</link> *message);</programlisting>
+<para>
+Retrieve locator of log entry.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>message</parameter>&nbsp;:</term>
+<listitem><simpara> log message
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> pointer to an appropriate raptor_locator* or NULL if not available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

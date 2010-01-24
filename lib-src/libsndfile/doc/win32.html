@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+	<TITLE>
+	Building libsndfile on Win32
+	</TITLE>
+	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
+	<LINK REL=StyleSheet HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+</HEAD>
+
+<BODY>
+<!-- pepper -->
+<H1><BR>Building libsndfile on Win32</H1>
+
+<P><B>
+Note : For pre-compiled binaries for windows, both for win32 and win64, see the
+main web page.
+</B></P>
+
+<P>
+There is currently only one way of building libsndfile for Win32 and Win64;
+cross compiling from Linux using the MinGW cross compiler.
+</P>
+
+<P>
+libsndfile is written to be compiled by a compiler which supports large
+chunks of the 1999 ISO C Standard.
+Unfortunately, the microsoft compiler supports close to nothing of this
+standard and hence is not suitable for libsndfile.
+</P>
+
+<P>
+It <b>may</b> be possible to compile libsndfile on windows using the
+	<a href="http://www.mingw.org/">MinGW</a>
+compiler suite, but I haven't tested that and have no interest in supporting
+that.
+</P>
+
+<!--===========================================================================-->
+
+<!-- pepper -->
+<!-- pepper -->
+<!-- pepper -->
+<BR>
+<!-- pepper -->
+<!-- pepper -->
+<!-- pepper -->
+<!-- pepper -->
+
+</BODY>
+</HTML>

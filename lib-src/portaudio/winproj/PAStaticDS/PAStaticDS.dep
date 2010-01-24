@@ -1,0 +1,38 @@
+# Microsoft Developer Studio Generated Dependency File, included by PAStaticDS.mak
+
+
+
+..\..\pa_win_ds\dsound_wrapper.c : \
+
+	"..\..\pa_common\pa_trace.h"\
+
+	"..\..\pa_win_ds\dsound_wrapper.h"\
+
+	
+
+
+
+..\..\pa_win_ds\pa_dsound.c : \
+
+	"..\..\pa_common\pa_host.h"\
+
+	"..\..\pa_common\pa_trace.h"\
+
+	"..\..\pa_common\portaudio.h"\
+
+	"..\..\pa_win_ds\dsound_wrapper.h"\
+
+	
+
+
+
+..\..\pa_common\pa_lib.c : \
+
+	"..\..\pa_common\pa_host.h"\
+
+	"..\..\pa_common\pa_trace.h"\
+
+	"..\..\pa_common\portaudio.h"\
+
+	
+

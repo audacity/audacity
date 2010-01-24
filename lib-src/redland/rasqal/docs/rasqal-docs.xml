@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <bookinfo>
+    <title>Rasqal RDF Query Library Manual</title>
+    <releaseinfo>for Rasqal &version;</releaseinfo>
+  </bookinfo>
+
+  <chapter id="rasqal">
+    <title>Rasqal Overview</title>
+    <para>
+Rasqal is an RDF query language providing APIs to build and
+manipulate queryies and query results along with an execution engine
+to run the queries.
+    </para>
+
+  </chapter>
+
+  <part>
+    <title>Reference Manual</title>
+
+    <xi:include href="xml/section-general.xml"/>
+    <xi:include href="xml/section-data.xml"/>
+    <xi:include href="xml/section-expression.xml"/>
+    <xi:include href="xml/section-graph_pattern.xml"/>
+    <xi:include href="xml/section-literal.xml"/>
+    <xi:include href="xml/section-prefix.xml"/>
+    <xi:include href="xml/section-query.xml"/>
+    <xi:include href="xml/section-query_results.xml"/>
+    <xi:include href="xml/section-query_results_formatter.xml"/>
+    <xi:include href="xml/section-triple.xml"/>
+    <xi:include href="xml/section-triples_source.xml"/>
+    <xi:include href="xml/section-variable.xml"/>
+    <xi:include href="xml/section-xsd.xml"/>
+
+    <!-- <xi:include href="xml/section-unused.xml"/> -->
+  </part>
+  <index>
+    <title>Index</title>
+  </index>
+</book>

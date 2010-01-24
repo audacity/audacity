@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:af="http://purl.org/ontology/af/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:event="http://purl.org/NET/c4dm/event.owl#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:vamp="http://purl.org/ontology/vamp/" xmlns:vs="http://www.w3.org/2003/06/sw-vocab-status/ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xml:base="http://purl.org/ontology/vamp/">
+  <owl:Ontology rdf:about="">
+    <dc:title>Vamp Plugins Ontology</dc:title>
+    <rdfs:label>Vamp Plugins Ontology</rdfs:label>
+    <rdfs:comment>
+			Vamp Ontology. This ontology includes the following descriptions:
+			
+				- OWL description of the Vamp API
+				- OWL description of the Transform environment necessary to set up the execution of any plugin 
+			
+			This Ontology provides semantics to describe and control Vamp plugins in RDF. Any "RDF-speaker" host is therefore able to 
+			use this ontology to read, set up and execute plugins.
+			The extracted features are expressed in terms of the Audio Features Ontology: http://purl.org/ontology/af/.
+			For more information, please visit the Vamp Plugins website: http://www.vamp-plugins.org/
+	</rdfs:comment>
+    <foaf:maker>Chris Cannam</foaf:maker>
+    <foaf:maker>Chris Sutton</foaf:maker>
+    <foaf:maker>Yves Raimond</foaf:maker>
+    <foaf:maker>David Pastor Escuredo</foaf:maker>
+    <dc:date>$Date: 2008-12-29 22:00:31 $</dc:date>
+  </owl:Ontology>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2003/06/sw-vocab-status/ns#term_status"/>
+  <owl:Class rdf:about="Plugin">
+    <rdfs:label>Vamp Plugin</rdfs:label>
+    <rdfs:comment>
+		A Vamp plugin is an implementation of an audio feature extraction algorithm using the Vamp API.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="PluginLibrary">
+    <rdfs:label>Vamp Plugin Library</rdfs:label>
+    <rdfs:comment>
+		Library of Vamp Plugins. This may need to include rights.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="Parameter">
+    <rdfs:label>Vamp Plugin Parameter</rdfs:label>
+    <rdfs:comment>
+		Descriptor for a plugin parameter. Hosts need to know about the specific type and form of the parameters of a particular plugin for a correct transform setup.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="QuantizedParameter">
+    <rdfs:label>Quantized Parameter</rdfs:label>
+    <rdfs:subClassOf rdf:resource="Parameter"/>
+    <rdfs:comment>
+			Descriptor of a parameter that does have quantized values. The property quantize_step is just defined for this subclass and not for the general Parameter.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="PluginOutput">
+    <rdfs:label>Vamp Plugin output descriptor</rdfs:label>
+    <rdfs:comment>
+		Descriptor for an output of a plugin. This descriptor provides information that is necessary to correctly interpret the output features. The output type will determine how to read the temporal information of the extracted features and how to manage the burden of ouput data.
+	</rdfs:comment>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="QuantizedOutput">
+    <rdfs:label>Quantized Output</rdfs:label>
+    <rdfs:subClassOf rdf:resource="PluginOutput"/>
+    <rdfs:comment>
+			Descriptor of an output that does have quantized values.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="KnownExtentsOutput">
+    <rdfs:label>Known Extents Output</rdfs:label>
+    <rdfs:subClassOf rdf:resource="PluginOutput"/>
+    <rdfs:comment>
+			Descriptor of an output that does have known extents.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="DenseOutput">
+    <rdfs:subClassOf rdf:resource="PluginOutput"/>
+    <rdfs:label>Dense output</rdfs:label>
+    <rdfs:comment>
+		Specific output type for data evenly spaced in time, which may be of high volume and which it is usually desirable to represent in a compact form.
+	</rdfs:comment>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="SparseOutput">
+    <rdfs:label>Sparse output</rdfs:label>
+    <rdfs:subClassOf rdf:resource="PluginOutput"/>
+    <rdfs:comment>
+		Specific output type for data that consist of features that require their own individual temporal information.
+	</rdfs:comment>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="TrackLevelOutput">
+    <rdfs:label>track level output</rdfs:label>
+    <rdfs:subClassOf rdf:resource="PluginOutput"/>
+    <rdfs:comment>
+		Specific output type for track level information.  The Vamp API does not provide for this sort of output directly, so this will require a "hacky" interpretation of the feature timestamp to establish that it reflects track metadata instead of temporal data.
+	</rdfs:comment>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="PluginProgram">
+    <rdfs:label>Plugin program</rdfs:label>
+    <rdfs:comment>
+		The program is a predefined context of parameters. We may not need a concept for this and just a property linking a string representing the program name.
+	</rdfs:comment>
+    <vs:term_status>unstable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="Feature">
+    <rdfs:label>Vamp Feature</rdfs:label>
+    <rdfs:comment>This may be removed mighty soon as we rely on the Audio Features Ontology for this</rdfs:comment>
+    <vs:term_status>deprecated</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="InputDomain">
+    <rdfs:label>Plugin input domain</rdfs:label>
+    <rdfs:comment>
+		Plugins declare the input domain they require, so the host can convert the input data properly. Hosts using the Vamp SDK PluginAdapter to wrap plugins should see this work done for them automatically - see the Vamp documentation.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <owl:Class rdf:about="SampleType">
+    <rdfs:label>sample type</rdfs:label>
+    <rdfs:comment>
+		The sample type specifies the temporal information of the plugin output. This information should be combined with the output type for a correct interpretation.
+	</rdfs:comment>
+    <vs:term_status>stable</vs:term_status>
+  </owl:Class>
+  <rdf:Property rdf:about="parameter">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>parameter descriptor</rdfs:label>
+    <rdfs:comment>
+		Links each parameter descriptor to the plugin.
+	</rdfs:comment>
+    <rdfs:range rdf:resource="Parameter"/>
+    <rdfs:domain rdf:resource="ParameterBinding"/>
+    <rdfs:domain rdf:resource="Plugin"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="output">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>output</rdfs:label>
+    <rdfs:comment>
+		Links each output type to the plugin.
+	</rdfs:comment>
+    <rdfs:range rdf:resource="PluginOutput"/>
+    <rdfs:domain rdf:resource="Plugin"/>
+    <rdfs:domain rdf:resource="Transform"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="available_plugin">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>available plugin</rdfs:label>
+    <rdfs:comment>
+		Available plugins in the library
+	</rdfs:comment>
+    <rdfs:range rdf:resource="Plugin"/>
+    <rdfs:domain rdf:resource="PluginLibrary"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="identifier">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>plugin identifier</rdfs:label>
+    <rdfs:comment>
+		Machine-readable identifier for a Vamp plugin within the scope of its library, or for a plugin descriptor within the scope of the plugin.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Plugin"/>
+    <rdfs:domain rdf:resource="PluginLibrary"/>
+    <rdfs:domain rdf:resource="PluginProgram"/>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <rdfs:domain rdf:resource="Parameter"/>
+    <rdfs:domain rdf:resource="Transform"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="name">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>plugin name</rdfs:label>
+    <rdfs:comment>
+		Human-readable identifier for the plugin.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Plugin"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="vamp_API_version">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>vamp API version</rdfs:label>
+    <rdfs:comment>
+		Version of the Vamp API used to implement this plugin.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Plugin"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="input_domain">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>input domain</rdfs:label>
+    <rdfs:comment>
+		Input domain required by the plugin (time or frequency).
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Plugin"/>
+    <rdfs:range rdf:resource="InputDomain"/>
+    <vs:term_status>stable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="max_value">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>max value</rdfs:label>
+    <rdfs:comment>
+		Maximum value of the parameter range
+	</rdfs:comment>
+    <rdfs:range rdf:resource="Parameter"/>
+    <rdfs:range rdf:resource="KnownExtentsOutput"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="min_value">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>min value</rdfs:label>
+    <rdfs:comment>
+		Minimum value of the parameter range
+	</rdfs:comment>
+    <rdfs:range rdf:resource="Parameter"/>
+    <rdfs:range rdf:resource="KnownExtentsOutput"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="default_value">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>default value</rdfs:label>
+    <rdfs:comment>
+		Default value of the parameter
+	</rdfs:comment>
+    <rdfs:range rdf:resource="Parameter"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="quantize_step">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>quantized step</rdfs:label>
+    <rdfs:comment>
+		Quantize step. Only defined if is_quantized is true
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="QuantizedOutput"/>
+    <rdfs:domain rdf:resource="QuantizedParameter"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="unit">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>unit</rdfs:label>
+    <rdfs:comment>
+		Unit of the output/parameter. A string type
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <rdfs:domain rdf:resource="Parameter"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="value_names">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>value names</rdfs:label>
+    <rdfs:comment>
+		List of value names if available
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Parameter"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="fixed_bin_count">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>fixed bin count</rdfs:label>
+    <rdfs:comment>
+		Fixed bin count. A boolean type.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="sample_rate">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>sample rate</rdfs:label>
+    <rdfs:comment>
+		Sample rate of the output if any. Should be read depending on SampleType and Output classes.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <vs:term_status>unstable</vs:term_status>
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>sample rate</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+			Specifies the sample rate if it is not constant.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="bin_count">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>bin count</rdfs:label>
+    <rdfs:comment>
+		Number of elements of the bin output. This information is necessary to define the output as belonging to a specific subclass of Plugin Output.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="bin_names">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label>bin names</rdfs:label>
+    <rdfs:comment>
+		List of bin names if available.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="sample_type">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>sample type</rdfs:label>
+    <rdfs:comment>
+		The sample type specifies the temporal information of the output.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <rdfs:range rdf:resource="SampleType"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="computes_feature_type">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>feature type</rdfs:label>
+    <rdfs:comment>
+			Feature Types output by the plugin. Links the vamp ontology to the audio features ontology.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <rdfs:range rdf:resource="../af/AudioFeature"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <rdf:Property rdf:about="computes_event_type">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>event type</rdfs:label>
+    <rdfs:comment>
+			Event Type output by the plugin.
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="PluginOutput"/>
+    <rdfs:range rdf:resource="../../NET/c4dm/event.owl#Event"/>
+    <vs:term_status>unstable</vs:term_status>
+  </rdf:Property>
+  <vamp:InputDomain rdf:about="TimeDomain"/>
+  <vamp:InputDomain rdf:about="FrequencyDomain"/>
+  <vamp:SampleType rdf:about="OneSamplePerStep"/>
+  <vamp:SampleType rdf:about="FixedSampleRate"/>
+  <vamp:SampleType rdf:about="VariableSampleRate"/>
+  <owl:Class rdf:about="Transform">
+    <rdfs:label>Transform</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+		The Transform defines the environment of any audio processing computation. 
+	</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="ParameterBinding">
+    <rdfs:label>Parameter binding</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+		Parameter setting used by the plugin transform to set up the plugin.
+	</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="Configuration">
+    <rdfs:label>Configuration</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+		For extension (key/value data provided to DSSI plugins, not relevant to Vamp)
+	</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="TransformType">
+    <rdfs:label>Transform Type</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+		Specifies the type of transform. May be feature extraction, effect...
+	</rdfs:comment>
+  </owl:Class>
+  <vamp:TransformType rdf:about="FeatureExtraction">
+    <rdfs:label>Feature Extraction</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+		Feature extraction transform. This may be just a subclass of Transform...
+	</rdfs:comment>
+  </vamp:TransformType>
+  <vamp:TransformType rdf:about="Effect">
+    <rdfs:label>Effect</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+		Effect transform. This may be just a subclass of Transform...
+	</rdfs:comment>
+  </vamp:TransformType>
+  <rdf:Property rdf:about="engine">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>plugin</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+		Specifies the sort of plugin in execution. This is an extension to use Transform with other plugin libraries
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+    <rdfs:range rdf:resource="Plugin"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="program">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>program</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+		Specifies the program to set the plugin in execution.  Here the plugin program matches with the one in the plugin descriptor. There is not descriptor required for the program (just a string), is it?
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+    <rdfs:range rdf:resource="PluginProgram"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="configuration">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>program</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+		Extension for configuration. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+    <rdfs:range rdf:resource="Configuration"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="parameter_binding">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>parameter</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+			Specifies the parameter to set the plugin in execution. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+    <rdfs:range rdf:resource="ParameterBinding"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="step_size">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>step size</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+			Specifies the step size for the framing. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="block_size">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>block size</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+			Specifies the block size for the framing. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="transform_type">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>transform type</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+			Specifies the transform type (we could do this by subclassin transform instead of using a property). 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="window_type">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>window type</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+			Specifies the window type (they should be individuals and clearly not here). 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="start">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>start</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+			Specifies temporal information when processing a data stream. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="duration">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>start</rdfs:label>
+    <vs:term_status>unstable</vs:term_status>
+    <rdfs:comment>
+			Specifies temporal information when processing a data stream. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="Transform"/>
+  </rdf:Property>
+  <rdf:Property rdf:about="value">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <rdfs:label>value</rdfs:label>
+    <vs:term_status>stable</vs:term_status>
+    <rdfs:comment>
+			Specifies the current value of the parameter. 
+	</rdfs:comment>
+    <rdfs:domain rdf:resource="ParameterBinding"/>
+  </rdf:Property>
+</rdf:RDF>

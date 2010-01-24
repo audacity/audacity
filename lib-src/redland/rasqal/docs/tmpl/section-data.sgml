@@ -1,0 +1,68 @@
+<!-- ##### SECTION Title ##### -->
+Data Graphs
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF graph sources for triples.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Data graphs are used in the query to describe RDF graphs that can be
+used to query against.  The graphs can be used either with #raptor_uri
+to name the graph, or without a name.  The query language determines
+which graphs are used in the query.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT rasqal_data_graph ##### -->
+<para>
+
+</para>
+
+@uri: 
+@name_uri: 
+@flags: 
+
+<!-- ##### FUNCTION rasqal_new_data_graph ##### -->
+<para>
+
+</para>
+
+@uri: 
+@name_uri: 
+@flags: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_free_data_graph ##### -->
+<para>
+
+</para>
+
+@dg: 
+
+
+<!-- ##### ENUM rasqal_data_graph_flags ##### -->
+<para>
+
+</para>
+
+@RASQAL_DATA_GRAPH_NONE: 
+@RASQAL_DATA_GRAPH_NAMED: 
+@RASQAL_DATA_GRAPH_BACKGROUND: 
+
+<!-- ##### FUNCTION rasqal_data_graph_print ##### -->
+<para>
+
+</para>
+
+@dg: 
+@fh: 
+
+

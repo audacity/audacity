@@ -1,0 +1,508 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Iterator</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="redland-heuristics.html" title="Heuristics">
+<link rel="next" href="redland-list.html" title="List">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="redland-heuristics.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-list.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-iterator.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-iterator.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-iterator"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-iterator.top_of_page"></a>Iterator</span></h2>
+<p>Iterator — Iterate a sequence of objects across some other object.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-iterator.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>;
+void*               (<a class="link" href="redland-iterator.html#librdf-iterator-map-handler" title="librdf_iterator_map_handler ()">*librdf_iterator_map_handler</a>)      (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator,
+                                                         void *map_context,
+                                                         void *item);
+void                (<a class="link" href="redland-iterator.html#librdf-iterator-map-free-context-handler" title="librdf_iterator_map_free_context_handler ()">*librdf_iterator_map_free_context_handler</a>)
+                                                        (void *map_context);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-iterator.html#librdf-new-iterator" title="librdf_new_iterator ()">librdf_new_iterator</a>                 (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *context,
+                                                         int (is_end_methodvoid*) (),
+                                                         int (next_methodvoid*) (),
+                                                         void* (get_methodvoid*, int) (),
+                                                         void (finished_methodvoid*) ());
+void                <a class="link" href="redland-iterator.html#librdf-free-iterator" title="librdf_free_iterator ()">librdf_free_iterator</a>                (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+int                 <a class="link" href="redland-iterator.html#librdf-iterator-end" title="librdf_iterator_end ()">librdf_iterator_end</a>                 (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+int                 <a class="link" href="redland-iterator.html#librdf-iterator-have-elements" title="librdf_iterator_have_elements ()">librdf_iterator_have_elements</a>       (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+int                 <a class="link" href="redland-iterator.html#librdf-iterator-next" title="librdf_iterator_next ()">librdf_iterator_next</a>                (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+void*               <a class="link" href="redland-iterator.html#librdf-iterator-get-object" title="librdf_iterator_get_object ()">librdf_iterator_get_object</a>          (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+void*               <a class="link" href="redland-iterator.html#librdf-iterator-get-context" title="librdf_iterator_get_context ()">librdf_iterator_get_context</a>         (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+void*               <a class="link" href="redland-iterator.html#librdf-iterator-get-key" title="librdf_iterator_get_key ()">librdf_iterator_get_key</a>             (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+void*               <a class="link" href="redland-iterator.html#librdf-iterator-get-value" title="librdf_iterator_get_value ()">librdf_iterator_get_value</a>           (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);
+int                 <a class="link" href="redland-iterator.html#librdf-iterator-add-map" title="librdf_iterator_add_map ()">librdf_iterator_add_map</a>             (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator,
+                                                         <a class="link" href="redland-iterator.html#librdf-iterator-map-handler" title="librdf_iterator_map_handler ()">librdf_iterator_map_handler</a> map_function,
+                                                         <a class="link" href="redland-iterator.html#librdf-iterator-map-free-context-handler" title="librdf_iterator_map_free_context_handler ()">librdf_iterator_map_free_context_handler</a> free_context,
+                                                         void *map_context);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-iterator.html#librdf-new-empty-iterator" title="librdf_new_empty_iterator ()">librdf_new_empty_iterator</a>           (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-iterator.description"></a><h2>Description</h2>
+<p>
+Provides a way to operate across a sequence of objects that are
+generated one-by-one on demand.  The returned objects can be of any
+type but the main public methods are on the <a class="link" href="redland-model.html#librdf-model" title="librdf_model"><span class="type">librdf_model</span></a> classs and
+return sequence of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects such as <a class="link" href="redland-model.html#librdf-model-get-sources" title="librdf_model_get_sources ()"><code class="function">librdf_model_get_sources()</code></a>.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-iterator.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator"></a><h3>librdf_iterator</h3>
+<pre class="programlisting">typedef struct librdf_iterator_s librdf_iterator;
+</pre>
+<p>
+Redland iterator class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-map-handler"></a><h3>librdf_iterator_map_handler ()</h3>
+<pre class="programlisting">void*               (*librdf_iterator_map_handler)      (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator,
+                                                         void *map_context,
+                                                         void *item);</pre>
+<p>
+Map function for a <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> map operation.
+</p>
+<p>
+See <a class="link" href="redland-iterator.html#librdf-iterator-add-map" title="librdf_iterator_add_map ()"><code class="function">librdf_iterator_add_map()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> Iterator that this map is operating over.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>map_context</code></em> :</span></p></td>
+<td> Map data context pointer.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>item</code></em> :</span></p></td>
+<td> Pointer to the current item in the iteration.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> item in keep the iteration or NULL to remove it
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-map-free-context-handler"></a><h3>librdf_iterator_map_free_context_handler ()</h3>
+<pre class="programlisting">void                (*librdf_iterator_map_free_context_handler)
+                                                        (void *map_context);</pre>
+<p>
+Free handler function for a <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> map operation.
+</p>
+<p>
+See <a class="link" href="redland-iterator.html#librdf-iterator-add-map" title="librdf_iterator_add_map ()"><code class="function">librdf_iterator_add_map()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>map_context</code></em> :</span></p></td>
+<td> Map data context pointer.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-iterator"></a><h3>librdf_new_iterator ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_new_iterator                 (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         void *context,
+                                                         int (is_end_methodvoid*) (),
+                                                         int (next_methodvoid*) (),
+                                                         void* (get_methodvoid*, int) (),
+                                                         void (finished_methodvoid*) ());</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object.
+The iterator object takes ownership of <em class="parameter"><code>context</code></em> and frees it with <em class="parameter"><code>finished_method</code></em>.
+The finished method is not called if librdf_new_iterator fails and returns NULL.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> context to pass to the iterator functions
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>is_end_method</code></em> :</span></p></td>
+<td> function to call to see if the iteration has ended
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>next_method</code></em> :</span></p></td>
+<td> function to get the next element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>get_method</code></em> :</span></p></td>
+<td> function to get the next element
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>finished_method</code></em> :</span></p></td>
+<td> function to destroy the iterator context (or NULL if not needed)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-free-iterator"></a><h3>librdf_free_iterator ()</h3>
+<pre class="programlisting">void                librdf_free_iterator                (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Destructor - destroy a <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-end"></a><h3>librdf_iterator_end ()</h3>
+<pre class="programlisting">int                 librdf_iterator_end                 (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Test if the iterator has finished.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if the iterator has finished
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-have-elements"></a><h3>librdf_iterator_have_elements ()</h3>
+<pre class="programlisting">int                 librdf_iterator_have_elements       (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Test if the iterator has finished.
+</p>
+<p>
+DEPRECATED - use !librdf_iterator_end(iterator)</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> 0 if the iterator has finished
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-next"></a><h3>librdf_iterator_next ()</h3>
+<pre class="programlisting">int                 librdf_iterator_next                (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Move to the next iterator element.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if the iterator has finished
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-get-object"></a><h3>librdf_iterator_get_object ()</h3>
+<pre class="programlisting">void*               librdf_iterator_get_object          (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Get the current object from the iterator.
+</p>
+<p>
+This method returns a SHARED pointer to the current iterator object
+which should be copied by the caller to preserve it if the iterator
+is moved on librdf_iterator_next or if it should last after the
+iterator is closed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The next element or NULL if the iterator has finished.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-get-context"></a><h3>librdf_iterator_get_context ()</h3>
+<pre class="programlisting">void*               librdf_iterator_get_context         (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Get the context of the current object on the iterator.
+</p>
+<p>
+This method returns a SHARED pointer to the current context node object
+which should be copied by the caller to preserve it if the iterator
+is moved on librdf_iterator_next or if it should last after the
+iterator is closed.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The context (can be NULL) or NULL if the iterator has finished.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-get-key"></a><h3>librdf_iterator_get_key ()</h3>
+<pre class="programlisting">void*               librdf_iterator_get_key             (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Get the key of the current object on the iterator.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The context or NULL if the iterator has finished.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-get-value"></a><h3>librdf_iterator_get_value ()</h3>
+<pre class="programlisting">void*               librdf_iterator_get_value           (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator);</pre>
+<p>
+Get the value of the current object on the iterator.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The context or NULL if the iterator has finished.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-iterator-add-map"></a><h3>librdf_iterator_add_map ()</h3>
+<pre class="programlisting">int                 librdf_iterator_add_map             (<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a> *iterator,
+                                                         <a class="link" href="redland-iterator.html#librdf-iterator-map-handler" title="librdf_iterator_map_handler ()">librdf_iterator_map_handler</a> map_function,
+                                                         <a class="link" href="redland-iterator.html#librdf-iterator-map-free-context-handler" title="librdf_iterator_map_free_context_handler ()">librdf_iterator_map_free_context_handler</a> free_context,
+                                                         void *map_context);</pre>
+<p>
+Add a librdf_iterator mapping function.
+</p>
+<p>
+Adds an iterator mapping function which operates over the iterator to
+select which elements are returned; it will be applied as soon as
+this method is called.
+</p>
+<p>
+Several mapping functions can be added and they are applied in
+the order given
+</p>
+<p>
+The mapping function should return non 0 to allow the element to be
+returned.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iterator</code></em> :</span></p></td>
+<td> the iterator
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>map_function</code></em> :</span></p></td>
+<td> the function to operate
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>free_context</code></em> :</span></p></td>
+<td> the function to use to free the context (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>map_context</code></em> :</span></p></td>
+<td> the context to pass to the map function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-empty-iterator"></a><h3>librdf_new_empty_iterator ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_new_empty_iterator           (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> with no content.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

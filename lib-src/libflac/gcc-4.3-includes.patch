@@ -1,0 +1,11 @@
+diff -Naur flac-1.2.1-orig/examples/cpp/encode/file/main.cpp flac-1.2.1/examples/cpp/encode/file/main.cpp
+--- flac-1.2.1-orig/examples/cpp/encode/file/main.cpp	2007-09-13 09:58:03.000000000 -0600
++++ flac-1.2.1/examples/cpp/encode/file/main.cpp	2007-11-18 12:59:45.000000000 -0600
+@@ -30,6 +30,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <cstring>
+ #include "FLAC++/metadata.h"
+ #include "FLAC++/encoder.h"
+ 

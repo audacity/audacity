@@ -1,0 +1,2 @@
+<http://rdf.hp.com/r> <http://rdf.hp.com/p1> "value-\u00E9" .
+<http://rdf.hp.com/r-\u00E9> <http://rdf.hp.com/p1> "value" .

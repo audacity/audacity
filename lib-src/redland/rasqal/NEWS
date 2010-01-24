@@ -1,0 +1,201 @@
+                        Rasqal RDF Query Library - News
+
+2008-07-05 Rasqal Version 0.9.16 Released
+
+   WARNING: ABI AND API CHANGED in this release. Rasqal 0.9.16 is
+   incompatible with 0.9.15.
+
+   Added a rasqal_world object used for all constructons
+   Removed deprecated functions
+   Fixed some memory leaks and made some low-memory resiliance fixes
+   Query result sets can be read/written from sparql XML results format
+   Improved error syntax error reporting
+
+   See the Raptor 0.9.16 Release Notes for the full details of the
+   changes.
+
+2007-11-17 Rasqal Version 0.9.15 Released
+
+   Many updates for supporting W3C SPARQL Proposed Recommendation. Passes
+   over 92% of the DAWG SPARQL Test Suite.
+   Many query engine improvements.
+   Substantial improvements to datatypes support and evaluation.
+   Many improvements and fixes for use in low-memory situations
+   Several new APIs were added including a new XSD decimal class
+   Fixed issues: #0000190, #0000191, #0000193, #0000196, #0000197,
+   #0000198, #0000199, #0000200, #0000201, #0000203, #0000204, #0000219,
+   #0000220, #0000221, #0000225, #0000234, #0000235 and #0000236
+
+   WARNING: ABI AND API CHANGE in Rasqal 0.9.16 which will be incompatible
+   with 0.9.15.
+
+   See the Raptor 0.9.15 Release Notes for the full details of the
+   changes.
+
+2007-04-22 Rasqal Version 0.9.14 Released
+
+   Added syntax and API support but no query engine support for an
+   experimental extension to SPARQL: LAQRS: LAQRS Adds to Querying RDF in
+   SPARQL
+   Updated the query results formatter to allow better introspection of
+   formats
+   Updated SPARQL parser for SPARQL Working Draft 2007-03-26 additions.
+   Fixed issues: #0000152, #0000156, #0000160, #0000167 and #0000182
+
+   See the Raptor 0.9.14 Release Notes for the full details of the
+   changes.
+
+2006-10-30 Rasqal Version 0.9.13 Released
+
+   Added a new rasqal_query_results_formatter class
+   Query engine now implements SPARQL GRAPH
+   Added query features system to set parameters
+   Many internal query engine changes (code reorganisation)
+   Many bug fixes addressing Issues #0000080, #0000094, #0000095,
+   #0000098, #0000100, #0000111, #0000113, #0000118, #0000129, #0000131
+   and #0000133.
+
+   See the 0.9.13 Release Notes for the full details of the changes.
+
+2006-04-30 Rasqal Version 0.9.12 Released
+
+   Added JSON output based on the Serializing SPARQL Query Results in JSON
+   draft
+   Added query writer so you can use rasqal to turn RDQL into SPARQL
+   Updated to SPARQL Query Language for RDF W3C Candidate Rec, 6 April
+   2006 now accepting all SPARQL syntax
+   Requires raptor 1.4.9 or newer.
+   Win32 build fixes (John Barstow)
+   Many internal code re-organisations
+
+   See the 0.9.12 Release Notes for the full details of the changes.
+
+2006-01-15 Rasqal Version 0.9.11 Released
+
+   Updated to SPARQL Query Language for RDF W3C Working Draft, 23 November
+   2005 making several additions and changes to the syntax and
+   functionality.
+   Using ordering, distinct and limit with query results now works
+   Created an enhanced API reference manual with gtk-doc
+   Requires Raptor 1.4.8
+   Many updates to the literal and expression handling
+   Major internal source code re-organisation
+   Many other changes, fixes and improvements.
+
+   See the 0.9.11 Release Notes for the full details of the changes.
+
+2005-06-09 Rasqal Version 0.9.10 Released
+
+   The query engine now supports sorting query results implementing SPARQL
+   ORDER BY (NOTE: duplicate query results are not yet removed)
+   SPARQL query language support updated for some recent changes
+
+   See the 0.9.10 Release Notes for the full details of the changes.
+
+2005-05-19 Rasqal Version 0.9.9 Released
+
+   Updated to SPARQL Query Language for RDF, W3C Working Draft, 19 April
+   2005 making widespread changes the syntax.
+   Query API extensively added to access more query structure
+   Query engine updated including query results limit and offsets
+   Updated to the revised SPARQL Query Results XML Format (not yet
+   published)
+   Many other bug fixes and improvements
+
+   See the 0.9.9 Release Notes for the full details of the changes.
+
+2005-04-10 Rasqal Version 0.9.8 Released
+
+   Updated to SPARQL Query Language for RDF W3C Working Draft of 17
+   February 2005
+   Added casting to the engine and in SPARQL
+   Restructured query engine to be based on a tree of graph patterns
+   Constraints now work per-graph pattern
+   Added a Data Graph API
+   Query engine uses and binds graph names in queries (SPARQL LOAD, FROM
+   and GRAPH)
+   Expanded the Graph Pattern API
+
+   See the 0.9.8 Release Notes for the full details of the changes.
+
+2005-02-27 Rasqal Version 0.9.7 Released
+
+   Fix a resource cleanup problem when query results were not fully read
+   Fixed some crashes in expression evaluation with invalid types
+   Added a graph pattern API to provide full access to the query
+   structures
+   Added query methods to return just bound or all variables
+   Some updates for syntax changes of SPARQL Query Language for RDF W3C
+   Working Draft of 17 February 2005
+   Portability fixes for win32 (Dave Viner)
+
+   See the 0.9.7 Release Notes for the full details of the changes.
+
+2005-02-06 Rasqal Version 0.9.6 Released
+
+   Added support and API calls for new query result forms graph and
+   boolean
+   Added SPARQL CONSTRUCT, ASK result forms
+   Added 7 new SPARQL built-in functions
+   Allow UTF-8 and Unicode in prefixes and QNames in queries
+   Several other changes and bug fixes.
+
+   See the 0.9.6 Release Notes for the full details of the changes.
+
+2005-01-16 Rasqal Version 0.9.5 Released
+
+   Query engine refactored to execute over graph patterns
+   Added support for SPARQL optionals
+   Added formatting of query results according to the SPARQL Variable
+   Binding Results XML Format, W3C Working Draft, 21 December 2004
+   Updated SPARQL to handle syntax changes
+   Many other improvements and fixes
+
+   See the 0.9.5 Release Notes for the full details of the changes.
+
+2004-10-29 Rasqal Version 0.9.4 Released
+
+   Fixed several crashes during query execution
+   Fixed some memory leaks when a query failed
+   Pass on internal raptor errors to rasqal users.
+
+   See the 0.9.4 Release Notes for the full details of the changes.
+
+2004-10-25 Rasqal Version 0.9.3 Released
+
+   License changed to LGPL 2.1/Apache 2
+   Added initial support for the W3C SPARQL Query Language for RDF,
+   2004-10-12 working draft
+   Queries can now be executed multiple times
+   Portability fixes for building on win32 (Chris Pointon)
+   Various roqet utility improvements
+
+   See the 0.9.3 Release Notes for the full details of the changes.
+
+2004-08-03 Rasqal Version 0.9.2 Released
+
+   Fix casts for C++
+   Add win32 skeleton header file
+   Fix a memory leak when using redland inside rasqal
+
+   See the 0.9.2 Release Notes for the full details of the changes.
+
+2004-06-13 Rasqal Version 0.9.1 Released
+
+   Added a query results class separate from the query class and moved all
+   the results methods to the new class.
+   Made portability fixes for the generated RDQL lexer files
+
+   See the 0.9.1 Release Notes for the full details of the changes.
+
+2004-05-15 Rasqal Version 0.9.0 Released
+
+   First public release.
+
+2003-08-12 Rasqal Version 0.1.0 Released
+
+   Initial web site created. Nothing actually released.
+     __________________________________________________________________
+
+   Copyright (C) 2003-2008 Dave Beckett
+   Copyright (C) 2003-2005 University of Bristol

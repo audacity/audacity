@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 1-01 : dump subjects
+
+SELECT ?x
+SOURCE <model1.nt>
+WHERE  (?x, ?y, ?z)

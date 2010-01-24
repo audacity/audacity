@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+<!DOCTYPE rdf:RDF [
+        <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	<!ENTITY ladspa 'http://ladspa.org/ontology#'>
+        <!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF xmlns:rdf="&rdf;"
+         xmlns:ladspa="&ladspa;"
+         xmlns:rdfs="&rdfs;">
+
+  <!-- Classes to describe the Plugin taxonomy -->
+  <rdfs:Class rdf:about="&ladspa;Plugin">
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;UtilityPlugin" ladspa:hasLabel="Utilities">
+    <rdfs:subClassOf rdf:resource="&ladspa;Plugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;GeneratorPlugin" ladspa:hasLabel="Generators">
+    <rdfs:subClassOf rdf:resource="&ladspa;Plugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;SimulatorPlugin" ladspa:hasLabel="Simulators">
+    <rdfs:subClassOf rdf:resource="&ladspa;Plugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;OscillatorPlugin" ladspa:hasLabel="Oscillators">
+    <rdfs:subClassOf rdf:resource="&ladspa;GeneratorPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;TimePlugin" ladspa:hasLabel="Time">
+    <rdfs:subClassOf rdf:resource="&ladspa;Plugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;DelayPlugin" ladspa:hasLabel="Delays">
+    <rdfs:subClassOf rdf:resource="&ladspa;TimePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;PhaserPlugin" ladspa:hasLabel="Phasers">
+    <rdfs:subClassOf rdf:resource="&ladspa;TimePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;FlangerPlugin" ladspa:hasLabel="Flangers">
+    <rdfs:subClassOf rdf:resource="&ladspa;TimePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ChorusPlugin" ladspa:hasLabel="Chorus">
+    <rdfs:subClassOf rdf:resource="&ladspa;TimePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ReverbPlugin" ladspa:hasLabel="Reverbs">
+    <rdfs:subClassOf rdf:resource="&ladspa;TimePlugin" />
+    <rdfs:subClassOf rdf:resource="&ladspa;SimulatorPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;FrequencyPlugin" ladspa:hasLabel="Frequency">
+    <rdfs:subClassOf rdf:resource="&ladspa;Plugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;FrequencyMeterPlugin" ladspa:hasLabel="Measurement">
+    <rdfs:subClassOf rdf:resource="&ladspa;FrequencyPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;FilterPlugin" ladspa:hasLabel="Filters">
+    <rdfs:subClassOf rdf:resource="&ladspa;FrequencyPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;LowpassPlugin" ladspa:hasLabel="Lowpass">
+    <rdfs:subClassOf rdf:resource="&ladspa;FilterPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;HighpassPlugin" ladspa:hasLabel="Highpass">
+    <rdfs:subClassOf rdf:resource="&ladspa;FilterPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;BandpassPlugin" ladspa:hasLabel="Bandpass">
+    <rdfs:subClassOf rdf:resource="&ladspa;FilterPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;CombPlugin" ladspa:hasLabel="Combs">
+    <rdfs:subClassOf rdf:resource="&ladspa;FilterPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AllpassPlugin" ladspa:hasLabel="Allpass">
+    <rdfs:subClassOf rdf:resource="&ladspa;FilterPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;EQPlugin" ladspa:hasLabel="EQs">
+    <rdfs:subClassOf rdf:resource="&ladspa;FrequencyPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ParaEQPlugin" ladspa:hasLabel="Parametric">
+    <rdfs:subClassOf rdf:resource="&ladspa;EQPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;MultiEQPlugin" ladspa:hasLabel="Multiband">
+    <rdfs:subClassOf rdf:resource="&ladspa;EQPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AmplitudePlugin" ladspa:hasLabel="Amplitude">
+    <rdfs:subClassOf rdf:resource="&ladspa;Plugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;PitchPlugin" ladspa:hasLabel="Pitch shifters">
+    <rdfs:subClassOf rdf:resource="&ladspa;FrequencyPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AmplifierPlugin" ladspa:hasLabel="Amplifiers">
+    <rdfs:subClassOf rdf:resource="&ladspa;AmplitudePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;WaveshaperPlugin" ladspa:hasLabel="Waveshapers">
+    <rdfs:subClassOf rdf:resource="&ladspa;AmplitudePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ModulatorPlugin" ladspa:hasLabel="Modulators">
+    <rdfs:subClassOf rdf:resource="&ladspa;AmplitudePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;DistortionPlugin" ladspa:hasLabel="Distortions">
+    <rdfs:subClassOf rdf:resource="&ladspa;AmplitudePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;DynamicsPlugin" ladspa:hasLabel="Dynamics">
+    <rdfs:subClassOf rdf:resource="&ladspa;AmplitudePlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;CompressorPlugin" ladspa:hasLabel="Compressors">
+    <rdfs:subClassOf rdf:resource="&ladspa;DynamicsPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ExpanderPlugin" ladspa:hasLabel="Expanders">
+    <rdfs:subClassOf rdf:resource="&ladspa;DynamicsPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;LimiterPlugin" ladspa:hasLabel="Limiters">
+    <rdfs:subClassOf rdf:resource="&ladspa;DynamicsPlugin" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;GatePlugin" ladspa:hasLabel="Gates">
+    <rdfs:subClassOf rdf:resource="&ladspa;DynamicsPlugin" />
+  </rdfs:Class>
+
+  <!-- Classes to describe Ports -->
+  <rdfs:Class rdf:about="&ladspa;Port">
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ControlPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;Port" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AudioPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;Port" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;InputPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;Port" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;OutputPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;Port" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ControlInputPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;ControlPort" />
+    <rdfs:subClassOf rdf:resource="&ladspa;InputPort" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;ControlOutputPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;ControlPort" />
+    <rdfs:subClassOf rdf:resource="&ladspa;OutputPort" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AudioInputPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;AudioPort" />
+    <rdfs:subClassOf rdf:resource="&ladspa;InputPort" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AudioOutputPort">
+    <rdfs:subClassOf rdf:resource="&ladspa;AudioPort" />
+    <rdfs:subClassOf rdf:resource="&ladspa;OutputPort" />
+  </rdfs:Class>
+
+  <!-- Classes to describe Units -->
+  <rdfs:Class rdf:about="&ladspa;Unit">
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;AmplitudeUnit">
+    <rdfs:subClassOf rdf:resource="&ladspa;Unit" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;FrequencyUnit">
+    <rdfs:subClassOf rdf:resource="&ladspa;Unit" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;TimeUnits">
+    <rdfs:subClassOf rdf:resource="&ladspa;Unit" />
+  </rdfs:Class>
+
+  <ladspa:AmplitudeUnits rdf:about="&ladspa;dB" />
+  <ladspa:AmplitudeUnits rdf:about="&ladspa;coef" />
+  <ladspa:FrequencyUnits rdf:about="&ladspa;Hz" />
+  <ladspa:TimeUnits rdf:about="&ladspa;seconds" />
+  <ladspa:TimeUnits rdf:about="&ladspa;milliseconds" />
+  <ladspa:TimeUnits rdf:about="&ladspa;minutes" />
+
+  <!-- Classes to describe Settings (Defaults and Presets) -->
+  <rdfs:Class rdf:about="&ladspa;Setting">
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;Default">
+    <rdfs:subClassOf rdf:resource="&ladspa;Setting" />
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="&ladspa;Preset">
+    <rdfs:subClassOf rdf:resource="&ladspa;Setting" />
+  </rdfs:Class>
+
+</rdf:RDF>

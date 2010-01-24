@@ -1,0 +1,447 @@
+                        Raptor RDF Parser Library - News
+
+2008-03-30 Raptor Version 1.4.17 Released
+
+   Added two new JSON serializers: resource-centric 'json' (Talis
+   RDF/JSON) and triple-centric 'json-triples'
+   Added a new public XML SAX2 API class
+   Added a new error handling structure
+   Made the I/O Stream class support reading
+   Added several new API methods.
+   Made several fixes, portability and resilience improvements.
+   Fixed reported issues: 0000252 and 0000245.
+
+   See the Raptor 1.4.17 Release Notes for the full details of the
+   changes.
+
+2007-10-01 Raptor Version 1.4.16 Released
+
+   100% support for the GRDDL W3C Recommendation of 2007-09-11
+   Turtle parser and serializer were updated to support @base from Turtle
+   2007-09-11.
+   Turtle and RDF/XML serializers had performance improvements for large
+   graphs.
+   Added a TRiG Parser based on Turtle with named graph support.
+   Several other API changes, fixed and improvements were made.
+   Fixed reported issues: 0000188, 0000192, 0000194, 0000195, 0000207,
+   0000210, 0000214, 0000216, 0000217, 0000232, 0000237, 0000238 and
+   0000239
+   Many other fixes and improvements.
+
+   See the Raptor 1.4.16 Release Notes for the full details of the
+   changes.
+
+2007-03-26 Raptor Version 1.4.15 Released
+
+   GRDDL parser substantially updated to support the GRDDL W3C Working
+   Draft 2 March 2007
+   Errors for XML parsing and URI 404s are reported much better
+   Fixed reported issues: #0000174, #0000177, #0000178, #0000180
+   Many other minor fixes and improvements.
+
+   See the Raptor 1.4.15 Release Notes for the full details of the
+   changes.
+
+2007-01-31 Raptor Version 1.4.14 Released
+
+   New Turtle serializer by Dave Robillard based on the existing
+   RDF/XML-Abbrev serializer.
+   New GraphViz DOT format serializer by Evan Nemerson.
+   GRDDL parser now does namespace and profile URI recursion and has other
+   improvements and fixes.
+   Fixed reported issues: #0000032, #0000141, #0000143, #0000148, #0000155
+   and #0000157
+   Many other fixes and improvements.
+
+   See the Raptor 1.4.14 Release Notes for the full details of the
+   changes.
+
+2006-10-22 Raptor Version 1.4.13 Released
+
+   Fixed a memory leak in reusing the XML writer
+   Fixed reported issues: #0000134
+   Minor updates and fixes to tutorial, configuration and build
+
+   See the Raptor 1.4.13 Release Notes for the full details of the
+   changes.
+
+2006-08-27 Raptor Version 1.4.12 Released
+
+   Restore serializer enumeration ordering back to that of 1.4.10 which
+   was causing Redland problems when writing type 'application/rdf+xml'.
+
+   See the Raptor 1.4.12 Release Notes for the gory details.
+
+2006-08-26 Raptor Version 1.4.11 Released
+
+   Added network request filtering for parsers
+   Improved the GRDDL parser to read Embedded RDF and HCalendar
+   The Guess parser can now be reused to do multiple guesses
+   The RSS 1.0 Serializer now works again
+   Fixed reported issues: #0000014, #0000041, #0000089, #0000091 ,
+   #0000110 and #0000112
+   Made several other changes, fixes and improvements.
+
+   See the Raptor 1.4.11 Release Notes for the full details of the
+   changes.
+
+2006-07-14 Raptor Version 1.4.10 Released
+
+   Fixed a crash with RSS Tag Soup parser generating triples too late
+   Fixed a crash with the RDF/XML parser and serializer if a comment was
+   seen outside an element
+   Parsers no longer generate any triple parts of type
+   RAPTOR_IDENTIFIER_TYPE_ORDINAL
+
+   See the Raptor 1.4.10 Release Notes for the full details of the
+   changes.
+
+2006-04-22 Raptor Version 1.4.9 Released
+
+   Raptor Tutorial added covering parsing and serializing with examples
+   Raptor Reference Manual now covers 100% of the public API
+   rapper can now pretty-print RDF using namespaces as hints
+   Turtle parser gains boolean literals
+   Requests for content now send appropriate Accept: headers
+   No longer require libxml for rss-tag-soup parser
+   Various Win32 fixes and VC build files updates (John Barstow)
+   Many other bug fixes and changes were made.
+
+   NOTE: Generation of RAPTOR_IDENTIFIER_TYPE_PREDICATE was removed as
+   deprecated in 1.4.8.
+
+   See the Raptor 1.4.9 Release Notes for the full details of the changes.
+
+2006-01-03 Raptor Version 1.4.8 Released
+
+   RSS Tag Soup parser now reads Atom 1.0 and rewrites old Atom 0.3 terms
+   Added a guess parser that picks the parser to use based on protocol
+   information such as HTTP Content-Type
+   Created an enhanced API reference manual with gtk-doc
+   Serializers to build can now be selected at configure time
+   Parsers can now return the namespace prefix/URIs seen in parsing
+   Turtle parser update to version 2006-01-02 (announcement)
+   Fix for URI resolution bugs (win32 fix by John Barstow)
+   Several parser bug fixes for RDF/XML, RSS and GRDDL
+   RDF/XML serializers and XML writer can write XML 1.0 or XML 1.1
+   Added an alpha Atom 1.0 serializer
+   Added an Adobe XMP (RDF/XML profile) serializer
+   Internal source reorganisation
+   Many other changes, fixes and improvements.
+
+   NOTE: Raptor will be switching to use Subversion for version control
+   after the 1.4.8 release. See the Redland Subversion site or the online
+   Raptor installation notes for the latest information.
+
+   See the Raptor 1.4.8 Release Notes for the full details of the changes.
+
+2005-06-08 Raptor Version 1.4.7 Released
+
+   Fix crashes in the RSS tag soup parser / serializer (Suzan Foster)
+   Fix a crash in the RDF/XML serializers with bad URI predicates.
+
+   See the Raptor 1.4.7 Release Notes for the full details of the changes.
+
+2005-05-19 Raptor Version 1.4.6 Released
+
+   Added a Gleaning Resource Descriptions from Dialects of Languages
+   (GRDDL) parser for reading XHTML and XML as RDF triples
+   Updated RSS enclosures support in RSS tag soup parser and RSS 1.0
+   serializer (Suzan Foster)
+   Fixed several crashes with RSS tag soup parser, RDF/XML-abbrev
+   serializer.
+   The turtle parser now accepts """long literals"""
+
+   See the Raptor 1.4.6 Release Notes for the full details of the changes.
+
+2005-02-06 Raptor Version 1.4.5 Released
+
+   Added an RDF/XML with abbreviations serializer (Steve Shepard)
+   Handle RSS 1.1 in RSS tag soup parser
+   More fixes for broken OSX libxml2
+
+   See the Raptor 1.4.5 Release Notes for the full details of the changes.
+
+2005-01-15 Raptor Version 1.4.4 Released
+
+   Fixed crashes in RSS tag soup parser and RSS 1.0 serializer
+   Handle RSS 0.9 namespace in RSS tag soup parser
+   Portability fixes for Win32 (Dave Viner)
+
+   See the Raptor 1.4.4 Release Notes for the full details of the changes.
+
+2005-01-03 Raptor Version 1.4.3 Released
+
+   New XML Writer API
+   Improved RDF/XML serializer allowing user namespace declarations and
+   writing relative URIs where possible
+   New RSS 1.0 serializer
+   Updated RSS tag soup parser
+   URI class can write relative URIs (Patch from René Puls)
+   Many other API changes
+
+   See the Raptor 1.4.3 Release Notes for the full details of the changes.
+
+2004-11-01 Raptor Version 1.4.2 Released
+
+   Fix raptor_xml_escape_string error return.
+
+   See the Raptor 1.4.2 Release Notes for the full details of the changes.
+
+2004-10-29 Raptor Version 1.4.1 Released
+
+   Fixed crashes in URI decoding and RSS enclosures.
+
+   See the Raptor 1.4.1 Release Notes for the full details of the changes.
+
+2004-10-24 Raptor Version 1.4.0 Released
+
+   Added a serializing class for writing RDF triples as a syntax
+   Added serializers for RDF/XML and N-Triples
+   Added an I/O stream class for aiding writing
+   Added RSS enclosure support to RSS Tag Soup parser (Suzan Foster)
+
+   See the Raptor 1.4.0 Release Notes for the full details of the changes.
+
+2004-09-20 Raptor Version 1.3.3 Released
+
+   License changed to LGPL 2.1/Apache 2
+   Added a new Unicode NFC checker
+   Rewritten URI parsing and resolving code
+   Added configure selection of RDF parsers
+   Updated the RSS Tag Soup parser to handle Atom 0.3
+   Updated the Turtle parser to handle large documents (Geoff Chappell)
+   Added a parser feature to disable rdf:ID duplicate checking
+   Updated rdf:ID duplicate value checking implementation
+   Portability fixes for building on win32 (Chris Pointon)
+
+   See the Raptor 1.3.3 Release Notes for the full details of the changes.
+
+2004-07-21 Raptor Version 1.3.2 Released
+
+   Added support for compiling against expat source trees (Mark Smith)
+   Added raptor_alloc_memory to allocate memory in raptor, typically
+   needed by handler routines on win32.
+   Make errors in fetching WWW content pass to the main error handler.
+   Added accessor functions for parts of the raptor_locator structure (Edd
+   Dumbill)
+   Disabled the broken Unicode NFC checking via GNOME glib for this
+   release.
+
+   See the Raptor 1.3.2 Release Notes for the full details of the changes.
+
+2004-06-12 Raptor Version 1.3.1 Released
+
+   Correct raptor_print_statement declaration argument statement to have
+   one less 'const', to match the code.
+   raptor.h now includes stdarg.h
+   Portability fixes for win32
+   Updates to Turtle parser to only allow language with non-datatyped
+   literals; allow a '_' immediately after a ':' in qnames and make bare
+   ':' work.
+   Added a warning for unknown rdf:parseType values, when parsing in lax
+   mode. This is controlled by a new parser feature warn_other_parsetypes
+   The Turtle parser was fixed to re-initialise correctly when performing
+   multiple parsings
+   Fixes to the file: URI support for %-escaping and for Win32 filenames
+
+   See the Raptor 1.3.1 Release Notes for the full details of the changes.
+
+2004-05-11 Raptor Version 1.3.0 Released
+
+   Updated Turtle parser to fix the collections syntax, add integer
+   literals and allow - in names.
+   Added support for guessing a parser from content or identifiers
+   Completed parser feature support
+   Added sending HTTP Accept: headers for WWW retrieval when possible
+   Added new utility sequence and stringbuffer classes
+   Several other functions added and improvements made.
+
+   See the Raptor 1.3.0 Release Notes for the full details of the changes.
+
+2004-01-24 Raptor Version 1.2.0 Released
+
+   Added a Turtle parser (was N-Triples Plus) now with collections.
+   Added raptor_syntaxes_enumerate to get syntax name, label, mime_type or
+   uri_string of all known parsers.
+   Added WWW access via BSD libfetch if available.
+   Updated the GNOME GUI grapper program to report errors and warnings
+
+2003-12-31 Raptor Version 1.1.0 Released
+
+   Added an N-Triples Plus parser
+   Updated for RDF/XML Revised Working Draft (10 October 2003) allowing
+   rdf:RDF to be optional by default. No further changes were needed for
+   RDF/XML Revised Proposed Recommendation (15 December 2003)
+   Made URI class constructors, methods and factory methods as well as
+   some other utility functions using or returning URIs or literals take
+   unsigned char* rather than char*.
+   Added the XML namespace, XML namespace stack and XML qname classes to
+   the public API.
+   Added a function to discover supported parsers.
+   Fixes for line number counting in N-Triples
+   Added support for libxml2 SAX2 API for 2.6.0 and later.
+   The N-Triples parser now uses the generate ID code.
+   Added configure options for XML 1.1 names and disabling NFC check code.
+
+2003-09-08 Raptor Version 1.0.0 Released
+
+   Several long-deprecated functions were removed and consequently the
+   library shared version number was increased to 1
+   Fixed scanning for rdf:RDF so that RDF/XML in other XML works, such as
+   in SVG
+   raptor-config --libs now works, added --libtool-libs and
+   --version-decimal
+   Check N-Triples legal Unicode character range #x0-#x10FFFF
+   Normalize RDF/XML xml:lang and N-Triples language to lowercase on input
+   Worked around libxml2 bug causing a crash on some error reporting
+   Added raptor_parse_file_stream for parsing a C FILE*
+   Tidied rapper utility argument handling, added --version
+
+2003-08-25 Raptor Version 0.9.12 Released
+
+   Fix some XML memory leaks in Exclusive XML Canonicalization.
+   Stop parsing RSS tag soup after a user abort
+   Improved N-Triples syntax checking.
+   Crash fixes for 64 bit Alpha/Sparc Linux/Solaris (varargs, size_t)
+   Fixed some other minor memory leaks with rdf:datatype and rdf:ID
+   attributes.
+
+2003-07-29 Raptor Version 0.9.11 Released
+
+   Completely handles the revised RDF/XML syntax (including post W3C Last
+   Call changes)
+   Added Unicode Normal Form C (NFC) checking for literals (requires GNOME
+   glib 2.0 at present)
+   Added Exclusive XML Canonicalization for XML Literals
+   Added many more checks for bad syntax (mostly illegal property
+   attributes)
+   Updated parseType="Collection" triples after RDF Core WG change
+   Added an experimental RSS Tag Soup parser to read any pile of XML that
+   has elements such as channel, image, item tags with title, description
+   etc inside them into coherent RSS 1.0 RDF triples. (Requires libxml
+   2.5.0 or newer)
+   API: Added new methods raptor_get_name, raptor_get_label.
+   API: Added new methods raptor_set_default_generate_id_parameters and
+   raptor_set_generate_id_handler to control generation of IDs.
+   API: Modified utility function raptor_xml_escape_string arguments.
+   Ripped out ISO 3166 country code parts since commercial use might be
+   subject to a license fee.
+   Improvements to GTK example 'grapper'.
+   Several internal reorganisations for pulling out a SAX2 API, XML C14N.
+   Other minor bug fixes.
+
+2003-04-17 Raptor Version 0.9.10 Released
+
+   Added parser lax / strict modes. lax is the default.
+   rdf:bagID now generates a warning in lax mode, an error in strict
+   Added raptor_www_no_www_library_init_finish to allow disabling of WWW
+   library startup/shutdown.
+   Added raptor_parse_abort to abort parsing inside a callback.
+   Added a GTK GUI example program grapper
+   Other minor bug fixes.
+
+2003-03-28 Raptor Version 0.9.9 Released
+
+   Performance improvements - uses less memory, less repeated small
+   malloc/free sequences, faster for larger files.
+   Added WWW retrieval - can parse from an URI as well as files, given
+   either libcurl or libxml2 is available.
+   Minor bug fixes.
+   Various Win32 configure, building patches
+   Sources updated to use autoconf 1.6+, automake 2.52+
+   More debian packaging updates.
+
+2003-02-13 Raptor Version 0.9.8 Released
+
+   Minor bug fixes (synchronising with Redland 0.9.12 release).
+   Fixed crashing on empty files
+   Fixed accepting illegal xmlns:prefix="" (prefix without URI not
+   allowed)
+   N-Triples bnodeIDs can now have '0's
+   Utility program rdfdump renamed to rapper; name conflicted with a
+   common Linux utility.
+
+2002-12-20 Raptor Version 0.9.7 Released
+
+   Passes about 90% of RDF Core WG Test Cases
+   All memory leaks fixed
+   Portability fixes - compilers, scripts, auto* tools, libxml2 version
+   rdf:ID syntax and duplicates checked
+   rdf:bagID supported
+   Added more conformance tests, errors and warnings.
+
+2002-11-02 Raptor Version 0.9.6 Released
+
+   Calling API changed to provide a common interface to the RDF parsers.
+   The libraptor.3 manual page describes the changes.
+   Added support for RDF datatyped literals in RDF/XML with rdf:datatype
+   attribute on property elements and N-Triples with the
+   "string"^^<datatypeURIref>.
+   Added support for rdf:parseType="Collection" for RDF Collections
+   URI class allows swappable implementation by applications.
+   URI class now handles file: URIs for Win32 and Unix conventions.
+   Fixes to enable it to work on Apple OSX 10.1, 10.2 (also tested working
+   on Linux/x86, Solaris/sparc, FreeBSD/x86)
+   Many internal changes to support API changes, allow it to work with
+   Redland when compiled as a separate library
+   Reorganised source into separate modules - URI, xml parser, ntriples
+   parser, XML namespaces, XML qnames, locator.
+   More resilience with XML errors and XML parser errors - none of
+   libxml2's XML test suite examples crash raptor.
+   N-Triples parser recovers gracefully from errors in content
+   Packing for debian included
+   Added manual pages libraptor.3 and rapper.1
+   Added raptor-config script for compiling with the library.
+
+2002-06-08 Raptor Version 0.9.5 Released
+
+   Many bugs fixed
+   Added full relative URI resolving
+   Work around bugs in libxml and expat (older versions)
+   Support libxml with the use of entities in the document
+   Support xml:lang passing to application
+
+2002-03-27 Raptor Version 0.9.4 Released
+
+   XML Base support (xml:base) added
+   xml:lang support added with N-Triples lang-string support
+   All N-Triples string escapes implemented
+   N-Triples support with XML literals - xml("<foo/>") and plain "foo"
+   removed all special code for containers; treated as regular typedNodes
+   rdf:parseType="Literal" now working
+   Builds as shared and static libraries
+   Conformance test suite added
+
+2001-08-21 Raptor Version 0.9.3 Released
+
+   N-Triples parser added
+   rdf:parseType="Literal" works much better (Aaron Michal and me)
+   DAML collections support added (Aaron Michal)
+   Win32 patch added - I can't confirm my merge didn't break this (Aaron
+   Michal)
+   N-Triples updated to support CR, LF and CR LF endings
+   Make parser generated ids appear distinguised from regular URIs
+   Added N-Triples output
+   Made rdf:type, rdf:value as property attributes work
+   Made empty typed nodes work
+   GNOME xml / libxml error location (line, column) values corrected.
+
+2001-07-03 Raptor Version 0.9.2 Released
+
+   Now called Raptor
+
+2001-06-06 Raptor Version 0.9.1 Released
+
+   Many bug fixes
+   Updates for Redland API changes
+   Fixed rdf:parsetype="Literal" buffer overrun
+   Added better XML parser auto-detection for various expats and libxml
+
+2001-01-22 Raptor Version 0.9.0 Released
+
+   First release
+     __________________________________________________________________
+
+   Copyright (C) 2001-2008 Dave Beckett
+   Copyright (C) 2001-2005 University of Bristol

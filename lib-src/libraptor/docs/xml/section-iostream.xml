@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-iostream">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-iostream.top_of_page">I/O Stream</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>I/O Stream</refname>
+<refpurpose>Providing streaming I/O writing to files, strings or user code.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-iostream.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="raptor-iostream">raptor_iostream</link>;
+<link linkend="int">int</link>                 (<link linkend="raptor-iostream-init-func">*raptor_iostream_init_func</link>)        (<link linkend="void">void</link> *context);
+<link linkend="void">void</link>                (<link linkend="raptor-iostream-finish-func">*raptor_iostream_finish_func</link>)      (<link linkend="void">void</link> *context);
+<link linkend="int">int</link>                 (<link linkend="raptor-iostream-write-byte-func">*raptor_iostream_write_byte_func</link>)  (<link linkend="void">void</link> *context,
+                                                         const <link linkend="int">int</link> byte);
+<link linkend="int">int</link>                 (<link linkend="raptor-iostream-write-bytes-func">*raptor_iostream_write_bytes_func</link>) (<link linkend="void">void</link> *context,
+                                                         const <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);
+<link linkend="void">void</link>                (<link linkend="raptor-iostream-write-end-func">*raptor_iostream_write_end_func</link>)   (<link linkend="void">void</link> *context);
+<link linkend="int">int</link>                 (<link linkend="raptor-iostream-read-bytes-func">*raptor_iostream_read_bytes_func</link>)  (<link linkend="void">void</link> *context,
+                                                         <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);
+<link linkend="int">int</link>                 (<link linkend="raptor-iostream-read-eof-func">*raptor_iostream_read_eof_func</link>)    (<link linkend="void">void</link> *context);
+                    <link linkend="raptor-iostream-handler">raptor_iostream_handler</link>;
+                    <link linkend="raptor-iostream-handler2">raptor_iostream_handler2</link>;
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-from-handler2">raptor_new_iostream_from_handler2</link>   (<link linkend="void">void</link> *user_data,
+                                                         const <link linkend="raptor-iostream-handler2">raptor_iostream_handler2</link> * const handler2);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-from-handler">raptor_new_iostream_from_handler</link>    (<link linkend="void">void</link> *context,
+                                                         const <link linkend="raptor-iostream-handler">raptor_iostream_handler</link> *handler);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-from-sink">raptor_new_iostream_from_sink</link>       (void);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-from-filename">raptor_new_iostream_from_filename</link>   (const <link linkend="char">char</link> *filename);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-from-file-handle">raptor_new_iostream_from_file_handle</link>
+                                                        (<link linkend="FILE:CAPS">FILE</link> *handle);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-from-string">raptor_new_iostream_from_string</link>     (<link linkend="void">void</link> *string,
+                                                         <link linkend="size-t">size_t</link> length);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-to-sink">raptor_new_iostream_to_sink</link>         (void);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-to-filename">raptor_new_iostream_to_filename</link>     (const <link linkend="char">char</link> *filename);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-to-file-handle">raptor_new_iostream_to_file_handle</link>  (<link linkend="FILE:CAPS">FILE</link> *handle);
+<link linkend="raptor-iostream">raptor_iostream</link>*    <link linkend="raptor-new-iostream-to-string">raptor_new_iostream_to_string</link>       (<link linkend="void">void</link> **string_p,
+                                                         <link linkend="size-t">size_t</link> *length_p,
+                                                         <link linkend="void">void</link>* (malloc_handlersize_t size) ());
+<link linkend="void">void</link>                <link linkend="raptor-free-iostream">raptor_free_iostream</link>                (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-format-hexadecimal">raptor_iostream_format_hexadecimal</link>  (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="int">int</link> integer,
+                                                         <link linkend="int">int</link> width);
+<link linkend="size-t">size_t</link>              <link linkend="raptor-iostream-get-bytes-written-count">raptor_iostream_get_bytes_written_count</link>
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-read-bytes">raptor_iostream_read_bytes</link>          (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-read-eof">raptor_iostream_read_eof</link>            (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);
+unsigned <link linkend="long">long</link>       <link linkend="raptor-iostream-tell">raptor_iostream_tell</link>                (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-byte">raptor_iostream_write_byte</link>          (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="int">int</link> byte);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-bytes">raptor_iostream_write_bytes</link>         (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-counted-string">raptor_iostream_write_counted_string</link>
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="void">void</link> *string,
+                                                         <link linkend="size-t">size_t</link> len);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-decimal">raptor_iostream_write_decimal</link>       (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="int">int</link> integer);
+<link linkend="void">void</link>                <link linkend="raptor-iostream-write-end">raptor_iostream_write_end</link>           (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);
+<link linkend="void">void</link>                <link linkend="raptor-iostream-write-statement-ntriples">raptor_iostream_write_statement_ntriples</link>
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="raptor-statement">raptor_statement</link> *statement);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-string">raptor_iostream_write_string</link>        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="void">void</link> *string);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-string-ntriples">raptor_iostream_write_string_ntriples</link>
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         const <link linkend="char">char</link> delim);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-string-python">raptor_iostream_write_string_python</link> (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         const <link linkend="char">char</link> delim,
+                                                         <link linkend="int">int</link> flags);
+<link linkend="void">void</link>                <link linkend="raptor-iostream-write-string-turtle">raptor_iostream_write_string_turtle</link> (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> len);
+<link linkend="int">int</link>                 <link linkend="raptor-iostream-write-stringbuffer">raptor_iostream_write_stringbuffer</link>  (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="raptor-stringbuffer">raptor_stringbuffer</link> *sb);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-iostream.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+An class providing an I/O writer abstraction that allows generating
+output that can be stored or passed on to system files, strings
+allocated in memory (usually via <link linkend="raptor-stringbuffer"><type>raptor_stringbuffer</type></link>), system
+file handles (<literal>FILE*</literal>) or to a user function.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-iostream.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-iostream" role="typedef">
+<title>raptor_iostream</title>
+<indexterm zone="raptor-iostream"><primary>raptor_iostream</primary></indexterm><programlisting>raptor_iostream* raptor_iostream;
+</programlisting>
+<para>
+Raptor I/O Stream class</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-iostream-init-func" role="function">
+<title>raptor_iostream_init_func ()</title>
+<indexterm zone="raptor-iostream-init-func"><primary>raptor_iostream_init_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_iostream_init_func)        (<link linkend="void">void</link> *context);</programlisting>
+<para>
+Handler function for <link linkend="raptor-iostream"><type>raptor_iostream</type></link> initialising.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-finish-func" role="function">
+<title>raptor_iostream_finish_func ()</title>
+<indexterm zone="raptor-iostream-finish-func"><primary>raptor_iostream_finish_func</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_iostream_finish_func)      (<link linkend="void">void</link> *context);</programlisting>
+<para>
+Handler function for <link linkend="raptor-iostream"><type>raptor_iostream</type></link> terminating.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-byte-func" role="function">
+<title>raptor_iostream_write_byte_func ()</title>
+<indexterm zone="raptor-iostream-write-byte-func"><primary>raptor_iostream_write_byte_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_iostream_write_byte_func)  (<link linkend="void">void</link> *context,
+                                                         const <link linkend="int">int</link> byte);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-iostream-write-byte"><function>raptor_iostream_write_byte()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>byte</parameter>&nbsp;:</term>
+<listitem><simpara> byte to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-bytes-func" role="function">
+<title>raptor_iostream_write_bytes_func ()</title>
+<indexterm zone="raptor-iostream-write-bytes-func"><primary>raptor_iostream_write_bytes_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_iostream_write_bytes_func) (<link linkend="void">void</link> *context,
+                                                         const <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-iostream-write-bytes"><function>raptor_iostream_write_bytes()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ptr</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to bytes to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> size of item
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>nmemb</parameter>&nbsp;:</term>
+<listitem><simpara> number of items
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-end-func" role="function">
+<title>raptor_iostream_write_end_func ()</title>
+<indexterm zone="raptor-iostream-write-end-func"><primary>raptor_iostream_write_end_func</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_iostream_write_end_func)   (<link linkend="void">void</link> *context);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-iostream-write-end"><function>raptor_iostream_write_end()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-read-bytes-func" role="function">
+<title>raptor_iostream_read_bytes_func ()</title>
+<indexterm zone="raptor-iostream-read-bytes-func"><primary>raptor_iostream_read_bytes_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_iostream_read_bytes_func)  (<link linkend="void">void</link> *context,
+                                                         <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-iostream-read-bytes"><function>raptor_iostream_read_bytes()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ptr</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to buffer to read into
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> size of buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>nmemb</parameter>&nbsp;:</term>
+<listitem><simpara> number of items
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> number of items read, 0 or &lt; <parameter>size</parameter> on EOF, &lt;0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-read-eof-func" role="function">
+<title>raptor_iostream_read_eof_func ()</title>
+<indexterm zone="raptor-iostream-read-eof-func"><primary>raptor_iostream_read_eof_func</primary></indexterm><programlisting><link linkend="int">int</link>                 (*raptor_iostream_read_eof_func)    (<link linkend="void">void</link> *context);</programlisting>
+<para>
+Handler function for implementing <link linkend="raptor-iostream-read-eof"><function>raptor_iostream_read_eof()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> stream context data
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if EOF
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-handler" role="struct" condition="deprecated:Use #raptor_iostream_handler2">
+<title>raptor_iostream_handler</title>
+<indexterm zone="raptor-iostream-handler" role="deprecated"><primary>raptor_iostream_handler</primary></indexterm><programlisting>typedef struct {
+  raptor_iostream_init_func         init;
+  raptor_iostream_finish_func       finish;
+  raptor_iostream_write_byte_func   write_byte;
+  raptor_iostream_write_bytes_func  write_bytes;
+  raptor_iostream_write_end_func    write_end;
+} raptor_iostream_handler;
+</programlisting>
+<warning><para><literal>raptor_iostream_handler</literal> is deprecated and should not be used in newly-written code. Use <link linkend="raptor-iostream-handler2"><type>raptor_iostream_handler2</type></link></para></warning>
+<para>
+I/O stream implementation handler structure.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="raptor-iostream-init-func">raptor_iostream_init_func</link>&nbsp;<structfield>init</structfield>;</term>
+<listitem><simpara>  initialisation handler - optional, called at most once
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-finish-func">raptor_iostream_finish_func</link>&nbsp;<structfield>finish</structfield>;</term>
+<listitem><simpara> finishing handler -  optional, called at most once
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-write-byte-func">raptor_iostream_write_byte_func</link>&nbsp;<structfield>write_byte</structfield>;</term>
+<listitem><simpara> write byte handler - required (for writing)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-write-bytes-func">raptor_iostream_write_bytes_func</link>&nbsp;<structfield>write_bytes</structfield>;</term>
+<listitem><simpara> write bytes handler - required (for writing)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-write-end-func">raptor_iostream_write_end_func</link>&nbsp;<structfield>write_end</structfield>;</term>
+<listitem><simpara> write end handler - optional (for writing), called at most once
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-handler2" role="struct">
+<title>raptor_iostream_handler2</title>
+<indexterm zone="raptor-iostream-handler2"><primary>raptor_iostream_handler2</primary></indexterm><programlisting>typedef struct {
+  int version;
+
+  /* V1 functions */
+  raptor_iostream_init_func         init;
+  raptor_iostream_finish_func       finish;
+  raptor_iostream_write_byte_func   write_byte;
+  raptor_iostream_write_bytes_func  write_bytes;
+  raptor_iostream_write_end_func    write_end;
+
+  /* V2 functions */
+  raptor_iostream_read_bytes_func   read_bytes;
+  raptor_iostream_read_eof_func     read_eof;
+} raptor_iostream_handler2;
+</programlisting>
+<para>
+I/O stream implementation handler structure.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>version</structfield>;</term>
+<listitem><simpara> interface version.  Presently 1 or 2.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-init-func">raptor_iostream_init_func</link>&nbsp;<structfield>init</structfield>;</term>
+<listitem><simpara>  initialisation handler - optional, called at most once (V1)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-finish-func">raptor_iostream_finish_func</link>&nbsp;<structfield>finish</structfield>;</term>
+<listitem><simpara> finishing handler -  optional, called at most once (V1)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-write-byte-func">raptor_iostream_write_byte_func</link>&nbsp;<structfield>write_byte</structfield>;</term>
+<listitem><simpara> write byte handler - required (for writing) (V1)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-write-bytes-func">raptor_iostream_write_bytes_func</link>&nbsp;<structfield>write_bytes</structfield>;</term>
+<listitem><simpara> write bytes handler - required (for writing) (V1)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-write-end-func">raptor_iostream_write_end_func</link>&nbsp;<structfield>write_end</structfield>;</term>
+<listitem><simpara> write end handler - optional (for writing), called at most once (V1)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-read-bytes-func">raptor_iostream_read_bytes_func</link>&nbsp;<structfield>read_bytes</structfield>;</term>
+<listitem><simpara> read bytes handler - required (for reading) (V2)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="raptor-iostream-read-eof-func">raptor_iostream_read_eof_func</link>&nbsp;<structfield>read_eof</structfield>;</term>
+<listitem><simpara> read EOF handler - required (for reading) (V2)
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-from-handler2" role="function">
+<title>raptor_new_iostream_from_handler2 ()</title>
+<indexterm zone="raptor-new-iostream-from-handler2"><primary>raptor_new_iostream_from_handler2</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_from_handler2   (<link linkend="void">void</link> *user_data,
+                                                         const <link linkend="raptor-iostream-handler2">raptor_iostream_handler2</link> * const handler2);</programlisting>
+<para>
+Create a new iostream over a user-defined handler</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to context information to pass in to calls
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler2</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to handler methods
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-from-handler" role="function" condition="deprecated:Use raptor_new_iosteram_from_handler2()">
+<title>raptor_new_iostream_from_handler ()</title>
+<indexterm zone="raptor-new-iostream-from-handler" role="deprecated"><primary>raptor_new_iostream_from_handler</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_from_handler    (<link linkend="void">void</link> *context,
+                                                         const <link linkend="raptor-iostream-handler">raptor_iostream_handler</link> *handler);</programlisting>
+<warning><para><literal>raptor_new_iostream_from_handler</literal> is deprecated and should not be used in newly-written code. Use <link linkend="raptor-new-iosteram-from-handler2"><function>raptor_new_iosteram_from_handler2()</function></link></para></warning>
+<para>
+Create a new iostream over a user-defined handler.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to context information to pass in to calls
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to handler methods
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-from-sink" role="function">
+<title>raptor_new_iostream_from_sink ()</title>
+<indexterm zone="raptor-new-iostream-from-sink"><primary>raptor_new_iostream_from_sink</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_from_sink       (void);</programlisting>
+<para>
+Create a new read iostream from a sink.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-from-filename" role="function">
+<title>raptor_new_iostream_from_filename ()</title>
+<indexterm zone="raptor-new-iostream-from-filename"><primary>raptor_new_iostream_from_filename</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_from_filename   (const <link linkend="char">char</link> *filename);</programlisting>
+<para>
+Constructor - create a new iostream reading from a filename.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&nbsp;:</term>
+<listitem><simpara> Input filename to open and read from
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-from-file-handle" role="function">
+<title>raptor_new_iostream_from_file_handle ()</title>
+<indexterm zone="raptor-new-iostream-from-file-handle"><primary>raptor_new_iostream_from_file_handle</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_from_file_handle
+                                                        (<link linkend="FILE:CAPS">FILE</link> *handle);</programlisting>
+<para>
+Constructor - create a new iostream reading from a file_handle.
+</para>
+<para>
+The <parameter>handle</parameter> must already be open for reading.
+NOTE: This does not fclose the <parameter>handle</parameter> when it is finished.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>handle</parameter>&nbsp;:</term>
+<listitem><simpara> Input file_handle to open and read from
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-from-string" role="function">
+<title>raptor_new_iostream_from_string ()</title>
+<indexterm zone="raptor-new-iostream-from-string"><primary>raptor_new_iostream_from_string</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_from_string     (<link linkend="void">void</link> *string,
+                                                         <link linkend="size-t">size_t</link> length);</programlisting>
+<para>
+Constructor - create a new iostream reading from a string.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> length of string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-to-sink" role="function">
+<title>raptor_new_iostream_to_sink ()</title>
+<indexterm zone="raptor-new-iostream-to-sink"><primary>raptor_new_iostream_to_sink</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_to_sink         (void);</programlisting>
+<para>
+Create a new write iostream to a sink.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-to-filename" role="function">
+<title>raptor_new_iostream_to_filename ()</title>
+<indexterm zone="raptor-new-iostream-to-filename"><primary>raptor_new_iostream_to_filename</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_to_filename     (const <link linkend="char">char</link> *filename);</programlisting>
+<para>
+Constructor - create a new iostream writing to a filename.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&nbsp;:</term>
+<listitem><simpara> Output filename to open and write to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-to-file-handle" role="function">
+<title>raptor_new_iostream_to_file_handle ()</title>
+<indexterm zone="raptor-new-iostream-to-file-handle"><primary>raptor_new_iostream_to_file_handle</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_to_file_handle  (<link linkend="FILE:CAPS">FILE</link> *handle);</programlisting>
+<para>
+Constructor - create a new iostream writing to a FILE*.
+</para>
+<para>
+The <parameter>handle</parameter> must already be open for writing.
+NOTE: This does not fclose the <parameter>handle</parameter> when it is finished.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>handle</parameter>&nbsp;:</term>
+<listitem><simpara> FILE* handle to write to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-iostream-to-string" role="function">
+<title>raptor_new_iostream_to_string ()</title>
+<indexterm zone="raptor-new-iostream-to-string"><primary>raptor_new_iostream_to_string</primary></indexterm><programlisting><link linkend="raptor-iostream">raptor_iostream</link>*    raptor_new_iostream_to_string       (<link linkend="void">void</link> **string_p,
+                                                         <link linkend="size-t">size_t</link> *length_p,
+                                                         <link linkend="void">void</link>* (malloc_handlersize_t size) ());</programlisting>
+<para>
+Constructor - create a new iostream writing to a string.
+</para>
+<para>
+If <parameter>malloc_handler</parameter> is null, raptor will allocate it using it's
+own memory allocator.  *<parameter>string_p</parameter> is set to NULL on failure (and
+*<parameter>length_p</parameter> to 0 if <parameter>length_p</parameter> is not NULL).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>string_p</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to location to hold string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length_p</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to location to hold length of string (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>malloc_handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to malloc to use to make string (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="raptor-iostream"><type>raptor_iostream</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-free-iostream" role="function">
+<title>raptor_free_iostream ()</title>
+<indexterm zone="raptor-free-iostream"><primary>raptor_free_iostream</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_free_iostream                (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);</programlisting>
+<para>
+Destructor - destroy an iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> iostream object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-format-hexadecimal" role="function">
+<title>raptor_iostream_format_hexadecimal ()</title>
+<indexterm zone="raptor-iostream-format-hexadecimal"><primary>raptor_iostream_format_hexadecimal</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_format_hexadecimal  (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="int">int</link> integer,
+                                                         <link linkend="int">int</link> width);</programlisting>
+<para>
+Write an integer in hexadecimal to the iostream.
+</para>
+<para>
+Always 0-fills the entire field and writes in uppercase A-F</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>integer</parameter>&nbsp;:</term>
+<listitem><simpara> unsigned integer to format as hexadecimal
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>width</parameter>&nbsp;:</term>
+<listitem><simpara> field width
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-get-bytes-written-count" role="function" condition="deprecated:Use raptor_iostream_tell()">
+<title>raptor_iostream_get_bytes_written_count ()</title>
+<indexterm zone="raptor-iostream-get-bytes-written-count" role="deprecated"><primary>raptor_iostream_get_bytes_written_count</primary></indexterm><programlisting><link linkend="size-t">size_t</link>              raptor_iostream_get_bytes_written_count
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);</programlisting>
+<warning><para><literal>raptor_iostream_get_bytes_written_count</literal> is deprecated and should not be used in newly-written code. Use <link linkend="raptor-iostream-tell"><function>raptor_iostream_tell()</function></link></para></warning>
+<para>
+Get the number of bytes written to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> number of bytes written or 0 if none written so far
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-read-bytes" role="function">
+<title>raptor_iostream_read_bytes ()</title>
+<indexterm zone="raptor-iostream-read-bytes"><primary>raptor_iostream_read_bytes</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_read_bytes          (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);</programlisting>
+<para>
+Read bytes to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ptr</parameter>&nbsp;:</term>
+<listitem><simpara> start of buffer to read objects into
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> size of object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>nmemb</parameter>&nbsp;:</term>
+<listitem><simpara> number of objects to read
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> number of objects read, 0 or less than nmemb on EOF, &lt;0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-read-eof" role="function">
+<title>raptor_iostream_read_eof ()</title>
+<indexterm zone="raptor-iostream-read-eof"><primary>raptor_iostream_read_eof</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_read_eof            (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);</programlisting>
+<para>
+Check if an read iostream has ended</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor read iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if EOF (or not a read iostream)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-tell" role="function">
+<title>raptor_iostream_tell ()</title>
+<indexterm zone="raptor-iostream-tell"><primary>raptor_iostream_tell</primary></indexterm><programlisting>unsigned <link linkend="long">long</link>       raptor_iostream_tell                (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);</programlisting>
+<para>
+Get the offset in the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> offset in iostream
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-byte" role="function">
+<title>raptor_iostream_write_byte ()</title>
+<indexterm zone="raptor-iostream-write-byte"><primary>raptor_iostream_write_byte</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_byte          (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="int">int</link> byte);</programlisting>
+<para>
+Write a byte to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>byte</parameter>&nbsp;:</term>
+<listitem><simpara> byte to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-bytes" role="function">
+<title>raptor_iostream_write_bytes ()</title>
+<indexterm zone="raptor-iostream-write-bytes"><primary>raptor_iostream_write_bytes</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_bytes         (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="void">void</link> *ptr,
+                                                         <link linkend="size-t">size_t</link> size,
+                                                         <link linkend="size-t">size_t</link> nmemb);</programlisting>
+<para>
+Write bytes to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>ptr</parameter>&nbsp;:</term>
+<listitem><simpara> start of objects to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> size of object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>nmemb</parameter>&nbsp;:</term>
+<listitem><simpara> number of objects
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> number of objects written or less than nmemb or 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-counted-string" role="function">
+<title>raptor_iostream_write_counted_string ()</title>
+<indexterm zone="raptor-iostream-write-counted-string"><primary>raptor_iostream_write_counted_string</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_counted_string
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="void">void</link> *string,
+                                                         <link linkend="size-t">size_t</link> len);</programlisting>
+<para>
+Write a counted string to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> string length
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-decimal" role="function">
+<title>raptor_iostream_write_decimal ()</title>
+<indexterm zone="raptor-iostream-write-decimal"><primary>raptor_iostream_write_decimal</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_decimal       (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="int">int</link> integer);</programlisting>
+<para>
+Write an integer in decimal to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>integer</parameter>&nbsp;:</term>
+<listitem><simpara> integer to format as decimal
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-end" role="function">
+<title>raptor_iostream_write_end ()</title>
+<indexterm zone="raptor-iostream-write-end"><primary>raptor_iostream_write_end</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_iostream_write_end           (<link linkend="raptor-iostream">raptor_iostream</link> *iostr);</programlisting>
+<para>
+End writing to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-statement-ntriples" role="function">
+<title>raptor_iostream_write_statement_ntriples ()</title>
+<indexterm zone="raptor-iostream-write-statement-ntriples"><primary>raptor_iostream_write_statement_ntriples</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_iostream_write_statement_ntriples
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="raptor-statement">raptor_statement</link> *statement);</programlisting>
+<para>
+Write a <link linkend="raptor-statement"><type>raptor_statement</type></link> formatted in N-Triples format to a <link linkend="raptor-iostream"><type>raptor_iostream</type></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iosteram
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> statement to write
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-string" role="function">
+<title>raptor_iostream_write_string ()</title>
+<indexterm zone="raptor-iostream-write-string"><primary>raptor_iostream_write_string</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_string        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         const <link linkend="void">void</link> *string);</programlisting>
+<para>
+Write a NULL-terminated string to the iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-string-ntriples" role="function">
+<title>raptor_iostream_write_string_ntriples ()</title>
+<indexterm zone="raptor-iostream-write-string-ntriples"><primary>raptor_iostream_write_string_ntriples</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_string_ntriples
+                                                        (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         const <link linkend="char">char</link> delim);</programlisting>
+<para>
+Write an UTF-8 string using N-Triples escapes to an iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-iostream"><type>raptor_iostream</type></link> to write to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> length of UTF-8 string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>delim</parameter>&nbsp;:</term>
+<listitem><simpara> Terminating delimiter character for string (such as " or &gt;)
+or \0 for no escaping.
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure such as bad UTF-8 encoding.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-string-python" role="function">
+<title>raptor_iostream_write_string_python ()</title>
+<indexterm zone="raptor-iostream-write-string-python"><primary>raptor_iostream_write_string_python</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_string_python (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         const <link linkend="char">char</link> delim,
+                                                         <link linkend="int">int</link> flags);</programlisting>
+<para>
+Write a UTF-8 string using Python-style escapes (N-Triples, Turtle, JSON) to an iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-iostream"><type>raptor_iostream</type></link> to write to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> length of UTF-8 string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>delim</parameter>&nbsp;:</term>
+<listitem><simpara> Terminating delimiter character for string (such as " or &gt;)
+or \0 for no escaping.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>flags</parameter>&nbsp;:</term>
+<listitem><simpara> flags 0=N-Triples mode, 1=Turtle (allow raw UTF-8), 2=Turtle long string (allow raw UTF-8), 3=JSON
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure such as bad UTF-8 encoding.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-string-turtle" role="function">
+<title>raptor_iostream_write_string_turtle ()</title>
+<indexterm zone="raptor-iostream-write-string-turtle"><primary>raptor_iostream_write_string_turtle</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_iostream_write_string_turtle (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> len);</programlisting>
+<para>
+Write an UTF-8 string using Turtle "longString" triple quoting to
+an iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-iostream"><type>raptor_iostream</type></link> to write to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> length of UTF-8 string
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-iostream-write-stringbuffer" role="function">
+<title>raptor_iostream_write_stringbuffer ()</title>
+<indexterm zone="raptor-iostream-write-stringbuffer"><primary>raptor_iostream_write_stringbuffer</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_iostream_write_stringbuffer  (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="raptor-stringbuffer">raptor_stringbuffer</link> *sb);</programlisting>
+<para>
+Write a stringbuffer to an iostream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> raptor iostream
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>sb</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-stringbuffer"><type>raptor_stringbuffer</type></link> to write
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

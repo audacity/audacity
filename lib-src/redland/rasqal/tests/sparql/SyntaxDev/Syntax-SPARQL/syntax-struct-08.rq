@@ -1,0 +1,4 @@
+# Operator, DOT
+PREFIX :  <http://example.org/ns#> 
+SELECT *
+{ OPTIONAL { :a :b :c } . }

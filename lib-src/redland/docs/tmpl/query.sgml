@@ -1,0 +1,136 @@
+<!-- ##### SECTION Title ##### -->
+Querying
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF query languages and execution.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Provides classes to create query objects and to execute them over
+an RDF graph (#librdf_model) returning a #librdf_query_results
+Query result limits and offsets can be set.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_query ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_query_factory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_query_register_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@uri_string: 
+@factory: 
+
+
+<!-- ##### FUNCTION librdf_new_query ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@uri: 
+@query_string: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_query_from_query ##### -->
+<para>
+
+</para>
+
+@old_query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_query_from_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@factory: 
+@name: 
+@uri: 
+@query_string: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_query ##### -->
+<para>
+
+</para>
+
+@query: 
+
+
+<!-- ##### FUNCTION librdf_query_execute ##### -->
+<para>
+
+</para>
+
+@query: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_get_limit ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_set_limit ##### -->
+<para>
+
+</para>
+
+@query: 
+@limit: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_get_offset ##### -->
+<para>
+
+</para>
+
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_set_offset ##### -->
+<para>
+
+</para>
+
+@query: 
+@offset: 
+@Returns: 
+
+

@@ -1,0 +1,226 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en]C-gatewaynet  (Win98; U) [Netscape]">
+   <meta name="Author" content="Phil Burk">
+   <meta name="Description" content="PortAudio is a cross platform, open-source, audio I/O library.It provides a very simple API for recording and/or playing sound using a simple callback function.">
+   <meta name="KeyWords" content="audio, library, portable, open-source, DirectSound,sound, music, JSyn, synthesis,">
+   <title>PortAudio Implementations for DirectSound</title>
+</head>
+<body>
+&nbsp;
+<center><table COLS=1 WIDTH="100%" BGCOLOR="#FADA7A" >
+<tr>
+<td>
+<center>
+<h1>
+PortAudio - Release Notes</h1></center>
+</td>
+</tr>
+</table></center>
+
+<p>Link to <a href="http://www.portaudio.com">PortAudio Home Page</a>
+<h2>
+<b>V17 - 10/15/01</b></h2>
+
+<blockquote><b>Unix OSS</b>
+<ul>
+<li>
+Set num channels back to two after device query for ALSA. This fixed a
+bug in V16 that sometimes caused a failure when querying for the sample
+rates. Thanks Stweart Greenhill.</li>
+</ul>
+</blockquote>
+
+<blockquote>
+<h4>
+<b>Macintosh Sound Manager</b></h4>
+
+<ul>
+<li>
+Use NewSndCallBackUPP() for CARBON compatibility.</li>
+</ul>
+</blockquote>
+
+<h2>
+<b>V16 - 9/27/01</b></h2>
+
+<blockquote><b>Added Alpha implementations for ASIO, SGI, and BeOS!</b>
+<br>&nbsp;
+<li>
+CPULoad is now calculated based on the time spent to generate a known number
+of frames. This is more accurate than a simple percentage of real-time.
+Implemented in pa_unix_oss, pa_win_wmme and pa_win_ds.</li>
+
+<li>
+Fix dither and shift for recording PaUInt8 format data.</li>
+
+<li>
+Added "patest_maxsines.c" which tests <tt>Pa_GetCPULoad().</tt></li>
+</blockquote>
+
+<blockquote>
+<h4>
+Windows WMME</h4>
+
+<ul>
+<li>
+sDevicePtrs now allocated using <tt>GlobalAlloc()</tt>. This prevents a
+crash in Pa_Terminate() on Win2000. Thanks Mike Berry for finding this.
+Thanks Mike Berry.</li>
+
+<li>
+Pass process instead of thread to <tt>SetPriorityClass</tt>(). This fixes
+a bug that caused the priority to not be increased. Thanks to Alberto di
+Bene for spotting this.</li>
+</ul>
+
+<h4>
+Windows DirectSound</h4>
+
+<ul>
+<li>
+Casts for compiling with __MWERKS__ CodeWarrior.</li>
+</ul>
+
+<h4>
+UNIX OSS</h4>
+
+<ul>
+<li>
+Derived from Linux OSS implementation.</li>
+
+<li>
+Numerous patches from Heiko Purnhagen, Stephen Brandon, etc.</li>
+
+<li>
+Improved query mechanism which often bailed out unnecessarily.</li>
+
+<li>
+Removed sNumDevices and potential related bugs,</li>
+
+<li>
+Use <tt>getenv("PA_MIN_LATENCY_MSEC")</tt> in code to set desired latency.
+User can set by entering:</li>
+
+<br>&nbsp;&nbsp;&nbsp; <tt>export PA_MIN_LATENCY_MSEC=40</tt></ul>
+
+<h4>
+Macintosh Sound Manager</h4>
+
+<ul>
+<li>
+Pass unused event to WaitNextEvent instead of NULL to prevent Mac OSX crash.
+Thanks Dominic Mazzoni.</li>
+
+<br>&nbsp;</ul>
+</blockquote>
+
+<h2>
+<b>V15 - 5/29/01</b></h2>
+
+<blockquote>
+<ul>
+<li>
+<b>New Linux OSS Beta</b></li>
+</ul>
+
+<h4>
+Windows WMME</h4>
+
+<ul>
+<li>
+&nbsp;sDevicePtrs now allocated based on sizeof(pointer). Was allocating
+too much space.</li>
+
+<li>
+&nbsp;Check for excessive numbers of channels. Some drivers reported bogus
+numbers.</li>
+
+<li>
+Apply Mike Berry's changes for CodeWarrior on PC including condition including
+of memory.h, and explicit typecasting on memory allocation.</li>
+</ul>
+
+<h4>
+Macintosh Sound Manager</h4>
+
+<ul>
+<li>
+ScanInputDevices was setting sDefaultOutputDeviceID instead of sDefaultInputDeviceID.</li>
+
+<li>
+Device Scan was crashing for anything other than siBadSoundInDevice, but
+some Macs may return other errors! Caused failure to init on some G4s under
+OS9.</li>
+
+<li>
+Fix TIMEOUT in record mode.</li>
+
+<li>
+Change CARBON_COMPATIBLE to TARGET_API_MAC_CARBON</li>
+</ul>
+</blockquote>
+
+<h2>
+<b>V14 - 2/6/01</b></h2>
+
+<blockquote>
+<ul>
+<li>
+Added implementation for Windows MultiMedia Extensions (WMME) by Ross and
+Phil</li>
+
+<li>
+Changed Pa_StopStream() so that it waits for the buffers to drain.</li>
+
+<li>
+Added Pa_AbortStream() that stops immediately without waiting.</li>
+
+<li>
+Added new test: patest_stop.c to test above two mods.</li>
+
+<li>
+Fixed Pa_StreamTime() so that it returns current play position instead
+of the write position. Added "patest_sync.c" to demo audio/video sync.</li>
+
+<li>
+Improved stability of Macintosh implementation. Added timeouts to prevent
+hangs.</li>
+
+<li>
+Added Pa_GetSampleSize( PaSampleFormat format );</li>
+
+<li>
+Changes some "int"s to "long"s so that PA works properly on Macintosh which
+often compiles using 16 bit ints.</li>
+
+<li>
+Added Implementation Guide</li>
+</ul>
+</blockquote>
+
+<h2>
+<b>V12 - 1/9/01</b></h2>
+
+<blockquote>
+<ul>
+<li>
+Mac now scans for and queries all devices. But it does not yet support
+selecting any other than the default device.</li>
+
+<li>
+Blocking I/O calls renamed to separate them from the PortAudio API.</li>
+
+<li>
+Cleaned up indentation problems with tabs versus spaces.</li>
+
+<li>
+Now attempts to correct bogus sample rate info returned from DirectSound
+device queries.</li>
+</ul>
+</blockquote>
+
+</body>
+</html>

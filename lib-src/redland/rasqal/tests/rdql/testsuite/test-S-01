@@ -1,0 +1,9 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Extra syntax checks
+
+SELECT *
+FROM <modelA.nt>
+WHERE
+    (x:r ?y "value-\u00E9")
+USING
+    x FOR <http://rdf.hp.com/>

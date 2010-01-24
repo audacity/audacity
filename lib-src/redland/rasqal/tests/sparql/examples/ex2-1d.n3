@@ -1,0 +1,3 @@
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix :     <http://example.org/book/> .
+:book1  dc:title  "SPARQL Tutorial" .

@@ -1,0 +1,37 @@
+### Makefile.common
+###
+### Copyright (C) 2002 by the KDE developers
+
+### All the real work is done by the shellscript cvs.sh
+
+SHELL=/bin/sh
+
+cvs dist configure configure.in configure.files subdirs package-messages package-merge Makefile.am acinclude.m4 extract-messages:
+	@admindir=$(admindir); \
+	if test "x$$admindir" = x; then \
+	  admindir=.; until test -f $$admindir/admin/cvs.sh; do \
+	    admindir=$$admindir/..; \
+	    if test `cd $$admindir && pwd` = / ; then break; fi; \
+	  done; \
+	  admindir=$$admindir/admin; \
+	  if test -f $$admindir/cvs.sh; then :; else \
+	    echo "Can't find the admin/ directory in any parent of the"; \
+	    echo "current directory.  Please set it with admindir=..."; \
+	    exit 1; \
+	  fi; \
+	fi; \
+	if test "$@" = "package-merge"; then \
+		MAKE="$(MAKE)" POFILES="$(POFILES)" PACKAGE="$(PACKAGE)" \
+	  	$(SHELL) $$admindir/cvs.sh package-merge ;\
+	else \
+		MAKE="$(MAKE)" $(SHELL) $$admindir/cvs.sh $@ ;\
+	fi
+
+configure.in: configure.files subdirs
+configure.files: subdirs
+
+svn: cvs
+
+.SILENT:
+
+.PHONY: svn cvs dist package-merge package-messages

@@ -1,0 +1,9 @@
+diff -u -r1.1 -r1.2
+--- lib-src/portsmf/strparse.cpp	11 Jul 2008 15:39:25 -0000	1.1
++++ lib-src/portsmf/strparse.cpp	28 Jul 2008 19:54:09 -0000	1.2
+@@ -1,4 +1,5 @@
+ #include <string>
++#include <cstring>
+ // #include <iostream>  -- for debugging (cout)
+ #include "ctype.h"
+ using namespace std;

@@ -1,0 +1,50 @@
+<TYPEDEF>
+<NAME>raptor_iostream</NAME>
+raptor_iostream* raptor_iostream;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_namespace</NAME>
+raptor_namespace* raptor_namespace;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_namespace_stack</NAME>
+raptor_namespace_stack* raptor_namespace_stack;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_parser</NAME>
+raptor_parser* raptor_parser;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_qname</NAME>
+raptor_qname* raptor_qname;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_sequence</NAME>
+raptor_sequence* raptor_sequence;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_serializer</NAME>
+raptor_serializer* raptor_serializer;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_stringbuffer</NAME>
+raptor_stringbuffer* raptor_stringbuffer;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_uri</NAME>
+raptor_uri* raptor_uri;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_www</NAME>
+raptor_www* raptor_www;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_xml_element</NAME>
+raptor_xml_element* raptor_xml_element;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>raptor_xml_writer</NAME>
+raptor_xml_writer* raptor_xml_writer;
+</TYPEDEF>
+
+

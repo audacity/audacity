@@ -1,0 +1,10 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial query 6
+
+SELECT ?resource, ?familyName
+FROM <vc-db-2.rdf>
+WHERE (?resource, <info:age>, ?age) ,
+      (?resource, <vCard:N>, ?y) , (?y, <vCard:Family>, ?familyName)
+AND ?age >= 24
+USING  info  FOR <http://somewhere/peopleInfo#> ,
+       vCard FOR <http://www.w3.org/2001/vcard-rdf/3.0#>

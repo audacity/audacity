@@ -1,0 +1,51 @@
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+[]    rdf:type    rs:ResultSet ;
+      rs:resultVariable  "title" ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Query Languages"@en ;
+                                  rs:variable  "title"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Anfragesprachen"@de ;
+                                  rs:variable  "title"
+                                ]  
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "An Overview of RDF Query Languages" ;
+                                  rs:variable  "title"
+                                ] 
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Information Systems"@en ;
+                                  rs:variable  "title"
+                                ] 
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Informationsysteme"@de ;
+                                  rs:variable  "title"
+                                ] 
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Database Management"@en ;
+                                  rs:variable  "title"
+                                ] 
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Datenbankmanagement"@de ;
+                                  rs:variable  "title"
+                                ] 
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Languages"@en ;
+                                  rs:variable  "title"
+                                ] 
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value     "Sprachen"@de ;
+                                  rs:variable  "title"
+                                ] 
+		  ] .

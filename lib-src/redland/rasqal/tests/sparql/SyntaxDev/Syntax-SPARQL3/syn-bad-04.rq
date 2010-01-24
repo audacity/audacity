@@ -1,0 +1,3 @@
+# DOT, no triples
+SELECT * WHERE
+{ . FILTER(?x) }

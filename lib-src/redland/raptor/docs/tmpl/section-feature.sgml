@@ -1,0 +1,102 @@
+<!-- ##### SECTION Title ##### -->
+Features
+
+<!-- ##### SECTION Short_Description ##### -->
+Parser and Serializer features
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Optional parameters for #raptor_parser and #raptor_serializer
+objects that can be get and set.  Utility functions also exist
+to enumerate them, their description and the parameter type
+taken.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM raptor_feature ##### -->
+<para>
+
+</para>
+
+@RAPTOR_FEATURE_SCANNING: 
+@RAPTOR_FEATURE_ASSUME_IS_RDF: 
+@RAPTOR_FEATURE_ALLOW_NON_NS_ATTRIBUTES: 
+@RAPTOR_FEATURE_ALLOW_OTHER_PARSETYPES: 
+@RAPTOR_FEATURE_ALLOW_BAGID: 
+@RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST: 
+@RAPTOR_FEATURE_NORMALIZE_LANGUAGE: 
+@RAPTOR_FEATURE_NON_NFC_FATAL: 
+@RAPTOR_FEATURE_WARN_OTHER_PARSETYPES: 
+@RAPTOR_FEATURE_CHECK_RDF_ID: 
+@RAPTOR_FEATURE_RELATIVE_URIS: 
+@RAPTOR_FEATURE_START_URI: 
+@RAPTOR_FEATURE_WRITER_AUTO_INDENT: 
+@RAPTOR_FEATURE_WRITER_AUTO_EMPTY: 
+@RAPTOR_FEATURE_WRITER_INDENT_WIDTH: 
+@RAPTOR_FEATURE_WRITER_XML_VERSION: 
+@RAPTOR_FEATURE_WRITER_XML_DECLARATION: 
+@RAPTOR_FEATURE_NO_NET: 
+@RAPTOR_FEATURE_RESOURCE_BORDER: 
+@RAPTOR_FEATURE_LITERAL_BORDER: 
+@RAPTOR_FEATURE_BNODE_BORDER: 
+@RAPTOR_FEATURE_RESOURCE_FILL: 
+@RAPTOR_FEATURE_LITERAL_FILL: 
+@RAPTOR_FEATURE_BNODE_FILL: 
+@RAPTOR_FEATURE_HTML_TAG_SOUP: 
+@RAPTOR_FEATURE_MICROFORMATS: 
+@RAPTOR_FEATURE_HTML_LINK: 
+@RAPTOR_FEATURE_WWW_TIMEOUT: 
+@RAPTOR_FEATURE_WRITE_BASE_URI: 
+@RAPTOR_FEATURE_WWW_HTTP_CACHE_CONTROL: 
+@RAPTOR_FEATURE_WWW_HTTP_USER_AGENT: 
+@RAPTOR_FEATURE_JSON_CALLBACK: 
+@RAPTOR_FEATURE_JSON_EXTRA_DATA: 
+@RAPTOR_FEATURE_RSS_TRIPLES: 
+@RAPTOR_FEATURE_ATOM_ENTRY_URI: 
+@RAPTOR_FEATURE_LAST: 
+
+<!-- ##### FUNCTION raptor_get_feature_count ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_features_enumerate ##### -->
+<para>
+
+</para>
+
+@feature: 
+@name: 
+@uri: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_feature_from_uri ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_feature_value_type ##### -->
+<para>
+
+</para>
+
+@feature: 
+@Returns: 
+
+

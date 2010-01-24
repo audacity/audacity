@@ -1,0 +1,30 @@
+No library needs to be built for iAVC.
+
+The file src/effects/AvcCompressor.cpp includes the iAVC files.
+While it is somewhat unorthodox to include a .cpp file, it
+does save building a library.
+
+Keeping the iAVC files in a directory of its own is appropriate
+and makes it easy to remember that iAVC is under LGPL license
+and not simply part of Audacity.
+
+Vince Busam
+
+-------------
+
+New files list:
+
+lib-src/iAVC/iAVC-Audacity.txt   (this file)
+lib-src/iAVC/iAVC.h
+lib-src/iAVC/iAVC.cpp
+lib-src/iAVC/iAVCsamples.h
+
+src/effects/AvcCompressor.cpp
+src/effects/AvcCompressor.h
+src/effects/SimplePairedTwoTrack.cpp
+src/effects/SimplePairedTwoTrack.h
+
+Updated files list:
+
+src/effects/LoadEffects.cpp (one line to load AvcCompressor)
+win/audacity.dsp  (add above new files to project)

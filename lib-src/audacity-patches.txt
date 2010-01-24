@@ -1,0 +1,348 @@
+This is intended as a list of all the patches that have been incorporated into
+the lib-src copies of libraries, to avoid them getting lost in version upgrades
+from upstream, and to remind us of the versions we are using.
+
+Libraries
+=========
+dlcompat
+--------
+Support library for dynamic loading of modules on OS X 10.3 and older. Used
+for LADSPA on OS X support, and probably not any where else
+
+expat
+-----
+XML parser library used to parse project files and so on. By default the
+system copy is prefered over this one, even on OS X (where it is shipped by
+default). Build against system 2.0.1 works fine.
+Version in audacity CVS: 1.2
+Patches: None
+Upstream version: 2.0.1
+
+FileDialogue
+------------
+The customised file saving dialogues for wxwidgets to provide the options
+button for format preferences. This is written and maintained by us so doesn't
+have an upstream at the moment.
+
+iAVC
+----
+disused?
+
+id3lib
+------
+disused?
+
+libflac
+-------
+http://flac.sourceforge.net/
+Free Lossless Audio Codec encoding and decoding library
+Version in audacity cvs: 1.2.1
+Patches: mac-asm-fixes.patch. Fixes build on OS X Intel 10.4 by creating and
+object format for Mach-O. Needs to go upstream
+	gcc-4.3-includes.patch. Patch from gentoo to fix includes needed for
+		GCC 4.3. Already included in upstream CVS
+	asm-textreloc.patch. Patch from Gentoo to avoid text relocations is
+		the assembly optimisations. In upstream CVS
+	asneeded.patch. Add LDFLAGS needed for non-glibc systems. Taken from Gentoo.
+	flac-lite.diff. Remove all the things not included in audacity CVS from
+		the build system so it will build with 50% less stuff
+Upstream version: 1.2.1
+
+libid3tag
+---------
+MP3 tag manipulation library. Comes with libmad (below)
+arguments ([-Wall foreign]) added to AM_INIT_AUTOMAKE to avoid autoreconf
+failures
+arguments (--no-verify) removed from ltconfig execution to prevent configure
+failures
+
+libmad
+------
+http://www.underbit.com/products/mad/
+MP3 decoding library
+Version in audacity cvs: 0.15.1 (beta)
+Patches: libmad-mp2-out-of-spec.patch:	Import some forms of MP2 file that are
+theoretically out of spec but in practise work fine (msmeyer)
+osx-universal-build.patch: Makes build work on OS X for universal binary by
+using compiler-defined symbols for targets as well as hosts.
+autotools.patch:			Update to autotools to work with recent auto{conf,
+make}
+Upstream version: 0.15.1 (beta)
+
+libnyquist
+----------
+Digital Audio scripting language, with our own library interface added to it
+kFreeBSD-nyquist.patch	Patch from Benjamin Drung to build nyquist on
+						kFreeBSD. Asked him to send it upstream 2009/08/22
+hurd-nyquist.patch      Patch from Benjamin Drung to build nyquist on HURD.
+                        Asked him to send it upstream 2009/12/05.
+
+libogg
+------
+library to handle Xiph.org's open multimedia container format
+Version in Audacity CVS: 1.1.3
+Patches: None, except docs build disabled in Makefile.am
+/usr/share/aclocal/libtool.m4 copied to acinclude.m4 (working round not having
+an m4 directory in the package for libtool files)
+Upstream Version: 1.1.3
+
+libresample
+-----------
+Audio sample rate conversion library. Maintained by audacity project
+
+libsamplerate
+-------------
+Erik de Castro Lopo's high quality sample rate conversion library. Not used
+in release builds, could probably be removed altogther except for comparision
+purposes.
+Version in Audacity CVS: 0.1.7
+Patches: endian.m4, lrint.m4, llrint.m4, lrintf.m4, clip_mode.m4 copied from
+			libsndfile's M4/.
+		 signal.m4 created out of the tail of acinclude.m4 with the remaining
+		 	necessary macro
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+Upstream Version: 0.1.7
+
+libsndfile
+----------
+Erik de Castro Lopo's uncompressed audio file I/O library. Core and essential
+to audacity.
+Version in Audacity CVS: 1.0.18
+Patches: macro-quoting.patch: quote arguments to AC_DEFUN such that
+			autoreconf works with autorecnf 2.63. Has been accepted upstream
+		 portability.patch: add portability macros / pre-processor to 
+			enable build on non-standard platforms. Not yet accepted upstream.
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+Upstream Version: 1.0.18
+
+libvamp
+-------
+Library to load and use VAMP plug-ins. http://www.vamp-plugins.org/
+Version in Audacity CVS: 2.0
+Patches: optional-progs.patch: Make building the Vamp host (and so the
+dependecy on libsndfile) optional rather than mandatory. Accepted upstream.
+		 distclean.patch: ensure that distclean actually works and takes away
+		 auto* droppings. Accepted upstream.
+Upstream Version: 2.0
+
+libvorbis
+---------
+library for endcoding and decoding Xiph.org's high-quality compressed audio
+format.
+Version in Audacity CVS: 1.2.0
+Patches: local-libogg.patch: configure patch that lets us build against a
+local libogg if there isn't a system one.
+no-docs-examples.patch: disable building documentation and examples, so we can
+avoid shipping the files in those directories
+Upstream Version: 1.2.0
+
+liblrdf
+-------
+Patches:
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+
+
+lib-widget-extra
+----------------
+
+mod-script-pipe
+---------------
+
+portaudio
+---------
+http://portaudio.com/
+cross-platform audio I/O library version 18, used for 1.2.x version of
+audacity.
+Quite heavily patched local copy to get AC-97 ALSA cards to play back
+correctly.
+
+portaudio-v19
+-------------
+http://portaudio.com/
+cross-platform audio I/O library version 19, used for 1.3.2 onwards releases
+Version in audacity cvs: 1st July 2009 SVN snapshot (r1416)
+Patches:
+../portmixer/portaudio.patch	add features needed to make portmixer work.
+		Integration by upstream in progress. Will need updating as upstream
+		portaudio moves
+
+portaudio/libtool22.patch	Patch from Gentoo to ensure that static libraries
+are always built, not shared ones, otherwise the assumptions elsewhere in the
+build system break. Not suitable for upstream, what is needed is more
+powerfull autoconf features to pass the right options to portaudio's configure
+script, which suffers from the broken-ness of autoconf's subdirectory support
+
+portsmf
+-------
+http://portmedia.sourceforge.net/
+Cross-platform Midi file reader and writer (succeeded and obsoltes allegro)
+Version in audacity cvs: SVN snapshot from ????
+Patches:
+portsmf-includes.patch	add include of <cstring> needed to compile with recent
+						GCC versions
+portsmf-string-const.patch	Add string const qualifiers as needed
+local-macros.patch		Add all the necessary 3rd party m4 macros into autotools
+						/m4/ and supporting changes.
+unsigned-const-casts.patch	Build fix for Solaris compiler, adds casts to
+						unsigned integer literals.
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+All patches have been added to upstream patch tracker at
+https://sourceforge.net/tracker2/?group_id=196750&atid=958711
+
+
+portburn
+--------
+Doesn't do anything yet
+
+portmixer
+---------
+cross-platform audio mixer control library, hooked onto portaudio. Maintained
+by the audacity project with some help from portaudio development.
+
+redland
+-------
+http://librdf.org
+RDF parser and query engine. Consists of three separate libraries, Raptor
+(the parser), Rasqal (the query engine) and librdf (triple storage and
+wrapper API). It is needed for liblrdf and SLV2.
+Version in audacity cvs: 1.0.8
+Patches:
+audacity_build_tweaks.patch	Patches the configure scripts to turn off parsers, storage models and query languages not used by Audacity as well as using Expat instead of libxml2 for XML parsing. No need to integrate with upstream.
+
+rtaudio
+-------
+http://www.music.mcgill.ca/~gary/rtaudio/
+Another cross-platform audio I/O library that was at one point available as an
+alternative to portaudio.
+
+sbsms
+-----
+http://sbsms.sourceforge.net/
+An audio stretching library for changing pitch or tempo without changing the
+other. Alternative to SoundTouch, better on large changes but slower.
+Version in audacity cvs: ??
+Patches:
+Misc fixes to configure.in/Makefile.am for autoconf macros and libtool. More
+files added to m4/ directory by libtoolizing commited to CVS.
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+dont-mangle-cflags.patch	patch to stop sed-ing the CXXFLAGS and achieve the
+same ends by better means, replacing a hacked version from Gentoo. Patch
+linked to from upstream tracker at
+https://sourceforge.net/tracker/index.php?func=detail&aid=2561247&group_id=177794&atid=882654
+because attachements there don't seem to work.
+
+slv2
+-------
+http://wiki.drobilla.net/SLV2
+Support library for LV2 hosts (like Audacity).
+Version in audacity cvs: 0.6.0
+Patches:
+audacity_build_tweaks.patch	Patches the configure scripts to not build hosts and utility programs and to use local Redland libraries if requested. No need to integrate with upstream.
+lv2core_internal.patch		Add lv2.h as an internal header to avoid the dependency on lv2core.
+i18n.patch					Patch to support translation of some form?
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+
+soundtouch
+----------
+http://www.surina.net/soundtouch/
+Independant Pitch and Tempo changing library.
+Version in audacity cvs: 1.3.1
+Patches:
+PPC mac build changes to configure.in in several places
+correct-const-usage.patch: makes usage of const keyword consistent so it
+compiles with Sun's C++ compiler. Patch sent upstream 17/03/2008
+fix-includes.patch: needed for GCC 4.3.1 to include all the headers we use
+directly. In upstream SVN
+Argument ([-Wall foreign]) added to AM_INIT_AUTOMAKE because autoreconf fails
+otherwise
+Upstream Version: 1.3.1
+
+taglib
+------
+http://developer.kde.org/~wheeler/taglib.html
+svn co svn://anonsvn.kde.org/home/kde/trunk/kdesupport/taglib
+Audio Meta-Data Library
+Version in audacity cvs: svn revision 924567 (post 1.5)
+Patches: none
+
+If replacing via svn, you need to do the following to generate the configure
+scripts (from within the base taglib directory):
+   sh admin/cvs.sh dist
+
+And remove the .svn directories (from within the base taglib direcotry):
+   find -d . -path \*/.svn\* -exec rm -rf \{\} \;
+
+twolame
+-------
+http://www.twolame.org/
+MPEG I layer 2 audio encoding library used for MP2 exports
+Version in audacity cvs: 0.3.12
+Patches: None
+AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
+by default
+Upstream Version: 0.3.12
+
+wave++
+------
+http://www.scs.ryerson.ca/~lkolasa/CppWavelets.html
+disused?
+
+Crib notes on upgrading lib-src trees:
+======================================
+1 Remove old files
+------------------
+find . -not -wholename '*CVS*' -delete
+will remove all the source files but not any directories or the CVS files, so
+after this you have an empty place into which you can unpack the new tarball
+
+2 Bring in new files
+--------------------
+Next unpack the tarball. If you want to unpack within a package directory,
+then tar --strip-components 1 will remove the un-needed top level directory.
+
+3 Apply patches and updates
+---------------------------
+Now we have a new file tree. This is the point at which to clean out any
+un-needed files, re-apply any local patches so on. To clean up after patching,
+run  find . -name '*.orig' -delete and  find . -name '*~' -delete. To remove
+.svn directories from projects that use SVN upstream, use
+find . -wholename '*/.svn/*' -delete and then find . -name '.svn' -delete
+
+* run autoreconf if we have modified configure.in or configure.ac
+* If the package uses libtool, run libtoolize --copy --force to update 
+	ltmain.sh, config.sub, config.guess. If not, update config.sub,
+	config.guess from /usr/share/gnuconfig/
+
+By doing it this way we have already updated the mtime on all files, so we
+don't need to do a recusive touch.
+
+4 Add new files to CVS and remove old ones
+------------------------------------------
+CVS will list files with a ? if they are new and need to be added to the
+repository. To get a list, run 
+cvs st 2>/dev/null | grep '?'
+Remember to ignore the generated files from the build system which don't need
+to be included in CVS, like aclocal.m4 and autom4te.cache
+
+Finding which files have been removed is a bit harder:
+cvs st 2>/dev/null | grep 'Status: Needs Checkout'
+gives file names but not their paths, so you have to go back and grep each
+file name to find them and do cvs rm on them.
+
+To remove all the files that are in the working directory but aren't under CVS
+control, you can use this incantation:
+\rm $(cvs st 2>/dev/null | grep '?' | cut -d '?' -f 2)
+
+5 Commit the lot to CVS
+-----------------------
+Run cvs ci -f -R to commit all the files in the new library tree. Use an
+appropriate message that says what library version this is. This should do
+all the required changes and add / remove files.
+
+

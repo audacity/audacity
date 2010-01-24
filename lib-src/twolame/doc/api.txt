@@ -1,0 +1,81 @@
+The libtwolame API
+==================
+
+This is the interface for encoding PCM audio to MPEG Audio Layer 2.
+
+It is 'very' similar to the libmp3lame API.
+
+See simplefrontend/simplefrontend.c for a very simple application
+using the API.
+
+
+Steps to encode PCM to MP2
+--------------------------
+
+1. Grab a set of default options by calling:
+
+		twolame_options *encodeOptions;
+		encodeOptions = twolame_init();
+
+
+2. Adjust those options to suit your requirements. 
+   See twolame.h for a full list of options. eg.
+   
+		twolame_set_out_samplerate(encodeOptions, 32000);
+		twolame_set_bitrate(encodeOptions, 160);
+
+
+3. Initialise twolame library with these options by calling:
+	
+		twolame_init_params(encodeOptions);
+  
+   NOTE: The return value should be checked to see if the options were valid.
+   Currently only ever returns 0
+
+
+4. Encode PCM audio to MP2 by calling:
+
+        int twolame_encode_buffer(
+         twolame_options *glopts,   // the set of options you're using
+         const short int leftpcm[], // the left and right audio channels
+         const short int rightpcm[],
+         int num_samples,           // the number of samples in each channel
+         unsigned char *mp2buffer,  // a pointer to a buffer for the MP2 audio data
+                                    // NB User must allocate space!
+         int mp2buffer_size);       // The size of the mp2buffer that the user allocated
+         int *mp2fill_size);
+		
+   This function returns the number of bytes written into mp2buffer by the library MPEG.
+   One frame of MPEG audio will be returned for every 1152 samples of PCM audio.
+   Multiple calls can be made to this function. 
+   It is the users responsibility to:
+
+	 - allocate the mp2buffer
+	 - read the pcmaudio from somewhere with new samples always staring from
+	   the beginning of the buffer
+	 - write the mp2buffer contents to somewhere (it is overwritten with each call)
+
+	     
+5. Flush the encoder by calling: 
+
+	 int twolame_encode_flush(
+	     twolame_options *glopts, 
+	     unsigned char *mp2buffer, 
+	     int mp2buffer_size);
+
+	When encoding is finished, unless there was exactly a multiple of 1152 samples/channel
+	sent to the encoder, there will be some remaining audio that is not encoded. This function
+	encodes this last bit of audio by padding out with zeros until there is 1152 samples per channel
+	in the PCM audio buffers and then encoding this.
+	
+	This function returns the number of bytes written into mp2buffer by the library MPEG.
+
+	
+6.  The user must "de-initialise" the encoder at the end by calling:
+
+	void twolame_close(twolame_options **glopts);
+
+	This function must be called to free all the memory and structures 
+	associated with this set of encoding parameters.
+	POST: glopts = NULL
+	

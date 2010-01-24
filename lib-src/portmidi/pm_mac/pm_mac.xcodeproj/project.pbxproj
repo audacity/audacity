@@ -1,0 +1,2211 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		D8684B960ACBFB93009F6478 /* everything suite */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D8684BAA0ACBFBDD009F6478 /* Build configuration list for PBXAggregateTarget "everything suite" */;
+			buildPhases = (
+			);
+			comments = "Builds the Library and all the test shell tools.";
+			dependencies = (
+				3D8DABA50D57B68A000FEBA8 /* PBXTargetDependency */,
+				3D4799D40F0E87350006C842 /* PBXTargetDependency */,
+				D8684B980ACBFB9D009F6478 /* PBXTargetDependency */,
+				D8684B9A0ACBFB9D009F6478 /* PBXTargetDependency */,
+				D8684B9C0ACBFB9D009F6478 /* PBXTargetDependency */,
+				D8684B9E0ACBFB9D009F6478 /* PBXTargetDependency */,
+				D8684BA00ACBFB9D009F6478 /* PBXTargetDependency */,
+				D8684BA20ACBFB9D009F6478 /* PBXTargetDependency */,
+				3D4799F50F0EE7D10006C842 /* PBXTargetDependency */,
+				D8E738E20ACDA3BD0030B95B /* PBXTargetDependency */,
+				3D3534900F0D2DB30059CD05 /* PBXTargetDependency */,
+			);
+			name = "everything suite";
+			productName = "lib+test suite";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXApplicationTarget section */
+		3D9D57CD0E12E22800C4C68D /* PmDefaults */ = {
+			isa = PBXApplicationTarget;
+			buildConfigurationList = 3D9D57D00E12E24600C4C68D /* Build configuration list for PBXApplicationTarget "PmDefaults" */;
+			buildPhases = (
+				3D9D57C90E12E22800C4C68D /* Sources */,
+				3D9D57CA0E12E22800C4C68D /* Resources */,
+				3D9D57CB0E12E22800C4C68D /* JavaArchive */,
+				3D9D57CC0E12E22800C4C68D /* Frameworks */,
+			);
+			comments = "Application to set PortMidi default input and output devices.";
+			dependencies = (
+				3D4799F80F0EE7FB0006C842 /* PBXTargetDependency */,
+			);
+			name = PmDefaults;
+			productInstallPath = "$(USER_APPS_DIR)";
+			productName = pmdefaults;
+			productReference = 3D9D57CE0E12E22800C4C68D /* pmdefaults.app */;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>PmDefaults</string>
+	<key>CFBundleGetInfoString</key>
+	<string>1.00</string>
+	<key>CFBundleIconFile</key>
+	<string>pmdefaults</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>PmDefaults</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.00</string>
+	<key>Java</key>
+	<dict>
+		<key>ClassPath</key>
+		<array>
+			<string>$JAVAROOT/pmdefaults.jar</string>
+		</array>
+		<key>JVMVersion</key>
+		<string>1.5</string>
+		<key>MainClass</key>
+		<string>pmdefaults.PmDefaults</string>
+		<key>Properties</key>
+		<dict>
+			<key>apple.awt.textantialiasing</key>
+			<string>on</string>
+		</dict>
+		<key>VMOptions</key>
+		<string>-verbose</string>
+		<key>WorkingDirectory</key>
+		<string>$APP_PACKAGE/Contents/Resources/</string>
+	</dict>
+</dict>
+</plist>
+";
+		};
+/* End PBXApplicationTarget section */
+
+/* Begin PBXBuildFile section */
+		3D17A16A0E13D6B700930576 /* JPortMidi.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57DE0E12E39B00C4C68D /* JPortMidi.java */; };
+		3D17A16C0E13D70800930576 /* JPortMidiException.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57E40E12E39B00C4C68D /* JPortMidiException.java */; };
+		3D17A16D0E13D70E00930576 /* JPortMidiApi.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57E20E12E39B00C4C68D /* JPortMidiApi.java */; };
+		3D17A16E0E13D70E00930576 /* PmDefaults.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57EF0E12E3DE00C4C68D /* PmDefaults.java */; };
+		3D17A16F0E13D70E00930576 /* PmDefaultsFrame.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57F50E12E3DE00C4C68D /* PmDefaultsFrame.java */; };
+		3D17A1A20E13E30100930576 /* pmjni.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D17A1A10E13E30100930576 /* pmjni.c */; };
+		3D17A1A90E13E3B300930576 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		3D17A1AF0E13E3BC00930576 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		3D17A1DF0E13E3D800930576 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		3D17A1E80E13E57700930576 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D17A1E70E13E57700930576 /* JavaVM.framework */; };
+		3D17A20A0E13E7E900930576 /* readbinaryplist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57C50E12E1E500C4C68D /* readbinaryplist.c */; };
+		3D17A20B0E13E7E900930576 /* finddefault.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57C30E12E1CF00C4C68D /* finddefault.c */; };
+		3D17A20D0E13E88100930576 /* pmutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D524047955C800EE98CD /* pmutil.c */; };
+		3D17A20E0E13E88100930576 /* portmidi.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D526047955C800EE98CD /* portmidi.c */; };
+		3D17A20F0E13E88100930576 /* pmmacosxcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D5310479560B00EE98CD /* pmmacosxcm.c */; };
+		3D17A2100E13E88100930576 /* pmmac.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D5740479613900EE98CD /* pmmac.c */; };
+		3D17A2110E13E88100930576 /* ptmacosx_mach.c in Sources */ = {isa = PBXBuildFile; fileRef = 58ED5B81047D41DB00B92E62 /* ptmacosx_mach.c */; };
+		3D17A2120E13E88100930576 /* readbinaryplist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57C50E12E1E500C4C68D /* readbinaryplist.c */; };
+		3D17A2130E13E88100930576 /* finddefault.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57C30E12E1CF00C4C68D /* finddefault.c */; };
+		3D17A2290E13EF8000930576 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D17A2280E13EF8000930576 /* CoreServices.framework */; };
+		3D17A22D0E13EF9300930576 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D17A2280E13EF8000930576 /* CoreServices.framework */; };
+		3D17A4C40E14079000930576 /* pmdefaults.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3D17A4C30E14079000930576 /* pmdefaults.icns */; };
+		3D65FEE30ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D65FEE40ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D65FEE50ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D65FEE60ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D65FEE70ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D65FEE80ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D65FEE90ECB7548008083A3 /* CoreServices in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D65FEE20ECB7548008083A3 /* CoreServices */; };
+		3D9D57C40E12E1CF00C4C68D /* finddefault.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57C30E12E1CF00C4C68D /* finddefault.c */; };
+		3D9D57C60E12E1E500C4C68D /* readbinaryplist.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57C50E12E1E500C4C68D /* readbinaryplist.c */; };
+		3D9D57E60E12E39B00C4C68D /* JPortMidi.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57DE0E12E39B00C4C68D /* JPortMidi.java */; };
+		3D9D57EA0E12E39B00C4C68D /* JPortMidiApi.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57E20E12E39B00C4C68D /* JPortMidiApi.java */; };
+		3D9D57EC0E12E39B00C4C68D /* JPortMidiException.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57E40E12E39B00C4C68D /* JPortMidiException.java */; };
+		3D9D57F80E12E3DE00C4C68D /* PmDefaults.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57EF0E12E3DE00C4C68D /* PmDefaults.java */; };
+		3D9D57FE0E12E3DE00C4C68D /* PmDefaultsFrame.java in Sources */ = {isa = PBXBuildFile; fileRef = 3D9D57F50E12E3DE00C4C68D /* PmDefaultsFrame.java */; };
+		3D9D57FF0E12E3DE00C4C68D /* portmusic_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9D57F60E12E3DE00C4C68D /* portmusic_logo.png */; };
+		3DA60D640D3FBEA40036B654 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		3DA60D650D3FBEA40036B654 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		3DA60D660D3FBEA40036B654 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		3DA60D670D3FBEA40036B654 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		3DA60D720D3FBF160036B654 /* midiclock.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA60D710D3FBF160036B654 /* midiclock.c */; };
+		3DBF246D0B59686800DAD93B /* mm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF246C0B59686800DAD93B /* mm.c */; };
+		3DBF24720B59691500DAD93B /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		3DBF24780B59691800DAD93B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		3DBF24A10B59691B00DAD93B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		3DBF24A90B59692C00DAD93B /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		D814404E0ACB2C1200515C41 /* pmutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 5851D525047955C800EE98CD /* pmutil.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D814404F0ACB2C1200515C41 /* portmidi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5851D527047955C800EE98CD /* portmidi.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D81440510ACB2C1200515C41 /* porttime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5851D51F047955B800EE98CD /* porttime.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D81440540ACB2C1200515C41 /* pmutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D524047955C800EE98CD /* pmutil.c */; };
+		D81440550ACB2C1200515C41 /* portmidi.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D526047955C800EE98CD /* portmidi.c */; };
+		D81440560ACB2C1200515C41 /* pmmacosxcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D5310479560B00EE98CD /* pmmacosxcm.c */; };
+		D81440570ACB2C1200515C41 /* pmmac.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D5740479613900EE98CD /* pmmac.c */; };
+		D81440580ACB2C1200515C41 /* ptmacosx_mach.c in Sources */ = {isa = PBXBuildFile; fileRef = 58ED5B81047D41DB00B92E62 /* ptmacosx_mach.c */; };
+		D84A40DC0ACD4A19001FC716 /* pmutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 5851D525047955C800EE98CD /* pmutil.h */; };
+		D84A40DD0ACD4A19001FC716 /* portmidi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5851D527047955C800EE98CD /* portmidi.h */; };
+		D84A40DF0ACD4A19001FC716 /* porttime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5851D51F047955B800EE98CD /* porttime.h */; };
+		D84A40E10ACD4A26001FC716 /* pmutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D524047955C800EE98CD /* pmutil.c */; };
+		D84A40E20ACD4A26001FC716 /* portmidi.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D526047955C800EE98CD /* portmidi.c */; };
+		D84A40E30ACD4A26001FC716 /* pmmacosxcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D5310479560B00EE98CD /* pmmacosxcm.c */; };
+		D84A40E40ACD4A26001FC716 /* pmmac.c in Sources */ = {isa = PBXBuildFile; fileRef = 5851D5740479613900EE98CD /* pmmac.c */; };
+		D84A40E50ACD4A26001FC716 /* ptmacosx_mach.c in Sources */ = {isa = PBXBuildFile; fileRef = 58ED5B81047D41DB00B92E62 /* ptmacosx_mach.c */; };
+		D84A41220ACD4A92001FC716 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		D84A41230ACD4A92001FC716 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		D84A41240ACD4A92001FC716 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		D8684B370ACBF9AF009F6478 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		D8684B380ACBF9B9009F6478 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA774260663E9DA0002CE69 /* test.c */; };
+		D8684B460ACBFA24009F6478 /* midithread.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA774160663E9DA0002CE69 /* midithread.c */; };
+		D8684B470ACBFA2D009F6478 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		D8684B540ACBFA34009F6478 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		D8684B550ACBFA34009F6478 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		D8684B560ACBFA34009F6478 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		D8684B570ACBFA3E009F6478 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		D8684B580ACBFA3E009F6478 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		D8684B590ACBFA3E009F6478 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		D8684B650ACBFA9D009F6478 /* midithru.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA7741B0663E9DA0002CE69 /* midithru.c */; };
+		D8684B660ACBFAA5009F6478 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		D8684B670ACBFAA5009F6478 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		D8684B680ACBFAA5009F6478 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		D8684B690ACBFAA5009F6478 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		D8684B790ACBFAF7009F6478 /* sysex.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA774210663E9DA0002CE69 /* sysex.c */; };
+		D8684B7A0ACBFAFD009F6478 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		D8684B7B0ACBFAFD009F6478 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		D8684B7C0ACBFAFD009F6478 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		D8684B7D0ACBFAFD009F6478 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+		D8684B850ACBFB2C009F6478 /* latency.c in Sources */ = {isa = PBXBuildFile; fileRef = 3DA774110663E9DA0002CE69 /* latency.c */; };
+		D8684B860ACBFB33009F6478 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81440D40ACB36E100515C41 /* libportmidi.a */; };
+		D8684B870ACBFB33009F6478 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774480663EAE60002CE69 /* CoreMIDI.framework */; };
+		D8684B880ACBFB33009F6478 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */; };
+		D8684B890ACBFB33009F6478 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA774500663EBBF0002CE69 /* CoreAudio.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3D17A1EB0E13E5D100930576 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D17A13C0E13D47F00930576;
+			remoteInfo = JPortMidiHeaders;
+		};
+		3D35348F0F0D2DB30059CD05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D9D57CD0E12E22800C4C68D;
+			remoteInfo = PmDefaults;
+		};
+		3D4799D30F0E87350006C842 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DBF24630B5967A500DAD93B /* mm */;
+			remoteInfo = mm;
+		};
+		3D4799F40F0EE7D10006C842 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D17A1900E13E25E00930576 /* libpmjni.jnilib */;
+			remoteInfo = libpmjni.jnilib;
+		};
+		3D4799F70F0EE7FB0006C842 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D17A1900E13E25E00930576 /* libpmjni.jnilib */;
+			remoteInfo = libpmjni.jnilib;
+		};
+		3D8DABA40D57B68A000FEBA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DA60D5E0D3FBEA40036B654;
+			remoteInfo = midiclock;
+		};
+		3DA60D600D3FBEA40036B654 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		3DBF24700B5968BC00DAD93B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B080ACBF996009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B440ACBFA12009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B630ACBFA8D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B6F0ACBFAD0009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B830ACBFB13009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B970ACBFB9D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D814404B0ACB2C1200515C41;
+			remoteInfo = libportmidi.a;
+		};
+		D8684B990ACBFB9D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8684B050ACBF977009F6478;
+			remoteInfo = test;
+		};
+		D8684B9B0ACBFB9D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8684B410ACBFA09009F6478;
+			remoteInfo = midithread;
+		};
+		D8684B9D0ACBFB9D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8684B600ACBFA75009F6478;
+			remoteInfo = midithru;
+		};
+		D8684B9F0ACBFB9D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8684B6C0ACBFAB7009F6478;
+			remoteInfo = sysex;
+		};
+		D8684BA10ACBFB9D009F6478 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8684B800ACBFB0B009F6478;
+			remoteInfo = latency;
+		};
+		D8E738E10ACDA3BD0030B95B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5851D5180479552300EE98CD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D84A40D90ACD4A08001FC716;
+			remoteInfo = portmidi;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3D17A13D0E13D47F00930576 /* JPortMidiHeaders.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = JPortMidiHeaders.jar; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D17A18C0E13E1EF00930576 /* jportmidi_JportMidiApi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = jportmidi_JportMidiApi.h; path = build/Development/jportmidi_JportMidiApi.h; sourceTree = "<group>"; };
+		3D17A1910E13E25E00930576 /* libpmjni.jnilib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libpmjni.jnilib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D17A1A10E13E30100930576 /* pmjni.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pmjni.c; path = ../pm_java/pmjni/pmjni.c; sourceTree = SOURCE_ROOT; };
+		3D17A1E70E13E57700930576 /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
+		3D17A2280E13EF8000930576 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		3D17A4C30E14079000930576 /* pmdefaults.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = pmdefaults.icns; path = ../pm_java/pmdefaults/pmdefaults.icns; sourceTree = SOURCE_ROOT; };
+		3D65FEE20ECB7548008083A3 /* CoreServices */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = CoreServices; path = /System/Library/Frameworks/CoreServices.framework/CoreServices; sourceTree = "<absolute>"; };
+		3D9D57C30E12E1CF00C4C68D /* finddefault.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = finddefault.c; sourceTree = "<group>"; };
+		3D9D57C50E12E1E500C4C68D /* readbinaryplist.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = readbinaryplist.c; sourceTree = "<group>"; };
+		3D9D57CE0E12E22800C4C68D /* pmdefaults.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pmdefaults.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D9D57DE0E12E39B00C4C68D /* JPortMidi.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = JPortMidi.java; sourceTree = "<group>"; };
+		3D9D57E20E12E39B00C4C68D /* JPortMidiApi.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = JPortMidiApi.java; sourceTree = "<group>"; };
+		3D9D57E40E12E39B00C4C68D /* JPortMidiException.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = JPortMidiException.java; sourceTree = "<group>"; };
+		3D9D57EF0E12E3DE00C4C68D /* PmDefaults.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = PmDefaults.java; sourceTree = "<group>"; };
+		3D9D57F50E12E3DE00C4C68D /* PmDefaultsFrame.java */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.java; path = PmDefaultsFrame.java; sourceTree = "<group>"; };
+		3D9D57F60E12E3DE00C4C68D /* portmusic_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = portmusic_logo.png; sourceTree = "<group>"; };
+		3DA60D6C0D3FBEA40036B654 /* midiclock */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = midiclock; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DA60D710D3FBF160036B654 /* midiclock.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = midiclock.c; sourceTree = "<group>"; };
+		3DA774110663E9DA0002CE69 /* latency.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = latency.c; path = ../pm_test/latency.c; sourceTree = SOURCE_ROOT; };
+		3DA774160663E9DA0002CE69 /* midithread.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = midithread.c; path = ../pm_test/midithread.c; sourceTree = SOURCE_ROOT; };
+		3DA7741B0663E9DA0002CE69 /* midithru.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = midithru.c; path = ../pm_test/midithru.c; sourceTree = SOURCE_ROOT; };
+		3DA774210663E9DA0002CE69 /* sysex.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = sysex.c; path = ../pm_test/sysex.c; sourceTree = SOURCE_ROOT; };
+		3DA774260663E9DA0002CE69 /* test.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = test.c; path = ../pm_test/test.c; sourceTree = SOURCE_ROOT; };
+		3DA7742B0663E9DA0002CE69 /* txdata.syx */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = txdata.syx; path = ../pm_test/txdata.syx; sourceTree = SOURCE_ROOT; };
+		3DA774480663EAE60002CE69 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = /System/Library/Frameworks/CoreMIDI.framework; sourceTree = "<absolute>"; };
+		3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
+		3DA774500663EBBF0002CE69 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
+		3DBF24640B5967A500DAD93B /* mm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mm; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DBF246C0B59686800DAD93B /* mm.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = mm.c; sourceTree = "<group>"; };
+		5851D51E047955B800EE98CD /* porttime.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = porttime.c; path = ../porttime/porttime.c; sourceTree = SOURCE_ROOT; };
+		5851D51F047955B800EE98CD /* porttime.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = porttime.h; path = ../porttime/porttime.h; sourceTree = SOURCE_ROOT; };
+		5851D521047955B800EE98CD /* ptmacosx_cf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = ptmacosx_cf.c; path = ../porttime/ptmacosx_cf.c; sourceTree = SOURCE_ROOT; };
+		5851D523047955C800EE98CD /* pminternal.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pminternal.h; path = ../pm_common/pminternal.h; sourceTree = SOURCE_ROOT; };
+		5851D524047955C800EE98CD /* pmutil.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pmutil.c; path = ../pm_common/pmutil.c; sourceTree = SOURCE_ROOT; };
+		5851D525047955C800EE98CD /* pmutil.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pmutil.h; path = ../pm_common/pmutil.h; sourceTree = SOURCE_ROOT; };
+		5851D526047955C800EE98CD /* portmidi.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = portmidi.c; path = ../pm_common/portmidi.c; sourceTree = SOURCE_ROOT; };
+		5851D527047955C800EE98CD /* portmidi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = portmidi.h; path = ../pm_common/portmidi.h; sourceTree = SOURCE_ROOT; };
+		5851D528047955D700EE98CD /* pmlinux.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pmlinux.c; path = ../pm_linux/pmlinux.c; sourceTree = SOURCE_ROOT; };
+		5851D529047955D700EE98CD /* pmlinux.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pmlinux.h; path = ../pm_linux/pmlinux.h; sourceTree = SOURCE_ROOT; };
+		5851D52A047955D700EE98CD /* pmlinuxalsa.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = pmlinuxalsa.c; path = ../pm_linux/pmlinuxalsa.c; sourceTree = SOURCE_ROOT; };
+		5851D52B047955D700EE98CD /* pmlinuxalsa.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = pmlinuxalsa.h; path = ../pm_linux/pmlinuxalsa.h; sourceTree = SOURCE_ROOT; };
+		5851D5310479560B00EE98CD /* pmmacosxcm.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = pmmacosxcm.c; sourceTree = SOURCE_ROOT; };
+		5851D5320479560B00EE98CD /* pmmacosxcm.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = pmmacosxcm.h; sourceTree = SOURCE_ROOT; };
+		5851D5730479613900EE98CD /* pmmac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pmmac.h; sourceTree = SOURCE_ROOT; };
+		5851D5740479613900EE98CD /* pmmac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pmmac.c; sourceTree = SOURCE_ROOT; };
+		58ED5B81047D41DB00B92E62 /* ptmacosx_mach.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = ptmacosx_mach.c; path = ../porttime/ptmacosx_mach.c; sourceTree = SOURCE_ROOT; };
+		D81440D40ACB36E100515C41 /* libportmidi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportmidi.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D84A40DA0ACD4A08001FC716 /* libportmidi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libportmidi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8684B060ACBF977009F6478 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8684B420ACBFA09009F6478 /* midithread */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = midithread; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8684B610ACBFA75009F6478 /* midithru */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = midithru; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8684B6D0ACBFAB7009F6478 /* sysex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sysex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8684B810ACBFB0B009F6478 /* latency */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = latency; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3D17A13B0E13D47F00930576 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D17A18F0E13E25E00930576 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D17A1DF0E13E3D800930576 /* CoreAudio.framework in Frameworks */,
+				3D17A1AF0E13E3BC00930576 /* CoreFoundation.framework in Frameworks */,
+				3D17A1A90E13E3B300930576 /* CoreMIDI.framework in Frameworks */,
+				3D17A1E80E13E57700930576 /* JavaVM.framework in Frameworks */,
+				3D17A2290E13EF8000930576 /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D9D57CC0E12E22800C4C68D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DA60D630D3FBEA40036B654 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DA60D640D3FBEA40036B654 /* libportmidi.a in Frameworks */,
+				3DA60D650D3FBEA40036B654 /* CoreMIDI.framework in Frameworks */,
+				3DA60D660D3FBEA40036B654 /* CoreFoundation.framework in Frameworks */,
+				3DA60D670D3FBEA40036B654 /* CoreAudio.framework in Frameworks */,
+				3D65FEE90ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DBF24620B5967A500DAD93B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DBF24A90B59692C00DAD93B /* libportmidi.a in Frameworks */,
+				3DBF24720B59691500DAD93B /* CoreMIDI.framework in Frameworks */,
+				3DBF24780B59691800DAD93B /* CoreFoundation.framework in Frameworks */,
+				3DBF24A10B59691B00DAD93B /* CoreAudio.framework in Frameworks */,
+				3D65FEE80ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D81440590ACB2C1200515C41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84A40D80ACD4A08001FC716 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D17A22D0E13EF9300930576 /* CoreServices.framework in Frameworks */,
+				D84A41220ACD4A92001FC716 /* CoreMIDI.framework in Frameworks */,
+				D84A41230ACD4A92001FC716 /* CoreFoundation.framework in Frameworks */,
+				D84A41240ACD4A92001FC716 /* CoreAudio.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B040ACBF977009F6478 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B370ACBF9AF009F6478 /* libportmidi.a in Frameworks */,
+				D8684B570ACBFA3E009F6478 /* CoreMIDI.framework in Frameworks */,
+				D8684B580ACBFA3E009F6478 /* CoreFoundation.framework in Frameworks */,
+				D8684B590ACBFA3E009F6478 /* CoreAudio.framework in Frameworks */,
+				3D65FEE30ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B400ACBFA09009F6478 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B470ACBFA2D009F6478 /* libportmidi.a in Frameworks */,
+				D8684B540ACBFA34009F6478 /* CoreMIDI.framework in Frameworks */,
+				D8684B550ACBFA34009F6478 /* CoreFoundation.framework in Frameworks */,
+				D8684B560ACBFA34009F6478 /* CoreAudio.framework in Frameworks */,
+				3D65FEE40ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B5F0ACBFA75009F6478 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B660ACBFAA5009F6478 /* libportmidi.a in Frameworks */,
+				D8684B670ACBFAA5009F6478 /* CoreMIDI.framework in Frameworks */,
+				D8684B680ACBFAA5009F6478 /* CoreFoundation.framework in Frameworks */,
+				D8684B690ACBFAA5009F6478 /* CoreAudio.framework in Frameworks */,
+				3D65FEE50ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B6B0ACBFAB7009F6478 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B7A0ACBFAFD009F6478 /* libportmidi.a in Frameworks */,
+				D8684B7B0ACBFAFD009F6478 /* CoreMIDI.framework in Frameworks */,
+				D8684B7C0ACBFAFD009F6478 /* CoreFoundation.framework in Frameworks */,
+				D8684B7D0ACBFAFD009F6478 /* CoreAudio.framework in Frameworks */,
+				3D65FEE60ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B7F0ACBFB0B009F6478 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B860ACBFB33009F6478 /* libportmidi.a in Frameworks */,
+				D8684B870ACBFB33009F6478 /* CoreMIDI.framework in Frameworks */,
+				D8684B880ACBFB33009F6478 /* CoreFoundation.framework in Frameworks */,
+				D8684B890ACBFB33009F6478 /* CoreAudio.framework in Frameworks */,
+				3D65FEE70ECB7548008083A3 /* CoreServices in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3D9D57D90E12E35700C4C68D /* pm_java */ = {
+			isa = PBXGroup;
+			children = (
+				3D9D57ED0E12E3DE00C4C68D /* pmdefaults */,
+				3D9D57DC0E12E39B00C4C68D /* jportmidi */,
+			);
+			name = pm_java;
+			sourceTree = "<group>";
+		};
+		3D9D57DC0E12E39B00C4C68D /* jportmidi */ = {
+			isa = PBXGroup;
+			children = (
+				3D9D57DE0E12E39B00C4C68D /* JPortMidi.java */,
+				3D9D57E20E12E39B00C4C68D /* JPortMidiApi.java */,
+				3D9D57E40E12E39B00C4C68D /* JPortMidiException.java */,
+			);
+			name = jportmidi;
+			path = ../pm_java/jportmidi;
+			sourceTree = SOURCE_ROOT;
+		};
+		3D9D57ED0E12E3DE00C4C68D /* pmdefaults */ = {
+			isa = PBXGroup;
+			children = (
+				3D9D57EF0E12E3DE00C4C68D /* PmDefaults.java */,
+				3D9D57F50E12E3DE00C4C68D /* PmDefaultsFrame.java */,
+				3D9D57F60E12E3DE00C4C68D /* portmusic_logo.png */,
+			);
+			name = pmdefaults;
+			path = ../pm_java/pmdefaults;
+			sourceTree = SOURCE_ROOT;
+		};
+		3DA774100663E9DA0002CE69 /* pm_test */ = {
+			isa = PBXGroup;
+			children = (
+				3DA774110663E9DA0002CE69 /* latency.c */,
+				3DA60D710D3FBF160036B654 /* midiclock.c */,
+				3DA774160663E9DA0002CE69 /* midithread.c */,
+				3DA7741B0663E9DA0002CE69 /* midithru.c */,
+				3DBF246C0B59686800DAD93B /* mm.c */,
+				3DA774210663E9DA0002CE69 /* sysex.c */,
+				3DA774260663E9DA0002CE69 /* test.c */,
+				3DA7742B0663E9DA0002CE69 /* txdata.syx */,
+			);
+			name = pm_test;
+			path = ../pm_test;
+			sourceTree = SOURCE_ROOT;
+		};
+		5851D5140479552300EE98CD = {
+			isa = PBXGroup;
+			children = (
+				3D65FEE20ECB7548008083A3 /* CoreServices */,
+				3D17A4C30E14079000930576 /* pmdefaults.icns */,
+				3D17A2280E13EF8000930576 /* CoreServices.framework */,
+				3D17A1E70E13E57700930576 /* JavaVM.framework */,
+				3D17A1A10E13E30100930576 /* pmjni.c */,
+				3D9D57D90E12E35700C4C68D /* pm_java */,
+				5851D51D047955A100EE98CD /* porttime */,
+				5851D51C0479553600EE98CD /* pm_common */,
+				5851D51B0479553500EE98CD /* pm_linux */,
+				5851D5190479552E00EE98CD /* pm_mac */,
+				3DA774100663E9DA0002CE69 /* pm_test */,
+				5851D5390479562300EE98CD /* Products */,
+				3DA774480663EAE60002CE69 /* CoreMIDI.framework */,
+				3DA7744E0663EBB20002CE69 /* CoreFoundation.framework */,
+				3DA774500663EBBF0002CE69 /* CoreAudio.framework */,
+			);
+			sourceTree = "<group>";
+		};
+		5851D5190479552E00EE98CD /* pm_mac */ = {
+			isa = PBXGroup;
+			children = (
+				5851D5310479560B00EE98CD /* pmmacosxcm.c */,
+				5851D5320479560B00EE98CD /* pmmacosxcm.h */,
+				3D9D57C50E12E1E500C4C68D /* readbinaryplist.c */,
+				3D9D57C30E12E1CF00C4C68D /* finddefault.c */,
+				5851D5730479613900EE98CD /* pmmac.h */,
+				5851D5740479613900EE98CD /* pmmac.c */,
+			);
+			name = pm_mac;
+			sourceTree = "<group>";
+		};
+		5851D51B0479553500EE98CD /* pm_linux */ = {
+			isa = PBXGroup;
+			children = (
+				5851D528047955D700EE98CD /* pmlinux.c */,
+				5851D529047955D700EE98CD /* pmlinux.h */,
+				5851D52A047955D700EE98CD /* pmlinuxalsa.c */,
+				5851D52B047955D700EE98CD /* pmlinuxalsa.h */,
+			);
+			name = pm_linux;
+			sourceTree = "<group>";
+		};
+		5851D51C0479553600EE98CD /* pm_common */ = {
+			isa = PBXGroup;
+			children = (
+				5851D523047955C800EE98CD /* pminternal.h */,
+				5851D524047955C800EE98CD /* pmutil.c */,
+				5851D525047955C800EE98CD /* pmutil.h */,
+				5851D526047955C800EE98CD /* portmidi.c */,
+				5851D527047955C800EE98CD /* portmidi.h */,
+			);
+			name = pm_common;
+			sourceTree = SOURCE_ROOT;
+		};
+		5851D51D047955A100EE98CD /* porttime */ = {
+			isa = PBXGroup;
+			children = (
+				5851D51E047955B800EE98CD /* porttime.c */,
+				5851D51F047955B800EE98CD /* porttime.h */,
+				5851D521047955B800EE98CD /* ptmacosx_cf.c */,
+				58ED5B81047D41DB00B92E62 /* ptmacosx_mach.c */,
+			);
+			name = porttime;
+			sourceTree = "<group>";
+		};
+		5851D5390479562300EE98CD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D81440D40ACB36E100515C41 /* libportmidi.a */,
+				D84A40DA0ACD4A08001FC716 /* libportmidi.dylib */,
+				D8684B060ACBF977009F6478 /* test */,
+				D8684B420ACBFA09009F6478 /* midithread */,
+				D8684B610ACBFA75009F6478 /* midithru */,
+				D8684B6D0ACBFAB7009F6478 /* sysex */,
+				D8684B810ACBFB0B009F6478 /* latency */,
+				3DBF24640B5967A500DAD93B /* mm */,
+				3DA60D6C0D3FBEA40036B654 /* midiclock */,
+				3D9D57CE0E12E22800C4C68D /* pmdefaults.app */,
+				3D17A13D0E13D47F00930576 /* JPortMidiHeaders.jar */,
+				3D17A18C0E13E1EF00930576 /* jportmidi_JportMidiApi.h */,
+				3D17A1910E13E25E00930576 /* libpmjni.jnilib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3D17A18D0E13E25E00930576 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D814404C0ACB2C1200515C41 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D814404E0ACB2C1200515C41 /* pmutil.h in Headers */,
+				D814404F0ACB2C1200515C41 /* portmidi.h in Headers */,
+				D81440510ACB2C1200515C41 /* porttime.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84A40D60ACD4A08001FC716 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84A40DC0ACD4A19001FC716 /* pmutil.h in Headers */,
+				D84A40DD0ACD4A19001FC716 /* portmidi.h in Headers */,
+				D84A40DF0ACD4A19001FC716 /* porttime.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXJavaArchiveBuildPhase section */
+		3D17A13A0E13D47F00930576 /* JavaArchive */ = {
+			isa = PBXJavaArchiveBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D9D57CB0E12E22800C4C68D /* JavaArchive */ = {
+			isa = PBXJavaArchiveBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXJavaArchiveBuildPhase section */
+
+/* Begin PBXLibraryTarget section */
+		3D17A13C0E13D47F00930576 /* JPortMidiHeaders */ = {
+			isa = PBXLibraryTarget;
+			buildConfigurationList = 3D17A1470E13D48800930576 /* Build configuration list for PBXLibraryTarget "JPortMidiHeaders" */;
+			buildPhases = (
+				3D17A1390E13D47F00930576 /* Sources */,
+				3D17A13A0E13D47F00930576 /* JavaArchive */,
+				3D17A13B0E13D47F00930576 /* Frameworks */,
+				3D17A1560E13D4E400930576 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = JPortMidiHeaders;
+			productInstallPath = /usr/local/lib;
+			productName = JPortMidiHeaders;
+			productReference = 3D17A13D0E13D47F00930576 /* JPortMidiHeaders.jar */;
+		};
+/* End PBXLibraryTarget section */
+
+/* Begin PBXNativeTarget section */
+		3D17A1900E13E25E00930576 /* libpmjni.jnilib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D17A19B0E13E29800930576 /* Build configuration list for PBXNativeTarget "libpmjni.jnilib" */;
+			buildPhases = (
+				3D17A18D0E13E25E00930576 /* Headers */,
+				3D17A18E0E13E25E00930576 /* Sources */,
+				3D17A18F0E13E25E00930576 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D17A1EC0E13E5D100930576 /* PBXTargetDependency */,
+			);
+			name = libpmjni.jnilib;
+			productName = libpmjni.jnilib;
+			productReference = 3D17A1910E13E25E00930576 /* libpmjni.jnilib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		3DA60D5E0D3FBEA40036B654 /* midiclock */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DA60D680D3FBEA40036B654 /* Build configuration list for PBXNativeTarget "midiclock" */;
+			buildPhases = (
+				3DA60D610D3FBEA40036B654 /* Sources */,
+				3DA60D630D3FBEA40036B654 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "a MIDI clock and MIDI time code generator for testing";
+			dependencies = (
+				3DA60D5F0D3FBEA40036B654 /* PBXTargetDependency */,
+			);
+			name = midiclock;
+			productName = mm;
+			productReference = 3DA60D6C0D3FBEA40036B654 /* midiclock */;
+			productType = "com.apple.product-type.tool";
+		};
+		3DBF24630B5967A500DAD93B /* mm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DBF24680B59681900DAD93B /* Build configuration list for PBXNativeTarget "mm" */;
+			buildPhases = (
+				3DBF24610B5967A500DAD93B /* Sources */,
+				3DBF24620B5967A500DAD93B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "a midi monitor program";
+			dependencies = (
+				3DBF24710B5968BC00DAD93B /* PBXTargetDependency */,
+			);
+			name = mm;
+			productName = mm;
+			productReference = 3DBF24640B5967A500DAD93B /* mm */;
+			productType = "com.apple.product-type.tool";
+		};
+		D814404B0ACB2C1200515C41 /* libportmidi.a */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D814405B0ACB2C1200515C41 /* Build configuration list for PBXNativeTarget "libportmidi.a" */;
+			buildPhases = (
+				D814404C0ACB2C1200515C41 /* Headers */,
+				D81440530ACB2C1200515C41 /* Sources */,
+				D81440590ACB2C1200515C41 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libportmidi.a;
+			productInstallPath = /usr/local/lib;
+			productName = libportmidi.a;
+			productReference = D81440D40ACB36E100515C41 /* libportmidi.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D84A40D90ACD4A08001FC716 /* portmidi.dylib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D84A40E70ACD4A56001FC716 /* Build configuration list for PBXNativeTarget "portmidi.dylib" */;
+			buildPhases = (
+				D84A40D60ACD4A08001FC716 /* Headers */,
+				D84A40D70ACD4A08001FC716 /* Sources */,
+				D84A40D80ACD4A08001FC716 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = portmidi.dylib;
+			productName = portmidi;
+			productReference = D84A40DA0ACD4A08001FC716 /* libportmidi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		D8684B050ACBF977009F6478 /* test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8684B390ACBF9CC009F6478 /* Build configuration list for PBXNativeTarget "test" */;
+			buildPhases = (
+				D8684B030ACBF977009F6478 /* Sources */,
+				D8684B040ACBF977009F6478 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "A PortMidi test program";
+			dependencies = (
+				D8684B090ACBF996009F6478 /* PBXTargetDependency */,
+			);
+			name = test;
+			productName = test;
+			productReference = D8684B060ACBF977009F6478 /* test */;
+			productType = "com.apple.product-type.tool";
+		};
+		D8684B410ACBFA09009F6478 /* midithread */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8684B5A0ACBFA51009F6478 /* Build configuration list for PBXNativeTarget "midithread" */;
+			buildPhases = (
+				D8684B3F0ACBFA09009F6478 /* Sources */,
+				D8684B400ACBFA09009F6478 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "Demonstrates the use of a low-latency thread for midi processing";
+			dependencies = (
+				D8684B450ACBFA12009F6478 /* PBXTargetDependency */,
+			);
+			name = midithread;
+			productName = midithread;
+			productReference = D8684B420ACBFA09009F6478 /* midithread */;
+			productType = "com.apple.product-type.tool";
+		};
+		D8684B600ACBFA75009F6478 /* midithru */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8684B710ACBFAE9009F6478 /* Build configuration list for PBXNativeTarget "midithru" */;
+			buildPhases = (
+				D8684B5E0ACBFA75009F6478 /* Sources */,
+				D8684B5F0ACBFA75009F6478 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "Demonstrates midi thru processing in a low-priority thread";
+			dependencies = (
+				D8684B640ACBFA8D009F6478 /* PBXTargetDependency */,
+			);
+			name = midithru;
+			productName = midithru;
+			productReference = D8684B610ACBFA75009F6478 /* midithru */;
+			productType = "com.apple.product-type.tool";
+		};
+		D8684B6C0ACBFAB7009F6478 /* sysex */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8684B750ACBFAE9009F6478 /* Build configuration list for PBXNativeTarget "sysex" */;
+			buildPhases = (
+				D8684B6A0ACBFAB7009F6478 /* Sources */,
+				D8684B6B0ACBFAB7009F6478 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "System exclusive input and output test";
+			dependencies = (
+				D8684B700ACBFAD0009F6478 /* PBXTargetDependency */,
+			);
+			name = sysex;
+			productName = sysex;
+			productReference = D8684B6D0ACBFAB7009F6478 /* sysex */;
+			productType = "com.apple.product-type.tool";
+		};
+		D8684B800ACBFB0B009F6478 /* latency */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D8684B8A0ACBFB3D009F6478 /* Build configuration list for PBXNativeTarget "latency" */;
+			buildPhases = (
+				D8684B7E0ACBFB0B009F6478 /* Sources */,
+				D8684B7F0ACBFB0B009F6478 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			comments = "a test program to measure OS latency";
+			dependencies = (
+				D8684B840ACBFB13009F6478 /* PBXTargetDependency */,
+			);
+			name = latency;
+			productName = latency;
+			productReference = D8684B810ACBFB0B009F6478 /* latency */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5851D5180479552300EE98CD /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = D814401B0ACB28B600515C41 /* Build configuration list for PBXProject "pm_mac" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 5851D5140479552300EE98CD;
+			productRefGroup = 5851D5390479562300EE98CD /* Products */;
+			projectDirPath = "";
+			targets = (
+				D84A40D90ACD4A08001FC716 /* portmidi.dylib */,
+				D814404B0ACB2C1200515C41 /* libportmidi.a */,
+				3D17A1900E13E25E00930576 /* libpmjni.jnilib */,
+				D8684B050ACBF977009F6478 /* test */,
+				D8684B410ACBFA09009F6478 /* midithread */,
+				D8684B600ACBFA75009F6478 /* midithru */,
+				D8684B6C0ACBFAB7009F6478 /* sysex */,
+				D8684B800ACBFB0B009F6478 /* latency */,
+				3DBF24630B5967A500DAD93B /* mm */,
+				3DA60D5E0D3FBEA40036B654 /* midiclock */,
+				D8684B960ACBFB93009F6478 /* everything suite */,
+				3D9D57CD0E12E22800C4C68D /* PmDefaults */,
+				3D17A13C0E13D47F00930576 /* JPortMidiHeaders */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3D9D57CA0E12E22800C4C68D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D9D57FF0E12E3DE00C4C68D /* portmusic_logo.png in Resources */,
+				3D17A4C40E14079000930576 /* pmdefaults.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3D17A1560E13D4E400930576 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			comments = "Build header for the JNI interface. The source that specifies the interface is JPortMidiApi.java. There may be multiple header files created since there are some subclasses contained in JPortMidiApi.java, but the headers we need are for the outer JPortMidi class. The header file should be called jportmidi_JportMidiApi.h because that's what javah creates by default.\n";
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo BUILT_PRODUCTS_DIR is ${BUILT_PRODUCTS_DIR}\njavah -classpath \"${BUILT_PRODUCTS_DIR}/JPortMidiHeaders.jar\" -force -o \"${BUILT_PRODUCTS_DIR}/jportmidi_JportMidiApi.h\" \"jportmidi.JPortMidiApi\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D17A1390E13D47F00930576 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D17A16A0E13D6B700930576 /* JPortMidi.java in Sources */,
+				3D17A16C0E13D70800930576 /* JPortMidiException.java in Sources */,
+				3D17A16D0E13D70E00930576 /* JPortMidiApi.java in Sources */,
+				3D17A16E0E13D70E00930576 /* PmDefaults.java in Sources */,
+				3D17A16F0E13D70E00930576 /* PmDefaultsFrame.java in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D17A18E0E13E25E00930576 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D17A20D0E13E88100930576 /* pmutil.c in Sources */,
+				3D17A20E0E13E88100930576 /* portmidi.c in Sources */,
+				3D17A20F0E13E88100930576 /* pmmacosxcm.c in Sources */,
+				3D17A2100E13E88100930576 /* pmmac.c in Sources */,
+				3D17A2110E13E88100930576 /* ptmacosx_mach.c in Sources */,
+				3D17A2120E13E88100930576 /* readbinaryplist.c in Sources */,
+				3D17A2130E13E88100930576 /* finddefault.c in Sources */,
+				3D17A1A20E13E30100930576 /* pmjni.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D9D57C90E12E22800C4C68D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D9D57EC0E12E39B00C4C68D /* JPortMidiException.java in Sources */,
+				3D9D57E60E12E39B00C4C68D /* JPortMidi.java in Sources */,
+				3D9D57EA0E12E39B00C4C68D /* JPortMidiApi.java in Sources */,
+				3D9D57F80E12E3DE00C4C68D /* PmDefaults.java in Sources */,
+				3D9D57FE0E12E3DE00C4C68D /* PmDefaultsFrame.java in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DA60D610D3FBEA40036B654 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DA60D720D3FBF160036B654 /* midiclock.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DBF24610B5967A500DAD93B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DBF246D0B59686800DAD93B /* mm.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D81440530ACB2C1200515C41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D81440540ACB2C1200515C41 /* pmutil.c in Sources */,
+				D81440550ACB2C1200515C41 /* portmidi.c in Sources */,
+				D81440560ACB2C1200515C41 /* pmmacosxcm.c in Sources */,
+				D81440570ACB2C1200515C41 /* pmmac.c in Sources */,
+				D81440580ACB2C1200515C41 /* ptmacosx_mach.c in Sources */,
+				3D17A20A0E13E7E900930576 /* readbinaryplist.c in Sources */,
+				3D17A20B0E13E7E900930576 /* finddefault.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D84A40D70ACD4A08001FC716 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D84A40E10ACD4A26001FC716 /* pmutil.c in Sources */,
+				D84A40E20ACD4A26001FC716 /* portmidi.c in Sources */,
+				D84A40E30ACD4A26001FC716 /* pmmacosxcm.c in Sources */,
+				D84A40E40ACD4A26001FC716 /* pmmac.c in Sources */,
+				D84A40E50ACD4A26001FC716 /* ptmacosx_mach.c in Sources */,
+				3D9D57C40E12E1CF00C4C68D /* finddefault.c in Sources */,
+				3D9D57C60E12E1E500C4C68D /* readbinaryplist.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B030ACBF977009F6478 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B380ACBF9B9009F6478 /* test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B3F0ACBFA09009F6478 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B460ACBFA24009F6478 /* midithread.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B5E0ACBFA75009F6478 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B650ACBFA9D009F6478 /* midithru.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B6A0ACBFAB7009F6478 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B790ACBFAF7009F6478 /* sysex.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8684B7E0ACBFB0B009F6478 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8684B850ACBFB2C009F6478 /* latency.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3D17A1EC0E13E5D100930576 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D17A13C0E13D47F00930576 /* JPortMidiHeaders */;
+			targetProxy = 3D17A1EB0E13E5D100930576 /* PBXContainerItemProxy */;
+		};
+		3D3534900F0D2DB30059CD05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D9D57CD0E12E22800C4C68D /* PmDefaults */;
+			targetProxy = 3D35348F0F0D2DB30059CD05 /* PBXContainerItemProxy */;
+		};
+		3D4799D40F0E87350006C842 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DBF24630B5967A500DAD93B /* mm */;
+			targetProxy = 3D4799D30F0E87350006C842 /* PBXContainerItemProxy */;
+		};
+		3D4799F50F0EE7D10006C842 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D17A1900E13E25E00930576 /* libpmjni.jnilib */;
+			targetProxy = 3D4799F40F0EE7D10006C842 /* PBXContainerItemProxy */;
+		};
+		3D4799F80F0EE7FB0006C842 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D17A1900E13E25E00930576 /* libpmjni.jnilib */;
+			targetProxy = 3D4799F70F0EE7FB0006C842 /* PBXContainerItemProxy */;
+		};
+		3D8DABA50D57B68A000FEBA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DA60D5E0D3FBEA40036B654 /* midiclock */;
+			targetProxy = 3D8DABA40D57B68A000FEBA8 /* PBXContainerItemProxy */;
+		};
+		3DA60D5F0D3FBEA40036B654 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = 3DA60D600D3FBEA40036B654 /* PBXContainerItemProxy */;
+		};
+		3DBF24710B5968BC00DAD93B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = 3DBF24700B5968BC00DAD93B /* PBXContainerItemProxy */;
+		};
+		D8684B090ACBF996009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = D8684B080ACBF996009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B450ACBFA12009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = D8684B440ACBFA12009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B640ACBFA8D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = D8684B630ACBFA8D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B700ACBFAD0009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = D8684B6F0ACBFAD0009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B840ACBFB13009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = D8684B830ACBFB13009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B980ACBFB9D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D814404B0ACB2C1200515C41 /* libportmidi.a */;
+			targetProxy = D8684B970ACBFB9D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B9A0ACBFB9D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8684B050ACBF977009F6478 /* test */;
+			targetProxy = D8684B990ACBFB9D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B9C0ACBFB9D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8684B410ACBFA09009F6478 /* midithread */;
+			targetProxy = D8684B9B0ACBFB9D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684B9E0ACBFB9D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8684B600ACBFA75009F6478 /* midithru */;
+			targetProxy = D8684B9D0ACBFB9D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684BA00ACBFB9D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8684B6C0ACBFAB7009F6478 /* sysex */;
+			targetProxy = D8684B9F0ACBFB9D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8684BA20ACBFB9D009F6478 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8684B800ACBFB0B009F6478 /* latency */;
+			targetProxy = D8684BA10ACBFB9D009F6478 /* PBXContainerItemProxy */;
+		};
+		D8E738E20ACDA3BD0030B95B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D84A40D90ACD4A08001FC716 /* portmidi.dylib */;
+			targetProxy = D8E738E10ACDA3BD0030B95B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D17A1480E13D48800930576 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = JPortMidiHeaders;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Development;
+		};
+		3D17A1490E13D48800930576 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = JPortMidiHeaders;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3D17A14A0E13D48800930576 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				JAVA_ARCHIVE_CLASSES = YES;
+				JAVA_ARCHIVE_TYPE = JAR;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_STYLE = STATIC;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = JPortMidiHeaders;
+				PURE_JAVA = YES;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3D17A19C0E13E29800930576 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_EXTENSION = jnilib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/System/Library/Frameworks/JavaVM.framework/Headers",
+					/Developer/Headers/FlatCarbon,
+				);
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = pmjni;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		3D17A19D0E13E29800930576 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				EXECUTABLE_EXTENSION = jnilib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/System/Library/Frameworks/JavaVM.framework/Headers",
+					/Developer/Headers/FlatCarbon,
+				);
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = pmjni;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3D17A19E0E13E29800930576 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_EXTENSION = jnilib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/System/Library/Frameworks/JavaVM.framework/Headers",
+					/Developer/Headers/FlatCarbon,
+				);
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = pmjni;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		3D9D57D10E12E24600C4C68D /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = "";
+				INSTALL_PATH = Applications;
+				JAVA_CLASS_SEARCH_PATHS = /Users/rbd/portmedia/portmidi/pm_java/pmdefaults;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_COMPILER_SOURCE_VERSION = 1.5;
+				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
+				JAVA_ONLY = YES;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../pm_java/pmjni",
+				);
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = PmDefaults;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Development;
+		};
+		3D9D57D20E12E24600C4C68D /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_ONLY = YES;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../pm_java/pmjni",
+				);
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = pmdefaults;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3D9D57D30E12E24600C4C68D /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				JAVA_COMPILER = /usr/bin/javac;
+				JAVA_ONLY = YES;
+				JAVA_SOURCE_SUBDIR = .;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../pm_java/pmjni",
+				);
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = pmdefaults;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Default;
+		};
+		3DA60D690D3FBEA40036B654 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midiclock;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		3DA60D6A0D3FBEA40036B654 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midiclock;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3DA60D6B0D3FBEA40036B654 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midiclock;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		3DBF24690B59681900DAD93B /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = mm;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		3DBF246A0B59681900DAD93B /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = mm;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3DBF246B0B59681900DAD93B /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = mm;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D814401C0ACB28B600515C41 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Development;
+		};
+		D814401D0ACB28B600515C41 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				INSTALL_PATH = /usr/local/lib;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Deployment;
+		};
+		D814401E0ACB28B600515C41 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Default;
+		};
+		D814405C0ACB2C1200515C41 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					PM_CHECK_ERRORS,
+					DEBUG,
+					NEWBUFFER,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = portmidi;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D814405D0ACB2C1200515C41 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					PM_CHECK_ERRORS,
+					DEBUG,
+					NEWBUFFER,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = portmidi;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D814405E0ACB2C1200515C41 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					PM_CHECK_ERRORS,
+					DEBUG,
+					NEWBUFFER,
+				);
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOL_FLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = portmidi;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		D84A40E80ACD4A56001FC716 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = portmidi;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D84A40E90ACD4A56001FC716 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = portmidi;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D84A40EA0ACD4A56001FC716 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = portmidi;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D8684B3A0ACBF9CC009F6478 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = test;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D8684B3B0ACBF9CC009F6478 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = test;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D8684B3C0ACBF9CC009F6478 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = test;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D8684B5B0ACBFA51009F6478 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midithread;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D8684B5C0ACBFA51009F6478 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midithread;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D8684B5D0ACBFA51009F6478 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midithread;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D8684B720ACBFAE9009F6478 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midithru;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D8684B730ACBFAE9009F6478 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midithru;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D8684B740ACBFAE9009F6478 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = midithru;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D8684B760ACBFAE9009F6478 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = sysex;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D8684B770ACBFAE9009F6478 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = sysex;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D8684B780ACBFAE9009F6478 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = sysex;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D8684B8B0ACBFB3D009F6478 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = latency;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		D8684B8C0ACBFB3D009F6478 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = latency;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D8684B8D0ACBFB3D009F6478 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = NEWBUFFER;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/Frameworks/CoreServices.framework\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = latency;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		D8684BAB0ACBFBDD009F6478 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "lib+test suite";
+			};
+			name = Development;
+		};
+		D8684BAC0ACBFBDD009F6478 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "lib+test suite";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		D8684BAD0ACBFBDD009F6478 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "lib+test suite";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3D17A1470E13D48800930576 /* Build configuration list for PBXLibraryTarget "JPortMidiHeaders" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D17A1480E13D48800930576 /* Development */,
+				3D17A1490E13D48800930576 /* Deployment */,
+				3D17A14A0E13D48800930576 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3D17A19B0E13E29800930576 /* Build configuration list for PBXNativeTarget "libpmjni.jnilib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D17A19C0E13E29800930576 /* Development */,
+				3D17A19D0E13E29800930576 /* Deployment */,
+				3D17A19E0E13E29800930576 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3D9D57D00E12E24600C4C68D /* Build configuration list for PBXApplicationTarget "PmDefaults" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D9D57D10E12E24600C4C68D /* Development */,
+				3D9D57D20E12E24600C4C68D /* Deployment */,
+				3D9D57D30E12E24600C4C68D /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3DA60D680D3FBEA40036B654 /* Build configuration list for PBXNativeTarget "midiclock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DA60D690D3FBEA40036B654 /* Development */,
+				3DA60D6A0D3FBEA40036B654 /* Deployment */,
+				3DA60D6B0D3FBEA40036B654 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3DBF24680B59681900DAD93B /* Build configuration list for PBXNativeTarget "mm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DBF24690B59681900DAD93B /* Development */,
+				3DBF246A0B59681900DAD93B /* Deployment */,
+				3DBF246B0B59681900DAD93B /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D814401B0ACB28B600515C41 /* Build configuration list for PBXProject "pm_mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D814401C0ACB28B600515C41 /* Development */,
+				D814401D0ACB28B600515C41 /* Deployment */,
+				D814401E0ACB28B600515C41 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D814405B0ACB2C1200515C41 /* Build configuration list for PBXNativeTarget "libportmidi.a" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D814405C0ACB2C1200515C41 /* Development */,
+				D814405D0ACB2C1200515C41 /* Deployment */,
+				D814405E0ACB2C1200515C41 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D84A40E70ACD4A56001FC716 /* Build configuration list for PBXNativeTarget "portmidi.dylib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D84A40E80ACD4A56001FC716 /* Development */,
+				D84A40E90ACD4A56001FC716 /* Deployment */,
+				D84A40EA0ACD4A56001FC716 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D8684B390ACBF9CC009F6478 /* Build configuration list for PBXNativeTarget "test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8684B3A0ACBF9CC009F6478 /* Development */,
+				D8684B3B0ACBF9CC009F6478 /* Deployment */,
+				D8684B3C0ACBF9CC009F6478 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D8684B5A0ACBFA51009F6478 /* Build configuration list for PBXNativeTarget "midithread" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8684B5B0ACBFA51009F6478 /* Development */,
+				D8684B5C0ACBFA51009F6478 /* Deployment */,
+				D8684B5D0ACBFA51009F6478 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D8684B710ACBFAE9009F6478 /* Build configuration list for PBXNativeTarget "midithru" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8684B720ACBFAE9009F6478 /* Development */,
+				D8684B730ACBFAE9009F6478 /* Deployment */,
+				D8684B740ACBFAE9009F6478 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D8684B750ACBFAE9009F6478 /* Build configuration list for PBXNativeTarget "sysex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8684B760ACBFAE9009F6478 /* Development */,
+				D8684B770ACBFAE9009F6478 /* Deployment */,
+				D8684B780ACBFAE9009F6478 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D8684B8A0ACBFB3D009F6478 /* Build configuration list for PBXNativeTarget "latency" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8684B8B0ACBFB3D009F6478 /* Development */,
+				D8684B8C0ACBFB3D009F6478 /* Deployment */,
+				D8684B8D0ACBFB3D009F6478 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		D8684BAA0ACBFBDD009F6478 /* Build configuration list for PBXAggregateTarget "everything suite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D8684BAB0ACBFBDD009F6478 /* Development */,
+				D8684BAC0ACBFBDD009F6478 /* Deployment */,
+				D8684BAD0ACBFBDD009F6478 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5851D5180479552300EE98CD /* Project object */;
+}

@@ -1,0 +1,7 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Datatypes.  Data has no matching datatypes
+// xsd:string - sameValueAs plain literal
+
+SELECT ?x ?y
+FROM <model8.n3>
+WHERE (?x ?y "value"^^xsd:string)

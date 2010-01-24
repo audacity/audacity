@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Syntactic test : variable is a keyword
+
+SELECT ?select
+FROM   <model0.nt>
+WHERE  (?x, <http://localhost/p1>, ?select)

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<rdf:RDF
+  xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+  xmlns:vCard='http://www.w3.org/2001/vcard-rdf/3.0#'
+  xmlns:info='http://somewhere/peopleInfo#'
+   >
+
+  <rdf:Description rdf:about="http://somewhere/JohnSmith/">
+    <vCard:FN>John Smith</vCard:FN>
+    <info:age>25</info:age>
+    <vCard:N rdf:parseType="Resource">
+      <vCard:Family>Smith</vCard:Family>
+      <vCard:Given>John</vCard:Given>
+    </vCard:N>
+    <vCard:TEL rdf:parseType="Resource">
+        <rdf:value>+44 117 555 5555</rdf:value>
+        <rdf:type rdf:resource="http://www.w3.org/2001/vcard-rdf/3.0#work"/>
+        <rdf:type rdf:resource="http://www.w3.org/2001/vcard-rdf/3.0#voice"/>
+      </vCard:TEL>
+    <vCard:TEL rdf:parseType="Resource">
+        <rdf:value>+44 117 555 7777</rdf:value>
+        <rdf:type rdf:resource="http://www.w3.org/2001/vcard-rdf/3.0#home"/>
+        <rdf:type rdf:resource="http://www.w3.org/2001/vcard-rdf/3.0#voice"/>
+      </vCard:TEL>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://somewhere/RebeccaSmith/">
+    <vCard:FN>Becky Smith</vCard:FN>
+    <info:age>23</info:age>
+    <vCard:N rdf:parseType="Resource">
+      <vCard:Family>Smith</vCard:Family>
+      <vCard:Given>Rebecca</vCard:Given>
+    </vCard:N>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://somewhere/SarahJones/">
+    <vCard:FN>Sarah Jones</vCard:FN>
+    <vCard:N rdf:parseType="Resource">
+      <vCard:Family>Jones</vCard:Family>
+      <vCard:Given>Sarah</vCard:Given>
+    </vCard:N>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://somewhere/MattJones/">
+    <vCard:FN>Matt Jones</vCard:FN>
+    <vCard:N
+      vCard:Family="Jones"
+      vCard:Given="Matthew"/>
+  </rdf:Description>
+
+</rdf:RDF>

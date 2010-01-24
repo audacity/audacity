@@ -1,0 +1,387 @@
+<!-- ##### SECTION Title ##### -->
+I/O Stream
+
+<!-- ##### SECTION Short_Description ##### -->
+Providing streaming I/O writing to files, strings or user code.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+An class providing an I/O writer abstraction that allows generating
+output that can be stored or passed on to system files, strings
+allocated in memory (usually via #raptor_stringbuffer), system
+file handles (<literal>FILE*</literal>) or to a user function.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_iostream ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_init_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_finish_func ##### -->
+<para>
+
+</para>
+
+@context: 
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_write_byte_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@byte: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_write_bytes_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@ptr: 
+@size: 
+@nmemb: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_write_end_func ##### -->
+<para>
+
+</para>
+
+@context: 
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_read_bytes_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@ptr: 
+@size: 
+@nmemb: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION raptor_iostream_read_eof_func ##### -->
+<para>
+
+</para>
+
+@context: 
+@Returns: 
+
+
+<!-- ##### STRUCT raptor_iostream_handler ##### -->
+<para>
+
+</para>
+
+@init: 
+@finish: 
+@write_byte: 
+@write_bytes: 
+@write_end: 
+
+<!-- ##### STRUCT raptor_iostream_handler2 ##### -->
+<para>
+
+</para>
+
+@version: 
+@init: 
+@finish: 
+@write_byte: 
+@write_bytes: 
+@write_end: 
+@read_bytes: 
+@read_eof: 
+
+<!-- ##### FUNCTION raptor_new_iostream_from_handler2 ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@handler2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_from_handler ##### -->
+<para>
+
+</para>
+
+@context: 
+@handler: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_from_sink ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_from_filename ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_from_file_handle ##### -->
+<para>
+
+</para>
+
+@handle: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_to_sink ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_to_filename ##### -->
+<para>
+
+</para>
+
+@filename: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_to_file_handle ##### -->
+<para>
+
+</para>
+
+@handle: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_iostream_to_string ##### -->
+<para>
+
+</para>
+
+@string_p: 
+@length_p: 
+@malloc_handler: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_iostream ##### -->
+<para>
+
+</para>
+
+@iostr: 
+
+
+<!-- ##### FUNCTION raptor_iostream_format_hexadecimal ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@integer: 
+@width: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_get_bytes_written_count ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_read_bytes ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@ptr: 
+@size: 
+@nmemb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_read_eof ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_tell ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_byte ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@byte: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_bytes ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@ptr: 
+@size: 
+@nmemb: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_counted_string ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@len: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_decimal ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@integer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_end ##### -->
+<para>
+
+</para>
+
+@iostr: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_statement_ntriples ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@statement: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_string ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_string_ntriples ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@len: 
+@delim: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_string_python ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@len: 
+@delim: 
+@flags: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_string_turtle ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@string: 
+@len: 
+
+
+<!-- ##### FUNCTION raptor_iostream_write_stringbuffer ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@sb: 
+@Returns: 
+
+

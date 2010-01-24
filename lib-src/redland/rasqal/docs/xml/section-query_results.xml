@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="rasqal-section-query-results">
+<refmeta>
+<refentrytitle role="top_of_page" id="rasqal-section-query-results.top_of_page">Query Results</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RASQAL Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Query Results</refname>
+<refpurpose>Query results as variable bindings, boolean or RDF graphs.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="rasqal-section-query-results.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="rasqal-query-results">rasqal_query_results</link>;
+<link linkend="void">void</link>                <link linkend="rasqal-free-query-results">rasqal_free_query_results</link>           (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-finished">rasqal_query_results_finished</link>       (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+const unsigned <link linkend="char">char</link>* <link linkend="rasqal-query-results-get-binding-name">rasqal_query_results_get_binding_name</link>
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         <link linkend="int">int</link> offset);
+<link linkend="rasqal-literal">rasqal_literal</link>*     <link linkend="rasqal-query-results-get-binding-value">rasqal_query_results_get_binding_value</link>
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         <link linkend="int">int</link> offset);
+<link linkend="rasqal-literal">rasqal_literal</link>*     <link linkend="rasqal-query-results-get-binding-value-by-name">rasqal_query_results_get_binding_value_by_name</link>
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         unsigned <link linkend="char">char</link> *name);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-get-bindings">rasqal_query_results_get_bindings</link>   (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         unsigned <link linkend="char">char</link> ***names,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> ***values);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-get-bindings-count">rasqal_query_results_get_bindings_count</link>
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-get-boolean">rasqal_query_results_get_boolean</link>    (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-get-count">rasqal_query_results_get_count</link>      (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="raptor-statement">raptor_statement</link>*   <link linkend="rasqal-query-results-get-triple">rasqal_query_results_get_triple</link>     (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-is-bindings">rasqal_query_results_is_bindings</link>    (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-is-boolean">rasqal_query_results_is_boolean</link>     (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-is-graph">rasqal_query_results_is_graph</link>       (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-is-syntax">rasqal_query_results_is_syntax</link>      (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-next">rasqal_query_results_next</link>           (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-next-triple">rasqal_query_results_next_triple</link>    (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-read">rasqal_query_results_read</link>           (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="rasqal-query-results">rasqal_query_results</link> *results,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *format_uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="rasqal-query-results-write">rasqal_query_results_write</link>          (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="rasqal-query-results">rasqal_query_results</link> *results,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *format_uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="rasqal-section-query-results.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+A query results object is only ever constructed by the internal
+query engine evaluating a <link linkend="rasqal-query"><type>rasqal_query</type></link> with <link linkend="rasqal-query-execute"><function>rasqal_query_execute()</function></link>.
+It provides interface to the multiple types of result supported.
+</para>
+
+<para>
+There are a large set of methods for returning all or parts of a
+variable binding query result including the names, values or
+individuals.  A boolean result is straightforward to get with
+<link linkend="rasqal-query-results-get-boolean"><function>rasqal_query_results_get_boolean()</function></link> and an RDF graph returns a
+sequence of raptor triples than can be easily passed to the Raptor
+library for serializing to a syntax.
+</para>
+</refsect1>
+
+<refsect1 id="rasqal-section-query-results.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rasqal-query-results" role="typedef">
+<title>rasqal_query_results</title>
+<indexterm zone="rasqal-query-results"><primary>rasqal_query_results</primary></indexterm><programlisting>rasqal_graph_query_results* query_results;
+</programlisting>
+<para>
+Rasqal query results class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="rasqal-free-query-results" role="function">
+<title>rasqal_free_query_results ()</title>
+<indexterm zone="rasqal-free-query-results"><primary>rasqal_free_query_results</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_free_query_results           (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Destructor - destroy a rasqal_query_results.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-finished" role="function">
+<title>rasqal_query_results_finished ()</title>
+<indexterm zone="rasqal-query-results-finished"><primary>rasqal_query_results_finished</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_finished       (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Find out if binding results are exhausted.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if results are finished or query failed
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-binding-name" role="function">
+<title>rasqal_query_results_get_binding_name ()</title>
+<indexterm zone="rasqal-query-results-get-binding-name"><primary>rasqal_query_results_get_binding_name</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* rasqal_query_results_get_binding_name
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         <link linkend="int">int</link> offset);</programlisting>
+<para>
+Get binding name for the current result.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offset</parameter>&nbsp;:</term>
+<listitem><simpara> offset of binding name into array of known names
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a pointer to a shared copy of the binding name or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-binding-value" role="function">
+<title>rasqal_query_results_get_binding_value ()</title>
+<indexterm zone="rasqal-query-results-get-binding-value"><primary>rasqal_query_results_get_binding_value</primary></indexterm><programlisting><link linkend="rasqal-literal">rasqal_literal</link>*     rasqal_query_results_get_binding_value
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         <link linkend="int">int</link> offset);</programlisting>
+<para>
+Get one binding value for the current result.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offset</parameter>&nbsp;:</term>
+<listitem><simpara> offset of binding name into array of known names
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a pointer to a shared <link linkend="rasqal-literal"><type>rasqal_literal</type></link> binding value or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-binding-value-by-name" role="function">
+<title>rasqal_query_results_get_binding_value_by_name ()</title>
+<indexterm zone="rasqal-query-results-get-binding-value-by-name"><primary>rasqal_query_results_get_binding_value_by_name</primary></indexterm><programlisting><link linkend="rasqal-literal">rasqal_literal</link>*     rasqal_query_results_get_binding_value_by_name
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         unsigned <link linkend="char">char</link> *name);</programlisting>
+<para>
+Get one binding value for a given name in the current result.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> variable name
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a pointer to a shared <link linkend="rasqal-literal"><type>rasqal_literal</type></link> binding value or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-bindings" role="function">
+<title>rasqal_query_results_get_bindings ()</title>
+<indexterm zone="rasqal-query-results-get-bindings"><primary>rasqal_query_results_get_bindings</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_get_bindings   (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results,
+                                                         unsigned <link linkend="char">char</link> ***names,
+                                                         <link linkend="rasqal-literal">rasqal_literal</link> ***values);</programlisting>
+<para>
+Get all binding names, values for current result.
+</para>
+<para>
+If names is not NULL, it is set to the address of a shared array
+of names of the bindings (an output parameter).  These names
+are shared and must not be freed by the caller
+</para>
+<para>
+If values is not NULL, it is set to the address of a shared array
+of <link linkend="rasqal-literal"><type>rasqal_literal</type></link>* binding values.  These values are shaerd
+and must not be freed by the caller.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>names</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to an array of binding names (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>values</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to an array of binding value <link linkend="rasqal-literal"><type>rasqal_literal</type></link> (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if the assignment failed
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-bindings-count" role="function">
+<title>rasqal_query_results_get_bindings_count ()</title>
+<indexterm zone="rasqal-query-results-get-bindings-count"><primary>rasqal_query_results_get_bindings_count</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_get_bindings_count
+                                                        (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Get the number of bound variables in the result.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> &lt;0 if failed or results exhausted
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-boolean" role="function">
+<title>rasqal_query_results_get_boolean ()</title>
+<indexterm zone="rasqal-query-results-get-boolean"><primary>rasqal_query_results_get_boolean</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_get_boolean    (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Get boolean query result.
+</para>
+<para>
+The return value is only meaningful if this is a boolean
+query result - see <link linkend="rasqal-query-results-is-boolean"><function>rasqal_query_results_is_boolean()</function></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> boolean query result - &gt;0 is true, 0 is false, &lt;0 on error
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-count" role="function">
+<title>rasqal_query_results_get_count ()</title>
+<indexterm zone="rasqal-query-results-get-count"><primary>rasqal_query_results_get_count</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_get_count      (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Get number of bindings so far.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> number of bindings found so far or &lt; 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-get-triple" role="function">
+<title>rasqal_query_results_get_triple ()</title>
+<indexterm zone="rasqal-query-results-get-triple"><primary>rasqal_query_results_get_triple</primary></indexterm><programlisting><link linkend="raptor-statement">raptor_statement</link>*   rasqal_query_results_get_triple     (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Get the current triple in the result.
+</para>
+<para>
+The return value is a shared <link linkend="raptor-statement"><type>raptor_statement</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="raptor-statement"><type>raptor_statement</type></link> or NULL if failed or results exhausted
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-is-bindings" role="function">
+<title>rasqal_query_results_is_bindings ()</title>
+<indexterm zone="rasqal-query-results-is-bindings"><primary>rasqal_query_results_is_bindings</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_is_bindings    (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Test if rasqal_query_results is variable bindings format.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if true
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-is-boolean" role="function">
+<title>rasqal_query_results_is_boolean ()</title>
+<indexterm zone="rasqal-query-results-is-boolean"><primary>rasqal_query_results_is_boolean</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_is_boolean     (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Test if rasqal_query_results is boolean format.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if true
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-is-graph" role="function">
+<title>rasqal_query_results_is_graph ()</title>
+<indexterm zone="rasqal-query-results-is-graph"><primary>rasqal_query_results_is_graph</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_is_graph       (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Test if rasqal_query_results is RDF graph format.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if true
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-is-syntax" role="function">
+<title>rasqal_query_results_is_syntax ()</title>
+<indexterm zone="rasqal-query-results-is-syntax"><primary>rasqal_query_results_is_syntax</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_is_syntax      (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Test if the rasqal_query_results is a syntax.
+</para>
+<para>
+Many of the query results may be formatted as a syntax using the
+<link linkend="rasqal-query-formatter"><type>rasqal_query_formatter</type></link> class however this function returns true
+if a syntax result was specifically requested.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if true
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-next" role="function">
+<title>rasqal_query_results_next ()</title>
+<indexterm zone="rasqal-query-results-next"><primary>rasqal_query_results_next</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_next           (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Move to the next result.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if failed or results exhausted
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-next-triple" role="function">
+<title>rasqal_query_results_next_triple ()</title>
+<indexterm zone="rasqal-query-results-next-triple"><primary>rasqal_query_results_next_triple</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_next_triple    (<link linkend="rasqal-query-results">rasqal_query_results</link> *query_results);</programlisting>
+<para>
+Move to the next triple result.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query_results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query_results
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if failed or results exhausted
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-read" role="function">
+<title>rasqal_query_results_read ()</title>
+<indexterm zone="rasqal-query-results-read"><primary>rasqal_query_results_read</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_read           (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="rasqal-query-results">rasqal_query_results</link> *results,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *format_uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);</programlisting>
+<para>
+Read the query results from an iostream in a format.
+</para>
+<para>
+This uses the <link linkend="rasqal-query-results-formatter"><type>rasqal_query_results_formatter</type></link> class
+and the <link linkend="rasqal-query-results-formatter-read"><function>rasqal_query_results_formatter_read()</function></link> method
+to perform the formatting. See
+<link linkend="rasqal-query-results-formats-enumerate"><function>rasqal_query_results_formats_enumerate()</function></link> 
+for obtaining the supported format URIs at run time.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-iostream"><type>raptor_iostream</type></link> to read the query from
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query results format
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>format_uri</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-uri"><type>raptor_uri</type></link> describing the format to read (or NULL for default)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-uri"><type>raptor_uri</type></link> base URI of the input format
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-query-results-write" role="function">
+<title>rasqal_query_results_write ()</title>
+<indexterm zone="rasqal-query-results-write"><primary>rasqal_query_results_write</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_query_results_write          (<link linkend="raptor-iostream">raptor_iostream</link> *iostr,
+                                                         <link linkend="rasqal-query-results">rasqal_query_results</link> *results,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *format_uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);</programlisting>
+<para>
+Write the query results to an iostream in a format.
+</para>
+<para>
+This uses the <link linkend="rasqal-query-results-formatter"><type>rasqal_query_results_formatter</type></link> class
+and the <link linkend="rasqal-query-results-formatter-write"><function>rasqal_query_results_formatter_write()</function></link> method
+to perform the formatting. See
+<link linkend="rasqal-query-results-formats-enumerate"><function>rasqal_query_results_formats_enumerate()</function></link> 
+for obtaining the supported format URIs at run time.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>iostr</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-iostream"><type>raptor_iostream</type></link> to write the query to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>results</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query-results"><type>rasqal_query_results</type></link> query results format
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>format_uri</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-uri"><type>raptor_uri</type></link> describing the format to write (or NULL for default)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-uri"><type>raptor_uri</type></link> base URI of the output format
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

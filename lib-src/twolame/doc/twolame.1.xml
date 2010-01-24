@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<refentry>
+<refmeta>
+<refentrytitle>twolame</refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+<refnamediv>
+    <refname>twolame</refname>
+    <refpurpose>an optimised MPEG Audio Layer 2 (MP2) encoder</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<simpara><emphasis>twolame</emphasis> [options] &lt;infile&gt; [outfile]</simpara>
+
+</refsynopsisdiv>
+<refsect1>
+<title>DESCRIPTION</title>
+<simpara>TwoLAME is an optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME by
+Mike Cheng, which in turn is based upon the ISO dist10 code and portions of
+LAME. Encoding is performed by the libtwolame library backend.</simpara>
+
+</refsect1>
+<refsect1>
+<title>OPTIONS</title>
+<refsect2>
+<title>Input File</title>
+<simpara>twolame uses libsndfile for reading the input sound file, so
+the input file can be in any format supported by libsndfile.
+To read raw PCM audio from STDIN, then use - as the input filename.</simpara>
+
+</refsect2>
+<refsect2>
+<title>Output File</title>
+<simpara>If no output filename is specified, then suffix of the input filename
+is automatically changed to .mp2. To write the encoded audio to STDOUT
+then use - as the output filename.</simpara>
+
+</refsect2>
+<refsect2>
+<title>Input Options</title>
+<variablelist>
+<varlistentry>
+<term>
+-r, --raw-input
+</term>
+<listitem>
+<simpara>
+        Specifies that input is raw signed PCM audio.
+        If audio is stereo, than audio samples are interleaved
+        between the two channels.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-x, --byte-swap
+</term>
+<listitem>
+<simpara>
+        Force byte-swapping of the input. Endian detection is performed
+        automatically by libsndfile, so this option shouldn't
+        normally be needed.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-s, --samplerate &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        If inputting raw PCM sound, you must specify the sample rate of
+        the audio in Hz.
+        Valid sample rates: 16000, 22050, 24000, 32000, 44100, 48000Hz.
+        Default sample rate is 44100Hz.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--samplesize &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        Specifies the sample size (in bits) of the raw PCM audio.
+        Valid sample sizes: 8, 16, 24, 32.
+        Default sample size is 16-bit.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-N, --channels &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        If inputting raw PCM sound, you must specify the number of channels
+        in the input audio. Default number of channels is 2.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-g, --swap-channels
+</term>
+<listitem>
+<simpara>
+        Swap the Left and Right channels of a stereo input file.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--scale &lt;float&gt;
+</term>
+<listitem>
+<simpara>
+        Scale the input audio prior to encoding.
+        All of the input audio is multiplied by specified value.
+        Value between 0 and 1 will reduce the audio gain, and a value
+        above 1 will increase the gain of the audio.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--scale-l &lt;float&gt;
+</term>
+<listitem>
+<simpara>
+        Same as --scale, but only affects the left channel.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--scale-r &lt;float&gt;
+</term>
+<listitem>
+<simpara>
+        Same as --scale, but only affects the right channel.
+</simpara>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+<refsect2>
+<title>Output Options</title>
+<variablelist>
+<varlistentry>
+<term>
+-m, --mode &lt;char&gt;
+</term>
+<listitem>
+<simpara>
+        Choose the mode of the resulting audio. Default is auto.
+</simpara>
+<itemizedlist>
+<listitem>
+<simpara>
+"a" auto - choose mode automatically based on the input
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+"s" stereo
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+"d" dual channel
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+"j" joint stereo
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+"m" mono
+</simpara>
+</listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-a, --downmix
+</term>
+<listitem>
+<simpara>
+        If the input file is stereo then, downmix the left and right
+        input channels into a single mono channel.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-b, --bitrate &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        Sets the total bitrate (in kbps) for the output file.
+        The default bitrate  depends on the number of
+        input channels and samplerate.
+</simpara>
+<literallayout class="monospaced">------------------------------
+Sample Rate   Mono    Stereo
+------------------------------
+48000         96      192
+44100         96      192
+32000         80      160
+24000         48      96
+22050         48      96
+16000         32      64
+------------------------------</literallayout>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-P, --psyc-mode &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        Choose the psycho-acoustic model to use (-1 to 4).
+        Model number -1 is turns off psycho-acoustic modelling and
+        uses fixed default values instead.
+        Please see the file <emphasis>psycho</emphasis> for a full description of
+        each of the models available.
+        Default model is 3.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-v, --vbr
+</term>
+<listitem>
+<simpara>
+        Enable VBR mode. See <emphasis>vbr</emphasis> documentation file for details.
+        Default VBR level is 5.0.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-v, --vbr-level &lt;float&gt;
+</term>
+<listitem>
+<simpara>
+        Enable VBR mode and set quality level.
+        The higher the number the better the quality.
+        Maximum range is -50 to 50 but useful range is -10 to 10.
+        See <emphasis>vbr</emphasis> documentation file for details.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-l, --ath &lt;float&gt;
+</term>
+<listitem>
+<simpara>
+        Set the ATH level. Default level is 0.0.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-q, --quick &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        Enable quick mode. Only re-calculate psycho-acoustic
+        model every specified number of frames.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-S, --single-frame
+</term>
+<listitem>
+<simpara>
+        Enables single frame mode: only a single frame of MPEG audio
+        is output and then the program terminates.
+</simpara>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+<refsect2>
+<title>Miscellaneous Options</title>
+<variablelist>
+<varlistentry>
+<term>
+-c, --copyright
+</term>
+<listitem>
+<simpara>
+        Turn on Copyright flag in output bitstream.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-o, --non-original
+</term>
+<listitem>
+<simpara>
+        Turn off Original flag in output bitstream.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--original
+</term>
+<listitem>
+<simpara>
+        Turn on Original flag in output bitstream.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-p, --protect
+</term>
+<listitem>
+<simpara>
+        Enable CRC error protection in output bitstream.
+        An extra 16-bit checksum is added to frames.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-d, --padding
+</term>
+<listitem>
+<simpara>
+        Turn on padding in output bitstream.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-R, --reserve &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        Reserve specified number of bits in the each from of the
+        output bitstream.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-e, --deemphasis &lt;char&gt;
+</term>
+<listitem>
+<simpara>
+        Set the de-emphasis type (n/c/5). Default is none.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+-E, --energy
+</term>
+<listitem>
+<simpara>
+        Turn on energy level extensions.
+</simpara>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+<refsect2>
+<title>Verbosity Options</title>
+<variablelist>
+<varlistentry>
+<term>
+-t, --talkativity &lt;int&gt;
+</term>
+<listitem>
+<simpara>
+        Set the amount of information to be displayed on stderr (0 to 10).
+        Default is 2.
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--quiet
+</term>
+<listitem>
+<simpara>
+        Don't send any messages to stderr, unless there is an error.
+        (Same as --talkativity=0)
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--brief
+</term>
+<listitem>
+<simpara>
+        Only display a minimal number of messages while encoding.
+        This setting is quieter than the default talkativity setting.
+        (Same as --talkativity=1)
+</simpara>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+--verbose
+</term>
+<listitem>
+<simpara>
+        Display an increased number of messages on stderr.
+        This setting is useful to diagnose problems.
+        (Same as --talkativity=4)
+</simpara>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsect1>
+<refsect1>
+<title>Return Codes</title>
+<simpara>If encoding completes successfully, then twolame will return 0.
+However if encoding is not successful, then it will return one of the following codes.</simpara>
+
+<itemizedlist>
+<listitem>
+<simpara>
+1 (No encoding performed)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+2 (Error opening input file)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+4 (Error opening output file)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+6 (Error allocating memory)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+8 (Error in chosen encoding parameters)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+10 (Error reading input audio)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+12 (Error occured while encoding)
+</simpara>
+</listitem>
+<listitem>
+<simpara>
+14 (Error writing output audio)
+</simpara>
+</listitem>
+</itemizedlist>
+</refsect1>
+<refsect1>
+<title>EXAMPLES</title>
+<simpara>This will encode sound.wav to sound.mp2 using the default constant bitrate of 192 kbps
+and using the default psycho-acoustic model (model 3):</simpara>
+
+<literallayout class="monospaced">twolame sound.wav</literallayout>
+<simpara>Constant bitrate of 160kbps and joint stereo encoding, saved to file sound_160.mp2:</simpara>
+
+<literallayout class="monospaced">twolame -b 160 -m j sound.aiff sound_160.mp2</literallayout>
+<simpara>Encode sound.wav to newfile.mp2 using psycho-acoustic model 2 and encoding
+with variable bitrate:</simpara>
+
+<literallayout class="monospaced">twolame -P 2 -v sound.wav newfile.mp2</literallayout>
+<simpara>Same as example above, except that the negative value of the "-V" argument
+means that the lower bitrates will be favoured over the higher ones:</simpara>
+
+<literallayout class="monospaced">twolame -P 2 -V -5 sound.wav newfile.mp2</literallayout>
+<simpara>Resample audio file using sox and pipe straight through twolame:</simpara>
+
+<literallayout class="monospaced">sox sound_11025.aiff -t raw -r 16000 | twolame -r -s 16000 - - &gt; out.mp2</literallayout>
+</refsect1>
+<refsect1>
+<title>AUTHORS</title>
+<simpara>The twolame frontend was (re)written by Nicholas J Humfrey.
+The libtwolame library is based on toolame by Mike Cheng.
+For a full list of authors, please see the AUTHORS file.</simpara>
+
+</refsect1>
+<refsect1>
+<title>RESOURCES</title>
+<simpara>TwoLAME web site: http://www.twolame.org/</simpara>
+
+</refsect1>
+<refsect1>
+<title>SEE ALSO</title>
+<simpara>lame(1), mpg123(1), madplay(1), sox(1)</simpara>
+
+</refsect1>
+<refsect1>
+<title>COPYING</title>
+<simpara>Copyright &#169; 2004-2006 The TwoLAME Project. Free use of this software is
+granted under the terms of the GNU Lesser General Public License (LGPL).</simpara>
+
+</refsect1>
+</refentry>

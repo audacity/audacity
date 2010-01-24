@@ -1,0 +1,10 @@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: portSMF
+Description: Portmedia Simple Midi File library
+Requires: 
+Version: 0.1
+
+Libs: -L${libdir} -lportSMF @LIBS@
+Cflags: -I${includedir} @CXXFLAGS@

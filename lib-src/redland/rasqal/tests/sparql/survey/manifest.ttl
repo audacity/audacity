@@ -1,0 +1,123 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Survey test cases" ;
+    rdfs:comment "See http://lists.w3.org/Archives/Public/public-rdf-dawg/2005AprJun/0023.html" ;
+    mf:entries
+    ( 
+      [  mf:name    "survey-1" ;
+         rdfs:label "Survey q1: Path expression" ;
+	 rdfs:comment "Return the names of the authors of publication X" ;
+         mf:action
+            [ qt:query  <query-survey-1.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-1.ttl>
+      ]
+      [  mf:name    "survey-2" ;
+         rdfs:label "Survey q2: optional path expression";
+	 rdfs:comment "Return the name and, if known, the e-mail of the author of publication X" ;
+         mf:action
+            [ qt:query  <query-survey-2.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-2.ttl>
+      ]
+      [  mf:name    "survey-3" ;
+         rdfs:label "Survey q3: Union ";
+	 rdfs:comment "Return the labels of all topics and (union) the titles of all publications." ;
+         mf:action
+            [ qt:query  <query-survey-3.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-3.ttl>
+      ]
+#      [  mf:name    "survey-4" ;
+#         rdfs:label "Survey q4: Difference" ;
+#	 rdfs:comment "Return the labels of all topics that are not titles of publications." ;
+#         mf:action
+#            [ qt:query  <query-survey-4.rq> ;
+#              qt:data   <survey-sample.ttl> ] ;
+#         mf:result  <result-survey-4.ttl>
+#      ]
+#      [  mf:name    "survey-5" ;
+#         rdfs:label "Survey q5: Quantification" ;
+#	 rdfs:comment "Return the persons who are authors of all publications." ;
+#         mf:action
+#            [ qt:query  <query-survey-5.rq> ;
+#              qt:data   <survey-sample.ttl> ] ;
+#         mf:result  <result-survey-5.ttl>
+#      ]
+#      [  mf:name    "survey-6" ;
+#         rdfs:label "Survey q6: Aggregation" ;
+#	 rdfs:comment "Count the number of authors of a publication." ;
+#         mf:action
+#            [ qt:query  <query-survey-6.rq> ;
+#              qt:data   <survey-sample.ttl> ] ;
+#         mf:result  <result-survey-6.ttl>
+#      ]
+#      [  mf:name    "survey-7" ;
+#         rdfs:label "Survey q7: Recursion" ;
+#	 rdfs:comment "Return all subtopics of topic "Information Systems", recursively." ;
+#         mf:action
+#            [ qt:query  <query-survey-7.rq> ;
+#              qt:data   <survey-sample.ttl> ] ;
+#         mf:result  <result-survey-7.ttl>
+#      ]
+      [  mf:name    "survey-8" ;
+         rdfs:label "Survey q8: Reification" ;
+	 rdfs:comment "Return the person who has classified the publication X." ;
+         mf:action
+            [ qt:query  <query-survey-8.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-8.ttl>
+      ]
+      [  mf:name    "survey-9" ;
+         rdfs:label "Survey q9: Collections and Containers" ;
+	 rdfs:comment "Return the first author of Publication X." ;
+         mf:action
+            [ qt:query  <query-survey-9.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-9.ttl>
+      ]
+      [  mf:name    "survey-10" ;
+         rdfs:label "Survey q10: Namespace" ;
+	 rdfs:comment "Return all resources whose namespace starts with http://example.org/survey-sample/." ;
+         mf:action
+            [ qt:query  <query-survey-10.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-10.ttl>
+      ]
+      [  mf:name    "survey-11" ;
+         rdfs:label "Survey q11: Language" ;
+	 rdfs:comment "Return the German label of the topic whose English label is 'Database Management'." ;
+         mf:action
+            [ qt:query  <query-survey-11.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-11.ttl>
+      ]
+      [  mf:name    "survey-12" ;
+         rdfs:label "Survey q12: Lexical space" ;
+	 rdfs:comment "Return all publications where the page number is the lexical value '08'." ;
+         mf:action
+            [ qt:query  <query-survey-12.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-12.ttl>
+      ]
+      [  mf:name    "survey-13" ;
+         rdfs:label "Survey q13: Value space" ;
+	 rdfs:comment "Return all publications where the page number is the integer value 8." ;
+         mf:action
+            [ qt:query  <query-survey-13.rq> ;
+              qt:data   <survey-sample.ttl> ] ;
+         mf:result  <result-survey-13.ttl>
+      ]
+#      [  mf:name    "survey-14" ;
+#         rdfs:label "Survey q14: Entailment" ;
+#	 rdfs:comment "Return all instances of that are members of the class Publication." ;
+#         mf:action
+#            [ qt:query  <query-survey-14.rq> ;
+#              qt:data   <survey-sample.ttl> ] ;
+#         mf:result  <result-survey-14.ttl>
+#      ]
+    ).

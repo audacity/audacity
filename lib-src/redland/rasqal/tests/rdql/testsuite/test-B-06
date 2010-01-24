@@ -1,0 +1,9 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Datatypes: test handling in WHERE clause
+// Tests in WHERE are on the lexical representation.
+
+SELECT ?z
+FROM <model8.n3>
+WHERE (?x ?y ?z)
+AND   ?z eq "value"^^ns:someType
+USING ns FOR <http://rdf.hp.com/ns#>

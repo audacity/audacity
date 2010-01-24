@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-unused">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-unused.top_of_page">Unused</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Unused</refname>
+<refpurpose>Unused</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-unused.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#define             <link linkend="RAPTOR-API:CAPS">RAPTOR_API</link>
+#define             <link linkend="RAPTOR-DEPRECATED:CAPS">RAPTOR_DEPRECATED</link>
+#define             <link linkend="RAPTOR-PRINTF-FORMAT:CAPS">RAPTOR_PRINTF_FORMAT</link>                (string_index, first_to_check_index)
+typedef             <link linkend="raptor-ntriples-parser">raptor_ntriples_parser</link>;
+enum                <link linkend="raptor-uri-source">raptor_uri_source</link>;
+enum                <link linkend="raptor-ntriples-term-type">raptor_ntriples_term_type</link>;
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-unused.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Unused
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-unused.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RAPTOR-API:CAPS" role="macro">
+<title>RAPTOR_API</title>
+<indexterm zone="RAPTOR-API:CAPS"><primary>RAPTOR_API</primary></indexterm><programlisting>#define             RAPTOR_API</programlisting>
+<para>
+Macro for wrapping API function call declarations.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="RAPTOR-DEPRECATED:CAPS" role="macro">
+<title>RAPTOR_DEPRECATED</title>
+<indexterm zone="RAPTOR-DEPRECATED:CAPS"><primary>RAPTOR_DEPRECATED</primary></indexterm><programlisting>#define             RAPTOR_DEPRECATED</programlisting>
+<para>
+When defined before a function, indicates that the function
+has been deprecated and may be replaced in a future release.
+With some versions of gcc this may give a compilation warning.
+</para></refsect2>
+<refsect2 id="RAPTOR-PRINTF-FORMAT:CAPS" role="macro">
+<title>RAPTOR_PRINTF_FORMAT()</title>
+<indexterm zone="RAPTOR-PRINTF-FORMAT:CAPS"><primary>RAPTOR_PRINTF_FORMAT</primary></indexterm><programlisting>#define             RAPTOR_PRINTF_FORMAT(string_index, first_to_check_index)</programlisting>
+<para>
+Internal macro</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>string_index</parameter>&nbsp;:</term>
+<listitem><simpara> ignore me
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>first_to_check_index</parameter>&nbsp;:</term>
+<listitem><simpara> ignore me
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-ntriples-parser" role="typedef">
+<title>raptor_ntriples_parser</title>
+<indexterm zone="raptor-ntriples-parser"><primary>raptor_ntriples_parser</primary></indexterm><programlisting>typedef raptor_parser raptor_ntriples_parser;
+</programlisting>
+<para>
+<parameter>Deprecated</parameter>: use <link linkend="raptor-parser"><type>raptor_parser</type></link>.
+</para>
+<para>
+old structure - use <link linkend="raptor-parser"><type>raptor_parser</type></link> instead.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-uri-source" role="enum">
+<title>enum raptor_uri_source</title>
+<indexterm zone="raptor-uri-source"><primary>raptor_uri_source</primary></indexterm><programlisting>typedef enum { RAPTOR_URI_SOURCE_UNKNOWN, RAPTOR_URI_SOURCE_NOT_URI, RAPTOR_URI_SOURCE_ELEMENT, RAPTOR_URI_SOURCE_ATTRIBUTE, RAPTOR_URI_SOURCE_ID, RAPTOR_URI_SOURCE_URI, RAPTOR_URI_SOURCE_GENERATED, RAPTOR_URI_SOURCE_BLANK_ID } raptor_uri_source;
+</programlisting>
+<para>
+Internal: Where a URI or identifier was derived from
+</para>
+<para>
+Likely to be deprecated in future releases.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="RAPTOR-URI-SOURCE-UNKNOWN:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_UNKNOWN</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-NOT-URI:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_NOT_URI</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-ELEMENT:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_ELEMENT</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-ATTRIBUTE:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_ATTRIBUTE</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-ID:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_ID</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-URI:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_URI</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-GENERATED:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_GENERATED</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-URI-SOURCE-BLANK-ID:CAPS" role="constant">
+<term><literal>RAPTOR_URI_SOURCE_BLANK_ID</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-ntriples-term-type" role="enum">
+<title>enum raptor_ntriples_term_type</title>
+<indexterm zone="raptor-ntriples-term-type"><primary>raptor_ntriples_term_type</primary></indexterm><programlisting>typedef enum { RAPTOR_NTRIPLES_TERM_TYPE_URI_REF, RAPTOR_NTRIPLES_TERM_TYPE_BLANK_NODE, RAPTOR_NTRIPLES_TERM_TYPE_LITERAL } raptor_ntriples_term_type;
+</programlisting>
+<para>
+N-Triples term types
+</para>
+<para>
+Used for the deprecated function <link linkend="raptor-ntriples-term-as-string"><function>raptor_ntriples_term_as_string()</function></link> only.</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="RAPTOR-NTRIPLES-TERM-TYPE-URI-REF:CAPS" role="constant">
+<term><literal>RAPTOR_NTRIPLES_TERM_TYPE_URI_REF</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-NTRIPLES-TERM-TYPE-BLANK-NODE:CAPS" role="constant">
+<term><literal>RAPTOR_NTRIPLES_TERM_TYPE_BLANK_NODE</literal></term>
+<listitem><simpara> Internal
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RAPTOR-NTRIPLES-TERM-TYPE-LITERAL:CAPS" role="constant">
+<term><literal>RAPTOR_NTRIPLES_TERM_TYPE_LITERAL</literal></term>
+<listitem><simpara> I
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

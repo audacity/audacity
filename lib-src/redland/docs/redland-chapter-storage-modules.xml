@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="redland-storage-modules">
+
+<title>Storage Modules</title>
+
+<section id="redland-storage-module-intro">
+
+<title>Introduction</title>
+
+<para>Redland includes several modules that implement the
+<ulink url="api/storage.html">storage API</ulink> and provide a variety of
+different features and functionality.  This document gives the
+details of what each implementation module provides and
+the storage options used.
+</para>
+
+
+<para>Storage modules:</para>
+
+<itemizedlist spacing="compact">
+  <listitem><para><link linkend="redland-storage-module-hashes">hashes</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-file">file</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-mysql">mysql</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-memory">memory</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-postgresql">postgresql</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-sqlite">sqlite</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-tstore">tstore</link></para></listitem>
+  <listitem><para><link linkend="redland-storage-module-uri">uri</link></para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-hashes">
+
+<title>Store 'hashes'</title>
+
+<para>This module is always present (cannot be removed) and provides
+indexed storage using Redland <xref linkend="redland-storage"/> to
+store various combinations of subject, predicate and object for
+faster access. Context nodes are also stored in a hash when used.
+The hashes may be in-memory (always availabe) or persistent via
+Sleepycat/Berkeley DB (BDB) versions 2-4.  It is the most mature and
+primary persistent store and suitable for large models, tested in the
+2-3 million range..</para>
+
+<para>The main option requiring setting is the
+<literal>hash-type</literal> which must be one of the supported
+Redland hashes.  Hash type <literal>memory</literal> is always
+available and if BDB has been compiled in, <literal>bdb</literal> is
+also available.  Option <literal>dir</literal> can be used to set the
+destination directory for the BDB files when used.  Boolean option
+<literal>new</literal> can be set to force creation or truncation
+of a persistent hashed store.  The storage
+name must be given for hash type <literal>bdb</literal> since
+it is used for a filename.
+</para>
+
+<para>The module provides optional contexts support enabled when
+boolean storage option <literal>contexts</literal> is set.  This
+can be used with any hash type.</para>
+
+<para>Examples:</para>
+<programlisting>
+  /* A new BDB hashed persistent store in the current directory */
+  storage=librdf_new_storage(world, "hashes", "db1",
+                             "new='yes',hash-type='bdb',dir='.'");
+
+  /* Hashed in-memory store */
+  storage=librdf_new_storage(world, "hashes", NULL,
+                             "hash-type='memory'");
+
+  /* An existing BDB hashed persistent store in dir /somewhere */
+  storage=librdf_new_storage(world, "hashes", "dv2", 
+                             "hash-type='bdb',dir='/somewhere'");
+
+  /* An existing BDB hashed store with contexts */
+  storage=librdf_new_storage(world, "hashes", "db3", 
+                             "hash-type='bdb',contexts='yes'");
+</programlisting>
+
+<para>In Python:</para>
+<programlisting>
+  from RDF import *
+  ...
+  # Create a new BDB store
+  storage = HashStorage("db4", options="new='yes',hash-type='bdb'")
+</programlisting>
+
+<para>In Perl:</para>
+<programlisting>
+  use RDF::Redland;
+  ...
+  # Open an existing BDB store
+  $storage=new RDF::Redland::Storage("hashes", "db5", 
+                                     "hash-type='bdb',dir='.'");
+</programlisting>
+
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>Persistent or in-memory</para></listitem>
+  <listitem><para>Suitable for larger models</para></listitem>
+  <listitem><para>Indexed</para></listitem>
+  <listitem><para>Large disk usage with BDB</para></listitem>
+  <listitem><para>Optional contexts (with option <literal>contexts</literal> set)</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-memory">
+
+<title>Store 'memory'</title>
+
+<para>This module is always present (cannot be removed) and provides a
+simple and fast in-memory store with no persistence.  It is
+the default store if no store name is given to the storage
+constructors.</para>
+
+<para>The memory store is not suitable for large in-memory models since
+it does not do any indexing.  For that, use the
+<xref linkend="redland-storage-module-hashes"/> with
+<literal>hash-type</literal> of <literal>memory</literal>.</para>
+
+<para>The module provides optional contexts support enabled when
+boolean storage option <literal>contexts</literal> is set.</para>
+
+<para>Examples:</para>
+<programlisting>
+  /* Explictly named memory storage */
+  storage=librdf_new_storage(world, "memory", NULL, NULL);
+
+  /* Default storage type, which is memory */
+  storage=librdf_new_storage(world, NULL, NULL, NULL);
+
+  /* In-memory store with contexts */
+  storage=librdf_new_storage(world, NULL, NULL, "contexts='yes'");
+</programlisting>
+
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>In-memory</para></listitem>
+  <listitem><para>Fast</para></listitem>
+  <listitem><para>Suitable for small models</para></listitem>
+  <listitem><para>No indexing</para></listitem>
+  <listitem><para>No persistance</para></listitem>
+  <listitem><para>Optional contexts (with option <literal>contexts</literal> set)</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-file">
+
+<title>Store 'file'</title>
+
+<para>This module provides an in-memory model (internally,
+using a <xref linkend="redland-storage-module-memory"/>) initialised from the
+RDF/XML content in a file.  The file is given as the storage name and
+assumed to exist on opening.  When a model or storage sync method
+is called or the model or store is closed, a new file is created, the
+old file renamed to a backup and the new file renamed to replace it.
+This store was added in Redland 0.9.15</para>
+
+<para>There are no options for this store and contexts are not supported.</para>
+
+<para>Example:</para>
+<programlisting>
+  /* File based store from thing.rdf file */
+  storage=librdf_new_storage(world, "file", "thing.rdf", NULL);
+</programlisting>
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>In-memory</para></listitem>
+  <listitem><para>Suitable for small models</para></listitem>
+  <listitem><para>Simple local storage to content in RDF/XML</para></listitem>
+  <listitem><para>Not indexed</para></listitem>
+  <listitem><para>No contexts</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-mysql">
+
+<title>Store 'mysql'</title>
+
+<para>This module is compiled in when MySQL 3 or 4 is available. This
+store provides storage using the
+<ulink url="http://www.mysql.com/">MySQL</ulink>
+open source database including contexts.  It was added in Redland
+0.9.15.  It has however been tested with several million triples and
+deployed.</para>
+
+
+
+<para>There are several options required with the mysql storage
+in order to connect to the database.  These are:</para>
+<itemizedlist>
+  <listitem><para><literal>host</literal> for the database server hostname</para></listitem>
+  <listitem><para><literal>port</literal> for the database server port (defaults to the MySQL port 3306 if not given)</para></listitem>
+  <listitem><para><literal>database</literal> for the MySQL database name (not the storage name)</para></listitem>
+  <listitem><para><literal>user</literal> for the database server user name</para></listitem>
+  <listitem><para><literal>password</literal> for the database server password</para>
+</listitem>
+</itemizedlist>
+<para>NOTE: Take care exposing the password as for example, program
+arguments or environment variables.  The rdfproc
+utility can with help this by reading the password from standard
+input.  Inside programs, one way to prevent storing the password in a
+string is to construct a Redland hash of the storage options such as
+via <literal>librdf_hash_from_string</literal> and use
+<literal>librdf_new_storage_with_options</literal> to create a storage.
+The rdfproc utility source code demonstrates this.
+</para>
+
+<para>The storage name parameter given to the storage constructor
+<literal>librdf_new_storage</literal> is used inside the mysql store to
+allow multiple stores inside one MySQL database instance as
+parameterised with the above optiosn.</para>
+
+<para>If boolean option <literal>new</literal> is given, any existing MySQL
+database named by the storage option <literal>database</literal>, say
+<emphasis>db</emphasis> will be dropped and the appropriate new tables created.
+The MySQL database <emphasis>db</emphasis> must already exist, such as made with
+the MySQL <literal>create database </literal><emphasis>db</emphasis> command and the
+appropriate priviledges set so that the user and password work.
+</para>
+
+<para>If boolean option <literal>reconnect</literal> is given, MySQL
+reconnection will be enabled so that if the database conneciton
+is dropped, MySQL will attempt to reconnect.
+</para>
+
+<para>This store always provides contexts; the boolean storage option
+<literal>contexts</literal> is not checked.</para>
+
+<para>Examples:</para>
+<programlisting>
+  /* A new MySQL store */
+  storage=librdf_new_storage(world, "mysql", "db1",
+      "new='yes',host='localhost',database='red',user='foo','password='bar'");
+
+  /* A different, existing MySQL store db2 in the same database as above */
+  storage=librdf_new_storage(world, "mysql", "db2",
+      "host='localhost',database='red',user='foo','password='bar'");
+
+  /* An existing MySQL store on a different database server */
+  storage=librdf_new_storage(world, "mysql", "db3",
+      "host='db.example.org',database='abc',user='baz','password='blah'");
+
+  /* Opening with an options hash */
+  options=librdf_new_hash(world, NULL);
+  librdf_hash_from_string(options, 
+      "host='db.example.org',database='abc',user='baz'");
+  librdf_hash_put_strings(options, "password", user_password);
+  storage=librdf_new_storage_with_options(world, "mysql", "db4", options);
+</programlisting>
+
+<para>In PHP:</para>
+<programlisting>
+  # An existing store
+  $storage=librdf_new_storage($world, 'mysql', 'db4', 
+      "host='127.0.0.1',database='xyz',user='foo',password='blah'");
+
+</programlisting>
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>Persistent</para></listitem>
+  <listitem><para>Suitable for very large models</para></listitem>
+  <listitem><para>Indexed but not optimised</para></listitem>
+  <listitem><para>Smaller disk usage than BDB</para></listitem>
+  <listitem><para>Possibility of free text searching</para></listitem>
+  <listitem><para>Contexts always provided</para>
+</listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-postgresql">
+
+<title>Store 'postgresql'</title>
+
+<para>This module is based on the MySQL store and is compiled in when
+PostgreSQL is available. This store provides storage using the
+<ulink url="http://www.postgresql.org/">PostgreSQL</ulink>
+open source database including contexts.  This store was added in
+Redland 1.0.3.</para>
+
+<para>There are several options required with the postgresql storage
+in order to connect to the database.  These are:</para>
+<itemizedlist>
+  <listitem><para><literal>host</literal> for the database server hostname</para></listitem>
+  <listitem><para><literal>port</literal> for the database server port (defaults to the Postgresql port 3306 if not given)</para></listitem>
+  <listitem><para><literal>database</literal> for the Postgresql database name (not the storage name)</para></listitem>
+  <listitem><para><literal>user</literal> for the database server user name</para></listitem>
+  <listitem><para><literal>password</literal> for the database server password</para></listitem>
+  <listitem><para><literal>database</literal> for the Postgresql database name (not the storage name)</para></listitem>
+</itemizedlist>
+
+<para>NOTE: Before Redland 1.0.5, the
+parameter <literal>dbname</literal> had to be used instead
+of <literal>database</literal> for the Postgresql database name.</para>
+
+
+<para>NOTE: Take care exposing the password as for example, program
+arguments or environment variables.  The rdfproc utility can with
+help this by reading the password from standard input.  Inside
+programs, one way to prevent storing the password in a string is to
+construct a Redland hash of the storage options such as
+via <literal>librdf_hash_from_string</literal> and use
+<literal>librdf_new_storage_with_options</literal> to create a storage.
+The rdfproc utility source code demonstrates this.
+</para>
+
+<para>The storage name parameter given to the storage constructor
+<literal>librdf_new_storage</literal> is used inside the postgresql
+store to allow multiple stores inside one PostgreSQL database
+instance as parameterised with the above optiosn.</para>
+
+<para>If boolean option <literal>new</literal> is given, any existing
+PostgreSQL database named by the storage
+option <literal>database</literal>, say
+<emphasis>db</emphasis> will be dropped and the appropriate new
+tables created.  The PostgreSQL database <emphasis>db</emphasis> must
+already exist, such as made with the PostgreSQL <literal>create
+database </literal><emphasis>db</emphasis> command and the
+appropriate priviledges set so that the user and password
+work.</para>
+
+<para>This store always provides contexts; the boolean storage option
+<literal>contexts</literal> is not checked.</para>
+
+<para>Examples:</para>
+<programlisting>
+  /* A new PostgreSQL store */
+  storage=librdf_new_storage(world, "postgresql", "db1",
+      "new='yes',host='localhost',database='red',user='foo','password='bar'");
+
+  /* A different, existing PostgreSQL store db2 in the same database as above */
+  storage=librdf_new_storage(world, "postgresql", "db2",
+      "host='localhost',database='red',user='foo','password='bar'");
+
+  /* An existing PostgreSQL store on a different database server */
+  storage=librdf_new_storage(world, "postgresql", "db3",
+      "host='db.example.org',database='abc',user='baz','password='blah'");
+
+  /* Opening with an options hash */
+  options=librdf_new_hash(world, NULL);
+  librdf_hash_from_string(options, 
+      "host='db.example.org',database='abc',user='baz'");
+  librdf_hash_put_strings(options, "password", user_password);
+  storage=librdf_new_storage_with_options(world, "postgresql", "db4", options);
+</programlisting>
+
+<para>In PHP:</para>
+<programlisting>
+  # An existing store
+  $storage=librdf_new_storage($world, 'postgresql', 'db4', 
+      "host='127.0.0.1',database='xyz',user='foo',password='blah'");
+
+</programlisting>
+
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>Persistent</para></listitem>
+  <listitem><para>Suitable for very large models</para></listitem>
+  <listitem><para>Indexed but not optimised</para></listitem>
+  <listitem><para>Smaller disk usage than BDB</para></listitem>
+  <listitem><para>Contexts always provided</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-sqlite">
+
+<title>Store 'sqlite'</title>
+
+<para>This module provides storage via the
+<ulink url="http://www.sqlite.org/">SQLite</ulink>
+relational database when available and supports SQLite V2 and V3.
+It was added in Redland 1.0.0.  This store provides triples and contexts.
+</para>
+
+<para>The only option respected by this store is the
+<literal>new</literal> one to create a new store, destroying any
+existing store.
+</para>
+
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>Persistent</para></listitem>
+  <listitem><para>Suitable for small/medium models</para></listitem>
+  <listitem><para>Indexed but not optimized</para></listitem>
+  <listitem><para>Smaller disk usage than BDB</para></listitem>
+  <listitem><para>Contexts always provided</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+
+<section id="redland-storage-module-tstore">
+
+<title>Store 'tstore'</title>
+
+<para>This module provides storage via the
+<ulink url="http://triplestore.aktors.org/">AKT Triplestore</ulink>
+when available. It was added in Redland 0.9.15
+and is alpha quality - not complete or tested significantly (although
+the AKT store itself is used in production).  This store provides a
+basic triple API but no redland contexts.  The underlying RDQL
+support and inference is not yet exposed in Redland but may be in
+future.
+</para>
+
+<para>There are several options required with the tstore storage in
+order to connect to the tstore database (which uses MySQL).  These
+are:</para>
+<itemizedlist>
+  <listitem><para><literal>host</literal> for the database server hostname</para></listitem>
+  <listitem><para><literal>port</literal> for the database server port</para></listitem>
+  <listitem><para><literal>database</literal> for the database name (not the storage name)</para></listitem>
+  <listitem><para><literal>user</literal> for the database server user name</para></listitem>
+  <listitem><para><literal>password</literal> for the database server password</para></listitem>
+</itemizedlist>
+
+<para>NOTE: Take care exposing the password as for example, program
+arguments or environment variables.  The rdfproc utility can with
+help this by reading the password from standard input.  Inside
+programs, one way to prevent storing the password in a string is to
+construct a Redland hash of the storage options such as
+via <literal>librdf_hash_from_string</literal> and use
+<literal>librdf_new_storage_with_options</literal> to create a storage.
+The rdfproc utility source code demonstrates this.
+</para>
+
+
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>Persistent</para></listitem>
+  <listitem><para>Suitable for very large models</para></listitem>
+  <listitem><para>Indexed and optimised by the AKT project</para></listitem>
+  <listitem><para>No Redland contexts</para></listitem>
+  <listitem><para>Alpha quality</para></listitem>
+</itemizedlist>
+
+</section>
+
+
+<section id="redland-storage-module-uri">
+
+<title>Store 'uri'</title>
+
+<para>This module provides an in-memory model (internally,
+using a <xref linkend="redland-storage-module-memory"/>) initialised from the
+RDF/XML content in a URI.  The URI is given as the storage name and
+on closing, the model is destroyed.  This store was added in
+Redland 1.0.15.  In future it may be
+extended to allow saving the store to the URI.
+</para>
+
+<para>There are no options for this store and contexts are not
+supported.</para>
+
+<para>Example:</para>
+<programlisting>
+  /* Read URI content into a store */
+  storage=librdf_new_storage(world, "uri", 
+     "http://example.org/content.rdf", NULL);
+</programlisting>
+
+<para>Summary:</para>
+<itemizedlist>
+  <listitem><para>In-memory</para></listitem>
+  <listitem><para>Suitable for small models</para></listitem>
+  <listitem><para>Easy access to web content in RDF/XML</para></listitem>
+  <listitem><para>Not indexed</para></listitem>
+  <listitem><para>No contexts</para>
+</listitem>
+</itemizedlist>
+
+</section>
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("redland-docs.xml" "book" "part" "chapter")
+End:
+-->
+

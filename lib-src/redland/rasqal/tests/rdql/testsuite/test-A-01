@@ -1,0 +1,15 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test A-01 : Test handling of prefixes : mixed use
+// Note : no comma in list
+// Current still needs comma in USING clause - grammar/parser needs fixing.
+// 
+
+SELECT ?b  ?y
+FROM   <model5.nt>
+WHERE
+    (?b  <rdf:type>   <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag>)
+    (?b  ?x  ?y)
+AND ! ( ?x eq <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> && ?y eq <rdf:Bag> )
+USING
+  rdfs FOR <http://www.w3.org/2000/01/rdf-schema#> ,
+  rdf  FOR <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

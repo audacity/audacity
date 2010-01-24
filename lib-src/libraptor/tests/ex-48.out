@@ -1,0 +1,5 @@
+<http://example.org/node0> <http://example.com/properties/prop1> " &amp; "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop2> " &lt; "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop3> " &gt; "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop4> "&gt;&amp;&lt;"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop5> "&lt;ex:notaprop&gt;"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .

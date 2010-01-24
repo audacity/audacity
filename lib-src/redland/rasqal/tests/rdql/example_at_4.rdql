@@ -1,0 +1,33 @@
+SELECT
+	?title_value, ?title_language,
+	?subject_value,?subject_language,
+	?description_value, ?description_language,
+	?language,
+	?identifier
+FROM
+	<http://braveheart.eun.org/xml/rdf/example10.xml>
+WHERE
+	( ?x, dc:title, ?tt),
+	( ?tt, rdf:value, ?title_value),
+	( ?tt, dc:language, ?ttl),
+	( ?ttl, dcq:RFC1766, ?title_language),
+	( ?x, dc:subject, ?ss1),
+	( ?ss1, etbthes:ETBT, ?ss2),
+	( ?ss2, rdf:value, ?subject_value),
+	( ?ss2, dc:language, ?ss3),
+	( ?ss3, dcq:RFC1766, ?subject_language),
+	( ?x, dc:description, ?dd),
+	( ?dd, rdf:value, ?description_value),
+	( ?dd, dc:language, ?ddl),
+	( ?ddl, dcq:RFC1766, ?description_language),
+	( ?x, dc:identifier, ?identifier),
+	( ?x, dc:language, ?ll1),
+	( ?ll1, dcq:RFC1766, ?language)
+USING
+	rdf for <http://www.w3.org/1999/02/22-rdf-syntax-ns#>,
+	rdfs for <http://www.w3.org/2000/01/rdf-schema#>,
+	dc for <http://purl.org/dc/elements/1.1/>,
+	dcq for <http://purl.org/dc/terms/>,
+	dct for <http://purl.org/dc/dcmitype/>,
+	etb for <http://eun.org/etb/elements/>,
+	etbthes for <http://eun.org/etb/thesaurus/elements/>

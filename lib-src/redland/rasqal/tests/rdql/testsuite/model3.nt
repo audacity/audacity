@@ -1,0 +1,6 @@
+# Anonymous nodes
+
+_:a <http://rdf.hp.com/p1> "v-a-1".
+_:a <http://rdf.hp.com/p2> "v-a-2".
+
+_:b <http://rdf.hp.com/p> _:a .

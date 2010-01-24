@@ -1,0 +1,5 @@
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example.com/resource/a> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example.com/resource/b> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_3> <http://example.com/resource/c> .
+<http://example.com/somewhere/> <http://example.com/properties/foo> _:genid1 .

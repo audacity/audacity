@@ -1,0 +1,62 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\"
+.\" redland-config.1 - Redland compiling utility manual page
+.\"
+.\" Copyright (C) 2003-2008 David Beckett - http://www.dajobe.org/
+.\" Copyright (C) 2003-2004 University of Bristol - http://www.bristol.ac.uk/
+.\"
+.TH redland-config 1 "2007-05-01"
+.\" Please adjust this date whenever revising the manpage.
+.SH NAME
+redland-config \- script to get information about the installed version of Redland
+.SH SYNOPSIS
+.B redland-config
+[\-\-cflags]
+[\-\-help]
+[\-\-libs]
+[\-\-libtool\-libs]
+[\-\-prefix\fI[=DIR]\fP]
+[\-\-private\-libs]
+[\-\-version\-decimal]
+[\-\-version]
+.SH DESCRIPTION
+\fIredland-config\fP is a tool that is used to determine the compile and
+linker flags that should be used to compile and link programs that use
+the Redland RDF library.
+.SH OPTIONS
+.l
+\fIredland-config\fP accepts the following options:
+.TP 8
+.B  \-\-version
+Print the currently installed version of redland on the standard output.
+.TP 8
+.B  \-\-version\-decimal
+Print the currently installed version of redland as a decimal integer.
+.TP 8
+.B  \-\-libs
+Print the linker flags that are necessary to link a redland program.
+This excludes linker arguments used to build the librdf shared library.
+.TP 8
+.B  \-\-libtool\-libs
+Print the flags that are necessary to link a redland program with libtool.
+.TP 8
+.B  \-\-private\-libs
+Print the linker flags that are necessary to build the librdf shared
+library.  This option is not usually needed because the librdf
+shared library has already been dynamically linked against these libs.
+.TP 8
+.B  \-\-cflags
+Print the compiler flags that are necessary to compile a redland program.
+.TP 8
+.B  \-\-prefix=PREFIX
+If specified, use PREFIX instead of the installation prefix that
+redland was built with when computing the output for the
+\-\-cflags and \-\-libs options. This option must be specified before
+any \-\-libs or \-\-cflags options.
+.SH SEE ALSO
+.BR redland (3),
+.SH AUTHOR
+Dave Beckett - 
+.UR http://www.dajobe.org/
+http://www.dajobe.org/
+.UE

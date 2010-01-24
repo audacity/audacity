@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 4-01 : Paths : Find all paths of length 2
+
+SELECT *
+SOURCE <model2.nt>
+WHERE  (?a, ?b, ?z), (?z, ?c, ?d)

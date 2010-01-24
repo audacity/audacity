@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 xmlns:a="http://example.com/properties/">
+  <!-- Test rdf:Description with properties -->
+  <rdf:Description rdf:about="http://example.com/resource1/" a:foo="err" a:bar="hmm" a:baz="umm" />
+  <rdf:Description rdf:about="http://example.com/resource2/" xmlns:c="http://example.com/somewhere/" c:foo="apple" c:bar="banana" c:baz="pear" />
+</rdf:RDF>

@@ -1,0 +1,11 @@
+Scott Wheeler <wheeler@kde.org>
+ Author, maintainer
+Ismael Orenstein <orenstein@kde.org>
+ Xing header implementation
+Allan Sandfeld Jensen <kde@carewolf.org>
+ FLAC metadata implementation
+Teemu Tervo <teemu.tervo@gmx.net>
+ Numerous bug reports and fixes
+
+Please send all patches and questions to taglib-devel@kde.org rather than to
+individual developers!

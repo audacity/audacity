@@ -1,0 +1,11 @@
+# $Id: boolean-0.n3,v 1.1 2008-07-08 10:46:39 larsl Exp $
+
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix t: <http://www.w3.org/2001/sw/DataAccess/tests/data/ValueTesting/boolean-0#> .
+
+# test values from http://www.w3.org/TR/xmlschema-2/#boolean
+t:fdigit	rdf:value	"0"^^xsd:boolean .
+t:ftext		rdf:value	"false"^^xsd:boolean .
+t:tdigit	rdf:value	"1"^^xsd:boolean .
+t:ttext		rdf:value	"true"^^xsd:boolean .

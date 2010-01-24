@@ -1,0 +1,14 @@
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix ex: <http://example.org/survey-sample/ontology/>
+prefix acm: <http://daml.umbc.edu/ontologies/topic-ont#>
+prefix dc: <http://purl.org/dc/elements/1.1/>
+
+SELECT ?who WHERE
+{
+  [ rdf:subject ?work;
+    rdf:predicate ex:isAbout;
+    rdf:object ?topic
+  ] dc:creator ?who
+}
+

@@ -1,0 +1,3 @@
+# Dot after triple
+SELECT * WHERE
+{ ?s ?p ?o . }

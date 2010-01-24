@@ -1,0 +1,145 @@
+========================================================================================================================
+Methods for Debugging DLLs
+========================================================================================================================
+If you have the source for both the DLL and the calling program, open the project for the calling executable file and 
+debug the DLL from there. If you load a DLL dynamically, you must specify it in the Additional DLLs category of the 
+Debug tab in the Project Settings dialog box. 
+
+If you have the source for the DLL only, open the project that builds the DLL. Use the Debug tab in the Project 
+Settings dialog box to specify the executable file that calls the DLL.
+
+You can also debug a DLL without a project. For example, maybe you just picked up a DLL and source code but you 
+don’t have an associated project or workspace. You can use the Open command on the File menu to select the .DLL 
+file you want to debug. The debug information should be in either the .DLL or the related .PDB file. After 
+Visual C++ opens the file, on the Build menu click Start Debug and Go to begin debugging.
+
+To debug a DLL using the project for the executable file 
+
+From the Project menu, click Settings. 
+The Project Settings dialog box appears.
+
+Choose the Debug tab.
+
+
+In the Category drop-down list box, select General. 
+
+
+In the Program Arguments text box, type any command-line arguments required by the executable file.
+
+
+In the Category drop-down list box, select Additional DLLs.
+
+
+In the Local Name column, type the names of DLLs to debug. 
+If you are debugging remotely, the Remote Name column appears. In this column, type the complete path for the 
+remote module to map to the local module name.
+
+In the Preload column, select the check box if you want to load the module before debugging begins.
+
+
+Click OK to store the information in your project.
+
+
+From the Build menu, click Start Debug and Go to start the debugger. 
+You can set breakpoints in the DLL or the calling program. You can open a source file for the DLL and set breakpoints 
+in that file, even though it is not a part of the executable file’s project.
+
+To debug a DLL using the project for the DLL 
+
+From the Project menu, click Settings. 
+The Project Settings dialog box appears.
+
+Choose the Debug tab.
+
+
+In the Category drop-down list box, select General. 
+
+
+In the Executable For Debug Session text box, type the name of the executable file that calls the DLL.
+
+
+In the Category list box, select Additional DLLs.
+
+
+In the Local Module Name column, type the name of the DLLs you want to debug.
+
+
+Click OK to store the information in your project.
+
+
+Set breakpoints as required in your DLL source files or on function symbols in the DLL.
+
+
+From the Build menu, click Start Debug and Go to start the debugger. 
+To debug a DLL created with an external project 
+
+From the Project menu, click Settings. 
+The Project Settings dialog box appears.
+
+Choose the Debug tab.
+
+
+In the Category drop-down list box, select General.
+
+
+In the Executable For Debug Session text box, type the name of the DLL that your external makefile builds. 
+
+
+Click OK to store the information in your project.
+
+
+Build a debug version of the DLL with symbolic debugging information, if you don’t already have one.
+
+
+Follow one of the two procedures immediately preceding this one to debug the DLL. 
+
+========================================================================================================================
+Why Don’t My DLL Breakpoints Work?
+========================================================================================================================
+Some reasons why your breakpoints don’t work as expected are listed here, along with solutions or work-arounds for each. 
+If you follow the instructions in one topic and are still having breakpoint problems, look at some of the other topics. 
+Often breakpoint problems result from a combination of conditions. 
+
+You can't set a breakpoint in a source file when the corresponding symbolic information isn't loaded into memory by 
+the debugger. 
+You cannot set a breakpoint in any source file when the corresponding symbolic information will not be loaded into memory 
+by the debugger. 
+Symptoms include messages such as "the breakpoint cannot be set" or a simple, noninformational beep.
+
+When setting breakpoints before the code to be debugged has been started, the debugger uses a breakpoint list to keep 
+track of how and where to set breakpoints. When you actually begin the debugging session, the debugger loads the symbolic 
+information for all the code to be debugged and then walks through its breakpoint list, attempting to set the 
+breakpoints. 
+
+However, if one or more of the code modules have not been designated to the debugger, there will be no symbolic 
+information for the debugger to use when walking through its breakpoint list. Situations where this is likely to 
+occur include: 
+
+Attempts to set breakpoints in a DLL before the call to LoadLibrary.
+
+Setting a breakpoint in an ActiveX server before the container has started the server.
+
+Other similar cases. 
+
+To prevent this behavior in Visual C++, specify all additional DLLs and COM servers in the Additional DLLs field 
+in the Debug/Options dialog box to notify the debugger that you want it to load symbolic debug information for 
+additional .DLL files. When this has been done, breakpoints set in code that has not yet been loaded into memory 
+will be "virtual" breakpoints. When the code is actually loaded into memory by the loader, these become physical 
+breakpoints. Make sure that these additional debugging processes are not already running when you start your 
+debugging session. The debugging process and these additional processes must be sychronized at the same beginning 
+point to work correctly, hitting all breakpoints. 
+
+Breakpoints are missed when more than one copy of a DLL is on your hard disk. 
+Having more than one copy of a DLL on your hard drive, especially if it is in your Windows directory, can cause 
+debugger confusion. The debugger will load the symbolic information for the DLL specified to it at run time (with the 
+Additional DLLs field in the Debug/Options dialog box), while Windows has actually loaded a different copy of the 
+DLL itself into memory. Because there is no way to force the debugger to load a specific DLL, it is a good idea to 
+keep only one version of a DLL at a time in your path, current directory, and Windows directory. 
+
+You can’t set "Break When Expression Has Changed" breakpoints on a variable local to a DLL. 
+Setting a "Break When Expression Has Changed" breakpoint on a variable local to a DLL function before the call 
+to LoadLibrary causes the breakpoint to be virtual (there are no physical addresses for the DLL in memory yet). 
+Virtual breakpoints involving expressions pose a special problem. The DLL must be specified to the debugger at 
+startup (causing its symbolic information to be loaded). In addition, the DLL's executable code must also be loaded 
+into memory before this kind of breakpoint can be set. This means that the calling application's code must be 
+executed to the point after its call to LoadLibrary before the debugger will allow this type of breakpoint to be set. 

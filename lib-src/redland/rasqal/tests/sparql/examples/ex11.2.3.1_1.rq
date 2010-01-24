@@ -1,0 +1,8 @@
+PREFIX a:      <http://www.w3.org/2000/10/annotation-ns#>
+PREFIX dc:     <http://purl.org/dc/elements/1.1/>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?annotates
+WHERE { ?annot  a:annotates  ?annotates .
+        ?annot  dc:created   ?date .
+        FILTER ( ?date = xsd:dateTime("2004-01-01T00:00:00Z") || ?date = xsd:dateTime("2005-01-01T00:00:00Z") ) }

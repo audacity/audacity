@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>GRDDL link genid test</title>
+  <!--
+      This link order is to ensure that the internal raptor GRDDL
+      RDF/XML parser is destroyed between parsing data-01.rdf and
+      data-02.rdf
+
+      The @type attribute is actually ignored when guessing a parser
+      to use so data-01.nt is attempted to be parsed as N-Triples.
+  -->
+  <link rel="meta" type="application/rdf+xml" title="rdf1" href="data-01.rdf" />
+  <link rel="meta" type="application/rdf+xml" title="rdf2" href="data-01.nt" />
+  <link rel="meta" type="application/rdf+xml" title="rdf3" href="data-02.rdf" />
+</head>
+<body>
+
+</body>
+</html>

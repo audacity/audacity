@@ -1,0 +1,110 @@
+<!-- ##### SECTION Title ##### -->
+Triples
+
+<!-- ##### SECTION Short_Description ##### -->
+Triple pattern or RDF triple.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+An object for a triple pattern or an RDF triple in a query.  It
+contains the three parts of an RDF triple - subject, predicate,
+object as well as origin for matching triples in some graph (such as
+with the SPARQL <literal>GRAPH</literal>).
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT rasqal_triple ##### -->
+<para>
+
+</para>
+
+@subject: 
+@predicate: 
+@object: 
+@origin: 
+@flags: 
+
+<!-- ##### ENUM rasqal_triple_flags ##### -->
+<para>
+
+</para>
+
+@RASQAL_TRIPLE_FLAGS_EXACT: 
+@RASQAL_TRIPLE_FLAGS_OPTIONAL: 
+@RASQAL_TRIPLE_FLAGS_LAST: 
+
+<!-- ##### FUNCTION rasqal_new_triple ##### -->
+<para>
+
+</para>
+
+@subject: 
+@predicate: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_triple_from_triple ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_free_triple ##### -->
+<para>
+
+</para>
+
+@t: 
+
+
+<!-- ##### FUNCTION rasqal_triple_get_origin ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### ENUM rasqal_triple_parts ##### -->
+<para>
+
+</para>
+
+@RASQAL_TRIPLE_SUBJECT: 
+@RASQAL_TRIPLE_PREDICATE: 
+@RASQAL_TRIPLE_OBJECT: 
+@RASQAL_TRIPLE_ORIGIN: 
+@RASQAL_TRIPLE_GRAPH: 
+@RASQAL_TRIPLE_SPO: 
+@RASQAL_TRIPLE_SPOG: 
+
+<!-- ##### FUNCTION rasqal_triple_print ##### -->
+<para>
+
+</para>
+
+@t: 
+@fh: 
+
+
+<!-- ##### FUNCTION rasqal_triple_set_origin ##### -->
+<para>
+
+</para>
+
+@t: 
+@l: 
+
+

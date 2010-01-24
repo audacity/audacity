@@ -1,0 +1,2 @@
+<http://example.org/triples#bag1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> .
+<http://example.org/node> <http://example.org/ns#prop1> "" .

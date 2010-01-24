@@ -1,0 +1,6 @@
+PREFIX  foaf: <http://xmlns.com/foaf/0.1/>
+SELECT  ?mbox
+WHERE
+    { ?x foaf:name "Johnny Lee Outlaw" .
+      ?x foaf:mbox ?mbox .
+    }

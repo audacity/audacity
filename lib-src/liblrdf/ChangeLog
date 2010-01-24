@@ -1,0 +1,10 @@
+0.0.1	First release
+
+...
+
+0.2.3	Added patches from Taybin Rutkin and Paul Davis
+
+0.2.4	Fixed buffer overrun in rebuild_taxonomic_closure reported by Taybin Rutkin
+	Fixed some memory leaks: know remaining leak in the triple list allocator.
+
+0.4.0	Better genid creation.

@@ -1,0 +1,89 @@
+# $Id: manifest.ttl,v 1.1 2008-07-08 10:45:52 larsl Exp $
+
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:label  "Expr: Built-ins" ;
+    mf:entries
+    ( 
+      [  mf:name    "str-1" ;
+         mf:action
+            [ qt:query  <q-str-1.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-str-1.ttl>
+      ]
+      [  mf:name    "str-2" ;
+         mf:action
+            [ qt:query  <q-str-2.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-str-2.ttl>
+      ]
+      [  mf:name    "str-3" ;
+         mf:action
+            [ qt:query  <q-str-3.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-str-3.ttl>
+      ]
+      [  mf:name    "str-4" ;
+         mf:action
+            [ qt:query  <q-str-4.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-str-4.ttl>
+      ]
+      [  mf:name    "isBlank-1" ;
+         mf:action
+            [ qt:query  <q-blank-1.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-blank-1.ttl>
+      ]
+
+      [  mf:name    "datatype-1" ;
+         mf:action
+            [ qt:query  <q-datatype-1.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-datatype-1.ttl>
+      ]
+
+      [  mf:name    "isURI-1" ;
+         mf:action
+            [ qt:query  <q-uri-1.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         mf:result  <result-uri-1.ttl>
+      ]
+
+      [  mf:name    "isIRI-1" ;
+         mf:action
+            [ qt:query  <q-iri-1.rq> ;
+              qt:data   <data-builtin-1.ttl> ] ;
+         # NB same result as before.
+         mf:result  <result-iri-1.ttl>
+      ]
+    [  mf:name    "LangMatches-1" ;
+         mf:action
+            [ qt:query  <q-langMatches-1.rq> ;
+              qt:data   <data-langMatches.ttl> ] ;
+        mf:result  <result-langMatches-1.ttl>
+      ]
+     [  mf:name    "LangMatches-2" ;
+         mf:action
+            [ qt:query  <q-langMatches-2.rq> ;
+              qt:data   <data-langMatches.ttl> ] ;
+        mf:result  <result-langMatches-2.ttl>
+      ]
+     [  mf:name    "LangMatches-3" ;
+         mf:action
+            [ qt:query  <q-langMatches-3.rq> ;
+              qt:data   <data-langMatches.ttl> ] ;
+        mf:result  <result-langMatches-3.ttl>
+      ]
+     [  mf:name    "LangMatches-4" ;
+         mf:action
+            [ qt:query  <q-langMatches-4.rq> ;
+              qt:data   <data-langMatches.ttl> ] ;
+        mf:result  <result-langMatches-4.ttl>
+      ]
+
+    ).

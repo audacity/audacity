@@ -1,0 +1,2 @@
+SELECT ?x
+WHERE  (<http://somewhere/res1>, <http://somewhere/pred1>, ?x)

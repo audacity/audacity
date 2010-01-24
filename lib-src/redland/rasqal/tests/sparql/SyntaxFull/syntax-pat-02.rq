@@ -1,0 +1,4 @@
+# No DOT after optional
+PREFIX : <http:/example.org/ns#> 
+SELECT *
+{ ?a :b :c OPTIONAL{:x :y :z} :x ?y ?z }

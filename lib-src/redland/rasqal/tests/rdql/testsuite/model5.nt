@@ -1,0 +1,12 @@
+# Produced by ARP : see model5.rdf
+# This has two bags (one anon) in it.
+_:j1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "11" .
+_:j1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "12" .
+_:j1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> .
+<http://never/something> <http://never/contents1> _:j1 .
+<http://never/bag> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "21" .
+<http://never/bag> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "22" .
+<http://never/bag> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> .
+<http://never/something> <http://never/contents2> <http://never/bag> .
+<http://never/something> <http://never/otherstuff> "Other Stuff" .
+<http://never/somethingElse> <http://never/metadata> "metadata" .

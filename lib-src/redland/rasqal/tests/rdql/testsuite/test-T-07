@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial query 7
+
+SELECT ?prop
+FROM <vc-db-2.rdf>
+WHERE (<http://somewhere/JohnSmith/> , ?prop, "John Smith")
+USING vCard FOR <http://www.w3.org/2001/vcard-rdf/3.0#>

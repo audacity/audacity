@@ -1,0 +1,16 @@
+@prefix r: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix loc: <http://www.w3.org/2001/sw/DataAccess/tests/data/ValueTesting/extendedType-0#> .
+@prefix air: <http://www.daml.org/2001/10/html/airport-ont#> .
+
+loc:a	air:name "Austin Bergstrom International" ;
+	loc:location [ r:type loc:geodetic ;
+		loc:rotational "30.300000"^^loc:latitude ;
+		loc:orthogonal "-97.700000"^^loc:longitude
+	]
+ .
+loc:b	air:name "Austin Bergstrom International" ;
+	loc:location [ r:type loc:EarthCenteredEarthFixed ;
+		loc:rotational "-7420507.1"^^loc:ECEF_X ;
+		loc:orthogonal "-5462738.5"^^loc:ECEF_Y
+	]
+ .

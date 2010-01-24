@@ -1,0 +1,118 @@
+# -*- RPM-SPEC -*-
+%define name    @PACKAGE@
+%define version @VERSION@
+%define release SNAP
+
+Summary:   Rasqal RDF Query Library
+Name:      %{name}
+Version:   %{version}
+Release:   %{release}
+Prefix:    %{_prefix}
+License:   LGPL/Apache 2.0
+Group:     Development/Libraries
+Source:    http://download.librdf.org/source/%{name}-%{version}.tar.gz
+URL:       http://librdf.org/rasqal/
+BuildRoot: /tmp/%{name}-%{version}
+BuildRequires: raptor-devel >= @RAPTOR_MIN_VERSION@
+Packager:  Dave Beckett <Dave.Beckett@bristol.ac.uk>
+Docdir: %{_docdir}
+Requires: raptor
+
+%description
+
+Rasqal is a library providing full support for querying Resource
+Description Framework (RDF) including parsing query syntaxes, constructing
+the queries, executing them and returning result formats.  It currently
+handles the RDF Data Query Language (RDQL) and SPARQL Query language.
+
+%package devel
+Summary: Libraries, includes etc to develop with the Rasqal RDF query library
+Group: Development/Libraries
+Requires: rasqal = %{version}
+Requires: raptor >= @RAPTOR_MIN_VERSION@
+
+%description devel
+Libraries, includes etc to develop with the Rasqal RDF query language library.
+
+%prep
+%setup -q
+
+%build
+
+%configure --enable-release --with-raptor=system
+
+%{__make} OPTIMIZE="$RPM_OPT_FLAGS"
+
+%install
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_mandir}/man1
+install -d $RPM_BUILD_ROOT%{_mandir}/man3
+
+%makeinstall
+
+%clean
+[ -n "$RPM_BUILD_ROOT" -a "$RPM_BUILD_ROOT" != / ] && rm -rf $RPM_BUILD_ROOT
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-, root, root)
+
+%doc AUTHORS COPYING COPYING.LIB ChangeLog LICENSE.txt NEWS README
+%doc *.html
+
+%doc %{_mandir}/man1/roqet.1*
+%doc %{_mandir}/man3/librasqal.3*
+
+%{_libdir}/librasqal*.so.*
+%{prefix}/bin/roqet
+
+
+%files devel
+%defattr(-, root, root)
+
+%doc AUTHORS COPYING COPYING.LIB ChangeLog LICENSE.txt NEWS README
+%doc LICENSE-2.0.txt NOTICE
+%doc %{_mandir}/man1/rasqal-config.1*
+
+%doc docs/README.html
+%doc %{_datadir}/gtk-doc/html
+
+%{prefix}/bin/rasqal-config
+%{_libdir}/librasqal*.so
+%{_libdir}/librasqal*.a
+%{_libdir}/librasqal*.la
+%{_libdir}/pkgconfig/rasqal.pc
+
+%{prefix}/include/*
+
+
+%changelog
+* Wed Aug 11 2005  Dave Beckett <dave.beckett@bristol.ac.uk>
+- Update Source:
+- Use %makeinstall
+
+* Wed Aug 10 2005  Dave Beckett <dave.beckett@bristol.ac.uk>
+- Use %configure.
+
+* Fri Jul 28 2005  Dave Beckett <dave.beckett@bristol.ac.uk>
+- Updated for gtk-doc locations
+
+* Fri Oct 22 2004 <Dave.Beckett@bristol.ac.uk>
+- License now LGPL/Apache 2
+- Added LICENSE-2.0.txt and NOTICE
+
+* Wed May 5 2004 <Dave.Beckett@bristol.ac.uk>
+- Ship roqet and roqet.1
+
+* Sat May 1 2004 <Dave.Beckett@bristol.ac.uk>
+- Requires raptor 1.3.0
+
+* Mon Feb 24 2004 <Dave.Beckett@bristol.ac.uk>
+- Requires raptor
+
+* Mon Aug 11 2003 <Dave.Beckett@bristol.ac.uk>
+- Initial packaging

@@ -1,0 +1,193 @@
+--- ../../../../flac-1.2.1/configure.in	2007-09-13 16:48:42.000000000 +0100
++++ configure.in	2008-05-25 16:50:12.000000000 +0100
+@@ -324,60 +324,14 @@
+ 	src/libFLAC++/Makefile \
+ 	src/libFLAC++/flac++.pc \
+ 	src/flac/Makefile \
+-	src/metaflac/Makefile \
+-	src/monkeys_audio_utilities/Makefile \
+-	src/monkeys_audio_utilities/flac_mac/Makefile \
+-	src/monkeys_audio_utilities/flac_ren/Makefile \
+-	src/plugin_common/Makefile \
+-	src/plugin_winamp2/Makefile \
+-	src/plugin_winamp2/include/Makefile \
+-	src/plugin_winamp2/include/winamp2/Makefile \
+-	src/plugin_xmms/Makefile \
+ 	src/share/Makefile \
+-	src/share/getopt/Makefile \
+-	src/share/grabbag/Makefile \
+-	src/share/replaygain_analysis/Makefile \
+-	src/share/replaygain_synthesis/Makefile \
+-	src/share/replaygain_synthesis/include/Makefile \
+-	src/share/replaygain_synthesis/include/private/Makefile \
+-	src/share/utf8/Makefile \
+-	src/test_grabbag/Makefile \
+-	src/test_grabbag/cuesheet/Makefile \
+-	src/test_grabbag/picture/Makefile \
+-	src/test_libs_common/Makefile \
+-	src/test_libFLAC/Makefile \
+-	src/test_libFLAC++/Makefile \
+-	src/test_seeking/Makefile \
+-	src/test_streams/Makefile \
+-	examples/Makefile \
+-	examples/c/Makefile \
+-	examples/c/decode/Makefile \
+-	examples/c/decode/file/Makefile \
+-	examples/c/encode/Makefile \
+-	examples/c/encode/file/Makefile \
+-	examples/cpp/Makefile \
+-	examples/cpp/decode/Makefile \
+-	examples/cpp/decode/file/Makefile \
+-	examples/cpp/encode/Makefile \
+-	examples/cpp/encode/file/Makefile \
+ 	include/Makefile \
+ 	include/FLAC/Makefile \
+ 	include/FLAC++/Makefile \
+ 	include/share/Makefile \
+ 	include/share/grabbag/Makefile \
+-	include/test_libs_common/Makefile \
+-	doc/Makefile \
+-	doc/html/Makefile \
+-	doc/html/images/Makefile \
+-	doc/html/images/hw/Makefile \
+-	doc/html/ru/Makefile \
+ 	m4/Makefile \
+ 	man/Makefile \
+-	test/Makefile \
+-	test/cuesheets/Makefile \
+-	test/flac-to-flac-metadata-test-files/Makefile \
+-	test/metaflac-test-files/Makefile \
+-	test/pictures/Makefile \
+ 	build/Makefile \
+ 	obj/Makefile \
+ 	obj/debug/Makefile \
+--- ../../../flac-1.2.1/Makefile.am	2007-09-16 20:29:29.000000000 +0100
++++ Makefile.am	2008-03-22 16:13:57.000000000 +0000
+@@ -30,7 +30,7 @@
+ 
+ AUTOMAKE_OPTIONS = foreign 1.7
+ 
+-SUBDIRS = doc include m4 man src examples test build obj
++SUBDIRS = include m4 man src build obj
+ 
+ DISTCLEANFILES = libtool-disable-static
+ 
+--- ../../../flac-1.2.1/include/Makefile.am	2007-08-29 05:48:07.000000000 +0100
++++ include/Makefile.am	2008-03-22 16:14:53.000000000 +0000
+@@ -19,4 +19,4 @@
+ CPPLIBS_DIRS = FLAC++
+ endif
+ 
+-SUBDIRS = FLAC $(CPPLIBS_DIRS) share test_libs_common
++SUBDIRS = FLAC $(CPPLIBS_DIRS) share
+--- ../../../../flac-1.2.1/src/Makefile.am	2007-08-29 05:47:32.000000000 +0100
++++ src/Makefile.am	2008-05-25 17:06:46.000000000 +0100
+@@ -20,22 +20,12 @@
+ endif
+ 
+ if FLaC__WITH_CPPLIBS
+-CPPLIBS_DIRS = libFLAC++ test_libFLAC++
++CPPLIBS_DIRS = libFLAC++ 
+ endif
+ 
+ SUBDIRS = \
+ 	libFLAC \
+ 	share \
+-	flac \
+-	metaflac \
+-	monkeys_audio_utilities \
+-	$(XMMS_DIRS) \
+-	plugin_winamp2 \
+-	test_grabbag \
+-	test_libs_common \
+-	test_libFLAC \
+-	test_seeking \
+-	test_streams \
+ 	$(CPPLIBS_DIRS)
+ 
+ EXTRA_DIST = \
+--- ../../../../flac-1.2.1/src/share/Makefile.am	2007-02-02 06:25:22.000000000 +0000
++++ src/share/Makefile.am	2008-05-25 16:57:21.000000000 +0100
+@@ -15,7 +15,7 @@
+ #  restrictive of those mentioned above.  See the file COPYING.Xiph in this
+ #  distribution.
+ 
+-SUBDIRS = getopt replaygain_analysis replaygain_synthesis grabbag utf8
++SUBDIRS =
+ 
+ EXTRA_DIST = \
+ 	Makefile.lite \
+Index: configure.in
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/libflac/configure.in,v
+retrieving revision 1.6
+diff -u -r1.6 configure.in
+--- configure.in	25 May 2008 16:11:51 -0000	1.6
++++ configure.in	18 Jan 2009 00:16:11 -0000
+@@ -209,26 +209,26 @@
+ fi
+ AM_CONDITIONAL(FLaC__HAS_DOXYGEN, test -n "$DOXYGEN")
+ 
+-AC_ARG_ENABLE(local-xmms-plugin,
+-AC_HELP_STRING([--enable-local-xmms-plugin], [Install XMMS plugin to ~/.xmms/Plugins instead of system location]),
+-[case "${enableval}" in
+-	yes) install_xmms_plugin_locally=true ;;
+-	no)  install_xmms_plugin_locally=false ;;
+-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-local-xmms-plugin) ;;
+-esac],[install_xmms_plugin_locally=false])
+-AM_CONDITIONAL(FLaC__INSTALL_XMMS_PLUGIN_LOCALLY, test "x$install_xmms_plugin_locally" = xtrue)
+-
+-AC_ARG_ENABLE(xmms-plugin,
+-AC_HELP_STRING([--disable-xmms-plugin], [Do not build XMMS plugin]),
+-[case "${enableval}" in
+-	yes) enable_xmms_plugin=true ;;
+-	no)  enable_xmms_plugin=false ;;
+-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-xmms-plugin) ;;
+-esac],[enable_xmms_plugin=true])
+-if test "x$enable_xmms_plugin" != xfalse ; then
+-	AM_PATH_XMMS(0.9.5.1, , AC_MSG_WARN([*** XMMS >= 0.9.5.1 not installed - XMMS support will not be built]))
+-fi
+-AM_CONDITIONAL(FLaC__HAS_XMMS, test -n "$XMMS_INPUT_PLUGIN_DIR")
++dnl AC_ARG_ENABLE(local-xmms-plugin,
++dnl AC_HELP_STRING([--enable-local-xmms-plugin], [Install XMMS plugin to ~/.xmms/Plugins instead of system location]),
++dnl [case "${enableval}" in
++dnl	yes) install_xmms_plugin_locally=true ;;
++dnl	no)  install_xmms_plugin_locally=false ;;
++dnl	*) AC_MSG_ERROR(bad value ${enableval} for --enable-local-xmms-plugin) ;;
++dnl esac],[install_xmms_plugin_locally=false])
++dnl AM_CONDITIONAL(FLaC__INSTALL_XMMS_PLUGIN_LOCALLY, test "x$install_xmms_plugin_locally" = xtrue)
++
++dnl AC_ARG_ENABLE(xmms-plugin,
++dnl AC_HELP_STRING([--disable-xmms-plugin], [Do not build XMMS plugin]),
++dnl [case "${enableval}" in
++dnl 	yes) enable_xmms_plugin=true ;;
++dnl 	no)  enable_xmms_plugin=false ;;
++dnl 	*) AC_MSG_ERROR(bad value ${enableval} for --enable-xmms-plugin) ;;
++dnl esac],[enable_xmms_plugin=true])
++dnl if test "x$enable_xmms_plugin" != xfalse ; then
++dnl 	AM_PATH_XMMS(0.9.5.1, , AC_MSG_WARN([*** XMMS >= 0.9.5.1 not installed - XMMS support will not be built]))
++dnl fi
++dnl AM_CONDITIONAL(FLaC__HAS_XMMS, test -n "$XMMS_INPUT_PLUGIN_DIR")
+ 
+ dnl build FLAC++ or not
+ AC_ARG_ENABLE([cpplibs],
+Index: src/Makefile.am
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/libflac/src/Makefile.am,v
+retrieving revision 1.4
+diff -u -r1.4 Makefile.am
+--- src/Makefile.am	25 May 2008 16:11:53 -0000	1.4
++++ src/Makefile.am	18 Jan 2009 00:18:31 -0000
+@@ -15,9 +15,9 @@
+ #  restrictive of those mentioned above.  See the file COPYING.Xiph in this
+ #  distribution.
+ 
+-if FLaC__HAS_XMMS
+-XMMS_DIRS = plugin_common plugin_xmms
+-endif
++#if FLaC__HAS_XMMS
++#XMMS_DIRS = plugin_common plugin_xmms
++#endif
+ 
+ if FLaC__WITH_CPPLIBS
+ CPPLIBS_DIRS = libFLAC++ 

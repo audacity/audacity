@@ -1,0 +1,65 @@
+This is libsndfile, 1.0.18
+
+libsndfile is a library of C routines for reading and writing
+files containing sampled audio data.
+
+The src/ directory contains the source code for library itself.
+
+The doc/ directory contains the libsndfile documentation.
+
+The examples/ directory contains examples of how to write code using
+libsndfile.
+
+The tests/ directory contains programs which link against libsndfile
+and test its functionality.
+
+The src/GSM610 directory contains code written by Jutta Degener and Carsten
+Bormann. Their original code can be found at :
+    http://kbs.cs.tu-berlin.de/~jutta/toast.html
+
+The src/G72x directory contains code written and released by Sun Microsystems
+under a suitably free license.
+
+
+LINUX
+-----
+Whereever possible, you should use the packages supplied by your Linux
+distribution.
+
+If you really do need to compile from source it should be as easy as:
+
+		./configure
+		make
+		make install
+
+Since libsndfile optionally links against libFLAC, libogg and libvorbis, you
+will need to install appropriate versions of these libraries before running
+configure as above.
+
+
+UNIX
+----
+Compile as for Linux.
+
+
+Win32/Win64
+-----------
+The default Windows compilers are nowhere near compliant with the 1999 ISO
+C Standard and hence not able to compile libsndfile.
+
+Please use the libsndfile binaries available on the libsndfile web site.
+
+
+MacOSX
+------
+Building on MacOSX should be the same as building it on any other Unix.
+
+
+CONTACTS
+--------
+
+libsndfile was written by Erik de Castro Lopo (erikd AT mega-nerd DOT com).
+The libsndfile home page is at :
+
+	http://www.mega-nerd.com/libsndfile/
+

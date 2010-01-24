@@ -1,0 +1,543 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Hashes</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="redland-files.html" title="Files">
+<link rel="next" href="redland-heuristics.html" title="Heuristics">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="redland-files.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-heuristics.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-hash.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-hash.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-hash"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-hash.top_of_page"></a>Hashes</span></h2>
+<p>Hashes — Key:Value hashes or dictionaries.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-hash.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>;
+typedef             <a class="link" href="redland-hash.html#librdf-hash-cursor" title="librdf_hash_cursor">librdf_hash_cursor</a>;
+<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>*        <a class="link" href="redland-hash.html#librdf-new-hash-from-string" title="librdf_new_hash_from_string ()">librdf_new_hash_from_string</a>         (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name,
+                                                         const char *string);
+<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>*        <a class="link" href="redland-hash.html#librdf-new-hash-from-array-of-strings" title="librdf_new_hash_from_array_of_strings ()">librdf_new_hash_from_array_of_strings</a>
+                                                        (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name,
+                                                         const char **array);
+<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>*        <a class="link" href="redland-hash.html#librdf-new-hash-from-hash" title="librdf_new_hash_from_hash ()">librdf_new_hash_from_hash</a>           (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *old_hash);
+void                <a class="link" href="redland-hash.html#librdf-free-hash" title="librdf_free_hash ()">librdf_free_hash</a>                    (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash);
+char*               <a class="link" href="redland-hash.html#librdf-hash-get" title="librdf_hash_get ()">librdf_hash_get</a>                     (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);
+int                 <a class="link" href="redland-hash.html#librdf-hash-get-as-boolean" title="librdf_hash_get_as_boolean ()">librdf_hash_get_as_boolean</a>          (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);
+long                <a class="link" href="redland-hash.html#librdf-hash-get-as-long" title="librdf_hash_get_as_long ()">librdf_hash_get_as_long</a>             (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);
+char*               <a class="link" href="redland-hash.html#librdf-hash-get-del" title="librdf_hash_get_del ()">librdf_hash_get_del</a>                 (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);
+int                 <a class="link" href="redland-hash.html#librdf-hash-put-strings" title="librdf_hash_put_strings ()">librdf_hash_put_strings</a>             (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key,
+                                                         const char *value);
+void                <a class="link" href="redland-hash.html#librdf-hash-print" title="librdf_hash_print ()">librdf_hash_print</a>                   (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         FILE *fh);
+void                <a class="link" href="redland-hash.html#librdf-hash-print-keys" title="librdf_hash_print_keys ()">librdf_hash_print_keys</a>              (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         FILE *fh);
+void                <a class="link" href="redland-hash.html#librdf-hash-print-values" title="librdf_hash_print_values ()">librdf_hash_print_values</a>            (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key_string,
+                                                         FILE *fh);
+unsigned char*      <a class="link" href="redland-hash.html#librdf-hash-interpret-template" title="librdf_hash_interpret_template ()">librdf_hash_interpret_template</a>      (unsigned char *template_string,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *dictionary,
+                                                         unsigned char *prefix,
+                                                         unsigned char *suffix);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-hash.description"></a><h2>Description</h2>
+<p>
+Interface to implementations of key:value hashes either in memory, on
+disk and with persistence.  Keys may have multiple and duplicate values.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-hash.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-hash"></a><h3>librdf_hash</h3>
+<pre class="programlisting">typedef struct librdf_hash_s librdf_hash;
+</pre>
+<p>
+Redland hash class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-cursor"></a><h3>librdf_hash_cursor</h3>
+<pre class="programlisting">typedef struct librdf_hash_cursor_s librdf_hash_cursor;
+</pre>
+<p>
+Redland hash cursor class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-hash-from-string"></a><h3>librdf_new_hash_from_string ()</h3>
+<pre class="programlisting"><a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>*        librdf_new_hash_from_string         (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name,
+                                                         const char *string);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object from a string.
+</p>
+<p>
+See <span class="type">librdf_hash_from_string</span> for the string format.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> hash name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>string</code></em> :</span></p></td>
+<td> hash encoded as a string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-hash-from-array-of-strings"></a><h3>librdf_new_hash_from_array_of_strings ()</h3>
+<pre class="programlisting"><a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>*        librdf_new_hash_from_array_of_strings
+                                                        (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name,
+                                                         const char **array);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object from an array of strings.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> hash name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>array</code></em> :</span></p></td>
+<td> address of the start of the array of char* pointers
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-hash-from-hash"></a><h3>librdf_new_hash_from_hash ()</h3>
+<pre class="programlisting"><a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a>*        librdf_new_hash_from_hash           (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *old_hash);</pre>
+<p>
+Copy Constructor - create a new <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object from an existing one.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>old_hash</code></em> :</span></p></td>
+<td> the hash to use to construct the hash
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-free-hash"></a><h3>librdf_free_hash ()</h3>
+<pre class="programlisting">void                librdf_free_hash                    (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash);</pre>
+<p>
+Destructor - destroy a <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> hash object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-get"></a><h3>librdf_hash_get ()</h3>
+<pre class="programlisting">char*               librdf_hash_get                     (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);</pre>
+<p>
+Retrieve one value from hash for a given key as string.
+</p>
+<p>
+The value returned is from newly allocated memory which the
+caller must free.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> hash object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>key</code></em> :</span></p></td>
+<td> pointer to key
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the value or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-get-as-boolean"></a><h3>librdf_hash_get_as_boolean ()</h3>
+<pre class="programlisting">int                 librdf_hash_get_as_boolean          (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);</pre>
+<p>
+Lookup a hash key and decode value as a boolean.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>key</code></em> :</span></p></td>
+<td> key string to look up
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> &gt;0 (for true), 0 (for false) or &lt;0 (for key not found or not known boolean value)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-get-as-long"></a><h3>librdf_hash_get_as_long ()</h3>
+<pre class="programlisting">long                librdf_hash_get_as_long             (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);</pre>
+<p>
+Lookup a hash key and decode value as a long.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>key</code></em> :</span></p></td>
+<td> key string to look up
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> &gt;0 (for success), &lt;0 (for key not found or not known boolean value)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-get-del"></a><h3>librdf_hash_get_del ()</h3>
+<pre class="programlisting">char*               librdf_hash_get_del                 (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key);</pre>
+<p>
+Retrieve one value from hash for a given key as string and remove all values with that key.
+</p>
+<p>
+The value returned is from newly allocated memory which the
+caller must free.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> hash object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>key</code></em> :</span></p></td>
+<td> pointer to key
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the value or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-put-strings"></a><h3>librdf_hash_put_strings ()</h3>
+<pre class="programlisting">int                 librdf_hash_put_strings             (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key,
+                                                         const char *value);</pre>
+<p>
+Insert key/value pairs into the hash as strings.
+</p>
+<p>
+The key and values are copied into the hash, no sharing i s done.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> hash object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>key</code></em> :</span></p></td>
+<td> key 
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-print"></a><h3>librdf_hash_print ()</h3>
+<pre class="programlisting">void                librdf_hash_print                   (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         FILE *fh);</pre>
+<p>
+Pretty print the hash to a file descriptor.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> the hash
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fh</code></em> :</span></p></td>
+<td> file handle
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-print-keys"></a><h3>librdf_hash_print_keys ()</h3>
+<pre class="programlisting">void                librdf_hash_print_keys              (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         FILE *fh);</pre>
+<p>
+Pretty print the keys to a file descriptor.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> the hash
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fh</code></em> :</span></p></td>
+<td> file handle
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-print-values"></a><h3>librdf_hash_print_values ()</h3>
+<pre class="programlisting">void                librdf_hash_print_values            (<a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *hash,
+                                                         const char *key_string,
+                                                         FILE *fh);</pre>
+<p>
+Pretty print the values of one key to a file descriptor.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>hash</code></em> :</span></p></td>
+<td> the hash
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>key_string</code></em> :</span></p></td>
+<td> the key as a string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fh</code></em> :</span></p></td>
+<td> file handle
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-hash-interpret-template"></a><h3>librdf_hash_interpret_template ()</h3>
+<pre class="programlisting">unsigned char*      librdf_hash_interpret_template      (unsigned char *template_string,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *dictionary,
+                                                         unsigned char *prefix,
+                                                         unsigned char *suffix);</pre>
+<p>
+Interpret keys in a template string to their value in a dictionary.
+</p>
+<p>
+Can be used to do variable substitution for a string where
+the syntax that marks the variable is defined by the <em class="parameter"><code>prefix</code></em>
+and <em class="parameter"><code>suffix</code></em> strings, and the variables are stored in the <em class="parameter"><code>dictionary</code></em>
+hash table.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>template_string</code></em> :</span></p></td>
+<td> template string to interprate
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dictionary</code></em> :</span></p></td>
+<td> dictionary of key/values to substitute
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prefix</code></em> :</span></p></td>
+<td> prefix to mark a key in the template
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>suffix</code></em> :</span></p></td>
+<td> suffix to mark a key in the template
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Newly allocated string, or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

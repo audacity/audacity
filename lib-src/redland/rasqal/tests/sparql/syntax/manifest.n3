@@ -1,0 +1,38 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Miscellaneous SPARQL syntax test cases" ;
+    mf:entries
+    (
+     [  mf:name    "sparql-0triples" ;
+        rdfs:comment
+            "Select with 0 triples" ;
+        mf:action
+            [ qt:query  <0triples.rq> ;
+              qt:data   <data.n3> ] ;
+        mf:result  <result-0triples.n3>
+      ]
+
+     [  mf:name    "order-by-distinct" ;
+        rdfs:comment
+            "ORDER BY and DISTINCT with different variables" ;
+        mf:action
+            [ qt:query  <order-distinct.rq> ;
+              qt:data   <order.ttl> ] ;
+        mf:result  <result-order-distinct.ttl>
+      ]
+
+     [  mf:name    "distinct-with-undef-var" ;
+        rdfs:comment
+            "SELECT DISTINCT with an undefined variable" ;
+        mf:action
+            [ qt:query  <distinct-undef.rq> ;
+              qt:data   <data.n3> ] ;
+        mf:result  <result-distinct-undef.ttl>
+      ]
+
+    # End of tests
+   ).

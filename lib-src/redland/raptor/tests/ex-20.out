@@ -1,0 +1,1 @@
+<http://librdf.org/raptor/tests/ex-20.rdf#foo> <http://example.com/properties/property> <http://example.org/object> .

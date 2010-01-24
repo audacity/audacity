@@ -1,0 +1,118 @@
+<!-- ##### SECTION Title ##### -->
+Unused items
+
+<!-- ##### SECTION Short_Description ##### -->
+Not used
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO RASQAL_API ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO RASQAL_QUERY_RESULTS_FORMATTER_DECLARED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO RASQAL_WORLD_DECLARED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION bind_match ##### -->
+<para>
+
+</para>
+
+@rtm: 
+@user_data: 
+@bindings: 
+@parts: 
+@Returns: 
+
+
+<!-- ##### FUNCTION finish ##### -->
+<para>
+
+</para>
+
+@rtm: 
+@user_data: 
+
+
+<!-- ##### FUNCTION free_triples_source ##### -->
+<para>
+
+</para>
+
+@user_data: 
+
+
+<!-- ##### FUNCTION init_triples_match ##### -->
+<para>
+
+</para>
+
+@rtm: 
+@rts: 
+@user_data: 
+@m: 
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION is_end ##### -->
+<para>
+
+</para>
+
+@rtm: 
+@user_data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION next_match ##### -->
+<para>
+
+</para>
+
+@rtm: 
+@user_data: 
+
+
+<!-- ##### STRUCT rasqal_expression_s ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION triple_present ##### -->
+<para>
+
+</para>
+
+@rts: 
+@user_data: 
+@t: 
+@Returns: 
+
+

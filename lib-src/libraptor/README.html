@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Raptor RDF Parser Library</title>
+  <link rel="meta" type="application/rdf+xml" title="DOAP" href="raptor.rdf" />
+</head>
+<body>
+
+<h1 style="text-align:center">Raptor RDF Parser Library</h1>
+<h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
+  
+
+<h2>Overview</h2>
+
+<p><a href="http://librdf.org/raptor/">Raptor</a>
+is a free software / Open Source C library that provides
+a set of parsers and serializers that
+generate Resource Description Framework (RDF) triples
+by parsing syntaxes or serialize the triples into a syntax.
+The supported parsing syntaxes are RDF/XML, N-Triples, TRiG, Turtle,
+RSS tag soup including all versions of RSS, Atom 1.0 and 0.3, GRDDL
+and microformats for HTML, XHTML and XML.  The
+serializing syntaxes are RDF/XML (regular, and abbreviated),
+Atom 1.0, GraphViz, JSON, N-Triples, RSS 1.0 and XMP.</p>
+
+<p>Raptor was designed to work closely with the
+<a href="http://librdf.org/">Redland RDF library</a>
+(<b>R</b>DF <b>P</b>arser <b>T</b>oolkit f<b>o</b>r <b>R</b>edland)
+but is entirely separate.  It is a portable library that works
+across many POSIX systems (Unix, GNU/Linux, BSDs, OSX, cygwin,
+win32).  Raptor has no memory leaks and is fast.
+</p>
+
+<p>This is a mature and stable library.  A summary
+of the changes can be found in the <a href="NEWS.html">NEWS</a> file,
+detailed API changes in the <a href="RELEASE.html">release notes</a>
+and file-by-file changes in the <a href="ChangeLog">ChangeLog</a>.</p>
+
+<ul>
+<li>Designed to integrate well with <a href="http://librdf.org/">Redland</a></li>
+<li>Parses content on the web if <a href="http://curl.haxx.se/libcurl/">libcurl</a>, <a href="http://xmlsoft.org/">libxml2</a> or BSD libfetch is available.</li>
+<li>Supports all RDF terms including datatyped and XML literals</li>
+<li>Optional features including parsers and serialisers can be selected at configure time.</li>
+<li>Language bindings to Perl, PHP, Python and Ruby when used via Redland</li>
+<li>No memory leaks</li>
+<li>Fast</li>
+<li>Standalone <a href="rapper.html">rapper</a> RDF parser utility program</li>
+</ul>
+
+<p>Known bugs and issues are recorded in the
+<a href="http://bugs.librdf.org/">Redland issue tracker</a>.</p>
+
+
+
+<h2>Parsers</h2>
+
+<h3>RDF/XML Parser</h3>
+
+<p>A Parser for the standard
+<a href="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML syntax</a>.</p>
+<ul>
+<li>Fully handles the <a href="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML syntax updates</a> for <a href="http://www.w3.org/TR/xmlbase/">XML Base</a>, <code>xml:lang</code>, RDF datatyping and Collections.</li>
+<li>Handles all RDF vocabularies such as <a href="http://www.foaf-project.org/">FOAF</a>, <a href="http://www.purl.org/rss/1.0/">RSS 1.0</a>, <a href="http://dublincore.org/">Dublin Core</a>, <a href="http://www.w3.org/TR/owl-features/">OWL</a>, <a href="http://usefulinc.com/doap">DOAP</a></li>
+<li>Handles <code>rdf:resource</code> / <code>resource</code> attributes</li>
+<li>Uses <a href="http://expat.sourceforge.net/">expat</a> and/or (GNOME) <a href="http://xmlsoft.org/">libxml</a> XML parsers as available or required</li>
+</ul>
+
+
+<h3>N-Triples Parser</h3>
+
+<p>A parser for the
+<a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
+syntax as defined by the 
+<a href="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</a>
+for the <a href="http://www.w3.org/TR/rdf-testcases/">RDF Test Cases</a>.
+</p>
+
+
+<h3>Turtle Parser</h3>
+
+<p>A parser for the
+<a href="http://www.dajobe.org/2004/01/turtle/">Turtle Terse RDF Triple Language</a>
+syntax, designed as a useful subset of
+<a href="http://www.w3.org/DesignIssues/Notation3">Notation 3</a>.
+</p>
+
+
+<h3>TRiG Parser</h3>
+
+<p>A parser for the
+<a href="http://www.wiwiss.fu-berlin.de/suhl/bizer/TriG/Spec/">TriG - Turtle with Named Graphs</a>
+syntax.
+</p>
+
+<p>The parser is alpha quality and may not support the entire TRiG
+specification.</p>
+
+
+<h3>RSS "tag soup" parser</h3>
+
+<p>A parser for the multiple XML RSS formats that use the elements
+such as channel, item, title, description in different ways.
+Attempts to turn the input into
+<a href="http://www.purl.org/rss/1.0/">RSS 1.0</a>
+RDF triples.  True <a href="http://www.purl.org/rss/1.0/">RSS 1.0</a>,
+as a full RDF vocabulary, is best parsed by the RDF/XML parser.
+It also generates triples for RSS enclosures.</p>
+
+<p>This parser also provides support for the Atom 1.0 syndication
+format defined in IETF
+<a href="http://www.ietf.org/rfc/rfc4287.txt">RFC 4287</a>
+</p>
+
+
+<h3>GRDDL and microformats parser</h3>
+
+<p>A parser/processor for
+<a href="http://www.w3.org/TR/2007/REC-grddl-20070911/">Gleaning Resource Descriptions from Dialects of Languages (GRDDL)</a>
+syntax, W3C Recommendation of 2007-09-11 which allows reading XHTML
+and XML as RDF triples by using profiles in the document that declare
+XSLT transforms from the XHTML or XML content into RDF/XML or other
+RDF syntax which can then be parsed.  It uses either an XML or
+a lax HTML parser to allow HTML tag soup to be read.</p>
+
+<p>The parser passes the all the GRDDL tests as of Raptor 1.4.16.</p>
+
+<p>The parser also handles hCard and hReview using public XSL sheets.</p>
+
+
+<h2>Serializers</h2>
+
+<h3>RDF/XML Serializer</h3>
+
+<p>A serializer to the standard
+<a href="http://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML syntax</a>
+as revised by the
+<a href="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</a>
+in 2004.   This writes a plain triple-based RDF/XML serialization with
+no optimisation or pretty-printing.</p>
+
+<p>A second serializer is provided using several of the RDF/XML
+abbreviations to provide a more compact readable format, at the cost
+of some pre-processing.  This is suitable for small documents.
+</p>
+
+
+<h3>N-Triples Serializer</h3>
+
+<p>A serializer to the
+<a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
+syntax as used by the 
+<a href="http://www.w3.org/2001/sw/RDFCore/">W3C RDF Core working group</a>
+for the <a href="http://www.w3.org/TR/rdf-testcases/">RDF Test Cases</a>.
+</p>
+
+
+<h3>Atom 1.0 Serializer</h3>
+
+<p>A serializer to the Atom 1.0 syndication format defined in IETF
+<a href="http://www.ietf.org/rfc/rfc4287.txt">RFC 4287</a>
+</p>
+
+
+<h3>JSON Serializers</h3>
+
+<p>Two serializers for to write triples encoded in JSON, one
+(<code>json</code>) in a resource-centric abbreviated form <a
+href="http://n2.talis.com/wiki/RDF_JSON_Specification">RDF/JSON</a>
+like Turtle or RDF/XML-Abbreviated; the other a triple-centric format
+(<code>json-triples</code>) based on the SPARQL results in JSON
+format.  Beta quality.
+</p>
+
+
+<h3>GraphViz DOT Serializer</h3>
+
+<p>An serializer to the GraphViz
+<a href="http://www.graphviz.org/doc/info/lang.html">DOT format</a>
+which aids visualising RDF graphs.
+</p>
+
+
+<h3>RSS 1.0 Serializer</h3>
+
+<p>A serializer to the
+<a href="http://purl.org/rss/1.0/spec">RDF Site Summary (RSS) 1.0</a>
+format.
+</p>
+
+
+<h3>Turtle Serializer</h3>
+
+<p>A serializer for the
+<a href="http://www.dajobe.org/2004/01/turtle/">Turtle Terse RDF Triple Language</a>
+syntax.
+</p>
+
+<h3>XMP Serializer</h3>
+
+<p>An alpha quality serializer to the Adobe XMP profile of RDF/XML
+suitable for embedding inside an external document.
+</p>
+
+
+<h2>Documentation</h2>
+
+<p>The public API is described in the
+<a href="libraptor.html">libraptor.3</a> UNIX manual page.
+It is demonstrated in the
+<a href="rapper.html">rapper</a>
+utility program which shows how to call the parser and write
+the triples in a serialization.  When Raptor is used inside
+<a href="http://librdf.org/">Redland</a>,
+the Redland documentation explains
+how to call the parser and contains several example programs.
+There are also further examples in the <tt>example</tt> directory
+of the distribution.</p>
+
+<p>To install Raptor see the <a href="INSTALL.html">Installation document</a>.
+</p>
+
+<h2>Sources</h2>
+
+<p>The packaged sources are available from
+<a href="http://download.librdf.org/source/">http://download.librdf.org/source/</a> (master site) and also from the
+<a href="http://sourceforge.net/projects/librdf/">SourceForge site</a>.
+
+The development <a href="http://subversion.tigris.org/">Subversion</a>
+sources can also be
+<a href="http://svn.librdf.org/view/raptor/">browsed with ViewCV</a>.
+</p>
+
+
+<h2>License</h2>
+
+<p>This library is free software / open source software released
+under the LGPL (GPL) or Apache 2.0 licenses.  See 
+<a href="LICENSE.html">LICENSE.html</a> for full details.</p>
+
+
+<h2>Mailing Lists</h2>
+
+<p>The
+<a href="http://librdf.org/lists/">Redland mailing lists</a>
+discusses the development and use of Raptor and Redland as well as
+future plans and announcement of releases.</p>
+
+<hr />
+
+<p>Copyright (C) 2000-2008 <a href="http://www.dajobe.org/">Dave Beckett</a><br />Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

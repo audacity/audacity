@@ -1,0 +1,39 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoundTouch", "..\..\SoundTouch\SoundTouch.vcproj", "{121A2AA5-7B1F-4871-8436-FB9C837F11D4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bpm", "..\bpm\bpm.vcproj", "{DA262114-26F8-4F52-BC51-111307A6C776}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundstretch", "soundstretch.vcproj", "{5AACDFFA-D491-44B8-A332-DA7ACCAAF2AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DA262114-26F8-4F52-BC51-111307A6C776} = {DA262114-26F8-4F52-BC51-111307A6C776}
+		{121A2AA5-7B1F-4871-8436-FB9C837F11D4} = {121A2AA5-7B1F-4871-8436-FB9C837F11D4}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{121A2AA5-7B1F-4871-8436-FB9C837F11D4}.Debug.ActiveCfg = Debug|Win32
+		{121A2AA5-7B1F-4871-8436-FB9C837F11D4}.Debug.Build.0 = Debug|Win32
+		{121A2AA5-7B1F-4871-8436-FB9C837F11D4}.Release.ActiveCfg = Release|Win32
+		{121A2AA5-7B1F-4871-8436-FB9C837F11D4}.Release.Build.0 = Release|Win32
+		{DA262114-26F8-4F52-BC51-111307A6C776}.Debug.ActiveCfg = Debug|Win32
+		{DA262114-26F8-4F52-BC51-111307A6C776}.Debug.Build.0 = Debug|Win32
+		{DA262114-26F8-4F52-BC51-111307A6C776}.Release.ActiveCfg = Release|Win32
+		{DA262114-26F8-4F52-BC51-111307A6C776}.Release.Build.0 = Release|Win32
+		{5AACDFFA-D491-44B8-A332-DA7ACCAAF2AF}.Debug.ActiveCfg = Debug|Win32
+		{5AACDFFA-D491-44B8-A332-DA7ACCAAF2AF}.Debug.Build.0 = Debug|Win32
+		{5AACDFFA-D491-44B8-A332-DA7ACCAAF2AF}.Release.ActiveCfg = Release|Win32
+		{5AACDFFA-D491-44B8-A332-DA7ACCAAF2AF}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

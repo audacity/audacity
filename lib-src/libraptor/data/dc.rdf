@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <rdf:Description rdf:about="http://purl.org/net/dajobe/">
+    <dc:title>Dave Beckett's Home Page</dc:title>
+    <dc:creator>Dave Beckett</dc:creator>
+  </rdf:Description> 
+</rdf:RDF>

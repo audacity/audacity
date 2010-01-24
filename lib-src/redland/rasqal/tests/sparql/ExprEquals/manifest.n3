@@ -1,0 +1,106 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Some SPARQL test cases - equality of values" ;
+    mf:entries
+    ( 
+      [  mf:name    "Equality 1-1" ;
+         mf:action
+            [ qt:query  <query-eq-1.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-1.ttl>
+      ]
+      [  mf:name    "Equality 1-2" ;
+         mf:action
+            [ qt:query  <query-eq-2.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-2.ttl>
+      ]
+      [  mf:name    "Equality 1-3" ;
+         mf:action
+            [ qt:query  <query-eq-3.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-3.ttl>
+      ]
+      [  mf:name    "Equality 1-4" ;
+         mf:action
+            [ qt:query  <query-eq-4.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-4.ttl>
+      ]
+      [  mf:name    "Equality 1-5" ;
+         mf:action
+            [ qt:query  <query-eq-5.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-5.ttl>
+      ]
+
+
+      [  mf:name    "Equality - 2 var - test equals" ;
+         mf:action
+            [ qt:query  <query-eq2-1.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq2-1.ttl>
+      ]
+
+##       [  mf:name    "Equality - 2 var - test not equals " ;
+##          mf:action
+##             [ qt:query  <query-eq2-1.rq> ;
+##               qt:data   <data-eq.ttl> ] ;
+##          mf:result  <result-eq2-1.ttl>
+##       ]
+
+    # Graph versions of the equality tests
+
+      [  mf:name    "Equality 1-1 -- graph" ;
+         mf:action
+            [ qt:query  <query-eq-graph-1.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-graph-1.ttl>
+      ]
+      [  mf:name    "Equality 1-2 -- graph" ;
+         mf:action
+            [ qt:query  <query-eq-graph-2.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-graph-2.ttl>
+      ]
+      [  mf:name    "Equality 1-3 -- graph" ;
+         mf:action
+            [ qt:query  <query-eq-graph-3.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-graph-3.ttl>
+      ]
+      [  mf:name    "Equality 1-4 -- graph" ;
+         mf:action
+            [ qt:query  <query-eq-graph-4.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-graph-4.ttl>
+      ]
+      [  mf:name    "Equality 1-5 -- graph" ;
+         mf:action
+            [ qt:query  <query-eq-graph-5.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq-graph-5.ttl>
+      ]
+
+
+      [  mf:name    "Equality - 2 var - test equals -- graph" ;
+         mf:action
+            [ qt:query  <query-eq2-graph-1.rq> ;
+              qt:data   <data-eq.ttl> ] ;
+         mf:result  <result-eq2-graph-1.ttl>
+      ]
+
+    ## Can't write != in a graph match.
+##       [  mf:name    "Equality - 2 var - test not equals  -- graph" ;
+##          mf:action
+##             [ qt:query  <query-eq2-1.rq> ;
+##               qt:data   <data-eq.ttl> ] ;
+##          mf:result  <result-eq2-1.ttl>
+##       ]
+
+
+    ).

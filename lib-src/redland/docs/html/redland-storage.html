@@ -1,0 +1,1691 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Triple stores.</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="redland-statement.html" title="RDF Triple (librdf_statement)">
+<link rel="next" href="redland-storage-modules.html" title="Storage Modules">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="redland-statement.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-storage-modules.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#redland-storage.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#redland-storage.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="redland-storage"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="redland-storage.top_of_page"></a>Triple stores.</span></h2>
+<p>Triple stores. — RDF Triple stores</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="redland-storage.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+typedef             <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>;
+typedef             <a class="link" href="redland-storage.html#librdf-storage-factory" title="librdf_storage_factory">librdf_storage_factory</a>;
+void                <a class="link" href="redland-storage.html#librdf-storage-register-factory" title="librdf_storage_register_factory ()">librdf_storage_register_factory</a>     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name,
+                                                         const char *label,
+                                                         void (factorylibrdf_storage_factory*) ());
+int                 <a class="link" href="redland-storage.html#librdf-storage-enumerate" title="librdf_storage_enumerate ()">librdf_storage_enumerate</a>            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         unsigned int counter,
+                                                         const char **name,
+                                                         const char **label);
+<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     <a class="link" href="redland-storage.html#librdf-new-storage" title="librdf_new_storage ()">librdf_new_storage</a>                  (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *storage_name,
+                                                         const char *name,
+                                                         const char *options_string);
+<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     <a class="link" href="redland-storage.html#librdf-new-storage-with-options" title="librdf_new_storage_with_options ()">librdf_new_storage_with_options</a>     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *storage_name,
+                                                         const char *name,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *options);
+<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     <a class="link" href="redland-storage.html#librdf-new-storage-from-storage" title="librdf_new_storage_from_storage ()">librdf_new_storage_from_storage</a>     (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *old_storage);
+<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     <a class="link" href="redland-storage.html#librdf-new-storage-from-factory" title="librdf_new_storage_from_factory ()">librdf_new_storage_from_factory</a>     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-storage.html#librdf-storage-factory" title="librdf_storage_factory">librdf_storage_factory</a> *factory,
+                                                         const char *name,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *options);
+void                <a class="link" href="redland-storage.html#librdf-free-storage" title="librdf_free_storage ()">librdf_free_storage</a>                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+int                 <a class="link" href="redland-storage.html#librdf-storage-open" title="librdf_storage_open ()">librdf_storage_open</a>                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-model.html#librdf-model" title="librdf_model">librdf_model</a> *model);
+int                 <a class="link" href="redland-storage.html#librdf-storage-close" title="librdf_storage_close ()">librdf_storage_close</a>                (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+int                 <a class="link" href="redland-storage.html#librdf-storage-size" title="librdf_storage_size ()">librdf_storage_size</a>                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+int                 <a class="link" href="redland-storage.html#librdf-storage-add-statement" title="librdf_storage_add_statement ()">librdf_storage_add_statement</a>        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+int                 <a class="link" href="redland-storage.html#librdf-storage-add-statements" title="librdf_storage_add_statements ()">librdf_storage_add_statements</a>       (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a> *statement_stream);
+int                 <a class="link" href="redland-storage.html#librdf-storage-remove-statement" title="librdf_storage_remove_statement ()">librdf_storage_remove_statement</a>     (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+int                 <a class="link" href="redland-storage.html#librdf-storage-contains-statement" title="librdf_storage_contains_statement ()">librdf_storage_contains_statement</a>   (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      <a class="link" href="redland-storage.html#librdf-storage-serialise" title="librdf_storage_serialise ()">librdf_storage_serialise</a>            (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      <a class="link" href="redland-storage.html#librdf-storage-find-statements" title="librdf_storage_find_statements ()">librdf_storage_find_statements</a>      (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      <a class="link" href="redland-storage.html#librdf-storage-find-statements-with-options" title="librdf_storage_find_statements_with_options ()">librdf_storage_find_statements_with_options</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context_node,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *options);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-storage.html#librdf-storage-get-sources" title="librdf_storage_get_sources ()">librdf_storage_get_sources</a>          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *arc,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *target);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-storage.html#librdf-storage-get-arcs" title="librdf_storage_get_arcs ()">librdf_storage_get_arcs</a>             (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *source,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *target);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-storage.html#librdf-storage-get-targets" title="librdf_storage_get_targets ()">librdf_storage_get_targets</a>          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *source,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *arc);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-storage.html#librdf-storage-get-arcs-in" title="librdf_storage_get_arcs_in ()">librdf_storage_get_arcs_in</a>          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-storage.html#librdf-storage-get-arcs-out" title="librdf_storage_get_arcs_out ()">librdf_storage_get_arcs_out</a>         (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);
+int                 <a class="link" href="redland-storage.html#librdf-storage-has-arc-in" title="librdf_storage_has_arc_in ()">librdf_storage_has_arc_in</a>           (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *property);
+int                 <a class="link" href="redland-storage.html#librdf-storage-has-arc-out" title="librdf_storage_has_arc_out ()">librdf_storage_has_arc_out</a>          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *property);
+int                 <a class="link" href="redland-storage.html#librdf-storage-context-add-statement" title="librdf_storage_context_add_statement ()">librdf_storage_context_add_statement</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+int                 <a class="link" href="redland-storage.html#librdf-storage-context-add-statements" title="librdf_storage_context_add_statements ()">librdf_storage_context_add_statements</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context,
+                                                         <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a> *stream);
+int                 <a class="link" href="redland-storage.html#librdf-storage-context-remove-statement" title="librdf_storage_context_remove_statement ()">librdf_storage_context_remove_statement</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);
+int                 <a class="link" href="redland-storage.html#librdf-storage-context-remove-statements" title="librdf_storage_context_remove_statements ()">librdf_storage_context_remove_statements</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context);
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      <a class="link" href="redland-storage.html#librdf-storage-context-as-stream" title="librdf_storage_context_as_stream ()">librdf_storage_context_as_stream</a>    (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context);
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      <a class="link" href="redland-storage.html#librdf-storage-context-serialise" title="librdf_storage_context_serialise ()">librdf_storage_context_serialise</a>    (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context);
+int                 <a class="link" href="redland-storage.html#librdf-storage-supports-query" title="librdf_storage_supports_query ()">librdf_storage_supports_query</a>       (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-query.html#librdf-query" title="librdf_query">librdf_query</a> *query);
+<a class="link" href="redland-query-results.html#librdf-query-results" title="librdf_query_results">librdf_query_results</a>* <a class="link" href="redland-storage.html#librdf-storage-query-execute" title="librdf_storage_query_execute ()">librdf_storage_query_execute</a>      (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-query.html#librdf-query" title="librdf_query">librdf_query</a> *query);
+int                 <a class="link" href="redland-storage.html#librdf-storage-sync" title="librdf_storage_sync ()">librdf_storage_sync</a>                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      <a class="link" href="redland-storage.html#librdf-storage-find-statements-in-context" title="librdf_storage_find_statements_in_context ()">librdf_storage_find_statements_in_context</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context_node);
+<a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    <a class="link" href="redland-storage.html#librdf-storage-get-contexts" title="librdf_storage_get_contexts ()">librdf_storage_get_contexts</a>         (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+<a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        <a class="link" href="redland-storage.html#librdf-storage-get-feature" title="librdf_storage_get_feature ()">librdf_storage_get_feature</a>          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature);
+int                 <a class="link" href="redland-storage.html#librdf-storage-set-feature" title="librdf_storage_set_feature ()">librdf_storage_set_feature</a>          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *value);
+int                 <a class="link" href="redland-storage.html#librdf-storage-transaction-commit" title="librdf_storage_transaction_commit ()">librdf_storage_transaction_commit</a>   (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+void*               <a class="link" href="redland-storage.html#librdf-storage-transaction-get-handle" title="librdf_storage_transaction_get_handle ()">librdf_storage_transaction_get_handle</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+int                 <a class="link" href="redland-storage.html#librdf-storage-transaction-rollback" title="librdf_storage_transaction_rollback ()">librdf_storage_transaction_rollback</a> (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+int                 <a class="link" href="redland-storage.html#librdf-storage-transaction-start" title="librdf_storage_transaction_start ()">librdf_storage_transaction_start</a>    (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+int                 <a class="link" href="redland-storage.html#librdf-storage-transaction-start-with-handle" title="librdf_storage_transaction_start_with_handle ()">librdf_storage_transaction_start_with_handle</a>
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         void *handle);
+void                <a class="link" href="redland-storage.html#librdf-storage-add-reference" title="librdf_storage_add_reference ()">librdf_storage_add_reference</a>        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+void                <a class="link" href="redland-storage.html#librdf-storage-remove-reference" title="librdf_storage_remove_reference ()">librdf_storage_remove_reference</a>     (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-storage.description"></a><h2>Description</h2>
+<p>
+Provides classes to create triple stores to back the RDF graph
+interface (<a class="link" href="redland-model.html#librdf-model" title="librdf_model"><span class="type">librdf_model</span></a>).  Most of the methods are for implementing
+the RDF model API and have the same name.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="redland-storage.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="librdf-storage"></a><h3>librdf_storage</h3>
+<pre class="programlisting">typedef struct librdf_storage_s librdf_storage;
+</pre>
+<p>
+Redland storage class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-factory"></a><h3>librdf_storage_factory</h3>
+<pre class="programlisting">typedef struct librdf_storage_factory_s librdf_storage_factory;
+</pre>
+<p>
+Redland storage factory class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-register-factory"></a><h3>librdf_storage_register_factory ()</h3>
+<pre class="programlisting">void                librdf_storage_register_factory     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *name,
+                                                         const char *label,
+                                                         void (factorylibrdf_storage_factory*) ());</pre>
+<p>
+Register a storage factory.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> the storage factory name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
+<td> the storage factory label
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>factory</code></em> :</span></p></td>
+<td> pointer to function to call to register the factory
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-enumerate"></a><h3>librdf_storage_enumerate ()</h3>
+<pre class="programlisting">int                 librdf_storage_enumerate            (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         unsigned int counter,
+                                                         const char **name,
+                                                         const char **label);</pre>
+<p>
+Get information on storages.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>counter</code></em> :</span></p></td>
+<td> index into the list of storages
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> pointer to store the name of the storage (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
+<td> pointer to store syntax readable label (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure of if counter is out of range
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-storage"></a><h3>librdf_new_storage ()</h3>
+<pre class="programlisting"><a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     librdf_new_storage                  (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *storage_name,
+                                                         const char *name,
+                                                         const char *options_string);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object.
+</p>
+<p>
+The options are encoded as described in <code class="function">librdf_hash_from_string()</code>
+and can be NULL if none are required.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage_name</code></em> :</span></p></td>
+<td> the storage factory name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> an identifier for the storage
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>options_string</code></em> :</span></p></td>
+<td> options to initialise storage
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object or NULL on failure
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-storage-with-options"></a><h3>librdf_new_storage_with_options ()</h3>
+<pre class="programlisting"><a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     librdf_new_storage_with_options     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         const char *storage_name,
+                                                         const char *name,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *options);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object.
+</p>
+<p>
+The options can be NULL if none are required.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage_name</code></em> :</span></p></td>
+<td> the storage factory name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> an identifier for the storage
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>options</code></em> :</span></p></td>
+<td> <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> of options to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object or NULL on failure
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-storage-from-storage"></a><h3>librdf_new_storage_from_storage ()</h3>
+<pre class="programlisting"><a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     librdf_new_storage_from_storage     (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *old_storage);</pre>
+<p>
+Should create a new storage in the same context as the existing one
+as appropriate for the storage.  For example, in a RDBMS storage
+it would be a new database, or in on disk it would be a new
+set of files.  This will mean automatically generating
+a new identifier for the storage, maybe based on the existing
+storage identifier.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>old_storage</code></em> :</span></p></td>
+<td> the existing storage <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> to use
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object or NULL on failure
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-new-storage-from-factory"></a><h3>librdf_new_storage_from_factory ()</h3>
+<pre class="programlisting"><a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a>*     librdf_new_storage_from_factory     (<a class="link" href="redland-world.html#librdf-world" title="librdf_world">librdf_world</a> *world,
+                                                         <a class="link" href="redland-storage.html#librdf-storage-factory" title="librdf_storage_factory">librdf_storage_factory</a> *factory,
+                                                         const char *name,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *options);</pre>
+<p>
+Constructor - create a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object.
+</p>
+<p>
+If the options are present, they become owned by the storage
+and should no longer be used.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> redland world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>factory</code></em> :</span></p></td>
+<td> the factory to use to construct the storage
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> name to use for storage
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>options</code></em> :</span></p></td>
+<td> <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> of options to initialise storage
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object or NULL on failure
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-free-storage"></a><h3>librdf_free_storage ()</h3>
+<pre class="programlisting">void                librdf_free_storage                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Destructor - destroy a <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-open"></a><h3>librdf_storage_open ()</h3>
+<pre class="programlisting">int                 librdf_storage_open                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-model.html#librdf-model" title="librdf_model">librdf_model</a> *model);</pre>
+<p>
+Start a model / storage association.
+</p>
+<p>
+This is ended with <a class="link" href="redland-storage.html#librdf-storage-close" title="librdf_storage_close ()"><code class="function">librdf_storage_close()</code></a></p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>model</code></em> :</span></p></td>
+<td> model stored
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-close"></a><h3>librdf_storage_close ()</h3>
+<pre class="programlisting">int                 librdf_storage_close                (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+End a model / storage association.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-size"></a><h3>librdf_storage_size ()</h3>
+<pre class="programlisting">int                 librdf_storage_size                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Get the number of statements stored.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The number of statements or &lt; 0 if cannot be determined
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-add-statement"></a><h3>librdf_storage_add_statement ()</h3>
+<pre class="programlisting">int                 librdf_storage_add_statement        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Add a statement to a storage.
+</p>
+<p>
+The passed-in statement is copied when added to the store, not
+shared with the store.  
+</p>
+<p>
+If the statement already exists in the store, it is not added
+unless Redland contexts are being used.
+</p>
+<p>
+Enforces that the statement is legal for RDF - URI or blank subject,
+URI predicate and URI or blank or literal object (i.e. anything).</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> statement to add
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure, &lt;0 on error, &gt;0 if statement was illegal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-add-statements"></a><h3>librdf_storage_add_statements ()</h3>
+<pre class="programlisting">int                 librdf_storage_add_statements       (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a> *statement_stream);</pre>
+<p>
+Add a stream of statements to the storage.
+</p>
+<p>
+If any of the statements already exists in the store, they are not
+added unless Redland contexts are being used.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement_stream</code></em> :</span></p></td>
+<td> <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of statements
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-remove-statement"></a><h3>librdf_storage_remove_statement ()</h3>
+<pre class="programlisting">int                 librdf_storage_remove_statement     (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Remove a statement from the storage.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> statement to remove
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-contains-statement"></a><h3>librdf_storage_contains_statement ()</h3>
+<pre class="programlisting">int                 librdf_storage_contains_statement   (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Test if a given statement is present in the storage.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> statement to check
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if the storage contains the statement (&gt;0 if illegal statement)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-serialise"></a><h3>librdf_storage_serialise ()</h3>
+<pre class="programlisting"><a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      librdf_storage_serialise            (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Serialise the storage as a librdf_stream of statemetns.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of statements or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-find-statements"></a><h3>librdf_storage_find_statements ()</h3>
+<pre class="programlisting"><a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      librdf_storage_find_statements      (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Search the storage for matching statements.
+</p>
+<p>
+Searches the storage for a (partial) statement as described in
+<a class="link" href="redland-statement.html#librdf-statement-match" title="librdf_statement_match ()"><code class="function">librdf_statement_match()</code></a> and returns a <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of
+matching <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> objects.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> partial statement to find
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of matching statements (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-find-statements-with-options"></a><h3>librdf_storage_find_statements_with_options ()</h3>
+<pre class="programlisting"><a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      librdf_storage_find_statements_with_options
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context_node,
+                                                         <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash">librdf_hash</a> *options);</pre>
+<p>
+Search the storage for matching statements with match options.
+</p>
+<p>
+Searches the storage for a (partial) statement as described in
+<a class="link" href="redland-statement.html#librdf-statement-match" title="librdf_statement_match ()"><code class="function">librdf_statement_match()</code></a> and returns a <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of
+matching <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> objects.
+</p>
+<p>
+If options is given then the match is made according to
+the given options.  If options is NULL, this is equivalent
+to librdf_storage_find_statements_in_context.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> partial statement to find
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context_node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context node or NULL.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>options</code></em> :</span></p></td>
+<td> <a class="link" href="redland-hash.html#librdf-hash" title="librdf_hash"><span class="type">librdf_hash</span></a> of matching options or NULL
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of matching statements (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-sources"></a><h3>librdf_storage_get_sources ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_storage_get_sources          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *arc,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *target);</pre>
+<p>
+Return the sources (subjects) of arc in an RDF graph given arc (predicate) and target (object).
+</p>
+<p>
+Searches the storage for arcs matching the given arc and target
+and returns a list of the source <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects as an iterator</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>arc</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> arc
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>target</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> target
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-arcs"></a><h3>librdf_storage_get_arcs ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_storage_get_arcs             (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *source,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *target);</pre>
+<p>
+Return the arcs (predicates) of an arc in an RDF graph given source (subject) and target (object).
+</p>
+<p>
+Searches the storage for arcs matching the given source and target
+and returns a list of the arc <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects as an iterator</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> source
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>target</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> target
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-targets"></a><h3>librdf_storage_get_targets ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_storage_get_targets          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *source,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *arc);</pre>
+<p>
+Return the targets (objects) of an arc in an RDF graph given source (subject) and arc (predicate).
+</p>
+<p>
+Searches the storage for targets matching the given source and arc
+and returns a list of the source <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects as an iterator</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> source
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>arc</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> arc
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-arcs-in"></a><h3>librdf_storage_get_arcs_in ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_storage_get_arcs_in          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);</pre>
+<p>
+Return the properties pointing to the given resource.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> resource node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-arcs-out"></a><h3>librdf_storage_get_arcs_out ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_storage_get_arcs_out         (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node);</pre>
+<p>
+Return the properties pointing from the given resource.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> resource node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>  <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> objects (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-has-arc-in"></a><h3>librdf_storage_has_arc_in ()</h3>
+<pre class="programlisting">int                 librdf_storage_has_arc_in           (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *property);</pre>
+<p>
+Check if a node has a given property pointing to it.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> resource node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>property</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> property node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if arc property does point to the resource node
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-has-arc-out"></a><h3>librdf_storage_has_arc_out ()</h3>
+<pre class="programlisting">int                 librdf_storage_has_arc_out          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *node,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *property);</pre>
+<p>
+Check if a node has a given property pointing from it.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>node</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> resource node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>property</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> property node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 if arc property does point from the resource node
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-context-add-statement"></a><h3>librdf_storage_context_add_statement ()</h3>
+<pre class="programlisting">int                 librdf_storage_context_add_statement
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Add a statement to a storage in a context.
+</p>
+<p>
+If <em class="parameter"><code>context</code></em> is NULL, this is equivalent to librdf_storage_add_statement</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> statement to add
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-context-add-statements"></a><h3>librdf_storage_context_add_statements ()</h3>
+<pre class="programlisting">int                 librdf_storage_context_add_statements
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context,
+                                                         <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a> *stream);</pre>
+<p>
+Add statements to a storage with a context.
+</p>
+<p>
+If <em class="parameter"><code>context</code></em> is NULL, this is equivalent to librdf_storage_add_statements</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>stream</code></em> :</span></p></td>
+<td> <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> stream object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-context-remove-statement"></a><h3>librdf_storage_context_remove_statement ()</h3>
+<pre class="programlisting">int                 librdf_storage_context_remove_statement
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement);</pre>
+<p>
+Remove a statement from a storage in a context.
+</p>
+<p>
+If <em class="parameter"><code>context</code></em> is NULL, this is equivalent to librdf_storage_remove_statement</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> statement to remove
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-context-remove-statements"></a><h3>librdf_storage_context_remove_statements ()</h3>
+<pre class="programlisting">int                 librdf_storage_context_remove_statements
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context);</pre>
+<p>
+Remove statements from a storage with the given context.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri"><span class="type">librdf_uri</span></a> context
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Non 0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-context-as-stream"></a><h3>librdf_storage_context_as_stream ()</h3>
+<pre class="programlisting"><a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      librdf_storage_context_as_stream    (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context);</pre>
+<p>
+List all statements in a storage context.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of statements or NULL on failure or context is empty
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-context-serialise"></a><h3>librdf_storage_context_serialise ()</h3>
+<pre class="programlisting"><a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      librdf_storage_context_serialise    (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context);</pre>
+<p>
+List all statements in a storage context (DEPRECATED).
+</p>
+<p>
+DEPRECATED to reduce confusion with the librdf_serializer class.
+Please use librdf_storage_context_as_stream.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context node
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of statements or NULL on failure or context is empty
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-supports-query"></a><h3>librdf_storage_supports_query ()</h3>
+<pre class="programlisting">int                 librdf_storage_supports_query       (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-query.html#librdf-query" title="librdf_query">librdf_query</a> *query);</pre>
+<p>
+Check if a storage system supports a query language.
+</p>
+<p>
+Not implemented.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td> <a class="link" href="redland-query.html#librdf-query" title="librdf_query"><span class="type">librdf_query</span></a> query object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if the query is supported.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-query-execute"></a><h3>librdf_storage_query_execute ()</h3>
+<pre class="programlisting"><a class="link" href="redland-query-results.html#librdf-query-results" title="librdf_query_results">librdf_query_results</a>* librdf_storage_query_execute      (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-query.html#librdf-query" title="librdf_query">librdf_query</a> *query);</pre>
+<p>
+Run the given query against the storage.
+</p>
+<p>
+Not implemented.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td> <a class="link" href="redland-query.html#librdf-query" title="librdf_query"><span class="type">librdf_query</span></a> query object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="redland-query-results.html#librdf-query-results" title="librdf_query_results"><span class="type">librdf_query_results</span></a> or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-sync"></a><h3>librdf_storage_sync ()</h3>
+<pre class="programlisting">int                 librdf_storage_sync                 (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Synchronise the storage to the storage implementation.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-find-statements-in-context"></a><h3>librdf_storage_find_statements_in_context ()</h3>
+<pre class="programlisting"><a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream">librdf_stream</a>*      librdf_storage_find_statements_in_context
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement">librdf_statement</a> *statement,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *context_node);</pre>
+<p>
+Search the storage for matching statements in a given context.
+</p>
+<p>
+Searches the storage for a (partial) statement as described in
+<a class="link" href="redland-statement.html#librdf-statement-match" title="librdf_statement_match ()"><code class="function">librdf_statement_match()</code></a> in the given context and returns a
+<a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of matching <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> objects.  If
+context is NULL, this is equivalent to librdf_storage_find_statements.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>statement</code></em> :</span></p></td>
+<td> <a class="link" href="redland-statement.html#librdf-statement" title="librdf_statement"><span class="type">librdf_statement</span></a> partial statement to find
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context_node</code></em> :</span></p></td>
+<td> context <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="redland-stream.html#librdf-stream" title="librdf_stream"><span class="type">librdf_stream</span></a> of matching statements (may be empty) or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-contexts"></a><h3>librdf_storage_get_contexts ()</h3>
+<pre class="programlisting"><a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator">librdf_iterator</a>*    librdf_storage_get_contexts         (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Return the list of contexts in the store.
+</p>
+<p>
+Returns an iterator of <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> context nodes for each
+context in the store.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> <a class="link" href="redland-iterator.html#librdf-iterator" title="librdf_iterator"><span class="type">librdf_iterator</span></a> of context nodes or NULL on failure or if contexts are not supported
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-get-feature"></a><h3>librdf_storage_get_feature ()</h3>
+<pre class="programlisting"><a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a>*        librdf_storage_get_feature          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature);</pre>
+<p>
+Get the value of a storage feature.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri"><span class="type">librdf_uri</span></a> feature property
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> feature value or NULL if no such feature
+exists or the value is empty.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-set-feature"></a><h3>librdf_storage_set_feature ()</h3>
+<pre class="programlisting">int                 librdf_storage_set_feature          (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri">librdf_uri</a> *feature,
+                                                         <a class="link" href="redland-node.html#librdf-node" title="librdf_node">librdf_node</a> *value);</pre>
+<p>
+Set the value of a storage feature.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>feature</code></em> :</span></p></td>
+<td> <a class="link" href="redland-uri.html#librdf-uri" title="librdf_uri"><span class="type">librdf_uri</span></a> feature property
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td> <a class="link" href="redland-node.html#librdf-node" title="librdf_node"><span class="type">librdf_node</span></a> feature property value
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure (negative if no such feature)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-transaction-commit"></a><h3>librdf_storage_transaction_commit ()</h3>
+<pre class="programlisting">int                 librdf_storage_transaction_commit   (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Commit a transaction.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> the storage object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-transaction-get-handle"></a><h3>librdf_storage_transaction_get_handle ()</h3>
+<pre class="programlisting">void*               librdf_storage_transaction_get_handle
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Get the current transaction handle.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> the storage object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-transaction-rollback"></a><h3>librdf_storage_transaction_rollback ()</h3>
+<pre class="programlisting">int                 librdf_storage_transaction_rollback (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Rollback a transaction.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> the storage object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure 
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-transaction-start"></a><h3>librdf_storage_transaction_start ()</h3>
+<pre class="programlisting">int                 librdf_storage_transaction_start    (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Start a transaction</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> the storage object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-transaction-start-with-handle"></a><h3>librdf_storage_transaction_start_with_handle ()</h3>
+<pre class="programlisting">int                 librdf_storage_transaction_start_with_handle
+                                                        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage,
+                                                         void *handle);</pre>
+<p>
+Start a transaction using an existing external transaction object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> the storage object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>handle</code></em> :</span></p></td>
+<td> the transaction object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-add-reference"></a><h3>librdf_storage_add_reference ()</h3>
+<pre class="programlisting">void                librdf_storage_add_reference        (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Increment storage reference count by one.
+This function is intended to be internal to librdf storage modules.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="librdf-storage-remove-reference"></a><h3>librdf_storage_remove_reference ()</h3>
+<pre class="programlisting">void                librdf_storage_remove_reference     (<a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage">librdf_storage</a> *storage);</pre>
+<p>
+Decrement storage reference count by one.
+Free the storage if reference count becomes zero.
+This function is intended to be internal to librdf storage modules.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>storage</code></em> :</span></p></td>
+<td> <a class="link" href="redland-storage.html#librdf-storage" title="librdf_storage"><span class="type">librdf_storage</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

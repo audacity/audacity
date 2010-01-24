@@ -1,0 +1,1072 @@
+diff --git a/slv2/Makefile.am b/slv2/Makefile.am
+index c891f0b..dc265aa 100644
+--- a/slv2/Makefile.am
++++ b/slv2/Makefile.am
+@@ -13,7 +13,7 @@ dist-check-doxygen:
+ 	@false
+ endif
+ 
+-SUBDIRS      = src slv2 utils hosts $(DOC_DIR) swig debian
++SUBDIRS      = src slv2 # utils hosts $(DOC_DIR) swig debian
+ DIST_SUBDIRS = src slv2 utils hosts doc swig debian
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+diff --git a/slv2/configure b/slv2/configure
+index 1300ca2..4bf1ecd 100755
+--- a/slv2/configure
++++ b/slv2/configure
+@@ -812,6 +812,7 @@ target_alias
+ INSTALL_PROGRAM
+ INSTALL_SCRIPT
+ INSTALL_DATA
++am__isrc
+ CYGPATH_W
+ PACKAGE
+ VERSION
+@@ -902,15 +903,8 @@ WITH_MZSCHEME_TRUE
+ WITH_MZSCHEME_FALSE
+ WITH_CHICKEN_TRUE
+ WITH_CHICKEN_FALSE
+-REDLAND_CONFIG
+-RAPTOR_CFLAGS
+-RAPTOR_LIBS
+-RASQAL_CFLAGS
+-RASQAL_LIBS
+ REDLAND_CFLAGS
+ REDLAND_LIBS
+-WITH_REDLAND_TRUE
+-WITH_REDLAND_FALSE
+ JACK_CFLAGS
+ JACK_LIBS
+ WITH_JACK_TRUE
+@@ -940,10 +934,8 @@ PKG_CONFIG
+ LV2CORE_CFLAGS
+ LV2CORE_LIBS
+ PYTHON_VERSION
+-RAPTOR_CFLAGS
+-RAPTOR_LIBS
+-RASQAL_CFLAGS
+-RASQAL_LIBS
++REDLAND_CFLAGS
++REDLAND_LIBS
+ JACK_CFLAGS
+ JACK_LIBS'
+ 
+@@ -1527,7 +1519,7 @@ Optional Features:
+   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+   --disable-dependency-tracking  speeds up one-time build
+   --enable-dependency-tracking   do not reject slow dependency extractors
+-  --enable-shared[=PKGS]  build shared libraries [default=yes]
++  --enable-shared[=PKGS]  build shared libraries [default=no]
+   --enable-static[=PKGS]  build static libraries [default=yes]
+   --enable-fast-install[=PKGS]
+                           optimize for fast installation [default=yes]
+@@ -1569,12 +1561,10 @@ Some influential environment variables:
+               The installed Python version to use, for example '2.3'. This
+               string will be appended to the Python interpreter canonical
+               name.
+-  RAPTOR_CFLAGS
+-              C compiler flags for RAPTOR, overriding pkg-config
+-  RAPTOR_LIBS linker flags for RAPTOR, overriding pkg-config
+-  RASQAL_CFLAGS
+-              C compiler flags for RASQAL, overriding pkg-config
+-  RASQAL_LIBS linker flags for RASQAL, overriding pkg-config
++  REDLAND_CFLAGS
++              C compiler flags for REDLAND, overriding pkg-config
++  REDLAND_LIBS
++              linker flags for REDLAND, overriding pkg-config
+   JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
+   JACK_LIBS   linker flags for JACK, overriding pkg-config
+ 
+@@ -2048,7 +2038,8 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
+ 
+ ac_config_headers="$ac_config_headers config/config.h"
+ 
+-am__api_version="1.9"
++am__api_version='1.10'
++
+ # Find a good install program.  We prefer a C program (faster),
+ # so one script is as good as another.  But avoid the broken or
+ # incompatible versions:
+@@ -2200,38 +2191,53 @@ else
+ echo "$as_me: WARNING: \`missing' script is too old or missing" >&2;}
+ fi
+ 
+-if mkdir -p --version . >/dev/null 2>&1 && test ! -d ./--version; then
+-  # We used to keeping the `.' as first argument, in order to
+-  # allow $(mkdir_p) to be used without argument.  As in
+-  #   $(mkdir_p) $(somedir)
+-  # where $(somedir) is conditionally defined.  However this is wrong
+-  # for two reasons:
+-  #  1. if the package is installed by a user who cannot write `.'
+-  #     make install will fail,
+-  #  2. the above comment should most certainly read
+-  #     $(mkdir_p) $(DESTDIR)$(somedir)
+-  #     so it does not work when $(somedir) is undefined and
+-  #     $(DESTDIR) is not.
+-  #  To support the latter case, we have to write
+-  #     test -z "$(somedir)" || $(mkdir_p) $(DESTDIR)$(somedir),
+-  #  so the `.' trick is pointless.
+-  mkdir_p='mkdir -p --'
+-else
+-  # On NextStep and OpenStep, the `mkdir' command does not
+-  # recognize any option.  It will interpret all options as
+-  # directories to create, and then abort because `.' already
+-  # exists.
+-  for d in ./-p ./--version;
+-  do
+-    test -d $d && rmdir $d
+-  done
+-  # $(mkinstalldirs) is defined by Automake if mkinstalldirs exists.
+-  if test -f "$ac_aux_dir/mkinstalldirs"; then
+-    mkdir_p='$(mkinstalldirs)'
++{ echo "$as_me:$LINENO: checking for a thread-safe mkdir -p" >&5
++echo $ECHO_N "checking for a thread-safe mkdir -p... $ECHO_C" >&6; }
++if test -z "$MKDIR_P"; then
++  if test "${ac_cv_path_mkdir+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH$PATH_SEPARATOR/opt/sfw/bin
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++  for ac_prog in mkdir gmkdir; do
++	 for ac_exec_ext in '' $ac_executable_extensions; do
++	   { test -f "$as_dir/$ac_prog$ac_exec_ext" && $as_test_x "$as_dir/$ac_prog$ac_exec_ext"; } || continue
++	   case `"$as_dir/$ac_prog$ac_exec_ext" --version 2>&1` in #(
++	     'mkdir (GNU coreutils) '* | \
++	     'mkdir (coreutils) '* | \
++	     'mkdir (fileutils) '4.1*)
++	       ac_cv_path_mkdir=$as_dir/$ac_prog$ac_exec_ext
++	       break 3;;
++	   esac
++	 done
++       done
++done
++IFS=$as_save_IFS
++
++fi
++
++  if test "${ac_cv_path_mkdir+set}" = set; then
++    MKDIR_P="$ac_cv_path_mkdir -p"
+   else
+-    mkdir_p='$(install_sh) -d'
++    # As a last resort, use the slow shell script.  Don't cache a
++    # value for MKDIR_P within a source directory, because that will
++    # break other packages using the cache if that directory is
++    # removed, or if the value is a relative name.
++    test -d ./--version && rmdir ./--version
++    MKDIR_P="$ac_install_sh -d"
+   fi
+ fi
++{ echo "$as_me:$LINENO: result: $MKDIR_P" >&5
++echo "${ECHO_T}$MKDIR_P" >&6; }
++
++mkdir_p="$MKDIR_P"
++case $mkdir_p in
++  [\\/$]* | ?:[\\/]*) ;;
++  */*) mkdir_p="\$(top_builddir)/$mkdir_p" ;;
++esac
+ 
+ for ac_prog in gawk mawk nawk awk
+ do
+@@ -2314,12 +2320,16 @@ else
+ fi
+ rmdir .tst 2>/dev/null
+ 
+-# test to see if srcdir already configured
+-if test "`cd $srcdir && pwd`" != "`pwd`" &&
+-   test -f $srcdir/config.status; then
+-  { { echo "$as_me:$LINENO: error: source directory already configured; run \"make distclean\" there first" >&5
++if test "`cd $srcdir && pwd`" != "`pwd`"; then
++  # Use -I$(srcdir) only when $(srcdir) != ., so that make's output
++  # is not polluted with repeated "-I."
++  am__isrc=' -I$(srcdir)'
++  # test to see if srcdir already configured
++  if test -f $srcdir/config.status; then
++    { { echo "$as_me:$LINENO: error: source directory already configured; run \"make distclean\" there first" >&5
+ echo "$as_me: error: source directory already configured; run \"make distclean\" there first" >&2;}
+    { (exit 1); exit 1; }; }
++  fi
+ fi
+ 
+ # test whether we have cygpath
+@@ -2362,7 +2372,7 @@ AUTOHEADER=${AUTOHEADER-"${am_missing_run}autoheader"}
+ 
+ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
+ 
+-install_sh=${install_sh-"$am_aux_dir/install-sh"}
++install_sh=${install_sh-"\$(SHELL) $am_aux_dir/install-sh"}
+ 
+ # Installed binaries are usually stripped using `strip' when the user
+ # run `make install-strip'.  However `strip' might not be the right
+@@ -2466,7 +2476,7 @@ else
+ fi
+ 
+ fi
+-INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh) -c -s"
++INSTALL_STRIP_PROGRAM="\$(install_sh) -c -s"
+ 
+ # We need awk for the "check" target.  The system "awk" is bad on
+ # some platforms.
+@@ -2587,9 +2597,7 @@ if test "x$enable_dependency_tracking" != xno; then
+   am_depcomp="$ac_aux_dir/depcomp"
+   AMDEPBACKSLASH='\'
+ fi
+-
+-
+-if test "x$enable_dependency_tracking" != xno; then
++ if test "x$enable_dependency_tracking" != xno; then
+   AMDEP_TRUE=
+   AMDEP_FALSE='#'
+ else
+@@ -2598,7 +2606,6 @@ else
+ fi
+ 
+ 
+-
+ ac_ext=c
+ ac_cpp='$CPP $CPPFLAGS'
+ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+@@ -3585,6 +3592,7 @@ else
+        depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
+        $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
+          >/dev/null 2>conftest.err &&
++       grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
+        grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
+        grep sub/conftest.${OBJEXT-o} sub/conftest.Po > /dev/null 2>&1 &&
+        ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
+@@ -3614,9 +3622,7 @@ fi
+ echo "${ECHO_T}$am_cv_CC_dependencies_compiler_type" >&6; }
+ CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
+ 
+-
+-
+-if
++ if
+   test "x$enable_dependency_tracking" != xno \
+   && test "$am_cv_CC_dependencies_compiler_type" = gcc3; then
+   am__fastdepCC_TRUE=
+@@ -3753,6 +3759,7 @@ if eval "test \"`echo '$ac_cv_prog_cc_'${ac_cc}_c_o`\" != yes"; then
+ fi
+ 
+ 
++
+ # Library building stuff
+ # Check whether --enable-shared was given.
+ if test "${enable_shared+set}" = set; then
+@@ -3774,10 +3781,11 @@ if test "${enable_shared+set}" = set; then
+       ;;
+     esac
+ else
+-  enable_shared=yes
++  enable_shared=no
+ fi
+ 
+ 
++
+ # Check whether --enable-static was given.
+ if test "${enable_static+set}" = set; then
+   enableval=$enable_static; p=${PACKAGE-default}
+@@ -4562,7 +4570,7 @@ ia64-*-hpux*)
+   ;;
+ *-*-irix6*)
+   # Find out which ABI we are using.
+-  echo '#line 4565 "configure"' > conftest.$ac_ext
++  echo '#line 4573 "configure"' > conftest.$ac_ext
+   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+   (eval $ac_compile) 2>&5
+   ac_status=$?
+@@ -5802,6 +5810,7 @@ else
+        depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
+        $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
+          >/dev/null 2>conftest.err &&
++       grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
+        grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
+        grep sub/conftest.${OBJEXT-o} sub/conftest.Po > /dev/null 2>&1 &&
+        ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
+@@ -5831,9 +5840,7 @@ fi
+ echo "${ECHO_T}$am_cv_CXX_dependencies_compiler_type" >&6; }
+ CXXDEPMODE=depmode=$am_cv_CXX_dependencies_compiler_type
+ 
+-
+-
+-if
++ if
+   test "x$enable_dependency_tracking" != xno \
+   && test "$am_cv_CXX_dependencies_compiler_type" = gcc3; then
+   am__fastdepCXX_TRUE=
+@@ -7620,11 +7627,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:7623: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:7630: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:7627: \$? = $ac_status" >&5
++   echo "$as_me:7634: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -7910,11 +7917,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:7913: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:7920: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:7917: \$? = $ac_status" >&5
++   echo "$as_me:7924: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8014,11 +8021,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8017: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8024: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:8021: \$? = $ac_status" >&5
++   echo "$as_me:8028: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -10391,7 +10398,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<EOF
+-#line 10394 "configure"
++#line 10401 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -10491,7 +10498,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<EOF
+-#line 10494 "configure"
++#line 10501 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -12892,11 +12899,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:12895: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:12902: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:12899: \$? = $ac_status" >&5
++   echo "$as_me:12906: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -12996,11 +13003,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:12999: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:13006: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:13003: \$? = $ac_status" >&5
++   echo "$as_me:13010: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -14594,11 +14601,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:14597: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:14604: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:14601: \$? = $ac_status" >&5
++   echo "$as_me:14608: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -14698,11 +14705,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:14701: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:14708: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:14705: \$? = $ac_status" >&5
++   echo "$as_me:14712: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -16918,11 +16925,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:16921: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:16928: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:16925: \$? = $ac_status" >&5
++   echo "$as_me:16932: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -17208,11 +17215,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:17211: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:17218: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:17215: \$? = $ac_status" >&5
++   echo "$as_me:17222: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -17312,11 +17319,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:17315: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:17322: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:17319: \$? = $ac_status" >&5
++   echo "$as_me:17326: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -20232,6 +20239,8 @@ bindings="no"
+ # Check whether --enable-bindings was given.
+ if test "${enable_bindings+set}" = set; then
+   enableval=$enable_bindings; bindings="$enableval"
++else
++  bindings="no"
+ fi
+ 
+ if test "$bindings" = "yes"; then
+@@ -20282,9 +20291,7 @@ done
+ echo "$as_me: WARNING: \"SWIG not found" >&2;}
+   fi
+ fi
+-
+-
+-if test "$bindings" = "yes"; then
++ if test "$bindings" = "yes"; then
+   WITH_SWIG_TRUE=
+   WITH_SWIG_FALSE='#'
+ else
+@@ -20911,9 +20918,7 @@ fi
+ 
+ 
+ fi
+-
+-
+-if test ! "$PYTHON_VERSION" = "yes"; then
++ if test ! "$PYTHON_VERSION" = "yes"; then
+   WITH_PYTHON_TRUE=
+   WITH_PYTHON_FALSE='#'
+ else
+@@ -20921,9 +20926,7 @@ else
+   WITH_PYTHON_FALSE=
+ fi
+ 
+-
+-
+-if test "$mzscheme" = "yes"; then
++ if test "$mzscheme" = "yes"; then
+   WITH_MZSCHEME_TRUE=
+   WITH_MZSCHEME_FALSE='#'
+ else
+@@ -20931,9 +20934,7 @@ else
+   WITH_MZSCHEME_FALSE=
+ fi
+ 
+-
+-
+-if test "$chicken" = "yes"; then
++ if test "$chicken" = "yes"; then
+   WITH_CHICKEN_TRUE=
+   WITH_CHICKEN_FALSE='#'
+ else
+@@ -20943,177 +20944,22 @@ fi
+ 
+ 
+ # Check for Redland
+-build_redland="no"
+-# Extract the first word of "redland-config", so it can be a program name with args.
+-set dummy redland-config; ac_word=$2
+-{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+-if test "${ac_cv_prog_REDLAND_CONFIG+set}" = set; then
+-  echo $ECHO_N "(cached) $ECHO_C" >&6
+-else
+-  if test -n "$REDLAND_CONFIG"; then
+-  ac_cv_prog_REDLAND_CONFIG="$REDLAND_CONFIG" # Let the user override the test.
+-else
+-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+-for as_dir in $PATH
+-do
+-  IFS=$as_save_IFS
+-  test -z "$as_dir" && as_dir=.
+-  for ac_exec_ext in '' $ac_executable_extensions; do
+-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+-    ac_cv_prog_REDLAND_CONFIG="redland-config"
+-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+-    break 2
+-  fi
+-done
+-done
+-IFS=$as_save_IFS
+-
+-fi
+-fi
+-REDLAND_CONFIG=$ac_cv_prog_REDLAND_CONFIG
+-if test -n "$REDLAND_CONFIG"; then
+-  { echo "$as_me:$LINENO: result: $REDLAND_CONFIG" >&5
+-echo "${ECHO_T}$REDLAND_CONFIG" >&6; }
+-else
+-  { echo "$as_me:$LINENO: result: no" >&5
+-echo "${ECHO_T}no" >&6; }
+-fi
+-
+-
+-if test "X$REDLAND_CONFIG" = X; then
+-	{ { echo "$as_me:$LINENO: error: SLV2 requires Redland (librdf), but redland-config not found." >&5
+-echo "$as_me: error: SLV2 requires Redland (librdf), but redland-config not found." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
+-	build_redland="yes"
+-
+-pkg_failed=no
+-{ echo "$as_me:$LINENO: checking for RAPTOR" >&5
+-echo $ECHO_N "checking for RAPTOR... $ECHO_C" >&6; }
+-
+-if test -n "$PKG_CONFIG"; then
+-    if test -n "$RAPTOR_CFLAGS"; then
+-        pkg_cv_RAPTOR_CFLAGS="$RAPTOR_CFLAGS"
+-    else
+-        if test -n "$PKG_CONFIG" && \
+-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"raptor\"") >&5
+-  ($PKG_CONFIG --exists --print-errors "raptor") 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); }; then
+-  pkg_cv_RAPTOR_CFLAGS=`$PKG_CONFIG --cflags "raptor" 2>/dev/null`
+-else
+-  pkg_failed=yes
+-fi
+-    fi
+-else
+-	pkg_failed=untried
+-fi
+-if test -n "$PKG_CONFIG"; then
+-    if test -n "$RAPTOR_LIBS"; then
+-        pkg_cv_RAPTOR_LIBS="$RAPTOR_LIBS"
+-    else
+-        if test -n "$PKG_CONFIG" && \
+-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"raptor\"") >&5
+-  ($PKG_CONFIG --exists --print-errors "raptor") 2>&5
+-  ac_status=$?
+-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+-  (exit $ac_status); }; then
+-  pkg_cv_RAPTOR_LIBS=`$PKG_CONFIG --libs "raptor" 2>/dev/null`
+-else
+-  pkg_failed=yes
+-fi
+-    fi
+-else
+-	pkg_failed=untried
+-fi
+-
+-
+-
+-if test $pkg_failed = yes; then
+-
+-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+-        _pkg_short_errors_supported=yes
+-else
+-        _pkg_short_errors_supported=no
+-fi
+-        if test $_pkg_short_errors_supported = yes; then
+-	        RAPTOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "raptor"`
+-        else
+-	        RAPTOR_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "raptor"`
+-        fi
+-	# Put the nasty error message in config.log where it belongs
+-	echo "$RAPTOR_PKG_ERRORS" >&5
+-
+-	{ { echo "$as_me:$LINENO: error: Package requirements (raptor) were not met:
+-
+-$RAPTOR_PKG_ERRORS
+-
+-Consider adjusting the PKG_CONFIG_PATH environment variable if you
+-installed software in a non-standard prefix.
+-
+-Alternatively, you may set the environment variables RAPTOR_CFLAGS
+-and RAPTOR_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" >&5
+-echo "$as_me: error: Package requirements (raptor) were not met:
+-
+-$RAPTOR_PKG_ERRORS
+-
+-Consider adjusting the PKG_CONFIG_PATH environment variable if you
+-installed software in a non-standard prefix.
+-
+-Alternatively, you may set the environment variables RAPTOR_CFLAGS
+-and RAPTOR_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" >&2;}
+-   { (exit 1); exit 1; }; }
+-elif test $pkg_failed = untried; then
+-	{ { echo "$as_me:$LINENO: error: The pkg-config script could not be found or is too old.  Make sure it
+-is in your PATH or set the PKG_CONFIG environment variable to the full
+-path to pkg-config.
+-
+-Alternatively, you may set the environment variables RAPTOR_CFLAGS
+-and RAPTOR_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: The pkg-config script could not be found or is too old.  Make sure it
+-is in your PATH or set the PKG_CONFIG environment variable to the full
+-path to pkg-config.
+-
+-Alternatively, you may set the environment variables RAPTOR_CFLAGS
+-and RAPTOR_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
+-else
+-	RAPTOR_CFLAGS=$pkg_cv_RAPTOR_CFLAGS
+-	RAPTOR_LIBS=$pkg_cv_RAPTOR_LIBS
+-        { echo "$as_me:$LINENO: result: yes" >&5
+-echo "${ECHO_T}yes" >&6; }
+-	:
+-fi
+ 
+ pkg_failed=no
+-{ echo "$as_me:$LINENO: checking for RASQAL" >&5
+-echo $ECHO_N "checking for RASQAL... $ECHO_C" >&6; }
++{ echo "$as_me:$LINENO: checking for REDLAND" >&5
++echo $ECHO_N "checking for REDLAND... $ECHO_C" >&6; }
+ 
+ if test -n "$PKG_CONFIG"; then
+-    if test -n "$RASQAL_CFLAGS"; then
+-        pkg_cv_RASQAL_CFLAGS="$RASQAL_CFLAGS"
++    if test -n "$REDLAND_CFLAGS"; then
++        pkg_cv_REDLAND_CFLAGS="$REDLAND_CFLAGS"
+     else
+         if test -n "$PKG_CONFIG" && \
+-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"rasqal >= 0.9.14\"") >&5
+-  ($PKG_CONFIG --exists --print-errors "rasqal >= 0.9.14") 2>&5
++    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"redland >= 1.0.6\"") >&5
++  ($PKG_CONFIG --exists --print-errors "redland >= 1.0.6") 2>&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; then
+-  pkg_cv_RASQAL_CFLAGS=`$PKG_CONFIG --cflags "rasqal >= 0.9.14" 2>/dev/null`
++  pkg_cv_REDLAND_CFLAGS=`$PKG_CONFIG --cflags "redland >= 1.0.6" 2>/dev/null`
+ else
+   pkg_failed=yes
+ fi
+@@ -21122,16 +20968,16 @@ else
+ 	pkg_failed=untried
+ fi
+ if test -n "$PKG_CONFIG"; then
+-    if test -n "$RASQAL_LIBS"; then
+-        pkg_cv_RASQAL_LIBS="$RASQAL_LIBS"
++    if test -n "$REDLAND_LIBS"; then
++        pkg_cv_REDLAND_LIBS="$REDLAND_LIBS"
+     else
+         if test -n "$PKG_CONFIG" && \
+-    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"rasqal >= 0.9.14\"") >&5
+-  ($PKG_CONFIG --exists --print-errors "rasqal >= 0.9.14") 2>&5
++    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"redland >= 1.0.6\"") >&5
++  ($PKG_CONFIG --exists --print-errors "redland >= 1.0.6") 2>&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; then
+-  pkg_cv_RASQAL_LIBS=`$PKG_CONFIG --libs "rasqal >= 0.9.14" 2>/dev/null`
++  pkg_cv_REDLAND_LIBS=`$PKG_CONFIG --libs "redland >= 1.0.6" 2>/dev/null`
+ else
+   pkg_failed=yes
+ fi
+@@ -21150,33 +20996,33 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        RASQAL_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "rasqal >= 0.9.14"`
++	        REDLAND_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "redland >= 1.0.6"`
+         else
+-	        RASQAL_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "rasqal >= 0.9.14"`
++	        REDLAND_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "redland >= 1.0.6"`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+-	echo "$RASQAL_PKG_ERRORS" >&5
++	echo "$REDLAND_PKG_ERRORS" >&5
+ 
+-	{ { echo "$as_me:$LINENO: error: Package requirements (rasqal >= 0.9.14) were not met:
++	{ { echo "$as_me:$LINENO: error: Package requirements (redland >= 1.0.6) were not met:
+ 
+-$RASQAL_PKG_ERRORS
++$REDLAND_PKG_ERRORS
+ 
+ Consider adjusting the PKG_CONFIG_PATH environment variable if you
+ installed software in a non-standard prefix.
+ 
+-Alternatively, you may set the environment variables RASQAL_CFLAGS
+-and RASQAL_LIBS to avoid the need to call pkg-config.
++Alternatively, you may set the environment variables REDLAND_CFLAGS
++and REDLAND_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ " >&5
+-echo "$as_me: error: Package requirements (rasqal >= 0.9.14) were not met:
++echo "$as_me: error: Package requirements (redland >= 1.0.6) were not met:
+ 
+-$RASQAL_PKG_ERRORS
++$REDLAND_PKG_ERRORS
+ 
+ Consider adjusting the PKG_CONFIG_PATH environment variable if you
+ installed software in a non-standard prefix.
+ 
+-Alternatively, you may set the environment variables RASQAL_CFLAGS
+-and RASQAL_LIBS to avoid the need to call pkg-config.
++Alternatively, you may set the environment variables REDLAND_CFLAGS
++and REDLAND_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ " >&2;}
+    { (exit 1); exit 1; }; }
+@@ -21185,8 +21031,8 @@ elif test $pkg_failed = untried; then
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+-Alternatively, you may set the environment variables RASQAL_CFLAGS
+-and RASQAL_LIBS to avoid the need to call pkg-config.
++Alternatively, you may set the environment variables REDLAND_CFLAGS
++and REDLAND_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+@@ -21195,66 +21041,28 @@ echo "$as_me: error: The pkg-config script could not be found or is too old.  Ma
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+-Alternatively, you may set the environment variables RASQAL_CFLAGS
+-and RASQAL_LIBS to avoid the need to call pkg-config.
++Alternatively, you may set the environment variables REDLAND_CFLAGS
++and REDLAND_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+ See \`config.log' for more details." >&2;}
+    { (exit 1); exit 1; }; }
+ else
+-	RASQAL_CFLAGS=$pkg_cv_RASQAL_CFLAGS
+-	RASQAL_LIBS=$pkg_cv_RASQAL_LIBS
++	REDLAND_CFLAGS=$pkg_cv_REDLAND_CFLAGS
++	REDLAND_LIBS=$pkg_cv_REDLAND_LIBS
+         { echo "$as_me:$LINENO: result: yes" >&5
+ echo "${ECHO_T}yes" >&6; }
+ 	:
+ fi
+-	redland_major_version=`$REDLAND_CONFIG --version | \
+-	  sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
+-	redland_minor_version=`$REDLAND_CONFIG --version | \
+-	  sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
+-	redland_micro_version=`$REDLAND_CONFIG --version | \
+-	  sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/'`
+-	{ echo "$as_me:$LINENO: checking for REDLAND version >= 1.0.6" >&5
+-echo $ECHO_N "checking for REDLAND version >= 1.0.6... $ECHO_C" >&6; }
+-	version_ok="no"
+-	if test 1 -le $redland_major_version; then
+-		if test 0 -le $redland_minor_version; then
+-			if test 6 -le $redland_micro_version; then
+-				version_ok="yes"
+-			fi
+-		fi
+-	fi
+-	if test $version_ok = "no"; then
+-	    act=`$REDLAND_CONFIG --version`
+-		{ { echo "$as_me:$LINENO: error: REDLAND version >= 1.0.6 required; $act found" >&5
+-echo "$as_me: error: REDLAND version >= 1.0.6 required; $act found" >&2;}
+-   { (exit 1); exit 1; }; }
+-	else
+-		{ echo "$as_me:$LINENO: result: yes" >&5
+-echo "${ECHO_T}yes" >&6; }
+-    fi
+-	REDLAND_CFLAGS=`$REDLAND_CONFIG --cflags`
+-	REDLAND_LIBS=`$REDLAND_CONFIG --libs`
+-
+-
+-fi
+-
+-
+-if test "$build_redland" = "yes"; then
+-  WITH_REDLAND_TRUE=
+-  WITH_REDLAND_FALSE='#'
+-else
+-  WITH_REDLAND_TRUE='#'
+-  WITH_REDLAND_FALSE=
+-fi
+-
+ 
+ # Check for JACK
+ build_jack="yes"
+ # Check whether --enable-jack was given.
+ if test "${enable_jack+set}" = set; then
+   enableval=$enable_jack;  if test x$enable_jack = xno ; then build_jack=no ; fi
++else
++  build_jack=no
+ fi
+ 
+ if test "$build_jack" = "yes"; then
+@@ -21409,9 +21217,7 @@ else
+ 	{ echo "$as_me:$LINENO: WARNING: \"Sufficiently recent JACK not found" >&5
+ echo "$as_me: WARNING: \"Sufficiently recent JACK not found" >&2;}
+ fi
+-
+-
+-if test "$build_jack" = "yes"; then
++ if test "$build_jack" = "yes"; then
+   WITH_JACK_TRUE=
+   WITH_JACK_FALSE='#'
+ else
+@@ -21472,9 +21278,7 @@ echo "$as_me: WARNING: *** Doxygen not found, API documentation will not be buil
+ 		build_documentation="no"
+ 	fi
+ fi
+-
+-
+-if test "x$build_documentation" = "xyes"; then
++ if test "x$build_documentation" = "xyes"; then
+   HAVE_DOXYGEN_TRUE=
+   HAVE_DOXYGEN_FALSE='#'
+ else
+@@ -21654,13 +21458,6 @@ echo "$as_me: error: conditional \"WITH_CHICKEN\" was never defined.
+ Usually this means the macro was only invoked conditionally." >&2;}
+    { (exit 1); exit 1; }; }
+ fi
+-if test -z "${WITH_REDLAND_TRUE}" && test -z "${WITH_REDLAND_FALSE}"; then
+-  { { echo "$as_me:$LINENO: error: conditional \"WITH_REDLAND\" was never defined.
+-Usually this means the macro was only invoked conditionally." >&5
+-echo "$as_me: error: conditional \"WITH_REDLAND\" was never defined.
+-Usually this means the macro was only invoked conditionally." >&2;}
+-   { (exit 1); exit 1; }; }
+-fi
+ if test -z "${WITH_JACK_TRUE}" && test -z "${WITH_JACK_FALSE}"; then
+   { { echo "$as_me:$LINENO: error: conditional \"WITH_JACK\" was never defined.
+ Usually this means the macro was only invoked conditionally." >&5
+@@ -22039,6 +21836,7 @@ gives unlimited permission to copy, distribute and modify it."
+ ac_pwd='$ac_pwd'
+ srcdir='$srcdir'
+ INSTALL='$INSTALL'
++MKDIR_P='$MKDIR_P'
+ _ACEOF
+ 
+ cat >>$CONFIG_STATUS <<\_ACEOF
+@@ -22255,6 +22053,7 @@ target_alias!$target_alias$ac_delim
+ INSTALL_PROGRAM!$INSTALL_PROGRAM$ac_delim
+ INSTALL_SCRIPT!$INSTALL_SCRIPT$ac_delim
+ INSTALL_DATA!$INSTALL_DATA$ac_delim
++am__isrc!$am__isrc$ac_delim
+ CYGPATH_W!$CYGPATH_W$ac_delim
+ PACKAGE!$PACKAGE$ac_delim
+ VERSION!$VERSION$ac_delim
+@@ -22311,7 +22110,6 @@ EGREP!$EGREP$ac_delim
+ LN_S!$LN_S$ac_delim
+ ECHO!$ECHO$ac_delim
+ AR!$AR$ac_delim
+-RANLIB!$RANLIB$ac_delim
+ _ACEOF
+ 
+   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
+@@ -22353,6 +22151,7 @@ _ACEOF
+ ac_delim='%!_!# '
+ for ac_last_try in false false false false false :; do
+   cat >conf$$subs.sed <<_ACEOF
++RANLIB!$RANLIB$ac_delim
+ DSYMUTIL!$DSYMUTIL$ac_delim
+ NMEDIT!$NMEDIT$ac_delim
+ CPP!$CPP$ac_delim
+@@ -22386,15 +22185,8 @@ WITH_MZSCHEME_TRUE!$WITH_MZSCHEME_TRUE$ac_delim
+ WITH_MZSCHEME_FALSE!$WITH_MZSCHEME_FALSE$ac_delim
+ WITH_CHICKEN_TRUE!$WITH_CHICKEN_TRUE$ac_delim
+ WITH_CHICKEN_FALSE!$WITH_CHICKEN_FALSE$ac_delim
+-REDLAND_CONFIG!$REDLAND_CONFIG$ac_delim
+-RAPTOR_CFLAGS!$RAPTOR_CFLAGS$ac_delim
+-RAPTOR_LIBS!$RAPTOR_LIBS$ac_delim
+-RASQAL_CFLAGS!$RASQAL_CFLAGS$ac_delim
+-RASQAL_LIBS!$RASQAL_LIBS$ac_delim
+ REDLAND_CFLAGS!$REDLAND_CFLAGS$ac_delim
+ REDLAND_LIBS!$REDLAND_LIBS$ac_delim
+-WITH_REDLAND_TRUE!$WITH_REDLAND_TRUE$ac_delim
+-WITH_REDLAND_FALSE!$WITH_REDLAND_FALSE$ac_delim
+ JACK_CFLAGS!$JACK_CFLAGS$ac_delim
+ JACK_LIBS!$JACK_LIBS$ac_delim
+ WITH_JACK_TRUE!$WITH_JACK_TRUE$ac_delim
+@@ -22406,7 +22198,7 @@ LIBOBJS!$LIBOBJS$ac_delim
+ LTLIBOBJS!$LTLIBOBJS$ac_delim
+ _ACEOF
+ 
+-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 51; then
++  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 45; then
+     break
+   elif $ac_last_try; then
+     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
+@@ -22633,6 +22425,11 @@ ac_abs_srcdir=$ac_abs_top_srcdir$ac_dir_suffix
+   [\\/$]* | ?:[\\/]* ) ac_INSTALL=$INSTALL ;;
+   *) ac_INSTALL=$ac_top_build_prefix$INSTALL ;;
+   esac
++  ac_MKDIR_P=$MKDIR_P
++  case $MKDIR_P in
++  [\\/$]* | ?:[\\/]* ) ;;
++  */*) ac_MKDIR_P=$ac_top_build_prefix$MKDIR_P ;;
++  esac
+ _ACEOF
+ 
+ cat >>$CONFIG_STATUS <<\_ACEOF
+@@ -22686,6 +22483,7 @@ s&@builddir@&$ac_builddir&;t t
+ s&@abs_builddir@&$ac_abs_builddir&;t t
+ s&@abs_top_builddir@&$ac_abs_top_builddir&;t t
+ s&@INSTALL@&$ac_INSTALL&;t t
++s&@MKDIR_P@&$ac_MKDIR_P&;t t
+ $ac_datarootdir_hack
+ " $ac_file_inputs | sed -f "$tmp/subs-1.sed" | sed -f "$tmp/subs-2.sed" >$tmp/out
+ 
+@@ -22801,21 +22599,22 @@ echo "$as_me: $ac_file is unchanged" >&6;}
+   fi
+   rm -f "$tmp/out12"
+ # Compute $ac_file's index in $config_headers.
++_am_arg=$ac_file
+ _am_stamp_count=1
+ for _am_header in $config_headers :; do
+   case $_am_header in
+-    $ac_file | $ac_file:* )
++    $_am_arg | $_am_arg:* )
+       break ;;
+     * )
+       _am_stamp_count=`expr $_am_stamp_count + 1` ;;
+   esac
+ done
+-echo "timestamp for $ac_file" >`$as_dirname -- $ac_file ||
+-$as_expr X$ac_file : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+-	 X$ac_file : 'X\(//\)[^/]' \| \
+-	 X$ac_file : 'X\(//\)$' \| \
+-	 X$ac_file : 'X\(/\)' \| . 2>/dev/null ||
+-echo X$ac_file |
++echo "timestamp for $_am_arg" >`$as_dirname -- "$_am_arg" ||
++$as_expr X"$_am_arg" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
++	 X"$_am_arg" : 'X\(//\)[^/]' \| \
++	 X"$_am_arg" : 'X\(//\)$' \| \
++	 X"$_am_arg" : 'X\(/\)' \| . 2>/dev/null ||
++echo X"$_am_arg" |
+     sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+ 	    s//\1/
+ 	    q
+@@ -22850,8 +22649,9 @@ echo "$as_me: executing $ac_file commands" >&6;}
+   # some people rename them; so instead we look at the file content.
+   # Grep'ing the first line is not enough: some people post-process
+   # each Makefile.in and add a new line on top of each file to say so.
+-  # So let's grep whole file.
+-  if grep '^#.*generated by automake' $mf > /dev/null 2>&1; then
++  # Grep'ing the whole file is not good either: AIX grep has a line
++  # limit of 2048, but all sed's we know have understand at least 4000.
++  if sed -n 's,^#.*generated by automake.*,X,p' "$mf" | grep X >/dev/null 2>&1; then
+     dirpart=`$as_dirname -- "$mf" ||
+ $as_expr X"$mf" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+ 	 X"$mf" : 'X\(//\)[^/]' \| \
+diff --git a/slv2/configure.ac b/slv2/configure.ac
+index 8040d0c..a9fe8a4 100644
+--- a/slv2/configure.ac
++++ b/slv2/configure.ac
+@@ -67,6 +67,7 @@ CONFIG_H_PATH="$builddir/config/config.h"
+ AM_PROG_CC_C_O
+ 
+ # Library building stuff
++AC_DISABLE_SHARED
+ AC_PROG_LIBTOOL
+ 
+ # LV2 core package
+@@ -99,7 +100,7 @@ fi
+ bindings="no"
+ AC_ARG_ENABLE(bindings,
+ 	[AS_HELP_STRING(--enable-bindings, [Build language bindings via SWIG (false)])],
+-	[bindings="$enableval"])
++	[bindings="$enableval"], [bindings="no"])
+ if test "$bindings" = "yes"; then
+   AC_CHECK_PROGS(SWIG, "swig swig-1.3")
+   if test "$SWIG" = ""; then
+@@ -121,47 +122,13 @@ AM_CONDITIONAL(WITH_MZSCHEME, [test "$mzscheme" = "yes"])
+ AM_CONDITIONAL(WITH_CHICKEN, [test "$chicken" = "yes"])
+ 
+ # Check for Redland
+-build_redland="no"
+-AC_CHECK_PROG(REDLAND_CONFIG, redland-config, redland-config)
+-if test "X$REDLAND_CONFIG" = X; then
+-	AC_MSG_ERROR([SLV2 requires Redland (librdf), but redland-config not found.])
+-else
+-	build_redland="yes"
+-	PKG_CHECK_MODULES(RAPTOR, raptor)
+-	PKG_CHECK_MODULES(RASQAL, rasqal >= 0.9.14)
+-	redland_major_version=`$REDLAND_CONFIG --version | \
+-	  sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+-	redland_minor_version=`$REDLAND_CONFIG --version | \
+-	  sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+-	redland_micro_version=`$REDLAND_CONFIG --version | \
+-	  sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+-	AC_MSG_CHECKING([for REDLAND version >= 1.0.6])
+-	version_ok="no"
+-	if test 1 -le $redland_major_version; then
+-		if test 0 -le $redland_minor_version; then
+-			if test 6 -le $redland_micro_version; then
+-				version_ok="yes"
+-			fi
+-		fi
+-	fi
+-	if test $version_ok = "no"; then
+-	    act=`$REDLAND_CONFIG --version`
+-		AC_MSG_ERROR([REDLAND version >= 1.0.6 required; $act found])
+-	else
+-		AC_MSG_RESULT([yes])
+-    fi
+-	REDLAND_CFLAGS=`$REDLAND_CONFIG --cflags`
+-	REDLAND_LIBS=`$REDLAND_CONFIG --libs`
+-	AC_SUBST(REDLAND_CFLAGS)
+-	AC_SUBST(REDLAND_LIBS)
+-fi
+-AM_CONDITIONAL(WITH_REDLAND, [test "$build_redland" = "yes"])
++PKG_CHECK_MODULES(REDLAND, redland >= 1.0.6)
+ 
+ # Check for JACK
+ build_jack="yes"
+ AC_ARG_ENABLE(jack,
+ 	[AS_HELP_STRING(--enable-jack, [Build JACK clients (true)])],
+-	[ if test x$enable_jack = xno ; then build_jack=no ; fi ])
++	[ if test x$enable_jack = xno ; then build_jack=no ; fi ], [build_jack=no])
+ if test "$build_jack" = "yes"; then
+ 	PKG_CHECK_MODULES(JACK, jack >= 0.102.29, build_jack="yes", build_jack="no")
+ 	AC_DEFINE(HAVE_JACK, 1, [Has JACK])

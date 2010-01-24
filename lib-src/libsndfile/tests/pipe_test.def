@@ -1,0 +1,14 @@
+autogen definitions pipe_test.tpl;
+
+data_type = { 
+	type_name	= short ;
+	};
+
+data_type = { 
+	type_name	= float ;
+	};
+
+data_type = { 
+	type_name 	= double ;
+	};
+

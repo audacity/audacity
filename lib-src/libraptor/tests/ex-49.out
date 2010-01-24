@@ -1,0 +1,4 @@
+<http://example.org/node0> <http://example.com/properties/prop1> " <foo href=\"http://example.org?foo=1&amp;bar=2\">hmm</foo> "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop2> " <bar a=\"'\"></bar> "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop3> " <baz b=\"&quot;\"></baz> "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/node0> <http://example.com/properties/prop4> " <baz b=\"&lt;>\"></baz> "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .

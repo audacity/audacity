@@ -1,0 +1,32 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:     <http://jena.hpl.hp.com/2003/03/result-set#> .
+
+[] rdf:type rs:ResultSet ;
+    rs:resultVariable "property" ;
+    rs:size "5" ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "property" ; rs:value <http://www.w3.org/2001/vcard-rdf/3.0#FN> ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "property" ; rs:value <http://somewhere/peopleInfo#age> ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "property" ; rs:value <http://www.w3.org/2001/vcard-rdf/3.0#N> ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "property" ; rs:value <http://www.w3.org/2001/vcard-rdf/3.0#TEL> ] ;
+        ] ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ; 
+          rs:binding [ rdf:type rs:ResultBinding ;
+                       rs:variable "property" ; rs:value <http://www.w3.org/2001/vcard-rdf/3.0#TEL> ] ;
+        ] ;
+    .

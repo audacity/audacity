@@ -1,0 +1,6 @@
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+_:a  foaf:name   "Johnny Lee Outlaw" .
+_:a  foaf:mbox   <mailto:jlow@example.com> .
+_:b  foaf:name   "Peter Goodguy" .
+_:b  foaf:mbox   <mailto:peter@example.org> .

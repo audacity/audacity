@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 2-07 : 2 triple patterns
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (?x, ?y, ?z1), (?x, ?y, ?z2)
+AND ?z1 eq ?z2

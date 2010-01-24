@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!-- Test rdf:Seq with rdf:li to a resource -->
+  <rdf:Description rdf:about="http://example.com/somewhere/">
+    <a:foo xmlns:a="http://example.com/properties/">
+      <rdf:Seq>
+	<rdf:li rdf:resource="http://example.com/resource/a"/>
+	<rdf:li rdf:resource="http://example.com/resource/b"/>
+	<rdf:li rdf:resource="http://example.com/resource/c"/>
+      </rdf:Seq>
+    </a:foo>
+  </rdf:Description>
+</rdf:RDF>

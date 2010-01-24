@@ -1,0 +1,6 @@
+_:genid1 <http://example.org/ns#name> "prop1name" .
+<http://example.org/node> <http://example.org/ns#prop1> _:genid1 .
+_:genid2 <http://example.org/ns#name> "prop2name" .
+<http://example.org/node> <http://example.org/ns#prop2> _:genid2 .
+_:genid3 <http://example.org/ns#name> "prop3name" .
+<http://example.org/node> <http://example.org/ns#prop3> _:genid3 .

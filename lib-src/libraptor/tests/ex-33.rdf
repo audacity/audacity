@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.org/ns#">
+
+  <!-- check that an empty property element gives properties of
+       the generated node
+    -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+      <ex:prop1 ex:prop2="literal2" ex:prop3="literal3" />
+  </rdf:Description>
+
+</rdf:RDF>

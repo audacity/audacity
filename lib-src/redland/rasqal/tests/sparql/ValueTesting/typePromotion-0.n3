@@ -1,0 +1,8 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix t: <http://www.w3.org/2001/sw/DataAccess/tests/data/ValueTesting/typePromotion-0#> .
+
+t:one	rdfs:value	"1"^^xsd:unsignedByte .
+
+t:two	rdfs:value	"2"^^xsd:unsignedShort .
+

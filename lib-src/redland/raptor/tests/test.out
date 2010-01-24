@@ -1,0 +1,31 @@
+<http://example.org/resource1> <http://example.org/property> <http://example.org/resource2> .
+_:anon <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource2> <http://example.org/property> _:anon .
+<http://example.org/resource3> <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource4> <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource5> <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource6> <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource7> <http://example.org/property> "simple literal" .
+<http://example.org/resource8> <http://example.org/property> "backslash:\\" .
+<http://example.org/resource9> <http://example.org/property> "dquote:\"" .
+<http://example.org/resource10> <http://example.org/property> "newline:\n" .
+<http://example.org/resource11> <http://example.org/property> "return\r" .
+<http://example.org/resource12> <http://example.org/property> "tab:\t" .
+<http://example.org/resource13> <http://example.org/property> <http://example.org/resource2> .
+<http://example.org/resource14> <http://example.org/property> "x" .
+<http://example.org/resource15> <http://example.org/property> _:anon .
+<http://example.org/resource16> <http://example.org/property> "\u00E9" .
+<http://example.org/resource17> <http://example.org/property> "\u20AC" .
+<http://example.org/resource18> <http://example.org/property> "\U0010FFFF" .
+<http://example.org/resource21> <http://example.org/property> ""^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource22> <http://example.org/property> " "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource23> <http://example.org/property> "x"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource23> <http://example.org/property> "\""^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource24> <http://example.org/property> "<a></a>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource25> <http://example.org/property> "a <b></b>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource26> <http://example.org/property> "a <b></b> c"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource26> <http://example.org/property> "a\n<b></b>\nc"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource27> <http://example.org/property> "chat"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+<http://example.org/resource30> <http://example.org/property> "chat"@fr .
+<http://example.org/resource31> <http://example.org/property> "chat"@en .
+<http://example.org/resource32> <http://example.org/property> "abc"^^<http://example.org/datatype1> .

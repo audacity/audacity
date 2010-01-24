@@ -1,0 +1,8 @@
+SELECT  ?link
+SOURCE <http://xmlhack.com/rss10.php>
+WHERE  
+(?x, rss:title, ?title),
+(?x, rss:link, ?link)
+AND ?title ~~ /^RdQL/i
+USING
+rss for <http://purl.org/rss/1.0/>

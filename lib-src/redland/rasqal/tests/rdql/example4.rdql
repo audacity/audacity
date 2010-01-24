@@ -1,0 +1,5 @@
+SELECT ?x, ?y
+WHERE (<http://never/bag>, ?x, ?y)
+AND ! ( ?x eq rsyn:type && ?y eq rsyn:Bag)
+USING
+rsyn FOR <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

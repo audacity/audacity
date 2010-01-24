@@ -1,0 +1,364 @@
+<!-- ##### SECTION Title ##### -->
+Parser
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF parsers - from a syntax to RDF triples
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The parsing class that allows creating a parser for reading from a
+particular syntax (or can guess and use contextual information) that
+will on demand generate RDF triples to a handler function, as chunks
+of syntax data are passed into the parser.  Parsing can be done from
+strings in memory, files or from URIs on the web.
+</para>
+
+<para>
+There are also methods to deal with handling errors, warnings and
+returned triples as well as setting options (features) that can
+adjust how parsing is performed.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_parser ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_parser ##### -->
+<para>
+
+</para>
+
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_new_parser_for_content ##### -->
+<para>
+
+</para>
+
+@uri: 
+@mime_type: 
+@buffer: 
+@len: 
+@identifier: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_start_parse ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_parser ##### -->
+<para>
+
+</para>
+
+@parser: 
+
+
+<!-- ##### FUNCTION raptor_set_fatal_error_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_set_error_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_set_warning_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_set_statement_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_set_generate_id_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### USER_FUNCTION raptor_graph_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@graph: 
+
+
+<!-- ##### FUNCTION raptor_set_graph_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### USER_FUNCTION raptor_namespace_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@nspace: 
+
+
+<!-- ##### FUNCTION raptor_set_namespace_handler ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@handler: 
+
+
+<!-- ##### FUNCTION raptor_get_locator ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_set_default_generate_id_parameters ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@prefix: 
+@base: 
+
+
+<!-- ##### FUNCTION raptor_parse_chunk ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@buffer: 
+@len: 
+@is_end: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parse_file_stream ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@stream: 
+@filename: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parse_file ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parse_uri ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parse_uri_with_connection ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@uri: 
+@base_uri: 
+@connection: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parse_abort ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+
+
+<!-- ##### FUNCTION raptor_get_name ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_get_label ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_get_mime_type ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_get_need_base_uri ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_set_feature ##### -->
+<para>
+
+</para>
+
+@parser: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parser_set_feature_string ##### -->
+<para>
+
+</para>
+
+@parser: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_get_feature ##### -->
+<para>
+
+</para>
+
+@parser: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parser_get_feature_string ##### -->
+<para>
+
+</para>
+
+@parser: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_set_parser_strict ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@is_strict: 
+
+
+<!-- ##### FUNCTION raptor_parser_get_accept_header ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_parser_set_uri_filter ##### -->
+<para>
+
+</para>
+
+@parser: 
+@filter: 
+@user_data: 
+
+
+<!-- ##### FUNCTION raptor_parser_generate_id ##### -->
+<para>
+
+</para>
+
+@rdf_parser: 
+@type: 
+@Returns: 
+
+

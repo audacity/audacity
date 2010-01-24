@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
+<book xmlns="http://www.devhelp.net/book" title="Raptor RDF Syntax Parsing and Serializing Library Manual" link="index.html" author="" name="raptor">
+  <chapters>
+    <sub name="Raptor Overview" link="introduction.html"/>
+    <sub name="Raptor Tutorial" link="tutorial.html">
+      <sub name="Initialising and Finishing using the Library" link="tutorial-initialising-finishing.html"/>
+      <sub name="Listing built-in functionality" link="tutorial-querying-functionality.html"/>
+      <sub name="Parsing syntaxes to RDF Triples" link="tutorial-parsing.html">
+        <sub name="Introduction" link="tutorial-parsing.html#tutorial-parsing-intro"/>
+        <sub name="Create the Parser object" link="tutorial-parser-create.html"/>
+        <sub name="Parser features" link="tutorial-parser-features.html"/>
+        <sub name="Set RDF triple callback handler" link="tutorial-parser-set-triple-handler.html"/>
+        <sub name="Set fatal error, error and warning handlers" link="tutorial-parser-set-error-warning-handlers.html"/>
+        <sub name="Set the identifier creator handler" link="tutorial-parser-set-id-handler.html"/>
+        <sub name="Set namespace declared handler" link="tutorial-parser-set-namespace-handler.html"/>
+        <sub name="Set the parsing strictness" link="tutorial-parse-strictness.html"/>
+        <sub name="Provide syntax content to parse" link="tutorial-parser-content.html">
+          <sub name="Parse the content from a URI (raptor_parse_uri())" link="tutorial-parser-content.html#parse-from-uri"/>
+          <sub name="Parse the content of a URI using an existing WWW connection (raptor_parse_uri_with_connection())" link="tutorial-parser-content.html#parse-from-www"/>
+          <sub name="Parse the content of a C FILE* (raptor_parse_file_stream())" link="tutorial-parser-content.html#parse-from-filehandle"/>
+          <sub name="Parse the content of a file URI (raptor_parse_file())" link="tutorial-parser-content.html#parse-from-file-uri"/>
+          <sub name="Parse chunks of syntax content provided by the application  (raptor_start_parse() and raptor_parse_chunk())" link="tutorial-parser-content.html#parse-from-chunks"/>
+        </sub>
+        <sub name="Restrict parser network access" link="restrict-parser-network-access.html">
+          <sub name="Filtering parser network requests with feature RAPTOR_FEATURE_NO_NET" link="restrict-parser-network-access.html#tutorial-filter-network-with-feature"/>
+          <sub name="Filtering parser network requests with raptor_www_set_uri_filter()" link="restrict-parser-network-access.html#tutorial-filter-network-www-uri-filter"/>
+          <sub name="Filtering parser network requests with raptor_parser_set_uri_filter()" link="restrict-parser-network-access.html#tutorial-filter-network-parser-uri-filter"/>
+          <sub name="Setting timeout for parser network requests with feature RAPTOR_FEATURE_WWW_TIMEOUT" link="restrict-parser-network-access.html#tutorial-filter-network-parser-timeout"/>
+        </sub>
+        <sub name="Querying parser static information" link="tutorial-parser-static-info.html"/>
+        <sub name="Querying parser run-time information" link="tutorial-parser-runtime-info.html"/>
+        <sub name="Aborting parsing" link="tutorial-parser-abort.html"/>
+        <sub name="Destroy the parser" link="tutorial-parser-destroy.html"/>
+        <sub name="Parsing example code" link="tutorial-parser-example.html"/>
+      </sub>
+      <sub name="Serializing RDF triples to a syntax" link="tutorial-serializing.html">
+        <sub name="Introduction" link="tutorial-serializing.html#tutorial-serializing-intro"/>
+        <sub name="Create the Serializer object" link="tutorial-serializer-create.html"/>
+        <sub name="Serializer features" link="tutorial-serializer-features.html"/>
+        <sub name="Declare namespaces" link="tutorial-serializer-declare-namespace.html"/>
+        <sub name="Set error and warning handlers" link="tutorial-serializer-set-error-warning-handlers.html"/>
+        <sub name="Provide a destination for the serialized syntax" link="tutorial-serializer-to-destination.html">
+          <sub name="Serialize to a filename (raptor_serialize_start_to_filename())" link="tutorial-serializer-to-destination.html#serialize-to-filename"/>
+          <sub name="Serialize to a string (raptor_serialize_start_to_string())" link="tutorial-serializer-to-destination.html#serialize-to-string"/>
+          <sub name="Serialize to a FILE* file handle (raptor_serialize_start_to_file_handle())" link="tutorial-serializer-to-destination.html#serialize-to-filehandle"/>
+          <sub name="Serialize to an raptor_iostream (raptor_serialize_start())" link="tutorial-serializer-to-destination.html#serialize-to-iostream"/>
+        </sub>
+        <sub name="Get or construct RDF Triples" link="tutorial-serializer-get-triples.html"/>
+        <sub name="Send RDF Triples to serializer" link="tutorial-serializer-send-triples.html"/>
+        <sub name="Querying serializer run-time information" link="tutorial-serializer-runtime-info.html"/>
+        <sub name="Destroy the serializer" link="tutorial-serializer-destroy.html"/>
+        <sub name="Serializing example code" link="tutorial-serializer-example.html"/>
+      </sub>
+    </sub>
+    <sub name="Raptor Reference Manual" link="reference-manual.html">
+      <sub name="Parsers in Raptor (syntax to triples)" link="raptor-parsers.html">
+        <sub name="Introduction" link="raptor-parsers.html#raptor-parsers-intro"/>
+        <sub name="GRDDL parser (name grddl)" link="parser-grddl.html"/>
+        <sub name="Guess parser (name guess)" link="parser-guess.html"/>
+        <sub name="N-Triples parser (name ntriples)" link="parser-ntriples.html"/>
+        <sub name="RDF/XML parser - default (name rdfxml)" link="parser-rdfxml.html"/>
+        <sub name="RSS Tag Soup parser (name rss-tag-soup)" link="parser-rss-tag-soup.html"/>
+        <sub name="TRiG parser (name trig)" link="parser-trig.html"/>
+        <sub name="Turtle Terse RDF Triple Language parser (name turtle)" link="parser-turtle.html"/>
+      </sub>
+      <sub name="Serializers in Raptor (triples to syntax)" link="raptor-serializers.html">
+        <sub name="Introduction" link="raptor-serializers.html#raptor-serializers-intro"/>
+        <sub name="Atom 1.0 serializer (name atom)" link="serializer-atom.html"/>
+        <sub name="N-Triples serializer - default (name ntriples)" link="serializer-ntriples.html"/>
+        <sub name="RDF/XML serializer (name rdfxml)" link="serializer-rdfxml.html"/>
+        <sub name="RDF/XML (Abbreviated) serializer (name rdfxml-abbrev)" link="serializer-rdfxml-abbrev.html"/>
+        <sub name="RDF/XML (XMP Profile) serializer (name rdfxml-xmp)" link="serializer-rdfxml-xmp.html"/>
+        <sub name="Turtle serializer (name turtle)" link="serializer-turtle.html"/>
+        <sub name="RSS 1.0 serializer (name rss-1.0)" link="serializer-rss-1-0.html"/>
+        <sub name="GraphViz dot serializer (name dot)" link="serializer-dot.html"/>
+      </sub>
+      <sub name="General" link="raptor-section-general.html"/>
+      <sub name="Memory" link="raptor-section-memory.html"/>
+      <sub name="Constants" link="raptor-section-constants.html"/>
+      <sub name="Features" link="raptor-section-feature.html"/>
+      <sub name="I/O Stream" link="raptor-section-iostream.html"/>
+      <sub name="Locator" link="raptor-section-locator.html"/>
+      <sub name="Parser" link="raptor-section-parser.html"/>
+      <sub name="SAX2" link="raptor-section-sax2.html"/>
+      <sub name="Sequence" link="raptor-section-sequence.html"/>
+      <sub name="Serializer" link="raptor-section-serializer.html"/>
+      <sub name="String buffer" link="raptor-section-stringbuffer.html"/>
+      <sub name="Triples" link="raptor-section-triples.html"/>
+      <sub name="Unicode" link="raptor-section-unicode.html"/>
+      <sub name="URI Factory" link="raptor-section-uri-factory.html"/>
+      <sub name="URI" link="raptor-section-uri.html"/>
+      <sub name="WWW" link="raptor-section-www.html"/>
+      <sub name="XML Namespaces" link="raptor-section-xml-namespace.html"/>
+      <sub name="XML QName" link="raptor-section-xml-qname.html"/>
+      <sub name="XML" link="raptor-section-xml.html"/>
+    </sub>
+    <sub name="Index" link="ix01.html"/>
+  </chapters>
+  <functions>
+    <function name="raptor_version_major" link="raptor-section-general.html#raptor-version-major"/>
+    <function name="raptor_version_minor" link="raptor-section-general.html#raptor-version-minor"/>
+    <function name="raptor_version_release" link="raptor-section-general.html#raptor-version-release"/>
+    <function name="raptor_version_decimal" link="raptor-section-general.html#raptor-version-decimal"/>
+    <function name="raptor_init ()" link="raptor-section-general.html#raptor-init"/>
+    <function name="raptor_finish ()" link="raptor-section-general.html#raptor-finish"/>
+    <function name="raptor_simple_message_handler ()" link="raptor-section-general.html#raptor-simple-message-handler"/>
+    <function name="raptor_message_handler ()" link="raptor-section-general.html#raptor-message-handler"/>
+    <function name="raptor_statement_handler ()" link="raptor-section-general.html#raptor-statement-handler"/>
+    <function name="raptor_parsers_enumerate ()" link="raptor-section-general.html#raptor-parsers-enumerate"/>
+    <function name="raptor_syntaxes_enumerate ()" link="raptor-section-general.html#raptor-syntaxes-enumerate"/>
+    <function name="raptor_syntax_name_check ()" link="raptor-section-general.html#raptor-syntax-name-check"/>
+    <function name="raptor_guess_parser_name ()" link="raptor-section-general.html#raptor-guess-parser-name"/>
+    <function name="raptor_serializers_enumerate ()" link="raptor-section-general.html#raptor-serializers-enumerate"/>
+    <function name="raptor_serializer_syntax_name_check ()" link="raptor-section-general.html#raptor-serializer-syntax-name-check"/>
+    <function name="raptor_print_ntriples_string ()" link="raptor-section-general.html#raptor-print-ntriples-string"/>
+    <function name="raptor_ntriples_string_as_utf8_string ()" link="raptor-section-general.html#raptor-ntriples-string-as-utf8-string"/>
+    <function name="raptor_ntriples_term_as_string ()" link="raptor-section-general.html#raptor-ntriples-term-as-string"/>
+    <function name="raptor_vsnprintf ()" link="raptor-section-general.html#raptor-vsnprintf"/>
+    <function name="enum raptor_log_level" link="raptor-section-general.html#raptor-log-level"/>
+    <function name="raptor_message_handler_closure" link="raptor-section-general.html#raptor-message-handler-closure"/>
+    <function name="raptor_error_handlers" link="raptor-section-general.html#raptor-error-handlers"/>
+    <function name="raptor_error_handlers_init ()" link="raptor-section-general.html#raptor-error-handlers-init"/>
+    <function name="raptor_free_memory ()" link="raptor-section-memory.html#raptor-free-memory"/>
+    <function name="raptor_alloc_memory ()" link="raptor-section-memory.html#raptor-alloc-memory"/>
+    <function name="raptor_calloc_memory ()" link="raptor-section-memory.html#raptor-calloc-memory"/>
+    <function name="raptor_rdf_namespace_uri_len" link="raptor-section-constants.html#raptor-rdf-namespace-uri-len"/>
+    <function name="raptor_xml_literal_datatype_uri_string_len" link="raptor-section-constants.html#raptor-xml-literal-datatype-uri-string-len"/>
+    <function name="RAPTOR_RDF_MS_URI" link="raptor-section-constants.html#RAPTOR-RDF-MS-URI:CAPS"/>
+    <function name="RAPTOR_RDF_SCHEMA_URI" link="raptor-section-constants.html#RAPTOR-RDF-SCHEMA-URI:CAPS"/>
+    <function name="RAPTOR_XMLSCHEMA_DATATYPES_URI" link="raptor-section-constants.html#RAPTOR-XMLSCHEMA-DATATYPES-URI:CAPS"/>
+    <function name="RAPTOR_OWL_URI" link="raptor-section-constants.html#RAPTOR-OWL-URI:CAPS"/>
+    <function name="enum raptor_feature" link="raptor-section-feature.html#raptor-feature"/>
+    <function name="raptor_get_feature_count ()" link="raptor-section-feature.html#raptor-get-feature-count"/>
+    <function name="raptor_features_enumerate ()" link="raptor-section-feature.html#raptor-features-enumerate"/>
+    <function name="raptor_feature_from_uri ()" link="raptor-section-feature.html#raptor-feature-from-uri"/>
+    <function name="raptor_feature_value_type ()" link="raptor-section-feature.html#raptor-feature-value-type"/>
+    <function name="raptor_iostream" link="raptor-section-iostream.html#raptor-iostream"/>
+    <function name="raptor_iostream_init_func ()" link="raptor-section-iostream.html#raptor-iostream-init-func"/>
+    <function name="raptor_iostream_finish_func ()" link="raptor-section-iostream.html#raptor-iostream-finish-func"/>
+    <function name="raptor_iostream_write_byte_func ()" link="raptor-section-iostream.html#raptor-iostream-write-byte-func"/>
+    <function name="raptor_iostream_write_bytes_func ()" link="raptor-section-iostream.html#raptor-iostream-write-bytes-func"/>
+    <function name="raptor_iostream_write_end_func ()" link="raptor-section-iostream.html#raptor-iostream-write-end-func"/>
+    <function name="raptor_iostream_read_bytes_func ()" link="raptor-section-iostream.html#raptor-iostream-read-bytes-func"/>
+    <function name="raptor_iostream_read_eof_func ()" link="raptor-section-iostream.html#raptor-iostream-read-eof-func"/>
+    <function name="raptor_iostream_handler" link="raptor-section-iostream.html#raptor-iostream-handler"/>
+    <function name="raptor_iostream_handler2" link="raptor-section-iostream.html#raptor-iostream-handler2"/>
+    <function name="raptor_new_iostream_from_handler2 ()" link="raptor-section-iostream.html#raptor-new-iostream-from-handler2"/>
+    <function name="raptor_new_iostream_from_handler ()" link="raptor-section-iostream.html#raptor-new-iostream-from-handler"/>
+    <function name="raptor_new_iostream_from_sink ()" link="raptor-section-iostream.html#raptor-new-iostream-from-sink"/>
+    <function name="raptor_new_iostream_from_filename ()" link="raptor-section-iostream.html#raptor-new-iostream-from-filename"/>
+    <function name="raptor_new_iostream_from_file_handle ()" link="raptor-section-iostream.html#raptor-new-iostream-from-file-handle"/>
+    <function name="raptor_new_iostream_from_string ()" link="raptor-section-iostream.html#raptor-new-iostream-from-string"/>
+    <function name="raptor_new_iostream_to_sink ()" link="raptor-section-iostream.html#raptor-new-iostream-to-sink"/>
+    <function name="raptor_new_iostream_to_filename ()" link="raptor-section-iostream.html#raptor-new-iostream-to-filename"/>
+    <function name="raptor_new_iostream_to_file_handle ()" link="raptor-section-iostream.html#raptor-new-iostream-to-file-handle"/>
+    <function name="raptor_new_iostream_to_string ()" link="raptor-section-iostream.html#raptor-new-iostream-to-string"/>
+    <function name="raptor_free_iostream ()" link="raptor-section-iostream.html#raptor-free-iostream"/>
+    <function name="raptor_iostream_format_hexadecimal ()" link="raptor-section-iostream.html#raptor-iostream-format-hexadecimal"/>
+    <function name="raptor_iostream_get_bytes_written_count ()" link="raptor-section-iostream.html#raptor-iostream-get-bytes-written-count"/>
+    <function name="raptor_iostream_read_bytes ()" link="raptor-section-iostream.html#raptor-iostream-read-bytes"/>
+    <function name="raptor_iostream_read_eof ()" link="raptor-section-iostream.html#raptor-iostream-read-eof"/>
+    <function name="raptor_iostream_tell ()" link="raptor-section-iostream.html#raptor-iostream-tell"/>
+    <function name="raptor_iostream_write_byte ()" link="raptor-section-iostream.html#raptor-iostream-write-byte"/>
+    <function name="raptor_iostream_write_bytes ()" link="raptor-section-iostream.html#raptor-iostream-write-bytes"/>
+    <function name="raptor_iostream_write_counted_string ()" link="raptor-section-iostream.html#raptor-iostream-write-counted-string"/>
+    <function name="raptor_iostream_write_decimal ()" link="raptor-section-iostream.html#raptor-iostream-write-decimal"/>
+    <function name="raptor_iostream_write_end ()" link="raptor-section-iostream.html#raptor-iostream-write-end"/>
+    <function name="raptor_iostream_write_statement_ntriples ()" link="raptor-section-iostream.html#raptor-iostream-write-statement-ntriples"/>
+    <function name="raptor_iostream_write_string ()" link="raptor-section-iostream.html#raptor-iostream-write-string"/>
+    <function name="raptor_iostream_write_string_ntriples ()" link="raptor-section-iostream.html#raptor-iostream-write-string-ntriples"/>
+    <function name="raptor_iostream_write_string_python ()" link="raptor-section-iostream.html#raptor-iostream-write-string-python"/>
+    <function name="raptor_iostream_write_string_turtle ()" link="raptor-section-iostream.html#raptor-iostream-write-string-turtle"/>
+    <function name="raptor_iostream_write_stringbuffer ()" link="raptor-section-iostream.html#raptor-iostream-write-stringbuffer"/>
+    <function name="raptor_locator" link="raptor-section-locator.html#raptor-locator"/>
+    <function name="raptor_print_locator ()" link="raptor-section-locator.html#raptor-print-locator"/>
+    <function name="raptor_format_locator ()" link="raptor-section-locator.html#raptor-format-locator"/>
+    <function name="raptor_locator_line ()" link="raptor-section-locator.html#raptor-locator-line"/>
+    <function name="raptor_locator_column ()" link="raptor-section-locator.html#raptor-locator-column"/>
+    <function name="raptor_locator_byte ()" link="raptor-section-locator.html#raptor-locator-byte"/>
+    <function name="raptor_locator_file ()" link="raptor-section-locator.html#raptor-locator-file"/>
+    <function name="raptor_locator_uri ()" link="raptor-section-locator.html#raptor-locator-uri"/>
+    <function name="raptor_parser" link="raptor-section-parser.html#raptor-parser"/>
+    <function name="raptor_new_parser ()" link="raptor-section-parser.html#raptor-new-parser"/>
+    <function name="raptor_new_parser_for_content ()" link="raptor-section-parser.html#raptor-new-parser-for-content"/>
+    <function name="raptor_start_parse ()" link="raptor-section-parser.html#raptor-start-parse"/>
+    <function name="raptor_free_parser ()" link="raptor-section-parser.html#raptor-free-parser"/>
+    <function name="raptor_set_fatal_error_handler ()" link="raptor-section-parser.html#raptor-set-fatal-error-handler"/>
+    <function name="raptor_set_error_handler ()" link="raptor-section-parser.html#raptor-set-error-handler"/>
+    <function name="raptor_set_warning_handler ()" link="raptor-section-parser.html#raptor-set-warning-handler"/>
+    <function name="raptor_set_statement_handler ()" link="raptor-section-parser.html#raptor-set-statement-handler"/>
+    <function name="raptor_set_generate_id_handler ()" link="raptor-section-parser.html#raptor-set-generate-id-handler"/>
+    <function name="raptor_graph_handler ()" link="raptor-section-parser.html#raptor-graph-handler"/>
+    <function name="raptor_set_graph_handler ()" link="raptor-section-parser.html#raptor-set-graph-handler"/>
+    <function name="raptor_namespace_handler ()" link="raptor-section-parser.html#raptor-namespace-handler"/>
+    <function name="raptor_set_namespace_handler ()" link="raptor-section-parser.html#raptor-set-namespace-handler"/>
+    <function name="raptor_get_locator ()" link="raptor-section-parser.html#raptor-get-locator"/>
+    <function name="raptor_set_default_generate_id_parameters ()" link="raptor-section-parser.html#raptor-set-default-generate-id-parameters"/>
+    <function name="raptor_parse_chunk ()" link="raptor-section-parser.html#raptor-parse-chunk"/>
+    <function name="raptor_parse_file_stream ()" link="raptor-section-parser.html#raptor-parse-file-stream"/>
+    <function name="raptor_parse_file ()" link="raptor-section-parser.html#raptor-parse-file"/>
+    <function name="raptor_parse_uri ()" link="raptor-section-parser.html#raptor-parse-uri"/>
+    <function name="raptor_parse_uri_with_connection ()" link="raptor-section-parser.html#raptor-parse-uri-with-connection"/>
+    <function name="raptor_parse_abort ()" link="raptor-section-parser.html#raptor-parse-abort"/>
+    <function name="raptor_get_name ()" link="raptor-section-parser.html#raptor-get-name"/>
+    <function name="raptor_get_label ()" link="raptor-section-parser.html#raptor-get-label"/>
+    <function name="raptor_get_mime_type ()" link="raptor-section-parser.html#raptor-get-mime-type"/>
+    <function name="raptor_get_need_base_uri ()" link="raptor-section-parser.html#raptor-get-need-base-uri"/>
+    <function name="raptor_set_feature ()" link="raptor-section-parser.html#raptor-set-feature"/>
+    <function name="raptor_parser_set_feature_string ()" link="raptor-section-parser.html#raptor-parser-set-feature-string"/>
+    <function name="raptor_get_feature ()" link="raptor-section-parser.html#raptor-get-feature"/>
+    <function name="raptor_parser_get_feature_string ()" link="raptor-section-parser.html#raptor-parser-get-feature-string"/>
+    <function name="raptor_set_parser_strict ()" link="raptor-section-parser.html#raptor-set-parser-strict"/>
+    <function name="raptor_parser_get_accept_header ()" link="raptor-section-parser.html#raptor-parser-get-accept-header"/>
+    <function name="raptor_parser_set_uri_filter ()" link="raptor-section-parser.html#raptor-parser-set-uri-filter"/>
+    <function name="raptor_parser_generate_id ()" link="raptor-section-parser.html#raptor-parser-generate-id"/>
+    <function name="raptor_sax2" link="raptor-section-sax2.html#raptor-sax2"/>
+    <function name="raptor_new_sax2 ()" link="raptor-section-sax2.html#raptor-new-sax2"/>
+    <function name="raptor_free_sax2 ()" link="raptor-section-sax2.html#raptor-free-sax2"/>
+    <function name="raptor_sax2_start_element_handler ()" link="raptor-section-sax2.html#raptor-sax2-start-element-handler"/>
+    <function name="raptor_sax2_end_element_handler ()" link="raptor-section-sax2.html#raptor-sax2-end-element-handler"/>
+    <function name="raptor_sax2_characters_handler ()" link="raptor-section-sax2.html#raptor-sax2-characters-handler"/>
+    <function name="raptor_sax2_cdata_handler ()" link="raptor-section-sax2.html#raptor-sax2-cdata-handler"/>
+    <function name="raptor_sax2_comment_handler ()" link="raptor-section-sax2.html#raptor-sax2-comment-handler"/>
+    <function name="raptor_sax2_unparsed_entity_decl_handler ()" link="raptor-section-sax2.html#raptor-sax2-unparsed-entity-decl-handler"/>
+    <function name="raptor_sax2_external_entity_ref_handler ()" link="raptor-section-sax2.html#raptor-sax2-external-entity-ref-handler"/>
+    <function name="raptor_sax2_set_start_element_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-start-element-handler"/>
+    <function name="raptor_sax2_set_end_element_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-end-element-handler"/>
+    <function name="raptor_sax2_set_characters_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-characters-handler"/>
+    <function name="raptor_sax2_set_cdata_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-cdata-handler"/>
+    <function name="raptor_sax2_set_comment_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-comment-handler"/>
+    <function name="raptor_sax2_set_unparsed_entity_decl_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-unparsed-entity-decl-handler"/>
+    <function name="raptor_sax2_set_external_entity_ref_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-external-entity-ref-handler"/>
+    <function name="raptor_sax2_set_namespace_handler ()" link="raptor-section-sax2.html#raptor-sax2-set-namespace-handler"/>
+    <function name="raptor_sax2_parse_start ()" link="raptor-section-sax2.html#raptor-sax2-parse-start"/>
+    <function name="raptor_sax2_parse_chunk ()" link="raptor-section-sax2.html#raptor-sax2-parse-chunk"/>
+    <function name="raptor_sax2_inscope_xml_language ()" link="raptor-section-sax2.html#raptor-sax2-inscope-xml-language"/>
+    <function name="raptor_sax2_inscope_base_uri ()" link="raptor-section-sax2.html#raptor-sax2-inscope-base-uri"/>
+    <function name="raptor_sequence" link="raptor-section-sequence.html#raptor-sequence"/>
+    <function name="raptor_new_sequence ()" link="raptor-section-sequence.html#raptor-new-sequence"/>
+    <function name="raptor_free_sequence ()" link="raptor-section-sequence.html#raptor-free-sequence"/>
+    <function name="raptor_sequence_size ()" link="raptor-section-sequence.html#raptor-sequence-size"/>
+    <function name="raptor_sequence_set_at ()" link="raptor-section-sequence.html#raptor-sequence-set-at"/>
+    <function name="raptor_sequence_push ()" link="raptor-section-sequence.html#raptor-sequence-push"/>
+    <function name="raptor_sequence_shift ()" link="raptor-section-sequence.html#raptor-sequence-shift"/>
+    <function name="raptor_sequence_get_at ()" link="raptor-section-sequence.html#raptor-sequence-get-at"/>
+    <function name="raptor_sequence_pop ()" link="raptor-section-sequence.html#raptor-sequence-pop"/>
+    <function name="raptor_sequence_unshift ()" link="raptor-section-sequence.html#raptor-sequence-unshift"/>
+    <function name="raptor_compare_strings ()" link="raptor-section-sequence.html#raptor-compare-strings"/>
+    <function name="raptor_sequence_sort ()" link="raptor-section-sequence.html#raptor-sequence-sort"/>
+    <function name="raptor_sequence_print_string ()" link="raptor-section-sequence.html#raptor-sequence-print-string"/>
+    <function name="raptor_sequence_print_uri ()" link="raptor-section-sequence.html#raptor-sequence-print-uri"/>
+    <function name="raptor_sequence_set_print_handler ()" link="raptor-section-sequence.html#raptor-sequence-set-print-handler"/>
+    <function name="raptor_sequence_print ()" link="raptor-section-sequence.html#raptor-sequence-print"/>
+    <function name="raptor_sequence_join ()" link="raptor-section-sequence.html#raptor-sequence-join"/>
+    <function name="raptor_serializer" link="raptor-section-serializer.html#raptor-serializer"/>
+    <function name="raptor_new_serializer ()" link="raptor-section-serializer.html#raptor-new-serializer"/>
+    <function name="raptor_free_serializer ()" link="raptor-section-serializer.html#raptor-free-serializer"/>
+    <function name="raptor_serialize_start ()" link="raptor-section-serializer.html#raptor-serialize-start"/>
+    <function name="raptor_serialize_start_to_filename ()" link="raptor-section-serializer.html#raptor-serialize-start-to-filename"/>
+    <function name="raptor_serialize_start_to_string ()" link="raptor-section-serializer.html#raptor-serialize-start-to-string"/>
+    <function name="raptor_serialize_start_to_file_handle ()" link="raptor-section-serializer.html#raptor-serialize-start-to-file-handle"/>
+    <function name="raptor_serialize_set_namespace ()" link="raptor-section-serializer.html#raptor-serialize-set-namespace"/>
+    <function name="raptor_serialize_set_namespace_from_namespace ()" link="raptor-section-serializer.html#raptor-serialize-set-namespace-from-namespace"/>
+    <function name="raptor_serialize_statement ()" link="raptor-section-serializer.html#raptor-serialize-statement"/>
+    <function name="raptor_serialize_end ()" link="raptor-section-serializer.html#raptor-serialize-end"/>
+    <function name="raptor_serializer_get_iostream ()" link="raptor-section-serializer.html#raptor-serializer-get-iostream"/>
+    <function name="raptor_serializer_set_error_handler ()" link="raptor-section-serializer.html#raptor-serializer-set-error-handler"/>
+    <function name="raptor_serializer_set_warning_handler ()" link="raptor-section-serializer.html#raptor-serializer-set-warning-handler"/>
+    <function name="raptor_serializer_get_locator ()" link="raptor-section-serializer.html#raptor-serializer-get-locator"/>
+    <function name="raptor_serializer_features_enumerate ()" link="raptor-section-serializer.html#raptor-serializer-features-enumerate"/>
+    <function name="raptor_serializer_set_feature ()" link="raptor-section-serializer.html#raptor-serializer-set-feature"/>
+    <function name="raptor_serializer_set_feature_string ()" link="raptor-section-serializer.html#raptor-serializer-set-feature-string"/>
+    <function name="raptor_serializer_get_feature ()" link="raptor-section-serializer.html#raptor-serializer-get-feature"/>
+    <function name="raptor_serializer_get_feature_string ()" link="raptor-section-serializer.html#raptor-serializer-get-feature-string"/>
+    <function name="raptor_stringbuffer" link="raptor-section-stringbuffer.html#raptor-stringbuffer"/>
+    <function name="raptor_new_stringbuffer ()" link="raptor-section-stringbuffer.html#raptor-new-stringbuffer"/>
+    <function name="raptor_free_stringbuffer ()" link="raptor-section-stringbuffer.html#raptor-free-stringbuffer"/>
+    <function name="raptor_stringbuffer_append_counted_string ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-append-counted-string"/>
+    <function name="raptor_stringbuffer_append_string ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-append-string"/>
+    <function name="raptor_stringbuffer_append_decimal ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-append-decimal"/>
+    <function name="raptor_stringbuffer_append_stringbuffer ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-append-stringbuffer"/>
+    <function name="raptor_stringbuffer_prepend_counted_string ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-prepend-counted-string"/>
+    <function name="raptor_stringbuffer_prepend_string ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-prepend-string"/>
+    <function name="raptor_stringbuffer_as_string ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-as-string"/>
+    <function name="raptor_stringbuffer_length ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-length"/>
+    <function name="raptor_stringbuffer_copy_to_string ()" link="raptor-section-stringbuffer.html#raptor-stringbuffer-copy-to-string"/>
+    <function name="enum raptor_genid_type" link="raptor-section-triples.html#raptor-genid-type"/>
+    <function name="enum raptor_identifier_type" link="raptor-section-triples.html#raptor-identifier-type"/>
+    <function name="raptor_identifier" link="raptor-section-triples.html#raptor-identifier"/>
+    <function name="raptor_new_identifier ()" link="raptor-section-triples.html#raptor-new-identifier"/>
+    <function name="raptor_copy_identifier ()" link="raptor-section-triples.html#raptor-copy-identifier"/>
+    <function name="raptor_free_identifier ()" link="raptor-section-triples.html#raptor-free-identifier"/>
+    <function name="raptor_statement" link="raptor-section-triples.html#raptor-statement"/>
+    <function name="raptor_statement_compare ()" link="raptor-section-triples.html#raptor-statement-compare"/>
+    <function name="raptor_print_statement ()" link="raptor-section-triples.html#raptor-print-statement"/>
+    <function name="raptor_print_statement_as_ntriples ()" link="raptor-section-triples.html#raptor-print-statement-as-ntriples"/>
+    <function name="raptor_print_statement_detailed ()" link="raptor-section-triples.html#raptor-print-statement-detailed"/>
+    <function name="raptor_statement_part_as_counted_string ()" link="raptor-section-triples.html#raptor-statement-part-as-counted-string"/>
+    <function name="raptor_statement_part_as_string ()" link="raptor-section-triples.html#raptor-statement-part-as-string"/>
+    <function name="raptor_unichar" link="raptor-section-unicode.html#raptor-unichar"/>
+    <function name="raptor_unicode_char_to_utf8 ()" link="raptor-section-unicode.html#raptor-unicode-char-to-utf8"/>
+    <function name="raptor_utf8_to_unicode_char ()" link="raptor-section-unicode.html#raptor-utf8-to-unicode-char"/>
+    <function name="raptor_unicode_is_xml11_namestartchar ()" link="raptor-section-unicode.html#raptor-unicode-is-xml11-namestartchar"/>
+    <function name="raptor_unicode_is_xml10_namestartchar ()" link="raptor-section-unicode.html#raptor-unicode-is-xml10-namestartchar"/>
+    <function name="raptor_unicode_is_xml11_namechar ()" link="raptor-section-unicode.html#raptor-unicode-is-xml11-namechar"/>
+    <function name="raptor_unicode_is_xml10_namechar ()" link="raptor-section-unicode.html#raptor-unicode-is-xml10-namechar"/>
+    <function name="raptor_utf8_check ()" link="raptor-section-unicode.html#raptor-utf8-check"/>
+    <function name="raptor_new_uri_func ()" link="raptor-section-uri-factory.html#raptor-new-uri-func"/>
+    <function name="raptor_new_uri_from_uri_local_name_func ()" link="raptor-section-uri-factory.html#raptor-new-uri-from-uri-local-name-func"/>
+    <function name="raptor_new_uri_relative_to_base_func ()" link="raptor-section-uri-factory.html#raptor-new-uri-relative-to-base-func"/>
+    <function name="raptor_new_uri_for_rdf_concept_func ()" link="raptor-section-uri-factory.html#raptor-new-uri-for-rdf-concept-func"/>
+    <function name="raptor_free_uri_func ()" link="raptor-section-uri-factory.html#raptor-free-uri-func"/>
+    <function name="raptor_uri_equals_func ()" link="raptor-section-uri-factory.html#raptor-uri-equals-func"/>
+    <function name="raptor_uri_copy_func ()" link="raptor-section-uri-factory.html#raptor-uri-copy-func"/>
+    <function name="raptor_uri_compare_func ()" link="raptor-section-uri-factory.html#raptor-uri-compare-func"/>
+    <function name="raptor_uri" link="raptor-section-uri.html#raptor-uri"/>
+    <function name="raptor_uri_handler" link="raptor-section-uri.html#raptor-uri-handler"/>
+    <function name="raptor_new_uri ()" link="raptor-section-uri.html#raptor-new-uri"/>
+    <function name="raptor_new_uri_from_uri_local_name ()" link="raptor-section-uri.html#raptor-new-uri-from-uri-local-name"/>
+    <function name="raptor_new_uri_relative_to_base ()" link="raptor-section-uri.html#raptor-new-uri-relative-to-base"/>
+    <function name="raptor_new_uri_from_id ()" link="raptor-section-uri.html#raptor-new-uri-from-id"/>
+    <function name="raptor_new_uri_for_rdf_concept ()" link="raptor-section-uri.html#raptor-new-uri-for-rdf-concept"/>
+    <function name="raptor_free_uri ()" link="raptor-section-uri.html#raptor-free-uri"/>
+    <function name="raptor_uri_compare ()" link="raptor-section-uri.html#raptor-uri-compare"/>
+    <function name="raptor_uri_equals ()" link="raptor-section-uri.html#raptor-uri-equals"/>
+    <function name="raptor_uri_copy ()" link="raptor-section-uri.html#raptor-uri-copy"/>
+    <function name="raptor_uri_as_string ()" link="raptor-section-uri.html#raptor-uri-as-string"/>
+    <function name="raptor_uri_as_counted_string ()" link="raptor-section-uri.html#raptor-uri-as-counted-string"/>
+    <function name="raptor_new_uri_for_xmlbase ()" link="raptor-section-uri.html#raptor-new-uri-for-xmlbase"/>
+    <function name="raptor_new_uri_for_retrieval ()" link="raptor-section-uri.html#raptor-new-uri-for-retrieval"/>
+    <function name="raptor_uri_resolve_uri_reference ()" link="raptor-section-uri.html#raptor-uri-resolve-uri-reference"/>
+    <function name="raptor_uri_filename_to_uri_string ()" link="raptor-section-uri.html#raptor-uri-filename-to-uri-string"/>
+    <function name="raptor_uri_uri_string_to_filename ()" link="raptor-section-uri.html#raptor-uri-uri-string-to-filename"/>
+    <function name="raptor_uri_uri_string_to_filename_fragment ()" link="raptor-section-uri.html#raptor-uri-uri-string-to-filename-fragment"/>
+    <function name="raptor_uri_uri_string_is_file_uri ()" link="raptor-section-uri.html#raptor-uri-uri-string-is-file-uri"/>
+    <function name="raptor_uri_is_file_uri ()" link="raptor-section-uri.html#raptor-uri-is-file-uri"/>
+    <function name="raptor_uri_to_relative_counted_uri_string ()" link="raptor-section-uri.html#raptor-uri-to-relative-counted-uri-string"/>
+    <function name="raptor_uri_to_relative_uri_string ()" link="raptor-section-uri.html#raptor-uri-to-relative-uri-string"/>
+    <function name="raptor_uri_print ()" link="raptor-section-uri.html#raptor-uri-print"/>
+    <function name="raptor_uri_to_counted_string ()" link="raptor-section-uri.html#raptor-uri-to-counted-string"/>
+    <function name="raptor_uri_to_string ()" link="raptor-section-uri.html#raptor-uri-to-string"/>
+    <function name="raptor_uri_set_handler ()" link="raptor-section-uri.html#raptor-uri-set-handler"/>
+    <function name="raptor_uri_get_handler ()" link="raptor-section-uri.html#raptor-uri-get-handler"/>
+    <function name="raptor_iostream_write_uri ()" link="raptor-section-uri.html#raptor-iostream-write-uri"/>
+    <function name="raptor_www" link="raptor-section-www.html#raptor-www"/>
+    <function name="raptor_www_init ()" link="raptor-section-www.html#raptor-www-init"/>
+    <function name="raptor_www_finish ()" link="raptor-section-www.html#raptor-www-finish"/>
+    <function name="raptor_www_write_bytes_handler ()" link="raptor-section-www.html#raptor-www-write-bytes-handler"/>
+    <function name="raptor_www_content_type_handler ()" link="raptor-section-www.html#raptor-www-content-type-handler"/>
+    <function name="raptor_www_no_www_library_init_finish ()" link="raptor-section-www.html#raptor-www-no-www-library-init-finish"/>
+    <function name="raptor_www_new ()" link="raptor-section-www.html#raptor-www-new"/>
+    <function name="raptor_www_new_with_connection ()" link="raptor-section-www.html#raptor-www-new-with-connection"/>
+    <function name="raptor_www_free ()" link="raptor-section-www.html#raptor-www-free"/>
+    <function name="raptor_www_set_user_agent ()" link="raptor-section-www.html#raptor-www-set-user-agent"/>
+    <function name="raptor_www_set_proxy ()" link="raptor-section-www.html#raptor-www-set-proxy"/>
+    <function name="raptor_www_set_http_accept ()" link="raptor-section-www.html#raptor-www-set-http-accept"/>
+    <function name="raptor_www_set_http_cache_control ()" link="raptor-section-www.html#raptor-www-set-http-cache-control"/>
+    <function name="raptor_www_set_write_bytes_handler ()" link="raptor-section-www.html#raptor-www-set-write-bytes-handler"/>
+    <function name="raptor_www_set_connection_timeout ()" link="raptor-section-www.html#raptor-www-set-connection-timeout"/>
+    <function name="raptor_www_set_content_type_handler ()" link="raptor-section-www.html#raptor-www-set-content-type-handler"/>
+    <function name="raptor_www_set_error_handler ()" link="raptor-section-www.html#raptor-www-set-error-handler"/>
+    <function name="raptor_uri_filter_func ()" link="raptor-section-www.html#raptor-uri-filter-func"/>
+    <function name="raptor_www_set_uri_filter ()" link="raptor-section-www.html#raptor-www-set-uri-filter"/>
+    <function name="raptor_www_final_uri_handler ()" link="raptor-section-www.html#raptor-www-final-uri-handler"/>
+    <function name="raptor_www_get_final_uri ()" link="raptor-section-www.html#raptor-www-get-final-uri"/>
+    <function name="raptor_www_set_final_uri_handler ()" link="raptor-section-www.html#raptor-www-set-final-uri-handler"/>
+    <function name="raptor_www_fetch ()" link="raptor-section-www.html#raptor-www-fetch"/>
+    <function name="raptor_www_fetch_to_string ()" link="raptor-section-www.html#raptor-www-fetch-to-string"/>
+    <function name="raptor_www_get_connection ()" link="raptor-section-www.html#raptor-www-get-connection"/>
+    <function name="raptor_www_abort ()" link="raptor-section-www.html#raptor-www-abort"/>
+    <function name="raptor_namespace" link="raptor-section-xml-namespace.html#raptor-namespace"/>
+    <function name="raptor_new_namespace_from_uri ()" link="raptor-section-xml-namespace.html#raptor-new-namespace-from-uri"/>
+    <function name="raptor_new_namespaces ()" link="raptor-section-xml-namespace.html#raptor-new-namespaces"/>
+    <function name="raptor_namespaces_init ()" link="raptor-section-xml-namespace.html#raptor-namespaces-init"/>
+    <function name="raptor_namespaces_clear ()" link="raptor-section-xml-namespace.html#raptor-namespaces-clear"/>
+    <function name="raptor_free_namespaces ()" link="raptor-section-xml-namespace.html#raptor-free-namespaces"/>
+    <function name="raptor_namespaces_start_namespace ()" link="raptor-section-xml-namespace.html#raptor-namespaces-start-namespace"/>
+    <function name="raptor_namespaces_start_namespace_full ()" link="raptor-section-xml-namespace.html#raptor-namespaces-start-namespace-full"/>
+    <function name="raptor_namespaces_end_for_depth ()" link="raptor-section-xml-namespace.html#raptor-namespaces-end-for-depth"/>
+    <function name="raptor_namespaces_get_default_namespace ()" link="raptor-section-xml-namespace.html#raptor-namespaces-get-default-namespace"/>
+    <function name="raptor_namespaces_find_namespace ()" link="raptor-section-xml-namespace.html#raptor-namespaces-find-namespace"/>
+    <function name="raptor_namespaces_find_namespace_by_uri ()" link="raptor-section-xml-namespace.html#raptor-namespaces-find-namespace-by-uri"/>
+    <function name="raptor_namespaces_namespace_in_scope ()" link="raptor-section-xml-namespace.html#raptor-namespaces-namespace-in-scope"/>
+    <function name="raptor_new_namespace ()" link="raptor-section-xml-namespace.html#raptor-new-namespace"/>
+    <function name="raptor_free_namespace ()" link="raptor-section-xml-namespace.html#raptor-free-namespace"/>
+    <function name="raptor_namespace_copy ()" link="raptor-section-xml-namespace.html#raptor-namespace-copy"/>
+    <function name="raptor_namespace_get_uri ()" link="raptor-section-xml-namespace.html#raptor-namespace-get-uri"/>
+    <function name="raptor_namespace_get_prefix ()" link="raptor-section-xml-namespace.html#raptor-namespace-get-prefix"/>
+    <function name="raptor_namespace_get_counted_prefix ()" link="raptor-section-xml-namespace.html#raptor-namespace-get-counted-prefix"/>
+    <function name="raptor_namespaces_format ()" link="raptor-section-xml-namespace.html#raptor-namespaces-format"/>
+    <function name="raptor_iostream_write_namespace ()" link="raptor-section-xml-namespace.html#raptor-iostream-write-namespace"/>
+    <function name="raptor_new_namespace_parts_from_string ()" link="raptor-section-xml-namespace.html#raptor-new-namespace-parts-from-string"/>
+    <function name="raptor_namespace_stack" link="raptor-section-xml-namespace.html#raptor-namespace-stack"/>
+    <function name="raptor_namespaces_qname_from_uri ()" link="raptor-section-xml-namespace.html#raptor-namespaces-qname-from-uri"/>
+    <function name="raptor_qname" link="raptor-section-xml-qname.html#raptor-qname"/>
+    <function name="raptor_new_qname ()" link="raptor-section-xml-qname.html#raptor-new-qname"/>
+    <function name="raptor_new_qname_from_namespace_local_name ()" link="raptor-section-xml-qname.html#raptor-new-qname-from-namespace-local-name"/>
+    <function name="raptor_qname_copy ()" link="raptor-section-xml-qname.html#raptor-qname-copy"/>
+    <function name="raptor_free_qname ()" link="raptor-section-xml-qname.html#raptor-free-qname"/>
+    <function name="raptor_qname_equal ()" link="raptor-section-xml-qname.html#raptor-qname-equal"/>
+    <function name="raptor_qname_string_to_uri ()" link="raptor-section-xml-qname.html#raptor-qname-string-to-uri"/>
+    <function name="raptor_iostream_write_qname ()" link="raptor-section-xml-qname.html#raptor-iostream-write-qname"/>
+    <function name="raptor_qname_get_counted_value ()" link="raptor-section-xml-qname.html#raptor-qname-get-counted-value"/>
+    <function name="raptor_qname_get_local_name ()" link="raptor-section-xml-qname.html#raptor-qname-get-local-name"/>
+    <function name="raptor_qname_get_namespace ()" link="raptor-section-xml-qname.html#raptor-qname-get-namespace"/>
+    <function name="raptor_qname_get_value ()" link="raptor-section-xml-qname.html#raptor-qname-get-value"/>
+    <function name="raptor_xml_element" link="raptor-section-xml.html#raptor-xml-element"/>
+    <function name="raptor_new_xml_element ()" link="raptor-section-xml.html#raptor-new-xml-element"/>
+    <function name="raptor_new_xml_element_from_namespace_local_name ()" link="raptor-section-xml.html#raptor-new-xml-element-from-namespace-local-name"/>
+    <function name="raptor_free_xml_element ()" link="raptor-section-xml.html#raptor-free-xml-element"/>
+    <function name="raptor_xml_element_get_name ()" link="raptor-section-xml.html#raptor-xml-element-get-name"/>
+    <function name="raptor_xml_element_get_attributes ()" link="raptor-section-xml.html#raptor-xml-element-get-attributes"/>
+    <function name="raptor_xml_element_get_attributes_count ()" link="raptor-section-xml.html#raptor-xml-element-get-attributes-count"/>
+    <function name="raptor_xml_element_set_attributes ()" link="raptor-section-xml.html#raptor-xml-element-set-attributes"/>
+    <function name="raptor_xml_element_declare_namespace ()" link="raptor-section-xml.html#raptor-xml-element-declare-namespace"/>
+    <function name="raptor_xml_element_is_empty ()" link="raptor-section-xml.html#raptor-xml-element-is-empty"/>
+    <function name="raptor_xml_element_get_language ()" link="raptor-section-xml.html#raptor-xml-element-get-language"/>
+    <function name="raptor_new_xml_writer ()" link="raptor-section-xml.html#raptor-new-xml-writer"/>
+    <function name="raptor_free_xml_writer ()" link="raptor-section-xml.html#raptor-free-xml-writer"/>
+    <function name="raptor_xml_writer_empty_element ()" link="raptor-section-xml.html#raptor-xml-writer-empty-element"/>
+    <function name="raptor_xml_writer_start_element ()" link="raptor-section-xml.html#raptor-xml-writer-start-element"/>
+    <function name="raptor_xml_writer_end_element ()" link="raptor-section-xml.html#raptor-xml-writer-end-element"/>
+    <function name="raptor_xml_writer_cdata ()" link="raptor-section-xml.html#raptor-xml-writer-cdata"/>
+    <function name="raptor_xml_writer_cdata_counted ()" link="raptor-section-xml.html#raptor-xml-writer-cdata-counted"/>
+    <function name="raptor_xml_writer_raw ()" link="raptor-section-xml.html#raptor-xml-writer-raw"/>
+    <function name="raptor_xml_writer_raw_counted ()" link="raptor-section-xml.html#raptor-xml-writer-raw-counted"/>
+    <function name="raptor_xml_writer_comment ()" link="raptor-section-xml.html#raptor-xml-writer-comment"/>
+    <function name="raptor_xml_writer_comment_counted ()" link="raptor-section-xml.html#raptor-xml-writer-comment-counted"/>
+    <function name="raptor_xml_writer_features_enumerate ()" link="raptor-section-xml.html#raptor-xml-writer-features-enumerate"/>
+    <function name="raptor_xml_writer_set_feature ()" link="raptor-section-xml.html#raptor-xml-writer-set-feature"/>
+    <function name="raptor_xml_writer_set_feature_string ()" link="raptor-section-xml.html#raptor-xml-writer-set-feature-string"/>
+    <function name="raptor_xml_writer_get_feature ()" link="raptor-section-xml.html#raptor-xml-writer-get-feature"/>
+    <function name="raptor_xml_writer_get_feature_string ()" link="raptor-section-xml.html#raptor-xml-writer-get-feature-string"/>
+    <function name="raptor_iostream_write_xml_element ()" link="raptor-section-xml.html#raptor-iostream-write-xml-element"/>
+    <function name="raptor_xml_writer" link="raptor-section-xml.html#raptor-xml-writer"/>
+    <function name="raptor_xml_any_escape_string ()" link="raptor-section-xml.html#raptor-xml-any-escape-string"/>
+    <function name="raptor_xml_escape_string ()" link="raptor-section-xml.html#raptor-xml-escape-string"/>
+    <function name="raptor_iostream_write_xml_any_escaped_string ()" link="raptor-section-xml.html#raptor-iostream-write-xml-any-escaped-string"/>
+    <function name="raptor_iostream_write_xml_escaped_string ()" link="raptor-section-xml.html#raptor-iostream-write-xml-escaped-string"/>
+    <function name="raptor_xml_name_check ()" link="raptor-section-xml.html#raptor-xml-name-check"/>
+  </functions>
+</book>

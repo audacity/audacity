@@ -1,0 +1,2 @@
+# NegativeSyntax/lone-node.rq
+SELECT * WHERE {<a>}

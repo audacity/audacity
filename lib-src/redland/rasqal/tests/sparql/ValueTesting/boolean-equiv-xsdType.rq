@@ -1,0 +1,9 @@
+# Various lexical forms of xsd:boolean equal each other
+# $Id: boolean-equiv-xsdType.rq,v 1.1 2008-07-08 10:46:40 larsl Exp $
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?one ?two
+ WHERE { ?one rdf:value ?oneL .
+         ?two rdf:value ?twoL .
+         FILTER ( ?oneL = ?twoL ) }

@@ -1,0 +1,422 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="tutorial-serializing" xmlns:xi="http://www.w3.org/2003/XInclude">
+<title>Serializing RDF triples to a syntax</title>
+
+<section id="tutorial-serializing-intro">
+<title>Introduction</title>
+
+<para>
+The typical sequence of operations to serialize is to create a
+serializer object, set various callback and features, start the
+serializing, send some RDF triples to the serializer object,
+finish the serializing and destroy the serializer object.
+</para>
+
+</section>
+
+
+<section id="tutorial-serializer-create">
+<title>Create the Serializer object</title>
+
+<para>The serializer can be created directly from a known name using
+<link linkend="raptor-new-serializer"><function>raptor_new_serializer()</function></link>
+such as <literal>rdfxml</literal> for the W3C Recommendation RDF/XML syntax:
+<programlisting>
+  raptor_serializer* rdf_serializer;
+
+  rdf_serializer = raptor_new_serializer("rdfxml");
+</programlisting>
+or the name can be discovered from an <emphasis>enumeration</emphasis>
+as discussed in
+<link linkend="tutorial-querying-functionality">Querying Functionality</link>
+</para>
+</section>
+
+
+<section id="tutorial-serializer-features">
+<title>Serializer features</title>
+
+<para>There are several options that can be set on serializers, called
+<emphasis>features</emphasis>.  The exact list of features can be
+found via
+<link linkend="tutorial-querying-functionality">Querying Functionality</link>
+or in the API reference for 
+<link linkend="raptor-serializer-set-feature"><function>raptor_serializer_set_feature()</function></link>.
+</para>
+
+<para>Features are integer enumerations of the
+<link linkend="raptor-feature"><type>raptor_feature</type></link> enum and have values
+that are either integers (often acting as booleans) or strings.
+The two functions that set features are:
+<programlisting>
+  /* Set an integer (or boolean) valued feature */
+  raptor_serializer_set_feature(rdf_serializer, feature, 1);
+
+  /* Set a string valued feature */
+  raptor_serializer_set_feature_string(rdf_serializer, feature, "abc");
+</programlisting>
+</para>
+
+<para>
+There are also two corresponding functions for reading the values of serializer
+features:
+<link linkend="raptor-serializer-get-feature"><function>raptor_serializer_get_feature()</function></link>
+and
+<link linkend="raptor-serializer-get-feature-string"><function>raptor_serializer_get_feature_string()</function></link>
+taken the feature enumeration parameter and returning the integer or string
+value correspondingly.
+</para>
+
+</section>
+
+
+<section id="tutorial-serializer-declare-namespace">
+<title>Declare namespaces</title>
+
+<para>Raptor can use namespace prefix/URIs to abbreviate syntax
+in some syntaxes such as Turtle or any XML syntax including RDF/XML,
+RSS1.0 and Atom 1.0.  These are declared 
+with <link linkend="raptor-serialize-set-namespace"><function>raptor_serialize_set_namespace()</function></link>
+using a prefix and URI argument pair like this:
+<programlisting>
+  const unsigned char* prefix="ex";
+  raptor_uri* uri=raptor_new_uri("http://example.org");
+
+  raptor_serialize_set_namespace(rdf_serializer, prefix, uri);
+</programlisting>
+</para>
+
+<para>or
+<link linkend="raptor-serialize-set-namespace-from-namespace"><function>raptor_serialize_set_namespace_from_namespace()</function></link>
+from an existing namespace.  This can be useful when connected up the
+the namespace declarations that are generated from a parser via a
+namespace handler set with
+<link linkend="raptor-set-namespace-handler"><function>raptor_set_namespace_handler()</function></link>
+</para>
+like this:
+<programlisting>
+  static void
+  relay_namespaces(void* user_data, raptor_namespace *nspace)
+  {
+    raptor_serialize_set_namespace_from_namespace(rdf_serializer, nspace);
+  }
+
+  rdf_parser=raptor_new_parser(syntax_name);
+  raptor_set_namespace_handler(rdf_parser, rdf_serializer, relay_namespaces);
+</programlisting>
+
+</section>
+
+
+<section id="tutorial-serializer-set-error-warning-handlers">
+<title>Set error and warning handlers</title>
+
+<para>There are several other callback handlers that can be set
+on serializers.  These can be set any time before serializing is started.
+Errors and warnings from serializing can be returned with functions
+that all take a callback of type
+<link linkend="raptor-message-handler"><type>raptor_message_handler</type></link>
+and signature:
+<programlisting>
+void
+message_handler(void *user_data, raptor_locator* locator, 
+                const char *message)
+{
+  /* do something with the message */
+}
+</programlisting>
+returning the user data given, associated location information
+as a <link linkend="raptor-locator"><type>raptor_locator</type></link>
+and the error/warning message itself.  The <emphasis>locator</emphasis>
+structure contains full information on the details of where in the
+serialized file or URI the message occurred.
+</para>
+
+<para>The fatal error, error and warning handlers are all set with
+similar functions that take a handler as follows:
+<programlisting>
+  raptor_serializer_set_error_handler(rdf_serializer, user_data, error_handler);
+
+  raptor_serializer_set_warning_handler(rdf_serializer, user_data, warning_handler);
+</programlisting>
+</para>
+
+</section>
+
+
+<section id="tutorial-serializer-to-destination">
+<title>Provide a destination for the serialized syntax</title>
+
+<para>The operation of turning RDF triples into a syntax has several
+alternatives from functions that do most of the work writing to a file
+or string to functions that allow passing in a 
+<link linkend="raptor-iostream"><type>raptor_iostream</type></link>
+which can be entirely user-constructed.</para>
+
+<section id="serialize-to-filename">
+<title>Serialize to a filename (<link linkend="raptor-serialize-start-to-filename"><function>raptor_serialize_start_to_filename()</function></link>)</title>
+
+<para>Serialize to a new filename
+(using <link linkend="raptor-new-iostream-to-filename"><function>raptor_new_iostream_to_filename()</function></link> internally)
+and uses asf base URI, the file's URI.
+<programlisting>
+  const char *filename="raptor.rdf";
+  raptor_serialize_start_to_filename(rdf_serializer, filename);
+</programlisting>
+</para>
+</section>
+
+<section id="serialize-to-string">
+<title>Serialize to a string (<link linkend="raptor-serialize-start-to-string"><function>raptor_serialize_start_to_string()</function></link>)</title>
+
+<para>Serialize to a string that is allocated by the serializer
+(using <link linkend="raptor-new-iostream-to-string"><function>raptor_new_iostream_to_string()</function></link> internally).  The
+resulting string is only constructed after <link linkend="raptor-serialize-end"><function>raptor_serialize_end()</function></link> is called and at that
+point it is assigned to the string pointer passed in, with the length
+written to the optional length pointer.  This function
+takes an optional base URI but may be required by some serializers.
+<programlisting>
+  raptor_uri* uri=raptor_new_uri("http://example.org/base");
+  void *string;  /* destination for string */
+  size_t length; /* length of constructed string */
+
+  raptor_serialize_start_to_string(rdf_serializer, uri,
+                                   &amp;string, &amp;length);
+</programlisting>
+</para>
+
+</section>
+
+
+<section id="serialize-to-filehandle">
+<title>Serialize to a FILE* file handle (<link linkend="raptor-serialize-start-to-file-handle"><function>raptor_serialize_start_to_file_handle()</function></link>)</title>
+
+<para>Serialize to an existing open C FILE* file handle
+(using <link linkend="raptor-new-iostream-to-file-handle"><function>raptor_new_iostream_to_file_handle()</function></link> internally).  The handle is not closed after serializing is finished.  This function
+takes an optional base URI but may be required by some serializers.
+<programlisting>
+  raptor_uri* uri=raptor_new_uri("http://example.org/base");
+  FILE* fh=fopen("raptor.rdf", "wb");
+  raptor_serialize_start_to_file_handle(rdf_serializer, uri, fh);
+</programlisting>
+</para>
+</section>
+
+<section id="serialize-to-iostream">
+<title>Serialize to an <link linkend="raptor-iostream"><type>raptor_iostream</type></link> (<link linkend="raptor-serialize-start-to-iostream"><function>raptor_serialize_start_to_iostream()</function></link>)</title>
+
+<para>This is the most flexible serializing method as it allows
+writing to any 
+<link linkend="raptor-iostream"><type>raptor_iostream</type></link>
+which can be constructed to build any form of user-generated structure
+via callbacks.  The iostream remains owned by the caller that can continue
+to write to it after the serializing is finished (after
+<link linkend="raptor-serialize-end"><function>raptor_serialize_end()</function></link>) is called).
+<programlisting>
+  raptor_uri* uri=raptor_new_uri("http://example.org/base");
+  raptor_iostream* iostream = /* iostream initialized by some means */ ;
+
+  raptor_serialize_start_to_iostream(rdf_serializer, uri, iostream);
+
+  while( /* got RDF triples */ ) {
+    raptor_statement* triple = /* ... triple made from somewhere ... */ ;
+    raptor_serialize_statement(rdf_serializer,  triple);
+  }
+  raptor_serialize_end(rdf_serializer);
+
+  raptor_free_serializer(rdf_serializer);
+
+  /* ... write other stuff to iostream ... */
+
+  raptor_free_iostream(iostream);
+</programlisting>
+</para>
+</section>
+
+
+<section id="serialize-to-iostream-old">
+<title>Serialize to an <link linkend="raptor-iostream"><type>raptor_iostream</type></link> and close iostream (<link linkend="raptor-serialize-start"><function>raptor_serialize_start()</function></link>)</title>
+
+<para><link linkend="raptor-serialize-start"><function>raptor_serialize_start()</function></link>
+also serializes to an iostream like
+<link linkend="raptor-serialize-start-to-iostream"><function>raptor_serialize_start_to_iostream()</function></link>
+but it becomes the owner of the passed in 
+<link linkend="raptor-iostream"><type>raptor_iostream</type></link>
+and destroys it at the end of serializing, so no further use of the
+iostream can be made by the caller.
+</para>
+</section>
+
+
+</section>
+
+
+<section id="tutorial-serializer-get-triples">
+<title>Get or construct RDF Triples</title>
+<para>
+An <link linkend="raptor-statement"><type>raptor_statement</type></link>
+can be made either by receiving them from a
+<link linkend="raptor-parser"><type>raptor_parser</type></link>
+via parsing or can be constructed by hand.</para>
+
+<para>When constructing by hand,
+the <link linkend="raptor-statement"><type>raptor_statement</type></link>
+structure should be allocated by the application and the fields
+filled in.  Each triple has three parts.  The subject can be a URI
+or blank node, the predicate can only be a URI and the object
+can be a URI, blank node or RDF literal. RDF literals can have either
+just a Unicode string, a Unicode string and a language or a Unicode
+string and a datatype URI.</para>
+
+<para>The triple part types are set as fields named
+like <literal>subject_type</literal> for describing
+field <literal>subject</literal>.
+So to initialise the subject of the triple,
+set the field <literal>statement.subject</literal> to point to a
+previously allocated
+<link linkend="raptor-uri"><type>raptor_uri*</type></link> object (for URI)
+or <literal>char*</literal> (for blank node) and
+set <literal>statement.subject_type</literal>
+to <literal>RAPTOR_IDENTIFIER_TYPE_RESOURCE</literal> or
+<literal>RAPTOR_IDENTIFIER_TYPE_ANONYMOUS</literal> respectively.
+Triple predicates are always of type
+<literal>RAPTOR_IDENTIFIER_TYPE_RESOURCE</literal>.
+Triple objects are all all types given above and also
+<literal>RAPTOR_IDENTIFIER_TYPE_LITERAL</literal> which takes
+an <literal>unsigned char*</literal> pointer plus an optional
+language <literal>char*</literal> pointer
+in the <literal>object_literal_language</literal> field OR a
+a <literal>raptor_uri*</literal> literal datatype pointer
+in the <literal>object_literal_datatype</literal> field.
+The triple part types are described under
+<link linkend="raptor-identifier-type"><type>raptor_identifier_type</type>.</link>
+</para>
+
+<example id="raptor-example-rdfserialize">
+<title><filename>rdfserialize.c</filename>: Serialize 1 triple to RDF/XML (Abbreviated)</title>
+<programlisting>
+<xi:include href="rdfserialize.c" parse="text"/>
+</programlisting>
+
+<para>Compile it like this:
+<screen>
+$ gcc -o rdfserialize rdfserialize.c `raptor-config --cflags` `raptor-config --libs`
+</screen>
+and run it with an optional base URI argument
+<screen>
+$ ./rdfserialize
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"&gt;
+  &lt;rdf:Description rdf:about="http://example.org/subject"&gt;
+    &lt;ns0:predicate xmlns:ns0="http://example.org/" xml:lang="en"&gt;An example&lt;/ns0:predicate&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</screen>
+</para>
+
+</example>
+
+</section>
+
+<section id="tutorial-serializer-send-triples">
+<title>Send RDF Triples to serializer</title>
+
+<para>
+Once the serializer has been started, RDF triples can be sent to it
+via the
+<link linkend="raptor-serialize-statement"><function>raptor_serialize_statement()</function></link>
+function with a
+<link linkend="raptor-statement"><type>raptor_statement</type></link>
+value.
+</para>
+
+<para>Once all triples are sent, the serializing must be finished
+with a call to
+<link linkend="raptor-serialize-end"><function>raptor_serialize_end()</function></link>.
+In particular, only at this point does the 
+<link linkend="raptor-iostream"><type>raptor_iostream</type></link>
+get flushed or any string constructed for 
+<link linkend="raptor-serialize-start-to-string"><function>raptor_serialize_start_to_string()</function></link>.
+<programlisting>
+  /* start the serializing somehow */
+  while( /* got RDF triples */ ) {
+    raptor_serialize_statement(rdf_serializer, triple);
+  }
+  raptor_serialize_end(rdf_serializer);
+  /* now can use the serializing result (FILE, string, raptor_iostream) */
+</programlisting>
+
+</para>
+</section>
+
+
+<section id="tutorial-serializer-runtime-info">
+<title>Querying serializer run-time information</title>
+
+<para>
+<link linkend="raptor-serializer-get-iostream"><function>raptor_serializer_get_iostream()</function></link>
+gets the current serializer's raptor_iostream.
+</para>
+
+<para>
+<link linkend="raptor-serializer-get-locator"><function>raptor_serializer_get_locator()</function></link>
+returns the <link linkend="raptor-locator"><type>raptor_locator</type></link>
+for the current position in the output stream.  The <emphasis>locator</emphasis>
+structure contains full information on the details of where in the
+file or URI the current serializer has reached.
+</para>
+</section>
+
+
+<section id="tutorial-serializer-destroy">
+<title>Destroy the serializer</title>
+
+<para>
+To tidy up, delete the serializer object as follows: 
+<programlisting>
+  raptor_free_serializer(rdf_serializer);
+</programlisting>
+</para>
+
+</section>
+
+<section id="tutorial-serializer-example">
+<title>Serializing example code</title>
+
+<example id="raptor-example-rdfcat">
+<title><filename>rdfcat.c</filename>: Read any RDF syntax and serialize to RDF/XML (Abbreviated)</title>
+<programlisting>
+<xi:include href="rdfcat.c" parse="text"/>
+</programlisting>
+
+<para>Compile it like this:
+<screen>
+$ gcc -o rdfcat rdfcat.c `raptor-config --cflags` `raptor-config --libs`
+</screen>
+and run it on an RDF file as:
+<screen>
+$ ./rdfcat raptor.rdf
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://usefulinc.com/ns/doap#"&gt;
+  &lt;rdf:Description rdf:about=""&gt;
+    &lt;foaf:maker&gt;
+      &lt;foaf:Person&gt;
+        &lt;foaf:name&gt;Dave Beckett&lt;/foaf:name&gt;
+...
+</screen>
+</para>
+
+</example>
+
+</section>
+
+</chapter>
+
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("raptor-docs.xml" "book" "part")
+End:
+-->

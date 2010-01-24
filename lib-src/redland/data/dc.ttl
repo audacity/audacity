@@ -1,0 +1,6 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+
+<http://purl.org/net/dajobe/>
+      dc:creator "Dave Beckett" ;
+      dc:description "The generic home page of Dave Beckett." ;
+      dc:title "Dave Beckett's Home Page" .

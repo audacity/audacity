@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial query 8
+
+SELECT ?b
+FROM <vc-db-2.rdf>
+WHERE (<http://somewhere/JohnSmith/> , <vCard:N>, ?b)
+USING vCard FOR <http://www.w3.org/2001/vcard-rdf/3.0#>

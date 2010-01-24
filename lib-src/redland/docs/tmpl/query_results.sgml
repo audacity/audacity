@@ -1,0 +1,291 @@
+<!-- ##### SECTION Title ##### -->
+Query results
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF query results.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The results of an #librdf_query execution as a sequence of individual
+results, an RDF graph as a sequence of triples or a boolean.  For
+variable binding results, the binding names and values can be read in
+multiple forms and the number of results returned as well as the
+current result moved to the next.  For an RDF graph result, the
+stream of triples can be returned. For a boolean result, the value
+can be returned.  All results can be turned into a string XML format
+based on the SPARQL XML results format which can also be written to a file.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_query_results ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_query_results_as_stream ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_count ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_next ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_finished ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_bindings ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@names: 
+@values: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_binding_value ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@offset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_binding_name ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@offset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_binding_value_by_name ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_bindings_count ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_to_counted_string ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@format_uri: 
+@base_uri: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_to_string ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@format_uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_to_file_handle ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@handle: 
+@format_uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_to_file ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@name: 
+@format_uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_query_results ##### -->
+<para>
+
+</para>
+
+@query_results: 
+
+
+<!-- ##### FUNCTION librdf_query_results_is_bindings ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_is_boolean ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_is_graph ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_is_syntax ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_get_boolean ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_query_results_formatter ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@name: 
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_query_results_formatter_by_mime_type ##### -->
+<para>
+
+</para>
+
+@query_results: 
+@mime_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_query_results_formatter ##### -->
+<para>
+
+</para>
+
+@formatter: 
+
+
+<!-- ##### FUNCTION librdf_query_results_formats_check ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@uri: 
+@mime_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_query_results_formats_enumerate ##### -->
+<para>
+
+</para>
+
+@world: 
+@counter: 
+@name: 
+@label: 
+@uri_string: 
+@mime_type: 
+@Returns: 
+
+
+<!-- ##### TYPEDEF librdf_query_results_formatter ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_query_results_formatter_write ##### -->
+<para>
+
+</para>
+
+@iostr: 
+@formatter: 
+@results: 
+@base_uri: 
+@Returns: 
+
+

@@ -1,0 +1,13 @@
+# $Id: boolean-EBV-canonical-result.n3,v 1.1 2008-07-08 10:46:39 larsl Exp $
+
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+
+[]  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                rs:ResultSet ;
+    rs:resultVariable
+                "s" ;
+    rs:solution [ rs:binding  [ rs:value    <http://www.w3.org/2001/sw/DataAccess/tests/data/ValueTesting/boolean-0#ttext> ;
+                                rs:variable "s"
+                              ]
+                ] .

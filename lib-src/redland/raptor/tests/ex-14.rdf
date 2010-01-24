@@ -1,0 +1,18 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:gen="http://www.mygenealogy.com/"
+         xmlns:gdc="http://www.gedcom.com/">
+
+  <!-- Check this doesn't crash / leak memory handling propElm rdf:resource -->
+
+  <!-- Can't remember where this example came from, I've anonymised it -->
+
+  <rdf:Description rdf:about="http://example.org/person1/">
+    <gen:Parent rdf:resource="#Person_B"/>
+  </rdf:Description>
+ 
+  <rdf:Description rdf:ID="Person_B">
+    <gdc:Name>John Doe</gdc:Name>
+    <gdc:Birthplace>New York</gdc:Birthplace>
+    <gdc:DOB>19010101</gdc:DOB>
+  </rdf:Description>
+</rdf:RDF>

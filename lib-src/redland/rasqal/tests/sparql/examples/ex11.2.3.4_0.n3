@@ -1,0 +1,11 @@
+@prefix a:          <http://www.w3.org/2000/10/annotation-ns#> .
+@prefix dc:         <http://purl.org/dc/elements/1.1/> .
+@prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+
+_:a   a:annotates   <http://www.w3.org/TR/rdf-sparql-query/> .
+_:a   dc:creator    "Alice B. Toeclips" .
+
+_:b   a:annotates   <http://www.w3.org/TR/rdf-sparql-query/> .
+_:b   dc:creator    _:c .
+_:c   foaf:given    "Bob".
+_:c   foaf:family   "Smith".

@@ -1,0 +1,77 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.75 [en]C-gatewaynet  (Win98; U) [Netscape]">
+   <meta name="Author" content="Phil Burk">
+   <meta name="Description" content="Tutorial for PortAudio, a cross platform, open-source, audio I/O library.It provides a very simple API for recording and/or playing sound using a simple callback function.">
+   <meta name="KeyWords" content="audio, tutorial, library, portable, open-source, DirectSound,sound, music, JSyn, synthesis,">
+   <title>PortAudio Tutorial</title>
+</head>
+<body>
+&nbsp;
+<center><table COLS=1 WIDTH="100%" BGCOLOR="#FADA7A" >
+<tr>
+<td>
+<center>
+<h1>
+PortAudio Tutorial</h1></center>
+</td>
+</tr>
+</table></center>
+
+<h2>
+Blocking Read/Write Functions</h2>
+
+<blockquote>[Note: These functions are not part of the official PortAudio
+API. They are simply built on top of PortAudio as an extra utility. Also
+note that they are under evaluation and their definition may change.]
+<p>There are two fundamentally different ways to design an audio API. One
+is to use callback functions the way we have already shown. The callback
+function operates under an interrupt or background thread This leaves the
+foreground application free to do other things while the audio just runs
+in the background. But this can sometimes be awkward.
+<p>So we have provided an alternative technique that lets a program generate
+audio in the foreground and then just write it to the audio stream as if
+it was a file. If there is not enough room in the audio buffer for more
+data, then the write function will just block until more room is available.
+This can make it very easy to write an audio example. To use this tool,
+you must add the files "pablio/pablio.c" and "pablio/ringbuffer.c" to your
+project. You must also:
+<blockquote>
+<pre>#include "pablio.h"</pre>
+</blockquote>
+Here is a short excerpt of a program that opens a stream for input and
+output. It then read a pair of samples at a time from input, and writes
+them to output, in a loop. The complete example can be found in "pablio/test_rw.c".
+<blockquote>
+<pre>&nbsp;&nbsp;&nbsp; SAMPLE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; samples[2];
+&nbsp;&nbsp;&nbsp; PaError&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; err;
+&nbsp;&nbsp;&nbsp; PABLIO_Stream&nbsp; *aStream;
+
+/* Open simplified blocking I/O layer on top of PortAudio. */
+&nbsp;&nbsp;&nbsp; err = OpenAudioStream( &amp;rwbl, SAMPLE_RATE, paFloat32,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (PABLIO_READ_WRITE | PABLIO_STEREO) );
+&nbsp;&nbsp;&nbsp; if( err != paNoError ) goto error;
+
+/* Process samples in the foreground. */
+&nbsp;&nbsp;&nbsp; for( i=0; i&lt;(NUM_SECONDS * SAMPLE_RATE); i++ )
+&nbsp;&nbsp;&nbsp; {
+&nbsp;&nbsp;&nbsp; /* Read one frame of data into sample array from audio input. */
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ReadAudioStream( aStream, samples, 1 );
+&nbsp;&nbsp;&nbsp; /*
+&nbsp;&nbsp;&nbsp; ** At this point you could process the data in samples[0] and samples[1],
+&nbsp;&nbsp;&nbsp; ** and write the result back to the same samples array.
+&nbsp;&nbsp;&nbsp; */
+&nbsp;&nbsp;&nbsp; /* Write that same frame of data to output. */
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WriteAudioStream( aStream, samples, 1 );
+&nbsp;&nbsp;&nbsp; }
+
+&nbsp;&nbsp;&nbsp; CloseAudioStream( aStream );</pre>
+</blockquote>
+</blockquote>
+<font size=+2><a href="http://www.portaudio.com/">home</a> |
+<a href="pa_tutorial.html">contents</a>
+| <a href="pa_tut_devs.html">previous</a> |&nbsp; <a href="pa_tut_explore.html">next</a></font>
+</body>
+</html>

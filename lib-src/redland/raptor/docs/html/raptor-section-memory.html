@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Memory</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Raptor RDF Syntax Parsing and Serializing Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="prev" href="raptor-section-general.html" title="General">
+<link rel="next" href="raptor-section-constants.html" title="Constants">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="introduction.html" title="Raptor Overview">
+<link rel="part" href="tutorial.html" title="Part I. Raptor Tutorial">
+<link rel="chapter" href="tutorial-initialising-finishing.html" title="Initialising and Finishing using the Library">
+<link rel="chapter" href="tutorial-querying-functionality.html" title="Listing built-in functionality">
+<link rel="chapter" href="tutorial-parsing.html" title="Parsing syntaxes to RDF Triples">
+<link rel="chapter" href="tutorial-serializing.html" title="Serializing RDF triples to a syntax">
+<link rel="part" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="chapter" href="raptor-parsers.html" title="Parsers in Raptor (syntax to triples)">
+<link rel="chapter" href="raptor-serializers.html" title="Serializers in Raptor (triples to syntax)">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="raptor-section-general.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Raptor RDF Syntax Parsing and Serializing Library Manual</th>
+<td><a accesskey="n" href="raptor-section-constants.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#raptor-section-memory.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#raptor-section-memory.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="raptor-section-memory"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="raptor-section-memory.top_of_page"></a>Memory</span></h2>
+<p>Memory — Memory handling functions</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="raptor-section-memory.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+void                <a class="link" href="raptor-section-memory.html#raptor-free-memory" title="raptor_free_memory ()">raptor_free_memory</a>                  (void *ptr);
+void*               <a class="link" href="raptor-section-memory.html#raptor-alloc-memory" title="raptor_alloc_memory ()">raptor_alloc_memory</a>                 (size_t size);
+void*               <a class="link" href="raptor-section-memory.html#raptor-calloc-memory" title="raptor_calloc_memory ()">raptor_calloc_memory</a>                (size_t nmemb,
+                                                         size_t size);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-memory.description"></a><h2>Description</h2>
+<p>
+Wrappers around the free, malloc and calloc functions but
+called from inside the library.  Required by some systems
+to handle multiple-HEAPs and pass memory to and from the library.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-memory.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="raptor-free-memory"></a><h3>raptor_free_memory ()</h3>
+<pre class="programlisting">void                raptor_free_memory                  (void *ptr);</pre>
+<p>
+Free memory allocated inside raptor.
+</p>
+<p>
+Some systems require memory allocated in a library to
+be deallocated in that library.  This function allows
+memory allocated by raptor to be freed.
+</p>
+<p>
+Examples include the result of the '_to_' methods that returns
+allocated memory such as raptor_uri_filename_to_uri_string,
+raptor_uri_filename_to_uri_string
+and raptor_uri_uri_string_to_filename_fragment</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>ptr</code></em> :</span></p></td>
+<td> memory pointer
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-alloc-memory"></a><h3>raptor_alloc_memory ()</h3>
+<pre class="programlisting">void*               raptor_alloc_memory                 (size_t size);</pre>
+<p>
+Allocate memory inside raptor.
+</p>
+<p>
+Some systems require memory allocated in a library to
+be deallocated in that library.  This function allows
+memory to be allocated inside the raptor shared library
+that can be freed inside raptor either internally or via
+raptor_free_memory.
+</p>
+<p>
+Examples include using this in the <a class="link" href="raptor-section-parser.html#raptor-parser-generate-id" title="raptor_parser_generate_id ()"><code class="function">raptor_parser_generate_id()</code></a> handler
+code to create new strings that will be used internally
+as short identifiers and freed later on by the parsers.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
+<td> size of memory to allocate
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the address of the allocated memory or NULL on failure
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-calloc-memory"></a><h3>raptor_calloc_memory ()</h3>
+<pre class="programlisting">void*               raptor_calloc_memory                (size_t nmemb,
+                                                         size_t size);</pre>
+<p>
+Allocate zeroed array of items inside raptor.
+</p>
+<p>
+Some systems require memory allocated in a library to
+be deallocated in that library.  This function allows
+memory to be allocated inside the raptor shared library
+that can be freed inside raptor either internally or via
+raptor_free_memory.
+</p>
+<p>
+Examples include using this in the <a class="link" href="raptor-section-parser.html#raptor-parser-generate-id" title="raptor_parser_generate_id ()"><code class="function">raptor_parser_generate_id()</code></a> handler
+code to create new strings that will be used internally
+as short identifiers and freed later on by the parsers.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>nmemb</code></em> :</span></p></td>
+<td> number of members
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>size</code></em> :</span></p></td>
+<td> size of item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the address of the allocated memory or NULL on failure
+
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

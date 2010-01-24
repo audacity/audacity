@@ -1,0 +1,9 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test A-02 : Test default prefixes.
+
+SELECT ?b  ?y
+FROM   <model5.nt>
+WHERE
+    (?b  <rdf:type>   <rdf:Bag>)
+    (?b  ?x  ?y)
+AND ! ( ?x eq <rdf:type> && ?y eq <rdf:Bag> )

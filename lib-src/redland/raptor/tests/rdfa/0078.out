@@ -1,0 +1,6 @@
+_:genid1 <http://xmlns.com/foaf/0.1/name> "Ivan Herman" .
+_:genid1 <http://xmlns.com/foaf/0.1/mailbox> <mailto:ivan@w3.org> .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+_:genid2 <http://xmlns.com/foaf/0.1/name> "Mark Birbeck" .
+<http://www.example.org/#somebody> <http://xmlns.com/foaf/0.1/knows> _:genid1 .
+<http://www.example.org/#somebody> <http://xmlns.com/foaf/0.1/knows> _:genid2 .

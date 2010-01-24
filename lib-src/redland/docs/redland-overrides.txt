@@ -1,0 +1,371 @@
+# Make the concept macros not reveal their definition
+
+<MACRO>
+<NAME>LIBRDF_MS_Alt</NAME>
+#define LIBRDF_MS_Alt
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Alt_URI</NAME>
+#define LIBRDF_MS_Alt_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Bag</NAME>
+#define LIBRDF_MS_Bag
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Bag_URI</NAME>
+#define LIBRDF_MS_Bag_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Description</NAME>
+#define LIBRDF_MS_Description
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Description_URI</NAME>
+#define LIBRDF_MS_Description_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Property</NAME>
+#define LIBRDF_MS_Property
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Property_URI</NAME>
+#define LIBRDF_MS_Property_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_RDF</NAME>
+#define LIBRDF_MS_RDF
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_RDF_URI</NAME>
+#define LIBRDF_MS_RDF_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Seq</NAME>
+#define LIBRDF_MS_Seq
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Seq_URI</NAME>
+#define LIBRDF_MS_Seq_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Statement</NAME>
+#define LIBRDF_MS_Statement
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_Statement_URI</NAME>
+#define LIBRDF_MS_Statement_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_aboutEach</NAME>
+#define LIBRDF_MS_aboutEach
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_aboutEachPrefix</NAME>
+#define LIBRDF_MS_aboutEachPrefix
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_aboutEachPrefix_URI</NAME>
+#define LIBRDF_MS_aboutEachPrefix_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_aboutEach_URI</NAME>
+#define LIBRDF_MS_aboutEach_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_li</NAME>
+#define LIBRDF_MS_li
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_li_URI</NAME>
+#define LIBRDF_MS_li_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_object</NAME>
+#define LIBRDF_MS_object
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_object_URI</NAME>
+#define LIBRDF_MS_object_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_predicate</NAME>
+#define LIBRDF_MS_predicate
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_predicate_URI</NAME>
+#define LIBRDF_MS_predicate_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_subject</NAME>
+#define LIBRDF_MS_subject
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_subject_URI</NAME>
+#define LIBRDF_MS_subject_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_type</NAME>
+#define LIBRDF_MS_type
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_type_URI</NAME>
+#define LIBRDF_MS_type_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_value</NAME>
+#define LIBRDF_MS_value
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_MS_value_URI</NAME>
+#define LIBRDF_MS_value_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_List</NAME>
+#define LIBRDF_RS_List
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_List_URI</NAME>
+#define LIBRDF_RS_List_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_XMLLiteral</NAME>
+#define LIBRDF_RS_XMLLiteral
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_XMLLiteral_URI</NAME>
+#define LIBRDF_RS_XMLLiteral_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_first</NAME>
+#define LIBRDF_RS_first
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_first_URI</NAME>
+#define LIBRDF_RS_first_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_nil</NAME>
+#define LIBRDF_RS_nil
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_nil_URI</NAME>
+#define LIBRDF_RS_nil_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_nodeID</NAME>
+#define LIBRDF_RS_nodeID
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_nodeID_URI</NAME>
+#define LIBRDF_RS_nodeID_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_rest</NAME>
+#define LIBRDF_RS_rest
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_RS_rest_URI</NAME>
+#define LIBRDF_RS_rest_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Class</NAME>
+#define LIBRDF_S_Class
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Class_URI</NAME>
+#define LIBRDF_S_Class_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_ConstraintProperty</NAME>
+#define LIBRDF_S_ConstraintProperty
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_ConstraintProperty_URI</NAME>
+#define LIBRDF_S_ConstraintProperty_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_ConstraintResource</NAME>
+#define LIBRDF_S_ConstraintResource
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_ConstraintResource_URI</NAME>
+#define LIBRDF_S_ConstraintResource_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Container</NAME>
+#define LIBRDF_S_Container
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_ContainerMembershipProperty</NAME>
+#define LIBRDF_S_ContainerMembershipProperty
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_ContainerMembershipProperty_URI</NAME>
+#define LIBRDF_S_ContainerMembershipProperty_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Container_URI</NAME>
+#define LIBRDF_S_Container_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Literal</NAME>
+#define LIBRDF_S_Literal
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Literal_URI</NAME>
+#define LIBRDF_S_Literal_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Resource</NAME>
+#define LIBRDF_S_Resource
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_Resource_URI</NAME>
+#define LIBRDF_S_Resource_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_comment</NAME>
+#define LIBRDF_S_comment
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_comment_URI</NAME>
+#define LIBRDF_S_comment_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_domain</NAME>
+#define LIBRDF_S_domain
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_domain_URI</NAME>
+#define LIBRDF_S_domain_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_isDefinedBy</NAME>
+#define LIBRDF_S_isDefinedBy
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_isDefinedBy_URI</NAME>
+#define LIBRDF_S_isDefinedBy_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_label</NAME>
+#define LIBRDF_S_label
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_label_URI</NAME>
+#define LIBRDF_S_label_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_range</NAME>
+#define LIBRDF_S_range
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_range_URI</NAME>
+#define LIBRDF_S_range_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_seeAlso</NAME>
+#define LIBRDF_S_seeAlso
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_seeAlso_URI</NAME>
+#define LIBRDF_S_seeAlso_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_subClassOf</NAME>
+#define LIBRDF_S_subClassOf
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_subClassOf_URI</NAME>
+#define LIBRDF_S_subClassOf_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_subPropertyOf</NAME>
+#define LIBRDF_S_subPropertyOf
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_S_subPropertyOf_URI</NAME>
+#define LIBRDF_S_subPropertyOf_URI
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_URI_RDF_MS</NAME>
+#define LIBRDF_URI_RDF_MS
+</MACRO>
+
+<MACRO>
+<NAME>LIBRDF_URI_RDF_SCHEMA</NAME>
+#define LIBRDF_URI_RDF_SCHEMA
+</MACRO>

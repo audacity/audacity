@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Triples</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Rasqal RDF Query Library Manual">
+<link rel="up" href="pt01.html" title="Part I. Reference Manual">
+<link rel="prev" href="rasqal-section-query-results-formatter.html" title="Query Results Formatter">
+<link rel="next" href="rasqal-section-triples-source.html" title="Triples Source">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="rasqal.html" title="Rasqal Overview">
+<link rel="part" href="pt01.html" title="Part I. Reference Manual">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="rasqal-section-query-results-formatter.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="pt01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Rasqal RDF Query Library Manual</th>
+<td><a accesskey="n" href="rasqal-section-triples-source.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#rasqal-section-triple.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#rasqal-section-triple.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="rasqal-section-triple"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="rasqal-section-triple.top_of_page"></a>Triples</span></h2>
+<p>Triples — Triple pattern or RDF triple.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="rasqal-section-triple.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+                    <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a>;
+enum                <a class="link" href="rasqal-section-triple.html#rasqal-triple-flags" title="enum rasqal_triple_flags">rasqal_triple_flags</a>;
+<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a>*      <a class="link" href="rasqal-section-triple.html#rasqal-new-triple" title="rasqal_new_triple ()">rasqal_new_triple</a>                   (<a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *subject,
+                                                         <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *predicate,
+                                                         <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *object);
+<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a>*      <a class="link" href="rasqal-section-triple.html#rasqal-new-triple-from-triple" title="rasqal_new_triple_from_triple ()">rasqal_new_triple_from_triple</a>       (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t);
+void                <a class="link" href="rasqal-section-triple.html#rasqal-free-triple" title="rasqal_free_triple ()">rasqal_free_triple</a>                  (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t);
+<a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a>*     <a class="link" href="rasqal-section-triple.html#rasqal-triple-get-origin" title="rasqal_triple_get_origin ()">rasqal_triple_get_origin</a>            (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t);
+enum                <a class="link" href="rasqal-section-triple.html#rasqal-triple-parts" title="enum rasqal_triple_parts">rasqal_triple_parts</a>;
+void                <a class="link" href="rasqal-section-triple.html#rasqal-triple-print" title="rasqal_triple_print ()">rasqal_triple_print</a>                 (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t,
+                                                         FILE *fh);
+void                <a class="link" href="rasqal-section-triple.html#rasqal-triple-set-origin" title="rasqal_triple_set_origin ()">rasqal_triple_set_origin</a>            (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t,
+                                                         <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *l);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="rasqal-section-triple.description"></a><h2>Description</h2>
+<p>
+An object for a triple pattern or an RDF triple in a query.  It
+contains the three parts of an RDF triple - subject, predicate,
+object as well as origin for matching triples in some graph (such as
+with the SPARQL <code class="literal">GRAPH</code>).
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="rasqal-section-triple.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="rasqal-triple"></a><h3>rasqal_triple</h3>
+<pre class="programlisting">typedef struct {
+  rasqal_literal* subject;
+  rasqal_literal* predicate;
+  rasqal_literal* object;
+  rasqal_literal* origin;
+  unsigned int flags;
+} rasqal_triple;
+</pre>
+<p>
+A triple pattern or RDF triple.
+</p>
+<p>
+This is used as a triple pattern in queries and
+an RDF triple when generating RDF triples such as with SPARQL CONSTRUCT.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *<em class="structfield"><code>subject</code></em>;</span></p></td>
+<td> Triple subject.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *<em class="structfield"><code>predicate</code></em>;</span></p></td>
+<td> Triple predicate.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *<em class="structfield"><code>object</code></em>;</span></p></td>
+<td> Triple object.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *<em class="structfield"><code>origin</code></em>;</span></p></td>
+<td> Triple origin.
+</td>
+</tr>
+<tr>
+<td><p><span class="term">unsigned int <em class="structfield"><code>flags</code></em>;</span></p></td>
+<td> Or of enum <a class="link" href="rasqal-section-triple.html#rasqal-triple-flags" title="enum rasqal_triple_flags"><span class="type">rasqal_triple_flags</span></a> bits.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-triple-flags"></a><h3>enum rasqal_triple_flags</h3>
+<pre class="programlisting">typedef enum {
+
+  /* Not used - was only used internally in the execution engine */
+  RASQAL_TRIPLE_FLAGS_EXACT=1,
+
+  /* Not used - this is now a property of a graph pattern */
+  RASQAL_TRIPLE_FLAGS_OPTIONAL=2,
+
+  RASQAL_TRIPLE_FLAGS_LAST=RASQAL_TRIPLE_FLAGS_OPTIONAL
+} rasqal_triple_flags;
+</pre>
+<p>
+Flags for triple patterns.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-FLAGS-EXACT:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_FLAGS_EXACT</code></span></p></td>
+<td> Not used.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-FLAGS-OPTIONAL:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_FLAGS_OPTIONAL</code></span></p></td>
+<td> Not used.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-FLAGS-LAST:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_FLAGS_LAST</code></span></p></td>
+<td> Internal.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-new-triple"></a><h3>rasqal_new_triple ()</h3>
+<pre class="programlisting"><a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a>*      rasqal_new_triple                   (<a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *subject,
+                                                         <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *predicate,
+                                                         <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *object);</pre>
+<p>
+Constructor - create a new <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> triple or triple pattern.
+Takes ownership of the literals passed in.
+</p>
+<p>
+The triple origin can be set with <a class="link" href="rasqal-section-triple.html#rasqal-triple-set-origin" title="rasqal_triple_set_origin ()"><code class="function">rasqal_triple_set_origin()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>subject</code></em> :</span></p></td>
+<td> Triple subject.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>predicate</code></em> :</span></p></td>
+<td> Triple predicate.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>object</code></em> :</span></p></td>
+<td> Triple object.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> or NULL on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-new-triple-from-triple"></a><h3>rasqal_new_triple_from_triple ()</h3>
+<pre class="programlisting"><a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a>*      rasqal_new_triple_from_triple       (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t);</pre>
+<p>
+Copy constructor - create a new <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> from an existing one.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
+<td> Triple to copy.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> or NULL on failure.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-free-triple"></a><h3>rasqal_free_triple ()</h3>
+<pre class="programlisting">void                rasqal_free_triple                  (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t);</pre>
+<p>
+Destructor - destroy a <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> object.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-triple-get-origin"></a><h3>rasqal_triple_get_origin ()</h3>
+<pre class="programlisting"><a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a>*     rasqal_triple_get_origin            (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t);</pre>
+<p>
+Get the origin field of a <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
+<td> The triple object. 
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The triple origin or NULL.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-triple-parts"></a><h3>enum rasqal_triple_parts</h3>
+<pre class="programlisting">typedef enum {
+  RASQAL_TRIPLE_SUBJECT  = 1,
+  RASQAL_TRIPLE_PREDICATE= 2,
+  RASQAL_TRIPLE_OBJECT   = 4,
+  RASQAL_TRIPLE_ORIGIN   = 8,
+  RASQAL_TRIPLE_GRAPH    = RASQAL_TRIPLE_ORIGIN,
+  RASQAL_TRIPLE_SPO      = RASQAL_TRIPLE_SUBJECT | RASQAL_TRIPLE_PREDICATE | RASQAL_TRIPLE_OBJECT,
+  RASQAL_TRIPLE_SPOG     = RASQAL_TRIPLE_SPO | RASQAL_TRIPLE_GRAPH
+} rasqal_triple_parts;
+</pre>
+<p>
+Flags for parts of a triple.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-SUBJECT:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_SUBJECT</code></span></p></td>
+<td> Subject present in a triple.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-PREDICATE:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_PREDICATE</code></span></p></td>
+<td> Predicate present in a triple.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-OBJECT:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_OBJECT</code></span></p></td>
+<td> Object present in a triple.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-ORIGIN:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_ORIGIN</code></span></p></td>
+<td> Origin/graph present in a triple.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-GRAPH:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_GRAPH</code></span></p></td>
+<td>  Alias for RASQAL_TRIPLE_ORIGIN
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-SPO:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_SPO</code></span></p></td>
+<td> Subject, Predicate and Object present in a triple.
+</td>
+</tr>
+<tr>
+<td><p><a name="RASQAL-TRIPLE-SPOG:CAPS"></a><span class="term"><code class="literal">RASQAL_TRIPLE_SPOG</code></span></p></td>
+<td> Subject, Predicate, Object, Graph present in a triple.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-triple-print"></a><h3>rasqal_triple_print ()</h3>
+<pre class="programlisting">void                rasqal_triple_print                 (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t,
+                                                         FILE *fh);</pre>
+<p>
+Print a Rasqal triple in a debug format.
+</p>
+<p>
+The print debug format may change in any release.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a> object.
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fh</code></em> :</span></p></td>
+<td> The <span class="type">FILE</span>* handle to print to.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-triple-set-origin"></a><h3>rasqal_triple_set_origin ()</h3>
+<pre class="programlisting">void                rasqal_triple_set_origin            (<a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple">rasqal_triple</a> *t,
+                                                         <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal">rasqal_literal</a> *l);</pre>
+<p>
+Set the origin field of a <a class="link" href="rasqal-section-triple.html#rasqal-triple" title="rasqal_triple"><span class="type">rasqal_triple</span></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>t</code></em> :</span></p></td>
+<td> The triple object. 
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>l</code></em> :</span></p></td>
+<td> The <a class="link" href="rasqal-section-literal.html#rasqal-literal" title="rasqal_literal"><span class="type">rasqal_literal</span></a> object to set as origin.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

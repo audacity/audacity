@@ -1,0 +1,3 @@
+_:genid2 <http://somewhere.example.com/base64> "jd8734djr08347jyd4" .
+_:genid1 <http://somewhere.example.com/hash-sha-1> _:genid2 .
+<http://www.w3.org/> <http://somewhere.example.com/xml-cannonicalized> _:genid1 .

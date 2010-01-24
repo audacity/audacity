@@ -1,0 +1,13 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+@prefix ex:        <http://example.org/things#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+
+_:a foaf:name "Eve" ;
+    ex:empId "9"^^xsd:integer .
+
+_:f foaf:name "John" ;
+    ex:empId [ ex:number "29"^^xsd:integer ] .
+
+_:g foaf:name "Dirk" ;
+    ex:empId <http://example.org/dirk01> .

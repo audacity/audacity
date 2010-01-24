@@ -1,0 +1,6 @@
+<http://example.org/channel/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/rss/1.0/channel> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example.org/01> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example.org/02> .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#_3> <http://example.org/03> .
+<http://example.org/channel/> <http://purl.org/rss/1.0/items> _:genid1 .

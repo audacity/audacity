@@ -1,0 +1,8 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Lang tags
+// Lang tags only differentiate literals in rdf:XMLLiterals
+// and plain literals
+
+SELECT *
+FROM   <model9.n3>
+WHERE  (?x ?y "value"@en^^rdf:XMLLiteral)

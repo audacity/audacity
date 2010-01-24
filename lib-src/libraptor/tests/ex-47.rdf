@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [
+	 <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	 <!ENTITY xsd 'http://www.w3.org/2000/10/XMLSchema#'>
+]>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+
+  <!-- Exercise all RDFS vocabulary -->
+
+  <!-- Node elements (typed node elements) 
+       http://www.w3.org/TR/rdf-syntax-grammar/#nodeElementURIs
+   -->
+  <rdfs:Resource rdf:about="http://example.org/node"/>
+  <rdfs:Literal rdf:about="http://example.org/node"/>
+  <rdfs:Class rdf:about="http://example.org/node"/>
+  <rdfs:Datatype rdf:about="http://example.org/node"/>
+  <rdfs:Container rdf:about="http://example.org/node"/>
+  <rdfs:ContainerMembershipProperty rdf:about="http://example.org/node"/>
+
+  <!-- Property elements 
+       http://www.w3.org/TR/rdf-syntax-grammar/#propertyElementURIs
+    -->
+  <rdf:Description rdf:about="http://example.org/node1">
+    <rdfs:subClassOf rdf:resource="http://example.org/node2"/>
+    <rdfs:subPropertyOf rdf:resource="http://example.org/node2"/>
+    <rdfs:domain rdf:resource="http://example.org/node2"/>
+    <rdfs:range rdf:resource="http://example.org/node2"/>
+    <rdfs:label rdf:resource="http://example.org/node2"/>
+    <rdfs:comment rdf:resource="http://example.org/node2"/>
+    <rdfs:member rdf:resource="http://example.org/node2"/>
+    <rdfs:seeAlso rdf:resource="http://example.org/node2"/>
+    <rdfs:isDefinedBy rdf:resource="http://example.org/node2"/>
+  </rdf:Description>
+
+
+  <!-- Property attributes 
+       http://www.w3.org/TR/rdf-syntax-grammar/#propertyAttributeURIs
+    -->
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:subClassOf="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:subPropertyOf="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:domain="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:range="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:label="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:comment="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:member="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:seeAlso="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdfs:isDefinedBy="abc" />
+
+</rdf:RDF>

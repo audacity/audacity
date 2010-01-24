@@ -1,0 +1,3 @@
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "val1"^^<http://example.org/datatype1> .
+<http://example.org/node> <http://example.org/ns#prop2> "val2"^^<http://example.org/datatype2> .
+<http://example.org/node> <http://example.org/ns#prop3> "val3"^^<http://example.org/datatype3> .

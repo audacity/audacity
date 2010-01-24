@@ -1,0 +1,22 @@
+.TH SNDFILE-CONVERT 1 "October 09, 2002"
+.SH NAME
+sndfile-convert \- convert a sound files from one format to another
+.SH SYNOPSIS
+.B sndfile-convert
+.RI "[encoding] input_file output_file"
+.LP
+.B sndfile-convert
+.RI --help
+.SH DESCRIPTION
+sndfile-convert converts sound files from one format to another using
+libsndfile (http://www.mega-nerd.com/libsndfile/) to read and write
+the data.
+.LP
+The format of the output file is determined by the filename extension
+of the output file.
+.LP
+The optional encoding parameter allows setting of the data encoding for
+the output file. Run "sndfile-convert --help" for more information.
+.SH AUTHOR
+This manual page was written by Erik de Castro Lopo <erikd@mega-nerd.com>.
+

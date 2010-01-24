@@ -1,0 +1,110 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="tutorial-querying-functionality">
+<title>Listing built-in functionality</title>
+
+<para>
+Raptor can be configured and compiled with support for different
+parsers and serializers.  Lists of the functionality built into the
+library can be interrogated by means of
+<emphasis>enumerate</emphasis> functions.  These take as input an
+<literal>int</literal> counter and return descriptions of the feature
+at that offset in the list.  The descriptions are returned stored in
+the variables pointed to by the reference arguments of the
+<literal>**</literal><emphasis>var</emphasis> form.
+The return value of the function is non-zero when the counter has
+gone too far.
+</para>
+
+<variablelist>
+<title>Listing Functionality with Enumeration</title>
+<varlistentry><term>List the parse syntaxes (parser names)</term>
+<listitem><programlisting>
+int
+raptor_parsers_enumerate(const unsigned int counter,
+                         const char **name, const char **label);
+</programlisting></listitem>
+</varlistentry>
+<varlistentry><term>List the parse syntaxes
+(same as above but with more information)</term>
+<listitem><programlisting>
+int
+raptor_syntaxes_enumerate(const unsigned int counter,
+                          const char **name,
+                          const char **label, 
+                          const char **mime_type,
+                          const unsigned char **uri_string);
+</programlisting></listitem>
+</varlistentry>
+<varlistentry><term>List the serializer syntaxes (serializer names)</term>
+<listitem><programlisting>
+int
+raptor_serializers_enumerate(const unsigned int counter,
+                             const char **name,
+                             const char **label,
+                             const char **mime_type,
+                             const unsigned char **uri_string);
+</programlisting></listitem>
+</varlistentry>
+<varlistentry><term>List the Parser features</term>
+<listitem><programlisting>
+int
+raptor_features_enumerate(const raptor_feature feature,
+                          const char **name, raptor_uri **uri,
+                          const char **label);
+</programlisting></listitem>
+</varlistentry>
+<varlistentry><term>List the Serializer features</term>
+<listitem><programlisting>
+int
+raptor_serializer_features_enumerate(const raptor_feature feature,
+                                     const char **name,
+                                     raptor_uri **uri,
+                                     const char **label);
+</programlisting></listitem>
+</varlistentry>
+<varlistentry><term>List the XML Writer features</term>
+<listitem><programlisting>
+int
+raptor_xml_writer_features_enumerate(const raptor_feature feature,
+                                     const char **name,
+                                     raptor_uri **uri,
+                                     const char **label);
+</programlisting></listitem>
+</varlistentry>
+</variablelist>
+
+<para>These functions can be called directly after
+<link linkend="raptor-init"><function>raptor_init()</function></link>
+has been called so can be used to find name parameters for creating
+parser and serializer instances.  This is one way to find a parser
+(name) by it's MIME Type, the other is to use the mime_type parameter
+of the
+<link linkend="raptor-new-parser-for-content"><function>raptor_new_parser_for_content()</function></link>.</para>
+
+<example id="raptor-example-list-all-parser-features">
+<title>List all features of parsers with an enumerate function</title>
+<programlisting>
+  int i;
+  for(i=0; i &lt; RAPTOR_FEATURE_LAST; i++) {
+    const char *name;
+    raptor_uri *uri;
+    const char *label;
+    if(raptor_features_enumerate((raptor_feature)i, &amp;name, &amp;uri, &amp;label))
+      continue;
+    /* do something with name, uri and label */
+  }
+</programlisting>
+<para>There are more examples of this usage in the source for the
+<literal>rapper</literal> utility in <filename>util/rapper.c</filename>.
+</para>
+</example>
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("raptor-docs.xml" "book" "part")
+End:
+-->

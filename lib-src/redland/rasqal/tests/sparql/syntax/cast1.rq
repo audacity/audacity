@@ -1,0 +1,5 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT *
+WHERE { ?x ?y ?val .
+         FILTER ( xsd:integer(?val) = 10 )
+      }

@@ -1,0 +1,19 @@
+@prefix : <http://example.org/ns#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+
+# These object values are true by the boolean effective value rule.
+:x1 :p    1 .
+:x2 :p    "foo" .
+:x3 :p    "0.01"^^xsd:double .
+:x4 :p    "true"^^xsd:boolean .
+
+# These are false
+:y1 :p    0 .
+:y2 :p    "0.0"^^xsd:double .
+:y3 :p    "" .
+:y4 :p    "false"^^xsd:boolean .
+
+# Optionals
+:x1 :q    "true"^^xsd:boolean .
+:x2 :q    "false"^^xsd:boolean .
+:x3 :q    "foo"^^:unknown .

@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://www.example.org/ns#"
+         xml:base="http://example.org/triples">
+
+  <!-- Should give a warning about rdf:bagID attribute -->
+
+  <rdf:Description about="http://example.org/" rdf:bagID="bag">
+    <ex:prop>text</ex:prop>
+  </rdf:Description>
+
+</rdf:RDF>

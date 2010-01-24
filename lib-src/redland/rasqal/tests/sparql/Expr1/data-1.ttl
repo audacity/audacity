@@ -1,0 +1,11 @@
+@prefix x: <http://example.org/ns#> .
+@prefix : <http://example.org/books#> .
+@prefix dc:         <http://purl.org/dc/elements/1.1/> .
+
+:book1 dc:title "TITLE 1" .
+:book1 x:price  10 .
+
+:book2 dc:title "TITLE 2" .
+:book2 x:price  20 .
+
+:book3 dc:title "TITLE 3" .

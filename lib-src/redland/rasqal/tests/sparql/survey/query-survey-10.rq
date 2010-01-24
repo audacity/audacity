@@ -1,0 +1,4 @@
+select DISTINCT ?R where
+ { ?R ?x ?y.
+   FILTER ( regex(str(?R), "http://example.org/") )
+}

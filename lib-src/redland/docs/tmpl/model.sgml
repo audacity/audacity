@@ -1,0 +1,592 @@
+<!-- ##### SECTION Title ##### -->
+RDF Graph (librdf_model)
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF graph (set of triples) API.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The main user API class for Redland, providing access to the RDF
+graph and the triples in it (#librdf_statement), storage, parsing,
+serializing and querying.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_model ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_model_factory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_model_enumerate ##### -->
+<para>
+
+</para>
+
+@world: 
+@counter: 
+@name: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_model ##### -->
+<para>
+
+</para>
+
+@world: 
+@storage: 
+@options_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_model_with_options ##### -->
+<para>
+
+</para>
+
+@world: 
+@storage: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_model_from_model ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_model ##### -->
+<para>
+
+</para>
+
+@model: 
+
+
+<!-- ##### FUNCTION librdf_model_size ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_add ##### -->
+<para>
+
+</para>
+
+@model: 
+@subject: 
+@predicate: 
+@object: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_add_string_literal_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@subject: 
+@predicate: 
+@literal: 
+@xml_language: 
+@is_wf_xml: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_add_typed_literal_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@subject: 
+@predicate: 
+@literal: 
+@xml_language: 
+@datatype_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_add_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_add_statements ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement_stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_remove_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_contains_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_has_arc_in ##### -->
+<para>
+
+</para>
+
+@model: 
+@node: 
+@property: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_has_arc_out ##### -->
+<para>
+
+</para>
+
+@model: 
+@node: 
+@property: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_as_stream ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_serialise ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_find_statements ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### MACRO LIBRDF_MODEL_FIND_OPTION_MATCH_SUBSTRING_LITERAL ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION librdf_model_find_statements_with_options ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement: 
+@context_node: 
+@options: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_sources ##### -->
+<para>
+
+</para>
+
+@model: 
+@arc: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_arcs ##### -->
+<para>
+
+</para>
+
+@model: 
+@source: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_targets ##### -->
+<para>
+
+</para>
+
+@model: 
+@source: 
+@arc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_source ##### -->
+<para>
+
+</para>
+
+@model: 
+@arc: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_arc ##### -->
+<para>
+
+</para>
+
+@model: 
+@source: 
+@target: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_target ##### -->
+<para>
+
+</para>
+
+@model: 
+@source: 
+@arc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_arcs_in ##### -->
+<para>
+
+</para>
+
+@model: 
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_arcs_out ##### -->
+<para>
+
+</para>
+
+@model: 
+@node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_add_submodel ##### -->
+<para>
+
+</para>
+
+@model: 
+@sub_model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_remove_submodel ##### -->
+<para>
+
+</para>
+
+@model: 
+@sub_model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_print ##### -->
+<para>
+
+</para>
+
+@model: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_model_context_add_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_context_add_statements ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_context_remove_statement ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@statement: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_context_remove_statements ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_context_as_stream ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_context_serialize ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_contains_context ##### -->
+<para>
+
+</para>
+
+@model: 
+@context: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_query_execute ##### -->
+<para>
+
+</para>
+
+@model: 
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_sync ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_storage ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_load ##### -->
+<para>
+
+</para>
+
+@model: 
+@uri: 
+@name: 
+@mime_type: 
+@type_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_to_counted_string ##### -->
+<para>
+
+</para>
+
+@model: 
+@uri: 
+@name: 
+@mime_type: 
+@type_uri: 
+@string_length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_to_string ##### -->
+<para>
+
+</para>
+
+@model: 
+@uri: 
+@name: 
+@mime_type: 
+@type_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_find_statements_in_context ##### -->
+<para>
+
+</para>
+
+@model: 
+@statement: 
+@context_node: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_get_contexts ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### MACRO LIBRDF_MODEL_FEATURE_CONTEXTS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION librdf_model_get_feature ##### -->
+<para>
+
+</para>
+
+@model: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_set_feature ##### -->
+<para>
+
+</para>
+
+@model: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_transaction_commit ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_transaction_get_handle ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_transaction_rollback ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_transaction_start ##### -->
+<para>
+
+</para>
+
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_model_transaction_start_with_handle ##### -->
+<para>
+
+</para>
+
+@model: 
+@handle: 
+@Returns: 
+
+

@@ -1,0 +1,2 @@
+// Query that dumps the model
+SELECT ?x, ?y, ?z WHERE (?x, ?y, ?z)

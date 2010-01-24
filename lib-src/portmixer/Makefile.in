@@ -1,0 +1,42 @@
+### PortMixer library Makefile
+
+OBJECTS	= @objects@
+
+LIBRARY  = libportmixer.a
+
+CC       = @CC@
+AR       = @AR@
+RANLIB   = @RANLIB@
+
+DEFS    += @DEFS@
+CFLAGS  += @cflags@
+CFLAGS  += @include@
+
+all : $(LIBRARY)
+
+tests:
+	cd tests && $(MAKE) all
+
+$(LIBRARY): $(OBJECTS)
+	$(AR) ruv $(LIBRARY) $(OBJECTS)
+	$(RANLIB) $(LIBRARY)
+
+%.o : src/%.c
+	$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $@
+
+clean : 
+	-rm -f $(LIBRARY)
+	-rm -f $(OBJECTS)
+
+distclean: clean
+	-$(RM) -rf config.log config.status autom4te.cache Makefile portmixer-v2
+
+dist:
+	rm -rf portmixer-v2
+	mkdir portmixer-v2
+	cp -pr include src LICENSE.txt README.txt portaudio.patch Makefile.in configure.ac configure portmixer-v2
+	tar -zcf ../portmixer-v2.tar.gz portmixer-v2
+
+strip : 
+	strip $(LIBRARY)
+	ranlib $(LIBRARY)

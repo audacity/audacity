@@ -1,0 +1,145 @@
+<!-- ##### SECTION Title ##### -->
+List
+
+<!-- ##### SECTION Short_Description ##### -->
+Simple list class.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A simple list class used internally.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_list ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_new_list ##### -->
+<para>
+
+</para>
+
+@world: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION librdf_list_clear ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION librdf_list_add ##### -->
+<para>
+
+</para>
+
+@list: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_unshift ##### -->
+<para>
+
+</para>
+
+@list: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_shift ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_pop ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_remove ##### -->
+<para>
+
+</para>
+
+@list: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_contains ##### -->
+<para>
+
+</para>
+
+@list: 
+@data: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_size ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_set_equals ##### -->
+<para>
+
+</para>
+
+@list: 
+@equals: 
+
+
+<!-- ##### FUNCTION librdf_list_get_iterator ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_list_foreach ##### -->
+<para>
+
+</para>
+
+@list: 
+@fn: 
+@user_data: 
+
+

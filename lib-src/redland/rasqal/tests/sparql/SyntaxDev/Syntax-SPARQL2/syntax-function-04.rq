@@ -1,0 +1,4 @@
+PREFIX q: <http://example.org/>
+SELECT * WHERE { FILTER (q:name(1
+)) . FILTER (q:name(1,2)) . FILTER (q:name(1
+,2))}

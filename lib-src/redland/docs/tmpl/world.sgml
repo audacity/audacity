@@ -1,0 +1,148 @@
+<!-- ##### SECTION Title ##### -->
+World
+
+<!-- ##### SECTION Short_Description ##### -->
+Initialisation and termination of library
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The Redland #librdf_world class handles startup and termination of
+the library and cleanup of all allocated resources.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_world ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_new_world ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_world ##### -->
+<para>
+
+</para>
+
+@world: 
+
+
+<!-- ##### FUNCTION librdf_world_open ##### -->
+<para>
+
+</para>
+
+@world: 
+
+
+<!-- ##### FUNCTION librdf_world_init_mutex ##### -->
+<para>
+
+</para>
+
+@world: 
+
+
+<!-- ##### FUNCTION librdf_world_set_error ##### -->
+<para>
+
+</para>
+
+@world: 
+@user_data: 
+@error_handler: 
+
+
+<!-- ##### FUNCTION librdf_world_set_warning ##### -->
+<para>
+
+</para>
+
+@world: 
+@user_data: 
+@warning_handler: 
+
+
+<!-- ##### FUNCTION librdf_world_set_logger ##### -->
+<para>
+
+</para>
+
+@world: 
+@user_data: 
+@log_handler: 
+
+
+<!-- ##### FUNCTION librdf_world_set_digest ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+
+
+<!-- ##### MACRO LIBRDF_WORLD_FEATURE_GENID_BASE ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO LIBRDF_WORLD_FEATURE_GENID_COUNTER ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION librdf_world_get_feature ##### -->
+<para>
+
+</para>
+
+@world: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_world_set_feature ##### -->
+<para>
+
+</para>
+
+@world: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_init_world ##### -->
+<para>
+
+</para>
+
+@digest_factory_name: 
+@not_used2: 
+
+
+<!-- ##### FUNCTION librdf_destroy_world ##### -->
+<para>
+
+</para>
+
+
+

@@ -1,0 +1,42 @@
+Here's a list of what I (erikd AT mega-nerd DOT com) think needs to be 
+done. The list is by no means exhaustive and people are encouraged to 
+email me with suggestions. 
+
+  o Add pipe in/out capabilities. libsndfile should be able to read 
+	its input from a pipe and write its output to a pipe.
+
+  o Add checks of the error state after fseek???? Use ferror ().
+
+  o Modify tests/lossy_comp_test.c to add tests for stereo files.
+
+  o Testing compilation and correctness on more platforms.
+
+  o Improve testing routines. Must test all combinations of inputs
+    and outputs.
+
+  o Test sf_seek function on write???
+
+  o Add more sound file formats. People should contact me with their
+    requirements. 
+
+  o Add support for accessing sound formats with multiple audio
+    data sections (ie samples within tracker files, Soundfont II and 
+    multi-sample sampler formats). 
+
+  o Add an interface to allow reading and writing of sample loop points 
+    and other info within AIFF and other file formats. This must be a 
+    general solution.
+
+  o Improve documentation. Is HTML documentation good enough?
+
+  o Look into the possibility of optional sample rate convert on file 
+    read.
+
+As I am the person who knows libsndfile best, I can probably implement 
+any new features faster than anybody else (and you can spend your time
+writing applications with libsndfile). All I need is some 
+documentation and some sample files. Please contact me before emailing
+me documentation and sample files. I would much rather pull them off
+the web than have them clogging up my email inbox.
+
+

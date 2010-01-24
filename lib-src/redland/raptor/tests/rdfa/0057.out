@@ -1,0 +1,4 @@
+<http://www.example.org/#ben> <http://xmlns.com/foaf/0.1/knows> <http://www.example.org/#mark> .
+<http://www.example.org/#ben> <http://xmlns.com/foaf/0.1/knows> <http://www.example.org/#ivan> .
+<http://www.example.org/#mark> <http://xmlns.com/foaf/0.1/name> "Mark Birbeck" .
+<http://www.example.org/#ivan> <http://xmlns.com/foaf/0.1/name> "Ivan Herman" .

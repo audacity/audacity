@@ -1,0 +1,12 @@
+PREFIX ex: <http://example.org/ns#>
+CONSTRUCT {
+   _:a ex:pred1 "hello" .
+   _:b <http://example.org/ns#pred2> "val" .
+   _:c ex:pred3 _:d .
+   ex:thing1 ex:pred4 _:e .
+   <http://example.org/ns#thing2> ex:pred5 _:f .
+   <http://example.org/ns#thing3> ex:pred6 <http://example.org/ns#thing4> .
+   <http://example.org/ns#thing5> <http://example.org/ns#pred7> <http://example.org/ns#thing6> .
+   }
+FROM <data.n3>
+WHERE { ?x ?y ?z }

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [
+	 <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	 <!ENTITY xsd 'http://www.w3.org/2000/10/XMLSchema#'>
+]>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2000/10/XMLSchema#">
+
+
+  <!-- Exercise all RDF vocabulary -->
+
+  <!-- Node elements (typed node elements) 
+       http://www.w3.org/TR/rdf-syntax-grammar/#nodeElementURIs
+   -->
+  <rdf:Description rdf:about="http://example.org/node"/>
+  <rdf:Seq rdf:about="http://example.org/node"/>
+  <rdf:Bag rdf:about="http://example.org/node"/>
+  <rdf:Alt rdf:about="http://example.org/node"/>
+  <rdf:Statement rdf:about="http://example.org/node"/>
+  <rdf:Property rdf:about="http://example.org/node"/>
+  <rdf:XMLLiteral rdf:about="http://example.org/node"/>
+  <rdf:List rdf:about="http://example.org/node"/>
+  <rdf:subject rdf:about="http://example.org/node"/>
+  <rdf:predicate rdf:about="http://example.org/node"/>
+  <rdf:object rdf:about="http://example.org/node"/>
+  <rdf:type rdf:about="http://example.org/node"/>
+  <rdf:value rdf:about="http://example.org/node"/>
+  <rdf:first rdf:about="http://example.org/node"/>
+  <rdf:rest rdf:about="http://example.org/node"/>
+  <rdf:_1 rdf:about="http://example.org/node"/>
+  <rdf:nil rdf:about="http://example.org/node"/>
+
+  <!-- Property elements 
+       http://www.w3.org/TR/rdf-syntax-grammar/#propertyElementURIs
+    -->
+  <rdf:Description rdf:about="http://example.org/node1">
+    <rdf:Seq rdf:resource="http://example.org/node2"/>
+    <rdf:Bag rdf:resource="http://example.org/node2"/>
+    <rdf:Alt rdf:resource="http://example.org/node2"/>
+    <rdf:Statement rdf:resource="http://example.org/node2"/>
+    <rdf:Property rdf:resource="http://example.org/node2"/>
+    <rdf:XMLLiteral rdf:resource="http://example.org/node2"/>
+    <rdf:List rdf:resource="http://example.org/node2"/>
+    <rdf:subject rdf:resource="http://example.org/node2"/>
+    <rdf:predicate rdf:resource="http://example.org/node2"/>
+    <rdf:object rdf:resource="http://example.org/node2"/>
+    <rdf:type rdf:resource="http://example.org/node2"/>
+    <rdf:value rdf:resource="http://example.org/node2"/>
+    <rdf:first rdf:resource="http://example.org/node2"/>
+    <rdf:rest rdf:resource="http://example.org/node2"/>
+    <rdf:li rdf:resource="http://example.org/node1"/>
+    <rdf:_2 rdf:resource="http://example.org/node2"/>
+  </rdf:Description>
+
+  <!-- Property attributes 
+       http://www.w3.org/TR/rdf-syntax-grammar/#propertyAttributeURIs
+    -->
+  <rdf:Description rdf:about="http://example.org/node1" rdf:Seq="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:Bag="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:Alt="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:Statement="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:Property="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:XMLLiteral="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:List="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:subject="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:predicate="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:object="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:type="http://example.org/node1" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:value="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:first="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:rest="abc" />
+  <rdf:Description rdf:about="http://example.org/node1" rdf:_1="abc" />
+
+  <!-- nodeID for triples with blank node object and subjects -->
+  <rdf:Description rdf:about="http://example.org/node1">
+    <rdf:value rdf:nodeID="node2"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="node1">
+    <rdf:value rdf:resource="http://example.org/node2"/>
+  </rdf:Description>
+
+  <!-- property elements with literal values including datatyped  -->
+
+  <rdf:Description rdf:about="http://example.org/node1">
+     <rdf:value>apples</rdf:value>
+     <rdf:value rdf:parseType="Literal">pears</rdf:value>
+     <rdf:value rdf:datatype="&rdf;XMLLiteral">oranges</rdf:value>
+     <rdf:value rdf:datatype="&xsd;decimal">10</rdf:value>
+  </rdf:Description>
+
+</rdf:RDF>

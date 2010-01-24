@@ -1,0 +1,1474 @@
+2006-11-26  Dave Beckett  <dave@dajobe.org>
+
+	* configure.ac: libxml minimum version is now 2.6.8 since 2.6.7
+	crashes on PPC64 Linux.  2.6.8 was released March 2004 so this
+	should be no burden.
+
+2006-11-21  Dave Beckett  <dave@dajobe.org>
+
+	* configure.ac: Minimum raptor version is 1.4.11
+
+2006-10-30  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted rasqal_0_9_13 for 0.9.13 release
+
+	* src/rasqal_raptor.c: (rasqal_raptor_new_triples_source): Check
+	for RAPTOR_FEATURE_NO_NET before using it.
+
+2006-10-29  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c, src/rasqal_expr.c,
+	src/rasqal_graph_pattern.c, src/rasqal_literal.c,
+	src/rasqal_query_results.c, src/rasqal_raptor.c,
+	src/rasqal_redland.c: Correct calls to calloc() - count first,
+	then size.
+
+	* docs/tmpl/section-general.sgml, docs/tmpl/section-query.sgml: docs
+
+2006-10-24  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c: (rasqal_engine_execute_init): Add hacky
+	top-level graph before rasqal_query_results_init() is run so that
+	the gp_data gets set correctly.
+
+	* src/sparql_lexer.l: Look for NULL *yytext at end of input
+	instead of EOF
+
+	* src/rdql_lexer.l: Look for NULL *yytext at end of input instead
+	of EOF
+	(rdql_copy_regex_token): int c since it may return EOF which may
+	be negative.
+
+2006-10-23  Dave Beckett  <dave@dajobe.org>
+
+	* docs/rasqal-sections.txt: add new functions about features
+
+2006-10-14  Dave Beckett  <dave@dajobe.org>
+
+	* utils/roqet.c: Added -f/--feature option to set query features
+
+	* src/rasqal_raptor.c: (rasqal_raptor_new_triples_source): Use
+	RASQAL_FEATURE_NO_NET to enable parser RAPTOR_FEATURE_NO_NET
+
+	* src/rasqal.h: Added rasqal_feature RASQAL_FEATURE_NO_NET Added
+	prototypes for rasqal_features_enumerate,
+	rasqal_get_feature_count, rasqal_feature_from_uri,
+	rasqal_feature_value_type, rasqal_query_set_feature_string,
+	rasqal_query_get_feature, rasqal_query_get_feature_string.
+	Prototype of rasqal_query_set_feature changed to return an int.
+
+	* src/rasqal_internal.h: rasqal_query_s gains features table
+
+	* src/rasqal_query.c: (rasqal_query_set_feature): Now returns an
+	int and has a feature.
+	(rasqal_query_set_feature_string, rasqal_query_get_feature,
+	rasqal_query_get_feature_string): Added.
+
+	* src/rasqal_feature.c: Added rasqal_feature.c
+
+	* src/Makefile.am: Added rasqal_feature.c
+
+2006-10-13  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_expr.c: (rasqal_free_triple): Free any origin.
+	Fixes Issue#0000133 http://bugs.librdf.org/mantis/view.php?id=133
+
+2006-10-07  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_map.c: (rasqal_map_node_print_visit): Delete old
+	debug messages.
+	Fixes Issue#0000131 http://bugs.librdf.org/mantis/view.php?id=131
+
+2006-10-05  Dave Beckett  <dave@dajobe.org>
+
+	* configure.ac: More -W flags
+
+	* src/rdql_lexer.l, src/rdql_parser.y, src/sparql_lexer.l,
+	src/sparql_parser.y: Casts
+
+	* utils/roqet.c: int cast
+
+	* utils/roqet.c: const
+
+	* src/rasqal_literal.c, src/rasqal_query.c,
+	src/rasqal_query_results.c, src/rdql_common.h, src/rdql_lexer.l,
+	src/sparql_common.h, src/sparql_lexer.l, src/sparql_parser.y: Add
+	some casting around error/warning handlers. Fix a few
+	signed/unsigned comparisons
+
+	* src/rasqal_general.c: (rasqal_languages_enumerate,
+	rasqal_escaped_name_to_utf8_string): Discard tests for unsigned
+	int < 0.
+	(rasqal_uri_init, rasqal_uri_finish): Use ANSI style void
+	declaration.
+
+	* src/rasqal_engine.c: (rasqal_engine_expand_wildcards): Add
+	missing format arg in error.
+
+	* configure.ac: In maintainer mode, add all the supported -W
+	options to the MAINTAINER_CFLAGS
+
+	* src/rasqal_internal.h: Added RASQAL_PRINTF_FORMAT to allow
+	declaring of functions with a printf-style format argument declare
+	many error/warning/*varargs prototypes with it if they take a
+	printf-style format argument.
+
+2006-10-01  Dave Beckett  <dave@dajobe.org>
+
+	* tests/engine/Makefile.am: Add AM_CPPFLAGS/CFLAGS to allow
+	compiling out of source dir with external raptor
+
+	* utils/Makefile.am: Tidy AM_CPPFLAGS/CFLAGS to remove duplicated
+	symbols
+
+2006-09-28  Dave Beckett  <dave@dajobe.org>
+
+	* tests/engine/rasqal_graph_test.c: Added 2nd query
+
+	* tests/engine/rasqal_graph_test.c: parameterise the input data graphs
+
+	* tests/engine/rasqal_graph_test.c: Add tests structure to make
+	this more data driven.
+
+	* data/graph-c.ttl: add graph-c.ttl
+
+	* data/Makefile.am: graph-c.ttl
+
+	* tests/engine/rasqal_graph_test.c: Rasqal RDF Query GRAPH Tests
+
+2006-09-27  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c: (rasqal_engine_do_step): Added a hack to
+	check an outer constraint expression.
+	Fixes Issue#0000129 http://bugs.librdf.org/mantis/view.php?id=129
+
+	* tests/engine/Makefile.am: Added rasqal_graph_test.c.
+	Invoke all tests with the data dir
+
+	* tests/engine/rasqal_order_test.c: Take data dir as a parameter.
+
+2006-09-26  Dave Beckett  <dave@dajobe.org>
+
+	* docs/tmpl/section-query_results.sgml: update
+
+	* data/Makefile.am, data/graph-a.ttl, data/graph-b.ttl: Add graph
+	test data files
+
+	* src/rasqal_raptor.c: (rasqal_raptor_free_triples_source): Free
+	source URIs and literals only if allocated.
+
+	* src/rasqal_engine.c: (rasqal_engine_query_results_update): Fix
+	logic to set failed flag as well as finished flag when
+	rasqal_engine_get_next_result fails.
+
+2006-09-24  Dave Beckett  <dave@dajobe.org>
+
+	* src/sparql_parser.y: Fix debug messages since
+	propertyListNotEmpty is now ordered forward.
+
+	* src/sparql_parser.y: (PropertyListNotEmpty, ObjectList): Take
+	more care not to reverse order of triple patterns as they appeared
+	in the query.
+
+	* src/rasqal_engine.c: (rasqal_engine_merge_triples): Merge only
+	all adjacent sequences of basic graph pattern triples, not
+	anything with triples such as optional BGP triples.
+	Fixes Issue #0000080 http://bugs.librdf.org/mantis/view.php?id=80
+
+	* ChangeLog: add fix bug note
+	* src/rasqal_engine.c: (rasqal_engine_group_graph_pattern_get_next_match,
+	rasqal_engine_triple_graph_pattern_get_next_match): Added from the
+	content of rasqal_engine_graph_pattern_get_next_match.
+
+2006-09-23  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c: (rasqal_engine_graph_pattern_get_next_match):
+	Tidy code
+
+	* src/rasqal_engine.c: (rasqal_reset_triple_meta): Reset executed
+	flag.
+	(rasqal_engine_graph_pattern_get_next_match): When an exact triple
+	match is performed, set the executed flag and next time backtrack.
+	Also set the flag when a pattern triple match is executed.
+	Fixes Issue #0000094 http://bugs.librdf.org/mantis/view.php?id=94
+
+	* src/rasqal.h: rasqal_triple_meta gains executed field
+
+	* src/rasqal_query_results.c: autodocs
+
+	* docs/rasqal-sections.txt: Remove
+	rasqal_query_results_syntaxes_enumerate
+
+	* docs/tmpl/section-query_results_formatter.sgml: Title
+
+	* docs/rasqal-overrides.txt: rasqal_graph_query_results_formatter
+
+	* docs/tmpl/section-query_results_formatter.sgml: Short + long
+	descriptions
+
+	* docs/rasqal-docs.xml: Added file section-query_results_formatter.xml
+
+	* docs/rasqal-sections.txt: Added section-query_results_formatter FILE
+
+	* utils/roqet.c: Update to use new rasqal_query_results_formatter class.
+
+	* src/rasqal_query_results.c: Reorganised to create a
+	rasqal_query_results_formatter class for formatting query results.
+	(rasqal_query_results_formats_enumerate): Added, renamed from
+	rasqal_query_results_syntaxes_enumerate.
+	(rasqal_get_query_results_formatter_factory): Added helper
+	function.
+	(rasqal_new_query_results_formatter): Added new constructor
+	(rasqal_free_query_results_formatter): Added new destructor
+	(rasqal_query_results_formatter_write): Added new writer method.
+	(rasqal_query_results_get_results_format_uri_by_name): Deleted
+	public function now handled by constructor.
+
+	* src/rasqal_internal.h: Added rasqal_query_results_writer typedef.
+	Added rasqal_query_results_format_factory
+	Added struct rasqal_query_results_formatter_s
+
+	* src/rasqal.h: Added rasqal_query_results_formatter class
+	Added rasqal_query_results_formats_enumerate prototype (was
+	rasqal_query_results_syntaxes_enumerate)
+	Added rasqal_new_query_results_formatter,
+	rasqal_free_query_results_formatter and
+	rasqal_query_results_formatter_write prototypes.
+	Deleted rasqal_query_results_get_results_format_uri_by_name prototype.
+
+	* tests/engine/Makefile.am: Automakefile for query engine tests
+
+	* tests/Makefile.am, tests/engine,
+	tests/engine/rasqal_order_test.c (from
+	/rasqal/trunk/tests/rasqal_order_test.c:11290),
+	tests/rasqal_order_test.c: Add engine test dir and move order test
+	there
+
+	* configure.ac: Added test/engine/Makefile
+
+2006-09-08  Dave Beckett  <dave@dajobe.org>
+
+	* docs/tmpl/section-graph_pattern.sgml,
+	docs/tmpl/section-query.sgml,
+	docs/tmpl/section-query_results.sgml: Updated for new functions
+
+	* configure.ac: Allow LEX to be set to things that aren't exactly
+	'flex'
+
+2006-09-07  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c, src/rasqal_graph_pattern.c,
+	src/rasqal_internal.h: Move column field from graph_pattern to
+	execution data
+
+	* src/rasqal_graph_pattern.c: (rasqal_new_graph_pattern,
+	rasqal_graph_pattern_add_triples): Delete fields moved to gp_data.
+
+	* src/rasqal_engine.c: rasqal_engine_gp_data gains
+	optional_graph_pattern, current_graph_pattern,
+	optional_graph_pattern_matches_count and matches_returned
+	(rasqal_new_gp_data, rasqal_free_gp_data): Init, free new fields.
+	(rasqal_new_engine_execution_data,
+	rasqal_engine_graph_pattern_reset): Add new fields.
+	(rasqal_engine_graph_pattern_init, rasqal_engine_execute_init,
+	rasqal_engine_move_to_graph_pattern, rasqal_engine_do_step,
+	rasqal_engine_do_optional_step, rasqal_engine_get_next_result):
+	Updates to use gp_data not gp for moved fields.
+
+2006-09-06  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_internal.h: (struct rasqal_graph_pattern_s): Loses
+	fields optional_graph_pattern, current_graph_pattern,
+	optional_graph_pattern_matches_count and matches_returned into
+	execution graph pattern data.
+
+	* src/rasqal_engine.c: (rasqal_engine_check_limit_offset): Another
+	off-by-1 in offsets
+	(rasqal_engine_execute_order): Skip initial offset of results in
+	an ordering.
+
+	* tests/rasqal_order_test.c: (main): Add limit/offset=1 tests
+
+2006-09-04  Dave Beckett  <dave@dajobe.org>
+
+	* tests/rasqal_order_test.c: Add limit & offset testing
+
+	* tests/Makefile.am, tests/rasqal_order_test.c: Added query result
+	order test
+
+	* src/Makefile.am: run-rasqal-query-test: build rasqal_query_test
+
+	* data/Makefile.am: added animals.nt
+
+	* data/animals.nt: Animals
+
+	* src/rasqal_engine.c: (rasqal_engine_graph_pattern_reset): Added,
+	taking the resetting part of graph pattern initialising out of
+	rasqal_engine_graph_pattern_init.
+	(rasqal_engine_graph_pattern_init): Now just does once-only
+	initialising, rest moved to new rasqal_engine_graph_pattern_reset.
+
+2006-09-03  Dave Beckett  <dave@dajobe.org>
+
+	* utils/roqet.c: Remove hard-coded query results format enum and
+	use rasqal_query_results_syntaxes_enumerate to discover them and
+	rasqal_query_results_get_results_format_uri_by_name to find them
+	by user-specified name (-r NAME).
+	(roqet_query_results_print_as_xml): Deleted.
+
+	* src/rasqal_query_results.c: Added factory for constructing query
+	results into a syntax: rasqal_query_results_format_factory.
+	(rasqal_query_results_format_register_factory and
+	rasqal_free_query_results_format_factory): Added.
+	(rasqal_init_query_results): Added, registering all the query
+	syntax formats using rasqal_query_results_format_register_factory.
+	(rasqal_finish_query_results): Added.
+	(rasqal_query_results_syntaxes_enumerate): Added to get info on
+	query results syntaxes.
+	(rasqal_query_results_write): Find and then use factory function
+	writer to do all the work.
+	(rasqal_query_results_get_results_format_uri_by_name): Added to
+	get the URI for a query result format from it's short name.
+
+	* src/rasqal.h: Added prototypes for
+	rasqal_query_results_syntaxes_enumerate and
+	rasqal_query_results_get_results_format_uri_by_name
+
+	* src/rasqal_internal.h: Add prototypes for
+	rasqal_init_query_results and rasqal_finish_query_results
+
+	* src/rasqal_general.c: (rasqal_init): Call
+	rasqal_init_query_results
+	(rasqal_finish): Call rasqal_finish_query_results
+
+2006-08-25  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_expr.c: (rasqal_expression_evaluate):
+	RASQAL_EXPR_LANG - Fail if a variable has an undefined value
+	rather than try to execute a NULL pointer.
+	Fixes issue #0000113 http://bugs.librdf.org/mantis/view.php?id=113
+
+2006-08-23  Dave Beckett  <dave@dajobe.org>
+
+	* src/win32_rasqal_config.h: Include float.h and #define isnan.
+	Fixes Issue #0000111 http://bugs.librdf.org/mantis/view.php?id=111
+
+2006-08-20  Dave Beckett  <dave@dajobe.org>
+
+	* autogen.sh: Track where programs are discovered.
+
+	* src/rdql_parser.y: Added labels for some tokens to enable better
+	error messages. Add %destructor to tidy up tokens when doing error
+	recovery.
+
+	* src/sparql_parser.y: Added labels for some tokens to enable
+	better error messages. Add %destructor to tidy up tokens when
+	doing error recovery.
+
+	* configure.ac: flex check - warn before failing
+
+	* configure.ac: recommend flex 2.5.33
+
+	* configure.ac: Update to point at main flex site whichq finally
+	gets 2.5.33 after 9 years
+
+2006-08-18  Dave Beckett  <dave@dajobe.org>
+
+	* configure.ac: Strip more -O flags from incoming CFLAGS, CXXFLAGS
+	and CPPFLAGS.
+
+	* configure.ac: Patch configure.ac to remove un-necessary tests
+	for C++ or F77++ compilers that libtool stupidly insists on
+
+2006-07-30  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query.c: (rasqal_query_write_sparql_20060406): Add
+	newline after verb when there are no args.
+
+	* src/rasqal_query.c: (rasqal_query_execute): Add
+	query/query_results link early so reference counting is done
+	right.
+	Fixes Issue#0000095 http://bugs.librdf.org/mantis/view.php?id=95
+
+2006-07-05  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query.c: (rasqal_query_print): Rewrite many fprintf
+	to fputs
+
+2006-07-04  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c: (rasqal_new_gp_data): Zero new structure
+
+	* src/rasqal.h: Correct win32 static linking of rasqal
+	Fixes Issue#0000100 http://bugs.librdf.org/mantis/view.php?id=100
+
+	* configure.ac: allow PKGCONFIG_REQUIRES to append correctly to an
+	empty string
+
+	* configure.ac, rasqal.pc.in: Fix PKGCONFIG vars not substituted
+	correctly in configure.ac and remove @LDFLAGS from rasqal.pc.in.
+	Fixes Issue#0000098 http://bugs.librdf.org/mantis/view.php?id=98
+
+	* src/rasqal_engine.c: Typedef rasqal_engine_gp_data gains gp and
+	triple_meta field.
+	(rasqal_new_gp_data): Init gp field.
+	(rasqal_free_gp_data): Tidy up triple_meta field content.
+	(rasqal_engine_graph_pattern_get_next_match): Get
+	rasqal_engine_gp_data from sequence of gp_data.  Take
+	rasqal_triple_meta from that data.
+	(rasqal_new_engine_execution_data): Init rasqal_engine_gp_data for
+	all graph patterns.
+	(rasqal_engine_graph_pattern_order): Renamed from
+	rasqal_graph_pattern_order.
+	(rasqal_engine_graph_pattern_init): Renamed from
+	rasqal_graph_pattern_init.
+	(rasqal_engine_execute_init): Call
+	rasqal_engine_graph_pattern_init.
+	(rasqal_engine_move_to_graph_pattern): Gains query_results arg.
+	(rasqal_engine_do_step, rasqal_engine_do_optional_step): Call
+	rasqal_engine_move_to_graph_pattern with query_results arg.
+
+	* src/rasqal_graph_pattern.c: (rasqal_free_graph_pattern): Remove
+	triple_meta cleanup.
+	(rasqal_graph_pattern_order): Deleted and renamed to
+	rasqal_free_gp_data.
+	(rasqal_graph_pattern_init): Deleted and renamed to
+	rasqal_engine_graph_pattern_init.
+
+2006-07-03  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query.c: (rasqal_free_query): Free graph_patterns_sequence
+	(rasqal_query_prepare_count_graph_patterns): Add next graph
+	pattern to index sequence.
+	(rasqal_query_prepare): Initialise graph_patterns_sequence using
+	rasqal_query_graph_pattern_visit with
+	rasqal_query_prepare_count_graph_patterns.
+
+	* src/rasqal_internal.h: (struct rasqal_graph_pattern_s): Remove
+	triple_meta field, now in engine's
+	rasqal_engine_gp_data. rasqal_graph_pattern_init prototype removed.
+	(struct rasqal_query_s): Add graph_patterns_sequence for getting
+	graph pattern by an index.
+
+2006-07-01  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_expr.c: (rasqal_expression_evaluate): For AND and OR
+	ops, do not free a NULL literal when tidying up on error.
+	Fixes Issue#0000095 http://bugs.librdf.org/mantis/view.php?id=95
+
+2006-04-30  Dave Beckett  <dave@dajobe.org>
+
+	* docs/librasqal.3: Updated for 0.9.12 (too late for release)
+
+	* src/rasqal_engine.c: (rasqal_engine_run): Restore query when
+	RASQAL_DEBUG is present
+
+	* src/rasqal_expr.c: (rasqal_expression_evaluate): RASQAL_EXPR_AND
+	and RASQAL_EXPR_OR - initialise b1 and b2 to prevent a gcc
+	warning.  They were never used unitialised by the logic but gcc
+	couldn't tell.
+
+	* src/rasqal_query_results.c: (rasqal_free_query_results):
+	Initialise query; happily it wasn't used in 0.9.12 use case
+
+	* src/rasqal_engine.c: Only define rasqal_engine_step_names for
+	RASQAL_DEBUG
+
+	* Snapshotted rasqal_0_9_12 for 0.9.12 release
+
+2006-04-29  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query_results.c: (rasqal_free_query_results): Add
+	triple field cleanup
+	(rasqal_query_results_get_triple,
+	rasqal_query_results_next_triple): Update field names;
+	query->statement to query_results->result_triple and query->triple
+	to query_results->triple
+
+	* src/rasqal_query.c: (rasqal_free_query): Remove triple field
+	cleanup
+
+	* src/rasqal_internal.h: rasqal_query loses triple and statement
+	fields rasqal_query_statement gains them as triple and
+	result_triple field.
+
+	* src/rasqal_query_results.c: (rasqal_query_results_get_bindings,
+	rasqal_query_results_get_binding_value,
+	rasqal_query_results_get_binding_name,
+	rasqal_query_results_get_binding_value_by_name): Allow returning
+	name/values even if an error occurred or this is the last result.
+
+	* src/rasqal_engine.c: (rasqal_engine_assign_binding_values):
+	Deleted, only ever used once inside
+	rasqal_engine_query_result_row_update and 2 lines long.
+
+	* src/rasqal_engine.c: Moved triples_source, new_bindings_count,
+	current_triple_result and results_sequence fields from
+	rasqal_query_s to rasqal_query_results_s
+	(rasqal_new_triples_match,
+	rasqal_engine_graph_pattern_get_next_match,
+	rasqal_engine_execute_finish, rasqal_engine_do_step,
+	rasqal_engine_do_optional_step, rasqal_engine_get_next_result,
+	rasqal_engine_get_results_values, rasqal_engine_get_result_value,
+	rasqal_engine_execute_order): Use query_results arg and update for
+	changes above.
+
+	* src/rasqal_query_results.c: (rasqal_query_results_init,
+	rasqal_free_query_results): Init and free
+	query_results->triples_source and query_results->results_sequence.
+	(rasqal_query_results_get_triple,
+	rasqal_query_results_next_triple): Use
+	query_results->triples_source and
+	query_results->current_triple_result
+
+	* src/sparql_parser.y: Comments SPARQL 2006-04-06
+
+	* src/rasqal_query.c: (rasqal_new_query): Moved
+	query->results_sequence to query_results.
+	9rasqal_query_write_sparql_20060406): Renamed from
+	rasqal_query_write_sparql_20060125.
+	(rasqal_query_write): Accept SPARQL 2006-04-06 and use as the
+	default URI.
+
+	* src/rasqal_internal.h: Moved triples_source, new_bindings_count,
+	current_triple_result and results_sequence fields from
+	rasqal_query_s to rasqal_query_results_s
+
+	* src/sparql_parser.y: SPARQL grammar updates for SPARQL CR -
+	mostly a rename and some re-ordering of rules since it was already
+	based on an earlier pre-CR rq23 draft.
+	(FilteredBasicGraphPattern): Renamed from BasicGraphPattern)
+	IRIrefOrFunction remains unused/deleted since the lexer does the
+	work for us.
+
+2006-04-28  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c, src/rasqal_query.c, src/rdql_parser.y,
+	src/sparql_parser.y: rasqal_query_declare_prefix and
+	rasqal_query_declare_prefixes in rasqal_query.c replace
+	rasqal_engine_declare_prefix, rasqal_engine_undeclare_prefix and
+	rasqal_engine_declare_prefixes in rasqal_engine.c since they
+	operate before query execution
+
+	* src/rasqal_internal.h: rasqal_query_declare_prefix and
+	rasqal_query_declare_prefixes replace
+	rasqal_engine_declare_prefix, rasqal_engine_undeclare_prefix and
+	rasqal_engine_declare_prefixes
+
+	* src/rasqal_engine.c: Many new functions moved from
+	rasqal_query.c and rasqal_query_results.c:
+	rasqal_engine_query_result_row_update
+	rasqal_engine_new_query_result_row,
+	rasqal_engine_new_query_result_row_from_query_result_row,
+	rasqal_engine_free_query_result_row,
+	rasqal_engine_get_results_values, rasqal_engine_get_result_value,
+	rasqal_engine_query_result_row_print,
+	rasqal_query_result_literal_sequence_compare,
+	rasqal_engine_query_result_row_compare,
+	rasqal_engine_query_results_update,
+	rasqal_engine_map_free_query_result_row,
+	rasqal_engine_map_print_query_result_row,
+	rasqal_engine_map_add_to_sequence, rasqal_engine_execute_order,
+	rasqal_engine_execute_next
+
+	* src/rasqal_query_results.c: (rasqal_new_query_results,
+	rasqal_query_results_init): Added from rasqal_query.c and now in
+	public API.
+	(rasqal_query_result_row_print,
+	rasqal_query_result_literal_sequence_compare,
+	rasqal_query_result_row_compare): Moved to rasqal_engine.c and
+	renamed.
+	(rasqal_free_query_results): Call renamed
+	rasqal_engine_free_query_result_row
+	(rasqal_query_results_next): Bulk of code moved to new
+	rasqal_engine_execute_next() in rasqal_engine.c
+	(rasqal_query_results_get_bindings): Results part moved to
+	rasqal_engine_get_results_values() in rasqal_engine.c.
+	9rasqal_query_results_get_binding_value,
+	rasqal_query_results_get_binding_value_by_name): Result part moved
+	to rasqal_engine_get_result_value() in rasqal_engine.c
+
+	* src/rasqal_query.c: (rasqal_new_query_result_row,
+	rasqal_new_query_result_row_from_query_result_row,
+	rasqal_query_result_row_update, rasqal_query_results_update,
+	rasqal_map_free_query_result_row,
+	rasqal_map_print_query_result_row, rasqal_map_add_to_sequence):
+	Moved to rasqal_engine.c and renamed.
+	(rasqal_new_query_results, rasqal_query_results_init): Moved to
+	rasqal_query_results.c and now public.
+	(rasqal_query_execute): Moved bulk of code to new
+	rasqal_engine_execute_order().
+
+	* src/rasqal_internal.h: Added prototypes for:
+	rasqal_engine_execute_order, rasqal_engine_free_query_result_row,
+	rasqal_engine_get_results_values, rasqal_engine_get_result_value,
+	rasqal_engine_execute_next, rasqal_new_query_results and and
+	rasqal_query_results_init.  Removed several prototypes now not
+	shared between modules (and moved to rasqal_engine.c):
+	rasqal_query_results_init, rasqal_query_result_row_update,
+	rasqal_query_results_update, rasqal_free_query_result_row,
+	rasqal_query_result_row_print and rasqal_query_result_row_compare
+
+2006-04-27  Dave Beckett  <dave@dajobe.org>
+
+	* utils/roqet.c: (roqet_graph_pattern_walk): Use
+	rasqal_graph_pattern_get_index
+
+	* src/rasqal_graph_pattern.c: (rasqal_graph_pattern_get_index):
+	Added.
+
+	* src/rasqal.h: Added rasqal_graph_pattern_get_index prototype
+
+	* utils/roqet.c: (roqet_graph_pattern_walk): Display the
+	graph_pattern index
+
+	* src/rasqal_graph_pattern.c: (rasqal_graph_pattern_print):
+	Display the graph_pattern index
+
+	* src/rasqal_graph_pattern.c: (rasqal_new_graph_pattern): Set
+	unused gp_index to -1.
+
+	* src/rasqal_engine.c: (rasqal_new_triples_source,
+	rasqal_new_engine_execution_data, rasqal_engine_execute_init,
+	rasqal_engine_execute_finish, rasqal_engine_do_optional_step,
+	rasqal_engine_get_next_result, rasqal_engine_run): Take
+	rasqal_query_results arg and use finish/failed fields off
+	query_results.
+
+	* src/rasqal_query_results.c: (rasqal_free_query_results): Call
+	rasqal_engine_execute_finish.
+	(rasqal_query_results_next, rasqal_query_results_finished,
+	rasqal_query_results_get_bindings,
+	rasqal_query_results_get_binding_value,
+	rasqal_query_results_get_binding_name,
+	rasqal_query_results_get_binding_value_by_name,
+	rasqal_query_results_get_bindings_count,
+	rasqal_query_results_get_triple, rasqal_query_results_next_triple,
+	rasqal_query_results_get_boolean, rasqal_query_results_write): Use
+	query_results->finished and failed.  Tidy formatting and error
+	check arguments for NULLs.
+
+	* src/rasqal_query.c: (rasqal_free_query): Moved
+	rasqal_engine_execute_finish to rasqal_free_query_results.
+	(rasqal_query_results_update): Use query_results->finished and
+	query_results arg for rasqal_engine_get_next_result.
+	(rasqal_query_results_init): Init executed, abort, finished,
+	failed and ask_result fields.
+	(rasqal_query_execute): Remove init of query deleted fields
+	finished, executed, ask_result.  Use query_results->failed.  Call
+	rasqal_engine_execute_init and rasqal_engine_get_next_result with
+	query_results arg.
+
+	* src/rasqal_internal.h: rasqal_query_results gains fields abort,
+	finished, executed, ask_result moved from rasqal_query
+	rasqal_query_results gains failed field
+	rasqal_engine_execute_init, rasqal_engine_execute_finish and
+	rasqal_engine_run, rasqal_new_triples_source,
+	rasqal_engine_get_next_result now take rasqal_query_results* args.
+
+	* src/rasqal_query.c: (rasqal_query_prepare_count_graph_patterns):
+	Return 0
+
+	* src/rasqal_engine.c: (rasqal_new_gp_data, rasqal_free_gp_data):
+	Added.
+	(rasqal_new_engine_execution_data,
+	rasqal_free_engine_execution_data): Added to build
+	query-engine-specific data for this query engine.
+	(rasqal_engine_execute_init): Construct execution_data and store
+	in the results. Run rasqal_query_results_init.
+	(rasqal_engine_check_limit_offset): Use query_results arg.
+
+	* src/rasqal_query_results.c: Updates to rename
+	query->result_count to query_results->result_count
+
+	* src/rasqal_query.c: (rasqal_query_prepare_count_graph_patterns):
+	Added to give each graph pattern a unique index.
+	(rasqal_query_prepare): Call
+	rasqal_query_prepare_count_graph_patterns after all other graph
+	pattern munging is finished to prepare for storing execution data
+	per-gp.
+	(rasqal_query_results_updaet): Rename query->result_count to
+	query_results->result_count and rasqal_engine_check_limit_offset
+	now taking a query_results arg.
+	(rasqal_new_query_results): Added, pulled out of
+	rasqal_query_execute.
+	(rasqal_query_results_init): Added, to re-initialise a results
+	object in-situ.
+	(rasqal_query_execute): Use rasqal_new_query_results and update
+	for query->result_count to query_results->result_count and
+	rasqal_engine_check_limit_offset with query_results arg.
+
+	* src/rasqal_graph_pattern.c: (rasqal_new_graph_pattern,
+	rasqal_new_graph_pattern_from_triples,
+	rasqal_new_graph_pattern_from_sequence): Protect from NULL query
+	arg.
+	(rasqal_new_graph_pattern_from_triples): Protect from NULL triples
+	arg.
+
+	* src/rasqal_internal.h: rasqal_graph_pattern_s gains a gp_index
+	field to give each rasqal_graph_pattern a unique index
+	rasqal_query_s loses result_count field and gains
+	graph_pattern_count rasqal_engine_execution_data added with
+	skeleton content rasqal_query_results_s gains result_count,
+	execution_data and free_execution_data handler fields
+	rasqal_engine_check_limit_offset now takes a rasqal_query_results
+	parameter added prototype for rasqal_query_results_init
+
+2006-04-26  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal.h: Added prototype for
+	rasqal_query_get_anonymous_variable_sequence
+
+2006-04-23  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query.c:
+	(rasqal_query_get_anonymous_variable_sequence): Added to return
+	only anonymous variables.
+	(rasqal_query_get_all_variable_sequence): Corrected to match the
+	definition - return all variables, not just the bound (SELECTed) ones.
+	Fixes Issue#00000079 http://bugs.librdf.org/mantis/view.php?id=79
+
+	* docs/rasqal-sections.txt: Added
+	rasqal_query_iostream_write_escaped_counted_string and
+	rasqal_query_escape_counted_string
+
+	* src/sparql_parser.y: (rasqal_sparql_query_engine_iostream_write_escaped_counted_string):
+	Added to implement factory method
+	iostream_write_escaped_counted_string
+
+
+	* src/rasqal.h: Added prototypes for
+	rasqal_query_iostream_write_escaped_counted_string and
+	rasqal_query_escape_counted_string
+
+	* src/rasqal_query.c: (rasqal_query_iostream_write_escaped_counted_string,
+	rasqal_query_escape_counted_string): Added.
+
+	* src/rasqal_internal.h: rasqal_query_engine_factory_s gains
+	factory method iostream_write_escaped_counted_string
+
+2006-04-22  Dave Beckett  <dave@dajobe.org>
+
+	* tests/rdql/Makefile.am, tests/rdql/example_at_8.rdql: Remove
+	obsolete syntax example_at_8.rdql
+
+	* src/Makefile.am: tweak sibling raptor dir
+
+2006-04-05  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query_results.c: Updated sparql json url
+
+2006-03-27  Dave Beckett  <dave@dajobe.org>
+
+	* win32/rasqal.vcproj: rasqal win32 build files update from John Barstow
+
+	* src/win32_rasqal_config.h: rasqal win32 build files update from
+	John Barstow
+
+	* src/rasqal_expr.c: (rasqal_expression_convert_to_literal): Use
+	standard memset not older bzero
+
+2006-03-18  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query.c: (rasqal_query_write_sparql_uri): const for
+	raptor_qname_get_namespace
+
+2006-03-05  Dave Beckett  <dave@dajobe.org>
+
+	* tests/sparql/check-sparql: Use -d debug as check-sparql relies
+	on that to get var names
+
+	* tests/rdql/testsuite/check-rdql: Use -d debug as check-sparql
+	relies on that to get var names
+
+	* tests/sparql/check-sparql: Update for new roqet args
+
+	* tests/rdql/testsuite/check-rdql: Update for new roqet args
+
+	* src/rasqal_query.c: (rasqal_query_write_sparql_20060125): Handle
+	order conditions.
+
+	* utils/roqet.c: -d/--dump-query now takes an argument with values
+	'debug' (same as old -d), 'structure' (same as -w) and new
+	'sparql' using rasqal_query_write -w deprectated for '-w
+	structure'
+
+	* configure.ac: Require raptor 1.4.9 now
+
+	* src/rasqal_query.c: Fix AND and OR SPARQL write tokens.
+	(rasqal_query_write_sparql_graph_pattern): Always print outer ()s
+	for FILTER.
+
+2006-03-05  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query.c: (rasqal_query_write): Added to write a query
+	structure into a syntax onto a raptor_iostream.  Implements
+	writing SPARQL format when format_uri is NULL,
+	http://www.w3.org/TR/rdf-sparql-query/ or
+	http://www.w3.org/TR/2006/WD-rdf-sparql-query-20060220/
+
+	* src/rasqal.h: (rasqal_query_write): Added to write a query
+	structure into a syntax onto a raptor_iostream.
+
+2006-03-04  Dave Beckett  <dave@dajobe.org>
+
+	* src/rdql_lexer.l: (rdql_copy_regex_token): Handle empty regex //
+	Fixes issue#0000071 http://bugs.librdf.org/mantis/view.php?id=71
+
+2006-02-19  Dave Beckett  <dave@dajobe.org>
+
+	* src/fix-flex, src/fix-bison: 2006
+
+	* AUTHORS: update me
+
+2006-02-16  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_query_results.c: (rasqal_query_results_write_json1):
+	Don't write a null
+
+	* src/rasqal.h: doc fix. RASQAL_EXPR_REGEX not
+	RASQAL_EXPR_STR_REGEX
+
+	* src/rasqal_query_results.c: (rasqal_query_results_write_json1):
+	Use raptor_iostream_write_string_ntriples to do at least some core
+	needed escapes for writing URIs and literals as strings.
+
+	* utils/roqet.c: Added -r json with format_uri
+	http://www.mindswap.org/%7Ekendall/sparql-results-json/
+
+	* src/rasqal_query_results.c: (rasqal_query_results_write): Add
+	JSON results with URI identifier
+	http://www.mindswap.org/%7Ekendall/sparql-results-json/
+	(raptor_iostream_write_json_boolean): Added to support:
+	(rasqal_query_results_write_json1): Added for SPARQL Query Results
+	in JSON (http://json.org/) draft Defined in
+	http://www.mindswap.org/%7Ekendall/sparql-results-json/ Version:
+	alt-ser-sparql.rst,v 1.3 2006/02/16 16:03:08 k Exp
+
+	* src/rasqal_internal.h: Add internal rasqal_prefix_id prototype
+
+	* src/rasqal_query.c: (rasqal_prefix_id): Internal but no longer
+	inline static.
+
+	* src/Makefile.am, src/rasqal_internal.h, src/rasqal_query.c,
+	src/rasqal_query_results.c: split query into query+results files
+
+	* src/rasqal_query_results.c (from
+	/rasqal/trunk/src/rasqal_query.c:5450): copied rasqal_query.c
+	rasqal_query_results.c to split query from results
+
+2006-01-22  Dave Beckett  <dave@dajobe.org>
+
+	* tests/sparql/Expr1/Makefile.am, tests/sparql/Expr2/Makefile.am,
+	tests/sparql/ExprBuiltins/Makefile.am,
+	tests/sparql/ExprEquals/Makefile.am,
+	tests/sparql/SyntaxDev/Syntax-SPARQL2/Makefile.am,
+	tests/sparql/SyntaxDev/Syntax-SPARQL3/Makefile.am,
+	tests/sparql/part1/Makefile.am, tests/sparql/survey/Makefile.am,
+	tests/sparql/syntax/Makefile.am: Edit failures reporting message
+	for consistency
+
+	* tests/sparql/SyntaxDev/Syntax-SPARQL3/Makefile.am: All tests
+	pass
+
+	* tests/sparql/SyntaxDev/Syntax-SPARQL2/Makefile.am: All tests
+	pass
+
+	* tests/sparql/part1/Makefile.am: dawg-opt-query-003 passes (again).
+	All tests now pass.
+
+	* tests/sparql/ValueTesting/Makefile.am: adjust failures order to
+	match manifest
+
+	* tests/sparql/regex/Makefile.am: regex-query-003 passes. All
+	tests now pass.
+
+	* src/sparql_parser.y: (RegexExpression): Build new
+	RASQAL_EXPR_REGEX expressions.
+
+	* src/rasqal_engine.c: (rasqal_engine_check_constraint): On an
+	error return - type error - return false rather than failing
+	query.
+
+	* src/rasqal_literal.c: (rasqal_literal_as_string_flags) :Added,
+	with flags and error to allow default failure for as_string on URI
+	literals when flags is set to
+	RASQAL_COMPARE_XQUERY. (rasqal_literal_as_string): Rewritten to
+	wrap rasqal_literal_as_string_flags.
+
+	* src/rasqal_expr.c: (rasqal_new_3op_expression): Added, for new
+	3-expression arg RASQAL_EXPR_REGEX
+	(rasqal_expression_clear, rasqal_expression_visit,
+	rasqal_expression_evaluate, rasqal_expression_print,
+	rasqal_expression_is_constant): Added support for
+	RASQAL_EXPR_REGEX.
+	(rasqal_expression_evaluate): Use rasqal_literal_as_string_flags
+	for conversions and return failure if error is set.  For EXPR_STR
+	ignore RASQAL_COMPARE_XQUERY flag to allow explicit stringify to
+	work.  Add EXPR_REGEX using same code as RASQAL_EXPR_STR_N?MATCH
+	but with expression arguments for literal and flags.  Modify
+	EXPR_CAST to use rasqal_literal_as_string_flags.
+	(array rasqal_op_labels): Add regex.
+
+	* src/rasqal.h: rasqal_op gains RASQAL_EXPR_REGEX value
+	rasqal_expression gains arg3 field.  Added
+	rasqal_new_3op_expression for new 3-expression arg
+	RASQAL_EXPR_REGEX Added rasqal_literal_as_string_flags
+
+	* tests/sparql/examples/Makefile.am: sparql-query-example-e broken
+	again
+
+	* src/sparql_parser.y, src/sparql_lexer.l: Delete ~ token - long
+	gone from SPARQL.
+
+	* src/sparql_parser.y: Define DEBUG_FH as where debug messages go,
+	rather than burn in stdout.
+
+	* src/sparql_parser.y:
+	(BasicGraphPatternRestOpt): Deleted, merged into BasicGraphPattern
+	(GraphPattern): Added more verbose debug messages.
+	(BasicGraphPattern): Inlined BasicGraphPatternRestOpt.  This is
+	now always a group.  Constraint are moved from the empty graph
+	pattern they are created on, onto the group graph pattern.
+	BlockOfTriplesOpt is pushed to the start of the group each time.
+	For the BasicGraphPattern alone, the new group is initialised,
+	possibly being empty.
+
+	* src/rasqal_query.c: (rasqal_query_prepare): Use a loop with a
+	modified flag to repeat modifying query until nothing more is
+	done.  Add super verbose debug messages.  Make
+	rasqal_engine_merge_graph_patterns visit the query graph pattern.
+
+	* src/rasqal_engine.c: (rasqal_engine_move_constraints): Added, to
+	move constraints about when merging graph patterns in
+	rasqal_engine_join_graph_patterns
+	(rasqal_engine_merge_graph_patterns): Set modified flag when
+	changes happen.  If result is basic but contains graph patterns,
+	turn it back to a group type.
+	(rasqal_engine_merge_triples): Set modified flag.
+	(rasqal_engine_remove_empty_group_graph_patterns): Added to remove
+	empty - zero length - sequences of graph patterns in groups.
+
+	* src/rasqal_internal.h: Add prototypes for
+	rasqal_engine_remove_empty_group_graph_patterns and
+	rasqal_engine_move_constraints
+
+	* src/sparql_parser.y: Update for rq23 changes.
+	(TriplesDotListOpt): Added.
+	(TriplesSameSubject, TriplesSameSubjectDotListOpt,
+	BlockOfTriplesOpt): Added, rougly replacing Triples and
+	TriplesOpt.
+	(BasicGraphPattern, BasicGraphPatternRestOpt): Added, roughly
+	replacing GraphPattern1Opt
+
+	* tests/sparql/examples/Makefile.am: sparql-query-example-e works
+	again
+
+	* tests/sparql/SyntaxDev/Makefile.am: Added check-sparql-correct
+	to recursive rules
+
+	* tests/sparql/Makefile.am: Added check-sparql-correct to
+	recursive rules
+
+	* src/rasqal_engine.c: (rasqal_engine_join_graph_patterns):
+	Protect from NULL args.
+
+	* src/rasqal_engine.c: (rasqal_engine_group_2_graph_patterns): Added.
+
+	* src/rasqal_internal.h: Added prototype for
+	rasqal_engine_group_2_graph_patterns
+
+	* src/rasqal_engine.c:
+	(rasqal_engine_new_graph_pattern_from_formula): Added.
+
+	* src/rasqal_internal.h: Added prototypes for rasqal_formula_join
+	and rasqal_engine_new_graph_pattern_from_formula
+
+	* src/rasqal_literal.c: (rasqal_formula_join): Added.
+
+2006-01-21  Dave Beckett  <dave@dajobe.org>
+
+	* src/sparql_parser.y: (OrderCondition): Removed deprecated ASC[]
+	and DESC[] syntax.
+
+	* src/sparql_parser.y: (TriplesSameSubject): Renamed from
+	Triples1, after rq23.
+
+	* tests/sparql/part1/Makefile.am: dawg-opt-query-003 now fails
+
+	* tests/sparql/examples/Makefile.am: sparql-query-example-e now
+	fails
+
+	* tests/sparql/ValueTesting/extendedType-ne-pass.rq: removed
+	unused test extendedType-ne-pass.rq
+
+	* tests/sparql/ValueTesting/Makefile.am: Remove
+	extendedType-ne-pass.rq from distribution, old syntax and not in
+	the dawg test suite.
+
+	* tests/sparql/SyntaxFull/Makefile.am: Now no expected failures
+
+	* src/sparql_parser.y: Put tests in debug messages around
+	additional optional values.
+	(FunctionCall): For a function with no arguments, create an empty
+	sequence here as it is not done in ArgsList.
+
+	* src/rasqal_query.c: (rasqal_query_prepare): Call
+	rasqal_engine_build_constraints_expression here.
+
+	* src/rasqal_engine.c: (rasqal_engine_prepare,
+	rasqal_engine_merge_triples): Remove
+	rasqal_engine_build_constraints_expression, done by
+	rasqal_query_prepare.
+	
+2006-01-20  Dave Beckett  <dave@dajobe.org>
+
+	* tests/sparql/SyntaxDev/Makefile.am: Added check-sparql-lexer and
+	check-sparql-parser recursive tasks
+
+	* tests/sparql/Makefile.am: Added check-sparql-lexer and
+	check-sparql-parser recursive tasks
+
+	* src/rasqal_graph_pattern.c: (rasqal_free_graph_pattern): Let
+	raptor_free_sequence tidy up constraints and
+	rasqal_free_expression do the tree of expressions.
+	(rasqal_graph_pattern_add_constraint): Init destructor when making
+	a new sequence.
+
+	* src/rasqal_expr.c: (rasqal_expression_convert_to_literal): Copy
+	usage to new expression literal.
+
+	* src/rasqal_engine.c:
+	(rasqal_engine_build_constraints_expression): Copy expressions
+	when building, easier to keep clear.
+	(rasqal_engine_join_graph_patterns): Tidy long line.  Do not
+	delete parts of source gp expressions, the destructor will do that
+	anyway.
+
+2006-01-17  Dave Beckett  <dave@dajobe.org>
+
+	* src/sparql_parser.y: Major update to align with SPARQL grammar
+	terms.  Not yet completed.  Down to 1 shift/reduce conflict
+	Renamed many terms to match SPARQL (rq23) tokens.
+	Subject => VarOrTerm, Predicate => Verb,
+	PropertyList => PropertyListOpt,
+	PropertyListTail => PropertyListTailOpt
+	(PatternElement, PatternsEelementList, UnionGraphPattern,
+	UnionGraphPatternList): Deleted
+	(TriplesDotListOpt, Triples1 TriplesOpt, PropertyListNotEmpty,
+	GroupOrUnionGraphPattern, GroupOrUnionGraphPatternList,
+	GraphPatternNotTriples GraphPattern1Opt): Added.
+
+	* src/fix-bison: Remove malloc/free prototypes
+
+	* tests/sparql/ValueTesting/Makefile.am: sort test and query files
+	by name
+
+	* tests/sparql/ValueTesting/Makefile.am,
+	tests/sparql/ValueTesting/boolean-0.n3,
+	tests/sparql/ValueTesting/boolean-EBV-canonical-result.n3,
+	tests/sparql/ValueTesting/boolean-EBV-canonical.rq,
+	tests/sparql/ValueTesting/boolean-equiv-FALSE.rq,
+	tests/sparql/ValueTesting/boolean-equiv-TRUE.rq,
+	tests/sparql/ValueTesting/boolean-equiv-xsdType.rq,
+	tests/sparql/ValueTesting/boolean-false-canonical-result.n3,
+	tests/sparql/ValueTesting/boolean-false-canonical.rq,
+	tests/sparql/ValueTesting/boolean-logical-OR.rq,
+	tests/sparql/ValueTesting/boolean-true-canonical-result.n3,
+	tests/sparql/ValueTesting/boolean-true-canonical.rq,
+	tests/sparql/ValueTesting/manifest.n3: Added
+	boolean-true-canonical boolean-EBV-canonical from DAWG CVS
+
+2006-01-16  Dave Beckett  <dave@dajobe.org>
+
+	* rasqal.rdf.in: use download.librdf.org
+
+	* utils/roqet.1: Document --exec and update synopsis for exec use.
+
+	* src/win32_rasqal_config.h, configure.ac: Bumped version to 0.9.12
+
+2006-01-15  Dave Beckett  <dave@dajobe.org>
+
+	* tests/rdql/testsuite/README-RDQL-tests.txt,
+	tests/rdql/testsuite/copyright.txt,
+	tests/rdql/testsuite/model0.nt, tests/rdql/testsuite/model1.nt,
+	tests/rdql/testsuite/model2.nt, tests/rdql/testsuite/model3.nt,
+	tests/rdql/testsuite/model4.nt, tests/rdql/testsuite/model5.nt,
+	tests/rdql/testsuite/model5.rdf, tests/rdql/testsuite/model6.nt,
+	tests/rdql/testsuite/model7.nt, tests/rdql/testsuite/model8.n3,
+	tests/rdql/testsuite/model9.n3, tests/rdql/testsuite/modelA.nt,
+	tests/rdql/testsuite/query-dump,
+	tests/rdql/testsuite/result-0-01.n3,
+	tests/rdql/testsuite/result-0-02.n3,
+	tests/rdql/testsuite/result-0-04.n3,
+	tests/rdql/testsuite/result-1-01.n3,
+	tests/rdql/testsuite/result-1-02.n3,
+	tests/rdql/testsuite/result-1-03.n3,
+	tests/rdql/testsuite/result-1-04.n3,
+	tests/rdql/testsuite/result-1-08.n3,
+	tests/rdql/testsuite/result-2-01.n3,
+	tests/rdql/testsuite/result-2-02.n3,
+	tests/rdql/testsuite/result-2-04.n3,
+	tests/rdql/testsuite/result-2-05.n3,
+	tests/rdql/testsuite/result-2-06.n3,
+	tests/rdql/testsuite/result-2-07.n3,
+	tests/rdql/testsuite/result-2-08.n3,
+	tests/rdql/testsuite/result-2-09.n3,
+	tests/rdql/testsuite/result-2-10.n3,
+	tests/rdql/testsuite/result-3-01.n3,
+	tests/rdql/testsuite/result-3-02.n3,
+	tests/rdql/testsuite/result-3-03.n3,
+	tests/rdql/testsuite/result-3-04.n3,
+	tests/rdql/testsuite/result-3-05.n3,
+	tests/rdql/testsuite/result-3-06.n3,
+	tests/rdql/testsuite/result-3-07.n3,
+	tests/rdql/testsuite/result-4-01.n3,
+	tests/rdql/testsuite/result-4-02.n3,
+	tests/rdql/testsuite/result-4-03.n3,
+	tests/rdql/testsuite/result-4-04.n3,
+	tests/rdql/testsuite/result-4-05.n3,
+	tests/rdql/testsuite/result-4-06.n3,
+	tests/rdql/testsuite/result-4-07.n3,
+	tests/rdql/testsuite/result-5-01.n3,
+	tests/rdql/testsuite/result-5-03.n3,
+	tests/rdql/testsuite/result-5-04.n3,
+	tests/rdql/testsuite/result-6-01.n3,
+	tests/rdql/testsuite/result-6-03.n3,
+	tests/rdql/testsuite/result-6-04.n3,
+	tests/rdql/testsuite/result-7-01.n3,
+	tests/rdql/testsuite/result-7-02.n3,
+	tests/rdql/testsuite/result-7-03.n3,
+	tests/rdql/testsuite/result-7-04.n3,
+	tests/rdql/testsuite/result-8-01.n3,
+	tests/rdql/testsuite/result-8-02.n3,
+	tests/rdql/testsuite/result-8-03.n3,
+	tests/rdql/testsuite/result-8-04.n3,
+	tests/rdql/testsuite/result-8-05.n3,
+	tests/rdql/testsuite/result-9-01.n3,
+	tests/rdql/testsuite/result-9-02.n3,
+	tests/rdql/testsuite/result-A-01.n3,
+	tests/rdql/testsuite/result-A-02.n3,
+	tests/rdql/testsuite/result-B-01.n3,
+	tests/rdql/testsuite/result-B-02.n3,
+	tests/rdql/testsuite/result-B-03.n3,
+	tests/rdql/testsuite/result-B-04.n3,
+	tests/rdql/testsuite/result-B-05.n3,
+	tests/rdql/testsuite/result-B-06.n3,
+	tests/rdql/testsuite/result-B-08.n3,
+	tests/rdql/testsuite/result-B-09.n3,
+	tests/rdql/testsuite/result-B-10.n3,
+	tests/rdql/testsuite/result-B-11.n3,
+	tests/rdql/testsuite/result-B-12.n3,
+	tests/rdql/testsuite/result-B-13.n3,
+	tests/rdql/testsuite/result-B-14.n3,
+	tests/rdql/testsuite/result-B-15.n3,
+	tests/rdql/testsuite/result-B-16.n3,
+	tests/rdql/testsuite/result-B-17.n3,
+	tests/rdql/testsuite/result-B-18.n3,
+	tests/rdql/testsuite/result-B-19.n3,
+	tests/rdql/testsuite/result-B-20.n3,
+	tests/rdql/testsuite/result-S-02.n3,
+	tests/rdql/testsuite/result-S-03.n3,
+	tests/rdql/testsuite/result-S-04.n3,
+	tests/rdql/testsuite/result-S-05.n3,
+	tests/rdql/testsuite/result-T-02.n3,
+	tests/rdql/testsuite/result-T-03.n3,
+	tests/rdql/testsuite/result-T-04.n3,
+	tests/rdql/testsuite/result-T-06.n3,
+	tests/rdql/testsuite/result-T-09.n3,
+	tests/rdql/testsuite/test-0-01, tests/rdql/testsuite/test-0-02,
+	tests/rdql/testsuite/test-0-03, tests/rdql/testsuite/test-0-04,
+	tests/rdql/testsuite/test-1-01, tests/rdql/testsuite/test-1-02,
+	tests/rdql/testsuite/test-1-03, tests/rdql/testsuite/test-1-04,
+	tests/rdql/testsuite/test-1-05, tests/rdql/testsuite/test-1-06,
+	tests/rdql/testsuite/test-1-07, tests/rdql/testsuite/test-1-08,
+	tests/rdql/testsuite/test-1-09, tests/rdql/testsuite/test-1-10,
+	tests/rdql/testsuite/test-2-01, tests/rdql/testsuite/test-2-02,
+	tests/rdql/testsuite/test-2-03, tests/rdql/testsuite/test-2-04,
+	tests/rdql/testsuite/test-2-05, tests/rdql/testsuite/test-2-06,
+	tests/rdql/testsuite/test-2-07, tests/rdql/testsuite/test-2-08,
+	tests/rdql/testsuite/test-2-09, tests/rdql/testsuite/test-2-10,
+	tests/rdql/testsuite/test-3-01, tests/rdql/testsuite/test-3-02,
+	tests/rdql/testsuite/test-3-03, tests/rdql/testsuite/test-3-04,
+	tests/rdql/testsuite/test-3-05, tests/rdql/testsuite/test-3-06,
+	tests/rdql/testsuite/test-3-07, tests/rdql/testsuite/test-4-01,
+	tests/rdql/testsuite/test-4-02, tests/rdql/testsuite/test-4-03,
+	tests/rdql/testsuite/test-4-04, tests/rdql/testsuite/test-4-05,
+	tests/rdql/testsuite/test-4-06, tests/rdql/testsuite/test-4-07,
+	tests/rdql/testsuite/test-5-01, tests/rdql/testsuite/test-5-02,
+	tests/rdql/testsuite/test-5-03, tests/rdql/testsuite/test-5-04,
+	tests/rdql/testsuite/test-6-01, tests/rdql/testsuite/test-6-02,
+	tests/rdql/testsuite/test-6-03, tests/rdql/testsuite/test-6-04,
+	tests/rdql/testsuite/test-7-01, tests/rdql/testsuite/test-7-02,
+	tests/rdql/testsuite/test-7-03, tests/rdql/testsuite/test-7-04,
+	tests/rdql/testsuite/test-8-01, tests/rdql/testsuite/test-8-02,
+	tests/rdql/testsuite/test-8-03, tests/rdql/testsuite/test-8-04,
+	tests/rdql/testsuite/test-8-05, tests/rdql/testsuite/test-9-01,
+	tests/rdql/testsuite/test-9-02, tests/rdql/testsuite/test-A-01,
+	tests/rdql/testsuite/test-A-02, tests/rdql/testsuite/test-B-01,
+	tests/rdql/testsuite/test-B-02, tests/rdql/testsuite/test-B-03,
+	tests/rdql/testsuite/test-B-04, tests/rdql/testsuite/test-B-05,
+	tests/rdql/testsuite/test-B-06, tests/rdql/testsuite/test-B-07,
+	tests/rdql/testsuite/test-B-08, tests/rdql/testsuite/test-B-09,
+	tests/rdql/testsuite/test-B-10, tests/rdql/testsuite/test-B-11,
+	tests/rdql/testsuite/test-B-12, tests/rdql/testsuite/test-B-13,
+	tests/rdql/testsuite/test-B-14, tests/rdql/testsuite/test-B-15,
+	tests/rdql/testsuite/test-B-16, tests/rdql/testsuite/test-B-17,
+	tests/rdql/testsuite/test-B-18, tests/rdql/testsuite/test-B-19,
+	tests/rdql/testsuite/test-B-20, tests/rdql/testsuite/test-S-01,
+	tests/rdql/testsuite/test-S-02, tests/rdql/testsuite/test-S-03,
+	tests/rdql/testsuite/test-S-04, tests/rdql/testsuite/test-S-05,
+	tests/rdql/testsuite/test-T-01, tests/rdql/testsuite/test-T-02,
+	tests/rdql/testsuite/test-T-03, tests/rdql/testsuite/test-T-04,
+	tests/rdql/testsuite/test-T-05, tests/rdql/testsuite/test-T-06,
+	tests/rdql/testsuite/test-T-07, tests/rdql/testsuite/test-T-08,
+	tests/rdql/testsuite/test-T-09, tests/rdql/testsuite/test-T-10,
+	tests/rdql/testsuite/vc-db-1.rdf,
+	tests/rdql/testsuite/vc-db-2.rdf,
+	tests/rdql/testsuite/vc-db-3.rdf: Restore CRLF end of lines, set
+	svn:eol-style CRLF
+
+	* win32/rasqal.dsp, win32/rasqal.dsw, win32/rasqal.vcproj: Restore
+	CRLF end of lines, set svn:eol-style CRLF
+
+	* src/rdql_lexer.l: Fix C++ comment regex to work with multiple
+	line endings.
+
+	* .cvsignore, data/.cvsignore, docs/.cvsignore, src/.cvsignore,
+	tests/.cvsignore, tests/rdql/.cvsignore,
+	tests/rdql/testsuite/.cvsignore, tests/sparql/.cvsignore,
+	tests/sparql/Expr1/.cvsignore, tests/sparql/Expr2/.cvsignore,
+	tests/sparql/ExprBuiltins/.cvsignore,
+	tests/sparql/ExprEquals/.cvsignore,
+	tests/sparql/SyntaxDev/.cvsignore,
+	tests/sparql/SyntaxDev/Syntax-SPARQL/.cvsignore,
+	tests/sparql/SyntaxDev/Syntax-SPARQL2/.cvsignore,
+	tests/sparql/SyntaxDev/Syntax-SPARQL3/.cvsignore,
+	tests/sparql/SyntaxFull/.cvsignore,
+	tests/sparql/ValueTesting/.cvsignore,
+	tests/sparql/bound/.cvsignore, tests/sparql/examples/.cvsignore,
+	tests/sparql/part1/.cvsignore, tests/sparql/regex/.cvsignore,
+	tests/sparql/simple/.cvsignore, tests/sparql/sort/.cvsignore,
+	tests/sparql/survey/.cvsignore, tests/sparql/syntax/.cvsignore,
+	utils/.cvsignore, win32/.cvsignore: Delete .cvsignore
+
+	* Switched to Subversion version control.
+	CVS tag for rasqal 0.9.11: rasqal_0_9_11
+	Subversion revision ID for rasqal 0.9.11: r5375
+
+	* Snapshotted rasqal_0_9_11 for 0.9.11 release
+
+	* docs/librasqal.3: Updates for 0.9.11
+
+	* fix-groff-xhtml: style edits
+
+	* src/rasqal_query.c: Change results indexing when using ORDER;
+	the query->results_count is now a count (again) so starts from 1
+	when there is at least 1 result, indexing into item 0 of the
+	query->results_sequence sequence.
+	(rasqal_query_results_update): If result_count goes beyond range,
+	adjust it down and return.
+	(rasqal_query_execute): If a results sequence is created, but it
+	is empty, set result count to 0, otherwise immediately check if it
+	is finished by the limit/offset rules.
+	(rasqal_query_results_next): Check result_count is finished and
+	adjust down if it was.
+	(rasqal_query_results_get_bindings,
+	rasqal_query_results_get_binding_value,
+	rasqal_query_results_get_binding_value_by_name): Adjusted to use
+	result_count offset -1.
+	Fixes Issue#0000064 - http://bugs.librdf.org/mantis/view.php?id=64
+	
+	* src/rasqal_engine.c (rasqal_engine_check_limit_offset): Do not
+	muck about with result_count here.
+
+2006-01-12  Dave Beckett  <dave@dajobe.org>
+
+	* tests/sparql/ValueTesting/Makefile.am: Add boolean tests to dist.
+
+	* src/rasqal_literal.c (rasqal_literal_string_to_native):
+	Accept "1" as an xsd:boolean true.
+
+2006-01-11  Dave Beckett  <dave@dajobe.org>
+
+	* tests/sparql/ValueTesting/boolean-0.n3,
+	tests/sparql/ValueTesting/boolean-equiv-FALSE-result.n3,
+	tests/sparql/ValueTesting/boolean-equiv-FALSE.rq,
+	tests/sparql/ValueTesting/boolean-equiv-TRUE-result.n3,
+	tests/sparql/ValueTesting/boolean-equiv-TRUE.rq,
+	tests/sparql/ValueTesting/boolean-equiv-xsdType-result.n3,
+	tests/sparql/ValueTesting/boolean-equiv-xsdType.rq,
+	tests/sparql/ValueTesting/boolean-logical-OR-result.n3,
+	tests/sparql/ValueTesting/boolean-logical-OR.rq,
+	tests/sparql/ValueTesting/manifest.n3: Added more boolean tests
+	from DAWG (unapproved)
+
+2006-01-10  Dave Beckett  <dave@dajobe.org>
+
+	* src/rasqal_engine.c (rasqal_graph_pattern_get_next_match,
+	rasqal_engine_get_next_result): Return errors when query fails due
+	to unimplemented sequence/union of graph patterns.
+
+	* src/rasqal_query.c (rasqal_query_results_get_triple,
+	rasqal_query_results_next_triple): Do not crash with DESCRIBE,
+	return an empty graph always.
+	Fixes Issue#0000050 - http://bugs.librdf.org/mantis/view.php?id=50
+
+2006-01-06  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac:
+	Add --disable-pcre and --disable-xml2 options to configure to
+	prevent	automatic use of libpcre or libxml2 when found.  Patch
+	from Mike Frysinger.
+	Addresses Issue#0000052 - http://bugs.librdf.org/mantis/view.php?id=52
+
+	* src/rasqal.h: rasqal_op: RASQAL_EXPR_LANGMATCHES is last
+
+	* src/rasqal_expr.c (rasqal_expression_evaluate):
+	Make LANG() return "" for non-literals
+	as tests depend on it.  Return "" not "-".
+	Update LANGMATCHES() to make the wildcard the second arg; still does
+	not do proper subtag matches.
+
+	* tests/sparql/ExprBuiltins/Makefile.am: q-langMatches-1 works
+
+2006-01-05  Dave Beckett <dave@dajobe.org>
+
+	* src/rasqal_query.c:
+	Do not emit XML header here as raptor 1.4.8 xml writer does that
+	automatically now.
+
+2006-01-03  Dave Beckett <dave@dajobe.org>
+
+	* tests/sparql/ValueTesting/Makefile.am: Added expected test
+	failures: typePromotion-decimal-decimal-fail
+
+	* tests/sparql/ExprBuiltins/Makefile.am: Added expected test
+	failures: datatype-1 LangMatches-1 LangMatches-2 LangMatches-3
+	LangMatches-4
+
+	* tests/sparql/ExprBuiltins/data-builtin-1.ttl,
+	tests/sparql/ExprBuiltins/data-langMatches.ttl,
+	tests/sparql/ExprBuiltins/manifest.ttl,
+	tests/sparql/ExprBuiltins/q-iri-1.rq,
+	tests/sparql/ExprBuiltins/q-langMatches-1.rq,
+	tests/sparql/ExprBuiltins/q-langMatches-2.rq,
+	tests/sparql/ExprBuiltins/q-langMatches-3.rq,
+	tests/sparql/ExprBuiltins/q-langMatches-4.rq,
+	tests/sparql/ExprBuiltins/result-iri-1.ttl,
+	tests/sparql/ExprBuiltins/result-langMatches-1.ttl,
+	tests/sparql/ExprBuiltins/result-langMatches-2.ttl,
+	tests/sparql/ExprBuiltins/result-langMatches-3.ttl,
+	tests/sparql/ExprBuiltins/result-langMatches-4.ttl,
+	tests/sparql/ExprBuiltins/result-str-4.ttl,
+	tests/sparql/ExprEquals/result-eq2-1.ttl,
+	tests/sparql/ExprEquals/result-eq2-graph-1.ttl,
+	tests/sparql/ValueTesting/dateTime-tz0.rq,
+	tests/sparql/ValueTesting/dateTime-tz1.rq,
+	tests/sparql/ValueTesting/extendedType-ne-pass.rq,
+	tests/sparql/ValueTesting/manifest.n3,
+	tests/sparql/ValueTesting/roman-result.n3,
+	tests/sparql/ValueTesting/typePromotion-0.n3,
+	tests/sparql/ValueTesting/typePromotion-decimal-decimal-fail-result.n3,
+	tests/sparql/ValueTesting/typePromotion-decimal-decimal-fail.rq,
+	tests/sparql/ValueTesting/typePromotion-decimal-decimal-pass-result.n3,
+	tests/sparql/ValueTesting/typePromotion-decimal-decimal-pass.rq:
+	Updated DAWG test cases from CVS 2006-01-02
+
+2006-01-02  Dave Beckett <dave@dajobe.org>
+
+	* tests/sparql/ExprEquals/result-eq2-graph-1.ttl: new result
+
+	* docs/tmpl/section-literal.sgml: Added rasqal_new_decimal_literal
+
+	* docs/tmpl/section-expression.sgml: Added
+	@RASQAL_EXPR_LANGMATCHES:
+
+	* src/rasqal_literal.c: autodocs
+
+	* docs/rasqal-sections.txt: Added rasqal_new_decimal_literal
+
+	* src/sparql_parser.y: Updates for SPARQL Query Language for RDF,
+	23 November 2005
+	http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/ Including
+	many renamings of tokens to match grammar.
+	(DECIMAL_LITERAL): Added.
+	(GraphNodeListNotEmpty): Renamed from ItemList
+	(GraphNode): Renamed from Object
+	(GraphTerm): Renamed from RDFTerm. Added DECIMAL_LITERAL option.
+	(VarOrTerm): Added.
+	(VarOrBnodeOrURI): Replaced by VarOrBlankNodeOrIRIref.
+	(Select/Construct/Describe/AskQuery): Renamed from *Clause.
+	(Prolog): Re-added.
+	(BuiltInCall): Added LANGMATCHES option.
+
+	* src/sparql_lexer.l (DECIMAl, DOUBLE, EXPONENT): Added.  Support
+	SPARQL decimal and double literal syntax and return new
+	DECIMAL_LITERAL when there is a '.' else FLOATING_LITERAL with an
+	EXPONENT
+
+	* src/rasqal_literal.c (rasqal_new_decimal_literal): Added to make
+	a decimal literal (xsd:decimal).
+
+	* src/rasqal.h: Added prototype for rasqal_new_decimal_literal
+
+	* tests/sparql/SyntaxDev/Syntax-SPARQL2/Makefile.am:
+	syntax-general-03.rq and syntax-function-01.rq now work (7
+	failures remain)
+
+	* tests/sparql/ExprEquals/result-eq2-1.ttl,
+	tests/sparql/ExprEquals/query-eq-2.rq,
+	tests/sparql/ExprEquals/query-eq-graph-2.rq,
+	tests/sparql/ExprEquals/Makefile.am,
+	tests/sparql/ExprEquals/data-eq.ttl,
+	tests/sparql/ExprEquals/manifest.n3: Updates for decimal syntax
+	changes and equality rules
+
+2006-01-01  Dave Beckett <dave@dajobe.org>
+
+	* src/sparql_parser.y (PrefixDeclOpt): gcc const string warning
+	fix.
+
+	* src/sparql_parser.y (PrefixDeclOpt): Generate a warning if a
+	PREFIX appears more than once.  Check added after update in
+	http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/
+
+	* src/rasqal_expr.c (rasqal_expression_evaluate): Added SPARQL
+	trinary logic evaluation of AND and OR expressions for T,F,E
+	following the truth table in
+	http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/#truthTable
+
+	* src/rasqal_expr.c (rasqal_expression_clear,
+	rasqal_expression_visit, rasqal_expression_print,
+	rasqal_expression_is_constant): Added SPARQL_EXPR_LANGMATCHEs to
+	switch statements as a new 2-argument expression.
+	(rasqal_expression_evaluate): Added a simple evaluation for
+	SPARQL_EXPR_LANGMATCHES that handles '*' and otherwise does a case
+	independent string compare.  This is not a full implementation by
+	any means.  Support for the new SPARQL keyword langMatches added
+	in http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/
+
+	* src/sparql_parser.y (BuiltInCall): Added SPARQL langMatches
+	2-argument expresson after addition in
+	http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/
+
+	* src/rasqal.h: Added SPARQL_EXPR_LANGMATCHES for SPARQL
+	langMatches expression
+
+	* src/sparql_lexer.l: Allow _ at the start of sparql variable
+	names, as changed in
+	http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/
+	(enum sparql_name_check_flags): Remove
+	SPARQL_NAME_CHECK_NO_UL_FIRST for varname.
+	(NCCHAR1p): Renamed from NCCHAR1 - no _.
+	(NCCHAR1): Added to aloow _
+	(VARNAME, NCCHAR, NCNAME): No need to use _ here, NCCHAR1 has it.
+	(NCNAME_PREFIX): Use NCCHAR1p at start, no _ still.
+
+	* src/sparql_lexer.l, src/sparql_parser.y: Added LANGMATCHES token
+	(case independent) new in
+	http://www.w3.org/TR/2005/WD-rdf-sparql-query-20051123/
+
+	* src/sparql_lexer.l: Allow isiri (case independent) returning
+	ISURI token
+

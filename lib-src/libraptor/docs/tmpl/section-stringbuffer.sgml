@@ -1,0 +1,139 @@
+<!-- ##### SECTION Title ##### -->
+String buffer
+
+<!-- ##### SECTION Short_Description ##### -->
+Append-only strings.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A utility class that allows easy construction of strings that
+grow at the end by appending new strings.  Primarily used for
+constructing/serializing syntaxes into strings by the #raptor_iostream
+and #raptor_serializer classes.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_stringbuffer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_new_stringbuffer ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_free_stringbuffer ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_append_counted_string ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@string: 
+@length: 
+@do_copy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_append_string ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@string: 
+@do_copy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_append_decimal ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@integer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_append_stringbuffer ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@append: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_prepend_counted_string ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@string: 
+@length: 
+@do_copy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_prepend_string ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@string: 
+@do_copy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_as_string ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_length ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_stringbuffer_copy_to_string ##### -->
+<para>
+
+</para>
+
+@stringbuffer: 
+@string: 
+@length: 
+@Returns: 
+
+

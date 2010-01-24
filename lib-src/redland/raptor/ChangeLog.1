@@ -1,0 +1,57 @@
+2000-12-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdfdump.c, rapier_parse.c, rapier.h, Makefile.am:
+	Snapshot 2000-12-15
+
+2000-12-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am: Added test files
+
+2000-12-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rapier_parse.c (rapier_print_ns_name):
+	Only compile when debugging.
+	Put LIBRDF_DEBUG2 around some debugging statements.
+
+2000-11-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rapier.h:
+	Changed some interfaces slightly.
+	Added defines when not linked with Redland.
+
+	* rdfdump.c:
+	Made work when compiled with Redland.
+	Added options via getopt/getopt_long and usage.
+
+	* rapier_parse.c:
+	Added general container support and callback.
+	Made work with Redland librdf_uri and concepts when used inside
+	Redland.
+	Tidied some function declarations.
+	Split some super-long functions into two - 1) xml parsing 2) rdf
+	grammar
+
+2000-11-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rapier.h:
+	Changed some interfaces slightly.
+	Added defines when not linked with Redland.
+
+	* rdfdump.c:
+	Made work when compiled with Redland.
+	Added options via getopt/getopt_long and usage.
+
+	* rapier_parse.c:
+	Added general container support and callback.
+	Made work with Redland librdf_uri and concepts when used inside it.
+	Tidied some function declarations.
+	Split some super-long functions into two - 
+	  1) xml parsing
+	  2) rdf grammar
+
+2000-11-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* acconfig.h, AUTHORS, autogen.sh, config.h.in, configure.in,
+	.cvsignore, INSTALL.html, LICENSE.html, Makefile.am, MPL.html,
+	NEWS.html, rapier.h, rapier_parse.c,
+	rdfdump.c, README.html: Initial import.

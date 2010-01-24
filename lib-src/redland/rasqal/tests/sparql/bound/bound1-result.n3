@@ -1,0 +1,20 @@
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+
+[]  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                rs:ResultSet ;
+    rs:resultVariable
+                "a" , "c" ;
+    rs:solution [ rs:binding  [ rs:value    <http://example.org/ns#c2> ;
+                                rs:variable "a"
+                              ] ;
+                  rs:binding  [ rs:value    <http://example.org/ns#f> ;
+                                rs:variable "c"
+                              ]
+                ] ;
+    rs:solution [ rs:binding  [ rs:value    <http://example.org/ns#a2> ;
+                                rs:variable "a"
+                              ] ;
+                  rs:binding  [ rs:value    <http://example.org/ns#c2> ;
+                                rs:variable "c"
+                              ]
+                ] .

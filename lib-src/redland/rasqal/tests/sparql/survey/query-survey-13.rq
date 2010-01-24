@@ -1,0 +1,7 @@
+prefix ex: <http://example.org/survey-sample/ontology/>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
+SELECT ?PUB WHERE {
+  ?PUB ex:pages ?n.
+  FILTER ( xsd:integer(?n) = 8 )
+}
+

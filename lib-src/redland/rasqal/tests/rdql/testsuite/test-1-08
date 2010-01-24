@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 1-08 : bound subject and value : no statements
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (<http://rdf.hp.com/r-1>, ?y, "v-2-2")

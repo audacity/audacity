@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="rasqal-section-graph-pattern">
+<refmeta>
+<refentrytitle role="top_of_page" id="rasqal-section-graph-pattern.top_of_page">Graph patterns</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RASQAL Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Graph patterns</refname>
+<refpurpose>Collections of triple patterns, sub-graph patterns with operators.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="rasqal-section-graph-pattern.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link>;
+<link linkend="int">int</link>                 <link linkend="rasqal-graph-pattern-add-constraint">rasqal_graph_pattern_add_constraint</link> (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="rasqal-expression">rasqal_expression</link> *expr);
+<link linkend="int">int</link>                 <link linkend="rasqal-graph-pattern-add-sub-graph-pattern">rasqal_graph_pattern_add_sub_graph_pattern</link>
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern,
+                                                         <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *sub_graph_pattern);
+<link linkend="rasqal-expression">rasqal_expression</link>*  <link linkend="rasqal-graph-pattern-get-constraint">rasqal_graph_pattern_get_constraint</link> (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="int">int</link> idx);
+<link linkend="raptor-sequence">raptor_sequence</link>*    <link linkend="rasqal-graph-pattern-get-constraint-sequence">rasqal_graph_pattern_get_constraint_sequence</link>
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp);
+<link linkend="int">int</link>                 <link linkend="rasqal-graph-pattern-get-index">rasqal_graph_pattern_get_index</link>      (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp);
+<link linkend="rasqal-graph-pattern-operator">rasqal_graph_pattern_operator</link> <link linkend="rasqal-graph-pattern-get-operator">rasqal_graph_pattern_get_operator</link>
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern);
+<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link>* <link linkend="rasqal-graph-pattern-get-sub-graph-pattern">rasqal_graph_pattern_get_sub_graph_pattern</link>
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern,
+                                                         <link linkend="int">int</link> idx);
+<link linkend="raptor-sequence">raptor_sequence</link>*    <link linkend="rasqal-graph-pattern-get-sub-graph-pattern-sequence">rasqal_graph_pattern_get_sub_graph_pattern_sequence</link>
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern);
+<link linkend="rasqal-triple">rasqal_triple</link>*      <link linkend="rasqal-graph-pattern-get-triple">rasqal_graph_pattern_get_triple</link>     (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern,
+                                                         <link linkend="int">int</link> idx);
+enum                <link linkend="rasqal-graph-pattern-operator">rasqal_graph_pattern_operator</link>;
+const <link linkend="char">char</link>*         <link linkend="rasqal-graph-pattern-operator-as-string">rasqal_graph_pattern_operator_as_string</link>
+                                                        (<link linkend="rasqal-graph-pattern-operator">rasqal_graph_pattern_operator</link> op);
+<link linkend="void">void</link>                <link linkend="rasqal-graph-pattern-print">rasqal_graph_pattern_print</link>          (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);
+<link linkend="int">int</link>                 (<link linkend="rasqal-graph-pattern-visit-fn">*rasqal_graph_pattern_visit_fn</link>)    (<link linkend="rasqal-query">rasqal_query</link> *query,
+                                                         <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="void">void</link> *user_data);
+<link linkend="int">int</link>                 <link linkend="rasqal-graph-pattern-visit">rasqal_graph_pattern_visit</link>          (<link linkend="rasqal-query">rasqal_query</link> *query,
+                                                         <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="rasqal-graph-pattern-visit-fn">rasqal_graph_pattern_visit_fn</link> fn,
+                                                         <link linkend="void">void</link> *user_data);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="rasqal-section-graph-pattern.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Graph patterns form a a tree structure that build a <link linkend="rasqal-query"><type>rasqal_query</type></link>
+top-level graph pattern (see <link linkend="rasqal-query-get-query-graph-pattern"><function>rasqal_query_get_query_graph_pattern()</function></link>)
+which may have sub-graph patterns.  Graph patterns at the leaf of the
+tree operate over triple patterns (<link linkend="rasqal-triple"><type>rasqal_triple</type></link>) matching the
+RDF triples in the data sources for <link linkend="RASQAL-GRAPH-PATTERN-OPERATOR-BASIC:CAPS"><literal>RASQAL_GRAPH_PATTERN_OPERATOR_BASIC</literal></link>
+or <link linkend="RASQAL-GRAPH-PATTERN-OPERATOR-OPTIONAL:CAPS"><literal>RASQAL_GRAPH_PATTERN_OPERATOR_OPTIONAL</literal></link>.  Other graph patterns
+operators operate over sub graph patterns and group them, union them
+or apply a GRAPH matching keyword (<link linkend="RASQAL-GRAPH-PATTERN-OPERATOR-GRAPH:CAPS"><literal>RASQAL_GRAPH_PATTERN_OPERATOR_GRAPH</literal></link>).
+</para>
+</refsect1>
+
+<refsect1 id="rasqal-section-graph-pattern.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rasqal-graph-pattern" role="typedef">
+<title>rasqal_graph_pattern</title>
+<indexterm zone="rasqal-graph-pattern"><primary>rasqal_graph_pattern</primary></indexterm><programlisting>rasqal_graph_pattern* graph_pattern;
+</programlisting>
+<para>
+Rasqal graph pattern class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="rasqal-graph-pattern-add-constraint" role="function">
+<title>rasqal_graph_pattern_add_constraint ()</title>
+<indexterm zone="rasqal-graph-pattern-add-constraint"><primary>rasqal_graph_pattern_add_constraint</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_graph_pattern_add_constraint (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="rasqal-expression">rasqal_expression</link> *expr);</programlisting>
+<para>
+Add a constraint expression to the graph_pattern.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> query object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>expr</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-expression"><type>rasqal_expression</type></link> expr - ownership taken
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-add-sub-graph-pattern" role="function">
+<title>rasqal_graph_pattern_add_sub_graph_pattern ()</title>
+<indexterm zone="rasqal-graph-pattern-add-sub-graph-pattern"><primary>rasqal_graph_pattern_add_sub_graph_pattern</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_graph_pattern_add_sub_graph_pattern
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern,
+                                                         <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *sub_graph_pattern);</programlisting>
+<para>
+Add a sub graph pattern to a graph pattern.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>graph_pattern</parameter>&nbsp;:</term>
+<listitem><simpara> graph pattern to add to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>sub_graph_pattern</parameter>&nbsp;:</term>
+<listitem><simpara> graph pattern to add inside
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-constraint" role="function">
+<title>rasqal_graph_pattern_get_constraint ()</title>
+<indexterm zone="rasqal-graph-pattern-get-constraint"><primary>rasqal_graph_pattern_get_constraint</primary></indexterm><programlisting><link linkend="rasqal-expression">rasqal_expression</link>*  rasqal_graph_pattern_get_constraint (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="int">int</link> idx);</programlisting>
+<para>
+Get a constraint in the sequence of constraint expressions in the query.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> query object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>idx</parameter>&nbsp;:</term>
+<listitem><simpara> index into the sequence (0 or larger)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="rasqal-expression"><type>rasqal_expression</type></link> pointer or NULL if out of the sequence range
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-constraint-sequence" role="function">
+<title>rasqal_graph_pattern_get_constraint_sequence ()</title>
+<indexterm zone="rasqal-graph-pattern-get-constraint-sequence"><primary>rasqal_graph_pattern_get_constraint_sequence</primary></indexterm><programlisting><link linkend="raptor-sequence">raptor_sequence</link>*    rasqal_graph_pattern_get_constraint_sequence
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp);</programlisting>
+<para>
+Get the sequence of constraints expressions in the query.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a <link linkend="raptor-sequence"><type>raptor_sequence</type></link> of <link linkend="rasqal-expression"><type>rasqal_expression</type></link> pointers.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-index" role="function">
+<title>rasqal_graph_pattern_get_index ()</title>
+<indexterm zone="rasqal-graph-pattern-get-index"><primary>rasqal_graph_pattern_get_index</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_graph_pattern_get_index      (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp);</programlisting>
+<para>
+Get the graph pattern absolute index in the array of graph patterns.
+</para>
+<para>
+The graph pattern index is assigned when <link linkend="rasqal-query-prepare"><function>rasqal_query_prepare()</function></link> is
+run on a query containing a graph pattern.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> graph pattern
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> index or &lt;0 if no index has been assigned yet
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-operator" role="function">
+<title>rasqal_graph_pattern_get_operator ()</title>
+<indexterm zone="rasqal-graph-pattern-get-operator"><primary>rasqal_graph_pattern_get_operator</primary></indexterm><programlisting><link linkend="rasqal-graph-pattern-operator">rasqal_graph_pattern_operator</link> rasqal_graph_pattern_get_operator
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern);</programlisting>
+<para>
+Get the graph pattern operator .
+</para>
+<para>
+The operator for the given graph pattern. See also
+<link linkend="rasqal-graph-pattern-operator-as-string"><function>rasqal_graph_pattern_operator_as_string()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>graph_pattern</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> graph pattern object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> graph pattern operator
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-sub-graph-pattern" role="function">
+<title>rasqal_graph_pattern_get_sub_graph_pattern ()</title>
+<indexterm zone="rasqal-graph-pattern-get-sub-graph-pattern"><primary>rasqal_graph_pattern_get_sub_graph_pattern</primary></indexterm><programlisting><link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link>* rasqal_graph_pattern_get_sub_graph_pattern
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern,
+                                                         <link linkend="int">int</link> idx);</programlisting>
+<para>
+Get a sub-graph pattern inside a graph pattern.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>graph_pattern</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> graph pattern object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>idx</parameter>&nbsp;:</term>
+<listitem><simpara> index into the sequence of sub graph_patterns in the graph pattern
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> or NULL if out of range
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-sub-graph-pattern-sequence" role="function">
+<title>rasqal_graph_pattern_get_sub_graph_pattern_sequence ()</title>
+<indexterm zone="rasqal-graph-pattern-get-sub-graph-pattern-sequence"><primary>rasqal_graph_pattern_get_sub_graph_pattern_sequence</primary></indexterm><programlisting><link linkend="raptor-sequence">raptor_sequence</link>*    rasqal_graph_pattern_get_sub_graph_pattern_sequence
+                                                        (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern);</programlisting>
+<para>
+Get the sequence of graph patterns inside a graph pattern .</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>graph_pattern</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> graph pattern object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  a <link linkend="raptor-sequence"><type>raptor_sequence</type></link> of <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> pointers.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-get-triple" role="function">
+<title>rasqal_graph_pattern_get_triple ()</title>
+<indexterm zone="rasqal-graph-pattern-get-triple"><primary>rasqal_graph_pattern_get_triple</primary></indexterm><programlisting><link linkend="rasqal-triple">rasqal_triple</link>*      rasqal_graph_pattern_get_triple     (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *graph_pattern,
+                                                         <link linkend="int">int</link> idx);</programlisting>
+<para>
+Get a triple inside a graph pattern.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>graph_pattern</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> graph pattern object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>idx</parameter>&nbsp;:</term>
+<listitem><simpara> index into the sequence of triples in the graph pattern
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="rasqal-triple"><type>rasqal_triple</type></link> or NULL if out of range
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-operator" role="enum">
+<title>enum rasqal_graph_pattern_operator</title>
+<indexterm zone="rasqal-graph-pattern-operator"><primary>rasqal_graph_pattern_operator</primary></indexterm><programlisting>typedef enum {
+  RASQAL_GRAPH_PATTERN_OPERATOR_UNKNOWN   = 0,
+  RASQAL_GRAPH_PATTERN_OPERATOR_BASIC     = 1,
+  RASQAL_GRAPH_PATTERN_OPERATOR_OPTIONAL  = 2,
+  RASQAL_GRAPH_PATTERN_OPERATOR_UNION     = 3,
+  RASQAL_GRAPH_PATTERN_OPERATOR_GROUP     = 4,
+  RASQAL_GRAPH_PATTERN_OPERATOR_GRAPH     = 5,
+
+  RASQAL_GRAPH_PATTERN_OPERATOR_LAST=RASQAL_GRAPH_PATTERN_OPERATOR_GRAPH
+} rasqal_graph_pattern_operator;
+</programlisting>
+<para>
+Graph pattern operators</para>
+<para>
+
+</para><variablelist role="enum">
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-UNKNOWN:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_UNKNOWN</literal></term>
+<listitem><simpara> Internal.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-BASIC:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_BASIC</literal></term>
+<listitem><simpara> Just triple patterns and constraints.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-OPTIONAL:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_OPTIONAL</literal></term>
+<listitem><simpara> Set of graph patterns (ANDed) and constraints.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-UNION:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_UNION</literal></term>
+<listitem><simpara> Set of graph patterns (UNIONed) and constraints.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-GROUP:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_GROUP</literal></term>
+<listitem><simpara> Set of graph patterns (ANDed) and constraints.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-GRAPH:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_GRAPH</literal></term>
+<listitem><simpara> A graph term + a graph pattern and constraints.
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RASQAL-GRAPH-PATTERN-OPERATOR-LAST:CAPS" role="constant">
+<term><literal>RASQAL_GRAPH_PATTERN_OPERATOR_LAST</literal></term>
+<listitem><simpara> Internal.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-operator-as-string" role="function">
+<title>rasqal_graph_pattern_operator_as_string ()</title>
+<indexterm zone="rasqal-graph-pattern-operator-as-string"><primary>rasqal_graph_pattern_operator_as_string</primary></indexterm><programlisting>const <link linkend="char">char</link>*         rasqal_graph_pattern_operator_as_string
+                                                        (<link linkend="rasqal-graph-pattern-operator">rasqal_graph_pattern_operator</link> op);</programlisting>
+<para>
+Get a string for the query verb.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>op</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="rasqal-graph-pattern-operator"><type>rasqal_graph_pattern_operator</type></link> verb of the query
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> pointer to a shared string label for the query verb
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-print" role="function">
+<title>rasqal_graph_pattern_print ()</title>
+<indexterm zone="rasqal-graph-pattern-print"><primary>rasqal_graph_pattern_print</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_graph_pattern_print          (<link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);</programlisting>
+<para>
+Print a <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> in a debug format.
+</para>
+<para>
+The print debug format may change in any release.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara> the <link linkend="FILE:CAPS"><type>FILE</type></link>* handle to print to
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-visit-fn" role="function">
+<title>rasqal_graph_pattern_visit_fn ()</title>
+<indexterm zone="rasqal-graph-pattern-visit-fn"><primary>rasqal_graph_pattern_visit_fn</primary></indexterm><programlisting><link linkend="int">int</link>                 (*rasqal_graph_pattern_visit_fn)    (<link linkend="rasqal-query">rasqal_query</link> *query,
+                                                         <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="void">void</link> *user_data);</programlisting>
+<para>
+User function to visit an graph_pattern and operate on it with
+<link linkend="rasqal-graph-pattern-visit"><function>rasqal_graph_pattern_visit()</function></link> or <link linkend="rasqal-query-graph-pattern-visit"><function>rasqal_query_graph_pattern_visit()</function></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query"><type>rasqal_query</type></link> containing the graph pattern
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> current graph_pattern
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data passed in
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> 0 to truncate the visit
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-graph-pattern-visit" role="function">
+<title>rasqal_graph_pattern_visit ()</title>
+<indexterm zone="rasqal-graph-pattern-visit"><primary>rasqal_graph_pattern_visit</primary></indexterm><programlisting><link linkend="int">int</link>                 rasqal_graph_pattern_visit          (<link linkend="rasqal-query">rasqal_query</link> *query,
+                                                         <link linkend="rasqal-graph-pattern">rasqal_graph_pattern</link> *gp,
+                                                         <link linkend="rasqal-graph-pattern-visit-fn">rasqal_graph_pattern_visit_fn</link> fn,
+                                                         <link linkend="void">void</link> *user_data);</programlisting>
+<para>
+Visit a user function over a <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link>
+</para>
+<para>
+If the user function <parameter>fn</parameter> returns 0, the visit is truncated.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>query</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-query"><type>rasqal_query</type></link> to operate on
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>gp</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="rasqal-graph-pattern"><type>rasqal_graph_pattern</type></link> graph pattern
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fn</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to function to apply that takes user data and graph pattern parameters
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data for applied function 
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> 0 if the visit was truncated.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

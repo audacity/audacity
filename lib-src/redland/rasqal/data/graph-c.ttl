@@ -1,0 +1,4 @@
+@prefix : <http://example.org/> .
+:d :a "red" .
+:e :b "green" .
+:f :c "blue" .

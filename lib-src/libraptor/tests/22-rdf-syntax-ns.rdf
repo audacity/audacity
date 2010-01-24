@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<RDF
+  xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:s="http://www.w3.org/2000/01/rdf-schema#">
+
+<!--
+  This is the RDF Schema for the RDF data model as described in the
+  Resource Description Framework (RDF) Model and Syntax Specification
+  http://www.w3.org/TR/REC-rdf-syntax -->
+
+<s:Class rdf:ID="Statement"
+  s:comment="A triple consisting of a predicate, a subject, and an object." />
+
+<s:Class rdf:ID="Property"
+  s:comment="A name of a property, defining specific meaning for the property" />
+
+<s:Class rdf:ID="Bag"
+  s:comment="An unordered collection" />
+
+<s:Class rdf:ID="Seq"
+  s:comment="An ordered collection" />
+
+<s:Class rdf:ID="Alt"
+  s:comment="A collection of alternatives" />
+
+<Property ID="predicate"
+  s:comment="Identifies the property used in a statement when representing the statement in reified form">
+  <s:domain rdf:resource="#Statement" />
+  <s:range rdf:resource="#Property" />
+</Property>
+
+<Property ID="subject"
+  s:comment="Identifies the resource that a statement is describing when representing the statement in reified form">
+  <s:domain rdf:resource="#Statement" />
+</Property>
+
+<Property ID="object"
+  s:comment="Identifies the object of a statement when representing the statement in reified form" />
+
+<Property ID="type"
+  s:comment="Identifies the Class of a resource" />
+
+<Property ID="value"
+  s:comment="Identifies the principal value (usually a string) of a property when the property value is a structured resource" />
+
+</RDF>

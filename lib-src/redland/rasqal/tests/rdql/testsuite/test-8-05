@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test-8-05 : Regular expression testing
+SELECT *
+FROM   <model1.nt>
+WHERE  (?x ?y ?z)
+AND    ?x eq 'http://rdf.hp.com/r-1' && ( ?y ~~ /1$/ )

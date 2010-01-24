@@ -1,0 +1,5 @@
+PREFIX  dc: <http://purl.org/dc/elements/1.1/>
+PREFIX  : <http://example.org/book/>
+SELECT  ?title
+WHERE
+    { :book1 dc:title ?title }

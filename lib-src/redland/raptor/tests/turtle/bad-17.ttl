@@ -1,0 +1,3 @@
+# Bad '-quoted long literal
+@prefix :  <http://example.org/ex#> .
+:a :b 'John said: "Hello World!"' .

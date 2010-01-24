@@ -1,0 +1,67 @@
+RtAudio - a set of C++ classes which provide a common API for realtime audio input/output across Linux (native ALSA, JACK, and OSS), SGI, Macintosh OS X (CoreAudio), and Windows (DirectSound and ASIO) operating systems.
+
+By Gary P. Scavone, 2001-2004.
+
+Modified for Audacity distribution by Dominic Mazzoni, 2006.  The
+configure/make system builds librtaudio.a and rtaudio-config, and
+ASIO has been removed for licensing reasons.
+
+This distribution of RtAudio contains the following:
+
+doc:      RtAudio documentation (see doc/html/index.html)
+tests:    example RtAudio programs
+tests/Windows: Visual C++ 6.0 test program workspace and projects
+
+OVERVIEW:
+
+RtAudio is a set of C++ classes which provide a common API (Application Programming Interface) for realtime audio input/output across Linux (native ALSA, JACK, and OSS), SGI, Macintosh OS X (CoreAudio), and Windows (DirectSound and ASIO) operating systems. RtAudio significantly simplifies the process of interacting with computer audio hardware. It was designed with the following goals:
+
+  - object oriented C++ design
+  - simple, common API across all supported platforms
+  - only two header files and one source file for easy inclusion in programming projects
+  - allow simultaneous multi-api support
+  - blocking functionality
+  - callback functionality
+  - extensive audio device parameter control
+  - audio device capability probing
+  - automatic internal conversion for data format, channel number compensation, de-interleaving, and byte-swapping
+
+RtAudio incorporates the concept of audio streams, which represent audio output (playback) and/or input (recording). Available audio devices and their capabilities can be enumerated and then specified when opening a stream.  Where applicable, multiple API support can be compiled and a particular API specified when creating an RtAudio instance.
+
+The RtAudio API provides both blocking (synchronous) and callback (asyncronous) functionality. Callbacks are typically used in conjunction with graphical user interfaces (GUI). Blocking functionality is often necessary for explicit control of multiple input/output stream synchronization or when audio must be synchronized with other system events. 
+
+
+FURTHER READING:
+
+For complete documentation on RtAudio, see the doc directory of the distribution or surf to http://music.mcgill.ca/~gary/rtaudio/.
+
+
+LEGAL AND ETHICAL:
+
+The RtAudio license is similar to the the MIT License, with the added "feature" that modifications be sent to the developer.
+
+    RtAudio: a set of realtime audio i/o C++ classes
+    Copyright (c) 2001-2004 Gary P. Scavone
+
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    Any person wishing to distribute modifications to the Software is
+    requested to send the modifications to the original developer so that
+    they can be incorporated into the canonical version.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+    ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+    CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-parser">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-parser.top_of_page">Parser</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Parser</refname>
+<refpurpose>RDF parsers - from a syntax to RDF triples</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-parser.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="raptor-parser">raptor_parser</link>;
+<link linkend="raptor-parser">raptor_parser</link>*      <link linkend="raptor-new-parser">raptor_new_parser</link>                   (const <link linkend="char">char</link> *name);
+<link linkend="raptor-parser">raptor_parser</link>*      <link linkend="raptor-new-parser-for-content">raptor_new_parser_for_content</link>       (<link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         const <link linkend="char">char</link> *mime_type,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         unsigned <link linkend="char">char</link> *identifier);
+<link linkend="int">int</link>                 <link linkend="raptor-start-parse">raptor_start_parse</link>                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);
+<link linkend="void">void</link>                <link linkend="raptor-free-parser">raptor_free_parser</link>                  (<link linkend="raptor-parser">raptor_parser</link> *parser);
+<link linkend="void">void</link>                <link linkend="raptor-set-fatal-error-handler">raptor_set_fatal_error_handler</link>      (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-set-error-handler">raptor_set_error_handler</link>            (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-set-warning-handler">raptor_set_warning_handler</link>          (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-set-statement-handler">raptor_set_statement_handler</link>        (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-statement-handler">raptor_statement_handler</link> handler);
+<link linkend="void">void</link>                <link linkend="raptor-set-generate-id-handler">raptor_set_generate_id_handler</link>      (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-generate-id-handler">raptor_generate_id_handler</link> handler);
+<link linkend="void">void</link>                (<link linkend="raptor-graph-handler">*raptor_graph_handler</link>)             (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *graph);
+<link linkend="void">void</link>                <link linkend="raptor-set-graph-handler">raptor_set_graph_handler</link>            (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-graph-handler">raptor_graph_handler</link> handler);
+<link linkend="void">void</link>                (<link linkend="raptor-namespace-handler">*raptor_namespace_handler</link>)         (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-namespace">raptor_namespace</link> *nspace);
+<link linkend="void">void</link>                <link linkend="raptor-set-namespace-handler">raptor_set_namespace_handler</link>        (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-namespace-handler">raptor_namespace_handler</link> handler);
+<link linkend="raptor-locator">raptor_locator</link>*     <link linkend="raptor-get-locator">raptor_get_locator</link>                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+<link linkend="void">void</link>                <link linkend="raptor-set-default-generate-id-parameters">raptor_set_default_generate_id_parameters</link>
+                                                        (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="char">char</link> *prefix,
+                                                         <link linkend="int">int</link> base);
+<link linkend="int">int</link>                 <link linkend="raptor-parse-chunk">raptor_parse_chunk</link>                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         <link linkend="int">int</link> is_end);
+<link linkend="int">int</link>                 <link linkend="raptor-parse-file-stream">raptor_parse_file_stream</link>            (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="FILE:CAPS">FILE</link> *stream,
+                                                         const <link linkend="char">char</link> *filename,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="raptor-parse-file">raptor_parse_file</link>                   (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="raptor-parse-uri">raptor_parse_uri</link>                    (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="raptor-parse-uri-with-connection">raptor_parse_uri_with_connection</link>    (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri,
+                                                         <link linkend="void">void</link> *connection);
+<link linkend="void">void</link>                <link linkend="raptor-parse-abort">raptor_parse_abort</link>                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+const <link linkend="char">char</link>*         <link linkend="raptor-get-name">raptor_get_name</link>                     (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+const <link linkend="char">char</link>*         <link linkend="raptor-get-label">raptor_get_label</link>                    (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+const <link linkend="char">char</link>*         <link linkend="raptor-get-mime-type">raptor_get_mime_type</link>                (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+<link linkend="int">int</link>                 <link linkend="raptor-get-need-base-uri">raptor_get_need_base_uri</link>            (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+<link linkend="int">int</link>                 <link linkend="raptor-set-feature">raptor_set_feature</link>                  (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         <link linkend="int">int</link> value);
+<link linkend="int">int</link>                 <link linkend="raptor-parser-set-feature-string">raptor_parser_set_feature_string</link>    (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         unsigned <link linkend="char">char</link> *value);
+<link linkend="int">int</link>                 <link linkend="raptor-get-feature">raptor_get_feature</link>                  (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);
+const unsigned <link linkend="char">char</link>* <link linkend="raptor-parser-get-feature-string">raptor_parser_get_feature_string</link>   (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);
+<link linkend="void">void</link>                <link linkend="raptor-set-parser-strict">raptor_set_parser_strict</link>            (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="int">int</link> is_strict);
+const <link linkend="char">char</link>*         <link linkend="raptor-parser-get-accept-header">raptor_parser_get_accept_header</link>     (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);
+<link linkend="void">void</link>                <link linkend="raptor-parser-set-uri-filter">raptor_parser_set_uri_filter</link>        (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-uri-filter-func">raptor_uri_filter_func</link> filter,
+                                                         <link linkend="void">void</link> *user_data);
+unsigned <link linkend="char">char</link>*      <link linkend="raptor-parser-generate-id">raptor_parser_generate_id</link>           (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-genid-type">raptor_genid_type</link> type);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-parser.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The parsing class that allows creating a parser for reading from a
+particular syntax (or can guess and use contextual information) that
+will on demand generate RDF triples to a handler function, as chunks
+of syntax data are passed into the parser.  Parsing can be done from
+strings in memory, files or from URIs on the web.
+</para>
+
+<para>
+There are also methods to deal with handling errors, warnings and
+returned triples as well as setting options (features) that can
+adjust how parsing is performed.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-parser.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-parser" role="typedef">
+<title>raptor_parser</title>
+<indexterm zone="raptor-parser"><primary>raptor_parser</primary></indexterm><programlisting>raptor_parser* raptor_parser;
+</programlisting>
+<para>
+Raptor Parser class</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-new-parser" role="function">
+<title>raptor_new_parser ()</title>
+<indexterm zone="raptor-new-parser"><primary>raptor_new_parser</primary></indexterm><programlisting><link linkend="raptor-parser">raptor_parser</link>*      raptor_new_parser                   (const <link linkend="char">char</link> *name);</programlisting>
+<para>
+Constructor - create a new raptor_parser object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the parser name
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="raptor-parser"><type>raptor_parser</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-new-parser-for-content" role="function">
+<title>raptor_new_parser_for_content ()</title>
+<indexterm zone="raptor-new-parser-for-content"><primary>raptor_new_parser_for_content</primary></indexterm><programlisting><link linkend="raptor-parser">raptor_parser</link>*      raptor_new_parser_for_content       (<link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         const <link linkend="char">char</link> *mime_type,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         unsigned <link linkend="char">char</link> *identifier);</programlisting>
+<para>
+Constructor - create a new raptor_parser.
+</para>
+<para>
+Uses <link linkend="raptor-guess-parser-name"><function>raptor_guess_parser_name()</function></link> to find a parser by scoring
+recognition of the syntax by a block of characters, the content
+identifier or a mime type.  The content identifier is typically a
+filename or URI or some other identifier.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI identifying the syntax (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>mime_type</parameter>&nbsp;:</term>
+<listitem><simpara> mime type identifying the content (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> buffer of content to guess (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> length of buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>identifier</parameter>&nbsp;:</term>
+<listitem><simpara> identifier of content (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="raptor-parser"><type>raptor_parser</type></link> object or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-start-parse" role="function">
+<title>raptor_start_parse ()</title>
+<indexterm zone="raptor-start-parse"><primary>raptor_start_parse</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_start_parse                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri);</programlisting>
+<para>
+Start a parse of content with base URI.
+</para>
+<para>
+Parsers that need a base URI can be tested with <link linkend="raptor-get-need-base-uri"><function>raptor_get_need_base_uri()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> RDF parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> base URI or may be NULL if no base URI is required
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure, &lt;0 if a required base URI was missing
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-free-parser" role="function">
+<title>raptor_free_parser ()</title>
+<indexterm zone="raptor-free-parser"><primary>raptor_free_parser</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_free_parser                  (<link linkend="raptor-parser">raptor_parser</link> *parser);</programlisting>
+<para>
+Destructor - destroy a raptor_parser object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-fatal-error-handler" role="function">
+<title>raptor_set_fatal_error_handler ()</title>
+<indexterm zone="raptor-set-fatal-error-handler"><primary>raptor_set_fatal_error_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_fatal_error_handler      (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);</programlisting>
+<para>
+Set the parser error handling function.
+</para>
+<para>
+The function will receive callbacks when the parser fails.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-error-handler" role="function">
+<title>raptor_set_error_handler ()</title>
+<indexterm zone="raptor-set-error-handler"><primary>raptor_set_error_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_error_handler            (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);</programlisting>
+<para>
+Set the parser error handling function.
+</para>
+<para>
+The function will receive callbacks when the parser fails.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-warning-handler" role="function">
+<title>raptor_set_warning_handler ()</title>
+<indexterm zone="raptor-set-warning-handler"><primary>raptor_set_warning_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_warning_handler          (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-message-handler">raptor_message_handler</link> handler);</programlisting>
+<para>
+Set the parser warning handling function.
+</para>
+<para>
+The function will receive callbacks when the parser gives a warning.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-statement-handler" role="function">
+<title>raptor_set_statement_handler ()</title>
+<indexterm zone="raptor-set-statement-handler"><primary>raptor_set_statement_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_statement_handler        (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-statement-handler">raptor_statement_handler</link> handler);</programlisting>
+<para>
+Set the statement handler function for the parser.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data pointer for callback
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> new statement callback function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-generate-id-handler" role="function">
+<title>raptor_set_generate_id_handler ()</title>
+<indexterm zone="raptor-set-generate-id-handler"><primary>raptor_set_generate_id_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_generate_id_handler      (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-generate-id-handler">raptor_generate_id_handler</link> handler);</programlisting>
+<para>
+Set the generate ID handler function for the parser.
+</para>
+<para>
+Sets the function to generate IDs for the parser.  The handler is
+called with the <parameter>user_data</parameter> parameter and an ID type of either
+RAPTOR_GENID_TYPE_BNODEID or RAPTOR_GENID_TYPE_BAGID (latter is deprecated).
+</para>
+<para>
+The final argument of the callback method is user_bnodeid, the value of
+the rdf:nodeID attribute that the user provided if any (or NULL).
+It can either be returned directly as the generated value when present or
+modified.  The passed in value must be <link linkend="free"><function>free()</function></link>d if it is not used.
+</para>
+<para>
+If handler is NULL, the default method is used</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data pointer for callback
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> generate ID callback function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-graph-handler" role="function">
+<title>raptor_graph_handler ()</title>
+<indexterm zone="raptor-graph-handler"><primary>raptor_graph_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_graph_handler)             (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *graph);</programlisting>
+<para>
+Named graph reporting handler function. Due to historic reasons the named graph
+API is separated from the statement handler. A graph is reported after all its 
+statements.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>graph</parameter>&nbsp;:</term>
+<listitem><simpara> graph to report, 0 for the default graph
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-graph-handler" role="function">
+<title>raptor_set_graph_handler ()</title>
+<indexterm zone="raptor-set-graph-handler"><primary>raptor_set_graph_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_graph_handler            (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-graph-handler">raptor_graph_handler</link> handler);</programlisting>
+<para>
+Set the graph handler function for the parser.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data pointer for callback
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> new graph callback function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-namespace-handler" role="function">
+<title>raptor_namespace_handler ()</title>
+<indexterm zone="raptor-namespace-handler"><primary>raptor_namespace_handler</primary></indexterm><programlisting><link linkend="void">void</link>                (*raptor_namespace_handler)         (<link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-namespace">raptor_namespace</link> *nspace);</programlisting>
+<para>
+XML Namespace declaration reporting handler set by 
+<link linkend="raptor-set-namespace-handler"><function>raptor_set_namespace_handler()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>nspace</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-namespace"><type>raptor_namespace</type></link> declared
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-namespace-handler" role="function">
+<title>raptor_set_namespace_handler ()</title>
+<indexterm zone="raptor-set-namespace-handler"><primary>raptor_set_namespace_handler</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_namespace_handler        (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="raptor-namespace-handler">raptor_namespace_handler</link> handler);</programlisting>
+<para>
+Set the namespace handler function for the parser.
+</para>
+<para>
+When a prefix/namespace is seen in a parser, call the given
+<parameter>handler</parameter> with the prefix string and the <link linkend="raptor-uri"><type>raptor_uri</type></link> namespace URI.
+Either can be NULL for the default prefix or default namespace.
+</para>
+<para>
+The handler function does not deal with duplicates so any
+namespace may be declared multiple times.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data pointer for callback
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handler</parameter>&nbsp;:</term>
+<listitem><simpara> new namespace callback function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-get-locator" role="function">
+<title>raptor_get_locator ()</title>
+<indexterm zone="raptor-get-locator"><primary>raptor_get_locator</primary></indexterm><programlisting><link linkend="raptor-locator">raptor_locator</link>*     raptor_get_locator                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Get the current raptor locator object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> raptor parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> raptor locator
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-default-generate-id-parameters" role="function">
+<title>raptor_set_default_generate_id_parameters ()</title>
+<indexterm zone="raptor-set-default-generate-id-parameters"><primary>raptor_set_default_generate_id_parameters</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_default_generate_id_parameters
+                                                        (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="char">char</link> *prefix,
+                                                         <link linkend="int">int</link> base);</programlisting>
+<para>
+Set default ID generation parameters.
+</para>
+<para>
+Sets the parameters for the default algorithm used to generate IDs.
+The default algorithm uses both <parameter>prefix</parameter> and <parameter>base</parameter> to generate a new
+identifier.   The exact identifier generated is not guaranteed to
+be a strict concatenation of <parameter>prefix</parameter> and <parameter>base</parameter> but will use both
+parts. The <parameter>prefix</parameter> parameter is copied to generate an ID.
+</para>
+<para>
+For finer control of the generated identifiers, use
+<link linkend="raptor-set-default-generate-id-handler"><function>raptor_set_default_generate_id_handler()</function></link>.
+</para>
+<para>
+If <parameter>prefix</parameter> is NULL, the default prefix is used (currently "genid")
+If <parameter>base</parameter> is less than 1, it is initialised to 1.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>prefix</parameter>&nbsp;:</term>
+<listitem><simpara> prefix string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base</parameter>&nbsp;:</term>
+<listitem><simpara> integer base identifier
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parse-chunk" role="function">
+<title>raptor_parse_chunk ()</title>
+<indexterm zone="raptor-parse-chunk"><primary>raptor_parse_chunk</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_parse_chunk                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> len,
+                                                         <link linkend="int">int</link> is_end);</programlisting>
+<para>
+Parse a block of content into triples.
+</para>
+<para>
+This method can only be called after raptor_start_parse has
+initialised the parser.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> RDF parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> content to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&nbsp;:</term>
+<listitem><simpara> length of buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>is_end</parameter>&nbsp;:</term>
+<listitem><simpara> non-0 if this is the end of the content (such as EOF)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parse-file-stream" role="function">
+<title>raptor_parse_file_stream ()</title>
+<indexterm zone="raptor-parse-file-stream"><primary>raptor_parse_file_stream</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_parse_file_stream            (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="FILE:CAPS">FILE</link> *stream,
+                                                         const <link linkend="char">char</link> *filename,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);</programlisting>
+<para>
+Parse RDF content from a FILE*.
+</para>
+<para>
+After draining the stream, fclose is not called on it internally.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara> FILE* of RDF content
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&nbsp;:</term>
+<listitem><simpara> filename of content or NULL if it has no name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parse-file" role="function">
+<title>raptor_parse_file ()</title>
+<indexterm zone="raptor-parse-file"><primary>raptor_parse_file</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_parse_file                   (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);</programlisting>
+<para>
+Parse RDF content at a file URI.
+</para>
+<para>
+If uri is NULL (source is stdin), then the base_uri is required.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI of RDF content or NULL to read from standard input
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use (or NULL if the same)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parse-uri" role="function">
+<title>raptor_parse_uri ()</title>
+<indexterm zone="raptor-parse-uri"><primary>raptor_parse_uri</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_parse_uri                    (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri);</programlisting>
+<para>
+Parse the RDF content at URI.
+</para>
+<para>
+Sends an HTTP Accept: header whent the URI is of the HTTP protocol,
+see <link linkend="raptor-parse-uri-with-connection"><function>raptor_parse_uri_with_connection()</function></link> for details including
+how the <parameter>base_uri</parameter> is used.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI of RDF content
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use (or NULL if the same)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parse-uri-with-connection" role="function">
+<title>raptor_parse_uri_with_connection ()</title>
+<indexterm zone="raptor-parse-uri-with-connection"><primary>raptor_parse_uri_with_connection</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_parse_uri_with_connection    (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *uri,
+                                                         <link linkend="raptor-uri">raptor_uri</link> *base_uri,
+                                                         <link linkend="void">void</link> *connection);</programlisting>
+<para>
+Parse RDF content at URI using existing WWW connection.
+</para>
+<para>
+If <parameter>base_uri</parameter> is not given and during resolution of the URI, a
+protocol redirection occurs, the final resolved URI will be
+used as the base URI.  If redirection does not occur, the
+base URI will be <parameter>uri</parameter>.
+</para>
+<para>
+If <parameter>base_uri</parameter> is given, it overrides the process above.
+</para>
+<para>
+When <parameter>connection</parameter> is NULL and a MIME Type exists for the parser
+type - such as returned by raptor_get_mime_type(parser) - this
+type is sent in an HTTP Accept: header in the form
+Accept: MIME-TYPE along with a wildcard of 0.1 quality, so MIME-TYPE is
+prefered rather than the sole answer.  The latter part may not be
+necessary but should ensure an HTTP 200 response.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI of RDF content
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use (or NULL if the same)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>connection</parameter>&nbsp;:</term>
+<listitem><simpara> connection object pointer or NULL to create a new one
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parse-abort" role="function">
+<title>raptor_parse_abort ()</title>
+<indexterm zone="raptor-parse-abort"><primary>raptor_parse_abort</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_parse_abort                  (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Abort an ongoing parse.
+</para>
+<para>
+Causes any ongoing generation of statements by a parser to be
+terminated and the parser to return controlto the application
+as soon as draining any existing buffers.
+</para>
+<para>
+Most useful inside raptor_parse_file or raptor_parse_uri when
+the Raptor library is directing the parsing and when one of the
+callback handlers such as as set by raptor_set_statement_handler
+requires to return to the main application code.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-get-name" role="function">
+<title>raptor_get_name ()</title>
+<indexterm zone="raptor-get-name"><primary>raptor_get_name</primary></indexterm><programlisting>const <link linkend="char">char</link>*         raptor_get_name                     (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Get the name of a parser.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the short name for the parser.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-get-label" role="function">
+<title>raptor_get_label ()</title>
+<indexterm zone="raptor-get-label"><primary>raptor_get_label</primary></indexterm><programlisting>const <link linkend="char">char</link>*         raptor_get_label                    (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Get a descriptive label of a parser.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a readable label for the parser.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-get-mime-type" role="function">
+<title>raptor_get_mime_type ()</title>
+<indexterm zone="raptor-get-mime-type"><primary>raptor_get_mime_type</primary></indexterm><programlisting>const <link linkend="char">char</link>*         raptor_get_mime_type                (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Return MIME type for the parser.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> MIME type or NULL if none available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-get-need-base-uri" role="function">
+<title>raptor_get_need_base_uri ()</title>
+<indexterm zone="raptor-get-need-base-uri"><primary>raptor_get_need_base_uri</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_get_need_base_uri            (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Get a boolean whether this parser needs a base URI to start parsing.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if this parser needs a base URI
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-feature" role="function">
+<title>raptor_set_feature ()</title>
+<indexterm zone="raptor-set-feature"><primary>raptor_set_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_set_feature                  (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         <link linkend="int">int</link> value);</programlisting>
+<para>
+Set various parser features.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to set from enumerated <link linkend="raptor-feature"><type>raptor_feature</type></link> values
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> integer feature value (0 or larger)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure or if the feature is unknown
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parser-set-feature-string" role="function">
+<title>raptor_parser_set_feature_string ()</title>
+<indexterm zone="raptor-parser-set-feature-string"><primary>raptor_parser_set_feature_string</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_parser_set_feature_string    (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature,
+                                                         unsigned <link linkend="char">char</link> *value);</programlisting>
+<para>
+Set parser features with string values.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.
+If the feature type is integer, the value is interpreted as an integer.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to set from enumerated <link linkend="raptor-feature"><type>raptor_feature</type></link> values
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> feature value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure or if the feature is unknown
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-get-feature" role="function">
+<title>raptor_get_feature ()</title>
+<indexterm zone="raptor-get-feature"><primary>raptor_get_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_get_feature                  (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);</programlisting>
+<para>
+Get various parser features.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.
+</para>
+<para>
+Note: no feature value is negative</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to get value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> feature value or &lt; 0 for an illegal feature
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parser-get-feature-string" role="function">
+<title>raptor_parser_get_feature_string ()</title>
+<indexterm zone="raptor-parser-get-feature-string"><primary>raptor_parser_get_feature_string</primary></indexterm><programlisting>const unsigned <link linkend="char">char</link>* raptor_parser_get_feature_string   (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-feature">raptor_feature</link> feature);</programlisting>
+<para>
+Get parser features with string values.
+</para>
+<para>
+The allowed features are available via <link linkend="raptor-features-enumerate"><function>raptor_features_enumerate()</function></link>.
+If a string is returned, it must be freed by the caller.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> feature to get value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> feature value or NULL for an illegal feature or no value
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-set-parser-strict" role="function">
+<title>raptor_set_parser_strict ()</title>
+<indexterm zone="raptor-set-parser-strict"><primary>raptor_set_parser_strict</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_set_parser_strict            (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="int">int</link> is_strict);</programlisting>
+<para>
+Set parser to strict / lax mode.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>is_strict</parameter>&nbsp;:</term>
+<listitem><simpara> Non 0 for strict parsing
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parser-get-accept-header" role="function">
+<title>raptor_parser_get_accept_header ()</title>
+<indexterm zone="raptor-parser-get-accept-header"><primary>raptor_parser_get_accept_header</primary></indexterm><programlisting>const <link linkend="char">char</link>*         raptor_parser_get_accept_header     (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser);</programlisting>
+<para>
+Get an HTTP Accept value for the parser.
+</para>
+<para>
+The returned string must be freed by the caller such as with
+<link linkend="raptor-free-memory"><function>raptor_free_memory()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new Accept: header string or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parser-set-uri-filter" role="function">
+<title>raptor_parser_set_uri_filter ()</title>
+<indexterm zone="raptor-parser-set-uri-filter"><primary>raptor_parser_set_uri_filter</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_parser_set_uri_filter        (<link linkend="raptor-parser">raptor_parser</link> *parser,
+                                                         <link linkend="raptor-uri-filter-func">raptor_uri_filter_func</link> filter,
+                                                         <link linkend="void">void</link> *user_data);</programlisting>
+<para>
+Set URI filter function for WWW retrieval.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filter</parameter>&nbsp;:</term>
+<listitem><simpara> URI filter function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> User data to pass to filter function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-parser-generate-id" role="function">
+<title>raptor_parser_generate_id ()</title>
+<indexterm zone="raptor-parser-generate-id"><primary>raptor_parser_generate_id</primary></indexterm><programlisting>unsigned <link linkend="char">char</link>*      raptor_parser_generate_id           (<link linkend="raptor-parser">raptor_parser</link> *rdf_parser,
+                                                         <link linkend="raptor-genid-type">raptor_genid_type</link> type);</programlisting>
+<para>
+Generate an ID for a parser
+</para>
+<para>
+Type can be either RAPTOR_GENID_TYPE_BNODEID or
+RAPTOR_GENID_TYPE_BAGID</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>rdf_parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-parser"><type>raptor_parser</type></link> parser object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&nbsp;:</term>
+<listitem><simpara> Type of ID to generate
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> newly allocated generated ID or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

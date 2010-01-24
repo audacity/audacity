@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Objects in C</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Redland RDF Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="prev" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="next" href="redland-world.html" title="World">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="redland.html" title="Redland Overview">
+<link rel="chapter" href="introduction.html" title="Introduction">
+<link rel="part" href="tutorial.html" title="Part I. Tutorial">
+<link rel="part" href="reference-manual.html" title="Part II. Reference Manual">
+<link rel="chapter" href="objects.html" title="Objects in C">
+<link rel="chapter" href="redland-storage-modules.html" title="Storage Modules">
+<link rel="index" href="indexes.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
+<td><a accesskey="p" href="reference-manual.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Redland RDF Library Manual</th>
+<td><a accesskey="n" href="redland-world.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="chapter" lang="en">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="objects"></a>Objects in C</h2></div></div></div>
+<p>
+Redland uses objects and is written in C, which has no built in support for
+object construction, destruction, copying etc.  This library thus uses
+conventions for the names of the routines providing the
+constructor, destructor and copy constructor functionality for a class as
+well as conventions for the general methods.
+</p>
+<p>
+A class FOO is defined as a C typedef <code class="literal">librdf_foo</code>,
+and its a public interface defined in <code class="filename">rdf_foo.h</code>
+along with any public or private types, enumerations or constants.
+The private definitions are not exposed to library users, only
+internally when the library is built.  The implementation of the
+class is defined in file <code class="filename">rdf_foo.c</code> and may
+include private (static) functions either for internal
+implementations or to satisfy part of a factory API.
+</p>
+<p>Each class may have a class initialiser / termination pair
+of functions which must be called before any object in the class is created,
+and after the last object has been freed. These are defined with signatures
+like:
+</p>
+<pre class="programlisting">
+  void init_librdf_foo (...)
+  void terminate_librdf_foo (void)
+</pre>
+<p>
+The arguments to the initialisation vary since there are sometimes
+some class wide options that can be set at initialisation time.
+</p>
+<p>
+The object constructor(s) are defined with signatures like:
+</p>
+<pre class="programlisting">
+  librdf_foo* librdf_new_foo(void)
+</pre>
+<p>
+which takes no parameters.  Additional constructors can be defined
+with parameters, and are named in a similar way with an extra part
+appropriate for the name for example:
+</p>
+<pre class="programlisting">
+  librdf_foo* librdf_new_foo_with_options(char *options)
+</pre>
+<p>
+</p>
+<p>A copy constructor may be defined which will have the signature:
+</p>
+<pre class="programlisting">
+  librdf_foo* librdf_new_foo_from_foo(librdf_foo* old_foo)
+</pre>
+<p>
+</p>
+<p>A destructor must be defined and has the signature:
+</p>
+<pre class="programlisting">
+  void librdf_free_foo(librdf_foo* foo)
+</pre>
+<p>
+</p>
+<p>Methods of the class have names starting with <code class="literal">librdf_foo_</code> and
+examples could be:
+</p>
+<pre class="programlisting">
+  /* accessor functions to object part 'thing' */
+  int librdf_foo_set_thing(librdf_foo* foo, char *thing)
+  char *librdf_foo_get_thing(librdf_foo* foo)
+</pre>
+<p>
+</p>
+<p>It is often convienent to get a string representation of an
+object for further processing, debugging or serialisation.  There are
+two conventions for methods that provide this functionality - the
+first is when a pointer is returned to a <span class="emphasis"><em>shared</em></span>
+copy of the string and in that case the method ends
+<code class="literal">_as_string</code>.  The second is when a pointer is
+returned to a <span class="emphasis"><em>newly allocated</em></span> string in which
+case the method ends <code class="literal">_to_string</code>.</p>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

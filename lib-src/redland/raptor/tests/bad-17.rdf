@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.org/ns/">
+
+  <!-- property element parseType="Literal" with illegal NFC -->
+
+   <!-- The ü below is two characters a u followed by 
+        #x308 (encoded as two UTF-8 octets #xCC #x88).
+        It should be displayed identically to ü (character #xFC encoded
+        as two UTF-8 octets #xC3 #xBC). -->
+
+  <rdf:Description rdf:about="http://example.org/node0">
+     <ex:blah rdf:parseType="Literal">ü</ex:blah>
+  </rdf:Description>
+
+</rdf:RDF>

@@ -1,0 +1,5 @@
+PREFIX ex: <http://example.org/dt#>
+SELECT *
+WHERE { ?x ?y ?y .
+        FILTER ( <http://example.org/dt#foo>(?x) || ex:bar(?x) )
+      }

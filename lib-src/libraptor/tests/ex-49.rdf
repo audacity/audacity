@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.com/properties/">
+
+  <!-- Check attributes are properly encoded when building the XML string -->
+
+  <rdf:Description rdf:about="http://example.org/node0">
+     <ex:prop1 rdf:parseType="Literal"> <foo href="http://example.org?foo=1&amp;bar=2">hmm</foo> </ex:prop1>
+     <ex:prop2 rdf:parseType="Literal"> <bar a="&apos;"/> </ex:prop2>
+     <ex:prop3 rdf:parseType="Literal"> <baz b="&quot;"/> </ex:prop3>
+     <ex:prop4 rdf:parseType="Literal"> <baz b="&lt;&gt;"/> </ex:prop4>
+  </rdf:Description>
+
+</rdf:RDF>

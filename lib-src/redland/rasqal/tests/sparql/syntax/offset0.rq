@@ -1,0 +1,3 @@
+SELECT *
+WHERE { ?x ?y ?z }
+LIMIT 5 OFFSET 2

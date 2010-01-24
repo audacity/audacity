@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rapper", "rapper.vcproj", "{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raptor", "raptor.vcproj", "{F48C108E-B937-4D8C-A308-9C257C5D0D3D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "curllib", "..\..\..\curl-7.13.2\lib\curllib.vcproj", "{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Debug.ActiveCfg = Debug|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Debug.Build.0 = Debug|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Release.ActiveCfg = Release|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Release.Build.0 = Release|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Debug.ActiveCfg = Debug|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Debug.Build.0 = Debug|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Release.ActiveCfg = Release|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Release.Build.0 = Release|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Debug.ActiveCfg = Debug|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Debug.Build.0 = Debug|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Release.ActiveCfg = Release|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

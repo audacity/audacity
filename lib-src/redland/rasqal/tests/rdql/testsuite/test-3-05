@@ -1,0 +1,9 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 3-05 : Triple patterns and constraints
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (?x, ?y, ?z)
+AND    ?x eq <http://rdf.hp.com/r-1> , 
+       ?y eq <http://rdf.hp.com/p-1> ,
+       ?z eq "v-1-1"

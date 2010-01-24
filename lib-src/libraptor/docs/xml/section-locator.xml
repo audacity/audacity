@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-locator">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-locator.top_of_page">Locator</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Locator</refname>
+<refpurpose>Location information for errors, warnings and messages.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-locator.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+                    <link linkend="raptor-locator">raptor_locator</link>;
+<link linkend="void">void</link>                <link linkend="raptor-print-locator">raptor_print_locator</link>                (<link linkend="FILE:CAPS">FILE</link> *stream,
+                                                         <link linkend="raptor-locator">raptor_locator</link> *locator);
+<link linkend="int">int</link>                 <link linkend="raptor-format-locator">raptor_format_locator</link>               (<link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> length,
+                                                         <link linkend="raptor-locator">raptor_locator</link> *locator);
+<link linkend="int">int</link>                 <link linkend="raptor-locator-line">raptor_locator_line</link>                 (<link linkend="raptor-locator">raptor_locator</link> *locator);
+<link linkend="int">int</link>                 <link linkend="raptor-locator-column">raptor_locator_column</link>               (<link linkend="raptor-locator">raptor_locator</link> *locator);
+<link linkend="int">int</link>                 <link linkend="raptor-locator-byte">raptor_locator_byte</link>                 (<link linkend="raptor-locator">raptor_locator</link> *locator);
+const <link linkend="char">char</link>*         <link linkend="raptor-locator-file">raptor_locator_file</link>                 (<link linkend="raptor-locator">raptor_locator</link> *locator);
+const <link linkend="char">char</link>*         <link linkend="raptor-locator-uri">raptor_locator_uri</link>                  (<link linkend="raptor-locator">raptor_locator</link> *locator);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-locator.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+A small structure that can be optionally filled in when
+errors, warnings or other messages are generated and returned
+to user code.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-locator.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-locator" role="struct">
+<title>raptor_locator</title>
+<indexterm zone="raptor-locator"><primary>raptor_locator</primary></indexterm><programlisting>typedef struct {
+  raptor_uri *uri;
+  const char *file;
+  int line;
+  int column;
+  int byte;  
+} raptor_locator;
+</programlisting>
+<para>
+Location information for an error, warning or information message.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="raptor-uri">raptor_uri</link>&nbsp;*<structfield>uri</structfield>;</term>
+<listitem><simpara> URI of location (or NULL)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term>const&nbsp;<link linkend="char">char</link>&nbsp;*<structfield>file</structfield>;</term>
+<listitem><simpara> Filename of location (or NULL)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>line</structfield>;</term>
+<listitem><simpara> Line number of location (or &lt;0 for no line)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>column</structfield>;</term>
+<listitem><simpara> Column number of location (or &lt;0 for no column)
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>byte</structfield>;</term>
+<listitem><simpara> Byte number of location (or &lt;0 for no byte)
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-print-locator" role="function">
+<title>raptor_print_locator ()</title>
+<indexterm zone="raptor-print-locator"><primary>raptor_print_locator</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_print_locator                (<link linkend="FILE:CAPS">FILE</link> *stream,
+                                                         <link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Print a raptor locator to a stream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara> stream to print to
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-locator"><type>raptor_locator</type></link> to print
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-format-locator" role="function">
+<title>raptor_format_locator ()</title>
+<indexterm zone="raptor-format-locator"><primary>raptor_format_locator</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_format_locator               (<link linkend="char">char</link> *buffer,
+                                                         <link linkend="size-t">size_t</link> length,
+                                                         <link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Format a raptor locator as a string.
+</para>
+<para>
+If buffer is NULL or length is insufficient for the size of
+the locator, returns the number of additional bytes required
+in the buffer to write the locator.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> buffer to store format
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> size of buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="raptor-locator"><type>raptor_locator</type></link> to format
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> 0 on success, &gt;0 if additional bytes required in buffer, &lt;0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-locator-line" role="function">
+<title>raptor_locator_line ()</title>
+<indexterm zone="raptor-locator-line"><primary>raptor_locator_line</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_locator_line                 (<link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Get line number from locator.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> locator
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> integer line number, or -1 if there is no line number available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-locator-column" role="function">
+<title>raptor_locator_column ()</title>
+<indexterm zone="raptor-locator-column"><primary>raptor_locator_column</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_locator_column               (<link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Get column number from locator.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> locator
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> integer column number, or -1 if there is no column number available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-locator-byte" role="function">
+<title>raptor_locator_byte ()</title>
+<indexterm zone="raptor-locator-byte"><primary>raptor_locator_byte</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_locator_byte                 (<link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Get the locator byte offset from locator.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> locator
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> integer byte number, or -1 if there is no byte offset available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-locator-file" role="function">
+<title>raptor_locator_file ()</title>
+<indexterm zone="raptor-locator-file"><primary>raptor_locator_file</primary></indexterm><programlisting>const <link linkend="char">char</link>*         raptor_locator_file                 (<link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Get file name from locator.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> locator
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> string file name, or NULL if there is no filename available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-locator-uri" role="function">
+<title>raptor_locator_uri ()</title>
+<indexterm zone="raptor-locator-uri"><primary>raptor_locator_uri</primary></indexterm><programlisting>const <link linkend="char">char</link>*         raptor_locator_uri                  (<link linkend="raptor-locator">raptor_locator</link> *locator);</programlisting>
+<para>
+Get URI from locator.
+</para>
+<para>
+Returns a pointer to a shared string version of the URI in
+the locator.  This must be copied if it is needed.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>locator</parameter>&nbsp;:</term>
+<listitem><simpara> locator
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> string URI, or NULL if there is no URI available
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://example.org/ns#">
+
+  <!-- Test xml:lang info gets passed to output -->
+
+  <rdf:Description rdf:about="http://example.org/node">
+    <prop1 xml:lang="en">chat</prop1>
+    <prop2 xml:lang="fr">chat</prop2>
+    <prop3>chat</prop3>
+
+  </rdf:Description>
+
+</rdf:RDF>

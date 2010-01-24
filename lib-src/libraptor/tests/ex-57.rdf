@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:ex="http://example.org/bar#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- 
+Test for RDF/XML spec bug based on the comment in
+  http://lists.w3.org/Archives/Public/www-rdf-comments/2005AprJun/0000.html
+and the final answer in
+  http://lists.w3.org/Archives/Public/www-rdf-comments/2005AprJun/0003.html
+losing all the 'foo' and 'bar's
+    -->
+
+  <rdf:Description rdf:about="http://example.org/res">
+    <ex:prop rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></ex:prop>
+  </rdf:Description>
+</rdf:RDF>
+ 

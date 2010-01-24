@@ -1,0 +1,7 @@
+<?xml version="1.0" standalone="no"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:bad="http://www.w3.org/1999/02/22-rdf-syntax-ns#x">
+
+  <!-- Should give an error about above 'bad' namespace declaration -->
+
+</rdf:RDF>

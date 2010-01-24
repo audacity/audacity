@@ -1,0 +1,3 @@
+CONSTRUCT { ?x ?y ?z }
+FROM <data.n3>
+WHERE { ?x ?y ?z }

@@ -1,0 +1,4 @@
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "1" .
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> "_1" .
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> "2" .
+<http://example.org/node> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_3> "_3" .

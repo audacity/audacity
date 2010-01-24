@@ -1,0 +1,11 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:     <http://jena.hpl.hp.com/2003/03/result-set#> .
+
+[]  a   rs:ResultSet ;
+    rs:solution [] ;
+    rs:size     "1" .
+
+## Jena1 : was no result bindings.
+## [] rdf:type rs:ResultSet ;
+##     rs:size "0" ;
+##     .

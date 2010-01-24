@@ -1,0 +1,82 @@
+<!-- ##### SECTION Title ##### -->
+Unicode
+
+<!-- ##### SECTION Short_Description ##### -->
+Unicode utility functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Utility functions to convert between UTF-8, full Unicode and Latin-1.
+Redland uses UTF-8 for all string formats (except where noted) but
+these may need to be converted to other Unicode encodings or downgraded
+with loss to Latin-1.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_unichar ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_unicode_char_to_utf8 ##### -->
+<para>
+
+</para>
+
+@c: 
+@output: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_utf8_to_unicode_char ##### -->
+<para>
+
+</para>
+
+@output: 
+@input: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_utf8_to_latin1 ##### -->
+<para>
+
+</para>
+
+@input: 
+@length: 
+@output_length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_latin1_to_utf8 ##### -->
+<para>
+
+</para>
+
+@input: 
+@length: 
+@output_length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_utf8_print ##### -->
+<para>
+
+</para>
+
+@input: 
+@length: 
+@stream: 
+
+

@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-parser">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-parser.top_of_page">Parsers</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Parsers</refname>
+<refpurpose>RDF parsers from syntax to triples.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-parser.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="librdf-parser">librdf_parser</link>;
+typedef             <link linkend="librdf-parser-factory">librdf_parser_factory</link>;
+<link linkend="int">int</link>                 <link linkend="librdf-parser-enumerate">librdf_parser_enumerate</link>             (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         unsigned <link linkend="int">int</link> counter,
+                                                         const <link linkend="char">char</link> **name,
+                                                         const <link linkend="char">char</link> **label);
+const <link linkend="char">char</link>*         <link linkend="librdf-parser-guess-name">librdf_parser_guess_name</link>            (const <link linkend="char">char</link> *mime_type,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         unsigned <link linkend="char">char</link> *identifier);
+<link linkend="void">void</link>                <link linkend="librdf-parser-register-factory">librdf_parser_register_factory</link>      (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *label,
+                                                         const <link linkend="char">char</link> *mime_type,
+                                                         unsigned <link linkend="char">char</link> *uri_string,
+                                                         <link linkend="void">void</link> (factorylibrdf_parser_factory*) ());
+<link linkend="librdf-parser">librdf_parser</link>*      <link linkend="librdf-new-parser">librdf_new_parser</link>                   (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *mime_type,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *type_uri);
+<link linkend="librdf-parser">librdf_parser</link>*      <link linkend="librdf-new-parser-from-factory">librdf_new_parser_from_factory</link>      (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-parser-factory">librdf_parser_factory</link> *factory);
+<link linkend="void">void</link>                <link linkend="librdf-free-parser">librdf_free_parser</link>                  (<link linkend="librdf-parser">librdf_parser</link> *parser);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-parser-parse-as-stream">librdf_parser_parse_as_stream</link>       (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *uri,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="librdf-parser-parse-into-model">librdf_parser_parse_into_model</link>      (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *uri,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-parser-parse-file-handle-as-stream">librdf_parser_parse_file_handle_as_stream</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh,
+                                                         <link linkend="int">int</link> close_fh,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="librdf-parser-parse-file-handle-into-model">librdf_parser_parse_file_handle_into_model</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh,
+                                                         <link linkend="int">int</link> close_fh,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-parser-parse-string-as-stream">librdf_parser_parse_string_as_stream</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="librdf-parser-parse-string-into-model">librdf_parser_parse_string_into_model</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);
+<link linkend="void">void</link>                <link linkend="librdf-parser-set-error">librdf_parser_set_error</link>             (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="void">void</link> (error_fnvoid *user_data, const char *msg, ...) ());
+<link linkend="void">void</link>                <link linkend="librdf-parser-set-warning">librdf_parser_set_warning</link>           (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="void">void</link> (warning_fnvoid *user_data, const char *msg, ...) ());
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-parser-parse-counted-string-as-stream">librdf_parser_parse_counted_string_as_stream</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> length,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);
+<link linkend="int">int</link>                 <link linkend="librdf-parser-parse-counted-string-into-model">librdf_parser_parse_counted_string_into_model</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> length,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);
+#define             <link linkend="LIBRDF-PARSER-FEATURE-ERROR-COUNT:CAPS">LIBRDF_PARSER_FEATURE_ERROR_COUNT</link>
+#define             <link linkend="LIBRDF-PARSER-FEATURE-WARNING-COUNT:CAPS">LIBRDF_PARSER_FEATURE_WARNING_COUNT</link>
+<link linkend="librdf-node">librdf_node</link>*        <link linkend="librdf-parser-get-feature">librdf_parser_get_feature</link>           (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature);
+<link linkend="int">int</link>                 <link linkend="librdf-parser-set-feature">librdf_parser_set_feature</link>           (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature,
+                                                         <link linkend="librdf-node">librdf_node</link> *value);
+<link linkend="char">char</link>*               <link linkend="librdf-parser-get-accept-header">librdf_parser_get_accept_header</link>     (<link linkend="librdf-parser">librdf_parser</link> *parser);
+<link linkend="int">int</link>                 <link linkend="librdf-parser-get-namespaces-seen-count">librdf_parser_get_namespaces_seen_count</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser);
+const <link linkend="char">char</link>*         <link linkend="librdf-parser-get-namespaces-seen-prefix">librdf_parser_get_namespaces_seen_prefix</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="int">int</link> offset);
+<link linkend="librdf-uri">librdf_uri</link>*         <link linkend="librdf-parser-get-namespaces-seen-uri">librdf_parser_get_namespaces_seen_uri</link>
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="int">int</link> offset);
+<link linkend="librdf-uri-filter-func">librdf_uri_filter_func</link> <link linkend="librdf-parser-get-uri-filter">librdf_parser_get_uri_filter</link>     (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="void">void</link> **user_data_p);
+<link linkend="void">void</link>                <link linkend="librdf-parser-set-uri-filter">librdf_parser_set_uri_filter</link>        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri-filter-funcfilter">librdf_uri_filter_funcfilter</link> ,
+                                                         <link linkend="void">void</link> *user_data);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-parser.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Provides classes to create parsers and parse syntaxes from URIs or a
+string into RDF graphs (<link linkend="librdf-model"><type>librdf_model</type></link>) or sequences of triples
+(<link linkend="librdf-stream"><type>librdf_stream</type></link>).  Parser features can be set, which are passed down
+to Raptor and errors and warnings that are returned can be retrieved
+by callbacks. 
+</para>
+</refsect1>
+
+<refsect1 id="redland-parser.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-parser" role="typedef">
+<title>librdf_parser</title>
+<indexterm zone="librdf-parser"><primary>librdf_parser</primary></indexterm><programlisting>typedef struct librdf_parser_s librdf_parser;
+</programlisting>
+<para>
+Redland parser class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-parser-factory" role="typedef">
+<title>librdf_parser_factory</title>
+<indexterm zone="librdf-parser-factory"><primary>librdf_parser_factory</primary></indexterm><programlisting>typedef struct librdf_parser_factory_s librdf_parser_factory;
+</programlisting>
+<para>
+Redland parser factory class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-parser-enumerate" role="function">
+<title>librdf_parser_enumerate ()</title>
+<indexterm zone="librdf-parser-enumerate"><primary>librdf_parser_enumerate</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_enumerate             (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         unsigned <link linkend="int">int</link> counter,
+                                                         const <link linkend="char">char</link> **name,
+                                                         const <link linkend="char">char</link> **label);</programlisting>
+<para>
+Get information on parsers.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>counter</parameter>&nbsp;:</term>
+<listitem><simpara> index into the list of parsers
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to store the name of the parser (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to store syntax readable label (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure of if counter is out of range
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-guess-name" role="function">
+<title>librdf_parser_guess_name ()</title>
+<indexterm zone="librdf-parser-guess-name"><primary>librdf_parser_guess_name</primary></indexterm><programlisting>const <link linkend="char">char</link>*         librdf_parser_guess_name            (const <link linkend="char">char</link> *mime_type,
+                                                         unsigned <link linkend="char">char</link> *buffer,
+                                                         unsigned <link linkend="char">char</link> *identifier);</programlisting>
+<para>
+Get a parser name for content with type or identiifer</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>mime_type</parameter>&nbsp;:</term>
+<listitem><simpara> MIME type of syntax or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buffer</parameter>&nbsp;:</term>
+<listitem><simpara> content buffer or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>identifier</parameter>&nbsp;:</term>
+<listitem><simpara> content identifier or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a parser name or NULL if nothing was guessable
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-register-factory" role="function">
+<title>librdf_parser_register_factory ()</title>
+<indexterm zone="librdf-parser-register-factory"><primary>librdf_parser_register_factory</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_parser_register_factory      (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *label,
+                                                         const <link linkend="char">char</link> *mime_type,
+                                                         unsigned <link linkend="char">char</link> *uri_string,
+                                                         <link linkend="void">void</link> (factorylibrdf_parser_factory*) ());</programlisting>
+<para>
+Register a parser factory .</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the name of the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<listitem><simpara> the label of the parser (optional)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>mime_type</parameter>&nbsp;:</term>
+<listitem><simpara> MIME type of the syntax (optional)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri_string</parameter>&nbsp;:</term>
+<listitem><simpara> URI of the syntax (optional)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>factory</parameter>&nbsp;:</term>
+<listitem><simpara> function to be called to register the factor parameters
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-new-parser" role="function">
+<title>librdf_new_parser ()</title>
+<indexterm zone="librdf-new-parser"><primary>librdf_new_parser</primary></indexterm><programlisting><link linkend="librdf-parser">librdf_parser</link>*      librdf_new_parser                   (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *mime_type,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *type_uri);</programlisting>
+<para>
+Constructor - create a new <link linkend="librdf-parser"><type>librdf_parser</type></link> object.
+</para>
+<para>
+If all fields are NULL, this means any parser supporting
+MIME Type "application/rdf+xml"</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the parser factory name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>mime_type</parameter>&nbsp;:</term>
+<listitem><simpara> the MIME type of the syntax (NULL if not used)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type_uri</parameter>&nbsp;:</term>
+<listitem><simpara> URI of syntax (NULL if not used)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="librdf-parser"><type>librdf_parser</type></link> object or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-new-parser-from-factory" role="function">
+<title>librdf_new_parser_from_factory ()</title>
+<indexterm zone="librdf-new-parser-from-factory"><primary>librdf_new_parser_from_factory</primary></indexterm><programlisting><link linkend="librdf-parser">librdf_parser</link>*      librdf_new_parser_from_factory      (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-parser-factory">librdf_parser_factory</link> *factory);</programlisting>
+<para>
+Constructor - create a new <link linkend="librdf-parser"><type>librdf_parser</type></link> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>factory</parameter>&nbsp;:</term>
+<listitem><simpara> the parser factory to use to create this parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="librdf-parser"><type>librdf_parser</type></link> object or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-free-parser" role="function">
+<title>librdf_free_parser ()</title>
+<indexterm zone="librdf-free-parser"><primary>librdf_free_parser</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_free_parser                  (<link linkend="librdf-parser">librdf_parser</link> *parser);</programlisting>
+<para>
+Destructor - destroys a <link linkend="librdf-parser"><type>librdf_parser</type></link> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-as-stream" role="function">
+<title>librdf_parser_parse_as_stream ()</title>
+<indexterm zone="librdf-parser-parse-as-stream"><primary>librdf_parser_parse_as_stream</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_parser_parse_as_stream       (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *uri,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);</programlisting>
+<para>
+Parse a URI to a librdf_stream of statements.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> the URI to read
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-into-model" role="function">
+<title>librdf_parser_parse_into_model ()</title>
+<indexterm zone="librdf-parser-parse-into-model"><primary>librdf_parser_parse_into_model</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_parse_into_model      (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *uri,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);</programlisting>
+<para>
+Parse a URI of content into an librdf_model.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&nbsp;:</term>
+<listitem><simpara> the URI to read the content
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> the model to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-file-handle-as-stream" role="function">
+<title>librdf_parser_parse_file_handle_as_stream ()</title>
+<indexterm zone="librdf-parser-parse-file-handle-as-stream"><primary>librdf_parser_parse_file_handle_as_stream</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_parser_parse_file_handle_as_stream
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh,
+                                                         <link linkend="int">int</link> close_fh,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);</programlisting>
+<para>
+Parse a FILE* handle of content to a <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara> FILE* to read content source
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>close_fh</parameter>&nbsp;:</term>
+<listitem><simpara> non-0 to <link linkend="fclose"><function>fclose()</function></link> the file handle on finishing
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-file-handle-into-model" role="function">
+<title>librdf_parser_parse_file_handle_into_model ()</title>
+<indexterm zone="librdf-parser-parse-file-handle-into-model"><primary>librdf_parser_parse_file_handle_into_model</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_parse_file_handle_into_model
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh,
+                                                         <link linkend="int">int</link> close_fh,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);</programlisting>
+<para>
+Parse a FILE* handle of content into an <link linkend="librdf-model"><type>librdf_model</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara> FILE* to read content source
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>close_fh</parameter>&nbsp;:</term>
+<listitem><simpara> non-0 to <link linkend="fclose"><function>fclose()</function></link> the file handle on finishing
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> the model to write to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-string-as-stream" role="function">
+<title>librdf_parser_parse_string_as_stream ()</title>
+<indexterm zone="librdf-parser-parse-string-as-stream"><primary>librdf_parser_parse_string_as_stream</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_parser_parse_string_as_stream
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);</programlisting>
+<para>
+Parse a string of content to a librdf_stream of statements.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> the string to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-string-into-model" role="function">
+<title>librdf_parser_parse_string_into_model ()</title>
+<indexterm zone="librdf-parser-parse-string-into-model"><primary>librdf_parser_parse_string_into_model</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_parse_string_into_model
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);</programlisting>
+<para>
+Parse a string of content into an librdf_model.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> the content to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> the model to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-set-error" role="function">
+<title>librdf_parser_set_error ()</title>
+<indexterm zone="librdf-parser-set-error"><primary>librdf_parser_set_error</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_parser_set_error             (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="void">void</link> (error_fnvoid *user_data, const char *msg, ...) ());</programlisting>
+<para>
+<parameter>Deprecated</parameter>: Does nothing
+</para>
+<para>
+Set the parser error handling function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error_fn</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-set-warning" role="function">
+<title>librdf_parser_set_warning ()</title>
+<indexterm zone="librdf-parser-set-warning"><primary>librdf_parser_set_warning</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_parser_set_warning           (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="void">void</link> *user_data,
+                                                         <link linkend="void">void</link> (warning_fnvoid *user_data, const char *msg, ...) ());</programlisting>
+<para>
+<parameter>Deprecated</parameter>: Does nothing.
+</para>
+<para>
+Set the parser warning handling function.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data to pass to function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>warning_fn</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to the function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-counted-string-as-stream" role="function">
+<title>librdf_parser_parse_counted_string_as_stream ()</title>
+<indexterm zone="librdf-parser-parse-counted-string-as-stream"><primary>librdf_parser_parse_counted_string_as_stream</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_parser_parse_counted_string_as_stream
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> length,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri);</programlisting>
+<para>
+Parse a counted string of content to a librdf_stream of statements.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> the string to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> length of the string content (must be &gt;0)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-parse-counted-string-into-model" role="function">
+<title>librdf_parser_parse_counted_string_into_model ()</title>
+<indexterm zone="librdf-parser-parse-counted-string-into-model"><primary>librdf_parser_parse_counted_string_into_model</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_parse_counted_string_into_model
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> length,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *base_uri,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);</programlisting>
+<para>
+Parse a counted string of content into an librdf_model.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> the parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> the content to parse
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> length of content (must be &gt;0)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>base_uri</parameter>&nbsp;:</term>
+<listitem><simpara> the base URI to use or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> the model to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="LIBRDF-PARSER-FEATURE-ERROR-COUNT:CAPS" role="macro">
+<title>LIBRDF_PARSER_FEATURE_ERROR_COUNT</title>
+<indexterm zone="LIBRDF-PARSER-FEATURE-ERROR-COUNT:CAPS"><primary>LIBRDF_PARSER_FEATURE_ERROR_COUNT</primary></indexterm><programlisting>#define LIBRDF_PARSER_FEATURE_ERROR_COUNT "http://feature.librdf.org/parser-error-count"
+</programlisting>
+<para>
+Parser feature URI string for getting the error count of the last parse.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="LIBRDF-PARSER-FEATURE-WARNING-COUNT:CAPS" role="macro">
+<title>LIBRDF_PARSER_FEATURE_WARNING_COUNT</title>
+<indexterm zone="LIBRDF-PARSER-FEATURE-WARNING-COUNT:CAPS"><primary>LIBRDF_PARSER_FEATURE_WARNING_COUNT</primary></indexterm><programlisting>#define LIBRDF_PARSER_FEATURE_WARNING_COUNT "http://feature.librdf.org/parser-warning-count"
+</programlisting>
+<para>
+Parser feature URI string for getting the warning count of the last parse.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-parser-get-feature" role="function">
+<title>librdf_parser_get_feature ()</title>
+<indexterm zone="librdf-parser-get-feature"><primary>librdf_parser_get_feature</primary></indexterm><programlisting><link linkend="librdf-node">librdf_node</link>*        librdf_parser_get_feature           (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature);</programlisting>
+<para>
+Get the value of a parser feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-Uuri"><type>librdf_Uuri</type></link> feature property
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="librdf-node"><type>librdf_node</type></link> feature value or NULL if no such feature
+exists or the value is empty.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-set-feature" role="function">
+<title>librdf_parser_set_feature ()</title>
+<indexterm zone="librdf-parser-set-feature"><primary>librdf_parser_set_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_set_feature           (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature,
+                                                         <link linkend="librdf-node">librdf_node</link> *value);</programlisting>
+<para>
+Set the value of a parser feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-uri"><type>librdf_uri</type></link> feature property
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> feature property value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure (negative if no such feature)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-get-accept-header" role="function">
+<title>librdf_parser_get_accept_header ()</title>
+<indexterm zone="librdf-parser-get-accept-header"><primary>librdf_parser_get_accept_header</primary></indexterm><programlisting><link linkend="char">char</link>*               librdf_parser_get_accept_header     (<link linkend="librdf-parser">librdf_parser</link> *parser);</programlisting>
+<para>
+Get an HTTP Accept value for the parser.
+</para>
+<para>
+The returned string must be freed by the caller such as with
+<link linkend="raptor-free-memory"><function>raptor_free_memory()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> parser
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new Accept: header string or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-get-namespaces-seen-count" role="function">
+<title>librdf_parser_get_namespaces_seen_count ()</title>
+<indexterm zone="librdf-parser-get-namespaces-seen-count"><primary>librdf_parser_get_namespaces_seen_count</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_parser_get_namespaces_seen_count
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser);</programlisting>
+<para>
+Get the number of namespaces seen during parsing</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> uri or NULL if no such namespace uri
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-get-namespaces-seen-prefix" role="function">
+<title>librdf_parser_get_namespaces_seen_prefix ()</title>
+<indexterm zone="librdf-parser-get-namespaces-seen-prefix"><primary>librdf_parser_get_namespaces_seen_prefix</primary></indexterm><programlisting>const <link linkend="char">char</link>*         librdf_parser_get_namespaces_seen_prefix
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="int">int</link> offset);</programlisting>
+<para>
+Get the prefix of namespaces seen during parsing</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offset</parameter>&nbsp;:</term>
+<listitem><simpara> index into list of namespaces
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> prefix or NULL if no such namespace prefix
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-get-namespaces-seen-uri" role="function">
+<title>librdf_parser_get_namespaces_seen_uri ()</title>
+<indexterm zone="librdf-parser-get-namespaces-seen-uri"><primary>librdf_parser_get_namespaces_seen_uri</primary></indexterm><programlisting><link linkend="librdf-uri">librdf_uri</link>*         librdf_parser_get_namespaces_seen_uri
+                                                        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="int">int</link> offset);</programlisting>
+<para>
+Get the uri of namespaces seen during parsing</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>offset</parameter>&nbsp;:</term>
+<listitem><simpara> index into list of namespaces
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> uri or NULL if no such namespace uri
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-get-uri-filter" role="function">
+<title>librdf_parser_get_uri_filter ()</title>
+<indexterm zone="librdf-parser-get-uri-filter"><primary>librdf_parser_get_uri_filter</primary></indexterm><programlisting><link linkend="librdf-uri-filter-func">librdf_uri_filter_func</link> librdf_parser_get_uri_filter     (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="void">void</link> **user_data_p);</programlisting>
+<para>
+Get the current URI filter function for retrieval during parsing.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data_p</parameter>&nbsp;:</term>
+<listitem><simpara> Pointer to user data to return
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> current URI filter function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-parser-set-uri-filter" role="function">
+<title>librdf_parser_set_uri_filter ()</title>
+<indexterm zone="librdf-parser-set-uri-filter"><primary>librdf_parser_set_uri_filter</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_parser_set_uri_filter        (<link linkend="librdf-parser">librdf_parser</link> *parser,
+                                                         <link linkend="librdf-uri-filter-funcfilter">librdf_uri_filter_funcfilter</link> ,
+                                                         <link linkend="void">void</link> *user_data);</programlisting>
+<para>
+Set URI filter function for retrieval during parsing.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>parser</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-parser"><type>librdf_parser</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>Param2</parameter>&nbsp;:</term>
+<listitem><simpara>
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> User data to pass to filter function
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

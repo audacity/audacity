@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="http://www.w3.org/2002/06/rdfs2html.xsl" type="application/xml"?>
+<!DOCTYPE rdf:RDF [
+     <!ENTITY rdf  "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+     <!ENTITY xsd  "http://www.w3.org/2001/XMLSchema#" >
+     <!ENTITY owl  "http://www.w3.org/2002/07/owl#" >
+   ]>
+
+<rdf:RDF
+  xmlns     ="&owl;"
+  xmlns:owl ="&owl;"
+  xml:base  ="http://www.w3.org/2002/07/owl"
+  xmlns:rdf ="&rdf;"
+  xmlns:rdfs="&rdfs;"
+  xmlns:dc  ="http://purl.org/dc/elements/1.1/"
+>
+
+<Ontology rdf:about="">
+  <imports rdf:resource="http://www.w3.org/2000/01/rdf-schema"/>
+  <rdfs:seeAlso rdf:resource="http://www.w3.org/2001/sw/WebOnt/" />
+  <rdfs:seeAlso rdf:resource="http://www.w3.org/TR/owl-features/" />
+  <rdfs:seeAlso rdf:resource="http://www.w3.org/TR/2003/CR-owl-test-20030818/" />
+  <rdfs:seeAlso rdf:resource="http://www.w3.org/TR/2003/CR-owl-semantics-20030818/" />
+  <rdfs:comment>This file specifies in RDF Schema format the
+    built-in classes and properties that together form the basis of
+    the RDF/XML syntax of OWL Full, OWL DL and OWL Lite.
+    We do not expect people to import this file
+    explicitly into their ontology. People that do import this file
+    should expect their ontology to be an OWL Full ontology. 
+  </rdfs:comment>
+  <rdfs:comment>$Id: owl-schema.rdf,v 1.1 2008-07-08 10:43:24 larsl Exp $</rdfs:comment>
+  <versionInfo>$Id: owl-schema.rdf,v 1.1 2008-07-08 10:43:24 larsl Exp $</versionInfo>
+</Ontology>
+
+<rdfs:Class rdf:ID="Class">
+  <rdfs:label>Class</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&rdfs;Class"/>
+</rdfs:Class>
+
+<Class rdf:ID="Thing">
+  <rdfs:label>Thing</rdfs:label>
+  <unionOf rdf:parseType="Collection">
+    <Class rdf:about="#Nothing"/>
+    <Class>
+      <complementOf rdf:resource="#Nothing"/>
+    </Class>
+  </unionOf>
+</Class>
+
+<Class rdf:ID="Nothing">
+  <rdfs:label>Nothing</rdfs:label>
+  <complementOf rdf:resource="#Thing"/>
+</Class>
+
+<rdf:Property rdf:ID="equivalentClass">
+  <rdfs:label>equivalentClass</rdfs:label>
+  <rdfs:subPropertyOf rdf:resource="&rdfs;subClassOf"/>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="disjointWith">
+  <rdfs:label>disjointWith</rdfs:label>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="equivalentProperty">
+  <rdfs:label>equivalentProperty</rdfs:label>
+  <rdfs:subPropertyOf rdf:resource="&rdfs;subPropertyOf"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="sameAs"> 
+  <rdfs:label>sameAs</rdfs:label>
+  <rdfs:domain rdf:resource="#Thing"/>
+  <rdfs:range rdf:resource="#Thing"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="differentFrom">
+  <rdfs:label>differentFrom</rdfs:label>
+  <rdfs:domain rdf:resource="#Thing"/>
+  <rdfs:range rdf:resource="#Thing"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="AllDifferent">
+  <rdfs:label>AllDifferent</rdfs:label>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="distinctMembers">
+  <rdfs:label>distinctMembers</rdfs:label>
+  <rdfs:domain rdf:resource="#AllDifferent"/>
+  <rdfs:range rdf:resource="&rdf;List"/>
+</rdf:Property>
+  
+<rdf:Property rdf:ID="unionOf">
+  <rdfs:label>unionOf</rdfs:label>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="&rdf;List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="intersectionOf">
+  <rdfs:label>intersectionOf</rdfs:label>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="&rdf;List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="complementOf">
+  <rdfs:label>complementOf</rdfs:label>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="oneOf">
+  <rdfs:label>oneOf</rdfs:label>
+  <rdfs:domain rdf:resource="&rdfs;Class"/>
+  <rdfs:range rdf:resource="&rdf;List"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="Restriction">
+  <rdfs:label>Restriction</rdfs:label>
+  <rdfs:subClassOf rdf:resource="#Class"/>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="onProperty">
+  <rdfs:label>onProperty</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="&rdf;Property"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="allValuesFrom">
+  <rdfs:label>allValuesFrom</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="&rdfs;Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="hasValue">
+  <rdfs:label>hasValue</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="someValuesFrom">
+  <rdfs:label>someValuesFrom</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="&rdfs;Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="minCardinality">
+  <rdfs:label>minCardinality</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="maxCardinality">
+  <rdfs:label>maxCardinality</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="cardinality">
+  <rdfs:label>cardinality</rdfs:label>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="ObjectProperty">
+  <rdfs:label>ObjectProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&rdf;Property"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="DatatypeProperty">
+  <rdfs:label>DatatypeProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&rdf;Property"/>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="inverseOf">
+  <rdfs:label>inverseOf</rdfs:label>
+  <rdfs:domain rdf:resource="#ObjectProperty"/>
+  <rdfs:range rdf:resource="#ObjectProperty"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="TransitiveProperty">
+  <rdfs:label>TransitiveProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="#ObjectProperty"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="SymmetricProperty">
+  <rdfs:label>SymmetricProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="#ObjectProperty"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="FunctionalProperty">
+  <rdfs:label>FunctionalProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&rdf;Property"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="InverseFunctionalProperty">
+  <rdfs:label>InverseFunctionalProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&owl;ObjectProperty"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="AnnotationProperty">
+  <rdfs:subClassOf rdf:resource="&rdf;Property"/>
+</rdfs:Class>
+
+<rdf:Description rdf:about="&rdfs;label">
+  <rdf:type rdf:resource="#AnnotationProperty"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="&rdfs;comment">
+  <rdf:type rdf:resource="#AnnotationProperty"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="&rdfs;seeAlso">
+  <rdf:type rdf:resource="#AnnotationProperty"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="&rdfs;isDefinedBy">
+  <rdf:type rdf:resource="#AnnotationProperty"/>
+</rdf:Description>
+
+<rdfs:Class rdf:ID="Ontology">
+  <rdfs:label>Ontology</rdfs:label>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="OntologyProperty">
+  <rdfs:subClassOf rdf:resource="&rdf;Property"/>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="imports">
+  <rdfs:label>imports</rdfs:label>
+  <rdf:type rdf:resource="#OntologyProperty"/>
+  <rdfs:domain rdf:resource="#Ontology"/>
+  <rdfs:range rdf:resource="#Ontology"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="versionInfo">
+  <rdfs:label>versionInfo</rdfs:label>
+  <rdf:type rdf:resource="#AnnotationProperty"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="priorVersion">
+  <rdfs:label>priorVersion</rdfs:label>
+  <rdf:type rdf:resource="#OntologyProperty"/>
+  <rdfs:domain rdf:resource="#Ontology"/>
+  <rdfs:range rdf:resource="#Ontology"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="backwardCompatibleWith">
+  <rdfs:label>backwardCompatibleWitesh</rdfs:label>
+  <rdf:type rdf:resource="#OntologyProperty"/>
+  <rdfs:domain rdf:resource="#Ontology"/>
+  <rdfs:range rdf:resource="#Ontology"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="incompatibleWith">
+  <rdfs:label>incompatibleWith</rdfs:label>
+  <rdf:type rdf:resource="#OntologyProperty"/>
+  <rdfs:domain rdf:resource="#Ontology"/>
+  <rdfs:range rdf:resource="#Ontology"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="DeprecatedClass">
+  <rdfs:label>DeprecatedClass</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&rdfs;Class"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="DeprecatedProperty">
+  <rdfs:label>DeprecatedProperty</rdfs:label>
+  <rdfs:subClassOf rdf:resource="&rdf;Property"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="DataRange">
+  <rdfs:label>DataRange</rdfs:label>
+</rdfs:Class>
+
+
+</rdf:RDF>
+

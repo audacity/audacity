@@ -1,0 +1,271 @@
+/* librdf/rdf_config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
+/* BDB has close method with 2 args */
+#undef HAVE_BDB_CLOSE_2_ARGS
+
+/* BDB defines DBC */
+#undef HAVE_BDB_CURSOR
+
+/* BDB cursor method has 4 arguments */
+#undef HAVE_BDB_CURSOR_4_ARGS
+
+/* BDB defines DB_TXN */
+#undef HAVE_BDB_DB_TXN
+
+/* BDB has fd method with 2 args */
+#undef HAVE_BDB_FD_2_ARGS
+
+/* Have BDB hash support */
+#undef HAVE_BDB_HASH
+
+/* BDB has open method with 6 args */
+#undef HAVE_BDB_OPEN_6_ARGS
+
+/* BDB has open method with 7 args */
+#undef HAVE_BDB_OPEN_7_ARGS
+
+/* BDB has set_flags method */
+#undef HAVE_BDB_SET_FLAGS
+
+/* Define to 1 if the system has the type `byte'. */
+#undef HAVE_BYTE
+
+/* BDB has dbopen method */
+#undef HAVE_DBOPEN
+
+/* BDB has db_create method */
+#undef HAVE_DB_CREATE
+
+/* Define to 1 if you have the <db.h> header file. */
+#undef HAVE_DB_H
+
+/* BDB has db_open method */
+#undef HAVE_DB_OPEN
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the <dmalloc.h> header file. */
+#undef HAVE_DMALLOC_H
+
+/* Define to 1 if you have the <errno.h> header file. */
+#undef HAVE_ERRNO_H
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the `getenv' function. */
+#undef HAVE_GETENV
+
+/* Define to 1 if you have the `getopt' function. */
+#undef HAVE_GETOPT
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define to 1 if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <libpq-fe.h> header file. */
+#undef HAVE_LIBPQ_FE_H
+
+/* Have local MD5 digest */
+#undef HAVE_LOCAL_MD5_DIGEST
+
+/* Have local RIPEMD160 digest */
+#undef HAVE_LOCAL_RIPEMD160_DIGEST
+
+/* Have local SHA1 digest */
+#undef HAVE_LOCAL_SHA1_DIGEST
+
+/* Define to 1 if you have the `memcmp' function. */
+#undef HAVE_MEMCMP
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `mkstemp' function. */
+#undef HAVE_MKSTEMP
+
+/* Define to 1 if you have the `mktemp' function. */
+#undef HAVE_MKTEMP
+
+/* have MYSQL_OPT_RECONNECT declared */
+#undef HAVE_MYSQL_OPT_RECONNECT
+
+/* Define to 1 if you have the <openssl/crypto.h> header file. */
+#undef HAVE_OPENSSL_CRYPTO_H
+
+/* Have openssl MD5 digest */
+#undef HAVE_OPENSSL_CRYPTO_MD5_DIGEST
+
+/* Have openssl RIPEMD160 digest */
+#undef HAVE_OPENSSL_CRYPTO_RIPEMD160_DIGEST
+
+/* Have openssl SHA1 digest */
+#undef HAVE_OPENSSL_CRYPTO_SHA1_DIGEST
+
+/* Have openssl digests */
+#undef HAVE_OPENSSL_DIGESTS
+
+/* Define to 1 if you have the <pthread.h> header file. */
+#undef HAVE_PTHREAD_H
+
+/* Define to 1 if you have the <sqlite3.h> header file. */
+#undef HAVE_SQLITE3_H
+
+/* Define to 1 if you have the <sqlite.h> header file. */
+#undef HAVE_SQLITE_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <time.h> header file. */
+#undef HAVE_TIME_H
+
+/* Define to 1 if you have the `tmpnam' function. */
+#undef HAVE_TMPNAM
+
+/* Define to 1 if the system has the type `u32'. */
+#undef HAVE_U32
+
+/* Define to 1 if the system has the type `u64'. */
+#undef HAVE_U64
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Run time assertion checks. */
+#undef LIBRDF_ASSERT
+
+/* Print run time assertion check failure messages. */
+#undef LIBRDF_ASSERT_MESSAGES
+
+/* Release version as a decimal */
+#undef LIBRDF_VERSION_DECIMAL
+
+/* Major version number */
+#undef LIBRDF_VERSION_MAJOR
+
+/* Minor version number */
+#undef LIBRDF_VERSION_MINOR
+
+/* Release version number */
+#undef LIBRDF_VERSION_RELEASE
+
+/* Build storage backends as modules */
+#undef MODULAR_LIBRDF
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* The size of `unsigned char', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_CHAR
+
+/* The size of `unsigned int', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_INT
+
+/* The size of `unsigned long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* The size of `unsigned long long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG_LONG
+
+/* SQLite API version */
+#undef SQLITE_API
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Building file storage */
+#undef STORAGE_FILE
+
+/* Building hashes storage */
+#undef STORAGE_HASHES
+
+/* Building memory storage */
+#undef STORAGE_MEMORY
+
+/* Building MySQL storage */
+#undef STORAGE_MYSQL
+
+/* Building PostgreSQL storage */
+#undef STORAGE_POSTGRESQL
+
+/* Building SQLite storage */
+#undef STORAGE_SQLITE
+
+/* Building trees storage */
+#undef STORAGE_TREES
+
+/* Building 3store storage */
+#undef STORAGE_TSTORE
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Version number of package */
+#undef VERSION
+
+/* Use POSIX threads */
+#undef WITH_THREADS
+
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const

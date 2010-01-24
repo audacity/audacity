@@ -1,0 +1,50 @@
+2001-06-05  Erik de Castro Lopo  <erikd@mega-nerd.com>
+
+	* g72x.c
+	Added {} in function update () to prevent 'ambiguous else' warning messages.
+
+2000-07-14  Erik de Castro Lopo  <erikd@mega-nerd.com>
+
+	* g72x.c
+	Modified g72x_init_state () to fit in with the new structure of the code.
+	Implemented g72x_encode_block () and g72x_decode_block ().
+
+2000-07-12  Erik de Castro Lopo  <erikd@mega-nerd.com>
+
+    * g72x.h
+    Moved nearly all definitions and function prototypes from this file have been 
+    moved to private.h.
+    Added an enum defining the 4 different G72x ADPCM codecs.
+    Added new function prototypes to define a cleaner interface to the encoder 
+    and decoder. This new interface also allows samples to be processed in blocks
+    rather than on a sample by sample basis like the original code.
+    
+    * private.h
+    Added prototypes moved from g72x.h.
+    Changed struct g72x_state to a typedef struct { .. } G72x_PRIVATE.
+    Added fields to G72x_PRIVATE required for working on blocks of samples.
+
+2000-06-07  Erik de Castro Lopo  <erikd@mega-nerd.com>
+
+    * g72x.c
+    Fixed all compiler warnings.
+    Removed functions tandem_adjust() which is not required by libsndfile.
+    
+    * g721.c
+    Fixed all compiler warnings.
+    Removed functions tandem_adjust_alaw() and tandem_adjust_ulaw () which are not 
+    required by libsndfile.
+    Removed second parameter to g721_encoder () which is not required.
+
+    * g72x.h
+    Removed in_coding and out_coding parameters from all functions. These allowed
+    g72x encoding/decoding to/from A-law or u-law and are not required by libsndfile.
+    Removed unneeded defines for A-law, u-law and linear encoding.
+
+    * g723_16.c
+    Removed second parameter (in_coding) for g723_16_encoder().    
+    Removed second parameter (out_coding) for g723_16_decoder().
+    
+    * private.h
+    New file containing prototypes and tyepdefs private to G72x code.
+    

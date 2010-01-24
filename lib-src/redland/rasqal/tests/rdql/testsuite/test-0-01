@@ -1,0 +1,8 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Syntactic test
+
+SELECT *
+// Comment
+FROM   <model0.nt>
+/* Comment */
+WHERE  (?x, ?y, ?z)

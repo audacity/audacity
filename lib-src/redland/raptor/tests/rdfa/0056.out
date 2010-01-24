@@ -1,0 +1,3 @@
+<http://www.example.org/#ben> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> .
+<http://www.example.org/#ben> <http://xmlns.com/foaf/0.1/knows> <http://www.example.org/#mark> .
+<http://www.example.org/#mark> <http://xmlns.com/foaf/0.1/name> "Mark Birbeck" .

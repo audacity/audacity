@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Query Results Formatter</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Rasqal RDF Query Library Manual">
+<link rel="up" href="pt01.html" title="Part I. Reference Manual">
+<link rel="prev" href="rasqal-section-query-results.html" title="Query Results">
+<link rel="next" href="rasqal-section-triple.html" title="Triples">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="rasqal.html" title="Rasqal Overview">
+<link rel="part" href="pt01.html" title="Part I. Reference Manual">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="rasqal-section-query-results.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="pt01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Rasqal RDF Query Library Manual</th>
+<td><a accesskey="n" href="rasqal-section-triple.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#rasqal-section-query-results-formatter.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#rasqal-section-query-results-formatter.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="rasqal-section-query-results-formatter"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="rasqal-section-query-results-formatter.top_of_page"></a>Query Results Formatter</span></h2>
+<p>Query Results Formatter — Query results formatted into a syntax.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="rasqal-section-query-results-formatter.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+int                 <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-check" title="rasqal_query_results_formats_check ()">rasqal_query_results_formats_check</a>  (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         const char *name,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *uri,
+                                                         const char *mime_type);
+#define             <a class="link" href="rasqal-section-query-results-formatter.html#RASQAL-QUERY-RESULTS-FORMAT-FLAG-READER:CAPS" title="RASQAL_QUERY_RESULTS_FORMAT_FLAG_READER">RASQAL_QUERY_RESULTS_FORMAT_FLAG_READER</a>
+#define             <a class="link" href="rasqal-section-query-results-formatter.html#RASQAL-QUERY-RESULTS-FORMAT-FLAG-WRITER:CAPS" title="RASQAL_QUERY_RESULTS_FORMAT_FLAG_WRITER">RASQAL_QUERY_RESULTS_FORMAT_FLAG_WRITER</a>
+int                 <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-enumerate" title="rasqal_query_results_formats_enumerate ()">rasqal_query_results_formats_enumerate</a>
+                                                        (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         unsigned int counter,
+                                                         const char **name,
+                                                         const char **label,
+                                                         unsigned char **uri_string,
+                                                         const char **mime_type,
+                                                         int *flags);
+typedef             <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a>;
+<a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a>* <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-new-query-results-formatter" title="rasqal_new_query_results_formatter ()">rasqal_new_query_results_formatter</a>
+                                                        (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         const char *name,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *format_uri);
+<a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a>* <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-new-query-results-formatter-by-mime-type" title="rasqal_new_query_results_formatter_by_mime_type ()">rasqal_new_query_results_formatter_by_mime_type</a>
+                                                        (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         const char *mime_type);
+void                <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-free-query-results-formatter" title="rasqal_free_query_results_formatter ()">rasqal_free_query_results_formatter</a> (<a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter);
+const char*         <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter-get-mime-type" title="rasqal_query_results_formatter_get_mime_type ()">rasqal_query_results_formatter_get_mime_type</a>
+                                                        (<a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter);
+int                 <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter-read" title="rasqal_query_results_formatter_read ()">rasqal_query_results_formatter_read</a> (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-iostream.html#raptor-iostream"
+>raptor_iostream</a> *iostr,
+                                                         <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter,
+                                                         <a class="link" href="rasqal-section-query-results.html#rasqal-query-results" title="rasqal_query_results">rasqal_query_results</a> *results,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *base_uri);
+int                 <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter-write" title="rasqal_query_results_formatter_write ()">rasqal_query_results_formatter_write</a>
+                                                        (<a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-iostream.html#raptor-iostream"
+>raptor_iostream</a> *iostr,
+                                                         <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter,
+                                                         <a class="link" href="rasqal-section-query-results.html#rasqal-query-results" title="rasqal_query_results">rasqal_query_results</a> *results,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *base_uri);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="rasqal-section-query-results-formatter.description"></a><h2>Description</h2>
+<p>
+Variable bindings and boolean query results can be formatted into
+different syntaxes such as SPARQL Query Results Format or JSON.
+The rasqal_query_results_formatter class allows choosing a formatter
+for a particular syntax and writing the syntax to a raptor_iostream
+which allows turning the syntax into a string, writing to a file
+handle or other custom destination.
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="rasqal-section-query-results-formatter.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="rasqal-query-results-formats-check"></a><h3>rasqal_query_results_formats_check ()</h3>
+<pre class="programlisting">int                 rasqal_query_results_formats_check  (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         const char *name,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *uri,
+                                                         const char *mime_type);</pre>
+<p>
+Check if a query results formatter exists for the requested format.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> rasqal_world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> the query results format name (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+><span class="type">raptor_uri</span></a> query results format uri (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mime_type</code></em> :</span></p></td>
+<td> mime type name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if a formatter exists.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="RASQAL-QUERY-RESULTS-FORMAT-FLAG-READER:CAPS"></a><h3>RASQAL_QUERY_RESULTS_FORMAT_FLAG_READER</h3>
+<pre class="programlisting">#define RASQAL_QUERY_RESULTS_FORMAT_FLAG_READER 1
+</pre>
+<p>
+Flag for <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-enumerate" title="rasqal_query_results_formats_enumerate ()"><code class="function">rasqal_query_results_formats_enumerate()</code></a> to get query results formats that can be read.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="RASQAL-QUERY-RESULTS-FORMAT-FLAG-WRITER:CAPS"></a><h3>RASQAL_QUERY_RESULTS_FORMAT_FLAG_WRITER</h3>
+<pre class="programlisting">#define RASQAL_QUERY_RESULTS_FORMAT_FLAG_WRITER 2
+</pre>
+<p>
+Flag for <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-enumerate" title="rasqal_query_results_formats_enumerate ()"><code class="function">rasqal_query_results_formats_enumerate()</code></a> to get query results formats that can be written.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-query-results-formats-enumerate"></a><h3>rasqal_query_results_formats_enumerate ()</h3>
+<pre class="programlisting">int                 rasqal_query_results_formats_enumerate
+                                                        (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         unsigned int counter,
+                                                         const char **name,
+                                                         const char **label,
+                                                         unsigned char **uri_string,
+                                                         const char **mime_type,
+                                                         int *flags);</pre>
+<p>
+Get information on query result syntaxes.
+</p>
+<p>
+The current list of format names/URI is given below however
+the results of this function will always return the latest.
+</p>
+<p>
+SPARQL XML Results 2007-06-14 (default format when <em class="parameter"><code>counter</code></em> is 0)
+name '<code class="literal">xml</code>' with
+URIs http://www.w3.org/TR/2006/WD-rdf-sparql-XMLres-20070614/ or
+http://www.w3.org/2005/sparql-results#
+</p>
+<p>
+JSON name '<code class="literal">json</code>' and
+URI http://www.w3.org/2001/sw/DataAccess/json-sparql/
+</p>
+<p>
+All returned strings are shared and must be copied if needed to be
+used dynamically.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> rasqal_world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>counter</code></em> :</span></p></td>
+<td> index into the list of query result syntaxes
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> pointer to store the name of the query result syntax (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label</code></em> :</span></p></td>
+<td> pointer to store query result syntax readable label (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri_string</code></em> :</span></p></td>
+<td> pointer to store query result syntax URI string (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mime_type</code></em> :</span></p></td>
+<td> pointer to store query result syntax mime type string (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flags</code></em> :</span></p></td>
+<td> pointer to store query result syntax flags (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non 0 on failure of if counter is out of range
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-query-results-formatter"></a><h3>rasqal_query_results_formatter</h3>
+<pre class="programlisting">rasqal_graph_query_results_formatter* query_results_formatter;
+</pre>
+<p>
+Rasqal query results formatter class.</p>
+<p>
+
+</p>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-new-query-results-formatter"></a><h3>rasqal_new_query_results_formatter ()</h3>
+<pre class="programlisting"><a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a>* rasqal_new_query_results_formatter
+                                                        (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         const char *name,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *format_uri);</pre>
+<p>
+Constructor - create a new rasqal_query_results_formatter object by identified format.
+</p>
+<p>
+A query results format can be named or identified by a URI, both
+of which are optional.  The default query results format will be used
+if both are NULL.  <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-enumerate" title="rasqal_query_results_formats_enumerate ()"><code class="function">rasqal_query_results_formats_enumerate()</code></a> returns
+information on the known query results names, labels and URIs.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> rasqal_world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> the query results format name (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format_uri</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+><span class="type">raptor_uri</span></a> query results format uri (or NULL)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-new-query-results-formatter-by-mime-type"></a><h3>rasqal_new_query_results_formatter_by_mime_type ()</h3>
+<pre class="programlisting"><a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a>* rasqal_new_query_results_formatter_by_mime_type
+                                                        (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         const char *mime_type);</pre>
+<p>
+Constructor - create a new rasqal_query_results_formatter object by mime type.
+</p>
+<p>
+A query results format generates a syntax with a mime type which
+may be requested with this constructor.
+</p>
+<p>
+Note that there may be several formatters that generate the same
+MIME Type (such as SPARQL XML results format drafts) and in thot
+case the <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-new-query-results-formatter" title="rasqal_new_query_results_formatter ()"><code class="function">rasqal_new_query_results_formatter()</code></a> constructor allows
+selecting of a specific one by name or URI.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> rasqal_world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mime_type</code></em> :</span></p></td>
+<td> mime type name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a new <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-free-query-results-formatter"></a><h3>rasqal_free_query_results_formatter ()</h3>
+<pre class="programlisting">void                rasqal_free_query_results_formatter (<a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter);</pre>
+<p>
+Destructor - destroy a <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>formatter</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-query-results-formatter-get-mime-type"></a><h3>rasqal_query_results_formatter_get_mime_type ()</h3>
+<pre class="programlisting">const char*         rasqal_query_results_formatter_get_mime_type
+                                                        (<a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter);</pre>
+<p>
+Get the mime type of the syntax being formatted.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>formatter</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> a shared mime type string
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-query-results-formatter-read"></a><h3>rasqal_query_results_formatter_read ()</h3>
+<pre class="programlisting">int                 rasqal_query_results_formatter_read (<a class="link" href="rasqal-section-general.html#rasqal-world" title="rasqal_world">rasqal_world</a> *world,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-iostream.html#raptor-iostream"
+>raptor_iostream</a> *iostr,
+                                                         <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter,
+                                                         <a class="link" href="rasqal-section-query-results.html#rasqal-query-results" title="rasqal_query_results">rasqal_query_results</a> *results,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *base_uri);</pre>
+<p>
+Read the query results using the given formatter from an iostream
+</p>
+<p>
+See <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-enumerate" title="rasqal_query_results_formats_enumerate ()"><code class="function">rasqal_query_results_formats_enumerate()</code></a> to get the
+list of syntax URIs and their description.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>world</code></em> :</span></p></td>
+<td> rasqal world object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iostr</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-iostream.html#raptor-iostream"
+><span class="type">raptor_iostream</span></a> to read the query from
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>formatter</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>results</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-query-results.html#rasqal-query-results" title="rasqal_query_results"><span class="type">rasqal_query_results</span></a> query results format
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base_uri</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+><span class="type">raptor_uri</span></a> base URI of the input format
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="rasqal-query-results-formatter-write"></a><h3>rasqal_query_results_formatter_write ()</h3>
+<pre class="programlisting">int                 rasqal_query_results_formatter_write
+                                                        (<a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-iostream.html#raptor-iostream"
+>raptor_iostream</a> *iostr,
+                                                         <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter">rasqal_query_results_formatter</a> *formatter,
+                                                         <a class="link" href="rasqal-section-query-results.html#rasqal-query-results" title="rasqal_query_results">rasqal_query_results</a> *results,
+                                                         <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+>raptor_uri</a> *base_uri);</pre>
+<p>
+Write the query results using the given formatter to an iostream
+</p>
+<p>
+See <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formats-enumerate" title="rasqal_query_results_formats_enumerate ()"><code class="function">rasqal_query_results_formats_enumerate()</code></a> to get the
+list of syntax URIs and their description.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iostr</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-iostream.html#raptor-iostream"
+><span class="type">raptor_iostream</span></a> to write the query to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>formatter</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-query-results-formatter.html#rasqal-query-results-formatter" title="rasqal_query_results_formatter"><span class="type">rasqal_query_results_formatter</span></a> object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>results</code></em> :</span></p></td>
+<td> <a class="link" href="rasqal-section-query-results.html#rasqal-query-results" title="rasqal_query_results"><span class="type">rasqal_query_results</span></a> query results format
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base_uri</code></em> :</span></p></td>
+<td> <a
+href="/usr/share/gtk-doc/html/raptor/raptor-section-uri.html#raptor-uri"
+><span class="type">raptor_uri</span></a> base URI of the output format
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

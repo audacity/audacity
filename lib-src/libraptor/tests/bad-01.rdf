@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:ex="http://example.org/ns/">
+
+  <!-- A property must have only one node value -->
+
+  <rdf:Description rdf:about="http://example.org/node0">
+    <ex:mainprop>
+
+       <rdf:Description>
+	 <ex:prop1>val1</ex:prop1>
+       </rdf:Description>
+
+       <rdf:Description>
+	 <ex:prop2>val2</ex:prop2>
+       </rdf:Description>
+
+    </ex:mainprop>
+  </rdf:Description>
+
+</rdf:RDF>

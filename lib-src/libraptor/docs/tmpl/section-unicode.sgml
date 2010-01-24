@@ -1,0 +1,95 @@
+<!-- ##### SECTION Title ##### -->
+Unicode
+
+<!-- ##### SECTION Short_Description ##### -->
+Unicode and UTF-8 utility functions.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Functions to support converting to and from Unicode written in UTF-8
+which is the native internal string format of all the redland libraries.
+Includes checking for Unicode names using either the XML 1.0 or XML 1.1
+rules.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF raptor_unichar ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION raptor_unicode_char_to_utf8 ##### -->
+<para>
+
+</para>
+
+@c: 
+@output: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_utf8_to_unicode_char ##### -->
+<para>
+
+</para>
+
+@output: 
+@input: 
+@length: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_unicode_is_xml11_namestartchar ##### -->
+<para>
+
+</para>
+
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_unicode_is_xml10_namestartchar ##### -->
+<para>
+
+</para>
+
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_unicode_is_xml11_namechar ##### -->
+<para>
+
+</para>
+
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_unicode_is_xml10_namechar ##### -->
+<para>
+
+</para>
+
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION raptor_utf8_check ##### -->
+<para>
+
+</para>
+
+@string: 
+@length: 
+@Returns: 
+
+

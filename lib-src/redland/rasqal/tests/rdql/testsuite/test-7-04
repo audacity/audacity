@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test-7-04 : Predicate and Subject 
+
+SELECT ?x, ?y, ?a
+FROM <model7.nt>
+WHERE (?y, ?a, ?b) , (?x, ?y, ?z)

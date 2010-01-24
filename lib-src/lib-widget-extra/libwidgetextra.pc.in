@@ -1,0 +1,10 @@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: lib-widget-extra
+Description: Extras for wxwidgets
+Requires: 
+Version: 1
+
+Libs: -L${libdir} -lwidgetextra @LIBS@
+Cflags: -I${includedir} @CXXFLAGS@

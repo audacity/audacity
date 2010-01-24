@@ -1,0 +1,5 @@
+# Model 1 : Two resources ; two properties ; values encode the statement
+<http://rdf.hp.com/r-1>  <http://rdf.hp.com/p-1>  "v-1-1" .
+<http://rdf.hp.com/r-1>  <http://rdf.hp.com/p-2>  "v-1-2" .
+<http://rdf.hp.com/r-2>  <http://rdf.hp.com/p-1>  "v-2-1" .
+<http://rdf.hp.com/r-2>  <http://rdf.hp.com/p-2>  "v-2-2" .

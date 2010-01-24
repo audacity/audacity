@@ -1,0 +1,10 @@
+prefix ex: <http://example.org/survey-sample/ontology/>
+prefix acm: <http://daml.umbc.edu/ontologies/topic-ont#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?title 
+WHERE  
+     { { [] a acm:Topic; rdfs:label ?title }
+     UNION
+      { [] ex:title ?title }}
+

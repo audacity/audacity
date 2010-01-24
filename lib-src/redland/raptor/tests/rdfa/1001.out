@@ -1,0 +1,6 @@
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/1001.xhtml#event1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/12/cal/icaltzd#Vevent> .
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/1001.xhtml#event1> <http://www.w3.org/2002/12/cal/icaltzd#summary> "Weekend off in Iona" .
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/1001.xhtml#event1> <http://www.w3.org/2002/12/cal/icaltzd#dtstart> "2006-10-21"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/1001.xhtml#event1> <http://www.w3.org/2002/12/cal/icaltzd#dtend> "2006-10-23"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/1001.xhtml#event1> <http://www.w3.org/2002/12/cal/icaltzd#url> <http://freetime.example.org/> .
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/1001.xhtml#event1> <http://www.w3.org/2002/12/cal/icaltzd#location> "Iona, UK" .

@@ -1,0 +1,4 @@
+PREFIX :      <http://example.org/ns#> 
+SELECT *
+{ ?s ?p ?o }
+ORDER BY DESC(?o)

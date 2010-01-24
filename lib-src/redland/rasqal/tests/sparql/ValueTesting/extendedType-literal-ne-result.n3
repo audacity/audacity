@@ -1,0 +1,10 @@
+# Test FILTER negative match on extended type.
+# $Id: extendedType-literal-ne-result.n3,v 1.1 2008-07-08 10:46:42 larsl Exp $
+
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+
+[]  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                rs:ResultSet ;
+    rs:resultVariable
+                "a1", "a2" .

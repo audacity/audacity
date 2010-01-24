@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-digest">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-digest.top_of_page">Digests</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Digests</refname>
+<refpurpose>Content digests.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-digest.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="librdf-digest">librdf_digest</link>;
+typedef             <link linkend="librdf-digest-factory">librdf_digest_factory</link>;
+<link linkend="librdf-digest">librdf_digest</link>*      <link linkend="librdf-new-digest">librdf_new_digest</link>                   (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name);
+<link linkend="void">void</link>                <link linkend="librdf-free-digest">librdf_free_digest</link>                  (<link linkend="librdf-digest">librdf_digest</link> *digest);
+<link linkend="void">void</link>                <link linkend="librdf-digest-init">librdf_digest_init</link>                  (<link linkend="librdf-digest">librdf_digest</link> *digest);
+<link linkend="void">void</link>                <link linkend="librdf-digest-update">librdf_digest_update</link>                (<link linkend="librdf-digest">librdf_digest</link> *digest,
+                                                         unsigned <link linkend="char">char</link> *buf,
+                                                         <link linkend="size-t">size_t</link> length);
+<link linkend="void">void</link>                <link linkend="librdf-digest-update-string">librdf_digest_update_string</link>         (<link linkend="librdf-digest">librdf_digest</link> *digest,
+                                                         unsigned <link linkend="char">char</link> *string);
+<link linkend="void">void</link>                <link linkend="librdf-digest-final">librdf_digest_final</link>                 (<link linkend="librdf-digest">librdf_digest</link> *digest);
+<link linkend="void">void</link>*               <link linkend="librdf-digest-get-digest">librdf_digest_get_digest</link>            (<link linkend="librdf-digest">librdf_digest</link> *digest);
+<link linkend="size-t">size_t</link>              <link linkend="librdf-digest-get-digest-length">librdf_digest_get_digest_length</link>     (<link linkend="librdf-digest">librdf_digest</link> *digest);
+<link linkend="char">char</link>*               <link linkend="librdf-digest-to-string">librdf_digest_to_string</link>             (<link linkend="librdf-digest">librdf_digest</link> *digest);
+<link linkend="void">void</link>                <link linkend="librdf-digest-print">librdf_digest_print</link>                 (<link linkend="librdf-digest">librdf_digest</link> *digest,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-digest.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Create a message digest over a block of data.  Includes implementations
+of MD5, RMD160 and SHA1.
+</para>
+</refsect1>
+
+<refsect1 id="redland-digest.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-digest" role="typedef">
+<title>librdf_digest</title>
+<indexterm zone="librdf-digest"><primary>librdf_digest</primary></indexterm><programlisting>typedef struct librdf_digest_s librdf_digest;
+</programlisting>
+<para>
+Redland content digest class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-digest-factory" role="typedef">
+<title>librdf_digest_factory</title>
+<indexterm zone="librdf-digest-factory"><primary>librdf_digest_factory</primary></indexterm><programlisting>typedef struct librdf_digest_factory_s librdf_digest_factory;
+</programlisting>
+<para>
+Redland digest factory class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-new-digest" role="function">
+<title>librdf_new_digest ()</title>
+<indexterm zone="librdf-new-digest"><primary>librdf_new_digest</primary></indexterm><programlisting><link linkend="librdf-digest">librdf_digest</link>*      librdf_new_digest                   (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name);</programlisting>
+<para>
+Constructor - create a new <link linkend="librdf-digest"><type>librdf_digest</type></link> object.
+</para>
+<para>
+After construction, data should be added to the digest using
+<link linkend="librdf-digest-update"><type>librdf_digest_update</type></link> or <link linkend="librdf-digest-update-string"><type>librdf_digest_update_string</type></link> with
+<link linkend="librdf-digest-final"><type>librdf_digest_final</type></link> to signify finishing.  Then the digest
+value can be returned directly with <link linkend="librdf-digest-get-digest"><type>librdf_digest_get_digest</type></link>
+of <link linkend="librdf-digest-get-digest-length"><type>librdf_digest_get_digest_length</type></link> bytes or as a hex encoded
+string with <link linkend="librdf-digest-to-string"><type>librdf_digest_to_string</type></link>.  The digest can be
+re-initialised for new data with <link linkend="librdf-digest-init"><type>librdf_digest_init</type></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the digest name to use to create this digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="librdf-digest"><type>librdf_digest</type></link> object or NULL
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-free-digest" role="function">
+<title>librdf_free_digest ()</title>
+<indexterm zone="librdf-free-digest"><primary>librdf_free_digest</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_free_digest                  (<link linkend="librdf-digest">librdf_digest</link> *digest);</programlisting>
+<para>
+Destructor- destroy a <link linkend="librdf-digest"><type>librdf_digest</type></link> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-init" role="function">
+<title>librdf_digest_init ()</title>
+<indexterm zone="librdf-digest-init"><primary>librdf_digest_init</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_digest_init                  (<link linkend="librdf-digest">librdf_digest</link> *digest);</programlisting>
+<para>
+(Re)initialise the librdf_digest object.
+</para>
+<para>
+This is automatically called on construction but can be used to
+re-initialise the digest to the initial state for digesting new
+data.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-update" role="function">
+<title>librdf_digest_update ()</title>
+<indexterm zone="librdf-digest-update"><primary>librdf_digest_update</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_digest_update                (<link linkend="librdf-digest">librdf_digest</link> *digest,
+                                                         unsigned <link linkend="char">char</link> *buf,
+                                                         <link linkend="size-t">size_t</link> length);</programlisting>
+<para>
+Add more data to the librdf_digest object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>buf</parameter>&nbsp;:</term>
+<listitem><simpara> the data buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> the length of the data
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-update-string" role="function">
+<title>librdf_digest_update_string ()</title>
+<indexterm zone="librdf-digest-update-string"><primary>librdf_digest_update_string</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_digest_update_string         (<link linkend="librdf-digest">librdf_digest</link> *digest,
+                                                         unsigned <link linkend="char">char</link> *string);</programlisting>
+<para>
+Add a string to the librdf_digest object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> string to add
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-final" role="function">
+<title>librdf_digest_final ()</title>
+<indexterm zone="librdf-digest-final"><primary>librdf_digest_final</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_digest_final                 (<link linkend="librdf-digest">librdf_digest</link> *digest);</programlisting>
+<para>
+Finish the digesting of data.
+</para>
+<para>
+The digest can now be returned via <link linkend="librdf-digest-get-digest"><function>librdf_digest_get_digest()</function></link>.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-get-digest" role="function">
+<title>librdf_digest_get_digest ()</title>
+<indexterm zone="librdf-digest-get-digest"><primary>librdf_digest_get_digest</primary></indexterm><programlisting><link linkend="void">void</link>*               librdf_digest_get_digest            (<link linkend="librdf-digest">librdf_digest</link> *digest);</programlisting>
+<para>
+Get the calculated digested value.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> pointer to the memory containing the digest.  It will
+be <link linkend="librdf-digest-get-digest-length"><type>librdf_digest_get_digest_length</type></link> bytes in length.
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-get-digest-length" role="function">
+<title>librdf_digest_get_digest_length ()</title>
+<indexterm zone="librdf-digest-get-digest-length"><primary>librdf_digest_get_digest_length</primary></indexterm><programlisting><link linkend="size-t">size_t</link>              librdf_digest_get_digest_length     (<link linkend="librdf-digest">librdf_digest</link> *digest);</programlisting>
+<para>
+Get length of the calculated digested.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> size of the digest in bytes
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-to-string" role="function">
+<title>librdf_digest_to_string ()</title>
+<indexterm zone="librdf-digest-to-string"><primary>librdf_digest_to_string</primary></indexterm><programlisting><link linkend="char">char</link>*               librdf_digest_to_string             (<link linkend="librdf-digest">librdf_digest</link> *digest);</programlisting>
+<para>
+Get a string representation of the digest object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a newly allocated string that represents the digest.
+This must be released by the caller using <link linkend="free"><function>free()</function></link> 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-digest-print" role="function">
+<title>librdf_digest_print ()</title>
+<indexterm zone="librdf-digest-print"><primary>librdf_digest_print</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_digest_print                 (<link linkend="librdf-digest">librdf_digest</link> *digest,
+                                                         <link linkend="FILE:CAPS">FILE</link> *fh);</programlisting>
+<para>
+Print the digest to a FILE handle.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>digest</parameter>&nbsp;:</term>
+<listitem><simpara> the digest
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>fh</parameter>&nbsp;:</term>
+<listitem><simpara> file handle
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

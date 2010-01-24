@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="objects">
+<title>Objects in C</title>
+
+<para>
+Redland uses objects and is written in C, which has no built in support for
+object construction, destruction, copying etc.  This library thus uses
+conventions for the names of the routines providing the
+constructor, destructor and copy constructor functionality for a class as
+well as conventions for the general methods.
+</para>
+
+<para>
+A class FOO is defined as a C typedef <literal>librdf_foo</literal>,
+and its a public interface defined in <filename>rdf_foo.h</filename>
+along with any public or private types, enumerations or constants.
+The private definitions are not exposed to library users, only
+internally when the library is built.  The implementation of the
+class is defined in file <filename>rdf_foo.c</filename> and may
+include private (static) functions either for internal
+implementations or to satisfy part of a factory API.
+</para>
+
+<para>Each class may have a class initialiser / termination pair
+of functions which must be called before any object in the class is created,
+and after the last object has been freed. These are defined with signatures
+like:
+<programlisting>
+  void init_librdf_foo (...)
+  void terminate_librdf_foo (void)
+</programlisting>
+The arguments to the initialisation vary since there are sometimes
+some class wide options that can be set at initialisation time.
+</para>
+
+<para>
+The object constructor(s) are defined with signatures like:
+<programlisting>
+  librdf_foo* librdf_new_foo(void)
+</programlisting>
+which takes no parameters.  Additional constructors can be defined
+with parameters, and are named in a similar way with an extra part
+appropriate for the name for example:
+<programlisting>
+  librdf_foo* librdf_new_foo_with_options(char *options)
+</programlisting>
+</para>
+
+<para>A copy constructor may be defined which will have the signature:
+<programlisting>
+  librdf_foo* librdf_new_foo_from_foo(librdf_foo* old_foo)
+</programlisting>
+</para>
+
+<para>A destructor must be defined and has the signature:
+<programlisting>
+  void librdf_free_foo(librdf_foo* foo)
+</programlisting>
+</para>
+
+<para>Methods of the class have names starting with <literal>librdf_foo_</literal> and
+examples could be:
+<programlisting>
+  /* accessor functions to object part 'thing' */
+  int librdf_foo_set_thing(librdf_foo* foo, char *thing)
+  char *librdf_foo_get_thing(librdf_foo* foo)
+</programlisting>
+</para>
+
+<para>It is often convienent to get a string representation of an
+object for further processing, debugging or serialisation.  There are
+two conventions for methods that provide this functionality - the
+first is when a pointer is returned to a <emphasis>shared</emphasis>
+copy of the string and in that case the method ends
+<literal>_as_string</literal>.  The second is when a pointer is
+returned to a <emphasis>newly allocated</emphasis> string in which
+case the method ends <literal>_to_string</literal>.</para>
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("redland-docs.xml" "book" "part" "chapter")
+End:
+-->

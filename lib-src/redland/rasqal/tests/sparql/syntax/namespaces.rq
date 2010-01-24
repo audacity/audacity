@@ -1,0 +1,5 @@
+# rdf: is not a default namespace in sparql
+SELECT *
+WHERE {
+  ?s rdf:type ?o
+}

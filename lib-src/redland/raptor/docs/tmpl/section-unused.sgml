@@ -1,0 +1,73 @@
+<!-- ##### SECTION Title ##### -->
+Unused
+
+<!-- ##### SECTION Short_Description ##### -->
+Unused
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Unused
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO RAPTOR_API ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO RAPTOR_DEPRECATED ##### -->
+<para>
+When defined before a function, indicates that the function
+has been deprecated and may be replaced in a future release.
+With some versions of gcc this may give a compilation warning.
+</para>
+
+
+
+<!-- ##### MACRO RAPTOR_PRINTF_FORMAT ##### -->
+<para>
+
+</para>
+
+@string_index: 
+@first_to_check_index: 
+
+
+<!-- ##### TYPEDEF raptor_ntriples_parser ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM raptor_uri_source ##### -->
+<para>
+
+</para>
+
+@RAPTOR_URI_SOURCE_UNKNOWN: 
+@RAPTOR_URI_SOURCE_NOT_URI: 
+@RAPTOR_URI_SOURCE_ELEMENT: 
+@RAPTOR_URI_SOURCE_ATTRIBUTE: 
+@RAPTOR_URI_SOURCE_ID: 
+@RAPTOR_URI_SOURCE_URI: 
+@RAPTOR_URI_SOURCE_GENERATED: 
+@RAPTOR_URI_SOURCE_BLANK_ID: 
+
+<!-- ##### ENUM raptor_ntriples_term_type ##### -->
+<para>
+
+</para>
+
+@RAPTOR_NTRIPLES_TERM_TYPE_URI_REF: 
+@RAPTOR_NTRIPLES_TERM_TYPE_BLANK_NODE: 
+@RAPTOR_NTRIPLES_TERM_TYPE_LITERAL: 
+

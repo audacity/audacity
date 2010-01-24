@@ -1,0 +1,170 @@
+================================================================================
+= APE Tag Specification, Version 2.000
+================================================================================
+
+Original Content     (C) 2004, Frank Klemm <frank.klemm@elster.offl.uni-jena.de>
+Formatting / Editing (C) 2004, Scott Wheeler <wheeler@kde.org>
+
+================================================================================
+= Contents
+================================================================================
+
+1   - APE Tag General Structure
+2   - APE Tag Header / Footer Format
+3   - APE Tag Flags
+4   - APE Tag Item Format
+5   - APE Tag Item Supported Keys
+6   - APE Tag Item Content
+7   - Data Types
+7.1 - Data Types / UTF-8
+7.2 - Data Types / Dates
+7.3 - Data Types / Timestamps
+
+================================================================================
+= 1 - APE Tag General Structure
+================================================================================
+
+Member of Basic Components of SV8 Stream Note:
+
+It is strongly recommended that the data size be stored in the tags.  The size
+should normally be in the roughly one kilobyte, never more than 8 kilobytes.
+
+Larger data should be stored externally using link entries.  Linked data is much
+easier to process by normal programs, so for instance JPEG data should not be
+included inside the audio file.
+
+APE Tag Version 2.000 (with header, recommended):
+
+/================================\
+| APE Tag Header    | 32 bytes   |
+|-------------------|------------|
+| APE Tag Item 1    | > 10 bytes |
+| APE Tag Item 2    | > 10 bytes |
+| APE Tag Item n-1  | > 10 bytes |
+| APE Tag Item n    | > 10 bytes |
+|-------------------|------------|
+| APE Tag Footer    | 32 bytes   |
+\================================/
+
+
+APE tag items should be sorted ascending by size.  When streaming, parts of the
+APE tag may be dropped to reduce the danger of drop outs between tracks.  This
+is not required, but is strongly recommended.  It would be desirable for the i
+tems to be sorted by importance / size, but this is not feasible.  This
+convention should only be broken when adding less important small items and it
+is not desirable to rewrite the entire tag.  An APE tag at the end of a file
+(the recommended location) must have at least a footer; an APE tag at the
+beginning of a file (strongly discouraged) must have at least a header.
+
+APE Tag Version 1.000 (without header, deprecated)
+
+/================================\
+| APE Tag Item 1    | > 10 bytes |
+| APE Tag Item 2    | > 10 bytes |
+| APE Tag Item n-1  | > 10 bytes |
+| APE Tag Item n    | > 10 bytes |
+|-------------------|------------|
+| APE Tag Footer    | 32 bytes   |
+\================================/
+
+================================================================================
+= 2 - APE Tag Header / Footer Format
+================================================================================
+
+Contains number, length and attributes of all tag items
+
+Header and Footer are different in 1 bit in the Tags Flags to distinguish
+between them.
+
+Member of APE Tag 2.0
+
+/===========================================================================\
+| Preamble       | 8 bytes | { 'A', 'P', 'E', 'T', 'A', 'G', 'E', 'X' }     |
+|----------------|---------|------------------------------------------------|
+| Version Number | 4 bytes | 1000 = Version 1.000, 2000 = Version 2.000     |
+|----------------|---------|------------------------------------------------|
+| Tag Size       | 4 bytes | Tag size in bytes including footer and all tag |
+|                |         | items excluding the header (for 1.000          |
+|                |         | compatibility)                                 |
+|----------------|---------|------------------------------------------------|
+| Item Count     | 4 bytes | Number of items in the tag                     |
+|----------------|---------|------------------------------------------------|
+| Tag Flags      | 4 bytes | Global flags                                   |
+|----------------|---------|------------------------------------------------|
+| Reserved       | 8 bytes | Must be zeroed                                 |
+\===========================================================================/
+
+================================================================================
+= 3 - APE Tag Flags
+================================================================================
+
+The general flag structure for either items or headers / footers is the same.
+Bits 31, 30 and 29 are specific to headers / footers, whereas 2 through 0 are
+item specific.
+
+Note: APE Tags from Version 1.0 do not use any of the following.  All flags in
+that version are zeroed and ignored when reading.
+
+/=================================================================\
+| Contains Header | Bit 31      | 1 - has header | 0 - no header  |
+|-----------------|-------------|---------------------------------|
+| Contains Footer | Bit 30      | 1 - has footer | 0 - no footer  |
+|-----------------|-------------|---------------------------------|
+| Is Header       | Bit 29      | 1 - is header  | 0 - is footer  |
+|-----------------|-------------|---------------------------------|
+| Undefined       | Bits 28 - 3 | Undefined, must be zeroed       |
+|-----------------|-------------|---------------------------------|
+| Encoding        | Bits 2 - 1  | 00 - UTF-8                      |
+|                 |             | 01 - Binary Data *              |
+|                 |             | 10 - External Reference **      |
+|                 |             | 11 - Reserved                   |
+|-----------------|-------------|---------------------------------|
+| Read Only       | Bit 0       | 1 - read only  | 0 - read/write |
+\=================================================================/
+
+ (*) Should be ignored by tools for editing text values
+(**) Allowed external reference formats:
+     - http://host/directory/filename.ext
+     - ftp://host/directory/filename.ext
+     - filename.ext
+     - /directory/filename.ext
+     - DRIVE:/directory/filename.ext
+
+     Note: External references are also UTF-8 encoded.
+
+================================================================================
+= 4 - APE Tag Item Format
+================================================================================
+
+APE Tag Items are stored as key-value pairs.  APE Tags Item Key are case
+sensitive, however it is illegal to use keys which only differ in case and
+it is recommended that tag reading not be case sensitive.
+
+Every key can only occur (at most) once. It is not possible to repeat a key
+to signify updated contents.
+
+Tags can be partially or completely repeated in the streaming format.  This
+makes it possible to display an artist and / or title if it was missed at the
+beginning of the stream.  It is recommended that the important information like
+artist, album and title should occur approximately every 2 minutes in the
+stream and again 5 to 10 seconds before the end.  However, care should be tak
+en not to replicate this information too often or during passages with high
+bitrate demands to avoid unnecessary drop-outs.
+
+/==============================================================================\
+| Content Size   | 4 bytes       | Length of the value in bytes                |
+|----------------|---------------|---------------------------------------------|
+| Flags          | 4 bytes       | Item flags                                  |
+|----------------|---------------|---------------------------------------------|
+| Key            | 2 - 255 bytes | Item key                                    |
+|----------------|---------------|---------------------------------------------|
+| Key Terminator | 1 byte        | Null byte that indicates the end of the key |
+|----------------|---------------|---------------------------------------------|
+| Value          | variable      | Content (formatted according to the flags)  |
+\==============================================================================/
+
+================================================================================
+
+Sections 5 - 7 haven't yet been converted from:
+
+http://www.personal.uni-jena.de/~pfk/mpp/sv8/apetag.html

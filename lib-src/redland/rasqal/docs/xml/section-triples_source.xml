@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="rasqal-section-triples-source">
+<refmeta>
+<refentrytitle role="top_of_page" id="rasqal-section-triples-source.top_of_page">Triples Source</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RASQAL Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Triples Source</refname>
+<refpurpose>Source of matches to a triple pattern.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="rasqal-section-triples-source.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+                    <link linkend="rasqal-triple-meta">rasqal_triple_meta</link>;
+                    <link linkend="rasqal-triples-match">rasqal_triples_match</link>;
+                    <link linkend="rasqal-triples-source">rasqal_triples_source</link>;
+                    <link linkend="rasqal-triples-source-factory">rasqal_triples_source_factory</link>;
+<link linkend="void">void</link>                <link linkend="rasqal-set-triples-source-factory">rasqal_set_triples_source_factory</link>   (<link linkend="rasqal-world">rasqal_world</link> *world,
+                                                         <link linkend="void">void</link> (register_fnrasqal_triples_source_factory *factory) (),
+                                                         <link linkend="void">void</link> *user_data);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="rasqal-section-triples-source.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+A factory that provides the raw triple matches for a triple pattern
+against some RDF graph.  The <link linkend="rasqal-triples-source-factory"><type>rasqal_triples_source_factory</type></link>
+must create use a new <link linkend="rasqal-triples-source"><type>rasqal_triples_source</type></link> that can be used
+to initialise and build a <link linkend="rasqal-triples-match"><type>rasqal_triples_match</type></link> for some
+<link linkend="rasqal-triple"><type>rasqal_triple</type></link> (subject, predicate, object, origin URI).
+</para>
+</refsect1>
+
+<refsect1 id="rasqal-section-triples-source.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rasqal-triple-meta" role="struct">
+<title>rasqal_triple_meta</title>
+<indexterm zone="rasqal-triple-meta"><primary>rasqal_triple_meta</primary></indexterm><programlisting>typedef struct {
+  /* triple (subject, predicate, object) and origin */
+  rasqal_variable* bindings[4];
+
+  rasqal_triples_match *triples_match;
+
+  void *context;
+
+  rasqal_triple_parts parts;
+
+  /* non-0 if the associated triple pattern contains no variables */
+  int is_exact;
+
+  /* non-0 if the triple pattern has been fully executed */
+  int executed;
+} rasqal_triple_meta;
+</programlisting>
+<para>
+Triple matching metadata for one triple pattern.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="rasqal-variable">rasqal_variable</link>&nbsp;*<structfield>bindings</structfield>[4];</term>
+<listitem><simpara> Variable bindings for this triple+origin to set.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="rasqal-triples-match">rasqal_triples_match</link>&nbsp;*<structfield>triples_match</structfield>;</term>
+<listitem><simpara> The matcher that is setting these bindings.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="void">void</link>&nbsp;*<structfield>context</structfield>;</term>
+<listitem><simpara> Context data used by the matcher.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="rasqal-triple-parts">rasqal_triple_parts</link>&nbsp;<structfield>parts</structfield>;</term>
+<listitem><simpara> Parts of the triple to match/bindings to set.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>is_exact</structfield>;</term>
+<listitem><simpara> non-0 if all parts of the triple are given
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="int">int</link>&nbsp;<structfield>executed</structfield>;</term>
+<listitem><simpara> non-0 if the triple pattern has been fully executed
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triples-match" role="struct">
+<title>rasqal_triples_match</title>
+<indexterm zone="rasqal-triples-match"><primary>rasqal_triples_match</primary></indexterm><programlisting>typedef struct {
+  void *user_data;
+
+  rasqal_triple_parts (*bind_match)(struct rasqal_triples_match_s* rtm, void *user_data, rasqal_variable *bindings[4], rasqal_triple_parts parts);
+
+  void (*next_match)(struct rasqal_triples_match_s* rtm, void *user_data);
+
+  int (*is_end)(struct rasqal_triples_match_s* rtm, void *user_data);
+
+  void (*finish)(struct rasqal_triples_match_s* rtm, void *user_data);
+
+  rasqal_world *world;
+} rasqal_triples_match;
+</programlisting>
+<para>
+Triples match structure as initialised by <link linkend="rasqal-triples-source"><type>rasqal_triples_source</type></link>
+method init_triples_match.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="void">void</link>&nbsp;*<structfield>user_data</structfield>;</term>
+<listitem><simpara> User data pointer for factory methods.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>bind_match</structfield>&nbsp;()</term>
+<listitem><simpara> The [4]array (s,p,o,origin) bindings against the current triple match only touching triple parts given. Returns parts that were bound or 0 on failure.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>next_match</structfield>&nbsp;()</term>
+<listitem><simpara> Move to next match.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>is_end</structfield>&nbsp;()</term>
+<listitem><simpara> Check for end of triple match - return non-0 if is end.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>finish</structfield>&nbsp;()</term>
+<listitem><simpara> Finish triples match and destroy any allocated memory.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="rasqal-world">rasqal_world</link>&nbsp;*<structfield>world</structfield>;</term>
+<listitem><simpara> rasqal_world object
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triples-source" role="struct">
+<title>rasqal_triples_source</title>
+<indexterm zone="rasqal-triples-source"><primary>rasqal_triples_source</primary></indexterm><programlisting>typedef struct {
+  rasqal_query* query;
+
+  void *user_data;
+
+  int (*init_triples_match)(rasqal_triples_match* rtm, struct rasqal_triples_source_s* rts, void *user_data, rasqal_triple_meta *m, rasqal_triple *t);
+
+  int (*triple_present)(struct rasqal_triples_source_s* rts, void *user_data, rasqal_triple *t);
+
+  void (*free_triples_source)(void *user_data);
+} rasqal_triples_source;
+</programlisting>
+<para>
+Triples source as initialised by a <link linkend="rasqal-triples-source-factory"><type>rasqal_triples_source_factory</type></link>.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="rasqal-query">rasqal_query</link>&nbsp;*<structfield>query</structfield>;</term>
+<listitem><simpara> Source for this query.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="void">void</link>&nbsp;*<structfield>user_data</structfield>;</term>
+<listitem><simpara> Context user data passed into the factory methods.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>init_triples_match</structfield>&nbsp;()</term>
+<listitem><simpara> Factory method to initalise a new <link linkend="rasqal-triples-match"><type>rasqal_triples_match</type></link>.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>triple_present</structfield>&nbsp;()</term>
+<listitem><simpara> Factory method to return presence or absence of a complete triple.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>free_triples_source</structfield>&nbsp;()</term>
+<listitem><simpara> Factory method to deallocate resources.
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-triples-source-factory" role="struct">
+<title>rasqal_triples_source_factory</title>
+<indexterm zone="rasqal-triples-source-factory"><primary>rasqal_triples_source_factory</primary></indexterm><programlisting>typedef struct {
+  void *user_data;
+  size_t user_data_size;
+
+  int (*new_triples_source)(rasqal_query* query, void *factory_user_data, void *user_data, rasqal_triples_source* rts);
+} rasqal_triples_source_factory;
+</programlisting>
+<para>
+A factory that initialises <link linkend="rasqal-triples-source"><type>rasqal_triples_source</type></link> structures
+to returning matches to a triple pattern.</para>
+<para>
+
+</para><variablelist role="struct">
+<varlistentry>
+<term><link linkend="void">void</link>&nbsp;*<structfield>user_data</structfield>;</term>
+<listitem><simpara> User data for triples_source_factory.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><link linkend="size-t">size_t</link>&nbsp;<structfield>user_data_size</structfield>;</term>
+<listitem><simpara> Size Of <parameter>user_data</parameter> for new_triples_source.
+</simpara></listitem>
+</varlistentry>
+<varlistentry>
+<term><structfield>new_triples_source</structfield>&nbsp;()</term>
+<listitem><simpara> Create a new triples source - returns non-zero on failure &lt; 0 is a 'no rdf data error', &gt; 0 is an unspecified error..
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rasqal-set-triples-source-factory" role="function">
+<title>rasqal_set_triples_source_factory ()</title>
+<indexterm zone="rasqal-set-triples-source-factory"><primary>rasqal_set_triples_source_factory</primary></indexterm><programlisting><link linkend="void">void</link>                rasqal_set_triples_source_factory   (<link linkend="rasqal-world">rasqal_world</link> *world,
+                                                         <link linkend="void">void</link> (register_fnrasqal_triples_source_factory *factory) (),
+                                                         <link linkend="void">void</link> *user_data);</programlisting>
+<para>
+Register the factory to return triple sources.
+</para>
+<para>
+Registers the factory that returns triples sources.  Note that
+there is only one of these per runtime. 
+</para>
+<para>
+The rasqal_triples_source_factory factory method new_triples_source is
+called with the user data for some query and rasqal_triples_source.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> rasqal_world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>register_fn</parameter>&nbsp;:</term>
+<listitem><simpara> registration function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>
+<listitem><simpara> user data for registration
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

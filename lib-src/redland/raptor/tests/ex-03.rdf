@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!-- Test rdf:Description and all combinations of syntax-related
+       rdf: attributes that can be used on it
+    -->
+  <rdf:Description rdf:about="http://example.org/resource/"/>
+  <rdf:Description rdf:about="http://example.org/resource/" rdf:bagID="b"
+    xml:base="http://example.org/bags"/>
+
+  <rdf:Description about="http://example.org/resource/"/>
+</rdf:RDF>

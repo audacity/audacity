@@ -1,0 +1,8 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 3-07 : Contents of bags
+
+SELECT ?b, ?y
+SOURCE <model5.nt>
+WHERE  (?b, <rsyn:type>, <rsyn:Bag>), (?b, ?x, ?y)
+AND ! ( ?x eq <rsyn:type> && ?y eq <rsyn:Bag> )
+USING rsyn FOR <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

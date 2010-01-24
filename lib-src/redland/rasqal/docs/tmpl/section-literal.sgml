@@ -1,0 +1,290 @@
+<!-- ##### SECTION Title ##### -->
+Literal
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF literals and RDF query-specific literals.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+A class for handling RDF terms (URI, blank nodes, strings, datatyped
+literals) as well as those natively used in a query such as
+boolean, double, floating, integer, regex pattern and variables.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF rasqal_literal ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### ENUM rasqal_literal_type ##### -->
+<para>
+
+</para>
+
+@RASQAL_LITERAL_UNKNOWN: 
+@RASQAL_LITERAL_BLANK: 
+@RASQAL_LITERAL_URI: 
+@RASQAL_LITERAL_STRING: 
+@RASQAL_LITERAL_BOOLEAN: 
+@RASQAL_LITERAL_INTEGER: 
+@RASQAL_LITERAL_DOUBLE: 
+@RASQAL_LITERAL_FLOAT: 
+@RASQAL_LITERAL_DECIMAL: 
+@RASQAL_LITERAL_DATETIME: 
+@RASQAL_LITERAL_FIRST_XSD: 
+@RASQAL_LITERAL_LAST_XSD: 
+@RASQAL_LITERAL_PATTERN: 
+@RASQAL_LITERAL_QNAME: 
+@RASQAL_LITERAL_VARIABLE: 
+@RASQAL_LITERAL_LAST: 
+
+<!-- ##### FUNCTION rasqal_new_typed_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@type: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_boolean_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_decimal_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_decimal_literal_from_decimal ##### -->
+<para>
+
+</para>
+
+@world: 
+@string: 
+@decimal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_double_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@d: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_float_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@f: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_integer_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@type: 
+@integer: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_pattern_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@pattern: 
+@flags: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_simple_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@type: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_string_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@string: 
+@language: 
+@datatype: 
+@datatype_qname: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_uri_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_variable_literal ##### -->
+<para>
+
+</para>
+
+@world: 
+@variable: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_new_literal_from_literal ##### -->
+<para>
+
+</para>
+
+@l: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_free_literal ##### -->
+<para>
+
+</para>
+
+@l: 
+
+
+<!-- ##### FUNCTION rasqal_literal_as_node ##### -->
+<para>
+
+</para>
+
+@l: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_as_string ##### -->
+<para>
+
+</para>
+
+@l: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_as_string_flags ##### -->
+<para>
+
+</para>
+
+@l: 
+@flags: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_as_variable ##### -->
+<para>
+
+</para>
+
+@l: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_compare ##### -->
+<para>
+
+</para>
+
+@l1: 
+@l2: 
+@flags: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_datatype ##### -->
+<para>
+
+</para>
+
+@l: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_equals ##### -->
+<para>
+
+</para>
+
+@l1: 
+@l2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION rasqal_literal_print ##### -->
+<para>
+
+</para>
+
+@l: 
+@fh: 
+
+
+<!-- ##### FUNCTION rasqal_literal_print_type ##### -->
+<para>
+
+</para>
+
+@l: 
+@fh: 
+
+
+<!-- ##### FUNCTION rasqal_literal_value ##### -->
+<para>
+
+</para>
+
+@l: 
+@Returns: 
+
+

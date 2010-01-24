@@ -1,0 +1,117 @@
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex:	 <http://example.org/survey-sample/ontology/> .
+
+[]    rdf:type    rs:ResultSet ;
+      rs:resultVariable  "R" ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:Publication ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:InProceedings ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:Person ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:Human ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:Topic ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:author ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:title ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:pages ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:year ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:isAbout ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:name ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:email ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/survey-sample/person01> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/survey-sample/person02> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/survey-sample/person03> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/survey-sample/person04> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/survey-sample/Paper> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value ex:reified_triple ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/ACMTopic/Information_Systems> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/ACMTopic/Information_Systems/Database_Management> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/ACMTopic/Information_Systems/Database_Management/Languages> ;
+                                  rs:variable  "R"
+                                ]
+		  ] ;
+      rs:solution
+                  [ rs:binding  [ rs:value <http://example.org/ACMTopic/Information_Systems/Database_Management/Languages/Query_Languages> ;
+                                  rs:variable  "R"
+                                ]
+		  ] .

@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>URI Factory</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="index.html" title="Raptor RDF Syntax Parsing and Serializing Library Manual">
+<link rel="up" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="prev" href="raptor-section-unicode.html" title="Unicode">
+<link rel="next" href="raptor-section-uri.html" title="URI">
+<meta name="generator" content="GTK-Doc V1.10 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="chapter" href="introduction.html" title="Raptor Overview">
+<link rel="part" href="tutorial.html" title="Part I. Raptor Tutorial">
+<link rel="chapter" href="tutorial-initialising-finishing.html" title="Initialising and Finishing using the Library">
+<link rel="chapter" href="tutorial-querying-functionality.html" title="Listing built-in functionality">
+<link rel="chapter" href="tutorial-parsing.html" title="Parsing syntaxes to RDF Triples">
+<link rel="chapter" href="tutorial-serializing.html" title="Serializing RDF triples to a syntax">
+<link rel="part" href="reference-manual.html" title="Part II. Raptor Reference Manual">
+<link rel="chapter" href="raptor-parsers.html" title="Parsers in Raptor (syntax to triples)">
+<link rel="chapter" href="raptor-serializers.html" title="Serializers in Raptor (triples to syntax)">
+<link rel="index" href="ix01.html" title="Index">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="raptor-section-unicode.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="reference-manual.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">Raptor RDF Syntax Parsing and Serializing Library Manual</th>
+<td><a accesskey="n" href="raptor-section-uri.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts"><nobr><a href="#raptor-section-uri-factory.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#raptor-section-uri-factory.description" class="shortcut">Description</a></nobr></td></tr>
+</table>
+<div class="refentry" lang="en">
+<a name="raptor-section-uri-factory"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="raptor-section-uri-factory.top_of_page"></a>URI Factory</span></h2>
+<p>URI Factory — Provide an implementation for the URI class.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="raptor-section-uri-factory.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+<a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (<a class="link" href="raptor-section-uri-factory.html#raptor-new-uri-func" title="raptor_new_uri_func ()">*raptor_new_uri_func</a>)              (void *context,
+                                                         unsigned char *uri_string);
+<a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (<a class="link" href="raptor-section-uri-factory.html#raptor-new-uri-from-uri-local-name-func" title="raptor_new_uri_from_uri_local_name_func ()">*raptor_new_uri_from_uri_local_name_func</a>)
+                                                        (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri,
+                                                         unsigned char *local_name);
+<a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (<a class="link" href="raptor-section-uri-factory.html#raptor-new-uri-relative-to-base-func" title="raptor_new_uri_relative_to_base_func ()">*raptor_new_uri_relative_to_base_func</a>)
+                                                        (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *base_uri,
+                                                         unsigned char *uri_string);
+<a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (<a class="link" href="raptor-section-uri-factory.html#raptor-new-uri-for-rdf-concept-func" title="raptor_new_uri_for_rdf_concept_func ()">*raptor_new_uri_for_rdf_concept_func</a>)
+                                                        (void *context,
+                                                         const char *name);
+void                (<a class="link" href="raptor-section-uri-factory.html#raptor-free-uri-func" title="raptor_free_uri_func ()">*raptor_free_uri_func</a>)             (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri);
+int                 (<a class="link" href="raptor-section-uri-factory.html#raptor-uri-equals-func" title="raptor_uri_equals_func ()">*raptor_uri_equals_func</a>)           (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri1,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri2);
+<a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (<a class="link" href="raptor-section-uri-factory.html#raptor-uri-copy-func" title="raptor_uri_copy_func ()">*raptor_uri_copy_func</a>)             (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri);
+int                 (<a class="link" href="raptor-section-uri-factory.html#raptor-uri-compare-func" title="raptor_uri_compare_func ()">*raptor_uri_compare_func</a>)          (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri1,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri2);
+</pre>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-uri-factory.description"></a><h2>Description</h2>
+<p>
+A factory that allows registering an implementation for the URI
+class to override the simple internal one (<a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri"><span class="type">raptor_uri</span></a> are char*).
+Normally used by redland to replace <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri"><span class="type">raptor_uri</span></a> with <a
+href="/usr/share/gtk-doc/html/redland/redland-uri.html#librdf-uri"
+><span class="type">librdf_uri</span></a>
+</p>
+</div>
+<div class="refsect1" lang="en">
+<a name="raptor-section-uri-factory.details"></a><h2>Details</h2>
+<div class="refsect2" lang="en">
+<a name="raptor-new-uri-func"></a><h3>raptor_new_uri_func ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (*raptor_new_uri_func)              (void *context,
+                                                         unsigned char *uri_string);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-new-uri" title="raptor_new_uri ()"><code class="function">raptor_new_uri()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri_string</code></em> :</span></p></td>
+<td> URI string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new URI object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-new-uri-from-uri-local-name-func"></a><h3>raptor_new_uri_from_uri_local_name_func ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (*raptor_new_uri_from_uri_local_name_func)
+                                                        (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri,
+                                                         unsigned char *local_name);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-new-uri-from-uri-local-name" title="raptor_new_uri_from_uri_local_name ()"><code class="function">raptor_new_uri_from_uri_local_name()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td> URI object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>local_name</code></em> :</span></p></td>
+<td> local name string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new URI object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-new-uri-relative-to-base-func"></a><h3>raptor_new_uri_relative_to_base_func ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (*raptor_new_uri_relative_to_base_func)
+                                                        (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *base_uri,
+                                                         unsigned char *uri_string);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-new-uri-relative-to-base" title="raptor_new_uri_relative_to_base ()"><code class="function">raptor_new_uri_relative_to_base()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base_uri</code></em> :</span></p></td>
+<td> base URI object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri_string</code></em> :</span></p></td>
+<td> relative URI string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new URI object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-new-uri-for-rdf-concept-func"></a><h3>raptor_new_uri_for_rdf_concept_func ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (*raptor_new_uri_for_rdf_concept_func)
+                                                        (void *context,
+                                                         const char *name);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-new-uri-for-rdf-concept" title="raptor_new_uri_for_rdf_concept ()"><code class="function">raptor_new_uri_for_rdf_concept()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td> RDF term
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new URI object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-free-uri-func"></a><h3>raptor_free_uri_func ()</h3>
+<pre class="programlisting">void                (*raptor_free_uri_func)             (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-free-uri" title="raptor_free_uri ()"><code class="function">raptor_free_uri()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td> URI object
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-uri-equals-func"></a><h3>raptor_uri_equals_func ()</h3>
+<pre class="programlisting">int                 (*raptor_uri_equals_func)           (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri1,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri2);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-uri-equals" title="raptor_uri_equals ()"><code class="function">raptor_uri_equals()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri1</code></em> :</span></p></td>
+<td> URI object 1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri2</code></em> :</span></p></td>
+<td> URI object 2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> non-0 if the URIs are equal
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-uri-copy-func"></a><h3>raptor_uri_copy_func ()</h3>
+<pre class="programlisting"><a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a>*         (*raptor_uri_copy_func)             (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-uri-copy" title="raptor_uri_copy ()"><code class="function">raptor_uri_copy()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td> URI object
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> new URI object or NULL on failure
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" lang="en">
+<a name="raptor-uri-compare-func"></a><h3>raptor_uri_compare_func ()</h3>
+<pre class="programlisting">int                 (*raptor_uri_compare_func)          (void *context,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri1,
+                                                         <a class="link" href="raptor-section-uri.html#raptor-uri" title="raptor_uri">raptor_uri</a> *uri2);</pre>
+<p>
+Handler function for implementing <a class="link" href="raptor-section-uri.html#raptor-uri-equals" title="raptor_uri_equals ()"><code class="function">raptor_uri_equals()</code></a>.</p>
+<p>
+
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td> URI context data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri1</code></em> :</span></p></td>
+<td> URI object 1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri2</code></em> :</span></p></td>
+<td> URI object 2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> -1 if uri1 &lt; uri2, 0 if equal, 1 if uri1 &gt; uri2
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.10</div>
+</body>
+</html>

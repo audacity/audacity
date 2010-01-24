@@ -1,0 +1,9 @@
+SLV2
+----
+
+SLV2 is a library for LV2 hosts intended to make using LV2 Plugins as simple
+as possible (without sacrificing capabilities).
+
+More information about LV2 plugins can be found at <http://lv2plug.in>.
+
+ -- Dave Robillard <dave@drobilla.net>

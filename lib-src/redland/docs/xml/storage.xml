@@ -1,0 +1,1103 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="redland-storage">
+<refmeta>
+<refentrytitle role="top_of_page" id="redland-storage.top_of_page">Triple stores.</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>REDLAND Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Triple stores.</refname>
+<refpurpose>RDF Triple stores</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="redland-storage.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="librdf-storage">librdf_storage</link>;
+typedef             <link linkend="librdf-storage-factory">librdf_storage_factory</link>;
+<link linkend="void">void</link>                <link linkend="librdf-storage-register-factory">librdf_storage_register_factory</link>     (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *label,
+                                                         <link linkend="void">void</link> (factorylibrdf_storage_factory*) ());
+<link linkend="int">int</link>                 <link linkend="librdf-storage-enumerate">librdf_storage_enumerate</link>            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         unsigned <link linkend="int">int</link> counter,
+                                                         const <link linkend="char">char</link> **name,
+                                                         const <link linkend="char">char</link> **label);
+<link linkend="librdf-storage">librdf_storage</link>*     <link linkend="librdf-new-storage">librdf_new_storage</link>                  (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *storage_name,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *options_string);
+<link linkend="librdf-storage">librdf_storage</link>*     <link linkend="librdf-new-storage-with-options">librdf_new_storage_with_options</link>     (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *storage_name,
+                                                         const <link linkend="char">char</link> *name,
+                                                         <link linkend="librdf-hash">librdf_hash</link> *options);
+<link linkend="librdf-storage">librdf_storage</link>*     <link linkend="librdf-new-storage-from-storage">librdf_new_storage_from_storage</link>     (<link linkend="librdf-storage">librdf_storage</link> *old_storage);
+<link linkend="librdf-storage">librdf_storage</link>*     <link linkend="librdf-new-storage-from-factory">librdf_new_storage_from_factory</link>     (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-storage-factory">librdf_storage_factory</link> *factory,
+                                                         const <link linkend="char">char</link> *name,
+                                                         <link linkend="librdf-hash">librdf_hash</link> *options);
+<link linkend="void">void</link>                <link linkend="librdf-free-storage">librdf_free_storage</link>                 (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-open">librdf_storage_open</link>                 (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-close">librdf_storage_close</link>                (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-size">librdf_storage_size</link>                 (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-add-statement">librdf_storage_add_statement</link>        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-add-statements">librdf_storage_add_statements</link>       (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-stream">librdf_stream</link> *statement_stream);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-remove-statement">librdf_storage_remove_statement</link>     (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-contains-statement">librdf_storage_contains_statement</link>   (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-storage-serialise">librdf_storage_serialise</link>            (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-storage-find-statements">librdf_storage_find_statements</link>      (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-storage-find-statements-with-options">librdf_storage_find_statements_with_options</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement,
+                                                         <link linkend="librdf-node">librdf_node</link> *context_node,
+                                                         <link linkend="librdf-hash">librdf_hash</link> *options);
+<link linkend="librdf-iterator">librdf_iterator</link>*    <link linkend="librdf-storage-get-sources">librdf_storage_get_sources</link>          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *arc,
+                                                         <link linkend="librdf-node">librdf_node</link> *target);
+<link linkend="librdf-iterator">librdf_iterator</link>*    <link linkend="librdf-storage-get-arcs">librdf_storage_get_arcs</link>             (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *source,
+                                                         <link linkend="librdf-node">librdf_node</link> *target);
+<link linkend="librdf-iterator">librdf_iterator</link>*    <link linkend="librdf-storage-get-targets">librdf_storage_get_targets</link>          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *source,
+                                                         <link linkend="librdf-node">librdf_node</link> *arc);
+<link linkend="librdf-iterator">librdf_iterator</link>*    <link linkend="librdf-storage-get-arcs-in">librdf_storage_get_arcs_in</link>          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node);
+<link linkend="librdf-iterator">librdf_iterator</link>*    <link linkend="librdf-storage-get-arcs-out">librdf_storage_get_arcs_out</link>         (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-has-arc-in">librdf_storage_has_arc_in</link>           (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node,
+                                                         <link linkend="librdf-node">librdf_node</link> *property);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-has-arc-out">librdf_storage_has_arc_out</link>          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node,
+                                                         <link linkend="librdf-node">librdf_node</link> *property);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-context-add-statement">librdf_storage_context_add_statement</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-context-add-statements">librdf_storage_context_add_statements</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context,
+                                                         <link linkend="librdf-stream">librdf_stream</link> *stream);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-context-remove-statement">librdf_storage_context_remove_statement</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-context-remove-statements">librdf_storage_context_remove_statements</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-storage-context-as-stream">librdf_storage_context_as_stream</link>    (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-storage-context-serialise">librdf_storage_context_serialise</link>    (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-supports-query">librdf_storage_supports_query</link>       (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-query">librdf_query</link> *query);
+<link linkend="librdf-query-results">librdf_query_results</link>* <link linkend="librdf-storage-query-execute">librdf_storage_query_execute</link>      (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-query">librdf_query</link> *query);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-sync">librdf_storage_sync</link>                 (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="librdf-stream">librdf_stream</link>*      <link linkend="librdf-storage-find-statements-in-context">librdf_storage_find_statements_in_context</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement,
+                                                         <link linkend="librdf-node">librdf_node</link> *context_node);
+<link linkend="librdf-iterator">librdf_iterator</link>*    <link linkend="librdf-storage-get-contexts">librdf_storage_get_contexts</link>         (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="librdf-node">librdf_node</link>*        <link linkend="librdf-storage-get-feature">librdf_storage_get_feature</link>          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-set-feature">librdf_storage_set_feature</link>          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature,
+                                                         <link linkend="librdf-node">librdf_node</link> *value);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-transaction-commit">librdf_storage_transaction_commit</link>   (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="void">void</link>*               <link linkend="librdf-storage-transaction-get-handle">librdf_storage_transaction_get_handle</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-transaction-rollback">librdf_storage_transaction_rollback</link> (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-transaction-start">librdf_storage_transaction_start</link>    (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="int">int</link>                 <link linkend="librdf-storage-transaction-start-with-handle">librdf_storage_transaction_start_with_handle</link>
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="void">void</link> *handle);
+<link linkend="void">void</link>                <link linkend="librdf-storage-add-reference">librdf_storage_add_reference</link>        (<link linkend="librdf-storage">librdf_storage</link> *storage);
+<link linkend="void">void</link>                <link linkend="librdf-storage-remove-reference">librdf_storage_remove_reference</link>     (<link linkend="librdf-storage">librdf_storage</link> *storage);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="redland-storage.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Provides classes to create triple stores to back the RDF graph
+interface (<link linkend="librdf-model"><type>librdf_model</type></link>).  Most of the methods are for implementing
+the RDF model API and have the same name.
+</para>
+</refsect1>
+
+<refsect1 id="redland-storage.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="librdf-storage" role="typedef">
+<title>librdf_storage</title>
+<indexterm zone="librdf-storage"><primary>librdf_storage</primary></indexterm><programlisting>typedef struct librdf_storage_s librdf_storage;
+</programlisting>
+<para>
+Redland storage class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-storage-factory" role="typedef">
+<title>librdf_storage_factory</title>
+<indexterm zone="librdf-storage-factory"><primary>librdf_storage_factory</primary></indexterm><programlisting>typedef struct librdf_storage_factory_s librdf_storage_factory;
+</programlisting>
+<para>
+Redland storage factory class.</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="librdf-storage-register-factory" role="function">
+<title>librdf_storage_register_factory ()</title>
+<indexterm zone="librdf-storage-register-factory"><primary>librdf_storage_register_factory</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_storage_register_factory     (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *label,
+                                                         <link linkend="void">void</link> (factorylibrdf_storage_factory*) ());</programlisting>
+<para>
+Register a storage factory.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> the storage factory name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<listitem><simpara> the storage factory label
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>factory</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to function to call to register the factory
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-enumerate" role="function">
+<title>librdf_storage_enumerate ()</title>
+<indexterm zone="librdf-storage-enumerate"><primary>librdf_storage_enumerate</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_enumerate            (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         unsigned <link linkend="int">int</link> counter,
+                                                         const <link linkend="char">char</link> **name,
+                                                         const <link linkend="char">char</link> **label);</programlisting>
+<para>
+Get information on storages.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>counter</parameter>&nbsp;:</term>
+<listitem><simpara> index into the list of storages
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to store the name of the storage (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label</parameter>&nbsp;:</term>
+<listitem><simpara> pointer to store syntax readable label (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure of if counter is out of range
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-new-storage" role="function">
+<title>librdf_new_storage ()</title>
+<indexterm zone="librdf-new-storage"><primary>librdf_new_storage</primary></indexterm><programlisting><link linkend="librdf-storage">librdf_storage</link>*     librdf_new_storage                  (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *storage_name,
+                                                         const <link linkend="char">char</link> *name,
+                                                         const <link linkend="char">char</link> *options_string);</programlisting>
+<para>
+Constructor - create a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object.
+</para>
+<para>
+The options are encoded as described in <link linkend="librdf-hash-from-string"><function>librdf_hash_from_string()</function></link>
+and can be NULL if none are required.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>storage_name</parameter>&nbsp;:</term>
+<listitem><simpara> the storage factory name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> an identifier for the storage
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>options_string</parameter>&nbsp;:</term>
+<listitem><simpara> options to initialise storage
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object or NULL on failure
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-new-storage-with-options" role="function">
+<title>librdf_new_storage_with_options ()</title>
+<indexterm zone="librdf-new-storage-with-options"><primary>librdf_new_storage_with_options</primary></indexterm><programlisting><link linkend="librdf-storage">librdf_storage</link>*     librdf_new_storage_with_options     (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         const <link linkend="char">char</link> *storage_name,
+                                                         const <link linkend="char">char</link> *name,
+                                                         <link linkend="librdf-hash">librdf_hash</link> *options);</programlisting>
+<para>
+Constructor - create a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object.
+</para>
+<para>
+The options can be NULL if none are required.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>storage_name</parameter>&nbsp;:</term>
+<listitem><simpara> the storage factory name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> an identifier for the storage
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>options</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-hash"><type>librdf_hash</type></link> of options to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object or NULL on failure
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-new-storage-from-storage" role="function">
+<title>librdf_new_storage_from_storage ()</title>
+<indexterm zone="librdf-new-storage-from-storage"><primary>librdf_new_storage_from_storage</primary></indexterm><programlisting><link linkend="librdf-storage">librdf_storage</link>*     librdf_new_storage_from_storage     (<link linkend="librdf-storage">librdf_storage</link> *old_storage);</programlisting>
+<para>
+Should create a new storage in the same context as the existing one
+as appropriate for the storage.  For example, in a RDBMS storage
+it would be a new database, or in on disk it would be a new
+set of files.  This will mean automatically generating
+a new identifier for the storage, maybe based on the existing
+storage identifier.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>old_storage</parameter>&nbsp;:</term>
+<listitem><simpara> the existing storage <link linkend="librdf-storage"><type>librdf_storage</type></link> to use
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object or NULL on failure
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-new-storage-from-factory" role="function">
+<title>librdf_new_storage_from_factory ()</title>
+<indexterm zone="librdf-new-storage-from-factory"><primary>librdf_new_storage_from_factory</primary></indexterm><programlisting><link linkend="librdf-storage">librdf_storage</link>*     librdf_new_storage_from_factory     (<link linkend="librdf-world">librdf_world</link> *world,
+                                                         <link linkend="librdf-storage-factory">librdf_storage_factory</link> *factory,
+                                                         const <link linkend="char">char</link> *name,
+                                                         <link linkend="librdf-hash">librdf_hash</link> *options);</programlisting>
+<para>
+Constructor - create a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object.
+</para>
+<para>
+If the options are present, they become owned by the storage
+and should no longer be used.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>world</parameter>&nbsp;:</term>
+<listitem><simpara> redland world object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>factory</parameter>&nbsp;:</term>
+<listitem><simpara> the factory to use to construct the storage
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&nbsp;:</term>
+<listitem><simpara> name to use for storage
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>options</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-hash"><type>librdf_hash</type></link> of options to initialise storage
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> a new <link linkend="librdf-storage"><type>librdf_storage</type></link> object or NULL on failure
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-free-storage" role="function">
+<title>librdf_free_storage ()</title>
+<indexterm zone="librdf-free-storage"><primary>librdf_free_storage</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_free_storage                 (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Destructor - destroy a <link linkend="librdf-storage"><type>librdf_storage</type></link> object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-open" role="function">
+<title>librdf_storage_open ()</title>
+<indexterm zone="librdf-storage-open"><primary>librdf_storage_open</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_open                 (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-model">librdf_model</link> *model);</programlisting>
+<para>
+Start a model / storage association.
+</para>
+<para>
+This is ended with <link linkend="librdf-storage-close"><function>librdf_storage_close()</function></link></para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>model</parameter>&nbsp;:</term>
+<listitem><simpara> model stored
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-close" role="function">
+<title>librdf_storage_close ()</title>
+<indexterm zone="librdf-storage-close"><primary>librdf_storage_close</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_close                (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+End a model / storage association.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-size" role="function">
+<title>librdf_storage_size ()</title>
+<indexterm zone="librdf-storage-size"><primary>librdf_storage_size</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_size                 (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Get the number of statements stored.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> The number of statements or &lt; 0 if cannot be determined
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-add-statement" role="function">
+<title>librdf_storage_add_statement ()</title>
+<indexterm zone="librdf-storage-add-statement"><primary>librdf_storage_add_statement</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_add_statement        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);</programlisting>
+<para>
+Add a statement to a storage.
+</para>
+<para>
+The passed-in statement is copied when added to the store, not
+shared with the store.  
+</para>
+<para>
+If the statement already exists in the store, it is not added
+unless Redland contexts are being used.
+</para>
+<para>
+Enforces that the statement is legal for RDF - URI or blank subject,
+URI predicate and URI or blank or literal object (i.e. anything).</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> statement to add
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure, &lt;0 on error, &gt;0 if statement was illegal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-add-statements" role="function">
+<title>librdf_storage_add_statements ()</title>
+<indexterm zone="librdf-storage-add-statements"><primary>librdf_storage_add_statements</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_add_statements       (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-stream">librdf_stream</link> *statement_stream);</programlisting>
+<para>
+Add a stream of statements to the storage.
+</para>
+<para>
+If any of the statements already exists in the store, they are not
+added unless Redland contexts are being used.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement_stream</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-remove-statement" role="function">
+<title>librdf_storage_remove_statement ()</title>
+<indexterm zone="librdf-storage-remove-statement"><primary>librdf_storage_remove_statement</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_remove_statement     (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);</programlisting>
+<para>
+Remove a statement from the storage.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> statement to remove
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-contains-statement" role="function">
+<title>librdf_storage_contains_statement ()</title>
+<indexterm zone="librdf-storage-contains-statement"><primary>librdf_storage_contains_statement</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_contains_statement   (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);</programlisting>
+<para>
+Test if a given statement is present in the storage.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> statement to check
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 if the storage contains the statement (&gt;0 if illegal statement)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-serialise" role="function">
+<title>librdf_storage_serialise ()</title>
+<indexterm zone="librdf-storage-serialise"><primary>librdf_storage_serialise</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_storage_serialise            (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Serialise the storage as a librdf_stream of statemetns.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-find-statements" role="function">
+<title>librdf_storage_find_statements ()</title>
+<indexterm zone="librdf-storage-find-statements"><primary>librdf_storage_find_statements</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_storage_find_statements      (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);</programlisting>
+<para>
+Search the storage for matching statements.
+</para>
+<para>
+Searches the storage for a (partial) statement as described in
+<link linkend="librdf-statement-match"><function>librdf_statement_match()</function></link> and returns a <link linkend="librdf-stream"><type>librdf_stream</type></link> of
+matching <link linkend="librdf-statement"><type>librdf_statement</type></link> objects.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> partial statement to find
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-stream"><type>librdf_stream</type></link> of matching statements (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-find-statements-with-options" role="function">
+<title>librdf_storage_find_statements_with_options ()</title>
+<indexterm zone="librdf-storage-find-statements-with-options"><primary>librdf_storage_find_statements_with_options</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_storage_find_statements_with_options
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement,
+                                                         <link linkend="librdf-node">librdf_node</link> *context_node,
+                                                         <link linkend="librdf-hash">librdf_hash</link> *options);</programlisting>
+<para>
+Search the storage for matching statements with match options.
+</para>
+<para>
+Searches the storage for a (partial) statement as described in
+<link linkend="librdf-statement-match"><function>librdf_statement_match()</function></link> and returns a <link linkend="librdf-stream"><type>librdf_stream</type></link> of
+matching <link linkend="librdf-statement"><type>librdf_statement</type></link> objects.
+</para>
+<para>
+If options is given then the match is made according to
+the given options.  If options is NULL, this is equivalent
+to librdf_storage_find_statements_in_context.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> partial statement to find
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context_node</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> context node or NULL.
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>options</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-hash"><type>librdf_hash</type></link> of matching options or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-stream"><type>librdf_stream</type></link> of matching statements (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-sources" role="function">
+<title>librdf_storage_get_sources ()</title>
+<indexterm zone="librdf-storage-get-sources"><primary>librdf_storage_get_sources</primary></indexterm><programlisting><link linkend="librdf-iterator">librdf_iterator</link>*    librdf_storage_get_sources          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *arc,
+                                                         <link linkend="librdf-node">librdf_node</link> *target);</programlisting>
+<para>
+Return the sources (subjects) of arc in an RDF graph given arc (predicate) and target (object).
+</para>
+<para>
+Searches the storage for arcs matching the given arc and target
+and returns a list of the source <link linkend="librdf-node"><type>librdf_node</type></link> objects as an iterator</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arc</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> arc
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>target</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> target
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-iterator"><type>librdf_iterator</type></link> of <link linkend="librdf-node"><type>librdf_node</type></link> objects (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-arcs" role="function">
+<title>librdf_storage_get_arcs ()</title>
+<indexterm zone="librdf-storage-get-arcs"><primary>librdf_storage_get_arcs</primary></indexterm><programlisting><link linkend="librdf-iterator">librdf_iterator</link>*    librdf_storage_get_arcs             (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *source,
+                                                         <link linkend="librdf-node">librdf_node</link> *target);</programlisting>
+<para>
+Return the arcs (predicates) of an arc in an RDF graph given source (subject) and target (object).
+</para>
+<para>
+Searches the storage for arcs matching the given source and target
+and returns a list of the arc <link linkend="librdf-node"><type>librdf_node</type></link> objects as an iterator</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>source</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> source
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>target</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> target
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-iterator"><type>librdf_iterator</type></link> of <link linkend="librdf-node"><type>librdf_node</type></link> objects (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-targets" role="function">
+<title>librdf_storage_get_targets ()</title>
+<indexterm zone="librdf-storage-get-targets"><primary>librdf_storage_get_targets</primary></indexterm><programlisting><link linkend="librdf-iterator">librdf_iterator</link>*    librdf_storage_get_targets          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *source,
+                                                         <link linkend="librdf-node">librdf_node</link> *arc);</programlisting>
+<para>
+Return the targets (objects) of an arc in an RDF graph given source (subject) and arc (predicate).
+</para>
+<para>
+Searches the storage for targets matching the given source and arc
+and returns a list of the source <link linkend="librdf-node"><type>librdf_node</type></link> objects as an iterator</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>source</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> source
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>arc</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> arc
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-iterator"><type>librdf_iterator</type></link> of <link linkend="librdf-node"><type>librdf_node</type></link> objects (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-arcs-in" role="function">
+<title>librdf_storage_get_arcs_in ()</title>
+<indexterm zone="librdf-storage-get-arcs-in"><primary>librdf_storage_get_arcs_in</primary></indexterm><programlisting><link linkend="librdf-iterator">librdf_iterator</link>*    librdf_storage_get_arcs_in          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node);</programlisting>
+<para>
+Return the properties pointing to the given resource.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>node</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> resource node
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-iterator"><type>librdf_iterator</type></link> of <link linkend="librdf-node"><type>librdf_node</type></link> objects (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-arcs-out" role="function">
+<title>librdf_storage_get_arcs_out ()</title>
+<indexterm zone="librdf-storage-get-arcs-out"><primary>librdf_storage_get_arcs_out</primary></indexterm><programlisting><link linkend="librdf-iterator">librdf_iterator</link>*    librdf_storage_get_arcs_out         (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node);</programlisting>
+<para>
+Return the properties pointing from the given resource.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>node</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> resource node
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara>  <link linkend="librdf-iterator"><type>librdf_iterator</type></link> of <link linkend="librdf-node"><type>librdf_node</type></link> objects (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-has-arc-in" role="function">
+<title>librdf_storage_has_arc_in ()</title>
+<indexterm zone="librdf-storage-has-arc-in"><primary>librdf_storage_has_arc_in</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_has_arc_in           (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node,
+                                                         <link linkend="librdf-node">librdf_node</link> *property);</programlisting>
+<para>
+Check if a node has a given property pointing to it.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>node</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> resource node
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>property</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> property node
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 if arc property does point to the resource node
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-has-arc-out" role="function">
+<title>librdf_storage_has_arc_out ()</title>
+<indexterm zone="librdf-storage-has-arc-out"><primary>librdf_storage_has_arc_out</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_has_arc_out          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *node,
+                                                         <link linkend="librdf-node">librdf_node</link> *property);</programlisting>
+<para>
+Check if a node has a given property pointing from it.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>node</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> resource node
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>property</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> property node
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 if arc property does point from the resource node
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-context-add-statement" role="function">
+<title>librdf_storage_context_add_statement ()</title>
+<indexterm zone="librdf-storage-context-add-statement"><primary>librdf_storage_context_add_statement</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_context_add_statement
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);</programlisting>
+<para>
+Add a statement to a storage in a context.
+</para>
+<para>
+If <parameter>context</parameter> is NULL, this is equivalent to librdf_storage_add_statement</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> context node
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> statement to add
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-context-add-statements" role="function">
+<title>librdf_storage_context_add_statements ()</title>
+<indexterm zone="librdf-storage-context-add-statements"><primary>librdf_storage_context_add_statements</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_context_add_statements
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context,
+                                                         <link linkend="librdf-stream">librdf_stream</link> *stream);</programlisting>
+<para>
+Add statements to a storage with a context.
+</para>
+<para>
+If <parameter>context</parameter> is NULL, this is equivalent to librdf_storage_add_statements</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> context
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>stream</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> stream object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> Non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-context-remove-statement" role="function">
+<title>librdf_storage_context_remove_statement ()</title>
+<indexterm zone="librdf-storage-context-remove-statement"><primary>librdf_storage_context_remove_statement</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_context_remove_statement
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement);</programlisting>
+<para>
+Remove a statement from a storage in a context.
+</para>
+<para>
+If <parameter>context</parameter> is NULL, this is equivalent to librdf_storage_remove_statement</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> context node
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> statement to remove
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-context-remove-statements" role="function">
+<title>librdf_storage_context_remove_statements ()</title>
+<indexterm zone="librdf-storage-context-remove-statements"><primary>librdf_storage_context_remove_statements</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_context_remove_statements
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context);</programlisting>
+<para>
+Remove statements from a storage with the given context.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-uri"><type>librdf_uri</type></link> context
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> Non 0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-context-as-stream" role="function">
+<title>librdf_storage_context_as_stream ()</title>
+<indexterm zone="librdf-storage-context-as-stream"><primary>librdf_storage_context_as_stream</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_storage_context_as_stream    (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context);</programlisting>
+<para>
+List all statements in a storage context.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> context node
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL on failure or context is empty
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-context-serialise" role="function">
+<title>librdf_storage_context_serialise ()</title>
+<indexterm zone="librdf-storage-context-serialise"><primary>librdf_storage_context_serialise</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_storage_context_serialise    (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-node">librdf_node</link> *context);</programlisting>
+<para>
+List all statements in a storage context (DEPRECATED).
+</para>
+<para>
+DEPRECATED to reduce confusion with the librdf_serializer class.
+Please use librdf_storage_context_as_stream.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> context node
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of statements or NULL on failure or context is empty
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-supports-query" role="function">
+<title>librdf_storage_supports_query ()</title>
+<indexterm zone="librdf-storage-supports-query"><primary>librdf_storage_supports_query</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_supports_query       (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-query">librdf_query</link> *query);</programlisting>
+<para>
+Check if a storage system supports a query language.
+</para>
+<para>
+Not implemented.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>query</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-query"><type>librdf_query</type></link> query object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if the query is supported.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-query-execute" role="function">
+<title>librdf_storage_query_execute ()</title>
+<indexterm zone="librdf-storage-query-execute"><primary>librdf_storage_query_execute</primary></indexterm><programlisting><link linkend="librdf-query-results">librdf_query_results</link>* librdf_storage_query_execute      (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-query">librdf_query</link> *query);</programlisting>
+<para>
+Run the given query against the storage.
+</para>
+<para>
+Not implemented.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>query</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-query"><type>librdf_query</type></link> query object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-query-results"><type>librdf_query_results</type></link> or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-sync" role="function">
+<title>librdf_storage_sync ()</title>
+<indexterm zone="librdf-storage-sync"><primary>librdf_storage_sync</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_sync                 (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Synchronise the storage to the storage implementation.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-find-statements-in-context" role="function">
+<title>librdf_storage_find_statements_in_context ()</title>
+<indexterm zone="librdf-storage-find-statements-in-context"><primary>librdf_storage_find_statements_in_context</primary></indexterm><programlisting><link linkend="librdf-stream">librdf_stream</link>*      librdf_storage_find_statements_in_context
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-statement">librdf_statement</link> *statement,
+                                                         <link linkend="librdf-node">librdf_node</link> *context_node);</programlisting>
+<para>
+Search the storage for matching statements in a given context.
+</para>
+<para>
+Searches the storage for a (partial) statement as described in
+<link linkend="librdf-statement-match"><function>librdf_statement_match()</function></link> in the given context and returns a
+<link linkend="librdf-stream"><type>librdf_stream</type></link> of matching <link linkend="librdf-statement"><type>librdf_statement</type></link> objects.  If
+context is NULL, this is equivalent to librdf_storage_find_statements.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>statement</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-statement"><type>librdf_statement</type></link> partial statement to find
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context_node</parameter>&nbsp;:</term>
+<listitem><simpara> context <link linkend="librdf-node"><type>librdf_node</type></link> (or NULL)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-stream"><type>librdf_stream</type></link> of matching statements (may be empty) or NULL on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-contexts" role="function">
+<title>librdf_storage_get_contexts ()</title>
+<indexterm zone="librdf-storage-get-contexts"><primary>librdf_storage_get_contexts</primary></indexterm><programlisting><link linkend="librdf-iterator">librdf_iterator</link>*    librdf_storage_get_contexts         (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Return the list of contexts in the store.
+</para>
+<para>
+Returns an iterator of <link linkend="librdf-node"><type>librdf_node</type></link> context nodes for each
+context in the store.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> <link linkend="librdf-iterator"><type>librdf_iterator</type></link> of context nodes or NULL on failure or if contexts are not supported
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-get-feature" role="function">
+<title>librdf_storage_get_feature ()</title>
+<indexterm zone="librdf-storage-get-feature"><primary>librdf_storage_get_feature</primary></indexterm><programlisting><link linkend="librdf-node">librdf_node</link>*        librdf_storage_get_feature          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature);</programlisting>
+<para>
+Get the value of a storage feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-uri"><type>librdf_uri</type></link> feature property
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> new <link linkend="librdf-node"><type>librdf_node</type></link> feature value or NULL if no such feature
+exists or the value is empty.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-set-feature" role="function">
+<title>librdf_storage_set_feature ()</title>
+<indexterm zone="librdf-storage-set-feature"><primary>librdf_storage_set_feature</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_set_feature          (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="librdf-uri">librdf_uri</link> *feature,
+                                                         <link linkend="librdf-node">librdf_node</link> *value);</programlisting>
+<para>
+Set the value of a storage feature.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feature</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-uri"><type>librdf_uri</type></link> feature property
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-node"><type>librdf_node</type></link> feature property value
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non 0 on failure (negative if no such feature)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-transaction-commit" role="function">
+<title>librdf_storage_transaction_commit ()</title>
+<indexterm zone="librdf-storage-transaction-commit"><primary>librdf_storage_transaction_commit</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_transaction_commit   (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Commit a transaction.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> the storage object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-transaction-get-handle" role="function">
+<title>librdf_storage_transaction_get_handle ()</title>
+<indexterm zone="librdf-storage-transaction-get-handle"><primary>librdf_storage_transaction_get_handle</primary></indexterm><programlisting><link linkend="void">void</link>*               librdf_storage_transaction_get_handle
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Get the current transaction handle.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> the storage object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-transaction-rollback" role="function">
+<title>librdf_storage_transaction_rollback ()</title>
+<indexterm zone="librdf-storage-transaction-rollback"><primary>librdf_storage_transaction_rollback</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_transaction_rollback (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Rollback a transaction.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> the storage object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-transaction-start" role="function">
+<title>librdf_storage_transaction_start ()</title>
+<indexterm zone="librdf-storage-transaction-start"><primary>librdf_storage_transaction_start</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_transaction_start    (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Start a transaction</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> the storage object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-transaction-start-with-handle" role="function">
+<title>librdf_storage_transaction_start_with_handle ()</title>
+<indexterm zone="librdf-storage-transaction-start-with-handle"><primary>librdf_storage_transaction_start_with_handle</primary></indexterm><programlisting><link linkend="int">int</link>                 librdf_storage_transaction_start_with_handle
+                                                        (<link linkend="librdf-storage">librdf_storage</link> *storage,
+                                                         <link linkend="void">void</link> *handle);</programlisting>
+<para>
+Start a transaction using an existing external transaction object.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> the storage object
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>handle</parameter>&nbsp;:</term>
+<listitem><simpara> the transaction object
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-add-reference" role="function">
+<title>librdf_storage_add_reference ()</title>
+<indexterm zone="librdf-storage-add-reference"><primary>librdf_storage_add_reference</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_storage_add_reference        (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Increment storage reference count by one.
+This function is intended to be internal to librdf storage modules.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="librdf-storage-remove-reference" role="function">
+<title>librdf_storage_remove_reference ()</title>
+<indexterm zone="librdf-storage-remove-reference"><primary>librdf_storage_remove_reference</primary></indexterm><programlisting><link linkend="void">void</link>                librdf_storage_remove_reference     (<link linkend="librdf-storage">librdf_storage</link> *storage);</programlisting>
+<para>
+Decrement storage reference count by one.
+Free the storage if reference count becomes zero.
+This function is intended to be internal to librdf storage modules.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>storage</parameter>&nbsp;:</term>
+<listitem><simpara> <link linkend="librdf-storage"><type>librdf_storage</type></link> object
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

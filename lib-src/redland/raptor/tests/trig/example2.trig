@@ -1,0 +1,11 @@
+# TriG Example Document 2
+
+@prefix ex: <http://www.example.org/vocabulary#> .
+@prefix : <http://www.example.org/exampleDocument#> .
+
+:G1 :- { :Monica a ex:Person ;
+                 ex:name "Monica Murphy" ;      
+                 ex:homepage <http://www.monicamurphy.org> ;
+                 ex:email <mailto:monica@monicamurphy.org> ;
+                 ex:hasSkill ex:Management ,
+                             ex:Programming . }

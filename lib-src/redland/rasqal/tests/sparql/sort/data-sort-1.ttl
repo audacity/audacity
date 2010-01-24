@@ -1,0 +1,7 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf:       <http://xmlns.com/foaf/0.1/> .
+
+_:a foaf:name "Eve".
+_:b foaf:name "Alice" .
+_:c foaf:name "Fred" .
+_:e foaf:name "Bob" .

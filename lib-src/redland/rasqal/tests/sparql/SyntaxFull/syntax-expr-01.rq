@@ -1,0 +1,2 @@
+SELECT *
+WHERE { ?s ?p ?o . FILTER (?o) }

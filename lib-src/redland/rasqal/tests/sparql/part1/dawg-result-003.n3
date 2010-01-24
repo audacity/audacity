@@ -1,0 +1,35 @@
+@prefix rs:      <http://www.w3.org/2001/sw/DataAccess/tests/result-set#> .
+
+[]  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                rs:ResultSet ;
+    rs:resultVariable
+                "mbox" , "name" ;
+    rs:solution [ rs:binding  [ rs:value    <mailto:bob@home> ;
+                                rs:variable "mbox"
+                              ] ;
+                  rs:binding  [ rs:value    "Bob" ;
+                                rs:variable "name"
+                              ]
+                ] ;
+    rs:solution [ rs:binding  [ rs:value    <mailto:fred@edu> ;
+                                rs:variable "mbox"
+                              ]
+                ] ;
+    rs:solution [ rs:binding  [ rs:value    "Eve" ;
+                                rs:variable "name"
+                              ]
+                ] ;
+    rs:solution [ rs:binding  [ rs:value    "Alice" ;
+                                rs:variable "name"
+                              ] ;
+                  rs:binding  [ rs:value    <mailto:alice@work> ;
+                                rs:variable "mbox"
+                              ]
+                ] ;
+    rs:solution [ rs:binding  [ rs:value    "Bob" ;
+                                rs:variable "name"
+                              ] ;
+                  rs:binding  [ rs:value    <mailto:bob@work> ;
+                                rs:variable "mbox"
+                              ]
+                ] .

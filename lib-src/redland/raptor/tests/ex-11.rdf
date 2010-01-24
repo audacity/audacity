@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.org/"
+         xmlns="http://www.w3.org/1999/xhtml">
+   <!-- Check parseType literal with XML markup -->
+   <rdf:Description rdf:about="http://example.org/resource">
+      <ex:property rdf:parseType="Literal">
+        <em>some markup</em>
+        <a href="http://example.org/somewhere/else">blah</a>
+      </ex:property>
+   </rdf:Description>
+
+</rdf:RDF>

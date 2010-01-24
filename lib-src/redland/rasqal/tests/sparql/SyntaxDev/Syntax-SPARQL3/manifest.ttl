@@ -1,0 +1,115 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix mfx:    <http://jena.hpl.hp.com/2005/05/test-manifest-extra#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Syntax tests 4" ;
+    mf:entries
+    ( 
+      [  mf:name    "syn-01.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-01.rq> ; 
+      ]
+      [  mf:name    "syn-02.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-02.rq> ; 
+      ]
+      [  mf:name    "syn-03.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-03.rq> ; 
+      ]
+      [  mf:name    "syn-04.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-04.rq> ; 
+      ]
+      [  mf:name    "syn-05.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-05.rq> ; 
+      ]
+      [  mf:name    "syn-06.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-06.rq> ; 
+      ]
+      [  mf:name    "syn-07.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-07.rq> ; 
+      ]
+      [  mf:name    "syn-08.rq" ;
+         rdf:type   mfx:TestSyntax ;
+         mf:action  <syn-08.rq> ; 
+      ]
+      [  mf:name    "syn-bad-01.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-01.rq> ; 
+      ]
+      [  mf:name    "syn-bad-02.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-02.rq> ; 
+      ]
+      [  mf:name    "syn-bad-03.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-03.rq> ; 
+      ]
+      [  mf:name    "syn-bad-04.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-04.rq> ; 
+      ]
+      [  mf:name    "syn-bad-05.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-05.rq> ; 
+      ]
+      [  mf:name    "syn-bad-06.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-06.rq> ; 
+      ]
+      [  mf:name    "syn-bad-07.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-07.rq> ; 
+      ]
+      [  mf:name    "syn-bad-08.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-08.rq> ; 
+      ]
+      [  mf:name    "syn-bad-09.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-09.rq> ; 
+      ]
+      [  mf:name    "syn-bad-10.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <syn-bad-10.rq> ; 
+      ]
+      [  mf:name    "bnode-dot.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <bnode-dot.rq> ; 
+      ]
+      [  mf:name    "bnodes-missing-pvalues-01.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <bnodes-missing-pvalues-01.rq> ; 
+      ]
+      [  mf:name    "bnodes-missing-pvalues-02.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <bnodes-missing-pvalues-02.rq> ; 
+      ]
+      [  mf:name    "empty-optional-01.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <empty-optional-01.rq> ; 
+      ]
+      [  mf:name    "empty-optional-02.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <empty-optional-02.rq> ; 
+      ]
+      [  mf:name    "filter-missing-parens.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <filter-missing-parens.rq> ; 
+      ]
+      [  mf:name    "lone-list.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <lone-list.rq> ; 
+      ]
+      [  mf:name    "lone-node.rq" ;
+         rdf:type   mfx:TestBadSyntax ;
+         mf:action  <lone-node.rq> ; 
+      ]
+    ) .

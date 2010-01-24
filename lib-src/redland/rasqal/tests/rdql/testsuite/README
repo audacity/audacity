@@ -1,0 +1,24 @@
+The RDQL tests in this directory were downloaded from:
+
+  http://jena.hpl.hp.com/2003/07/query/rdql-tests-jena-2.1a.zip
+
+  Content-Length: 71085
+  Content-Type: application/zip
+  Last-Modified: Thu, 15 Apr 2004 14:50:34 GMT
+
+  MD5sum
+  bd862c29be2ec871d609cbae819c71f6  rdql-tests-jena-2.1a.zip
+
+See README-RDQL-tests.txt and copyright.txt
+
+CHANGES:
+
+Edited
+   result-B-07.n3
+   result-B-20.n3
+
+via tests2turtle.patch
+to replace 5.7 with "5.7"^^<http://www.w3.org/2001/XMLSchema#>
+to make them legal Turtle rather than N3.
+
+-- Dave

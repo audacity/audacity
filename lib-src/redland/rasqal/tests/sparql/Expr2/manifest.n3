@@ -1,0 +1,46 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Test of boolean expressions" ;
+    mf:entries
+    ( 
+      [  mf:name    "Test 'boolean effective value' - true" ;
+         mf:action
+            [ qt:query  <query-bev-1.rq> ;
+              qt:data   <data-1.ttl> ] ;
+        mf:result  <result-bev-1.ttl>
+      ]
+      [  mf:name    "Test 'boolean effective value' - false" ;
+         mf:action
+            [ qt:query  <query-bev-2.rq> ;
+              qt:data   <data-1.ttl> ] ;
+        mf:result  <result-bev-2.ttl>
+      ]
+      [  mf:name    "Test 'boolean effective value' - &&" ;
+         mf:action
+            [ qt:query  <query-bev-3.rq> ;
+              qt:data   <data-1.ttl> ] ;
+        mf:result  <result-bev-3.ttl>
+      ]
+      [  mf:name    "Test 'boolean effective value' - ||" ;
+         mf:action
+            [ qt:query  <query-bev-4.rq> ;
+              qt:data   <data-1.ttl> ] ;
+        mf:result  <result-bev-4.ttl>
+      ]
+      [  mf:name    "Test 'boolean effective value' - optional" ;
+         mf:action
+            [ qt:query  <query-bev-5.rq> ;
+              qt:data   <data-2.ttl> ] ;
+        mf:result  <result-bev-5.ttl>
+      ]
+      [  mf:name    "Test 'boolean effective value' - unknown types" ;
+         mf:action
+            [ qt:query  <query-bev-6.rq> ;
+              qt:data   <data-2.ttl> ] ;
+        mf:result  <result-bev-6.ttl>
+      ]
+    ).

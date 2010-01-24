@@ -1,0 +1,4 @@
+SELECT ?a, ?b
+FROM   <http://somewhere/model1.rdf>
+WHERE  (?a, <http://somewhere/pred1>, ?b)
+AND    ?b < 5

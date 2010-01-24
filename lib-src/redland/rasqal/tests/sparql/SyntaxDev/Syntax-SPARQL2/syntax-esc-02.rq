@@ -1,0 +1,2 @@
+SELECT *
+WHERE { <x> <p> "x\t" }

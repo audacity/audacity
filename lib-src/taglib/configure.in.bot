@@ -1,0 +1,8 @@
+if test "x$have_zlib" = "xfalse"; then
+	echo "**************************************************"
+	echo "*"
+	echo "* You don't seem to have libz / zlib.h installed."
+	echo "* Compressed frames have been disabled."
+	echo "*"
+	echo "**************************************************"
+fi

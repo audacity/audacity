@@ -1,0 +1,5 @@
+BASE   <http://example.org/>
+PREFIX :  <#> 
+SELECT * WHERE { :x :p '''Long
+'' """
+Literal''' }

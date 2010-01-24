@@ -1,0 +1,3 @@
+# Two triples : no trailing dot
+SELECT *
+WHERE { ?x ?y ?z . ?a ?b ?c }

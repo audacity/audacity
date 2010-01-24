@@ -1,0 +1,6 @@
+@prefix ns:   <http://example.org/ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix :     <http://example.org/book/> .
+
+:book1 ns:numPages  "200"^^xsd:integer .
+:book2 ns:numPages  100 .

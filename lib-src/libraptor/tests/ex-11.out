@@ -1,0 +1,1 @@
+<http://example.org/resource> <http://example.org/property> "\n        <em xmlns=\"http://www.w3.org/1999/xhtml\">some markup</em>\n        <a xmlns=\"http://www.w3.org/1999/xhtml\" href=\"http://example.org/somewhere/else\">blah</a>\n      "^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .

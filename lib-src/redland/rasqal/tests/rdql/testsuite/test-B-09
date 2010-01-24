@@ -1,0 +1,8 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Lang tags
+// Lang tags have no effect when there is a datatype (except XMLLiteral)
+
+SELECT *
+FROM   <model9.n3>
+WHERE  (?x ?y "value"@en^^ns:someType)
+USING  ns FOR <http://rdf.hp.com/ns#>

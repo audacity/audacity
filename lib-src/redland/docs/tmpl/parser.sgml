@@ -1,0 +1,310 @@
+<!-- ##### SECTION Title ##### -->
+Parsers
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF parsers from syntax to triples.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Provides classes to create parsers and parse syntaxes from URIs or a
+string into RDF graphs (#librdf_model) or sequences of triples
+(#librdf_stream).  Parser features can be set, which are passed down
+to Raptor and errors and warnings that are returned can be retrieved
+by callbacks. 
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_parser ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_parser_factory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_parser_enumerate ##### -->
+<para>
+
+</para>
+
+@world: 
+@counter: 
+@name: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_guess_name ##### -->
+<para>
+
+</para>
+
+@mime_type: 
+@buffer: 
+@identifier: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_register_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@label: 
+@mime_type: 
+@uri_string: 
+@factory: 
+
+
+<!-- ##### FUNCTION librdf_new_parser ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@mime_type: 
+@type_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_parser_from_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@factory: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_parser ##### -->
+<para>
+
+</para>
+
+@parser: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_as_stream ##### -->
+<para>
+
+</para>
+
+@parser: 
+@uri: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_into_model ##### -->
+<para>
+
+</para>
+
+@parser: 
+@uri: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_file_handle_as_stream ##### -->
+<para>
+
+</para>
+
+@parser: 
+@fh: 
+@close_fh: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_file_handle_into_model ##### -->
+<para>
+
+</para>
+
+@parser: 
+@fh: 
+@close_fh: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_string_as_stream ##### -->
+<para>
+
+</para>
+
+@parser: 
+@string: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_string_into_model ##### -->
+<para>
+
+</para>
+
+@parser: 
+@string: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_set_error ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@error_fn: 
+
+
+<!-- ##### FUNCTION librdf_parser_set_warning ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data: 
+@warning_fn: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_counted_string_as_stream ##### -->
+<para>
+
+</para>
+
+@parser: 
+@string: 
+@length: 
+@base_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_parse_counted_string_into_model ##### -->
+<para>
+
+</para>
+
+@parser: 
+@string: 
+@length: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### MACRO LIBRDF_PARSER_FEATURE_ERROR_COUNT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO LIBRDF_PARSER_FEATURE_WARNING_COUNT ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION librdf_parser_get_feature ##### -->
+<para>
+
+</para>
+
+@parser: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_set_feature ##### -->
+<para>
+
+</para>
+
+@parser: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_get_accept_header ##### -->
+<para>
+
+</para>
+
+@parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_get_namespaces_seen_count ##### -->
+<para>
+
+</para>
+
+@parser: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_get_namespaces_seen_prefix ##### -->
+<para>
+
+</para>
+
+@parser: 
+@offset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_get_namespaces_seen_uri ##### -->
+<para>
+
+</para>
+
+@parser: 
+@offset: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_get_uri_filter ##### -->
+<para>
+
+</para>
+
+@parser: 
+@user_data_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_parser_set_uri_filter ##### -->
+<para>
+
+</para>
+
+@parser: 
+@Param2: 
+@user_data: 
+
+

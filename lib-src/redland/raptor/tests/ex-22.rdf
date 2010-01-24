@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example/org/foo/">
+  <!-- Test rdf:ID is handled on a typedNode -->
+  <rdf:Seq>
+    <rdf:li><ex:thing rdf:ID="myid">
+      <ex:prop>value</ex:prop>
+    </ex:thing></rdf:li>
+  </rdf:Seq>
+</rdf:RDF>

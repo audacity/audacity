@@ -1,0 +1,7 @@
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?de 
+WHERE
+{
+  [ rdfs:label ?de, "Database Management"@en ].
+  FILTER ( lang(?de) = "de" )
+}

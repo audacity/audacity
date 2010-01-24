@@ -1,0 +1,5 @@
+prefix ex: <http://example.org/survey-sample/ontology/>
+SELECT ?PUB WHERE {
+  ?PUB ex:pages "08"
+}
+

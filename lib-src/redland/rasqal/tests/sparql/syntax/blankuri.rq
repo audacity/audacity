@@ -1,0 +1,8 @@
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?person
+from <data/dc.rdf>
+where {
+  <_:foo> a foaf:Person .
+  <_:foo> foaf:name ?person .
+  FILTER (?person != <_foo> && ?person != <:foo> )
+}

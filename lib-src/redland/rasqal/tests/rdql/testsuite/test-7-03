@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test-7-03 : Predicate and Subject 
+// Model7 has anon subject resources. NB anon properties are illegal (currently).
+
+SELECT  ?x, ?y, ?a
+FROM <model7.nt>
+WHERE (?x, ?y, ?z), (?y, ?a, ?b)

@@ -1,0 +1,228 @@
+all: @LOCAL_LIBS@ @LIBSRC_BUILD@
+
+# portSMF
+portSMF:
+	$(MAKE) -C portsmf
+
+# dlcompat
+dl-recursive:
+	$(MAKE) -C dlcompat
+libdl.a: dl-recursive
+	ln -sf dlcompat/libdl.a libdl.a
+
+# expat
+expat-recursive:
+	$(MAKE) -C expat
+expat.a: expat-recursive
+	ln -sf expat/expat.a expat.a
+
+# FileDialog
+FileDialog-recursive:
+	$(MAKE) -C FileDialog
+FileDialog.a: FileDialog-recursive
+	ln -sf FileDialog/FileDialog.a FileDialog.a
+
+# libwidgetextra
+widgetextra:
+	$(MAKE) -C lib-widget-extra
+
+# libogg
+libogg-recursive:
+	$(MAKE) -C libogg
+libogg.a: libogg-recursive
+	ln -sf libogg/src/.libs/libogg.a libogg.a
+
+# libvorbis
+libvorbis-recursive:
+	$(MAKE) -C libvorbis
+libvorbis.a libvorbisfile.a libvorbisenc.a: libogg.a libvorbis-recursive
+	ln -sf libvorbis/lib/.libs/libvorbis.a libvorbis.a
+	ln -sf libvorbis/lib/.libs/libvorbisfile.a libvorbisfile.a
+	ln -sf libvorbis/lib/.libs/libvorbisenc.a libvorbisenc.a
+
+# libflac
+libflac-recursive:
+	$(MAKE)  -C libflac
+libFLAC++.a libFLAC.a: libflac-recursive
+	ln -sf libflac/src/libFLAC++/.libs/libFLAC++.a libFLAC++.a
+	ln -sf libflac/src/libFLAC/.libs/libFLAC.a libFLAC.a
+
+# libnyquist
+libnyquist-recursive:
+	$(MAKE) -C libnyquist
+libnyquist.a: libnyquist-recursive
+	ln -sf libnyquist/libnyquist.a libnyquist.a
+
+# libvamp
+#
+# The reason for the "sdkstatic" is that's all that we really need
+# and it circumvents an issue when building on OSX...the makefile
+# has different options for OSX, but they aren't configurable via
+# the configure script.
+#
+vamp-sdk:
+	$(MAKE) -C libvamp sdkstatic
+
+# redland
+redland-recursive:
+	$(MAKE) -C redland
+librdf.a: redland-recursive
+	ln -sf redland/librdf/.libs/librdf.a librdf.a
+libraptor.a: redland-recursive
+	ln -sf redland/raptor/src/.libs/libraptor.a libraptor.a
+librasqal.a: redland-recursive
+	ln -sf redland/rasqal/src/.libs/librasqal.a librasqal.a
+
+# liblrdf
+liblrdf-recursive:
+	$(MAKE) -C liblrdf
+liblrdf.a: liblrdf-recursive
+	ln -sf liblrdf/src/.libs/liblrdf.a liblrdf.a
+
+# slv2
+slv2-recursive:
+	$(MAKE) -C slv2
+libslv2.a: slv2-recursive
+	ln -sf slv2/src/.libs/libslv2.a libslv2.a
+
+# libtwolame
+libtwolame-recursive:
+	$(MAKE) -C twolame
+libtwolame.a: libtwolame-recursive
+	ln -sf twolame/libtwolame/.libs/libtwolame.a libtwolame.a
+
+# libmad
+libmad-recursive:
+	$(MAKE) -C libmad
+libmad.a: libmad-recursive
+	ln -sf libmad/.libs/libmad.a libmad.a
+libmad/mad.h: libmad-recursive
+
+# libid3tag
+libid3tag-recursive:
+	$(MAKE) -C libid3tag
+libid3tag.a: libid3tag-recursive
+	ln -sf libid3tag/.libs/libid3tag.a libid3tag.a
+
+# libsamplerate
+libsamplerate-recursive:
+	$(MAKE) -C libsamplerate
+libsamplerate.a: libsamplerate-recursive
+	ln -sf libsamplerate/src/.libs/libsamplerate.a libsamplerate.a
+
+# libresample
+libresample-recursive:
+	$(MAKE) -C libresample libresample.a
+libresample.a: libresample-recursive
+	ln -sf libresample/libresample.a libresample.a
+
+
+# libsndfile
+libsndfile-recursive:
+	$(MAKE) -C libsndfile
+libsndfile.a: libsndfile-recursive
+	ln -sf libsndfile/src/.libs/libsndfile.a libsndfile.a
+
+# SBSMS
+sbsms-recursive:
+	$(MAKE) -C sbsms
+libsbsms.a: sbsms-recursive
+	ln -sf sbsms/src/.libs/libsbsms.a .
+
+# SoundTouch
+soundtouch-recursive:
+	$(MAKE) -C soundtouch
+libSoundTouch.a: soundtouch-recursive
+	ln -sf soundtouch/source/SoundTouch/.libs/libSoundTouch.a .
+
+# TagLib
+taglib-recursive:
+	$(MAKE) -C taglib
+taglib.a: taglib-recursive
+	ln -sf taglib/taglib/.libs/libtag.a taglib.a 
+
+# PortAudio
+portaudio-v19-recursive:
+	$(MAKE) -C portaudio-v19 lib/libportaudio.la
+portaudio-v19/lib/libportaudio.a: portaudio-v19-recursive
+	ln -sf .libs/libportaudio.a $@
+
+# PortMixer
+portmixer-recursive:
+	$(MAKE) -C portmixer
+portmixer/libportmixer.a: portmixer-recursive
+
+portaudio/pa_unix_oss/portaudio.a:
+	$(MAKE) -C portaudio/pa_unix_oss
+
+portaudio/pa_mac_core/portaudio.a:
+	$(MAKE) -C portaudio/pa_mac_core
+
+# RTAudio not supported 23/08/2007 R.A.
+# librtaudio-recursive:
+#	$(MAKE) -C rtaudio
+#rtaudio/librtaudio.a: librtaudio-recursive
+#	ln -sf rtaudio/librtaudio.a .
+
+# Utility rules
+clean:
+	-$(MAKE) -C portsmf clean
+	-$(MAKE) -C dlcompat clean	
+	-$(MAKE) -C expat clean
+	-$(MAKE) -C FileDialog clean
+	-$(MAKE) -C libid3tag clean
+	-$(MAKE) -C libmad clean
+	-$(MAKE) -C libnyquist clean
+	-$(MAKE) -C liblrdf clean
+	-$(MAKE) -C libogg clean
+	-$(MAKE) -C libsamplerate clean
+	-$(MAKE) -C libresample clean
+	-$(MAKE) -C libsndfile clean
+	-$(MAKE) -C libvamp clean
+	-$(MAKE) -C libvorbis clean
+	-$(MAKE) -C lib-widget-extra clean
+	-$(MAKE) -C libflac clean
+	-$(MAKE) -C portaudio-v19 clean
+	-$(MAKE) -C portaudio/pa_unix_oss clean
+	-$(MAKE) -C portaudio/pa_mac_core clean
+	-$(MAKE) -C portmixer clean
+	-$(MAKE) -C sbsms clean
+	-$(MAKE) -C soundtouch clean
+	-$(MAKE) -C twolame clean
+	-rm -rf @LOCAL_LIBS@
+
+distclean:
+	-$(MAKE) -C portsmf distclean
+	-$(MAKE) -C dlcompat distclean
+	-$(MAKE) -C expat distclean
+	-$(MAKE) -C FileDialog distclean
+	-$(MAKE) -C libid3tag distclean
+	-$(MAKE) -C libmad distclean
+	-$(MAKE) -C libnyquist distclean
+	-$(MAKE) -C liblrdf distclean
+	-$(MAKE) -C libogg distclean
+	-$(MAKE) -C libsamplerate distclean
+	-$(MAKE) -C libresample distclean
+	-$(MAKE) -C libsndfile distclean
+	-$(MAKE) -C libvamp distclean
+	-$(MAKE) -C libvorbis distclean
+	-$(MAKE) -C lib-widget-extra distclean
+	-$(MAKE) -C libflac distclean
+	-$(MAKE) -C portaudio-v19 distclean
+	-$(MAKE) -C portaudio/pa_unix_oss distclean
+	-$(MAKE) -C portaudio/pa_mac_core distclean
+	-$(MAKE) -C portmixer distclean
+	-$(MAKE) -C sbsms distclean
+	-$(MAKE) -C soundtouch distclean
+	-$(MAKE) -C twolame distclean
+	-rm -f @LOCAL_LIBS@
+
+# list here all the targets that aren't actually files to be made
+.PHONY: portSMF eexpat-recursive FileDialog-recursive \
+		widgetextra libogg-recursive \
+	libvorbis-recursive libnyquist-recursive libmad-recursive \
+	libid3tag-recursive sbsms-recursive soundtouch-recursive libsndfile-recursive \
+	libresample-recursive libsamplerate-recursive vamp-sdk \
+	portaudio-v19-recursive portmixer-recursive libtwolame-recursive \
+	liblrdf-recursive redland-recursive slv2-recursive
+

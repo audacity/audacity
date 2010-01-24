@@ -1,0 +1,190 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.75 [en]C-gatewaynet  (Win98; U) [Netscape]">
+   <meta name="Author" content="Phil Burk">
+   <meta name="Description" content="Internal docs. How a stream is started or stopped.">
+   <meta name="KeyWords" content="audio, tutorial, library, portable, open-source, DirectSound,sound, music, JSyn, synthesis,">
+   <title>PortAudio Implementation - Start/Stop</title>
+</head>
+<body>
+&nbsp;
+<center><table COLS=1 WIDTH="100%" BGCOLOR="#FADA7A" >
+<tr>
+<td>
+<center>
+<h1>
+PortAudio Implementation</h1></center>
+</td>
+</tr>
+</table></center>
+
+<h2>
+Starting and Stopping Streams</h2>
+PortAudio is generally executed in two "threads". The foreground thread
+is the application thread. The background "thread" may be implemented as
+an actual thread, an interrupt handler, or a callback from a timer thread.
+<p>There are three ways that PortAudio can stop a stream. In each case
+we look at the sequence of events and the messages sent between the two
+threads. The following variables are contained in the internalPortAudioStream.
+<blockquote><tt>int&nbsp;&nbsp; past_IsActive;&nbsp;&nbsp;&nbsp;&nbsp;
+/* Background is still playing. */</tt>
+<br><tt>int&nbsp;&nbsp; past_StopSoon;&nbsp;&nbsp;&nbsp;&nbsp; /* Stop
+when last buffer done. */</tt>
+<br><tt>int&nbsp;&nbsp; past_StopNow;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*
+Stop IMMEDIATELY. */</tt></blockquote>
+
+<h3>
+Pa_AbortStream()</h3>
+This function causes the background thread to terminate as soon as possible
+and audio I/O to stop abruptly.
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="60%" >
+<tr>
+<td><b>Foreground Thread</b></td>
+
+<td><b>Background Thread</b></td>
+</tr>
+
+<tr>
+<td>sets <tt>StopNow</tt></td>
+
+<td></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>sees <tt>StopNow</tt>,&nbsp;</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>clears IsActive, stops thread</td>
+</tr>
+
+<tr>
+<td>waits for thread to exit</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>turns off audio I/O</td>
+
+<td></td>
+</tr>
+</table>
+
+<h3>
+Pa_StopStream()</h3>
+This function stops the user callback function from being called and then
+waits for all audio data written to the output buffer to be played. In
+a system with very low latency, you may not hear any difference between
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="60%" >
+<tr>
+<td><b>Foreground Thread</b></td>
+
+<td><b>Background Thread</b></td>
+</tr>
+
+<tr>
+<td>sets StopSoon</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>stops calling user callback</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>continues until output buffer empty</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>clears IsActive, stops thread</td>
+</tr>
+
+<tr>
+<td>waits for thread to exit</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>turns off audio I/O</td>
+
+<td></td>
+</tr>
+</table>
+
+<h3>
+User callback returns one.</h3>
+If the user callback returns one then the user callback function will no
+longer be called. Audio output will continue until all audio data written
+to the output buffer has been played. Then the audio I/O is stopped, the
+background thread terminates, and the stream becomes inactive.
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="60%" >
+<tr>
+<td><b>Foreground Thread</b></td>
+
+<td><b>Background Thread</b></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>callback returns 1</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>sets StopSoon</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>stops calling user callback</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>continues until output buffer empty</td>
+</tr>
+
+<tr>
+<td></td>
+
+<td>clears IsActive, stops thread</td>
+</tr>
+
+<tr>
+<td>waits for thread to exit</td>
+
+<td></td>
+</tr>
+
+<tr>
+<td>turns off audio I/O</td>
+
+<td></td>
+</tr>
+</table>
+
+<br>&nbsp;
+</body>
+</html>

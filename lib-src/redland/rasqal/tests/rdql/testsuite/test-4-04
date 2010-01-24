@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 4-04 : Binding object to string : strings are not resources : no match
+
+SELECT *
+SOURCE <model2.nt>
+WHERE  (?a, ?b, "http://rdf.hp.com/s2")

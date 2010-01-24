@@ -1,0 +1,492 @@
+<!-- $Revision: 1.2 $ of $Date: 2008-06-26 15:14:27 $. -->
+
+<rdf:RDF
+  xmlns:rdf ="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+  xmlns     ="http://www.daml.org/2001/03/daml+oil#"
+>
+
+<rdf:Description rdf:about="">
+  <versionInfo>$Id: daml-oil.rdf,v 1.2 2008-06-26 15:14:27 larsl Exp $</versionInfo>
+  <imports rdf:resource="http://www.w3.org/2000/01/rdf-schema"/>
+</rdf:Description>
+
+<!-- (meta) classes of "object" and datatype classes  -->
+
+<rdfs:Class rdf:ID="Class">
+  <rdfs:label>Class</rdfs:label>
+  <rdfs:comment>
+    The class of all "object" classes
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Datatype">
+  <rdfs:label>Datatype</rdfs:label>
+  <rdfs:comment>
+    The class of all datatype classes
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+</rdfs:Class>
+
+<!-- Pre-defined top/bottom thing/nothing most/least-general (object) classes. -->
+
+<Class rdf:ID="Thing">
+  <rdfs:label>Thing</rdfs:label>
+  <rdfs:comment>
+    The most general (object) class in DAML.
+    This is equal to the union of any class and its complement.
+  </rdfs:comment>
+  <unionOf rdf:parseType="daml:collection">
+    <rdfs:Class rdf:about="#Nothing"/>
+    <rdfs:Class>
+      <complementOf rdf:resource="#Nothing"/>
+    </rdfs:Class>
+  </unionOf>
+</Class>
+
+<Class rdf:ID="Nothing">
+  <rdfs:label>Nothing</rdfs:label>
+  <rdfs:comment>the class with no things in it.</rdfs:comment>
+  <complementOf rdf:resource="#Thing"/>
+</Class>
+
+<!-- Terms for building classes from other classes. -->
+
+<Property rdf:ID="equivalentTo"> <!-- equals? equiv? renames? -->
+  <rdfs:label>equivalentTo</rdfs:label>
+  <comment>
+    for equivalentTo(X, Y), read X is an equivalent term to Y.
+  </comment>
+</Property>
+
+<Property rdf:ID="sameClassAs">
+  <rdfs:label>sameClassAs</rdfs:label>
+  <comment>
+    for sameClassAs(X, Y), read X is an equivalent class to Y.
+    cf OIL Equivalent
+  </comment>
+  <rdfs:subPropertyOf rdf:resource="#equivalentTo"/>
+  <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#Class"/>
+</Property>
+
+<Property rdf:ID="samePropertyAs">
+  <rdfs:label>samePropertyAs</rdfs:label>
+  <rdfs:comment>
+    for samePropertyAs(P, R), read P is an equivalent property to R.
+  </rdfs:comment>
+  <rdfs:subPropertyOf rdf:resource="#equivalentTo"/>
+  <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf"/>
+</Property>
+
+<Property rdf:ID="sameIndividualAs">
+  <rdfs:label>sameIndividualAs</rdfs:label>
+  <rdfs:comment>
+    for sameIndividualAs(a, b), read a is the same individual as b.
+  </rdfs:comment>
+  <rdfs:subPropertyOf rdf:resource="#equivalentTo"/>
+  <rdfs:domain rdf:resource="#Thing"/>
+  <rdfs:range rdf:resource="#Thing"/>
+</Property>
+
+<rdf:Property rdf:ID="disjointWith">
+  <rdfs:label>disjointWith</rdfs:label>
+  <rdfs:comment>
+    for disjointWith(X, Y) read: X and Y have no members in common.
+    cf OIL Disjoint
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#Class"/>
+</rdf:Property>
+
+<Property rdf:ID="differentIndividualFrom">
+  <rdfs:label>differentIndividualFrom</rdfs:label>
+  <rdfs:comment>
+    for differentIndividualFrom(a, b), read a is not the same individual as b.
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Thing"/>
+  <rdfs:range rdf:resource="#Thing"/>
+</Property>
+
+
+<!-- NOTE: the Disjoint class has been deleted: use disjointWith -->
+<!-- or disjointUnionOf instead. -->
+
+<rdf:Property rdf:ID="unionOf">
+  <rdfs:label>unionOf</rdfs:label>
+  <rdfs:comment>
+    for unionOf(X, Y) read: X is the union of the classes in the list Y;
+    i.e. if something is in any of the classes in Y, it's in X, and vice versa.
+    cf OIL OR
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="disjointUnionOf">
+  <rdfs:label>disjointUnionOf</rdfs:label>
+  <rdfs:comment>
+    for disjointUnionOf(X, Y) read: X is the disjoint union of the classes in
+    the list Y: (a) for any c1 and c2 in Y, disjointWith(c1, c2),
+    and (b) unionOf(X, Y). i.e. if something is in any of the classes in Y, it's
+    in X, and vice versa.
+    cf OIL disjoint-covered
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="intersectionOf">
+  <rdfs:label>intersectionOf</rdfs:label>
+  <rdfs:comment>
+    for intersectionOf(X, Y) read: X is the intersection of the classes in the list Y;
+    i.e. if something is in all the classes in Y, then it's in X, and vice versa.
+    cf OIL AND
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="complementOf">
+  <rdfs:label>complementOf</rdfs:label>
+  <rdfs:comment>
+    for complementOf(X, Y) read: X is the complement of Y; if something is in Y,
+    then it's not in X, and vice versa.
+    cf OIL NOT
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#Class"/>
+</rdf:Property>
+
+<!-- Term for building classes by enumerating their elements -->
+
+<rdf:Property rdf:ID="oneOf">
+  <rdfs:label>oneOf</rdfs:label>
+  <rdfs:comment>
+     for oneOf(C, L) read everything in C is one of the
+     things in L;
+     This lets us define classes by enumerating the members.
+     cf OIL OneOf
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Class"/>
+  <rdfs:range rdf:resource="#List"/>
+</rdf:Property>
+
+<!-- Terms for building classes by restricting their properties. -->
+
+<rdfs:Class rdf:ID="Restriction">
+  <rdfs:label>Restriction</rdfs:label>
+  <rdfs:comment>
+    something is in the class R if it satisfies the attached restrictions, 
+    and vice versa.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#Class"/>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="onProperty">
+  <rdfs:label>onProperty</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P), read:
+    R is a restricted with respect to property P.
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="toClass">
+  <rdfs:label>toClass</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P) and toClass(R, X), read:
+    i is in class R if and only if for all j, P(i, j) implies type(j, X).
+    cf OIL ValueType
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="hasValue">
+  <rdfs:label>hasValue</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P) and hasValue(R, V), read:
+    i is in class R if and only if P(i, V).
+    cf OIL HasFiller
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="hasClass">
+  <rdfs:label>hasClass</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P) and hasClass(R, X), read:
+    i is in class R if and only if for some j, P(i, j) and type(j, X).
+    cf OIL HasValue
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+</rdf:Property>
+
+<!-- Note that cardinality restrictions on transitive properties, or     -->
+<!-- properties with transitive sub-properties, compromise decidability. -->
+
+<rdf:Property rdf:ID="minCardinality">
+  <rdfs:label>minCardinality</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P) and minCardinality(R, n), read:
+    i is in class R if and only if there are at least n distinct j with P(i, j).
+    cf OIL MinCardinality
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/10/XMLSchema#nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="maxCardinality">
+  <rdfs:label>maxCardinality</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P) and maxCardinality(R, n), read:
+    i is in class R if and only if there are at most n distinct j with P(i, j).
+    cf OIL MaxCardinality
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/10/XMLSchema#nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="cardinality">
+  <rdfs:label>cardinality</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P) and cardinality(R, n), read:
+    i is in class R if and only if there are exactly n distinct j with P(i, j).
+    cf OIL Cardinality
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/10/XMLSchema#nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="hasClassQ">
+  <rdfs:label>hasClassQ</rdfs:label>
+  <rdfs:comment>
+    property for specifying class restriction with cardinalityQ constraints
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="minCardinalityQ">
+  <rdfs:label>minCardinality</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P), minCardinalityQ(R, n) and hasClassQ(R, X), read:
+    i is in class R if and only if there are at least n distinct j with P(i, j) 
+    and type(j, X).
+    cf OIL MinCardinality
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/10/XMLSchema#nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="maxCardinalityQ">
+  <rdfs:label>maxCardinality</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P), maxCardinalityQ(R, n) and hasClassQ(R, X), read:
+    i is in class R if and only if there are at most n distinct j with P(i, j)
+    and type(j, X).
+    cf OIL MaxCardinality
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/10/XMLSchema#nonNegativeInteger"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="cardinalityQ">
+  <rdfs:label>cardinality</rdfs:label>
+  <rdfs:comment>
+    for onProperty(R, P), cardinalityQ(R, n) and hasClassQ(R, X), read:
+    i is in class R if and only if there are exactly n distinct j with P(i, j)
+    and type(j, X).
+    cf OIL Cardinality
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#Restriction"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/10/XMLSchema#nonNegativeInteger"/>
+</rdf:Property>
+
+<!-- Classes and Properties for different kinds of Property -->
+
+<rdfs:Class rdf:ID="ObjectProperty">
+  <rdfs:label>ObjectProperty</rdfs:label>
+  <rdfs:comment>
+    if P is an ObjectProperty, and P(x, y), then y is an object.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="DatatypeProperty">
+  <rdfs:label>DatatypeProperty</rdfs:label>
+  <rdfs:comment>
+    if P is a DatatypeProperty, and P(x, y), then y is a data value.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="inverseOf">
+  <rdfs:label>inverseOf</rdfs:label>
+  <rdfs:comment>
+    for inverseOf(R, S) read: R is the inverse of S; i.e.
+    if R(x, y) then S(y, x) and vice versa.
+    cf OIL inverseRelationOf
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#ObjectProperty"/>
+  <rdfs:range rdf:resource="#ObjectProperty"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="TransitiveProperty">
+  <rdfs:label>TransitiveProperty</rdfs:label>
+  <rdfs:comment>
+    if P is a TransitiveProperty, then if P(x, y) and P(y, z) then P(x, z).
+    cf OIL TransitiveProperty.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#ObjectProperty"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="UniqueProperty">
+  <rdfs:label>UniqueProperty</rdfs:label>
+  <rdfs:comment>
+    compare with maxCardinality=1; e.g. integer successor:
+    if P is a UniqueProperty, then if P(x, y) and P(x, z) then y=z.
+    cf OIL FunctionalProperty.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="UnambiguousProperty">
+  <rdfs:label>UnambiguousProperty</rdfs:label>
+  <rdfs:comment>
+    if P is an UnambiguousProperty, then if P(x, y) and P(z, y) then x=z.
+    aka injective. e.g. if firstBorne(m, Susan)
+    and firstBorne(n, Susan) then m and n are the same.
+  </rdfs:comment>
+  <rdfs:subClassOf rdf:resource="#ObjectProperty"/>
+</rdfs:Class>
+
+<!-- List terminology. -->
+
+<rdfs:Class rdf:ID="List">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"/>
+</rdfs:Class>
+
+<List rdf:ID="nil">
+  <rdfs:comment>
+     the empty list; this used to be called Empty.
+  </rdfs:comment>
+</List>
+
+<rdf:Property rdf:ID="first">
+  <rdfs:domain rdf:resource="#List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="rest">
+  <rdfs:domain rdf:resource="#List"/>
+  <rdfs:range rdf:resource="#List"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="item">
+  <rdfs:comment>
+    for item(L, I) read: I is an item in L; either first(L, I)
+    or item(R, I) where rest(L, R).
+  </rdfs:comment>
+  <rdfs:domain rdf:resource="#List"/>
+</rdf:Property>
+
+<!-- A class for ontologies themselves... -->
+
+<rdfs:Class rdf:ID="Ontology">
+  <rdfs:label>Ontology</rdfs:label>
+  <rdfs:comment>
+    An Ontology is a document that describes
+    a vocabulary of terms for communication between
+    (human and) automated agents.
+  </rdfs:comment>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="versionInfo">
+  <rdfs:label>versionInfo</rdfs:label>
+  <rdfs:comment>
+    generally, a string giving information about this
+    version; e.g. RCS/CVS keywords
+  </rdfs:comment>
+</rdf:Property>
+
+<!-- Importing, i.e. assertion by reference -->
+
+<rdf:Property rdf:ID="imports">
+  <rdfs:label>imports</rdfs:label>
+  <rdfs:comment>
+    for imports(X, Y) read: X imports Y;
+    i.e. X asserts the* contents of Y by reference;
+    i.e. if imports(X, Y) and you believe X and Y says something,
+    then you should believe it.
+    Note: "the contents" is, in the general case,
+    an il-formed definite description. Different
+    interactions with a resource may expose contents
+    that vary with time, data format, preferred language,
+    requestor credentials, etc. So for "the contents",
+    read "any contents".
+  </rdfs:comment>
+</rdf:Property>
+
+<!-- Importing terms from RDF/RDFS -->
+
+<!-- first, assert the contents of the RDF schema by reference -->
+<Ontology rdf:about="">
+  <imports rdf:resource="http://www.w3.org/2000/01/rdf-schema"/>
+</Ontology>
+
+<rdf:Property rdf:ID="subPropertyOf">
+  <samePropertyAs  rdf:resource="http://www.w3.org/2000/01/rdf-schema#subPropertyOf"/>
+</rdf:Property>
+
+<rdfs:Class rdf:ID="Literal">
+  <sameClassAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:ID="Property">
+  <sameClassAs rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdfs:Class>
+
+<rdf:Property rdf:ID="type">
+  <samePropertyAs rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="value">
+  <samePropertyAs rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#value"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="subClassOf">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#subClassOf"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="domain">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#domain"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="range">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#range"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="label">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="comment">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="seeAlso">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
+</rdf:Property>
+
+<rdf:Property rdf:ID="isDefinedBy">
+  <samePropertyAs rdf:resource="http://www.w3.org/2000/01/rdf-schema#isDefinedBy"/>
+  <rdfs:subPropertyOf rdf:resource="#seeAlso"/>
+</rdf:Property>
+
+</rdf:RDF>

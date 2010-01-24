@@ -1,0 +1,635 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="tutorial-parsing" xmlns:xi="http://www.w3.org/2003/XInclude">
+<title>Parsing syntaxes to RDF Triples</title>
+
+<section id="tutorial-parsing-intro">
+<title>Introduction</title>
+
+<para>
+The typical sequence of operations to parse is to create a parser
+object, set various callback and features, start the parsing, send
+some syntax content to the parser object, finish the parsing and
+destroy the parser object.</para>
+
+<para>Several parts of this process are optional, including actually
+using the triple results, which is useful as a syntax checking
+process.
+</para>
+</section>
+
+<section id="tutorial-parser-create">
+<title>Create the Parser object</title>
+
+<para>The parser can be created directly from a known name such as
+<literal>rdfxml</literal> for the W3C Recommendation RDF/XML syntax:
+<programlisting>
+  raptor_parser* rdf_parser;
+
+  rdf_parser = raptor_new_parser("rdfxml");
+</programlisting>
+or the name can be discovered from an <emphasis>enumeration</emphasis>
+as discussed in <link linkend="tutorial-querying-functionality">Querying Functionality</link>
+</para>
+
+<para>The parser can also be created by identifying the syntax by a
+URI, specifying the syntax by a MIME Type, providng an identifier for
+the content such as filename or URI string or giving some initial
+content bytes that can be used to guess.
+Using the
+<link linkend="raptor-new-parser-for-content"><function>raptor_new_parser_for_content()</function></link>
+function, all of these can be given as optional parameters, using NULL
+or 0 for undefined parameters.  The constructor will then use as much of
+this information as possible.
+</para>
+<programlisting>
+  raptor_parser* rdf_parser;
+</programlisting>
+
+<para>Create a parser that reads the MIME Type for RDF/XML
+<literal>application/rdf+xml</literal>
+<programlisting>
+  rdf_parser = raptor_new_parser_for_content(NULL, "application/rdf+xml", NULL, 0, NULL);
+</programlisting>
+</para>
+
+<para>Create a parser that can read a syntax identified by the URI
+for Turtle <literal>http://www.dajobe.org/2004/01/turtle/</literal>,
+which has no registered MIME Type at this date:
+<programlisting>
+  syntax_uri = raptor_new_uri("http://www.dajobe.org/2004/01/turtle/");
+  rdf_parser = raptor_new_parser_for_content(syntax_uri, NULL, NULL, 0, NULL);
+</programlisting>
+</para>
+
+<para>Create a parser that recognises the identifier <literal>foo.rss</literal>:
+<programlisting>
+  rdf_parser = raptor_new_parser_for_content(NULL, NULL, NULL, 0, "foo.rss");
+</programlisting>
+</para>
+
+<para>Create a parser that recognises the content in <emphasis>buffer</emphasis>:
+<programlisting>
+  rdf_parser = raptor_new_parser_for_content(NULL, NULL, buffer, len, NULL);
+</programlisting>
+</para>
+
+<para>Any of the constructor calls can return NULL if no matching
+parser could be found, or the construction failed in another way.
+</para>
+
+</section>
+
+
+<section id="tutorial-parser-features">
+<title>Parser features</title>
+
+<para>There are several options that can be set on parsers, called
+<emphasis>features</emphasis>.  The exact list of features can be
+found via
+<link linkend="tutorial-querying-functionality">Querying Functionality</link>
+or in the API reference for 
+<link linkend="raptor-set-feature"><function>raptor_set_feature()</function></link>.  (This should be properly called <function>raptor_parser_set_feature()</function> as
+it only applies to <literal>raptor_parser</literal> objects).
+</para>
+
+<para>Features are integer enumerations of the
+<link linkend="raptor-feature"><type>raptor_feature</type></link> enum and have values
+that are either integers (often acting as booleans) or strings.
+The two functions that set features are:
+<programlisting>
+  /* Set an integer (or boolean) valued feature */
+  raptor_set_feature(rdf_parser, feature, 1);
+
+  /* Set a string valued feature */
+  raptor_set_feature_string(rdf_parser, feature, "abc");
+</programlisting>
+</para>
+
+<para>
+There are also two corresponding functions for reading the values of parser
+features:
+<link linkend="raptor-get-feature"><function>raptor_get_feature()</function></link>
+and
+<link linkend="raptor-get-feature-string"><function>raptor_get_feature_string()</function></link>
+taken the feature enumeration parameter and returning the integer or string
+value correspondingly.
+</para>
+
+</section>
+
+
+<section id="tutorial-parser-set-triple-handler">
+<title>Set RDF triple callback handler</title>
+
+<para>The main reason to parse a syntax is to get RDF triples
+returned and this is done by a callback function which is called
+with parameters of a user data pointer and the triple itself.
+The handler is set with
+<link linkend="raptor-set-statement-handler"><function>raptor_set_statement_handler()</function></link>
+as follows:
+<programlisting>
+  void
+  triples_handler(void* user_data, const raptor_statement* triple) 
+  {
+    /* do something with the triple */
+  }
+
+  raptor_set_statement_handler(rdf_parser, user_data, triples_handler);
+</programlisting>
+</para>
+
+<para>It is optional to set a handler function for triples, which does
+have some uses if just counting triples or validating a syntax.
+</para>
+</section>
+
+
+<section id="tutorial-parser-set-error-warning-handlers">
+<title>Set fatal error, error and warning handlers</title>
+
+<para>There are several other callback handlers that can be set
+on parsers.  These can be set any time before parsing is called.
+Errors and warnings from parsing can be returned with functions
+that all take a callback of type
+<link linkend="raptor-message-handler"><type>raptor_message_handler</type></link>
+and signature:
+<programlisting>
+void
+message_handler(void *user_data, raptor_locator* locator, 
+                const char *message)
+{
+  /* do something with the message */
+}
+</programlisting>
+returning the user data given, associated location information
+as a <link linkend="raptor-locator"><type>raptor_locator</type></link>
+and the error/warning message itself.  The <emphasis>locator</emphasis>
+structure contains full information on the details of where in the
+file or URI the message occurred.
+</para>
+
+<para>The fatal error, error and warning handlers are all set with
+similar functions that take a handler as follows:
+<programlisting>
+  raptor_set_fatal_error_handler(rdf_parser, user_data, fatal_handler);
+
+  raptor_set_error_handler(rdf_parser, user_data, error_handler);
+
+  raptor_set_warning_handler(rdf_parser, user_data, warning_handler);
+</programlisting>
+<caution>The program will terminate
+with <function>abort()</function> if the fatal error handler returns.
+</caution>
+</para>
+</section>
+
+
+<section id="tutorial-parser-set-id-handler">
+<title>Set the identifier creator handler</title>
+
+<para>Identifiers are created in some parsers by generating them
+automatically or via hints given a syntax.  Raptor can customise this
+process using a user-supplied identifier handler function.
+For example, in RDF/XML generated blank node identifiers and those
+those specified <literal>rdf:nodeID</literal> are passed through this
+process.  Setting a handler allows the identifier generation mechanism to be
+fully replaced.  A lighter alternative is to use
+<link linkend="raptor-set-default-generate-id-parameters"><function>raptor_set_default_generate_id_parameters()</function></link>
+to adjust the default algorithm for generated identifiers.
+</para>
+
+<para>It is used as follows
+<programlisting>
+  raptor_generate_id_handler id_handler;
+
+  raptor_set_generate_id_handler(rdf_parser, user_data, id_handler);
+</programlisting>
+</para>
+
+<para>The <emphasis>id_handler</emphasis> takes the following signature:
+<programlisting>
+unsigned char*
+generate_id_handler(void* user_data, raptor_genid_type type,
+                    unsigned char* user_id) {
+   /* return a new generated ID based on user_id (optional) */
+}
+</programlisting>
+where the
+<link linkend="raptor-genid-type"><type>raptor_genid_type</type></link>
+provides extra information on the identifier being created and
+<emphasis>user_id</emphasis> an optional user-supplied identifier,
+such as the value of a <literal>rdf:nodeID</literal> in RDF/XML.
+</para>
+
+</section>
+
+
+<section id="tutorial-parser-set-namespace-handler">
+<title>Set namespace declared handler</title>
+
+<para>Raptor can report when namespace prefix/URIs are declared in
+during parsing a syntax such as those in XML, RDF/XML or Turtle.
+A handler function can be set to receive these declarations using
+the namespace handler method.
+<programlisting>
+  raptor_namespace_handler namespaces_handler;
+
+  raptor_set_namespace_handler(rdf_parser, user_data, namespaces_handler);
+</programlisting>
+</para>
+
+<para>The <emphasis>namespaces_handler</emphasis> takes the following signature:
+<programlisting>
+void
+namespaces_handler(void* user_data, raptor_namespace *nspace) {
+  /*  */
+}
+</programlisting>
+<note>This may be called multiple times with the same namespace,
+if the namespace is declared inside different XML sub-trees.
+</note>
+</para>
+
+</section>
+
+
+<section id="tutorial-parse-strictness">
+<title>Set the parsing strictness</title>
+<para>
+<link linkend="raptor-set-parser-strict"><function>raptor_set_parser_strict()</function></link>
+allows setting of the parser strictness flag.  The default is lax parsing,
+accepting older or deprecated syntax forms but may generate a warning. Setting
+to non-0 (true) will cause parser errors to be generated in these cases.
+</para>
+</section>
+
+
+<section id="tutorial-parser-content">
+<title>Provide syntax content to parse</title>
+
+<para>The operation of turning syntax into RDF triples has several
+alternatives from functions that do most of the work starting from a
+URI to functions that allow passing in data buffers.</para>
+
+<note>
+<title>Parsing and MIME Types</title> 
+The mime type of the retrieved content is not used to choose
+a parser unless the parser is of type <literal>guess</literal>.
+The guess parser will send an <literal>Accept:</literal> header
+for all known parser syntax mime types (if a URI request is made)
+and based on the response, including the identifiers used,
+pick the appropriate parser to execute.  See
+<link linkend="raptor-guess-parser-name"><function>raptor_guess_parser_name()</function></link>
+for a full discussion of the inputs to the guessing.
+</note>
+
+
+<section id="parse-from-uri">
+<title>Parse the content from a URI (<link linkend="raptor-parse-uri"><function>raptor_parse_uri()</function></link>)</title>
+
+<para>The URI is resolved and the content read from it and passed to
+the parser:
+<programlisting>
+  raptor_parse_uri(rdf_parser, uri, base_uri);
+</programlisting>
+The <emphasis>base_uri</emphasis> is optional (can be
+<literal>NULL</literal>) and will default to the
+<emphasis>uri</emphasis>.
+</para>
+</section>
+
+
+<section id="parse-from-www">
+<title>Parse the content of a URI using an existing WWW connection (<link linkend="raptor-parse-uri-with-connection"><function>raptor_parse_uri_with_connection()</function></link>)</title>
+
+<para>The URI is resolved using an existing WWW connection (for
+example a libcurl CURL handle) to allow for any existing
+WWW configuration to be reused.  See
+<link linkend="raptor-www-new-with-connection"><function>raptor_www_new_with_connection</function></link>
+for full details of how this works.   The content is then read from the
+result of resolving the URI:
+<programlisting>
+  raptor_parse_uri_with_connection(rdf_parser, uri, base_uri, connection);
+</programlisting>
+The <emphasis>base_uri</emphasis> is optional (can be
+<literal>NULL</literal>) and will default to the
+<emphasis>uri</emphasis>.
+</para>
+</section>
+
+
+<section id="parse-from-filehandle">
+<title>Parse the content of a C <literal>FILE*</literal> (<link linkend="raptor-parse-file-stream"><function>raptor_parse_file_stream()</function></link>)</title>
+
+<para>Parsing can read from a C STDIO file handle:
+<programlisting>
+  stream=fopen(filename, "rb");
+  raptor_parse_file_stream(rdf_parser, stream, filename, base_uri);
+  fclose(stream);
+</programlisting>
+This function can use take an optional <emphasis>filename</emphasis> which
+is used in locator error messages.
+The <emphasis>base_uri</emphasis> may be required by some parsers
+and if <literal>NULL</literal> will cause the parsing to fail.
+</para>
+</section>
+
+
+<section id="parse-from-file-uri">
+<title>Parse the content of a file URI (<link linkend="raptor-parse-file"><function>raptor_parse_file()</function></link>)</title>
+
+<para>Parsing can read from a URI known to be a <literal>file:</literal> URI:
+<programlisting>
+  raptor_parse_file(rdf_parser, file_uri, base_uri);
+</programlisting>
+This function requires that the <emphasis>file_uri</emphasis> is
+a file URI, that is 
+<literal>raptor_uri_uri_string_is_file_uri( raptor_uri_as_string( file_uri) )</literal>
+must be true.
+The <emphasis>base_uri</emphasis> may be required by some parsers
+and if <literal>NULL</literal> will cause the parsing to fail.
+</para>
+</section>
+
+
+<section id="parse-from-chunks">
+<title>Parse chunks of syntax content provided by the application  (<link linkend="raptor-start-parse"><function>raptor_start_parse()</function></link> and <link linkend="raptor-parse-chunk"><function>raptor_parse_chunk()</function></link>)</title>
+
+<para>
+<programlisting>
+  raptor_start_parse(rdf_parser, base_uri);
+  while(/* not finished getting content */) {
+    unsigned char *buffer;
+    size_t buffer_len;
+    /* obtain some syntax content in buffer of size buffer_len bytes */
+    raptor_parse_chunk(rdf_parser, buffer, buffer_len, 0);
+  }
+  raptor_parse_chunk(rdf_parser, NULL, 0, 1); /* no data and is_end = 1 */
+</programlisting>
+The <emphasis>base_uri</emphasis> argument to 
+<link linkend="raptor-start-parse"><function>raptor_start_parse()</function></link>
+may be required by some parsers
+and if <literal>NULL</literal> will cause the parsing to fail.
+</para>
+
+<para>On the last
+<link linkend="raptor-parse-chunk"><function>raptor_parse_chunk()</function></link>
+call, or after the loop is ended, the <literal>is_end</literal>
+parameter must be set to non-0.  Content can be passed with the
+final call.  If no content is present at the end (such as in
+some kind of <quote>end of file</quote> situation), then a 0-length
+buffer_len or NULL buffer can be used.</para>
+
+<para>The minimal case is an entire parse in one chunk as follows:</para>
+<programlisting>
+  raptor_start_parse(rdf_parser, base_uri);
+  raptor_parse_chunk(rdf_parser, buffer, buffer_len, 1); /* is_end = 1 */
+</programlisting>
+
+</section>
+
+</section>
+
+
+<section id="restrict-parser-network-access">
+<title>Restrict parser network access</title>
+
+<para>
+Parsing can cause network requests to be performed, especially
+if a URI is given as an argument such as with
+<link linkend="raptor-parse-uri"><function>raptor_parse_uri()</function></link>
+however there may also be indirect requests such as with the
+GRDDL parser that retrieves URIs depending on the results of
+initial parse requests.  The URIs requested may not be wanted
+to be fetched or need to be filtered, and this can be done in
+three ways.
+</para>
+
+<section id="tutorial-filter-network-with-feature">
+<title>Filtering parser network requests with feature <link linkend="RAPTOR-FEATURE-NO-NET:CAPS"><literal>RAPTOR_FEATURE_NO_NET</literal></link></title>
+<para>
+The parser feature 
+<link linkend="RAPTOR-FEATURE-NO-NET:CAPS"><literal>RAPTOR_FEATURE_NO_NET</literal></link>
+can be set with
+<link linkend="raptor-set-feature"><function>raptor_set_feature()</function></link>
+and forbids all network requests.  There is no customisation with
+this approach, for that see the URI filter in the next section.
+</para>
+
+<programlisting>
+  rdf_parser = raptor_new_parser("rdfxml");
+
+  /* Disable internal network requests */
+  raptor_set_feature(rdf_parser, RAPTOR_FEATURE_NO_NET, 1);
+</programlisting>
+
+</section>
+
+
+<section id="tutorial-filter-network-www-uri-filter">
+<title>Filtering parser network requests with <link linkend="raptor-www-set-uri-filter"><function>raptor_www_set_uri_filter()</function></link></title>
+<para>
+The
+<link linkend="raptor-www-set-uri-filter"><function>raptor_www_set_uri_filter()</function></link>
+
+allows setting of a filtering function to operate on all URIs
+retrieved by a WWW connection.  This connection can be used in
+parsing when operated by hand.
+</para>
+
+<programlisting>
+void write_bytes_handler(raptor_www* www, void *user_data, 
+                         const void *ptr, size_t size, size_t nmemb) {
+{
+  raptor_parser* rdf_parser=(raptor_parser*)user_data;
+  raptor_parse_chunk(rdf_parser, (unsigned char*)ptr, size*nmemb, 0);
+}
+
+int uri_filter(void* filter_user_data, raptor_uri* uri) {
+  /* return non-0 to forbid the request */
+}
+
+int main(int argc, char *argv[]) { 
+  ...
+
+  rdf_parser = raptor_new_parser("rdfxml");
+  www = raptor_new_www();
+
+  /* filter all URI requests */
+  raptor_www_set_uri_filter(www, uri_filter, filter_user_data);
+
+  /* make WWW write bytes to parser */
+  raptor_www_set_write_bytes_handler(www, write_bytes_handler, rdf_parser);
+
+  raptor_start_parse(rdf_parser, uri);
+  raptor_www_fetch(www, uri);
+  /* tell the parser that we are done */
+  raptor_parse_chunk(rdf_parser, NULL, 0, 1);
+
+  raptor_www_free(www);
+  raptor_free_parser(rdf_parser);
+
+  ...
+}
+
+</programlisting>
+
+</section>
+
+
+<section id="tutorial-filter-network-parser-uri-filter">
+<title>Filtering parser network requests with <link linkend="raptor-parser-set-uri-filter"><function>raptor_parser_set_uri_filter()</function></link></title>
+
+<para>
+The
+<link linkend="raptor-parser-set-uri-filter"><function>raptor_parser_set_uri_filter()</function></link>
+allows setting of a filtering function to operate on all URIs that
+the parser sees.  This operates on the internal raptor_www object
+used inside parsing to retrieve URIs, similar to that described in
+the <link linkend="tutorial-filter-network-www-uri-filter">previous section</link>.
+</para>
+
+<programlisting>
+  int uri_filter(void* filter_user_data, raptor_uri* uri) {
+    /* return non-0 to forbid the request */
+  }
+
+  rdf_parser = raptor_new_parser("rdfxml");
+  raptor_parser_set_uri_filter(rdf_parser, uri_filter, filter_user_data);
+
+  /* parse content as normal */
+  raptor_parse_uri(rdf_parser, uri, base_uri);
+</programlisting>
+
+</section>
+
+
+<section id="tutorial-filter-network-parser-timeout">
+<title>Setting timeout for parser network requests with feature <link linkend="RAPTOR-FEATURE-WWW-TIMEOUT:CAPS"><literal>RAPTOR_FEATURE_WWW_TIMEOUT</literal></link></title>
+
+<para>If the value of feature
+<link linkend="RAPTOR-FEATURE-WWW-TIMEOUT:CAPS"><literal>RAPTOR_FEATURE_WWW_TIMEOUT</literal></link>
+if set to a number &gt;0, it is used as the timeout in seconds
+for retrieving of URIs during parsing (primarily for GRDDL).
+This uses
+<link linkend="raptor-www-set-connection-timeout"><function>raptor_www_set_connection_timeout()</function></link>
+internally.
+</para>
+
+<programlisting>
+  rdf_parser = raptor_new_parser("grddl");
+
+  /* set internal URI retrieval maximum time to 5 seconds */
+  raptor_set_feature(rdf_parser, RAPTOR_FEATURE_WWW_TIMEOUT , 5);
+</programlisting>
+
+</section>
+
+
+</section>
+
+
+<section id="tutorial-parser-static-info">
+<title>Querying parser static information</title>
+
+<para>
+These methods return information about the constructed parser
+implementation corresponding to the information available
+via <link linkend="raptor-syntaxes-enumerate"><function>raptor_syntaxes_enumerate()</function></link>
+for all parsers.
+</para>
+
+<para><link linkend="raptor-get-name"><function>raptor_get_name()</function></link> return the parser syntax name,
+<link linkend="raptor-get-label"><function>raptor_get_label()</function></link>
+the long label for the parser and
+<link linkend="raptor-get-mime-type"><function>raptor_get_mime_type()</function></link>
+the primary MIME Type for the parser (there may be others that the parser
+will accept but this is the main one).
+</para>
+
+<para><link linkend="raptor-parser-get-accept-header"><function>raptor_parser_get_accept_header()</function></link>
+returns a string that would be sent in an HTTP
+request <code>Accept:</code> header for the syntaxes accepted by this
+parser only. 
+</para>
+
+</section>
+
+
+<section id="tutorial-parser-runtime-info">
+<title>Querying parser run-time information</title>
+
+<para>
+<link linkend="raptor-get-locator"><function>raptor_get_locator()</function></link>
+returns the <link linkend="raptor-locator"><type>raptor_locator</type></link>
+for the current position in the input stream.  The <emphasis>locator</emphasis>
+structure contains full information on the details of where in the
+file or URI the current parser has reached.
+</para>
+</section>
+
+
+<section id="tutorial-parser-abort">
+<title>Aborting parsing</title>
+
+<para>
+<link linkend="raptor-parse-abort"><function>raptor_parse_abort()</function></link>
+allows the current parsing to be aborted, at which point no further
+triples will be passed to callbacks and the parser will attempt to
+return control to the application.  This is most useful when called
+inside a handler function which allows the application to decide to stop
+an active parsing.
+</para>
+</section>
+
+
+<section id="tutorial-parser-destroy">
+<title>Destroy the parser</title>
+
+<para>
+To tidy up, delete the parser object as follows: 
+<programlisting>
+  raptor_free_parser(rdf_parser);
+</programlisting>
+</para>
+
+</section>
+
+
+<section id="tutorial-parser-example">
+<title>Parsing example code</title>
+
+<example id="raptor-example-rdfprint">
+<title><filename>rdfprint.c</filename>: Parse an RDF/XML file and print the triples</title>
+<programlisting>
+<xi:include href="rdfprint.c" parse="text"/>
+</programlisting>
+
+<para>Compile it like this:
+<screen>
+$ gcc -o rdfprint rdfprint.c `raptor-config --cflags` `raptor-config --libs`
+</screen>
+and run it on an RDF file as:
+<screen>
+$ ./rdfprint raptor.rdf
+_:genid1 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://usefulinc.com/ns/doap#Project&gt; .
+_:genid1 &lt;http://usefulinc.com/ns/doap#name&gt; "Raptor" .
+_:genid1 &lt;http://usefulinc.com/ns/doap#homepage&gt; &lt;http://librdf.org/raptor/&gt; .
+...
+</screen>
+</para>
+
+</example>
+
+</section>
+
+</chapter>
+
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("raptor-docs.xml" "book" "part")
+End:
+-->

@@ -1,0 +1,196 @@
+Version 2.0.2 (15 Aug 2005)
+
+  * packaging changes:
+    - require automake (>= 1.5) for 'make -f Makefile.cvs'
+      (mandatory for 'dist-bzip2' automake option)
+
+  * src/gig.cpp, src/gig.h:
+    - support for gig v3 multi-file format (.gig, .gx01, .gx02, ...),
+      the extension files are read automatically when the samples are
+      loaded
+    - fixed the 24 bit decompression, the result should now be exact
+      instead of an approximation
+    - added VCFCutoffControllerInvert parameter and GetVelocityCutoff
+      function to DimensionRegion
+
+  * src/DLS.cpp, src/DLS.h:
+    - the upper bits of the pool table indices are read (used as
+      extension file numbers for gig v3)
+
+  * src/RIFF.cpp, src/RIFF.h:
+    - the file name is remembered in the RIFF::File object
+
+Version 2.0.1 (12 Jun 2005)
+
+  * packaging changes:
+    - include debian/ directory on 'make dist'
+    - create a bzip2 tarball on 'make dist'
+
+  * src/gigextract.cpp:
+    - show also version of libsndfile or build version of libaudiofile when
+      using the -v switch
+    - fixed mutual link dependency to libsndfile / libaudiofile
+
+  * src/gig.cpp, src/gig.h:
+    - added DimensionRegion::GetVelocityRelease function
+
+Version 2.0.0 (9 May 2005)
+
+  * packaging changes:
+    - fixed conditional linkage of either libsndfile or libaudiofile
+      (if none of the two exist, configure script will abort)
+    - man pages are now auto generated with the correct libgig version
+
+  * src/gig.cpp, src/gig.h:
+    - experimental support for Gigasampler v3 format;
+      64 bit file offsets are truncated to 32 bit, 24 bit samples are
+      truncated to 16 bit, up to 8 dimensions are read, additional
+      articulation informations are ignored at the moment
+      (patch by Andreas Persson)
+    - added some file format compatibility checks
+    - fixed vcf_type_lowpassturbo value (vcf_type_lowpassturbo was actually
+      never used, because the necessary check was made before
+      initialization)
+    - fixed crossfade points order (structure for big endian and little
+      endian systems was interchanged)
+    - fixed some memory leaks (patch by 'Gene', a.k.a Anders Alm)
+    - fixed crash which occured when patches did not have a sample assigned
+      to their region or dimension region (patch by Andreas Persson)
+    - support for compressed mono samples
+    - experimental support for compressed 24 bit samples
+    - fixed decompression on big-endian CPUs
+    - fixed decompression bug that truncated the last block of samples
+    - external decompression buffers can now be used for streaming samples
+      to avoid race conditions in case of multiple streaming threads
+    - added pre-calculated sample attenuation parameter
+    - added v3 "random" and "round robin" dimensions
+    - implemented progress indicator callback mechanism for loading
+      instruments and samples
+    - added functions libraryName() and libraryVersion()
+
+  * src/DLS.cpp, src/DLS.h:
+    - fixed File constructor which caused variable File::Instruments always
+      to be zero
+    - added functions libraryName() and libraryVersion()
+
+  * src/RIFF.cpp, src/RIFF.h:
+    - fixed method List::LoadSubChunks() which did not restore the original
+      position within the body of the given list chunk
+    - added functions libraryName() and libraryVersion()
+
+  * src/rifftree.cpp:
+    - added command line switch -v to show rifftree's revision and the used
+      libgig version
+
+  * src/dlsdump.cpp:
+    - added command line switch -v to show dlsdump's revision and the used
+      libgig version
+
+  * src/gigdump.cpp:
+    - added output of UnityNote, FineTune, Gain, SampleStartOffset an
+      LoopPlayCount
+    - added command line switch -v to show gigdump's revision and the used
+      libgig version
+
+  * src/gigextract.cpp:
+    - support for compressed mono samples and compressed 24 bit samples
+    - added command line switch -v to show gigextract's revision and the
+      used libgig version
+
+Version 1.0.0 (26 Nov 2004)
+
+  * packaging changes:
+    - renamed 'libgig.pc.in' -> 'gig.pc.in' and renamed pkg-config lib name
+      'libgig' -> 'gig' as it's common practice to omit the 'lib' prefix
+    - fixed man pages automake install rule (which didn't work on Mandrake,
+      SuSE and Fedora)
+    - fixed generation of Doxygen API documentation (now also included in
+      RPM and Debian packages)
+
+  * src/gig.cpp, src/gig.h:
+    - fixed / improved accuracy of all three velocity to volume
+      transformation functions a.k.a. 'nonlinear','linear','special'
+      (patch by Andreas Persson)
+    - denormals are filtered from the velocity to volume tables
+    - bugfix for dimension region switching (wrong handling of the release
+      trigger dimension, no bit range check for dimensions of split type
+      'split_type_bit')
+    - fixed panorama value in DimensionRegion (invalid conversion from
+      signed 7 bit to signed 8 bit)
+    - added class attribute 'Layers' to class 'gig::Region'
+    - symbol prototyping of gig::Region (fixes build failure with qsampler)
+
+  * src/gigextract.cpp:
+    - added support for libsndfile (if libaudiofile and libsndfile are
+      available then libsndfile is preferred)
+
+  * src/gigdump.cpp:
+    - added printout for dimension informations (amount, type, bits, zones)
+    - added printout for velocity response curve parameters
+    - added printout for crossfade definitions
+    - added printout for panorama value for each DimensionRegion
+    - replaced printout of DLS Region layer by printout of amount of
+      Gigasampler layers
+
+Version 0.7.1 (2 Jul 2004)
+
+  * packaging changes:
+    - added libgig.spec and libgig.pc package configurations for generating
+      Redhat packages
+    - header files included on installation.
+    - autotools-generated files removed from CVS repository.
+    - added support for generating Debian packages
+    - version of shared library can be set in configure.in
+
+Version 0.7.0 (3 May 2004)
+
+  * general changes:
+    - various big endian specific corrections
+      (successfully tested now on PPC)
+    - minor adjustments to avoid compile errors on some systems
+      (using now pow() instead of powl() and --pedantic g++ compiler switch)
+    - libtoolized the library
+    - added man pages for the command line tools
+      (gigextract, gigdump, dlsdump, rifftree)
+
+  * src/gig.cpp, src/gig.h:
+    - fixed bug in decompression algorithm which caused it not to detect
+      the end of a stream
+    - added method GetVelocityAttenuation() to class 'DimensionRegion' which
+      takes the MIDI key velocity value as an argument and returns the
+      appropriate volume factor (0.0 ... 1.0) for the sample to be played
+      back, the velocity curve transformation functions used for this are
+      only an approximation so far
+    - fixed class attributes 'Sample::LoopStart', 'Sample::LoopEnd' and
+      'Sample::LoopSize' which reflected wrong values
+    - class attributes 'Sample::LoopStart' and 'Sample::LoopEnd' are now
+      measured in sample points instead of byte offset
+    - renamed misleading attribute name 'Sample::MIDIPitchFraction' to
+      'Sample::FineTune'
+    - added class attribute 'Sample::LoopSize'
+    - added method GetInstrument(uint index) to class 'File'
+    - added ReadAndLoop() method to class 'Sample' which is an extension to
+      the normal Read() method to honor the sample's looping information
+      while streaming from disk
+    - changed interface for 'attenuation_ctrl_t', 'eg1_ctrl_t' and
+      'eg2_ctrl_t': replaced this huge enumeration by a structure which
+      reflects the MIDI controller number in case of an ordinary control
+      change controller (this saves a huge switch-case block in the
+      application of the library user)
+    - renamed following attributes in class 'DimensionRegion':
+      'AttenuationContol' -> 'AttenuationController',
+      'InvertAttenuationControl' -> 'InvertAttenuationController',
+      'AttenuationControlTreshold' -> 'AttenuationControllerThreshold'
+    - minor fix in API documentation for method GetVelocityAttenuation() in
+      class 'DimensionRegion'
+
+  * src/RIFF.cpp, src/RIFF.h:
+    - added additional API documentation
+    - minor fix in Chunk::Read() method (only a minor efficiency issue)
+
+  * src/gigdump.cpp:
+    - added printout of samples' looping informations
+
+Version 0.6.0 (3 Nov 2003)
+
+  * initial release

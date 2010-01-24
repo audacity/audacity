@@ -1,0 +1,162 @@
+<!-- ##### SECTION Title ##### -->
+Hashes
+
+<!-- ##### SECTION Short_Description ##### -->
+Key:Value hashes or dictionaries.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Interface to implementations of key:value hashes either in memory, on
+disk and with persistence.  Keys may have multiple and duplicate values.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_hash ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_hash_cursor ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_new_hash_from_string ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_hash_from_array_of_strings ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@array: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_hash_from_hash ##### -->
+<para>
+
+</para>
+
+@old_hash: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_hash ##### -->
+<para>
+
+</para>
+
+@hash: 
+
+
+<!-- ##### FUNCTION librdf_hash_get ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_hash_get_as_boolean ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_hash_get_as_long ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_hash_get_del ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_hash_put_strings ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_hash_print ##### -->
+<para>
+
+</para>
+
+@hash: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_hash_print_keys ##### -->
+<para>
+
+</para>
+
+@hash: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_hash_print_values ##### -->
+<para>
+
+</para>
+
+@hash: 
+@key_string: 
+@fh: 
+
+
+<!-- ##### FUNCTION librdf_hash_interpret_template ##### -->
+<para>
+
+</para>
+
+@template_string: 
+@dictionary: 
+@prefix: 
+@suffix: 
+@Returns: 
+
+

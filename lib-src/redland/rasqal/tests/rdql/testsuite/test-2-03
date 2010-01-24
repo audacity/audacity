@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 2-03 : 2 triple patterns 
+// 8 results (4 first pattern x 2 ways for each resource second pattern)
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (?x, ?y, ?z), (?x, ?a, ?b)

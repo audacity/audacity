@@ -1,0 +1,2 @@
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/0093.xhtml> <http://purl.org/dc/elements/1.1/creator> "Albert Einstein" .
+<http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/0093.xhtml> <http://purl.org/dc/elements/1.1/title> "E = mc2: The Most Urgent Problem of Our Time"^^<http://www.example.org/XMLLiteral> .

@@ -1,0 +1,4 @@
+PREFIX : <http://example.org/>
+SELECT ?x
+FROM NAMED <http://example.org/graph1>
+WHERE {}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:play="http://somewhere.example.com/"
+         xmlns:enc="http://somewhere.example.com/">
+   <!-- Check this doesn't crash anymore - parseType="Resource" -->
+
+   <!-- Should generate 3 statements as described in ex-13.out -->
+
+<rdf:Description rdf:about="http://www.w3.org/">
+   <play:xml-cannonicalized rdf:parseType="Resource">
+      <enc:hash-sha-1 rdf:parseType="Resource">
+         <enc:base64>jd8734djr08347jyd4</enc:base64>
+      </enc:hash-sha-1>
+   </play:xml-cannonicalized>
+</rdf:Description>
+</rdf:RDF>

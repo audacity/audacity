@@ -1,0 +1,196 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.75 [en]C-gatewaynet  (Win98; U) [Netscape]">
+   <meta name="Author" content="Phil Burk">
+   <meta name="Description" content="Internal docs. How a stream is started or stopped.">
+   <meta name="KeyWords" content="audio, tutorial, library, portable, open-source, DirectSound,sound, music, JSyn, synthesis,">
+   <title>PortAudio Implementation - Start/Stop</title>
+</head>
+<body>
+&nbsp;
+<center><table COLS=1 WIDTH="100%" BGCOLOR="#FADA7A" >
+<tr>
+<td>
+<center>
+<h1>
+PortAudio Implementation Guide</h1></center>
+</td>
+</tr>
+</table></center>
+
+<p>This document describes how to implement the PortAudio API on a new
+computer platform. Implementing PortAudio on a new platform, makes it possible
+to port many existing audio applications to that platform.
+<p>By Phil Burk
+<br>Copyright 2000 Phil Burk and Ross Bencina
+<p>Note that the license says: <b>"Any person wishing to distribute modifications
+to the Software is requested to send the modifications to the original
+developer so that they can be incorporated into the canonical version."</b>.
+So when you have finished a new implementation, please send it back to
+us at&nbsp; "<a href="http://www.portaudio.com">http://www.portaudio.com</a>"
+so that we can make it available for other users. Thank you!
+<h2>
+Download the Latest PortAudio Implementation</h2>
+Always start with the latest implementation available at "<a href="http://www.portaudio.com">http://www.portaudio.com</a>".
+<h2>
+Select an Existing Implementation as a Basis</h2>
+The fastest way to get started is to take an existing implementation and
+translate it for your new platform. Choose an implementation whose architecture
+is as close as possible to your target.
+<ul>
+<li>
+DirectSound Implementation - pa_win_ds - Uses a timer callback for the
+background "thread". Polls a circular buffer and writes blocks of data
+to keep it full.</li>
+
+<li>
+Windows MME - pa_win_wmme - Spawns an actual Win32 thread. Writes blocks
+of data to the HW device and waits for events that signal buffer completion.</li>
+
+<li>
+Linux OSS - pa_linux - Spawns a real thread that writes to the "/dev/dsp"
+stream using blocking I/O calls.</li>
+</ul>
+When you write a new implementation, you will be using some code that is
+in common with all implementations. This code is in the folder "pa_common".
+It provides various functions such as parameter checking, error code to
+text conversion, sample format conversion, clipping and dithering, etc.
+<p>The code that you write will go into a separate folder called "pa_{os}_{api}".
+For example, code specific to the DirectSound interface for Windows goes
+in "pa_win_ds".
+<h2>
+Read Docs and Code</h2>
+Famialiarize yourself with the system by reading the documentation provided.
+here is a suggested order:
+<ol>
+<li>
+User Programming <a href="pa_tutorial.html">Tutorial</a></li>
+
+<li>
+Header file "pa_common/portaudio.h" which defines API.</li>
+
+<li>
+Header file "pa_common/pa_host.h" for host dependant code. This definces
+the routine you will need to provide.</li>
+
+<li>
+Shared code in "pa_common/pa_lib.c".</li>
+
+<li>
+Docs on Implementation of <a href="pa_impl_startstop.html">Start/Stop</a>
+code.</li>
+</ol>
+
+<h2>
+Implement&nbsp; Output to Default Device</h2>
+Now we are ready to crank some code. For instant gratification, let's try
+to play a sine wave.
+<ol>
+<li>
+Link the test program "pa_tests/patest_sine.c" with the file "pa_lib.c"
+and the implementation specific file you are creating.</li>
+
+<li>
+For now, just stub out the device query code and the audio input code.</li>
+
+<li>
+Modify PaHost_OpenStream() to open your default target device and get everything
+setup.</li>
+
+<li>
+Modify PaHost_StartOutput() to start playing audio.</li>
+
+<li>
+Modify PaHost_StopOutput() to stop audio.</li>
+
+<li>
+Modify PaHost_CloseStream() to clean up. Free all memory that you allocated
+in PaHost_OpenStream().</li>
+
+<li>
+Keep cranking until you can play a sine wave using "patest_sine.c".</li>
+
+<li>
+Once that works, try "patest_pink.c", "patest_clip.c", "patest_sine8.c".</li>
+
+<li>
+To test your Open and Close code, try "patest_many.c".</li>
+
+<li>
+Now test to make sure that the three modes of stopping are properly supported
+by running "patest_stop.c".</li>
+
+<li>
+Test your implementation of time stamping with "patest_sync.c".</li>
+</ol>
+
+<h2>
+Implement Device Queries</h2>
+Now that output is working, lets implement the code for querying what devices
+are available to the user. Run "pa_tests/pa_devs.c". It should print all
+of the devices available and their characteristics.
+<h2>
+Implement Input</h2>
+Implement audio input and test it with:
+<ol>
+<li>
+patest_record.c - record in half duplex, play back as recorded.</li>
+
+<li>
+patest_wire.c - full duplex, copies input to output. Note that some HW
+may not support full duplex.</li>
+
+<li>
+patest_fuzz.c - plug in your guitar and get a feel for why latency is an
+important issue in computer music.</li>
+
+<li>
+paqa_devs.c - try to open every device and use it with every possible format</li>
+</ol>
+
+<h2>
+Debugging Tools</h2>
+You generally cannot use printf() calls to debug real-time processes because
+they disturb the timing. Also calling printf() from your background thread
+or interrupt could crash the machine. So PA includes a tool for capturing
+events and storing the information while it is running. It then prints
+the events when Pa_Terminate() is called.
+<ol>
+<li>
+To enable trace mode, change TRACE_REALTIME_EVENTS in "pa_common/pa_trace.h"
+from a (0) to a (1).</li>
+
+<li>
+Link with "pa_common/pa_trace.c".</li>
+
+<li>
+Add trace messages to your code by calling:<br>
+<tt>&nbsp;&nbsp; void AddTraceMessage( char *msg, int data );<br>
+for example<br>
+&nbsp;&nbsp; AddTraceMessage("Pa_TimeSlice: past_NumCallbacks ", past->past_NumCallbacks
+);</tt></li>
+
+<li>
+Run your program. You will get a dump of events at the end.</li>
+
+<li>
+You can leave the trace messages in your code. They will turn to NOOPs
+when you change TRACE_REALTIME_EVENTS back to (0).</li>
+</ol>
+
+<h2>
+Delivery</h2>
+Please send your new code along with notes on the implementation back to
+us at "<a href="http://www.portaudio.com">http://www.portaudio.com</a>".
+We will review the implementation and post it with your name. If you had
+to make any modifications to the code in "pa_common" or "pa_tests" <b>please</b>
+send us those modifications and your notes. We will try to merge your changes
+so that the "pa_common" code works with <b>all</b> implementations.
+<p>If you have suggestions for how to make future implementations easier,
+please let us know.
+<br>THANKS!
+<br>&nbsp;
+</body>
+</html>

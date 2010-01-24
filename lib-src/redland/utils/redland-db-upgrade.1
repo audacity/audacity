@@ -1,0 +1,29 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\"
+.\" redland-db-upgrade.1 - Redland database upgrade utility manual page
+.\"
+.\" Copyright (C) 2003-2006 David Beckett - http://purl.org/net/dajobe/
+.\" Copyright (C) 2003 University of Bristol - http://www.bristol.ac.uk/
+.\"
+.TH redland-db-upgrade 1 "2003-08-19"
+.\" Please adjust this date whenever revising the manpage.
+.SH NAME
+redland-db-upgrade \- upgrade older Redland databases to 0.9.12 format
+.SH SYNOPSIS
+.B redland-db-upgrade
+\fIold BDB Name\fP \fInew BDB name\fP
+.SH DESCRIPTION
+\fIredland-db-upgrade\fP converts Redland databases from the format
+in 0.9.11 and earlier into the new format.  It must be run on
+each Redland database.  For example if database \fIa\fP
+created files \fIa-sp2o.db\fP,  \fIa-so2p.db\fP and  \fIa-po2s.db\fP
+it could be converted to a new database \fIb\fP with:
+.IP
+redland-db-upgrade a b
+.SH SEE ALSO
+.BR redland (3),
+.SH AUTHOR
+Dave Beckett - 
+.UR http://purl.org/net/dajobe/
+http://purl.org/net/dajobe/
+.UE

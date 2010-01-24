@@ -1,0 +1,17 @@
+autogen definitions benchmark.tpl;
+
+data_type = { 
+	type_name		= short ;
+	multiplier		= "32700.0" ;
+	};
+
+data_type = { 
+	type_name		= int ;
+	multiplier		= "32700.0 * (1<<16)" ;
+	};
+
+data_type = { 
+	type_name		= float ;
+	multiplier		= "1.0" ;
+	};
+

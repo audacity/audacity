@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.com/properties/">
+
+  <!-- Check that the core SGML/XML entities are properly encoded when 
+       building the XML string -->
+
+  <rdf:Description rdf:about="http://example.org/node0">
+     <ex:prop1 rdf:parseType="Literal"> &amp; </ex:prop1>
+     <ex:prop2 rdf:parseType="Literal"> &lt; </ex:prop2>
+     <ex:prop3 rdf:parseType="Literal"> &gt; </ex:prop3>
+     <ex:prop4 rdf:parseType="Literal">&gt;&amp;&lt;</ex:prop4>
+     <ex:prop5 rdf:parseType="Literal">&lt;ex:notaprop&gt;</ex:prop5>
+  </rdf:Description>
+
+</rdf:RDF>

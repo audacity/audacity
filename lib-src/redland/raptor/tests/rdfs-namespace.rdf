@@ -1,0 +1,188 @@
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Resource">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">Resource</rdfs:label>
+  <rdfs:comment>The class resource, everything.</rdfs:comment>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#type">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">type</rdfs:label>
+  <rdfs:comment>Indicates membership of a class</rdfs:comment>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdf:Property>
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Class">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">Class</rdfs:label>
+  <rdfs:comment>The concept of Class</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#subClassOf">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">subClassOf</rdfs:label>
+  <rdfs:comment>Indicates membership of a class</rdfs:comment>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#subPropertyOf">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">subPropertyOf</rdfs:label>
+  <rdfs:comment>Indicates specialization of properties</rdfs:comment>
+  <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdf:Property>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">Property</rdfs:label>
+  <rdfs:comment>The concept of a property.</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#comment">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">comment</rdfs:label>
+  <rdfs:comment>Use this for descriptions</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#label">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">label</rdfs:label>
+  <rdfs:comment>Provides a human-readable version of a resource name.</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#domain">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">domain</rdfs:label>
+  <rdfs:comment>A domain class for a property type</rdfs:comment>
+ <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#range">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">range</rdfs:label>
+  <rdfs:comment>A range class for a property type</rdfs:comment>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+  <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">seeAlso</rdfs:label>
+  <rdfs:comment>A resource that provides information about the subject resource</rdfs:comment>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+  <rdfs:domain   rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#isDefinedBy">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdf:type resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+  <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
+  <rdfs:label xml:lang="en">isDefinedBy</rdfs:label>
+  <rdfs:comment>Indicates the namespace of a resource</rdfs:comment>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdf:Property>
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Literal">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">Literal</rdfs:label>
+  <rdfs:comment>This represents the set of atomic values, eg. textual strings.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">Statement</rdfs:label>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+  <rdfs:comment>The class of RDF statements.</rdfs:comment>
+</rdfs:Class>
+
+<rdf:Property about="http://www.w3.org/1999/02/22-rdf-syntax-ns#subject">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">subject</rdfs:label>
+  <rdfs:comment>The subject of an RDF statement.</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdf:Property>
+
+<rdf:Property about="http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">predicate</rdfs:label>
+  <rdfs:comment>the predicate of an RDF statement.</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+  <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdf:Property>
+
+<rdf:Property about="http://www.w3.org/1999/02/22-rdf-syntax-ns#object">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">object</rdfs:label>
+  <rdfs:comment>The object of an RDF statement.</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"/>
+</rdf:Property>
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#Container">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">Container</rdfs:label>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+  <rdfs:comment>This represents the set Containers.</rdfs:comment>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">Bag</rdfs:label>
+  <rdfs:comment xml:lang="en">An unordered collection.</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">Seq</rdfs:label>
+  <rdfs:comment xml:lang="en">An ordered collection.</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">Alt</rdfs:label>
+  <rdfs:comment xml:lang="en">A collection of alternatives.</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">ContainerMembershipProperty</rdfs:label>
+  <rdfs:comment>The container membership properties, rdf:1, rdf:2, ..., all of which are sub-properties of 'member'.</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+</rdfs:Class>
+
+<rdf:Property rdf:about="http://www.w3.org/2000/01/rdf-schema#member">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/2000/01/rdf-schema#"/>
+  <rdfs:label xml:lang="en">member</rdfs:label>
+  <rdfs:comment>a member of a container</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Container"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="http://www.w3.org/1999/02/22-rdf-syntax-ns#value">
+  <rdfs:isDefinedBy rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <rdfs:label xml:lang="en">value</rdfs:label>
+  <rdfs:comment>Identifies the principal value (usually a string) of a property when the property value is a structured resource</rdfs:comment>
+  <rdfs:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+</rdf:Property>
+
+<rdf:Description rdf:about="http://www.w3.org/2000/01/rdf-schema#">
+  <rdfs:seeAlso rdf:resource="http://www.w3.org/2000/01/rdf-schema-more"/>
+</rdf:Description>
+
+</rdf:RDF>

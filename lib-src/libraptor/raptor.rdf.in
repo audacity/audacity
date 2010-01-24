@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <Project rdf:about="http://librdf.org/raptor/#raptor">
+    <name>Raptor</name>
+    <homepage rdf:resource="http://librdf.org/raptor/"/>
+
+    <shortdesc xml:lang="en">Raptor RDF Parser Toolkit Library.</shortdesc>
+
+    <description xml:lang="en">is a free software / Open Source C
+    library that provides a set of parsers and serializers that
+    generate Resource Description Framework (RDF) triples by parsing
+    syntaxes or serialize the triples into a syntax.  The supported
+    parsing syntaxes are RDF/XML, N-Triples, TRiG, Turtle, RSS tag
+    soup including all versions of RSS, Atom 1.0 and 0.3, GRDDL and
+    microformats for HTML, XHTML and XML.  The
+    serializing syntaxes are RDF/XML (regular, and abbreviated),
+    N-Triples, RSS 1.0, Atom 1.0, XMP, Turtle, GraphViz DOT and
+    JSON.</description>
+
+    <maintainer>
+      <foaf:Person>
+	<foaf:name>Dave Beckett</foaf:name>
+	<foaf:homepage rdf:resource="http://www.dajobe.org/"/>
+	<foaf:mbox_sha1sum>970987f991961f2553a1bf2574166fa29befbccb</foaf:mbox_sha1sum>
+      </foaf:Person>
+    </maintainer>
+
+    <release>
+      <Version>
+        <name>stable</name>
+	<created>2005-02-01</created>
+	<revision>@VERSION@</revision>
+      </Version>
+    </release>
+
+    <mailing-list rdf:resource="http://lists.usefulinc.com/mailman/listinfo/redland-dev" />
+    <mailing-list rdf:resource="http://lists.usefulinc.com/mailman/listinfo/redland-announce" />
+    <mailing-list rdf:resource="http://lists.usefulinc.com/mailman/listinfo/redland-commits" />
+
+    <download-page rdf:resource="http://download.librdf.org/sources/"/>
+    <download-mirror rdf:resource="http://sourceforge.net/projects/librdf/" />
+
+    <!-- Freshmeat category: Database Engines/Servers -->
+    <category rdf:resource="http://software.freshmeat.net/browse/67/" />
+    <!--   Internet :: WWW/HTTP :: Indexing/Search -->
+    <category rdf:resource="http://software.freshmeat.net/browse/93/" />
+    <!--  Software Development :: Libraries -->
+    <category rdf:resource="http://software.freshmeat.net/browse/809/" />
+    <!--  Software Development :: Libraries ::  Application Frameworks -->
+    <category rdf:resource="http://software.freshmeat.net/browse/810/" />
+    <!--  Text Processing :: Markup :: XML -->
+    <category rdf:resource="http://software.freshmeat.net/browse/868/" />
+
+    <!-- Sourceforge category: -->
+    <category rdf:resource="http://sourceforge.net/softwaremap/trove_list.php?form_cat=237" />
+
+    <!-- Licensing details -->
+    <license rdf:resource="http://usefulinc.com/doap/licenses/gpl"/>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/lgpl"/>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/asl20"/>
+
+    <!-- source repository -->
+    <repository>
+      <SVNRepository>
+	<location rdf:resource="http://svn.librdf.org/repository/raptor/" />
+	<browse rdf:resource="http://svn.librdf.org/view/raptor/" />
+      </SVNRepository>
+    </repository>
+  </Project>
+
+
+  <!--
+       optional administravia:
+       authoring tools can add more here if they'd like.
+   -->
+  <rdf:Description rdf:about="">
+    <foaf:maker>
+      <foaf:Person>
+	<foaf:name>Dave Beckett</foaf:name>
+	<foaf:homepage rdf:resource="http://www.dajobe.org/"/>
+	<foaf:mbox_sha1sum>970987f991961f2553a1bf2574166fa29befbccb</foaf:mbox_sha1sum>
+      </foaf:Person>
+    </foaf:maker>
+  </rdf:Description>
+
+</rdf:RDF>
+<!-- 
+Local variables:
+mode:nxml
+End:
+-->

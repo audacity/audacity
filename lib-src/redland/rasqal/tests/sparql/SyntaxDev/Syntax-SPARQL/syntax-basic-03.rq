@@ -1,0 +1,4 @@
+# No trailing dot
+PREFIX : <http://example.org/ns#> 
+SELECT *
+WHERE { ?x ?y ?z }

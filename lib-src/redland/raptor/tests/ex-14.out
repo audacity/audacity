@@ -1,0 +1,4 @@
+<http://example.org/person1/> <http://www.mygenealogy.com/Parent> <http://librdf.org/raptor/tests/ex-14.rdf#Person_B> .
+<http://librdf.org/raptor/tests/ex-14.rdf#Person_B> <http://www.gedcom.com/Name> "John Doe" .
+<http://librdf.org/raptor/tests/ex-14.rdf#Person_B> <http://www.gedcom.com/Birthplace> "New York" .
+<http://librdf.org/raptor/tests/ex-14.rdf#Person_B> <http://www.gedcom.com/DOB> "19010101" .

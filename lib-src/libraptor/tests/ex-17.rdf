@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:a="http://example.com/properties/">
+  <!-- Test empty propertyElt -->
+  <rdf:Description about="http://example.com/">
+    <a:property />
+  </rdf:Description>
+</rdf:RDF>

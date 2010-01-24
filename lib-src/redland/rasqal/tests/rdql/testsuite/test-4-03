@@ -1,0 +1,6 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 4-03 : Binding object to resource
+
+SELECT *
+SOURCE <model2.nt>
+WHERE  (?a, ?b, <http://rdf.hp.com/s2>)

@@ -1,0 +1,16 @@
+SELECT  ?name, ?info 
+SOURCE <http://www.ilrt.bris.ac.uk/discovery/2001/06/content/swws2001-07-30.rdf>
+WHERE  
+(?cal, dc:source, <http://www.SemanticWeb.org/SWWS/program/>),
+(?cal, ical:VEVENT-PROP, ?event),
+(?event, ical:LOCATION, ?geo),
+(?geo, ical:GEO-NAME, ?text),
+(?text, rdf:value, ?name),
+(?geo, rdfs:seeAlso, ?info)  
+USING 
+rdf FOR <http://www.w3.org/1999/02/22-rdf-syntax-ns#>,
+rdfs FOR <http://www.w3.org/2000/01/rdf-schema#>,
+ical FOR <http://ilrt.org/discovery/2001/06/schemas/ical-full/hybrid.rdf#>,
+util FOR <http://ilrt.org/discovery/2001/06/schemas/swws/index.rdf#>,
+foaf FOR <http://xmlns.com/foaf/0.1/>,
+dc FOR <http://purl.org/dc/elements/1.1/>

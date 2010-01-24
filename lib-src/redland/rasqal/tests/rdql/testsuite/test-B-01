@@ -1,0 +1,7 @@
+// (c) Copyright 2003 Hewlett-Packard Development Company, LP
+// Datatypes
+// No match: the value in the model is datatyped.
+
+SELECT ?x ?y
+FROM <model8.n3>
+WHERE (?x ?y "value")

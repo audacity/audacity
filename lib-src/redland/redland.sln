@@ -1,0 +1,74 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rasqal", "rasqal\win32\rasqal.vcproj", "{B72BB9A4-C889-4242-8188-34133944DC65}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D24FB457-A295-4237-8D5E-92ACBBA10139} = {D24FB457-A295-4237-8D5E-92ACBBA10139}
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D} = {F48C108E-B937-4D8C-A308-9C257C5D0D3D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "librdf", "librdf\win32\librdf.vcproj", "{2EF6F83E-DACB-4958-B0C0-A9F34476127A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B72BB9A4-C889-4242-8188-34133944DC65} = {B72BB9A4-C889-4242-8188-34133944DC65}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rapper", "raptor\win32\rapper.vcproj", "{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D} = {F48C108E-B937-4D8C-A308-9C257C5D0D3D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raptor", "raptor\win32\raptor.vcproj", "{F48C108E-B937-4D8C-A308-9C257C5D0D3D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "curllib", "..\curl-7.13.2\lib\curllib.vcproj", "{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "roqet", "rasqal\win32\roqet.vcproj", "{143A879E-BD81-4EF4-88EE-851D978304FE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B72BB9A4-C889-4242-8188-34133944DC65} = {B72BB9A4-C889-4242-8188-34133944DC65}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcre", "..\pcre\6.4\pcre-6.4-src\pcre\pcre.vcproj", "{D24FB457-A295-4237-8D5E-92ACBBA10139}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{B72BB9A4-C889-4242-8188-34133944DC65}.Debug.ActiveCfg = Debug|Win32
+		{B72BB9A4-C889-4242-8188-34133944DC65}.Debug.Build.0 = Debug|Win32
+		{B72BB9A4-C889-4242-8188-34133944DC65}.Release.ActiveCfg = Release|Win32
+		{B72BB9A4-C889-4242-8188-34133944DC65}.Release.Build.0 = Release|Win32
+		{2EF6F83E-DACB-4958-B0C0-A9F34476127A}.Debug.ActiveCfg = Debug|Win32
+		{2EF6F83E-DACB-4958-B0C0-A9F34476127A}.Debug.Build.0 = Debug|Win32
+		{2EF6F83E-DACB-4958-B0C0-A9F34476127A}.Release.ActiveCfg = Release|Win32
+		{2EF6F83E-DACB-4958-B0C0-A9F34476127A}.Release.Build.0 = Release|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Debug.ActiveCfg = Debug|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Debug.Build.0 = Debug|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Release.ActiveCfg = Release|Win32
+		{1FFF7A31-D1A9-4516-AB07-4D415ABAB733}.Release.Build.0 = Release|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Debug.ActiveCfg = Debug|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Debug.Build.0 = Debug|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Release.ActiveCfg = Release|Win32
+		{F48C108E-B937-4D8C-A308-9C257C5D0D3D}.Release.Build.0 = Release|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Debug.ActiveCfg = Debug|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Debug.Build.0 = Debug|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Release.ActiveCfg = Release|Win32
+		{59ED01CF-49C8-42C5-846F-AAF0A5F3B437}.Release.Build.0 = Release|Win32
+		{143A879E-BD81-4EF4-88EE-851D978304FE}.Debug.ActiveCfg = Debug|Win32
+		{143A879E-BD81-4EF4-88EE-851D978304FE}.Debug.Build.0 = Debug|Win32
+		{143A879E-BD81-4EF4-88EE-851D978304FE}.Release.ActiveCfg = Release|Win32
+		{143A879E-BD81-4EF4-88EE-851D978304FE}.Release.Build.0 = Release|Win32
+		{D24FB457-A295-4237-8D5E-92ACBBA10139}.Debug.ActiveCfg = Debug|Win32
+		{D24FB457-A295-4237-8D5E-92ACBBA10139}.Debug.Build.0 = Debug|Win32
+		{D24FB457-A295-4237-8D5E-92ACBBA10139}.Release.ActiveCfg = Release|Win32
+		{D24FB457-A295-4237-8D5E-92ACBBA10139}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

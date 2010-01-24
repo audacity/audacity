@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-memory">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-memory.top_of_page">Memory</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Memory</refname>
+<refpurpose>Memory handling functions</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-memory.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+<link linkend="void">void</link>                <link linkend="raptor-free-memory">raptor_free_memory</link>                  (<link linkend="void">void</link> *ptr);
+<link linkend="void">void</link>*               <link linkend="raptor-alloc-memory">raptor_alloc_memory</link>                 (<link linkend="size-t">size_t</link> size);
+<link linkend="void">void</link>*               <link linkend="raptor-calloc-memory">raptor_calloc_memory</link>                (<link linkend="size-t">size_t</link> nmemb,
+                                                         <link linkend="size-t">size_t</link> size);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-memory.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Wrappers around the free, malloc and calloc functions but
+called from inside the library.  Required by some systems
+to handle multiple-HEAPs and pass memory to and from the library.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-memory.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-free-memory" role="function">
+<title>raptor_free_memory ()</title>
+<indexterm zone="raptor-free-memory"><primary>raptor_free_memory</primary></indexterm><programlisting><link linkend="void">void</link>                raptor_free_memory                  (<link linkend="void">void</link> *ptr);</programlisting>
+<para>
+Free memory allocated inside raptor.
+</para>
+<para>
+Some systems require memory allocated in a library to
+be deallocated in that library.  This function allows
+memory allocated by raptor to be freed.
+</para>
+<para>
+Examples include the result of the '_to_' methods that returns
+allocated memory such as raptor_uri_filename_to_uri_string,
+raptor_uri_filename_to_uri_string
+and raptor_uri_uri_string_to_filename_fragment</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>ptr</parameter>&nbsp;:</term>
+<listitem><simpara> memory pointer
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-alloc-memory" role="function">
+<title>raptor_alloc_memory ()</title>
+<indexterm zone="raptor-alloc-memory"><primary>raptor_alloc_memory</primary></indexterm><programlisting><link linkend="void">void</link>*               raptor_alloc_memory                 (<link linkend="size-t">size_t</link> size);</programlisting>
+<para>
+Allocate memory inside raptor.
+</para>
+<para>
+Some systems require memory allocated in a library to
+be deallocated in that library.  This function allows
+memory to be allocated inside the raptor shared library
+that can be freed inside raptor either internally or via
+raptor_free_memory.
+</para>
+<para>
+Examples include using this in the <link linkend="raptor-parser-generate-id"><function>raptor_parser_generate_id()</function></link> handler
+code to create new strings that will be used internally
+as short identifiers and freed later on by the parsers.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> size of memory to allocate
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the address of the allocated memory or NULL on failure
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-calloc-memory" role="function">
+<title>raptor_calloc_memory ()</title>
+<indexterm zone="raptor-calloc-memory"><primary>raptor_calloc_memory</primary></indexterm><programlisting><link linkend="void">void</link>*               raptor_calloc_memory                (<link linkend="size-t">size_t</link> nmemb,
+                                                         <link linkend="size-t">size_t</link> size);</programlisting>
+<para>
+Allocate zeroed array of items inside raptor.
+</para>
+<para>
+Some systems require memory allocated in a library to
+be deallocated in that library.  This function allows
+memory to be allocated inside the raptor shared library
+that can be freed inside raptor either internally or via
+raptor_free_memory.
+</para>
+<para>
+Examples include using this in the <link linkend="raptor-parser-generate-id"><function>raptor_parser_generate_id()</function></link> handler
+code to create new strings that will be used internally
+as short identifiers and freed later on by the parsers.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>nmemb</parameter>&nbsp;:</term>
+<listitem><simpara> number of members
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>size</parameter>&nbsp;:</term>
+<listitem><simpara> size of item
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> the address of the allocated memory or NULL on failure
+
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

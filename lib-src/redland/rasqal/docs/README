@@ -1,0 +1,22 @@
+                    Rasqal RDF Query Library - Documentation
+
+DOCUMENTS
+
+   The latest documentation is on the Rasqal Web Site.
+     * Installation document
+     * Testing Redland
+     * Frequently Asked Questions
+     * To-do list
+     * News
+     * Release Notes
+     * License
+
+API DOCUMENTATION
+
+   The API documentation is generated automatically from the source code
+   using gtk-doc.
+     * Rasqal API documentation (HTML)
+     __________________________________________________________________
+
+   Copyright (C) 2004-2008 Dave Beckett, Copyright (C) 2004-2005
+   University of Bristol

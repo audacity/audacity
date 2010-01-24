@@ -1,0 +1,2 @@
+PREFIX : <http://example.org/>
+SELECT * WHERE { ( ) :p 1 }

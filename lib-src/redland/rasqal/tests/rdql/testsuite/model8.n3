@@ -1,0 +1,6 @@
+@prefix :     <http://rdf.hp.com/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> . 
+@prefix ns:   <http://rdf.hp.com/ns#> .
+
+:r :p1 "value"^^xsd:string .
+:r :p2 "value"^^ns:someType .

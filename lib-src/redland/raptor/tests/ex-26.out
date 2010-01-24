@@ -1,0 +1,2 @@
+<http://example.org/#blah> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/#foo> .
+<http://example.org/#blah> <http://example.org/#prop> "content" .

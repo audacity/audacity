@@ -1,0 +1,1147 @@
+.\"
+.\" librasqal.3 - Rasqal library manual page
+.\"
+.\" $Id: librasqal.3,v 1.1 2008-07-08 10:44:49 larsl Exp $
+.\"
+.\" Copyright (C) 2004-2008 David Beckett - http://purl.org/net/dajobe/
+.\" Copyright (C) 2004-2005 University of Bristol - http://www.bristol.ac.uk/
+.\"
+.TH librasqal 3 "2008-06-22"
+.\" Please adjust this date whenever revising the manpage.
+.SH NAME
+librasqal \- Rasqal RDF query library
+.SH SYNOPSIS
+.nf
+.B #include <rasqal.h>
+.br
+\ 
+.br
+.BI rasqal_world* world =rasqal_new_world();
+.br
+.BI "rasqal_query_results *" results ;
+.br
+.BI "raptor_uri *" base_uri =raptor_new_uri( "\(dqhttp://example.org/foo\(dq" );
+.br
+.BI "rasqal_query *" rq =rasqal_new_query(world, "\(dqrdql\(dq" , NULL );
+.br
+.BI "const char *" query_string "=\(dqselect * from <http://example.org/data.rdf>\(dq;"
+.br
+\ 
+.br
+.BI rasqal_query_prepare( rq , query_string , base_uri );
+.br
+.BI "" results =rasqal_query_execute( rq );
+.br
+.BI "while(!rasqal_query_results_finished(" results "))\ {"
+.br
+.BI "\ for(" i "=0;" i "<rasqal_query_results_get_bindings_count(" results ");" i "++) {"
+.br
+.BI "\ \ const char *" name "=rasqal_query_results_get_binding_name(" results , i );
+.br
+.BI "\ \ rasqal_literal *" value "=rasqal_query_results_get_binding_value(" results, i);
+.br
+.BI "\ \ /* ... */"
+.br
+.BI "\ }"
+.br
+.BI "\ rasqal_query_results_next(" results );
+.br
+.BI }
+.br
+.BI rasqal_free_query_results( results );
+.br
+.BI rasqal_free_query( rq );
+.br
+.BI raptor_free_uri( base_uri );
+.br
+.BI rasqal_free_world( world );
+.br
+
+.B cc `rasqal-config --cflags` file.c `rasqal-config --libs`
+.br
+.fi
+.SH DESCRIPTION
+The \fIRasqal\fR library provides a high-level interface to RDF query
+parsing, query construction, query execution over an RDF graph and
+query results manipulation and formatting.  The library provides APIs
+to each of the steps in the process and provides support for handling
+multiple query language syntaxes.  At present Rasqal partially supports the 
+W3C draft SPARQL query language and fully supports RDQL. 
+.LP
+Rasqal uses the libraptor(3) library for providing URI handling,
+WWW content retrieval and other support functions.
+.LP
+.SH LIBRARY INITIALISATION AND CLEANUP
+.IP "\fBrasqal_world *rasqal_new_world(void)\fR"
+Create the rasqal world object.  This must be called before use
+of any rasqal library functions.
+.IP "\fBvoid rasqal_free_world(rasqal_world* \fIworld\fP)\fR"
+Destroy the rasqal world object and cleanup the library.  This
+must be called after destroying all rasqal objects.
+.SH "LIBRARY FUNCTIONS"
+These functions provide general library features not associated
+to any particular class.
+.IP "\fBint rasqal_languages_enumerate(raptor_world* \fIworld\fP, const unsigned int \fIcounter\fP, const char **\fIname\fB, const char **\fIlabel\fP, const unsigned char **\fIuri_string\fP)\fR"
+Return the \fIname\fP, \fIlabel\fP, \fIuri_string\fP (all optional)
+for a query language with a given integer \fIcounter\fP, returning non-zero
+if no such query language at that offset exists.
+The counter should start from 0 and be incremented by 1
+until the function returns non-zero.
+.IP "\fBint rasqal_language_name_check(raptor_world* \fIworld\fP, const char *\fIname\fB)\fR"
+Check \fIname\fP is a known query language name.
+.IP "\fBint rasqal_query_set_feature(rasqal_query* \fIquery\fP, rasqal_feature \fIfeature\fP, int \fIvalue\fP)\fR"
+Set a query feature \fIfeature\fR to a particular integer \fIvalue\fR.
+Returns non 0 on failure or if the feature is unknown.
+The current defined parser features are:
+  \fIFeature                                 Values\fR
+  \fBRASQAL_FEATURE_NO_NET\fR                   Boolean (non 0 true)
+.P
+If the \fIno_net\fR
+feature is true (default false) then network requests are denied.
+.IP "\fBint rasqal_query_set_feature_string(rasqal_query* \fIquery\fP, rasqal_feature \fIfeature\fP, const unsigned char* \fIvalue\fP)\fR"
+Set a query feature \fIfeature\fR to a particular string \fIvalue\fR.
+Returns non 0 on failure or if the feature is unknown.
+The current defined query features are given in
+\fBrasqal_query_set_feature\fP and at present only take integer values. If
+an integer value feature is set with this function, \fIvalue\fP is
+interpreted as an integer and then that value is used.
+.IP "\fBint rasqal_query_get_feature(rasqal_query* \fIquery\fP, rasqal_feature \fIfeature\fP)\fR"
+Get a query feature integer value.  The allowed \fIfeature\fP values
+and types are given under \fBrasqal_features_enumerate\fP.
+.IP "\fBconst unsigned char* rasqal_query_get_feature_string(rasqal_query* \fIquery\fP, rasqal_feature \fIfeature\fP)\fR"
+Get a query feature string value. The allowed \fIfeature\fP values
+and types are given under \fBrasqal_features_enumerate\fP.
+.IP "\fBint rasqal_features_enumerate(const rasqal_feature \fIfeature\fP, const char** \fIname\fP, raptor_uri** \fIuri\fP, const char** \fIlabel\fP)\fR"
+Return the name, URI, string label (all optional)
+for a query \fIfeature\fP, returning non-zero if no such feature exists.
+.IP "\fBunsigned int rasqal_get_feature_count(void)\fR"
+Get the count of rasqal features defined which can be
+found with \fBrasqal_features_enumerate\fP.
+.P
+Rasqal features have URIs that are constructed from the URI
+\fIhttp://feature.librdf.org/rasqal-\fP and the \fIname\fP
+so for example feature \fInoNet\fP
+has URI \fIhttp://feature.librdf.org/rasqal-noNet\fP
+.IP "\fBrasqal_feature rasqal_feature_from_uri(raptor_uri* \fIuri\fP)\fR"
+Turn a URI \fIuri\fR into a rasqal feature identifier, or <0 if the
+feature is unknown.  The URIs are described below rasqal_query_set_feature.
+.IP "\fBint rasqal_feature_value_type(const rasqal_feature \fIfeature\fP)\fR"
+Get a rasqal feature value tyype - integer or string.
+.SH "QUERY CONSTRUCTOR"
+.IP "\fBrasqal_query* rasqal_new_query(raptor_world* \fIworld\fP, const char *\fIname\fB, const unsigned char *\fIuri\fP)\fR"
+Create a new rasqal query object for the query syntax with name
+\fIname\fR.  Currently "rdql" for the RDF Data Query Language
+and "sparql" for the SPARQL query language are recognised.
+A language may alternatively be identified by a URI \fIuri\fP.
+If \fIname\fR and \fIuri\fP are both NULL the default query language
+is selected, currently "sparql".
+.SH "QUERY DESTRUCTOR"
+.IP "\fBvoid rasqal_free_query(rasqal_query* \fIquery\fB)\fR"
+Destroy a rasqal query object.
+.SH "QUERY METHODS"
+.IP "\fBconst char* rasqal_query_get_name(rasqal_query* \fIquery\fP)\fR"
+Get the query language name.
+.IP "\fBconst char* rasqal_query_get_label(rasqal_query* \fIquery\fP)\fR"
+Get the query language human readable label.
+.IP "\fBvoid rasqal_query_set_fatal_error_handler(rasqal_query* \fIquery\fB, void *\fIuser_data\fP, raptor_message_handler \fIhandler\fP)\fR"
+Set the fatal error handler callback.
+.IP "\fBvoid rasqal_query_set_error_handler(rasqal_query* \fIquery\fB, void *\fIuser_data\fP, raptor_message_handler \fIhandler\fP)\fR"
+Set the error handler callback.
+.IP "\fBvoid rasqal_query_set_warning_handler(rasqal_query* \fIquery\fB, void *\fIuser_data\fP, raptor_message_handler \fIhandler\fP)\fR"
+Set the warning handler callback.
+.IP "\fBint rasqal_query_get_distinct(rasqal_query* \fIquery\fP)\fR"
+Get the query distinct mode flag as described in \fBrasqal_query_set_distinct()\fP
+.IP "\fBvoid rasqal_query_set_distinct(rasqal_query* \fIquery\fP, int \fImode\fP)\fR"
+Set the query distinct results mode: 0 (none), 1 (SPARQL DISTINCT) or 2
+(SPARQL REDUCE).
+.IP "\fBint rasqal_query_get_limit(rasqal_query* \fIquery\fP)\fR"
+Get the query-specified limit on results returning >= 0 if a
+limit is given, otherwise not specified.
+.IP "\fBvoid rasqal_query_set_limit(rasqal_query* \fIquery\fP, int \fIlimit\fP)\fR"
+Set the query results limit.  No more than \fIlimit\fP results will
+be returned.
+.IP "\fBint rasqal_query_get_offset(rasqal_query* \fIquery\fP)\fR"
+Get the query-specified offset on results returning >= 0 if a
+offset is given, otherwise not specified.
+.IP "\fBvoid rasqal_query_set_offset(rasqal_query* \fIquery\fP, int \fIoffset\fP)\fR"
+Set the query results offset.  The first \fIoffset\fP results will
+be not be returned.
+.IP "\fBint rasqal_query_add_variable(rasqal_query* \fIquery\fB, rasqal_variable* \fIvar\fP)\fR"
+Add a variable binding to the sequence of bindings in the query.
+.IP "\fBraptor_sequence* rasqal_query_get_bound_variable_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the sequence of variables that are returning bindings in the
+query such as when explicitly chosen via \fBSELECT\fP in RDQL or SPARQL
+or all variables mentioned with \fBSELECT *\fP.
+.IP "\fBraptor_sequence* rasqal_query_get_all_variable_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the sequence of all variables mentioned in the query.
+.IP "\fBrasqal_variable* rasqal_query_get_variable(rasqal_query* \fIquery\fB, int \fIidx\fP)\fR"
+Get one variable binding in the sequence of variable bindings in the query.
+.IP "\fBraptor_sequence* rasqal_query_get_anonymous_variable_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the raptor_sequence of anonymous variables mentioned in the query.
+.IP "\fBint rasqal_query_has_variable(rasqal_query* \fIquery\fB, const unsigned char *\fIname\fB)\fR"
+Return non-0 if the named variable is in the variable bindings of the query.
+.IP "\fBint rasqal_query_set_variable(rasqal_query* \fIquery\fB, const unsigned char *\fIname\fB, rasqal_literal* \fIvalue\fP)\fR"
+Set the query variable \fIname\fP to a literal \fIvalue\fP (the
+variable must already be in the sequence of variable bindings).
+.IP "\fBraptor_sequence* rasqal_query_get_triple_sequence(rasqal_query* \fIquery\fB)\fR"
+Get the sequence of triples to match in the query.
+.IP "\fBrasqal_triple* rasqal_query_get_triple(rasqal_query* \fIquery\fB, int \fIidx\fP)\fR"
+Get one triple in the sequences of triples to match in the query.
+.IP "\fBint rasqal_query_add_prefix(rasqal_query* \fIquery\fB, rasqal_prefix* \fIprefix\fP)\fR"
+Add one namespace prefix/URI to the sequence of prefixes in the query.
+.IP "\fBraptor_sequence* rasqal_query_get_prefix_sequence(rasqal_query* \fIquery\fB)\fR"
+Get the sequence of prefixes in the query.
+.IP "\fBrasqal_prefix* rasqal_query_get_prefix(rasqal_query* \fIquery\fB, int \fIidx\fP)\fR"
+Get one prefix in the sequence of prefixes in the query at index \fIidx\fP.
+.IP "\fBraptor_sequence* rasqal_query_get_graph_pattern_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the sequence of graph patterns expressions in the query.
+.IP "\fBrasqal_graph_pattern* rasqal_query_get_graph_pattern(rasqal_query* \fIquery\fP, int \fIidx\fP)\fR"
+Get a graph pattern in the sequence of graph_pattern expressions in the query.
+.IP "\fBvoid rasqal_query_print(rasqal_query* \fIquery\fP, FILE* \fIstream\fP)\fR"
+Print a query in a debug format.  This format may change in any release.
+.IP "\fBint rasqal_query_prepare(rasqal_query* \fIquery\fP, const unsigned char *\fIquery_string\fP, raptor_uri *\fIbase_uri\fP)\fR"
+Prepare a query string \fIquery_string\fPwith
+optional base URI \fIuri_string\fP for execution,
+parsing it and modifying the rasqal_query internals.
+Return non-0 on failure.
+.IP "\fBrasqal_query_results* rasqal_query_execute(rasqal_query* \fIquery\fP)\fR"
+Execute a query, returning a rasqal_query_results* object or NULL on failure.
+.IP "\fBvoid rasqal_query_set_user_data(rasqal_query* \fIquery\fP, void *\fIuser_data\fP)\fR"
+Set some user data to be associated with the query.
+.IP "\fBvoid* rasqal_query_get_user_data(rasqal_query* \fIquery\fP)\fR"
+Get the user data associated with the query.
+.IP "\fBint rasqal_query_add_data_graph(rasqal_query* \fIquery\fP, raptor_uri* \fIuri, raptor_uri* \fIname_uri, int \fIflags\fP)\fR"
+Add a data graph to the query's data sources, constructing a new data
+graph object with URI \fIuri\fI, optional name URI \fIname_uri\fP and
+\fIflags\fP.  See \fBrasqal_new_data_graph\fP for a description of
+the argumetns.
+.IP "\fBraptor_sequence* rasqal_query_get_data_graph_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the sequence of data graphs in the query.
+.IP "\fBrasqal_data_graph* rasqal_query_get_data_graph(rasqal_query* \fIquery\fP, int \fIidx\fP)\fR"
+Get one prefix in the sequence of prefixes in the query at index \fIidx\fP.
+.IP "\fBraptor_sequence* rasqal_query_get_order_conditions_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the sequence of all result ordering conditions in the query, each
+of which is a \fIrasqal_expression\fP.
+.IP "\fBrasqal_expression* rasqal_query_get_order_condition(rasqal_query* \fIquery\fP, int \fIidx\fP)\fR"
+Get one result ordering condition expression in the sequence.
+.IP "\fBrasqal_query_verb rasqal_query_get_verb(rasqal_query* \fIquery\fP)\fR"
+Get the main \fIquery\fP verb.
+.IP "\fBint rasqal_query_get_wildcard(rasqal_query* \fIquery\fP)\fR"
+Get the \fIquery\fP verb wildcard flag signifying * in RDQL and SPARQL
+after the query verb.
+.IP "\fBrasqal_graph_pattern* rasqal_query_get_query_graph_pattern(rasqal_query* \fIquery\fP)\fR"
+Get the top query graph pattern of \fIquery\fP.
+.IP "\fBvoid rasqal_query_set_default_generate_bnodeid_parameters(rasqal_query* \fIrdf_query\fP, char* \fIprefix\fP, int \fIbase\fP)\fR"
+Control the default method for generation of IDs for blank nodes.
+The method uses a short string \fIprefix\fR and an integer
+\fIbase\fR to generate the identifier which is not guaranteed to
+be a strict concatenation.  If \fIprefix\fR is NULL, the
+default is used.  If base is less than 1, it is initialised to 1.
+.IP "\fBvoid rasqal_query_set_generate_bnodeid_handler(rasqal_query* \fIquery\fP, void* \fIuser_data\fP, rasqal_generate_bnodeid_handler \fIhandler\fP)\fR"
+Allow full customisation of the generated IDs by setting a callback
+\fIhandler\fR and associated \fIuser_data\fR that is called whenever
+a blank node or bag identifier is required.  The memory returned
+is deallocated inside rasqal.  Some systems require this to be
+allocated inside the same library, in which case the 
+\fBrasqal_alloc_memory\fP function may be useful.
+.IP "\fBrasqal_query_verb_as_string(rasqal_query_verb \fIverb\fP)\fR"
+Get a string for the query \fIverb\fP.
+.IP "\fBraptor_sequence* rasqal_query_get_construct_triples_sequence(rasqal_query* \fIquery\fP)\fR"
+Get the sequence of triples for a construct.
+.IP "\fBrasqal_triple* rasqal_query_get_construct_triple(rasqal_query* \fIquery\fP, int \fIidx\fP)\fR"
+Get a triple in the sequence of construct triples.
+.IP "\fBint rasqal_query_get_explain(rasqal_query* \fIquery\fP)\fR"
+Get whether explain was given in the query.
+.IP "\fBraptor_sequence* rasqal_query_get_group_conditions_sequence(rasqal_query* \fIquery\fP)\fP"
+Get the sequence of result group bys in the graph pattern.
+.IP "\fBrasqal_expression* rasqal_query_get_group_condition(rasqal_query* \fIquery\fP, int \fIidx\fP)\fP"
+Get one group by expression in the sequences of result group bys
+in the graph pattern at index \fIidx\fP.
+.IP "\fBint rasqal_query_write(raptor_iostream* \fIiostr\fP, rasqal_query* \fIquery\fP, raptor_uri* \fIformat_uri\fP, raptor_uri* \fPbase_uri\fP)\fR"
+Write a formatted query to a raptor iostream \fIiostr\fP in format described by
+URI \fIformat_uri\fP using base URI \fIbase_uri\fP for relative URIs (or NULL).
+.IP "\fBint rasqal_query_iostream_write_escaped_counted_string(rasqal_query* \fIquery\fP, raptor_iostream* \fIiostr\fP, const unsigned char* \fIstring\fP, size_t \fIlen\fP)\fR"
+Write a string to an iostream in an escaped form suitable for the
+query string.  Uses \fBrasqal_query_escape_counted_string\fP to
+perform the escaping.
+.IP "\fBunsigned char* rasqal_query_escape_counted_string(rasqal_query* query, const unsigned char *string, size_t len, size_t* output_len_p)\fR"
+Convert a \fIstring\fP of length \fIlen\fP into an escaped form
+suitable for the query string.  If \fIoutput_len\fP is not NULL, it
+is a pointer to the location to store the output string lenght.
+The returned string must be freed by the caller with
+\fBrasqal_free_memory\fP.
+.SH "GRAPH PATTERN CLASS"
+A class for graph patterns in a query - a set of triple patterns)
+with flags and possible sub-graph patterns
+.SH "GRAPH PATTERN CONSTRUCTOR"
+There is no public constructor for this class, it is constructed
+when the query is prepared from a syntax. The query methods
+\fBrasqal_query_get_graph_pattern_sequence\fP
+and \fBrasqal_query_get_graph_pattern\fP provide access to
+the top-level graph patterns in a query.
+.IP "\fBrasqal_triple* rasqal_graph_pattern_get_triple(rasqal_graph_pattern* \fIgraph_pattern\fP, int \fIidx\fP)\fR"
+Get a rasqal_triple inside a graph pattern at index \fIidx\fP returning NULL
+when the index is out of range.
+.IP "\fBint rasqal_graph_pattern_add_sub_graph_pattern(rasqal_graph_pattern* \fIgraph_pattern\fP, rasqal_graph_pattern* \fIsub_graph_pattern\fP)\fR"
+Add a sub-graph pattern \fIsub_graph_pattern\fP to the sequence of
+sub-graph patterns inside the graph pattern.
+.IP "\fBraptor_sequence* rasqal_graph_pattern_get_sub_graph_pattern_sequence(rasqal_graph_pattern* \fIgraph_pattern\fP)\fR"
+Get the sequence of sub-graph patterns inside the graph pattern returning
+NULL if there are no sub-graph patterns.
+.IP "\fBrasqal_graph_pattern* rasqal_graph_pattern_get_sub_graph_pattern(rasqal_graph_pattern* \fIgraph_pattern\fP, int \fIidx\fP)\fR"
+Get a sub-graph pattern inside the graph pattern at index \fIidx\fP
+returning NULL when the index is out of range.
+.IP "\fBrasqal_graph_pattern_operator rasqal_graph_pattern_get_operator(rasqal_graph_pattern* \fIgraph_pattern\fP)\fR"
+Get the graph pattern operator to determine how the graph pattern
+should be interpreted.
+.IP "\fBint rasqal_graph_pattern_add_constraint(rasqal_graph_pattern* \fIgp\fP, rasqal_expression* \fIexpr\fP)\fR"
+Add a constraint expression \fIexpr\fP to the sequence of constraints in the
+graph pattern.
+.IP "\fBraptor_sequence* rasqal_graph_pattern_get_constraint_sequence(rasqal_graph_pattern* \fIgp\fP)\fR"
+Get the sequence of constraints in the graph pattern.
+.IP "\fBrasqal_expression* rasqal_graph_pattern_get_constraint(rasqal_graph_pattern* \fIgp\fP, int \fIidx\fP)\fR"
+Get one constraint expression in the sequences of constraint to match
+in the graph pattern at index \fIidx\fP.
+.IP "\fBint rasqal_graph_pattern_get_index(rasqal_graph_pattern* \fIgraph_pattern\fP)\fR"
+Get the graph pattern absolute index in the array of graph patterns.
+The index is assigned when \fBrasqal_query_prepare\P is run on the
+query containing the graph pattern.
+.IP "\fBvoid rasqal_graph_pattern_print(rasqal_graph_pattern* \fIgraph_pattern\fP, FILE* \fIfh\fP)\fR"
+Print a graph pattern in a debug format.  This format may change in
+any release.
+.IP "\fBconst char* rasqal_graph_pattern_operator_as_string(rasqal_graph_pattern_operator \fIop\fP)"
+Utility function to get a graph pattern operator as a string.
+.IP "\fBint rasqal_graph_pattern_visit(rasqal_graph_pattern* \fIgraph_pattern\fP, rasqal_graph_pattern_visit_fn \fIfn\fP, void *\fIuser_data\fP)\fR"
+Visit a user function \fIfn\fP recursively over the graph pattern and it's
+sub-graph patterns.  The order is the first graph pattern at hand and then
+the arguments, if any.  function \fIfn\fP is called at each point
+with the arguments of \fIuser_data\fP and the graph pattern.
+.SH "QUERY RESULTS CLASS"
+A class for the results of a query.  The results can be in different
+formats - variable bindings, RDF graphs as a sequence of triples
+or a boolean result.  The format returned is determined by the
+query which is query-language specific.
+.SH "QUERY RESULTS CONSTRUCTOR"
+There is no public constructor for this class, the
+\fBrasqal_query_results*\fP is returned from 
+\fBrasqal_query_execute\fP.
+.SH "QUERY RESULTS DESTRUCTOR"
+.IP "\fBrasqal_free_query_results(rasqal_query_results *\fIquery_results\fP)\fR"
+Destroy a rasqal query results object.
+.SH "QUERY RESULTS METHODS"
+.IP "\fBint rasqal_query_results_is_bindings(rasqal_query_results* \fIquery_results\fP)\fR"
+.IP "\fBint rasqal_query_results_is_boolean(rasqal_query_results* \fIquery_results\fP)\fR"
+.IP "\fBint rasqal_query_results_is_graph(rasqal_query_results* \fIquery_results\fP)\fR"
+.IP "\fBint rasqal_query_results_is_syntax(rasqal_query_results* \fIquery_results\fP);\fR"
+Return non-0 if the \fBrasqal_query_results\fP is of the given
+format.  Only one of these will be non-0 for any result.
+.IP "\fBint rasqal_query_results_read(raptor_iostream* \fIiostr\fP, rasqal_query_results* \fIresults\fP, raptor_uri* \fIformat_uri\fP, raptor_uri* \fIbase_uri\fP)\fR"
+Read a query results in a syntax from the read \fIiostr\fP iostream, the
+format of the syntax is given by the \fIformat_uri\fP URI, with
+an optional base URI \fIbase_uri\fP that may be used.  The
+values of \fIformat_uri\fP supported are provided by at runtime
+by the function \fBrasqal_query_results_formats_enumerate()\fP.
+This uses the \fBlibrdf_query_results_formatter\fP class internally.
+.IP "\fBint rasqal_query_results_write(raptor_iostream *\fIiostr\fP, rasqal_query_results *\fIresults\fP, raptor_uri *\fIformat_uri\fP, raptor_uri *\fIbase_uri\fP)\fR"
+Write the query results in a syntax to the write \fIiostr\fP iostream, the
+format of the syntax is given by the \fIformat_uri\fP URI, with
+an optional base URI \fIbase_uri\fP that may be used.  The
+values of \fIformat_uri\fP supported are provided by at runtime
+by the function \fBrasqal_query_results_formats_enumerate()\fP.
+This uses the \fBlibrdf_query_results_formatter\fP class internally.
+.SH "QUERY VARIABLE BINDINGS RESULTS METHODS"
+.IP "\fBint rasqal_query_results_get_count(rasqal_query_results *\fIquery_result\fP)\fR"
+Get the current number of variable bindings results returned.
+(Variable bindings results only)
+.IP "\fBint rasqal_query_results_next(rasqal_query_results *\fIquery_results\fP)\fR"
+Move to the next variable bindings result, returning non-0 on failure
+or results are exhausted. (Variable bindings results only)
+.IP "\fBint rasqal_query_results_finished(rasqal_query_results *\fIquery_results\fP)\fR"
+Find out if the variable binding results are exhausted, return non-0 if results
+are finished or the query failed. (Variable bindings results only)
+.IP "\fBint rasqal_query_results_get_bindings(rasqal_query_results *\fIquery_results\fP, const unsigned char ***\fInames\fP, rasqal_literal ***\fIvalues\fP)\fR"
+Get all variable binding names and values for the current result.
+If \fInames\fP is not NULL, it is set to the address of a shared array
+of names of the bindings (an output parameter). 
+If \fIvalues\fP is not NULL, it is set to the address of a shared array
+of rasqal_literal* binding values.  Note that both the
+names or values are shared and must not be freed by the caller.
+Returns non-0 if the assignment failed. (Variable bindings results only)
+.IP "\fBrasqal_literal* rasqal_query_results_get_binding_value(rasqal_query_results *\fIquery_results\fP, int \fIoffset\fP)\fR"
+Get one variable binding literal value for the current result.  Returns the
+value of the variable indexed in the sequence of variable bindings
+at position \fIoffset\fP. (Variable bindings results only)
+.IP "\fBconst unsigned char* rasqal_query_results_get_binding_name(rasqal_query_results *\fIquery_results\fP, int \fIoffset\fP)\fR"
+Get the name of the variable indexed in the sequence of variable bindings
+at position \fIoffset\fP. (Variable bindings results only)
+.IP "\fBrasqal_literal* rasqal_query_results_get_binding_value_by_name(rasqal_query_results *\fIquery_results\fP, const unsigned char *\fIname\fB)\fR"
+Get the value of the variable in the sequence of variable bindings
+named \fIname\fP or NULL if not known or unbound. (Variable bindings
+results only)
+.IP "\fBint rasqal_query_results_get_bindings_count(rasqal_query_results *\fIquery_results\fP)\fR"
+Get the number of bound variables in the variable bindings result or
+<0 on failure. (Variable bindings results only)
+.SH "QUERY BOOLEAN RESULTS METHODS"
+.IP "\fBint rasqal_query_results_get_boolean(rasqal_query_results *\fIquery_results\fP)\fR"
+Return the value of a boolean query result.  This is meaningless if
+the query result is not a boolean. (Boolean result format only).
+.SH "QUERY RDF GRAPH RESULTS METHODS"
+.IP "\fBraptor_statement* rasqal_query_results_get_triple(rasqal_query_results *\fIquery_results\fP)\fR"
+Return the current triple in the RDF graph results or NULL at end of
+results or on failure.  The returned \fBraptor_statement\fP is a
+shared pointer.  (Graph results format only).
+.IP "\fBint rasqal_query_results_next_triple(rasqal_query_results *\fIquery_results\fP)\fR"
+Move to the next triple in the RDF graph results, returning non-0
+at end of results or on failure. (Graph results format only).
+.SH "QUERY RESULTS FORMATTER CLASS"
+A class for formatting the results of a query into a syntax.
+.SH "QUERY RESULTS FORMATTER CONSTRUCTOR"
+.IP "\fBrasqal_query_results_formatter* rasqal_new_query_results_formatter(raptor_world* \fIworld\fP, const char *\fIname\fP, raptor_uri* \fIuri\fP)\fP"
+Create a new query results formatter for the \fIname\fP or \fIuri\fP.
+The  \fBrasqal_query_results_formats_enumerate()\fP function returns
+the allowed names and/or uris.  If \fIname\fP and \fIuri\fP are both
+NULL, the default query results format is used.
+.IP "\fBrasqal_query_results_formatter* rasqal_new_query_results_formatter_by_mime_type(raptor_world* \fIworld\fP, const char *\fImime_type\fP)\fP"
+Create a new query results formatter for the output \fImime_type\fP.
+The  \fBrasqal_query_results_formats_enumerate_full()\fP function returns
+the allowed names, uris and mime types.
+\fBrasqal_query_results_formatter_get_mime_type()\fP can return the
+mime type of a constructed object.
+.SH "QUERY RESULTS FORMATTER DESTRUCTOR"
+.IP "\fBvoid rasqal_free_query_results_formatter(rasqal_query_results_formatter* formatter)\fP"
+Destroy a rasqal query results formatter object.
+.SH "QUERY RESULTS FORMATTER METHODS"
+.IP "\fBint rasqal_query_results_formatter_read(rasqal_world* \fIworld\fP, raptor_iostream* \fIiostr\fP, rasqal_query_results_formatter* \fIformatter\fP, rasqal_query_results* \fIresults\fP, raptor_uri* \fIbase_uri\fP)\fP"
+Read query results formatted in a syntax from the read \fIiostr\fP iostream
+with an optional base URI \fIbase_uri\fP into \fIresults\fP object.
+.IP "\fBint rasqal_query_results_formatter_write(raptor_iostream* \fIiostr\fP, rasqal_query_results_formatter* \fIformatter\fP, rasqal_query_results* \fIresults\fP, raptor_uri* \fIbase_uri\fP)\fP"
+Write the query \fIresults\fP formatted in a syntax to the \fIiostr\fP iostream
+an optional base URI \fIbase_uri\fP.
+.IP "\fBconst char* rasqal_query_results_formatter_get_mime_type(rasqal_query_results_formatter* \fIformatter\fP)\fP"
+Get the mime type of the selected formatter.
+.SH "QUERY RESULTS FORMATTER STATIC METHODS"
+.IP "\fBint rasqal_query_results_formats_enumerate(const unsigned int \fIcounter\fP, const char **\fIname\fP, const char **\fIlabel\fP, const unsigned char **\fIuri_string\fP, const char **\fImime_type\fP, int flags)\fP"
+Get query results formats information by \fIcounter\fP..  When 
+counter is 0, this returns the default query results format.  The
+\fIname\fP, \fIlabel\fP, \fIuri_string\fP and/or \fImime_type\fP
+may be returned if they are not NULL.  Flags may be either
+RASQAL_QUERY_RESULTS_FORMAT_FLAG_READER or
+RASQAL_QUERY_RESULTS_FORMAT_FLAG_WRITER to return formats that can be
+read or written respectively.
+.IP "\fBint rasqal_query_results_formats_check(raptor_world* \fIworld\fP, const char *name, raptor_uri* uri, const char *mime_type)\fP"
+Check if a query results formatter with the given \fIname\fP,
+\fIuri\fP or \fImime_type\fP exists, as would be used by
+the constructors \fBrasqal_new_query_results_formatter()\fP
+or \fBrasqal_new_query_results_formatter_by_mime_type()\fP if called.
+.SH "LITERAL CLASS"
+A class for the values returned as parts of triples and in variable
+bindings. The rasqal_literal structure is public and defined in
+rasqal.h however note that some fields are used for different
+literal types in different ways.  The types of literals are defined
+in the rasqal_literal_type enum.
+.SH "LITERAL CONSTRUCTORS"
+There a several constructors for rasqal_literal to build them from
+simple types and existing rasqal_literal objects.  NOTE: Any objects
+or strings passed into these constructors becomed owned by the
+literal object except where noted.
+.IP "\fBrasqal_literal* rasqal_new_decimal_literal(raptor_world* \fIworld\fP, const unsigned char* \fIdecimal\fP)\fR"
+Create a new decimal literal from string \fIdecimal\fP.
+.IP "\fBrasqal_literal* rasqal_new_double_literal(raptor_world* \fIworld\fP, double \fId\fP)\fR"
+Create a new double literal from a \fId\fP.
+.IP "\fBrasqal_literal* rasqal_new_integer_literal(raptor_world* \fIworld\fP, rasqal_literal_type \fItype\fP, int \fIinteger\fP)\fR"
+Create a new integer literal of an integral type, either type
+RASQAL_LITERAL_INTEGER or RASQAL_LITERAL_BOOLEAN.
+.IP "\fBrasqal_literal* rasqal_new_uri_literal(raptor_world* \fIworld\fP, raptor_uri* \fIuri\fP)\fR"
+Create a new URI literal from a raptor_uri \fIuri\fP.
+.IP "\fBrasqal_literal* rasqal_new_pattern_literal(raptor_world* \fIworld\fP, const unsigned char *\fIpattern\fP, const char *\fIflags\fP)\fR"
+Create a new regular expression literal from regex \fIpattern\fP and \fIflags\fP.
+.IP "\fBrasqal_literal* rasqal_new_string_literal(raptor_world* \fIworld\fP, const unsigned char *\fIstring\fP, const char *\fIlanguage\fP, raptor_uri *\fIdatatype\fP, const unsigned char *\fIdatatype_qname\fP)\fR"
+Create a new Rasqal string literal.
+The \fIdatatype\fP and \fIdatatype_qname\fP parameters are alternatives; the
+QName is a datatype that cannot be resolved till later since the
+prefixes have not yet been declared or checked at the time this
+constructor is called.
+.IP
+If the string literal is datatyped and of certain types recognised
+(currently xsd:decimal, xsd:double) it may be internally converted to
+a different literal type.
+.IP "\fBrasqal_literal* rasqal_new_simple_literal(raptor_world* \fIworld\fP, rasqal_literal_type \fItype\fP, const unsigned char *\fIstring\fP)\fR"
+Create a new Rasqal simple literal of \fItype\fP
+RASQAL_LITERAL_BLANK or RASQAL_LITERAL_BLANK_QNAME.
+.IP "\fBrasqal_literal* rasqal_new_boolean_literal(raptor_world* \fIworld\fP, int \fIvalue\fP)\fR"
+Create a new Raqal boolean literal, where \fIvalue\fP is non-0 for
+true, 0 for false.
+.IP "\fBrasqal_literal* rasqal_new_variable_literal(raptor_world* \fIworld\fP, rasqal_variable* \fIvariable\fP)\fR"
+Create a new Rasqal variable literal using an existing
+\fIvariable\fP object.
+.IP "\fBrasqal_literal* rasqal_new_decimal_literal_from_decimal(raptor_world* \fIworld\fP, const unsigned char *\fIstring\fP, rasqal_xsd_decimal* \fIdecimal\fP)\fR"
+Create a new Rasqal decimal literal using an existing
+\fIstring\fP or \fIdecimal\fP object.
+.IP "\fBrasqal_literal* rasqal_new_float_literal(raptor_world* \fIworld\fP, float \fIf\fP)\fR"
+Create a new Rasqal float literal using an existing foat \fIf\fP
+.IP "\fBrasqal_literal* rasqal_new_typed_literal(raptor_world* \fIworld\fP, rasqal_literal_type type, const unsigned char* string)\fR"
+Create a new Rasqal RDF typed literal of the given \fItype\fP and
+\fIstring\fP form.
+.SH "LITERAL COPY CONSTRUCTOR"
+.IP "\fBrasqal_literal* rasqal_new_literal_from_literal(rasqal_literal* \fIliteral\fP)\fR"
+Copy an existing literal object.
+.SH "LITERAL DESTRUCTOR"
+.IP "\fBvoid rasqal_free_literal(rasqal_uri* \fIliteral\fB)\fR"
+Destroy a rasqal literal object.
+.SH "LITERAL METHODS"
+.IP "\fBvoid rasqal_literal_print(rasqal_literal* \fIliteral\fP, FILE* \fIfh\fP)\fR"
+Print a literal in a debug format.  This format may change in any release.
+.IP "\fBrasqal_variable* rasqal_literal_as_variable(rasqal_literal* \fIliteral\fP)\fR"
+Return a rasqal literal as a variable, if it is one, otherwise return NULL.
+.IP "\fBconst unsigned char* rasqal_literal_as_string(rasqal_literal* \fIliteral\fP)\fR"
+Return a rasqal literal as a string value.  This always succeeds.
+.IP "\fBconst unsigned char* rasqal_literal_as_string_flags(rasqal_literal* \fIliteral\fP, int \fIflags\fP, int* \fIerror\fP)\fR"
+Return a rasqal literal as a string value according to \fIflags\fP.  The
+only defined string value at present is \fBRASQAL_COMPARE_XQUERY\fP to
+use XQuery conversion rules.  If \fIerror\fP is not NULL, it will be
+set to non-0 if there is an error.
+.IP "\fBrasqal_literal* rasqal_literal_as_node(rasqal_literal* \fIliteral\fP)\fR"
+Return a new rasqal literal into one suitable for a node in an RDF triple
+or binding - as a URI, literal string (or datatyped) or blank node.
+The returned literal is owned by the caller and must be freed by
+rasqal_free_literal.
+.IP "\fBint rasqal_literal_compare(rasqal_literal* \fIliteral\fP1, rasqal_literal* \fIliteral\fP2, rasqal_compare_flags \fIflags\fP, int* \fIerror\fP)\fR"
+Compare two literals with type promotion across their range.  If the
+types are not the same, they are promoted.  If one is a floating, the
+other is promoted to floating, otherwise for integers, otherwise as
+strings (all literals have a string value).
+.IP
+flags affects string comparisons.  If the
+RASQAL_COMPARE_NOCASE bit is set, a case independent
+comparison is made.
+.IP
+The return value is comparable to strcmp(3), first before second
+returns <0.  equal returns 0, and first after second returns >0.
+If there is no ordering, such as for URIs, the return value
+is 0 for equal, non-0 for different (using raptor_uri_equals).
+.IP "\fBint rasqal_literal_equals(rasqal_literal* \fIliteral1\fP, rasqal_literal* \fIliteral2\fP)\fR"
+Compare two literals with no type promotion
+If \fIliteral2\fP's value is a boolean, it will match
+ the string "true" or "false" in \fIliteral1\fP.
+.IP "\fBrasqal_literal* rasqal_literal_value(rasqal_literal* \fIliteral\fP)\fR"
+Get the value of a \fIliteral\fP, looking up any variables.
+.IP "\fBraptor_uri* rasqal_literal_datatype(rasqal_literal* \fIliteral\fP)\fR"
+Get the datatype URI of a \fIliteral\fP
+.SH "TRIPLE CLASS"
+A class for triples of three literals, used for matching triples in a
+query where the literals may be variables as well as in then
+interface between Rasqal and RDF systems using RDF triples, when the
+literals may not be literals.  The structure of this class is public
+and defined in rasqal.h
+.SH "TRIPLE CONSTRUCTOR"
+.IP "\fBrasqal_triple* rasqal_new_triple(rasqal_literal* \fIsubject\fP, rasqal_literal* \fIpredicate\fP, rasqal_literal* \fIobject\fP)\fR"
+Create a new rasqal triple from three literals.
+.SH "TRIPLE COPY CONSTRUCTOR"
+.IP "\fBrasqal_triple* rasqal_new_triple_from_triple(rasqal_triple* \fItriple\fP)\fR"
+Copy an existing rasqal triple object.
+.SH "TRIPLE DESTRUCTOR"
+.IP "\fBvoid rasqal_free_triple(rasqal_triple* \fItriple\fP)\fR"
+Destroy a rasqal triple object.
+.SH "TRIPLE METHODS"
+.IP "\fBvoid rasqal_triple_print(rasqal_triple* \fItriple\fP, FILE* \fIfh\fP)\fR"
+Print a triple in a debug format.  This format may change in any release.
+.IP "\fBvoid rasqal_triple_set_origin(rasqal_triple* \fItriple\fP, rasqal_literal *\fIliteral\fP)\fP"
+Set the origin rasqal_literal of the triple, typically a URI literal.
+.IP "\fBrasqal_literal* rasqal_triple_get_origin(rasqal_triple* \fItriple\fP)\fP"
+Get the origin rasqal_literal of the triple.
+.SH "VARIABLE CLASS"
+A class for variable name and literal used to capture a variable
+with optional value binding such as returned as query results by
+various methods.  The structure of this class is public and defined
+in rasqal.h
+.SH "VARIABLE CONSTRUCTOR"
+.IP "\fBrasqal_variable* rasqal_new_variable(rasqal_query* \fIquery\fP, const unsigned char *\fIname\fB, rasqal_literal* \fIvalue\fP)\fR"
+Create a new rasqal variable scoped to a Rasqal \fIquery\fP, with required
+\fIname\fP and optional rasqal_literal \fIvalue\fP.  This creates a
+variable of type RASQAL_VARIABLE_TYPE_NORMAL.
+.IP "\fBrasqal_variable* rasqal_new_variable_typed(rasqal_query* \fIrq\fP, rasqal_variable_type \fItype\fP, const unsigned char *\fIname\fP, rasqal_literal* \fIvalue\fP)\fR"
+Create a new rasqal variable scoped to a Rasqal \fIquery\fP, with required
+\fIname\fP, optional rasqal_literal \fIvalue\fP and type \fItype\fP
+either
+RASQAL_VARIABLE_TYPE_NORMAL or RASQAL_VARIABLE_TYPE_ANONYMOUS
+.SH "VARIABLE COPY CONSTRUCTOR"
+.IP "\fBrasqal_variable* rasqal_new_variable_from_variable(rasqal_variable* \fIvariable\fP)\fP"
+Create a new rasqal variable object from an existing \fIvariable\fP.
+.SH "VARIABLE DESTRUCTOR"
+.IP "\fBvoid rasqal_free_variable(rasqal_variable* \fIvariable\fP)\fR"
+Destroy a rasqal variable object.
+.SH "VARIABLE METHODS"
+.IP "\fBvoid rasqal_variable_print(rasqal_variable* \fIvariable\fP, FILE* \fIfh\fP)\fR"
+Print a variable in a debug format.  This format may change in any release.
+.IP "\fBvoid rasqal_variable_set_value(rasqal_variable* \fIvariable\fP, rasqal_literal* \fIliteral\fP)\fR"
+Set the value of a rasqal \fIvariable\fP to an rasqal_literal value, freeing
+any current value.  The new \fIliteral\fP may be NULL.
+.SH "PREFIX CLASS"
+A class for namespace name/URI prefix association used to shorten
+URIs in some query languages using XML-style QNames.  The structure of this
+class is public and defined in rasqal.h
+.SH PREFIX CONSTRUCTOR
+.IP "\fBrasqal_prefix* rasqal_new_prefix(const unsigned char* \fIprefix\fP, raptor_uri* \fIuri\fP)\fR"
+Create a new namespace prefix with the given short \fIprefix\fP and
+URI \fIuri\fP.
+.SH PREFIX DESTRUCTOR
+.IP "\fBvoid rasqal_free_prefix(rasqal_prefix* \fIprefix\fP)\fR"
+Destroy a rasqal prefix object.
+.IP "\fBvoid rasqal_prefix_print(rasqal_prefix* \fIprefix\fP, FILE* \fIfh\fP)\fR"
+Print a prefix in a debug format.  This format may change in any release.
+.SH "EXPRESSION CLASS"
+A class for constraint expressions over literals and variables.  The
+expression operators are defined in rasqal.h as enum rasqal_op
+and take one, two or more complex parameters.
+.SH "EXPRESSION CONSTRUCTORS"
+.IP "\fBrasqal_expression* rasqal_new_0op_expression(rasqal_op \fIop\fP)\fR"
+Create a new expression with a 0-argument operator.
+.IP "\fBrasqal_expression* rasqal_new_1op_expression(rasqal_op \fIop\fP, rasqal_expression* arg)\fR"
+Create a new expression with a 1-argument operator.
+.IP "\fBrasqal_expression* rasqal_new_2op_expression(rasqal_op \fIop\fP, rasqal_expression* \fIarg1\fP, rasqal_expression* \fIarg2\fP)\fR"
+Create a new expression with a 2-argument operator.
+.IP "\fBrasqal_expression* rasqal_new_2op_expression(rasqal_op \fIop\fP, rasqal_expression* \fIarg1\fP, rasqal_expression* \fIarg2\fP, rasqal_expression* \fIarg3\fP)\fR"
+Create a new expression with a 3-argument operator.
+.IP "\fBrasqal_expression* rasqal_new_string_op_expression(rasqal_op \fIop\fP, rasqal_expression* \fIarg1\fP, rasqal_literal* \fIliteral\fP)\fR"
+Create a new expression with a 2-argument operator, the second of
+which is a literal string.
+.IP "\fBrasqal_expression* rasqal_new_literal_expression(rasqal_literal* \fIliteral\fP)\fR"
+Create a new expression over an existing rasqal \fIliteral\fP.
+.IP "\fBrasqal_expression* rasqal_new_variable_expression(rasqal_variable* \fIvariable\fP)\fR"
+Create a new expression over an existing rasqal \fIvariable\fP.
+.IP "\fBrasqal_expression* rasqal_new_function_expression(raptor_uri* \fIname\fP, raptor_sequence* \fIargs\fP)\fR"
+Create a new expression for a function named \fIname\fP and with
+sequence of \fBrasqal_literal*\fP arguments \fIargs\fP.
+.IP "\fBrasqal_expression* rasqal_new_cast_expression(raptor_uri* \fIname, rasqal_expression* \fIvalue\fP)\fR"
+Create a new expression for a casting of \fIvalue\fP to a datatype
+with URI \fIname\fI.
+.SH "EXPRESSION COPY CONSTRUCTOR"
+.IP "\fBrasqal_expression* rasqal_new_expression_from_expression(rasqal_expression* \fIexpression\fP)\fR"
+Copy an existing rasqal expression object.
+.SH "EXPRESSION DESTRUCTOR"
+.IP "\fBvoid rasqal_free_expression(rasqal_expression* \fIexpression\fP)\fR"
+Destroy a rasqal expression object.
+.SH "EXPRESSION METHODS"
+.IP "\fBvoid rasqal_expression_print_op(rasqal_expression* \fIexpression\fP, FILE* \fIfh\fP)\fR"
+Print an expression operator in a debug format.  This format may
+change in any release.
+.IP "\fBvoid rasqal_expression_print(rasqal_expression* \fIexpression\fP, FILE* \fIfh\fP)\fR"
+Print an expression in a debug format.  This format may change in any release.
+.IP "\fBrasqal_literal* rasqal_expression_evaluate(rasqal_query* \fIquery\fP, rasqal_expression* \fIexpression\fP, rasqal_compare_flags \fIflags\fP)\fR"
+Evalute an expression, returning a rasqal boolean with the result or
+NULL on failure.  If \fIflags\fP are \fBRASQAL_COMPARE_XQUERY\fP then XQuery
+comparison and type promotions are used.
+.IP "\fBint rasqal_expression_visit(rasqal_expression* \fIexpression\fP, rasqal_expression_visit_fn \fIfn\fP, void *\fIuser_data\fP)\fR"
+Visit a user function \fIfn\fP recursively over the expression and it's
+sub-expressions.  The order is the first expression at hand and then
+the arguments, if any.  function \fIfn\fP is called at each point
+with the arguments of \fIuser_data\fP and the expression.
+.SH "DATA GRAPH CLASS"
+A class for graph data sources to query over from a source URI
+with an optional name URI.
+.SH DATA GRAPH CONSTRUCTOR
+.IP "\fBrasqal_data_graph* rasqal_new_data_graph(raptor_uri* \fIuri, raptor_uri* \fIname_uri\fP, int \fIflags)\fR"
+Create a new data graph with source URI \fIuri\fI and optional
+name URI \fIname_uri\fP.  Flags can be 
+\fBRASQAL_DATA_GRAPH_NONE\fP, \fBRASQAL_DATA_GRAPH_NAMED\fP or
+\fBRASQAL_DATA_GRAPH_BACKGROUND\fP.
+.SH DATA GRAPH DESTRUCTOR
+.IP "\fBvoid rasqal_free_data_graph(rasqal_data_graph* \fIdg\fP)\fR"
+Destroy a rasqal data_graph object.
+.IP "\fBvoid rasqal_data_graph_print(rasqal_data_graph* \fIdg\fP, FILE* \fIfh\fP)\fR"
+Print a data graph in a debug format.  This format may change in any release.
+.SH "DECIMAL CLASS"
+A class for accurate decimal arithmetic to handle XSD decimals.
+.SH DECIMAL CONSTRUCTOR
+.IP "\fBrasqal_xsd_decimal* rasqal_new_xsd_decimal(void)\fR"
+Create a new decimal object.
+.SH DECIMAL DESTRUCTOR
+.IP "\fBvoid rasqal_free_xsd_decimal(rasqal_xsd_decimal* dec)\fR"
+Destroy a rasqal decimal object.
+.SH "DECIMAL METHODS"
+.IP "\fBint rasqal_xsd_decimal_set_string(rasqal_xsd_decimal* \fIdec\fP, const char* \fIstring\fP)\fR"
+Set the decimal value from a string.
+.IP "\fBdouble rasqal_xsd_decimal_get_double(rasqal_xsd_decimal* \fIdec\fP)\fR"
+Get the decimal value as a double - this may lose precision.
+.IP "\fBchar* rasqal_xsd_decimal_as_string(rasqal_xsd_decimal* \fIdec\fP)\fR"
+Get the decimal as a string.  The returned string is shared and must
+be copied by the caller.
+.IP "\fBchar* rasqal_xsd_decimal_as_counted_string(rasqal_xsd_decimal* \fIdec\fP, size_t* \fIlen_p\fP)\fR"
+Get the decimal as a string plus optional length stored in
+\fIlen_p\fP if it is not NULL .  The returned string is shared and must
+be copied by the caller.
+.IP "\fBint rasqal_xsd_decimal_set_long(rasqal_xsd_decimal* \fIdec\fP, long l)\fR"
+Set the decimal value from a long.
+.IP "\fBint rasqal_xsd_decimal_set_double(rasqal_xsd_decimal* \fIdec\fP, double d)\fR"
+Set the decimal value from a double.
+.IP "\fBint rasqal_xsd_decimal_print(rasqal_xsd_decimal* \fIdec\fP, FILE* \fIstream\fP)\fR"
+Print the decimal to a FILE* \fIstream\fP.
+.IP "\fBint rasqal_xsd_decimal_add(rasqal_xsd_decimal* \fIresult\fP, rasqal_xsd_decimal* \fIa\fP, rasqal_xsd_decimal* \fIb\fP)\fR"
+Perform decimal \fIa\fP + \fBb\fP and store the result in \fIresult\fP.
+.IP "\fBint rasqal_xsd_decimal_subtract(rasqal_xsd_decimal* \fIresult\fP, rasqal_xsd_decimal* \fIa\fP, rasqal_xsd_decimal* \fIb\fP)\fR"
+Perform decimal \fIa\fP - \fBb\fP and store the result in \fIresult\fP.
+.IP "\fBint rasqal_xsd_decimal_multiply(rasqal_xsd_decimal* \fIresult\fP, rasqal_xsd_decimal* \fIa\fP, rasqal_xsd_decimal* \fIb\fP)\fR"
+Perform decimal \fIa\fP * \fBb\fP and store the result in \fIresult\fP.
+.IP "\fBint rasqal_xsd_decimal_divide(rasqal_xsd_decimal* \fIresult\fP, rasqal_xsd_decimal* \fIa\fP, rasqal_xsd_decimal* \fIb\fP)\fR"
+Perform decimal \fIa\fP / \fBb\fP and store the result in \fIresult\fP.
+.IP "\fBint rasqal_xsd_decimal_negate(rasqal_xsd_decimal* \fIresult\fP, rasqal_xsd_decimal* \fIa\fP)\fR"
+Perform decimal - \fIa\fP and store the result in \fIresult\fP.
+.IP "\fBint rasqal_xsd_decimal_compare(rasqal_xsd_decimal* \fIa\fP, rasqal_xsd_decimal* \fIb\fP)\fR"
+Compare decimal \fIa\fP to \fBb\fP and return <0, 0 or >0 if a is < b
+a = b or a > b in the same fashion as strcmp() does for strings.
+.IP "\fBint rasqal_xsd_decimal_equals(rasqal_xsd_decimal* \fIa\fP, rasqal_xsd_decimal* \fIb\fP)\fR"
+Return non-0 if decimal \fIa\fP equals \fBb\fP.
+.IP "\fBint rasqal_xsd_decimal_is_zero(rasqal_xsd_decimal* d)\fR"
+Return non-0 if decimal \fIa\fP is zero.
+.SH API CHANGES
+.SS 0.9.16
+Removed \fBrasqal_init\fP and \fBrasqal_finish\fP.
+.LP
+Added a new rasqal_world object to manage library allocations and
+classes with constructor \fBrasqal_new_world\fP and destructor
+\fBrasqal_free_world\fP.
+.LP
+The following functions now take a librdf_world* world argument as
+the first argument:
+\fBrasqal_language_name_check\fP,
+\fBrasqal_languages_enumerate\fP,
+\fBrasqal_new_query\fP,
+\fBrasqal_query_results_formats_check \fP,
+\fBrasqal_new_query_results_formatter\fP,
+\fBrasqal_new_query_results_formatter_by_mime_type\fP,
+\fBrasqal_new_integer_literal\fP,
+\fBrasqal_new_typed_literal\fP,
+\fBrasqal_new_double_literal\fP,
+\fBrasqal_new_float_literal\fP,
+\fBrasqal_new_uri_literal\fP,
+\fBrasqal_new_pattern_literal\fP,
+\fBrasqal_new_string_literal\fP,
+\fBrasqal_new_simple_literal\fP,
+\fBrasqal_new_boolean_literal\fP,
+\fBrasqal_new_variable_literal\fP,
+\fBrasqal_new_decimal_literal\fP,
+\fBrasqal_new_decimal_literal_from_decimal\fP
+.LP
+\fBrasqal_query_add_variable\fP, \fBrasqal_query_add_prefix\fP and
+\fBrasqal_graph_pattern_add_sub_graph_pattern\fP now have int return values
+for catchng allocation failure.
+.LP
+Added \fBrasqal_query_results_read\fP
+.LP
+Removed \fBrasqal_query_results_formats_enumerate_full\fP.
+.LP
+\fBrasqal_query_results_formats_enumerate\fP gains a flags argument
+with values \fBRASQAL_QUERY_RESULTS_FORMAT_FLAG_READER\fP or
+\fBRASQAL_QUERY_RESULTS_FORMAT_FLAG_WRITER\fP
+.LP
+Added \fBrasqal_query_results_formatter_read\fP
+.LP
+Added \fBrasqal_new_variable_from_variable\fP
+.LP
+The rasqal_triples_match struct now has a world field.
+.LP
+Removed deprecated functions and macros:
+\fBrasqal_new_floating_literal\fP,
+\fBrasqal_graph_pattern_get_flags\fP and
+\fBrasqal_expression_foreach\fP functions,
+\fbrasqal_expression_foreach_fn\fP typedef and
+\fBRASQAL_LITERAL_FLOATING\fP macro
+.SS 0.9.15
+Added rasqal_xsd_decimal type and support functions
+\fBrasqal_new_decimal_literal_from_decimal\fP,
+\fBrasqal_new_xsd_decimal\fP,
+\fBrasqal_free_xsd_decimal\fP,
+\fBrasqal_xsd_decimal_set_string\fP,
+\fBrasqal_xsd_decimal_get_double\fP,
+\fBrasqal_xsd_decimal_as_string\fP,
+\fBrasqal_xsd_decimal_as_counted_string\fP,
+\fBrasqal_xsd_decimal_set_long\fP,
+\fBrasqal_xsd_decimal_set_double\fP,
+\fBrasqal_xsd_decimal_print\fP,
+\fBrasqal_xsd_decimal_add\fP,
+\fBrasqal_xsd_decimal_subtract\fP,
+\fBrasqal_xsd_decimal_multiply\fP,
+\fBrasqal_xsd_decimal_divide\fP,
+\fBrasqal_xsd_decimal_negate\fP,
+\fBrasqal_xsd_decimal_compare\fP,
+\fBrasqal_xsd_decimal_equals\fP and
+\fBrasqal_xsd_decimal_is_zero\fP
+.LP
+Added RASQAL_EXPR_SAMETERM for SPARQL sameTerm
+.LP
+Added rasqal_compare_flags RASQAL_COMPARE_RDF and RASQAL_COMPARE_URI.
+.LP
+Added \fBrasqal_new_typed_literal\fP
+.LP
+Added \fBrasqal_new_float_literal\fP
+.LP
+Added \fBrasqal_literal_datatype\fP
+.LP
+Added \fBrasqal_literal_value\fP
+.LP
+Added rasqal_tripleparts RASQAL_TRIPLE_GRAPH, RASQAL_TRIPLE_SPO and
+RASQAL_TRIPLE_SPOG
+.SS 0.9.14
+Added \fBrasqal_new_0op_expression\fP.
+.LP
+Added \fBrasqal_new_query_results_formatter_by_mime_type\fP
+and \fBrasqal_query_results_formatter_get_mime_type\fP.
+.LP
+Added \fBrasqal_query_results_formats_check\fP and
+\fBrasqal_query_results_formats_enumerate_full\fP.
+.LP
+Added \Brasqal_query_results_is_syntax\fP.
+.LP
+Added query results group by accessor methods:
+\fBrasqal_query_get_group_conditions_sequence\fP and
+\fBrasqal_query_get_group_condition\fP for LAQRS.
+.LP
+\fBrasqal_query_set_distinct\fP now takes a mode argument.
+.LP
+Added new query verbs \fBRASQAL_QUERY_VERB_DELETE\fP
+and \fBRASQAL_QUERY_VERB_INSERT\fP for LAQRS.
+.LP
+Added \fBrasqal_query_get_explain\fP
+.LP
+\fBrasqal_expression\fP structure looses an unused field \fBvariable\fP.
+.LP
+Added \fBrasqal_expression\fP types
+\fBRASQAL_EXPR_GROUP_COND_ASC\fP,
+\fBRASQAL_EXPR_GROUP_COND_DESC\fP,
+\fBRASQAL_EXPR_COUNT\fP and
+\fBRASQAL_EXPR_VARSTAR\fP for LAQRS.
+.LP
+\fBrasqal_variable\fP structure gains a new field \fBexpression\fP for LAQRS..
+.LP
+Added static variables \fBrasqal_license_string\fP
+and \fBrasqal_home_url_string\fP
+.SS 0.9.13
+Added rasqal_feature system with single feature
+\fBRASQAL_FEATURE_NO_NET\fP and functions
+\fBrasqal_feature_from_uri\fP, \fBrasqal_feature_value_type\fP,
+\fBrasqal_features_enumerate\fP, \fBrasqal_get_feature_count\fP,
+\fBrasqal_query_get_feature\fP, \fBrasqal_query_get_feature_string\fP,
+\fBrasqal_query_set_feature\fP and \fBrasqal_query_set_feature_string\fP.
+int.
+.LP
+Added \fBrasqal_query_results_formatter class\fP with
+constructor \fBrasqal_new_query_results_formatter\fP
+destructor \fBrasqal_free_query_results_formatter\fP and method
+\fBrasqal_query_results_formatter_write\fP.
+.LP
+Added \fBrasqal_query_results_formats_enumerate\fP for listing
+supported formats.
+.SS 0.9.12
+Added \fBrasqal_query_iostream_write_escaped_counted_string\fP
+and \fBrasqal_query_escape_counted_string\fP
+.LP
+Added \fBrasqal_query_get_anonymous_variable_sequence\fP
+.LP
+Added \fBrasqal_graph_pattern_get_index\fP
+.LP
+Added \fBRASQAL_EXPR_REGEX\fP to rasqal_op
+.LP
+Added arg3 field to rasqal_expression for the REGEX operation.
+.LP
+Added \fBrasqal_query_write\fP
+.LP
+Added \fBrasqal_new_3op_expression\fP
+.LP
+Added \fBrasqal_literal_as_string_flags\fP
+.SS 0.9.11
+.LP
+Added enum \fBrasqal_compare_flags\fP
+flags for \fBrasqal_expression_evaluate\fP or \fBrasqal_literal_compare\fP.
+.LP
+Function \fBrasqal_expression_evaluate\fP gains a flag argument.
+.LP
+Added \fBrasqal_expression_visit\fP and type for visitor function
+\fBrasqal_expression_visit_fn\fP.
+.LP
+Added \fBrasqal_new_expression_from_expression\fP.
+.LP
+Deprecated \fBrasqal_expression_foreach\fP, replaced by
+\fBrasqal_expression_visit\fP.
+.LP
+Remove unused \fBrasqal_new_variable_expression\fP prototype.
+.LP
+Added \fBrasqal_graph_pattern_visit\fP and
+type for visitor function \fBrasqal_graph_pattern_visit_fn\fP.
+.LP
+Added \fBrasqal_new_decimal_literal\fP.
+.LP
+Deprecated \fBrasqal_new_floating_literal\fP replaced by new
+\fBrasqal_new_double_literal\fP.
+.LP
+Added rasqal_op type \fBRASQAL_EXPR_LANGMATCHES\fP for SPARQL langMatches().
+.LP
+Added \fBrasqal_literal\fP types:
+\fBRASQAL_LITERAL_DECIMAL\fP,
+\fBRASQAL_LITERAL_DATETIME\fP,
+\fBRASQAL_LITERAL_DOUBLE\fP (replacing deprecated \fBRASQAL_LITERAL_FLOATING\fP)
+and \fBRASQAL_LITERAL_FLOAT\fP.
+.LP
+Reordered the \fBrasqal_literal\fP types in the enum.
+.SS 0.9.10
+.LP
+Added an \fBrasqal_graph_pattern_operator\fP enumerated type.
+with the following (useful) values:
+\fBRASQAL_GRAPH_PATTERN_OPERATOR_BASIC\fP (for triple patterns),
+\fBRASQAL_GRAPH_PATTERN_OPERATOR_OPTIONAL\fP (for SPARQL OPTIONAL),
+\fBRASQAL_GRAPH_PATTERN_OPERATOR_UNION\fP,
+\fBRASQAL_GRAPH_PATTERN_OPERATOR_GROUP\fP and
+\fBRASQAL_GRAPH_PATTERN_OPERATOR_GRAPH\fP (for SPARQL GRAPH).
+.LP
+Added graph pattern method \fBrasqal_graph_pattern_get_operator\fB
+Deprecated \fBrasqal_graph_pattern_get_flags\fP replaced by the above.
+Added helper function \fBrasqal_graph_pattern_operator_as_string\fP.
+.LP
+Modified the type of the final argument of
+\fBrasqal_new_graph_pattern_from_sequence\fP and
+\fBrasqal_graph_pattern_add_triples\fP from an integer to a
+\fBrasqal_graph_pattern_operator\fP enumeration.
+.LP
+Removed documentation of removed functions deprecated in 0.9.9.
+.SS 0.9.9
+.LP
+Added query methods
+\fBrasqal_query_get_construct_triple\fP,
+\fBrasqal_query_get_construct_triples_sequence\fP,
+\fBrasqal_query_get_offset\fP,
+\fBrasqal_query_get_order_condition\fP,
+\fBrasqal_query_get_order_conditions_sequence\fP,
+\fBrasqal_query_get_query_graph_pattern\fP,
+\fBrasqal_query_get_verb\fP,
+\fBrasqal_query_get_wildcard\fP.
+\fBrasqal_query_set_default_generate_bnodeid_parameters\fP,
+\fBrasqal_query_set_distinct\fP,
+\fBrasqal_query_set_generate_bnodeid_handler\fP,
+\fBrasqal_query_set_limit\fP and
+\fBrasqal_query_set_offset\fP.
+.LP
+Added expressions \fBRASQAL_EXPR_ORDER_COND_ASC\fP,
+\fBRASQAL_EXPR_ORDER_COND_DESC\fP and \fBRASQAL_EXPR_ORDER_COND_NONE\fP.
+.LP
+Added enum \fBrasqal_variable_type\fP for typing variables.
+.LP
+Added variable constructor \fBrasqal_new_variable_typed\fP to create
+typed variables.
+.LP
+Added enum \fBrasqal_query_verb\fP for the main query verbs with
+values \fBRASQAL_QUERY_VERB_SELECT\fP,
+\fBRASQAL_QUERY_VERB_CONSTRUCT\fP \fBRASQAL_QUERY_VERB_DESCRIBE\fP
+and \fBRASQAL_QUERY_VERB_ASK\fP.
+.LP
+Added \fBrasqal_query_verb_as_string\fP to get a strign for a query verb.
+.LP
+Deprecated the \fBrasqal_triple\fP flags field and the triple methods
+\fBrasqal_triple_set_flags\fP and \fBrasqal_triple_get_flags\fP.
+.SS 0.9.8
+.LP
+Added a \fIData Graph\fP class with constructor
+\fBrasqal_new_data_graph\fP, destructor
+\fBrasqal_free_data_graph\fP and debug method
+\fBrasqal_data_graph_print\fP.
+.LP
+Added casting expressions with type \fBRASQAL_EXPR_CAST\fP
+and expression constructor \fIrasqal_new_cast_expression\fP
+.LP
+Added a no-arg graph pattern constructor \fBrasqal_new_graph_pattern\fP
+.LP
+Added graph pattern methods
+\fBrasqal_graph_pattern_add_triples\fP to add triples to
+a graph pattern and
+\fBrasqal_graph_pattern_add_sub_graph_pattern\fP to add
+a sub-graph pattern to a graph pattern.
+.LP
+Added graph pattern methods
+\fBrasqal_graph_pattern_add_constraint\fP,
+\fBrasqal_graph_pattern_get_constraint_sequence\fP and
+\fBrasqal_graph_pattern_get_constraint\fP
+to add constraints to a graph pattern.
+.LP
+Added query methods for data graphs:
+\fBrasqal_query_add_data_graph\fP,
+\fBrasqal_query_get_data_graph_sequence\fP,
+\fBrasqal_query_get_data_graph\fP.
+.LP
+Deprecated query methods:
+\fBrasqal_query_add_constraint\fP,
+\fBrasqal_query_get_constraint_sequence\fP
+\fBrasqal_query_get_constraint\fP,
+\fBrasqal_query_add_source\fP,
+\fBrasqal_query_get_source_sequence\fP and
+\fBrasqal_query_get_source\fP.
+.LP
+Removed deprecated query methods:
+\fBrasqal_query_get_variable_sequence\fP and \fBrasqal_query_add_triple\fP.
+.SS 0.9.7
+Export \fIrasqal_graph_pattern\fP typedef for graph patterns
+and added access methods:
+\fBrasqal_query_get_graph_pattern_sequence\fP
+\fBrasqal_query_get_graph_pattern\fP, rasqal_graph_pattern_get_triple\fP,
+\fBrasqal_graph_pattern_get_sub_graph_pattern_sequence\fP,
+\fBrasqal_graph_pattern_get_sub_graph_pattern\fP,
+\fBrasqal_graph_pattern_get_flags\fP
+ and exported previously internal \fBrasqal_graph_pattern_print\fP
+Export \fIrasqal_pattern_flags\fP enum for graph pattern flags.
+.LP
+Added \fBrasqal_query_get_bound_variable_sequence\fP
+and \fBrasqal_query_get_all_variable_sequence\fP.
+.LP
+Deprecate \fBrasqal_query_get_variable_sequence\fR prefering
+\fBrasqal_query_get_bound_variable_sequence\fP
+.LP
+Added  \fBrasqal_query_get_distinct\fP
+and \fBrasqal_query_get_limit\fP to get access to query flags.
+.LP
+Deleted \fBRASQAL_EXPR_PATTERN\fP which was never used.
+.SS 0.9.6
+Added new 1-argument expressions to the expression constructor;
+\fBrasqal_op\fP enum gained the following values:
+\fBRASQAL_EXPR_LANG\fP, 
+\fBRASQAL_EXPR_DATATYPE\fP, 
+\fBRASQAL_EXPR_BOUND\fP, 
+\fBRASQAL_EXPR_ISURI\fP, 
+\fBRASQAL_EXPR_ISBLANK\fP and
+\fBRASQAL_EXPR_ISLITERAL\fP
+.LP
+Added user-defined function expressions to the expression constructor:
+\fBrasqal_op\fP enum gained \fBRASQAL_EXPR_FUNCTION\fP value;
+\fBrasqal_expression\fP gained name and args fields
+and added \fBrasqal_new_function_expression\fP to construct
+a function expression.
+.LP
+Added \fBrasqal_query_results_is_bindings\fP, 
+\fBrasqal_query_results_is_boolean\fP and
+\fBrasqal_query_results_is_graph\fP to test the format of query
+result.
+.LP
+Added \fBrasqal_query_results_get_boolean\fP
+to get the value of a boolean query result.
+.LP
+Added \fBrasqal_query_results_get_triple\fP and
+\fBrasqal_query_results_next_triple\fP to return an RDF graph query result.
+.LP
+Added \fBrasqal_new_triple_from_triple\fP triple copy constructor.
+.SS 0.9.5
+Added \fBrasqal_query_results_write\fP to format query results
+into a syntax, written to a raptor iostream.
+.LP
+Changed \fBrasqal_new_floating_literal\fP to take a double argument.
+.LP
+Added flags for triples with \fBrasqal_triple_get_flags\fP and
+\fBrasqal_triple_set_flags\fP to get and set them.
+.LP
+Added \fBrasqal_triple_parts\fP enum and updated the \fIbind_match\fP
+factory method of the \fBrasqal_triples_match\fP structure to take
+and return them.
+.LP
+Added a \fBrasqal_triple_parts\fP type field \fIparts\fP to the
+\fBrasqal_triple_meta\fP structure
+.SS 0.9.4
+No API changes.
+.SS 0.9.3
+The struct \fBrasqal_prefix\fP gained a \fIdeclared\fP field.
+.LP
+The struct \fBrasqal_triple\fP gained an origin field; not used at
+present but intended to support work on tracking triple provenance
+such as provided by Redland Contexts.
+.LP
+Added methods \fBrasqal_triple_set_origin\fP and
+\fBrasqal_triple_get_origin\fP to support the above.
+.LP
+struct \fBrasqal_triple_meta\fP now takes a 4-array of bindings,
+the fourth being the origin.
+.LP
+Exported function \fBrasqal_set_triples_source_factory\fP publically
+as intended.
+.SS 0.9.2
+Several functions changed their parameters or return values from
+char* to unsigned char* or const unsigned char* to reflect the actual
+use.
+.LP
+Changed to return a const unsigned char*:
+.br
+\fBrasqal_literal_as_string\fP
+.LP
+Changed to take const unsigned char* (or add const):
+.br
+\fBrasqal_new_floating_literal\fP
+.br
+\fBrasqal_new_pattern_literal\fP
+.br
+\fBrasqal_new_prefix\fP
+.br
+\fBrasqal_new_simple_literal\fP
+.br
+\fBrasqal_new_string_literal\fP
+.br
+\fBrasqal_new_variable\fP
+.br
+\fBrasqal_query_has_variable\fP
+.br
+\fBrasqal_query_results_get_binding_name\fP
+.br
+\fBrasqal_query_results_get_binding_value_by_name\fP
+.br
+\fBrasqal_query_results_get_bindings\fP
+.br
+\fBrasqal_query_set_variable\fP
+.SS 0.9.1
+Added the \fBrasqal_query_results\fR class and moved the results
+methods from \fBrasqal_query\fR.
+.LP
+Made \fBrasqal_query_execute\fR return a \fBrasqal_query_result*\fR.
+.LP
+Renamed all \fBrasqal_query\fR\fI*result*\fP methods to be rasqal_query_result_*
+Added \fBrasqal_free_query_results\fP to tidy up.
+.ta \w'rasqal_query_get_result_binding_by_name  'u+\n(Spu
+.LP
+\fIOLD API (0.9.0)	NEW API (0.9.1+)\fR
+.br
+\fBrasqal_query_get_result_count\fR	\fBrasqal_query_results_get_count\fR
+.br
+\fBrasqal_query_next_result\fR	\fBrasqal_query_results_next\fR
+.br
+\fBrasqal_query_results_finished\fR	\fBrasqal_query_results_finished\fR
+.br
+\fBrasqal_query_get_result_bindings\fR	\fBrasqal_query_results_get_bindings\fR
+.br
+\fBrasqal_query_get_result_binding_value\fR	\fBrasqal_query_results_get_binding_value\fR
+.br
+\fBrasqal_query_get_result_binding_name\fR	\fBrasqal_query_results_get_binding_name\fR
+.br
+\fBrasqal_query_get_result_binding_by_name\fR	\fBrasqal_query_results_get_binding_value_by_name\fR
+.br
+\fBrasqal_query_get_bindings_count\fR	\fBrasqal_query_results_get_bindings_count\fR
+.br
+.SS 0.9.0
+All new.
+.br
+.SH "CONFORMING TO"
+\fISPARQL Query Language for RDF\fR, 
+Eric Prud'hommeaux and Andy Seaborne (eds), W3C Recommendation, 15 January 2008
+.UR http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/
+http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/
+.UE
+.LP
+\fISPARQL Query Results XML Format\fR, 
+Jeen Broekstra and Dave Beckett (eds), W3C Recommendation, 15 January 2008.
+.UR http://www.w3.org/TR/2008/REC-rdf-sparql-XMLres-20080115/
+http://www.w3.org/TR/2008/REC-rdf-sparql-XMLres-20080115/
+.UE
+.LP
+\fIRDQL - A Query Language for RDF\fR, Andy Seaborne,
+W3C Member Submission 9 January 2004
+.UR http://www.w3.org/Submission/2004/SUBM-RDQL-20040109/
+http://www.w3.org/Submission/2004/SUBM-RDQL-20040109/
+.UE
+.SH SEE ALSO
+.BR roqet (1), rasqal-config (1)
+.SH AUTHOR
+Dave Beckett - 
+.UR http://purl.org/net/dajobe/
+http://purl.org/net/dajobe/
+.UE
+.br

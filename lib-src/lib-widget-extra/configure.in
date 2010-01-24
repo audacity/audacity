@@ -1,0 +1,184 @@
+dnl
+dnl libwidgetextra configure.in script
+dnl
+dnl Joshua Haberman
+dnl Dominic Mazzoni
+dnl Richard Ash
+dnl
+
+dnl
+dnl Instructions: to create "configure" from "configure.in", run:
+dnl
+
+dnl Process this file with autoconf to produce a configure script.
+
+dnl Require autoconf >= 2.60
+AC_PREREQ(2.59)
+
+dnl Init autoconf
+AC_INIT
+dnl check we have some source (are in the right directory)
+AC_CONFIG_SRCDIR([NonGuiThread.h])
+dnl we have some extra macros in m4/
+AC_CONFIG_MACRO_DIR([m4])
+
+dnl -------------------------------------------------------
+dnl Checks for programs.
+dnl -------------------------------------------------------
+dnl save $CFLAGS etc. since AC_PROG_CC likes to insert "-g -O2"
+dnl if $CFLAGS is blank and it finds GCC
+cflags_save="$CFLAGS"
+cppflags_save="$CPPFLAGS"
+cxxflags_save="$CXXFLAGS"
+AC_PROG_CC
+AC_LANG([C++])
+AC_PROG_CXX
+AC_PROG_CXXCPP
+CFLAGS="$cflags_save"
+CPPFLAGS="$cppflags_save"
+CXXFLAGS="$cxxflags_save"
+
+dnl we will need an "install" program to be available
+AC_PROG_INSTALL
+
+dnl We have some extra variables which we need to subsitute into output files
+AC_SUBST(INSTALL_PREFIX)
+
+dnl Make the install prefix available to the program so that the pkg-config file
+dnl can be created correctly
+AC_PREFIX_DEFAULT(/usr/local)
+if [[ $prefix = "NONE" ]] ; then
+  AC_DEFINE(INSTALL_PREFIX, "/usr/local",
+      [define as prefix where Audacity is installed])
+else
+  AC_DEFINE_UNQUOTED(INSTALL_PREFIX, "$prefix")
+fi
+
+dnl Build Options
+
+AC_ARG_ENABLE(static,
+            [AS_HELP_STRING([--enable-static],
+                            [link wx statically [default=no]])],
+            static_preference="--static=$enableval",
+            static_preference="")
+
+AC_ARG_ENABLE(unicode,
+            [AS_HELP_STRING([--enable-unicode],
+                            [enable unicode support [default=yes]])],   
+            unicode_preference="--unicode=$enableval",
+            unicode_preference="--unicode=yes")
+
+AC_ARG_ENABLE(debug,
+            [AS_HELP_STRING([--enable-debug],
+                            [enable debug support [default=no]])],
+            debug_preference="$enableval",
+            debug_preference="no")
+
+dnl AC_ARG_WITH(wx-version,
+dnl             [AS_HELP_STRING([--with-wx-version],
+dnl                            [select wxWidgets version (if both installed) [2.8,]])],
+dnl            wx_preference="--version=$withval",
+dnl            wx_preference="")
+dnl Right now only support wx 2.8
+
+dnl ----------------------------------------------------
+dnl If user asked for debug, put debug in compiler flags
+dnl ----------------------------------------------------
+
+if test x"$debug_preference" = "xyes" ; then
+   dnl we want debuging on
+   AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
+   CFLAGS="${CFLAGS} -g "
+   CXXFLAGS="${CXXFLAGS} -g "
+fi
+
+dnl --------------------------------------------------------------------------
+dnl We would like warnings enabled on the builds, but different compilers need
+dnl different options for these. This bit tries to work out what flags we 
+dnl should add to the compiler we are using.
+dnl --------------------------------------------------------------------------
+
+dnl Strict prototypes flags for C (only C because doesn't work for C++)
+AX_CFLAGS_STRICT_PROTOTYPES(CFLAGS)
+
+dnl Sensible warnings for C
+AX_CFLAGS_WARN_ALL(wall_flags)
+CFLAGS="${CFLAGS} $wall_flags"
+dnl try and use it on C++ as well
+AX_CXX_CHECK_FLAG([$wall_flags], [[int foo;]], [[foo = 1;]], cxx_does_wall="yes", cxx_does_wall="no")
+if test "x$cxx_does_wall" = "xyes" ; then
+   dnl can use all warnings flag on the C++ compiler
+   CXXFLAGS="${CXXFLAGS} $wall_flags"
+fi
+AX_CXXCPP_CHECK_FLAG([$wall_flags], [[int foo;]], [[foo = 1;]], cpp_does_wall="yes", cpp_does_wall="no")
+if test "x$cpp_does_wall" = "xyes" ; then
+   dnl can use all warnings flag on the C++ pre-processor
+   CPPFLAGS="${CPPFLAGS} $wall_flags"
+fi
+
+dnl --- check for required libraries ---
+
+dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
+AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin )
+if [[ "$WX_CONFIG" = "no" ]] ; then
+   AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
+fi
+
+dnl --- Check that the wx version is at least 2.8.x ---
+
+if test "x$debug_preference" = "xyes"; then
+   dnl want debug wx as well
+   wxconfigargs="--debug=yes"
+else
+   dnl normal wx
+   wxconfigargs=""
+fi
+
+dnl more things we always pass to wx-config
+wxconfigargs="$static_preference $unicode_preference  $wxconfigargs $wx_preference"
+
+wx_version=`${WX_CONFIG} $wxconfigargs --version`
+
+AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 2.8.x])
+
+case "${wx_version}" in
+  2.8.*)
+    echo "Great, you're using wxWidgets ${wx_version}!"
+    ;;
+  *)
+  wx_list=`${WX_CONFIG} --list`
+  AC_MSG_ERROR([Unable to locate a suitable configuration of wxWidgets v2.8.x or higher.
+The currently available configurations are listed below.  If necessary, either
+install the package for your distribution or download the latest version of
+wxWidgets
+from http://wxwidgets.org.
+${wx_list}])
+esac
+
+dnl Gather wx arguments
+
+LIBS="$LIBS `$WX_CONFIG $wxconfigargs --libs`"
+CPPFLAGS="$CPPFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+AC_CONFIG_FILES([Makefile libwidgetextra.pc libwidgetextra-uninstalled.pc])
+
+AC_OUTPUT
+
+echo ""
+echo "Run 'configure --help' for an explanation of the possible options,"
+echo "otherwise run 'make' to build libwidgetextra."
+
+dnl Indentation settings for Vim and Emacs and unique identifier for Arch, a
+dnl version control system. Please do not modify past this point.
+
+
+# Local Variables:
+# c-basic-offset: 3
+# indent-tabs-mode: nil
+# End:
+#
+# vim: et sts=3 sw=3

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY version SYSTEM "version.xml">
+]>
+<refentry id="raptor-section-unicode">
+<refmeta>
+<refentrytitle role="top_of_page" id="raptor-section-unicode.top_of_page">Unicode</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>RAPTOR Library</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>Unicode</refname>
+<refpurpose>Unicode and UTF-8 utility functions.</refpurpose>
+<!--[<xref linkend="desc" endterm="desc.title"/>]-->
+</refnamediv>
+
+<refsynopsisdiv id="raptor-section-unicode.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+typedef             <link linkend="raptor-unichar">raptor_unichar</link>;
+<link linkend="int">int</link>                 <link linkend="raptor-unicode-char-to-utf8">raptor_unicode_char_to_utf8</link>         (<link linkend="raptor-unichar">raptor_unichar</link> c,
+                                                         unsigned <link linkend="char">char</link> *output);
+<link linkend="int">int</link>                 <link linkend="raptor-utf8-to-unicode-char">raptor_utf8_to_unicode_char</link>         (<link linkend="raptor-unichar">raptor_unichar</link> *output,
+                                                         unsigned <link linkend="char">char</link> *input,
+                                                         <link linkend="int">int</link> length);
+<link linkend="int">int</link>                 <link linkend="raptor-unicode-is-xml11-namestartchar">raptor_unicode_is_xml11_namestartchar</link>
+                                                        (<link linkend="raptor-unichar">raptor_unichar</link> c);
+<link linkend="int">int</link>                 <link linkend="raptor-unicode-is-xml10-namestartchar">raptor_unicode_is_xml10_namestartchar</link>
+                                                        (<link linkend="raptor-unichar">raptor_unichar</link> c);
+<link linkend="int">int</link>                 <link linkend="raptor-unicode-is-xml11-namechar">raptor_unicode_is_xml11_namechar</link>    (<link linkend="raptor-unichar">raptor_unichar</link> c);
+<link linkend="int">int</link>                 <link linkend="raptor-unicode-is-xml10-namechar">raptor_unicode_is_xml10_namechar</link>    (<link linkend="raptor-unichar">raptor_unichar</link> c);
+<link linkend="int">int</link>                 <link linkend="raptor-utf8-check">raptor_utf8_check</link>                   (unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> length);
+</synopsis>
+</refsynopsisdiv>
+
+
+
+
+
+
+
+
+
+<refsect1 id="raptor-section-unicode.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Functions to support converting to and from Unicode written in UTF-8
+which is the native internal string format of all the redland libraries.
+Includes checking for Unicode names using either the XML 1.0 or XML 1.1
+rules.
+</para>
+</refsect1>
+
+<refsect1 id="raptor-section-unicode.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="raptor-unichar" role="typedef">
+<title>raptor_unichar</title>
+<indexterm zone="raptor-unichar"><primary>raptor_unichar</primary></indexterm><programlisting>typedef unsigned long raptor_unichar;
+</programlisting>
+<para>
+raptor Unicode codepoint</para>
+<para>
+
+</para></refsect2>
+<refsect2 id="raptor-unicode-char-to-utf8" role="function">
+<title>raptor_unicode_char_to_utf8 ()</title>
+<indexterm zone="raptor-unicode-char-to-utf8"><primary>raptor_unicode_char_to_utf8</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_unicode_char_to_utf8         (<link linkend="raptor-unichar">raptor_unichar</link> c,
+                                                         unsigned <link linkend="char">char</link> *output);</programlisting>
+<para>
+Convert a Unicode character to UTF-8 encoding.
+</para>
+<para>
+Based on <link linkend="librdf-unicode-char-to-utf8"><function>librdf_unicode_char_to_utf8()</function></link> with no need to calculate
+length since the encoded character is always copied into a buffer
+with sufficient size.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>c</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode character
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>output</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string buffer or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> bytes encoded to output buffer or &lt;0 on failure
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-utf8-to-unicode-char" role="function">
+<title>raptor_utf8_to_unicode_char ()</title>
+<indexterm zone="raptor-utf8-to-unicode-char"><primary>raptor_utf8_to_unicode_char</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_utf8_to_unicode_char         (<link linkend="raptor-unichar">raptor_unichar</link> *output,
+                                                         unsigned <link linkend="char">char</link> *input,
+                                                         <link linkend="int">int</link> length);</programlisting>
+<para>
+Convert an UTF-8 encoded buffer to a Unicode character.
+</para>
+<para>
+If output is NULL, then will calculate the number of bytes that
+will be used from the input buffer and not perform the conversion.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>output</parameter>&nbsp;:</term>
+<listitem><simpara> Pointer to the Unicode character or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>input</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string buffer
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> buffer size
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> bytes used from input buffer or &lt;0 on failure: -1 input buffer too short or length error, -2 overlong UTF-8 sequence, -3 illegal code positions, -4 code out of range U+0000 to U+10FFFF.  In cases -2, -3 and -4 the coded character is stored in the output.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-unicode-is-xml11-namestartchar" role="function">
+<title>raptor_unicode_is_xml11_namestartchar ()</title>
+<indexterm zone="raptor-unicode-is-xml11-namestartchar"><primary>raptor_unicode_is_xml11_namestartchar</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_unicode_is_xml11_namestartchar
+                                                        (<link linkend="raptor-unichar">raptor_unichar</link> c);</programlisting>
+<para>
+Check if Unicode character is legal to start an XML 1.1 Name
+</para>
+<para>
+Namespaces in XML 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/<link linkend="NT-NameStartChar"><type>NT-NameStartChar</type></link>
+updating
+  Extensible Markup Language (XML) 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/ sec 2.3, [4a]
+excluding the ':'</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>c</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode character to check
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if legal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-unicode-is-xml10-namestartchar" role="function">
+<title>raptor_unicode_is_xml10_namestartchar ()</title>
+<indexterm zone="raptor-unicode-is-xml10-namestartchar"><primary>raptor_unicode_is_xml10_namestartchar</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_unicode_is_xml10_namestartchar
+                                                        (<link linkend="raptor-unichar">raptor_unichar</link> c);</programlisting>
+<para>
+Check if Unicode character is legal to start an XML 1.0 Name
+</para>
+<para>
+Namespaces in XML REC 1999-01-14
+  http://www.w3.org/TR/1999/REC-xml-names-19990114/<link linkend="NT-NCName"><type>NT-NCName</type></link>
+updating
+  Extensible Markup Language (XML) 1.0 (Third Edition) REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml-20040204/
+excluding the ':'</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>c</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode character to check
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if legal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-unicode-is-xml11-namechar" role="function">
+<title>raptor_unicode_is_xml11_namechar ()</title>
+<indexterm zone="raptor-unicode-is-xml11-namechar"><primary>raptor_unicode_is_xml11_namechar</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_unicode_is_xml11_namechar    (<link linkend="raptor-unichar">raptor_unichar</link> c);</programlisting>
+<para>
+Check if a Unicode codepoint is a legal to continue an XML 1.1 Name
+</para>
+<para>
+Namespaces in XML 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/
+updating
+  Extensible Markup Language (XML) 1.1 REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml11-20040204/ sec 2.3, [4a]
+excluding the ':'</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>c</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode character
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if legal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-unicode-is-xml10-namechar" role="function">
+<title>raptor_unicode_is_xml10_namechar ()</title>
+<indexterm zone="raptor-unicode-is-xml10-namechar"><primary>raptor_unicode_is_xml10_namechar</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_unicode_is_xml10_namechar    (<link linkend="raptor-unichar">raptor_unichar</link> c);</programlisting>
+<para>
+Check if a Unicode codepoint is a legal to continue an XML 1.0 Name
+</para>
+<para>
+Namespaces in XML REC 1999-01-14
+  http://www.w3.org/TR/1999/REC-xml-names-19990114/<link linkend="NT-NCNameChar"><type>NT-NCNameChar</type></link>
+updating
+  Extensible Markup Language (XML) 1.0 (Third Edition) REC 2004-02-04
+  http://www.w3.org/TR/2004/REC-xml-20040204/
+excluding the ':'</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>c</parameter>&nbsp;:</term>
+<listitem><simpara> Unicode character
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> non-0 if legal
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="raptor-utf8-check" role="function">
+<title>raptor_utf8_check ()</title>
+<indexterm zone="raptor-utf8-check"><primary>raptor_utf8_check</primary></indexterm><programlisting><link linkend="int">int</link>                 raptor_utf8_check                   (unsigned <link linkend="char">char</link> *string,
+                                                         <link linkend="size-t">size_t</link> length);</programlisting>
+<para>
+Check a string is UTF-8.</para>
+<para>
+
+</para><variablelist role="params">
+<varlistentry><term><parameter>string</parameter>&nbsp;:</term>
+<listitem><simpara> UTF-8 string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&nbsp;:</term>
+<listitem><simpara> length of string
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&nbsp;:</term><listitem><simpara> Non 0 if the string is UTF-8
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+
+
+
+</refentry>

@@ -1,0 +1,3 @@
+# No dot
+SELECT * WHERE
+{ ?s ?p ?o . ?s ?p ?o }

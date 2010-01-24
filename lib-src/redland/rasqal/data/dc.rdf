@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 xmlns:foaf="http://xmlns.com/foaf/0.1/">
+  <!-- test data for rasqal_query_test -->
+  <foaf:Person>
+    <foaf:name>Dave Beckett</foaf:name>
+    <foaf:homepage rdf:resource="http://purl.org/net/dajobe/" />
+  </foaf:Person> 
+</rdf:RDF>

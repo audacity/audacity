@@ -1,0 +1,1251 @@
+2001-12-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am, redland.spec.in, configure.in:
+	Fix failure to build the Perl RPMs by passing Perl's installsitearch
+	and man3dir configuration paths down to the SPEC file
+
+2001-12-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/Makefile.am, redland.spec.in, configure.in:
+	Fix failure to build the Perl RPMs by passing Perl's
+	installsitearch and man3dir configuration paths down to the SPEC
+	file
+
+2001-11-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in:
+	Fixed bug: link -lexpat before other libs (inc libwww)
+
+2001-11-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/python.html:
+	Added notes on running python example.py
+	Updated other python links
+
+	* python/Makefile.am:
+	Added example.py to release
+
+	* python/test/test.py:
+	Update to new python interface style.
+
+	* python/example.py:
+	Update to new python interface style.
+	Added parsing test
+	Carefully delete objects in right order before world is destroyed
+
+	* python/RDF.py:
+	Changed to more Python-ic interface using **kw args - thanks to
+	Mark Nottingham
+	(class uri, constructor): Use new args properly.
+	(class parser): Mime type takes an optional string not object.
+	(class parser, method feature): update comment, still needs fixing to
+	allow python URI objects
+
+2001-10-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_storage.c (librdf_delete_storage_factories):
+	Zero storages after freeing all.
+
+2001-10-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* java/redland-fragment.java:
+	Correct comment
+
+	* expat/xmltok/Makefile.am, expat/xmlparse/Makefile.am:
+	Updated to use libtool properly
+
+	* NEWS.html: Added statement grouping
+
+2001-09-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	More updates for libtool
+	Just use librdf.la (no librdf.a)
+	Change all librdf_a to librdf_la
+	Move example programs to automake style
+	Fix test programs to work with libtool $(LINK) and -static librdf.la
+
+	* configure.in:
+	More updates for libtool:
+	- remove SOBJS parts (not needed)
+	- change from .o to .lo throughout
+
+	* rdf_storage_hashes.c:
+	Add statment grouping in 4th hash "groups".
+	Bumped fixed number of hashes up one.
+	(librdf_storage_hashes_group_add_statement,
+	librdf_storage_hashes_group_remove_statement,
+	librdf_storage_hashes_group_serialise,
+	librdf_storage_hashes_group_serialise_end_of_stream,
+	librdf_storage_hashes_group_serialise_next_statement,
+	librdf_storage_hashes_group_serialise_finished): Added to implement
+	groups in same style as for librdf_storage_list
+
+2001-09-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	Added ex1.rdf, ex2.rdf to dist - for tests
+
+	* ex1.rdf, ex2.rdf:
+	Example RDF/XML for tests
+
+	* rdf_storage_list.c:
+	Added statement groups support:
+	(librdf_storage_list_open): Create memory hash for groups
+	(librdf_storage_list_close): Remove memory hash for groups
+	(librdf_storage_list_group_add_statement): Added
+	(librdf_storage_list_group_remove_statement): Added
+	(librdf_storage_list_group_serialise_end_of_stream): Added
+	(librdf_storage_list_group_serialise_next_statement): Added
+	(librdf_storage_list_group_serialise_finished): Added
+	Added factory method registrations.
+
+	* rdf_model.h: Added prototypes for
+	librdf_model_add_statements_group and
+	librdf_model_remove_statements_group
+
+	* rdf_model.c (librdf_model_print):
+	Moved most code to librdf_stream_print
+	(librdf_model_add_statements_group): Added
+	(librdf_model_remove_statements_group): Added
+	Added tests for add/remove statements group
+
+	* rdf_storage.h:
+	Added factory methods and prototypes for
+	librdf_storage_group_add_statement,
+	librdf_storage_group_remove_statement,
+	librdf_storage_group_serialise
+
+	* rdf_storage.c (librdf_storage_has_arc_out):
+	Use of wrong storage method.
+	(librdf_storage_group_add_statement,librdf_storage_group_remove_statement,librdf_storage_group_serialise): Added, calling storage method
+
+	* rdf_list.h:
+	librdf_list_remove prototype amended to return data pointer
+
+	* rdf_hash_memory.c (librdf_free_hash_memory_node):
+	Always free node
+	(librdf_hash_memory_delete_key_value): Free value as well as vnode
+
+	* rdf_list.c (librdf_list_remove):
+	Return data pointer of stored item.
+
+	* rdf_parser_sirpac.c, rdf_parser_repat.c, rdf_parser_raptor.c, rdf_parser_libwww.c:
+	Handle NULL base_uri as written in API spec.
+
+	* rdf_stream.c (librdf_stream_print):
+	Added more docu-comment
+	Send result to fh, not always stdout
+
+2001-09-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_stream.h:
+	Added prototype for librdf_stream_print
+
+	* rdf_stream.c (librdf_stream_print):
+	Added
+
+	* configure.in, Makefile.am:
+	Added libtool versioning directed from configure.in
+
+2001-09-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* repat/Makefile.am, expat/xmltok/Makefile.am,
+	expat/xmlparse/Makefile.am, redland.spec.in, configure.in,
+	Makefile.am:
+	Build librdf as shared library as well as static one
+
+2001-09-07  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_hash.h:
+	Prototype for librdf_hash_values_count added
+	Hash factory method values_count added
+
+	* rdf_hash.c (librdf_hash_values_count):
+	Added
+	Use it in test code
+
+	* rdf_hash_bdb.c (librdf_hash_bdb_values_count):
+	Added, does not seem possible to implement with BDB btrees/hashes
+	without a large performance penalty.
+
+	* rdf_hash_gdbm.c (librdf_hash_gdbm_values_count):
+	Added, does not seem possible to do
+	in GBDM.
+
+	* rdf_hash_memory.c (librdf_hash_memory_values_count):
+	Added and implemented.
+
+	* rdf_storage_hashes.c (librdf_storage_hashes_size):
+	Call librdf_hash_values_count on
+	one hash to count size.
+
+	* rdf_storage.c (librdf_storage_size):
+	Amended return value
+
+2001-09-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* INSTALL.html:
+	Added more details of where Redland builds.
+	Updated BDB versions.
+	Moved linking warning
+
+	* configure.in:
+	Added new java directory
+
+	* FAQS.html:
+	Updated - now have Java API.
+
+	* docs/java.html:
+	Updated to new class names.
+
+2001-09-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* java/org/librdf/redland/World.java,
+	java/org/librdf/redland/URI.java,
+	java/org/librdf/redland/Stream.java,
+	java/org/librdf/redland/Storage.java,
+	java/org/librdf/redland/Statement.java,
+	java/org/librdf/redland/Parser.java,
+	java/org/librdf/redland/Node.java,
+	java/org/librdf/redland/Model.java,
+	java/org/librdf/redland/Iterator.java:
+	Use finalize() with correct signature.
+
+	* java/test2.java:
+	Redland Java test code using classes
+
+	* java/org/librdf/redland/Storage.java (Storage):
+	Store new Redland object, don't loose it
+
+	* java/org/librdf/redland/World.java,
+	java/org/librdf/redland/URI.java,
+	java/org/librdf/redland/Stream.java,
+	java/org/librdf/redland/Storage.java,
+	java/org/librdf/redland/Statement.java,
+	java/org/librdf/redland/Parser.java,
+	java/org/librdf/redland/Node.java,
+	java/org/librdf/redland/Model.java,
+	java/org/librdf/redland/Iterator.java,
+	java/org/librdf/redland/Hash.java:
+	Styled API with Java BiCapitalisation for classes, lowerThenUpper
+	for methods
+	Made Iterator and Stream implement java.lang.Iterator API.
+
+	* java/test1.java, java/example.java:
+	Updated for new java package, classes
+
+	* java/Makefile.am:
+	Added java files, class files
+	Added classpath, use env to run java, javac
+	Added test2.java and run it with test-java target.
+
+	* java/test1.java, java/skeleton.java:
+	Updates for Java package and class name changes
+
+	* java/Makefile.am:
+	Changed class path to org.librdf.redland and C interface class to core
+
+	* java/org/librdf/redland/Makefile.am:
+	Changed class names to Java style
+
+	* java/org/librdf/Makefile.am:
+	Makefile.am
+
+	* java/org/librdf/redland/Model.java:
+	Remove model_ from some method names
+
+2001-08-28  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* NEWS.html: No space after <h2>!
+
+	* configure.in:
+	Bump version to 0.9.11
+
+	* Snapshotted redland_0_9_10 for 0.9.10 release
+
+	* configure.in: Tidy PROGS macros
+	Added SWIG test and version test, in order to check if can build java.
+
+	* perl/Makefile.am: Tidy perl macros
+
+	* perl/lib/RDF/Model.pm (serialise):
+	Use RDF::Stream constructor correctly
+
+2001-08-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* README.html:
+	Added java API pointers.
+
+	* INSTALL.html:
+	Added java API pointer.
+
+	* docs/java.html:
+	Updated for new Java Interface
+
+	* java/test.java, java/Makefile.am:
+	Updated for first version of SWIG Java interface
+
+	* java/org/librdf/world.java, java/org/librdf/uri.java,
+	java/org/librdf/stream.java, java/org/librdf/storage.java,
+	java/org/librdf/statement.java, java/org/librdf/parser.java,
+	java/org/librdf/node.java, java/org/librdf/model.java,
+	java/org/librdf/iterator.java, java/org/librdf/hash.java,
+	java/org/librdf/Makefile.am, java/org/Makefile.am,
+	java/skeleton.java, java/redland-fragment.java, java/example.java:
+	First version of SWIG Java interface
+
+	* java/redland-java.c, java/NativeName.java:
+	Not used
+
+	* java/README:
+	Notes not needed anymore
+
+	* configure.in:
+	Updated Berkeley/Sleepcat DB testing for V3, V2, V1 in order.
+	Added java dirs
+
+	* Makefile.am: Added java dir
+
+2001-08-15  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_raptor.c:
+	Remove checks for obsolete XML_NAME types.
+	Update to use identifier_type enum names
+	Add some more error checking if types do not match.
+
+	* rdf_concepts.h:
+	Added prototype for librdf_get_concept_by_name
+
+	* rdf_concepts.c (librdf_get_concept_by_name):
+	Added
+
+2001-08-14  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/test/test.py:
+	Use memory storage not bdb - BDB may not be available or required.
+
+	* perl/lib/RDF/RSS.pm:
+	Use raptor as parser.
+	(format_literal): Fix quoting.
+	Allow description content through raw, including any HTML formattign.
+
+2001-07-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/RDF.py:
+	(RDF.parser constructor) Allow pass through of null mime_type (None in python)
+
+	* perl/lib/RDF/Parser.pm:
+	(RDF::Parser::new) Allow pass through of null mime_type (undef in
+	perl)
+
+	* docs/Makefile.am:
+	Moved SGML docs to MAINTAINERCLEAN again
+
+	* rdf_parser_raptor.c:
+	Fixes after changes for daml:collection and ntriples support, with
+	anonymous nodes that have non-URIs.
+	(librdf_parser_raptor_make_node_from_anon): Added to support above.
+
+	* INSTALL.html:
+	Updated BDB notes - tested with 3.2.9 also
+
+2001-07-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser.c:
+	Add raptor to list of parser to test.
+	Init URI module and dependent modules that are needed by parsers
+	that use URIs for identification (raptor ntriples is only one so far)
+
+	* configure.in:
+	Updated for raptor ntriples parser
+
+	* docs/api.sgml.in:
+	Added world class - from rdf_init.c
+
+2001-07-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_raptor.c:
+	Updated ntriples URI
+
+	* rdf_parser_raptor.c:
+	Added raptor ntriples parser called "ntriples"
+
+	* debian/README.Debian:
+	Added apt config that might work someday.
+
+	* debian/scanpackages.override:
+	guess again
+
+2001-07-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/Makefile.am: Raptor now rapier
+
+	* debian/control:
+	Updated Standards-Version to 3.5.5
+
+	* debian/README.Debian:
+	Updated after more experience.
+
+	* debian/Makefile.am:
+	Debian package stuff
+
+	* debian/doc-base.package:
+	Install documents in /usr/share/doc/redland/html
+
+2001-07-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* debian/scanpackages.override:
+	override file for dpkg-scanpackages
+
+2001-07-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	tinkered with HTML to text rule
+
+	* configure.in:
+	Removed u16, u64, unsigned short, unsigned long long - not used
+
+	* rdf_types.h:
+	Removed u16, u64 - not used
+
+2001-07-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Statement.pm (new_from_nodes):
+	Added documentation about copying nodes.
+
+	* rdf_parser_raptor.c:
+	Now called raptor
+
+2001-07-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* java/UK/ac/bristol/ilrt/redland/Hash.java,
+	java/UK/ac/bristol/ilrt/redland/Iterator.java,
+	java/UK/ac/bristol/ilrt/redland/Model.java,
+	java/UK/ac/bristol/ilrt/redland/Node.java,
+	java/UK/ac/bristol/ilrt/redland/Parser.java,
+	java/UK/ac/bristol/ilrt/redland/redland.java,
+	java/UK/ac/bristol/ilrt/redland/Statement.java,
+	java/UK/ac/bristol/ilrt/redland/Storage.java,
+	java/UK/ac/bristol/ilrt/redland/Stream.java,
+	java/UK/ac/bristol/ilrt/redland/URI.java,
+	java/Makefile.am, java/NativeName.java, java/README,
+	java/redland-java.c, java/test.java:
+	Imported java test code
+
+2001-07-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_statement.c, rdf_node.c:
+	Make object comparisons fail if any pointer is NULL
+
+	* NEWS.html: Local parser now Raptor
+
+2001-07-02  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser.h, rdf_parser.c, configure.in, acconfig.h,
+	Makefile.am: Rapier now raptor
+
+2001-06-07  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* NEWS.html:
+	Post release, added link to rapier changes
+
+	* configure.in:
+	Bump version to 0.9.10
+
+	* Snapshotted redland_0_9_9 for 0.9.9 release
+
+	* NEWS.html:
+	Updated for 0.9.9 release
+
+	* debian/README.Debian:
+	Updated after success!
+
+	* debian/rules.in:
+	Nasty horrible perl inline Makefile-editing finally makes debian
+	package building work.
+
+2001-06-06  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* debian/README.Debian:
+	Updated with what might work someday...
+
+	* configure.in, Makefile.am:
+	Pick a local tar and set TAR variable
+
+	* configure.in, Makefile.am:
+	Changed rapier macro names to work better with automake/autoconf.
+
+2001-06-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in:
+	Yet more xml parser checking fixes.
+
+	* acconfig.h:
+	Added HAVE_XML_SetNamespaceDeclHandler
+
+2001-06-01  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in, Makefile.am:
+	More fixes to make rapier sources optional.
+
+	* Makefile.am, configure.in:
+	Add rapier sources to dist only when present
+
+	* configure.in:
+	Set have_rapier=0 by default
+
+	* configure.in:
+	Text compile and run of programs linked with -lexpat.
+	Emit summary of things that are configured - xml, rdf parsers,
+	digests, BDB
+
+2001-05-30  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* README.html:
+	Updated sources to include snapshots and web-cvs
+
+	* redland.spec.in:
+	Use make install-perl to install the perl modules
+
+	* perl/example.pl:
+	Close down storage explicitly to ensure data is flushed ok.
+
+2001-05-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	Added rpm/redland.spec to dist
+
+2001-05-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_sirpac.c:
+	Quote URI field with quotes '%s' in format string for invoking
+	SiRPAC java
+
+2001-05-10  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Storage.pm:
+	Document more storage options.
+
+2001-05-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* redland.spec.in:
+	For perl rpm, use auto/Redland not auto/redland
+
+	* redland.spec.in:
+	Added missing RDF.pm to perl RPM
+
+	* README.html: HTML
+
+2001-05-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Node.pm (type):
+	Added an example.
+
+	* perl/lib/RDF/Storage.pm:
+	Docs: added more details and examples
+
+2001-04-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/java.html: Java interface
+
+2001-04-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* README.html:
+	Moved java stuff to java placeholder page.
+
+	* docs/Makefile.am:
+	Added java.html placeholder
+
+2001-04-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* debian/rules.in:
+	More fixes from attempts to get this working on a pure debian system
+
+	* perl/test.pl:
+	Added testing of iterators and individual warnings, more coverage of
+	usual code calls.
+
+	* perl/lib/RDF/Model.pm (sources,arcs):
+	Fix prototypes.
+
+	* perl/lib/RDF/Iterator.pm (end):
+	Call Redland::librdf_iterator_end not old function
+
+2001-04-12  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/test.pl:
+	Use in memory hashes for testing, not everyone has a working BDB
+
+	* perl/Makefile.PL:
+	Get version numbers from ../configure.in using changed style.
+
+2001-04-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_sirpac.c (librdf_parser_sirpac_get_next_statement):
+	Don't reuse 'p' and change
+	value inside inner loop.
+
+2001-03-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_uri.h, rdf_uri.c, rdf_stream.c, rdf_storage.c,
+	rdf_statement.c, rdf_parser_sirpac.c, rdf_parser_repat.c,
+	rdf_parser_rapier.c, rdf_parser_libwww.c, rdf_parser.c,
+	rdf_node.h, rdf_node.c, rdf_model.c, rdf_list.c, rdf_iterator.c,
+	rdf_init.c, rdf_hash_memory.c, rdf_hash_gdbm.c, rdf_hash_bdb.c,
+	rdf_hash.c, rdf_digest_openssl.c, rdf_digest_md5.c, rdf_digest.c,
+	rdf_concepts.c:
+	Comment documentation updated with librdf_world arguments
+
+	* debian/rules.in, debian/shlibs.local.ex, debian/control,
+	debian/copyright, debian/dirs, debian/doc-base.package,
+	debian/docs, debian/manpage.1.ex, debian/changelog,
+	debian/README.Debian:
+	Debian package support
+
+	* Makefile.am: Added debian dir
+
+	* configure.in:
+	More XML parser config games - note which system library name found
+	Substitute $expat_libs
+	Added debian makefile, rules
+
+	* perl/lib/RDF/RSS.pm:
+	(as_xhtml) format_literal - Changed encoding to UTF-8 and don't quote
+	>255 char entities.
+
+2001-03-27  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* python/RDF.py, perl/lib/RDF/Model.pm, perl/lib/RDF/Iterator.pm:
+	Updated Perl/Python interfaces for changed iterator interface, added
+	deprecated warnings.
+
+	* rdf_stream.c, rdf_storage_list.c, rdf_storage_hashes.c,
+	rdf_storage.c, example4.c, example1.c, Redland.i, rdf_model.c,
+	rdf_list.c, rdf_hash_memory.c, rdf_hash_gdbm.c, rdf_hash_bdb.c,
+	rdf_hash.c:
+	Changed iterator test-end from have_elements to is_end and
+	inverted logic.
+	Replaced iterator_have_elements with !iterator_end
+
+	* rdf_iterator.h:
+	Changed iterator test-end from have_elements to is_end and
+	inverted logic.
+	Renamed librdf_iterator_set_map to librdf_iterator_add_map
+	Added librdf_iterator_map_remove_duplicate_nodes
+
+	* rdf_iterator.c:
+	Changed iterator test-end from have_elements to is_end and
+	inverted logic.
+	Added list of mapping functions for each iterator, not just one.
+	(librdf_iterator_free_iterator_map): Added, helper function for
+	mapping.
+	(librdf_iterator_add_map): Renamed from librdf_iterator_set_map and
+	now uses the list.
+	(librdf_iterator_map_remove_duplicate_nodes): Dummy mapping function,
+	not used yet.
+
+	* configure.in:
+	Set LIBS and LDFLAGS more carefully to set lib search path in LDFLAGS
+	and -lLIb in LIBS
+	Include stdio.h in tests where NULL is referenced.
+
+2001-03-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_storage.c
+	(librdf_storage_get_arcs_in,librdf_storage_get_arcs_out):
+	Added - pass to factory or implement here using
+	librdf_storage_node_stream_to_node_create.  However this isn't good
+	enough since it needs to filter out duplicates but this requires
+	changes to iterator so new FIXME.
+	(librdf_storage_has_arc_in,librdf_storage_has_arc_out): Added -
+	pass to factory or implement here by getting an iterator of answers
+	and checking it isn't empty.
+
+	* rdf_storage.h:
+	Added prototypes for arc in/out tests, get arc in/out methods
+
+	* rdf_model.c (librdf_model_get_arcs_in,librdf_model_get_arcs_out):
+	Added - pass to storage
+	(librdf_model_has_arc_in,librdf_model_has_arc_out): Added - pass
+	to storage
+
+	* rdf_model.h:
+	Added prototypes for arc in/out tests, get arc in/out methods
+
+	* example4.c:
+	Added check for librdf_model_has_arc_in and librdf_model_has_arc_out
+
+	* example4.c:
+	Added arcs-in, arcs-out commands
+
+2001-03-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_utf8.c, rdf_uri.c, rdf_statement.c, rdf_node.c,
+	rdf_heuristics.c, rdf_hash.h, rdf_hash.c, example4.c, example1.c:
+	Added some missing casts found by compiling as C++
+
+	* librdf.h:
+	Removed RDF_World reference - local to rdf_init.c
+
+	* rdf_hash.c (librdf_hash_from_string):
+	Fixed ancient bug in \-escaping.  Added
+	test code for it.
+
+2001-03-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/RSS.pm (description):
+	Take DC description first if there is one
+
+	* perl/lib/RDF/RSS.pm:
+	(as_xhtml) Handle undef arg in sub format_literal
+
+2001-02-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_rapier.c (librdf_parser_rapier_new_statement_handler):
+	Ignore statements with bare XML non-namespaced elements
+	(librdf_parser_rapier_parse_common): Turn on scanning (hunt for
+	rdf:RDF) by default.
+
+2001-02-21  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_rapier.c:
+	Handle receiving XML literal content
+
+	* rdf_parser_sirpac.c:
+	Fixed negative use of librdf_uri_equals
+
+	* python/RDF.py:
+	Provide Python interfaces to librdf_node_equals and librdf_uri_equals.
+
+	* rdf_uri.c (librdf_uri_equals):
+	Fix documentation
+
+	* rdf_statement.c (librdf_statement_equals):
+	Fix documentation
+
+	* perl/lib/RDF/URI.pm, perl/lib/RDF/Node.pm:
+	Provide Perl interfaces to librdf_node_equals and librdf_uri_equals.
+
+	* Redland.i:
+	Export librdf_node_equals and librdf_uri_equals.
+
+	* rdf_storage_hashes.c, rdf_statement.h, rdf_statement.c,
+	rdf_node.h, rdf_node.c:
+	(librdf_node_init, librdf_statement_init) Added methods for
+	initialisation of statically allocated nodes, statements.
+
+	* perl/lib/RDF/Statement.pm (new):
+	Add missing reference to world in constructor.
+
+2001-02-20  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_storage.h, rdf_digest.h, librdf.h:
+	Move some opaque struct defines back to librdf.h
+
+	* tcl/test.tcl, tcl/example.tcl:
+	Update tcl interface for librdf_world changes
+
+	* tcl/Makefile.am:
+	Clean generated pkgIndex.tcl
+
+	* python/RDF.py:
+	Update python interface for librdf_world changes
+
+	* perl/lib/RDF/URI.pm, perl/lib/RDF/Storage.pm,
+	perl/lib/RDF/Statement.pm, perl/lib/RDF/Parser.pm,
+	perl/lib/RDF/Node.pm, perl/lib/RDF/Model.pm, perl/lib/RDF.pm,
+	perl/test.pl:
+	Update perl interface for librdf_world changes
+
+	* Redland.i:
+	Update scripting interface for librdf_world changes
+
+	* example4.c, example3.c, example2.c, example1.c:
+	Update examples for librdf_world changes
+
+	* Many files:
+	Use librdf_world class for all main constructors (not copy
+	constructors).
+
+2001-02-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/README.html:
+	Added link to WWW10 paper pre-print.
+
+2001-02-18  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Many files:
+	New class librdf_world handling Redland environment
+
+	* rdf_parser_sirpac.c (librdf_parser_sirpac_get_next_statement):
+	Handle multi-line literals.
+
+2001-02-13  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/rss-dump.pl:
+	Updated out-of-date RSS 1.0 URIs
+
+	* perl/Makefile.am:
+	Add rss-dump.pl RSS 1.0 example to distribution
+
+2001-02-11  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/RSS.pm (as_xhtml):
+	Quote time keyword in associate array arg.
+
+	* perl/Makefile.PL:
+	Strip -L.. -lrdf when line has no end space
+
+2001-02-09  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/tcl.html:
+	Other tools section updated with more corrections and details for
+	XOTcl and related.
+
+	* docs/tcl.html:
+	Other tools section rewritten to attribute work correctly.
+
+2001-02-07  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* tcl/example.tcl:
+	Remove old meaningless comment
+
+	* tcl/Makefile.am:
+	clean-local: remove junk
+
+	* rdf_node.h:
+	Declare librdf_node_get_type_as_string only when debugging.
+
+	* rdf_node.c (librdf_node_get_type_as_string):
+	Compile only when debugging - meant
+	to be internal.  Remove docs from public view.
+
+	* librdf.h:
+	Use NEED_EXPAT_SOURCE to pick correct header when local expat source
+	is compiled.
+
+	* configure.in:
+	Use NEED_EXPAT_SOURCE when local expat source is compiled in.
+
+	* acconfig.h: Added NEED_EXPAT_SOURCE
+
+	* INSTALL.html:
+	Fix wrong -- options for SiRPACs
+
+	* docs/README.html:
+	Update Title, Copyright year
+
+	* FAQS.html:
+	Updated GPL license combinations - even more complex now.
+
+	* FAQS.html: Added: Redland name #2
+	Added: Java interface note
+
+	* docs/tcl.html:
+	Added warning about file: uris
+
+	* docs/tcl.html: Tidy words.
+
+	* docs/tcl.html:
+	Added other Tcl APIs and apps section.
+
+2001-02-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* README.html: Moved mailing list egroups->yahoo groups
+
+	* configure.in: Bump version to 0.9.9
+
+	* Snapshotted redland_0_9_8 for 0.9.8 release
+
+2001-02-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Many files:
+	Make new boilerplate point to LICENSE not INSTALL - Doh!
+
+	* LICENSE.html:
+	Specify particular versions of licenses.
+
+	* Many files:
+	Pruned license boilerplate
+
+	* python/example.py:
+	Python 2.0 example
+
+	* redland.spec.in:
+	Set release to SNAP by default
+	Use --enable-release to turn on optimisations only when building RPMs
+
+	* configure.in:
+	Added --enable-release to NOT remove -O2 from cflags.
+
+	* docs/README.html, INSTALL.html, README.html:
+	Updates for Tcl interface
+
+	* docs/tcl.html: Tcl Interface
+
+	* docs/Makefile.am: Added tcl.html
+
+	* tcl/test.tcl: Tidied code
+
+	* tcl/example.tcl:
+	Tcl interface example code
+
+	* tcl/Makefile.am: Added example.tcl
+
+	* configure.in: Added Tcl interface
+
+	* Redland.i:
+	Updates for Tcl interface
+
+	* tcl/test.tcl, tcl/README, tcl/Makefile.am:
+	Tcl API
+
+	* python/test/test.py:
+	Updated for changed model add_statment api
+
+2001-01-29  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF.pm (DESTROY):
+	Add () to librdf_destroy_world call to make perl 5.6
+	happy.
+
+2001-01-26  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in:
+	Another xml parser check attempt.
+
+	* configure.in:
+	Need more Xtrick for tests
+
+	* Makefile.am:
+	Added dist-hook rule to allow symlinks to rapier sources and make
+	dist building continue to work.
+
+2001-01-25  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_parser_rapier.c:
+	Remove some unused vars.
+	Updated for changed Rapier API and real Redland URI objects.
+
+	* perl/lib/RDF/RSS.pm (as_xhtml):
+	Don't output : after item link/title if there is no description
+
+2001-01-24  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	s/rapier_parser.c/rapier_parse.c/
+
+	* docs/Makefile.am: Add rapier
+
+	* rdf_parser_rapier.c:
+	Make list of stored statements static and clean up properly.
+	Handle ordinal predicates simply.
+
+	* rdf_parser_rapier.c:
+	Final tweaks to get it basically working.
+
+	* rdf_parser_libwww.c (librdf_parser_libwww_parse_uri_into_model):
+	Fix return code logic.
+
+	* rdf_utf8.c, rdf_uri.c, rdf_stream.c, rdf_storage_list.c,
+	rdf_storage_hashes.c, rdf_storage.c, rdf_statement.c,
+	rdf_parser_sirpac.c, rdf_parser_repat.c, rdf_parser_libwww.c,
+	rdf_node.c, rdf_model.c, rdf_memory.c, rdf_list.c, rdf_iterator.c,
+	rdf_init.c, rdf_heuristics.c, rdf_hash_memory.c, rdf_hash_gdbm.c,
+	rdf_hash_bdb.c, rdf_hash.c, rdf_files.c, rdf_digest_openssl.c,
+	rdf_digest_md5.c, rdf_digest.c, rdf_concepts.c:
+	Define LIBRDF_INTERNAL outside
+
+	* rdf_parser.h, rdf_parser.c:
+	Added Rapier
+
+	* rdf_parser_rapier.c:
+	Rapier RDF parser for Redland
+
+	* Makefile.am: Add rapier
+
+	* configure.in:
+	Improve version calculations
+	Find old and new expat headers
+	Add rapier parser
+	Defined LIBRDF_INTERNAL here
+
+	* acconfig.h: Added Rapier define
+
+	* rdf_parser_redland.c:
+	Renamde rdf_parser_redland.c to rdf_parser_rapier.c
+
+2001-01-23  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* rdf_concepts.h, rdf_concepts.c:
+	Added rdf:li concept
+
+	* perl/lib/RDF/RSS.pm:
+	(as_xhtml) Handle dc:subject being a URI
+
+2001-01-22  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Makefile.am:
+	Add redland.spec.in to dist
+
+2001-01-19  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Storage.pm:
+	Removed use Redland
+	Futile attempt to get proper destruction before perl global
+	destruction phase.
+
+	* perl/lib/RDF/Model.pm:
+	Removed use Redland
+	Improved code comments.
+	Futile attempt to get proper destruction before perl global
+	destruction phase.
+	Removed several node copies no longer needed.
+
+	* perl/lib/RDF.pm: Moved use Redland
+
+	* perl/rss-dump.pl:
+	Added configuration to show properties in proposed modules.
+
+	* rdf_uri.h:
+	Added librdf_new_uri_relative_to_base
+
+	* rdf_uri.c (librdf_new_uri_relative_to_base):
+	Added - start at attempt to create
+	absolute URI from abs URI+relative URI.
+	Added tests for above.
+
+2001-01-18  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Stream.pm:
+	Removed use Redland
+	(new): No need for free statements arg, they are never freed now.
+	(DESTROY): Empty references asap.
+	(next): Update to return a new statement always or undef
+
+	* perl/lib/RDF/Parser.pm:
+	Removed use Redland
+	(parse_as_stream): Fix new RDF::Stream args
+
+	* perl/lib/RDF/Statement.pm:
+	Removed use Redland
+	Tweak debugging message.
+
+	* perl/lib/RDF/URI.pm:
+	Removed use Redland
+
+	* perl/lib/RDF/RSS.pm (as_xhtml):
+	Fix search form output.
+	Updated various methods to use get_targets/get_target etc. as needed.
+	Remove most RDF::Node copying, no longer needed since above methods
+	return new nodes each time.
+	(RDF::RSS::Node new): Remove RDF::Node copy.
+
+	* rdf_stream.c (librdf_stream_next):
+	Changed - returns a new statement object each
+	time.
+	(librdf_stream_end): Return not empty when stream contains a stored
+	item.
+
+	* rdf_storage_hashes.c (librdf_storage_hashes_add_statements):
+	Free statement delivered by
+	stream after using it.
+
+	* rdf_storage.c:
+	(librdf_storage_find_statements) Improve doc comments
+
+	* rdf_parser_libwww.c (librdf_parser_libwww_new_triple_handler):
+	Updated to free statement
+	if added to a model.
+	(librdf_parser_libwww_serialise_finished): Free any statements stored
+	on list before finishing.
+
+	* rdf_model.c:
+	(librdf_model_get_source,librdf_model_get_arc,librdf_model_get_target):
+	Don't free node that is returned, let the application do that now.
+	Amend test code to free statement added to the model.
+
+	* rdf_concepts.c: Added test code
+
+	* example4.c:
+	Update code to free statement after add_statement call.
+
+	* example3.c:
+	Update code to free statement, previously became owned by model after
+	add_statement.
+
+2001-01-17  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/Node.pm:
+	Zap 'use Redland'
+	Tidy debug message.
+
+	* perl/lib/RDF/Iterator.pm:
+	Zap 'use Redland'
+	Tidy comments.
+	(DESTROY) Remove creator reference after tidy
+
+2001-01-16  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/rss-dump.pl:
+	Emit literals as latin1, not UTF8
+
+	* perl/example.pl:
+	Change wording; add_statement does not take ownership of adding
+	statement
+
+	* Makefile.am:
+	Added rdf_concepts_test to TESTS
+
+	* example4.c:
+	Remove extra node declaration.
+
+	* example4.c:
+	Added test code for source, arc, target model methods
+
+2001-01-08  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* perl/lib/RDF/RSS.pm:
+	Fixed imageAlign doc
+
+	* perl/lib/RDF/RSS.pm:
+	Tidied as_xhtml documentation.
+
+	* perl/lib/RDF/RSS.pm (as_xhtml):
+	Moved to METHODS section.
+
+	* perl/lib/RDF/RSS.pm (as_xhtml):
+	Added.
+
+2001-01-05  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* configure.in: Bump version to 0.9.8
+
+	* Snapshotted redland_0_9_7 for 0.9.7 release
+
+	* redland.spec.in: Mising % typo
+	Make sure default python is used even if other versions are present.
+
+	* redland.spec.in:
+	Added perl manual pages to docs in perl rpm
+
+	* Makefile.am:
+	Add rdf_utf8.h to installed includes
+
+	* NEWS.html:
+	Updated for 0.9.7 release
+
+2001-01-04  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* Redland.i:
+	Added librdf_node_get_literal_value_as_latin1
+
+	* rdf_node.h:
+	Added prototype for librdf_node_get_literal_value_as_latin1
+
+	* rdf_node.c (librdf_node_get_literal_value_as_latin1):
+	Added to return literal value converted from UTF-8 to ISO Latin-1
+	(may discard chars) using utf8 utility functions.
+	Added test for above.
+
+	* rdf_utf8.c (librdf_utf8_to_latin1):
+	Fixed off-by-one in allocating memory, copying.
+
+	* rdf_utf8.h:
+	Include rdf_types here to define u32 if needed
+
+	* perl/lib/RDF/URI.pm, perl/lib/RDF/Stream.pm,
+	perl/lib/RDF/Storage.pm, perl/lib/RDF/Statement.pm,
+	perl/lib/RDF/RSS.pm, perl/lib/RDF/Parser.pm, perl/lib/RDF/Node.pm,
+	perl/lib/RDF/Iterator.pm:
+	Added SYNOPSIS pod section.
+	Made module be 'strict' - fix some things for that.
+
+	* perl/lib/RDF/Model.pm:
+	Added SYNOPSIS pod section.
+	Made module be 'strict' - fix some things for that.
+	Added warning about deprecated get_sources,get_arcs,get_targets
+
+	* rdf_model.c:
+	Added casts for librdf_node pointers retrived from iterators (for c++)
+
+	* rdf_files.c:
+	template => file_template (for c++)
+
+	* configure.in:
+	Make Repat compile with (old) expat in sources as well as old/new
+	expat in system.
+	Remove Repat portability hacks, having updated sources.
+
+	* repat/rdftest.c, repat/rdfparse.h, repat/rdfdump.c:
+	Portability fixes - includes, _MAX_PATH => PATH_MAX
+
+	* Makefile.am:
+	Added DIST_SUBDIRS so distribution contains even
+	conditionally-included sub directories
+	Fixed wrong -D defines in MEM debugging macros
+
+2001-01-03  Dave Beckett  <Dave.Beckett@bristol.ac.uk>
+
+	* docs/perl.html:
+	Added links to perl pod docs
+
+	* docs/api.sgml.in: Added utf8 class
+
+	* rdf_stream.h:
+	Protect private method
+
+	* rdf_iterator.c: Comment improvement
+
+	* rdf_list.h (librdf_list_clear,librdf_list_foreach):
+	Added prototypes
+
+	* rdf_list.c (librdf_list_clear):
+	Added to empty the list
+	(librdf_list_foreach): Added to walk the list and apply function to
+	each data node
+
+	* rdf_storage_list.c (librdf_storage_list_add_statement):
+	Don't dispose of passed in statement.
+
+	* rdf_storage_hashes.c:
+	Renamed some incredibly long identifiers to be just very long
+	instead.
+
+	* rdf_model.c (librdf_model_add_statement):
+	No longer owns incoming statement -
+	just too annoying to use in practice.
+	(librdf_model_get_source,librdf_model_get_arc,librdf_model_get_target):
+	Added, returning one arbitrary matching node for given pair of nodes
+
+	* rdf_model.h:
+	(librdf_model_get_source,librdf_model_get_arc,librdf_model_get_target):
+	Added, returning one arbitrary matching node for given pair of nodes
+
+	* Redland.i, python/RDF.py:
+	Updated for changes to Model API
+
+	* perl/lib/RDF/Stream.pm, perl/lib/RDF/Storage.pm,
+	perl/lib/RDF/Statement.pm, perl/lib/RDF/Node.pm:
+	Tidy debugging messages.
+
+	* perl/lib/RDF/Model.pm:
+	Tidy debugging messages.
+	Remove reference to storage from iterator constructors
+
+	* perl/lib/RDF.pm:
+	Added RDF::World class (hidden) to do global destruction -
+	librdf_destroy_world
+
+	* perl/Makefile.am: Pass in MEM_LIBS
+
+	* perl/Makefile.PL:
+	Simplified use of linking libs; maybe.
+	Pull in memory debugging libs
+
+	* perl/lib/RDF.pm, perl/lib/RDF/URI.pm, perl/lib/RDF/Stream.pm,
+	perl/lib/RDF/Storage.pm, perl/lib/RDF/Statement.pm,
+	perl/lib/RDF/RSS.pm, perl/lib/RDF/Parser.pm, perl/lib/RDF/Node.pm,
+	perl/lib/RDF/Model.pm, perl/lib/RDF/Iterator.pm:
+	Added plain old documentation (POD)

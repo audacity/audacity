@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Test 1-09 : prefix
+
+SELECT *
+SOURCE <model1.nt>
+WHERE  (<prefix:/r-1>, ?y, "v-1-2")
+USING  prefix FOR <http://rdf.hp.com>

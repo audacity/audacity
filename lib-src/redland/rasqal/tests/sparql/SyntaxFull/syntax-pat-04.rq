@@ -1,0 +1,8 @@
+# No DOT between non-triples patterns
+PREFIX : <http:/example.org/ns#> 
+SELECT *
+{
+  OPTIONAL{:x :y :z} 
+  ?a :b :c 
+  { :x1 :y1 :z1 } UNION { :x2 :y2 :z2 }
+}

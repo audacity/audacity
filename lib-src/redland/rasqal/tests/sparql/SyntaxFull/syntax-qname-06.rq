@@ -1,0 +1,3 @@
+PREFIX :  <#> 
+SELECT *
+WHERE { : : : . }

@@ -1,0 +1,7 @@
+// (c) Copyright 2002 Hewlett-Packard Development Company, LP
+// Tutorial query 3
+
+SELECT ?givenName
+FROM <vc-db-1.rdf>
+WHERE (?y, <http://www.w3.org/2001/vcard-rdf/3.0#Family>, "Smith") ,
+      (?y, <http://www.w3.org/2001/vcard-rdf/3.0#Given>, ?givenName)

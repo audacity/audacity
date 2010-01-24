@@ -1,0 +1,4 @@
+# Trailing ;
+PREFIX :   <http://example/ns#>
+SELECT * WHERE
+{ :s :p :o ; FILTER(?x) }

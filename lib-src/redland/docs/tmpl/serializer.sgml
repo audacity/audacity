@@ -1,0 +1,271 @@
+<!-- ##### SECTION Title ##### -->
+Serializers
+
+<!-- ##### SECTION Short_Description ##### -->
+RDF serializers from triples to syntax.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Provides class to create serializers to turn RDF graphs into syntax
+in either files or strings.  Serializer features can be set, which
+are passed down to Raptor and errors and warnings that are returned
+can be retrieved by callbacks.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_serializer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_serializer_factory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_serializer_enumerate ##### -->
+<para>
+
+</para>
+
+@world: 
+@counter: 
+@name: 
+@label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_register_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@label: 
+@mime_type: 
+@uri_string: 
+@factory: 
+
+
+<!-- ##### FUNCTION librdf_new_serializer ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@mime_type: 
+@type_uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_new_serializer_from_factory ##### -->
+<para>
+
+</para>
+
+@world: 
+@factory: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_serializer ##### -->
+<para>
+
+</para>
+
+@serializer: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_model ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@handle: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_model_to_file_handle ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@handle: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_model_to_file ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@name: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_model_to_string ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@base_uri: 
+@model: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_model_to_counted_string ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@base_uri: 
+@model: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_model_to_iostream ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@base_uri: 
+@model: 
+@iostr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_stream_to_counted_string ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@base_uri: 
+@stream: 
+@length_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_stream_to_file ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@name: 
+@base_uri: 
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_stream_to_file_handle ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@handle: 
+@base_uri: 
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_stream_to_iostream ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@base_uri: 
+@stream: 
+@iostr: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_serialize_stream_to_string ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@base_uri: 
+@stream: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_set_error ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@user_data: 
+@error_fn: 
+
+
+<!-- ##### FUNCTION librdf_serializer_set_warning ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@user_data: 
+@warning_fn: 
+
+
+<!-- ##### FUNCTION librdf_serializer_get_feature ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@feature: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_set_feature ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@feature: 
+@value: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_serializer_set_namespace ##### -->
+<para>
+
+</para>
+
+@serializer: 
+@uri: 
+@prefix: 
+@Returns: 
+
+

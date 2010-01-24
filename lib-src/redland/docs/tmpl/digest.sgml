@@ -1,0 +1,121 @@
+<!-- ##### SECTION Title ##### -->
+Digests
+
+<!-- ##### SECTION Short_Description ##### -->
+Content digests.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Create a message digest over a block of data.  Includes implementations
+of MD5, RMD160 and SHA1.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF librdf_digest ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### TYPEDEF librdf_digest_factory ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION librdf_new_digest ##### -->
+<para>
+
+</para>
+
+@world: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_free_digest ##### -->
+<para>
+
+</para>
+
+@digest: 
+
+
+<!-- ##### FUNCTION librdf_digest_init ##### -->
+<para>
+
+</para>
+
+@digest: 
+
+
+<!-- ##### FUNCTION librdf_digest_update ##### -->
+<para>
+
+</para>
+
+@digest: 
+@buf: 
+@length: 
+
+
+<!-- ##### FUNCTION librdf_digest_update_string ##### -->
+<para>
+
+</para>
+
+@digest: 
+@string: 
+
+
+<!-- ##### FUNCTION librdf_digest_final ##### -->
+<para>
+
+</para>
+
+@digest: 
+
+
+<!-- ##### FUNCTION librdf_digest_get_digest ##### -->
+<para>
+
+</para>
+
+@digest: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_digest_get_digest_length ##### -->
+<para>
+
+</para>
+
+@digest: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_digest_to_string ##### -->
+<para>
+
+</para>
+
+@digest: 
+@Returns: 
+
+
+<!-- ##### FUNCTION librdf_digest_print ##### -->
+<para>
+
+</para>
+
+@digest: 
+@fh: 
+
+

@@ -1,0 +1,60 @@
+/* This duplication sucks :( */
+
+/* HTML */
+
+/** @mainpage
+ * @section Overview
+ * 
+ * SLV2 is a host library to simplify the discovery, loading, and use of LV2
+ * plugins (http://lv2plug.in).
+ * 
+ * SLV2 is written in standard C99, and depends only on the Redland RDF library
+ * (http://librdf.org).  It should be portable to any system with Redland, and
+ * is tested on various GNU/Linux distributions (often), and MacOS X (occasionally).
+ * 
+ * The Data (RDF) and code (shared library) functionality in SLV2 is strictly
+ * separated so it is simple to control where each is used (e.g. it is
+ * possible to discover/investigate plugins and related data without loading
+ * any shared libraries, avoiding the associated risks).
+ * 
+ * The SLV2 documentation is broken into several pages:
+ * 
+ * \li \link slv2_world slv2_world \endlink - Global library initialisation, state, plugin discovery, etc.
+ * 
+ * \li \link slv2_util slv2_util \endlink - Generally useful utility functions
+ * 
+ * \li \link slv2_collections slv2_collections \endlink - Collections of values (literals and URIs) and objects
+ * 
+ * \li \link slv2_data slv2_data \endlink - Access to plugin RDF data
+ * 
+ * \li \link slv2_library slv2_library \endlink - Access to plugin shared libraries
+ */
+
+
+/* man page */
+
+/** @defgroup slv2 SLV2
+ * SLV2 is a host library to simplify the discovery, loading, and use of LV2
+ * plugins (http://lv2plug.in).
+ * 
+ * SLV2 is written in standard C99, and depends only on the Redland RDF library
+ * (http://librdf.org).  It should be portable to any system with Redland, and
+ * is tested on various GNU/Linux distributions (often), and MacOS X (occasionally).
+ * 
+ * The Data (RDF) and code (shared library) functionality in SLV2 is strictly
+ * separated so it is simple to control where each is used (e.g. it is
+ * possible to discover/investigate plugins and related data without loading
+ * any shared libraries, avoiding the associated risks).
+ * 
+ * The SLV2 documentation is broken into several pages:
+ * 
+ * \li \link slv2_world slv2_world \endlink - Global library initialisation, state, plugin discovery, etc.
+ * 
+ * \li \link slv2_util slv2_util \endlink - Generally useful utility functions
+ * 
+ * \li \link slv2_collections slv2_collections \endlink - Collections of values (literals and URIs) and objects
+ * 
+ * \li \link slv2_data slv2_data \endlink - Access to plugin RDF data
+ * 
+ * \li \link slv2_library slv2_library \endlink - Access to plugin shared libraries
+ */

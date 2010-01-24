@@ -1,0 +1,26 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="tutorial-initialising-finishing">
+<title>Initialising and Finishing using the Library</title>
+
+<para>Raptor has a single initialising function and a single
+terminating function.  The initialising function must be called
+before any other Raptor API functions are called:
+<programlisting>
+  raptor_init();
+  ...
+  raptor_finish();
+</programlisting>
+</para>
+
+<para>It is safe to call these functions more than once.  But don't
+do that!</para>
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("raptor-docs.xml" "book" "part")
+End:
+-->
