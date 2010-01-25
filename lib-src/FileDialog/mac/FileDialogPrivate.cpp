@@ -55,6 +55,7 @@ static ControlID kButtonID = { kCustom, kButton };
 
 struct CustomData {
    FileDialog     *me;
+   WindowRef      window;
    Rect           bounds;
    ControlRef     userpane;
    ControlRef     choice;
@@ -192,9 +193,129 @@ static void HandleNormalEvents(NavCBRecPtr callBackParms, CustomData *data)
    }			
 }
 
+static const EventTypeSpec namedAttrsList[] =
+{
+    { kEventClassAccessibility , kEventAccessibleGetNamedAttribute },
+};
+
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
+static OSStatus SetElement(wxMacCarbonEvent & event, HIObjectRef objectRef,
+                           UInt64 id, int parm)
+{
+    OSStatus result = eventNotHandledErr;
+    AXUIElementRef elem;
+
+    elem = AXUIElementCreateWithHIObjectAndIdentifier(objectRef, id);
+    if (elem) {
+        result = event.SetParameter(parm,
+                                    typeCFTypeRef,
+                                    sizeof(elem),
+                                    &elem);
+        CFRelease(elem);
+    }
+
+    return result;
+}
+
+static pascal OSStatus HandlePaneEvents(EventHandlerCallRef handlerRef, EventRef eventRef, void *data)
+{
+    wxMacCarbonEvent event(eventRef);
+    CustomData *dt = (CustomData *) data;
+    OSStatus result = eventNotHandledErr;
+
+    switch (event.GetKind())
+    {
+        case kEventAccessibleGetNamedAttribute:
+        {
+            CFStringRef attr;
+
+            require_noerr(event.GetParameter(kEventParamAccessibleAttributeName,
+                                             typeCFTypeRef,
+                                             sizeof(attr),
+                                             &attr), ParameterError);
+
+            if (false)
+            {
+            }
+            else if (CFStringCompare(attr, kAXRoleAttribute, 0) == kCFCompareEqualTo) {
+                CFStringRef role = kAXGroupRole;
+        
+                result = event.SetParameter(kEventParamAccessibleAttributeValue,
+                                            typeCFStringRef,
+                                            sizeof(role),
+                                            &role);
+        
+                require_noerr(result, ParameterError);
+            }
+            else if (CFStringCompare(attr, kAXRoleDescriptionAttribute, 0) == kCFCompareEqualTo) {
+                CFStringRef role = kAXGroupRole;
+                CFStringRef desc;
+        
+                desc = HICopyAccessibilityRoleDescription(role, NULL);
+                if (desc) {
+                    result = event.SetParameter(kEventParamAccessibleAttributeValue,
+                                                typeCFStringRef,
+                                                sizeof(desc),
+                                                &desc);
+        
+                    CFRelease(desc);
+        
+                    require_noerr(result, ParameterError);
+                }
+            }
+            else if (CFStringCompare(attr, kAXParentAttribute, 0) == kCFCompareEqualTo) {
+                HIViewRef viewRef = HIViewGetSuperview(dt->userpane);
+                if (viewRef) {
+                    result = SetElement(event, (HIObjectRef) viewRef, 0,
+                                        kEventParamAccessibleAttributeValue);
+            
+                    require_noerr(result, ParameterError);
+                }
+            }
+            else if (CFStringCompare(attr, kAXWindowAttribute, 0) == kCFCompareEqualTo) {
+                WindowRef winRef = HIViewGetWindow((HIViewRef) dt->userpane);
+        
+                if (winRef) {
+                    result = SetElement(event, (HIObjectRef) winRef, 0,
+                                        kEventParamAccessibleAttributeValue);
+        
+                    require_noerr(result, ParameterError);
+                }
+            }
+            else if (CFStringCompare(attr, kAXTopLevelUIElementAttribute, 0) == kCFCompareEqualTo) {
+                if (dt->window) {
+                    result = SetElement(event, (HIObjectRef) dt->window, 0,
+                                        kEventParamAccessibleAttributeValue);
+        
+                    require_noerr(result, ParameterError);
+                }
+            }
+            else {
+                result = eventNotHandledErr;
+            }
+        }
+        break;
+    }
+
+ParameterError:
+    return result;
+}
+
+DEFINE_ONE_SHOT_HANDLER_GETTER(HandlePaneEvents);
+
 static void HandleStartEvent(NavCBRecPtr callBackParms, CustomData *data)
 {
    CreateUserPaneControl(callBackParms->window, &data->bounds, kControlSupportsEmbedding, &data->userpane);
+
+   InstallControlEventHandler(data->userpane,
+                              GetHandlePaneEventsUPP(),
+                              GetEventTypeCount(namedAttrsList),
+                              namedAttrsList,
+                              data,
+                              NULL);
+
    EmbedControl(data->choice, data->userpane);
    EmbedControl(data->button, data->userpane);
    
@@ -430,6 +551,7 @@ int FileDialog::ShowModal()
    
    SetRect(&myData.bounds, 0, 0, 0, 0);
    myData.me = this;
+   myData.window = NULL;
    myData.defaultLocation = m_dir;
    myData.userpane = NULL;
    myData.choice = NULL;
@@ -460,7 +582,7 @@ int FileDialog::ShowModal()
       }
       
       SetRect(&r, 0, margin, 0, 0);
-      CreatePopupButtonControl(NULL, &r, CFSTR("Format:"), -12345, false, 50, teJustLeft, normal, &myData.choice);
+      CreatePopupButtonControl(NULL, &r, CFSTR("Format:"), -12345, true, -1, teJustLeft, normal, &myData.choice);
       SetControlID(myData.choice, &kChoiceID);
       SetControlPopupMenuRef(myData.choice, myData.menu);
       SetControl32BitMinimum(myData.choice, 1);
@@ -470,6 +592,8 @@ int FileDialog::ShowModal()
       SizeControl(myData.choice, r.right - r.left, r.bottom - r.top);
       UnionRect(&myData.bounds, &r, &myData.bounds);
       gap = 15;
+
+      HIObjectSetAuxiliaryAccessibilityAttribute((HIObjectRef)myData.choice, 0, kAXDescriptionAttribute, CFSTR("Format"));
    }
    
    if (!m_buttonlabel.IsEmpty())
@@ -542,27 +666,27 @@ int FileDialog::ShowModal()
    
    if (err == noErr)
    {
-      WindowRef w = NavDialogGetWindow(dialog);
+      myData.window = NavDialogGetWindow(dialog);
       Rect r;
-      
+
       // This creates our "fake" dialog with the same dimensions as the sheet so
       // that Options dialogs will center properly on the sheet.  The "fake" dialog
       // is never actually seen.
-      GetWindowBounds(w,kWindowStructureRgn, &r);
+      GetWindowBounds(myData.window, kWindowStructureRgn, &r);
       wxDialog::Create(NULL,  // no parent...otherwise strange things happen
                        wxID_ANY,
                        wxEmptyString,
                        wxPoint(r.left, r.top),
                        wxSize(r.right - r.left, r.bottom - r.top));
       
-      BeginAppModalStateForWindow(w);
+      BeginAppModalStateForWindow(myData.window);
       
       while (myData.showing)
       {
          wxTheApp->MacDoOneEvent();
       }
       
-      EndAppModalStateForWindow(w);
+      EndAppModalStateForWindow(myData.window);
    }
    
    // clean up filter related data, etc.
