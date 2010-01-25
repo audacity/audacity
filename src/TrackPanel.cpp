@@ -443,7 +443,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mBacking(NULL),
      mRefreshBacking(false),
      mAutoScrolling(false),
-     vrulerSize(36,0)
+     vrulerSize(36,0),
+     mVertScrollRemainder(0)
 #ifndef __WXGTK__   //Get rid if this pragma for gtk
 #pragma warning( default: 4355 )
 #endif
@@ -4144,8 +4145,8 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out and vertical scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
-   int steps = event.m_wheelRotation /
-      (event.m_wheelDelta > 0 ? event.m_wheelDelta : 120);
+   double steps = event.m_wheelRotation /
+      (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
    if (event.ShiftDown())
    {
@@ -4160,10 +4161,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
       int trackLeftEdge = GetLeftOffset();
       
       double center_h = PositionToTime(event.m_x, trackLeftEdge);
-      if (steps < 0)
-         mViewInfo->zoom = wxMax(mViewInfo->zoom / (2.0 * -steps), gMinZoom);
-      else
-         mViewInfo->zoom = wxMin(mViewInfo->zoom * (2.0 * steps), gMaxZoom);
+      mViewInfo->zoom = wxMin(mViewInfo->zoom * pow(2.0, steps), gMaxZoom);
 
       double new_center_h = PositionToTime(event.m_x, trackLeftEdge);
       mViewInfo->h += (center_h - new_center_h);
@@ -4173,7 +4171,10 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
    } else
    {
       // MM: Zoom up/down when used without modifier keys
-      mListener->TP_ScrollUpDown(-steps * 4);
+      double lines = steps * 4 + mVertScrollRemainder;
+      mVertScrollRemainder = lines - floor(lines);
+      lines = floor(lines);
+      mListener->TP_ScrollUpDown((int)-lines);
    }
 }
 

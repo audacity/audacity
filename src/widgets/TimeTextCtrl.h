@@ -154,6 +154,9 @@ private:
    double         mScalingFactor;
    bool           mNtscDrop;
 
+   // Keeps track of extra fractional scrollwheel steps
+   double         mScrollRemainder;
+
    DECLARE_EVENT_TABLE()
 };
 

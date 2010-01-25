@@ -1036,19 +1036,18 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
    }
    else if( event.m_wheelRotation != 0 )
    {
-
       //Calculate the number of steps in a given direction this event
       //represents (allows for two or more clicks on a single event.)
-      int steps =  event.m_wheelRotation /
-         (event.m_wheelDelta > 0 ? event.m_wheelDelta : 120);
+      double steps =  event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
-      if( steps < 0 )
+      if( steps < 0.0 )
       {
-         Decrease( -steps );
+         Decrease( (float)-steps );
       }
       else
       {
-         Increase( steps );
+         Increase( (float)steps );
       }
       SendUpdate( mCurrentValue );
    }

@@ -982,15 +982,18 @@ void TimeTextCtrl::OnMouse(wxMouseEvent &event)
       OnContext(e);
    }
    else if( event.m_wheelRotation != 0 ) {
-      int steps =  event.m_wheelRotation /
-         (event.m_wheelDelta > 0 ? event.m_wheelDelta : 120);
+      double steps = event.m_wheelRotation /
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0) + 
+         mScrollRemainder;
+      mScrollRemainder = steps - floor(steps);
+      steps = floor(steps);
 
-      if (steps < 0) {
-         Decrease(-steps);
+      if (steps < 0.0) {
+         Decrease((int)-steps);
          Updated();
       }
       else {
-         Increase(steps);
+         Increase((int)steps);
          Updated();
       }
    }

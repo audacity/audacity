@@ -578,6 +578,9 @@ private:
 
    wxString mSoloPref;
 
+   // Keeps track of extra fractional vertical scroll steps
+   double mVertScrollRemainder;
+
  private:
 
    // The screenshot class needs to access internals
