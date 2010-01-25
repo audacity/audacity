@@ -7721,7 +7721,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -r \"$TOPLEVEL/nyquist\" \"$TARGET_BUILD_DIR\"\nfind \"$TARGET_BUILD_DIR/nyquist\" -name CVS -print0 | xargs -0 rm -rf\n";
+			shellScript = "cp -pPR \"$TOPLEVEL/nyquist\" \"$TARGET_BUILD_DIR\"\nfind \"$TARGET_BUILD_DIR/nyquist\" -name .svn -print0 | xargs -0 rm -rf\n";
 		};
 		2878AF020F340FE700396567 /* Copy plug-ins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7737,7 +7737,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -r \"$TOPLEVEL/plug-ins\" \"$TARGET_BUILD_DIR\"\nfind \"$TARGET_BUILD_DIR/plug-ins\" -name CVS -print0 | xargs -0 rm -rf\n";
+			shellScript = "cp -pPR \"$TOPLEVEL/plug-ins\" \"$TARGET_BUILD_DIR\"\nfind \"$TARGET_BUILD_DIR/plug-ins\" -name .svn -print0 | xargs -0 rm -rf\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
