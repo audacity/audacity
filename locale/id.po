@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Indo 1.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-11-06 22:36+0000\n"
+"POT-Creation-Date: 2009-12-30 16:20+0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: g <g@g>\n"
+"Last-Translator: Lukmanul Hakim <lukmanulhakim14@gmail.com>\n"
 "Language-Team: Audacityn' Indonesia <lukmanulhakim14@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +21,8 @@ msgid "OK... Audacious!"
 msgstr "OK... Bersenanglah dengan Audacity!"
 
 #: AboutDialog.cpp:192
-msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Windows 98/ME, use version 1.2.6 or 1.3.7 Beta; for Mac OS 9, version 1.0.0."
-msgstr "Audacity adalah program bebas dan gratis yang dicanangkan oleh para<a href=\"http://audacity.sourceforge.net/community/developers\">pengembang</a> di seluruh dunia. Kami berterima kasih kepada <a href=\"http://sourceforge.net\">Sourceforge.net</a>, untuk penempatan proyek kami. Audacity tersedia untuk Windows 98 atau yang lebih baru, Mac OS X, Linux, atau sistem operasi lainnya yang mirip dengan sistem operasi Unix.Untuk Windows 98/ME, gunakan versi 1.2.6 atau 1.3.7 beta; untuk Mac OS 9, versi 1.0.0."
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Windows 98/ME, use version 1.2.6 or 1.3.7 Beta; for Mac OS 9, version 1.0.0."
+msgstr "Audacity adalah program bebas dan gratis yang dicanangkan oleh para<a href=\"http://audacity.sourceforge.net/community/developers\">pengembang</a> di seluruh dunia. Kami berterima kasih kepada <a href=\"http://sourceforge.net\">Sourceforge.net</a> dan <a href=\"http://code.google.com\">Google Code</a> untuk penempatan proyek kami. Audacity tersedia untuk Windows 98 atau yang lebih baru, Mac OS X, Linux, atau sistem operasi lainnya yang mirip dengan sistem operasi Unix. Untuk Windows 98/ME, gunakan versi 1.2.6 atau 1.3.7 beta; untuk Mac OS 9, versi 1.0.0."
 
 #: AboutDialog.cpp:196
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
@@ -211,21 +211,21 @@ msgstr "Folder pengaturan:"
 msgid "GPL License"
 msgstr "Lisensi GPL"
 
-#: AudacityApp.cpp:752
-#: Project.cpp:2242
+#: AudacityApp.cpp:743
+#: Project.cpp:2176
 #, c-format
 msgid "%s is already open in another window."
 msgstr "%s sudah dibuka di window yang lain."
 
-#: AudacityApp.cpp:754
-#: Project.cpp:2244
-#: Project.cpp:2367
-#: Project.cpp:2548
-#: Project.cpp:2709
+#: AudacityApp.cpp:745
+#: Project.cpp:2178
+#: Project.cpp:2301
+#: Project.cpp:2482
+#: Project.cpp:2647
 msgid "Error opening project"
 msgstr "Error dalam membuka proyek"
 
-#: AudacityApp.cpp:780
+#: AudacityApp.cpp:771
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -236,54 +236,54 @@ msgstr ""
 "\n"
 "Ini sudah dibuang dari daftar file terkini."
 
-#: AudacityApp.cpp:899
+#: AudacityApp.cpp:909
 msgid "Master Gain Control"
 msgstr "Pengendali Master"
 
-#: AudacityApp.cpp:900
+#: AudacityApp.cpp:910
 msgid "Input Meter"
 msgstr "Meter Input"
 
-#: AudacityApp.cpp:901
+#: AudacityApp.cpp:911
 msgid "Output Meter"
 msgstr "Meter Output"
 
-#: AudacityApp.cpp:1060
+#: AudacityApp.cpp:1070
 #: Menus.cpp:206
 msgid "&New"
 msgstr "&Baru"
 
-#: AudacityApp.cpp:1061
+#: AudacityApp.cpp:1071
 #: Menus.cpp:210
 msgid "&Open..."
 msgstr "B&uka..."
 
-#: AudacityApp.cpp:1062
+#: AudacityApp.cpp:1072
 msgid "Open &Recent..."
 msgstr "Buka yang &Sebelumnya..."
 
-#: AudacityApp.cpp:1063
-#: Menus.cpp:984
+#: AudacityApp.cpp:1073
+#: Menus.cpp:991
 msgid "&About Audacity..."
 msgstr "&Tentang Audacity"
 
-#: AudacityApp.cpp:1064
+#: AudacityApp.cpp:1074
 msgid "&Preferences..."
 msgstr "&Preferensi..."
 
-#: AudacityApp.cpp:1155
-#: AudacityApp.cpp:1232
+#: AudacityApp.cpp:1165
+#: AudacityApp.cpp:1242
 #, c-format
 msgid "Using block size of %ld\n"
 msgstr "Menggunakan ukuran blok %ld\n"
 
-#: AudacityApp.cpp:1177
-#: AudacityApp.cpp:1247
+#: AudacityApp.cpp:1187
+#: AudacityApp.cpp:1257
 #, c-format
 msgid "Unknown command line option: %s\n"
 msgstr "Opsi baris komando tidak diketahui: %s\n"
 
-#: AudacityApp.cpp:1406
+#: AudacityApp.cpp:1413
 msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -291,11 +291,11 @@ msgstr ""
 "Audacity tidak bisa mencari tempat untuk meletakkan file temporary.\n"
 "Tolong masukkan direktori yang benar ke dalam dialog preferensi."
 
-#: AudacityApp.cpp:1412
+#: AudacityApp.cpp:1419
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
 msgstr "Audacity sekarang ingin keluar. Tolong aktifkan Audacity kembali untuk menggunakan direktori file temporary yang baru."
 
-#: AudacityApp.cpp:1444
+#: AudacityApp.cpp:1451
 msgid ""
 "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -305,7 +305,7 @@ msgstr ""
 "hilangnya data atau dapat merusak sistem Anda.\n"
 "\n"
 
-#: AudacityApp.cpp:1451
+#: AudacityApp.cpp:1458
 msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
@@ -313,19 +313,19 @@ msgstr ""
 "Audacity tidak bisa mengunci direktori file temporary.\n"
 "Folder ini mungkin digunakan oleh program Audacity yang Lain.\n"
 
-#: AudacityApp.cpp:1453
+#: AudacityApp.cpp:1460
 msgid "Do you still want to start Audacity?"
 msgstr "Anda ingin tetap menjalankan Audacity?"
 
-#: AudacityApp.cpp:1455
+#: AudacityApp.cpp:1462
 msgid "Error locking temporary folder"
 msgstr "Error dalam mengunci folder temporary"
 
-#: AudacityApp.cpp:1493
+#: AudacityApp.cpp:1500
 msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "Sistem telah mendeteksi bahwa Audacity yang lainnya sedang berjalan.\n"
 
-#: AudacityApp.cpp:1495
+#: AudacityApp.cpp:1502
 msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -333,29 +333,29 @@ msgstr ""
 "Gunakan komando Baru atau Buka waktu menjalankan\n"
 "Audacity untuk membuka beberapa proyek sekaligus.\n"
 
-#: AudacityApp.cpp:1496
+#: AudacityApp.cpp:1503
 msgid "Audacity is already running"
 msgstr "Audacity sudah berjalan"
 
-#: AudacityApp.cpp:1513
+#: AudacityApp.cpp:1520
 msgid "Command-line options supported:"
 msgstr "Dukungan opsi baris komando"
 
 #. i18n-hint: '-help' is the option and needs to stay in
 #. * English. This displays a list of available options
-#: AudacityApp.cpp:1516
+#: AudacityApp.cpp:1523
 msgid "\t-help (this message)"
 msgstr "\t-bantuan (pesan ini)"
 
 #. i18n-hint '-version' needs to stay in English.
-#: AudacityApp.cpp:1518
+#: AudacityApp.cpp:1525
 msgid "\t-version (display Audacity version)"
 msgstr "\t-versi (tampilan versi Audacity)"
 
 #. i18n-hint '-test' is the option and needs to stay in
 #. * English. This runs a set of automatic tests on audacity
 #. * itself
-#: AudacityApp.cpp:1522
+#: AudacityApp.cpp:1529
 msgid "\t-test (run self diagnostics)"
 msgstr "\t-test (jalankan diagnosa otomatis)"
 
@@ -363,15 +363,15 @@ msgstr "\t-test (jalankan diagnosa otomatis)"
 #. * English. 'nnn' is any integer number. This controls the
 #. * size pieces that audacity uses when writing files to the
 #. * disk
-#: AudacityApp.cpp:1527
+#: AudacityApp.cpp:1534
 msgid "\t-blocksize nnn (set max disk block size in bytes)"
 msgstr "\t-blocksize nnn (ukuran blok pada disk maksimum dalam byte)"
 
-#: AudacityApp.cpp:1528
+#: AudacityApp.cpp:1535
 msgid "In addition, specify the name of an audio file or Audacity project to open it."
 msgstr "Tambahan, spesifikasikan nama file audio atau proyek audacity terlebih dahul untuk membukanya."
 
-#: AudacityApp.cpp:1839
+#: AudacityApp.cpp:1846
 msgid ""
 "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
@@ -383,15 +383,15 @@ msgstr ""
 "\n"
 "Hubungkan terlebih dahulu baru file tersebut bisa dibuka dengan klik ganda?"
 
-#: AudacityApp.cpp:1840
+#: AudacityApp.cpp:1847
 msgid "Audacity Project Files"
 msgstr "File Proyek Audacity"
 
-#: AudioIO.cpp:283
+#: AudioIO.cpp:311
 msgid "Could not find any audio devices.\n"
 msgstr "Tidak dapat mencari perangkat audio.\n"
 
-#: AudioIO.cpp:284
+#: AudioIO.cpp:312
 msgid ""
 "You will not be able to play or record audio.\n"
 "\n"
@@ -399,20 +399,20 @@ msgstr ""
 "Anda tidak akan bisa memainkan ataupun merekam audio.\n"
 "\n"
 
-#: AudioIO.cpp:287
-#: AudioIO.cpp:307
+#: AudioIO.cpp:315
+#: AudioIO.cpp:335
 msgid "Error: "
 msgstr "Error:"
 
-#: AudioIO.cpp:290
+#: AudioIO.cpp:318
 msgid "Error Initializing Audio"
 msgstr "Error Menginisialisasi audio"
 
-#: AudioIO.cpp:303
+#: AudioIO.cpp:331
 msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "Ada kesalahan daam menginisialisasi latar i/o midi.\n"
 
-#: AudioIO.cpp:304
+#: AudioIO.cpp:332
 msgid ""
 "You will not be able to play midi.\n"
 "\n"
@@ -420,11 +420,11 @@ msgstr ""
 "Anda tidak akan bisa memainkan midi.\n"
 "\n"
 
-#: AudioIO.cpp:310
+#: AudioIO.cpp:338
 msgid "Error Initializing Midi"
 msgstr "Error Menginisialisasi Midi"
 
-#: AudioIO.cpp:1329
+#: AudioIO.cpp:1376
 msgid ""
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -434,37 +434,37 @@ msgstr ""
 "Audacity telah mengembalikannya untuk mulai dari nol.\n"
 "Anda bisa menggunakan Alat Time Shift (<--> atau F5) untuk memindahkan trak ke tempat yang tepat."
 
-#: AudioIO.cpp:1330
+#: AudioIO.cpp:1377
 msgid "Latency problem"
 msgstr "Masalah Laten"
 
-#: AudioIO.cpp:2731
+#: AudioIO.cpp:2822
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."
 msgstr "Perubahan Level Input Otomatis dihentikan. Tidak mungkin membenahi lebih jauh. Tetap terlalu tinggi."
 
-#: AudioIO.cpp:2739
+#: AudioIO.cpp:2830
 #, c-format
 msgid "Automated Input Level Adjustment decreased the volume to %f."
 msgstr "Perubahan Level Input Otomatis mengurangi volume ke %f"
 
-#: AudioIO.cpp:2754
+#: AudioIO.cpp:2845
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."
 msgstr "Perubahan Level Input Otomatis dihentikan. Tidak mungkin membenahi lebih jauh. Tetap terlalu rendah."
 
-#: AudioIO.cpp:2766
+#: AudioIO.cpp:2857
 #, c-format
 msgid "Automated Input Level Adjustment increased the volume to %.2f."
 msgstr "Perubahan Level Input Otomatis menaikkan volume ke %f"
 
-#: AudioIO.cpp:2800
+#: AudioIO.cpp:2891
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
 msgstr "Perubahan Level Input Otomatis dihentikan. Angka total analisis telah melebihi batas tanpa menemukan volume yang cocok. tetap terlalu tinggi."
 
-#: AudioIO.cpp:2802
+#: AudioIO.cpp:2893
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
 msgstr "Perubahan Level Input Otomatis dihentikan. Angka total analisis telah melebihi batas tanpa menemukan volume yang cocok. tetap terlalu rendah."
 
-#: AudioIO.cpp:2805
+#: AudioIO.cpp:2896
 #, c-format
 msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "Perubahan Level Input Otomatis dihentikan. %.2f sepertinya volume yang cocok."
@@ -524,26 +524,26 @@ msgstr "Tidak bisa enumerasi file dalam direkroti simpan otomatis"
 
 #: AutoRecovery.cpp:147
 #: AutoRecovery.cpp:184
-#: Menus.cpp:3302
-#: Menus.cpp:3314
-#: Menus.cpp:5531
-#: Project.cpp:2507
-#: Project.cpp:4301
-#: Project.cpp:4387
-#: TrackPanel.cpp:6570
-#: WaveTrack.cpp:1107
-#: WaveTrack.cpp:1126
-#: WaveTrack.cpp:2180
+#: Menus.cpp:3344
+#: Menus.cpp:3356
+#: Menus.cpp:5582
+#: Project.cpp:2441
+#: Project.cpp:4252
+#: Project.cpp:4338
+#: TrackPanel.cpp:6577
+#: WaveTrack.cpp:1102
+#: WaveTrack.cpp:1121
+#: WaveTrack.cpp:2176
 #: effects/Contrast.cpp:107
 #: effects/Contrast.cpp:117
-#: effects/Effect.cpp:520
+#: effects/Effect.cpp:542
 #: effects/Generator.cpp:59
-#: export/ExportFFmpeg.cpp:699
+#: export/ExportFFmpeg.cpp:698
 #: export/ExportMP2.cpp:231
 #: prefs/DirectoriesPrefs.cpp:195
 #: prefs/KeyConfigPrefs.cpp:375
 #: toolbars/ControlToolBar.cpp:586
-#: toolbars/ControlToolBar.cpp:932
+#: toolbars/ControlToolBar.cpp:933
 msgid "Error"
 msgstr "Error"
 
@@ -601,7 +601,7 @@ msgstr ""
 msgid "Your batch command of %s was not recognised."
 msgstr "%s Komando Anda tidak bisa dijalankan."
 
-#: BatchCommands.cpp:674
+#: BatchCommands.cpp:676
 #, c-format
 msgid ""
 "Apply %s with parameter(s)\n"
@@ -612,182 +612,179 @@ msgstr ""
 "\n"
 "%s"
 
-#: BatchCommands.cpp:675
-#: BatchCommands.cpp:680
+#: BatchCommands.cpp:677
+#: BatchCommands.cpp:682
 msgid "Test Mode"
 msgstr "Mode Percobaan"
 
-#: BatchCommands.cpp:679
+#: BatchCommands.cpp:681
 #, c-format
 msgid "Apply %s"
 msgstr "Mengaplikasikan %s"
 
-#: BatchProcessDialog.cpp:61
-#: BatchProcessDialog.cpp:71
+#: BatchProcessDialog.cpp:62
 #: BatchProcessDialog.cpp:72
+#: BatchProcessDialog.cpp:73
 msgid "Apply Chain"
 msgstr "Mengaplikasikan Untaian"
 
-#: BatchProcessDialog.cpp:68
+#: BatchProcessDialog.cpp:69
 msgid "CleanSpeech Batch Processing"
 msgstr "Proses Batch CleanSpeech"
 
-#: BatchProcessDialog.cpp:95
+#: BatchProcessDialog.cpp:96
 msgid "&Select chain"
 msgstr "&Pilih untaian"
 
-#: BatchProcessDialog.cpp:100
+#: BatchProcessDialog.cpp:101
 msgid "Chain"
 msgstr "Untaian"
 
-#: BatchProcessDialog.cpp:107
+#: BatchProcessDialog.cpp:108
 msgid "Apply to Current &Project"
 msgstr "Aplikasikan ke proyek yang tersedia"
 
-#: BatchProcessDialog.cpp:108
+#: BatchProcessDialog.cpp:109
 msgid "Apply to &Files..."
 msgstr "Aplikasikan ke &File"
 
-#: BatchProcessDialog.cpp:109
-#: BatchProcessDialog.cpp:246
+#: BatchProcessDialog.cpp:110
+#: BatchProcessDialog.cpp:288
 #: UploadDialog.cpp:180
 #: effects/AvcCompressor.cpp:732
 #: effects/ChangeLength.cpp:183
 #: effects/SpikeCleaner.cpp:188
-#: effects/audiounits/AudioUnitEffect.cpp:853
+#: effects/audiounits/AudioUnitEffect.cpp:881
 msgid "&Cancel"
 msgstr "&Batal"
 
-#: BatchProcessDialog.cpp:147
-#: BatchProcessDialog.cpp:190
+#: BatchProcessDialog.cpp:148
+#: BatchProcessDialog.cpp:191
 msgid "No chain selected"
 msgstr "Tidak ada untaian yang dipilih"
 
-#: BatchProcessDialog.cpp:160
+#: BatchProcessDialog.cpp:161
 #, c-format
 msgid "Applying '%s' to current project"
 msgstr "Mengaplikasikan '%s' ke proyek yang tersedia"
 
-#: BatchProcessDialog.cpp:199
+#: BatchProcessDialog.cpp:200
 msgid "Please save and close the current project first."
 msgstr "Mohon simpan dan tutup proyek yang ada dahulu."
 
-#: BatchProcessDialog.cpp:205
+#: BatchProcessDialog.cpp:206
 msgid "Select vocal file(s) for batch CleanSpeech Chain..."
 msgstr "Pilih (beberapa) file vokal untuk Sambungan batch CleanSpeech..."
 
-#: BatchProcessDialog.cpp:206
+#: BatchProcessDialog.cpp:207
 msgid "Select file(s) for batch processing..."
 msgstr "Pilih (beberapa) file untuk memproses..."
 
-#: BatchProcessDialog.cpp:208
-msgid "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files (*.mp3)|*.mp3"
-msgstr "File vokal (*.wav;*.mp3)|*.wav;*.mp3|file WAV (*.wav)|*.wav|file MP3 (*.mp3)|*.mp3"
+#: BatchProcessDialog.cpp:233
+#: Project.cpp:2090
+msgid "All files|*|All supported files|"
+msgstr "Semua file|*|Semua file yang terdukung|"
 
-#: BatchProcessDialog.cpp:209
-msgid "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|FLAC files (*.flac)|*.flac"
-msgstr "Semua file (*.*)|*.*|File WAV(*.wav)|*.wav|File AIFF (*.aif)|*.aif|File AU (*.au)|*.au|File MP3 (*.mp3)|*.mp3|File Ogg Vorbis (*.ogg)|*.ogg|File FLAC (*.flac)|*.flac"
-
-#: BatchProcessDialog.cpp:230
+#: BatchProcessDialog.cpp:272
 msgid "Applying..."
 msgstr "Mengaplikasikan..."
 
-#: BatchProcessDialog.cpp:240
+#: BatchProcessDialog.cpp:282
 msgid "File"
 msgstr "Berkas"
 
-#: BatchProcessDialog.cpp:355
-#: BatchProcessDialog.cpp:359
-#: BatchProcessDialog.cpp:360
+#: BatchProcessDialog.cpp:397
+#: BatchProcessDialog.cpp:401
+#: BatchProcessDialog.cpp:402
 msgid "Edit Chains"
 msgstr "Edit Untaian"
 
-#: BatchProcessDialog.cpp:415
+#: BatchProcessDialog.cpp:457
 msgid "&Chains"
 msgstr "&Untaian"
 
-#: BatchProcessDialog.cpp:434
+#: BatchProcessDialog.cpp:476
 #: Tags.cpp:825
 msgid "&Add"
 msgstr "&Tambah"
 
-#: BatchProcessDialog.cpp:435
+#: BatchProcessDialog.cpp:477
 #: LabelDialog.cpp:128
 #: Tags.cpp:826
 msgid "&Remove"
 msgstr "&Buang"
 
-#: BatchProcessDialog.cpp:436
+#: BatchProcessDialog.cpp:478
 msgid "Re&name"
 msgstr "&Ganti Nama"
 
-#: BatchProcessDialog.cpp:442
+#: BatchProcessDialog.cpp:484
 msgid "C&hain (Double-Click or press SPACE to edit)"
 msgstr "Un&taiann (Klik ganda atau tekan SPASI untuk edit)"
 
 #. i18n-hint: This is the number of the command in the list
-#: BatchProcessDialog.cpp:452
+#: BatchProcessDialog.cpp:494
 msgid "Num"
 msgstr "No"
 
-#: BatchProcessDialog.cpp:453
+#: BatchProcessDialog.cpp:495
 #: commands/CommandManager.cpp:108
 #: prefs/KeyConfigPrefs.cpp:183
 msgid "Command"
 msgstr "Perintah"
 
-#: BatchProcessDialog.cpp:454
+#: BatchProcessDialog.cpp:496
 #: effects/Contrast.cpp:217
 msgid "Parameters"
 msgstr "Parameter"
 
-#: BatchProcessDialog.cpp:458
+#: BatchProcessDialog.cpp:500
 msgid "&Insert"
 msgstr "&Masukkan"
 
-#: BatchProcessDialog.cpp:459
+#: BatchProcessDialog.cpp:501
 msgid "De&lete"
 msgstr "&Hapus"
 
-#: BatchProcessDialog.cpp:460
+#: BatchProcessDialog.cpp:502
 msgid "Move &Up"
 msgstr "Pindah ke &Atas"
 
-#: BatchProcessDialog.cpp:461
+#: BatchProcessDialog.cpp:503
 msgid "Move &Down"
 msgstr "Pindak ke &Bawah"
 
-#: BatchProcessDialog.cpp:462
+#: BatchProcessDialog.cpp:504
 msgid "De&faults"
 msgstr "Se&mula"
 
-#: BatchProcessDialog.cpp:506
+#: BatchProcessDialog.cpp:548
 msgid "- END -"
 msgstr "- SELESAI -"
 
-#: BatchProcessDialog.cpp:539
+#: BatchProcessDialog.cpp:581
 #, c-format
 msgid "%s changed"
 msgstr "%s telah diubah"
 
-#: BatchProcessDialog.cpp:540
+#: BatchProcessDialog.cpp:582
 msgid "Do you want to save the changes?"
 msgstr "Anda mau menyimpan perubahan?"
 
-#: BatchProcessDialog.cpp:622
+#: BatchProcessDialog.cpp:664
 msgid "Enter name of new chain"
 msgstr "Masukkan nama untaian baru"
 
-#: BatchProcessDialog.cpp:633
+#: BatchProcessDialog.cpp:675
 msgid "Name must not be blank"
 msgstr "Nama seharusnya tidak kosong"
 
-#: BatchProcessDialog.cpp:642
+#: BatchProcessDialog.cpp:684
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
 msgstr "Nama tidak mungkin mengandung '%c' and '%c'"
 
-#: BatchProcessDialog.cpp:672
+#: BatchProcessDialog.cpp:714
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "anda yakin mau menghapus %s?"
@@ -802,77 +799,75 @@ msgstr "Menyalin data audio ke proyek..."
 
 #: Dependencies.cpp:226
 msgid ""
-"Your project currently depends on the presence of other files.\n"
-"Copy audio from the following files into your project to make it self-contained?\n"
-"This will need more disc space but is safer."
+"Copying the following files into your project will remove this dependency.   \n"
+"This needs more disk space, but is safer."
 msgstr ""
-"Proyek Anda membutuhkan file lainnya.\n"
-"Salin audio dari file tersebut ke dalam proyek Anda supaya proyek anda terisi sendiri?\n"
-"Ini akan membutuhkan ruang lebig besar, tetapi lebih aman."
+"Menyalin file-file ini ke dalam proyek dapat menghapus ketergantungan ini. \n"
+"Ini membutuhkan ruang lebih banyak, tetapi lebih aman."
 
-#: Dependencies.cpp:273
+#: Dependencies.cpp:274
 msgid "Project depends on other audio files"
 msgstr "Proyek membutuhkan file audio lainnya"
 
-#: Dependencies.cpp:294
+#: Dependencies.cpp:295
 msgid "Project Dependencies"
 msgstr "Ketergantungan Proyek"
 
-#: Dependencies.cpp:297
+#: Dependencies.cpp:298
 msgid "Audio file"
 msgstr "File audio"
 
-#: Dependencies.cpp:299
+#: Dependencies.cpp:300
 msgid "Disk space"
 msgstr "Ruang disk"
 
-#: Dependencies.cpp:304
+#: Dependencies.cpp:305
 msgid "Copy Selected Audio Into Project"
 msgstr "Menyalin Audio yang Dipilih ke dalam Proyek"
 
-#: Dependencies.cpp:311
-#: Dependencies.cpp:417
+#: Dependencies.cpp:312
+#: Dependencies.cpp:418
 msgid "Cancel Save"
 msgstr "Batalkan Penyimpanan"
 
-#: Dependencies.cpp:313
+#: Dependencies.cpp:314
 msgid "Do Not Copy Any Audio"
 msgstr "Jangan Salin Audio Apapun"
 
-#: Dependencies.cpp:315
+#: Dependencies.cpp:316
 msgid "Copy All Audio into Project (Safer)"
 msgstr "Salin Semua Audio ke dalam Proyek (Lebih Aman)"
 
-#: Dependencies.cpp:324
-#: Dependencies.cpp:329
+#: Dependencies.cpp:325
+#: Dependencies.cpp:330
 msgid "Ask me"
 msgstr "Tanya saya"
 
-#: Dependencies.cpp:325
+#: Dependencies.cpp:326
 msgid "Always copy all audio (safest)"
 msgstr "Selalu salin semua audio (paling aman)"
 
-#: Dependencies.cpp:326
+#: Dependencies.cpp:327
 msgid "Never copy any audio"
 msgstr "Tidak pernah menyalin audio apapun"
 
-#: Dependencies.cpp:328
+#: Dependencies.cpp:329
 msgid "Whenever a project depends on other files:"
 msgstr "Ketika proyek membutuhkan file lainnya:"
 
-#: Dependencies.cpp:416
+#: Dependencies.cpp:417
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "Proyek Anda tidak akan disimpad di disk. Itukan yang Anda mau?"
 
-#: Dependencies.cpp:456
+#: Dependencies.cpp:457
 msgid "Your project is self-contained; it does not depend on any external audio files."
 msgstr "Proyek Anda terisi sendiri; proyek ini tidak membutuhkan file audio eksternal apapun."
 
-#: Dependencies.cpp:457
+#: Dependencies.cpp:458
 msgid "Dependency check"
 msgstr "Cek ketergantungan"
 
-#: DirManager.cpp:137
+#: DirManager.cpp:143
 msgid ""
 "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
@@ -880,25 +875,25 @@ msgstr ""
 "Ruang disk yang tersisa tinggal sedikit.\n"
 "Mohon pilih direktori temporer lainnya dalam Preferensi."
 
-#: DirManager.cpp:222
-#: DirManager.cpp:253
-#: DirManager.cpp:336
+#: DirManager.cpp:228
+#: DirManager.cpp:259
+#: DirManager.cpp:342
 msgid "Progress"
 msgstr "Kemajuan"
 
-#: DirManager.cpp:287
+#: DirManager.cpp:293
 msgid "Cleaning up temporary files"
 msgstr "Membersihkan file temporer"
 
-#: DirManager.cpp:337
+#: DirManager.cpp:343
 msgid "Saving project data files"
 msgstr "Menyimpan file data proyek"
 
-#: DirManager.cpp:409
+#: DirManager.cpp:415
 msgid "Cleaning up cache directories"
 msgstr "Membersihkan direktori cache"
 
-#: DirManager.cpp:504
+#: DirManager.cpp:510
 #, c-format
 msgid ""
 "Audacity found an orphaned blockfile %s! \n"
@@ -910,61 +905,61 @@ msgstr ""
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
 #. example, mysong would become mysong-old1, mysong-old2, etc.
-#: DirManager.cpp:1123
+#: DirManager.cpp:1129
 #, c-format
 msgid "%s-old%d"
 msgstr "%s-%dlama"
 
-#: DirManager.cpp:1131
+#: DirManager.cpp:1137
 msgid "Unable to open/create test file"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
-#: DirManager.cpp:1140
+#: DirManager.cpp:1146
 #, c-format
 msgid "Unable to remove '%s'"
 msgstr "Tidak bisa membuang '%s'"
 
-#: DirManager.cpp:1145
+#: DirManager.cpp:1151
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "File yang telah diganti nama: %s\n"
 
-#: DirManager.cpp:1213
+#: DirManager.cpp:1219
 #, c-format
 msgid "Unable to rename '%s' to '%s'"
 msgstr "Tidak bisa meganti nama '%s' ke '%s'"
 
-#: DirManager.cpp:1231
+#: DirManager.cpp:1237
 #, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "Blok %s diubah ke nama alias yg baru\n"
 
-#: DirManager.cpp:1301
-#: DirManager.cpp:1592
+#: DirManager.cpp:1307
+#: DirManager.cpp:1598
 msgid "Inspecting project file data..."
 msgstr "Memeriksa data file proyek..."
 
-#: DirManager.cpp:1317
+#: DirManager.cpp:1323
 #, c-format
 msgid "Orphaned blockfile: (%s)"
 msgstr "Anak file blok: (%s)"
 
-#: DirManager.cpp:1342
+#: DirManager.cpp:1348
 #, c-format
 msgid "Missing alias file: (%s)"
 msgstr "File alias menghilang: (%s)"
 
-#: DirManager.cpp:1362
+#: DirManager.cpp:1368
 #, c-format
 msgid "Missing summary file: (%s.auf)"
 msgstr "File rangkuman menghilang: (%s)"
 
-#: DirManager.cpp:1382
+#: DirManager.cpp:1388
 #, c-format
 msgid "Missing data file: (%s.au)"
 msgstr "File data menghilang: (%s.au)"
 
-#: DirManager.cpp:1396
+#: DirManager.cpp:1402
 msgid ""
 "Project check found inconsistencies inspecting the loaded project data;\n"
 "click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
@@ -972,7 +967,7 @@ msgstr ""
 "Pengecekan menemukan ketidakkonsistenan keteka memeriksa data yang diambil;\n"
 "Tekan 'Detail' untuk daftar error, atau 'OK' untuk meneruskan ke opsi lainnya."
 
-#: DirManager.cpp:1408
+#: DirManager.cpp:1414
 #, c-format
 msgid ""
 "Project check found %d orphaned blockfile[s]. These files are\n"
@@ -983,22 +978,22 @@ msgstr ""
 "dan mungkin tertinggal waktu crash atau bug lainya.\n"
 "Ini harus dihapus untuk menghemat ruang disk."
 
-#: DirManager.cpp:1413
+#: DirManager.cpp:1419
 msgid "Delete orphaned files [safe and recommended]"
 msgstr "Hapus anak file [Aman dan direkomendasikan]"
 
-#: DirManager.cpp:1414
+#: DirManager.cpp:1420
 msgid "Continue without deleting; silently work around the extra files"
 msgstr "Terus tanpa penghapusan; bekerja di sekitar file tambahan secara diam-diam"
 
-#: DirManager.cpp:1415
+#: DirManager.cpp:1421
 msgid "Close project immediately with no changes"
 msgstr "Tutup proyek secepatnya tanpa perubahan"
 
-#: DirManager.cpp:1417
-#: DirManager.cpp:1452
-#: DirManager.cpp:1498
-#: DirManager.cpp:1540
+#: DirManager.cpp:1423
+#: DirManager.cpp:1458
+#: DirManager.cpp:1504
+#: DirManager.cpp:1546
 #: export/Export.cpp:582
 #: export/Export.cpp:603
 #: export/Export.cpp:622
@@ -1006,7 +1001,7 @@ msgstr "Tutup proyek secepatnya tanpa perubahan"
 msgid "Warning"
 msgstr "Perhatian"
 
-#: DirManager.cpp:1443
+#: DirManager.cpp:1449
 #, c-format
 msgid ""
 "Project check detected %d input file[s] being used in place\n"
@@ -1022,22 +1017,22 @@ msgstr ""
 "mengosongkan file yang hilang secara permanen pada sesi ini, atau\n"
 "tutup proyek ini dan coba mencari file itu sendiri."
 
-#: DirManager.cpp:1448
+#: DirManager.cpp:1454
 msgid "Replace missing data with silence [permanent upon save]"
 msgstr "Mengembalikan data yang hilang diam-diam [permanen pada penyimpanan]"
 
-#: DirManager.cpp:1449
-#: DirManager.cpp:1537
+#: DirManager.cpp:1455
+#: DirManager.cpp:1543
 msgid "Temporarily replace missing data with silence [this session only]"
 msgstr "Mengembalikan data yang hilang diam-diam secara sementara [hanya sesi ini saja]"
 
-#: DirManager.cpp:1450
-#: DirManager.cpp:1496
-#: DirManager.cpp:1538
+#: DirManager.cpp:1456
+#: DirManager.cpp:1502
+#: DirManager.cpp:1544
 msgid "Close project immediately with no further changes"
 msgstr "Tutup proyek secepatnya tanpa perubahan"
 
-#: DirManager.cpp:1489
+#: DirManager.cpp:1495
 #, c-format
 msgid ""
 "Project check detected %d missing summary file[s] (.auf).\n"
@@ -1047,15 +1042,15 @@ msgstr ""
 "Pengecekan menemukan file rangkuman %d yang hilang (.auf).\n"
 "Audacity bisa membuat ulang file tersebut dari data aslinya pada proyek."
 
-#: DirManager.cpp:1494
+#: DirManager.cpp:1500
 msgid "Regenerate summary files [safe and recommended]"
 msgstr "Membuat ulang file rangkuman [lebih aman dan direkomendasikan]"
 
-#: DirManager.cpp:1495
+#: DirManager.cpp:1501
 msgid "Fill in silence for missing display data [this session only]"
 msgstr "Kosongkan tampilan data yang hilang [sesi ini saja]"
 
-#: DirManager.cpp:1531
+#: DirManager.cpp:1537
 #, c-format
 msgid ""
 "Project check detected %d missing audio data blockfile[s] (.au), \n"
@@ -1072,27 +1067,27 @@ msgstr ""
 "secara otomatis; Anda bisa memilih untuk tetap mengosongkan data tadi\n"
 "atau secara sementara atau tutup proyek dan mencoba mengembalikannya sendiri."
 
-#: DirManager.cpp:1536
+#: DirManager.cpp:1542
 msgid "Replace missing data with silence [permanent immediately]"
 msgstr "Kosongkan data yang hilang [permanen]"
 
-#: DirManager.cpp:1564
+#: DirManager.cpp:1570
 msgid "Cleaning up unused directories in project data..."
 msgstr "Membersihkan direktori yang tak berguna apda data proyek..."
 
-#: DirManager.cpp:1641
+#: DirManager.cpp:1647
 msgid "Caching audio"
 msgstr "Membuat cache audio"
 
-#: DirManager.cpp:1642
+#: DirManager.cpp:1648
 msgid "Caching audio into memory..."
 msgstr "Membuat cache audio di memeoi..."
 
-#: DirManager.cpp:1677
+#: DirManager.cpp:1683
 msgid "Saving recorded audio"
 msgstr "Meinyimpan audio yang direkam"
 
-#: DirManager.cpp:1678
+#: DirManager.cpp:1684
 msgid "Saving recorded audio to disk..."
 msgstr "Meinyimpan audio yang direkam pada disk..."
 
@@ -1296,96 +1291,96 @@ msgstr "Tutup"
 
 #: FreqWindow.cpp:230
 #: FreqWindow.cpp:233
-#: effects/Equalization.cpp:1389
-#: effects/Equalization.cpp:1392
+#: effects/Equalization.cpp:1408
+#: effects/Equalization.cpp:1411
 msgid "Grids"
 msgstr "Batas"
 
 #: FreqWindow.cpp:297
-#: FreqWindow.cpp:498
+#: FreqWindow.cpp:502
 #: effects/AutoDuck.cpp:503
 #: effects/AutoDuck.cpp:537
 #: effects/AutoDuck.cpp:806
 #: effects/Compressor.cpp:480
 #: effects/Compressor.cpp:488
-#: effects/Equalization.cpp:1231
-#: effects/Equalization.cpp:1233
-#: effects/Equalization.cpp:1241
-#: effects/Equalization.cpp:1307
-#: effects/Equalization.cpp:1535
-#: effects/Equalization.cpp:1546
+#: effects/Equalization.cpp:1246
+#: effects/Equalization.cpp:1248
+#: effects/Equalization.cpp:1256
+#: effects/Equalization.cpp:1322
+#: effects/Equalization.cpp:1554
+#: effects/Equalization.cpp:1565
 #: effects/Normalize.cpp:372
-#: widgets/Meter.cpp:441
+#: widgets/Meter.cpp:436
 msgid "dB"
 msgstr "dB"
 
 #. i18n-hint: This is the abbreviation for "Hertz", or
 #. cycles per second.
 #: FreqWindow.cpp:313
-#: FreqWindow.cpp:538
-#: effects/Equalization.cpp:1272
-#: effects/Equalization.cpp:1303
+#: FreqWindow.cpp:542
+#: effects/Equalization.cpp:1287
+#: effects/Equalization.cpp:1318
 #: import/ImportRaw.cpp:409
 msgid "Hz"
 msgstr "Hz"
 
-#: FreqWindow.cpp:404
+#: FreqWindow.cpp:405
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "Untuk memplot spektrum, semua trek yang dipilih harus mempunyai rate sampel yang sama."
 
-#: FreqWindow.cpp:431
+#: FreqWindow.cpp:432
 #, c-format
 msgid "Too much audio was selected.  Only the first %.1f seconds of audio will be analyzed."
 msgstr "Terlalu banyak yang dipilih. Hanya awal %.1f detik audio yang akan dianalisis."
 
-#: FreqWindow.cpp:482
+#: FreqWindow.cpp:486
 msgid "Not enough data selected."
 msgstr "Data yang dipilih tidak cukup"
 
-#: FreqWindow.cpp:546
+#: FreqWindow.cpp:550
 #: effects/AutoDuck.cpp:808
 msgid "s"
 msgstr "d"
 
-#: FreqWindow.cpp:880
+#: FreqWindow.cpp:884
 #, c-format
 msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
 msgstr "Kursor: %d Hz (%s) = %d dB    Pik: %d Hz (%s) = %.1f dB"
 
-#: FreqWindow.cpp:889
+#: FreqWindow.cpp:893
 #, c-format
 msgid "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
 msgstr "Kursor: %.4f det (%d Hz) (%s) = %f,    Pik: %.4f det (%d Hz) (%s) = %.3f"
 
-#: FreqWindow.cpp:1003
+#: FreqWindow.cpp:1006
 msgid "Drawing Spectrum"
 msgstr "Spektrum yang Tergambar"
 
-#: FreqWindow.cpp:1003
+#: FreqWindow.cpp:1006
 msgid "FreqWindow"
 msgstr "JendelaFrek"
 
-#: FreqWindow.cpp:1219
+#: FreqWindow.cpp:1222
 msgid "spectrum.txt"
 msgstr "spektrum.txt"
 
-#: FreqWindow.cpp:1221
+#: FreqWindow.cpp:1224
 msgid "Export Spectral Data As:"
 msgstr "Ekspor data spektral sebagai:"
 
-#: FreqWindow.cpp:1237
+#: FreqWindow.cpp:1240
 #: LabelDialog.cpp:603
-#: Menus.cpp:2750
+#: Menus.cpp:2792
 #: effects/Contrast.cpp:491
 #: prefs/KeyConfigPrefs.cpp:322
 msgid "Couldn't write to file: "
 msgstr "Tidak bisa menulis file:"
 
-#: FreqWindow.cpp:1242
+#: FreqWindow.cpp:1245
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "Frekuensi (Hz)\tTingkatan (dB)"
 
-#: FreqWindow.cpp:1248
+#: FreqWindow.cpp:1251
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Waktu (detik)\tFrekuensi (Hz)\tTingkat"
 
@@ -1557,18 +1552,18 @@ msgid "Track"
 msgstr "Trek"
 
 #: LabelDialog.cpp:55
-#: Menus.cpp:5005
-#: Menus.cpp:5040
+#: Menus.cpp:5056
+#: Menus.cpp:5091
 msgid "Label"
 msgstr "Label"
 
 #: LabelDialog.cpp:56
-#: TimerRecordDialog.cpp:328
+#: TimerRecordDialog.cpp:332
 msgid "Start Time"
 msgstr "Waktu Mulai"
 
 #: LabelDialog.cpp:57
-#: TimerRecordDialog.cpp:347
+#: TimerRecordDialog.cpp:351
 msgid "End Time"
 msgstr "Waktu Selesai"
 
@@ -1614,19 +1609,19 @@ msgid "Confirm"
 msgstr "Konfirmasi"
 
 #: LabelDialog.cpp:516
-#: Menus.cpp:4423
+#: Menus.cpp:4465
 msgid "Select a text file containing labels..."
 msgstr "Pilih file teks yang berisi label..."
 
 #: LabelDialog.cpp:520
-#: Menus.cpp:4427
+#: Menus.cpp:4469
 msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
 msgstr "File teks (*.txt)|*.txt|Semua file (*.*)|*.* "
 
 #: LabelDialog.cpp:534
-#: Menus.cpp:4439
-#: Project.cpp:2330
-#: Project.cpp:2338
+#: Menus.cpp:4481
+#: Project.cpp:2264
+#: Project.cpp:2272
 msgid "Could not open file: "
 msgstr "Tidak bisa membuka file:"
 
@@ -1635,12 +1630,12 @@ msgid "No labels to export."
 msgstr "Tidak ada label untuk diekspor."
 
 #: LabelDialog.cpp:566
-#: Menus.cpp:2713
+#: Menus.cpp:2755
 msgid "Export Labels As:"
 msgstr "Ekspor label sebagai:"
 
 #: LabelDialog.cpp:568
-#: Menus.cpp:2711
+#: Menus.cpp:2753
 msgid "labels.txt"
 msgstr "label.txt"
 
@@ -1654,7 +1649,7 @@ msgstr "Masukkan nama trek"
 
 #: LabelDialog.cpp:705
 #: LabelDialog.h:52
-#: LabelTrack.cpp:93
+#: LabelTrack.cpp:94
 msgid "Label Track"
 msgstr "Trek Label"
 
@@ -1791,12 +1786,12 @@ msgid "&Edit"
 msgstr "&Edit"
 
 #: Menus.cpp:335
-#: Menus.cpp:1243
+#: Menus.cpp:1250
 msgid "&Undo"
 msgstr "&Batalkan"
 
 #: Menus.cpp:347
-#: Menus.cpp:1258
+#: Menus.cpp:1265
 msgid "&Redo"
 msgstr "&Lakukan Kembali"
 
@@ -2254,8 +2249,8 @@ msgid "&Generate"
 msgstr "&Buat"
 
 #: Menus.cpp:796
-#: Menus.cpp:881
-#: Menus.cpp:951
+#: Menus.cpp:888
+#: Menus.cpp:958
 msgid "Unsorted"
 msgstr "Tidak berurut"
 
@@ -2263,389 +2258,396 @@ msgstr "Tidak berurut"
 msgid "Effe&ct"
 msgstr "E&fek"
 
-#: Menus.cpp:902
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: Menus.cpp:824
+#: Menus.cpp:2593
+#, c-format
+msgid "Repeat %s"
+msgstr "Ulangi %s"
+
+#: Menus.cpp:827
+msgid "Repeat Last Effect"
+msgstr "Ulangi Efek Terakhir"
+
+#: Menus.cpp:909
 msgid "&Analyze"
 msgstr "&Analisa"
 
-#: Menus.cpp:904
+#: Menus.cpp:911
 msgid "Contrast..."
 msgstr "Kontras..."
 
-#: Menus.cpp:907
+#: Menus.cpp:914
 msgid "Plot Spectrum..."
 msgstr "Spektrum Plot..."
 
-#: Menus.cpp:974
-#: Menus.cpp:977
+#: Menus.cpp:981
+#: Menus.cpp:984
 msgid "&Help"
 msgstr "&Bantuan"
 
-#: Menus.cpp:981
+#: Menus.cpp:988
 msgid "&About Audacity CleanSpeech..."
 msgstr "&Tentang Audacity CleamSpeech..."
 
-#: Menus.cpp:987
+#: Menus.cpp:994
 msgid "&Quick Help (in web browser)"
 msgstr "Bantuan &Kilat (di web browser)"
 
-#: Menus.cpp:988
+#: Menus.cpp:995
 msgid "&Manual (in web browser)"
 msgstr "&Manual (di web browser)"
 
-#: Menus.cpp:989
+#: Menus.cpp:996
 msgid "Show &Log..."
 msgstr "Tunjukkan &Log..."
 
-#: Menus.cpp:995
+#: Menus.cpp:1002
 msgid "&Screenshot Tools..."
 msgstr "&Alat Screenshot..."
 
-#: Menus.cpp:1000
+#: Menus.cpp:1007
 msgid "&Run Benchmark..."
 msgstr "&Jalankan Benchmark..."
 
-#: Menus.cpp:1005
+#: Menus.cpp:1012
 msgid "&Audio Device Info..."
 msgstr "&Info Perangkat Audio..."
 
-#: Menus.cpp:1016
+#: Menus.cpp:1023
 msgid "Move backward from toolbars to tracks"
 msgstr "Maju ke belakang dari toolbar ke Trek"
 
-#: Menus.cpp:1017
+#: Menus.cpp:1024
 msgid "Move forward from toolbars to tracks"
 msgstr "Maju ke depan dari toolbar ke Trek"
 
-#: Menus.cpp:1019
+#: Menus.cpp:1026
 #: toolbars/ToolsToolBar.cpp:147
 #: toolbars/ToolsToolBar.cpp:186
 msgid "Selection Tool"
 msgstr "Alat Pemilihan"
 
-#: Menus.cpp:1020
+#: Menus.cpp:1027
 #: toolbars/ToolsToolBar.cpp:148
 #: toolbars/ToolsToolBar.cpp:187
 msgid "Envelope Tool"
 msgstr "Alat Envelop"
 
-#: Menus.cpp:1021
+#: Menus.cpp:1028
 #: toolbars/ToolsToolBar.cpp:151
 #: toolbars/ToolsToolBar.cpp:188
 msgid "Draw Tool"
 msgstr "Alat Menggambar"
 
-#: Menus.cpp:1022
+#: Menus.cpp:1029
 #: toolbars/ToolsToolBar.cpp:150
 #: toolbars/ToolsToolBar.cpp:189
 msgid "Zoom Tool"
 msgstr "Alat Memperbesar"
 
-#: Menus.cpp:1023
+#: Menus.cpp:1030
 #: toolbars/ToolsToolBar.cpp:149
 msgid "Time Shift Tool"
 msgstr "Alat Menyingkat Waktu"
 
-#: Menus.cpp:1024
+#: Menus.cpp:1031
 #: toolbars/ToolsToolBar.cpp:191
 msgid "Multi Tool"
 msgstr "Alat Multifungsi"
 
-#: Menus.cpp:1026
+#: Menus.cpp:1033
 msgid "Next Tool"
 msgstr "Alat Selanjutnya"
 
-#: Menus.cpp:1027
+#: Menus.cpp:1034
 msgid "Previous Tool"
 msgstr "Alat Sebelumnya"
 
-#: Menus.cpp:1029
+#: Menus.cpp:1036
 msgid "Play/Stop"
 msgstr "Mulai/Berhenti"
 
-#: Menus.cpp:1030
+#: Menus.cpp:1037
 msgid "Play/Stop and Set Cursor"
 msgstr "Main/Berhenti dan Atur Kursor"
 
-#: Menus.cpp:1031
+#: Menus.cpp:1038
 msgid "Play One Second"
 msgstr "Mainkan Satu Detik"
 
-#: Menus.cpp:1032
+#: Menus.cpp:1039
 msgid "Play To Selection"
 msgstr "Mainkan ke yang dipilih"
 
-#: Menus.cpp:1033
+#: Menus.cpp:1040
 msgid "Play Cut Preview"
 msgstr "Mainkan Preview POtongan"
 
-#: Menus.cpp:1035
+#: Menus.cpp:1042
 msgid "Selection to Start"
 msgstr "Pilih ke Awal"
 
-#: Menus.cpp:1036
+#: Menus.cpp:1043
 msgid "Selection to End"
 msgstr "Pilih ke Akhir"
 
-#: Menus.cpp:1038
+#: Menus.cpp:1045
 msgid "DeleteKey"
 msgstr "KunciHapus"
 
-#: Menus.cpp:1042
+#: Menus.cpp:1049
 msgid "DeleteKey2"
 msgstr "KunciHapus2"
 
-#: Menus.cpp:1048
+#: Menus.cpp:1055
 msgid "Short seek left during playback"
 msgstr "Coba periode pendek di kiri selama bermain"
 
-#: Menus.cpp:1049
+#: Menus.cpp:1056
 msgid "Short seek right during playback"
 msgstr "Coba periode pendek di kanan selama bermain"
 
-#: Menus.cpp:1050
+#: Menus.cpp:1057
 msgid "Long seek left during playback"
 msgstr "Coba periode panjang di kiri selama bermain"
 
-#: Menus.cpp:1051
+#: Menus.cpp:1058
 msgid "Long Seek right during playback"
 msgstr "Coba periode panjang di kanan selama bermain"
 
-#: Menus.cpp:1056
+#: Menus.cpp:1063
 msgid "Move Focus to Previous Track"
 msgstr "Pindahkan Fokus ke Trek Sebelumnya"
 
-#: Menus.cpp:1057
+#: Menus.cpp:1064
 msgid "Move Focus to Previous and Select"
 msgstr "Pindahkan Fokus ke Trek Sebelumnya dan Pilih"
 
-#: Menus.cpp:1058
+#: Menus.cpp:1065
 msgid "Move Focus to Next Track"
 msgstr "Pindahkan Fokus ke Trek Selanjutnya"
 
-#: Menus.cpp:1059
+#: Menus.cpp:1066
 msgid "Move Focus to Next and Select"
 msgstr "Pindahkan Fokus ke Trek Selanjutnya dan Pilih"
 
-#: Menus.cpp:1060
-#: Menus.cpp:1061
+#: Menus.cpp:1067
+#: Menus.cpp:1068
 msgid "Toggle Focused Track"
 msgstr "Fokuskan ke Trek Terpilih"
 
-#: Menus.cpp:1063
+#: Menus.cpp:1070
 msgid "Cursor Left"
 msgstr "Kursor Kiri"
 
-#: Menus.cpp:1064
+#: Menus.cpp:1071
 msgid "Cursor Right"
 msgstr "Kursor Kanan"
 
-#: Menus.cpp:1065
+#: Menus.cpp:1072
 msgid "Cursor Short Jump Left"
 msgstr "Kursor Kiri Lompatan Rendah"
 
-#: Menus.cpp:1066
+#: Menus.cpp:1073
 msgid "Cursor Short Jump Right"
 msgstr "Kursor Kiri Lompatan Rendah"
 
-#: Menus.cpp:1067
+#: Menus.cpp:1074
 msgid "Cursor Long Jump Left"
 msgstr "Kursor Kiri Lompatan Tinggi"
 
-#: Menus.cpp:1068
+#: Menus.cpp:1075
 msgid "Cursor Long Jump Right"
 msgstr "Kursor Kanan Lompatan Tinggi"
 
-#: Menus.cpp:1070
+#: Menus.cpp:1077
 msgid "Selection Extend Left"
 msgstr "Pilih yang tidak dipilih di Kiri"
 
-#: Menus.cpp:1071
+#: Menus.cpp:1078
 msgid "Selection Extend Right"
 msgstr "Pilih yang tidak dipilih di Kanan"
 
-#: Menus.cpp:1073
+#: Menus.cpp:1080
 msgid "Set (or Extend) Left Selection"
 msgstr "Atur (atau Mengecualikan) Yang Terpilih di Kiri"
 
-#: Menus.cpp:1074
+#: Menus.cpp:1081
 msgid "Set (or Extend) Right Selection"
 msgstr "Atur (atau Mengecualikan) Yang Terpilih di Kanan"
 
-#: Menus.cpp:1076
+#: Menus.cpp:1083
 msgid "Selection Contract Left"
 msgstr "Pilih yang di Kiri"
 
-#: Menus.cpp:1077
+#: Menus.cpp:1084
 msgid "Selection Contract Right"
 msgstr "Pilih yang di Kanan"
 
-#: Menus.cpp:1079
+#: Menus.cpp:1086
 msgid "Change pan on focused track"
 msgstr "Ubah pan pada trek terfokus"
 
-#: Menus.cpp:1080
+#: Menus.cpp:1087
 msgid "Pan left on focused track"
 msgstr "Pan-kan di kiri trek terfokus"
 
-#: Menus.cpp:1081
+#: Menus.cpp:1088
 msgid "Pan right on focused track"
 msgstr "Pan-kan di kanan trek terfokus"
 
-#: Menus.cpp:1082
+#: Menus.cpp:1089
 msgid "Change gain on focused track"
 msgstr "Ubah kekuatan pada trek yang terfokus"
 
-#: Menus.cpp:1083
+#: Menus.cpp:1090
 msgid "Increase gain on focused track"
 msgstr "Tingkatkan kekuatan pada trek yang difokuskan"
 
-#: Menus.cpp:1084
+#: Menus.cpp:1091
 msgid "Decrease gain on focused track"
 msgstr "Turunkan kekuatan pada trek yang difokuskan"
 
-#: Menus.cpp:1085
+#: Menus.cpp:1092
 msgid "Open menu on focused track"
 msgstr "Buka menu pada trek yang terfokus"
 
-#: Menus.cpp:1086
+#: Menus.cpp:1093
 msgid "Mute/Unmute focused track"
 msgstr "Diam/Hidupkan suara trek yang terfokus"
 
-#: Menus.cpp:1087
+#: Menus.cpp:1094
 msgid "Solo/Unsolo focused track"
 msgstr "Solo/Jangan solo trek yang terfokus"
 
-#: Menus.cpp:1088
+#: Menus.cpp:1095
 msgid "Close focused track"
 msgstr "Tutup trek yang terfokus"
 
-#: Menus.cpp:1090
+#: Menus.cpp:1097
 msgid "Snap To On"
 msgstr "Hidupkan Patokan"
 
-#: Menus.cpp:1091
+#: Menus.cpp:1098
 msgid "Snap To Off"
 msgstr "Matikankan Patokan"
 
-#: Menus.cpp:1095
+#: Menus.cpp:1102
 msgid "Full screen on/off"
 msgstr "Layar penuh hidup/mati"
 
-#: Menus.cpp:1097
+#: Menus.cpp:1104
 msgid "Adjust output gain"
 msgstr "Ubah kekuatan output"
 
-#: Menus.cpp:1098
+#: Menus.cpp:1105
 msgid "Increase output gain"
 msgstr "Naikkan kekuatan output"
 
-#: Menus.cpp:1099
+#: Menus.cpp:1106
 msgid "Decrease output gain"
 msgstr "Turunkan kekuatan output"
 
-#: Menus.cpp:1100
+#: Menus.cpp:1107
 msgid "Adjust input gain"
 msgstr "Ubah kekuatan imput"
 
-#: Menus.cpp:1101
+#: Menus.cpp:1108
 msgid "Increase input gain"
 msgstr "Naikkan kekuatan input"
 
-#: Menus.cpp:1102
+#: Menus.cpp:1109
 msgid "Decrease input gain"
 msgstr "Turunkan kekuatan input"
 
-#: Menus.cpp:1104
+#: Menus.cpp:1111
 msgid "Adjust input source"
 msgstr "Ubah Sumber Input"
 
-#: Menus.cpp:1108
+#: Menus.cpp:1115
 msgid "Play at speed"
 msgstr "Main dengan kecepatan"
 
-#: Menus.cpp:1109
+#: Menus.cpp:1116
 msgid "Adjust playback speed"
 msgstr "Ubah kecepatan bermain"
 
-#: Menus.cpp:1110
+#: Menus.cpp:1117
 msgid "Increase playback speed"
 msgstr "Tingkatkan kecepatan bermain"
 
-#: Menus.cpp:1111
+#: Menus.cpp:1118
 msgid "Decrease playback speed"
 msgstr "Turunkan kecepatan bermain"
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
-#: Menus.cpp:1196
+#: Menus.cpp:1203
 msgid "Open Recent"
 msgstr "Buka yang Sebelumnya"
 
 #. i18n-hint: This is the name of the menu item on Windows and Linux
-#: Menus.cpp:1199
+#: Menus.cpp:1206
 msgid "Recent &Files"
 msgstr "&File Sebelumnya"
 
-#: Menus.cpp:1217
+#: Menus.cpp:1224
 #, c-format
 msgid "&Undo %s"
 msgstr "&Batalkan %s"
 
-#: Menus.cpp:1252
+#: Menus.cpp:1259
 #, c-format
 msgid "&Redo %s"
 msgstr "&Ulang %s"
 
-#: Menus.cpp:1939
+#: Menus.cpp:1978
 msgid "Sort By Time"
 msgstr "Urutkan dari waktu"
 
-#: Menus.cpp:1939
+#: Menus.cpp:1978
 msgid "Tracks sorted by time"
 msgstr "Trek diurut bedasarkan waktu"
 
-#: Menus.cpp:1965
+#: Menus.cpp:2004
 msgid "Sort By Name"
 msgstr "Urutkan dari Nama"
 
-#: Menus.cpp:1965
+#: Menus.cpp:2004
 msgid "Tracks sorted by name"
 msgstr "Trek diurut bedasarkan nama"
 
-#: Menus.cpp:2116
-#: Menus.cpp:2152
+#: Menus.cpp:2155
+#: Menus.cpp:2191
 msgid "Position"
 msgstr "Posisi"
 
-#: Menus.cpp:2116
+#: Menus.cpp:2155
 msgid "Set Left Selection Boundary"
 msgstr "Atur Batas Kiri"
 
-#: Menus.cpp:2152
+#: Menus.cpp:2191
 msgid "Set Right Selection Boundary"
 msgstr "Atur Batas Kanan"
 
-#: Menus.cpp:2529
+#: Menus.cpp:2568
 msgid "You must select a track first."
 msgstr "Anda harus pilih trek terlebih dahulu"
 
-#: Menus.cpp:2551
-#, c-format
-msgid "Repeat %s"
-msgstr "Ulangi %s"
-
-#: Menus.cpp:2707
+#: Menus.cpp:2749
 msgid "There are no label tracks to export."
 msgstr "Tidak ada label yang diekspor"
 
-#: Menus.cpp:2802
+#: Menus.cpp:2844
 msgid "Export MIDI As:"
 msgstr "Ekspor MIDI Sebagai:"
 
-#: Menus.cpp:2806
+#: Menus.cpp:2848
 msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "File MIDI (*.mid)|*.mid|File Allegro (*.gro)|*.gro"
 
-#: Menus.cpp:2838
+#: Menus.cpp:2880
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
@@ -2653,422 +2655,422 @@ msgstr ""
 "Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
 " Anda ingin meneruskan?"
 
-#: Menus.cpp:2839
+#: Menus.cpp:2881
 msgid "Export MIDI"
 msgstr "Ekspor MIDI"
 
-#: Menus.cpp:2911
+#: Menus.cpp:2953
 msgid "Nothing to undo"
 msgstr "Tidak mungkin membatalkan"
 
-#: Menus.cpp:2932
+#: Menus.cpp:2974
 msgid "Nothing to redo"
 msgstr "Tidak mungkin melakukan kembali"
 
-#: Menus.cpp:3035
+#: Menus.cpp:3077
 #: TrackPanel.cpp:661
 #: toolbars/EditToolBar.cpp:130
 #: toolbars/EditToolBar.cpp:194
 msgid "Cut"
 msgstr "Potong"
 
-#: Menus.cpp:3035
+#: Menus.cpp:3077
 msgid "Cut to the clipboard"
 msgstr "Potong ke Clipboard"
 
-#: Menus.cpp:3075
+#: Menus.cpp:3117
 msgid "Split Cut"
 msgstr "Potong Sekaligus"
 
-#: Menus.cpp:3075
+#: Menus.cpp:3117
 msgid "Split-cut to the clipboard"
 msgstr "Potong sekaligus ke clipboard"
 
-#: Menus.cpp:3138
-#: Menus.cpp:3228
-#: Menus.cpp:3448
+#: Menus.cpp:3180
+#: Menus.cpp:3270
+#: Menus.cpp:3490
 #: TrackPanel.cpp:663
 #: toolbars/EditToolBar.cpp:134
 #: toolbars/EditToolBar.cpp:196
 msgid "Paste"
 msgstr "Tempel"
 
-#: Menus.cpp:3138
+#: Menus.cpp:3180
 msgid "Pasted text from the clipboard"
 msgstr "Teks ditempel dari clipboard"
 
-#: Menus.cpp:3228
-#: Menus.cpp:3448
-#: Menus.cpp:3520
+#: Menus.cpp:3270
+#: Menus.cpp:3490
+#: Menus.cpp:3562
 msgid "Pasted from the clipboard"
 msgstr "Ditempel dari clipboard"
 
-#: Menus.cpp:3301
+#: Menus.cpp:3343
 msgid "Pasting one type of track into another is not allowed."
 msgstr "Menempelkan satu tipe audio ke tipe lainnya tidak diperbolehkan."
 
-#: Menus.cpp:3313
+#: Menus.cpp:3355
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "Menyalin auido stereo ke trek mono tidak diperbolehkan."
 
-#: Menus.cpp:3520
+#: Menus.cpp:3562
 msgid "Paste Text to New Label"
 msgstr "Tempel Teks ke Label Baru"
 
-#: Menus.cpp:3554
+#: Menus.cpp:3596
 #: toolbars/EditToolBar.cpp:197
 msgid "Trim"
 msgstr "Gabung"
 
-#: Menus.cpp:3554
+#: Menus.cpp:3596
 msgid "Trim file to selection"
 msgstr "Trim file ke bagian terpilih"
 
-#: Menus.cpp:3583
+#: Menus.cpp:3625
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
 msgstr "Dihapus sekaligus %.2f detik pada t=%.2f"
 
-#: Menus.cpp:3586
+#: Menus.cpp:3628
 msgid "Split Delete"
 msgstr "Hapus Sekaligus"
 
-#: Menus.cpp:3607
+#: Menus.cpp:3649
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
 msgstr "Terlepas %.2f detik pada t=%.2f"
 
-#: Menus.cpp:3610
+#: Menus.cpp:3652
 msgid "Detach"
 msgstr "Lepas"
 
-#: Menus.cpp:3631
+#: Menus.cpp:3673
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
 msgstr "Bergabung %.2f detik pada t=%.2f"
 
-#: Menus.cpp:3634
+#: Menus.cpp:3676
 msgid "Join"
 msgstr "Pasangkan"
 
-#: Menus.cpp:3647
+#: Menus.cpp:3689
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "Telah didiamkan trek terpilih pada %.2f seconds at %.2f"
 
-#: Menus.cpp:3649
+#: Menus.cpp:3691
 #: toolbars/EditToolBar.cpp:198
 msgid "Silence"
 msgstr "Diam"
 
-#: Menus.cpp:3679
+#: Menus.cpp:3721
 msgid "Duplicate"
 msgstr "Duplikatkan"
 
-#: Menus.cpp:3679
+#: Menus.cpp:3721
 msgid "Duplicated"
 msgstr "Terduplikat"
 
-#: Menus.cpp:3702
+#: Menus.cpp:3744
 msgid "Cut Labels"
 msgstr "Potong Label"
 
-#: Menus.cpp:3702
+#: Menus.cpp:3744
 msgid "Cut labeled regions to the clipboard"
 msgstr "Potong wilayah berlabel ke clipboard"
 
-#: Menus.cpp:3716
+#: Menus.cpp:3758
 msgid "SplitCut labeled regions to the clipboard"
 msgstr "Potong Sekaligus wilayah berlabel ke clipboard"
 
-#: Menus.cpp:3717
+#: Menus.cpp:3759
 msgid "Split Cut Labels"
 msgstr "Potong Sekaligus Label"
 
-#: Menus.cpp:3731
+#: Menus.cpp:3773
 msgid "Copied labeled regions to the clipboard"
 msgstr "Salin wilayah berlabel ke clipboard"
 
-#: Menus.cpp:3731
+#: Menus.cpp:3773
 msgid "Copy Labels"
 msgstr "Salin Label"
 
-#: Menus.cpp:3745
+#: Menus.cpp:3787
 msgid "Delete Labels"
 msgstr "Hapus Label"
 
-#: Menus.cpp:3745
+#: Menus.cpp:3787
 msgid "Deleted labeled regions"
 msgstr "Wilayah berlabel dihapus"
 
-#: Menus.cpp:3757
+#: Menus.cpp:3799
 msgid "Split Delete Labels"
 msgstr "Hapus Sekaligus Label"
 
-#: Menus.cpp:3757
+#: Menus.cpp:3799
 msgid "Split Deleted labeled regions"
 msgstr "Hapus Sekaligus wilayah berlabel"
 
-#: Menus.cpp:3769
+#: Menus.cpp:3811
 msgid "Silence Labels"
 msgstr "Label Diam"
 
-#: Menus.cpp:3769
+#: Menus.cpp:3811
 msgid "Silenced labeled regions"
 msgstr "Wilayah berlabel didiamkan"
 
-#: Menus.cpp:3778
+#: Menus.cpp:3820
 msgid "Split Labels"
 msgstr "Labelkan Sekaligus"
 
-#: Menus.cpp:3778
+#: Menus.cpp:3820
 msgid "Split labeled regions"
 msgstr "Sekaliguskan wilayah berlabel"
 
-#: Menus.cpp:3790
+#: Menus.cpp:3832
 msgid "Join Labels"
 msgstr "Gabungkan Label"
 
-#: Menus.cpp:3790
+#: Menus.cpp:3832
 msgid "Joined labeled regions"
 msgstr "Wilayah berlabel digabung"
 
-#: Menus.cpp:3802
+#: Menus.cpp:3844
 msgid "Detach Labels"
 msgstr "Lepaskan Label"
 
-#: Menus.cpp:3802
+#: Menus.cpp:3844
 msgid "Detached labeled regions"
 msgstr "Wilayah berlabel yang terlepas"
 
-#: Menus.cpp:3824
-#: TrackPanel.cpp:6322
+#: Menus.cpp:3866
+#: TrackPanel.cpp:6329
 msgid "Split"
 msgstr "Sekaligus"
 
-#: Menus.cpp:3913
+#: Menus.cpp:3955
 msgid "Split New"
 msgstr "Perbaharui sekaligus"
 
-#: Menus.cpp:3913
+#: Menus.cpp:3955
 msgid "Split to new track"
 msgstr "Sekaliguskan ke trek baru"
 
-#: Menus.cpp:3995
+#: Menus.cpp:4037
 msgid "Split at labels"
 msgstr "Sekaliguskan pada label"
 
-#: Menus.cpp:4310
+#: Menus.cpp:4352
 msgid "Frequency Analysis"
 msgstr "Analisis Frekuensi"
 
-#: Menus.cpp:4452
+#: Menus.cpp:4494
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Diimpor label dari '%s'"
 
-#: Menus.cpp:4453
+#: Menus.cpp:4495
 msgid "Import Labels"
 msgstr "Impor label"
 
-#: Menus.cpp:4464
+#: Menus.cpp:4506
 msgid "Select a MIDI file..."
 msgstr "Pilih file MIDI..."
 
-#: Menus.cpp:4468
+#: Menus.cpp:4510
 msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
 msgstr "File MIDI dan Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|File MIDI (*.mid;*.midi)|*.mid;*.midi|File Allegro (*.gro)|*.gro|Semua file (*.*)|*.*"
 
-#: Menus.cpp:4484
+#: Menus.cpp:4526
 #, c-format
 msgid "Imported MIDI from '%s'"
 msgstr "MIDI diimpor dari '%s'"
 
-#: Menus.cpp:4485
+#: Menus.cpp:4527
 msgid "Import MIDI"
 msgstr "Impor MIDI"
 
-#: Menus.cpp:4499
+#: Menus.cpp:4541
 msgid "Select any uncompressed audio file..."
 msgstr "Pilih file audio tanpa kompresi apa saja..."
 
-#: Menus.cpp:4503
+#: Menus.cpp:4545
 msgid "All files (*)|*"
 msgstr "Semua File (*)|*"
 
-#: Menus.cpp:4527
+#: Menus.cpp:4569
 msgid "Edit the metadata tags"
 msgstr "Edit tag metadata"
 
-#: Menus.cpp:4528
+#: Menus.cpp:4570
 #: export/Export.cpp:354
 msgid "Edit Metadata"
 msgstr "Edit Metadata"
 
-#: Menus.cpp:4528
+#: Menus.cpp:4570
 msgid "Edit Metadata tags"
 msgstr "Edit Tag Metadata"
 
-#: Menus.cpp:4583
+#: Menus.cpp:4625
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "Semua audio di trek '%s' telah di-render"
 
-#: Menus.cpp:4584
+#: Menus.cpp:4626
 msgid "Render"
 msgstr "Render"
 
-#: Menus.cpp:4589
+#: Menus.cpp:4631
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
 msgstr "Di-mix dan di-render %d trek ke dalam satu trek stereo"
 
-#: Menus.cpp:4592
+#: Menus.cpp:4634
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "Di-mix dan di-render %d trek ke dalam satu trek mono"
 
-#: Menus.cpp:4594
+#: Menus.cpp:4636
 #: Mix.cpp:120
 msgid "Mix and Render"
 msgstr "Mix dan Render"
 
-#: Menus.cpp:4726
+#: Menus.cpp:4768
 msgid "Aligned with zero"
 msgstr "Sejajarkan dengan nol"
 
-#: Menus.cpp:4730
+#: Menus.cpp:4772
 msgid "Aligned cursor"
 msgstr "Kursor yang diratakan"
 
-#: Menus.cpp:4734
+#: Menus.cpp:4776
 msgid "Aligned with selection start"
 msgstr "Diratakan dengan awal pilihan"
 
-#: Menus.cpp:4738
+#: Menus.cpp:4780
 msgid "Aligned with selection end"
 msgstr "Diratakan dengan akhir pilihan"
 
-#: Menus.cpp:4742
+#: Menus.cpp:4784
 msgid "Aligned end with cursor"
 msgstr "Diratakan akhir dengan kursor"
 
-#: Menus.cpp:4746
+#: Menus.cpp:4788
 msgid "Aligned end with selection start"
 msgstr "Diratakan akhir dengan awal pilihan"
 
-#: Menus.cpp:4750
+#: Menus.cpp:4792
 msgid "Aligned end with selection end"
 msgstr "Diratakan akhir dengan akhir pilihan"
 
-#: Menus.cpp:4754
+#: Menus.cpp:4796
 msgid "Aligned"
 msgstr "Diratakan"
 
-#: Menus.cpp:4787
+#: Menus.cpp:4829
 msgid "Align"
 msgstr "Perataan"
 
-#: Menus.cpp:4873
+#: Menus.cpp:4915
 msgid "Sync MIDI with Audio"
 msgstr "Sinkronisasi MIDI dengan Audio"
 
-#: Menus.cpp:4877
+#: Menus.cpp:4919
 msgid "Alignment completed."
 msgstr "Perataan selesai."
 
-#: Menus.cpp:4888
+#: Menus.cpp:4930
 msgid "Created new audio track"
 msgstr "Trek audio baru telah dibuat"
 
-#: Menus.cpp:4888
-#: Menus.cpp:4910
-#: Menus.cpp:4925
-#: Menus.cpp:4945
+#: Menus.cpp:4930
+#: Menus.cpp:4952
+#: Menus.cpp:4967
+#: Menus.cpp:4987
 msgid "New Track"
 msgstr "Trek Baru"
 
-#: Menus.cpp:4910
+#: Menus.cpp:4952
 msgid "Created new stereo audio track"
 msgstr "Trek stereo baru telah dibuat"
 
-#: Menus.cpp:4925
+#: Menus.cpp:4967
 msgid "Created new label track"
 msgstr "Trek label baru telah dibuat"
 
-#: Menus.cpp:4934
+#: Menus.cpp:4976
 msgid "The version of Audacity you are using does not support multiple time tracks."
 msgstr "Varsi Audacity anda tidak mendukung multi-trek "
 
-#: Menus.cpp:4945
+#: Menus.cpp:4987
 msgid "Created new time track"
 msgstr "Dibuat trek waktu yang baru"
 
-#: Menus.cpp:5005
+#: Menus.cpp:5056
 msgid "Added label"
 msgstr "Label telah dibuat"
 
-#: Menus.cpp:5040
+#: Menus.cpp:5091
 msgid "Edited labels"
 msgstr "Label yang diedit"
 
-#: Menus.cpp:5067
+#: Menus.cpp:5118
 msgid "Save CleanSpeech Preset File As:"
 msgstr "Simpan File Aturan Lanjut CleanSpeech Sebagai:"
 
-#: Menus.cpp:5071
+#: Menus.cpp:5122
 msgid "CleanSpeech Presets (*.csp)|*.csp"
 msgstr "CleanSpeech Presets (*.csp)|*.csp"
 
-#: Menus.cpp:5078
+#: Menus.cpp:5129
 #: export/Export.cpp:611
 msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Maaf, nama path yang lebih dari 256 karakter tidak mendukung."
 
-#: Menus.cpp:5124
+#: Menus.cpp:5175
 msgid "Problem encountered exporting presets."
 msgstr "Problem encountered exporting presets."
 
-#: Menus.cpp:5125
+#: Menus.cpp:5176
 #: export/Export.cpp:479
 msgid "Unable to export"
 msgstr "Tidak bisa mengekspor"
 
-#: Menus.cpp:5312
+#: Menus.cpp:5363
 msgid "Remove Track"
 msgstr "Buang Trek"
 
-#: Menus.cpp:5312
+#: Menus.cpp:5363
 msgid "Removed audio track(s)"
 msgstr "Trek audio dibuang"
 
-#: Menus.cpp:5486
-#: Menus.cpp:5542
-#: export/ExportFFmpeg.cpp:800
+#: Menus.cpp:5537
+#: Menus.cpp:5593
+#: export/ExportFFmpeg.cpp:799
 #: export/ExportMP3.cpp:1785
 msgid "Resample"
 msgstr "Sampel Ulang"
 
-#: Menus.cpp:5507
-#: TrackPanel.cpp:6546
+#: Menus.cpp:5558
+#: TrackPanel.cpp:6553
 msgid "New sample rate (Hz):"
 msgstr "New sample rate (Hz):"
 
-#: Menus.cpp:5531
-#: TrackPanel.cpp:6570
+#: Menus.cpp:5582
+#: TrackPanel.cpp:6577
 msgid "The entered value is invalid"
 msgstr "Nilai yang Anda masukkan tidak valid"
 
-#: Menus.cpp:5540
+#: Menus.cpp:5591
 #, c-format
 msgid "Resampling track %d"
 msgstr "Menyampel ulang trek %d"
 
-#: Menus.cpp:5549
+#: Menus.cpp:5600
 msgid "Resample Track"
 msgstr "Menyempel Ulang Trek"
 
-#: Menus.cpp:5549
+#: Menus.cpp:5600
 msgid "Resampled audio track(s)"
 msgstr "Trek audio telah disampel ulang"
 
@@ -3084,9 +3086,9 @@ msgstr "Trek Mix dan Render"
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: MixerBoard.cpp:147
 #: MixerBoard.cpp:286
-#: TrackPanel.cpp:3625
-#: TrackPanel.cpp:5956
-#: TrackPanel.cpp:7337
+#: TrackPanel.cpp:3632
+#: TrackPanel.cpp:5963
+#: TrackPanel.cpp:7349
 msgid "Gain"
 msgstr "Kekuatan"
 
@@ -3097,21 +3099,21 @@ msgstr "Instrumen Musikal"
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
 #: MixerBoard.cpp:180
 #: MixerBoard.cpp:300
-#: TrackPanel.cpp:3625
-#: TrackPanel.cpp:5904
-#: TrackPanel.cpp:7345
+#: TrackPanel.cpp:3632
+#: TrackPanel.cpp:5911
+#: TrackPanel.cpp:7357
 msgid "Pan"
 msgstr "Pan"
 
 #: MixerBoard.cpp:228
-#: MixerBoard.cpp:1069
-#: TrackPanel.cpp:7286
+#: MixerBoard.cpp:1070
+#: TrackPanel.cpp:7298
 msgid "Mute"
 msgstr "Diam"
 
 #: MixerBoard.cpp:229
-#: MixerBoard.cpp:1119
-#: TrackPanel.cpp:7286
+#: MixerBoard.cpp:1120
+#: TrackPanel.cpp:7298
 msgid "Solo"
 msgstr "Solo"
 
@@ -3120,16 +3122,16 @@ msgid "Signal Level Meter"
 msgstr "Pengukur Level Signal"
 
 #: MixerBoard.cpp:286
-#: TrackPanel.cpp:3624
+#: TrackPanel.cpp:3631
 msgid "Moved gain slider"
 msgstr "Pindahkan slider kekuatan"
 
 #: MixerBoard.cpp:300
-#: TrackPanel.cpp:3624
+#: TrackPanel.cpp:3631
 msgid "Moved pan slider"
 msgstr "Pindahkan slider pan"
 
-#: MixerBoard.cpp:1328
+#: MixerBoard.cpp:1329
 #, c-format
 msgid "Audacity Mixer Board%s"
 msgstr "Mixer Board%s Audacity"
@@ -3146,39 +3148,35 @@ msgstr "Ada masalah dalam mencetak"
 msgid "Print"
 msgstr "Cetak"
 
-#: Project.cpp:826
-msgid "Repeat Last Effect"
-msgstr "Ulangi Efek Terakhir"
-
-#: Project.cpp:931
+#: Project.cpp:866
 msgid "Main Mix"
 msgstr "Mix Utama"
 
-#: Project.cpp:1054
+#: Project.cpp:989
 #, c-format
 msgid "Welcome to Audacity version %s"
 msgstr "Selamat datang di Audacity versi %s"
 
-#: Project.cpp:1229
+#: Project.cpp:1155
 msgid "(Recovered)"
 msgstr "(Terkembalikan)"
 
-#: Project.cpp:1914
-#: TrackPanel.cpp:931
+#: Project.cpp:1835
+#: TrackPanel.cpp:933
 #: toolbars/ControlToolBar.cpp:187
 msgid "Record"
 msgstr "Rekam"
 
-#: Project.cpp:1914
-#: TrackPanel.cpp:931
+#: Project.cpp:1835
+#: TrackPanel.cpp:933
 msgid "Recorded Audio"
 msgstr "Rekaman Audio"
 
-#: Project.cpp:1935
+#: Project.cpp:1856
 msgid "Save changes before closing?"
 msgstr "Simpan perubahan sebelum ditutup?"
 
-#: Project.cpp:1938
+#: Project.cpp:1859
 msgid ""
 "\n"
 "If saved, the project will have no tracks.\n"
@@ -3194,24 +3192,24 @@ msgstr ""
 "Batal, Edit > Batalkan sampai semua trek\n"
 "terbuka, kemudian Berkas > Simpan Proyek."
 
-#: Project.cpp:1941
+#: Project.cpp:1862
 msgid "Save changes?"
 msgstr "Simpan perubahan?"
 
-#: Project.cpp:2163
-msgid "All files|*|All supported files|"
-msgstr "Semua file|*|Semua file yang terdukung|"
-
-#: Project.cpp:2193
+#: Project.cpp:2124
 msgid "Select one or more audio files..."
 msgstr "Pilih satu atau lebih file audio..."
 
-#: Project.cpp:2221
-msgid "Audacity projects|*.aup|"
-msgstr "Proyek Audacity|*.aup|"
+#. i18n-hint: This string is a label in the file type filter in the open
+#. * / save dialogues, for the option that only shows project files created
+#. * with Audacity.
+#: Project.cpp:2155
+#: Project.cpp:3394
+msgid "Audacity projects"
+msgstr "Proyek Audacity"
 
-#: Project.cpp:2285
-#: Project.cpp:2782
+#: Project.cpp:2219
+#: Project.cpp:2720
 #, c-format
 msgid ""
 "This file was saved by Audacity %s, a much\n"
@@ -3230,16 +3228,16 @@ msgstr ""
 "\n"
 "Buka filenya sekarang?"
 
-#: Project.cpp:2286
+#: Project.cpp:2220
 msgid "1.0 or earlier"
 msgstr "1.0 atau lebih lama"
 
-#: Project.cpp:2292
-#: Project.cpp:2794
+#: Project.cpp:2226
+#: Project.cpp:2732
 msgid "Opening old project file"
 msgstr "Membuka file proyek yang lama"
 
-#: Project.cpp:2316
+#: Project.cpp:2250
 msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
@@ -3251,17 +3249,17 @@ msgstr ""
 "\n"
 "Silahkan buka file proyek Audacity yang sesungguhnya."
 
-#: Project.cpp:2317
+#: Project.cpp:2251
 msgid "Backup file detected"
 msgstr "File backup terdeteksi"
 
-#: Project.cpp:2331
-#: Project.cpp:2339
+#: Project.cpp:2265
+#: Project.cpp:2273
 #: xml/XMLWriter.cpp:306
 msgid "Error opening file"
 msgstr "Error dalam mebuka file"
 
-#: Project.cpp:2345
+#: Project.cpp:2279
 #, c-format
 msgid ""
 "File may be invalid or corrupted: \n"
@@ -3270,41 +3268,41 @@ msgstr ""
 "File mungkin tidak ada atau terhapus: \n"
 "%s"
 
-#: Project.cpp:2346
+#: Project.cpp:2280
 msgid "Error opening file or project"
 msgstr "Error dalam membuka file atau proyek"
 
-#: Project.cpp:2366
+#: Project.cpp:2300
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 
-#: Project.cpp:2506
+#: Project.cpp:2440
 msgid "Could not remove old auto save file"
 msgstr "Tidak bisa membuang file simpan otomatis yang lama"
 
-#: Project.cpp:2508
+#: Project.cpp:2442
 msgid "Project was recovered"
 msgstr "Proyek telah dikembalikan"
 
-#: Project.cpp:2508
+#: Project.cpp:2442
 msgid "Recover"
 msgstr "Kembalikan"
 
-#: Project.cpp:2537
+#: Project.cpp:2471
 msgid "Project checker repaired file"
 msgstr "Pengecekan telah memperbaiki file"
 
-#: Project.cpp:2537
+#: Project.cpp:2471
 #: effects/Repair.h:29
 msgid "Repair"
 msgstr "Perbaiki"
 
-#: Project.cpp:2707
+#: Project.cpp:2645
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Tidak bisa menemukan folder data proyek: \"%s\""
 
-#: Project.cpp:2751
+#: Project.cpp:2689
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3315,11 +3313,11 @@ msgstr ""
 "Anda menggunakan Audacity %s - anda diharuskan untuk\n"
 "meng-upgrade versi terbaru untuk membuka file ini."
 
-#: Project.cpp:2755
+#: Project.cpp:2693
 msgid "Can't open project file"
 msgstr "Tidak bisa membuka file proyek"
 
-#: Project.cpp:2789
+#: Project.cpp:2727
 #, c-format
 msgid ""
 "This file was saved by Audacity %s.\n"
@@ -3336,7 +3334,7 @@ msgstr ""
 "\n"
 "Buka filenya sekarang?"
 
-#: Project.cpp:2987
+#: Project.cpp:2925
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3356,11 +3354,11 @@ msgstr ""
 "\n"
 "Simpan saja?"
 
-#: Project.cpp:2988
+#: Project.cpp:2926
 msgid "Warning empty project"
 msgstr "Peringatan proyek kosong"
 
-#: Project.cpp:3097
+#: Project.cpp:3035
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -3369,46 +3367,46 @@ msgstr ""
 "Tidak bisa menyimpan proyek. Mungkin %s \n"
 "tidak bisa ditulis atau disk penuh."
 
-#: Project.cpp:3099
-#: Project.cpp:3125
+#: Project.cpp:3037
+#: Project.cpp:3063
 msgid "Error saving project"
 msgstr "Error dalam meyimpan proyek"
 
-#: Project.cpp:3123
-#: Project.cpp:4369
+#: Project.cpp:3061
+#: Project.cpp:4320
 #: Tags.cpp:1203
-#: effects/Equalization.cpp:1184
+#: effects/Equalization.cpp:1199
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "Tidak bisa menulis ke file \"%s\": %s"
 
-#: Project.cpp:3203
+#: Project.cpp:3141
 #, c-format
 msgid "Saved %s"
 msgstr "Tersimpan %s"
 
-#: Project.cpp:3356
+#: Project.cpp:3294
 #, c-format
 msgid "Imported '%s'"
 msgstr "Terimpor '%s'"
 
-#: Project.cpp:3357
+#: Project.cpp:3295
 msgid "Import"
 msgstr "Impor"
 
-#: Project.cpp:3392
+#: Project.cpp:3330
 msgid "Error importing"
 msgstr "Error menginpor"
 
-#: Project.cpp:3440
+#: Project.cpp:3378
 msgid "Save Speech As:"
 msgstr "Simpan Speech Sebagai:"
 
-#: Project.cpp:3442
+#: Project.cpp:3380
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "File Windows PCM Audio(*.wav)|*.wav"
 
-#: Project.cpp:3449
+#: Project.cpp:3387
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
@@ -3426,7 +3424,7 @@ msgstr ""
 "Ketika anda ingin menyimpan file yang bisa dibuka oleh program lain, Pilih salah satu\n"
 "perintah Ekspor."
 
-#: Project.cpp:3452
+#: Project.cpp:3390
 msgid ""
 "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3440,84 +3438,92 @@ msgstr ""
 "\n"
 "Untuk emnyimpan file untuk program lainnya, gunakan salah satu perintah \"Berkas > Ekspor\".\n"
 
-#: Project.cpp:3454
+#: Project.cpp:3392
 msgid "Save Project As..."
 msgstr "Simpan Proyek Sebagai..."
 
-#: Project.cpp:3456
-msgid "Audacity projects (*.aup)|*.aup"
-msgstr "Proyek Audacity (*.aup)|*.aup"
+#: Project.cpp:3415
+msgid "Error Saving Project"
+msgstr "Error Meyimpan Proyek"
 
-#: Project.cpp:3505
+#: Project.cpp:3415
+msgid ""
+"The project was not saved because the file name provided would overwrite another project.\n"
+"Please try again and select an original name."
+msgstr ""
+"Proyek ini tidak disimpan karena nama file yang ada akan menimpa proyek lainnya.\n"
+"Silahkan coba lagi dan pilih nama yang aslinya."
+
+#: Project.cpp:3456
 msgid "Created new project"
 msgstr "Membuat proyek baru"
 
-#: Project.cpp:3725
+#: Project.cpp:3676
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Terhapus %.2f detik pada t=%.2f"
 
-#: Project.cpp:3728
-#: effects/Equalization.cpp:1384
-#: effects/Equalization.cpp:2759
+#: Project.cpp:3679
+#: effects/Equalization.cpp:1399
+#: effects/Equalization.cpp:2778
 msgid "Delete"
 msgstr "Hapus"
 
-#: Project.cpp:3914
+#: Project.cpp:3865
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "Ruang disk tinggal %d jam dan %d menit waktu rekaman."
 
-#: Project.cpp:3917
+#: Project.cpp:3868
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "Ruang disk tinggal 1 jam dan %d menit waktu rekaman."
 
-#: Project.cpp:3920
+#: Project.cpp:3871
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "Ruang disk tinggal %d menit waktu rekaman."
 
-#: Project.cpp:3923
+#: Project.cpp:3874
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "Ruang disk tinggal %d detik waktu rekaman."
 
-#: Project.cpp:3926
+#: Project.cpp:3877
 msgid "Out of disk space"
 msgstr "Ruang disk tidak cukup"
 
-#: Project.cpp:3948
+#: Project.cpp:3899
 msgid "On-demand import and waveform calculation complete."
 msgstr "Mengimpor di tempat dan perhitungan waveform selesai."
 
-#: Project.cpp:3953
+#: Project.cpp:3904
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
 msgstr "Mengimpor selesai. Menjalankan %d perhitungan waveform di tempat. %2.0f%% selesai dari semuanya."
 
-#: Project.cpp:3956
+#: Project.cpp:3907
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "Mengimpor selesai. Menjalankan perhitungan waveform di tempat. %2.0f%% selesai."
 
-#: Project.cpp:4300
+#: Project.cpp:4251
 msgid "Could not remove old autosave file: "
 msgstr "Tidak bisa membuang file autosimpan yang lama:"
 
-#: Project.cpp:4341
+#: Project.cpp:4292
 msgid "New Project"
 msgstr "Proyek Baru"
 
-#: Project.cpp:4371
+#: Project.cpp:4322
 msgid "Error writing autosave file"
 msgstr "Error menulis file simpan otomatis"
 
-#: Project.cpp:4386
+#: Project.cpp:4337
 msgid "Could not create autosave file: "
 msgstr "Tidak bisa membuat file autosimpan:"
 
-#: Project.cpp:4412
+#: Project.cpp:4363
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Rate Asli: %d"
@@ -3652,7 +3658,7 @@ msgstr "Kontrol"
 #: Screenshot.cpp:377
 #: effects/LoadEffects.cpp:115
 #: toolbars/MixerToolBar.cpp:59
-#: toolbars/MixerToolBar.cpp:240
+#: toolbars/MixerToolBar.cpp:246
 msgid "Mixer"
 msgstr "Mixer"
 
@@ -3754,8 +3760,8 @@ msgid "Gap detected in project file\n"
 msgstr "Pemisah terdeteksi pada file proyek\n"
 
 #: ShuttleGui.cpp:2034
-#: effects/Effect.cpp:410
-#: effects/audiounits/AudioUnitEffect.cpp:843
+#: effects/Effect.cpp:432
+#: effects/audiounits/AudioUnitEffect.cpp:871
 msgid "Pre&view"
 msgstr "Pre&view"
 
@@ -3997,9 +4003,9 @@ msgstr ""
 "sudah ada."
 
 #: TimeDialog.h:29
-#: TimerRecordDialog.cpp:233
-#: TimerRecordDialog.cpp:354
+#: TimerRecordDialog.cpp:238
 #: TimerRecordDialog.cpp:358
+#: TimerRecordDialog.cpp:362
 #: effects/DtmfGen.cpp:453
 #: effects/Noise.cpp:197
 #: effects/Noise.cpp:213
@@ -4026,42 +4032,42 @@ msgstr "Durasinya nol. Tidak ada yang akan direkam."
 msgid "Error in Duration"
 msgstr "Error dalam Durasi"
 
-#: TimerRecordDialog.cpp:230
+#: TimerRecordDialog.cpp:235
 msgid "Recording start"
 msgstr "Mulai merekam"
 
-#: TimerRecordDialog.cpp:231
+#: TimerRecordDialog.cpp:236
 msgid "Recording end"
 msgstr "Selesai merekam"
 
-#: TimerRecordDialog.cpp:237
+#: TimerRecordDialog.cpp:242
 msgid "Audacity Timer Record Progress"
 msgstr "Peningkatan Pencatat Waktu Rekaman Audacity"
 
-#: TimerRecordDialog.cpp:316
+#: TimerRecordDialog.cpp:320
 msgid "Start Date and Time"
 msgstr "Tanggal dan Waktu mulai"
 
-#: TimerRecordDialog.cpp:323
+#: TimerRecordDialog.cpp:327
 msgid "Start Date"
 msgstr "Tanggal Mulai"
 
-#: TimerRecordDialog.cpp:335
+#: TimerRecordDialog.cpp:339
 msgid "End Date and Time"
 msgstr "Tanggal dan Waktu selesai"
 
-#: TimerRecordDialog.cpp:343
+#: TimerRecordDialog.cpp:347
 msgid "End Date"
 msgstr "Tanggal Selesai"
 
 #. i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
 #. * but hopefully translated by wxwidgets will be inserted into this
-#: TimerRecordDialog.cpp:430
+#: TimerRecordDialog.cpp:434
 #, c-format
 msgid "Waiting to start recording at %s.\n"
 msgstr "Menunggu untuk memulai rekaman pada %s.\n"
 
-#: TimerRecordDialog.cpp:436
+#: TimerRecordDialog.cpp:440
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Pencatat Waktu Rekaman Audacity - Menunggu untuk mulai"
 
@@ -4114,17 +4120,17 @@ msgid "Pitch (EAC)"
 msgstr "Pitch (EAC)"
 
 #: TrackPanel.cpp:624
-#: TrackPanel.cpp:6265
+#: TrackPanel.cpp:6272
 msgid "Mono"
 msgstr "Mono"
 
 #: TrackPanel.cpp:625
-#: TrackPanel.cpp:6264
+#: TrackPanel.cpp:6271
 msgid "Left Channel"
 msgstr "Bagian Kiri"
 
 #: TrackPanel.cpp:626
-#: TrackPanel.cpp:6264
+#: TrackPanel.cpp:6271
 msgid "Right Channel"
 msgstr "Bagian Kanan"
 
@@ -4145,7 +4151,7 @@ msgid "Set Sample Format"
 msgstr "Atur Format Sampel"
 
 #: TrackPanel.cpp:633
-#: TrackPanel.cpp:6526
+#: TrackPanel.cpp:6533
 msgid "Set Rate"
 msgstr "Atur Rate"
 
@@ -4171,299 +4177,299 @@ msgstr "Atur Jarak..."
 msgid "Copy"
 msgstr "Salin"
 
-#: TrackPanel.cpp:1406
+#: TrackPanel.cpp:1413
 msgid "Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "Klik untuk perbesar secara vertikal, klik dengan Shift untuk perkecil, Dorong untuk membuat wilayah zoom kecil."
 
-#: TrackPanel.cpp:1411
+#: TrackPanel.cpp:1418
 msgid "Drag the label vertically to change the order of the tracks."
 msgstr "Dorong label secara vertikal untuk mengubah urutan trek."
 
-#: TrackPanel.cpp:1431
+#: TrackPanel.cpp:1438
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr "Klik dan dorong untuk mengubah ukuran relatif trek stereo."
 
-#: TrackPanel.cpp:1434
+#: TrackPanel.cpp:1441
 msgid "Click and drag to resize the track."
 msgstr "Klik dan dorong untuk mengubah ukuran trek"
 
-#: TrackPanel.cpp:1465
+#: TrackPanel.cpp:1472
 msgid "Drag one or more label boundaries"
 msgstr "Dorong satu atau lebih batasan label"
 
-#: TrackPanel.cpp:1466
+#: TrackPanel.cpp:1473
 msgid "Drag label boundary"
 msgstr "Borong batasan label"
 
 #. i18n-hint: This string is for the Mac OS, which uses Command-, as the shortcut for Preferences
-#: TrackPanel.cpp:1482
+#: TrackPanel.cpp:1489
 msgid "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
 msgstr "Mode Tool Serbaguna: Cmd-. untuk Preferensi Mouse dan Keyboard"
 
 #. i18n-hint: This string is for Windows and Linux, which uses Control-P as the shortcut for Preferences
-#: TrackPanel.cpp:1485
+#: TrackPanel.cpp:1492
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "Mode Tool Serbaguna: Ctrl-P untuk Preferensi Mouse dan Keyboard"
 
-#: TrackPanel.cpp:1531
+#: TrackPanel.cpp:1538
 msgid "Click and drag to move left selection boundary."
 msgstr "Klik dan dorong untuk memindahkan batasan kiri."
 
-#: TrackPanel.cpp:1536
+#: TrackPanel.cpp:1543
 msgid "Click and drag to move right selection boundary."
 msgstr "Klik dan dorong untuk memindahkan batasan kanan."
 
-#: TrackPanel.cpp:1882
-#: TrackPanel.cpp:4193
-#: TrackPanel.cpp:4225
-#: TrackPanel.cpp:4487
-#: TrackPanel.cpp:6689
-#: TrackPanel.cpp:6709
+#: TrackPanel.cpp:1889
+#: TrackPanel.cpp:4200
+#: TrackPanel.cpp:4232
+#: TrackPanel.cpp:4494
+#: TrackPanel.cpp:6696
+#: TrackPanel.cpp:6716
 msgid "Modified Label"
 msgstr "Label yang Telah Diubah"
 
-#: TrackPanel.cpp:1883
-#: TrackPanel.cpp:4194
-#: TrackPanel.cpp:4226
-#: TrackPanel.cpp:4488
-#: TrackPanel.cpp:6690
-#: TrackPanel.cpp:6710
+#: TrackPanel.cpp:1890
+#: TrackPanel.cpp:4201
+#: TrackPanel.cpp:4233
+#: TrackPanel.cpp:4495
+#: TrackPanel.cpp:6697
+#: TrackPanel.cpp:6717
 msgid "Label Edit"
 msgstr "Label Edit"
 
-#: TrackPanel.cpp:2116
+#: TrackPanel.cpp:2123
 msgid "Adjusted envelope."
 msgstr "Amplop diubah."
 
-#: TrackPanel.cpp:2117
+#: TrackPanel.cpp:2124
 #: prefs/MousePrefs.cpp:119
 msgid "Envelope"
 msgstr "Amplop"
 
-#: TrackPanel.cpp:2267
+#: TrackPanel.cpp:2274
 msgid "Moved clip to another track"
 msgstr "Telah dipindah ke trek yang lain"
 
-#: TrackPanel.cpp:2271
+#: TrackPanel.cpp:2278
 msgid "left"
 msgstr "kiri"
 
-#: TrackPanel.cpp:2271
+#: TrackPanel.cpp:2278
 msgid "right"
 msgstr "kanan"
 
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2273
+#: TrackPanel.cpp:2280
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "Waktu trek/klip %s dipersingkat %.02f seconds"
 
-#: TrackPanel.cpp:2277
+#: TrackPanel.cpp:2284
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "Time-Shift"
 
-#: TrackPanel.cpp:3070
+#: TrackPanel.cpp:3077
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "Untuk menggunakan Gambar, pilih 'Waveform' pada Menu Trek."
 
-#: TrackPanel.cpp:3087
+#: TrackPanel.cpp:3094
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "Untuk emnggunakan Gambar, perbesar sampai Anda melihat sampel berdiri sendiri."
 
-#: TrackPanel.cpp:3361
+#: TrackPanel.cpp:3368
 msgid "Moved Sample"
 msgstr "Dipindahkan Sampel"
 
-#: TrackPanel.cpp:3362
+#: TrackPanel.cpp:3369
 msgid "Sample Edit"
 msgstr "Sampel Edit"
 
-#: TrackPanel.cpp:3465
+#: TrackPanel.cpp:3472
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "Dibuang trek '%s.'"
 
-#: TrackPanel.cpp:3467
+#: TrackPanel.cpp:3474
 msgid "Track Remove"
 msgstr "Pembuangan Trek"
 
-#: TrackPanel.cpp:3795
-#: TrackPanel.cpp:6633
+#: TrackPanel.cpp:3802
+#: TrackPanel.cpp:6640
 msgid "up"
 msgstr "atas"
 
-#: TrackPanel.cpp:3803
-#: TrackPanel.cpp:6634
+#: TrackPanel.cpp:3810
+#: TrackPanel.cpp:6641
 msgid "down"
 msgstr "bawah"
 
-#: TrackPanel.cpp:3814
-#: TrackPanel.cpp:6629
+#: TrackPanel.cpp:3821
+#: TrackPanel.cpp:6636
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "Dipindahkan '%s' %s"
 
-#: TrackPanel.cpp:3817
-#: TrackPanel.cpp:6635
+#: TrackPanel.cpp:3824
+#: TrackPanel.cpp:6642
 msgid "Move Track"
 msgstr "Pindahkan Trek"
 
-#: TrackPanel.cpp:4388
+#: TrackPanel.cpp:4395
 msgid "Expand"
 msgstr "Sebar"
 
-#: TrackPanel.cpp:4388
+#: TrackPanel.cpp:4395
 msgid "Expanded Cut Line"
 msgstr "Garis Potong yng Tersebar"
 
-#: TrackPanel.cpp:4397
+#: TrackPanel.cpp:4404
 msgid "Merge"
 msgstr "Gabung"
 
-#: TrackPanel.cpp:4397
+#: TrackPanel.cpp:4404
 msgid "Merged Clips"
 msgstr "Klip Tergabung"
 
-#: TrackPanel.cpp:4408
+#: TrackPanel.cpp:4415
 msgid "Remove"
 msgstr "Buang"
 
-#: TrackPanel.cpp:4408
+#: TrackPanel.cpp:4415
 msgid "Removed Cut Line"
 msgstr "Garis Pemisah yang Dibuang"
 
-#: TrackPanel.cpp:5904
+#: TrackPanel.cpp:5911
 msgid "Adjusted Pan"
 msgstr "Pengubahan Pan"
 
-#: TrackPanel.cpp:5956
+#: TrackPanel.cpp:5963
 msgid "Adjusted gain"
 msgstr "Kekuatan yang Diubah"
 
-#: TrackPanel.cpp:6095
+#: TrackPanel.cpp:6102
 msgid "Can't delete track with active audio"
 msgstr "Tidak bisa menghapus trek yang sedang aktif"
 
-#: TrackPanel.cpp:6245
+#: TrackPanel.cpp:6252
 msgid "Stereo, "
 msgstr "Stereo,"
 
-#: TrackPanel.cpp:6248
+#: TrackPanel.cpp:6255
 msgid "Mono, "
 msgstr "Mono,"
 
-#: TrackPanel.cpp:6250
+#: TrackPanel.cpp:6257
 msgid "Left, "
 msgstr "Kiri,"
 
-#: TrackPanel.cpp:6252
+#: TrackPanel.cpp:6259
 msgid "Right, "
 msgstr "Kanan,"
 
-#: TrackPanel.cpp:6274
-#: TrackPanel.cpp:6436
+#: TrackPanel.cpp:6281
+#: TrackPanel.cpp:6443
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "Diubah '%s' ke %s"
 
-#: TrackPanel.cpp:6277
+#: TrackPanel.cpp:6284
 msgid "Channel"
 msgstr "Saluran"
 
-#: TrackPanel.cpp:6318
+#: TrackPanel.cpp:6325
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "Menggabung Trek Stereo '%s'"
 
-#: TrackPanel.cpp:6320
+#: TrackPanel.cpp:6327
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "Pisah Stereo ke Mono '%s'"
 
-#: TrackPanel.cpp:6352
+#: TrackPanel.cpp:6359
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "Dibuat '%s' trek stereo"
 
-#: TrackPanel.cpp:6355
+#: TrackPanel.cpp:6362
 msgid "Make Stereo"
 msgstr "Buat Stereo"
 
-#: TrackPanel.cpp:6400
+#: TrackPanel.cpp:6407
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "Diubah '%s' ke %d Hz"
 
-#: TrackPanel.cpp:6402
+#: TrackPanel.cpp:6409
 msgid "Rate Change"
 msgstr "Perubahan Rate"
 
-#: TrackPanel.cpp:6440
+#: TrackPanel.cpp:6447
 msgid "Format Change"
 msgstr "Perubahan Format"
 
-#: TrackPanel.cpp:6590
+#: TrackPanel.cpp:6597
 msgid "Change lower speed limit (%) to:"
 msgstr "Ubah batas kecepatan rendah (%) ke:"
 
-#: TrackPanel.cpp:6591
-#: TrackPanel.cpp:6592
+#: TrackPanel.cpp:6598
+#: TrackPanel.cpp:6599
 msgid "Lower speed limit"
 msgstr "Batas kecepatan rendah"
 
-#: TrackPanel.cpp:6597
+#: TrackPanel.cpp:6604
 msgid "Change upper speed limit (%) to:"
 msgstr "Ubah batas kecepatan tinggi (%) ke:"
 
-#: TrackPanel.cpp:6598
-#: TrackPanel.cpp:6599
+#: TrackPanel.cpp:6605
+#: TrackPanel.cpp:6606
 msgid "Upper speed limit"
 msgstr "Batas kecepatan tinggi"
 
-#: TrackPanel.cpp:6607
+#: TrackPanel.cpp:6614
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "Atur jarak ke '%d' - '%d'"
 
-#: TrackPanel.cpp:6610
+#: TrackPanel.cpp:6617
 msgid "Set Range"
 msgstr "Atur Jarak"
 
-#: TrackPanel.cpp:6664
+#: TrackPanel.cpp:6671
 msgid "Change track name to:"
 msgstr "Ubah nama trek ke:"
 
-#: TrackPanel.cpp:6665
+#: TrackPanel.cpp:6672
 msgid "Track Name"
 msgstr "Nama Trek"
 
-#: TrackPanel.cpp:6675
+#: TrackPanel.cpp:6682
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "Diubah nama '%s' ke '%s'"
 
-#: TrackPanel.cpp:6678
+#: TrackPanel.cpp:6685
 msgid "Name Change"
 msgstr "Pengubahan Nama"
 
-#: TrackPanel.cpp:6744
+#: TrackPanel.cpp:6751
 msgid "Label Track Font"
 msgstr "Font Label Trek"
 
-#: TrackPanel.cpp:6756
-#: TrackPanel.cpp:6762
+#: TrackPanel.cpp:6763
+#: TrackPanel.cpp:6769
 msgid "Face name"
 msgstr "Nama depan"
 
-#: TrackPanel.cpp:6766
 #: TrackPanel.cpp:6773
+#: TrackPanel.cpp:6780
 msgid "Face size"
 msgstr "Ukuran depan"
 
-#: TrackPanel.cpp:7026
+#: TrackPanel.cpp:7038
 msgid "Stereo, 999999Hz"
 msgstr "Stereo, 999999Hz"
 
@@ -4471,24 +4477,20 @@ msgstr "Stereo, 999999Hz"
 msgid "TrackView"
 msgstr "LihatTrek"
 
-#: TrackPanelAx.cpp:293
-msgid "Track Accessible out of sync"
-msgstr "Trek tidak bisa disinkronkan"
-
-#: TrackPanelAx.cpp:301
+#: TrackPanelAx.cpp:300
 #, c-format
 msgid "Track %d"
 msgstr "Trek %d"
 
-#: TrackPanelAx.cpp:307
+#: TrackPanelAx.cpp:306
 msgid " Mute On"
 msgstr " Sunyi Hidup"
 
-#: TrackPanelAx.cpp:312
+#: TrackPanelAx.cpp:311
 msgid " Solo On"
 msgstr " Solo Hidup"
 
-#: TrackPanelAx.cpp:316
+#: TrackPanelAx.cpp:315
 msgid " Select On"
 msgstr " Pilihan Hidup"
 
@@ -4522,12 +4524,12 @@ msgstr "Pengubahan Arah        -- mean: %1.4f  sd: (%1.4f)\n"
 msgid "Audio Track"
 msgstr "Trek Audio"
 
-#: WaveTrack.cpp:1106
-#: WaveTrack.cpp:1125
+#: WaveTrack.cpp:1101
+#: WaveTrack.cpp:1120
 msgid "There is not enough room available to paste the selection"
 msgstr "Tidak ada ruang cukup untuk menempel itu"
 
-#: WaveTrack.cpp:2179
+#: WaveTrack.cpp:2175
 msgid "There is not enough room available to expand the cut line"
 msgstr "Tidak ada ruang yang tersedia untuk menyebarkan garis potong"
 
@@ -4733,7 +4735,7 @@ msgid "Processing Auto Duck..."
 msgstr "Memproses Auto Duck..."
 
 #: effects/AvcCompressor.cpp:738
-#: effects/audiounits/AudioUnitEffect.cpp:848
+#: effects/audiounits/AudioUnitEffect.cpp:876
 #: effects/nyquist/Nyquist.cpp:1288
 #: widgets/ErrorDialog.cpp:100
 msgid "OK"
@@ -4801,13 +4803,13 @@ msgid "Change Pitch without Changing Tempo"
 msgstr "Mengubah Pitch Tanpa Mengubah Tempo"
 
 #: effects/ChangePitch.cpp:260
-#: effects/ChangeSpeed.cpp:342
-#: effects/ChangeTempo.cpp:179
+#: effects/ChangeSpeed.cpp:360
+#: effects/ChangeTempo.cpp:180
 msgid "by Vaughan Johnson && Dominic Mazzoni"
 msgstr "dari Vaughan Johnson && Dominic Mazzoni"
 
 #: effects/ChangePitch.cpp:262
-#: effects/ChangeTempo.cpp:181
+#: effects/ChangeTempo.cpp:182
 msgid "using SoundTouch, by Olli Parviainen"
 msgstr "menggunakan SoundTouch, dari Olli Parviainen"
 
@@ -4848,9 +4850,9 @@ msgid "Semitones in half-steps"
 msgstr "Seminada dalam separuh langkah"
 
 #: effects/ChangePitch.cpp:328
-#: effects/ChangeSpeed.cpp:375
-#: effects/ChangeTempo.cpp:212
-#: effects/ChangeTempo.cpp:225
+#: effects/ChangeSpeed.cpp:393
+#: effects/ChangeTempo.cpp:213
+#: effects/ChangeTempo.cpp:226
 msgid "from"
 msgstr "dari"
 
@@ -4859,9 +4861,9 @@ msgid "From frequency in hertz"
 msgstr "Dari Frekuensi dalam Hertz"
 
 #: effects/ChangePitch.cpp:333
-#: effects/ChangeSpeed.cpp:380
-#: effects/ChangeTempo.cpp:217
-#: effects/ChangeTempo.cpp:230
+#: effects/ChangeSpeed.cpp:398
+#: effects/ChangeTempo.cpp:218
+#: effects/ChangeTempo.cpp:231
 msgid "to"
 msgstr "ke"
 
@@ -4870,15 +4872,15 @@ msgid "To frequency in seconds"
 msgstr "Ke Frekuensi dalam Detik"
 
 #: effects/ChangePitch.cpp:340
-#: effects/ChangeSpeed.cpp:353
-#: effects/ChangeTempo.cpp:190
+#: effects/ChangeSpeed.cpp:371
+#: effects/ChangeTempo.cpp:191
 msgid "Percent Change:"
 msgstr "Presentase Perubahan:"
 
 #: effects/ChangePitch.cpp:345
 #: effects/ChangePitch.cpp:358
-#: effects/ChangeSpeed.cpp:364
-#: effects/ChangeTempo.cpp:201
+#: effects/ChangeSpeed.cpp:382
+#: effects/ChangeTempo.cpp:202
 msgid "Percent Change"
 msgstr "Presentase Perubahan"
 
@@ -4896,33 +4898,33 @@ msgstr "Mengubah Pitch"
 msgid "Applied effect: %s %.1f%%"
 msgstr "Efek teraplikasi: %s %.1f%%"
 
-#: effects/ChangeSpeed.cpp:304
+#: effects/ChangeSpeed.cpp:322
 msgid "Change Speed"
 msgstr "Mengubah Kecepatan"
 
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable"
 #. (in other words, unimportant, not relevant).
-#: effects/ChangeSpeed.cpp:335
+#: effects/ChangeSpeed.cpp:353
 msgid "n/a"
 msgstr "tidak ada"
 
-#: effects/ChangeSpeed.cpp:340
+#: effects/ChangeSpeed.cpp:358
 msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "Mengubah Kecepatan, mengubah Tempo dan juga Pitch"
 
-#: effects/ChangeSpeed.cpp:344
+#: effects/ChangeSpeed.cpp:362
 msgid "using SampleRate, by Erik de Castro Lopo"
 msgstr "menggunakan SampleRate, dari Erik de Castro Lopo"
 
-#: effects/ChangeSpeed.cpp:372
+#: effects/ChangeSpeed.cpp:390
 msgid "Standard Vinyl RPM:"
 msgstr "Vinyl RPM Standar:"
 
-#: effects/ChangeSpeed.cpp:376
+#: effects/ChangeSpeed.cpp:394
 msgid "From RPM"
 msgstr "Dari RPM"
 
-#: effects/ChangeSpeed.cpp:381
+#: effects/ChangeSpeed.cpp:399
 msgid "To RPM"
 msgstr "Ke RPM"
 
@@ -4934,35 +4936,35 @@ msgstr "Udah Kecepatan..."
 msgid "Changing Speed"
 msgstr "Mengubah Kecepatan"
 
-#: effects/ChangeTempo.cpp:144
+#: effects/ChangeTempo.cpp:145
 msgid "Change Tempo"
 msgstr "Mengubah Tempo"
 
-#: effects/ChangeTempo.cpp:177
+#: effects/ChangeTempo.cpp:178
 msgid "Change Tempo without Changing Pitch"
 msgstr "Mengubah Tempo Tanpa Mengubah Pitch"
 
-#: effects/ChangeTempo.cpp:209
+#: effects/ChangeTempo.cpp:210
 msgid "Beats per minute:"
 msgstr "Bit per Menit:"
 
-#: effects/ChangeTempo.cpp:213
+#: effects/ChangeTempo.cpp:214
 msgid "From beats per minute"
 msgstr "Dari bit per menit"
 
-#: effects/ChangeTempo.cpp:218
+#: effects/ChangeTempo.cpp:219
 msgid "To beats per minute"
 msgstr "Kei bit per menit"
 
-#: effects/ChangeTempo.cpp:222
+#: effects/ChangeTempo.cpp:223
 msgid "Length (seconds):"
 msgstr "Panjang (detik):"
 
-#: effects/ChangeTempo.cpp:226
+#: effects/ChangeTempo.cpp:227
 msgid "From length in seconds"
 msgstr "Dari panjang dalam detik"
 
-#: effects/ChangeTempo.cpp:231
+#: effects/ChangeTempo.cpp:232
 msgid "To length in seconds"
 msgstr "Ke panjang dalam detik"
 
@@ -5145,9 +5147,9 @@ msgstr "Awal"
 #: effects/Contrast.cpp:225
 #: effects/ToneGen.cpp:313
 #: toolbars/ControlToolBar.cpp:184
-#: toolbars/SelectionBar.cpp:156
-#: toolbars/SelectionBar.cpp:159
-#: toolbars/SelectionBar.cpp:262
+#: toolbars/SelectionBar.cpp:158
+#: toolbars/SelectionBar.cpp:161
+#: toolbars/SelectionBar.cpp:264
 msgid "End"
 msgstr "Akhir"
 
@@ -5429,15 +5431,15 @@ msgstr "Echo..."
 msgid "Performing Echo"
 msgstr "Menjalankan Echo..."
 
-#: effects/Effect.cpp:472
+#: effects/Effect.cpp:494
 msgid "Preparing preview"
 msgstr "Meyiapkan preview"
 
-#: effects/Effect.cpp:504
+#: effects/Effect.cpp:526
 msgid "Previewing"
 msgstr "Melihat preview"
 
-#: effects/Effect.cpp:519
+#: effects/Effect.cpp:541
 msgid "Error while opening sound device. Please check the output device settings and the project sample rate."
 msgstr "Error ketika membuka perangkat suara. Tolong cek pengaturan perangkat output dan rate sampel proyek."
 
@@ -5464,79 +5466,84 @@ msgstr "Kubik"
 msgid "Equalization"
 msgstr "Ekualisasi"
 
-#: effects/Equalization.cpp:1095
+#: effects/Equalization.cpp:1110
 msgid "Error loading EQ curve"
 msgstr "Error mengambil kurva EQ"
 
-#: effects/Equalization.cpp:1134
+#: effects/Equalization.cpp:1149
 msgid "custom"
 msgstr "pilihan sendiri"
 
-#: effects/Equalization.cpp:1186
+#: effects/Equalization.cpp:1201
 msgid "Error saving equalization curves"
 msgstr "Error dalam menyimpan equalizer"
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
-#: effects/Equalization.cpp:1209
+#: effects/Equalization.cpp:1224
 msgid "Equalization, by Martyn Shaw && Mitch Golden"
 msgstr "Ekualisasi, dari Martyn Shaw && Mitch Golden"
 
-#: effects/Equalization.cpp:1230
+#: effects/Equalization.cpp:1245
 msgid "Max dB"
 msgstr "dB Maks"
 
-#: effects/Equalization.cpp:1232
+#: effects/Equalization.cpp:1247
 msgid "Min dB"
 msgstr "dB Min"
 
-#: effects/Equalization.cpp:1305
+#: effects/Equalization.cpp:1320
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1322
+#: effects/Equalization.cpp:1337
 msgid "Draw curves"
 msgstr "Gambar kurva"
 
-#: effects/Equalization.cpp:1327
+#: effects/Equalization.cpp:1342
 msgid "Graphic EQ"
 msgstr "Grafik EQ"
 
-#: effects/Equalization.cpp:1341
+#: effects/Equalization.cpp:1356
 msgid "Linear frequency scale"
 msgstr "Skala frekuensi linier"
 
-#: effects/Equalization.cpp:1350
+#: effects/Equalization.cpp:1365
 msgid "Length of filter:"
 msgstr "Panjang filter:"
 
-#: effects/Equalization.cpp:1371
+#: effects/Equalization.cpp:1386
 msgid "Select curve:"
 msgstr "Pilih kurva:"
 
-#: effects/Equalization.cpp:1381
-#: effects/Equalization.cpp:2662
+#: effects/Equalization.cpp:1396
+#: effects/Equalization.cpp:2681
 #: export/ExportMultiple.cpp:946
 msgid "Save As..."
 msgstr "Simpan Sebagai..."
 
-#: effects/Equalization.cpp:1387
+#: effects/Equalization.cpp:1402
 msgid "Flat"
 msgstr "Datar"
 
-#: effects/Equalization.cpp:1469
+#: effects/Equalization.cpp:1405
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "Tukar"
+
+#: effects/Equalization.cpp:1488
 msgid "To use this EQ curve in a batch chain, please choose a new name for it."
 msgstr "Untuk menggunakan kurva EQ pada untaian batch, silahkan pilih nama baru untuknya."
 
-#: effects/Equalization.cpp:1470
+#: effects/Equalization.cpp:1489
 msgid "EQ Curve needs a different name"
 msgstr "Kurva EQ memerlukan nama yang berbeda"
 
-#: effects/Equalization.cpp:2661
+#: effects/Equalization.cpp:2680
 msgid "Enter the desired name of the curve"
 msgstr "Masukkan nama untuk kurva"
 
-#: effects/Equalization.cpp:2763
+#: effects/Equalization.cpp:2782
 #: export/ExportFFmpegDialogs.cpp:1214
 msgid "Confirm Deletion"
 msgstr "Konfirmasi Penghapusan"
@@ -5604,10 +5611,6 @@ msgstr "Memdeteksi Clipping"
 #: effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Tidak ada ruang cukup untuk membuat audio"
-
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "Tukar"
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -5799,7 +5802,7 @@ msgid "Gate"
 msgstr "Jembatan"
 
 #: effects/LoadEffects.cpp:200
-#: effects/NoiseRemoval.cpp:738
+#: effects/NoiseRemoval.cpp:740
 msgid "Noise Removal"
 msgstr "Pembuang Bising"
 
@@ -5865,11 +5868,11 @@ msgstr ""
 msgid "Attempt to run Noise Removal without a noise profile.\n"
 msgstr "Tetap menjalankan Pembuang Bising tanpa profil bising.\n"
 
-#: effects/NoiseRemoval.cpp:827
+#: effects/NoiseRemoval.cpp:829
 msgid "Step 1"
 msgstr "Tahap 1"
 
-#: effects/NoiseRemoval.cpp:828
+#: effects/NoiseRemoval.cpp:830
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
@@ -5877,11 +5880,11 @@ msgstr ""
 "Pilih beberapa detik bising agar Audacity tahu apa yang harus dibuang,\n"
 "kemudian klik Ambil Profil Bising:"
 
-#: effects/NoiseRemoval.cpp:829
+#: effects/NoiseRemoval.cpp:831
 msgid "Step 2"
 msgstr "Tahap 2"
 
-#: effects/NoiseRemoval.cpp:830
+#: effects/NoiseRemoval.cpp:832
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
@@ -5889,35 +5892,35 @@ msgstr ""
 "Pilih seluruh audio yang anda mau disaring, pilih seberapa banyak bising\n"
 "yang Anda ingin buang, dan klik 'OK' untuk membuangnya.\n"
 
-#: effects/NoiseRemoval.cpp:835
+#: effects/NoiseRemoval.cpp:837
 msgid "Noise Removal by Dominic Mazzoni"
 msgstr "Pembuang Bising dari Dominic Mazzoni"
 
-#: effects/NoiseRemoval.cpp:843
+#: effects/NoiseRemoval.cpp:845
 msgid "Get Noise Profile"
 msgstr "Ambil Profil Bising"
 
-#: effects/NoiseRemoval.cpp:854
+#: effects/NoiseRemoval.cpp:856
 msgid "Noise reduction (dB):"
 msgstr "Reduksi bising (dB):"
 
-#: effects/NoiseRemoval.cpp:859
+#: effects/NoiseRemoval.cpp:861
 msgid "Noise reduction"
 msgstr "Pengurangan bising"
 
-#: effects/NoiseRemoval.cpp:863
+#: effects/NoiseRemoval.cpp:865
 msgid "Frequency smoothing (Hz):"
 msgstr "Frekuensi pelembut (Hz):"
 
-#: effects/NoiseRemoval.cpp:868
+#: effects/NoiseRemoval.cpp:870
 msgid "Frequency smoothing"
 msgstr "penghalusan frekuensi"
 
-#: effects/NoiseRemoval.cpp:872
+#: effects/NoiseRemoval.cpp:874
 msgid "Attack/decay time (secs):"
 msgstr "Waktu serang/kurang (dtk):"
 
-#: effects/NoiseRemoval.cpp:877
+#: effects/NoiseRemoval.cpp:879
 msgid "Attach/decay time"
 msgstr "Waktu baru/usang"
 
@@ -6230,7 +6233,7 @@ msgid "Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = %.2
 msgstr "Efek teraplikasi: Membuat %s gelombang %s, frekuensi = %.2f Hz, amplitudo = %.2f, %.6lf detik"
 
 #: effects/ToneGen.cpp:69
-#: widgets/Meter.cpp:440
+#: widgets/Meter.cpp:435
 msgid "Linear"
 msgstr "Linier"
 
@@ -6312,43 +6315,43 @@ msgid "All tracks must have the same sample rate"
 msgstr "Semua trek harus mempunyai rate sampel yang sama"
 
 #: effects/TruncSilence.cpp:133
-#: effects/TruncSilence.cpp:461
+#: effects/TruncSilence.cpp:481
 msgid "Truncate Silence"
 msgstr "Pangkas Diam"
 
-#: effects/TruncSilence.cpp:471
+#: effects/TruncSilence.cpp:491
 msgid "by Lynn Allan && Philip Van Baren"
 msgstr "oleh Lynn Allan && Philip Van Baren"
 
-#: effects/TruncSilence.cpp:485
+#: effects/TruncSilence.cpp:505
 msgid "Min silence duration:"
 msgstr "Durasi diam minimal:"
 
-#: effects/TruncSilence.cpp:488
-#: effects/TruncSilence.cpp:492
+#: effects/TruncSilence.cpp:508
+#: effects/TruncSilence.cpp:512
 #: prefs/MidiIOPrefs.cpp:197
 #: prefs/MidiIOPrefs.cpp:199
 #: widgets/TimeTextCtrl.cpp:1529
 msgid "milliseconds"
 msgstr "milidetik"
 
-#: effects/TruncSilence.cpp:489
+#: effects/TruncSilence.cpp:509
 msgid "Max silence duration:"
 msgstr "Durasi diam maksimum:"
 
-#: effects/TruncSilence.cpp:493
+#: effects/TruncSilence.cpp:513
 msgid "Silence compression:"
 msgstr "Kompresi diam:"
 
-#: effects/TruncSilence.cpp:496
+#: effects/TruncSilence.cpp:516
 msgid ":1"
 msgstr ":1"
 
-#: effects/TruncSilence.cpp:498
+#: effects/TruncSilence.cpp:518
 msgid "Threshold for silence:"
 msgstr "Ambang Batas untuk Diam:"
 
-#: effects/TruncSilence.cpp:524
+#: effects/TruncSilence.cpp:544
 msgid ""
 "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
@@ -6364,13 +6367,13 @@ msgstr "Pangkas Diam..."
 msgid "Truncating Silence..."
 msgstr "Memangkas Diam.."
 
-#: effects/VST/VSTEffect.cpp:319
+#: effects/VST/VSTEffect.cpp:388
 #: effects/ladspa/LadspaEffect.cpp:590
 #: effects/lv2/LV2Effect.cpp:798
 msgid "Effect Settings"
 msgstr "Aturan Efek"
 
-#: effects/VST/VSTEffect.cpp:399
+#: effects/VST/VSTEffect.cpp:468
 #: effects/ladspa/LadspaEffect.cpp:555
 #: effects/ladspa/LadspaEffect.cpp:563
 #: prefs/QualityPrefs.cpp:74
@@ -6378,52 +6381,52 @@ msgstr "Aturan Efek"
 msgid "None"
 msgstr "Tidak Ada"
 
-#: effects/VST/VSTEffect.cpp:410
+#: effects/VST/VSTEffect.cpp:479
 msgid "Presets:"
 msgstr "Aturan Lanjut:"
 
-#: effects/VST/VSTEffect.cpp:422
+#: effects/VST/VSTEffect.cpp:491
 msgid "Load"
 msgstr "Ambil"
 
-#: effects/VST/VSTEffect.cpp:425
+#: effects/VST/VSTEffect.cpp:494
 msgid "Save"
 msgstr "Simpan"
 
-#: effects/VST/VSTEffect.cpp:525
+#: effects/VST/VSTEffect.cpp:594
 msgid "Load VST Program:"
 msgstr "Mengambil Program VST:"
 
-#: effects/VST/VSTEffect.cpp:543
+#: effects/VST/VSTEffect.cpp:612
 msgid "Error loading program"
 msgstr "Error memulai program"
 
-#: effects/VST/VSTEffect.cpp:559
+#: effects/VST/VSTEffect.cpp:628
 msgid "Save VST Program As:"
 msgstr "Simpan Program VST sebagai:"
 
-#: effects/VST/VSTEffect.cpp:693
+#: effects/VST/VSTEffect.cpp:767
 #, c-format
 msgid "This parameter file was saved from %s.  Continue?"
 msgstr "parameter ini disimpan dari %s. Lanjutkan?"
 
-#: effects/VST/VSTEffect.cpp:1147
+#: effects/VST/VSTEffect.cpp:1221
 msgid "Performing Effect: "
 msgstr "Menjalankan Efek:"
 
-#: effects/VST/VSTEffect.cpp:1178
+#: effects/VST/VSTEffect.cpp:1252
 msgid "Both channels of a stereo track must be the same sample rate."
 msgstr "Kedua saluran trek stereo harus mempunyai rate sampel yang sama."
 
-#: effects/VST/VSTEffect.cpp:1183
+#: effects/VST/VSTEffect.cpp:1257
 msgid "Both channels of a stereo track must be the same length."
 msgstr "Kedua saluran trek stereo harus mempunyai panjang yang sama."
 
-#: effects/VST/VSTEffect.cpp:1626
+#: effects/VST/VSTEffect.cpp:1739
 msgid "Scanning VST Plugins"
 msgstr "Memindai Plugin VST"
 
-#: effects/VST/VSTEffect.cpp:1642
+#: effects/VST/VSTEffect.cpp:1755
 #, c-format
 msgid "Checking %s"
 msgstr "Mengecek %s"
@@ -6465,7 +6468,7 @@ msgstr "Wahwah..."
 msgid "Applying Wahwah"
 msgstr "Mengaplikasikan Wahwah"
 
-#: effects/audiounits/AudioUnitEffect.cpp:138
+#: effects/audiounits/AudioUnitEffect.cpp:142
 #: effects/ladspa/LadspaEffect.cpp:178
 #: effects/lv2/LV2Effect.cpp:193
 #, c-format
@@ -6717,7 +6720,7 @@ msgstr ""
 "Tetapi, dukungan AMR tidak ada dalam installer FFmpeg kami,\n"
 "jadi anda butuh mengcompile FFmpeg sendiri."
 
-#: export/ExportFFmpeg.cpp:446
+#: export/ExportFFmpeg.cpp:445
 #, c-format
 msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
@@ -6726,27 +6729,27 @@ msgstr ""
 "FFmpeg tidak bisa mencari codec audio 0x%x.\n"
 "Pendukuk codec ini mungkin belum dibuat."
 
-#: export/ExportFFmpeg.cpp:699
+#: export/ExportFFmpeg.cpp:698
 #, c-format
 msgid "Attempted to export %d channels, but max. channels for selected output format is %d"
 msgstr "Sedang mengekspor %d saluran, tapi saluran maksimal untuk format ini adalah %d"
 
-#: export/ExportFFmpeg.cpp:728
+#: export/ExportFFmpeg.cpp:727
 #, c-format
 msgid "Exporting selected audio as %s"
 msgstr "Exporting selected audio as %s"
 
-#: export/ExportFFmpeg.cpp:729
+#: export/ExportFFmpeg.cpp:728
 #, c-format
 msgid "Exporting entire file as %s"
 msgstr "Mengekspor file sebagai %s"
 
-#: export/ExportFFmpeg.cpp:792
+#: export/ExportFFmpeg.cpp:791
 #: export/ExportMP3.cpp:1777
 msgid "Invalid sample rate"
 msgstr "Rate sampel tidak valid"
 
-#: export/ExportFFmpeg.cpp:805
+#: export/ExportFFmpeg.cpp:804
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
@@ -6755,7 +6758,7 @@ msgstr ""
 "Rate Sampel proyek (%d) tidak mendukung \n"
 "file format output yang ada.  "
 
-#: export/ExportFFmpeg.cpp:808
+#: export/ExportFFmpeg.cpp:807
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -6764,12 +6767,12 @@ msgstr ""
 "Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
 "mendukung format file output yang ada."
 
-#: export/ExportFFmpeg.cpp:811
+#: export/ExportFFmpeg.cpp:810
 #: export/ExportMP3.cpp:1796
 msgid "You may resample to one of the rates below."
 msgstr "Anda harus menyampel ulang ke salah satu rate di bawah ini."
 
-#: export/ExportFFmpeg.cpp:839
+#: export/ExportFFmpeg.cpp:838
 #: export/ExportMP3.cpp:1819
 msgid "Sample Rates"
 msgstr "Rate Sampel"
@@ -8302,27 +8305,27 @@ msgstr "Perang&kat"
 msgid "Cha&nnels"
 msgstr "Salura&n"
 
-#: prefs/DevicePrefs.cpp:166
+#: prefs/DevicePrefs.cpp:182
 msgid "No audio interfaces"
 msgstr "Tidak ada pengolah audio"
 
-#: prefs/DevicePrefs.cpp:205
-#: prefs/DevicePrefs.cpp:210
+#: prefs/DevicePrefs.cpp:221
+#: prefs/DevicePrefs.cpp:226
 #: prefs/MidiIOPrefs.cpp:295
 #: prefs/MidiIOPrefs.cpp:300
 msgid "No devices found"
 msgstr "Tidak ada perangkat"
 
-#: prefs/DevicePrefs.cpp:274
+#: prefs/DevicePrefs.cpp:298
 msgid "1 (Mono)"
 msgstr "1 (Mono)"
 
-#: prefs/DevicePrefs.cpp:277
+#: prefs/DevicePrefs.cpp:301
 msgid "2 (Stereo)"
 msgstr "2 (Stereo)"
 
 #: prefs/DirectoriesPrefs.cpp:52
-#: prefs/PrefsDialog.cpp:227
+#: prefs/PrefsDialog.cpp:238
 msgid "Directories"
 msgstr "Direktori"
 
@@ -8723,6 +8726,14 @@ msgstr "Loca&te..."
 #: prefs/LibraryPrefs.cpp:130
 msgid "Dow&nload"
 msgstr "U&nduh"
+
+#: prefs/LibraryPrefs.cpp:186
+msgid ""
+"Audacity has automatically detected valid FFmpeg libraries.\n"
+"Do you still want to locate them manually?"
+msgstr ""
+"Audacity telah mendeteksi referensi FFmpeg yang valid.\n"
+"Apakah Anda tetap ingin meletakkannya sendiri?"
 
 #: prefs/MidiIOPrefs.cpp:58
 msgid "MIDI Devices"
@@ -9587,15 +9598,15 @@ msgid "Record (Shift for Append Record)"
 msgstr "Rekam (Shift untuk Tambahan Rekam)"
 
 #: toolbars/ControlToolBar.cpp:584
-#: toolbars/ControlToolBar.cpp:930
+#: toolbars/ControlToolBar.cpp:931
 msgid "Error while opening sound device. "
 msgstr "Error ketika membuka perangkat suara."
 
-#: toolbars/ControlToolBar.cpp:760
+#: toolbars/ControlToolBar.cpp:761
 msgid "Recording in CleanSpeech mode is not possible when a track, or more than one project, is already open."
 msgstr "Merekam pada Mode CleanSpeech tidak mungkin ketika trek, atau lebih dari satu proyek telah dibuka."
 
-#: toolbars/ControlToolBar.cpp:761
+#: toolbars/ControlToolBar.cpp:762
 msgid "Recording not permitted"
 msgstr "Rekaman tidak diizinkan"
 
@@ -9692,62 +9703,62 @@ msgstr "Slider pada Input"
 msgid "Input Source"
 msgstr "Sumber Input"
 
-#: toolbars/MixerToolBar.cpp:299
+#: toolbars/MixerToolBar.cpp:321
 msgid "Input source information is not available."
 msgstr "Informasi sumber input tidak ada"
 
-#: toolbars/MixerToolBar.cpp:306
+#: toolbars/MixerToolBar.cpp:328
 msgid "Select Input Source"
 msgstr "Pilih Sumber Input"
 
-#: toolbars/MixerToolBar.cpp:314
+#: toolbars/MixerToolBar.cpp:336
 msgid "Input Source:"
 msgstr "Sumber Input:"
 
 #: toolbars/SelectionBar.cpp:86
-#: toolbars/SelectionBar.cpp:292
+#: toolbars/SelectionBar.cpp:294
 msgid "Selection"
 msgstr "Pilihan"
 
-#: toolbars/SelectionBar.cpp:135
-#: toolbars/SelectionBar.cpp:194
+#: toolbars/SelectionBar.cpp:137
+#: toolbars/SelectionBar.cpp:196
 msgid "Project Rate (Hz):"
 msgstr "Rate Proyek (Hz):"
 
-#: toolbars/SelectionBar.cpp:149
-#: toolbars/SelectionBar.cpp:255
+#: toolbars/SelectionBar.cpp:151
+#: toolbars/SelectionBar.cpp:257
 msgid "Selection Start:"
 msgstr "Awal Pilihan:"
 
-#: toolbars/SelectionBar.cpp:163
-#: toolbars/SelectionBar.cpp:164
-#: toolbars/SelectionBar.cpp:261
+#: toolbars/SelectionBar.cpp:165
+#: toolbars/SelectionBar.cpp:166
+#: toolbars/SelectionBar.cpp:263
 msgid "Length"
 msgstr "Panjang"
 
-#: toolbars/SelectionBar.cpp:174
+#: toolbars/SelectionBar.cpp:176
 msgid "hidden"
 msgstr "tersembunyi"
 
-#: toolbars/SelectionBar.cpp:184
-#: toolbars/SelectionBar.cpp:272
+#: toolbars/SelectionBar.cpp:186
+#: toolbars/SelectionBar.cpp:274
 msgid "Audio Position:"
 msgstr "Posisi Audio:"
 
-#: toolbars/SelectionBar.cpp:236
-#: toolbars/SelectionBar.cpp:241
+#: toolbars/SelectionBar.cpp:238
+#: toolbars/SelectionBar.cpp:243
 msgid "Snap To"
 msgstr "Patokan"
 
-#: toolbars/SelectionBar.cpp:260
+#: toolbars/SelectionBar.cpp:262
 msgid "Selection "
 msgstr "Pilihan"
 
-#: toolbars/SelectionBar.cpp:340
+#: toolbars/SelectionBar.cpp:342
 msgid "Selection Length"
 msgstr "Panjang Pilihan"
 
-#: toolbars/SelectionBar.cpp:348
+#: toolbars/SelectionBar.cpp:350
 msgid "Selection End"
 msgstr "Akhir Pilihan"
 
@@ -9931,27 +9942,27 @@ msgstr "Tombol"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: widgets/ASlider.cpp:688
-#: widgets/Meter.cpp:249
+#: widgets/ASlider.cpp:718
+#: widgets/Meter.cpp:942
 msgid "L"
 msgstr "L"
 
 #. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: widgets/ASlider.cpp:691
-#: widgets/Meter.cpp:251
+#: widgets/ASlider.cpp:721
+#: widgets/Meter.cpp:945
 msgid "R"
 msgstr "R"
 
-#: widgets/ASlider.cpp:815
+#: widgets/ASlider.cpp:849
 msgid "Center"
 msgstr "Tengah"
 
-#: widgets/ASlider.cpp:819
+#: widgets/ASlider.cpp:853
 msgid "Left"
 msgstr "Kiri"
 
-#: widgets/ASlider.cpp:822
+#: widgets/ASlider.cpp:856
 msgid "Right"
 msgstr "Kanan"
 
@@ -9991,39 +10002,39 @@ msgstr "Pendorong"
 msgid "Empty"
 msgstr "Kosong"
 
-#: widgets/Meter.cpp:407
+#: widgets/Meter.cpp:402
 msgid "Enable Meter"
 msgstr "Bolehkan Meter"
 
-#: widgets/Meter.cpp:409
+#: widgets/Meter.cpp:404
 msgid "Disable Meter"
 msgstr "Larangkan Meter"
 
-#: widgets/Meter.cpp:412
+#: widgets/Meter.cpp:407
 msgid "Stop Monitoring"
 msgstr "Hentikan Pemantauan"
 
-#: widgets/Meter.cpp:414
+#: widgets/Meter.cpp:409
 msgid "Start Monitoring"
 msgstr "Mulai Pemantauan"
 
-#: widgets/Meter.cpp:418
+#: widgets/Meter.cpp:413
 msgid "Stop Automated Input Level Adjustment"
 msgstr "Hentikan Perubahan Level Input Otomatis"
 
-#: widgets/Meter.cpp:420
+#: widgets/Meter.cpp:415
 msgid "Start Automated Input Level Adjustment"
 msgstr "Mulai Perubahan Level Input Otomatis"
 
-#: widgets/Meter.cpp:431
+#: widgets/Meter.cpp:426
 msgid "Horizontal Stereo"
 msgstr "Stereo Horizontal"
 
-#: widgets/Meter.cpp:432
+#: widgets/Meter.cpp:427
 msgid "Vertical Stereo"
 msgstr "Stereo Vertikal"
 
-#: widgets/Meter.cpp:449
+#: widgets/Meter.cpp:444
 msgid "Preferences..."
 msgstr "Preferensi..."
 
@@ -10326,6 +10337,34 @@ msgstr "Error dalam menutup file"
 msgid "Error writing to file"
 msgstr "Error menulis ke file"
 
+#~ msgid ""
+#~ "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files "
+#~ "(*.mp3)|*.mp3"
+#~ msgstr ""
+#~ "File vokal (*.wav;*.mp3)|*.wav;*.mp3|file WAV (*.wav)|*.wav|file MP3 (*."
+#~ "mp3)|*.mp3"
+#~ msgid ""
+#~ "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU "
+#~ "files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|"
+#~ "FLAC files (*.flac)|*.flac"
+#~ msgstr ""
+#~ "Semua file (*.*)|*.*|File WAV(*.wav)|*.wav|File AIFF (*.aif)|*.aif|File "
+#~ "AU (*.au)|*.au|File MP3 (*.mp3)|*.mp3|File Ogg Vorbis (*.ogg)|*.ogg|File "
+#~ "FLAC (*.flac)|*.flac"
+#~ msgid ""
+#~ "Your project currently depends on the presence of other files.\n"
+#~ "Copy audio from the following files into your project to make it self-"
+#~ "contained?\n"
+#~ "This will need more disc space but is safer."
+#~ msgstr ""
+#~ "Proyek Anda membutuhkan file lainnya.\n"
+#~ "Salin audio dari file tersebut ke dalam proyek Anda supaya proyek anda "
+#~ "terisi sendiri?\n"
+#~ "Ini akan membutuhkan ruang lebig besar, tetapi lebih aman."
+#~ msgid "Audacity projects (*.aup)|*.aup"
+#~ msgstr "Proyek Audacity (*.aup)|*.aup"
+#~ msgid "Track Accessible out of sync"
+#~ msgstr "Trek tidak bisa disinkronkan"
 #~ msgid "Sile&nce"
 #~ msgstr "Dia&m"
 #~ msgid "Can't Undo"
