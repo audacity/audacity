@@ -8,7 +8,7 @@
 # This makefile may be invoked to build either audacity.pot or any lang.mo
 
 PROGNAME=audacity
-LINGUAS=af ar bn bg bs ca ca@valencia cs cy da de el es eu fa fi fr ga gl he hi hu id it ja ka km ko lt mk nb nl oc pl pt pt_BR ro ru sk sl sv tg tr uk vi zh zh_TW
+LINGUAS=af ar bn bg bs ca ca@valencia cs cy da de el es eu fa fi fr ga gl he hi hu id it ja ka km ko lt mk my nb nl oc pl pt pt_BR ro ru sk sl sv tg tr uk vi zh zh_TW
 # these languages are not generated because they are currently unmaintained and
 # overlapped by another one:
 # currently none - Cleber produced a pt_PT translation August 2009.

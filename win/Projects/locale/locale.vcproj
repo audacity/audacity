@@ -864,6 +864,31 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\..\locale\my.po"
+				>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="msgfmt"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="msgfmt"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="msgfmt"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\..\locale\nb.po"
 				>
 				<FileConfiguration
