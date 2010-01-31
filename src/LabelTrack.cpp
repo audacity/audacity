@@ -242,7 +242,7 @@ double LabelTrack::AdjustTimeStampOnScale(double t, double b, double e, double c
 // (If necessary this could be optimised by ignoring labels that occur before a
 // specified time, as in most cases they don't need to move.)
 void LabelTrack::WarpLabels(const TimeWarper &warper) {
-   for (int i = 0; i < mLabels.GetCount(); ++i) {
+   for (int i = 0; i < (int)mLabels.GetCount(); ++i) {
       double &labelT0 = mLabels[i]->t; labelT0 = warper.Warp(labelT0);
       double &labelT1 = mLabels[i]->t1; labelT1 = warper.Warp(labelT1);
    }
@@ -561,9 +561,9 @@ void LabelStruct::DrawGlyphs(wxDC & dc, const wxRect & r, int GlyphLeft, int Gly
 
    if((x  >= r.x) && (x  <= (r.x+r.width)))
       dc.DrawBitmap(LabelTrack::GetGlyph(GlyphLeft), x-xHalfWidth,yStart, true);
-   // The extra test here suppresses right hand markers when they overlap
-   // the left hand marker (e.g. zoomed out) or are to the left.
-   if((x1 >= r.x) && (x1 <= (r.x+r.width)) && (x1>x+LabelTrack::mIconWidth))
+   // The extra test commented out here would suppress right hand markers 
+   // when they overlap the left hand marker (e.g. zoomed out) or to the left.
+   if((x1 >= r.x) && (x1 <= (r.x+r.width)) /*&& (x1>x+LabelTrack::mIconWidth)*/)
       dc.DrawBitmap(LabelTrack::GetGlyph(GlyphRight), x1-xHalfWidth,yStart, true);
 }
 
@@ -1163,24 +1163,35 @@ int LabelTrack::OverGlyph(int x, int y)
       pLabel = mLabels[i];
       
       //over left or right selection bound
-      if(   abs(pLabel->y - (y - (LabelTrack::mTextHeight+3)/2)) < d1 &&
+      //Check right bound first, since it is drawn after left bound,
+      //so give it precedence for matching/highlighting.
+      if( abs(pLabel->y - (y - (LabelTrack::mTextHeight+3)/2)) < d1 &&
+               abs(pLabel->x1 - d2 -x) < d1)
+      {
+         mMouseOverLabelRight = i;
+         if(abs(pLabel->x1 - x) < d2 )
+         {
+            mbHitCenter = true;
+            // If left and right co-incident at this resolution, then we drag both.
+            // We could be a little less stringent about co-incidence here if we liked.
+            if( abs(pLabel->x1-pLabel->x) < 1.0 )
+            {
+               result |=1;
+               mMouseOverLabelLeft = i;
+            }
+         }
+         result |= 2;
+         mInBox = false;     // to disable the dragging for selecting the text in text box
+      }
+      // Use else-if here rather than else to avoid detecting left and right 
+      // of the same label.
+      else if(   abs(pLabel->y - (y - (LabelTrack::mTextHeight+3)/2)) < d1 &&
             abs(pLabel->x + d2 - x) < d1 )
       {
          mMouseOverLabelLeft = i;
          if(abs(pLabel->x - x) < d2 )
             mbHitCenter = true;
          result |= 1;
-         mInBox = false;     // to disable the dragging for selecting the text in text box
-      }
-      // use else-if so that we don't detect left and right 
-      // of the same label.
-      else if( abs(pLabel->y - (y - (LabelTrack::mTextHeight+3)/2)) < d1 &&
-               abs(pLabel->x1 - d2 -x) < d1)
-      {
-         mMouseOverLabelRight = i;
-         if(abs(pLabel->x1 - x) < d2 )
-            mbHitCenter = true;
-         result |= 2;
          mInBox = false;     // to disable the dragging for selecting the text in text box
       }
 
@@ -1261,22 +1272,35 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             x = r.width - 2;
          }
 
+         double width;
+         bool bSameLabel = mMouseOverLabelLeft==mMouseOverLabelRight;
          //Adjust boundary and make sure that t < t1 on any dragged labels.
          //This code pushes both of them in one direction, instead of swapping
          //bounds like happens for the selection region.
+         //If button is down, then we preserve the label width.
          if(mMouseOverLabelLeft>=0)
          {
+            width = mLabels[mMouseOverLabelLeft]->t1 - mLabels[mMouseOverLabelLeft]->t;
             mLabels[mMouseOverLabelLeft]->t  = h + x / pps;
-            if( mLabels[mMouseOverLabelLeft]->t > mLabels[mMouseOverLabelLeft]->t1)
+            if( evt.ShiftDown() || bSameLabel )
+            {
+               mLabels[mMouseOverLabelLeft]->t1  = mLabels[mMouseOverLabelLeft]->t+width;
+            }
+            else if( mLabels[mMouseOverLabelLeft]->t > mLabels[mMouseOverLabelLeft]->t1)
             {
                mLabels[mMouseOverLabelLeft]->t1  = mLabels[mMouseOverLabelLeft]->t;
             }
             mLabels[mMouseOverLabelLeft]->updated = true;
          }
-         if (mMouseOverLabelRight>=0)
+         if( (mMouseOverLabelRight>=0) && !bSameLabel )
          {
+            width = mLabels[mMouseOverLabelRight]->t1 - mLabels[mMouseOverLabelRight]->t;
             mLabels[mMouseOverLabelRight]->t1 = h + x / pps;
-            if( mLabels[mMouseOverLabelRight]->t > mLabels[mMouseOverLabelRight]->t1)
+            if( evt.ShiftDown() )
+            {
+               mLabels[mMouseOverLabelRight]->t  = mLabels[mMouseOverLabelRight]->t1-width;
+            }
+            else if( mLabels[mMouseOverLabelRight]->t > mLabels[mMouseOverLabelRight]->t1)
             {
                mLabels[mMouseOverLabelRight]->t  = mLabels[mMouseOverLabelRight]->t1;
             }
@@ -1340,12 +1364,16 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          // and use that in subsequent dragging calculations.  The mouse stays 
          // at the same relative displacement throughout dragging.
 
-         // However, if two labels are being dragged, then the displacement 
-         // is relative to the initial average position of them, and in that 
-         // case there can be a jump of at most a few pixels to bring the 
-         // two label boundaries to exactly the same position when we start
-         // dragging.
-         if((mMouseOverLabelRight >=0) && (mMouseOverLabelLeft >=0))
+         // However, if two label's edges are being dragged
+         // then the displacement is relative to the initial average 
+         // position of them, and in that case there can be a jump of at most 
+         // a few pixels to bring the two label boundaries to exactly the same 
+         // position when we start dragging.
+
+         // Dragging of three label edges at the same time is not supported (yet).
+         if( (mMouseOverLabelRight >=0) && 
+             (mMouseOverLabelLeft >=0) 
+           )
          {
             t = (mLabels[mMouseOverLabelRight]->t1+mLabels[mMouseOverLabelLeft]->t)/2.0f;
          }
