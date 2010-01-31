@@ -41,7 +41,7 @@ msgstr "Ini adalah versi yang sudah stabil. Tetapi, jika Anda menemukan bug atau
 #: AboutDialog.cpp:209
 #: AboutDialog.cpp:211
 msgid "translator_credits"
-msgstr "Bahasa Indonesia: Lukmanul Hakim (kim-kim@kaskus.us)"
+msgstr "Bahasa Indonesia: Lukmanul Hakim (lukmanul.hakim91@ui.ac.id)"
 
 #: AboutDialog.cpp:224
 msgid "A Free Digital Audio Editor<br>"
@@ -83,7 +83,7 @@ msgstr "Terima kasih untuk:"
 
 #: AboutDialog.cpp:267
 msgid "<b>Audacity&reg;</b> software is copyright &copy; 1999-2009 Audacity Team. <br>The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
-msgstr "Perangkat lunak <b>Audacity&reg;</b> adalah hak cipta &copy; Tim Audacity 1999-2008. <br>Nama <b>Audacity&reg;</b> adalah merk terdaftar dari Dominic Mazzoni."
+msgstr "Perangkat lunak <b>Audacity&reg;</b> adalah hak cipta &copy; Tim Audacity 1999-2010. <br>Nama <b>Audacity&reg;</b> adalah merk terdaftar dari Dominic Mazzoni."
 
 #: AboutDialog.cpp:275
 msgid "Audacity"
@@ -143,18 +143,18 @@ msgstr "Impor melalui QuickTime"
 #. i18n-hint: Libraries that are essential to audacity
 #: AboutDialog.cpp:400
 msgid "Core Libraries"
-msgstr "Referensi Penting"
+msgstr "Referensi Utama"
 
 #: AboutDialog.cpp:406
 #: AboutDialog.cpp:409
 #: AboutDialog.cpp:412
 #: AboutDialog.cpp:414
 msgid "Sample rate conversion"
-msgstr "Konversi Sample Rate"
+msgstr "Konversi sample rate"
 
 #: AboutDialog.cpp:418
 msgid "Audio playback and recording"
-msgstr "Pemproduksian Audio dan Perekaman"
+msgstr "Pemroduksian Audio dan Perekaman"
 
 #: AboutDialog.cpp:430
 msgid "Features"
@@ -192,11 +192,11 @@ msgstr "Tipe perubahan:"
 
 #: AboutDialog.cpp:492
 msgid "Debug build"
-msgstr "Pembuangan bug"
+msgstr "Versi Debug"
 
 #: AboutDialog.cpp:494
 msgid "Release build"
-msgstr "Rilis"
+msgstr "Versi Rilis"
 
 #. i18n-hint: The directory audacity is installed into (on *nix systems)
 #: AboutDialog.cpp:499
@@ -238,7 +238,7 @@ msgstr ""
 
 #: AudacityApp.cpp:909
 msgid "Master Gain Control"
-msgstr "Pengendali Master"
+msgstr "Pengendali Besaran Utama"
 
 #: AudacityApp.cpp:910
 msgid "Input Meter"
