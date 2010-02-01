@@ -1762,6 +1762,8 @@ AudioThread::ExitCode AudioThread::Entry()
 {
    while( !TestDestroy() )
    {
+      // Set LoopActive outside the tests to avoid race condition
+      gAudioIO->mAudioThreadFillBuffersLoopActive = true;
       if( gAudioIO->mAudioThreadShouldCallFillBuffersOnce )
       {
          gAudioIO->FillBuffers();
@@ -1771,6 +1773,7 @@ AudioThread::ExitCode AudioThread::Entry()
       {
          gAudioIO->FillBuffers();
       }
+      gAudioIO->mAudioThreadFillBuffersLoopActive = false;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
      if( gAudioIO->mMidiStreamActive && 
@@ -2123,8 +2126,6 @@ void AudioIO::FillBuffers()
 {
    unsigned int i;
 
-   gAudioIO->mAudioThreadFillBuffersLoopActive = true;
-
    if( mPlaybackTracks.GetCount() > 0 )
    {
       // Though extremely unlikely, it is possible that some buffers
@@ -2285,7 +2286,6 @@ void AudioIO::FillBuffers()
       }
    }
 
-   gAudioIO->mAudioThreadFillBuffersLoopActive = false;
    //if ( mMidiStreamActive && mMidiPlaybackTracks.GetCount() > 0 )
       //FillMidiBuffers();
 }
