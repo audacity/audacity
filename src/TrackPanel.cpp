@@ -215,6 +215,7 @@ is time to refresh some aspect of the screen.
 
 #include "widgets/ASlider.h"
 #include "widgets/Ruler.h"
+#include "widgets/TimeTextCtrl.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -443,8 +444,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mBacking(NULL),
      mRefreshBacking(false),
      mAutoScrolling(false),
-     vrulerSize(36,0),
-     mVertScrollRemainder(0)
+     mVertScrollRemainder(0),
+     vrulerSize(36,0)
 #ifndef __WXGTK__   //Get rid if this pragma for gtk
 #pragma warning( default: 4355 )
 #endif
@@ -1791,13 +1792,9 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    if (mSnapManager)
       delete mSnapManager;
 
-   // "/SnapTo" pref refers to snapping to time. Don't use the snap manager in
-   // this case
-   if (gPrefs->Read(wxT("/SnapTo"), 0L) == 0) {
-      mSnapManager = new SnapManager(mTracks, NULL,
-                                     mViewInfo->zoom,
-                                     4); // pixel tolerance
-   }
+   mSnapManager = new SnapManager(mTracks, NULL,
+                                  mViewInfo->zoom,
+                                  4); // pixel tolerance
    mSnapLeft = -1;
    mSnapRight = -1;
 
@@ -1938,8 +1935,11 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
    if (mSnapManager) {
       mSnapLeft = -1;
       mSnapRight = -1;
-      if (mSnapManager->Snap(mCapturedTrack, mSelStart, false, &s)) {
-         mSnapLeft = TimeToPosition(s, trackLeftEdge);
+      bool snappedPoint, snappedTime;
+      if (mSnapManager->Snap(mCapturedTrack, mSelStart, false,
+                             &s, &snappedPoint, &snappedTime)) {
+         if (snappedPoint)
+            mSnapLeft = TimeToPosition(s, trackLeftEdge);
       }
    }
 
@@ -1978,15 +1978,22 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
    if (mSnapManager) {
       mSnapLeft = -1;
       mSnapRight = -1;
-      if (mSnapManager->Snap(mCapturedTrack, sel0, false, &sel0)) {
-         mSnapLeft = TimeToPosition(sel0, trackLeftEdge);
+      bool snappedPoint, snappedTime;
+      if (mSnapManager->Snap(mCapturedTrack, sel0, false,
+                             &sel0, &snappedPoint, &snappedTime)) {
+         if (snappedPoint)
+            mSnapLeft = TimeToPosition(sel0, trackLeftEdge);
       }
-      if (mSnapManager->Snap(mCapturedTrack, sel1, true, &sel1)) {
-         mSnapRight = TimeToPosition(sel1, trackLeftEdge);
+      if (mSnapManager->Snap(mCapturedTrack, sel1, true,
+                             &sel1, &snappedPoint, &snappedTime)) {
+         if (snappedPoint)
+            mSnapRight = TimeToPosition(sel1, trackLeftEdge);
       }
 
-      if (mSnapLeft >= 0 && mSnapRight >= 0 && mSnapRight - mSnapLeft < 3) {
-         // Too close together.  Better not to snap at all.
+      // Check if selection endpoints are too close together to snap (unless
+      // using snap-to-time -- then we always accept the snap results)
+      if (mSnapLeft >= 0 && mSnapRight >= 0 && mSnapRight - mSnapLeft < 3 &&
+            !snappedTime) {
          sel0 = origSel0;
          sel1 = origSel1;
          mSnapLeft = -1;
@@ -2415,7 +2422,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mSnapManager = new SnapManager(mTracks,
                                   &mCapturedClipArray,
                                   mViewInfo->zoom,
-                                  4); // pixel tolerance
+                                  4,     // pixel tolerance
+                                  true); // don't snap to time
    mSnapLeft = -1;
    mSnapRight = -1;
    mSnapPreferRightEdge = false;
@@ -2510,8 +2518,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       double newClipLeft = clipLeft;
       double newClipRight = clipRight;
 
-      mSnapManager->Snap(mCapturedTrack, clipLeft, false, &newClipLeft);
-      mSnapManager->Snap(mCapturedTrack, clipRight, false, &newClipRight);
+      bool dummy1, dummy2;
+      mSnapManager->Snap(mCapturedTrack, clipLeft, false, &newClipLeft,
+                         &dummy1, &dummy2);
+      mSnapManager->Snap(mCapturedTrack, clipRight, false, &newClipRight,
+                         &dummy1, &dummy2);
 
       // Only one of them is allowed to snap
       if (newClipLeft != clipLeft && newClipRight != clipRight) {
@@ -5518,11 +5529,18 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
    // Get currently focused track if there is one
    t = GetFocusedTrack();
 
+   bool snapToTime = (gPrefs->Read(wxT("/SnapTo"), 0L) != 0);
+
    // Contract selection from the right to the left
    if( shift && ctrl )
    {
       // Reduce and constrain (counter-intuitive)
-      mViewInfo->sel1 -= multiplier / mViewInfo->zoom;
+      if (snapToTime) {
+         mViewInfo->sel1 = GridMove(mViewInfo->sel1, -multiplier);
+      }
+      else {
+         mViewInfo->sel1 -= multiplier / mViewInfo->zoom;
+      }
       if( mViewInfo->sel1 < mViewInfo->sel0 )
       {
          mViewInfo->sel1 = mViewInfo->sel0;
@@ -5546,7 +5564,12 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
       }
 
       // Expand and constrain
-      mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
+      if (snapToTime) {
+         mViewInfo->sel0 = GridMove(mViewInfo->sel0, -multiplier);
+      }
+      else {
+         mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
+      }
       if( mViewInfo->sel0 < 0.0 )
       {
          mViewInfo->sel0 = 0.0;
@@ -5573,7 +5596,12 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
       if( mViewInfo->sel0 == mViewInfo->sel1 )
       {
          // Move and constrain
-         mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
+         if (snapToTime) {
+            mViewInfo->sel0 = GridMove(mViewInfo->sel0, -multiplier);
+         }
+         else {
+            mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
+         }
          if( mViewInfo->sel0 < 0.0 )
          {
             mViewInfo->sel0 = 0.0;
@@ -5616,11 +5644,18 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
    // Get currently focused track if there is one
    t = GetFocusedTrack();
 
+   bool snapToTime = (gPrefs->Read(wxT("/SnapTo"), 0L) != 0);
+
    // Contract selection from the left to the right
    if( shift && ctrl )
    {
       // Reduce and constrain (counter-intuitive)
-      mViewInfo->sel0 += multiplier / mViewInfo->zoom;
+      if (snapToTime) {
+         mViewInfo->sel0 = GridMove(mViewInfo->sel0, multiplier);
+      }
+      else {
+         mViewInfo->sel0 += multiplier / mViewInfo->zoom;
+      }
       if( mViewInfo->sel0 > mViewInfo->sel1 )
       {
          mViewInfo->sel0 = mViewInfo->sel1;
@@ -5644,7 +5679,12 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
       }
 
       // Expand and constrain
-      mViewInfo->sel1 += multiplier/mViewInfo->zoom;
+      if (snapToTime) {
+         mViewInfo->sel1 = GridMove(mViewInfo->sel1, multiplier);
+      }
+      else {
+         mViewInfo->sel1 += multiplier/mViewInfo->zoom;
+      }
       double end = mTracks->GetEndTime();
       if( mViewInfo->sel1 > end )
       {
@@ -5672,7 +5712,12 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
       if (mViewInfo->sel0 == mViewInfo->sel1)
       {
          // Move and constrain
-         mViewInfo->sel1 += multiplier / mViewInfo->zoom;
+         if (snapToTime) {
+            mViewInfo->sel1 = GridMove(mViewInfo->sel1, multiplier);
+         }
+         else {
+            mViewInfo->sel1 += multiplier / mViewInfo->zoom;
+         }
          double end = mTracks->GetEndTime();
          if( mViewInfo->sel1 > end )
          {
@@ -5697,6 +5742,34 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
    }
 
    MakeParentModifyState();
+}
+
+// Handles moving a selection edge with the keyboard in snap-to-time mode;
+// returns the moved value.
+// Will move at least minPix pixels -- set minPix positive to move forward,
+// negative to move backward.
+double TrackPanel::GridMove(double t, int minPix)
+{
+   TimeTextCtrl ttc(this, wxID_ANY, wxT(""), 0.0, GetProject()->GetRate());
+   wxString formatName;
+   gPrefs->Read(wxT("/SelectionFormat"), &formatName);
+   ttc.SetFormatString(ttc.GetBuiltinFormat(formatName));
+   ttc.SetTimeValue(t);
+
+   // Try incrementing/decrementing the value; if we've moved far enough we're
+   // done
+   double result;
+   minPix >= 0 ? ttc.Increment() : ttc.Decrement();
+   result = ttc.GetTimeValue();
+   if (fabs(result - t) * mViewInfo->zoom >= fabs(minPix)) {
+      return result;
+   }
+
+   // Otherwise, move minPix pixels, then snap to the time.
+   result = t + minPix / mViewInfo->zoom;
+   ttc.SetTimeValue(result);
+   result = ttc.GetTimeValue();
+   return result;
 }
 
 void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)

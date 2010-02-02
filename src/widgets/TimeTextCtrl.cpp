@@ -469,6 +469,18 @@ void TimeTextCtrl::SetTimeValue(double newTime)
    ControlsToValue();
 }
 
+void TimeTextCtrl::Increment()
+{
+   mFocusedDigit = mDigits.GetCount() - 1;
+   Increase(1);
+}
+
+void TimeTextCtrl::Decrement()
+{
+   mFocusedDigit = mDigits.GetCount() - 1;
+   Decrease(1);
+}
+
 void TimeTextCtrl::EnableMenu(bool enable)
 {
 #if wxUSE_TOOLTIPS

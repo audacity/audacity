@@ -67,6 +67,8 @@ class TimeTextCtrl: public wxControl{
    void SetFormatString(wxString formatString);
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
+   void Increment();
+   void Decrement();
    const double GetTimeValue();
 
    wxString GetTimeString();

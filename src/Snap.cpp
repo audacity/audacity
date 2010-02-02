@@ -11,9 +11,12 @@
 #include <math.h>
 
 #include "LabelTrack.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "Snap.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
+#include "widgets/TimeTextCtrl.h"
 
 int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 {
@@ -21,9 +24,26 @@ int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 }
 
 SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
-                         double zoom, int pixelTolerance)
+                         double zoom, int pixelTolerance, bool noTimeSnap)
 {
    int i;
+
+   // Grab time-snapping prefs (unless otherwise requested)
+   mSnapToTime = false;
+   TimeTextCtrl *ttc = NULL;
+   if (gPrefs->Read(wxT("/SnapTo"), 0L) != 0L && !noTimeSnap)
+   {
+      // Look up the format string
+      AudacityProject *p = GetActiveProject();
+      if (p) {
+         mSnapToTime = true;
+         ttc = new TimeTextCtrl(p, wxID_ANY, wxT(""), 0.0, p->GetRate());
+         wxString formatName;
+         gPrefs->Read(wxT("/SelectionFormat"), &formatName);
+         mFormat = ttc->GetBuiltinFormat(formatName);
+         ttc->SetFormatString(mFormat);
+      }
+   }
 
    mSnapPoints = new SnapPointArray(CompareSnapPoints);
    if (zoom > 0 && pixelTolerance > 0)
@@ -46,9 +66,10 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
          LabelTrack *labelTrack = (LabelTrack *)track;
          for(i = 0; i < labelTrack->GetNumLabels(); i++) {
             const LabelStruct *label = labelTrack->GetLabel(i);
-            mSnapPoints->Add(new SnapPoint(label->t, labelTrack));
-            if (label->t1 != label->t)
-               mSnapPoints->Add(new SnapPoint(label->t1, labelTrack));
+            CondListAdd(label->t, labelTrack, ttc);
+            if (label->t1 != label->t) {
+               CondListAdd(label->t1, labelTrack, ttc);
+            }
          }
       }
       if (track->GetKind() == Track::Wave) {
@@ -66,13 +87,26 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
                if (skip)
                   continue;
             }
-            mSnapPoints->Add(new SnapPoint(clip->GetStartTime(), waveTrack));
-            mSnapPoints->Add(new SnapPoint(clip->GetEndTime(), waveTrack));
+            CondListAdd(clip->GetStartTime(), waveTrack, ttc);
+            CondListAdd(clip->GetEndTime(), waveTrack, ttc);
          }
       }
 
       track = iter.Next();
    }
+
+   if (ttc)
+      delete ttc;
+}
+
+// Adds to mSnapPoints, filtering by ttc if it's not NULL
+void SnapManager::CondListAdd(double t, Track *tr, TimeTextCtrl *ttc)
+{
+   if (ttc)
+      ttc->SetTimeValue(t);
+
+   if (!ttc || ttc->GetTimeValue() == t)
+      mSnapPoints->Add(new SnapPoint(t, tr));
 }
 
 SnapManager::~SnapManager()
@@ -130,10 +164,11 @@ int SnapManager::Find(double t)
       return index;
 }
 
-bool SnapManager::Snap(Track *currentTrack,
-                       double t,
-                       bool rightEdge,
-                       double *out_t)
+// Helper: performs snap-to-points for Snap(). Returns true if a snap happened.
+bool SnapManager::SnapToPoints(Track *currentTrack,
+                               double t,
+                               bool rightEdge,
+                               double *out_t)
 {
    int len = (int)mSnapPoints->GetCount();
    *out_t = t;
@@ -191,6 +226,39 @@ bool SnapManager::Snap(Track *currentTrack,
 
    // None of the points matched, bummer.
    return false;
+}
+
+bool SnapManager::Snap(Track *currentTrack,
+                       double t,
+                       bool rightEdge,
+                       double *out_t,
+                       bool *snappedPoint,
+                       bool *snappedTime)
+{
+   // First snap to points in mSnapPoints
+   *out_t = t;
+   *snappedPoint = SnapToPoints(currentTrack, t, rightEdge, out_t);
+
+   // Now snap to the time grid
+   *snappedTime = false;
+   if (mSnapToTime) {
+      if (*snappedPoint) {
+         // Since mSnapPoints only contains points on the grid, we're done
+         *snappedTime = true;
+      }
+      else {
+         // Snap time to the grid
+         AudacityProject *p = GetActiveProject();
+         TimeTextCtrl ttc(p, wxID_ANY, wxT(""), 0.0, p->GetRate());
+         ttc.SetFormatString(mFormat);
+
+         ttc.SetTimeValue(t);
+         *out_t = ttc.GetTimeValue();
+         *snappedTime = true;
+      }
+   }
+
+   return *snappedPoint || *snappedTime;
 }
 
 // Indentation settings for Vim and Emacs.

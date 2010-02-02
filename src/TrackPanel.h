@@ -254,6 +254,8 @@ class TrackPanel:public wxPanel {
    void SelectTracksByLabel( LabelTrack *t );
    void SelectTrackLength(Track *t);
 
+   // Helper for moving by keyboard with snap-to-grid enabled
+   double GridMove(double t, int minPix);
 
    // AS: Cursor handling
    bool SetCursorByActivity( );

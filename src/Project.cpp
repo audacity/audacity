@@ -4140,10 +4140,6 @@ void AudacityProject::TP_DisplaySelection()
    }
 
    GetSelectionBar()->SetTimes(mViewInfo.sel0, mViewInfo.sel1, audioTime);
-   if( mSnapTo ) {
-      mViewInfo.sel0 = GetSelectionBar()->GetLeftTime();
-      mViewInfo.sel1 = GetSelectionBar()->GetRightTime();
-   }
 
    if (!gAudioIO->IsBusy() && !mLockPlayRegion)
       mRuler->SetPlayRegion(mViewInfo.sel0, mViewInfo.sel1);

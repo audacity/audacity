@@ -22,6 +22,7 @@
 #include "ViewInfo.h"
 
 class TrackClipArray;
+class TimeTextCtrl;
 
 class SnapPoint {
  public:
@@ -37,8 +38,10 @@ WX_DEFINE_SORTED_ARRAY(SnapPoint *, SnapPointArray);
 
 class SnapManager {
  public:
+   // Set gridCtrl to a TimeTextCtrl to use for snap-to-time; if NULL we won't
+   // snap to time
    SnapManager(TrackList *tracks, TrackClipArray *exclusions,
-               double zoom, int pixelTolerance);
+               double zoom, int pixelTolerance, bool noTimeSnap = false);
 
    ~SnapManager();
 
@@ -49,18 +52,27 @@ class SnapManager {
    bool Snap(Track *currentTrack,
              double t,
              bool rightEdge,
-             double *out_t);
+             double *out_t,
+             bool *snappedPoint,
+             bool *snappedTime);
 
  private:
+   void CondListAdd(double t, Track *tr, TimeTextCtrl *ttc);
    double Get(int index);
    double Diff(double t, int index);
    int Find(double t, int i0, int i1);
    int Find(double t);
+   bool SnapToPoints(Track *currentTrack, double t, bool rightEdge,
+                     double *out_t);
 
    double           mEpsilon;
    double           mTolerance;
    double           mZoom;
    SnapPointArray  *mSnapPoints;
+
+   // Info for snap-to-time
+   bool             mSnapToTime;
+   wxString         mFormat;
 };
 
 #endif
