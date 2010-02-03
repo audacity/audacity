@@ -5761,7 +5761,7 @@ double TrackPanel::GridMove(double t, int minPix)
    double result;
    minPix >= 0 ? ttc.Increment() : ttc.Decrement();
    result = ttc.GetTimeValue();
-   if (fabs(result - t) * mViewInfo->zoom >= fabs(minPix)) {
+   if (fabs(result - t) * mViewInfo->zoom >= fabs((double)minPix)) {
       return result;
    }
 
