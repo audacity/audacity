@@ -4,7 +4,7 @@
 
    ExportFFmpegDialogs.cpp
 
-   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
    License: GPL v2.  See License.txt.
 
    LRN
@@ -904,7 +904,7 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
         mCodecName = S.Id(FECodecNameID).AddVariableText(wxT(""));
      }
      S.EndMultiColumn();
-     S.AddVariableText(_("Not all formats and codecs are compatible. Nor are all option combinations, (such as bitrates and samplerates), compatible with all codecs."), false);
+     S.AddVariableText(_("Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."), false);
      S.StartMultiColumn(2, wxEXPAND);
      {
         S.StartMultiColumn(2, wxEXPAND);
