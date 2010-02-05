@@ -706,7 +706,7 @@ BEGIN_EVENT_TABLE(AudacityProject, wxFrame)
    EVT_COMMAND_SCROLL_LINEDOWN(HSBarID, AudacityProject::OnScrollRightButton)
    EVT_COMMAND_SCROLL(HSBarID, AudacityProject::OnScroll)
    EVT_COMMAND_SCROLL(VSBarID, AudacityProject::OnScroll)
-   EVT_TIMER(AudacityProjectTimerID, AudacityProject::OnTimer)
+   EVT_TIMER(wxID_ANY, AudacityProject::OnTimer)
    // Fires for menu with ID #1...first menu defined
    EVT_UPDATE_UI(1, AudacityProject::OnUpdateUI)
    EVT_ICONIZE(AudacityProject::OnIconize)
@@ -992,7 +992,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mStatusBar->SetStatusText(msg);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 
-   mTimer = new wxTimer(this, AudacityProjectTimerID);
+   mTimer = new wxTimer(this, wxID_ANY);
    mTimer->Start(200);
 
 #if wxUSE_DRAG_AND_DROP
