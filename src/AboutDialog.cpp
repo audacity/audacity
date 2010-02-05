@@ -99,6 +99,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Paul Nasca"), roleContributor);
    AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
    AddCredit(wxT("Augustus Saunders"), roleContributor);
+   AddCredit(wxT("David R. Sky"), roleContributor);
    AddCredit(wxT("Mike Underwood"), roleContributor);
    AddCredit(wxT("Jun Wan"), roleContributor);
    AddCredit(wxT("Tom Woodhams"), roleContributor);
@@ -137,7 +138,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jonathan Ryshpan"), roleThanks);
    AddCredit(wxT("Michael Schwendt"), roleThanks);
    AddCredit(wxT("Patrick Shirkey"), roleThanks);
-   AddCredit(wxT("David R. Sky"), roleThanks);
    AddCredit(wxT("Tuomas Suutari"), roleThanks);
    AddCredit(wxT("Mark Tomlinson"), roleThanks);
    AddCredit(wxT("David Topper"), roleThanks);
