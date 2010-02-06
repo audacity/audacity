@@ -259,13 +259,17 @@ void ToolBar::ReCreateButtons()
    Layout();
 
    // Recalculate the height to be a multiple of toolbarSingle
-#define tbs ( toolbarSingle + toolbarGap )
+   const int tbs = toolbarSingle + toolbarGap;
    wxSize sz = GetSize();
    sz.y = ( ( ( sz.y + tbs ) / tbs ) * tbs ) - 1;
-#undef tbs
 
    // Set the true AND minimum sizes and do final layout
    SetInitialSize(sz);
+   if(IsResizable())
+   {// EM: allows narrow Meter Toolbar
+      sz.SetWidth(160);
+      SetMinSize(sz);
+   }
    Layout();
 }
 
@@ -585,6 +589,18 @@ void ToolBar::OnPaint( wxPaintEvent & event )
    }
 }
 
+/// @return true iff pos is in resize grabber.
+bool ToolBar::IsResizeGrabberHit( wxPoint & pos )
+{
+   wxRect rect = GetRect();
+
+   // Adjust to size of resize grabber
+   rect.x = rect.width - RWIDTH;
+   rect.y = 0;
+   rect.width = RWIDTH;
+   return rect.Contains( pos );
+}
+
 //
 // Handle toolbar resizing
 //
@@ -603,19 +619,11 @@ void ToolBar::OnLeftDown( wxMouseEvent & event )
    if( IsResizable() )
    {
       wxPoint pos = event.GetPosition();
-      wxRect rect = GetRect();
-
-      // Adjust to size of resize grabber
-      rect.x = rect.width - RWIDTH;
-      rect.y = 0;
-      rect.width = RWIDTH;
-
       // Is left click within resize grabber?
-      if( rect.Contains( pos ) )
+      if( IsResizeGrabberHit( pos ) )
       {
          // Retrieve the mouse position
          mResizeStart = ClientToScreen( pos );
-
          // We want all of the mouse events
          CaptureMouse();
       }
@@ -647,29 +655,17 @@ void ToolBar::OnMotion( wxMouseEvent & event )
    }
 
    // Retrieve the mouse position
-   wxPoint pos = ClientToScreen( event.GetPosition() );
+   wxPoint raw_pos = event.GetPosition();
+   wxPoint pos = ClientToScreen( raw_pos );
 
    if( !HasCapture() )
    {
+      // JKC: Wrong place for this?  Surely the cursor should change on 
+      // mouse-down and capture-lost rather than with mouse movement?
       if( IsResizable() )
       {
-         wxPoint pos = event.GetPosition();
-         wxRect rect = GetRect();
-
-         // Adjust to size of resize grabber
-         rect.x = rect.width - RWIDTH;
-         rect.y = 0;
-         rect.width = RWIDTH;
-
          // Is left click within resize grabber?
-         if( rect.Contains( pos ) )
-         {
-            SetCursor( wxCURSOR_SIZEWE );
-         }
-         else
-         {
-            SetCursor( wxCURSOR_ARROW );
-         }
+         SetCursor( IsResizeGrabberHit( raw_pos ) ? wxCURSOR_SIZEWE : wxCURSOR_ARROW);
       }
    }
    else if( event.Dragging() )

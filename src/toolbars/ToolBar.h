@@ -159,7 +159,7 @@ class ToolBar:public wxPanel
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
 
  private:
-
+   bool IsResizeGrabberHit( wxPoint & pos );
    void Init(wxWindow *parent, int type, const wxString & title, const wxString & label);
 
    wxWindow *mParent;
