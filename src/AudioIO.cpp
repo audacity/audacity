@@ -2121,7 +2121,7 @@ wxString AudioIO::GetDeviceInfo()
 
 // This method is the data gateway between the audio thread (which
 // communicates with the disk) and the PortAudio callback thread
-// (which communicates with the audio device.
+// (which communicates with the audio device).
 void AudioIO::FillBuffers()
 {
    unsigned int i;
@@ -2219,9 +2219,9 @@ void AudioIO::FillBuffers()
 
          } while (mPlayLooped && secsAvail > 0 && deltat > 0);
       }
-   }
+   }  // end of playback buffering
 
-   if( mCaptureTracks.GetCount() > 0 )
+   if( mCaptureTracks.GetCount() > 0 ) // start record buffering
    {
       int commonlyAvail = GetCommonlyAvailCapture();
 
@@ -2284,7 +2284,7 @@ void AudioIO::FillBuffers()
          if (mListener && !blockFileLog.IsEmpty())
             mListener->OnAudioIONewBlockFiles(blockFileLog);
       }
-   }
+   }  // end of record buffering
 
    //if ( mMidiStreamActive && mMidiPlaybackTracks.GetCount() > 0 )
       //FillMidiBuffers();
