@@ -57,7 +57,7 @@ void AboutDialog::CreateCreditsList()
    // These will be split into two separate categories
 
    AddCredit(wxT("Gale Andrews"), roleTeamSupport);
-   AddCredit(wxT("Richard Ash"), roleTeamSupport);
+   AddCredit(wxT("Richard Ash"), roleTeamDeveloper);
    AddCredit(wxT("Christian Brochec"), roleTeamSupport);
    AddCredit(wxT("Michael Chinen"), roleTeamDeveloper);
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
