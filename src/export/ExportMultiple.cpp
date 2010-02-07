@@ -304,7 +304,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       S.SetBorder(5);
       S.StartStatic(_("Name files:"), false);
       {
-
+         S.SetBorder(2);
          mByNumberAndName = S.Id(ByNameAndNumberID)
             .AddRadioButton(_("Using number AND Label/Track Name"));
 
