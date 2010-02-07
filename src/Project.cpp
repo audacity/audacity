@@ -3389,14 +3389,22 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    }
    else
    {
+      wxString DialogTitle;
       if (bWantSaveCompressed)
+      {
          ShowWarningDialog(this, wxT("FirstProjectSave"),
                            _("Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \nCompressed project files are a good way to transmit your project online, because they are much smaller. \nTo open a compressed project takes longer than usual, as it imports each compressed track. \n\nMost other programs can't open Audacity project files.\nWhen you want to save a file that can be opened by other programs, select one of the\nExport commands."));
+         DialogTitle = _("Save Compressed Project As...");
+      }
       else
+      {
          ShowWarningDialog(this, wxT("FirstProjectSave"),
                            _("You are saving an Audacity project file (.aup).\n\nSaving a project creates a file that only Audacity can open.\n\nTo save an audio file for other programs, use one of the \"File > Export\" commands.\n"));
+         DialogTitle = _("Save Project As...");
+      }
 
-      fName = FileSelector(_("Save Project As..."),
+      fName = FileSelector(
+         DialogTitle,
          path, fName, wxT(""),
          _("Audacity projects") + static_cast<wxString>(wxT(" (*.aup)|*.aup")),
       // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking 
