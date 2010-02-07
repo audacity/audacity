@@ -63,6 +63,7 @@ enum {
    FirstID,
    FirstFileNameID,
    TrackID,
+   ByNameAndNumberID,
    ByNameID,
    ByNumberID,
    PrefixID,
@@ -302,39 +303,26 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       S.SetBorder(5);
       S.StartStatic(_("Name files:"), false);
       {
-         S.StartMultiColumn(2, false);
-         S.SetStretchyCol(1);
+
+         mByNumberAndName = S.Id(ByNameAndNumberID)
+            .AddRadioButton(_("Using number AND Label/Track Name"));
+
+         mByName = S.Id(ByNameID)
+            .AddRadioButtonToGroup(_("Using Label/Track Name"));
+
+         mByNumber = S.Id(ByNumberID)
+            .AddRadioButtonToGroup(_("Numbering consecutively"));
+
+         S.StartHorizontalLay(wxEXPAND, false);
          {
-            // Row 1
-            S.SetBorder(1);
-            mByName = S.Id(ByNameID)
-               .AddRadioButton(wxT(""));
-            mByName->SetName(_("Using Label/Track Name"));
-            S.SetBorder(3);
-            mByNameLabel = S.AddVariableText(_("Using Label/Track Name"), false);
-
-            // Row 2
-            S.SetBorder(1);
-            mByNumber = S.Id(ByNumberID)
-               .AddRadioButtonToGroup(wxT(""));
-            mByNumber->SetName(_("Numbering consecutively"));
-            S.SetBorder(3);
-            mByNumberLabel = S.AddVariableText(_("Numbering consecutively"), false);
-
-            // Row 3
-            S.AddVariableText(wxT(""), false);
-            S.StartHorizontalLay(wxEXPAND, false);
-            {
-               mPrefixLabel = S.AddVariableText(_("File name prefix:"), true);
-               mPrefix = S.Id(PrefixID)
-                  .TieTextBox(wxT(""),
-                              name,
-                              30);
-               mPrefix->SetName(_("File name prefix"));
-            }
-            S.EndHorizontalLay();
+            mPrefixLabel = S.AddVariableText(_("File name prefix:"), true);
+            mPrefix = S.Id(PrefixID)
+               .TieTextBox(wxT(""),
+                           name,
+                           30);
+            mPrefix->SetName(_("File name prefix"));
          }
-         S.EndMultiColumn();
+         S.EndHorizontalLay();
       }
       S.EndStatic();
    }
@@ -364,9 +352,9 @@ void ExportMultiple::EnableControls()
 
    mFirst->Enable(mLabel->GetValue());
    
-   enable = mLabel->GetValue() &&
-            mByName->GetValue() &&
-            mFirst->GetValue();
+   enable =  mLabel->GetValue() &&
+            (mByName->GetValue() || mByNumberAndName->GetValue()) && 
+             mFirst->GetValue();
    mFirstFileLabel->Enable(enable);
    mFirstFileName->Enable(enable);
 
@@ -518,12 +506,14 @@ void ExportMultiple::OnExport(wxCommandEvent& event)
    mExported.Empty();
 
    if (mLabel->GetValue()) {
-      ok = ExportMultipleByLabel(mByName->GetValue(),
-                                 mPrefix->GetValue());
+      ok = ExportMultipleByLabel(mByName->GetValue() || mByNumberAndName->GetValue(),
+                                 mPrefix->GetValue(),
+                                 mByNumberAndName->GetValue());
    }
    else {
-      ok = ExportMultipleByTrack(mByName->GetValue(),
-                                 mPrefix->GetValue());
+      ok = ExportMultipleByTrack(mByName->GetValue() || mByNumberAndName->GetValue(),
+                                 mPrefix->GetValue(),
+                                 mByNumberAndName->GetValue());
    }
 
    // Give 'em the result
@@ -541,12 +531,13 @@ void ExportMultiple::OnExport(wxCommandEvent& event)
 
       SuccessDialog dlg(this,
                    wxID_ANY,
-                   wxString(_("Export Multiple")));
+                   wxString(_("Export Multiple")) );
       ShuttleGui S(&dlg, eIsCreating);
       S.StartVerticalLay();
       {
          S.AddTitle(msg);
-         S.SetStyle(wxLC_LIST | wxLC_SINGLE_SEL | wxLC_HRULES | wxSUNKEN_BORDER);
+         S.SetStyle(wxLC_LIST | wxLC_SINGLE_SEL | wxLC_HRULES | wxSUNKEN_BORDER |
+            wxVSCROLL | wxHSCROLL);
          wxListCtrl *l = S.AddListControl();
          l->SetBackgroundStyle(wxBG_STYLE_COLOUR);
 #if defined (__WXGTK__)
@@ -602,7 +593,8 @@ bool ExportMultiple::DirOk()
    return fn.Mkdir(0777, wxPATH_MKDIR_FULL);
 }
 
-int ExportMultiple::ExportMultipleByLabel(bool byName, wxString prefix)
+int ExportMultiple::ExportMultipleByLabel(bool byName, 
+   wxString prefix, bool addNumber)
 {
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
@@ -669,9 +661,13 @@ int ExportMultiple::ExportMultipleByLabel(bool byName, wxString prefix)
             name.Printf(wxT("%s-%02d"), prefix.c_str(), l+1);
          else
             name.Printf(wxT("%s-%d"), prefix.c_str(), l+1);
+      } else if (addNumber) {
+         // Following discussion with GA, always have 2 digits
+         // for easy file-name sorting (on windows)
+         name.Prepend(wxString::Format(wxT("%02d-"), l+1));
       }
 
-      // store sanitised and user checjed name in object
+      // store sanitised and user checked name in object
       setting.destfile.SetName(MakeFileName(name));
 
       wxASSERT(setting.destfile.IsOk());     // scream if file name is broke
@@ -714,8 +710,8 @@ int ExportMultiple::ExportMultipleByLabel(bool byName, wxString prefix)
    return ok;
 }
 
-int ExportMultiple::ExportMultipleByTrack(bool byName,
-                                          wxString prefix)
+int ExportMultiple::ExportMultipleByTrack(bool byName, 
+   wxString prefix, bool addNumber)
 {
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
@@ -793,6 +789,9 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       title = tr->GetName();
       if (byName) {
          name = title;
+         if (addNumber) {
+            name.Prepend(wxString::Format(wxT("%02d-"), l+1));
+         } 
       }
       else {
          if (numTracks > 9) {

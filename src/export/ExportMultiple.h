@@ -52,7 +52,7 @@ private:
     * labels that define them (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   int ExportMultipleByLabel(bool byName, wxString prefix);
+   int ExportMultipleByLabel(bool byName, wxString prefix, bool addNumber);
 
    /** \brief Export each track in the project to a separate file
     *
@@ -60,7 +60,7 @@ private:
     * (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
-   int ExportMultipleByTrack(bool byName, wxString prefix);
+   int ExportMultipleByTrack(bool byName, wxString prefix, bool addNumber);
 
    /** Export one file of an export multiple set
     *
@@ -149,11 +149,9 @@ private:
    wxRadioButton *mTrack;  /**< button to choose export based on tracks */
    wxStaticText  *mTrackLabel;
    
-   wxRadioButton *mByName; /**< button to choose naming exported file from label text */
-   wxStaticText  *mByNameLabel;
-
+   wxRadioButton *mByNumberAndName; /**< button to choose number AND name for exported files */
+   wxRadioButton *mByName;    /**< button to choose naming exported file from label text */
    wxRadioButton *mByNumber;  /**< button to choose numbering exported files */
-   wxStaticText  *mByNumberLabel;
 
    wxStaticText  *mPrefixLabel;
    wxTextCtrl    *mPrefix;
@@ -171,7 +169,8 @@ class SuccessDialog : public wxDialog
 {
 public:
    SuccessDialog(wxWindow *parent, wxWindowID id, const wxString &title) : 
-      wxDialog(parent, id, title) {};
+      wxDialog(parent, id, title, wxDefaultPosition,
+         wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {};
    void OnKeyDown(wxListEvent& event); // dismisses dialog when <enter> is pressed with list control having focus
    void OnItemActivated(wxListEvent& event); // dismisses dialog when <enter> is pressed with list item having focus
 private:
