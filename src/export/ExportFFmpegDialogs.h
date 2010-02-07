@@ -378,7 +378,7 @@ static int iAACProfileValues[] = { FF_PROFILE_AAC_LOW, FF_PROFILE_AAC_MAIN, /*FF
 static const wxChar *iAACProfileNames[] = { _("LC"), _("Main"), /*_("SSR"),*/ _("LTP") }; //SSR is not supported
 
 /// Sample rates supported by AAC encoder (must end with zero-element)
-static const int iAACSampleRates[] = { 7350, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 38000, 64000, 88200, 0 };
+static const int iAACSampleRates[] = { 7350, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 64000, 88200, 0 };
 
 /// Bit Rates supported by libAMR-NB encoder
 /// Sample Rate is always 8 kHz
