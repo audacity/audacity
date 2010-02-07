@@ -212,6 +212,7 @@ void LabelTrack::ChangeLabelsOnReverse(double b, double e)
          mLabels[i]->t  = aux;
       }
    }
+   SortLabels();
 }
 
 void LabelTrack::ScaleLabels(double b, double e, double change)
