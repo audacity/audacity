@@ -1217,6 +1217,92 @@ bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y)
    return false;
 }
 
+// Adjust label's left or right boundary, depending which is requested.
+void LabelStruct::AdjustEdge( int iEdge, double fNewTime)
+{
+   if( iEdge < 0 )
+      t = fNewTime;
+   else
+      t1 = fNewTime;
+   updated = true;
+}
+
+// We're moving the label.  Adjust both left and right edge.
+void LabelStruct::MoveLabel( int iEdge, double fNewTime)
+{
+   double width = getDuration();
+
+   if( iEdge < 0 )
+   {
+      t  = fNewTime;
+      t1 = fNewTime+width;
+   }
+   else
+   {
+      t  = fNewTime-width;
+      t1 = fNewTime;
+   }
+   updated = true;
+}
+
+/// If the index is for a real label, adjust its left or right boundary.
+/// @iLabel - index of label, -1 for none.
+/// @iEdge - which edge is requested to move, -1 for left +1 for right.
+/// @bAllowSwapping - if we can switch which edge is being dragged.
+/// fNewTime - the new time for this edge of the label.
+void LabelTrack::MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime)
+{
+   if( iLabel < 0 )
+      return;
+   LabelStruct * pLabel = mLabels[ iLabel ];
+
+   // Adjust the requested edge.
+   pLabel->AdjustEdge( iEdge, fNewTime );
+   // If the label is not inverted, then we are done.
+   if( pLabel->t <= pLabel->t1 )
+      return;
+
+   // If swapping's not allowed we must also move the edge
+   // we didn't move.  Then we're done.
+   if( !bAllowSwapping )
+   {
+      pLabel->AdjustEdge( -iEdge, fNewTime );
+      return;
+   }
+
+   // Swapping's allowed and we moved the 'wrong' edge.
+   // Swap the edges.
+   double fTemp = pLabel->t;
+   pLabel->t = pLabel->t1;
+   pLabel->t1 = fTemp;
+
+   // Swap our record of what we are dragging.
+   int Temp = mMouseOverLabelLeft;
+   mMouseOverLabelLeft = mMouseOverLabelRight;
+   mMouseOverLabelRight = Temp;
+}
+
+// If the index is for a real label, adjust its left and right boundary.
+void LabelTrack::MayMoveLabel( int iLabel, int iEdge, double fNewTime)
+{
+   if( iLabel < 0 )
+      return;
+   mLabels[ iLabel ]->MoveLabel( iEdge, fNewTime );
+}
+
+// Constrain function, as in processing/arduino.
+// returned value will be between min and max (inclusive).
+int Constrain( int value, int min, int max )
+{
+   wxASSERT( min <= max );
+   int result=value;
+   if( result < min )
+      result=min;
+   if( result > max )
+      result=max;
+   return result;
+}
+
 /// HandleMouse gets called with every mouse move or click.
 /// 
 bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
@@ -1264,47 +1350,26 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
       {
          // LL:  Constrain to inside track rectangle for now.  Should be changed
          //      to allow scrolling while dragging labels
-         int x = evt.m_x + mxMouseDisplacement - r.x;
-         if (x < 0) {
-            x = 0;
-         }
-         else if (x > r.width - 2) {
-            x = r.width - 2;
-         }
+         int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width - 2);
 
-         double width;
-         bool bSameLabel = mMouseOverLabelLeft==mMouseOverLabelRight;
-         //Adjust boundary and make sure that t < t1 on any dragged labels.
-         //This code pushes both of them in one direction, instead of swapping
-         //bounds like happens for the selection region.
-         //If button is down, then we preserve the label width.
-         if(mMouseOverLabelLeft>=0)
+         // If exactly one edge is selected we allow swapping
+         bool bAllowSwapping = (mMouseOverLabelLeft >=0 ) ^ ( mMouseOverLabelRight >= 0);
+         // If we're on the 'dot' and nowe're moving,
+         // Though shift-down inverts that.
+         // and if both edges the same, then we're always moving the label.
+         bool bLabelMoving = mbIsMoving;
+         bLabelMoving ^= evt.ShiftDown();
+         bLabelMoving |= mMouseOverLabelLeft==mMouseOverLabelRight;
+         double fNewX = h + x / pps;
+         if( bLabelMoving )
          {
-            width = mLabels[mMouseOverLabelLeft]->t1 - mLabels[mMouseOverLabelLeft]->t;
-            mLabels[mMouseOverLabelLeft]->t  = h + x / pps;
-            if( evt.ShiftDown() || bSameLabel )
-            {
-               mLabels[mMouseOverLabelLeft]->t1  = mLabels[mMouseOverLabelLeft]->t+width;
-            }
-            else if( mLabels[mMouseOverLabelLeft]->t > mLabels[mMouseOverLabelLeft]->t1)
-            {
-               mLabels[mMouseOverLabelLeft]->t1  = mLabels[mMouseOverLabelLeft]->t;
-            }
-            mLabels[mMouseOverLabelLeft]->updated = true;
+            MayMoveLabel( mMouseOverLabelLeft,  -1, fNewX );
+            MayMoveLabel( mMouseOverLabelRight, +1, fNewX );
          }
-         if( (mMouseOverLabelRight>=0) && !bSameLabel )
+         else
          {
-            width = mLabels[mMouseOverLabelRight]->t1 - mLabels[mMouseOverLabelRight]->t;
-            mLabels[mMouseOverLabelRight]->t1 = h + x / pps;
-            if( evt.ShiftDown() )
-            {
-               mLabels[mMouseOverLabelRight]->t  = mLabels[mMouseOverLabelRight]->t1-width;
-            }
-            else if( mLabels[mMouseOverLabelRight]->t > mLabels[mMouseOverLabelRight]->t1)
-            {
-               mLabels[mMouseOverLabelRight]->t  = mLabels[mMouseOverLabelRight]->t1;
-            }
-            mLabels[mMouseOverLabelRight]->updated = true;
+            MayAdjustLabel( mMouseOverLabelLeft,  -1, bAllowSwapping, fNewX );
+            MayAdjustLabel( mMouseOverLabelRight, +1, bAllowSwapping, fNewX );
          }
 
          if( mSelIndex >=0 )
@@ -1323,7 +1388,8 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
    if( evt.ButtonDown())
    {
       //OverGlyph sets mMouseOverLabel to be the chosen label.         
-      mIsAdjustingLabel = OverGlyph(evt.m_x, evt.m_y) != 0;   
+      int iGlyph = OverGlyph(evt.m_x, evt.m_y);
+      mIsAdjustingLabel = iGlyph != 0;
       
       // reset mouseXPos if the mouse is pressed in the text box
       mMouseXPos = -1;
@@ -1359,6 +1425,9 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
       if (mIsAdjustingLabel)
       {
          float t = 0.0;
+         // We move if we hit the centre, we adjust one edge if we hit a chevron.
+         // This is if we are moving just one edge.
+         mbIsMoving = mbHitCenter;
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays 
@@ -1376,6 +1445,10 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
            )
          {
             t = (mLabels[mMouseOverLabelRight]->t1+mLabels[mMouseOverLabelLeft]->t)/2.0f;
+            // If we're moving two edges, then it's a move (label size preserved) 
+            // if both edges are the same label, and it's an adjust (label sizes change)
+            // if we're on a boundary between two different labels.
+            mbIsMoving = (mMouseOverLabelLeft == mMouseOverLabelRight);
          }
          else if(mMouseOverLabelRight >=0)
          {

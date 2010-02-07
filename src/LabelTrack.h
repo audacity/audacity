@@ -47,6 +47,9 @@ public:
    void DrawTextBox( wxDC & dc, const wxRect & r);
    void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
    void getXPos( wxDC & dc, int * xPos1, int cursorPos);
+   double getDuration(){return t1-t;};
+   void AdjustEdge( int iEdge, double fNewTime);
+   void MoveLabel( int iEdge, double fNewTime);
    
 public:
    double t;  /// Time for left hand of label.
@@ -169,6 +172,9 @@ class LabelTrack:public Track {
    bool CalcCursorX(wxWindow * parent, int * x);
    int getCurrentCursorPosition() const { return mCurrentCursorPos; };
    
+   void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
+   void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
+
    void ShiftLabelsOnClear(double b, double e);
    void ChangeLabelsOnClear(double b, double e);
    void ShiftLabelsOnInsert(double length, double pt);
@@ -226,6 +232,7 @@ class LabelTrack:public Track {
    void RemoveSelectedText();
 
    bool mIsAdjustingLabel;
+   bool mbIsMoving;
 
    static wxFont msFont;
 };
