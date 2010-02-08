@@ -40,6 +40,8 @@
 #include <wx/intl.h>
 #include <wx/dcclient.h>
 
+const int AudacityProjectTimerID = 5200;
+
 class wxWindow;
 class wxDialog;
 class wxBoxSizer;

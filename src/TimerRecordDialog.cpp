@@ -34,6 +34,7 @@
 #include "Internat.h"
 
 #define MAX_PROG 1000
+#define TIMER_ID 7000
 
 enum { // control IDs
    ID_DATEPICKER_START = 10000, 
@@ -61,7 +62,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
 
    EVT_BUTTON(wxID_OK, TimerRecordDialog::OnOK)
 
-   EVT_TIMER(wxID_ANY, TimerRecordDialog::OnTimer)
+   EVT_TIMER(TIMER_ID, TimerRecordDialog::OnTimer)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
@@ -87,7 +88,7 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
    m_pTimeTextCtrl_Duration->SetFocus();
    m_pTimeTextCtrl_Duration->SetFieldFocus(3);
 
-   m_timer.SetOwner(this, wxID_ANY);
+   m_timer.SetOwner(this, TIMER_ID);
    m_timer.Start(kTimerInterval); 
 }
 

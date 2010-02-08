@@ -168,7 +168,8 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 //
 
 enum {
-   OnDisableMeterID = 6000,
+   OnMeterUpdateID = 6000,
+   OnDisableMeterID,
    OnMonitorID,
    OnHorizontalID,
    OnAutomatedInputLevelAdjustmentID,
@@ -184,7 +185,7 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(Meter, wxPanel)
-   EVT_TIMER(wxID_ANY, Meter::OnMeterUpdate)
+   EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
    EVT_PAINT(Meter::OnPaint)
@@ -284,7 +285,7 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
 
    mRuler.SetFonts(GetFont(), GetFont(), GetFont());
 
-   mTimer.SetOwner(this, wxID_ANY);
+   mTimer.SetOwner(this, OnMeterUpdateID);
    Reset(44100.0, true);
    for(i=0; i<kMaxMeterBars; i++) {
       mBar[i].clipping = false;

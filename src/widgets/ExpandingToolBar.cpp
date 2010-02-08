@@ -89,6 +89,7 @@ const wxRect kDummyRect = wxRect(-9999, -9999, 0, 0);
 
 enum {
    kToggleButtonID = 5000,
+   kTimerID
 };
 
 WX_DEFINE_OBJARRAY(wxArrayRect);
@@ -107,7 +108,7 @@ public:
 
 BEGIN_EVENT_TABLE(ExpandingToolBar, wxPanel)
    EVT_SIZE(ExpandingToolBar::OnSize)
-   EVT_TIMER(wxID_ANY, ExpandingToolBar::OnTimer)
+   EVT_TIMER(kTimerID, ExpandingToolBar::OnTimer)
    EVT_BUTTON(kToggleButtonID, ExpandingToolBar::OnToggle)
 END_EVENT_TABLE()
 
@@ -164,7 +165,7 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mToggleButton->UseDisabledAsDownHiliteImage(true);
 
    SetAutoLayout(true);
-   mTimer.SetOwner(this, wxID_ANY);
+   mTimer.SetOwner(this, kTimerID);
 }
 
 ExpandingToolBar::~ExpandingToolBar()
