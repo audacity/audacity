@@ -620,7 +620,7 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    wxFile f;   // will be closed when it goes out of scope
    SNDFILE *sf = NULL;
 
-   if (f.Open(aliasPath)) {
+   if (f.Exists(aliasPath) && f.Open(aliasPath)) {
       // Even though there is an sf_open() that takes a filename, use the one that
       // takes a file descriptor since wxWidgets can open a file with a Unicode name and
       // libsndfile can't (under Windows).
