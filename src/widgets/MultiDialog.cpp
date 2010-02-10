@@ -86,7 +86,7 @@ MultiDialog::MultiDialog(wxString prompt,
    mBox->SetName(_("Please select an action"));
    mBox->SetSelection(0);
 
-   wxButton *ok = new wxButton(this, wxID_OK, wxT("OK"));
+   wxButton *ok = new wxButton(this, wxID_OK, _("OK"));
    
    vSizer->Add(mBox, 1, wxGROW|wxALIGN_CENTER|wxALL, 5);
    vSizer->Add(ok, 0, wxALIGN_CENTER|wxALL, 5);
