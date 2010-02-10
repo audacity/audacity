@@ -303,16 +303,20 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
 
       S.SetBorder(5);
       S.StartStatic(_("Name files:"), false);
-      {
+       {
          S.SetBorder(2);
-         mByNumberAndName = S.Id(ByNameAndNumberID)
-            .AddRadioButton(_("Using number AND Label/Track Name"));
+         S.StartRadioButtonGroup(wxT("/Export/TrackNameWithOrWithoutNumbers"), wxT("labelTrack"));
+         {
+            mByName = S.Id(ByNameID)
+               .TieRadioButton(_("Using Label/Track Name"), wxT("labelTrack"));
 
-         mByName = S.Id(ByNameID)
-            .AddRadioButtonToGroup(_("Using Label/Track Name"));
+            mByNumberAndName = S.Id(ByNameAndNumberID)
+               .TieRadioButton(_("Numbering before Label/Track Name"), wxT("numberBefore"));
 
-         mByNumber = S.Id(ByNumberID)
-            .AddRadioButtonToGroup(_("Numbering consecutively"));
+            mByNumber = S.Id(ByNumberID)
+               .TieRadioButton(_("Numbering after Label/Track Name"), wxT("numberAfter"));
+         }
+         S.EndRadioButtonGroup();
 
          S.StartHorizontalLay(wxEXPAND, false);
          {
@@ -658,13 +662,11 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
 
       // Numbering files...
       if (!byName) {
-         if (numFiles > 9)
+         if (numFiles)
             name.Printf(wxT("%s-%02d"), prefix.c_str(), l+1);
-         else
-            name.Printf(wxT("%s-%d"), prefix.c_str(), l+1);
       } else if (addNumber) {
          // Following discussion with GA, always have 2 digits
-         // for easy file-name sorting (on windows)
+         // for easy file-name sorting (on Windows)
          name.Prepend(wxString::Format(wxT("%02d-"), l+1));
       }
 
@@ -795,11 +797,8 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          } 
       }
       else {
-         if (numTracks > 9) {
+         if (numTracks) {
             name = (wxString::Format(wxT("%s-%02d"), prefix.c_str(), l+1));
-         }
-         else {
-            name = (wxString::Format(wxT("%s-%d"), prefix.c_str(), l+1));
          }
       }
 
