@@ -855,7 +855,7 @@ bool WaveTrack::HandleClear(double t0, double t1,
             }
          }
       } else
-      if (clip->GetStartTime() >= t1)
+      if (clip->BeforeClip(t1))
       {
          // Clip is "behind" the region -- offset it unless we're splitting
          // or we're using the "don't move other clips" mode
