@@ -534,36 +534,26 @@ void ExportMultiple::OnExport(wxCommandEvent& event)
                )
              ), mExported.GetCount());
 
+      // This results dialog is a child of this dialog.
       SuccessDialog dlg(this,
                    wxID_ANY,
                    wxString(_("Export Multiple")) );
       ShuttleGui S(&dlg, eIsCreating);
+
       S.StartVerticalLay();
       {
          S.AddTitle(msg);
-         S.SetStyle(wxLC_LIST | wxLC_SINGLE_SEL | wxLC_HRULES | wxSUNKEN_BORDER |
-            wxVSCROLL | wxHSCROLL);
-         wxListCtrl *l = S.AddListControl();
-         l->SetBackgroundStyle(wxBG_STYLE_COLOUR);
-#if defined (__WXGTK__)
-         // setting dlg.GetBackgroundColour does not work as expected in wxGTK
-         l->SetBackgroundColour(wxColour(wxT("wxNullColour")));
-#else
-         l->SetBackgroundColour(dlg.GetBackgroundColour());
-#endif
-         l->Refresh();
+         wxString FileList;
          for (size_t i = 0; i < mExported.GetCount(); i++) {
-            l->InsertItem(i, mExported[i]);
+            FileList += mExported[i];
+            FileList += '\n';
          }
-         
+         S.SetStyle( wxTE_READONLY|wxHSCROLL|wxTE_MULTILINE );
+         S.AddTextWindow( FileList );
          S.AddStandardButtons(eOkButton);
-         l->SetFocus();
-
-         // this handles double-click and prevents item activation when a list-item is double-clicked
-         MouseEvtHandler *mouseHdlr = new MouseEvtHandler();
-         l->PushEventHandler(mouseHdlr);
       }
-      dlg.Fit();
+      dlg.SetMinSize( wxSize(125,200) );
+      dlg.SetSize( wxSize(450,400) );
       dlg.Center();
       dlg.ShowModal();
    }
@@ -662,8 +652,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
 
       // Numbering files...
       if (!byName) {
-         if (numFiles)
-            name.Printf(wxT("%s-%02d"), prefix.c_str(), l+1);
+         name.Printf(wxT("%s-%02d"), prefix.c_str(), l+1);
       } else if (addNumber) {
          // Following discussion with GA, always have 2 digits
          // for easy file-name sorting (on Windows)
@@ -797,9 +786,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          } 
       }
       else {
-         if (numTracks) {
-            name = (wxString::Format(wxT("%s-%02d"), prefix.c_str(), l+1));
-         }
+         name = (wxString::Format(wxT("%s-%02d"), prefix.c_str(), l+1));
       }
 
       // store sanitised and user checked name in object
