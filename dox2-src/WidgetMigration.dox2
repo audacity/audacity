@@ -27,12 +27,12 @@ wxWidgets and the GPL'ed Audacity code.  Another approach is as each
 source file is created, release it under the wxWindows license.  It is
 automatically then also a GPL compatible file, and it is a GPL licensed 
 version that is linked in to the exe.  The wxWindows licensed version
-is still available from our CVS.  This is what we are doing.  We require 
-that developers checking in changes into Audacity CVS for these files 
+is still available from our SVN.  This is what we are doing.  We require 
+that developers checking in changes into Audacity SVN for these files 
 authorise their changes to be used under the wxWindows license.  Of 
 course anyone is free to use these dual-licensed files under the GPL 
 instead.  They may also choose to make their changes GPL only, but in that 
-case they may not check their changes back into our CVS.
+case they may not check their changes back into our SVN.
 
 \section MigrationItems Code Slated For Migration
 

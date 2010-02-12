@@ -142,7 +142,7 @@ for one version of Audacity may no longer be suitable for the next
 version.
 
 Storing as individual images solves that problem and makes it easier
-for a designer to change just one image.  In CVS we check in the 
+for a designer to change just one image.  In SVN we check in the 
 individual images.
 
 The third form allows Audacity to store the combined PNG in 'C' format
@@ -225,8 +225,8 @@ and recompile.  You should now have a version of Audacity with the new
  
 Audacity will now be using the image.  
 
- - When you come to check in the updated code into CVS, including 
-ThemeAsCeeCode.h, remember to also add your new .png image into CVS 
+ - When you come to check in the updated code into SVN, including 
+ThemeAsCeeCode.h, remember to also add your new .png image into SVN 
 too.
 
 <hr>
@@ -237,7 +237,7 @@ It is possible to completely screw up the built in default images
 through using an incorrect ThemeAsCeeCode.h.  A correct ThemeAsCeeCode.h
 can be regenerated as follows:
 
- - Retrieve a correct set of images from CVS and place them in the 
+ - Retrieve a correct set of images from SVN and place them in the 
 components directory used by Audacity.
  - Compile Audacity in debug mode.
  - Use ThemePrefs 'Load Components' to load the correct set of images.
