@@ -49,7 +49,7 @@ WX_DEFINE_LIST(AboutDialogCreditItemsList);
 #include "Theme.h"
 #include "AllThemeResources.h"
 
-//#include "../images/AudacityLogo.xpm"
+#include "../images/AudacityLogoWithName.xpm"
 
 void AboutDialog::CreateCreditsList()
 {

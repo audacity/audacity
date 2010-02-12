@@ -42,6 +42,8 @@ most commonly asked questions about Audacity.
 #include "Prefs.h"
 #include "HelpText.h"
 
+#include "../images/AudacityLogoWithName.xpm"
+
 SplashDialog * SplashDialog::pSelf=NULL;
 
 enum 

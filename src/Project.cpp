@@ -159,6 +159,8 @@ scroll information.  It also has some status flags.
 
 #include "CaptureEvents.h"
 
+#include "../images/AudacityLogoAlpha.xpm"
+
 TrackList *AudacityProject::msClipboard = new TrackList();
 double AudacityProject::msClipLen = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
