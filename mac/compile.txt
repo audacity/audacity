@@ -12,7 +12,7 @@ email audacity-devel@lists.sourceforge.net.
 
 Note: Audacity is no longer supported at all for Mac OS 9.
 
-This document assumes you are using Mac OS X 10.3 or newer with
+This document assumes you are using Mac OS X 10.4 or newer with
 Xcode 1.5 or newer.  If you type "gcc --version" at your prompt,
 you should see:
 
@@ -40,17 +40,14 @@ wxWindows is available from http://www.wxwindows.org.
 Similar to the Linux kernel, wxWindows is available as
 stable and development branches.  
 
-The best way to compile Audacity is to download wxMac 2.8.8.
+The best way to compile Audacity is to download wxMac 2.8.10.
 
-For step 1, just download wxMac 2.8.8 from http://www.wxwindows.org/
-Click on the "Download" link on the left.  Under the "2.8.8 stable
-release" header, click on "Mac OS" and then select wxMac-2.8.8.tar.gz
-from the closest region.  Finally, select a mirror site from which
-to download.
+For step 1, just download wxMac 2.8.10 from:
+  http://www.wxwindows.org/downloads/ 
 
 Uncompress wxMac from the command line by typing:
 
-  tar xvzf wxMac-2.8.8.tar.gz
+  tar xvzf wxMac-2.8.10.tar.gz
 
 --------------------------
 STEP 2:  Download Audacity
@@ -58,17 +55,17 @@ STEP 2:  Download Audacity
 You can find the latest Audacity source code from
 http://audacity.sourceforge.net/
 
-To retrieve the latest version from CVS, use the following
-commands:
+To retrieve the latest version from SVN, use the following
+command:
 
-  cvs -d:pserver:anonymous@audacity.cvs.sourceforge.net:/cvsroot/audacity login
-  cvs -d:pserver:anonymous@audacity.cvs.sourceforge.net:/cvsroot/audacity checkout audacity
+svn checkout http://audacity.googlecode.com/svn/audacity-src/trunk/ audacity-read-only
+
 
 ----------------------------------
 STEP 3:  Compile and install wxMac
 ----------------------------------
 
-cd wxMac-2.8.8
+cd wxMac-2.8.10
 mkdir macbuild
 cd macbuild
 ../configure --disable-shared
