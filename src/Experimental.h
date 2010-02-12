@@ -126,7 +126,7 @@
 #endif
 
 //If you want any of these files, ask JKC.  They are not
-//yet checked in to Audacity CVS as of 10-Oct-2004
+//yet checked in to Audacity SVN as of 12-Feb-2010
 #ifdef EXPERIMENTAL_NOTEBOOK
 #include "widgets/GuiFactory.h"
 #include "widgets/APanel.h"
