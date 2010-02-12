@@ -43,6 +43,26 @@ WX_DECLARE_OBJARRAY(TimeField, TimeFieldArray);
 class DigitInfo;
 WX_DECLARE_OBJARRAY(DigitInfo, DigitInfoArray);
 
+class TimeConverter
+{
+public:
+   TimeConverter();
+   TimeFieldArray mFields;
+   wxString       mPrefix;
+   wxString       mValueTemplate;
+   wxString       mValueMask;
+   wxString       mValueString;
+
+   double         mScalingFactor;
+   double         mSampleRate;
+   bool           mNtscDrop;
+
+   void ParseFormatString( const wxString & format );
+   void PrintDebugInfo();
+   void ValueToControls( double RawTime );
+   double ControlsToValue();
+};
+
 class TimeTextCtrl: public wxControl{
    friend class TimeTextCtrlAx;
 
@@ -97,8 +117,6 @@ private:
    void OnContext(wxContextMenuEvent &event);
    void OnMenu(wxCommandEvent &event);
 
-   void ParseFormatString();
-
    void ValueToControls();
    void ControlsToValue();
 
@@ -118,15 +136,9 @@ private:
     *  need adjusting if new time formats are added */
    BuiltinFormatString BuiltinFormatStrings[16];
    double         mTimeValue;
-   double         mSampleRate;
+
    wxString       mFormatString;
-   wxString       mValueString;
-   wxString       mValueTemplate;
-   wxString       mValueMask;
-
    bool           mMenuEnabled;
-
-   wxString       mPrefix;
 
    wxBitmap      *mBackgroundBitmap;
 
@@ -151,10 +163,8 @@ private:
    bool           mAutoPos;
 
    DigitInfoArray mDigits;
+   TimeConverter  mConverter;
 
-   TimeFieldArray mFields;
-   double         mScalingFactor;
-   bool           mNtscDrop;
 
    // Keeps track of extra fractional scrollwheel steps
    double         mScrollRemainder;

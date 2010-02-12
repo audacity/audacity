@@ -31,6 +31,13 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
    // Grab time-snapping prefs (unless otherwise requested)
    mSnapToTime = false;
    TimeTextCtrl *ttc = NULL;
+
+   // TODO: Switch over from using TimeTextCtrl to TimeConverter.
+   // This will prevent an annoying tiny toolbar appearing in top left
+   // every time we click the mouse left button.  It's the time text 
+   // ctrl.
+
+   //TimeConverter *pTc=NULL;
    if (gPrefs->Read(wxT("/SnapTo"), 0L) != 0L && !noTimeSnap)
    {
       // Look up the format string
@@ -249,11 +256,26 @@ bool SnapManager::Snap(Track *currentTrack,
       else {
          // Snap time to the grid
          AudacityProject *p = GetActiveProject();
+#if 0
+         // Old code for snapping.
+         // This created a new ctrl for every tiny drag.
          TimeTextCtrl ttc(p, wxID_ANY, wxT(""), 0.0, p->GetRate());
          ttc.SetFormatString(mFormat);
-
          ttc.SetTimeValue(t);
          *out_t = ttc.GetTimeValue();
+#else
+         // Replacement code.  It's still inefficient, since we
+         // repeatedly parse the format, but it now doesn't
+         // create a new ctrl too.
+         // TODO: Move Tc into being a member variable of 
+         // SnapManager.  Then we won't be repeatedly 
+         // parsing the format string.
+         TimeConverter Tc;
+         Tc.mSampleRate = p->GetRate();
+         Tc.ParseFormatString( mFormat );
+         Tc.ValueToControls( t );
+         *out_t = Tc.ControlsToValue();
+#endif
          *snappedTime = true;
       }
    }

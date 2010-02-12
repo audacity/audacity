@@ -129,6 +129,14 @@ in the status bar of Audacity.
 \class TimeTextCtrlAx
 \brief TimeTextCtrlAx gives the TimeTextCtrl Accessibility.
 
+*******************************************************************//**
+
+\class TimeConverter
+\brief TimeConverter has all the time conversion and snapping 
+functionality that used to live in TimeTextCtrl.  The idea is to have 
+a GUI-less class which can do the conversions, so that we can use it 
+in sanpping without having a window created each time.
+
 *//****************************************************************//**
 
 \class BuiltinFormatString
@@ -252,7 +260,6 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
                            bool autoPos):
    wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
    mTimeValue(timeValue),
-   mSampleRate(sampleRate),
    mFormatString(formatString),
    mBackgroundBitmap(NULL),
    mDigitFont(NULL),
@@ -261,6 +268,7 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
    mLastField(1),
    mAutoPos(autoPos)
 {
+   mConverter.mSampleRate = sampleRate;
    /* i18n-hint: Name of time display format that shows time in seconds */
    BuiltinFormatStrings[0].name = _("seconds");
    /* i18n-hint: Format string for displaying time in seconds. Change the comma
@@ -396,7 +404,7 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
    mMenuEnabled = true;
    mButtonWidth = 9;
 
-   ParseFormatString();
+   mConverter.ParseFormatString( mFormatString);
    Layout();
    Fit();
    ValueToControls();
@@ -433,7 +441,7 @@ void TimeTextCtrl::UpdateAutoFocus()
 
    mFocusedDigit = 0;
    while (mFocusedDigit < ((int)mDigits.GetCount() - 1)) {
-      wxChar dgt = mValueString[mDigits[mFocusedDigit].pos];
+      wxChar dgt = mConverter.mValueString[mDigits[mFocusedDigit].pos];
       if (dgt != '0') {
          break;
       }
@@ -444,7 +452,7 @@ void TimeTextCtrl::UpdateAutoFocus()
 void TimeTextCtrl::SetFormatString(wxString formatString)
 {
    mFormatString = formatString;
-   ParseFormatString();
+   mConverter.ParseFormatString( mFormatString);
    Layout();
    Fit();
    ValueToControls();
@@ -454,8 +462,8 @@ void TimeTextCtrl::SetFormatString(wxString formatString)
 
 void TimeTextCtrl::SetSampleRate(double sampleRate)
 {
-   mSampleRate = sampleRate;
-   ParseFormatString();
+   mConverter.mSampleRate = sampleRate;
+   mConverter.ParseFormatString( mFormatString);
    Layout();
    Fit();
    ValueToControls();
@@ -561,13 +569,24 @@ wxString TimeTextCtrl::GetBuiltinFormat(const wxString &name)
    return TimeTextCtrl::GetBuiltinFormat(ndx);
 }
 
-void TimeTextCtrl::ParseFormatString()
+TimeConverter::TimeConverter()
+{
+   mPrefix = wxT("");
+   mValueTemplate = wxT("");
+   mValueMask = wxT("");
+   mValueString = wxT("");
+
+   mScalingFactor = 1.0f;
+   mSampleRate = 1.0f;
+   mNtscDrop = false;
+}
+
+void TimeConverter::ParseFormatString( const wxString & format)
 {
    mPrefix = wxT("");
    mFields.Clear();
    mScalingFactor = 1.0;
 
-   const wxString format = mFormatString;
    bool inFrac = false;
    int fracMult = 1;
    int numWholeFields = 0;
@@ -709,7 +728,7 @@ void TimeTextCtrl::ParseFormatString()
    }
 }
 
-void TimeTextCtrl::PrintDebugInfo()
+void TimeConverter::PrintDebugInfo()
 {
    unsigned int i;
 
@@ -738,7 +757,7 @@ wxString TimeTextCtrl::GetTimeString()
 {
    ValueToControls();
 
-   return mValueString;
+   return mConverter.mValueString;
 }
 
 bool TimeTextCtrl::Layout()
@@ -795,9 +814,12 @@ bool TimeTextCtrl::Layout()
    pos = 0;
 
    memDC.SetFont(*mLabelFont);
-   memDC.GetTextExtent(mPrefix, &strW, &strH);
+   memDC.GetTextExtent(mConverter.mPrefix, &strW, &strH);
    x += strW;
-   pos += mPrefix.Length();
+   pos += mConverter.mPrefix.Length();
+
+   // Slightly messy trick to save us some prefixing.
+   TimeFieldArray & mFields = mConverter.mFields;
 
    for(i=0; i<mFields.GetCount(); i++) {
       mFields[i].fieldX = x;
@@ -838,7 +860,7 @@ bool TimeTextCtrl::Layout()
 
    memDC.SetTextForeground(*wxBLACK);
    memDC.SetTextBackground(*wxLIGHT_GREY);
-   memDC.DrawText(mPrefix, mBorderLeft, labelTop);
+   memDC.DrawText(mConverter.mPrefix, mBorderLeft, labelTop);
 
    theTheme.SetBrushColour( Brush, clrTimeBack );
    memDC.SetBrush(Brush);
@@ -914,7 +936,7 @@ void TimeTextCtrl::OnPaint(wxPaintEvent &event)
          dc.SetTextBackground(theTheme.Colour( clrTimeBackFocus ));
       }
       int pos = mDigits[i].pos;
-      wxString digit = mValueString.Mid(pos, 1);
+      wxString digit = mConverter.mValueString.Mid(pos, 1);
       int x = box.x + (mDigitBoxW - mDigitW)/2;
       int y = box.y + (mDigitBoxH - mDigitH)/2;
       dc.DrawText(digit, x, y);
@@ -1071,7 +1093,7 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9)) keyCode -= WXK_NUMPAD0 - '0';
 
    if (keyCode >= '0' && keyCode <= '9') {
-      mValueString[mDigits[mFocusedDigit].pos] = wxChar(keyCode);
+      mConverter.mValueString[mDigits[mFocusedDigit].pos] = wxChar(keyCode);
       ControlsToValue();
       ValueToControls();
       mFocusedDigit = (mFocusedDigit+1)%(mDigits.GetCount());
@@ -1083,7 +1105,7 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
       mFocusedDigit--;
       mFocusedDigit += mDigits.GetCount();
       mFocusedDigit %= mDigits.GetCount();
-      mValueString[mDigits[mFocusedDigit].pos] = '0';
+      mConverter.mValueString[mDigits[mFocusedDigit].pos] = '0';
       ControlsToValue();
       ValueToControls();
       Updated();
@@ -1195,36 +1217,39 @@ void TimeTextCtrl::Updated()
 
 void TimeTextCtrl::Increase(int steps)
 {
+   // Slightly messy trick to save us some prefixing.
+   TimeFieldArray & mFields = mConverter.mFields;
+
    while(steps > 0) {
       for(unsigned int i=0; i<mFields.GetCount(); i++) {
          if( (mDigits[mFocusedDigit].pos>=mFields[i].pos) && (mDigits[mFocusedDigit].pos<mFields[i].pos+mFields[i].digits)) {   //it's this field
-            if(!mNtscDrop)
+            if(!mConverter.mNtscDrop)
                ControlsToValue();
             else {
-               mNtscDrop = false;
+               mConverter.mNtscDrop = false;
                ControlsToValue();
-               mNtscDrop = true;
+               mConverter.mNtscDrop = true;
             }
-            mTimeValue *= mScalingFactor;
+            mTimeValue *= mConverter.mScalingFactor;
             double mult = pow(10.,mFields[i].digits-(mDigits[mFocusedDigit].pos-mFields[i].pos)-1);
             if (mFields[i].frac)
                mTimeValue += mult/(double)mFields[i].base;
             else
                mTimeValue += mult*(double)mFields[i].base;
-            if(mNtscDrop) {
+            if(mConverter.mNtscDrop) {
                if( (mTimeValue - (int)mTimeValue)*30 < 2 )
                   if( (((int)mTimeValue)%60 == 0) && (((int)mTimeValue)%600 != 0) )
                      mTimeValue = (int)mTimeValue + 2./30.;
             }
             if(mTimeValue<0.)
                mTimeValue=0.;
-            mTimeValue /= mScalingFactor;
-            if(!mNtscDrop)
+            mTimeValue /= mConverter.mScalingFactor;
+            if(!mConverter.mNtscDrop)
                ValueToControls();
             else {
-               mNtscDrop = false;
+               mConverter.mNtscDrop = false;
                ValueToControls();
-               mNtscDrop = true;
+               mConverter.mNtscDrop = true;
                ControlsToValue();
             }
             break;
@@ -1238,36 +1263,39 @@ void TimeTextCtrl::Increase(int steps)
 
 void TimeTextCtrl::Decrease(int steps)
 {
+   // Slightly messy trick to save us some prefixing.
+   TimeFieldArray & mFields = mConverter.mFields;
+
    while(steps > 0) {
       for(unsigned int i=0; i<mFields.GetCount(); i++) {
          if( (mDigits[mFocusedDigit].pos>=mFields[i].pos) && (mDigits[mFocusedDigit].pos<mFields[i].pos+mFields[i].digits)) {   //it's this field
-            if(!mNtscDrop)
+            if(!mConverter.mNtscDrop)
                ControlsToValue();
             else {
-               mNtscDrop = false;
+               mConverter.mNtscDrop = false;
                ControlsToValue();
-               mNtscDrop = true;
+               mConverter.mNtscDrop = true;
             }
-            mTimeValue *= mScalingFactor;
+            mTimeValue *= mConverter.mScalingFactor;
             double mult = pow(10.,mFields[i].digits-(mDigits[mFocusedDigit].pos-mFields[i].pos)-1);
             if (mFields[i].frac)
                mTimeValue -= mult/(double)mFields[i].base;
             else
                mTimeValue -= mult*(double)mFields[i].base;
-            if(mNtscDrop) {
+            if(mConverter.mNtscDrop) {
                if( (mTimeValue - (int)mTimeValue)*30 < 2 )
                   if( (((int)mTimeValue)%60 == 0) && (((int)mTimeValue)%600 != 0) )
                      mTimeValue = (int)mTimeValue - 1./30.;
             }
             if(mTimeValue<0.)
                mTimeValue=0.;
-            mTimeValue /= mScalingFactor;
-            if(!mNtscDrop)
+            mTimeValue /= mConverter.mScalingFactor;
+            if(!mConverter.mNtscDrop)
                ValueToControls();
             else {
-               mNtscDrop = false;
+               mConverter.mNtscDrop = false;
                ValueToControls();
-               mNtscDrop = true;
+               mConverter.mNtscDrop = true;
                ControlsToValue();
             }
             break;
@@ -1281,7 +1309,13 @@ void TimeTextCtrl::Decrease(int steps)
 
 void TimeTextCtrl::ValueToControls()
 {
-   double theValue = mTimeValue * mScalingFactor + .000001;
+   mConverter.ValueToControls( mTimeValue  );
+   Refresh(false);
+}
+
+void TimeConverter::ValueToControls( double RawTime )
+{
+   double theValue = RawTime * mScalingFactor + .000001;
    int t_int = int(theValue);
    double t_frac = (theValue - t_int);
    unsigned int i;
@@ -1337,10 +1371,16 @@ void TimeTextCtrl::ValueToControls()
       mValueString += mFields[i].label;
    }
 
-   Refresh(false);
 }
 
+
+
 void TimeTextCtrl::ControlsToValue()
+{
+   mTimeValue = mConverter.ControlsToValue();
+}
+
+double TimeConverter::ControlsToValue()
 {
    unsigned int i;
    double t = 0.0;
@@ -1382,7 +1422,7 @@ void TimeTextCtrl::ControlsToValue()
       t = frames * 1.001 / 30.;
    }
 
-   mTimeValue = t;
+   return t;
 }
 
 #if wxUSE_ACCESSIBILITY
@@ -1510,6 +1550,9 @@ wxAccStatus TimeTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 // Gets the name of the specified object.
 wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
 {
+   // Slightly messy trick to save us some prefixing.
+   TimeFieldArray & mFields = mCtrl->mConverter.mFields;
+      
    wxString value = mCtrl->GetTimeString();
    int field = mCtrl->GetFocusedField();
 
@@ -1528,15 +1571,15 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
    // The user has moved from one field of the time to another so
    // report the value of the field and the field's label.
    else if (mLastField != field) {
-      wxString label = mCtrl->mFields[field - 1].label;
-      int cnt = mCtrl->mFields.GetCount();
+      wxString label = mFields[field - 1].label;
+      int cnt = mFields.GetCount();
       wxString decimal = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
 
       // If the new field is the last field, then check it to see if
       // it represents fractions of a second.
       if (field > 1 && field == cnt) {
-         if (mCtrl->mFields[field - 2].label == decimal) {
-            int digits = mCtrl->mFields[field - 1].digits;
+         if (mFields[field - 2].label == decimal) {
+            int digits = mFields[field - 1].digits;
             if (digits == 2) {
                label = _("centiseconds");
             }
@@ -1548,10 +1591,10 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
       // If the field following this one represents fractions of a
       // second then use that label instead of the decimal point.
       else if (label == decimal && field == cnt - 1) {
-         label = mCtrl->mFields[field].label;
+         label = mFields[field].label;
       }
 
-      *name = mCtrl->mFields[field - 1].str +
+      *name = mFields[field - 1].str +
               wxT(" ") +
               label +
               wxT(" ") +
@@ -1568,7 +1611,7 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
    // The user has updated the value of a field, so report the field's
    // value only.
    else {
-      *name = mCtrl->mFields[field - 1].str;
+      *name = mFields[field - 1].str;
    }
 
    return wxACC_OK;
