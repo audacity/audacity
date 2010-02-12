@@ -1830,6 +1830,10 @@ bool WaveTrack::Set(samplePtr buffer, sampleFormat format,
 void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
                          double t0, double tstep)
 {
+   // Possibly nothing to do.
+   if( bufferLen <= 0 )
+      return;
+
    memset(buffer, 0, sizeof(double)*bufferLen);
 
    double startTime = t0;
@@ -1839,6 +1843,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
    {
       WaveClip *clip = it->GetData();
       
+      // IF clip intersects startTime..endTime THEN...
       if (clip->GetStartTime() < endTime && clip->GetEndTime() > startTime)
       {
          double* rbuf = buffer;
@@ -1857,7 +1862,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
          {
             rlen = (int) ((clip->GetEndTime()-rt0) / tstep);
          }
-
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
