@@ -552,6 +552,7 @@ void ExportMultiple::OnExport(wxCommandEvent& event)
          S.AddTextWindow( FileList );
          S.AddStandardButtons(eOkButton);
       }
+      S.EndVerticalLay();
       dlg.SetMinSize( wxSize(125,200) );
       dlg.SetSize( wxSize(450,400) );
       dlg.Center();
