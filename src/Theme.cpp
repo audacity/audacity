@@ -499,7 +499,7 @@ int SourceOutputStream::OpenFile(const wxString & Filename)
       File.Write( wxT("//\r\n") );
       File.Write( wxT("//   This file was Auto-Generated.\r\n") );
       File.Write( wxT("//   It is included by Theme.cpp.\r\n") );
-      File.Write( wxT("//   Only check this into CVS if you've read and understood the guidelines!\r\n\r\n   ") );
+      File.Write( wxT("//   Only check this into SVN if you've read and understood the guidelines!\r\n\r\n   ") );
    }
    return bOk;
 }
