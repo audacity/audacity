@@ -648,6 +648,9 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
          setting.t1 = mTracks->GetEndTime();
       }
 
+      if( name.IsEmpty() )
+         name = _("untitled");
+
       // store title of label to use in tags
       title = name;
 
@@ -780,6 +783,9 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
 
       // Get name and title
       title = tr->GetName();
+      if( title.IsEmpty() )
+         title = _("untitled");
+
       if (byName) {
          name = title;
          if (addNumber) {
@@ -881,10 +887,6 @@ int ExportMultiple::DoExport(int channels,
    wxLogDebug(wxT("Channels: %i, Start: %lf, End: %lf "), channels, t0, t1);
    if (selectedOnly) wxLogDebug(wxT("Selected Region Only"));
    else wxLogDebug(wxT("Whole Project"));
-
-   if (name.GetName().IsEmpty()) {
-      name.SetName(wxT("untitled"));
-   }
 
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
