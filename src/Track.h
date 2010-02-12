@@ -179,6 +179,9 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
 
    virtual double GetStartTime() { return 0.0; }
    virtual double GetEndTime() { return 0.0; }
+
+   // Checks if linking is on and any track in its group is selected
+   bool IsSynchroSelected();
 };
 
 struct TrackListNode
@@ -298,7 +301,7 @@ class AUDACITY_DLL_API TrackGroupIterator: public TrackListIterator
    Track *Last(bool skiplinked = false);
 
  private:
-   bool mEndOfGroup;
+   bool mInLabelSection;
 };
 
 //

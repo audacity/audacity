@@ -55,6 +55,7 @@ for drawing different aspects of the label and its text box.
 #include "AllThemeResources.h"
 #include "AColor.h"
 #include "Project.h"
+#include "TrackArtist.h"
 #include "commands/CommandManager.h"
 
 #include "CaptureEvents.h"
@@ -729,6 +730,11 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    dc.SetBrush(AColor::labelSelectedBrush);
    dc.SetPen(AColor::labelSelectedPen);
    dc.DrawRectangle(selr);
+
+   // If selection is synchro, draw in linked graphics
+   if (IsSynchroSelected() && !GetSelected() && selr.width > 0) {
+      TrackArtist::DrawLinkTiles(&dc, selr);
+   }
 
    wxRect after = r;
    after.x += (before.width + selr.width);

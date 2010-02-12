@@ -662,7 +662,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
                                          float zoomMin, float zoomMax, bool dB,
                                          const sampleCount where[],
                                          sampleCount ssel0, sampleCount ssel1,
-                                         bool drawEnvelope)
+                                         bool drawEnvelope, bool synchroSelection)
 {
    // Visually (one vertical slice of the waveform background, on its side;
    // the "*" is the actual waveform background we're drawing
@@ -750,6 +750,17 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
    }
    else {
       dc.DrawRectangle(l, r.y + lmaxtop, w, lminbot - lmaxtop);
+   }
+
+   // If selection is synchro, draw in linked graphics
+   if (synchroSelection && ssel0 < ssel1) {
+      // Find the beginning/end of the selection
+      int begin, end;
+      for (x = 0; x < r.width && where[x] < ssel0; ++x);
+      begin = x;
+      for (; x < r.width && where[x] < ssel1; ++x);
+      end = x;
+      DrawLinkTiles(&dc, wxRect(r.x + begin, r.y, end - 1 - begin, r.height));
    }
 
    //OK, the display bounds are between min and max, which
@@ -1136,7 +1147,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    double sps = 1./rate;            //seconds-per-sample
 
    //If the track isn't selected, make the selection empty
-   if (!track->GetSelected()) {
+   if (!track->GetSelected() && !track->IsSynchroSelected()) {
       sel0 = sel1 = 0.0;
    }
 
@@ -1281,7 +1292,8 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // the envelope and using a colored pen for the selected
    // part of the waveform
    DrawWaveformBackground(dc, mid, envValues, zoomMin, zoomMax, dB,
-                          where, ssel0, ssel1, drawEnvelope);
+                          where, ssel0, ssel1, drawEnvelope,
+                          !track->GetSelected());
 
    if (!showIndividualSamples) {
       DrawMinMaxRMS(dc, mid, envValues, zoomMin, zoomMax, dB,
@@ -2522,7 +2534,7 @@ void TrackArtist::DrawLabelTrack(LabelTrack *track,
    double sel0 = viewInfo->sel0;
    double sel1 = viewInfo->sel1;
    
-   if (!track->GetSelected())
+   if (!track->GetSelected() && !track->IsSynchroSelected())
       sel0 = sel1 = 0.0;
    
    track->Draw(dc, r, viewInfo->h, viewInfo->zoom, sel0, sel1);
@@ -2621,6 +2633,26 @@ void TrackArtist::SetSpectrumLogMinFreq(int freq)
 void TrackArtist::SetSpectrumLogMaxFreq(int freq)
 {
    mLogMaxFreq = freq;
+}
+
+void TrackArtist::DrawLinkTiles(wxDC *dc, wxRect r)
+{
+   wxBitmap sync(theTheme.Image(bmpLinkSelect));
+   
+   // Draw in full-width copies
+   int x;
+   for (x = 0; x + sync.GetWidth() < r.width; x += sync.GetWidth()) {
+      for (int y = 0; y < r.height; y += sync.GetHeight()) {
+         dc->DrawBitmap(sync, r.x + x, r.y + y, true);
+      }
+   }
+   // Draw in partial column at end of selection
+   if (r.width - x > 0) {
+      sync = sync.GetSubBitmap(wxRect(0, 0, r.width - x, sync.GetHeight()));
+      for (int y = 0; y < r.height; y += sync.GetHeight()) {
+         dc->DrawBitmap(sync, r.x + x, r.y + y, true);
+      }
+   }
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a

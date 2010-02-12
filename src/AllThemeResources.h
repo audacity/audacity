@@ -217,6 +217,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo")); //vvv
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
 
+   DEFINE_IMAGE( bmpLinkSelect, wxImage(30, 30), wxT("LinkSelect"));
+
 #ifdef OLD_COLOURS
    DEFINE_COLOUR( clrBlank,      wxColour(214, 214, 214), wxT("Blank"));
    DEFINE_COLOUR( clrUnselected, wxColour(192, 192, 192), wxT("Unselected"));

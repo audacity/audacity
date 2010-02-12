@@ -94,7 +94,7 @@ private:
    void EnsureSufficientSliders(int index);
 
    void SetTrackInfoFont(wxDC *dc);
-   void DrawBackground(wxDC * dc, const wxRect r, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul);
+   void DrawBackground(wxDC * dc, const wxRect r, bool bSelected, bool bSyncSel, bool bHasMuteSolo, const int labelw, const int vrul);
    void DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo );
    void DrawCloseBox(wxDC * dc, const wxRect r, bool down);
    void DrawTitleBar(wxDC * dc, const wxRect r, Track * t, bool down);

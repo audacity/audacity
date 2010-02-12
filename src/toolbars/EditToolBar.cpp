@@ -247,6 +247,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
             else
                mButtons[ETBLinkID]->PopUp();
             p->ModifyToolbarMenus();
+            p->GetTrackPanel()->Refresh(false);
          }
          return;//avoiding the call to SetButton()
 #endif

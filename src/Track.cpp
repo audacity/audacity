@@ -205,6 +205,30 @@ Track *Track::GetLink() const
    return NULL;
 }
 
+bool Track::IsSynchroSelected()
+{
+#ifdef EXPERIMENTAL_LINKING
+   AudacityProject *p = GetActiveProject();
+   if (!p || !p->IsSticky())
+      return false;
+
+   TrackGroupIterator git(mList);
+   Track *t = git.First(this);
+
+   if (!t) {
+      // Not in a group.
+      return GetSelected();
+   }
+
+   for (; t; t = git.Next()) {
+      if (t->GetSelected())
+         return true;
+   }
+#endif
+
+   return false;
+}
+
 // TrackListIterator
 TrackListIterator::TrackListIterator(TrackList * val)
 {
@@ -450,35 +474,34 @@ bool VisibleTrackIterator::Condition(Track *t)
 // in which the starting track is a member.
 //
 TrackGroupIterator::TrackGroupIterator(TrackList * val)
-:  TrackListIterator(val)
+:  TrackListIterator(val),
+   mInLabelSection(false)
 {
-   mEndOfGroup = false;
 }
 
 Track *TrackGroupIterator::First(Track * member)
 {
    Track *t = NULL;
 
-   // Scan forward for a label track
-   while (member && member->GetKind() == Track::Wave) {
-      member = l->GetNext(member);
+   // A group consists of any positive number of wave tracks followed by any
+   // non-negative number of label tracks. Step back through any label tracks,
+   // and then through the wave tracks above them.
+
+   while (member && member->GetKind() == Track::Label) {
+      member = l->GetPrev(member);
    }
 
-   // It's not part of a group if one wasn't found
-   if (!member || member->GetKind() != Track::Label) {
-      return NULL;
-   }
-
-   // Find first wave track in the group
-   member = l->GetPrev(member);
    while (member && member->GetKind() == Track::Wave) {
       t = member;
       member = l->GetPrev(member);
    }
 
-   // Make it current
+   // Make it current (if t is still NULL there are no wave tracks, so we're
+   // not in a group).
    if (t)
       cur = (TrackListNode *) t->GetNode();
+
+   mInLabelSection = false;
 
    return t;
 }
@@ -487,29 +510,58 @@ Track *TrackGroupIterator::Next(bool skiplinked)
 {
    Track *t = TrackListIterator::Next(skiplinked);
 
-   // End of the group has been reached
-   if (!t || mEndOfGroup) {
+   //
+   // Ways to end a group
+   //
+
+   // End of tracks
+   if (!t)
+      return NULL;
+
+   // In the label section, encounter a non-label track
+   if (mInLabelSection && t->GetKind() != Track::Label) {
+      cur = NULL;
       return NULL;
    }
 
-   // Found the end of the group, so signal for next iteration
-   if (t->GetKind() == Track::Label) {
-      mEndOfGroup = true;
+   // Encounter a non-wave non-label track
+   if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label) {
+      cur = NULL;
+      return NULL;
    }
+
+   // Otherwise, check if we're in the label section
+   mInLabelSection = (t->GetKind() == Track::Label);
 
    return t;
 }
 
 Track *TrackGroupIterator::Prev(bool skiplinked)
 {
-   // AWD: currently grouping as it works here allows only one label track per
-   // group, but this should change
-
    Track *t = TrackListIterator::Prev(skiplinked);
 
-   if (!t || t->GetKind() != Track::Wave) {
+   //
+   // Ways to end a group in reverse
+   //
+
+   // Beginning of tracks
+   if (!t)
+      return NULL;
+
+   // In wave section, encounter a label track
+   if (!mInLabelSection && t->GetKind() == Track::Label) {
+      cur = NULL;
       return NULL;
    }
+
+   // Encounter a non-wave non-label track
+   if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label) {
+      cur = NULL;
+      return NULL;
+   }
+
+   // Otherwise, check if we're in the label section
+   mInLabelSection = (t->GetKind() == Track::Label);
 
    return t;
 }
@@ -521,7 +573,14 @@ Track *TrackGroupIterator::Last(bool skiplinked)
 
    Track *t = cur->t;
 
-   while (!mEndOfGroup) {
+   while (l->GetNext(t)) {
+      // Check if this is the last track in the group
+      int nextKind = l->GetNext(t)->GetKind();
+      if (mInLabelSection && nextKind != Track::Label)
+         break;
+      if (nextKind != Track::Label && nextKind != Track::Wave)
+         break;
+
       t = Next(skiplinked);
    }
 
@@ -543,26 +602,24 @@ Track *TrackAndGroupIterator::NextGroup(bool skiplinked)
       return NULL;
 
    Track* t = cur->t;
-   
-   if (t->GetKind() == Track::Label) {
-      // the next group when we have a LabelTrack is the next track
-      return TrackListIterator::Next(skiplinked);
-   }
 
-   TrackGroupIterator git(l);
-   if (git.First(t) == NULL) {
-      //not part of a group
-      return TrackListIterator::Next(skiplinked);
-   }
-
-   //skip the remaining tracks of the current group
-   for (; t != NULL && t->GetKind() != Track::Label; t = TrackListIterator::Next(skiplinked) );
-
-   if (t) {
-      //Reached final Label track, let's go to the next group
+   while(t) {
+      int prevKind = t->GetKind();
       t = TrackListIterator::Next(skiplinked);
-   }
 
+      // Check if we've exited a group
+
+      // End of tracks
+      if (!t)
+         break;
+      // Non-wave non-label track
+      if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label)
+         break;
+      // From label section to non-label track
+      if (prevKind == Track::Label && t->GetKind() != Track::Label)
+         break;
+   }
+   
    return t;
 }
 
