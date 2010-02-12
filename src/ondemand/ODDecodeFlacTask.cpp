@@ -27,12 +27,6 @@ extern "C" {
 
 #define DESC _("FLAC files")
 
-static const wxChar *exts[] =
-{
-   wxT("flac"),
-   wxT("flc")
-};
-
 ODDecodeFlacTask::~ODDecodeFlacTask()
 {
 }

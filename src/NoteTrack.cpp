@@ -78,7 +78,7 @@ Track *NoteTrack::Duplicate()
    if (mSeq) {
       assert(!mSerializationBuffer);
       // serialize from this to duplicate's mSerializationBuffer
-      mSeq->serialize(&duplicate->mSerializationBuffer, 
+      mSeq->serialize((void**)&duplicate->mSerializationBuffer, 
                       &duplicate->mSerializationLength);
    } else if (mSerializationBuffer) {
       assert(!mSeq);

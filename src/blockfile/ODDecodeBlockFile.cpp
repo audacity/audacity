@@ -42,9 +42,9 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFil
                      sampleCount aliasLen, int aliasChannel,unsigned int decodeType):
    SimpleBlockFile(baseFileName,NULL,aliasLen,floatSample,true,true), //floatSample has no effect.  last two bools - bypass writing of blockfile and cache
 
+   mType(decodeType),
    mAliasStart(aliasStart),
-   mAliasChannel(aliasChannel),
-   mType(decodeType)
+   mAliasChannel(aliasChannel)
 {
    mDataAvailable=false;
    mAudioFileName = audioFileName;
@@ -56,9 +56,9 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFi
                    float min, float max, float rms, bool dataAvailable):
    SimpleBlockFile(existingFile,aliasLen,min,max,rms),
    
+   mType(decodeType),
    mAliasStart(aliasStart),
-   mAliasChannel(aliasChannel),
-   mType(decodeType)
+   mAliasChannel(aliasChannel)
 {
    mDataAvailable=dataAvailable;
    mAudioFileName = audioFileName;

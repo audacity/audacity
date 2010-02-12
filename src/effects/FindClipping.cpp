@@ -144,8 +144,6 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
 
    float *ptr = buffer;
 
-   bool first = true;
-
    sampleCount startrun = 0;
    sampleCount stoprun = 0;
    sampleCount samps = 0;

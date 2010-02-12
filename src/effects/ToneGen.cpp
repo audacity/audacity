@@ -57,7 +57,7 @@ wxString EffectToneGen::GetEffectDescription() {
    // Note: This is useful only after values have been set. 
    /// \todo update to include *all* chirp parameters??
    const wxChar* waveformNames[] = {wxT("sine"), wxT("square"), wxT("sawtooth"), wxT("square, no alias")};
-   const wxChar* interpolationNames[] = {wxT("linear"), wxT("logarithmic")};
+   //const wxChar* interpolationNames[] = {wxT("linear"), wxT("logarithmic")};
    return wxString::Format(_("Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = %.2f, %.6lf seconds"), 
       waveformNames[waveform], mbChirp ? wxT("chirp") : wxT("tone"), frequency[0], amplitude[0], mDuration);
 } 

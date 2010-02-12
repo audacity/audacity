@@ -473,7 +473,7 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
          for (size_t i = 0; i < mParameters[p].valueNames.size(); ++i) {
             wxString choice = wxString
                (mParameters[p].valueNames[i].c_str(), wxConvISO8859_1);
-            if (int(value - mParameters[p].minValue + 0.5) == i) {
+            if (size_t(value - mParameters[p].minValue + 0.5) == i) {
                selected = choice;
             }
             choices.Add(choice);
@@ -707,7 +707,7 @@ void VampEffectDialog::UpdateFromPlugin()
          for (size_t i = 0; i < mParameters[p].valueNames.size(); ++i) {
             wxString choice = wxString
                (mParameters[p].valueNames[i].c_str(), wxConvISO8859_1);
-            if (int(value - mParameters[p].minValue + 0.5) == i) {
+            if (size_t(value - mParameters[p].minValue + 0.5) == i) {
                selected = choice;
                break;
             }

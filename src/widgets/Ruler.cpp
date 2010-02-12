@@ -1111,7 +1111,6 @@ void Ruler::Update( Envelope *speedEnv, long minSpeed, long maxSpeed )
       double hiLog = log10(mMax);
       double scale = mLength/(hiLog - loLog);
       int loDecade = (int) floor(loLog);
-      int hiDecade = (int) ceil(hiLog);
       
       int pos;
       double val;

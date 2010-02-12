@@ -50,8 +50,8 @@ END_EVENT_TABLE()
 
 DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Directories")),
-   mTempDir(NULL),
-   mFreeSpace(NULL)
+   mFreeSpace(NULL),
+   mTempDir(NULL)
 {
    Populate();
 }

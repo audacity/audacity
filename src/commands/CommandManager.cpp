@@ -455,8 +455,8 @@ void CommandManager::AddCheck(const wxChar *name,
                               const wxChar *label,
                               CommandFunctor *callback,
                               int checkmark,
-                              int flags,
-                              int mask)
+                              unsigned int flags,
+                              unsigned int mask)
 {
    AddItem(name, label, callback, wxT(""), flags, mask, checkmark);
 }
@@ -464,8 +464,8 @@ void CommandManager::AddCheck(const wxChar *name,
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label,
                              CommandFunctor *callback,
-                             int flags,
-                             int mask)
+                             unsigned int flags,
+                             unsigned int mask)
 {
    AddItem(name, label, callback, wxT(""), flags, mask);
 }                  
@@ -474,8 +474,8 @@ void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
                              CommandFunctor *callback,
                              const wxChar *accel,
-                             int flags,
-                             int mask,
+                             unsigned int flags,
+                             unsigned int mask,
                              int checkmark)
 {
    wxString label(label_in);
@@ -582,8 +582,8 @@ void CommandManager::AddItemList(wxString name, wxArrayString labels,
 void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label,
                                 CommandFunctor *callback,
-                                int flags,
-                                int mask)
+                                unsigned int flags,
+                                unsigned int mask)
 {
    AddCommand(name, label, callback, wxT(""), flags, mask);
 }                  
@@ -592,8 +592,8 @@ void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label_in,
                                 CommandFunctor *callback,
                                 const wxChar *accel,
-                                int flags,
-                                int mask)
+                                unsigned int flags,
+                                unsigned int mask)
 {
    wxString label(label_in);
    label += wxT("\t");

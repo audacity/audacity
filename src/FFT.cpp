@@ -330,7 +330,7 @@ void RealFFT(int NumSamples, float *RealIn, float *RealOut, float *ImagOut)
 
    delete[]tmpReal;
    delete[]tmpImag;
-#endif EXPERIMENTAL_USE_REALFFTF
+#endif //EXPERIMENTAL_USE_REALFFTF
 }
 
 #ifdef EXPERIMENTAL_USE_REALFFTF

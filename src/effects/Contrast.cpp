@@ -247,7 +247,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          if (mForegroundEndT == NULL)
          {
-            AudacityProject *p = GetActiveProject();
             mForegroundEndT = new
             TimeTextCtrl(this,
                          ID_FOREGROUNDEND_T,
@@ -271,7 +270,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText(_("Background:"));
          if (mBackgroundStartT == NULL)
          {
-            AudacityProject *p = GetActiveProject();
             mBackgroundStartT = new
             TimeTextCtrl(this,
                          ID_BACKGROUNDSTART_T,
@@ -289,7 +287,6 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          if (mBackgroundEndT == NULL)
          {
-            AudacityProject *p = GetActiveProject();
             mBackgroundEndT = new
             TimeTextCtrl(this,
                          ID_BACKGROUNDEND_T,

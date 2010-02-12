@@ -91,7 +91,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // mSeq variable. (TrackArtist should check to make sure this
    // flip-flop from mSeq to mSerializationBuffer happened an
    // even number of times, otherwise mSeq will be NULL).
-   void *mSerializationBuffer; // NULL means no buffer
+   char *mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
    double mLen;
 

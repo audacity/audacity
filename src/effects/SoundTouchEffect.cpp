@@ -54,8 +54,6 @@ bool EffectSoundTouch::Process()
    mCurTrackNum = 0;
 	m_maxNewLength = 0.0;
 	
-   double len = leftTrack->GetEndTime() - leftTrack->GetStartTime();
-
    // we only do a "group change" in the first selected track of the group. 
    // ClearAndPaste has a call to Paste that does changes to the group tracks
    bool first = true;

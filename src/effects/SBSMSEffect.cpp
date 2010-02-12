@@ -188,11 +188,8 @@ bool EffectSBSMS::Process()
    for (t = iter.First(); t->GetKind() != Track::Wave; t = iter.Next());
    if (!t)
       return false;
-   WaveTrack* leftTrack = (WaveTrack*)t;
-   WaveTrack* saveLeft = leftTrack;
    mCurTrackNum = 0;
 
-   double len = leftTrack->GetEndTime() - leftTrack->GetStartTime();   
    double maxDuration = 0.0;
 
    if(rateStart == rateEnd)
@@ -347,7 +344,6 @@ bool EffectSBSMS::Process()
                long pos = 0;
                long lastPos = 0;
                long ret = 0;
-               bool stopped = false;
                while(lastPos<samplesToProcess) {
                   ret = sbsms_pre_analyze(&samplesCB,&si,rb.sbsmser);
                   lastPos = pos;

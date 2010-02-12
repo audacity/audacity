@@ -1489,7 +1489,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    double sel0 = viewInfo->sel0;
    double sel1 = viewInfo->sel1;
 
-   sampleCount numSamples = clip->GetNumSamples();
    double tOffset = clip->GetOffset();
    double rate = clip->GetRate();
    double sps = 1./rate;
@@ -1657,10 +1656,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
  
    const float 
 //      e=exp(1.0f), 
-      log2=log(2.0f),
       f=rate/2.0f/half, 
       lmin=log(float(minFreq)),
       lmax=log(float(maxFreq)),
+#ifdef EXPERIMENTAL_FIND_NOTES
+      log2=log(2.0f),
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
       lmins=log(float(minFreq)/(mFftSkipPoints+1)),
       lmaxs=log(float(maxFreq)/(mFftSkipPoints+1)),
@@ -1668,12 +1668,15 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       lmins=lmin,
       lmaxs=lmax,
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-      scale=lmax-lmin, 
-      scale2=(lmax-lmin)/log2, 
-      lmin2=lmin/log2 /*,
+#endif //EXPERIMENTAL_FIND_NOTES
+      scale=lmax-lmin /*, 
       expo=exp(scale)*/ ;
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
+   const float
+      scale2=(lmax-lmin)/log2,
+      lmin2=lmin/log2;
+
    bool *yGrid;
    yGrid=new bool[mid.height];
    for (int y = 0; y < mid.height; y++) {
@@ -2293,7 +2296,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    //for every event
    Alg_event_ptr evt;
    printf ("go time\n");
-   while (evt = iterator.next()) {
+   while ( (evt = iterator.next()) ) {
    
       //printf ("one note");
 

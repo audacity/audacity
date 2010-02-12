@@ -245,11 +245,9 @@ void Lyrics::Measure(wxDC *dc) // only for drawn text
 {
    this->SetDrawnFont(dc);
    int width = 0, height = 0;
-   int maxLineWidth = 0; // only for kHighlightLyrics
 
    const int kIndent = 4;
    int x = 2*kIndent; 
-   int y = kIndent;
 
    unsigned int i;
    for(i=0; i<mSyllables.GetCount(); i++) {

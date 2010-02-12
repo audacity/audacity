@@ -57,11 +57,11 @@ bool GetProjectInfoCommand::Apply(CommandExecutionContext context)
    }
    else if (mode.IsSameAs(wxT("FocusedTrackID")))
    {
-      int FocusedTrackID = SendFocusedTrackIndex(context);
+      SendFocusedTrackIndex(context);
    }
    else if (mode.IsSameAs(wxT("NumberOfTracks")))
    {
-      int NumberOfTracks = SendNumberOfTracks(context);
+      SendNumberOfTracks(context);
    }
    else if (mode.IsSameAs(wxT("SelectedTracks"))) 
    {

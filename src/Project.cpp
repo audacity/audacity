@@ -663,7 +663,6 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
       nextRect->y  -= inc;
       bottomRight = nextRect->GetBottomRight();
       if (bottomRight.y > screenRect.GetBottom()) {
-         int newheight = screenRect.GetHeight() - nextRect->GetBottom();
          nextRect->SetBottom(screenRect.GetBottom());
       }
    }
@@ -724,7 +723,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxSize & size)
    : wxFrame(parent, id, wxT("Audacity"), pos, size),
      mLastPlayMode(normalPlay),
-     mFreqWindow(NULL),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
@@ -742,6 +740,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
         mMixerBoard(NULL),
         mMixerBoardFrame(NULL),
      #endif
+     mFreqWindow(NULL),
      mToolManager(NULL),
      mAudioIOToken(-1),
      mIsDeleting(false),

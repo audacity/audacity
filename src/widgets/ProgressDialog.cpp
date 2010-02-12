@@ -1002,8 +1002,8 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
            wxDefaultSize,
            wxDEFAULT_DIALOG_STYLE |
            wxFRAME_FLOAT_ON_PARENT),
-   mDisable(NULL),
-   mLastValue(0)
+   mLastValue(0),
+   mDisable(NULL)
 {
    wxBoxSizer *v;
    wxWindow *w;

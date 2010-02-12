@@ -22,7 +22,7 @@
 class AUDACITY_DLL_API FileHistory
 {
  public:
-   FileHistory(int maxfiles = 9, wxWindowID idbase = wxID_FILE);
+   FileHistory(size_t maxfiles = 9, wxWindowID idbase = wxID_FILE);
    virtual ~FileHistory();
 
    void AddFileToHistory(const wxString & file, bool update = true);
@@ -40,7 +40,7 @@ class AUDACITY_DLL_API FileHistory
    wxString GetHistoryFile(size_t i) const;
 
  private:
-   int mMaxFiles;
+   size_t mMaxFiles;
    wxWindowID mIDBase;
 
    wxArrayPtrVoid mMenus;

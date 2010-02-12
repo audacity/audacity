@@ -180,10 +180,10 @@ void LoadLadspaPlugins()
    wxSortedArrayString uniq;
    wxString pathVar;
    unsigned int i;
-   EffectManager& em = EffectManager::Get();
 
 #if defined(USE_LIBLRDF) && defined(EFFECT_CATEGORIES)
    
+   EffectManager& em = EffectManager::Get();
    wxArrayString rdfPathList;
    wxString rdfPathVar;
    wxArrayString rdfFiles;

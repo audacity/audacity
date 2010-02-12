@@ -630,8 +630,10 @@ void Meter::OnMeterUpdate(wxTimerEvent &evt)
 {
    MeterUpdateMsg msg;
    int numChanges = 0;
+#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    double maxPeak = 0.0;
    bool discarded = false;
+#endif
    // There may have been several update messages since the last
    // time we got to this function.  Catch up to real-time by
    // popping them off until there are none left.  It is necessary

@@ -376,7 +376,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    const double dFrameInterval = (t1 - t0) / (double)nFramesPerBuffer;
    double dFrameT0 = t0;
    double dFrameT1 = t0 + dFrameInterval;
-   unsigned int i = 0;
+   int i = 0;
    while (bSuccess && (i < nFramesPerBuffer))
    {
       bSuccess &= 
@@ -595,7 +595,6 @@ MusicalInstrument::MusicalInstrument(wxBitmap* pBitmap, const wxString strXPMfil
 {
    mBitmap = pBitmap;
 
-   size_t nFirstCharIndex = 0;
    int nUnderscoreIndex;
    wxString strFilename = strXPMfilename;
    strFilename.MakeLower(); // Make sure, so we don't have to do case insensitive comparison.

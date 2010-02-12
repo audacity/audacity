@@ -426,7 +426,7 @@ int ExportCL::Export(AudacityProject *project,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 
       ShuttleGui S(&dlg, eIsCreating);
-      wxTextCtrl *tc = S.AddTextWindow(output);
+      S.AddTextWindow(output);
       S.StartHorizontalLay(wxALIGN_CENTER, false);
       {
          S.Id(wxID_OK).AddButton(_("&OK"))->SetDefault();

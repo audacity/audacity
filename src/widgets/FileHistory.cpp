@@ -21,7 +21,7 @@
 
 #include "FileHistory.h"
 
-FileHistory::FileHistory(int maxfiles, wxWindowID base)
+FileHistory::FileHistory(size_t maxfiles, wxWindowID base)
 {
    mMaxFiles = maxfiles;
    mIDBase = base;

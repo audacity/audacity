@@ -242,7 +242,6 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       }
 
       vorbis_info *vi = ov_info(mVorbisFile, i);
-      vorbis_comment *vc = ov_comment(mVorbisFile, i);
 
       mChannels[i] = new WaveTrack *[vi->channels];
 
