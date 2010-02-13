@@ -52,7 +52,7 @@ function.
 
 extern FFmpegLibs *FFmpegLibsInst;
 
-bool CheckFFmpegPresence()
+static bool CheckFFmpegPresence()
 {
    bool result = true;
    PickFFmpegLibs();
@@ -65,12 +65,12 @@ bool CheckFFmpegPresence()
    return result;
 }
 
-int AdjustFormatIndex(int format)
+static int AdjustFormatIndex(int format)
 {
    int subFormat = -1;
    for (int i = 0; i <= FMT_OTHER; i++)
    {
-      if (fmts[i].compiledIn) subFormat++;
+      if (ExportFFmpegOptions::fmts[i].compiledIn) subFormat++;
       if (subFormat == format || i == FMT_OTHER)
       {
          subFormat = i;
@@ -183,22 +183,22 @@ ExportFFmpeg::ExportFFmpeg()
    // Adds export types from the export type list
    for (newfmt = 0; newfmt < FMT_LAST; newfmt++)
    {
-      wxString shortname(fmts[newfmt].shortname);
+      wxString shortname(ExportFFmpegOptions::fmts[newfmt].shortname);
       //Don't hide export types when there's no av-libs, and don't hide FMT_OTHER
       if (newfmt < FMT_OTHER && FFmpegLibsInst->ValidLibsLoaded())
       {
          // Format/Codec support is compiled in?
          AVOutputFormat *avoformat = FFmpegLibsInst->guess_format(shortname.mb_str(), NULL, NULL);
-         AVCodec *avcodec = FFmpegLibsInst->avcodec_find_encoder(fmts[newfmt].codecid);
+         AVCodec *avcodec = FFmpegLibsInst->avcodec_find_encoder(ExportFFmpegOptions::fmts[newfmt].codecid);
          if (avoformat == NULL || avcodec == NULL)
          {
-            fmts[newfmt].compiledIn = false;
+            ExportFFmpegOptions::fmts[newfmt].compiledIn = false;
             continue;
          }
       }
       int fmtindex = AddFormat() - 1;
-      SetFormat(fmts[newfmt].name,fmtindex);
-      AddExtension(fmts[newfmt].extension,fmtindex);
+      SetFormat(ExportFFmpegOptions::fmts[newfmt].name,fmtindex);
+      AddExtension(ExportFFmpegOptions::fmts[newfmt].extension,fmtindex);
       // For some types add other extensions
       switch(newfmt)
       {
@@ -215,9 +215,9 @@ ExportFFmpeg::ExportFFmpeg()
          break;
       }
 
-     SetMaxChannels(fmts[newfmt].maxchannels,fmtindex);
-     SetCanMetaData(fmts[newfmt].canmetadata,fmtindex);
-     SetDescription(fmts[newfmt].description,fmtindex);
+     SetMaxChannels(ExportFFmpegOptions::fmts[newfmt].maxchannels,fmtindex);
+     SetCanMetaData(ExportFFmpegOptions::fmts[newfmt].canmetadata,fmtindex);
+     SetDescription(ExportFFmpegOptions::fmts[newfmt].description,fmtindex);
    }
 }
 
@@ -230,8 +230,8 @@ void ExportFFmpeg::Destroy()
 bool ExportFFmpeg::CheckFileName(wxFileName &filename, int format)
 {
    bool result = true;
-   int subFormat = AdjustFormatIndex(format);
 #if FFMPEG_STABLE
+   int subFormat = AdjustFormatIndex(format);
    if (subFormat == FMT_AMRNB || subFormat == FMT_AMRWB)
    {
       wxMessageBox(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries.\n\nNote that AMR support is not available with our FFmpeg\ninstaller, but requires you compile FFmpeg yourself."), _("AMR support is not distributable"));
@@ -317,9 +317,9 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *m
 
    // Add metadata BEFORE writing the header.
    // At the moment that works with ffmpeg-git and ffmpeg-0.5 for MP4.
-   if (fmts[mSubFormat].canmetadata)
+   if (ExportFFmpegOptions::fmts[mSubFormat].canmetadata)
    {
-      mSupportsUTF8 = fmts[mSubFormat].canutf8;
+      mSupportsUTF8 = ExportFFmpegOptions::fmts[mSubFormat].canutf8;
       AddTags(metadata);
    }
 
@@ -351,7 +351,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
   
    FFmpegLibsInst->avcodec_get_context_defaults(mEncAudioCodecCtx);
 
-   mEncAudioCodecCtx->codec_id = fmts[mSubFormat].codecid;
+   mEncAudioCodecCtx->codec_id = ExportFFmpegOptions::fmts[mSubFormat].codecid;
    mEncAudioCodecCtx->codec_type = CODEC_TYPE_AUDIO;
    mEncAudioCodecCtx->codec_tag = FFmpegLibsInst->av_codec_get_tag((const AVCodecTag **)mEncFormatCtx->oformat->codec_tag,mEncAudioCodecCtx->codec_id);
    mSampleRate = (int)project->GetRate();
@@ -366,8 +366,16 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       mEncAudioCodecCtx->profile = FF_PROFILE_AAC_LOW;
       mEncAudioCodecCtx->cutoff = 0;
       mEncAudioCodecCtx->global_quality = gPrefs->Read(wxT("/FileFormats/AACQuality"),-99999);
-      if (!CheckSampleRate(mSampleRate,iAACSampleRates[0],iAACSampleRates[11],&iAACSampleRates[0]))
-         mSampleRate = AskResample(mEncAudioCodecCtx->bit_rate,mSampleRate,iAACSampleRates[0],iAACSampleRates[11],&iAACSampleRates[0]);
+      if (!CheckSampleRate(mSampleRate,
+               ExportFFmpegOptions::iAACSampleRates[0],
+               ExportFFmpegOptions::iAACSampleRates[11],
+               &ExportFFmpegOptions::iAACSampleRates[0]))
+      {
+         mSampleRate = AskResample(mEncAudioCodecCtx->bit_rate,mSampleRate,
+               ExportFFmpegOptions::iAACSampleRates[0],
+               ExportFFmpegOptions::iAACSampleRates[11],
+               &ExportFFmpegOptions::iAACSampleRates[0]);
+      }
       break;
    case FMT_AC3:
       mEncAudioCodecCtx->bit_rate = gPrefs->Read(wxT("/FileFormats/AC3BitRate"), 192000);
@@ -693,10 +701,10 @@ int ExportFFmpeg::Export(AudacityProject *project,
    mChannels = channels;
    // subformat index may not correspond directly to fmts[] index, convert it
    mSubFormat = AdjustFormatIndex(subformat);
-   if (channels > fmts[mSubFormat].maxchannels)
+   if (channels > ExportFFmpegOptions::fmts[mSubFormat].maxchannels)
    {
-      wxLogMessage(wxT("Attempted to export %d channels, but max. channels = %d"),channels,fmts[mSubFormat].maxchannels);
-      wxMessageBox(wxString::Format(_("Attempted to export %d channels, but max. channels for selected output format is %d"),channels,fmts[mSubFormat].maxchannels),_("Error"));
+      wxLogMessage(wxT("Attempted to export %d channels, but max. channels = %d"),channels,ExportFFmpegOptions::fmts[mSubFormat].maxchannels);
+      wxMessageBox(wxString::Format(_("Attempted to export %d channels, but max. channels for selected output format is %d"),channels,ExportFFmpegOptions::fmts[mSubFormat].maxchannels),_("Error"));
       return false;
    }
    mName = fName;
@@ -705,7 +713,7 @@ int ExportFFmpeg::Export(AudacityProject *project,
 
    if (mSubFormat >= FMT_LAST) return false;
    
-   wxString shortname(fmts[mSubFormat].shortname);
+   wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
    if (mSubFormat == FMT_OTHER)
       shortname = gPrefs->Read(wxT("/FileFormats/FFmpegFormat"),wxT("matroska"));
    ret = Init(shortname.mb_str(),project, metadata);
@@ -725,8 +733,8 @@ int ExportFFmpeg::Export(AudacityProject *project,
 
    ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
       selectionOnly ?
-      wxString::Format(_("Exporting selected audio as %s"), fmts[mSubFormat].description) :
-   wxString::Format(_("Exporting entire file as %s"), fmts[mSubFormat].description));
+      wxString::Format(_("Exporting selected audio as %s"), ExportFFmpegOptions::fmts[mSubFormat].description) :
+   wxString::Format(_("Exporting entire file as %s"), ExportFFmpegOptions::fmts[mSubFormat].description));
 
    int updateResult = eProgressSuccess;
 

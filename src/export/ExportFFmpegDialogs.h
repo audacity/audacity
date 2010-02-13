@@ -50,18 +50,6 @@ struct ExposedFormat
    bool compiledIn;           //!< support for this codec/format is compiled in (checked at runtime)
 };
 
-/// List of export types
-static ExposedFormat fmts[] = 
-{
-   {FMT_M4A,         wxT("M4A"),     wxT("m4a"),  wxT("ipod"), 48,  true ,true ,_("M4A (AAC) Files (FFmpeg)"),         CODEC_ID_AAC,    true},
-   {FMT_AC3,         wxT("AC3"),     wxT("ac3"),  wxT("ac3"),  7,   false,false,_("AC3 Files (FFmpeg)"),               CODEC_ID_AC3,    true},
-   {FMT_AMRNB,       wxT("AMRNB"),   wxT("amr"),  wxT("amr"),  1,   false,false,_("AMR (narrow band) Files (FFmpeg)"), CODEC_ID_AMR_NB, true},
-#if FFMPEG_STABLE
-   {FMT_AMRWB,       wxT("AMRWB"),   wxT("amr"),  wxT("amr"),  1,   false,false,_("AMR (wide band) Files (FFmpeg)"),   CODEC_ID_AMR_WB, true},
-#endif
-   {FMT_WMA2,        wxT("WMA"),     wxT("wma"),  wxT("asf"),  2,   false,false,_("WMA (version 2) Files (FFmpeg)"),   CODEC_ID_WMAV2,  true},
-   {FMT_OTHER,       wxT("FFMPEG"),  wxT(""),     wxT(""),     255, true ,true ,_("Custom FFmpeg Export"),             CODEC_ID_NONE,   true}
-};
 
 /// Describes format-codec compatibility
 struct CompatibilityEntry
@@ -70,326 +58,6 @@ struct CompatibilityEntry
    CodecID codec;     //!< codec ID
 };
 
-/// Format-codec compatibility list
-/// Must end with NULL entry
-static CompatibilityEntry CompatibilityList[] = 
-{
-   { wxT("adts"), CODEC_ID_AAC },
-
-   { wxT("aiff"), CODEC_ID_PCM_S16BE },
-   { wxT("aiff"), CODEC_ID_PCM_S8 },
-   { wxT("aiff"), CODEC_ID_PCM_S24BE },
-   { wxT("aiff"), CODEC_ID_PCM_S32BE },
-   { wxT("aiff"), CODEC_ID_PCM_ALAW },
-   { wxT("aiff"), CODEC_ID_PCM_MULAW },
-   { wxT("aiff"), CODEC_ID_MACE3 },
-   { wxT("aiff"), CODEC_ID_MACE6 },
-   { wxT("aiff"), CODEC_ID_GSM },
-   { wxT("aiff"), CODEC_ID_ADPCM_G726 },
-   { wxT("aiff"), CODEC_ID_PCM_S16LE },
-   { wxT("aiff"), CODEC_ID_ADPCM_IMA_QT },
-   { wxT("aiff"), CODEC_ID_QDM2 },
-
-   { wxT("amr"), CODEC_ID_AMR_NB },
-   { wxT("amr"), CODEC_ID_AMR_WB },
-
-   { wxT("asf"), CODEC_ID_PCM_S16LE },
-   { wxT("asf"), CODEC_ID_PCM_U8 },
-   { wxT("asf"), CODEC_ID_PCM_S24LE },
-   { wxT("asf"), CODEC_ID_PCM_S32LE },
-   { wxT("asf"), CODEC_ID_ADPCM_MS },
-   { wxT("asf"), CODEC_ID_PCM_ALAW },
-   { wxT("asf"), CODEC_ID_PCM_MULAW },
-   { wxT("asf"), CODEC_ID_WMAVOICE },
-   { wxT("asf"), CODEC_ID_ADPCM_IMA_WAV },
-   { wxT("asf"), CODEC_ID_ADPCM_YAMAHA },
-   { wxT("asf"), CODEC_ID_TRUESPEECH },
-   { wxT("asf"), CODEC_ID_GSM_MS },
-   { wxT("asf"), CODEC_ID_ADPCM_G726 },
-   { wxT("asf"), CODEC_ID_MP2 },
-   { wxT("asf"), CODEC_ID_MP3 },
-   { wxT("asf"), CODEC_ID_VOXWARE },
-   { wxT("asf"), CODEC_ID_AAC },
-   { wxT("asf"), CODEC_ID_WMAV1 },
-   { wxT("asf"), CODEC_ID_WMAV2 },
-   { wxT("asf"), CODEC_ID_WMAPRO },
-   { wxT("asf"), CODEC_ID_ADPCM_CT },
-   { wxT("asf"), CODEC_ID_ATRAC3 },
-   { wxT("asf"), CODEC_ID_IMC },
-   { wxT("asf"), CODEC_ID_AC3 },
-   { wxT("asf"), CODEC_ID_DTS },
-   { wxT("asf"), CODEC_ID_SONIC },
-   { wxT("asf"), CODEC_ID_SONIC_LS },
-   { wxT("asf"), CODEC_ID_FLAC },
-   { wxT("asf"), CODEC_ID_ADPCM_SWF },
-   { wxT("asf"), CODEC_ID_VORBIS },
-
-   { wxT("au"), CODEC_ID_PCM_MULAW },
-   { wxT("au"), CODEC_ID_PCM_S8 },
-   { wxT("au"), CODEC_ID_PCM_S16BE },
-   { wxT("au"), CODEC_ID_PCM_ALAW },
-
-   { wxT("avi"), CODEC_ID_PCM_S16LE },
-   { wxT("avi"), CODEC_ID_PCM_U8 },
-   { wxT("avi"), CODEC_ID_PCM_S24LE },
-   { wxT("avi"), CODEC_ID_PCM_S32LE },
-   { wxT("avi"), CODEC_ID_ADPCM_MS },
-   { wxT("avi"), CODEC_ID_PCM_ALAW },
-   { wxT("avi"), CODEC_ID_PCM_MULAW },
-   { wxT("avi"), CODEC_ID_WMAVOICE },
-   { wxT("avi"), CODEC_ID_ADPCM_IMA_WAV },
-   { wxT("avi"), CODEC_ID_ADPCM_YAMAHA },
-   { wxT("avi"), CODEC_ID_TRUESPEECH },
-   { wxT("avi"), CODEC_ID_GSM_MS },
-   { wxT("avi"), CODEC_ID_ADPCM_G726 },
-   { wxT("avi"), CODEC_ID_MP2 },
-   { wxT("avi"), CODEC_ID_MP3 },
-   { wxT("avi"), CODEC_ID_VOXWARE },
-   { wxT("avi"), CODEC_ID_AAC },
-   { wxT("avi"), CODEC_ID_WMAV1 },
-   { wxT("avi"), CODEC_ID_WMAV2 },
-   { wxT("avi"), CODEC_ID_WMAPRO },
-   { wxT("avi"), CODEC_ID_ADPCM_CT },
-   { wxT("avi"), CODEC_ID_ATRAC3 },
-   { wxT("avi"), CODEC_ID_IMC },
-   { wxT("avi"), CODEC_ID_AC3 },
-   { wxT("avi"), CODEC_ID_DTS },
-   { wxT("avi"), CODEC_ID_SONIC },
-   { wxT("avi"), CODEC_ID_SONIC_LS },
-   { wxT("avi"), CODEC_ID_FLAC },
-   { wxT("avi"), CODEC_ID_ADPCM_SWF },
-   { wxT("avi"), CODEC_ID_VORBIS },
-
-   { wxT("crc"), CODEC_ID_NONE },
-
-   { wxT("dv"), CODEC_ID_PCM_S16LE },
-
-   { wxT("ffm"), CODEC_ID_NONE },
-
-   { wxT("flv"), CODEC_ID_MP3 },
-   { wxT("flv"), CODEC_ID_PCM_S8 },
-   { wxT("flv"), CODEC_ID_PCM_S16BE },
-   { wxT("flv"), CODEC_ID_PCM_S16LE },
-   { wxT("flv"), CODEC_ID_ADPCM_SWF },
-   { wxT("flv"), CODEC_ID_AAC },
-   { wxT("flv"), CODEC_ID_NELLYMOSER },
-
-   { wxT("framecrc"), CODEC_ID_NONE },
-
-   { wxT("gxf"), CODEC_ID_PCM_S16LE },
-
-   { wxT("matroska"), CODEC_ID_PCM_S16LE },
-   { wxT("matroska"), CODEC_ID_PCM_U8 },
-   { wxT("matroska"), CODEC_ID_PCM_S24LE },
-   { wxT("matroska"), CODEC_ID_PCM_S32LE },
-   { wxT("matroska"), CODEC_ID_ADPCM_MS },
-   { wxT("matroska"), CODEC_ID_PCM_ALAW },
-   { wxT("matroska"), CODEC_ID_PCM_MULAW },
-   { wxT("matroska"), CODEC_ID_WMAVOICE },
-   { wxT("matroska"), CODEC_ID_ADPCM_IMA_WAV },
-   { wxT("matroska"), CODEC_ID_ADPCM_YAMAHA },
-   { wxT("matroska"), CODEC_ID_TRUESPEECH },
-   { wxT("matroska"), CODEC_ID_GSM_MS },
-   { wxT("matroska"), CODEC_ID_ADPCM_G726 },
-   { wxT("matroska"), CODEC_ID_MP2 },
-   { wxT("matroska"), CODEC_ID_MP3 },
-   { wxT("matroska"), CODEC_ID_VOXWARE },
-   { wxT("matroska"), CODEC_ID_AAC },
-   { wxT("matroska"), CODEC_ID_WMAV1 },
-   { wxT("matroska"), CODEC_ID_WMAV2 },
-   { wxT("matroska"), CODEC_ID_WMAPRO },
-   { wxT("matroska"), CODEC_ID_ADPCM_CT },
-   { wxT("matroska"), CODEC_ID_ATRAC3 },
-   { wxT("matroska"), CODEC_ID_IMC },
-   { wxT("matroska"), CODEC_ID_AC3 },
-   { wxT("matroska"), CODEC_ID_DTS },
-   { wxT("matroska"), CODEC_ID_SONIC },
-   { wxT("matroska"), CODEC_ID_SONIC_LS },
-   { wxT("matroska"), CODEC_ID_FLAC },
-   { wxT("matroska"), CODEC_ID_ADPCM_SWF },
-   { wxT("matroska"), CODEC_ID_VORBIS },
-
-   { wxT("mmf"), CODEC_ID_ADPCM_YAMAHA },
-
-   { wxT("mov"), CODEC_ID_PCM_S32BE }, //mov
-   { wxT("mov"), CODEC_ID_PCM_S32LE },
-   { wxT("mov"), CODEC_ID_PCM_S24BE },
-   { wxT("mov"), CODEC_ID_PCM_S24LE },
-   { wxT("mov"), CODEC_ID_PCM_S16BE },
-   { wxT("mov"), CODEC_ID_PCM_S16LE },
-   { wxT("mov"), CODEC_ID_PCM_S8 },
-   { wxT("mov"), CODEC_ID_PCM_U8 },
-   { wxT("mov"), CODEC_ID_PCM_MULAW },
-   { wxT("mov"), CODEC_ID_PCM_ALAW },
-   { wxT("mov"), CODEC_ID_ADPCM_IMA_QT },
-   { wxT("mov"), CODEC_ID_MACE3 },
-   { wxT("mov"), CODEC_ID_MACE6 },
-   { wxT("mov"), CODEC_ID_MP3 },
-   { wxT("mov"), CODEC_ID_AAC },
-   { wxT("mov"), CODEC_ID_AMR_NB },
-   { wxT("mov"), CODEC_ID_AMR_WB },
-   { wxT("mov"), CODEC_ID_GSM },
-   { wxT("mov"), CODEC_ID_ALAC },
-   { wxT("mov"), CODEC_ID_QCELP },
-   { wxT("mov"), CODEC_ID_QDM2 },
-   { wxT("mov"), CODEC_ID_DVAUDIO },
-   { wxT("mov"), CODEC_ID_WMAV2 },
-   { wxT("mov"), CODEC_ID_ALAC },
-
-   { wxT("mp4"), CODEC_ID_AAC },
-   { wxT("mp4"), CODEC_ID_QCELP },
-   { wxT("mp4"), CODEC_ID_MP3 },
-   { wxT("mp4"), CODEC_ID_VORBIS },
-
-   { wxT("psp"), CODEC_ID_AAC },
-   { wxT("psp"), CODEC_ID_QCELP },
-   { wxT("psp"), CODEC_ID_MP3 },
-   { wxT("psp"), CODEC_ID_VORBIS },
-
-   { wxT("ipod"), CODEC_ID_AAC },
-   { wxT("ipod"), CODEC_ID_QCELP },
-   { wxT("ipod"), CODEC_ID_MP3 },
-   { wxT("ipod"), CODEC_ID_VORBIS },
-
-   { wxT("3gp"), CODEC_ID_AAC },
-   { wxT("3gp"), CODEC_ID_AMR_NB },
-   { wxT("3gp"), CODEC_ID_AMR_WB },
-
-   { wxT("3g2"), CODEC_ID_AAC },
-   { wxT("3g2"), CODEC_ID_AMR_NB },
-   { wxT("3g2"), CODEC_ID_AMR_WB },
-
-   { wxT("mp3"), CODEC_ID_MP3 },
-
-   { wxT("mpeg"), CODEC_ID_AC3 },
-   { wxT("mpeg"), CODEC_ID_DTS },
-   { wxT("mpeg"), CODEC_ID_PCM_S16BE },
-   { wxT("mpeg"), CODEC_ID_MP2 },
-
-   { wxT("vcd"), CODEC_ID_AC3 },
-   { wxT("vcd"), CODEC_ID_DTS },
-   { wxT("vcd"), CODEC_ID_PCM_S16BE },
-   { wxT("vcd"), CODEC_ID_MP2 },
-
-   { wxT("vob"), CODEC_ID_AC3 },
-   { wxT("vob"), CODEC_ID_DTS },
-   { wxT("vob"), CODEC_ID_PCM_S16BE },
-   { wxT("vob"), CODEC_ID_MP2 },
-
-   { wxT("svcd"), CODEC_ID_AC3 },
-   { wxT("svcd"), CODEC_ID_DTS },
-   { wxT("svcd"), CODEC_ID_PCM_S16BE },
-   { wxT("svcd"), CODEC_ID_MP2 },
-
-   { wxT("dvd"), CODEC_ID_AC3 },
-   { wxT("dvd"), CODEC_ID_DTS },
-   { wxT("dvd"), CODEC_ID_PCM_S16BE },
-   { wxT("dvd"), CODEC_ID_MP2 },
-
-   { wxT("nut"), CODEC_ID_PCM_S16LE },
-   { wxT("nut"), CODEC_ID_PCM_U8 },
-   { wxT("nut"), CODEC_ID_PCM_S24LE },
-   { wxT("nut"), CODEC_ID_PCM_S32LE },
-   { wxT("nut"), CODEC_ID_ADPCM_MS },
-   { wxT("nut"), CODEC_ID_PCM_ALAW },
-   { wxT("nut"), CODEC_ID_PCM_MULAW },
-   { wxT("nut"), CODEC_ID_WMAVOICE },
-   { wxT("nut"), CODEC_ID_ADPCM_IMA_WAV },
-   { wxT("nut"), CODEC_ID_ADPCM_YAMAHA },
-   { wxT("nut"), CODEC_ID_TRUESPEECH },
-   { wxT("nut"), CODEC_ID_GSM_MS },
-   { wxT("nut"), CODEC_ID_ADPCM_G726 },
-   { wxT("nut"), CODEC_ID_MP2 },
-   { wxT("nut"), CODEC_ID_MP3 },
-   { wxT("nut"), CODEC_ID_VOXWARE },
-   { wxT("nut"), CODEC_ID_AAC },
-   { wxT("nut"), CODEC_ID_WMAV1 },
-   { wxT("nut"), CODEC_ID_WMAV2 },
-   { wxT("nut"), CODEC_ID_WMAPRO },
-   { wxT("nut"), CODEC_ID_ADPCM_CT },
-   { wxT("nut"), CODEC_ID_ATRAC3 },
-   { wxT("nut"), CODEC_ID_IMC },
-   { wxT("nut"), CODEC_ID_AC3 },
-   { wxT("nut"), CODEC_ID_DTS },
-   { wxT("nut"), CODEC_ID_SONIC },
-   { wxT("nut"), CODEC_ID_SONIC_LS },
-   { wxT("nut"), CODEC_ID_FLAC },
-   { wxT("nut"), CODEC_ID_ADPCM_SWF },
-   { wxT("nut"), CODEC_ID_VORBIS },
-
-   { wxT("ogg"), CODEC_ID_VORBIS },
-   { wxT("ogg"), CODEC_ID_FLAC },
-
-   { wxT("ac3"), CODEC_ID_AC3 },
-
-   { wxT("dts"), CODEC_ID_DTS },
-
-   { wxT("flac"), CODEC_ID_FLAC },
-
-   { wxT("RoQ"), CODEC_ID_ROQ_DPCM },
-
-   { wxT("rm"), CODEC_ID_AC3 },
-
-   { wxT("swf"), CODEC_ID_MP3 },
-
-   { wxT("avm2"), CODEC_ID_MP3 },
-
-   { wxT("voc"), CODEC_ID_PCM_U8 },
-
-   { wxT("wav"), CODEC_ID_PCM_S16LE },
-   { wxT("wav"), CODEC_ID_PCM_U8 },
-   { wxT("wav"), CODEC_ID_PCM_S24LE },
-   { wxT("wav"), CODEC_ID_PCM_S32LE },
-   { wxT("wav"), CODEC_ID_ADPCM_MS },
-   { wxT("wav"), CODEC_ID_PCM_ALAW },
-   { wxT("wav"), CODEC_ID_PCM_MULAW },
-   { wxT("wav"), CODEC_ID_WMAVOICE },
-   { wxT("wav"), CODEC_ID_ADPCM_IMA_WAV },
-   { wxT("wav"), CODEC_ID_ADPCM_YAMAHA },
-   { wxT("wav"), CODEC_ID_TRUESPEECH },
-   { wxT("wav"), CODEC_ID_GSM_MS },
-   { wxT("wav"), CODEC_ID_ADPCM_G726 },
-   { wxT("wav"), CODEC_ID_MP2 },
-   { wxT("wav"), CODEC_ID_MP3 },
-   { wxT("wav"), CODEC_ID_VOXWARE },
-   { wxT("wav"), CODEC_ID_AAC },
-   { wxT("wav"), CODEC_ID_WMAV1 },
-   { wxT("wav"), CODEC_ID_WMAV2 },
-   { wxT("wav"), CODEC_ID_WMAPRO },
-   { wxT("wav"), CODEC_ID_ADPCM_CT },
-   { wxT("wav"), CODEC_ID_ATRAC3 },
-   { wxT("wav"), CODEC_ID_IMC },
-   { wxT("wav"), CODEC_ID_AC3 },
-   { wxT("wav"), CODEC_ID_DTS },
-   { wxT("wav"), CODEC_ID_SONIC },
-   { wxT("wav"), CODEC_ID_SONIC_LS },
-   { wxT("wav"), CODEC_ID_FLAC },
-   { wxT("wav"), CODEC_ID_ADPCM_SWF },
-   { wxT("wav"), CODEC_ID_VORBIS },
-
-   { NULL, CODEC_ID_NONE }
-};
-
-
-/// AAC profiles
-static int iAACProfileValues[] = { FF_PROFILE_AAC_LOW, FF_PROFILE_AAC_MAIN, /*FF_PROFILE_AAC_SSR,*/ FF_PROFILE_AAC_LTP };
-
-/// Names of AAC profiles to be displayed
-static const wxChar *iAACProfileNames[] = { _("LC"), _("Main"), /*_("SSR"),*/ _("LTP") }; //SSR is not supported
-
-/// Sample rates supported by AAC encoder (must end with zero-element)
-static const int iAACSampleRates[] = { 7350, 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 64000, 88200, 0 };
-
-/// Bit Rates supported by libAMR-NB encoder
-/// Sample Rate is always 8 kHz
-static int iAMRNBBitRate[] = { 4750, 5150, 5900, 6700, 7400, 7950, 10200, 12200 };
-
-/// Bit Rates supported by libAMR-WB encoder
-/// Sample Rate is always 16 kHz
-static int iAMRWBBitRate[] = { 6600, 8850, 12650, 14250, 15850, 18250, 19850, 23050, 23850 };
-
-/// Bit Rates supported by WMA encoder. Setting bit rate to other values will not result in different file size.
-static int iWMABitRate[] = { 24634, 26012, 27734, 29457, 31524, 33764, 36348, 39448, 42894, 47028, 52024, 58225, 65805, 75624, 88716, 106976, 134539, 180189, 271835, 546598 };
 
 /// AC3 export options dialog
 class ExportFFmpegAC3Options : public wxDialog
@@ -441,6 +109,8 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    void OnOK(wxCommandEvent& event);
 
+   static int iAMRNBBitRate[];
+
 private:
 
    wxArrayString mBitRateNames;
@@ -460,6 +130,8 @@ public:
    ExportFFmpegAMRWBOptions(wxWindow *parent);
    void PopulateOrExchange(ShuttleGui & S);
    void OnOK(wxCommandEvent& event);
+
+   static int iAMRWBBitRate[];
 
 private:
 
@@ -482,6 +154,7 @@ public:
    void OnOK(wxCommandEvent& event);
 
    static const int iWMASampleRates[];
+   static const int iWMABitRate[];
 
 private:
 
@@ -495,190 +168,14 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-/// Identifiers for UI elements of the Custom FFmpeg export dialog
-/// Do not store these in external files, as they may be changed later
-enum FFmpegExportCtrlID {
-   FEFirstID = 20000,
-   FEFormatID,
-   FECodecID,
-   FEBitrateID,
-   FEQualityID,
-   FESampleRateID,
-   FELanguageID,
-   FETagID,
-   FECutoffID,
-   FEFrameSizeID,
-   FEBufSizeID,
-   FEProfileID,
-   FECompLevelID,
-   FEUseLPCID,
-   FELPCCoeffsID,
-   FEMinPredID,
-   FEMaxPredID,
-   FEPredOrderID,
-   FEMinPartOrderID,
-   FEMaxPartOrderID,
-   FEMuxRateID,
-   FEPacketSizeID,
-   FEBitReservoirID,
-   FEVariableBlockLenID,
-   FELastID,
-
-   FEFormatLabelID,
-   FECodecLabelID,
-   FEFormatNameID,
-   FECodecNameID,
-   FEPresetID,
-   FESavePresetID,
-   FELoadPresetID,
-   FEDeletePresetID,
-   FEAllFormatsID,
-   FEAllCodecsID,
-   FEImportPresetsID,
-   FEExportPresetsID
-};
-
-/// String equivalents of identifiers for UI elements
-/// These may be stored in external files
-/// I have not yet found a convinient way to keep these two lists in sync automatically
-/// To get control's ID string, use FFmpegExportCtrlIDNames[ControlID - FEFirstID]
-static const wxChar *FFmpegExportCtrlIDNames[] = {
-   wxT("FEFirstID"),
-   wxT("FEFormatID"),
-   wxT("FECodecID"),
-   wxT("FEBitrateID"),
-   wxT("FEQualityID"),
-   wxT("FESampleRateID"),
-   wxT("FELanguageID"),
-   wxT("FETagID"),
-   wxT("FECutoffID"),
-   wxT("FEFrameSizeID"),
-   wxT("FEBufSizeID"),
-   wxT("FEProfileID"),
-   wxT("FECompLevelID"),
-   wxT("FEUseLPCID"),
-   wxT("FELPCCoeffsID"),
-   wxT("FEMinPredID"),
-   wxT("FEMaxPredID"),
-   wxT("FEPredOrderID"),
-   wxT("FEMinPartOrderID"),
-   wxT("FEMaxPartOrderID"),
-   wxT("FEMuxRateID"),
-   wxT("FEPacketSizeID"),
-   wxT("FEBitReservoirID"),
-   wxT("FEVariableBlockLenID"),
-   wxT("FELastID"),
-
-   wxT("FEFormatLabelID"),
-   wxT("FECodecLabelID"),
-   wxT("FEFormatNameID"),
-   wxT("FECodecNameID"),
-   wxT("FEPresetID"),
-   wxT("FESavePresetID"),
-   wxT("FELoadPresetID"),
-   wxT("FEDeletePresetID"),
-   wxT("FEAllFormatsID"),
-   wxT("FEAllCodecsID"),
-   wxT("FEImportPresetsID"),
-   wxT("FEExportPresetsID")
-};
-
 /// Entry for the Applicability table
 struct ApplicableFor
 {
    bool                 enable;  //!< true if this control should be enabled, false otherwise
-   FFmpegExportCtrlID   control; //!< control ID
+   int                  control; //!< control ID
    CodecID              codec;   //!< Codec ID
    const char          *format;  //!< Format short name
 };
-
-/// Some controls (parameters they represent) are only applicable to a number
-/// of codecs and/or formats.
-/// Syntax: first, enable a control for each applicable format-codec combination
-/// then disable it for anything else
-/// "any" - any format
-/// CODEC_ID_NONE - any codec
-/// This list must end with {FALSE,FFmpegExportCtrlID(0),CODEC_ID_NONE,NULL}
-static ApplicableFor apptable[] = 
-{
-   {TRUE,FEQualityID,CODEC_ID_AAC,"any"},
-   {TRUE,FEQualityID,CODEC_ID_MP3,"any"},
-   {TRUE,FEQualityID,CODEC_ID_VORBIS,"any"},
-   {FALSE,FEQualityID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FECutoffID,CODEC_ID_AC3,"any"},
-   {TRUE,FECutoffID,CODEC_ID_AAC,"any"},
-   {TRUE,FECutoffID,CODEC_ID_VORBIS,"any"},
-   {FALSE,FECutoffID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEFrameSizeID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEFrameSizeID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEProfileID,CODEC_ID_AAC,"any"},
-   {FALSE,FEProfileID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FECompLevelID,CODEC_ID_FLAC,"any"},
-   {FALSE,FECompLevelID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEUseLPCID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEUseLPCID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FELPCCoeffsID,CODEC_ID_FLAC,"any"},
-   {FALSE,FELPCCoeffsID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEMinPredID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEMinPredID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEMaxPredID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEMaxPredID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEPredOrderID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEPredOrderID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEMinPartOrderID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEMinPartOrderID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEMaxPartOrderID,CODEC_ID_FLAC,"any"},
-   {FALSE,FEMaxPartOrderID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEMuxRateID,CODEC_ID_NONE,"mpeg"},
-   {TRUE,FEMuxRateID,CODEC_ID_NONE,"vcd"},
-   {TRUE,FEMuxRateID,CODEC_ID_NONE,"vob"},
-   {TRUE,FEMuxRateID,CODEC_ID_NONE,"svcd"},
-   {TRUE,FEMuxRateID,CODEC_ID_NONE,"dvd"},
-   {FALSE,FEMuxRateID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEPacketSizeID,CODEC_ID_NONE,"mpeg"},
-   {TRUE,FEPacketSizeID,CODEC_ID_NONE,"vcd"},
-   {TRUE,FEPacketSizeID,CODEC_ID_NONE,"vob"},
-   {TRUE,FEPacketSizeID,CODEC_ID_NONE,"svcd"},
-   {TRUE,FEPacketSizeID,CODEC_ID_NONE,"dvd"},
-   {FALSE,FEPacketSizeID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FELanguageID,CODEC_ID_NONE,"matroska"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"mov"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"3gp"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"mp4"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"psp"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"3g2"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"ipod"},
-   {TRUE,FELanguageID,CODEC_ID_NONE,"mpegts"},
-   {FALSE,FELanguageID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEBitReservoirID,CODEC_ID_MP3,"any"},
-   {TRUE,FEBitReservoirID,CODEC_ID_WMAV1,"any"},
-   {TRUE,FEBitReservoirID,CODEC_ID_WMAV2,"any"},
-   {FALSE,FEBitReservoirID,CODEC_ID_NONE,"any"},
-
-   {TRUE,FEVariableBlockLenID,CODEC_ID_WMAV1,"any"},
-   {TRUE,FEVariableBlockLenID,CODEC_ID_WMAV2,"any"},
-   {FALSE,FEVariableBlockLenID,CODEC_ID_NONE,"any"},
-
-   {FALSE,FFmpegExportCtrlID(0),CODEC_ID_NONE,NULL}
-};
-
-/// Prediction order method - names. Labels are indices of this array.
-static const wxChar *PredictionOrderMethodNames[] = { _("Estimate"), _("2-level"), _("4-level"), _("8-level"), _("Full search"), _("Log search")};
 
 class FFmpegPresets;
 
@@ -702,6 +199,15 @@ public:
    void OnDeletePreset(wxCommandEvent& event);
    void OnImportPresets(wxCommandEvent& event);
    void OnExportPresets(wxCommandEvent& event);
+
+   // Static tables
+   static CompatibilityEntry CompatibilityList[];
+   static int iAACProfileValues[];
+   static const wxChar *iAACProfileNames[];
+   static ExposedFormat fmts[];
+   static const int iAACSampleRates[];
+   static ApplicableFor apptable[];
+   static const wxChar *PredictionOrderMethodNames[];
 
 private:
 
