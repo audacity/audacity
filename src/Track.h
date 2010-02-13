@@ -104,7 +104,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
       MonoChannel = 2
    };
 
-   enum
+   enum TrackKindEnum
    {
       None,
       Wave,
@@ -114,7 +114,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
       Label,
       Time,
       All
-   } TrackKindEnum;
+   };
 
    Track(DirManager * projDirManager);
    Track(const Track &orig);
