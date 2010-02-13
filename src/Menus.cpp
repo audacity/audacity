@@ -5432,7 +5432,8 @@ void AudacityProject::OnAudioDeviceInfo()
 
    S.StartHorizontalLay(wxEXPAND, true);
    {
-      S.SetStyle( wxTE_READONLY|wxHSCROLL|wxTE_MULTILINE );
+      S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
+         wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL );
       tc = S.AddTextWindow(wxT(""));
       tc->WriteText(info);
    }

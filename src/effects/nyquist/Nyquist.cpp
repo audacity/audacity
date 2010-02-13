@@ -1278,6 +1278,12 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    item = new wxStaticText(this, -1, prompt);
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
+   // TODO: Convert this to using ShuttleGui.
+   // using S.AddTextWindow();
+   // TODO: Consider using:
+   //   wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
+   //   wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL 
+   // Haven't made this change as this dialog MUST work with screen readers.
    item = new wxTextCtrl(this, -1, message,
                          wxDefaultPosition, wxSize(400, 200),
                          wxTE_MULTILINE | wxTE_READONLY);

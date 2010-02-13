@@ -548,7 +548,8 @@ void ExportMultiple::OnExport(wxCommandEvent& event)
             FileList += mExported[i];
             FileList += '\n';
          }
-         S.SetStyle( wxTE_READONLY|wxHSCROLL|wxTE_MULTILINE );
+         S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
+            wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL  );
          S.AddTextWindow( FileList );
          S.AddStandardButtons(eOkButton);
       }
