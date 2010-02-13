@@ -44,6 +44,7 @@ simplifies construction of menu items.
 #include <wx/progdlg.h>
 #include <wx/scrolbar.h>
 #include <wx/ffile.h>
+#include <wx/statusbr.h>
 
 #include "Project.h"
 #include "effects/EffectManager.h"
@@ -5421,28 +5422,11 @@ void AudacityProject::OnScreenshot()
 void AudacityProject::OnAudioDeviceInfo()
 {
    wxString info = gAudioIO->GetDeviceInfo();
-   wxTextCtrl *tc;
-
-   wxDialog dlg(this, wxID_ANY,
-                wxString(wxT("Audio Device Info")),
-                wxDefaultPosition, wxDefaultSize,
-                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
-
-   ShuttleGui S(&dlg, eIsCreating);
-
-   S.StartHorizontalLay(wxEXPAND, true);
-   {
-      S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
-         wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL );
-      tc = S.AddTextWindow(wxT(""));
-      tc->WriteText(info);
-   }
-   S.EndHorizontalLay();
-   
-   S.AddStandardButtons(eOkButton);
-
-   dlg.Center();
-   dlg.ShowModal();
+   ShowInfoDialog( this, 
+      _("Audio Device Info"),
+      wxT(""),
+      info, 
+      350,450);
 }
 
 void AudacityProject::OnSeparator()

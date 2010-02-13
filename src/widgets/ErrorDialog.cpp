@@ -247,6 +247,49 @@ void ShowErrorDialog(wxWindow *parent,
 }
 
 
+/// Mostly we use this so that we have the code for resizability
+/// in one place.  Other considerations like screen readers are also
+/// handled by having the code in one place.
+void ShowInfoDialog( wxWindow *parent,
+                     const wxString &dlogTitle,
+                     const wxString &shortMsg,
+                     const wxString &message, 
+                     const int xSize, const int ySize)
+{
+   wxDialog dlog(parent, wxID_ANY,
+                dlogTitle,
+                wxDefaultPosition, wxDefaultSize,
+                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX /*| wxDEFAULT_FRAME_STYLE */);
+
+   ShuttleGui S(&dlog, eIsCreating);
+
+   S.StartVerticalLay(1);
+   {
+      S.AddTitle( shortMsg);
+      S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
+         wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL );
+      S.AddTextWindow(message);
+   }
+   S.SetBorder( 0 );
+   S.StartHorizontalLay(wxALIGN_RIGHT|wxALIGN_BOTTOM, 0);
+   S.AddStandardButtons(eOkButton);
+
+   // Next three lines add a tiny dragger.
+   wxStatusBar * pBar = new wxStatusBar( &dlog );
+   pBar->SetSize( 18, 38);
+   S.AddWindow( pBar, wxALIGN_BOTTOM|wxALIGN_RIGHT );
+
+   S.EndHorizontalLay();
+   S.EndVerticalLay();
+
+   // Smallest size is half default size.  Seems reasonable.
+   dlog.SetMinSize( wxSize(xSize/2, ySize/2) );
+   dlog.SetSize( wxSize(xSize, ySize) );
+   dlog.Center();
+   dlog.ShowModal();
+}
+
+
 void ShowHelpDialog(wxWindow *parent,
                      const wxString &localFileName,
                      const wxString &remoteURL)

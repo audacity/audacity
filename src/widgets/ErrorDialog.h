@@ -5,6 +5,7 @@
   ErrorDialog.h
 
   Jimmy Johnson
+  James Crook
 
 **********************************************************************/
 
@@ -19,7 +20,14 @@
 void ShowErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
                      const wxString &message, 
-                     const wxString &helpURL);                  
+                     const wxString &helpURL);
+
+/// Displays cutable information in a text ctrl, with an OK button.
+void ShowInfoDialog( wxWindow *parent,
+                     const wxString &dlogTitle,
+                     const wxString &shortMsg,
+                     const wxString &message, 
+                     const int xSize, const int ySize);
 
 /// Displays a new window with wxHTML help.
 void ShowHtmlText( wxWindow * pParent, 

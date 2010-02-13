@@ -521,6 +521,9 @@ wxTextCtrl * ShuttleGuiBase::AddTextWindow(const wxString &Value)
    mpWind = pTextCtrl = new wxTextCtrl(mpParent, miId, Value,
       wxDefaultPosition, wxDefaultSize, Style( wxTE_MULTILINE ));
    UpdateSizers();
+   // Start off at start of window...
+   pTextCtrl->SetInsertionPoint( 0 );
+   pTextCtrl->ShowPosition( 0 );
    return pTextCtrl;
 }
 

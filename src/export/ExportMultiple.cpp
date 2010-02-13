@@ -47,6 +47,7 @@
 #include "../Project.h"
 #include "../Prefs.h"
 #include "../Tags.h"
+#include "../widgets/ErrorDialog.h"
 
 
 /* define our dynamic array of export settings */
@@ -534,30 +535,17 @@ void ExportMultiple::OnExport(wxCommandEvent& event)
                )
              ), mExported.GetCount());
 
-      // This results dialog is a child of this dialog.
-      SuccessDialog dlg(this,
-                   wxID_ANY,
-                   wxString(_("Export Multiple")) );
-      ShuttleGui S(&dlg, eIsCreating);
-
-      S.StartVerticalLay();
-      {
-         S.AddTitle(msg);
-         wxString FileList;
-         for (size_t i = 0; i < mExported.GetCount(); i++) {
-            FileList += mExported[i];
-            FileList += '\n';
-         }
-         S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
-            wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL  );
-         S.AddTextWindow( FileList );
-         S.AddStandardButtons(eOkButton);
+      wxString FileList;
+      for (size_t i = 0; i < mExported.GetCount(); i++) {
+         FileList += mExported[i];
+         FileList += '\n';
       }
-      S.EndVerticalLay();
-      dlg.SetMinSize( wxSize(125,200) );
-      dlg.SetSize( wxSize(450,400) );
-      dlg.Center();
-      dlg.ShowModal();
+      // This results dialog is a child of this dialog.
+      ShowInfoDialog( this, 
+         _("Export Multiple"),
+         msg,
+         FileList, 
+         450,400);
    }
 
    if (ok == eProgressSuccess || ok == eProgressStopped) {
