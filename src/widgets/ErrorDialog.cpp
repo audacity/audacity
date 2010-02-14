@@ -25,6 +25,7 @@ Gives an Error message with an option for help.
 #include <wx/utils.h>
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
+#include <wx/statusbr.h>
 
 #include "LinkingHtmlWindow.h"
 #include "../Theme.h"
