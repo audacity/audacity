@@ -133,9 +133,6 @@ class AUDACITY_DLL_API WaveTrack: public Track {
                               Track *src,
                               bool preserve = true,
                               bool merge = true,
-                              TrackList* tracks = NULL,
-                              bool relativeLabels = false,
-                              bool useHandlePaste = false,
                               TimeWarper *effectWarper = NULL);
 
    virtual bool Silence(double t0, double t1);
@@ -156,15 +153,9 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    virtual bool Trim (double t0, double t1);
 
-   bool Clear(double t0, double t1, TrackList* tracks);
-   bool HandleGroupClear(double t0, double t1, bool addCutLines, bool split, TrackList* tracks = NULL);
    bool HandleClear(double t0, double t1, bool addCutLines, bool split);
 
-   bool Paste(double t0, Track *src, TrackList* tracks, bool relativeLabels = false);
-   bool HandleGroupPaste(double t0, Track *src, TrackList* tracks, bool relativeLabels);
-   bool HandlePaste(double t0, Track *src);
-
-   bool Cut(double t0, double t1, Track **dest, bool groupCut);
+   virtual bool SyncAdjust(double oldT1, double newT1);
 
    // Returns true if there are no WaveClips in that region
    bool IsEmpty(double t0, double t1);

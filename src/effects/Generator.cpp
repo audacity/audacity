@@ -26,8 +26,7 @@ bool Generator::Process()
 
    BeforeGenerate();
 
-   // Set up mOutputTracks. This effect needs Track::All because it uses ClearAndPaste
-   // that need to have label tracks.
+   // Set up mOutputTracks. This effect needs Track::All for grouping
    this->CopyInputTracks(Track::All);
 
    // Iterate over the tracks
@@ -36,15 +35,9 @@ bool Generator::Process()
    TrackListIterator iter(mOutputTracks);
    Track* t = iter.First();
 
-   // we only do a "group change" in the first selected track of the group. 
-   // ClearAndPaste has a call to Paste that does changes to the group tracks
-   bool first = true;
-
    while (t != NULL)
    {
-      if (t->GetKind() == Track::Label)
-         first = true;
-      else if (t->GetKind() == Track::Wave && t->GetSelected()) {
+      if (t->GetKind() == Track::Wave && t->GetSelected()) {
          WaveTrack* track = (WaveTrack*)t;
          
          bool editClipCanMove;
@@ -76,11 +69,7 @@ bool Generator::Process()
                tmp->Flush();
                SetTimeWarper(new StepTimeWarper(mT1, mDuration-mT1));
                bGoodResult = track->ClearAndPaste(mT0, mT1, tmp, true,
-                     false, mOutputTracks,
-                     false, !first, GetTimeWarper());
-               if (first) {
-                  first = false;
-               }
+                     false, GetTimeWarper());
                delete tmp;
             }
 
@@ -97,6 +86,9 @@ bool Generator::Process()
          }
 
          ntrack++;
+      }
+      else if (t->IsSynchroSelected()) {
+         t->SyncAdjust(mT1, mT0 + mDuration);
       }
       // Move on to the next track
       t = iter.Next();

@@ -110,36 +110,21 @@ bool EffectRepeat::TransferParameters( Shuttle & shuttle )
 
 bool EffectRepeat::Process()
 {
-   // Set up mOutputTracks. This effect needs Track::All because it uses Paste that needs to have label tracks.
+   // Set up mOutputTracks. This effect needs Track::All for grouping
    this->CopyInputTracks(Track::All);
 
    int nTrack = 0;
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
    
-   // Is linking enabled?
-   AudacityProject *p = GetActiveProject();
-   bool isSticky = ( p && p->IsSticky());
-
    TrackListIterator iter(mOutputTracks);
-
-   // we only do a "group change" in the first selected track of the group. 
-   // Paste call does changes to the group tracks
-   bool first = true;
 
    for (Track *t = iter.First(); t && bGoodResult; t = iter.Next()) {
       if (t->GetKind() == Track::Label)
       {
-         // We repeat labels if linking is enabled and a WaveTrack before this
-         // has been repeated, or if the label track is selected
-         if (t->GetSelected() || (isSticky && !first))
+         if (t->GetSelected() || t->IsSynchroSelected())
          {
             LabelTrack* track = (LabelTrack*)t;
-
-            // If this track isn't selected, ShiftLabelsOnInsert() has
-            // already been called
-            if (t->GetSelected())
-               track->ShiftLabelsOnInsert((mT1 - mT0) * repeatCount, mT1);
 
             if (!track->Repeat(mT0, mT1, repeatCount))
             {
@@ -147,7 +132,6 @@ bool EffectRepeat::Process()
                break;
             }
          }
-         first = true;
       }
       else if (t->GetKind() == Track::Wave && t->GetSelected())
       {
@@ -166,29 +150,22 @@ bool EffectRepeat::Process()
          track->Copy(mT0, mT1, &dest);
          for(int j=0; j<repeatCount; j++)
          {
-            if (first) {
-               if (!track->Paste(tc, dest, mOutputTracks) || 
-                     TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
-               {
-                  bGoodResult = false;
-                  break;
-               }
-            }
-            else {
-               if (!track->HandlePaste(tc, dest) || 
-                     TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
-               {
-                  bGoodResult = false;
-                  break;
-               }
+            if (!track->Paste(tc, dest) || 
+                  TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
+            {
+               bGoodResult = false;
+               break;
             }
             tc += tLen;
          }
-         first = false;
          if (tc > maxDestLen)
             maxDestLen = tc;
          delete dest;
          nTrack++;
+      }
+      else if (t->IsSynchroSelected())
+      {
+         t->SyncAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    }
 

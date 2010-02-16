@@ -175,8 +175,10 @@ class LabelTrack:public Track {
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
-   void ShiftLabelsOnClear(double b, double e);
-   void ChangeLabelsOnClear(double b, double e);
+   // This pastes labels without shifting existing ones
+   bool PasteOver(double t, Track *src);
+   bool SplitCut(double b, double e, Track **dest);
+   bool SplitDelete(double b, double e);
    void ShiftLabelsOnInsert(double length, double pt);
    void ChangeLabelsOnReverse(double b, double e);
    void ScaleLabels(double b, double e, double change);
@@ -221,7 +223,7 @@ class LabelTrack:public Track {
    bool mRightDragging;                /// flag to tell if it's a valid dragging
    bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
    
-   // Used only for a LabelTrack on the clipboard
+   // Set in copied label tracks
    double mClipLen;
 
    void ComputeLayout(const wxRect & r, double h, double pps);

@@ -421,13 +421,10 @@ bool EffectTruncSilence::Process()
    // Remove stale data at end of output tracks.
    if (!cancelled && (outTrackOffset < end)) {
       t = (WaveTrack *) iterOut.First();
-      if( p->IsSticky() )
-         t->Clear(outTrackOffset / rate, t1, mOutputTracks);
-      else
-         while(t) {
-            t->Clear(outTrackOffset / rate, t1, mOutputTracks);
-            t = (WaveTrack *) iterOut.Next();
-         }         
+      while(t) {
+         t->Clear(outTrackOffset / rate, t1);
+         t = (WaveTrack *) iterOut.Next();
+      }         
 
       t1 = outTrackOffset / rate;
    }

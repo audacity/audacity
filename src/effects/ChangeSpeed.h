@@ -57,13 +57,13 @@ class EffectChangeSpeed : public Effect {
    virtual bool Process();
 
  private:
-   bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end, bool first);
+   bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
    bool ProcessLabelTrack(Track *t);
 
  private:
 	// track related
    int    mCurTrackNum;
-	double m_maxNewLength;
+   double m_maxNewLength;
    double mCurT0;
    double mCurT1;
 

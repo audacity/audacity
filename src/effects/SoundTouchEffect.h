@@ -44,17 +44,16 @@ class EffectSoundTouch:public Effect {
 
  private:
    bool ProcessLabelTrack(Track *track);
-   bool ProcessOne(WaveTrack * t,
-                   sampleCount start, sampleCount end, bool first);
+   bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
    bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack, 
-                        sampleCount start, sampleCount end, bool first);
+                        sampleCount start, sampleCount end);
    bool ProcessStereoResults(const unsigned int outputCount, 
                               WaveTrack* outputLeftTrack, 
                               WaveTrack* outputRightTrack);
 
    int    mCurTrackNum;
 
-	double m_maxNewLength;
+   double m_maxNewLength;
 };
 
 #endif

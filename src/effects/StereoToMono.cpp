@@ -96,7 +96,7 @@ bool EffectStereoToMono::ProcessOne(int count)
    double minStart = wxMin(mLeftTrack->GetStartTime(), mRightTrack->GetStartTime());
    mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
    mOutTrack->Flush();
-   mLeftTrack->HandlePaste(minStart, mOutTrack);
+   mLeftTrack->Paste(minStart, mOutTrack);
    mLeftTrack->SetLinked(false);
    mRightTrack->SetLinked(false);
    mLeftTrack->SetChannel(Track::MonoChannel);

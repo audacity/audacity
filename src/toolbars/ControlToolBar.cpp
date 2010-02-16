@@ -1000,10 +1000,6 @@ void ControlToolBar::SetupCutPreviewTracks(double playStart, double cutStart,
       
       if (track1)
       {
-         // Temporarily disable sticky track handling
-         bool sticky = p->GetStickyFlag();
-         p->SetStickyFlag(false);
-
          // Duplicate and change tracks
          track1 = track1->Duplicate();
          track1->Clear(cutStart, cutEnd);
@@ -1017,9 +1013,6 @@ void ControlToolBar::SetupCutPreviewTracks(double playStart, double cutStart,
          mCutPreviewTracks->Add(track1);
          if (track2)
             mCutPreviewTracks->Add(track2);
-
-         // Reinstate sticky track handling
-         p->SetStickyFlag(sticky);
       }
    }
 }

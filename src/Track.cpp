@@ -229,6 +229,34 @@ bool Track::IsSynchroSelected()
    return false;
 }
 
+bool Track::SyncAdjust(double oldT1, double newT1)
+{
+   if (newT1 > oldT1) {
+      // Insert space within the track
+
+      if (oldT1 > GetEndTime())
+         return true;
+
+      Track *tmp;
+      bool ret;
+
+      ret = Cut(oldT1, GetEndTime(), &tmp);
+      if (!ret) return false;
+
+      ret = Paste(newT1, tmp);
+
+      delete tmp;
+      return ret;
+   }
+   else if (newT1 < oldT1) {
+      // Remove from the track
+      return Clear(newT1, oldT1);
+   }
+
+   // fall-through: no change
+   return true;
+}
+
 // TrackListIterator
 TrackListIterator::TrackListIterator(TrackList * val)
 {

@@ -36,41 +36,33 @@ bool EffectReverse::Process()
    //Track::All is needed because Reverse should move the labels too
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
    bool bGoodResult = true;
-   Track *lastGroup = NULL;   // First track of group of last acted-on WaveTrack
-   TrackGroupIterator gIt(mOutputTracks);
 
    TrackListIterator iter(mOutputTracks);
    Track *t = iter.First();
    int count = 0;
    while (t) {
-      if (t->GetKind() == Track::Wave) {
+      if (t->GetKind() == Track::Wave &&
+            (t->GetSelected() || t->IsSynchroSelected()))
+      {
          WaveTrack *track = (WaveTrack*)t;
-         
-         if (track->GetSelected()) {
-            if (mT1 > mT0) {
-               sampleCount start = track->TimeToLongSamples(mT0);
-               sampleCount end = track->TimeToLongSamples(mT1);
-               sampleCount len = (sampleCount)(end - start);
 
-               if (!ProcessOneWave(count, track, start, len))
-               {
-                  bGoodResult = false;
-                  break;
-               }
+         if (mT1 > mT0) {
+            sampleCount start = track->TimeToLongSamples(mT0);
+            sampleCount end = track->TimeToLongSamples(mT1);
+            sampleCount len = (sampleCount)(end - start);
+
+            if (!ProcessOneWave(count, track, start, len))
+            {
+               bGoodResult = false;
+               break;
             }
-            
-            // Update grouping variables
-            lastGroup = gIt.First(t);
          }
       }
-      else if (t->GetKind() == Track::Label) {
-         AudacityProject *p = GetActiveProject();
-         if ((p && p->IsSticky() && gIt.First(t) == lastGroup) ||
-             t->GetSelected())
-         {
-            LabelTrack *track = (LabelTrack*)t;
-            track->ChangeLabelsOnReverse(mT0, mT1);
-         }
+      else if (t->GetKind() == Track::Label &&
+            (t->GetSelected() || t->IsSynchroSelected()))
+      {
+         LabelTrack *track = (LabelTrack*)t;
+         track->ChangeLabelsOnReverse(mT0, mT1);
       }
       t = iter.Next();
       count++;

@@ -18,9 +18,9 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 #include <math.h>
 
-#include "SoundTouchEffect.h"
 #include "../WaveTrack.h"
 #include "../Project.h"
+#include "SoundTouchEffect.h"
 #include "TimeWarper.h"
 
 bool EffectSoundTouch::ProcessLabelTrack(Track *track)
@@ -37,37 +37,40 @@ bool EffectSoundTouch::ProcessLabelTrack(Track *track)
 bool EffectSoundTouch::Process()
 {
    // Assumes that mSoundTouch has already been initialized
-   // by the subclass for subclass-specific parameters.
+   // by the subclass for subclass-specific parameters. The
+   // time warper should also be set.
+
+   // Check if this effect will alter the selection length; if so, we need
+   // to operate on sync-selected tracks
+   bool mustSync = true;
+   if (mT1 == GetTimeWarper()->Warp(mT1)) {
+      mustSync = false;
+   }
    
    //Iterate over each track
-   //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
-   this->CopyInputTracks(Track::All); // Set up mOutputTracks.
+   //Track::All is needed for group behavior
+   this->CopyInputTracks(Track::All);
    bool bGoodResult = true;
 
    TrackListIterator iter(mOutputTracks);
-   // go to first wavetrack
    Track* t;
-   for (t = iter.First(); t->GetKind() != Track::Wave; t = iter.Next());
-   if (!t)
-      return false;
-   WaveTrack* leftTrack = (WaveTrack*)t;
    mCurTrackNum = 0;
-	m_maxNewLength = 0.0;
-	
-   // we only do a "group change" in the first selected track of the group. 
-   // ClearAndPaste has a call to Paste that does changes to the group tracks
-   bool first = true;
+   m_maxNewLength = 0.0;
 
+   t = iter.First();
    while (t != NULL) {
-      if (t->GetKind() == Track::Label) {
-         first = true;
-         if (t->GetSelected() && !ProcessLabelTrack(t))
+      if (t->GetKind() == Track::Label && 
+            (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
+      {
+         if (!ProcessLabelTrack(t))
          {
             bGoodResult = false;
             break;
          }
       }
-      else if (t->GetKind() == Track::Wave && t->GetSelected()) {
+      else if (t->GetKind() == Track::Wave &&
+            (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
+      {
          WaveTrack* leftTrack = (WaveTrack*)t;
          //Get start and end times from track
          mCurT0 = leftTrack->GetStartTime();
@@ -102,7 +105,7 @@ bool EffectSoundTouch::Process()
                mSoundTouch->setChannels(2);
 
                //ProcessStereo() (implemented below) processes a stereo track
-               if (!ProcessStereo(leftTrack, rightTrack, start, end, first))
+               if (!ProcessStereo(leftTrack, rightTrack, start, end))
                {
                   bGoodResult = false;
                   break;
@@ -117,16 +120,19 @@ bool EffectSoundTouch::Process()
                mSoundTouch->setChannels(1);
 
                //ProcessOne() (implemented below) processes a single track
-               if (!ProcessOne(leftTrack, start, end, first))
+               if (!ProcessOne(leftTrack, start, end))
                {
                   bGoodResult = false;
                   break;
                }
             }
-            first = false;
          }
          mCurTrackNum++;
       }
+      else if (mustSync && t->IsSynchroSelected()) {
+         t->SyncAdjust(mT1, GetTimeWarper()->Warp(mT1));
+      }
+
       //Iterate to the next track
       t = iter.Next();
    }
@@ -146,7 +152,7 @@ bool EffectSoundTouch::Process()
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
 bool EffectSoundTouch::ProcessOne(WaveTrack *track,
-                                  sampleCount start, sampleCount end, bool first)
+                                  sampleCount start, sampleCount end)
 {
    WaveTrack *outputTrack;
    sampleCount s;
@@ -217,7 +223,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
    
    // Take the output track and insert it in place of the original
    // sample data
-   track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, NULL, true, first, GetTimeWarper());
+   track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper());
    
    double newLength = outputTrack->GetEndTime(); 
    m_maxNewLength = wxMax(m_maxNewLength, newLength);
@@ -230,7 +236,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
 }
 
 bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack, 
-                                     sampleCount start, sampleCount end, bool first)
+                                     sampleCount start, sampleCount end)
 {
    mSoundTouch->setSampleRate((unsigned int)(leftTrack->GetRate()+0.5));
    
@@ -321,8 +327,8 @@ bool EffectSoundTouch::ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack
    
    // Take the output tracks and insert in place of the original
    // sample data.
-   leftTrack->ClearAndPaste(mCurT0, mCurT1, outputLeftTrack, true, false, NULL, true, first, GetTimeWarper());
-   rightTrack->ClearAndPaste(mCurT0, mCurT1, outputRightTrack, true, false, NULL, true, false, GetTimeWarper());
+   leftTrack->ClearAndPaste(mCurT0, mCurT1, outputLeftTrack, true, false, GetTimeWarper());
+   rightTrack->ClearAndPaste(mCurT0, mCurT1, outputRightTrack, true, false, GetTimeWarper());
 
    // Track the longest result length
    double newLength = outputLeftTrack->GetEndTime();

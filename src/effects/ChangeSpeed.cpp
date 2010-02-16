@@ -89,9 +89,9 @@ bool EffectChangeSpeed::TransferParameters( Shuttle & shuttle )
 // the region are shifted along according to how the region size changed.
 bool EffectChangeSpeed::ProcessLabelTrack(Track *t)
 {
-   SetTimeWarper(new RegionTimeWarper(mCurT0, mCurT1,
-                     new LinearTimeWarper(mCurT0, mCurT0,
-                         mCurT1, mCurT0 + (mCurT1-mCurT0)*mFactor)));
+   SetTimeWarper(new RegionTimeWarper(mT0, mT1,
+                     new LinearTimeWarper(mT0, mT0,
+                         mT1, mT0 + (mT1-mT0)*mFactor)));
    LabelTrack *lt = (LabelTrack*)t;
    if (lt == NULL) return false;
    lt->WarpLabels(*GetTimeWarper());
@@ -108,42 +108,28 @@ bool EffectChangeSpeed::Process()
    bool bGoodResult = true;
 
    TrackListIterator iter(mOutputTracks);
-   // go to first wavetrack
    Track* t;
-   for (t = iter.First(); t->GetKind() != Track::Wave; t = iter.Next());
-   if (!t)
-      return false;
-   WaveTrack* pOutWaveTrack = (WaveTrack*)t;
    mCurTrackNum = 0;
    m_maxNewLength = 0.0;
 
    mFactor = 100.0 / (100.0 + m_PercentChange);
 
-   //Get start and end times from track
-   mCurT0 = pOutWaveTrack->GetStartTime();
-   mCurT1 = pOutWaveTrack->GetEndTime();
-
-   //Set the current bounds to whichever left marker is
-   //greater and whichever right marker is less:
-   mCurT0 = wxMax(mT0, mCurT0);
-   mCurT1 = wxMin(mT1, mCurT1);
-
-   // we only do a "group change" in the first selected track of the group. 
-   // ClearAndPaste has a call to Paste that does changes to the group tracks
-   bool first = true;
-
+   t = iter.First();
    while (t != NULL)
    {
       if (t->GetKind() == Track::Label) {
-         first = true;
-         if (t->GetSelected() && !ProcessLabelTrack(t))
+         if (t->GetSelected() || t->IsSynchroSelected())
          {
-            bGoodResult = false;
-            break;
+            if (!ProcessLabelTrack(t)) {
+               bGoodResult = false;
+               break;
+            }
          }
       }
-      else if (t->GetKind() == Track::Wave && t->GetSelected()) {
-         pOutWaveTrack = (WaveTrack*)t;
+      else if (t->GetKind() == Track::Wave &&
+            (t->GetSelected() || t->IsSynchroSelected()))
+      {
+         WaveTrack *pOutWaveTrack = (WaveTrack*)t;
          //Get start and end times from track
          mCurT0 = pOutWaveTrack->GetStartTime();
          mCurT1 = pOutWaveTrack->GetEndTime();
@@ -160,14 +146,17 @@ bool EffectChangeSpeed::Process()
             sampleCount end = pOutWaveTrack->TimeToLongSamples(mCurT1);
 
             //ProcessOne() (implemented below) processes a single track
-            if (!ProcessOne(pOutWaveTrack, start, end, first))
+            if (!ProcessOne(pOutWaveTrack, start, end))
             {
                bGoodResult = false;
                break;
             }
-            first = false;
          }
          mCurTrackNum++;
+      }
+      else if (t->IsSynchroSelected() && !t->GetSelected())
+      {
+         t->SyncAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
 
       //Iterate to the next track
@@ -185,7 +174,7 @@ bool EffectChangeSpeed::Process()
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
 bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
-                           sampleCount start, sampleCount end, bool first)
+                           sampleCount start, sampleCount end)
 {
    if (track == NULL)
       return false;
@@ -268,8 +257,10 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // sample data
    double newLength = outputTrack->GetEndTime(); 
    if (bLoopSuccess) {
-      SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength ));
-      track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, mOutputTracks, true, first, GetTimeWarper());
+      SetTimeWarper(new LinearTimeWarper(
+                       mCurT0, mCurT0, mCurT1, mCurT0 + newLength ));
+      track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false,
+                           GetTimeWarper());
    }
 
    if (newLength > m_maxNewLength) 

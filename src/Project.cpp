@@ -3671,18 +3671,20 @@ void AudacityProject::ClearClipboard()
 
 void AudacityProject::Clear()
 {
-   TrackAndGroupIterator iter(mTracks);
+   TrackListIterator iter(mTracks);
 
    Track *n = iter.First();
 
    while (n) {
-      if (n->GetSelected()) {
-         n->Clear(mViewInfo.sel0, mViewInfo.sel1);
-         // Wave and Label tracks have group behaviour
-         if (IsSticky() && (n->GetKind() == Track::Wave || n->GetKind() == Track::Label)) n = iter.NextGroup();
-         else n = iter.Next();
+      if (n->GetSelected() || n->IsSynchroSelected()) {
+         // AWD: Preserve traditional label track behavior: only shift time in
+         // linked mode
+         if (n->GetKind() == Track::Label && IsSticky())
+            ((LabelTrack *)n)->SplitDelete(mViewInfo.sel0, mViewInfo.sel1);
+         else
+            n->Clear(mViewInfo.sel0, mViewInfo.sel1);
       }
-      else n = iter.Next();
+      n = iter.Next();
    }
 
    double seconds = mViewInfo.sel1 - mViewInfo.sel0;
@@ -3981,10 +3983,11 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels
 //If No tracks selected, function is applied on all tracks
-//If the function deletes audio, groupIteration should probably be set to true,
-// so it won't delete too many times.
+//If the function replaces the selection with audio of a different length
+// syncTracks should be set true to perform the same action on sync-selected
+// tracks.
 void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
-                                   bool groupIteration )
+                                   bool syncTracks )
 { 
    Regions regions;
    
@@ -3992,7 +3995,7 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
    if( regions.GetCount() == 0 )
       return;
 
-   TrackAndGroupIterator iter( mTracks );
+   TrackListIterator iter( mTracks );
    Track *n;
    bool allTracks = true;
 
@@ -4011,23 +4014,14 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
    n = iter.First();
    while (n)
    {
-      if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ) )
+      if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ||
+                                    (syncTracks && n->IsSynchroSelected()) ) )
       {
          WaveTrack *wt = ( WaveTrack* )n;
          for( int i = ( int )regions.GetCount() - 1; i >= 0; i-- )
             ( wt->*action )( regions.Item( i )->start, regions.Item( i )->end );
-
-         // Tracks operated on may need group iteration
-         if (IsSticky() && groupIteration)
-            n = iter.NextGroup();
-         else
-            n = iter.Next();
       }
-      else
-      {
-         // Tracks not operated on need normal iteration
-         n = iter.Next();
-      }
+      n = iter.Next();
    }
 
    //delete label regions
@@ -4440,7 +4434,7 @@ bool AudacityProject::GetSnapTo()
 bool AudacityProject::IsSticky()
 {
 #ifdef EXPERIMENTAL_LINKING
-   return (GetStickyFlag() && (mLastFlags & LabelTracksExistFlag));
+   return GetStickyFlag();
 #else
    return false;
 #endif

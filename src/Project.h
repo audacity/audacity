@@ -280,7 +280,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void Rewind(bool shift);
    void SkipEnd(bool shift);
    void SetStop(bool bStopped);
-   void EditByLabel( WaveTrack::EditFunction action, bool groupIteration ); 
+   void EditByLabel( WaveTrack::EditFunction action, bool syncTracks ); 
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
    bool IsSticky();
    bool GetStickyFlag() { return mStickyFlag; };

@@ -508,6 +508,8 @@ bool EffectNyquist::Process()
    mDebugOutput = "";
 
    // Keep track of whether the current track is first selected in its group
+   // (we have no idea what the length of the returned audio will be, so we have
+   // to handle group behavior the "old" way).
    mFirstInGroup = true;
    Track *gtLast = NULL;
 
@@ -775,9 +777,19 @@ bool EffectNyquist::ProcessOne()
          out = mOutputTrack[0];
       }
 
-      // If this track is not first in its group we set useHandlePaste
-      mCurTrack[i]->ClearAndPaste(mT0, mT1, out, false, false,
-                                  NULL, false, !mFirstInGroup);
+      mCurTrack[i]->ClearAndPaste(mT0, mT1, out, false, false);
+      // If we were first in the group adjust non-selected group tracks
+      if (mFirstInGroup) {
+         TrackGroupIterator git(mOutputTracks);
+         Track *t;
+         for (t = git.First(mCurTrack[i]); t; t = git.Next())
+         {
+            if (!t->GetSelected() && t->IsSynchroSelected()) {
+               t->SyncAdjust(mT1, mT0 + out->GetEndTime());
+            }
+         }
+      }
+
       // Only the first channel can be first in its group
       mFirstInGroup = false;
    }

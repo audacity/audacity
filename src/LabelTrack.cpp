@@ -90,6 +90,7 @@ LabelTrack::LabelTrack(DirManager * projDirManager):
    mSelIndex(-1),
    mMouseOverLabelLeft(-1),
    mMouseOverLabelRight(-1),
+   mClipLen(0.0),
    mIsAdjustingLabel(false)
 {
    SetDefaultName(_("Label Track"));
@@ -114,6 +115,7 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    mSelIndex(-1),
    mMouseOverLabelLeft(-1),
    mMouseOverLabelRight(-1),
+   mClipLen(0.0),
    mIsAdjustingLabel(false)
 {
    int len = orig.mLabels.Count();
@@ -149,7 +151,7 @@ void LabelTrack::SetOffset(double dOffset)
    }
 }
 
-void LabelTrack::ShiftLabelsOnClear(double b, double e)
+bool LabelTrack::Clear(double b, double e)
 {
    for (size_t i=0;i<mLabels.GetCount();i++){
       if (mLabels[i]->t >= e){//label is after deletion region
@@ -169,10 +171,12 @@ void LabelTrack::ShiftLabelsOnClear(double b, double e)
          //nothing
       }
    }
+
+   return true;
 }
 
 //used when we want to use clear only on the labels
-void LabelTrack::ChangeLabelsOnClear(double b, double e)
+bool LabelTrack::SplitDelete(double b, double e)
 {
    for (size_t i=0;i<mLabels.GetCount();i++) {
       if (mLabels[i]->t >= b && mLabels[i]->t1 <= e){//deletion region encloses label
@@ -186,6 +190,8 @@ void LabelTrack::ChangeLabelsOnClear(double b, double e)
          mLabels[i]->t1 = b;
       }
    }
+
+   return true;
 }
 void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
 {
@@ -2135,7 +2141,17 @@ bool LabelTrack::Save(wxTextFile * out, bool overwrite)
 }
 #endif
 
-bool LabelTrack::Cut(double t0, double t1, Track ** dest)
+bool LabelTrack::Cut(double t0, double t1, Track **dest)
+{
+   if (!SplitCut(t0, t1, dest))
+      return false;
+   if (!Clear(t0, t1))
+      return false;
+
+   return true;
+}
+
+bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
 {
    *dest = new LabelTrack(GetDirManager());
    int len = mLabels.Count();
@@ -2182,7 +2198,7 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest)
 }
 
 
-bool LabelTrack::Paste(double t, Track * src)
+bool LabelTrack::PasteOver(double t, Track * src)
 {
    if (src->GetKind() != Track::Label)
       return false;
@@ -2206,17 +2222,29 @@ bool LabelTrack::Paste(double t, Track * src)
    return true;
 }
 
+bool LabelTrack::Paste(double t, Track *src)
+{
+   if (src->GetKind() != Track::Label)
+      return false;
+
+   LabelTrack *lt = (LabelTrack *)src;
+
+   double shiftAmt = lt->mClipLen > 0.0 ? lt->mClipLen : lt->GetEndTime();
+
+   ShiftLabelsOnInsert(shiftAmt, t);
+   return PasteOver(t, src);
+}
+
 // This repeats the labels in a time interval a specified number of times.
-// Like Paste(), it does not shift existing labels over
-//  - It assumes that you've already called ShiftLabelsOnInsert(), because
-//  sometimes with linking enabled that's hard to avoid.
-//  - It assumes that you inserted the necessary extra time at t1, not t0.
 bool LabelTrack::Repeat(double t0, double t1, int n)
 {
    // Sanity-check the arguments
    if (n < 0 || t1 < t0) return false;
 
    double tLen = t1 - t0;
+
+   // Insert space for the repetitions
+   ShiftLabelsOnInsert(tLen * n, t1);
 
    for (unsigned int i = 0; i < mLabels.GetCount(); i++)
    {
@@ -2250,30 +2278,6 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
       
       // Other cases have already been handled by ShiftLabelsOnInsert()
    }
-
-   return true;
-}
-
-bool LabelTrack::Clear(double t0, double t1)
-{
-   AudacityProject *p = GetActiveProject();   
-   if (p && p->IsSticky()){
-      TrackGroupIterator grpIter(p->GetTracks());
-      Track *t = grpIter.First(this);
-      // If this track is part of a group, find a Wave track in the group and do
-      // the clear from there to ensure proper group behavior
-      while (t) {
-         if (t->GetKind() == Track::Wave) {
-            return t->Clear(t0, t1);
-         }
-         t = grpIter.Next();
-      }
-
-      // Fallback: shift labels in this track
-      ShiftLabelsOnClear(t0, t1);
-   }
-   else
-      ChangeLabelsOnClear(t0, t1);
 
    return true;
 }

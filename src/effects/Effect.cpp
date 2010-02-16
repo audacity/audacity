@@ -247,31 +247,12 @@ void Effect::CopyInputTracks(int trackType)
    TrackListOfKindIterator aIt(trackType, mTracks);
    t2bHash added;
 
-   //for each track that is selected
    for (Track *aTrack = aIt.First(); aTrack; aTrack = aIt.Next()) {
-      if (!aTrack->GetSelected()) {
-         continue;
-      }
 
-      TrackGroupIterator gIt(mTracks);
-      Track *gTrack = gIt.First(aTrack);
-
-      //if the track is part of a group
-      if (trackType == Track::All && gTrack != NULL) {
-         //go to the project tracks and add all the tracks in the same group
-         for( ; gTrack; gTrack = gIt.Next() ) {
-            // only add if the track was not added before
-            if (added.find(gTrack) == added.end()) {
-               added[gTrack]=true;
-               Track *o = gTrack->Duplicate();
-               mOutputTracks->Add(o);
-               mIMap.Add(gTrack);
-               mOMap.Add(o);
-            }
-         }
-      }
-      //otherwise just add the track
-      else {
+      // Include selected tracks, plus sync-selected tracks for Track::All)
+      if (aTrack->GetSelected() ||
+            (trackType == Track::All && aTrack->IsSynchroSelected()))
+      {
          Track *o = aTrack->Duplicate();
          mOutputTracks->Add(o);
          mIMap.Add(aTrack);

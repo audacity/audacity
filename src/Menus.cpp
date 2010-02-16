@@ -2992,7 +2992,7 @@ void AudacityProject::OnRedo()
 
 void AudacityProject::OnCut()
 {
-   TrackAndGroupIterator iter(mTracks);
+   TrackListIterator iter(mTracks);
    Track *n = iter.First();
    Track *dest;
 
@@ -3042,7 +3042,8 @@ void AudacityProject::OnCut()
 
    n = iter.First();
    while (n) {
-      if (n->GetSelected()) {
+      // We clear from selected and synchro-selected tracks
+      if (n->GetSelected() || n->IsSynchroSelected()) {
          switch (n->GetKind())
          {
 #if defined(USE_MIDI)
@@ -3064,12 +3065,7 @@ void AudacityProject::OnCut()
             break;
          }
       }
-      // Selected wave and label tracks may need group iteration
-      if (IsSticky() && n->GetSelected() &&
-            (n->GetKind() == Track::Wave || n->GetKind() == Track::Label))
-         n = iter.NextGroup();
-      else
-         n = iter.Next();
+      n = iter.Next();
    }
 
    msClipLen = (mViewInfo.sel1 - mViewInfo.sel0);
@@ -3299,10 +3295,6 @@ void AudacityProject::OnPaste()
    bool trackTypeMismatch = false;
    bool advanceClipboard = true;
 
-   // Keeps track of whether n would be the first WaveTrack in its group to
-   // receive data from the paste.
-   bool firstInGroup = true;
-
    while (n && c) {
       if (n->GetSelected()) {
          advanceClipboard = true;
@@ -3329,8 +3321,6 @@ void AudacityProject::OnPaste()
             c = tmpC;
             while (n && (c->GetKind() != n->GetKind()) )
             {
-               if (n && n->GetKind() == Track::Label)
-                  firstInGroup = true;
                n = iter.Next();
             }
             if (!n) c = NULL;               
@@ -3368,25 +3358,19 @@ void AudacityProject::OnPaste()
          {
             // If not the first in group we set useHandlePaste to true
             pastedSomething = ((WaveTrack*)n)->ClearAndPaste(t0, t1,
-                  (WaveTrack*)c, true, true, NULL, false, !firstInGroup);
-            firstInGroup = firstInGroup && !pastedSomething;
+                  (WaveTrack*)c, true, true);
          }
          else if (c->GetKind() == Track::Label &&
                   n && n->GetKind() == Track::Label)
          {
-            // AWD: LabelTrack::Paste() doesn't shift future labels (and
-            // WaveTrack::HandleGroupPaste() doesn't adjust selected group
-            // tracks, so some other track's paste hasn't done it either).  To
-            // be (sort of) consistent with Clear behavior, we'll only shift
-            // them if linking is on and we have already pasted into a wave
-            // track in this group.
-            if (IsSticky() && !firstInGroup)
-            {
-               ((LabelTrack *)n)->ShiftLabelsOnClear(t0, t1);
-               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
-            }
+            ((LabelTrack *)n)->Clear(t0, t1);
 
-            pastedSomething = n->Paste(t0, c);
+            // To be (sort of) consistent with Clear behavior, we'll only shift
+            // them if linking is on
+            if (IsSticky())
+               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
+
+            pastedSomething = ((LabelTrack *)n)->PasteOver(t0, c);
          }
          else
          {
@@ -3405,17 +3389,7 @@ void AudacityProject::OnPaste()
                   ((WaveTrack *) n)->Clear(t0, t1);
                }
 
-               // firstInGroup should always be false here, unless pasting to
-               // the first channel failed
-               if (firstInGroup)
-               {
-                  pastedSomething = ((WaveTrack *)n)->Paste(t0, c);
-                  firstInGroup = !pastedSomething;
-               }
-               else
-               {
-                  pastedSomething = ((WaveTrack *)n)->HandlePaste(t0, c);
-               }
+               pastedSomething = ((WaveTrack *)n)->Paste(t0, c);
             }
             else {
                n->Clear(t0, t1);
@@ -3430,10 +3404,12 @@ void AudacityProject::OnPaste()
             prev = c;
             c = clipIter.Next();
          }
+      } // if (n->GetSelected())
+      else if (n->IsSynchroSelected())
+      {
+         n->SyncAdjust(t1, t0 + msClipLen);
       }
 
-      if (n && n->GetKind() == Track::Label)
-         firstInGroup = true;
       n = iter.Next();
    }
    
@@ -3450,8 +3426,7 @@ void AudacityProject::OnPaste()
          if (n->GetSelected() && n->GetKind()==Track::Wave){
             if (c && c->GetKind() == Track::Wave){
                pastedSomething = ((WaveTrack *)n)->ClearAndPaste(t0, t1,
-                     (WaveTrack *)c, true, true, NULL, false, !firstInGroup);
-               firstInGroup = firstInGroup && !pastedSomething;
+                     (WaveTrack *)c, true, true);
             }else{
                WaveTrack *tmp;
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
@@ -3459,24 +3434,24 @@ void AudacityProject::OnPaste()
                tmp->Flush();
 
                pastedSomething = ((WaveTrack *)n)->ClearAndPaste(t0, t1,
-                     tmp, true, true, NULL, false, !firstInGroup);
-               firstInGroup = firstInGroup && !pastedSomething;
+                     tmp, true, true);
 
                delete tmp;
             }
          }
-         else if (n->GetSelected() && n->GetKind() == Track::Label)
+         else if (n->GetKind() == Track::Label && n->GetSelected())
          {
-            // Make room in label tracks as necessary
-            if (IsSticky() && !firstInGroup)
-            {
-               ((LabelTrack *)n)->ShiftLabelsOnClear(t0, t1);
+            ((LabelTrack *)n)->Clear(t0, t1);
+
+            // As above, only shift labels if linking is on
+            if (IsSticky())
                ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
-            }
+         }
+         else if (n->IsSynchroSelected())
+         {
+            n->SyncAdjust(t1, t0 + msClipLen);
          }
 
-         if (n && n->GetKind() == Track::Label)
-            firstInGroup = true;
          n = iter.Next();
       }
    }

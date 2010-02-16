@@ -162,6 +162,10 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual bool Clear(double t0, double t1) {return false;}
    virtual bool Paste(double t, Track * src) {return false;}
 
+   // This can be used to adjust a synchro-selected track when the selection
+   // is replaced by one of a different length.
+   virtual bool SyncAdjust(double oldT1, double newT1);
+
    virtual bool Silence(double t0, double t1) {return false;}
    virtual bool InsertSilence(double t, double len) {return false;}
 
