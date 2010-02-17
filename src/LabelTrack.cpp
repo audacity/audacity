@@ -733,8 +733,17 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    wxRect selr = r;
    selr.x += before.width;
    selr.width = int ((dsel1 - dsel0) * pps);
-   dc.SetBrush(AColor::labelSelectedBrush);
-   dc.SetPen(AColor::labelSelectedPen);
+   
+   // If selection is synchro use synchro colors
+   if (IsSynchroSelected() && !GetSelected()) {
+      dc.SetBrush(AColor::labelSyncSelBrush);
+      dc.SetPen(AColor::labelSyncSelPen);
+   }
+   else {
+      dc.SetBrush(AColor::labelSelectedBrush);
+      dc.SetPen(AColor::labelSelectedPen);
+   }
+
    dc.DrawRectangle(selr);
 
    // If selection is synchro, draw in linked graphics

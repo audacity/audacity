@@ -7243,7 +7243,7 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
    // fill in label
    wxRect fill = r;
    fill.width = labelw-4;
-   AColor::MediumTrackInfo(dc, bSelected || bSyncSel);
+   AColor::MediumTrackInfo(dc, bSelected, bSyncSel);
    dc->DrawRectangle(fill); 
 
    // Draw in linked tiles for synchro selection
@@ -7330,7 +7330,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    // characters if they are repeatedly drawn.  This
    // happens when holding down mouse button and moving
    // in and out of the title bar.  So clear it first.
-   AColor::MediumTrackInfo(dc, t->GetSelected() || t->IsSynchroSelected());
+   AColor::MediumTrackInfo(dc, t->GetSelected(), t->IsSynchroSelected());
    dc->DrawRectangle(bev);
    dc->DrawText(titleStr, r.x + 19, r.y + 2);
 
@@ -7366,7 +7366,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    if (bev.y + bev.height >= r.y + r.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
       
-   AColor::MediumTrackInfo( dc, t->GetSelected() || t->IsSynchroSelected());
+   AColor::MediumTrackInfo( dc, t->GetSelected(), t->IsSynchroSelected());
    if( solo )
    {
       if( t->GetSolo() )
@@ -7410,7 +7410,7 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down, bo
    GetMinimizeRect(r, bev, minimized);
     
    // Clear background to get rid of previous arrow
-   AColor::MediumTrackInfo(dc, t->GetSelected() || t->IsSynchroSelected());
+   AColor::MediumTrackInfo(dc, t->GetSelected(), t->IsSynchroSelected());
    dc->DrawRectangle(bev);
     
 #ifdef EXPERIMENTAL_THEMING

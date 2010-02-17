@@ -1881,7 +1881,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 void AdornedRulerPanel::DoDrawBorder(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
-   AColor::MediumTrackInfo( dc, false );
+   AColor::MediumTrackInfo( dc, false, false );
    dc->DrawRectangle( mInner );
 
    wxRect r = mOuter;

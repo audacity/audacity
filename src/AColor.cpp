@@ -29,10 +29,10 @@ It is also a place to document colour usage policy in Audacity
 
 bool AColor::inited = false;
 wxBrush AColor::lightBrush[2];
-wxBrush AColor::mediumBrush[2];
+wxBrush AColor::mediumBrush[3];
 wxBrush AColor::darkBrush[2];
 wxPen AColor::lightPen[2];
-wxPen AColor::mediumPen[2];
+wxPen AColor::mediumPen[3];
 wxPen AColor::darkPen[2];
 
 wxPen AColor::cursorPen;
@@ -54,8 +54,10 @@ wxBrush AColor::labelTextNormalBrush;
 wxBrush AColor::labelTextEditBrush;
 wxBrush AColor::labelUnselectedBrush;
 wxBrush AColor::labelSelectedBrush;
+wxBrush AColor::labelSyncSelBrush;
 wxPen AColor::labelUnselectedPen;
 wxPen AColor::labelSelectedPen;
+wxPen AColor::labelSyncSelPen;
 wxPen AColor::labelSurroundPen;
 wxPen AColor::trackFocusPens[3];
 wxPen AColor::snapGuidePen;
@@ -252,11 +254,11 @@ void AColor::Light(wxDC * dc, bool selected)
    dc->SetPen(lightPen[index]);
 }
 
-void AColor::Medium(wxDC * dc, bool selected)
+// index: 0 for unselected, 1 for selected, 2 for sync-selected
+void AColor::Medium(wxDC * dc, int index)
 {
    if (!inited)
       Init();
-   int index = (int) selected;
    dc->SetBrush(mediumBrush[index]);
    dc->SetPen(mediumPen[index]);
 }
@@ -270,12 +272,13 @@ void AColor::Medium(wxDC * dc, bool selected)
 #endif
 #endif
 
-void AColor::MediumTrackInfo(wxDC * dc, bool selected)
+void AColor::MediumTrackInfo(wxDC * dc, bool selected, bool syncSel)
 {
 #ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrTrackInfoSelected : clrTrackInfo);
+   UseThemeColour( dc, selected ? clrTrackInfo :
+                                  syncSel ? clrTrackInfoSyncSel : clrTrackInfo);
 #else
-   Medium( dc, selected );
+   Medium( dc, selected ? 1 : syncSel ? 2 : 0 );
 #endif
 }
 
@@ -397,8 +400,10 @@ void AColor::Init()
    theTheme.SetBrushColour( labelTextEditBrush,   clrLabelTextEditBrush );
    theTheme.SetBrushColour( labelUnselectedBrush, clrLabelUnselectedBrush );
    theTheme.SetBrushColour( labelSelectedBrush,   clrLabelSelectedBrush );
+   theTheme.SetBrushColour( labelSyncSelBrush,    clrSyncSel );
    theTheme.SetPenColour( labelUnselectedPen,   clrLabelUnselectedPen );
    theTheme.SetPenColour( labelSelectedPen,     clrLabelSelectedPen );
+   theTheme.SetPenColour( labelSyncSelPen,      clrSyncSel );
    theTheme.SetPenColour( labelSurroundPen,     clrLabelSurroundPen );
 
    // These colors were modified to avoid using reserved colors red and green
@@ -447,6 +452,10 @@ void AColor::Init()
    mediumPen[1].SetColour(200, 200, 214);
    darkPen[1].SetColour(0, 0, 0);
 
+   // sync-selected (only need medium so far)
+   mediumBrush[2].SetColour(215, 215, 220);
+   mediumPen[2].SetColour(215, 215, 220);
+
 #else
 
 #if defined(__WXMAC__)          // && defined(TARGET_CARBON)
@@ -467,6 +476,10 @@ void AColor::Init()
    mediumPen[1].SetColour(180, 180, 192);
    darkPen[1].SetColour(148, 148, 170);
 
+   // sync-selected (only need medium so far)
+   mediumBrush[2].SetColour(195, 195, 200);
+   mediumPen[2].SetColour(195, 195, 200);
+
 #else
 
    // unselected
@@ -484,6 +497,10 @@ void AColor::Init()
    lightPen[1].SetColour(204, 204, 255);
    mediumPen[1].SetColour(180, 180, 192);
    darkPen[1].SetColour(0, 0, 0);
+
+   // sync-selected (only need medium so far)
+   mediumBrush[2].SetColour(195, 195, 200);
+   mediumPen[2].SetColour(195, 195, 200);
 
 #endif
 

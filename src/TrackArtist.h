@@ -190,6 +190,7 @@ class AUDACITY_DLL_API TrackArtist {
    wxBrush blankBrush;
    wxBrush unselectedBrush;
    wxBrush selectedBrush;
+   wxBrush syncSelBrush;
    wxBrush sampleBrush;
    wxBrush selsampleBrush;
    wxBrush dragsampleBrush;// for samples which are draggable.
@@ -197,6 +198,7 @@ class AUDACITY_DLL_API TrackArtist {
    wxPen blankPen;
    wxPen unselectedPen;
    wxPen selectedPen;
+   wxPen syncSelPen;
    wxPen samplePen;
    wxPen rmsPen;
    wxPen muteRmsPen;

@@ -681,7 +681,7 @@ void LWSlider::Draw()
    if (mEnabled)
       AColor::Dark(dc, false);
    else
-      AColor::Medium(dc, false);
+      AColor::Medium(dc, 0);
 
    if (mOrientation == wxHORIZONTAL)
       AColor::Line(*dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
@@ -804,7 +804,7 @@ void LWSlider::Draw()
             if (mEnabled)
                AColor::Dark(dc, false);
             else
-               AColor::Medium(dc, false);
+               AColor::Medium(dc, 0);
 
             if (mOrientation == wxHORIZONTAL)
                AColor::Line(*dc, mLeftX+p+1, mCenterY-tickLength+1, mLeftX+p+1, mCenterY-1); // ticks above
