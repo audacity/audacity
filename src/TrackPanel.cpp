@@ -1789,19 +1789,13 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    bool startNewSelection = true;
    mMouseCapture=IsSelecting;
 
-   // Need a comment explaining why we need a new SnapManager
-   // with each mouse-down.
+   // We create a new snap manager in case any snap-points have changed
    if (mSnapManager)
       delete mSnapManager;
-   mSnapManager = NULL;
 
-   // If we're not snapping, we don't need a snap manager.
-   if( GetActiveProject()->GetSnapTo() )
-   {
-      mSnapManager = new SnapManager(mTracks, NULL,
-                                     mViewInfo->zoom,
-                                     4); // pixel tolerance
-   }
+   mSnapManager = new SnapManager(mTracks, NULL,
+                                  mViewInfo->zoom,
+                                  4); // pixel tolerance
 
    mSnapLeft = -1;
    mSnapRight = -1;
