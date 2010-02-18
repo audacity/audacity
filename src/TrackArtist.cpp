@@ -2642,23 +2642,40 @@ void TrackArtist::SetSpectrumLogMaxFreq(int freq)
    mLogMaxFreq = freq;
 }
 
+// Draws the link bitmap, tiled; always draws stationary relative to the DC
 void TrackArtist::DrawLinkTiles(wxDC *dc, wxRect r)
 {
    wxBitmap sync(theTheme.Image(bmpLinkSelect));
-   
-   // Draw in full-width copies
-   int x;
-   for (x = 0; x + sync.GetWidth() < r.width; x += sync.GetWidth()) {
-      for (int y = 0; y < r.height; y += sync.GetHeight()) {
-         dc->DrawBitmap(sync, r.x + x, r.y + y, true);
+
+   int xOffset = r.x % sync.GetWidth();
+   int width;
+   for (int x = 0; x < r.width; x += width) {
+      width = sync.GetWidth() - xOffset;
+      if (x + width > r.width)
+         width = r.width - x;
+
+      int yOffset = r.y % sync.GetHeight();
+      int height;
+      for (int y = 0; y < r.height; y += height) {
+         height = sync.GetHeight() - yOffset;
+         if (y + height > r.height)
+            height = r.height - y;
+
+         // Do we need to get a sub-bitmap?
+         if (width != sync.GetWidth() || height != sync.GetHeight()) {
+            wxBitmap subSync = sync.GetSubBitmap(wxRect(
+                     xOffset, yOffset, width, height));
+            dc->DrawBitmap(subSync, r.x + x, r.y + y, true);
+         }
+         else {
+            dc->DrawBitmap(sync, r.x + x, r.y + y, true);
+         }
+
+         // Only offset first row
+         yOffset = 0;
       }
-   }
-   // Draw in partial column at end of selection
-   if (r.width - x > 0) {
-      sync = sync.GetSubBitmap(wxRect(0, 0, r.width - x, sync.GetHeight()));
-      for (int y = 0; y < r.height; y += sync.GetHeight()) {
-         dc->DrawBitmap(sync, r.x + x, r.y + y, true);
-      }
+      // Only offset first column
+      xOffset = 0;
    }
 }
 
