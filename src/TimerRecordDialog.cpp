@@ -32,6 +32,7 @@
 #include "TimerRecordDialog.h"
 #include "Project.h"
 #include "Internat.h"
+#include "Prefs.h"
 
 #define MAX_PROG 1000
 #define TIMER_ID 7000
@@ -69,8 +70,10 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
 : wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition, 
            wxDefaultSize, wxCAPTION)
 {
-   m_DateTime_Start = wxDateTime::UNow(); 
-   m_TimeSpan_Duration = wxTimeSpan::Minutes(60); // default 1 hour duration
+   m_DateTime_Start = wxDateTime::UNow();
+   long seconds; // default duration is 1 hour = 3600 seconds
+   gPrefs->Read(wxT("/TimerRecord/LastDuration"), &seconds, 3600);
+   m_TimeSpan_Duration = wxTimeSpan::Seconds(seconds); 
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
 
    m_pDatePickerCtrl_Start = NULL;
@@ -209,6 +212,9 @@ void TimerRecordDialog::OnOK(wxCommandEvent& event)
 
    m_timer.Stop(); // Don't need to keep updating m_DateTime_Start to prevent backdating.
    this->EndModal(wxID_OK);
+   wxLongLong duration = m_TimeSpan_Duration.GetSeconds();
+   // this will assert if the duration won't fit in a long
+   gPrefs->Write(wxT("/TimerRecord/LastDuration"), duration.ToLong());
 }
 
 ///Runs the wait for start dialog.  Returns false if the user clicks stop while we are recording
