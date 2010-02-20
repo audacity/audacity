@@ -529,6 +529,7 @@ int ExportPCM::Export(AudacityProject *project,
                        formatStr.c_str()));
 
    while(updateResult == eProgressSuccess) {
+      sampleCount samplesWritten;
       sampleCount numSamples = mixer->Process(maxBlockLen);
 
       if (numSamples == 0)
@@ -538,10 +539,20 @@ int ExportPCM::Export(AudacityProject *project,
 
       ODManager::LockLibSndFileMutex();
       if (format == int16Sample)
-         sf_writef_short(sf, (short *)mixed, numSamples);
+         samplesWritten = sf_writef_short(sf, (short *)mixed, numSamples);
       else
-         sf_writef_float(sf, (float *)mixed, numSamples);
+         samplesWritten = sf_writef_float(sf, (float *)mixed, numSamples);
       ODManager::UnlockLibSndFileMutex();
+
+      if (samplesWritten != numSamples) {
+        char buffer2[1000];
+        sf_error_str(sf, buffer2, 1000);
+        wxMessageBox(wxString::Format(
+           _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
+           formatStr.c_str(),
+           wxString::FromAscii(buffer2).c_str()));
+        break;
+      }
 
       updateResult = progress->Update(mixer->MixGetCurrentTime()-t0, t1-t0);
    }
