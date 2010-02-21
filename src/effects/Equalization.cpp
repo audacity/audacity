@@ -988,9 +988,7 @@ BEGIN_EVENT_TABLE(EqualizationDialog,wxDialog)
    EVT_BUTTON( ID_SAVEAS, EqualizationDialog::OnSaveAs )
    EVT_BUTTON( ID_DELETE, EqualizationDialog::OnDelete )
    EVT_BUTTON( ID_CLEAR, EqualizationDialog::OnClear )
-#ifdef EXPERIMENTAL_EQ_INVERT
    EVT_BUTTON( ID_INVERT, EqualizationDialog::OnInvert )
-#endif
 
    EVT_BUTTON( ID_EFFECT_PREVIEW, EqualizationDialog::OnPreview )
    EVT_BUTTON( wxID_OK, EqualizationDialog::OnOk )
@@ -1399,12 +1397,10 @@ void EqualizationDialog::MakeEqualizationDialog()
    mDelete = new wxButton( this, ID_DELETE, _("Delete") );
    szrC->Add( mDelete, 0, wxALIGN_CENTRE|wxLEFT, 4 );
 
-   btn = new wxButton( this, ID_CLEAR, _("Flat"));
+   btn = new wxButton( this, ID_CLEAR, _("Flatten"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
-#ifdef EXPERIMENTAL_EQ_INVERT
    btn = new wxButton( this, ID_INVERT, _("Invert"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
-#endif
    mGridOnOff = new wxCheckBox(this, GridOnOffID, _("Grids"),
                             wxDefaultPosition, wxDefaultSize,
                             wxALIGN_RIGHT);
@@ -2833,7 +2829,6 @@ void EqualizationDialog::OnClear(wxCommandEvent &event)
    EnvelopeUpdated();
 }
 
-#ifdef EXPERIMENTAL_EQ_INVERT
 void EqualizationDialog::OnInvert(wxCommandEvent &event) // Inverts any curve
 {
    if(!drawMode)   // Graphic (Slider) mode. Invert the sliders.
@@ -2907,7 +2902,6 @@ void EqualizationDialog::OnInvert(wxCommandEvent &event) // Inverts any curve
    mPanel->Refresh(false);
    EnvelopeUpdated();
 }
-#endif
 
 void EqualizationDialog::OnErase(wxEraseEvent &event)
 {

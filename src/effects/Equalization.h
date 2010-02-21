@@ -282,9 +282,7 @@ private:
       ID_SAVEAS,
       ID_DELETE,
       ID_CLEAR,
-#ifdef EXPERIMENTAL_EQ_INVERT
       ID_INVERT,
-#endif
       drawRadioID,
       sliderRadioID,
       ID_INTERP,
@@ -314,9 +312,7 @@ private:
    void OnSaveAs( wxCommandEvent &event );
    void OnDelete( wxCommandEvent &event );
    void OnClear( wxCommandEvent &event );
-#ifdef EXPERIMENTAL_EQ_INVERT
    void OnInvert( wxCommandEvent &event );
-#endif
    void OnPreview(wxCommandEvent &event);
    void OnOk( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
