@@ -180,6 +180,12 @@ const float EffectEqualization::curvey[][nCurvePoints] =
       3.8,     2.6,   1.8,   1.2,   0.8,   0.3,   0.0,  -2.6,  -4.7,  -6.6,
       -8.2,   -9.6, -10.8, -11.9, -12.9, -13.7, -17.2, -17.7
    },
+   {    
+   // Inverse RIAA
+      -18.6,  -18.5, -16.9, -15.9, -15.3, -13.1, -11.6, -8.2,  -6.7,  -5.5,
+      -3.8,   -2.6,  -1.8,   -1.2, -0.8,  -0.3,    0.0,  2.6,   4.7,   6.6,
+       8.2,    9.6,  10.8,   11.9, 12.9,  13.7,   17.2, 17.7
+   },
    {
    // Col 78
       16.0,   16.0,  16.0,  14.0,  12.5,  10.0,   8.5,   5.0,   4.0,   3.0,
@@ -297,6 +303,7 @@ const wxChar * EffectEqualization::curveNames[] =
     wxT("Decca FFRR Micro"),
     wxT("Decca FFRR 78"),
     wxT("RIAA"),
+    wxT("Inverse RIAA"),
     wxT("Columbia 78"),
     wxT("Decca FFRR LP"),
     wxT("EMI 78"),
