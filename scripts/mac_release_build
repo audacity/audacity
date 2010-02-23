@@ -82,6 +82,9 @@ rm TMP.dmg
 # Move DMG to parent
 mv *.dmg ..
 
+# Remove help contents
+rm -rf "$DMG/help/"*
+
 # Create the zip version
 zip -r9 "../$DMG.zip" "$DMG"
 
