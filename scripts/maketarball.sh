@@ -78,8 +78,8 @@ function cleanfulltree {
 	fi
 	printf "Done\n"
 
-	printf "removing CVS directories... ";
-	find . -depth -name 'CVS' -execdir rm -rf '{}' ';'
+	printf "removing SVN directories... ";
+	find . -depth -name '.svn' -execdir rm -rf '{}' ';'
 	# -depth is needed to avoid find trying to examine directories it has just
 	# deleted.
 	# The sort of quotes used is critical!
@@ -88,7 +88,7 @@ function cleanfulltree {
 
 	printf "removing vim / emacs temp files... ";
 	myfindrm $1 "*~"
-	printf "\nremoving CVS conflict files... ";
+	printf "\nremoving SVN conflict files... ";
 	myfindrm $1 ".#*"
 	printf "Done\n"
 
@@ -120,14 +120,14 @@ function cleanfulltree {
 	myrmrvf $1 dox 
 	printf "Done\n"
 
-	printf "removing unused libraries from CVS tree ..."
+	printf "removing unused libraries from SVN tree ..."
 	myrmrvf $1 lib-src/iAVC lib-src/id3lib ;
 	myrmrvf $1 lib-src/portaudio lib-src/portburn lib-src/rtaudio; 
 	myrmrvf $1 lib-src/wave++;
 	printf "Done\n"
 }
 
-# remove all the things we have in CVS for convenience rather than being
+# remove all the things we have in SVN for convenience rather than being
 # necessary
 function slimtree {
 	printf "removing todo lists ... ";
