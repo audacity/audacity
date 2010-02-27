@@ -2008,8 +2008,6 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
       b = new wxButton( parent, wxID_OK );
       b->SetDefault();
       bs->AddButton( b );
-      // Needs to be default and focus for ENTER to work.
-      b->SetFocus();
    }
 
    if( buttons & eCancelButton )
@@ -2022,8 +2020,6 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
       b = new wxButton( parent, wxID_YES );
       b->SetDefault();
       bs->AddButton( b );
-      // Needs to be default and focus for ENTER to work.
-      b->SetFocus();
    }
 
    if( buttons & eNoButton )
