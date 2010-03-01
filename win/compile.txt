@@ -201,7 +201,7 @@ configuration, but requires that extra libraries be downloaded
 separately to use it. 
 
 * To allow export of MP3 files, download LAME:
-  http://audacity.sourceforge.net/help/faq?s=install&i=lame-mp3    
+  http://manual.audacityteam.org/index.php?title=FAQ:Installation_and_Plug-Ins#lame
 
 * To allow import and export of a much wider range of audio formats
   (including WMA, M4A and AC3), and to import audio from video files,
@@ -221,6 +221,7 @@ The installation will automatically define the DXSDK_DIR
 environment variable and its presense will cause DirectSound
 support to be automatically included when Audacity is built.
 
+Audacity releases from 1.3.7 onwards include DirectSound support. 
 
 TO ADD SUPPORT FOR ASIO:
 Because ASIO is a PROPRIETARY, closed standard, 
