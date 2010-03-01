@@ -2468,6 +2468,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\plug-ins\SoundFinder.ny"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\plug-ins\tremolo.ny"
 				>
 			</File>
