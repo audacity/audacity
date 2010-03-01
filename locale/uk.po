@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: uk\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-01-27 15:29+0000\n"
-"PO-Revision-Date: 2010-02-04 11:17-0000\n"
+"PO-Revision-Date: 2010-03-01 20:53-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -27,8 +27,8 @@ msgid "OK... Audacious!"
 msgstr "Гаразд... Круто!"
 
 #: AboutDialog.cpp:192
-msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Windows 98/ME, use version 1.2.6 or 1.3.7 Beta; for Mac OS 9, version 1.0.0."
-msgstr "Audacity — вільна програма, написана групою <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. За надання проекту майданчика для розвитку ми маємо бути вдячні <a href=\"http://sourceforge.net\">SourceForge.net</a> та <a href=\"http://code.google.com\">Google Code</a>. Audacity доступна на платформах Windows 98 та новіше, Mac OS X, Linux, та інших Unix-системах. У Windows 98/ME ви можете скористатися версією 1.2.6 або 1.3.7 бета; у Mac OS 9 — версією 1.0.0."
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
+msgstr "Audacity — вільна програма, створена командою добровольців, <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. Ми вдячні <a href=\"http://sourceforge.net\">SourceForge.net</a> та <a href=\"http://code.google.com\">Google Code</a> за надання майданчика для нашого проекту. Audacity можна користуватися у Windows 98 та пізніших версіях, Mac OS X, Linux та інших подібних до Unix системах. Якщо ви працюєте у Mac OS 9, скористайтеся версією 1.0.0."
 
 #: AboutDialog.cpp:196
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
@@ -3064,6 +3064,10 @@ msgstr "Вилучити доріжку"
 msgid "Removed audio track(s)"
 msgstr "Доріжку(и) вилучено"
 
+#: Menus.cpp:5401
+msgid "Audio Device Info"
+msgstr "Інформація про аудіо пристрої"
+
 #: Menus.cpp:5540
 #: Menus.cpp:5596
 #: export/ExportFFmpeg.cpp:800
@@ -3447,6 +3451,10 @@ msgstr ""
 "Більшість інших програм не здатні відкривати файли проектів Audacity.\n"
 "Якщо ви бажаєте зберегти результат роботи у файл, який підтримується іншими\n"
 "програмами, скористайтеся пунктом меню «Експорт»."
+
+#: Project.cpp:3398
+msgid "Save Compressed Project As..."
+msgstr "Зберегти стиснений проект як..."
 
 #: Project.cpp:3397
 msgid ""
@@ -5546,9 +5554,9 @@ msgstr "Обрати криву:"
 msgid "Save As..."
 msgstr "Зберегти як..."
 
-#: effects/Equalization.cpp:1402
-msgid "Flat"
-msgstr "Все до нуля"
+#: effects/Equalization.cpp:1407
+msgid "Flatten"
+msgstr "Вирівняти"
 
 #: effects/Equalization.cpp:1405
 #: effects/Invert.h:27
@@ -6882,6 +6890,66 @@ msgstr "Будь ласка, вкажіть кодек, перш ніж збер
 msgid "Preset '%s' does not exist."
 msgstr "Шаблона «%s» не існує."
 
+#: export/ExportFFmpegDialogs.h:378
+msgid "LC"
+msgstr "LC"
+
+#: export/ExportFFmpegDialogs.h:378
+msgid "Main"
+msgstr "Основний"
+
+#: export/ExportFFmpegDialogs.h:378
+msgid "LTP"
+msgstr "LTP"
+
+#: export/ExportFFmpegDialogs.h:56
+msgid "M4A (AAC) Files (FFmpeg)"
+msgstr "Файли M4A (AAC) (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:57
+msgid "AC3 Files (FFmpeg)"
+msgstr "Файли AC3 (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:58
+msgid "AMR (narrow band) Files (FFmpeg)"
+msgstr "Файли AMR (вузькосмугові) (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:60
+msgid "AMR (wide band) Files (FFmpeg)"
+msgstr "Файли AMR (широкосмугові) (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:62
+msgid "WMA (version 2) Files (FFmpeg)"
+msgstr "Файли WMA (версії 2) (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:63
+msgid "Custom FFmpeg Export"
+msgstr "Нетиповий експорт до FFmpeg"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "2-level"
+msgstr "2-рівневий"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "4-level"
+msgstr "4-рівневий"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "8-level"
+msgstr "8-рівневий"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Estimate"
+msgstr "Оцінити"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Full search"
+msgstr "Повний пошук"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Log search"
+msgstr "Пошук за журналом"
+
 #: export/ExportFFmpegDialogs.cpp:797
 msgid "Specify Other Options"
 msgstr "Вказати інші параметри"
@@ -6918,9 +6986,9 @@ msgstr "Формат:"
 msgid "Codec:"
 msgstr "Кодек:"
 
-#: export/ExportFFmpegDialogs.cpp:907
-msgid "Not all formats and codecs are compatible. Nor are all option combinations, (such as bitrates and samplerates), compatible with all codecs."
-msgstr "Не всі формати і кодеки є сумісними. Певні комбінації параметрів (зокрема бітової частоти і частоти вибірки) також несумісні з деякими кодеками."
+#: export/ExportFFmpegDialogs.cpp:1409
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr "Не всі формати і кодеки є сумісними. Певні комбінації параметрів також несумісні з деякими кодеками."
 
 #: export/ExportFFmpegDialogs.cpp:913
 msgid "Show All Formats"
@@ -7251,66 +7319,6 @@ msgstr "Не вдалося визначити формат"
 #: export/ExportFFmpegDialogs.cpp:1428
 msgid "Failed to find the codec"
 msgstr "Не вдалося знайти кодек"
-
-#: export/ExportFFmpegDialogs.h:56
-msgid "M4A (AAC) Files (FFmpeg)"
-msgstr "Файли M4A (AAC) (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:57
-msgid "AC3 Files (FFmpeg)"
-msgstr "Файли AC3 (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:58
-msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "Файли AMR (вузькосмугові) (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:60
-msgid "AMR (wide band) Files (FFmpeg)"
-msgstr "Файли AMR (широкосмугові) (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:62
-msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "Файли WMA (версії 2) (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:63
-msgid "Custom FFmpeg Export"
-msgstr "Нетиповий експорт до FFmpeg"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "LC"
-msgstr "LC"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "LTP"
-msgstr "LTP"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "Main"
-msgstr "Основний"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "2-level"
-msgstr "2-рівневий"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "4-level"
-msgstr "4-рівневий"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "8-level"
-msgstr "8-рівневий"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Estimate"
-msgstr "Оцінити"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Full search"
-msgstr "Повний пошук"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Log search"
-msgstr "Пошук за журналом"
 
 #: export/ExportFLAC.cpp:67
 msgid "Specify FLAC Options"
@@ -7690,10 +7698,13 @@ msgstr "Назви файлів:"
 msgid "Using Label/Track Name"
 msgstr "Використовується позначка/назва доріжки"
 
-#: export/ExportMultiple.cpp:320
-#: export/ExportMultiple.cpp:322
-msgid "Numbering consecutively"
-msgstr "Послідовна нумерація"
+#: export/ExportMultiple.cpp:315
+msgid "Numbering before Label/Track Name"
+msgstr "Нумерація перед міткою/назвою доріжки"
+
+#: export/ExportMultiple.cpp:318
+msgid "Numbering after Label/Track Name"
+msgstr "Нумерація після мітки/назви доріжки"
 
 #: export/ExportMultiple.cpp:328
 msgid "File name prefix:"
@@ -7751,6 +7762,11 @@ msgstr ""
 "«%s» не існує.\n"
 "\n"
 "Створити?"
+
+#: export/ExportMultiple.cpp:641
+#: export/ExportMultiple.cpp:776
+msgid "untitled"
+msgstr "без назви"
 
 #: export/ExportMultiple.cpp:689
 #: export/ExportMultiple.cpp:826
@@ -7836,6 +7852,15 @@ msgstr "Експортування вибраного аудіо як %s"
 #, c-format
 msgid "Exporting the entire project as %s"
 msgstr "Експортування всього проекту як %s"
+
+#: export/ExportPCM.cpp:551
+#, c-format
+msgid ""
+"Error while writing %s file (disk full?).\n"
+"Libsndfile says \"%s\""
+msgstr ""
+"Помилка під час спроби запису файла %s (недостатньо місця?).\n"
+"Повідомлення libsndfile: «%s»"
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: export/ExportPCM.cpp:564
