@@ -150,6 +150,7 @@ void MixerToolBar::Populate()
 
    // Show or hide the input slider based on whether it works
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   SetToolTips();
 
    UpdateControls();
 
@@ -227,6 +228,7 @@ void MixerToolBar::UpdatePrefs()
    
    // Show or hide the input slider based on whether it works
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   SetToolTips();
 
    // Layout the toolbar
    Layout();
@@ -377,6 +379,27 @@ void MixerToolBar::AdjustInputGain(int adj)
    wxCommandEvent e;
    SetMixer(e);
    UpdateControls();
+}
+
+void MixerToolBar::SetToolTips()
+{
+#if wxUSE_TOOLTIPS
+   if (mInputSlider->IsEnabled()) {
+      mInputSlider->SetToolTip(_("Input Level Slider"));
+   }
+   else {
+      mInputSlider->SetToolTip(
+            _("Cannot control input level; use system mixer."));
+   }
+
+   if (mOutputSlider->IsEnabled()) {
+      mOutputSlider->SetToolTip(_("Output Level Slider"));
+   }
+   else {
+      mOutputSlider->SetToolTip(
+            _("Cannot control output level; use system mixer."));
+   }
+#endif
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a

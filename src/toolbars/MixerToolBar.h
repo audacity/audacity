@@ -54,6 +54,7 @@ class MixerToolBar:public ToolBar {
  private:
 
    void InitializeMixerToolBar();
+   void SetToolTips();
 
    wxBitmap *mPlayBitmap;
    wxBitmap *mRecordBitmap;

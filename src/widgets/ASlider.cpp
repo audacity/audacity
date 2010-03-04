@@ -678,10 +678,7 @@ void LWSlider::Draw()
    dc->Clear();
 
    // Draw the line along which the thumb moves.
-   if (mEnabled)
-      AColor::Dark(dc, false);
-   else
-      AColor::Medium(dc, 0);
+   AColor::Dark(dc, false);
 
    if (mOrientation == wxHORIZONTAL)
       AColor::Line(*dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
@@ -699,8 +696,10 @@ void LWSlider::Draw()
       wxFont labelFont(sliderFontSize-3, wxSWISS, wxNORMAL, wxNORMAL);
       dc->SetFont(labelFont);
 
+      // Colors
 #ifdef EXPERIMENTAL_THEMING
       dc->SetTextForeground( theTheme.Colour( clrTrackPanelText ));
+
       // TransparentColour should be same as clrTrackInfo.
       dc->SetTextBackground( theTheme.Colour( clrTrackInfo ) );
       dc->SetBackground( theTheme.Colour( clrTrackInfo ) );
@@ -710,7 +709,11 @@ void LWSlider::Draw()
       // background.
       dc->SetBackgroundMode( wxSOLID );
 #else
-      dc->SetTextForeground( wxColour( 0,0,0) );
+      if (mEnabled)
+         dc->SetTextForeground( wxColour( 0,0,0) );
+      else
+         dc->SetTextForeground( wxColour(128, 128, 128));
+
       dc->SetTextBackground( wxColour( 255,255,255));
 #endif
 
@@ -726,7 +729,10 @@ void LWSlider::Draw()
       wxPen pen( theTheme.Colour( clrTrackPanelText ));
       dc->SetPen( pen );
 #else
-      dc->SetPen(*wxBLACK_PEN);
+      if (mEnabled)
+         dc->SetPen(*wxBLACK_PEN);
+      else
+         dc->SetPen(wxColour(128, 128, 128));
 #endif
       if (mOrientation == wxHORIZONTAL)
       {
@@ -801,10 +807,7 @@ void LWSlider::Draw()
             else
                AColor::Line(*dc, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
 
-            if (mEnabled)
-               AColor::Dark(dc, false);
-            else
-               AColor::Medium(dc, 0);
+            AColor::Dark(dc, false);
 
             if (mOrientation == wxHORIZONTAL)
                AColor::Line(*dc, mLeftX+p+1, mCenterY-tickLength+1, mLeftX+p+1, mCenterY-1); // ticks above
