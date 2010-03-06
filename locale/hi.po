@@ -4,8 +4,7 @@
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: Audacity 2.0.0\n"
+msgstr "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-02-05 22:21+0000\n"
 "PO-Revision-Date: 2010-02-08 14:26-0000\n"
@@ -26,8 +25,8 @@ msgid "OK... Audacious!"
 msgstr "अच्छा... ऑडेसिटी!"
 
 #: AboutDialog.cpp:192
-msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Windows 98/ME, use version 1.2.6 or 1.3.7 Beta; for Mac OS 9, version 1.0.0."
-msgstr "विश्व के स्वयंसेवी प्रोग्रामरों द्वारा रचित ऑडेसिटी, एक अमुल्य प्रोग्राम है <a href=\"http://audacity.sourceforge.net/community/developers\"></a>. इस परियोजना को वेब पर उपलब्ध कराने के लिए हम <a href=\"http://sourceforge.net\">SourceForge.net</a> और <a href=\"http://code.google.com\">Google Code</a> के आभारी हैं. ऑडेसिटी Windows 98 तथा परवर्ती, Mac OS X, लिनक्स और दूसरे यूनिक्स-समान ऑपरेटिंग सिस्टम्स के लिए भी उपलब्ध है. Windows 98/ME के लिए, संस्करण 1.2.6 या 1.3.7 बीटा; Mac OS 9 के लिए, संस्करण 1.0.0 का प्रयोग करें."
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
+msgstr ""
 
 #: AboutDialog.cpp:196
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
@@ -239,12 +238,10 @@ msgstr "परियोजना खोलने में त्रुटि"
 
 #: AudacityApp.cpp:772
 #, c-format
-msgid ""
-"%s could not be found.\n"
+msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr ""
-"%s विद्यमान नहीं है.\n"
+msgstr "%s विद्यमान नहीं है.\n"
 "\n"
 "इसे हाल की फ़ाइलों की सूची से हटा दिया गया है."
 
@@ -296,11 +293,9 @@ msgid "Unknown command line option: %s\n"
 msgstr "अंजान आदेश-पंक्ति विकल्प: %s\n"
 
 #: AudacityApp.cpp:1415
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Audacity को अस्थायी फ़ाइलों को  संचित करने के लिए जगह नहीं मिली. \n"
+msgstr "Audacity को अस्थायी फ़ाइलों को  संचित करने के लिए जगह नहीं मिली. \n"
 " कृपया वरीयताएँ संवादपत्र में एक उचित निर्देशिका दर्ज करें."
 
 #: AudacityApp.cpp:1421
@@ -308,20 +303,16 @@ msgid "Audacity is now going to exit. Please launch Audacity again to use the ne
 msgstr "Audacity अभी बंद हो रहा है. कृपया  नए अस्थायी निर्देशिका का उपयोग करने के लिए Audacity फिर से शुरु करें."
 
 #: AudacityApp.cpp:1453
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"Audacity की दो प्रतियां एक साथ चलने से डाटा की गलती या सिस्टम क्षतिग्रस्त हो सकता है.\n"
+msgstr "Audacity की दो प्रतियां एक साथ चलने से डाटा की गलती या सिस्टम क्षतिग्रस्त हो सकता है.\n"
 "\n"
 
 #: AudacityApp.cpp:1460
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Audacity अस्थायी फाइल निर्देशिका में ताला बंद नहीं कर पा रहा था. \n"
+msgstr "Audacity अस्थायी फाइल निर्देशिका में ताला बंद नहीं कर पा रहा था. \n"
 " हो सकता है यह निर्देशिका (फ़ोल्डर) Audacity की एक और प्रति द्वारा उपयोग में हो \n"
 
 #: AudacityApp.cpp:1462
@@ -337,11 +328,9 @@ msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "इस प्रणाली को पता चला है कि Audacity की एक और प्रति चल रही है.\n"
 
 #: AudacityApp.cpp:1504
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"एक साथ कई परियोजनाओं को खोलने के लिए. \n"
+msgstr "एक साथ कई परियोजनाओं को खोलने के लिए. \n"
 "वर्तमान Audacity में नई या खोलें आदेश का प्रयोग करें \n"
 
 #: AudacityApp.cpp:1505
@@ -383,13 +372,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "इसके अलावा, एक ऑडियो फ़ाइल या Audacity परियोजना का नाम खोलने के लिए निर्दिष्ट करें."
 
 #: AudacityApp.cpp:1848
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"Audacity परियोजना (. AUP) फाइल अभी \n"
+msgstr "Audacity परियोजना (. AUP) फाइल अभी \n"
 " Audacity के साथ नहीं जुड़ा हैं. \n"
 " \n"
 "उन्हें Audacity  के साथ जोड़ें ताकि वे दोहरे क्लिक पर खुले ?"
@@ -403,11 +390,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "कोई भी ध्वनि-यंत्र (ऑडियो डिवाइस) नहीं मिला. \n"
 
 #: AudioIO.cpp:312
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"आप ऑडियो रिकार्ड या प्ले नहीं कर सकते.\n"
+msgstr "आप ऑडियो रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
 #: AudioIO.cpp:315
@@ -424,11 +409,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "MIDI i/o परत की शुरुआत में एक त्रुटि हुई. \n"
 
 #: AudioIO.cpp:332
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"आप midi रिकार्ड या प्ले नहीं कर सकते.\n"
+msgstr "आप midi रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
 #: AudioIO.cpp:338
@@ -436,12 +419,10 @@ msgid "Error Initializing Midi"
 msgstr "Midi शुरू करने में त्रुटि"
 
 #: AudioIO.cpp:1376
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"विलंबता सुधार सेटिंग के कारण दर्ज ऑडियो शून्य से पहले छिपा हुआ है. \n"
+msgstr "विलंबता सुधार सेटिंग के कारण दर्ज ऑडियो शून्य से पहले छिपा हुआ है. \n"
 " Audacity शून्य से शुरू करने के लिए इसे वापस लाया है. \n"
 " आप इसे बाद में समय Shift उपकरण (<---> या  F5) का उपयोग   करके ट्रैक को सही जगह  पर खींच कर वापस ला सकते हैं."
 
@@ -485,11 +466,9 @@ msgid "Automatic Crash Recovery"
 msgstr "दुर्घटना से स्वचालित बचाव"
 
 #: AutoRecovery.cpp:73
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"पिछली बार Audacity की कुछ परियोजनाएं सही रूप में संचित नहीं हुईं \n"
+msgstr "पिछली बार Audacity की कुछ परियोजनाएं सही रूप में संचित नहीं हुईं \n"
 "लेकिन इन्हें फ़िर से स्वत: ठीक किया जा सकता है । :"
 
 #: AutoRecovery.cpp:75
@@ -517,11 +496,9 @@ msgid "Recover Projects"
 msgstr "परियोजनाएं ठीक करें"
 
 #: AutoRecovery.cpp:127
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"क्या आप कोई परियोजना बचाना नहीं चाहते?\n"
+msgstr "क्या आप कोई परियोजना बचाना नहीं चाहते?\n"
 "इन्हें बाद में नहीं बचाया जा सकता."
 
 #: AutoRecovery.cpp:128
@@ -600,11 +577,9 @@ msgstr "आदेश %s अभी तक कार्यान्वित न�
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:121
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"%s प्रभाव के मापदंडों को %s में लागू नहीं\n"
+msgstr "%s प्रभाव के मापदंडों को %s में लागू नहीं\n"
 " किया जा सका"
 
 #: BatchCommands.cpp:557
@@ -614,12 +589,10 @@ msgstr "आपके बैच आदेश %s  को समझा नहीं
 
 #: BatchCommands.cpp:676
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"लागू करें %s , इन परिमाणों के साथ\n"
+msgstr "लागू करें %s , इन परिमाणों के साथ\n"
 "\n"
 "%s"
 
@@ -809,11 +782,9 @@ msgid "Copying audio data into project..."
 msgstr "ध्वनी डाटा को परियोजना में नकल कर रहे हैं..."
 
 #: Dependencies.cpp:226
-msgid ""
-"Copying the following files into your project will remove this dependency.\n"
+msgid "Copying the following files into your project will remove this dependency.\n"
 "This needs more disk space, but is safer."
-msgstr ""
-"निम्नलिखित फ़ाइलों की प्रति आपकी परियोजना में रखने से यह निर्भरता दूर हो जाएगी.\n"
+msgstr "निम्नलिखित फ़ाइलों की प्रति आपकी परियोजना में रखने से यह निर्भरता दूर हो जाएगी.\n"
 "इसमें डिस्क पर ज्यादा स्थान चाहिए, लेकिन ये अधिक सुरक्षित है."
 
 #: Dependencies.cpp:274
@@ -879,11 +850,9 @@ msgid "Dependency check"
 msgstr "निर्भरता निरीक्षण"
 
 #: DirManager.cpp:143
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"यहाँ डिस्क पर बहुत कम स्थान खाली है.\n"
+msgstr "यहाँ डिस्क पर बहुत कम स्थान खाली है.\n"
 "कृपया अपनी वरीयताओं में अन्य अस्थायी निर्देशिका का चयन करें."
 
 #: DirManager.cpp:228
@@ -906,11 +875,9 @@ msgstr "कैष निर्देशिका की सफ़ाई कर�
 
 #: DirManager.cpp:510
 #, c-format
-msgid ""
-"Audacity found an orphaned blockfile %s! \n"
+msgid "Audacity found an orphaned blockfile %s! \n"
 "Please consider saving and reloading the project to perform a complete project check.\n"
-msgstr ""
-"ऑडेसिटी ने एक अनाथ ब्लाक फ़ाइल %s! \n"
+msgstr "ऑडेसिटी ने एक अनाथ ब्लाक फ़ाइल %s! \n"
 " पाया है. पूरी परियोजना की जांच करने के लिए परियोजना सहेज कर पुन: लोड करना बेहतर होगा.\n"
 
 #. i18n-hint: This is the pattern for filenames that are created
@@ -971,21 +938,17 @@ msgid "Missing data file: (%s.au)"
 msgstr "लापता डेटा फ़ाइल: (%s.au)"
 
 #: DirManager.cpp:1402
-msgid ""
-"Project check found inconsistencies inspecting the loaded project data;\n"
+msgid "Project check found inconsistencies inspecting the loaded project data;\n"
 "click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
-msgstr ""
-"परियोजना जांच ने डेटा में विसंगतियाँ पाई हैं ;\n"
+msgstr "परियोजना जांच ने डेटा में विसंगतियाँ पाई हैं ;\n"
 " त्रुटियों की एक पूरी सूची के लिए क्लिक करें 'विवरण', या अधिक विकल्पों के लिए 'ठीक है' को."
 
 #: DirManager.cpp:1414
 #, c-format
-msgid ""
-"Project check found %d orphaned blockfile[s]. These files are\n"
+msgid "Project check found %d orphaned blockfile[s]. These files are\n"
 "unused and probably left over from a crash or some other bug.\n"
 "They should be deleted to avoid disk contention."
-msgstr ""
-"परियोजना जांच में अनाथ ब्लाक फ़ाइलें %d मिली हैं. ये अप्रयुक्त फ़ाइलें हैं जो\n"
+msgstr "परियोजना जांच में अनाथ ब्लाक फ़ाइलें %d मिली हैं. ये अप्रयुक्त फ़ाइलें हैं जो\n"
 "शायद एक दुर्घटना में या कुछ अन्य त्रुटि के कारण छूट गई हैं. इनको नष्ट कर देना\n"
 "उचित है, जिससे डिस्क बेतरतीब न हो."
 
@@ -1014,15 +977,13 @@ msgstr "चेतावनी"
 
 #: DirManager.cpp:1449
 #, c-format
-msgid ""
-"Project check detected %d input file[s] being used in place\n"
+msgid "Project check detected %d input file[s] being used in place\n"
 "('alias files') are now missing.  There is no way for Audacity\n"
 "to recover these files automatically; you may choose to\n"
 "permanently fill in silence for the missing files, temporarily\n"
 "fill in silence for this session only, or close the project now\n"
 "and try to restore the missing files by hand."
-msgstr ""
-"परियोजना जांच में प्रयुक्त %d इनपुट फाइलें (उपनाम फाइलें) अब\n"
+msgstr "परियोजना जांच में प्रयुक्त %d इनपुट फाइलें (उपनाम फाइलें) अब\n"
 "लापता हैं. ऑडेसिटी इन्हें स्वयं बरामद नहीं कर सकता. इन लापता फाइलों\n"
 "की जगह आप स्थायी तौर पर चुप्पी रख सकते हैं, या अस्थायी तौर अभी\n"
 "चुप्पी रख सकते हैं, या परियोजना बंद कर लापता फाइलों को पुनर्जीवित\n"
@@ -1045,12 +1006,10 @@ msgstr "परियोजना तुरंत बंद करें बि�
 
 #: DirManager.cpp:1495
 #, c-format
-msgid ""
-"Project check detected %d missing summary file[s] (.auf).\n"
+msgid "Project check detected %d missing summary file[s] (.auf).\n"
 "Audacity can fully regenerate these summary files from the\n"
 "original audio data in the project."
-msgstr ""
-"परियोजना की जांच में %d लापता सारांश फाइलें (.auf) मिली हैं.\n"
+msgstr "परियोजना की जांच में %d लापता सारांश फाइलें (.auf) मिली हैं.\n"
 "ऑडेसिटी इन सारांश फ़ाइलों को पूरी तरह परियोजना के आरंभिक\n"
 "ऑडियो डाटा से पुनर्जीवित कर सकता है."
 
@@ -1064,16 +1023,14 @@ msgstr "प्रदर्शन के लिए लापता डेटा �
 
 #: DirManager.cpp:1537
 #, c-format
-msgid ""
-"Project check detected %d missing audio data blockfile[s] (.au), \n"
+msgid "Project check detected %d missing audio data blockfile[s] (.au), \n"
 "probably due to a bug, system crash or accidental deletion.\n"
 "There is no way for Audacity to recover this lost data\n"
 "automatically; you may choose to permanently fill in silence\n"
 "for the missing data, temporarily fill in silence for this\n"
 "session only, or close the project now and try to restore the\n"
 "missing data by hand."
-msgstr ""
-"परियोजना की जांच में %d लापता ऑडियो ब्लाक फाइलें (.au) मिली हैं,\n"
+msgstr "परियोजना की जांच में %d लापता ऑडियो ब्लाक फाइलें (.au) मिली हैं,\n"
 "जो शायद एक त्रुटि, सिस्टम दुर्घटना या अंजाने में मिट जाने से हुई है.\n"
 "ऑडेसिटी के पास इस खोए डेटा को पाने का कोई कारगर तरीका नहीं है\n"
 "आप लापता डेटा के स्थान पर स्थायी रूप से मौन भर सकते हैं या \n"
@@ -1113,13 +1070,11 @@ msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg समर्थन यहाँ समायोजित नहीं"
 
 #: FFmpeg.cpp:103
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                       \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                       \n"
 "but this time Audacity failed to load it at startup.                       \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpeg वरीयताएँ में विन्यस्त किया गया था और पहले सफलतापूर्वक  चला था,        \n"
+msgstr "FFmpeg वरीयताएँ में विन्यस्त किया गया था और पहले सफलतापूर्वक  चला था,        \n"
 "किंतु इस बार ऑडेसिटी इसे आरंभ करने में विफल रहा.         \n"
 "\n"
 "आप चाहें तो वरीयता > पुस्तकालय में फिर से जाकर विन्यास करें."
@@ -1186,14 +1141,12 @@ msgid "FFmpeg not found"
 msgstr "FFmpeg नहीं मिला"
 
 #: FFmpeg.h:120
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"ऑडेसिटी ने FFmpeg के द्वारा ऑडियो फ़ाइल आयात करने की\n"
+msgstr "ऑडेसिटी ने FFmpeg के द्वारा ऑडियो फ़ाइल आयात करने की\n"
 "कोशिश की, लेकिन उसे जरूरी लाइब्रेरी नहीं मिली.\n"
 "\n"
 "FFmpeg आयात के उपयोग के लिए चुनें, वरीयताएँ > लाइब्रेरी\n"
@@ -1404,12 +1357,10 @@ msgid "GStreamer %s: %s"
 msgstr "GStreamer %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"GStreamer वरीयताओं में विन्यस्त किया गया था और पहले सफलतापूर्वक चला था,\n"
+msgstr "GStreamer वरीयताओं में विन्यस्त किया गया था और पहले सफलतापूर्वक चला था,\n"
 "           लेकिन इस बार ऑडेस्टी इसे आरंभ करने में विफल रहा.\n"
 "           आप वरीयताएँ > पुस्तकालय पर जाकर फिर विन्यास कर सकते हैं."
 
@@ -1610,13 +1561,11 @@ msgid "New..."
 msgstr "नई..."
 
 #: LabelDialog.cpp:354
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"आपने लेबल का नाम खाली छोड़ दिया है. दुबारा लेबल\n"
+msgstr "आपने लेबल का नाम खाली छोड़ दिया है. दुबारा लेबल\n"
 "ट्रैक्स दिखाते समय इन्हें छोड़ दिया जाएगा.\n"
 "\n"
 "क्या आप वापस जाकर नाम देना चाहेंगे?"
@@ -1688,11 +1637,9 @@ msgstr "आपकी चुनी गई भाषा, %s (%s), इस कंप
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"परियोजना 1.0 की एक फाइल नए स्वरूप में परिवर्तित की गई.\n"
+msgstr "परियोजना 1.0 की एक फाइल नए स्वरूप में परिवर्तित की गई.\n"
 "पुरानी फाइल '%s' के रूप में सहेजी गई"
 
 #: Legacy.cpp:373
@@ -2678,11 +2625,9 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI फ़ाईल (*.mid)|*.mid|Allegro फ़ाईल (*.gro)|*.gro"
 
 #: Menus.cpp:2880
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr ""
-"आपने एक अनजाने फ़ाइल एक्सटेंशन के साथ फ़ाइल नाम चुना है.\n"
+msgstr "आपने एक अनजाने फ़ाइल एक्सटेंशन के साथ फ़ाइल नाम चुना है.\n"
 "क्या आप जारी रखना चाहते हैं?"
 
 #: Menus.cpp:2881
@@ -3078,6 +3023,10 @@ msgstr "ट्रैक मिटाएं"
 msgid "Removed audio track(s)"
 msgstr "ऑडियो ट्रैक (ट्रैक्स)को हटाया"
 
+#: Menus.cpp:5401
+msgid "Audio Device Info"
+msgstr ""
+
 #: Menus.cpp:5540
 #: Menus.cpp:5596
 #: export/ExportFFmpeg.cpp:800
@@ -3211,15 +3160,13 @@ msgid "Save changes before closing?"
 msgstr "बंद करने से पहले परिवर्तन संचित करूँ?"
 
 #: Project.cpp:1865
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "सहेजने पर परियोजना में कोई ट्रैक नहीं होगा.\n"
 "\n"
 "कोई पहले से खुला ट्रैक सहेजने के लिए:\n"
@@ -3246,16 +3193,14 @@ msgstr "ऑडेसिटी परियोजनाएं"
 #: Project.cpp:2226
 #: Project.cpp:2727
 #, c-format
-msgid ""
-"This file was saved by Audacity %s, a much\n"
+msgid "This file was saved by Audacity %s, a much\n"
 "older version.  The format has changed.\n"
 "\n"
 "Audacity could corrupt the file in opening\n"
 "it, so you must back it up first.\n"
 "\n"
 "Open this file now?"
-msgstr ""
-"यह फाइल बहुत पुराने ऑडेसिटी %s, संस्करण के रूप में\n"
+msgstr "यह फाइल बहुत पुराने ऑडेसिटी %s, संस्करण के रूप में\n"
 "संचित था. अब इसका स्वरूप बदल गया है.\n"
 "\n"
 "ऑडेसिटी इसे खोलने पर भ्रष्ट कर सकता है, इसलिए पहले\n"
@@ -3273,13 +3218,11 @@ msgid "Opening old project file"
 msgstr "पूर्व परियोजना फ़ाईल खोल रहे हैं"
 
 #: Project.cpp:2257
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"आप को एक स्वत: निर्मित बैकअप फ़ाइल को खोलने की कोशिश कर रहे हैं.\n"
+msgstr "आप को एक स्वत: निर्मित बैकअप फ़ाइल को खोलने की कोशिश कर रहे हैं.\n"
 "इसका दुष्परिणाम गंभीर डेटा हानि हो सकता है.\n"
 "\n"
 "कृपया इसके बदले वास्तविक ऑडेसिटी परियोजना फ़ाइल खोलें."
@@ -3296,11 +3239,9 @@ msgstr "फ़ाइल खोलने में त्रुटि"
 
 #: Project.cpp:2286
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"फ़ाइल अमान्य या भ्रष्ट हो सकता है: \n"
+msgstr "फ़ाइल अमान्य या भ्रष्ट हो सकता है: \n"
 "%s"
 
 #: Project.cpp:2287
@@ -3339,12 +3280,10 @@ msgstr "परियोजना डाटा फ़ोल्डर नहीं
 
 #: Project.cpp:2696
 #, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s - you need to upgrade to\n"
 "a newer version to open this file."
-msgstr ""
-"इस फाइल को ऑडेसिटी %s  प्रारूप में संचित किया गया था\n"
+msgstr "इस फाइल को ऑडेसिटी %s  प्रारूप में संचित किया गया था\n"
 "आप ऑडेसिटी %s  का प्रयोग कर रहे हैं - इस फ़ाइल को खोलने के लिए\n"
 "ऑडेसिटी के एक नए उन्नत संस्करण की जरूरत है."
 
@@ -3354,15 +3293,13 @@ msgstr "परियोजना फ़ाइल को खोल नहीं स�
 
 #: Project.cpp:2734
 #, c-format
-msgid ""
-"This file was saved by Audacity %s.\n"
+msgid "This file was saved by Audacity %s.\n"
 "\n"
 "Audacity can open and save this file, but saving it in this version\n"
 "will then prevent any 1.2 or earlier version opening it.\n"
 "\n"
 "Open this file now?"
-msgstr ""
-"इस फाइल को ऑडेसिटी %s  प्रारूप में संचित किया गया था\n"
+msgstr "इस फाइल को ऑडेसिटी %s  प्रारूप में संचित किया गया था\n"
 "\n"
 "ऑडेसिटी इस फाइल को खोल या संचित कर सकता है, पर इस संस्करण में संचित होने\n"
 "पर 1.2 या उससे पहले के संस्करण में इसे खोलना संभव नहीं होगा.\n"
@@ -3370,8 +3307,7 @@ msgstr ""
 "क्या यह फ़ाइल अभी खोलें?"
 
 #: Project.cpp:2932
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3379,8 +3315,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"आपकी परियोजना अभी खाली है.\n"
+msgstr "आपकी परियोजना अभी खाली है.\n"
 "सहेजने पर परियोजना में कोई ट्रैक नहीं होगा.\n"
 "\n"
 "कोई पहले से खुला ट्रैक सहेजने के लिए:\n"
@@ -3395,11 +3330,9 @@ msgstr "चेतावनी: खाली परियोजना"
 
 #: Project.cpp:3042
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"परियोजना को संचित नहीं किया जा सका. शायद  %s \n"
+msgstr "परियोजना को संचित नहीं किया जा सका. शायद  %s \n"
 "डिस्क लिखने योग्य नहीं है या पूरी तरह भरा है."
 
 #: Project.cpp:3044
@@ -3442,31 +3375,31 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "विंडोज PCM ऑडियो फ़ाइल (*.wav)|*.wav"
 
 #: Project.cpp:3394
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"परियोजना को ऑनलाइन प्रसारित करने के लिए संकुचित परियोजना फ़ाइलें एक अच्छा माध्यम है, क्योंकि इनका आकार बहुत छोटा होता है. \n"
+msgstr "परियोजना को ऑनलाइन प्रसारित करने के लिए संकुचित परियोजना फ़ाइलें एक अच्छा माध्यम है, क्योंकि इनका आकार बहुत छोटा होता है. \n"
 "एक संकुचित परियोजना खुलने में सामान्य से अधिक समय लेता है, क्योंकि यह हरेक संकुचित ट्रैक का आयात करता है. \n"
 "\n"
 "अधिकतर अन्य प्रोग्राम ऑडेसिटी परियोजना फ़ाइलों को खोलने में असमर्थ हैं.\n"
 "यदि आप चाहते हैं कि संचित फ़ाइल अन्य प्रोग्रामों द्वारा भी खुल सके, तो उपयोग करें किसी\n"
 "निर्यात आदेश का."
 
+#: Project.cpp:3398
+msgid "Save Compressed Project As..."
+msgstr ""
+
 #: Project.cpp:3397
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"आप एक ऑडेसिटी परियोजना फ़ाइल (.aup) संचित कर रहे हैं.\n"
+msgstr "आप एक ऑडेसिटी परियोजना फ़ाइल (.aup) संचित कर रहे हैं.\n"
 "परियोजना संचय करने पर एक फ़ाइल बनती है जिसे केवल ऑडेसिटी ही खोल सकता है.\n"
 "\n"
 "ऑडियो फ़ाइल संचित करने के लिए \"फ़ाइल > निर्यात\" आदेश का प्रयोग करें, जिसका अन्य प्रोग्राम उपयोग कर सकते हैं.\n"
@@ -3480,11 +3413,9 @@ msgid "Error Saving Project"
 msgstr "परियोजना सहेजने में त्रुटि"
 
 #: Project.cpp:3422
-msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
-msgstr ""
-"परियोजना संचित नहीं हुआ, क्योंकि दिया गया फ़ाइल नाम दूसरी परियोजना को मिटा देगा.\n"
+msgstr "परियोजना संचित नहीं हुआ, क्योंकि दिया गया फ़ाइल नाम दूसरी परियोजना को मिटा देगा.\n"
 "कृपया एक मौलिक नाम के साथ दुबारा कोशिश करें."
 
 #: Project.cpp:3463
@@ -3939,102 +3870,82 @@ msgstr "टैग फ़ाइल संचयन में त्रुटि"
 
 #: Theme.cpp:638
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
-msgstr ""
-"%s :\n"
+msgstr "%s :\n"
 " फ़ाइल में लिखा नहीं जा सका।"
 
 #: Theme.cpp:656
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr ""
-"ऑडेसिटी फ़ाइल :\n"
+msgstr "ऑडेसिटी फ़ाइल :\n"
 "  %s\n"
 " को लिखने के लिए  खोला नहीं जा सका."
 
 #: Theme.cpp:664
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
-msgstr ""
-"ऑडेसिटी इस फ़ाइल में छवियों को लिख पाया:\n"
+msgstr "ऑडेसिटी इस फ़ाइल में छवियों को लिख पाया:\n"
 "  %s."
 
 #: Theme.cpp:799
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"ऑडेसिटी को फ़ाइल नहीं मिली :\n"
+msgstr "ऑडेसिटी को फ़ाइल नहीं मिली :\n"
 "%s \n"
 "थीम को लोड नहीं किया गया."
 
 #: Theme.cpp:807
 #: Theme.cpp:896
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"ऑडेसिटी फाइल लोड नहीं कर सका :\n"
+msgstr "ऑडेसिटी फाइल लोड नहीं कर सका :\n"
 " %s.\n"
 "शायद png प्रारूप सही न हो?"
 
 #: Theme.cpp:823
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"ऑडेसिटी अपनी डिफ़ॉल्ट थीम नहीं पढ़ सका.\n"
+msgstr "ऑडेसिटी अपनी डिफ़ॉल्ट थीम नहीं पढ़ सका.\n"
 "कृपया इस समस्या की सूचना दें."
 
 #: Theme.cpp:918
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr ""
-"कोई भी आवश्यक थीम घटक फ़ाइलें\n"
+msgstr "कोई भी आवश्यक थीम घटक फ़ाइलें\n"
 "यहाँ नहीं मिली :\n"
 "  %s."
 
 #: Theme.cpp:942
 #: effects/NoiseRemoval.cpp:172
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"निर्देशिका (डायरेक्टरी )उत्पन्न नहीं कर सका :\n"
+msgstr "निर्देशिका (डायरेक्टरी )उत्पन्न नहीं कर सका :\n"
 "  %s"
 
 #: Theme.cpp:963
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"ऑडेसिटी फ़ाइल को संचित नहीं कर सका:\n"
+msgstr "ऑडेसिटी फ़ाइल को संचित नहीं कर सका:\n"
 "  %s"
 
 #: Theme.cpp:975
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"सभी आवश्यक फाइलें :\n"
+msgstr "सभी आवश्यक फाइलें :\n"
 " %s\n"
 "में पहले से ही मौजूद थीं."
 
@@ -4580,23 +4491,19 @@ msgid "Plugins %i to %i"
 msgstr "प्लग-इन %i से %i"
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
 msgstr "आपके पिछले कार्य में एक समस्या थी. यदि आप समझते हैं कि यह एक त्रुटि है, तो कृपया हमें बताएं कि ये कहाँ पर हुआ था."
 
 #: commands/CommandManager.cpp:953
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped.  [Pausing is not sufficient.]"
 msgstr "आप ये तभी कर सकते हैं जब बजाना और ध्वन्यांकन दोनों ही बंद हों. [केवल ठहरना काफ़ी नहीं है.]"
 
 #: commands/CommandManager.cpp:955
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use.  [You can't use this with mono.]"
-msgstr ""
-"पहले आप इसके उपयोग लिए कुछ स्टीरियो ऑडियो\n"
+msgstr "पहले आप इसके उपयोग लिए कुछ स्टीरियो ऑडियो\n"
 " चुनें. [आप इसे मोनो में प्रयोग नहीं कर सकते.]"
 
 #: commands/CommandManager.cpp:957
@@ -4604,11 +4511,9 @@ msgid "You must first select some audio for this to use."
 msgstr "आप इसके उपयोग लिए पहले कुछ ऑडियो चुनें."
 
 #: commands/CommandManager.cpp:959
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. [Selecting other kinds of track won't work.]"
-msgstr ""
-"आप इसके उपयोग लिए पहले कुछ ऑडियो चुनें.\n"
+msgstr "आप इसके उपयोग लिए पहले कुछ ऑडियो चुनें.\n"
 " [अन्य प्रकार के ट्रैक काम नहीं करेंगे.]"
 
 #: commands/CommandManager.cpp:964
@@ -5154,19 +5059,15 @@ msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr "मुख्य-नेपथ्य विश्लेषन(WCAG 2 compliance)"
 
 #: effects/Contrast.cpp:107
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
-msgstr ""
-"आरंभ का समय अंत के बाद!\n"
+msgstr "आरंभ का समय अंत के बाद!\n"
 "कृपया उचित समय लिखें."
 
 #: effects/Contrast.cpp:117
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"बताए गए समय तर्क से परे हैं!\n"
+msgstr "बताए गए समय तर्क से परे हैं!\n"
 "कृपया उचित समय लिखें."
 
 #: effects/Contrast.cpp:214
@@ -5557,9 +5458,9 @@ msgstr "वक्र चुनें:"
 msgid "Save As..."
 msgstr "जैसा सुरक्षित करें..."
 
-#: effects/Equalization.cpp:1402
-msgid "Flat"
-msgstr "समतल"
+#: effects/Equalization.cpp:1407
+msgid "Flatten"
+msgstr ""
 
 #: effects/Equalization.cpp:1405
 #: effects/Invert.h:27
@@ -5893,11 +5794,9 @@ msgstr "शोर उत्पादन"
 
 #: effects/NoiseRemoval.cpp:191
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"फ़ाइल को खोल नहीं सका:\n"
+msgstr "फ़ाइल को खोल नहीं सका:\n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:276
@@ -5909,11 +5808,9 @@ msgid "Step 1"
 msgstr "चरण 1"
 
 #: effects/NoiseRemoval.cpp:830
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"कुछ सेकंड केवल शोर चुनें, जिससे ऑडेसिटी को पता चले कि क्या फ़िल्टर कर बाहर निकालना है,\n"
+msgstr "कुछ सेकंड केवल शोर चुनें, जिससे ऑडेसिटी को पता चले कि क्या फ़िल्टर कर बाहर निकालना है,\n"
 " तब शोर-प्रोफाइल-प्राप्त-करें को क्लिक करें :"
 
 #: effects/NoiseRemoval.cpp:831
@@ -5921,11 +5818,9 @@ msgid "Step 2"
 msgstr "चरण 2"
 
 #: effects/NoiseRemoval.cpp:832
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"पूरी ऑडियो चुनें जिसे आप फ़िल्टर करना चाहते हैं, फिर कितना शोर आप फ़िल्टर\n"
+msgstr "पूरी ऑडियो चुनें जिसे आप फ़िल्टर करना चाहते हैं, फिर कितना शोर आप फ़िल्टर\n"
 "कर निकालना चाहते हैं यह चुनें, और फिर शोर हटाने के लिए 'ठीक है' पर क्लिक करें.\n"
 
 #: effects/NoiseRemoval.cpp:837
@@ -6087,24 +5982,20 @@ msgid "Applying Phaser"
 msgstr "Phaser लागू कर रहे हैं"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"मरम्मत प्रभाव का इस्तेमाल क्षतिग्रस्त ऑडियो (128 नमूने तक) के बहुत छोटे खंडों पर होना चाहिए.\n"
+msgstr "मरम्मत प्रभाव का इस्तेमाल क्षतिग्रस्त ऑडियो (128 नमूने तक) के बहुत छोटे खंडों पर होना चाहिए.\n"
 "\n"
 "दृश्य बड़ा करें और मरम्मत के लिए एक सेकेंड से छोटे अंश का चयन करें."
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"मरम्मत का काम चयन-क्षेत्र से बाहर के ऑडियो डेटा का उपयोग करके होता है.\n"
+msgstr "मरम्मत का काम चयन-क्षेत्र से बाहर के ऑडियो डेटा का उपयोग करके होता है.\n"
 "\n"
 "कृपया एक क्षेत्र का चयन करें जो कि ऑडियो को किसी एक तरफ छूता हो.\n"
 "\n"
@@ -6193,11 +6084,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "स्पाइक-क्लीनर Lynn Allan के द्वारा"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"अधिकतम स्पाईक अवधि (मिलीसेकेंड): \n"
+msgstr "अधिकतम स्पाईक अवधि (मिलीसेकेंड): \n"
 "(99999 या अधिक संख्या बंद है)"
 
 #: effects/SpikeCleaner.cpp:178
@@ -6389,11 +6278,9 @@ msgid "Threshold for silence:"
 msgstr "मौन शिखर:"
 
 #: effects/TruncSilence.cpp:544
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"   अवधि कम से कम 1 मिलीसेकेण्ड होगा\n"
+msgstr "   अवधि कम से कम 1 मिलीसेकेण्ड होगा\n"
 "   संक्षिप्ता अनुपात कम से कम 1:1 होना चाहिए          "
 
 #: effects/TruncSilence.h:29
@@ -6639,8 +6526,7 @@ msgstr ""
 
 #: export/Export.cpp:597
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
@@ -6731,8 +6617,7 @@ msgid "Command Output"
 msgstr "आदेश आउटपुट"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
 msgstr ""
 
@@ -6741,8 +6626,7 @@ msgid "AMR support is not distributable"
 msgstr ""
 
 #: export/ExportFFmpeg.cpp:237
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries.\n"
 "\n"
 "Note that AMR support is not available with our FFmpeg\n"
@@ -6751,8 +6635,7 @@ msgstr ""
 
 #: export/ExportFFmpeg.cpp:446
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
 msgstr ""
 
@@ -6778,15 +6661,13 @@ msgstr "अमान्य सैंपल रेट"
 
 #: export/ExportFFmpeg.cpp:805
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
 msgstr ""
 
 #: export/ExportFFmpeg.cpp:808
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
 msgstr ""
 
@@ -6877,6 +6758,66 @@ msgstr ""
 msgid "Preset '%s' does not exist."
 msgstr "'%s' प्रिसेट विद्यमान नहीं है. "
 
+#: export/ExportFFmpegDialogs.h:378
+msgid "LC"
+msgstr "LC"
+
+#: export/ExportFFmpegDialogs.h:378
+msgid "Main"
+msgstr "मुख्य"
+
+#: export/ExportFFmpegDialogs.h:378
+msgid "LTP"
+msgstr "LTP"
+
+#: export/ExportFFmpegDialogs.h:56
+msgid "M4A (AAC) Files (FFmpeg)"
+msgstr "M4A (AAC) फ़ाइलें (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:57
+msgid "AC3 Files (FFmpeg)"
+msgstr "AC3 फ़ाइलें (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:58
+msgid "AMR (narrow band) Files (FFmpeg)"
+msgstr "AMR (नैरो बैंड) फ़ाइलें (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:60
+msgid "AMR (wide band) Files (FFmpeg)"
+msgstr "AMR (वाइड बैंड) फ़ाइलें (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:62
+msgid "WMA (version 2) Files (FFmpeg)"
+msgstr "WMA (संस्करण 2) फ़ाइलें (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:63
+msgid "Custom FFmpeg Export"
+msgstr "Custom FFmpeg निर्यात"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "2-level"
+msgstr "2-तल"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "4-level"
+msgstr "4-तल"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "8-level"
+msgstr "8-तल"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Estimate"
+msgstr "अनुमान"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Full search"
+msgstr "पूरी खोज"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Log search"
+msgstr "लॉग में ढूंढें"
+
 #: export/ExportFFmpegDialogs.cpp:797
 msgid "Specify Other Options"
 msgstr "अन्य विकल्प निर्धारण"
@@ -6934,8 +6875,7 @@ msgid "Language:"
 msgstr "भाषा :"
 
 #: export/ExportFFmpegDialogs.cpp:930
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
 msgstr ""
@@ -6954,23 +6894,20 @@ msgid "Tag:"
 msgstr "टैग:"
 
 #: export/ExportFFmpegDialogs.cpp:944
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:947
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:950
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
@@ -6981,8 +6918,7 @@ msgid "Sample Rate:"
 msgstr "सैंपल रेट:"
 
 #: export/ExportFFmpegDialogs.cpp:953
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
 msgstr ""
 
@@ -6991,8 +6927,7 @@ msgid "Cutoff:"
 msgstr "सीमा:"
 
 #: export/ExportFFmpegDialogs.cpp:956
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
 msgstr ""
@@ -7002,8 +6937,7 @@ msgid "Profile:"
 msgstr "प्रोफ़ाईल :"
 
 #: export/ExportFFmpegDialogs.cpp:961
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
 msgstr ""
@@ -7017,8 +6951,7 @@ msgid "Compression:"
 msgstr "संपीड़न:"
 
 #: export/ExportFFmpegDialogs.cpp:972
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
@@ -7030,8 +6963,7 @@ msgid "Frame:"
 msgstr "फ्रे़म:"
 
 #: export/ExportFFmpegDialogs.cpp:975
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
@@ -7043,8 +6975,7 @@ msgid "LPC"
 msgstr "LPC"
 
 #: export/ExportFFmpegDialogs.cpp:978
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
@@ -7056,8 +6987,7 @@ msgid "PdO Method:"
 msgstr "PdO विधि :"
 
 #: export/ExportFFmpegDialogs.cpp:983
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
@@ -7068,8 +6998,7 @@ msgid "Min. PdO"
 msgstr "न्यूनतम PdO"
 
 #: export/ExportFFmpegDialogs.cpp:986
-msgid ""
-"Minimal prediction order\n"
+msgid "Minimal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7081,8 +7010,7 @@ msgid "Max. PdO"
 msgstr "अधिकतम PdO"
 
 #: export/ExportFFmpegDialogs.cpp:989
-msgid ""
-"Maximal prediction order\n"
+msgid "Maximal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7094,8 +7022,7 @@ msgid "Min. PtO"
 msgstr "न्यूनतम PtO"
 
 #: export/ExportFFmpegDialogs.cpp:992
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7107,8 +7034,7 @@ msgid "Max. PtO"
 msgstr "अधिकतम PtO"
 
 #: export/ExportFFmpegDialogs.cpp:995
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7128,8 +7054,7 @@ msgid "Mux Rate:"
 msgstr "Mux रेट:"
 
 #: export/ExportFFmpegDialogs.cpp:1009
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
 msgstr ""
@@ -7139,8 +7064,7 @@ msgid "Packet Size:"
 msgstr "पैकेट आकार:"
 
 #: export/ExportFFmpegDialogs.cpp:1012
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
 msgstr ""
@@ -7180,66 +7104,6 @@ msgstr "स्वरूप का अनुमान लगाने में �
 #: export/ExportFFmpegDialogs.cpp:1428
 msgid "Failed to find the codec"
 msgstr "इस codec को नहीं ढूंढ पाया"
-
-#: export/ExportFFmpegDialogs.h:56
-msgid "M4A (AAC) Files (FFmpeg)"
-msgstr "M4A (AAC) फ़ाइलें (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:57
-msgid "AC3 Files (FFmpeg)"
-msgstr "AC3 फ़ाइलें (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:58
-msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR (नैरो बैंड) फ़ाइलें (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:60
-msgid "AMR (wide band) Files (FFmpeg)"
-msgstr "AMR (वाइड बैंड) फ़ाइलें (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:62
-msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "WMA (संस्करण 2) फ़ाइलें (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:63
-msgid "Custom FFmpeg Export"
-msgstr "Custom FFmpeg निर्यात"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "LC"
-msgstr "LC"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "LTP"
-msgstr "LTP"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "Main"
-msgstr "मुख्य"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "2-level"
-msgstr "2-तल"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "4-level"
-msgstr "4-तल"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "8-level"
-msgstr "8-तल"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Estimate"
-msgstr "अनुमान"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Full search"
-msgstr "पूरी खोज"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Log search"
-msgstr "लॉग में ढूंढें"
 
 #: export/ExportFLAC.cpp:67
 msgid "Specify FLAC Options"
@@ -7312,8 +7176,7 @@ msgstr "FLAC निर्यात %s को नहीं खोल सका"
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
 msgstr ""
 
@@ -7458,8 +7321,7 @@ msgstr "Lame की मुफ़्त प्रति के लिए, यह�
 
 #: export/ExportMP3.cpp:1070
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
 msgstr ""
 
@@ -7528,15 +7390,13 @@ msgstr ""
 
 #: export/ExportMP3.cpp:1790
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
 msgstr ""
 
 #: export/ExportMP3.cpp:1793
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
 msgstr ""
 
@@ -7551,8 +7411,7 @@ msgid "Export Multiple"
 msgstr "अनेक निर्यात"
 
 #: export/ExportMultiple.cpp:172
-msgid ""
-"If you have more than one Audio Track, you can export each track as a separate file,\n"
+msgid "If you have more than one Audio Track, you can export each track as a separate file,\n"
 "or if you have a Label Track, you can export a new file for each label.\n"
 "\n"
 "This project does not have multiple tracks or a Label Track, so you cannot export multiple files."
@@ -7608,10 +7467,13 @@ msgstr "फ़ाइलों का नामकरण:"
 msgid "Using Label/Track Name"
 msgstr "लेबल/ट्रैक नाम यह रखें"
 
-#: export/ExportMultiple.cpp:320
-#: export/ExportMultiple.cpp:322
-msgid "Numbering consecutively"
-msgstr "एक के बाद एक संख्यांकन हो रहा है"
+#: export/ExportMultiple.cpp:315
+msgid "Numbering before Label/Track Name"
+msgstr ""
+
+#: export/ExportMultiple.cpp:318
+msgid "Numbering after Label/Track Name"
+msgstr ""
 
 #: export/ExportMultiple.cpp:328
 msgid "File name prefix:"
@@ -7661,10 +7523,13 @@ msgstr ""
 
 #: export/ExportMultiple.cpp:592
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
+msgstr ""
+
+#: export/ExportMultiple.cpp:641 export/ExportMultiple.cpp:776
+msgid "untitled"
 msgstr ""
 
 #: export/ExportMultiple.cpp:689
@@ -7674,8 +7539,7 @@ msgstr "मेटाडाटा संपादन"
 
 #: export/ExportMultiple.cpp:945
 #, c-format
-msgid ""
-"Label %s is not a legal file name. You cannot use any of:   %s\n"
+msgid "Label %s is not a legal file name. You cannot use any of:   %s\n"
 "Use..."
 msgstr ""
 
@@ -7750,6 +7614,12 @@ msgstr "चुनी हुई ध्वनी का निर्यात %s �
 msgid "Exporting the entire project as %s"
 msgstr "पूरी परियोजना %s नाम से निर्यात कर रहे हैं"
 
+#: export/ExportPCM.cpp:551
+#, c-format
+msgid "Error while writing %s file (disk full?).\n"
+"Libsndfile says \"%s\""
+msgstr ""
+
 #. i18n-hint: %s will be the error message from libsndfile
 #: export/ExportPCM.cpp:564
 #, c-format
@@ -7796,13 +7666,11 @@ msgstr ""
 
 #: import/Import.cpp:248
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
+msgstr "\"%s\" \n"
 "  एक MIDI फ़ाइल है , ऑडियो फ़ाइल नहीं. \n"
 "ऑडेसिटी इस प्रकार की फ़ाइलें बजाने के लिए नहीं खोल सकता, लेकिन आप \n"
 "फ़ाइल > आयात > MIDI क्लिक करके इसे संपादित कर सकते हैं."
@@ -7810,45 +7678,39 @@ msgstr ""
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:258
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"\"%s\" एक ऑडियो सीडी ट्रैक है. \n"
+msgstr "\"%s\" एक ऑडियो सीडी ट्रैक है. \n"
 "ऑडेसिटी ऑडियो सीडी को सीधे नहीं खोल सकता. \n"
 "सीडी ट्रैक को एक ऐसे स्वरुप में बदलें जिसे ऑडेसिटी \n"
 "आयात कर सके, जैसे कि WAV या AIFF."
 
 #: import/Import.cpp:264
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 
 #: import/Import.cpp:269
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:274
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:279
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
@@ -7857,16 +7719,14 @@ msgstr ""
 
 #: import/Import.cpp:284
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:290
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
@@ -7874,8 +7734,7 @@ msgstr ""
 
 #: import/Import.cpp:296
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
@@ -7884,47 +7743,41 @@ msgstr ""
 
 #: import/Import.cpp:302
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:308
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:314
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:320
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
 msgstr ""
 
 #: import/Import.cpp:325
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
 msgstr ""
 
 #: import/Import.cpp:343
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+msgid "Audacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
@@ -8250,8 +8103,7 @@ msgid "Mi&nimum Free Memory (MB):"
 msgstr "न्यू&नतम खाली मेमोरी (MB):"
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
 msgstr ""
 
@@ -8477,8 +8329,7 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr ""
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
 msgstr ""
 
@@ -8555,8 +8406,7 @@ msgstr "लघु कुंजियों को संचित करने �
 
 #: prefs/KeyConfigPrefs.cpp:386
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
 msgstr ""
@@ -8615,8 +8465,7 @@ msgid "Dow&nload"
 msgstr "डाउनलोड(&n)"
 
 #: prefs/LibraryPrefs.cpp:186
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
 msgstr ""
 
@@ -9316,8 +9165,7 @@ msgid "Info"
 msgstr "सूचना"
 
 #: prefs/ThemePrefs.cpp:91
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -9329,20 +9177,17 @@ msgid ""
 msgstr ""
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
 msgstr ""
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
 
@@ -9586,6 +9431,22 @@ msgstr "इनपुट स्रोत चुनें"
 #: toolbars/MixerToolBar.cpp:336
 msgid "Input Source:"
 msgstr "इनपुट स्रोत:"
+
+#: toolbars/MixerToolBar.cpp:388
+msgid "Input Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:392
+msgid "Cannot control input level; use system mixer."
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:396
+msgid "Output Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:400
+msgid "Cannot control output level; use system mixer."
+msgstr ""
 
 #: toolbars/SelectionBar.cpp:86
 #: toolbars/SelectionBar.cpp:283
@@ -9917,12 +9778,10 @@ msgid "Automated Input Level Adjustment stopped as requested by user."
 msgstr "प्रयोगी के आग्रह पर स्वचालित इनपुट लेबल अनुकूलन बंद किया गया है."
 
 #: widgets/Meter.cpp:1282
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"उच्च दर पर मीटर तेज गति परिवर्तन को दिखा पाता है. धीमी गति\n"
+msgstr "उच्च दर पर मीटर तेज गति परिवर्तन को दिखा पाता है. धीमी गति\n"
 "की मशीनों में 30 प्रति सेकेंड या उससे कम दर पर मीटर ध्वनि की\n"
 "गुणवत्ता पर असर नहीं डालता."
 
@@ -10210,17 +10069,4 @@ msgstr "फ़ाइल बंद करने में त्रुटि"
 #: xml/XMLWriter.cpp:340
 msgid "Error writing to file"
 msgstr "फ़ाइल में लिखने में त्रुटि"
-
-#~ msgid "Format selector:"
-#~ msgstr "फ़ॉरमैट चयनकर्ता:"
-#~ msgid "Codec selector:"
-#~ msgstr "कोडेक चयनकर्ता:"
-#~ msgid "Options"
-#~ msgstr "विकल्प"
-#~ msgid "Frame Size:"
-#~ msgstr "फ्रेम आकार:"
-#~ msgid "Main profile"
-#~ msgstr "मुख्य - प्रोफ़ाईल"
-#~ msgid "ExportMultiple"
-#~ msgstr "निर्यात कई एक"
 

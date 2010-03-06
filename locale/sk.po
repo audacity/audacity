@@ -3,8 +3,7 @@
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: Audacity 1.3.8\n"
+msgstr "Project-Id-Version: Audacity 1.3.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2009-08-22 20:01+0100\n"
 "PO-Revision-Date: 2009-08-29 15:00+0100\n"
@@ -25,17 +24,17 @@ msgstr "O Audacity..."
 msgid "OK... Audacious!"
 msgstr "OK...Pekne!"
 
-#: AboutDialog.cpp:175
-msgid "Audacity is a free program written by a team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a> around the world. We are grateful to <a href=\"http://sourceforge.net\">SourceForge.net</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like operating systems. Older versions of Audacity are available for Mac OS 9."
-msgstr "Audacity je slobodný program, ktorý napísal tím dobrovoľníkov <a href=\"http://audacity.sourceforge.net/community/developers\"> vývojárov </a> z celého sveta. Sme vďační <a href=\"http://sourceforge.net\"> SourceForge.net </a> za hosting nášho projektu. Audacity možno používať s Windows 98 a novšími, Mac OS X, Linuxom a ostatnými Unix operačnými systémami. Staršie verzie Audacity možno používať na Mac OS 9."
+#: AboutDialog.cpp:192
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
+msgstr ""
 
-#: AboutDialog.cpp:179
-msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help using Audacity, please visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
-msgstr "Toto je beta verzia programu. Môže obsahovať chyby a nedokončené vlastnosti. Sme závislí na vašej spätnej väzbe: pošlite hlásenie chýb a žiadosti o funkciu na <a href=\"mailto:feedback@audacityteam.org\">adresu</a>. Pre pomoc s používaním Audacity, navštívte naše <a href=\"http://audacityteam.org/forum/\"> fórum </a>."
+#: AboutDialog.cpp:196
+msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+msgstr ""
 
-#: AboutDialog.cpp:182
-msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help using Audacity, please visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
-msgstr "Toto je stabilné, dokončené vydanie programu. Pokiaľ však nájdete chybu, alebo máte pripomienku  pre nás, prosím napište nam na  <a href=\"mailto:feedback@audacityteam.org\">adresu</a>. Pre pomoc s používaním Audacity, navštívte naše <a href=\"http://audacityteam.org/forum/\"> fórum </a>."
+#: AboutDialog.cpp:199
+msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. in the credits in the About Audacity window.  Use this to add
@@ -86,9 +85,13 @@ msgstr "Audacity je založená na programovom kóde týchto projektov:"
 msgid "Special thanks:"
 msgstr "Zvláštne poďakovanie:"
 
-#: AboutDialog.cpp:250
-msgid "<b>Audacity&reg;</b> software is copyright &copy; 1999-2009 Audacity Team. <br>The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
-msgstr "<b> Audacity&reg; </b> softvér je copyright &copy; 1999-2009 Audacity Tímu. <br> Meno <b> Audacity&reg;</b> je registrovaná ochranná známka spoločnosti Dominica Mazzoniho."
+#: AboutDialog.cpp:267
+msgid "<b>Audacity&reg;</b> software is copyright"
+msgstr ""
+
+#: AboutDialog.cpp:270
+msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
+msgstr ""
 
 #: AboutDialog.cpp:258
 msgid "Audacity"
@@ -230,16 +233,12 @@ msgstr "%s je už otvorený v inom okne."
 msgid "Error opening project"
 msgstr "Chyba pri otváraní projektu"
 
-#: AudacityApp.cpp:706
+#: AudacityApp.cpp:772
 #, c-format
-msgid ""
-"%s does not exist and could not be opened.\n"
+msgid "%s could not be found.\n"
 "\n"
-"It has been removed from the history list."
+"It has been removed from the list of recent files."
 msgstr ""
-"%s neexistuje, preto nemôže byť otvorený.\n"
-"\n"
-"Záznam bol odstránený zo zoznamu histórie."
 
 #: AudacityApp.cpp:825
 msgid "Master Gain Control"
@@ -289,11 +288,9 @@ msgid "Unknown command line option: %s\n"
 msgstr "Neznáma voľba riadkového príkazu: %s\n"
 
 #: AudacityApp.cpp:1327
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Audacity nemôže nájsť umiestnenie pre dočasné súbory.\n"
+msgstr "Audacity nemôže nájsť umiestnenie pre dočasné súbory.\n"
 "Prosím zadajte správny adresár v dialógu pre nastavenia."
 
 #: AudacityApp.cpp:1333
@@ -301,21 +298,17 @@ msgid "Audacity is now going to exit. Please launch Audacity again to use the ne
 msgstr "Audacity sa  vypína. Aby sa použil nový dočasný adresár, prosím spuste Audacity znovu."
 
 #: AudacityApp.cpp:1365
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"Súčasné spustené dve kópie Audacity môžu zapríčiniť\n"
+msgstr "Súčasné spustené dve kópie Audacity môžu zapríčiniť\n"
 "stratu dát alebo pád vašeho systému.\n"
 "\n"
 
 #: AudacityApp.cpp:1372
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Audacity nemôže nájsť adresár pre pracovné súbory.\n"
+msgstr "Audacity nemôže nájsť adresár pre pracovné súbory.\n"
 "Je možné, že tento adresár práve používa iná kópia Audacity.\n"
 
 #: AudacityApp.cpp:1374
@@ -331,11 +324,9 @@ msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "Systém rozpoznal ďalšiu spustenú kópiu Audacity.\n"
 
 #: AudacityApp.cpp:1416
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"Viac projektov naraz je možné otvoriť pomocou príkazu Súbor-Nový\n"
+msgstr "Viac projektov naraz je možné otvoriť pomocou príkazu Súbor-Nový\n"
 "alebo Otvoriť v práve spustenom Audacity.\n"
 
 #: AudacityApp.cpp:1417
@@ -377,13 +368,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "Uveďte tiež meno zvukového súboru alebo projektu Audacity, ktorý sa ma otvoriť."
 
 #: AudacityApp.cpp:1760
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"Projektové súbory (.AUP) nie sú \n"
+msgstr "Projektové súbory (.AUP) nie sú \n"
 "asociované s Audacity. \n"
 "\n"
 "Vykonať asociáciu, aby ich bolo možné otvárať dvojklikom?"
@@ -397,11 +386,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "Nedá sa nájsť žiadne zvukové zariadenie.\n"
 
 #: AudioIO.cpp:276
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"Nebudete môcť prehrávať alebo nahrávať zvuk.\n"
+msgstr "Nebudete môcť prehrávať alebo nahrávať zvuk.\n"
 "\n"
 
 #: AudioIO.cpp:279
@@ -418,11 +405,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "Došlo k chybe pri inicializácii MIDI na  I/O vrstve.\n"
 
 #: AudioIO.cpp:296
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"Nebudete môcť prehrávať midi.\n"
+msgstr "Nebudete môcť prehrávať midi.\n"
 "\n"
 
 #: AudioIO.cpp:302
@@ -430,12 +415,10 @@ msgid "Error Initializing Midi"
 msgstr "Chyba pri inicializácii Midi"
 
 #: AudioIO.cpp:1318
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"Nastavenie opravy latencie spôsobilo, že nahrávané audio je skryté pred začiatočným bodom.\n"
+msgstr "Nastavenie opravy latencie spôsobilo, že nahrávané audio je skryté pred začiatočným bodom.\n"
 "Audacity ho preniesol späť na štart na začiatočný bod.\n"
 "Možno budete musieť použiť Nástroj na posun času (<---> alebo F5) na presunutie stopy na správne miesto."
 
@@ -443,47 +426,45 @@ msgstr ""
 msgid "Latency problem"
 msgstr "Problém latencie"
 
-#: AudioIO.cpp:2619
-msgid "Automatic Volume stopped. It was not possible to optimize it more. Still too high."
-msgstr "Automatickú Hlasitosť zastavil. Nebolo možné optimalizovať viac. Stále príliš vysoká."
+#: AudioIO.cpp:2825
+msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr ""
 
-#: AudioIO.cpp:2627
+#: AudioIO.cpp:2833
 #, c-format
-msgid "Automatic Volume decreased the volume to %f."
-msgstr "Automatickú Hlasitosť znížiť hlasitosť na %f."
+msgid "Automated Input Level Adjustment decreased the volume to %f."
+msgstr ""
 
-#: AudioIO.cpp:2642
-msgid "Automatic Volume stopped. It was not possible to optimize it more. Still too low."
-msgstr "Automatickú Hlasitosť zastavil. Nebolo možné optimalizovať viac. Stále príliš nízka."
+#: AudioIO.cpp:2848
+msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr ""
 
-#: AudioIO.cpp:2654
+#: AudioIO.cpp:2860
 #, c-format
-msgid "Automatic Volume increased the volume to %.2f."
-msgstr "Automatickú Hlasitosť zvýšil hlasitosť na %.2f."
+msgid "Automated Input Level Adjustment increased the volume to %.2f."
+msgstr ""
 
-#: AudioIO.cpp:2688
-msgid "Automatic Volume stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
-msgstr "Automatickú Hlasitosť zastavil. Celkový počet analýz bol prekročený bez nájdenie prijateľnej hlasitosti. Stále príliš vysoká."
+#: AudioIO.cpp:2894
+msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
 
-#: AudioIO.cpp:2690
-msgid "Automatic Volume stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
-msgstr "Automatickú Hlasitosť zastavil. Celkový počet analýz bol prekročený bez nájdenie prijateľnej hlasitosti. Stále príliš nízka."
+#: AudioIO.cpp:2896
+msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
 
-#: AudioIO.cpp:2693
+#: AudioIO.cpp:2899
 #, c-format
-msgid "Automatic Volume stopped. %.2f seems an acceptable volume."
-msgstr "Automatickú Hlasitosť zastavil. %.2f zdá sa prijateľná hlasitosť."
+msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr ""
 
 #: AutoRecovery.cpp:54
 msgid "Automatic Crash Recovery"
 msgstr "Automatická oprava pádu"
 
 #: AutoRecovery.cpp:73
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"Pri poslednom spustení Audacity niektoré projekty neboli správne uložené.\n"
+msgstr "Pri poslednom spustení Audacity niektoré projekty neboli správne uložené.\n"
 "Nasledujúce projekty je možné automaticky obnoviť:"
 
 #: AutoRecovery.cpp:75
@@ -511,11 +492,9 @@ msgid "Recover Projects"
 msgstr "Obnoviť projekty"
 
 #: AutoRecovery.cpp:127
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"Skutočne nechcete opraviť žiadne projekty?\n"
+msgstr "Skutočne nechcete opraviť žiadne projekty?\n"
 "Neskoršie už oprava nebude možná."
 
 #: AutoRecovery.cpp:128
@@ -594,11 +573,9 @@ msgstr "Príkaz %s zatiaľ nie je implementovaný"
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:121
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"Nedajú sa nastaviť parametre efektu %s\n"
+msgstr "Nedajú sa nastaviť parametre efektu %s\n"
 " na %s."
 
 #: BatchCommands.cpp:557
@@ -608,12 +585,10 @@ msgstr "Váš dávkový príkaz %s nebol uznaný. "
 
 #: BatchCommands.cpp:674
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"Použiť %s s parametrami\n"
+msgstr "Použiť %s s parametrami\n"
 "\n"
 "%s"
 
@@ -685,13 +660,9 @@ msgstr "Vybrať vokálny súbor(y) pre dávky CleanSpeech reťazca..."
 msgid "Select file(s) for batch processing..."
 msgstr "Výber súbory pre dávkové spracovanie..."
 
-#: BatchProcessDialog.cpp:208
-msgid "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files (*.mp3)|*.mp3"
-msgstr "Vokálne súbory (*.wav;*.mp3)|*.wav;*.mp3|WAV súbory (*.wav)|*.wav|MP3 súbory (*.mp3)|*.mp3"
-
-#: BatchProcessDialog.cpp:209
-msgid "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|FLAC files (*.flac)|*.flac"
-msgstr "Všetky súbory (*.*)|*.*|WAV súbory (*.wav)|*.wav|AIFF súbory (*.aif)|*.aif|AU súbory (*.au)|*.au|MP3 súbory (*.mp3)|*.mp3|Ogg Vorbis súbory (*.ogg)|*.ogg|FLAC súbory (*.flac)|*.flac"
+#: Project.cpp:2003
+msgid "All files|*|All supported files|"
+msgstr "Všetky súbory|*|Všetky podporované súbory|"
 
 #: BatchProcessDialog.cpp:230
 msgid "Applying..."
@@ -806,14 +777,9 @@ msgid "Copying audio data into project..."
 msgstr "Do projektu sa kopírujú zvukové dáta..."
 
 #: Dependencies.cpp:226
-msgid ""
-"Your project currently depends on the presence of other files.\n"
-"Copy audio from the following files into your project to make it self-contained?\n"
-"This will need more disc space but is safer."
+msgid "Copying the following files into your project will remove this dependency.\n"
+"This needs more disk space, but is safer."
 msgstr ""
-"Váš projekt je teraz závislý na prítomnosti ďalších súborov.\n"
-"Chcete prekopírovať zvukové dáta z následujúcich súborov do vášho projektu,\n"
-"aby bol nezávislý? Zaberie to viac miesta na disku, ale je to bezpečnejšie."
 
 #: Dependencies.cpp:273
 msgid "Project depends on other audio files"
@@ -878,11 +844,9 @@ msgid "Dependency check"
 msgstr "Kontrola závislostí"
 
 #: DirManager.cpp:136
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"Na tomto disku je veľmi málo voľného miesta.\n"
+msgstr "Na tomto disku je veľmi málo voľného miesta.\n"
 "Prosím zvoľte v nastaveniach iný dočasný adresár."
 
 #: DirManager.cpp:221
@@ -905,11 +869,9 @@ msgstr "Odstraňujú sa adresáre z vyrovnávacej pamäte"
 
 #: DirManager.cpp:503
 #, c-format
-msgid ""
-"Audacity found an orphaned blockfile %s! \n"
+msgid "Audacity found an orphaned blockfile %s! \n"
 "Please consider saving and reloading the project to perform a complete project check.\n"
-msgstr ""
-"Audacity našiel opustený blokový súbor %s! \n"
+msgstr "Audacity našiel opustený blokový súbor %s! \n"
 "Prosím zvážte uloženie a nové otvorenie projektu. Tím dôjde k celkovej kontrole projektu.\n"
 
 #. i18n-hint: This is the pattern for filenames that are created
@@ -970,21 +932,17 @@ msgid "Missing data file: (%s.au)"
 msgstr "Chýbajúci dátový súbor: (%s.au)"
 
 #: DirManager.cpp:1346
-msgid ""
-"Project check found inconsistencies inspecting the loaded project data;\n"
+msgid "Project check found inconsistencies inspecting the loaded project data;\n"
 "click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
-msgstr ""
-"V dátach projektu boli zistené nezrovnalosti. Nájdené chyby sa zobrazia,\n"
+msgstr "V dátach projektu boli zistené nezrovnalosti. Nájdené chyby sa zobrazia,\n"
 "ak kliknete na 'Podrobnosti'. Kliknutím na 'OK' sa dostanete k ďalším možnostiam."
 
 #: DirManager.cpp:1358
 #, c-format
-msgid ""
-"Project check found %d orphaned blockfile[s]. These files are\n"
+msgid "Project check found %d orphaned blockfile[s]. These files are\n"
 "unused and probably left over from a crash or some other bug.\n"
 "They should be deleted to avoid disk contention."
-msgstr ""
-"Pri kontrole projektu boli nájdené %d nevyužité blokové súbory ,\n"
+msgstr "Pri kontrole projektu boli nájdené %d nevyužité blokové súbory ,\n"
 "ktoré vznikli pravdepodobne pri páde programu alebo nejakou chybou.\n"
 "Tieto súbory by mali byť odstránené, aby sa predišlo konfliktom."
 
@@ -1013,15 +971,13 @@ msgstr "Varovanie"
 
 #: DirManager.cpp:1393
 #, c-format
-msgid ""
-"Project check detected %d input file[s] being used in place\n"
+msgid "Project check detected %d input file[s] being used in place\n"
 "('alias files') are now missing.  There is no way for Audacity\n"
 "to recover these files automatically; you may choose to\n"
 "permanently fill in silence for the missing files, temporarily\n"
 "fill in silence for this session only, or close the project now\n"
 "and try to restore the missing files by hand."
-msgstr ""
-"Kontrola projektu zistila, že chýba %d vstupný súbor,\n"
+msgstr "Kontrola projektu zistila, že chýba %d vstupný súbor,\n"
 "na ktorý odkazujú podobné súbory. Audacity nemá možnosť\n"
 "ich automaticky opraviť. Môžete zvoliť, či sa majú nahradiť\n"
 "tichom natrvalo, alebo iba dočasne, alebo zavrieť projekt\n"
@@ -1044,12 +1000,10 @@ msgstr "Zavrieť projekt okamžite bez ďalších zmien"
 
 #: DirManager.cpp:1439
 #, c-format
-msgid ""
-"Project check detected %d missing summary file[s] (.auf).\n"
+msgid "Project check detected %d missing summary file[s] (.auf).\n"
 "Audacity can fully regenerate these summary files from the\n"
 "original audio data in the project."
-msgstr ""
-"Kontrola projektu zistila %d chýbajúce súčtové\n"
+msgstr "Kontrola projektu zistila %d chýbajúce súčtové\n"
 "súbory (.auf). Audacity môže tieto súbory úplne\n"
 "obnoviť podľa pôvodných zvukových dát v projekte."
 
@@ -1063,16 +1017,14 @@ msgstr "Nahradiť stratené dáta tichom [iba pre toto otvorenie]"
 
 #: DirManager.cpp:1481
 #, c-format
-msgid ""
-"Project check detected %d missing audio data blockfile[s] (.au), \n"
+msgid "Project check detected %d missing audio data blockfile[s] (.au), \n"
 "probably due to a bug, system crash or accidental deletion.\n"
 "There is no way for Audacity to recover this lost data\n"
 "automatically; you may choose to permanently fill in silence\n"
 "for the missing data, temporarily fill in silence for this\n"
 "session only, or close the project now and try to restore the\n"
 "missing data by hand."
-msgstr ""
-"Kontrola projektu zistila %d že chýbajú blokové súbory (.au)\n"
+msgstr "Kontrola projektu zistila %d že chýbajú blokové súbory (.au)\n"
 "so zvukovými dátami. Ku strate došlo pravdepodobne v dôsledku chyby\n"
 "programu, pádu systému alebo nechceným vymazaním. Nie je spôsob,\n"
 "ako by Audacity mohol tieto súbory obnoviť automaticky. Stratené dáta\n"
@@ -1112,13 +1064,11 @@ msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg podpora nebola nastavená"
 
 #: FFmpeg.cpp:103
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                       \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                       \n"
 "but this time Audacity failed to load it at startup.                       \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpeg bol nastavený v Predvoľbách a úspešne sa načítal pred,                                      \n"
+msgstr "FFmpeg bol nastavený v Predvoľbách a úspešne sa načítal pred,                                      \n"
 "ale tentoraz sa ho Audacity nepodarilo načítať pri štarte. \n"
 "\n"
 "Mali by ste sa vrátiť do Predvolieb-> Knižnice a re-konfigurovať."
@@ -1184,14 +1134,12 @@ msgid "FFmpeg not found"
 msgstr "FFmpeg nenájdená"
 
 #: FFmpeg.h:111
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity sa pokúsil použiť FFmpeg knižnice pre import zvukového súboru,\n"
+msgstr "Audacity sa pokúsil použiť FFmpeg knižnice pre import zvukového súboru,\n"
 "ale knižnice neboli nájdené. \n"
 "Ak chcete použiť FFmpeg import, prejdite na Nastavenia->Knižnice \n"
 "a stiahnite si FFmpeg knižnicu."
@@ -1211,10 +1159,6 @@ msgstr "Dynamické Knižnice (*.dylib)|*.dylib|Všetky súbory(*)|*"
 #: FFmpeg.h:328
 msgid "Only libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr "Len libavformat.so|libavformat.so*|Dynamicky Prepojené Knižnice (*.so*)|*.so*|Všetky súbory (*)|*"
-
-#: FreqWindow.cpp:109
-msgid "Frequency Analysis"
-msgstr "Frekvenčná analýza"
 
 #: FreqWindow.cpp:168
 #: TrackPanel.cpp:620
@@ -1366,6 +1310,14 @@ msgstr "Kurzor: %d Hz (%s) = %d dB    Špička: %d Hz (%s) = %.1f dB"
 msgid "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
 msgstr "Kurzor: %.4f sec (%d Hz) (%s) = %f,    Špička: %.4f sec (%d Hz) (%s) = %.3f"
 
+#: FreqWindow.cpp:1006
+msgid "Drawing Spectrum"
+msgstr ""
+
+#: FreqWindow.cpp:1006
+msgid "FreqWindow"
+msgstr ""
+
 #: FreqWindow.cpp:1224
 msgid "spectrum.txt"
 msgstr "spectrum.txt"
@@ -1396,12 +1348,10 @@ msgid "GStreamer %s: %s"
 msgstr "GStreamer %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"Gstreamer sa nastavuje v predvoľbach a úspešne načítava pred \n"
+msgstr "Gstreamer sa nastavuje v predvoľbach a úspešne načítava pred \n"
 "                      ale tentoraz sa ho Audacity nepodarilo načítať pri štarte. \n"
 "                       Mali by ste sa vrátiť do Predvolieb-> Knižnice a re-konfigurovať."
 
@@ -1598,13 +1548,11 @@ msgid "New..."
 msgstr "Nové..."
 
 #: LabelDialog.cpp:354
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"Musí zostať prázdna etiketa mien. Tie budú\n"
+msgstr "Musí zostať prázdna etiketa mien. Tie budú\n"
 " preskočené pri presúvaní popisov stôp.\n"
 " \n"
 "Chceli by ste sa vrátiť späť a poskytnúť mená?"
@@ -1674,11 +1622,9 @@ msgstr "Jazyk, ktorý ste si vybrali, %s (%s), nie je rovnaký ako  systemový j
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"Skonvertovaný súbor projektu z Audacity 1.0 do nového formátu.\n"
+msgstr "Skonvertovaný súbor projektu z Audacity 1.0 do nového formátu.\n"
 "Starý súbor bol uložený ako '%s'"
 
 #: Legacy.cpp:373
@@ -1689,14 +1635,6 @@ msgstr "Otváram Audacity projekt"
 #, c-format
 msgid "Audacity Karaoke%s"
 msgstr "Audacity Karaoke%s"
-
-#: LyricsWindow.cpp:81
-msgid "Bouncing Ball"
-msgstr "Skákacia lopta"
-
-#: LyricsWindow.cpp:92
-msgid "Highlight"
-msgstr "Zvýrazniť"
 
 #: Menus.cpp:202
 msgid "&File"
@@ -1823,6 +1761,10 @@ msgstr "&Kopírovať"
 msgid "&Paste"
 msgstr "&Vložiť"
 
+#: Menus.cpp:366
+msgid "Paste Te&xt to New Label"
+msgstr ""
+
 #: Menus.cpp:362
 msgid "Tri&m"
 msgstr "Ore&zať"
@@ -1887,9 +1829,9 @@ msgstr "Ko&pírovať"
 msgid "Sp&lit Delete"
 msgstr "Rozdeliť a vymazať"
 
-#: Menus.cpp:407
-msgid "Sile&nce"
-msgstr "Tich&o"
+#: Menus.cpp:418
+msgid "Silence &Audio"
+msgstr ""
 
 #: Menus.cpp:411
 msgid "Spli&t"
@@ -2128,9 +2070,9 @@ msgstr "Zvukom Aktivované Nahrávanie (on/off)"
 msgid "Sound Activation Level..."
 msgstr "Aktivačná úroveň zvuku..."
 
-#: Menus.cpp:605
-msgid "Automatic Volume (on/off)"
-msgstr "Automatická hlasitosť (on/off)"
+#: Menus.cpp:616
+msgid "Automated Input Level Adjustment (on/off)"
+msgstr ""
 
 #: Menus.cpp:614
 msgid "&Tracks"
@@ -2265,6 +2207,15 @@ msgstr "Netriedené"
 #: Menus.cpp:806
 msgid "Effe&ct"
 msgstr "Efe&kty"
+
+#: Menus.cpp:2547
+#, c-format
+msgid "Repeat %s"
+msgstr "Opakovať %s"
+
+#: Project.cpp:692
+msgid "Repeat Last Effect"
+msgstr "Opakovať predchádzajúci efekt"
 
 #: Menus.cpp:890
 msgid "&Analyze"
@@ -2593,18 +2544,10 @@ msgstr "Nedávne &súbory"
 msgid "&Undo %s"
 msgstr "&Späť %s"
 
-#: Menus.cpp:1231
-msgid "Can't Undo"
-msgstr "Nie je možné vrátiť"
-
 #: Menus.cpp:1240
 #, c-format
 msgid "&Redo %s"
 msgstr "&Znovu %s"
-
-#: Menus.cpp:1246
-msgid "Can't Redo"
-msgstr "Nie je možné opakovať"
 
 #: Menus.cpp:1935
 msgid "Sort By Time"
@@ -2639,11 +2582,6 @@ msgstr "Nastaviť pravú hranicu výberu"
 msgid "You must select a track first."
 msgstr "Najskôr musíte zvoliť stopu."
 
-#: Menus.cpp:2547
-#, c-format
-msgid "Repeat %s"
-msgstr "Opakovať %s"
-
 #: Menus.cpp:2703
 msgid "There are no label tracks to export."
 msgstr "Žiadne popisové stopy na export."
@@ -2657,11 +2595,9 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI súbor (*.mid)|*.mid|Allegro súbor (*.gro)|*.gro"
 
 #: Menus.cpp:2834
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr ""
-"Vybrali ste názov súboru s nerozpoznanou koncovkou súboru. \n"
+msgstr "Vybrali ste názov súboru s nerozpoznanou koncovkou súboru. \n"
 "Chcete pokračovať?"
 
 #: Menus.cpp:2835
@@ -2723,6 +2659,10 @@ msgstr "Nie je možné vložiť jeden druh stopy do iného."
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "Ne je možné kopírovať stereo zvuk do mono stopy."
 
+#: Menus.cpp:3538
+msgid "Paste Text to New Label"
+msgstr ""
+
 #: Menus.cpp:3504
 #: toolbars/EditToolBar.cpp:193
 msgid "Trim"
@@ -2741,14 +2681,14 @@ msgstr "Rozdelené a vymazané %.2f sekúnd na t=%.2f"
 msgid "Split Delete"
 msgstr "Rozdeliť a vymazať"
 
-#: Menus.cpp:3557
+#: Menus.cpp:3625
 #, c-format
-msgid "Disjoined %.2f seconds at t=%.2f"
-msgstr "Rozpojiť %.2f sekúnd na t=%.2f"
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr ""
 
-#: Menus.cpp:3560
-msgid "Disjoin"
-msgstr "Rozpojiť"
+#: Menus.cpp:3628
+msgid "Detach"
+msgstr ""
 
 #: Menus.cpp:3581
 #, c-format
@@ -2841,13 +2781,13 @@ msgstr "Spojiť popisy"
 msgid "Joined labeled regions"
 msgstr "Spojené oblasti s popismi"
 
-#: Menus.cpp:3749
-msgid "Disjoin Labels"
-msgstr "Rozpojiť popisy"
+#: Menus.cpp:3820
+msgid "Detach Labels"
+msgstr ""
 
-#: Menus.cpp:3749
-msgid "Disjoined labeled regions"
-msgstr "Rozpojené oblasti s popismi"
+#: Menus.cpp:3820
+msgid "Detached labeled regions"
+msgstr ""
 
 #: Menus.cpp:3771
 #: TrackPanel.cpp:6273
@@ -2865,6 +2805,10 @@ msgstr "Rozdeliť do novej stopy"
 #: Menus.cpp:3942
 msgid "Split at labels"
 msgstr "Rozdeliť na popisoch"
+
+#: FreqWindow.cpp:109
+msgid "Frequency Analysis"
+msgstr "Frekvenčná analýza"
 
 #: Menus.cpp:4384
 #, c-format
@@ -3046,6 +2990,10 @@ msgstr "Odstrániť stopu"
 msgid "Removed audio track(s)"
 msgstr "Odstránené audio stopy"
 
+#: Menus.cpp:5401
+msgid "Audio Device Info"
+msgstr ""
+
 #: Menus.cpp:5418
 #: Menus.cpp:5474
 #: export/ExportFFmpeg.cpp:753
@@ -3085,15 +3033,6 @@ msgstr "Mixážny panel"
 msgid "Mixing and rendering tracks"
 msgstr "Miešanie a vykreslenie stôp"
 
-#. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: MixerBoard.cpp:153
-#: MixerBoard.cpp:313
-#: TrackPanel.cpp:3566
-#: TrackPanel.cpp:5855
-#: TrackPanel.cpp:7296
-msgid "Pan"
-msgstr "Vyváženie"
-
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: MixerBoard.cpp:172
 #: MixerBoard.cpp:299
@@ -3107,15 +3046,14 @@ msgstr "Zisk"
 msgid "Musical Instrument"
 msgstr "Hudobný nástroj"
 
-#: MixerBoard.cpp:299
-#: TrackPanel.cpp:3565
-msgid "Moved gain slider"
-msgstr "Zmena nastavenia zisku (gain)"
-
+#. i18n-hint: Title of the Pan slider, used to move the sound left or right
+#: MixerBoard.cpp:153
 #: MixerBoard.cpp:313
-#: TrackPanel.cpp:3565
-msgid "Moved pan slider"
-msgstr "Zmena nastavenia vyváženia (pan)"
+#: TrackPanel.cpp:3566
+#: TrackPanel.cpp:5855
+#: TrackPanel.cpp:7296
+msgid "Pan"
+msgstr "Vyváženie"
 
 #: MixerBoard.cpp:1065
 #: TrackPanel.cpp:7237
@@ -3126,6 +3064,20 @@ msgstr "Stlmiť"
 #: TrackPanel.cpp:7237
 msgid "Solo"
 msgstr "Sólo"
+
+#: MixerBoard.cpp:230
+msgid "Signal Level Meter"
+msgstr ""
+
+#: MixerBoard.cpp:299
+#: TrackPanel.cpp:3565
+msgid "Moved gain slider"
+msgstr "Zmena nastavenia zisku (gain)"
+
+#: MixerBoard.cpp:313
+#: TrackPanel.cpp:3565
+msgid "Moved pan slider"
+msgstr "Zmena nastavenia vyváženia (pan)"
 
 #: MixerBoard.cpp:1325
 #, c-format
@@ -3143,10 +3095,6 @@ msgstr "Vyskytli sa problémy s tlačou."
 #: Printing.cpp:161
 msgid "Print"
 msgstr "Tlač"
-
-#: Project.cpp:692
-msgid "Repeat Last Effect"
-msgstr "Opakovať predchádzajúci efekt"
 
 #: Project.cpp:798
 msgid "Main Mix"
@@ -3177,15 +3125,13 @@ msgid "Save changes before closing?"
 msgstr "Uložiť zmeny pred uzavretím?"
 
 #: Project.cpp:1785
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "Ak ukladáte, projekt nebude mať žiadne stopy.\n"
 "\n"
 "Ak chcete uložiť všetky predtým otvorené skladby:\n"
@@ -3196,31 +3142,29 @@ msgstr ""
 msgid "Save changes?"
 msgstr "Uložiť zmeny?"
 
-#: Project.cpp:2003
-msgid "All files|*|All supported files|"
-msgstr "Všetky súbory|*|Všetky podporované súbory|"
-
 #: Project.cpp:2033
 msgid "Select one or more audio files..."
 msgstr "Zvoľte jeden alebo viac zvukových súborov..."
 
-#: Project.cpp:2061
-msgid "Audacity projects|*.aup|"
-msgstr "Audacity projekty|*.aup|"
+#. i18n-hint: This string is a label in the file type filter in the open
+#. * and save dialogues, for the option that only shows project files created
+#. * with Audacity. Do not include pipe symbols or .aup (this extension will
+#. * now be added automatically for the Save Projects dialogues).
+#: Project.cpp:2163 Project.cpp:3410
+msgid "Audacity projects"
+msgstr ""
 
 #: Project.cpp:2121
 #: Project.cpp:2556
 #, c-format
-msgid ""
-"This file was saved by Audacity %s, a much\n"
+msgid "This file was saved by Audacity %s, a much\n"
 "older version.  The format has changed.\n"
 "\n"
 "Audacity could corrupt the file in opening\n"
 "it, so you must back it up first.\n"
 "\n"
 "Open this file now?"
-msgstr ""
-"Tento súbor bol uložený do Audacity% s, čo je oveľa\n"
+msgstr "Tento súbor bol uložený do Audacity% s, čo je oveľa\n"
 "staršia verzia. Tento formát sa zmenil.\n"
 "\n"
 "Audacity mohol poškodiť súbor pri otvorení,\n"
@@ -3238,13 +3182,11 @@ msgid "Opening old project file"
 msgstr "Otvára sa starý projektový súbor"
 
 #: Project.cpp:2152
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"Pokúšate sa otvoriť automaticky vytvorí záložný súbor.\n"
+msgstr "Pokúšate sa otvoriť automaticky vytvorí záložný súbor.\n"
 "Toto môže viesť k závažnej strate dát.\n"
 "\n"
 "Prosím, miesto toho otvorte aktuálny Audacity projektoví súbor."
@@ -3261,11 +3203,9 @@ msgstr "Chyba pri načítaní súboru."
 
 #: Project.cpp:2181
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"Súbor môže byť nesprávny alebo poškodený: \n"
+msgstr "Súbor môže byť nesprávny alebo poškodený: \n"
 "%s"
 
 #: Project.cpp:2182
@@ -3304,12 +3244,10 @@ msgstr "Nemôžem nájsť zložku s dátami projektu: \"%s\""
 
 #: Project.cpp:2525
 #, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s - you need to upgrade to\n"
 "a newer version to open this file."
-msgstr ""
-"Súbor bol uložený Audacity %s.\n"
+msgstr "Súbor bol uložený Audacity %s.\n"
 "Vy používate %s - pokiaľ tento súbor chcete\n"
 "otvoriť, musíte prejsť na novšiu verziu programu."
 
@@ -3319,15 +3257,13 @@ msgstr "Nie je možné otvoriť súbor projektu"
 
 #: Project.cpp:2563
 #, c-format
-msgid ""
-"This file was saved by Audacity %s.\n"
+msgid "This file was saved by Audacity %s.\n"
 "\n"
 "Audacity can open and save this file, but saving it in this version\n"
 "will then prevent any 1.2 or earlier version opening it.\n"
 "\n"
 "Open this file now?"
-msgstr ""
-"Tento súbor bol uložený do Audacity %s.\n"
+msgstr "Tento súbor bol uložený do Audacity %s.\n"
 "\n"
 "Môžete otvoriť súbor s touto verziou Audacity, ale ak ju uložíte s touto verziou už ho nebudete môcť otvoriť vo verzii 1.2.\n"
 "\n"
@@ -3335,8 +3271,7 @@ msgstr ""
 "Otvoriť tento súbor teraz?"
 
 #: Project.cpp:2761
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3344,8 +3279,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"Váš projekt je teraz prázdny. \n"
+msgstr "Váš projekt je teraz prázdny. \n"
 "Ak ste ho uložili, projekt nebude mať žiadne stopy.\n"
 "\n"
 "Ak chcete uložiť všetky predtým otvorené stopy.\n"
@@ -3360,11 +3294,9 @@ msgstr "Upozornenie prázdny projekt"
 
 #: Project.cpp:2871
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"Nie je možné uložiť projekt. Možno %s \n"
+msgstr "Nie je možné uložiť projekt. Možno %s \n"
 "nie je zapisovateľný alebo je plný disk."
 
 #: Project.cpp:2873
@@ -3407,16 +3339,14 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Súbor Windows PCM Audio (*.wav)|*.wav"
 
 #: Project.cpp:3223
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"Audacity komprimované projektové súbory (.aup) uložte si prácu v menších, komprimovaných formátoch (.ogg). \n"
+msgstr "Audacity komprimované projektové súbory (.aup) uložte si prácu v menších, komprimovaných formátoch (.ogg). \n"
 "Komprimované projektové súbory sú dobrým spôsobom, ako odovzdať svoj projekt na internet, pretože sú oveľa menšie.\n"
 "Ak chcete otvoriť komprimovaný projekt trvá dlhšie ako zvyčajne, pretože importuje každú komprimovanú stopu. \n"
 "\n"
@@ -3424,15 +3354,17 @@ msgstr ""
 "Ak chcete uložiť súbor, ktorý je možné otvoriť pomocou iných programov, vyberte jeden z \n"
 " príkazov Export."
 
+#: Project.cpp:3398
+msgid "Save Compressed Project As..."
+msgstr ""
+
 #: Project.cpp:3226
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"Ukladáte súbor projektu Audacity (.aup).\n"
+msgstr "Ukladáte súbor projektu Audacity (.aup).\n"
 "\n"
 "Uložením projektu sa vytvorí súbor, ktorý môže otvoriť iba Audacity. \n"
 "\n"
@@ -3442,9 +3374,14 @@ msgstr ""
 msgid "Save Project As..."
 msgstr "Uložiť projekt ako..."
 
-#: Project.cpp:3230
-msgid "Audacity projects (*.aup)|*.aup"
-msgstr "Audacity projekty (*.aup)|*.aup"
+#: Project.cpp:3431
+msgid "Error Saving Project"
+msgstr ""
+
+#: Project.cpp:3431
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
+"Please try again and select an original name."
+msgstr ""
 
 #: Project.cpp:3279
 msgid "Created new project"
@@ -3484,6 +3421,10 @@ msgstr "Na disku zostáva miesto pre %d sekúnd  nahrávania."
 #: Project.cpp:3706
 msgid "Out of disk space"
 msgstr "Nedostatok miesta na disku"
+
+#: Project.cpp:3917
+msgid "On-demand import and waveform calculation complete."
+msgstr ""
 
 #: Project.cpp:3719
 #, c-format
@@ -3895,102 +3836,82 @@ msgstr "Chyba pri ukladaní súboru s tagmy"
 
 #: Theme.cpp:638
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
-msgstr ""
-"Audacity nemôže zapísať súbor:\n"
+msgstr "Audacity nemôže zapísať súbor:\n"
 "  %s."
 
 #: Theme.cpp:656
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr ""
-"Audacity nemôže otvoriť súbor:\n"
+msgstr "Audacity nemôže otvoriť súbor:\n"
 "  %s\n"
 "pre písanie."
 
 #: Theme.cpp:664
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
-msgstr ""
-"Audacity nemôže zapísať obrázky do súboru:\n"
+msgstr "Audacity nemôže zapísať obrázky do súboru:\n"
 "  %s."
 
 #: Theme.cpp:799
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"Audacity nemôže nájsť súbor:\n"
+msgstr "Audacity nemôže nájsť súbor:\n"
 "  %s.\n"
 "Téma sa nenačítala."
 
 #: Theme.cpp:807
 #: Theme.cpp:896
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"Audacity nemôže načítať súbor:\n"
+msgstr "Audacity nemôže načítať súbor:\n"
 "  %s.\n"
 "Pravdepodobne zlý png formát?"
 
 #: Theme.cpp:823
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"Audacity nemôže prečítať vlastnú predvolenú tému.\n"
+msgstr "Audacity nemôže prečítať vlastnú predvolenú tému.\n"
 "Nahláste prosím tento problém."
 
 #: Theme.cpp:918
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr ""
-"Žiadny z očakávaných komponentov témy\n"
+msgstr "Žiadny z očakávaných komponentov témy\n"
 "nebol nájdený:\n"
 "  %s."
 
 #: Theme.cpp:942
 #: effects/NoiseRemoval.cpp:172
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"Nie je možné vytvoriť adresár:\n"
+msgstr "Nie je možné vytvoriť adresár:\n"
 "  %s"
 
 #: Theme.cpp:963
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"Audacity nemôže uložiť súbor:\n"
+msgstr "Audacity nemôže uložiť súbor:\n"
 "  %s"
 
 #: Theme.cpp:975
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"Všetky potrebné súbory v:\n"
+msgstr "Všetky potrebné súbory v:\n"
 "  %s\n"
 "už existujú."
 
@@ -4469,10 +4390,6 @@ msgstr "Stereo, 999999Hz"
 msgid "TrackView"
 msgstr "Pohľad na Stopu"
 
-#: TrackPanelAx.cpp:293
-msgid "Track Accessible out of sync"
-msgstr "Stopa dostupná zo synchronizácie"
-
 #: TrackPanelAx.cpp:301
 #, c-format
 msgid "Track %d"
@@ -4540,27 +4457,21 @@ msgid "Plugins %i to %i"
 msgstr "Moduly %i - %i"
 
 #: commands/CommandManager.cpp:939
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Došlo k problému s vašou poslednou akciou. Ak si myslíte, že \n"
+msgstr "Došlo k problému s vašou poslednou akciou. Ak si myslíte, že \n"
 "to je chyba, prosím povedzte nám presne, ako k nemu došlo."
 
 #: commands/CommandManager.cpp:943
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped.  [Pausing is not sufficient.]"
-msgstr ""
-"Môžete to urobiť ale pri prehrávaní a nahrávaní sa\n"
+msgstr "Môžete to urobiť ale pri prehrávaní a nahrávaní sa\n"
 "zastaví. [Pozastavenie nie je dostatočné.]"
 
 #: commands/CommandManager.cpp:945
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use.  [You can't use this with mono.]"
-msgstr ""
-"Najprv musíte vybrať nejaké stereo audio pre toto\n"
+msgstr "Najprv musíte vybrať nejaké stereo audio pre toto\n"
 " použitie.[Nie je možné použiť toto mono.]"
 
 #: commands/CommandManager.cpp:947
@@ -4568,11 +4479,9 @@ msgid "You must first select some audio for this to use."
 msgstr "Najprv musíte vybrať nejaké audio pre toto použitie."
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. [Selecting other kinds of track won't work.]"
-msgstr ""
-"Najprv musíte vybrať nejaké audio pre toto\n"
+msgstr "Najprv musíte vybrať nejaké audio pre toto\n"
 "použitie.[Výber iných druhov stopy nebude fungovať.]"
 
 #: commands/CommandManager.cpp:954
@@ -5112,41 +5021,25 @@ msgstr "Kompresor..."
 msgid "Applying Dynamic Range Compression..."
 msgstr "Aplikujem kompresiu dynamického rozsahu..."
 
-#: effects/Contrast.cpp:64
-msgid "Contrast Analysis"
-msgstr "Analýza kontrastu"
-
-#: effects/Contrast.cpp:88
-msgid "Contrast Tool Foreground"
-msgstr "Nástroj kontrastu popredia"
-
-#: effects/Contrast.cpp:88
-msgid ""
-"Foreground times selected.\n"
-"Now select background and use Ctrl+Shift+T or menu again."
+#: effects/Contrast.cpp:65
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
-"Čas popredia vybraný. \n"
-"Teraz vyberte pozadie a použitie Ctrl+Shift+T alebo znova menu."
 
 #: effects/Contrast.cpp:144
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
-msgstr ""
-"Začiatočný čas nasleduje po koncovom čase! \n"
+msgstr "Začiatočný čas nasleduje po koncovom čase! \n"
 "Prosím, zadajte primerané časy."
 
 #: effects/Contrast.cpp:154
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"Časy nie sú primerané! \n"
+msgstr "Časy nie sú primerané! \n"
 "Prosím, zadajte primerané časy."
 
-#: effects/Contrast.cpp:276
-msgid "Contrast Analyzer"
-msgstr "Analyzátor Kontrastu"
+#: effects/Contrast.cpp:214
+msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
+msgstr ""
 
 #: effects/Contrast.cpp:286
 #: effects/ToneGen.cpp:312
@@ -5179,17 +5072,9 @@ msgstr "Začiatočný čas popredia"
 msgid "Foreground end time"
 msgstr "Koncový čas popredia"
 
-#: effects/Contrast.cpp:329
-#: effects/Contrast.cpp:373
-#: effects/Contrast.cpp:437
-#: effects/Contrast.cpp:448
-msgid "Measured"
-msgstr "Merané"
-
-#: effects/Contrast.cpp:331
-#: effects/Contrast.cpp:375
-msgid "Use selection"
-msgstr "Použitie výberu"
+#: effects/Contrast.cpp:265 effects/Contrast.cpp:305
+msgid "Measure selection"
+msgstr ""
 
 #: effects/Contrast.cpp:336
 msgid "Background:"
@@ -5219,32 +5104,13 @@ msgstr "Reset"
 msgid "Difference:"
 msgstr "Rozdiel:"
 
-#: effects/Contrast.cpp:403
-msgid "Information"
-msgstr "Informácia"
+#: effects/Contrast.cpp:333
+msgid "WCAG 2 Help"
+msgstr ""
 
-#: effects/Contrast.cpp:405
-msgid "For measuring rms volume differences between two selections of audio."
-msgstr "Pre meranie rms rozdielu hlasitosti medzi dvoma výbermi  z audia."
-
-#: effects/Contrast.cpp:406
-msgid "Help for WCAG2 Audio Contrast Analyzer"
-msgstr "Pomoc pre WCAG2 Audio Analyzátor Kontrastu"
-
-#: effects/Contrast.cpp:412
-msgid "Close (keeping times)"
-msgstr "Zatvoriť (zachovanie času)"
-
-#: effects/Contrast.cpp:474
-#: effects/Contrast.cpp:480
-#: effects/Contrast.cpp:486
-#: effects/Contrast.cpp:492
-msgid "Measure"
-msgstr "Meranie"
-
-#: effects/Contrast.cpp:531
-msgid "No foreground to measure"
-msgstr "Žiadne popredie na meranie"
+#: effects/Contrast.cpp:419
+msgid "No foreground measured"
+msgstr ""
 
 #: effects/Contrast.cpp:536
 msgid "Measured foreground level"
@@ -5256,9 +5122,13 @@ msgstr "Meranie úrovne popredia"
 msgid "%.1f dB"
 msgstr "%.1f dB"
 
-#: effects/Contrast.cpp:541
-msgid "No background to measure"
-msgstr "Žiadne pozadie na meranie"
+#: effects/Contrast.cpp:428 effects/Contrast.cpp:441
+msgid "zero"
+msgstr ""
+
+#: effects/Contrast.cpp:432
+msgid "No background measured"
+msgstr ""
 
 #: effects/Contrast.cpp:546
 msgid "Measured background level"
@@ -5276,10 +5146,18 @@ msgstr "WCAG2 Chybné"
 msgid "Current difference"
 msgstr "Aktuálny rozdiel:"
 
+#: effects/Contrast.cpp:452
+msgid "indeterminate"
+msgstr ""
+
 #: effects/Contrast.cpp:556
 #, c-format
 msgid "%.1f dB Average rms"
 msgstr "%.1f dB priemer  rms"
+
+#: effects/Contrast.cpp:457
+msgid "infinite dB difference"
+msgstr ""
 
 #: effects/Contrast.cpp:561
 msgid "Please enter valid times."
@@ -5320,6 +5198,10 @@ msgstr "Koncový čas = %2d hodina(y), %2d minút(y), %.2f sekúnd."
 msgid "Average rms = %.1f dB."
 msgstr "Priemer  rms = %.1f dB."
 
+#: effects/Contrast.cpp:512 effects/Contrast.cpp:531
+msgid "Average rms = zero."
+msgstr ""
+
 #: effects/Contrast.cpp:610
 #: effects/Contrast.cpp:627
 msgid "Average rms =  dB."
@@ -5333,10 +5215,18 @@ msgstr "Pozadie"
 msgid "Results"
 msgstr "Výsledky "
 
+#: effects/Contrast.cpp:538
+msgid "Difference is indeterminate."
+msgstr ""
+
 #: effects/Contrast.cpp:631
 #, c-format
 msgid "Difference = %.1f Average rms dB."
 msgstr "Rozdiel = %.1f Priemer rms dB."
+
+#: effects/Contrast.cpp:543
+msgid "Difference = infinite Average rms dB."
+msgstr ""
 
 #: effects/Contrast.cpp:633
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Pass"
@@ -5532,9 +5422,13 @@ msgstr "Vyberte krivku:"
 msgid "Save As..."
 msgstr "Uložiť ako..."
 
-#: effects/Equalization.cpp:1341
-msgid "Flat"
-msgstr "Plochý"
+#: effects/Equalization.cpp:1407
+msgid "Flatten"
+msgstr ""
+
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "Invertovať"
 
 #: effects/Equalization.cpp:1423
 msgid "To use this EQ curve in a batch chain, please choose a new name for it."
@@ -5616,10 +5510,6 @@ msgstr "Detekcia výstrižku "
 #: effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "Nie je k dispozícii dostatok priestoru pre generovanie zvuku"
-
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "Invertovať"
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -5866,11 +5756,9 @@ msgstr "Generuje sa šum"
 
 #: effects/NoiseRemoval.cpp:191
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"Nedá sa otvoriť súbor: \n"
+msgstr "Nedá sa otvoriť súbor: \n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:276
@@ -5882,11 +5770,9 @@ msgid "Step 1"
 msgstr "Krok 1"
 
 #: effects/NoiseRemoval.cpp:828
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"Vyberte niekoľko sekúnd samotného šumu, aby Audacity vedel\n"
+msgstr "Vyberte niekoľko sekúnd samotného šumu, aby Audacity vedel\n"
 "čo sa má filtrovať. Potom kliknite na Získať profil šumu."
 
 #: effects/NoiseRemoval.cpp:829
@@ -5894,11 +5780,9 @@ msgid "Step 2"
 msgstr "Krok 2"
 
 #: effects/NoiseRemoval.cpp:830
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Označte všetko čo chcete filtrovať,\n"
+msgstr "Označte všetko čo chcete filtrovať,\n"
 "zvoľte mieru filtrovania šumu a kliknite na 'OK'.\n"
 
 #: effects/NoiseRemoval.cpp:835
@@ -6059,24 +5943,20 @@ msgid "Applying Phaser"
 msgstr "Aplikujem Fázer"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Tento opravný efekt je určený na použitie na veľmi krátkych úsekoch poškodeného záznamu (do 128 vzoriek).\n"
+msgstr "Tento opravný efekt je určený na použitie na veľmi krátkych úsekoch poškodeného záznamu (do 128 vzoriek).\n"
 "\n"
 "Nastavte si veľké zväčšenie a zvoľte malú časť na opravu."
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"Oprava pomocou audio dát mimo vybranú oblasť. \n"
+msgstr "Oprava pomocou audio dát mimo vybranú oblasť. \n"
 "\n"
 "Prosím vyberte oblasť, ktorá sa dotýka audia aspoň na jednej strane.\n"
 "\n"
@@ -6165,11 +6045,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "Odstránenie špičiek od Lynna Allana"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"Maximálna dĺžka Impulzu  (milisekúnd): \n"
+msgstr "Maximálna dĺžka Impulzu  (milisekúnd): \n"
 "(99999 alebo väčšia je vypnutá)"
 
 #: effects/SpikeCleaner.cpp:178
@@ -6361,11 +6239,9 @@ msgid "Threshold for silence:"
 msgstr "Prah ticha: "
 
 #: effects/TruncSilence.cpp:524
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"   Dĺžka musí byť aspoň 1 milisekunda\n"
+msgstr "   Dĺžka musí byť aspoň 1 milisekunda\n"
 "    Kompresný pomer musí byť aspoň 1:1"
 
 #: effects/TruncSilence.h:29
@@ -6393,6 +6269,10 @@ msgstr "Nič"
 #: effects/VST/VSTEffect.cpp:404
 msgid "Presets:"
 msgstr "Predvoľby:"
+
+#: effects/VST/VSTEffect.cpp:489
+msgid "Presets"
+msgstr ""
 
 #: effects/VST/VSTEffect.cpp:416
 msgid "Load"
@@ -6607,14 +6487,12 @@ msgstr "Naozaj chcete súbor uložiť ako \""
 
 #: export/Export.cpp:596
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to save the file under this name?"
-msgstr ""
-"Chystáte sa uložiť súbor %s pod menom \"%s\".\n"
+msgstr "Chystáte sa uložiť súbor %s pod menom \"%s\".\n"
 "\n"
 "Obvykle názvy týchto súborov končia na \".%s\" a niektoré programy nevedia otvoriť súbory s neštandardnými príponami.\n"
 "Naozaj chcete uložiť tento súbor pod týmto menom?"
@@ -6677,8 +6555,8 @@ msgstr "Zobraziť výstup"
 
 #: export/ExportCL.cpp:85
 #, c-format
-msgid "Data will be piped to standard in. \"%f\" will be replaced with output filename selected."
-msgstr "Dáta budú prevedené do štandardu   \"%f\" bude nahradené vybraným výstupným súborom."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
+msgstr ""
 
 #: export/ExportCL.cpp:220
 msgid "(external program)"
@@ -6703,20 +6581,28 @@ msgid "Command Output"
 msgstr "Výstup príkazu"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
-msgstr ""
-"Správne nakonfigurovaný FFmpeg je povinný pokračovať.\n"
+msgstr "Správne nakonfigurovaný FFmpeg je povinný pokračovať.\n"
 "Môžete nastaviť v Nastavenie-> Knižnice."
+
+#: export/ExportFFmpeg.cpp:237
+msgid "AMR support is not distributable"
+msgstr ""
+
+#: export/ExportFFmpeg.cpp:237
+msgid "Properly configured FFmpeg is required to proceed.\n"
+"You can configure it at Preferences > Libraries.\n"
+"\n"
+"Note that AMR support is not available with our FFmpeg\n"
+"installer, but requires you compile FFmpeg yourself."
+msgstr ""
 
 #: export/ExportFFmpeg.cpp:428
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
-msgstr ""
-"FFmpeg nemôže nájsť audio kodek 0x% x.\n"
+msgstr "FFmpeg nemôže nájsť audio kodek 0x% x.\n"
 "Podpora tohto kodeku je pravdepodobne nevkompilovaná."
 
 #: export/ExportFFmpeg.cpp:652
@@ -6741,20 +6627,16 @@ msgstr "Nesprávna vzorkovacia rýchlosť"
 
 #: export/ExportFFmpeg.cpp:758
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
-msgstr ""
-"Projekt vzorkovej rýchlosti (%d) nie je podporovaný súčasným výstupným\n"
+msgstr "Projekt vzorkovej rýchlosti (%d) nie je podporovaný súčasným výstupným\n"
 "súborovým formátom. "
 
 #: export/ExportFFmpeg.cpp:761
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
-msgstr ""
-"Projekt kombinácie vzorkovej rýchlosti (%d) a bitovej rýchlosti (%d kbps)  nie je\n"
+msgstr "Projekt kombinácie vzorkovej rýchlosti (%d) a bitovej rýchlosti (%d kbps)  nie je\n"
 "podporovaný súčasným výstupným súborovým formátom."
 
 #: export/ExportFFmpeg.cpp:764
@@ -6844,6 +6726,66 @@ msgstr "Prosím, vyberte kodek pred uložením profilu"
 msgid "Preset '%s' does not exist."
 msgstr "Predvoľba '%s' neexistuje."
 
+#: export/ExportFFmpegDialogs.cpp:1179
+msgid "LC"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1180
+msgid "Main"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.h:374
+msgid "LTP"
+msgstr "LTP"
+
+#: export/ExportFFmpegDialogs.h:54
+msgid "M4A (AAC) Files (FFmpeg)"
+msgstr "M4A (AAC) Súbory (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:55
+msgid "AC3 Files (FFmpeg)"
+msgstr "AC3 Súbory (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:56
+msgid "AMR (narrow band) Files (FFmpeg)"
+msgstr "AMR (úzke pásmo) Súbory (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.cpp:1192
+msgid "AMR (wide band) Files (FFmpeg)"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.h:58
+msgid "WMA (version 2) Files (FFmpeg)"
+msgstr "WMA (verzia 2) Súbory (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:59
+msgid "Custom FFmpeg Export"
+msgstr "Vlastný FFmpeg export"
+
+#: export/ExportFFmpegDialogs.h:677
+msgid "2-level"
+msgstr "2-úroveň"
+
+#: export/ExportFFmpegDialogs.h:677
+msgid "4-level"
+msgstr "4-úroveň"
+
+#: export/ExportFFmpegDialogs.h:677
+msgid "8-level"
+msgstr "8-úroveň"
+
+#: export/ExportFFmpegDialogs.h:677
+msgid "Estimate"
+msgstr "Odhad"
+
+#: export/ExportFFmpegDialogs.h:677
+msgid "Full search"
+msgstr "Úplné vyhľadávanie"
+
+#: export/ExportFFmpegDialogs.h:677
+msgid "Log search"
+msgstr "Prihlásiť vyhľadávanie"
+
 #: export/ExportFFmpegDialogs.cpp:797
 msgid "Specify Other Options"
 msgstr "Upresniť iné nastavenie "
@@ -6880,17 +6822,9 @@ msgstr "Formát:"
 msgid "Codec:"
 msgstr "Kodek:"
 
-#: export/ExportFFmpegDialogs.cpp:902
-msgid "Not all formats and codecs are compatible. Some parameters (such as bitrate and samplerate) combinations are not compatible with some codecs too."
-msgstr "Nie všetky formáty a kodeky sú kompatibilné. Niektoré parametre (napr. bitová a vzorkovacia rýchlosť) a ich kombinácie tiež nie sú kompatibilné s niektorými kodekmi."
-
-#: export/ExportFFmpegDialogs.cpp:905
-msgid "Format selector:"
-msgstr "Volič formátu:"
-
-#: export/ExportFFmpegDialogs.cpp:906
-msgid "Codec selector:"
-msgstr "Volič kodekov:"
+#: export/ExportFFmpegDialogs.cpp:1409
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:908
 msgid "Show All Formats"
@@ -6900,9 +6834,9 @@ msgstr "Zobraziť všetky formáty"
 msgid "Show All Codecs"
 msgstr "Zobraziť všetky kodeky"
 
-#: export/ExportFFmpegDialogs.cpp:916
-msgid "Options"
-msgstr "Možnosti"
+#: export/ExportFFmpegDialogs.cpp:1427
+msgid "General Options"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:920
 #: prefs/GUIPrefs.cpp:114
@@ -6910,49 +6844,49 @@ msgid "Language:"
 msgstr "Jazyk:"
 
 #: export/ExportFFmpegDialogs.cpp:921
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"ISO 639 3-zápis kódu jazyka \n"
+msgstr "ISO 639 3-zápis kódu jazyka \n"
 "Voliteľné \n"
 "prázdny - automatické"
+
+#: export/ExportFFmpegDialogs.cpp:1435
+msgid "Bit Reservoir"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1439
+msgid "VBL"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:923
 msgid "Tag:"
 msgstr "Tág:"
 
 #: export/ExportFFmpegDialogs.cpp:924
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"Značka kodeku (FOURCC)\n"
+msgstr "Značka kodeku (FOURCC)\n"
 "Voliteľné \n"
 "prázdny - automatické"
 
 #: export/ExportFFmpegDialogs.cpp:927
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
-msgstr ""
-"Bitová rýchlosť (bitov/sekundu) - ovplyvňuje výslednú veľkosť súboru a kvalitu \n"
+msgstr "Bitová rýchlosť (bitov/sekundu) - ovplyvňuje výslednú veľkosť súboru a kvalitu \n"
 "Niektoré kodeky môžu iba prijať konkrétne hodnoty (128k, 192k, 256k, atď) \n"
 "0 - automatické \n"
 "Odporúčané - 192000"
 
 #: export/ExportFFmpegDialogs.cpp:930
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
-msgstr ""
-"Celková kvalita, používaná odlišne rôznymi kodekmi  \n"
+msgstr "Celková kvalita, používaná odlišne rôznymi kodekmi  \n"
 "Potrebné pre vorbis \n"
 "0 - automatické \n"
 "-1 - Vypnuté (použitie miesto dátového toku)"
@@ -6962,24 +6896,20 @@ msgid "Sample Rate:"
 msgstr "Rýchlosť vzorkovania: "
 
 #: export/ExportFFmpegDialogs.cpp:933
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
-msgstr ""
-"Vzorkovací kmitočet (Hz) \n"
+msgstr "Vzorkovací kmitočet (Hz) \n"
 "0 - nemení vzorkovací kmitočet"
 
-#: export/ExportFFmpegDialogs.cpp:935
-msgid "Cutoff Bandwidth:"
-msgstr "Prerušené pásmo:"
+#: export/ExportFFmpegDialogs.cpp:1457
+msgid "Cutoff:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:936
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
-msgstr ""
-"Prerušené audio pásmo (Hz)\n"
+msgstr "Prerušené audio pásmo (Hz)\n"
 "Voliteľné\n"
 "0 - automatické"
 
@@ -6988,164 +6918,138 @@ msgid "Profile:"
 msgstr "Profil:"
 
 #: export/ExportFFmpegDialogs.cpp:940
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
-msgstr ""
-"AAC Profil \n"
+msgstr "AAC Profil \n"
 "Vysoká-Zložitosť-predvolená \n"
 "Väčšina hráčov nebude hrať nič iného ako LC"
-
-#: export/ExportFFmpegDialogs.cpp:942
-msgid "Use Bit Reservoir"
-msgstr "Použitie zásobníkových Bitov"
-
-#: export/ExportFFmpegDialogs.cpp:945
-msgid "Use Variable Block Length"
-msgstr "Variabilné použitie blokovej dĺžky"
 
 #: export/ExportFFmpegDialogs.cpp:950
 msgid "FLAC options"
 msgstr "Nastavenie FLAC"
 
-#: export/ExportFFmpegDialogs.cpp:954
-msgid "Compression Level:"
-msgstr "Úroveň Kompresie"
+#: export/ExportFFmpegDialogs.cpp:1473
+msgid "Compression:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:955
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr ""
-"Úroveň kompresie\n"
+msgstr "Úroveň kompresie\n"
 "Potrebné pre FLAC\n"
 "-1 - automatické\n"
 "min - 0 (rýchle kódovanie, veľký výstupný súbor)\n"
 "max - 10 (pomalé kódovanie, malý výstupný súbor)"
 
-#: export/ExportFFmpegDialogs.cpp:957
-msgid "Frame Size:"
-msgstr "Veľkosť snímku:"
+#: export/ExportFFmpegDialogs.cpp:1476
+msgid "Frame:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:958
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr ""
-"Veľkosť rámca\n"
+msgstr "Veľkosť rámca\n"
 "Voliteľná \n"
 "0 - predvolená\n"
 "min - 16 \n"
 "max - 65535"
 
-#: export/ExportFFmpegDialogs.cpp:960
-msgid "LPC coefficients precision"
-msgstr "LPC koeficienty presnosti"
+#: export/ExportFFmpegDialogs.cpp:1479
+msgid "LPC"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:961
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr ""
-"LPC koeficienty presnosti \n"
+msgstr "LPC koeficienty presnosti \n"
 "Voliteľné \n"
 "0 - predvolené \n"
 "min - 1 \n"
 "max - 15"
 
-#: export/ExportFFmpegDialogs.cpp:963
-msgid "Minimal prediction order"
-msgstr "Minimálna predikcia poradia"
-
-#: export/ExportFFmpegDialogs.cpp:964
-msgid ""
-"Minimal prediction order\n"
-"Optional\n"
-"-1 - default\n"
-"min - 0\n"
-"max - 32 (with LPC) or 4 (without LPC)"
+#: export/ExportFFmpegDialogs.cpp:1482
+msgid "PdO Method:"
 msgstr ""
-"Minimálna predpoveď príkazu\n"
-"Voliteľná\n"
-"-1 - prevolená\n"
-"min - 0\n"
-"max - 32 (s LPC) or 4 (bez LPC)"
-
-#: export/ExportFFmpegDialogs.cpp:966
-msgid "Maximal prediction order"
-msgstr "Maximálna predikcia poradia"
-
-#: export/ExportFFmpegDialogs.cpp:967
-msgid ""
-"Maximal prediction order\n"
-"Optional\n"
-"-1 - default\n"
-"min - 0\n"
-"max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Maximálna predpoveď príkazu\n"
-"Voliteľná\n"
-"-1 - prevolená\n"
-"min - 0\n"
-"max - 32 (s LPC) or 4 (bez LPC)"
-
-#: export/ExportFFmpegDialogs.cpp:969
-msgid "Prediction Order Method:"
-msgstr "Predikcia metódy poradia"
 
 #: export/ExportFFmpegDialogs.cpp:971
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
-msgstr ""
-"Predpoveď metódy príkazu\n"
+msgstr "Predpoveď metódy príkazu\n"
 "Odhad - najrýchlejší, nižšia kompresia\n"
 "Prihlásené hľadanie - najpomalšie, najlepšia kompresia\n"
 " Úplné hľadanie - predvolené"
 
-#: export/ExportFFmpegDialogs.cpp:973
-msgid "Minimal partition order"
-msgstr "Minimálnal partícia poradia"
+#: export/ExportFFmpegDialogs.cpp:1487
+msgid "Min. PdO"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:964
+msgid "Minimal prediction order\n"
+"Optional\n"
+"-1 - default\n"
+"min - 0\n"
+"max - 32 (with LPC) or 4 (without LPC)"
+msgstr "Minimálna predpoveď príkazu\n"
+"Voliteľná\n"
+"-1 - prevolená\n"
+"min - 0\n"
+"max - 32 (s LPC) or 4 (bez LPC)"
+
+#: export/ExportFFmpegDialogs.cpp:1490
+msgid "Max. PdO"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:967
+msgid "Maximal prediction order\n"
+"Optional\n"
+"-1 - default\n"
+"min - 0\n"
+"max - 32 (with LPC) or 4 (without LPC)"
+msgstr "Maximálna predpoveď príkazu\n"
+"Voliteľná\n"
+"-1 - prevolená\n"
+"min - 0\n"
+"max - 32 (s LPC) or 4 (bez LPC)"
+
+#: export/ExportFFmpegDialogs.cpp:1493
+msgid "Min. PtO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:974
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Minimálny príkaz partície\n"
+msgstr "Minimálny príkaz partície\n"
 "Voliteľnýl\n"
 "-1 - predvolený\n"
 "min - 0\n"
 "max - 8"
 
-#: export/ExportFFmpegDialogs.cpp:976
-msgid "Maximal partition order"
-msgstr "Maximálna partícia poradia"
+#: export/ExportFFmpegDialogs.cpp:1496
+msgid "Max. PtO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:977
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Maximálny príkaz partície\n"
+msgstr "Maximálny príkaz partície\n"
 "Voliteľnýl\n"
 "-1 - predvolený\n"
 "min - 0\n"
@@ -7164,12 +7068,10 @@ msgid "Mux Rate:"
 msgstr "Mux rýchlosť:"
 
 #: export/ExportFFmpegDialogs.cpp:991
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Maximálna prenosová rýchlosť multiplexovaného toku \n"
+msgstr "Maximálna prenosová rýchlosť multiplexovaného toku \n"
 "Voliteľná\n"
 "0 - predvolená"
 
@@ -7178,12 +7080,10 @@ msgid "Packet Size:"
 msgstr "Veľkosť paketu:"
 
 #: export/ExportFFmpegDialogs.cpp:994
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Veľkosť paketu\n"
+msgstr "Veľkosť paketu\n"
 "Voliteľný\n"
 "0 - predvolený"
 
@@ -7222,62 +7122,6 @@ msgstr "Nepodarilo sa odhadnúť formát"
 #: export/ExportFFmpegDialogs.cpp:1405
 msgid "Failed to find the codec"
 msgstr "Nepodarilo sa nájsť kodek"
-
-#: export/ExportFFmpegDialogs.h:54
-msgid "M4A (AAC) Files (FFmpeg)"
-msgstr "M4A (AAC) Súbory (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:55
-msgid "AC3 Files (FFmpeg)"
-msgstr "AC3 Súbory (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:56
-msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR (úzke pásmo) Súbory (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:58
-msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "WMA (verzia 2) Súbory (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:59
-msgid "Custom FFmpeg Export"
-msgstr "Vlastný FFmpeg export"
-
-#: export/ExportFFmpegDialogs.h:374
-msgid "LTP"
-msgstr "LTP"
-
-#: export/ExportFFmpegDialogs.h:374
-msgid "Low Complexity"
-msgstr "Nízka zložitosť"
-
-#: export/ExportFFmpegDialogs.h:374
-msgid "Main profile"
-msgstr "Hlavný profil"
-
-#: export/ExportFFmpegDialogs.h:677
-msgid "2-level"
-msgstr "2-úroveň"
-
-#: export/ExportFFmpegDialogs.h:677
-msgid "4-level"
-msgstr "4-úroveň"
-
-#: export/ExportFFmpegDialogs.h:677
-msgid "8-level"
-msgstr "8-úroveň"
-
-#: export/ExportFFmpegDialogs.h:677
-msgid "Estimate"
-msgstr "Odhad"
-
-#: export/ExportFFmpegDialogs.h:677
-msgid "Full search"
-msgstr "Úplné vyhľadávanie"
-
-#: export/ExportFFmpegDialogs.h:677
-msgid "Log search"
-msgstr "Prihlásiť vyhľadávanie"
 
 #: export/ExportFLAC.cpp:67
 msgid "Specify FLAC Options"
@@ -7350,11 +7194,9 @@ msgstr "Exportovať FLAC nie je možné otvoriť %s"
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
-msgstr ""
-"FLAC Enkóder sa nepodarilo inicializovať \n"
+msgstr "FLAC Enkóder sa nepodarilo inicializovať \n"
 "Stav: %d "
 
 #: export/ExportFLAC.cpp:324
@@ -7497,11 +7339,9 @@ msgstr "Voľne dostupnú kópiu Lame získate kliknutím sem  -->"
 
 #: export/ExportMP3.cpp:1070
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
-msgstr ""
-"Tie sú prepojené s lame_enc.dll v%d.%d. Táto verzia nie je kompatibilná s Audacity %d.%d.%d.\n"
+msgstr "Tie sú prepojené s lame_enc.dll v%d.%d. Táto verzia nie je kompatibilná s Audacity %d.%d.%d.\n"
 "Prosím, stiahnite si poslednú verziu  LAME MP3 knižnice."
 
 #: export/ExportMP3.cpp:1328
@@ -7569,20 +7409,16 @@ msgstr "Chyba %d vrátená z MP3 enkódera"
 
 #: export/ExportMP3.cpp:1790
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
-msgstr ""
-"Projekt vzorkovej sady (%d) nie je podporovaným MP3 \n"
+msgstr "Projekt vzorkovej sady (%d) nie je podporovaným MP3 \n"
 "  súborovým formátom. "
 
 #: export/ExportMP3.cpp:1793
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
-msgstr ""
-"Projekt vzorkovej sady (%d) a prenosová rýchlosť (%d kbps) ich kombinácia nie je \n"
+msgstr "Projekt vzorkovej sady (%d) a prenosová rýchlosť (%d kbps) ich kombinácia nie je \n"
 "  podporovaných  MP3 súborovým formátom."
 
 #: export/ExportMP3.cpp:1970
@@ -7595,13 +7431,11 @@ msgid "Export Multiple"
 msgstr "Viacnásobný export"
 
 #: export/ExportMultiple.cpp:163
-msgid ""
-"If you have more than one Audio Track, you can export each track as a separate file,\n"
+msgid "If you have more than one Audio Track, you can export each track as a separate file,\n"
 "or if you have a Label Track, you can export a new file for each label.\n"
 "\n"
 "This project does not have multiple tracks or a Label Track, so you cannot export multiple files."
-msgstr ""
-"Pokiaľ máte viac ako jednu zvukovú stopu, môžete exportovať každú do samostatného súboru.\n"
+msgstr "Pokiaľ máte viac ako jednu zvukovú stopu, môžete exportovať každú do samostatného súboru.\n"
 "alebo ak máte popisovú stopu, môžete exportovať nový súbor pre každý popis.\n"
 "\n"
 "Tento projekt neobsahuje viac stôp, ani popisovú stopu, takže viacnásobný export nie je možné použiť."
@@ -7656,10 +7490,13 @@ msgstr "Pomenovať súbory:"
 msgid "Using Label/Track Name"
 msgstr "Použi popis/Názov stopy"
 
-#: export/ExportMultiple.cpp:311
-#: export/ExportMultiple.cpp:313
-msgid "Numbering consecutively"
-msgstr "Postupné číslovanie"
+#: export/ExportMultiple.cpp:315
+msgid "Numbering before Label/Track Name"
+msgstr ""
+
+#: export/ExportMultiple.cpp:318
+msgid "Numbering after Label/Track Name"
+msgstr ""
 
 #: export/ExportMultiple.cpp:319
 msgid "File name prefix:"
@@ -7707,20 +7544,18 @@ msgstr "Export zastavený po exporte nasledujúceho %ld súboru(ov)."
 msgid "Something went really wrong after exporting the following %ld file(s)."
 msgstr "Niečo zle po exporte posledného  %ld súboru (ov)."
 
-#: export/ExportMultiple.cpp:535
-msgid "ExportMultiple"
-msgstr "Viacnásobný export"
-
 #: export/ExportMultiple.cpp:570
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr ""
-"\"%s\" neexistuje.\n"
+msgstr "\"%s\" neexistuje.\n"
 "\n"
 "Chcete ho vytvoriť?"
+
+#: export/ExportMultiple.cpp:641 export/ExportMultiple.cpp:776
+msgid "untitled"
+msgstr ""
 
 #: export/ExportMultiple.cpp:667
 #: export/ExportMultiple.cpp:804
@@ -7729,11 +7564,9 @@ msgstr "Upraviť metadáta"
 
 #: export/ExportMultiple.cpp:923
 #, c-format
-msgid ""
-"Label %s is not a legal file name. You cannot use any of:   %s\n"
+msgid "Label %s is not a legal file name. You cannot use any of:   %s\n"
 "Use..."
-msgstr ""
-"Popis %s nie je právnym názov súboru. Nie je možné použiť niektorý z: %s \n"
+msgstr "Popis %s nie je právnym názov súboru. Nie je možné použiť niektorý z: %s \n"
 "Použitie ..."
 
 #: export/ExportOGG.cpp:64
@@ -7807,6 +7640,12 @@ msgstr "Vybrané zvukové dáta sa exportujú ako  %s"
 msgid "Exporting the entire project as %s"
 msgstr "Celý projekt sa exportuje ako %s"
 
+#: export/ExportPCM.cpp:551
+#, c-format
+msgid "Error while writing %s file (disk full?).\n"
+"Libsndfile says \"%s\""
+msgstr ""
+
 #. i18n-hint: %s will be the error message from libsndfile
 #: export/ExportPCM.cpp:564
 #, c-format
@@ -7853,13 +7692,11 @@ msgstr "Táto verzia Audacity nebola kompilovaná s podporou %s."
 
 #: import/Import.cpp:248
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
+msgstr "\"%s\" \n"
 "je MIDI súbor, nie audio súbor. \n"
 "Audacity nedokáže otvoriť tento typ súboru pre prehrávanie, ale môžete \n"
 "ho upraviť ale môžete ho aspoň zobraziť, keď kliknete na  Súbor > Importovať > MIDI."
@@ -7867,60 +7704,50 @@ msgstr ""
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:258
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zvuková stopa CD. \n"
+msgstr "\"%s\" je zvuková stopa CD. \n"
 "Audacity tieto stopy nedokáže  priamo otvoriť. \n"
 "Preveďte (rippnite) CD stopy do niektorého z formátov,  \n"
 "ktoré Audacity dokáže  importovať. napr: WAV alebo AIFF."
 
 #: import/Import.cpp:264
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr ""
-"\"%s\"  je zoznam súborov k prehrávaniu (playlist).\n"
+msgstr "\"%s\"  je zoznam súborov k prehrávaniu (playlist).\n"
 "Audacity tento súbor nemôže otvoriť pretože obsahuje iba odkazy na iné súbory.\n"
 "Dá sa ale otvoriť v textovom editore a jednotlivé súbory stiahnuť."
 
 #: import/Import.cpp:269
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zvukový súbor Windows Media.\n"
+msgstr "\"%s\" je zvukový súbor Windows Media.\n"
 "Audacity tento  typ súboru  nevie otvoriť, pre obmedzenie patentom.\n"
 "Treba urobiť konverziu na podporovaný zvukový formát, napr. WAV alebo AIFF."
 
 #: import/Import.cpp:274
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je súbor Advanced Audio Coding.\n"
+msgstr "\"%s\" je súbor Advanced Audio Coding.\n"
 "Audacity tento  typ súboru  nevie otvoriť.\n"
 "Treba urobiť konverziu na podporovaný zvukový formát, napr. WAV alebo AIFF."
 
 #: import/Import.cpp:279
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zakódovaný zvukový súbor. \n"
+msgstr "\"%s\" je zakódovaný zvukový súbor. \n"
 "Toto je typické z on-line obchodu s hudbou. \n"
 "Kvôli zakódovaniu Audacity nedokáže tento súbor otvoriť. \n"
 "Skúste ho nahrať do Audacity alebo vypáliť na CD a potom  \n"
@@ -7928,38 +7755,32 @@ msgstr ""
 
 #: import/Import.cpp:284
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je súbor pre RealPlayer .\n"
+msgstr "\"%s\" je súbor pre RealPlayer .\n"
 "Audacity tento proprietárny typ súboru  nevie otvoriť.\n"
 "Treba urobiť konverziu na podporovaný zvukový formát, napr. WAV alebo AIFF."
 
 #: import/Import.cpp:290
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr ""
-"\"%s\" je súbor obsahujúci noty, nie audio súbor. \n"
+msgstr "\"%s\" je súbor obsahujúci noty, nie audio súbor. \n"
 "Audacity tento typ súboru nevie otvoriť. \n"
 "Skúste ho previesť do zvukového formátu napr.  WAV alebo AIFF \n"
 "a potom importovať alebo nahrať do Audacity."
 
 #: import/Import.cpp:296
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zvukový súbor Musepack. \n"
+msgstr "\"%s\" je zvukový súbor Musepack. \n"
 "Audacity tento typ súboru  nevie otvoriť.\n"
 "Ak si myslite, že  ide  o mp3 súbor, zmente jeho príponu na \".mp3\" \n"
 "a pokúste sa ho importovať znovu. V prípade neúspechu musíte urobiť prevod \n"
@@ -7967,65 +7788,54 @@ msgstr ""
 
 #: import/Import.cpp:302
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zvukový súbor Wavpack.\n"
+msgstr "\"%s\" je zvukový súbor Wavpack.\n"
 "Audacity tento typ súboru  nevie otvoriť.\n"
 "Treba urobiť konverziu na podporovaný zvukový formát, napr. WAV alebo AIFF."
 
 #: import/Import.cpp:308
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zvukový súbor Dolby Digital.\n"
+msgstr "\"%s\" je zvukový súbor Dolby Digital.\n"
 "Audacity tento typ súboru v súčasnej dobe nevie otvoriť.\n"
 "Treba urobiť konverziu na podporovaný zvukový formát, napr. WAV alebo AIFF."
 
 #: import/Import.cpp:314
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je zvukový súbor Ogg Speex. \n"
+msgstr "\"%s\" je zvukový súbor Ogg Speex. \n"
 "Audacity tento typ súboru v súčasnej dobe nevie otvoriť.\n"
 "Treba urobiť konverziu na podporovaný zvukový formát, napr. WAV alebo AIFF."
 
 #: import/Import.cpp:320
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" je video súbor. \n"
+msgstr "\"%s\" je video súbor. \n"
 "Audacity tento typ súboru v súčasnej dobe nevie otvoriť. \n"
 "Musíte extrahovať audio do podporovaného formátu, ako WAV alebo AIFF."
 
 #: import/Import.cpp:325
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
-msgstr ""
-"Audacity nerozpoznal typ súboru '%s'.\n"
+msgstr "Audacity nerozpoznal typ súboru '%s'.\n"
 "Ak je nekomprimovaný, skúste ho importovať použitím \"Import Raw\"."
 
-#: import/Import.cpp:330
+#: import/Import.cpp:343
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s',\n"
-"but was unable to import it."
+msgid "Audacity recognized the type of the file '%s'.\n"
+"Importers supposedly supporting such files are:\n"
+"%s,\n"
+"but none of them understood this file format."
 msgstr ""
-"Audacity rozpoznal typ súboru '%s',\n"
-"ale nie je schopný importovať ho."
 
 #: import/ImportFFmpeg.cpp:34
 msgid "FFmpeg-compatible files"
@@ -8260,10 +8070,9 @@ msgstr "Zariadenie"
 msgid "Interface"
 msgstr "Rozhranie (Interface)"
 
-#: prefs/DevicePrefs.cpp:112
-#: prefs/MidiIOPrefs.cpp:118
-msgid "Host"
-msgstr "Hostiteľ "
+#: prefs/DevicePrefs.cpp:113
+msgid "&Host"
+msgstr ""
 
 #: prefs/DevicePrefs.cpp:119
 #: prefs/MidiIOPrefs.cpp:125
@@ -8276,15 +8085,23 @@ msgstr "Používa:"
 msgid "Playback"
 msgstr "Prehrávanie"
 
+#: prefs/DevicePrefs.cpp:132
+msgid "&Device"
+msgstr ""
+
 #: prefs/DevicePrefs.cpp:139
 #: prefs/MidiIOPrefs.cpp:145
 #: prefs/RecordingPrefs.cpp:37
 msgid "Recording"
 msgstr "Nahrávanie"
 
-#: prefs/DevicePrefs.cpp:149
-msgid "Channels"
-msgstr "Kanál"
+#: prefs/DevicePrefs.cpp:145
+msgid "De&vice"
+msgstr ""
+
+#: prefs/DevicePrefs.cpp:150
+msgid "Cha&nnels"
+msgstr ""
 
 #: prefs/DevicePrefs.cpp:165
 msgid "No audio interfaces"
@@ -8315,8 +8132,12 @@ msgid "Temporary files directory"
 msgstr "Adresár dočasných súborov"
 
 #: prefs/DirectoriesPrefs.cpp:89
-msgid "Location:"
-msgstr "Umiestnenie:"
+msgid "&Location:"
+msgstr ""
+
+#: prefs/DirectoriesPrefs.cpp:94
+msgid "C&hoose..."
+msgstr ""
 
 #: prefs/DirectoriesPrefs.cpp:96
 msgid "Free Space:"
@@ -8327,19 +8148,19 @@ msgid "Audio cache"
 msgstr "Zvuková vyrovnávacia pamäť"
 
 #: prefs/DirectoriesPrefs.cpp:105
-msgid "Play and/or record using RAM (useful for slow drives)"
+#, fuzzy
+msgid "Play and/or record using &RAM (useful for slow drives)"
 msgstr "Prehrať a/alebo nahrávať pomocou RAM (užitočné pre pomalé disky)"
 
 #: prefs/DirectoriesPrefs.cpp:111
-msgid "Minimum Free Memory (MB):"
+#, fuzzy
+msgid "Mi&nimum Free Memory (MB):"
 msgstr "Minimálne voľne miesto (MB):"
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
-msgstr ""
-"Ak dostupná systémová pamäť klesne pod túto hodnotu, bude zvuk \n"
+msgstr "Ak dostupná systémová pamäť klesne pod túto hodnotu, bude zvuk \n"
 "uložený v pamäti, zapísaný na disk."
 
 #: prefs/DirectoriesPrefs.cpp:126
@@ -8373,20 +8194,28 @@ msgid "Effects"
 msgstr "Efekty"
 
 #: prefs/EffectsPrefs.cpp:56
-msgid "Enable"
-msgstr "Povolené"
+msgid "Enable Effects"
+msgstr ""
 
-#: prefs/EffectsPrefs.cpp:59
-msgid "LADSPA effects"
-msgstr "LADSPA efekty"
+#: prefs/EffectsPrefs.cpp:60
+msgid "Audio Unit"
+msgstr ""
 
-#: prefs/EffectsPrefs.cpp:65
-msgid "Nyquist effects"
-msgstr "Nyquist efekty"
+#: prefs/EffectsPrefs.cpp:66
+msgid "&LADSPA"
+msgstr ""
 
-#: prefs/EffectsPrefs.cpp:71
-msgid "VAMP effects"
-msgstr "VAMP efekty"
+#: prefs/EffectsPrefs.cpp:72
+msgid "N&yquist"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:78
+msgid "&VAMP"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:84
+msgid "V&ST"
+msgstr ""
 
 #: prefs/EffectsPrefs.cpp:75
 msgid "Restart Audacity to apply changes."
@@ -8395,10 +8224,6 @@ msgstr "Po Reštarte Audacity použiť zmeny."
 #: prefs/EffectsPrefs.cpp:80
 msgid "Audio Unit Effects"
 msgstr "Jednotka zvukových efektov"
-
-#: prefs/EffectsPrefs.cpp:82
-msgid "Enable Audio Unit effects"
-msgstr "Povoliť efekty zvukovej jednotke"
 
 #: prefs/EffectsPrefs.cpp:85
 msgid "Display Audio Unit effects in graphical mode"
@@ -8413,13 +8238,14 @@ msgstr "Otestovať VST efekty nabudúce pri štarte Audacity"
 msgid "VST Effects"
 msgstr "VST efekty"
 
-#: prefs/EffectsPrefs.cpp:100
-msgid "Enable VST effects"
-msgstr "Povoliť VST efekty"
-
-#: prefs/EffectsPrefs.cpp:103
-msgid "Display VST effects in graphical mode"
+#: prefs/EffectsPrefs.cpp:111
+#, fuzzy
+msgid "&Display VST effects in graphical mode"
 msgstr "Displej VST efektov efektov v grafickom režime"
+
+#: prefs/EffectsPrefs.cpp:114
+msgid "&Rescan VST effects next time Audacity is started"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:49
 msgid "Local"
@@ -8484,24 +8310,31 @@ msgid "Display"
 msgstr "Zobrazenie"
 
 #: prefs/GUIPrefs.cpp:96
-msgid "Er&gonomic order of audio I/O buttons"
-msgstr "Er&gonomické usporiadanie tlačidiel zvukového vstupu a výstupu"
+msgid "&Ergonomic order of audio I/O buttons"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:99
-msgid "Show '&How to get Help' message at program start up"
+#, fuzzy
+msgid "S&how 'How to get Help' message at program start up"
 msgstr "Ukázať správu '& Ako sa dostať na Nepovedú'  pri štarte programu "
 
 #: prefs/GUIPrefs.cpp:107
-msgid "Meter/Waveform dB range:"
+#, fuzzy
+msgid "Meter/Waveform dB &range:"
 msgstr "Meradlo/Priebehov rozsahu dB :"
 
+#: prefs/GUIPrefs.cpp:114
+msgid "&Language:"
+msgstr ""
+
 #: prefs/GUIPrefs.cpp:121
-msgid "Location of Manual:"
+#, fuzzy
+msgid "Location of &Manual:"
 msgstr "Umiestnenie Manuálu:"
 
 #: prefs/GUIPrefs.cpp:134
-msgid "Cl&osing last window quits Audacity"
-msgstr "Zatv&orením posledného okna ukončiť Audacity"
+msgid "Closing last window &quits Audacity"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:137
 msgid "&Beep on completion of longer activities"
@@ -8510,6 +8343,10 @@ msgstr "Skončenie dlhotrvajúcej operácie oznámiť &pipnutím"
 #: prefs/GUIPrefs.cpp:143
 msgid "Modes"
 msgstr "Režimy"
+
+#: prefs/GUIPrefs.cpp:145
+msgid "Clea&nSpeech Mode (Customized GUI)"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:149
 msgid "Don't a&pply effects in batch mode"
@@ -8540,8 +8377,8 @@ msgid "When exporting tracks to an audio file"
 msgstr "Pri exportovaní stôp do audio súboru"
 
 #: prefs/ImportExportPrefs.cpp:74
-msgid "A&lways mix all tracks down to Stereo or Mono channel(s)."
-msgstr "&Vždy miešať stopy do stereo alebo mono kanálu(ov)."
+msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
+msgstr ""
 
 #: prefs/ImportExportPrefs.cpp:76
 msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
@@ -8552,8 +8389,7 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr "Pred prevedením exportu zob&raziť editor metadát "
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
 msgstr "Poznámka: Nastavenia kvality exportu si  môžeme vybrať kliknutím na tlačidlo Možnosti v dialógovom okne Export."
 
@@ -8579,12 +8415,12 @@ msgid "Key Bindings"
 msgstr "Mapovanie kláves"
 
 #: prefs/KeyConfigPrefs.cpp:132
-msgid "Category:"
-msgstr "Kategória:"
+msgid "C&ategory:"
+msgstr ""
 
-#: prefs/KeyConfigPrefs.cpp:159
-msgid "Se&t"
-msgstr "Sa&da"
+#: prefs/KeyConfigPrefs.cpp:160
+msgid "Set"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:165
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
@@ -8629,12 +8465,10 @@ msgstr "Chyba pri ukladaní klávesových skratiek"
 
 #: prefs/KeyConfigPrefs.cpp:371
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
-msgstr ""
-"Klávesová skratka '%s' už je použitá pre:\n"
+msgstr "Klávesová skratka '%s' už je použitá pre:\n"
 "\n"
 "'%s'"
 
@@ -8685,9 +8519,27 @@ msgstr "Nájdená  knižnica je nekompatibilná s FFmpeg "
 msgid "FFmpeg Library:"
 msgstr "FFmpeg knižnica:"
 
+#: prefs/LibraryPrefs.cpp:124
+msgid "Loca&te..."
+msgstr ""
+
+#: prefs/LibraryPrefs.cpp:130
+msgid "Dow&nload"
+msgstr ""
+
+#: prefs/LibraryPrefs.cpp:186
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
+"Do you still want to locate them manually?"
+msgstr ""
+
 #: prefs/MidiIOPrefs.cpp:58
 msgid "MIDI Devices"
 msgstr "Zariadenie MIDI"
+
+#: prefs/DevicePrefs.cpp:112
+#: prefs/MidiIOPrefs.cpp:118
+msgid "Host"
+msgstr "Hostiteľ "
 
 #: prefs/MidiIOPrefs.cpp:168
 #: prefs/RecordingPrefs.cpp:63
@@ -8997,20 +8849,31 @@ msgid "Zoom in or out"
 msgstr "Zväčšiť alebo zmenšiť"
 
 #: prefs/PlaybackPrefs.cpp:61
-msgid "Length of preview:"
+#, fuzzy
+msgid "&Length of preview:"
 msgstr "Dĺžka skúšky:"
 
 #: prefs/PlaybackPrefs.cpp:76
-msgid "Preview before cut region:"
+#, fuzzy
+msgid "Preview &before cut region:"
 msgstr "Zobraziť pred oddelením okruhu:"
 
 #: prefs/PlaybackPrefs.cpp:83
-msgid "Preview after cut region:"
+#, fuzzy
+msgid "Preview &after cut region:"
 msgstr "Zobraziť po oddelení okruhu:"
 
 #: prefs/PlaybackPrefs.cpp:94
 msgid "Seek Time when playing"
 msgstr "Hľadať čas na prehrávanie"
+
+#: prefs/PlaybackPrefs.cpp:98
+msgid "&Short period:"
+msgstr ""
+
+#: prefs/PlaybackPrefs.cpp:105
+msgid "Lo&ng period:"
+msgstr ""
 
 #: prefs/PrefsDialog.cpp:73
 msgid "Audacity Preferences"
@@ -9025,27 +8888,29 @@ msgid "When saving a project that depends on other audio files"
 msgstr "Pri ukladaní projektu, ktorý závisí na ďalších zvukových súboroch"
 
 #: prefs/ProjectsPrefs.cpp:63
-msgid "Always &copy all audio into project (safest)"
-msgstr "Vždy &kopírovať všetky zvukové dáta do projektu (najbezpečnejšie)"
+msgid "&Always copy all audio into project (safest)"
+msgstr ""
 
 #: prefs/ProjectsPrefs.cpp:65
-msgid "&Do not copy any audio"
-msgstr "&Nekopírovať žiadne zvukové dáta"
+msgid "Do &not copy any audio"
+msgstr ""
 
 #: prefs/ProjectsPrefs.cpp:67
-msgid "&Ask user"
-msgstr "Opýtať sa užívateľa"
+msgid "As&k user"
+msgstr ""
 
 #: prefs/ProjectsPrefs.cpp:74
 msgid "Auto save"
 msgstr "Automatické ukladanie"
 
 #: prefs/ProjectsPrefs.cpp:76
-msgid "Auto save a copy of the project in a separate folder"
+#, fuzzy
+msgid "Auto &save a copy of the project in a separate folder"
 msgstr "Automatické ukladanie kópie projektu v samostatnej zložke"
 
 #: prefs/ProjectsPrefs.cpp:82
-msgid "Auto save interval:"
+#, fuzzy
+msgid "Auto save in&terval:"
 msgstr "Interval automatického ukladania:"
 
 #: prefs/ProjectsPrefs.cpp:86
@@ -9070,11 +8935,13 @@ msgid "Sampling"
 msgstr "Vzorkovanie"
 
 #: prefs/QualityPrefs.cpp:129
-msgid "Default Sample Rate:"
+#, fuzzy
+msgid "Default Sample &Rate:"
 msgstr "Počiatočná rýchlosť vzorkovania:"
 
 #: prefs/QualityPrefs.cpp:154
-msgid "Default Sample Format:"
+#, fuzzy
+msgid "Default Sample &Format:"
 msgstr "Počiatočný formát vzorkovania:"
 
 #: prefs/QualityPrefs.cpp:165
@@ -9082,39 +8949,55 @@ msgid "Real-time Conversion"
 msgstr "Prevod v reálnom čase"
 
 #: prefs/QualityPrefs.cpp:171
-#: prefs/QualityPrefs.cpp:193
-msgid "Sample Rate Converter:"
+#, fuzzy
+msgid "Sample Rate Con&verter:"
 msgstr "Prevodník vzorkovacej frekvencie:"
 
 #: prefs/QualityPrefs.cpp:178
-#: prefs/QualityPrefs.cpp:200
-msgid "Dither"
-msgstr "Miešanie"
+msgid "&Dither:"
+msgstr ""
 
 #: prefs/QualityPrefs.cpp:189
 msgid "High-quality Conversion"
 msgstr "Vysoko kvalitný  prevod"
+
+#: prefs/QualityPrefs.cpp:193
+#, fuzzy
+msgid "Sample Rate Conver&ter:"
+msgstr "Prevodník vzorkovacej frekvencie:"
+
+#: prefs/QualityPrefs.cpp:200
+msgid "Dit&her:"
+msgstr ""
 
 #: prefs/RecordingPrefs.cpp:65
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr "Overdub: Popri  nahrávaní novej stopy &prehrávať ostatné"
 
 #: prefs/RecordingPrefs.cpp:69
-msgid "&Hardware Playthrough: Play new track while recording it"
-msgstr "&Hardware Playthrough:Popri nahrávaní novej stopy ju zároveň prehrávať"
+msgid "&Hardware Playthrough: Listen while recording or monitoring new track"
+msgstr ""
 
 #: prefs/RecordingPrefs.cpp:73
-msgid "&Software Playthrough: Play new track while recording or monitoring"
-msgstr "&Software Playthrough: Prehrávať novú stopu pokiaľ nahrávame alebo monitorujeme"
+msgid "&Software Playthrough: Listen while recording or monitoring new track"
+msgstr ""
 
 #: prefs/RecordingPrefs.cpp:77
 msgid "(uncheck when recording \"stereo mix\")"
 msgstr "(nepotvrdzovať pri nahrávaní  \"stereo mixu \")"
 
+#: prefs/RecordingPrefs.cpp:88
+msgid "Audio to &buffer:"
+msgstr ""
+
 #: prefs/RecordingPrefs.cpp:92
 #: prefs/RecordingPrefs.cpp:93
 msgid "milliseconds (higher = more latency)"
 msgstr "milisekundy (vyššia = väčšia latencia)"
+
+#: prefs/RecordingPrefs.cpp:95
+msgid "L&atency correction:"
+msgstr ""
 
 #: prefs/RecordingPrefs.cpp:99
 #: prefs/RecordingPrefs.cpp:100
@@ -9126,17 +9009,22 @@ msgstr "milisekundy (záporná = naspäť)"
 msgid "Sound Activated Recording"
 msgstr "Zvukom aktivované nahrávanie"
 
+#: prefs/RecordingPrefs.cpp:108
+msgid "Sound Activated &Recording"
+msgstr ""
+
 #: prefs/RecordingPrefs.cpp:117
-msgid "Sound Activation Level (dB):"
+#, fuzzy
+msgid "Sound Activation Le&vel (dB):"
 msgstr "Aktivačná úroveň zvuku (dB):"
 
 #: prefs/RecordingPrefs.cpp:128
-msgid "Automatic Volume Recording"
-msgstr "Automatické nahrávanie hasitosti"
+msgid "Automated Input Level Adjustment"
+msgstr ""
 
 #: prefs/RecordingPrefs.cpp:130
-msgid "Enable Automatic Volume recording."
-msgstr "Povoliť automatické hlasité nahrávanie."
+msgid "Enable Automated Input Level Adjustment."
+msgstr ""
 
 #: prefs/RecordingPrefs.cpp:138
 msgid "Target Peak:"
@@ -9227,11 +9115,13 @@ msgid "FFT Window"
 msgstr "FFT Okno"
 
 #: prefs/SpectrumPrefs.cpp:86
-msgid "Window size"
+#, fuzzy
+msgid "Window &size"
 msgstr "Veľkosť okna"
 
 #: prefs/SpectrumPrefs.cpp:93
-msgid "Window type"
+#, fuzzy
+msgid "Window &type"
 msgstr "Druh okna"
 
 #: prefs/SpectrumPrefs.cpp:113
@@ -9243,28 +9133,32 @@ msgid "Skip Points"
 msgstr "Preskočiť body"
 
 #: prefs/SpectrumPrefs.cpp:134
-msgid "Minimum Frequency (Hz):"
+#, fuzzy
+msgid "Mi&nimum Frequency (Hz):"
 msgstr "Minimálna frekvencia (Hz):"
 
 #: prefs/SpectrumPrefs.cpp:140
-msgid "Maximum Frequency (Hz):"
+#, fuzzy
+msgid "Ma&ximum Frequency (Hz):"
 msgstr "Maximálna frekvencia (Hz):"
 
 #: prefs/SpectrumPrefs.cpp:146
-msgid "Gain (dB):"
+#, fuzzy
+msgid "&Gain (dB):"
 msgstr "Zisk (dB):"
 
 #: prefs/SpectrumPrefs.cpp:152
-msgid "Range (dB):"
+#, fuzzy
+msgid "&Range (dB):"
 msgstr "Rozsah (dB):"
 
 #: prefs/SpectrumPrefs.cpp:158
-msgid "Frequency gain: (dB/dec)"
-msgstr "Frekvenčný zisk: (dB/dec)"
+msgid "Frequency g&ain (dB/dec):"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:165
-msgid "Show the spectrum using &grayscale colors"
-msgstr "Zobraziť spektrum pomocou &stupňov šedej farby "
+msgid "S&how the spectrum using grayscale colors"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:170
 msgid "Show a grid along the &Y-axis"
@@ -9355,8 +9249,7 @@ msgid "Info"
 msgstr "Informácie"
 
 #: prefs/ThemePrefs.cpp:91
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -9365,8 +9258,7 @@ msgid ""
 "\n"
 "[Only the control toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.]"
-msgstr ""
-"Themability je experimentálne funkcia.\n"
+msgstr "Themability je experimentálne funkcia.\n"
 " \n"
 " Ak ju chcete vyskúšať, kliknite na \"Uložiť tému do Cache \", potom  nájsť a upraviť obrázky a farby do \n"
 " ImageCacheVxx.png pomocou obrázkového editora \n"
@@ -9378,27 +9270,21 @@ msgstr ""
 "obrázok súbor ukazuje iné ikony.]"
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
-msgstr ""
-"Zostavili ste Audacity s extra tlačidlom'Výstupný zdroj'. To ušetrí  C verziu \n"
+msgstr "Zostavili ste Audacity s extra tlačidlom'Výstupný zdroj'. To ušetrí  C verziu \n"
 " pamäti obrazu, a je ho možné nastaviť ako predvolený. "
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
-msgstr ""
-"Ak 'Načítať Tému do vyrovnávacej pamäte pri štarte' je začiarknuté, potom \n"
+msgstr "Ak 'Načítať Tému do vyrovnávacej pamäte pri štarte' je začiarknuté, potom \n"
 " Téma do vyrovnávacej pamäte bude načítaná pri štarte programu  Začína sa."
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr ""
-"Ukladanie a načítanie jednotlivých súborov témy používa samostatný súbor pre každý obrázok, ale inak je v \n"
+msgstr "Ukladanie a načítanie jednotlivých súborov témy používa samostatný súbor pre každý obrázok, ale inak je v \n"
 " rovnakom motíve."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -9444,7 +9330,8 @@ msgid "Automatically &fit tracks vertically zoomed"
 msgstr "Automaticky pri&spôsobovať stopy zvislému zväčšeniu"
 
 #: prefs/TracksPrefs.cpp:90
-msgid "Default View Mode:"
+#, fuzzy
+msgid "Default &View Mode:"
 msgstr "Predvolené zobrazenie:"
 
 #: prefs/TracksPrefs.cpp:103
@@ -9452,8 +9339,8 @@ msgid "&Select all audio in project, if none selected"
 msgstr "Ak nie je vybraný žiadny projekt, &vybrať všetky"
 
 #: prefs/TracksPrefs.cpp:106
-msgid "Enable cut &lines"
-msgstr "Povoľte rezané &línie"
+msgid "Enable cu&t lines"
+msgstr ""
 
 #: prefs/TracksPrefs.cpp:109
 msgid "Enable &dragging of left and right selection edges"
@@ -9464,11 +9351,12 @@ msgid "\"Move track focus\" c&ycles repeatedly through tracks"
 msgstr "\"Presunúť zameranie skladby\" v c&ykloch opakovať cez stopy"
 
 #: prefs/TracksPrefs.cpp:115
-msgid "Editing a &clip can move other clips"
-msgstr "Úprava &klipu môže spôsobiť posunutie iného klipu"
+msgid "Editing a clip can &move other clips"
+msgstr ""
 
 #: prefs/TracksPrefs.cpp:123
-msgid "Solo Button:"
+#, fuzzy
+msgid "Solo &Button:"
 msgstr "Tlačítko Sólo:"
 
 #: prefs/WarningsPrefs.cpp:31
@@ -9476,28 +9364,28 @@ msgid "Warnings"
 msgstr "Varovanie"
 
 #: prefs/WarningsPrefs.cpp:55
-msgid "Show Warnings/Prompts"
-msgstr "Zobrazovať varovanie/Prompt"
+msgid "Show Warnings/Prompts for"
+msgstr ""
 
 #: prefs/WarningsPrefs.cpp:57
-msgid "When saving &projects"
-msgstr "Pri ukladaní  &projektov"
+msgid "Saving &projects"
+msgstr ""
 
 #: prefs/WarningsPrefs.cpp:60
-msgid "When saving &empty project"
-msgstr "Pri ukladaní  &prázdneho projektu"
+msgid "Saving &empty project"
+msgstr ""
 
 #: prefs/WarningsPrefs.cpp:63
-msgid "When &disk space is getting low"
-msgstr " "
+msgid "&Low disk space at program start up"
+msgstr ""
 
 #: prefs/WarningsPrefs.cpp:66
-msgid "When mixing down to &stereo during export"
-msgstr "Zmiešať na &stereo pri exporte"
+msgid "Mixing down to &stereo during export"
+msgstr ""
 
 #: prefs/WarningsPrefs.cpp:69
-msgid "When mixing down to &mono during export"
-msgstr "Zmiešať na &mono pri exporte"
+msgid "Mixing down to &mono during export"
+msgstr ""
 
 #: toolbars/ControlToolBar.cpp:170
 #: toolbars/ControlToolBar.cpp:205
@@ -9640,6 +9528,22 @@ msgstr "Zvoliť vstupný zdroj"
 #: toolbars/MixerToolBar.cpp:314
 msgid "Input Source:"
 msgstr "Vstupný zdroj:"
+
+#: toolbars/MixerToolBar.cpp:388
+msgid "Input Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:392
+msgid "Cannot control input level; use system mixer."
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:396
+msgid "Output Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:400
+msgid "Cannot control output level; use system mixer."
+msgstr ""
 
 #: toolbars/SelectionBar.cpp:86
 #: toolbars/SelectionBar.cpp:292
@@ -9944,13 +9848,13 @@ msgstr "Koniec monitorovania"
 msgid "Start Monitoring"
 msgstr "Štart  monitorovania"
 
-#: widgets/Meter.cpp:418
-msgid "Stop Automatic Volume"
-msgstr "Stop Automatická Hlasitosť"
+#: widgets/Meter.cpp:413
+msgid "Stop Automated Input Level Adjustment"
+msgstr ""
 
-#: widgets/Meter.cpp:420
-msgid "Start Automatic Volume"
-msgstr "Automatický štart hlasitosti"
+#: widgets/Meter.cpp:415
+msgid "Start Automated Input Level Adjustment"
+msgstr ""
 
 #: widgets/Meter.cpp:431
 msgid "Horizontal Stereo"
@@ -9964,17 +9868,15 @@ msgstr "Vertikálne Stereo"
 msgid "Preferences..."
 msgstr "Predvoľby..."
 
-#: widgets/Meter.cpp:1268
-msgid "Automatic Volume stopped as requested by user."
-msgstr "Automatickú hlasitosť zastavil podľa požiadavky užívateľa."
+#: widgets/Meter.cpp:1270
+msgid "Automated Input Level Adjustment stopped as requested by user."
+msgstr ""
 
 #: widgets/Meter.cpp:1283
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"Vyššia obnovovacia frekvencia, aby sa ukazovateľ častejšie \n"
+msgstr "Vyššia obnovovacia frekvencia, aby sa ukazovateľ častejšie \n"
 "menil. Sadzbou 30 za sekundu alebo menej by sa malo  zabrániť \n"
 "aby ukazovateľ ovplyvňoval kvalitu zvuku na pomalších počítačoch."
 
@@ -10262,772 +10164,4 @@ msgstr "Chyba uzavretia súboru"
 #: xml/XMLWriter.cpp:340
 msgid "Error writing to file"
 msgstr "Chyba zapísania do súboru"
-
-#~ msgid "To [[welcome|Welcome screen]]"
-#~ msgstr "Na [[welcome|Uvítacia obrazovka]]"
-#~ msgid ""
-#~ "Learn how to: <ul><li>[[play|play]] an existing audio file <li>[[record|"
-#~ "record]] your voice, LP or tape <li>[[edit|edit]] sounds <li>[[save|save "
-#~ "or open an Audacity project]] <li>[[export|export]] to an MP3 or other "
-#~ "audio file, or [[burncd|burn to a CD]]  </ul></p><p>"
-#~ msgstr ""
-#~ "Naučte sa: <ul> <li> [[play| prehrať]] existujúci zvukový súbor <li> "
-#~ "[[record| záznam]] svojho hlasu, LP alebo pásky <li> [[edit| upraviť]] "
-#~ "zvuk <li> [[save| uložiť alebo otvoriť projekt Audacity]] <li> [[export| "
-#~ "exportovať]] na MP3 alebo iné audio súbory, alebo [[burncd | vypáliť na "
-#~ "CD]] </ul> </p> <p>"
-#~ msgid ""
-#~ "This screen can be viewed at any time by clicking the <i>Help</i> menu, "
-#~ "then <i>Show Welcome Message</i>. For a detailed guide to all the "
-#~ "Audacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, "
-#~ "or download our <a href=\"http://audacity.sourceforge.net/help/"
-#~ "documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
-#~ msgstr ""
-#~ "Túto obrazovku si môžete pozrieť kedykoľvek kliknutím na <i> Pomoc </i> "
-#~ "menu, potom <i> Zobraziť uvítaciu správu </i>. Pre podrobný návod na "
-#~ "všetky Audacity menu a ovládacie prvky, kliknite na tlačidlo <i> Pomoc</"
-#~ "i> menu potom <i> Index </i>, alebo si stiahnute  <a href=\"http://"
-#~ "audacity.sourceforge.net /help/documentation/manual_1.4.pdf\"> plný "
-#~ "manuál </a> vo formáte PDF. </p> "
-#~ msgid ""
-#~ "<p><b>Opening audio files:</b> Either drag the files into the current "
-#~ "project window, or click <i>File &gt; Import &gt; Audio</i>. Files can be "
-#~ "opened into a new project window with <i>File &gt; Open</i>. The main "
-#~ "formats Audacity plays are <b>AIFF, AU, FLAC, M4A</b> (only on a Mac), "
-#~ "<b>MP2/MP3, OGG Vorbis</b> and <b>WAV</b>. Click [[wma-proprietary|here]] "
-#~ "if your file is in some other format. <b>To import a CD:</b> extract it "
-#~ "to WAV or AIFF using iTunes, Windows Media Player 11 or similar. See our "
-#~ "online guide: [[wiki:How_to_import_CDs|importing CDs]].</p><p> "
-#~ "<p><b>Playing audio:</b> Press the green Play button to start playback. "
-#~ "Press the blue Pause button once to pause playback, and again to resume. "
-#~ "To stop, press the yellow Stop button. Spacebar can be used to either "
-#~ "play or stop. After stopping, playback resumes from its last starting "
-#~ "point. To change the starting point, click in the track at your desired "
-#~ "starting point. The <b>|&lt;&lt;</b> and <b>&gt;&gt;|</b> buttons can be "
-#~ "used to skip to the start or end of the track respectively. </p><br><br>"
-#~ msgstr ""
-#~ "<p><b> Otváranie audio súborov:</b> Buď pretiahnite súbory do aktuálneho "
-#~ "okna projektu, alebo kliknite na tlačidlo <i> Súbor &gt; Importovať&gt; "
-#~ "Audio </i>. Súbory je možné otvoriť do nového okna projektu, pomocou <i> "
-#~ "Súbor &gt; Otvoriť </i>. Hlavnými formátmi, ktoré Audacity prehráva sú "
-#~ "<b> AIFF, AU, FLAC, M4A </b> (len pre Mac), <b> MP2/MP3, OGG Vorbis </b> "
-#~ "a <b> WAV </b>. Kliknite na tlačidlo [[wma-proprietárnu | tu]], ak súbor "
-#~ "je v inom formáte. <b> Pre importovanie CD: </b> zmente formát na WAV "
-#~ "alebo AIFF pomocou iTunes, Windows Media Player 11 a podobných. Pozrite "
-#~ "si nášho online sprievodcu: [[wiki: How_to_import_CDs | pre  importovanie "
-#~ "CD ]].</p> <p> <p> <b> Prehrávanie audio: </b> Stlačte zelené tlačidlo "
-#~ "Play na spustenie prehrávania. Stlačte raz modré tlačidlo Pozastaviť pre "
-#~ "pozastavenie prehrávania, a opäť obnovte. Ak chcete zastaviť, stlačte "
-#~ "žlté tlačidlo Stop. Medzerník možno využiť buď na prehrávanie alebo "
-#~ "zastavenia. Po zastavení, začne prehrávanie od jeho posledného bodu. Ak "
-#~ "chcete zmeniť východiskový bod, kliknite na požadovanú skladbu na "
-#~ "východiskové miesto. Tlačidlá <b>|&lt;&lt;</b> a <b>&gt;&gt;|</b> je "
-#~ "možné použiť na preskočenie na začiatok alebo na koniec stopy </p><br><br>"
-#~ msgid ""
-#~ "<p><b>To record:</b> Set the recording device and input source, adjust "
-#~ "the input level, then press the red Record button.</b></p><p> 1) "
-#~ "[[inputdevice|Set Recording Device]] either in the <i>Audio I/O tab of "
-#~ "Preferences</i> or in <i>Device Toolbar</i>. Audio I/O Preferences lets "
-#~ "you choose stereo recording if required.<br> 2) [[inputsource|Set input "
-#~ "source]] for that device (for example, microphone or line-in) in the "
-#~ "dropdown selector of the <i>Mixer Toolbar</i>, or (on some systems) at "
-#~ "Recording Device in the <i>Audio I/O tab of Preferences</i> or in "
-#~ "<i>Device Toolbar</i>.<br> 3) [[inputlevel|Adjust input level]] using the "
-#~ "right-hand slider on the <i>Mixer Toolbar</i>. Correct adjustment of "
-#~ "level before recording is essential to avoid noise or distortion. </p><p> "
-#~ "More help at: \"Recording\" <a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq\">FAQs</a>, our Tutorial <a href=\"http://www.audacityteam.org/"
-#~ "manual/index.php?title=Tutorial_-_Your_First_Recording\"> Your First "
-#~ "Recording</a> in the <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">Manual</a>, and our Wiki [[wiki:Recording_Tips|"
-#~ "Recording Tips]] and [[wiki:Troubleshooting_Recordings|Troubleshooting "
-#~ "Recordings]] pages. </p><br><br>"
-#~ msgstr ""
-#~ "<p> <b> Pre nahrávanie: </b> Nastavte nahrávacie zariadenie a vstupný "
-#~ "zdroj, nastavte vstupnú úroveň, potom stlačte červené tlačidlo Nahrávať. "
-#~ "</b> </p> <p> 1) [[InputDevice | Nastavenie Záznamového zariadenia]] "
-#~ "namiesto v <i> Predvoľby Audio I/O karty  </i>, alebo v <i> Nastavenie "
-#~ "panela nástrojov</i>.Nastavenie Audio I / O umožňuje zvoliť stereo "
-#~ "nahrávanie v prípade potreby. <br> 2) [[inputsource | Nastavenia "
-#~ "vstupného zdroja]] pre toto zariadenie (napríklad mikrofón alebo line-in) "
-#~ "v rozbaľovacom voliči z <i>  Mixážny panel nástrojov </i>, alebo (na "
-#~ "niektorých systémoch) v Záznamovom zariadení v <i> Predvoľby Audio I/O "
-#~ "karty </i>, alebo v <i> Nastavenia panela nástrojov </i>. <br> 3) "
-#~ "[[ inputlevel | Upravte vstupnú úroveň]] pomocou pravého jazdca na <i> "
-#~ "Mixážny panel nástrojov</i>. Správne nastavenie úrovne pred nahrávaním je "
-#~ "dôležité, aby nedochádzalo k rušeniu alebo skresleniu. </p> <p> Ďalšie "
-#~ "informácie na : \"Nahrávanie \"<a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq\"> Často kladené otázky </a>, našich  príručkách   <a href="
-#~ "\"http://www.audacityteam.org/manual/index.php?title=Tutorial_-"
-#~ "_Your_First_Recording\"> Vaše prvé nahrávky </a>,<a href=\"http://www."
-#~ "audacityteam.org/manual/index.php?title= Main_Page\"> manuál </a>, a na "
-#~ "našej Wiki [[wiki: Recording_Tips |Tipy na nahrávanie]] a [[wiki: "
-#~ "Troubleshooting_Recordings | Problémy s  nahrávkami]] stránkach. </"
-#~ "p><br><br>"
-#~ msgid ""
-#~ "<p>The input device is the actual physical sound device you are recording "
-#~ "from. This is chosen at \"Recording Device\" in the <i>Audio I/O tab of "
-#~ "Preferences</i>, On Windows and Linux, Preferences are at the bottom of "
-#~ "the <i>Edit</i> Menu. On a Mac, they in the <i>Audacity</i> Menu. You can "
-#~ "also conveniently select Recording Device in the <i>Device Toolbar</i>, "
-#~ "which can be enabled at <i>View &gt; Toolbars...</i>. </p><p> By default, "
-#~ "Audacity uses the device currently being used by the system, (usually "
-#~ "your inbuilt sound device), so it is often not necessary to change the "
-#~ "input device. On Windows, this current system device can be selected as "
-#~ "\"Microsoft Sound Mapper\". If you are recording from an external USB or "
-#~ "Firewire device such as a USB turntable, select it explicitly by name as "
-#~ "recording device after connecting it. </p><p> Back to [[record|Recording "
-#~ "Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>Vstupné zariadenie je aktuálne fyzický zvukové zariadenie, z ktorého "
-#~ "sa  nahráva. To sa volí v \"Nahrávacie zariadenie \" v <i> Predvoľbách "
-#~ "Audio I/O karte  </i>, Windows a Linux, predvoľby sú v dolnej časti <i> "
-#~ "Upraviť </i> menu. On a Mac, sú v <i> Audacity </i> menu. Tiež môžete "
-#~ "pohodlne vybrať záznamové zariadenie v <i> Zariadenia nástrojového panela "
-#~ "</i>, ktoré môžu byť aktivované na <i> Zobraziť &gt; Nástrojový panel ..."
-#~ "</i>. </p><p> Štandardne Audacity používa zariadenie v súčasnosti "
-#~ "používajúce systémom (zvyčajne vaše  vstavané zvukové zariadenie), takže "
-#~ "často nie je potrebné meniť vstupné zariadenie. Vo Windows súčasný systém "
-#~ "zariadenia môže byť vybraný ako \"Microsoft  mapy zvuku \". Ak chcete "
-#~ "nahrávať z externého USB alebo Firewire zariadení, ako je napríklad USB "
-#~ "gramofón, vyberte ju explicitne podľa názvu ako záznamové zariadenie po "
-#~ "spojení . </p> <p> Späť na [[záznamu | Záznam Audio]] <br> </p>"
-#~ msgid ""
-#~ "<p>Select the input source (such as microphone or line-in) for your "
-#~ "[[inputdevice|recording device]]:<br> - <b>On Windows (except Vista)</b> "
-#~ "and <b>Linux</b>, in the dropdown selector on the right of the <i>Mixer "
-#~ "Toolbar</i>.<br> - <b>On Windows Vista</b> and <b>Mac</b>, at Recording "
-#~ "Device on the <i>Audio I/O tab of Preferences</i>, or in <i>Device "
-#~ "Toolbar</i>. The source will be shown as part of the parent device (for "
-#~ "example, <i>High Def Audio Card: Microphone</i>). If necessary, Mac users "
-#~ "can choose the input source at Apple Audio MIDI Setup. <br><i><b>Note:</"
-#~ "b> many USB or Firewire recording devices don't have a choice of inputs, "
-#~ "so this step is not necessary. If in doubt, see the documentation for "
-#~ "your device. </i></p><p> <b>Tip:</b> To <a href=\"http://audacity."
-#~ "sourceforge.net/help/faq?s=recording&i=streaming\">record audio playing "
-#~ "on the computer</a>, Windows and Linux users can choose the \"Stereo Mix"
-#~ "\", \"Wave Out\", \"Sum\" or comparable input source. </p><p> Back to "
-#~ "[[record|Recording Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p> Vyberte vstupný zdroj (ako je mikrofón alebo line-in) pre vaše "
-#~ "[[Vstupné zariadenie | záznamové zariadenia]]: <br> - <b> Na Windows "
-#~ "(okrem Vista) </b> a <b> Linux </b>, vo voliči v rozbalovacej lište na "
-#~ "pravej strane v<i> Mixážny panel nástrojov</i>. <br> - <b> Na Windows "
-#~ "Vista </b> a <b> Mac </b>, v záznamových zariadeniach v <i> Predvoľby "
-#~ "Audio I/O karty </i>, alebo v <i> nástrojovom paneli Zariadenia </i>. "
-#~ "Tento zdroj sa bude zobrazovať ako súčasť materského zariadenia "
-#~ "(napríklad <i> Vysoká Def Audio karta: Mikrofon </i>). Ak je to potrebné, "
-#~ "Mac užívatelia si môžu vybrať vstupný zdroj na Apple Audio MIDI Setup. "
-#~ "<br> <i> <b> Poznámka: </b> mnoho USB alebo Firewire nahrávacích "
-#~ "zariadení nemá výber vstupov, takže tento krok nie je potrebný. Ak máte "
-#~ "pochybnosti, pozrite sa na dokumentáciu pre vaše zariadenie. </i> </p> "
-#~ "<p> <b> Tip: </b>Pre <a href=\"http://audacity.sourceforge.net/help/faq?"
-#~ "s=recording&i=streaming\"> nahrávanie audia, ktorý sa prehráva na "
-#~ "počítači </a>,si Windows a Linux užívatelia môžu zvoliť  \"Stereo Mix "
-#~ "\",  \"Wave Out \", \"Sum \" alebo porovnateľný vstupný zdroj. </p> <p> "
-#~ "Späť na [[record | nahrávanie Audio]] <br> </p>"
-#~ msgid ""
-#~ "<p>The input level must be set correctly. If the level is too low, there "
-#~ "will be background noise. If the level is too high, there will be "
-#~ "distortion in the loud parts. </p><p>To set the level, either see this "
-#~ "[[wiki:Recording_levels|illustrated online guide]] or follow these steps: "
-#~ "<ol><li>Turn on <b>monitoring</b>. Double-click the right-hand of the two "
-#~ "<i>VU Meters</i> (or right-click over it) and click \"Start Monitoring\". "
-#~ "If the meters are not visible, click <i>View &gt; Toolbars</i> and check "
-#~ "\"Meter Toolbar\". </li><li>Adjust the input slider on the <i>Mixer "
-#~ "Toolbar</i> (by the microphone symbol), so that the red bars in the meter "
-#~ "come close to <b>but do not touch</b> the right edge of the scale. If you "
-#~ "can't hear the monitored audio, go to the <i>Audio I/O tab of "
-#~ "Preferences</i> and check \"Software Playthrough\". </li></ol></p><p> "
-#~ "Back to [[record|Recording Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>Vstupná úroveň musí byť nastavená správne. Ak je úroveň je príliš "
-#~ "nízka, bude tam hluk pozadia.Ak je úroveň príliš vysoká, dôjde k "
-#~ "narušeniu v hlasných častiach. </p><p>Ak chcete nastaviť úroveň, najskôr "
-#~ "pozrite toto [[wiki:Recording_levels|ilustrovaný  online sprievodca]] "
-#~ "alebo postupujte nasledovne: <ol> <li> Zapnite <b> monitorovanie </b>. "
-#~ "Dvojité kliknutie na pravú stranu <i> VU Metre </i> (alebo vpravo "
-#~ "kliknite na neho) a kliknite na tlačidlo  \"Štart monitorovania \". Ak "
-#~ "meradlá nie je vidieť, kliknite na <i> Zobraziť &gt; v Panely s nástrojmi "
-#~ "</i> a skontrolujte   \"Nastavenie meračov\". </li> <li> Nastavenie "
-#~ "vstupného jazdca na <i> Mixážnom  panely </i> ( symbolom mikrofónu), tak, "
-#~ "že červené tyče v metra sa priblížia <b> ale nedotknú sa </b > pravého "
-#~ "okraja stupnice. Ak nemôžete počuť monitorovaný zvuk, prejdite na <i> "
-#~ "Predvoľby Audio I/O karty  </i> a skontrolujte  \"Prehrávací Software \". "
-#~ "</li> </ol> </p> <p> Späť na [[záznam | Záznam Audio]] <br> </p> "
-#~ msgid ""
-#~ "<p>The main commands for editing audio are under the <i>Edit</i> menu "
-#~ "(such as cut, copy and paste) and the <i>Effect</i> menu (you can do "
-#~ "things like boost the bass, change pitch or tempo, or remove noise). </"
-#~ "p><p> Audacity applies edits to selected areas of the audio track. To "
-#~ "select a particular area, click in the track and drag the shaded area "
-#~ "with the mouse. If no audio is selected, Audacity selects all the audio "
-#~ "in the project window.</p><p> When playing or recording, the Edit and "
-#~ "Effect menus will appear greyed out, because a moving track can't be "
-#~ "edited. Commands can sometimes be unavailable for other reasons too. For "
-#~ "example, you can't run effects until you have audio on the screen, and "
-#~ "you can't paste audio until you've cut or copied it to Audacity's "
-#~ "clipboard. </p><br><br>"
-#~ msgstr ""
-#~ "<p> Hlavné príkazy pre editáciu zvuku sú pod menu<i> Upraviť </i> (ako "
-#~ "strih, kopírovanie a vloženie) a menu<i> Efekt </i> (môžete robiť veci, "
-#~ "ako je posilnenie basov,  zmení rozstup alebo tempo, alebo odstránenie "
-#~ "hluku). </p> <p> Audacity umožňuje úpravu vybraných oblastí  audio stopy. "
-#~ "Ak chcete vybrať konkrétne oblasti, kliknite v projektovom okne a "
-#~ "pretiahnite šrafované oblasti s myšou. Ak nie je vybraný žiadný zvuk, "
-#~ "Audacity vyberá všetkým audio v okne projektu. </p> <p> Pri prehrávaní "
-#~ "alebo nahrávaní menu Úpravy a Efektu  budú zobrazené šedou farbou, "
-#~ "pretože sa pohybujúce stopy nedajú upravovať. Príkazy nemôžu byť niekedy "
-#~ "k dispozícii z iných dôvodov . Napríklad si nemožno spustiť efekty kým  "
-#~ "je zvuk na obrazovke, a nie je možné vložiť  audio kým  ho striháte alebo "
-#~ "kopírujete do schránky Audacity. </p> <br> <br> "
-#~ msgid ""
-#~ "<p>To return later to your unfinished work in Audacity with all tracks "
-#~ "and edits as you left them, save an Audacity project. To play your "
-#~ "current work in other media programs or send it to others, [[export|"
-#~ "export]] an audio file such as WAV or MP3. </p><p> <i>File &gt; Save "
-#~ "Project</i> saves an <b>.aup</b> project file and  a <b>_data</b> folder "
-#~ "containing the actual audio. To re-open a saved project, click <i>File "
-#~ "&gt; Open</i> and open the .aup file. If you save and exit more than "
-#~ "once, an .aup.bak backup file is created, but the .aup file should always "
-#~ "be opened if present. When your final exported file is exactly as you "
-#~ "want, delete the project files and _data folder to save disc space. </"
-#~ "p><p><i>File &gt; Save Project As...</i> is for saving an empty project. "
-#~ "It also lets you save an existing Project to a <b> new</b> name. This is "
-#~ "the only safe way to rename a project. The .aup file and _data folder "
-#~ "should not be moved or renamed manually. </p><p>"
-#~ msgstr ""
-#~ "<p> Ak sa chcete  neskôr vrátiť do svojej nedokončenej práce v Audacity "
-#~ "so všetkými skladbami a úpravami, ako ste to  nechali, uložte Audacity "
-#~ "projekt. Pre prehratie vašej súčasnej práce v iných média programoch "
-#~ "alebo exportovanie do iných, [[export | exportovať]] audio súborov ako "
-#~ "WAV alebo MP3. </p> <p> <i> Súbor &gt; Uložiť projekt </i> uložiť <b>. "
-#~ "aup </b> súbor projektu a <b> _dáta </b> obsahujú aktuálny zvuk. Ak "
-#~ "chcete znova otvoriť uložený projekt, kliknite na tlačidlo <i> Súbor &gt; "
-#~ "Otvoriť </i> a otvorte. aup súbor. Ak budete ukladať a ukončovať viac ako "
-#~ "raz, čo je. aup.bak zálohovaný súbor je vytvorený, ale aup súbor by mal "
-#~ "byť vždy zahájený ak je prítomný. Pri vašom konečnom exportovaní je "
-#~ "súbor  presne taký, ako chcete. Zmazať súbory  projektu  a dátový  "
-#~ "priečinok na ušetrenie diskového priestoru. </p> <p> <i> Súbor &gt; "
-#~ "Uložiť projekt ako ...</i> je pre ukladanie prázdneho projektu. Tiež vám "
-#~ "umožní uložiť existujúci projekt na <b> nový </b> názov. To je jediný "
-#~ "bezpečný spôsob, ako premenovať projekt.  Aup súbory a dátové  adresáre "
-#~ "by nemali byť presunuté alebo premenované ručne. </p> <p> "
-#~ msgid ""
-#~ "To hear your work in other media programs, export it to an audio file "
-#~ "such as WAV or MP3 (some formats are [[wma-proprietary|unsupported]]). "
-#~ "[[save|Saving an Audacity project]] creates a project file (and linked "
-#~ "_data folder) containing all your edited tracks, so you can return to "
-#~ "your work later. However, other programs can't read Audacity projects. </"
-#~ "p><p> To export, click <i>File &gt; Export</i> then choose the file "
-#~ "format you want to export to in the \"Save as type\" dropdown. To "
-#~ "[[burncd|burn a CD]] for standalone CD players, choose WAV or AIFF. To "
-#~ "export as MP3, the [[wiki:Lame_Installation|Lame Encoder]] must be "
-#~ "installed. </p><p> <i>File &gt; Export Selection</i> exports only a "
-#~ "selected area of audio. <i>Use File &gt; Export Multiple</i> to export "
-#~ "multiple files at the same time, either one for each audio track, or one "
-#~ "for each labeled area in a single track. <i>Tracks &gt; Add Label At "
-#~ "Selection</i> lets you [[wiki:Splitting_recordings_into_separate_tracks|"
-#~ "split the tracks]] from an album for multiple export as separate files. </"
-#~ "p><br><br>"
-#~ msgstr ""
-#~ "Ak chcete počúvať vašu prácu v iných mediálnych programoch, exportujte "
-#~ "ich do zvukového súboru, ako WAV alebo MP3 (niektoré formáty sú [[wma-"
-#~ "proprietary|nepodporované]]). [[Save|Uložiť Audacity projekt]] vytvorí "
-#~ "súbor projektu (a súvisiacu data zložku), ktoré obsahujú všetky vaše "
-#~ "upravený stopy, takže sa môžete vrátiť k vašej práci neskôr. Avšak, "
-#~ "ostatné programy nevedia čítať Audacity projekty. </p> <p> Pre "
-#~ "exportovanie, kliknite <i> Súbor &gt; Export </i> a potom vyberte formát "
-#~ "súboru, ktorý chcete exportovať do rozbaľovača  \"Uložiť ako typ \" . Ak "
-#~ "chcete [[burncd | napáliť CD]] pre nezávislý CD prehrávač, vyberte WAV "
-#~ "alebo AIFF. Ak chcete exportovať ako MP3, musí byť nainštalovaný [[wiki: "
-#~ "Lame_Installation | Lame Encoder]], . </p> <p> <i> Súbor &gt;Výber "
-#~ "Exportu</i> exportuje iba vybrané oblasti audia. <i> Pomocou Súbor &gt; "
-#~ "Hromadný export</i> exportujete viac súborov súčasne, jeden pre každú "
-#~ "zvukovú stopu, alebo jeden pre každú oblasť označenú v jednej stope. <i> "
-#~ "Skladby &gt; Pridať popis na výber </i> vám [[wiki: "
-#~ "Splitting_recordings_into_separate_tracks | rozdelí skladby]] z albumu "
-#~ "pre mnohonásobné exportované súbory ako samostatné súbory. </p><br><br> "
-#~ msgid ""
-#~ "<p>Audacity <b>cannot</b> [[play|play]] or [[export|export]] files in "
-#~ "<b>WMA, RealAudio, Shorten (SHN)</b> or most other proprietary formats, "
-#~ "due to licensing and patent restrictions.  On a Mac computer, unprotected "
-#~ "<b>AAC</b> formats such as <b>M4A</b> can be imported. Some open formats "
-#~ "are not yet supported, including <b>Ogg Speex</b> and <b>Musepack</b>. "
-#~ "Files protected by any kind of Digital Rights Management (DRM), including "
-#~ "most purchased online such as from iTunes or Napster, <b>cannot</b> be "
-#~ "imported.</p><p> If you can't import your file into Audacity, then if it "
-#~ "is not DRM-protected, use iTunes or <a href=\"http://www.erightsoft.com/"
-#~ "SUPER.html#Dnload\">SUPER</a> to convert it to WAV or AIFF. If it is "
-#~ "protected, burn it to an audio CD in the program licensed to play it, "
-#~ "then extract the CD track to WAV or AIFF using iTunes or (on Windows) <a "
-#~ "href=\"http://cdexos.sourceforge.net/?q=download\">CDex</a> or Windows "
-#~ "Media Player 11. You could also <a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq?s=recording&amp;i=streaming\">record</a> the CD to your "
-#~ "computer. <i>To export to an unsupported format, export to WAV or AIFF "
-#~ "and convert it to the desired format in iTunes or <a href=\"http://www."
-#~ "erightsoft.com/SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-#~ msgstr ""
-#~ "<p> Audacity <b> nemôže </b> [[play|prehrať]] alebo [[export|exportovať]] "
-#~ "<b> súbory WMA, RealAudio, Shorten (SHN) </b> alebo väčšinu iných "
-#~ "vlastníckych formátov vďaka patentu a licenčným obmedzeniam. Na počítači "
-#~ "Mac, nechránené formáty  <b>AAC </b>  ako <b> M4A </b> môžu byť "
-#~ "importované. Niektoré otvorené formáty ešte nie sú podporované, vrátane "
-#~ "<b> Ogg Speex </b> a <b> Musepack </b>. Súbory chránené akýmkoľvek druhom "
-#~ "Digital Rights Management (DRM), vrátane väčšiny on-line zakúpených "
-#~ "programov, napríklad z iTunes alebo Napster, <b> nemôžu </b> byť "
-#~ "importované. </p> <p> Ak nemôžete importovať súbor do Audacity, potom v "
-#~ "prípade, ak nie DRM chránená, použitia iTunes alebo <a href=\"http://www."
-#~ "erightsoft.com/SUPER.html#Dnload\"> SUPER </a> presunúť ju do WAV alebo "
-#~ "AIFF. Ak je chránené, vypáľte ho na zvukové CD v programe s licenciou na "
-#~ "prehrávanie, potom extrahovať CD stopy do WAV alebo AIFF alebo pomocou "
-#~ "iTunes (pre Windows) <a href=\"http://cdexos.sourceforge.net /?q=download"
-#~ "\"> CDex </a> alebo Windows Media Player 11. Môžete tiež <a href=\"http://"
-#~ "audacity.sourceforge.net/help/faq?s=recording&i=streaming\"> zaznamenať </"
-#~ "a> CD do počítača. <i> pre exportovanie  nepodporovaného formátu ho "
-#~ "exportujte do WAV alebo AIFF a premeňte ho na požadovaný formát v iTunes "
-#~ "alebo <a href=\"http://www.erightsoft.com/SUPER.html#Dnload\"> SUPER </"
-#~ "a>. </i> </p> <p>  "
-#~ msgid ""
-#~ "<p>To burn your work to an audio CD for standalone CD players, first "
-#~ "[[export|export]] it as WAV or AIFF. The exported file should be stereo, "
-#~ "44100 Hz (set in the \"Project Rate\" button bottom left) and 16 bit (set "
-#~ "in the \"Options\" button in the file export dialog). These are "
-#~ "Audacity's default settings, so normally you will not need to change "
-#~ "these before exporting. <p>Burn the exported file to an \"audio CD\" - "
-#~ "not a \"data CD\" or \"MP3 CD\" - with a CD burning program like iTunes "
-#~ "or Windows Media Player. For more help, see [[wiki:How_to_burn_CDs|How to "
-#~ "burn CDs]] online. </p><p>"
-#~ msgstr ""
-#~ "<p>Vypáliť vašu audio CD prácu  pre samostatné CD prehrávače, najskôr ju "
-#~ "[[export | exportujte]] ako WAV alebo AIFF. Tento súbor by mal byť "
-#~ "vyvážené stereo, 44100 Hz (súbor v  \"Projekt vzoriek \" tlačidlo vľavo "
-#~ "dole) a 16 bit (súbor v  \"Nastavenia \" tlačidlo v súbore export "
-#~ "dialóg). Tieto nastavenia sú v Audacity  predvolené , takže ich obvykle "
-#~ "nemusíte meniť pred exportom. <p> Napálenie exportovaného súboru na "
-#~ "\"audio CD \" - nie  \"dátové CD \" alebo \"MP3 CD \" - napaľovanie CD s "
-#~ "programom ako sú iTunes alebo Windows Media Player. Pre bližšie "
-#~ "informácie pozrite [[wiki: How_to_burn_CDs | Ako napáliť CD]] online. </"
-#~ "p> <p>"
-#~ msgid ""
-#~ "<p>Help for Audacity Beta is currently unfinished. For now, a draft "
-#~ "manual is available <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">online</a>. Alternatively, click <a href=\"http://"
-#~ "www.audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export"
-#~ "\">here</a> to download a single-page version of the manual which can be "
-#~ "viewed in this window."
-#~ msgstr ""
-#~ "<p>Pomoc k Audacity Beta je v súčasnej dobe nedokončená. Terajší  návrh "
-#~ "manuálu je k dispozícii<a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\"> online</a>. Prípadne kliknite<a href=\"http://www."
-#~ "audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export\"> "
-#~ "sem</a> pre stiahnutie jedno-stranovej verzie manuálu, ktorú je možné "
-#~ "zobraziť v tomto okne."
-#~ msgid "&Show Welcome Message..."
-#~ msgstr "&Zobraziť uvítaciu správu..."
-#~ msgid "&Help..."
-#~ msgstr "&Nápoveda..."
-#~ msgid "AMR support not distributable"
-#~ msgstr "podpora AMR nie je rozdeliteľná"
-
-#, fuzzy
-#~ msgid ""
-#~ "Properly configured FFmpeg is required to proceed.\n"
-#~ "You can configure it at Preferences > Libraries.\n"
-#~ "\n"
-#~ "Note that AMR support is not available with our FFmpeg\n"
-#~ "installer, but requires you compile FFmpeg yourself."
-#~ msgstr ""
-#~ "Správne nakonfigurovaný FFmpeg je povinný pokračovať.\n"
-#~ "Môžete nastaviť v Nastavenie-> Import / Export."
-#~ msgid "AMR (wide band) Files (FFmpeg, undistributable)"
-#~ msgstr "AMR (široké pásmo) Súbory (FFmpeg,nerozdeliteľný)"
-#~ msgid "In Browser"
-#~ msgstr "V prehliadači"
-#~ msgid "Help:"
-#~ msgstr "Nápoveda:"
-#~ msgid "Mix Volume"
-#~ msgstr "Zmiešaná hlasitosť"
-#~ msgid ""
-#~ "This determines how often the meter is refreshed.\n"
-#~ "If you have a slower PC you may want to select a\n"
-#~ "lower refresh rate (30 per second or lower), so that\n"
-#~ "audio qualtiy is not affected by the meter display."
-#~ msgstr ""
-#~ "Tu  sa nastavuje ako často sa ukazovateľ obnovuje.\n"
-#~ "Ak máte pomalší počítač, možno bude lepšie zvoliť nižšiu\n"
-#~ " obnovovaciu frekvenciu (30 za sekundu alebo menej), aby\n"
-#~ "kvalita zvuku nebola ovplyvňovaná zobrazovaním ukazovateľa."
-#~ msgid "&Preferences...\tCtrl+,"
-#~ msgstr "&Predvoľby...\tCtrl+,"
-#~ msgid "&New\tCtrl+N"
-#~ msgstr "&Nový\tCtrl+N"
-#~ msgid "&Open...\tCtrl+O"
-#~ msgstr "&Otvoriť...\tCtrl+O"
-#~ msgid "&Close\tCtrl+W"
-#~ msgstr "&Zavrieť\tCtrl+W"
-#~ msgid "&Audio...\tCtrl+Shift+I"
-#~ msgstr "&Audio...\tCtrl+Shift+I"
-#~ msgid "CleanSpeech C&hain..."
-#~ msgstr "Sada &príkazov CleanSpeech..."
-#~ msgid "E&xit\tCtrl+Q"
-#~ msgstr "&Ukončiť program\tCtrl+Q"
-#~ msgid "&Undo\tCtrl+Z"
-#~ msgstr "&Späť\tCtrl+Z"
-#~ msgid "Cu&t\tCtrl+X"
-#~ msgstr "&Vystrihnúť\tCtrl+X"
-#~ msgid "Spl&it Cut\tCtrl+Alt+X"
-#~ msgstr "Rozdel&iť a vystrihnúť\tCtrl+Alt+X"
-#~ msgid "&Copy\tCtrl+C"
-#~ msgstr "&Kopírovať\tCtrl+C"
-#~ msgid "&Paste\tCtrl+V"
-#~ msgstr "&Vložiť\tCtrl+V"
-#~ msgid "Tri&m\tCtrl+T"
-#~ msgstr "Ore&zať\tCtrl+T"
-#~ msgid "&Delete\tCtrl+K"
-#~ msgstr "&Zmazať\tCtrl+K"
-#~ msgid "Split D&elete\tCtrl+Alt+K"
-#~ msgstr "R&ozdeliť a vymazať\tCtrl+Alt+K"
-#~ msgid "Sp&lit\tCtrl+I"
-#~ msgstr "Rozdeliť\tCtrl+I"
-#~ msgid "Split Ne&w\tCtrl+Alt+I"
-#~ msgstr "Rozdeliť a &nový\tCtrl+Alt+I"
-#~ msgid "&Join\tCtrl+J"
-#~ msgstr "Spo&jiť\tCtrl+J"
-#~ msgid "Duplic&ate\tCtrl+D"
-#~ msgstr "Duplikov&ať\tCtrl+D"
-#~ msgid "&Cut\tAlt+X"
-#~ msgstr "&Vystrihnúť\tAlt+X"
-#~ msgid "&Split Cut\tShift+Alt+X"
-#~ msgstr "&Rozdeliť a vystrihnúť\tShift+Alt+X"
-#~ msgid "Co&py\tShift+Alt+C"
-#~ msgstr "Ko&pírovať\tShift+Alt+C"
-#~ msgid "&Delete\tAlt+K"
-#~ msgstr "&Vymazať\tAlt+K"
-#~ msgid "Sp&lit Delete\tShift+Alt+K"
-#~ msgstr "Rozdeliť a vymazať\tShift+Alt+K"
-#~ msgid "Sile&nce\tAlt+L"
-#~ msgstr "Tich&o\tAlt+L"
-#~ msgid "Spli&t\tAlt+I"
-#~ msgstr "Rozdeli&ť\tAlt+I"
-#~ msgid "&Join\tAlt+J"
-#~ msgstr "Spo&jiť\tAlt+J"
-#~ msgid "Detac&h at Silences\tShift+Alt+J"
-#~ msgstr "Uvoľniť na umlčanie\tShift+Alt+J"
-#~ msgid "&All\tCtrl+A"
-#~ msgstr "&Všetko\tCtrl+A"
-#~ msgid "&None\tCtrl+Shift+A"
-#~ msgstr "&Nič\tCtrl+Shift+A"
-#~ msgid "Turn Snap-To On"
-#~ msgstr "Polohovať"
-#~ msgid "Turn Snap-To Off"
-#~ msgstr "Nepolohovať"
-#~ msgid "Turn Grid Snap On"
-#~ msgstr "Zapnúť polohovanie mriežky"
-#~ msgid "Turn Grid Snap Off"
-#~ msgstr "Vypnúť polohovanie mriežky"
-#~ msgid "Pre&ferences...\tCtrl+,"
-#~ msgstr "&Predvoľby...\tCtrl+,"
-#~ msgid "Pre&ferences...\tCtrl+P"
-#~ msgstr "&Predvoľby...\tCtrl+P"
-#~ msgid "Zoom &In\tCtrl+1"
-#~ msgstr "&Zväčšiť\tCtrl+1"
-#~ msgid "Zoom &Out\tCtrl+3"
-#~ msgstr "&Zmenšiť\tCtrl+3"
-#~ msgid "Play\tSpace"
-#~ msgstr "Prehrať\tMedzerník"
-#~ msgid "&Pause\tP"
-#~ msgstr "Pozastaviť\tP"
-#~ msgid "&Stop\tSpace"
-#~ msgstr "&Stop\tMedzerník"
-#~ msgid "Skip to Start\tHome"
-#~ msgstr "Preskočiť na začiatok\tHome"
-#~ msgid "Skip to End\tEnd"
-#~ msgstr "Preskočiť na koniec\tEnd"
-#~ msgid "&Record\tR"
-#~ msgstr "Nahrávať\tR"
-#~ msgid "&Audio Track\tCtrl+Shift+N"
-#~ msgstr "&Zvuková stopa\tCtrl+Shift+N"
-#~ msgid "&UnMute All Tracks\tCtrl+Shift+U"
-#~ msgstr "&Zosilniť všetky stopy\tCtrl+Shift+U"
-#~ msgid "Add &Label At Selection\tCtrl+B"
-#~ msgstr "Vložiť p&opis k výberu\tCtrl+B"
-#~ msgid "&Index..."
-#~ msgstr "&Index..."
-#~ msgid "Cycle backward through toolbars and Track View\tCtrl+Shift+F6"
-#~ msgstr "Cyklus späť cez panel nástrojov a pohľad na stopu\tCtrl+Shift+F6"
-#~ msgid "Selection Tool\tF1"
-#~ msgstr "Výber\tF1"
-#~ msgid "Envelope Tool\tF2"
-#~ msgstr "Obálka\tF2"
-#~ msgid "Draw Tool\tF3"
-#~ msgstr "Kreslenie\tF3"
-#~ msgid "Zoom Tool\tF4"
-#~ msgstr "Lupa\tF4"
-#~ msgid "Time Shift Tool\tF5"
-#~ msgstr "Časový posun\tF5"
-#~ msgid "Multi Tool\tF6"
-#~ msgstr "Viacnásobný režim\tF6"
-#~ msgid "Stop\tS"
-#~ msgstr "Stop\tS"
-#~ msgid "Pause\tP"
-#~ msgstr "Pozastaviť\tP"
-#~ msgid "Record\tR"
-#~ msgstr "Nahrávať\tR"
-#~ msgid "Record Append\tShift+R"
-#~ msgstr "Pridať nahrávku\tShift+R"
-#~ msgid "Play Looped\tL"
-#~ msgstr "Prehrať v slučke\tL"
-#~ msgid "Play Looped\tShift+Space"
-#~ msgstr "Prehrať v slučke\tShift+Space"
-#~ msgid "Selection to Start\tShift+Home"
-#~ msgstr "Rozšírenie výberu na začiatok\tShift+Home"
-#~ msgid "Selection to End\tShift+End"
-#~ msgstr "Označiť do konca\tShift+End"
-#~ msgid "DeleteKey\tBackspace"
-#~ msgstr "KlávesaDelete\tBackspace"
-#~ msgid "DeleteKey2\tDelete"
-#~ msgstr "KlávesaDelete2\tDelete"
-#~ msgid "Seek left long period during playback\tShift+Left"
-#~ msgstr "Hľadajte vľavo dlhé obdobie, počas prehrávania\tShift+Left"
-#~ msgid "Seek right long period during playback\tShift+Right"
-#~ msgstr "Hľadajte vprávo dlhé obdobie, počas prehrávania\tShift+Right"
-#~ msgid "Move Focus to Previous and Change Selection\tShift+Up"
-#~ msgstr "Predchádzajúca stopa ako aktívna a zmeniť výber\tShift+Up"
-#~ msgid "Toggle Focused Track\tNUMPAD_ENTER"
-#~ msgstr "Prepnúť vybranú stopu\tNUMPAD_ENTER"
-#~ msgid "Toggle Focused Track\tCtrl+Space"
-#~ msgstr "Prepnúť vybranú stopu\tCtrl+Space"
-#~ msgid "Selection Contract Right\tCtrl+Shift+Left"
-#~ msgstr "Zmenšenie výberu sprava\tCtrl+Shift+Left"
-#~ msgid "Repeat %s\tCtrl+R"
-#~ msgstr "Opakovať %s\tCtrl+R"
-#~ msgid "&Mix and Render"
-#~ msgstr "&Mixovať a vykresliť"
-#~ msgid "Tag Name"
-#~ msgstr "Názov tágu"
-#~ msgid "Tag Value"
-#~ msgstr "Hodnota tagu"
-#~ msgid "Soloed track"
-#~ msgstr "Osamostatnená stopa"
-#~ msgid "Muted track"
-#~ msgstr "Stíšená stopa"
-#~ msgid "Disallowed for some reason.  Try selecting some audio first?"
-#~ msgstr "Zakázané z nejakého dôvodu. Skúste skôr vybrať niektoré Audio ?"
-#~ msgid "Hello.\n"
-#~ msgstr "Ahoj.\n"
-#~ msgid "WCAG2 Audio Contrast Analyzer"
-#~ msgstr "WCAG2 Audio Analyzátor Kontrastu"
-#~ msgid "Note: The 'OK' button resets time values."
-#~ msgstr "Poznámka: 'OK' tlačidlo resetuje čas hodnôt."
-#~ msgid "Contrast...\tCtrl+Shift+T"
-#~ msgstr "Kontrast...\tCtrl+Shift+T"
-#~ msgid "Measuring background"
-#~ msgstr "Meranie pozadia"
-#~ msgid "Measuring foreground"
-#~ msgstr "Meranie popredia"
-#~ msgid ""
-#~ "Sorry, VST Effects cannot be performed on stereo tracks where the "
-#~ "individual channels of the track do not match."
-#~ msgstr ""
-#~ "Ospravedlňujem sa, ale VST efekt nemôže byť aplikovaný na stereo stopy, "
-#~ "pri ktorých  nesúhlasia individuálne kanály."
-#~ msgid "Can't process replacing"
-#~ msgstr "Nie je možné uskutočniť zámenu"
-#~ msgid "VST Plug-in parameters:"
-#~ msgstr "Parametre pre zásuvný modul VST:"
-#~ msgid "Audio I/O"
-#~ msgstr "Audio vstup/výstup (I/O)"
-#~ msgid "Portaudio v"
-#~ msgstr "Audio port v"
-#~ msgid "&Software Playthrough: Play new track while recording it"
-#~ msgstr ""
-#~ "&Software Playthrough:Popri nahrávaní novej stopy ju zároveň prehrávať"
-#~ msgid ""
-#~ "Playback and Recording device must use the same type, i.e., MME, "
-#~ "DirectSound, etc."
-#~ msgstr ""
-#~ "Prehrávacie a nahrávacie zariadenie musí používať rovnaký typ, tj., MME, "
-#~ "DirectSound, atď."
-#~ msgid "Show / Hide"
-#~ msgstr "Zobraziť / Skryť"
-#~ msgid "Show prompt to sa&ve, even if project is empty"
-#~ msgstr "Zobraziť výz&vu na uloženie aj keď je projekt prázdny"
-#~ msgid "Display range minimum: meters and 'Waveform (dB)'"
-#~ msgstr "Zobraz v rozsahu minimálne: metrov a 'Krivka(dB)'"
-#~ msgid "Other interface choices"
-#~ msgstr "Ďalšie voľby rozhrania"
-#~ msgid "Conversion"
-#~ msgstr "Prevod"
-#~ msgid "Real-time:"
-#~ msgstr "Reálny čas:"
-#~ msgid "Smart Recording"
-#~ msgstr "Inteligentné nahrávanie"
-#~ msgid "FFT Size"
-#~ msgstr "FFT veľkosť"
-#~ msgid "&Grayscale"
-#~ msgstr "&Odtiene šedej"
-#~ msgid "Zoom Toggle"
-#~ msgstr "Prepnutie zväčšenia"
-#~ msgid "%d rows, %d columns"
-#~ msgstr "%d riadkov, %d stĺpcov"
-#~ msgid "Row %d"
-#~ msgstr "Riadok %d"
-#~ msgid "Time Control"
-#~ msgstr "Časové ovládanie"
-#~ msgid "No"
-#~ msgstr "Nie"
-#~ msgid "Changing block %s\n"
-#~ msgstr "Mením blok %s\n"
-#~ msgid ""
-#~ "<p>You don't appear to have Audacity help files on your machine. Either "
-#~ "<a href=\"http://audacity.sourceforge.net/help/documentation\">download</"
-#~ "a> the help files and then access them again from Audacity by clicking "
-#~ "<i>Help</i> then <i>Index</i>, or click <a href=\"http://www.audacityteam."
-#~ "org/manual/index.php?title=Main_Page\">here</a> to read the full Manual "
-#~ "online."
-#~ msgstr ""
-#~ "<p>Zdá sa, že súbory s nápovedou k Audacity nie sú na vašom počítači. "
-#~ "Môžete buď <a href=\"http://audacity.sourceforge.net/help/documentation"
-#~ "\">stiahnuť</a> nápovedu a potom sa ku nej dostať z menu <i>Nápoveda</i>, "
-#~ "<i>Obsah</i>, alebo kliknite <a href=\"http://www.audacityteam.org/manual/"
-#~ "index.php?title=Main_Page\">sem</a> a môžete si prečítať celý manuál on-"
-#~ "line."
-#~ msgid "Disj&oin\tCtrl+Alt+J"
-#~ msgstr "Rozpo&jiť\tCtrl+Alt+J"
-#~ msgid "Select&..."
-#~ msgstr "Vybra&ť..."
-#~ msgid "Raw"
-#~ msgstr "Neformátované dáta"
-#~ msgid "Press F2 or double click to edit."
-#~ msgstr "Editujte stlačeným F2 alebo dvojklikom."
-#~ msgid "Title:"
-#~ msgstr "Titul:"
-#~ msgid "Artist:"
-#~ msgstr "Interpret:"
-#~ msgid "Album:"
-#~ msgstr "Album:"
-#~ msgid "Composer:"
-#~ msgstr "Skladateľ:"
-#~ msgid "Lyricist:"
-#~ msgstr "Text:"
-#~ msgid "Comments:"
-#~ msgstr "Komentáre:"
-#~ msgid "Encoded By:"
-#~ msgstr "Enkódované:"
-#~ msgid "Copyright:"
-#~ msgstr "Autorské práva:"
-#~ msgid "Track Number:"
-#~ msgstr "Číslo stopy:"
-#~ msgid "Year:"
-#~ msgstr "Rok:"
-#~ msgid "Genre:"
-#~ msgstr "Žáner:"
-#~ msgid "No Genres"
-#~ msgstr "Žiadne žánre"
-#~ msgid "Reset to Defaults"
-#~ msgstr "Vrátiť predvolené nastavenie"
-#~ msgid "Basic"
-#~ msgstr "Základné"
-#~ msgid "Advanced"
-#~ msgstr "Rozšírené"
-#~ msgid "Clea&r"
-#~ msgstr "&Vymazať"
-#~ msgid ""
-#~ "Maximum length of attribute '%s' is %d characters. Data was truncated."
-#~ msgstr "Maximálna dĺžka atribútu '%s' je %d znakov. Dáta boli skrátené."
-#~ msgid "Title"
-#~ msgstr "Titul"
-#~ msgid "Artist"
-#~ msgstr "Interpret"
-#~ msgid "Album"
-#~ msgstr "Album"
-#~ msgid "Enter a sample rate in Hz (per second) between 1 and 100000:"
-#~ msgstr "Vložte rýchlosť v Hz (vzoriek za sekundu) v rozmedzí 1 a 100000:"
-#~ msgid "Invalid rate."
-#~ msgstr "Chybná rýchlosť."
-#~ msgid "Message"
-#~ msgstr "Správa"
-#~ msgid "Frequency (Hz):   from"
-#~ msgstr "Frekvencia (Hz):   z"
-#~ msgid "Length (seconds):   from"
-#~ msgstr "Dĺžka (sekundy):     od"
-#~ msgid "Dynamic Range Compressor by Dominic Mazzoni"
-#~ msgstr "Kompresor dynamického rozsahu od Dominica Mazzoniho"
-#~ msgid "Leveller by Lynn Allan"
-#~ msgstr "Úrovne (Leveller) od Lynna Allana"
-#~ msgid "Equalize soft and loud sections"
-#~ msgstr "Vyrovnať tiché a hlasité časti"
-#~ msgid "Normalize by Dominic Mazzoni"
-#~ msgstr "Normalizácia  od Dominica Mazzoniho"
-#~ msgid "Phaser by Nasca Octavian Paul"
-#~ msgstr "Fázer od Nasca Octavian Paul"
-#~ msgid "DRY"
-#~ msgstr "DRY"
-#~ msgid "WET"
-#~ msgstr "WET"
-#~ msgid "Repeat by Dominic Mazzoni && Vaughan Johnson"
-#~ msgstr "Opakovanie od Dominica Mazzoniho && Vaughana Johnsona"
-#~ msgid "%d minutes, %d seconds"
-#~ msgstr "%d minút, %d sekúnd"
-#~ msgid "Wahwah by Nasca Octavian Paul"
-#~ msgstr "Kvákadlo (Wahwah) od Nasca Octavian Paul"
-#~ msgid ""
-#~ "No tracks are selected! Use Ctrl-A (Select All)\n"
-#~ "Choose Export... to export all tracks."
-#~ msgstr ""
-#~ "Nie sú vybrané žiadne stopy!Použitím Ctrl-A (vybrať všetko)\n"
-#~ "a ďalej príkazom Exportovať... všetky stopy vyexportujete."
-#~ msgid "Download..."
-#~ msgstr "Stiahnuť..."
-#~ msgid "E&xport"
-#~ msgstr "E&xportovať"
-#~ msgid ""
-#~ "Audacity had to make a guess at the type of file.\n"
-#~ "The Audio may be bogus.\n"
-#~ "\n"
-#~ "If the audio is bogus, try renaming the file\n"
-#~ "so that it has the correct extension before opening it."
-#~ msgstr ""
-#~ "Audacity musel vykonať odhad na typ súboru. \n"
-#~ " Audio môže byť falošné. \n"
-#~ "\n"
-#~ "Ak je zvuk  falošný, skúste premenovať súbor \n"
-#~ " tak, aby bol správny aj keď sa otvorenie predĺži."
-#~ msgid "Error parsing Allegro file."
-#~ msgstr "Chyba pri načítaní  Allegro súboru."
-#~ msgid "Error parsing MIDI file."
-#~ msgstr "Chyba pri načítaní  MIDI súboru."
-#~ msgid "Importing %s File..."
-#~ msgstr "Importujem %s súbor..."
-#~ msgid ""
-#~ "&Software Playthrough: Play new track while recording it (uncheck when "
-#~ "recording \"stereo mix\")"
-#~ msgstr ""
-#~ "&Hardware Playthrough:Popri nahrávaní novej stopy ju zároveň prehrávať"
-#~ "(odškrtnite, ak nahrávate \"stereo mix\")"
-#~ msgid "Hold recorded data in memory until recording is stopped"
-#~ msgstr "Ponechať dáta v pamäti, kým nebude nahrávanie zastavené."
-#~ msgid "&Find Library"
-#~ msgstr "&Nájsť knižnicu"
-#~ msgid "WaveformDisplay"
-#~ msgstr "Zobrazenie krivky"
-#~ msgid "WaveformDBDisplay"
-#~ msgstr "Zobrazenie DB krivky"
-#~ msgid "SpectrumDisplay"
-#~ msgstr "Zobrazenie spektra"
-#~ msgid "SpectrumLogDisplay"
-#~ msgstr "Zobrazenie Log spektra"
-#~ msgid "PitchDisplay"
-#~ msgstr "Sklon Zobrazenia"
-#~ msgid "Real-time sample rate converter:"
-#~ msgstr "Konvertor vzorkovacej frekvencie v reálnom čase:"
-#~ msgid "High-quality sample rate converter:"
-#~ msgstr "Vysoko kvalitný konvertor vzorkovacej rýchlosti:"
-#~ msgid "Real-time dither:"
-#~ msgstr "Miešanie v reálnom čase:"
-#~ msgid "High-quality dither:"
-#~ msgstr "Vysoko kvalitné miešanie :"
-#~ msgid "Pause Recording on Silence"
-#~ msgstr "Prerušiť nahrávanie ak je ticho"
 

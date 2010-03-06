@@ -5,8 +5,7 @@
 # Kene Lin <kenelin@gmail.com>, pre-2009.
 # Stanley Wong <wkstanley@gmail.com>, 2009.
 msgid ""
-msgstr ""
-"Project-Id-Version: zh-TW\n"
+msgstr "Project-Id-Version: zh-TW\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2009-11-06 22:36+0000\n"
 "PO-Revision-Date: 2009-12-15 19:34+0800\n"
@@ -26,8 +25,8 @@ msgid "OK... Audacious!"
 msgstr "好... Audacious!"
 
 #: AboutDialog.cpp:192
-msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Windows 98/ME, use version 1.2.6 or 1.3.7 Beta; for Mac OS 9, version 1.0.0."
-msgstr "Audacity 是一個自由軟體.它是一群來自世界各地的<a href=\"http://audacity.sourceforge.net/community/developers\">開發人員</a>志願寫出來的。感謝 <a href=\"http://sourceforge.net\">SourceForge.net</a> 替我們寄存網頁。Audacity 可以在 Windows 98 以後, Mac OS X, Linux 和其他 Unix 系統上運行。Windows 98/ME 請使用 1.2.6 或 1.3.7 beta 版; Mac OS 9 請使用 1.0.0 版。"
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
+msgstr ""
 
 #: AboutDialog.cpp:196
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
@@ -87,8 +86,12 @@ msgid "Special thanks:"
 msgstr "特別感謝："
 
 #: AboutDialog.cpp:267
-msgid "<b>Audacity&reg;</b> software is copyright &copy; 1999-2009 Audacity Team. <br>The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
-msgstr "<b>Audacity&reg;</b> 軟體的版權屬於 &copy; 1999-2009 Audacity 團隊. <br>「 <b>Audacity&reg;</b>」 這個名稱是 Dominic Mazzoni 註冊的商標."
+msgid "<b>Audacity&reg;</b> software is copyright"
+msgstr ""
+
+#: AboutDialog.cpp:270
+msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
+msgstr ""
 
 #: AboutDialog.cpp:275
 msgid "Audacity"
@@ -232,12 +235,10 @@ msgstr "開啟專案錯誤"
 
 #: AudacityApp.cpp:780
 #, c-format
-msgid ""
-"%s could not be found.\n"
+msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr ""
-"找不到 %s。\n"
+msgstr "找不到 %s。\n"
 "\n"
 "它已經從開啟檔案的記錄中移除。"
 
@@ -289,11 +290,9 @@ msgid "Unknown command line option: %s\n"
 msgstr "未知的的命令列選項: %s\n"
 
 #: AudacityApp.cpp:1406
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Audacity 找不到位置去儲存暫存檔。\n"
+msgstr "Audacity 找不到位置去儲存暫存檔。\n"
 "請到偏好設定輸入適當目錄。"
 
 #: AudacityApp.cpp:1412
@@ -301,20 +300,16 @@ msgid "Audacity is now going to exit. Please launch Audacity again to use the ne
 msgstr "Audacity 即將關閉。請重新啟動 Audacity 來使用新的暫存目錄。"
 
 #: AudacityApp.cpp:1444
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"同時開啟兩個 Audacity 程式可能會導致資料損毀或當機。\n"
+msgstr "同時開啟兩個 Audacity 程式可能會導致資料損毀或當機。\n"
 "\n"
 
 #: AudacityApp.cpp:1451
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Audacity 無法鎖定暫存檔的目錄。\n"
+msgstr "Audacity 無法鎖定暫存檔的目錄。\n"
 "可能有另一個運作中的 Audacity 在使用它。\n"
 
 #: AudacityApp.cpp:1453
@@ -330,11 +325,9 @@ msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "系統偵測到有另一個 Audacity 正在運作。\n"
 
 #: AudacityApp.cpp:1495
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"在目前執行的 Audacity 裡用\"開新檔案\"或\"開啟\"命令\n"
+msgstr "在目前執行的 Audacity 裡用\"開新檔案\"或\"開啟\"命令\n"
 "可以同時開啟多個專案。\n"
 
 #: AudacityApp.cpp:1496
@@ -376,13 +369,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "此外，請指定一個欲開啟的聲音檔案或專案檔名稱。"
 
 #: AudacityApp.cpp:1839
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"Audacity 專案檔(.AUP) 目前沒有關聯到 Audacity。\n"
+msgstr "Audacity 專案檔(.AUP) 目前沒有關聯到 Audacity。\n"
 "關聯後雙擊 AUP 檔時，可以用 Audacity 開啟。\n"
 "\n"
 "要進行關聯嗎？"
@@ -396,11 +387,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "找不到任何音訊裝置。\n"
 
 #: AudioIO.cpp:284
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"你會無法播放/錄製聲音。\n"
+msgstr "你會無法播放/錄製聲音。\n"
 "\n"
 
 #: AudioIO.cpp:287
@@ -417,11 +406,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "初始化 MIDI I/O layer 時發生錯誤.\n"
 
 #: AudioIO.cpp:304
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"你會無法播放 MIDI\n"
+msgstr "你會無法播放 MIDI\n"
 "\n"
 
 #: AudioIO.cpp:310
@@ -429,12 +416,10 @@ msgid "Error Initializing Midi"
 msgstr "MIDI 初始化錯誤"
 
 #: AudioIO.cpp:1329
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"延遲修正的設定使得錄製的聲音放在了原點之前.\n"
+msgstr "延遲修正的設定使得錄製的聲音放在了原點之前.\n"
 "Audacity 已經把它放回原點.\n"
 "你可能需要使用時間移位工具 (<---> 或者 F5) 來把它移回正確的位置."
 
@@ -478,11 +463,9 @@ msgid "Automatic Crash Recovery"
 msgstr "當機自動回復"
 
 #: AutoRecovery.cpp:73
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"上一次執行 Audacity 時有部份專案沒有適當的儲存。\n"
+msgstr "上一次執行 Audacity 時有部份專案沒有適當的儲存。\n"
 "幸好下面這些專案都可以回復好："
 
 #: AutoRecovery.cpp:75
@@ -510,11 +493,9 @@ msgid "Recover Projects"
 msgstr "回復專案"
 
 #: AutoRecovery.cpp:127
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"你真的不要復原任何專案？\n"
+msgstr "你真的不要復原任何專案？\n"
 "之後就無法再復原了。"
 
 #: AutoRecovery.cpp:128
@@ -593,11 +574,9 @@ msgstr "%s 命令是尚未寫好的功能"
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:121
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"無法將效果器 %s 的參數\n"
+msgstr "無法將效果器 %s 的參數\n"
 "設為 %s。"
 
 #: BatchCommands.cpp:557
@@ -607,12 +586,10 @@ msgstr "無法辨識批次命令 %s。"
 
 #: BatchCommands.cpp:674
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"套用 %s︰參數為\n"
+msgstr "套用 %s︰參數為\n"
 "\n"
 "%s"
 
@@ -684,13 +661,9 @@ msgstr "選擇要使用 CleanSpeech 的人聲檔..."
 msgid "Select file(s) for batch processing..."
 msgstr "選擇要批次處理的檔案..."
 
-#: BatchProcessDialog.cpp:208
-msgid "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files (*.mp3)|*.mp3"
-msgstr "人聲檔 (*.wav;*.mp3)|*.wav;*.mp3|WAV 檔案 (*.wav)|*.wav|MP3 檔案 (*.mp3)|*.mp3"
-
-#: BatchProcessDialog.cpp:209
-msgid "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|FLAC files (*.flac)|*.flac"
-msgstr "所有檔案 (*.*)|*.*|WAV 檔案 (*.wav)|*.wav|AIFF 檔案 (*.aif)|*.aif|AU 檔案 (*.au)|*.au|MP3 檔案 (*.mp3)|*.mp3|Ogg Vorbis 檔案 (*.ogg)|*.ogg|FLAC 檔案 (*.flac)|*.flac"
+#: Project.cpp:2163
+msgid "All files|*|All supported files|"
+msgstr "所有檔案|*|所有支援的檔案|"
 
 #: BatchProcessDialog.cpp:230
 msgid "Applying..."
@@ -805,14 +778,9 @@ msgid "Copying audio data into project..."
 msgstr "正在複製聲音資料至專案..."
 
 #: Dependencies.cpp:226
-msgid ""
-"Your project currently depends on the presence of other files.\n"
-"Copy audio from the following files into your project to make it self-contained?\n"
-"This will need more disc space but is safer."
+msgid "Copying the following files into your project will remove this dependency.\n"
+"This needs more disk space, but is safer."
 msgstr ""
-"您的專案依賴外部的檔案。\n"
-"要把將下面這些檔案複製進去，使讓專案可以獨立於它們嗎？\n"
-"這會增加檔案大小，但更安全。"
 
 #: Dependencies.cpp:273
 msgid "Project depends on other audio files"
@@ -877,11 +845,9 @@ msgid "Dependency check"
 msgstr "相依性檢查"
 
 #: DirManager.cpp:137
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"警告：磁碟剩餘空間不足。\n"
+msgstr "警告：磁碟剩餘空間不足。\n"
 "請於偏好設定中設定其他暫存目錄。"
 
 #: DirManager.cpp:222
@@ -904,11 +870,9 @@ msgstr "正在清除快取資料夾"
 
 #: DirManager.cpp:504
 #, c-format
-msgid ""
-"Audacity found an orphaned blockfile %s! \n"
+msgid "Audacity found an orphaned blockfile %s! \n"
 "Please consider saving and reloading the project to perform a complete project check.\n"
-msgstr ""
-"Audacity 發現孤兒區塊檔案 %s！\n"
+msgstr "Audacity 發現孤兒區塊檔案 %s！\n"
 "請將專案儲存，並重新開啟，以便把整個專案全部檢查一遍。\n"
 
 #. i18n-hint: This is the pattern for filenames that are created
@@ -969,21 +933,17 @@ msgid "Missing data file: (%s.au)"
 msgstr "找不到資料檔案：(%s.au)"
 
 #: DirManager.cpp:1396
-msgid ""
-"Project check found inconsistencies inspecting the loaded project data;\n"
+msgid "Project check found inconsistencies inspecting the loaded project data;\n"
 "click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
-msgstr ""
-"檢查載入的專案資料時發現不一致；\n"
+msgstr "檢查載入的專案資料時發現不一致；\n"
 "請按「詳細資料」檢視錯誤訊息，點「OK」繼續顯示更多選項。"
 
 #: DirManager.cpp:1408
 #, c-format
-msgid ""
-"Project check found %d orphaned blockfile[s]. These files are\n"
+msgid "Project check found %d orphaned blockfile[s]. These files are\n"
 "unused and probably left over from a crash or some other bug.\n"
 "They should be deleted to avoid disk contention."
-msgstr ""
-"專案檢查發現 %d 個孤兒區塊檔案。這些檔案是\n"
+msgstr "專案檢查發現 %d 個孤兒區塊檔案。這些檔案是\n"
 "沒有用的，可能是因為當機或 bug 造成的。\n"
 "這些檔案應該要刪除。"
 
@@ -1012,15 +972,13 @@ msgstr "警告"
 
 #: DirManager.cpp:1443
 #, c-format
-msgid ""
-"Project check detected %d input file[s] being used in place\n"
+msgid "Project check detected %d input file[s] being used in place\n"
 "('alias files') are now missing.  There is no way for Audacity\n"
 "to recover these files automatically; you may choose to\n"
 "permanently fill in silence for the missing files, temporarily\n"
 "fill in silence for this session only, or close the project now\n"
 "and try to restore the missing files by hand."
-msgstr ""
-"檢查專案時發現使用中的 %d 個輸入檔案('alias files') 不見了。\n"
+msgstr "檢查專案時發現使用中的 %d 個輸入檔案('alias files') 不見了。\n"
 "Audacity 無法自動回復這些檔案。\n"
 "您可以永久用靜音填補、\n"
 "或只在此工作階段暫時用靜音填補、\n"
@@ -1043,12 +1001,10 @@ msgstr "立刻關閉專案，不再作任何變更"
 
 #: DirManager.cpp:1489
 #, c-format
-msgid ""
-"Project check detected %d missing summary file[s] (.auf).\n"
+msgid "Project check detected %d missing summary file[s] (.auf).\n"
 "Audacity can fully regenerate these summary files from the\n"
 "original audio data in the project."
-msgstr ""
-"檢查專案時發現遺失了 %d 個 summary 檔案(.auf)。\n"
+msgstr "檢查專案時發現遺失了 %d 個 summary 檔案(.auf)。\n"
 "Audacity 可以從原始聲音資料完全回復這些 summary 檔。"
 
 #: DirManager.cpp:1494
@@ -1061,16 +1017,14 @@ msgstr "用靜音填滿遺失的顯示資料 [僅此工作階段]"
 
 #: DirManager.cpp:1531
 #, c-format
-msgid ""
-"Project check detected %d missing audio data blockfile[s] (.au), \n"
+msgid "Project check detected %d missing audio data blockfile[s] (.au), \n"
 "probably due to a bug, system crash or accidental deletion.\n"
 "There is no way for Audacity to recover this lost data\n"
 "automatically; you may choose to permanently fill in silence\n"
 "for the missing data, temporarily fill in silence for this\n"
 "session only, or close the project now and try to restore the\n"
 "missing data by hand."
-msgstr ""
-"檢查專案時發現遺失了 %d 個聲音資料區塊檔(.au)。\n"
+msgstr "檢查專案時發現遺失了 %d 個聲音資料區塊檔(.au)。\n"
 "這可能是因為 bug、當機、意外刪除造成的。\n"
 "Audacity 無法回復這些遺失的資料；\n"
 "您可以永久用靜音填補、\n"
@@ -1110,13 +1064,11 @@ msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg 支援沒有編譯"
 
 #: FFmpeg.cpp:103
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                       \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                       \n"
 "but this time Audacity failed to load it at startup.                       \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpeg 之前已經在「偏好設定」裡設置好，且曾經成功載入過，                       \n"
+msgstr "FFmpeg 之前已經在「偏好設定」裡設置好，且曾經成功載入過，                       \n"
 "但是在今次 Audacity 啟動時它載入失敗。                       \n"
 "\n"
 "您可能要在「偏好設定->程式庫」重新設定它。"
@@ -1182,14 +1134,12 @@ msgid "FFmpeg not found"
 msgstr "找不到 FFmpeg"
 
 #: FFmpeg.h:120
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity 嘗試使用 FFmpeg 來匯入音訊檔，\n"
+msgstr "Audacity 嘗試使用 FFmpeg 來匯入音訊檔，\n"
 "但是找不到它的程式庫。\n"
 "\n"
 "要使用 FFmpeg 來匯入，請到「偏好設定->程式庫」\n"
@@ -1402,12 +1352,10 @@ msgid "GStreamer %s: %s"
 msgstr "GStreamer %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"GStreamer 之前已經在「偏好設定」裡設置好，且曾經成功載入過，\n"
+msgstr "GStreamer 之前已經在「偏好設定」裡設置好，且曾經成功載入過，\n"
 "                      但是在今次 Audacity 啟動時它載入失敗。\n"
 "                      您可能要在「偏好設定->程式庫」重新設定它。"
 
@@ -1604,13 +1552,11 @@ msgid "New..."
 msgstr "新增..."
 
 #: LabelDialog.cpp:354
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"您留空了標籤名稱。\n"
+msgstr "您留空了標籤名稱。\n"
 "標籤軌建立時會略過這些空白的標籤。\n"
 "\n"
 "您要把它們命名嗎？"
@@ -1680,11 +1626,9 @@ msgstr "你選擇的語言 %s (%s) 並不是系統的語言 %s (%s)."
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"已經把 1.0 格式的專案轉換成新格式。\n"
+msgstr "已經把 1.0 格式的專案轉換成新格式。\n"
 "原本的檔案已另存為 '%s'。"
 
 #: Legacy.cpp:373
@@ -2271,6 +2215,15 @@ msgstr "未排序"
 msgid "Effe&ct"
 msgstr "效果(&C)"
 
+#: Menus.cpp:2551
+#, c-format
+msgid "Repeat %s"
+msgstr "重複 %s"
+
+#: Project.cpp:826
+msgid "Repeat Last Effect"
+msgstr "重覆上次的效果"
+
 #: Menus.cpp:902
 msgid "&Analyze"
 msgstr "分析(&A)"
@@ -2636,11 +2589,6 @@ msgstr "設定選取範圍的右端"
 msgid "You must select a track first."
 msgstr "你必須先選取音軌。"
 
-#: Menus.cpp:2551
-#, c-format
-msgid "Repeat %s"
-msgstr "重複 %s"
-
 #: Menus.cpp:2707
 msgid "There are no label tracks to export."
 msgstr "沒有標籤音軌可以匯出。"
@@ -2654,11 +2602,9 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI 檔案 (*.mid)|*.mid|Allegro 檔案 (*.gro)|*.gro"
 
 #: Menus.cpp:2838
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr ""
-"無法從選取檔案的副檔名辨認它的類型。\n"
+msgstr "無法從選取檔案的副檔名辨認它的類型。\n"
 "你要繼續嗎?"
 
 #: Menus.cpp:2839
@@ -3050,6 +2996,10 @@ msgstr "移除音軌"
 msgid "Removed audio track(s)"
 msgstr "移除了音軌"
 
+#: Menus.cpp:5401
+msgid "Audio Device Info"
+msgstr ""
+
 #: Menus.cpp:5486
 #: Menus.cpp:5542
 #: export/ExportFFmpeg.cpp:800
@@ -3155,10 +3105,6 @@ msgstr "列印發生錯誤。"
 msgid "Print"
 msgstr "列印"
 
-#: Project.cpp:826
-msgid "Repeat Last Effect"
-msgstr "重覆上次的效果"
-
 #: Project.cpp:931
 msgid "Main Mix"
 msgstr "主混音"
@@ -3188,15 +3134,13 @@ msgid "Save changes before closing?"
 msgstr "在關閉前儲存變更？"
 
 #: Project.cpp:1938
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "儲存專案之後，這個專案會沒有任何音軌。\n"
 "\n"
 "要儲存先前開啟的音軌，\n"
@@ -3207,31 +3151,29 @@ msgstr ""
 msgid "Save changes?"
 msgstr "儲存變更？"
 
-#: Project.cpp:2163
-msgid "All files|*|All supported files|"
-msgstr "所有檔案|*|所有支援的檔案|"
-
 #: Project.cpp:2193
 msgid "Select one or more audio files..."
 msgstr "選取一個或多個音訊檔..."
 
-#: Project.cpp:2221
-msgid "Audacity projects|*.aup|"
-msgstr "Audacity 專案|*.aup|"
+#. i18n-hint: This string is a label in the file type filter in the open
+#. * and save dialogues, for the option that only shows project files created
+#. * with Audacity. Do not include pipe symbols or .aup (this extension will
+#. * now be added automatically for the Save Projects dialogues).
+#: Project.cpp:2163 Project.cpp:3410
+msgid "Audacity projects"
+msgstr ""
 
 #: Project.cpp:2285
 #: Project.cpp:2782
 #, c-format
-msgid ""
-"This file was saved by Audacity %s, a much\n"
+msgid "This file was saved by Audacity %s, a much\n"
 "older version.  The format has changed.\n"
 "\n"
 "Audacity could corrupt the file in opening\n"
 "it, so you must back it up first.\n"
 "\n"
 "Open this file now?"
-msgstr ""
-"此檔案格式是由非常舊版的 Audacity %s 儲存的，而此格式\n"
+msgstr "此檔案格式是由非常舊版的 Audacity %s 儲存的，而此格式\n"
 "已改變。\n"
 "Audacity 可能會在開啟檔案時損毀它。\n"
 "為了安全起見，請先備份此檔案。\n"
@@ -3248,13 +3190,11 @@ msgid "Opening old project file"
 msgstr "開啟舊版專案"
 
 #: Project.cpp:2316
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"你正要開啟一個自動建立的備份檔。\n"
+msgstr "你正要開啟一個自動建立的備份檔。\n"
 "這樣做可能導致嚴重的資料損失。\n"
 "\n"
 "請開啟真正的 Audacity 專案檔。"
@@ -3271,11 +3211,9 @@ msgstr "開啟檔案錯誤"
 
 #: Project.cpp:2345
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"檔案可能無效或損壞：\n"
+msgstr "檔案可能無效或損壞：\n"
 "%s"
 
 #: Project.cpp:2346
@@ -3314,12 +3252,10 @@ msgstr "找不到專案資料目錄：\"%s"
 
 #: Project.cpp:2751
 #, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s - you need to upgrade to\n"
 "a newer version to open this file."
-msgstr ""
-"這個檔案是由 Audacity %s 儲存的。\n"
+msgstr "這個檔案是由 Audacity %s 儲存的。\n"
 "您現在使用的是Audacity %s - 您需要更新的版本\n"
 "來開啟這個檔案。"
 
@@ -3329,15 +3265,13 @@ msgstr "無法開啟專案檔"
 
 #: Project.cpp:2789
 #, c-format
-msgid ""
-"This file was saved by Audacity %s.\n"
+msgid "This file was saved by Audacity %s.\n"
 "\n"
 "Audacity can open and save this file, but saving it in this version\n"
 "will then prevent any 1.2 or earlier version opening it.\n"
 "\n"
 "Open this file now?"
-msgstr ""
-"這個檔案是由 Audacity %s 儲存的。\n"
+msgstr "這個檔案是由 Audacity %s 儲存的。\n"
 "\n"
 "Audacity 可以存取這個檔案，但是使用此版本來儲存它會\n"
 "令 1.2 或之前的版本無法開啟。\n"
@@ -3345,8 +3279,7 @@ msgstr ""
 "你要開啟它嗎?"
 
 #: Project.cpp:2987
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3354,8 +3287,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"你的專案是空白的。\n"
+msgstr "你的專案是空白的。\n"
 "儲存專案之後，這個專案會沒有任何音軌。\n"
 "\n"
 "要儲存先前開啟的音軌，\n"
@@ -3368,11 +3300,9 @@ msgstr "空白專案警告"
 
 #: Project.cpp:3097
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"無法儲存專案。可能 %s \n"
+msgstr "無法儲存專案。可能 %s \n"
 "是不能寫入的，或者磁碟已滿。"
 
 #: Project.cpp:3099
@@ -3415,31 +3345,31 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM 音訊檔 (*.wav)|*.wav"
 
 #: Project.cpp:3449
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"Audacity 壓縮專案 (.aup) 會把聲音儲存為壓縮過的 (.ogg) 格式。\n"
+msgstr "Audacity 壓縮專案 (.aup) 會把聲音儲存為壓縮過的 (.ogg) 格式。\n"
 "壓縮專案比正常的專案小很多，所以它們很適合用來放在網上。\n"
 "開啟壓縮專案會比正常的慢，因為程式要匯入壓縮過的音軌。\n"
 "\n"
 "大部份程式都不能開啟 Audacity 專案。\n"
 "要儲存成其他程式也能開啟的聲音檔，請使用「匯出」功能。"
 
+#: Project.cpp:3398
+msgid "Save Compressed Project As..."
+msgstr ""
+
 #: Project.cpp:3452
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"你正要儲存一個 Audacity 專案檔 (.aup)。\n"
+msgstr "你正要儲存一個 Audacity 專案檔 (.aup)。\n"
 "\n"
 "這個專案檔只有 Audacity 才能開啟。\n"
 "\n"
@@ -3449,9 +3379,14 @@ msgstr ""
 msgid "Save Project As..."
 msgstr "另存專案為..."
 
-#: Project.cpp:3456
-msgid "Audacity projects (*.aup)|*.aup"
-msgstr "Audacity 專案 (*.aup)|*.aup"
+#: Project.cpp:3431
+msgid "Error Saving Project"
+msgstr ""
+
+#: Project.cpp:3431
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
+"Please try again and select an original name."
+msgstr ""
 
 #: Project.cpp:3505
 msgid "Created new project"
@@ -3902,68 +3837,54 @@ msgstr "儲存標頭檔錯誤"
 
 #: Theme.cpp:638
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
-msgstr ""
-"Audacity 無法寫入檔案：\n"
+msgstr "Audacity 無法寫入檔案：\n"
 "  %s。"
 
 #: Theme.cpp:656
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr ""
-"Audacity 無法開啟這個檔案來寫入：\n"
+msgstr "Audacity 無法開啟這個檔案來寫入：\n"
 "%s"
-
 
 #: Theme.cpp:664
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
-msgstr ""
-"Audacity 無法將圖片寫入檔案：\n"
+msgstr "Audacity 無法將圖片寫入檔案：\n"
 "  %s。"
 
 #: Theme.cpp:799
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"Audacity 找不到檔案：\n"
+msgstr "Audacity 找不到檔案：\n"
 "  %s.\n"
 "沒有載入佈景。"
 
 #: Theme.cpp:807
 #: Theme.cpp:896
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"Audacity 無法載入檔案：\n"
+msgstr "Audacity 無法載入檔案：\n"
 "  %s.\n"
 "PNG 檔已經損毀？"
 
 #: Theme.cpp:823
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"Audacity 無法讀取預設佈景。\n"
+msgstr "Audacity 無法讀取預設佈景。\n"
 "請把這個問題告訴我們。"
 
 #: Theme.cpp:918
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
 msgstr "在 %s 找不到想要的佈景。"
@@ -3971,30 +3892,24 @@ msgstr "在 %s 找不到想要的佈景。"
 #: Theme.cpp:942
 #: effects/NoiseRemoval.cpp:172
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"無法建立資料夾：\n"
+msgstr "無法建立資料夾：\n"
 " %s"
 
 #: Theme.cpp:963
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"無法儲存檔案：\n"
+msgstr "無法儲存檔案：\n"
 " %s"
 
 #: Theme.cpp:975
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"在%s所需的檔案\n"
+msgstr "在%s所需的檔案\n"
 "已經準備好了。"
 
 #: TimeDialog.h:29
@@ -4472,10 +4387,6 @@ msgstr "立體聲, 999999Hz"
 msgid "TrackView"
 msgstr "軌道檢視"
 
-#: TrackPanelAx.cpp:293
-msgid "Track Accessible out of sync"
-msgstr "軌道不同步"
-
 #: TrackPanelAx.cpp:301
 #, c-format
 msgid "Track %d"
@@ -4544,24 +4455,19 @@ msgid "Plugins %i to %i"
 msgstr "插件 %i 至 %i"
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"你上一次的動作發生了問題。\n"
+msgstr "你上一次的動作發生了問題。\n"
 "如果你覺得這是 bug，請告訴我們在那裡出了問題。"
 
 #: commands/CommandManager.cpp:953
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped.  [Pausing is not sufficient.]"
-msgstr ""
-"你只能在停止播放及停止錄音後才能執行此動作。\n"
+msgstr "你只能在停止播放及停止錄音後才能執行此動作。\n"
 "[暫停是不夠的。]"
 
 #: commands/CommandManager.cpp:955
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use.  [You can't use this with mono.]"
 msgstr "在使用前必須先選擇一個立體聲音軌。[選擇單聲道音軌是無效的。]"
 
@@ -4570,8 +4476,7 @@ msgid "You must first select some audio for this to use."
 msgstr "必須先選取聲音。"
 
 #: commands/CommandManager.cpp:959
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. [Selecting other kinds of track won't work.]"
 msgstr "在使用前必須先選擇一些聲音。[選擇別種的軌道是無效的。]"
 
@@ -5123,19 +5028,15 @@ msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr "對比分析 (WCAG 2 標準對照)"
 
 #: effects/Contrast.cpp:107
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
-msgstr ""
-"開始時間比結束時間還遲!\n"
+msgstr "開始時間比結束時間還遲!\n"
 "請輸入適當的時間."
 
 #: effects/Contrast.cpp:117
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"這些時間不合理!\n"
+msgstr "這些時間不合理!\n"
 "請輸入適當的時間."
 
 #: effects/Contrast.cpp:214
@@ -5527,9 +5428,14 @@ msgstr "選取曲線："
 msgid "Save As..."
 msgstr "另存新檔..."
 
-#: effects/Equalization.cpp:1387
-msgid "Flat"
-msgstr "直線"
+#: effects/Equalization.cpp:1407
+msgid "Flatten"
+msgstr ""
+
+# 波形上下反轉
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "波形反轉 Invert"
 
 #: effects/Equalization.cpp:1469
 msgid "To use this EQ curve in a batch chain, please choose a new name for it."
@@ -5611,11 +5517,6 @@ msgstr "正在偵測削波"
 #: effects/Generator.cpp:58
 msgid "There is not enough room available to generate the audio"
 msgstr "沒有足夠的位置可以產生聲音"
-
-# 波形上下反轉
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "波形反轉 Invert"
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -5862,11 +5763,9 @@ msgstr "產生雜音"
 
 #: effects/NoiseRemoval.cpp:191
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"無法開啟檔案：\n"
+msgstr "無法開啟檔案：\n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:276
@@ -5878,11 +5777,9 @@ msgid "Step 1"
 msgstr "步驟 1"
 
 #: effects/NoiseRemoval.cpp:828
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"請選擇一段幾秒鐘長的雜音，以便讓 Audacity 判斷雜音的特徵，\n"
+msgstr "請選擇一段幾秒鐘長的雜音，以便讓 Audacity 判斷雜音的特徵，\n"
 "然後點擊「取得雜音特徵」："
 
 #: effects/NoiseRemoval.cpp:829
@@ -5890,11 +5787,9 @@ msgid "Step 2"
 msgstr "步驟 2"
 
 #: effects/NoiseRemoval.cpp:830
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"將需要過濾的聲音全部選取，再選擇雜音濾除的程度，\n"
+msgstr "將需要過濾的聲音全部選取，再選擇雜音濾除的程度，\n"
 "然後按「確定」消除雜音。\n"
 
 #: effects/NoiseRemoval.cpp:835
@@ -6055,24 +5950,20 @@ msgid "Applying Phaser"
 msgstr "套用移相器中"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"修復效果提供小片段損毀聲音的修復(最多128個取樣點)。\n"
+msgstr "修復效果提供小片段損毀聲音的修復(最多128個取樣點)。\n"
 "\n"
 "放大聲音然後選取一小片段來修復。"
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"修復選取的部分，需要用到它周圍的聲音。\n"
+msgstr "修復選取的部分，需要用到它周圍的聲音。\n"
 "\n"
 "請確定這部分的前後至少有一面是有聲音粘住的。\n"
 "\n"
@@ -6161,11 +6052,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "突刺清除器(由Lynn Allan提供)"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"最大峰值持續期間(毫秒)：\n"
+msgstr "最大峰值持續期間(毫秒)：\n"
 "(最大99999)"
 
 # 壓縮動作的起始點，指的是輸入音量的值。
@@ -6361,11 +6250,9 @@ msgid "Threshold for silence:"
 msgstr "靜音臨界值："
 
 #: effects/TruncSilence.cpp:524
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"   靜音長度最短要1 ms\n"
+msgstr "   靜音長度最短要1 ms\n"
 "   壓縮比例至少要 1:1"
 
 #: effects/TruncSilence.h:29
@@ -6393,6 +6280,10 @@ msgstr "無"
 #: effects/VST/VSTEffect.cpp:410
 msgid "Presets:"
 msgstr "預置:"
+
+#: effects/VST/VSTEffect.cpp:489
+msgid "Presets"
+msgstr ""
 
 #: effects/VST/VSTEffect.cpp:422
 msgid "Load"
@@ -6607,14 +6498,12 @@ msgstr "您確認要將該檔案另存新檔為 \""
 
 #: export/Export.cpp:597
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to save the file under this name?"
-msgstr ""
-"您正要將 %s 檔案以 \"%s\" 的檔名儲存起來。\n"
+msgstr "您正要將 %s 檔案以 \"%s\" 的檔名儲存起來。\n"
 "\n"
 "通常，這類檔案的副檔名為\".%s\"，且有些軟體無法開啟非標準副檔名的檔案。\n"
 "\n"
@@ -6704,11 +6593,9 @@ msgid "Command Output"
 msgstr "命令輸出"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
-msgstr ""
-"你必須正確地設定 FFmpeg 才可以繼續.\n"
+msgstr "你必須正確地設定 FFmpeg 才可以繼續.\n"
 "你可以在「偏好設定->程式庫」設定它."
 
 #: export/ExportFFmpeg.cpp:237
@@ -6716,14 +6603,12 @@ msgid "AMR support is not distributable"
 msgstr "AMR 支援不可發佈"
 
 #: export/ExportFFmpeg.cpp:237
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries.\n"
 "\n"
 "Note that AMR support is not available with our FFmpeg\n"
 "installer, but requires you compile FFmpeg yourself."
-msgstr ""
-"你必須正確地設定 FFmpeg 才可以繼續.\n"
+msgstr "你必須正確地設定 FFmpeg 才可以繼續.\n"
 "你可以在「偏好設定->程式庫」設定它.\n"
 "\n"
 "請注意, 我們提供的 FFmpeg 安裝程式不包括安裝 AMR 支援.\n"
@@ -6731,11 +6616,9 @@ msgstr ""
 
 #: export/ExportFFmpeg.cpp:446
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
-msgstr ""
-"FFmpeg 找不到音訊 codec 0x%x.\n"
+msgstr "FFmpeg 找不到音訊 codec 0x%x.\n"
 "這個 codec 的支援很可能沒有編譯到."
 
 #: export/ExportFFmpeg.cpp:699
@@ -6760,15 +6643,13 @@ msgstr "無效取樣頻率"
 
 #: export/ExportFFmpeg.cpp:805
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
 msgstr "目前的輸出格式並不支援此專案的取樣頻率 (%d)。"
 
 #: export/ExportFFmpeg.cpp:808
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
 msgstr "目前的輸出格式並不支援此專案的取樣頻率 (%d) 和位元率 (%d kbps)的組合。"
 
@@ -6859,6 +6740,66 @@ msgstr "在儲存預置之前，請選擇 Codec"
 msgid "Preset '%s' does not exist."
 msgstr "預置 '%s' 並不存在。"
 
+#: export/ExportFFmpegDialogs.cpp:1179
+msgid "LC"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1180
+msgid "Main"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.h:378
+msgid "LTP"
+msgstr "LTP"
+
+#: export/ExportFFmpegDialogs.h:56
+msgid "M4A (AAC) Files (FFmpeg)"
+msgstr "M4A (AAC) 檔案 (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:57
+msgid "AC3 Files (FFmpeg)"
+msgstr "AC3 檔案 (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:58
+msgid "AMR (narrow band) Files (FFmpeg)"
+msgstr "AMR (narrow band) 檔案 (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:60
+msgid "AMR (wide band) Files (FFmpeg)"
+msgstr "AMR (wide band) 檔案 (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:62
+msgid "WMA (version 2) Files (FFmpeg)"
+msgstr "WMA (version 2) 檔案 (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:63
+msgid "Custom FFmpeg Export"
+msgstr "自訂 FFmpeg 匯出"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "2-level"
+msgstr "2-level"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "4-level"
+msgstr "4-level"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "8-level"
+msgstr "8-level"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Estimate"
+msgstr "Estimate"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Full search"
+msgstr "Full search"
+
+#: export/ExportFFmpegDialogs.h:681
+msgid "Log search"
+msgstr "Log search"
+
 #: export/ExportFFmpegDialogs.cpp:797
 msgid "Specify Other Options"
 msgstr "指定其他選項"
@@ -6895,18 +6836,9 @@ msgstr "格式："
 msgid "Codec:"
 msgstr "Codec:"
 
-#: export/ExportFFmpegDialogs.cpp:902
-msgid "Not all formats and codecs are compatible. Some parameters (such as bitrate and samplerate) combinations are not compatible with some codecs too."
+#: export/ExportFFmpegDialogs.cpp:1409
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr ""
-"格式跟 Codec 不一定相容。有一些參數的組合，如位元率+取樣頻率的組合亦跟某些 Codec 不相容。"
-
-#: export/ExportFFmpegDialogs.cpp:905
-msgid "Format selector:"
-msgstr "格式選擇器："
-
-#: export/ExportFFmpegDialogs.cpp:906
-msgid "Codec selector:"
-msgstr "Codec 選擇器："
 
 #: export/ExportFFmpegDialogs.cpp:908
 msgid "Show All Formats"
@@ -6916,61 +6848,59 @@ msgstr "顯示所有格式"
 msgid "Show All Codecs"
 msgstr "顯示所有 Codec"
 
-#: export/ExportFFmpegDialogs.cpp:916
-msgid "Options"
-msgstr "選項"
+#: export/ExportFFmpegDialogs.cpp:1427
+msgid "General Options"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:920
 msgid "Language:"
 msgstr "語言："
 
 #: export/ExportFFmpegDialogs.cpp:921
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"ISO 639 3-letter language code\n"
+msgstr "ISO 639 3-letter language code\n"
 "額外選項\n"
 "空白表示自動選擇"
+
+#: export/ExportFFmpegDialogs.cpp:1435
+msgid "Bit Reservoir"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1439
+msgid "VBL"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:923
 msgid "Tag:"
 msgstr "標籤:"
 
 #: export/ExportFFmpegDialogs.cpp:924
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"Codec 標籤 (FOURCC)\n"
+msgstr "Codec 標籤 (FOURCC)\n"
 "額外選項\n"
 "空白表示自動選擇"
 
-
 #: export/ExportFFmpegDialogs.cpp:927
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
-msgstr ""
-"位元率 (bits/second) - 影響輸出的檔案大小和品質\n"
+msgstr "位元率 (bits/second) - 影響輸出的檔案大小和品質\n"
 "有一些 Codec 僅允許特定的位元率 (如 128K, 192K, 256K)\n"
 "0 - 自動選擇\n"
 "建議 - 192000"
 
 #: export/ExportFFmpegDialogs.cpp:930
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
-msgstr ""
-"品質，此選項對各 Codec 有不同的影響\n"
-"使用 Vorbis 格式時必需設定"
-"0 - 自動\n"
+msgstr "品質，此選項對各 Codec 有不同的影響\n"
+"使用 Vorbis 格式時必需設定0 - 自動\n"
 "-1 - 不指定 (以位元率代替此選項)"
 
 #: export/ExportFFmpegDialogs.cpp:932
@@ -6978,24 +6908,20 @@ msgid "Sample Rate:"
 msgstr "取樣頻率:"
 
 #: export/ExportFFmpegDialogs.cpp:933
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
-msgstr ""
-"取樣頻率 (Hz)\n"
+msgstr "取樣頻率 (Hz)\n"
 "0 - 不要改變取樣頻率"
 
-#: export/ExportFFmpegDialogs.cpp:935
-msgid "Cutoff Bandwidth:"
-msgstr "Cutoff Bandwidth:"
+#: export/ExportFFmpegDialogs.cpp:1457
+msgid "Cutoff:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:936
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
-msgstr ""
-"聲音訊號的截止頻寬 Cutoff Bandwidth(Hz)\n"
+msgstr "聲音訊號的截止頻寬 Cutoff Bandwidth(Hz)\n"
 "額外參數\n"
 "0 - 自動設定"
 
@@ -7004,164 +6930,137 @@ msgid "Profile:"
 msgstr "Profile:"
 
 #: export/ExportFFmpegDialogs.cpp:940
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
-msgstr ""
-"AAC Profile\n"
+msgstr "AAC Profile\n"
 "Low Complexity - 預設\n"
 "大部份播放程式都不能播放 LC 之外的 AAC 檔"
-
-#: export/ExportFFmpegDialogs.cpp:942
-msgid "Use Bit Reservoir"
-msgstr "使用 Bit Reservoir"
-
-#: export/ExportFFmpegDialogs.cpp:945
-msgid "Use Variable Block Length"
-msgstr "使用動態區塊大小"
 
 #: export/ExportFFmpegDialogs.cpp:950
 msgid "FLAC options"
 msgstr "FLAC 選項"
 
-#: export/ExportFFmpegDialogs.cpp:954
-msgid "Compression Level:"
-msgstr "壓縮等級:"
+#: export/ExportFFmpegDialogs.cpp:1473
+msgid "Compression:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:955
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr ""
-"壓縮等級\n"
+msgstr "壓縮等級\n"
 "使用 FLAC 時必需指定此選項\n"
 "-1 - 自動選擇\n"
 "最低 - 0 (編碼速度快，但輸出檔案較大)\n"
 "最高 - 10 (編碼速度慢，但輸出檔案較小)"
 
-#: export/ExportFFmpegDialogs.cpp:957
-msgid "Frame Size:"
-msgstr "幀(Frame)大小："
+#: export/ExportFFmpegDialogs.cpp:1476
+msgid "Frame:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:958
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr ""
-"幀大小\n"
+msgstr "幀大小\n"
 "額外選項\n"
 "0 - 預設值\n"
 "最小值 - 16\n"
 "最大值 - 65535"
 
-#: export/ExportFFmpegDialogs.cpp:960
-msgid "LPC coefficients precision"
-msgstr "LPC coefficients 精確度"
+#: export/ExportFFmpegDialogs.cpp:1479
+msgid "LPC"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:961
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr ""
-"LPC 系數精確度\n"
+msgstr "LPC 系數精確度\n"
 "額外參數\n"
-"0 - 預設值"
-"最小值 - 1\n"
+"0 - 預設值最小值 - 1\n"
 "最大值 - 15"
 
-#: export/ExportFFmpegDialogs.cpp:963
-msgid "Minimal prediction order"
-msgstr "Minimal prediction order"
-
-#: export/ExportFFmpegDialogs.cpp:964
-msgid ""
-"Minimal prediction order\n"
-"Optional\n"
-"-1 - default\n"
-"min - 0\n"
-"max - 32 (with LPC) or 4 (without LPC)"
+#: export/ExportFFmpegDialogs.cpp:1482
+msgid "PdO Method:"
 msgstr ""
-"Minimal prediction order\n"
-"額外參數\n"
-"-1 - 預設值\n"
-"最小值 - 0\n"
-"最大值 - 32 (使用 LPC) 或 4 (不使用 LPC)"
-
-#: export/ExportFFmpegDialogs.cpp:966
-msgid "Maximal prediction order"
-msgstr "Maximal prediction order"
-
-#: export/ExportFFmpegDialogs.cpp:967
-msgid ""
-"Maximal prediction order\n"
-"Optional\n"
-"-1 - default\n"
-"min - 0\n"
-"max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Maximal prediction order\n"
-"額外參數\n"
-"-1 - 預設值\n"
-"最小值 - 0\n"
-"最大值 - 32 (使用 LPC) 或 4 (不使用 LPC)"
-
-#: export/ExportFFmpegDialogs.cpp:969
-msgid "Prediction Order Method:"
-msgstr "Prediction Order Method:"
 
 #: export/ExportFFmpegDialogs.cpp:971
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
-msgstr ""
-"Prediction Order Method\n"
+msgstr "Prediction Order Method\n"
 "Estimate - 最快，但壓縮效果小\n"
 "Log search - 最慢，但壓縮效果最好\n"
 "Full search - 預設值"
 
-#: export/ExportFFmpegDialogs.cpp:973
-msgid "Minimal partition order"
-msgstr "Minimal partition order"
+#: export/ExportFFmpegDialogs.cpp:1487
+msgid "Min. PdO"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:964
+msgid "Minimal prediction order\n"
+"Optional\n"
+"-1 - default\n"
+"min - 0\n"
+"max - 32 (with LPC) or 4 (without LPC)"
+msgstr "Minimal prediction order\n"
+"額外參數\n"
+"-1 - 預設值\n"
+"最小值 - 0\n"
+"最大值 - 32 (使用 LPC) 或 4 (不使用 LPC)"
+
+#: export/ExportFFmpegDialogs.cpp:1490
+msgid "Max. PdO"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:967
+msgid "Maximal prediction order\n"
+"Optional\n"
+"-1 - default\n"
+"min - 0\n"
+"max - 32 (with LPC) or 4 (without LPC)"
+msgstr "Maximal prediction order\n"
+"額外參數\n"
+"-1 - 預設值\n"
+"最小值 - 0\n"
+"最大值 - 32 (使用 LPC) 或 4 (不使用 LPC)"
+
+#: export/ExportFFmpegDialogs.cpp:1493
+msgid "Min. PtO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:974
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Minimal partition order\n"
+msgstr "Minimal partition order\n"
 "額外參數\n"
 "-1 - 預設值\n"
 "最小值 - 0\n"
 "最大值 - 8"
 
-#: export/ExportFFmpegDialogs.cpp:976
-msgid "Maximal partition order"
-msgstr "Maximal partition order"
+#: export/ExportFFmpegDialogs.cpp:1496
+msgid "Max. PtO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:977
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Maximal partition order\n"
+msgstr "Maximal partition order\n"
 "額外參數\n"
 "-1 - 預設值\n"
 "最小值 - 0\n"
@@ -7180,12 +7079,10 @@ msgid "Mux Rate:"
 msgstr "Mux 位元率:"
 
 #: export/ExportFFmpegDialogs.cpp:991
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"合成後音訊流的最高位元率\n"
+msgstr "合成後音訊流的最高位元率\n"
 "額外參數\n"
 "0 - 預設值"
 
@@ -7194,12 +7091,10 @@ msgid "Packet Size:"
 msgstr "封包大小："
 
 #: export/ExportFFmpegDialogs.cpp:994
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"封包大小\n"
+msgstr "封包大小\n"
 "額外參數\n"
 "0 - 預設值"
 
@@ -7238,66 +7133,6 @@ msgstr "偵測格式失敗"
 #: export/ExportFFmpegDialogs.cpp:1405
 msgid "Failed to find the codec"
 msgstr "找不到需要的 Codec"
-
-#: export/ExportFFmpegDialogs.h:56
-msgid "M4A (AAC) Files (FFmpeg)"
-msgstr "M4A (AAC) 檔案 (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:57
-msgid "AC3 Files (FFmpeg)"
-msgstr "AC3 檔案 (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:58
-msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr "AMR (narrow band) 檔案 (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:60
-msgid "AMR (wide band) Files (FFmpeg)"
-msgstr "AMR (wide band) 檔案 (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:62
-msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "WMA (version 2) 檔案 (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:63
-msgid "Custom FFmpeg Export"
-msgstr "自訂 FFmpeg 匯出"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "LTP"
-msgstr "LTP"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "Low Complexity"
-msgstr "Low Complexity"
-
-#: export/ExportFFmpegDialogs.h:378
-msgid "Main profile"
-msgstr "Main profile"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "2-level"
-msgstr "2-level"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "4-level"
-msgstr "4-level"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "8-level"
-msgstr "8-level"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Estimate"
-msgstr "Estimate"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Full search"
-msgstr "Full search"
-
-#: export/ExportFFmpegDialogs.h:681
-msgid "Log search"
-msgstr "Log search"
 
 #: export/ExportFLAC.cpp:67
 msgid "Specify FLAC Options"
@@ -7370,11 +7205,9 @@ msgstr "FLAC 匯出無法開啟 %s"
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
-msgstr ""
-"FLAC 編碼器初始化失敗\n"
+msgstr "FLAC 編碼器初始化失敗\n"
 "狀態： %d"
 
 #: export/ExportFLAC.cpp:324
@@ -7519,11 +7352,9 @@ msgstr "按這裡取得免費的 Lame-->"
 
 #: export/ExportMP3.cpp:1070
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
-msgstr ""
-"你正連結到 lame_enc.dll v%d.%d。這個版本跟 Audacity %d.%d.%d 並不相容。\n"
+msgstr "你正連結到 lame_enc.dll v%d.%d。這個版本跟 Audacity %d.%d.%d 並不相容。\n"
 "請下載最新版本的 LAME MP3 程式庫。"
 
 #: export/ExportMP3.cpp:1328
@@ -7591,15 +7422,13 @@ msgstr "MP3 編碼器傳回錯誤 %d"
 
 #: export/ExportMP3.cpp:1790
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
 msgstr "MP3 格式不支援目前專案的取樣率(%d)。  "
 
 #: export/ExportMP3.cpp:1793
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
 msgstr "MP3 格式不支援目前專案取樣率(%d)及位元率(%d kbps)。  "
 
@@ -7613,13 +7442,11 @@ msgid "Export Multiple"
 msgstr "匯出多個檔案"
 
 #: export/ExportMultiple.cpp:172
-msgid ""
-"If you have more than one Audio Track, you can export each track as a separate file,\n"
+msgid "If you have more than one Audio Track, you can export each track as a separate file,\n"
 "or if you have a Label Track, you can export a new file for each label.\n"
 "\n"
 "This project does not have multiple tracks or a Label Track, so you cannot export multiple files."
-msgstr ""
-"如果您需要匯出多個音軌，您可將每個軌道單獨匯出為一個檔案，\n"
+msgstr "如果您需要匯出多個音軌，您可將每個軌道單獨匯出為一個檔案，\n"
 "或者如果存在一個標籤軌，您可將每個標籤匯出為一個新的檔案。\n"
 "\n"
 "這個專案不包含多個音軌，或者不含標籤軌，所以不能匯出多個檔案。"
@@ -7674,10 +7501,13 @@ msgstr "檔案命名："
 msgid "Using Label/Track Name"
 msgstr "使用標籤/音軌名"
 
-#: export/ExportMultiple.cpp:320
-#: export/ExportMultiple.cpp:322
-msgid "Numbering consecutively"
-msgstr "連續編號"
+#: export/ExportMultiple.cpp:315
+msgid "Numbering before Label/Track Name"
+msgstr ""
+
+#: export/ExportMultiple.cpp:318
+msgid "Numbering after Label/Track Name"
+msgstr ""
 
 #: export/ExportMultiple.cpp:328
 msgid "File name prefix:"
@@ -7725,20 +7555,18 @@ msgstr "匯出下面 %ld 個檔案之後就停止了。"
 msgid "Something went really wrong after exporting the following %ld file(s)."
 msgstr "匯出下面 %ld 個檔案之後發生了很大的問題。"
 
-#: export/ExportMultiple.cpp:544
-msgid "ExportMultiple"
-msgstr "匯出多個檔案"
-
 #: export/ExportMultiple.cpp:592
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr ""
-"\"%s\" 不存在。\n"
+msgstr "\"%s\" 不存在。\n"
 "\n"
 "您要建立它嗎？"
+
+#: export/ExportMultiple.cpp:641 export/ExportMultiple.cpp:776
+msgid "untitled"
+msgstr ""
 
 #: export/ExportMultiple.cpp:689
 #: export/ExportMultiple.cpp:826
@@ -7747,11 +7575,9 @@ msgstr "編輯標頭檔"
 
 #: export/ExportMultiple.cpp:945
 #, c-format
-msgid ""
-"Label %s is not a legal file name. You cannot use any of:   %s\n"
+msgid "Label %s is not a legal file name. You cannot use any of:   %s\n"
 "Use..."
-msgstr ""
-"%s 標籤不是可用的名稱。你不可以使用 %s\n"
+msgstr "%s 標籤不是可用的名稱。你不可以使用 %s\n"
 "請使用..."
 
 #: export/ExportOGG.cpp:64
@@ -7825,6 +7651,12 @@ msgstr "將選定的聲音匯出為 %s"
 msgid "Exporting the entire project as %s"
 msgstr "將整個專案匯出為 %s"
 
+#: export/ExportPCM.cpp:551
+#, c-format
+msgid "Error while writing %s file (disk full?).\n"
+"Libsndfile says \"%s\""
+msgstr ""
+
 #. i18n-hint: %s will be the error message from libsndfile
 #: export/ExportPCM.cpp:564
 #, c-format
@@ -7871,175 +7703,145 @@ msgstr "此版本的 Audacity 在編譯時沒有加入 %s 的支援。"
 
 #: import/Import.cpp:248
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
+msgstr "\"%s\" \n"
 "是一個 MIDI 檔案，並不是一個聲音檔案。\n"
 "Audacity 無法開啟這一種格式來播放，但是你可以用「檔案->匯入->MIDI」來編輯它。"
 
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:258
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是音樂 CD 檔案。\n"
+msgstr "\"%s\"是音樂 CD 檔案。\n"
 "Audacity 無法開啟該類型檔案。\n"
 "請嘗試將它轉錄成 Audacity 能匯入的聲音格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:264
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr ""
-"\"%s\"是播放清單檔案。\n"
+msgstr "\"%s\"是播放清單檔案。\n"
 "它只是一種文字檔案，內容是檔案的位置，所以 Audacity 不能開啟它。\n"
 "您或許可以用文字編輯器將它開啟，取得網址並下載真正的音訊檔。"
 
 #: import/Import.cpp:269
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 Windows Media Audio (WMA) 檔案。\n"
+msgstr "\"%s\"是 Windows Media Audio (WMA) 檔案。\n"
 "Audacity 基於專利權的問題，無法開啟此私有格式。\n"
 "您需要將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:274
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 Advanced Audio Coding (AAC) 檔案。\n"
+msgstr "\"%s\"是 Advanced Audio Coding (AAC) 檔案。\n"
 "Audacity 無法開啟該類型檔案。\n"
 "您需要將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:279
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
-msgstr ""
-"\"%s\" 是加密音訊檔案，通常來自線上音樂商店\n"
+msgstr "\"%s\" 是加密音訊檔案，通常來自線上音樂商店\n"
 "Audacity 基於加密的問題，無法開啟此私有格式。\n"
 "您可以使用錄音功能把它錄進 Audacity，或者把它轉錄成音樂 CD 再擷取成支援的格式如 WAV 或 AIFF。"
 
 #: import/Import.cpp:284
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 RealPlayer 多媒體檔案。\n"
+msgstr "\"%s\"是 RealPlayer 多媒體檔案。\n"
 "Audacity 無法開啟此私有格式。\n"
 "您需要將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:290
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr ""
-"\"%s\" 不是音訊檔案。\n"
+msgstr "\"%s\" 不是音訊檔案。\n"
 "Audacity 無法開啟該類型檔案。\n"
 "請嘗試將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:296
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 Musepack 檔案。\n"
+msgstr "\"%s\"是 Musepack 檔案。\n"
 "Audacity 無法開啟該類型檔案。\n"
 "如果你認為它有可能是 MP3 檔，請將它的副檔名\n"
 "更改為\".mp3\"然後再重新匯入一次，\n"
 "或者將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
-
 #: import/Import.cpp:302
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 Wavpack 檔案。\n"
+msgstr "\"%s\"是 Wavpack 檔案。\n"
 "Audacity 無法開啟該類型檔案。\n"
 "您需要將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:308
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 Dolby Digital 檔案。\n"
+msgstr "\"%s\"是 Dolby Digital 檔案。\n"
 "Audacity 目前不能開啟這種類型的檔案。\n"
 "您需要將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:314
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"是 Ogg Speex 檔案。\n"
+msgstr "\"%s\"是 Ogg Speex 檔案。\n"
 "Audacity 目前不能開啟這種類型的檔案。\n"
 "您需要將它轉錄成 Audacity 支援的檔案格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:320
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" 是一個影片檔。\n"
+msgstr "\"%s\" 是一個影片檔。\n"
 "Audacity 目前不能開啟這種類型的檔案。\n"
 "你需要把聲音擷取出來，存為一種支援的格式，如 WAV 或 AIFF。"
 
 #: import/Import.cpp:325
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
-msgstr ""
-"Audacity 無法辨認檔案 '%s' 的類型。\n"
+msgstr "Audacity 無法辨認檔案 '%s' 的類型。\n"
 "如果它是非壓縮的格式, 可以試一試「匯入 Raw」。"
 
-#: import/Import.cpp:330
+#: import/Import.cpp:343
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s',\n"
-"but was unable to import it."
+msgid "Audacity recognized the type of the file '%s'.\n"
+"Importers supposedly supporting such files are:\n"
+"%s,\n"
+"but none of them understood this file format."
 msgstr ""
-"Audacity 認得檔案 '%s' 的類型，\n"
-"但是無法匯入它。"
 
 #: import/ImportFFmpeg.cpp:34
 msgid "FFmpeg-compatible files"
@@ -8360,11 +8162,9 @@ msgid "Mi&nimum Free Memory (MB):"
 msgstr "最少可用的記憶體(MB)："
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
-msgstr ""
-"如果系統的可用記憶體比這個數值少，聲音就不會放入快取，而是寫入磁碟中。"
+msgstr "如果系統的可用記憶體比這個數值少，聲音就不會放入快取，而是寫入磁碟中。"
 
 #: prefs/DirectoriesPrefs.cpp:126
 msgid "Choose a location to place the temporary directory"
@@ -8587,11 +8387,9 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr "在匯出前顯示標頭檔編輯器(&H)"
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
-msgstr ""
-"注意：匯出品質可以在「匯出」對話框的「選項」中設定。"
+msgstr "注意：匯出品質可以在「匯出」對話框的「選項」中設定。"
 
 #: prefs/KeyConfigPrefs.cpp:72
 msgid "Keyboard"
@@ -8665,12 +8463,10 @@ msgstr "儲存快速鍵錯誤"
 
 #: prefs/KeyConfigPrefs.cpp:371
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
-msgstr ""
-"快速鍵'%s'已經指定為：\n"
+msgstr "快速鍵'%s'已經指定為：\n"
 "'%s'"
 
 #: prefs/LibraryPrefs.cpp:46
@@ -8725,6 +8521,11 @@ msgstr "選取位置(&T)..."
 #: prefs/LibraryPrefs.cpp:130
 msgid "Dow&nload"
 msgstr "下載(&N)"
+
+#: prefs/LibraryPrefs.cpp:186
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
+"Do you still want to locate them manually?"
+msgstr ""
 
 #: prefs/MidiIOPrefs.cpp:58
 msgid "MIDI Devices"
@@ -9421,8 +9222,7 @@ msgid "Info"
 msgstr "資訊"
 
 #: prefs/ThemePrefs.cpp:91
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -9431,8 +9231,7 @@ msgid ""
 "\n"
 "[Only the control toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.]"
-msgstr ""
-"佈景是一個實驗性的功能。\n"
+msgstr "佈景是一個實驗性的功能。\n"
 "\n"
 "按「儲存佈景快取」，然後用影像處理軟體(如 GIMP)來尋找並修改 ImageCacheVxx.png 圖片和顏色。\n"
 "\n"
@@ -9441,23 +9240,18 @@ msgstr ""
 "[只有控制工具列及音軌的顏色可以改變。雖然圖片檔有其他工具列的圖示，但修改它們仍然是沒有作用。]"
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
-msgstr ""
-"你在編譯 Audacity 時啟用了 'Output Sourcery' 按鈕，\n"
+msgstr "你在編譯 Audacity 時啟用了 'Output Sourcery' 按鈕，\n"
 "它會把影像快取儲存成 C 程式碼，以便加入到原始碼中編譯。"
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
-msgstr ""
-"如果你選取了「啟動時載入佈景快取」，佈景快取就會在程式啟動時載入。"
+msgstr "如果你選取了「啟動時載入佈景快取」，佈景快取就會在程式啟動時載入。"
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
 
@@ -9700,6 +9494,22 @@ msgstr "選擇輸入來源"
 #: toolbars/MixerToolBar.cpp:314
 msgid "Input Source:"
 msgstr "輸入來源:"
+
+#: toolbars/MixerToolBar.cpp:388
+msgid "Input Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:392
+msgid "Cannot control input level; use system mixer."
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:396
+msgid "Output Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:400
+msgid "Cannot control output level; use system mixer."
+msgstr ""
 
 #: toolbars/SelectionBar.cpp:86
 #: toolbars/SelectionBar.cpp:292
@@ -10030,12 +9840,10 @@ msgid "Automated Input Level Adjustment stopped as requested by user."
 msgstr "輸入音量自動調整已經停止(使用者要求)。"
 
 #: widgets/Meter.cpp:1283
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"音量計的更新頻率愈高，反應就愈快。\n"
+msgstr "音量計的更新頻率愈高，反應就愈快。\n"
 "系統速度不夠快的話，可以指定每秒 30 次以下的頻率。\n"
 "這樣播放的品質就不會受到太大的影響。"
 
@@ -10323,128 +10131,4 @@ msgstr "關閉檔案時發生錯誤"
 #: xml/XMLWriter.cpp:340
 msgid "Error writing to file"
 msgstr "寫入檔案時發生錯誤"
-
-#~ msgid "To [[welcome|Welcome screen]]"
-#~ msgstr "回到[[welcome|歡迎頁面]]"
-#~ msgid ""
-#~ "Learn how to: <ul><li>[[play|play]] an existing audio file <li>[[record|"
-#~ "record]] your voice, LP or tape <li>[[edit|edit]] sounds <li>[[save|save "
-#~ "or open an Audacity project]] <li>[[export|export]] to an MP3 or other "
-#~ "audio file, or [[burncd|burn to a CD]]  </ul></p><p>"
-#~ msgstr ""
-#~ "讓我們一起學習如何：<ul><li>[[play|播放]]一個已存在的聲音檔案。<li>如何"
-#~ "[[record|錄製]]一個聲音檔案。<li>如何[[edit|編輯]] 聲音然後[[export|匯出]]"
-#~ "成如MP3的檔案。<li>[[burncd|燒錄至CD]]。</ul><br><br>"
-#~ msgid ""
-#~ "This screen can be viewed at any time by clicking the <i>Help</i> menu, "
-#~ "then <i>Show Welcome Message</i>. For a detailed guide to all the "
-#~ "Audacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, "
-#~ "or download our <a href=\"http://audacity.sourceforge.net/help/"
-#~ "documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
-#~ msgstr ""
-#~ "你可以從'說明'選單內找到這些教學指引，在<i>說明</i>選單內的<i>顯示歡迎畫面"
-#~ "</i>。若要完整的說明文件，則在<i>說明</i>選單內的<i>索引</i>，或者<a href="
-#~ "\"http://audacity.sourceforge.net/help/documentation\">下載PDF說明手冊</"
-#~ "a>。<br><br>再次感謝您使用Audacity。"
-
-#, fuzzy
-#~ msgid ""
-#~ "<p><b>Opening audio files:</b> Either drag the files into the current "
-#~ "project window, or click <i>File &gt; Import &gt; Audio</i>. Files can be "
-#~ "opened into a new project window with <i>File &gt; Open</i>. The main "
-#~ "formats Audacity plays are <b>AIFF, AU, FLAC, M4A</b> (only on a Mac), "
-#~ "<b>MP2/MP3, OGG Vorbis</b> and <b>WAV</b>. Click [[wma-proprietary|here]] "
-#~ "if your file is in some other format. <b>To import a CD:</b> extract it "
-#~ "to WAV or AIFF using iTunes, Windows Media Player 11 or similar. See our "
-#~ "online guide: [[wiki:How_to_import_CDs|importing CDs]].</p><p> "
-#~ "<p><b>Playing audio:</b> Press the green Play button to start playback. "
-#~ "Press the blue Pause button once to pause playback, and again to resume. "
-#~ "To stop, press the yellow Stop button. Spacebar can be used to either "
-#~ "play or stop. After stopping, playback resumes from its last starting "
-#~ "point. To change the starting point, click in the track at your desired "
-#~ "starting point. The <b>|&lt;&lt;</b> and <b>&gt;&gt;|</b> buttons can be "
-#~ "used to skip to the start or end of the track respectively. </p><br><br>"
-#~ msgstr ""
-#~ "你可以前已存在的檔案拖曳至Audacity開啟，或者用選單上的<b>檔案>匯入>音訊</"
-#~ "b>。<b>檔案>開啟</b>是一樣的動作，只是會新開一個Audacity視窗而已。<br/"
-#~ "><br/>以下是Audacity主要支援的檔案格式：<b>AIFF、AU、FLAC、M4A</b> (僅"
-#~ "Mac), <b>MP2/MP3、OGG Vorbis、WAV</b>。如果你的檔案是其他格式，請參見(格式"
-#~ "說明)。如果你想要從CD匯入音訊，請看[[wiki:How to import CDs|如何從CD匯入音"
-#~ "訊]]<br><br>要開始播放你的音訊，按下綠色播放按鈕。要停止播放，按下黃色停止"
-#~ "按鈕。你可以用空白鍵來播放/停止。當你在停止後再度播放，會從上一次開始播放"
-#~ "的時間點開始。如果要改變播放時間點，請用<b>|&lt;&lt;</b>或<b>&gt;&gt;|</b>"
-#~ "鈕來改變播放時間點至開頭或結尾。或者用滑鼠在音軌上點一下想要播放的起點。"
-#~ "<br><br>"
-
-#, fuzzy
-#~ msgid ""
-#~ "<p>The main commands for editing audio are under the <i>Edit</i> menu "
-#~ "(such as cut, copy and paste) and the <i>Effect</i> menu (you can do "
-#~ "things like boost the bass, change pitch or tempo, or remove noise). </"
-#~ "p><p> Audacity applies edits to selected areas of the audio track. To "
-#~ "select a particular area, click in the track and drag the shaded area "
-#~ "with the mouse. If no audio is selected, Audacity selects all the audio "
-#~ "in the project window.</p><p> When playing or recording, the Edit and "
-#~ "Effect menus will appear greyed out, because a moving track can't be "
-#~ "edited. Commands can sometimes be unavailable for other reasons too. For "
-#~ "example, you can't run effects until you have audio on the screen, and "
-#~ "you can't paste audio until you've cut or copied it to Audacity's "
-#~ "clipboard. </p><br><br>"
-#~ msgstr ""
-#~ "編輯：Audacity是一個強大的編輯器，你可以看看到底它能對你的音訊檔案及錄音檔"
-#~ "案做些什麼。你會使用到的主要功能都在<b>編輯</b>選單(如剪下、複製、貼上)及"
-#~ "<b>效果</b>選單內(如低音增強、變更音高、變更速率、移除雜訊等)。"
-#~ "<br><br>Audacity可以對音軌編輯、套用效果。你可以選定音軌上的一個範圍來編"
-#~ "輯，用滑鼠左鍵對音軌上的一點按住並拖曳陰影範圍即可。如果你沒有選擇任何音軌"
-#~ "來編輯，那麼Audacity將會自動選擇所有的音軌來編輯。<br><br>編輯時的兩個重"
-#~ "點：<br><br>(1) 如果你正在播放或錄音，請先按下黃色停止按鈕。因為你不能編輯"
-#~ "或匯出一個正在播放的音軌！<br><br>(2)有的時候，選單或按鈕會顯示為灰色或"
-#~ "\"停用\" -  這是正常的。例如，當你正在播放或錄音時不能編輯音訊，此時一些指"
-#~ "令就會顯示成灰色或者停用。有的時候還有其他原因會造成指令停用 - 例如工程內"
-#~ "沒有任何音訊時就不能執行效果器，或者當你沒有剪下或複製音訊時，不能執行貼上"
-#~ "的指令。<br><br>"
-#~ msgid "Sile&nce"
-#~ msgstr "靜音(&N)"
-#~ msgid "&Show Welcome Message..."
-#~ msgstr "顯示歡迎訊息(&S)…"
-#~ msgid "Can't Undo"
-#~ msgstr "無法復原"
-#~ msgid "Can't Redo"
-#~ msgstr "無法重做"
-#~ msgid "Disjoined %.2f seconds at t=%.2f"
-#~ msgstr "靜音範圍變為空白%.2f 秒 (位置 t=%.2f)"
-#~ msgid "Disjoin"
-#~ msgstr "靜音範圍變為空白"
-#~ msgid "Disjoin Labels"
-#~ msgstr "將標籤靜音範圍變為空白"
-#~ msgid "Disjoined labeled regions"
-#~ msgstr "將標籤區域靜音範圍變為空白"
-#~ msgid "&Mix and Render"
-#~ msgstr "混音且執行(&M)"
-#~ msgid "Tag Name"
-#~ msgstr "標籤名稱"
-#~ msgid "In Browser"
-#~ msgstr "瀏覽器"
-#~ msgid "Help:"
-#~ msgstr "說明："
-#~ msgid "Audio I/O"
-#~ msgstr "音訊 I/O"
-#~ msgid "Portaudio v"
-#~ msgstr "Portaudio v"
-#~ msgid "%d rows, %d columns"
-#~ msgstr "%d列，%d行"
-#~ msgid "Row %d"
-#~ msgstr "列%d"
-#~ msgid ""
-#~ "This determines how often the meter is refreshed.\n"
-#~ "If you have a slower PC you may want to select a\n"
-#~ "lower refresh rate (30 per second or lower), so that\n"
-#~ "audio qualtiy is not affected by the meter display."
-#~ msgstr ""
-#~ "此偏好設定決定儀定的更新頻率。\n"
-#~ "如果您的電腦等級較低，可以設定\n"
-#~ "較低的更新頻率 (低於30)，這樣子\n"
-#~ "電腦可以跑得比較順。"
-#~ msgid "Time Control"
-#~ msgstr "時間控制"
 

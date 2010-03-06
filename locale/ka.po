@@ -17,24 +17,24 @@ msgstr "Project-Id-Version: AUDACITY.PO\n"
 "X-Poedit-Bookmarks: -1,1872,-1,-1,-1,-1,-1,-1,-1,-1\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: AboutDialog.cpp:143 AudacityApp.cpp:807 Menus.cpp:955
-msgid "&About Audacity..."
-msgstr "Audacity-ის &შესახებ..."
+#: AboutDialog.cpp:159
+msgid "About Audacity..."
+msgstr ""
 
 #: AboutDialog.cpp:157
 msgid "OK... Audacious!"
 msgstr "OK... Audacious!"
 
-#: AboutDialog.cpp:175
-msgid "Audacity is a free program written by a team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a> around the world. We are grateful to <a href=\"http://sourceforge.net\">SourceForge.net</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like operating systems. Older versions of Audacity are available for Mac OS 9."
-msgstr "Audacity მოხალისეთა ჯგუფის მიერ დაწერილი უფასო პროგრამაა <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>, რომელიც მსოფლიოს მასშტაბითაა გავრცელებული <a href=\"http://sourceforge.net\">SourceForge.net</a>. Audacity მუშაობს 98 და მომდევნოზე, Mac OS X, Linux და სხვა Unix ოპერაციულ სისტემებზე. უფრო ძველი  Audacity ხელმისაწვდომია Mac OS 9."
-
-#: AboutDialog.cpp:179
-msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help using Audacity, please visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:192
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
 msgstr ""
 
-#: AboutDialog.cpp:182
-msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help using Audacity, please visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:196
+msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+msgstr ""
+
+#: AboutDialog.cpp:199
+msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
 msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
@@ -85,10 +85,13 @@ msgstr "Audacity დაფუძნებულია კოდზე შემ�
 msgid "Special thanks:"
 msgstr "განსაკუთრებული მადლობა:"
 
-#: AboutDialog.cpp:250
-#, fuzzy
-msgid "<b>Audacity&reg;</b> software is copyright &copy; 1999-2009 Audacity Team. <br>The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
-msgstr "<b>Audacity&reg;</b> პროგრამა copyright &copy; 1999-2008 Audacity ჯგუფი. <br>The name <b>Audacity&reg;</b>  Dominic Mazzoni-ის რეგისტრირებული სავაჭრო ნიშანი."
+#: AboutDialog.cpp:267
+msgid "<b>Audacity&reg;</b> software is copyright"
+msgstr ""
+
+#: AboutDialog.cpp:270
+msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
+msgstr ""
 
 #: AboutDialog.cpp:258
 msgid "Audacity"
@@ -207,14 +210,12 @@ msgstr "%s უკვე გახსნილია სხვა ფანჯა
 msgid "Error opening project"
 msgstr "პროექტის გახსნის შეცდომა"
 
-#: AudacityApp.cpp:541
+#: AudacityApp.cpp:772
 #, c-format
-msgid "%s does not exist and could not be opened.\n"
+msgid "%s could not be found.\n"
 "\n"
-"It has been removed from the history list."
-msgstr "%s არ არსებობს და მისი გახსნა შეუძლებელია.\n"
-"\n"
-"წაშლილია ისტორიის ნუსხიდან."
+"It has been removed from the list of recent files."
+msgstr ""
 
 #: AudacityApp.cpp:643
 msgid "Master Gain Control"
@@ -239,6 +240,10 @@ msgstr "&გახსნა..."
 #: AudacityApp.cpp:805
 msgid "Open &Recent..."
 msgstr ""
+
+#: AboutDialog.cpp:143 AudacityApp.cpp:807 Menus.cpp:955
+msgid "&About Audacity..."
+msgstr "Audacity-ის &შესახებ..."
 
 #: AudacityApp.cpp:809
 msgid "&Preferences..."
@@ -366,6 +371,19 @@ msgstr "შეცდომა: "
 msgid "Error Initializing Audio"
 msgstr "აუდიოს დაწყების შეცდომა"
 
+#: AudioIO.cpp:331
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr ""
+
+#: AudioIO.cpp:332
+msgid "You will not be able to play midi.\n"
+"\n"
+msgstr ""
+
+#: AudioIO.cpp:338
+msgid "Error Initializing Midi"
+msgstr ""
+
 #: AudioIO.cpp:1225
 msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -375,6 +393,37 @@ msgstr ""
 #: AudioIO.cpp:1375
 msgid "Latency problem"
 msgstr "ლატენტურობის პრობლემა"
+
+#: AudioIO.cpp:2825
+msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr ""
+
+#: AudioIO.cpp:2833
+#, c-format
+msgid "Automated Input Level Adjustment decreased the volume to %f."
+msgstr ""
+
+#: AudioIO.cpp:2848
+msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr ""
+
+#: AudioIO.cpp:2860
+#, c-format
+msgid "Automated Input Level Adjustment increased the volume to %.2f."
+msgstr ""
+
+#: AudioIO.cpp:2894
+msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
+
+#: AudioIO.cpp:2896
+msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
+
+#: AudioIO.cpp:2899
+#, c-format
+msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr ""
 
 #: AutoRecovery.cpp:54
 msgid "Automatic Crash Recovery"
@@ -557,13 +606,9 @@ msgstr "მონიშნეთ ხმოვანი ფაილ(ებ) ჯ�
 msgid "Select file(s) for batch processing..."
 msgstr "ფაილ(ებ)ის მონიშვნა დასამუშავებლად..."
 
-#: BatchProcessDialog.cpp:209
-msgid "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files (*.mp3)|*.mp3"
-msgstr "ხმის ფაილები  (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files (*.mp3)|*.mp3"
-
-#: BatchProcessDialog.cpp:210
-msgid "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|FLAC files (*.flac)|*.flac"
-msgstr "ყველა ფაილი  (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|FLAC files (*.flac)|*.flac"
+#: Project.cpp:1925
+msgid "All files|*|All supported files|"
+msgstr ""
 
 #: BatchProcessDialog.cpp:231
 msgid "Applying..."
@@ -603,6 +648,14 @@ msgstr "ჯაჭვი (ორჯერ დაუწკაპუნეთ ა�
 #: BatchProcessDialog.cpp:453
 msgid "Num"
 msgstr ""
+
+#: prefs/KeyConfigPrefs.cpp:171
+msgid "Command"
+msgstr ""
+
+#: effects/Contrast.cpp:235
+msgid "Parameters"
+msgstr "პარამეტრები"
 
 #: BatchProcessDialog.cpp:459
 msgid "&Insert"
@@ -663,13 +716,10 @@ msgstr "დამოკიდებულთა წაშლა"
 msgid "Copying audio data into project..."
 msgstr "აუდიო მონაცემების პროექტის კოპირება..."
 
-#: Dependencies.cpp:223
-msgid "Your project currently depends on the presence of other files.\n"
-"Copy audio from the following files into your project to make it self-contained?\n"
-"This will need more disc space but is safer."
-msgstr "თქვენი პროექტი ამჟამად დამოკიდებულია სხვა ფაილებზე.\n"
-"გადმოვაკოპიროთ პროექტში აუდიო შემდეგ ფაილებიდან რათა თვითკმარი გახდეს?\n"
-"ეს მეტ სივრცეს მოითხოვს, მაგრამ უფრო უსაფრთხოა."
+#: Dependencies.cpp:226
+msgid "Copying the following files into your project will remove this dependency.\n"
+"This needs more disk space, but is safer."
+msgstr ""
 
 #: Dependencies.cpp:270
 msgid "Project depends on other audio files"
@@ -731,11 +781,10 @@ msgstr "თქვენი პროექტი თვითტევადი�
 msgid "Dependency check"
 msgstr "დამოკიდებულების შემოწმება"
 
-#: DirManager.cpp:137
-msgid "Warning: there is very little free disk space left on this volume.\n"
-"Please select another temporary directory in your preferences."
-msgstr "გაფრთხილება: ძალიან მცირე სივრცეა დარჩენილი ამ ნაწილზე.\n"
-"გთხოვთ მონიშნოთ სხვა დროებითი დირექტორია თქვენს პარამეტრებში."
+#: DirManager.cpp:143
+msgid "There is very little free disk space left on this volume.\n"
+"Please select another temporary directory in Preferences."
+msgstr ""
 
 #: DirManager.cpp:223 DirManager.cpp:254 DirManager.cpp:337
 msgid "Progress"
@@ -1028,10 +1077,6 @@ msgstr ""
 msgid "Only libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr ""
 
-#: FreqWindow.cpp:103
-msgid "Frequency Analysis"
-msgstr "სიხშირის ანალიზი"
-
 #: FreqWindow.cpp:139 TrackPanel.cpp:556 prefs/GUIPrefs.cpp:156
 msgid "Spectrum"
 msgstr "სპექტრი"
@@ -1154,6 +1199,14 @@ msgstr "კურსორი: %d Hz (%s) = %d dB   პიკი: %d Hz (%s) = %
 msgid "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
 msgstr "კურსორი: %.4f წ (%d Hz) (%s) = %f,   პიკი: %.4f წ (%d Hz) (%s) = %.3f"
 
+#: FreqWindow.cpp:1006
+msgid "Drawing Spectrum"
+msgstr ""
+
+#: FreqWindow.cpp:1006
+msgid "FreqWindow"
+msgstr ""
+
 #: FreqWindow.cpp:1069
 msgid "spectrum.txt"
 msgstr "spectrum.txt"
@@ -1189,10 +1242,6 @@ msgstr ""
 #: GStreamerLoader.cpp:215
 msgid "GStreamer startup failed"
 msgstr ""
-
-#: HelpText.cpp:85
-msgid "To [[welcome|Welcome screen]]"
-msgstr "To [[welcome|Welcome screen]]"
 
 #: HelpText.cpp:92
 msgid "Welcome!"
@@ -1242,67 +1291,41 @@ msgstr "CD-ზე ჩაწერა"
 msgid "No Local Help"
 msgstr "ლოკალური დახმარების გარეშე"
 
-#: HelpText.cpp:148
-msgid "</p><center><h3>Getting Started</h3></center><br>"
-msgstr "</p><ცენტრი><h3>დაწყება</h3></center><br>"
+#: HelpText.cpp:176
+msgid "<center><h3>How to get Help</h3></center>"
+msgstr ""
 
 #: HelpText.cpp:150
 msgid "Welcome to Audacity "
 msgstr "მოგესალმებათ Audacity "
 
-#: HelpText.cpp:151
-msgid "Learn how to: <ul><li>[[play|play]] an existing audio file <li>[[record|record]] your voice, LP or tape <li>[[edit|edit]] sounds <li>[[save|save or open an Audacity project]] <li>[[export|export]] to an MP3 or other audio file, or [[burncd|burn to a CD]]  </ul></p><p>"
-msgstr "როგორ: <ul><li>[[play|play]] არსებული აუდიო ფალი <li>[[ჩაწერეთ|ჩაწერეთ]] თქვენი ხმა, LP ან ჩაწერეთ <li>[[რედაქტირება|რედაქტირება]] ხმები <li>[[შენახვა|შენახვა ან Audacity პროექტის გახსნა]] <li>[[ექსპორტი|ექსპორტი]]  MP3 ან სხვა ფორმატად, ან [[cd-ის ჩაწერა| CD -ის ჩაწერა]]  </ul></p><p>"
+#: HelpText.cpp:178
+msgid "These are our support methods:"
+msgstr ""
 
-#: HelpText.cpp:159
-msgid "This screen can be viewed at any time by clicking the <i>Help</i> menu, then <i>Show Welcome Message</i>. For a detailed guide to all the Audacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, or download our <a href=\"http://audacity.sourceforge.net/help/documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
-msgstr "This screen can be viewed at any time by clicking the <i>Help</i> menu, then <i>Show Welcome Message</i>. For a detailed guide to all the Audacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, or download our <a href=\"http://audacity.sourceforge.net/help/documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
+#: HelpText.cpp:179
+msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">internet version if it isn't</a>)"
+msgstr ""
 
-#: HelpText.cpp:172
-msgid "<p><b>Opening audio files:</b> Either drag the files into the current project window, or click <i>File &gt; Import &gt; Audio</i>. Files can be opened into a new project window with <i>File &gt; Open</i>. The main formats Audacity plays are <b>AIFF, AU, FLAC, M4A</b> (only on a Mac), <b>MP2/MP3, OGG Vorbis</b> and <b>WAV</b>. Click [[wma-proprietary|here]] if your file is in some other format. <b>To import a CD:</b> extract it to WAV or AIFF using iTunes, Windows Media Player 11 or similar. See our online guide: [[wiki:How_to_import_CDs|importing CDs]].</p><p> <p><b>Playing audio:</b> Press the green Play button to start playback. Press the blue Pause button once to pause playback, and again to resume. To stop, press the yellow Stop button. Spacebar can be used to either play or stop. After stopping, playback resumes from its last starting point. To change the starting point, click in the track at your desired starting point. The <b>|&lt;&lt;</b> and <b>&gt;&gt;|</b> buttons can be used to skip to the start or end of the track respectively. </p><br><br>"
-msgstr "<p><b>Opening audio files:</b> Either drag the files into the current project window, or click <i>File &gt; Import &gt; Audio</i>. Files can be opened into a new project window with <i>File &gt; Open</i>. The main formats Audacity plays are <b>AIFF, AU, FLAC, M4A</b> (only on a Mac), <b>MP2/MP3, OGG Vorbis</b> and <b>WAV</b>. Click [[wma-proprietary|here]] if your file is in some other format. <b>To import a CD:</b> extract it to WAV or AIFF using iTunes, Windows Media Player 11 or similar. See our online guide: [[wiki:How_to_import_CDs|importing CDs]].</p><p> <p><b>Playing audio:</b> Press the green Play button to start playback. Press the blue Pause button once to pause playback, and again to resume. To stop, press the yellow Stop button. Spacebar can be used to either play or stop. After stopping, playback resumes from its last starting point. To change the starting point, click in the track at your desired starting point. The <b>|&lt;&lt;</b> and <b>&gt;&gt;|</b> buttons can be used to skip to the start or end of the track respectively. </p><br><br>"
+#: HelpText.cpp:180
+msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">internet version if it isn't</a>)"
+msgstr ""
 
-#: HelpText.cpp:194
-msgid "<p><b>To record:</b> Set the recording device and input source, adjust the input level, then press the red Record button.</b></p><p> 1) [[inputdevice|Set Recording Device]] either in the <i>Audio I/O tab of Preferences</i> or in <i>Device Toolbar</i>. Audio I/O Preferences lets you choose stereo recording if required.<br> 2) [[inputsource|Set input source]] for that device (for example, microphone or line-in) in the dropdown selector of the <i>Mixer Toolbar</i>, or (on some systems) at Recording Device in the <i>Audio I/O tab of Preferences</i> or in <i>Device Toolbar</i>.<br> 3) [[inputlevel|Adjust input level]] using the right-hand slider on the <i>Mixer Toolbar</i>. Correct adjustment of level before recording is essential to avoid noise or distortion. </p><p> More help at: \"Recording\" <a href=\"http://audacity.sourceforge.net/help/faq\">FAQs</a>, our Tutorial <a href=\"http://www.audacityteam.org/manual/index.php?title=Tutorial_-_Your_First_Recording\"> Your First Recording</a> in the <a href=\"http://www.audacityteam.org/manual/index.php?title=Main_Page\">Manual</a>, and our Wiki [[wiki:Recording_Tips|Recording Tips]] and [[wiki:Troubleshooting_Recordings|Troubleshooting Recordings]] pages. </p><br><br>"
-msgstr "<p><b>To record:</b> Set the recording device and input source, adjust the input level, then press the red Record button.</b></p><p> 1) [[inputdevice|Set Recording Device]] either in the <i>Audio I/O tab of Preferences</i> or in <i>Device Toolbar</i>. Audio I/O Preferences lets you choose stereo recording if required.<br> 2) [[inputsource|Set input source]] for that device (for example, microphone or line-in) in the dropdown selector of the <i>Mixer Toolbar</i>, or (on some systems) at Recording Device in the <i>Audio I/O tab of Preferences</i> or in <i>Device Toolbar</i>.<br> 3) [[inputlevel|Adjust input level]] using the right-hand slider on the <i>Mixer Toolbar</i>. Correct adjustment of level before recording is essential to avoid noise or distortion. </p><p> More help at: \"Recording\" <a href=\"http://audacity.sourceforge.net/help/faq\">FAQs</a>, our Tutorial <a href=\"http://www.audacityteam.org/manual/index.php?title=Tutorial_-_Your_First_Recording\"> Your First Recording</a> in the <a href=\"http://www.audacityteam.org/manual/index.php?title=Main_Page\">Manual</a>, and our Wiki [[wiki:Recording_Tips|Recording Tips]] and [[wiki:Troubleshooting_Recordings|Troubleshooting Recordings]] pages. </p><br><br>"
+#: HelpText.cpp:181
+msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the internet)"
+msgstr ""
 
-#: HelpText.cpp:221
-#, fuzzy
-msgid "<p>The input device is the actual physical sound device you are recording from. This is chosen at \"Recording Device\" in the <i>Audio I/O tab of Preferences</i>, On Windows and Linux, Preferences are at the bottom of the <i>Edit</i> Menu. On a Mac, they in the <i>Audacity</i> Menu. You can also conveniently select Recording Device in the <i>Device Toolbar</i>, which can be enabled at <i>View &gt; Toolbars...</i>. </p><p> By default, Audacity uses the device currently being used by the system, (usually your inbuilt sound device), so it is often not necessary to change the input device. On Windows, this current system device can be selected as \"Microsoft Sound Mapper\". If you are recording from an external USB or Firewire device such as a USB turntable, select it explicitly by name as recording device after connecting it. </p><p> Back to [[record|Recording Audio]] <br></p>"
-msgstr "<p>The input device is the actual physical sound device you are recording from. This is chosen at \"Recording Device\" in the <i>Audio I/O tab of Preferences</i>, On Windows and Linux, Preferences are at the bottom of the <i>Edit</i> Menu. On a Mac, they in the <i>Audacity</i> Menu. You can also conveniently select Recording Device in the <i>Device Toolbar</i>, which can be enabled at <i>View &gt; Toolbars...</i>. </p><p> By default, Audacity uses the device currently being used by the system, (usually your inbuilt sound device), so it is often not necessary to change the input device. On Windows, this current system device can be selected as \"Microsoft Sound Mapper\". If you are recording from an external USB or Firewire device such as a USB turntable, select it explicitly by name as recording device after conecting it. </p><p> Back to [[record|Recording Audio]] <br></p>"
+#: HelpText.cpp:182
+msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the internet)"
+msgstr ""
 
-#: HelpText.cpp:244
-msgid "<p>Select the input source (such as microphone or line-in) for your [[inputdevice|recording device]]:<br> - <b>On Windows (except Vista)</b> and <b>Linux</b>, in the dropdown selector on the right of the <i>Mixer Toolbar</i>.<br> - <b>On Windows Vista</b> and <b>Mac</b>, at Recording Device on the <i>Audio I/O tab of Preferences</i>, or in <i>Device Toolbar</i>. The source will be shown as part of the parent device (for example, <i>High Def Audio Card: Microphone</i>). If necessary, Mac users can choose the input source at Apple Audio MIDI Setup. <br><i><b>Note:</b> many USB or Firewire recording devices don't have a choice of inputs, so this step is not necessary. If in doubt, see the documentation for your device. </i></p><p> <b>Tip:</b> To <a href=\"http://audacity.sourceforge.net/help/faq?s=recording&i=streaming\">record audio playing on the computer</a>, Windows and Linux users can choose the \"Stereo Mix\", \"Wave Out\", \"Sum\" or comparable input source. </p><p> Back to [[record|Recording Audio]] <br></p>"
-msgstr "<p>Select the input source (such as microphone or line-in) for your [[inputdevice|recording device]]:<br> - <b>On Windows (except Vista)</b> and <b>Linux</b>, in the dropdown selector on the right of the <i>Mixer Toolbar</i>.<br> - <b>On Windows Vista</b> and <b>Mac</b>, at Recording Device on the <i>Audio I/O tab of Preferences</i>, or in <i>Device Toolbar</i>. The source will be shown as part of the parent device (for example, <i>High Def Audio Card: Microphone</i>). If necessary, Mac users can choose the input source at Apple Audio MIDI Setup. <br><i><b>Note:</b> many USB or Firewire recording devices don't have a choice of inputs, so this step is not necessary. If in doubt, see the documentation for your device. </i></p><p> <b>Tip:</b> To <a href=\"http://audacity.sourceforge.net/help/faq?s=recording&i=streaming\">record audio playing on the computer</a>, Windows and Linux users can choose the \"Stereo Mix\", \"Wave Out\", \"Sum\" or comparable input source. </p><p> Back to [[record|Recording Audio]] <br></p>"
+#: HelpText.cpp:183
+msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
+msgstr ""
 
-#: HelpText.cpp:267
-msgid "<p>The input level must be set correctly. If the level is too low, there will be background noise. If the level is too high, there will be distortion in the loud parts. </p><p>To set the level, either see this [[wiki:Recording_levels|illustrated online guide]] or follow these steps: <ol><li>Turn on <b>monitoring</b>. Double-click the right-hand of the two <i>VU Meters</i> (or right-click over it) and click \"Start Monitoring\". If the meters are not visible, click <i>View &gt; Toolbars</i> and check \"Meter Toolbar\". </li><li>Adjust the input slider on the <i>Mixer Toolbar</i> (by the microphone symbol), so that the red bars in the meter come close to <b>but do not touch</b> the right edge of the scale. If you can't hear the monitored audio, go to the <i>Audio I/O tab of Preferences</i> and check \"Software Playthrough\". </li></ol></p><p> Back to [[record|Recording Audio]] <br></p>"
-msgstr "<p>The input level must be set correctly. If the level is too low, there will be background noise. If the level is too high, there will be distortion in the loud parts. </p><p>To set the level, either see this [[wiki:Recording_levels|illustrated online guide]] or follow these steps: <ol><li>Turn on <b>monitoring</b>. Double-click the right-hand of the two <i>VU Meters</i> (or right-click over it) and click \"Start Monitoring\". If the meters are not visible, click <i>View &gt; Toolbars</i> and check \"Meter Toolbar\". </li><li>Adjust the input slider on the <i>Mixer Toolbar</i> (by the microphone symbol), so that the red bars in the meter come close to <b>but do not touch</b> the right edge of the scale. If you can't hear the monitored audio, go to the <i>Audio I/O tab of Preferences</i> and check \"Software Playthrough\". </li></ol></p><p> Back to [[record|Recording Audio]] <br></p>"
-
-#: HelpText.cpp:292
-msgid "<p>The main commands for editing audio are under the <i>Edit</i> menu (such as cut, copy and paste) and the <i>Effect</i> menu (you can do things like boost the bass, change pitch or tempo, or remove noise). </p><p> Audacity applies edits to selected areas of the audio track. To select a particular area, click in the track and drag the shaded area with the mouse. If no audio is selected, Audacity selects all the audio in the project window.</p><p> When playing or recording, the Edit and Effect menus will appear greyed out, because a moving track can't be edited. Commands can sometimes be unavailable for other reasons too. For example, you can't run effects until you have audio on the screen, and you can't paste audio until you've cut or copied it to Audacity's clipboard. </p><br><br>"
-msgstr "<p>The main commands for editing audio are under the <i>Edit</i> menu (such as cut, copy and paste) and the <i>Effect</i> menu (you can do things like boost the bass, change pitch or tempo, or remove noise). </p><p> Audacity applies edits to selected areas of the audio track. To select a particular area, click in the track and drag the shaded area with the mouse. If no audio is selected, Audacity selects all the audio in the project window.</p><p> When playing or recording, the Edit and Effect menus will appear greyed out, because a moving track can't be edited. Commands can sometimes be unavailable for other reasons too. For example, you can't run effects until you have audio on the screen, and you can't paste audio until you've cut or copied it to Audacity's clipboard. </p><br><br>"
-
-#: HelpText.cpp:311
-msgid "<p>To return later to your unfinished work in Audacity with all tracks and edits as you left them, save an Audacity project. To play your current work in other media programs or send it to others, [[export|export]] an audio file such as WAV or MP3. </p><p> <i>File &gt; Save Project</i> saves an <b>.aup</b> project file and  a <b>_data</b> folder containing the actual audio. To re-open a saved project, click <i>File &gt; Open</i> and open the .aup file. If you save and exit more than once, an .aup.bak backup file is created, but the .aup file should always be opened if present. When your final exported file is exactly as you want, delete the project files and _data folder to save disc space. </p><p><i>File &gt; Save Project As...</i> is for saving an empty project. It also lets you save an existing Project to a <b> new</b> name. This is the only safe way to rename a project. The .aup file and _data folder should not be moved or renamed manually. </p><p>"
-msgstr "<p>To return later to your unfinished work in Audacity with all tracks and edits as you left them, save an Audacity project. To play your current work in other media programs or send it to others, [[export|export]] an audio file such as WAV or MP3. </p><p> <i>File &gt; Save Project</i> saves an <b>.aup</b> project file and  a <b>_data</b> folder containing the actual audio. To re-open a saved project, click <i>File &gt; Open</i> and open the .aup file. If you save and exit more than once, an .aup.bak backup file is created, but the .aup file should always be opened if present. When your final exported file is exactly as you want, delete the project files and _data folder to save disc space. </p><p><i>File &gt; Save Project As...</i> is for saving an empty project. It also lets you save an existing Project to a <b> new</b> name. This is the only safe way to rename a project. The .aup file and _data folder should not be moved or renamed manually. </p><p>"
-
-#: HelpText.cpp:335
-msgid "To hear your work in other media programs, export it to an audio file such as WAV or MP3 (some formats are [[wma-proprietary|unsupported]]). [[save|Saving an Audacity project]] creates a project file (and linked _data folder) containing all your edited tracks, so you can return to your work later. However, other programs can't read Audacity projects. </p><p> To export, click <i>File &gt; Export</i> then choose the file format you want to export to in the \"Save as type\" dropdown. To [[burncd|burn a CD]] for standalone CD players, choose WAV or AIFF. To export as MP3, the [[wiki:Lame_Installation|Lame Encoder]] must be installed. </p><p> <i>File &gt; Export Selection</i> exports only a selected area of audio. <i>Use File &gt; Export Multiple</i> to export multiple files at the same time, either one for each audio track, or one for each labeled area in a single track. <i>Tracks &gt; Add Label At Selection</i> lets you [[wiki:Splitting_recordings_into_separate_tracks|split the tracks]] from an album for multiple export as separate files. </p><br><br>"
-msgstr "To hear your work in other media programs, export it to an audio file such as WAV or MP3 (some formats are [[wma-proprietary|unsupported]]). [[save|Saving an Audacity project]] creates a project file (and linked _data folder) containing all your edited tracks, so you can return to your work later. However, other programs can't read Audacity projects. </p><p> To export, click <i>File &gt; Export</i> then choose the file format you want to export to in the \"Save as type\" dropdown. To [[burncd|burn a CD]] for standalone CD players, choose WAV or AIFF. To export as MP3, the [[wiki:Lame_Installation|Lame Encoder]] must be installed. </p><p> <i>File &gt; Export Selection</i> exports only a selected area of audio. <i>Use File &gt; Export Multiple</i> to export multiple files at the same time, either one for each audio track, or one for each labeled area in a single track. <i>Tracks &gt; Add Label At Selection</i> lets you [[wiki:Splitting_recordings_into_separate_tracks|split the tracks]] from an album for multiple export as separate files. </p><br><br>"
-
-#: HelpText.cpp:359
-#, fuzzy
-msgid "<p>Audacity <b>cannot</b> [[play|play]] or [[export|export]] files in <b>WMA, RealAudio, Shorten (SHN)</b> or most other proprietary formats, due to licensing and patent restrictions.  On a Mac computer, unprotected <b>AAC</b> formats such as <b>M4A</b> can be imported. Some open formats are not yet supported, including <b>Ogg Speex</b> and <b>Musepack</b>. Files protected by any kind of Digital Rights Management (DRM), including most purchased online such as from iTunes or Napster, <b>cannot</b> be imported.</p><p> If you can't import your file into Audacity, then if it is not DRM-protected, use iTunes or <a href=\"http://www.erightsoft.com/SUPER.html#Dnload\">SUPER</a> to convert it to WAV or AIFF. If it is protected, burn it to an audio CD in the program licensed to play it, then extract the CD track to WAV or AIFF using iTunes or (on Windows) <a href=\"http://cdexos.sourceforge.net/?q=download\">CDex</a> or Windows Media Player 11. You could also <a href=\"http://audacity.sourceforge.net/help/faq?s=recording&amp;i=streaming\">record</a> the CD to your computer. <i>To export to an unsupported format, export to WAV or AIFF and convert it to the desired format in iTunes or <a href=\"http://www.erightsoft.com/SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-msgstr "<p>Audacity <b>cannot</b> [[play|play]] or [[export|export]] files in <b>WMA, RealAudio, Shorten (SHN)</b> or most other proprietary formats, due to licensing and patent restrictions.  On a Mac computer, unprotected <b>AAC</b> formats such as <b>M4A</b> can be imported. Some open formats are not yet supported, including <b>Ogg Speex</b> and <b>Musepack</b>. Files protected by any kind of Digital Rights Management (DRM), including most purchased online such as from iTunes or Napster, <b>cannot</b> be imported.</p><p> If you can't import your file into Audacity, then if it is not DRM-protected, use iTunes or <a href=\"http://www.erightsoft.com/SUPER.html#Dnload\">SUPER</a> to convert it to WAV or AIFF. If it is protected, burn it to an audio CD in the program licensed to play it, then extract the CD track to WAV or AIFF using ITunes or (on Windows) <a href=\"http://cdexos.sourceforge.net/?q=download\">CDex</a> or Windows Media Player 11. You could also <a href=\"http://audacity.sourceforge.net/help/faq?s=recording&amp;i=streaming\">record</a> the CD to your computer. <i>To export to an unsupported format, export to WAV or AIFF and convert it to the desired format in iTunes or <a href=\"http://www.erightsoft.com/SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-
-#: HelpText.cpp:383
-msgid "<p>To burn your work to an audio CD for standalone CD players, first [[export|export]] it as WAV or AIFF. The exported file should be stereo, 44100 Hz (set in the \"Project Rate\" button bottom left) and 16 bit (set in the \"Options\" button in the file export dialog). These are Audacity's default settings, so normally you will not need to change these before exporting. <p>Burn the exported file to an \"audio CD\" - not a \"data CD\" or \"MP3 CD\" - with a CD burning program like iTunes or Windows Media Player. For more help, see [[wiki:How_to_burn_CDs|How to burn CDs]] online. </p><p>"
-msgstr "<p>To burn your work to an audio CD for standalone CD players, first [[export|export]] it as WAV or AIFF. The exported file should be stereo, 44100 Hz (set in the \"Project Rate\" button bottom left) and 16 bit (set in the \"Options\" button in the file export dialog). These are Audacity's default settings, so normally you will not need to change these before exporting. <p>Burn the exported file to an \"audio CD\" - not a \"data CD\" or \"MP3 CD\" - with a CD burning program like iTunes or Windows Media Player. For more help, see [[wiki:How_to_burn_CDs|How to burn CDs]] online. </p><p>"
-
-#: HelpText.cpp:403
-msgid "<p>Help for Audacity Beta is currently unfinished. For now, a draft manual is available <a href=\"http://www.audacityteam.org/manual/index.php?title=Main_Page\">online</a>. Alternatively, click <a href=\"http://www.audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export\">here</a> to download a single-page version of the manual which can be viewed in this window."
-msgstr "<p>Help for Audacity Beta is currently unfinished. For now, a draft manual is available <a href=\"http://www.audacityteam.org/manual/index.php?title=Main_Page\">online</a>. Alternatively, click <a href=\"http://www.audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export\">here</a> to download a single-page version of the manual which can be viewed in this window."
+#: HelpText.cpp:193
+msgid "<p>You do not appear to have 'help' installed on your computer.<br> Please <a href=\"*URL*\">view or download it online</a>."
+msgstr ""
 
 #: HistoryWindow.cpp:53
 msgid "Undo History"
@@ -1378,9 +1401,9 @@ msgstr "საწყისი დრო"
 msgid "End Time"
 msgstr "დასრულების დრო"
 
-#: LabelDialog.cpp:100 Menus.cpp:713
-msgid "&Edit Labels"
-msgstr "&იარლიყების რედაქტირება"
+#: LabelDialog.cpp:100
+msgid "Edit Labels"
+msgstr ""
 
 #: LabelDialog.cpp:115
 msgid "Press F2 or double click to edit cell contents."
@@ -1448,9 +1471,9 @@ msgstr "ახალი იარლიყის ტრეკი"
 msgid "Enter track name"
 msgstr "ტრეკის სახელის შეყვანა"
 
-#: LabelDialog.cpp:705 LabelDialog.h:52 LabelTrack.cpp:89 Menus.cpp:632
-msgid "&Label Track"
-msgstr "&იარლიყის ტრეკი"
+#: LabelDialog.cpp:705 LabelDialog.h:52 LabelTrack.cpp:96
+msgid "Label Track"
+msgstr ""
 
 #: LangChoice.cpp:57
 msgid "Audacity First Run"
@@ -1459,6 +1482,11 @@ msgstr "Audacity-ის პირველი გაშვება"
 #: LangChoice.cpp:89
 msgid "Choose Language for Audacity to use:"
 msgstr "ენის ამორჩევა Audacity-ისთვის:"
+
+#: LangChoice.cpp:125
+#, c-format
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
+msgstr ""
 
 #: Legacy.cpp:356
 #, c-format
@@ -1470,6 +1498,11 @@ msgstr "1.0 პროექტის ფაილი კონვერტირ
 #: Legacy.cpp:357
 msgid "Opening Audacity Project"
 msgstr "Audacity პროექტის გახსნა"
+
+#: LyricsWindow.cpp:48
+#, c-format
+msgid "Audacity Karaoke%s"
+msgstr ""
 
 #: Menus.cpp:194
 msgid "&File"
@@ -1595,6 +1628,10 @@ msgstr "&კპირება"
 msgid "&Paste"
 msgstr "&ჩასმა"
 
+#: Menus.cpp:366
+msgid "Paste Te&xt to New Label"
+msgstr ""
+
 #: Menus.cpp:376
 msgid "Tri&m"
 msgstr "დაჭრ&რა"
@@ -1659,10 +1696,9 @@ msgstr "კო&პირება"
 msgid "Sp&lit Delete"
 msgstr "და&ყოფის წაშლა"
 
-#. i18n-hint: Labeled Regions submenu
-#: Menus.cpp:435
-msgid "Sile&nce"
-msgstr "სიჩუ&მე"
+#: Menus.cpp:418
+msgid "Silence &Audio"
+msgstr ""
 
 #. i18n-hint: Labeled Regions submenu
 #: Menus.cpp:441
@@ -1789,6 +1825,14 @@ msgstr "მიმაგრების &ჩვენება"
 msgid "&History..."
 msgstr "&ისტორია..."
 
+#: Menus.cpp:546
+msgid "&Karaoke..."
+msgstr ""
+
+#: Menus.cpp:549
+msgid "&Mixer Board..."
+msgstr ""
+
 #: Menus.cpp:566
 msgid "&Toolbars"
 msgstr "&ხელსაწყოთა ზოლები"
@@ -1891,6 +1935,10 @@ msgstr "ხმა-გააქტიურებული ჩაწერა (�
 msgid "Sound Activation Level..."
 msgstr "ხმის გააქტიურების დონე..."
 
+#: Menus.cpp:616
+msgid "Automated Input Level Adjustment (on/off)"
+msgstr ""
+
 #: Menus.cpp:622
 msgid "&Tracks"
 msgstr "&ტრეკები"
@@ -1906,6 +1954,10 @@ msgstr "&აუდიო ტრეკი"
 #: Menus.cpp:631
 msgid "&Stereo Track"
 msgstr "&სტერეო ტრეკი"
+
+#: LabelDialog.cpp:705 LabelDialog.h:52 LabelTrack.cpp:89 Menus.cpp:632
+msgid "&Label Track"
+msgstr "&იარლიყის ტრეკი"
 
 #: Menus.cpp:633 TimeTrack.cpp:44
 msgid "&Time Track"
@@ -1992,6 +2044,10 @@ msgstr ""
 msgid "Add Label At &Playback Position"
 msgstr "იარლიყის დამატება &დაკვრის პოზიციისას"
 
+#: LabelDialog.cpp:100 Menus.cpp:713
+msgid "&Edit Labels"
+msgstr "&იარლიყების რედაქტირება"
+
 #: Menus.cpp:716
 msgid "S&ort tracks"
 msgstr "ტრეკების &დახარისხება"
@@ -2016,6 +2072,15 @@ msgstr "დაუხარისხებელი"
 msgid "Effe&ct"
 msgstr "ეფ&ექტი"
 
+#: Menus.cpp:2369
+#, c-format
+msgid "Repeat %s"
+msgstr "გამეორება %s"
+
+#: Project.cpp:669
+msgid "Repeat Last Effect"
+msgstr ""
+
 #: Menus.cpp:877
 msgid "&Analyze"
 msgstr "&ანალიზი"
@@ -2036,12 +2101,12 @@ msgstr "&დახმარება"
 msgid "&About Audacity CleanSpeech..."
 msgstr "Audacity CleanSpeech-ის შესახებ..."
 
-#: Menus.cpp:957
-msgid "&Show Welcome Message..."
-msgstr "&მისალმების შეტყობინების &ჩვენება..."
+#: Menus.cpp:995
+msgid "&Quick Help (in web browser)"
+msgstr ""
 
-#: Menus.cpp:958
-msgid "&Help..."
+#: Menus.cpp:996
+msgid "&Manual (in web browser)"
 msgstr ""
 
 #: Menus.cpp:959
@@ -2300,6 +2365,22 @@ msgstr ""
 msgid "Adjust input source"
 msgstr ""
 
+#: Menus.cpp:1116
+msgid "Play at speed"
+msgstr ""
+
+#: Menus.cpp:1117
+msgid "Adjust playback speed"
+msgstr ""
+
+#: Menus.cpp:1118
+msgid "Increase playback speed"
+msgstr ""
+
+#: Menus.cpp:1119
+msgid "Decrease playback speed"
+msgstr ""
+
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: Menus.cpp:1157
 msgid "Open Recent"
@@ -2315,18 +2396,10 @@ msgstr "უკანასკნელი  &ფაილები"
 msgid "&Undo %s"
 msgstr "%s &დაბრუნება"
 
-#: Menus.cpp:1235
-msgid "Can't Undo"
-msgstr "დაბრუნება შეუძლებელია"
-
 #: Menus.cpp:1244
 #, c-format
 msgid "&Redo %s"
 msgstr "&გამეორება %s"
-
-#: Menus.cpp:1250
-msgid "Can't Redo"
-msgstr "გამეორება შეუძლებელია"
 
 #: Menus.cpp:1856
 msgid "Sort By Time"
@@ -2344,22 +2417,21 @@ msgstr "სახელის მიხედვით დახარისხ�
 msgid "Tracks sorted by name"
 msgstr "სახელის მიხედვით დახარისხებული ტრეკები"
 
-#: Menus.cpp:2033
-msgid "Set Left Selection Bound"
-msgstr "მარცხენა მონიშვნის საზღვრის მომართვა"
+#: Menus.cpp:2156 Menus.cpp:2192
+msgid "Position"
+msgstr ""
 
-#: Menus.cpp:2068
-msgid "Set Right Selection Bound"
-msgstr "მარჯვენა მონიშვნის საზღვრის მომართვა"
+#: Menus.cpp:2156
+msgid "Set Left Selection Boundary"
+msgstr ""
+
+#: Menus.cpp:2192
+msgid "Set Right Selection Boundary"
+msgstr ""
 
 #: Menus.cpp:2337
 msgid "You must select a track first."
 msgstr "ჯერ უნდა ამოირჩიოთ ტრეკი"
-
-#: Menus.cpp:2369
-#, c-format
-msgid "Repeat %s"
-msgstr "გამეორება %s"
 
 #: Menus.cpp:2512
 msgid "There are no label tracks to export."
@@ -2428,6 +2500,10 @@ msgstr "ერთი ტიპის ტრეკის მეორეში �
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "სტერეო აუდიოდან მონო ტრეკზე კოპირება დაუშვებელია."
 
+#: Menus.cpp:3538
+msgid "Paste Text to New Label"
+msgstr ""
+
 #: Menus.cpp:3214 toolbars/EditToolBar.cpp:139
 msgid "Trim"
 msgstr "Trim"
@@ -2445,14 +2521,14 @@ msgstr "დაყოფილი-წაშლილი %.2f წამი =%.2f"
 msgid "Split Delete"
 msgstr "დაყოფა წაშლა"
 
-#: Menus.cpp:3267
+#: Menus.cpp:3625
 #, c-format
-msgid "Disjoined %.2f seconds at t=%.2f"
-msgstr "განცალკევებული %.2f წამი at t=%.2f"
+msgid "Detached %.2f seconds at t=%.2f"
+msgstr ""
 
-#: Menus.cpp:3270
-msgid "Disjoin"
-msgstr "განცალკევება"
+#: Menus.cpp:3628
+msgid "Detach"
+msgstr ""
 
 #: Menus.cpp:3291
 #, c-format
@@ -2544,13 +2620,13 @@ msgstr "იარლიყების შეერთება"
 msgid "Joined labeled regions"
 msgstr "შეერთებული იარლიყდადებული არეები"
 
-#: Menus.cpp:3469
-msgid "Disjoin Labels"
-msgstr "იარლიყების შეერთება"
+#: Menus.cpp:3820
+msgid "Detach Labels"
+msgstr ""
 
-#: Menus.cpp:3469
-msgid "Disjoined labeled regions"
-msgstr "განცალკევებული იარლიყდადებული არეები"
+#: Menus.cpp:3820
+msgid "Detached labeled regions"
+msgstr ""
 
 #: Menus.cpp:3491 TrackPanel.cpp:6134
 msgid "Split"
@@ -2567,6 +2643,10 @@ msgstr "ახალ ტრეკზე დაყოფა"
 #: Menus.cpp:3668
 msgid "Split at labels"
 msgstr "იარლიყებზე დაყოფა"
+
+#: FreqWindow.cpp:103
+msgid "Frequency Analysis"
+msgstr "სიხშირის ანალიზი"
 
 #: Menus.cpp:4130
 #, c-format
@@ -2633,8 +2713,9 @@ msgstr "%d ტრეკების ერთ ახალ სტერეო �
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "%d ტრეკების ერთ ახალ მონო ტრეკში არევა და რენდერი "
 
-#: Menus.cpp:4273 Mix.cpp:121
-msgid "&Mix and Render"
+#: Menus.cpp:4612 Mix.cpp:120
+#, fuzzy
+msgid "Mix and Render"
 msgstr "&არევა და რენდერი"
 
 #: Menus.cpp:4403
@@ -2741,6 +2822,10 @@ msgstr "ტრეკის წაშლა"
 msgid "Removed audio track(s)"
 msgstr "წაშლილი აუდიო ტრეკ(ბ)ი"
 
+#: Menus.cpp:5401
+msgid "Audio Device Info"
+msgstr ""
+
 #: Menus.cpp:5138 Menus.cpp:5193 export/ExportFFmpeg.cpp:710
 #: export/ExportMP3.cpp:1928
 msgid "Resample"
@@ -2775,6 +2860,45 @@ msgstr "არევა"
 msgid "Mixing and rendering tracks"
 msgstr "ტრეკების არევა და რენდერინგი"
 
+#. i18n-hint: Title of the Gain slider, used to adjust the volume
+#: TrackPanel.cpp:3449 TrackPanel.cpp:5703 TrackPanel.cpp:7244
+msgid "Gain"
+msgstr "Gain"
+
+#: MixerBoard.cpp:164
+msgid "Musical Instrument"
+msgstr ""
+
+#. i18n-hint: Title of the Pan slider, used to move the sound left or right stereoscopically
+#: TrackPanel.cpp:3449 TrackPanel.cpp:5641 TrackPanel.cpp:7251
+msgid "Pan"
+msgstr "Pan"
+
+#: TrackPanel.cpp:7171
+msgid "Mute"
+msgstr "დადუმება"
+
+#: TrackPanel.cpp:7171
+msgid "Solo"
+msgstr "სოლო"
+
+#: MixerBoard.cpp:230
+msgid "Signal Level Meter"
+msgstr ""
+
+#: TrackPanel.cpp:3448
+msgid "Moved gain slider"
+msgstr "გადაადგილებული gain ცოცია"
+
+#: TrackPanel.cpp:3448
+msgid "Moved pan slider"
+msgstr "გადაადგილებული pan ცოცია"
+
+#: MixerBoard.cpp:1328
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr ""
+
 #: NoteTrack.cpp:43
 msgid "Note Track"
 msgstr "გაითვალისწინეთ ტრეკი"
@@ -2786,10 +2910,6 @@ msgstr "ამობეჭდვის შეცდომა."
 #: Printing.cpp:193
 msgid "Print"
 msgstr "ამობეჭდვა"
-
-#: Project.cpp:669
-msgid "Repeat Last Effect"
-msgstr ""
 
 #: Project.cpp:673
 msgid "Main Mix"
@@ -2834,17 +2954,17 @@ msgstr "\n"
 msgid "Save changes?"
 msgstr "შევინახო ცვლილებები?"
 
-#: Project.cpp:1925
-msgid "All files|*|All supported files|"
-msgstr ""
-
 #: Project.cpp:1802
 msgid "Select one or more audio files..."
 msgstr "ერთი ან მეტი აუდიო ფაილის მონიშვნა..."
 
-#: Project.cpp:1829
-msgid "Audacity projects|*.aup|"
-msgstr "Audacity პროექტები|*.aup|"
+#. i18n-hint: This string is a label in the file type filter in the open
+#. * and save dialogues, for the option that only shows project files created
+#. * with Audacity. Do not include pipe symbols or .aup (this extension will
+#. * now be added automatically for the Save Projects dialogues).
+#: Project.cpp:2163 Project.cpp:3410
+msgid "Audacity projects"
+msgstr ""
 
 #: Project.cpp:1882 Project.cpp:2304
 #, c-format
@@ -3024,6 +3144,10 @@ msgstr "Audacity-ს კომპრესირებული პროექ�
 "როდესაც გსურთ ფაილის გახსნა პროგრამით, რომელსაც შეუძლია გახსნა, მონიშნეთ\n"
 "ექსპორტის ერთ-ერთი ბრძანება."
 
+#: Project.cpp:3398
+msgid "Save Compressed Project As..."
+msgstr ""
+
 #: Project.cpp:2894
 msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3036,9 +3160,18 @@ msgstr "თქვენ ინხავთ  Audacity პროექტის �
 "\n"
 "აუდიო ფაილის სხვა პროგრამებით შენახვისთვის გამოიყენეთ ერთ-ერთი \"ფაილი >ექსპორტი\"  ბრძანება.\n"
 
-#: Project.cpp:2898
-msgid "Audacity projects (*.aup)|*.aup"
-msgstr "Audacity პროექტები(*.aup)|*.aup"
+#: Project.cpp:3404
+msgid "Save Project As..."
+msgstr ""
+
+#: Project.cpp:3431
+msgid "Error Saving Project"
+msgstr ""
+
+#: Project.cpp:3431
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
+"Please try again and select an original name."
+msgstr ""
 
 #: Project.cpp:2952
 msgid "Created new project"
@@ -3077,6 +3210,10 @@ msgstr "ჩაწერისთვის დარჩენილი სივ�
 #: Project.cpp:3320
 msgid "Out of disk space"
 msgstr "დისზე სივრცე აღარ დარჩა"
+
+#: Project.cpp:3917
+msgid "On-demand import and waveform calculation complete."
+msgstr ""
 
 #: Project.cpp:3333
 #, c-format
@@ -3307,14 +3444,6 @@ msgstr ""
 msgid "Tall Tracks"
 msgstr ""
 
-#: Screenshot.cpp:384
-msgid "Saved "
-msgstr "შენახულია"
-
-#: Screenshot.cpp:387
-msgid "Error trying to save file: "
-msgstr "ფაილის შენახვის შეცდომა:"
-
 #: Screenshot.cpp:673
 msgid "Choose a location to save screenshot images"
 msgstr ""
@@ -3340,8 +3469,9 @@ msgstr "ხმაგააქტიურებული ჩაწერა"
 msgid "Activation level (dB):"
 msgstr "აქტივაციის დონე (dB):"
 
-#: SplashDialog.cpp:60
-msgid "&Welcome to Audacity!"
+#: SplashDialog.cpp:62
+#, fuzzy
+msgid "Welcome to Audacity!"
 msgstr "&მოგესალმებათ Audacity!"
 
 #: SplashDialog.cpp:112
@@ -3380,17 +3510,17 @@ msgstr "კომენტარები"
 msgid "Use arrow keys (or RETURN key after editing) to navigate fields."
 msgstr ""
 
+#: Tags.cpp:812
+msgid "Tag"
+msgstr ""
+
 #: Tags.cpp:813
-msgid "Tag Name"
-msgstr "ჭდის სახელი"
+msgid "Value"
+msgstr ""
 
-#: Tags.cpp:814
-msgid "Tag Value"
-msgstr "ჭდის მნიშვნელობა"
-
-#: Tags.cpp:829 Tags.cpp:1486 prefs/KeyConfigPrefs.cpp:116
-msgid "&Clear"
-msgstr "&გაწმენდა"
+#: Tags.cpp:828 prefs/KeyConfigPrefs.cpp:161
+msgid "Cl&ear"
+msgstr ""
 
 #: Tags.cpp:835
 msgid "Genres"
@@ -3416,9 +3546,9 @@ msgstr "&ჩატვირთვა..."
 msgid "&Save..."
 msgstr "&შენახვა..."
 
-#: Tags.cpp:852 Tags.cpp:1477 Tags.cpp:2004
-msgid "S&et Default"
-msgstr "ნაგულისხმევი პარამეტრების დაყენება"
+#: Tags.cpp:851
+msgid "Set De&fault"
+msgstr ""
 
 #: Tags.cpp:1002 Tags.cpp:1640 Tags.cpp:2368
 msgid "Edit Genres"
@@ -3544,6 +3674,10 @@ msgstr "ყველა მოთხოვნილი ფაილები:\n"
 #: effects/ToneGen.cpp:366
 msgid "Duration"
 msgstr "ხანგრძლოვობა"
+
+#: TimeTrack.cpp:44
+msgid "Time Track"
+msgstr ""
 
 #: TimerRecordDialog.cpp:68
 msgid "Audacity Timer Record"
@@ -3792,24 +3926,6 @@ msgstr "წაშლილი ტრეკი '%s.'"
 msgid "Track Remove"
 msgstr "ტრეკის წაშლა"
 
-#: TrackPanel.cpp:3448
-msgid "Moved gain slider"
-msgstr "გადაადგილებული gain ცოცია"
-
-#: TrackPanel.cpp:3448
-msgid "Moved pan slider"
-msgstr "გადაადგილებული pan ცოცია"
-
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: TrackPanel.cpp:3449 TrackPanel.cpp:5703 TrackPanel.cpp:7244
-msgid "Gain"
-msgstr "Gain"
-
-#. i18n-hint: Title of the Pan slider, used to move the sound left or right stereoscopically
-#: TrackPanel.cpp:3449 TrackPanel.cpp:5641 TrackPanel.cpp:7251
-msgid "Pan"
-msgstr "Pan"
-
 #: TrackPanel.cpp:3576 TrackPanel.cpp:6441
 msgid "up"
 msgstr "ზემოთ"
@@ -3842,6 +3958,10 @@ msgstr "შერწყმა"
 #: TrackPanel.cpp:4164
 msgid "Merged Clips"
 msgstr "შერწყმული სანიშნები"
+
+#: TrackPanel.cpp:4439
+msgid "Remove"
+msgstr ""
 
 #: TrackPanel.cpp:4176
 msgid "Removed Cut Line"
@@ -3974,21 +4094,9 @@ msgstr "სახის ზომა"
 msgid "Stereo, 999999Hz"
 msgstr ""
 
-#: TrackPanel.cpp:7171
-msgid "Mute"
-msgstr "დადუმება"
-
-#: TrackPanel.cpp:7171
-msgid "Solo"
-msgstr "სოლო"
-
 #: TrackPanelAx.cpp:273
 msgid "TrackView"
 msgstr "ტრეკის ხედი"
-
-#: TrackPanelAx.cpp:281
-msgid "Track Accessible out of sync"
-msgstr "ხელმისაწვდომი ტრეკი სინქრონიზაციის გარეთაა"
 
 #: TrackPanelAx.cpp:289
 #, c-format
@@ -4091,6 +4199,14 @@ msgstr "ჩატვირთულია %d კლავიატურის �
 #: commands/CommandManager.cpp:1085
 msgid "Loading keyboard shortcuts"
 msgstr "კლავიატურის მალსახმობების ჩატვირთვა"
+
+#: Screenshot.cpp:384
+msgid "Saved "
+msgstr "შენახულია"
+
+#: Screenshot.cpp:387
+msgid "Error trying to save file: "
+msgstr "ფაილის შენახვის შეცდომა:"
 
 #: effects/Amplify.cpp:52
 #, c-format
@@ -4475,6 +4591,14 @@ msgstr "დინამიური დიაპაზონის კომპ�
 msgid "Threshold"
 msgstr "ზღვარი"
 
+#: effects/Compressor.cpp:640
+msgid "Noise Floor:"
+msgstr ""
+
+#: effects/Compressor.cpp:644
+msgid "Noise Floor"
+msgstr ""
+
 #: effects/Compressor.cpp:502
 msgid "Ratio:"
 msgstr "პროპორციები:"
@@ -4503,6 +4627,10 @@ msgstr "დაწევის დრო"
 msgid "Make-up gain for 0dB after compressing"
 msgstr ""
 
+#: effects/Compressor.cpp:680
+msgid "Compress based on Peaks"
+msgstr ""
+
 #: effects/Compressor.cpp:563
 #, c-format
 msgid "Threshold %d dB"
@@ -4512,6 +4640,11 @@ msgstr "ზღვარი %d dB"
 #, c-format
 msgid "%3d dB"
 msgstr "%3d dB"
+
+#: effects/Compressor.cpp:722
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr ""
 
 #: effects/Compressor.cpp:567
 #, c-format
@@ -4556,17 +4689,8 @@ msgstr "კომპრესორი"
 msgid "Applying Dynamic Range Compression..."
 msgstr "დინამიური დიაპაზონის კომპრესიის გააქტიურება..."
 
-#: effects/Contrast.cpp:64
-msgid "Contrast Analysis"
-msgstr ""
-
-#: effects/Contrast.cpp:79
-msgid "Contrast Tool Foreground"
-msgstr ""
-
-#: effects/Contrast.cpp:79
-msgid "Foreground times selected.\n"
-"Now select background and use Ctrl+Shift+T or menu again."
+#: effects/Contrast.cpp:65
+msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr ""
 
 #: effects/Contrast.cpp:127
@@ -4579,13 +4703,9 @@ msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
 msgstr ""
 
-#: effects/Contrast.cpp:231
-msgid "Contrast Analyzer"
-msgstr "კონტრასტის ანალიზატორი"
-
-#: effects/Contrast.cpp:235
-msgid "Parameters"
-msgstr "პარამეტრები"
+#: effects/Contrast.cpp:214
+msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
+msgstr ""
 
 #: effects/Contrast.cpp:242 effects/ToneGen.cpp:355
 #: toolbars/ControlToolBar.cpp:186
@@ -4614,13 +4734,8 @@ msgstr ""
 msgid "Foreground end time"
 msgstr ""
 
-#: effects/Contrast.cpp:193 effects/Contrast.cpp:204 effects/Contrast.cpp:266
-#: effects/Contrast.cpp:289
-msgid "Measured"
-msgstr "გაზომილი"
-
-#: effects/Contrast.cpp:373 effects/Contrast.cpp:417
-msgid "Use selection"
+#: effects/Contrast.cpp:265 effects/Contrast.cpp:305
+msgid "Measure selection"
 msgstr ""
 
 #: effects/Contrast.cpp:271
@@ -4651,29 +4766,12 @@ msgstr "პარამეტრების გარდაქმნა"
 msgid "Difference:"
 msgstr "განსხვავება:"
 
-#: effects/Contrast.cpp:313
-msgid "Information"
-msgstr "ინფორმაცია"
-
-#: effects/Contrast.cpp:447
-msgid "For measuring rms volume differences between two selections of audio."
+#: effects/Contrast.cpp:333
+msgid "WCAG 2 Help"
 msgstr ""
 
-#: effects/Contrast.cpp:448
-msgid "Help for WCAG2 Audio Contrast Analyzer"
-msgstr ""
-
-#: effects/Contrast.cpp:412
-msgid "Close (keeping times)"
-msgstr ""
-
-#: effects/Contrast.cpp:328 effects/Contrast.cpp:336 effects/Contrast.cpp:344
-#: effects/Contrast.cpp:352
-msgid "Measure"
-msgstr "გაზომვა"
-
-#: effects/Contrast.cpp:511
-msgid "No foreground to measure"
+#: effects/Contrast.cpp:419
+msgid "No foreground measured"
 msgstr ""
 
 #: effects/Contrast.cpp:516
@@ -4685,8 +4783,12 @@ msgstr ""
 msgid "%.1f dB"
 msgstr "%.1f dB"
 
-#: effects/Contrast.cpp:521
-msgid "No background to measure"
+#: effects/Contrast.cpp:428 effects/Contrast.cpp:441
+msgid "zero"
+msgstr ""
+
+#: effects/Contrast.cpp:432
+msgid "No background measured"
 msgstr ""
 
 #: effects/Contrast.cpp:526
@@ -4705,9 +4807,17 @@ msgstr "WCAG2 მარცხი"
 msgid "Current difference"
 msgstr ""
 
+#: effects/Contrast.cpp:452
+msgid "indeterminate"
+msgstr ""
+
 #: effects/Contrast.cpp:536
 #, c-format
 msgid "%.1f dB Average rms"
+msgstr ""
+
+#: effects/Contrast.cpp:457
+msgid "infinite dB difference"
 msgstr ""
 
 #: effects/Contrast.cpp:541
@@ -4746,6 +4856,10 @@ msgstr ""
 msgid "Average rms = %.1f dB."
 msgstr ""
 
+#: effects/Contrast.cpp:512 effects/Contrast.cpp:531
+msgid "Average rms = zero."
+msgstr ""
+
 #: effects/Contrast.cpp:590 effects/Contrast.cpp:607
 msgid "Average rms =  dB."
 msgstr ""
@@ -4758,9 +4872,17 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
+#: effects/Contrast.cpp:538
+msgid "Difference is indeterminate."
+msgstr ""
+
 #: effects/Contrast.cpp:611
 #, c-format
 msgid "Difference = %.1f Average rms dB."
+msgstr ""
+
+#: effects/Contrast.cpp:543
+msgid "Difference = infinite Average rms dB."
 msgstr ""
 
 #: effects/Contrast.cpp:613
@@ -4949,9 +5071,21 @@ msgstr "ხვეულას ამორჩევა:"
 msgid "Save As..."
 msgstr "შენახვა, როგორც..."
 
-#: effects/Equalization.cpp:1279
-msgid "Flat"
-msgstr "ბრტყელი"
+#: effects/Equalization.cpp:1407
+msgid "Flatten"
+msgstr ""
+
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "ინვერსია"
+
+#: effects/Equalization.cpp:1491
+msgid "To use this EQ curve in a batch chain, please choose a new name for it."
+msgstr ""
+
+#: effects/Equalization.cpp:1492
+msgid "EQ Curve needs a different name"
+msgstr ""
 
 #: effects/Equalization.cpp:2511
 msgid "Enter the desired name of the curve"
@@ -5021,9 +5155,9 @@ msgstr "კლიპინგის მოძიება..."
 msgid "Detecting clipping"
 msgstr "კლიპინგის დადგენა"
 
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "ინვერსია"
+#: effects/Generator.cpp:51
+msgid "There is not enough room available to generate the audio"
+msgstr ""
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -5567,7 +5701,8 @@ msgid "Applying Spike Cleaner..."
 msgstr "Spike Cleaner-ის გააქტიურება..."
 
 #: effects/StereoToMono.h:23
-msgid "&Stereo to Mono"
+#, fuzzy
+msgid "Stereo to Mono"
 msgstr "&სტერეოდან მონოზე"
 
 #: effects/StereoToMono.h:38
@@ -5763,6 +5898,10 @@ msgstr "არცერთიი"
 msgid "Presets:"
 msgstr ""
 
+#: effects/VST/VSTEffect.cpp:489
+msgid "Presets"
+msgstr ""
+
 #: effects/VST/VSTEffect.cpp:355
 msgid "Load"
 msgstr ""
@@ -5798,6 +5937,15 @@ msgstr ""
 
 #: effects/VST/VSTEffect.cpp:1021
 msgid "Both channels of a stereo track must be the same length."
+msgstr ""
+
+#: effects/VST/VSTEffect.cpp:1740
+msgid "Scanning VST Plugins"
+msgstr ""
+
+#: effects/VST/VSTEffect.cpp:1756
+#, c-format
+msgid "Checking %s"
 msgstr ""
 
 #: effects/Wahwah.cpp:61
@@ -6022,10 +6170,10 @@ msgstr "ბრძანება:"
 msgid "Show output"
 msgstr "გამონატანის ჩვენება"
 
-#: export/ExportCL.cpp:87
+#: export/ExportCL.cpp:85
 #, c-format
-msgid "Data will be piped to standard in. \"%f\" will be replaced with output filename selected."
-msgstr "მონაცემები დაუკავშირდება სტანდარტულს. \"%f\"-ს ჩაენაცვლება მონიშნული გამონატანი ფაილის სახელი."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
+msgstr ""
 
 #: export/ExportCL.cpp:222
 msgid "(external program)"
@@ -6053,8 +6201,8 @@ msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
 msgstr ""
 
-#: export/ExportFFmpeg.cpp:232
-msgid "AMR support not distributable"
+#: export/ExportFFmpeg.cpp:237
+msgid "AMR support is not distributable"
 msgstr ""
 
 #: export/ExportFFmpeg.cpp:232
@@ -6184,6 +6332,66 @@ msgstr ""
 msgid "Preset '%s' does not exist."
 msgstr ""
 
+#: export/ExportFFmpegDialogs.cpp:1179
+msgid "LC"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1180
+msgid "Main"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.h:373
+msgid "LTP"
+msgstr "LTP"
+
+#: export/ExportFFmpegDialogs.h:53
+msgid "M4A (AAC) Files (FFmpeg)"
+msgstr "M4A (AAC) ფაილები (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:54
+msgid "AC3 Files (FFmpeg)"
+msgstr "AC3 Fფაილები (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.cpp:1190
+msgid "AMR (narrow band) Files (FFmpeg)"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1192
+msgid "AMR (wide band) Files (FFmpeg)"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.h:57
+msgid "WMA (version 2) Files (FFmpeg)"
+msgstr "WMA (ვერსია 2) ფაილები (FFmpeg)"
+
+#: export/ExportFFmpegDialogs.h:58
+msgid "Custom FFmpeg Export"
+msgstr "ინდივიდუალური FFmpeg ექსპორტირება"
+
+#: export/ExportFFmpegDialogs.h:676
+msgid "2-level"
+msgstr "2-დონე"
+
+#: export/ExportFFmpegDialogs.h:676
+msgid "4-level"
+msgstr "4-დონე"
+
+#: export/ExportFFmpegDialogs.h:676
+msgid "8-level"
+msgstr "8-დონე"
+
+#: export/ExportFFmpegDialogs.h:676
+msgid "Estimate"
+msgstr "დაახლოებითი"
+
+#: export/ExportFFmpegDialogs.h:676
+msgid "Full search"
+msgstr "სრული ძიება"
+
+#: export/ExportFFmpegDialogs.h:676
+msgid "Log search"
+msgstr "ჩანაწერის ძიება"
+
 #: export/ExportFFmpegDialogs.cpp:803
 msgid "Specify Other Options"
 msgstr "სხვა პარამეტრების განსაზღვრა"
@@ -6220,17 +6428,9 @@ msgstr "ფორმატი:"
 msgid "Codec:"
 msgstr "კოდეკი:"
 
-#: export/ExportFFmpegDialogs.cpp:913
-msgid "Not all formats and codecs are compatible. Some parameters (such as bitrate and samplerate) combinations are not compatible with some codecs too."
-msgstr "ყველა ფორმატი და კოდეკი არ არის მხარდაჭერილი. ზოგიერთი პარამეტრის (როგორიცაა ბიტური კოეფიციენტი და სემპლის კოეფიციენტი) კომბინაცია არათავსებადია ზოგიერთ კოდეკთანაც."
-
-#: export/ExportFFmpegDialogs.cpp:916
-msgid "Format selector:"
-msgstr "ფორმატის ამომრჩევი:"
-
-#: export/ExportFFmpegDialogs.cpp:917
-msgid "Codec selector:"
-msgstr "კოდეკის ამომრჩევი:"
+#: export/ExportFFmpegDialogs.cpp:1409
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:919
 msgid "Show All Formats"
@@ -6240,8 +6440,8 @@ msgstr "ყველა ფორმატის ჩვენება"
 msgid "Show All Codecs"
 msgstr "ყველა კოდეკის ჩვენება"
 
-#: export/ExportFFmpegDialogs.cpp:914
-msgid "Options"
+#: export/ExportFFmpegDialogs.cpp:1427
+msgid "General Options"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:931 prefs/GUIPrefs.cpp:166
@@ -6255,6 +6455,14 @@ msgid "ISO 639 3-letter language code\n"
 msgstr "ISO 639 3-სიმბოლოიანი ენის კოდი\n"
 "ნებაყოფლობითი\n"
 "ცარიელი - ავტომატური"
+
+#: export/ExportFFmpegDialogs.cpp:1435
+msgid "Bit Reservoir"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:1439
+msgid "VBL"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:934
 msgid "Tag:"
@@ -6299,9 +6507,9 @@ msgid "Sample rate (Hz)\n"
 msgstr "სემპლის კოეფიციენტი (Hz)\n"
 "0 - არ შეცვალო სემპლის კოეფიციენტი"
 
-#: export/ExportFFmpegDialogs.cpp:946
-msgid "Cutoff Bandwidth:"
-msgstr "Cutoff Bandwidth:"
+#: export/ExportFFmpegDialogs.cpp:1457
+msgid "Cutoff:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:936
 #, fuzzy
@@ -6324,21 +6532,13 @@ msgstr "AAC პროფილი\n"
 "დაბალი კომპლექსურობა - ნაგულისხმევი\n"
 "საკრავების უმეტესობა არ დაუკრავს არაფერს გარდა LC-ისა"
 
-#: export/ExportFFmpegDialogs.cpp:940
-msgid "Use Bit Reservoir"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.cpp:943
-msgid "Use Variable Block Length"
-msgstr ""
-
 #: export/ExportFFmpegDialogs.cpp:948
 msgid "FLAC options"
 msgstr ""
 
-#: export/ExportFFmpegDialogs.cpp:965
-msgid "Compression Level:"
-msgstr "კომპრესიის დონე:"
+#: export/ExportFFmpegDialogs.cpp:1473
+msgid "Compression:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:966
 msgid "Compression level\n"
@@ -6352,9 +6552,9 @@ msgstr "კომპრესიის დონე\n"
 "წუთი - 0 (სწრაფი კოდირება, დიდი გამონატანი ფაილი)\n"
 "მაქს - 10 (ნელი კოდირება, პატარა გამონატანი ფაილი)"
 
-#: export/ExportFFmpegDialogs.cpp:968
-msgid "Frame Size:"
-msgstr "კადრის ზომა:"
+#: export/ExportFFmpegDialogs.cpp:1476
+msgid "Frame:"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:969
 msgid "Frame size\n"
@@ -6368,9 +6568,9 @@ msgstr "კადრის ზომა\n"
 "წუთი - 16\n"
 "მაქს - 65535"
 
-#: export/ExportFFmpegDialogs.cpp:971
-msgid "LPC coefficients precision"
-msgstr "LPC კოეფიციენტების განსაზღვრა"
+#: export/ExportFFmpegDialogs.cpp:1479
+msgid "LPC"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:972
 msgid "LPC coefficients precision\n"
@@ -6384,9 +6584,23 @@ msgstr "LPC კოეფიციენტების განსაზღვ�
 "მინ - 1\n"
 "მაქს - 15"
 
-#: export/ExportFFmpegDialogs.cpp:974
-msgid "Minimal prediction order"
-msgstr "მინიმალური პროგნოზის რიგი"
+#: export/ExportFFmpegDialogs.cpp:1482
+msgid "PdO Method:"
+msgstr ""
+
+#: export/ExportFFmpegDialogs.cpp:982
+msgid "Prediction Order Method\n"
+"Estimate - fastest, lower compression\n"
+"Log search - slowest, best compression\n"
+"Full search - default"
+msgstr "პროგნოზის რიგის მეთოდი\n"
+"დაახლოებითი - ყველაზე სწრაფი, დაბალი კომპრესია\n"
+"ჩანაწერის ძიება - ყველაზე დაბალი, საუკეთესო კომპრესიაn\n"
+"სრული ძიება - ნაგულისხმევი"
+
+#: export/ExportFFmpegDialogs.cpp:1487
+msgid "Min. PdO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:975
 msgid "Minimal prediction order\n"
@@ -6399,9 +6613,9 @@ msgstr "ინდიოვიდუალური\n"
 "მინ - 1\n"
 "მაქს -  32 (LPC-ით) ან 4 (LPC-ის გარეშე)"
 
-#: export/ExportFFmpegDialogs.cpp:977
-msgid "Maximal prediction order"
-msgstr "მაქსიმალური პროგნოზის რიგი"
+#: export/ExportFFmpegDialogs.cpp:1490
+msgid "Max. PdO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:978
 msgid "Maximal prediction order\n"
@@ -6414,23 +6628,9 @@ msgstr "მაქსიმალური პროგნოზის რიგ�
 "მინ - 1\n"
 "მაქს -  32 (LPC-ით) ან 4 (LPC-ის გარეშე)"
 
-#: export/ExportFFmpegDialogs.cpp:980
-msgid "Prediction Order Method:"
-msgstr "პროგნოზის რიგის მეთდი:"
-
-#: export/ExportFFmpegDialogs.cpp:982
-msgid "Prediction Order Method\n"
-"Estimate - fastest, lower compression\n"
-"Log search - slowest, best compression\n"
-"Full search - default"
-msgstr "პროგნოზის რიგის მეთოდი\n"
-"დაახლოებითი - ყველაზე სწრაფი, დაბალი კომპრესია\n"
-"ჩანაწერის ძიება - ყველაზე დაბალი, საუკეთესო კომპრესიაn\n"
-"სრული ძიება - ნაგულისხმევი"
-
-#: export/ExportFFmpegDialogs.cpp:984
-msgid "Minimal partition order"
-msgstr "მინიმალური დაყოფის რიგი"
+#: export/ExportFFmpegDialogs.cpp:1493
+msgid "Min. PtO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:985
 msgid "Minimal partition order\n"
@@ -6443,9 +6643,9 @@ msgstr "ინდივიდუალური\n"
 "მინ - 0\n"
 "მაქს - 8"
 
-#: export/ExportFFmpegDialogs.cpp:987
-msgid "Maximal partition order"
-msgstr "მაქსიმალური დაყოფის რიგი"
+#: export/ExportFFmpegDialogs.cpp:1496
+msgid "Max. PtO"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:988
 msgid "Maximal partition order\n"
@@ -6523,66 +6723,6 @@ msgstr ""
 #: export/ExportFFmpegDialogs.cpp:1403
 msgid "Failed to find the codec"
 msgstr ""
-
-#: export/ExportFFmpegDialogs.h:53
-msgid "M4A (AAC) Files (FFmpeg)"
-msgstr "M4A (AAC) ფაილები (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:54
-msgid "AC3 Files (FFmpeg)"
-msgstr "AC3 Fფაილები (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:56
-msgid "AMR (narrow band) Files (FFmpeg, undistributable)"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.h:57
-msgid "AMR (wide band) Files (FFmpeg, undistributable)"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.h:57
-msgid "WMA (version 2) Files (FFmpeg)"
-msgstr "WMA (ვერსია 2) ფაილები (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.h:58
-msgid "Custom FFmpeg Export"
-msgstr "ინდივიდუალური FFmpeg ექსპორტირება"
-
-#: export/ExportFFmpegDialogs.h:373
-msgid "LTP"
-msgstr "LTP"
-
-#: export/ExportFFmpegDialogs.h:373
-msgid "Low Complexity"
-msgstr "დაბალი კომპლექსურობა"
-
-#: export/ExportFFmpegDialogs.h:373
-msgid "Main profile"
-msgstr "ძირითადი პროფილი"
-
-#: export/ExportFFmpegDialogs.h:676
-msgid "2-level"
-msgstr "2-დონე"
-
-#: export/ExportFFmpegDialogs.h:676
-msgid "4-level"
-msgstr "4-დონე"
-
-#: export/ExportFFmpegDialogs.h:676
-msgid "8-level"
-msgstr "8-დონე"
-
-#: export/ExportFFmpegDialogs.h:676
-msgid "Estimate"
-msgstr "დაახლოებითი"
-
-#: export/ExportFFmpegDialogs.h:676
-msgid "Full search"
-msgstr "სრული ძიება"
-
-#: export/ExportFFmpegDialogs.h:676
-msgid "Log search"
-msgstr "ჩანაწერის ძიება"
 
 #: export/ExportFLAC.cpp:67
 msgid "Specify FLAC Options"
@@ -6942,9 +7082,13 @@ msgstr "ფაილების სახელების დარქმე�
 msgid "Using Label/Track Name"
 msgstr "იარლიყის/ტრეკის სახელის გამოყენება"
 
-#: export/ExportMultiple.cpp:314 export/ExportMultiple.cpp:316
-msgid "Numbering consecutively"
-msgstr "მიმდევრობით დანომრვა"
+#: export/ExportMultiple.cpp:315
+msgid "Numbering before Label/Track Name"
+msgstr ""
+
+#: export/ExportMultiple.cpp:318
+msgid "Numbering after Label/Track Name"
+msgstr ""
 
 #: export/ExportMultiple.cpp:322
 msgid "File name prefix:"
@@ -6972,9 +7116,9 @@ msgstr "ექსპორტირებული ფაილების შ�
 msgid "Successfully exported the following %ld file(s)."
 msgstr ""
 
-#: export/ExportMultiple.cpp:525
+#: export/ExportMultiple.cpp:530
 #, c-format
-msgid "Something went wrong after exporting the folliwing %ld file(s)."
+msgid "Something went wrong after exporting the following %ld file(s)."
 msgstr ""
 
 #: export/ExportMultiple.cpp:526
@@ -6992,10 +7136,6 @@ msgstr ""
 msgid "Something went really wrong after exporting the following %ld file(s)."
 msgstr ""
 
-#: export/ExportMultiple.cpp:535
-msgid "ExportMultiple"
-msgstr ""
-
 #: export/ExportMultiple.cpp:539
 #, c-format
 msgid "\"%s\" doesn't exist.\n"
@@ -7004,6 +7144,10 @@ msgid "\"%s\" doesn't exist.\n"
 msgstr "\"%s\" არ არსებობს\n"
 "\n"
 "გსურთ შექმნა?"
+
+#: export/ExportMultiple.cpp:641 export/ExportMultiple.cpp:776
+msgid "untitled"
+msgstr ""
 
 #: export/ExportMultiple.cpp:637 export/ExportMultiple.cpp:772
 msgid "Edit metadata"
@@ -7085,6 +7229,12 @@ msgstr "მონიშნული აუდიოს ექსპორტი�
 #, c-format
 msgid "Exporting the entire project as %s"
 msgstr "მთლიანი პროექტის ექსპორტირება როგორც %s"
+
+#: export/ExportPCM.cpp:551
+#, c-format
+msgid "Error while writing %s file (disk full?).\n"
+"Libsndfile says \"%s\""
+msgstr ""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: export/ExportPCM.cpp:531
@@ -7268,12 +7418,13 @@ msgid "Audacity did not recognize the type of the file '%s'.\n"
 msgstr "Audacity ვერ ამოიცნო ფაილი '%s'-ის ტიპი.\n"
 "ის არაკომპრესირებულია, შეეცადეთ მის იმპორტირებას  \"დაუმუშავებელის იმპორტი\"-ის საშალებით."
 
-#: import/Import.cpp:322
+#: import/Import.cpp:343
 #, c-format
-msgid "Audacity recognized the type of the file '%s',\n"
-"but was unable to import it."
-msgstr "Audacity-იმ ამოიცნა  '%s' ფაილის ტიპი,\n"
-"მაგრამ ვერ მოახერხა მისი იმპორტირება."
+msgid "Audacity recognized the type of the file '%s'.\n"
+"Importers supposedly supporting such files are:\n"
+"%s,\n"
+"but none of them understood this file format."
+msgstr ""
 
 #: import/ImportFFmpeg.cpp:34
 msgid "FFmpeg-compatible files"
@@ -7370,6 +7521,30 @@ msgstr "%s იმპორტირება"
 #: import/ImportQT.cpp:21
 msgid "QuickTime files"
 msgstr "QuickTime ფაილები"
+
+#: import/ImportQT.cpp:246
+msgid "Unable to start QuickTime extraction"
+msgstr ""
+
+#: import/ImportQT.cpp:256
+msgid "Unable to set QuickTime render quality"
+msgstr ""
+
+#: import/ImportQT.cpp:266
+msgid "Unable to set QuickTime discrete channels property"
+msgstr ""
+
+#: import/ImportQT.cpp:277
+msgid "Unable to get QuickTime sample size property"
+msgstr ""
+
+#: import/ImportQT.cpp:288
+msgid "Unable to retrieve stream description"
+msgstr ""
+
+#: import/ImportQT.cpp:347
+msgid "Unable to get fill buffer"
+msgstr ""
 
 #: import/ImportRaw.cpp:205
 msgid "Import Raw"
@@ -7474,7 +7649,7 @@ msgid "Interface"
 msgstr "ინტერფეისი"
 
 #: prefs/DevicePrefs.cpp:113
-msgid "Host"
+msgid "&Host"
 msgstr ""
 
 #: prefs/AudioIOPrefs.cpp:124 prefs/MidiIOPrefs.cpp:121
@@ -7485,13 +7660,30 @@ msgstr "გამოყენებით:"
 msgid "Playback"
 msgstr "დაკვრა"
 
+#: prefs/DevicePrefs.cpp:132
+msgid "&Device"
+msgstr ""
+
 #: prefs/AudioIOPrefs.cpp:135 prefs/MidiIOPrefs.cpp:132
 msgid "Recording"
 msgstr "ჩაწერა"
 
-#: prefs/AudioIOPrefs.cpp:141 prefs/MidiIOPrefs.cpp:138
-msgid "Channels"
-msgstr "არხები"
+#: prefs/DevicePrefs.cpp:145
+msgid "De&vice"
+msgstr ""
+
+#: prefs/DevicePrefs.cpp:150
+msgid "Cha&nnels"
+msgstr ""
+
+#: prefs/DevicePrefs.cpp:186
+msgid "No audio interfaces"
+msgstr ""
+
+#: prefs/DevicePrefs.cpp:225 prefs/DevicePrefs.cpp:230
+#: prefs/MidiIOPrefs.cpp:295 prefs/MidiIOPrefs.cpp:300
+msgid "No devices found"
+msgstr ""
 
 #: prefs/AudioIOPrefs.cpp:102 prefs/MidiIOPrefs.cpp:99
 msgid "1 (Mono)"
@@ -7510,9 +7702,13 @@ msgstr "დირექტორიები"
 msgid "Temporary files directory"
 msgstr "დროებითი ფაილების დირექტორია"
 
-#: prefs/DirectoriesPrefs.cpp:91
-msgid "Location:"
-msgstr "მდებარეობა:"
+#: prefs/DirectoriesPrefs.cpp:89
+msgid "&Location:"
+msgstr ""
+
+#: prefs/DirectoriesPrefs.cpp:94
+msgid "C&hoose..."
+msgstr ""
 
 #: prefs/DirectoriesPrefs.cpp:93
 msgid "Free Space:"
@@ -7523,11 +7719,11 @@ msgid "Audio cache"
 msgstr "აუდიო ქეში"
 
 #: prefs/DirectoriesPrefs.cpp:105
-msgid "Play and/or record using RAM (useful for slow drives)"
+msgid "Play and/or record using &RAM (useful for slow drives)"
 msgstr ""
 
 #: prefs/DirectoriesPrefs.cpp:111
-msgid "Minimum Free Memory (MB):"
+msgid "Mi&nimum Free Memory (MB):"
 msgstr ""
 
 #: prefs/DirectoriesPrefs.cpp:118
@@ -7561,9 +7757,65 @@ msgstr "%s დირექტორია არაჩაწერადია"
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "დროებით დირექტორიაში შეტანილიც ცვლილებები არ გააქტიურდება Audacity-ის გადატვირთვამდე"
 
-#: prefs/GUIPrefs.cpp:42
-msgid "In Browser"
-msgstr "ბრაუზერში"
+#: prefs/EffectsPrefs.cpp:32
+msgid "Effects"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:56
+msgid "Enable Effects"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:60
+msgid "Audio Unit"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:66
+msgid "&LADSPA"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:72
+msgid "N&yquist"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:78
+msgid "&VAMP"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:84
+msgid "V&ST"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:89
+msgid "Restart Audacity to apply changes."
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:94
+msgid "Audio Unit Effects"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:96
+msgid "Display Audio Unit effects in graphical mode"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:100
+msgid "Rescan VST effects next time Audacity is started"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:109
+msgid "VST Effects"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:111
+msgid "&Display VST effects in graphical mode"
+msgstr ""
+
+#: prefs/EffectsPrefs.cpp:114
+msgid "&Rescan VST effects next time Audacity is started"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:49
+msgid "Local"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:43
 msgid "From Internet"
@@ -7621,25 +7873,29 @@ msgstr "-145 dB (PCM დიაპაზონი 24 ბიტიანი სე
 msgid "Display"
 msgstr "ეკრანი"
 
-#: prefs/GUIPrefs.cpp:100
-msgid "Er&gonomic order of audio I/O buttons"
-msgstr "აუდიო  I/O ღილაკების ერ&გონომიული განლაგება"
-
-#: prefs/GUIPrefs.cpp:101
-msgid "Show &welcome message at program start up"
-msgstr ""
-
-#: prefs/GUIPrefs.cpp:109
-msgid "Meter/Waveform dB range:"
-msgstr ""
-
-#: prefs/GUIPrefs.cpp:167
-msgid "Help:"
-msgstr "დახმარება:"
-
 #: prefs/GUIPrefs.cpp:96
-msgid "Cl&osing last window quits Audacity"
-msgstr "უკანასკნელი ფანჯრის დახურვა იწვევს  Audacity-ის დახურვას"
+msgid "&Ergonomic order of audio I/O buttons"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:99
+msgid "S&how 'How to get Help' message at program start up"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:107
+msgid "Meter/Waveform dB &range:"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:114
+msgid "&Language:"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:121
+msgid "Location of &Manual:"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:134
+msgid "Closing last window &quits Audacity"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:110
 msgid "&Beep on completion of longer activities"
@@ -7649,8 +7905,8 @@ msgstr "დიდი ხანგრძლივობის მოქმედ�
 msgid "Modes"
 msgstr "რეჟიმები"
 
-#: prefs/GUIPrefs.cpp:151
-msgid "Display VST effects in GUI mode"
+#: prefs/GUIPrefs.cpp:145
+msgid "Clea&nSpeech Mode (Customized GUI)"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:129
@@ -7681,9 +7937,9 @@ msgstr "ყველა ტრეკის &ნორმალიზაცია
 msgid "When exporting tracks to an audio file"
 msgstr "ტრეკების ექსპორტისას აუდიო ფაილში"
 
-#: prefs/FileFormatPrefs.cpp:160
-msgid "A&lways mix all tracks down to Stereo or Mono channel(s)."
-msgstr "&ყოველთვის დაიყვანე ყველა ტრეკი სტერეო ან მონო არხამდე."
+#: prefs/ImportExportPrefs.cpp:74
+msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
+msgstr ""
 
 #: prefs/FileFormatPrefs.cpp:161
 msgid "&Use custom mix (for example to export a 5.1 multichannel file)"
@@ -7710,13 +7966,21 @@ msgstr ""
 msgid "Open a new project to modify keyboard shortcuts."
 msgstr ""
 
+#: prefs/KeyConfigPrefs.cpp:111 prefs/KeyConfigPrefs.cpp:228
+msgid "All"
+msgstr ""
+
 #: prefs/KeyConfigPrefs.cpp:95
 msgid "Key Bindings"
 msgstr "კლავიატურის ბმები"
 
-#: prefs/KeyConfigPrefs.cpp:115
-msgid "S&et"
-msgstr "მ&ორგება"
+#: prefs/KeyConfigPrefs.cpp:132
+msgid "C&ategory:"
+msgstr ""
+
+#: prefs/KeyConfigPrefs.cpp:160
+msgid "Set"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:120
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
@@ -7725,10 +7989,6 @@ msgstr "შენიშნვა: Cmd+Q-ზე დაჭერა გამო�
 #: prefs/KeyConfigPrefs.cpp:124 prefs/ThemePrefs.cpp:105
 msgid "&Defaults"
 msgstr "&ნაგულისხმევი პარამეტრები"
-
-#: prefs/KeyConfigPrefs.cpp:171
-msgid "Command"
-msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:143
 msgid "Key Combination"
@@ -7812,14 +8072,26 @@ msgstr ""
 msgid "FFmpeg Library:"
 msgstr "FFmpeg ბიბლიოთეკა:"
 
-#: prefs/AudioIOPrefs.cpp:41 prefs/AudioIOPrefs.cpp:42
-#: prefs/MidiIOPrefs.cpp:44 prefs/MidiIOPrefs.cpp:45
-msgid "Audio I/O"
-msgstr "აუდიო I/O"
+#: prefs/LibraryPrefs.cpp:124
+msgid "Loca&te..."
+msgstr ""
 
-#: prefs/AudioIOPrefs.cpp:125 prefs/MidiIOPrefs.cpp:122
-msgid "Portaudio v"
-msgstr "Portaudio v"
+#: prefs/LibraryPrefs.cpp:130
+msgid "Dow&nload"
+msgstr ""
+
+#: prefs/LibraryPrefs.cpp:186
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
+"Do you still want to locate them manually?"
+msgstr ""
+
+#: prefs/MidiIOPrefs.cpp:58
+msgid "MIDI Devices"
+msgstr ""
+
+#: prefs/DevicePrefs.cpp:113
+msgid "Host"
+msgstr ""
 
 #: prefs/AudioIOPrefs.cpp:147 prefs/MidiIOPrefs.cpp:144
 msgid "Playthrough"
@@ -7880,6 +8152,10 @@ msgstr "ეფექტის დათვალიერება"
 #: prefs/MidiIOPrefs.cpp:196
 msgid "Play when previewing:"
 msgstr "დაკვრა დათვალიერებისას:"
+
+#: prefs/MidiIOPrefs.cpp:256
+msgid "No MIDI interfaces"
+msgstr ""
 
 #: prefs/MousePrefs.cpp:55 prefs/MousePrefs.cpp:56
 msgid "Mouse"
@@ -8087,21 +8363,32 @@ msgstr "Ctrl-ბორბალი-ტრიალი"
 msgid "Zoom in or out"
 msgstr "გადიდება ან შემცირება"
 
-#: prefs/AudioIOPrefs.cpp:171
-msgid "Length of preview:"
+#: prefs/PlaybackPrefs.cpp:61
+#, fuzzy
+msgid "&Length of preview:"
 msgstr "დათვალიერების რეჟიმის სიგრძე:"
 
-#: prefs/AudioIOPrefs.cpp:179
-msgid "Preview before cut region:"
+#: prefs/PlaybackPrefs.cpp:76
+#, fuzzy
+msgid "Preview &before cut region:"
 msgstr "არეს ამოჭრამდე დათვალიერება:"
 
-#: prefs/AudioIOPrefs.cpp:181
-msgid "Preview after cut region:"
+#: prefs/PlaybackPrefs.cpp:83
+#, fuzzy
+msgid "Preview &after cut region:"
 msgstr "ამოჭრის მერე დათვალიერება:"
 
 #: prefs/AudioIOPrefs.cpp:203
 msgid "Seek Time when playing"
 msgstr "დროის ძიება დაკვრისას"
+
+#: prefs/PlaybackPrefs.cpp:98
+msgid "&Short period:"
+msgstr ""
+
+#: prefs/PlaybackPrefs.cpp:105
+msgid "Lo&ng period:"
+msgstr ""
 
 #: prefs/PrefsDialog.cpp:94
 msgid "Audacity Preferences"
@@ -8115,28 +8402,30 @@ msgstr ""
 msgid "When saving a project that depends on other audio files"
 msgstr "პროექტის შენახვისას, რომელიც დამოკიდებულია სხვა აუდიო ფაილებზე"
 
-#: prefs/FileFormatPrefs.cpp:151
-msgid "Always &copy all audio into project (safest)"
-msgstr "ყოველთვის &დააკოპირე ყველა აუდიო პროექტში (უსაფრთხო)"
+#: prefs/ProjectsPrefs.cpp:63
+msgid "&Always copy all audio into project (safest)"
+msgstr ""
 
-#: prefs/FileFormatPrefs.cpp:152
-msgid "&Do not copy any audio"
-msgstr "&არ დააკოპირო არცერთი აუდიო"
+#: prefs/ProjectsPrefs.cpp:65
+msgid "Do &not copy any audio"
+msgstr ""
 
-#: prefs/FileFormatPrefs.cpp:153
-msgid "&Ask user"
-msgstr "მომხმარებლისთვის კითხვა"
+#: prefs/ProjectsPrefs.cpp:67
+msgid "As&k user"
+msgstr ""
 
 #: prefs/DirectoriesPrefs.cpp:99
 msgid "Auto save"
 msgstr "ავტოშენახვა"
 
-#: prefs/DirectoriesPrefs.cpp:101
-msgid "Auto save a copy of the project in a separate folder"
+#: prefs/ProjectsPrefs.cpp:76
+#, fuzzy
+msgid "Auto &save a copy of the project in a separate folder"
 msgstr "პროექტის ასლის ცალკე საქაღალდეში ავტოშენახვა"
 
-#: prefs/DirectoriesPrefs.cpp:104
-msgid "Auto save interval:"
+#: prefs/ProjectsPrefs.cpp:82
+#, fuzzy
+msgid "Auto save in&terval:"
 msgstr "ავტოშენახვის ინტერვალი:"
 
 #: prefs/DirectoriesPrefs.cpp:105
@@ -8159,49 +8448,68 @@ msgstr "ჩამოყალიბებული"
 msgid "Sampling"
 msgstr "სემპლინგი"
 
-#: prefs/QualityPrefs.cpp:125
-msgid "Default Sample Rate:"
+#: prefs/QualityPrefs.cpp:129
+#, fuzzy
+msgid "Default Sample &Rate:"
 msgstr "ნაგულისხმევი სემპლის კოეფიციენტი:"
 
-#: prefs/QualityPrefs.cpp:127
-msgid "Default Sample Format:"
+#: prefs/QualityPrefs.cpp:154
+#, fuzzy
+msgid "Default Sample &Format:"
 msgstr "სემპლის ნაგულისხმევი ფორმატი:"
 
 #: prefs/QualityPrefs.cpp:165
 msgid "Real-time Conversion"
 msgstr ""
 
-#: prefs/QualityPrefs.cpp:171 prefs/QualityPrefs.cpp:193
+#: prefs/QualityPrefs.cpp:171
 #, fuzzy
-msgid "Sample Rate Converter:"
+msgid "Sample Rate Con&verter:"
 msgstr "სემპლის კოეფიციენტის კონვერტორი"
 
-#: prefs/QualityPrefs.cpp:164
-msgid "Dither"
-msgstr "დითერი"
+#: prefs/QualityPrefs.cpp:178
+msgid "&Dither:"
+msgstr ""
 
 #: prefs/QualityPrefs.cpp:189
 msgid "High-quality Conversion"
+msgstr ""
+
+#: prefs/QualityPrefs.cpp:193
+#, fuzzy
+msgid "Sample Rate Conver&ter:"
+msgstr "სემპლის კოეფიციენტის კონვერტორი"
+
+#: prefs/QualityPrefs.cpp:200
+msgid "Dit&her:"
 msgstr ""
 
 #: prefs/AudioIOPrefs.cpp:149
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr "ოვერდუბლიკაცია: სხვა ტრეკების &დაკვრა ახლის ჩაწერის პარალელურად"
 
-#: prefs/AudioIOPrefs.cpp:152
-msgid "&Hardware Playthrough: Play new track while recording it"
-msgstr "&მოწყობილობის დაკვრა: ახალი ტრეკის დაკვრა და ჩაწერა"
+#: prefs/RecordingPrefs.cpp:69
+msgid "&Hardware Playthrough: Listen while recording or monitoring new track"
+msgstr ""
 
-#: prefs/AudioIOPrefs.cpp:157
-msgid "&Software Playthrough: Play new track while recording or monitoring"
-msgstr "&მოწყობილობის დაკვრა: ახალი ტრეკის დაკვრა და ჩაწერა ან მონიტორინგი"
+#: prefs/RecordingPrefs.cpp:73
+msgid "&Software Playthrough: Listen while recording or monitoring new track"
+msgstr ""
 
 #: prefs/AudioIOPrefs.cpp:160
 msgid "(uncheck when recording \"stereo mix\")"
 msgstr "(ამორთვა ჩაწერისას  \"სტერეო შერევა\")"
 
+#: prefs/RecordingPrefs.cpp:88
+msgid "Audio to &buffer:"
+msgstr ""
+
 #: prefs/RecordingPrefs.cpp:86
 msgid "milliseconds (higher = more latency)"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:95
+msgid "L&atency correction:"
 msgstr ""
 
 #: prefs/RecordingPrefs.cpp:92
@@ -8212,9 +8520,46 @@ msgstr ""
 msgid "Sound Activated Recording"
 msgstr "ხმის გააქტიურებული ჩაწერა"
 
-#: prefs/SmartRecordPrefs.cpp:71
-msgid "Sound Activation Level (dB):"
+#: prefs/RecordingPrefs.cpp:108
+msgid "Sound Activated &Recording"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:117
+#, fuzzy
+msgid "Sound Activation Le&vel (dB):"
 msgstr "ხმის გააქტიურების დონე(dB):"
+
+#: prefs/RecordingPrefs.cpp:128
+msgid "Automated Input Level Adjustment"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:130
+msgid "Enable Automated Input Level Adjustment."
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:138
+msgid "Target Peak:"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:144
+msgid "Within:"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:154
+msgid "Analysis Time:"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:158
+msgid "milliseconds (time of one analysis)"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:160
+msgid "Number of consecutive analysis:"
+msgstr ""
+
+#: prefs/RecordingPrefs.cpp:164
+msgid "0 means endless"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:41 prefs/SpectrumPrefs.cpp:42
 msgid "Spectrograms"
@@ -8281,12 +8626,12 @@ msgid "FFT Window"
 msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:86
-msgid "Window size"
+msgid "Window &size"
 msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:93
 #, fuzzy
-msgid "Window type"
+msgid "Window &type"
 msgstr "ფანჯრის ტიპი"
 
 #: prefs/SpectrumPrefs.cpp:125
@@ -8297,16 +8642,30 @@ msgstr "FFT  წერტილების გამოტოვება"
 msgid "Skip Points"
 msgstr ""
 
-#: prefs/SpectrumPrefs.cpp:147
-msgid "Minimum Frequency (Hz):"
+#: prefs/SpectrumPrefs.cpp:134
+#, fuzzy
+msgid "Mi&nimum Frequency (Hz):"
 msgstr "მინიმალური სიხშირე (Hz):"
 
-#: prefs/SpectrumPrefs.cpp:152
-msgid "Maximum Frequency (Hz):"
+#: prefs/SpectrumPrefs.cpp:140
+#, fuzzy
+msgid "Ma&ximum Frequency (Hz):"
 msgstr "მაქსიმალური სიხშირე (Hz):"
 
-#: prefs/SpectrumPrefs.cpp:147
-msgid "Show the spectrum using &grayscale colors"
+#: prefs/SpectrumPrefs.cpp:146
+msgid "&Gain (dB):"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:152
+msgid "&Range (dB):"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:158
+msgid "Frequency g&ain (dB/dec):"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:165
+msgid "S&how the spectrum using grayscale colors"
 msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:152
@@ -8351,6 +8710,30 @@ msgstr "მინიმალური სიხშირე 0 Hz მაინ�
 
 #: prefs/SpectrumPrefs.cpp:213
 msgid "Minimum frequency must be less than maximum frequency"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:237
+msgid "The gain must be an integer"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:242
+msgid "The range must be a positive integer"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:246
+msgid "The range must be at least 1 dB"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:252
+msgid "The frequency gain must be an integer"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:256
+msgid "The frequency gain cannot be negative"
+msgstr ""
+
+#: prefs/SpectrumPrefs.cpp:260
+msgid "The frequency gain must be no more than 60 dB/dec"
 msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:220
@@ -8455,18 +8838,18 @@ msgstr "&ეკრანის განახლება დაკვრის
 msgid "Automatically &fit tracks vertically zoomed"
 msgstr "ვერტიკალურად გადიდებული ტრეკების ავტომატური მორგება"
 
-#: prefs/TracksPrefs.cpp:88
+#: prefs/TracksPrefs.cpp:90
 #, fuzzy
-msgid "Default View Mode:"
+msgid "Default &View Mode:"
 msgstr "ნაგულისხმები დათვალიერების რეჟიმი"
 
 #: prefs/GUIPrefs.cpp:108
 msgid "&Select all audio in project, if none selected"
 msgstr "ყველა აუდიოს მონიშვნა პროექტში, თუ არცერთი არაა მონიშნული"
 
-#: prefs/GUIPrefs.cpp:116
-msgid "Enable cut &lines"
-msgstr "ხაზების მოჭრის გააქტიურება"
+#: prefs/TracksPrefs.cpp:106
+msgid "Enable cu&t lines"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:98
 msgid "Enable &dragging of left and right selection edges"
@@ -8476,12 +8859,13 @@ msgstr "მარცხენა და მარჯვენა მონიშ
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
 msgstr "\"ტრეკის ფოკუსის ციკლების გადაადგილება\" განმეორებითად ტრეკებზე"
 
-#: prefs/GUIPrefs.cpp:106
-msgid "Editing a &clip can move other clips"
-msgstr "კლიპის რედაქტირება გამოიწვევს სხვა კლიპების გადაადგილებას"
+#: prefs/TracksPrefs.cpp:115
+msgid "Editing a clip can &move other clips"
+msgstr ""
 
-#: prefs/GUIPrefs.cpp:168
-msgid "Solo Button:"
+#: prefs/TracksPrefs.cpp:123
+#, fuzzy
+msgid "Solo &Button:"
 msgstr "სოლო ღილაკი:"
 
 #: prefs/WarningsPrefs.cpp:31
@@ -8489,27 +8873,27 @@ msgid "Warnings"
 msgstr ""
 
 #: prefs/WarningsPrefs.cpp:55
-msgid "Show Warnings/Prompts"
+msgid "Show Warnings/Prompts for"
 msgstr ""
 
 #: prefs/WarningsPrefs.cpp:57
-msgid "When saving &projects"
+msgid "Saving &projects"
 msgstr ""
 
 #: prefs/WarningsPrefs.cpp:60
-msgid "When saving &empty project"
+msgid "Saving &empty project"
 msgstr ""
 
 #: prefs/WarningsPrefs.cpp:63
-msgid "When &disk space is getting low"
+msgid "&Low disk space at program start up"
 msgstr ""
 
 #: prefs/WarningsPrefs.cpp:66
-msgid "When mixing down to &stereo during export"
+msgid "Mixing down to &stereo during export"
 msgstr ""
 
 #: prefs/WarningsPrefs.cpp:69
-msgid "When mixing down to &mono during export"
+msgid "Mixing down to &mono during export"
 msgstr ""
 
 #: Menus.cpp:997
@@ -8638,6 +9022,26 @@ msgstr ""
 
 #: toolbars/MixerToolBar.cpp:306
 msgid "Select Input Source"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:338
+msgid "Input Source:"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:388
+msgid "Input Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:392
+msgid "Cannot control input level; use system mixer."
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:396
+msgid "Output Level Slider"
+msgstr ""
+
+#: toolbars/MixerToolBar.cpp:400
+msgid "Cannot control output level; use system mixer."
 msgstr ""
 
 #: toolbars/SelectionBar.cpp:86
@@ -8902,19 +9306,13 @@ msgstr "უაკნ"
 msgid "Help on the Internet"
 msgstr "დახმარება ინტერნეტით"
 
+#: Tags.cpp:829 Tags.cpp:1486 prefs/KeyConfigPrefs.cpp:116
+msgid "&Clear"
+msgstr "&გაწმენდა"
+
 #: widgets/Grabber.cpp:62
 msgid "Grabber"
 msgstr "Grabber"
-
-#: widgets/Grid.cpp:643
-#, c-format
-msgid "%d rows, %d columns"
-msgstr "%d რიგი, %d სვეტი"
-
-#: widgets/Grid.cpp:649 widgets/Grid.cpp:776
-#, c-format
-msgid "Row %d"
-msgstr "რიგი %d"
 
 #: widgets/Grid.cpp:791
 msgid "Empty"
@@ -8936,6 +9334,14 @@ msgstr "მონიტორინგის შეჩერება"
 msgid "Start Monitoring"
 msgstr "მონიტორინგის დაწყება"
 
+#: widgets/Meter.cpp:413
+msgid "Stop Automated Input Level Adjustment"
+msgstr ""
+
+#: widgets/Meter.cpp:415
+msgid "Start Automated Input Level Adjustment"
+msgstr ""
+
 #: widgets/Meter.cpp:407
 msgid "Horizontal Stereo"
 msgstr "ჰორიზონტალური სტერეო"
@@ -8948,19 +9354,15 @@ msgstr "ვერტიკალური სტერეო"
 msgid "Preferences..."
 msgstr "პარამეტრები..."
 
-#: widgets/Meter.cpp:876
-msgid "Mix Volume"
-msgstr "ხმის არევა..."
+#: widgets/Meter.cpp:1270
+msgid "Automated Input Level Adjustment stopped as requested by user."
+msgstr ""
 
-#: widgets/Meter.cpp:1145
-msgid "This determines how often the meter is refreshed.\n"
-"If you have a slower PC you may want to select a\n"
-"lower refresh rate (30 per second or lower), so that\n"
-"audio qualtiy is not affected by the meter display."
-msgstr "This determines how often the meter is refreshed.\n"
-"If you have a slower PC you may want to select a\n"
-"lower refresh rate (30 per second or lower), so that\n"
-"audio qualtiy is not affected by the meter display."
+#: widgets/Meter.cpp:1285
+msgid "Higher refresh rates make the meter show more frequent\n"
+"changes. A rate of 30 per second or less should prevent\n"
+"the meter affecting audio quality on slower machines."
+msgstr ""
 
 #: widgets/Meter.cpp:1146
 msgid "Meter refresh rate per second [1-100]: "
@@ -9211,9 +9613,9 @@ msgstr "01000,01000 კადრი|75"
 msgid "Use right mouse button or context key to change format"
 msgstr "ფორმატის შესაცვლელად გამოიყენეთ მარჯვენა კლავიში ან კონტექსტური გასაღები"
 
-#: widgets/TimeTextCtrl.cpp:1485
-msgid "Time Control"
-msgstr "დროის კონტროლი"
+#: widgets/TimeTextCtrl.cpp:1584
+msgid "centiseconds"
+msgstr ""
 
 #: widgets/Warning.cpp:64
 msgid "Don't show this warning again"
