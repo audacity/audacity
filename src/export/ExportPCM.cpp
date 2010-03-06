@@ -548,6 +548,9 @@ int ExportPCM::Export(AudacityProject *project,
         char buffer2[1000];
         sf_error_str(sf, buffer2, 1000);
         wxMessageBox(wxString::Format(
+           /* i18n-hint: %s will be the error message from libsndfile, which
+            * is usually something unhelpful (and untranslated) like "system
+            * error" */
            _("Error while writing %s file (disk full?).\nLibsndfile says \"%s\""),
            formatStr.c_str(),
            wxString::FromAscii(buffer2).c_str()));
