@@ -4778,6 +4778,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       Track *t = iter.First();
       
       while (t) {
+         // This shifts different tracks in different ways, so no sync move
          if (t->GetSelected()) {
             t->SetOffset(newPos);
          }
@@ -4790,7 +4791,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       Track *t = iter.First();
       
       while (t) {
-         if (t->GetSelected()) {
+         // For a fixed-distance shift move sync-selected tracks also
+         if (t->GetSelected() || t->IsSynchroSelected()) {
             t->SetOffset(t->GetOffset() + delta);
          }
          t = iter.Next();
