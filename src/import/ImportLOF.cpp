@@ -13,7 +13,9 @@
 \brief An ImportFileHandle for LOF data
 
   Supports the opening of ".lof" files which are text files that contain
-  a list of individual files to open in audacity in specific formats.
+  a list of individual files to open in audacity in specific formats. Files may
+  be file names (in the same directory as the LOF file), absolute paths or
+  relative paths relative to the directory of the LOF file.
 
   (In BNF) The syntax for an LOF file, denoted by <lof>:
 
@@ -35,6 +37,7 @@
   file "C:\folder1\sample1.wav"    # sample1.wav is displayed
   file "C:\sample2.wav" offset 5   # sample2 is displayed with a 5s offset
   File "C:\sample3.wav"            # sample3 is displayed with no offset
+  File "foo.aiff" # foo is loaded from the same directory as the LOF file
   window offset 5 duration 10      # open a new window, zoom to display 
   # 10 seconds total starting at 5 (ending at 15) seconds
   file "C:\sample3.wav" offset 2.5
