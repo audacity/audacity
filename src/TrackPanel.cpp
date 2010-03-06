@@ -156,6 +156,7 @@ is time to refresh some aspect of the screen.
 #include "Experimental.h"
 #include "TrackPanel.h"
 
+#include <limits>
 #include <math.h>
 
 //#define DEBUG_DRAW_TIMING 1
@@ -2338,72 +2339,58 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          (wt->GetSelected() &&
           clickTime > mViewInfo->sel0 &&
           clickTime < mViewInfo->sel1);
-
+      
+      // First, if click was in selection, capture selected clips; otherwise
+      // just the clicked-on clip
       if (clickedInSelection) {
-         // Loop through every clip and include it if it overlaps the
-         // selection.  This will get mCapturedClip (and its stereo pair)
-         // automatically
-
          mCapturedClipIsSelection = true;
 
-         TrackAndGroupIterator iter(mTracks);
-         Track *t = iter.First();
-
-         while (t) // must iterate t in all possible branches
-         {
+         TrackListIterator iter(mTracks);
+         for (Track *t = iter.First(); t; t = iter.Next()) {
             if (t->GetSelected()) {
-               // If this track is in a group, move all clips in the group that
-               // overlap the selection region
-               TrackGroupIterator gIter(mTracks);
-               Track *gt = gIter.First(t);
-               if (GetProject()->IsSticky() && gt) {
-                  while (gt) {
-                     AddClipsToCaptured(gt, true);
-                     gt = gIter.Next();
-                  }
-
-                  // iteration for t: we're done with this group.
-                  t = iter.NextGroup();
-               }
-               else {
-                  AddClipsToCaptured(t, true);
-                  
-                  // iteration for t
-                  t = iter.Next();
-               }
-            }
-            else {
-               // iteration for t
-               t = iter.Next();
+               AddClipsToCaptured(t, true);
             }
          }
       }
       else {
          mCapturedClipIsSelection = false;
-         TrackGroupIterator iter(mTracks);
-         Track *t;
-         if (GetProject()->IsSticky() && (t = iter.First(wt))) {
-            // Captured clip is in a group -- move all group tracks
-            while (t) {
-               AddClipsToCaptured(t, false);
-               t = iter.Next();
+         mCapturedClipArray.Add(TrackClip(wt, mCapturedClip));
+
+         // Check for stereo partner
+         Track *partner = mTracks->GetLink(wt);
+         if (partner && partner->GetKind() == Track::Wave) {
+            WaveClip *clip = ((WaveTrack *)partner)->GetClipAtX(event.m_x);
+            if (clip) {
+               mCapturedClipArray.Add(TrackClip(partner, clip));
             }
          }
-         else {
-            // Only add mCapturedClip, and possibly its stereo partner,
-            // to the list of clips to move.
+      }
 
-            mCapturedClipArray.Add(TrackClip(wt, mCapturedClip));
-
-            Track *partner = mTracks->GetLink(wt);
-            if (partner && partner->GetKind()==Track::Wave) {
-               WaveClip *clip = ((WaveTrack *)partner)->GetClipAtX(event.m_x);
-               if (clip) {
-                  mCapturedClipArray.Add(TrackClip(partner, clip));
+      // Now, if linking is enabled, capture any clip that's linked to a
+      // captured clip
+      if (GetProject()->IsSticky()) {
+         // AWD: mCapturedClipArray expands as the loop runs, so newly-added
+         // clips are considered (the effect is like recursion and terminates
+         // because AddClipsToCapture doesn't add duplicate clips); to remove
+         // this behavior just store the array size beforehand.
+         for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
+            // Only capture based on tracks that have clips -- that means we
+            // don't capture based on links to label tracks for now (until
+            // we can treat individual labels as clips)
+            if (mCapturedClipArray[i].clip) {
+               // Iterate over group tracks
+               TrackGroupIterator git(mTracks);
+               for ( Track *t = git.First(mCapturedClipArray[i].track);
+                     t; t = git.Next() )
+               {   
+                  AddClipsToCaptured(t,
+                        mCapturedClipArray[i].clip->GetStartTime(),
+                        mCapturedClipArray[i].clip->GetEndTime() );
                }
             }
          }
       }
+
    } else {
       mCapturedClip = NULL;
       mCapturedClipArray.Clear();
@@ -2442,6 +2429,15 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 // duplication of this logic)
 void TrackPanel::AddClipsToCaptured(Track *t, bool withinSelection)
 {
+   if (withinSelection)
+      AddClipsToCaptured(t, mViewInfo->sel0, mViewInfo->sel1);
+   else
+      AddClipsToCaptured(t, t->GetStartTime(), t->GetEndTime());
+}
+
+// Adds a track's clips to mCapturedClipArray within a specified time
+void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
+{
    if (t->GetKind() == Track::Wave)
    {
       WaveClipList::compatibility_iterator it =
@@ -2449,12 +2445,20 @@ void TrackPanel::AddClipsToCaptured(Track *t, bool withinSelection)
       while (it)
       {
          WaveClip *clip = it->GetData();
-         if (!withinSelection || (
-                  // Overlap of the selection must be at least one sample
-                  clip->GetStartTime()+1.0/clip->GetRate() <= mViewInfo->sel1 &&
-                  clip->GetEndTime()-1.0/clip->GetRate() >= mViewInfo->sel0) )
+
+         if ( ! clip->AfterClip(t0) && ! clip->BeforeClip(t1) )
          {
-            mCapturedClipArray.Add(TrackClip(t, clip));
+            // Avoid getting clips that were already captured
+            bool newClip = true;
+            for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
+               if (mCapturedClipArray[i].clip == clip) {
+                  newClip = false;
+                  break;
+               }
+            }
+
+            if (newClip)
+               mCapturedClipArray.Add(TrackClip(t, clip));
          }
          it = it->GetNext();
       }
@@ -2463,7 +2467,18 @@ void TrackPanel::AddClipsToCaptured(Track *t, bool withinSelection)
    {
       // This handles label tracks rather heavy-handedly -- it would be nice to
       // treat individual labels like clips
-      mCapturedClipArray.Add(TrackClip(t, NULL));
+      
+      // Avoid adding a track twice
+      bool newClip = true;
+      for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
+         if (mCapturedClipArray[i].track == t) {
+            newClip = false;
+            break;
+         }
+      }
+
+      if (newClip)
+         mCapturedClipArray.Add(TrackClip(t, NULL));
    }
 }
 
