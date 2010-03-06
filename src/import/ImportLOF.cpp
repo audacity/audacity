@@ -138,6 +138,8 @@ private:
    void doScrollOffset();
 
    wxTextFile *mTextFile;
+   wxFileName *mLOFFileName;  /**< The name of the LOF file, which is used to
+                                interpret relative paths in it */
    AudacityProject *mProject;
 
    // In order to know whether or not to create a new window
@@ -157,6 +159,7 @@ LOFImportFileHandle::LOFImportFileHandle(const wxString & name, wxTextFile *file
    mTextFile(file)
 {
    mProject = GetActiveProject();
+   mLOFFileName = new wxFileName(name);
    windowCalledOnce = false;
    callDurationFactor = false;
    durationFactor = 1;
@@ -358,6 +361,15 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // To identify filename and open it
       tokenholder = temptok1.GetNextToken();
       targetfile = temptok1.GetNextToken();
+
+      // If path is relative, make absolute path from LOF path
+      if(!wxIsAbsolutePath(targetfile)) {
+         wxFileName fName(targetfile);
+         fName.Normalize(wxPATH_NORM_ALL, mLOFFileName->GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+         if(fName.FileExists()) {
+            targetfile = fName.GetFullPath();
+         }
+      }
      
       #ifdef USE_MIDI
       // If file is a midi
@@ -491,6 +503,9 @@ LOFImportFileHandle::~LOFImportFileHandle()
       if (mTextFile->IsOpened())
          mTextFile->Close();
       delete mTextFile;
+   }
+   if(mLOFFileName) {
+      delete mLOFFileName;
    }
 }
 
