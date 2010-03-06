@@ -418,7 +418,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                   t = iter.Next();
 
                // t is now the last track in the project, unless the import of
-               // the last track failed, in which case it will be null. In that
+               // all tracks failed, in which case it will be null. In that
                // case we return because we cannot offset a non-existent track.
                if (t == NULL) return;
 #ifdef USE_MIDI
