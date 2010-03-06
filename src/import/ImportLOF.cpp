@@ -272,6 +272,12 @@ static int CountNumTracks(AudacityProject *proj)
    return count;
 }
 
+/** @brief Processes a single line from a LOF text file, doing whatever is
+ * indicated on the line.
+ *
+ * This function should just return for lines it cannot deal with, and the
+ * caller will continue to the next line of the input file
+ */
 void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 {  
    wxStringTokenizer tok(*ln, wxT(" "));
@@ -344,7 +350,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             tok = wxStringTokenizer(wxT(""), wxT(" "));
          }
       }     // End while loop
-   }        // End if statement
+   }        // End if statement handling "window" lines
    
    else if (tokenholder.IsSameAs(wxT("file"), false))
    {
@@ -399,7 +405,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             if (tok.HasMoreTokens())
                tokenholder = tok.GetNextToken();
             double offset;
-            
+           
+            // handle an "offset" specifier
             if (Internat::CompatibleToDouble(tokenholder, &offset))
             {
                Track *t;
@@ -410,6 +417,10 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                for (int i = 1; i < CountNumTracks(mProject) - 1; i++)
                   t = iter.Next();
 
+               // t is now the last track in the project, unless the import of
+               // the last track failed, in which case it will be null. In that
+               // case we return because we cannot offset a non-existent track.
+               if (t == NULL) return;
 #ifdef USE_MIDI
                if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false) ||
                    targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
@@ -431,16 +442,16 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                      t->SetOffset(offset);
                   }
                }
-            }            
+            } // end of converting "offset" argument
             else
             {
                /* i18n-hint: You do not need to translate "LOF" */
                wxMessageBox(_("Invalid track offset in LOF file."),
                             _("LOF Error"), wxOK | wxCENTRE);
             }
-         }     // End if statement
-      }     // End if statement
-   }     // End if statement
+         }     // End if statement for "offset" parameters
+      }     // End if statement (more tokens after file name)
+   }     // End if statement "file" lines
    
    else if (tokenholder.IsSameAs(wxT("#")))
    {
