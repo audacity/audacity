@@ -226,6 +226,7 @@ void OnSelectAll();
 void OnSelectNone();
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
+void OnSelectSyncSel();
 
         // View Menu
 

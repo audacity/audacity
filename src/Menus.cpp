@@ -443,6 +443,10 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
    c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
 
+#ifdef EXPERIMENTAL_LINKING
+   c->AddItem(wxT("SelSyncTracks"), _("S&ynchro-selected Tracks"), FN(OnSelectSyncSel), wxT("Ctrl+Shift+Y"));
+#endif
+
    c->EndSubMenu();
 
    /////////////////////////////////////////////////////////////////////////////
@@ -4087,6 +4091,23 @@ void AudacityProject::OnSelectStartCursor()
    ModifyState();
    
    mTrackPanel->Refresh(false);
+}
+
+void AudacityProject::OnSelectSyncSel()
+{
+   TrackListIterator iter(mTracks);
+   for (Track *t = iter.First(); t; t = iter.Next())
+   {
+      if (t->IsSynchroSelected()) {
+         t->SetSelected(true);
+      }
+   }
+
+   mTrackPanel->Refresh(false);
+   #ifdef EXPERIMENTAL_MIXER_BOARD
+      if (mMixerBoard)
+         mMixerBoard->Refresh(false);
+   #endif
 }
 
 //
