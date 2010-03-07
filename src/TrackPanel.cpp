@@ -156,7 +156,6 @@ is time to refresh some aspect of the screen.
 #include "Experimental.h"
 #include "TrackPanel.h"
 
-#include <limits>
 #include <math.h>
 
 //#define DEBUG_DRAW_TIMING 1
