@@ -443,8 +443,17 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("SelStartCursor"), _("Track &Start to Cursor"), FN(OnSelectStartCursor), wxT("Shift+J"));
    c->AddItem(wxT("SelCursorEnd"), _("Cursor to Track &End"), FN(OnSelectCursorEnd), wxT("Shift+K"));
 
+   c->AddSeparator();
+
+   c->AddItem(wxT("SelAllTracks"), _("In All &Tracks"), FN(OnSelectAllTracks),
+         wxT("Ctrl+Shift+K"),
+         TracksExistFlag, TracksExistFlag);
+
 #ifdef EXPERIMENTAL_LINKING
-   c->AddItem(wxT("SelSyncTracks"), _("S&ynchro-selected Tracks"), FN(OnSelectSyncSel), wxT("Ctrl+Shift+Y"));
+   c->AddItem(wxT("SelSyncTracks"), _("In All S&ync-selected Tracks"),
+         FN(OnSelectSyncSel), wxT("Ctrl+Shift+Y"),
+         TracksSelectedFlag | LinkingEnabledFlag,
+         TracksSelectedFlag | LinkingEnabledFlag);
 #endif
 
    c->EndSubMenu();
@@ -1455,7 +1464,9 @@ wxUint32 AudacityProject::GetUpdateFlags()
    if (wxGetApp().GetRecentFiles()->GetCount() > 0)
       flags |= HaveRecentFiles;
 
-   if (!IsSticky())
+   if (IsSticky())
+      flags |= LinkingEnabledFlag;
+   else
       flags |= LinkingDisabledFlag;
 
    return flags;
@@ -4108,6 +4119,20 @@ void AudacityProject::OnSelectSyncSel()
       if (mMixerBoard)
          mMixerBoard->Refresh(false);
    #endif
+}
+
+void AudacityProject::OnSelectAllTracks()
+{
+   TrackListIterator iter(mTracks);
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      t->SetSelected(true);
+   }
+
+   mTrackPanel->Refresh(false);
+#ifdef EXPERIMENTAL_MIXER_BOARD
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
+#endif
 }
 
 //

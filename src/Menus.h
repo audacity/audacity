@@ -227,6 +227,7 @@ void OnSelectNone();
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
 void OnSelectSyncSel();
+void OnSelectAllTracks();
 
         // View Menu
 
