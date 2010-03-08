@@ -68,9 +68,6 @@ protected:
    ///Then it updates in the OD manner.
    virtual void Update();
    
-   ///Readjusts the blockfile order to start at the new cursor.
-   virtual void ODUpdate();
-
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles(std::vector<ODPCMAliasBlockFile*> &unorderedBlocks);
 

@@ -1,11 +1,18 @@
-/*
- *  ODManager.cpp
- *  Audacity
- *
- *  Created by apple on 6/8/08.
- *  Copyright 2008 __MyCompanyName__. All rights reserved.
- *
- */
+/**********************************************************************
+
+   Audacity - A Digital Audio Editor
+   Copyright 1999-2010 Audacity Team
+   File License: wxWidgets
+
+   Michael Chinen
+
+******************************************************************//**
+
+\file ODManager.cpp
+\brief Singleton ODManager class.  Is the bridge between client side
+ODTask requests and internals.  
+
+*//*******************************************************************/
 
 #include "ODManager.h"
 #include "ODTask.h"
@@ -24,81 +31,16 @@ bool gPause=false; //to be loaded in and used with Pause/Resume before ODMan ini
 /// a flag that is set if we have loaded some OD blockfiles from PCM.  
 bool sHasLoadedOD=false;
 
-
+ODManager* ODManager::pMan=NULL;   
+//init the accessor function pointer - use the first time version of the interface fetcher 
+//first we need to typedef the function pointer type because the compiler doesn't support it in the raw
+typedef  ODManager* (*pfodman)();
+pfodman ODManager::Instance = &(ODManager::InstanceFirstTime);
 
 //libsndfile is not threadsafe - this deals with it
 ODLock sLibSndFileMutex;
 
 DEFINE_EVENT_TYPE(EVT_ODTASK_UPDATE)
-
-//OD files are "greater than" non OD files, to produce a sort that has
-//OD Files at the end
-int CompareODFileName(const wxString& first, const wxString& second)
-{
-   bool firstIsOD = false;
-   bool secondIsOD = false;
-
-   if(first.EndsWith(wxT("wav"))||first.EndsWith(wxT("WAV"))||
-      first.EndsWith(wxT("wave"))||first.EndsWith(wxT("WAVE"))||
-      first.EndsWith(wxT("Wav"))||first.EndsWith(wxT("Wave"))||
-      first.EndsWith(wxT("aif"))||first.EndsWith(wxT("AIF"))||
-      first.EndsWith(wxT("aiff"))||first.EndsWith(wxT("AIFF"))||
-      first.EndsWith(wxT("aiff"))||first.EndsWith(wxT("Aif")) )
-    {
-      firstIsOD=true;
-    }
-   if(second.EndsWith(wxT("wav"))||second.EndsWith(wxT("WAV"))||
-      second.EndsWith(wxT("wave"))||second.EndsWith(wxT("WAVE"))||
-      second.EndsWith(wxT("Wav"))||second.EndsWith(wxT("Wave"))||
-      second.EndsWith(wxT("aif"))||second.EndsWith(wxT("AIF"))||
-      second.EndsWith(wxT("aiff"))||second.EndsWith(wxT("AIFF"))||
-      second.EndsWith(wxT("aiff"))||second.EndsWith(wxT("Aif")) )
-    {
-      secondIsOD=true;
-    }
-    
-    if(firstIsOD && !secondIsOD)
-      return 1;
-    else if(secondIsOD&&!firstIsOD)
-      return -1;
-   
-   return first.Cmp(second);
-}
-
-//same as above but OD is less than non-OD
-int CompareODFirstFileName(const wxString& first, const wxString& second)
-{
-   bool firstIsOD = false;
-   bool secondIsOD = false;
-   
-   if(first.EndsWith(wxT("wav"))||first.EndsWith(wxT("WAV"))||
-      first.EndsWith(wxT("wave"))||first.EndsWith(wxT("WAVE"))||
-      first.EndsWith(wxT("Wav"))||first.EndsWith(wxT("Wave"))||
-      first.EndsWith(wxT("aif"))||first.EndsWith(wxT("AIF"))||
-      first.EndsWith(wxT("aiff"))||first.EndsWith(wxT("AIFF"))||
-      first.EndsWith(wxT("aiff"))||first.EndsWith(wxT("Aif")) )
-    {
-      firstIsOD=true;
-    }
-   if(second.EndsWith(wxT("wav"))||second.EndsWith(wxT("WAV"))||
-      second.EndsWith(wxT("wave"))||second.EndsWith(wxT("WAVE"))||
-      second.EndsWith(wxT("Wav"))||second.EndsWith(wxT("Wave"))||
-      second.EndsWith(wxT("aif"))||second.EndsWith(wxT("AIF"))||
-      second.EndsWith(wxT("aiff"))||second.EndsWith(wxT("AIFF"))||
-      second.EndsWith(wxT("aiff"))||second.EndsWith(wxT("Aif")) )
-    {
-      secondIsOD=true;
-    }
-    
-    if(firstIsOD && !secondIsOD)
-      return -1;
-    else if(secondIsOD&&!firstIsOD)
-      return 1;
-   
-   //if they are both OD-files, or both non-OD-files, use a normal string comparison
-   //to get alphabetical sorting
-   return first.Cmp(second);
-}
 
 //using this with wxStringArray::Sort will give you a list that 
 //is alphabetical, without depending on case.  If you use the
@@ -130,7 +72,7 @@ ODManager::ODManager()
    mQueueNotEmptyCond = new ODCondition(&mQueueNotEmptyCondLock);
 }
 
-//private constructor - delete with static method Quit()
+//private destructor - delete with static method Quit()
 ODManager::~ODManager()
 {
    //get rid of all the queues.  The queues get rid of the tasks, so we don't worry abut them.
@@ -182,6 +124,7 @@ void ODManager::SignalTaskQueueLoop()
 void ODManager::RemoveTaskIfInQueue(ODTask* task)
 {
    mTasksMutex.Lock();
+   //linear search okay for now, (probably only 1-5 tasks exist at a time.)
    for(unsigned int i=0;i<mTasks.size();i++)
    {
       if(mTasks[i]==task)
@@ -206,8 +149,7 @@ void ODManager::AddNewTask(ODTask* task, bool lockMutex)
       mQueuesMutex.Lock();
    for(unsigned int i=0;i<mQueues.size();i++)
    {
-      //search for a task containing the lead track.  
-      //This may be buggy when adding tracks.  We may have to do an exhaustive search instead.
+      //search for a task containing the lead track.  wavetrack removal is threadsafe and bound to the mQueuesMutex
       //note that GetWaveTrack is not threadsafe, but we are assuming task is not running on a different thread yet.
       if(mQueues[i]->ContainsWaveTrack(task->GetWaveTrack(0)))
          queue=mQueues[i];
@@ -234,24 +176,29 @@ void ODManager::AddNewTask(ODTask* task, bool lockMutex)
       
    }
 }
-   
-ODManager* ODManager::Instance()
-{
-   static ODManager* man=NULL;
-   //this isn't 100% threadsafe but I think Okay for this purpose.
-   
- //   wxLogDebug(wxT("Fetching Instance\n"));
  
+//that switches out the mutex/null check.
+ODManager* ODManager::InstanceFirstTime()
+{
    gODInitedMutex.Lock();
-   if(!man)
+   if(!pMan)
    {
-      man = new ODManager();
-      man->Init();
+      pMan = new ODManager();
+      pMan->Init();
       gManagerCreated = true;
    }
    gODInitedMutex.Unlock();
    
-   return man;
+   //change the accessor function to use the quicker method.
+   Instance = &(ODManager::InstanceNormal);
+   
+   return pMan;
+}
+
+//faster method of instance fetching once init is done
+ODManager* ODManager::InstanceNormal()
+{
+   return pMan;
 }
 
 bool ODManager::IsInstanceCreated()
@@ -278,7 +225,7 @@ void ODManager::Init()
    startThread->Run();
    
 //   printf("started thread from init\n");
-   //destruction is taken care of by wx thread code.  TODO:Check if pthreads code does this.
+   //destruction of thread is taken care of by thread library
 }
 
 void ODManager::DecrementCurrentThreads()
@@ -328,13 +275,7 @@ void ODManager::Start()
          mCurrentThreads++;
          mCurrentThreadsMutex.Unlock();
          //remove the head
-         mTasksMutex.Lock();
-         //task = mTasks[0];
-         
-         //the thread will add it back to the array if the job is not yet done at the end of the thread's run.  
-         //mTasks.erase(mTasks.begin());  
-         mTasksMutex.Unlock();
-         
+                  
          //detach a new thread.
          thread = new ODTaskThread(mTasks[0]);//task);
          
@@ -392,18 +333,21 @@ void ODManager::Start()
 
 }
 
+//static function that prevents ODTasks from being scheduled
+//does not stop currently running tasks from completing their immediate subtask,
+//but presumably they will finish within a second
 void ODManager::Pause(bool pause)
 {
    if(IsInstanceCreated())
    {
-      ODManager::Instance()->mPauseLock.Lock();
-      ODManager::Instance()->mPause = pause;
-      ODManager::Instance()->mPauseLock.Unlock();
+      pMan->mPauseLock.Lock();
+      pMan->mPause = pause;
+      pMan->mPauseLock.Unlock();
       
       //we should check the queue again.
-      ODManager::Instance()->mQueueNotEmptyCondLock.Lock();
-      ODManager::Instance()->mQueueNotEmptyCond->Signal();
-      ODManager::Instance()->mQueueNotEmptyCondLock.Unlock();
+      pMan->mQueueNotEmptyCondLock.Lock();
+      pMan->mQueueNotEmptyCond->Signal();
+      pMan->mQueueNotEmptyCondLock.Unlock();
    }
    else
    {
@@ -420,27 +364,29 @@ void ODManager::Quit()
 {
    if(IsInstanceCreated())
    {
-      ODManager::Instance()->mTerminateMutex.Lock();
-      ODManager::Instance()->mTerminate = true;
-      ODManager::Instance()->mTerminateMutex.Unlock();
+      pMan->mTerminateMutex.Lock();
+      pMan->mTerminate = true;
+      pMan->mTerminateMutex.Unlock();
       
-      ODManager::Instance()->mTerminatedMutex.Lock();
-      while(!ODManager::Instance()->mTerminated)
+      pMan->mTerminatedMutex.Lock();
+      while(!pMan->mTerminated)
       {
-         ODManager::Instance()->mTerminatedMutex.Unlock();
+         pMan->mTerminatedMutex.Unlock();
          wxThread::Sleep(200);
          
          //signal the queue not empty condition since the ODMan thread will wait on the queue condition
-         ODManager::Instance()->mQueueNotEmptyCondLock.Lock();
-         ODManager::Instance()->mQueueNotEmptyCond->Signal();
-         ODManager::Instance()->mQueueNotEmptyCondLock.Unlock();
+         pMan->mQueueNotEmptyCondLock.Lock();
+         pMan->mQueueNotEmptyCond->Signal();
+         pMan->mQueueNotEmptyCondLock.Unlock();
 
-         ODManager::Instance()->mTerminatedMutex.Lock();
+         pMan->mTerminatedMutex.Lock();
       }
-      ODManager::Instance()->mTerminatedMutex.Unlock();
+      pMan->mTerminatedMutex.Unlock();
    
 
-      delete ODManager::Instance();
+      delete pMan;
+      //The above while loop waits for ODTasks to finish and the delete removes all tasks from the Queue.  
+      //This function is called from the main audacity event thread, so there should not be more requests for pMan
    }
 }
     
@@ -572,10 +518,7 @@ void ODManager::UpdateQueues()
             ODWaveTrackTaskQueue* queue;
             queue = mQueues[i];
             
-            mQueuesMutex.Unlock();
             AddTask(queue->GetFrontTask());
-            mQueuesMutex.Lock();
-            
          }
       }
       

@@ -99,6 +99,12 @@ class ODDecodeBlockFile : public SimpleBlockFile
    ///Gets the value that indicates where the first sample in this block corresponds to the global sequence/clip.  Only for display use.
    sampleCount GetStart(){return mStart;}
    
+   //returns the number of samples from the beginning of the track that this blockfile starts at
+   sampleCount GetGlobalStart(){return mClipOffset+mStart;}
+
+   //returns the number of samples from the beginning of the track that this blockfile ends at
+   sampleCount GetGlobalEnd(){return mClipOffset+mStart+GetLength();}
+   
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
    
    /// Reads the specified data from the aliased file using libsndfile

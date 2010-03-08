@@ -41,9 +41,7 @@ number of threads.
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_ODTASK_UPDATE, -1)
 
-///wxstring compare function for sorting filenames with od
-int CompareODFileName(const wxString& first, const wxString& second);
-int CompareODFirstFileName(const wxString& first, const wxString& second);
+///wxstring compare function for sorting case, which is needed to load correctly.
 int CompareNoCaseFileName(const wxString& first, const wxString& second);
 /// A singleton that manages currently running Tasks on an arbitrary 
 /// number of threads.
@@ -52,8 +50,13 @@ class ODWaveTrackTaskQueue;
 class ODManager
 {
  public:
+   ///Gets the singleton instance - this is a function pointer that points to one of the below two instance calls.
+   ///Note that it is not a member function pointer since it is a static function.
+   static ODManager* (*Instance)();
    ///Gets the singleton instance
-   static ODManager* Instance();
+   static ODManager* InstanceFirstTime();
+   ///Gets the singleton instance
+   static ODManager* InstanceNormal();
    
    ///Kills the ODMananger Thread.
    static void Quit();   
@@ -132,6 +135,8 @@ class ODManager
    ///Remove references in our array to Tasks that have been completed/Schedule new ones
    void UpdateQueues();
  
+   //instance
+   static ODManager* pMan;
    
    //List of tracks and their active and inactive tasks.
    std::vector<ODWaveTrackTaskQueue*> mQueues;

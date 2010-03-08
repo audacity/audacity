@@ -110,6 +110,13 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    ///Gets the number of samples the clip associated with this blockfile is offset by.  
    sampleCount GetClipOffset(){return mClipOffset;}
    
+   //returns the number of samples from the beginning of the track that this blockfile starts at
+   sampleCount GetGlobalStart(){return mClipOffset+mStart;}
+
+   //returns the number of samples from the beginning of the track that this blockfile ends at
+   sampleCount GetGlobalEnd(){return mClipOffset+mStart+GetLength();}
+
+   
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
    
    /// Reads the specified data from the aliased file using libsndfile

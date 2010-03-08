@@ -110,7 +110,10 @@ void ODWaveTrackTaskQueue::AddTask(ODTask* task)
    mTracksMutex.Lock();
    for(int i=0;i<task->GetNumWaveTracks();i++)
    {
-      //ODTask::GetWaveTrack is not threadsafe, but I think we are safe anyway, because the task isn't being run yet?
+      //task->GetWaveTrack(i) may return NULL, but we handle it by checking before using.
+      //The other worry that the WaveTrack returned and was deleted in the meantime is also 
+      //handled since mQueuesMutex is locked one up in the stack from here, 
+      //and WaveTrack deletion is bound to that.
       mTracks.push_back(task->GetWaveTrack(i));
    } 
     
@@ -165,7 +168,11 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
          {
             task=mTasks[j]->Clone();
             task->AddWaveTrack(track);
-            mTasksMutex.Unlock(); //AddNewTask assumes no locks.
+            //AddNewTask requires us to relinquish this lock. However, it is safe because ODManager::MakeWaveTrackIndependent
+            //has already locked the m_queuesMutex.
+            mTasksMutex.Unlock(); 
+            //AddNewTask locks the m_queuesMutex which is already locked by ODManager::MakeWaveTrackIndependent,
+            //so we pass a boolean flag telling it not to lock again.
             ODManager::Instance()->AddNewTask(task,false);
             mTasksMutex.Lock();
          }
@@ -304,7 +311,7 @@ void ODWaveTrackTaskQueue::RemoveFrontTask()
    mTasksMutex.Unlock();
 }
    
-///Schedules the front task for immediate execution
+///gets the front task for immediate execution
 ODTask* ODWaveTrackTaskQueue::GetFrontTask()
 {
    mTasksMutex.Lock();

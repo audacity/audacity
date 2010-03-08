@@ -124,8 +124,7 @@ void ODDecodeTask::Update()
          
          //gather all the blockfiles that we should process in the wavetrack.
          WaveClipList::compatibility_iterator node = mWaveTracks[j]->GetClipIterator();
-         
-         int numBlocksDone;         
+               
          while(node) {
             clip = node->GetData();
             seq = clip->GetSequence();
@@ -135,10 +134,7 @@ void ODDecodeTask::Update()
             //See Sequence::Delete() for why need this for now..
             blocks = clip->GetSequenceBlockArray();
             int i;
-            int numBlocksIn;
             int insertCursor;
-            
-            numBlocksIn=0;
             
             insertCursor =0;//OD TODO:see if this works, removed from inner loop (bfore was n*n)
             for(i=0; i<(int)blocks->GetCount(); i++)
@@ -156,12 +152,9 @@ void ODDecodeTask::Update()
                         (sampleCount)(((ODDecodeBlockFile*)blocks->Item(i)->f)->GetStart()+((ODDecodeBlockFile*)blocks->Item(i)->f)->GetClipOffset()))
                      insertCursor++;
                   
-                  
                   tempBlocks.insert(tempBlocks.begin()+insertCursor++,(ODDecodeBlockFile*)blocks->Item(i)->f);
-                  numBlocksIn++;
                }
             }   
-            numBlocksDone = numBlocksIn;
             
             seq->UnlockDeleteUpdateMutex();
             node = node->GetNext();
@@ -196,10 +189,14 @@ void ODDecodeTask::OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlo
       //If there isn't, then the block was deleted for some reason and we should ignore it.
       if(unorderedBlocks[i]->RefCount()>=2)
       {
-         if(mBlockFiles.size() && (unorderedBlocks[i]->GetStart()+unorderedBlocks[i]->GetClipOffset()) + unorderedBlocks[i]->GetLength() >=processStartSample && 
-                ( (mBlockFiles[0]->GetStart()+mBlockFiles[0]->GetClipOffset()) +  mBlockFiles[0]->GetLength() < processStartSample || 
-                  (unorderedBlocks[i]->GetStart()+unorderedBlocks[i]->GetClipOffset()) <= (mBlockFiles[0]->GetStart() +mBlockFiles[0]->GetClipOffset()))
-            )
+         //test if the blockfiles are near the task cursor.  we use the last mBlockFiles[0] as our point of reference
+         //and add ones that are closer.  
+         //since the order is linear right to left, this will add blocks so that the ones on the right side of the target
+         //are processed first, with the ones closer being processed earlier.  Then the ones on the left side get processed.
+         if(mBlockFiles.size() && 
+            unorderedBlocks[i]->GetGlobalEnd() >= processStartSample && 
+                ( mBlockFiles[0]->GetGlobalEnd() < processStartSample || 
+                  unorderedBlocks[i]->GetGlobalStart() <= mBlockFiles[0]->GetGlobalStart()) )
          {
             //insert at the front of the list if we get blockfiles that are after the demand sample
             mBlockFiles.insert(mBlockFiles.begin()+0,unorderedBlocks[i]);
@@ -220,13 +217,6 @@ void ODDecodeTask::OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlo
    }
    
 }  
-
-void ODDecodeTask::ODUpdate()
-{
-   //clear old blockFiles and do something smarter.
-   
-}   
-
 
 
 ///there could be the ODBlockFiles of several FLACs in one track (after copy and pasting)

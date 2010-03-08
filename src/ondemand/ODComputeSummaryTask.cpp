@@ -102,7 +102,10 @@ void ODComputeSummaryTask::DoSomeInternal()
       //take it out of the array - we are done with it.
       mBlockFiles.erase(mBlockFiles.begin());
       
+      //This is a bit of a convenience in case someone tries to terminate the task by closing the trackpanel or window.  
+      //ODComputeSummaryTask::Terminate() uses this lock to remove everything, and we don't want it to wait since the UI is being blocked. 
       mBlockFilesMutex.Unlock();
+      wxThread::This()->Yield();
       mBlockFilesMutex.Lock();
       
       
@@ -187,21 +190,22 @@ void ODComputeSummaryTask::Update()
          
          //gather all the blockfiles that we should process in the wavetrack.
          WaveClipList::compatibility_iterator node = mWaveTracks[j]->GetClipIterator();
-         
-         int numBlocksDone;         
+                  
          while(node) {
             clip = node->GetData();
             seq = clip->GetSequence();
-            //TODO:this lock is way to big since the whole file is one sequence.  find a way to break it down.
+            //This lock may be way too big since the whole file is one sequence.  
+            //TODO: test for large files and find a way to break it down.
             seq->LockDeleteUpdateMutex();
             
             //See Sequence::Delete() for why need this for now..
+            //We don't need the mBlockFilesMutex here because it is only for the vector list.  
+            //These are existing blocks, and its wavetrack or blockfiles won't be deleted because 
+            //of the respective mWaveTrackMutex lock and LockDeleteUpdateMutex() call. 
             blocks = clip->GetSequenceBlockArray();
             int i;
-            int numBlocksIn;
             int insertCursor;
             
-            numBlocksIn=0;
             insertCursor =0;//OD TODO:see if this works, removed from inner loop (bfore was n*n)
             
             for(i=0; i<(int)blocks->GetCount(); i++)
@@ -219,21 +223,9 @@ void ODComputeSummaryTask::Update()
                         (sampleCount)(((ODPCMAliasBlockFile*)blocks->Item(i)->f)->GetStart()+((ODPCMAliasBlockFile*)blocks->Item(i)->f)->GetClipOffset()))
                      insertCursor++;
                   
-                  
                   tempBlocks.insert(tempBlocks.begin()+insertCursor++,(ODPCMAliasBlockFile*)blocks->Item(i)->f);
-                  
-                  //this next bit ensures that we are spacing the blockfiles over multiple wavetracks evenly.
-                  //if((j+1)*numBlocksIn>tempBlocks.size())
-//                     tempBlocks.push_back((ODPCMAliasBlockFile*)blocks->Item(i)->f);
-//                  else
-//                     tempBlocks.insert(tempBlocks.begin()+(j+1)*numBlocksIn, (ODPCMAliasBlockFile*)blocks->Item(i)->f);
-//                     
-                  
-                  numBlocksIn++;
                }
             }   
-            numBlocksDone = numBlocksIn;
-            
             seq->UnlockDeleteUpdateMutex();
             node = node->GetNext();
          }
@@ -260,7 +252,8 @@ void ODComputeSummaryTask::OrderBlockFiles(std::vector<ODPCMAliasBlockFile*> &un
    mBlockFiles.clear();
    //TODO:order the blockfiles into our queue in a fancy convenient way.  (this could be user-prefs)
    //for now just put them in linear.  We start the order from the first block that includes the ondemand sample
-   //(which the user sets by clicking.)   note that this code is pretty hacky - it assumes that the array is sorted in time.
+   //(which the user sets by clicking.)   
+   //Note that this code assumes that the array is sorted in time.
    
    //find the startpoint
    sampleCount processStartSample = GetDemandSample(); 
@@ -271,9 +264,12 @@ void ODComputeSummaryTask::OrderBlockFiles(std::vector<ODPCMAliasBlockFile*> &un
       //If there isn't, then the block was deleted for some reason and we should ignore it.
       if(unorderedBlocks[i]->RefCount()>=2)
       {
-         if(mBlockFiles.size() && (unorderedBlocks[i]->GetStart()+unorderedBlocks[i]->GetClipOffset()) + unorderedBlocks[i]->GetLength() >=processStartSample && 
-                ( (mBlockFiles[0]->GetStart()+mBlockFiles[0]->GetClipOffset()) +  mBlockFiles[0]->GetLength() < processStartSample || 
-                  (unorderedBlocks[i]->GetStart()+unorderedBlocks[i]->GetClipOffset()) <= (mBlockFiles[0]->GetStart() +mBlockFiles[0]->GetClipOffset()))
+         //test if the blockfiles are near the task cursor.  we use the last mBlockFiles[0] as our point of reference
+         //and add ones that are closer.
+         if(mBlockFiles.size() && 
+            unorderedBlocks[i]->GetGlobalEnd() >= processStartSample && 
+                ( mBlockFiles[0]->GetGlobalEnd() < processStartSample || 
+                  unorderedBlocks[i]->GetGlobalStart() <= mBlockFiles[0]->GetGlobalStart())
             )
          {
             //insert at the front of the list if we get blockfiles that are after the demand sample
@@ -295,9 +291,3 @@ void ODComputeSummaryTask::OrderBlockFiles(std::vector<ODPCMAliasBlockFile*> &un
    }
    
 }  
-
-void ODComputeSummaryTask::ODUpdate()
-{
-   //clear old blockFiles and do something smarter.
-   
-}   
