@@ -126,8 +126,7 @@ bool EffectChangeSpeed::Process()
             }
          }
       }
-      else if (t->GetKind() == Track::Wave &&
-            (t->GetSelected() || t->IsSynchroSelected()))
+      else if (t->GetKind() == Track::Wave && t->GetSelected())
       {
          WaveTrack *pOutWaveTrack = (WaveTrack*)t;
          //Get start and end times from track
@@ -154,7 +153,7 @@ bool EffectChangeSpeed::Process()
          }
          mCurTrackNum++;
       }
-      else if (t->IsSynchroSelected() && !t->GetSelected())
+      else if (t->IsSynchroSelected())
       {
          t->SyncAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }

@@ -68,8 +68,7 @@ bool EffectSoundTouch::Process()
             break;
          }
       }
-      else if (t->GetKind() == Track::Wave &&
-            (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
+      else if (t->GetKind() == Track::Wave && t->GetSelected())
       {
          WaveTrack* leftTrack = (WaveTrack*)t;
          //Get start and end times from track

@@ -201,16 +201,12 @@ bool EffectSBSMS::Process()
       if (t->GetKind() == Track::Label && 
             (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
       {
-         if (t->GetSelected() || t->IsSynchroSelected())
-         {
-            if (!ProcessLabelTrack(t)) {
-               bGoodResult = false;
-               break;
-            }
+         if (!ProcessLabelTrack(t)) {
+            bGoodResult = false;
+            break;
          }
       }
-      else if (t->GetKind() == Track::Wave &&
-            (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
+      else if (t->GetKind() == Track::Wave && t->GetSelected() )
       {
          WaveTrack* leftTrack = (WaveTrack*)t;
 
