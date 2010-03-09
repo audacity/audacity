@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-03-06 16:28+0000\n"
-"PO-Revision-Date: 2010-03-06 20:55+0100\n"
+"PO-Revision-Date: 2010-03-09 09:26+0100\n"
 "Last-Translator: Carmelo Battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -9736,11 +9736,11 @@ msgstr "Volume di ingresso"
 
 #: toolbars/MixerToolBar.cpp:103
 msgid "Slider Input"
-msgstr "Cursore entrata"
+msgstr "Cursore di ingresso"
 
 #: toolbars/MixerToolBar.cpp:134
 msgid "Input Source"
-msgstr "Sorgente di entrata"
+msgstr "Sorgente di ingresso"
 
 #: toolbars/MixerToolBar.cpp:323
 msgid "Input source information is not available."
@@ -9752,23 +9752,23 @@ msgstr "Seleziona sorgente di entrata"
 
 #: toolbars/MixerToolBar.cpp:338
 msgid "Input Source:"
-msgstr "Sorgente di entrata:"
+msgstr "Sorgente di ingresso:"
 
 #: toolbars/MixerToolBar.cpp:388
 msgid "Input Level Slider"
-msgstr "Cursore livello di input"
+msgstr "Cursore livello di ingresso"
 
 #: toolbars/MixerToolBar.cpp:392
 msgid "Cannot control input level; use system mixer."
-msgstr "Non è possibile controllare il livello di input; usa il mixer di sistema."
+msgstr "Non è possibile controllare il livello di ingresso; usa il mixer di sistema."
 
 #: toolbars/MixerToolBar.cpp:396
 msgid "Output Level Slider"
-msgstr "Cursore livello di output"
+msgstr "Cursore livello di uscita"
 
 #: toolbars/MixerToolBar.cpp:400
 msgid "Cannot control output level; use system mixer."
-msgstr "Non è possibile controllare il livello di output; usa il mixer di sistema."
+msgstr "Non è possibile controllare il livello di uscita; usa il mixer di sistema."
 
 #: toolbars/SelectionBar.cpp:86
 #: toolbars/SelectionBar.cpp:283
