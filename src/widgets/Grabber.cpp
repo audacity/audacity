@@ -95,13 +95,13 @@ void Grabber::DrawGrabber( wxDC & dc )
    int y, left, right, top, bottom;
 
 #ifndef EXPERIMENTAL_THEMING
-   AColor::Medium(&dc, mOver ? 1 : 0);
+   AColor::Medium(&dc, mOver );
    dc.DrawRectangle(r);
 #else
    // Paint the background
    if( mOver )
    {
-   AColor::Medium(&dc, mOver ? 1 : 0);
+   AColor::Medium(&dc, mOver );
    dc.DrawRectangle(r);
    }
    else

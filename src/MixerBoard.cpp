@@ -501,7 +501,7 @@ void MixerTrackCluster::OnPaint(wxPaintEvent &evt)
 
    #ifdef __WXMAC__
       // Fill with correct color, not scroller background. Done automatically on Windows.
-      AColor::Medium(&dc, 0);
+      AColor::Medium(&dc, false);
       dc.DrawRectangle(this->GetClientRect());
    #endif
 

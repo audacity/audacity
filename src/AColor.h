@@ -36,8 +36,8 @@ class AColor {
    static void TrackPanelBackground(wxDC * dc, bool selected);
 
    static void Light(wxDC * dc, bool selected);
-   static void Medium(wxDC * dc, int index);
-   static void MediumTrackInfo(wxDC * dc, bool selected, bool syncSel);
+   static void Medium(wxDC * dc, bool selected);
+   static void MediumTrackInfo(wxDC * dc, bool selected);
    static void Dark(wxDC * dc, bool selected);
 
    static void CursorColor(wxDC * dc);
@@ -57,10 +57,10 @@ class AColor {
    // Member variables
 
    static wxBrush lightBrush[2];
-   static wxBrush mediumBrush[3];
+   static wxBrush mediumBrush[2];
    static wxBrush darkBrush[2];
    static wxPen lightPen[2];
-   static wxPen mediumPen[3];
+   static wxPen mediumPen[2];
    static wxPen darkPen[2];
 
    static wxPen cursorPen;

@@ -110,7 +110,6 @@ void TrackArtist::SetColours()
    theTheme.SetBrushColour( blankBrush,      clrBlank );
    theTheme.SetBrushColour( unselectedBrush, clrUnselected);
    theTheme.SetBrushColour( selectedBrush,   clrSelected);
-   theTheme.SetBrushColour( syncSelBrush,    clrSyncSel);
    theTheme.SetBrushColour( sampleBrush,     clrSample);
    theTheme.SetBrushColour( selsampleBrush,  clrSelSample);
    theTheme.SetBrushColour( dragsampleBrush, clrDragSample);
@@ -118,7 +117,6 @@ void TrackArtist::SetColours()
    theTheme.SetPenColour(   blankPen,        clrBlank);
    theTheme.SetPenColour(   unselectedPen,   clrUnselected);
    theTheme.SetPenColour(   selectedPen,     clrSelected);
-   theTheme.SetPenColour(   syncSelPen,      clrSyncSel);
    theTheme.SetPenColour(   samplePen,       clrSample);
    theTheme.SetPenColour(   selsamplePen,    clrSelSample);
    theTheme.SetPenColour(   muteSamplePen,   clrMuteSample);
@@ -713,7 +711,8 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
          mintop = halfHeight;
       }
 
-      sel = (ssel0 <= where[x] && where[x + 1] < ssel1);
+      // We don't draw selection color for sync-sel tracks
+      sel = (ssel0 <= where[x] && where[x + 1] < ssel1) && !synchroSelection;
 
       if (lmaxtop == maxtop &&
           lmintop == mintop &&
@@ -723,8 +722,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
          continue;
       }
 
-      dc.SetBrush(lsel ? (synchroSelection ? syncSelBrush : selectedBrush) :
-                         unselectedBrush);
+      dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
 
       l = r.x + lx;
       w = x - lx;
@@ -744,8 +742,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
       lx = x;
    }
 
-   dc.SetBrush(lsel ? (synchroSelection ? syncSelBrush : selectedBrush) :
-                      unselectedBrush);
+   dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
    l = r.x + lx;
    w = x - lx;
    if (lmaxbot != lmintop - 1) {
@@ -756,7 +753,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
       dc.DrawRectangle(l, r.y + lmaxtop, w, lminbot - lmaxtop);
    }
 
-   // If selection is synchro, draw in linked graphics
+   // If sync-selected, draw in linked graphics
    if (synchroSelection && ssel0 < ssel1) {
       // Find the beginning/end of the selection
       int begin, end;

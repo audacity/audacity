@@ -29,10 +29,10 @@ It is also a place to document colour usage policy in Audacity
 
 bool AColor::inited = false;
 wxBrush AColor::lightBrush[2];
-wxBrush AColor::mediumBrush[3];
+wxBrush AColor::mediumBrush[2];
 wxBrush AColor::darkBrush[2];
 wxPen AColor::lightPen[2];
-wxPen AColor::mediumPen[3];
+wxPen AColor::mediumPen[2];
 wxPen AColor::darkPen[2];
 
 wxPen AColor::cursorPen;
@@ -254,11 +254,11 @@ void AColor::Light(wxDC * dc, bool selected)
    dc->SetPen(lightPen[index]);
 }
 
-// index: 0 for unselected, 1 for selected, 2 for sync-selected
-void AColor::Medium(wxDC * dc, int index)
+void AColor::Medium(wxDC * dc, bool selected)
 {
    if (!inited)
       Init();
+   int index = (int) selected;
    dc->SetBrush(mediumBrush[index]);
    dc->SetPen(mediumPen[index]);
 }
@@ -272,13 +272,12 @@ void AColor::Medium(wxDC * dc, int index)
 #endif
 #endif
 
-void AColor::MediumTrackInfo(wxDC * dc, bool selected, bool syncSel)
+void AColor::MediumTrackInfo(wxDC * dc, bool selected)
 {
 #ifdef EXPERIMENTAL_THEMING
-   UseThemeColour( dc, selected ? clrTrackInfo :
-                                  syncSel ? clrTrackInfoSyncSel : clrTrackInfo);
+   UseThemeColour( dc, selected ? clrTrackInfoSelected : clrTrackInfo );
 #else
-   Medium( dc, selected ? 1 : syncSel ? 2 : 0 );
+   Medium( dc, selected );
 #endif
 }
 
@@ -452,10 +451,6 @@ void AColor::Init()
    mediumPen[1].SetColour(200, 200, 214);
    darkPen[1].SetColour(0, 0, 0);
 
-   // sync-selected (only need medium so far)
-   mediumBrush[2].SetColour(215, 215, 220);
-   mediumPen[2].SetColour(215, 215, 220);
-
 #else
 
 #if defined(__WXMAC__)          // && defined(TARGET_CARBON)
@@ -476,10 +471,6 @@ void AColor::Init()
    mediumPen[1].SetColour(180, 180, 192);
    darkPen[1].SetColour(148, 148, 170);
 
-   // sync-selected (only need medium so far)
-   mediumBrush[2].SetColour(195, 195, 200);
-   mediumPen[2].SetColour(195, 195, 200);
-
 #else
 
    // unselected
@@ -497,10 +488,6 @@ void AColor::Init()
    lightPen[1].SetColour(204, 204, 255);
    mediumPen[1].SetColour(180, 180, 192);
    darkPen[1].SetColour(0, 0, 0);
-
-   // sync-selected (only need medium so far)
-   mediumBrush[2].SetColour(195, 195, 200);
-   mediumPen[2].SetColour(195, 195, 200);
 
 #endif
 

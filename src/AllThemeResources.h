@@ -137,8 +137,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpUndoDisabled, wxImage( 26, 24 ), wxT("UndoDisabled"));
    DEFINE_IMAGE( bmpRedo, wxImage( 26, 24 ), wxT("Redo"));
    DEFINE_IMAGE( bmpRedoDisabled, wxImage( 26, 24 ), wxT("RedoDisabled"));
-   DEFINE_IMAGE( bmpLinkTracks, wxImage( 27, 27 ), wxT("LinkTracks"));
-   DEFINE_IMAGE( bmpLinkTracksDisabled, wxImage( 27, 27 ), wxT("LinkTracksDisabled"));
+   DEFINE_IMAGE( bmpLinkTracks, wxImage( 20, 20 ), wxT("LinkTracks"));
+   DEFINE_IMAGE( bmpLinkTracksDisabled, wxImage( 20, 20 ), wxT("LinkTracksDisabled"));
 
    SET_THEME_FLAGS(  resFlagPaired | resFlagNewLine  );
    DEFINE_IMAGE( bmpTnStartOn, wxImage( 27, 27 ), wxT("TnStartOn"));
@@ -220,7 +220,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo")); //vvv
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
 
-   DEFINE_IMAGE( bmpLinkSelect, wxImage(30, 30), wxT("LinkSelect"));
+   DEFINE_IMAGE( bmpLinkSelect, wxImage(27, 27), wxT("LinkSelect"));
+   DEFINE_IMAGE( bmpLinkTP, wxImage(12, 12), wxT("LinkTP"));
 
 #ifdef OLD_COLOURS
    DEFINE_COLOUR( clrBlank,      wxColour(214, 214, 214), wxT("Blank"));
@@ -335,8 +336,9 @@ from there.  Audacity will look for a file called "Pause.png".
 
    DEFINE_COLOUR( clrProgressDone,     wxColour(60, 240, 60, 128),   wxT("ProgressDone"));
    DEFINE_COLOUR( clrProgressNotYet,   wxColour(255, 255, 255,220), wxT("ProgressNotYet"));
-   DEFINE_COLOUR( clrSyncSel,          wxColour(165, 165, 185),      wxT("SyncSel"));
-   DEFINE_COLOUR( clrTrackInfoSyncSel, wxColour( 80,  64,  80),      wxT("TrackInfoSyncSel"));
+   DEFINE_COLOUR( clrSyncSel,          wxColour(192, 192, 192),      wxT("SyncSel"));
+   DEFINE_COLOUR( clrTrackInfoSyncSel, wxColour( 64,  64,  64),      wxT("TrackInfoSyncSel"));
+   DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
 // version control system. Please do not modify past this point.

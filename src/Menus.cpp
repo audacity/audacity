@@ -726,7 +726,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_LINKING
-      c->AddCheck(wxT("StickyLabels"), _("&Link Audio and Label Tracks"), FN(OnStickyLabel), 0);
+      c->AddCheck(wxT("StickyLabels"), _("&Link Tracks"), FN(OnStickyLabel), 0);
 
       c->AddSeparator();
 #endif

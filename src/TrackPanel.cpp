@@ -5148,8 +5148,15 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
 
    bool bIsWave = (t->GetKind() == Track::Wave);
 
-   mTrackInfo.DrawBackground(dc, r, t->GetSelected(), t->IsSynchroSelected(),
-                             bIsWave, labelw, vrul);
+   mTrackInfo.DrawBackground(dc, r, t->GetSelected(), bIsWave, labelw, vrul);
+
+   // Draw in linked tiles in ruler area
+   if (t->IsSynchroSelected()) {
+      wxRect tileFill = r;
+      tileFill.x = GetVRulerOffset();
+      tileFill.width = GetVRulerWidth();
+      TrackArtist::DrawLinkTiles(dc, tileFill);
+   }
 
    DrawBordersAroundTrack(t, dc, r, labelw, vrul);
    DrawShadow(t, dc, r);
@@ -7252,18 +7259,13 @@ void TrackInfo::DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo )
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
-   bool bSyncSel, bool bHasMuteSolo, const int labelw, const int vrul)
+   bool bHasMuteSolo, const int labelw, const int vrul)
 {
    // fill in label
    wxRect fill = r;
    fill.width = labelw-4;
-   AColor::MediumTrackInfo(dc, bSelected, bSyncSel);
+   AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill); 
-
-   // Draw in linked tiles for synchro selection
-   if (bSyncSel && !bSelected) {
-      TrackArtist::DrawLinkTiles(dc, fill);
-   }
 
    if( bHasMuteSolo )
    {
@@ -7330,10 +7332,18 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    GetTitleBarRect(r, bev);
    bev.Inflate(-1, -1);
 
+   // Load small link icon bitmap for future use
+   wxBitmap link(theTheme.Image(bmpLinkTP));
+
    // Draw title text
    SetTrackInfoFont(dc);
    wxString titleStr = t->GetName();
    int allowableWidth = GetTitleWidth() - 38 - kLeftInset;
+
+   // Make room for the link icon if necessary
+   if (t->IsSynchroSelected())
+      allowableWidth -= link.GetWidth() - 2; // let it closer than to the arrow
+
    long textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    while (textWidth > allowableWidth) {
@@ -7344,7 +7354,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    // characters if they are repeatedly drawn.  This
    // happens when holding down mouse button and moving
    // in and out of the title bar.  So clear it first.
-   AColor::MediumTrackInfo(dc, t->GetSelected(), t->IsSynchroSelected());
+   AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
    dc->DrawText(titleStr, r.x + 19, r.y + 2);
 
@@ -7364,6 +7374,17 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
                  bev.y + ((bev.height - (s / 2)) / 2),
                  s);
 
+   // Link icon: drawn to the left of the dropdown arrow
+   if (t->IsSynchroSelected()) {
+      wxBitmap link(theTheme.Image(bmpLinkTP));
+      dc->DrawBitmap(link,
+                     // Arrow's left minus our width and an extra px
+                     bev.GetRight() - s - 3 - link.GetWidth() - 1,
+                     bev.y + 1,
+                     true);
+   }
+
+
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
@@ -7380,21 +7401,19 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    if (bev.y + bev.height >= r.y + r.height - 19)
       return; // don't draw mute and solo buttons, because they don't fit into track label
       
-   AColor::MediumTrackInfo( dc, t->GetSelected(), t->IsSynchroSelected());
+   AColor::MediumTrackInfo( dc, t->GetSelected());
    if( solo )
    {
       if( t->GetSolo() )
       {
-         AColor::Solo(dc, t->GetSolo(),
-               t->GetSelected() || t->IsSynchroSelected());
+         AColor::Solo(dc, t->GetSolo(), t->GetSelected());
       }
    }
    else
    {
       if( t->GetMute() )
       {
-         AColor::Mute(dc, t->GetMute(),
-               t->GetSelected() || t->IsSynchroSelected(), t->GetSolo());
+         AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
       }
    }
    //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
@@ -7424,7 +7443,7 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down, bo
    GetMinimizeRect(r, bev, minimized);
     
    // Clear background to get rid of previous arrow
-   AColor::MediumTrackInfo(dc, t->GetSelected(), t->IsSynchroSelected());
+   AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
     
 #ifdef EXPERIMENTAL_THEMING
