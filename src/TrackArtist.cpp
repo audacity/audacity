@@ -2645,6 +2645,7 @@ void TrackArtist::DrawLinkTiles(wxDC *dc, wxRect r)
    wxBitmap sync(theTheme.Image(bmpLinkSelect));
 
    int xOffset = r.x % sync.GetWidth();
+   if (xOffset < 0) xOffset += sync.GetWidth();
    int width;
    for (int x = 0; x < r.width; x += width) {
       width = sync.GetWidth() - xOffset;
@@ -2652,6 +2653,7 @@ void TrackArtist::DrawLinkTiles(wxDC *dc, wxRect r)
          width = r.width - x;
 
       int yOffset = r.y % sync.GetHeight();
+      if (yOffset < 0) yOffset += sync.GetWidth();
       int height;
       for (int y = 0; y < r.height; y += height) {
          height = sync.GetHeight() - yOffset;
