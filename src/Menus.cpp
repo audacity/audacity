@@ -5094,6 +5094,7 @@ void AudacityProject::OnStickyLabel()
    SetStickyFlag(!GetStickyFlag());
    EditToolBar *toolbar = GetEditToolBar();
    toolbar->EnableDisableButtons();
+   GetTrackPanel()->Refresh(false);
 }
 
 void AudacityProject::OnAddLabel()
