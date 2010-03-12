@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audacity\Audacity.vcproj", "{1D64095C-F936-4FCF-B609-56E9DDF941FA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8A1C2514-85DD-4AE2-9CF3-3183B66C537D} = {8A1C2514-85DD-4AE2-9CF3-3183B66C537D}
@@ -326,11 +326,9 @@ Global
 		{D5AB2D87-51DC-4277-A9AB-2A6018D0E947}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{D5AB2D87-51DC-4277-A9AB-2A6018D0E947}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{02F94A40-586A-4403-8464-13B50801FFEC}.Debug|Win32.Build.0 = Debug|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Release|Win32.ActiveCfg = Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Release|Win32.Build.0 = Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
-		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
