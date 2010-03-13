@@ -65,9 +65,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Ruslan Ijbulatov"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
    AddCredit(wxT("Greg Kozikowski"), roleTeamSupport);
-   AddCredit(wxT("Leland Lucius"), roleTeamDeveloper);
    AddCredit(wxT("Dominic Mazzoni"), roleTeamDeveloper);
-   AddCredit(wxT("Markus Meyer"), roleTeamDeveloper);
    AddCredit(wxT("Alexandre Prokoudine"), roleTeamSupport);
    AddCredit(wxT("Peter Sampson"), roleTeamSupport);
    AddCredit(wxT("Martyn Shaw"), roleTeamDeveloper);
@@ -79,6 +77,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Matt Brubeck"), roleEmeritusDeveloper);
    AddCredit(wxT("Roger Dannenberg"), roleEmeritusDeveloper);
    AddCredit(wxT("Joshua Haberman"), roleEmeritusDeveloper);
+   AddCredit(wxT("Leland Lucius"), roleTeamDeveloper);
+   AddCredit(wxT("Markus Meyer"), roleTeamDeveloper);
    AddCredit(wxT("Monty Montgomery"), roleEmeritusDeveloper);
    AddCredit(wxT("Shane Mueller"), roleEmeritusDeveloper);
    AddCredit(wxT("Tony Oetzmann"), roleEmeritusSupport);
