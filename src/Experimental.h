@@ -148,6 +148,8 @@ extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebo
    //#define AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 #endif
 
+// AWD: new Truncate Silence code
+//#define EXPERIMENTAL_TRUNC_SILENCE
 
 #endif
 

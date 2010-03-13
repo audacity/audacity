@@ -18,6 +18,14 @@
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
 #include "Effect.h"
+#include "../Experimental.h"
+
+#include <wx/list.h>
+
+// Declaration of RegionList
+struct REGION;
+typedef struct REGION Region;
+WX_DECLARE_LIST(Region, RegionList);
 
 class EffectTruncSilence: public Effect {
 
@@ -53,6 +61,9 @@ public:
  private:
    //ToDo ... put BlendFrames in Effects, Project, or other class
    void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
+#ifdef EXPERIMENTAL_TRUNC_SILENCE
+   void Intersect(RegionList &dest, const RegionList &src);
+#endif
 
  private:
    sampleCount mBlendFrameCount;

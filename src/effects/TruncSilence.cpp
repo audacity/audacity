@@ -26,11 +26,18 @@
 #include "../Audacity.h"
 
 #include <wx/wx.h>
+#include <wx/list.h>
+#include <wx/listimpl.cpp>
+#include <limits>
 #include <math.h>
 
+#include "../Experimental.h"
 #include "../Prefs.h"
 #include "../Project.h"
+#include "../WaveTrack.h"
 #include "TruncSilence.h"
+
+WX_DEFINE_LIST(RegionList);
 
 EffectTruncSilence::EffectTruncSilence()
 {
@@ -110,6 +117,7 @@ bool EffectTruncSilence::TransferParameters( Shuttle & shuttle )
    return true;
 }
 
+#ifndef EXPERIMENTAL_TRUNC_SILENCE
 #define QUARTER_SECOND_MS 250
 bool EffectTruncSilence::Process()
 {
@@ -441,6 +449,293 @@ bool EffectTruncSilence::Process()
    this->ReplaceProcessedTracks(!cancelled); 
    return !cancelled;
 }
+
+#else // defined(EXPERIMENTAL_TRUNC_SILENCE)
+
+// AWD: this is the new version!
+bool EffectTruncSilence::Process()
+{
+   // Copy tracks
+   this->CopyInputTracks(Track::All);
+
+   // Lower bound on the amount of silence to find at a time -- this avoids
+   // detecting silence repeatedly in low-frequency sounds.
+   const float minTruncMs = 1.0f;
+   double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
+
+   // Master list of silent regions; it is responsible for deleting them.
+   // This list should always be kept in order
+   RegionList silences;
+   silences.DeleteContents(true);
+
+   // Start with the whole selection silent
+   Region *sel = new Region;
+   sel->start = mT0;
+   sel->end = mT1;
+   silences.push_back(sel);
+
+   // Remove non-silent regions in each track
+   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   for (Track *t = iter.First(); t; t = iter.Next())
+   {
+      WaveTrack *wt = (WaveTrack *)t;
+
+      // Smallest silent region to detect in frames
+      sampleCount minSilenceFrames = 
+         sampleCount((wxMax( mTruncInitialAllowedSilentMs, minTruncMs) *
+                  wt->GetRate()) / 1000.0);
+
+      //
+      // Scan the track for silences
+      //
+      RegionList trackSilences;
+      trackSilences.DeleteContents(true);
+      sampleCount blockLen = wt->GetMaxBlockSize();
+      sampleCount start = wt->TimeToLongSamples(mT0);
+      sampleCount end = wt->TimeToLongSamples(mT1);
+
+      // Allocate buffer
+      float *buffer = new float[blockLen];
+
+      sampleCount index = start;
+      sampleCount silentFrames = 0;
+      while (index < end) {
+         // Limit size of current block if we've reached the end
+         sampleCount count = blockLen;
+         if ((index + count) > end) {
+            count = end - index;
+         }
+
+         // Fill buffer
+         wt->Get((samplePtr)(buffer), floatSample, index, count);
+
+         // Look for silences in current block
+         for (sampleCount i = 0; i < count; ++i) {
+            if (fabs(buffer[i] < truncDbSilenceThreshold)) {
+               ++silentFrames;
+            }
+            else {
+               if (silentFrames >= minSilenceFrames)
+               {
+                  // Record the silent region
+                  Region *r = new Region;
+                  r->start = wt->LongSamplesToTime(index + i - silentFrames);
+                  r->end = wt->LongSamplesToTime(index + i);
+                  trackSilences.push_back(r);
+               }
+               silentFrames = 0;
+            }
+         }
+
+         // Next block
+         index += count;
+      }
+
+      if (silentFrames >= minSilenceFrames)
+      {
+         // Track ended in silence -- record region
+         Region *r = new Region;
+         r->start = wt->LongSamplesToTime(index - silentFrames);
+         r->end = wt->LongSamplesToTime(index);
+         trackSilences.push_back(r);
+      }
+
+      // Intersect with the overall silent region list
+      Intersect(silences, trackSilences);
+
+      delete [] buffer;
+   }
+
+   //
+   // Now remove the silent regions from all selected/sync-seletcted tracks
+   //
+
+   // Loop over detected regions in reverse (so cuts don't change time values
+   // down the line)
+   RegionList::reverse_iterator rit;
+   double totalCutLen = 0.0;  // For cutting selection at the end
+   for (rit = silences.rbegin(); rit != silences.rend(); ++rit) {
+      Region *r = *rit;
+
+      // Intersection may create regions smaller than allowed; ignore them
+      if (r->end - r->start < mTruncInitialAllowedSilentMs / 1000.0)
+         continue;
+
+      // Find new silence length as requested
+      double inLength = r->end - r->start;
+      double outLength = wxMin(
+            mTruncInitialAllowedSilentMs / 1000.0 + (inLength - mTruncInitialAllowedSilentMs / 1000.0) / mSilenceCompressRatio,
+            mTruncLongestAllowedSilentMs);
+      double cutLen = inLength - outLength;
+      totalCutLen += cutLen;
+
+      TrackListIterator iterOut(mOutputTracks);
+      for (Track *t = iterOut.First(); t; t = iterOut.Next())
+      {
+         if (t->GetKind() == Track::Wave && (
+                  t->GetSelected() || t->IsSynchroSelected()))
+         {
+            // In WaveTracks, clear with a cross-fade
+            WaveTrack *wt = (WaveTrack *)t;
+            sampleCount blendFrames = mBlendFrameCount;
+            double cutStart = (r->start + r->end - cutLen) / 2;
+            double cutEnd = cutStart + cutLen;
+            // Round start/end times to frame boundaries
+            cutStart = wt->LongSamplesToTime(wt->TimeToLongSamples(cutStart));
+            cutEnd = wt->LongSamplesToTime(wt->TimeToLongSamples(cutEnd));
+
+            // Make sure the cross-fade does not affect non-silent frames
+            if (wt->LongSamplesToTime(blendFrames) > inLength) {
+               blendFrames = wt->TimeToLongSamples(inLength);
+            }
+
+            // Perform cross-fade in memory
+            float *buf1 = new float[blendFrames];
+            float *buf2 = new float[blendFrames];
+            sampleCount t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
+            sampleCount t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
+
+            wt->Get((samplePtr)buf1, floatSample, t1, blendFrames);
+            wt->Get((samplePtr)buf2, floatSample, t2, blendFrames);
+
+            for (sampleCount i = 0; i < blendFrames; ++i) {
+               buf1[i] = ((blendFrames-i) * buf1[i] + i * buf2[i]) /
+                         (double)blendFrames;
+            }
+
+            // Perform the cut
+            wt->Clear(cutStart, cutEnd);
+
+            // Write cross-faded data
+            wt->Set((samplePtr)buf1, floatSample, t1, blendFrames);
+
+            delete [] buf1;
+            delete [] buf2;
+         }
+         else if (t->GetSelected() || t->IsSynchroSelected())
+         {
+            // Non-wave tracks: just do a sync adjust
+            double cutStart = (r->start + r->end - cutLen) / 2;
+            double cutEnd = cutStart + cutLen;
+            t->SyncAdjust(cutStart, cutEnd);
+         }
+      }
+   }
+
+   mT1 -= totalCutLen;
+
+   ReplaceProcessedTracks(true);
+
+   return true;
+}
+
+// Finds the intersection of the ordered region lists, stores in dest
+void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
+{
+   RegionList::iterator destIter;
+   destIter = dest.begin();
+   // Any time we reach the end of the dest list we're finished
+   if (destIter == dest.end())
+      return;
+   Region *curDest = *destIter;
+
+   // Operation: find non-silent regions in src, remove them from dest.
+   double nsStart = curDest->start;
+   double nsEnd;
+   bool lastRun = false; // must run the loop one extra time
+
+   RegionList::const_iterator srcIter = src.begin();
+   while (srcIter != src.end() || lastRun)
+   {
+      // Don't use curSrc unless lastRun is false!
+      Region *curSrc;
+
+      if (lastRun)
+      {
+         // The last non-silent region extends as far as possible
+         curSrc = NULL;
+         nsEnd = std::numeric_limits<double>::max();
+      }
+      else
+      {
+         curSrc = *srcIter;
+         nsEnd = curSrc->start;
+      }
+
+      if (nsEnd > nsStart)
+      {
+         // Increment through dest until we have a region that could be affected
+         while (curDest->end <= nsStart) {
+            ++destIter;
+            if (destIter == dest.end())
+               return;
+            curDest = *destIter;
+         }
+
+         // Check for splitting dest region in two
+         if (nsStart > curDest->start && nsEnd < curDest->end) {
+            // The second region
+            Region *r = new Region;
+            r->start = nsEnd;
+            r->end = curDest->end;
+
+            // The first region
+            curDest->end = nsStart;
+
+            // Insert second
+            // AWD: wxList::insert() has a bug causing it to return the wrong
+            // value; this is a workaround.
+            RegionList::iterator nextIt(destIter);
+            ++nextIt;
+            dest.insert(nextIt, r);
+            ++destIter;          // (now points at the newly-inserted region)
+            curDest = *destIter;
+         }
+
+         // Check for truncating the end of dest region
+         if (nsStart > curDest->start && nsStart < curDest->end &&
+               nsEnd >= curDest->end)
+         {
+            curDest->end = nsStart;
+
+            ++destIter;
+            if (destIter == dest.end())
+               return;
+            curDest = *destIter;
+         }
+
+         // Check for all dest regions that need to be removed completely
+         while (nsStart <= curDest->start && nsEnd >= curDest->end) {
+            destIter = dest.erase(destIter);
+            if (destIter == dest.end())
+               return;
+            curDest = *destIter;
+         }
+
+         // Check for truncating the beginning of dest region
+         if (nsStart <= curDest->start &&
+               nsEnd > curDest->start && nsEnd < curDest->end)
+         {
+            curDest->start = nsEnd;
+         }
+      }
+
+      if (lastRun) {
+         // done
+         lastRun = false;
+      }
+      else {
+         // Next non-silent region starts at the end of this silent region
+         nsStart = curSrc->end;
+         ++srcIter;
+         if (srcIter == src.end()) {
+            lastRun = true;
+         }
+      }
+   }
+}
+
+#endif // EXPERIMENTAL_TRUNC_SILENCE
 
 void EffectTruncSilence::BlendFrames(float* buffer, int blendFrameCount, int leftIndex, int rightIndex)
 {
