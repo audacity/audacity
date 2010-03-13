@@ -1532,7 +1532,7 @@ void AudacityProject::ModifyToolbarMenus()
    mCommandManager.Check(wxT("SWPlaythrough"), active);
    gPrefs->Read(wxT("/GUI/LinkTracks"), &active, true);
    SetStickyFlag(active);
-   mCommandManager.Check(wxT("StickyLabels"), mStickyFlag);
+   mCommandManager.Check(wxT("StickyLabels"), active);
 }
 
 void AudacityProject::UpdateMenus()
