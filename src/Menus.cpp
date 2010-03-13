@@ -1479,6 +1479,13 @@ void AudacityProject::SelectAllIfNone()
       OnSelectAll();
 }
 
+void AudacityProject::ModifyAllProjectToolbarMenus()
+{
+   AProjectArray::iterator i;
+   for (i = gAudacityProjects.begin(); i != gAudacityProjects.end(); ++i) {
+      (*i)->ModifyToolbarMenus();
+   }
+}
 
 void AudacityProject::ModifyToolbarMenus()
 {
@@ -1523,6 +1530,8 @@ void AudacityProject::ModifyToolbarMenus()
    mCommandManager.Check(wxT("Duplex"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    mCommandManager.Check(wxT("SWPlaythrough"), active);
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &active, true);
+   SetStickyFlag(active);
    mCommandManager.Check(wxT("StickyLabels"), mStickyFlag);
 }
 
@@ -1900,7 +1909,7 @@ void AudacityProject::OnToggleSoundActivated()
    bool pause;
    gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &pause, false);
    gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
-   ModifyToolbarMenus();
+   ModifyAllProjectToolbarMenus();
 }
 
 void AudacityProject::OnTogglePlayRecording()
@@ -1908,7 +1917,7 @@ void AudacityProject::OnTogglePlayRecording()
    bool Duplex;
    gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, false);
    gPrefs->Write(wxT("/AudioIO/Duplex"), !Duplex);
-   ModifyToolbarMenus();
+   ModifyAllProjectToolbarMenus();
 }
 
 void AudacityProject::OnToggleSWPlaythrough()
@@ -1916,7 +1925,7 @@ void AudacityProject::OnToggleSWPlaythrough()
    bool SWPlaythrough;
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &SWPlaythrough, false);
    gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), !SWPlaythrough);
-   ModifyToolbarMenus();
+   ModifyAllProjectToolbarMenus();
 }
 
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
@@ -1925,7 +1934,7 @@ void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
    bool AVEnabled;
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
    gPrefs->Write(wxT("/AudioIO/AutomatedInputLevelAdjustment"), !AVEnabled);
-   ModifyToolbarMenus();
+   ModifyAllProjectToolbarMenus();
 }
 #endif
 
@@ -5091,10 +5100,12 @@ int AudacityProject::DoAddLabel(double left, double right)
 
 void AudacityProject::OnStickyLabel()
 {
-   SetStickyFlag(!GetStickyFlag());
-   EditToolBar *toolbar = GetEditToolBar();
-   toolbar->EnableDisableButtons();
-   GetTrackPanel()->Refresh(false);
+   bool linkTracks;
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, true);
+   gPrefs->Write(wxT("/GUI/LinkTracks"), !linkTracks);
+
+   // Toolbar, project "sticky flag" handled within
+   ModifyAllProjectToolbarMenus();
 }
 
 void AudacityProject::OnAddLabel()

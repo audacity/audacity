@@ -50,6 +50,7 @@
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../Internat.h"
+#include "../Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
 #include "../UndoManager.h"
@@ -240,15 +241,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          break;
 #ifdef EXPERIMENTAL_LINKING
       case ETBLinkID:
-         if (!busy){
-            p->OnStickyLabel();
-            if (p->GetStickyFlag())
-               mButtons[ETBLinkID]->PushDown();
-            else
-               mButtons[ETBLinkID]->PopUp();
-            p->ModifyToolbarMenus();
-            p->GetTrackPanel()->Refresh(false);
-         }
+         if (!busy) p->OnStickyLabel();
          return;//avoiding the call to SetButton()
 #endif
       case ETBZoomInID:
@@ -313,7 +306,10 @@ void EditToolBar::EnableDisableButtons()
    mButtons[ETBPasteID]->SetEnabled(p->Clipboard());
    
 #ifdef EXPERIMENTAL_LINKING
-   if (p->GetStickyFlag())
+   bool linkTracks;
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, true);
+
+   if (linkTracks)
       mButtons[ETBLinkID]->PushDown();
    else
       mButtons[ETBLinkID]->PopUp();

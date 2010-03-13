@@ -813,7 +813,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mViewInfo.bRedrawWaveform = false;
 
    mLockPlayRegion = false;
-   SetStickyFlag(true);
+   bool linkTracks;
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, true);
+   SetStickyFlag(linkTracks);
 
    CreateMenusAndCommands();
 
@@ -4438,6 +4440,15 @@ bool AudacityProject::IsSticky()
 #else
    return false;
 #endif
+}
+
+void AudacityProject::SetStickyFlag(bool flag)
+{
+   if (flag != mStickyFlag) {
+      mStickyFlag = flag;
+      if (GetTrackPanel())
+         GetTrackPanel()->Refresh(false);
+   }
 }
 
 void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
