@@ -455,6 +455,9 @@ bool EffectTruncSilence::Process()
 // AWD: this is the new version!
 bool EffectTruncSilence::Process()
 {
+   // Typical fraction of total time taken by detection (better to guess low)
+   const double detectFrac = .6;
+
    // Copy tracks
    this->CopyInputTracks(Track::All);
 
@@ -476,6 +479,7 @@ bool EffectTruncSilence::Process()
 
    // Remove non-silent regions in each track
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   int whichTrack = 0;
    for (Track *t = iter.First(); t; t = iter.Next())
    {
       WaveTrack *wt = (WaveTrack *)t;
@@ -499,7 +503,16 @@ bool EffectTruncSilence::Process()
 
       sampleCount index = start;
       sampleCount silentFrames = 0;
+      bool cancelled = false;
       while (index < end) {
+         // Show progress dialog, test for cancellation; we figure detection
+         // takes a little more than half the total time
+         cancelled = TotalProgress(
+               detectFrac * (whichTrack + index / (double)end) / 
+               (double)GetNumWaveTracks());
+         if (cancelled)
+            break;
+
          // Limit size of current block if we've reached the end
          sampleCount count = blockLen;
          if ((index + count) > end) {
@@ -531,6 +544,13 @@ bool EffectTruncSilence::Process()
          index += count;
       }
 
+      delete [] buffer;
+
+      // Buffer has been freed, so we're OK to return if cancelled
+      if (cancelled) {
+         return false;
+      }
+
       if (silentFrames >= minSilenceFrames)
       {
          // Track ended in silence -- record region
@@ -542,8 +562,7 @@ bool EffectTruncSilence::Process()
 
       // Intersect with the overall silent region list
       Intersect(silences, trackSilences);
-
-      delete [] buffer;
+      whichTrack++;
    }
 
    //
@@ -552,10 +571,16 @@ bool EffectTruncSilence::Process()
 
    // Loop over detected regions in reverse (so cuts don't change time values
    // down the line)
+   int whichReg = 0;
    RegionList::reverse_iterator rit;
    double totalCutLen = 0.0;  // For cutting selection at the end
    for (rit = silences.rbegin(); rit != silences.rend(); ++rit) {
       Region *r = *rit;
+
+      // Progress dialog and cancellation; at this point it's safe to return
+      if (TotalProgress(detectFrac +
+               (1 - detectFrac) * whichReg / (double)silences.size()))
+         return false;
 
       // Intersection may create regions smaller than allowed; ignore them
       if (r->end - r->start < mTruncInitialAllowedSilentMs / 1000.0)
@@ -572,6 +597,10 @@ bool EffectTruncSilence::Process()
       TrackListIterator iterOut(mOutputTracks);
       for (Track *t = iterOut.First(); t; t = iterOut.Next())
       {
+         // Don't waste time past the end of a track
+         if (t->GetEndTime() < r->start)
+            continue;
+
          if (t->GetKind() == Track::Wave && (
                   t->GetSelected() || t->IsSynchroSelected()))
          {
@@ -620,6 +649,7 @@ bool EffectTruncSilence::Process()
             t->SyncAdjust(cutStart, cutEnd);
          }
       }
+      ++whichReg;
    }
 
    mT1 -= totalCutLen;
