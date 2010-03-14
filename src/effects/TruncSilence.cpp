@@ -511,7 +511,7 @@ bool EffectTruncSilence::Process()
 
          // Look for silences in current block
          for (sampleCount i = 0; i < count; ++i) {
-            if (fabs(buffer[i] < truncDbSilenceThreshold)) {
+            if (fabs(buffer[i]) < truncDbSilenceThreshold) {
                ++silentFrames;
             }
             else {
