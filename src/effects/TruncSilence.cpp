@@ -590,7 +590,7 @@ bool EffectTruncSilence::Process()
       double inLength = r->end - r->start;
       double outLength = wxMin(
             mTruncInitialAllowedSilentMs / 1000.0 + (inLength - mTruncInitialAllowedSilentMs / 1000.0) / mSilenceCompressRatio,
-            mTruncLongestAllowedSilentMs);
+            mTruncLongestAllowedSilentMs / 1000.0);
       double cutLen = inLength - outLength;
       totalCutLen += cutLen;
 
