@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2009-06-30 22:14+0100\n"
-"PO-Revision-Date: 2010-03-15 22:32-0000\n"
+"PO-Revision-Date: 2010-03-16 23:18-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: swedish <musselasse@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -3424,11 +3424,15 @@ msgstr "Spara komprimerat projektet som"
 
 #: Project.cpp:3403
 msgid ""
-"<p><center>You are saving an Audacity project file (.haup).</center></p>Saving a project creates a file that only Audacity can open.\n"
+"You are saving an Audacity project file (.aup).\n"
+"\n"
+"Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
 msgstr ""
-"<p><center>Du sparar en Audacity projektfil (.haup).</center></p>Spara ett projekt skapar en fil som bara Audacity kan öppna.\n"
+"Du sparar en Audacity projektfil (.aup).\n"
+"\n"
+"Spara ett projekt skapar en fil som bara Audacity kan öppna.\n"
 "\n"
 "För att spara en ljudfil för andra program, välj en från \"Arkiv > Export\"-menyn.\n"
 
@@ -3652,7 +3656,7 @@ msgstr "Kontrollpanel"
 #: Screenshot.cpp:377
 #: effects/LoadEffects.cpp:115
 #: toolbars/MixerToolBar.cpp:59
-#: toolbars/MixerToolBar.cpp:246
+#: toolbars/MixerToolBar.cpp:248
 msgid "Mixer"
 msgstr "Mixerpanel"
 
@@ -7810,7 +7814,8 @@ msgstr "Exporterar valt ljud som %s"
 msgid "Exporting the entire project as %s"
 msgstr "Exportera hela projektet som %s"
 
-#: export/ExportPCM.cpp:551
+#. i18n-hint: %s will be the error message from libsndfile, which
+#: export/ExportPCM.cpp:554
 #, c-format
 msgid ""
 "Error while writing %s file (disk full?).\n"
@@ -7820,29 +7825,29 @@ msgstr ""
 "Libsndfile säger \"%s\""
 
 #. i18n-hint: %s will be the error message from libsndfile
-#: export/ExportPCM.cpp:575
+#: export/ExportPCM.cpp:578
 #, c-format
 msgid "Error (file may not have been written): %s"
 msgstr "Fel (filen kanske inte blev rätt gjord): %s"
 
-#: export/ExportPCM.cpp:746
+#: export/ExportPCM.cpp:749
 msgid "There are no options for this format.\n"
 msgstr "Det finns inga inställningar för detta format.\n"
 
 #. i18n-hint: This is pointing users at another possible export format in
-#: export/ExportPCM.cpp:751
+#: export/ExportPCM.cpp:754
 msgid "If you need more control over the export format please use the 'Other uncompressed files' format."
 msgstr "Om du behöver mer kontrll över exportformat, valj 'Andra okomprimerade filer'-format."
 
-#: export/ExportPCM.cpp:756
+#: export/ExportPCM.cpp:759
 msgid "Your file will be exported as a 16-bit AIFF (Apple/SGI) file.\n"
 msgstr "Din fil kommer att exporteras som en 16-bit AIFF (Apple/SGI)-fil.\n"
 
-#: export/ExportPCM.cpp:761
+#: export/ExportPCM.cpp:764
 msgid "Your file will be exported as a 16-bit WAV (Microsoft) file.\n"
 msgstr "Din fil kommer att exporteras som en 16-bit WAV (Microsoft)-fil.\n"
 
-#: export/ExportPCM.cpp:766
+#: export/ExportPCM.cpp:769
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
 msgstr "Din fil kommer att exporteras som en GSM 6.10 WAV-fil.\n"
 
@@ -9696,17 +9701,33 @@ msgstr "reglage input"
 msgid "Input Source"
 msgstr "Input källa"
 
-#: toolbars/MixerToolBar.cpp:321
+#: toolbars/MixerToolBar.cpp:323
 msgid "Input source information is not available."
 msgstr "Info om Inputkälla är inte tillgänglig."
 
-#: toolbars/MixerToolBar.cpp:328
+#: toolbars/MixerToolBar.cpp:330
 msgid "Select Input Source"
 msgstr "Välj input källa"
 
-#: toolbars/MixerToolBar.cpp:336
+#: toolbars/MixerToolBar.cpp:338
 msgid "Input Source:"
 msgstr "Input källa:"
+
+#: toolbars/MixerToolBar.cpp:388
+msgid "Input Level Slider"
+msgstr "Input enhetreglage"
+
+#: toolbars/MixerToolBar.cpp:392
+msgid "Cannot control input level; use system mixer."
+msgstr "Kan inte kontrollera inputnivån, använd systemmixer."
+
+#: toolbars/MixerToolBar.cpp:396
+msgid "Output Level Slider"
+msgstr "Output nivåreglage"
+
+#: toolbars/MixerToolBar.cpp:400
+msgid "Cannot control output level; use system mixer."
+msgstr "Kan inte kontrollera outputnivån, använd systemmixer."
 
 #: toolbars/SelectionBar.cpp:86
 #: toolbars/SelectionBar.cpp:283
@@ -9933,27 +9954,27 @@ msgstr "Tryck"
 msgid "Button"
 msgstr "Knapp"
 
-#. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: widgets/ASlider.cpp:718
+#. i18n-hint: One-letter abbreviation for Left, in the Pan slider
+#: widgets/ASlider.cpp:721
 #: widgets/Meter.cpp:944
 msgid "L"
 msgstr "V"
 
-#. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: widgets/ASlider.cpp:721
+#. i18n-hint: One-letter abbreviation for Right, in the Pan slider
+#: widgets/ASlider.cpp:724
 #: widgets/Meter.cpp:947
 msgid "R"
 msgstr "H"
 
-#: widgets/ASlider.cpp:849
+#: widgets/ASlider.cpp:852
 msgid "Center"
 msgstr "Center"
 
-#: widgets/ASlider.cpp:853
+#: widgets/ASlider.cpp:856
 msgid "Left"
 msgstr "Vänster"
 
-#: widgets/ASlider.cpp:856
+#: widgets/ASlider.cpp:859
 msgid "Right"
 msgstr "Höger"
 
