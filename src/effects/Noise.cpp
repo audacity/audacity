@@ -211,7 +211,7 @@ void NoiseDialog::PopulateOrExchange( ShuttleGui & S )
           * with "seconds" this does not always work properly. For example,
           * it rounds down to zero... */
          mNoiseDurationT->SetName(_("Duration"));
-         mNoiseDurationT->SetFormatString(mNoiseDurationT->GetBuiltinFormat(nIsSelection==true?(wxT("hh:mm:ss + samples")):(wxT("seconds"))));
+         mNoiseDurationT->SetFormatString(mNoiseDurationT->GetBuiltinFormat(nIsSelection==true?(_("hh:mm:ss + samples")):(_("seconds"))));
          mNoiseDurationT->EnableMenu();
       }
       S.AddWindow(mNoiseDurationT, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);

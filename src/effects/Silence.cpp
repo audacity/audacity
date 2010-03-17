@@ -36,11 +36,11 @@ bool EffectSilence::PromptUser()
    if (mT1 > mT0) {
       // there is a selection: let's fit in there...
       mDuration = mT1 - mT0;
-      dlog.SetFormatString(wxT("hh:mm:ss + samples"));
+      dlog.SetFormatString(_("hh:mm:ss + samples"));
 
    } else {
       // retrieve last used values
-      dlog.SetFormatString(wxT("seconds"));
+      dlog.SetFormatString(_("seconds"));
    }
    dlog.SetTimeValue(mDuration);
 

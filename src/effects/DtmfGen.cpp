@@ -451,7 +451,7 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
          * "seconds" this does not always work properly. For example, it rounds
          * down to zero... */
          mDtmfDurationT->SetName(_("Duration"));
-         mDtmfDurationT->SetFormatString(mDtmfDurationT->GetBuiltinFormat(dIsSelection==true?(wxT("hh:mm:ss + samples")):(wxT("seconds"))));
+         mDtmfDurationT->SetFormatString(mDtmfDurationT->GetBuiltinFormat(dIsSelection==true?(_("hh:mm:ss + samples")):(_("seconds"))));
          mDtmfDurationT->EnableMenu();
       }
       S.AddWindow(mDtmfDurationT);
