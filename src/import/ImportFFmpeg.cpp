@@ -25,6 +25,7 @@ Licensed under the GNU General Public License v2 or later
 
 #include "../Audacity.h"	// needed before FFmpeg.h
 #include "../FFmpeg.h"		// which brings in avcodec.h, avformat.h
+#include "../ondemand/ODManager.h"
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
@@ -153,10 +154,16 @@ static const wxChar *exts[] =
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
+
+#ifdef EXPERIMENTAL_OD_FFMPEG
+#include "ODDecodeFFMpegTask.h"
+#endif
+
 extern FFmpegLibs *FFmpegLibsInst;
 
 class FFmpegImportFileHandle;
-
+//moving from ImportFFmpeg.cpp to FFMpeg.h so other cpp files can use this struct.
+#ifndef EXPERIMENTAL_OD_FFMPEG
 typedef struct _streamContext
 {
    bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
@@ -177,7 +184,7 @@ typedef struct _streamContext
    int			         m_decodedAudioSamplesValidSiz;   // # valid bytes in m_decodedAudioSamples
    int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
 } streamContext;
-
+#endif
 /// A representative of FFmpeg loader in
 /// the Audacity import plugin list
 class FFmpegImportPlugin : public ImportPlugin
@@ -278,6 +285,10 @@ private:
    bool                  mStopped;       //!< True if importing was stopped by user
    wxString              mName;
    WaveTrack           ***mChannels;     //!< 2-dimentional array of WaveTrack's. First dimention - streams, second - channels of a stream. Length is mNumStreams
+#ifdef EXPERIMENTAL_OD_FFMPEG
+   bool                  mUsingOD;
+#endif
+
 };
 
 
@@ -533,11 +544,68 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
       }
    }
-
    // This is the heart of the importing process
    streamContext *sc = NULL;
    // The result of Import() to be returend. It will be something other than zero if user canceled or some error appears.
    int res = eProgressSuccess;
+
+#ifdef EXPERIMENTAL_OD_FFMPEG
+   mUsingOD = true; //TODO: for now just use it - later use a prefs 
+   //at this point we know the file is good and that we have to load the number of channels in mScs[s]->m_stream->codec->channels;
+   //so for OD loading we create the tracks and releasee the modal lock after starting the ODTask.
+   std::vector<ODDecodeFFmpegTask*> tasks;
+   //append blockfiles to each stream and add an individual ODDecodeTask for each one.
+   for (int s = 0; s < mNumStreams; s++)
+   {
+      ODDecodeFFmpegTask* odTask=new ODDecodeFFmpegTask(mScs,mNumStreams,mChannels,mFormatContext);
+      ODFileDecoder* odDecoder = (ODFileDecoder*)odTask->CreateFileDecoder(mFilename);
+
+      //each stream has different duration.  We need to know it if seeking is to be allowed.
+      sampleCount sampleDuration = 0;
+      if (mScs[s]->m_stream->duration > 0)
+         sampleDuration = ((sampleCount)mScs[s]->m_stream->duration * mScs[s]->m_stream->time_base.num) *mScs[s]->m_stream->codec->sample_rate / mScs[s]->m_stream->time_base.den;
+      else
+         sampleDuration = ((sampleCount)mFormatContext->duration *mScs[s]->m_stream->codec->sample_rate) / AV_TIME_BASE;
+
+//      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)mScs[s]->m_stream->codec->sample_rate,(int)sampleDuration/mScs[s]->m_stream->codec->sample_rate);
+         
+      //for each wavetrack within the stream add coded blockfiles
+      for (int c = 0; c < mScs[s]->m_stream->codec->channels; c++)
+      {
+         WaveTrack *t = mChannels[s][c];
+         odTask->AddWaveTrack(t);
+         
+         sampleCount maxBlockSize = t->GetMaxBlockSize();
+         //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
+         for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) 
+         {
+            sampleCount blockLen = maxBlockSize;
+            if (i + blockLen > sampleDuration)
+               blockLen = sampleDuration - i;
+            
+            t->AppendCoded(mFilename, i, blockLen, c,ODTask::eODFFMPEG);
+            
+            // This only works well for single streams since we assume 
+            // each stream is of the same duration and channels
+            res = mProgress->Update(i+sampleDuration*c+ sampleDuration*mScs[s]->m_stream->codec->channels*s, 
+                                 sampleDuration*mScs[s]->m_stream->codec->channels*mNumStreams);
+            if (res != eProgressSuccess)
+               break;
+         }
+      }
+      tasks.push_back(odTask);
+   }
+   //Now we add the tasks and let them run, or delete them if the user cancelled
+   for(int i=0;i<tasks.size();i++)
+   {
+      if(res==eProgressSuccess)
+         ODManager::Instance()->AddNewTask(tasks[i]);
+      else
+      {
+         delete tasks[i];
+      }
+   }
+#else //ifndef EXPERIMENTAL_OD_FFMPEG   
    // Read next frame.
    while ((sc = ReadNextFrame()) != NULL && (res == eProgressSuccess))
    {
@@ -589,6 +657,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
       }
    }
+#endif   //EXPERIMENTAL_OD_FFMPEG
 
    // Something bad happened - destroy everything!
    if (res == eProgressCancelled || res == eProgressFailed)
@@ -836,6 +905,11 @@ void FFmpegImportFileHandle::WriteMetadata(AVFormatContext *avf,Tags *tags)
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
+#ifdef EXPERIMENTAL_OD_FFMPEG
+   //ODDecodeFFmpegTask takes ownership and deltes it there.
+   if(!mUsingOD)
+   {
+#endif
    if (FFmpegLibsInst->ValidLibsLoaded())
    {
       if (mFormatContext) FFmpegLibsInst->av_close_input_file(mFormatContext);
@@ -850,6 +924,10 @@ FFmpegImportFileHandle::~FFmpegImportFileHandle()
       delete mScs[i];
    }
    free(mScs);
+#ifdef EXPERIMENTAL_OD_FFMPEG
+   }//mUsingOD
+#endif
+
 
    delete mStreamInfo;
 

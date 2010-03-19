@@ -219,6 +219,17 @@ void ODDecodeTask::OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlo
 }  
 
 
+   
+///changes the tasks associated with this Waveform to process the task from a different point in the track
+///this is overridden from ODTask because certain classes don't allow users to seek sometimes, or not at all.
+void ODDecodeTask::DemandTrackUpdate(WaveTrack* track, double seconds)
+{
+   //only update if the subclass says we can seek.
+   if(SeekingAllowed())
+      ODTask::DemandTrackUpdate(track,seconds);
+}
+
+
 ///there could be the ODBlockFiles of several FLACs in one track (after copy and pasting)
 ///so we keep a list of decoders that keep track of the file names, etc, and check the blocks against them.
 ///Blocks that have IsDataAvailable()==false are blockfiles to be decoded.  if BlockFile::GetDecodeType()==ODDecodeTask::GetODType() then
@@ -230,7 +241,11 @@ ODFileDecoder* ODDecodeTask::GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* b
    //see if the filename matches any of our decoders, if so, return it.
    for(int i=0;i<(int)mDecoders.size();i++)
    {
-      if(mDecoders[i]->GetFileName()==blockFile->GetAudioFileName().GetFullPath())
+      //we check filename and decode type, since two types of ODDecoders might work with the same filetype
+      //e.g., FFmpeg and LibMad import both do MP3s.  TODO: is this necessary? in theory we filter this when
+      //updating our list of blockfiles.
+      if(mDecoders[i]->GetFileName()==blockFile->GetAudioFileName().GetFullPath() &&
+         GetODType() == blockFile->GetDecodeType() )
       {
          ret = mDecoders[i];
          break;

@@ -57,6 +57,8 @@ extern "C" {
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 
+#include "Experimental.h"
+
 // if you needed them, any other audacity header files would go here
 
 /* These defines apply whether or not ffmpeg is available */
@@ -396,6 +398,30 @@ void        DropFFmpegLibs();
 
 int ufile_fopen(ByteIOContext **s, const wxString & name, int flags);
 int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
+
+//moving from ImportFFmpeg.cpp to FFMpeg.h so other cpp files can use this struct.
+#ifdef EXPERIMENTAL_OD_FFMPEG
+typedef struct _streamContext
+{
+   bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
+   AVStream            *m_stream;		      	         // an AVStream *
+   AVCodecContext      *m_codecCtx;			               // pointer to m_stream->codec
+
+   AVPacket             m_pkt;				               // the last AVPacket we read for this stream
+   int                  m_pktValid;			               // is m_pkt valid?
+   uint8_t             *m_pktDataPtr;		           	   // pointer into m_pkt.data
+   int                  m_pktRemainingSiz;	
+
+   int64_t			      m_pts;			              	   // the current presentation time of the input stream
+   int64_t			      m_ptsOffset;		    	         // packets associated with stream are relative to this
+
+   int                  m_frameValid;		               // is m_decodedVideoFrame/m_decodedAudioSamples valid?
+   int16_t             *m_decodedAudioSamples;           // decoded audio samples stored here
+   unsigned int			m_decodedAudioSamplesSiz;        // current size of m_decodedAudioSamples
+   int			         m_decodedAudioSamplesValidSiz;   // # valid bytes in m_decodedAudioSamples
+   int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
+} streamContext;
+#endif
 
 #endif // USE_FFMPEG
 #endif // __AUDACITY_FFMPEG__
