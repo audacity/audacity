@@ -450,6 +450,7 @@
 		186CCE730E51F48500659159 /* ODDecodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 186CCE700E51F48500659159 /* ODDecodeTask.cpp */; };
 		186CCEA40E523C8E00659159 /* Profiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 186CCEA30E523C8E00659159 /* Profiler.cpp */; };
 		18A2840F0F79BCAB0013A1BE /* Generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18A2840E0F79BCAB0013A1BE /* Generator.cpp */; };
+		18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */; };
 		18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18D8314C0ED0F56200FD870D /* Contrast.cpp */; };
 		2800FE0D0FF32308005CA9E5 /* pminternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2800FDF40FF3225B005CA9E5 /* pminternal.h */; };
 		2800FE0E0FF32308005CA9E5 /* pmutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 2800FDF50FF3225B005CA9E5 /* pmutil.c */; };
@@ -1793,7 +1794,7 @@
 		174F73CD098D516D009CD6E0 /* AudacityOGG.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AudacityOGG.icns; sourceTree = "<group>"; };
 		174F73CE098D516D009CD6E0 /* AudacityProject.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AudacityProject.icns; sourceTree = "<group>"; };
 		174F73CF098D516D009CD6E0 /* AudacityWAV.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AudacityWAV.icns; sourceTree = "<group>"; };
-		174F73D7098D51AA009CD6E0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = Info.plist; path = mac/Info.plist; sourceTree = "<group>"; };
+		174F73D7098D51AA009CD6E0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = Info.plist; path = mac/Info.plist; sourceTree = "<group>"; };
 		176A1A5B098B7B8D00DC73B4 /* libnyquist.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnyquist.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		176EE9DB09A2EC1000188F3B /* caf.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = caf.c; sourceTree = "<group>"; };
 		176EE9DC09A2EC1000188F3B /* flac.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = flac.c; sourceTree = "<group>"; };
@@ -2117,6 +2118,8 @@
 		186CCEA30E523C8E00659159 /* Profiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profiler.cpp; sourceTree = "<group>"; };
 		18A2840D0F79BCAA0013A1BE /* Generator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Generator.h; sourceTree = "<group>"; };
 		18A2840E0F79BCAB0013A1BE /* Generator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Generator.cpp; sourceTree = "<group>"; };
+		18CE3C931145511100282C50 /* ODDecodeFFmpegTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODDecodeFFmpegTask.h; path = ondemand/ODDecodeFFmpegTask.h; sourceTree = "<group>"; };
+		18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODDecodeFFmpegTask.cpp; path = ondemand/ODDecodeFFmpegTask.cpp; sourceTree = "<group>"; };
 		18D8314C0ED0F56200FD870D /* Contrast.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Contrast.cpp; sourceTree = "<group>"; };
 		18D8314D0ED0F56200FD870D /* Contrast.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Contrast.h; sourceTree = "<group>"; };
 		2800FDF40FF3225B005CA9E5 /* pminternal.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; name = pminternal.h; path = portmidi/pm_common/pminternal.h; sourceTree = "<group>"; };
@@ -4493,6 +4496,8 @@
 				1841B5070E00AD6E00F386E9 /* ODTaskThread.h */,
 				1841B5080E00AD6E00F386E9 /* ODWaveTrackTaskQueue.cpp */,
 				1841B5090E00AD6E00F386E9 /* ODWaveTrackTaskQueue.h */,
+				18CE3C931145511100282C50 /* ODDecodeFFmpegTask.h */,
+				18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */,
 			);
 			name = ondemand;
 			sourceTree = "<group>";
@@ -7784,6 +7789,7 @@
 				EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */,
 				284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */,
 				284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */,
+				18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
