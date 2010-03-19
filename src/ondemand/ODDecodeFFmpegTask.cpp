@@ -58,7 +58,7 @@ public:
 
    ///This is a must implement abstract virtual in the superclass.  
    ///However it doesn't do anything because ImportFFMpeg does all that for us.
-   virtual bool ReadHeader(){}  
+   virtual bool ReadHeader() {return true;}
    
 private:
    int FillDataFromCache(samplePtr & data, sampleCount start, sampleCount& len, unsigned int channel);
@@ -145,8 +145,8 @@ ODFFmpegDecoder::ODFFmpegDecoder(const wxString & fileName, streamContext** scs,
 mNumStreams(numStreams),
 mScs(scs),
 mFormatContext(formatContext),
-mCurrentPos(0),
-mNumSamplesInCache(0)
+mNumSamplesInCache(0),
+mCurrentPos(0)
 {
    PickFFmpegLibs();   
    
@@ -211,8 +211,6 @@ void ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCoun
    data = NewSamples(len, format);
    samplePtr bufStart = data;
    streamContext* sc = NULL;
-   
-   sampleCount origLen=len;
    
    int nChannels;
    
@@ -304,7 +302,6 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleCount start, samp
    //that has a start time of less than our start sample, but try to get closer with binary search
    int searchStart = 0;
    int searchEnd = mDecodeCache.size()-1;
-   int mid;
    int guess;
    if(searchEnd>kODFFmpegSearchThreshold)
    {
@@ -326,7 +323,7 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleCount start, samp
    }
    
    //most recent caches are at the end of the vector, so start there.
-   for(int i=searchStart;i<mDecodeCache.size();i++)
+   for(int i=searchStart; i < (int)mDecodeCache.size(); i++)
    {     
       //check for a cache hit - be careful to include the first/last sample an nothing more.
       //we only accept cache hits that touch either end - no piecing out of the middle.
@@ -338,7 +335,6 @@ int ODFFmpegDecoder::FillDataFromCache(samplePtr & data, sampleCount start, samp
          int16_t* outBuf;
          outBuf = (int16_t*)data;
          //for debug
-         FFMpegDecodeCache* cache = mDecodeCache[i];
          //reject buffers that would split us into two pieces because we don't have
          //a method of dealing with this yet, and it won't happen very often.
          if(start<mDecodeCache[i]->start && start+len  > mDecodeCache[i]->start+mDecodeCache[i]->len)

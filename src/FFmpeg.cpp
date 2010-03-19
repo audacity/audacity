@@ -158,7 +158,7 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
 //will crash.  
 //TODO:find some workaround for the log.  perhaps use ODManager as a bridge. for now just print
    if(!wxThread::IsMain())
-      printf("%s: %s\n",cpt.c_str(),printstring.c_str());
+      printf("%s: %s\n",cpt.char_str(),printstring.char_str());
    else
 #endif
       wxLogMessage(wxT("%s: %s"),cpt.c_str(),printstring.c_str());

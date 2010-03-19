@@ -156,7 +156,7 @@ static const wxChar *exts[] =
 
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
-#include "ODDecodeFFMpegTask.h"
+#include "../ondemand/ODDecodeFFmpegTask.h"
 #endif
 
 extern FFmpegLibs *FFmpegLibsInst;
@@ -545,7 +545,6 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       }
    }
    // This is the heart of the importing process
-   streamContext *sc = NULL;
    // The result of Import() to be returend. It will be something other than zero if user canceled or some error appears.
    int res = eProgressSuccess;
 
@@ -596,7 +595,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       tasks.push_back(odTask);
    }
    //Now we add the tasks and let them run, or delete them if the user cancelled
-   for(int i=0;i<tasks.size();i++)
+   for(int i=0; i < (int)tasks.size(); i++)
    {
       if(res==eProgressSuccess)
          ODManager::Instance()->AddNewTask(tasks[i]);
@@ -606,6 +605,9 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       }
    }
 #else //ifndef EXPERIMENTAL_OD_FFMPEG   
+
+   streamContext *sc = NULL;
+
    // Read next frame.
    while ((sc = ReadNextFrame()) != NULL && (res == eProgressSuccess))
    {
