@@ -2364,6 +2364,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\ondemand\ODDecodeFFmpegTask.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\ondemand\ODDecodeFFmpegTask.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\ondemand\ODDecodeFlacTask.cpp"
 				>
 			</File>
