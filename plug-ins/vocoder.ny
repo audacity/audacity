@@ -4,10 +4,10 @@
 ;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
 ;name "Vocoder..."
 ;action "Processing Vocoder..."
-;info "by Edgar-RFT and David R. Sky\nReleased under terms of the GNU General Public License version 2\nNote: Vocoder works only on * stereo * tracks. Setting channel processing\nto '1 (right channel)' processes only the right channel of your stereo track."
+;info "by Edgar-RFT and David R. Sky\nReleased under terms of the GNU General Public License version 2\nVocoder only works on unsplit stereo tracks. For best results, the voice\nshould be in the left channel and white noise (from Generate > Noise)\nor some other carrier wave should be in the right channel." 
 
 ;control dst "Distance: [1 to 120, default = 20]" real "" 20 1 120
-;control mst "Channel processing" choice " 2 (both channels), 1 (right channel)" 0
+;control mst "Output choice:" choice "both channels, right only" 0
 ;control bands "Number of vocoder bands" int "" 40 10 240
 ;control track-vl "Amplitude of original audio [percent]" real "" 100 0 100
 ;control noise-vl "Amplitude of white noise [percent]" real "" 0 0 100
