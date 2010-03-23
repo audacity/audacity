@@ -952,7 +952,7 @@ int Envelope::Insert(double when, double value)
 {
 #if defined(__WXDEBUG__)
    // in debug builds, do a spot of argument checking
-   if(when > mTrackLen)
+   if(when > mTrackLen + 0.0000001)
    {
       wxString msg;
       msg = wxString::Format(wxT("when %.20f mTrackLen %.20f diff %.20f"), when, mTrackLen, when-mTrackLen);

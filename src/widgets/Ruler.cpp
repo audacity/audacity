@@ -1385,7 +1385,7 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
          gridPos = mMinorLabels[i].pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != mGridLineLength))
-               mDC->DrawLine(gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength);
+               mDC->DrawLine(gridPos+xOffset, yOffset, gridPos+xOffset, mGridLineLength+yOffset);
          }
          else {
             if((gridPos != 0) && (gridPos != mGridLineLength))

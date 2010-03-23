@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_EQUALIZATION__
 #define NUMBER_OF_BANDS 31
 #define NUM_PTS 180
+#define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
 
 #include <wx/button.h>
 #include <wx/panel.h>
@@ -349,10 +350,11 @@ private:
    wxBoxSizer *szrH;
    wxBoxSizer *szrI;
    wxBoxSizer *szrL;
+   wxFlexGridSizer *szr1;
+   wxBoxSizer *szr2;
    wxBoxSizer *szr3;
    wxBoxSizer *szr4;
-   wxBoxSizer *szr2;
-   wxFlexGridSizer *szr1;
+   wxBoxSizer *szr5;
    wxSize size;
    wxCheckBox *mGridOnOff;
 

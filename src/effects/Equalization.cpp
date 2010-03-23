@@ -824,7 +824,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent & evt)
    memDC.DrawRectangle(border);
 
    mEnvRect = border;
-   mEnvRect.Deflate(2, 2);
+   mEnvRect.Deflate(PANELBORDER, PANELBORDER);
 
    // Pure blue x-axis line
    memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxSOLID));
@@ -832,6 +832,13 @@ void EqualizationPanel::OnPaint(wxPaintEvent & evt)
    AColor::Line(memDC,
                 mEnvRect.GetLeft(), mEnvRect.y + center,
                 mEnvRect.GetRight(), mEnvRect.y + center);
+
+   // Draw the grid, if asked for.  Do it now so it's underneath the main plots.
+   if( mParent->drawGrid )
+   {
+      mParent->freqRuler->ruler.DrawGrid(memDC, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
+      mParent->dBRuler->ruler.DrawGrid(memDC, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
+   }
 
    // Med-blue envelope line
    memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 3, wxSOLID));
@@ -927,13 +934,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent & evt)
 
    memDC.SetPen(*wxBLACK_PEN);
    if( mParent->mFaderOrDraw[0]->GetValue() )
-      mEnvelope->DrawPoints(memDC, mEnvRect, 0.0, mEnvRect.width, false, dBMin, dBMax);
-
-   if( mParent->drawGrid )
-   {
-      mParent->freqRuler->ruler.DrawGrid(memDC, mEnvRect.height+2, true, true, 0, 1);
-      mParent->dBRuler->ruler.DrawGrid(memDC, mEnvRect.width+2, true, true, 1, 2);
-   }
+      mEnvelope->DrawPoints(memDC, mEnvRect, 0.0, mEnvRect.width-1, false, dBMin, dBMax);
 
    dc.Blit(0, 0, mWidth, mHeight,
            &memDC, 0, 0, wxCOPY, FALSE);
@@ -1260,14 +1261,15 @@ void EqualizationDialog::MakeEqualizationDialog()
    dBRuler->ruler.SetFormat(Ruler::LinearDBFormat);
    dBRuler->ruler.SetUnits(_("dB"));
    dBRuler->ruler.SetLabelEdges(true);
+   dBRuler->ruler.mbTicksAtExtremes = true;
    int w, h;
    dBRuler->ruler.GetMaxSize(&w, NULL);
    dBRuler->SetSize(wxSize(w, 150));  // height needed for wxGTK
 
    szr4 = new wxBoxSizer( wxVERTICAL );
-   szr4->AddSpacer(2); // vertical space for panel border and thickness of line
+   szr4->AddSpacer(PANELBORDER); // vertical space for panel border
    szr4->Add( dBRuler, 1, wxEXPAND|wxALIGN_LEFT|wxALL );
-   szr4->AddSpacer(1); // vertical space for thickness of line
+   szr4->AddSpacer(PANELBORDER); // vertical space for panel border
    szr1->Add( szr4, 0, wxEXPAND|wxALIGN_LEFT|wxALL );
 
    mPanel = new EqualizationPanel( mLoFreq, mHiFreq,
@@ -1275,7 +1277,7 @@ void EqualizationDialog::MakeEqualizationDialog()
                                    this,
                                    mFilterFuncR, mFilterFuncI, mWindowSize,
                                    ID_FILTERPANEL);
-   szr1->Add( mPanel, 1, wxEXPAND|wxALIGN_CENTRE|wxRIGHT, 4);
+   szr1->Add( mPanel, 1, wxEXPAND|wxALIGN_CENTRE);
    szr3 = new wxBoxSizer( wxVERTICAL );
    szr1->Add( szr3, 0, wxALIGN_CENTRE|wxRIGHT, 0);   //spacer for last EQ
 
@@ -1292,9 +1294,14 @@ void EqualizationDialog::MakeEqualizationDialog()
    freqRuler->ruler.SetUnits(_("Hz"));
    freqRuler->ruler.SetFlip(true);
    freqRuler->ruler.SetLabelEdges(true);
+   freqRuler->ruler.mbTicksAtExtremes = true;
    freqRuler->ruler.GetMaxSize(NULL, &h);
    freqRuler->SetMinSize(wxSize(-1, h));
-   szr1->Add( freqRuler, 0, wxEXPAND|wxALIGN_LEFT|wxRIGHT, 4 );
+   szr5 = new wxBoxSizer( wxHORIZONTAL );
+   szr5->AddSpacer(PANELBORDER); // horizontal space for panel border
+   szr5->Add( freqRuler, 1, wxEXPAND|wxALIGN_LEFT);
+   szr5->AddSpacer(PANELBORDER); // horizontal space for panel border
+   szr1->Add( szr5, 0, wxEXPAND|wxALIGN_LEFT|wxALL );
 
    szrV->Add( szr1, 1, wxEXPAND|wxALIGN_CENTER|wxALL, 0 );
 
