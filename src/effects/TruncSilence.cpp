@@ -456,7 +456,7 @@ bool EffectTruncSilence::Process()
 bool EffectTruncSilence::Process()
 {
    // Typical fraction of total time taken by detection (better to guess low)
-   const double detectFrac = .6;
+   const double detectFrac = .4;
 
    // Copy tracks
    this->CopyInputTracks(Track::All);
@@ -504,14 +504,48 @@ bool EffectTruncSilence::Process()
       sampleCount index = start;
       sampleCount silentFrames = 0;
       bool cancelled = false;
+
+      // Keep position in overall silences list for optimization
+      RegionList::iterator rit(silences.begin());
+
       while (index < end) {
-         // Show progress dialog, test for cancellation; we figure detection
-         // takes a little more than half the total time
+         // Show progress dialog, test for cancellation
          cancelled = TotalProgress(
                detectFrac * (whichTrack + index / (double)end) / 
                (double)GetNumWaveTracks());
          if (cancelled)
             break;
+
+         //
+         // Optimization: if not in a silent region skip ahead to the next one
+         //
+         double curTime = wt->LongSamplesToTime(index);
+         for ( ; rit != silences.end(); ++rit)
+         {
+            // Find the first silent region ending after current time
+            if ((*rit)->end >= curTime)
+               break;
+         }
+
+         if (rit == silences.end()) {
+            // No more regions -- no need to process the rest of the track
+            break;
+         }
+         else if ((*rit)->start > curTime) {
+            // End current silent region, skip ahead
+            if (silentFrames >= minSilenceFrames) {
+               Region *r = new Region;
+               r->start = wt->LongSamplesToTime(index - silentFrames);
+               r->end = wt->LongSamplesToTime(index);
+               trackSilences.push_back(r);
+            }
+            silentFrames = 0;
+
+            index = wt->TimeToLongSamples((*rit)->start);
+         }
+         //
+         // End of optimization
+         //
 
          // Limit size of current block if we've reached the end
          sampleCount count = blockLen;
