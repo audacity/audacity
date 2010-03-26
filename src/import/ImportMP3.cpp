@@ -405,7 +405,8 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
    struct private_data *data = (struct private_data *)_data;
 
    data->updateResult = data->progress->Update((wxULongLong_t)data->file->Tell(),
-                                             (wxULongLong_t)data->file->Length());
+                                             (wxULongLong_t)data->file->Length() != 0 ?
+                                             (wxULongLong_t)data->file->Length() : 1);
    if(data->updateResult != eProgressSuccess)
       return MAD_FLOW_STOP;
 
