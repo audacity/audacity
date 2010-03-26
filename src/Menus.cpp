@@ -4466,6 +4466,7 @@ void AudacityProject::OnImport()
 {
    wxArrayString selectedFiles = ShowOpenDialog(wxT(""));
    if (selectedFiles.GetCount() == 0) {
+      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       return;
    }
 
@@ -4483,7 +4484,8 @@ void AudacityProject::OnImport()
       
       Import(fileName);
    }
-	
+
+   gPrefs->Write(wxT("/LastOpenType"),wxT(""));
    HandleResize(); // Adjust scrollers for new track sizes.
    ODManager::Resume();
 }

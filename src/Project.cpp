@@ -2138,10 +2138,8 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 
    dlog.SetFilterIndex(index);
 
-   if (dlog.ShowModal() != wxID_OK) {
-      return selected;
-   }
-
+   int dialogResult = dlog.ShowModal();
+   
    // Convert the filter index to type and save
    index = dlog.GetFilterIndex();
    for (int i = 0; i < index; i++) {
@@ -2150,8 +2148,10 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
    gPrefs->Write(wxT("/DefaultOpenType"), mask.BeforeFirst(wxT('|')));
    gPrefs->Write(wxT("/LastOpenType"), mask.BeforeFirst(wxT('|')));
 
-   // Return the selected files
-   dlog.GetPaths(selected);
+   if (dialogResult != wxID_OK) {
+      // Return the selected files
+      dlog.GetPaths(selected);
+   }
    return selected;
 }
 
@@ -2164,6 +2164,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
     * now be added automatically for the Save Projects dialogues).*/
    wxArrayString selectedFiles = ShowOpenDialog(_("Audacity projects"), wxT("*.aup"));
    if (selectedFiles.GetCount() == 0) {
+      gPrefs->Write(wxT("/LastOpenType"),wxT(""));
       return;
    }
    
@@ -2217,6 +2218,8 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
       // and it's okay to open a new project inside this window.
       proj->OpenFile(fileName);
    }
+   
+   gPrefs->Write(wxT("/LastOpenType"),wxT(""));
    
    ODManager::Resume();
 
