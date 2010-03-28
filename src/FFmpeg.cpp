@@ -324,6 +324,13 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
       // Read up to a "probe_size" worth of data
       pd.buf_size = FFmpegLibsInst->get_buffer(pb, pd.buf, probe_size);
 
+      // AWD: with zero-length input files buf_size can come back negative;
+      // this causes problems so we might as well just fail
+      if (pd.buf_size < 0) {
+         err = AVERROR_INVALIDDATA;
+         goto fail;
+      }
+
       // Clear up to a "AVPROBE_PADDING_SIZE" worth of unused buffer
       memset(pd.buf + pd.buf_size, 0, AVPROBE_PADDING_SIZE);
 
