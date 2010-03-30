@@ -3682,12 +3682,7 @@ void AudacityProject::Clear()
 
    while (n) {
       if (n->GetSelected() || n->IsSynchroSelected()) {
-         // AWD: Preserve traditional label track behavior: only shift time in
-         // linked mode
-         if (n->GetKind() == Track::Label && !IsSticky())
-            ((LabelTrack *)n)->SplitDelete(mViewInfo.sel0, mViewInfo.sel1);
-         else
-            n->Clear(mViewInfo.sel0, mViewInfo.sel1);
+         n->Clear(mViewInfo.sel0, mViewInfo.sel1);
       }
       n = iter.Next();
    }
