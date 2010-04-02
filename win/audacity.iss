@@ -3,7 +3,7 @@
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-1.3.10
+OutputBaseFilename=audacity-win-1.3.12
 SetupIconFile=audacity.ico
 
 WizardImageFile=audacity_InnoWizardImage.bmp
@@ -12,18 +12,23 @@ WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
 SolidCompression=yes
 
 ; installer-related directives
-AppName=Audacity 1.3 Beta
-AppVerName=Audacity 1.3.10
+AppName=Audacity 1.3 Beta 
+AppVerName=Audacity 1.3.12
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
 AppUpdatesURL=http://audacity.sourceforge.net
 ChangesAssociations=yes
+
+; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta 
+; For a stable release:   DefaultDirName={pf}\Audacity
 DefaultDirName={pf}\Audacity 1.3 Beta
+
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
 DisableProgramGroupPage=yes
 UninstallDisplayIcon="{app}\audacity.exe"
+
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=..\LICENSE.txt
 InfoAfterFile=..\README.txt
@@ -83,9 +88,13 @@ Source: "..\win\Release\wxmsw28_html_vc_custom.dll"; DestDir: "{app}"; Flags: ig
 ; This is not an ideal solution, but should need the least tech support.
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Subject to having resources available to do this, we build the executable with
+; VS8, so need the VS8 runtime DLLs.  
+Source: "I:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\Microsoft.VC80.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
+Source: "I:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\msvcm80.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "I:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\msvcp80.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "I:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\msvcr80.dll"; DestDir: "{app}"; Flags: ignoreversion
+
 
 Source: "..\win\Release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\Release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
@@ -103,8 +112,12 @@ Type: files; Name: "{app}\audacity-1.2-help.htb"
 
 ; Get rid of previous versions of MSVC runtimes.
 Type: files; Name: "{app}\Microsoft.VC80.CRT.manifest"
+Type: files; Name: "{app}\msvcm80.dll"
 Type: files; Name: "{app}\msvcp80.dll"
 Type: files; Name: "{app}\msvcr80.dll"
+
+; Get rid of previous help folder.
+Type: filesandordirs; Name: "{app}\help"
 
 ; Don't want to do this because user may have stored their own.
 ;   Type: filesandordirs; Name: "{app}\vst"
