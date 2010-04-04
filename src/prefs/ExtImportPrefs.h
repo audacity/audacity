@@ -19,9 +19,10 @@
 
 #include "PrefsPanel.h"
 
-#include "../Import/Import.h"
-#include "../Import/ImportPlugin.h"
+#include "../import/Import.h"
+#include "../import/ImportPlugin.h"
 
+class wxListEvent;
 
 class ExtImportPrefs:public PrefsPanel
 {

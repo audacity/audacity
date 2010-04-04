@@ -39,9 +39,10 @@ and ImportLOF.cpp.
 #include <wx/msgdlg.h>
 #include <wx/string.h>
 #include <wx/intl.h>
-#include <wx/listimpl.cpp>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
+#include <wx/arrimpl.cpp>
+#include <wx/listimpl.cpp>
 #include "../ShuttleGui.h"
 #include "../Audacity.h"
 
@@ -62,6 +63,7 @@ and ImportLOF.cpp.
 WX_DEFINE_LIST(ImportPluginList);
 WX_DEFINE_LIST(UnusableImportPluginList);
 WX_DEFINE_LIST(FormatList);
+WX_DEFINE_OBJARRAY(ExtImportItems);
 
 Importer::Importer()
 {
@@ -165,10 +167,11 @@ void Importer::ReadImportItems()
       if (toker.HasMoreTokens())
         mime_types = toker.GetNextToken();
 
-      StringToList (extensions, wxString(wxT(":")), new_item->extensions);
+      wxString delims(wxT(":"));
+      StringToList (extensions, delims, new_item->extensions);
 
       if (mime_types != wxEmptyString)
-         StringToList (mime_types, wxString(wxT(":")), new_item->mime_types);
+         StringToList (mime_types, delims, new_item->mime_types);
       
       /* Filter token consists of used and unused filter lists */
       toker.SetString(filters, wxT("\\"), wxTOKEN_RET_EMPTY_ALL);
@@ -176,7 +179,7 @@ void Importer::ReadImportItems()
       if (toker.HasMoreTokens())
         unused_filters = toker.GetNextToken();
       
-      StringToList (used_filters, wxString(wxT(":")), new_item->filters);
+      StringToList (used_filters, delims, new_item->filters);
 
       if (unused_filters != wxEmptyString)
       {
@@ -184,7 +187,7 @@ void Importer::ReadImportItems()
           * unused filters start is remembered
           */
          new_item->divider = new_item->filters.Count();
-         StringToList (unused_filters, wxString(wxT(":")), new_item->filters);
+         StringToList (unused_filters, delims, new_item->filters);
       }
       else
          new_item->divider = -1;

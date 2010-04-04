@@ -13,20 +13,17 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
 
 #include <wx/defs.h>
+#include <wx/listctrl.h>
 
+#include "ExtImportPrefs.h"
+#include "../Audacity.h"
+#include "../AudacityApp.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "ExtImportPrefs.h"
-
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
-
 #define EXTIMPORT_MIME_SUPPORT 0
-
-WX_DEFINE_OBJARRAY(ExtImportItems);
 
 enum ExtImportPrefsControls
 {
@@ -81,7 +78,7 @@ void ExtImportPrefs::Populate()
    RuleTable->SetSelectionMode (wxGrid::wxGridSelectRows);
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
 
-   for (int i = 0; i < items->Count(); i++)
+   for (unsigned int i = 0; i < items->Count(); i++)
       AddItemToTable (i, &(*items)[i]);
    // ----------------------- End of main section --------------
 }
@@ -346,15 +343,16 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
    ExtImportItem *item = &(*items)[row];
    RuleTable->SaveEditControlValue();
    wxString val = RuleTable->GetCellValue (row, col);
+   wxString delims(wxT(":"));
    switch (col)
    {
    case 0:
       item->extensions.Clear();
-      wxGetApp().mImporter->StringToList (val, wxString(wxT(":")), item->extensions);
+      wxGetApp().mImporter->StringToList (val, delims, item->extensions);
       break;
    case 1:
       item->mime_types.Clear();
-      wxGetApp().mImporter->StringToList (val, wxString(wxT(":")), item->mime_types);
+      wxGetApp().mImporter->StringToList (val, delims, item->mime_types);
       break;
    }
    RuleTable->AutoSizeColumns ();
@@ -366,7 +364,7 @@ void ExtImportPrefs::AddItemToTable (int index, ExtImportItem *item)
    if (item->extensions.Count() > 0)
    {
       extensions.Append (item->extensions[0]);
-      for (int i = 1; i < item->extensions.Count(); i++)
+      for (unsigned int i = 1; i < item->extensions.Count(); i++)
       {
          extensions.Append (wxT(":"));
          extensions.Append (item->extensions[i]);
@@ -375,7 +373,7 @@ void ExtImportPrefs::AddItemToTable (int index, ExtImportItem *item)
    if (item->mime_types.Count() > 0)
    {
       mime_types.Append (item->mime_types[0]);
-      for (int i = 1; i < item->mime_types.Count(); i++)
+      for (unsigned int i = 1; i < item->mime_types.Count(); i++)
       {
          mime_types.Append (wxT(":"));
          mime_types.Append (item->mime_types[i]);

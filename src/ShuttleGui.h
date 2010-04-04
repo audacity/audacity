@@ -16,6 +16,7 @@
 
 #include "Audacity.h"
 
+#include <wx/grid.h>
 #include <wx/string.h>
 
 #include "WrappedType.h" 
