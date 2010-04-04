@@ -80,6 +80,7 @@ public:
 
    ~PCMImportPlugin() { }
 
+   wxString GetPluginStringID() { return wxT("libsndfile"); }
    wxString GetPluginFormatDescription();
    ImportFileHandle *Open(wxString Filename);
 };

@@ -1616,6 +1616,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\prefs\ExtImportPrefs.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\prefs\ExtImportPrefs.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\prefs\GUIPrefs.cpp"
 				>
 			</File>

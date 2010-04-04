@@ -112,6 +112,7 @@ public:
 
    ~LOFImportPlugin() { }
 
+   wxString GetPluginStringID() { return wxT("lof"); }
    wxString GetPluginFormatDescription();
    ImportFileHandle *Open(wxString Filename);
 };

@@ -222,6 +222,7 @@ OBJS = \
    prefs/ThemePrefs.o \
    prefs/TracksPrefs.o \
    prefs/WarningsPrefs.o \
+   prefs/ExtImportPrefs.o \
 	toolbars/ControlToolBar.o \
 	toolbars/DeviceToolBar.o \
 	toolbars/EditToolBar.o \

@@ -136,6 +136,7 @@ class FLACImportPlugin : public ImportPlugin
 
    ~FLACImportPlugin() { }
 
+   wxString GetPluginStringID() { return wxT("libflac"); }
    wxString GetPluginFormatDescription();
    ImportFileHandle *Open(wxString Filename);
 };

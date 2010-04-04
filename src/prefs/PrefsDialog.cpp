@@ -59,6 +59,7 @@
 #include "ThemePrefs.h"
 #include "TracksPrefs.h"
 #include "WarningsPrefs.h"
+#include "ExtImportPrefs.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "MidiIOPrefs.h"
@@ -112,6 +113,8 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
 //       w = new BatchPrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
          w = new KeyConfigPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
          w = new MousePrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
+
+         w = new ExtImportPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
       }
       S.EndHorizontalLay();
    }

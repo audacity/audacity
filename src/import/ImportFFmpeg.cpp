@@ -198,6 +198,7 @@ public:
 
    ~FFmpegImportPlugin() { }
 
+   wxString GetPluginStringID() { return wxT("libav"); }
    wxString GetPluginFormatDescription();
 
    ///! Probes the file and opens it if appropriate

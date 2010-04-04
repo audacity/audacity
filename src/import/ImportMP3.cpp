@@ -112,6 +112,7 @@ public:
 
    ~MP3ImportPlugin() { }
 
+   wxString GetPluginStringID() { return wxT("libmad"); }
    wxString GetPluginFormatDescription();
    ImportFileHandle *Open(wxString Filename);
 };

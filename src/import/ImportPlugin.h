@@ -72,6 +72,12 @@ class ImportPlugin
 {
 public:
 
+   // Get unique string ID of this plugin, usually it corresponds
+   // to the underlying library, i.e. "libsndfile", "libflac", "libav"
+   // These MUST NOT change across Audacity versions (but new IDs can
+   // be added).
+   virtual wxString GetPluginStringID() = 0;
+
    // Get a description of the file type this importer can import.
    // Examples: "Ogg Vorbis", "MP3", "Uncompressed PCM"
    virtual wxString GetPluginFormatDescription() = 0;

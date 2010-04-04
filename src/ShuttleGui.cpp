@@ -572,6 +572,20 @@ wxListCtrl * ShuttleGuiBase::AddListControl()
    return pListCtrl;
 }
 
+wxGrid * ShuttleGuiBase::AddGrid()
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxGrid);
+   wxGrid * pGrid;
+   SetProportions( 1 );
+   mpWind = pGrid = new wxGrid(mpParent, miId, wxDefaultPosition, 
+      wxDefaultSize, Style( wxWANTS_CHARS ));
+   pGrid->SetMinSize( wxSize( 120, 150 ));
+   UpdateSizers();
+   return pGrid;
+}
+
 wxListCtrl * ShuttleGuiBase::AddListControlReportMode()
 {
    UseUpId();

@@ -87,6 +87,7 @@ public:
 
    ~OggImportPlugin() { }
 
+   wxString GetPluginStringID() { return wxT("liboggvorbis"); }
    wxString GetPluginFormatDescription();
    ImportFileHandle *Open(wxString Filename);
 };
