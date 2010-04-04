@@ -35,7 +35,7 @@ enum ExtImportPrefsControls
 
 BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
    EVT_LIST_KEY_DOWN(EIPPluginList,ExtImportPrefs::OnPluginKeyDown)
-   //EVT_KEY_DOWN (ExtImportPrefs::OnRuleTableKeyDown) 
+   EVT_KEY_DOWN (ExtImportPrefs::OnRuleTableKeyDown) 
    EVT_GRID_EDITOR_HIDDEN (ExtImportPrefs::OnRuleTableEdit)
    EVT_GRID_SELECT_CELL (ExtImportPrefs::OnRuleTableSelect)
    EVT_GRID_RANGE_SELECT (ExtImportPrefs::OnRuleTableSelectRange)
@@ -99,7 +99,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 		PluginList = S.Id(EIPPluginList).AddListControl ();
 		PluginList->SetSingleStyle (wxLC_REPORT, true);
 		PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
-		PluginList->InsertColumn (0, _("Importer"));
+		PluginList->InsertColumn (0, _("Importer order"));
 	  }
 	  S.EndHorizontalLay();
 	  S.StartHorizontalLay (wxSHRINK, 0);
