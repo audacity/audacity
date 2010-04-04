@@ -35,7 +35,7 @@ enum ExtImportPrefsControls
 
 BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
    EVT_LIST_KEY_DOWN(EIPPluginList,ExtImportPrefs::OnPluginKeyDown)
-   EVT_KEY_DOWN (ExtImportPrefs::OnRuleTableKeyDown) 
+   //EVT_KEY_DOWN (ExtImportPrefs::OnRuleTableKeyDown) 
    EVT_GRID_EDITOR_HIDDEN (ExtImportPrefs::OnRuleTableEdit)
    EVT_GRID_SELECT_CELL (ExtImportPrefs::OnRuleTableSelect)
    EVT_GRID_RANGE_SELECT (ExtImportPrefs::OnRuleTableSelectRange)
@@ -396,7 +396,10 @@ void ExtImportPrefs::OnAddRule(wxCommandEvent& event)
    ExtImportItem *item = wxGetApp().mImporter->CreateDefaultImportItem();
    items->Add (item);
 
-   AddItemToTable (RuleTable->GetNumberRows (), item);   
+   AddItemToTable (RuleTable->GetNumberRows (), item);
+   RuleTable->SelectRow(RuleTable->GetNumberRows () - 1);
+   RuleTable->SetGridCursor (RuleTable->GetNumberRows () - 1, 0);
+   RuleTable->SetFocus();
 }
 
 void ExtImportPrefs::OnDelRule(wxCommandEvent& event)
@@ -404,9 +407,22 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& event)
    if (last_selected < 0)
       return;
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   
+   int msgres = wxMessageBox (_("Do you really want to delete selected rule?"),
+      _("Rule deletion confirmation"), wxYES_NO, RuleTable);
+   if (msgres == wxNO || msgres != wxYES)
+      return;
+   
    RuleTable->DeleteRows (last_selected);
    items->RemoveAt (last_selected);
    RuleTable->AutoSizeColumns ();
+   if (last_selected >= RuleTable->GetNumberRows ())
+      last_selected = RuleTable->GetNumberRows () - 1;
+   if (last_selected >= 0)
+   {
+      RuleTable->SelectRow(last_selected);
+      RuleTable->SetGridCursor (last_selected, 0);
+   }
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
