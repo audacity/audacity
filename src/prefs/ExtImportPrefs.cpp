@@ -76,6 +76,8 @@ void ExtImportPrefs::Populate()
 #endif
    RuleTable->SetRowLabelSize (0);
    RuleTable->SetSelectionMode (wxGrid::wxGridSelectRows);
+   RuleTable->AutoSizeColumns ();
+   
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
 
    for (unsigned int i = 0; i < items->Count(); i++)
