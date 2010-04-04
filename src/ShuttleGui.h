@@ -63,6 +63,7 @@ class wxMenuBar;
 class wxMenu;
 class wxSpinCtrl;
 class wxListBox;
+class wxGrid;
 class Shuttle;
 
 class WrappedType;
