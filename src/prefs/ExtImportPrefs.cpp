@@ -16,6 +16,7 @@
 
 #include <wx/defs.h>
 #include <wx/listctrl.h>
+#include <wx/msgdlg.h>
 
 #include "ExtImportPrefs.h"
 #include "../Audacity.h"
