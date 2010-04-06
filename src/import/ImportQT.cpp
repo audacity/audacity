@@ -108,6 +108,8 @@ class QTImportPlugin : public ImportPlugin
       mInitialized = false;
    }
 
+   wxString GetPluginStringID() { return wxT("quicktime"); }
+
    wxString GetPluginFormatDescription();
    ImportFileHandle *Open(wxString Filename);
 
