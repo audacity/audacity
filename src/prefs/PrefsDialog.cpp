@@ -99,6 +99,7 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
          w = new GUIPrefs(mCategories);         mCategories->AddPage(w, w->GetName(), false, 0);
          w = new TracksPrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
          w = new ImportExportPrefs(mCategories);mCategories->AddPage(w, w->GetName(), false, 0);
+         w = new ExtImportPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
          w = new ProjectsPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
          w = new LibraryPrefs(mCategories);     mCategories->AddPage(w, w->GetName(), false, 0);
          w = new SpectrumPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
@@ -113,8 +114,6 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
 //       w = new BatchPrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
          w = new KeyConfigPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
          w = new MousePrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
-
-         w = new ExtImportPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
       }
       S.EndHorizontalLay();
    }

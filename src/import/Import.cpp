@@ -339,16 +339,21 @@ int Importer::Import(wxString fName,
    wxString mime_type = wxT("*");
 
    // First, add user-selected filter
-   importPluginNode = mImportPluginList->GetFirst();
-   while(importPluginNode)
+   bool usersSelectionOverrides;
+   gPrefs->Read(wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), &usersSelectionOverrides, false);
+   if (usersSelectionOverrides)
    {
-      ImportPlugin *plugin = importPluginNode->GetData();
-      if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
+      importPluginNode = mImportPluginList->GetFirst();
+      while(importPluginNode)
       {
-         // This plugin corresponds to user-selected filter, try it first.
-         importPlugins.Insert(plugin);
+         ImportPlugin *plugin = importPluginNode->GetData();
+         if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
+         {
+            // This plugin corresponds to user-selected filter, try it first.
+            importPlugins.Insert(plugin);
+         }
+         importPluginNode = importPluginNode->GetNext();
       }
-      importPluginNode = importPluginNode->GetNext();
    }
    bool foundItem = false;
 
@@ -358,20 +363,24 @@ int Importer::Import(wxString fName,
       bool matches_ext = false, matches_mime = false;
       for (size_t j = 0; j < item->extensions.Count(); j++)
       {
-         if (wxMatchWild (item->extensions[j],fName, false))
+         if (wxMatchWild (item->extensions[j].Lower(),fName.Lower(), false))
          {
             matches_ext = true;
             break;
          }
       }
+      if (item->extensions.Count() == 0)
+         matches_ext = true;
       for (size_t j = 0; matches_ext && j < item->mime_types.Count(); j++)
       {
-         if (wxMatchWild (item->mime_types[j],mime_type, false))
+         if (wxMatchWild (item->mime_types[j].Lower(),mime_type.Lower(), false))
          {
             matches_mime = true;
             break;
          }
       }
+      if (item->mime_types.Count() == 0)
+         matches_mime = true;
       if (matches_ext && matches_mime)
       {
          for (size_t j = 0; j < item->filter_objects.Count() && (item->divider < 0 || (int) j < item->divider); j++)
