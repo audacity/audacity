@@ -435,9 +435,9 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
    
    for (size_t i = 0; i < vals.Count(); i++)
    {
+      
       wxString trimmed = vals[i];
-      trimmed.Trim();
-      trimmed.Trim(true);
+      trimmed.Trim().Trim(false);
       if (trimmed.Cmp(vals[i]) != 0)
       {
          if (!askedAboutSpaces)
@@ -448,6 +448,7 @@ the items. They are likely to break the pattern matching. Unless you know \
 what you are doing, it is recommended to trim spaces. Do you want \
 Audacity to trim spaces for you?"
             ),_("Spaces detected"), wxYES_NO);
+            askedAboutSpaces = true;
          }
          if (fixSpaces != wxYES)
          {
