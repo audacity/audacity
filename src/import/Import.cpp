@@ -413,7 +413,11 @@ int Importer::Import(wxString fName,
 
    if (!foundItem)
    {
+      bool prioritizeMp3 = false;
       wxLogMessage(wxT("Applying default rule"));
+      // Special treatment for mp3 files
+      if (wxMatchWild (wxT("*.mp3"),fName.Lower(), false))
+         prioritizeMp3 = true;
       // By default just add all plugins (except for MP3)
       importPluginNode = mImportPluginList->GetFirst();
       while(importPluginNode)
@@ -426,6 +430,11 @@ int Importer::Import(wxString fName,
             {
                wxLogMessage(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
                importPlugins.Append(plugin);
+            }
+            else if (prioritizeMp3)
+            {
+               wxLogMessage(wxT("Inserting %s at 0"),plugin->GetPluginStringID().c_str());
+               importPlugins.Insert((size_t) 0, plugin);
             }
          }
          importPluginNode = importPluginNode->GetNext();
