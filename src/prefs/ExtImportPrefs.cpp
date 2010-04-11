@@ -136,10 +136,10 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 	  S.EndHorizontalLay();
 	  S.StartHorizontalLay (wxSHRINK, 0);
 	  {
-         MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton (_("Move selected rule &up"));
-         MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton (_("Move selected rule &down"));
-         MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton (_("Move selected f&ilter up"));
-         MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton (_("Move selected &filter down"));
+         MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton (_("Move rule &up"));
+         MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton (_("Move rule &down"));
+         MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton (_("Move f&ilter up"));
+         MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton (_("Move &filter down"));
 	  }
 	  S.EndHorizontalLay();
 	  S.StartHorizontalLay (wxSHRINK, 0);
