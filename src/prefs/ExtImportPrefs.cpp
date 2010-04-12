@@ -55,7 +55,7 @@ BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
-:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL), PluginList(NULL), last_selected (-1), mCreateTable (false)
+:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL), PluginList(NULL), mCreateTable (false), last_selected (-1)
 {
    dragtext = new wxTextDataObject(wxT(""));
    dragtarget = new RuleTableDropTarget(dragtext);
