@@ -680,7 +680,7 @@ bool EffectTruncSilence::Process()
             // Non-wave tracks: just do a sync adjust
             double cutStart = (r->start + r->end - cutLen) / 2;
             double cutEnd = cutStart + cutLen;
-            t->SyncAdjust(cutStart, cutEnd);
+            t->SyncAdjust(cutEnd, cutStart);
          }
       }
       ++whichReg;

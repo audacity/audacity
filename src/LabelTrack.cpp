@@ -2152,7 +2152,7 @@ bool LabelTrack::Save(wxTextFile * out, bool overwrite)
 
 bool LabelTrack::Cut(double t0, double t1, Track **dest)
 {
-   if (!SplitCut(t0, t1, dest))
+   if (!Copy(t0, t1, dest))
       return false;
    if (!Clear(t0, t1))
       return false;
@@ -2162,27 +2162,12 @@ bool LabelTrack::Cut(double t0, double t1, Track **dest)
 
 bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
 {
-   *dest = new LabelTrack(GetDirManager());
-   int len = mLabels.Count();
-
-   for (int i = 0; i < len; i++) {
-      if (t0 <= mLabels[i]->t && mLabels[i]->t <= t1) {
-         mLabels[i]->t -= t0;
-         mLabels[i]->t1 -= t0;
-         ((LabelTrack *) (*dest))->mLabels.Add(mLabels[i]);
-         //Don't use DeleteLabel() since we've only moved it.
-         mLabels.RemoveAt(i);
-         // JC: ALWAYS unselect, since RemoveAt renumbers labels.
-         mSelIndex=-1;
-         len--;
-         i--;
-      }
-      else if (mLabels[i]->t > t1) {
-         mLabels[i]->t -= (t1 - t0);
-         mLabels[i]->t1 -= (t1 - t0);
-      }
-   }
-   ((LabelTrack *) (*dest))->mClipLen = (t1 - t0);
+   // SplitCut() == Copy() + SplitDelete()
+   
+   if (!Copy(t0, t1, dest))
+      return false;
+   if (!SplitDelete(t0, t1))
+      return false;
 
    return true;
 }
