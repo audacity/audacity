@@ -1530,7 +1530,7 @@ void AudacityProject::ModifyToolbarMenus()
    mCommandManager.Check(wxT("Duplex"), active);
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    mCommandManager.Check(wxT("SWPlaythrough"), active);
-   gPrefs->Read(wxT("/GUI/LinkTracks"), &active, true);
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &active, false);
    SetStickyFlag(active);
    mCommandManager.Check(wxT("StickyLabels"), active);
 }
@@ -5103,7 +5103,7 @@ int AudacityProject::DoAddLabel(double left, double right)
 void AudacityProject::OnStickyLabel()
 {
    bool linkTracks;
-   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, true);
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
    gPrefs->Write(wxT("/GUI/LinkTracks"), !linkTracks);
 
    // Toolbar, project "sticky flag" handled within

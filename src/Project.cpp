@@ -814,7 +814,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mLockPlayRegion = false;
    bool linkTracks;
-   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, true);
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
    SetStickyFlag(linkTracks);
 
    CreateMenusAndCommands();

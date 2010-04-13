@@ -307,7 +307,7 @@ void EditToolBar::EnableDisableButtons()
    
 #ifdef EXPERIMENTAL_LINKING
    bool linkTracks;
-   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, true);
+   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
 
    if (linkTracks)
       mButtons[ETBLinkID]->PushDown();
