@@ -1123,7 +1123,20 @@ bool LabelTrack::IsTextClipSupported()
    CaptureEvents capture;
 #endif
 
-   return wxTheClipboard->IsSupported(wxDF_TEXT);
+#if defined(__WXGTK__)
+   // AWD: work-around for bug 154: do not call wxClipboard::IsSupported()
+   // when handling a keyboard event
+   if (!wxGetApp().inKbdHandler) {
+#endif
+
+      return wxTheClipboard->IsSupported(wxDF_TEXT);
+
+#if defined (__WXGTK__)
+   }
+
+   // In keyboard handler; return false for now
+   return false;
+#endif
 }
 
 

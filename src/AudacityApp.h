@@ -172,6 +172,13 @@ class AudacityApp:public wxApp {
    Importer *mImporter;
 
    wxLogWindow *mLogger;
+
+#if defined(__WXGTK__)
+   /** \brief This flag is set true when in a keyboard event handler.
+    * Used to work around a hang issue with ibus (bug 154) */
+   bool inKbdHandler;
+#endif
+
  private:
    CommandHandler *mCmdHandler;
    FileHistory *mRecentFiles;

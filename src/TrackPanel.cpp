@@ -4256,6 +4256,12 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 /// Allow typing into LabelTracks.
 void TrackPanel::OnChar(wxKeyEvent & event)
 {
+#if defined (__WXGTK__)
+   // AWD: workaround for bug 154
+   bool restore = wxGetApp().inKbdHandler;
+   wxGetApp().inKbdHandler = true;
+#endif
+
    // Only deal with LabelTracks
    Track *t = GetFocusedTrack();
    if (!t || t->GetKind() != Track::Label) {
@@ -4277,6 +4283,11 @@ void TrackPanel::OnChar(wxKeyEvent & event)
       Refresh( false );
    else if (!event.GetSkipped()) 
       RefreshTrack(t);
+
+#if defined (__WXGTK__)
+   // AWD: workaround for bug 154
+   wxGetApp().inKbdHandler = restore;
+#endif
 }
 
 /// Should handle the case when the mouse capture is lost.

@@ -869,6 +869,11 @@ void AudacityApp::OnFatalException()
 // main frame
 bool AudacityApp::OnInit()
 {
+#if defined(__WXGTK__)
+   // Workaround for bug 154 -- initialize to false
+   inKbdHandler = false;
+#endif
+
 #if defined(__WXMAC__)
    // Disable window animation
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
