@@ -254,8 +254,7 @@ bool WaveTrack::IsEmpty(double t0, double t1)
    {
       WaveClip *clip = it->GetData();
 
-      if (clip->GetStartTime() < t1-(1.0/mRate) &&
-          clip->GetEndTime()-(1.0/mRate) > t0) {
+      if (!clip->BeforeClip(t1) && !clip->AfterClip(t0)) {
          //printf("Overlapping clip: %.6f...%.6f\n",
          //       clip->GetStartTime(),
          //       clip->GetEndTime());

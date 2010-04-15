@@ -43,11 +43,13 @@ bool Generator::Process()
          bool editClipCanMove;
          gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 
-         //if we can't move clips, check if generation is done on an empty place with enough
-         //duration before actually generate anything.
-         if (!editClipCanMove && track->IsEmpty(mT0, mT0+1.0/track->GetRate()) &&
-            !track->IsEmpty(mT0, mT0+mDuration-1.0/track->GetRate())) {
-            wxMessageBox(
+         //if we can't move clips, and we're generating into an empty space,
+         //make sure there's room.
+         if (!editClipCanMove &&
+	     track->IsEmpty(mT0, mT1+1.0/track->GetRate()) &&
+             !track->IsEmpty(mT0, mT0+mDuration-(mT1-mT0)-1.0/track->GetRate()))
+	 {
+             wxMessageBox(
                _("There is not enough room available to generate the audio"),
                _("Error"), wxICON_STOP);   
             Failure();
@@ -67,7 +69,7 @@ bool Generator::Process()
             else {
                // Transfer the data from the temporary track to the actual one
                tmp->Flush();
-               SetTimeWarper(new StepTimeWarper(mT1, mDuration-mT1));
+               SetTimeWarper(new StepTimeWarper(mT0+mDuration, mDuration-(mT1-mT0)));
                bGoodResult = track->ClearAndPaste(mT0, mT1, tmp, true,
                      false, GetTimeWarper());
                delete tmp;
