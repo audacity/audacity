@@ -254,18 +254,19 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
    bool bGoodResult = true;
 
    // all dtmf sequence durations in samples from seconds
-   numSamplesSequence = (sampleCount)(mDuration * track.GetRate() + 0.5);
-   numSamplesTone = (sampleCount)(dtmfTone * track.GetRate() + 0.5);
-   numSamplesSilence = (sampleCount)(dtmfSilence * track.GetRate() + 0.5);
+   numSamplesSequence = tmp->TimeToLongSamples(mDuration);  // needs to be exact number of samples selected
+   //make under-estimates if anything, and then redistribute the few remaining samples
+   numSamplesTone = (sampleCount)floor(dtmfTone * track.GetRate());
+   numSamplesSilence = (sampleCount)floor(dtmfSilence * track.GetRate());
 
    // recalculate the sum, and spread the difference - due to approximations.
    // Since diff should be in the order of "some" samples, a division (resulting in zero)
    // is not sufficient, so we add the additional remaining samples in each tone/silence block,
    // at least until available.
    int diff = numSamplesSequence - (dtmfNTones*numSamplesTone) - (dtmfNTones-1)*numSamplesSilence;
-   if (diff>dtmfNTones) {
-      // in this case, both these values would change, so it makes sense to recalculate diff
-      // otherwise just keep the value we already have
+   while (diff > 2*dtmfNTones - 1) {   // more than one per thingToBeGenerated
+      // in this case, both numSamplesTone and numSamplesSilence would change, so it makes sense
+      //  to recalculate diff here, otherwise just keep the value we already have
 
       // should always be the case that dtmfNTones>1, as if 0, we don't even start processing,
       // and with 1 there is no difference to spread (no silence slot)...
@@ -274,6 +275,8 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
       numSamplesSilence += (diff/(dtmfNTones-1));
       diff = numSamplesSequence - (dtmfNTones*numSamplesTone) - (dtmfNTones-1)*numSamplesSilence;
    }
+   wxASSERT(diff >= 0);  // should never be negative
+
    // this var will be used as extra samples distributor
    int extra=0;
 
@@ -303,8 +306,7 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
    //
    while ((i < numSamplesSequence) && bGoodResult) {
       if (isTone)
-         // generate tone
-      {
+      {  // generate tone
          // the statement takes care of extracting one sample from the diff bin and
          // adding it into the tone block until depletion
          extra=(diff-- > 0?1:0);
@@ -325,8 +327,7 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
          if(n>=dtmfNTones)break;
       }
       else
-         // generate silence
-      {
+      {  // generate silence
          // the statement takes care of extracting one sample from the diff bin and
          // adding it into the silence block until depletion
          extra=(diff-- > 0?1:0);
@@ -348,7 +349,7 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
       isTone=!isTone;
 
    } // finished the whole dtmf sequence
-
+   wxLogDebug(wxT("Extra %d diff: %d"), extra, diff);
    delete[] data;
    return bGoodResult;
 }
