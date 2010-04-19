@@ -78,15 +78,6 @@ void GUIPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
-// Code duplication warning: this default is repeated in Project.cpp
-// in the destructor.  -DMM
-#ifdef __WXMAC__
-   const bool bQuitOnCloseDefault = false;
-#else
-   const bool bQuitOnCloseDefault = true;
-#endif
-// End code duplication warning
-
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -131,9 +122,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("Closing last window &quits Audacity"),
-                    wxT("/GUI/QuitOnClose"),
-                    bQuitOnCloseDefault);
       S.TieCheckBox(_("&Beep on completion of longer activities"),
                     wxT("/GUI/BeepOnCompletion"),
                     false);

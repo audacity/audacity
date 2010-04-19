@@ -557,6 +557,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    //flag for cancellation of timer record.
    bool mTimerRecordCanceled;
 
+   // Are we currently closing as the result of a menu command?
+   bool mMenuClose;
+
  public:
     DECLARE_EVENT_TABLE()
 };

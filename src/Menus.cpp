@@ -2717,6 +2717,7 @@ void AudacityProject::OnOpen()
 
 void AudacityProject::OnClose()
 {
+   mMenuClose = true;
    Close();
 }
 

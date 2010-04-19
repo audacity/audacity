@@ -760,7 +760,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mWantSaveCompressed(false),
      mLastEffect(NULL),
      mLastEffectType(0),
-     mTimerRecordCanceled(false)
+     mTimerRecordCanceled(false),
+     mMenuClose(false)
 {
    int widths[] = {-1, 130};
    mStatusBar = CreateStatusBar(2);
@@ -1898,13 +1899,15 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    mLastFocusedWindow = NULL;
    mIsDeleting = true;
 
+   // Mac: we never quit as the result of a close.
+   // Other systems: we quit only when the close is the result of an external
+   // command (on Windows, those are taskbar closes, "X" box, Alt+F4, etc.)
    bool quitOnClose;
 #ifdef __WXMAC__
-   bool defaultQuitOnClose = false;
+   quitOnClose = false;
 #else
-   bool defaultQuitOnClose = true;
+   quitOnClose = !mMenuClose;
 #endif
-   gPrefs->Read(wxT("/GUI/QuitOnClose"), &quitOnClose, defaultQuitOnClose);
 
    // DanH: If we're definitely about to quit, delete the clipboard.
    //       Doing this after Deref'ing the DirManager causes problems.
@@ -2012,14 +2015,15 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       //      common menu.
       wxGetApp().mLogger->Show(false);
       
-      if (quitOnClose)
-         QuitAudacity();
-      else {
 #if !defined(__WXMAC__)
-      wxGetApp().SetWindowRectAlreadySaved(FALSE);
-      CreateNewAudacityProject();
-#endif
+      if (quitOnClose) {
+         QuitAudacity();
       }
+      else {
+         wxGetApp().SetWindowRectAlreadySaved(FALSE);
+         CreateNewAudacityProject();
+      }
+#endif
    }
 
    Destroy();
