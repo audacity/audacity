@@ -253,6 +253,7 @@ void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       s = S.Id(ID_PHASER_PHASESLIDER).AddSlider(wxT(""), 0, PHASE_MAX, PHASE_MIN);
       s->SetName(_("LFO start phase in degrees"));
+      s->SetLineSize(10);
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif
@@ -269,6 +270,7 @@ void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       s = S.Id(ID_PHASER_FEEDBACKSLIDER).AddSlider(wxT(""), 0, FB_MAX, FB_MIN);
       s->SetName(_("Feedback in percent"));
+      s->SetLineSize(10);
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif

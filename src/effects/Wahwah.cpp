@@ -231,6 +231,7 @@ void WahwahDialog::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       s = S.Id(ID_PHASESLIDER).AddSlider(wxT(""), 0, PHASE_MAX, PHASE_MIN);
       s->SetName(_("LFO start phase in degrees"));
+      s->SetLineSize(10);
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif
@@ -420,7 +421,7 @@ void WahwahDialog::OnResonanceText(wxCommandEvent & event)
 
       wxSlider *slider = GetResonanceSlider();
       if (slider)
-         slider->SetValue((int)(res * 10));
+         slider->SetValue((int)floor(res * 10 + .5));
    }
 }
 
@@ -463,7 +464,7 @@ void WahwahDialog::OnFreqText(wxCommandEvent & event)
       c->GetValue().ToDouble(&freqd);
 
       freq = freqd;
-      freql = TrapLong(((long) (freq * 10)), FREQ_MIN, FREQ_MAX);
+      freql = TrapLong(((long)floor(freq * 10 + .5)), FREQ_MIN, FREQ_MAX);
 
       wxSlider *slider = GetFreqSlider();
       if (slider)
