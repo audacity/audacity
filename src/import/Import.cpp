@@ -340,11 +340,14 @@ int Importer::Import(wxString fName,
 
    // First, add user-selected filter
    bool usersSelectionOverrides;
+   // False if override filter is not found
+   bool foundOverride = false;
    gPrefs->Read(wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), &usersSelectionOverrides, false);
    wxLogMessage(wxT("LastOpenType is %s"),type.c_str());
    wxLogMessage(wxT("OverrideExtendedImportByOpenFileDialogChoice is %i"),usersSelectionOverrides);
    if (usersSelectionOverrides)
    {
+      
       importPluginNode = mImportPluginList->GetFirst();
       while(importPluginNode)
       {
@@ -354,6 +357,7 @@ int Importer::Import(wxString fName,
             // This plugin corresponds to user-selected filter, try it first.
             wxLogMessage(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
             importPlugins.Insert(plugin);
+            foundOverride = true;
          }
          importPluginNode = importPluginNode->GetNext();
       }
@@ -411,9 +415,10 @@ int Importer::Import(wxString fName,
       }
    }
 
-   if (!foundItem)
+   if (!foundItem || (usersSelectionOverrides && !foundOverride))
    {
       bool prioritizeMp3 = false;
+      importPlugins.Clear();
       wxLogMessage(wxT("Applying default rule"));
       // Special treatment for mp3 files
       if (wxMatchWild (wxT("*.mp3"),fName.Lower(), false))
