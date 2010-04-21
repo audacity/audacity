@@ -11,11 +11,11 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
+#include <wx/dcmemory.h>
 #include <wx/dynarray.h>
+#include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/window.h>
-#include <wx/panel.h>
-#include <wx/dcmemory.h>
 
 //Stm:  The following included because of the sampleCount struct.
 #include "Sequence.h"  
@@ -80,6 +80,16 @@ class AUDACITY_DLL_API TrackPanelListener {
    virtual void TP_HandleResize() = 0;
 };
 
+// 
+// TrackInfo sliders: we keep a constant number of sliders, and attach them to
+// tracks as they come on screen (this helps deal with very large numbers of
+// tracks, esp. on MSW).
+//
+
+const unsigned int kInitialSliders = 100;
+// kInitialSliders-kSliderPageFlipshould be around the most tracks you could
+// ever fit vertically on the screen (but if more fit on that's OK too)
+const unsigned int kSliderPageFlip = 80;
 
 class TrackInfo
 {
@@ -88,6 +98,8 @@ public:
    ~TrackInfo();
 
    int GetTitleWidth() const;
+
+   void UpdateSliderOffset(Track *t);
 
 private:
    void MakeMoreSliders();
@@ -111,9 +123,19 @@ private:
    void GetPanRect(const wxRect r, wxRect &dest) const;
    void GetMinimizeRect(const wxRect r, wxRect &dest, bool minimized) const;
 
-public:
+   // These arrays are always kept the same size.
    LWSliderArray mGains;
    LWSliderArray mPans;
+
+   // index of track whose pan/gain sliders are at index 0 in the above arrays
+   unsigned int mSliderOffset;
+
+public:
+
+   // Slider access by track index
+   LWSlider * GainSlider(int trackIndex);
+   LWSlider * PanSlider(int trackIndex);
+
    wxWindow * pParent;
    wxFont mFont;
 

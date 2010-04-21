@@ -157,6 +157,7 @@ is time to refresh some aspect of the screen.
 #include "TrackPanel.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 //#define DEBUG_DRAW_TIMING 1
 
@@ -1276,6 +1277,9 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    // (See TrackPanel::Refresh())
    if( mRefreshBacking || ( box == GetRect() ) )
    {
+      // Update visible sliders
+      mTrackInfo.UpdateSliderOffset(mViewInfo->track);
+
       // Reset (should a mutex be used???)
       mRefreshBacking = false;
 
@@ -3622,9 +3626,9 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    LWSlider *slider;
 
    if (pan)
-      slider = mTrackInfo.mPans[mCapturedTrack->GetIndex()];
+      slider = mTrackInfo.PanSlider(mCapturedTrack->GetIndex());
    else
-      slider = mTrackInfo.mGains[mCapturedTrack->GetIndex()];
+      slider = mTrackInfo.GainSlider(mCapturedTrack->GetIndex());
 
    slider->OnMouseEvent(event);
 
@@ -5988,7 +5992,7 @@ void TrackPanel::OnTrackPan()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.mPans[t->GetIndex()];
+   LWSlider *slider = mTrackInfo.PanSlider(t->GetIndex());
    if (slider->ShowDialog()) {
       SetTrackPan(t, slider);
    }
@@ -6001,7 +6005,7 @@ void TrackPanel::OnTrackPanLeft()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.mPans[t->GetIndex()];
+   LWSlider *slider = mTrackInfo.PanSlider(t->GetIndex());
    slider->Decrease(1);
    SetTrackPan(t, slider);
 }
@@ -6013,7 +6017,7 @@ void TrackPanel::OnTrackPanRight()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.mPans[t->GetIndex()];
+   LWSlider *slider = mTrackInfo.PanSlider(t->GetIndex());
    slider->Increase(1);
    SetTrackPan(t, slider);
 }
@@ -6040,7 +6044,7 @@ void TrackPanel::OnTrackGain()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.mGains[t->GetIndex()];
+   LWSlider *slider = mTrackInfo.GainSlider(t->GetIndex());
    if (slider->ShowDialog()) {
       SetTrackGain(t, slider);
    }
@@ -6053,7 +6057,7 @@ void TrackPanel::OnTrackGainInc()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.mGains[t->GetIndex()];
+   LWSlider *slider = mTrackInfo.GainSlider(t->GetIndex());
    slider->Increase(1);
    SetTrackGain(t, slider);
 }
@@ -6065,7 +6069,7 @@ void TrackPanel::OnTrackGainDec()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.mGains[t->GetIndex()];
+   LWSlider *slider = mTrackInfo.GainSlider(t->GetIndex());
    slider->Decrease(1);
    SetTrackGain(t, slider);
 }
@@ -7139,13 +7143,14 @@ void TrackPanel::OnKillFocus(wxFocusEvent & event)
 
 TrackInfo::TrackInfo(wxWindow * pParentIn)
 {
-   //To prevent flicker, we create an initial set of 16 sliders
-   //which won't ever be shown.
+   
    pParent = pParentIn;
-   int i;
-   for (i = 0; i < 16; i++) {
+
+   // Populate sliders array
+   for (unsigned int i = 0; i < kInitialSliders; ++i) {
       MakeMoreSliders();
    }
+   mSliderOffset = 0;
 
    int fontSize = 10;
    mFont.Create(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
@@ -7500,10 +7505,12 @@ void TrackInfo::MakeMoreSliders()
    mPans.Add(slider);
 }
 
+// This covers the case where kInitialSliders - kSliderPageFlip is not big
+// enough
 void TrackInfo::EnsureSufficientSliders(int index)
 {
-   while (mGains.Count() < (unsigned int)index+1 ||
-          mPans.Count() < (unsigned int)index+1)
+   while (mGains.Count() < (unsigned int)index - mSliderOffset + 1 ||
+          mPans.Count() < (unsigned int)index - mSliderOffset + 1)
       MakeMoreSliders();
 }
 
@@ -7519,18 +7526,113 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect r)
    GetPanRect(r, panRect);
 
    if (gainRect.y + gainRect.height < r.y + r.height - 19) {
-      mGains[index]->Move(wxPoint(gainRect.x, gainRect.y));
-      mGains[index]->Set(t->GetGain());
-      mGains[index]->OnPaint(*dc, t->GetSelected());
+      GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
+      GainSlider(index)->Set(t->GetGain());
+      GainSlider(index)->OnPaint(*dc, t->GetSelected());
    }
 
    if (panRect.y + panRect.height < r.y + r.height - 19) {
-      mPans[index]->Move(wxPoint(panRect.x, panRect.y));
-      mPans[index]->Set(t->GetPan());
-      mPans[index]->OnPaint(*dc, t->GetSelected());
+      PanSlider(index)->Move(wxPoint(panRect.x, panRect.y));
+      PanSlider(index)->Set(t->GetPan());
+      PanSlider(index)->OnPaint(*dc, t->GetSelected());
    }
 }
 
+void TrackInfo::UpdateSliderOffset(Track *t)
+{
+   if (!t)
+      return;
+
+   // Ensure that the specified track is: (a) at least the second track in the
+   // arrays (if it's the second track in a stereo pair the first must be in);
+   // (b) no farther in than kSliderPageFlip
+   int newSliderOffset = (int)mSliderOffset;
+   if ((unsigned int)t->GetIndex() < mSliderOffset + 1 ||
+         (unsigned int)t->GetIndex() > mSliderOffset + kSliderPageFlip) {
+      newSliderOffset = t->GetIndex() - (int)kSliderPageFlip / 2;
+   }
+   // Slider offset can't be negative
+   if (newSliderOffset < 0) newSliderOffset = 0;
+
+   // Rotate the array values if necessary
+   int delta = newSliderOffset - (int)mSliderOffset;
+
+   // If the rotation is greater than the array size, none of the old values
+   // are preserved, so don't bother rotating.
+   if (abs(delta) >= (int)mGains.Count())
+      delta = 0;
+
+   if (delta > 0) {
+      // Circularly shift values down in the arrays (temp arrays needed to
+      // avoid reading written-over values)
+      LWSliderArray tempGains;
+      LWSliderArray tempPans;
+      tempGains.SetCount(delta);
+      tempPans.SetCount(delta);
+      
+      for (int i = 0; i < (int)mGains.Count(); ++i) {
+         int src = (i + delta) % (int)mGains.Count();
+         if (src < 0) src += (int)mGains.Count();
+
+         if (i < delta) {
+            // Save a copy of the first `delta` values
+            tempGains[i] = mGains[i];
+            tempPans[i] = mPans[i];
+         }
+         if (src >= delta) {
+            // These values have not been overwritten
+            mGains[i] = mGains[src];
+            mPans[i] = mPans[src];
+         }
+         else {
+            // These ones have
+            mGains[i] = tempGains[src];
+            mPans[i] = tempPans[src];
+         }
+      }
+   }
+   else if (delta < 0) {
+      // Circularly shift values up in the arrays
+      LWSliderArray tempGains;
+      LWSliderArray tempPans;
+      tempGains.SetCount(mGains.Count());
+      tempPans.SetCount(mPans.Count());
+
+      // Iterating backwards to do this
+      for (int i = mGains.Count() - 1; i >= 0; --i) {
+         int src = (i + delta) % (int)mGains.Count();
+         if (src < 0) src += (int)mGains.Count();
+
+         if (i >= (int)mGains.Count() + delta) {
+            // Save a copy of the last `delta` values
+            tempGains[i] = mGains[i];
+            tempPans[i] = mPans[i];
+         }
+         if (src < (int)mGains.Count() + delta) {
+            // These values have not been overwritten
+            mGains[i] = mGains[src];
+            mPans[i] = mPans[src];
+         }
+         else {
+            // These ones have
+            mGains[i] = tempGains[src];
+            mPans[i] = tempPans[src];
+         }
+      }
+   }
+
+   mSliderOffset = newSliderOffset;
+}
+
+LWSlider * TrackInfo::GainSlider(int trackIndex)
+{
+   return mGains[trackIndex - mSliderOffset];
+}
+
+LWSlider * TrackInfo::PanSlider(int trackIndex)
+{
+   return mPans[trackIndex - mSliderOffset];
+}
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
 // version control system. Please do not modify past this point.
