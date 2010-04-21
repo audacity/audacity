@@ -418,7 +418,8 @@ int Importer::Import(wxString fName,
    if (!foundItem || (usersSelectionOverrides && !foundOverride))
    {
       bool prioritizeMp3 = false;
-      importPlugins.Clear();
+      if (usersSelectionOverrides && !foundOverride)
+         importPlugins.Clear();
       wxLogMessage(wxT("Applying default rule"));
       // Special treatment for mp3 files
       if (wxMatchWild (wxT("*.mp3"),fName.Lower(), false))
@@ -438,8 +439,16 @@ int Importer::Import(wxString fName,
             }
             else if (prioritizeMp3)
             {
-               wxLogMessage(wxT("Inserting %s at 0"),plugin->GetPluginStringID().c_str());
-               importPlugins.Insert((size_t) 0, plugin);
+               if (usersSelectionOverrides)
+               {
+                  wxLogMessage(wxT("Inserting %s at 1"),plugin->GetPluginStringID().c_str());
+                  importPlugins.Insert((size_t) 1, plugin);
+               }
+               else
+               {
+                  wxLogMessage(wxT("Inserting %s at 0"),plugin->GetPluginStringID().c_str());
+                  importPlugins.Insert((size_t) 0, plugin);
+               }
             }
          }
          importPluginNode = importPluginNode->GetNext();
