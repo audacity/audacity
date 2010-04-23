@@ -26,11 +26,11 @@
 class wxListEvent;
 class ExtImportPrefs;
 
-class RuleTableDropTarget: public wxDropTarget
+class ExtImportPrefsDropTarget: public wxDropTarget
 {
 public:
-   RuleTableDropTarget (wxDataObject *dataObject = 0);
-   ~RuleTableDropTarget ();
+   ExtImportPrefsDropTarget (wxDataObject *dataObject = 0);
+   ~ExtImportPrefsDropTarget ();
    wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
    bool OnDrop(wxCoord x, wxCoord y);
    wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def);
@@ -50,6 +50,7 @@ class ExtImportPrefs:public PrefsPanel
    virtual bool Apply();
 
    void OnPluginKeyDown(wxListEvent& event);
+   void OnPluginBeginDrag(wxListEvent& event);
    void OnRuleTableKeyDown(wxKeyEvent& event);
    void OnRuleTableSelect(wxGridEvent& event);
    void OnRuleTableEdit(wxGridEvent& event);
@@ -65,11 +66,16 @@ class ExtImportPrefs:public PrefsPanel
    void OnNavKey (wxNavigationKeyEvent& event);
    
    void SwapRows (int row1, int row2);
+   void SwapPluginRows (int row1, int row2);
    
-   Grid *RuleTable;
+   Grid *GetRuleTable() { return RuleTable; }
+   wxListCtrl *GetPluginList() { return PluginList; }
+   
+   wxWindow *GetDragFocus() { return mDragFocus; }
    
  private:
  
+   Grid *RuleTable;
    wxListCtrl *PluginList;
    
    wxButton *AddRule;
@@ -79,13 +85,18 @@ class ExtImportPrefs:public PrefsPanel
    wxButton *MoveFilterUp;
    wxButton *MoveFilterDown;
    
-   wxTextDataObject *dragtext;
-   RuleTableDropTarget *dragtarget;
+   wxTextDataObject *dragtext1;
+   wxTextDataObject *dragtext2;
+   ExtImportPrefsDropTarget *dragtarget1;
+   ExtImportPrefsDropTarget *dragtarget2;
 
    bool mCreateTable;
+   wxWindow *mDragFocus;
+   bool mFakeKeyEvent;
    
    int last_selected;
    
+   void FakeOnPluginKeyDown (int keycode);
    void DoOnRuleTableKeyDown (int keycode);
    bool DoOnPluginKeyDown (int code);
    void DoOnRuleTableSelect (int toprow);

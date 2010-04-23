@@ -41,6 +41,7 @@ enum ExtImportPrefsControls
 
 BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
    EVT_LIST_KEY_DOWN(EIPPluginList,ExtImportPrefs::OnPluginKeyDown)
+   EVT_LIST_BEGIN_DRAG(EIPPluginList,ExtImportPrefs::OnPluginBeginDrag)
    EVT_KEY_DOWN (ExtImportPrefs::OnRuleTableKeyDown) 
    EVT_GRID_CELL_LEFT_CLICK (ExtImportPrefs::OnRuleTableCellClick)
    EVT_GRID_EDITOR_HIDDEN (ExtImportPrefs::OnRuleTableEdit)
@@ -56,11 +57,15 @@ END_EVENT_TABLE()
 
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
 :   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
-    PluginList(NULL), mCreateTable (false), last_selected (-1)
+    PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
+    last_selected (-1), mFakeKeyEvent (false)
 {
-   dragtext = new wxTextDataObject(wxT(""));
-   dragtarget = new RuleTableDropTarget(dragtext);
-   dragtarget->SetPrefs (this);
+   dragtext1 = new wxTextDataObject(wxT(""));
+   dragtext2 = new wxTextDataObject(wxT(""));
+   dragtarget1 = new ExtImportPrefsDropTarget(dragtext1);
+   dragtarget2 = new ExtImportPrefsDropTarget(dragtext2);
+   dragtarget1->SetPrefs (this);
+   dragtarget2->SetPrefs (this);
    Populate();
 }
 
@@ -114,17 +119,14 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             RuleTable->SetSelectionMode (wxGrid::wxGridSelectRows);
             RuleTable->AutoSizeColumns ();
 
-            RuleTable->SetDropTarget (dragtarget);
+            RuleTable->SetDropTarget (dragtarget1);
             RuleTable->EnableDragCell (true);
             fillRuleTable = true;
          }
          S.AddWindow(RuleTable, wxEXPAND | wxALL);
        
          PluginList = S.Id(EIPPluginList).AddListControl ();
-         PluginList->SetSingleStyle (wxLC_REPORT, true);
-         PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
-         PluginList->InsertColumn (0, _("Importer order"));
-
+           
          if (fillRuleTable)
          {
             ExtImportItems *items = wxGetApp().mImporter->GetImportItems();         
@@ -135,6 +137,11 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
                RuleTable->SelectRow(0);
                RuleTable->SetGridCursor(0,0);
             }
+
+            PluginList->SetSingleStyle (wxLC_REPORT, true);
+            PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
+            PluginList->InsertColumn (0, _("Importer order"));
+            PluginList->SetDropTarget (dragtarget2);
          }         
       }
       S.EndHorizontalLay();
@@ -175,15 +182,55 @@ void ExtImportPrefs::OnPluginKeyDown(wxListEvent& event)
    for (int i = 0; i < 1; i++)
    {
 #ifdef __WXMAC__
-      if (!wxGetKeyState(WXK_COMMAND))
+      if (!mFakeKeyEvent && !wxGetKeyState(WXK_COMMAND))
          break;
 #else
-      if (!wxGetKeyState(WXK_CONTROL))
+      if (!mFakeKeyEvent && !wxGetKeyState(WXK_CONTROL))
          break;
 #endif
          
       if (DoOnPluginKeyDown (event.GetKeyCode()))
          event.Skip();
+   }
+}
+
+void ExtImportPrefs::SwapPluginRows (int row1, int row2)
+{
+   wxString t, t2;
+   long d, d2;
+   ImportPlugin *ip1, *ip2;
+
+   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItem *item = &(*items)[last_selected];
+
+   t = PluginList->GetItemText (row1);
+   d = PluginList->GetItemData (row1);
+   d2 = PluginList->GetItemData (row2);
+   PluginList->SetItemText (row1, PluginList->GetItemText (row2));
+   PluginList->SetItemText (row2, t);
+   if (d == -1 || d2 == -1)
+   {
+      PluginList->SetItemData (row1, PluginList->GetItemData (row2));
+      PluginList->SetItemData (row2, d);
+      if (d == -1)
+      {
+         item->divider = row2;
+      }
+      else if (d2 == -1)
+      {
+         item->divider = row1;
+      }
+   }
+   else
+   {
+      ip1 = item->filter_objects[d];
+      ip2 = item->filter_objects[d2];
+      item->filter_objects[d] = ip2;
+      item->filter_objects[d2] = ip1;
+      t = item->filters[d];
+      t2 = item->filters[d2];
+      item->filters[d] = t2;
+      item->filters[d2] = t;
    }
 }
 
@@ -193,6 +240,7 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
          return false;
 
    long itemIndex = -1;
+   long itemIndex2;
    itemIndex = PluginList->GetNextItem(itemIndex,
          wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    if (itemIndex == -1)
@@ -209,76 +257,19 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
    else if (code == WXK_DOWN && itemIndex == PluginList->GetItemCount() - 1)
       return false;
    
-   wxString t, t2;
-   long d, d2;
-   ImportPlugin *ip1, *ip2;
    if (code == WXK_UP)
    {
-      t = PluginList->GetItemText (itemIndex);
-      d = PluginList->GetItemData (itemIndex);
-      d2 = PluginList->GetItemData (itemIndex - 1);
-      PluginList->SetItemText (itemIndex, PluginList->GetItemText (
-            itemIndex - 1));
-      PluginList->SetItemText (itemIndex - 1, t);
-      if (d == -1 || d2 == -1)
-      {
-         PluginList->SetItemData (itemIndex, PluginList->GetItemData (
-               itemIndex - 1));
-         PluginList->SetItemData (itemIndex - 1, d);
-         if (d == -1)
-         {
-            item->divider--;
-         }
-         else if (d2 == -1)
-         {
-            item->divider++;
-         }
-      }
-      else
-      {
-         ip1 = item->filter_objects[d];
-         ip2 = item->filter_objects[d2];
-         item->filter_objects[d] = ip2;
-         item->filter_objects[d2] = ip1;
-         t = item->filters[d];
-         t2 = item->filters[d2];
-         item->filters[d] = t2;
-         item->filters[d2] = t;
-      }
+      itemIndex2 = itemIndex - 1;
    }
    else if (code == WXK_DOWN)
    {
-      t = PluginList->GetItemText (itemIndex);
-      d = PluginList->GetItemData (itemIndex);
-      d2 = PluginList->GetItemData (itemIndex + 1);
-      PluginList->SetItemText (itemIndex, PluginList->GetItemText (
-            itemIndex + 1));
-      PluginList->SetItemText (itemIndex + 1, t);
-      if (d == -1 || d2 == -1)
-      {
-         PluginList->SetItemData (itemIndex, PluginList->GetItemData (
-               itemIndex + 1));
-         PluginList->SetItemData (itemIndex + 1, d);
-         if (d == -1)
-         {
-            item->divider++;
-         }
-         else if (d2 == -1)
-         {
-            item->divider--;
-         }
-      }
-      else
-      {
-         ip1 = item->filter_objects[d];
-         ip2 = item->filter_objects[d2];
-         item->filter_objects[d] = ip2;
-         item->filter_objects[d2] = ip1;
-         t = item->filters[d];
-         t2 = item->filters[d2];
-         item->filters[d] = t2;
-         item->filters[d2] = t;
-      }
+      itemIndex2 = itemIndex + 1;
+   }
+   SwapPluginRows (itemIndex, itemIndex2);
+   if (mFakeKeyEvent)
+   {
+      PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
+      PluginList->SetItemState (itemIndex2, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
    }
    int fcount = item->filter_objects.Count();
    if (item->divider >= fcount)
@@ -287,6 +278,7 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
    }
    if (item->divider < -1)
       item->divider = item->filter_objects.Count() - 1;
+   
    return true;
 }
       
@@ -314,6 +306,26 @@ void ExtImportPrefs::SwapRows (int row1, int row2)
       ts = RuleTable->GetCellValue (row2, i);
       RuleTable->SetCellValue (row2, i, RuleTable->GetCellValue (row1, i));
       RuleTable->SetCellValue (row1, i, ts);
+   }
+}
+
+void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& event)
+{
+   wxDropSource dragSource(this);
+   dragtext2->SetText(wxT(""));
+   dragSource.SetData(*dragtext2);
+   mDragFocus = PluginList;
+   wxDragResult result = dragSource.DoDragDrop(TRUE);
+   mDragFocus = NULL;
+   switch (result)
+   {
+      case wxDragCopy: 
+      case wxDragMove:
+      case wxDragNone:
+         return;
+         break;
+      default:
+         break;
    }
 }
 
@@ -568,102 +580,178 @@ void ExtImportPrefs::OnRuleMoveDown(wxCommandEvent& event)
    DoOnRuleTableKeyDown (WXK_DOWN);
 }
 
+void ExtImportPrefs::FakeOnPluginKeyDown (int keycode)
+{
+   wxListEvent fakeevent(wxEVT_COMMAND_LIST_KEY_DOWN, EIPPluginList);
+   fakeevent.SetEventObject(this);
+   fakeevent.m_code = keycode;
+   mFakeKeyEvent = true;
+   GetEventHandler()->ProcessEvent (fakeevent);
+   mFakeKeyEvent = false;
+}
+
 void ExtImportPrefs::OnFilterMoveUp(wxCommandEvent& event)
 {
-   DoOnPluginKeyDown (WXK_UP);
+   FakeOnPluginKeyDown (WXK_UP);
 }
 
 void ExtImportPrefs::OnFilterMoveDown(wxCommandEvent& event)
 {
-   DoOnPluginKeyDown (WXK_DOWN);
+   FakeOnPluginKeyDown (WXK_DOWN);
 }
 
 
 void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
 {
    int row = event.GetRow();
-   if (RuleTable->GetGridCursorRow () == row)
+   RuleTable->SelectRow (row, false);
+   RuleTable->SetGridCursor (row, 0);
+   
+   wxDropSource dragSource(this);
+   dragtext1->SetText(wxT(""));
+   dragSource.SetData(*dragtext1);
+   mDragFocus = RuleTable;
+   wxDragResult result = dragSource.DoDragDrop(TRUE);
+   mDragFocus = NULL;
+   switch (result)
    {
-      wxDropSource dragSource(this);
-      dragtext->SetText(wxT(""));
-      dragSource.SetData(*dragtext);
-      wxDragResult result = dragSource.DoDragDrop(TRUE);
-      switch (result)
-      {
-         case wxDragCopy: /* copy the data */
-         case wxDragMove:
-         case wxDragNone:
-            return;
-            break;
-         default:         /* do nothing */ break;
-      }
+      case wxDragCopy: /* copy the data */
+      case wxDragMove:
+      case wxDragNone:
+         return;
+         break;
+      default:         /* do nothing */ break;
    }
+   
    event.Skip();
 }
 
-RuleTableDropTarget::RuleTableDropTarget (wxDataObject *dataObject)
+ExtImportPrefsDropTarget::ExtImportPrefsDropTarget (wxDataObject *dataObject)
 {
    SetDataObject (dataObject);
    mPrefs = NULL;
 }
 
-RuleTableDropTarget::~RuleTableDropTarget ()
+ExtImportPrefsDropTarget::~ExtImportPrefsDropTarget ()
 {
 }
 
-void RuleTableDropTarget::SetPrefs (ExtImportPrefs *prefs)
+void ExtImportPrefsDropTarget::SetPrefs (ExtImportPrefs *prefs)
 {
    mPrefs = prefs;
 }
 
-wxDragResult RuleTableDropTarget::OnData(wxCoord x, wxCoord y,
+wxDragResult ExtImportPrefsDropTarget::OnData(wxCoord x, wxCoord y,
       wxDragResult def)
 {
    return def;
 }
 
-bool RuleTableDropTarget::OnDrop(wxCoord x, wxCoord y)
+bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
 {
    if (mPrefs == NULL)
       return false;
-   int row = mPrefs->RuleTable->YToRow (y);
-   if (row == wxNOT_FOUND)
-      return false;
+   wxListCtrl *PluginList = mPrefs->GetPluginList();
+   Grid *RuleTable = mPrefs->GetRuleTable();
+   if (mPrefs->GetDragFocus() == RuleTable)
+   {
+      if (RuleTable->YToRow (y -
+            RuleTable->GetColLabelSize ()) == wxNOT_FOUND)
+         return false;
+   }
+   else if (mPrefs->GetDragFocus() == PluginList)
+   {
+      long item = PluginList->FindItem (-1, wxPoint (x, y), 0);
+      if (item >= 0)
+      {
+         wxRect r;
+         PluginList->GetItemRect (item, r);
+         if (!r.Contains(x, y))
+            return false;
+      }
+   }
    
    return true;
 }
 
-wxDragResult RuleTableDropTarget::OnEnter(wxCoord x, wxCoord y,
+wxDragResult ExtImportPrefsDropTarget::OnEnter(wxCoord x, wxCoord y,
       wxDragResult def)
 {
    return OnDragOver(x, y, def);
 }
-wxDragResult RuleTableDropTarget::OnDragOver(wxCoord x, wxCoord y,
+
+/* wxListCtrl::FindItem() in wxPoint()-taking mode works only for lists in
+ * Small/Large-icon mode
+ */
+long wxCustomFindItem(wxListCtrl *list, int x, int y)
+{
+   long count = list->GetItemCount();
+   wxRect r;
+   for (long i = 0; i < count; i++)
+   {
+      if (list->GetItemRect (i, r))
+      {
+         if (r.Contains (x, y))
+            return i;
+      }
+   }
+   return -1;
+}
+
+wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
       wxDragResult def)
 {
    if (mPrefs == NULL)
       return wxDragNone;
-   int row = mPrefs->RuleTable->YToRow (y -
-         mPrefs->RuleTable->GetColLabelSize ());
-   if (row == wxNOT_FOUND)
-      return wxDragNone;
-   
-   int cRow = mPrefs->RuleTable->GetGridCursorRow ();
-   wxRect cRect = mPrefs->RuleTable->CellToRect(cRow, 0);
-   if (row != cRow)
+   wxListCtrl *PluginList = mPrefs->GetPluginList();
+   Grid *RuleTable = mPrefs->GetRuleTable();
+   if (mPrefs->GetDragFocus() == RuleTable)
    {
-      mPrefs->SwapRows (cRow, row);
-      mPrefs->RuleTable->SetGridCursor (row, 0);
-      mPrefs->RuleTable->SelectRow (row);
+      int row;
+      row = RuleTable->YToRow (y -
+         RuleTable->GetColLabelSize ());
+      if (row == wxNOT_FOUND)
+         return wxDragNone;
+  
+   
+      int cRow = RuleTable->GetGridCursorRow ();
+      if (row != cRow)
+      {
+         mPrefs->SwapRows (cRow, row);
+         RuleTable->SetGridCursor (row, 0);
+         RuleTable->SelectRow (row);
+      }
+   }
+   else if (mPrefs->GetDragFocus() == PluginList)
+   {
+      wxRect r;
+      long item = wxCustomFindItem (PluginList, x, y);
+      
+      if (item < 0)
+         return wxDragNone;
+      
+      long selected = -1;
+      selected = PluginList->GetNextItem(selected,
+            wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      if (selected == -1)
+            return wxDragNone;
+      
+      if (item != selected)
+      {
+         mPrefs->SwapPluginRows(selected, item);
+         PluginList->SetItemState (selected, 0, wxLIST_STATE_SELECTED);
+         PluginList->SetItemState (item, wxLIST_STATE_SELECTED,
+               wxLIST_STATE_SELECTED);
+      }
    }
    return wxDragCopy;
 }
 
-void RuleTableDropTarget::OnLeave()
+void ExtImportPrefsDropTarget::OnLeave()
 {
 }
 
-void RuleTableDropTarget::SetDataObject(wxDataObject* data)
+void ExtImportPrefsDropTarget::SetDataObject(wxDataObject* data)
 {
    this->m_dataObject = data;
 }
