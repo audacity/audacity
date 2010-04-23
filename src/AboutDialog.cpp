@@ -62,6 +62,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Michael Chinen"), roleTeamDeveloper);
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
    AddCredit(wxT("Steve Daulton"), roleTeamSupport);
+   AddCredit(wxT("Al Dimond"), roleTeamDeveloper);
    AddCredit(wxT("Ruslan Ijbulatov"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
    AddCredit(wxT("Greg Kozikowski"), roleTeamSupport);
