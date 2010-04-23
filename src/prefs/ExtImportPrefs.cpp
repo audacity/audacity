@@ -29,14 +29,14 @@
 
 enum ExtImportPrefsControls
 {
-  EIPPluginList = 20000,
-  EIPRuleTable,
-  EIPAddRule,
-  EIPDelRule,
-  EIPMoveRuleUp,
-  EIPMoveRuleDown,
-  EIPMoveFilterUp,
-  EIPMoveFilterDown
+   EIPPluginList = 20000,
+   EIPRuleTable,
+   EIPAddRule,
+   EIPDelRule,
+   EIPMoveRuleUp,
+   EIPMoveRuleDown,
+   EIPMoveFilterUp,
+   EIPMoveFilterDown
 };
 
 BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
@@ -55,7 +55,8 @@ BEGIN_EVENT_TABLE(ExtImportPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
-:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL), PluginList(NULL), mCreateTable (false), last_selected (-1)
+:   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
+    PluginList(NULL), mCreateTable (false), last_selected (-1)
 {
    dragtext = new wxTextDataObject(wxT(""));
    dragtarget = new RuleTableDropTarget(dragtext);
@@ -83,18 +84,20 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.TieCheckBox(_("Filter chosen in OpenFile dialog overrides any rules"), wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), false);
+   S.TieCheckBox(_("Filter chosen in OpenFile dialog overrides any rules"),
+         wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"),
+         false);
    S.StartStatic(_("Rules to choose import filters"), 1);
    {
       S.SetSizerProportion(1);
       S.StartHorizontalLay (wxEXPAND, 1);
-	  {
-	     bool fillRuleTable = false;
-	     if (RuleTable == NULL)
-	     {
-	        RuleTable = new Grid(S.GetParent(),EIPRuleTable);
-	        
-	        RuleTable->SetColLabelSize(RuleTable->GetDefaultRowSize());
+      {
+         bool fillRuleTable = false;
+         if (RuleTable == NULL)
+         {
+            RuleTable = new Grid(S.GetParent(),EIPRuleTable);
+           
+            RuleTable->SetColLabelSize(RuleTable->GetDefaultRowSize());
 #if EXTIMPORT_MIME_SUPPORT
             RuleTable->CreateGrid (0, 2, wxGrid::wxGridSelectRows);
 #else
@@ -112,14 +115,15 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             RuleTable->AutoSizeColumns ();
 
             RuleTable->SetDropTarget (dragtarget);
+            RuleTable->EnableDragCell (true);
             fillRuleTable = true;
-	     }
+         }
          S.AddWindow(RuleTable, wxEXPAND | wxALL);
-		 
-		 PluginList = S.Id(EIPPluginList).AddListControl ();
-		 PluginList->SetSingleStyle (wxLC_REPORT, true);
-		 PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
-		 PluginList->InsertColumn (0, _("Importer order"));
+       
+         PluginList = S.Id(EIPPluginList).AddListControl ();
+         PluginList->SetSingleStyle (wxLC_REPORT, true);
+         PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
+         PluginList->InsertColumn (0, _("Importer order"));
 
          if (fillRuleTable)
          {
@@ -132,22 +136,25 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
                RuleTable->SetGridCursor(0,0);
             }
          }         
-	  }
-	  S.EndHorizontalLay();
-	  S.StartHorizontalLay (wxSHRINK, 0);
-	  {
-         MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton (_("Move rule &up"));
-         MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton (_("Move rule &down"));
-         MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton (_("Move f&ilter up"));
-         MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton (_("Move &filter down"));
-	  }
-	  S.EndHorizontalLay();
-	  S.StartHorizontalLay (wxSHRINK, 0);
-	  {
-         AddRule = S.Id (EIPAddRule).AddButton (_("&Add new rule"));
-         DelRule = S.Id (EIPDelRule).AddButton (_("De&lete selected rule"));
-	  }
-	  S.EndHorizontalLay();
+      }
+      S.EndHorizontalLay();
+      S.StartHorizontalLay (wxSHRINK, 0);
+      {
+          MoveRuleUp = S.Id (EIPMoveRuleUp).AddButton (_("Move rule &up"));
+          MoveRuleDown = S.Id (EIPMoveRuleDown).AddButton
+                (_("Move rule &down"));
+          MoveFilterUp = S.Id (EIPMoveFilterUp).AddButton
+                (_("Move f&ilter up"));
+          MoveFilterDown = S.Id (EIPMoveFilterDown).AddButton
+                (_("Move &filter down"));
+      }
+      S.EndHorizontalLay();
+      S.StartHorizontalLay (wxSHRINK, 0);
+      {
+          AddRule = S.Id (EIPAddRule).AddButton (_("&Add new rule"));
+          DelRule = S.Id (EIPDelRule).AddButton (_("De&lete selected rule"));
+      }
+      S.EndHorizontalLay();
    }
    S.EndStatic();
    Layout();
@@ -176,23 +183,23 @@ void ExtImportPrefs::OnPluginKeyDown(wxListEvent& event)
 #endif
          
       if (DoOnPluginKeyDown (event.GetKeyCode()))
-        event.Skip();
+         event.Skip();
    }
 }
 
 bool ExtImportPrefs::DoOnPluginKeyDown (int code)
 {
    if (code != WXK_UP && code != WXK_DOWN)
-      return false;
+         return false;
 
    long itemIndex = -1;
    itemIndex = PluginList->GetNextItem(itemIndex,
          wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    if (itemIndex == -1)
-      return false;
+         return false;
    
    if (last_selected == -1)
-      return false;
+         return false;
 
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
    ExtImportItem *item = &(*items)[last_selected];
@@ -210,11 +217,13 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
       t = PluginList->GetItemText (itemIndex);
       d = PluginList->GetItemData (itemIndex);
       d2 = PluginList->GetItemData (itemIndex - 1);
-      PluginList->SetItemText (itemIndex, PluginList->GetItemText (itemIndex - 1));
+      PluginList->SetItemText (itemIndex, PluginList->GetItemText (
+            itemIndex - 1));
       PluginList->SetItemText (itemIndex - 1, t);
       if (d == -1 || d2 == -1)
       {
-         PluginList->SetItemData (itemIndex, PluginList->GetItemData (itemIndex - 1));
+         PluginList->SetItemData (itemIndex, PluginList->GetItemData (
+               itemIndex - 1));
          PluginList->SetItemData (itemIndex - 1, d);
          if (d == -1)
          {
@@ -236,19 +245,19 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
          item->filters[d] = t2;
          item->filters[d2] = t;
       }
-      PluginList->SetItemState (itemIndex - 1, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-      PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
    }
    else if (code == WXK_DOWN)
    {
       t = PluginList->GetItemText (itemIndex);
       d = PluginList->GetItemData (itemIndex);
       d2 = PluginList->GetItemData (itemIndex + 1);
-      PluginList->SetItemText (itemIndex, PluginList->GetItemText (itemIndex + 1));
+      PluginList->SetItemText (itemIndex, PluginList->GetItemText (
+            itemIndex + 1));
       PluginList->SetItemText (itemIndex + 1, t);
       if (d == -1 || d2 == -1)
       {
-         PluginList->SetItemData (itemIndex, PluginList->GetItemData (itemIndex + 1));
+         PluginList->SetItemData (itemIndex, PluginList->GetItemData (
+               itemIndex + 1));
          PluginList->SetItemData (itemIndex + 1, d);
          if (d == -1)
          {
@@ -270,8 +279,6 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
          item->filters[d] = t2;
          item->filters[d2] = t;
       }
-      PluginList->SetItemState (itemIndex + 1, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-      PluginList->SetItemState (itemIndex, 0, wxLIST_STATE_SELECTED);
    }
    int fcount = item->filter_objects.Count();
    if (item->divider >= fcount)
@@ -313,7 +320,8 @@ void ExtImportPrefs::SwapRows (int row1, int row2)
 void ExtImportPrefs::OnRuleTableKeyDown(wxKeyEvent& event)
 {
    int mods = event.GetModifiers();
-   if (mods & wxMOD_CMD && (event.GetKeyCode() == WXK_UP || event.GetKeyCode() == WXK_DOWN))
+   if (mods & wxMOD_CMD && (event.GetKeyCode() == WXK_UP ||
+          event.GetKeyCode() == WXK_DOWN))
    {
       DoOnRuleTableKeyDown (event.GetKeyCode());
    }
@@ -385,7 +393,8 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
       }
       if (item->filter_objects[i] != NULL)
       {
-         PluginList->InsertItem (i + shift, item->filter_objects[i]->GetPluginFormatDescription());
+         PluginList->InsertItem (i + shift,
+               item->filter_objects[i]->GetPluginFormatDescription());
       }
       else
       {
@@ -607,7 +616,8 @@ void RuleTableDropTarget::SetPrefs (ExtImportPrefs *prefs)
    mPrefs = prefs;
 }
 
-wxDragResult RuleTableDropTarget::OnData(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult RuleTableDropTarget::OnData(wxCoord x, wxCoord y,
+      wxDragResult def)
 {
    return def;
 }
@@ -623,15 +633,18 @@ bool RuleTableDropTarget::OnDrop(wxCoord x, wxCoord y)
    return true;
 }
 
-wxDragResult RuleTableDropTarget::OnEnter(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult RuleTableDropTarget::OnEnter(wxCoord x, wxCoord y,
+      wxDragResult def)
 {
    return OnDragOver(x, y, def);
 }
-wxDragResult RuleTableDropTarget::OnDragOver(wxCoord x, wxCoord y, wxDragResult def)
+wxDragResult RuleTableDropTarget::OnDragOver(wxCoord x, wxCoord y,
+      wxDragResult def)
 {
    if (mPrefs == NULL)
       return wxDragNone;
-   int row = mPrefs->RuleTable->YToRow (y - mPrefs->RuleTable->GetColLabelSize ());
+   int row = mPrefs->RuleTable->YToRow (y -
+         mPrefs->RuleTable->GetColLabelSize ());
    if (row == wxNOT_FOUND)
       return wxDragNone;
    
