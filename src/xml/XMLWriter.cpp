@@ -34,6 +34,16 @@ the general functionality for creating XML in UTF8 encoding.
 #include "XMLWriter.h"
 #include "XMLTagHandler.h"
 
+#include "../../lib-src/expat/xmltok/xmltok_impl.h"
+static int charXMLCompatiblity[] = 
+  {
+#define BT_COLON BT_NMSTRT
+#include "../../lib-src/expat/xmltok/asciitab.h"
+#undef BT_COLON
+#include "../../lib-src/expat/xmltok/latin1tab.h"
+  };
+
+
 ///
 /// XMLWriter base class
 ///
@@ -274,7 +284,14 @@ wxString XMLWriter::XMLEsc(const wxString & s)
 
          default:
             if (!wxIsprint(c)) {
-               result += wxString::Format(wxT("&#x%04x;"), c);
+               //ignore several characters such ase eot (0x04) and stx (0x02) because it makes expat parser bail
+               //see xmltok.c in expat checkCharRefNumber() to see how expat bails on these chars.
+               //also see lib-src/expat/xmltok/asciitab.h to see which characters are nonxml compatible post decode
+               //(we can still encode '&' and '<' with this table, but it prevents us from encoding eot)
+               //the table only goes up to 0x7F, so we don't check higher than this. 
+               //this assumes that c as ascii compatible, which utf8 is.
+               if(c> 0x7F || charXMLCompatiblity[c]!=BT_NONXML)
+                  result += wxString::Format(wxT("&#x%04x;"), c);
             }
             else {
                result += c;
