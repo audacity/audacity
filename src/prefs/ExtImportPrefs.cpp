@@ -58,7 +58,7 @@ END_EVENT_TABLE()
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
 :   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
-    last_selected (-1), mFakeKeyEvent (false), mStopRecursiveSelection (false)
+    mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
    dragtext1 = new wxTextDataObject(wxT(""));
    dragtext2 = new wxTextDataObject(wxT(""));
