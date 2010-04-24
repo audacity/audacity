@@ -58,7 +58,7 @@ END_EVENT_TABLE()
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent)
 :   PrefsPanel(parent, _("Extended Import")), RuleTable(NULL),
     PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
-    last_selected (-1), mFakeKeyEvent (false)
+    last_selected (-1), mFakeKeyEvent (false), mStopRecursiveSelection (false)
 {
    dragtext1 = new wxTextDataObject(wxT(""));
    dragtext2 = new wxTextDataObject(wxT(""));
@@ -369,21 +369,25 @@ void ExtImportPrefs::DoOnRuleTableKeyDown (int keycode)
 void ExtImportPrefs::OnRuleTableSelect (wxGridEvent& event)
 {
    int toprow;
-   if (!event.Selecting())
+   event.Skip();
+   if (!event.Selecting() || mStopRecursiveSelection)
       return;
    toprow = event.GetRow();
    DoOnRuleTableSelect (toprow);
-   event.Skip();
 }
 
 void ExtImportPrefs::OnRuleTableSelectRange (wxGridRangeSelectEvent& event)
 {
    int toprow;
-   if (!event.Selecting())
+   event.Skip();
+   if (!event.Selecting() || mStopRecursiveSelection)
       return;
    toprow = event.GetTopRow();
    DoOnRuleTableSelect (toprow);
-   event.Skip();
+   mStopRecursiveSelection = true;
+   RuleTable->SelectRow (toprow);
+   mStopRecursiveSelection = false;
+   RuleTable->SetGridCursor (toprow, 0);
 }
 
 void ExtImportPrefs::DoOnRuleTableSelect (int toprow)

@@ -93,6 +93,7 @@ class ExtImportPrefs:public PrefsPanel
    bool mCreateTable;
    wxWindow *mDragFocus;
    bool mFakeKeyEvent;
+   bool mStopRecursiveSelection;
    
    int last_selected;
    
