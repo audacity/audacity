@@ -129,6 +129,11 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
            
          if (fillRuleTable)
          {
+            PluginList->SetSingleStyle (wxLC_REPORT, true);
+            PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
+            PluginList->InsertColumn (0, _("Importer order"));
+            PluginList->SetDropTarget (dragtarget2);
+
             ExtImportItems *items = wxGetApp().mImporter->GetImportItems();         
             for (unsigned int i = 0; i < items->Count(); i++)
                AddItemToTable (i, &(*items)[i]);
@@ -137,11 +142,6 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
                RuleTable->SelectRow(0);
                RuleTable->SetGridCursor(0,0);
             }
-
-            PluginList->SetSingleStyle (wxLC_REPORT, true);
-            PluginList->SetSingleStyle (wxLC_SINGLE_SEL, true);
-            PluginList->InsertColumn (0, _("Importer order"));
-            PluginList->SetDropTarget (dragtarget2);
          }         
       }
       S.EndHorizontalLay();
