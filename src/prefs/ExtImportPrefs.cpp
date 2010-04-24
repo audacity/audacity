@@ -651,41 +651,12 @@ wxDragResult ExtImportPrefsDropTarget::OnData(wxCoord x, wxCoord y,
    return def;
 }
 
-bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
-{
-   if (mPrefs == NULL)
-      return false;
-   wxListCtrl *PluginList = mPrefs->GetPluginList();
-   Grid *RuleTable = mPrefs->GetRuleTable();
-   if (mPrefs->GetDragFocus() == RuleTable)
-   {
-      if (RuleTable->YToRow (y -
-            RuleTable->GetColLabelSize ()) == wxNOT_FOUND)
-         return false;
-   }
-   else if (mPrefs->GetDragFocus() == PluginList)
-   {
-      long item = PluginList->FindItem (-1, wxPoint (x, y), 0);
-      if (item >= 0)
-      {
-         wxRect r;
-         PluginList->GetItemRect (item, r);
-         if (!r.Contains(x, y))
-            return false;
-      }
-   }
-   
-   return true;
-}
-
-wxDragResult ExtImportPrefsDropTarget::OnEnter(wxCoord x, wxCoord y,
-      wxDragResult def)
-{
-   return OnDragOver(x, y, def);
-}
-
+#if defined(__WXMSW__)
 /* wxListCtrl::FindItem() in wxPoint()-taking mode works only for lists in
  * Small/Large-icon mode
+ * wxListCtrl::HitTest() on Windows only hits item label rather than its whole
+ * row, which makes it difficult to drag over items with short or non-existent
+ * labels.
  */
 long wxCustomFindItem(wxListCtrl *list, int x, int y)
 {
@@ -700,6 +671,40 @@ long wxCustomFindItem(wxListCtrl *list, int x, int y)
       }
    }
    return -1;
+}
+#endif
+
+bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
+{
+   if (mPrefs == NULL)
+      return false;
+   wxListCtrl *PluginList = mPrefs->GetPluginList();
+   Grid *RuleTable = mPrefs->GetRuleTable();
+   if (mPrefs->GetDragFocus() == RuleTable)
+   {
+      if (RuleTable->YToRow (y -
+            RuleTable->GetColLabelSize ()) == wxNOT_FOUND)
+         return false;
+   }
+   else if (mPrefs->GetDragFocus() == PluginList)
+   {
+#if defined(__WXMSW__)
+      long item = wxCustomFindItem (PluginList, x, y);
+#else
+      int flags = 0;
+      long item = PluginList->HitTest (wxPoint (x, y), flags, NULL);
+#endif
+      if (item < 0)
+         return false;
+   }
+   
+   return true;
+}
+
+wxDragResult ExtImportPrefsDropTarget::OnEnter(wxCoord x, wxCoord y,
+      wxDragResult def)
+{
+   return OnDragOver(x, y, def);
 }
 
 wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
@@ -728,9 +733,12 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
    }
    else if (mPrefs->GetDragFocus() == PluginList)
    {
-      wxRect r;
+#if defined(__WXMSW__)
       long item = wxCustomFindItem (PluginList, x, y);
-      
+#else
+      int flags = 0;
+      long item = PluginList->HitTest (wxPoint (x, y), flags, NULL);
+#endif
       if (item < 0)
          return wxDragNone;
       
