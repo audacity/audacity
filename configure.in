@@ -654,8 +654,13 @@ case "${host_os}" in
       ;;
 esac
 
+# process Makefile.in's to generate Makefiles
 AC_CONFIG_FILES([Makefile src/Makefile lib-src/Makefile \
                  locale/Makefile])
+# Anything that depends on the name of the installed Audacity binary needs
+# to be processed to set that here
+AC_CONFIG_FILES([src/audacity.desktop])
+
 dnl There are various other files we might need to process, depends on what
 dnl has been enabled previously
 if [[ "x$LIBEXPAT_USE_LOCAL" = "xyes" ]]; then

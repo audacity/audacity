@@ -9831,7 +9831,13 @@ case "${host_os}" in
       ;;
 esac
 
+# process Makefile.in's to generate Makefiles
 ac_config_files="$ac_config_files Makefile src/Makefile lib-src/Makefile locale/Makefile"
+
+# Anything that depends on the name of the installed Audacity binary needs
+# to be processed to set that here
+ac_config_files="$ac_config_files src/audacity.desktop"
+
 
 if [ "x$LIBEXPAT_USE_LOCAL" = "xyes" ]; then
    ac_config_files="$ac_config_files lib-src/expat/Makefile"
@@ -10442,6 +10448,7 @@ do
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "lib-src/Makefile") CONFIG_FILES="$CONFIG_FILES lib-src/Makefile" ;;
     "locale/Makefile") CONFIG_FILES="$CONFIG_FILES locale/Makefile" ;;
+    "src/audacity.desktop") CONFIG_FILES="$CONFIG_FILES src/audacity.desktop" ;;
     "lib-src/expat/Makefile") CONFIG_FILES="$CONFIG_FILES lib-src/expat/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
 
