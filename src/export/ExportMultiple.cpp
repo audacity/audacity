@@ -920,7 +920,7 @@ wxString ExportMultiple::MakeFileName(wxString input)
    {  // need to get user to fix file name
       // build the dialog
       wxString msg;
-      msg.Printf(_("Label %s is not a legal file name. You cannot use any of:   %s\nUse..."), input.c_str(), wxFileName::GetForbiddenChars().c_str());
+      msg.Printf(_("Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse..."), input.c_str(), wxFileName::GetForbiddenChars().c_str());
       wxTextEntryDialog dlg( this, msg, _("Save As..."), newname );
 
       // And tell the validator about excluded chars
