@@ -6,6 +6,7 @@
 #
 SUFFIX=$1
 TYPE=$2
+DEBUG=$3
 
 # Setup
 VERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' src/Audacity.h`
@@ -37,7 +38,12 @@ mkdir "$DMG"
 SUBDIRS="Audacity.app Languages nyquist plug-ins"
 for SUBDIR in $SUBDIRS
 do
-   cp -pR "mac/build/Release Static/$SUBDIR" "$DMG"
+   if [ -z "$DEBUG" ]
+   then
+      cp -pR "mac/build/Release Static/$SUBDIR" "$DMG"
+   else
+      cp -pR "mac/build/Debug Static/$SUBDIR" "$DMG"
+   fi
 done
 
 # Strip binary
