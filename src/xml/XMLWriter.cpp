@@ -34,13 +34,20 @@ the general functionality for creating XML in UTF8 encoding.
 #include "XMLWriter.h"
 #include "XMLTagHandler.h"
 
-#include "../../lib-src/expat/xmltok/xmltok_impl.h"
+//table for xml encoding compatibility with expat decoding
+//see ../../lib-src/expat/xmltok/xmltok_impl.h
+//and  ../../lib-src/expat/xmltok/ asciitab.h
 static int charXMLCompatiblity[] = 
   {
-#define BT_COLON BT_NMSTRT
-#include "../../lib-src/expat/xmltok/asciitab.h"
-#undef BT_COLON
-#include "../../lib-src/expat/xmltok/latin1tab.h"
+
+/* 0x00 */ 0, 0, 0, 0,
+/* 0x04 */ 0, 0, 0, 0,
+/* 0x08 */ 0, 1, 1, 0,
+/* 0x0C */ 0, 1, 0, 0,
+/* 0x10 */ 0, 0, 0, 0,
+/* 0x14 */ 0, 0, 0, 0,
+/* 0x18 */ 0, 0, 0, 0,
+/* 0x1C */ 0, 0, 0, 0,
   };
 
 
@@ -288,9 +295,8 @@ wxString XMLWriter::XMLEsc(const wxString & s)
                //see xmltok.c in expat checkCharRefNumber() to see how expat bails on these chars.
                //also see lib-src/expat/xmltok/asciitab.h to see which characters are nonxml compatible post decode
                //(we can still encode '&' and '<' with this table, but it prevents us from encoding eot)
-               //the table only goes up to 0x7F, so we don't check higher than this. 
-               //this assumes that c as ascii compatible, which utf8 is.
-               if(c> 0x7F || charXMLCompatiblity[c]!=BT_NONXML)
+               //everything is compatible past ascii 0x20, so we don't check higher than this. 
+               if(c> 0x1F || charXMLCompatiblity[c]!=0)
                   result += wxString::Format(wxT("&#x%04x;"), c);
             }
             else {
