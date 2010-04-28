@@ -1529,12 +1529,18 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
    float* outBuffer = new float[bufsize];
    sampleCount pos = 0;
    bool error = false;
+   int outGenerated = 0;
    sampleCount numSamples = mSequence->GetNumSamples();
 
    Sequence* newSequence =
       new Sequence(mSequence->GetDirManager(), mSequence->GetSampleFormat());
    
-   while (pos < numSamples)
+   /**
+    * We want to keep going as long as we have something to feed the resampler
+    * with OR as long as the resampler spews out samples (which could continue
+    * for a few iterations after we stop feeding it)
+    */
+   while (pos < numSamples || outGenerated > 0)
    {
       int inLen = numSamples - pos;
       if (inLen > bufsize)
@@ -1549,7 +1555,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       }
       
       int inBufferUsed = 0;
-      int outGenerated = resample->Process(factor, inBuffer, inLen, isLast,
+      outGenerated = resample->Process(factor, inBuffer, inLen, isLast,
                                            &inBufferUsed, outBuffer, bufsize);
                                            
       pos += inBufferUsed;
