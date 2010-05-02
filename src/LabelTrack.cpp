@@ -1357,6 +1357,18 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             mLabels[mMouseOverLabelRight]->updated = false;
          }
       }
+#if defined (__WXGTK__) && defined (HAVE_GTK)
+      // On GTK, if we just dragged out a text selection, set the primary
+      // selection
+      else {
+         if (mInitialCursorPos != mCurrentCursorPos) {
+            wxTheClipboard->UsePrimarySelection(true);
+            CopySelectedText();
+            wxTheClipboard->UsePrimarySelection(false);
+         }
+      }
+#endif
+
       mIsAdjustingLabel = false;
       mMouseOverLabelLeft  = -1;
       mMouseOverLabelRight = -1;
@@ -1515,6 +1527,28 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
                changeCursor = false;
          }
       }
+
+      // Middle click on GTK: paste from primary selection
+#if defined(__WXGTK__) && (HAVE_GTK)
+      if (evt.MiddleDown()) {
+         // Check for a click outside of the selected label's text box; in this
+         // case PasteSelectedText() will start a new label at the click
+         // location
+         if (mSelIndex != -1) {
+            if (!OverTextBox(mLabels[mSelIndex], evt.m_x, evt.m_y))
+               mSelIndex = -1;
+            double t = h + (evt.m_x - r.x) / pps;
+            *newSel0 = t;
+            *newSel1 = t;
+         }
+
+         wxTheClipboard->UsePrimarySelection(true);
+         PasteSelectedText(*newSel0, *newSel1);
+         wxTheClipboard->UsePrimarySelection(false);
+
+         return false;
+      }
+#endif
 
       mSelIndex = -1;
       LabelStruct * pLabel;
