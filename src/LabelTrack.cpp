@@ -1582,7 +1582,7 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
          {
             double t0, t1;
             pProj->GetPlayRegion(&t0, &t1);
-            if (pProj->mViewInfo.sel0 == t0 && pProj->mViewInfo.sel1)
+            if (pProj->mViewInfo.sel0 == t0 && pProj->mViewInfo.sel1 == t1)
                return false;
          }
 
