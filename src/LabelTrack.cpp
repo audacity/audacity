@@ -1573,12 +1573,20 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
    {
       if( IsGoodLabelFirstCharacter(keyCode, charCode) && !event.CmdDown() ){
          AudacityProject * pProj = GetActiveProject();
-         CommandManager * cm = pProj->GetCommandManager();
-         if (pProj->GetAudioIOToken() > 0 && gAudioIO->IsStreamActive(pProj->GetAudioIOToken()) &&
-            cm && cm->GetKeyFromName(wxT("AddLabelPlaying")) == keyCode)
-            return false;
 
-         // IF Label already there, then don't add a new one on typing.
+         // If we're playing, don't capture if the selection is the same as the
+         // playback region (this helps prevent label track creation from
+         // stealing unmodified kbd. shortcuts)
+         if (pProj->GetAudioIOToken() > 0 &&
+               gAudioIO->IsStreamActive(pProj->GetAudioIOToken()))
+         {
+            double t0, t1;
+            pProj->GetPlayRegion(&t0, &t1);
+            if (pProj->mViewInfo.sel0 == t0 && pProj->mViewInfo.sel1)
+               return false;
+         }
+
+         // If there's a label there already don't capture
          if( GetLabelIndex( pProj->mViewInfo.sel0,  pProj->mViewInfo.sel1) != wxNOT_FOUND )
             return false;
 
