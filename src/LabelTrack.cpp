@@ -1357,6 +1357,11 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             mLabels[mMouseOverLabelRight]->updated = false;
          }
       }
+#if 0
+      // AWD: Due to wxWidgets bug #7491 (fix not ported to 2.8 branch) we
+      // should never write the primary selection. We can enable this block
+      // when we move to the 3.0 branch (or if a fixed 2.8 version is released
+      // and we can do a runtime version check)
 #if defined (__WXGTK__) && defined (HAVE_GTK)
       // On GTK, if we just dragged out a text selection, set the primary
       // selection
@@ -1367,6 +1372,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             wxTheClipboard->UsePrimarySelection(false);
          }
       }
+#endif
 #endif
 
       mIsAdjustingLabel = false;
