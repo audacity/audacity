@@ -126,15 +126,34 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
                     _("Choose a location to place the temporary directory"), 
                     gPrefs->Read(wxT("/Directories/TempDir"), 
                                  wxGetApp().defaultTempDir));
-   dlog.ShowModal();
-   if (dlog.GetPath() != wxT("")) {
+   int retval = dlog.ShowModal();
+   if (retval != wxID_CANCEL && dlog.GetPath() != wxT("")) {
       wxFileName tmpDirPath;
       tmpDirPath.AssignDir(dlog.GetPath());
+
+      // Append an "audacity_temp" directory to this path if necessary (the
+      // default, the existing pref (as stored in the control), and any path
+      // ending in a directory with the same name as what we'd add should be OK
+      // already)
+      wxString newDirName;
 #if defined(__WXMSW__) || defined(__WXMAC__)
-      tmpDirPath.AppendDir(wxT("audacity_temp"));
+      newDirName = wxT("audacity_temp");
 #else
-      tmpDirPath.AppendDir(wxT(".audacity_temp"));
+      newDirName = wxT(".audacity_temp");
 #endif
+      wxArrayString dirsInPath = tmpDirPath.GetDirs();
+
+      // If the default temp dir or user's pref dir don't end in '/' they cause
+      // wxFileName's == operator to construct a wxFileName representing a file
+      // (that doesn't exist) -- hence the constructor calls
+      if (tmpDirPath != wxFileName(wxGetApp().defaultTempDir, wxT("")) &&
+            tmpDirPath != wxFileName(mTempDir->GetValue(), wxT("")) &&
+            (dirsInPath.GetCount() == 0 ||
+             dirsInPath[dirsInPath.GetCount()-1] != newDirName))
+      {
+         tmpDirPath.AppendDir(newDirName);
+      }
+
       mTempDir->SetValue(tmpDirPath.GetPath(wxPATH_GET_VOLUME|wxPATH_GET_SEPARATOR));
       UpdateFreeSpace(e);
    }
