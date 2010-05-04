@@ -1630,8 +1630,11 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
          if( GetLabelIndex( pProj->mViewInfo.sel0,  pProj->mViewInfo.sel1) != wxNOT_FOUND )
             return false;
 
-         if( pProj )
-            pProj->OnAddLabel();
+         // Add a label
+         SetSelected(true);
+         AddLabel(pProj->mViewInfo.sel0, pProj->mViewInfo.sel1);
+         pProj->PushState(_("Added label"), _("Label"));
+
          return true;
       }
    }
