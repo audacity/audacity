@@ -2012,6 +2012,8 @@ void AudacityProject::OnSortName()
    wxArrayPtrVoid arr;
    TrackListIterator iter(mTracks);
    Track *track = iter.First();
+   //Assumes that linked channels have the same name.
+   //if this is not true a crash will occur during redraw after the sort.
    while (track) {
       for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
          if (track->GetName() < ((Track *) arr[ndx])->GetName()) {

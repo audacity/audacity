@@ -6793,9 +6793,14 @@ void TrackPanel::OnSetName(wxCommandEvent &event)
       wxString defaultStr = t->GetName();
       wxString newName = wxGetTextFromUser(_("Change track name to:"),
                                            _("Track Name"), defaultStr);
-      if (newName != wxT(""))
+      //if we have a linked channel this name should change as well (otherwise sort by name and time will crash)
+      if (newName != wxT("")) {
          t->SetName(newName);
-
+         if(t->GetLinked())
+         {
+            t->GetLink()->SetName(newName);
+         }
+      }
       #ifdef EXPERIMENTAL_MIXER_BOARD
          MixerBoard* pMixerBoard = this->GetMixerBoard();
          if (pMixerBoard && (t->GetKind() == Track::Wave))

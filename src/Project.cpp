@@ -3269,14 +3269,17 @@ void AudacityProject::AddImportedTracks(wxString fileName,
    bool initiallyEmpty = mTracks->IsEmpty();
    double newRate = 0;
    wxString trackNameBase = fileName.AfterLast(wxFILE_SEP_PATH).BeforeLast('.');
-
+   bool isLinked = false;
    for (int i = 0; i < numTracks; i++) {
       if (newRate == 0 && newTracks[i]->GetKind() == Track::Wave) {
          newRate = ((WaveTrack *)newTracks[i])->GetRate();
       }
       mTracks->Add(newTracks[i]);
       newTracks[i]->SetSelected(true);
-      if (numTracks > 2 || (numTracks > 1 && !newTracks[i]->GetLink())) {
+      //we need to check link status based on the first channel only.
+      if(0==i)
+         isLinked = newTracks[i]->GetLinked();
+      if (numTracks > 2 || (numTracks > 1 && !isLinked) ) {
          newTracks[i]->SetName(trackNameBase + wxString::Format(wxT(" %d" ), i + 1));
       }
       else {
