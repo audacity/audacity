@@ -839,28 +839,38 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
       return b;
    }
 
-   wxFileName newFile = MakeBlockFileName();
-
-   // We assume that the new file should have the same extension
-   // as the existing file
-   newFile.SetExt(b->GetFileName().GetExt());
-
-   //some block files such as ODPCMAliasBlockFIle don't always have
-   //a summary file, so we should check before we copy.
-   if(b->IsSummaryAvailable())
-   {
-      if( !wxCopyFile(b->GetFileName().GetFullPath(),
-                   newFile.GetFullPath()) )
-         return NULL;
+   // Copy the blockfile
+   BlockFile *b2;
+   if (b->GetFileName().GetName().IsEmpty()) {
+      // Block files with no filename (i.e. SilentBlockFile) just need an
+      // in-memory copy
+      b2 = b->Copy(wxFileName());
    }
-   
-   BlockFile *b2 = b->Copy(newFile);
+   else
+   {
+      wxFileName newFile = MakeBlockFileName();
 
-   if (b2 == NULL)
-      return NULL;
+      // We assume that the new file should have the same extension
+      // as the existing file
+      newFile.SetExt(b->GetFileName().GetExt());
 
-   blockFileHash[newFile.GetName()]=b2;
-   aliasList.Add(newFile.GetFullPath());
+      //some block files such as ODPCMAliasBlockFIle don't always have
+      //a summary file, so we should check before we copy.
+      if(b->IsSummaryAvailable())
+      {
+         if( !wxCopyFile(b->GetFileName().GetFullPath(),
+                  newFile.GetFullPath()) )
+            return NULL;
+      }
+
+      b2 = b->Copy(newFile);
+
+      if (b2 == NULL)
+         return NULL;
+
+      blockFileHash[newFile.GetName()]=b2;
+      aliasList.Add(newFile.GetFullPath());
+   }
 
    return b2;
 }
