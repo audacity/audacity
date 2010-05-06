@@ -2016,7 +2016,8 @@ void AudacityProject::OnSortName()
    //if this is not true a crash will occur during redraw after the sort.
    while (track) {
       for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-         if (track->GetName() < ((Track *) arr[ndx])->GetName()) {
+         //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
+         if (track->GetName().CmpNoCase(((Track *) arr[ndx])->GetName()) < 0) {
             break;
          }
       }
