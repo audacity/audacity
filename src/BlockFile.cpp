@@ -114,7 +114,9 @@ BlockFile::~BlockFile()
 
 /// Returns the file name of the disk file associated with this
 /// BlockFile.  Not all BlockFiles store their sample data here,
-/// but all BlockFiles have at least their summary data here.
+/// but most BlockFiles have at least their summary data here.
+/// (some, i.e. SilentBlockFiles, do not correspond to a file on
+///  disk and have empty file names)
 wxFileName BlockFile::GetFileName()
 {
    return mFileName;

@@ -77,6 +77,8 @@ class BlockFile {
    virtual void SaveXML(XMLWriter &xmlFile) = 0;
 
    /// Gets the filename of the disk file associated with this BlockFile
+   /// (can be empty -- some BlockFiles, like SilentBlockFile, correspond to
+   ///  no file on disk)
    virtual wxFileName GetFileName();
    virtual void SetFileName(wxFileName &name);
 

@@ -973,6 +973,11 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
 {
+   // Check that this BlockFile corresponds to a file on disk
+   if (f->GetFileName().GetName().IsEmpty()) {
+      return true;
+   }
+
    wxFileName newFileName;
    wxFileName oldFileName=f->GetFileName();
    AssignFile(newFileName,f->GetFileName().GetFullName(),FALSE); 
@@ -1025,6 +1030,10 @@ bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
 
 bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
 {
+   // Check that this BlockFile corresponds to a file on disk
+   if (f->GetFileName().GetName().IsEmpty()) {
+      return true;
+   }
    wxFileName newFileName;
    wxFileName oldFileName=f->GetFileName();
    AssignFile(newFileName,f->GetFileName().GetFullName(),FALSE); 
