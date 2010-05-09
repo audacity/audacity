@@ -1965,40 +1965,54 @@ double AudacityProject::GetTime(Track *t)
    return stime;
 }
 
-void AudacityProject::OnSortTime()
+//sort based on flags.  see Project.h for sort flags
+void AudacityProject::SortTracks(int flags)
 {
    int ndx;
-
-   wxArrayPtrVoid warr, marr;
+   int cmpValue;
+   wxArrayPtrVoid arr;
    TrackListIterator iter(mTracks);
    Track *track = iter.First();
+   bool lastTrackLinked = false;
+   //sort by linked tracks. Assumes linked track follows owner in list.
    while (track) {
-      if (track->GetKind() == Track::Wave) {
-         for (ndx = 0; ndx < (int)warr.GetCount(); ndx++) {
-            if (GetTime(track) < GetTime((Track *) warr[ndx])) {
-               break;
-            }
-         }
-         warr.Insert(track, ndx);
+      if(lastTrackLinked) {
+         //insert after the last track since this track should be linked to it.
+         ndx++;
       }
       else {
-         for (ndx = 0; ndx < (int)marr.GetCount(); ndx++) {
-            if (GetTime(track) < GetTime((Track *) marr[ndx])) {
-               break;
+         for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
+            if(flags & kAudacitySortByName){
+               //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
+               //also if we have case insensitive equality, then we need to sort by case as well
+               //We sort 'b' before 'B' accordingly.  We uncharacteristically use greater than for the case sensitive
+               //compare because 'b' is greater than 'B' in ascii.
+               cmpValue = track->GetName().CmpNoCase(((Track *) arr[ndx])->GetName());
+               if (cmpValue < 0 ||
+                   (0 == cmpValue && track->GetName().CompareTo(((Track *) arr[ndx])->GetName()) > 0) )
+                  break;
+            }
+            //sort by time otherwise
+            else if(flags & kAudacitySortByTime){
+               if (GetTime(track) < GetTime((Track *) arr[ndx])) 
+                  break;
             }
          }
-         marr.Insert(track, ndx);
       }
+      arr.Insert(track, ndx);
+      
+      lastTrackLinked = track->GetLinked();
       track = iter.RemoveCurrent();
    }
 
-   for (ndx = 0; ndx < (int)marr.GetCount(); ndx++) {
-      mTracks->Add((Track *)marr[ndx]);
+   for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
+      mTracks->Add((Track *)arr[ndx]);
    }
+}
 
-   for (ndx = 0; ndx < (int)warr.GetCount(); ndx++) {
-      mTracks->Add((Track *)warr[ndx]);
-   }
+void AudacityProject::OnSortTime()
+{
+   SortTracks(kAudacitySortByTime);
 
    PushState(_("Tracks sorted by time"), _("Sort By Time"));
 
@@ -2007,28 +2021,8 @@ void AudacityProject::OnSortTime()
 
 void AudacityProject::OnSortName()
 {
-   int ndx;
-
-   wxArrayPtrVoid arr;
-   TrackListIterator iter(mTracks);
-   Track *track = iter.First();
-   //Assumes that linked channels have the same name.
-   //if this is not true a crash will occur during redraw after the sort.
-   while (track) {
-      for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-         //do case insensitive sort - cmpNoCase returns less than zero if the string is 'less than' its argument
-         if (track->GetName().CmpNoCase(((Track *) arr[ndx])->GetName()) < 0) {
-            break;
-         }
-      }
-      arr.Insert(track, ndx);
-      track = iter.RemoveCurrent();
-   }
-
-   for (ndx = 0; ndx < (int)arr.GetCount(); ndx++) {
-      mTracks->Add((Track *)arr[ndx]);
-   }
-
+   SortTracks(kAudacitySortByName);
+  
    PushState(_("Tracks sorted by name"), _("Sort By Name"));
 
    mTrackPanel->Refresh(false);

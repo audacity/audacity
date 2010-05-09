@@ -499,6 +499,12 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool IsTimerRecordCancelled(){return mTimerRecordCanceled;}
    void ResetTimerRecordFlag(){mTimerRecordCanceled=false;}
  private:
+   //sort method used by OnSortName and OnSortTime
+   //currently only supported flags are kAudacitySortByName and kAudacitySortByName
+   //in the future we might have 0x01 as sort ascending and we can bit or it
+#define kAudacitySortByTime (1 << 1)
+#define kAudacitySortByName (1 << 2)
+   void SortTracks(int flags);
 
    int  mAudioIOToken;
 
