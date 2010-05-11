@@ -79,8 +79,8 @@ class LabelTrack:public Track {
    friend class LabelStruct;
 
  public:
-   bool IsGoodLabelCharacter(int keyCode, wxChar charCode);
-   bool IsGoodLabelFirstCharacter(int keyCode, wxChar charCode);
+   bool IsGoodLabelFirstKey(int keyCode);
+   bool IsGoodLabelEditKey(int keyCode);
    bool IsTextSelected();
 
    void CreateCustomGlyphs();
