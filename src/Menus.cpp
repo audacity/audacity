@@ -5054,26 +5054,31 @@ void AudacityProject::OnSoundActivated()
 
 int AudacityProject::DoAddLabel(double left, double right)
 {
-   TrackListIterator iter(mTracks);
    LabelTrack *lt = NULL;
 
-   bool selfound = false;
-   Track *t = iter.First();
-   while (t) {
-      if (t->GetKind() == Track::Label) {
-         if (selfound || t->GetSelected()) {
-            lt = (LabelTrack *) t;
-            break;
-         }
-         else if (!IsSticky())
-            lt = (LabelTrack *) t;
-      }
-      else if (t->GetSelected())
-         selfound = true;
-
-      t = iter.Next();
+   // If the focused track is a label track, use that
+   Track *t = mTrackPanel->GetFocusedTrack();
+   if (t && t->GetKind() == Track::Label) {
+      lt = (LabelTrack *) t;
    }
 
+   // Otherwise look for a label track after the focused track
+   if (!lt) {
+      TrackListIterator iter(mTracks);
+      if (t)
+         iter.StartWith(t);
+      else
+         t = iter.First();
+
+      while (t && !lt) {
+         if (t->GetKind() == Track::Label)
+            lt = (LabelTrack *) t;
+
+         t = iter.Next();
+      }
+   }
+
+   // If none found, start a new label track and use it
    if (!lt) {
       lt = new LabelTrack(mDirManager);
       mTracks->Add(lt);
