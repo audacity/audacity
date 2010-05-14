@@ -1892,6 +1892,11 @@ bool LabelTrack::OnChar(double & newSel0, double & newSel1, wxKeyEvent & event)
 
    // If we've reached this point and aren't currently editing, add new label
    if (mSelIndex < 0) {
+      // Don't create a new label for a space
+      if (wxIsspace((wxUChar)charCode)) {
+         event.Skip();
+         return false;
+      }
       SetSelected(true);
       AudacityProject *p = GetActiveProject();
       AddLabel(p->mViewInfo.sel0, p->mViewInfo.sel1);
