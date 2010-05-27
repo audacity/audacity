@@ -5006,7 +5006,7 @@ void AudacityProject::OnNewLabelTrack()
 void AudacityProject::OnNewTimeTrack()
 {
    if (mTracks->GetTimeTrack()) {
-      wxMessageBox(_("The version of Audacity you are using does not support multiple time tracks."));
+      wxMessageBox(_("This version of Audacity only allows one time track for each project window."));
       return;
    }
 
