@@ -146,11 +146,11 @@ class ODTask
    
 
    int   mTaskNumber;
-   float mPercentComplete;
+   volatile float mPercentComplete;
    ODLock mPercentCompleteMutex;
-   bool  mDoingTask;
-   bool  mTaskStarted;
-   bool mTerminate;
+   volatile bool  mDoingTask;
+   volatile bool  mTaskStarted;
+   volatile bool mTerminate;
    ODLock mTerminateMutex;
    //for a function not a member var.
    ODLock mBlockUntilTerminateMutex;
@@ -158,16 +158,16 @@ class ODTask
    std::vector<WaveTrack*> mWaveTracks;
    ODLock     mWaveTrackMutex;
    
-   sampleCount mDemandSample;
+   volatile sampleCount mDemandSample;
    ODLock      mDemandSampleMutex;
    
-   bool mIsRunning;
+   volatile bool mIsRunning;
    ODLock mIsRunningMutex;
    
    
    private:
    
-   bool mNeedsODUpdate;
+   volatile bool mNeedsODUpdate;
    ODLock mNeedsODUpdateMutex;
    
    

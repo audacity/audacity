@@ -148,13 +148,13 @@ class ODManager
    ODLock mTasksMutex;
    
    //global pause switch for OD
-   bool mPause;
+   volatile bool mPause;
    ODLock mPauseLock;
 
-   int mNeedsDraw;
+   volatile int mNeedsDraw;
    
    ///Number of threads currently running.   Accessed thru multiple threads
-   int mCurrentThreads;
+   volatile int mCurrentThreads;
    //mutex for above variable
    ODLock mCurrentThreadsMutex;
    
@@ -162,10 +162,10 @@ class ODManager
    ///Maximum number of threads allowed out.
    int mMaxThreads;
    
-   bool mTerminate;
+   volatile bool mTerminate;
    ODLock mTerminateMutex;
    
-   bool mTerminated;
+   volatile bool mTerminated;
    ODLock mTerminatedMutex;
    
    //for the queue not empty comdition
