@@ -868,12 +868,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
             newTrack->SetOffset(t0);
 
-            if (recordingChannels <= 2) {
-               newTrack->SetHeight(initialheight/recordingChannels);
-            }
-            else {
-               newTrack->SetMinimized(true);
-            }
+            if (recordingChannels > 2)
+              newTrack->SetMinimized(true);
 
             if (recordingChannels == 2) {
                if (c == 0) {
