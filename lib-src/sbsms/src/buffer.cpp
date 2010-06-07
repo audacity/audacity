@@ -3,10 +3,13 @@
 #include <assert.h>
 #include "buffer.h"
 #include "sbsms.h"
+#include "utils.h"
+#include <algorithm>
+using namespace std;
 
 namespace _sbsms_ {
 
-#define INIT_SAMPLEBUF_LENGTH 65536
+#define INIT_SAMPLEBUF_LENGTH 8192
 #define INIT_GRAINBUF_LENGTH 128
 #define INIT_TPLBUF_LENGTH 128
 
@@ -76,7 +79,7 @@ long SampleBuf :: write(grain *g, int h)
   for(int c=0;c<2;c++) {
     int j = 0;
     for(int k=writePos; k<writePos+g->N; k++) {
-      buf[k][c] += g->time[j++][c] * f;
+      buf[k][c] += g->x[j++][c] * f;
     }
   }
   writePos += h;
@@ -134,21 +137,20 @@ void SampleBuf :: clear()
 
 GrainBuf :: GrainBuf(int N, int h) 
 {
-  init(N,h,1,SBSMS_HANN);
+  init(N,h,1);
 }
 
-GrainBuf :: GrainBuf(int N, int h, real pad, int wintype) 
+GrainBuf :: GrainBuf(int N, int h, real pad) 
 {
-  init(N,h,pad,wintype);
+  init(N,h,pad);
 }
 
-void GrainBuf :: init(int N, int h, real pad, int wintype)
+void GrainBuf :: init(int N, int h, real pad)
 {
   this->length = INIT_GRAINBUF_LENGTH;
   this->buf = (grain**) calloc(2*length,sizeof(grain*));
   this->iBuf = (audio*) calloc(N,sizeof(audio));
   
-  this->wintype = wintype;
   this->pad = pad;
   this->N = N;
   this->h = h;
@@ -197,8 +199,8 @@ long GrainBuf :: write(audio *buf2, long n)
 
 void GrainBuf :: convert(audio *timebuf) 
 {
-  grain *g = grain::create(N,pad,wintype);
-  memcpy(g->time,timebuf,N*sizeof(audio));
+  grain *g = grain::create(N,pad);
+  memcpy(g->x,timebuf,N*sizeof(audio));
   g->analyze();
   g->h = h;
   write(g);

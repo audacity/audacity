@@ -5,40 +5,31 @@
 #include "audio.h"
 #include "sbsms.h"
 
-#define SBSMS_HANN 0
-#define SBSMS_HAMMING 1
-
 namespace _sbsms_ {
 
 class grain {
-
  public:
-
-  static long count;
-  static grain* create(int N, real pad, int wintype);
+  static grain* create(int N, real pad);
   static void destroy(grain *g);
   static void referenced(grain *g);
   static void forget(grain *g);
 
-  t_fft *time;
-  t_fft *freq;
-  int N, type, h;
+  t_fft *x;
+  int N;
+  int h;
   real pad;
   int refCount;
+  audio *peak;
  
   void analyze();
   void synthesize();
-
   grain* upsample();
   grain* downsample();
-  grain* lpfilter();
-  grain* hpfilter();
-  audio *peak;
   
  protected:
-  grain(int N,real q,int wintype);
-  void calc_windows();
+  grain(int N,real pad);
   void calc_plans();
+  void calc_windows();
   real *ww;
   fftplan *fftPlan, *ifftPlan;
 };

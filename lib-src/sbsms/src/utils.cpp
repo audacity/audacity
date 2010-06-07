@@ -1,10 +1,9 @@
 #include <math.h>
 #include "utils.h"
 #include "real.h"
-#include "defs.h"
 
 namespace _sbsms_ {
-real *COSTABLE_ = NULL;
+int COSSIZE;
 real *COSTABLE = NULL;
 real COSFACTOR;
 
@@ -56,12 +55,12 @@ void _c2evenodd(audio *eo, audio *even, audio *odd, int N)
 }
 
 void cosinit(int size) {
-  COSFACTOR = (real)(size-1)/PI;
-  if(COSTABLE_) free(COSTABLE_);
-  COSTABLE_ = (real*)malloc(size*sizeof(real));
+  COSSIZE = size;
+  COSFACTOR = (double)(COSSIZE-1)/PI;
+  if(COSTABLE) free(COSTABLE);
+  COSTABLE = (real*)malloc(size*sizeof(real));
   for(int k=0;k<size;k++)
-    COSTABLE_[k] = cos((real)k/(real)(size-1)*PI);
-  COSTABLE = COSTABLE_;
+    COSTABLE[k] = cos((double)k/(double)(COSSIZE-1)*PI);
 }
 
 void _c2magphase(audio *g, int N)
@@ -79,8 +78,8 @@ void _magphase2c(audio *g, int N)
  for(int k=0;k<N;k++) {
    real mag = g[k][0];
    real phi = g[k][1];
-   real re = mag * COS(phi);
-   real im = mag * SIN(phi);
+   real re = mag * cos(phi);
+   real im = mag * sin(phi);
 
    g[k][0] = re;
    g[k][1] = im;

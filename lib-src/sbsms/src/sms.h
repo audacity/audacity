@@ -16,7 +16,9 @@ using namespace std;
 
 namespace _sbsms_ {
 
+class renderer;
 class sms : public SampleBufBase {
+  friend class renderer;
  public:
   sms(int N, unsigned short M, unsigned short M_MAX, int res, int latency, real p, real q, real pad, int Nlo, int channels, TrackAllocator *ta, PeakAllocator *pa);
   void reset();
@@ -29,7 +31,7 @@ class sms : public SampleBufBase {
   void markDuplicates(long offset, sms *hi, sms *lo, int c);
   bool connectTrackPoints(trackpoint *tp0, trackpoint *tp1, sms *hi, sms *lo, real dtlo, int c);
   bool adoptTrack(track *precursor, sms *lender, trackpoint *tp, real m, real dt, int c);
-  void synthTracks(real a);
+  void synthTracks(real a, real f0, real f1);
   void advanceTrackPoints(int c);
   long nTrackPoints();
   long read(audio *out, long n);
@@ -41,8 +43,6 @@ class sms : public SampleBufBase {
 
 
   bool bPhaseLock;
-  bool bStitch;
-  bool bConserveEnergy;
   int res;
   int N;
   unsigned short M;

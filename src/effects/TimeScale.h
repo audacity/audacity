@@ -57,10 +57,12 @@ class EffectTimeScale : public EffectSBSMS {
    virtual bool Process();
   
  private:
-   double m_RateStart;
-   double m_RateEnd;
-   double m_HalfStepsStart;
-   double m_HalfStepsEnd;
+   double m_RatePercentChangeStart;
+   double m_RatePercentChangeEnd;
+   double m_PitchHalfStepsStart;
+   double m_PitchHalfStepsEnd;
+   double m_PitchPercentChangeStart;
+   double m_PitchPercentChangeEnd;
    bool m_PreAnalyze;
 
    friend class TimeScaleDialog;
@@ -81,22 +83,26 @@ class TimeScaleDialog:public EffectDialog {
 
  private:
   // handlers
-  void OnText_RateStart(wxCommandEvent & event);
-  void OnText_RateEnd(wxCommandEvent & event);
-  void OnText_HalfStepsStart(wxCommandEvent & event);
-  void OnText_HalfStepsEnd(wxCommandEvent & event);
-  void OnSlider_RateStart(wxCommandEvent & event);
-  void OnSlider_RateEnd(wxCommandEvent & event);
+  void OnText_RatePercentChangeStart(wxCommandEvent & event);
+  void OnText_RatePercentChangeEnd(wxCommandEvent & event);
+  void OnText_PitchPercentChangeStart(wxCommandEvent & event);
+  void OnText_PitchPercentChangeEnd(wxCommandEvent & event);
+  void OnText_PitchHalfStepsStart(wxCommandEvent & event);
+  void OnText_PitchHalfStepsEnd(wxCommandEvent & event);
+  void OnSlider_RatePercentChangeStart(wxCommandEvent & event);
+  void OnSlider_RatePercentChangeEnd(wxCommandEvent & event);
   void OnCheckBox_PreAnalyze(wxCommandEvent & event);
 
   // helper fns
   bool CheckParameters();
-  void Update_Text_RateStart();
-  void Update_Text_RateEnd();
-  void Update_Text_HalfStepsStart();
-  void Update_Text_HalfStepsEnd();
-  void Update_Slider_RateStart();
-  void Update_Slider_RateEnd();
+  void Update_Text_RatePercentChangeStart();
+  void Update_Text_RatePercentChangeEnd();
+  void Update_Text_PitchPercentChangeStart();
+  void Update_Text_PitchPercentChangeEnd();
+  void Update_Text_PitchHalfStepsStart();
+  void Update_Text_PitchHalfStepsEnd();
+  void Update_Slider_RatePercentChangeStart();
+  void Update_Slider_RatePercentChangeEnd();
   void Update_CheckBox_PreAnalyze();
 
  private:
@@ -104,19 +110,23 @@ class TimeScaleDialog:public EffectDialog {
   bool m_bLoopDetect;
   
   // controls
-  wxTextCtrl *m_pTextCtrl_RateStart;
-  wxSlider *m_pSlider_RateStart;
-  wxTextCtrl *m_pTextCtrl_RateEnd;
-  wxSlider *m_pSlider_RateEnd;
-  wxTextCtrl *m_pTextCtrl_HalfStepsStart;
-  wxTextCtrl *m_pTextCtrl_HalfStepsEnd;
+  wxTextCtrl *m_pTextCtrl_RatePercentChangeStart;
+  wxTextCtrl *m_pTextCtrl_RatePercentChangeEnd;
+  wxSlider *m_pSlider_RatePercentChangeStart;
+  wxSlider *m_pSlider_RatePercentChangeEnd;
+  wxTextCtrl *m_pTextCtrl_PitchHalfStepsStart;
+  wxTextCtrl *m_pTextCtrl_PitchHalfStepsEnd;
+  wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
+  wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
   wxCheckBox *m_pCheckBox_PreAnalyze;
 
  public:
-   double m_RateStart;
-   double m_RateEnd;
-   double m_HalfStepsStart;
-   double m_HalfStepsEnd;
+   double m_RatePercentChangeStart;
+   double m_RatePercentChangeEnd;
+   double m_PitchHalfStepsStart;
+   double m_PitchHalfStepsEnd;
+   double m_PitchPercentChangeStart;
+   double m_PitchPercentChangeEnd;
    bool m_PreAnalyze;
 
  private:

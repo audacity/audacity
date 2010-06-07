@@ -5,10 +5,12 @@
 #include "sincCoeffs.h"
 #include "real.h"
 #include "utils.h"
+#include <algorithm>
+using namespace std;
 
-using namespace _sbsms_;
+namespace _sbsms_ {
 
-#define SBSMS_RESAMPLE_CHUNK_SIZE ((long)8192)
+#define SBSMS_RESAMPLE_CHUNK_SIZE 8192L
 
 Resampler :: Resampler(sbsms_resample_cb cb, void *data)
 {
@@ -223,4 +225,6 @@ void Resampler :: writingComplete()
 Resampler :: ~Resampler()
 {
   delete out;
+}
+
 }

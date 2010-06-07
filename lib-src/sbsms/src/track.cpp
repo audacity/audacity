@@ -4,8 +4,6 @@
 #include "real.h"
 #include "sbsms.h"
 #include "sms.h"
-#include <assert.h>
-#include <stack>
 #include <vector>
 using namespace std;
 
@@ -113,7 +111,7 @@ void track :: endTrack(bool bTail)
 {
   end = back()->time;
   if(bTail) {
-    this->fall = min(1.5f,.25 + back()->y / point[point.size()-2]->y);
+    this->fall = min(1.5,.25 + back()->y / point[point.size()-2]->y);
     tailEnd = 1;
     end++;
     trackpoint *f = new trackpoint(back());
@@ -122,39 +120,14 @@ void track :: endTrack(bool bTail)
   }
 }
 
-real track :: advance(long synthtime, int steps)
-{
-  long k = synthtime - start;
-  tpoint *tp0 = point[k];
-  tpoint *tp1 = point[k+1];
-  real w0 = tp0->f;
-  real w1 = tp1->f;
-  real ph0 = tp0->ph;
-  real ph1 = tp1->ph;
-  real h = tp0->h;
-
-  real dp = ph1 - ph0;
-  if(dp>PI) dp-=TWOPI;
-  else if(dp<-PI) dp+=TWOPI;
-  real dp0 = 0.5f*h*(w0 + w1);
-  real deltadp = canon(dp - dp0);
-
-  if(k==0) {
-    if(precursor) {
-      m_p = precursor->m_pDescendant;
-    }  else {    
-      deltadp = 0;
-    }
-  }
-  dp = (real)steps/h*(dp0+deltadp);
-  return dp;
-}
-
 void track :: synth(SampleBuf *out,
-		    long writePos,
-		    int c,
-		    long synthtime,
-		    int steps) {
+                    long writePos,
+                    int c,
+                    long synthtime,
+                    int steps,
+                    real fScale0,
+                    real fScale1,
+                    real mScale) {
   if(point.size()==0) return;
   long k = synthtime - start;
   if(k>=(long)point.size()-1) return;
@@ -167,68 +140,93 @@ void track :: synth(SampleBuf *out,
 
   real w0 = tp0->f;
   real w1 = tp1->f;
-  real dp = advance(synthtime,steps);  
-  real dt = (real)steps;
-  w1 = 2.0f/dt*dp - w0;
-  real b = (w1 - w0)/(2.0f*dt);
+  real ph0 = tp0->ph;
+  real ph1 = tp1->ph;
+  real h = tp0->h;
+ 
+  real dp = ph1 - ph0;
+  if(dp>PI) dp-=TWOPI;
+  else if(dp<-PI) dp+=TWOPI;
+  real dp0 = 0.5f*h*(w0 + w1);
+  real dw = canon(dp - dp0)/h;
+
+  if(k==0) {
+    if(precursor) {
+      m_p = precursor->m_pDescendant;
+    }  else {    
+      dw = 0;
+    }
+  }
   
+  real dt = (real)steps;
+  w0 = (w0+dw);
+  w1 = (w1+dw);
+  w0 = w0*fScale0;
+  w1 = w1*fScale1;
+  dp = dt*0.5f*(w0 + w1);
+  real b = (w1 - w0)/(2.0f*dt);
+
   bool bEnd = (k1==(long)point.size()-1);
   bool bStart = (k==0);
 
   if(bStart && tailStart) {
-    real ph = m_p;
-    int rise = round2int(this->rise * (real)steps);
-    real dm = tp1->y/(real)rise;
-    real m = tp1->y - dm;
-    for(int i=steps-1;i>=steps-rise+1;i--) {
-      ph -= w0;
-      if(ph>PI) ph -= TWOPI;
-      else if(ph<-PI) ph += TWOPI;
-      out->buf[writePos+i][c] += m * COS(ph);
-      m -= dm;
+    if(w0 < PI && w0 > -PI) {
+      real ph = m_p;
+      int rise = round2int(this->rise * (real)steps);
+      real dm = mScale*tp1->y/(real)rise;
+      real m = mScale*tp1->y - dm;
+      for(int i=steps-1;i>=steps-rise+1;i--) {
+        ph -= w0;     
+        if(ph<-PI) ph += TWOPI;
+        else if(ph>PI) ph -= TWOPI;
+        out->buf[writePos+i][c] += m * COS(ph);
+        m -= dm;
+      }
     }
   } else if(bEnd && tailEnd) {
-    real ph = m_p;
-    int fall = round2int(this->fall * (real)steps);
-    real dm = tp0->y/(real)fall;
-    real m = tp0->y;
-    for(int i=0;i<fall;i++) {
-      out->buf[writePos+i][c] += m * COS(ph); 
-      ph += w0;
-      if(ph>PI) ph -= TWOPI;
-      else if(ph<-PI) ph += TWOPI;
-      m -= dm;
+    if(w0 < PI && w0 > -PI) {
+      real ph = m_p;
+      int fall = round2int(this->fall * (real)steps);
+      real dm = mScale*tp0->y/(real)fall;
+      real m = mScale*tp0->y;
+      for(int i=0;i<fall;i++) {
+        out->buf[writePos+i][c] += m * COS(ph); 
+        ph += w0;
+        if(ph<-PI) ph += TWOPI;
+        else if(ph>PI) ph -= TWOPI;
+        m -= dm;
+      }
     }
   } else  {
-    real m = tp0->y;
-    real dm;
-    dm = (tp1->y0 - tp0->y)/dt;
+    real m = mScale*tp0->y;
+    real dm = mScale*(tp1->y0 - tp0->y)/dt;
     real ph = m_p;
     real b2tt1 = b;
     real b2 = 2.0f*b;
-    
+    real dph;
+
     audio *o = &(out->buf[writePos]);
     for(int i=0;i<steps;i++) {
-      (*o)[c] += m * COS(ph);
-      ph += w0 + b2tt1;
-      if(ph>PI) ph -= TWOPI;
-      else if(ph<-PI) ph += TWOPI;
+      dph = w0 + b2tt1;      
+      if(dph < PI && dph > -PI) (*o)[c] += m * COS(ph);
+      ph += dph;
+      if(ph<-PI) ph += TWOPI;
+      else if(ph>PI) ph -= TWOPI;
       b2tt1 += b2;
       m += dm;
       o++;
     }
-
   }
-  //}
+
   if(bEnd) {
     if(descendant && descendant->back()->M < tp0->M) {
-      m_pDescendant = canon(m_p + dp/dt*(real)(descendant->owner->samplePos/2 + 0.5f*(descendant->owner->samplePos%2) - owner->samplePos));
+      m_pDescendant = canon(m_p + dp/dt*(real)(descendant->owner->samplePos - owner->samplePos));
     }
   } else if(bStart && tailStart) {
   } else {
     m_p = canon(m_p + dp);
     if(descendant && descendant->back()->M > tp0->M && (k1+res==(long)point.size()-1)) {
-      m_pDescendant = canon(m_p + dp/dt*(real)(descendant->owner->samplePos*2 - (owner->samplePos+steps)));
+      m_pDescendant = canon(m_p + dp/dt*(real)(descendant->owner->samplePos - (owner->samplePos+steps)));
     }
   }
 }

@@ -305,10 +305,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\pitch.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\lib-src\sbsms\src\resample.cpp"
 				>
 			</File>
@@ -348,10 +344,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\lib-src\sbsms\src\buffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\defs.h"
 				>
 			</File>
 			<File

@@ -3,20 +3,20 @@
 #include <math.h>
 #include "sms.h"
 #include "buffer.h"
-#include "defs.h"
-#include "limits.h"
+#include <limits.h>
 
 using namespace std;
 namespace _sbsms_ {
 
 #define SMS_BUF_SIZE 4096
 
-sms :: sms(int N, unsigned short M, unsigned short  M_MAX, int res, int latency, real p, real q, real pad, int Nlo, int channels, TrackAllocator *ta, PeakAllocator *pa) {
+sms :: sms(int N, unsigned short M, unsigned short  M_MAX, int res, int latency, real p, real q, real pad, int Nlo, int channels, TrackAllocator *ta, PeakAllocator *pa) 
+{
   this->N = N;
   this->M = M;
   Nover2 = N/2;
   this->p = 1.0/p;
-  this->q = q;
+  this->q = 1.0/q;
   this->res = res;
   this->m = (real)M/(real)M_MAX;
   this->channels = channels;
@@ -29,64 +29,57 @@ sms :: sms(int N, unsigned short M, unsigned short  M_MAX, int res, int latency,
 
   // Phase lock channels
   bPhaseLock = 0;
-  // Stitch bands together
-  bStitch = 1;
-  // Threshold (relative to maximum magnitude) for finding peaks
+  // Threshold (relative to max magnitude) for finding peaks
   peakThresh = .000005;
   // Threshold (in trackpoint units) for starting a track
   startThresh = 8.0*sqrt(pad/(real)N) * peakThresh;
-  // Maximum figure of merit for continuing a track (see merit)
+  // Max figure of merit for continuing a track (see merit)
   maxMerit2 = square(.11);
-  // Maximum differency in frequency for continuing a track
+  // Max differency in frequency for continuing a track
   maxDF2 = square(.08);
   // Coefficient for dB magnitude changes in figure of merit for continuing a track
   dMCoeff = 0.01;
-  // Maximum increase in dB for continuing a track
+  // Max increase in dB for continuing a track
   maxdBIncr = (12.0 - 6.0*m);
-  // Maximum difference in dB for stitching two subband tracks together
+  // Max difference in dB for stitching two subband tracks together
   maxdBIncrStitch = (12.0 - 6.0*m);
-  // Maximum figure of merit for matching tracks for phase locking
+  // Max figure of merit for matching tracks for phase locking
   maxMerit2PhaseLock = square(.01);
-  // Maximum differene in frequency for matching tracks for phase locking
+  // Max differene in frequency for matching tracks for phase locking
   maxDF2PhaseLock = square(.005);
   // Coefficient for dB magnitude changes in figure of merit for phase locking
   dMCoeffPhaseLock = 0.0005;
-  // Maximum figure of merit for matching peaks for band stitching
+  // Max figure of merit for matching peaks for band stitching
   maxMerit2Match = square(.08);
-  // Maximum difference in frequency for matching peaks for band stitching
+  // Max difference in frequency for matching peaks for band stitching
   maxDF2Match = square(.04);
   // Coefficient for dB magnitude changes in figure of merit for band stitching
   dMCoeffMatch = 0.02;
-    // Minimum number of trackpoints in a track for synthesis
+    // Min number of trackpoints in a track for synthesis
   minNpts = 4;
-  // Maximum width of a peak for determining spectral energy
+  // Max width of a peak for determining spectral energy
   peakWidth = 2*((round2int(pad*(real)N/96.0)+1)/2);
   // Beginning and end of band
   if(terminal) kStart = 1; 
   else kStart = N/4-(int)(0.5*round2int((real)peakWidth*(real)N/(real)Nlo)+6);
   if(M==1) kEnd = N/2;
   else kEnd = N/2-peakWidth;
-  // Maximum frequency for matching peaks for band stitching
-  maxFMatch = (0.5*kEnd+8.0)*TWOPI/(real)N;
-  // Minimum frequency for matching peaks for band stitching
-  minFMatch = (2.0*kStart-16.0)*TWOPI/(real)N;
-  // Minimum ratio of peak "top" to total peak energy
+  // Max frequency for matching peaks for band stitching
+  maxFMatch = (0.5*kEnd+5.0)*TWOPI/(real)N;
+  // Min frequency for matching peaks for band stitching
+  minFMatch = (2.0*kStart-10.0)*TWOPI/(real)N;
+  // Min ratio of peak "top" to total peak energy
   minPeakTopRatio = 0.05;
-  // Minimum ratio of low frequency resolution/high frequency resolution peaks for determining peaks
+  // Min ratio of low frequency resolution/high frequency resolution peaks for determining peaks
   // Ratio for favoring continuing a track in local band over stitching to another band
   localFavorRatio = 1.1;
-  // Maximum ratio of (peak energy given to other peaks) to (peak energy)
+  // Max ratio of (peak energy given to other peaks) to (peak energy)
   maxDecRatio = 1.5;
 
   // Normalization from spectrum energy to peak amplitude
-  if(SBSMS_WINDOW == SBSMS_HANN)
-    mNorm = 1.0/6.0 * pad * square(8.0 / (real)(N));
-  else if(SBSMS_WINDOW == SBSMS_HAMMING)
-    mNorm = 0.18141196440283 * pad * square(8.0 / (real)(N));
-  else
-    abort();
+  mNorm = 1.0/6.0 * pad * square(8.0 / (real)(N));
 
-  // maximum magnitude (for determining peaks)
+  // max magnitude (for determining peaks)
   magmax = 0;
 
   assigntime[0] = 0;
@@ -110,18 +103,18 @@ sms :: sms(int N, unsigned short M, unsigned short  M_MAX, int res, int latency,
   trackPointListBuffer[0] = new TrackPointListBuffer();
   trackPointListBuffer[1] = new TrackPointListBuffer();
 
-  h2cum = 0;    
+  h2cum = 0.0f;
   sines2 = new SampleBuf(0);
   outMixer = sines2;
   
-  x0[0] = grain :: create(N,1,SBSMS_WINDOW);
-  x0[1] = grain :: create(N,1,SBSMS_WINDOW);
+  x0[0] = grain :: create(N,1);
+  x0[1] = grain :: create(N,1);
 
-  x1[0] = grain :: create(N,1,SBSMS_WINDOW);
-  x1[1] = grain :: create(N,1,SBSMS_WINDOW);
+  x1[0] = grain :: create(N,1);
+  x1[1] = grain :: create(N,1);
 
-  x2[0] = grain :: create(N,1,SBSMS_WINDOW);
-  x2[1] = grain :: create(N,1,SBSMS_WINDOW);
+  x2[0] = grain :: create(N,1);
+  x2[1] = grain :: create(N,1);
 
   bPeakSet = false;
 
@@ -179,7 +172,7 @@ void sms :: reset()
   marktime[1] = 0;
   currtime = 0;
   synthtime = 0;
-  h2cum = 0;
+  h2cum = 0.0f;
   samplePos = 0;
 
   for(int c=0;c<channels;c++) {
@@ -200,11 +193,8 @@ void sms :: reset()
   sines2->clear();
 }
 
-
-//1/65535
-#define LOG_MIN (-11.09033963005365f)
-//4
-#define LOG_MAX 1.38629436111989f
+#define LOG_MIN -16.0f
+#define LOG_MAX 0.0f
 
 unsigned short sms :: encodeRealLog(real x)
 {
@@ -474,11 +464,12 @@ long sms :: addTrackPoints(grain *g0, grain *g1, grain *g2)
   return 1;
 }
 
-real sms :: merit(trackpoint *tp0, trackpoint *tp1, real m0, real m1, real dti2, real dMCoeff, real *df, real maxDF2)
+inline real sms :: merit(trackpoint *tp0, trackpoint *tp1, real m0, real m1, real dti2, real dMCoeff, real *df, real maxDF2)
 {
   (*df) = m1*tp1->f - m0*tp0->f;
   real df2 = square(*df);
   if(df2 > maxDF2) return df2;
+  if(tp0->y==0.0f || tp1->y==0.0f) return df2;
   real dM = dBApprox((m1*tp1->y)/(m0*tp0->y));
   return (df2+square(dMCoeff*dM));
 }
@@ -508,22 +499,14 @@ bool sms :: nearestTrackPoint(tplist *tpl, trackpoint *tp0, real m0, real m1, re
 
 bool sms :: contTrack(track *t, trackpoint *tp, int c)
 {
-  bool allowCont = true;
-  trackpoint *last = t->back();
-  real dbIncr = dBApprox(tp->y/last->y);
 #ifdef MULTITHREADED
   pthread_mutex_lock(&trackMutex[c]);
 #endif
-  if(dbIncr > maxdBIncr) {
-    tp->y0 = last->y;
-    t->push_back(tp);
-  } else {
-    t->push_back(tp);
-  }
+  t->push_back(tp);
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&trackMutex[c]);
 #endif
-  return allowCont;
+  return true;
 }      
 
 bool sms :: adoptTrack(track *precursor, 
@@ -540,24 +523,13 @@ bool sms :: adoptTrack(track *precursor,
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&lender->trackMutex[c]);
 #endif
-  real dbIncr = dBApprox((m*tp->y)/last->y);
-
-  bool bDiscont;
-  if(dbIncr > maxdBIncrStitch) {
-    bDiscont = true;
-  } else {
-    bDiscont = false;
-  }
   if(tp->M>last->M) {
     if(dt==1.0) {
       if(lender->res==2) {
 	trackpoint *tp0 = new trackpoint();
 	tp0->h = tp->h*2/lender->res;
 	tp0->y = 0.5*tp->y;
-	if(bDiscont)
-	  tp0->y0 = last->y;
-	else 
-	  tp0->y0 = tp0->y;
+  tp0->y0 = tp0->y;
 	tp0->f = 0.5*tp->f;
 	tp0->ph = tp->ph;
 	tp0->time = last->time+1;
@@ -600,8 +572,6 @@ bool sms :: adoptTrack(track *precursor,
 	pthread_mutex_unlock(&lender->trackMutex[c]);
 #endif
 	t->startTrack(tp0,false);
-	if(bDiscont)
-	  tp->y0 = 2.0*last->y;
 	t->push_back(tp);
 	addTrack(c,t);
       }
@@ -610,10 +580,6 @@ bool sms :: adoptTrack(track *precursor,
       trackpoint *tpend0 = new trackpoint();
       trackpoint *tpend1 = new trackpoint();
       trackpoint *tp0 = new trackpoint();
-
-      if(bDiscont)
-	tp->y0 = 2.0*last->y;
-
       tp0->h = (last->h*lender->res)/2;
       tp0->y = 0;
       tp0->y0 = 0;
@@ -656,9 +622,6 @@ bool sms :: adoptTrack(track *precursor,
     }
   } else {
     track *t = ta->create(precursor,this,res);
-
-    if(bDiscont)
-      tp->y0 = 0.5f*last->y;
 
     trackpoint *tp0 = new trackpoint();
     trackpoint *tpend = new trackpoint();
@@ -764,7 +727,7 @@ void sms :: markDuplicatesLo(long offset, sms *lo, long offsetlo, int c)
       }
     }
       
-    if(trackPointsL1 && bStitch) {
+    if(trackPointsL1) {
       for(tplist::reverse_iterator tpi = trackPointsL1->rbegin(); 
 	  tpi!=trackPointsL1->rend();
 	  tpi++) {      
@@ -1025,7 +988,7 @@ long sms :: assignTrackPoints_(long offset, sms *hi, sms *lo, real dtlo, long of
       else (*tpi)->cont = NULL;
     }
     
-    if(trackPointsL1 && bStitch) {
+    if(trackPointsL1) {
       for(tplist::reverse_iterator tpi = trackPointsL1->rbegin(); 
 	  tpi!=trackPointsL1->rend();
 	  tpi++) {      
@@ -1039,7 +1002,7 @@ long sms :: assignTrackPoints_(long offset, sms *hi, sms *lo, real dtlo, long of
       }
     }
     
-    if(trackPointsH1 && bStitch) {
+    if(trackPointsH1) {
       for(tplist::iterator tpi = trackPointsH1->begin(); 
 	  tpi!=trackPointsH1->end();
 	  tpi++) {      
@@ -1066,8 +1029,7 @@ long sms :: assignTrackPoints_(long offset, sms *hi, sms *lo, real dtlo, long of
       tplist::iterator minH0; bool minH0Set = nearestTrackPoint(trackPointsH1,*tpi,1.0,2.0,1.0,&minH0,&FH0,maxMerit2,maxDF2);
       
       if(minM0Set &&
-	 (!bStitch
-	  ||(FM0<=FH0 && FM0<=FL0)
+	 ((FM0<=FH0 && FM0<=FL0)
 	  ||(minL0Set && FL0<=FH0 && FL0<=FM0 && (*minL0)->dup[1-offsetlo] == (*minM0))
 	  ||(minH0Set && FH0<=FL0 && FH0<=FM0 && (*minH0)->dup[1] == (*minM0)))
 	 ) {
@@ -1079,14 +1041,14 @@ long sms :: assignTrackPoints_(long offset, sms *hi, sms *lo, real dtlo, long of
 	(*tpi)->contF = FM0;
 	(*tpi)->cont = *minM0;
 	nToCont++;
-      } else if(bStitch && minL0Set && FL0<=FM0 && FL0<=FH0) {
+      } else if(minL0Set && FL0<=FM0 && FL0<=FH0) {
 	if(minM0Set && (*minL0)->dup[1-offsetlo] == (*minM0)) {
 	  (*tpi)->dupcont = *minM0;
 	}
 	(*tpi)->contF = FL0;
 	(*tpi)->cont = *minL0;
 	nToCont++;
-      } else if(bStitch && minH0Set && FH0<=FM0 && FH0<=FL0) {
+      } else if(minH0Set && FH0<=FM0 && FH0<=FL0) {
 	if(minM0Set && (*minH0)->dup[1] == (*minM0)) {
 	  (*tpi)->dupcont = *minM0;
 	}
@@ -1403,7 +1365,7 @@ void sms :: phaseLock(trackpoint *tp0, trackpoint *tp1, long time)
   tp1->f = f;
 }
 
-void sms :: synthTracks(real a)
+void sms :: synthTracks(real a, real f0, real f1)
 {
 #ifdef MULTITHREADED
   pthread_mutex_lock(&dataMutex);
@@ -1413,6 +1375,12 @@ void sms :: synthTracks(real a)
   pthread_mutex_unlock(&dataMutex);
 #endif
   real h2 = (a*(real)h1);			  
+  real fScale0, fScale1;
+  real mScale;
+  h2 *= (real)M;
+  mScale = 1.0f / (real)M;
+  fScale0 = f0 * mScale;
+  fScale1 = f1 * mScale;    
   h2cum += h2;
   int h2i = round2int(h2cum);
   h2cum -= h2i;
@@ -1433,23 +1401,22 @@ void sms :: synthTracks(real a)
     pthread_mutex_lock(&trackMutex[c]);
 #endif
     for(list<track*>::iterator tt=trax[c]->begin();
-	tt!=trax[c]->end(); ) {  
+        tt!=trax[c]->end(); ) {  
       track *t = (*tt);
       if(t->end <= synthtime) {
-	if(!t->descendant||t->descendant->isDone()) {
-	  list<track*>::iterator eraseMe = tt;
-	  tt++;
-	  trax[c]->erase(eraseMe);
-	  ta->destroy(t);
-	} else {
-	  tt++;
-	}
+        if(!t->descendant||t->descendant->isDone()) {
+          list<track*>::iterator eraseMe = tt;
+          tt++;
+          trax[c]->erase(eraseMe);
+          ta->destroy(t);
+        } else {
+          tt++;
+        }
       } else if(synthtime >= t->start) {
-	trackpoint *tp = t->getTrackPoint(synthtime);
-	t->synth(sines2,sines2->writePos,c,synthtime,h2i);
-	tt++;
+        t->synth(sines2,sines2->writePos,c,synthtime,h2i,fScale0,fScale1,mScale);
+        tt++;
       } else {
-	break;
+        break;
       }
     }
 #ifdef MULTITHREADED
@@ -1512,13 +1479,13 @@ void sms :: advance(long n)
 }
 
 void sms :: c2evenodd(grain *eo, grain *even, grain *odd) {
-  _c2evenodd(eo->freq, even->freq, odd->freq, eo->N);
+  _c2evenodd(eo->x, even->x, odd->x, eo->N);
 }
 
 void sms :: calcmags(real *mag, grain *g, real q) {
   real q2 = 1.0/q;
   for(int k=0;k<=Nover2;k++) {
-    real m = norm2(g->freq[k])*q2;
+    real m = norm2(g->x[k])*q2;
     mag[k] = m;
     if(magmax < m) magmax = m;
   }
@@ -1629,7 +1596,7 @@ void sms :: adjustPeaks(list<peak*> &peaks,
     if(k0 < tp->x) {
       real m0 = ((mag2[k0])+(mag2[k0+1]))*(1.0-kf0);
       m += m0;
-      mtop += max(0.0f,(m0 - mbase)*(1.0-kf0));
+      mtop += max(0.0,(m0 - mbase)*(1.0-kf0));
     } else {
       real m0 = ((mag2[k0])+(mag2[k0+1]));
       m += m0;
@@ -1642,14 +1609,14 @@ void sms :: adjustPeaks(list<peak*> &peaks,
     if(k2 < tn->x) {
       real m0 = ((mag2[k2-1])+(mag2[k2]));
       m += m0;
-      mtop += max(0.0,m0 - mbase);
+      mtop += max(0.0f,m0 - mbase);
       m0 = ((mag2[k2])+(mag2[k2+1]))*kf2;
       m += m0;
       mtop += max(0.0f,(m0 - mbase)*kf2);
     } else {
       real m0 = ((mag2[k2-1])+(mag2[k2]))*(1.0-kf2);
       m += m0;
-      mtop += max(0.0f,(m0 - mbase)*(1.0-kf2));
+      mtop += max(0.0,(m0 - mbase)*(1.0-kf2));
     }
     
     for(int k=k0+1;k<k2-1;k++) {
@@ -1830,8 +1797,8 @@ void sms :: extractTrackPoints(grain *g,
 {
   real thmin = square(peakThresh)*magmax;
   list<peak*> peaks;
-  list<peak*> troughs1;
-  list<peak*> troughs2;
+  peak* trough1 = NULL;
+  peak* trough2 = NULL;
 
   peak *t0 = pa->create();
   t0->k = 1;
@@ -1853,7 +1820,7 @@ void sms :: extractTrackPoints(grain *g,
   t1->tn = NULL;
   t1->tn2 = NULL;
 
-  troughs2.push_back(t0);
+  trough2 = t0;
 
   int k00=0;
   int k01=Nover2-1;
@@ -1863,34 +1830,36 @@ void sms :: extractTrackPoints(grain *g,
 
   for(int k=1;k<Nover2-1;k++) {
     if( (mag2[k] > thmin)
-	&&
-	(mag2[k] > mag2[k-1])
-	&&
-	(mag2[k] >= mag2[k+1])
-	) {
+        &&
+        (mag2[k] > mag2[k-1])
+        &&
+        (mag2[k] >= mag2[k+1])
+        ) {
+
       kp = k;
       if(k>=kStart-peakWidth && k<=kEnd+peakWidth) {
-	peak *p = makePeak(mag1,mag2,k);
-	p->tn2 = t1;
-	if(!troughs1.empty() && troughs1.back()->tn == NULL) {
-	  p->tp = troughs1.back();
-	  troughs1.back()->tn = p;
-	}
-	if(!troughs2.empty() && troughs2.back()->tn2 == NULL) {
-	  p->tp2 = troughs2.back();
-	  troughs2.back()->tn2 = p;
-	}
-	peaks.push_back(p);
+        peak *p = makePeak(mag1,mag2,k);
+        p->tn2 = t1;
+        if(trough1 && trough1->tn == NULL) {
+          p->tp = trough1;
+          trough1->tn = p;
+        }
+        if(trough2 && trough2->tn2 == NULL) {
+          p->tp2 = trough2;
+          trough2->tn2 = p;
+        }
+        peaks.push_back(p);
       }
     } else if((mag2[k] <= mag2[k-1])
-	      &&
-	      (mag2[k] <= mag2[k+1])
-	      ) {
+              &&
+              (mag2[k] <= mag2[k+1])
+              ) {
+
       peak *p = makePeak(mag1,mag2,k);
-      troughs2.push_back(p);
+      trough2 = p;
       if(!peaks.empty()) { 
-	peaks.back()->tn2 = p;
-	p->tp2 = peaks.back();
+        peaks.back()->tn2 = p;
+        p->tp2 = peaks.back();
       }
     }
     if((mag0[k] <= mag0[k-1])
@@ -1898,23 +1867,23 @@ void sms :: extractTrackPoints(grain *g,
        (mag0[k] <= mag0[k+1])
        ) {   
       if(peaks.empty())
-	k00 = k;
+        k00 = k;
       if(kp <= kEnd)
-	k01 = k;
+        k01 = k;
     }
     if((mag1[k] <= mag1[k-1])
        &&
        (mag1[k] <= mag1[k+1])
        ) {      
       if(peaks.empty())
-	k10 = k;
+        k10 = k;
       if(kp <= kEnd)
-	k11 = k;
+        k11 = k;
       peak *p = makePeak(mag1,mag1,k);
-      troughs1.push_back(p);
+      trough1 = p;
       if(!peaks.empty() && peaks.back()->tn == NULL) {
-	peaks.back()->tn = p;
-	p->tp = peaks.back();
+        peaks.back()->tn = p;
+        p->tp = peaks.back();
       }
     }
   }

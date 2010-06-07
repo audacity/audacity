@@ -2,6 +2,8 @@
 #include "real.h"
 #include "sbsms.h"
 #include "utils.h"
+#include <algorithm>
+using namespace std;
 
 namespace _sbsms_ {
 
@@ -42,26 +44,24 @@ bool subband :: isSynthReady()
   return synthInit(false)?true:false;
 }
 
-subband :: subband(subband *parent, unsigned short M, int channels, int quality, int latency, bool bPreAnalyze, TrackAllocator *ta, PeakAllocator *pa)
+subband :: subband(subband *parent, unsigned short M, int channels, sbsms_quality *quality, int latency, bool bPreAnalyze, TrackAllocator *ta, PeakAllocator *pa)
 {
+  this->quality = quality;
   this->ta = ta;
   this->pa = pa;
-  this->fp = NULL;
-
   int k = ilog2(M);
   this->channels = channels;
-  this->quality = quality;
   this->parent = parent;
-  this->N = SBSMS_N[quality][k];
+  this->N = quality->N[k];
   this->M = M;
-  this->s = SBSMS_S;
-  this->res = SBSMS_RES[quality][k];
-  real pad = SBSMS_PAD[quality][k];
-  if(M<SBSMS_M_MAX[quality]) 
+  this->s = quality->S[k];
+  this->res = quality->res[k];
+  real pad = quality->pad[k];
+  if(M<quality->M_MAX) 
     sub = new subband(this,M*2,channels,quality,latency,bPreAnalyze,ta,pa);
   else 
     sub = NULL;
-  int Nlo = sub?SBSMS_N[quality][k+1]:0;
+  int Nlo = sub?quality->N[k+1]:0;
   
   nGrainsPerFrame = res;
   if(sub) nGrainsPerFrame *= sub->nGrainsPerFrame;
@@ -75,37 +75,36 @@ subband :: subband(subband *parent, unsigned short M, int channels, int quality,
   init();
 
   // sms 
-  in0 = new GrainBuf(N, h, pad*SBSMS_P1, SBSMS_WINDOW);
-  in1 = new GrainBuf(N, h, pad, SBSMS_WINDOW);
-  in2 = new GrainBuf(N, h, pad/SBSMS_Q1, SBSMS_WINDOW);
+  in0 = new GrainBuf(N, h, pad*quality->P[k]);
+  in1 = new GrainBuf(N, h, pad);
+  in2 = new GrainBuf(N, h, pad*quality->Q[k]);
 
   // synthesize
-  smser = new sms(N,(short)M,(short)(SBSMS_M_MAX[quality]),res,latency,SBSMS_P1,SBSMS_Q1,pad,Nlo,channels,ta,pa);
+  smser = new sms(N,(short)M,(short)quality->M_MAX,res,latency,quality->P[k],quality->Q[k],pad,Nlo,channels,ta,pa);
 
   if(!parent && bPreAnalyze) {
     this->bPreAnalyze = true;
-    inPre = new GrainBuf(N, h, 2, SBSMS_WINDOW);
-    x1[0] = grain :: create(N,pad,SBSMS_WINDOW);
-    x1[1] = grain :: create(N,pad,SBSMS_WINDOW);
-    x2[0] = grain :: create(N,pad,SBSMS_WINDOW);
-    x2[1] = grain :: create(N,pad,SBSMS_WINDOW);
+    inPre = new GrainBuf(N, h, 2);
+    x1[0] = grain :: create(N,pad);
+    x1[1] = grain :: create(N,pad);
+    x2[0] = grain :: create(N,pad);
+    x2[1] = grain :: create(N,pad);
   } else {
     this->bPreAnalyze = false;
     inPre = NULL;
   }
 
   if(sub) {
-    subOut = new GrainBuf(N, N/s, 1, SBSMS_HANN);
-    usSubOut = new SampleBuf(2*N);
+    subOut = new SampleBuf(0);
 
     // receive
-    in = new GrainBuf(N, N/s, 1, SBSMS_HANN);
+    in = new GrainBuf(N, N/s, 1);
 
     // samples to sub
     subIn = new SampleBuf(N/2);
 
     // output samples
-    outMixer = new Mixer(smser,usSubOut);
+    outMixer = new Mixer(smser,subOut);
   } else {
     outMixer = smser;
   }
@@ -141,6 +140,7 @@ void subband :: reset() {
   outputFrameSize.clear();
   aForH.clear();
   aSynth.clear();
+  fSynth.clear();
   frameRatio.clear();
   in0->clear();
   in1->clear();
@@ -149,23 +149,19 @@ void subband :: reset() {
     in->clear();
     subIn->clear();
     subOut->clear();
-    usSubOut->clear();
   }
   smser->reset();
 }
 
 void subband :: init()
 {
-  int ssms = (N*nGrainsPerFrame)/(resTotal*SBSMS_H[quality][2]);
+  int ssms = (N*nGrainsPerFrame)/(resTotal*quality->H[2]);
   h = N/ssms;
-
   lastInputFrameSize = h*nGrainsPerFrame;
-  lastFrameA = 1.0;
-  lastFrameRatio = 1.0;
-
+  lastFrameA = 1.0f;
+  lastFrameRatio = 1.0f;
   nLatency = nLatencyOriginal;
-
-  nToDrop = (SBSMS_N[quality][SBSMS_BANDS[quality]-1]/SBSMS_H[quality][2]*nGrainsPerFrame-ssms)/2;
+  nToDrop = (quality->N[quality->bands-1]/quality->H[2]*nGrainsPerFrame-ssms)/2;
   nDropped = 0;
   nFramesSkipped = 0;
   nFramesWritten = 0;
@@ -212,7 +208,6 @@ subband :: ~subband()
     delete in;
     delete subIn;
     delete subOut;
-    delete usSubOut;
     delete outMixer;
   }
 }
@@ -228,21 +223,22 @@ void subband :: setFrameSize(int iFrameSize, real a, real ratio)
   lastInputFrameSize = iFrameSize;
   lastOutputFrameSize = oFrameSizei;
   samplesQueued += oFrameSizei * ratio;
+  //samplesQueued += oFrameSizei;
 }
 
 void subband :: setH(real ratio)
 {
   real a = aForH.read(aForH.readPos);
   if(a > 4.0)
-    h = SBSMS_H[quality][0];
+    h = quality->H[0];
   else if(a > 2.0 && a <= 4.0)
-    h = SBSMS_H[quality][1];
+    h = quality->H[1];
   else if(a >= 0.5 && a <= 2.0)
-    h = SBSMS_H[quality][2];
+    h = quality->H[2];
   else if(a >= 0.25 && a < 0.5)
-    h = SBSMS_H[quality][3];
+    h = quality->H[3];
   else
-    h = SBSMS_H[quality][4];
+    h = quality->H[4];
 
   h = (h*resTotal)/nGrainsPerFrame;
   in0->h = h;
@@ -265,6 +261,12 @@ void subband :: setA(real a)
   aSynth.write(a);
   if(sub) sub->setA(a);
   lastFrameA = a;
+}
+
+void subband :: setF(real f)
+{
+  fSynth.write(f);
+  if(sub) sub->setF(f);
 }
 
 void subband :: setAMod(real a)
@@ -298,20 +300,17 @@ void subband :: write_(audio *inBuf, long n, real a, real ratio)
 	nDropped++;
       } else {
 	if(!parent && nTrackPointsWritten%nGrainsPerFrame == 0) {
-	  if(bPreAnalyze) {
-	    if(aPreAnalysis.n_readable()) {
-	      real aMod = aPreAnalysis.read(aPreAnalysis.readPos);
-	      setAMod(aMod);
-	      setA(1.0f+aMod*(a-1.0f));
-	      aPreAnalysis.advance(1);
-	    } else {
-	      setAMod(1.0f);
-	      setA(a);
-	    }
+    real amod;
+    if(bPreAnalyze && aPreAnalysis.n_readable()) {
+	    amod = aPreAnalysis.read(aPreAnalysis.readPos);
+	    aPreAnalysis.advance(1);
 	  } else {
-	    setA(a);
+      amod = 1.0f;
 	  }
+	  setA(1.0f+amod*(a-1.0f));
+    setAMod(amod);	 
 	  setRatio(ratio);
+    setF(1.0f/ratio);
 	}
 	if(!parent && (nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
 	  setAForH(a);
@@ -376,7 +375,9 @@ void subband :: stepSynthFrame()
 #ifdef MULTITHREADED
   pthread_mutex_lock(&dataMutex);
 #endif
+  if(!parent) aMod.advance(1);
   aSynth.advance(1);
+  fSynth.advance(1);
   nFramesSynthed++;
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&dataMutex);
@@ -472,9 +473,9 @@ void subband :: markDuplicates(int c)
   long ndone = 0;
   while(ndone<ntodo) {  
     smser->markDuplicates(nTrackPointsMarked[c],
-			  parent?parent->smser:NULL,
-			  sub?sub->smser:NULL,
-			  c);
+                          parent?parent->smser:NULL,
+                          sub?sub->smser:NULL,
+                          c);
     if(nTrackPointsMarked[c]%res==1 || res==1) {
       if(sub) sub->markDuplicates(c);
     }
@@ -496,11 +497,11 @@ long subband :: assignInit(bool bSet, int c)
     nTrackPointsToAssign[c] = n;
     if(nTrackPointsToAssign[c]) {
       if(nFramesAssigned[c]==0) {
-	smser->assignTrackPoints(nTrackPointsAssigned[c]++,
-				 parent?parent->smser:NULL,
-				 sub?sub->smser:NULL,
-				 c);
-	smser->startNewTracks(nTrackPointsStarted[c]++,c);
+        smser->assignTrackPoints(nTrackPointsAssigned[c]++,
+                                 parent?parent->smser:NULL,
+                                 sub?sub->smser:NULL,
+                                 c);
+        smser->startNewTracks(nTrackPointsStarted[c]++,c);
       }      
     }
   }
@@ -518,19 +519,19 @@ long subband :: assignTrackPoints(int c)
     if(nTrackPointsAssigned[c]%res==0) {
       if(sub) sub->assignTrackPoints(c);
       smser->assignTrackPoints(nTrackPointsAssigned[c]++,
-			       parent?parent->smser:NULL,
-			       sub?sub->smser:NULL,
-			       c);
+                               parent?parent->smser:NULL,
+                               sub?sub->smser:NULL,
+                               c);
       if(!parent) startNewTracks(c);
     } else {
       smser->assignTrackPoints(nTrackPointsAssigned[c]++,
-			       parent?parent->smser:NULL,
-			       sub?sub->smser:NULL,
-			       c);
+                               parent?parent->smser:NULL,
+                               sub?sub->smser:NULL,
+                               c);
     }
     if(parent && parent->res != 1)
       parent->smser->startNewTracks(parent->nTrackPointsStarted[c]++,c);
-
+    
     ndone++;
   }
   
@@ -628,6 +629,7 @@ void subband :: readTrackPointsFromFile(FILE *fp)
   }
 }
 
+
 long subband :: writeTrackPointsToFile(FILE *fp) 
 {
   long ntodo = parent?1:nTrackPointsToSynth;
@@ -669,6 +671,12 @@ void subband :: synthTracks()
   pthread_mutex_lock(&dataMutex);
 #endif
   real a = aSynth.read(aSynth.readPos);
+  real f0 = fSynth.read(fSynth.readPos);
+  real f1;
+  if(fSynth.n_readable()>=2)
+    f1 = fSynth.read(fSynth.readPos+1);
+  else
+    f1 = f0;
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&dataMutex);
 #endif
@@ -677,8 +685,9 @@ void subband :: synthTracks()
 
   while(ndone<ntodo) {
     if(nTrackPointsSynthed%res==0)
-      if(sub) sub->synthTracks();
-    smser->synthTracks(a);
+      if(sub) sub->synthTracks();   
+    real df = (f1-f0)/(real)nTrackPointsToSynth;
+    smser->synthTracks(a,f0+nTrackPointsSynthed*df,f0+(nTrackPointsSynthed+1)*df);
     nTrackPointsSynthed++;
     ndone++;
   }
@@ -690,24 +699,11 @@ void subband :: readSubSamples()
   if(sub) {
     audio fromSub[SUB_BUF_SIZE];
     long n_fromsub = 0;
-
     do {
       n_fromsub = min((long)SUB_BUF_SIZE,sub->n_readable());
       n_fromsub = sub->read(fromSub,n_fromsub);
-      //write samples to grains
       subOut->write(fromSub, n_fromsub);
     } while(n_fromsub>0);
-    
-    // upsample grains to samples 
-    long ng_read_subOut = 0;
-    for(int k=subOut->readPos;k<subOut->writePos;k++) {
-      ng_read_subOut++;
-      int h = 2*N/s;
-      grain *gup = subOut->read(k)->upsample();
-      usSubOut->write(gup,h);
-      grain :: destroy(gup);
-    }
-    subOut->advance(ng_read_subOut);
   }
 }
 
@@ -767,9 +763,11 @@ long subband :: readFromFile(FILE *fp, real a, real ratio)
       stepAssignFrame(c);
     samples += framesize;
 #ifdef MULTITHREADED
-  pthread_mutex_lock(&dataMutex);
+    pthread_mutex_lock(&dataMutex);
 #endif    
     setA(1.0f+amod*(a-1.0f));
+    setAMod(amod);
+    setF(1.0f/ratio);
     setRatio(ratio);
     setFrameSize(framesize,a,ratio);
 #ifdef MULTITHREADED
@@ -783,7 +781,7 @@ void subband :: writeFramePositionsToFile(FILE *fp)
 {
   long frames = 0;
   // samples, frames, channels, quality
-  long offset = 2*sizeof(long) + 2*sizeof(int);
+  long offset = 2*sizeof(long) + sizeof(int) + sizeof(sbsms_quality);
   unsigned short maxtrackindex = ta->size();
   fseek(fp,offset,SEEK_SET);
   fwrite(&maxtrackindex,sizeof(unsigned short),1,fp); offset += sizeof(unsigned short);
@@ -838,13 +836,7 @@ long subband :: writeTracksToFile(FILE *fp)
     return 0;
   }
   int framesize = inputFrameSize.read(nFramesSynthed);
-  real amod;
-  if(aMod.n_readable()) {
-    amod = aMod.read(aMod.readPos);
-    aMod.advance(1);
-  } else {
-    amod = 1.0f;
-  }
+  real amod = aMod.read(aMod.readPos);
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&dataMutex);
 #endif    
@@ -858,7 +850,8 @@ long subband :: writeTracksToFile(FILE *fp)
   }
   bytes += writeTrackPointsToFile(fp);
   frameBytes.write(bytes);
-
+  frameRatio.advance(1);
+  outputFrameSize.advance(1);
   return samples;
 }
 
@@ -1021,7 +1014,7 @@ long subband :: read(audio *buf, real *ratio0, real *ratio1)
       pthread_mutex_unlock(&dataMutex);
 #endif
       if(buf) {
-	stepReadFrame();
+        stepReadFrame();
       }
       n = read(buf, n);
     } else {
@@ -1202,15 +1195,15 @@ void subband :: calculateA(long kstart, long kend)
 
 real subband :: calculateOnset(grain *g1, grain *g2)
 {  
-  _c2evenodd(g2->freq, x2[0]->freq, x2[1]->freq, g2->N);
+  _c2evenodd(g2->x, x2[0]->x, x2[1]->x, g2->N);
   real o = 1.0f;
   if(g1!=NULL) {
     int Nover2 = N/2;
     int nOnset = 0;
     int nThresh = 0;
     for(int k=0;k<Nover2;k++) {
-      real m2 = norm2(x2[0]->freq[k]) + norm2(x2[1]->freq[k]);
-      real m1 = norm2(x1[0]->freq[k]) + norm2(x1[1]->freq[k]);
+      real m2 = norm2(x2[0]->x[k]) + norm2(x2[1]->x[k]);
+      real m1 = norm2(x1[0]->x[k]) + norm2(x1[1]->x[k]);
       bool bThresh = (m2 > 1e-6);
       bool bOnset = (m2 > 2.0f*m1) && bThresh;
       if(bOnset) nOnset++;
@@ -1221,8 +1214,8 @@ real subband :: calculateOnset(grain *g1, grain *g2)
     else
       o = (real)nOnset/(real)nThresh;
   } 
-  memcpy(x1[0]->freq,x2[0]->freq,g2->N*sizeof(audio));
-  memcpy(x1[1]->freq,x2[1]->freq,g2->N*sizeof(audio));
+  memcpy(x1[0]->x,x2[0]->x,g2->N*sizeof(audio));
+  memcpy(x1[1]->x,x2[1]->x,g2->N*sizeof(audio));
   return o;
 }
 

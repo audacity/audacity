@@ -16,19 +16,29 @@
 #include <pthread.h>
 #endif
 
-using namespace _sbsms_;
+namespace _sbsms_ {
 
-real SBSMS_P1 = 2.0f;
-real SBSMS_Q1 = (4.0f/3.0f);
-int SBSMS_FRAME_SIZE[SBSMS_QUALITIES] = {512,512,512};
-int SBSMS_BANDS[SBSMS_QUALITIES] = {7,7,7};
-int SBSMS_MAX_FRAME_SIZE[SBSMS_QUALITIES] = {SBSMS_MAX_STRETCH*512,SBSMS_MAX_STRETCH*512,SBSMS_MAX_STRETCH*512};
-int SBSMS_H[SBSMS_QUALITIES][5] = {{8,12,16,24,32},{6,8,8,8,12},{4,6,8,12,16}};
-int SBSMS_M_MAX[SBSMS_QUALITIES] = {64,64,64};
-int SBSMS_RES[SBSMS_QUALITIES][SBSMS_MAX_BANDS]  = {{1,1,1,2,2,1,1}, {1,1,2,2,1,2,1}, {1,1,2,2,2,2,1}};
-real SBSMS_PAD[SBSMS_QUALITIES][SBSMS_MAX_BANDS]  = {{2,2,4,4,4,4,4},{2,2,4,4,4,4,6},{4,4,4,4,4,6}};
-int SBSMS_N[SBSMS_QUALITIES][SBSMS_MAX_BANDS] = {{384,384,576,480,384,288,252},{384,384,576,480,384,288,336},{768,768,576,480,384,288,288}};
+const sbsms_quality sbsms_quality_standard = {
+  512,6400,0.08f,12.5f,7,64,
+  {6,8,8,8,12},
+  {384,384,576,480,384,288,336,NULL},
+  {4,4,4,4,4,4,4,NULL},
+  {1,1,2,2,1,2,1,NULL},
+  {2.00f,2.00f,4.00f,4.00f,4.00f,4.00f,6.00f,NULL},
+  {2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,NULL},
+  {0.75f,0.75f,0.75f,0.75f,0.75f,0.75f,0.75f,NULL}
+};
 
+const sbsms_quality sbsms_quality_fast = {
+  512,6400,0.08f,12.5f,7,64,
+  {6,8,8,8,12},
+  {192,192,288,240,192,144,168,NULL},
+  {4,4,4,4,4,4,4,NULL},
+  {1,1,2,2,1,2,1,NULL},
+  {2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,3.00f,NULL},
+  {2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,NULL},
+  {0.50f,0.50f,0.75f,0.75f,0.75f,0.75f,0.75f,NULL}
+};
 
 #ifdef MULTITHREADED
 
@@ -301,10 +311,7 @@ void sbsms_init(int n) {
 
 void sbsms_private_init(sbsms *sbsmser, bool bAnalyze, bool bSynthesize)
 {
-  sbsmser->bufsize = SBSMS_MAX_FRAME_SIZE[sbsmser->quality];
-  sbsmser->chunksize = SBSMS_FRAME_SIZE[sbsmser->quality];
-  sbsmser->n_postpad = LONG_MAX;
-  sbsmser->ina = make_audio_buf(sbsmser->bufsize);
+  sbsmser->ina = make_audio_buf(sbsmser->quality.maxoutframesize);
   sbsms_init_threads(sbsmser,bAnalyze,bSynthesize);
 }
 
@@ -313,12 +320,13 @@ void sbsms_reset(sbsms *sbsmser)
   sbsmser->ta->init();
   sbsmser->n_processed = 0;
   sbsmser->bWritingComplete = false;
+  
   if(sbsmser->getSamplesCB) {
-    sbsmser->n_prepad = SBSMS_N[sbsmser->quality][SBSMS_BANDS[sbsmser->quality]-1]*SBSMS_M_MAX[sbsmser->quality];
-    sbsmser->n_prespent = SBSMS_N[sbsmser->quality][SBSMS_BANDS[sbsmser->quality]-1]/SBSMS_H[sbsmser->quality][2]/2;
+    sbsmser->n_prepad = sbsmser->quality.N[sbsmser->quality.bands-1] * sbsmser->quality.M_MAX;
+    sbsmser->n_prespent = sbsmser->quality.N[sbsmser->quality.bands-1] / sbsmser->quality.H[2] / 2;
   } else {
-    sbsmser->n_prepad = SBSMS_N[sbsmser->quality][SBSMS_BANDS[sbsmser->quality]-1]/SBSMS_H[sbsmser->quality][2]/2;
-    sbsmser->n_prespent = SBSMS_N[sbsmser->quality][SBSMS_BANDS[sbsmser->quality]-1]/SBSMS_H[sbsmser->quality][2]/2;
+    sbsmser->n_prepad = 0;
+    sbsmser->n_prespent = 0;
   }
   sbsmser->top->reset();
 }
@@ -329,7 +337,7 @@ void sbsms_seek(sbsms *sbsmser, long framePos, long samplePos)
   sbsmser->top->seek(framePos);
 }
 
-sbsms* sbsms_create(FILE *fp, sbsms_stretch_cb getStretchCB, sbsms_ratio_cb getRatioCB)
+sbsms* sbsms_create(FILE *fp, sbsms_rate_cb getRateCB, sbsms_pitch_cb getPitchCB)
 {
   sbsms *sbsmser = (sbsms*) calloc(1,sizeof(sbsms));
   // samples, frames
@@ -338,33 +346,33 @@ sbsms* sbsms_create(FILE *fp, sbsms_stretch_cb getStretchCB, sbsms_ratio_cb getR
   fread(&samples,sizeof(long),1,fp);
   fread(&frames,sizeof(long),1,fp);
   fread(&(sbsmser->channels),sizeof(int),1,fp);
-  fread(&(sbsmser->quality),sizeof(int),1,fp);
+  fread(&(sbsmser->quality),sizeof(sbsms_quality),1,fp);
   unsigned short maxtrackindex;
   fread(&maxtrackindex,sizeof(unsigned short),1,fp);
   sbsmser->fp = fp;
   sbsmser->getSamplesCB = NULL;
-  sbsmser->getStretchCB = getStretchCB;
-  sbsmser->getRatioCB = getRatioCB;
+  sbsmser->getRateCB = getRateCB;
+  sbsmser->getPitchCB = getPitchCB;
   sbsmser->ta = new TrackAllocator(false,maxtrackindex);
   sbsmser->pa = new PeakAllocator();
-  sbsmser->top = new subband(NULL,1,sbsmser->channels,sbsmser->quality,2,false,sbsmser->ta,sbsmser->pa);
+  sbsmser->top = new subband(NULL,1,sbsmser->channels,&sbsmser->quality,2,false,sbsmser->ta,sbsmser->pa);
   sbsmser->top->setFramesInFile(frames);
   sbsms_private_init(sbsmser,false,false);
   sbsms_reset(sbsmser);
   return sbsmser;
 }
 
-sbsms* sbsms_create(sbsms_cb getSamplesCB, sbsms_stretch_cb getStretchCB, sbsms_ratio_cb getRatioCB, int channels, int quality, bool bPreAnalyze, bool bSynthesize)
+sbsms* sbsms_create(sbsms_cb getSamplesCB, sbsms_rate_cb getRateCB, sbsms_pitch_cb getPitchCB, int channels, sbsms_quality *quality, bool bPreAnalyze, bool bSynthesize)
 {
   sbsms *sbsmser = (sbsms*) calloc(1,sizeof(sbsms));
   sbsmser->channels = channels;
-  sbsmser->quality = quality;
+  sbsmser->quality = *quality;
   sbsmser->getSamplesCB = getSamplesCB;
-  sbsmser->getStretchCB = getStretchCB;
-  sbsmser->getRatioCB = getRatioCB;
+  sbsmser->getRateCB = getRateCB;
+  sbsmser->getPitchCB = getPitchCB;
   sbsmser->ta = new TrackAllocator(true);
   sbsmser->pa = new PeakAllocator();
-  sbsmser->top = new subband(NULL,1,sbsmser->channels,sbsmser->quality,6,bPreAnalyze,sbsmser->ta,sbsmser->pa);
+  sbsmser->top = new subband(NULL,1,sbsmser->channels,&sbsmser->quality,6,bPreAnalyze,sbsmser->ta,sbsmser->pa);
   sbsms_private_init(sbsmser,true,bSynthesize);
   sbsms_reset(sbsmser);
   return sbsmser;
@@ -390,34 +398,27 @@ void sbsms_pre_analyze_complete(sbsms *sbsmser)
 long sbsms_pre_analyze(sbsms_cb getSamplesCB, void *data, sbsms *sbsmser)
 {
   long n_towrite = 0;
-  real stretch = (sbsmser->getStretchCB)(sbsmser->n_processed,data);
-  real ratio = (sbsmser->getRatioCB)(sbsmser->n_processed,data);
-  real a = 1.0/(ratio*stretch);
+  real rate = (sbsmser->getRateCB)(sbsmser->n_processed,data);
+  real pitch = (sbsmser->getPitchCB)(sbsmser->n_processed,data);
+  real a = 1.0f/rate;
 
   if(sbsmser->n_prepad) {
     a = 1.0;
-    n_towrite = min(sbsmser->chunksize,sbsmser->n_prepad);
+    n_towrite = min(sbsmser->quality.inframesize,sbsmser->n_prepad);
     memset(sbsmser->ina,0,n_towrite*sizeof(audio));
     sbsmser->n_prepad -= n_towrite;
   } else {
-    n_towrite = getSamplesCB(sbsmser->ina,sbsmser->chunksize,data);
+    n_towrite = getSamplesCB(sbsmser->ina,sbsmser->quality.inframesize,data);
     sbsmser->n_processed += n_towrite;
     if(n_towrite == 0) {
-      if(sbsmser->n_postpad) {
-	n_towrite = min(sbsmser->chunksize,sbsmser->n_postpad);
-	memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-	sbsmser->n_postpad -= n_towrite;
-      }
-    }
-    if(n_towrite==0) {
-      sbsmser->bWritingComplete = true;
-      sbsmser->top->writingComplete();
+      n_towrite = sbsmser->quality.inframesize;
+      memset(sbsmser->ina,0,n_towrite*sizeof(audio));
     }
   }
-  return sbsmser->top->preAnalyze(sbsmser->ina, n_towrite, a, ratio);
+  return sbsmser->top->preAnalyze(sbsmser->ina, n_towrite, a, pitch);
 }
 
-long sbsms_read_frame(audio *buf, void *data, sbsms *sbsmser, real *ratio0, real *ratio1)
+long sbsms_read_frame(audio *buf, void *data, sbsms *sbsmser, real *pitch0, real *pitch1)
 {
   long n_read = 0;
   long n_write = 0;
@@ -426,16 +427,16 @@ long sbsms_read_frame(audio *buf, void *data, sbsms *sbsmser, real *ratio0, real
 #endif
 
   do {
-    real stretch = (sbsmser->getStretchCB)(sbsmser->n_processed,data);
-    real ratio = (sbsmser->getRatioCB)(sbsmser->n_processed,data);
-    real a = 1.0/(ratio*stretch);
+    real rate = (sbsmser->getRateCB)(sbsmser->n_processed,data);
+    real pitch = (sbsmser->getPitchCB)(sbsmser->n_processed,data);
+    real a = 1.0f/rate;    
 
     if(sbsmser->n_prespent) {
-      n_read = sbsmser->top->read(NULL, ratio0, ratio1);
+      n_read = sbsmser->top->read(NULL, pitch0, pitch1);
       if(n_read) sbsmser->n_prespent--;
       n_read = 0;
     } else {
-      n_read = sbsmser->top->read(buf, ratio0, ratio1);
+      n_read = sbsmser->top->read(buf, pitch0, pitch1);
     }
 
     n_write = 0;    
@@ -449,46 +450,34 @@ long sbsms_read_frame(audio *buf, void *data, sbsms *sbsmser, real *ratio0, real
     if(n_read == 0) {
 #ifdef MULTITHREADED
       if(!sbsmser->top->isWriteReady()) {
-	pthread_mutex_lock(&threadData->writeMutex);
-	pthread_cond_wait(&threadData->writeCond,&threadData->writeMutex);
-	pthread_mutex_unlock(&threadData->writeMutex);
+        pthread_mutex_lock(&threadData->writeMutex);
+        pthread_cond_wait(&threadData->writeCond,&threadData->writeMutex);
+        pthread_mutex_unlock(&threadData->writeMutex);
       }
 #endif
       long n_towrite = 0;
       if(sbsmser->getSamplesCB) {
-	if(sbsmser->n_prepad) {
-	  a = 1.0;
-	  n_towrite = min(sbsmser->chunksize,sbsmser->n_prepad);
-	  memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-	  sbsmser->n_prepad -= n_towrite;
-	} else {
-	  n_towrite = (sbsmser->getSamplesCB)(sbsmser->ina,sbsmser->chunksize,data);
-	  sbsmser->n_processed += n_towrite;
-	  if(n_towrite == 0) {
-	    if(sbsmser->n_postpad) {
-	      n_towrite = min(sbsmser->chunksize,sbsmser->n_postpad);
-	      memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-	      sbsmser->n_postpad -= n_towrite;
-	    }
-	  }
-	  if(n_towrite==0) {
-	    sbsmser->bWritingComplete = true;
- 	    sbsmser->top->writingComplete();
-	  }
-	}
-	n_write = sbsmser->top->write(sbsmser->ina, n_towrite, a, ratio);
+        if(sbsmser->n_prepad) {
+          a = 1.0;
+          n_towrite = min(sbsmser->quality.inframesize,sbsmser->n_prepad);
+          memset(sbsmser->ina,0,n_towrite*sizeof(audio));
+          sbsmser->n_prepad -= n_towrite;
+        } else {
+          n_towrite = (sbsmser->getSamplesCB)(sbsmser->ina,sbsmser->quality.inframesize,data);
+          sbsmser->n_processed += n_towrite;
+          if(n_towrite == 0) {
+            n_towrite = sbsmser->quality.inframesize;
+            memset(sbsmser->ina,0,n_towrite*sizeof(audio));
+          }
+        }
+        n_write = sbsmser->top->write(sbsmser->ina, n_towrite, a, pitch);
       } else {
-	if(sbsmser->n_prepad) {
-	  n_write = sbsmser->top->zeroPad();
-	  sbsmser->n_prepad--;
-	} else {
-	  n_write = sbsmser->top->readFromFile(sbsmser->fp, a, ratio);
-	  sbsmser->n_processed += n_write;
-	  if(n_write == 0) {
-	    sbsmser->bWritingComplete = true;
-	    sbsmser->top->writingComplete();
-	  }
-	}
+        n_write = sbsmser->top->readFromFile(sbsmser->fp, a, pitch);
+        sbsmser->n_processed += n_write;
+        if(n_write == 0) {
+          sbsmser->bWritingComplete = true;
+          sbsmser->top->writingComplete();
+        }
       }
     }
 #ifdef MULTITHREADED
@@ -513,6 +502,7 @@ long sbsms_read_frame(audio *buf, void *data, sbsms *sbsmser, real *ratio0, real
       pthread_mutex_unlock(&threadData->assignMutex);
     }
 #endif
+    
     if(sbsmser->bWritingComplete && 
        !sbsmser->top->isframe_readable() && 
        sbsmser->top->getFramesAtBack() == 0) {
@@ -531,9 +521,9 @@ long sbsms_write_frame(FILE *fp, void *data, sbsms *sbsmser)
 #endif
 
   do {
-    real stretch = (sbsmser->getStretchCB)(sbsmser->n_processed,data);
-    real ratio = (sbsmser->getRatioCB)(sbsmser->n_processed,data);
-    real a = 1.0/(ratio*stretch);
+    real rate = (sbsmser->getRateCB)(sbsmser->n_processed,data);
+    real pitch = (sbsmser->getPitchCB)(sbsmser->n_processed,data);
+    real a = 1.0f/rate;
 
     n_tofile = sbsmser->top->getFramesWrittenToFile();
 
@@ -548,32 +538,27 @@ long sbsms_write_frame(FILE *fp, void *data, sbsms *sbsmser)
     if(n_tofile == 0) {
 #ifdef MULTITHREADED
       if(!sbsmser->top->isWriteReady()) {
-	pthread_mutex_lock(&threadData->writeMutex);
-	pthread_cond_wait(&threadData->writeCond,&threadData->writeMutex);
-	pthread_mutex_unlock(&threadData->writeMutex);
+        pthread_mutex_lock(&threadData->writeMutex);
+        pthread_cond_wait(&threadData->writeCond,&threadData->writeMutex);
+        pthread_mutex_unlock(&threadData->writeMutex);
       }
 #endif
       if(sbsmser->top->isWriteReady()) {
-	long n_towrite = 0;
-	if(sbsmser->n_prepad) {
-	  a = 1.0;
-	  n_towrite = min(sbsmser->chunksize,sbsmser->n_prepad);
-	  memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-	  sbsmser->n_prepad -= n_towrite;
-	} else {
-	  n_towrite = (sbsmser->getSamplesCB)(sbsmser->ina,sbsmser->chunksize,data);
-	  sbsmser->n_processed += n_towrite;
-	  if(n_towrite == 0) {
-	    if(sbsmser->n_postpad) {
-	      n_towrite = min(sbsmser->chunksize,sbsmser->n_postpad);
-	      memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-	      sbsmser->n_postpad -= n_towrite;
-	    }
-	  }
-	  if(!sbsmser->n_postpad)
-	    sbsmser->top->writingComplete();
-	}
-	n_write = sbsmser->top->write(sbsmser->ina, n_towrite, a, ratio);
+        long n_towrite = 0;
+        if(sbsmser->n_prepad) {
+          a = 1.0;
+          n_towrite = min(sbsmser->quality.inframesize,sbsmser->n_prepad);
+          memset(sbsmser->ina,0,n_towrite*sizeof(audio));
+          sbsmser->n_prepad -= n_towrite;
+        } else {
+          n_towrite = (sbsmser->getSamplesCB)(sbsmser->ina,sbsmser->quality.inframesize,data);
+          sbsmser->n_processed += n_towrite;
+          if(n_towrite == 0) {
+            n_towrite = sbsmser->quality.inframesize;
+            memset(sbsmser->ina,0,n_towrite*sizeof(audio));
+          }
+        }
+        n_write = sbsmser->top->write(sbsmser->ina, n_towrite, a, pitch);
       }
     }
 #ifdef MULTITHREADED
@@ -625,10 +610,9 @@ FILE *sbsms_open_write(const char *fileName, sbsms *sbsmser, long samples_to_pro
   long nframes = 0;
   fwrite(&nframes,sizeof(long),1,fp);
   fwrite(&(sbsmser->channels),sizeof(int),1,fp);
-  fwrite(&(sbsmser->quality),sizeof(int),1,fp);
+  fwrite(&(sbsmser->quality),sizeof(sbsms_quality),1,fp);
   unsigned short maxtrackindex = 0;
   fwrite(&maxtrackindex,sizeof(unsigned short),1,fp);
-  sbsmser->top->fp = fp;
   return fp;
 }
 
@@ -666,20 +650,19 @@ long sbsms_get_channels(FILE *fp)
   return channels;
 }
 
-long sbsms_get_quality(FILE *fp)
+
+void sbsms_get_quality(FILE *fp, sbsms_quality *quality)
 {
   //samples, frames, channels
   long offset = 2*sizeof(long) + sizeof(int);
   fseek(fp,offset,SEEK_SET);
-  int quality;
-  fread(&quality,sizeof(int),1,fp);
-  return quality;
+  fread(quality,sizeof(sbsms_quality),1,fp);
 }
 
 void sbsms_seek_start_data(FILE *fp)
 {
   // samples, frames, channels, quality, maxtrackindex
-  long offset = 2*sizeof(long) + 2*sizeof(int) + sizeof(unsigned short);
+  long offset = 2*sizeof(long) + sizeof(int) + sizeof(sbsms_quality) + sizeof(unsigned short);
   fseek(fp,offset,SEEK_SET);
 }
 
@@ -708,38 +691,56 @@ long sbsms_get_frame_pos(sbsms *sbsmser)
   return sbsmser->top->getFramePos();
 }
 
-real stretchCBLinear(long nProcessed, void *userData)
+real rateCBLinear(long nProcessed, void *userData)
 {
   sbsmsInfo *si = (sbsmsInfo*) userData;
   real t0 = (real)nProcessed/(real)si->samplesToProcess;
-  real stretch = si->stretch0 + (si->stretch1-si->stretch0)*t0;
-  return stretch;
+  if(t0 > 1.0) t0 = 1.0;
+  real rate = si->rate0 + (si->rate1-si->rate0)*t0;
+  return rate;
 }
 
-real stretchCBConstant(long nProcessed, void *userData)
+real rateCBConstant(long nProcessed, void *userData)
 {
   sbsmsInfo *si = (sbsmsInfo*) userData;
-  return si->stretch0;
+  return si->rate0;
 }
 
-real ratioCBLinear(long nProcessed, void *userData)
+long getLinearOutputSamples(sbsmsInfo *si)
+{
+  real s;
+  if(si->rate0 == si->rate1) {
+    s = 1.0f / si->rate0;
+  } else {
+    s = log(si->rate1/si->rate0)/(si->rate1-si->rate0);
+  }
+  return (long) (s * si->samplesToProcess);
+}
+
+real pitchCBLinear(long nProcessed, void *userData)
 {
   sbsmsInfo *si = (sbsmsInfo*) userData;
+
   real t0 = (real)nProcessed/(real)si->samplesToProcess;
-  real stretch = si->stretch0 + (si->stretch1-si->stretch0)*t0;
-  real t1;
-  if(stretch == si->stretch0)
-    t1 = 1.0/stretch;
+  if(t0 > 1.0f) t0 = 1.0f;
+
+  real rate = si->rate0 + (si->rate1-si->rate0)*t0;
+  real stretch;
+  if(rate == si->rate0)
+    stretch = 1.0/rate;
   else
-    t1 = log(stretch/si->stretch0)/(stretch-si->stretch0);
+    stretch = log(rate/si->rate0)/(rate-si->rate0);
+  real t1 = stretch * (real)nProcessed/(real)si->samplesToGenerate;
+  if(t1 > 1.0f) t1 = 1.0f;
 
-  real ratio = si->ratio0 + (si->ratio1-si->ratio0)*t1*(real)nProcessed/(real)si->samplesToGenerate;
-  
-  return ratio;
+  real pitch = si->pitch0 + (si->pitch1-si->pitch0)*t1;
+  return pitch;
 }
 
-real ratioCBConstant(long nProcessed, void *userData)
+real pitchCBConstant(long nProcessed, void *userData)
 {
   sbsmsInfo *si = (sbsmsInfo*) userData;
-  return si->ratio0;
+  return si->pitch0;
+}
+
 }

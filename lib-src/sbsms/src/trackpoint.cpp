@@ -4,7 +4,6 @@
 #include "track.h"
 #include "trackpoint.h"
 #include "grain.h"
-#include "defs.h"
 
 namespace _sbsms_ {
 
@@ -36,10 +35,10 @@ trackpoint :: trackpoint(grain *g, real x, real y, int N, short M, short h, long
   int ki = round2int(k);
   real kf = ki<k?k-ki:ki-k;
 
-  real norm0 = square(g->freq[ki][0]) + square(g->freq[ki][1]); 
+  real norm0 = square(g->x[ki][0]) + square(g->x[ki][1]); 
   real ph0;
   if(norm0 > 0.0f) {
-    ph0 = atan2(g->freq[ki][1],g->freq[ki][0]);
+    ph0 = atan2(g->x[ki][1],g->x[ki][0]);
   } else {
     ph0 = 0.0f;
   }
@@ -50,9 +49,9 @@ trackpoint :: trackpoint(grain *g, real x, real y, int N, short M, short h, long
     norm1 = norm0;
     ph1 = ph0;
   } else {
-    norm1 = square(g->freq[ki1][0]) + square(g->freq[ki1][1]);
+    norm1 = square(g->x[ki1][0]) + square(g->x[ki1][1]);
     if(norm1 > 0.0f) {
-      ph1 = atan2(g->freq[ki1][1],g->freq[ki1][0]);
+      ph1 = atan2(g->x[ki1][1],g->x[ki1][0]);
     } else { 
       ph1 = 0.0f;
     }

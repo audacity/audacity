@@ -13,9 +13,12 @@
 
 namespace _sbsms_ {
 
+class renderer;
+
 class subband {
+  friend class renderer;
  public:
-  subband(subband *parent, unsigned short M, int channels, int quality, int latency, bool bPreAnalysis, TrackAllocator *ta, PeakAllocator *pa);
+  subband(subband *parent, unsigned short M, int channels, sbsms_quality *quality, int latency, bool bPreAnalysis, TrackAllocator *ta, PeakAllocator *pa);
   ~subband();
 
   long write(audio *buf, long n, real a, real ratio);
@@ -64,6 +67,7 @@ class subband {
   void setAMod(real a);
   void setAForH(real a);
   void setH(real ratio);
+  void setF(real f);
   void setFrameSize(int inputSize, real a, real ratio);
   void setRatio(real ratio);
   void setFramesInFile(long frames);
@@ -98,11 +102,12 @@ class subband {
 
   TrackAllocator *ta;
   PeakAllocator *pa;
-  
+
   RingBuffer<real> aPreAnalysis;
   RingBuffer<real> aMod;
   RingBuffer<real> aSynth;
   RingBuffer<real> aForH;
+  RingBuffer<real> fSynth;
   RingBuffer<int> inputFrameSize;
   RingBuffer<int> outputFrameSize;
   RingBuffer<real> frameRatio;
@@ -118,7 +123,7 @@ class subband {
   real lastFrameRatio;
   real totalSizef;
   bool bPreAnalyze;
-  int quality;
+  sbsms_quality *quality;
   int channels;
   int N;
   int h;
@@ -156,11 +161,10 @@ class subband {
   subband *parent;
   subband *sub;
   GrainBuf *in0,*in1,*in2;
-  SampleBuf *usSubOut;
   SampleBufBase *outMixer;
   sms *smser;
   SampleBuf *subIn;
-  GrainBuf *subOut;
+  SampleBuf *subOut;
   GrainBuf *in;
   GrainBuf *inPre;
   

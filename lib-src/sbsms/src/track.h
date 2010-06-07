@@ -14,8 +14,10 @@ using namespace std;
 namespace _sbsms_ {
 
 class sms;
+class renderer;
 
 class track {
+  friend class renderer;
  public:
   void endTrack(bool bTail);
   bool isEnded();
@@ -23,13 +25,15 @@ class track {
   void startTrack(trackpoint *p, bool bTail);
   void push_back(trackpoint *p);
   void push_back_tpoint(tpoint *p);
-  real advance(long time, int steps);
   long size();
   void synth(SampleBuf *out,
-	     long writePos,
-	     int c,
-	     long synthtime,
-	     int steps);
+             long writePos,
+             int c,
+             long synthtime,
+             int steps,
+             real fScale0,
+             real fScale1,
+             real mScale);
   trackpoint *getTrackPoint(long time);
   bool isStart(long synthtime);
   bool isEnd(long synthtime);

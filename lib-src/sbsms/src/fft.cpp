@@ -242,8 +242,8 @@ void fft2(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
   x1[1] = IMAG(t10,t11,y0,y1);
 }
 
-#define T300 (real)0.5
-#define T301 (real)0.86602540378444
+#define T300 0.5f
+#define T301 0.86602540378444f
 void fft3(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
 {
   int i = r+n1;
@@ -341,10 +341,10 @@ void fft4(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
   x3[1] = IMAG(t30,t31,y30,y31);
 }
 
-#define T500 (real)0.95105651629515
-#define T501 (real)0.58778525229247
-#define T510 (real)0.55901699437495
-#define T511 (real)0.25
+#define T500 0.95105651629515f
+#define T501 0.58778525229247f
+#define T510 0.55901699437495f
+#define T511 0.25f
 
 void fft5(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
 {
@@ -438,8 +438,8 @@ void fft5(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
   x4[1] = IMAG(t40,t41,y40,y41);
 }
 
-#define T600 (real)0.86602540378444
-#define T601 (real)0.5
+#define T600 0.86602540378444f
+#define T601 0.5f
 void fft6(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
 {
   int i = r+n1;
@@ -544,14 +544,14 @@ void fft6(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
   x5[1] = IMAG(t50,t51,y50,y51);
 }
 
-#define C71 (real)-1.16666666666667
-#define C72 (real)0.79015646852540
-#define C73 (real)0.05585426728965
-#define C74 (real)0.73430220123575
-#define C75 (real)0.44095855184410
-#define C76 (real)0.34087293062393
-#define C77 (real)-0.53396936033773
-#define C78 (real)0.87484229096166
+#define C71 -1.16666666666667f
+#define C72 0.79015646852540f
+#define C73 0.05585426728965f
+#define C74 0.73430220123575f
+#define C75 0.44095855184410f
+#define C76 0.34087293062393f
+#define C77 -0.53396936033773f
+#define C78 0.87484229096166f
 
 void fft7(t_fft *x, int n1, int N1, int r, t_fft *t, int dir)
 {

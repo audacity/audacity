@@ -122,10 +122,10 @@ class TrackPointListBuffer {
 class GrainBuf {
  public:
   GrainBuf(int N, int h);
-  GrainBuf(int N, int h, real pad, int type);
+  GrainBuf(int N, int h, real pad);
   ~GrainBuf();
 
-  void init(int N, int h, real pad, int type);
+  void init(int N, int h, real pad);
   long write(audio *buf, long n);
   void write(grain *g);
   void advance(long n);
@@ -135,7 +135,7 @@ class GrainBuf {
 
   long length;
   long readPos, writePos;
-  int N,h,wintype;
+  int N,h;
   real pad;
 
  protected:
