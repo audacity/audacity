@@ -115,7 +115,7 @@ inline double HalfStepsToPercentChange(double halfSteps)
 
 inline double PercentChangeToHalfSteps(double percentChange)
 {
-   return 12.0 * log2(PercentChangeToRatio(percentChange));
+   return 17.312340490667560888319096172023 * log(PercentChangeToRatio(percentChange));
 }
 
 bool EffectTimeScale::Process()
