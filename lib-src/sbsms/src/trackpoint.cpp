@@ -67,7 +67,7 @@ trackpoint :: trackpoint(grain *g, real x, real y, int N, short M, short h, long
     real dp = canon(ph0 - ph1);
     ph0 = ph1 + dp;
   }
-  real ph = ((1.0-kf)*ph0 + kf*ph1);
+  real ph = ((1.0f-kf)*ph0 + kf*ph1);
 
   this->time = time;
   this->y = y;

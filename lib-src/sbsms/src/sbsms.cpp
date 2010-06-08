@@ -727,7 +727,7 @@ real pitchCBLinear(long nProcessed, void *userData)
   real rate = si->rate0 + (si->rate1-si->rate0)*t0;
   real stretch;
   if(rate == si->rate0)
-    stretch = 1.0/rate;
+    stretch = 1.0f/rate;
   else
     stretch = log(rate/si->rate0)/(rate-si->rate0);
   real t1 = stretch * (real)nProcessed/(real)si->samplesToGenerate;

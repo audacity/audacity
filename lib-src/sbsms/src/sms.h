@@ -48,7 +48,6 @@ class sms : public SampleBufBase {
   unsigned short M;
   real m;
   int Nover2;
-  RingBuffer<unsigned short> hAssign[2];
   RingBuffer<unsigned short> hSynth;
   real h2cum;
   long samplePos;
@@ -77,9 +76,7 @@ class sms : public SampleBufBase {
 		   real *mag2,
 		   real *dec,
 		   int peakWidth);
-  void phaseLock(trackpoint *tp0, trackpoint *tp1, long time);
   long assignTrackPoints(long offset, sms *hi, sms *lo, real dtlo, long offsetlo, int c);
-  void stereoPhaseLock();
   bool contTrack(track *t, trackpoint *tp, int c);
   void extractTrackPoints(grain *g, real *mag0, real *mag1, real *mag2, long currtime, TrackPointListBuffer *tplb, unsigned short h1, int c);
   bool nearestTrackPoint(tplist *tpl, trackpoint *tp0, real m0, real m1, real dt, tplist::iterator *minpos, real *minFx, real maxMerit2, real maxDF2);
@@ -101,9 +98,6 @@ class sms : public SampleBufBase {
   real maxMerit2;
   real maxDF2;
   real dMCoeff;
-  real maxMerit2PhaseLock;
-  real maxDF2PhaseLock;
-  real dMCoeffPhaseLock;
   real maxMerit2Match;
   real maxDF2Match;
   real dMCoeffMatch;

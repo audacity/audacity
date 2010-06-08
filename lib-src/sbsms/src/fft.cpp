@@ -74,8 +74,8 @@ t_fft **calcTwiddles(int n, int *N1, int *N2, int *order, int sign)
     int Np = N1[i]*N2[i];
     t[i] = (t_fft*)calloc(Np,sizeof(t_fft));
     for(int k=0;k<Np;k++) {
-      t[i][k][0] = cos((real)(-sign)*2.0*M_PI*(real)k/(real)Np);
-      t[i][k][1] = sin((real)(-sign)*2.0*M_PI*(real)k/(real)Np);
+      t[i][k][0] = cos((real)(-sign)*TWOPI*(real)k/(real)Np);
+      t[i][k][1] = sin((real)(-sign)*TWOPI*(real)k/(real)Np);
     }
   }
   return t;

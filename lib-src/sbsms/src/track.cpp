@@ -111,7 +111,7 @@ void track :: endTrack(bool bTail)
 {
   end = back()->time;
   if(bTail) {
-    this->fall = min(1.5,.25 + back()->y / point[point.size()-2]->y);
+    this->fall = min(1.5f,.25f + back()->y / point[point.size()-2]->y);
     tailEnd = 1;
     end++;
     trackpoint *f = new trackpoint(back());
@@ -298,7 +298,6 @@ long track :: size()
 }
 
 track :: ~track() {
-  static long i = 0;
   if(precursor) precursor->descendant = NULL;
   if(descendant) descendant->precursor = NULL;
   for(vector<tpoint*>::iterator i = point.begin();

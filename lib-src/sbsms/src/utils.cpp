@@ -56,11 +56,11 @@ void _c2evenodd(audio *eo, audio *even, audio *odd, int N)
 
 void cosinit(int size) {
   COSSIZE = size;
-  COSFACTOR = (double)(COSSIZE-1)/PI;
+  COSFACTOR = (real)(COSSIZE-1)/PI;
   if(COSTABLE) free(COSTABLE);
   COSTABLE = (real*)malloc(size*sizeof(real));
   for(int k=0;k<size;k++)
-    COSTABLE[k] = cos((double)k/(double)(COSSIZE-1)*PI);
+    COSTABLE[k] = cos((real)k/(real)(COSSIZE-1)*PI);
 }
 
 void _c2magphase(audio *g, int N)

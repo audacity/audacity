@@ -434,7 +434,8 @@ void subband :: addTrackPoints()
   pthread_mutex_unlock(&dataMutex);
 #endif
 
-  for(int k=0;k<g1V.size();k++) {
+  int size = (int)g1V.size();
+  for(int k=0;k<size;k++) {
     smser->addTrackPoints(g0V[k],g1V[k],g2V[k]);
   }
 

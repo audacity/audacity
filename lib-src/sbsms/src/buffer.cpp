@@ -74,7 +74,7 @@ long SampleBuf :: write(grain *g, int h)
 {
   grow(g->N);
   g->synthesize();
-  real f = 2.0/(real)(N/h) * 4.0/3.0;
+  real f = 2.6666666666666666666666666f/(real)(N/h);
   
   for(int c=0;c<2;c++) {
     int j = 0;

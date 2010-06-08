@@ -93,7 +93,7 @@ void grain :: calc_windows()
   if(ww == NULL) {
     wwMap[N][pad] = (ww = (real*)calloc(N,sizeof(real)));   
     for(int k=0;k<N2;k++) {
-      ww[k+(N-N2)/2] = .5*(1.0 - cos((real)k/(real)N2*TWOPI));
+      ww[k+(N-N2)/2] = 0.5f*(1.0f - cos((real)k/(real)N2*TWOPI));
     }
   }
 
@@ -134,7 +134,7 @@ grain* grain :: downsample()
     for(int k=0;k<=N/4-1;k++)
       g2->x[k][c] = g->x[k][c];
     
-    g2->x[N/4][c] = 0.5*(g->x[N/4][c] + g->x[N-N/4][c] );
+    g2->x[N/4][c] = 0.5f*(g->x[N/4][c] + g->x[N-N/4][c] );
     
     for(int k=N/4+1;k<N/2;k++)
       g2->x[k][c] = g->x[k+N/2][c];
