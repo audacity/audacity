@@ -162,7 +162,7 @@ fftplan *planIFFT(int N)
   plan->t = calcTwiddles(plan->n,plan->N1,plan->N2,plan->order,-1);
   plan->f = getFuncs(factors);
   plan->N = N;
-  plan->norm = 1.0/(real)N;
+  plan->norm = 1.0f/(real)N;
   return plan;
 }
 

@@ -969,7 +969,7 @@ long sms :: assignTrackPoints_(long offset, sms *hi, sms *lo, real dtlo, long of
 	(*tpi)->bConnected = false;
 	if((*tpi)->f < minFMatch) break;
 	real F;
-	tplist::iterator minL1; bool minL1Set = nearestTrackPoint(&trackPoints0,*tpi,0.5f,1.0f,square(1.0/dtlo),&minL1,&F,maxMerit2,maxDF2);
+	tplist::iterator minL1; bool minL1Set = nearestTrackPoint(&trackPoints0,*tpi,0.5f,1.0f,square(1.0f/dtlo),&minL1,&F,maxMerit2,maxDF2);
 	if(minL1Set) (*tpi)->cont = *minL1;
       }
     }
@@ -1599,7 +1599,7 @@ void sms :: adjustPeaks(list<peak*> &peaks,
     real mdec = 0;
 
     if(k0 < tp->x) {
-      mdec += (dec[k0]+dec[k0+1])*(1.0-kf0);
+      mdec += (dec[k0]+dec[k0+1])*(1.0f-kf0);
     } else {
       mdec += (dec[k0]+dec[k0+1]);
       mdec += (dec[k0-1]+dec[k0])*kf0;
@@ -1609,7 +1609,7 @@ void sms :: adjustPeaks(list<peak*> &peaks,
       mdec += (dec[k2-1]+dec[k2]);
       mdec += (dec[k2]+dec[k2+1])*kf2;
     } else {
-      mdec += (dec[k2-1]+dec[k2])*(1.0-kf2);
+      mdec += (dec[k2-1]+dec[k2])*(1.0f-kf2);
     }
     
     for(int k=k0+1;k<k2-1;k++) {
@@ -1653,7 +1653,7 @@ void sms :: extractTrackPoints(grain *g,
 
   peak *t0 = pa->create();
   t0->k = 1;
-  t0->x = 1;
+  t0->x = (real)1;
   t0->y = mag1[0];
   t0->y2 = mag2[0];
   t0->tp = NULL;
@@ -1663,7 +1663,7 @@ void sms :: extractTrackPoints(grain *g,
 
   peak *t1 = pa->create();
   t1->k = Nover2-1;
-  t1->x = Nover2-1;
+  t1->x = (real)(Nover2-1);
   t1->y = mag1[Nover2-1];
   t1->y2 = mag2[Nover2-1];
   t1->tp = NULL;
