@@ -215,6 +215,7 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
    S.SetBorder(5);
    
+   S.StartMultiColumn(2, 0);
    // Rate Start
    S.StartStatic(_("Initial Tempo Change (%)"));
    {
@@ -287,6 +288,7 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndStatic();
+   S.EndMultiColumn();
    
    S.StartStatic(_("Options"));
    {
