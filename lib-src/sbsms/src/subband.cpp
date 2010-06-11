@@ -296,8 +296,8 @@ void subband :: write_(audio *inBuf, long n, real a, real ratio)
     long n_advance = 0;
     for(int k=0;k<ng;k++) {
       if(nDropped < nToDrop) {
-	n_advance++;
-	nDropped++;
+        n_advance++;
+        nDropped++;
       } else {
 	if(!parent && nTrackPointsWritten%nGrainsPerFrame == 0) {
     real amod;
@@ -307,7 +307,7 @@ void subband :: write_(audio *inBuf, long n, real a, real ratio)
 	  } else {
       amod = 1.0f;
 	  }
-	  setA(1.0f+amod*(a-1.0f));
+	  setA(amod*a);
     setAMod(amod);	 
 	  setRatio(ratio);
     setF(1.0f/ratio);
@@ -1075,24 +1075,24 @@ long subband :: preAnalyze(audio *buf, long n, real a, real ratio)
     long ng_read = 0;
     for(int k=inPre->readPos;k<inPre->writePos;k++) {
       if(nDropped < nToDrop) {
-	nDropped++;
+        nDropped++;
       } else {
-	if(!parent && (nTrackPointsWritten)%nGrainsPerFrame == 0) {
-	  grain *g = inPre->read(k);
-	  grain::referenced(g);
-	  real o = calculateOnset(gPrev,g);
-	  onset.write(o);
-	  if(gPrev) grain::forget(gPrev);
-	  gPrev = g;
-	  setA(a);
-	}
-	if(!parent && (nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
-	  setAForH(a);
-	}
-	if((nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
-	  setH(ratio);
-	}
-	nTrackPointsWritten++;
+        if(!parent && (nTrackPointsWritten)%nGrainsPerFrame == 0) {
+          grain *g = inPre->read(k);
+          grain::referenced(g);
+          real o = calculateOnset(gPrev,g);
+          onset.write(o);
+          if(gPrev) grain::forget(gPrev);
+          gPrev = g;
+          setA(a);
+        }
+        if(!parent && (nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
+          setAForH(a);
+        }
+        if((nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
+          setH(ratio);
+        }
+        nTrackPointsWritten++;
       }
       ng_read++;
     }
@@ -1131,9 +1131,9 @@ void subband :: preAnalyzeComplete()
 
   for(long k=k0;k<k1;k++) {
     bool bOnset = false;
-    if(k==k0) 
+    if(k==k0) {
       bOnset = true;
-    else {
+    } else {
       real o0 = getOnset(k);
       if(o0 < 0.1f) continue;
       real o1 = getOnset(k-1);
@@ -1141,23 +1141,25 @@ void subband :: preAnalyzeComplete()
       if(o0 < 0.22f) continue;
       bOnset = ((o0 > 0.4f) || (o0>1.4f*o1));
       if(!bOnset && k>k0+1) {
-	real o2 = getOnset(k-2);
-	bOnset = ((o0 > 1.2f*o1) && (o1 > 1.2f * o2));
-	if(!bOnset && k>k0+2) {
-	  real o3 = getOnset(k-3);
-	  bOnset = ((o0 > 0.3f) && (o1 > 1.1f * o2) && (o2 > 1.1f * o3));
-	}
+        real o2 = getOnset(k-2);
+        bOnset = ((o0 > 1.2f*o1) && (o1 > 1.2f * o2));
+        if(!bOnset && k>k0+2) {
+          real o3 = getOnset(k-3);
+          bOnset = ((o0 > 0.3f) && (o1 > 1.1f * o2) && (o2 > 1.1f * o3));
+        }
       }
     }
     if(bOnset) {
       if(kend != 0) {
-	calculateA(kstart,kend);
+        calculateA(kstart,kend);
       }
       kstart = kend;
       kend = k;
     }
   }
   calculateA(kstart,k1);
+  aPreAnalysis.write(1.0f);
+  aPreAnalysis.advance(1);
 }
 
 void subband :: calculateA(long kstart, long kend)
@@ -1169,6 +1171,8 @@ void subband :: calculateA(long kstart, long kend)
     real o = getOnset(k);
     if(o > oMax) oMax = o;
   }
+
+  oMax *= 1.3;
 
   for(long k=kstart;k<kend;k++) {
     real o = getOnset(k);
@@ -1186,7 +1190,7 @@ void subband :: calculateA(long kstart, long kend)
     } else {
       da = d/dTotal*aAllot;
     }
-    
+
     dTotal -= d;
     aAllot -= da;
     aPreAnalysis.write(da);
