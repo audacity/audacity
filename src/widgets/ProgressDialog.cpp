@@ -1369,7 +1369,7 @@ ProgressDialog::Beep()
       wxSound s;
 
       if (name.IsEmpty()) {
-         //s.Create(sizeof(beep), beep);
+         s.Create(sizeof(beep), beep);
       }
       else {
          s.Create(name);
