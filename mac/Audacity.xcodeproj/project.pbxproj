@@ -1343,7 +1343,6 @@
 		ED27072C0EF9C51D007D4FFD /* grain.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070A0EF9C51D007D4FFD /* grain.h */; };
 		ED27072D0EF9C51D007D4FFD /* peak.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070B0EF9C51D007D4FFD /* peak.cpp */; };
 		ED27072E0EF9C51D007D4FFD /* peak.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070C0EF9C51D007D4FFD /* peak.h */; };
-		ED27072F0EF9C51D007D4FFD /* pitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070D0EF9C51D007D4FFD /* pitch.cpp */; };
 		ED2707300EF9C51D007D4FFD /* real.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070E0EF9C51D007D4FFD /* real.h */; };
 		ED2707310EF9C51D007D4FFD /* resample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070F0EF9C51D007D4FFD /* resample.cpp */; };
 		ED2707320EF9C51D007D4FFD /* sbsms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707100EF9C51D007D4FFD /* sbsms.cpp */; };
@@ -3185,7 +3184,6 @@
 		ED27070A0EF9C51D007D4FFD /* grain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = grain.h; path = sbsms/src/grain.h; sourceTree = "<group>"; };
 		ED27070B0EF9C51D007D4FFD /* peak.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = peak.cpp; path = sbsms/src/peak.cpp; sourceTree = "<group>"; };
 		ED27070C0EF9C51D007D4FFD /* peak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = peak.h; path = sbsms/src/peak.h; sourceTree = "<group>"; };
-		ED27070D0EF9C51D007D4FFD /* pitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pitch.cpp; path = sbsms/src/pitch.cpp; sourceTree = "<group>"; };
 		ED27070E0EF9C51D007D4FFD /* real.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = real.h; path = sbsms/src/real.h; sourceTree = "<group>"; };
 		ED27070F0EF9C51D007D4FFD /* resample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resample.cpp; path = sbsms/src/resample.cpp; sourceTree = "<group>"; };
 		ED2707100EF9C51D007D4FFD /* sbsms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sbsms.cpp; path = sbsms/src/sbsms.cpp; sourceTree = "<group>"; };
@@ -5787,7 +5785,6 @@
 				ED27070A0EF9C51D007D4FFD /* grain.h */,
 				ED27070B0EF9C51D007D4FFD /* peak.cpp */,
 				ED27070C0EF9C51D007D4FFD /* peak.h */,
-				ED27070D0EF9C51D007D4FFD /* pitch.cpp */,
 				ED27070E0EF9C51D007D4FFD /* real.h */,
 				ED27070F0EF9C51D007D4FFD /* resample.cpp */,
 				ED2707100EF9C51D007D4FFD /* sbsms.cpp */,
@@ -8060,7 +8057,6 @@
 				ED2707290EF9C51D007D4FFD /* fft.cpp in Sources */,
 				ED27072B0EF9C51D007D4FFD /* grain.cpp in Sources */,
 				ED27072D0EF9C51D007D4FFD /* peak.cpp in Sources */,
-				ED27072F0EF9C51D007D4FFD /* pitch.cpp in Sources */,
 				ED2707310EF9C51D007D4FFD /* resample.cpp in Sources */,
 				ED2707320EF9C51D007D4FFD /* sbsms.cpp in Sources */,
 				ED2707340EF9C51D007D4FFD /* sms.cpp in Sources */,
