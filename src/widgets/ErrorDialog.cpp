@@ -272,15 +272,16 @@ void ShowInfoDialog( wxWindow *parent,
       S.AddTextWindow(message);
    }
    S.SetBorder( 0 );
-   S.StartHorizontalLay(wxALIGN_RIGHT|wxALIGN_BOTTOM, 0);
+   S.StartHorizontalLay(wxALIGN_CENTER|wxALIGN_BOTTOM, 0);
    S.AddStandardButtons(eOkButton);
+
+   S.EndHorizontalLay();
 
    // Next three lines add a tiny dragger.
    wxStatusBar * pBar = new wxStatusBar( &dlog );
    pBar->SetSize( 18, 38);
    S.AddWindow( pBar, wxALIGN_BOTTOM|wxALIGN_RIGHT );
 
-   S.EndHorizontalLay();
    S.EndVerticalLay();
 
    // Smallest size is half default size.  Seems reasonable.
