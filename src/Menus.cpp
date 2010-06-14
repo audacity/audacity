@@ -33,6 +33,7 @@ simplifies construction of menu items.
 #include "Audacity.h"
 
 #include <iterator>
+#include <limits>
 #include <math.h>
 
 #include <wx/defs.h>
