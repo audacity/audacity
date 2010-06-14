@@ -1994,8 +1994,40 @@ void AudacityProject::SortTracks(int flags)
             }
             //sort by time otherwise
             else if(flags & kAudacitySortByTime){
-               if (GetTime(track) < GetTime((Track *) arr[ndx])) 
+               //we have to search each track and all its linked ones to fine the minimum start time.
+               double time1,time2,tempTime;
+               Track* tempTrack;
+               int    candidatesLookedAt;
+               
+               candidatesLookedAt = 0;
+               tempTrack = track;
+               time1=time2=std::numeric_limits<double>::max(); //TODO: find max time value. (I don't think we have one yet)
+               while(tempTrack){
+                  tempTime = GetTime(tempTrack);
+                  time1 = time1<tempTime? time1:tempTime;
+                  if(tempTrack->GetLinked())
+                     tempTrack = tempTrack->GetLink();
+                  else
+                     tempTrack = NULL;
+               }
+   
+               //get candidate's (from sorted array) time
+               tempTrack = (Track *) arr[ndx];
+               while(tempTrack){
+                  tempTime = GetTime(tempTrack);
+                  time2 = time2<tempTime? time2:tempTime;
+                  if(tempTrack->GetLinked() && (ndx+candidatesLookedAt <  (int)arr.GetCount()-1) ) {
+                     candidatesLookedAt++;
+                     tempTrack = (Track*) arr[ndx+candidatesLookedAt];
+                  }
+                  else
+                     tempTrack = NULL;
+               }
+
+               if (time1 < time2) 
                   break;
+                  
+               ndx+=candidatesLookedAt;
             }
          }
       }
