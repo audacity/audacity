@@ -30,9 +30,6 @@ EqualizationPanel, EQCurve and EQPoint.
 
   The filter is applied using overlap/add of Hanning windows.
 
-  Has presets of certain specific equalization curves, suitable
-  for old recordings.
-
   Clone of the FFT Filter effect, no longer part of Audacity.
 
 *//****************************************************************//**
@@ -66,6 +63,7 @@ various graphing code, such as provided by FreqWindow and FilterPanel.
 #include "../PlatformCompatibility.h"
 #include "../FileNames.h"
 #include "../Envelope.h"
+#include "../widgets/ErrorDialog.h"
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -82,6 +80,7 @@ various graphing code, such as provided by FreqWindow and FilterPanel.
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 #include <wx/brush.h>
+#include <wx/button.h>  // not really needed here
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/image.h>
@@ -107,6 +106,34 @@ various graphing code, such as provided by FreqWindow and FilterPanel.
 
 #include <wx/arrimpl.cpp>
 
+enum EQCurvesDialogControls
+{
+   CurvesListID = 11000,
+   UpButtonID,
+   DownButtonID,
+   RenameButtonID,
+   DeleteButtonID,
+   ImportButtonID,
+   ExportButtonID,
+   LibraryButtonID,
+   DefaultsButtonID
+};
+
+BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
+   EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
+   EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
+   EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
+   EVT_LIST_ITEM_ACTIVATED(CurvesListID, EditCurvesDialog::OnRenameActivated)
+   EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
+   EVT_LIST_KEY_DOWN(CurvesListID, EditCurvesDialog::OnKey)
+   EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
+   EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
+   EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
+   EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
+   EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
+END_EVENT_TABLE()
+
+
 WX_DEFINE_OBJARRAY( EQPointArray );
 WX_DEFINE_OBJARRAY( EQCurveArray );
 
@@ -116,110 +143,6 @@ const double EqualizationDialog::thirdOct[] =
    250., 315., 400., 500., 630., 800., 1000., 1250., 1600., 2000.,
    2500., 3150., 4000., 5000., 6300., 8000., 10000., 12500., 16000., 20000.,
 };
-
-const float EffectEqualization::curvex[] =
-  {
-   30., 31., 50., 63., 70., 100., 125., 200., 250., 300.,
-   400., 500., 600., 700., 800., 900., 1000., 2000., 3000., 4000.,
-   5000., 6000., 7000., 8000., 9000., 10000., 15000., 16000.
-};
-
-// Don't want to be warned about double->float precision loss here
-// when compiling with MSVC.
-#if defined(__WXMSW__)
-#pragma warning( disable: 4305 )
-#endif
-const float EffectEqualization::curvey[][nCurvePoints] =
-{
-   {
-   // amradio
-//    30   31   50   63   70   100  125  200  250  300  400  500  600  700
-      -20.,-20.,-20.,-20.,-20.,-20.,-16.,-12., -8., -4., 0.0, 0.0, 0.0, 0.0,
-//  800  900  1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 15000 16000.
-         0.0, 0.0, 0.0, -4., -8.,-12.,-16.,-20.0,-20.,-20.,-20.,-20., -20., -20.0
-   },
-   {
-   // acoustic (see p 52)
-      -20.0, -20.0, -20.0,   5.0,   4.4,   3.3,   2.5,   1.7,   0.0,   0.0,
-      0.0,     0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,  -1.5,  -2.5,
-      -3.3,   -4.0,  -4.5,  -5.0, -10.0, -15.0, -20.0, -20.0
-   },
-   {
-   // NAB
-      20.0,   20.0,  16.0,  15.6,  15.5,  13.8,  12.0,   8.0,   6.2,   5.0,
-      3.0,     1.7,   1.0,   0.0,  -0.5,  -1.0,  -1.3,  -4.2,  -6.5,  -8.5,
-      -10.2, -12.0, -13.0, -14.0, -15.0, -16.0, -20.0, -20.0
-   },
-   {
-   // LP
-      13.5,   13.2,  13.0,  12.8,  12.5,  11.0,  10.5,   8.0,   7.0,   6.0,
-      3.5,     2.5,   1.5,   1.0,   0.5,  -0.5,  -1.0,  -3.5,  -6.0,  -8.0,
-      -10.0, -11.5, -12.5, -13.5, -14.5, -16.0, -21.2, -22.0
-   },
-   {
-   // AES
-      22.5,   22.5,  18.0,  16.0,  15.0,  12.0,  10.0,   6.5,   5.2,   4.5,
-      3.0,     2.0,   1.5,   1.0,   0.5,   0.0,   0.0,  -2.2,  -4.0,  -5.5,
-      -6.7,   -8.0,  -9.0, -10.0, -11.0, -12.0, -15.5, -16.0
-   },
-   {
-   // Decca FFRR Micro
-      14.0,   14.0,  14.0,  13.8,  13.5,  12.5,  11.5,   8.5,   7.2,   6.0,
-      4.0,     2.5,   1.5,   1.0,   0.5,   0.0,   0.0,  -1.5,  -3.0,  -4.5,
-      -6.0,   -7.0,  -8.0,  -8.5,  -9.0, -10.0, -12.6, -13.0
-   },
-   {
-   // Decca FFRR 78
-      22.0,   21.5,  14.0,  11.2,   9.8,   6.0,   2.0,   1.5,   1.0,   0.5,
-      0.0,     0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   -0.5,
-      -1.0,   -2.0,  -2.5,  -3.5,  -4.0,  -4.5,  -7.0,  -7.5
-   },
-   {
-   // RIAA
-      18.6,   18.5,  16.9,  15.9,  15.3,  13.1,  11.6,   8.2,   6.7,   5.5,
-      3.8,     2.6,   1.8,   1.2,   0.8,   0.3,   0.0,  -2.6,  -4.7,  -6.6,
-      -8.2,   -9.6, -10.8, -11.9, -12.9, -13.7, -17.2, -17.7
-   },
-   {    
-   // Inverse RIAA
-      -18.6,  -18.5, -16.9, -15.9, -15.3, -13.1, -11.6, -8.2,  -6.7,  -5.5,
-      -3.8,   -2.6,  -1.8,   -1.2, -0.8,  -0.3,    0.0,  2.6,   4.7,   6.6,
-       8.2,    9.6,  10.8,   11.9, 12.9,  13.7,   17.2, 17.7
-   },
-   {
-   // Col 78
-      16.0,   16.0,  16.0,  14.0,  12.5,  10.0,   8.5,   5.0,   4.0,   3.0,
-      2.0,     1.0,   0.5,   0.2,   0.0,  -0.5,  -1.0,  -3.5,  -6.0,  -8.0,
-      -10.0, -11.5, -12.5, -13.5, -14.5, -16.0, -21.2, -22.0
-   },
-   {
-   // Decca FFRR LP
-      17.5,   17.2,  14.0,  12.0,  11.5,   9.0,   7.5,   5.0,   4.0,   3.0,
-      2.0,     1.5,   1.0,   0.7,   0.2,   0.0,   0.0,  -4.0,  -6.7,  -8.5,
-      -10.0, -11.0, -12.0, -13.0, -13.2, -14.0, -16.0, -16.0
-   },
-   {
-   // EMI 78
-      14.0,   14.0,  14.0,  12.0,  11.0,   8.0,   7.0,   4.0,   3.0,   2.0,
-      1.0,     0.5,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,
-      0.0,     0.0,   0.0,   0.0,   0.0,   0.0,  -5.0,  -5.0
-   },
-   {
-   // RCA Victor 1938
-      24.0,   24.0,  24.0,  21.8,  20.0,  16.0,  13.0,   9.0,   7.5,   6.0,
-      4.0,     3.0,   2.0,   1.5,   1.0,   0.5,   0.0,  -2.5,  -5.0,  -6.5,
-      -7.5,   -8.0,  -7.7,  -7.5,  -7.5,  -7.5,  -7.5,  -7.5
-   },
-   {
-   // RCA Victor 1947
-      24.0,   24.0,  24.0,  21.8,  20.0,  16.0,  13.0,   9.0,   7.5,   6.0,
-      4.0,     3.0,   2.0,   1.5,   1.0,   0.5,   0.0,  -2.5,  -5.0,  -6.5,
-      -8.0,  -10.0, -11.5, -12.0, -12.5, -12.5, -12.5, -12.5
-   }
-  };
-#if defined(__WXMSW__)
-#pragma warning( default: 4305 )
-#endif
 
 // LLL:  This seem to have a strange interaction with wxWidgets 2.8.9.  It's
 //       possible that the wxSlider was fixed as it seems to work ok for me
@@ -293,24 +216,6 @@ private:
 
 #endif // ifdef __WXGTK__
 
-const wxChar * EffectEqualization::curveNames[] =
-  {
-    wxT("amradio"),
-    wxT("acoustic"),
-    wxT("NAB"),
-    wxT("Columbia LP"),
-    wxT("AES"),
-    wxT("Decca FFRR Micro"),
-    wxT("Decca FFRR 78"),
-    wxT("RIAA"),
-    wxT("Inverse RIAA"),
-    wxT("Columbia 78"),
-    wxT("Decca FFRR LP"),
-    wxT("EMI 78"),
-    wxT("RCA Victor 1938"),
-    wxT("RCA Victor 1947")
-  };
-
 #define NUM_INTERP_CHOICES 3
 static wxString interpChoiceStrings[NUM_INTERP_CHOICES];
 
@@ -323,7 +228,7 @@ void EffectEqualization::ReadPrefs()
       mM = 4001;  //default
       gPrefs->Write(wxT("/CsPresets/EQFilterLength"), mM);
    }
-   gPrefs->Read(wxT("/CsPresets/EQCurveName"), &mCurveName, wxT("custom"));
+   gPrefs->Read(wxT("/CsPresets/EQCurveName"), &mCurveName, wxT("unnamed"));
    gPrefs->Read(wxT("/CsPresets/EQLin"), &mLin, false);
    gPrefs->Read(wxT("/CsPresets/EQdBMin"), &mdBMin, -30.0);
    if ((mdBMin < -120) || (mdBMin > -10)) {  // corrupted Prefs?
@@ -993,8 +898,7 @@ BEGIN_EVENT_TABLE(EqualizationDialog,wxDialog)
    EVT_CHOICE( ID_INTERP, EqualizationDialog::OnInterp )
 
    EVT_CHOICE( ID_CURVE, EqualizationDialog::OnCurve )
-   EVT_BUTTON( ID_SAVEAS, EqualizationDialog::OnSaveAs )
-   EVT_BUTTON( ID_DELETE, EqualizationDialog::OnDelete )
+   EVT_BUTTON( ID_MANAGE, EqualizationDialog::OnManage )
    EVT_BUTTON( ID_CLEAR, EqualizationDialog::OnClear )
    EVT_BUTTON( ID_INVERT, EqualizationDialog::OnInvert )
 
@@ -1021,7 +925,7 @@ EqualizationDialog::EqualizationDialog(EffectEqualization * effect,
                      long style):
    wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER | wxMAXIMIZE_BOX ),
    mDisallowCustom(disallowCustom),
-   mCustomBackup(wxT("custom"))
+   mCustomBackup(wxT("unnamed"))
 {
    m_pEffect = effect;
 
@@ -1056,9 +960,9 @@ EqualizationDialog::EqualizationDialog(EffectEqualization * effect,
    LoadCurves();
    if (mDisallowCustom)
    {
-      mCustomBackup.Name = wxT("custom");
+      mCustomBackup.Name = wxT("unnamed");
       EQCurve &realCustom = mCurves[mCurves.GetCount()-1];
-      wxASSERT(realCustom.Name.IsSameAs(wxT("custom")));
+      wxASSERT(realCustom.Name.IsSameAs(wxT("unnamed")));
       mCustomBackup.points = realCustom.points;
    }
 
@@ -1084,9 +988,9 @@ EqualizationDialog::~EqualizationDialog()
 }
 
 //
-// Load external curves with fallback to internal
+// Load external curves with fallback to default, then message
 //
-void EqualizationDialog::LoadCurves()
+void EqualizationDialog::LoadCurves(wxString fileName, bool append)
 {
    // Construct default curve filename
    //
@@ -1094,18 +998,37 @@ void EqualizationDialog::LoadCurves()
    //       between wxStandardPaths and wxConfig under Linux.  The latter
    //       creates a normal file as "$HOME/.audacity", while the former
    //       expects the ".audacity" portion to be a directory.
-   wxFileName fn( FileNames::DataDir(), wxT("EQCurves.xml") );
+   // MJS:  I don't know what the above means, or if I have broken it.
+   wxFileName fn;
+   if(fileName == wxT(""))
+      fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
+   else
+      fn = wxFileName(fileName);
 
    // If it doesn't exist...
    if( !fn.FileExists() )
-   {
-      // Fallback to internal
-      LoadDefaultCurves();
-      return;
+   {  // Fallback to the default curves file in exe directory
+      wxFileName exePath(PlatformCompatibility::GetExecutablePath());
+      fn = wxFileName( exePath.GetPath(), wxT("EQCurves.xml") );
+      wxString fullFn = fn.GetFullPath();
+      if( !fn.FileExists() )
+      {  // Default file not found.  Give up and advise user
+         wxString errorMessage = _("EQCurves.xml not found on your system.\nPlease press 'help' to visit the download page.");
+         ShowErrorDialog(this, _("EQCurves.xml missing"),
+            errorMessage, wxT("http://wiki.audacityteam.org/wiki/Default_EQCurves"));   
+         mCurves.Add( _("unnamed") );   // we still need a default curve to use
+         return;
+      }
    }
 
-   // Start from scratch
-   mCurves.Clear();
+   EQCurve tempCustom(wxT("temp"));
+   if( append == false) // Start from scratch
+      mCurves.Clear();
+   else  // appending so copy and remove 'unnamed', to replace later
+   {
+      tempCustom.points = mCurves.Last().points;
+      mCurves.RemoveAt(mCurves.Count()-1);
+   }
 
    // Load the curves
    XMLFileReader reader;
@@ -1116,45 +1039,13 @@ void EqualizationDialog::LoadCurves()
                     _("Error loading EQ curve"),
                     wxOK | wxCENTRE,
                     this );
-
-      // Fallback to internal
-      LoadDefaultCurves();
    }
-
-   return;
-}
-
-//
-// Load the internal curves
-//
-void EqualizationDialog::LoadDefaultCurves()
-{
-   int curve;
-   int point;
-
-   // Start from scratch
-   mCurves.Clear();
-
-   // For all internally defined curves...
-   for( curve = 0; curve < EffectEqualization::nCurveTypes; curve++ )
+   if( mCurves.Last().Name != _("unnamed") )
+      mCurves.Add( _("unnamed") );   // we always need a default curve to use
+   if( append == true )
    {
-      // Create and name a new curve class
-      mCurves.Add( wxString( EffectEqualization::curveNames[ curve ] ) );
-
-      // For all points within this curve...
-      for( point = 0; point < EffectEqualization::nCurvePoints; point++ )
-      {
-         // Extract the frequency and dB values
-         double freq = EffectEqualization::curvex[ point ];
-         double db   = EffectEqualization::curvey[ curve ][ point ];
-
-         // Add it to the list of points within the curve
-         mCurves[ curve ].points.Add( EQPoint( freq, db ) );
-      }
+      mCurves.Last().points = tempCustom.points;
    }
-   mCurves.Add( _("custom") );
-
-   SaveCurves();
 
    return;
 }
@@ -1162,29 +1053,35 @@ void EqualizationDialog::LoadDefaultCurves()
 //
 // Save curves to external file
 //
-void EqualizationDialog::SaveCurves()
+void EqualizationDialog::SaveCurves(wxString fileName)
 {
-   if (mDisallowCustom)
-      RevertCustom();
-
-   // Construct default curve filename
-   //
-   // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
-   //       between wxStandardPaths and wxConfig under Linux.  The latter
-   //       creates a normal file as "$HOME/.audacity", while the former
-   //       expects the ".audacity" portion to be a directory.
-   wxFileName fn( FileNames::DataDir(), wxT("EQCurves.xml") );
-
-   // If the directory doesn't exist...
-   if( !fn.DirExists() )
+   wxFileName fn;
+   if( fileName == wxT(""))
    {
-      // Attempt to create it
-      if( !fn.Mkdir( fn.GetPath(), 511, wxPATH_MKDIR_FULL ) )
+      if (mDisallowCustom)
+         RevertCustom();
+
+      // Construct default curve filename
+      //
+      // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
+      //       between wxStandardPaths and wxConfig under Linux.  The latter
+      //       creates a normal file as "$HOME/.audacity", while the former
+      //       expects the ".audacity" portion to be a directory.
+      fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
+
+      // If the directory doesn't exist...
+      if( !fn.DirExists() )
       {
-         // MkDir() will emit message
-         return;
+         // Attempt to create it
+         if( !fn.Mkdir( fn.GetPath(), 511, wxPATH_MKDIR_FULL ) )
+         {
+            // MkDir() will emit message
+            return;
+         }
       }
    }
+   else
+      fn = wxFileName(fileName);
 
    // Create/Open the file
    XMLFileWriter eqFile;
@@ -1405,11 +1302,8 @@ void EqualizationDialog::MakeEqualizationDialog()
    // Create the choice control
    CreateChoice();
 
-   mSaveAs = new wxButton( this, ID_SAVEAS, _("Save As...") );
-   szrC->Add( mSaveAs, 0, wxALIGN_CENTRE|wxLEFT, 4 );
-
-   mDelete = new wxButton( this, ID_DELETE, _("Delete") );
-   szrC->Add( mDelete, 0, wxALIGN_CENTRE|wxLEFT, 4 );
+   mManage = new wxButton( this, ID_MANAGE, _("Save/Manage curves...") );
+   szrC->Add( mManage, 0, wxALIGN_CENTRE|wxLEFT, 4 );
 
    btn = new wxButton( this, ID_CLEAR, _("Flatten"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
@@ -1491,16 +1385,14 @@ void EqualizationDialog::CreateChoice()
 //
 bool EqualizationDialog::Validate()
 {
-   // If editing a batch chain, we don't want to be using the custom curve so
+   // If editing a batch chain, we don't want to be using the unnamed curve so
    // we offer to save it.
-   while (mDisallowCustom && curveName.IsSameAs(wxT("custom")))
+   while (mDisallowCustom && curveName.IsSameAs(wxT("unnamed")))
    {
-      wxMessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it."),
+      wxMessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it.\nChoose the 'Manage curves list...' button and rename the 'unnamed' curve, then use that one."),
             _("EQ Curve needs a different name"),
             wxOK | wxCENTRE,
             this);
-
-      if (!SaveAs())
          return false;
    }
    return true;
@@ -1804,7 +1696,7 @@ void EqualizationDialog::setCurve(int currentCurve)
          }
       }
    }
-   if(changed) // not all points were loaded so switch to custom
+   if(changed) // not all points were loaded so switch to unnamed
       EnvelopeUpdated();
    mPanel->RecalcRequired = true;
    mPanel->Refresh( false );
@@ -1822,7 +1714,7 @@ void EqualizationDialog::setCurve(wxString curveName)
          break;
    if( i == mCurves.GetCount())
    {
-      wxMessageBox( wxT("Requested curve not found, using 'custom'"), wxT("Curve not found"), wxOK|wxICON_ERROR );
+      wxMessageBox( wxT("Requested curve not found, using 'unnamed'"), wxT("Curve not found"), wxOK|wxICON_ERROR );
       setCurve((int) mCurves.GetCount()-1);
    }
    else
@@ -1838,7 +1730,7 @@ void EqualizationDialog::Select( int curve )
    mCurve->SetSelection( curve );
    curveName = mCurves[ curve ].Name;
 
-   // If the "custom" curve became active
+   // If the "unnamed" curve became active
    if( (unsigned int)curve + 1U == mCurve->GetCount() )
    {
       // Prevent focus from being lost
@@ -1846,14 +1738,6 @@ void EqualizationDialog::Select( int curve )
       {
          mCurve->SetFocus();
       }
-
-      // Not allowed to delete the "custom" curve
-      mDelete->Disable();
-   }
-   else
-   {
-      // Allow the curve to be deleted
-      mDelete->Enable();
    }
 }
 
@@ -1876,7 +1760,7 @@ void EqualizationDialog::EnvelopeUpdated(Envelope *env, bool lin)
    double *value = new double[ numPoints ];
    env->GetPoints( when, value, numPoints );
 
-   // Clear the custom curve
+   // Clear the unnamed curve
    int curve = mCurves.GetCount()-1;
    mCurves[ curve ].points.Clear();
 
@@ -1910,10 +1794,10 @@ void EqualizationDialog::EnvelopeUpdated(Envelope *env, bool lin)
          mCurves[ curve ].points.Add( EQPoint( freq, db ) );
       }
    }
-   // Remember that we've updated the custom curve
+   // Remember that we've updated the unnamed curve
    mDirty = true;
 
-   // set 'custom' as the selected curve
+   // set 'unnamed' as the selected curve
    Select( (int) mCurves.GetCount()-1 );
 
    // Clean up
@@ -2349,7 +2233,7 @@ void EqualizationDialog::OnDrawRadio(wxCommandEvent &evt)
 
    mLogEnvelope->GetPoints( when, value, numPoints );
 
-   // set 'custom' as the selected curve
+   // set 'unnamed' as the selected curve
    EnvelopeUpdated();
 
    bool flag = true;
@@ -2681,146 +2565,12 @@ void EqualizationDialog::OnCurve(wxCommandEvent &event)
 }
 
 //
-// User wants to save a new curve
+// User wants to modify the list in some way
 //
-void EqualizationDialog::OnSaveAs(wxCommandEvent &event)
+void EqualizationDialog::OnManage(wxCommandEvent &event)
 {
-   SaveAs();
-}
-
-bool EqualizationDialog::SaveAs()
-{
-   wxString name;
-   int numCurves = mCurves.GetCount();
-   int curve;
-   bool overWrite = false;
-
-   // build the dialog
-   wxTextEntryDialog dlg( this,
-                          _("Enter the desired name of the curve"),
-                          _("Save As...") );
-
-   // Setup list of characters that aren't allowed
-   wxArrayString exclude;
-   exclude.Add( wxT("<") );
-   exclude.Add( wxT(">") );
-   exclude.Add( wxT("'") );
-   exclude.Add( wxT("\"") );
-
-   // And tell the validator about them
-   dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );
-   wxTextValidator *tv = dlg.GetTextValidator();
-   tv->SetExcludes( exclude );
-
-   // Prompt the user until a valid name is enter or cancelled
-   while( true )
-   {   // Show the dialog and bail if the user cancels
-      if( dlg.ShowModal() == wxID_CANCEL )
-      {
-         return false;
-      }
-
-      // Extract the name from the dialog
-      name = dlg.GetValue();
-
-      // Search list of curves for a duplicate name
-      bool bad = false;
-      for( curve = 0; curve < numCurves; curve++ )
-      {
-         if( name == mCurves[ curve ].Name )
-         {
-            int answer = wxMessageBox( wxT("Overwrite existing curve?"),
-                     wxT("Curve exists"), wxYES_NO );
-            if (answer == wxNO)
-            {
-               bad = true;
-               break;
-            }
-            else
-            {
-               overWrite = true;
-               break;
-            }
-         }
-      }
-      if( name == wxT("") || name == wxT("custom") )
-         bad = true;
-
-      // An unacceptable duplicate wasn't found so break out of loop
-      if( !bad )
-      {
-         break;
-      }
-   }
-
-   if( overWrite == false)
-   {
-      // Create a new entry
-      mCurves.Add( EQCurve( wxT("custom") ) );
-
-      // Copy over the points
-      mCurves[ numCurves ].points = mCurves[ numCurves - 1 ].points;
-
-      // Give the original custom entry the new name
-      mCurves[ numCurves - 1 ].Name = name;
-
-      // Recreate the choice control and layout everything again
-      CreateChoice();
-      Layout();
-
-      // Select the newly name curve
-      Select( numCurves - 1 );
-   }
-   else
-   {
-      // Overwrite curve from custom
-      mCurves[ curve ].points = mCurves[ numCurves - 1 ].points;
-
-      // Select the overwritten curve
-      Select( curve );
-   }
-
-   // Save the curves to file - enables the user to set up curves without applying them
-   SaveCurves();
-   return true;
-}
-
-//
-// User wants to delete a curve
-//
-void EqualizationDialog::OnDelete(wxCommandEvent &event)
-{
-   // Get the one to be deleted
-   int sel = mCurve->GetSelection();
-
-   // Create the prompt
-   wxString quest;
-   quest = wxString(_("Delete")) + wxT(" ") + mCurves[ sel ].Name + wxT("?");
-
-   // Ask for confirmation
-   int ans = wxMessageBox( quest,
-                           _("Confirm Deletion"),
-                           wxYES_NO | wxCENTRE,
-                           this );
-
-   // Denied, so bail
-   if( ans == wxNO )
-   {
-      return;
-   }
-
-   // Remove the curve from the array and choice control
-   mCurves.RemoveAt( sel );
-   mCurve->Delete( sel );
-
-   // Save the curves to file - enables the user to delete curves without applying anything
-   SaveCurves();
-
-   // set 'custom' as the selected curve
-   Select( (int) mCurves.GetCount()-1 );
-
-   // Reselect
-   setCurve( mCurves.GetCount()-1 );
+   EditCurvesDialog d(this, mCurve->GetSelection());
+   d.ShowModal();
 }
 
 void EqualizationDialog::OnClear(wxCommandEvent &event)
@@ -2968,7 +2718,7 @@ void EqualizationDialog::OnGridOnOff(wxCommandEvent & WXUNUSED(event))
 void EqualizationDialog::RevertCustom()
 {
    EQCurve &realCustom = mCurves[mCurves.GetCount()-1];
-   wxASSERT(realCustom.Name.IsSameAs(wxT("custom")));
+   wxASSERT(realCustom.Name.IsSameAs(wxT("unnamed")));
    realCustom.points = mCustomBackup.points;
 }
 
@@ -2999,7 +2749,7 @@ void EqualizationDialog::OnOk(wxCommandEvent &event)
 
    if( Validate() )
    {
-      // Update custom curve (so it's there for next time)
+      // Update unnamed curve (so it's there for next time)
       //(done in a hurry, may not be the neatest -MJS)
       if( !mDisallowCustom)
       {
@@ -3032,6 +2782,503 @@ void EqualizationDialog::OnOk(wxCommandEvent &event)
    {
       event.Skip(false);
    }
+}
+
+// EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
+// Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
+/// Constructor
+EditCurvesDialog::EditCurvesDialog(EqualizationDialog * parent, int position):
+   wxDialog(parent, wxID_ANY, _("Manage Curves List"),
+            wxDefaultPosition, wxDefaultSize,
+            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+{
+   SetLabel(_("Manage Curves"));         // Provide visual label
+   SetName(_("Manage Curves List"));     // Provide audible label
+   mParent = parent;
+   mPosition = position;
+   // make a copy of mParent->mCurves here to muck about with.
+   mEditCurves.Clear();
+   for (unsigned int i = 0; i < mParent->mCurves.GetCount(); i++)
+   {
+      mEditCurves.Add(mParent->mCurves[i].Name);
+      mEditCurves[i].points = mParent->mCurves[i].points;
+   }
+
+   Populate();
+}
+
+EditCurvesDialog::~EditCurvesDialog()
+{
+}
+
+/// Creates the dialog and its contents.
+void EditCurvesDialog::Populate()
+{
+   //------------------------- Main section --------------------
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+   // ----------------------- End of main section --------------
+}
+
+/// Defines the dialog and does data exchange with it.
+void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
+{
+   S.StartHorizontalLay(wxEXPAND, 0);
+   {
+      S.StartStatic(_("&Curves"));
+      {
+         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
+         mList = S.Id(CurvesListID).AddListControlReportMode();
+         mList->InsertColumn(0, _("Curve Name"), wxLIST_FORMAT_RIGHT);
+      }
+      S.EndStatic();
+      S.StartVerticalLay();
+      {
+         S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
+         S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
+         S.Id(RenameButtonID).AddButton(_("&Rename..."), wxALIGN_LEFT);
+         S.Id(DeleteButtonID).AddButton(_("D&elete..."), wxALIGN_LEFT);
+         S.Id(ImportButtonID).AddButton(_("I&mport..."), wxALIGN_LEFT);
+         S.Id(ExportButtonID).AddButton(_("E&xport..."), wxALIGN_LEFT);
+         S.Id(LibraryButtonID).AddButton(_("&Get More..."), wxALIGN_LEFT);
+         S.Id(DefaultsButtonID).AddButton(_("De&faults"), wxALIGN_LEFT);
+      }
+      S.EndVerticalLay();
+   }
+   S.EndHorizontalLay();
+   S.AddStandardButtons();
+      S.StartStatic(_("Help"));
+   S.AddConstTextBox(wxT(""), _("'OK' save your changes, 'Cancel' doesn't.\nRename 'unnamed' to create a new entry"));
+   PopulateList(mPosition);
+   Fit();
+
+   return;
+}
+
+void EditCurvesDialog::PopulateList(int position)
+{
+   mList->DeleteAllItems();
+   for (unsigned int i = 0; i < mEditCurves.GetCount(); i++)
+      mList->InsertItem(i, mEditCurves[i].Name);
+   mList->SetColumnWidth(0, wxLIST_AUTOSIZE);
+   int curvesWidth = mList->GetColumnWidth(0);
+   mList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+   int headerWidth = mList->GetColumnWidth(0);
+   mList->SetColumnWidth(0, wxMax(headerWidth, curvesWidth));
+   // use 'position' to set focus
+   mList->EnsureVisible(position);
+   mList->SetItemState(position, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
+}
+
+void EditCurvesDialog::OnUp(wxCommandEvent &event)
+{
+   long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   if ( item == -1 )
+      return;  // no items selected
+   if( item == 0 )
+      item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED); // top item selected, can't move up
+   int state;
+   while( item != -1 )
+   {
+      if ( item == mList->GetItemCount()-1)
+      {  // 'unnamed' always stays at the bottom
+         wxMessageBox(_("'unnamed' always stays at the bottom of the list"), _("'unnamed' is special"));   // these could get tedious!
+         return;
+      }
+      state = mList->GetItemState(item-1, wxLIST_STATE_SELECTED);
+      if ( state != wxLIST_STATE_SELECTED )
+      { // swap this with one above but only if it isn't selected
+         EQCurve temp(wxT("temp"));
+         temp.Name = mEditCurves[item].Name;
+         temp.points = mEditCurves[item].points;
+         mEditCurves[item].Name = mEditCurves[item-1].Name;
+         mEditCurves[item].points = mEditCurves[item-1].points;
+         mEditCurves[item-1].Name = temp.Name;
+         mEditCurves[item-1].points = temp.points;
+         wxString sTemp = mList->GetItemText(item);
+         mList->SetItem(item, 0, mList->GetItemText(item-1));
+         mList->SetItem(item-1, 0, sTemp);
+         mList->SetItemState(item, 0, wxLIST_STATE_SELECTED);
+         mList->SetItemState(item-1, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      }
+      item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   }
+}
+
+void EditCurvesDialog::OnDown(wxCommandEvent &event)
+{  // looks harder than OnUp as we need to seek backwards up the list, hence GetPreviousItem
+   long item = GetPreviousItem(mList->GetItemCount());
+   if( item == -1 )
+      return;  // nothing selected
+   int state;
+   while( item != -1 )
+   {
+      if( (item != mList->GetItemCount()-1) && (item != mList->GetItemCount()-2) )
+      {  // can't move 'unnamed' down, or the one above it
+         state = mList->GetItemState(item+1, wxLIST_STATE_SELECTED);
+         if ( state != wxLIST_STATE_SELECTED )
+         { // swap this with one below but only if it isn't selected
+            EQCurve temp(wxT("temp"));
+            temp.Name = mEditCurves[item].Name;
+            temp.points = mEditCurves[item].points;
+            mEditCurves[item].Name = mEditCurves[item+1].Name;
+            mEditCurves[item].points = mEditCurves[item+1].points;
+            mEditCurves[item+1].Name = temp.Name;
+            mEditCurves[item+1].points = temp.points;
+            wxString sTemp = mList->GetItemText(item);
+            mList->SetItem(item, 0, mList->GetItemText(item+1));
+            mList->SetItem(item+1, 0, sTemp);
+            mList->SetItemState(item, 0, wxLIST_STATE_SELECTED);
+            mList->SetItemState(item+1, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+         }
+      }
+      item = GetPreviousItem(item);
+   }
+}
+
+long EditCurvesDialog::GetPreviousItem(long item)  // wx doesn't have this
+{
+   long lastItem = -1;
+   long itemTemp = mList->GetNextItem(-1, wxLIST_NEXT_ALL,
+                                  wxLIST_STATE_SELECTED);
+   while( (itemTemp != -1) && (itemTemp < item) )
+   {
+      lastItem = itemTemp;
+      itemTemp = mList->GetNextItem(itemTemp, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   }
+   return lastItem;
+}
+
+// Rename curve/curves
+void EditCurvesDialog::OnRename(wxCommandEvent &event)
+{
+   wxString name;
+   int numCurves = mEditCurves.GetCount();
+   int curve;
+
+   // Setup list of characters that aren't allowed
+   wxArrayString exclude;
+   exclude.Add( wxT("<") );
+   exclude.Add( wxT(">") );
+   exclude.Add( wxT("'") );
+   exclude.Add( wxT("\"") );
+
+   // Get the first one to be renamed
+   long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   long firstItem = item;  // for reselection with PopulateList
+   while(item >= 0)
+   {
+      // Prompt the user until a valid name is enter or cancelled
+      bool overwrite = false;
+      bool bad = true;
+      while( bad )   // Check for an unacceptable duplicate
+      {   // Show the dialog and bail if the user cancels
+         bad = false;
+         // build the dialog
+         wxTextEntryDialog dlg( this,
+                                _("Rename '") + mEditCurves[ item ].Name + _("' to..."),
+                                _("Rename...") );
+         dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );
+         wxTextValidator *tv = dlg.GetTextValidator();
+         tv->SetExcludes( exclude );   // Tell the validator about excluded chars
+         if( dlg.ShowModal() == wxID_CANCEL )
+         {
+            bad = true;
+            break;
+         }
+
+         // Extract the name from the dialog
+         name = dlg.GetValue();
+
+         // Search list of curves for a duplicate name
+         for( curve = 0; curve < numCurves; curve++ )
+         {
+            wxString temp = mEditCurves[ curve ].Name;
+            if( name.IsSameAs( mEditCurves[ curve ].Name )) // case sensitive
+            {
+               if( curve == item )  // trying to rename a curve with the same name
+               {
+                  wxMessageBox( _("Name is the same as the original one"), _("Same name"), wxOK );
+                  bad = true;
+                  break;
+               }
+               int answer = wxMessageBox( _("Overwrite existing curve '") + name +_("'?"),
+                        _("Curve exists"), wxYES_NO );
+               if (answer == wxYES)
+               {
+                  bad = false;
+                  overwrite = true; // we are going to overwrite the one with this name
+                  break;
+               }
+               else
+                  bad = true;
+            }
+         }
+         if( name == wxT("") || name == wxT("unnamed") )
+            bad = true;
+      }
+
+      if( bad != true ) // user didn't cancel this one
+      {
+         if( item == numCurves-1 ) // renaming 'unnamed'
+         {
+            if(overwrite)
+            {  // Overwrite another curve with 'unnamed'
+               mEditCurves[ curve ].Name = name;
+               mList->SetItem(curve, 0, name);
+               mEditCurves[ curve ].points = mEditCurves[ item ].points;
+            }
+            else
+            {  // Create a new entry
+               mEditCurves.Add( EQCurve( wxT("unnamed") ) );
+               // Copy over the points
+               mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
+               // Give the original unnamed entry the new name
+               mEditCurves[ numCurves - 1 ].Name = name;
+               numCurves++;
+            }
+         }
+         else  // renaming a curve other than 'unnamed'
+         {
+            if(overwrite)
+            {  // Overwrite another curve with this one, then delete this one
+               mEditCurves[ curve ].Name = name;
+               mEditCurves[ curve ].points = mEditCurves[ item ].points;
+               mEditCurves.RemoveAt( item );
+               numCurves--;
+            }
+            else  // just rename (the 'normal' case)
+            {
+               mEditCurves[ item ].Name = name;
+               mList->SetItem(item, 0, name);
+            }
+         }
+      }
+      // get next selected item
+      item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   }
+
+   PopulateList(firstItem);  // Note: only saved to file when you OK out of the dialog
+   return;
+}
+
+void EditCurvesDialog::OnRenameActivated( wxListEvent &event )
+{
+   wxCommandEvent dummyEvent;
+   OnRename( dummyEvent );
+   return;
+}
+
+// Delete curve/curves
+void EditCurvesDialog::OnDelete(wxCommandEvent &event)
+{
+   // We could could count them here
+   // And then put in a 'Delete N items?' prompt.
+
+#if 0 // 'one at a time' prompt code
+   // Get the first one to be deleted
+   long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   // Take care, mList and mEditCurves will get out of sync as curves are deleted
+   int deleted = 0;
+   long highlight = -1;
+
+   while(item >= 0)
+   {
+      if(item == mList->GetItemCount()-1)   //unnamed
+      {
+         wxMessageBox(_("You cannot delete the 'unnamed' curve."),
+               _("Can't delete 'unnamed'"), wxOK | wxCENTRE, this);
+      }
+      else
+      {
+         // Create the prompt
+         wxString quest;
+         quest = wxString(_("Delete '")) + mEditCurves[ item-deleted ].Name + _("' ?");
+
+         // Ask for confirmation before removal
+         int ans = wxMessageBox( quest, _("Confirm Deletion"), wxYES_NO | wxCENTRE, this );
+         if( ans == wxYES )
+         {  // Remove the curve from the array
+            mEditCurves.RemoveAt( item-deleted );
+            deleted++;
+         }
+         else
+            highlight = item-deleted;  // if user presses 'No', select that curve
+      }
+      // get next selected item
+      item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   }
+
+   if(highlight == -1)
+      PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
+   else
+      PopulateList(highlight);   // user said 'No' to deletion
+#else // 'delete all N' code
+   int count = mList->GetSelectedItemCount();
+   long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   // Create the prompt
+   wxString quest;
+   if( count > 1 )
+      quest.Printf(_("Delete ") + wxString(wxT("%d ")) + _("items?"), count);
+   else
+      if( count == 1 )
+         quest = wxString(_("Delete '")) + mEditCurves[ item ].Name + _("' ?");
+      else
+         return;
+   // Ask for confirmation before removal
+   int ans = wxMessageBox( quest, _("Confirm Deletion"), wxYES_NO | wxCENTRE, this );
+   if( ans == wxYES )
+   {  // Remove the curve(s) from the array
+      // Take care, mList and mEditCurves will get out of sync as curves are deleted
+      int deleted = 0;
+      while(item >= 0)
+      {
+         if(item == mList->GetItemCount()-1)   //unnamed
+         {
+            wxMessageBox(_("You cannot delete the 'unnamed' curve, it is special."),
+                  _("Can't delete 'unnamed'"), wxOK | wxCENTRE, this);
+         }
+         else
+         {
+            mEditCurves.RemoveAt( item-deleted );
+            deleted++;
+         }
+         item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      }
+      PopulateList(mEditCurves.GetCount()-1);   // set 'unnamed' as the selected curve
+   }
+#endif
+}
+
+void EditCurvesDialog::OnKey( wxListEvent &event )
+{
+   wxCommandEvent dummyEvent;
+   int key = event.GetKeyCode();
+   switch ( key )
+   {
+      case WXK_DELETE:
+         OnDelete( dummyEvent );
+         break;
+/*      case WXK_UP:
+         OnUp( dummyEvent );
+         event.Skip();
+         break;
+      case WXK_DOWN:
+         OnDown( dummyEvent );
+         event.Skip();
+         break;*/
+      default:
+         event.Skip();
+   }
+   return;
+}
+
+void EditCurvesDialog::OnImport( wxCommandEvent &event )
+{
+   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), wxT("*.XML"));
+   wxString fileName = wxT("");
+   if( filePicker.ShowModal() == wxID_CANCEL)
+      return;
+   else
+      fileName = filePicker.GetPath();
+   // Use EqualizationDialog::LoadCurves to read into (temporary) mEditCurves
+   // This may not be the best OOP way of doing it, but I don't know better (MJS)
+   EQCurveArray temp;
+   temp = mParent->mCurves;
+   mParent->mCurves = mEditCurves;
+   mParent->LoadCurves(fileName, true);
+   mEditCurves = mParent->mCurves;
+   mParent->mCurves = temp;
+   PopulateList(0);  // update the EditCurvesDialog dialog
+   return;
+}
+
+void EditCurvesDialog::OnExport( wxCommandEvent &event )
+{
+   wxFileDialog filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
+   wxString fileName = wxT("");
+   if( filePicker.ShowModal() == wxID_CANCEL)
+      return;
+   else
+      fileName = filePicker.GetPath();
+
+   EQCurveArray temp;
+   temp = mParent->mCurves;   // backup the parent's curves
+   EQCurveArray exportCurves;   // Copy selected curves to export
+   exportCurves.Clear();
+   long item = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   int i=0;
+   while(item >= 0)
+   {
+      if(item != mList->GetItemCount()-1)   // not 'unnamed'
+      {
+         exportCurves.Add(mEditCurves[item].Name);
+         exportCurves[i].points = mEditCurves[item].points;
+         i++;
+      }
+      else
+         wxMessageBox(_("You cannot export 'unnamed' curve"), _("'unnamed' is special"));
+      // get next selected item
+      item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+   }
+   if(i>0)
+   {
+      mParent->mCurves = exportCurves;
+      mParent->SaveCurves(fileName);
+      mParent->mCurves = temp;
+      wxString message;
+      message.Printf(wxString(wxT("%d ")) + _("curves exported to ") + wxString(wxT("%s")), i, fileName);
+      wxMessageBox(message, _("Curves exported"));
+   }
+   else
+      wxMessageBox(_("No curves exported"), _("No curves exported"));
+}
+
+void EditCurvesDialog::OnLibrary( wxCommandEvent &event )
+{
+/* Original code, now simpler
+   wxString message = _("Please press 'help' to visit the download page.");
+   ShowErrorDialog(this, _("Get more curves"),
+   message, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload")); */
+   wxLaunchDefaultBrowser(wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"));
+}
+
+void EditCurvesDialog::OnDefaults( wxCommandEvent &event )
+{
+   EQCurveArray temp;
+   temp = mParent->mCurves;
+   wxFileName exePath(PlatformCompatibility::GetExecutablePath());
+   mParent->LoadCurves(wxFileName( exePath.GetPath(), wxT("EQCurves.xml")).GetFullPath() );
+   mEditCurves = mParent->mCurves;
+   mParent->mCurves = temp;
+   PopulateList(0);  // update the EditCurvesDialog dialog
+}
+
+void EditCurvesDialog::OnOK(wxCommandEvent &event)
+{
+   // Make a backup of the current curves
+   wxString backupPlace = wxFileName( FileNames::DataDir(), wxT("EQBackup.xml") ).GetFullPath();
+   mParent->SaveCurves(backupPlace);
+   // Load back into the main dialog
+   mParent->mCurves.Clear();
+   for (unsigned int i = 0; i < mEditCurves.GetCount(); i++)
+   {
+      mParent->mCurves.Add(mEditCurves[i].Name);
+      mParent->mCurves[i].points = mEditCurves[i].points;
+   }
+   mParent->SaveCurves();
+   mParent->LoadCurves();
+   mParent->CreateChoice();
+   mParent->Layout();
+
+   // Select something sensible
+   long item = mList->GetNextItem(-1,
+                                  wxLIST_NEXT_ALL,
+                                  wxLIST_STATE_SELECTED);
+   if (item == -1)
+      item = mList->GetItemCount()-1;   // nothing selected, default to 'unnamed'
+   mParent->setCurve(item);
+   EndModal(true);
 }
 
 #if wxUSE_ACCESSIBILITY

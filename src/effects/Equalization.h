@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  EffectEqualization.h
+  Equalization.h
 
   Mitch Golden
   Vaughan Johnson (Preview)
@@ -20,6 +20,7 @@
 #include <wx/dialog.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
+#include <wx/listctrl.h>
 #include <wx/stattext.h>
 #include <wx/slider.h>
 #include <wx/sizer.h>
@@ -37,6 +38,7 @@
 #include "../Envelope.h"
 #include "../WaveTrack.h"
 #include "../xml/XMLTagHandler.h"
+#include "../widgets/Grid.h"
 #include "../widgets/Ruler.h"
 #include "../RealFFTf.h"
 
@@ -135,17 +137,6 @@ private:
    bool mEditingBatchParams;
 
 public:
-   enum curveType {
-     amradio, acoustic,
-     nab, lp, aes, deccaffrrmicro, deccaffrr78, riaa,
-     inverseriaa, col78, deccaffrrlp, emi78, rcavictor1938, rcavictor1947,
-     nCurveTypes
-   };
-
-   enum {nCurvePoints=28};
-   static const float curvex[];
-   static const float curvey[][nCurvePoints];
-   static const wxChar * curveNames[];
 
 friend class EqualizationDialog;
 friend class EqualizationPanel;
@@ -246,13 +237,13 @@ public:
    bool drawGrid;
    RulerPanel *dBRuler;
    RulerPanel *freqRuler;
+   friend class EditCurvesDialog;
 
 private:
    void MakeEqualizationDialog();
    void CreateChoice();
-   void LoadDefaultCurves();
-   void LoadCurves();
-   void SaveCurves();
+   void LoadCurves(wxString fileName = wxT(""), bool append = false);
+   void SaveCurves(wxString fileName = wxT(""));
    void Select(int sel);
    void setCurve(int currentCurve);
    void setCurve(wxString curveName);
@@ -261,7 +252,6 @@ private:
    void spline(double x[], double y[], int n, double y2[]);
    double splint(double x[], double y[], int n, double y2[], double xr);
    void LayoutEQSliders();
-   bool SaveAs();
    void RevertCustom();
    void Finish(bool ok);
 
@@ -280,7 +270,7 @@ private:
       ID_DBMAX,
       ID_DBMIN,
       ID_CURVE,
-      ID_SAVEAS,
+      ID_MANAGE,
       ID_DELETE,
       ID_CLEAR,
       ID_INVERT,
@@ -310,8 +300,7 @@ private:
    void EnvLinToLog(void);
    void ErrMin(void);
    void OnCurve( wxCommandEvent &event );
-   void OnSaveAs( wxCommandEvent &event );
-   void OnDelete( wxCommandEvent &event );
+   void OnManage( wxCommandEvent &event );
    void OnClear( wxCommandEvent &event );
    void OnInvert( wxCommandEvent &event );
    void OnPreview(wxCommandEvent &event);
@@ -338,7 +327,7 @@ private:
    wxBoxSizer *mCurveSizer;
    wxChoice *mCurve;
    wxButton *mDelete;
-   wxButton *mSaveAs;
+   wxButton *mManage;
    wxStaticText *mMText;
    wxStaticText *octText;
    wxSlider *MSlider;
@@ -357,7 +346,6 @@ private:
    wxBoxSizer *szr5;
    wxSize size;
    wxCheckBox *mGridOnOff;
-
    EQCurveArray mCurves;
    EQCurve mCustomBackup;
 
@@ -367,6 +355,37 @@ private:
 };
 
 #if wxUSE_ACCESSIBILITY
+
+// EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
+// Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
+class EditCurvesDialog:public wxDialog
+{
+public:
+   EditCurvesDialog(EqualizationDialog * parent, int position);
+   ~EditCurvesDialog();
+
+private:
+   wxListCtrl *mList;   // List of curves.
+   EQCurveArray mEditCurves;   // Copy of curves to muck about with
+   EqualizationDialog *mParent;   // the parent EQ Dialog
+   int mPosition; // position of current curve in list
+   void Populate();
+   void PopulateOrExchange(ShuttleGui &S);
+   void PopulateList(int position);
+   void OnUp(wxCommandEvent &event);
+   void OnDown(wxCommandEvent &event);
+   long GetPreviousItem(long item);
+   void OnRename( wxCommandEvent &event );
+   void OnRenameActivated( wxListEvent &event );
+   void OnDelete( wxCommandEvent &event );
+   void OnKey( wxListEvent &event );
+   void OnImport( wxCommandEvent &event );
+   void OnExport( wxCommandEvent &event );
+   void OnLibrary( wxCommandEvent &event );
+   void OnDefaults( wxCommandEvent &event );
+   void OnOK(wxCommandEvent &event);
+   DECLARE_EVENT_TABLE()
+};
 
 class SliderAx: public wxWindowAccessible
 {
