@@ -485,6 +485,8 @@ int ExportPCM::Export(AudacityProject *project,
       // libsndfile can't (under Windows).
       ODManager::LockLibSndFileMutex();
       sf = sf_open_fd(f.fd(), SFM_WRITE, &info, FALSE);
+      //add clipping for integer formats.  We allow floats to clip.
+      sf_command(sf, SFC_SET_CLIPPING, NULL,sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
       ODManager::UnlockLibSndFileMutex();
    }
 
