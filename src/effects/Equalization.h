@@ -354,8 +354,6 @@ private:
 
 };
 
-#if wxUSE_ACCESSIBILITY
-
 // EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
 class EditCurvesDialog:public wxDialog
@@ -386,6 +384,9 @@ private:
    void OnOK(wxCommandEvent &event);
    DECLARE_EVENT_TABLE()
 };
+
+
+#if wxUSE_ACCESSIBILITY
 
 class SliderAx: public wxWindowAccessible
 {
