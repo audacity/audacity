@@ -1243,12 +1243,12 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrH = new wxBoxSizer( wxHORIZONTAL );
 
    mFaderOrDraw[0] = new wxRadioButton(
-         this, drawRadioID, _("Draw curves"),
+         this, drawRadioID, _("&Draw curves"),
          wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
    szrH->Add( mFaderOrDraw[0], 0, wxRIGHT, 10 );
 
    mFaderOrDraw[1] = new wxRadioButton(
-         this, sliderRadioID, _("Graphic EQ"),
+         this, sliderRadioID, _("&Graphic EQ"),
          wxDefaultPosition, wxDefaultSize, 0 );
    szrH->Add( mFaderOrDraw[1], 0, wxRIGHT, 4 );
 
@@ -1262,7 +1262,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrH->Add( szrI );
 
    szrL = new wxBoxSizer( wxHORIZONTAL );
-   mLinFreq = new wxCheckBox(this, ID_LIN_FREQ, _("Linear frequency scale"));
+   mLinFreq = new wxCheckBox(this, ID_LIN_FREQ, _("Li&near frequency scale"));
    szrL->Add( mLinFreq, 0 );
    szrH->Add(szrL);  // either szrI or szrL are visible, not both.
 
@@ -1271,7 +1271,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    // -------------------------------------------------------------------
 
    // length of filter (M) label
-   txt = new wxStaticText(this, wxID_ANY, _("Length of filter:"));
+   txt = new wxStaticText(this, wxID_ANY, _("Length of &filter:"));
    szrH->Add( txt, 0 );
 
    // length of filter (M) slider
@@ -1292,7 +1292,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    // -------------------------------------------------------------------
    szrC = new wxBoxSizer( wxHORIZONTAL );   //szrC is for the curves bits
 
-   txt = new wxStaticText( this, wxID_ANY, _("Select curve:") );
+   txt = new wxStaticText( this, wxID_ANY, _("&Select curve:") );
    szrC->Add( txt, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT, 4 );
 
    // Create the choice sizer (helps in recreating choice control)
@@ -1302,14 +1302,14 @@ void EqualizationDialog::MakeEqualizationDialog()
    // Create the choice control
    CreateChoice();
 
-   mManage = new wxButton( this, ID_MANAGE, _("Save/Manage curves...") );
+   mManage = new wxButton( this, ID_MANAGE, _("S&ave/Manage curves...") );
    szrC->Add( mManage, 0, wxALIGN_CENTRE|wxLEFT, 4 );
 
-   btn = new wxButton( this, ID_CLEAR, _("Flatten"));
+   btn = new wxButton( this, ID_CLEAR, _("Fla&tten"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
-   btn = new wxButton( this, ID_INVERT, _("Invert"));
+   btn = new wxButton( this, ID_INVERT, _("In&vert"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
-   mGridOnOff = new wxCheckBox(this, GridOnOffID, _("Grids"),
+   mGridOnOff = new wxCheckBox(this, GridOnOffID, _("G&rids"),
                             wxDefaultPosition, wxDefaultSize,
                             wxALIGN_RIGHT);
    mGridOnOff->SetName(_("Grids"));
@@ -2848,7 +2848,7 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
    S.AddStandardButtons();
       S.StartStatic(_("Help"));
-   S.AddConstTextBox(wxT(""), _("'OK' save your changes, 'Cancel' doesn't.\nRename 'unnamed' to create a new entry"));
+   S.AddConstTextBox(wxT(""), _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
    PopulateList(mPosition);
    Fit();
 
