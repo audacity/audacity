@@ -14,7 +14,7 @@ expat
 XML parser library used to parse project files and so on. By default the
 system copy is prefered over this one, even on OS X (where it is shipped by
 default). Build against system 2.0.1 works fine.
-Version in audacity CVS: 1.2
+Version in Audacity SVN: 1.2
 Patches: None
 Upstream version: 2.0.1
 
@@ -36,7 +36,7 @@ libflac
 -------
 http://flac.sourceforge.net/
 Free Lossless Audio Codec encoding and decoding library
-Version in audacity cvs: 1.2.1
+Version in Audacity SVN: 1.2.1
 Patches: mac-asm-fixes.patch. Fixes build on OS X Intel 10.4 by creating and
 object format for Mach-O. Needs to go upstream
 	gcc-4.3-includes.patch. Patch from gentoo to fix includes needed for
@@ -44,7 +44,7 @@ object format for Mach-O. Needs to go upstream
 	asm-textreloc.patch. Patch from Gentoo to avoid text relocations is
 		the assembly optimisations. In upstream CVS
 	asneeded.patch. Add LDFLAGS needed for non-glibc systems. Taken from Gentoo.
-	flac-lite.diff. Remove all the things not included in audacity CVS from
+	flac-lite.diff. Remove all the things not included in Audacity SVN from
 		the build system so it will build with 50% less stuff
 Upstream version: 1.2.1
 
@@ -60,7 +60,7 @@ libmad
 ------
 http://www.underbit.com/products/mad/
 MP3 decoding library
-Version in audacity cvs: 0.15.1 (beta)
+Version in Audacity SVN: 0.15.1 (beta)
 Patches: libmad-mp2-out-of-spec.patch:	Import some forms of MP2 file that are
 theoretically out of spec but in practise work fine (msmeyer)
 osx-universal-build.patch: Makes build work on OS X for universal binary by
@@ -80,7 +80,7 @@ hurd-nyquist.patch      Patch from Benjamin Drung to build nyquist on HURD.
 libogg
 ------
 library to handle Xiph.org's open multimedia container format
-Version in Audacity CVS: 1.1.3
+Version in Audacity SVN: 1.1.3
 Patches: None, except docs build disabled in Makefile.am
 /usr/share/aclocal/libtool.m4 copied to acinclude.m4 (working round not having
 an m4 directory in the package for libtool files)
@@ -88,14 +88,14 @@ Upstream Version: 1.1.3
 
 libresample
 -----------
-Audio sample rate conversion library. Maintained by audacity project
+Audio sample rate conversion library. Maintained by Audacity project
 
 libsamplerate
 -------------
 Erik de Castro Lopo's high quality sample rate conversion library. Not used
 in release builds, could probably be removed altogther except for comparision
 purposes.
-Version in Audacity CVS: 0.1.7
+Version in Audacity SVN: 0.1.7
 Patches: endian.m4, lrint.m4, llrint.m4, lrintf.m4, clip_mode.m4 copied from
 			libsndfile's M4/.
 		 signal.m4 created out of the tail of acinclude.m4 with the remaining
@@ -107,8 +107,8 @@ Upstream Version: 0.1.7
 libsndfile
 ----------
 Erik de Castro Lopo's uncompressed audio file I/O library. Core and essential
-to audacity.
-Version in Audacity CVS: 1.0.18
+to Audacity.
+Version in Audacity SVN: 1.0.18
 Patches: macro-quoting.patch: quote arguments to AC_DEFUN such that
 			autoreconf works with autorecnf 2.63. Has been accepted upstream
 		 portability.patch: add portability macros / pre-processor to 
@@ -120,7 +120,7 @@ Upstream Version: 1.0.18
 libvamp
 -------
 Library to load and use VAMP plug-ins. http://www.vamp-plugins.org/
-Version in Audacity CVS: 2.0
+Version in Audacity SVN: 2.0
 Patches: optional-progs.patch: Make building the Vamp host (and so the
 dependecy on libsndfile) optional rather than mandatory. Accepted upstream.
 		 distclean.patch: ensure that distclean actually works and takes away
@@ -131,7 +131,7 @@ libvorbis
 ---------
 library for endcoding and decoding Xiph.org's high-quality compressed audio
 format.
-Version in Audacity CVS: 1.2.0
+Version in Audacity SVN: 1.2.0
 Patches: local-libogg.patch: configure patch that lets us build against a
 local libogg if there isn't a system one.
 no-docs-examples.patch: disable building documentation and examples, so we can
@@ -155,7 +155,7 @@ portaudio
 ---------
 http://portaudio.com/
 cross-platform audio I/O library version 18, used for 1.2.x version of
-audacity.
+Audacity.
 Quite heavily patched local copy to get AC-97 ALSA cards to play back
 correctly.
 
@@ -163,7 +163,7 @@ portaudio-v19
 -------------
 http://portaudio.com/
 cross-platform audio I/O library version 19, used for 1.3.2 onwards releases
-Version in audacity cvs: 1st July 2009 SVN snapshot (r1416)
+Version in Audacity SVN: 1st July 2009 SVN snapshot (r1416)
 Patches:
 ../portmixer/portaudio.patch	add features needed to make portmixer work.
 		Integration by upstream in progress. Will need updating as upstream
@@ -179,7 +179,7 @@ portsmf
 -------
 http://portmedia.sourceforge.net/
 Cross-platform Midi file reader and writer (succeeded and obsoltes allegro)
-Version in audacity cvs: SVN snapshot from ????
+Version in Audacity SVN: SVN snapshot from ????
 Patches:
 portsmf-includes.patch	add include of <cstring> needed to compile with recent
 						GCC versions
@@ -201,7 +201,7 @@ Doesn't do anything yet
 portmixer
 ---------
 cross-platform audio mixer control library, hooked onto portaudio. Maintained
-by the audacity project with some help from portaudio development.
+by the Audacity project with some help from portaudio development.
 
 redland
 -------
@@ -209,7 +209,7 @@ http://librdf.org
 RDF parser and query engine. Consists of three separate libraries, Raptor
 (the parser), Rasqal (the query engine) and librdf (triple storage and
 wrapper API). It is needed for liblrdf and SLV2.
-Version in audacity cvs: 1.0.8
+Version in Audacity SVN: 1.0.8
 Patches:
 audacity_build_tweaks.patch	Patches the configure scripts to turn off parsers, storage models and query languages not used by Audacity as well as using Expat instead of libxml2 for XML parsing. No need to integrate with upstream.
 
@@ -224,10 +224,10 @@ sbsms
 http://sbsms.sourceforge.net/
 An audio stretching library for changing pitch or tempo without changing the
 other. Alternative to SoundTouch, better on large changes but slower.
-Version in audacity cvs: ??
+Version in Audacity SVN: ??
 Patches:
 Misc fixes to configure.in/Makefile.am for autoconf macros and libtool. More
-files added to m4/ directory by libtoolizing commited to CVS.
+files added to m4/ directory by libtoolizing commited to Audacity SVN.
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
 dont-mangle-cflags.patch	patch to stop sed-ing the CXXFLAGS and achieve the
@@ -240,7 +240,7 @@ slv2
 -------
 http://wiki.drobilla.net/SLV2
 Support library for LV2 hosts (like Audacity).
-Version in audacity cvs: 0.6.0
+Version in Audacity SVN: 0.6.0
 Patches:
 audacity_build_tweaks.patch	Patches the configure scripts to not build hosts and utility programs and to use local Redland libraries if requested. No need to integrate with upstream.
 lv2core_internal.patch		Add lv2.h as an internal header to avoid the dependency on lv2core.
@@ -252,7 +252,7 @@ soundtouch
 ----------
 http://www.surina.net/soundtouch/
 Independant Pitch and Tempo changing library.
-Version in audacity cvs: 1.3.1
+Version in Audacity SVN: 1.3.1
 Patches:
 PPC mac build changes to configure.in in several places
 correct-const-usage.patch: makes usage of const keyword consistent so it
@@ -268,7 +268,7 @@ taglib
 http://developer.kde.org/~wheeler/taglib.html
 svn co svn://anonsvn.kde.org/home/kde/trunk/kdesupport/taglib
 Audio Meta-Data Library
-Version in audacity cvs: svn revision 924567 (post 1.5)
+Version in Audacity SVN: svn revision 924567 (post 1.5)
 Patches: none
 
 If replacing via svn, you need to do the following to generate the configure
@@ -282,7 +282,7 @@ twolame
 -------
 http://www.twolame.org/
 MPEG I layer 2 audio encoding library used for MP2 exports
-Version in audacity cvs: 0.3.12
+Version in Audacity SVN: 0.3.12
 Patches: None
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
