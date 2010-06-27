@@ -106,34 +106,6 @@ various graphing code, such as provided by FreqWindow and FilterPanel.
 
 #include <wx/arrimpl.cpp>
 
-enum EQCurvesDialogControls
-{
-   CurvesListID = 11000,
-   UpButtonID,
-   DownButtonID,
-   RenameButtonID,
-   DeleteButtonID,
-   ImportButtonID,
-   ExportButtonID,
-   LibraryButtonID,
-   DefaultsButtonID
-};
-
-BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
-   EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
-   EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
-   EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
-   EVT_LIST_ITEM_ACTIVATED(CurvesListID, EditCurvesDialog::OnRenameActivated)
-   EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
-   EVT_LIST_KEY_DOWN(CurvesListID, EditCurvesDialog::OnKey)
-   EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
-   EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
-   EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
-   EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
-   EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
-END_EVENT_TABLE()
-
-
 WX_DEFINE_OBJARRAY( EQPointArray );
 WX_DEFINE_OBJARRAY( EQCurveArray );
 
@@ -1245,11 +1217,13 @@ void EqualizationDialog::MakeEqualizationDialog()
    mFaderOrDraw[0] = new wxRadioButton(
          this, drawRadioID, _("&Draw curves"),
          wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+   mFaderOrDraw[0]->SetName(_("Draw curves"));
    szrH->Add( mFaderOrDraw[0], 0, wxRIGHT, 10 );
 
    mFaderOrDraw[1] = new wxRadioButton(
          this, sliderRadioID, _("&Graphic EQ"),
          wxDefaultPosition, wxDefaultSize, 0 );
+   mFaderOrDraw[0]->SetName(_("Graphic EQ"));
    szrH->Add( mFaderOrDraw[1], 0, wxRIGHT, 4 );
 
    mInterpChoice = new wxChoice(this, ID_INTERP,
@@ -1263,6 +1237,7 @@ void EqualizationDialog::MakeEqualizationDialog()
 
    szrL = new wxBoxSizer( wxHORIZONTAL );
    mLinFreq = new wxCheckBox(this, ID_LIN_FREQ, _("Li&near frequency scale"));
+   mLinFreq->SetName(_("Linear frequency scale"));
    szrL->Add( mLinFreq, 0 );
    szrH->Add(szrL);  // either szrI or szrL are visible, not both.
 
@@ -1277,6 +1252,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    // length of filter (M) slider
    MSlider = new wxSliderBugfix(this, ID_LENGTH, (M -1)/2, 10, 4095,
                            wxDefaultPosition, wxSize(200, -1), wxSL_HORIZONTAL);
+   MSlider->SetName(_("Length of filter"));
    szrH->Add( MSlider, 0, wxEXPAND );
 
    wxString label;
@@ -1303,6 +1279,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    CreateChoice();
 
    mManage = new wxButton( this, ID_MANAGE, _("S&ave/Manage curves...") );
+   mManage->SetName(_("Save and Manage curves"));
    szrC->Add( mManage, 0, wxALIGN_CENTRE|wxLEFT, 4 );
 
    btn = new wxButton( this, ID_CLEAR, _("Fla&tten"));
@@ -1374,6 +1351,7 @@ void EqualizationDialog::CreateChoice()
 
    // Save control ptr and add to its sizer
    mCurve = choice;
+   mCurve->SetName(_("Select curve"));
    mCurveSizer->Add( mCurve, 0 );
 
    // Delete the array of names
@@ -1832,7 +1810,28 @@ bool EqualizationDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             const wxString strValue = value;
             if (!XMLValueChecker::IsGoodString(strValue))
                return false;
-            mCurves.Add( EQCurve( strValue ) );
+            // check for a duplicate name and add (n) if there is one
+            int n = 0;
+            wxString strValueTemp = strValue;
+            bool exists;
+            do
+            {
+               exists = false;
+               for(size_t i=0;i<mCurves.GetCount();i++)
+               {
+                   if(n>0)
+                     strValueTemp.Printf(wxT("%s (%d)"),strValue,n);
+                  if(mCurves[i].Name == strValueTemp)
+                  {
+                     exists = true;
+                     break;
+                  }
+               }
+               n++;
+            }
+            while(exists == true);
+
+            mCurves.Add( EQCurve( strValueTemp ) );
          }
       }
 
@@ -2784,9 +2783,26 @@ void EqualizationDialog::OnOk(wxCommandEvent &event)
    }
 }
 
-// EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
+//----------------------------------------------------------------------------
+// EditCurvesDialog
+//----------------------------------------------------------------------------
+// Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
 /// Constructor
+
+BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
+   EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
+   EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
+   EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
+   EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
+   EVT_LIST_KEY_DOWN(CurvesListID, EditCurvesDialog::OnKey)
+   EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
+   EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
+   EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
+   EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
+   EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
+END_EVENT_TABLE()
+
 EditCurvesDialog::EditCurvesDialog(EqualizationDialog * parent, int position):
    wxDialog(parent, wxID_ANY, _("Manage Curves List"),
             wxDefaultPosition, wxDefaultSize,
@@ -2823,16 +2839,16 @@ void EditCurvesDialog::Populate()
 /// Defines the dialog and does data exchange with it.
 void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxEXPAND, 0);
+   S.StartHorizontalLay(wxEXPAND);
    {
-      S.StartStatic(_("&Curves"));
+      S.StartStatic(_("&Curves"), 1);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
          mList = S.Id(CurvesListID).AddListControlReportMode();
          mList->InsertColumn(0, _("Curve Name"), wxLIST_FORMAT_RIGHT);
       }
       S.EndStatic();
-      S.StartVerticalLay();
+      S.StartVerticalLay(0);
       {
          S.Id(UpButtonID).AddButton(_("Move &Up"), wxALIGN_LEFT);
          S.Id(DownButtonID).AddButton(_("Move &Down"), wxALIGN_LEFT);
@@ -2847,8 +2863,9 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
    S.AddStandardButtons();
-      S.StartStatic(_("Help"));
-   S.AddConstTextBox(wxT(""), _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
+   S.StartStatic(_("Help"));
+      S.AddConstTextBox(wxT(""), _("Rename 'unnamed' to save a new entry.\n'OK' saves all changes, 'Cancel' doesn't."));
+   S.EndStatic();
    PopulateList(mPosition);
    Fit();
 
@@ -3062,13 +3079,6 @@ void EditCurvesDialog::OnRename(wxCommandEvent &event)
    return;
 }
 
-void EditCurvesDialog::OnRenameActivated( wxListEvent &event )
-{
-   wxCommandEvent dummyEvent;
-   OnRename( dummyEvent );
-   return;
-}
-
 // Delete curve/curves
 void EditCurvesDialog::OnDelete(wxCommandEvent &event)
 {
@@ -3159,14 +3169,6 @@ void EditCurvesDialog::OnKey( wxListEvent &event )
       case WXK_DELETE:
          OnDelete( dummyEvent );
          break;
-/*      case WXK_UP:
-         OnUp( dummyEvent );
-         event.Skip();
-         break;
-      case WXK_DOWN:
-         OnDown( dummyEvent );
-         event.Skip();
-         break;*/
       default:
          event.Skip();
    }
@@ -3184,11 +3186,11 @@ void EditCurvesDialog::OnImport( wxCommandEvent &event )
    // Use EqualizationDialog::LoadCurves to read into (temporary) mEditCurves
    // This may not be the best OOP way of doing it, but I don't know better (MJS)
    EQCurveArray temp;
-   temp = mParent->mCurves;
-   mParent->mCurves = mEditCurves;
-   mParent->LoadCurves(fileName, true);
-   mEditCurves = mParent->mCurves;
-   mParent->mCurves = temp;
+   temp = mParent->mCurves;   // temp copy of the main dialog curves
+   mParent->mCurves = mEditCurves;  // copy EditCurvesDialog to main interface
+   mParent->LoadCurves(fileName, true);   // use main interface to load imported curves
+   mEditCurves = mParent->mCurves;  // copy back to this interface
+   mParent->mCurves = temp;   // and reset the main interface how it was
    PopulateList(0);  // update the EditCurvesDialog dialog
    return;
 }

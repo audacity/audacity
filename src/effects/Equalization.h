@@ -363,6 +363,20 @@ public:
    ~EditCurvesDialog();
 
 private:
+
+   enum EQCurvesDialogControls
+   {
+      CurvesListID = 11000,
+      UpButtonID,
+      DownButtonID,
+      RenameButtonID,
+      DeleteButtonID,
+      ImportButtonID,
+      ExportButtonID,
+      LibraryButtonID,
+      DefaultsButtonID
+   };
+
    wxListCtrl *mList;   // List of curves.
    EQCurveArray mEditCurves;   // Copy of curves to muck about with
    EqualizationDialog *mParent;   // the parent EQ Dialog
@@ -374,7 +388,6 @@ private:
    void OnDown(wxCommandEvent &event);
    long GetPreviousItem(long item);
    void OnRename( wxCommandEvent &event );
-   void OnRenameActivated( wxListEvent &event );
    void OnDelete( wxCommandEvent &event );
    void OnKey( wxListEvent &event );
    void OnImport( wxCommandEvent &event );
