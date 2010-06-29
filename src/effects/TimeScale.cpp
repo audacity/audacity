@@ -222,7 +222,7 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(1, wxCENTER);
       {
          m_pTextCtrl_RatePercentChangeStart = S.Id(ID_TEXT_RATE_PERCENTCHANGE_START)
-            .AddTextBox(_(""), wxT(""), 12);
+            .AddTextBox(wxT(""), wxT(""), 12);
          m_pTextCtrl_RatePercentChangeStart->SetValidator(numvld);
       }
       S.EndMultiColumn();
@@ -241,7 +241,7 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(1, wxCENTER);
       {
          m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_TEXT_RATE_PERCENTCHANGE_END)
-            .AddTextBox(_(""), wxT(""), 12);
+            .AddTextBox(wxT(""), wxT(""), 12);
          m_pTextCtrl_RatePercentChangeEnd->SetValidator(numvld);
       }
       S.EndMultiColumn();
