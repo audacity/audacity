@@ -2795,7 +2795,6 @@ BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
    EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
    EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
    EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
-   EVT_LIST_KEY_DOWN(CurvesListID, EditCurvesDialog::OnKey)
    EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
    EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
    EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
@@ -3161,24 +3160,9 @@ void EditCurvesDialog::OnDelete(wxCommandEvent &event)
 #endif
 }
 
-void EditCurvesDialog::OnKey( wxListEvent &event )
-{
-   wxCommandEvent dummyEvent;
-   int key = event.GetKeyCode();
-   switch ( key )
-   {
-      case WXK_DELETE:
-         OnDelete( dummyEvent );
-         break;
-      default:
-         event.Skip();
-   }
-   return;
-}
-
 void EditCurvesDialog::OnImport( wxCommandEvent &event )
 {
-   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), wxT("*.XML"));
+   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), wxT("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;

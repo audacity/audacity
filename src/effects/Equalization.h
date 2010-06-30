@@ -389,7 +389,6 @@ private:
    long GetPreviousItem(long item);
    void OnRename( wxCommandEvent &event );
    void OnDelete( wxCommandEvent &event );
-   void OnKey( wxListEvent &event );
    void OnImport( wxCommandEvent &event );
    void OnExport( wxCommandEvent &event );
    void OnLibrary( wxCommandEvent &event );
