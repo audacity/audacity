@@ -52,8 +52,6 @@ void ProjectsPrefs::Populate()
 
 void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
-   wxTextCtrl *w;
-
    S.SetBorder(2);
 
    S.StartStatic(_("When saving a project that depends on other audio files"));
@@ -76,17 +74,6 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Auto &save a copy of the project in a separate folder"),
                     wxT("/Directories/AutoSaveEnabled"),
                     true);
-
-      S.StartThreeColumn();
-      {
-         w = S.TieTextBox(_("Auto save in&terval:"),
-                          wxT("/Directories/AutoSaveMinutes"),
-                          2.0,
-                          9);
-         S.AddUnits(_("minutes"));
-         w->SetName(w->GetName() + wxT(" ") + _("minutes"));
-      }
-      S.EndThreeColumn();
    }
    S.EndStatic();
 }

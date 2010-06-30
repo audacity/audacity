@@ -2452,12 +2452,15 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          // recovered file mFileName is faked to point to the original file
          // which has been recovered, not the one in the auto-save folder.
          GetDirManager()->ProjectFSCK(err, true); // silently correct problems
-         AutoSave();
+         
+         // PushState calls AutoSave(), so no longer need to do so here. 
+         this->PushState(_("Project was recovered"), _("Recover"));
+         
          if (!wxRemoveFile(fileName))
             wxMessageBox(_("Could not remove old auto save file"),
                          _("Error"), wxICON_STOP, this);
-         this->PushState(_("Project was recovered"), _("Recover"));
-      } else
+      } 
+      else
       {
          // This is a regular project, check it and ask user
          int status=GetDirManager()->ProjectFSCK(err, false);
@@ -3008,7 +3011,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       bool success = false;
       if (bWantSaveCompressed)
       {
-         //vvv Move this condition into SaveCompressedWaveTracks() if want to support other formats.
+         //v Move this condition into SaveCompressedWaveTracks() if want to support other formats.
          #ifdef USE_LIBVORBIS 
             success = this->SaveCompressedWaveTracks(project);
          #endif
@@ -3533,12 +3536,15 @@ void AudacityProject::PushState(wxString desc,
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
 
-   AutoSaveIfNeeded();
+   if (IsAutoSaveEnabled()) 
+      AutoSave();
 }
 
 void AudacityProject::ModifyState()
 {
    mUndoManager.ModifyState(mTracks, mViewInfo.sel0, mViewInfo.sel1);
+   if (IsAutoSaveEnabled()) 
+      AutoSave();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -3594,6 +3600,9 @@ void AudacityProject::PopState(TrackList * l)
    #ifdef EXPERIMENTAL_MIXER_BOARD
       this->UpdateMixerBoard();
    #endif
+
+   if (IsAutoSaveEnabled()) 
+      AutoSave();
 }
 
 void AudacityProject::SetStateTo(unsigned int n)
@@ -4253,46 +4262,12 @@ void AudacityProject::ReleaseKeyboard(wxWindow *w)
    }
 }
 
-void AudacityProject::DeleteCurrentAutoSaveFile()
-{
-   if (!mAutoSaveFileName.IsEmpty())
-   {
-      if (wxFileExists(mAutoSaveFileName))
-      {
-         if (!wxRemoveFile(mAutoSaveFileName))
-         {
-            wxMessageBox(_("Could not remove old autosave file: ") +
-                         mAutoSaveFileName, _("Error"), wxICON_STOP, this);
-            return;
-         }
-      }
-      
-      mAutoSaveFileName = wxT("");
-   }
-}
-
 // static
 bool AudacityProject::IsAutoSaveEnabled()
 {
    bool autoSaveEnabled = true;
    gPrefs->Read(wxT("/Directories/AutoSaveEnabled"), &autoSaveEnabled);
    return autoSaveEnabled;
-}
-
-void AudacityProject::AutoSaveIfNeeded()
-{
-   if (!IsAutoSaveEnabled())
-      return; // user disabled auto-save
-      
-   double autoSaveMinutes = 2.0;
-   gPrefs->Read(wxT("/Directories/AutoSaveMinutes"), &autoSaveMinutes);
-   
-   if (mAutoSaveFileName.IsEmpty() ||
-       wxGetLocalTime() > mLastAutoSaveTime + autoSaveMinutes * 60)
-   {
-      // We need to auto-save, so do it
-      AutoSave();
-   }
 }
 
 void AudacityProject::AutoSave()
@@ -4355,6 +4330,25 @@ void AudacityProject::AutoSave()
    mAutoSaveFileName += fn + wxT(".autosave");
    mLastAutoSaveTime = wxGetLocalTime();
 }
+
+void AudacityProject::DeleteCurrentAutoSaveFile()
+{
+   if (!mAutoSaveFileName.IsEmpty())
+   {
+      if (wxFileExists(mAutoSaveFileName))
+      {
+         if (!wxRemoveFile(mAutoSaveFileName))
+         {
+            wxMessageBox(_("Could not remove old autosave file: ") +
+                         mAutoSaveFileName, _("Error"), wxICON_STOP, this);
+            return;
+         }
+      }
+      
+      mAutoSaveFileName = wxT("");
+   }
+}
+
 
 void AudacityProject::MayStartMonitoring()
 {
