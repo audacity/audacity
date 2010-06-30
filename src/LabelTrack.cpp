@@ -1585,7 +1585,7 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
    int keyCode = event.GetKeyCode();
    // Check for modifiers -- this does what wxKeyEvent::HasModifiers() should
    // do (it checks Control instead of CMD on Mac)
-   bool hasMods = event.GetModifiers() & (wxMOD_CMD | wxMOD_ALT);
+   bool hasMods = ((event.GetModifiers() & (wxMOD_CMD | wxMOD_ALT)) != 0);
 
    if (mSelIndex >= 0) {
       if (IsGoodLabelEditKey(keyCode) && !hasMods) {
