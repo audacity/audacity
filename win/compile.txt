@@ -14,7 +14,7 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This version is currently accurate for Audacity version 1.3.11.
+This version is currently accurate for Audacity version 1.3.13.		.
 If the advice here is inaccurate or incomplete, please
 email audacity-devel@lists.sourceforge.net.
 See also 
@@ -46,7 +46,7 @@ attempting to compile Audacity, or nothing will work!
 
 wxWidgets is available at "http://www.wxwidgets.org/".
 
-Audacity 1.3.11 requires wxWidgets 2.8.10.
+Audacity 1.3.13 requires wxWidgets 2.8.11.
 
 To build on Windows only, download the wxMSW package
 (installer or zip).
@@ -60,21 +60,21 @@ build it.
 
 For wxWidgets' instructions on compilation 
 (and details about static versus dll linkage), see 
-"C:\wxWidgets-2.8.10\docs\msw\install.txt". 
+"C:\wxWidgets-2.8.11\docs\msw\install.txt". 
 Note therein that wx_dll.dsw adds the dependencies to
 force the correct build order for DLLs, which wx.dsw
 does not. Because of this, wx_dll.dsw doesn't work for
 static libraries.
 
 
-1. Open "C:\wxWidgets-2.8.10\build\msw\wx_dll.dsw" with 
+1. Open "C:\wxWidgets-2.8.11\build\msw\wx_dll.dsw" with 
    Visual Studio 2008 (for VC9). 
    Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
    does not have the correct dependencies for the DLL builds.
    When you open wx_dll.dsw, Visual Studio will prompt whether
    to convert. Click "Yes To All". Next time you open a Visual
    Studio session, you can avoid this prompt by opening 
-   "C\wxWidgets-2.8.10\build\msw\wx_dll.sln" instead of wx_dll.dsw.
+   "C\wxWidgets-2.8.11\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
 2. If you want to use the accessibility features, we have modified a
@@ -85,9 +85,9 @@ static libraries.
    You may want to make backups of the wxWidgets originals of these, 
    in case you also build without these accessibility features. 
 
-   * Copy access.cpp to "C:\wxWidgets-2.8.10\src\msw\ole\". 
+   * Copy access.cpp to "C:\wxWidgets-2.8.11\src\msw\ole\". 
 
-   * Copy setup.h to "C:\wxWidgets-2.8.10\include\wx\msw\".
+   * Copy setup.h to "C:\wxWidgets-2.8.11\include\wx\msw\".
 
    Audacity releases are built with these accessibility features.
 
@@ -124,7 +124,7 @@ static libraries.
    wxbase28*_odbc*.* dbgrid.
  
 
-4. Note the directory "C\wxWidgets-2.8.10\lib\vc_dll". For each
+4. Note the directory "C\wxWidgets-2.8.11\lib\vc_dll". For each
    build of WxWidgets you made, you will need from here five DLLs
    appropriate to that build to go in the corresponding Audacity
    build directory. The DLLs required are noted at "Provide access
@@ -147,9 +147,9 @@ MSVC++ STEP 4:  Set wxWidgets location for Audacity
 Before you can start the build process, you must update the
 project settings to tell Visual C++ where to find wxWidgets.
 There are three settings that need changing:
-    1.  Include Directory (e.g., "C:\wxWidgets-2.8.10\include")
-    2.  Resource Directory (e.g., "C:\wxWidgets-2.8.10\include")
-    3.  Library Directory (e.g., "C:\wxWidgets-2.8.10\lib")
+    1.  Include Directory (e.g., "C:\wxWidgets-2.8.11\include")
+    2.  Resource Directory (e.g., "C:\wxWidgets-2.8.11\include")
+    3.  Library Directory (e.g., "C:\wxWidgets-2.8.11\lib")
 
 Fortunately, this is parameterized, using a Windows system 
 environment variable. There are various ways to set these, so 
@@ -158,7 +158,7 @@ environment variable WXWIN, set to the top-level directory
 where you installed wxWidgets. For example, 
 in your "autoexec.bat" file, you might have a line:
 
-   set WXWIN=C:\wxWidgets-2.8.10
+   set WXWIN=C:\wxWidgets-2.8.11
 
 Note that you don't want a trailing backslash on that.
 
@@ -171,13 +171,14 @@ In the Audacity project file, there are declarations like
 
    $(WXWIN)\include
 
-that get interpreted as, e.g., "C:\wxWidgets-2.8.10\include".
+that get interpreted as, e.g., "C:\wxWidgets-2.8.11\include".
 
 Once you have set the WXWIN environment variable correctly, 
 the Audacity project file's declarations will do the rest.
 
-Note that you have to restart the IDE so it picks up changes
-in the environment variables.
+Note that you have at least to restart the IDE so it picks up
+changes in the environment variables. It is safer to reboot
+the computer to ensure the variables are read correctly. 
 
 
 -----------------------
@@ -190,13 +191,26 @@ Run Visual C++ and load the Audacity solution,
 
 Optional Features
 
-Local help (optional, but required for a full 'release ready' version).
-Build the 'help' project.  This will download a copy of the manual wiki
-onto your machine and copy it to the correct place for the build that
-you are doing.  If the local copy needs updating at any time, run
-audacity\scripts\mw2html_audacity\wiki2htm.bat and re-run the 'help' project.
+1. Locally installed help is optional, but required for a full release 
+build (the "help" folder is included in the installer, but removed from 
+the zip distribution). The Python library is required, obtainable from
+http://www.python.org/download/ . Add the location of the top-level
+directory where you installed Python to your Path environment 
+variable. For help with environment variables, see MSVC++ STEP 4 above.  
 
-Some functionality in Audacity is currently turned on its default
+Build the "help" project by enabling it in the MSVC++ Configuration 
+Manager. This will download a copy of the Manual wiki onto your machine 
+and copy it to the correct place for your build. If the local copy needs 
+updating at any time, run audacity\scripts\mw2html_audacity\wiki2htm.bat
+and re-build the "help" project.
+
+2. To support languages other than English in your build of Audacity,
+you must enable and build the optional "locale" project. This is 
+required for a full release. You will need to obtain msgfmt.exe from
+http://audacity.sourceforge.net/files/msgfmt.zip. Add the location of 
+the directory containing msgfmt.exe to your Path environment variable.  
+
+3. Some functionality in Audacity is currently turned on its default
 configuration, but requires that extra libraries be downloaded
 separately to use it. 
 
@@ -211,7 +225,7 @@ separately to use it.
 To change the libraries that are enabled in Audacity, open the file 
 "win\configwin.h" and comment or uncomment the libraries as required.
 
-DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
+4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
 protocols that are more efficient than the standard WMME. Unlike WMME,
 not all sound card drivers support them. 
 
@@ -269,7 +283,7 @@ above. You can copy them to your Windows PATH, or more simply,
 to the same directory as the executable. If you are building 
 Audacity for public release using the *.iss installer script, 
 you must copy them to the executable directory. The DLLs required 
-are at "C:\wxWidgets-2.8.10\lib\vc_dll":
+are at "C:\wxWidgets-2.8.11\lib\vc_dll":
 
 	wxbase28*_net_vc_custom.dll
 	wxbase28*_vc_custom.dll
@@ -281,9 +295,9 @@ The "*" in the file names above is replaced in the actual files by
 a suffix specific to its Widgets configuration. You can identify the
 DLLs needed for each Audacity version as follows: 
 
-        "" (no suffix) for "Release" versions
-        "u" for "Unicode Release" versions 
-        "d" for "Debug" versions
+	"" (no suffix) for "Release" versions
+	"u" for "Unicode Release" versions 
+	"d" for "Debug" versions
 	"ud" for "Unicode Debug" versions
 
 So for instance, a Unicode Debug version of Audacity should have:  
@@ -416,9 +430,9 @@ Cygwin STEP 1:  Installing Cygwin
 Cygwin STEP 2:  Download and install wxWidgets
 ---------------------------------------
 
-1.  Go to http://www.wxwidgets.org/ and download wxWidgets v2.8.10 or greater.  Make
+1.  Go to http://www.wxwidgets.org/ and download wxWidgets v2.8.11 or greater.  Make
 sure you download the "wxAll" package that contains source code for all ports.  The
-Win32 port will not work for compiling audacity, since it was compiled and installed
+Win32 port will not work for compiling Audacity, since it was compiled and installed
 to work with MS Visual C++.
 
 2.  Untar the archive from the Cygwin command line, using a command like:
