@@ -327,10 +327,8 @@ Global
 		{D5AB2D87-51DC-4277-A9AB-2A6018D0E947}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Release|Win32.ActiveCfg = Release|Win32
-		{02F94A40-586A-4403-8464-13B50801FFEC}.Release|Win32.Build.0 = Release|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
 		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
-		{02F94A40-586A-4403-8464-13B50801FFEC}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
