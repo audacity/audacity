@@ -3536,15 +3536,13 @@ void AudacityProject::PushState(wxString desc,
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
 
-   if (IsAutoSaveEnabled()) 
-      AutoSave();
+   AutoSave();
 }
 
 void AudacityProject::ModifyState()
 {
    mUndoManager.ModifyState(mTracks, mViewInfo.sel0, mViewInfo.sel1);
-   if (IsAutoSaveEnabled()) 
-      AutoSave();
+   AutoSave();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -3601,8 +3599,7 @@ void AudacityProject::PopState(TrackList * l)
       this->UpdateMixerBoard();
    #endif
 
-   if (IsAutoSaveEnabled()) 
-      AutoSave();
+   AutoSave();
 }
 
 void AudacityProject::SetStateTo(unsigned int n)
@@ -4262,13 +4259,6 @@ void AudacityProject::ReleaseKeyboard(wxWindow *w)
    }
 }
 
-// static
-bool AudacityProject::IsAutoSaveEnabled()
-{
-   bool autoSaveEnabled = true;
-   gPrefs->Read(wxT("/Directories/AutoSaveEnabled"), &autoSaveEnabled);
-   return autoSaveEnabled;
-}
 
 void AudacityProject::AutoSave()
 {
@@ -4380,7 +4370,7 @@ void AudacityProject::OnAudioIOStartRecording()
    // since no block files are written during recording that could be
    // recovered.
    //
-   if (IsAutoSaveEnabled() && !GetCacheBlockFiles())
+   if (!GetCacheBlockFiles())
       AutoSave();
 }
 
@@ -4391,14 +4381,13 @@ void AudacityProject::OnAudioIOStopRecording()
    mDirManager->WriteCacheToDisk();
    
    // Now we auto-save again to get the project to a "normal" state again.
-   if (IsAutoSaveEnabled())
-      AutoSave();
+   AutoSave();
 }
 
 void AudacityProject::OnAudioIONewBlockFiles(const wxString& blockFileLog)
 {
    // New blockfiles have been created, so add them to the auto-save file
-   if (IsAutoSaveEnabled() && !GetCacheBlockFiles() &&
+   if (!GetCacheBlockFiles() &&
        !mAutoSaveFileName.IsEmpty())
    {
       wxFFile f(mAutoSaveFileName, wxT("at"));

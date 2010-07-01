@@ -68,14 +68,6 @@ void ProjectsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndRadioButtonGroup();
    }
    S.EndStatic();
-
-   S.StartStatic(_("Auto save"));
-   {
-      S.TieCheckBox(_("Auto &save a copy of the project in a separate folder"),
-                    wxT("/Directories/AutoSaveEnabled"),
-                    true);
-   }
-   S.EndStatic();
 }
 
 bool ProjectsPrefs::Apply()

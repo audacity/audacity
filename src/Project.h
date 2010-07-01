@@ -409,7 +409,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void GetRegionsByLabel( Regions &regions );
    
    void AutoSave();
-   static bool IsAutoSaveEnabled();
    void DeleteCurrentAutoSaveFile();
    
    static bool GetCacheBlockFiles();
