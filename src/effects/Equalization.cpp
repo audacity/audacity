@@ -1819,8 +1819,8 @@ bool EqualizationDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                exists = false;
                for(size_t i=0;i<mCurves.GetCount();i++)
                {
-                   if(n>0)
-                     strValueTemp.Printf(wxT("%s (%d)"),strValue,n);
+                  if(n>0)
+                     strValueTemp.Printf(wxT("%s (%d)"),strValue.c_str(),n);
                   if(mCurves[i].Name == strValueTemp)
                   {
                      exists = true;
@@ -3214,7 +3214,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent &event )
       mParent->SaveCurves(fileName);
       mParent->mCurves = temp;
       wxString message;
-      message.Printf(wxString(wxT("%d ")) + _("curves exported to ") + wxString(wxT("%s")), i, fileName);
+      message.Printf(_("%d curves exported to %s"), i, fileName.c_str());
       wxMessageBox(message, _("Curves exported"));
    }
    else
