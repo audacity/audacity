@@ -136,7 +136,10 @@ static int open_mixer(PxDev *dev, int card, int playback)
                dev->numselems++;
             }
             else if (snd_mixer_selem_is_enum_capture(elem)) {
-               dev->numselems += snd_mixer_selem_get_enum_items(elem);
+               int retval = snd_mixer_selem_get_enum_items(elem);
+
+               if (retval > 0)
+                  dev->numselems += retval;
             }
          }
       }
@@ -196,12 +199,15 @@ static int open_mixer(PxDev *dev, int card, int playback)
             i++;
          }
          else if (snd_mixer_selem_is_enum_capture(elem)) {
-            unsigned int cnt = snd_mixer_selem_get_enum_items(elem);
-            unsigned int j;
+            int j;
+            int cnt = snd_mixer_selem_get_enum_items(elem);
+
+            if (cnt < 0)
+               continue;
 
             for (j = 0; j < cnt; j++) {
                char iname[256];
-               snd_mixer_selem_get_enum_item_name(elem, j, sizeof(iname), iname);
+               snd_mixer_selem_get_enum_item_name(elem, (unsigned int) j, sizeof(iname), iname);
                snprintf(name,
                         sizeof(name),
                         "%s:%d",
