@@ -81,9 +81,11 @@ private:
 
    // Parameters that affect the noise removal, regardless of how the
    // noise profile was extracted
+   double     mSensitivity;
    double     mFreqSmoothingHz;
    double     mNoiseGain;              // in dB, should be negative
    double     mAttackDecayTime;        // in secs
+   bool       mbLeaveNoise;
 
    bool ProcessOne(int count, WaveTrack * track,
                    sampleCount start, sampleCount len);
@@ -113,6 +115,7 @@ private:
    int       mAttackDecayBlocks;
    float     mOneBlockAttackDecay;
    float     mNoiseAttenFactor;
+   float     mSensitivityFactor;
    int       mMinSignalBlocks;
    int       mHistoryLen;
    float    *mInWaveBuffer;     // mWindowSize
@@ -151,13 +154,16 @@ public:
 private:
    // handlers
    void OnGetProfile( wxCommandEvent &event );
+   void OnKeepNoise( wxCommandEvent &event );
    void OnPreview(wxCommandEvent &event);
    void OnRemoveNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
-   
+  
+   void OnSensitivityText(wxCommandEvent & event);
    void OnGainText(wxCommandEvent & event);
    void OnFreqText(wxCommandEvent & event);
    void OnTimeText(wxCommandEvent & event);
+   void OnSensitivitySlider(wxCommandEvent & event);
    void OnGainSlider(wxCommandEvent & event);
    void OnFreqSlider(wxCommandEvent & event);
    void OnTimeSlider(wxCommandEvent & event);
@@ -170,17 +176,25 @@ private:
    wxButton * m_pButton_Preview;
    wxButton * m_pButton_RemoveNoise;
 
+   wxRadioButton *mKeepSignal;
+   wxRadioButton *mKeepNoise;
+
+   wxSlider   *mSensitivityS;
    wxSlider   *mGainS;
    wxSlider   *mFreqS;
    wxSlider   *mTimeS;
 
+   wxTextCtrl *mSensitivityT;
    wxTextCtrl *mGainT;
    wxTextCtrl *mFreqT;
    wxTextCtrl *mTimeT;
 
+   double      mSensitivity;
    double      mGain;
    double      mFreq;
    double      mTime;
+
+   bool        mbLeaveNoise;
 
 private:
    DECLARE_EVENT_TABLE()

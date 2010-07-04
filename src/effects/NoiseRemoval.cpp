@@ -60,6 +60,8 @@
 #include <wx/bitmap.h>
 #include <wx/brush.h>
 #include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/radiobut.h>
 #include <wx/dcmemory.h>
 #include <wx/image.h>
 #include <wx/intl.h>
@@ -69,6 +71,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
+
 #include "../AudacityApp.h"
 #include "../PlatformCompatibility.h"
 
@@ -77,12 +80,18 @@ EffectNoiseRemoval::EffectNoiseRemoval()
    mWindowSize = 2048;
    mSpectrumSize = 1 + mWindowSize / 2;
 
+   gPrefs->Read(wxT("/CsPresets/NoiseSensitivity"),
+                &mSensitivity, 0.0);
    gPrefs->Read(wxT("/CsPresets/NoiseGain"),
                 &mNoiseGain, -24.0);
    gPrefs->Read(wxT("/CsPresets/NoiseFreqSmoothing"),
                 &mFreqSmoothingHz, 150.0);
    gPrefs->Read(wxT("/CsPresets/NoiseAttackDecayTime"),
                 &mAttackDecayTime, 0.15);
+   gPrefs->Read(wxT("/CsPresets/NoiseLeaveNoise"),
+                &mbLeaveNoise, false);
+//   mbLeaveNoise = false;
+
 
    mMinSignalTime = 0.05f;
    mHasProfile = false;
@@ -213,9 +222,13 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
 bool EffectNoiseRemoval::PromptUser()
 {
    NoiseRemovalDialog dlog(this, mParent);
+   dlog.mSensitivity = mSensitivity;
    dlog.mGain = -mNoiseGain;
    dlog.mFreq = mFreqSmoothingHz;
    dlog.mTime = mAttackDecayTime;
+   dlog.mbLeaveNoise = mbLeaveNoise;
+   dlog.mKeepSignal->SetValue(!mbLeaveNoise);
+   dlog.mKeepNoise->SetValue(mbLeaveNoise);
 
    if( !mHasProfile )
    {
@@ -238,6 +251,7 @@ bool EffectNoiseRemoval::PromptUser()
    }
 
    dlog.TransferDataToWindow();
+   dlog.mKeepNoise->SetValue(dlog.mbLeaveNoise);
    dlog.CentreOnParent();
    dlog.ShowModal();
    
@@ -245,12 +259,16 @@ bool EffectNoiseRemoval::PromptUser()
       return false;
    }
 
+   mSensitivity = dlog.mSensitivity;
    mNoiseGain = -dlog.mGain;
    mFreqSmoothingHz = dlog.mFreq;
    mAttackDecayTime = dlog.mTime;
+   mbLeaveNoise = dlog.mbLeaveNoise;
+   gPrefs->Write(wxT("/CsPresets/NoiseSensitivity"), mSensitivity);
    gPrefs->Write(wxT("/CsPresets/NoiseGain"), mNoiseGain);
    gPrefs->Write(wxT("/CsPresets/NoiseFreqSmoothing"), mFreqSmoothingHz);
    gPrefs->Write(wxT("/CsPresets/NoiseAttackDecayTime"), mAttackDecayTime);
+   gPrefs->Write(wxT("/CsPresets/NoiseLeaveNoise"), mbLeaveNoise);
 
    mDoProfile = (dlog.GetReturnCode() == 1);
    return true;
@@ -350,7 +368,8 @@ void EffectNoiseRemoval::Initialize()
    mAttackDecayBlocks = 1 +
       (int)(mAttackDecayTime * mSampleRate / (mWindowSize / 2));
    mNoiseAttenFactor = pow(10.0, mNoiseGain/20.0);
-   mOneBlockAttackDecay = (int)(mNoiseGain / (mAttackDecayBlocks - 1));
+   mOneBlockAttackDecay = pow(10.0, (mNoiseGain / (10.0 * mAttackDecayBlocks)));
+   mSensitivityFactor = pow(10.0, mSensitivity/10.0);
    mMinSignalBlocks =
       (int)(mMinSignalTime * mSampleRate / (mWindowSize / 2));
    if( mMinSignalBlocks < 1 )
@@ -571,13 +590,17 @@ void EffectNoiseRemoval::RemoveNoise()
          if (mSpectrums[i][j] < min)
             min = mSpectrums[i][j];
       }
-      if (min > mNoiseThreshold[j] && mGains[center][j] < 1.0)
-         mGains[center][j] = 1.0;
+      if (min > mSensitivityFactor * mNoiseThreshold[j] && mGains[center][j] < 1.0) {
+         if (mbLeaveNoise) mGains[center][j] = 0.0;
+         else mGains[center][j] = 1.0;
+      } else {
+         if (mbLeaveNoise) mGains[center][j] = 1.0;
+      }
    }
 
    // Decay the gain in both directions;
    // note that mOneBlockAttackDecay is less than 1.0
-   // dB of attenuation per block
+   // of linear attenuation per block
    for (j = 0; j < mSpectrumSize; j++) {
       for (i = center + 1; i < mHistoryLen; i++) {
          if (mGains[i][j] < mGains[i - 1][j] * mOneBlockAttackDecay)
@@ -592,6 +615,7 @@ void EffectNoiseRemoval::RemoveNoise()
             mGains[i][j] = mNoiseAttenFactor;
       }
    }
+
 
    // Apply frequency smoothing to output gain
    int out = mHistoryLen - 1;  // end of the queue
@@ -704,13 +728,21 @@ bool EffectNoiseRemoval::ProcessOne(int count, WaveTrack * track,
 
 enum {
    ID_BUTTON_GETPROFILE = 10001,
+   ID_BUTTON_LEAVENOISE,
+   ID_RADIOBUTTON_KEEPSIGNAL,
+   ID_RADIOBUTTON_KEEPNOISE,
+   ID_SENSIVITY_SLIDER,
    ID_GAIN_SLIDER,
    ID_FREQ_SLIDER,
    ID_TIME_SLIDER,
+   ID_SENSIVITY_TEXT,
    ID_GAIN_TEXT,
    ID_FREQ_TEXT,
    ID_TIME_TEXT,
 };
+
+#define SENSIVITY_MIN 0      // Corresponds to -20 dB 
+#define SENSIVITY_MAX 4000    // Corresponds to 20 dB
 
 #define GAIN_MIN 0
 #define GAIN_MAX 48    // Corresponds to -48 dB
@@ -719,7 +751,7 @@ enum {
 #define FREQ_MAX 100    // Corresponds to 1000 Hz
 
 #define TIME_MIN 0
-#define TIME_MAX 100   // Corresponds to 1.00 seconds
+#define TIME_MAX 1000   // Corresponds to 1.000 seconds
 
 
 BEGIN_EVENT_TABLE(NoiseRemovalDialog,wxDialog)
@@ -727,9 +759,13 @@ BEGIN_EVENT_TABLE(NoiseRemovalDialog,wxDialog)
    EVT_BUTTON(wxID_CANCEL, NoiseRemovalDialog::OnCancel)
    EVT_BUTTON(ID_EFFECT_PREVIEW, NoiseRemovalDialog::OnPreview)
    EVT_BUTTON(ID_BUTTON_GETPROFILE, NoiseRemovalDialog::OnGetProfile)
+   EVT_RADIOBUTTON(ID_RADIOBUTTON_KEEPNOISE, NoiseRemovalDialog::OnKeepNoise)
+   EVT_RADIOBUTTON(ID_RADIOBUTTON_KEEPSIGNAL, NoiseRemovalDialog::OnKeepNoise)
+   EVT_SLIDER(ID_SENSIVITY_SLIDER, NoiseRemovalDialog::OnSensitivitySlider)
    EVT_SLIDER(ID_GAIN_SLIDER, NoiseRemovalDialog::OnGainSlider)
    EVT_SLIDER(ID_FREQ_SLIDER, NoiseRemovalDialog::OnFreqSlider)
    EVT_SLIDER(ID_TIME_SLIDER, NoiseRemovalDialog::OnTimeSlider)
+   EVT_TEXT(ID_SENSIVITY_TEXT, NoiseRemovalDialog::OnSensitivityText)
    EVT_TEXT(ID_GAIN_TEXT, NoiseRemovalDialog::OnGainText)
    EVT_TEXT(ID_FREQ_TEXT, NoiseRemovalDialog::OnFreqText)
    EVT_TEXT(ID_TIME_TEXT, NoiseRemovalDialog::OnTimeText)
@@ -759,10 +795,17 @@ void NoiseRemovalDialog::OnGetProfile( wxCommandEvent &event )
    EndModal(1);
 }
 
+void NoiseRemovalDialog::OnKeepNoise( wxCommandEvent &event )
+{
+   mbLeaveNoise = mKeepNoise->GetValue();
+}
+
 void NoiseRemovalDialog::OnPreview(wxCommandEvent &event)
 {
    // Save & restore parameters around Preview, because we didn't do OK.
    bool oldDoProfile = m_pEffect->mDoProfile;
+   bool oldLeaveNoise = m_pEffect->mbLeaveNoise;
+   double oldSensitivity = m_pEffect->mSensitivity;
    double oldGain = m_pEffect->mNoiseGain;
    double oldFreq = m_pEffect->mFreqSmoothingHz;
    double oldTime = m_pEffect->mAttackDecayTime;
@@ -770,20 +813,25 @@ void NoiseRemovalDialog::OnPreview(wxCommandEvent &event)
    TransferDataFromWindow();
 
    m_pEffect->mDoProfile = false;
+   m_pEffect->mbLeaveNoise = mbLeaveNoise;
+   m_pEffect->mSensitivity = mSensitivity;
    m_pEffect->mNoiseGain = -mGain;
    m_pEffect->mFreqSmoothingHz =  mFreq;
    m_pEffect->mAttackDecayTime =  mTime;
    
    m_pEffect->Preview();
    
+   m_pEffect->mSensitivity = oldSensitivity;
    m_pEffect->mNoiseGain = oldGain;
    m_pEffect->mFreqSmoothingHz =  oldFreq;
    m_pEffect->mAttackDecayTime =  oldTime;
+   m_pEffect->mbLeaveNoise = oldLeaveNoise;
    m_pEffect->mDoProfile = oldDoProfile;
 }
 
 void NoiseRemovalDialog::OnRemoveNoise( wxCommandEvent &event )
 {
+   mbLeaveNoise = mKeepNoise->GetValue();
    EndModal(2);
 }
 
@@ -862,6 +910,15 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
          mGainS->SetRange(GAIN_MIN, GAIN_MAX);
          mGainS->SetSizeHints(150, -1);
 
+         mSensitivityT = S.Id(ID_SENSIVITY_TEXT).AddTextBox(_("Sensitivity (dB):"),
+                                                wxT(""),
+                                                0);
+         S.SetStyle(wxSL_HORIZONTAL);
+         mSensitivityS = S.Id(ID_SENSIVITY_SLIDER).AddSlider(wxT(""), 0, SENSIVITY_MAX);
+         mSensitivityS->SetName(_("Sensitivity"));
+         mSensitivityS->SetRange(SENSIVITY_MIN, SENSIVITY_MAX);
+         mSensitivityS->SetSizeHints(150, -1);
+
          mFreqT = S.Id(ID_FREQ_TEXT).AddTextBox(_("Frequency smoothing (Hz):"),
                                                 wxT(""),
                                                 0);
@@ -876,9 +933,15 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
          mTimeS = S.Id(ID_TIME_SLIDER).AddSlider(wxT(""), 0, TIME_MAX);
-         mTimeS->SetName(_("Attach/decay time"));
+         mTimeS->SetName(_("Attack/decay time"));
          mTimeS->SetRange(TIME_MIN, TIME_MAX);
          mTimeS->SetSizeHints(150, -1);
+
+         S.AddPrompt(_("Noise:"));
+         mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
+               .AddRadioButtonToGroup(_("Remove"));
+         mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
+               .AddRadioButtonToGroup(_("Isolate"));
       }
       S.EndMultiColumn();
    }
@@ -887,13 +950,17 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
 bool NoiseRemovalDialog::TransferDataToWindow()
 {
+   mSensitivityT->SetValue(wxString::Format(wxT("%.2f"), mSensitivity));
    mGainT->SetValue(wxString::Format(wxT("%d"), (int)mGain));
    mFreqT->SetValue(wxString::Format(wxT("%d"), (int)mFreq));
    mTimeT->SetValue(wxString::Format(wxT("%.2f"), mTime));
+   mKeepNoise->SetValue(mbLeaveNoise);
+   mKeepSignal->SetValue(!mbLeaveNoise);
 
+   mSensitivityS->SetValue(TrapLong(mSensitivity*100.0 + 2000.0, SENSIVITY_MIN, SENSIVITY_MAX));
    mGainS->SetValue(TrapLong(mGain, GAIN_MIN, GAIN_MAX));
    mFreqS->SetValue(TrapLong(mFreq / 10, FREQ_MIN, FREQ_MAX));
-   mTimeS->SetValue(TrapLong(mTime / 0.01, TIME_MIN, TIME_MAX));
+   mTimeS->SetValue(TrapLong(mTime * 1000, TIME_MIN, TIME_MAX));
 
    return true;
 }
@@ -902,6 +969,12 @@ bool NoiseRemovalDialog::TransferDataFromWindow()
 {
    // Nothing to do here
    return true;
+}
+
+void NoiseRemovalDialog::OnSensitivityText(wxCommandEvent & event)
+{
+   mSensitivityT->GetValue().ToDouble(&mSensitivity);
+   mSensitivityS->SetValue(TrapLong(mSensitivity*100.0 + 2000.0, SENSIVITY_MIN, SENSIVITY_MAX));
 }
 
 void NoiseRemovalDialog::OnGainText(wxCommandEvent & event)
@@ -919,7 +992,13 @@ void NoiseRemovalDialog::OnFreqText(wxCommandEvent & event)
 void NoiseRemovalDialog::OnTimeText(wxCommandEvent & event)
 {
    mTimeT->GetValue().ToDouble(&mTime);
-   mTimeS->SetValue(TrapLong(mTime / 0.01, TIME_MIN, TIME_MAX));
+   mTimeS->SetValue(TrapLong(mTime * 1000, TIME_MIN, TIME_MAX));
+}
+
+void NoiseRemovalDialog::OnSensitivitySlider(wxCommandEvent & event)
+{
+   mSensitivity = mSensitivityS->GetValue()/100.0 - 20.0;
+   mSensitivityT->SetValue(wxString::Format(wxT("%.2f"), mSensitivity));
 }
 
 void NoiseRemovalDialog::OnGainSlider(wxCommandEvent & event)
@@ -936,7 +1015,7 @@ void NoiseRemovalDialog::OnFreqSlider(wxCommandEvent & event)
 
 void NoiseRemovalDialog::OnTimeSlider(wxCommandEvent & event)
 {
-   mTime = mTimeS->GetValue() * 0.01;
+   mTime = mTimeS->GetValue() / 1000.0;
    mTimeT->SetValue(wxString::Format(wxT("%.2f"), mTime));
 }
 
