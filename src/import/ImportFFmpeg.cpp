@@ -557,7 +557,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    //append blockfiles to each stream and add an individual ODDecodeTask for each one.
    for (int s = 0; s < mNumStreams; s++)
    {
-      ODDecodeFFmpegTask* odTask=new ODDecodeFFmpegTask(mScs,mNumStreams,mChannels,mFormatContext);
+      ODDecodeFFmpegTask* odTask=new ODDecodeFFmpegTask(mScs,mNumStreams,mChannels,mFormatContext, s);
       ODFileDecoder* odDecoder = (ODFileDecoder*)odTask->CreateFileDecoder(mFilename);
 
       //each stream has different duration.  We need to know it if seeking is to be allowed.

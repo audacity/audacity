@@ -89,9 +89,9 @@ class ODDecodeBlockFile : public SimpleBlockFile
    virtual void Recover(void);
    
    ///A public interface to WriteSummary
-   void DoWriteBlockFile(){WriteODDecodeBlockFile();}
+   int DoWriteBlockFile(){return WriteODDecodeBlockFile();}
    
-   void WriteODDecodeBlockFile();
+   int WriteODDecodeBlockFile();
    
    ///Sets the value that indicates where the first sample in this block corresponds to the global sequence/clip.  Only for display use.
    void SetStart(sampleCount startSample){mStart = startSample;}

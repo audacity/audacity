@@ -311,28 +311,29 @@ bool ODDecodeBlockFile::IsDataAvailable()
 /// Write the summary to disk, using the derived ReadData() to get the data
 /// Here, the decoder ODTask associated with this file must fetch the samples with
 /// the ODDecodeTask::Decode() method.
-void ODDecodeBlockFile::WriteODDecodeBlockFile()
+int ODDecodeBlockFile::WriteODDecodeBlockFile()
 {
 
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
    samplePtr sampleData;// = NewSamples(mLen, floatSample);
-   
+   int ret;
    //use the decoder here.   
    mDecoderMutex.Lock();
    
    if(!mDecoder)
    {
       mDecoderMutex.Unlock();
-      return;
+      return -1;
    }
    
    
    //sampleData and mFormat are set by the decoder.
-   mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
+   ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
    
    mDecoderMutex.Unlock();
-   
+   if(ret < 0)
+      return ret; //failure
 
    //the summary is also calculated here.
    mFileNameMutex.Lock();
@@ -352,6 +353,8 @@ void ODDecodeBlockFile::WriteODDecodeBlockFile()
    mDataAvailableMutex.Lock();
    mDataAvailable=true;
    mDataAvailableMutex.Unlock();
+   
+   return ret;
 }
 
 ///sets the file name the summary info will be saved in.  threadsafe.

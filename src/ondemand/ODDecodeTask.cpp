@@ -49,6 +49,8 @@ void ODDecodeTask::DoSomeInternal()
    {
       bf = mBlockFiles[0];
       
+      int ret = 1;
+      
       //first check to see if the ref count is at least 2.  It should have one 
       //from when we added it to this instance's mBlockFiles array, and one from
       //the Wavetrack/sequence.  If it doesn't it has been deleted and we should forget it.
@@ -63,13 +65,15 @@ void ODDecodeTask::DoSomeInternal()
          if(!decoder->IsInitialized())
             decoder->Init();
          bf->SetODFileDecoder(decoder);
-         bf->DoWriteBlockFile();
+         ret = bf->DoWriteBlockFile();
          bf->UnlockRead();
          
-         success = true;
-         blockStartSample = bf->GetStart();
-         blockEndSample = blockStartSample + bf->GetLength();
-         mComputedBlockFiles++;
+         if(ret >= 0) {
+            success = true;
+            blockStartSample = bf->GetStart();
+            blockEndSample = blockStartSample + bf->GetLength();
+            mComputedBlockFiles++;
+         }
       }
       else
       {
@@ -78,21 +82,23 @@ void ODDecodeTask::DoSomeInternal()
          mMaxBlockFiles--;
       }
       
-      //Release the refcount we placed on it.
-      bf->Deref();
-      //take it out of the array - we are done with it.
-      mBlockFiles.erase(mBlockFiles.begin());
+      //Release the refcount we placed on it if we are successful
+      if(ret >= 0 ) {
+         bf->Deref();
+         //take it out of the array - we are done with it.
+         mBlockFiles.erase(mBlockFiles.begin());
       
-      //upddate the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
-      //because this loop runs a number of times equal to the number of tracks, they probably are getting processed in
-      //the next iteration at the same sample window.
-      mWaveTrackMutex.Lock();
-      for(size_t i=0;i<mWaveTracks.size();i++)
-      {
-         if(success && mWaveTracks[i])
-            mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+         //upddate the gui for all associated blocks.  It doesn't matter that we're hitting more wavetracks then we should
+         //because this loop runs a number of times equal to the number of tracks, they probably are getting processed in
+         //the next iteration at the same sample window.
+         mWaveTrackMutex.Lock();
+         for(size_t i=0;i<mWaveTracks.size();i++)
+         {
+            if(success && mWaveTracks[i])
+               mWaveTracks[i]->AddInvalidRegion(blockStartSample,blockEndSample);
+         }
+         mWaveTrackMutex.Unlock();
       }
-      mWaveTrackMutex.Unlock();
    }   
    
    //update percentage complete.
@@ -104,6 +110,15 @@ void ODDecodeTask::CalculatePercentComplete()
    mPercentCompleteMutex.Lock();
    mPercentComplete = (float) 1.0 - ((float)mBlockFiles.size() / (mMaxBlockFiles+1));
    mPercentCompleteMutex.Unlock();
+}
+
+bool ODDecodeTask::SeekingAllowed() 
+{
+   for(int i=0;i<mDecoders.size();i++) {
+      if(!mDecoders[i]->SeekingAllowed())
+         return false;
+   }
+   return true;
 }
 
 ///by default creates the order of the wavetrack to load.

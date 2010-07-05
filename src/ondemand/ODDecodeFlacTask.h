@@ -106,7 +106,7 @@ public:
    ///this->ReadData(sampleData, floatSample, 0, mLen);
    ///This class should call ReadHeader() first, so it knows the length, and can prepare 
    ///the file object if it needs to. 
-   virtual void Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
+   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
 
    
    ///Read header.  Subclasses must override.  Probably should save the info somewhere.

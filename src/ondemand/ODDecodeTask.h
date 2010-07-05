@@ -48,9 +48,7 @@ class ODDecodeTask:public ODTask
    
    virtual ODTask* Clone()=0;
    
-   /// subclasses need to override this if they cannot always seek.
-   /// seeking will be enabled once this is true.
-   virtual bool SeekingAllowed(){return true;}
+   virtual bool SeekingAllowed();
    
    ///changes the tasks associated with this Waveform to process the task from a different point in the track
    ///this is overridden from ODTask because certain classes don't allow users to seek sometimes, or not at all.
@@ -113,13 +111,16 @@ public:
    virtual bool ReadHeader()=0;  
 	virtual bool Init(){return ReadHeader();}
    
+   virtual bool SeekingAllowed(){return true;}
+   
    ///Decodes the samples for this blockfile from the real file into a float buffer.  
    ///This is file specific, so subclasses must implement this only.
    ///the buffer should be created by the ODFileDecoder implementing this method.
    ///It should set the format parameter so that the client code can deal with it. 
    ///This class should call ReadHeader() first, so it knows the length, and can prepare 
    ///the file object if it needs to. 
-   virtual void Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
+   ///returns negative value for failure, 0 or positive value for success.
+   virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
    
    wxString GetFileName(){return mFName;}
 

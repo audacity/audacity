@@ -25,7 +25,7 @@ class ODDecodeFFmpegTask:public ODDecodeTask
  public:
 
    /// Constructs an ODTask
-   ODDecodeFFmpegTask(void* scs,int numStreams, WaveTrack*** channels, void* formatContext);
+   ODDecodeFFmpegTask(void* scs,int numStreams, WaveTrack*** channels, void* formatContext, int streamIndex);
    virtual ~ODDecodeFFmpegTask();
 
    virtual ODTask* Clone();
@@ -36,15 +36,12 @@ class ODDecodeFFmpegTask:public ODDecodeTask
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODFFMPEG;}
 
-   /// overridden because we cannot always seek - this depends on the file and our confidence which is
-   /// computed by this function.
-    virtual bool SeekingAllowed();
-
  protected:
    WaveTrack*** mChannels;
    int   mNumStreams;
    void* mScs;
    void* mFormatContext;
+   int   mStreamIndex;
 };
 #endif //__ODDECODEFFMPEGTASK__
 
