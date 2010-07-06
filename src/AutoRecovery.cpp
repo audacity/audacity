@@ -1,8 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  AutoRecovery.cpp
+   AutoRecovery.cpp
 
 *******************************************************************//**
 
@@ -143,7 +145,7 @@ static bool HaveFilesToRecover()
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
    {
-      wxMessageBox(_("Could not enumerate files in auto save directory"),
+      wxMessageBox(_("Could not enumerate files in auto save directory."),
                    _("Error"), wxICON_STOP);
       return false;
    }
@@ -180,7 +182,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
    {
-      wxMessageBox(_("Could not enumerate files in auto save directory"),
+      wxMessageBox(_("Could not enumerate files in auto save directory."),
                    _("Error"), wxICON_STOP);
       return false;
    }

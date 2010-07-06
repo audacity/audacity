@@ -1,3 +1,13 @@
+/**********************************************************************
+
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   License: GPL v2.  See License.txt.
+
+   AutoRecovery.h
+
+*******************************************************************/
+
 #ifndef __AUDACITY_AUTORECOVERY__
 #define __AUDACITY_AUTORECOVERY__
 

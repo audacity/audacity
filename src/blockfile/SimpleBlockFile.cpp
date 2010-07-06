@@ -32,12 +32,12 @@ default is to disable caching.
 
 * Read-caching: If caching is enabled, all block files will always be
   read-cached. Block files on disk will be read as soon as they are created
-  and hold in memory. New block files will be written to disk, but hold in
+  and held in memory. New block files will be written to disk, but held in
   memory, so they are never read from disk in the current session.
 
 * Write-caching: If caching is enabled and the parameter allowDeferredWrite
-  is enabled at the block file constructor, new block files are hold in memory
-  and only written to disk when WriteCacheToDisk() is called. This is used
+  is enabled at the block file constructor, new block files are held in memory
+  and written to disk only when WriteCacheToDisk() is called. This is used
   during recording to prevent disk access. After recording, WriteCacheToDisk()
   will be called on all block files and they will be written to disk. During
   normal editing, no write cache is active, that is, any block files will be
@@ -592,14 +592,15 @@ bool SimpleBlockFile::GetCache()
 {  
    bool cacheBlockFiles = false;
    gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
+   if (!cacheBlockFiles) 
+      return false;
 
    int lowMem = gPrefs->Read(wxT("/Directories/CacheLowMem"), 16l);
    if (lowMem < 16) {
       lowMem = 16;
    }
    lowMem <<= 20;
-
-   return cacheBlockFiles && (GetFreeMemory() > lowMem);
+   return (GetFreeMemory() > lowMem);
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
