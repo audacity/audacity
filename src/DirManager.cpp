@@ -1,11 +1,22 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  DirManager.cpp
+   DirManager.cpp
 
-  Dominic Mazzoni
-  Monty
+   Dominic Mazzoni
+   Matt Brubeck
+   Michael Chinen
+   James Crook
+   Al Dimond
+   Brian Gunlogson
+   Josh Haberman
+   Vaughan Johnson
+   Leland Lucius
+   Monty
+   Markus Meyer
 
 *******************************************************************//*!
 
@@ -105,7 +116,7 @@ DirManager::DirManager()
 
    // Set up local temp subdir
    // Previously, Audacity just named project temp directories "project0",
-   // "project1" and so on. But with the advent of recovery code, we need an
+   // "project1" and so on. But with the advent of recovery code, we need a 
    // unique name even after a crash. So we create a random project index
    // and make sure it is not used already. This will not pose any performance
    // penalties as long as the number of open Audacity projects is much
@@ -130,10 +141,11 @@ DirManager::DirManager()
    }
 
    //create a temporary null log to capture the log dialog
-   //that wxGetDiskSpace creates.  It gets destroyed when
-   //it goes out of context.
+   //that wxGetDiskSpace creates.  
    //JKC: Please explain why.
-   wxLogNull logNo;
+   // Vaughan, 2010-07-06: No explanation forthcoming and Nestify is long gone.
+   //    wxWidgets manual says, "rarely the best way to" suppress wxWidgets log messages.
+   // wxLogNull logNo; 
 
    // Make sure there is plenty of space for temp files
    wxLongLong freeSpace = 0;
@@ -156,22 +168,21 @@ DirManager::~DirManager()
    }
 }
 
-// behavior of dash_rf_enum is tailored to our two uses and thus not
-// entirely straightforward.  It recurses depth-first from the passed
+// Behavior of RecursivelyEnumerate is tailored to our uses and not
+// entirely straightforward.  It recurs depth-first from the passed-
 // in directory into its subdirs according to optional dirspec
-// matching, building a list of directories and [optionally] files to
-// be rm()ed in the listed order.  The dirspec is not applied to
-// subdirs of subdirs. Files in the passed in directory will not be
+// pattern, building a list of directories and (optionally) files 
+// in the listed order.  The dirspec is not applied to
+// subdirs of subdirs. Files in the passed-in directory will not be
 // enumerated.  Also, the passed-in directory is the last entry added
 // to the list.
-
-static int rm_dash_rf_enumerate_i(wxString dirpath, 
-                                  wxArrayString &flist, 
+static int RecursivelyEnumerate(wxString dirpath, 
+                                  wxArrayString& flist, 
                                   wxString dirspec,
-                                  int files_p,int dirs_p,
-                                  int progress_count,int progress_bias,
-                                  const wxChar *prompt,
-                                  ProgressDialog * progress)
+                                  bool bFiles, bool bDirs,
+                                  int progress_count= 0, 
+                                  int progress_bias = 0,
+                                  ProgressDialog* progress = NULL)
 {
    int count=0;
    bool cont;
@@ -180,7 +191,7 @@ static int rm_dash_rf_enumerate_i(wxString dirpath,
    if(dir.IsOpened()){
       wxString name;
 
-      if(files_p){
+      if (bFiles){
          cont= dir.GetFirst(&name, dirspec, wxDIR_FILES);
          while ( cont ){
             wxString filepath=dirpath + wxFILE_SEP_PATH + name;
@@ -199,14 +210,16 @@ static int rm_dash_rf_enumerate_i(wxString dirpath,
       cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS);
       while ( cont ){
          wxString subdirpath=dirpath + wxFILE_SEP_PATH + name;
-         count+=rm_dash_rf_enumerate_i(subdirpath,flist,wxEmptyString,
-                                     files_p,dirs_p,progress_count,
-                                     count+progress_bias,prompt,progress);  
+         count += RecursivelyEnumerate(
+                     subdirpath, flist, wxEmptyString,
+                     bFiles, bDirs, 
+                     progress_count, count + progress_bias, 
+                     progress);  
          cont = dir.GetNext(&name);
       }
    }
    
-   if(dirs_p){
+   if (bDirs){
       flist.Add(dirpath);
       count++;
    }
@@ -215,22 +228,23 @@ static int rm_dash_rf_enumerate_i(wxString dirpath,
 }
 
 
-static int rm_dash_rf_enumerate_prompt(wxString dirpath,
-                                       wxArrayString &flist, 
-                                       wxString dirspec,
-                                       int files_p,int dirs_p,
-                                       int progress_count,
-                                       const wxChar *prompt)
+static int RecursivelyEnumerateWithProgress(wxString dirpath,
+                                             wxArrayString &flist, 
+                                             wxString dirspec,
+                                             bool bFiles, bool bDirs,
+                                             int progress_count,
+                                             const wxChar* message)
 {
    ProgressDialog *progress = NULL;
 
-   if (prompt)
-      progress = new ProgressDialog(_("Progress"), prompt);
+   if (message)
+      progress = new ProgressDialog(_("Progress"), message);
 
-   int count=rm_dash_rf_enumerate_i(dirpath, flist, dirspec, files_p,dirs_p,
-                                    progress_count,0,
-                                    prompt,
-                                    progress);
+   int count = RecursivelyEnumerate(
+                  dirpath, flist, dirspec, 
+                  bFiles, bDirs,
+                  progress_count, 0,
+                  progress);
 
    if (progress)
       delete progress;
@@ -238,35 +252,21 @@ static int rm_dash_rf_enumerate_prompt(wxString dirpath,
    return count;
 }
 
-static int rm_dash_rf_enumerate(wxString dirpath,
-                                wxArrayString &flist, 
-                                wxString dirspec,
-                                int files_p,int dirs_p){
-
-   return rm_dash_rf_enumerate_i(dirpath, flist, dirspec, files_p,dirs_p,
-                                    0,0,NULL,NULL);
-
-}
-
-
-static void rm_dash_rf_execute(wxArrayString &fList, 
-                               int count, int files_p, int dirs_p,
-                               const wxChar *prompt)
+static void RecursivelyRemove(wxArrayString &fList, int count, 
+                              bool bFiles, bool bDirs,
+                              const wxChar* message = NULL)
 {
    ProgressDialog *progress = NULL;
 
-   if (prompt)
-      progress = new ProgressDialog(_("Progress"), prompt);
+   if (message)
+      progress = new ProgressDialog(_("Progress"), message);
 
    for (int i = 0; i < count; i++) {
       const wxChar *file = fList[i].c_str();
-      if(files_p){
+      if (bFiles)
          wxRemoveFile(file);
-      }
-      if(dirs_p){
+      if (bDirs)
          wxRmdir(file);
-      }
-
       if (progress)
          progress->Update(i, count);
    }
@@ -282,15 +282,15 @@ void DirManager::CleanTempDir()
       return; // do nothing
       
    wxArrayString flist;
-   int count;
 
-   // don't count the global temp directory, which this will find and
-   // list last
-   count=rm_dash_rf_enumerate(globaltemp,flist,wxT("project*"),1,1)-1;
+   // Subtract 1 because we don't want to delete the global temp directory, 
+   // which this will find and list last.
+   int count = 
+      RecursivelyEnumerate(globaltemp, flist, wxT("project*"), true, true) - 1;
    if (count == 0) 
       return;
 
-   rm_dash_rf_execute(flist,count,1,1,_("Cleaning up temporary files"));
+   RecursivelyRemove(flist, count, true, true, _("Cleaning up temporary files"));
 }
 
 bool DirManager::SetProject(wxString & projPath, wxString & projName,
@@ -406,13 +406,14 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
       // new; rmdir will fail on non-empty dirs.
       
       wxArrayString dirlist;
-      count=rm_dash_rf_enumerate(cleanupLoc1,dirlist,wxEmptyString,0,1);
-//This destroys the empty dirs of the OD block files, which are yet to come. com
-//Dont know if this will make the project dirty, but I doubt it. (mchinen)
-//      count+=rm_dash_rf_enumerate(cleanupLoc2,dirlist,wxEmptyString,0,1);
+      count = RecursivelyEnumerate(cleanupLoc1, dirlist, wxEmptyString, false, true);
+
+      //This destroys the empty dirs of the OD block files, which are yet to come. 
+      //Dont know if this will make the project dirty, but I doubt it. (mchinen)
+      //      count += RecursivelyEnumerate(cleanupLoc2, dirlist, wxEmptyString, false, true);
       
-      if(count)
-         rm_dash_rf_execute(dirlist,count,0,1,_("Cleaning up cache directories"));
+      if (count > 0)
+         RecursivelyRemove(dirlist, count, false, true, _("Cleaning up cache directories"));
    }
    return true;
 }
@@ -435,8 +436,7 @@ wxLongLong DirManager::GetFreeDiskSpace()
    if (projPath == wxT(""))
       path = mytemp;
    {
-      wxLogNull logNo;
-
+      // wxLogNull logNo; // See above note on why this is commented out.
       if (!wxGetDiskSpace(path, NULL, &freeSpace))
          freeSpace = -1;
    }
@@ -1320,14 +1320,16 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
    BlockHash    missingSummaryList;
    BlockHash    missingDataList;
 
-   // this function is finally a misnomer
-   rm_dash_rf_enumerate_prompt((projFull != wxT("")? projFull: mytemp),
-                               fnameList,wxEmptyString,1,0,blockcount,
-                               _("Inspecting project file data..."));
+   int count = 
+      RecursivelyEnumerateWithProgress(
+         (projFull != wxT("")? projFull: mytemp),
+         fnameList, wxEmptyString, 
+         true, false, 
+         blockcount, _("Inspecting project file data..."));
    
    // enumerate orphaned blockfiles
    BlockHash diskFileHash;
-   for(ndx=0;ndx<(int)fnameList.GetCount();ndx++){
+   for (ndx = 0; ndx < count; ndx++){
       wxFileName fullname = fnameList[ndx];
       wxString basename=fullname.GetName();
       
@@ -1584,11 +1586,16 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
 
    // clean up any empty directories
    fnameList.Clear();
-   rm_dash_rf_enumerate_prompt((projFull != wxT("")? projFull: mytemp),
-                               fnameList,wxEmptyString,0,1,blockcount,
-                               _("Cleaning up unused directories in project data..."));
-   rm_dash_rf_execute(fnameList,0,0,1,0);
-
+   //vvvvv Why ignore enumeration before deleting?!
+   //vvvvv Anyway, this enumeration call does not return 
+   //    empty directories, it returns all subdirs. Need to fix it.
+   count = 
+      RecursivelyEnumerateWithProgress(
+         (projFull != wxT("")? projFull: mytemp),
+         fnameList, wxEmptyString, 
+         false, true, 
+         blockcount, _("Cleaning up unused directories in project data..."));
+   RecursivelyRemove(fnameList, 0, false, true);
 
    return ret;
 }
@@ -1611,11 +1618,12 @@ void DirManager::RemoveOrphanedBlockfiles()
    // enumerate *all* files in the project directory
    wxArrayString fnameList;
 
-   // this function is finally a misnomer
-   rm_dash_rf_enumerate_prompt((projFull != wxT("")? projFull: mytemp),
-                               fnameList,wxEmptyString,1,0,blockcount,
-                               _("Inspecting project file data..."));
-   
+   RecursivelyEnumerateWithProgress(
+      (projFull != wxT("")? projFull: mytemp),
+      fnameList, wxEmptyString, 
+      true, false, 
+      blockcount, _("Inspecting project file data..."));
+
    // enumerate orphaned blockfiles
    wxArrayString orphanList;
    for(i=0;i<(int)fnameList.GetCount();i++){
