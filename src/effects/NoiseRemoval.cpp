@@ -890,7 +890,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddVariableText(step1Prompt);
       m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).
-         AddButton(_("Get Noise Profile"));
+         AddButton(_("&Get Noise Profile"));
    }
    S.EndStatic();
 
@@ -901,7 +901,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-         mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise reduction (dB):"),
+         mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise re&duction (dB):"),
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
@@ -910,7 +910,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
          mGainS->SetRange(GAIN_MIN, GAIN_MAX);
          mGainS->SetSizeHints(150, -1);
 
-         mSensitivityT = S.Id(ID_SENSIVITY_TEXT).AddTextBox(_("Sensitivity (dB):"),
+         mSensitivityT = S.Id(ID_SENSIVITY_TEXT).AddTextBox(_("&Sensitivity (dB):"),
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
@@ -919,7 +919,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
          mSensitivityS->SetRange(SENSIVITY_MIN, SENSIVITY_MAX);
          mSensitivityS->SetSizeHints(150, -1);
 
-         mFreqT = S.Id(ID_FREQ_TEXT).AddTextBox(_("Frequency smoothing (Hz):"),
+         mFreqT = S.Id(ID_FREQ_TEXT).AddTextBox(_("Fr&equency smoothing (Hz):"),
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
@@ -928,7 +928,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
          mFreqS->SetRange(FREQ_MIN, FREQ_MAX);
          mFreqS->SetSizeHints(150, -1);
 
-         mTimeT = S.Id(ID_TIME_TEXT).AddTextBox(_("Attack/decay time (secs):"),
+         mTimeT = S.Id(ID_TIME_TEXT).AddTextBox(_("Attac&k/decay time (secs):"),
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
@@ -939,9 +939,9 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 
          S.AddPrompt(_("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
-               .AddRadioButton(_("Remove"));
+               .AddRadioButton(_("Re&move"));
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
-               .AddRadioButtonToGroup(_("Isolate"));
+               .AddRadioButtonToGroup(_("&Isolate"));
       }
       S.EndMultiColumn();
    }
