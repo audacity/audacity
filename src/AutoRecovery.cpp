@@ -282,7 +282,8 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
       WaveTrack* track = tracks.Item(index);
-      Sequence* seq = track->GetLastOrCreateClip()->GetSequence();
+      WaveClip*  clip  = track->GetLastOrCreateClip();
+      Sequence* seq = clip->GetSequence();
       
       // Load the blockfile from the XML
       BlockFile* blockFile = NULL;
@@ -297,6 +298,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       }
 
       seq->AppendBlockFile(blockFile);
+      clip->UpdateEnvelopeTrackLen();
 
    } else if (wxStrcmp(tag, wxT("recordingrecovery")) == 0)
    {
@@ -312,10 +314,11 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
             break;
          
          const wxString strValue = value;
+         //this channels value does not correspond to WaveTrack::Left/Right/Mono, but which channel of the recording device
+         //it came from, and thus we can't use XMLValueChecker::IsValidChannel on it.  Rather we compare to the next attribute value.
          if (wxStrcmp(attr, wxT("channel")) == 0)
          {
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || 
-                  !XMLValueChecker::IsValidChannel(nValue))
+            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || nValue < 0)
                return false;
             mChannel = nValue;
          }
@@ -324,8 +327,11 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
             if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || 
                   (nValue < 1))
                return false;
+            if(mChannel >= nValue )
+               return false;   
             mNumChannels = nValue;
          }
+         
       }
    }
    
