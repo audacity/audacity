@@ -304,10 +304,10 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
          // and RemoveDirectory), and they all give same results. 
          // I noticed dirs get deleted in RecursivelyRemove, maybe because it doesn't 
          // consider whether the path is a directory or a file and wxRemoveFile()'s it first.
-         // Tried it here, but no joy!
-         //    #ifdef __WXMSW__
-         //       ::wxRemoveFile(dirPath);
-         //    #endif
+         // Tried it here on WinXP, but no joy. Leave the code in case it works on other Win systems. 
+         #ifdef __WXMSW__
+            ::wxRemoveFile(dirPath);
+         #endif
          ::wxRmdir(dirPath);
       }
       nCount++; // Count dirPath in progress.
