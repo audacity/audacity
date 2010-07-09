@@ -176,25 +176,25 @@ DirManager::~DirManager()
 // subdirs of subdirs. Files in the passed-in directory will not be
 // enumerated.  Also, the passed-in directory is the last entry added
 // to the list.
-static int RecursivelyEnumerate(wxString dirpath, 
+static int RecursivelyEnumerate(wxString dirPath, 
                                   wxArrayString& flist, 
                                   wxString dirspec,
                                   bool bFiles, bool bDirs,
-                                  int progress_count= 0, 
+                                  int progress_count = 0, 
                                   int progress_bias = 0,
                                   ProgressDialog* progress = NULL)
 {
    int count=0;
    bool cont;
 
-   wxDir dir(dirpath);
+   wxDir dir(dirPath);
    if(dir.IsOpened()){
       wxString name;
 
       if (bFiles){
          cont= dir.GetFirst(&name, dirspec, wxDIR_FILES);
          while ( cont ){
-            wxString filepath=dirpath + wxFILE_SEP_PATH + name;
+            wxString filepath = dirPath + wxFILE_SEP_PATH + name;
             
             count++;
             flist.Add(filepath);
@@ -209,9 +209,9 @@ static int RecursivelyEnumerate(wxString dirpath,
 
       cont= dir.GetFirst(&name, dirspec, wxDIR_DIRS);
       while ( cont ){
-         wxString subdirpath=dirpath + wxFILE_SEP_PATH + name;
+         wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
          count += RecursivelyEnumerate(
-                     subdirpath, flist, wxEmptyString,
+                     subdirPath, flist, wxEmptyString,
                      bFiles, bDirs, 
                      progress_count, count + progress_bias, 
                      progress);  
@@ -219,8 +219,8 @@ static int RecursivelyEnumerate(wxString dirpath,
       }
    }
    
-   if (bDirs){
-      flist.Add(dirpath);
+   if (bDirs) {
+      flist.Add(dirPath);
       count++;
    }
 
@@ -228,7 +228,7 @@ static int RecursivelyEnumerate(wxString dirpath,
 }
 
 
-static int RecursivelyEnumerateWithProgress(wxString dirpath,
+static int RecursivelyEnumerateWithProgress(wxString dirPath,
                                              wxArrayString &flist, 
                                              wxString dirspec,
                                              bool bFiles, bool bDirs,
@@ -241,7 +241,7 @@ static int RecursivelyEnumerateWithProgress(wxString dirpath,
       progress = new ProgressDialog(_("Progress"), message);
 
    int count = RecursivelyEnumerate(
-                  dirpath, flist, dirspec, 
+                  dirPath, flist, dirspec, 
                   bFiles, bDirs,
                   progress_count, 0,
                   progress);
@@ -250,6 +250,71 @@ static int RecursivelyEnumerateWithProgress(wxString dirpath,
       delete progress;
 
    return count;
+}
+
+static int RecursivelyCountSubdirs(wxString dirPath)
+{
+   bool bContinue;
+   int nCount = 0;
+   wxDir dir(dirPath);
+   if (dir.IsOpened() && dir.HasSubDirs()) 
+   {
+      wxString name;
+      bContinue = dir.GetFirst(&name, wxEmptyString, wxDIR_DIRS);
+      while (bContinue) 
+      {
+         nCount++;
+         wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+         nCount += RecursivelyCountSubdirs(subdirPath);  
+         bContinue = dir.GetNext(&name);
+      }
+   }
+   return nCount;
+}
+
+static int RecursivelyRemoveEmptyDirs(wxString dirPath, 
+                                       int nDirCount = 0, 
+                                       ProgressDialog* pProgress = NULL)
+{
+   bool bContinue;
+   wxDir dir(dirPath);
+   int nCount = 0;
+   if (dir.IsOpened()) 
+   {
+      if (dir.HasSubDirs()) 
+      {
+         wxString name;
+         bContinue = dir.GetFirst(&name, wxEmptyString, wxDIR_DIRS);
+         while (bContinue) 
+         {
+            wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
+            nCount += RecursivelyRemoveEmptyDirs(subdirPath, nDirCount, pProgress);  
+            bContinue = dir.GetNext(&name);
+         }
+      }
+      // Have to recheck dir.HasSubDirs() again, in case they all were deleted in recursive calls.
+      if (!dir.HasSubDirs() && !dir.HasFiles())
+      {
+         // No subdirs or files. It's empty so delete it. 
+         // Vaughan, 2010-07-07: 
+         // Note that, per http://src.chromium.org/svn/trunk/src/base/file_util_win.cc, among others, 
+         // "Some versions of Windows return ERROR_FILE_NOT_FOUND (0x2) when deleting
+         // an empty directory..." Supposedly fixed in Vista and up.
+         // I discovered this on WinXP. I tried several other Windows SDK functions (e.g., _rmdir 
+         // and RemoveDirectory), and they all give same results. 
+         // I noticed dirs get deleted in RecursivelyRemove, maybe because it doesn't 
+         // consider whether the path is a directory or a file and wxRemoveFile()'s it first.
+         // Tried it here, but no joy!
+         //    #ifdef __WXMSW__
+         //       ::wxRemoveFile(dirPath);
+         //    #endif
+         ::wxRmdir(dirPath);
+      }
+      nCount++; // Count dirPath in progress.
+      if (pProgress)
+         pProgress->Update(nCount, nDirCount);
+   }
+   return nCount;
 }
 
 static void RecursivelyRemove(wxArrayString &fList, int count, 
@@ -264,9 +329,9 @@ static void RecursivelyRemove(wxArrayString &fList, int count,
    for (int i = 0; i < count; i++) {
       const wxChar *file = fList[i].c_str();
       if (bFiles)
-         wxRemoveFile(file);
+         ::wxRemoveFile(file);
       if (bDirs)
-         wxRmdir(file);
+         ::wxRmdir(file); // See note above about wxRmdir sometimes incorrectly failing on Windows.
       if (progress)
          progress->Update(i, count);
    }
@@ -1320,12 +1385,12 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
    BlockHash    missingSummaryList;
    BlockHash    missingDataList;
 
+   wxString dirPath = (projFull != wxT("") ? projFull: mytemp);
    int count = 
       RecursivelyEnumerateWithProgress(
-         (projFull != wxT("")? projFull: mytemp),
-         fnameList, wxEmptyString, 
+         dirPath, fnameList, wxEmptyString, 
          true, false, 
-         blockcount, _("Inspecting project file data..."));
+         blockcount, _("Inspecting project file data"));
    
    // enumerate orphaned blockfiles
    BlockHash diskFileHash;
@@ -1438,7 +1503,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       prompt.Printf(promptA,(int)orphanList.GetCount());
       
       const wxChar *buttons[]={_("Delete orphaned files [safe and recommended]"),
-                               _("Continue without deleting; silently work around the extra files"),
+                               _("Continue without deleting; ignore the extra files this session"),
                                _("Close project immediately with no changes"),NULL};
       int action = ShowMultiDialog(prompt,
                                    _("Warning"),
@@ -1519,7 +1584,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
          prompt.Printf(promptA,missingSummaryList.size());
       
          const wxChar *buttons[]={_("Regenerate summary files [safe and recommended]"),
-                                 _("Fill in silence for missing display data [this session only]"),
+                                  _("Fill in silence for missing display data [this session only]"),
                                   _("Close project immediately with no further changes"),NULL};
          action = ShowMultiDialog(prompt,
                                       _("Warning"),
@@ -1562,7 +1627,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       
          const wxChar *buttons[]={_("Replace missing data with silence [permanent immediately]"),
                                   _("Temporarily replace missing data with silence [this session only]"),
-                                 _("Close project immediately with no further changes"),NULL};
+                                  _("Close project immediately with no further changes"),NULL};
          action = ShowMultiDialog(prompt,
                                       _("Warning"),
                                       buttons);
@@ -1584,18 +1649,14 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       }
    }
 
-   // clean up any empty directories
-   fnameList.Clear();
-   //vvvvv Why ignore enumeration before deleting?!
-   //vvvvv Anyway, this enumeration call does not return 
-   //    empty directories, it returns all subdirs. Need to fix it.
-   count = 
-      RecursivelyEnumerateWithProgress(
-         (projFull != wxT("")? projFull: mytemp),
-         fnameList, wxEmptyString, 
-         false, true, 
-         blockcount, _("Cleaning up unused directories in project data..."));
-   RecursivelyRemove(fnameList, 0, false, true);
+   // Remove any empty directories.
+   ProgressDialog* pProgress = 
+      new ProgressDialog(_("Progress"), 
+                           _("Cleaning up unused directories in project data"));
+   // nDirCount is for updating pProgress. +1 because we may delete dirPath.
+   int nDirCount = RecursivelyCountSubdirs(dirPath) + 1; 
+   RecursivelyRemoveEmptyDirs(dirPath, nDirCount, pProgress);
+   delete pProgress;
 
    return ret;
 }
@@ -1619,10 +1680,10 @@ void DirManager::RemoveOrphanedBlockfiles()
    wxArrayString fnameList;
 
    RecursivelyEnumerateWithProgress(
-      (projFull != wxT("")? projFull: mytemp),
+      (projFull != wxT("") ? projFull: mytemp),
       fnameList, wxEmptyString, 
       true, false, 
-      blockcount, _("Inspecting project file data..."));
+      blockcount, _("Inspecting project file data"));
 
    // enumerate orphaned blockfiles
    wxArrayString orphanList;
@@ -1672,7 +1733,7 @@ void DirManager::FillBlockfilesCache()
       return;
 
    ProgressDialog progress(_("Caching audio"),
-                           _("Caching audio into memory..."));
+                           _("Caching audio into memory"));
 
    i = blockFileHash.begin();
    int current = 0;
@@ -1708,7 +1769,7 @@ void DirManager::WriteCacheToDisk()
       return;
 
    ProgressDialog progress(_("Saving recorded audio"),
-                           _("Saving recorded audio to disk..."));
+                           _("Saving recorded audio to disk"));
 
    i = blockFileHash.begin();
    int current = 0;
