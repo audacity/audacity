@@ -1284,7 +1284,7 @@ void EqualizationDialog::MakeEqualizationDialog()
 
    btn = new wxButton( this, ID_CLEAR, _("Fla&tten"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
-   btn = new wxButton( this, ID_INVERT, _("In&vert"));
+   btn = new wxButton( this, ID_INVERT, _("&Invert"));
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
    mGridOnOff = new wxCheckBox(this, GridOnOffID, _("G&rids"),
                             wxDefaultPosition, wxDefaultSize,
