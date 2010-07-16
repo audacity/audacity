@@ -1,21 +1,30 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+   License: GPL v2.  See License.txt.
   
-  Dependencies.cpp
- 
-  Dominic Mazzoni
+   Dependencies.cpp
 
-  The primary function provided in this source file is
-  ShowDependencyDialogIfNeeded.  It checks a project to see if
-  any of its WaveTracks contain AliasBlockFiles; if so it
-  presents a dialog to the user and lets them copy those block
-  files into the project, making it self-contained.
+   Dominic Mazzoni
+   Leland Lucius
+   Markus Meyer
+   LRN
+   Michael Chinen
+   Vaughan Johnson
+  
+   The primary function provided in this source file is
+   ShowDependencyDialogIfNeeded.  It checks a project to see if
+   any of its WaveTracks contain AliasBlockFiles; if so it
+   presents a dialog to the user and lets them copy those block
+   files into the project, making it self-contained.
 
 **********************************************************************/
 
+#include <wx/arrimpl.cpp>
 #include <wx/defs.h>
 #include <wx/dialog.h>
+#include <wx/filename.h>
 #include <wx/hashmap.h>
 #include <wx/progdlg.h>
 #include <wx/choice.h>
@@ -24,27 +33,43 @@
 #include "Dependencies.h"
 #include "DirManager.h"
 #include "Internat.h"
+#include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
-#include "Prefs.h"
+#include "Track.h"
 
-#include <wx/arrimpl.cpp>
+
+class AliasedFile 
+{
+public:
+   AliasedFile(wxFileName fileName, wxLongLong byteCount, bool bOriginalExists) 
+   {
+      mByteCount = byteCount;
+      mFileName = fileName;
+      mbOriginalExists = bOriginalExists;
+   };
+   wxLongLong  mByteCount; // if stored as current default sample format
+   wxFileName  mFileName;
+   bool        mbOriginalExists;
+};
+
+WX_DECLARE_OBJARRAY(AliasedFile, AliasedFileArray);
 WX_DEFINE_OBJARRAY( AliasedFileArray );
 
 WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
-		    wxStringHash, wxStringEqual, AliasedFileHash);
+		               wxStringHash, wxStringEqual, AliasedFileHash);
 
 WX_DECLARE_HASH_MAP(BlockFile *, BlockFile *,
-		    wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
+		               wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
 
 WX_DECLARE_HASH_MAP(BlockFile *, bool,
-		    wxPointerHash, wxPointerEqual, BoolBlockFileHash);
+		               wxPointerHash, wxPointerEqual, BoolBlockFileHash);
 
 // Given a project, returns a single array of all SeqBlocks
 // in the current set of tracks.  Enumerating that array allows
 // you to process all block files in the current set.
 void GetAllSeqBlocks(AudacityProject *project,
-		     BlockArray *outBlocks)
+                     BlockArray *outBlocks)
 {
    TrackList *tracks = project->GetTracks();
    TrackListIterator iter(tracks);
@@ -73,7 +98,7 @@ void GetAllSeqBlocks(AudacityProject *project,
 // Note that this code respects reference-counting and thus the
 // process of making a project self-contained is actually undoable.
 void ReplaceBlockFiles(AudacityProject *project,
-		       ReplacedBlockFileHash &hash)
+		                 ReplacedBlockFileHash &hash)
 {
    DirManager *dirManager = project->GetDirManager();
    BlockArray blocks;
@@ -93,9 +118,8 @@ void ReplaceBlockFiles(AudacityProject *project,
    }
 }
 
-// True = success
-bool FindDependencies(AudacityProject *project,
-		      AliasedFileArray *outAliasedFiles)
+void FindDependencies(AudacityProject *project,
+                      AliasedFileArray *outAliasedFiles)
 {
    sampleFormat format = project->GetDefaultFormat();
 
@@ -116,28 +140,29 @@ bool FindDependencies(AudacityProject *project,
          int blockBytes = (SAMPLE_SIZE(format) *
                            aliasBlockFile->GetLength());
          if (aliasedFileHash[fileNameStr])
-            aliasedFileHash[fileNameStr]->bytes += blockBytes;
+            aliasedFileHash[fileNameStr]->mByteCount += blockBytes;
          else {
-            outAliasedFiles->Add(AliasedFile(fileName, blockBytes));
+            outAliasedFiles->Add(AliasedFile(fileName, 
+                                             blockBytes, 
+                                             fileName.FileExists()));
             aliasedFileHash[fileNameStr] =
                &((*outAliasedFiles)[outAliasedFiles->GetCount()-1]);
          }
       }
    } 
-  
-   return true;
 }
 
 // Given a project and a list of aliased files that should no
 // longer be self-contained (selected by the user), replace
-// all of those alias block files with disk block files
+// all of those alias block files with disk block files.
 bool RemoveDependencies(AudacityProject *project,
-			AliasedFileArray *aliasedFiles)
+			               AliasedFileArray *aliasedFiles)
 {
    DirManager *dirManager = project->GetDirManager();
 
-   ProgressDialog *progress = new ProgressDialog(_("Removing Dependencies"),
-                                                 _("Copying audio data into project..."));
+   ProgressDialog *progress = 
+      new ProgressDialog(_("Removing Dependencies"),
+                         _("Copying audio data into project..."));
 
    AliasedFileHash aliasedFileHash;
    ReplacedBlockFileHash blockFileHash;   
@@ -146,8 +171,8 @@ bool RemoveDependencies(AudacityProject *project,
    wxLongLong completedBytes = 0;
    unsigned int i;
    for(i=0; i<aliasedFiles->GetCount(); i++) {
-      totalBytesToProcess += aliasedFiles->Item(i).bytes;
-      wxString fileNameStr = aliasedFiles->Item(i).fileName.GetFullPath();
+      totalBytesToProcess += aliasedFiles->Item(i).mByteCount;
+      wxString fileNameStr = aliasedFiles->Item(i).mFileName.GetFullPath();
       aliasedFileHash[fileNameStr] = &aliasedFiles->Item(i);
    }
    
@@ -216,16 +241,6 @@ bool RemoveDependencies(AudacityProject *project,
 // DependencyDialog
 //
 
-enum {
-   FileListID = 6000,
-   CopyID,
-   FutureActionID
-};
-
-wxString kDependencyDialogPrompt =
-_("Copying the following files into your project will remove this dependency.\
-\nThis needs more disk space, but is safer.");
-
 class DependencyDialog : public wxDialog
 {
 public:
@@ -238,29 +253,37 @@ public:
 private:
    void PopulateList();
    void OnList(wxListEvent &evt);
-   void OnCopy(wxCommandEvent &evt);
+   void OnCopySelectedFiles(wxCommandEvent &evt);
    void OnNo(wxCommandEvent &evt);
    void OnYes(wxCommandEvent &evt);
 
    void PopulateOrExchange(ShuttleGui & S);
-   void SaveChoice();
+   void SaveFutureActionChoice();
    
    virtual void OnCancel(wxCommandEvent& evt);
    
    AudacityProject  *mProject;
    AliasedFileArray *mAliasedFiles;
-   wxListCtrl       *mFileList;
-   wxButton         *mCopyButton;
-   wxChoice         *mChoice;
    bool              mIsSaving;
 
+   wxListCtrl       *mFileList;
+   wxButton         *mCopySelectedFilesButton;
+   wxChoice         *mFutureActionChoice;
+   
 public:
    DECLARE_EVENT_TABLE()
 };
 
+enum {
+   FileListID = 6000,
+   CopySelectedFilesButtonID,
+   FutureActionChoiceID
+};
+
 BEGIN_EVENT_TABLE(DependencyDialog, wxDialog)
    EVT_LIST_ITEM_SELECTED(FileListID, DependencyDialog::OnList)
-   EVT_BUTTON(CopyID, DependencyDialog::OnCopy)
+   EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
+   EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
    EVT_BUTTON(wxID_NO, DependencyDialog::OnNo)
    EVT_BUTTON(wxID_YES, DependencyDialog::OnYes)
    EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel) // seems to be needed
@@ -277,20 +300,27 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
                        wxDEFAULT_DIALOG_STYLE), // no close box when saving
    mProject(project),
    mAliasedFiles(aliasedFiles),
+   mIsSaving(isSaving),
    mFileList(NULL),
-   mCopyButton(NULL),
-   mIsSaving(isSaving)
+   mCopySelectedFilesButton(NULL), 
+   mFutureActionChoice(NULL)
 {
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
+
+wxString kDependencyDialogMessage =
+_("Copying these files into your project will remove this dependency.\
+\nThis needs more disk space, but is safer.\
+\n\nFiles shown in italics have been moved or deleted and cannot be copied.\
+\nRestore them to their original location to be able to copy into project."); 
 
 void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 {
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      S.AddVariableText(kDependencyDialogPrompt, false);
+      S.AddVariableText(kDependencyDialogMessage, false);
 
       S.StartStatic(_("Project Dependencies"));
       {  
@@ -301,8 +331,10 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          mFileList->SetColumnWidth(1, 120);
          PopulateList();
 
-         mCopyButton = S.Id(CopyID).AddButton
-            (_("Copy Selected Audio Into Project"), wxALIGN_LEFT);
+         mCopySelectedFilesButton = 
+            S.Id(CopySelectedFilesButtonID).AddButton(
+               _("Copy Selected Audio Into Project"), 
+               wxALIGN_LEFT);
       }
       S.EndStatic();
 
@@ -325,14 +357,14 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
             choices.Add(_("Ask me"));
             choices.Add(_("Always copy all audio (safest)"));
             choices.Add(_("Never copy any audio"));
-            mChoice = S.Id(FutureActionID).AddChoice(
+            mFutureActionChoice = S.Id(FutureActionChoiceID).AddChoice(
                _("Whenever a project depends on other files:"),
                _("Ask me"), &choices);
          }
          S.EndHorizontalLay();
       } else
       {
-         mChoice = NULL;
+         mFutureActionChoice = NULL;
       }
    }
    S.EndVerticalLay();
@@ -348,63 +380,75 @@ void DependencyDialog::PopulateList()
 
    unsigned int i;
    for(i=0; i<mAliasedFiles->GetCount(); i++) {
-      wxFileName fileName = mAliasedFiles->Item(i).fileName;
-      wxLongLong bytes = (mAliasedFiles->Item(i).bytes * 124) / 100;
+      wxFileName fileName = mAliasedFiles->Item(i).mFileName;
+      wxLongLong byteCount = (mAliasedFiles->Item(i).mByteCount * 124) / 100;
+      bool bOriginalExists = mAliasedFiles->Item(i).mbOriginalExists;
 
       mFileList->InsertItem(i, fileName.GetFullPath());
-      mFileList->SetItem(i, 1, Internat::FormatSize(bytes));
-      mFileList->SetItemState(i, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      mFileList->SetItem(i, 1, Internat::FormatSize(byteCount));
+      mFileList->SetItemData(i, long(bOriginalExists));
+      if (bOriginalExists)
+         mFileList->SetItemState(i, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      else 
+      {
+         mFileList->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
+
+         //mFileList->SetItemBackgroundColour(i, *wxRED);
+         //mFileList->SetItemTextColour(i, *wxWHITE);
+         mFileList->SetItemTextColour(i, *wxRED);
+
+         mFileList->SetItemFont(i, *wxITALIC_FONT);
+      }
    }
 }
 
 void DependencyDialog::OnList(wxListEvent &evt)
 {
-   if (!mCopyButton || !mFileList)
+   if (!mCopySelectedFilesButton || !mFileList)
       return;
 
-   int selectedCount = 0;
-   unsigned int i;
-   for(i=0; i<mAliasedFiles->GetCount(); i++) {
-      if (mFileList->GetItemState(i, wxLIST_STATE_SELECTED))
-         selectedCount++;
-   }
+   wxString itemStr = evt.GetText();
+   if (evt.GetData() == 0)
+      // This list item is one of mAliasedFiles for which 
+      // the original is missing, i.e., moved or deleted.
+      // wxListCtrl does not provide for items that are not 
+      // allowed to be selected, so always deselect these items. 
+      mFileList->SetItemState(evt.GetIndex(), 0, wxLIST_STATE_SELECTED); // Deselect.
 
-   if (selectedCount > 0)
-      mCopyButton->Enable(true);
-   else
-      mCopyButton->Enable(false);
+   int selectedCount = mFileList->GetSelectedItemCount();
+   mCopySelectedFilesButton->Enable(selectedCount > 0);
 }
 
 void DependencyDialog::OnNo(wxCommandEvent &evt)
 {
-   SaveChoice();
+   SaveFutureActionChoice();
    EndModal(wxID_NO);
 }
 
 void DependencyDialog::OnYes(wxCommandEvent &evt)
 {
-   SaveChoice();
+   SaveFutureActionChoice();
    EndModal(wxID_YES);
 }
 
-void DependencyDialog::OnCopy(wxCommandEvent &evt)
+void DependencyDialog::OnCopySelectedFiles(wxCommandEvent &evt)
 {
-   AliasedFileArray ToDelete;
+   AliasedFileArray aliasedFilesToDelete;
 
    int i;
    // Count backwards so we can remove as we go
    for(i=(int)mAliasedFiles->GetCount()-1; i>=0; i--) {
       if (mFileList->GetItemState(i, wxLIST_STATE_SELECTED)) {
-         ToDelete.Add(mAliasedFiles->Item(i));
+         aliasedFilesToDelete.Add(mAliasedFiles->Item(i));
          mAliasedFiles->RemoveAt(i);
       }
    }  
 
-   RemoveDependencies(mProject, &ToDelete);
+   RemoveDependencies(mProject, &aliasedFilesToDelete);
    PopulateList();
 
    if (mAliasedFiles->GetCount() == 0) {
-      SaveChoice();
+      SaveFutureActionChoice();
       EndModal(wxID_NO);  // Don't need to remove dependencies
    }
 }
@@ -423,12 +467,12 @@ void DependencyDialog::OnCancel(wxCommandEvent& evt)
    EndModal(wxID_CANCEL);
 }
 
-void DependencyDialog::SaveChoice()
+void DependencyDialog::SaveFutureActionChoice()
 {
-   if (mChoice)
+   if (mFutureActionChoice)
    {
       wxString savePref;   
-      int sel = mChoice->GetSelection();
+      int sel = mFutureActionChoice->GetSelection();
       switch (sel)
       {
       case 1: savePref = wxT("copy"); break;
@@ -441,70 +485,47 @@ void DependencyDialog::SaveChoice()
 }
 
 // Checks for alias block files, modifies the project if the
-// user requests it, and returns True if the user continues.
+// user requests it, and returns true if the user continues.
 // Returns false only if the user clicks Cancel.
 bool ShowDependencyDialogIfNeeded(AudacityProject *project,
                                   bool isSaving)
 {
    AliasedFileArray aliasedFiles;
-   bool success = FindDependencies(project,
-                                   &aliasedFiles);
-   if (!success)
-      return true; // We failed, but that shouldn't count as a cancel
+   FindDependencies(project, &aliasedFiles);
 
    if (aliasedFiles.GetCount() == 0) {
-      if (!isSaving) {
+      if (!isSaving) 
          wxMessageBox(_("Your project is self-contained; it does not depend on any external audio files."),
                       _("Dependency check"),
                       wxOK | wxICON_INFORMATION,
                       project);
-      }
-
-      return true; // Nothing to do
+      return true; // Nothing to do.
    }
    
    if (isSaving)
    {
-      wxString action = gPrefs->Read(
-         wxT("/FileFormats/SaveProjectWithDependencies"), wxT("ask"));
-
+      wxString action = 
+         gPrefs->Read(
+            wxT("/FileFormats/SaveProjectWithDependencies"), 
+            wxT("ask"));
       if (action == wxT("copy"))
       {
          // User always wants to remove dependencies
          RemoveDependencies(project, &aliasedFiles);
          return true;
       }
-
       if (action == wxT("never"))
-      {
          // User never wants to remove dependencies
          return true;
-      }
-
-      // Fall through to show the dialog
    }
 
    DependencyDialog dlog(project, -1, project, &aliasedFiles, isSaving);
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL) {
+   int returnCode = dlog.ShowModal();
+   if (returnCode == wxID_CANCEL)
       return false;
-   }
-
-   if (dlog.GetReturnCode() == wxID_YES) {
+   else if (returnCode == wxID_YES) 
       RemoveDependencies(project, &aliasedFiles);
-   }
 
    return true;
 }
-
-// Indentation settings for Vim and Emacs.
-// Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
 
