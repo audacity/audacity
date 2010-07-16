@@ -144,7 +144,7 @@ DirManager::DirManager()
    //that wxGetDiskSpace creates.  
    //JKC: Please explain why.
    // Vaughan, 2010-07-06: No explanation forthcoming and Nestify is long gone.
-   //    wxWidgets manual says, "rarely the best way to" suppress wxWidgets log messages.
+   //    wxWidgets manual says, "rarely the best way to" suppress wxWidgets log messages, so don't do it.
    // wxLogNull logNo; 
 
    // Make sure there is plenty of space for temp files
@@ -402,7 +402,7 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
       "locked" get copied instead of moved.  (This happens when
       we perform a Save As - the files which belonged to the last
       saved version of the old project must not be moved,
-      otherwise the old project would not be safe. */
+      otherwise the old project would not be safe.) */
 
    ProgressDialog *progress = new ProgressDialog(_("Progress"),
                                                  _("Saving project data files"));
