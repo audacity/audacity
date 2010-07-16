@@ -2959,8 +2959,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       // self-contained during this dialog, it modifies the project!
       if (mImportedDependencies)
       {
-         bool resultCode = ShowDependencyDialogIfNeeded(this, true);
-         if (!resultCode)
+         bool bSuccess = ShowDependencyDialogIfNeeded(this, true);
+         if (!bSuccess)
             return false;
          mImportedDependencies = false; // do not show again
       }
