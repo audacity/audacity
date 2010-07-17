@@ -114,7 +114,7 @@ void ODDecodeTask::CalculatePercentComplete()
 
 bool ODDecodeTask::SeekingAllowed() 
 {
-   for(int i=0;i<mDecoders.size();i++) {
+   for (unsigned int i = 0; i < mDecoders.size(); i++) {
       if(!mDecoders[i]->SeekingAllowed())
          return false;
    }
