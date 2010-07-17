@@ -44,12 +44,12 @@ class AliasedFile
 public:
    AliasedFile(wxFileName fileName, wxLongLong byteCount, bool bOriginalExists) 
    {
-      mByteCount = byteCount;
       mFileName = fileName;
+      mByteCount = byteCount;
       mbOriginalExists = bOriginalExists;
    };
-   wxLongLong  mByteCount; // if stored as current default sample format
    wxFileName  mFileName;
+   wxLongLong  mByteCount; // if stored as current default sample format
    bool        mbOriginalExists;
 };
 
@@ -83,7 +83,7 @@ void GetAllSeqBlocks(AudacityProject *project,
             Sequence *sequence = clip->GetSequence();
             BlockArray *blocks = sequence->GetBlockArray();
             int i;
-            for(i=0; i<(int)blocks->GetCount(); i++)
+            for (i = 0; i < (int)blocks->GetCount(); i++)
                outBlocks->Add(blocks->Item(i));
             node = node->GetNext();
          }
@@ -93,8 +93,8 @@ void GetAllSeqBlocks(AudacityProject *project,
 }
 
 // Given an Audacity project and a hash mapping aliased block
-// files to un-aliased block files, walks through all of the
-// tracks and replaces each block file with its replacement.
+// files to un-aliased block files, walk through all of the
+// tracks and replace each aliased block file with its replacement.
 // Note that this code respects reference-counting and thus the
 // process of making a project self-contained is actually undoable.
 void ReplaceBlockFiles(AudacityProject *project,
@@ -105,8 +105,8 @@ void ReplaceBlockFiles(AudacityProject *project,
    GetAllSeqBlocks(project, &blocks);
 
    int i;
-   for(i=0; i<(int)blocks.GetCount(); i++) {
-      if(hash.count(blocks[i]->f) > 0) {
+   for (i = 0; i < (int)blocks.GetCount(); i++) {
+      if (hash.count(blocks[i]->f) > 0) {
          BlockFile *src = blocks[i]->f;
          BlockFile *dst = hash[src];
 
@@ -130,18 +130,25 @@ void FindDependencies(AudacityProject *project,
    BoolBlockFileHash blockFileHash;
 
    int i;
-   for(i=0; i<(int)blocks.GetCount(); i++) {
+   for (i = 0; i < (int)blocks.GetCount(); i++) {
       BlockFile *f = blocks[i]->f;
-      if (f->IsAlias() && !blockFileHash[f]) {
-         blockFileHash[f] = true; // Don't count the same blockfile twice
+      if (f->IsAlias() && (blockFileHash.count(f) == 0)) 
+      {
+         // f is an alias block we have not yet counted.
+         blockFileHash[f] = true; // Don't count the same blockfile twice.
          AliasBlockFile *aliasBlockFile = (AliasBlockFile *)f;
          wxFileName fileName = aliasBlockFile->GetAliasedFile();
          wxString fileNameStr = fileName.GetFullPath();
          int blockBytes = (SAMPLE_SIZE(format) *
                            aliasBlockFile->GetLength());
-         if (aliasedFileHash[fileNameStr])
+         if (aliasedFileHash.count(fileNameStr) > 0)
+            // Already put this AliasBlockFile in aliasedFileHash. 
+            // Update block count.
             aliasedFileHash[fileNameStr]->mByteCount += blockBytes;
-         else {
+         else 
+         {
+            // Haven't counted this AliasBlockFile yet. 
+            // Add to return array and internal hash.
             outAliasedFiles->Add(AliasedFile(fileName, 
                                              blockBytes, 
                                              fileName.FileExists()));
@@ -155,7 +162,7 @@ void FindDependencies(AudacityProject *project,
 // Given a project and a list of aliased files that should no
 // longer be self-contained (selected by the user), replace
 // all of those alias block files with disk block files.
-bool RemoveDependencies(AudacityProject *project,
+void RemoveDependencies(AudacityProject *project,
 			               AliasedFileArray *aliasedFiles)
 {
    DirManager *dirManager = project->GetDirManager();
@@ -163,36 +170,39 @@ bool RemoveDependencies(AudacityProject *project,
    ProgressDialog *progress = 
       new ProgressDialog(_("Removing Dependencies"),
                          _("Copying audio data into project..."));
+   int updateResult = eProgressSuccess;
 
+   // Hash aliasedFiles based on their full paths and 
+   // count total number of bytes to process.
    AliasedFileHash aliasedFileHash;
-   ReplacedBlockFileHash blockFileHash;   
-
    wxLongLong totalBytesToProcess = 0;
-   wxLongLong completedBytes = 0;
    unsigned int i;
-   for(i=0; i<aliasedFiles->GetCount(); i++) {
+   for (i = 0; i < aliasedFiles->GetCount(); i++) {
       totalBytesToProcess += aliasedFiles->Item(i).mByteCount;
       wxString fileNameStr = aliasedFiles->Item(i).mFileName.GetFullPath();
       aliasedFileHash[fileNameStr] = &aliasedFiles->Item(i);
    }
    
-   sampleFormat format = project->GetDefaultFormat();
-
    BlockArray blocks;
    GetAllSeqBlocks(project, &blocks);
 
-   int updateResult = eProgressSuccess;
-   for(i=0; i<blocks.GetCount(); i++) {
+   const sampleFormat format = project->GetDefaultFormat();
+   ReplacedBlockFileHash blockFileHash;   
+   wxLongLong completedBytes = 0;
+   for (i = 0; i < blocks.GetCount(); i++) {
       BlockFile *f = blocks[i]->f;
-      if (f->IsAlias() && !blockFileHash[f]) {
+      if (f->IsAlias() && (blockFileHash.count(f) == 0)) 
+      {
+         // f is an alias block we have not yet processed.
          AliasBlockFile *aliasBlockFile = (AliasBlockFile *)f;
          wxFileName fileName = aliasBlockFile->GetAliasedFile();
          wxString fileNameStr = fileName.GetFullPath();
 
-         if (!aliasedFileHash[fileNameStr])
+         if (aliasedFileHash.count(fileNameStr) == 0)
+            // This aliased file was not selected to be replaced. Skip it.
             continue;
 
-         // Convert it from an aliased file to an actual file in the project
+         // Convert it from an aliased file to an actual file in the project.
          unsigned int len = aliasBlockFile->GetLength();
          samplePtr buffer = NewSamples(len, format);
          f->ReadData(buffer, format, 0, len);
@@ -205,12 +215,6 @@ bool RemoveDependencies(AudacityProject *project,
 
          // Update the progress bar
          completedBytes += SAMPLE_SIZE(format) * len;
-         
-         //TODO: add a cancel checker to break if the user clicks cancel.
-         /*
-         cancelled = !mProgress->Update(i, fileTotalFrames);
-         if (cancelled)
-            break;*/
          updateResult = progress->Update(completedBytes, totalBytesToProcess);
          if (updateResult != eProgressSuccess)
            break;
@@ -233,8 +237,6 @@ bool RemoveDependencies(AudacityProject *project,
    }
 
    delete progress;
-
-   return true;
 }
 
 //
@@ -379,7 +381,7 @@ void DependencyDialog::PopulateList()
    mFileList->DeleteAllItems();
 
    unsigned int i;
-   for(i=0; i<mAliasedFiles->GetCount(); i++) {
+   for (i = 0; i < mAliasedFiles->GetCount(); i++) {
       wxFileName fileName = mAliasedFiles->Item(i).mFileName;
       wxLongLong byteCount = (mAliasedFiles->Item(i).mByteCount * 124) / 100;
       bool bOriginalExists = mAliasedFiles->Item(i).mbOriginalExists;
