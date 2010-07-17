@@ -26,6 +26,9 @@
 // Returns: True, if the start of Audacity should continue as normal
 //          False if Audacity should be quit immediately
 //
+// The didRecoverAnything param is strictly for a return value. 
+// Any value passed in is ignored.
+// 
 bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
                                     bool *didRecoverAnything);
 
