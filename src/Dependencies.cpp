@@ -21,7 +21,6 @@
 
 **********************************************************************/
 
-#include <wx/arrimpl.cpp>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/filename.h>
@@ -54,6 +53,11 @@ public:
 };
 
 WX_DECLARE_OBJARRAY(AliasedFile, AliasedFileArray);
+
+// Note, this #include must occur here, not up with the others!
+// It must be between the WX_DECLARE_OBJARRAY and WX_DEFINE_OBJARRAY. 
+#include <wx/arrimpl.cpp> 
+
 WX_DEFINE_OBJARRAY( AliasedFileArray );
 
 WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
