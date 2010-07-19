@@ -16,9 +16,6 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
-
-
-
 #ifndef __AUDACITY_ODComputeSummaryTask__
 #define __AUDACITY_ODComputeSummaryTask__
 
@@ -54,10 +51,8 @@ class ODComputeSummaryTask:public ODTask
    
    ///releases memory that the ODTask owns.  Subclasses should override.
    virtual void Terminate();
-
    
 protected:
-
    ///recalculates the percentage complete.
    virtual void CalculatePercentComplete();
      
@@ -78,17 +73,10 @@ protected:
    //mBlockFiles is touched on several threads- the OD terminate thread, and the task thread, so we need to mutex it.
    ODLock  mBlockFilesMutex;
    std::vector<ODPCMAliasBlockFile*> mBlockFiles;
-   
-      
    int mMaxBlockFiles;
    int mComputedBlockFiles;
-   
-   
-
    ODLock  mHasUpdateRanMutex;
    bool mHasUpdateRan;
-
-
 };
 
 #endif
