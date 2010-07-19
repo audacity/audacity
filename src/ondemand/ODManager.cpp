@@ -271,6 +271,7 @@ void ODManager::Start()
          mCurrentThreads++;
          mCurrentThreadsMutex.Unlock();
 
+         mTasksMutex.Lock();
          //detach a new thread.
          thread = new ODTaskThread(mTasks[0]);//task);
          //thread->SetPriority(10);//default is 50.
@@ -279,7 +280,6 @@ void ODManager::Start()
 
          mTasks.erase(mTasks.begin());
          tasksInArray = mTasks.size()>0;
-
          mTasksMutex.Unlock();
 
          mCurrentThreadsMutex.Lock();
@@ -324,7 +324,6 @@ void ODManager::Start()
 
    //wxLogDebug Not thread safe.
    //printf("ODManager thread terminating\n");
-
 }
 
 //static function that prevents ODTasks from being scheduled
