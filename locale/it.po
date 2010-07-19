@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-06-20 19:10+0100\n"
-"PO-Revision-Date: 2010-06-21 19:13-0000\n"
-"Last-Translator: Gale <gale@audacityteam.org>\n"
+"POT-Creation-Date: 2010-07-18 04:15+0100\n"
+"PO-Revision-Date: 2010-07-19 21:27+0100\n"
+"Last-Translator: Carmelo Battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,8 +229,8 @@ msgstr "%s è già aperto in un'altra finestra."
 #: AudacityApp.cpp:746
 #: Project.cpp:2193
 #: Project.cpp:2318
-#: Project.cpp:2499
-#: Project.cpp:2664
+#: Project.cpp:2502
+#: Project.cpp:2667
 msgid "Error opening project"
 msgstr "Errore nell'apertura del progetto"
 
@@ -478,11 +478,11 @@ msgstr "Il volume automatico è stato disabilitato. Il numero toale di analisi �
 msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "Il volume automatico è stato fermato. %2f sembra un volume accettabile."
 
-#: AutoRecovery.cpp:54
+#: AutoRecovery.cpp:56
 msgid "Automatic Crash Recovery"
 msgstr "Ripristino automatico da crash"
 
-#: AutoRecovery.cpp:73
+#: AutoRecovery.cpp:75
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
@@ -490,31 +490,31 @@ msgstr ""
 "Alcuni progetti non sono stati adeguatamente salvati nell'ultima esecuzione di Audacity.\n"
 "Fortunatamente, è possibile recuperare i seguenti progetti:"
 
-#: AutoRecovery.cpp:75
+#: AutoRecovery.cpp:77
 msgid "Recoverable projects"
 msgstr "Progetti recuperabili"
 
-#: AutoRecovery.cpp:78
+#: AutoRecovery.cpp:80
 msgid "Name"
 msgstr "Nome"
 
-#: AutoRecovery.cpp:84
+#: AutoRecovery.cpp:86
 msgid "Recovering a project will not change any files on disk before you save it."
 msgstr "Il recupero di un progetto non modificherà alcun file su disco prima di salvarlo."
 
-#: AutoRecovery.cpp:88
+#: AutoRecovery.cpp:90
 msgid "Quit Audacity"
 msgstr "Esci da Audacity"
 
-#: AutoRecovery.cpp:89
+#: AutoRecovery.cpp:91
 msgid "Do Not Recover"
 msgstr "Non recuperare"
 
-#: AutoRecovery.cpp:90
+#: AutoRecovery.cpp:92
 msgid "Recover Projects"
 msgstr "Recupera i progetti"
 
-#: AutoRecovery.cpp:127
+#: AutoRecovery.cpp:129
 msgid ""
 "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
@@ -522,23 +522,23 @@ msgstr ""
 "Sei sicuro di non volere recuperare i progetti?\n"
 "Dopo non sarà più possibile recuperarli."
 
-#: AutoRecovery.cpp:128
+#: AutoRecovery.cpp:130
 msgid "Confirm?"
 msgstr "Confermi?"
 
-#: AutoRecovery.cpp:146
-#: AutoRecovery.cpp:183
-msgid "Could not enumerate files in auto save directory"
-msgstr "Impossibile enumerare i file contenuti nella cartella di salvataggio automatico"
+#: AutoRecovery.cpp:148
+#: AutoRecovery.cpp:185
+msgid "Could not enumerate files in auto save directory."
+msgstr "Impossibile enumerare i file contenuti nella cartella di salvataggio automatico."
 
-#: AutoRecovery.cpp:147
-#: AutoRecovery.cpp:184
+#: AutoRecovery.cpp:149
+#: AutoRecovery.cpp:186
 #: Menus.cpp:3390
 #: Menus.cpp:3402
 #: Menus.cpp:5644
-#: Project.cpp:2458
-#: Project.cpp:4265
-#: Project.cpp:4351
+#: Project.cpp:2461
+#: Project.cpp:4316
+#: Project.cpp:4333
 #: TrackPanel.cpp:6700
 #: WaveTrack.cpp:971
 #: WaveTrack.cpp:990
@@ -756,17 +756,17 @@ msgid "De&lete"
 msgstr "E&limina"
 
 #: BatchProcessDialog.cpp:502
-#: effects/Equalization.cpp:2837
+#: effects/Equalization.cpp:2852
 msgid "Move &Up"
 msgstr "Sposta &su"
 
 #: BatchProcessDialog.cpp:503
-#: effects/Equalization.cpp:2838
+#: effects/Equalization.cpp:2853
 msgid "Move &Down"
 msgstr "Sposta &giù"
 
 #: BatchProcessDialog.cpp:504
-#: effects/Equalization.cpp:2844
+#: effects/Equalization.cpp:2859
 msgid "De&faults"
 msgstr "Prede&initi"
 
@@ -801,85 +801,91 @@ msgstr "I nomi non devono contenere '%c' and '%c'"
 msgid "Are you sure you want to delete %s?"
 msgstr "Sei sicuro di volere cancellare %s?"
 
-#: Dependencies.cpp:139
+#: Dependencies.cpp:175
 msgid "Removing Dependencies"
 msgstr "Eliminazione delle dipendenze"
 
-#: Dependencies.cpp:140
+#: Dependencies.cpp:176
 msgid "Copying audio data into project..."
 msgstr "Sto copiando i dati audio nel progetto..."
 
-#: Dependencies.cpp:226
-msgid ""
-"Copying the following files into your project will remove this dependency.\n"
-"This needs more disk space, but is safer."
-msgstr ""
-"Copiando i file seguenti nel vostro progetto eliminererete questa dipendenza.\n"
-"Questo necessita di più spazio sul disco, ma è più sicuro."
-
-#: Dependencies.cpp:274
+#: Dependencies.cpp:303
 msgid "Project depends on other audio files"
 msgstr "Il progetto dipende da altri file audio"
 
-#: Dependencies.cpp:295
+#: Dependencies.cpp:319
+msgid ""
+"Copying these files into your project will remove this dependency.\n"
+"This needs more disk space, but is safer.\n"
+"\n"
+"Files shown in italics have been moved or deleted and cannot be copied.\n"
+"Restore them to their original location to be able to copy into project."
+msgstr ""
+"Copiando questi file nel vostro progetto eliminerai questa dipendenza.\n"
+"Qusto richiede più spazio sul disco, ma è più sicuro.\n"
+"\n"
+"I file mostrati in corsivo sono stati spostati o eliminati e non possono essere copiati.\n"
+"Per poterli copiare nel progetto devi ripristinarli nella loro posizione originale."
+
+#: Dependencies.cpp:331
 msgid "Project Dependencies"
 msgstr "Dipendenze progetto"
 
-#: Dependencies.cpp:298
+#: Dependencies.cpp:334
 msgid "Audio file"
 msgstr "File audio"
 
-#: Dependencies.cpp:300
+#: Dependencies.cpp:336
 msgid "Disk space"
 msgstr "Spazio su disco"
 
-#: Dependencies.cpp:305
+#: Dependencies.cpp:342
 msgid "Copy Selected Audio Into Project"
 msgstr "Copia l'audio selezionato nel progetto"
 
-#: Dependencies.cpp:312
-#: Dependencies.cpp:418
+#: Dependencies.cpp:350
+#: Dependencies.cpp:468
 msgid "Cancel Save"
 msgstr "Annulla salvataggio"
 
-#: Dependencies.cpp:314
+#: Dependencies.cpp:352
 msgid "Do Not Copy Any Audio"
 msgstr "Non copiare l'audio"
 
-#: Dependencies.cpp:316
+#: Dependencies.cpp:354
 msgid "Copy All Audio into Project (Safer)"
 msgstr "Copia tutto l'audio nel progetto (più sicuro)"
 
-#: Dependencies.cpp:325
-#: Dependencies.cpp:330
+#: Dependencies.cpp:363
+#: Dependencies.cpp:368
 msgid "Ask me"
 msgstr "Chiedi"
 
-#: Dependencies.cpp:326
+#: Dependencies.cpp:364
 msgid "Always copy all audio (safest)"
 msgstr "Copia sempre tutto l'audio (più sicuro)"
 
-#: Dependencies.cpp:327
+#: Dependencies.cpp:365
 msgid "Never copy any audio"
 msgstr "Non copiare mai l'audio"
 
-#: Dependencies.cpp:329
+#: Dependencies.cpp:367
 msgid "Whenever a project depends on other files:"
 msgstr "Ogni volta che un progetto dipende da altri file:"
 
-#: Dependencies.cpp:417
+#: Dependencies.cpp:467
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "Se procedi, il progetto non verrà salvato su disco. È questo che vuoi?"
 
-#: Dependencies.cpp:457
+#: Dependencies.cpp:504
 msgid "Your project is self-contained; it does not depend on any external audio files."
 msgstr "Il progetto è autosufficiente; non dipende da alcun file audio esterno."
 
-#: Dependencies.cpp:458
+#: Dependencies.cpp:505
 msgid "Dependency check"
 msgstr "Controlla dipendenze"
 
-#: DirManager.cpp:143
+#: DirManager.cpp:155
 msgid ""
 "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
@@ -887,25 +893,26 @@ msgstr ""
 "È rimasto pochissimo spazio libero su questo disco.\n"
 "Selezionare nelle Preferenze un'altra cartella temporanea."
 
-#: DirManager.cpp:228
-#: DirManager.cpp:259
-#: DirManager.cpp:342
+#: DirManager.cpp:241
+#: DirManager.cpp:327
+#: DirManager.cpp:407
+#: DirManager.cpp:1654
 msgid "Progress"
 msgstr "Avanzamento"
 
-#: DirManager.cpp:293
+#: DirManager.cpp:358
 msgid "Cleaning up temporary files"
 msgstr "Sto ripulendo i file temporanei"
 
-#: DirManager.cpp:343
+#: DirManager.cpp:408
 msgid "Saving project data files"
 msgstr "Sto salvando i file dati del progetto"
 
-#: DirManager.cpp:415
+#: DirManager.cpp:481
 msgid "Cleaning up cache directories"
 msgstr "Sto ripulendo le cartelle cache"
 
-#: DirManager.cpp:510
+#: DirManager.cpp:575
 #, c-format
 msgid ""
 "Audacity found an orphaned blockfile %s! \n"
@@ -917,61 +924,61 @@ msgstr ""
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
 #. example, mysong would become mysong-old1, mysong-old2, etc.
-#: DirManager.cpp:1148
+#: DirManager.cpp:1213
 #, c-format
 msgid "%s-old%d"
 msgstr "%s-vecchio%d"
 
-#: DirManager.cpp:1156
+#: DirManager.cpp:1221
 msgid "Unable to open/create test file"
 msgstr "Impossibile aprire/creare file test"
 
-#: DirManager.cpp:1165
+#: DirManager.cpp:1230
 #, c-format
 msgid "Unable to remove '%s'"
 msgstr "Impossibile eliminare '%s'"
 
-#: DirManager.cpp:1170
+#: DirManager.cpp:1235
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "File rinominato: %s\n"
 
-#: DirManager.cpp:1238
+#: DirManager.cpp:1303
 #, c-format
 msgid "Unable to rename '%s' to '%s'"
 msgstr "Impossibile rinominare '%s' in '%s'"
 
-#: DirManager.cpp:1256
+#: DirManager.cpp:1321
 #, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "Modificato blocco %s in nuovo nome alias\n"
 
-#: DirManager.cpp:1326
-#: DirManager.cpp:1617
-msgid "Inspecting project file data..."
-msgstr "Sto ispezionando i file dati del progetto..."
+#: DirManager.cpp:1393
+#: DirManager.cpp:1686
+msgid "Inspecting project file data"
+msgstr "Sto ispezionando i file dati del progetto"
 
-#: DirManager.cpp:1342
+#: DirManager.cpp:1409
 #, c-format
 msgid "Orphaned blockfile: (%s)"
 msgstr "Blocco file orfano: (%s)"
 
-#: DirManager.cpp:1367
+#: DirManager.cpp:1434
 #, c-format
 msgid "Missing alias file: (%s)"
 msgstr "Manca file alias: (%s)"
 
-#: DirManager.cpp:1387
+#: DirManager.cpp:1454
 #, c-format
 msgid "Missing summary file: (%s.auf)"
 msgstr "Manca file riepilogo: (%s.auf)"
 
-#: DirManager.cpp:1407
+#: DirManager.cpp:1474
 #, c-format
 msgid "Missing data file: (%s.au)"
 msgstr "Manca file dati: (%s.au)"
 
-#: DirManager.cpp:1421
+#: DirManager.cpp:1488
 msgid ""
 "Project check found inconsistencies inspecting the loaded project data;\n"
 "click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
@@ -979,33 +986,33 @@ msgstr ""
 "Il controllo del progetto ha trovato incoerenze ispezionando i dati del progetto caricato;\n"
 "fai clic su 'Dettagli' per un elenco completo degli errori, o su 'OK' per procedere con altre opzioni."
 
-#: DirManager.cpp:1433
+#: DirManager.cpp:1500
 #, c-format
 msgid ""
-"Project check found %d orphaned blockfile[s]. These files are\n"
+"Project check found %d orphaned blockfile(s). These files are\n"
 "unused and probably left over from a crash or some other bug.\n"
 "They should be deleted to avoid disk contention."
 msgstr ""
-"Il controlo dle progetto ha trovato %d blocco[i] file orfani. Questi file sono\n"
+"Il controlo del progetto ha trovato %d blocco[i] file orfani. Questi file sono\n"
 "inutilizzati e probabilmente lasciati da un precedente crash o da qualche altro errore.\n"
 "Devono essere eliminati per evitare conflitti nel disco."
 
-#: DirManager.cpp:1438
+#: DirManager.cpp:1505
 msgid "Delete orphaned files [safe and recommended]"
 msgstr "Elimina file orfani [sicuro e raccomandato]"
 
-#: DirManager.cpp:1439
-msgid "Continue without deleting; silently work around the extra files"
-msgstr "Continua senza eliminazione; lavora silenziosamente sui file extra"
+#: DirManager.cpp:1506
+msgid "Continue without deleting; ignore the extra files this session"
+msgstr "Continua senza eliminazione; ignora i file extra in questa sessione"
 
-#: DirManager.cpp:1440
+#: DirManager.cpp:1507
 msgid "Close project immediately with no changes"
 msgstr "Chiudi progetto senza modifiche"
 
-#: DirManager.cpp:1442
-#: DirManager.cpp:1477
-#: DirManager.cpp:1523
-#: DirManager.cpp:1565
+#: DirManager.cpp:1509
+#: DirManager.cpp:1544
+#: DirManager.cpp:1590
+#: DirManager.cpp:1632
 #: export/Export.cpp:582
 #: export/Export.cpp:603
 #: export/Export.cpp:622
@@ -1013,42 +1020,42 @@ msgstr "Chiudi progetto senza modifiche"
 msgid "Warning"
 msgstr "Avvertimento"
 
-#: DirManager.cpp:1468
+#: DirManager.cpp:1535
 #, c-format
 msgid ""
-"Project check detected %d input file[s] being used in place\n"
+"Project check detected %d input file(s) being used in place\n"
 "('alias files') are now missing.  There is no way for Audacity\n"
 "to recover these files automatically; you may choose to\n"
 "permanently fill in silence for the missing files, temporarily\n"
 "fill in silence for this session only, or close the project now\n"
 "and try to restore the missing files by hand."
 msgstr ""
-"Il controllo del progetto ha evidenziato che %d file input necessari\n"
+"Il controllo del progetto ha evidenziato che %d file ingresso necessari\n"
 "('alias file') sono mancanti.  Non vi è modo per Audacity\n"
 "di recuperare automaticamente questi file; puoi scegliere di\n"
 "inserire definitivamente il silenzio al posto dei file mancanti, di inserire\n"
-"temporaneamente il silenzio per questa sessione, o di chiudere il progetto ora\n"
+"temporaneamente il silenzio solo per questa sessione, o di chiudere il progetto ora\n"
 "e di cercare di ripristinare i file mancanti manualmente."
 
-#: DirManager.cpp:1473
+#: DirManager.cpp:1540
 msgid "Replace missing data with silence [permanent upon save]"
 msgstr "Sostituisci dati mancanti con il silenzio [permanente fino al salvataggio]"
 
-#: DirManager.cpp:1474
-#: DirManager.cpp:1562
+#: DirManager.cpp:1541
+#: DirManager.cpp:1629
 msgid "Temporarily replace missing data with silence [this session only]"
 msgstr "Sostituisci temporaneamente i dati persi con il silenzio [solo in questa sessione]"
 
-#: DirManager.cpp:1475
-#: DirManager.cpp:1521
-#: DirManager.cpp:1563
+#: DirManager.cpp:1542
+#: DirManager.cpp:1588
+#: DirManager.cpp:1630
 msgid "Close project immediately with no further changes"
 msgstr "Chiudi il progetto immediatamente senza ulteriori modifiche"
 
-#: DirManager.cpp:1514
+#: DirManager.cpp:1581
 #, c-format
 msgid ""
-"Project check detected %d missing summary file[s] (.auf).\n"
+"Project check detected %d missing summary file(s) (.auf).\n"
 "Audacity can fully regenerate these summary files from the\n"
 "original audio data in the project."
 msgstr ""
@@ -1056,18 +1063,18 @@ msgstr ""
 "Audacity può rigenerare completamente questi file riepilogo dai\n"
 "dati audio originali nel progetto."
 
-#: DirManager.cpp:1519
+#: DirManager.cpp:1586
 msgid "Regenerate summary files [safe and recommended]"
 msgstr "Rigenera file riepilogo [sicuro e raccomandato]"
 
-#: DirManager.cpp:1520
+#: DirManager.cpp:1587
 msgid "Fill in silence for missing display data [this session only]"
 msgstr "Inserisci il silenzio al posto dei dati di visualizzazione mancanti [solo per questa sessione]"
 
-#: DirManager.cpp:1556
+#: DirManager.cpp:1623
 #, c-format
 msgid ""
-"Project check detected %d missing audio data blockfile[s] (.au), \n"
+"Project check detected %d missing audio data blockfile(s) (.au), \n"
 "probably due to a bug, system crash or accidental deletion.\n"
 "There is no way for Audacity to recover this lost data\n"
 "automatically; you may choose to permanently fill in silence\n"
@@ -1083,29 +1090,29 @@ msgstr ""
 "per questa sessione, o chiudere il progetto ora e cercare di ripristinare\n"
 "manualmente i dati mancanti."
 
-#: DirManager.cpp:1561
+#: DirManager.cpp:1628
 msgid "Replace missing data with silence [permanent immediately]"
 msgstr "Sostituisci i dati mancanti con il silenzio [permanentemente e immediatamente]"
 
-#: DirManager.cpp:1589
-msgid "Cleaning up unused directories in project data..."
-msgstr "Ripulisci le cartelle inutilizzate nei dati progetto..."
+#: DirManager.cpp:1655
+msgid "Cleaning up unused directories in project data"
+msgstr "Ripulisci le cartelle inutilizzate nei dati progetto"
 
-#: DirManager.cpp:1666
+#: DirManager.cpp:1735
 msgid "Caching audio"
 msgstr "Sto mettendo l'audio in cache"
 
-#: DirManager.cpp:1667
-msgid "Caching audio into memory..."
-msgstr "Sto nascondendo l'audio nella memoria cache..."
+#: DirManager.cpp:1736
+msgid "Caching audio into memory"
+msgstr "Sto nascondendo l'audio nella memoria cache"
 
-#: DirManager.cpp:1702
+#: DirManager.cpp:1771
 msgid "Saving recorded audio"
 msgstr "Salvataggio dell'audio registrato"
 
-#: DirManager.cpp:1703
-msgid "Saving recorded audio to disk..."
-msgstr "Sto salvando su disco l'audio registrato..."
+#: DirManager.cpp:1772
+msgid "Saving recorded audio to disk"
+msgstr "Sto salvando su disco l'audio registrato"
 
 #: FFT.cpp:495
 msgid "Rectangular"
@@ -1307,7 +1314,7 @@ msgstr "Chiudi"
 
 #: FreqWindow.cpp:230
 #: FreqWindow.cpp:233
-#: effects/Equalization.cpp:1315
+#: effects/Equalization.cpp:1292
 msgid "Grids"
 msgstr "Griglie"
 
@@ -1318,12 +1325,12 @@ msgstr "Griglie"
 #: effects/AutoDuck.cpp:806
 #: effects/Compressor.cpp:480
 #: effects/Compressor.cpp:488
-#: effects/Equalization.cpp:1149
-#: effects/Equalization.cpp:1151
-#: effects/Equalization.cpp:1159
-#: effects/Equalization.cpp:1231
-#: effects/Equalization.cpp:1456
-#: effects/Equalization.cpp:1467
+#: effects/Equalization.cpp:1121
+#: effects/Equalization.cpp:1123
+#: effects/Equalization.cpp:1131
+#: effects/Equalization.cpp:1203
+#: effects/Equalization.cpp:1434
+#: effects/Equalization.cpp:1445
 #: effects/Normalize.cpp:372
 #: widgets/Meter.cpp:436
 msgid "dB"
@@ -1333,8 +1340,8 @@ msgstr "dB"
 #. cycles per second.
 #: FreqWindow.cpp:313
 #: FreqWindow.cpp:542
-#: effects/Equalization.cpp:1191
-#: effects/Equalization.cpp:1227
+#: effects/Equalization.cpp:1163
+#: effects/Equalization.cpp:1199
 #: import/ImportRaw.cpp:409
 msgid "Hz"
 msgstr "Hz"
@@ -3234,12 +3241,12 @@ msgstr "Seleziona uno o più file audio..."
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
 #. * now be added automatically for the Save Projects dialogues).
 #: Project.cpp:2169
-#: Project.cpp:3422
+#: Project.cpp:3425
 msgid "Audacity projects"
 msgstr "Progetti Audacity"
 
 #: Project.cpp:2236
-#: Project.cpp:2737
+#: Project.cpp:2740
 #, c-format
 msgid ""
 "This file was saved by Audacity %s, a much\n"
@@ -3263,7 +3270,7 @@ msgid "1.0 or earlier"
 msgstr "1.0 o precedente"
 
 #: Project.cpp:2243
-#: Project.cpp:2749
+#: Project.cpp:2752
 msgid "Opening old project file"
 msgstr "Aprire un vecchio file progetto"
 
@@ -3307,32 +3314,32 @@ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project
 msgstr "Audacity non è stato in grado di convertire un Progetto Audacity 1.0 nel nuovo formato."
 
 #: Project.cpp:2457
-msgid "Could not remove old auto save file"
-msgstr "Impossibile eliminare il vecchio file di salvataggio automatico"
-
-#: Project.cpp:2459
 msgid "Project was recovered"
 msgstr "Il progetto è stato recuperato"
 
-#: Project.cpp:2459
+#: Project.cpp:2457
 msgid "Recover"
 msgstr "Recupera"
 
-#: Project.cpp:2488
+#: Project.cpp:2460
+msgid "Could not remove old auto save file"
+msgstr "Impossibile eliminare il vecchio file di salvataggio automatico"
+
+#: Project.cpp:2491
 msgid "Project checker repaired file"
 msgstr "Controllo file progetto riparato"
 
-#: Project.cpp:2488
+#: Project.cpp:2491
 #: effects/Repair.h:29
 msgid "Repair"
 msgstr "Ripara"
 
-#: Project.cpp:2662
+#: Project.cpp:2665
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Impossibile trovare la cartella dati del progetto: \"%s\""
 
-#: Project.cpp:2706
+#: Project.cpp:2709
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3343,11 +3350,11 @@ msgstr ""
 "Ora stai usando Audacity %s - per aprire questo file\n"
 "devi aggiornare Audacity a una versione più recente."
 
-#: Project.cpp:2710
+#: Project.cpp:2713
 msgid "Can't open project file"
 msgstr "Impossibile aprire il file progetto"
 
-#: Project.cpp:2744
+#: Project.cpp:2747
 #, c-format
 msgid ""
 "This file was saved by Audacity %s.\n"
@@ -3364,7 +3371,7 @@ msgstr ""
 "\n"
 "Apro questo file ora?"
 
-#: Project.cpp:2942
+#: Project.cpp:2945
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3384,11 +3391,11 @@ msgstr ""
 "\n"
 "Salvo comunque?"
 
-#: Project.cpp:2943
+#: Project.cpp:2946
 msgid "Warning empty project"
 msgstr "Attenzione progetto vuoto"
 
-#: Project.cpp:3052
+#: Project.cpp:3055
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -3397,46 +3404,46 @@ msgstr ""
 "Impossibile salvare il progetto. Forse %s \n"
 "non è scrivibile o il disco è pieno."
 
-#: Project.cpp:3054
-#: Project.cpp:3080
+#: Project.cpp:3057
+#: Project.cpp:3083
 msgid "Error saving project"
 msgstr "Errore nel salvataggio del progetto"
 
-#: Project.cpp:3078
-#: Project.cpp:4333
+#: Project.cpp:3081
+#: Project.cpp:4298
 #: Tags.cpp:1203
-#: effects/Equalization.cpp:1102
+#: effects/Equalization.cpp:1074
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "Impossibile scrivere il file \"%s\": %s"
 
-#: Project.cpp:3158
+#: Project.cpp:3161
 #, c-format
 msgid "Saved %s"
 msgstr "Salvato %s"
 
-#: Project.cpp:3314
+#: Project.cpp:3317
 #, c-format
 msgid "Imported '%s'"
 msgstr "'%s' importato"
 
-#: Project.cpp:3315
+#: Project.cpp:3318
 msgid "Import"
 msgstr "Importa"
 
-#: Project.cpp:3350
+#: Project.cpp:3353
 msgid "Error importing"
 msgstr "Errore nell'importazione"
 
-#: Project.cpp:3398
+#: Project.cpp:3401
 msgid "Save Speech As:"
 msgstr "Salva parlato come:"
 
-#: Project.cpp:3400
+#: Project.cpp:3403
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "File audio Windows PCM (*.wav)|*.wav"
 
-#: Project.cpp:3409
+#: Project.cpp:3412
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
@@ -3454,11 +3461,11 @@ msgstr ""
 "Quando vuoi salvare un file in modo che possa essere aperto da altri programmi, seleziona uno dei\n"
 "comandi Esporta."
 
-#: Project.cpp:3410
+#: Project.cpp:3413
 msgid "Save Compressed Project As..."
 msgstr "Salva progetto compresso con nome..."
 
-#: Project.cpp:3415
+#: Project.cpp:3418
 msgid ""
 "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3472,15 +3479,15 @@ msgstr ""
 "\n"
 "Per salvare un file audio per altri programmi, usa uno dei comandi \"File > Esporta\".\n"
 
-#: Project.cpp:3416
+#: Project.cpp:3419
 msgid "Save Project As..."
 msgstr "Salva progetto con nome..."
 
-#: Project.cpp:3443
+#: Project.cpp:3446
 msgid "Error Saving Project"
 msgstr "Errore nel salvataggio del progetto"
 
-#: Project.cpp:3443
+#: Project.cpp:3446
 msgid ""
 "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
@@ -3488,74 +3495,74 @@ msgstr ""
 "Il progetto non è stato salvato poiché il nome file fornito sovrascriverebbe un altro progetto.\n"
 "Prova di nuovo e seleziona un nome originale."
 
-#: Project.cpp:3484
+#: Project.cpp:3487
 msgid "Created new project"
 msgstr "Creato nuovo progetto"
 
-#: Project.cpp:3701
+#: Project.cpp:3707
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Eliminati %.2f secondi a t=%.2f"
 
-#: Project.cpp:3704
+#: Project.cpp:3710
 msgid "Delete"
 msgstr "Elimina"
 
-#: Project.cpp:3890
+#: Project.cpp:3896
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "Spazio disco disponibile per la registrazione di %d ore e %d minuti."
 
-#: Project.cpp:3893
+#: Project.cpp:3899
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "Spazio disco disponibile per la registrazione di 1 ora e %d minuti."
 
-#: Project.cpp:3896
+#: Project.cpp:3902
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "Spazio disco disponibile per la registrazione di %d minuti."
 
-#: Project.cpp:3899
+#: Project.cpp:3905
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "Spazio disco disponibile per la registrazione di %d secondi."
 
-#: Project.cpp:3902
+#: Project.cpp:3908
 msgid "Out of disk space"
 msgstr "Spazio su disco esaurito"
 
-#: Project.cpp:3924
+#: Project.cpp:3930
 msgid "On-demand import and waveform calculation complete."
 msgstr "Importazione a richiesta e calcolo della forma d'onda completati."
 
-#: Project.cpp:3929
+#: Project.cpp:3935
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
 msgstr "Importazione completa. Esecuzione di %d dei calcoli della forma d'onda a richiesta. Completati %2.0f%% complessivi."
 
-#: Project.cpp:3932
+#: Project.cpp:3938
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "Importazione completa. Esecuzione dei calcoli della forma d'onda a richiesta. %2.0f%% completati."
 
-#: Project.cpp:4264
-msgid "Could not remove old autosave file: "
-msgstr "Impossibile eliminare vecchio file di salvataggio automatico:"
-
-#: Project.cpp:4305
+#: Project.cpp:4270
 msgid "New Project"
 msgstr "Nuovo progetto"
 
-#: Project.cpp:4335
+#: Project.cpp:4300
 msgid "Error writing autosave file"
 msgstr "Errore nella scrittura del file di salvataggio automatico"
 
-#: Project.cpp:4350
+#: Project.cpp:4315
 msgid "Could not create autosave file: "
 msgstr "Impossibile creare file di salvataggio automatico"
 
-#: Project.cpp:4376
+#: Project.cpp:4332
+msgid "Could not remove old autosave file: "
+msgstr "Impossibile eliminare vecchio file di salvataggio automatico:"
+
+#: Project.cpp:4360
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Frequenza effettiva: %d"
@@ -4005,7 +4012,7 @@ msgstr ""
 "  %s."
 
 #: Theme.cpp:942
-#: effects/NoiseRemoval.cpp:172
+#: effects/NoiseRemoval.cpp:181
 #, c-format
 msgid ""
 "Could not create directory:\n"
@@ -5510,24 +5517,24 @@ msgstr "Errore durante l'apertura del dispositivo audio. Controlla le opzioni de
 msgid "Applied effect: %s"
 msgstr "Applicato effettoo: %s"
 
-#: effects/Equalization.cpp:258
+#: effects/Equalization.cpp:230
 msgid "B-spline"
 msgstr "B-spline"
 
-#: effects/Equalization.cpp:259
+#: effects/Equalization.cpp:231
 msgid "Cosine"
 msgstr "Coseno"
 
-#: effects/Equalization.cpp:260
+#: effects/Equalization.cpp:232
 msgid "Cubic"
 msgstr "Cubico"
 
-#: effects/Equalization.cpp:304
-#: effects/Equalization.cpp:358
+#: effects/Equalization.cpp:276
+#: effects/Equalization.cpp:330
 msgid "Equalization"
 msgstr "Equalizzazione"
 
-#: effects/Equalization.cpp:1016
+#: effects/Equalization.cpp:988
 msgid ""
 "EQCurves.xml not found on your system.\n"
 "Please press 'help' to visit the download page."
@@ -5535,79 +5542,103 @@ msgstr ""
 "EQCurves.xml non trovate nel sistema.\n"
 "Premete 'Aiuto' per visitare la pagina download."
 
-#: effects/Equalization.cpp:1017
+#: effects/Equalization.cpp:989
 msgid "EQCurves.xml missing"
 msgstr "EQCurves.xml mancanti"
 
-#: effects/Equalization.cpp:1019
-#: effects/Equalization.cpp:1043
-#: effects/Equalization.cpp:1044
+#: effects/Equalization.cpp:991
+#: effects/Equalization.cpp:1015
+#: effects/Equalization.cpp:1016
 msgid "unnamed"
 msgstr "senza nome"
 
-#: effects/Equalization.cpp:1039
+#: effects/Equalization.cpp:1011
 msgid "Error loading EQ curve"
 msgstr "Errore di caricamento curva EQ"
 
-#: effects/Equalization.cpp:1104
+#: effects/Equalization.cpp:1076
 msgid "Error saving equalization curves"
 msgstr "Errore nel salvataggio curve EQ"
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
-#: effects/Equalization.cpp:1127
+#: effects/Equalization.cpp:1099
 msgid "Equalization, by Martyn Shaw && Mitch Golden"
 msgstr "Equalizzazione, di Martyn Shaw && Mitch Golden"
 
-#: effects/Equalization.cpp:1148
+#: effects/Equalization.cpp:1120
 msgid "Max dB"
 msgstr "Max dB"
 
-#: effects/Equalization.cpp:1150
+#: effects/Equalization.cpp:1122
 msgid "Min dB"
 msgstr "Min dB"
 
-#: effects/Equalization.cpp:1229
+#: effects/Equalization.cpp:1201
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1246
+#: effects/Equalization.cpp:1218
 msgid "&Draw curves"
 msgstr "&Disegna curve"
 
-#: effects/Equalization.cpp:1251
+#: effects/Equalization.cpp:1220
+msgid "Draw curves"
+msgstr "Disegna curve"
+
+#: effects/Equalization.cpp:1224
 msgid "&Graphic EQ"
 msgstr "EQ &grafico"
 
-#: effects/Equalization.cpp:1265
+#: effects/Equalization.cpp:1226
+msgid "Graphic EQ"
+msgstr "EQ grafico"
+
+#: effects/Equalization.cpp:1239
 msgid "Li&near frequency scale"
 msgstr "Scala li&neare frequenza"
 
-#: effects/Equalization.cpp:1274
+#: effects/Equalization.cpp:1240
+msgid "Linear frequency scale"
+msgstr "Scala lineare frequenza"
+
+#: effects/Equalization.cpp:1249
 msgid "Length of &filter:"
 msgstr "Ampiezza &filtro:"
 
-#: effects/Equalization.cpp:1295
+#: effects/Equalization.cpp:1255
+msgid "Length of filter"
+msgstr "Ampiezza filtro"
+
+#: effects/Equalization.cpp:1271
 msgid "&Select curve:"
 msgstr "&Seleziona curva:"
 
-#: effects/Equalization.cpp:1305
+#: effects/Equalization.cpp:1281
 msgid "S&ave/Manage curves..."
 msgstr "S&alva/Gestisci curve..."
 
-#: effects/Equalization.cpp:1308
+#: effects/Equalization.cpp:1282
+msgid "Save and Manage curves"
+msgstr "Salva e Gestisci curve"
+
+#: effects/Equalization.cpp:1285
 msgid "Fla&tten"
 msgstr "Appia&ttisci"
 
-#: effects/Equalization.cpp:1310
-msgid "In&vert"
-msgstr "In&verti"
+#: effects/Equalization.cpp:1287
+msgid "&Invert"
+msgstr "&Inverti"
 
-#: effects/Equalization.cpp:1312
+#: effects/Equalization.cpp:1289
 msgid "G&rids"
 msgstr "G&riglie"
 
-#: effects/Equalization.cpp:1392
+#: effects/Equalization.cpp:1354
+msgid "Select curve"
+msgstr "Seleziona curva"
+
+#: effects/Equalization.cpp:1370
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Manage curves list...' button and rename the 'unnamed' curve, then use that one."
@@ -5615,53 +5646,53 @@ msgstr ""
 "Per usare questa curva EQ in una concatenazione batch, si deve scegliere un nuovo nome. \n"
 "Scegli il pulsante 'Gestisci lista curve...' e rinomina la curva 'senza nome', poi usala."
 
-#: effects/Equalization.cpp:1393
+#: effects/Equalization.cpp:1371
 msgid "EQ Curve needs a different name"
 msgstr "La curva EQ necessita di un nuovo nome"
 
-#: effects/Equalization.cpp:2791
-#: effects/Equalization.cpp:2796
+#: effects/Equalization.cpp:2806
+#: effects/Equalization.cpp:2811
 msgid "Manage Curves List"
 msgstr "Gestisci lista curve"
 
-#: effects/Equalization.cpp:2795
+#: effects/Equalization.cpp:2810
 msgid "Manage Curves"
 msgstr "Gestisci curve"
 
-#: effects/Equalization.cpp:2828
+#: effects/Equalization.cpp:2843
 msgid "&Curves"
 msgstr "&Curve"
 
-#: effects/Equalization.cpp:2832
+#: effects/Equalization.cpp:2847
 msgid "Curve Name"
 msgstr "Nome curva"
 
-#: effects/Equalization.cpp:2839
+#: effects/Equalization.cpp:2854
 msgid "&Rename..."
 msgstr "&Rinomina..."
 
-#: effects/Equalization.cpp:2840
+#: effects/Equalization.cpp:2855
 msgid "D&elete..."
 msgstr "&Elimina"
 
-#: effects/Equalization.cpp:2841
+#: effects/Equalization.cpp:2856
 msgid "I&mport..."
 msgstr "I&mporta..."
 
-#: effects/Equalization.cpp:2842
+#: effects/Equalization.cpp:2857
 msgid "E&xport..."
 msgstr "E&sporta..."
 
-#: effects/Equalization.cpp:2843
+#: effects/Equalization.cpp:2858
 msgid "&Get More..."
 msgstr "&Cronologia..."
 
-#: effects/Equalization.cpp:2850
+#: effects/Equalization.cpp:2865
 #: widgets/ErrorDialog.cpp:98
 msgid "Help"
 msgstr "Aiuto"
 
-#: effects/Equalization.cpp:2851
+#: effects/Equalization.cpp:2866
 msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
@@ -5669,105 +5700,107 @@ msgstr ""
 "Rinomina 'senza nome' per salvare un nuovo elemento.\n"
 "'OK' per salvare tutte le modifiche, 'Annulla' per annullarle."
 
-#: effects/Equalization.cpp:2885
+#: effects/Equalization.cpp:2901
 msgid "'unnamed' always stays at the bottom of the list"
 msgstr "'senza nome' è presente sempre alla fine della lista"
 
-#: effects/Equalization.cpp:2885
-#: effects/Equalization.cpp:3220
+#: effects/Equalization.cpp:2901
+#: effects/Equalization.cpp:3207
 msgid "'unnamed' is special"
 msgstr "'senza nome' è speciale"
 
-#: effects/Equalization.cpp:2979
+#: effects/Equalization.cpp:2995
 msgid "' to..."
 msgstr "' a..."
 
-#: effects/Equalization.cpp:2979
+#: effects/Equalization.cpp:2995
+#: effects/Equalization.cpp:2998
 msgid "Rename '"
 msgstr "Rinomina '"
 
-#: effects/Equalization.cpp:2980
+#: effects/Equalization.cpp:2996
 msgid "Rename..."
 msgstr "Rinomina..."
 
-#: effects/Equalization.cpp:3001
+#: effects/Equalization.cpp:3018
 msgid "Name is the same as the original one"
 msgstr "Il nome è lo stesso dell'originale"
 
-#: effects/Equalization.cpp:3001
+#: effects/Equalization.cpp:3018
 msgid "Same name"
 msgstr "Stesso nome"
 
-#: effects/Equalization.cpp:3005
+#: effects/Equalization.cpp:3022
 msgid "'?"
 msgstr "'?"
 
-#: effects/Equalization.cpp:3005
+#: effects/Equalization.cpp:3022
 msgid "Overwrite existing curve '"
 msgstr "Sovrascrivi curva esistente '"
 
-#: effects/Equalization.cpp:3006
+#: effects/Equalization.cpp:3023
 msgid "Curve exists"
 msgstr "La curva esiste"
 
-#: effects/Equalization.cpp:3089
+#: effects/Equalization.cpp:3099
 msgid "You cannot delete the 'unnamed' curve."
 msgstr "Impossibile eliminare la curva 'senza nome'."
 
-#: effects/Equalization.cpp:3090
-#: effects/Equalization.cpp:3139
+#: effects/Equalization.cpp:3100
+#: effects/Equalization.cpp:3149
 msgid "Can't delete 'unnamed'"
 msgstr "Impossibile eliminare 'senza nome'"
 
-#: effects/Equalization.cpp:3096
-#: effects/Equalization.cpp:3125
+#: effects/Equalization.cpp:3106
+#: effects/Equalization.cpp:3135
 msgid "' ?"
 msgstr "' ?"
 
-#: effects/Equalization.cpp:3096
-#: effects/Equalization.cpp:3125
+#: effects/Equalization.cpp:3106
+#: effects/Equalization.cpp:3135
 msgid "Delete '"
 msgstr "Elimina '"
 
-#: effects/Equalization.cpp:3099
-#: effects/Equalization.cpp:3129
+#: effects/Equalization.cpp:3109
+#: effects/Equalization.cpp:3139
 #: export/ExportFFmpegDialogs.cpp:1737
 msgid "Confirm Deletion"
 msgstr "Conferma eliminazione"
 
-#: effects/Equalization.cpp:3122
+#: effects/Equalization.cpp:3132
 msgid "Delete "
 msgstr "Elimina"
 
-#: effects/Equalization.cpp:3122
+#: effects/Equalization.cpp:3132
 msgid "items?"
 msgstr "elementi?"
 
-#: effects/Equalization.cpp:3138
+#: effects/Equalization.cpp:3148
 msgid "You cannot delete the 'unnamed' curve, it is special."
 msgstr "Impossibile eliminare una curva 'senza nome', è speciale."
 
-#: effects/Equalization.cpp:3178
+#: effects/Equalization.cpp:3165
 msgid "Choose an EQ curve file"
 msgstr "Scegli un file curva EQ"
 
-#: effects/Equalization.cpp:3198
+#: effects/Equalization.cpp:3185
 msgid "Export EQ curves as..."
 msgstr "Esporta curve EQ con nome..."
 
-#: effects/Equalization.cpp:3220
+#: effects/Equalization.cpp:3207
 msgid "You cannot export 'unnamed' curve"
 msgstr "Impossibile esportare una curva 'senza nome'"
 
-#: effects/Equalization.cpp:3230
-msgid "curves exported to "
-msgstr "curve esportate in "
+#: effects/Equalization.cpp:3217
+#, c-format
+msgid "%d curves exported to %s"
+msgstr "%d curve esportate in %s"
 
-#: effects/Equalization.cpp:3231
+#: effects/Equalization.cpp:3218
 msgid "Curves exported"
 msgstr "Curve esportate"
 
-#: effects/Equalization.cpp:3234
+#: effects/Equalization.cpp:3221
 msgid "No curves exported"
 msgstr "Nessuna curva esportata"
 
@@ -5845,7 +5878,7 @@ msgstr "Sto invertendo"
 
 #: effects/Leveller.cpp:192
 msgid "Leveller"
-msgstr "Leveller"
+msgstr "Livellamento"
 
 #: effects/Leveller.cpp:205
 msgid "None-Skip"
@@ -5893,11 +5926,11 @@ msgstr "Soglia per il rumore:"
 
 #: effects/Leveller.h:28
 msgid "Leveller..."
-msgstr "Leveller..."
+msgstr "Livellamento..."
 
 #: effects/Leveller.h:42
 msgid "Applying Leveller..."
-msgstr "Sto applicando Leveller..."
+msgstr "Sto applicando Livellamento..."
 
 #: effects/LoadEffects.cpp:103
 msgid "Generator"
@@ -6029,7 +6062,7 @@ msgid "Gate"
 msgstr "Porta"
 
 #: effects/LoadEffects.cpp:200
-#: effects/NoiseRemoval.cpp:740
+#: effects/NoiseRemoval.cpp:776
 msgid "Noise Removal"
 msgstr "Rimozione rumore"
 
@@ -6082,7 +6115,7 @@ msgstr "Applicato effetto: Generatore rumore, %.6lf secondi"
 msgid "Generating Noise"
 msgstr "Generazione rumore"
 
-#: effects/NoiseRemoval.cpp:191
+#: effects/NoiseRemoval.cpp:200
 #, c-format
 msgid ""
 "Could not open file:\n"
@@ -6091,15 +6124,15 @@ msgstr ""
 "Impossibile aprire il file:\n"
 "  %s"
 
-#: effects/NoiseRemoval.cpp:276
+#: effects/NoiseRemoval.cpp:294
 msgid "Attempt to run Noise Removal without a noise profile.\n"
 msgstr "Tentativo di avviare Rimozione rumore senza un profilo rumore.\n"
 
-#: effects/NoiseRemoval.cpp:829
+#: effects/NoiseRemoval.cpp:877
 msgid "Step 1"
 msgstr "Passo 1"
 
-#: effects/NoiseRemoval.cpp:830
+#: effects/NoiseRemoval.cpp:878
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
@@ -6107,11 +6140,11 @@ msgstr ""
 "Seleziona pochi secondi del rumore in modo che Audacity riconosca quello che deve filtrare,\n"
 "poi fai clic su Elabora Profilo Rumore:"
 
-#: effects/NoiseRemoval.cpp:831
+#: effects/NoiseRemoval.cpp:879
 msgid "Step 2"
 msgstr "Passo 2"
 
-#: effects/NoiseRemoval.cpp:832
+#: effects/NoiseRemoval.cpp:880
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
@@ -6119,37 +6152,59 @@ msgstr ""
 "Seleziona tutto l'audio che deve essere filtrato, scegli la quantità di rumore che vuoi\n"
 "filtrare, e poi fai clic su 'OK' per eliminare il rumore.\n"
 
-#: effects/NoiseRemoval.cpp:837
+#: effects/NoiseRemoval.cpp:885
 msgid "Noise Removal by Dominic Mazzoni"
 msgstr "Rimozione rumore a cura di Dominic Mazzoni"
 
-#: effects/NoiseRemoval.cpp:845
-msgid "Get Noise Profile"
-msgstr "Elabora Profilo Rumore"
+#: effects/NoiseRemoval.cpp:893
+msgid "&Get Noise Profile"
+msgstr "&Elabora Profilo Rumore"
 
-#: effects/NoiseRemoval.cpp:856
-msgid "Noise reduction (dB):"
-msgstr "Riduzione rumore (dB):"
+#: effects/NoiseRemoval.cpp:904
+msgid "Noise re&duction (dB):"
+msgstr "Ri&duzione rumore (dB):"
 
-#: effects/NoiseRemoval.cpp:861
+#: effects/NoiseRemoval.cpp:909
 msgid "Noise reduction"
 msgstr "Riduzione rumore"
 
-#: effects/NoiseRemoval.cpp:865
-msgid "Frequency smoothing (Hz):"
-msgstr "Banda di intervento (Hz):"
+#: effects/NoiseRemoval.cpp:913
+msgid "&Sensitivity (dB):"
+msgstr "&Sensibilità (dB):"
 
-#: effects/NoiseRemoval.cpp:870
+#: effects/NoiseRemoval.cpp:918
+#: toolbars/TranscriptionToolBar.cpp:220
+#: toolbars/TranscriptionToolBar.cpp:276
+msgid "Sensitivity"
+msgstr "Sensibilità"
+
+#: effects/NoiseRemoval.cpp:922
+msgid "Fr&equency smoothing (Hz):"
+msgstr "Riduzione fr&equemnza (Hz):"
+
+#: effects/NoiseRemoval.cpp:927
 msgid "Frequency smoothing"
 msgstr "Banda di intervento"
 
-#: effects/NoiseRemoval.cpp:874
-msgid "Attack/decay time (secs):"
-msgstr "Tempo di attacco/rilascio (sec):"
+#: effects/NoiseRemoval.cpp:931
+msgid "Attac&k/decay time (secs):"
+msgstr "Tempo di attac&co/rilascio (sec):"
 
-#: effects/NoiseRemoval.cpp:879
-msgid "Attach/decay time"
+#: effects/NoiseRemoval.cpp:936
+msgid "Attack/decay time"
 msgstr "Tempo di attacco/rilascio"
+
+#: effects/NoiseRemoval.cpp:940
+msgid "Noise:"
+msgstr "Rumore:"
+
+#: effects/NoiseRemoval.cpp:942
+msgid "Re&move"
+msgstr "Eli&mina"
+
+#: effects/NoiseRemoval.cpp:944
+msgid "&Isolate"
+msgstr "&Isola"
 
 #: effects/NoiseRemoval.h:37
 msgid "Noise Removal..."
@@ -8485,7 +8540,7 @@ msgstr "Frequenza di campionamento:"
 msgid "Import complete. Calculating waveform"
 msgstr "Importazione completata. Sto calcolando la forma d'onda"
 
-#: ondemand/ODDecodeTask.h:62
+#: ondemand/ODDecodeTask.h:60
 msgid "Decoding Waveform"
 msgstr "Sto decodificando la forma d'onda"
 
@@ -9394,38 +9449,21 @@ msgstr "Preferenze Audacity"
 msgid "Projects"
 msgstr "Progetti"
 
-#: prefs/ProjectsPrefs.cpp:59
+#: prefs/ProjectsPrefs.cpp:57
 msgid "When saving a project that depends on other audio files"
 msgstr "Nel salvare un progetto che dipende da altri file audio"
 
-#: prefs/ProjectsPrefs.cpp:63
+#: prefs/ProjectsPrefs.cpp:61
 msgid "&Always copy all audio into project (safest)"
 msgstr "Copia &sempre tutto l'audio nel progetto (più sicuro)"
 
-#: prefs/ProjectsPrefs.cpp:65
+#: prefs/ProjectsPrefs.cpp:63
 msgid "Do &not copy any audio"
 msgstr "Non &copiare l'audio"
 
-#: prefs/ProjectsPrefs.cpp:67
+#: prefs/ProjectsPrefs.cpp:65
 msgid "As&k user"
 msgstr "Chie&di all'utente"
-
-#: prefs/ProjectsPrefs.cpp:74
-msgid "Auto save"
-msgstr "Salvataggio automatico"
-
-#: prefs/ProjectsPrefs.cpp:76
-msgid "Auto &save a copy of the project in a separate folder"
-msgstr "&Salva automaticamente una copia del progetto in una cartella separata"
-
-#: prefs/ProjectsPrefs.cpp:82
-msgid "Auto save in&terval:"
-msgstr "Salva automaticamente &ogni:"
-
-#: prefs/ProjectsPrefs.cpp:86
-#: prefs/ProjectsPrefs.cpp:87
-msgid "minutes"
-msgstr "minuti"
 
 #: prefs/QualityPrefs.cpp:75
 msgid "Rectangle"
@@ -10190,11 +10228,6 @@ msgstr "Calibra chiave vocale"
 msgid "Adjust Sensitivity"
 msgstr "Regola sensibilità"
 
-#: toolbars/TranscriptionToolBar.cpp:220
-#: toolbars/TranscriptionToolBar.cpp:276
-msgid "Sensitivity"
-msgstr "Sensibilità"
-
 #: toolbars/TranscriptionToolBar.cpp:225
 msgid "Energy"
 msgstr "Energia"
@@ -10653,93 +10686,87 @@ msgstr "Errore nella chiusura del file"
 msgid "Error writing to file"
 msgstr "Errore nella scrittura del file"
 
+#~ msgid ""
+#~ "Copying the following files into your project will remove this "
+#~ "dependency.\n"
+#~ "This needs more disk space, but is safer."
+#~ msgstr ""
+#~ "Copiando i file seguenti nel vostro progetto eliminererete questa "
+#~ "dipendenza.\n"
+#~ "Questo necessita di più spazio sul disco, ma è più sicuro."
+#~ msgid "In&vert"
+#~ msgstr "In&verti"
+#~ msgid "Auto save"
+#~ msgstr "Salvataggio automatico"
+#~ msgid "Auto &save a copy of the project in a separate folder"
+#~ msgstr ""
+#~ "&Salva automaticamente una copia del progetto in una cartella separata"
+#~ msgid "Auto save in&terval:"
+#~ msgstr "Salva automaticamente &ogni:"
+#~ msgid "minutes"
+#~ msgstr "minuti"
 #~ msgid "&Link Audio and Label Tracks"
 #~ msgstr "&Collega tracce audio ed etichette"
-
 #~ msgid ""
 #~ "The version of Audacity you are using does not support multiple time "
 #~ "tracks."
 #~ msgstr ""
 #~ "La versione di Audacity che stai usando non supporta le tracce tempo "
 #~ "multiple."
-
 #~ msgid "custom"
 #~ msgstr "personalizza"
-
 #~ msgid "Enter the desired name of the curve"
 #~ msgstr "Inserisci il nome desiderato della curva"
-
 #~ msgid "Initial Tempo Change (%):"
 #~ msgstr "Modifica tempo iniziale (%):"
-
 #~ msgid "Final Tempo Change (%):"
 #~ msgstr "Modifica tempo finale (%):"
-
 #~ msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
 #~ msgstr "Slittamento iniziale intonazione (semitoni) [da -12 a 12]:"
-
 #~ msgid "Closing last window &quits Audacity"
 #~ msgstr "Chiudendo l'ultima finestra &esci da Audacity"
-
 #~ msgid "Numbering consecutively"
 #~ msgstr "Numerazione progressiva"
-
 #~ msgid "Format selector:"
 #~ msgstr "Selettore formato:"
-
 #~ msgid "Codec selector:"
 #~ msgstr "Selettore codec:"
-
 #~ msgid "Cutoff Bandwidth:"
 #~ msgstr "Limite taglio banda:"
-
 #~ msgid "Use Variable Block Length"
 #~ msgstr "Usa lunghezza blocco variabile"
-
 #~ msgid "Compression Level:"
 #~ msgstr "Livello compressione:"
-
 #~ msgid "Frame Size:"
 #~ msgstr "Dimensione cornice:"
-
 #~ msgid "LPC coefficients precision"
 #~ msgstr "Coefficienti di precisione LPC"
-
 #~ msgid "Minimal prediction order"
 #~ msgstr "Ordine di predizione minimo"
-
 #~ msgid "Maximal prediction order"
 #~ msgstr "Ordine di predizione massimo"
-
 #~ msgid "Minimal partition order"
 #~ msgstr "Ordine partizione minimo"
-
 #~ msgid "Maximal partition order"
 #~ msgstr "Ordine partizione massimo"
-
 #~ msgid "Low Complexity"
 #~ msgstr "Complessità bassa"
-
 #~ msgid "Main profile"
 #~ msgstr "Profilo principale"
-
 #~ msgid "ExportMultiple"
 #~ msgstr "Esportazione multipla"
-
 #~ msgid ""
 #~ "Audacity recognized the type of the file '%s',\n"
 #~ "but was unable to import it."
 #~ msgstr ""
 #~ "Audacity ha riconosciuto il tipo di file '%s',\n"
 #~ "ma non è in grado di importarlo."
-
 #~ msgid ""
 #~ "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files "
 #~ "(*.mp3)|*.mp3"
 #~ msgstr ""
 #~ "File vocali (*.wav;*.mp3)|*.wav;*.mp3|File WAV (*.wav)|*.wav|File MP3 (*."
 #~ "mp3)|*.mp3"
-
 #~ msgid ""
 #~ "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU "
 #~ "files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|"
@@ -10748,7 +10775,6 @@ msgstr "Errore nella scrittura del file"
 #~ "Tutti i file (*.*)|*.*|File WAV (*.wav)|*.wav|File AIFF (*.aif)|*.aif|"
 #~ "File AU (*.au)|*.au|File MP3 (*.mp3)|*.mp3|File Ogg Vorbis (*.ogg)|*.ogg|"
 #~ "File FLAC (*.flac)|*.flac"
-
 #~ msgid ""
 #~ "Your project currently depends on the presence of other files.\n"
 #~ "Copy audio from the following files into your project to make it self-"
@@ -10759,88 +10785,62 @@ msgstr "Errore nella scrittura del file"
 #~ "Copio l'audio dai seguenti file nel progetto per renderlo "
 #~ "autosufficiente?\n"
 #~ "Questo richiederà più spazio sul disco ma è più sicuro."
-
 #~ msgid "Audacity projects (*.aup)|*.aup"
 #~ msgstr "Progetti Audacity (*.aup)|*.aup"
-
 #~ msgid "Track Accessible out of sync"
 #~ msgstr "Traccia accessibile fuori sincronizzazione"
-
 #~ msgid "Sile&nce"
 #~ msgstr "Sile&nzio"
-
 #~ msgid "Can't Undo"
 #~ msgstr "Impossibile annullare"
-
 #~ msgid "Can't Redo"
 #~ msgstr "Impossibile ripristinare"
-
 #~ msgid "&Hardware Playthrough: Play new track while recording it"
 #~ msgstr "&hardware Playthrough: Riproduci nuova traccia mentre registri"
-
 #~ msgid "Pre"
 #~ msgstr "Pre"
-
 #~ msgid "Show meter pre/post fade."
 #~ msgstr "Mostra monitor pre/post dissolvenza"
-
 #~ msgid "Enable"
 #~ msgstr "Abilita"
-
 #~ msgid "LADSPA effects"
 #~ msgstr "Effetti LADSPA"
-
 #~ msgid "Nyquist effects"
 #~ msgstr "Effetti Nyquist"
-
 #~ msgid "VAMP effects"
 #~ msgstr "Effetti VAMP"
-
 #~ msgid "Enable Audio Unit effects"
 #~ msgstr "Abilita efetti unità audio"
-
 #~ msgid "When saving &empty project"
 #~ msgstr "Quando si salva un progetto &vuoto"
-
 #~ msgid "When &disk space is getting low"
 #~ msgstr "Quando lo spazio su &disco si sta esaurendo"
-
 #~ msgid "Disjoined %.2f seconds at t=%.2f"
 #~ msgstr "Separati %.2f secondi a t=%.2f"
-
 #~ msgid "Disjoin"
 #~ msgstr "Ritaglia"
-
 #~ msgid "Disjoin Labels"
 #~ msgstr "Separa etichette"
-
 #~ msgid "Disjoined labeled regions"
 #~ msgstr "Regioni con etichette separate"
-
 #~ msgid "Contrast Tool Foreground"
 #~ msgstr "Strumento di contrasto in primo piano"
-
 #~ msgid ""
 #~ "Foreground times selected.\n"
 #~ "Now select background and use Ctrl+Shift+T or menu again."
 #~ msgstr ""
 #~ "Selezionati tempi in primo piano.\n"
 #~ "Ora seleziona lo sfondo e usa Ctrl+Maiusc+T o di nuovo il menu."
-
 #~ msgid "Contrast Analyzer"
 #~ msgstr "Analizzatore di contrasto"
-
 #~ msgid "Measured"
 #~ msgstr "Misurato"
-
 #~ msgid "Information"
 #~ msgstr "Informazioni"
-
 #~ msgid "Help for WCAG2 Audio Contrast Analyzer"
 #~ msgstr "Aiuto per l'analizzatore di contrasto audio WCAG2"
-
 #~ msgid "Close (keeping times)"
 #~ msgstr "Chiudi (mantenendo i tempi)"
-
 #~ msgid "Measure"
 #~ msgstr "Misura"
+
