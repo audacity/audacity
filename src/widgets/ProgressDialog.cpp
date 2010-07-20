@@ -989,6 +989,7 @@ static const unsigned char beep[] =
 BEGIN_EVENT_TABLE(ProgressDialog, wxDialog)
    EVT_BUTTON(wxID_CANCEL, ProgressDialog::OnCancel)
    EVT_BUTTON(wxID_OK, ProgressDialog::OnStop)
+   EVT_CLOSE(ProgressDialog::OnCloseWindow)
 END_EVENT_TABLE()  
 
 //
@@ -1350,6 +1351,12 @@ ProgressDialog::OnStop(wxCommandEvent & e)
    FindWindowById(wxID_OK, this)->Disable();
    mCancel = false;
    mStop = true;
+}
+
+void
+ProgressDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
+{
+   mCancel = true;
 }
 
 void

@@ -67,6 +67,7 @@ class AUDACITY_DLL_API ProgressDialog:public wxDialog
  private:
    void OnCancel(wxCommandEvent & e);
    void OnStop(wxCommandEvent & e);
+   void OnCloseWindow(wxCloseEvent & e);
    void Beep();
 
  protected:
