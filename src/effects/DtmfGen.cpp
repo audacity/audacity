@@ -426,7 +426,7 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
    wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST);
    vldDtmf.SetIncludes(wxArrayString(42, dtmfSymbols));
 
-   S.AddTitle(_("by Salvo Ventura (2006)"));
+   S.AddTitle(_("by Salvo Ventura"));
 
    S.StartMultiColumn(2, wxEXPAND);
    {
