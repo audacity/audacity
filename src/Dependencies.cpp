@@ -164,7 +164,7 @@ void FindDependencies(AudacityProject *project,
 }
 
 // Given a project and a list of aliased files that should no
-// longer be self-contained (selected by the user), replace
+// longer be external dependencies (selected by the user), replace
 // all of those alias block files with disk block files.
 void RemoveDependencies(AudacityProject *project,
 			               AliasedFileArray *aliasedFiles)
@@ -501,7 +501,10 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
 
    if (aliasedFiles.GetCount() == 0) {
       if (!isSaving) 
-         wxMessageBox(_("Your project is self-contained; it does not depend on any external audio files."),
+         wxMessageBox(
+_("Your project is currently self-contained; it does not depend on any external audio files. \
+\n\nIf you Undo back to a state where it has external dependencies on imported files, it will no \
+longer be self-contained. If you then Save without copying those files in, you may lose data."),
                       _("Dependency check"),
                       wxOK | wxICON_INFORMATION,
                       project);
