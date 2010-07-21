@@ -10,7 +10,6 @@
 **********************************************************************/
 
 #include "Experimental.h"
-#ifdef EXPERIMENTAL_MIXER_BOARD
 
 #include <math.h>
 
@@ -1376,5 +1375,4 @@ void MixerBoardFrame::OnSize(wxSizeEvent &event)
    mMixerBoard->SetSize(this->GetClientSize());
 }
 
-#endif // EXPERIMENTAL_MIXER_BOARD
 

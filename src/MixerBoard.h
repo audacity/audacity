@@ -9,7 +9,6 @@
 **********************************************************************/
 
 #include "Experimental.h"
-#ifdef EXPERIMENTAL_MIXER_BOARD
 
 #ifndef __AUDACITY_MIXER_BOARD__
 #define __AUDACITY_MIXER_BOARD__
@@ -270,5 +269,4 @@ public:
 
 #endif // __AUDACITY_MIXER_BOARD__
 
-#endif // EXPERIMENTAL_MIXER_BOARD
 

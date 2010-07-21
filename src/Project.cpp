@@ -97,13 +97,9 @@ scroll information.  It also has some status flags.
 #include "AudioIO.h"
 #include "Dependencies.h"
 #include "HistoryWindow.h"
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
-   #include "Lyrics.h"
-   #include "LyricsWindow.h"
-#endif
-#ifdef EXPERIMENTAL_MIXER_BOARD
-   #include "MixerBoard.h"
-#endif
+#include "Lyrics.h"
+#include "LyricsWindow.h"
+#include "MixerBoard.h"
 #include "Internat.h"
 #include "import/Import.h"
 #include "LabelTrack.h"
@@ -735,13 +731,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mAutoScrolling(false),
      mActive(true),
      mHistoryWindow(NULL),
-     #ifdef EXPERIMENTAL_LYRICS_WINDOW
-        mLyricsWindow(NULL),
-     #endif
-     #ifdef EXPERIMENTAL_MIXER_BOARD
-        mMixerBoard(NULL),
-        mMixerBoardFrame(NULL),
-     #endif
+     mLyricsWindow(NULL),
+     mMixerBoard(NULL),
+     mMixerBoardFrame(NULL),
      mFreqWindow(NULL),
      mToolManager(NULL),
      mAudioIOToken(-1),
@@ -1041,10 +1033,8 @@ void AudacityProject::UpdatePrefs()
    if (mTrackPanel) {
       mTrackPanel->UpdatePrefs();
    }
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->ResizeTrackClusters(); // in case prefs "/GUI/Solo" changed
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->ResizeTrackClusters(); // in case prefs "/GUI/Solo" changed
 
    SetSnapTo(gPrefs->Read(wxT("/SnapTo"), 0L)!=0);
 
@@ -3494,12 +3484,8 @@ void AudacityProject::InitialState()
    ModifyUndoMenus();
 
    UpdateMenus();
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      this->UpdateLyrics();
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      this->UpdateMixerBoard();
-   #endif
+   this->UpdateLyrics();
+   this->UpdateMixerBoard();
 }
 
 void AudacityProject::PushState(wxString desc,
@@ -3523,15 +3509,11 @@ void AudacityProject::PushState(wxString desc,
    // Others, such as deleting a label or adding a wave track, obviously do. 
    // Could categorize these state changes, but for now...
    // It's crucial to not do that repopulating during playback. 
-   //vvv These can be combined in the same conditional when both features are made non-experimental. 
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      if (!gAudioIO->IsStreamActive(GetAudioIOToken())) 
-         this->UpdateLyrics();
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (!gAudioIO->IsStreamActive(GetAudioIOToken())) 
-         this->UpdateMixerBoard();
-   #endif
+   if (!gAudioIO->IsStreamActive(GetAudioIOToken())) 
+   {
+      this->UpdateLyrics();
+      this->UpdateMixerBoard();
+   }
 
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
@@ -3592,12 +3574,8 @@ void AudacityProject::PopState(TrackList * l)
    HandleResize();
 
    UpdateMenus();
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      this->UpdateLyrics();
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      this->UpdateMixerBoard();
-   #endif
+   this->UpdateLyrics();
+   this->UpdateMixerBoard();
 
    AutoSave();
 }
@@ -3612,47 +3590,39 @@ void AudacityProject::SetStateTo(unsigned int n)
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
    ModifyUndoMenus();
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      this->UpdateLyrics();
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      this->UpdateMixerBoard();
-   #endif
+   this->UpdateLyrics();
+   this->UpdateMixerBoard();
 }
 
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
-   void AudacityProject::UpdateLyrics()
+void AudacityProject::UpdateLyrics()
+{
+   TrackListOfKindIterator iter(Track::Label, mTracks);
+   LabelTrack* pLabelTrack = (LabelTrack*)(iter.First()); // Lyrics come from only the first label track.
+   if (!pLabelTrack)
+      return;
+
+   if (!mLyricsWindow) 
    {
-      TrackListOfKindIterator iter(Track::Label, mTracks);
-      LabelTrack* pLabelTrack = (LabelTrack*)(iter.First()); // Lyrics come from only the first label track.
-      if (!pLabelTrack)
-         return;
-
-      if (!mLyricsWindow) 
-      {
-         mLyricsWindow = new LyricsWindow(this); 
-         mLyricsWindow->Show(false); // Don't show it. Need to update content regardless.
-      }
-
-      Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
-      pLyricsPanel->Clear();
-      for (int i = 0; i < pLabelTrack->GetNumLabels(); i++) 
-         pLyricsPanel->Add(pLabelTrack->GetLabel(i)->t,
-                           pLabelTrack->GetLabel(i)->title);
-      pLyricsPanel->Finish(pLabelTrack->GetEndTime());
-      pLyricsPanel->Update(this->GetSel0());
+      mLyricsWindow = new LyricsWindow(this); 
+      mLyricsWindow->Show(false); // Don't show it. Need to update content regardless.
    }
-#endif
 
-#ifdef EXPERIMENTAL_MIXER_BOARD
-   void AudacityProject::UpdateMixerBoard()
-   {
-      if (!mMixerBoard)
-         return;
-      mMixerBoard->UpdateTrackClusters();
-      mMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), (mLastPlayMode == loopedPlay)); 
-   }
-#endif
+   Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
+   pLyricsPanel->Clear();
+   for (int i = 0; i < pLabelTrack->GetNumLabels(); i++) 
+      pLyricsPanel->Add(pLabelTrack->GetLabel(i)->t,
+                        pLabelTrack->GetLabel(i)->title);
+   pLyricsPanel->Finish(pLabelTrack->GetEndTime());
+   pLyricsPanel->Update(this->GetSel0());
+}
+
+void AudacityProject::UpdateMixerBoard()
+{
+   if (!mMixerBoard)
+      return;
+   mMixerBoard->UpdateTrackClusters();
+   mMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), (mLastPlayMode == loopedPlay)); 
+}
 
 //
 // Clipboard methods
@@ -3721,10 +3691,8 @@ void AudacityProject::SelectNone()
       t = iter.Next();
    }
    mTrackPanel->Refresh(false);
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->Refresh(false);
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
 }
 
 // Utility function called by other zoom methods

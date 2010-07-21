@@ -65,12 +65,8 @@ simplifies construction of menu items.
 #include "widgets/TimeTextCtrl.h"
 #include "ShuttleGui.h"
 #include "HistoryWindow.h"
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
-   #include "LyricsWindow.h"
-#endif
-#ifdef EXPERIMENTAL_MIXER_BOARD
-   #include "MixerBoard.h"
-#endif
+#include "LyricsWindow.h"
+#include "MixerBoard.h"
 #include "Internat.h"
 #include "FileFormats.h"
 #include "LoadModules.h"	
@@ -556,12 +552,8 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag | UndoAvailableFlag,
               AudioIONotBusyFlag | UndoAvailableFlag);
 
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      c->AddItem(wxT("Karaoke"), _("&Karaoke..."), FN(OnKaraoke), LabelTracksExistFlag, LabelTracksExistFlag); 
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      c->AddItem(wxT("MixerBoard"), _("&Mixer Board..."), FN(OnMixerBoard), WaveTracksExistFlag, WaveTracksExistFlag);
-   #endif
+   c->AddItem(wxT("Karaoke"), _("&Karaoke..."), FN(OnKaraoke), LabelTracksExistFlag, LabelTracksExistFlag); 
+   c->AddItem(wxT("MixerBoard"), _("&Mixer Board..."), FN(OnMixerBoard), WaveTracksExistFlag, WaveTracksExistFlag);
 
    c->AddSeparator();
 
@@ -4085,10 +4077,8 @@ void AudacityProject::OnSelectAll()
    ModifyState();
    
    mTrackPanel->Refresh(false);
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->Refresh(false);
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
 }
 
 void AudacityProject::OnSelectNone()
@@ -4155,10 +4145,8 @@ void AudacityProject::OnSelectSyncSel()
    }
 
    mTrackPanel->Refresh(false);
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->Refresh(false);
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->Refresh(false);
 }
 
 void AudacityProject::OnSelectAllTracks()
@@ -4169,10 +4157,8 @@ void AudacityProject::OnSelectAllTracks()
    }
 
    mTrackPanel->Refresh(false);
-#ifdef EXPERIMENTAL_MIXER_BOARD
    if (mMixerBoard)
       mMixerBoard->Refresh(false);
-#endif
 }
 
 //
@@ -4379,29 +4365,26 @@ void AudacityProject::OnHistory()
    mHistoryWindow->UpdateDisplay();
 }
 
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
-   void AudacityProject::OnKaraoke()
+void AudacityProject::OnKaraoke()
+{
+   if (!mLyricsWindow)
+      mLyricsWindow = new LyricsWindow(this);
+   wxASSERT(mLyricsWindow);
+   mLyricsWindow->Show();
+   mLyricsWindow->Raise();
+}
+
+void AudacityProject::OnMixerBoard()
+{
+   if (!mMixerBoardFrame)
    {
-      if (!mLyricsWindow)
-         mLyricsWindow = new LyricsWindow(this);
-      wxASSERT(mLyricsWindow);
-      mLyricsWindow->Show();
-      mLyricsWindow->Raise();
+      mMixerBoardFrame = new MixerBoardFrame(this);
+      mMixerBoard = mMixerBoardFrame->mMixerBoard;
    }
-#endif
-#ifdef EXPERIMENTAL_MIXER_BOARD
-   void AudacityProject::OnMixerBoard()
-   {
-      if (!mMixerBoardFrame)
-      {
-         mMixerBoardFrame = new MixerBoardFrame(this);
-         mMixerBoard = mMixerBoardFrame->mMixerBoard;
-      }
-      mMixerBoardFrame->Show();
-      mMixerBoardFrame->Raise();
-      mMixerBoardFrame->SetFocus();
-  }
-#endif
+   mMixerBoardFrame->Show();
+   mMixerBoardFrame->Raise();
+   mMixerBoardFrame->SetFocus();
+}
 
 void AudacityProject::OnPlotSpectrum()
 {
@@ -5407,10 +5390,8 @@ void AudacityProject::OnRemoveTracks()
 
    while (t) {
       if (t->GetSelected()) {
-         #ifdef EXPERIMENTAL_MIXER_BOARD
-            if (mMixerBoard && (t->GetKind() == Track::Wave))
-               mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
-         #endif
+         if (mMixerBoard && (t->GetKind() == Track::Wave))
+            mMixerBoard->RemoveTrackCluster((WaveTrack*)t);
          if (!f)
             f = l;         // Capture the track preceeding the first removed track
          t = iter.RemoveCurrent(true);
@@ -5440,10 +5421,8 @@ void AudacityProject::OnRemoveTracks()
    PushState(_("Removed audio track(s)"), _("Remove Track"));
 
    mTrackPanel->Refresh(false);
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->Refresh(true);
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->Refresh(true);
 }
 
 //
@@ -5551,10 +5530,8 @@ void AudacityProject::OnMuteAllTracks()
 
    ModifyState();
    RedrawProject();
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->UpdateMute();
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->UpdateMute();
 }
 
 void AudacityProject::OnUnMuteAllTracks()
@@ -5570,10 +5547,8 @@ void AudacityProject::OnUnMuteAllTracks()
 
    ModifyState();
    RedrawProject();
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      if (mMixerBoard)
-         mMixerBoard->UpdateMute();
-   #endif
+   if (mMixerBoard)
+      mMixerBoard->UpdateMute();
 }
 
 void AudacityProject::OnLockPlayRegion()

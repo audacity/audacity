@@ -252,12 +252,8 @@ void OnShowClipping();
 
 void OnHistory();
 
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
-   void OnKaraoke();
-#endif
-#ifdef EXPERIMENTAL_MIXER_BOARD
-   void OnMixerBoard();
-#endif
+void OnKaraoke();
+void OnMixerBoard();
 
 void OnPlotSpectrum();
 void OnContrast();

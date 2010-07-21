@@ -10,7 +10,6 @@
 **********************************************************************/
 
 #include "Experimental.h"
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
 
 #ifndef __AUDACITY_LYRICS_WINDOW__
 #define __AUDACITY_LYRICS_WINDOW__
@@ -42,4 +41,3 @@ class LyricsWindow : public wxFrame {
 };
 
 #endif
-#endif // EXPERIMENTAL_LYRICS_WINDOW

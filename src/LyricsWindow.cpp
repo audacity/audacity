@@ -10,7 +10,6 @@
 **********************************************************************/
 
 #include "Experimental.h"
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
 
 #include "LyricsWindow.h"
 #include "Lyrics.h"
@@ -141,4 +140,3 @@ void LyricsWindow::OnStyle_Highlight(wxCommandEvent &evt)
    mLyricsPanel->SetLyricsStyle(Lyrics::kHighlightLyrics);
 }
 
-#endif // EXPERIMENTAL_LYRICS_WINDOW

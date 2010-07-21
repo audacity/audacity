@@ -49,33 +49,32 @@ class wxScrollEvent;
 class wxScrollBar;
 class wxPanel;
 
-class ToolManager;
-class Toolbar;
+class AudacityProject;
+class Importer;
+class ODLock;
+class RecordingRecoveryHandler;
+class TrackList;
+class Tags;
+
+// toolbar classes
 class ControlToolBar;
 class DeviceToolBar;
 class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
 class SelectionToolBar;
+class Toolbar;
+class ToolManager;
 class ToolsToolBar;
 class TranscriptionToolBar;
 
-class TrackList;
-class Tags;
-class HistoryWindow;
-#ifdef EXPERIMENTAL_LYRICS_WINDOW
-   class LyricsWindow;
-#endif
-#ifdef EXPERIMENTAL_MIXER_BOARD
-   class MixerBoard;
-   class MixerBoardFrame;
-#endif
-class Importer;
+// windows and frames
 class AdornedRulerPanel;
+class HistoryWindow;
+class LyricsWindow;
+class MixerBoard;
+class MixerBoardFrame;
 
-class AudacityProject;
-class RecordingRecoveryHandler;
-class ODLock;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -120,13 +119,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
                                      public AudioIOListener
 {
  public:
-
-   // Constructor and Destructor
-
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
-
-   virtual ~ AudacityProject();
+   virtual ~AudacityProject();
 
    TrackList *GetTracks() { return mTracks; };
    UndoManager *GetUndoManager() { return &mUndoManager; }
@@ -345,12 +340,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    ToolsToolBar *GetToolsToolBar();
    TranscriptionToolBar *GetTranscriptionToolBar();
 
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      LyricsWindow* GetLyricsWindow() { return mLyricsWindow; };
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      MixerBoard* GetMixerBoard() { return mMixerBoard; };
-   #endif
+   LyricsWindow* GetLyricsWindow() { return mLyricsWindow; };
+   MixerBoard* GetMixerBoard() { return mMixerBoard; };
 
    // SelectionBar callback methods
 
@@ -399,12 +390,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void ModifyState();
    void PopState(TrackList * l);
    
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      void UpdateLyrics();
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      void UpdateMixerBoard();
-   #endif
+   void UpdateLyrics();
+   void UpdateMixerBoard();
    
    void GetRegionsByLabel( Regions &regions );
    
@@ -475,13 +462,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mIconized;
 
    HistoryWindow *mHistoryWindow;
-   #ifdef EXPERIMENTAL_LYRICS_WINDOW
-      LyricsWindow* mLyricsWindow;
-   #endif
-   #ifdef EXPERIMENTAL_MIXER_BOARD
-      MixerBoard* mMixerBoard;
-      MixerBoardFrame* mMixerBoardFrame;
-   #endif
+   LyricsWindow* mLyricsWindow;
+   MixerBoard* mMixerBoard;
+   MixerBoardFrame* mMixerBoardFrame;
 
    FreqWindow *mFreqWindow;
 

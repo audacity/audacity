@@ -142,9 +142,6 @@ extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebo
 #ifdef EXPERIMENTAL_AUDACITY_TESTER
 #endif
 
-#define EXPERIMENTAL_LYRICS_WINDOW //vvv Vaughan, 2009-07-06
-#define EXPERIMENTAL_MIXER_BOARD //vvv Vaughan, 2009-07-07
-
 #if USE_PORTMIXER
    //Automatically tries to find an acceptable input volume
    //#define AUTOMATED_INPUT_LEVEL_ADJUSTMENT
@@ -154,15 +151,3 @@ extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebo
 //#define EXPERIMENTAL_TRUNC_SILENCE
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag:
-
