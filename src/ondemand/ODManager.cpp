@@ -259,12 +259,12 @@ void ODManager::Start()
       mTasksMutex.Lock();
       tasksInArray = mTasks.size()>0;
       mTasksMutex.Unlock();
-      mCurrentThreadsMutex.Lock();
 
       mPauseLock.Lock();
       paused=mPause;
       mPauseLock.Unlock();
 
+      mCurrentThreadsMutex.Lock();
       // keep adding tasks if there is work to do, up to the limit.
       while(!paused && tasksInArray && (mCurrentThreads < mMaxThreads))
       {

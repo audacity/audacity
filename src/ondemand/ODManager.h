@@ -45,6 +45,7 @@ class ODManager
  public:
    ///Gets the singleton instance - this is a function pointer that points to one of the below two instance calls.
    ///Note that it is not a member function pointer since it is a static function.
+   ///the function pointer swapping is valid as long as the initial calls only happen from the main thread.
    static ODManager* (*Instance)();
    ///Gets the singleton instance
    static ODManager* InstanceFirstTime();
@@ -192,6 +193,7 @@ class ODManagerHelperThread {
    static void *callback(void *p) {
       ODManagerHelperThread *th = (ODManagerHelperThread *)p;
       /* return (void *) */th->Entry();
+      return NULL;
    }
 
    ///Specifies the priority the thread will run at.  Currently doesn't work.
