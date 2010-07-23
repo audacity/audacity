@@ -47,12 +47,7 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(wxFileName fileName,
                      sampleCount aliasLen, int aliasChannel):
    PCMAliasBlockFile(fileName, aliasedFile, aliasStart, aliasLen, aliasChannel,false)
 {
-
-  mSummaryAvailable=mSummaryBeingComputed=mHasBeenSaved=false;
-   mFileNameChar = new char[strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1];
-   strcpy(mFileNameChar,mFileName.GetFullPath().mb_str(wxConvUTF8));
-
-  
+   mSummaryAvailable = mSummaryBeingComputed = mHasBeenSaved = false;
 }
 
 ///summaryAvailable should be true if the file has been written already.
@@ -65,13 +60,10 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(wxFileName existingFileName,
 {
    mSummaryAvailable=summaryAvailable;
    mSummaryBeingComputed=mHasBeenSaved=false;      
-   mFileNameChar = new char[strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1];
-   strcpy(mFileNameChar,mFileName.GetFullPath().mb_str(wxConvUTF8));
  }
 
 ODPCMAliasBlockFile::~ODPCMAliasBlockFile()
 {
-   delete [] mFileNameChar;
 }
 
 /// Increases the reference count of this block by one.  Only
@@ -381,9 +373,6 @@ void ODPCMAliasBlockFile::SetFileName(wxFileName &name)
 {
    mFileNameMutex.Lock();
    mFileName=name;
-   delete [] mFileNameChar;
-   mFileNameChar = new char[strlen(mFileName.GetFullPath().mb_str(wxConvUTF8))+1];
-   strcpy(mFileNameChar,mFileName.GetFullPath().mb_str(wxConvUTF8));
    mFileNameMutex.Unlock();
 }
 
@@ -403,12 +392,20 @@ void ODPCMAliasBlockFile::WriteSummary()
    //the mFileName path may change, for example, when the project is saved.
    //(it moves from /tmp/ to wherever it is saved to.
    mFileNameMutex.Lock();
-      //wxFFile is not thread-safe - if any error occurs in fopen, it posts a wxlog message which WILL crash
-      //audacity because it goes into the wx GUI.  For this reason I left the FILE* method commented out (mchinen)
-     //wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
-   
-   FILE* summaryFile=fopen(mFileNameChar, "wb");
-   
+
+   //wxFFile is not thread-safe - if any error occurs in opening the file, 
+   // it posts a wxlog message which WILL crash
+   // Audacity because it goes into the wx GUI.  
+   // For this reason I left the wxFFile method commented out. (mchinen)
+   //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
+
+   // ...and we use fopen instead.
+   wxString sFullPath = mFileName.GetFullPath();
+   char* fileNameChar = new char[strlen(sFullPath.mb_str(wxConvFile)) + 1];
+   strcpy(fileNameChar, sFullPath.mb_str(wxConvFile));
+   FILE* summaryFile = fopen(fileNameChar, "wb");
+   delete [] fileNameChar;
+
    mFileNameMutex.Unlock();
 
    if( !summaryFile){//.IsOpened() ){
@@ -418,7 +415,7 @@ void ODPCMAliasBlockFile::WriteSummary()
       //and wxLog calls are not thread safe.
       printf("Unable to write summary data to file: ");// %s",
       printf("test..\n");
-      printf(" filename: %s\n",mFileNameChar);
+      printf(" filename: %s\n", fileNameChar);
       mFileNameMutex.Unlock();
       return;
    }
@@ -438,7 +435,7 @@ void ODPCMAliasBlockFile::WriteSummary()
    delete [] (char *) summaryData;
    
    
-    //     printf("write successful. filename: %s\n",mFileNameChar);
+    //     printf("write successful. filename: %s\n", fileNameChar);
 
    mSummaryAvailableMutex.Lock();
    mSummaryAvailable=true;

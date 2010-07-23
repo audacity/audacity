@@ -152,8 +152,6 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    friend class ODComputeSummaryTask;
    friend class ODDecodeTask;
 
-   char* mFileNameChar;
-
    ODLock mWriteSummaryMutex;
 
    //need to protect this since it is changed from the main thread upon save.
