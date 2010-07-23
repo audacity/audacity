@@ -514,7 +514,7 @@ void ExpandingToolBar::StartMoving()
    // This gives time for wx to finish redrawing the window that way.
    // HACK: why do we need to do it so many times???
    for(j=0; j<500; j++)
-      wxYield();
+      ::wxSafeYield();
 
    wxBitmap toolbarBitmap = GetToolbarBitmap();
 
@@ -551,7 +551,7 @@ void ExpandingToolBar::StartMoving()
    // This gives time for wx to finish redrawing the window that way.
    // HACK: why do we need to do it several times???
    for(j=0; j<500; j++)
-      wxYield();
+      ::wxSafeYield();
 
    mAreaParent->SetCapturedChild(this);
 
@@ -607,7 +607,7 @@ void ExpandingToolBar::UpdateMoving()
       // This gives time for wx to finish redrawing the window that way.
       // HACK: why do we need to do it so many times???
       for(i=0; i<500; i++)
-         wxYield();
+         ::wxSafeYield();
 
       mDragImage->Show();
       mDragImage->Move(ScreenToClient(wxGetMousePosition()));

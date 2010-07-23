@@ -377,7 +377,7 @@ AudioIO::~AudioIO()
 
    /* Delete is a "graceful" way to stop the thread.
       (Kill is the not-graceful way.) */
-   wxYield();
+   wxGetApp().Yield();
    mThread->Delete();
    
    if(mSilentBuf) 
@@ -1233,7 +1233,7 @@ void AudioIO::StopStream()
    // if it was already there.
    mUpdateMeters = false;
    while(mUpdatingMeters) {
-      wxYield();
+      ::wxSafeYield();
       wxMilliSleep( 50 );
    }
 
@@ -1295,7 +1295,7 @@ void AudioIO::StopStream()
       while( mAudioThreadShouldCallFillBuffersOnce == true )
       {
          // LLL:  Experienced recursive yield here...once.
-         wxGetApp().Yield( true );
+         wxGetApp().Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
          wxMilliSleep( 50 );
       }
 

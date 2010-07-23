@@ -367,7 +367,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
 
    Printf(wxT("Preparing...\n"));
 
-   wxYield();
+   wxGetApp().Yield();
    FlushPrint();
 
    int i, b, v;
@@ -400,7 +400,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
    //t->Debug();
 
    Printf(wxT("Performing %d edits...\n"), trials);
-   wxYield();
+   wxGetApp().Yield();
    FlushPrint();
 
    timer.Start();
@@ -454,7 +454,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
    }
    Printf(wxT("Time to perform %d edits: %ld ms\n"), trials, elapsed);
    FlushPrint();
-   wxYield();
+   wxGetApp().Yield();
 
 
 #if 0
@@ -466,7 +466,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
 
    Printf(wxT("Doing correctness check...\n"));
    FlushPrint();
-   wxYield();
+   wxGetApp().Yield();
 
    bad = 0;
    timer.Start();
@@ -491,7 +491,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
    Printf(wxT("Time to check all data: %ld ms\n"), elapsed);
    Printf(wxT("Reading data again...\n"));
 
-   wxYield();
+   wxGetApp().Yield();
    FlushPrint();
 
    timer.Start();

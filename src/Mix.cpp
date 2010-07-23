@@ -116,7 +116,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                             startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
                             rate, format);
 
-   wxYield();
+   ::wxSafeYield();
    ProgressDialog *progress = new ProgressDialog(_("Mix and Render"),
                                                  _("Mixing and rendering tracks"));
    
