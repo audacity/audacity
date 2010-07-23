@@ -2,18 +2,23 @@
 # Copyright (C) YEAR Audacity Development Team
 # This file is distributed under the same license as Audacity.
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
-#
+# bashishtha <bashishtha.singh@gmail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-07-18 04:15+0100\n"
-"PO-Revision-Date: 2010-07-19 10:36-0000\n"
-"Last-Translator: Gale <gale@audacityteam.org>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2010-07-21 21:50+0530\n"
+"Last-Translator: bashishtha <bashishtha.singh@gmail.com>\n"
+"Language-Team: bashishtha.singh@gmail.com\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.5.2\n"
+"X-Poedit-Language: Hindi\n"
+"X-Poedit-Country: INDIA\n"
 
 #: AboutDialog.cpp:160
 msgid "About Audacity..."
@@ -528,9 +533,8 @@ msgstr "अंतिम निर्णय?"
 
 #: AutoRecovery.cpp:148
 #: AutoRecovery.cpp:185
-#, fuzzy
 msgid "Could not enumerate files in auto save directory."
-msgstr "स्वयं-संचयन निर्देशिका में फ़ाइल का नामकरण नहीं कर सका"
+msgstr "स्वयं-संचयन निर्देशिका में फ़ाइल का नामकरण नहीं कर सका."
 
 #: AutoRecovery.cpp:149
 #: AutoRecovery.cpp:186
@@ -822,6 +826,12 @@ msgid ""
 "Files shown in italics have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
 msgstr ""
+"इन फ़ाइलों की प्रति आपकी परियोजना में रखने से यह निर्भरता दूर हो जाएगी.\n"
+"इसके लिए डिस्क में ज्यादा जगह चाहिए, किंतु ये अधिक सुरक्षित है.\n"
+"\n"
+"तिरछे अक्षरों में दिखाई गई फ़ाइलें कहीं और चली गई हैं या मिट गई हैं, \n"
+"अतः उनकी प्रति नहीं बना सकते. परियोजना में उनकी प्रति बनाने के लिए उन्हें \n"
+"मूल स्थान पर लाएं."
 
 #: Dependencies.cpp:331
 msgid "Project Dependencies"
@@ -951,9 +961,8 @@ msgstr " ब्लॉक %s को नया उपनाम दिया गय
 
 #: DirManager.cpp:1393
 #: DirManager.cpp:1686
-#, fuzzy
 msgid "Inspecting project file data"
-msgstr "परियोजना फ़ाईल डाटा निरीक्षण..."
+msgstr "परियोजना फ़ाईल में डेटा की जाँच हो रही है"
 
 #: DirManager.cpp:1409
 #, c-format
@@ -984,13 +993,13 @@ msgstr ""
 " त्रुटियों की एक पूरी सूची के लिए क्लिक करें 'विवरण', या अधिक विकल्पों के लिए 'ठीक है' को."
 
 #: DirManager.cpp:1500
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check found %d orphaned blockfile(s). These files are\n"
 "unused and probably left over from a crash or some other bug.\n"
 "They should be deleted to avoid disk contention."
 msgstr ""
-"परियोजना जांच में अनाथ ब्लाक फ़ाइलें %d मिली हैं. ये अप्रयुक्त फ़ाइलें हैं जो\n"
+"परियोजना जांच में %d अनाथ ब्लाक फ़ाइलें मिली हैं. ये अप्रयुक्त फ़ाइलें हैं जो\n"
 "शायद एक दुर्घटना में या कुछ अन्य त्रुटि के कारण छूट गई हैं. इनको नष्ट कर देना\n"
 "उचित है, जिससे डिस्क बेतरतीब न हो."
 
@@ -999,9 +1008,8 @@ msgid "Delete orphaned files [safe and recommended]"
 msgstr "अनाथ फ़ाइलें हटाएँ [सुरक्षित एवं अनुशंसित]"
 
 #: DirManager.cpp:1506
-#, fuzzy
 msgid "Continue without deleting; ignore the extra files this session"
-msgstr "अतिरिक्त फ़ाइलों को हटाए बिना आराम से अपना काम करते रहें"
+msgstr "अतिरिक्त फ़ाइलों को हटाए बिना; आराम से इस सत्र में अपना काम करते रहें"
 
 #: DirManager.cpp:1507
 msgid "Close project immediately with no changes"
@@ -1019,7 +1027,7 @@ msgid "Warning"
 msgstr "चेतावनी"
 
 #: DirManager.cpp:1535
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check detected %d input file(s) being used in place\n"
 "('alias files') are now missing.  There is no way for Audacity\n"
@@ -1028,7 +1036,7 @@ msgid ""
 "fill in silence for this session only, or close the project now\n"
 "and try to restore the missing files by hand."
 msgstr ""
-"परियोजना जांच में प्रयुक्त %d इनपुट फाइलें (उपनाम फाइलें) अब\n"
+"परियोजना जांच में प्रयुक्त %d इनपुट फाइलें ('उपनाम फाइलें') अब\n"
 "लापता हैं. ऑडेसिटी इन्हें स्वयं बरामद नहीं कर सकता. इन लापता फाइलों\n"
 "की जगह आप स्थायी तौर पर चुप्पी रख सकते हैं, या अस्थायी तौर अभी\n"
 "चुप्पी रख सकते हैं, या परियोजना बंद कर लापता फाइलों को पुनर्जीवित\n"
@@ -1050,14 +1058,14 @@ msgid "Close project immediately with no further changes"
 msgstr "परियोजना तुरंत बंद करें बिना किसी और परिवर्तन के"
 
 #: DirManager.cpp:1581
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check detected %d missing summary file(s) (.auf).\n"
 "Audacity can fully regenerate these summary files from the\n"
 "original audio data in the project."
 msgstr ""
-"परियोजना की जांच में %d लापता सारांश फाइलें (.auf) मिली हैं.\n"
-"ऑडेसिटी इन सारांश फ़ाइलों को पूरी तरह परियोजना के आरंभिक\n"
+"परियोजना की जांच में %d लापता सारांश फाइलें (.auf) पाई गई हैं.\n"
+"ऑडेसिटी इन सारांश फ़ाइलों को पूरी तरह परियोजना के मूल\n"
 "ऑडियो डाटा से पुनर्जीवित कर सकता है."
 
 #: DirManager.cpp:1586
@@ -1069,7 +1077,7 @@ msgid "Fill in silence for missing display data [this session only]"
 msgstr "प्रदर्शन के लिए लापता डेटा की जगह मौन भरें [केवल इस सत्र में]"
 
 #: DirManager.cpp:1623
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check detected %d missing audio data blockfile(s) (.au), \n"
 "probably due to a bug, system crash or accidental deletion.\n"
@@ -1079,9 +1087,9 @@ msgid ""
 "session only, or close the project now and try to restore the\n"
 "missing data by hand."
 msgstr ""
-"परियोजना की जांच में %d लापता ऑडियो ब्लाक फाइलें (.au) मिली हैं,\n"
+"परियोजना की जांच में %d ऑडियो ब्लाक फाइलें (.au) लापता पाई गई हैं, \n"
 "जो शायद एक त्रुटि, सिस्टम दुर्घटना या अंजाने में मिट जाने से हुई है.\n"
-"ऑडेसिटी के पास इस खोए डेटा को पाने का कोई कारगर तरीका नहीं है\n"
+"ऑडेसिटी के पास इस खोए डेटा को स्वतः पाने का कोई कारगर तरीका नहीं है\n"
 "आप लापता डेटा के स्थान पर स्थायी रूप से मौन भर सकते हैं या \n"
 "अस्थायी रूप से केवल इस सत्र में मौन भर सकते हैं, या परियोजना\n"
 "को बंद करके स्वयं डेटा बहाल करने की कोशिश करें."
@@ -1091,27 +1099,24 @@ msgid "Replace missing data with silence [permanent immediately]"
 msgstr "खोए डेटा का स्थान चुप्पी से भरें [इसे तुरंत स्थायी करें]"
 
 #: DirManager.cpp:1655
-#, fuzzy
 msgid "Cleaning up unused directories in project data"
-msgstr "परियोजना डेटा में अप्रयुक्त निर्देशिकाएं मिटा रहे हैं..."
+msgstr "परियोजना डेटा में अप्रयुक्त निर्देशिकाएं मिटा रहे हैं"
 
 #: DirManager.cpp:1735
 msgid "Caching audio"
 msgstr "ऑडियो इकट्ठा कर रहे हैं"
 
 #: DirManager.cpp:1736
-#, fuzzy
 msgid "Caching audio into memory"
-msgstr "ऑडियो मेमॉरी में इकट्ठा कर रहे हैं..."
+msgstr "ऑडियो मेमॉरी में इकट्ठा कर रहे हैं"
 
 #: DirManager.cpp:1771
 msgid "Saving recorded audio"
 msgstr "अंकित आडियो को संचित कर रहे हैं"
 
 #: DirManager.cpp:1772
-#, fuzzy
 msgid "Saving recorded audio to disk"
-msgstr "दर्ज़ ऑडियो को डिस्क पर संचित कर रहे हैं..."
+msgstr "अंकित ऑडियो को डिस्क पर संचित कर रहे हैं"
 
 #: FFT.cpp:495
 msgid "Rectangular"
@@ -5601,36 +5606,32 @@ msgid "&Draw curves"
 msgstr "वक्र खींचें (&D)"
 
 #: effects/Equalization.cpp:1220
-#, fuzzy
 msgid "Draw curves"
-msgstr "वक्र खींचें (&D)"
+msgstr "वक्र खींचें"
 
 #: effects/Equalization.cpp:1224
 msgid "&Graphic EQ"
 msgstr "ग्राफ़िक EQ (&G)"
 
 #: effects/Equalization.cpp:1226
-#, fuzzy
 msgid "Graphic EQ"
-msgstr "ग्राफ़िक EQ (&G)"
+msgstr "ग्राफ़िक EQ"
 
 #: effects/Equalization.cpp:1239
 msgid "Li&near frequency scale"
 msgstr "रेखीय आवृति मापदंड"
 
 #: effects/Equalization.cpp:1240
-#, fuzzy
 msgid "Linear frequency scale"
-msgstr "रेखीय आवृति मापदंड"
+msgstr "रेखीय आवृति मापक"
 
 #: effects/Equalization.cpp:1249
 msgid "Length of &filter:"
 msgstr "फ़िल्टर(&f) की लंबाई:"
 
 #: effects/Equalization.cpp:1255
-#, fuzzy
 msgid "Length of filter"
-msgstr "फ़िल्टर(&f) की लंबाई:"
+msgstr "फ़िल्टर की लंबाई"
 
 #: effects/Equalization.cpp:1271
 msgid "&Select curve:"
@@ -5641,27 +5642,24 @@ msgid "S&ave/Manage curves..."
 msgstr "वक्र (&a)संचित/प्रबंध करें... "
 
 #: effects/Equalization.cpp:1282
-#, fuzzy
 msgid "Save and Manage curves"
-msgstr "वक्र (&a)संचित/प्रबंध करें... "
+msgstr "वक्र प्रबंध एवं संचय "
 
 #: effects/Equalization.cpp:1285
 msgid "Fla&tten"
 msgstr "समतल करें (&t)"
 
 #: effects/Equalization.cpp:1287
-#, fuzzy
 msgid "&Invert"
-msgstr "उलटें"
+msgstr "उलटें (&I)"
 
 #: effects/Equalization.cpp:1289
 msgid "G&rids"
 msgstr "ग्रिड (&r)"
 
 #: effects/Equalization.cpp:1354
-#, fuzzy
 msgid "Select curve"
-msgstr "वक्र चुनें(&S):"
+msgstr "वक्र चुनें"
 
 #: effects/Equalization.cpp:1370
 msgid ""
@@ -5817,9 +5815,9 @@ msgid "You cannot export 'unnamed' curve"
 msgstr "आप 'बेनाम' वक्र का निर्यात नहीं कर सकते"
 
 #: effects/Equalization.cpp:3217
-#, fuzzy, c-format
+#, c-format
 msgid "%d curves exported to %s"
-msgstr "वक्र इसे निर्यात किया"
+msgstr "%d वक्र %s को निर्यात किया"
 
 #: effects/Equalization.cpp:3218
 msgid "Curves exported"
@@ -6183,12 +6181,10 @@ msgid "Noise Removal by Dominic Mazzoni"
 msgstr "शोर हटाना Dominic Mazzoni द्वारा"
 
 #: effects/NoiseRemoval.cpp:893
-#, fuzzy
 msgid "&Get Noise Profile"
-msgstr "शोर प्रोफ़ाईल लें"
+msgstr "शोर प्रोफ़ाईल लें (&G)"
 
 #: effects/NoiseRemoval.cpp:904
-#, fuzzy
 msgid "Noise re&duction (dB):"
 msgstr "शोर में कमी (dB):"
 
@@ -6197,9 +6193,8 @@ msgid "Noise reduction"
 msgstr "शोर घटाना"
 
 #: effects/NoiseRemoval.cpp:913
-#, fuzzy
 msgid "&Sensitivity (dB):"
-msgstr "संवेदनशीलता"
+msgstr "&संवेदनशीलता (dB):"
 
 #: effects/NoiseRemoval.cpp:918
 #: toolbars/TranscriptionToolBar.cpp:220
@@ -6208,37 +6203,32 @@ msgid "Sensitivity"
 msgstr "संवेदनशीलता"
 
 #: effects/NoiseRemoval.cpp:922
-#, fuzzy
 msgid "Fr&equency smoothing (Hz):"
-msgstr "आवृति एकसार (Hz):"
+msgstr "आवृति एकसारता (Hz): "
 
 #: effects/NoiseRemoval.cpp:927
 msgid "Frequency smoothing"
 msgstr "आवृति एकसार कर रहे हैं"
 
 #: effects/NoiseRemoval.cpp:931
-#, fuzzy
 msgid "Attac&k/decay time (secs):"
-msgstr "चढ़ाव/उतार समय (सेकेंड):"
+msgstr "चढ़ाव/उतार समय (सेकेंड): (&k)"
 
 #: effects/NoiseRemoval.cpp:936
-#, fuzzy
 msgid "Attack/decay time"
 msgstr "चढ़ाव/उतार समय"
 
 #: effects/NoiseRemoval.cpp:940
-#, fuzzy
 msgid "Noise:"
-msgstr "शोर..."
+msgstr "शोर :"
 
 #: effects/NoiseRemoval.cpp:942
-#, fuzzy
 msgid "Re&move"
-msgstr "हटाएं"
+msgstr "हटाएं (&m)"
 
 #: effects/NoiseRemoval.cpp:944
 msgid "&Isolate"
-msgstr ""
+msgstr "अलग करें (&I)"
 
 #: effects/NoiseRemoval.h:37
 msgid "Noise Removal..."
