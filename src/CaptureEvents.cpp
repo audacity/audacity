@@ -68,7 +68,7 @@ static void main_do_event(GdkEvent *event, wxArrayPtrVoid *queue)
 CaptureEvents::CaptureEvents()
 {
 #if wxUSE_LOG
-   // disable log flushing from here because a call to wxGetApp().Yield() shouldn't
+   // disable log flushing from here because a call to wxTheApp->Yield() shouldn't
    // normally result in message boxes popping up &c
    wxLog::Suspend();
 #endif

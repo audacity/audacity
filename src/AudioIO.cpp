@@ -377,7 +377,7 @@ AudioIO::~AudioIO()
 
    /* Delete is a "graceful" way to stop the thread.
       (Kill is the not-graceful way.) */
-   wxGetApp().Yield();
+   wxTheApp->Yield();
    mThread->Delete();
    
    if(mSilentBuf) 

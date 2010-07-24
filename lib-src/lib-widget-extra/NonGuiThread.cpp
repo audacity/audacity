@@ -66,7 +66,7 @@ void NonGuiThread::RunInThread(tGenericFn pFn)
    {
       wxMilliSleep( 100 );
       //traits->AlwaysYield();
-      wxGetApp().Yield();
+      wxTheApp->Yield();
    }
    #ifdef WXMSW
    traits->AfterChildWaitLoop(cookie);

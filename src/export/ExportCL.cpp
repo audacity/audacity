@@ -413,7 +413,7 @@ int ExportCL::Export(AudacityProject *project,
    // Wait for process to terminate
    while (p->IsActive()) {
       wxMilliSleep(10);
-      wxGetApp().Yield();
+      wxTheApp->Yield();
    }
 
    // Display output on error or if the user wants to see it
