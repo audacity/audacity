@@ -271,9 +271,13 @@ private:
    AudacityProject  *mProject;
    AliasedFileArray *mAliasedFiles;
    bool              mIsSaving;
+   bool              mHasMissingFiles;
+   bool              mHasNonMissingFiles;
 
-   wxListCtrl       *mFileList;
+   wxStaticText     *mMessageStaticText;
+   wxListCtrl       *mFileListCtrl;
    wxButton         *mCopySelectedFilesButton;
+   wxButton         *mCopyAllFilesButton;
    wxChoice         *mFutureActionChoice;
    
 public:
@@ -307,18 +311,26 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
    mProject(project),
    mAliasedFiles(aliasedFiles),
    mIsSaving(isSaving),
-   mFileList(NULL),
-   mCopySelectedFilesButton(NULL), 
+   mHasMissingFiles(false), 
+   mHasNonMissingFiles(false), 
+   mMessageStaticText(NULL),
+   mFileListCtrl(NULL),
+   mCopySelectedFilesButton(NULL),
+   mCopyAllFilesButton(NULL), 
    mFutureActionChoice(NULL)
 {
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
 
-wxString kDependencyDialogMessage =
+const wxString kStdMessage =
+_("Copying these files into your project will remove this dependency.\
+\nThis needs more disk space, but is safer."); 
+
+const wxString kMessageForMissingFiles =
 _("Copying these files into your project will remove this dependency.\
 \nThis needs more disk space, but is safer.\
-\n\nFiles shown in italics have been moved or deleted and cannot be copied.\
+\n\nFiles shown as MISSING have been moved or deleted and cannot be copied.\
 \nRestore them to their original location to be able to copy into project."); 
 
 void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
@@ -326,21 +338,23 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      S.AddVariableText(kDependencyDialogMessage, false);
+      mMessageStaticText = S.AddVariableText(kStdMessage, false);
 
       S.StartStatic(_("Project Dependencies"));
       {  
-         mFileList = S.Id(FileListID).AddListControlReportMode();
-         mFileList->InsertColumn(0, _("Audio file"));
-         mFileList->SetColumnWidth(0, 220);
-         mFileList->InsertColumn(1, _("Disk space"));
-         mFileList->SetColumnWidth(1, 120);
+         mFileListCtrl = S.Id(FileListID).AddListControlReportMode();
+         mFileListCtrl->InsertColumn(0, _("Audio file"));
+         mFileListCtrl->SetColumnWidth(0, 220);
+         mFileListCtrl->InsertColumn(1, _("Disk space"));
+         mFileListCtrl->SetColumnWidth(1, 120);
          PopulateList();
 
          mCopySelectedFilesButton = 
             S.Id(CopySelectedFilesButtonID).AddButton(
                _("Copy Selected Audio Into Project"), 
                wxALIGN_LEFT);
+         mCopySelectedFilesButton->Enable(
+            mFileListCtrl->GetSelectedItemCount() > 0);
       }
       S.EndStatic();
 
@@ -351,7 +365,12 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          }
          S.Id(wxID_NO).AddButton(_("Do Not Copy Any Audio"));
 
-         S.Id(wxID_YES).AddButton(_("Copy All Audio into Project (Safer)"));
+         mCopyAllFilesButton = 
+            S.Id(wxID_YES).AddButton(_("Copy All Audio into Project (Safer)"));
+
+         // Enabling mCopyAllFilesButton is also done in PopulateList, 
+         // but at its call above, mCopyAllFilesButton does not yet exist.
+         mCopyAllFilesButton->Enable(!mHasMissingFiles);
       }
       S.EndHorizontalLay();
       
@@ -363,9 +382,10 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
             choices.Add(_("Ask me"));
             choices.Add(_("Always copy all audio (safest)"));
             choices.Add(_("Never copy any audio"));
-            mFutureActionChoice = S.Id(FutureActionChoiceID).AddChoice(
-               _("Whenever a project depends on other files:"),
-               _("Ask me"), &choices);
+            mFutureActionChoice = 
+               S.Id(FutureActionChoiceID).AddChoice(
+                  _("Whenever a project depends on other files:"),
+                  _("Ask me"), &choices);
          }
          S.EndHorizontalLay();
       } else
@@ -382,35 +402,46 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
 
 void DependencyDialog::PopulateList()
 {
-   mFileList->DeleteAllItems();
+   mFileListCtrl->DeleteAllItems();
 
+   mHasMissingFiles = false;
+   mHasNonMissingFiles = false;
    unsigned int i;
    for (i = 0; i < mAliasedFiles->GetCount(); i++) {
       wxFileName fileName = mAliasedFiles->Item(i).mFileName;
       wxLongLong byteCount = (mAliasedFiles->Item(i).mByteCount * 124) / 100;
       bool bOriginalExists = mAliasedFiles->Item(i).mbOriginalExists;
 
-      mFileList->InsertItem(i, fileName.GetFullPath());
-      mFileList->SetItem(i, 1, Internat::FormatSize(byteCount));
-      mFileList->SetItemData(i, long(bOriginalExists));
       if (bOriginalExists)
-         mFileList->SetItemState(i, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      {
+         mFileListCtrl->InsertItem(i, fileName.GetFullPath());
+         mHasNonMissingFiles = true;
+         mFileListCtrl->SetItemState(i, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      }
       else 
       {
-         mFileList->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
+         mFileListCtrl->InsertItem(i, _("MISSING ") + fileName.GetFullPath());
+         mHasMissingFiles = true;
+         mFileListCtrl->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
 
-         //mFileList->SetItemBackgroundColour(i, *wxRED);
-         //mFileList->SetItemTextColour(i, *wxWHITE);
-         mFileList->SetItemTextColour(i, *wxRED);
-
-         mFileList->SetItemFont(i, *wxITALIC_FONT);
+         //mFileListCtrl->SetItemBackgroundColour(i, *wxRED);
+         //mFileListCtrl->SetItemTextColour(i, *wxWHITE);
+         mFileListCtrl->SetItemTextColour(i, *wxRED);
+         //mFileListCtrl->SetItemFont(i, *wxITALIC_FONT);
       }
+      mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount));
+      mFileListCtrl->SetItemData(i, long(bOriginalExists));
    }
+   mMessageStaticText->SetLabel(mHasMissingFiles ? 
+                                 kMessageForMissingFiles : 
+                                 kStdMessage);
+   if (mCopyAllFilesButton)
+      mCopyAllFilesButton->Enable(!mHasMissingFiles);
 }
 
 void DependencyDialog::OnList(wxListEvent &evt)
 {
-   if (!mCopySelectedFilesButton || !mFileList)
+   if (!mCopySelectedFilesButton || !mFileListCtrl)
       return;
 
    wxString itemStr = evt.GetText();
@@ -419,10 +450,10 @@ void DependencyDialog::OnList(wxListEvent &evt)
       // the original is missing, i.e., moved or deleted.
       // wxListCtrl does not provide for items that are not 
       // allowed to be selected, so always deselect these items. 
-      mFileList->SetItemState(evt.GetIndex(), 0, wxLIST_STATE_SELECTED); // Deselect.
+      mFileListCtrl->SetItemState(evt.GetIndex(), 0, wxLIST_STATE_SELECTED); // Deselect.
 
-   int selectedCount = mFileList->GetSelectedItemCount();
-   mCopySelectedFilesButton->Enable(selectedCount > 0);
+   mCopySelectedFilesButton->Enable(
+      mFileListCtrl->GetSelectedItemCount() > 0);
 }
 
 void DependencyDialog::OnNo(wxCommandEvent &evt)
@@ -444,7 +475,7 @@ void DependencyDialog::OnCopySelectedFiles(wxCommandEvent &evt)
    int i;
    // Count backwards so we can remove as we go
    for(i=(int)mAliasedFiles->GetCount()-1; i>=0; i--) {
-      if (mFileList->GetItemState(i, wxLIST_STATE_SELECTED)) {
+      if (mFileListCtrl->GetItemState(i, wxLIST_STATE_SELECTED)) {
          aliasedFilesToDelete.Add(mAliasedFiles->Item(i));
          mAliasedFiles->RemoveAt(i);
       }
@@ -453,7 +484,8 @@ void DependencyDialog::OnCopySelectedFiles(wxCommandEvent &evt)
    RemoveDependencies(mProject, &aliasedFilesToDelete);
    PopulateList();
 
-   if (mAliasedFiles->GetCount() == 0) {
+   if ((mAliasedFiles->GetCount() == 0) || !mHasNonMissingFiles)
+   {
       SaveFutureActionChoice();
       EndModal(wxID_NO);  // Don't need to remove dependencies
    }
