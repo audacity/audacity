@@ -532,9 +532,8 @@ SourceOutputStream::~SourceOutputStream()
 }
 
 
-// Must be wide enough for AudacityLogoWithName. Use double width + 10.
-//vvv    const int ImageCacheWidth = (2 * LOGOWITHNAME_WIDTH) + 10; 
-const int ImageCacheWidth = 440;// Must be wide enough for AudacityLogo which is 215, use double width.
+// Must be wide enough for bmpAudacityLogo. Use double width + 10.
+const int ImageCacheWidth = 440;
 
 const int ImageCacheHeight = 836;
 
