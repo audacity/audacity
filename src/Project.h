@@ -278,7 +278,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void EditByLabel( WaveTrack::EditFunction action, bool syncTracks ); 
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
    bool IsSticky();
-   bool GetStickyFlag() { return mStickyFlag; };
    void SetStickyFlag(bool flag);
 
    // "exclusive" mute means mute the chosen track and unmute all others.

@@ -4392,7 +4392,7 @@ bool AudacityProject::GetSnapTo()
 bool AudacityProject::IsSticky()
 {
 #ifdef EXPERIMENTAL_LINKING
-   return GetStickyFlag();
+   return mStickyFlag;
 #else
    return false;
 #endif
