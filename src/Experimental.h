@@ -149,6 +149,6 @@
 #endif
 
 // AWD: new Truncate Silence code
-//#define EXPERIMENTAL_TRUNC_SILENCE
+#define EXPERIMENTAL_TRUNC_SILENCE
 
 #endif
