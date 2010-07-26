@@ -204,20 +204,8 @@ from there.  Audacity will look for a file called "Pause.png".
 
 #define LOGOWITHNAME_WIDTH 506
 #define LOGOWITHNAME_HEIGHT 200
-//vvv For now, do the new image the old-fashioned way, not via Theme.
-   // DEFINE_IMAGE(bmpAudacityLogoWithName, wxImage(LOGOWITHNAME_WIDTH, LOGOWITHNAME_HEIGHT), wxT("AudacityLogoWithName"));
 
-// AWD: no sense in statically building the XPM into every file that includes
-// this one; the few that need it should include it themselves.
-//#ifndef HAVE_AUDACITYLOGOWITHNAME
-//   #define HAVE_AUDACITYLOGOWITHNAME
-//   #include "../images/AudacityLogoWithName.xpm"
-//#ifdef __WXGTK__
-//   #include "../images/AudacityLogoAlpha.xpm"
-//#endif
-//#endif
-
-   DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo")); //vvv
+   DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo")); 
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
 
    DEFINE_IMAGE( bmpLinkSelect, wxImage(27, 27), wxT("LinkSelect"));

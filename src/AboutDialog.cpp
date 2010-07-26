@@ -180,6 +180,8 @@ AboutDialog::AboutDialog(wxWindow * parent)
    this->Centre();
 }
 
+#define ABOUT_DIALOG_WIDTH 506
+
 void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
    wxString versionStr = AUDACITY_VERSION_STRING;
@@ -297,13 +299,14 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
                           //vvv theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
                           //vvv theTheme.Bitmap(bmpAudacityLogoWithName), 
                           RescaledBitmap,
-                          wxDefaultPosition, wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
+                          wxDefaultPosition, 
+                          wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
    delete logo;
    S.Prop(0).AddWindow( icon );
 
    HtmlWindow *html = new LinkingHtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
-                                         wxSize(LOGOWITHNAME_WIDTH, 359), // wxSize(480, 240),
+                                         wxSize(ABOUT_DIALOG_WIDTH, 359), 
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
    html->SetFocus();
    html->SetPage(creditStr);
@@ -325,7 +328,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    S.StartNotebookPage( _("Build Information") );  // start the tab
    S.StartVerticalLay(2);  // create the window
    HtmlWindow *html = new HtmlWindow(S.GetParent(), -1, wxDefaultPosition,
-                           wxSize(LOGOWITHNAME_WIDTH, 264), 
+                           wxSize(ABOUT_DIALOG_WIDTH, 264), 
                            wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
    // create a html pane in it to put the content in.
    wxString enabled = _("Enabled");
@@ -523,7 +526,7 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
    S.StartVerticalLay(1);
    HtmlWindow *html = new HtmlWindow(S.GetParent(), -1,
                                          wxDefaultPosition,
-                                         wxSize(LOGOWITHNAME_WIDTH, 264), // wxSize(480, 240),
+                                         wxSize(ABOUT_DIALOG_WIDTH, 264), 
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
 
 // I tried using <pre> here to get a monospaced font,
