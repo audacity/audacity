@@ -7316,17 +7316,10 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    GetTitleBarRect(r, bev);
    bev.Inflate(-1, -1);
 
-   // Load small link icon bitmap for future use
-   wxBitmap link(theTheme.Image(bmpLinkTP));
-
    // Draw title text
    SetTrackInfoFont(dc);
    wxString titleStr = t->GetName();
    int allowableWidth = GetTitleWidth() - 38 - kLeftInset;
-
-   // Make room for the link icon if necessary
-   if (t->IsSynchroSelected())
-      allowableWidth -= link.GetWidth() - 2; // let it closer than to the arrow
 
    long textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
@@ -7359,15 +7352,16 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
                  s);
 
    // Link icon: drawn to the left of the dropdown arrow
-   if (t->IsSynchroSelected()) {
-      wxBitmap link(theTheme.Image(bmpLinkTP));
-      dc->DrawBitmap(link,
-                     // Arrow's left minus our width and an extra px
-                     bev.GetRight() - s - 3 - link.GetWidth() - 1,
-                     bev.y + 1,
-                     true);
-   }
-
+   //vvvvv  May want to put this elsewhere in the TrackInfo.
+   //wxBitmap link(theTheme.Image(bmpLinkTP)); 
+   //if (t->IsSynchroSelected()) {
+   //   wxBitmap link(theTheme.Image(bmpLinkTP));
+   //   dc->DrawBitmap(link,
+   //                  // Arrow's left minus our width and an extra px
+   //                  bev.GetRight() - s - 3 - link.GetWidth() - 1,
+   //                  bev.y + 1,
+   //                  true);
+   //}
 
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
