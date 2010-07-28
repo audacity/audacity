@@ -258,15 +258,17 @@ public:
 
 private:
    void PopulateList();
-   void OnList(wxListEvent &evt);
+   void PopulateOrExchange(ShuttleGui & S);
+
+   // event handlers
+   void OnCancel(wxCommandEvent& evt);
    void OnCopySelectedFiles(wxCommandEvent &evt);
+   void OnList(wxListEvent &evt);
    void OnNo(wxCommandEvent &evt);
    void OnYes(wxCommandEvent &evt);
 
-   void PopulateOrExchange(ShuttleGui & S);
    void SaveFutureActionChoice();
    
-   virtual void OnCancel(wxCommandEvent& evt);
    
    AudacityProject  *mProject;
    AliasedFileArray *mAliasedFiles;
@@ -294,9 +296,9 @@ BEGIN_EVENT_TABLE(DependencyDialog, wxDialog)
    EVT_LIST_ITEM_SELECTED(FileListID, DependencyDialog::OnList)
    EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
    EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
-   EVT_BUTTON(wxID_NO, DependencyDialog::OnNo)
-   EVT_BUTTON(wxID_YES, DependencyDialog::OnYes)
-   EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel) // seems to be needed
+   EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save without Copying"
+   EVT_BUTTON(wxID_YES, DependencyDialog::OnYes) // "Copy All Files (Safer)"
+   EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel)  // "Cancel Save"
 END_EVENT_TABLE()
 
 DependencyDialog::DependencyDialog(wxWindow *parent,
@@ -304,7 +306,7 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
                                    AudacityProject *project,
                                    AliasedFileArray *aliasedFiles,
                                    bool isSaving):
-   wxDialog(parent, id, _("Project depends on other audio files"),
+   wxDialog(parent, id, _("Project Depends on Other Audio Files"),
             wxDefaultPosition, wxDefaultSize,
             isSaving ? wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX) :
                        wxDEFAULT_DIALOG_STYLE), // no close box when saving
@@ -323,14 +325,12 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
    PopulateOrExchange(S);
 }
 
-const wxString kStdMessage =
+const wxString kStdMsg =
 _("Copying these files into your project will remove this dependency.\
-\nThis needs more disk space, but is safer."); 
+\nThis is safer, but needs more disk space."); 
 
-const wxString kMessageForMissingFiles =
-_("Copying these files into your project will remove this dependency.\
-\nThis needs more disk space, but is safer.\
-\n\nFiles shown as MISSING have been moved or deleted and cannot be copied.\
+const wxString kExtraMsgForMissingFiles =
+_("\n\nFiles shown as MISSING have been moved or deleted and cannot be copied.\
 \nRestore them to their original location to be able to copy into project."); 
 
 void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
@@ -338,23 +338,25 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      mMessageStaticText = S.AddVariableText(kStdMessage, false);
+      mMessageStaticText = S.AddVariableText(kStdMsg, false);
 
       S.StartStatic(_("Project Dependencies"));
       {  
          mFileListCtrl = S.Id(FileListID).AddListControlReportMode();
-         mFileListCtrl->InsertColumn(0, _("Audio file"));
+         mFileListCtrl->InsertColumn(0, _("Audio File"));
          mFileListCtrl->SetColumnWidth(0, 220);
-         mFileListCtrl->InsertColumn(1, _("Disk space"));
+         mFileListCtrl->InsertColumn(1, _("Disk Space"));
          mFileListCtrl->SetColumnWidth(1, 120);
          PopulateList();
 
          mCopySelectedFilesButton = 
             S.Id(CopySelectedFilesButtonID).AddButton(
-               _("Copy Selected Audio Into Project"), 
+               _("Copy Selected Files"), 
                wxALIGN_LEFT);
          mCopySelectedFilesButton->Enable(
             mFileListCtrl->GetSelectedItemCount() > 0);
+         mCopySelectedFilesButton->SetDefault(); 
+         mCopySelectedFilesButton->SetFocus();
       }
       S.EndStatic();
 
@@ -362,11 +364,13 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
       {
          if (mIsSaving) {
             S.Id(wxID_CANCEL).AddButton(_("Cancel Save"));
+            S.Id(wxID_NO).AddButton(_("Save without Copying"));
          }
-         S.Id(wxID_NO).AddButton(_("Do Not Copy Any Audio"));
+         else
+            S.Id(wxID_NO).AddButton(_("Do Not Copy"));
 
          mCopyAllFilesButton = 
-            S.Id(wxID_YES).AddButton(_("Copy All Audio into Project (Safer)"));
+            S.Id(wxID_YES).AddButton(_("Copy All Files (Safer)"));
 
          // Enabling mCopyAllFilesButton is also done in PopulateList, 
          // but at its call above, mCopyAllFilesButton does not yet exist.
@@ -380,8 +384,8 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          {
             wxArrayString choices;
             choices.Add(_("Ask me"));
-            choices.Add(_("Always copy all audio (safest)"));
-            choices.Add(_("Never copy any audio"));
+            choices.Add(_("Always copy all files (safest)"));
+            choices.Add(_("Never copy any files"));
             mFutureActionChoice = 
                S.Id(FutureActionChoiceID).AddChoice(
                   _("Whenever a project depends on other files:"),
@@ -423,18 +427,17 @@ void DependencyDialog::PopulateList()
          mFileListCtrl->InsertItem(i, _("MISSING ") + fileName.GetFullPath());
          mHasMissingFiles = true;
          mFileListCtrl->SetItemState(i, 0, wxLIST_STATE_SELECTED); // Deselect.
-
-         //mFileListCtrl->SetItemBackgroundColour(i, *wxRED);
-         //mFileListCtrl->SetItemTextColour(i, *wxWHITE);
          mFileListCtrl->SetItemTextColour(i, *wxRED);
-         //mFileListCtrl->SetItemFont(i, *wxITALIC_FONT);
       }
       mFileListCtrl->SetItem(i, 1, Internat::FormatSize(byteCount));
       mFileListCtrl->SetItemData(i, long(bOriginalExists));
    }
-   mMessageStaticText->SetLabel(mHasMissingFiles ? 
-                                 kMessageForMissingFiles : 
-                                 kStdMessage);
+   
+   wxString msg = kStdMsg;
+   if (mHasMissingFiles)
+      msg += kExtraMsgForMissingFiles;
+   mMessageStaticText->SetLabel(msg);
+
    if (mCopyAllFilesButton)
       mCopyAllFilesButton->Enable(!mHasMissingFiles);
 }
@@ -533,13 +536,18 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
 
    if (aliasedFiles.GetCount() == 0) {
       if (!isSaving) 
-         wxMessageBox(
-_("Your project is currently self-contained; it does not depend on any external audio files. \
-\n\nIf you Undo back to a state where it has external dependencies on imported files, it will no \
-longer be self-contained. If you then Save without copying those files in, you may lose data."),
-                      _("Dependency check"),
+      {
+         wxString msg = 
+            _("Your project is currently self-contained; it does not depend on any external audio files.");
+         if (project->GetUndoManager()->UndoAvailable())
+            msg += 
+_("\n\nIf you Undo back to a state where it has external dependencies on imported files, it will no \
+longer be self-contained. If you then Save without copying those files in, you may lose data.");
+         wxMessageBox(msg, 
+                      _("Dependency Check"),
                       wxOK | wxICON_INFORMATION,
                       project);
+      }
       return true; // Nothing to do.
    }
    

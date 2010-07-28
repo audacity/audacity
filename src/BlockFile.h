@@ -194,7 +194,7 @@ class AliasBlockFile : public BlockFile
    AliasBlockFile(wxFileName baseFileName,
                   wxFileName aliasedFileName, sampleCount aliasStart,
                   sampleCount aliasLen, int aliasChannel);
-   AliasBlockFile(wxFileName existingSummaryFile,
+   AliasBlockFile(wxFileName existingSummaryFileName,
                   wxFileName aliasedFileName, sampleCount aliasStart,
                   sampleCount aliasLen, int aliasChannel,
                   float min, float max, float RMS);
@@ -222,7 +222,7 @@ class AliasBlockFile : public BlockFile
    /// Modifies the name of the aliased file.
    void ChangeAliasedFile(wxFileName newAliasedFile);
    /// Returns TRUE if this is an AliasBlockFile
-   bool IsAlias() { return true; }
+   virtual bool IsAlias() { return true; }
 
  protected:
    /// Write the summary to disk, using the derived ReadData() to get the data
@@ -237,17 +237,4 @@ class AliasBlockFile : public BlockFile
 };
 
 #endif
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ebcc7075-5983-4092-a316-1f2e2b0bcbc3
-
 

@@ -25,29 +25,38 @@
 
 #include "../ondemand/ODManager.h"
 
-PCMAliasBlockFile::PCMAliasBlockFile(wxFileName fileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel):
-   AliasBlockFile(fileName, aliasedFile, aliasStart, aliasLen, aliasChannel)
+PCMAliasBlockFile::PCMAliasBlockFile(
+      wxFileName fileName,
+      wxFileName aliasedFileName, 
+      sampleCount aliasStart,
+      sampleCount aliasLen, int aliasChannel) 
+: AliasBlockFile(fileName, aliasedFileName, 
+                 aliasStart, aliasLen, aliasChannel)
 {
    AliasBlockFile::WriteSummary();
 }
 
-PCMAliasBlockFile::PCMAliasBlockFile(wxFileName fileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,bool writeSummary):
-   AliasBlockFile(fileName, aliasedFile, aliasStart, aliasLen, aliasChannel)
+PCMAliasBlockFile::PCMAliasBlockFile(
+      wxFileName fileName,
+      wxFileName aliasedFileName, 
+      sampleCount aliasStart,
+      sampleCount aliasLen, int aliasChannel,bool writeSummary)
+: AliasBlockFile(fileName, aliasedFileName, 
+                 aliasStart, aliasLen, aliasChannel)
 {
    if(writeSummary)
       AliasBlockFile::WriteSummary();
 }
 
-PCMAliasBlockFile::PCMAliasBlockFile(wxFileName existingFileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,
-                     float min, float max, float rms):
-   AliasBlockFile(existingFileName, aliasedFile, aliasStart, aliasLen,
-                  aliasChannel, min, max, rms)
+PCMAliasBlockFile::PCMAliasBlockFile(
+      wxFileName existingSummaryFileName,
+      wxFileName aliasedFileName, 
+      sampleCount aliasStart,
+      sampleCount aliasLen, int aliasChannel,
+      float min, float max, float rms)
+: AliasBlockFile(existingSummaryFileName, aliasedFileName, 
+                 aliasStart, aliasLen,
+                 aliasChannel, min, max, rms)
 {
 }
 
@@ -173,6 +182,7 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
 BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
+   bool bMissingAliasFile = false;
    wxFileName summaryFileName;
    wxFileName aliasFileName;
    int aliasStart=0, aliasLen=0, aliasChannel=0;
@@ -209,7 +219,10 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
             // Allow fallback of looking for the file name, located in the data directory.
             aliasFileName.Assign(dm.GetProjectDataDir(), strValue);
          else 
-            return NULL;
+         {
+            aliasFileName.Assign(strValue);
+            bMissingAliasFile = true;
+         }
       }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
       { // integer parameters
@@ -239,11 +252,33 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 
    }
 
-   if (!XMLValueChecker::IsGoodFileName(summaryFileName.GetFullName(), summaryFileName.GetPath(wxPATH_GET_VOLUME)) || 
-         !XMLValueChecker::IsGoodFileName(aliasFileName.GetFullName(), aliasFileName.GetPath(wxPATH_GET_VOLUME)) || 
-         (aliasLen <= 0) || (aliasLen < 0.0) || !XMLValueChecker::IsValidChannel(aliasChannel) || (rms < 0.0))
+   if (!XMLValueChecker::IsGoodFileName(
+         summaryFileName.GetFullName(), 
+         summaryFileName.GetPath(wxPATH_GET_VOLUME)) || 
+         // Check the aliasFileName validity only if we do not already know file is missing.
+         (!bMissingAliasFile && 
+            !XMLValueChecker::IsGoodFileName(
+               aliasFileName.GetFullName(), 
+               aliasFileName.GetPath(wxPATH_GET_VOLUME))) ||
+         (aliasStart < 0) || (aliasLen < 0) || 
+         !XMLValueChecker::IsValidChannel(aliasChannel) || 
+         (rms < 0.0))
       return NULL;
 
+   // Even if we know aliasFileName is missing (bMissingAliasFile), 
+   // create a PCMAliasBlockFile, so it gets put on DirManager's 
+   // mBlockFileHash and gets discovered in DirManager::ProjectFSCK(), 
+   // where user will get to decide what to do about it. 
+   // Vaughan, 2010-07-28 (bug 113): 
+   //    Previously, the "aliasfile" clause above returned NULL. 
+   //    This caused Sequence::HandleXMLEndTag to create a SilentBlockFile, 
+   //    but that never got put on DirManager's mBlockFileHash, so 
+   //    DirManager::ProjectFSCK() never found the missing files. 
+   //    That caused FindDependencies to miss them, too, so a re-opened 
+   //    project with missing alias file(s) would show as self-contained, 
+   //    among other errors.
+   //vvv *Not sure whether that "replace missing blockfiles with SilentBlockFiles" 
+   //    loop in Sequence::HandleXMLEndTag can now be removed...
    return new PCMAliasBlockFile(summaryFileName, aliasFileName,
                                 aliasStart, aliasLen, aliasChannel,
                                 min, max, rms);
@@ -253,16 +288,4 @@ void PCMAliasBlockFile::Recover(void)
 {
    WriteSummary();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 7afeef28-696c-40c6-9558-c1134ac04a66
-
 

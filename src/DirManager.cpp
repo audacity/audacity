@@ -407,12 +407,12 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
    ProgressDialog *progress = new ProgressDialog(_("Progress"),
                                                  _("Saving project data files"));
 
-   int total=blockFileHash.size();
+   int total = mBlockFileHash.size();
    int count=0;
 
-   BlockHash::iterator i=blockFileHash.begin();
+   BlockHash::iterator i = mBlockFileHash.begin();
    bool success = true;
-   while(i != blockFileHash.end() && success) {
+   while(i != mBlockFileHash.end() && success) {
       BlockFile *b = i->second;
       
       if (b->IsLocked())
@@ -436,8 +436,8 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
 
       projFull = oldLoc;
 
-      BlockHash::iterator i=blockFileHash.begin();
-      while(i != blockFileHash.end()) {
+      BlockHash::iterator i = mBlockFileHash.begin();
+      while(i != mBlockFileHash.end()) {
          BlockFile *b = i->second;
          MoveToNewProjectDirectory(b);
 
@@ -464,7 +464,7 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
    // loading a project; in this latter case, the movement code does
    // nothing because SetProject is called before there are any
    // blockfiles.  Cleanup code trigger is the same
-   if(blockFileHash.size()>0){
+   if (mBlockFileHash.size()>0){
       // Clean up after ourselves; look for empty directories in the old
       // and new project directories.  The easiest way to do this is to
       // recurse depth-first and rmdir every directory seen in old and
@@ -800,7 +800,7 @@ wxFileName DirManager::MakeBlockFileName()
 
       baseFileName.Printf(wxT("e%02x%02x%03x"),topnum,midnum,filenum);
 
-      if(blockFileHash.find(baseFileName) == blockFileHash.end()){
+      if (mBlockFileHash.find(baseFileName) == mBlockFileHash.end()){
          // not in the hash, good. 
          if(AssignFile(ret,baseFileName,TRUE)==FALSE){
             
@@ -832,7 +832,7 @@ BlockFile *DirManager::NewSimpleBlockFile(
        new SimpleBlockFile(fileName, sampleData, sampleLen, format,
                            allowDeferredWrite);
 
-   blockFileHash[fileName.GetName()]=newBlockFile;
+   mBlockFileHash[fileName.GetName()]=newBlockFile;
 
    return newBlockFile;
 }
@@ -847,7 +847,7 @@ BlockFile *DirManager::NewAliasBlockFile(
        new PCMAliasBlockFile(fileName,
                              aliasedFile, aliasStart, aliasLen, aliasChannel);
 
-   blockFileHash[fileName.GetName()]=newBlockFile;
+   mBlockFileHash[fileName.GetName()]=newBlockFile;
    aliasList.Add(aliasedFile);
 
    return newBlockFile;
@@ -863,7 +863,7 @@ BlockFile *DirManager::NewODAliasBlockFile(
        new ODPCMAliasBlockFile(fileName,
                              aliasedFile, aliasStart, aliasLen, aliasChannel);
 
-   blockFileHash[fileName.GetName()]=newBlockFile;
+   mBlockFileHash[fileName.GetName()]=newBlockFile;
    aliasList.Add(aliasedFile);
 
    return newBlockFile;
@@ -879,7 +879,7 @@ BlockFile *DirManager::NewODDecodeBlockFile(
        new ODDecodeBlockFile(fileName,
                              aliasedFile, aliasStart, aliasLen, aliasChannel, decodeType);
 
-   blockFileHash[fileName.GetName()]=newBlockFile;
+   mBlockFileHash[fileName.GetName()]=newBlockFile;
    aliasList.Add(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
                                //I don't immediately see a place where alias files remove when a file is closed.
 
@@ -894,12 +894,12 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
    if (!b->IsLocked()) {
       b->Ref();
 		//mchinen:July 13 2009 - not sure about this, but it needs to be added to the hash to be able to save if not locked.
-		//note that this shouldn't hurt blockFileHash's that already contain the filename, since it should just overwrite.
+		//note that this shouldn't hurt mBlockFileHash's that already contain the filename, since it should just overwrite.
 		//but it's something to watch out for.
       //
       // LLL: Except for silent block files which have no filename.
       if (!b->GetFileName().GetName().IsEmpty()) {
-         blockFileHash[b->GetFileName().GetName()]=b;
+         mBlockFileHash[b->GetFileName().GetName()]=b;
       }
       return b;
    }
@@ -933,7 +933,7 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
       if (b2 == NULL)
          return NULL;
 
-      blockFileHash[newFile.GetName()]=b2;
+      mBlockFileHash[newFile.GetName()]=b2;
       aliasList.Add(newFile.GetFullPath());
    }
 
@@ -1015,7 +1015,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    //
 
    wxString name = (*mLoadingTarget)->GetFileName().GetName();    
-   BlockFile *retrieved = blockFileHash[name];
+   BlockFile *retrieved = mBlockFileHash[name];
    if (retrieved) {
       // Lock it in order to delete it safely, i.e. without having
       // it delete the file, too...
@@ -1028,7 +1028,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    // This is a new object
-   blockFileHash[name]=*mLoadingTarget;
+   mBlockFileHash[name]=*mLoadingTarget;
    // MakeBlockFileName wasn't used so we must add the directory
    // balancing information
    BalanceInfoAdd(name);
@@ -1184,7 +1184,7 @@ void DirManager::Deref(BlockFile * f)
       // and this block is no longer needed.  Remove it from the hash
       // table.
 
-      blockFileHash.erase(theFileName);
+      mBlockFileHash.erase(theFileName);
       BalanceInfoDel(theFileName);
 
    }
@@ -1240,16 +1240,14 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
 
    bool needToRename = false;
    wxBusyCursor busy;
-   BlockHash::iterator it=blockFileHash.begin();
-   while(it != blockFileHash.end()) {
+   BlockHash::iterator it = mBlockFileHash.begin();
+   while(it != mBlockFileHash.end()) {
       BlockFile *b = it->second;
       // don't worry, we don't rely on this cast unless IsAlias is true
       AliasBlockFile *ab = (AliasBlockFile*)b;
 
       if (b->IsAlias() && ab->GetAliasedFile() == fName) {
          needToRename = true;
-         //wxPrintf(_("Changing block %s\n"), b->GetFileName().GetFullName().c_str());
-         //ab->ChangeAliasedFile(renamedFile);
          
          //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
          ab->LockRead();
@@ -1261,8 +1259,6 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
       if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
          needToRename = true;
-         //wxPrintf(_("Changing block %s\n"), b->GetFileName().GetFullName().c_str());
-         //ab->ChangeAliasedFile(renamedFile);
          
          //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
          db->LockRead();
@@ -1282,8 +1278,8 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
          // just in case!!!
 
          // Put things back where they were
-         BlockHash::iterator it=blockFileHash.begin();
-         while(it != blockFileHash.end()) {
+         BlockHash::iterator it = mBlockFileHash.begin();
+         while(it != mBlockFileHash.end()) {
             BlockFile *b = it->second;
             AliasBlockFile *ab = (AliasBlockFile*)b;
             ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
@@ -1308,8 +1304,8 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       else
       {
          //point the aliases to the new filename.
-         BlockHash::iterator it=blockFileHash.begin();
-         while(it != blockFileHash.end()) {
+         BlockHash::iterator it = mBlockFileHash.begin();
+         while(it != mBlockFileHash.end()) {
             BlockFile *b = it->second;
             AliasBlockFile *ab = (AliasBlockFile*)b;
             ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
@@ -1363,7 +1359,7 @@ void DirManager::Deref()
 // data is regenerated if possible orreplaced with silence, orphaned
 // blockfiles are deleted.... but only after user confirm!  Note that
 // even blockfiles not referenced by the current savefile (but locked
-// by history) will be reflected in the blockFileHash, and that's a
+// by history) will be reflected in the mBlockFileHash, and that's a
 // good thing; this is one reason why we use the hash and not the most
 // recent savefile.
 
@@ -1372,7 +1368,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       
    // get a rough guess of how many blockfiles will be found/processed
    // at each step by looking at the size of the blockfile hash
-   int blockcount=blockFileHash.size();
+   int blockcount = mBlockFileHash.size();
    int ret=0;
    int ndx;
 
@@ -1399,7 +1395,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       wxString basename=fullname.GetName();
       
       diskFileHash[basename.c_str()]=0; // just needs to be defined
-      if ((blockFileHash.find(basename) == blockFileHash.end()) &&       // is orphaned
+      if ((mBlockFileHash.find(basename) == mBlockFileHash.end()) &&       // is orphaned
             (!bIgnoreNonAUs ||      // check only AU, e.g., not an imported ogg or branding jpg
                fullname.GetExt().IsSameAs(wxT("au"))))
       {
@@ -1412,8 +1408,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
    }
    
    // enumerate missing alias files
-   BlockHash::iterator i=blockFileHash.begin();
-   while(i != blockFileHash.end()) {
+   BlockHash::iterator i = mBlockFileHash.begin();
+   while(i != mBlockFileHash.end()) {
       wxString key=i->first;
       BlockFile *b=i->second;
       
@@ -1437,8 +1433,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
    }
 
    // enumerate missing summary blockfiles
-   i=blockFileHash.begin();
-   while(i != blockFileHash.end()) {
+   i = mBlockFileHash.begin();
+   while(i != mBlockFileHash.end()) {
       wxString key=i->first;
       BlockFile *b=i->second;
       
@@ -1459,8 +1455,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
    }
 
    // enumerate missing data blockfiles
-   i=blockFileHash.begin();
-   while(i != blockFileHash.end()) {
+   i = mBlockFileHash.begin();
+   while(i != mBlockFileHash.end()) {
       wxString key=i->first;
       BlockFile *b=i->second;
 
@@ -1502,7 +1498,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       
       prompt.Printf(promptA,(int)orphanList.GetCount());
       
-      const wxChar *buttons[]={_("Delete orphaned files [safe and recommended]"),
+      const wxChar *buttons[]={_("Delete orphaned files (safe and recommended)"),
                                _("Continue without deleting; ignore the extra files this session"),
                                _("Close project immediately with no changes"),NULL};
       int action = ShowMultiDialog(prompt,
@@ -1537,8 +1533,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       
          prompt.Printf(promptA,missingAliasFiles.size());
       
-         const wxChar *buttons[]={_("Replace missing data with silence [permanent upon save]"),
-                                  _("Temporarily replace missing data with silence [this session only]"),
+         const wxChar *buttons[]={_("Replace missing data with silence (permanent upon save)"),
+                                  _("Temporarily replace missing data with silence (this session only)"),
                                   _("Close project immediately with no further changes"),NULL};
          action = ShowMultiDialog(prompt,
                                       _("Warning"),
@@ -1554,6 +1550,9 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
          
          if(action==0){
             // silence the blockfiles by yanking the filename
+            //vvvvv But this causes Check Dependencies to show "MISSING" with no filename.
+            //vvvvv Replace with actual SilentBlockFile, as that's what the user commanded.
+            //vvvvv Call RemoveDependencies from Dependencies.cpp instead?
             wxFileName dummy;
             dummy.Clear();
             b->ChangeAliasedFile(dummy);
@@ -1583,8 +1582,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       
          prompt.Printf(promptA,missingSummaryList.size());
       
-         const wxChar *buttons[]={_("Regenerate summary files [safe and recommended]"),
-                                  _("Fill in silence for missing display data [this session only]"),
+         const wxChar *buttons[]={_("Regenerate summary files (safe and recommended)"),
+                                  _("Fill in silence for missing display data (this session only"),
                                   _("Close project immediately with no further changes"),NULL};
          action = ShowMultiDialog(prompt,
                                       _("Warning"),
@@ -1625,8 +1624,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       
          prompt.Printf(promptA,missingDataList.size());
       
-         const wxChar *buttons[]={_("Replace missing data with silence [permanent immediately]"),
-                                  _("Temporarily replace missing data with silence [this session only]"),
+         const wxChar *buttons[]={_("Replace missing data with silence (permanent immediately)"),
+                                  _("Temporarily replace missing data with silence (this session only)"),
                                   _("Close project immediately with no further changes"),NULL};
          action = ShowMultiDialog(prompt,
                                       _("Warning"),
@@ -1674,7 +1673,7 @@ void DirManager::RemoveOrphanedBlockfiles()
 
    // get a rough guess of how many blockfiles will be found/processed
    // at each step by looking at the size of the blockfile hash
-   int blockcount=blockFileHash.size();
+   int blockcount = mBlockFileHash.size();
 
    // enumerate *all* files in the project directory
    wxArrayString fnameList;
@@ -1691,7 +1690,7 @@ void DirManager::RemoveOrphanedBlockfiles()
       wxFileName fullname(fnameList[i]);
       wxString basename=fullname.GetName();
       
-      if(blockFileHash.find(basename) == blockFileHash.end()){
+      if (mBlockFileHash.find(basename) == mBlockFileHash.end()){
          // the blockfile on disk is orphaned
          orphanList.Add(fullname.GetFullPath());
       }
@@ -1720,8 +1719,8 @@ void DirManager::FillBlockfilesCache()
    BlockHash::iterator i;
    int numNeed = 0;
 
-   i = blockFileHash.begin();
-   while (i != blockFileHash.end())
+   i = mBlockFileHash.begin();
+   while (i != mBlockFileHash.end())
    {
       BlockFile *b = i->second;
       if (b->GetNeedFillCache())
@@ -1735,9 +1734,9 @@ void DirManager::FillBlockfilesCache()
    ProgressDialog progress(_("Caching audio"),
                            _("Caching audio into memory"));
 
-   i = blockFileHash.begin();
+   i = mBlockFileHash.begin();
    int current = 0;
-   while (i != blockFileHash.end())
+   while (i != mBlockFileHash.end())
    {
       BlockFile *b = i->second;
       if (b->GetNeedFillCache() && (GetFreeMemory() > lowMem)) {
@@ -1756,8 +1755,8 @@ void DirManager::WriteCacheToDisk()
    BlockHash::iterator i;
    int numNeed = 0;
 
-   i = blockFileHash.begin();
-   while (i != blockFileHash.end())
+   i = mBlockFileHash.begin();
+   while (i != mBlockFileHash.end())
    {
       BlockFile *b = i->second;
       if (b->GetNeedWriteCacheToDisk())
@@ -1771,9 +1770,9 @@ void DirManager::WriteCacheToDisk()
    ProgressDialog progress(_("Saving recorded audio"),
                            _("Saving recorded audio to disk"));
 
-   i = blockFileHash.begin();
+   i = mBlockFileHash.begin();
    int current = 0;
-   while (i != blockFileHash.end())
+   while (i != mBlockFileHash.end())
    {
       BlockFile *b = i->second;
       if (b->GetNeedWriteCacheToDisk())

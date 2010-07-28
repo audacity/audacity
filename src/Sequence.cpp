@@ -767,8 +767,8 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!wxStrcmp(attr, wxT("maxsamples")))
          {
             // Dominic, 12/10/2006:
-			//    Let's check that maxsamples is >= 1024 and <= 64 * 1024 * 1024 
-			//    - that's a pretty wide range of reasonable values.
+			   //    Let's check that maxsamples is >= 1024 and <= 64 * 1024 * 1024 
+			   //    - that's a pretty wide range of reasonable values.
             if ((nValue < 1024) || (nValue > 64 * 1024 * 1024))
             {
                mErrorOpening = true;

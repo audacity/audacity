@@ -162,7 +162,7 @@ class DirManager: public XMLTagHandler {
 
    int mRef; // MM: Current refcount
 
-   BlockHash blockFileHash; // repository for blockfiles
+   BlockHash mBlockFileHash; // repository for blockfiles
    DirHash   dirTopPool;    // available toplevel dirs
    DirHash   dirTopFull;    // full toplevel dirs
    DirHash   dirMidPool;    // available two-level dirs

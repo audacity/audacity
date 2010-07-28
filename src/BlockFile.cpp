@@ -537,11 +537,13 @@ AliasBlockFile::AliasBlockFile(wxFileName baseFileName,
    mSilentAliasLog=FALSE;
 }
 
-AliasBlockFile::AliasBlockFile(wxFileName existingSummaryFile,
-                               wxFileName aliasedFileName, sampleCount aliasStart,
-                               sampleCount aliasLen, int aliasChannel,
+AliasBlockFile::AliasBlockFile(wxFileName existingSummaryFileName,
+                               wxFileName aliasedFileName, 
+                               sampleCount aliasStart,
+                               sampleCount aliasLen, 
+                               int aliasChannel,
                                float min, float max, float rms):
-   BlockFile(existingSummaryFile, aliasLen),
+   BlockFile(existingSummaryFileName, aliasLen),
    mAliasedFileName(aliasedFileName),
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
