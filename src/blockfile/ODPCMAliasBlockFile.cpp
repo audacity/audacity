@@ -42,21 +42,27 @@ const int aheaderTagLen = 20;
 char aheaderTag[aheaderTagLen + 1] = "AudacityBlockFile112";
 
 
-ODPCMAliasBlockFile::ODPCMAliasBlockFile(wxFileName fileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel):
-   PCMAliasBlockFile(fileName, aliasedFile, aliasStart, aliasLen, aliasChannel,false)
+ODPCMAliasBlockFile::ODPCMAliasBlockFile(
+      wxFileName fileName,
+      wxFileName aliasedFileName, 
+      sampleCount aliasStart,
+      sampleCount aliasLen, int aliasChannel)
+: PCMAliasBlockFile(fileName, aliasedFileName, 
+                    aliasStart, aliasLen, aliasChannel,false)
 {
    mSummaryAvailable = mSummaryBeingComputed = mHasBeenSaved = false;
 }
 
 ///summaryAvailable should be true if the file has been written already.
-ODPCMAliasBlockFile::ODPCMAliasBlockFile(wxFileName existingFileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,
-                     float min, float max, float rms, bool summaryAvailable):
-   PCMAliasBlockFile(existingFileName, aliasedFile, aliasStart, aliasLen,
-                  aliasChannel, min, max, rms)
+ODPCMAliasBlockFile::ODPCMAliasBlockFile(
+      wxFileName existingSummaryFileName,
+      wxFileName aliasedFileName, 
+      sampleCount aliasStart,
+      sampleCount aliasLen, int aliasChannel,
+      float min, float max, float rms, bool summaryAvailable)
+: PCMAliasBlockFile(existingSummaryFileName, aliasedFileName, 
+                    aliasStart, aliasLen,
+                    aliasChannel, min, max, rms)
 {
    mSummaryAvailable=summaryAvailable;
    mSummaryBeingComputed=mHasBeenSaved=false;      

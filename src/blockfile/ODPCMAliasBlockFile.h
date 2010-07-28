@@ -46,17 +46,14 @@ Some of these methods have been overridden only because they used the unsafe wxL
 class ODPCMAliasBlockFile : public PCMAliasBlockFile
 {
  public:
-
-   // Constructor / Destructor
-
    /// Constructs a PCMAliasBlockFile, writing the summary to disk
    ODPCMAliasBlockFile(wxFileName baseFileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel);
-   ODPCMAliasBlockFile(wxFileName existingFileName,
-                     wxFileName aliasedFile, sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,
-                     float min, float max, float rms, bool summaryAvailable);
+                        wxFileName aliasedFileName, sampleCount aliasStart,
+                        sampleCount aliasLen, int aliasChannel);
+   ODPCMAliasBlockFile(wxFileName existingSummaryFileName,
+                        wxFileName aliasedFileName, sampleCount aliasStart,
+                        sampleCount aliasLen, int aliasChannel,
+                        float min, float max, float rms, bool summaryAvailable);
    virtual ~ODPCMAliasBlockFile();
    
    //checks to see if summary data has been computed and written to disk yet.  Thread safe.  Blocks if we are writing summary data.

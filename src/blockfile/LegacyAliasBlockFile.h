@@ -23,7 +23,7 @@ class LegacyAliasBlockFile : public PCMAliasBlockFile
 
    /// Constructs a LegacyAliasBlockFile, writing the summary to disk
    LegacyAliasBlockFile(wxFileName fileName,
-                        wxFileName aliasedFile,
+                        wxFileName aliasedFileName,
                         sampleCount aliasStart,
                         sampleCount aliasLen,
                         int aliasChannel,

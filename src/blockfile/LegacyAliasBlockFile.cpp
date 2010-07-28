@@ -19,14 +19,14 @@
 #include "../Internat.h"
 
 LegacyAliasBlockFile::LegacyAliasBlockFile(wxFileName fileName,
-                                           wxFileName aliasedFile,
+                                           wxFileName aliasedFileName,
                                            sampleCount aliasStart,
                                            sampleCount aliasLen,
                                            int aliasChannel,
                                            sampleCount summaryLen,
-                                           bool noRMS):
-   PCMAliasBlockFile(fileName, aliasedFile, aliasStart, aliasLen,
-                     aliasChannel, 0.0, 0.0, 0.0)
+                                           bool noRMS)
+: PCMAliasBlockFile(fileName, aliasedFileName, aliasStart, aliasLen,
+                    aliasChannel, 0.0, 0.0, 0.0)
 {
    sampleFormat format;
 
