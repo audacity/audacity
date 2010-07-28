@@ -96,7 +96,7 @@ bool XMLValueChecker::IsGoodFileString(wxString str)
    return (IsGoodString(str) && 
             !str.IsEmpty() && 
             (str.Length() <= 260) && // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms, sometimes huge.
-            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters. //vvv (this won't work on CVS HEAD)
+            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters. 
 }
 
 bool XMLValueChecker::IsGoodInt(const wxString strInt)
