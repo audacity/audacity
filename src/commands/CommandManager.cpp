@@ -950,13 +950,13 @@ void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsReq
 
    wxUint32 missingFlags = flagsRequired & (~flagsGot );
    if( missingFlags & AudioIONotBusyFlag )
-      reason= _("You can only do this when playing and recording are\n stopped.  [Pausing is not sufficient.]");
+      reason= _("You can only do this when playing and recording are\n stopped. (Pausing is not sufficient.)");
    else if( missingFlags & StereoRequiredFlag )
-      reason = _("You must first select some stereo audio for this\n to use.  [You can't use this with mono.]");
+      reason = _("You must first select some stereo audio for this\n to use. (You cannot use this with mono.)");
    else if( missingFlags & TimeSelectedFlag )
       reason = _("You must first select some audio for this to use.");
    else if( missingFlags & WaveTracksSelectedFlag)
-      reason = _("You must first select some audio for this\n to use. [Selecting other kinds of track won't work.]");
+      reason = _("You must first select some audio for this\n to use. (Selecting other kinds of track won't work.)");
    // If the only thing wrong was no tracks, we do nothing and don't report a problem
    else if( missingFlags == TracksExistFlag )
       return;
