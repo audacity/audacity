@@ -548,8 +548,8 @@ wxFileName DirManager::MakeBlockFilePath(wxString value){
    return dir;
 }
 
-bool DirManager::AssignFile(wxFileName &fileName,
-			    wxString value,
+bool DirManager::AssignFile(wxFileName &fileName, 
+                            wxString value,
                             bool diskcheck){
    wxFileName dir=MakeBlockFilePath(value);
 
@@ -1552,7 +1552,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
             // silence the blockfiles by yanking the filename
             //vvvvv But this causes Check Dependencies to show "MISSING" with no filename.
             //vvvvv Replace with actual SilentBlockFile, as that's what the user commanded.
-            //vvvvv Call RemoveDependencies from Dependencies.cpp instead?
+            //vvvvv Call RemoveDependencies (from Dependencies.*) instead?
             wxFileName dummy;
             dummy.Clear();
             b->ChangeAliasedFile(dummy);
@@ -1560,6 +1560,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
             ret |= FSCKstatus_CHANGED;
          }else if(action==1){
             // silence the log for this session
+            //vvvvv Should do more than that...!
             b->SilenceAliasLog();
          }
          i++;

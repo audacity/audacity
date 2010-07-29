@@ -65,6 +65,18 @@ bool XMLValueChecker::IsGoodFileName(const wxString strFileName, const wxString 
    return (fileName.IsOk() && fileName.FileExists());
 }
 
+bool XMLValueChecker::IsGoodFileString(wxString str)
+{
+   return (IsGoodString(str) && 
+            !str.IsEmpty() && 
+
+            // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms, 
+            // sometimes huge, but we use 260 for all platforms.
+            (str.Length() <= 260) && 
+
+            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters. 
+}
+
 bool XMLValueChecker::IsGoodSubdirName(const wxString strSubdirName, const wxString strDirName /* = "" */)
 {
    // Test strSubdirName. 
@@ -91,13 +103,17 @@ bool XMLValueChecker::IsGoodPathName(const wxString strPathName)
    return XMLValueChecker::IsGoodFileName(fileName.GetFullName(), fileName.GetPath(wxPATH_GET_VOLUME));
 }
 
-bool XMLValueChecker::IsGoodFileString(wxString str)
+bool XMLValueChecker::IsGoodPathString(wxString str)
 {
    return (IsGoodString(str) && 
-            !str.IsEmpty() && 
-            (str.Length() <= 260) && // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms, sometimes huge.
-            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters. 
+            !str.IsEmpty() 
+
+            #ifdef _WIN32
+               && (str.Length() <= MAX_PATH)
+            #endif
+            );
 }
+
 
 bool XMLValueChecker::IsGoodInt(const wxString strInt)
 {
@@ -189,15 +205,3 @@ XMLTagHandler *XMLTagHandler::ReadXMLChild(const char *tag)
 {
    return HandleXMLChild(UTF8CTOWX(tag).c_str());
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 6aabae58-19bd-4b3a-aa6c-08432a7e106e
-

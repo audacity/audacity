@@ -182,7 +182,6 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
 BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
-   bool bMissingAliasFile = false;
    wxFileName summaryFileName;
    wxFileName aliasFileName;
    int aliasStart=0, aliasLen=0, aliasChannel=0;
@@ -201,15 +200,13 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       if( !wxStricmp(attr, wxT("summaryfile")) )
       {
          // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-         if (!XMLValueChecker::IsGoodFileString(strValue))
-            return NULL;
-
-         #ifdef _WIN32
-            if (strValue.Length() + 1 + dm.GetProjectDataDir().Length() > MAX_PATH)
-               return NULL;
-         #endif
-
-         dm.AssignFile(summaryFileName,value,FALSE);
+         if (XMLValueChecker::IsGoodFileString(strValue))
+         {
+            #ifdef _WIN32
+               if (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
+            #endif
+                  dm.AssignFile(summaryFileName, strValue, false);
+         }
       }
       else if( !wxStricmp(attr, wxT("aliasfile")) )
       {
@@ -218,26 +215,38 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
          else if (XMLValueChecker::IsGoodFileName(strValue, dm.GetProjectDataDir()))
             // Allow fallback of looking for the file name, located in the data directory.
             aliasFileName.Assign(dm.GetProjectDataDir(), strValue);
-         else 
-         {
+         else if (XMLValueChecker::IsGoodPathString(strValue))
+            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName() 
+            // and XMLValueChecker::IsGoodFileName, because both do existence tests, 
+            // but we want to keep the reference to the missing file because it's a good path string.
             aliasFileName.Assign(strValue);
-            bMissingAliasFile = true;
-         }
       }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
       { // integer parameters
          if( !wxStricmp(attr, wxT("aliasstart")) )
-            aliasStart = nValue;
+         {
+            if (nValue >= 0)
+               aliasStart = nValue;
+         }
          else if( !wxStricmp(attr, wxT("aliaslen")) )
-            aliasLen = nValue;
+         {
+            if (nValue >= 0)
+               aliasLen = nValue;
+         }
          else if( !wxStricmp(attr, wxT("aliaschannel")) )
-            aliasChannel = nValue;
+         {
+            if (XMLValueChecker::IsValidChannel(aliasChannel))
+               aliasChannel = nValue;
+         }
          else if( !wxStricmp(attr, wxT("min")) )
             min = nValue;
          else if( !wxStricmp(attr, wxT("max")) )
             max = nValue;
          else if( !wxStricmp(attr, wxT("rms")) )
-            rms = nValue;
+         {
+            if (nValue >= 0)
+               rms = nValue;
+         }
       }      
 		//the min/max can be (are?) doubles as well, so handle this case:
 		else if( !wxStrcmp(attr, wxT("min")) && 
@@ -252,33 +261,10 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 
    }
 
-   if (!XMLValueChecker::IsGoodFileName(
-         summaryFileName.GetFullName(), 
-         summaryFileName.GetPath(wxPATH_GET_VOLUME)) || 
-         // Check the aliasFileName validity only if we do not already know file is missing.
-         (!bMissingAliasFile && 
-            !XMLValueChecker::IsGoodFileName(
-               aliasFileName.GetFullName(), 
-               aliasFileName.GetPath(wxPATH_GET_VOLUME))) ||
-         (aliasStart < 0) || (aliasLen < 0) || 
-         !XMLValueChecker::IsValidChannel(aliasChannel) || 
-         (rms < 0.0))
-      return NULL;
-
-   // Even if we know aliasFileName is missing (bMissingAliasFile), 
+   // Even if, for example, we know aliasFileName is blank, 
    // create a PCMAliasBlockFile, so it gets put on DirManager's 
    // mBlockFileHash and gets discovered in DirManager::ProjectFSCK(), 
    // where user will get to decide what to do about it. 
-   // Vaughan, 2010-07-28 (bug 113): 
-   //    Previously, the "aliasfile" clause above returned NULL. 
-   //    This caused Sequence::HandleXMLEndTag to create a SilentBlockFile, 
-   //    but that never got put on DirManager's mBlockFileHash, so 
-   //    DirManager::ProjectFSCK() never found the missing files. 
-   //    That caused FindDependencies to miss them, too, so a re-opened 
-   //    project with missing alias file(s) would show as self-contained, 
-   //    among other errors.
-   //vvv *Not sure whether that "replace missing blockfiles with SilentBlockFiles" 
-   //    loop in Sequence::HandleXMLEndTag can now be removed...
    return new PCMAliasBlockFile(summaryFileName, aliasFileName,
                                 aliasStart, aliasLen, aliasChannel,
                                 min, max, rms);
