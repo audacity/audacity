@@ -1527,18 +1527,21 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
          action = 0;
       } else
       {
-         wxString promptA =
-            _("Project check detected %d input file(s) being used in place\n('alias files') are now missing.  There is no way for Audacity\nto recover these files automatically; you may choose to\npermanently fill in silence for the missing files, temporarily\nfill in silence for this session only, or close the project now\nand try to restore the missing files by hand.");
-         wxString prompt;
+         wxString msgA =
+_("Project check detected %d external audio file(s) ('aliased files') \
+\nare now missing. There is no way for Audacity to recover these \
+\nfiles automatically. \
+\n\nIf you choose the last option below, you can try to find and \
+\nrestore the missing files to their previous location.");
+         wxString msg;
+         msg.Printf(msgA, missingAliasFiles.size());
       
-         prompt.Printf(promptA,missingAliasFiles.size());
-      
-         const wxChar *buttons[]={_("Replace missing data with silence (permanent upon save)"),
-                                  _("Temporarily replace missing data with silence (this session only)"),
-                                  _("Close project immediately with no further changes"),NULL};
-         action = ShowMultiDialog(prompt,
-                                      _("Warning"),
-                                      buttons);
+         const wxChar *buttons[] = 
+            {_("Replace missing audio with silence (permanent upon save)"),
+               _("Temporarily replace missing audio with silence (this session only)"),
+               _("Close project immediately with no further changes"),
+               NULL};
+         action = ShowMultiDialog(msg, _("Warning - Missing Aliased Files"), buttons);
 
          if(action==2)return (ret | FSCKstatus_CLOSEREQ);
       }
@@ -1578,7 +1581,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       } else
       {
          wxString promptA =
-            _("Project check detected %d missing summary file(s) (.auf).\nAudacity can fully regenerate these summary files from the\noriginal audio data in the project.");
+            _("Project check detected %d missing summary file(s) (.auf).\nAudacity can fully regenerate these summary files from the\noriginal audio in the project.");
          wxString prompt;
       
          prompt.Printf(promptA,missingSummaryList.size());
