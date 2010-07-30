@@ -6752,30 +6752,31 @@ void TrackPanel::OnChangeOctave(wxCommandEvent & event)
 void TrackPanel::OnSetName(wxCommandEvent &event)
 {
    Track *t = mPopupMenuTarget;
-
-   if (t) {
-      wxString defaultStr = t->GetName();
-      wxString newName = wxGetTextFromUser(_("Change track name to:"),
-                                           _("Track Name"), defaultStr);
-      //if we have a linked channel this name should change as well (otherwise sort by name and time will crash)
-      if (newName != wxT("")) {
+   if (t) 
+   {
+      wxString oldName = t->GetName();
+      wxString newName = 
+         wxGetTextFromUser(_("Change track name to:"),
+                           _("Track Name"), oldName);
+      if (newName != wxT("")) // wxGetTextFromUser returns empty string on Cancel.
+      {
          t->SetName(newName);
-         if(t->GetLinked())
-         {
+         // if we have a linked channel this name should change as well 
+         // (otherwise sort by name and time will crash).
+         if (t->GetLinked())
             t->GetLink()->SetName(newName);
-         }
+
+         MixerBoard* pMixerBoard = this->GetMixerBoard();
+         if (pMixerBoard && (t->GetKind() == Track::Wave))
+            pMixerBoard->UpdateName((WaveTrack*)t);
+
+         MakeParentPushState(wxString::Format(_("Renamed '%s' to '%s'"),
+                                              oldName.c_str(),
+                                              newName.c_str()),
+                             _("Name Change"));
+
+         Refresh(false);
       }
-
-      MixerBoard* pMixerBoard = this->GetMixerBoard();
-      if (pMixerBoard && (t->GetKind() == Track::Wave))
-         pMixerBoard->UpdateName((WaveTrack*)t);
-
-      MakeParentPushState(wxString::Format(_("Renamed '%s' to '%s'"),
-                                           defaultStr.c_str(),
-                                           newName.c_str()),
-                          _("Name Change"));
-
-      Refresh(false);
    }
 }
 
