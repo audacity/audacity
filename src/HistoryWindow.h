@@ -35,7 +35,6 @@ class HistoryWindow :public wxDialog {
    void DoUpdate();
    void UpdateLevels();
 
-   void OnShow(wxShowEvent & event);
    void OnSize(wxSizeEvent & event);
    void OnCloseWindow(wxCloseEvent & WXUNUSED(event));
    void OnChar(wxKeyEvent & event);

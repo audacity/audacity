@@ -42,7 +42,6 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(HistoryWindow, wxDialog)
-   EVT_SHOW(HistoryWindow::OnShow)
    EVT_SIZE(HistoryWindow::OnSize)
    EVT_CLOSE(HistoryWindow::OnCloseWindow)
    EVT_LIST_ITEM_SELECTED(wxID_ANY, HistoryWindow::OnItemSelected)
@@ -116,7 +115,9 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
-   DoUpdate();
+   // Vaughan, 2010-07-30: AudacityProject::OnHistory always calls Show() then 
+   // HistoryWindow::UpdateDisplay, so no need to do it here.
+   //    DoUpdate();
    mList->SetMinSize(mList->GetSize());
    Fit();
    SetMinSize(GetSize());
@@ -237,26 +238,8 @@ void HistoryWindow::OnSize(wxSizeEvent & event)
    mList->EnsureVisible(mSelected);
 }
 
-void HistoryWindow::OnShow(wxShowEvent & event)
-{
-   if (event.GetShow())
-      UpdateDisplay();
-}
-
 void HistoryWindow::OnChar(wxKeyEvent &event)
 {
    event.Skip(false);
    return;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: a32dc48c-50da-4cda-90a6-b5aa4fd7673e
-

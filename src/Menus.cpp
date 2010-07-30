@@ -4360,8 +4360,8 @@ void AudacityProject::OnHistory()
 {
    if (!mHistoryWindow)
       mHistoryWindow = new HistoryWindow(this, &mUndoManager);
-
-   mHistoryWindow->Show(true);
+   mHistoryWindow->Show();
+   mHistoryWindow->Raise();
    mHistoryWindow->UpdateDisplay();
 }
 
@@ -4369,7 +4369,6 @@ void AudacityProject::OnKaraoke()
 {
    if (!mLyricsWindow)
       mLyricsWindow = new LyricsWindow(this);
-   wxASSERT(mLyricsWindow);
    mLyricsWindow->Show();
    mLyricsWindow->Raise();
 }
