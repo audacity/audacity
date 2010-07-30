@@ -173,6 +173,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
+   //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
    bool AppendCoded(wxString fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
                             

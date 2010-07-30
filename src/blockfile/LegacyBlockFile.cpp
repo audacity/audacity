@@ -283,6 +283,9 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("legacyblockfile"));
 }
 
+// BuildFromXML methods should always return a BlockFile, not NULL,  
+// even if the result is flawed (e.g., refers to nonexistent file), 
+// as testing will be done in DirManager::ProjectFSCK().
 /// static
 BlockFile *LegacyBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs,
                                          sampleCount len, sampleFormat format)
@@ -296,38 +299,27 @@ BlockFile *LegacyBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs,
    {
       const wxChar *attr =  *attrs++;
       const wxChar *value = *attrs++;
-
       if (!value)
          break;
 
       const wxString strValue = value;
-      if( !wxStrcmp(attr, wxT("name")) )
-      {
-         if (!XMLValueChecker::IsGoodFileName(strValue, projDir))
-            return NULL;
+      if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
+         //vvv Should this be 
+         //    dm.AssignFile(fileName, strValue, false);
+         // as in PCMAliasBlockFile::BuildFromXML? Test with an old project.
          fileName.Assign(projDir, strValue);
-      }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
-      { // integer parameters
-         if( !wxStrcmp(attr, wxT("len")) )
+      {  // integer parameters
+         if (!wxStrcmp(attr, wxT("len")) && (nValue >= 0))
             len = nValue;
-         if( !wxStrcmp(attr, wxT("norms")) )
+         else if (!wxStrcmp(attr, wxT("norms")))
             noRMS = (nValue != 0);
-         if( !wxStrcmp(attr, wxT("format")) )
-         {
-            if (!XMLValueChecker::IsValidSampleFormat(nValue))
-               return NULL;
+         else if (!wxStrcmp(attr, wxT("format")) && XMLValueChecker::IsValidSampleFormat(nValue))
             format = (sampleFormat)nValue;
-         }
-         if( !wxStrcmp(attr, wxT("summarylen")) )
+         else if (!wxStrcmp(attr, wxT("summarylen")) && (nValue > 0))
             summaryLen = nValue;
       }
    }
-
-   if (!XMLValueChecker::IsGoodFileName(fileName.GetFullName(), 
-                                         fileName.GetPath(wxPATH_GET_VOLUME)) || 
-         (len <= 0) || (summaryLen <= 0))
-      return NULL;
 
    return new LegacyBlockFile(fileName, format, summaryLen, len, noRMS);
 }

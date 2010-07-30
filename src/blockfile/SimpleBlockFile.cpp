@@ -468,11 +468,14 @@ void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("simpleblockfile"));
 }
 
+// BuildFromXML methods should always return a BlockFile, not NULL,  
+// even if the result is flawed (e.g., refers to nonexistent file), 
+// as testing will be done in DirManager::ProjectFSCK().
 /// static
 BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileName fileName;
-   float min=0, max=0, rms=0;
+   float min = 0.0f, max = 0.0f, rms = 0.0f;
    sampleCount len = 0;
    double dblValue;
    long nValue;
@@ -481,40 +484,32 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
    {
       const wxChar *attr =  *attrs++;
       const wxChar *value = *attrs++;
-
       if (!value)
          break;
 
       const wxString strValue = value;
-      if( !wxStrcmp(attr, wxT("filename")) )
-      {
-         // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-         if (!XMLValueChecker::IsGoodFileString(strValue))
-            return NULL;
-
-         #ifdef _WIN32
-            if (strValue.Length() + 1 + dm.GetProjectDataDir().Length() > MAX_PATH)
-               return NULL;
-         #endif
-
+      if (!wxStricmp(attr, wxT("filename")) && 
+            // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
+            XMLValueChecker::IsGoodFileString(strValue)
+            #ifdef _WIN32
+               && (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
+            #endif
+            )
          dm.AssignFile(fileName,value,FALSE);
-      }
-      else if( !wxStrcmp(attr, wxT("len")) && XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
+      else if (!wxStrcmp(attr, wxT("len")) && 
+               XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue) && 
+               len > 0) 
          len = nValue;
-      else if( !wxStrcmp(attr, wxT("min")) && 
-               XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-         min = dblValue;
-      else if( !wxStrcmp(attr, wxT("max")) && 
-               XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-         max = dblValue;
-      else if( !wxStrcmp(attr, wxT("rms")) && 
-               XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-         rms = dblValue;
+      else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
+      {  // double parameters
+         if (!wxStricmp(attr, wxT("min")))
+            min = dblValue;
+         else if (!wxStricmp(attr, wxT("max")))
+            max = dblValue;
+         else if (!wxStricmp(attr, wxT("rms")) && (dblValue >= 0.0))
+            rms = dblValue;
+      }
    }
-
-   if (!XMLValueChecker::IsGoodFileString(fileName.GetFullName()) || 
-         (len <= 0) || (rms < 0.0))
-      return NULL;
 
    return new SimpleBlockFile(fileName, len, min, max, rms);
 }

@@ -40,9 +40,6 @@ class ODFileDecoder;
 class ODDecodeTask:public ODTask
 {
  public:
-   // Constructor / Destructor
-
-   /// Constructs an ODTask
    ODDecodeTask();
    virtual ~ODDecodeTask(){};
    

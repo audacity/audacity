@@ -78,11 +78,13 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("legacyblockfile"));
 }
 
+// BuildFromXML methods should always return a BlockFile, not NULL,  
+// even if the result is flawed (e.g., refers to nonexistent file), 
+// as testing will be done in DirManager::ProjectFSCK().
 BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs)
 {
    wxFileName summaryFileName;
    wxFileName aliasFileName;
-   
    int aliasStart=0, aliasLen=0, aliasChannel=0;
    int summaryLen=0;
    bool noRMS = false;
@@ -92,17 +94,15 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **a
    {
       const wxChar *attr =  *attrs++;
       const wxChar *value = *attrs++;
-
       if (!value)
          break;
 
       const wxString strValue = value;
-      if( !wxStricmp(attr, wxT("name")) )
-      {
-         if (!XMLValueChecker::IsGoodFileName(strValue, projDir))
-            return NULL;
+      if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
+         //vvv Should this be 
+         //    dm.AssignFile(summaryFileName, strValue, false);
+         // as in PCMAliasBlockFile::BuildFromXML? Test with an old project.
          summaryFileName.Assign(projDir, strValue, wxT(""));
-      }
       else if ( !wxStricmp(attr, wxT("aliaspath")) )
       {
          if (XMLValueChecker::IsGoodPathName(strValue))
@@ -110,31 +110,26 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **a
          else if (XMLValueChecker::IsGoodFileName(strValue, projDir))
             // Allow fallback of looking for the file name, located in the data directory.
             aliasFileName.Assign(projDir, strValue);
-         else 
-            return NULL;
+         else if (XMLValueChecker::IsGoodPathString(strValue))
+            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName() 
+            // and XMLValueChecker::IsGoodFileName, because both do existence tests, 
+            // but we want to keep the reference to the missing file because it's a good path string.
+            aliasFileName.Assign(strValue);
       }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
-      { // integer parameters
-         if( !wxStricmp(attr, wxT("aliasstart")) )
+      {  // integer parameters
+         if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
             aliasStart = nValue;
-         if( !wxStricmp(attr, wxT("aliaslen")) )
+         else if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
             aliasLen = nValue;
-         if( !wxStricmp(attr, wxT("aliaschannel")) )
+         else if (!wxStricmp(attr, wxT("aliaschannel")) && XMLValueChecker::IsValidChannel(aliasChannel))
             aliasChannel = nValue;
-         if( !wxStricmp(attr, wxT("summarylen")) )
+         else if (!wxStricmp(attr, wxT("summarylen")) && (nValue > 0))
             summaryLen = nValue;
-         if( !wxStricmp(attr, wxT("norms")) )
+         else if (!wxStricmp(attr, wxT("norms")))
             noRMS = (nValue != 0);
       }
    }
-
-   if (!XMLValueChecker::IsGoodFileName(summaryFileName.GetFullName(), 
-                                         summaryFileName.GetPath(wxPATH_GET_VOLUME)) || 
-         !XMLValueChecker::IsGoodFileName(aliasFileName.GetFullName(), 
-                                          aliasFileName.GetPath(wxPATH_GET_VOLUME)) ||
-         (aliasStart < 0) || (aliasLen <= 0) || 
-         !XMLValueChecker::IsValidChannel(aliasChannel) || (summaryLen <= 0))
-      return NULL;
 
    return new LegacyAliasBlockFile(summaryFileName, aliasFileName,
                                    aliasStart, aliasLen, aliasChannel,

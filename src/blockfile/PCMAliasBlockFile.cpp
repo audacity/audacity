@@ -180,12 +180,15 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("pcmaliasblockfile"));
 }
 
+// BuildFromXML methods should always return a BlockFile, not NULL,  
+// even if the result is flawed (e.g., refers to nonexistent file), 
+// as testing will be done in DirManager::ProjectFSCK().
 BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
    wxFileName summaryFileName;
    wxFileName aliasFileName;
    int aliasStart=0, aliasLen=0, aliasChannel=0;
-   float min=0, max=0, rms=0;
+   float min = 0.0f, max = 0.0f, rms = 0.0f;
    double dblValue;
    long nValue;
 
@@ -197,18 +200,15 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
          break;
 
       const wxString strValue = value;
-      if( !wxStricmp(attr, wxT("summaryfile")) )
-      {
-         // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-         if (XMLValueChecker::IsGoodFileString(strValue))
-         {
+      if (!wxStricmp(attr, wxT("summaryfile")) && 
+            // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
+            XMLValueChecker::IsGoodFileString(strValue)
             #ifdef _WIN32
-               if (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
+               && (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
             #endif
-                  dm.AssignFile(summaryFileName, strValue, false);
-         }
-      }
-      else if( !wxStricmp(attr, wxT("aliasfile")) )
+            )
+         dm.AssignFile(summaryFileName, strValue, false);
+      else if (!wxStricmp(attr, wxT("aliasfile")))
       {
          if (XMLValueChecker::IsGoodPathName(strValue))
             aliasFileName.Assign(strValue);
@@ -222,49 +222,36 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
             aliasFileName.Assign(strValue);
       }
       else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
-      { // integer parameters
-         if( !wxStricmp(attr, wxT("aliasstart")) )
-         {
-            if (nValue >= 0)
-               aliasStart = nValue;
-         }
-         else if( !wxStricmp(attr, wxT("aliaslen")) )
-         {
-            if (nValue >= 0)
-               aliasLen = nValue;
-         }
-         else if( !wxStricmp(attr, wxT("aliaschannel")) )
-         {
-            if (XMLValueChecker::IsValidChannel(aliasChannel))
-               aliasChannel = nValue;
-         }
-         else if( !wxStricmp(attr, wxT("min")) )
+      {  // integer parameters
+         if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
+            aliasStart = nValue;
+         else if (!wxStricmp(attr, wxT("aliaslen")) && (nValue >= 0))
+            aliasLen = nValue;
+         else if (!wxStricmp(attr, wxT("aliaschannel")) && XMLValueChecker::IsValidChannel(aliasChannel))
+            aliasChannel = nValue;
+         else if (!wxStricmp(attr, wxT("min")))
             min = nValue;
-         else if( !wxStricmp(attr, wxT("max")) )
+         else if (!wxStricmp(attr, wxT("max")))
             max = nValue;
-         else if( !wxStricmp(attr, wxT("rms")) )
-         {
-            if (nValue >= 0)
-               rms = nValue;
-         }
+         else if (!wxStricmp(attr, wxT("rms")) && (nValue >= 0))
+            rms = nValue;
       }      
-		//the min/max can be (are?) doubles as well, so handle this case:
-		else if( !wxStrcmp(attr, wxT("min")) && 
-               XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-         min = dblValue;
-      else if( !wxStrcmp(attr, wxT("max")) && 
-               XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-         max = dblValue;
-      else if( !wxStrcmp(attr, wxT("rms")) && 
-               XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-         rms = dblValue;
-
+		// mchinen: the min/max can be (are?) doubles as well, so handle those cases.
+      // Vaughan: The code to which I added the XMLValueChecker checks 
+      // used wxAtoi to convert the string to an int. 
+      // So it's possible some prior project formats used ints (?), so am keeping 
+      // those above, but yes, we need to handle floats.
+      else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
+      {  // double parameters
+         if (!wxStricmp(attr, wxT("min")))
+            min = dblValue;
+         else if (!wxStricmp(attr, wxT("max")))
+            max = dblValue;
+         else if (!wxStricmp(attr, wxT("rms")) && (dblValue >= 0.0))
+            rms = dblValue;
+      }
    }
 
-   // Even if, for example, we know aliasFileName is blank, 
-   // create a PCMAliasBlockFile, so it gets put on DirManager's 
-   // mBlockFileHash and gets discovered in DirManager::ProjectFSCK(), 
-   // where user will get to decide what to do about it. 
    return new PCMAliasBlockFile(summaryFileName, aliasFileName,
                                 aliasStart, aliasLen, aliasChannel,
                                 min, max, rms);

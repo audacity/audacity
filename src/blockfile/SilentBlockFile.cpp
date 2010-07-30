@@ -46,6 +46,9 @@ void SilentBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("silentblockfile"));
 }
 
+// BuildFromXML methods should always return a BlockFile, not NULL,  
+// even if the result is flawed (e.g., refers to nonexistent file), 
+// as testing will be done in DirManager::ProjectFSCK().
 /// static
 BlockFile *SilentBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
@@ -56,18 +59,16 @@ BlockFile *SilentBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
    {
        const wxChar *attr =  *attrs++;
        const wxChar *value = *attrs++;
-
        if (!value)
          break;
 
        const wxString strValue = value;
-       if( !wxStrcmp(attr, wxT("len")) && 
-            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
-          len = nValue;
+       if (!wxStrcmp(attr, wxT("len")) && 
+            XMLValueChecker::IsGoodInt(strValue) && 
+            strValue.ToLong(&nValue) && 
+            len > 0) 
+         len = nValue;
    }
-
-   if (len <= 0)
-      return NULL;
 
    return new SilentBlockFile(len);
 }
