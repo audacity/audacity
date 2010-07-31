@@ -297,7 +297,6 @@ void AudacityProject::CreateMenusAndCommands()
 
 #ifdef EXPERIMENTAL_FTP
       c->AddSeparator();
-
       c->AddItem(wxT("Upload File"), _("&Upload File..."), FN(OnUpload));
 #endif
 
@@ -2770,14 +2769,16 @@ void AudacityProject::OnExit()
    QuitAudacity();
 }
 
-void AudacityProject::OnUpload()
-{
-   //if (mTags->ShowEditDialog(this, wxT("Edit ID3 Tags (for MP3 exporting)")))
-   //   PushState(wxT("Edit ID3 Tags"), wxT("Edit ID3 Tags"));
+#ifdef EXPERIMENTAL_FTP
+   void AudacityProject::OnUpload()
+   {
+      //if (mTags->ShowEditDialog(this, wxT("Edit ID3 Tags (for MP3 exporting)")))
+      //   PushState(wxT("Edit ID3 Tags"), wxT("Edit ID3 Tags"));
 
-   UploadDialog dlog(this);
-   dlog.ShowModal();
-}
+      UploadDialog dlog(this);
+      dlog.ShowModal();
+   }
+#endif
 
 void AudacityProject::OnExportLabels()
 {

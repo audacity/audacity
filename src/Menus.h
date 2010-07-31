@@ -181,7 +181,9 @@ void OnExportMultiple();
 void OnExportLabels();
 void OnExportMIDI();
 
-void OnUpload();
+#ifdef EXPERIMENTAL_FTP
+   void OnUpload();
+#endif
 
 void OnPreferences();
 

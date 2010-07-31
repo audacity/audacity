@@ -2922,9 +2922,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
                            bool bWantSaveCompressed /*= false*/) 
 {
    if (bWantSaveCompressed) 
-   {
       wxASSERT(fromSaveAs);
-   }
    else
    {
       TrackListIterator iter(mTracks);
