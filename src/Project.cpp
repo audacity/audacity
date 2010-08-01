@@ -755,7 +755,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mTimerRecordCanceled(false),
      mMenuClose(false)
 {
-   int widths[] = {-1, 130};
+   int widths[] = {-2, -1};
    mStatusBar = CreateStatusBar(2);
    mStatusBar->SetStatusWidths(2, widths);
 
@@ -4325,8 +4325,13 @@ void AudacityProject::MayStartMonitoring()
 
 void AudacityProject::OnAudioIORate(int rate)
 {
-   mStatusBar->SetStatusText(wxString::Format(_("Actual Rate: %d"),
-                                              rate), 1);
+   wxString display;
+   display = wxString::Format(_("Actual Rate: %d"), rate);
+   int x, y;
+   mStatusBar->GetTextExtent(display, &x, &y);
+   int widths[] = {-1, x+50};
+   mStatusBar->SetStatusWidths(2, widths);
+   mStatusBar->SetStatusText(display, 1);
 }
 
 void AudacityProject::OnAudioIOStartRecording()
