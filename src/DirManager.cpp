@@ -1203,36 +1203,36 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
    /* i18n-hint: e.g. Try to go from "mysong.wav" to "mysong-old1.wav". */
    // Keep trying until we find a filename that doesn't exist.
 
-   wxFileName renamedFile = fName;
+   wxFileName renamedFileName = fName;
    int i = 0;
    do {
       i++;
       /* i18n-hint: This is the pattern for filenames that are created
          when a file needs to be backed up to a different name.  For
          example, mysong would become mysong-old1, mysong-old2, etc. */
-      renamedFile.SetName(wxString::Format(_("%s-old%d"), fName.GetName().c_str(), i));
-   } while (wxFileExists(renamedFile.GetFullPath()));
+      renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName().c_str(), i));
+   } while (wxFileExists(renamedFileName.GetFullPath()));
 
    // Test creating a file by that name to make sure it will
    // be possible to do the rename
 
-   wxFile testFile(renamedFile.GetFullPath(), wxFile::write);
+   wxFile testFile(renamedFileName.GetFullPath(), wxFile::write);
    if (!testFile.IsOpened()) {
       wxLogSysError(_("Unable to open/create test file"),
-                    renamedFile.GetFullPath().c_str());
+                    renamedFileName.GetFullPath().c_str());
       return false;
    }
 
    // Close the file prior to renaming.
    testFile.Close();
 
-   if (!wxRemoveFile(renamedFile.GetFullPath())) {
+   if (!wxRemoveFile(renamedFileName.GetFullPath())) {
       wxLogSysError(_("Unable to remove '%s'"),
-                    renamedFile.GetFullPath().c_str());
+                    renamedFileName.GetFullPath().c_str());
       return false;
    }
 
-   wxPrintf(_("Renamed file: %s\n"), renamedFile.GetFullPath().c_str());
+   wxPrintf(_("Renamed file: %s\n"), renamedFileName.GetFullPath().c_str());
 
    // Go through our block files and see if any indeed point to
    // the file we're concerned about.  If so, point the block file
@@ -1246,7 +1246,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       // don't worry, we don't rely on this cast unless IsAlias is true
       AliasBlockFile *ab = (AliasBlockFile*)b;
 
-      if (b->IsAlias() && ab->GetAliasedFile() == fName) {
+      if (b->IsAlias() && ab->GetAliasedFileName() == fName) {
          needToRename = true;
          
          //ODBlocks access the aliased file on another thread, so we need to pause them before this continues.
@@ -1269,7 +1269,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
 
    if (needToRename) {
       if (!wxRenameFile(fName.GetFullPath(),
-                        renamedFile.GetFullPath())) 
+                        renamedFileName.GetFullPath())) 
       {
          // ACK!!! The renaming was unsuccessful!!!
          // (This shouldn't happen, since we tried creating a
@@ -1285,7 +1285,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
             ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
 
 
-            if (b->IsAlias() && ab->GetAliasedFile() == fName)
+            if (b->IsAlias() && ab->GetAliasedFileName() == fName)
             {
                ab->UnlockRead();
             }
@@ -1298,7 +1298,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
          // Print error message and cancel the export
          wxLogSysError(_("Unable to rename '%s' to '%s'"),
                        fName.GetFullPath().c_str(),
-                       renamedFile.GetFullPath().c_str());
+                       renamedFileName.GetFullPath().c_str());
          return false;
       }
       else
@@ -1310,15 +1310,15 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
             AliasBlockFile *ab = (AliasBlockFile*)b;
             ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
 
-            if (b->IsAlias() && ab->GetAliasedFile() == fName)
+            if (b->IsAlias() && ab->GetAliasedFileName() == fName)
             {
-               ab->ChangeAliasedFile(renamedFile);
+               ab->ChangeAliasedFileName(renamedFileName);
                ab->UnlockRead();
                wxPrintf(_("Changed block %s to new alias name\n"), b->GetFileName().GetFullName().c_str());
                
             }
             if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
-               db->ChangeAudioFile(renamedFile);
+               db->ChangeAudioFile(renamedFileName);
                db->UnlockRead();
             }
             it++;
@@ -1327,7 +1327,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       }
 
       aliasList.Remove(fName.GetFullPath());
-      aliasList.Add(renamedFile.GetFullPath());
+      aliasList.Add(renamedFileName.GetFullPath());
    }
 
    // Success!!!  Either we successfully renamed the file,
@@ -1414,7 +1414,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       BlockFile *b=i->second;
       
       if(b->IsAlias()){
-         wxFileName aliasfile=((AliasBlockFile *)b)->GetAliasedFile();
+         wxFileName aliasfile=((AliasBlockFile *)b)->GetAliasedFileName();
          if(aliasfile.GetFullPath()!=wxEmptyString && !wxFileExists(aliasfile.GetFullPath())){
             missingAliasList[key]=b;
             missingAliasFiles[aliasfile.GetFullPath().c_str()]=0; // simply must be defined
@@ -1531,8 +1531,8 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
 _("Project check detected %d external audio file(s) ('aliased files') \
 \nare now missing. There is no way for Audacity to recover these \
 \nfiles automatically. \
-\n\nIf you choose the last option below, you can try to find and \
-\nrestore the missing files to their previous location.");
+\n\nIf you choose the second or third option below, you can try to \
+\nfind and restore the missing files to their previous location.");
          wxString msg;
          msg.Printf(msgA, missingAliasFiles.size());
       
@@ -1552,18 +1552,31 @@ _("Project check detected %d external audio file(s) ('aliased files') \
          //safe, we checked that it's an alias block file earlier
          
          if(action==0){
+            //vvvvv This is incorrect in several ways. 
+            //    It returns FSCKstatus_CHANGED, and that makes AudacityProject::OpenFile 
+            //    do a PushState, but the tracks lower on the stack are identical to 
+            //    these and already have lost the missing aliased filename, 
+            //    so Undo Project Repair does effectively nothing, and yet 
+            //    it isn't an Undo, because these blockfiles have empty aliasFileNames.
+            //    Should actually replace these blocks with SilentBlockFiles, a la 
+            //    RemoveDependencies() (from Dependencies.*). (More to follow!)
+
             // silence the blockfiles by yanking the filename
-            //vvvvv But this causes Check Dependencies to show "MISSING" with no filename.
-            //vvvvv Replace with actual SilentBlockFile, as that's what the user commanded.
-            //vvvvv Call RemoveDependencies (from Dependencies.*) instead?
             wxFileName dummy;
             dummy.Clear();
-            b->ChangeAliasedFile(dummy);
+            b->ChangeAliasedFileName(dummy);
             b->Recover();
             ret |= FSCKstatus_CHANGED;
          }else if(action==1){
             // silence the log for this session
-            //vvvvv Should do more than that...!
+            //vvvvv Note, then, that "temporarily replace with silence" is really not what's done.
+            //    Also, doesn't change the waveform to silence. 
+            //    Should it do a PushState? If so, then why have this other option?
+            //    Instead, get rid of this, make action 0 replace with SilentBlockFiles, 
+            //    so there's an Undo state with the bad alias files and another with SilentBlockFiles, 
+            //    so we can get back to the bad alias files state. 
+            //    We could even just get rid of the block files, but that might cause gaps, 
+            //    and would lose information about the lengths of those tracks. (More to follow!)
             b->SilenceAliasLog();
          }
          i++;

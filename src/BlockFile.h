@@ -212,16 +212,11 @@ class AliasBlockFile : public BlockFile
    // applying to Alias file access
    void SilenceAliasLog() { mSilentAliasLog = TRUE; }
 
-
    //
    // These methods are for advanced use only!
    //
-
-   /// Gets the name of the aliased file.
-   wxFileName GetAliasedFile();
-   /// Modifies the name of the aliased file.
-   void ChangeAliasedFile(wxFileName newAliasedFile);
-   /// Returns TRUE if this is an AliasBlockFile
+   wxFileName GetAliasedFileName() { return mAliasedFileName; };
+   void ChangeAliasedFileName(wxFileName newAliasedFile);
    virtual bool IsAlias() { return true; }
 
  protected:

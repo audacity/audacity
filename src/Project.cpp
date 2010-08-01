@@ -2465,22 +2465,24 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
             SetProjectTitle();
             mTrackPanel->Refresh(true);
 
-         }else if (status & FSCKstatus_CHANGED){
+         }
+         else if (status & FSCKstatus_CHANGED)
+         {
          
             t = iter.First();
             while (t) {
                if (t->GetKind() == Track::Wave)
                {
                   // Only wave tracks have a notion of "changed"
-                  for (WaveClipList::compatibility_iterator it=((WaveTrack*)t)->GetClipIterator(); it; it=it->GetNext())
+                  for (WaveClipList::compatibility_iterator it=((WaveTrack*)t)->GetClipIterator(); 
+                        it; it=it->GetNext())
                      it->GetData()->MarkChanged();
                }
                t = iter.Next();
             }
             mTrackPanel->Refresh(true);
-            this->PushState(_("Project checker repaired file"), _("Repair"));
-   
-                            }
+            this->PushState(_("Project checker repaired file"), _("Project Repair"));
+         }
       }
    } else {
       mTracks->Clear(true);
@@ -3479,7 +3481,7 @@ void AudacityProject::InitialState()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   ModifyUndoMenus();
+   ModifyUndoMenuItems();
 
    UpdateMenus();
    this->UpdateLyrics();
@@ -3498,7 +3500,7 @@ void AudacityProject::PushState(wxString desc,
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   ModifyUndoMenus();
+   ModifyUndoMenuItems();
 
    UpdateMenus();
    
@@ -3587,7 +3589,7 @@ void AudacityProject::SetStateTo(unsigned int n)
    HandleResize();
    mTrackPanel->SetFocusedTrack(NULL);
    mTrackPanel->Refresh(false);
-   ModifyUndoMenus();
+   ModifyUndoMenuItems();
    this->UpdateLyrics();
    this->UpdateMixerBoard();
 }

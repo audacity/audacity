@@ -35,7 +35,7 @@ void AddEffectsToMenu(CommandManager* c, const EffectSet& effects);
 #endif
 
 void CreateRecentFilesMenu(CommandManager *c);
-void ModifyUndoMenus();
+void ModifyUndoMenuItems();
 void ModifyToolbarMenus();
 // Calls ModifyToolbarMenus() on all projects
 void ModifyAllProjectToolbarMenus();

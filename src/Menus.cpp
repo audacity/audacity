@@ -345,7 +345,7 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag | RedoAvailableFlag,
               AudioIONotBusyFlag | RedoAvailableFlag);
               
-   ModifyUndoMenus();
+   ModifyUndoMenuItems();
 
    c->AddSeparator();
 
@@ -1219,7 +1219,7 @@ void AudacityProject::CreateRecentFilesMenu(CommandManager *c)
 
 }
 
-void AudacityProject::ModifyUndoMenus()
+void AudacityProject::ModifyUndoMenuItems()
 {
    wxString desc;
    int cur = mUndoManager.GetCurrentState();
@@ -3014,7 +3014,7 @@ void AudacityProject::OnUndo()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   ModifyUndoMenus();   
+   ModifyUndoMenuItems();   
 }
 
 void AudacityProject::OnRedo()
@@ -3035,7 +3035,7 @@ void AudacityProject::OnRedo()
    if (mHistoryWindow)
       mHistoryWindow->UpdateDisplay();
 
-   ModifyUndoMenus();
+   ModifyUndoMenuItems();
 }
 
 void AudacityProject::OnCut()
@@ -5322,10 +5322,10 @@ void AudacityProject::OnApplyChain()
    BatchProcessDialog d(this);
    d.ShowModal();
 
-   // LL:  See comments in ModifyUndoMenus() for info about this...
+   // LL:  See comments in ModifyUndoMenuItems() for info about this...
    //
    // Refresh the Undo menu.
-   ModifyUndoMenus();
+   ModifyUndoMenuItems();
 }
 
 void AudacityProject::OnEditChains()

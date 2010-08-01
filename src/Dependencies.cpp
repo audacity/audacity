@@ -141,7 +141,16 @@ void FindDependencies(AudacityProject *project,
          // f is an alias block we have not yet counted.
          blockFileHash[f] = true; // Don't count the same blockfile twice.
          AliasBlockFile *aliasBlockFile = (AliasBlockFile *)f;
-         wxFileName fileName = aliasBlockFile->GetAliasedFile();
+         wxFileName fileName = aliasBlockFile->GetAliasedFileName();
+
+         // In DirManager::ProjectFSCK(), if the user has chosen to 
+         // "Replace missing audio with silence (permanent upon save)", 
+         // the code there puts in an empty wxFileName. 
+         // Don't count those in dependencies.
+         //vvvvv REMOVE THIS WHEN DirManager::ProjectFSCK() DOES THE RIGHT THING!
+         if (!fileName.IsOk())
+            continue;
+         
          wxString fileNameStr = fileName.GetFullPath();
          int blockBytes = (SAMPLE_SIZE(format) *
                            aliasBlockFile->GetLength());
@@ -199,7 +208,7 @@ void RemoveDependencies(AudacityProject *project,
       {
          // f is an alias block we have not yet processed.
          AliasBlockFile *aliasBlockFile = (AliasBlockFile *)f;
-         wxFileName fileName = aliasBlockFile->GetAliasedFile();
+         wxFileName fileName = aliasBlockFile->GetAliasedFileName();
          wxString fileNameStr = fileName.GetFullPath();
 
          if (aliasedFileHash.count(fileNameStr) == 0)
