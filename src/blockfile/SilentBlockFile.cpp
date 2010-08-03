@@ -66,7 +66,7 @@ BlockFile *SilentBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
        if (!wxStrcmp(attr, wxT("len")) && 
             XMLValueChecker::IsGoodInt(strValue) && 
             strValue.ToLong(&nValue) && 
-            len > 0) 
+            nValue > 0) 
          len = nValue;
    }
 

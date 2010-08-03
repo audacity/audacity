@@ -498,7 +498,7 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
          dm.AssignFile(fileName,value,FALSE);
       else if (!wxStrcmp(attr, wxT("len")) && 
                XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue) && 
-               len > 0) 
+               nValue > 0) 
          len = nValue;
       else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
       {  // double parameters
