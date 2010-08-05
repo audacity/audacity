@@ -154,7 +154,9 @@ void LabelTrack::SetOffset(double dOffset)
 bool LabelTrack::Clear(double b, double e)
 {
    for (size_t i=0;i<mLabels.GetCount();i++){
-      if (mLabels[i]->t >= e){//label is after deletion region
+      // label after deletion region -- this test uses > so that when we're called from Paste() we
+      // clear any label that was copied.
+      if (mLabels[i]->t > e){
          mLabels[i]->t  = mLabels[i]->t  - (e-b);
          mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
       }else if (mLabels[i]->t >= b && mLabels[i]->t1 <= e){//deletion region encloses label
