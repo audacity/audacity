@@ -1537,13 +1537,14 @@ _("Project check detected %d external audio file(s) ('aliased files') \
          msg.Printf(msgA, missingAliasFiles.size());
       
          const wxChar *buttons[] = 
-            {_("Replace missing audio with silence (permanent upon save)"),
+            {_("Close project immediately with no further changes"),
+               _("Replace missing audio with silence (permanent upon save)"),
                _("Temporarily replace missing audio with silence (this session only)"),
-               _("Close project immediately with no further changes"),
                NULL};
          action = ShowMultiDialog(msg, _("Warning - Missing Aliased Files"), buttons);
 
-         if(action==2)return (ret | FSCKstatus_CLOSEREQ);
+         if (action == 0) 
+            return (ret | FSCKstatus_CLOSEREQ);
       }
 
       BlockHash::iterator i=missingAliasList.begin();
@@ -1551,7 +1552,7 @@ _("Project check detected %d external audio file(s) ('aliased files') \
          AliasBlockFile *b = (AliasBlockFile *)i->second; //this is
          //safe, we checked that it's an alias block file earlier
          
-         if(action==0){
+         if (action == 1) {
             //vvvvv This is incorrect in several ways. 
             //    It returns FSCKstatus_CHANGED, and that makes AudacityProject::OpenFile 
             //    do a PushState, but the tracks lower on the stack are identical to 
@@ -1567,7 +1568,9 @@ _("Project check detected %d external audio file(s) ('aliased files') \
             b->ChangeAliasedFileName(dummy);
             b->Recover();
             ret |= FSCKstatus_CHANGED;
-         }else if(action==1){
+         }
+         else if (action == 1) 
+         {
             // silence the log for this session
             //vvvvv Note, then, that "temporarily replace with silence" is really not what's done.
             //    Also, doesn't change the waveform to silence. 
