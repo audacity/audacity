@@ -3262,8 +3262,12 @@ void AudacityProject::OnPaste()
          // is of different type than the first selected track
          if (!c){
             c = tmpC;
-            while (n && (c->GetKind() != n->GetKind()))
+            while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
             {
+               // Must perform sync-adjustment before incrementing n
+               if (n->IsSynchroSelected()) {
+                  n->SyncAdjust(t1, t0+msClipLen);
+               }
                n = iter.Next();
             }
             if (!n) c = NULL;               
@@ -3299,10 +3303,6 @@ void AudacityProject::OnPaste()
 
          if (c->GetKind() == Track::Wave && n && n->GetKind() == Track::Wave)
          {
-            // If not the first in group we set useHandlePaste to true.
-            // Vaughan, 2010-08-05: 
-            //   useHandlePaste is clearly out of date, and 
-            //   not sure this comment actually applies here. Martyn?
             bPastedSomething |= 
                ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
          }
@@ -3472,7 +3472,6 @@ bool AudacityProject::HandlePasteNothingSelected()
       return false;
    else 
    {
-      bool bSuccess = true;
       TrackListIterator iterClip(msClipboard);
       Track* pClip = iterClip.First();
       if (!pClip) 
