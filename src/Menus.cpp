@@ -3210,120 +3210,15 @@ void AudacityProject::OnCopy()
 
 void AudacityProject::OnPaste()
 {
-   // Handle text pastes (into active labels) first
-   TrackListOfKindIterator iterlt(Track::Label, mTracks);
-
-   LabelTrack *lt = (LabelTrack *) iterlt.First();
-   if (lt) {
-
-      while (lt) {
-         // Does this track have an active label?
-         if (lt->IsSelected()) {
-
-            // Yes, so try pasting into it
-            if (lt->PasteSelectedText(mViewInfo.sel0, mViewInfo.sel1)) {
-               PushState(_("Pasted text from the clipboard"), _("Paste"));
-
-               // Make sure caret is in view
-               int x;
-               if (lt->CalcCursorX(this, &x)) {
-                  mTrackPanel->ScrollIntoView(x);
-               }
-
-               // Redraw everyting (is that necessary???) and bail
-               RedrawProject();
-               return;
-            }
-         }
-
-         // Find the next one
-         lt = (LabelTrack *) iterlt.Next();
-      }
-   }
-
-   // If nothing's selected, we just insert new tracks...so first
-   // check to see if anything's selected
-   
-   TrackListIterator iter2(mTracks);
-   Track *countTrack = iter2.First();
-
-   int numSelected = 0;
-
-   while (countTrack) {
-      if (countTrack->GetSelected()) {
-         numSelected++;
-      }
-      countTrack = iter2.Next();
-   }
-
-   //If nothing's selected
-   if (numSelected == 0) {
-      TrackListIterator clipIter(msClipboard);
-      Track *c = clipIter.First();
-      if(c == NULL)  // if there is nothing to paste
-         return;
-      Track *n;
-      Track *f = NULL;
-
-      while (c) {
-         if (msClipProject != this && c->GetKind() == Track::Wave)
-            ((WaveTrack *) c)->Lock();
-         
-         switch(c->GetKind()) {
-         case Track::Wave: {
-            WaveTrack *w = (WaveTrack *)c;
-            n = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate());
-            } break;
-         #ifdef USE_MIDI
-         case Track::Note:
-            n = mTrackFactory->NewNoteTrack();
-            break;
-         #endif // USE_MIDI
-         case Track::Label:
-            n = mTrackFactory->NewLabelTrack();
-            break;
-            
-         case Track::Time:
-            n = mTrackFactory->NewTimeTrack();
-            break;
-
-         default:
-            c = clipIter.Next();
-            continue;
-         }
-
-         if (!f)
-            f = n;
-
-         n->SetLinked(c->GetLinked());
-         n->SetChannel(c->GetChannel());
-         n->SetName(c->GetName());
-
-         n->Paste(0.0, c);
-         mTracks->Add(n);
-         n->SetSelected(true);         
-         
-         if (msClipProject != this && c->GetKind() == Track::Wave)
-            ((WaveTrack *) c)->Unlock();
-         
-         c = clipIter.Next();
-      }
-
-      mViewInfo.sel0 = 0.0;
-      mViewInfo.sel1 = msClipLen;
-
-      PushState(_("Pasted from the clipboard"), _("Paste"));
-      
-      RedrawProject();
-
-      if (f)
-         mTrackPanel->EnsureVisible(f);
-
+   // Handle text paste (into active label) first.
+   if (this->HandleTextPaste())
       return;
-   }
+
+   // If nothing's selected, we just insert new tracks.
+   if (this->HandlePasteNothingSelected())
+      return;
 
    // Otherwise, paste into the selected tracks.
-
    double t0 = mViewInfo.sel0;
    double t1 = mViewInfo.sel1;
 
@@ -3339,21 +3234,21 @@ void AudacityProject::OnPaste()
    Track *tmpC = NULL;
    Track *prev = NULL;
    
-   bool pastedSomething = false;
-   bool trackTypeMismatch = false;
-   bool advanceClipboard = true;
+   bool bAdvanceClipboard = true;
+   bool bPastedSomething = false;
+   bool bTrackTypeMismatch = false;
 
    while (n && c) {
       if (n->GetSelected()) {
-         advanceClipboard = true;
+         bAdvanceClipboard = true;
          if (tmpC) c = tmpC;
          if (c->GetKind() != n->GetKind()){
-            if (!trackTypeMismatch) {
+            if (!bTrackTypeMismatch) {
                tmpSrc = prev;
                tmpC = c;
             }
-            trackTypeMismatch = true;
-            advanceClipboard = false;
+            bTrackTypeMismatch = true;
+            bAdvanceClipboard = false;
             c = tmpSrc;
             
             // If the types still don't match...
@@ -3367,7 +3262,7 @@ void AudacityProject::OnPaste()
          // is of different type than the first selected track
          if (!c){
             c = tmpC;
-            while (n && (c->GetKind() != n->GetKind()) )
+            while (n && (c->GetKind() != n->GetKind()))
             {
                n = iter.Next();
             }
@@ -3404,9 +3299,12 @@ void AudacityProject::OnPaste()
 
          if (c->GetKind() == Track::Wave && n && n->GetKind() == Track::Wave)
          {
-            // If not the first in group we set useHandlePaste to true
-            pastedSomething = ((WaveTrack*)n)->ClearAndPaste(t0, t1,
-                  (WaveTrack*)c, true, true);
+            // If not the first in group we set useHandlePaste to true.
+            // Vaughan, 2010-08-05: 
+            //   useHandlePaste is clearly out of date, and 
+            //   not sure this comment actually applies here. Martyn?
+            bPastedSomething |= 
+               ((WaveTrack*)n)->ClearAndPaste(t0, t1, (WaveTrack*)c, true, true);
          }
          else if (c->GetKind() == Track::Label &&
                   n && n->GetKind() == Track::Label)
@@ -3418,11 +3316,11 @@ void AudacityProject::OnPaste()
             if (IsSticky())
                ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
 
-            pastedSomething = ((LabelTrack *)n)->PasteOver(t0, c);
+            bPastedSomething |= ((LabelTrack *)n)->PasteOver(t0, c);
          }
          else
          {
-            pastedSomething = n->Paste(t0, c);
+            bPastedSomething |= n->Paste(t0, c);
          }
                  
          // When copying from mono to stereo track, paste the wave form
@@ -3436,26 +3334,26 @@ void AudacityProject::OnPaste()
                if (!((WaveTrack *) n)->IsEmpty(t0, t1)) {
                   ((WaveTrack *) n)->Clear(t0, t1);
                }
-
-               pastedSomething = ((WaveTrack *)n)->Paste(t0, c);
+               bPastedSomething |= ((WaveTrack *)n)->Paste(t0, c);
             }
-            else {
+            else 
+            {
                n->Clear(t0, t1);
-               n->Paste(t0, c);
+               bPastedSomething |= n->Paste(t0, c);
             }
          }
          
          if (msClipProject != this && c->GetKind() == Track::Wave)
             ((WaveTrack *) c)->Unlock();
 
-         if (advanceClipboard){
+         if (bAdvanceClipboard){
             prev = c;
             c = clipIter.Next();
          }
       } // if (n->GetSelected())
       else if (n->IsSynchroSelected())
       {
-         n->SyncAdjust(t1, t0 + msClipLen);
+         bPastedSomething |=  n->SyncAdjust(t1, t0 + msClipLen);
       }
 
       n = iter.Next();
@@ -3473,16 +3371,16 @@ void AudacityProject::OnPaste()
       while (n){
          if (n->GetSelected() && n->GetKind()==Track::Wave){
             if (c && c->GetKind() == Track::Wave){
-               pastedSomething = ((WaveTrack *)n)->ClearAndPaste(t0, t1,
-                     (WaveTrack *)c, true, true);
+               bPastedSomething |= 
+                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, (WaveTrack *)c, true, true);
             }else{
                WaveTrack *tmp;
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
                tmp->InsertSilence(0.0, msClipLen);
                tmp->Flush();
 
-               pastedSomething = ((WaveTrack *)n)->ClearAndPaste(t0, t1,
-                     tmp, true, true);
+               bPastedSomething |= 
+                  ((WaveTrack *)n)->ClearAndPaste(t0, t1, tmp, true, true);
 
                delete tmp;
             }
@@ -3506,7 +3404,7 @@ void AudacityProject::OnPaste()
    
    // TODO: What if we clicked past the end of the track?
 
-   if (pastedSomething)
+   if (bPastedSomething)
    {
       mViewInfo.sel0 = t0;
       mViewInfo.sel1 = t0 + msClipLen;
@@ -3520,11 +3418,136 @@ void AudacityProject::OnPaste()
    }
 }
 
+// Handle text paste (into active label), if any. Return true if did paste.
+// (This was formerly the first part of overly-long OnPaste.)
+bool AudacityProject::HandleTextPaste()
+{
+   TrackListOfKindIterator iterLabelTrack(Track::Label, mTracks);
+   LabelTrack* pLabelTrack = (LabelTrack*)(iterLabelTrack.First());
+   while (pLabelTrack) 
+   {
+      // Does this track have an active label?
+      if (pLabelTrack->IsSelected()) {
+
+         // Yes, so try pasting into it
+         if (pLabelTrack->PasteSelectedText(mViewInfo.sel0, mViewInfo.sel1)) 
+         {
+            PushState(_("Pasted text from the clipboard"), _("Paste"));
+
+            // Make sure caret is in view
+            int x;
+            if (pLabelTrack->CalcCursorX(this, &x)) {
+               mTrackPanel->ScrollIntoView(x);
+            }
+
+            // Redraw everyting (is that necessary???) and bail
+            RedrawProject();
+            return true;
+         }
+      }
+      pLabelTrack = (LabelTrack *) iterLabelTrack.Next();
+   }
+   return false;
+}
+
+// Return true if nothing selected, regardless of paste result.
+// If nothing was selected, create and paste into new tracks.
+// (This was formerly the second part of overly-long OnPaste.)
+bool AudacityProject::HandlePasteNothingSelected() 
+{
+   // First check whether anything's selected. 
+   bool bAnySelected = false;
+   TrackListIterator iterTrack(mTracks);
+   Track* pTrack = iterTrack.First();
+   while (pTrack) {
+      if (pTrack->GetSelected()) 
+      {
+         bAnySelected = true;
+         break;
+      }
+      pTrack = iterTrack.Next();
+   }
+
+   if (bAnySelected)
+      return false;
+   else 
+   {
+      bool bSuccess = true;
+      TrackListIterator iterClip(msClipboard);
+      Track* pClip = iterClip.First();
+      if (!pClip) 
+         return true; // nothing to paste
+      
+      Track* pNewTrack;
+      Track* pFirstNewTrack = NULL;
+      while (pClip) {
+         if ((msClipProject != this) && (pClip->GetKind() == Track::Wave))
+            ((WaveTrack*)pClip)->Lock();
+         
+         switch (pClip->GetKind()) {
+         case Track::Wave: 
+            {
+               WaveTrack *w = (WaveTrack *)pClip;
+               pNewTrack = mTrackFactory->NewWaveTrack(w->GetSampleFormat(), w->GetRate());
+            } 
+            break;
+         #ifdef USE_MIDI
+            case Track::Note:
+               pNewTrack = mTrackFactory->NewNoteTrack();
+               break;
+            #endif // USE_MIDI
+         case Track::Label:
+            pNewTrack = mTrackFactory->NewLabelTrack();
+            break;
+         case Track::Time:
+            pNewTrack = mTrackFactory->NewTimeTrack();
+            break;
+         default:
+            // Vaughan, 2010-08-05: 
+            //    This is probably an error, but was never checked...
+            //    The only kinds of tracks not checked above are Track::None and Track::All. 
+            pClip = iterClip.Next();
+            continue;
+         }
+
+         pNewTrack->SetLinked(pClip->GetLinked());
+         pNewTrack->SetChannel(pClip->GetChannel());
+         pNewTrack->SetName(pClip->GetName());
+
+         // Vaughan, 2010-08-05: This code never checked the paste result...
+         pNewTrack->Paste(0.0, pClip); 
+         mTracks->Add(pNewTrack);
+         pNewTrack->SetSelected(true);         
+         
+         if (msClipProject != this && pClip->GetKind() == Track::Wave)
+            ((WaveTrack *) pClip)->Unlock();
+         
+         if (!pFirstNewTrack)
+            pFirstNewTrack = pNewTrack;
+
+         pClip = iterClip.Next();
+      }
+
+      mViewInfo.sel0 = 0.0;
+      mViewInfo.sel1 = msClipLen;
+
+      PushState(_("Pasted from the clipboard"), _("Paste"));
+      
+      RedrawProject();
+
+      if (pFirstNewTrack)
+         mTrackPanel->EnsureVisible(pFirstNewTrack);
+
+      return true;
+   }
+}
+
+
 // Creates a new label in each selected label track with text from the system
 // clipboard
 void AudacityProject::OnPasteNewLabel()
 {
-   bool pastedSomething = false;
+   bool bPastedSomething = false;
 
    SelectedTrackListOfKindIterator iter(Track::Label, mTracks);
    Track *t = iter.First();
@@ -3569,7 +3592,7 @@ void AudacityProject::OnPasteNewLabel()
       // Add a new label, paste into it
       lt->AddLabel(mViewInfo.sel0, mViewInfo.sel1);
       if (lt->PasteSelectedText(mViewInfo.sel0, mViewInfo.sel1))
-         pastedSomething = true;
+         bPastedSomething = true;
 
       // Set previous track
       plt = lt;
@@ -3582,7 +3605,7 @@ void AudacityProject::OnPasteNewLabel()
       mTrackPanel->SetFocus();
    }
 
-   if (pastedSomething) {
+   if (bPastedSomething) {
       PushState(_("Pasted from the clipboard"), _("Paste Text to New Label"));
 
       // Is this necessary? (carried over from former logic in OnPaste())
@@ -5658,15 +5681,4 @@ void AudacityProject::OnFullScreen()
    else
       wxTopLevelWindow::ShowFullScreen(true);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: e8ab21c6-d9b9-4d35-b4c2-ff90c1781b85
 
