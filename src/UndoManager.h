@@ -61,6 +61,7 @@ struct UndoStackElem {
    wxString shortDescription;
    double sel0;
    double sel1;
+   wxLongLong spaceUsage;
 };
 
 WX_DEFINE_USER_EXPORTED_ARRAY(UndoStackElem *, UndoStack, class AUDACITY_DLL_API);
@@ -102,7 +103,7 @@ class AUDACITY_DLL_API UndoManager {
    void ResetODChangesFlag();
 
  private:
-   wxLongLong GetSpaceUsage(int index);
+   wxLongLong CalculateSpaceUsage(int index);
 
    int current;
    int saved;

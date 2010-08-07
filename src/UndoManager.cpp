@@ -49,7 +49,7 @@ UndoManager::~UndoManager()
 // get the sum of the sizes of all blocks this track list
 // references.  However, if a block is referred to multiple
 // times it is only counted once.  Return value is in bytes.
-wxLongLong UndoManager::GetSpaceUsage(int index)
+wxLongLong UndoManager::CalculateSpaceUsage(int index)
 {
    TrackListOfKindIterator iter(Track::Wave);
    WaveTrack *wt;
@@ -113,7 +113,7 @@ void UndoManager::GetLongDescription(unsigned int n, wxString *desc,
 
    *desc = stack[n]->description;
 
-   *size = Internat::FormatSize(GetSpaceUsage(n));
+   *size = Internat::FormatSize(stack[n]->spaceUsage);
 }
 
 void UndoManager::GetShortDescription(unsigned int n, wxString *desc)
@@ -243,9 +243,11 @@ void UndoManager::PushState(TrackList * l, double sel0, double sel1,
    push->sel1 = sel1;
    push->description = longDescription;
    push->shortDescription = shortDescription;
+   push->spaceUsage = 0; // Calculate actual value after it's on the stack.
 
    stack.Add(push);
    current++;
+   push->spaceUsage = this->CalculateSpaceUsage(current);
 
    if (saved >= current) {
       saved = -1;
