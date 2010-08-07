@@ -3266,7 +3266,7 @@ void AudacityProject::OnPaste()
             {
                // Must perform sync-adjustment before incrementing n
                if (n->IsSynchroSelected()) {
-                  n->SyncAdjust(t1, t0+msClipLen);
+                  bPastedSomething |= n->SyncAdjust(t1, t0+msClipLen);
                }
                n = iter.Next();
             }
