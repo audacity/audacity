@@ -462,13 +462,13 @@ bool WaveTrack::ClearAndAddCutLine(double t0, double t1)
 
 //
 // ClearAndPaste() is a specialized version of HandleClear()
-// followed by HandlePaste() and is used mostly by effects that
+// followed by Paste() and is used mostly by effects that
 // can't replace track data directly using Get()/Set().
 //
 // HandleClear() removes any cut/split lines lines with the
 // cleared range, but, in most cases, effects want to preserve
 // the existing cut/split lines, so they are saved before the
-// HandleClear()/HandlePaste() and restored after.
+// HandleClear()/Paste() and restored after.
 //
 // If the pasted track overlaps two or more clips, then it will
 // be pasted with visible split lines.  Normally, effects do not
@@ -507,7 +507,7 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    t1 = LongSamplesToTime(TimeToLongSamples(t1));
 
    // Save the cut/split lines whether preserving or not since merging
-   // needs to know if a clip boundary is being crossed since HandlePaste()
+   // needs to know if a clip boundary is being crossed since Paste()
    // will add split lines around the pasted clip if so.
    for (ic = GetClipIterator(); ic; ic = ic->GetNext()) {
       double st;

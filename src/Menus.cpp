@@ -3211,7 +3211,7 @@ void AudacityProject::OnCopy()
 void AudacityProject::OnPaste()
 {
    // Handle text paste (into active label) first.
-   if (this->HandleTextPaste())
+   if (this->HandlePasteText())
       return;
 
    // If nothing's selected, we just insert new tracks.
@@ -3420,7 +3420,7 @@ void AudacityProject::OnPaste()
 
 // Handle text paste (into active label), if any. Return true if did paste.
 // (This was formerly the first part of overly-long OnPaste.)
-bool AudacityProject::HandleTextPaste()
+bool AudacityProject::HandlePasteText()
 {
    TrackListOfKindIterator iterLabelTrack(Track::Label, mTracks);
    LabelTrack* pLabelTrack = (LabelTrack*)(iterLabelTrack.First());
