@@ -124,11 +124,10 @@ static libraries.
    wxbase28*_odbc*.* dbgrid.
  
 
-4. Note the directory "C\wxWidgets-2.8.11\lib\vc_dll". For each
-   build of WxWidgets you made, you will need from here five DLLs
-   appropriate to that build to go in the corresponding Audacity
-   build directory. The DLLs required are noted at "Provide access
-   to the wxWidgets DLLs" at "MSVC++ STEP 5: Build Audacity" below.
+4. Proceed with the rest of the process for building Audacity. 
+   You will see the instructions for how to copy the appropriate 
+   wxWidgets DLL's in the section "MSVC++ STEP 5:  Build Audacity" 
+   at the step "Provide access to the wxWidgets DLLs". 
 
 
 --------------------------
