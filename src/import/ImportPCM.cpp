@@ -244,7 +244,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    //   BEGIN_TASK_PROFILING("On Demand Drag and Drop 5 80 mb files into audacity, 5 wavs per task");
    //BEGIN_TASK_PROFILING("On Demand open an 80 mb wav stereo file");   
    if (doEdit) {
-    wxLogDebug(wxT("Importing PCM Start\n"));
+      wxLogDebug(wxT("Importing PCM Start"));
 
       // If this mode has been selected, we form the tracks as
       // aliases to the files we're editing, i.e. ("foo.wav", 12000-18000)
@@ -270,7 +270,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       
       //now go over the wavetrack/waveclip/sequence and load all the blockfiles into a ComputeSummaryTask.  
       //Add this task to the ODManager and the Track itself.      
-       wxLogDebug(wxT("Importing PCM \n"));
+      wxLogDebug(wxT("Importing PCM"));
        
       if(useOD)
       { 

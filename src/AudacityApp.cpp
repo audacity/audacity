@@ -1116,7 +1116,7 @@ bool AudacityApp::OnInit()
    // So we also call StartMonitoring when STOP is called.
    project->MayStartMonitoring();
 
-   mLogger = new wxLogWindow(NULL,wxT("Debug Log"),false,false);
+   mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
    mLogger->SetActiveTarget(mLogger);
    mLogger->EnableLogging(true);
    mLogger->SetLogLevel(wxLOG_Max);

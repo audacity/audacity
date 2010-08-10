@@ -379,14 +379,14 @@ bool FFmpegImportFileHandle::Init()
    int err = ufile_fopen_input(&mFormatContext, mName);
    if (err < 0)
    {
-      wxLogMessage(wxT("FFmpeg : av_open_input_file() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"),mName.c_str());
       return false;
    }
 
    err = FFmpegLibsInst->av_find_stream_info(mFormatContext);
    if (err < 0)
    {
-      wxLogMessage(wxT("FFmpeg : av_find_stream_info() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg : av_find_stream_info() failed for file %s"),mName.c_str());
       return false;
    }
 
@@ -414,14 +414,14 @@ bool FFmpegImportFileHandle::InitCodecs()
          AVCodec *codec = FFmpegLibsInst->avcodec_find_decoder(sc->m_codecCtx->codec_id);
          if (codec == NULL)
          {
-            wxLogMessage(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //FFmpeg can't decode this stream, skip it
             delete sc;
             continue;
          }
          if (codec->type != sc->m_codecCtx->codec_type)
          {
-            wxLogMessage(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //Non-audio codec reported as audio? Nevertheless, we don't need THIS.
             delete sc;
             continue;
@@ -429,7 +429,7 @@ bool FFmpegImportFileHandle::InitCodecs()
 
          if (FFmpegLibsInst->avcodec_open(sc->m_codecCtx, codec) < 0)
          {
-            wxLogMessage(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
+            wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //Can't open decoder - skip this stream
             delete sc;
             continue;
@@ -534,7 +534,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE))
       {
          stream_delay = mScs[s]->m_stream->start_time;
-         wxLogMessage(wxT("Stream %d start_time = %d, that would be %f milliseconds."), s, mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
+         wxLogError(wxT("Stream %d start_time = %d, that would be %f milliseconds."), s, mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
       }
       if (stream_delay != 0)
       {

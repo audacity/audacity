@@ -547,11 +547,10 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
       if (!isSaving) 
       {
          wxString msg = 
-            _("Your project is currently self-contained; it does not depend on any external audio files.");
-         if (project->GetUndoManager()->UndoAvailable())
-            msg += 
-_("\n\nIf you Undo back to a state where it has external dependencies on imported files, it will no \
-longer be self-contained. If you then Save without copying those files in, you may lose data.");
+_("Your project is currently self-contained; it does not depend on any external audio files. \
+\n\nIf you change the project to a state where it has external dependencies on imported \
+files, it will no longer be self-contained. If you then Save without copying those files in, \
+you may lose data.");
          wxMessageBox(msg, 
                       _("Dependency Check"),
                       wxOK | wxICON_INFORMATION,

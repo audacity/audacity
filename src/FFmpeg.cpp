@@ -154,14 +154,14 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
    default: cpt = wxT("Log"); break;
    }
 #ifdef EXPERIMENTAL_OD_FFMPEG
-//if the decoding happens thru OD then this gets called from a non main thread, which means wxLogMessage
+//if the decoding happens thru OD then this gets called from a non main thread, which means wxLogDebug
 //will crash.  
 //TODO:find some workaround for the log.  perhaps use ODManager as a bridge. for now just print
    if(!wxThread::IsMain())
       printf("%s: %s\n",(char*)cpt.char_str(),(char*)printstring.char_str());
    else
 #endif
-      wxLogMessage(wxT("%s: %s"),cpt.c_str(),printstring.c_str());
+      wxLogDebug(wxT("%s: %s"),cpt.c_str(),printstring.c_str());
 }
 
 //======================= Unicode aware uri protocol for FFmpeg
@@ -564,9 +564,9 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    wxString path;
    wxString name;
 
-   wxLogMessage(wxT("Looking for FFmpeg libraries..."));
+   wxLogDebug(wxT("Looking for FFmpeg libraries..."));
    if (!mLibAVFormatPath.IsEmpty()) {
-      wxLogMessage(wxT("mLibAVFormatPath is not empty, = %s"),mLibAVFormatPath.c_str());
+      wxLogDebug(wxT("mLibAVFormatPath is not empty, = %s"),mLibAVFormatPath.c_str());
       wxFileName fn = mLibAVFormatPath;
       path = fn.GetPath();
       name = fn.GetFullName();
@@ -574,7 +574,7 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    else {
       path = GetLibAVFormatPath();
       name = GetLibAVFormatName();
-      wxLogMessage(wxT("mLibAVFormatPath is empty, starting with path '%s', name '%s'"),path.c_str(),name.c_str());
+      wxLogDebug(wxT("mLibAVFormatPath is empty, starting with path '%s', name '%s'"),path.c_str(),name.c_str());
    }
 
    FindFFmpegDialog fd(parent,
@@ -583,18 +583,18 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
       GetLibraryTypeString());
 
    if (fd.ShowModal() == wxID_CANCEL) {
-      wxLogMessage(wxT("User canceled the dialog. Failed to find libraries."));
+      wxLogDebug(wxT("User canceled the dialog. Failed to find libraries."));
       return false;
    }
 
    path = fd.GetLibPath();
 
-   wxLogMessage(wxT("User-specified path = %s"),path.c_str());
+   wxLogDebug(wxT("User-specified path = %s"),path.c_str());
    if (!::wxFileExists(path)) {
-      wxLogMessage(wxT("User-specified file doesn't exist! Failed to find libraries."));
+      wxLogDebug(wxT("User-specified file doesn't exist! Failed to find libraries."));
       return false;
    }
-   wxLogMessage(wxT("User-specified file exists. Success."));
+   wxLogDebug(wxT("User-specified file exists. Success."));
    mLibAVFormatPath = path;
    gPrefs->Write(wxT("/FFmpeg/FFmpegLibPath"), mLibAVFormatPath);
 
@@ -604,15 +604,15 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
 bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
 {
 
-   wxLogMessage(wxT("Trying to load FFmpeg libraries"));
+   wxLogDebug(wxT("Trying to load FFmpeg libraries"));
    if (ValidLibsLoaded()) {
-      wxLogMessage(wxT("Libraries already loaded - freeing"));
+      wxLogDebug(wxT("Libraries already loaded - freeing"));
       FreeLibs();
    }
 
    // First try loading it from a previously located path
    if (!mLibAVFormatPath.IsEmpty()) {
-      wxLogMessage(wxT("mLibAVFormatPath is not empty, = %s. Loading from it."),mLibAVFormatPath.c_str());
+      wxLogDebug(wxT("mLibAVFormatPath is not empty, = %s. Loading from it."),mLibAVFormatPath.c_str());
       mLibsLoaded = InitLibs(mLibAVFormatPath,showerr);
    }
 
@@ -620,7 +620,7 @@ bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
    if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
       wxFileName fn(GetLibAVFormatPath(), GetLibAVFormatName());
       wxString path = fn.GetFullPath();
-      wxLogMessage(wxT("Trying to load from default path %s."),path.c_str());
+      wxLogDebug(wxT("Trying to load from default path %s."),path.c_str());
       mLibsLoaded = InitLibs(path,showerr);
       if (mLibsLoaded) {
          mLibAVFormatPath = path;
@@ -630,7 +630,7 @@ bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
    // If not successful, try loading using system search paths
    if (!ValidLibsLoaded()) {
       wxString path = GetLibAVFormatName();
-      wxLogMessage(wxT("Trying to load from system paths. File name is %s"),path.c_str());
+      wxLogDebug(wxT("Trying to load from system paths. File name is %s"),path.c_str());
       mLibsLoaded = InitLibs(path,showerr);
       if (mLibsLoaded) {
          mLibAVFormatPath = path;
@@ -641,7 +641,7 @@ bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
    /*
    if (!ValidLibsLoaded())
    {
-      wxLogMessage(wxT("Failed to load libraries altogether."));
+      wxLogError(wxT("Failed to load libraries altogether."));
       int dontShowDlg;
       FFmpegNotFoundDialog *dlg;
       gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
@@ -659,7 +659,7 @@ bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
       return false;
    }
 
-   wxLogMessage(wxT("Libraries loaded successfully!"));
+   wxLogDebug(wxT("Libraries loaded successfully!"));
    return true;
 }
 
@@ -685,27 +685,27 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    FreeLibs();
 
 #if defined(__WXMSW__)
-   wxLogMessage(wxT("Looking up PATH..."));
+   wxLogDebug(wxT("Looking up PATH..."));
    // First take PATH environment variable (store it's content)
    if (wxGetEnv(wxT("PATH"),&syspath))
    {
-      wxLogMessage(wxT("PATH = %s"),syspath.c_str());
+      wxLogDebug(wxT("PATH = %s"),syspath.c_str());
       wxString fmtdirsc = wxPathOnly(libpath_format) + wxT(";");
       wxString scfmtdir = wxT(";") + wxPathOnly(libpath_format);
       wxString fmtdir = wxPathOnly(libpath_format);
-      wxLogMessage(wxT("Checking that %s is in PATH..."),fmtdir.c_str());
+      wxLogDebug(wxT("Checking that %s is in PATH..."),fmtdir.c_str());
       // If the directory, where libavformat is, is not in PATH - add it
       if (!syspath.Contains(fmtdirsc) && !syspath.Contains(scfmtdir) && !syspath.Contains(fmtdir))
       {
-         wxLogMessage(wxT("not in PATH!"));
+         wxLogDebug(wxT("not in PATH!"));
          if (syspath.Last() == wxT(';'))
          {
-            wxLogMessage(wxT("Appending %s ..."),fmtdir.c_str());
+            wxLogDebug(wxT("Appending %s ..."),fmtdir.c_str());
             syspath.Append(fmtdirsc);
          }
          else
          {
-            wxLogMessage(wxT("Appending %s ..."),scfmtdir.c_str());
+            wxLogDebug(wxT("Appending %s ..."),scfmtdir.c_str());
             syspath.Append(scfmtdir);
          }
 
@@ -716,23 +716,23 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
          }
          else
          {
-            wxLogMessage(wxT("wxSetEnv(%s) failed."),syspath.c_str());
+            wxLogDebug(wxT("wxSetEnv(%s) failed."),syspath.c_str());
          }
       }
       else
       {
-         wxLogMessage(wxT("in PATH."));
+         wxLogDebug(wxT("in PATH."));
       }
    }
    else
    {
-      wxLogMessage(wxT("PATH does not exist."));
+      wxLogDebug(wxT("PATH does not exist."));
    }
 #endif
 
    //Load libavformat
    avformat = new wxDynamicLibrary();
-   wxLogMessage(wxT("Loading avformat from %s"),libpath_format.c_str());
+   wxLogDebug(wxT("Loading avformat from %s"),libpath_format.c_str());
    if (showerr)
       mLogger->SetActiveTarget(NULL);
    gotError = !avformat->Load(libpath_format, wxDL_LAZY);
@@ -751,7 +751,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    if (!util) {
       name.SetFullName(GetLibAVUtilName());
       avutil = util =  new wxDynamicLibrary();
-      wxLogMessage(wxT("Loading avutil from %s"),name.GetFullPath().c_str());
+      wxLogDebug(wxT("Loading avutil from %s"),name.GetFullPath().c_str());
       if (showerr)
          mLogger->SetActiveTarget(NULL);
       util->Load(name.GetFullPath(), wxDL_LAZY);
@@ -762,7 +762,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    if (!codec) {
       name.SetFullName(GetLibAVCodecName());
       avcodec = codec = new wxDynamicLibrary();
-      wxLogMessage(wxT("Loading avcodec from %s"),name.GetFullPath().c_str());
+      wxLogDebug(wxT("Loading avcodec from %s"),name.GetFullPath().c_str());
       if (showerr)
          mLogger->SetActiveTarget(NULL);
       codec->Load(name.GetFullPath(), wxDL_LAZY);
@@ -782,17 +782,17 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    if ( pathfix )
    {
       wxString oldpath = syspath.BeforeLast(wxT(';'));
-      wxLogMessage(wxT("Returning PATH to normal..."));
+      wxLogDebug(wxT("Returning PATH to normal..."));
       wxSetEnv(wxT("PATH"),oldpath.c_str());
    }
 
    if (gotError) {
-      wxLogMessage(wxT("Failed to load FFmpeg libs"));
+      wxLogError(wxT("Failed to load FFmpeg libs"));
       FreeLibs();
       return false;
    }
 
-   wxLogMessage(wxT("Importing symbols..."));
+   wxLogDebug(wxT("Importing symbols..."));
    INITDYN(avformat,av_register_all);
    INITDYN(avformat,av_open_input_file);
    INITDYN(avformat,av_find_stream_info);
@@ -882,12 +882,12 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    INITDYN(util,avutil_version);
 
    //FFmpeg initialization
-   wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));
+   wxLogDebug(wxT("All symbols loaded successfully. Initializing the library."));
    this->avcodec_init();
    this->avcodec_register_all();
    this->av_register_all();
    
-   wxLogMessage(wxT("Retrieving library version."));
+   wxLogDebug(wxT("Retrieving library version."));
    int avcver = this->avcodec_version();
    int avfver = this->avformat_version();
    int avuver = this->avutil_version();
@@ -895,20 +895,20 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    mAVFormatVersion = wxString::Format(wxT("%d.%d.%d"),avfver >> 16 & 0xFF, avfver >> 8 & 0xFF, avfver & 0xFF);
    mAVUtilVersion = wxString::Format(wxT("%d.%d.%d"),avuver >> 16 & 0xFF, avuver >> 8 & 0xFF, avuver & 0xFF);
 
-   wxLogMessage(wxT("AVCodec version 0x%06x - %s (built against 0x%06x - %s)"),avcver,mAVCodecVersion.c_str(),LIBAVCODEC_VERSION_INT,wxString::FromUTF8(AV_STRINGIFY(LIBAVCODEC_VERSION)).c_str());
-   wxLogMessage(wxT("AVFormat version 0x%06x - %s (built against 0x%06x - %s)"),avfver,mAVFormatVersion.c_str(),LIBAVFORMAT_VERSION_INT,wxString::FromUTF8(AV_STRINGIFY(LIBAVFORMAT_VERSION)).c_str());
-   wxLogMessage(wxT("AVUtil version 0x%06x - %s (built against 0x%06x - %s)"),avuver,mAVUtilVersion.c_str(),LIBAVUTIL_VERSION_INT,wxString::FromUTF8(AV_STRINGIFY(LIBAVUTIL_VERSION)).c_str());
+   wxLogDebug(wxT("AVCodec version 0x%06x - %s (built against 0x%06x - %s)"),avcver,mAVCodecVersion.c_str(),LIBAVCODEC_VERSION_INT,wxString::FromUTF8(AV_STRINGIFY(LIBAVCODEC_VERSION)).c_str());
+   wxLogDebug(wxT("AVFormat version 0x%06x - %s (built against 0x%06x - %s)"),avfver,mAVFormatVersion.c_str(),LIBAVFORMAT_VERSION_INT,wxString::FromUTF8(AV_STRINGIFY(LIBAVFORMAT_VERSION)).c_str());
+   wxLogDebug(wxT("AVUtil version 0x%06x - %s (built against 0x%06x - %s)"),avuver,mAVUtilVersion.c_str(),LIBAVUTIL_VERSION_INT,wxString::FromUTF8(AV_STRINGIFY(LIBAVUTIL_VERSION)).c_str());
 
    int avcverdiff = (avcver >> 16 & 0xFF) - int(LIBAVCODEC_VERSION_MAJOR);
    int avfverdiff = (avfver >> 16 & 0xFF) - int(LIBAVFORMAT_VERSION_MAJOR);
    int avuverdiff = (avuver >> 16 & 0xFF) - int(LIBAVUTIL_VERSION_MAJOR);
-   wxLogMessage(wxT("AVCodec version mismatch is %d"),avcverdiff);
-   wxLogMessage(wxT("AVFormat version mismatch is %d"),avfverdiff);
-   wxLogMessage(wxT("AVUtil version mismatch is %d"),avuverdiff);
+   wxLogDebug(wxT("AVCodec version mismatch is %d"),avcverdiff);
+   wxLogDebug(wxT("AVFormat version mismatch is %d"),avfverdiff);
+   wxLogDebug(wxT("AVUtil version mismatch is %d"),avuverdiff);
    //make sure that header and library major versions are the same
    if (avcverdiff != 0 || avfverdiff != 0 || avuverdiff != 0)
    {
-      wxLogMessage(wxT("Version mismatch! Libraries are unusable."));
+      wxLogError(wxT("Version mismatch! Libraries are unusable."));
       return false;
    }
 

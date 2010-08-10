@@ -343,8 +343,8 @@ int Importer::Import(wxString fName,
    // False if override filter is not found
    bool foundOverride = false;
    gPrefs->Read(wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), &usersSelectionOverrides, false);
-   wxLogMessage(wxT("LastOpenType is %s"),type.c_str());
-   wxLogMessage(wxT("OverrideExtendedImportByOpenFileDialogChoice is %i"),usersSelectionOverrides);
+   wxLogDebug(wxT("LastOpenType is %s"),type.c_str());
+   wxLogDebug(wxT("OverrideExtendedImportByOpenFileDialogChoice is %i"),usersSelectionOverrides);
    if (usersSelectionOverrides)
    {
       
@@ -355,7 +355,7 @@ int Importer::Import(wxString fName,
          if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
          {
             // This plugin corresponds to user-selected filter, try it first.
-            wxLogMessage(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
+            wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
             importPlugins.Insert(plugin);
             foundOverride = true;
          }
@@ -369,46 +369,46 @@ int Importer::Import(wxString fName,
    {
       ExtImportItem *item = &(*mExtImportItems)[i];
       bool matches_ext = false, matches_mime = false;
-      wxLogMessage(wxT("Testing extensions"));
+      wxLogDebug(wxT("Testing extensions"));
       for (size_t j = 0; j < item->extensions.Count(); j++)
       {
-         wxLogMessage(wxT("%s"),item->extensions[j].Lower().c_str());
+         wxLogDebug(wxT("%s"),item->extensions[j].Lower().c_str());
          if (wxMatchWild (item->extensions[j].Lower(),fName.Lower(), false))
          {
-            wxLogMessage(wxT("Match!"));
+            wxLogDebug(wxT("Match!"));
             matches_ext = true;
             break;
          }
       }
       if (item->extensions.Count() == 0)
       {
-         wxLogMessage(wxT("Match! (empty list)"));
+         wxLogDebug(wxT("Match! (empty list)"));
          matches_ext = true;
       }
       if (matches_ext)
-         wxLogMessage(wxT("Testing mime types"));
+         wxLogDebug(wxT("Testing mime types"));
       else
-         wxLogMessage(wxT("Not testing mime types"));
+         wxLogDebug(wxT("Not testing mime types"));
       for (size_t j = 0; matches_ext && j < item->mime_types.Count(); j++)
       {
          if (wxMatchWild (item->mime_types[j].Lower(),mime_type.Lower(), false))
          {
-            wxLogMessage(wxT("Match!"));
+            wxLogDebug(wxT("Match!"));
             matches_mime = true;
             break;
          }
       }
       if (item->mime_types.Count() == 0)
       {
-         wxLogMessage(wxT("Match! (empty list)"));
+         wxLogDebug(wxT("Match! (empty list)"));
          matches_mime = true;
       }
       if (matches_ext && matches_mime)
       {
-         wxLogMessage(wxT("Complete match!"));
+         wxLogDebug(wxT("Complete match!"));
          for (size_t j = 0; j < item->filter_objects.Count() && (item->divider < 0 || (int) j < item->divider); j++)
          {
-            wxLogMessage(wxT("Inserting %s"),item->filter_objects[j]->GetPluginStringID().c_str());
+            wxLogDebug(wxT("Inserting %s"),item->filter_objects[j]->GetPluginStringID().c_str());
             importPlugins.Append(item->filter_objects[j]);
          }
          foundItem = true;
@@ -420,7 +420,7 @@ int Importer::Import(wxString fName,
       bool prioritizeMp3 = false;
       if (usersSelectionOverrides && !foundOverride)
          importPlugins.Clear();
-      wxLogMessage(wxT("Applying default rule"));
+      wxLogDebug(wxT("Applying default rule"));
       // Special treatment for mp3 files
       if (wxMatchWild (wxT("*.mp3"),fName.Lower(), false))
          prioritizeMp3 = true;
@@ -434,19 +434,19 @@ int Importer::Import(wxString fName,
             // Skip MP3 import plugin. Opens some non-mp3 audio files (ac3 for example) as garbage.
             if (plugin->GetPluginFormatDescription().CompareTo( _("MP3 files") ) != 0)
             {
-               wxLogMessage(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
+               wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
                importPlugins.Append(plugin);
             }
             else if (prioritizeMp3)
             {
                if (usersSelectionOverrides)
                {
-                  wxLogMessage(wxT("Inserting %s at 1"),plugin->GetPluginStringID().c_str());
+                  wxLogDebug(wxT("Inserting %s at 1"),plugin->GetPluginStringID().c_str());
                   importPlugins.Insert((size_t) 1, plugin);
                }
                else
                {
-                  wxLogMessage(wxT("Inserting %s at 0"),plugin->GetPluginStringID().c_str());
+                  wxLogDebug(wxT("Inserting %s at 0"),plugin->GetPluginStringID().c_str());
                   importPlugins.Insert((size_t) 0, plugin);
                }
             }
@@ -464,7 +464,7 @@ int Importer::Import(wxString fName,
       inFile = plugin->Open(fName);
       if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
       {
-         wxLogMessage(wxT("Open() succeeded"));
+         wxLogMessage(wxT("Open(%s) succeeded"), fName.Lower().c_str());
          // File has more than one stream - display stream selector
          if (inFile->GetStreamCount() > 1)                                                  
          {
@@ -510,7 +510,7 @@ int Importer::Import(wxString fName,
       }
       importPluginNode = importPluginNode->GetNext();
    }
-   wxLogMessage(wxT("Opening failed."));
+   wxLogError(wxT("Importer::Import: Opening failed."));
    // None of our plugins can handle this file.  It might be that
    // Audacity supports this format, but support was not compiled in.
    // If so, notify the user of this fact

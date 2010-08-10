@@ -378,7 +378,7 @@ void FreqWindow::GetAudio()
    int selcount = 0;
    int i;
    bool warning = false;
-   wxLogMessage(wxT("Entering FreqWindow::GetAudio()"));
+   //wxLogDebug(wxT("Entering FreqWindow::GetAudio()"));
    TrackListIterator iter(p->GetTracks());
    Track *t = iter.First();
    while (t) {
@@ -431,11 +431,11 @@ void FreqWindow::GetAudio()
       wxString msg;
       msg.Printf(_("Too much audio was selected.  Only the first %.1f seconds of audio will be analyzed."),
                           (mDataLen / mRate));
-      wxLogMessage(wxT("About to show length warning message"));
+      //wxLogDebug(wxT("About to show length warning message"));
       wxMessageBox(msg);
-      wxLogMessage(wxT("Length warning message done"));
+      //wxLogDebug(wxT("Length warning message done"));
    }
-   wxLogMessage(wxT("Leaving FreqWindow::GetAudio()"));
+   //wxLogDebug(wxT("Leaving FreqWindow::GetAudio()"));
 }
 
 void FreqWindow::OnSize(wxSizeEvent & event)
@@ -924,7 +924,7 @@ void FreqWindow::OnCloseButton(wxCommandEvent & WXUNUSED(event))
 
 void FreqWindow::Plot()
 {
-   wxLogMessage(wxT("Starting FreqWindow::Plot()"));
+   //wxLogDebug(wxT("Starting FreqWindow::Plot()"));
    if (mData) {
       delete[]mData;
       mData = NULL;
@@ -939,12 +939,12 @@ void FreqWindow::Plot()
 
    wxSizeEvent dummy;
    OnSize( dummy );
-   wxLogMessage(wxT("Leaving FreqWindow::Plot()"));
+   //wxLogDebug(wxT("Leaving FreqWindow::Plot()"));
 }
 
 void FreqWindow::Recalc()
 {
-   wxLogMessage(wxT("Starting FreqWindow::Recalc()"));
+   //wxLogDebug(wxT("Starting FreqWindow::Recalc()"));
    if (mProcessed)
       delete[] mProcessed;
    mProcessed = NULL;
@@ -1002,7 +1002,7 @@ void FreqWindow::Recalc()
       wss = 1.0;
 
    //Progress dialog over FFT operation
-   wxLogMessage(wxT("Starting progress dialogue in FreqWindow::Recalc()"));
+   //wxLogDebug(wxT("Starting progress dialogue in FreqWindow::Recalc()"));
    ProgressDialog *mProgress = new ProgressDialog(_("FreqWindow"),_("Drawing Spectrum"));
 
    int start = 0;
@@ -1099,7 +1099,7 @@ void FreqWindow::Recalc()
          mProgress->Update(1 - static_cast<float>(mDataLen - start) / mDataLen);
    }
 
-   wxLogMessage(wxT("Finished updating progress dialogue in FreqWindow::Recalc()"));
+   //wxLogDebug(wxT("Finished updating progress dialogue in FreqWindow::Recalc()"));
    switch (alg) {
    double scale;
    case 0:                     // Spectrum
@@ -1211,7 +1211,7 @@ void FreqWindow::Recalc()
    delete[]out2;
    delete[]win;
 
-   wxLogMessage(wxT("About to draw plot in FreqWindow::Recalc()"));
+   //wxLogDebug(wxT("About to draw plot in FreqWindow::Recalc()"));
    DrawPlot();
    mFreqPlot->Refresh(true);
    delete mProgress;
