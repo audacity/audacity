@@ -1524,7 +1524,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       {
          // In "silently correct" mode, we always create silent blocks. This
          // makes sure the project is complete even if we open it again.
-         action = 0;
+         action = 1;
       } else
       {
          wxString msgA =
