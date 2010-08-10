@@ -64,8 +64,10 @@ wxLongLong UndoManager::CalculateSpaceUsage(int index)
    while (wt) {
       for (it = wt->GetClipIterator(); it; it = it->GetNext()) {
          blocks = it->GetData()->GetSequenceBlockArray();
-         for (i = 0; i < blocks->GetCount(); i++) {
-            cur[blocks->Item(i)->f] = blocks->Item(i)->f->GetSpaceUsage();
+         for (i = 0; i < blocks->GetCount(); i++) 
+         {
+            if (blocks->Item(i)->f->GetFileName().FileExists())
+               cur[blocks->Item(i)->f] = blocks->Item(i)->f->GetSpaceUsage();
          }
       }
       wt = (WaveTrack *) iter.Next();
