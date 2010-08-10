@@ -1332,14 +1332,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\effects\SpikeCleaner.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\effects\SpikeCleaner.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\effects\StereoToMono.cpp"
 				>
 			</File>
