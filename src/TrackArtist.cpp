@@ -761,7 +761,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
       begin = x;
       for (; x < r.width && where[x] < ssel1; ++x);
       end = x;
-      DrawLinkTiles(&dc, wxRect(r.x + begin, r.y, end - 1 - begin, r.height));
+      DrawSyncLockTiles(&dc, wxRect(r.x + begin, r.y, end - 1 - begin, r.height));
    }
 
    //OK, the display bounds are between min and max, which
@@ -2639,8 +2639,8 @@ void TrackArtist::SetSpectrumLogMaxFreq(int freq)
    mLogMaxFreq = freq;
 }
 
-// Draws the link bitmap, tiled; always draws stationary relative to the DC
-void TrackArtist::DrawLinkTiles(wxDC *dc, wxRect r)
+// Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
+void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
 {
    wxBitmap syncLockBitmap(theTheme.Image(bmpLinkSelect));
 

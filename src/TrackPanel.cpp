@@ -5135,12 +5135,12 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
 
    mTrackInfo.DrawBackground(dc, r, t->GetSelected(), bIsWave, labelw, vrul);
 
-   // Draw in linked tiles in ruler area
+   // Draw sync-lock tiles in ruler area.
    if (t->IsSyncLockSelected()) {
       wxRect tileFill = r;
       tileFill.x = GetVRulerOffset();
       tileFill.width = GetVRulerWidth();
-      TrackArtist::DrawLinkTiles(dc, tileFill);
+      TrackArtist::DrawSyncLockTiles(dc, tileFill);
    }
 
    DrawBordersAroundTrack(t, dc, r, labelw, vrul);

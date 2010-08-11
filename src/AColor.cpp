@@ -395,14 +395,14 @@ void AColor::Init()
 
    WideEnvelopePen.SetWidth( 3 );
 
-   theTheme.SetBrushColour( labelTextNormalBrush, clrLabelTextNormalBrush );
-   theTheme.SetBrushColour( labelTextEditBrush,   clrLabelTextEditBrush );
-   theTheme.SetBrushColour( labelUnselectedBrush, clrLabelUnselectedBrush );
-   theTheme.SetBrushColour( labelSelectedBrush,   clrLabelSelectedBrush );
-   theTheme.SetBrushColour( labelSyncLockSelBrush,    clrSyncLockSel );
+   theTheme.SetBrushColour( labelTextNormalBrush,  clrLabelTextNormalBrush );
+   theTheme.SetBrushColour( labelTextEditBrush,    clrLabelTextEditBrush );
+   theTheme.SetBrushColour( labelUnselectedBrush,  clrLabelUnselectedBrush );
+   theTheme.SetBrushColour( labelSelectedBrush,    clrLabelSelectedBrush );
+   theTheme.SetBrushColour( labelSyncLockSelBrush, clrSyncLockSel );
    theTheme.SetPenColour( labelUnselectedPen,   clrLabelUnselectedPen );
    theTheme.SetPenColour( labelSelectedPen,     clrLabelSelectedPen );
-   theTheme.SetPenColour( labelSyncLockSelPen,      clrSyncLockSel );
+   theTheme.SetPenColour( labelSyncLockSelPen,  clrSyncLockSel );
    theTheme.SetPenColour( labelSurroundPen,     clrLabelSurroundPen );
 
    // These colors were modified to avoid using reserved colors red and green

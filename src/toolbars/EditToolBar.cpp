@@ -148,8 +148,8 @@ void EditToolBar::Populate()
    AddSeparator();
 
 #ifdef EXPERIMENTAL_LINKING
-   AddButton(bmpLinkTracks, bmpLinkTracksDisabled, ETBLinkID,
-      _("Link Tracks"), true);
+   AddButton(bmpSyncLockTracks, bmpSyncLockTracksDisabled, ETBSyncLockID,
+               _("Sync-Lock Tracks"), true);
    
    AddSeparator();
 #endif
@@ -172,7 +172,7 @@ void EditToolBar::Populate()
    mButtons[ETBPasteID]->SetEnabled(false);
    
 #ifdef EXPERIMENTAL_LINKING
-   mButtons[ETBLinkID]->PushDown();
+   mButtons[ETBSyncLockID]->PushDown();
 #endif
 
    RegenerateTooltips();
@@ -199,9 +199,9 @@ void EditToolBar::RegenerateTooltips()
    mButtons[ETBSilenceID]->SetToolTip(_("Silence"));
    mButtons[ETBUndoID]->SetToolTip(_("Undo"));
    mButtons[ETBRedoID]->SetToolTip(_("Redo"));
-#ifdef EXPERIMENTAL_LINKING
-   mButtons[ETBLinkID]->SetToolTip(_("Link Tracks"));
-#endif
+   #ifdef EXPERIMENTAL_LINKING
+      mButtons[ETBSyncLockID]->SetToolTip(_("Sync-Lock Tracks"));
+   #endif
    mButtons[ETBZoomInID]->SetToolTip(_("Zoom In"));
    mButtons[ETBZoomOutID]->SetToolTip(_("Zoom Out"));
    mButtons[ETBZoomSelID]->SetToolTip(_("Fit Selection"));
@@ -240,7 +240,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          if (!busy) p->OnRedo();
          break;
 #ifdef EXPERIMENTAL_LINKING
-      case ETBLinkID:
+      case ETBSyncLockID:
          if (!busy) p->OnSyncLock();
          return;//avoiding the call to SetButton()
 #endif
@@ -306,24 +306,12 @@ void EditToolBar::EnableDisableButtons()
    mButtons[ETBPasteID]->SetEnabled(p->Clipboard());
    
 #ifdef EXPERIMENTAL_LINKING
-   bool linkTracks;
-   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
+   bool bSyncLockTracks;
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
 
-   if (linkTracks)
-      mButtons[ETBLinkID]->PushDown();
+   if (bSyncLockTracks)
+      mButtons[ETBSyncLockID]->PushDown();
    else
-      mButtons[ETBLinkID]->PopUp();
+      mButtons[ETBSyncLockID]->PopUp();
 #endif
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 55533f04-7fee-4a50-a3b6-e392ab2f8713
-

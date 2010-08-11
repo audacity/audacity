@@ -750,7 +750,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
 
    // If selection is sync-lock selected, draw in linked graphics.
    if (IsSyncLockSelected() && !GetSelected() && selr.width > 0) {
-      TrackArtist::DrawLinkTiles(&dc, selr);
+      TrackArtist::DrawSyncLockTiles(&dc, selr);
    }
 
    wxRect after = r;

@@ -806,9 +806,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mViewInfo.bRedrawWaveform = false;
 
    mLockPlayRegion = false;
-   bool linkTracks;
-   gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
-   SetSyncLock(linkTracks);
+   bool bSyncLockTracks;
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
+   SetSyncLock(bSyncLockTracks);
 
    CreateMenusAndCommands();
 

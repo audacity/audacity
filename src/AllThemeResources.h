@@ -137,8 +137,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpUndoDisabled, wxImage( 26, 24 ), wxT("UndoDisabled"));
    DEFINE_IMAGE( bmpRedo, wxImage( 26, 24 ), wxT("Redo"));
    DEFINE_IMAGE( bmpRedoDisabled, wxImage( 26, 24 ), wxT("RedoDisabled"));
-   DEFINE_IMAGE( bmpLinkTracks, wxImage( 20, 20 ), wxT("LinkTracks"));
-   DEFINE_IMAGE( bmpLinkTracksDisabled, wxImage( 20, 20 ), wxT("LinkTracksDisabled"));
+   DEFINE_IMAGE( bmpSyncLockTracks, wxImage( 20, 20 ), wxT("SyncLockTracks"));
+   DEFINE_IMAGE( bmpSyncLockTracksDisabled, wxImage( 20, 20 ), wxT("SyncLockTracksDisabled"));
 
    SET_THEME_FLAGS(  resFlagPaired | resFlagNewLine  );
    DEFINE_IMAGE( bmpTnStartOn, wxImage( 27, 27 ), wxT("TnStartOn"));

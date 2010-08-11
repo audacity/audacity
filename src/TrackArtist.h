@@ -91,8 +91,8 @@ class AUDACITY_DLL_API TrackArtist {
      this->selectedPen = selectedPen;
    }
 
-   // Helper: draws the "linked" watermark tiled to a rectangle
-   static void DrawLinkTiles(wxDC *dc, wxRect r);
+   // Helper: draws the "sync-locked" watermark tiled to a rectangle
+   static void DrawSyncLockTiles(wxDC *dc, wxRect r);
 
  private:
 
