@@ -787,7 +787,7 @@ void TrackPanel::SelectTrackLength(Track *t)
    double maxEnd = t->GetEndTime();
 
    // If we have a group and linking is on, check the group tracks
-   if (p->IsSticky() && t1 != NULL)
+   if (p->IsSyncLocked() && t1 != NULL)
    {
       for ( ; t1; t1 = it.Next())
       {
@@ -2359,7 +2359,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
       // Now, if linking is enabled, capture any clip that's linked to a
       // captured clip
-      if (GetProject()->IsSticky()) {
+      if (GetProject()->IsSyncLocked()) {
          // AWD: mCapturedClipArray expands as the loop runs, so newly-added
          // clips are considered (the effect is like recursion and terminates
          // because AddClipsToCapture doesn't add duplicate clips); to remove
@@ -5136,7 +5136,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    mTrackInfo.DrawBackground(dc, r, t->GetSelected(), bIsWave, labelw, vrul);
 
    // Draw in linked tiles in ruler area
-   if (t->IsSynchroSelected()) {
+   if (t->IsSyncLockSelected()) {
       wxRect tileFill = r;
       tileFill.x = GetVRulerOffset();
       tileFill.width = GetVRulerWidth();
@@ -7355,7 +7355,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    // Link icon: drawn to the left of the dropdown arrow
    //vvvvv  May want to put this elsewhere in the TrackInfo.
    //wxBitmap link(theTheme.Image(bmpLinkTP)); 
-   //if (t->IsSynchroSelected()) {
+   //if (t->IsSyncLockSelected()) {
    //   wxBitmap link(theTheme.Image(bmpLinkTP));
    //   dc->DrawBitmap(link,
    //                  // Arrow's left minus our width and an extra px

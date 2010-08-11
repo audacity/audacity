@@ -784,8 +784,8 @@ bool EffectNyquist::ProcessOne()
          Track *t;
          for (t = git.First(mCurTrack[i]); t; t = git.Next())
          {
-            if (!t->GetSelected() && t->IsSynchroSelected()) {
-               t->SyncAdjust(mT1, mT0 + out->GetEndTime());
+            if (!t->GetSelected() && t->IsSyncLockSelected()) {
+               t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
             }
          }
       }

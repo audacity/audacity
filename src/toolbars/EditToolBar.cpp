@@ -241,7 +241,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          break;
 #ifdef EXPERIMENTAL_LINKING
       case ETBLinkID:
-         if (!busy) p->OnStickyLabel();
+         if (!busy) p->OnSyncLock();
          return;//avoiding the call to SetButton()
 #endif
       case ETBZoomInID:

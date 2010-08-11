@@ -446,10 +446,10 @@ void AudacityProject::CreateMenusAndCommands()
          TracksExistFlag, TracksExistFlag);
 
 #ifdef EXPERIMENTAL_LINKING
-   c->AddItem(wxT("SelSyncTracks"), _("In All S&ync-selected Tracks"),
-         FN(OnSelectSyncSel), wxT("Ctrl+Shift+Y"),
-         TracksSelectedFlag | LinkingEnabledFlag,
-         TracksSelectedFlag | LinkingEnabledFlag);
+   c->AddItem(wxT("SelSyncLockTracks"), _("In All S&ync-Locked Tracks"),
+               FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
+               TracksSelectedFlag | LinkingEnabledFlag,
+               TracksSelectedFlag | LinkingEnabledFlag);
 #endif
 
    c->EndSubMenu();
@@ -718,7 +718,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddSeparator();
 
 #ifdef EXPERIMENTAL_LINKING
-      c->AddCheck(wxT("StickyLabels"), _("&Link Tracks"), FN(OnStickyLabel), 0);
+      c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0);
 
       c->AddSeparator();
 #endif
@@ -1456,7 +1456,7 @@ wxUint32 AudacityProject::GetUpdateFlags()
    if (wxGetApp().GetRecentFiles()->GetCount() > 0)
       flags |= HaveRecentFiles;
 
-   if (IsSticky())
+   if (IsSyncLocked())
       flags |= LinkingEnabledFlag;
    else
       flags |= LinkingDisabledFlag;
@@ -1510,7 +1510,7 @@ void AudacityProject::ModifyToolbarMenus()
    }
 
    // These don't really belong here, but it's easier and especially so for
-   // the Edit toolbar and the sticky menu item.
+   // the Edit toolbar and the sync-lock menu item.
    bool active;
    gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"),&active, false);
    mCommandManager.Check(wxT("SoundActivation"), active);
@@ -1523,8 +1523,8 @@ void AudacityProject::ModifyToolbarMenus()
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"),&active, false);
    mCommandManager.Check(wxT("SWPlaythrough"), active);
    gPrefs->Read(wxT("/GUI/LinkTracks"), &active, false);
-   SetStickyFlag(active);
-   mCommandManager.Check(wxT("StickyLabels"), active);
+   SetSyncLock(active);
+   mCommandManager.Check(wxT("SyncLock"), active);
 }
 
 void AudacityProject::UpdateMenus()
@@ -3090,8 +3090,8 @@ void AudacityProject::OnCut()
 
    n = iter.First();
    while (n) {
-      // We clear from selected and synchro-selected tracks
-      if (n->GetSelected() || n->IsSynchroSelected()) {
+      // We clear from selected and sync-lock selected tracks.
+      if (n->GetSelected() || n->IsSyncLockSelected()) {
          switch (n->GetKind())
          {
 #if defined(USE_MIDI)
@@ -3264,9 +3264,9 @@ void AudacityProject::OnPaste()
             c = tmpC;
             while (n && (c->GetKind() != n->GetKind() || !n->GetSelected()))
             {
-               // Must perform sync-adjustment before incrementing n
-               if (n->IsSynchroSelected()) {
-                  bPastedSomething |= n->SyncAdjust(t1, t0+msClipLen);
+               // Must perform sync-lock adjustment before incrementing n
+               if (n->IsSyncLockSelected()) {
+                  bPastedSomething |= n->SyncLockAdjust(t1, t0+msClipLen);
                }
                n = iter.Next();
             }
@@ -3313,7 +3313,7 @@ void AudacityProject::OnPaste()
 
             // To be (sort of) consistent with Clear behavior, we'll only shift
             // them if linking is on
-            if (IsSticky())
+            if (IsSyncLocked())
                ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
 
             bPastedSomething |= ((LabelTrack *)n)->PasteOver(t0, c);
@@ -3351,9 +3351,9 @@ void AudacityProject::OnPaste()
             c = clipIter.Next();
          }
       } // if (n->GetSelected())
-      else if (n->IsSynchroSelected())
+      else if (n->IsSyncLockSelected())
       {
-         bPastedSomething |=  n->SyncAdjust(t1, t0 + msClipLen);
+         bPastedSomething |=  n->SyncLockAdjust(t1, t0 + msClipLen);
       }
 
       n = iter.Next();
@@ -3390,12 +3390,12 @@ void AudacityProject::OnPaste()
             ((LabelTrack *)n)->Clear(t0, t1);
 
             // As above, only shift labels if linking is on
-            if (IsSticky())
+            if (IsSyncLocked())
                ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
          }
-         else if (n->IsSynchroSelected())
+         else if (n->IsSyncLockSelected())
          {
-            n->SyncAdjust(t1, t0 + msClipLen);
+            n->SyncLockAdjust(t1, t0 + msClipLen);
          }
 
          n = iter.Next();
@@ -4157,12 +4157,12 @@ void AudacityProject::OnSelectStartCursor()
    mTrackPanel->Refresh(false);
 }
 
-void AudacityProject::OnSelectSyncSel()
+void AudacityProject::OnSelectSyncLockSel()
 {
    TrackListIterator iter(mTracks);
    for (Track *t = iter.First(); t; t = iter.Next())
    {
-      if (t->IsSynchroSelected()) {
+      if (t->IsSyncLockSelected()) {
          t->SetSelected(true);
       }
    }
@@ -4871,7 +4871,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       Track *t = iter.First();
       
       while (t) {
-         // This shifts different tracks in different ways, so no sync move
+         // This shifts different tracks in different ways, so no sync-lock move.
          if (t->GetSelected()) {
             t->SetOffset(newPos);
          }
@@ -4884,8 +4884,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       Track *t = iter.First();
       
       while (t) {
-         // For a fixed-distance shift move sync-selected tracks also
-         if (t->GetSelected() || t->IsSynchroSelected()) {
+         // For a fixed-distance shift move sync-lock selected tracks also.
+         if (t->GetSelected() || t->IsSyncLockSelected()) {
             t->SetOffset(t->GetOffset() + delta);
          }
          t = iter.Next();
@@ -5141,13 +5141,13 @@ int AudacityProject::DoAddLabel(double left, double right)
    return index;
 }
 
-void AudacityProject::OnStickyLabel()
+void AudacityProject::OnSyncLock()
 {
    bool linkTracks;
    gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
    gPrefs->Write(wxT("/GUI/LinkTracks"), !linkTracks);
 
-   // Toolbar, project "sticky flag" handled within
+   // Toolbar, project sync-lock handled within
    ModifyAllProjectToolbarMenus();
 }
 

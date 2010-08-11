@@ -122,7 +122,7 @@ bool EffectRepeat::Process()
    for (Track *t = iter.First(); t && bGoodResult; t = iter.Next()) {
       if (t->GetKind() == Track::Label)
       {
-         if (t->GetSelected() || t->IsSynchroSelected())
+         if (t->GetSelected() || t->IsSyncLockSelected())
          {
             LabelTrack* track = (LabelTrack*)t;
 
@@ -163,9 +163,9 @@ bool EffectRepeat::Process()
          delete dest;
          nTrack++;
       }
-      else if (t->IsSynchroSelected())
+      else if (t->IsSyncLockSelected())
       {
-         t->SyncAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
+         t->SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    }
 

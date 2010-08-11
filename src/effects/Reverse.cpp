@@ -42,7 +42,7 @@ bool EffectReverse::Process()
    int count = 0;
    while (t) {
       if (t->GetKind() == Track::Wave &&
-            (t->GetSelected() || t->IsSynchroSelected()))
+            (t->GetSelected() || t->IsSyncLockSelected()))
       {
          WaveTrack *track = (WaveTrack*)t;
 
@@ -59,7 +59,7 @@ bool EffectReverse::Process()
          }
       }
       else if (t->GetKind() == Track::Label &&
-            (t->GetSelected() || t->IsSynchroSelected()))
+            (t->GetSelected() || t->IsSyncLockSelected()))
       {
          LabelTrack *track = (LabelTrack*)t;
          track->ChangeLabelsOnReverse(mT0, mT1);

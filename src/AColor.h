@@ -82,10 +82,10 @@ class AColor {
    static wxBrush labelTextEditBrush;
    static wxBrush labelUnselectedBrush;
    static wxBrush labelSelectedBrush;
-   static wxBrush labelSyncSelBrush;
+   static wxBrush labelSyncLockSelBrush;
    static wxPen labelUnselectedPen;
    static wxPen labelSelectedPen;
-   static wxPen labelSyncSelPen;
+   static wxPen labelSyncLockSelPen;
    static wxPen labelSurroundPen;
 
    static wxPen trackFocusPens[3];

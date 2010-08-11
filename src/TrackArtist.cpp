@@ -662,7 +662,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
                                          float zoomMin, float zoomMax, bool dB,
                                          const sampleCount where[],
                                          sampleCount ssel0, sampleCount ssel1,
-                                         bool drawEnvelope, bool synchroSelection)
+                                         bool drawEnvelope, bool bIsSyncLockSelected)
 {
    // Visually (one vertical slice of the waveform background, on its side;
    // the "*" is the actual waveform background we're drawing
@@ -711,8 +711,8 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
          mintop = halfHeight;
       }
 
-      // We don't draw selection color for sync-sel tracks
-      sel = (ssel0 <= where[x] && where[x + 1] < ssel1) && !synchroSelection;
+      // We don't draw selection color for sync-lock selected tracks.
+      sel = (ssel0 <= where[x] && where[x + 1] < ssel1) && !bIsSyncLockSelected;
 
       if (lmaxtop == maxtop &&
           lmintop == mintop &&
@@ -753,8 +753,8 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
       dc.DrawRectangle(l, r.y + lmaxtop, w, lminbot - lmaxtop);
    }
 
-   // If sync-selected, draw in linked graphics
-   if (synchroSelection && ssel0 < ssel1) {
+   // If sync-lock selected, draw in linked graphics.
+   if (bIsSyncLockSelected && ssel0 < ssel1) {
       // Find the beginning/end of the selection
       int begin, end;
       for (x = 0; x < r.width && where[x] < ssel0; ++x);
@@ -1148,7 +1148,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    double sps = 1./rate;            //seconds-per-sample
 
    //If the track isn't selected, make the selection empty
-   if (!track->GetSelected() && !track->IsSynchroSelected()) {
+   if (!track->GetSelected() && !track->IsSyncLockSelected()) {
       sel0 = sel1 = 0.0;
    }
 
@@ -2538,7 +2538,7 @@ void TrackArtist::DrawLabelTrack(LabelTrack *track,
    double sel0 = viewInfo->sel0;
    double sel1 = viewInfo->sel1;
    
-   if (!track->GetSelected() && !track->IsSynchroSelected())
+   if (!track->GetSelected() && !track->IsSyncLockSelected())
       sel0 = sel1 = 0.0;
    
    track->Draw(dc, r, viewInfo->h, viewInfo->zoom, sel0, sel1);
@@ -2642,32 +2642,32 @@ void TrackArtist::SetSpectrumLogMaxFreq(int freq)
 // Draws the link bitmap, tiled; always draws stationary relative to the DC
 void TrackArtist::DrawLinkTiles(wxDC *dc, wxRect r)
 {
-   wxBitmap sync(theTheme.Image(bmpLinkSelect));
+   wxBitmap syncLockBitmap(theTheme.Image(bmpLinkSelect));
 
-   int xOffset = r.x % sync.GetWidth();
-   if (xOffset < 0) xOffset += sync.GetWidth();
+   int xOffset = r.x % syncLockBitmap.GetWidth();
+   if (xOffset < 0) xOffset += syncLockBitmap.GetWidth();
    int width;
    for (int x = 0; x < r.width; x += width) {
-      width = sync.GetWidth() - xOffset;
+      width = syncLockBitmap.GetWidth() - xOffset;
       if (x + width > r.width)
          width = r.width - x;
 
-      int yOffset = r.y % sync.GetHeight();
-      if (yOffset < 0) yOffset += sync.GetWidth();
+      int yOffset = r.y % syncLockBitmap.GetHeight();
+      if (yOffset < 0) yOffset += syncLockBitmap.GetWidth();
       int height;
       for (int y = 0; y < r.height; y += height) {
-         height = sync.GetHeight() - yOffset;
+         height = syncLockBitmap.GetHeight() - yOffset;
          if (y + height > r.height)
             height = r.height - y;
 
          // Do we need to get a sub-bitmap?
-         if (width != sync.GetWidth() || height != sync.GetHeight()) {
-            wxBitmap subSync = sync.GetSubBitmap(wxRect(
-                     xOffset, yOffset, width, height));
-            dc->DrawBitmap(subSync, r.x + x, r.y + y, true);
+         if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
+            wxBitmap subSyncLockBitmap = 
+               syncLockBitmap.GetSubBitmap(wxRect(xOffset, yOffset, width, height));
+            dc->DrawBitmap(subSyncLockBitmap, r.x + x, r.y + y, true);
          }
          else {
-            dc->DrawBitmap(sync, r.x + x, r.y + y, true);
+            dc->DrawBitmap(syncLockBitmap, r.x + x, r.y + y, true);
          }
 
          // Only offset first row

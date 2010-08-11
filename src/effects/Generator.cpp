@@ -89,8 +89,8 @@ bool Generator::Process()
 
          ntrack++;
       }
-      else if (t->IsSynchroSelected()) {
-         t->SyncAdjust(mT1, mT0 + mDuration);
+      else if (t->IsSyncLockSelected()) {
+         t->SyncLockAdjust(mT1, mT0 + mDuration);
       }
       // Move on to the next track
       t = iter.Next();

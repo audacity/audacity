@@ -54,10 +54,10 @@ wxBrush AColor::labelTextNormalBrush;
 wxBrush AColor::labelTextEditBrush;
 wxBrush AColor::labelUnselectedBrush;
 wxBrush AColor::labelSelectedBrush;
-wxBrush AColor::labelSyncSelBrush;
+wxBrush AColor::labelSyncLockSelBrush;
 wxPen AColor::labelUnselectedPen;
 wxPen AColor::labelSelectedPen;
-wxPen AColor::labelSyncSelPen;
+wxPen AColor::labelSyncLockSelPen;
 wxPen AColor::labelSurroundPen;
 wxPen AColor::trackFocusPens[3];
 wxPen AColor::snapGuidePen;
@@ -399,10 +399,10 @@ void AColor::Init()
    theTheme.SetBrushColour( labelTextEditBrush,   clrLabelTextEditBrush );
    theTheme.SetBrushColour( labelUnselectedBrush, clrLabelUnselectedBrush );
    theTheme.SetBrushColour( labelSelectedBrush,   clrLabelSelectedBrush );
-   theTheme.SetBrushColour( labelSyncSelBrush,    clrSyncSel );
+   theTheme.SetBrushColour( labelSyncLockSelBrush,    clrSyncLockSel );
    theTheme.SetPenColour( labelUnselectedPen,   clrLabelUnselectedPen );
    theTheme.SetPenColour( labelSelectedPen,     clrLabelSelectedPen );
-   theTheme.SetPenColour( labelSyncSelPen,      clrSyncSel );
+   theTheme.SetPenColour( labelSyncLockSelPen,      clrSyncLockSel );
    theTheme.SetPenColour( labelSurroundPen,     clrLabelSurroundPen );
 
    // These colors were modified to avoid using reserved colors red and green

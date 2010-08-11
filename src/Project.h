@@ -278,10 +278,10 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void Rewind(bool shift);
    void SkipEnd(bool shift);
    void SetStop(bool bStopped);
-   void EditByLabel( WaveTrack::EditFunction action, bool syncTracks ); 
+   void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks ); 
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
-   bool IsSticky();
-   void SetStickyFlag(bool flag);
+   bool IsSyncLocked();
+   void SetSyncLock(bool flag);
 
    // "exclusive" mute means mute the chosen track and unmute all others.
    void HandleTrackMute(Track *t, const bool exclusive); 
@@ -499,7 +499,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mEmptyCanBeDirty;
    bool mSelectAllOnNone;
    
-   bool mStickyFlag;
+   bool mIsSyncLocked;
 
    bool mLockPlayRegion;
 

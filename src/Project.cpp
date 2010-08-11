@@ -808,7 +808,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mLockPlayRegion = false;
    bool linkTracks;
    gPrefs->Read(wxT("/GUI/LinkTracks"), &linkTracks, false);
-   SetStickyFlag(linkTracks);
+   SetSyncLock(linkTracks);
 
    CreateMenusAndCommands();
 
@@ -3664,7 +3664,7 @@ void AudacityProject::Clear()
    Track *n = iter.First();
 
    while (n) {
-      if (n->GetSelected() || n->IsSynchroSelected()) {
+      if (n->GetSelected() || n->IsSyncLockSelected()) {
          n->Clear(mViewInfo.sel0, mViewInfo.sel1);
       }
       n = iter.Next();
@@ -3964,11 +3964,11 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels
 //If No tracks selected, function is applied on all tracks
-//If the function replaces the selection with audio of a different length
-// syncTracks should be set true to perform the same action on sync-selected
+//If the function replaces the selection with audio of a different length, 
+// bSyncLockedTracks should be set true to perform the same action on sync-lock selected
 // tracks.
 void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
-                                   bool syncTracks )
+                                   bool bSyncLockedTracks )
 { 
    Regions regions;
    
@@ -3995,8 +3995,8 @@ void AudacityProject::EditByLabel( WaveTrack::EditFunction action,
    n = iter.First();
    while (n)
    {
-      if( n->GetKind() == Track::Wave && ( allTracks || n->GetSelected() ||
-                                    (syncTracks && n->IsSynchroSelected()) ) )
+      if ((n->GetKind() == Track::Wave) && 
+            (allTracks || n->GetSelected() || (bSyncLockedTracks && n->IsSyncLockSelected())))
       {
          WaveTrack *wt = ( WaveTrack* )n;
          for( int i = ( int )regions.GetCount() - 1; i >= 0; i-- )
@@ -4394,19 +4394,19 @@ bool AudacityProject::GetSnapTo()
    return mSnapTo;
 }
 
-bool AudacityProject::IsSticky()
+bool AudacityProject::IsSyncLocked()
 {
 #ifdef EXPERIMENTAL_LINKING
-   return mStickyFlag;
+   return mIsSyncLocked;
 #else
    return false;
 #endif
 }
 
-void AudacityProject::SetStickyFlag(bool flag)
+void AudacityProject::SetSyncLock(bool flag)
 {
-   if (flag != mStickyFlag) {
-      mStickyFlag = flag;
+   if (flag != mIsSyncLocked) {
+      mIsSyncLocked = flag;
       if (GetTrackPanel())
          GetTrackPanel()->Refresh(false);
    }

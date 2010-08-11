@@ -162,9 +162,9 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual bool Clear(double t0, double t1) {return false;}
    virtual bool Paste(double t, Track * src) {return false;}
 
-   // This can be used to adjust a synchro-selected track when the selection
+   // This can be used to adjust a sync-lock selected track when the selection
    // is replaced by one of a different length.
-   virtual bool SyncAdjust(double oldT1, double newT1);
+   virtual bool SyncLockAdjust(double oldT1, double newT1);
 
    virtual bool Silence(double t0, double t1) {return false;}
    virtual bool InsertSilence(double t, double len) {return false;}
@@ -185,7 +185,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual double GetEndTime() { return 0.0; }
 
    // Checks if linking is on and any track in its group is selected
-   bool IsSynchroSelected();
+   bool IsSyncLockSelected();
 };
 
 struct TrackListNode

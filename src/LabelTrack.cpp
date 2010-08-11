@@ -736,10 +736,10 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    selr.x += before.width;
    selr.width = int ((dsel1 - dsel0) * pps);
    
-   // If selection is synchro use synchro colors
-   if (IsSynchroSelected() && !GetSelected()) {
-      dc.SetBrush(AColor::labelSyncSelBrush);
-      dc.SetPen(AColor::labelSyncSelPen);
+   // If selection is sync-lock selected use sync-lock selected colors.
+   if (IsSyncLockSelected() && !GetSelected()) {
+      dc.SetBrush(AColor::labelSyncLockSelBrush);
+      dc.SetPen(AColor::labelSyncLockSelPen);
    }
    else {
       dc.SetBrush(AColor::labelSelectedBrush);
@@ -748,8 +748,8 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
 
    dc.DrawRectangle(selr);
 
-   // If selection is synchro, draw in linked graphics
-   if (IsSynchroSelected() && !GetSelected() && selr.width > 0) {
+   // If selection is sync-lock selected, draw in linked graphics.
+   if (IsSyncLockSelected() && !GetSelected() && selr.width > 0) {
       TrackArtist::DrawLinkTiles(&dc, selr);
    }
 

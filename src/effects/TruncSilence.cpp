@@ -600,7 +600,7 @@ bool EffectTruncSilence::Process()
    }
 
    //
-   // Now remove the silent regions from all selected/sync-seletcted tracks
+   // Now remove the silent regions from all selected / sync-lock selected tracks.
    //
 
    // Loop over detected regions in reverse (so cuts don't change time values
@@ -636,7 +636,7 @@ bool EffectTruncSilence::Process()
             continue;
 
          if (t->GetKind() == Track::Wave && (
-                  t->GetSelected() || t->IsSynchroSelected()))
+                  t->GetSelected() || t->IsSyncLockSelected()))
          {
             // In WaveTracks, clear with a cross-fade
             WaveTrack *wt = (WaveTrack *)t;
@@ -675,12 +675,12 @@ bool EffectTruncSilence::Process()
             delete [] buf1;
             delete [] buf2;
          }
-         else if (t->GetSelected() || t->IsSynchroSelected())
+         else if (t->GetSelected() || t->IsSyncLockSelected())
          {
-            // Non-wave tracks: just do a sync adjust
+            // Non-wave tracks: just do a sync-lock adjust
             double cutStart = (r->start + r->end - cutLen) / 2;
             double cutEnd = cutStart + cutLen;
-            t->SyncAdjust(cutEnd, cutStart);
+            t->SyncLockAdjust(cutEnd, cutStart);
          }
       }
       ++whichReg;

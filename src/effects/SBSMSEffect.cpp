@@ -152,7 +152,8 @@ bool EffectSBSMS::Process()
    bool bGoodResult = true;
    
    //Iterate over each track
-   //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
+   // Track::All is needed because this effect needs to introduce 
+   // silence in the group tracks to keep sync-lock.
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
    TrackListIterator iter(mOutputTracks);
    Track* t;
@@ -171,7 +172,7 @@ bool EffectSBSMS::Process()
    t = iter.First();
    while (t != NULL) {
       if (t->GetKind() == Track::Label && 
-            (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
+            (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
          if (!ProcessLabelTrack(t)) {
             bGoodResult = false;
@@ -371,9 +372,9 @@ bool EffectSBSMS::Process()
          }
          mCurTrackNum++;
       }
-      else if (mustSync && t->IsSynchroSelected())
+      else if (mustSync && t->IsSyncLockSelected())
       {
-         t->SyncAdjust(mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
+         t->SyncLockAdjust(mCurT1, mCurT0 + (mCurT1 - mCurT0) * mTotalStretch);
       }
       //Iterate to the next track
       t = iter.Next();

@@ -155,7 +155,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    bool HandleClear(double t0, double t1, bool addCutLines, bool split);
 
-   virtual bool SyncAdjust(double oldT1, double newT1);
+   virtual bool SyncLockAdjust(double oldT1, double newT1);
 
    // Returns true if there are no WaveClips in that region
    bool IsEmpty(double t0, double t1);

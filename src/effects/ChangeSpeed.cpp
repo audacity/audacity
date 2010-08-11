@@ -118,7 +118,7 @@ bool EffectChangeSpeed::Process()
    while (t != NULL)
    {
       if (t->GetKind() == Track::Label) {
-         if (t->GetSelected() || t->IsSynchroSelected())
+         if (t->GetSelected() || t->IsSyncLockSelected())
          {
             if (!ProcessLabelTrack(t)) {
                bGoodResult = false;
@@ -153,9 +153,9 @@ bool EffectChangeSpeed::Process()
          }
          mCurTrackNum++;
       }
-      else if (t->IsSynchroSelected())
+      else if (t->IsSyncLockSelected())
       {
-         t->SyncAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
+         t->SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
 
       //Iterate to the next track

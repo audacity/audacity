@@ -249,9 +249,9 @@ void Effect::CopyInputTracks(int trackType)
 
    for (Track *aTrack = aIt.First(); aTrack; aTrack = aIt.Next()) {
 
-      // Include selected tracks, plus sync-selected tracks for Track::All)
+      // Include selected tracks, plus sync-lock selected tracks for Track::All.
       if (aTrack->GetSelected() ||
-            (trackType == Track::All && aTrack->IsSynchroSelected()))
+            (trackType == Track::All && aTrack->IsSyncLockSelected()))
       {
          Track *o = aTrack->Duplicate();
          mOutputTracks->Add(o);

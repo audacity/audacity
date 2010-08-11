@@ -138,7 +138,7 @@ class AUDACITY_DLL_API TrackArtist {
                                float zoomMin, float zoomMax, bool dB,
                                const sampleCount where[],
                                sampleCount ssel0, sampleCount ssel1,
-                               bool drawEnvelope, bool synchroSelection);
+                               bool drawEnvelope, bool bIsSyncLockSelected);
 
    void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
                       float zoomMin, float zoomMax, bool dB,

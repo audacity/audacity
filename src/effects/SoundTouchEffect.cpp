@@ -41,7 +41,7 @@ bool EffectSoundTouch::Process()
    // time warper should also be set.
 
    // Check if this effect will alter the selection length; if so, we need
-   // to operate on sync-selected tracks
+   // to operate on sync-lock selected tracks.
    bool mustSync = true;
    if (mT1 == GetTimeWarper()->Warp(mT1)) {
       mustSync = false;
@@ -60,7 +60,7 @@ bool EffectSoundTouch::Process()
    t = iter.First();
    while (t != NULL) {
       if (t->GetKind() == Track::Label && 
-            (t->GetSelected() || (mustSync && t->IsSynchroSelected())) )
+            (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
          if (!ProcessLabelTrack(t))
          {
@@ -128,8 +128,8 @@ bool EffectSoundTouch::Process()
          }
          mCurTrackNum++;
       }
-      else if (mustSync && t->IsSynchroSelected()) {
-         t->SyncAdjust(mT1, GetTimeWarper()->Warp(mT1));
+      else if (mustSync && t->IsSyncLockSelected()) {
+         t->SyncLockAdjust(mT1, GetTimeWarper()->Warp(mT1));
       }
 
       //Iterate to the next track

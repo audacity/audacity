@@ -205,11 +205,11 @@ Track *Track::GetLink() const
    return NULL;
 }
 
-bool Track::IsSynchroSelected()
+bool Track::IsSyncLockSelected()
 {
 #ifdef EXPERIMENTAL_LINKING
    AudacityProject *p = GetActiveProject();
-   if (!p || !p->IsSticky())
+   if (!p || !p->IsSyncLocked())
       return false;
 
    TrackGroupIterator git(mList);
@@ -229,7 +229,7 @@ bool Track::IsSynchroSelected()
    return false;
 }
 
-bool Track::SyncAdjust(double oldT1, double newT1)
+bool Track::SyncLockAdjust(double oldT1, double newT1)
 {
    if (newT1 > oldT1) {
       // Insert space within the track

@@ -239,7 +239,7 @@ void OnSelectAll();
 void OnSelectNone();
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
-void OnSelectSyncSel();
+void OnSelectSyncLockSel();
 void OnSelectAllTracks();
 
         // View Menu
@@ -329,7 +329,7 @@ void OnNewLabelTrack();
 void OnNewTimeTrack();
 void OnTimerRecord();
 void OnRemoveTracks();
-void OnStickyLabel();
+void OnSyncLock();
 void OnAddLabel();
 void OnAddLabelPlaying();
 void OnEditLabels();
