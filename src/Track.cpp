@@ -212,11 +212,11 @@ bool Track::IsSyncLockSelected()
    if (!p || !p->IsSyncLocked())
       return false;
 
-   TrackGroupIterator git(mList);
+   SyncLockedTracksIterator git(mList);
    Track *t = git.First(this);
 
    if (!t) {
-      // Not in a group.
+      // Not in a sync-locked group.
       return GetSelected();
    }
 
@@ -496,22 +496,22 @@ bool VisibleTrackIterator::Condition(Track *t)
    return r.Intersects(mPanelRect);
 }
 
-// TrackGroupIterator
+// SyncLockedTracksIterator
 //
 // Based on TrackListIterator returns only tracks belonging to the group
 // in which the starting track is a member.
 //
-TrackGroupIterator::TrackGroupIterator(TrackList * val)
+SyncLockedTracksIterator::SyncLockedTracksIterator(TrackList * val)
 :  TrackListIterator(val),
    mInLabelSection(false)
 {
 }
 
-Track *TrackGroupIterator::First(Track * member)
+Track *SyncLockedTracksIterator::First(Track * member)
 {
    Track *t = NULL;
 
-   // A group consists of any positive number of wave tracks followed by any
+   // A sync-locked group consists of any positive number of wave tracks followed by any
    // non-negative number of label tracks. Step back through any label tracks,
    // and then through the wave tracks above them.
 
@@ -525,7 +525,7 @@ Track *TrackGroupIterator::First(Track * member)
    }
 
    // Make it current (if t is still NULL there are no wave tracks, so we're
-   // not in a group).
+   // not in a sync-locked group).
    if (t)
       cur = (TrackListNode *) t->GetNode();
 
@@ -534,12 +534,12 @@ Track *TrackGroupIterator::First(Track * member)
    return t;
 }
 
-Track *TrackGroupIterator::Next(bool skiplinked)
+Track *SyncLockedTracksIterator::Next(bool skiplinked)
 {
    Track *t = TrackListIterator::Next(skiplinked);
 
    //
-   // Ways to end a group
+   // Ways to end a sync-locked group
    //
 
    // End of tracks
@@ -564,12 +564,12 @@ Track *TrackGroupIterator::Next(bool skiplinked)
    return t;
 }
 
-Track *TrackGroupIterator::Prev(bool skiplinked)
+Track *SyncLockedTracksIterator::Prev(bool skiplinked)
 {
    Track *t = TrackListIterator::Prev(skiplinked);
 
    //
-   // Ways to end a group in reverse
+   // Ways to end a sync-locked group in reverse
    //
 
    // Beginning of tracks
@@ -594,7 +594,7 @@ Track *TrackGroupIterator::Prev(bool skiplinked)
    return t;
 }
 
-Track *TrackGroupIterator::Last(bool skiplinked)
+Track *SyncLockedTracksIterator::Last(bool skiplinked)
 {
    if (!cur)
       return NULL;
@@ -602,7 +602,7 @@ Track *TrackGroupIterator::Last(bool skiplinked)
    Track *t = cur->t;
 
    while (l->GetNext(t)) {
-      // Check if this is the last track in the group
+      // Check if this is the last track in the sync-locked group.
       int nextKind = l->GetNext(t)->GetKind();
       if (mInLabelSection && nextKind != Track::Label)
          break;
@@ -615,41 +615,6 @@ Track *TrackGroupIterator::Last(bool skiplinked)
    return t;
 }
 
-// TrackAndGroupIterator
-//
-// Based on TrackListIterator has methods to retrieve both tracks and groups
-//
-TrackAndGroupIterator::TrackAndGroupIterator(TrackList * val)
-:  TrackListIterator(val)
-{
-}
-
-Track *TrackAndGroupIterator::NextGroup(bool skiplinked)
-{
-   if (!cur)
-      return NULL;
-
-   Track* t = cur->t;
-
-   while(t) {
-      int prevKind = t->GetKind();
-      t = TrackListIterator::Next(skiplinked);
-
-      // Check if we've exited a group
-
-      // End of tracks
-      if (!t)
-         break;
-      // Non-wave non-label track
-      if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label)
-         break;
-      // From label section to non-label track
-      if (prevKind == Track::Label && t->GetKind() != Track::Label)
-         break;
-   }
-   
-   return t;
-}
 
 // TrackList
 //
@@ -913,7 +878,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
 }
 
 /// For mono track height of track
-/// For stereo track combined height of track and linked track.
+/// For stereo track combined height of both channels.
 int TrackList::GetGroupHeight(Track * t) const
 {
    int height = t->GetHeight();

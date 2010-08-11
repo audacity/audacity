@@ -531,7 +531,7 @@ bool EffectNyquist::Process()
          }
 
          // Check whether we're in the same group as the last selected track
-         TrackGroupIterator gIter(mOutputTracks);
+         SyncLockedTracksIterator gIter(mOutputTracks);
          Track *gt = gIter.First(mCurTrack[0]);
          mFirstInGroup = !gtLast || (gtLast != gt);
          gtLast = gt;
@@ -780,7 +780,7 @@ bool EffectNyquist::ProcessOne()
       mCurTrack[i]->ClearAndPaste(mT0, mT1, out, false, false);
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
-         TrackGroupIterator git(mOutputTracks);
+         SyncLockedTracksIterator git(mOutputTracks);
          Track *t;
          for (t = git.First(mCurTrack[i]); t; t = git.Next())
          {

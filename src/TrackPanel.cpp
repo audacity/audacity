@@ -781,7 +781,7 @@ void TrackPanel::SelectTracksByLabel( LabelTrack *lt )
 void TrackPanel::SelectTrackLength(Track *t)
 {
    AudacityProject *p = GetActiveProject();
-   TrackGroupIterator it(mTracks);
+   SyncLockedTracksIterator it(mTracks);
    Track *t1 = it.First(t);
    double minOffset = t->GetOffset();
    double maxEnd = t->GetEndTime();
@@ -2370,7 +2370,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             // we can treat individual labels as clips)
             if (mCapturedClipArray[i].clip) {
                // Iterate over group tracks
-               TrackGroupIterator git(mTracks);
+               SyncLockedTracksIterator git(mTracks);
                for ( Track *t = git.First(mCapturedClipArray[i].track);
                      t; t = git.Next() )
                {   

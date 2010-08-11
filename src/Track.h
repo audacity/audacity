@@ -184,7 +184,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual double GetStartTime() { return 0.0; }
    virtual double GetEndTime() { return 0.0; }
 
-   // Checks if linking is on and any track in its group is selected
+   // Checks if linking is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected();
 };
 
@@ -286,17 +286,14 @@ class AUDACITY_DLL_API VisibleTrackIterator: public TrackListCondIterator
    wxRect mPanelRect;
 };
 
-//
-// TrackGroupIterator
-//
-// Based on TrackListIterator returns only tracks belonging to the group
+
+// SyncLockedTracksIterator returns only tracks belonging to the sync-locked tracks 
 // in which the starting track is a member.
-//
-class AUDACITY_DLL_API TrackGroupIterator: public TrackListIterator
+class AUDACITY_DLL_API SyncLockedTracksIterator : public TrackListIterator
 {
  public:
-   TrackGroupIterator(TrackList * val);
-   virtual ~TrackGroupIterator() {};
+   SyncLockedTracksIterator(TrackList * val);
+   virtual ~SyncLockedTracksIterator() {};
 
    // Iterate functions
    Track *First(Track *member);
@@ -308,19 +305,6 @@ class AUDACITY_DLL_API TrackGroupIterator: public TrackListIterator
    bool mInLabelSection;
 };
 
-//
-// TrackAndGroupIterator
-//
-// Based on TrackListIterator has methods to retrieve both tracks and groups
-//
-class AUDACITY_DLL_API TrackAndGroupIterator: public TrackListIterator
-{
- public:
-   TrackAndGroupIterator(TrackList * val);
-
-   // Iterate functions
-   Track *NextGroup(bool skiplinked = false);
-};
 
 /** \brief TrackList is a flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, plus serialization of the list of tracks.
