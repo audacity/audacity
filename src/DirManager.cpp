@@ -106,7 +106,7 @@ wxString DirManager::globaltemp;
 
 DirManager::DirManager()
 {
-   wxLogDebug(wxT("DirManager: Created new instance"));
+   wxLogDebug(wxT("DirManager: Created new instance."));
 
    mRef = 1; // MM: Initial refcount is 1 by convention
    
@@ -572,7 +572,7 @@ bool DirManager::AssignFile(wxFileName &fileName,
          wxString collision;
          checkit.GetFirst(&collision,filespec);
          
-         wxLogWarning(_("Audacity found an orphaned blockfile %s! \nPlease consider saving and reloading the project to perform a complete project check.\n"),
+         wxLogWarning(_("Audacity found an orphaned blockfile: %s. \nPlease consider saving and reloading the project to perform a complete project check.\n"),
                       collision.c_str());
          
          return FALSE;
@@ -881,7 +881,7 @@ BlockFile *DirManager::NewODDecodeBlockFile(
 
    mBlockFileHash[fileName.GetName()]=newBlockFile;
    aliasList.Add(aliasedFile); //OD TODO: check to see if we need to remove this when done decoding.
-                               //I don't immediately see a place where alias files remove when a file is closed.
+                               //I don't immediately see a place where aliased files remove when a file is closed.
 
    return newBlockFile;
 }
@@ -1218,7 +1218,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
 
    wxFile testFile(renamedFileName.GetFullPath(), wxFile::write);
    if (!testFile.IsOpened()) {
-      wxLogSysError(_("Unable to open/create test file"),
+      wxLogSysError(_("Unable to open/create test file."),
                     renamedFileName.GetFullPath().c_str());
       return false;
    }
@@ -1227,7 +1227,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
    testFile.Close();
 
    if (!wxRemoveFile(renamedFileName.GetFullPath())) {
-      wxLogSysError(_("Unable to remove '%s'"),
+      wxLogSysError(_("Unable to remove '%s'."),
                     renamedFileName.GetFullPath().c_str());
       return false;
    }
@@ -1296,7 +1296,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
          }
 
          // Print error message and cancel the export
-         wxLogSysError(_("Unable to rename '%s' to '%s'"),
+         wxLogSysError(_("Unable to rename '%s' to '%s'."),
                        fName.GetFullPath().c_str(),
                        renamedFileName.GetFullPath().c_str());
          return false;
@@ -1349,10 +1349,7 @@ void DirManager::Deref()
 
    // MM: Automatically delete if refcount reaches zero
    if (mRef == 0)
-   {
-//      wxLogDebug(wxT("DirManager::Deref: Automatically deleting 'this'"));
       delete this;
-   }
 }
 
 // check the Blockfiles against the disk state.  Missing Blockfile
@@ -1402,12 +1399,12 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
          // the blockfile on disk is orphaned
          orphanList.Add(fullname.GetFullPath());
          if (!silentlycorrect)
-            wxLogWarning(_("Orphaned blockfile: (%s)"),
+            wxLogWarning(_("Orphaned blockfile: %s"),
                          fullname.GetFullPath().c_str());
       }
    }
    
-   // enumerate missing alias files
+   // enumerate missing aliased files
    BlockHash::iterator i = mBlockFileHash.begin();
    while(i != mBlockFileHash.end()) {
       wxString key=i->first;
@@ -1427,7 +1424,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       i=missingAliasFiles.begin();
       while(i != missingAliasFiles.end()) {
          wxString key=i->first;
-         wxLogWarning(_("Missing alias file: (%s)"),key.c_str());
+         wxLogWarning(_("Missing aliased file: %s"),key.c_str());
          i++;
       }
    }
@@ -1447,7 +1444,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
          if(!wxFileExists(file.GetFullPath().c_str())){
             missingSummaryList[key]=b;
             if (!silentlycorrect)
-               wxLogWarning(_("Missing summary file: (%s.auf)"),
+               wxLogWarning(_("Missing summary file: %s.auf"),
                             key.c_str());
          }
       }
@@ -1467,7 +1464,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
          if(!wxFileExists(file.GetFullPath().c_str())){
             missingDataList[key]=b;
             if (!silentlycorrect)
-               wxLogWarning(_("Missing data file: (%s.au)"),
+               wxLogWarning(_("Missing data file: %s.au"),
                             key.c_str());
          }
       }
@@ -1481,7 +1478,7 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       !missingDataList.empty() ||
       !missingSummaryList.empty()) && !silentlycorrect)){
 
-      wxLogWarning(_("Project check found inconsistencies inspecting the loaded project data;\nclick 'Details' for a complete list of errors, or 'OK' to proceed to more options."));
+      wxLogWarning(_("Project check found inconsistencies inspecting the loaded project data."));
       
       wxLog::GetActiveTarget()->Flush(); // Flush is both modal
       // (desired) and will clear the log (desired)
@@ -1492,22 +1489,25 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
    // (they will be deleted when project is saved the first time)
    if(!orphanList.IsEmpty() && !silentlycorrect){
 
-      wxString promptA =
-         _("Project check found %d orphaned blockfile(s). These files are\nunused and probably left over from a crash or some other bug.\nThey should be deleted to avoid disk contention.");
-      wxString prompt;
+      wxString msgA =
+_("Project check found %d orphaned blockfile(s). These files are \
+\nunused and probably left over from a crash or some other bug. \
+\n\nThey should be deleted to avoid disk contention.");
+      wxString msg;
       
-      prompt.Printf(promptA,(int)orphanList.GetCount());
+      msg.Printf(msgA, (int)orphanList.GetCount());
       
-      const wxChar *buttons[]={_("Delete orphaned files (safe and recommended)"),
-                               _("Continue without deleting; ignore the extra files this session"),
-                               _("Close project immediately with no changes"),NULL};
-      int action = ShowMultiDialog(prompt,
-                                   _("Warning"),
-                                   buttons);
+      const wxChar *buttons[] = {_("Delete orphaned files (safe and recommended)"),
+                                 _("Continue without deleting; ignore the extra files this session"),
+                                 _("Close project immediately with no changes"),
+                                 NULL};
+      int action = ShowMultiDialog(msg, _("Warning - Orphaned Blockfile(s)"), buttons);
 
       if(action==2)return (ret | FSCKstatus_CLOSEREQ);
 
       if(action==0){
+         //vvvvv Note FSCKstatus_CHANGED is bogus. See AudacityProject::OpenFile().
+         //    The files are already deleted and "Undo Project Repair" will do nothing.
          ret |= FSCKstatus_CHANGED;
          for(ndx=0;ndx<(int)orphanList.GetCount();ndx++){
             wxRemoveFile(orphanList[ndx]);
@@ -1524,24 +1524,24 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
       {
          // In "silently correct" mode, we always create silent blocks. This
          // makes sure the project is complete even if we open it again.
-         action = 1;
-      } else
+         action = 2;
+      } 
+      else
       {
          wxString msgA =
 _("Project check detected %d external audio file(s) ('aliased files') \
 \nare now missing. There is no way for Audacity to recover these \
 \nfiles automatically. \
-\n\nIf you choose the second or third option below, you can try to \
+\n\nIf you choose the first or second option below, you can try to \
 \nfind and restore the missing files to their previous location.");
          wxString msg;
          msg.Printf(msgA, missingAliasFiles.size());
       
-         const wxChar *buttons[] = 
-            {_("Close project immediately with no further changes"),
-               _("Replace missing audio with silence (permanent upon save)"),
-               _("Temporarily replace missing audio with silence (this session only)"),
-               NULL};
-         action = ShowMultiDialog(msg, _("Warning - Missing Aliased Files"), buttons);
+         const wxChar *buttons[] = {_("Close project immediately with no changes"),
+                                    _("Temporarily replace missing audio with silence (this session only)"),
+                                    _("Replace missing audio with silence (permanent upon save)"),
+                                    NULL};
+         action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
 
          if (action == 0) 
             return (ret | FSCKstatus_CLOSEREQ);
@@ -1552,7 +1552,8 @@ _("Project check detected %d external audio file(s) ('aliased files') \
          AliasBlockFile *b = (AliasBlockFile *)i->second; //this is
          //safe, we checked that it's an alias block file earlier
          
-         if (action == 1) {
+         if (action == 2) 
+         {
             //vvvvv This is incorrect in several ways. 
             //    It returns FSCKstatus_CHANGED, and that makes AudacityProject::OpenFile 
             //    do a PushState, but the tracks lower on the stack are identical to 
@@ -1596,18 +1597,19 @@ _("Project check detected %d external audio file(s) ('aliased files') \
          action = 0;
       } else
       {
-         wxString promptA =
-            _("Project check detected %d missing summary file(s) (.auf).\nAudacity can fully regenerate these summary files from the\noriginal audio in the project.");
-         wxString prompt;
+         wxString msgA =
+_("Project check detected %d missing summary (.auf) file(s). \
+\nAudacity can fully regenerate these summary files from the \
+\noriginal audio in the project.");
+         wxString msg;
       
-         prompt.Printf(promptA,missingSummaryList.size());
+         msg.Printf(msgA,missingSummaryList.size());
       
-         const wxChar *buttons[]={_("Regenerate summary files (safe and recommended)"),
-                                  _("Fill in silence for missing display data (this session only"),
-                                  _("Close project immediately with no further changes"),NULL};
-         action = ShowMultiDialog(prompt,
-                                      _("Warning"),
-                                      buttons);
+         const wxChar *buttons[] = {_("Regenerate summary files (safe and recommended)"),
+                                    _("Fill in silence for missing display data (this session only"),
+                                    _("Close project immediately with no changes"), 
+                                    NULL};
+         action = ShowMultiDialog(msg, _("Warning - Missing Summary File(s)"), buttons);
                                       
          if(action==2)return (ret | FSCKstatus_CLOSEREQ);
       }
@@ -1616,6 +1618,7 @@ _("Project check detected %d external audio file(s) ('aliased files') \
       while(i != missingSummaryList.end()) {
          BlockFile *b = i->second;
          if(action==0){
+            //vvvvv This is probably bogus as for Missing Aliased File(s).
             //regenerate from data
             b->Recover();
             ret |= FSCKstatus_CHANGED;
@@ -1635,33 +1638,42 @@ _("Project check detected %d external audio file(s) ('aliased files') \
       {
          // In "silently correct" mode, we always create silent blocks. This
          // makes sure the project is complete even if we open it again.
-         action = 0;
+         action = 2;
       } else
       {
-         wxString promptA =
-            _("Project check detected %d missing audio data blockfile(s) (.au), \nprobably due to a bug, system crash or accidental deletion.\nThere is no way for Audacity to recover this lost data\nautomatically; you may choose to permanently fill in silence\nfor the missing data, temporarily fill in silence for this\nsession only, or close the project now and try to restore the\nmissing data by hand.");
-         wxString prompt;
+         wxString msgA =
+_("Project check detected %d missing audio data blockfile(s) (.au), \
+\nprobably due to a bug, system crash, or accidental deletion. \
+\n\nThere is no way for Audacity to recover these missing files \
+\nautomatically. \
+\n\nIf you choose the first or second option below, you can try to \
+\nfind and restore the missing files to their previous location.");
+         wxString msg;
+         msg.Printf(msgA,missingDataList.size());
       
-         prompt.Printf(promptA,missingDataList.size());
+         const wxChar *buttons[] = {_("Close project immediately with no changes"), 
+                                    _("Temporarily replace missing audio with silence (this session only)"),
+                                    _("Replace missing audio with silence (permanent immediately)"),
+                                    NULL};
+         action = ShowMultiDialog(msg, _("Warning - Missing Audio Data Blockfile(s)"), buttons);
       
-         const wxChar *buttons[]={_("Replace missing data with silence (permanent immediately)"),
-                                  _("Temporarily replace missing data with silence (this session only)"),
-                                  _("Close project immediately with no further changes"),NULL};
-         action = ShowMultiDialog(prompt,
-                                      _("Warning"),
-                                      buttons);
-      
-         if(action==2)return (ret | FSCKstatus_CLOSEREQ);
+         if (action == 0) 
+            return (ret | FSCKstatus_CLOSEREQ);
       }
       
       BlockHash::iterator i=missingDataList.begin();
       while(i != missingDataList.end()) {
          BlockFile *b = i->second;
-         if(action==0){
+         if (action == 2) 
+         {
+            //vvvvv This is probably bogus as for Missing Aliased File(s).
             //regenerate with zeroes
             b->Recover();
             ret |= FSCKstatus_CHANGED;
-         }else if(action==1){
+         }
+         else if (action == 1) 
+         {
+            //vvvvv This is probably bogus as for Missing Aliased File(s).
             b->SilenceLog();
          }
          i++;

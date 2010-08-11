@@ -1,36 +1,26 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  ListWarning.h
+   MultiDialog.h
 
-  Monty
+   Monty
+   Vaughan Johnson
 
 **********************************************************************/
 
 #ifndef __AUDACITY_MULTIDIALOG__
 #define __AUDACITY_MULTIDIALOG__
 
-#include "../Audacity.h"
 #include <wx/defs.h>
 #include <wx/window.h>
 
-/// Displays a MessageBox-like warning dialog with a scrolling list
-/// window
-int ShowMultiDialog(wxString prompt,
+// Display a dialog with radio buttons.
+// Return the zero-based index of the chosen button.
+int ShowMultiDialog(wxString message,
                     wxString title,
                     const wxChar **buttons);
 
 #endif // __AUDACITY_MULTIDIALOG__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 2b69f33b-2dc8-4b9f-99a1-65d57f554133
-

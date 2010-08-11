@@ -1,10 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  MultiDialog.cpp
+   MultiDialog.h
 
-  Monty
+   Monty
+   Vaughan Johnson
 
 *******************************************************************//**
 
@@ -32,95 +35,106 @@ for each problem encountered, since there can be many orphans.
 class MultiDialog : public wxDialog
 {
 public:
-   // constructors and destructors
-   MultiDialog(wxString prompt,
+   MultiDialog(wxString message,
                wxString title,
                const wxChar **buttons);
+   ~MultiDialog() {};
    
 private:
    void OnOK( wxCommandEvent &event );
-   wxRadioBox *mBox;
+   void OnShowLog(wxCommandEvent& event);
 
-private:
+   wxRadioBox* mRadioBox;
+
    DECLARE_EVENT_TABLE()
 };
 
+#define ID_SHOW_LOG_BUTTON 3333
+
 BEGIN_EVENT_TABLE(MultiDialog, wxDialog)
    EVT_BUTTON( wxID_OK, MultiDialog::OnOK )
+   EVT_BUTTON(ID_SHOW_LOG_BUTTON, MultiDialog::OnShowLog)
 END_EVENT_TABLE()
    
-MultiDialog::MultiDialog(wxString prompt,
+MultiDialog::MultiDialog(wxString message,
                          wxString title,
                          const wxChar **buttons):
    wxDialog(NULL, (wxWindowID)-1, title)
 {
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer *icon_text = new wxBoxSizer( wxHORIZONTAL );
+   wxBoxSizer *iconAndTextSizer = new wxBoxSizer( wxHORIZONTAL );
 
    wxBitmap bitmap = wxArtProvider::GetIcon(wxART_WARNING,
                                             wxART_MESSAGE_BOX);
    wxStaticBitmap *icon = new wxStaticBitmap(this, -1, bitmap);
-   icon_text->Add( icon, 0, wxCENTER );
+   iconAndTextSizer->Add( icon, 0, wxCENTER );
 
-   wxStaticText *statText = new wxStaticText(this, -1, prompt);
-   icon_text->Add(statText, 1, wxCENTER|wxLEFT,15 );
+   wxStaticText *statText = new wxStaticText(this, -1, message);
+   iconAndTextSizer->Add(statText, 1, wxCENTER|wxLEFT,15 );
 
-   vSizer->Add(icon_text, 0, wxALIGN_LEFT|wxALL, 5);
-   
+   vSizer->Add(iconAndTextSizer, 0, wxALIGN_LEFT|wxALL, 5);
+
+
    int count=0;
    while(buttons[count])count++;
-   wxString *prompts= new wxString[count];
+   wxString *buttonLabels = new wxString[count];
 
    count=0;
    while(buttons[count]){
-      prompts[count]=buttons[count];
+      buttonLabels[count] = buttons[count];
       count++;
    }
 
-   mBox = new wxRadioBox(this,-1,
+   mRadioBox = new wxRadioBox(this,-1,
                          _(" Please select an action "),
                          wxDefaultPosition, wxDefaultSize,
-                         count, prompts,
+                         count, buttonLabels,
                          1, wxRA_SPECIFY_COLS);
-   mBox->SetName(_("Please select an action"));
-   mBox->SetSelection(0);
+   mRadioBox->SetName(_("Please select an action"));
+   mRadioBox->SetSelection(0);
+   vSizer->Add(mRadioBox, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 
-   wxButton *ok = new wxButton(this, wxID_OK, _("OK"));
-   
-   vSizer->Add(mBox, 1, wxGROW|wxALIGN_CENTER|wxALL, 5);
-   vSizer->Add(ok, 0, wxALIGN_CENTER|wxALL, 5);
+
+   wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+
+   wxButton* pButton = new wxButton(this, ID_SHOW_LOG_BUTTON, _("Show Log for Details"));
+   buttonSizer->Add(pButton, 0, wxALIGN_LEFT | wxALL, 5);
+   pButton->SetDefault(); // Encourage user to look at files.
+
+   buttonSizer->AddSpacer(40);
+
+   pButton = new wxButton(this, wxID_OK, _("OK"));   
+   buttonSizer->Add(pButton, 0, wxALIGN_RIGHT | wxALL, 5);
+
+   vSizer->Add(buttonSizer, 0, wxALIGN_CENTER | wxALL, 5);
+
 
    mainSizer->Add(vSizer, 0, wxALL, 5);
    SetAutoLayout(true);
    SetSizer(mainSizer);
    mainSizer->Fit(this);
    mainSizer->SetSizeHints(this);
-   delete[] prompts;
+   delete[] buttonLabels;
 }
 
 void MultiDialog::OnOK(wxCommandEvent &event)
 {
-   EndModal(mBox->GetSelection());
+   EndModal(mRadioBox->GetSelection());
 }
 
-int ShowMultiDialog(wxString prompt,
+void MultiDialog::OnShowLog(wxCommandEvent &event)
+{
+   wxGetApp().mLogger->Show();
+}
+
+
+int ShowMultiDialog(wxString message,
                     wxString title,
                     const wxChar **buttons)
 {
-   MultiDialog dlog(prompt,title,buttons);
+   MultiDialog dlog(message, title, buttons);
    dlog.CentreOnParent();
    return dlog.ShowModal();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: b84d77e0-4375-43f0-868e-3130e18c14c8
 
