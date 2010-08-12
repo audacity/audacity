@@ -19,6 +19,7 @@ for each problem encountered, since there can be many orphans.
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "../AudacityApp.h"
 
 #include "MultiDialog.h"
 
