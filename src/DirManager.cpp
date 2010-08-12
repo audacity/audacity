@@ -1606,7 +1606,7 @@ _("Project check detected %d missing summary (.auf) file(s). \
          msg.Printf(msgA,missingSummaryList.size());
       
          const wxChar *buttons[] = {_("Regenerate summary files (safe and recommended)"),
-                                    _("Fill in silence for missing display data (this session only"),
+                                    _("Fill in silence for missing display data (this session only)"),
                                     _("Close project immediately with no changes"), 
                                     NULL};
          action = ShowMultiDialog(msg, _("Warning - Missing Summary File(s)"), buttons);
