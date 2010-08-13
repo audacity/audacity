@@ -26,7 +26,7 @@ class SequenceTest;
 #define FSCKstatus_CHANGED  0x2
 
 WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
-WX_DECLARE_HASH_MAP(wxString,BlockFile *,wxStringHash,wxStringEqual,BlockHash);
+WX_DECLARE_HASH_MAP(wxString, BlockFile*, wxStringHash, wxStringEqual, BlockHash);
 
 wxMemorySize GetFreeMemory();
 
@@ -118,11 +118,12 @@ class DirManager: public XMLTagHandler {
    //             This leaves orphaned blockfiles on disk, but replaces
    //             files that are not found by silence
    //
-   // bIgnoreNonAUs: Do not count non-AU files as orphaned block files, per <import> tag.
-   //             For example, <branding> JPG and <import> OGG.
-   // 
-   int ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreNonAUs = true);
+   int ProjectFSCK(bool forceerror, bool silentlycorrect);
    
+   void FindOrphanedBlockfiles(
+         const wxArrayString& fileNameArray,    // input: all files in project directory
+         wxArrayString& orphanFileNameArray);   // output: orphaned files
+
    // Remove all orphaned blockfiles without user interaction. This is
    // generally safe, because orphaned blockfiles are not referenced by the
    // project and thus worthless anyway.
@@ -196,15 +197,3 @@ class DirManager: public XMLTagHandler {
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 5ba78795-b72e-4b1d-b408-4dc10035b0a4
-

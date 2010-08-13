@@ -95,78 +95,32 @@
 #include <mach/vm_statistics.h>
 #endif
 
-// Static class variables
 
-int DirManager::numDirManagers = 0;
-bool DirManager::dontDeleteTempFiles = false;
-
-wxString DirManager::globaltemp;
-
-// Methods
-
-DirManager::DirManager()
+wxMemorySize GetFreeMemory()
 {
-   wxLogDebug(wxT("DirManager: Created new instance."));
+   wxMemorySize avail;
 
-   mRef = 1; // MM: Initial refcount is 1 by convention
+#if defined(__WXMAC__)
+   mach_port_t port = mach_host_self();
+   mach_msg_type_number_t cnt = HOST_VM_INFO_COUNT;
+   vm_statistics_data_t	stats;
+   vm_size_t pagesize = 0;
    
-   // this need not be strictly uniform or random, but it should give
-   // unclustered numbers
-   srand(time(0));
+   memset(&stats, 0, sizeof(stats));
 
-   // Set up local temp subdir
-   // Previously, Audacity just named project temp directories "project0",
-   // "project1" and so on. But with the advent of recovery code, we need a 
-   // unique name even after a crash. So we create a random project index
-   // and make sure it is not used already. This will not pose any performance
-   // penalties as long as the number of open Audacity projects is much
-   // lower than RAND_MAX.
-   do {
-      mytemp = globaltemp + wxFILE_SEP_PATH +
-               wxString::Format(wxT("project%d"), rand());
-   } while (wxDirExists(mytemp));
-   
-   numDirManagers++;
+   host_page_size(port, &pagesize);
+   host_statistics(port, HOST_VM_INFO, (host_info_t) &stats, &cnt);
+   avail = stats.free_count * pagesize;
+#else
+   avail = wxGetFreeMemory();
+#endif
 
-   projPath = wxT("");
-   projName = wxT("");
-
-   mLoadingTarget = NULL;
-   mMaxSamples = -1;
-
-   // toplevel pool hash is fully populated to begin 
-   {
-      int i;
-      for(i=0; i< 256; i++) dirTopPool[i]=0;
-   }
-
-   //create a temporary null log to capture the log dialog
-   //that wxGetDiskSpace creates.  
-   //JKC: Please explain why.
-   // Vaughan, 2010-07-06: No explanation forthcoming and Nestify is long gone.
-   //    wxWidgets manual says, "rarely the best way to" suppress wxWidgets log messages, so don't do it.
-   // wxLogNull logNo; 
-
-   // Make sure there is plenty of space for temp files
-   wxLongLong freeSpace = 0;
-   if (wxGetDiskSpace(globaltemp, NULL, &freeSpace)) {
-      if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
-         ShowWarningDialog(NULL, wxT("DiskSpaceWarning"),
-                           _("There is very little free disk space left on this volume.\nPlease select another temporary directory in Preferences."));
-      }
-   }
+   return avail;
 }
 
-DirManager::~DirManager()
-{
-   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't delete it
-
-   numDirManagers--;
-   if (numDirManagers == 0) {
-      CleanTempDir();
-      //::wxRmdir(temp);
-   }
-}
+//
+// local helper functions for subdirectory traversal
+//
 
 // Behavior of RecursivelyEnumerate is tailored to our uses and not
 // entirely straightforward.  It recurs depth-first from the passed-
@@ -177,7 +131,7 @@ DirManager::~DirManager()
 // enumerated.  Also, the passed-in directory is the last entry added
 // to the list.
 static int RecursivelyEnumerate(wxString dirPath, 
-                                  wxArrayString& flist, 
+                                  wxArrayString& fileNameArray,  // output: all files in dirPath tree
                                   wxString dirspec,
                                   bool bFiles, bool bDirs,
                                   int progress_count = 0, 
@@ -197,7 +151,7 @@ static int RecursivelyEnumerate(wxString dirPath,
             wxString filepath = dirPath + wxFILE_SEP_PATH + name;
             
             count++;
-            flist.Add(filepath);
+            fileNameArray.Add(filepath);
             
             cont = dir.GetNext(&name);
             
@@ -211,7 +165,7 @@ static int RecursivelyEnumerate(wxString dirPath,
       while ( cont ){
          wxString subdirPath = dirPath + wxFILE_SEP_PATH + name;
          count += RecursivelyEnumerate(
-                     subdirPath, flist, wxEmptyString,
+                     subdirPath, fileNameArray, wxEmptyString,
                      bFiles, bDirs, 
                      progress_count, count + progress_bias, 
                      progress);  
@@ -220,7 +174,7 @@ static int RecursivelyEnumerate(wxString dirPath,
    }
    
    if (bDirs) {
-      flist.Add(dirPath);
+      fileNameArray.Add(dirPath);
       count++;
    }
 
@@ -229,7 +183,7 @@ static int RecursivelyEnumerate(wxString dirPath,
 
 
 static int RecursivelyEnumerateWithProgress(wxString dirPath,
-                                             wxArrayString &flist, 
+                                             wxArrayString& fileNameArray, // output: all files in dirPath tree
                                              wxString dirspec,
                                              bool bFiles, bool bDirs,
                                              int progress_count,
@@ -241,7 +195,7 @@ static int RecursivelyEnumerateWithProgress(wxString dirPath,
       progress = new ProgressDialog(_("Progress"), message);
 
    int count = RecursivelyEnumerate(
-                  dirPath, flist, dirspec, 
+                  dirPath, fileNameArray, dirspec, 
                   bFiles, bDirs,
                   progress_count, 0,
                   progress);
@@ -317,7 +271,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
    return nCount;
 }
 
-static void RecursivelyRemove(wxArrayString &fList, int count, 
+static void RecursivelyRemove(wxArrayString& fileNameArray, int count, 
                               bool bFiles, bool bDirs,
                               const wxChar* message = NULL)
 {
@@ -327,7 +281,7 @@ static void RecursivelyRemove(wxArrayString &fList, int count,
       progress = new ProgressDialog(_("Progress"), message);
 
    for (int i = 0; i < count; i++) {
-      const wxChar *file = fList[i].c_str();
+      const wxChar *file = fileNameArray[i].c_str();
       if (bFiles)
          ::wxRemoveFile(file);
       if (bDirs)
@@ -340,22 +294,98 @@ static void RecursivelyRemove(wxArrayString &fList, int count,
       delete progress;
 }
 
+
+//
+// DirManager
+//
+
+// Static class variables
+wxString DirManager::globaltemp;
+int DirManager::numDirManagers = 0;
+bool DirManager::dontDeleteTempFiles = false;
+
+
+DirManager::DirManager()
+{
+   wxLogDebug(wxT("DirManager: Created new instance."));
+
+   mRef = 1; // MM: Initial refcount is 1 by convention
+   
+   // this need not be strictly uniform or random, but it should give
+   // unclustered numbers
+   srand(time(0));
+
+   // Set up local temp subdir
+   // Previously, Audacity just named project temp directories "project0",
+   // "project1" and so on. But with the advent of recovery code, we need a 
+   // unique name even after a crash. So we create a random project index
+   // and make sure it is not used already. This will not pose any performance
+   // penalties as long as the number of open Audacity projects is much
+   // lower than RAND_MAX.
+   do {
+      mytemp = globaltemp + wxFILE_SEP_PATH +
+               wxString::Format(wxT("project%d"), rand());
+   } while (wxDirExists(mytemp));
+   
+   numDirManagers++;
+
+   projPath = wxT("");
+   projName = wxT("");
+
+   mLoadingTarget = NULL;
+   mMaxSamples = -1;
+
+   // toplevel pool hash is fully populated to begin 
+   {
+      int i;
+      for(i=0; i< 256; i++) dirTopPool[i]=0;
+   }
+
+   //create a temporary null log to capture the log dialog
+   //that wxGetDiskSpace creates.  
+   //JKC: Please explain why.
+   // Vaughan, 2010-07-06: No explanation forthcoming and Nestify is long gone.
+   //    wxWidgets manual says, "rarely the best way to" suppress wxWidgets log messages, so don't do it.
+   // wxLogNull logNo; 
+
+   // Make sure there is plenty of space for temp files
+   wxLongLong freeSpace = 0;
+   if (wxGetDiskSpace(globaltemp, NULL, &freeSpace)) {
+      if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
+         ShowWarningDialog(NULL, wxT("DiskSpaceWarning"),
+                           _("There is very little free disk space left on this volume.\nPlease select another temporary directory in Preferences."));
+      }
+   }
+}
+
+DirManager::~DirManager()
+{
+   wxASSERT(mRef == 0); // MM: Otherwise, we shouldn't delete it
+
+   numDirManagers--;
+   if (numDirManagers == 0) {
+      CleanTempDir();
+      //::wxRmdir(temp);
+   }
+}
+
+
 // static
 void DirManager::CleanTempDir()
 {
    if (dontDeleteTempFiles)
       return; // do nothing
       
-   wxArrayString flist;
+   wxArrayString fileNameArray;
 
    // Subtract 1 because we don't want to delete the global temp directory, 
    // which this will find and list last.
    int count = 
-      RecursivelyEnumerate(globaltemp, flist, wxT("project*"), true, true) - 1;
+      RecursivelyEnumerate(globaltemp, fileNameArray, wxT("project*"), true, true) - 1;
    if (count == 0) 
       return;
 
-   RecursivelyRemove(flist, count, true, true, _("Cleaning up temporary files"));
+   RecursivelyRemove(fileNameArray, count, true, true, _("Cleaning up temporary files"));
 }
 
 bool DirManager::SetProject(wxString & projPath, wxString & projName,
@@ -410,10 +440,11 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
    int total = mBlockFileHash.size();
    int count=0;
 
-   BlockHash::iterator i = mBlockFileHash.begin();
+   BlockHash::iterator iter = mBlockFileHash.begin();
    bool success = true;
-   while(i != mBlockFileHash.end() && success) {
-      BlockFile *b = i->second;
+   while ((iter != mBlockFileHash.end()) && success) 
+   {
+      BlockFile *b = iter->second;
       
       if (b->IsLocked())
          success = CopyToNewProjectDirectory(b);
@@ -423,7 +454,7 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
 
       progress->Update(count, total);
 
-      i++;
+      iter++;
       count++;
    }
 
@@ -436,15 +467,16 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
 
       projFull = oldLoc;
 
-      BlockHash::iterator i = mBlockFileHash.begin();
-      while(i != mBlockFileHash.end()) {
-         BlockFile *b = i->second;
+      BlockHash::iterator iter = mBlockFileHash.begin();
+      while (iter != mBlockFileHash.end()) 
+      {
+         BlockFile *b = iter->second;
          MoveToNewProjectDirectory(b);
 
          if (count>=0)
             progress->Update(count, total);
 
-         i++;
+         iter++;
          count--;
       }
 
@@ -511,6 +543,11 @@ wxLongLong DirManager::GetFreeDiskSpace()
 wxString DirManager::GetDataFilesDir() const
 {
    return projFull != wxT("")? projFull: mytemp;
+}
+
+void DirManager::SetLocalTempDir(wxString path)
+{
+   mytemp = path;
 }
 
 wxFileName DirManager::MakeBlockFilePath(wxString value){
@@ -742,9 +779,9 @@ wxFileName DirManager::MakeBlockFileName()
 
             // there's still a toplevel with room for a subdir
 
-            DirHash::iterator i = dirTopPool.begin();
-            int newcount        = 0;
-            topnum              = i->first;
+            DirHash::iterator iter = dirTopPool.begin();
+            int newcount           = 0;
+            topnum                 = iter->first;
             
 
             // search for unused midlevels; linear search adequate
@@ -788,8 +825,8 @@ wxFileName DirManager::MakeBlockFileName()
             
       }else{
          
-         DirHash::iterator i = dirMidPool.begin();
-         midkey              = i->first;
+         DirHash::iterator iter = dirMidPool.begin();
+         midkey                 = iter->first;
 
          // split the retrieved 16 bit directory key into two 8 bit numbers
          topnum = midkey >> 8;
@@ -1240,9 +1277,10 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
 
    bool needToRename = false;
    wxBusyCursor busy;
-   BlockHash::iterator it = mBlockFileHash.begin();
-   while(it != mBlockFileHash.end()) {
-      BlockFile *b = it->second;
+   BlockHash::iterator iter = mBlockFileHash.begin();
+   while (iter != mBlockFileHash.end()) 
+   {
+      BlockFile *b = iter->second;
       // don't worry, we don't rely on this cast unless IsAlias is true
       AliasBlockFile *ab = (AliasBlockFile*)b;
 
@@ -1264,7 +1302,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
          db->LockRead();
       }
 
-      it++;
+      iter++;
    }
 
    if (needToRename) {
@@ -1278,21 +1316,19 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
          // just in case!!!
 
          // Put things back where they were
-         BlockHash::iterator it = mBlockFileHash.begin();
-         while(it != mBlockFileHash.end()) {
-            BlockFile *b = it->second;
+         BlockHash::iterator iter = mBlockFileHash.begin();
+         while (iter != mBlockFileHash.end()) 
+         {
+            BlockFile *b = iter->second;
             AliasBlockFile *ab = (AliasBlockFile*)b;
             ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
 
-
-            if (b->IsAlias() && ab->GetAliasedFileName() == fName)
-            {
+            if (b->IsAlias() && (ab->GetAliasedFileName() == fName))
                ab->UnlockRead();
-            }
-            if (!b->IsDataAvailable() && db->GetEncodedAudioFilename() == fName) {
+            if (!b->IsDataAvailable() && (db->GetEncodedAudioFilename() == fName))
                db->UnlockRead();
-            }
-            it++;
+
+            iter++;
          }
 
          // Print error message and cancel the export
@@ -1304,9 +1340,10 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
       else
       {
          //point the aliases to the new filename.
-         BlockHash::iterator it = mBlockFileHash.begin();
-         while(it != mBlockFileHash.end()) {
-            BlockFile *b = it->second;
+         BlockHash::iterator iter = mBlockFileHash.begin();
+         while (iter != mBlockFileHash.end()) 
+         {
+            BlockFile *b = iter->second;
             AliasBlockFile *ab = (AliasBlockFile*)b;
             ODDecodeBlockFile *db = (ODDecodeBlockFile*)b;
 
@@ -1321,7 +1358,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
                db->ChangeAudioFile(renamedFileName);
                db->UnlockRead();
             }
-            it++;
+            iter++;
          }
 
       }
@@ -1352,89 +1389,62 @@ void DirManager::Deref()
       delete this;
 }
 
-// check the Blockfiles against the disk state.  Missing Blockfile
-// data is regenerated if possible orreplaced with silence, orphaned
-// blockfiles are deleted.... but only after user confirm!  Note that
-// even blockfiles not referenced by the current savefile (but locked
+// Check the BlockFiles against the disk state. 
+// Missing Blockfile data can be regenerated if possible or replaced with silence.
+// Orphaned blockfiles can be deleted.  
+// Note that even BlockFiles not referenced by the current savefile (but locked
 // by history) will be reflected in the mBlockFileHash, and that's a
 // good thing; this is one reason why we use the hash and not the most
 // recent savefile.
-
-int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreNonAUs /*= true*/)
+int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect)
 {
-      
-   // get a rough guess of how many blockfiles will be found/processed
-   // at each step by looking at the size of the blockfile hash
-   int blockcount = mBlockFileHash.size();
-   int ret=0;
-   int ndx;
+   int ret = 0;
 
-   // enumerate *all* files in the project directory
-   wxArrayString fnameList;
+   wxArrayString fileNameArray; // *all* files in the project directory/subdirectories
+   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   RecursivelyEnumerateWithProgress(
+      dirPath, fileNameArray, wxEmptyString, 
+      true, false, 
+      mBlockFileHash.size(), // rough guess of how many BlockFiles will be found/processed
+      _("Inspecting project file data"));
 
-   wxArrayString orphanList;
-   BlockHash    missingAliasList;
-   BlockHash    missingAliasFiles;
-   BlockHash    missingSummaryList;
-   BlockHash    missingDataList;
-
-   wxString dirPath = (projFull != wxT("") ? projFull: mytemp);
-   int count = 
-      RecursivelyEnumerateWithProgress(
-         dirPath, fnameList, wxEmptyString, 
-         true, false, 
-         blockcount, _("Inspecting project file data"));
-   
-   // enumerate orphaned blockfiles
-   BlockHash diskFileHash;
-   for (ndx = 0; ndx < count; ndx++){
-      wxFileName fullname = fnameList[ndx];
-      wxString basename=fullname.GetName();
-      
-      diskFileHash[basename.c_str()]=0; // just needs to be defined
-      if ((mBlockFileHash.find(basename) == mBlockFileHash.end()) &&       // is orphaned
-            (!bIgnoreNonAUs ||      // check only AU, e.g., not an imported ogg or branding jpg
-               fullname.GetExt().IsSameAs(wxT("au"))))
-      {
-         // the blockfile on disk is orphaned
-         orphanList.Add(fullname.GetFullPath());
-         if (!silentlycorrect)
-            wxLogWarning(_("Orphaned blockfile: %s"),
-                         fullname.GetFullPath().c_str());
-      }
-   }
+   // Enumerate orphaned block files.
+   wxArrayString orphanFileNameArray;
+   this->FindOrphanedBlockfiles(fileNameArray, orphanFileNameArray);
+   if (!silentlycorrect) 
+      for (size_t i = 0; i < orphanFileNameArray.GetCount(); i++) 
+         wxLogWarning(_("Orphaned blockfile: %s"), orphanFileNameArray[i].c_str());
    
    // enumerate missing aliased files
-   BlockHash::iterator i = mBlockFileHash.begin();
-   while(i != mBlockFileHash.end()) {
-      wxString key=i->first;
-      BlockFile *b=i->second;
-      
-      if(b->IsAlias()){
-         wxFileName aliasfile=((AliasBlockFile *)b)->GetAliasedFileName();
-         if(aliasfile.GetFullPath()!=wxEmptyString && !wxFileExists(aliasfile.GetFullPath())){
-            missingAliasList[key]=b;
-            missingAliasFiles[aliasfile.GetFullPath().c_str()]=0; // simply must be defined
+   BlockHash missingAliasList;
+   BlockHash missingAliasFiles;
+   BlockHash::iterator iter = mBlockFileHash.begin();
+   while (iter != mBlockFileHash.end()) 
+   {
+      wxString key = iter->first;
+      BlockFile *b = iter->second;
+      if (b->IsAlias()) 
+      {
+         wxFileName aliasedFileName = ((AliasBlockFile*)b)->GetAliasedFileName();
+         if ((aliasedFileName.GetFullPath() != wxEmptyString) && 
+               !wxFileExists(aliasedFileName.GetFullPath()))
+         {
+            if (!silentlycorrect) 
+               wxLogWarning(_("Missing aliased file: %s"), key.c_str());
+            missingAliasList[key] = b;
+            missingAliasFiles[aliasedFileName.GetFullPath().c_str()] = 0; // must be defined
          }
       }
-      i++;
-   }
-
-   if (!silentlycorrect) {
-      i=missingAliasFiles.begin();
-      while(i != missingAliasFiles.end()) {
-         wxString key=i->first;
-         wxLogWarning(_("Missing aliased file: %s"),key.c_str());
-         i++;
-      }
+      iter++;
    }
 
    // enumerate missing summary blockfiles
-   i = mBlockFileHash.begin();
-   while(i != mBlockFileHash.end()) {
-      wxString key=i->first;
-      BlockFile *b=i->second;
-      
+   BlockHash missingSummaryList;
+   iter = mBlockFileHash.begin();
+   while (iter != mBlockFileHash.end()) 
+   {
+      wxString key = iter->first;
+      BlockFile *b = iter->second;
       if(b->IsAlias() && b->IsSummaryAvailable()){
          /* don't look in hash; that might find files the user moved
             that the Blockfile abstraction can't find itself */
@@ -1448,15 +1458,16 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
                             key.c_str());
          }
       }
-      i++;
+      iter++;
    }
 
    // enumerate missing data blockfiles
-   i = mBlockFileHash.begin();
-   while(i != mBlockFileHash.end()) {
-      wxString key=i->first;
-      BlockFile *b=i->second;
-
+   BlockHash missingDataList;
+   iter = mBlockFileHash.begin();
+   while (iter != mBlockFileHash.end()) 
+   {
+      wxString key = iter->first;
+      BlockFile *b = iter->second;
       if(!b->IsAlias()){
          wxFileName file=MakeBlockFilePath(key);
          file.SetName(key);
@@ -1468,35 +1479,36 @@ int DirManager::ProjectFSCK(bool forceerror, bool silentlycorrect, bool bIgnoreN
                             key.c_str());
          }
       }
-      i++;
+      iter++;
    }
    
-   // First, pop the log so the user can see what be up.
-   if(forceerror ||
-      ((!orphanList.IsEmpty() ||
-      !missingAliasList.empty() ||
-      !missingDataList.empty() ||
-      !missingSummaryList.empty()) && !silentlycorrect)){
-
+   //vvvvv Should make the enumerations interleaved with handling, because, 
+   //    for example, user choosing to replace missing aliased block files with silence 
+   //    needs put in SilentBlockFiles and delete the corresponding auf files, 
+   //    so those would then not be cumulated in missingSummaryList.
+   // Summarize and flush the log.
+   if (forceerror ||
+         (!silentlycorrect && 
+            (!orphanFileNameArray.IsEmpty() ||
+               !missingAliasList.empty() ||
+               !missingSummaryList.empty() ||
+               !missingDataList.empty())))
+   {
       wxLogWarning(_("Project check found inconsistencies inspecting the loaded project data."));
-      
-      wxLog::GetActiveTarget()->Flush(); // Flush is both modal
-      // (desired) and will clear the log (desired)
+      wxLog::GetActiveTarget()->Flush(); // Flush is modal and will clear the log (both desired).
    }
 
-   // report, take action
-   // If in "silently correct" mode, leave orphaned blockfiles alone
-   // (they will be deleted when project is saved the first time)
-   if(!orphanList.IsEmpty() && !silentlycorrect){
-
+   // If in "silently correct" mode, leave orphaned blockfiles alone.
+   // They will be deleted when project is saved the first time.
+   if (!orphanFileNameArray.IsEmpty() && !silentlycorrect)
+   {
       wxString msgA =
 _("Project check found %d orphaned blockfile(s). These files are \
 \nunused and probably left over from a crash or some other bug. \
 \n\nThey should be deleted to avoid disk contention.");
       wxString msg;
-      
-      msg.Printf(msgA, (int)orphanList.GetCount());
-      
+      msg.Printf(msgA, (int)orphanFileNameArray.GetCount());
+
       const wxChar *buttons[] = {_("Delete orphaned files (safe and recommended)"),
                                  _("Continue without deleting; ignore the extra files this session"),
                                  _("Close project immediately with no changes"),
@@ -1509,17 +1521,14 @@ _("Project check found %d orphaned blockfile(s). These files are \
          //vvvvv Note FSCKstatus_CHANGED is bogus. See AudacityProject::OpenFile().
          //    The files are already deleted and "Undo Project Repair" will do nothing.
          ret |= FSCKstatus_CHANGED;
-         for(ndx=0;ndx<(int)orphanList.GetCount();ndx++){
-            wxRemoveFile(orphanList[ndx]);
-         }
+         for (size_t i = 0; i < orphanFileNameArray.GetCount(); i++) 
+            wxRemoveFile(orphanFileNameArray[i]);
       }
    }
 
-
    // Deal with any missing aliases
    if(!missingAliasList.empty()){
-      int action;
-      
+      int action;      
       if (silentlycorrect)
       {
          // In "silently correct" mode, we always create silent blocks. This
@@ -1547,10 +1556,11 @@ _("Project check detected %d external audio file(s) ('aliased files') \
             return (ret | FSCKstatus_CLOSEREQ);
       }
 
-      BlockHash::iterator i=missingAliasList.begin();
-      while(i != missingAliasList.end()) {
-         AliasBlockFile *b = (AliasBlockFile *)i->second; //this is
-         //safe, we checked that it's an alias block file earlier
+      iter = missingAliasList.begin();
+      while (iter != missingAliasList.end()) 
+      {
+         // This type caste is safe. We checked that it's an alias block file earlier.
+         AliasBlockFile *b = (AliasBlockFile*)iter->second; 
          
          if (action == 2) 
          {
@@ -1583,7 +1593,7 @@ _("Project check detected %d external audio file(s) ('aliased files') \
             //    and would lose information about the lengths of those tracks. (More to follow!)
             b->SilenceAliasLog();
          }
-         i++;
+         iter++;
       }
    }
 
@@ -1595,14 +1605,14 @@ _("Project check detected %d external audio file(s) ('aliased files') \
       {
          // In "silently correct" mode we just recreate the summary files
          action = 0;
-      } else
+      } 
+      else
       {
          wxString msgA =
 _("Project check detected %d missing summary (.auf) file(s). \
 \nAudacity can fully regenerate these summary files from the \
 \noriginal audio in the project.");
          wxString msg;
-      
          msg.Printf(msgA,missingSummaryList.size());
       
          const wxChar *buttons[] = {_("Regenerate summary files (safe and recommended)"),
@@ -1614,9 +1624,10 @@ _("Project check detected %d missing summary (.auf) file(s). \
          if(action==2)return (ret | FSCKstatus_CLOSEREQ);
       }
       
-      BlockHash::iterator i=missingSummaryList.begin();
-      while(i != missingSummaryList.end()) {
-         BlockFile *b = i->second;
+      iter = missingSummaryList.begin();
+      while (iter != missingSummaryList.end()) 
+      {
+         BlockFile *b = iter->second;
          if(action==0){
             //vvvvv This is probably bogus as for Missing Aliased File(s).
             //regenerate from data
@@ -1625,15 +1636,14 @@ _("Project check detected %d missing summary (.auf) file(s). \
          }else if (action==1){
             b->SilenceLog();
          }
-         i++;
+         iter++;
       }
    }
 
    // Deal with any missing SimpleBlockFiles
-   if(!missingDataList.empty()){
-
+   if(!missingDataList.empty())
+   {
       int action;
-      
       if (silentlycorrect)
       {
          // In "silently correct" mode, we always create silent blocks. This
@@ -1661,9 +1671,10 @@ _("Project check detected %d missing audio data blockfile(s) (.au), \
             return (ret | FSCKstatus_CLOSEREQ);
       }
       
-      BlockHash::iterator i=missingDataList.begin();
-      while(i != missingDataList.end()) {
-         BlockFile *b = i->second;
+      iter = missingDataList.begin();
+      while (iter != missingDataList.end()) 
+      {
+         BlockFile *b = iter->second;
          if (action == 2) 
          {
             //vvvvv This is probably bogus as for Missing Aliased File(s).
@@ -1676,7 +1687,7 @@ _("Project check detected %d missing audio data blockfile(s) (.au), \
             //vvvvv This is probably bogus as for Missing Aliased File(s).
             b->SilenceLog();
          }
-         i++;
+         iter++;
       }
    }
 
@@ -1692,45 +1703,41 @@ _("Project check detected %d missing audio data blockfile(s) (.au), \
    return ret;
 }
 
-void DirManager::SetLocalTempDir(wxString path)
+void DirManager::FindOrphanedBlockfiles(
+      const wxArrayString& fileNameArray,    // input: all files in project directory
+      wxArrayString& orphanFileNameArray)    // output: orphaned files
 {
-   mytemp = path;
-}
-
-// msmeyer: Large parts of this function have been copied from 'ProjectFSCK'.
-//          Might want to unify / modularize the approach some time.
-void DirManager::RemoveOrphanedBlockfiles()
-{
-   int i;
-
-   // get a rough guess of how many blockfiles will be found/processed
-   // at each step by looking at the size of the blockfile hash
-   int blockcount = mBlockFileHash.size();
-
-   // enumerate *all* files in the project directory
-   wxArrayString fnameList;
-
-   RecursivelyEnumerateWithProgress(
-      (projFull != wxT("") ? projFull: mytemp),
-      fnameList, wxEmptyString, 
-      true, false, 
-      blockcount, _("Inspecting project file data"));
-
-   // enumerate orphaned blockfiles
-   wxArrayString orphanList;
-   for(i=0;i<(int)fnameList.GetCount();i++){
-      wxFileName fullname(fnameList[i]);
-      wxString basename=fullname.GetName();
-      
-      if (mBlockFileHash.find(basename) == mBlockFileHash.end()){
-         // the blockfile on disk is orphaned
-         orphanList.Add(fullname.GetFullPath());
+   for (size_t i = 0; i < fileNameArray.GetCount(); i++) 
+   {
+      wxFileName fullname = fileNameArray[i];
+      wxString basename = fullname.GetName();
+      if ((mBlockFileHash.find(basename) == mBlockFileHash.end()) && // is orphaned
+            // Consider only Audacity data files. 
+            // Specifically, ignore <branding> JPG and <import> OGG ("Save Compressed Copy").
+            (fullname.GetExt().IsSameAs(wxT("au")) ||
+               fullname.GetExt().IsSameAs(wxT("auf"))))
+      {
+         orphanFileNameArray.Add(fullname.GetFullPath());
       }
    }
+}
+
+void DirManager::RemoveOrphanedBlockfiles()
+{
+   wxArrayString fileNameArray; // *all* files in the project directory/subdirectories
+   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   RecursivelyEnumerateWithProgress(
+      dirPath, fileNameArray, wxEmptyString, 
+      true, false, 
+      mBlockFileHash.size(), // rough guess of how many BlockFiles will be found/processed
+      _("Inspecting project file data"));
+
+   wxArrayString orphanFileNameArray;
+   this->FindOrphanedBlockfiles(fileNameArray, orphanFileNameArray);
    
-   // remove all orphaned blockfiles
-   for(i=0;i<(int)orphanList.GetCount();i++){
-      wxRemoveFile(orphanList[i]);
+   // Remove all orphaned blockfiles.
+   for (size_t i = 0; i < orphanFileNameArray.GetCount(); i++){
+      wxRemoveFile(orphanFileNameArray[i]);
    }
 }
 
@@ -1748,16 +1755,16 @@ void DirManager::FillBlockfilesCache()
    }
    lowMem <<= 20;
 
-   BlockHash::iterator i;
+   BlockHash::iterator iter;
    int numNeed = 0;
 
-   i = mBlockFileHash.begin();
-   while (i != mBlockFileHash.end())
+   iter = mBlockFileHash.begin();
+   while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = i->second;
+      BlockFile *b = iter->second;
       if (b->GetNeedFillCache())
          numNeed++;
-      i++;
+      iter++;
    }
    
    if (numNeed == 0)
@@ -1766,34 +1773,34 @@ void DirManager::FillBlockfilesCache()
    ProgressDialog progress(_("Caching audio"),
                            _("Caching audio into memory"));
 
-   i = mBlockFileHash.begin();
+   iter = mBlockFileHash.begin();
    int current = 0;
-   while (i != mBlockFileHash.end())
+   while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = i->second;
+      BlockFile *b = iter->second;
       if (b->GetNeedFillCache() && (GetFreeMemory() > lowMem)) {
          b->FillCache();
       }
 
       if (!progress.Update(current, numNeed))
          break; // user cancelled progress dialog, stop caching
-      i++;
+      iter++;
       current++;
    }
 }
 
 void DirManager::WriteCacheToDisk()
 {
-   BlockHash::iterator i;
+   BlockHash::iterator iter;
    int numNeed = 0;
 
-   i = mBlockFileHash.begin();
-   while (i != mBlockFileHash.end())
+   iter = mBlockFileHash.begin();
+   while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = i->second;
+      BlockFile *b = iter->second;
       if (b->GetNeedWriteCacheToDisk())
          numNeed++;
-      i++;
+      iter++;
    }
    
    if (numNeed == 0)
@@ -1802,51 +1809,18 @@ void DirManager::WriteCacheToDisk()
    ProgressDialog progress(_("Saving recorded audio"),
                            _("Saving recorded audio to disk"));
 
-   i = mBlockFileHash.begin();
+   iter = mBlockFileHash.begin();
    int current = 0;
-   while (i != mBlockFileHash.end())
+   while (iter != mBlockFileHash.end())
    {
-      BlockFile *b = i->second;
+      BlockFile *b = iter->second;
       if (b->GetNeedWriteCacheToDisk())
       {
          b->WriteCacheToDisk();
          progress.Update(current, numNeed);
       }
-      i++;
+      iter++;
       current++;
    }
 }
-
-wxMemorySize GetFreeMemory()
-{
-   wxMemorySize avail;
-
-#if defined(__WXMAC__)
-   mach_port_t port = mach_host_self();
-   mach_msg_type_number_t cnt = HOST_VM_INFO_COUNT;
-   vm_statistics_data_t	stats;
-   vm_size_t pagesize = 0;
-   
-   memset(&stats, 0, sizeof(stats));
-
-   host_page_size(port, &pagesize);
-   host_statistics(port, HOST_VM_INFO, (host_info_t) &stats, &cnt);
-   avail = stats.free_count * pagesize;
-#else
-   avail = wxGetFreeMemory();
-#endif
-
-   return avail;
-}
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 192b7dbe-6fef-49a8-b4f4-f11bce51d84f
 
