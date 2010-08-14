@@ -19,7 +19,7 @@ for each problem encountered, since there can be many orphans.
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
+#include "../Project.h"
 
 #include "MultiDialog.h"
 
@@ -126,7 +126,7 @@ void MultiDialog::OnOK(wxCommandEvent &event)
 
 void MultiDialog::OnShowLog(wxCommandEvent &event)
 {
-   wxGetApp().mLogger->Show();
+   GetActiveProject()->OnShowLog();
 }
 
 
