@@ -361,7 +361,7 @@ wxString BuildCleanFileName(wxString fileName);
 void OnAbout();
 void OnQuickHelp();
 void OnManual();
-void OnLog();
+void OnShowLog();
 void OnHelpWelcome();
 void OnBenchmark();
 void OnScreenshot();

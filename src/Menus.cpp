@@ -999,7 +999,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddItem(wxT("QuickHelp"), _("&Quick Help (in web browser)"), FN(OnQuickHelp));
    c->AddItem(wxT("Manual"), _("&Manual (in web browser)"), FN(OnManual));
-   c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnLog));
+   c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
 
    if (!mCleanSpeechMode) {
 
@@ -5478,9 +5478,11 @@ void AudacityProject::OnManual()
       wxT("http://manual.audacityteam.org/index.php?title=Main_Page" ));
 }
 
-void AudacityProject::OnLog()
+void AudacityProject::OnShowLog()
 {
-   wxGetApp().mLogger->Show();
+   wxLogWindow* pLogger = wxGetApp().mLogger;
+   pLogger->Show();
+   pLogger->GetFrame()->Raise();
 }
 
 void AudacityProject::OnBenchmark()
