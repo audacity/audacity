@@ -2000,12 +2000,12 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    
    if (gAudacityProjects.IsEmpty() && !gIsQuitting) {
 
-      // LL:  On the Mac, we don't want the logger open after all projects
-      //      have been closed since it's menu will show instead of the
-      //      common menu.
       wxGetApp().mLogger->Show(false);
       
 #if !defined(__WXMAC__)
+      // LL:  On the Mac, we don't want the logger open after all projects
+      //      have been closed since its menu will show instead of the
+      //      common menu.
       if (quitOnClose) {
          QuitAudacity();
       }
@@ -2453,30 +2453,27 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       else
       {
          // This is a regular project, check it and ask user
-         int status=GetDirManager()->ProjectFSCK(err, false);
-
-         if(status & FSCKstatus_CLOSEREQ){
-            // there was an error in the load/check and the user
-            // explictly opted to close the project
-
+         int status = GetDirManager()->ProjectFSCK(err, false);
+         if (status & FSCKstatus_CLOSEREQ) 
+         {
+            // There was an error in the load/check and the user
+            // explictly opted to close the project.
             mTracks->Clear(true);
-         
             mFileName = wxT("");
             SetProjectTitle();
             mTrackPanel->Refresh(true);
-
          }
          else if (status & FSCKstatus_CHANGED)
          {
-         
             t = iter.First();
             while (t) {
                if (t->GetKind() == Track::Wave)
                {
-                  // Only wave tracks have a notion of "changed"
-                  for (WaveClipList::compatibility_iterator it=((WaveTrack*)t)->GetClipIterator(); 
-                        it; it=it->GetNext())
-                     it->GetData()->MarkChanged();
+                  // Only wave tracks have a notion of "changed".
+                  for (WaveClipList::compatibility_iterator clipIter = ((WaveTrack*)t)->GetClipIterator(); 
+                        clipIter; 
+                        clipIter=clipIter->GetNext())
+                     clipIter->GetData()->MarkChanged();
                }
                t = iter.Next();
             }
