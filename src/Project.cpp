@@ -2456,6 +2456,11 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          int status = GetDirManager()->ProjectFSCK(err, false);
          if (status & FSCKstatus_CLOSEREQ) 
          {
+            //vvvvv Note this doesn't do a real close. 
+            //    It can cause problems if you get this, say on missing alias files, 
+            //    then try to open a project with, e.g., missing blockfiles. 
+            //    It will fail in SetProject, saying it cannot find the files, 
+            //    then never go through ProjectFSCK to give more info.
             // There was an error in the load/check and the user
             // explictly opted to close the project.
             mTracks->Clear(true);
@@ -3100,7 +3105,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          // This was a recovered file, that is, we have just overwritten the
          // old, crashed .aup file. There may still be orphaned blockfiles in
          // this directory left over from the crash, so we delete them now
-         mDirManager->RemoveOrphanedBlockfiles();
+         mDirManager->RemoveOrphanBlockfiles();
          
          // Before we saved this, this was a recovered project, but now it is
          // a regular project, so remember this.
@@ -3111,7 +3116,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       {
          // On save as, always remove orphaned blockfiles that may be left over
          // because the user is trying to overwrite another project
-         mDirManager->RemoveOrphanedBlockfiles();
+         mDirManager->RemoveOrphanBlockfiles();
       }
 
       if (mLastSavedTracks) {

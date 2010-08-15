@@ -109,25 +109,34 @@ class DirManager: public XMLTagHandler {
 
    // Check the project for errors and possibly prompt user
    //
-   // forceerror: Always show log error dialog even if no errors are found
+   // bForceError: Always show log error dialog even if no errors are found
    //             Important when you know that there are already errors in
    //             the log
    //
-   // silentlycorrect: Do not show an error dialog (except if forceerror is
+   // bSilentlyCorrect: Do not show an error dialog (except if bForceError is
    //             true) and silently correct problems the "safest" way.
-   //             This leaves orphaned blockfiles on disk, but replaces
-   //             files that are not found by silence
    //
-   int ProjectFSCK(bool forceerror, bool silentlycorrect);
+   int ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect);
    
-   void FindOrphanedBlockfiles(
-         const wxArrayString& fileNameArray,    // input: all files in project directory
-         wxArrayString& orphanFileNameArray);   // output: orphaned files
+   void FindMissingAliasedFiles(
+         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
+         BlockHash& missingAliasedBlockFileHash,      // output: (.auf) AliasBlockFiles whose aliased files are missing
+         wxArrayString& missingAliasedFilePathArray); // output: full paths of missing aliased files
+   void FindMissingAliasBlockFiles(
+         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
+         BlockHash& missingAliasBlockFileHash);       // output: missing (.auf) AliasBlockFiles 
+   void FindMissingDataBlockFiles(
+         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
+         BlockHash& missingDataBlockFileHash);        // missing data (.au) blockfiles
+   void FindOrphanBlockFiles(
+         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
+         const wxArrayString& fileNameArray,          // input: all files in project directory
+         wxArrayString& orphanFileNameArray);         // output: orphan files
 
    // Remove all orphaned blockfiles without user interaction. This is
    // generally safe, because orphaned blockfiles are not referenced by the
    // project and thus worthless anyway.
-   void RemoveOrphanedBlockfiles();
+   void RemoveOrphanBlockfiles();
 
    // Get directory where data files are in. Note that projects are normally
    // not interested in this information, but it is important for the
