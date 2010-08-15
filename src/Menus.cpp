@@ -400,16 +400,16 @@ void AudacityProject::CreateMenusAndCommands()
                       AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag);
 
    c->AddItem(wxT("CutLabels"), _("&Cut"), FN(OnCutLabels), wxT("Alt+X"),
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | LinkingDisabledFlag,
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | LinkingDisabledFlag);
+              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag,
+              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag);
    c->AddItem(wxT("SplitCutLabels"), _("&Split Cut"), FN(OnSplitCutLabels), wxT("Shift+Alt+X"));
    c->AddItem(wxT("CopyLabels"), _("Co&py"), FN(OnCopyLabels), wxT("Shift+Alt+C"));
 
    c->AddSeparator();
 
    c->AddItem(wxT("DeleteLabels"), _("&Delete"), FN(OnDeleteLabels), wxT("Alt+K"),
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | LinkingDisabledFlag,
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | LinkingDisabledFlag);
+              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag,
+              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag);
    c->AddItem(wxT("SplitDeleteLabels"), _("Sp&lit Delete"), FN(OnSplitDeleteLabels), wxT("Shift+Alt+K"));
    c->AddItem(wxT("SilenceLabels"), _("Silence &Audio"), FN(OnSilenceLabels), wxT("Alt+L"));
 
@@ -448,8 +448,8 @@ void AudacityProject::CreateMenusAndCommands()
 #ifdef EXPERIMENTAL_LINKING
    c->AddItem(wxT("SelSyncLockTracks"), _("In All S&ync-Locked Tracks"),
                FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
-               TracksSelectedFlag | LinkingEnabledFlag,
-               TracksSelectedFlag | LinkingEnabledFlag);
+               TracksSelectedFlag | IsSyncLockedFlag,
+               TracksSelectedFlag | IsSyncLockedFlag);
 #endif
 
    c->EndSubMenu();
@@ -1457,9 +1457,9 @@ wxUint32 AudacityProject::GetUpdateFlags()
       flags |= HaveRecentFiles;
 
    if (IsSyncLocked())
-      flags |= LinkingEnabledFlag;
+      flags |= IsSyncLockedFlag;
    else
-      flags |= LinkingDisabledFlag;
+      flags |= IsNotSyncLockedFlag;
 
    return flags;
 }
