@@ -121,7 +121,7 @@ class DirManager: public XMLTagHandler {
    void FindMissingAliasedFiles(
          const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
          BlockHash& missingAliasedBlockFileHash,      // output: (.auf) AliasBlockFiles whose aliased files are missing
-         wxArrayString& missingAliasedFilePathArray); // output: full paths of missing aliased files
+         BlockHash& missingAliasedFilePathHash);      // output: full paths of missing aliased files
    void FindMissingAliasBlockFiles(
          const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
          BlockHash& missingAliasBlockFileHash);       // output: missing (.auf) AliasBlockFiles 

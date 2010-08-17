@@ -723,21 +723,21 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
 END_EVENT_TABLE()
 
 // Backend for OnMRUFile and OnMRUProject
-bool AudacityApp::MRUOpen(wxString fileName) {
-   // Most of the checks below are copied from AudacityProject::ShowFileDialog
+bool AudacityApp::MRUOpen(wxString fullPathStr) {
+   // Most of the checks below are copied from AudacityProject::OpenFiles.
    // - some rationalisation might be possible.
    
    AudacityProject *proj = GetActiveProject();
    
-   if(!fileName.IsEmpty()) {
-      
+   if (!fullPathStr.IsEmpty()) 
+   {   
       // verify that the file exists 
-      if(wxFile::Exists(fileName)) {
-         wxFileName newFileName(fileName);
-         
-         gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fileName));
+      if (wxFile::Exists(fullPathStr)) 
+      {
+         gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr));
          
          // Make sure it isn't already open
+         wxFileName newFileName(fullPathStr);
          size_t numProjects = gAudacityProjects.Count();
          for (size_t i = 0; i < numProjects; i++) {
             if (newFileName.SameAs(gAudacityProjects[i]->GetFileName())) {
@@ -765,12 +765,12 @@ bool AudacityApp::MRUOpen(wxString fileName) {
          // This project is clean; it's never been touched.  Therefore
          // all relevant member variables are in their initial state,
          // and it's okay to open a new project inside this window.
-         proj->OpenFile(fileName);
+         proj->OpenFile(fullPathStr);
       }
       else {
          // File doesn't exist - remove file from history
          wxMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."), 
-                      fileName.c_str()));
+                      fullPathStr.c_str()));
          return(false);
       }
    }
@@ -784,9 +784,9 @@ void AudacityApp::OnMRUClear(wxCommandEvent& event)
 
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - wxID_FILE1;
-   wxString fileName = mRecentFiles->GetHistoryFile(n);
+   wxString fullPathStr = mRecentFiles->GetHistoryFile(n);
 
-   bool opened = MRUOpen(fileName);
+   bool opened = MRUOpen(fullPathStr);
    if(!opened) {
       mRecentFiles->RemoveFileFromHistory(n);
    }
@@ -794,13 +794,16 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
 
 #if 0
 //FIX-ME: Was this OnMRUProject lost in an edit??  Should we have it back?
+//vvvvv I think it was removed on purpose, but I don't know why it's still here. 
+// Basically, anything from Recent Files is treated as a .aup, until proven otherwise, 
+// then it tries to Import(). Very questionable handling, imo. 
 void AudacityApp::OnMRUProject(wxCommandEvent& event) {
    AudacityProject *proj = GetActiveProject();
 
    int n = event.GetId() - 6050;//FIX-ME: Use correct ID name.
-   wxString fileName = proj->GetRecentProjects()->GetHistoryFile(n);
+   wxString fullPathStr = proj->GetRecentProjects()->GetHistoryFile(n);
 
-   bool opened = MRUOpen(fileName);
+   bool opened = MRUOpen(fullPathStr);
    if(!opened) {
       proj->GetRecentProjects()->RemoveFileFromHistory(n);
       gPrefs->SetPath("/RecentProjects");
@@ -1934,13 +1937,3 @@ void AudacityApp::AssociateFileTypes()
 }
 #endif
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 49c2c7b5-6e93-4f33-83ab-ddac56ea598d

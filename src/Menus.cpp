@@ -5482,7 +5482,14 @@ void AudacityProject::OnShowLog()
 {
    wxLogWindow* pLogger = wxGetApp().mLogger;
    pLogger->Show();
-   pLogger->GetFrame()->Raise();
+   
+   wxFrame* pLoggerFrame = pLogger->GetFrame();
+   pLoggerFrame->Raise();
+
+   //bool bSuccess = pLoggerFrame->ScrollPages(1);
+   int width, height;
+   pLoggerFrame->GetSize(&width, &height);
+   pLoggerFrame->SetSize(width, 430);
 }
 
 void AudacityProject::OnBenchmark()

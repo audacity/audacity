@@ -1408,8 +1408,8 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect)
    this->FindOrphanBlockFiles(bSilentlyCorrect, fileNameArray, orphanFilePathArray);
    
    BlockHash missingAliasedBlockFileHash;       // (.auf) AliasBlockFiles whose aliased files are missing
-   wxArrayString missingAliasedFilePathArray;   // full paths of missing aliased files
-   this->FindMissingAliasedFiles(bSilentlyCorrect, missingAliasedBlockFileHash, missingAliasedFilePathArray);
+   BlockHash missingAliasedFilePathHash;        // full paths of missing aliased files
+   this->FindMissingAliasedFiles(bSilentlyCorrect, missingAliasedBlockFileHash, missingAliasedFilePathHash);
 
    BlockHash missingAliasBlockFileHash;         // missing (.auf) AliasBlockFiles
    this->FindMissingAliasBlockFiles(bSilentlyCorrect, missingAliasBlockFileHash); 
@@ -1486,8 +1486,8 @@ _("Project check detected %d external audio file(s) ('aliased files') \
 \n\nIf you choose the first or second option below, you can try to \
 \nfind and restore the missing files to their previous location.");
          wxString msg;
-         msg.Printf(msgA, missingAliasedFilePathArray.GetCount());
-      
+         msg.Printf(msgA, missingAliasedFilePathHash.size());
+
          const wxChar *buttons[] = {_("Close project immediately with no changes"),
                                     _("Temporarily replace missing audio with silence (this session only)"),
                                     _("Replace missing audio with silence (permanent immediately)"),
@@ -1646,29 +1646,38 @@ _("Project check detected %d missing audio data blockfile(s) (.au), \
 void DirManager::FindMissingAliasedFiles(
       const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
       BlockHash& missingAliasedBlockFileHash,      // output: AliasBlockFiles whose aliased files are missing
-      wxArrayString& missingAliasedFilePathArray)  // output: full paths of missing aliased files
+      BlockHash& missingAliasedFilePathHash)       // output: full paths of missing aliased files
 {
    BlockHash::iterator iter = mBlockFileHash.begin();
    while (iter != mBlockFileHash.end()) 
    {
-      wxString key = iter->first;
+      wxString key = iter->first;   // file name and extension
       BlockFile *b = iter->second;
       if (b->IsAlias()) 
       {
          wxFileName aliasedFileName = ((AliasBlockFile*)b)->GetAliasedFileName();
-         //vvvvv First clause should never happen when "replace with silence" works correctly.
-         if ((aliasedFileName.GetFullPath() != wxEmptyString) && 
+         wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
+         //vvvvv wxEmptyString should never happen when "replace with silence" works correctly. 
+         if ((aliasedFileFullPath != wxEmptyString) && 
                !aliasedFileName.FileExists())
          {
             missingAliasedBlockFileHash[key] = b;
-            missingAliasedFilePathArray.Add(aliasedFileName.GetFullPath());
+            if (missingAliasedFilePathHash.find(aliasedFileFullPath) == 
+                  missingAliasedFilePathHash.end()) // Add it only once.
+               missingAliasedFilePathHash[aliasedFileFullPath] = NULL; // Not really using the blocks here. 
          }
       }
       iter++;
    }
    if (!bSilentlyCorrect) 
-      for (size_t i = 0; i < missingAliasedFilePathArray.GetCount(); i++) 
-         wxLogWarning(_("Missing aliased audio file: %s"), missingAliasedFilePathArray[i].c_str());
+   {
+      iter = missingAliasedFilePathHash.begin();
+      while (iter != missingAliasedFilePathHash.end()) 
+      {
+         wxLogWarning(_("Missing aliased audio file: %s"), iter->first.c_str());
+         iter++;
+      }
+   }
 }
 
 void DirManager::FindMissingAliasBlockFiles(

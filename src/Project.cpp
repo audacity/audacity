@@ -2314,6 +2314,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       }
    }
    
+   //FIX-ME: //vvvvv Surely we could be smarter about this, like checking much earlier that this is a .aup file!
    if (temp.Mid(0, 6) != wxT("<?xml ")) {
       // If it's not XML, try opening it as any other form of audio
       Import(fileName);
@@ -4536,15 +4537,4 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
       }
    }
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: da1685fe-8c99-4407-a71b-cf52576ff11a
 
