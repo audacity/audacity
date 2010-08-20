@@ -5481,15 +5481,21 @@ void AudacityProject::OnManual()
 void AudacityProject::OnShowLog()
 {
    wxLogWindow* pLogger = wxGetApp().mLogger;
-   pLogger->Show();
-   
    wxFrame* pLoggerFrame = pLogger->GetFrame();
-   pLoggerFrame->Raise();
+   if (!pLoggerFrame->IsShown())
+   {
+      // Show latest lines.
+      //bool bSuccess = pLoggerFrame->ScrollPages(999); //v Doesn't work!
+      int width, height;
+      pLoggerFrame->GetVirtualSize(&width, &height);
+      //pLoggerFrame->SetScrollPos(wxVERTICAL, height); //v Doesn't work!
+      pLoggerFrame->SetSize(width, 430); // Have to just hope this brings the last into view.
 
-   //bool bSuccess = pLoggerFrame->ScrollPages(1);
-   int width, height;
-   pLoggerFrame->GetSize(&width, &height);
-   pLoggerFrame->SetSize(width, 430);
+      pLogger->Show();
+   }
+   pLoggerFrame->Enable(); 
+   pLoggerFrame->Raise();
+   pLoggerFrame->SetFocus();
 }
 
 void AudacityProject::OnBenchmark()

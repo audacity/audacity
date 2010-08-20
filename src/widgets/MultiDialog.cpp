@@ -59,8 +59,10 @@ END_EVENT_TABLE()
    
 MultiDialog::MultiDialog(wxString message,
                          wxString title,
-                         const wxChar **buttons):
-   wxDialog(NULL, (wxWindowID)-1, title)
+                         const wxChar **buttons)
+   : wxDialog(NULL, (wxWindowID)-1, title, 
+               wxDefaultPosition, wxDefaultSize, 
+               wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU 
 {
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);

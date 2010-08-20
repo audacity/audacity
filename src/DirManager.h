@@ -22,8 +22,8 @@ class wxHashTable;
 class BlockFile;
 class SequenceTest;
 
-#define FSCKstatus_CLOSEREQ 0x1
-#define FSCKstatus_CHANGED  0x2
+#define FSCKstatus_CLOSEREQ 1
+#define FSCKstatus_CHANGED  2
 
 WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
 WX_DECLARE_HASH_MAP(wxString, BlockFile*, wxStringHash, wxStringEqual, BlockHash);
@@ -119,19 +119,19 @@ class DirManager: public XMLTagHandler {
    int ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect);
    
    void FindMissingAliasedFiles(
-         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
-         BlockHash& missingAliasedBlockFileHash,      // output: (.auf) AliasBlockFiles whose aliased files are missing
-         BlockHash& missingAliasedFilePathHash);      // output: full paths of missing aliased files
-   void FindMissingAliasBlockFiles(
-         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
-         BlockHash& missingAliasBlockFileHash);       // output: missing (.auf) AliasBlockFiles 
-   void FindMissingDataBlockFiles(
-         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
-         BlockHash& missingDataBlockFileHash);        // missing data (.au) blockfiles
-   void FindOrphanBlockFiles(
-         const bool bSilentlyCorrect,                 // input: same as for ProjectFSCK
-         const wxArrayString& fileNameArray,          // input: all files in project directory
-         wxArrayString& orphanFileNameArray);         // output: orphan files
+         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
+         BlockHash& missingAliasedFilePathHash);   // output: full paths of missing aliased files
+   void FindMissingAUFs(
+         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles 
+   void FindMissingAUs(
+         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         BlockHash& missingAUHash);                // missing data (.au) blockfiles
+   void FindOrphanBlockFiles(                      // Find .au and .auf files that are not in the project.
+         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         const wxArrayString& filePathArray,       // input: all files in project directory
+         wxArrayString& orphanFilePathArray);      // output: orphan files
 
    // Remove all orphaned blockfiles without user interaction. This is
    // generally safe, because orphaned blockfiles are not referenced by the
