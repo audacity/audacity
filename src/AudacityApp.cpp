@@ -819,9 +819,8 @@ void AudacityApp::InitLang( const wxString & lang )
    if( mLocale )
       delete mLocale;
 
-   if (lang != wxT("en")) {
-      wxLogNull nolog;
-
+   if (lang != wxT("en")) 
+   {
 // LL: I do not know why loading translations fail on the Mac if LANG is not
 //     set, but for some reason it does.  So wrap the creation of wxLocale
 //     with the default translation.
