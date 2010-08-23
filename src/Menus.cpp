@@ -999,7 +999,6 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddItem(wxT("QuickHelp"), _("&Quick Help (in web browser)"), FN(OnQuickHelp));
    c->AddItem(wxT("Manual"), _("&Manual (in web browser)"), FN(OnManual));
-   c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
 
    if (!mCleanSpeechMode) {
 
@@ -1015,6 +1014,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();   
 
+      c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
       c->AddItem(wxT("DeviceInfo"), _("&Audio Device Info..."), FN(OnAudioDeviceInfo));
    }
 
