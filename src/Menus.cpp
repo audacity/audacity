@@ -5149,6 +5149,8 @@ void AudacityProject::OnSyncLock()
 
    // Toolbar, project sync-lock handled within
    ModifyAllProjectToolbarMenus();
+
+   mTrackPanel->Refresh(false);
 }
 
 void AudacityProject::OnAddLabel()
