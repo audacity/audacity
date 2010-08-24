@@ -1014,8 +1014,8 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();   
 
-      c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
       c->AddItem(wxT("DeviceInfo"), _("&Audio Device Info..."), FN(OnAudioDeviceInfo));
+      c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
    }
 
    c->EndMenu();
