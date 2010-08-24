@@ -5135,13 +5135,14 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
 
    mTrackInfo.DrawBackground(dc, r, t->GetSelected(), bIsWave, labelw, vrul);
 
+   // Vaughan, 2010-08-24: No longer doing this.
    // Draw sync-lock tiles in ruler area.
-   if (t->IsSyncLockSelected()) {
-      wxRect tileFill = r;
-      tileFill.x = GetVRulerOffset();
-      tileFill.width = GetVRulerWidth();
-      TrackArtist::DrawSyncLockTiles(dc, tileFill);
-   }
+   //if (t->IsSyncLockSelected()) {
+   //   wxRect tileFill = r;
+   //   tileFill.x = GetVRulerOffset();
+   //   tileFill.width = GetVRulerWidth();
+   //   TrackArtist::DrawSyncLockTiles(dc, tileFill);
+   //}
 
    DrawBordersAroundTrack(t, dc, r, labelw, vrul);
    DrawShadow(t, dc, r);
@@ -7352,18 +7353,6 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
                  bev.y + ((bev.height - (s / 2)) / 2),
                  s);
 
-   // Link icon: drawn to the left of the dropdown arrow
-   //vvvvv  May want to put this elsewhere in the TrackInfo.
-   //wxBitmap link(theTheme.Image(bmpLinkTP)); 
-   //if (t->IsSyncLockSelected()) {
-   //   wxBitmap link(theTheme.Image(bmpLinkTP));
-   //   dc->DrawBitmap(link,
-   //                  // Arrow's left minus our width and an extra px
-   //                  bev.GetRight() - s - 3 - link.GetWidth() - 1,
-   //                  bev.y + 1,
-   //                  true);
-   //}
-
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
@@ -7420,7 +7409,18 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down, bo
 {
    wxRect bev;
    GetMinimizeRect(r, bev, minimized);
-    
+
+   wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon)); 
+   if (t->IsSyncLockSelected()) 
+   {
+      // GetMinimizeRect() sets height to 15, and syncLockBitmap is 12x12.
+      bev.width -= syncLockBitmap.GetWidth() + 4;
+      dc->DrawBitmap(syncLockBitmap, 
+                     bev.GetRight() + 4, 
+                     bev.y + 2, 
+                     true);
+   }
+
    // Clear background to get rid of previous arrow
    AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
@@ -7596,15 +7596,4 @@ LWSlider * TrackInfo::PanSlider(int trackIndex)
 {
    return mPans[trackIndex - mSliderOffset];
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 5bb3d18e-9ba7-47c3-beef-29f5d791442a
 

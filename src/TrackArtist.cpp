@@ -2642,7 +2642,7 @@ void TrackArtist::SetSpectrumLogMaxFreq(int freq)
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
 void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
 {
-   wxBitmap syncLockBitmap(theTheme.Image(bmpLinkSelect));
+   wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockSelTile));
 
    int xOffset = r.x % syncLockBitmap.GetWidth();
    if (xOffset < 0) xOffset += syncLockBitmap.GetWidth();
@@ -2677,15 +2677,4 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
       xOffset = 0;
    }
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: cd156c5b-b867-48eb-9289-03d21bdf14e5
 

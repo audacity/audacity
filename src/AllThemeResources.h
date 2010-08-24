@@ -208,8 +208,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo")); 
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
 
-   DEFINE_IMAGE( bmpLinkSelect, wxImage(27, 27), wxT("LinkSelect"));
-   DEFINE_IMAGE( bmpLinkTP, wxImage(12, 12), wxT("LinkTP"));
+   DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(27, 27), wxT("SyncLockSelTile"));
+   DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
 
 #ifdef OLD_COLOURS
    DEFINE_COLOUR( clrBlank,      wxColour(214, 214, 214), wxT("Blank"));
@@ -328,13 +328,3 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrTrackInfoSyncLockSel, wxColour( 64,  64,  64),      wxT("TrackInfoSyncLockSel"));
    DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: b8a9d878-fa18-4cba-a5ce-3c61b5d77f0e
