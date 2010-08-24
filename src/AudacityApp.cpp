@@ -797,6 +797,8 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
 //vvvvv I think it was removed on purpose, but I don't know why it's still here. 
 // Basically, anything from Recent Files is treated as a .aup, until proven otherwise, 
 // then it tries to Import(). Very questionable handling, imo. 
+// Better, for example, to check the file type early on.
+// 
 void AudacityApp::OnMRUProject(wxCommandEvent& event) {
    AudacityProject *proj = GetActiveProject();
 
