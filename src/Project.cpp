@@ -2314,7 +2314,8 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       }
    }
    
-   //FIX-ME: //vvvvv Surely we could be smarter about this, like checking much earlier that this is a .aup file!
+   //FIX-ME: //v Surely we could be smarter about this, 
+   // like checking much earlier that this is a .aup file.
    if (temp.Mid(0, 6) != wxT("<?xml ")) {
       // If it's not XML, try opening it as any other form of audio
       Import(fileName);
@@ -2455,22 +2456,27 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       {
          // This is a regular project, check it and ask user
          int status = GetDirManager()->ProjectFSCK(err, false);
-         if (status & FSCKstatus_CLOSEREQ) 
+         if (status & FSCKstatus_CLOSE_REQ) 
          {
-            //vvvvv Note this doesn't do a real close. 
-            //    It can cause problems if you get this, say on missing alias files, 
-            //    then try to open a project with, e.g., missing blockfiles. 
-            //    It will fail in SetProject, saying it cannot find the files, 
-            //    then never go through ProjectFSCK to give more info.
-            // There was an error in the load/check and the user
-            // explictly opted to close the project.
-            mTracks->Clear(true);
-            mFileName = wxT("");
-            SetProjectTitle();
-            mTrackPanel->Refresh(true);
+            // Vaughan, 2010-08-23: Note this did not do a real close. 
+            // It could cause problems if you get this, say on missing alias files, 
+            // then try to open a project with, e.g., missing blockfiles. 
+            // It then failed in SetProject, saying it cannot find the files, 
+            // then never go through ProjectFSCK to give more info. 
+            // Going through OnClose() may be overkill, but it's safe.
+            /* 
+               // There was an error in the load/check and the user
+               // explictly opted to close the project.
+               mTracks->Clear(true);
+               mFileName = wxT("");
+               SetProjectTitle();
+               mTrackPanel->Refresh(true);
+               */
+            this->OnClose();
          }
          else if (status & FSCKstatus_CHANGED)
          {
+            // Mark the wave tracks as changed and redraw.
             t = iter.First();
             while (t) {
                if (t->GetKind() == Track::Wave)
@@ -2484,7 +2490,13 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
                t = iter.Next();
             }
             mTrackPanel->Refresh(true);
-            this->PushState(_("Project checker repaired file"), _("Project Repair"));
+
+            // Vaughan, 2010-08-20: This was bogus, as all the actions in DirManager::ProjectFSCK 
+            // that return FSCKstatus_CHANGED cannot be undone.
+            //    this->PushState(_("Project checker repaired file"), _("Project Repair"));
+
+            if (status & FSCKstatus_SAVE_AUP) 
+               this->Save();
          }
       }
    } else {

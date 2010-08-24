@@ -22,8 +22,9 @@ class wxHashTable;
 class BlockFile;
 class SequenceTest;
 
-#define FSCKstatus_CLOSEREQ 1
-#define FSCKstatus_CHANGED  2
+#define FSCKstatus_CLOSE_REQ 0x1
+#define FSCKstatus_CHANGED   0x2
+#define FSCKstatus_SAVE_AUP  0x4 // used in combination with FSCKstatus_CHANGED
 
 WX_DECLARE_HASH_MAP(int, int, wxIntegerHash, wxIntegerEqual, DirHash);
 WX_DECLARE_HASH_MAP(wxString, BlockFile*, wxStringHash, wxStringEqual, BlockHash);

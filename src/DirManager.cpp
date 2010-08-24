@@ -1412,7 +1412,9 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect)
    BlockHash missingAliasedFileAUFHash;   // (.auf) AliasBlockFiles whose aliased files are missing
    BlockHash missingAliasedFilePathHash;  // full paths of missing aliased files
    this->FindMissingAliasedFiles(bSilentlyCorrect, missingAliasedFileAUFHash, missingAliasedFilePathHash);
-   if ((nResult != FSCKstatus_CLOSEREQ) && !missingAliasedFileAUFHash.empty()) 
+
+   // No need to check (nResult != FSCKstatus_CLOSE_REQ) as this is first check.
+   if (!missingAliasedFileAUFHash.empty()) 
    {
       // In "silently correct" mode, we always create silent blocks, so do not ask user.
       // This makes sure the project is complete next time we open it.
@@ -1421,23 +1423,27 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect)
       else
       {
          wxString msgA =
-_("Project check detected %d external audio file(s) ('aliased files') \
-\nare now missing. There is no way for Audacity to recover these \
-\nfiles automatically. \
-\n\nIf you choose the first or second option below, you can try to \
-\nfind and restore the missing files to their previous location.");
+_("Project check detected %d missing external audio \
+\nfile(s) ('aliased files'). There is no way for Audacity \
+\nto recover these files automatically. \
+\n\nIf you choose the first or second option below, \
+\nyou can try to find and restore the missing files \
+\nto their previous location. \
+\n\nNote that for the second option, the waveform \
+\nmay not show silence.");
          wxString msg;
          msg.Printf(msgA, missingAliasedFilePathHash.size());
-         const wxChar *buttons[] = {_("Close project immediately with no changes"),
-                                    _("Temporarily replace missing audio with silence (this session only)"),
-                                    _("Replace missing audio with silence (permanent immediately)"),
-                                    NULL};
+         const wxChar *buttons[] = 
+            {_("Close project immediately with no changes"),
+               _("Treat missing audio as silence (this session only)"), 
+               _("Replace missing audio with silence (permanent immediately)"),
+               NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
       }
 
       if (action == 0) 
-         nResult = FSCKstatus_CLOSEREQ;
+         nResult = FSCKstatus_CLOSE_REQ;
       else
       {
          BlockHash::iterator iter = missingAliasedFileAUFHash.begin();
@@ -1445,37 +1451,20 @@ _("Project check detected %d external audio file(s) ('aliased files') \
          {
             // This type caste is safe. We checked that it's an alias block file earlier.
             AliasBlockFile *b = (AliasBlockFile*)iter->second; 
-            
-            if (action == 2) 
+            if (action == 1)
+               // Silence error logging for this block in this session.
+               b->SilenceAliasLog(); 
+            else if (action == 2) 
             {
-               //vvvvv This is incorrect in several ways. 
-               //    It returns FSCKstatus_CHANGED, and that makes AudacityProject::OpenFile 
-               //    do a PushState, but the tracks lower on the stack are identical to 
-               //    these and already have lost the missing aliased filename, replaced with empty string, 
-               //    so Undo Project Repair does effectively nothing, and yet 
-               //    it isn't an Undo, because these blockfiles have empty aliasFileNames.
-               //    Should actually replace these blocks with SilentBlockFiles, a la 
-               //    RemoveDependencies() (from Dependencies.*). (More to follow!)
-
                // silence the blockfiles by yanking the filename
+               // This is done, eventually, in PCMAliasBlockFile::ReadData() 
+               // and ODPCMAliasBlockFile::ReadData, in the stack of b->Recover(). 
+               // There, if the mAliasedFileName is bad, it zeroes the data.
                wxFileName dummy;
                dummy.Clear();
                b->ChangeAliasedFileName(dummy);
                b->Recover();
-               // nResult |= FSCKstatus_CHANGED; //vvvvv Reinstate this when we actually replace with SilentBlockFiles?
-            }
-            else if (action == 1) 
-            {
-               // silence the log for this session
-               //vvvvv Note, then, that "temporarily replace with silence" is really not what's done.
-               //    Also, doesn't change the waveform to silence. 
-               //    Should it do a PushState? If so, then why have this other option?
-               //    Instead, get rid of this, make action 0 replace with SilentBlockFiles, 
-               //    so there's an Undo state with the bad alias files and another with SilentBlockFiles, 
-               //    so we can get back to the bad alias files state. 
-               //    We could even just get rid of the block files, but that might cause gaps, 
-               //    and would lose information about the lengths of those tracks. (More to follow!)
-               b->SilenceAliasLog();
+               nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP; 
             }
             iter++;
          }
@@ -1489,7 +1478,7 @@ _("Project check detected %d external audio file(s) ('aliased files') \
    //
    BlockHash missingAUFHash;              // missing (.auf) AliasBlockFiles
    this->FindMissingAUFs(bSilentlyCorrect, missingAUFHash); 
-   if ((nResult != FSCKstatus_CLOSEREQ) && !missingAUFHash.empty()) 
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAUFHash.empty()) 
    {
       // In "silently correct" mode, we just recreate the alias files, so do not ask user.
       // This makes sure the project is complete next time we open it.
@@ -1498,21 +1487,21 @@ _("Project check detected %d external audio file(s) ('aliased files') \
       else
       {
          wxString msgA =
-_("Project check detected %d missing alias (.auf) blockfile(s). \
-\nAudacity can fully regenerate these summary files from the \
-\noriginal audio in the project.");
+_("Project check detected %d missing alias (.auf) \
+\nblockfile(s). Audacity can fully regenerate these \
+\nfiles from the original audio in the project.");
          wxString msg;
          msg.Printf(msgA, missingAUFHash.size());
-         const wxChar *buttons[] = {_("Regenerate summary files (safe and recommended)"),
+         const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
                                     _("Fill in silence for missing display data (this session only)"),
                                     _("Close project immediately with no further changes"), 
                                     NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Missing Summary File(s)"), buttons);
+         action = ShowMultiDialog(msg, _("Warning - Missing Alias Summary File(s)"), buttons);
       }
 
       if (action == 2)
-         nResult = FSCKstatus_CLOSEREQ;
+         nResult = FSCKstatus_CLOSE_REQ;
       else
       {
          BlockHash::iterator iter = missingAUFHash.begin();
@@ -1522,9 +1511,10 @@ _("Project check detected %d missing alias (.auf) blockfile(s). \
             if(action==0){
                //regenerate from data
                b->Recover();
-               // nResult |= FSCKstatus_CHANGED; // This was bogus. No tracks changed, just auf file(s).
+               nResult = FSCKstatus_CHANGED; 
             }else if (action==1){
-               b->SilenceLog();
+               // Silence error logging for this block in this session.
+               b->SilenceLog(); 
             }
             iter++;
          }
@@ -1536,7 +1526,7 @@ _("Project check detected %d missing alias (.auf) blockfile(s). \
    //
    BlockHash missingAUHash;               // missing data (.au) blockfiles
    this->FindMissingAUs(bSilentlyCorrect, missingAUHash);
-   if ((nResult != FSCKstatus_CLOSEREQ) && !missingAUHash.empty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAUHash.empty())
    {
       // In "silently correct" mode, we just always create silent blocks.
       // This makes sure the project is complete next time we open it.
@@ -1545,24 +1535,28 @@ _("Project check detected %d missing alias (.auf) blockfile(s). \
       else
       {
          wxString msgA =
-_("Project check detected %d missing audio data blockfile(s) (.au), \
-\nprobably due to a bug, system crash, or accidental deletion. \
-\n\nThere is no way for Audacity to recover these missing files \
-\nautomatically. \
-\n\nIf you choose the first or second option below, you can try to \
-\nfind and restore the missing files to their previous location.");
+_("Project check detected %d missing audio data \
+\n(.au) blockfile(s), probably due to a bug, system \
+\ncrash, or accidental deletion. There is no way for \
+\nAudacity to recover these missing files automatically. \
+\n\nIf you choose the first or second option below, \
+\nyou can try to find and restore the missing files \
+\nto their previous location. \
+\n\nNote that for the second option, the waveform \
+\nmay not show silence.");
          wxString msg;
          msg.Printf(msgA, missingAUHash.size());
-         const wxChar *buttons[] = {_("Close project immediately with no further changes"), 
-                                    _("Temporarily replace missing audio with silence (this session only)"),
-                                    _("Replace missing audio with silence (permanent immediately)"),
-                                    NULL};
+         const wxChar *buttons[] = 
+            {_("Close project immediately with no further changes"), 
+               _("Treat missing audio as silence (this session only)"), 
+               _("Replace missing audio with silence (permanent immediately)"),
+               NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Audio Data Blockfile(s)"), buttons);
       }
       
       if (action == 0)
-         nResult = FSCKstatus_CLOSEREQ;
+         nResult = FSCKstatus_CLOSE_REQ;
       else
       {
          BlockHash::iterator iter = missingAUHash.begin();
@@ -1573,10 +1567,7 @@ _("Project check detected %d missing audio data blockfile(s) (.au), \
             {
                //regenerate with zeroes
                b->Recover();
-
-               // FSCKstatus_CHANGED was bogus. Cannot Undo.
-               //vvvvv Reinstate this when we actually replace with SilentBlockFiles?
-               // nResult |= FSCKstatus_CHANGED; 
+               nResult = FSCKstatus_CHANGED; 
             }
             else if (action == 1) 
                b->SilenceLog();
@@ -1593,7 +1584,7 @@ _("Project check detected %d missing audio data blockfile(s) (.au), \
 
    // In "silently correct" mode, leave orphan blockfiles alone.
    // They will be deleted when project is saved the first time.
-   if ((nResult != FSCKstatus_CLOSEREQ) && !bSilentlyCorrect && !orphanFilePathArray.IsEmpty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !bSilentlyCorrect && !orphanFilePathArray.IsEmpty())
    {
       wxString msgA =
 _("Project check found %d orphan blockfile(s). These files are \
@@ -1602,7 +1593,6 @@ _("Project check found %d orphan blockfile(s). These files are \
       wxString msg;
       msg.Printf(msgA, (int)orphanFilePathArray.GetCount());
 
-      //vvvvv Probably get rid of "Continue without deleting". Make user deal with it for now. 
       const wxChar *buttons[] = {_("Close project immediately with no further changes"),
                                  _("Continue without deleting; ignore the extra files this session"),
                                  _("Delete orphan files immediately"),
@@ -1611,13 +1601,12 @@ _("Project check found %d orphan blockfile(s). These files are \
       action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);
 
       if (action == 0)
-         nResult = FSCKstatus_CLOSEREQ;
+         nResult = FSCKstatus_CLOSE_REQ;
       // Nothing is done if (action == 1).
       else if (action == 2)
       {
          // FSCKstatus_CHANGED was bogus here. 
-         // The files are about to be deleted, so "Undo Project Repair" would do nothing.
-         // You cannot undo wxRemoveFile.
+         // The files are deleted, so "Undo Project Repair" could not do anything.
          // Plus they affect none of the valid tracks, so incorrect to mark them changed, 
          // and no need for refresh.
          //    nResult |= FSCKstatus_CHANGED;
@@ -1626,7 +1615,7 @@ _("Project check found %d orphan blockfile(s). These files are \
       }
    }
 
-   if (nResult != FSCKstatus_CLOSEREQ)
+   if (nResult != FSCKstatus_CLOSE_REQ)
    {
       // Remove any empty directories.
       ProgressDialog* pProgress = 
@@ -1667,7 +1656,7 @@ void DirManager::FindMissingAliasedFiles(
       {
          wxFileName aliasedFileName = ((AliasBlockFile*)b)->GetAliasedFileName();
          wxString aliasedFileFullPath = aliasedFileName.GetFullPath();
-         //vvvvv wxEmptyString should never happen when "replace with silence" works correctly. 
+         // wxEmptyString can happen if user already chose to "replace... with silence".
          if ((aliasedFileFullPath != wxEmptyString) && 
                !aliasedFileName.FileExists())
          {
