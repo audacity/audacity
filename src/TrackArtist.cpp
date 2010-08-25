@@ -1187,11 +1187,9 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 
    // Calculate sample-based offset-corrected selection 
 
-   // +.99 better centers the selection drag area at single-sample
-   // granularity.  Not 1.0 as that would cause 'select whole
-   // track' to lose the first sample
-   sampleCount ssel0 = wxMax(0, sampleCount((sel0 - tOffset) * rate + .99)); 
-   sampleCount ssel1 = wxMax(0, sampleCount((sel1 - tOffset) * rate + .99));
+   // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
+   sampleCount ssel0 = wxMax(0, track->TimeToLongSamples(sel0 - tOffset));
+   sampleCount ssel1 = wxMax(0, track->TimeToLongSamples(sel1 - tOffset));
 
    //trim selection so that it only contains the actual samples
    if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
