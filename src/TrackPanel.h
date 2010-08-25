@@ -111,7 +111,7 @@ private:
    void DrawMuteSolo(wxDC * dc, const wxRect r, Track * t, bool down, bool solo, bool bHasSoloButton);
    void DrawVRuler(wxDC * dc, const wxRect r, Track * t);
    void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r);
-   void DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down, bool minimized);
+   void DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down);
 
    void GetTrackControlsRect(const wxRect r, wxRect &dest) const;
    void GetCloseBoxRect(const wxRect r, wxRect &dest) const;
@@ -119,7 +119,7 @@ private:
    void GetMuteSoloRect(const wxRect r, wxRect &dest, bool solo, bool bHasSoloButton) const;
    void GetGainRect(const wxRect r, wxRect &dest) const;
    void GetPanRect(const wxRect r, wxRect &dest) const;
-   void GetMinimizeRect(const wxRect r, wxRect &dest, bool minimized) const;
+   void GetMinimizeRect(const wxRect r, wxRect &dest, bool bIsSyncLockSelected) const;
 
    // These arrays are always kept the same size.
    LWSliderArray mGains;

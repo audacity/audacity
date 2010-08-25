@@ -3583,12 +3583,12 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
    }
 
    wxRect buttonRect;
-   mTrackInfo.GetMinimizeRect(r, buttonRect, t->GetMinimized());
+   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
 
    wxClientDC dc(this);
 
    if (event.Dragging()) {
-      mTrackInfo.DrawMinimize(&dc, r, t, buttonRect.Contains(event.m_x, event.m_y), t->GetMinimized());
+      mTrackInfo.DrawMinimize(&dc, r, t, buttonRect.Contains(event.m_x, event.m_y));
    }
    else if (event.LeftUp()) {
       if (buttonRect.Contains(event.m_x, event.m_y)) {
@@ -3601,7 +3601,7 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
 
       SetCapturedTrack(NULL);
 
-      mTrackInfo.DrawMinimize(&dc, r, t, false, t->GetMinimized());
+      mTrackInfo.DrawMinimize(&dc, r, t, false);
       Refresh(false);
       GetActiveProject()->RedrawProject();
    }
@@ -3915,7 +3915,7 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect r, int x, int y,
 bool TrackPanel::MinimizeFunc(Track * t, wxRect r, int x, int y)
 {
    wxRect buttonRect;
-   mTrackInfo.GetMinimizeRect(r, buttonRect, t->GetMinimized());
+   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
    if (!buttonRect.Contains(x, y)) 
       return false;
 
@@ -3923,7 +3923,7 @@ bool TrackPanel::MinimizeFunc(Track * t, wxRect r, int x, int y)
    SetCapturedTrack( t, IsMinimizing );
    mCapturedRect = r;
 
-   mTrackInfo.DrawMinimize(&dc, r, t, true, t->GetMinimized());
+   mTrackInfo.DrawMinimize(&dc, r, t, true);
    return true;
 }
 
@@ -5152,7 +5152,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    mTrackInfo.DrawCloseBox(dc, r, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, r, t, (captured && mMouseCapture==IsPopping));
 
-   mTrackInfo.DrawMinimize(dc, r, t, (captured && mMouseCapture==IsMinimizing), t->GetMinimized());
+   mTrackInfo.DrawMinimize(dc, r, t, (captured && mMouseCapture==IsMinimizing));
    mTrackInfo.DrawBordersWithin( dc, r, bIsWave );
 
    if (bIsWave) {
@@ -7213,10 +7213,12 @@ void TrackInfo::GetPanRect(const wxRect r, wxRect & dest) const
    dest.height = 25;
 }
 
-void TrackInfo::GetMinimizeRect(const wxRect r, wxRect &dest, bool minimized) const
+void TrackInfo::GetMinimizeRect(const wxRect r, wxRect &dest, bool bIsSyncLockSelected) const
 {
    dest.x = r.x + 1;
    dest.width = 94;
+   if (bIsSyncLockSelected)
+      dest.width -= 12 + 4; // bmpSyncLockIcon is 12x12. Give it 2 pixels either side.
    dest.y = r.y + r.height - 18;
    dest.height = 15;
 }
@@ -7274,7 +7276,7 @@ void TrackInfo::GetTrackControlsRect(const wxRect r, wxRect & dest) const
    wxRect bot;
 
    GetTitleBarRect(r, top);
-   GetMinimizeRect(r, bot, false);
+   GetMinimizeRect(r, bot, false); // Pass false because we do not care about its width here. 
 
    dest.x = r.x;
    dest.width = GetTitleWidth() - dest.x;
@@ -7405,16 +7407,15 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    }
 }
 
-void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down, bool minimized)
+void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down)
 {
    wxRect bev;
-   GetMinimizeRect(r, bev, minimized);
+   bool bIsSyncLockSelected = t->IsSyncLockSelected();
+   GetMinimizeRect(r, bev, bIsSyncLockSelected);
 
-   wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon)); 
    if (t->IsSyncLockSelected()) 
    {
-      // GetMinimizeRect() sets height to 15, and syncLockBitmap is 12x12.
-      bev.width -= syncLockBitmap.GetWidth() + 4;
+      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon)); 
       dc->DrawBitmap(syncLockBitmap, 
                      bev.GetRight() + 4, 
                      bev.y + 2, 
@@ -7437,7 +7438,7 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down, bo
                  bev.x - 5 + bev.width / 2,
                  bev.y - 2 + bev.height / 2,
                  10,
-                 minimized);
+                 t->GetMinimized());
 
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
