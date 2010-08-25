@@ -724,11 +724,10 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
 
       c->AddItem(wxT("AddLabel"), _("Add Label At &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
-                 AlwaysEnabledFlag,
-                 AlwaysEnabledFlag);
-      c->AddItem(wxT("AddLabelPlaying"), _("Add Label At &Playback Position"), FN(OnAddLabelPlaying), wxT("Ctrl+M"),
-                 0,
-                 AudioIONotBusyFlag);
+                 AlwaysEnabledFlag, AlwaysEnabledFlag);
+      c->AddItem(wxT("AddLabelPlaying"), _("Add Label At &Playback Position"), 
+                 FN(OnAddLabelPlaying), wxT("Ctrl+M"), 
+                 0, AudioIONotBusyFlag);
       c->AddItem(wxT("EditLabels"), _("&Edit Labels"), FN(OnEditLabels));
 
       c->AddSeparator();   

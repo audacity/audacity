@@ -120,17 +120,17 @@ class DirManager: public XMLTagHandler {
    int ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect);
    
    void FindMissingAliasedFiles(
-         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
          BlockHash& missingAliasedFilePathHash);   // output: full paths of missing aliased files
    void FindMissingAUFs(
-         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles 
    void FindMissingAUs(
-         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          BlockHash& missingAUHash);                // missing data (.au) blockfiles
    void FindOrphanBlockFiles(                      // Find .au and .auf files that are not in the project.
-         const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          const wxArrayString& filePathArray,       // input: all files in project directory
          wxArrayString& orphanFilePathArray);      // output: orphan files
 
@@ -159,17 +159,9 @@ class DirManager: public XMLTagHandler {
 
  private:
 
-   // Create new unique track name
-   wxString NewTrackName();
-
    wxFileName MakeBlockFileName();
    wxFileName MakeBlockFilePath(wxString value);
 
-   // Create new unique names
-   wxString NewTempBlockName();
-   wxString NewBlockName();
-
-   //////////////////////////
 
    int mRef; // MM: Current refcount
 

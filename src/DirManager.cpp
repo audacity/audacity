@@ -48,6 +48,8 @@
 
 #include "Audacity.h"
 
+#include <time.h> // to use time() for srand()
+
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/dir.h>
@@ -67,9 +69,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif
-
-// seed random number generator
-#include <time.h>
 
 #include "AudacityApp.h"
 #include "BlockFile.h"
@@ -311,9 +310,10 @@ DirManager::DirManager()
 
    mRef = 1; // MM: Initial refcount is 1 by convention
    
+   // Seed the random number generator.
    // this need not be strictly uniform or random, but it should give
    // unclustered numbers
-   srand(time(0));
+   srand(time(NULL));
 
    // Set up local temp subdir
    // Previously, Audacity just named project temp directories "project0",

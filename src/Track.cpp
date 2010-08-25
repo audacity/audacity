@@ -323,13 +323,13 @@ Track *TrackListIterator::Last(bool skiplinked)
    return NULL;
 }
 
-Track *TrackListIterator::Next(bool SkipLinked)
+Track *TrackListIterator::Next(bool skipLinked)
 {
    #ifdef DEBUG_TLI // if we are debugging this bit
    wxASSERT_MSG((!cur || (*l).Contains((*cur).t)), wxT("cur invalid at start of Next(). List changed since iterator created?"));   // check that cur is in the list
    #endif
 
-   if (SkipLinked && cur && cur->t->GetLinked()) {
+   if (skipLinked && cur && cur->t->GetLinked()) {
       cur = cur->next;
    }
 
