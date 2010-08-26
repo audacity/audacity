@@ -23,8 +23,8 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-class EffectChangeSpeed : public Effect {
-
+class EffectChangeSpeed : public Effect 
+{
  public:
    EffectChangeSpeed();
 
@@ -53,7 +53,7 @@ class EffectChangeSpeed : public Effect {
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
 
-   virtual bool CheckWhetherSkipEffect() { return (m_PercentChange == 0.0); }
+   virtual bool CheckWhetherSkipEffect() { return (mPercentChange == 0.0); }
    virtual bool Process();
 
  private:
@@ -63,31 +63,29 @@ class EffectChangeSpeed : public Effect {
  private:
 	// track related
    int    mCurTrackNum;
-   double m_maxNewLength;
+   double mMaxNewLength;
    double mCurT0;
    double mCurT1;
 
 	// control values
-   double	m_PercentChange;	// percent change to apply to tempo
+   double	mPercentChange;	// percent change to apply to tempo
 										// -100% is meaningless, but sky's the upper limit.
 										// Slider is (-100, 200], but textCtrls can set higher.
-   int		m_FromVinyl;		// from standard vinyl speed (RPM)
-   int		m_ToVinyl;			// to standard vinyl speed (RPM)
-   double   mFactor;          // Scale factor calculated from percent change
+   int		mFromVinyl;		   // from standard vinyl speed (RPM) enum
+   int		mToVinyl;			// to standard vinyl speed (RPM) enum
+   double   mFactor;          // scale factor calculated from percent change
 
 friend class ChangeSpeedDialog;
 };
 
-//----------------------------------------------------------------------------
-// ChangeSpeedDialog
-//----------------------------------------------------------------------------
 
-class ChangeSpeedDialog:public EffectDialog {
+class ChangeSpeedDialog : public EffectDialog 
+{
  public:
    ChangeSpeedDialog(EffectChangeSpeed * effect,
 							wxWindow * parent);
 
-   void PopulateOrExchange(ShuttleGui & S);
+   void PopulateOrExchange(ShuttleGui& S);
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
 
@@ -101,28 +99,28 @@ class ChangeSpeedDialog:public EffectDialog {
    void OnPreview(wxCommandEvent &event);
 
 	// helper fns
-	void Update_Text_PercentChange(); // Update control per current m_PercentChange.
-   void Update_Slider_PercentChange(); // Update control per current m_PercentChange.
-	void Update_Vinyl(); // Update Vinyl controls for new percent change.
-	void Update_PercentChange(); // Update percent change controls for new Vinyl values.
+	void Update_Text_PercentChange();   // Update control per current mPercentChange.
+   void Update_Slider_PercentChange(); // Update control per current mPercentChange.
+	void Update_Vinyl();                // Update Vinyl controls for new percent change.
+	void Update_PercentChange();        // Update percent change controls for new Vinyl values.
 
  private:
 	EffectChangeSpeed * mEffect;
-	bool m_bLoopDetect;
+	bool mbLoopDetect;
 
    // controls
-   wxTextCtrl *	m_pTextCtrl_PercentChange;
-   wxSlider *		m_pSlider_PercentChange;
-   wxChoice *		m_pChoice_FromVinyl;
-   wxChoice *		m_pChoice_ToVinyl;
+   wxTextCtrl *	mpTextCtrl_PercentChange;
+   wxSlider *		mpSlider_PercentChange;
+   wxChoice *		mpChoice_FromVinyl;
+   wxChoice *		mpChoice_ToVinyl;
 
  public:
 	// effect parameters
-   double	m_PercentChange;	// percent change to apply to tempo
+   double	mPercentChange;	// percent change to apply to tempo
 										// -100% is meaningless, but sky's the upper limit.
 										// Slider is (-100, 200], but textCtrls can set higher.
-   int		m_FromVinyl;		// from standard vinyl speed (RPM)
-   int		m_ToVinyl;			// to standard vinyl speed (RPM)
+   int		mFromVinyl;		   // from standard vinyl speed (RPM)
+   int		mToVinyl;			// to standard vinyl speed (RPM)
 
  private:
    DECLARE_EVENT_TABLE()
@@ -130,15 +128,4 @@ class ChangeSpeedDialog:public EffectDialog {
 
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 1b39309b-9855-4705-9637-6435a119be56
 
