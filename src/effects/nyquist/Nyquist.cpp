@@ -93,7 +93,7 @@ EffectNyquist::EffectNyquist(wxString fName)
       return;
    }
 
-   wxLogNull dontLog;
+   // wxLogNull dontLog; // Vaughan, 2010-08-27: Why turn off logging? Logging is good!
 
    mName = wxFileName(fName).GetName();
    mFileName = wxFileName(fName);
@@ -279,11 +279,24 @@ void EffectNyquist::Parse(wxString line)
             return;
          }
           
-         if (tokens[3] == wxT("real")) {
+         if ((tokens[3] == wxT("real")) || 
+               (tokens[3] == wxT("float"))) // undocumented, but useful, alternative
             ctrl.type = NYQ_CTRL_REAL;
-         }
-         else {
+         else if (tokens[3] == wxT("int"))
             ctrl.type = NYQ_CTRL_INT;
+         else 
+         {
+            wxString str;
+            str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\nControl not created."), 
+                       tokens[3], mFileName.GetFullPath());
+
+            // Too disturbing to show alert before Audacity frame is up.
+            //    wxMessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);
+
+            // Note that the AudacityApp's mLogger has not yet been created, 
+            // so this brings up an alert box, but after the Audacity frame is up.
+            wxLogWarning(str);
+            return;
          }
           
          ctrl.lowStr = tokens[6];
@@ -1315,16 +1328,4 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 {
    EndModal(wxID_OK);
 }
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: a6e418bb-2609-42f2-a8ae-8e50373855f3
 
