@@ -366,8 +366,8 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          wxString strFormat1 = wxT("099 days 024 h 060 m 060 s");
          m_pTimeTextCtrl_Duration = new TimeTextCtrl(this, ID_TIMETEXT_DURATION, strFormat1);
          m_pTimeTextCtrl_Duration->SetName(_("Duration"));
-         m_pTimeTextCtrl_Duration->SetTimeValue(
-            Internat::CompatibleToDouble(m_TimeSpan_Duration.GetSeconds().ToString())); 
+         wxLongLong sex = m_TimeSpan_Duration.GetSeconds();
+         m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
          S.AddWindow(m_pTimeTextCtrl_Duration);
          m_pTimeTextCtrl_Duration->EnableMenu(false);
       }
@@ -417,8 +417,7 @@ bool TimerRecordDialog::TransferDataFromWindow()
 void TimerRecordDialog::UpdateDuration() 
 {
    m_TimeSpan_Duration = m_DateTime_End - m_DateTime_Start;
-   m_pTimeTextCtrl_Duration->SetTimeValue(
-      Internat::CompatibleToDouble(m_TimeSpan_Duration.GetSeconds().ToString())); 
+   m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
 }
 
 // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
