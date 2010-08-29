@@ -1816,6 +1816,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       // If the shift button is down, extend the current selection.
       ExtendSelection(event.m_x, r.x, pTrack);
+      MakeParentModifyState();
       return;
    }
 
@@ -2003,9 +2004,6 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
       if(ODManager::IsInstanceCreated())
          ODManager::Instance()->DemandTrackUpdate((WaveTrack*)pTrack,sel0); //sel0 is sometimes less than mSelStart
    }
-
-
-   MakeParentModifyState();
 
    // Full refresh since the label area may need to indicate
    // newly selected tracks.
