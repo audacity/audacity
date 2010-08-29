@@ -1862,12 +1862,11 @@ void AudacityProject::OnPlayStopSelect()
    if (gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
-//    toolbar->StopPlaying();
       mViewInfo.sel0 = gAudioIO->GetStreamTime();
       if( mViewInfo.sel1 < mViewInfo.sel0 ) {
          mViewInfo.sel1 = mViewInfo.sel0;
       }
-      GetControlToolBar()->OnStop(evt);
+      toolbar->OnStop(evt);
       ModifyState();
    }
    else if (!gAudioIO->IsBusy()) {
