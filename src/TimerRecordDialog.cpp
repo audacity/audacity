@@ -366,7 +366,6 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          wxString strFormat1 = wxT("099 days 024 h 060 m 060 s");
          m_pTimeTextCtrl_Duration = new TimeTextCtrl(this, ID_TIMETEXT_DURATION, strFormat1);
          m_pTimeTextCtrl_Duration->SetName(_("Duration"));
-         wxLongLong sex = m_TimeSpan_Duration.GetSeconds();
          m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
          S.AddWindow(m_pTimeTextCtrl_Duration);
          m_pTimeTextCtrl_Duration->EnableMenu(false);
