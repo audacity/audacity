@@ -1279,8 +1279,8 @@ void AudacityProject::RebuildMenuBar()
    // sync with wxWidgets idea of what it should be.
 #if defined(__WXMAC__) && defined(__WXDEBUG__)
    {
-      wxDialog *d = wxDynamicCast(wxGetTopLevelParent(FindFocus()), wxDialog);
-      wxASSERT((!d || !d->IsModal()));
+      wxDialog *dlg = wxDynamicCast(wxGetTopLevelParent(FindFocus()), wxDialog);
+      wxASSERT((!dlg || !dlg->IsModal()));
    }
 #endif
 
@@ -1889,9 +1889,8 @@ void AudacityProject::OnStopSelect()
          mViewInfo.sel1 = mViewInfo.sel0;
       }
       GetControlToolBar()->OnStop(evt);
+      ModifyState();
    }
-
-   ModifyState();
 }
 
 void AudacityProject::OnToggleSoundActivated()
@@ -2186,73 +2185,87 @@ void AudacityProject::OnSelContractRight()
 //the current play position.
 void AudacityProject::OnSetLeftSelection()
 {
-   if (GetAudioIOToken()>0 &&
-       gAudioIO->IsStreamActive(GetAudioIOToken()))
-      {
-         double indicator = gAudioIO->GetStreamTime();
-         mViewInfo.sel0 = indicator;
-      }
+   bool bSelChanged = false;
+   if ((GetAudioIOToken() > 0) && gAudioIO->IsStreamActive(GetAudioIOToken()))
+   {
+      double indicator = gAudioIO->GetStreamTime();
+      mViewInfo.sel0 = indicator;
+      bSelChanged = true;
+   }
    else
+   {
+      TimeDialog dlg(this, _("Set Left Selection Boundary"), _("Position"));
+      wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
+      dlg.SetFormatString(fmt);
+      dlg.SetSampleRate(mRate);
+      dlg.SetTimeValue(mViewInfo.sel0);
+      if (wxID_OK == dlg.ShowModal())
       {
-         wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
+         //Get the value from the dialog
+         mViewInfo.sel0 = dlg.GetTimeValue();
+         
+         //Make sure it is 'legal'
+         if (mViewInfo.sel0 < 0.0)
+            mViewInfo.sel0 = 0.0;
 
-         TimeDialog D(this, _("Set Left Selection Boundary"), _("Position"));
-         D.SetSampleRate(mRate);
-         D.SetFormatString(fmt);
-         D.SetTimeValue(mViewInfo.sel0);
-         if(wxID_OK==D.ShowModal() )
-            {
-               //Get the value from the dialog
-               mViewInfo.sel0 = D.GetTimeValue();
-               
-               //Make sure it is 'legal'
-               if(mViewInfo.sel0 < 0.0)
-                  mViewInfo.sel0 = 0.0;
-            }
+         bSelChanged = true;
       }
+   }
    
-   if(mViewInfo.sel1 < mViewInfo.sel0)
+   if (mViewInfo.sel1 < mViewInfo.sel0) 
+   {
       mViewInfo.sel1 = mViewInfo.sel0;
+      bSelChanged = true;
+   }
 
-   ModifyState();
-
-   mTrackPanel->Refresh(false);
+   if (bSelChanged) 
+   {
+      ModifyState();
+      mTrackPanel->Refresh(false);
+   }
 }
 
 
 void AudacityProject::OnSetRightSelection()
 {
-   if (GetAudioIOToken()>0 &&
-       gAudioIO->IsStreamActive(GetAudioIOToken())) 
-      {
-         double indicator = gAudioIO->GetStreamTime();
-         mViewInfo.sel1 = indicator;
-      }
+   bool bSelChanged = false;
+   if ((GetAudioIOToken() > 0) && gAudioIO->IsStreamActive(GetAudioIOToken()))
+   {
+      double indicator = gAudioIO->GetStreamTime();
+      mViewInfo.sel1 = indicator;
+      bSelChanged = true;
+   }
    else
+   {
+      TimeDialog dlg(this, _("Set Right Selection Boundary"), _("Position"));
+      wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
+      dlg.SetFormatString(fmt);
+      dlg.SetSampleRate(mRate);
+      dlg.SetTimeValue(mViewInfo.sel1);
+      if (wxID_OK == dlg.ShowModal())
       {
-         wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
+         //Get the value from the dialog
+         mViewInfo.sel1 = dlg.GetTimeValue();
+         
+         //Make sure it is 'legal'
+         if(mViewInfo.sel1 < 0)
+            mViewInfo.sel1 = 0;
 
-         TimeDialog D(this, _("Set Right Selection Boundary"), _("Position"));
-         D.SetSampleRate(mRate);
-         D.SetFormatString(fmt);
-         D.SetTimeValue(mViewInfo.sel1);
-         if(wxID_OK==D.ShowModal() )
-            {
-               //Get the value from the dialog
-               mViewInfo.sel1 = D.GetTimeValue();
-               
-               //Make sure it is 'legal'
-               if(mViewInfo.sel1 < 0)
-                  mViewInfo.sel1 = 0;
-            }
+         bSelChanged = true;
       }
+   }
 
-   if(mViewInfo.sel0 >  mViewInfo.sel1)
+   if (mViewInfo.sel0 >  mViewInfo.sel1)
+   {
       mViewInfo.sel0 = mViewInfo.sel1;
+      bSelChanged = true;
+   }
 
-   ModifyState();
-   
-   mTrackPanel->Refresh(false);
+   if (bSelChanged) 
+   {
+      ModifyState();
+      mTrackPanel->Refresh(false);
+   }
 }
 
 void AudacityProject::NextFrame()
@@ -5167,9 +5180,9 @@ void AudacityProject::OnAddLabelPlaying()
 
 void AudacityProject::OnEditLabels()
 {
-   LabelDialog d(this, mDirManager, mTracks, mViewInfo, mRate);
+   LabelDialog dlg(this, mDirManager, mTracks, mViewInfo, mRate);
    
-   if (d.ShowModal() == wxID_OK) {
+   if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));
       RedrawProject();
    }
@@ -5341,8 +5354,8 @@ void AudacityProject::OnImportCleanSpeechPresets()
 
 void AudacityProject::OnApplyChain()
 {
-   BatchProcessDialog d(this);
-   d.ShowModal();
+   BatchProcessDialog dlg(this);
+   dlg.ShowModal();
 
    // LL:  See comments in ModifyUndoMenuItems() for info about this...
    //
@@ -5352,8 +5365,8 @@ void AudacityProject::OnApplyChain()
 
 void AudacityProject::OnEditChains()
 {
-   EditChainsDialog d(this);
-   d.ShowModal();
+   EditChainsDialog dlg(this);
+   dlg.ShowModal();
 }
 
 wxString AudacityProject::BuildCleanFileName(wxString fileName)

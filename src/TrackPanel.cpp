@@ -4017,7 +4017,7 @@ void TrackPanel::HandleResizeButtonUp(wxMouseEvent & event)
 {
    SetCapturedTrack( NULL );
    MakeParentRedrawScrollbars();
-   MakeParentModifyState();
+   MakeParentModifyState(); //v Probably doesn't really warrant AutoSave. Maybe add bWantAutoSave param if there are more.
 }
 
 ///  Resize dragging means that the mouse button IS down and has moved
@@ -6479,7 +6479,7 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 
       UpdateVRuler(wt);
    }
-   MakeParentModifyState();
+   MakeParentModifyState(); //v Doesn't really warrant AutoSave. Maybe add bWantAutoSave param if there are more.
    mPopupMenuTarget = NULL;
    Refresh(false);
 }

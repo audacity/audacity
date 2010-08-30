@@ -3543,6 +3543,8 @@ void AudacityProject::ModifyState()
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
+// Vaughan, 2010-08-29: No, as "l" is a TrackList* of an Undo stack state. 
+//    Need to keep it and its tracks "t" available for Undo/Redo/SetStateTo.
 void AudacityProject::PopState(TrackList * l)
 {
    mTracks->Clear(true);
