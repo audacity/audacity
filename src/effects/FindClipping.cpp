@@ -183,7 +183,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
             if (stoprun >= mStop) {
                l->AddLabel(startTime,
                            t->LongSamplesToTime(start + s - mStop),
-                           wxString::Format(wxT("%d of %d"), startrun, samps - mStop));
+                           wxString::Format(wxT("%lld of %lld"), startrun, samps - mStop));
                startrun = 0;
                stoprun = 0;
                samps = 0;
