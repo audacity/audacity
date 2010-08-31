@@ -310,7 +310,11 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
                && (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
             #endif
             )
-         dm.AssignFile(summaryFileName, strValue, false);
+      {
+         if (!dm.AssignFile(summaryFileName, strValue, false))
+            // Make sure summaryFileName is back to uninitialized state so we can detect problem later.
+            summaryFileName.Clear();
+      }
       else if( !wxStricmp(attr, wxT("aliasfile")) )
       {
          if (XMLValueChecker::IsGoodPathName(strValue))

@@ -495,7 +495,11 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
                && (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
             #endif
             )
-         dm.AssignFile(fileName,value,FALSE);
+      {
+         if (!dm.AssignFile(fileName, strValue, false))
+            // Make sure fileName is back to uninitialized state so we can detect problem later.
+            fileName.Clear();
+      }
       else if (!wxStrcmp(attr, wxT("len")) && 
                XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue) && 
                nValue > 0) 

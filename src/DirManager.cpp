@@ -573,7 +573,8 @@ wxFileName DirManager::MakeBlockFilePath(wxString value){
 
 bool DirManager::AssignFile(wxFileName &fileName, 
                             wxString value,
-                            bool diskcheck){
+                            bool diskcheck) 
+{
    wxFileName dir=MakeBlockFilePath(value);
 
    if(diskcheck){
@@ -602,7 +603,7 @@ bool DirManager::AssignFile(wxFileName &fileName,
       }
    }
    fileName.Assign(dir.GetFullPath(),value);
-   return TRUE;
+   return fileName.IsOk();
 }
 
 static inline unsigned int hexchar_to_int(unsigned int x)
@@ -825,8 +826,8 @@ wxFileName DirManager::MakeBlockFileName()
 
       if (mBlockFileHash.find(baseFileName) == mBlockFileHash.end()){
          // not in the hash, good. 
-         if(AssignFile(ret,baseFileName,TRUE)==FALSE){
-            
+         if (!this->AssignFile(ret, baseFileName, true))
+         {   
             // this indicates an on-disk collision, likely due to an
             // orphan blockfile.  We should try again, but first
             // alert the balancing info there's a phantom file here;
@@ -920,20 +921,18 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 		//note that this shouldn't hurt mBlockFileHash's that already contain the filename, since it should just overwrite.
 		//but it's something to watch out for.
       //
-      // LLL: Except for silent block files which have no filename.
-      if (!b->GetFileName().GetName().IsEmpty()) {
+      // LLL: Except for silent block files which have uninitialized filename.
+      if (b->GetFileName().IsOk()) 
          mBlockFileHash[b->GetFileName().GetName()]=b;
-      }
       return b;
    }
 
    // Copy the blockfile
    BlockFile *b2;
-   if (b->GetFileName().GetName().IsEmpty()) {
-      // Block files with no filename (i.e. SilentBlockFile) just need an
-      // in-memory copy
+   if (!b->GetFileName().IsOk()) 
+      // Block files with uninitialized filename (i.e. SilentBlockFile) 
+      // just need an in-memory copy.
       b2 = b->Copy(wxFileName());
-   }
    else
    {
       wxFileName newFile = MakeBlockFileName();
@@ -1062,18 +1061,21 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
 {
    // Check that this BlockFile corresponds to a file on disk
+   //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case 
+   //    (!f->GetFileName().IsOk()) is a more correct check?
    if (f->GetFileName().GetName().IsEmpty()) {
       return true;
    }
 
    wxFileName newFileName;
    wxFileName oldFileName=f->GetFileName();
-   AssignFile(newFileName,f->GetFileName().GetFullName(),FALSE); 
+   if (!this->AssignFile(newFileName, f->GetFileName().GetFullName(), false))
+      return false; 
 
-   if ( !(newFileName == f->GetFileName()) ) {
-      bool ok = f->IsSummaryAvailable() && wxRenameFile(f->GetFileName().GetFullPath(),
-                             newFileName.GetFullPath());
-
+   if (newFileName != f->GetFileName())
+   {
+      bool ok = f->IsSummaryAvailable() && 
+                  wxRenameFile(f->GetFileName().GetFullPath(), newFileName.GetFullPath());
       if (ok)
          f->SetFileName(newFileName);
       else {
@@ -1084,10 +1086,10 @@ bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
          {
             if(!wxRenameFile(f->GetFileName().GetFullPath(),
                              newFileName.GetFullPath()))
-                             /*wxCopyFile(f->GetFileName().GetFullPath(),
-                         newFileName.GetFullPath()))*/
+                             /*wxCopyFile(f->GetFileName().GetFullPath(), //ANSWER-ME: In or out? Cruft?
+                                 newFileName.GetFullPath()))*/
                return false;
-//            wxRemoveFile(f->GetFileName().GetFullPath());
+               //wxRemoveFile(f->GetFileName().GetFullPath()); //ANSWER-ME: In or out? Cruft?
          }
          f->SetFileName(newFileName);
             
@@ -1119,20 +1121,22 @@ bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
 bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
 {
    // Check that this BlockFile corresponds to a file on disk
+   //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case 
+   //    (!f->GetFileName().IsOk()) is a more correct check?
    if (f->GetFileName().GetName().IsEmpty()) {
       return true;
    }
    wxFileName newFileName;
    wxFileName oldFileName=f->GetFileName();
-   AssignFile(newFileName,f->GetFileName().GetFullName(),FALSE); 
+   if (!this->AssignFile(newFileName, f->GetFileName().GetFullName(), false))
+      return false; 
 
    //mchinen:5/31/08:adding OD support 
    //But also I'm also wondering if we need to delete the copied file here, while i'm reimplementing.
    //see original code below - I don't see where that file will ever get delted or used again.
-   if ( !(newFileName == f->GetFileName()) ) {
-      bool ok=true;
-      bool summaryExisted =  f->IsSummaryAvailable();
-      
+   if (newFileName != f->GetFileName())
+   {
+      bool summaryExisted =  f->IsSummaryAvailable();      
       if( summaryExisted)
       {   
         if(!wxCopyFile(f->GetFileName().GetFullPath(),
@@ -1140,7 +1144,6 @@ bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
                return false;
          //TODO:make sure we shouldn't delete               
          //   wxRemoveFile(f->mFileName.GetFullPath());
-
       }  
         
       f->SetFileName(newFileName);
@@ -1158,27 +1161,30 @@ bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
          //if it doesn't, we can assume it was written to the new name, which is fine.
          if (oldFileName.FileExists())
          {
-            ok = wxCopyFile(oldFileName.GetFullPath(),
-                     newFileName.GetFullPath());
-         //     if(ok)
-         //      wxRemoveFile(f->mFileName.GetFullPath());
+            bool ok = wxCopyFile(oldFileName.GetFullPath(),
+                                 newFileName.GetFullPath());
+            //vvvvv ANSWER-ME: In or out? Cruft? 
+            //if(ok)
+            //   wxRemoveFile(f->mFileName.GetFullPath());
+            //vvvvv ANSWER-ME: Need to return false if !ok?
          }
       }
    }
    return true;
-//
-//   
-//   if ( !(newFileName == f->mFileName) ) {
-//      bool ok = wxCopyFile(f->mFileName.GetFullPath(),
-//                           newFileName.GetFullPath());
-//      if (ok) {
-//         f->mFileName = newFileName;
-//      }
-//      else
-//         return false;
-//   }
-//
-//   return true;
+
+   //ANSWER-ME: In or out? Cruft?
+   //   
+   //   if ( !(newFileName == f->mFileName) ) {
+   //      bool ok = wxCopyFile(f->mFileName.GetFullPath(),
+   //                           newFileName.GetFullPath());
+   //      if (ok) {
+   //         f->mFileName = newFileName;
+   //      }
+   //      else
+   //         return false;
+   //   }
+   //
+   //   return true;
 }
 
 void DirManager::Ref(BlockFile * f)
