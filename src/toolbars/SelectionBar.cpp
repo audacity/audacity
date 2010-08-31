@@ -400,7 +400,14 @@ void SelectionBar::ValuesToControls()
    if (mRightEndButton->GetValue())
       mRightTime->SetTimeValue(mEnd);
    else
-      mRightTime->SetTimeValue(mEnd - mStart);
+   {  // mRightTime is the length.
+      // Be sure to take into account the sub-sample offset.
+      // See TimeToLongSamples and LongSamplesToTime but here at the project rate.
+      double t = (sampleCount)floor(mEnd * mRate + 0.5);
+      t -= (sampleCount)floor(mStart * mRate + 0.5);
+      t /= mRate;
+      mRightTime->SetTimeValue(t);
+   }
 
    mAudioTime->SetTimeValue(mAudio);
 }

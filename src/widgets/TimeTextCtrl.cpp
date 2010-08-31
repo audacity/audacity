@@ -1315,7 +1315,8 @@ void TimeTextCtrl::ValueToControls()
 
 void TimeConverter::ValueToControls( double RawTime )
 {
-   double theValue = RawTime * mScalingFactor + .000001;
+   RawTime = (double)((sampleCount)floor(RawTime * mSampleRate + 0.5)) / mSampleRate; // put on a sample
+   double theValue = RawTime * mScalingFactor + .000001; // what's this .000001 for?
    int t_int = int(theValue);
    double t_frac = (theValue - t_int);
    unsigned int i;
