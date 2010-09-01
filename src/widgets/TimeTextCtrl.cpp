@@ -161,6 +161,7 @@ different formats.
 #include "../Audacity.h"
 #include "../AudacityApp.h"
 #include "TimeTextCtrl.h"
+#include "../Sequence.h"   // for sampleCount
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"
