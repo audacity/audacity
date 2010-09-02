@@ -15,6 +15,7 @@
 
 #include "../Audacity.h"
 
+#include <wx/button.h>
 #include <wx/log.h>
 #include <wx/process.h>
 #include <wx/textctrl.h>

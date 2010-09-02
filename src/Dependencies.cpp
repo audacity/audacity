@@ -21,6 +21,7 @@
 
 **********************************************************************/
 
+#include <wx/button.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/filename.h>
