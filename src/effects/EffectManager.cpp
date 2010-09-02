@@ -62,7 +62,7 @@ void EffectManager::RegisterEffect(Effect *f, int NewFlags)
    int i;
    for(i=0; i<len; i++)
       if (name.CmpNoCase(Effect::StripAmpersand(mEffects[i]->GetEffectName())) < 0) {
-	 mEffects.Insert(f, i);
+         mEffects.Insert(f, i);
          break;
       }
    if (i==len)

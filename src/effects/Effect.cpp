@@ -26,7 +26,6 @@ greater use in future.
 #include <wx/defs.h>
 #include <wx/string.h>
 #include <wx/msgdlg.h>
-#include <wx/progdlg.h>
 #include <wx/sizer.h>
 #include <wx/timer.h>
 #include <wx/hashmap.h>
@@ -140,7 +139,8 @@ bool Effect::DoEffect(wxWindow *parent, int flags,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false) {
       mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
-                                     GetEffectAction());
+                                     GetEffectAction(), 
+                                     pdlgHideStopButton);
       returnVal = Process();
       delete mProgress;
    }
@@ -163,25 +163,19 @@ bool Effect::DoEffect(wxWindow *parent, int flags,
 bool Effect::TotalProgress(double frac)
 {
    int updateResult = mProgress->Update(frac);
-   if (updateResult == eProgressSuccess)
-     return false;
-   return true;
+   return (updateResult != eProgressSuccess);
 }
 
 bool Effect::TrackProgress(int whichTrack, double frac)
 {
    int updateResult = mProgress->Update(whichTrack + frac, (double) mNumTracks);
-   if (updateResult == eProgressSuccess)
-     return false;
-   return true;
+   return (updateResult != eProgressSuccess);
 }
 
 bool Effect::TrackGroupProgress(int whichGroup, double frac)
 {
    int updateResult = mProgress->Update(whichGroup + frac, (double) mNumGroups);
-   if (updateResult == eProgressSuccess)
-     return false;
-   return true;
+   return (updateResult != eProgressSuccess);
 }
 
 void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
@@ -472,7 +466,8 @@ void Effect::Preview()
    // again, so the state is exactly the way it was before Preview
    // was called.
    mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
-                                  _("Preparing preview"));
+                                  _("Preparing preview"), 
+                                  pdlgHideCancelButton); // Have only "Stop" button.
    bool bSuccess = Process();
    delete mProgress;
    End();

@@ -14,7 +14,6 @@
 
 #include <set>
 
-#include <wx/button.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h> 
 #include <wx/string.h>
@@ -135,6 +134,10 @@ class AUDACITY_DLL_API Effect {
 
    wxString GetPreviewName();
 
+   //ANSWER-ME: Isn't this pointless?
+   //    None of the built-in functions has an ampersand in the result of 
+   //    GetEffectName(), the only strings on which this method is used. 
+   //    In fact, the example 'E&qualizer' does not exist in the code!
    // Strip ampersand ('&' char) from string. This effectively removes the
    // shortcut from the string ('E&qualizer' becomes 'Equalizer'). This is
    // important for sorting.
@@ -147,11 +150,10 @@ class AUDACITY_DLL_API Effect {
  // do its processing.
  //
  protected:
-   // The constructor.  Called once at the beginning of the program.
+   // The constructor is called once by each subclass at the beginning of the program.
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
 
-   //The destructor.
    virtual ~Effect();
  
    // Called once each time an effect is called.  Perform any initialization;

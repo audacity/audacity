@@ -46,9 +46,9 @@ bool Generator::Process()
          //if we can't move clips, and we're generating into an empty space,
          //make sure there's room.
          if (!editClipCanMove &&
-	     track->IsEmpty(mT0, mT1+1.0/track->GetRate()) &&
+	          track->IsEmpty(mT0, mT1+1.0/track->GetRate()) &&
              !track->IsEmpty(mT0, mT0+mDuration-(mT1-mT0)-1.0/track->GetRate()))
-	 {
+	      {
              wxMessageBox(
                _("There is not enough room available to generate the audio"),
                _("Error"), wxICON_STOP);   
