@@ -39,12 +39,12 @@ extern char buf[];
 /* external routines */
 extern FILE *osaopen();
 /* on the NeXT, atof is a macro in stdlib.h */
-#ifndef atof
-extern double atof();
+#if !defined(atof) && !defined(_WIN32) 
+   extern double atof();
 #endif
 #ifndef __MWERKS__
-#ifdef ITYPE
-extern ITYPE;
+#if !defined(ITYPE) && !defined(_WIN32) 
+   extern ITYPE;
 #endif
 #endif
 
@@ -334,7 +334,10 @@ int readone(LVAL fptr, LVAL *pval)
 
     /* handle illegal characters */
     else
+    {
         xlerror("illegal character",cvfixnum((FIXTYPE)ch));
+        return (FALSE);
+    }
 }
 
 /* rmhash - read macro for '#' */

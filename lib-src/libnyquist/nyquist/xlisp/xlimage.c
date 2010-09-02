@@ -397,6 +397,7 @@ LOCAL OFFTYPE cvoptr(LVAL p)
 
     /* pointer not within any segment */
     xlerror("bad pointer found during image save",p);
+    return (NIL);
 }
 
 #endif

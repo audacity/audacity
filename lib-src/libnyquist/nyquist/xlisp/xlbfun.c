@@ -603,6 +603,7 @@ LVAL xcleanup(void)
 {
     xllastarg();
     xlcleanup();
+    return (NIL);
 }
 
 /* xtoplevel - special form 'top-level' */
@@ -610,6 +611,7 @@ LVAL xtoplevel(void)
 {
     xllastarg();
     xltoplevel();
+    return (NIL);
 }
 
 /* xcontinue - special form 'continue' */
@@ -617,6 +619,7 @@ LVAL xcontinue(void)
 {
     xllastarg();
     xlcontinue();
+    return (NIL);
 }
 
 /* xevalhook - eval hook function */
