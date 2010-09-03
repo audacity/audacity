@@ -709,6 +709,13 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
    bool lastRun = false; // must run the loop one extra time
 
    RegionList::const_iterator srcIter = src.begin();
+   
+   // This logic, causing the loop to run once after end of src, must occur
+   // each time srcIter is updated
+   if (srcIter == src.end()) {
+      lastRun = true;
+   }
+
    while (srcIter != src.end() || lastRun)
    {
       // Don't use curSrc unless lastRun is false!
