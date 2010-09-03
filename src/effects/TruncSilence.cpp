@@ -10,7 +10,8 @@
 *******************************************************************//**
 
 \class EffectTruncSilence
-\brief An Effect.
+\brief Truncate Silence automatically reduces the length of passages 
+       where the volume is below a set threshold level. 
 
   \todo mBlendFrameCount only retrieved from prefs ... not using dialog
         Only way to change (for windows) is thru registry
@@ -467,9 +468,10 @@ bool EffectTruncSilence::Process()
    double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
 
    // Master list of silent regions; it is responsible for deleting them.
-   // This list should always be kept in order
+   // This list should always be kept in order.
    RegionList silences;
-   silences.DeleteContents(true);
+
+   RegionList trackSilences; // per track list of silent regions
 
    // Start with the whole selection silent
    Region *sel = new Region;
@@ -486,19 +488,15 @@ bool EffectTruncSilence::Process()
 
       // Smallest silent region to detect in frames
       sampleCount minSilenceFrames = 
-         sampleCount((wxMax( mTruncInitialAllowedSilentMs, minTruncMs) *
-                  wt->GetRate()) / 1000.0);
+         (sampleCount)((wxMax(mTruncInitialAllowedSilentMs, minTruncMs) * wt->GetRate()) / 1000.0);
 
       //
       // Scan the track for silences
       //
-      RegionList trackSilences;
-      trackSilences.DeleteContents(true);
       sampleCount blockLen = wt->GetMaxBlockSize();
       sampleCount start = wt->TimeToLongSamples(mT0);
       sampleCount end = wt->TimeToLongSamples(mT1);
 
-      // Allocate buffer
       float *buffer = new float[blockLen];
 
       sampleCount index = start;
@@ -509,10 +507,9 @@ bool EffectTruncSilence::Process()
       RegionList::iterator rit(silences.begin());
 
       while (index < end) {
-         // Show progress dialog, test for cancellation
-         cancelled = TotalProgress(
-               detectFrac * (whichTrack + index / (double)end) / 
-               (double)GetNumWaveTracks());
+         // Show progress dialog, test for cancellation.
+         cancelled = 
+            TotalProgress(detectFrac * (whichTrack + index / (double)end) / (double)GetNumWaveTracks());
          if (cancelled)
             break;
 
@@ -578,10 +575,12 @@ bool EffectTruncSilence::Process()
          index += count;
       }
 
-      delete [] buffer;
-
-      // Buffer has been freed, so we're OK to return if cancelled
-      if (cancelled) {
+      delete [] buffer; // Finished with buffer.
+      if (cancelled) 
+      {
+         silences.DeleteContents(true);
+         trackSilences.DeleteContents(true); 
+         ReplaceProcessedTracks(false);
          return false;
       }
 
@@ -596,6 +595,8 @@ bool EffectTruncSilence::Process()
 
       // Intersect with the overall silent region list
       Intersect(silences, trackSilences);
+      trackSilences.DeleteContents(true);
+
       whichTrack++;
    }
 
@@ -611,10 +612,13 @@ bool EffectTruncSilence::Process()
    for (rit = silences.rbegin(); rit != silences.rend(); ++rit) {
       Region *r = *rit;
 
-      // Progress dialog and cancellation; at this point it's safe to return
-      if (TotalProgress(detectFrac +
-               (1 - detectFrac) * whichReg / (double)silences.size()))
+      // Progress dialog and cancellation.
+      if (TotalProgress(detectFrac + (1 - detectFrac) * whichReg / (double)silences.size()))
+      {
+         silences.DeleteContents(true);
+         ReplaceProcessedTracks(false);
          return false;
+      }
 
       // Intersection may create regions smaller than allowed; ignore them
       if (r->end - r->start < mTruncInitialAllowedSilentMs / 1000.0)
@@ -688,6 +692,7 @@ bool EffectTruncSilence::Process()
 
    mT1 -= totalCutLen;
 
+   silences.DeleteContents(true);
    ReplaceProcessedTracks(true);
 
    return true;
