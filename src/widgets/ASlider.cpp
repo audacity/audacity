@@ -447,6 +447,8 @@ void LWSlider::Init(wxWindow * parent,
    mDefaultValue = 0.0f;
    mDefaultShortcut = false;
    mBitmap = NULL;
+   mThumbBitmap = NULL;
+   mThumbBitmapAllocated = false;
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
 
@@ -461,7 +463,7 @@ void LWSlider::Init(wxWindow * parent,
 LWSlider::~LWSlider()
 {
    delete mBitmap;
-   if (mOrientation == wxVERTICAL && mThumbBitmap) {
+   if (mThumbBitmapAllocated) {
       delete mThumbBitmap;
    }
    delete mPopWin;
@@ -600,18 +602,32 @@ void LWSlider::Draw()
    //
 
    if (mEnabled && mOrientation == wxHORIZONTAL)
+   {
+      if (mThumbBitmapAllocated)
+         delete mThumbBitmap;
       mThumbBitmap = &theTheme.Bitmap( bmpSliderThumb );
+      mThumbBitmapAllocated = false;
+   }
    //vvv \todo Convert this to an image in AllThemeResources, as bmpSliderThumb. Make an alpha also, as for horizontal slider thumb?
    else if (mOrientation == wxHORIZONTAL)
    {
       wxImage thumbImage(wxBitmap(SliderThumbDisabled).ConvertToImage());
+
+      if (mThumbBitmapAllocated)
+         delete mThumbBitmap;
       mThumbBitmap = new wxBitmap(thumbImage);
+      mThumbBitmapAllocated = true;
+
       mThumbBitmap->SetMask(new wxMask(wxBitmap(SliderThumbAlpha), *wxBLACK));
    }
    else if (mEnabled)
    {
       wxImage thumbImage(wxBitmap(SliderThumb_Vertical).ConvertToImage());
+      if (mThumbBitmapAllocated)
+         delete mThumbBitmap;
       mThumbBitmap = new wxBitmap(thumbImage);
+      mThumbBitmapAllocated = true;
+
       mThumbBitmap->SetMask(
             new wxMask(wxBitmap(SliderThumb_VerticalAlpha), *wxBLACK));
    }
@@ -619,7 +635,12 @@ void LWSlider::Draw()
    {
       wxImage thumbImage(wxBitmap(
                SliderThumb_VerticalDisabled).ConvertToImage());
+
+      if (mThumbBitmapAllocated)
+         delete mThumbBitmap;
       mThumbBitmap = new wxBitmap(thumbImage);
+      mThumbBitmapAllocated = true;
+
       mThumbBitmap->SetMask(
             new wxMask(wxBitmap(SliderThumb_VerticalAlpha), *wxBLACK));
    }
