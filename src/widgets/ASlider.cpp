@@ -600,6 +600,11 @@ void LWSlider::Draw()
    //
    // Get the thumb slider bitmap
    //
+   // AD: Setting the mThumbBitmap pointer requires caution, because
+   // ownership of the object pointed to varies. If we've allocated
+   // mThumbBitmap we must delete it first, and we must set
+   // mThumbBitmapAllocated according to whether we have.
+   //
 
    if (mEnabled && mOrientation == wxHORIZONTAL)
    {
@@ -644,9 +649,6 @@ void LWSlider::Draw()
       mThumbBitmap->SetMask(
             new wxMask(wxBitmap(SliderThumb_VerticalAlpha), *wxBLACK));
    }
-
-   //   mThumbBitmap = new wxBitmap( SliderThumb );
-   //   mThumbBitmap->SetMask( new wxMask( wxBitmap( SliderThumbAlpha ), *wxBLACK ) );
 
    //
    // Now the background bitmap
