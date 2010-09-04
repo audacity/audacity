@@ -10,7 +10,8 @@
 *******************************************************************//**
 
 \class EffectTruncSilence
-\brief An Effect.
+\brief Truncate Silence automatically reduces the length of passages 
+       where the volume is below a set threshold level.
 
   \todo mBlendFrameCount only retrieved from prefs ... not using dialog
         Only way to change (for windows) is thru registry
@@ -467,7 +468,7 @@ bool EffectTruncSilence::Process()
    double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
 
    // Master list of silent regions; it is responsible for deleting them.
-   // This list should always be kept in order
+   // This list should always be kept in order.
    RegionList silences;
    silences.DeleteContents(true);
 
@@ -582,6 +583,7 @@ bool EffectTruncSilence::Process()
 
       // Buffer has been freed, so we're OK to return if cancelled
       if (cancelled) {
+         ReplaceProcessedTracks(false);
          return false;
       }
 
@@ -614,7 +616,10 @@ bool EffectTruncSilence::Process()
       // Progress dialog and cancellation; at this point it's safe to return
       if (TotalProgress(detectFrac +
                (1 - detectFrac) * whichReg / (double)silences.size()))
+      {
+         ReplaceProcessedTracks(false);
          return false;
+      }
 
       // Intersection may create regions smaller than allowed; ignore them
       if (r->end - r->start < mTruncInitialAllowedSilentMs / 1000.0)
