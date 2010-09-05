@@ -62,7 +62,13 @@ bool EffectDtmf::Init()
 
    if (mT1 > mT0) {
       // there is a selection: let's fit in there...
-      mDuration = mT1 - mT0;
+      // MJS: note that this is just for the TTC and is independent of the track rate
+      // but we do need to make sure we have the right number of samples at the project rate
+      AudacityProject *p = GetActiveProject();
+      double projRate = p->GetRate();
+      double quantMT0 = (double)((sampleCount)floor(mT0 * projRate + 0.5))/projRate;
+      double quantMT1 = (double)((sampleCount)floor(mT1 * projRate + 0.5))/projRate;
+      mDuration = quantMT1 - quantMT0;
       mIsSelection = true;
    } else {
       // retrieve last used values
@@ -254,7 +260,14 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
    bool bGoodResult = true;
 
    // all dtmf sequence durations in samples from seconds
-   numSamplesSequence = tmp->TimeToLongSamples(mDuration);  // needs to be exact number of samples selected
+   // MJS: Note that mDuration is in seconds but will have been quantised to the units of the TTC.
+   // If this was 'samples' and the project rate was lower than the track rate,
+   // extra samples may get created as mDuration may now be > mT1 - mT0;
+   // However we are making our best efforts at creating what was asked for.
+   sampleCount nT0 = tmp->TimeToLongSamples(mT0);
+   sampleCount nT1 = tmp->TimeToLongSamples(mT0 + mDuration);
+   numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
+
    //make under-estimates if anything, and then redistribute the few remaining samples
    numSamplesTone = (sampleCount)floor(dtmfTone * track.GetRate());
    numSamplesSilence = (sampleCount)floor(dtmfSilence * track.GetRate());
