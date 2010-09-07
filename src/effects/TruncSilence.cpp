@@ -581,8 +581,8 @@ bool EffectTruncSilence::Process()
 
       delete [] buffer;
 
-      // Buffer has been freed, so we're OK to return if cancelled
-      if (cancelled) {
+      if (cancelled) 
+      {
          ReplaceProcessedTracks(false);
          return false;
       }
@@ -613,9 +613,8 @@ bool EffectTruncSilence::Process()
    for (rit = silences.rbegin(); rit != silences.rend(); ++rit) {
       Region *r = *rit;
 
-      // Progress dialog and cancellation; at this point it's safe to return
-      if (TotalProgress(detectFrac +
-               (1 - detectFrac) * whichReg / (double)silences.size()))
+      // Progress dialog and cancellation. Do additional cleanup before return.
+      if (TotalProgress(detectFrac + (1 - detectFrac) * whichReg / (double)silences.size()))
       {
          ReplaceProcessedTracks(false);
          return false;
