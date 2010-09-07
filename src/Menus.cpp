@@ -3538,14 +3538,8 @@ bool AudacityProject::HandlePasteNothingSelected()
          pClip = iterClip.Next();
       }
 
-      // select the right amount, which is probably impossible with various sample rates
-      // so do it at the sample rate of the project
-      AudacityProject *p = GetActiveProject();
-      double projRate = p->GetRate();
-      double quantMT0 = (double)((sampleCount)floor(mViewInfo.sel0 * projRate + 0.5))/projRate;
-      double quantMT1 = (double)((sampleCount)floor(mViewInfo.sel1 * projRate + 0.5))/projRate;
-      mViewInfo.sel0 = 0.0;   // anywhere else and this should be half a sample earlier
-      mViewInfo.sel1 = quantMT1 - quantMT0;
+      mViewInfo.sel0 = 0.0;
+      mViewInfo.sel1 = msClipLen;
 
       PushState(_("Pasted from the clipboard"), _("Paste"));
       
