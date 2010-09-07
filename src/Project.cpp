@@ -159,6 +159,8 @@ scroll information.  It also has some status flags.
 
 TrackList *AudacityProject::msClipboard = new TrackList();
 double AudacityProject::msClipLen = 0.0;
+double AudacityProject::msClipT0 = 0.0;
+double AudacityProject::msClipT1 = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
 ODLock   *AudacityProject::msAllProjectDeleteMutex = new ODLock();
 

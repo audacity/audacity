@@ -3212,7 +3212,9 @@ void AudacityProject::OnCopy()
       n = iter.Next();
    }
 
-   msClipLen = (mViewInfo.sel1 - mViewInfo.sel0);
+   msClipLen = (mViewInfo.sel1 - mViewInfo.sel0);  // MJS: to be removed in future
+   msClipT0 = mViewInfo.sel0;
+   msClipT1 = mViewInfo.sel1;
    msClipProject = this;
 
    //Make sure the menus/toolbar states get updated
@@ -3538,8 +3540,15 @@ bool AudacityProject::HandlePasteNothingSelected()
          pClip = iterClip.Next();
       }
 
-      mViewInfo.sel0 = 0.0;
-      mViewInfo.sel1 = msClipLen;
+      // Select some pasted samples, which is probably impossible to get right
+      // with various project and track sample rates.
+      // So do it at the sample rate of the project
+      AudacityProject *p = GetActiveProject();
+      double projRate = p->GetRate();
+      double quantT0 = (double)((sampleCount)floor(msClipT0 * projRate + 0.5))/projRate;
+      double quantT1 = (double)((sampleCount)floor(msClipT1 * projRate + 0.5))/projRate;
+      mViewInfo.sel0 = 0.0;   // anywhere else and this should be half a sample earlier
+      mViewInfo.sel1 = quantT1 - quantT0;
 
       PushState(_("Pasted from the clipboard"), _("Paste"));
       

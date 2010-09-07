@@ -431,7 +431,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Clipboard (static because it is shared by all projects)
    static TrackList *msClipboard;
    static AudacityProject *msClipProject;
-   static double msClipLen;
+   static double msClipLen;   // MJS: to be removed in future - too dangerous!
+   static double msClipT0;
+   static double msClipT1;
 
    //shared by all projects
    static ODLock *msAllProjectDeleteMutex;
