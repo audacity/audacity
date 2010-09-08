@@ -757,13 +757,22 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             // The first region
             curDest->end = nsStart;
 
-            // Insert second
-            // AWD: wxList::insert() has a bug causing it to return the wrong
-            // value; this is a workaround.
+            // Insert second region after first
             RegionList::iterator nextIt(destIter);
             ++nextIt;
-            dest.insert(nextIt, r);
+            
+            // This should just read: destIter = dest.insert(nextIt, r); but we
+            // work around two two wxList::insert() bugs. First, in some
+            // versions it returns the wrong value. Second, in some versions,
+            // it crashes when you insert at list end.
+            if (nextIt == dest.end()) {
+               dest.Append(r);
+            }
+            else {
+               dest.insert(nextIt, r);
+            }
             ++destIter;          // (now points at the newly-inserted region)
+
             curDest = *destIter;
          }
 
