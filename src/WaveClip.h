@@ -59,12 +59,6 @@ WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_A
 
 class AUDACITY_DLL_API WaveClip: public XMLTagHandler
 {
-private:
-   WaveClip(const WaveClip&)
-   {
-      wxMessageBox(wxT("Fatal error - please report to audacity-devel@lists.sourceforge.net\n"));
-   }
-
 public:
    // typical constructor
    WaveClip(DirManager *projDirManager, sampleFormat format, int rate);
