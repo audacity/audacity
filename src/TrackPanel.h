@@ -111,6 +111,8 @@ private:
    void DrawMuteSolo(wxDC * dc, const wxRect r, Track * t, bool down, bool solo, bool bHasSoloButton);
    void DrawVRuler(wxDC * dc, const wxRect r, Track * t);
    void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r);
+
+   // Draw the minimize button *and* the sync-lock track icon, if necessary.
    void DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down);
 
    void GetTrackControlsRect(const wxRect r, wxRect &dest) const;

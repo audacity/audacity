@@ -45,8 +45,12 @@
   main part of the screen which contains multiple tracks.
 
   It uses many other classes, but in particular it uses the
-  TrackInfo class to draw the label on the left of a track,
+  TrackInfo class to draw the controls area on the left of a track,
   and the TrackArtist class to draw the actual waveforms.
+
+  Note that in some of the older code here, e.g., GetLabelWidth(), 
+  "Label" means the TrackInfo plus the vertical ruler. 
+  Confusing relative to LabelTrack labels.
 
   The TrackPanel manages multiple tracks and their TrackInfos.
 
@@ -59,6 +63,7 @@
 \brief
   The TrackInfo is shown to the side of a track 
   It has the menus, pan and gain controls displayed in it.
+  So "Info" is somewhat a misnomer. Should possibly be "TrackControls".
  
   TrackPanel and not TrackInfo takes care of the functionality for 
   each of the buttons in that panel.
@@ -1104,7 +1109,7 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
 
    mRuler->DrawIndicator( pos, rec );
 
-   // Ensure that we don't draw through the Track Info
+   // Ensure that we don't draw through the TrackInfo or vertical ruler.
    wxRect clip = GetRect();
    int leftCutoff = clip.x + GetLabelWidth();
    int rightInset = kLeftInset + 2; // See the call to SetInset
@@ -1401,21 +1406,22 @@ bool TrackPanel::SetCursorByActivity( )
    return false;
 }
 
-/// When in the label, we can either vertical zoom or re-order tracks.
+/// When in the "label" (TrackInfo or vertical ruler), we can either vertical zoom or re-order tracks.
 /// Dont't change cursor/tip to zoom if display is not waveform (either linear of dB) or Spectrum
 void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
          wxMouseEvent &event, const wxChar ** ppTip )
 {
    if (event.m_x >= GetVRulerOffset() &&
-      t->GetKind() == Track::Wave &&
-      (((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectrumDisplay
-      ||((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectrumLogDisplay)) {
-      *ppTip = _("Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
+         (t->GetKind() == Track::Wave) &&
+         (((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectrumDisplay ||
+            ((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectrumLogDisplay)) 
+   {
+      *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
    }
    else {
-      // Set a status message if over a label
-      *ppTip = _("Drag the label vertically to change the order of the tracks.");
+      // Set a status message if over TrackInfo.
+      *ppTip = _("Drag the track vertically to change the order of the tracks.");
       SetCursor(*mArrowCursor);
    }
 }
@@ -3691,6 +3697,7 @@ void TrackPanel::OnContextMenu(wxContextMenuEvent & event)
 /// This handles when the user clicks on the "Label" area
 /// of a track, ie the part with all the buttons and the drop
 /// down menu, etc.
+// That is, TrackInfo and vertical ruler rect.
 void TrackPanel::HandleLabelClick(wxMouseEvent & event)
 {
    // AS: If not a click, ignore the mouse event.
@@ -3913,15 +3920,30 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect r, int x, int y,
 bool TrackPanel::MinimizeFunc(Track * t, wxRect r, int x, int y)
 {
    wxRect buttonRect;
-   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
+   // Vaughan: Pass false for bIsSyncLockSelected instead of t->IsSyncLockSelected() because 
+   // we want to check the whole width, so we can return true, indicating we have handled 
+   // the mouse click, and so avoid this click being passed on to other controls in the TrackInfo, 
+   // if we're showing the sync-lock icon (which doesn't handle mouse clicks).
+   mTrackInfo.GetMinimizeRect(r, buttonRect, false);
    if (!buttonRect.Contains(x, y)) 
       return false;
 
-   wxClientDC dc(this);
-   SetCapturedTrack( t, IsMinimizing );
-   mCapturedRect = r;
+   // Now we know we're over the minimize button or the sync-lock icon. Get the correct rect.
+   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
 
-   mTrackInfo.DrawMinimize(&dc, r, t, true);
+   // Set up for handling only if event is in actual button rect, not the sync-lock icon.
+   if (buttonRect.Contains(x, y)) 
+   {
+      SetCapturedTrack(t, IsMinimizing);
+      mCapturedRect = r;
+
+      wxClientDC dc(this);
+      mTrackInfo.DrawMinimize(&dc, r, t, true);
+   }
+   else
+      // In the sync-lock icon rect. Tell HandleMinimizing to no-op.
+      SetCapturedTrack(NULL);
+
    return true;
 }
 
@@ -5151,7 +5173,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    mTrackInfo.DrawTitleBar(dc, r, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, r, t, (captured && mMouseCapture==IsMinimizing));
-   mTrackInfo.DrawBordersWithin( dc, r, bIsWave );
+   //vvvvv mTrackInfo.DrawBordersWithin( dc, r, bIsWave );
 
    if (bIsWave) {
       mTrackInfo.DrawMuteSolo(dc, r, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
@@ -7241,7 +7263,7 @@ void TrackInfo::DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo )
       AColor::Line(*dc, r.x, r.y + 66, GetTitleWidth(), r.y + 66);  // bevel below mute/solo
    }
 
-   AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // minimize bar
+   //vvvvv AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // minimize button
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
@@ -7258,11 +7280,13 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
       fill=wxRect( r.x+1, r.y+17, vrul-6, 32); 
       AColor::BevelTrackInfo( *dc, true, fill );
 
+      //vvvvv 
       fill=wxRect( r.x+1, r.y+67, fill.width, r.height-87); 
       AColor::BevelTrackInfo( *dc, true, fill );
    }
    else
    {
+      //vvvvv 
       fill=wxRect( r.x+1, r.y+17, vrul-6, r.height-37); 
       AColor::BevelTrackInfo( *dc, true, fill );
    }
@@ -7405,13 +7429,16 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    }
 }
 
+// Draw the minimize button *and* the sync-lock track icon, if necessary.
 void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down)
 {
    wxRect bev;
    bool bIsSyncLockSelected = t->IsSyncLockSelected();
    GetMinimizeRect(r, bev, bIsSyncLockSelected);
 
-   if (t->IsSyncLockSelected()) 
+   // Draw the sync-lock icon if track is sync-lock selected, but don't redraw 
+   // it if the button is down. That would cause the icon to blink dark.
+   if (bIsSyncLockSelected && !down) 
    {
       wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon)); 
       dc->DrawBitmap(syncLockBitmap, 

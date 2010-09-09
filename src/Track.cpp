@@ -217,7 +217,7 @@ bool Track::IsSyncLockSelected()
 
    if (!t) {
       // Not in a sync-locked group.
-      return GetSelected();
+      return ((this->GetKind() == Track::Wave) || (this->GetKind() == Track::Label)) && GetSelected();
    }
 
    for (; t; t = git.Next()) {
