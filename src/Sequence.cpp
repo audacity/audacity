@@ -1636,7 +1636,7 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr)
       wxString str;
       DebugPrintf(&str);
       wxLogError(wxT("%s"), str.c_str());
-      wxLogError(wxT("*** Please report this error to feedback@audacityteam.org ***\n\n\Recommended course of action:\nUndo the failed operation(s), then export or save your work and quit.\n"));   
+      wxLogError(wxT("*** Please report this error to feedback@audacityteam.org ***\n\nRecommended course of action:\nUndo the failed operation(s), then export or save your work and quit.\n"));   
    }
 
    return !bError;
