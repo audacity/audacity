@@ -57,8 +57,25 @@ class WaveClip;
 WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
 
-class AUDACITY_DLL_API WaveClip: public XMLTagHandler
+class AUDACITY_DLL_API WaveClip : public XMLTagHandler
 {
+private:
+   // It is an error to copy a WaveClip without specifying the DirManager.
+   // We define these break-inducing single-arg methods so that 
+   // if some developer makes the mistake of calling a single-arg copy 
+   // constructor rather than the one below (that requires a DirManager*), 
+   // rather than it going to C++-generated default copy constructor, 
+   // it goes here and the error is made clear to that developer.
+   WaveClip(const WaveClip&)
+   {
+      wxFAIL_MSG(wxT("It is an error to copy a WaveClip without specifying the DirManager."));
+   };
+   WaveClip& operator=(const WaveClip& orig) 
+   {
+      WaveClip bogus(orig);
+      return *this;
+   }
+
 public:
    // typical constructor
    WaveClip(DirManager *projDirManager, sampleFormat format, int rate);
