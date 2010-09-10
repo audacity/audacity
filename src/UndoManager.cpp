@@ -338,15 +338,16 @@ void UndoManager::StateSaved()
    ResetODChangesFlag();
 }
 
-void UndoManager::Debug()
-{
-   for (unsigned int i = 0; i < stack.Count(); i++) {
-      TrackListIterator iter(stack[i]->tracks);
-      WaveTrack *t = (WaveTrack *) (iter.First());
-      wxPrintf(wxT("*%d* %s %f\n"), i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),
-             t ? t->GetEndTime()-t->GetStartTime() : 0);
-   }
-}
+// currently unused
+//void UndoManager::Debug()
+//{
+//   for (unsigned int i = 0; i < stack.Count(); i++) {
+//      TrackListIterator iter(stack[i]->tracks);
+//      WaveTrack *t = (WaveTrack *) (iter.First());
+//      wxPrintf(wxT("*%d* %s %f\n"), i, (i == (unsigned int)current) ? wxT("-->") : wxT("   "),
+//             t ? t->GetEndTime()-t->GetStartTime() : 0);
+//   }
+//}
 
 ///to mark as unsaved changes without changing the state/tracks.
 void UndoManager::SetODChangesFlag()

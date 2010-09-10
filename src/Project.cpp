@@ -3556,10 +3556,8 @@ void AudacityProject::PopState(TrackList * l)
    ODComputeSummaryTask* computeTask;
    Track* copyTrack;
 
-   while (t) {
-      //    printf("Popping track with %d samples\n",
-      //           ((WaveTrack *)t)->numSamples);
-      //  ((WaveTrack *)t)->Debug();
+   while (t) 
+   {
       copyTrack=t->Duplicate();
       mTracks->Add(copyTrack);
      

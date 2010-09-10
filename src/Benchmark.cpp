@@ -397,7 +397,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
              t->GetClipByIndex(0)->GetSequence()->GetNumSamples());
       goto fail;
    }
-   //t->Debug();
 
    Printf(wxT("Performing %d edits...\n"), trials);
    wxTheApp->Yield();

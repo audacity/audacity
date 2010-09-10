@@ -14,9 +14,10 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This version is currently accurate for Audacity version 1.3.13.		.
-If the advice here is inaccurate or incomplete, please
-email audacity-devel@lists.sourceforge.net.
+This version is currently accurate for Audacity version 1.3.13.
+If you find the advice here inaccurate or incomplete, please
+first discuss on the "Compling Audacity" forum at 
+http://forum.audacityteam.org/.
 See also 
 "http://audacityteam.org/wiki/index.php?title=Developing_On_Windows".
 ========================================================================
@@ -309,14 +310,12 @@ So for instance, a Unicode Debug version of Audacity should have:
         
 in the "audacity\win\unicode debug" directory.
 
-
-That's all - if this procedure doesn't work, you can ask for
-help on the Audacity development mailing list:
-audacity-devel@lists.sourceforge.net.  However, the first
-suggestion is likely to be "try it again with a clean installation
-of the wxWidgets source and the latest Audacity source from SVN",
-so if that's not what you just attempted, you might want to try
-that first... 
+If this procedure doesn't work, you can ask for help on the 
+"Compling Audacity" forum at http://forum.audacityteam.org/. 
+However, the first suggestion there is likely to be "try it again 
+with a clean installation of the wxWidgets source and the latest 
+Audacity source from SVN". So if that's not what you attempted, 
+please try that first. 
 
 
 ---------------------------

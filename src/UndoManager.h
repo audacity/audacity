@@ -95,7 +95,7 @@ class AUDACITY_DLL_API UndoManager {
    bool UnsavedChanges();
    void StateSaved();
 
-   void Debug();
+   // void Debug(); // currently unused
 
    ///to mark as unsaved changes without changing the state/tracks.
    void SetODChangesFlag();
