@@ -288,7 +288,7 @@ void EffectNyquist::Parse(wxString line)
          {
             wxString str;
             str.Printf(_("Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\nControl not created."), 
-                       tokens[3], mFileName.GetFullPath().c_str());
+                       tokens[3].c_str(), mFileName.GetFullPath().c_str());
 
             // Too disturbing to show alert before Audacity frame is up.
             //    wxMessageBox(str, wxT("Nyquist Warning"), wxOK | wxICON_EXCLAMATION);
