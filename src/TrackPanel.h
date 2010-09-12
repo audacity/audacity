@@ -338,14 +338,27 @@ class TrackPanel:public wxPanel {
    void HandleMutingSoloing(wxMouseEvent & event, bool solo);
    void HandleMinimizing(wxMouseEvent & event);
    void HandleSliders(wxMouseEvent &event, bool pan);
-   bool MuteSoloFunc(Track *t, wxRect r, int x, int f, bool solo);
-   bool MinimizeFunc(Track *t, wxRect r, int x, int f);
+
+
+   // These *Func methods are used in TrackPanel::HandleLabelClick to set up 
+   // for actual handling in methods called by TrackPanel::OnMouseEvent, and 
+   // to draw button-down states, etc.
    bool CloseFunc(Track * t, wxRect r, int x, int y);
    bool PopupFunc(Track * t, wxRect r, int x, int y);
+
+   // SyncLockFunc, unlike the other *Func methods, returns true if the click is not 
+   // set up to be handled, but click is on the sync-lock icon and we want to pass 
+   // it forward to be a track select. 
+   bool SyncLockFunc(Track * t, wxRect r, int x, int y);
+
+   bool MuteSoloFunc(Track *t, wxRect r, int x, int f, bool solo);
+   bool MinimizeFunc(Track *t, wxRect r, int x, int f);
    bool GainFunc(Track * t, wxRect r, wxMouseEvent &event,
                  int x, int y);
    bool PanFunc(Track * t, wxRect r, wxMouseEvent &event,
                 int x, int y);
+
+
    void MakeParentRedrawScrollbars();
    
    // AS: Pushing the state preserves state for Undo operations.

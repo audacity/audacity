@@ -85,7 +85,7 @@
 
 \class TrackPanelListener
 \brief A now badly named class which is used to give access to a
-subset of the TrackPanel functions from all over the place.
+subset of the TrackPanel methods from all over the place.
 
 *//**************************************************************//**
 
@@ -729,7 +729,7 @@ void TrackPanel::SetStop(bool bStopped)
 }
 
 /// Remembers the track we clicked on and why we captured it.
-/// We also use this function to clear the record 
+/// We also use this method to clear the record 
 /// of the captured track, passing NULL as the track.
 void TrackPanel::SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture )
 {
@@ -1005,7 +1005,7 @@ void TrackPanel::ScrollDuringDrag()
 
    if (mAutoScrolling) {
       // AS: To keep the selection working properly as we scroll,
-      //  we fake a mouse event (remember, this function is called
+      //  we fake a mouse event (remember, this method is called
       //  from a timer tick).
 
       // AS: For some reason, GCC won't let us pass this directly.
@@ -1141,7 +1141,7 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
    }
 }
 
-/// This function draws the cursor things, both in the
+/// This method draws the cursor things, both in the
 /// ruler as seen at the top of the screen, but also in each of the
 /// selected tracks.
 /// These are the 'vertical lines' through waves and ruler.
@@ -1437,7 +1437,7 @@ void TrackPanel::SetCursorAndTipWhenInVResizeArea( Track * label,
       // is shorter when it is between stereo tracks).
 
       // IF we are in the label THEN return.
-      // Subsequently called functions can detect that a tip and 
+      // Subsequently called methods can detect that a tip and 
       // cursor are still needed.
       if (label) 
          return;
@@ -1565,10 +1565,10 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    }
    
    // It's possible we didn't set the tip and cursor.
-   // Subsequently called functions can detect this.
+   // Subsequently called methods can detect this.
 }
 
-/// In this function we know what tool we are using,
+/// In this method we know what tool we are using,
 /// so set the cursor accordingly.
 void TrackPanel::SetCursorAndTipByTool( int tool, 
          wxMouseEvent & event, const wxChar ** /*ppTip*/ )
@@ -1688,7 +1688,7 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
 }
 
 
-/// This function handles various ways of starting and extending
+/// This method handles various ways of starting and extending
 /// selections.  These are the selections you make by clicking and
 /// dragging over a waveform.
 void TrackPanel::HandleSelect(wxMouseEvent & event)
@@ -1774,7 +1774,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
    }
 }
 
-/// This function gets called when we're handling selection
+/// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                                       Track * pTrack, wxRect r)
@@ -2680,7 +2680,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 }
 
 
-///  This function takes care of our different zoom 
+///  This method takes care of our different zoom 
 ///  possibilities.  It is possible for a user to just
 ///  "zoom in" or "zoom out," but it is also possible 
 ///  for a user to drag and select an area that he
@@ -2794,7 +2794,7 @@ void TrackPanel::DragZoom(wxMouseEvent & event, int trackLeftEdge)
 
 /// This handles normal Zoom In/Out, if you just clicked;
 /// IOW, if you were NOT dragging to zoom an area.
-/// \todo MAGIC NUMBER: We've got several in this function.
+/// \todo MAGIC NUMBER: We've got several in this method.
 void TrackPanel::DoZoomInOut(wxMouseEvent & event, int trackLeftEdge)
 {
    double center_h = PositionToTime(event.m_x, trackLeftEdge);
@@ -3733,41 +3733,46 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    if (isleft && PopupFunc(t, r, event.m_x, event.m_y))
       return;
 
-   // MM: Check minimize buttons on WaveTracks. Must be before
-   //     solo/mute buttons, sliders etc.
-   if (isleft && MinimizeFunc(t, r, event.m_x, event.m_y))
-      return;
-
-   if (isleft && t->GetKind() == Track::Wave)
+   // VJ: Check sync-lock icon. Only result of doing so is to selecxt the track.
+   bool bSyncLockIconClick = this->SyncLockFunc(t, r, event.m_x, event.m_y);
+   if (!bSyncLockIconClick) 
    {
-      // DM: Check Mute and Solo buttons on WaveTracks:
-      if (MuteSoloFunc(t, r, event.m_x, event.m_y, false) ||
-         MuteSoloFunc(t, r, event.m_x, event.m_y, true))
+      // MM: Check minimize buttons on WaveTracks. Must be before
+      //     solo/mute buttons, sliders etc.
+      if (isleft && MinimizeFunc(t, r, event.m_x, event.m_y))
          return;
 
-      if (GainFunc(t, r, event, event.m_x, event.m_y))
-         return;
+      if (isleft && t->GetKind() == Track::Wave)
+      {
+         // DM: Check Mute and Solo buttons on WaveTracks:
+         if (MuteSoloFunc(t, r, event.m_x, event.m_y, false) ||
+            MuteSoloFunc(t, r, event.m_x, event.m_y, true))
+            return;
 
-      if (PanFunc(t, r, event, event.m_x, event.m_y))
-         return;
-   }
-   #ifdef USE_MIDI
-   // DM: If it's a NoteTrack, it has special controls
-   else if (t->GetKind() == Track::Note)
-   {
-      wxRect midiRect;
-      mTrackInfo.GetTrackControlsRect(r, midiRect);
-      if (midiRect.Contains(event.m_x, event.m_y)) {
-         ((NoteTrack *) t)->LabelClick(midiRect, event.m_x, event.m_y,
-                                       event.Button(wxMOUSE_BTN_RIGHT));
-         Refresh(false);
+         if (GainFunc(t, r, event, event.m_x, event.m_y))
+            return;
+
+         if (PanFunc(t, r, event, event.m_x, event.m_y))
+            return;
+      }
+      #ifdef USE_MIDI
+      // DM: If it's a NoteTrack, it has special controls
+      else if (t->GetKind() == Track::Note)
+      {
+         wxRect midiRect;
+         mTrackInfo.GetTrackControlsRect(r, midiRect);
+         if (midiRect.Contains(event.m_x, event.m_y)) {
+            ((NoteTrack *) t)->LabelClick(midiRect, event.m_x, event.m_y,
+                                          event.Button(wxMOUSE_BTN_RIGHT));
+            Refresh(false);
+            return;
+         }
+      }
+      #endif // USE_MIDI
+
+      if (!isleft) {
          return;
       }
-   }
-   #endif // USE_MIDI
-
-   if (!isleft) {
-      return;
    }
 
    // DM: If they weren't clicking on a particular part of a track label,
@@ -3780,7 +3785,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       TrackPanel::CalculateRearrangingThresholds(event);
    }
 
-   // AS: If the shift botton is being held down, then just invert 
+   // AS: If the shift button is being held down, invert 
    //  the selection on this track.
    if (event.ShiftDown()) {
       mTracks->Select(t, !t->GetSelected());
@@ -3917,32 +3922,38 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect r, int x, int y,
    return true;
 }
 
-bool TrackPanel::MinimizeFunc(Track * t, wxRect r, int x, int y)
+bool TrackPanel::SyncLockFunc(Track * t, wxRect r, int x, int y)
 {
    wxRect buttonRect;
-   // Vaughan: Pass false for bIsSyncLockSelected instead of t->IsSyncLockSelected() because 
-   // we want to check the whole width, so we can return true, indicating we have handled 
-   // the mouse click, and so avoid this click being passed on to other controls in the TrackInfo, 
-   // if we're showing the sync-lock icon (which doesn't handle mouse clicks).
+   // Vaughan: First, call GetMinimizeRect with false for bIsSyncLockSelected instead 
+   // of t->IsSyncLockSelected() because we want to check the whole width.
    mTrackInfo.GetMinimizeRect(r, buttonRect, false);
    if (!buttonRect.Contains(x, y)) 
       return false;
 
-   // Now we know we're over the minimize button or the sync-lock icon. Get the correct rect.
+   // Now we know we're on the minimize button or the sync-lock icon. 
+   // Set the buttonRect to the actual minimize button rect.
    mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
 
-   // Set up for handling only if event is in actual button rect, not the sync-lock icon.
-   if (buttonRect.Contains(x, y)) 
-   {
-      SetCapturedTrack(t, IsMinimizing);
-      mCapturedRect = r;
-
-      wxClientDC dc(this);
-      mTrackInfo.DrawMinimize(&dc, r, t, true);
-   }
-   else
-      // In the sync-lock icon rect. Tell HandleMinimizing to no-op.
+   // Not over minimize button means over sync-lock icon.
+   bool bOnSyncLock = !buttonRect.Contains(x, y);
+   if (bOnSyncLock)
       SetCapturedTrack(NULL);
+   return bOnSyncLock;
+}
+
+bool TrackPanel::MinimizeFunc(Track * t, wxRect r, int x, int y)
+{
+   wxRect buttonRect;
+   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
+   if (!buttonRect.Contains(x, y)) 
+      return false;
+
+   SetCapturedTrack(t, IsMinimizing);
+   mCapturedRect = r;
+
+   wxClientDC dc(this);
+   mTrackInfo.DrawMinimize(&dc, r, t, true);
 
    return true;
 }
@@ -4500,7 +4511,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
 /// Event has happened on a track and it has been determined to be a label track.
 bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMouseEvent & event)
 {
-   /// \todo This function is one of a large number of functions in 
+   /// \todo This method is one of a large number of methods in 
    /// TrackPanel which suitably modified belong in other classes.
    if(event.LeftDown())      
    {
@@ -4516,7 +4527,7 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
       }
 
       //If the button was pressed, check to see if we are over
-      //a glyph (this is the second of three calls to the function).
+      //a glyph (this is the second of three calls to the method).
       //std::cout << ((LabelTrack*)pTrack)->OverGlyph(event.m_x, event.m_y) << std::endl;
       if(lTrack->OverGlyph(event.m_x, event.m_y))
       {
@@ -4775,7 +4786,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
    return currentTool;
 }
 
-/// Function that tells us if the mouse event landed on a 
+/// method that tells us if the mouse event landed on a 
 /// envelope boundary.
 bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
 {
@@ -4838,7 +4849,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
    return( distance < yTolerance );
 }
 
-/// Function that tells us if the mouse event landed on an 
+/// method that tells us if the mouse event landed on an 
 /// editable sample
 bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
 {
@@ -4886,7 +4897,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
    return( abs( yValue -  yMouse ) < yTolerance );   
 }
 
-/// Function that tells us if the mouse event landed on a 
+/// method that tells us if the mouse event landed on a 
 /// time-slider that allows us to time shift the sequence.
 bool TrackPanel::HitTestSlide(Track *track, wxRect &r, wxMouseEvent & event)
 {
@@ -4941,7 +4952,7 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 }
 
 
-/// This function overrides Refresh() of wxWindow so that the 
+/// This method overrides Refresh() of wxWindow so that the 
 /// boolean play indicator can be set to false, so that an old play indicator that is
 /// no longer there won't get  XORed (to erase it), thus redrawing it on the 
 /// TrackPanel
@@ -5309,11 +5320,11 @@ void TrackPanel::UpdateVRulerSize()
    Refresh(false);
 }
 
-/// The following function moves to the previous track
+/// The following method moves to the previous track
 /// selecting and unselecting depending if you are on the start of a
 /// block or not.
 
-/// \todo Merge related functions, TrackPanel::OnPrevTrack and 
+/// \todo Merge related methods, TrackPanel::OnPrevTrack and 
 /// TrackPanel::OnNextTrack.
 void TrackPanel::OnPrevTrack( bool shift )
 {
@@ -5414,7 +5425,7 @@ void TrackPanel::OnPrevTrack( bool shift )
    }
 }
 
-/// The following function moves to the next track,
+/// The following method moves to the next track,
 /// selecting and unselecting depending if you are on the start of a
 /// block or not.
 void TrackPanel::OnNextTrack( bool shift )
@@ -5974,7 +5985,7 @@ void TrackPanel::OnCursorMove(bool forward, bool jump, bool longjump )
    }
 }
 
-//The following functions operate controls on specified tracks,
+//The following methods operate controls on specified tracks,
 //This will pop up the track panning dialog for specified track
 void TrackPanel::OnTrackPan()
 {
@@ -6601,7 +6612,7 @@ const int nRates=7;
 ///  IN THE SAME ORDER!!
 int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 96000 };
 
-/// This function handles the selection from the Rate
+/// This method handles the selection from the Rate
 /// submenu of the track menu, except for "Other" (/see OnRateOther).
 void TrackPanel::OnRateChange(wxCommandEvent & event)
 {
@@ -6987,7 +6998,7 @@ wxRect TrackPanel::FindTrackRect(Track * target, bool label)
 
    // The check for a null linked track is necessary because there's
    // a possible race condition between the time the 2 linked tracks
-   // are added and when wxAccessible functions are called.  This is
+   // are added and when wxAccessible methods are called.  This is
    // most evident when using Jaws.
    if (target->GetLinked() && target->GetLink()) {
       r.height += target->GetLink()->GetHeight();
@@ -7263,7 +7274,7 @@ void TrackInfo::DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo )
       AColor::Line(*dc, r.x, r.y + 66, GetTitleWidth(), r.y + 66);  // bevel below mute/solo
    }
 
-   //vvvvv AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // minimize button
+   AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // minimize button
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
@@ -7275,21 +7286,20 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill); 
 
-   if( bHasMuteSolo )
-   {
-      fill=wxRect( r.x+1, r.y+17, vrul-6, 32); 
-      AColor::BevelTrackInfo( *dc, true, fill );
+   //vvvvv
+   //if( bHasMuteSolo )
+   //{
+   //   fill=wxRect( r.x+1, r.y+17, vrul-6, 32); 
+   //   AColor::BevelTrackInfo( *dc, true, fill );
 
-      //vvvvv 
-      fill=wxRect( r.x+1, r.y+67, fill.width, r.height-87); 
-      AColor::BevelTrackInfo( *dc, true, fill );
-   }
-   else
-   {
-      //vvvvv 
-      fill=wxRect( r.x+1, r.y+17, vrul-6, r.height-37); 
-      AColor::BevelTrackInfo( *dc, true, fill );
-   }
+   //   fill=wxRect( r.x+1, r.y+67, fill.width, r.height-87); 
+   //   AColor::BevelTrackInfo( *dc, true, fill );
+   //}
+   //else
+   //{
+   //   fill=wxRect( r.x+1, r.y+17, vrul-6, r.height-37); 
+   //   AColor::BevelTrackInfo( *dc, true, fill );
+   //}
 }
 
 void TrackInfo::GetTrackControlsRect(const wxRect r, wxRect & dest) const
