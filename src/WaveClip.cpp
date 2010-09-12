@@ -1213,7 +1213,7 @@ bool WaveClip::CreateFromCopy(double t0, double t1, WaveClip* other)
    delete oldSequence;
    delete mEnvelope;
    mEnvelope = new Envelope();
-   mEnvelope->CopyFrom(other->mEnvelope, t0, t1);
+   mEnvelope->CopyFrom(other->mEnvelope, (double)s0/mRate, (double)s1/mRate);
 
    MarkChanged();
 
