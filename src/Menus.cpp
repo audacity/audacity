@@ -1413,7 +1413,7 @@ wxUint32 AudacityProject::GetUpdateFlags()
       t = iter.Next();
    }
 
-   if(msClipLen > 0.0)
+   if((msClipT1 - msClipT0) > 0.0)
       flags |= ClipboardFlag;
 
    if (mUndoManager.UnsavedChanges())
@@ -3127,7 +3127,8 @@ void AudacityProject::OnCut()
       n = iter.Next();
    }
 
-   msClipLen = (mViewInfo.sel1 - mViewInfo.sel0);
+   msClipT0 = mViewInfo.sel0;
+   msClipT1 = mViewInfo.sel1;
    msClipProject = this;
 
    PushState(_("Cut to the clipboard"), _("Cut"));
@@ -3167,7 +3168,8 @@ void AudacityProject::OnSplitCut()
       n = iter.Next();
    }
 
-   msClipLen = (mViewInfo.sel1 - mViewInfo.sel0);
+   msClipT0 = mViewInfo.sel0;
+   msClipT1 = mViewInfo.sel1;
    msClipProject = this;
 
    PushState(_("Split-cut to the clipboard"), _("Split Cut"));
@@ -3212,7 +3214,6 @@ void AudacityProject::OnCopy()
       n = iter.Next();
    }
 
-   msClipLen = (mViewInfo.sel1 - mViewInfo.sel0);  // MJS: to be removed in future
    msClipT0 = mViewInfo.sel0;
    msClipT1 = mViewInfo.sel1;
    msClipProject = this;
@@ -3279,7 +3280,7 @@ void AudacityProject::OnPaste()
             {
                // Must perform sync-lock adjustment before incrementing n
                if (n->IsSyncLockSelected()) {
-                  bPastedSomething |= n->SyncLockAdjust(t1, t0+msClipLen);
+                  bPastedSomething |= n->SyncLockAdjust(t1, t0+(msClipT1 - msClipT0));
                }
                n = iter.Next();
             }
@@ -3327,7 +3328,7 @@ void AudacityProject::OnPaste()
             // To be (sort of) consistent with Clear behavior, we'll only shift
             // them if linking is on
             if (IsSyncLocked())
-               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
+               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipT1 - msClipT0, t0);
 
             bPastedSomething |= ((LabelTrack *)n)->PasteOver(t0, c);
          }
@@ -3366,7 +3367,7 @@ void AudacityProject::OnPaste()
       } // if (n->GetSelected())
       else if (n->IsSyncLockSelected())
       {
-         bPastedSomething |=  n->SyncLockAdjust(t1, t0 + msClipLen);
+         bPastedSomething |=  n->SyncLockAdjust(t1, t0 + msClipT1 - msClipT0);
       }
 
       n = iter.Next();
@@ -3389,7 +3390,7 @@ void AudacityProject::OnPaste()
             }else{
                WaveTrack *tmp;
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
-               tmp->InsertSilence(0.0, msClipLen);
+               tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
                tmp->Flush();
 
                bPastedSomething |= 
@@ -3404,11 +3405,11 @@ void AudacityProject::OnPaste()
 
             // As above, only shift labels if linking is on
             if (IsSyncLocked())
-               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipLen, t0);
+               ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipT1 - msClipT0, t0);
          }
          else if (n->IsSyncLockSelected())
          {
-            n->SyncLockAdjust(t1, t0 + msClipLen);
+            n->SyncLockAdjust(t1, t0 + msClipT1 - msClipT0);
          }
 
          n = iter.Next();
@@ -3419,8 +3420,7 @@ void AudacityProject::OnPaste()
 
    if (bPastedSomething)
    {
-      mViewInfo.sel0 = t0;
-      mViewInfo.sel1 = t0 + msClipLen;
+      mViewInfo.sel1 = t0 + msClipT1 - msClipT0;
 
       PushState(_("Pasted from the clipboard"), _("Paste"));
 
@@ -3545,8 +3545,8 @@ bool AudacityProject::HandlePasteNothingSelected()
       // So do it at the sample rate of the project
       AudacityProject *p = GetActiveProject();
       double projRate = p->GetRate();
-      double quantT0 = (double)((sampleCount)floor(msClipT0 * projRate + 0.5))/projRate;
-      double quantT1 = (double)((sampleCount)floor(msClipT1 * projRate + 0.5))/projRate;
+      double quantT0 = QUANTIZED_TIME(msClipT0, projRate);
+      double quantT1 = QUANTIZED_TIME(msClipT1, projRate);
       mViewInfo.sel0 = 0.0;   // anywhere else and this should be half a sample earlier
       mViewInfo.sel1 = quantT1 - quantT0;
 
@@ -3632,11 +3632,11 @@ void AudacityProject::OnPasteNewLabel()
    }
 }
 
-void AudacityProject::OnPasteOver()
+void AudacityProject::OnPasteOver() // not currently in use it appears
 {
-   if(msClipLen>0.0)
+   if((msClipT1 - msClipT0) > 0.0)
    {
-      mViewInfo.sel1=mViewInfo.sel0+msClipLen;
+      mViewInfo.sel1 = mViewInfo.sel0 + (msClipT1 - msClipT0); // MJS: pointless, given what we do in OnPaste?
    }
    OnPaste();
 

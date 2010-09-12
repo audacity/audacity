@@ -146,7 +146,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SetSel0(double);        //Added by STM 
    void SetSel1(double);        //Added by STM 
 
-   bool Clipboard() { return msClipLen > 0.0; }
+   bool Clipboard() { return (msClipT1 - msClipT0) > 0.0; }
 
    wxString GetName();
    DirManager *GetDirManager();
@@ -431,7 +431,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Clipboard (static because it is shared by all projects)
    static TrackList *msClipboard;
    static AudacityProject *msClipProject;
-   static double msClipLen;   // MJS: to be removed in future - too dangerous!
    static double msClipT0;
    static double msClipT1;
 

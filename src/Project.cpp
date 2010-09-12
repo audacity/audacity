@@ -158,7 +158,6 @@ scroll information.  It also has some status flags.
 #include "../images/AudacityLogoAlpha.xpm"
 
 TrackList *AudacityProject::msClipboard = new TrackList();
-double AudacityProject::msClipLen = 0.0;
 double AudacityProject::msClipT0 = 0.0;
 double AudacityProject::msClipT1 = 0.0;
 AudacityProject *AudacityProject::msClipProject = NULL;
@@ -3667,7 +3666,8 @@ void AudacityProject::DeleteAllProjectsDeleteLock()
 
 void AudacityProject::ClearClipboard()
 {
-   msClipLen = 0.0;
+   msClipT0 = 0.0;
+   msClipT1 = 0.0;
    msClipProject = NULL;
    if (msClipboard) {
       msClipboard->Clear(true);
@@ -4095,8 +4095,8 @@ void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
       }
    }
 
-   msClipLen =
-      regions.Item(regions.GetCount() - 1)->end - regions.Item(0)->start;
+   msClipT0 = regions.Item(0)->start;
+   msClipT1 = regions.Item(regions.GetCount() - 1)->end;
 
    //delete label regions
    for( unsigned int i = 0; i < regions.GetCount(); i++ )
