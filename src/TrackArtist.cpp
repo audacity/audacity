@@ -113,6 +113,7 @@ void TrackArtist::SetColours()
    theTheme.SetBrushColour( sampleBrush,     clrSample);
    theTheme.SetBrushColour( selsampleBrush,  clrSelSample);
    theTheme.SetBrushColour( dragsampleBrush, clrDragSample);
+   theTheme.SetBrushColour( blankSelectedBrush, clrBlankSelected);
 
    theTheme.SetPenColour(   blankPen,        clrBlank);
    theTheme.SetPenColour(   unselectedPen,   clrUnselected);
@@ -120,13 +121,14 @@ void TrackArtist::SetColours()
    theTheme.SetPenColour(   samplePen,       clrSample);
    theTheme.SetPenColour(   selsamplePen,    clrSelSample);
    theTheme.SetPenColour(   muteSamplePen,   clrMuteSample);
-   theTheme.SetPenColour(   odProgressDonePen,   clrProgressDone);
-   theTheme.SetPenColour(   odProgressNotYetPen,   clrProgressNotYet);
+   theTheme.SetPenColour(   odProgressDonePen, clrProgressDone);
+   theTheme.SetPenColour(   odProgressNotYetPen, clrProgressNotYet);
    theTheme.SetPenColour(   rmsPen,          clrRms);
    theTheme.SetPenColour(   muteRmsPen,      clrMuteRms);
    theTheme.SetPenColour(   shadowPen,       clrShadow);
    theTheme.SetPenColour(   clippedPen,      clrClipped);
    theTheme.SetPenColour(   muteClippedPen,  clrMuteClipped);
+   theTheme.SetPenColour(   blankSelectedPen,clrBlankSelected);
 }
 
 void TrackArtist::SetInset(int left, int top, int right, int bottom)
@@ -1086,10 +1088,8 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
                                bool dB,
                                bool muted)
 {
-   // MM: Draw background. We should optimize that a bit more.
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(blankBrush);
-   dc.DrawRectangle(r);
+   DrawBackgroundWithSelection(&dc, r, track, blankSelectedBrush, blankBrush,
+         viewInfo->sel0, viewInfo->sel1, viewInfo->h, viewInfo->zoom);
 
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext())
       DrawClipWaveform(track, it->GetData(), dc, r, viewInfo,
@@ -1424,10 +1424,8 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
                                bool autocorrelation,
                                bool logF)
 {
-   // MM: Draw background. We should optimize that a bit more.
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(blankBrush);
-   dc.DrawRectangle(r);
+   DrawBackgroundWithSelection(&dc, r, track, blankSelectedBrush, blankBrush,
+         viewInfo->sel0, viewInfo->sel1, viewInfo->h, viewInfo->zoom);
 
    if(!viewInfo->bUpdateTrackIndicator && viewInfo->bIsPlaying) {
       // BG: Draw (undecorated) waveform instead of spectrum
@@ -2675,6 +2673,73 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
       }
       // Only offset first column
       xOffset = 0;
+   }
+}
+
+void TrackArtist::DrawBackgroundWithSelection(wxDC *dc, const wxRect &r,
+      Track *track, wxBrush &selBrush, wxBrush &unselBrush,
+      double sel0, double sel1, double h, double pps)
+{
+   //MM: Draw background. We should optimize that a bit more.
+   //AWD: "+ 1.5" and "+ 2.5" throughout match code in
+   //AdornedRulerPanel::DoDrawSelection() and make selection line up with ruler.
+   //I don't know if/why this is correct.
+
+   dc->SetPen(*wxTRANSPARENT_PEN);
+   if (track->GetSelected() || track->IsSyncLockSelected())
+   {
+      // Rectangles before, within, after the selction
+      wxRect before = r;
+      wxRect within = r;
+      wxRect after = r;
+
+      before.width = int ((sel0 - h) * pps + 2.5);
+      if (before.GetRight() > r.GetRight()) {
+         before.width = r.width;
+      }
+
+      if (before.width > 0) {
+         dc->SetBrush(unselBrush);
+         dc->DrawRectangle(before);
+
+         within.x = before.GetRight();
+      }
+      within.width = r.x + int ((sel1 - h) * pps + 2.5) - within.x;
+
+      if (within.GetRight() > r.GetRight()) {
+         within.width = r.GetRight() - within.x;
+      }
+
+      if (within.width > 0) {
+         if (track->GetSelected()) {
+            dc->SetBrush(selBrush);
+            dc->DrawRectangle(within);
+         }
+         else {
+            // Per condition above, track must be sync-lock selected
+            dc->SetBrush(unselBrush);
+            dc->DrawRectangle(within);
+            DrawSyncLockTiles(dc, within);
+         }
+
+         after.x = within.GetRight();
+      }
+      else {
+         // `within` not drawn; start where it would have gone
+         after.x = within.x;
+      }
+
+      after.width = r.GetRight() - after.x;
+      if (after.width > 0) {
+         dc->SetBrush(unselBrush);
+         dc->DrawRectangle(after);
+      }
+   }
+   else
+   {
+      // Track not selected; just draw background
+      dc->SetBrush(unselBrush);
+      dc->DrawRectangle(r);
    }
 }
 

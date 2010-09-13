@@ -333,4 +333,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrSyncLockSel,          wxColour(192, 192, 192),      wxT("SyncLockSel"));
    DEFINE_COLOUR( clrTrackInfoSyncLockSel, wxColour( 64,  64,  64),      wxT("TrackInfoSyncLockSel"));
    DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
+   // This is for waveform drawing, selected outside of clips
+   DEFINE_COLOUR( clrBlankSelected, wxColour(170, 170, 192), wxT("BlankSelected"));
 
