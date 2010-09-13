@@ -153,4 +153,4 @@ void QuitAudacity();
 #endif
 
 // This macro is used widely, so declared here.
-#define QUANTIZED_TIME(time, rate) ((double)((sampleCount)floor(((time) * (rate)) + 0.5))) / (rate)
+#define QUANTIZED_TIME(time, rate) ((double)((sampleCount)floor(((double)(time) * (rate)) + 0.5))) / (rate)
