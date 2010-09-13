@@ -1656,13 +1656,13 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    const float 
 //      e=exp(1.0f), 
       f=rate/2.0f/half, 
-      lmin=log(float(minFreq)),
-      lmax=log(float(maxFreq)),
+      lmin=logf(float(minFreq)),
+      lmax=logf(float(maxFreq)),
 #ifdef EXPERIMENTAL_FIND_NOTES
-      log2=log(2.0f),
+      log2=logf(2.0f),
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      lmins=log(float(minFreq)/(mFftSkipPoints+1)),
-      lmaxs=log(float(maxFreq)/(mFftSkipPoints+1)),
+      lmins=logf(float(minFreq)/(mFftSkipPoints+1)),
+      lmaxs=logf(float(maxFreq)/(mFftSkipPoints+1)),
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
       lmins=lmin,
       lmaxs=lmax,
@@ -1681,10 +1681,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    for (int y = 0; y < mid.height; y++) {
       float n =(float(y  )/mid.height*scale2-lmin2)*12; 
       float n2=(float(y+1)/mid.height*scale2-lmin2)*12; 
-      float f =float(minFreq)/(mFftSkipPoints+1)*pow(2.0f, n /12.0f+lmin2);
-      float f2=float(minFreq)/(mFftSkipPoints+1)*pow(2.0f, n2/12.0f+lmin2);
-      n =log(f /440)/log2*12;
-      n2=log(f2/440)/log2*12;
+      float f =float(minFreq)/(mFftSkipPoints+1)*powf(2.0f, n /12.0f+lmin2);
+      float f2=float(minFreq)/(mFftSkipPoints+1)*powf(2.0f, n2/12.0f+lmin2);
+      n =logf(f /440)/log2*12;
+      n2=logf(f2/440)/log2*12;
       if (floor(n) < floor(n2))
          yGrid[y]=true;
       else
@@ -1702,9 +1702,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       f2bin = half/(rate/2.0f),
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
       bin2f = 1.0f/f2bin,
-      minDistance = pow(2.0f, 2.0f/12.0f),
-      i0=exp(lmin)/f,
-      i1=exp(scale+lmin)/f,
+      minDistance = powf(2.0f, 2.0f/12.0f),
+      i0=expf(lmin)/f,
+      i1=expf(scale+lmin)/f,
       minColor=0.0f;
    const int maxTableSize=1024;
    int *indexes=new int[maxTableSize];
@@ -1819,19 +1819,19 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             }
 
 // The f2pix helper macro converts a frequency into a pixel coordinate.
-#define f2pix(f) (log(f)-lmins)/(lmaxs-lmins)*mid.height
+#define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*mid.height
 
             // Possibly quantize the maxima frequencies and create the pixel block limits.
             for (int i=0; i < maximas; i++) {
                int index=maxima[i];
                float f = float(index)*bin2f;
                if (mFindNotesQuantize)
-               {  f = exp(int(log(f/440)/log2*12-0.5)/12.0f*log2)*440;
+               {  f = expf(int(log(f/440)/log2*12-0.5)/12.0f*log2)*440;
                   maxima[i] = f*f2bin;
                }
-               float f0 = exp((log(f/440)/log2*24-1)/24.0f*log2)*440;
+               float f0 = expf((log(f/440)/log2*24-1)/24.0f*log2)*440;
                maxima0[i] = f2pix(f0);
-               float f1 = exp((log(f/440)/log2*24+1)/24.0f*log2)*440;
+               float f1 = expf((log(f/440)/log2*24+1)/24.0f*log2)*440;
                maxima1[i] = f2pix(f1);
             }
          }
@@ -1840,17 +1840,18 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
          bool inMaximum = false;
 #endif //EXPERIMENTAL_FIND_NOTES
 
+         double yy2_base=exp(lmin)/f;
+         float yy2 = yy2_base;
+         double exp_scale_per_height = exp(scale/mid.height);
          for (int yy = 0; yy < mid.height; yy++) {
             if(!usePxCache) {
-               float h=float(yy)/mid.height; 
-               float yy2=exp(h*scale+lmin)/f;
                if (int(yy2)>=half)
                   yy2=half-1;
                if (yy2<0)
                   yy2=0;
                float bin0 = float(yy2);
-               float h1=float(yy+1)/mid.height; 
-               float yy3=exp(h1*scale+lmin)/f;
+               yy2_base *= exp_scale_per_height;
+               float yy3 = yy2_base;
                if (int(yy3)>=half)
                   yy3=half-1;
                if (yy3<0)
@@ -1896,6 +1897,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                if (value < 0.0)
                   value = float(0.0);
                clip->mSpecPxCache->values[x * mid.height + yy] = value;
+               yy2 = yy2_base;
             }
             else
                value = clip->mSpecPxCache->values[x * mid.height + yy];

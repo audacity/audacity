@@ -285,7 +285,7 @@ void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window, int l
       if(power <= 0)
          out[i] = -160.0;
       else
-         out[i] = 10.0*log10(power);
+         out[i] = 10.0*log10f(power);
    }
 }
 #endif // EXPERIMENTAL_USE_REALFFTF

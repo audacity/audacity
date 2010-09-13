@@ -568,46 +568,58 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
 }
 
-void GetColorGradient(float value,
-                      bool selected,
-                      bool grayscale,
-                      unsigned char *red,
-                      unsigned char *green, unsigned char *blue)
-{
-   float r, g, b;
+bool AColor::gradient_inited = 0;
 
-   if (grayscale) {
-      r = g = b = 0.84 - 0.84 * value;
-   } else {
-      const int gsteps = 4;
-      float gradient[gsteps + 1][3] = {
-         {float(0.75), float(0.75), float(0.75)},    // lt gray
-         {float(0.30), float(0.60), float(1.00)},    // lt blue
-         {float(0.90), float(0.10), float(0.90)},    // violet
-         {float(1.00), float(0.00), float(0.00)},    // red
-         {float(1.00), float(1.00), float(1.00)}     // white
-      };                        
+unsigned char AColor::gradient_pre[2][2][gradientSteps][3];
 
-      int left = int (value * gsteps);
-      int right = (left == gsteps ? gsteps : left + 1);
+void AColor::PreComputeGradient() {
+   {
+      if (!gradient_inited) {
+         gradient_inited = 1;
 
-      float rweight = (value * gsteps) - left;
-      float lweight = 1.0 - rweight;
+         for (int selected = 0; selected <= 1; selected++)
+            for (int grayscale = 0; grayscale <= 1; grayscale++) {
+               float r, g, b;
 
-      r = (gradient[left][0] * lweight) + (gradient[right][0] * rweight);
-      g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
-      b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
+               int i;
+               for (i=0; i<gradientSteps; i++) {
+                  float value = float(i)/gradientSteps;
+
+                  if (grayscale) {
+                     r = g = b = 0.84 - 0.84 * value;
+                  } else {
+                     const int gsteps = 4;
+                     float gradient[gsteps + 1][3] = {
+                        {float(0.75), float(0.75), float(0.75)},    // lt gray
+                        {float(0.30), float(0.60), float(1.00)},    // lt blue
+                        {float(0.90), float(0.10), float(0.90)},    // violet
+                        {float(1.00), float(0.00), float(0.00)},    // red
+                        {float(1.00), float(1.00), float(1.00)}     // white
+                     };                        
+         
+                     int left = int (value * gsteps);
+                     int right = (left == gsteps ? gsteps : left + 1);
+         
+                     float rweight = (value * gsteps) - left;
+                     float lweight = 1.0 - rweight;
+
+                     r = (gradient[left][0] * lweight) + (gradient[right][0] * rweight);
+                     g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
+                     b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
+                  }
+         
+                  if (selected) {
+                     r *= 0.77f;
+                     g *= 0.77f;
+                     b *= 0.885f;
+                  }
+                  gradient_pre[selected][grayscale][i][0] = (unsigned char) (255 * r);
+                  gradient_pre[selected][grayscale][i][1] = (unsigned char) (255 * g);
+                  gradient_pre[selected][grayscale][i][2] = (unsigned char) (255 * b);
+               }
+            }
+      }
    }
-
-   if (selected) {
-      r *= 0.77f;
-      g *= 0.77f;
-      b *= 0.885f;
-   }
-
-   *red = (unsigned char) (255 * r);
-   *green = (unsigned char) (255 * g);
-   *blue = (unsigned char) (255 * b);
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a

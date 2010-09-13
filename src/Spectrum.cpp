@@ -27,7 +27,7 @@ static inline float todB_a(const float *x){
 #else
 
 static inline float todB_a(const float *x){
-   return (*(x)==0?-400.f:log(*(x)**(x))*4.34294480f);
+   return (*(x)==0?-400.f:logf(*(x)**(x))*4.34294480f);
 }
 
 #endif
@@ -78,7 +78,7 @@ bool ComputeSpectrum(float * data, int width,
          // of the power, instead of the square root
 
          for (i = 0; i < windowSize; i++)
-            in[i] = pow(in[i], 1.0f / 3.0f);
+            in[i] = powf(in[i], 1.0f / 3.0f);
 
          // Take FFT
 #ifdef EXPERIMENTAL_USE_REALFFTF

@@ -253,7 +253,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // lets use OD only if the file is longer than 30 seconds.  Otherwise, why wake up extra threads.
       //todo: make this a user pref.
       bool useOD =fileTotalFrames>kMinimumODFileSampleSize;
-      
+      int updateCounter = 0;
+
       for (sampleCount i = 0; i < fileTotalFrames; i += maxBlockSize) {
 	  
          sampleCount blockLen = maxBlockSize;
@@ -263,10 +264,14 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          for (c = 0; c < mInfo.channels; c++)
             channels[c]->AppendAlias(mFilename, i, blockLen, c,useOD);
 
-         updateResult = mProgress->Update(i, fileTotalFrames);
-         if (updateResult != eProgressSuccess)
-            break;
+         if (++updateCounter == 50) {
+            updateResult = mProgress->Update(i, fileTotalFrames);
+            updateCounter = 0;
+            if (updateResult != eProgressSuccess)
+               break;
+         }
       }
+      updateResult = mProgress->Update(fileTotalFrames, fileTotalFrames);
       
       //now go over the wavetrack/waveclip/sequence and load all the blockfiles into a ComputeSummaryTask.  
       //Add this task to the ODManager and the Track itself.      

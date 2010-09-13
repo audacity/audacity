@@ -54,6 +54,8 @@ class AColor {
    static void TrackFocusPen(wxDC * dc, int level /* 0 - 2 */);
    static void SnapGuidePen(wxDC * dc);
 
+   static void PreComputeGradient();
+
    // Member variables
 
    static wxBrush lightBrush[2];
@@ -93,6 +95,10 @@ class AColor {
 
    static wxBrush tooltipBrush;
 
+   static bool gradient_inited;
+   static const int gradientSteps = 512;
+   static unsigned char gradient_pre[2][2][gradientSteps][3];
+
  private:
    static wxPen sparePen;
    static wxBrush spareBrush;
@@ -100,11 +106,20 @@ class AColor {
 
 };
 
-void GetColorGradient(float value,
-                      bool selected,
-                      bool grayscale,
-                      unsigned char *red,
-                      unsigned char *green, unsigned char *blue);
+inline void GetColorGradient(float value,
+                             bool selected,
+                             bool grayscale,
+                             unsigned char *red,
+                             unsigned char *green, unsigned char *blue) {
+   if (!AColor::gradient_inited)
+      AColor::PreComputeGradient();
+
+   int idx = value * (AColor::gradientSteps - 1);
+
+   *red = AColor::gradient_pre[selected][grayscale][idx][0];
+   *green = AColor::gradient_pre[selected][grayscale][idx][1];
+   *blue = AColor::gradient_pre[selected][grayscale][idx][2];   
+}
 
 #endif
 
