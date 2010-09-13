@@ -446,7 +446,7 @@ private void indirect_command(filename, oldarg0)
         argv[0] = oldarg0;
         argc = 1;
     } else {
-            int i = 1;
+        int i = 1;
         char arg[100];
         while (get_arg(argfile, arg)) i++;
         fclose(argfile);
@@ -460,6 +460,7 @@ private void indirect_command(filename, oldarg0)
             strcpy(argv[i], arg);
             i++;
         }
+        fclose(argfile);
     }
 }
 

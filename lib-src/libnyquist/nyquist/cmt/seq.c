@@ -58,7 +58,8 @@ private char *chunk_alloc(seq_type seq, int size)
     if (size & 1) size++;	/* make it even */
     if (chunk->free + size >= CHUNK_SIZE) {
         chunk_type new_chunk = chunk_create(FALSE);
-        if (!chunk) {
+        if (!new_chunk) 
+        {
             gprintf(FATAL, "Out of memory while reading seq\n");
             return NULL;
         }
