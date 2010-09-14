@@ -31,7 +31,7 @@
 #define __EXPERIMENTAL__
 
 // feature to link audio tracks to a label track
-#define EXPERIMENTAL_LINKING
+#define EXPERIMENTAL_SYNC_LOCK
 
 // experimental theming
 // Work in progress, June-2008.
