@@ -37,7 +37,7 @@ enum {
    ETBUndoID,
    ETBRedoID,
 
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    ETBSyncLockID,
 #endif
 

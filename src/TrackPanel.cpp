@@ -500,8 +500,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mCapturedTrack = NULL;
    mPopupMenuTarget = NULL;
 
-//   SetBackgroundColour( wxColour( 255,255,255 ));
-
    mTimeCount = 0;
    mTimer.parent = this;
    mTimer.Start(kTimerInterval, FALSE);
@@ -1551,7 +1549,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    }
    else
    {
-   //For OD regions, we need to override and display the percent complete for this task.
+      //For OD regions, we need to override and display the percent complete for this task.
       //first, make sure it's a wavetrack.
       if(t->GetKind() == Track::Wave)
       {
@@ -4765,6 +4763,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
    } else if( trackKind != Track::Wave) {
       currentTool = selectTool;
    // So we are in a wave track.
+   //FIX-ME: Not necessarily. Haven't checked Track::Note (#if defined(USE_MIDI)).
    // From here on the order in which we hit test determines 
    // which tool takes priority in the rare cases where it
    // could be more than one.
@@ -5184,7 +5183,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    mTrackInfo.DrawTitleBar(dc, r, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, r, t, (captured && mMouseCapture==IsMinimizing));
-   //vvvvv mTrackInfo.DrawBordersWithin( dc, r, bIsWave );
+   mTrackInfo.DrawBordersWithin( dc, r, bIsWave );
 
    if (bIsWave) {
       mTrackInfo.DrawMuteSolo(dc, r, t, (captured && mMouseCapture == IsMuting), false, HasSoloButton());
@@ -5587,10 +5586,8 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
          mViewInfo->sel1 = mViewInfo->sel0;
       }
 
-      // Make sure it's visible
+      // Make sure it's visible.
       ScrollIntoView( mViewInfo->sel1 );
-
-      // Make it happen
       Refresh( false );
    }
    // Extend selection toward the left
@@ -5616,10 +5613,8 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
          mViewInfo->sel0 = 0.0;
       }
 
-      // Make sure it's visible
+      // Make sure it's visible.
       ScrollIntoView( mViewInfo->sel0 );
-
-      // Make it happen
       Refresh( false );
    }
    // Move the cursor toward the left
@@ -5654,10 +5649,8 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
       }
       else
       {
-         // Transition to cursor mode
+         // Transition to cursor mode.
          mViewInfo->sel1 = mViewInfo->sel0;
-
-         // Make it happen
          Refresh( false );
       }
 
@@ -5702,10 +5695,8 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
          mViewInfo->sel0 = mViewInfo->sel1;
       }
 
-      // Make sure new position is in view
+      // Make sure new position is in view.
       ScrollIntoView( mViewInfo->sel0 );
-
-      // Make it happen
       Refresh( false );
    }
    // Extend selection toward the right
@@ -5732,10 +5723,8 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
          mViewInfo->sel1 = end;
       }
 
-      // Make sure new position is in view
+      // Make sure new position is in view.
       ScrollIntoView( mViewInfo->sel1 );
-
-      // Make it happen
       Refresh( false );
    }
    // Move the cursor toward the right
@@ -5771,10 +5760,8 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
       }
       else
       {
-         // Transition to cursor mode
+         // Transition to cursor mode.
          mViewInfo->sel0 = mViewInfo->sel1;
-
-         // Make it happen
          Refresh( false );
       }
 
@@ -5904,7 +5891,6 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
             }
          }
       }
-      // Make it happen
       Refresh( false );
       MakeParentModifyState();
    }
@@ -5972,15 +5958,14 @@ void TrackPanel::OnCursorMove(bool forward, bool jump, bool longjump )
       }
       else
       {
-         // Transition to cursor mode
+         // Transition to cursor mode.
          mViewInfo->sel1 = mViewInfo->sel0;
-
-         // Make it happen
          Refresh( false );
       }
 
       // Make sure it's visible
       ScrollIntoView( mViewInfo->sel0 );
+
       MakeParentModifyState();
    }
 }
@@ -7016,7 +7001,6 @@ wxRect TrackPanel::FindTrackRect(Track * target, bool label)
 
 int TrackPanel::GetVRulerWidth() const 
 {
-//return 36;
    return vrulerSize.x;
 }
 
@@ -7260,21 +7244,23 @@ void TrackInfo::SetTrackInfoFont(wxDC * dc)
    dc->SetFont(mFont);
 }
 
-void TrackInfo::DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo )
+void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect r, bool bHasMuteSolo)
 {
-   dc->SetPen(*wxBLACK_PEN);
-   // These black lines are actually within TrackInfo...
-   AColor::Line(*dc, r.x, r.y + 16, GetTitleWidth(), r.y + 16);      // title bar
-   AColor::Line(*dc, r.x + 16, r.y, r.x + 16, r.y + 16);     // close box
+   //vvvvv dc->SetPen(*wxBLACK_PEN);
+   //vvvvv dc->SetPen(wxColour(96, 96, 96)); 
+   AColor::Dark(dc, false); //vvvvv same color as border of toolbars (ToolBar::OnPaint())
+
+   AColor::Line(*dc, r.x, r.y + 16, GetTitleWidth(), r.y + 16);      // below title bar
+   AColor::Line(*dc, r.x + 16, r.y, r.x + 16, r.y + 16);             // below close box
 
    if( bHasMuteSolo && (r.height > (66+18) ))
    {
-      AColor::Line(*dc, r.x, r.y + 50, GetTitleWidth(), r.y + 50);  // bevel above mute/solo
-      AColor::Line(*dc, r.x+48 , r.y+50, r.x+48, r.y + 66);         // line between mute/solo
-      AColor::Line(*dc, r.x, r.y + 66, GetTitleWidth(), r.y + 66);  // bevel below mute/solo
+      AColor::Line(*dc, r.x, r.y + 50, GetTitleWidth(), r.y + 50);   // bevel above mute/solo
+      AColor::Line(*dc, r.x + 48 , r.y + 50, r.x + 48, r.y + 66);    // line between mute/solo
+      AColor::Line(*dc, r.x, r.y + 66, GetTitleWidth(), r.y + 66);   // bevel below mute/solo
    }
 
-   AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // minimize button
+   AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // above minimize button
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,

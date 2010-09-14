@@ -445,7 +445,7 @@ void AudacityProject::CreateMenusAndCommands()
          wxT("Ctrl+Shift+K"),
          TracksExistFlag, TracksExistFlag);
 
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    c->AddItem(wxT("SelSyncLockTracks"), _("In All S&ync-Locked Tracks"),
                FN(OnSelectSyncLockSel), wxT("Ctrl+Shift+Y"),
                TracksSelectedFlag | IsSyncLockedFlag,
@@ -717,7 +717,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->AddSeparator();
 
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
       c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0);
 
       c->AddSeparator();

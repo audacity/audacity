@@ -207,7 +207,7 @@ Track *Track::GetLink() const
 
 bool Track::IsSyncLockSelected()
 {
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    AudacityProject *p = GetActiveProject();
    if (!p || !p->IsSyncLocked())
       return false;

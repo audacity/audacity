@@ -4413,7 +4413,7 @@ bool AudacityProject::GetSnapTo()
 
 bool AudacityProject::IsSyncLocked()
 {
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    return mIsSyncLocked;
 #else
    return false;

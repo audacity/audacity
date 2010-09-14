@@ -147,7 +147,7 @@ void EditToolBar::Populate()
 
    AddSeparator();
 
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    AddButton(bmpSyncLockTracks, bmpSyncLockTracksDisabled, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
    
@@ -171,7 +171,7 @@ void EditToolBar::Populate()
    mButtons[ETBZoomFitID]->SetEnabled(false);
    mButtons[ETBPasteID]->SetEnabled(false);
    
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    mButtons[ETBSyncLockID]->PushDown();
 #endif
 
@@ -199,7 +199,7 @@ void EditToolBar::RegenerateTooltips()
    mButtons[ETBSilenceID]->SetToolTip(_("Silence"));
    mButtons[ETBUndoID]->SetToolTip(_("Undo"));
    mButtons[ETBRedoID]->SetToolTip(_("Redo"));
-   #ifdef EXPERIMENTAL_LINKING
+   #ifdef EXPERIMENTAL_SYNC_LOCK
       mButtons[ETBSyncLockID]->SetToolTip(_("Sync-Lock Tracks"));
    #endif
    mButtons[ETBZoomInID]->SetToolTip(_("Zoom In"));
@@ -239,7 +239,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
       case ETBRedoID:
          if (!busy) p->OnRedo();
          break;
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
       case ETBSyncLockID:
          if (!busy) p->OnSyncLock();
          return;//avoiding the call to SetButton()
@@ -305,7 +305,7 @@ void EditToolBar::EnableDisableButtons()
 
    mButtons[ETBPasteID]->SetEnabled(p->Clipboard());
    
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
    bool bSyncLockTracks;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
 

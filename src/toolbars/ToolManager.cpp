@@ -584,7 +584,7 @@ void ToolManager::ReadConfig()
             bar->Create( mBotDock );
          }
 
-#ifdef EXPERIMENTAL_LINKING
+#ifdef EXPERIMENTAL_SYNC_LOCK
          // Set the width
          if( width[ ndx ] >= bar->GetSize().x )
          {
