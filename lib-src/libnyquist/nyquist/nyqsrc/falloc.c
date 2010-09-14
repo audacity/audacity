@@ -241,7 +241,8 @@ void falloc_gc()
          cp = NULL;
       }
       else {
-         lp->qnext = np;
+         if (lp)
+            lp->qnext = np;
          cp = lp;
       }
    }
