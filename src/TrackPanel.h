@@ -95,7 +95,7 @@ public:
    TrackInfo(wxWindow * pParentIn);
    ~TrackInfo();
 
-   int GetTitleWidth() const;
+   int GetTrackInfoWidth() const;
 
    void UpdateSliderOffset(Track *t);
 
@@ -121,7 +121,8 @@ private:
    void GetMuteSoloRect(const wxRect r, wxRect &dest, bool solo, bool bHasSoloButton) const;
    void GetGainRect(const wxRect r, wxRect &dest) const;
    void GetPanRect(const wxRect r, wxRect &dest) const;
-   void GetMinimizeRect(const wxRect r, wxRect &dest, bool bIsSyncLockSelected) const;
+   void GetMinimizeRect(const wxRect r, wxRect &dest) const;
+   void GetSyncLockIconRect(const wxRect r, wxRect &dest) const;
 
    // These arrays are always kept the same size.
    LWSliderArray mGains;
@@ -346,10 +347,10 @@ class TrackPanel:public wxPanel {
    bool CloseFunc(Track * t, wxRect r, int x, int y);
    bool PopupFunc(Track * t, wxRect r, int x, int y);
 
-   // SyncLockFunc, unlike the other *Func methods, returns true if the click is not 
-   // set up to be handled, but click is on the sync-lock icon and we want to pass 
-   // it forward to be a track select. 
-   bool SyncLockFunc(Track * t, wxRect r, int x, int y);
+   // TrackSelFunc, unlike the other *Func methods, returns true if the click is not 
+   // set up to be handled, but click is on the sync-lock icon or the blank area to 
+   // the left of the minimize button, and we want to pass it forward to be a track select. 
+   bool TrackSelFunc(Track * t, wxRect r, int x, int y);
 
    bool MuteSoloFunc(Track *t, wxRect r, int x, int f, bool solo);
    bool MinimizeFunc(Track *t, wxRect r, int x, int f);
@@ -404,13 +405,10 @@ class TrackPanel:public wxPanel {
 
    wxRect FindTrackRect(Track * target, bool label);
 
-//   int GetTitleWidth() const { return 100; }
-   int GetTitleOffset() const { return 0; }
-
    int GetVRulerWidth() const;
+   int GetVRulerOffset() const { return mTrackInfo.GetTrackInfoWidth(); };
 
-   int GetVRulerOffset() const { return GetTitleOffset() + mTrackInfo.GetTitleWidth();}
-   int GetLabelWidth() const { return mTrackInfo.GetTitleWidth() + GetVRulerWidth();}
+   int GetLabelWidth() const { return mTrackInfo.GetTrackInfoWidth() + GetVRulerWidth(); };
 
 private:
    void DrawTracks(wxDC * dc);

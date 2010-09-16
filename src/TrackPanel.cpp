@@ -3585,7 +3585,7 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
    }
 
    wxRect buttonRect;
-   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
+   mTrackInfo.GetMinimizeRect(r, buttonRect);
 
    wxClientDC dc(this);
 
@@ -3731,9 +3731,12 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
    if (isleft && PopupFunc(t, r, event.m_x, event.m_y))
       return;
 
-   // VJ: Check sync-lock icon. Only result of doing so is to selecxt the track.
-   bool bSyncLockIconClick = this->SyncLockFunc(t, r, event.m_x, event.m_y);
-   if (!bSyncLockIconClick) 
+   // VJ: Check sync-lock icon and the blank area to the left of the minimize button. 
+   // Have to do it here, because if track is shrunk such that these areas occlude controls, 
+   // e.g., mute/solo, don't want the "Funcs" below to set up handling. 
+   // Only result of doing so is to select the track. Don't care whether isleft.
+   bool bTrackSelClick = this->TrackSelFunc(t, r, event.m_x, event.m_y);
+   if (!bTrackSelClick) 
    {
       // MM: Check minimize buttons on WaveTracks. Must be before
       //     solo/mute buttons, sliders etc.
@@ -3920,30 +3923,27 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect r, int x, int y,
    return true;
 }
 
-bool TrackPanel::SyncLockFunc(Track * t, wxRect r, int x, int y)
+bool TrackPanel::TrackSelFunc(Track * t, wxRect r, int x, int y)
 {
-   wxRect buttonRect;
-   // Vaughan: First, call GetMinimizeRect with false for bIsSyncLockSelected instead 
-   // of t->IsSyncLockSelected() because we want to check the whole width.
-   mTrackInfo.GetMinimizeRect(r, buttonRect, false);
-   if (!buttonRect.Contains(x, y)) 
-      return false;
+   // First check the blank space to left of minimize button.
+   wxRect selRect;
+   mTrackInfo.GetMinimizeRect(r, selRect); // for y and height
+   selRect.x = r.x;
+   selRect.width = 16; // (kTrackInfoBtnSize)
+   selRect.height++;
+   if (selRect.Contains(x, y))
+      return true;
 
-   // Now we know we're on the minimize button or the sync-lock icon. 
-   // Set the buttonRect to the actual minimize button rect.
-   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
-
-   // Not over minimize button means over sync-lock icon.
-   bool bOnSyncLock = !buttonRect.Contains(x, y);
-   if (bOnSyncLock)
-      SetCapturedTrack(NULL);
-   return bOnSyncLock;
+   // Try the sync-lock rect.
+   mTrackInfo.GetSyncLockIconRect(r, selRect);
+   selRect.height++;
+   return selRect.Contains(x, y);
 }
 
 bool TrackPanel::MinimizeFunc(Track * t, wxRect r, int x, int y)
 {
    wxRect buttonRect;
-   mTrackInfo.GetMinimizeRect(r, buttonRect, t->IsSyncLockSelected());
+   mTrackInfo.GetMinimizeRect(r, buttonRect);
    if (!buttonRect.Contains(x, y)) 
       return false;
 
@@ -5177,12 +5177,26 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    DrawBordersAroundTrack(t, dc, r, labelw, vrul);
    DrawShadow(t, dc, r);
 
-   r.width = mTrackInfo.GetTitleWidth();
+   r.width = mTrackInfo.GetTrackInfoWidth();
    bool captured = (t == mCapturedTrack);
    mTrackInfo.DrawCloseBox(dc, r, (captured && mMouseCapture==IsClosing));
    mTrackInfo.DrawTitleBar(dc, r, t, (captured && mMouseCapture==IsPopping));
 
    mTrackInfo.DrawMinimize(dc, r, t, (captured && mMouseCapture==IsMinimizing));
+
+   // Draw the sync-lock indicator if this track is in a sync-lock selected group.
+   if (t->IsSyncLockSelected()) 
+   {
+      wxRect syncLockIconRect;
+      mTrackInfo.GetSyncLockIconRect(r, syncLockIconRect);
+      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon)); 
+      // Icon is 12x12 and syncLockIconRect is 16x16.
+      dc->DrawBitmap(syncLockBitmap, 
+                     syncLockIconRect.x + 3, 
+                     syncLockIconRect.y + 2, 
+                     true);
+   }
+
    mTrackInfo.DrawBordersWithin( dc, r, bIsWave );
 
    if (bIsWave) {
@@ -7140,7 +7154,7 @@ TrackInfo::TrackInfo(wxWindow * pParentIn)
    int fontSize = 10;
    mFont.Create(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
 
-   int allowableWidth = GetTitleWidth() - 2; // 2 to allow for left/right borders
+   int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
    int textWidth, textHeight;
    do {
       mFont.SetPointSize(fontSize);
@@ -7163,42 +7177,36 @@ TrackInfo::~TrackInfo()
       delete mPans[i];
 }
 
-int TrackInfo::GetTitleWidth() const 
+static const int kTrackInfoWidth = 100; 
+static const int kTrackInfoBtnSize = 16; // widely used dimension, usually height
+
+int TrackInfo::GetTrackInfoWidth() const 
 {
-   return 100;
+   return kTrackInfoWidth;
 }
 
 void TrackInfo::GetCloseBoxRect(const wxRect r, wxRect & dest) const
 {
    dest.x = r.x;
    dest.y = r.y;
-   dest.width = 16;
-   dest.height = 16;
+   dest.width = kTrackInfoBtnSize; 
+   dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetTitleBarRect(const wxRect r, wxRect & dest) const
 {
-   dest.x = r.x + 16;
+   dest.x = r.x + kTrackInfoBtnSize; // to right of CloseBoxRect
    dest.y = r.y;
-   dest.width = GetTitleWidth() - r.x - 16;
-   dest.height = 16;
+   dest.width = kTrackInfoWidth - r.x - kTrackInfoBtnSize; // to right of CloseBoxRect
+   dest.height = kTrackInfoBtnSize;
 }
 
 void TrackInfo::GetMuteSoloRect(const wxRect r, wxRect & dest, bool solo, bool bHasSoloButton) const
 {
-#ifdef NOT_USED
-   dest.x = r.x + 8;
-   dest.y = r.y + 50;
-   dest.width = 36;
-   dest.height = 16;
-
-   if (solo)
-      dest.x += 36 + 8;
-#else
    dest.x = r.x ;
    dest.y = r.y + 50;
    dest.width = 48;
-   dest.height = 16;
+   dest.height = kTrackInfoBtnSize;
 
    if( !bHasSoloButton )
    {
@@ -7208,8 +7216,6 @@ void TrackInfo::GetMuteSoloRect(const wxRect r, wxRect & dest, bool solo, bool b
    {
       dest.x += 48;
    }
-#endif
-
 }
 
 void TrackInfo::GetGainRect(const wxRect r, wxRect & dest) const
@@ -7228,15 +7234,24 @@ void TrackInfo::GetPanRect(const wxRect r, wxRect & dest) const
    dest.height = 25;
 }
 
-void TrackInfo::GetMinimizeRect(const wxRect r, wxRect &dest, bool bIsSyncLockSelected) const
+void TrackInfo::GetMinimizeRect(const wxRect r, wxRect &dest) const
 {
-   dest.x = r.x + 1;
-   dest.width = 94;
-   if (bIsSyncLockSelected)
-      dest.width -= 12 + 4; // bmpSyncLockIcon is 12x12. Give it 2 pixels either side.
-   dest.y = r.y + r.height - 18;
-   dest.height = 15;
+   const int kBlankWidth = kTrackInfoBtnSize + 4;
+   dest.x = r.x + kBlankWidth;
+   dest.y = r.y + r.height - 19;
+   // Width is kTrackInfoWidth less space on left for track select and on right for sync-lock icon.
+   dest.width = kTrackInfoWidth - (2 * kBlankWidth);
+   dest.height = kTrackInfoBtnSize; 
 }
+
+void TrackInfo::GetSyncLockIconRect(const wxRect r, wxRect &dest) const
+{
+   dest.x = r.x + kTrackInfoWidth - kTrackInfoBtnSize - 4; // to right of minimize button
+   dest.y = r.y + r.height - 19;
+   dest.width = kTrackInfoBtnSize;
+   dest.height = kTrackInfoBtnSize;
+}
+
 
 /// \todo Probably should move to 'Utils.cpp'.
 void TrackInfo::SetTrackInfoFont(wxDC * dc)
@@ -7246,21 +7261,28 @@ void TrackInfo::SetTrackInfoFont(wxDC * dc)
 
 void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect r, bool bHasMuteSolo)
 {
-   //vvvvv dc->SetPen(*wxBLACK_PEN);
-   //vvvvv dc->SetPen(wxColour(96, 96, 96)); 
-   AColor::Dark(dc, false); //vvvvv same color as border of toolbars (ToolBar::OnPaint())
+   AColor::Dark(dc, false); // same color as border of toolbars (ToolBar::OnPaint())
 
-   AColor::Line(*dc, r.x, r.y + 16, GetTitleWidth(), r.y + 16);      // below title bar
-   AColor::Line(*dc, r.x + 16, r.y, r.x + 16, r.y + 16);             // below close box
+   // below close box and title bar
+   AColor::Line(*dc, r.x, r.y + kTrackInfoBtnSize, kTrackInfoWidth, r.y + kTrackInfoBtnSize); 
+
+   // between close box and title bar
+   AColor::Line(*dc, r.x + kTrackInfoBtnSize, r.y, r.x + kTrackInfoBtnSize, r.y + kTrackInfoBtnSize); 
 
    if( bHasMuteSolo && (r.height > (66+18) ))
    {
-      AColor::Line(*dc, r.x, r.y + 50, GetTitleWidth(), r.y + 50);   // bevel above mute/solo
-      AColor::Line(*dc, r.x + 48 , r.y + 50, r.x + 48, r.y + 66);    // line between mute/solo
-      AColor::Line(*dc, r.x, r.y + 66, GetTitleWidth(), r.y + 66);   // bevel below mute/solo
+      AColor::Line(*dc, r.x, r.y + 50, kTrackInfoWidth, r.y + 50);   // above mute/solo
+      AColor::Line(*dc, r.x + 48 , r.y + 50, r.x + 48, r.y + 66);    // between mute/solo
+      AColor::Line(*dc, r.x, r.y + 66, kTrackInfoWidth, r.y + 66);   // below mute/solo
    }
 
-   AColor::Line(*dc, r.x, r.y + r.height - 19, GetTitleWidth(), r.y + r.height - 19);  // above minimize button
+   // left of and above minimize button
+   wxRect minimizeRect;
+   this->GetMinimizeRect(r, minimizeRect);
+   AColor::Line(*dc, minimizeRect.x - 1, minimizeRect.y, 
+                  minimizeRect.x - 1, minimizeRect.y + minimizeRect.height);  
+   AColor::Line(*dc, minimizeRect.x, minimizeRect.y - 1, 
+                  minimizeRect.x + minimizeRect.width, minimizeRect.y - 1);  
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
@@ -7272,7 +7294,7 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
    AColor::MediumTrackInfo(dc, bSelected);
    dc->DrawRectangle(fill); 
 
-   //vvvvv
+   // Vaughan, 2010-09-16: No more bevels around controls area. Now only around buttons.
    //if( bHasMuteSolo )
    //{
    //   fill=wxRect( r.x+1, r.y+17, vrul-6, 32); 
@@ -7294,10 +7316,10 @@ void TrackInfo::GetTrackControlsRect(const wxRect r, wxRect & dest) const
    wxRect bot;
 
    GetTitleBarRect(r, top);
-   GetMinimizeRect(r, bot, false); // Pass false because we do not care about its width here. 
+   GetMinimizeRect(r, bot);
 
    dest.x = r.x;
-   dest.width = GetTitleWidth() - dest.x;
+   dest.width = kTrackInfoWidth - dest.x;
    dest.y = top.GetBottom() + 2;
    dest.height = bot.GetTop() - top.GetBottom() - 2;
 }
@@ -7341,7 +7363,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    // Draw title text
    SetTrackInfoFont(dc);
    wxString titleStr = t->GetName();
-   int allowableWidth = GetTitleWidth() - 38 - kLeftInset;
+   int allowableWidth = kTrackInfoWidth - 38 - kLeftInset;
 
    long textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
@@ -7355,7 +7377,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    // in and out of the title bar.  So clear it first.
    AColor::MediumTrackInfo(dc, t->GetSelected());
    dc->DrawRectangle(bev);
-   dc->DrawText(titleStr, r.x + 19, r.y + 2);
+   dc->DrawText(titleStr, r.x + kTrackInfoBtnSize + 3, r.y + 2);
 
    // Pop-up triangle
 #ifdef EXPERIMENTAL_THEMING
@@ -7429,19 +7451,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
 void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down)
 {
    wxRect bev;
-   bool bIsSyncLockSelected = t->IsSyncLockSelected();
-   GetMinimizeRect(r, bev, bIsSyncLockSelected);
-
-   // Draw the sync-lock icon if track is sync-lock selected, but don't redraw 
-   // it if the button is down. That would cause the icon to blink dark.
-   if (bIsSyncLockSelected && !down) 
-   {
-      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon)); 
-      dc->DrawBitmap(syncLockBitmap, 
-                     bev.GetRight() + 4, 
-                     bev.y + 2, 
-                     true);
-   }
+   GetMinimizeRect(r, bev);
 
    // Clear background to get rid of previous arrow
    AColor::MediumTrackInfo(dc, t->GetSelected());
