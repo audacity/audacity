@@ -2444,7 +2444,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          // at this point mFileName != fileName, because when opening a
          // recovered file mFileName is faked to point to the original file
          // which has been recovered, not the one in the auto-save folder.
-         GetDirManager()->ProjectFSCK(err, true); // silently correct problems
+         GetDirManager()->ProjectFSCK(err, true); // Correct problems in auto-recover mode.
          
          // PushState calls AutoSave(), so no longer need to do so here. 
          this->PushState(_("Project was recovered"), _("Recover"));

@@ -1388,7 +1388,7 @@ void DirManager::Deref()
 // by history) will be reflected in the mBlockFileHash, and that's a
 // good thing; this is one reason why we use the hash and not the most
 // recent savefile.
-int DirManager::ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect)
+int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
 {
    wxArrayString filePathArray; // *all* files in the project directory/subdirectories
    wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
@@ -1417,14 +1417,14 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect)
    //
    BlockHash missingAliasedFileAUFHash;   // (.auf) AliasBlockFiles whose aliased files are missing
    BlockHash missingAliasedFilePathHash;  // full paths of missing aliased files
-   this->FindMissingAliasedFiles(bSilentlyCorrect, missingAliasedFileAUFHash, missingAliasedFilePathHash);
+   this->FindMissingAliasedFiles(missingAliasedFileAUFHash, missingAliasedFilePathHash);
 
    // No need to check (nResult != FSCKstatus_CLOSE_REQ) as this is first check.
    if (!missingAliasedFileAUFHash.empty()) 
    {
-      // In "silently correct" mode, we always create silent blocks, so do not ask user.
+      // In auto-recover mode, we always create silent blocks, and do not ask user.
       // This makes sure the project is complete next time we open it.
-      if (bSilentlyCorrect)
+      if (bAutoRecoverMode)
          action = 2;
       else
       {
@@ -1483,12 +1483,12 @@ _("Project check detected %d missing external audio \
    // Alias summary regeneration must happen after checking missing aliased files.
    //
    BlockHash missingAUFHash;              // missing (.auf) AliasBlockFiles
-   this->FindMissingAUFs(bSilentlyCorrect, missingAUFHash); 
+   this->FindMissingAUFs(missingAUFHash); 
    if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAUFHash.empty()) 
    {
-      // In "silently correct" mode, we just recreate the alias files, so do not ask user.
+      // In auto-recover mode, we just recreate the alias files, and do not ask user.
       // This makes sure the project is complete next time we open it.
-      if (bSilentlyCorrect)
+      if (bAutoRecoverMode)
          action = 0;
       else
       {
@@ -1531,12 +1531,12 @@ _("Project check detected %d missing alias (.auf) \
    // MISSING (.AU) SimpleBlockFiles
    //
    BlockHash missingAUHash;               // missing data (.au) blockfiles
-   this->FindMissingAUs(bSilentlyCorrect, missingAUHash);
+   this->FindMissingAUs(missingAUHash);
    if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAUHash.empty())
    {
-      // In "silently correct" mode, we just always create silent blocks.
+      // In auto-recover mode, we just always create silent blocks.
       // This makes sure the project is complete next time we open it.
-      if (bSilentlyCorrect)
+      if (bAutoRecoverMode)
          action = 2;
       else
       {
@@ -1586,11 +1586,11 @@ _("Project check detected %d missing audio data \
    // MISSING ORPHAN BLOCKFILES (.AU AND .AUF)
    //
    wxArrayString orphanFilePathArray;     // orphan .au and .auf files
-   this->FindOrphanBlockFiles(bSilentlyCorrect, filePathArray, orphanFilePathArray);
+   this->FindOrphanBlockFiles(filePathArray, orphanFilePathArray);
 
-   // In "silently correct" mode, leave orphan blockfiles alone.
+   // In auto-recover mode, leave orphan blockfiles alone.
    // They will be deleted when project is saved the first time.
-   if ((nResult != FSCKstatus_CLOSE_REQ) && !bSilentlyCorrect && !orphanFilePathArray.IsEmpty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !bAutoRecoverMode && !orphanFilePathArray.IsEmpty())
    {
       wxString msgA =
 _("Project check found %d orphan blockfile(s). These files are \
@@ -1635,21 +1635,26 @@ _("Project check found %d orphan blockfile(s). These files are \
 
    // Summarize and flush the log.
    if (bForceError ||
-         (!bSilentlyCorrect && 
-            (!missingAliasedFileAUFHash.empty() ||
-               !missingAUFHash.empty() ||
-               !missingAUHash.empty() || 
-               !orphanFilePathArray.IsEmpty())))
+         !missingAliasedFileAUFHash.empty() ||
+         !missingAUFHash.empty() ||
+         !missingAUHash.empty() || 
+         !orphanFilePathArray.IsEmpty())
    {
-      wxLogWarning(_("Project check found inconsistencies inspecting the loaded project data."));
+      wxLogWarning(_("Project check found file inconsistencies inspecting the loaded project data."));
       wxLog::FlushActive(); // Flush is modal and will clear the log (both desired).
+
+      // In auto-recover mode, we didn't do any ShowMultiDialog calls above, so put up an alert.
+      if (bAutoRecoverMode)
+         ::wxMessageBox(
+            _("Project check found file inconsistencies during automatic recovery.\n\nSelect 'Show Log...' in the Help menu to see details."), 
+            _("Warning: Problems in Automatic Recovery"), 
+            wxOK  | wxICON_EXCLAMATION);
    }
 
    return nResult;
 }
 
 void DirManager::FindMissingAliasedFiles(
-      const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
       BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
       BlockHash& missingAliasedFilePathHash)    // output: full paths of missing aliased files
 {
@@ -1669,24 +1674,23 @@ void DirManager::FindMissingAliasedFiles(
             missingAliasedFileAUFHash[key] = b;
             if (missingAliasedFilePathHash.find(aliasedFileFullPath) == 
                   missingAliasedFilePathHash.end()) // Add it only once.
-               missingAliasedFilePathHash[aliasedFileFullPath] = NULL; // Not really using the blocks here. 
+               // Not actually using the block here, just the path, 
+               // so set the block to NULL to create the entry.
+               missingAliasedFilePathHash[aliasedFileFullPath] = NULL; 
          }
       }
       iter++;
    }
-   if (!bSilentlyCorrect) 
+
+   iter = missingAliasedFilePathHash.begin();
+   while (iter != missingAliasedFilePathHash.end()) 
    {
-      iter = missingAliasedFilePathHash.begin();
-      while (iter != missingAliasedFilePathHash.end()) 
-      {
-         wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first.c_str());
-         iter++;
-      }
+      wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first.c_str());
+      iter++;
    }
 }
 
 void DirManager::FindMissingAUFs(
-      const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
       BlockHash& missingAUFHash)                // output: missing (.auf) AliasBlockFiles 
 {
    BlockHash::iterator iter = mBlockFileHash.begin();
@@ -1704,9 +1708,8 @@ void DirManager::FindMissingAUFs(
          if (!fileName.FileExists()) 
          {
             missingAUFHash[key] = b;
-            if (!bSilentlyCorrect)
-               wxLogWarning(_("Missing alias (.auf) blockfile: '%s'"), 
-                              fileName.GetFullPath().c_str());
+            wxLogWarning(_("Missing alias (.auf) blockfile: '%s'"), 
+                           fileName.GetFullPath().c_str());
          }
       }
       iter++;
@@ -1714,7 +1717,6 @@ void DirManager::FindMissingAUFs(
 }
 
 void DirManager::FindMissingAUs(
-      const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
       BlockHash& missingAUHash)                 // missing data (.au) blockfiles
 {
    BlockHash::iterator iter = mBlockFileHash.begin();
@@ -1730,17 +1732,16 @@ void DirManager::FindMissingAUs(
          if (!fileName.FileExists())
          {
             missingAUHash[key] = b;
-            if (!bSilentlyCorrect)
-               wxLogWarning(_("Missing data blockfile: '%s'"), 
-                              fileName.GetFullPath().c_str());
+            wxLogWarning(_("Missing data blockfile: '%s'"), 
+                           fileName.GetFullPath().c_str());
          }
       }
       iter++;
    }
 }
 
-void DirManager::FindOrphanBlockFiles(          // Find .au and .auf files that are not in the project.
-      const bool bSilentlyCorrect,              // input: same as for ProjectFSCK
+// Find .au and .auf files that are not in the project.
+void DirManager::FindOrphanBlockFiles( 
       const wxArrayString& filePathArray,       // input: all files in project directory
       wxArrayString& orphanFilePathArray)       // output: orphan files
 {
@@ -1757,10 +1758,10 @@ void DirManager::FindOrphanBlockFiles(          // Find .au and .auf files that 
          orphanFilePathArray.Add(fullname.GetFullPath());
       }
    }
-   if (!bSilentlyCorrect) 
-      for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++) 
-         wxLogWarning(_("Orphan blockfile: '%s'"), orphanFilePathArray[i].c_str());
+   for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++) 
+      wxLogWarning(_("Orphan blockfile: '%s'"), orphanFilePathArray[i].c_str());
 }
+
 
 void DirManager::RemoveOrphanBlockfiles()
 {
@@ -1776,7 +1777,6 @@ void DirManager::RemoveOrphanBlockfiles()
 
    wxArrayString orphanFilePathArray;
    this->FindOrphanBlockFiles(
-            true, 
             filePathArray,          // input: all files in project directory tree
             orphanFilePathArray);   // output: orphan files
    

@@ -109,30 +109,24 @@ class DirManager: public XMLTagHandler {
    static void CleanTempDir();
 
    // Check the project for errors and possibly prompt user
-   //
-   // bForceError: Always show log error dialog even if no errors are found
-   //             Important when you know that there are already errors in
-   //             the log
-   //
-   // bSilentlyCorrect: Do not show an error dialog (except if bForceError is
-   //             true) and silently correct problems the "safest" way.
-   //
-   int ProjectFSCK(const bool bForceError, const bool bSilentlyCorrect);
+   // bForceError: Always show log error alert even if no errors are found here. 
+   //    Important when you know that there are already errors in the log.
+   // bAutoRecoverMode: Do not show any option dialogs for how to deal with errors found here. 
+   //    Too complicated during auto-recover. Just correct problems the "safest" way.
+   int ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode);
    
    void FindMissingAliasedFiles(
-         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
          BlockHash& missingAliasedFilePathHash);   // output: full paths of missing aliased files
    void FindMissingAUFs(
-         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles 
    void FindMissingAUs(
-         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
          BlockHash& missingAUHash);                // missing data (.au) blockfiles
-   void FindOrphanBlockFiles(                      // Find .au and .auf files that are not in the project.
-         const bool bSilentlyCorrect,              // input: true => do not log warnings on files
+   // Find .au and .auf files that are not in the project.
+   void FindOrphanBlockFiles( 
          const wxArrayString& filePathArray,       // input: all files in project directory
          wxArrayString& orphanFilePathArray);      // output: orphan files
+
 
    // Remove all orphaned blockfiles without user interaction. This is
    // generally safe, because orphaned blockfiles are not referenced by the
