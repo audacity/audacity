@@ -154,23 +154,21 @@ void LabelTrack::SetOffset(double dOffset)
 bool LabelTrack::Clear(double b, double e)
 {
    for (size_t i=0;i<mLabels.GetCount();i++){
-      // label after deletion region -- this test uses > so that when we're called from Paste() we
-      // clear any label that was copied.
-      if (mLabels[i]->t > e){
+      LabelStruct::TimeRelations relation =
+                        mLabels[i]->RegionRelation(b, e, this);
+      if (relation == LabelStruct::BEFORE_LABEL) {
          mLabels[i]->t  = mLabels[i]->t  - (e-b);
          mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
-      }else if (mLabels[i]->t >= b && mLabels[i]->t1 <= e){//deletion region encloses label
+      } else if (relation == LabelStruct::SURROUNDS_LABEL) {
          DeleteLabel( i );
          i--;
-      }else if (mLabels[i]->t >= b && mLabels[i]->t1 > e){//deletion region covers start
+      } else if (relation == LabelStruct::ENDS_IN_LABEL) {
          mLabels[i]->t  = b;
          mLabels[i]->t1 = mLabels[i]->t1 - (e - mLabels[i]->t);
-      }else if (mLabels[i]->t < b && mLabels[i]->t1 > b && mLabels[i]->t1 <= e){//deletion regions covers end
+      } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
          mLabels[i]->t1 = b;
-      }else if (mLabels[i]->t < b && mLabels[i]->t1 > e){//label encloses deletion region
+      } else if (relation == LabelStruct::WITHIN_LABEL) {
          mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
-      }else if (mLabels[i]->t1 <= b){
-         //nothing
       }
    }
 
@@ -181,14 +179,16 @@ bool LabelTrack::Clear(double b, double e)
 bool LabelTrack::SplitDelete(double b, double e)
 {
    for (size_t i=0;i<mLabels.GetCount();i++) {
-      if (mLabels[i]->t >= b && mLabels[i]->t1 <= e){//deletion region encloses label
+      LabelStruct::TimeRelations relation =
+                        mLabels[i]->RegionRelation(b, e, this);
+      if (relation == LabelStruct::SURROUNDS_LABEL) {
          DeleteLabel(i);
          i--;
-      }else if (mLabels[i]->t < b && mLabels[i]->t1 > e){//label encloses deletion region
+      } else if (relation == LabelStruct::WITHIN_LABEL) {
          mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
-      }else if (mLabels[i]->t <= e && mLabels[i]->t1 > e){//deletion region covers label start
+      } else if (relation == LabelStruct::ENDS_IN_LABEL) {
          mLabels[i]->t  = e;
-      }else if (mLabels[i]->t < b && mLabels[i]->t1 >= b){//deletion regions covers label end
+      } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
          mLabels[i]->t1 = b;
       }
    }
@@ -197,16 +197,15 @@ bool LabelTrack::SplitDelete(double b, double e)
 }
 void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
 {
-   for (unsigned int i=0;i<mLabels.GetCount();i++){
-      // label is after the insert point
-      if (mLabels[i]->t >= pt) {
+   for (unsigned int i=0;i<mLabels.GetCount();i++) {
+      LabelStruct::TimeRelations relation =
+                        mLabels[i]->RegionRelation(pt, pt, this);
+
+      if (relation == LabelStruct::BEFORE_LABEL) {
          mLabels[i]->t = mLabels[i]->t + length;
          mLabels[i]->t1 = mLabels[i]->t1 + length;
-      // label is before the insert point
-      }else if (mLabels[i]->t1 <= pt) {
-         //nothing
-      // insert point is inside the label
-      }else{
+      }
+      else if (relation == LabelStruct::WITHIN_LABEL) {
          mLabels[i]->t1 = mLabels[i]->t1 + length;
       }
    }
@@ -215,7 +214,9 @@ void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
 void LabelTrack::ChangeLabelsOnReverse(double b, double e)
 {
    for (size_t i=0; i<mLabels.GetCount(); i++) {
-      if (mLabels[i]->t >= b && mLabels[i]->t1 <= e) {//deletion region encloses label
+      if (mLabels[i]->RegionRelation(b, e, this) ==
+                                    LabelStruct::SURROUNDS_LABEL)
+      {
          double aux     = b + (e - mLabels[i]->t1);
          mLabels[i]->t1 = e - (mLabels[i]->t - b);
          mLabels[i]->t  = aux;
@@ -714,57 +715,9 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    if (mFontHeight == -1)
       calculateFontHeight(dc);
 
-   double right = h + r.width / pps;
-   double dsel0 = sel0;
-   if (dsel0 < h)
-      dsel0 = h;
-   if (dsel0 > right)
-      dsel0 = right;
-   double dsel1 = sel1;
-   if (dsel1 < h)
-      dsel1 = h;
-   if (dsel1 > right)
-      dsel1 = right;
-
-   wxRect before = r;
-   before.width = int ((dsel0 - h) * pps);
-   dc.SetBrush(AColor::labelUnselectedBrush);
-   dc.SetPen(AColor::labelUnselectedPen);
-   dc.DrawRectangle(before);
-
-   wxRect selr = r;
-   selr.x += before.width;
-   selr.width = int ((dsel1 - dsel0) * pps);
-   
-   // If selection is sync-lock selected use sync-lock selected colors.
-   if (IsSyncLockSelected() && !GetSelected()) {
-      dc.SetBrush(AColor::labelSyncLockSelBrush);
-      dc.SetPen(AColor::labelSyncLockSelPen);
-   }
-   else {
-      dc.SetBrush(AColor::labelSelectedBrush);
-      dc.SetPen(AColor::labelSelectedPen);
-   }
-
-   dc.DrawRectangle(selr);
-
-   // If selection is sync-lock selected, draw in linked graphics.
-   if (IsSyncLockSelected() && !GetSelected() && selr.width > 0) {
-      TrackArtist::DrawSyncLockTiles(&dc, selr);
-   }
-
-   wxRect after = r;
-   after.x += (before.width + selr.width);
-   after.width -= (before.width + selr.width);
-   if (after.x < r.x) 
-   {
-      after.width -= (r.x - after.x);
-      after.x = r.x;
-   }
-
-   dc.SetBrush(AColor::labelUnselectedBrush);
-   dc.SetPen(AColor::labelUnselectedPen);
-   dc.DrawRectangle(after);
+   TrackArtist::DrawBackgroundWithSelection(&dc, r, this,
+         AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
+         sel0, sel1, h, pps);
 
    int i;
 
@@ -1280,6 +1233,41 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
       t1 = fNewTime;
    }
    updated = true;
+}
+
+LabelStruct::TimeRelations LabelStruct::RegionRelation(
+      double reg_t0, double reg_t1, LabelTrack *parent)
+{
+    wxASSERT(reg_t0 <= reg_t1);
+
+    // AWD: Desired behavior for edge cases: point labels bordered by the
+    // selection are included within it. Region labels are included in the
+    // selection to the extent that the selection covers them; specifically,
+    // they're not included at all if the selection borders them, and they're
+    // fully included if the selection covers them fully, even if it just
+    // borders their endpoints. This is just one of many possible schemes.
+
+    // The first test catches bordered point-labels and selected-through
+    // region-labels; move it to third and selection edges become inclusive WRT
+    // point-labels.
+    if (reg_t0 <= t && reg_t1 >= t1)
+        return SURROUNDS_LABEL;
+    else if (reg_t1 <= t)
+        return BEFORE_LABEL;
+    else if (reg_t0 >= t1)
+        return AFTER_LABEL;
+
+    // At this point, all point labels should have returned.
+
+    else if (reg_t0 > t && reg_t0 < t1 && reg_t1 > t && reg_t1 < t1)
+        return WITHIN_LABEL;
+    
+    // Knowing that none of the other relations match simplifies remaining
+    // tests
+    else if (reg_t0 > t && reg_t0 < t1)
+        return BEGINS_IN_LABEL;
+    else
+        return ENDS_IN_LABEL;
 }
 
 /// If the index is for a real label, adjust its left or right boundary.
@@ -2260,10 +2248,33 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest)
    int len = mLabels.Count();
 
    for (int i = 0; i < len; i++) {
-      if (t0 <= mLabels[i]->t && mLabels[i]->t <= t1) {
+      LabelStruct::TimeRelations relation =
+                        mLabels[i]->RegionRelation(t0, t1, this);
+      if (relation == LabelStruct::SURROUNDS_LABEL) {
          LabelStruct *l = new LabelStruct();
          l->t = mLabels[i]->t - t0;
          l->t1 = mLabels[i]->t1 - t0;
+         l->title = mLabels[i]->title;
+         ((LabelTrack *) (*dest))->mLabels.Add(l);
+      }
+      else if (relation == LabelStruct::WITHIN_LABEL) {
+         LabelStruct *l = new LabelStruct();
+         l->t = 0;
+         l->t1 = t1 - t0;
+         l->title = mLabels[i]->title;
+         ((LabelTrack *) (*dest))->mLabels.Add(l);
+      }
+      else if (relation == LabelStruct::BEGINS_IN_LABEL) {
+         LabelStruct *l = new LabelStruct();
+         l->t = 0;
+         l->t1 = mLabels[i]->t1 - t0;
+         l->title = mLabels[i]->title;
+         ((LabelTrack *) (*dest))->mLabels.Add(l);
+      }
+      else if (relation == LabelStruct::ENDS_IN_LABEL) {
+         LabelStruct *l = new LabelStruct();
+         l->t = mLabels[i]->t - t0;
+         l->t1 = t1 - t0;
          l->title = mLabels[i]->title;
          ((LabelTrack *) (*dest))->mLabels.Add(l);
       }
@@ -2324,8 +2335,9 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
 
    for (unsigned int i = 0; i < mLabels.GetCount(); i++)
    {
-      if (mLabels[i]->t >= t0 && mLabels[i]->t <= t1 &&
-            mLabels[i]->t1 >= t0 && mLabels[i]->t1 <= t1)
+      LabelStruct::TimeRelations relation =
+                        mLabels[i]->RegionRelation(t0, t1, this);
+      if (relation == LabelStruct::SURROUNDS_LABEL)
       {
          // Label is completely inside the selection; duplicate it in each
          // repeat interval
@@ -2344,8 +2356,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
             mLabels.Insert(l, pos);
          }
       }
-      else if (mLabels[i]->t < t0 &&
-            mLabels[i]->t1 >= t0 && mLabels[i]->t1 <= t1)
+      else if (relation == LabelStruct::BEGINS_IN_LABEL)
       {
          // Label ends inside the selection; ShiftLabelsOnInsert() hasn't touched
          // it, and we need to extend it through to the last repeat interval
@@ -2363,9 +2374,11 @@ bool LabelTrack::Silence(double t0, double t1)
    int len = mLabels.Count();
 
    for (int i = 0; i < len; i++) {
-      // If the label "surrounds" the selection, split it around the selection
-      if (mLabels[i]->t < t0 && t1 < mLabels[i]->t1)
+      LabelStruct::TimeRelations relation =
+                        mLabels[i]->RegionRelation(t0, t1, this);
+      if (relation == LabelStruct::WITHIN_LABEL)
       {
+         // Split label around the selection
          LabelStruct *l = new LabelStruct();
          l->t = t1;
          l->t1 = mLabels[i]->t1;
@@ -2377,20 +2390,17 @@ bool LabelTrack::Silence(double t0, double t1)
          ++i;
          mLabels.Insert(l, i);
       }
-
-      // If label begins in the selection, move the beginning to selection end
-      if (t0 <= mLabels[i]->t && mLabels[i]->t <= t1)
+      else if (relation == LabelStruct::ENDS_IN_LABEL)
       {
+         // Beginning of label to selection end
          mLabels[i]->t = t1;
       }
-      // If label ends in the selection, move the end to selection beginning
-      if (t0 <= mLabels[i]->t1 && mLabels[i]->t1 <= t1)
+      else if (relation == LabelStruct::BEGINS_IN_LABEL)
       {
+         // End of label to selection beginning
          mLabels[i]->t1 = t0;
       }
-
-      // Delete labels that were totally selected
-      if (mLabels[i]->t1 < mLabels[i]->t)
+      else if (relation == LabelStruct::SURROUNDS_LABEL)
       {
          DeleteLabel( i );
          len--;

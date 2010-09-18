@@ -51,6 +51,24 @@ public:
    void AdjustEdge( int iEdge, double fNewTime);
    void MoveLabel( int iEdge, double fNewTime);
    
+   /// Relationships between selection region and labels
+   enum TimeRelations
+   {
+       BEFORE_LABEL,
+       AFTER_LABEL,
+       SURROUNDS_LABEL,
+       WITHIN_LABEL,
+       BEGINS_IN_LABEL,
+       ENDS_IN_LABEL
+   };
+
+   /// Returns relationship between a region described and this label; if
+   /// parent is set, it will consider point labels at the very beginning
+   /// and end of parent to be within a region that borders them (this makes
+   /// it possible to delete capture all labels with a Select All).
+   TimeRelations RegionRelation(double reg_t0, double reg_t1,
+                                LabelTrack *parent = NULL);
+   
 public:
    double t;  /// Time for left hand of label.
    double t1; /// Time for right hand of label.
