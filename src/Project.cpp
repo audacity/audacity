@@ -2895,6 +2895,7 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    while (t) {
       if ((t->GetKind() == Track::Wave) && mWantSaveCompressed)
       {
+         //vvv This should probably be a method, WaveTrack::WriteCompressedTrackXML().
          xmlFile.StartTag(wxT("import"));
          xmlFile.WriteAttr(wxT("filename"), mStrOtherNamesArray[ndx]); // Assumes mTracks order hasn't changed!
 

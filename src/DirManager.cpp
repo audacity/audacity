@@ -1474,6 +1474,8 @@ _("Project check detected %d missing external audio \
             }
             iter++;
          }
+         if ((action == 2) && bAutoRecoverMode)
+            wxLogWarning(_("   Project check replaced missing aliased file(s) with silence."));
       }
    }
 
@@ -1524,6 +1526,8 @@ _("Project check detected %d missing alias (.auf) \
             }
             iter++;
          }
+         if ((action == 0) && bAutoRecoverMode)
+            wxLogWarning(_("   Project check regenerated missing alias summary file(s)."));
       }
    }
 
@@ -1579,6 +1583,8 @@ _("Project check detected %d missing audio data \
                b->SilenceLog();
             iter++;
          }
+         if ((action == 2) && bAutoRecoverMode)
+            wxLogWarning(_("   Project check replaced missing audio data blockfile(s) with silence."));
       }
    }
 
@@ -1588,23 +1594,31 @@ _("Project check detected %d missing audio data \
    wxArrayString orphanFilePathArray;     // orphan .au and .auf files
    this->FindOrphanBlockFiles(filePathArray, orphanFilePathArray);
 
-   // In auto-recover mode, leave orphan blockfiles alone.
-   // They will be deleted when project is saved the first time.
-   if ((nResult != FSCKstatus_CLOSE_REQ) && !bAutoRecoverMode && !orphanFilePathArray.IsEmpty())
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !orphanFilePathArray.IsEmpty())
    {
-      wxString msgA =
+      // In auto-recover mode, leave orphan blockfiles alone.
+      // They will be deleted when project is saved the first time.
+      if (bAutoRecoverMode)
+      {
+         wxLogWarning(_("   Project check ignored orphan blockfile(s). They will be deleted when project is saved."));
+         action = 1;
+      }
+      else
+      {
+         wxString msgA =
 _("Project check found %d orphan blockfile(s). These files are \
 \nunused and probably left over from a crash or some other bug. \
 \n\nThey should be deleted to avoid disk contention.");
       wxString msg;
-      msg.Printf(msgA, (int)orphanFilePathArray.GetCount());
+         msg.Printf(msgA, (int)orphanFilePathArray.GetCount());
 
-      const wxChar *buttons[] = {_("Close project immediately with no further changes"),
-                                 _("Continue without deleting; ignore the extra files this session"),
-                                 _("Delete orphan files immediately"),
-                                 NULL};
-      wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-      action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);
+         const wxChar *buttons[] = {_("Close project immediately with no further changes"),
+                                    _("Continue without deleting; ignore the extra files this session"),
+                                    _("Delete orphan files immediately"),
+                                    NULL};
+         wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
+         action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);
+      }
 
       if (action == 0)
          nResult = FSCKstatus_CLOSE_REQ;
