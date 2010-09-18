@@ -6,6 +6,7 @@
 #include "stdlib.h"
 #include "audioreader.h"
 #include "allegro.h"
+#include "scorealign.h"
 #include "scorealign-glue.h"
 #include "audiomixerreader.h"
 
@@ -26,7 +27,7 @@ Audio_mixer_reader::Audio_mixer_reader(void *mixer_,
     index = 0;
     channels = chans;
     sample_rate = srate;
-    total_frames = end_time * srate + 0.5 /* for rounding */;
+    total_frames = (long) (end_time * srate + 0.5 /* for rounding */);
 }
 
 

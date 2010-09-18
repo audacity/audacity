@@ -78,7 +78,7 @@ void String_parse::get_remainder(std::string &field)
     field.clear();
     skip_space();
     int len = str->length() - pos;
-    if ((*str)[len - 1] == '\n') { // if str ends in newline, 
+    if ((len > 0) && ((*str)[len - 1] == '\n')) { // if str ends in newline, 
         len--; // reduce length to ignore newline
     }
     field.insert(0, *str, pos, len);

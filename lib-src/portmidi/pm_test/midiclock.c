@@ -2,10 +2,11 @@
 
 #include "portmidi.h"
 #include "porttime.h"
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-#include "assert.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <ctype.h>
 
 #ifndef false
 #define false 0
@@ -23,7 +24,7 @@ typedef int boolean;
 
 #define OUTPUT_BUFFER_SIZE 0
 #define DRIVER_INFO NULL
-#define TIME_PROC ((long (*)(void *)) Pt_Time)
+#define TIME_PROC ((int32_t (*)(void *)) Pt_Time)
 #define TIME_INFO NULL
 #define LATENCY 0
 #define TIME_START Pt_Start(1, 0, 0) /* timer started w/millisecond accuracy */
@@ -63,7 +64,7 @@ float tempo = 60.0F;
 void timer_poll(PtTimestamp timestamp, void *userData)
 {
     static int callback_owns_portmidi = false;
-    static long clock_start_time = 0;
+    static PmTimestamp clock_start_time = 0;
     static double next_clock_time = 0;
     /* SMPTE time */
     static int frames = 0;
@@ -103,7 +104,7 @@ void timer_poll(PtTimestamp timestamp, void *userData)
         }
     }
     if (time_code_running) {
-        int data;
+        int data = 0; // initialization avoids compiler warning
         if ((timestamp - smpte_start_time) < next_smpte_time) 
             return;
         switch (mtc_count) {
@@ -212,9 +213,9 @@ private void doascii(char c)
         int input_tempo = get_number("Enter new tempo (bpm): ");
         if (input_tempo >= 1 && input_tempo <= 300) {
             printf("Changing tempo to %d\n", input_tempo);
-            tempo = input_tempo;
+            tempo = (float) input_tempo;
         } else {
-            printf("Tempo range is 1 to 300, current tempo is %d bpm\n", 
+            printf("Tempo range is 1 to 300, current tempo is %g bpm\n", 
                    tempo);
         }
     } else {

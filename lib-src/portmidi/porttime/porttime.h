@@ -7,10 +7,30 @@
 
 /* Should there be a way to choose the source of time here? */
 
+#ifdef WIN32
+#ifndef INT32_DEFINED
+// rather than having users install a special .h file for windows, 
+// just put the required definitions inline here. portmidi.h uses
+// these too, so the definitions are (unfortunately) duplicated there
+typedef int int32_t;
+typedef unsigned int uint32_t;
+#define INT32_DEFINED
+#endif
+#else
+#include <stdint.h> // needed for int32_t
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifndef PMEXPORT
+#ifdef _WINDLL
+#define PMEXPORT __declspec(dllexport)
+#else
+#define PMEXPORT 
+#endif
+#endif
 
 typedef enum {
     ptNoError = 0,         /* success */
@@ -21,7 +41,7 @@ typedef enum {
 } PtError;
 
 
-typedef long PtTimestamp;
+typedef int32_t PtTimestamp;
 
 typedef void (PtCallback)( PtTimestamp timestamp, void *userData );
 
@@ -38,7 +58,7 @@ typedef void (PtCallback)( PtTimestamp timestamp, void *userData );
     return value:
     Upon success, returns ptNoError. See PtError for other values.
 */
-PtError Pt_Start(int resolution, PtCallback *callback, void *userData);
+PMEXPORT PtError Pt_Start(int resolution, PtCallback *callback, void *userData);
 
 /*
     Pt_Stop() stops the timer.
@@ -46,17 +66,17 @@ PtError Pt_Start(int resolution, PtCallback *callback, void *userData);
     return value:
     Upon success, returns ptNoError. See PtError for other values.
 */
-PtError Pt_Stop();
+PMEXPORT PtError Pt_Stop();
 
 /*
     Pt_Started() returns true iff the timer is running.
 */
-int Pt_Started();
+PMEXPORT int Pt_Started();
 
 /* 
     Pt_Time() returns the current time in ms.
 */
-PtTimestamp Pt_Time();
+PMEXPORT PtTimestamp Pt_Time();
 
 /*
     Pt_Sleep() pauses, allowing other threads to run.
@@ -65,7 +85,7 @@ PtTimestamp Pt_Time();
     of the pause may be rounded to the nearest or next clock tick
     as determined by resolution in Pt_Start().
 */
-void Pt_Sleep(long duration);
+PMEXPORT void Pt_Sleep(int32_t duration);
 
 #ifdef __cplusplus
 }

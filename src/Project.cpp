@@ -4250,6 +4250,7 @@ void AudacityProject::AutoSave()
 {
    // To minimize the possibility of race conditions, we first write to a
    // file with the extension ".tmp", then rename the file to .autosave
+   SonifyBeginAutoSave();
    wxString projName;
 
    if (mFileName.IsEmpty())
@@ -4305,6 +4306,7 @@ void AudacityProject::AutoSave()
    
    mAutoSaveFileName += fn + wxT(".autosave");
    mLastAutoSaveTime = wxGetLocalTime();
+   SonifyEndAutoSave();
 }
 
 void AudacityProject::DeleteCurrentAutoSaveFile()

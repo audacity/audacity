@@ -37,7 +37,6 @@
 #define GET_DESCRIPTOR_PORT(info) (((int)(info)) & 0xff)
 
 #define BYTE unsigned char
-#define UINT unsigned long
 
 extern pm_fns_node pm_linuxalsa_in_dictionary;
 extern pm_fns_node pm_linuxalsa_out_dictionary;
@@ -383,12 +382,12 @@ static PmError alsa_abort(PmInternal *midi)
 
 #ifdef GARBAGE
 This is old code here temporarily for reference
-static PmError alsa_write(PmInternal *midi, PmEvent *buffer, long length)
+static PmError alsa_write(PmInternal *midi, PmEvent *buffer, int32_t length)
 {
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
     int i, bytes;
     unsigned char byte;
-    long msg;
+    PmMessage msg;
 
     desc->error = 0;
     for (; length > 0; length--, buffer++) {
@@ -421,7 +420,7 @@ static PmError alsa_write(PmInternal *midi, PmEvent *buffer, long length)
     }
     if (desc->error < 0) return pmHostError;
 
-    VERBOSE printf("snd_seq_drain_output: 0x%x\n", seq);
+    VERBOSE printf("snd_seq_drain_output: 0x%x\n", (unsigned int) seq);
     desc->error = snd_seq_drain_output(seq);
     if (desc->error < 0) return pmHostError;
 
@@ -446,7 +445,7 @@ static PmError alsa_write_flush(PmInternal *midi, PmTimestamp timestamp)
 static PmError alsa_write_short(PmInternal *midi, PmEvent *event)
 {
     int bytes = midi_message_length(event->message);
-    long msg = event->message;
+    PmMessage msg = event->message;
     int i;
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
     for (i = 0; i < bytes; i++) {

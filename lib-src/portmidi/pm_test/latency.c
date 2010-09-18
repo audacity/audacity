@@ -93,9 +93,9 @@ PtTimestamp previous_callback_time = 0;
 
 int period;            /* milliseconds per callback */
 
-long histogram[HIST_LEN];
-long max_latency = 0;  /* worst latency observed */
-long out_of_range = 0; /* how many points outside of HIST_LEN? */
+int histogram[HIST_LEN];
+int max_latency = 0;  /* worst latency observed */
+int out_of_range = 0; /* how many points outside of HIST_LEN? */
 
 int test_in, test_out; /* test MIDI in and/or out? */
 int output_period;     /* output MIDI every __ iterations if test_out true */
@@ -199,7 +199,7 @@ int main()
                   i,
                   NULL, 
                   INPUT_BUFFER_SIZE, 
-                  (long (*)(void *)) Pt_Time, 
+                  (PmTimestamp (*)(void *)) Pt_Time, 
                   NULL);
             /* turn on filtering; otherwise, input might overflow in the 
                5-second period before timer callback starts reading midi */
@@ -212,7 +212,7 @@ int main()
                   i,
                   NULL,
                   OUTPUT_BUFFER_SIZE,
-                  (long (*)(void *)) Pt_Time,
+                  (PmTimestamp (*)(void *)) Pt_Time,
                   NULL, 
                   0); /* no latency scheduling */
 
@@ -252,11 +252,11 @@ int main()
     /* avoid printing beyond last non-zero histogram entry */
     len = min(HIST_LEN, max_latency + 1);
     for (i = 0; i < len; i++) {
-        printf("%2d      %10ld\n", i, histogram[i]);
+        printf("%2d      %10d\n", i, histogram[i]);
     }
-    printf("Number of points greater than %dms: %ld\n", 
+    printf("Number of points greater than %dms: %d\n", 
            HIST_LEN - 1, out_of_range);
-    printf("Maximum latency: %ld milliseconds\n", max_latency);
+    printf("Maximum latency: %d milliseconds\n", max_latency);
     printf("\nNote that due to rounding, actual latency can be 1ms higher\n");
     printf("than the numbers reported here.\n");
     printf("Type return to exit...");

@@ -3,6 +3,10 @@
 readbinaryplist.c -- Roger B. Dannenberg, Jun 2008
 Based on ReadBinaryPList.m by Jens Ayton, 2007
 
+Note that this code is intended to read preference files and has an upper
+bound on file size (currently 100MB) and assumes in some places that 32 bit
+offsets are sufficient.
+
 Here are his comments:
 
 Reader for binary property list files (version 00).
@@ -74,13 +78,25 @@ memory requested or calls longjmp, so callers don't have to check.
 #include <stdio.h>
 #include <sys/stat.h>
 #include "readbinaryplist.h"
-#include <Carbon/Carbon.h>
-#define BPLIST_LOG_VERBOSE 1
+#include "Folders.h"
+
 #define NO 0
 #define YES 1
 #define BOOL int
 
 #define MAXPATHLEN 256
+
+/* there are 2 levels of error logging/printing:
+ *   BPLIST_LOG and BPLIST_LOG_VERBOSE
+ * either or both can be set to non-zero to turn on
+ * If BPLIST_LOG_VERBOSE is true, then BPLIST_LOG 
+ * is also true.
+ * 
+ * In the code, logging is done by calling either
+ * bplist_log() or bplist_log_verbose(), which take
+ * parameters like printf but might be a no-op.
+ */
+ 
 /* #define BPLIST_LOG_VERBOSE 1 */
 
 #if BPLIST_LOG_VERBOSE
@@ -245,7 +261,7 @@ void value_set_uid(value_ptr v, uint64_t uid)
     v->tag = kTAG_UID; v->uinteger = uid;
 }
 
-// value->data points to a pldata that points to the actual bytes
+// v->data points to a pldata that points to the actual bytes
 // the bytes are copied, so caller must free byte source (*data)
 void value_set_data(value_ptr v, const uint8_t *data, size_t len) {
     v->tag = kTAG_DATA;
@@ -324,18 +340,26 @@ value_ptr bplist_read_file(char *filename)
     value_ptr value;
     int rslt = stat(filename, &stbuf);
     if (rslt) {
-        perror("in stat: ");
+        #if BPLIST_LOG
+            perror("in stat");
+        #endif
         bplist_log("Could not stat %s, error %d\n", filename, rslt);
         return NULL;
     }
-    pldata.len = stbuf.st_size;
+    // if file is >100MB, assume it is not a preferences file and give up
+    if (stbuf.st_size > 100000000) {
+        bplist_log("Large file %s encountered (%llu bytes) -- not read\n",
+                   filename, stbuf.st_size);
+        return NULL;
+    }
+    pldata.len = (size_t) stbuf.st_size;
     // note: this is supposed to be malloc, not allocate. It is separate
     // from the graph structure, large, and easy to free right after
     // parsing.
     pldata.data = (uint8_t *) malloc(pldata.len);
     if (!pldata.data) {
-        bplist_log("Could not allocate %d bytes for %s\n",
-                   (long) pldata.len, filename);
+        bplist_log("Could not allocate %lu bytes for %s\n",
+                   (unsigned long) pldata.len, filename);
         return NULL;
     }
     file = fopen(filename, "rb");
@@ -664,7 +688,8 @@ static value_ptr extract_real(bplist_info_ptr bplist, uint64_t offset)
     }
         
     if (size == sizeof (float)) {
-        uint32_t i = read_sized_int(bplist, offset + 1, size); 
+        // cast is ok because we know size is 4 bytes
+        uint32_t i = (uint32_t) read_sized_int(bplist, offset + 1, size); 
         // Note that this handles byte swapping.
         value_set_real(value, *(float *)&i);
         return value;
@@ -755,7 +780,8 @@ static value_ptr extract_data(bplist_info_ptr bplist, uint64_t offset)
         return NULL;
         
     value = value_create();
-    value_set_data(value, bplist->data_bytes + offset, size);
+    // cast is ok because we only allow files up to 100MB:
+    value_set_data(value, bplist->data_bytes + (size_t) offset, (size_t) size);
     return value;
 }
 
@@ -772,7 +798,9 @@ static value_ptr extract_ascii_string(bplist_info_ptr bplist, uint64_t offset)
         return NULL;
 
     value = value_create();
-    value_set_ascii_string(value, bplist->data_bytes + offset, size);
+    // cast is ok because we only allow 100MB files
+    value_set_ascii_string(value, bplist->data_bytes + (size_t) offset, 
+                           (size_t) size);
     return value;
 }
 
@@ -789,7 +817,9 @@ static value_ptr extract_unicode_string(bplist_info_ptr bplist, uint64_t offset)
         return NULL;
         
     value = value_create();
-    value_set_unicode_string(value, bplist->data_bytes + offset, size);
+    // cast is ok because we only allow 100MB files
+    value_set_unicode_string(value, bplist->data_bytes + (size_t) offset, 
+                             (size_t) size);
     return value;
 }
 
@@ -814,15 +844,20 @@ static value_ptr extract_uid(bplist_info_ptr bplist, uint64_t offset)
         return NULL;
     }
         
-    assert(NO); // original code suggests using a string for a key
+    // assert(NO); // original code suggests using a string for a key
     // but our dictionaries all use big ints for keys, so I don't know
     // what to do here
+    
+    // In practice, I believe this code is never executed by PortMidi.
+    // I changed it to do something and not raise compiler warnings, but
+    // not sure what the code should do.
 
     value = value_create();
     value_set_uid(value, uid);
     // return [NSDictionary dictionaryWithObject:
     //         [NSNumber numberWithUnsignedLongLong:value] 
     //         forKey:"CF$UID"];
+    return value;
 }
 
 
@@ -861,11 +896,12 @@ static value_ptr extract_array(bplist_info_ptr bplist, uint64_t offset)
     assert(value);
 
     if (count == 0) {
-        value_set_array(value, array, count);
+        // count must be size_t or smaller because max file size is 100MB
+        value_set_array(value, array, (size_t) count);
         return value;
     }
         
-    array = allocate(sizeof(value_ptr) * count);
+    array = allocate(sizeof(value_ptr) * (size_t) count);
         
     for (i = 0; i != count; ++i) {
         bplist_log_verbose("[%u]\n", i);
@@ -879,8 +915,8 @@ static value_ptr extract_array(bplist_info_ptr bplist, uint64_t offset)
             break;
         }
     }
-    if (ok) {
-        value_set_array(value, array, count);
+    if (ok) { // count is smaller than size_t max because of 100MB file limit
+        value_set_array(value, array, (size_t) count);
     }
 
     return value;

@@ -1300,6 +1300,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\effects\ScoreAlignDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\effects\Silence.cpp"
 				>
 			</File>

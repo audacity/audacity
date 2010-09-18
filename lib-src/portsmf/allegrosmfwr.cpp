@@ -512,9 +512,8 @@ void Alg_smf_write::write_tempo_change(int i)
 void Alg_smf_write::write_time_signature(int i)
 {
     Alg_time_sigs &ts = seq->time_sig;
+    write_delta(ts[i].beat);
     // write the time signature
-    long divs = ROUND(ts[i].beat * division);
-    write_varinum(divs - previous_divs);
     out_file->put('\xFF');
     out_file->put('\x58');  // time signature
     out_file->put('\x04');     // length of message

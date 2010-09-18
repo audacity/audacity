@@ -15,6 +15,9 @@
  * 
  */
 
+// while optimizing, this function is called to report progress
+typedef void (*Report_fn_ptr)(void *cookie, int iteration, double best);
+
 class Hillclimb {
 protected:
     double *parameters; // parameters to optimize
@@ -24,12 +27,17 @@ protected:
     double *max_param; // maximum parameter values
     int n; // number of parameters
 public:
+    Hillclimb() {
+        parameters = step_size = min_param = max_param = NULL;
+    }
+    void setup(int n_);
+    ~Hillclimb();
     void set_parameters(double *parameters_, double *step_size_, 
                         double *min_, double *max_, int n_);
     // retrieve parameters after optimization:
     double *get_parameters() { return parameters; }
     virtual double evaluate() = 0;
-    double optimize();
+    double optimize(Report_fn_ptr report, void *cookie);
 };
 
 

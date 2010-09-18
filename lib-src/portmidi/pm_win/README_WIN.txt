@@ -2,6 +2,17 @@ File: PortMidi Win32 Readme
 Author: Belinda Thom, June 16 2002
 Revised by: Roger Dannenberg, June 2002, May 2004, June 2007, 
             Umpei Kurokawa, June 2007
+            Roger Dannenberg Sep 2009
+
+Contents:
+        Using Portmidi
+        To Install Portmidi
+        To Compile Portmidi
+        About Cmake
+        Using other versions of Visual C++
+        To Create Your Own Portmidi Client Application
+        
+
 
 =============================================================================
 USING PORTMIDI:
@@ -26,7 +37,7 @@ is both optimized and lacking the debugging printout code of the Debug
 version.
 
 Read the portmidi.h file for PortMidi API details on using the PortMidi API.
-See <...>\pm_dll_test\test.c or <...>\multithread\test.c for usage examples.
+See <...>\pm_test\test.c and other files in pm_test for usage examples.
 
 =============================================================================
 TO INSTALL PORTMIDI:
@@ -45,8 +56,7 @@ TO COMPILE PORTMIDI:
     portmidi-VC9.sln for Visual C++ version 9 users).
 	
 5)  the following projects exist within this workspace:
-    - portmidi (the PortMidi library)
-    - porttime (a small portable library implementing timer facilities)
+    - portmidi-static, portmidi-dynamic (versions of the PortMidi library)
     - test (simple midi I/O testing)
     - midithread (an example illustrating low-latency MIDI processing
         using a dedicated low-latency thread)
@@ -57,43 +67,82 @@ TO COMPILE PORTMIDI:
     - mm  (allows monitoring of midi messages)
     - pmjni (a dll to provide an interface to PortMidi for Java)
 
-6)  open the pmjni project properties
-    - visit Configuration Properties, C/C++, General
-    - find Additional Include Directories property and open the editor (...)
-    - at the end of the list, you will find two paths beginning with E:\
-    - these are absolute paths to the Java SDK; you'll need to install the
-      Java SDK (from Sun) and update these directories in order to build
-      this project.
+6)  set the Java SDK path using one of two methods:
+    Method 1: open portmidi/CMakeLists.txt with CMake, configure, and 
+        generate -- this should find the Java SDK path and update your
+            solution and project files
+    Method 2: (does not require CMake):
+        - open the pmjni project properties
+        - visit Configuration Properties, C/C++, General
+        - find Additional Include Directories property and open the editor (...)
+        - at the end of the list, you will find two paths mentioning Java
+        - these are absolute paths to the Java SDK; you'll need to install the
+          Java SDK (from Sun) and update these directories in order to build
+          this project.
 
-6)  verify that all project settings are for Win32 Debug release:
-    - type Alt-F7
-    - highlight all three projects in left part of Project Settings window; 
-    - "Settings For" should say "Win32 Debug"
+6)  use Build->Batch Build ... to build everything in the project
 	
-    -In Visual C++ 2005 Express Edition, there is a drop down menu in 
-     the top toolbar to select the Win32 and Debug option.
-
-7)  use Build->Batch Build ... to build everything in the project
-	
-    -In Visual C++ 2005 Express Edition, use Build->Build Solution
-	
-8)  The settings for these projects were distributed in the zip file, so
+7)  The settings for these projects were distributed in the zip file, so
     compile should just work.
 
-9)  run test project; use the menu that shows up from the command prompt to
+8)  run test project; use the menu that shows up from the command prompt to
     test that portMidi works on your system. tests include: 
 		- verify midi output works
 		- verify midi input works
 
-10) run other projects if you wish: sysex, latency, midithread, mm, 
+9) run other projects if you wish: sysex, latency, midithread, mm, 
     qtest, midithru
 
-11) use pm_java/make.bat (run in a cmd window from pm_java) to compile
-    the java code.
+10) compile the java code:
+    - cd pm_java
+    - make.bat
+        + If there is a problem running javac, note that you must have
+          a path to javac.exe on your PATH environment variable. Edit
+          your path (in Vista) using Control Panel > User Accounts > 
+          User Accounts > Change my environment variables; then select
+          Path and click Edit... After changing, you will have to 
+          restart the command window to see any effect.
+        + In Vista, you may get a warning about running 
+          UpdateRsrcJavaExe.exe. This is called by make.bat, and you
+          should allow the program to run.
+        + Note that make.bat does not build pmjni\jportmidi_JPortMidiApi.h
+          because it is included in the distribution. You can rebuild it 
+          from sources as follows:
+              cd pm_java
+              javah jportmidi.JPortMidiApi
+              move jportmidi_JPortMidiApi pmjni\jportmidi_JPortMidiApi.h
+       
+11) you might wish to move pm_java/win32 to another location; run the
+    pmdefaults.exe program from the win32 directory to use PmDefaults.
+    This program let's you select default input/output midi devices
+    for PortMidi applications.
 
-12) run pm_java/pmdefaults.bat (run in a cmd window from pm_java) to
-    run the PmDefaults program. This lets you select the default input
-    and output devices for PortMidi.
+============================================================================
+ABOUT CMAKE
+============================================================================
+
+cmake was used to generate .vcproj files. cmake embeds absolute paths
+into .vcproj files, which makes the files non-portable to other systems.
+To work around this problem, pm_win\clean_up_vcproj.bat can be used to 
+replace absolute paths with relative paths. To use it, you will need to
+install gawk and set your search path to allow you to execute gawk, e.g. 
+my path includes "C:\Program Files\GnuWin32\bin;". You will also need to
+edit pm_win\clean_up_vcproj.awk, replacing C:\Users\rbd\portmidi with
+whatever absolute path cmake uses in your vcproj files.
+
+This is not a general or robust fix, but it seems to work with the 
+vcproj files currently created by CMake.
+
+============================================================================
+USING OTHER VERSIONS OF VISUAL C++
+============================================================================
+
+You can use cmake to make Visual Studio solution and project files.
+If you do not want to use the provided Version 9 project files, install
+cmake, run it, set the "Where is the source code" box to your portmidi
+directory, and click on Configure. A menu will allow you to choose the
+Visual Studio project version you want. Click Configure once again, then
+Generate, and you should be all set to open portmidi.sln.
 
 ============================================================================
 TO CREATE YOUR OWN PORTMIDI CLIENT APPLICATION:

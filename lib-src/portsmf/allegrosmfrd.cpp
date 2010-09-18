@@ -377,7 +377,7 @@ void Alg_midifile_reader::Mf_smpte(int hours, int mins, int secs,
 
 void Alg_midifile_reader::Mf_timesig(int i1, int i2, int i3, int i4)
 {
-    seq->set_time_sig(get_currtime() / divisions, i1, 1 << i2);
+    seq->set_time_sig(double(get_currtime()) / divisions, i1, 1 << i2);
 }
 
 

@@ -26,6 +26,11 @@
 #include "Cursors32/ZoomOutCursor.xpm"
 #include "Cursors32/LabelCursorLeft.xpm"
 #include "Cursors32/LabelCursorRight.xpm"
+#ifdef USE_MIDI
+#include "Cursors32/StretchCursor.xpm"
+#include "Cursors32/StretchLeftCursor.xpm"
+#include "Cursors32/StretchRightCursor.xpm"
+#endif
 
 #else
 
@@ -38,4 +43,10 @@
 #include "Cursors16/ZoomOutCursor.xpm"
 #include "Cursors16/LabelCursorLeft.xpm"
 #include "Cursors16/LabelCursorRight.xpm"
+#ifdef USE_MIDI
+#include "Cursors16/StretchCursor.xpm"
+#include "Cursors16/StretchLeftCursor.xpm"
+#include "Cursors16/StretchRightCursor.xpm"
+#endif
+
 #endif

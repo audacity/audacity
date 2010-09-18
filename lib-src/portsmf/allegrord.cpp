@@ -27,6 +27,8 @@ public:
     Alg_seq_ptr seq;
     double tsnum;
     double tsden;
+    double offset;
+    bool offset_found;
 
     Alg_reader(istream *a_file, Alg_seq_ptr new_seq);
     void readline();
@@ -73,15 +75,20 @@ Alg_reader::Alg_reader(istream *a_file, Alg_seq_ptr new_seq)
     tsnum = 4; // default time signature
     tsden = 4;
     seq = new_seq;
+    offset = 0.0;
+    offset_found = false;
 }
 
 
-Alg_error alg_read(istream &file, Alg_seq_ptr new_seq)
+Alg_error alg_read(istream &file, Alg_seq_ptr new_seq, double *offset_ptr)
     // read a sequence from allegro file
 {
     assert(new_seq);
     Alg_reader alg_reader(&file, new_seq);
     bool err = alg_reader.parse();
+    if (!err && offset_ptr) {
+        *offset_ptr = alg_reader.offset;
+    }
     return (err ? alg_error_syntax : alg_no_error);
 }
 
@@ -169,27 +176,38 @@ bool Alg_reader::parse()
                 // parse_int ignores the first character of the argument
                 track_num = parse_int(field);
                 seq->add_track(track_num);
-            }
-            // maybe we have a sequence or track name
-            line_parser.get_remainder(field);
-            // if there is a non-space character after #track n then
-            // use it as sequence or track name. Note that because we
-            // skip over spaces, a sequence or track name cannot begin
-            // with leading blanks. Another decision is that the name
-            // must be at time zero
-            if (field.length() > 0) {
-                // insert the field as sequence name or track name
-                Alg_update_ptr update = new Alg_update;
-                update->chan = -1;
-                update->time = 0;
-                update->set_identifier(-1);
-                // sequence name is whatever is on track 0
-                // other tracks have track names
-                const char *attr =
-                        (track_num == 0 ? "seqnames" : "tracknames");
-                update->parameter.set_attr(symbol_table.insert_string(attr));
-                update->parameter.s = heapify(field.c_str());
-                seq->add_event(update, track_num);
+
+                // maybe we have a sequence or track name
+                line_parser.get_remainder(field);
+                // if there is a non-space character after #track n then
+                // use it as sequence or track name. Note that because we
+                // skip over spaces, a sequence or track name cannot begin
+                // with leading blanks. Another decision is that the name
+                // must be at time zero
+                if (field.length() > 0) {
+                    // insert the field as sequence name or track name
+                    Alg_update_ptr update = new Alg_update;
+                    update->chan = -1;
+                    update->time = 0;
+                    update->set_identifier(-1);
+                    // sequence name is whatever is on track 0
+                    // other tracks have track names
+                    const char *attr =
+                            (track_num == 0 ? "seqnames" : "tracknames");
+                    update->parameter.set_attr(
+                            symbol_table.insert_string(attr));
+                    update->parameter.s = heapify(field.c_str());
+                    seq->add_event(update, track_num);
+                }
+            } else if (streql(field.c_str(), "#offset")) {
+                if (offset_found) {
+                    parse_error(field, 0, "#offset specified twice");
+                }
+                offset_found = true;
+                line_parser.get_nonspace_quoted(field); // number
+                field.insert(0, " "); // need char at beginning because
+                // parse_real ignores first character in the argument
+                offset = parse_real(field);
             }
         } else {
             // we must have a track to insert into
@@ -456,6 +474,7 @@ int Alg_reader::find_real_in(string &field, int n)
     // scans from offset n to the end of a real constant
     bool decimal = false;
     int len = field.length();
+    if (n < len && field[n] == '-') n += 1; // parse one minus sign
     for (int i = n; i < len; i++) {
         char c = field[i];
         if (!isdigit(c)) {
@@ -466,7 +485,7 @@ int Alg_reader::find_real_in(string &field, int n)
             }
         }
     }
-    return field.length();
+    return len;
 }
 
 

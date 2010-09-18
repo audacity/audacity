@@ -39,7 +39,7 @@ WX_DEFINE_USER_EXPORTED_ARRAY(WaveTrack*, WaveTrackArray, class AUDACITY_DLL_API
 
 #if defined(USE_MIDI)
 class NoteTrack;
-WX_DEFINE_ARRAY(NoteTrack*, NoteTrackArray);
+WX_DEFINE_USER_EXPORTED_ARRAY(NoteTrack*, NoteTrackArray, class AUDACITY_DLL_API);
 #endif
 
 class TrackList;

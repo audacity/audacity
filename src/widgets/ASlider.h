@@ -39,6 +39,18 @@ class Ruler;
 #define DB_SLIDER 2      // -36...36 dB
 #define PAN_SLIDER 3     // -1.0...1.0
 #define SPEED_SLIDER 4  // 0.01 ..3.0 
+#ifdef USE_MIDI
+#define VEL_SLIDER 5    // -50..50
+#endif
+
+#define DB_MIN -36.0f
+#define DB_MAX 36.0f
+#define FRAC_MIN 0.0f
+#define FRAC_MAX 1.0f
+#define SPEED_MIN 0.01f
+#define SPEED_MAX 3.0f
+#define VEL_MIN -50.0f
+#define VEL_MAX 50.0f
 
 // Customizable slider only: If stepValue is STEP_CONTINUOUS,
 // every value on the slider between minValue and maxValue
@@ -111,7 +123,7 @@ class LWSlider
 
    float Get(bool convert = true);
    void Set(float value);
-
+   void SetStyle(int style);
    void Increase(float steps);
    void Decrease(float steps);
 
@@ -245,6 +257,9 @@ class ASlider :public wxPanel
 
    float Get( bool convert = true );
    void Set(float value);
+#ifdef USE_MIDI
+   void SetStyle(int style);
+#endif
 
    void Increase(float steps);
    void Decrease(float steps);

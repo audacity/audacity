@@ -79,7 +79,7 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
             }
          }
       }
-      if (track->GetKind() == Track::Wave) {
+      else if (track->GetKind() == Track::Wave) {
          WaveTrack *waveTrack = (WaveTrack *)track;
          WaveClipList::compatibility_iterator it;
          for (it=waveTrack->GetClipIterator(); it; it=it->GetNext()) {
@@ -98,7 +98,12 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
             CondListAdd(clip->GetEndTime(), waveTrack, ttc);
          }
       }
-
+#ifdef USE_MIDI
+      else if (track->GetKind() == Track::Note) {
+         CondListAdd(track->GetStartTime(), track, ttc);
+         CondListAdd(track->GetEndTime(), track, ttc);
+      }
+#endif
       track = iter.Next();
    }
 

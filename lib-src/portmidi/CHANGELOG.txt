@@ -1,5 +1,29 @@
 /* CHANGELOG FOR PORTMIDI
  *
+ * 19Oct09 Roger Dannenberg
+ * - Changes dynamic library names from portmidi_d to portmidi to
+ *   be backward-compatible with programs expecting a library by
+ *   the old name.
+ *
+ * 04Oct09 Roger Dannenberg
+ * - Converted to using Cmake.
+ * - Renamed static and dynamic library files to portmidi_s and portmidi_d
+ * - Eliminated VC9 and VC8 files (went back to simply test.vcproj, etc.,
+ *   use Cmake to switch from the provided VC9 files to VC8 or other)
+ * - Many small changes to prepare for 64-bit architectures (but only 
+ *   tested on 32-bit machines)
+ *
+ * 16Jun09 Roger Dannenberg
+ * - Started using Microsoft Visual C++ Version 9 (Express). Converted
+ * all *-VC9.vcproj file to *.vcproj and renamed old project files to 
+ * *-VC8.proj. Previously, output from VC9 went to special VC9 files,
+ * that breaks any program or script looking for output in release or
+ * debug files, so now both compiler version output to the same folders.
+ * Now, debug version uses static linking with debug DLL runtime, and 
+ * release version uses static linking with statically linked runtime.
+ * Converted to Inno Setup and worked on scripts to make things build
+ * properly, especially pmdefaults.
+ *
  * 02Jan09 Roger Dannenberg
  * - Created Java interface and wrote PmDefaults application to set
  *   values for Pm_GetDefaultInputDeviceID() and 

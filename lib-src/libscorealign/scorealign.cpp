@@ -24,7 +24,7 @@
 #define	LOW_CUTOFF  40
 #define HIGH_CUTOFF 2000
 
-// Note: There are "verbose" flags passed as parameters that 
+// Note: There is a "verbose" flag in Score_align objects that
 // enable some printing. The SA_VERBOSE compiler flag causes a
 // lot more debugging output, so it could be called VERY_VERBOSE
 // as opposed to the quieter verbose flags.
@@ -36,10 +36,10 @@
 // for presmoothing, how near does a point have to be to be "on the line"
 #define NEAR 1.5
 
-// path is file1_frames by file2_frames array, so first index
-// (rows) is in [0 .. file1_frames]. Array is sequence of rows.
-// columns (j) ranges from [0 .. file2_frames]
-#define PATH(i,j) (path[(i) * file2_frames + (j)])
+// path is file0_frames by file1_frames array, so first index
+// (rows) is in [0 .. file0_frames]. Array is sequence of rows.
+// columns (j) ranges from [0 .. file1_frames]
+#define PATH(i,j) (path[(i) * file1_frames + (j)])
 
 /*===========================================================================*/
 
@@ -48,21 +48,52 @@ FILE *dbf = NULL;
 #endif
 
 
+Scorealign::Scorealign() {
+    frame_period = SA_DFT_FRAME_PERIOD;
+    window_size = SA_DFT_WINDOW_SIZE;
+    force_final_alignment = SA_DFT_FORCE_FINAL_ALIGNMENT;
+    ignore_silence = SA_DFT_IGNORE_SILENCE;
+    silence_threshold = SA_DFT_SILENCE_THRESHOLD;
+    presmooth_time = SA_DFT_PRESMOOTH_TIME;
+    line_time = SA_DFT_LINE_TIME;
+    smooth_time = SA_DFT_SMOOTH_TIME;
+    pathlen = 0;
+    path_count = 0;
+    pathx = NULL;
+    pathy = NULL;
+    verbose = false;
+    progress = NULL;
+#if DEBUG_LOG
+    dbf = fopen("debug-log.txt", "w");
+    assert(dbf);
+#endif
+}
+
+
+Scorealign::~Scorealign() {
+    if (pathx) free(pathx);
+    if (pathy) free(pathy);
+#if DEBUG_LOG
+    fclose(dbf);
+#endif
+}
+
+
 /*			MAP_TIME  
-    lookup time of file1 in smooth_time_map and interpolate
-    to get time in file2 
+    lookup time of file0 in smooth_time_map and interpolate
+    to get time in file1 
 */
 
 float Scorealign::map_time(float t1)
 {
-    t1 /= actual_frame_period_1; // convert from seconds to frames
+    t1 /= (float) actual_frame_period_0; // convert from seconds to frames
     int i = (int) t1; // round down
     if (i < 0) i = 0;
-    if (i >= file1_frames - 1) i = file1_frames - 2;
+    if (i >= file0_frames - 1) i = file0_frames - 2;
     // interpolate to get time
-    return actual_frame_period_2 * 
+    return float(actual_frame_period_1 * 
         interpolate(i, smooth_time_map[i], i+1, smooth_time_map[i+1],
-                    t1);
+                    t1));
 }
 
 
@@ -86,7 +117,7 @@ int find_midi_duration(Alg_seq &seq, float *dur)
             Alg_event_ptr e = notes[i];
             if (e->is_note()) {
                 Alg_note_ptr n = (Alg_note_ptr) e;
-                float note_end = n->time + n->dur;
+                float note_end = float(n->time + n->dur);
                 if (note_end > *dur) *dur = note_end;
                 nnotes++;
             }
@@ -127,9 +158,9 @@ void Scorealign::path_step(int i, int j)
 {
 #if DEBUG_LOG
     fprintf(dbf, "(%i,%i) ", i, j);
-	if (++path_count % 5 == 0 ||
-		(i == 0 && j == 0)) 
-		fprintf(dbf, "\n");
+    if (++path_count % 5 == 0 ||
+        (i == first_x && j == first_y)) 
+        fprintf(dbf, "\n");
 #endif
     pathx[pathlen] = i; 
     pathy[pathlen] = j;
@@ -169,8 +200,8 @@ returns the first index in pathy where the element is bigger than sec
 */
 int Scorealign::sec_to_pathy_index(float sec) 
 {
-    for (int i = 0 ; i < (file1_frames + file2_frames); i++) {
-        if (smooth_time_map[i] * actual_frame_period_2 >= sec) {
+    for (int i = 0 ; i < (file0_frames + file1_frames); i++) {
+        if (smooth_time_map[i] * actual_frame_period_1 >= sec) {
             return i; 
         }
         //printf("%i\n" ,pathy[i]);
@@ -184,17 +215,21 @@ given a chrom_energy vector, sees how many
 of the inital frames are designated as silent 
 */
 
-int frames_of_init_silence( float *chrom_energy, int frame_count)
+int frames_of_init_silence(float *chrom_energy, int frame_count)
 {
-    bool silence = true;
-    int frames=0; 
-    while (silence) {
-        if (silent(frames, chrom_energy)) 
-            frames++; 
-        else
-            silence=false; 
+    int frames;
+    for (frames = 0; frames < frame_count; frames++) {
+        if (!silent(frames, chrom_energy)) break;
     }
-    
+    return frames; 
+}
+
+int last_non_silent_frame(float *chrom_energy, int frame_count)
+{
+    int frames;
+    for (frames = frame_count - 1; frames > 0; frames--) {
+        if (!silent(frames, chrom_energy)) break;
+    }
     return frames; 
 }
 
@@ -202,93 +237,128 @@ int frames_of_init_silence( float *chrom_energy, int frame_count)
 /*		COMPARE_CHROMA
 Perform Dynamic Programming to find optimal alignment
 */
-void Scorealign::compare_chroma(bool verbose)
+int Scorealign::compare_chroma()
 {
     float *path;
-    int x = 0;
-    int y = 0;
     
     /* Allocate the distance matrix */
-    path = (float *) calloc(file1_frames * file2_frames, sizeof(float));
+    path = (float *) calloc(file0_frames * file1_frames, sizeof(float));
     
-    /* Initialize first row and column */
+    /* skip over initial silence in signals */
+    if (ignore_silence) {
+        first_x = frames_of_init_silence(chrom_energy0, file0_frames);
+        last_x = last_non_silent_frame(chrom_energy0, file0_frames);
+        first_y = frames_of_init_silence(chrom_energy1, file1_frames);
+        last_y = last_non_silent_frame(chrom_energy1, file1_frames);
+    } else {
+        first_x = 0;
+        last_x = file0_frames - 1;
+        first_y = 0;
+        last_y = file1_frames - 1;
+    }
 
-    /* allow free skip over initial silence in either signal, but not both */
-    /* silence is indicated by a run of zeros along the first row and or 
-     * column, starting at the origin (0,0). After computing these runs, we
-     * put the proper value at (0,0)
-     */
-    if (verbose) printf("Performing silent skip DP \n"); 
-    PATH(0, 0) = (silent(0, chrom_energy1) ? 0 :
-                  gen_dist(0, 0, chrom_energy1, chrom_energy2));
-    for (int i = 1; i < file1_frames; i++)
-        PATH(i, 0) = (PATH(i-1, 0) == 0 && silent(i, chrom_energy1) ? 0 :
-                      gen_dist(i, 0, chrom_energy1, chrom_energy2) + 
-                      PATH(i-1, 0));
-    PATH(0, 0) = (silent(0, chrom_energy2) ? 0 :
-                  gen_dist(0, 0, chrom_energy1, chrom_energy2));
-    for (int j = 1; j < file2_frames; j++)
-        PATH(0, j) = (PATH(0, j-1) == 0 && silent(j, chrom_energy2) ? 0 :
-                      gen_dist(0, j, chrom_energy1, chrom_energy2) + 
-                      PATH(0, j-1));
-    /* first row and first column are done, put proper value at (0,0) */
-    PATH(0, 0) = (!silent(0, chrom_energy1) || !silent(0, chrom_energy2) ?
-                  gen_dist(0, 0, chrom_energy1, chrom_energy2) : 0);
-    
+    if (last_x - first_x <= 0 || last_y - first_y <= 0) {
+        return SA_TOOSHORT;
+    }
+
+    /* Initialize first row and column */
+    if (verbose) printf("Performing DP\n"); 
+    PATH(first_x, first_y) = gen_dist(first_x, first_y);
+    for (int x = first_x + 1; x <= last_x; x++)
+        PATH(x, first_y) = gen_dist(x, first_y) + PATH(x - 1, first_y);
+    for (int y = 1; y <= last_y; y++)
+        PATH(first_x, y) = gen_dist(first_x, y) + PATH(first_x, y - 1);
+
+#if DEBUG_LOG
+    fprintf(dbf, "DISTANCE MATRIX ***************************\n");
+#endif
     /* Perform DP for the rest of the matrix */
-    for (int i = 1; i < file1_frames; i++)
-        for (int j = 1; j < file2_frames; j++)
-            PATH(i, j) = gen_dist(i, j, chrom_energy1, chrom_energy2) +
-                min3(PATH(i-1, j-1), PATH(i-1, j), PATH(i, j-1)); 
-    
+    for (int x = first_x + 1; x <= last_x; x++) {
+        for (int y = first_y + 1; y <= last_y; y++) {
+            PATH(x, y) = gen_dist(x, y) +
+                    float(min3(PATH(x-1, y-1), PATH(x-1, y), PATH(x, y-1))); 
+#if DEBUG_LOG
+            fprintf(dbf, "(%d %d %g) ", x, y, gen_dist(x, y), PATH(x, y));
+#endif
+        }
+#if DEBUG_LOG
+        fprintf(dbf, "\n");
+#endif
+        // report progress for each file0_frame (column)
+        // This is not quite right if we are ignoring silence because
+        // then only a sub-matrix is computed.
+        if (progress && !progress->set_matrix_progress(file1_frames)) 
+            return SA_CANCEL;
+    }
+#if DEBUG_LOG
+    fprintf(dbf, "END OF DISTANCE MATRIX ********************\n");
+#endif
+
     if (verbose) printf("Completed Dynamic Programming.\n");
     
     
-    x = file1_frames - 1;
-    y = file2_frames - 1;
-
     //x and y are the ending points, it can end at either the end of midi, 
-    // or end of audio but not both
-    pathx = ALLOC(short, (x + y + 2));
-    pathy = ALLOC(short, (x + y + 2));
+    // or end of audio or both
+    pathx = ALLOC(short, (file0_frames + file1_frames));
+    pathy = ALLOC(short, (file0_frames + file1_frames));
 	
     assert(pathx != NULL);
     assert(pathy != NULL);
 	 
-    // map from file1 time to file2 time
-    time_map = ALLOC(float, file1_frames);
-    smooth_time_map = ALLOC(float, file1_frames);
+    // map from file0 time to file1 time
+    time_map = ALLOC(float, file0_frames);
+    smooth_time_map = ALLOC(float, file0_frames);
 	
+    int x = last_x;
+    int y = last_y;
+
+    if (!force_final_alignment) {
 #if DEBUG_LOG
-    fprintf(dbf, "\nOptimal Path: ");
+        fprintf(dbf, "\nOptimal Path: ");
 #endif
-    while (1) {
-        /* Check for stopping */
-        if (x ==  0 & y == 0) {
-            path_step(0, 0);
-            path_reverse();
-            break;
+        // find end point, the lowest cost matrix value at one of the
+        // sequence endings
+        float min_cost = 1.0E10;
+        for (int i = first_x; i <= last_x; i++) {
+            if (PATH(i, last_y) <= min_cost) {
+                min_cost = PATH(i, last_y);
+                x = i;
+                y = last_y;
+            }
         }
-		
-        /* Print the current coordinate in the path*/
+        for (int j = first_y; j <= last_y; j++) {
+            if (PATH(last_x, j) <= min_cost) {
+                min_cost = PATH(last_x, j);
+                x = last_x;
+                y = j;
+            }
+        }
+#if DEBUG_LOG
+        fprintf(dbf, "Min cost at %d %d\n\nPATH:\n", x, y);
+#endif
+    }
+
+    while ((x != first_x) || (y != first_y)) {
         path_step(x, y);
 
         /* Check for the optimal path backwards*/
-        if (x > 0 && y > 0 && PATH(x-1, y-1) <= PATH(x-1, y) &&
+        if (x > first_x && y > first_y && PATH(x-1, y-1) <= PATH(x-1, y) &&
             PATH(x-1, y-1) <= PATH(x, y-1)) {
             x--;
             y--;
-        } else if (x > 0 && y > 0 && PATH(x-1, y) <= PATH(x, y-1)) {
+        } else if (x > first_x && y > first_y && PATH(x-1, y) <= PATH(x, y-1)) {
             x--;
-        } else if (y > 0) {
+        } else if (y > first_y) {
             y--;
-        } else if (x > 0) {
+        } else if (x > first_x) {
             x--;
         }
     }
+    path_step(x, y);
+    path_reverse();
     free(path);
+    return SA_SUCCESS; // success
 }
-
 
 
 void Scorealign::linear_regression(int n, int width, float &a, float &b)
@@ -316,32 +386,36 @@ void Scorealign::linear_regression(int n, int width, float &a, float &b)
 }
 
 
-
-
-
 /*			COMPUTE_SMOOTH_TIME_MAP 
 	 compute regression line and estimate point at i
  
 	 Number of points in regression is smooth (an odd number). First
 	 index to compute is (smooth-1)/2. Use that line for the first
 	 (smooth+1)/2 points. The last index to compute is 
-	 (file1_frames - (smooth+1)/2). Use that line for the last 
+	 (file0_frames - (smooth+1)/2). Use that line for the last 
 	 (smooth+1)/2 points.
 */
 void Scorealign::compute_smooth_time_map()
 {
+    int i;
+    int hw = (smooth - 1) / 2; // half width of smoothing window
+
+    // find the first point
+    for (i = 0; i < first_x; i++) {
+        smooth_time_map[i] = NOT_MAPPED;
+    }
+
     // do the first points:
     float a, b;
-    linear_regression((smooth - 1) / 2, smooth, a, b);
-    int i;
-    for (i = 0; i < (smooth + 1) / 2; i++) {
-        smooth_time_map[i] = a + b*i;
+    linear_regression(first_x + hw, smooth, a, b);
+    for (i = first_x; i <= first_x + hw; i++) {
+        smooth_time_map[i] = a + b * i;
     }
     
     // do the middle points:
-    for (i = (smooth + 1) / 2; i < file1_frames - (smooth + 1) / 2; i++) {
+    for (i = first_x + hw + 1; i < last_x - hw; i++) {
         linear_regression(i, smooth, a, b);
-        smooth_time_map[i] = a + b*i;
+        smooth_time_map[i] = a + b * i;
         
 #if DEBUG_LOG
         fprintf(dbf, "time_map[%d] = %g, smooth_time_map[%d] = %g\n", 
@@ -349,14 +423,15 @@ void Scorealign::compute_smooth_time_map()
 #endif
         
     }
-    
+
     // do the last points
-    linear_regression(file1_frames - (smooth + 1) / 2, smooth, a, b);
-    for (i = file1_frames - (smooth + 1) / 2; i < file1_frames; i++) {
-        smooth_time_map[i] = a + b*i;
+    linear_regression(last_x - hw, smooth, a, b);
+    for (i = last_x - hw; i <= last_x; i++) {
+        smooth_time_map[i] = a + b * i;
     }
-    
-    
+    // finally, fill with NOT_MAPPED
+    for (i = last_x + 1; i < file0_frames; i++) 
+        smooth_time_map[i] = NOT_MAPPED;
 }
  
 
@@ -401,16 +476,17 @@ short *path_copy(short *path, int len)
  */
 void Scorealign::presmooth()
 {
-    int n = ROUND(presmooth_time / actual_frame_period_2);
+    int n = ROUND(presmooth_time / actual_frame_period_1);
     n = (n + 3) & ~3; // round up to multiple of 4
     int i = 0;
-    while (pathx[i] + n < file2_frames) {
+    while (i < pathlen - 1 && pathx[i] + n <= last_x) {
         /* line goes from i to i+n-1 */
         int x1 = pathx[i];
         int xmid = x1 + n/2;
         int x2 = x1 + n;
         int y1 = pathy[i];
-        int y2;
+        int y2 = pathy[i + 1]; // make sure it has a value. y2 should be
+                               // set in the loop below.
         int j;
         /* search for y2 = pathy[j] s.t. pathx[j] == x2 */
         for (j = i + n; j < pathlen; j++) {
@@ -424,7 +500,8 @@ void Scorealign::presmooth()
         int k = i;
         int count = 0;
         while (pathx[k] < xmid) { // search first half
-            if (near_line(x1, y1, x2, y2, pathx[k], pathy[k])) {
+            if (near_line(float(x1), float(y1), float(x2), float(y2), 
+                          pathx[k], pathy[k])) {
                 count++;
                 regr.point(pathx[k], pathy[k]);
             }
@@ -437,7 +514,8 @@ void Scorealign::presmooth()
         }
         /* see if line fits top half of the data */
         while (pathx[k] < x2) {
-            if (near_line(x1, y1, x2, y2, pathx[k], pathy[k])) {
+            if (near_line(float(x1), float(y1), float(x2), float(y2), 
+                pathx[k], pathy[k])) {
                 count++;
                 regr.point(pathx[k], pathy[k]);
             }
@@ -511,11 +589,6 @@ void Scorealign::presmooth()
         // make sure new path is no longer than original path
         // the last point we wrote was k - 1
         k = k - 1; // the last point we wrote is now k
-        // DEBUG
-        if (k > j) {
-            printf("oops: k %d, j %d\n", k, j);
-            SA_V(print_path_range(pathx, pathy, i, k);)
-        }
         assert(k <= j);
         // if new path is shorter than original, then fix up path
         if (k < j) {
@@ -539,19 +612,28 @@ void Scorealign::presmooth()
 */
 void Scorealign::compute_regression_lines()
 {
-    // first, compute the y value of the path at
+    int i;
+    // fill in time_map with NOT_MAPPED until the first point 
+    // of the path
+    for (i = 0; i < pathx[0]; i++) {
+        time_map[i] = NOT_MAPPED;
+    }
+    // now, compute the y value of the path at
     // each x value. If the path has multiple values
     // on x, take the average.
     int p = 0;
-    int i;
     int upper, lower;
-    for (i = 0; i < file1_frames; i++) {
+    for (i = pathx[0]; p < pathlen; i++) {
         lower = pathy[p];
         while (p < pathlen && pathx[p] == i) {
             upper = pathy[p];
             p = p + 1;
         }
-        time_map[i] = (lower + upper) * 0.5;
+        time_map[i] = (lower + upper) * 0.5F;
+    }
+    // fill in rest of time_map with NOT_MAPPED
+    for (i = pathx[pathlen - 1] + 1; i <= last_x; i++) {
+        time_map[i] = NOT_MAPPED;
     }
     // now fit a line to the nearest WINDOW points and record the 
     // line's y value for each x.
@@ -559,115 +641,196 @@ void Scorealign::compute_regression_lines()
 }
 
 
-void Scorealign::midi_tempo_align(Alg_seq &seq, bool verbose)
+void Scorealign::midi_tempo_align(Alg_seq &seq)
 {
     // We create a new time map out of the alignment, and replace
     // the original time map in the Alg_seq sequence
     Alg_seq new_time_map_seq;
 
     /** align at all integer beats **/
-    int totalbeats; 
-    float dur_in_sec; 
-    // probably alignment should respect the real_dur encoded into the seq
-    // rather than computing real_dur based on note off times -- the 
-    // caller should be required to set real_dur to a good value, and
-    // the find_midi_duration() function should be available to the caller
-    // if necessary -RBD
-    find_midi_duration(seq, &dur_in_sec); 
-    // 
-    // totalbeat = lastbeat + 1 and round up the beat
-    totalbeats = (int) (seq.get_time_map()->time_to_beat(dur_in_sec) + 2);
-    if (verbose)
+    // totalbeats = lastbeat + 1 and round up the beat
+    int totalbeats = (int) seq.get_beat_dur() + 2;
+    if (verbose) {
+        double dur_in_sec = seq.get_real_dur(); 
         printf("midi duration = %f, totalbeats=%i \n", dur_in_sec, totalbeats);   
-    
+    }
+#ifdef DEBUG_LOG
+    fprintf(dbf, "***************** CONSTRUCTING TIME MAP ***************\n");
+#endif
+    // turn off last tempo flag so last tempo will extrapolate
+    new_time_map_seq.get_time_map()->last_tempo_flag = false;
+    int first_beat = -1;
     for (int i = 0; i < totalbeats; i++) {
-        double newtime = map_time(seq.get_time_map()->beat_to_time(i));
-        if (newtime > 0) 
+        double newtime = map_time(float(seq.get_time_map()->beat_to_time(i)));
+        if (newtime > 0) {
             new_time_map_seq.insert_beat(newtime, (double) i);
+            // remember where the new time map begins
+            if (first_beat < 0) first_beat = i;
+#ifdef DEBUG_LOG
+            fprintf(dbf, "map beat %d to time %g\n", i, newtime);
+#endif
+        }
     }
     seq.convert_to_beats();
-    seq.set_time_map(new_time_map_seq.get_time_map());
+    double end_beat = seq.get_dur();
+    Alg_time_map_ptr map = new_time_map_seq.get_time_map();
+    seq.set_time_map(map);
+    // the new time map begins where the alignment began, but due to
+    // smoothing and rounding, there may be some edge effects.
+    // Try to set the tempo before the first_beat to match the tempo
+    // at the first beat by introducing another time map point at least
+    // one beat before the first_beat. To do this, we need at least
+    // 2 beats before first_beat and at least 2 beats in the time map 
+    // (needed to compute initial tempo). Furthermore, the tempo at 
+    // first_beat could be so slow that we do not have enough time 
+    // before first_beat to anticipate the tempo.
+    if (first_beat >= 2 && totalbeats > first_beat + 1) {
+        int new_beat = first_beat / 2;
+        // compute initial tempo from first_beat and first_beat + 1
+        int i = map->locate_beat(first_beat);
+        double t1 = map->beats[i].time;
+        double t2 = map->beats[i + 1].time;
+        double spb = (t2 - t1); // seconds per beat, beat period
+        double new_time = t1 - (first_beat - new_beat) * spb;
+        if (new_time <= 0.2) {
+            // not enough time to start at new_time, new_beat
+            // let's try using half the time rather than half the beats
+            new_time = t1 / 2.0;
+            // this will round down, so new_beat < first_beat
+            new_beat = int(first_beat - (t1 / 2) / spb);
+            new_time = t1 - (first_beat - new_beat) * spb;
+        }
+        // need to check again if new_beat would be too early
+        if (new_time > 0.2) {
+            map->insert_beat(new_time, new_beat);
+        }
+    }
+    // Note: final tempo is extrapolated, so no need to insert new
+    // time map points beyond the last one
+    seq.set_dur(end_beat);
+#ifdef DEBUG_LOG
+    fprintf(dbf, "\nend_beat %g end time %g\n", 
+            seq.get_beat_dur(), seq.get_real_dur());
+#endif
 }
 
 
 // this routine performs an alignment by adjusting midi to match audio
 //
-void Scorealign::align_midi_to_audio(Alg_seq &seq, Audio_reader &reader, 
-                                    bool verbose)
+int Scorealign::align_midi_to_audio(Alg_seq &seq, Audio_reader &reader)
 {
-    /* Generate the chroma for file 1 
+    float dur = 0.0F;
+    int nnotes = find_midi_duration(seq, &dur);
+    if (progress) {
+        progress->set_frame_period(frame_period);
+        progress->set_smoothing(line_time > 0.0);
+        progress->set_duration(0, false, dur);
+        progress->set_duration(1, true, float(reader.actual_frame_period * 
+                                              reader.frame_count));
+        progress->set_phase(0);
+    }
+    /* Generate the chroma for file 0 
      * This will always be the MIDI File when aligning midi with audio.
      */
-    file1_frames = gen_chroma_midi(seq, HIGH_CUTOFF, LOW_CUTOFF, 
-            &chrom_energy1, &actual_frame_period_1, 1, verbose);
+    file0_frames = gen_chroma_midi(seq, dur, nnotes, HIGH_CUTOFF, LOW_CUTOFF, 
+                                   &chrom_energy0, &actual_frame_period_0, 0);
 
-    /* Generate the chroma for file 2 */
-    file2_frames = gen_chroma_audio(reader, HIGH_CUTOFF, LOW_CUTOFF, 
-            &chrom_energy2, &actual_frame_period_2, 2, verbose);
-
-    align_chromagrams(verbose);
+    /* Generate the chroma for file 1 */
+    if (progress) progress->set_phase(1);
+    file1_frames = gen_chroma_audio(reader, HIGH_CUTOFF, LOW_CUTOFF, 
+                                    &chrom_energy1, &actual_frame_period_1, 1);
+    return align_chromagrams();
 }
 
-void Scorealign::align_audio_to_audio(Audio_reader &reader1, 
-                                     Audio_reader &reader2, bool verbose)
+int Scorealign::align_audio_to_audio(Audio_reader &reader0,
+        Audio_reader &reader1)
 {
+    if (progress) {
+        progress->set_frame_period(frame_period);
+        progress->set_duration(0, true, float(reader0.actual_frame_period * 
+                                              reader0.frame_count));
+        progress->set_duration(1, true, float(reader1.actual_frame_period * 
+                                              reader1.frame_count));
+
+        progress->set_phase(0);
+        progress->set_smoothing(line_time > 0.0);
+    }
+    file0_frames = gen_chroma_audio(reader0, HIGH_CUTOFF, LOW_CUTOFF, 
+                                    &chrom_energy0, &actual_frame_period_0, 0);
+
+    if (progress) progress->set_phase(1);
     file1_frames = gen_chroma_audio(reader1, HIGH_CUTOFF, LOW_CUTOFF, 
-                    &chrom_energy1, &actual_frame_period_1, 1, verbose);
-    file2_frames = gen_chroma_audio(reader2, HIGH_CUTOFF, LOW_CUTOFF, 
-                    &chrom_energy2, &actual_frame_period_2, 2, verbose);
-    align_chromagrams(verbose);
+                                    &chrom_energy1, &actual_frame_period_1, 1);
+
+    return align_chromagrams();
 }
 
 
-void Scorealign::align_midi_to_midi(Alg_seq &seq1, Alg_seq &seq2, 
-                                   bool verbose)
+int Scorealign::align_midi_to_midi(Alg_seq &seq0, Alg_seq &seq1)
 {
-    file1_frames = gen_chroma_midi(seq1, HIGH_CUTOFF, LOW_CUTOFF, 
-            &chrom_energy1, &actual_frame_period_1, 1, verbose);
+    float dur0 = 0.0F;
+    int nnotes0 = find_midi_duration(seq0, &dur0);
+    float dur1 = 0.0F;
+    int nnotes1 = find_midi_duration(seq1, &dur1);
+    if (progress) {
+        progress->set_frame_period(frame_period);
+        progress->set_smoothing(line_time > 0.0);
+        progress->set_duration(0, false, dur0);
+        progress->set_duration(1, false, dur1);
 
-    file2_frames = gen_chroma_midi(seq2, HIGH_CUTOFF, LOW_CUTOFF, 
-            &chrom_energy2, &actual_frame_period_2, 2, verbose);
+        progress->set_phase(0);
+    }
+    file0_frames = gen_chroma_midi(seq0, dur0, nnotes0, 
+            HIGH_CUTOFF, LOW_CUTOFF, 
+            &chrom_energy0, &actual_frame_period_0, 0);
 
-    align_chromagrams(verbose);
+    if (progress) progress->set_phase(1);
+    file1_frames = gen_chroma_midi(seq1, dur1, nnotes1, 
+            HIGH_CUTOFF, LOW_CUTOFF, 
+            &chrom_energy1, &actual_frame_period_1, 1);
+
+    return align_chromagrams();
 }
 
-void Scorealign::align_chromagrams(bool verbose)
+int Scorealign::align_chromagrams()
 {
+    if (progress) progress->set_phase(2);
     if (verbose)
         printf("\nGenerated Chroma.\n");
-    /* now that we have actual_frame_period_2, we can compute smooth */
+    /* now that we have actual_frame_period_1, we can compute smooth */
     // smooth is an odd number of frames that spans about smooth_time
-    smooth = ROUND(smooth_time / actual_frame_period_2);
+    smooth = ROUND(smooth_time / actual_frame_period_1);
     if (smooth < 3) smooth = 3;
     if (!(smooth & 1)) smooth++; // must be odd
     if (verbose) {
         printf("smoothing time is %g\n", smooth_time);
         printf("smooth count is %d\n", smooth);
     }
-    /* Normalize the chroma frames */
-    norm_chroma(file1_frames, chrom_energy1);
+    SA_V(printf("Chromagram data for file 0:\n");)
+    SA_V(print_chroma_table(chrom_energy0, file0_frames);)
     SA_V(printf("Chromagram data for file 1:\n");)
     SA_V(print_chroma_table(chrom_energy1, file1_frames);)
-    norm_chroma(file2_frames, chrom_energy2);
-    SA_V(printf("Chromagram data for file 2:\n");)
-    SA_V(print_chroma_table(chrom_energy2, file2_frames);)
-    if (verbose)
-        printf("Normalized Chroma.\n");
 
     /* Compare the chroma frames */
-    compare_chroma(verbose);
+    int result = compare_chroma();
+    if (result != SA_SUCCESS) {
+        return result;
+    }
+    if (progress) progress->set_phase(3);
     /* Compute the smooth time map now for use by curve-fitting */	
     compute_regression_lines();
-    /* if line_time is set, do curve-fitting */
-    if (line_time > 0.0) {
-        curve_fitting(this, verbose);
-        /* Redo the smooth time map after curve fitting or smoothing */	
-        compute_regression_lines();
-    }
     /* if presmooth_time is set, do presmoothing */
     if (presmooth_time > 0.0) {
         presmooth();
         /* Redo the smooth time map after curve fitting or smoothing */	
         compute_regression_lines();
     }
+    /* if line_time is set, do curve-fitting */
+    if (line_time > 0.0) {
+        curve_fitting(this, verbose);
+        /* Redo the smooth time map after curve fitting or smoothing */	
+        compute_regression_lines();
+    }
+    if (progress) progress->set_phase(4);
+    return SA_SUCCESS;
 }

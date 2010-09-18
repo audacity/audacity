@@ -360,6 +360,58 @@ LWSlider::LWSlider(wxWindow * parent,
         stepValue, canUseShift, style, heavyweight, popup, 1.0, orientation);
 }
 
+
+void LWSlider::SetStyle(int style)
+{
+   mStyle = style;
+   mSpeed = 1.0;
+   switch(style)
+   {
+   case PAN_SLIDER:
+      mMinValue = -1.0f;
+      mMaxValue = +1.0f;
+      mStepValue = 0.1f;
+      mOrientation = wxHORIZONTAL; //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
+      mName = _("Pan");
+      break;
+   case DB_SLIDER:
+      mMinValue = DB_MIN;
+      if (mOrientation == wxHORIZONTAL)
+         mMaxValue = DB_MAX;
+      else 
+         mMaxValue = DB_MAX; // for MixerBoard //vvv Previously was 6dB for MixerBoard, but identical for now. 
+      mStepValue = 1.0f;
+      mSpeed = 0.5;
+      mName = _("Gain");
+      break;
+   case FRAC_SLIDER:
+      mMinValue = FRAC_MIN;
+      mMaxValue = FRAC_MAX;
+      mStepValue = STEP_CONTINUOUS;
+      break;
+   case SPEED_SLIDER:
+      mMinValue = SPEED_MIN;
+      mMaxValue = SPEED_MAX;
+      mStepValue = STEP_CONTINUOUS;
+      break;
+#ifdef USE_MIDI
+   case VEL_SLIDER:
+      mMinValue = VEL_MIN;
+      mMaxValue = VEL_MAX;
+      mStepValue = 1.0f;
+      mSpeed = 0.5;
+      mName = _("Velocity");
+      break;
+#endif
+   default:
+      mMinValue = FRAC_MIN;
+      mMaxValue = FRAC_MAX;
+      mStepValue = 0.0f;
+      wxASSERT(false); // undefined style
+   }
+}
+
+
 // Construct predefined slider
 LWSlider::LWSlider(wxWindow *parent,
                    wxString name,
@@ -371,46 +423,13 @@ LWSlider::LWSlider(wxWindow *parent,
                    int orientation /* = wxHORIZONTAL */) // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER. 
 {
    wxString leftLabel, rightLabel;
-   float minValue, maxValue, stepValue;
-   float speed = 1.0;
+   mOrientation = orientation;
+   mName = name;
 
-   switch(style)
-   {
-   case PAN_SLIDER:
-      minValue = -1.0f;
-      maxValue = +1.0f;
-      stepValue = 0.1f;
-      orientation = wxHORIZONTAL; //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
-      break;
-   case DB_SLIDER:
-      minValue = -36.0f;
-      if (orientation == wxHORIZONTAL)
-         maxValue = 36.0f;
-      else 
-         maxValue = 36.0f; // for MixerBoard //vvv Previously was 6dB for MixerBoard, but identical for now. 
-      stepValue = 1.0f;
-      speed = 0.5;
-      break;
-   case FRAC_SLIDER:
-      minValue = 0.0f;
-      maxValue = 1.0f;
-      stepValue = STEP_CONTINUOUS;
-      break;
-   case SPEED_SLIDER:
-      minValue = 0.01f;
-      maxValue = 3.0f;
-      stepValue = STEP_CONTINUOUS;
-      break;
+   SetStyle(style);
 
-   default:
-      minValue = 0.0f;
-      maxValue = 1.0f;
-      stepValue = 0.0f;
-      wxASSERT(false); // undefined style
-   }
-
-   Init(parent, name, pos, size, minValue, maxValue, stepValue,
-        true, style, heavyweight, popup, speed, orientation);
+   Init(parent, mName, pos, size, mMinValue, mMaxValue, mStepValue,
+        true, style, heavyweight, popup, mSpeed, mOrientation);
 }
 
 void LWSlider::Init(wxWindow * parent,
@@ -520,7 +539,11 @@ void LWSlider::CreatePopWin()
 
    wxString maxStr = mName + wxT(": 000000");
 
-   if (mStyle == PAN_SLIDER || mStyle == DB_SLIDER || mStyle == SPEED_SLIDER)
+   if (mStyle == PAN_SLIDER || mStyle == DB_SLIDER || mStyle == SPEED_SLIDER
+#ifdef USE_MIDI
+       || mStyle == VEL_SLIDER
+#endif
+       )
       maxStr += wxT("000");
 
    mPopWin = new TipPanel(GetToolTipParent(), -1, maxStr, wxDefaultPosition);
@@ -886,6 +909,12 @@ void LWSlider::FormatPopWin()
    case SPEED_SLIDER:
       label.Printf(wxT("%s: %.2fx"), mName.c_str(), mCurrentValue);
       break;
+#ifdef USE_MIDI
+   case VEL_SLIDER:
+       label.Printf(wxT("%s: %s%d"), mName.c_str(), 
+                    (mCurrentValue > 0.0f ? _("+") : _("")), 
+                    (int) mCurrentValue);
+#endif
    }
 
    ((TipPanel *)mPopWin)->label = label;
@@ -1506,6 +1535,14 @@ void ASlider::Set(float value)
    mLWSlider->Set(value);
 }
 
+#ifdef USE_MIDI
+void ASlider::SetStyle(int style)
+{
+   mStyle = style;
+   mLWSlider->SetStyle(style);
+}
+#endif
+
 void ASlider::Increase(float steps)
 {
    mLWSlider->Increase(steps);
@@ -1740,6 +1777,12 @@ wxAccStatus ASliderAx::GetValue(int childId, wxString* strValue)
          case SPEED_SLIDER:
             strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue * 100 );
             break;
+#ifdef USE_MIDI
+         case VEL_SLIDER:
+            strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue);
+            break;
+#endif
+         
       }
 
       return wxACC_OK;

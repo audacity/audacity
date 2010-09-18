@@ -25,6 +25,7 @@ using namespace std;
 
 #define STREQL(x, y) (strcmp(x, y) == 0)
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
+#define ROUND(x) ((int) ((x) + 0.5))
 
 // 4311 is type cast ponter to long warning
 // 4996 is warning against strcpy
@@ -122,7 +123,7 @@ void Alg_parameter::show()
         printf("%s:%s", attr_name(), s);
         break;
     case 'i':
-        printf("%s:%d", attr_name(), i);
+        printf("%s:%ld", attr_name(), i);
         break;
     case 'l':
         printf("%s:%s", attr_name(), (l ? "t" : "f"));
@@ -565,7 +566,7 @@ bool Alg_event::overlap(double t, double len, bool all)
         return true;
     if (all && is_note()) {
         double dur = ((Alg_note_ptr) this)->dur;
-        // note ends within region
+        // note overlaps with region
         if (time < t && time + dur - ALG_EPS > t)
             return true;
     }
@@ -600,7 +601,7 @@ Alg_note::~Alg_note()
 
 void Alg_note::show()
 {
-    printf("Alg_note: time %g, chan %d, dur %g, key %d, "
+    printf("Alg_note: time %g, chan %ld, dur %g, key %ld, "
            "pitch %g, loud %g, attributes ",
            time, chan, dur, key, pitch, loud);
     Alg_parameters_ptr parms = parameters;
@@ -669,8 +670,8 @@ Alg_event_ptr Alg_events::uninsert(long index)
 {
     assert(0 <= index && index < len);
     Alg_event_ptr event = events[index];
-    printf("memmove: %x from %x (%d)\n", events + index, events + index + 1,
-            sizeof(Alg_event_ptr) * (len - index - 1));
+    //printf("memmove: %x from %x (%d)\n", events + index, events + index + 1,
+    //        sizeof(Alg_event_ptr) * (len - index - 1));
     memmove(events + index, events + index + 1,
             sizeof(Alg_event_ptr) * (len - index - 1));
     len--;
@@ -848,7 +849,12 @@ double Alg_time_map::beat_to_time(double beat)
         return beat;
     }
     int i = locate_beat(beat);
-    if (i == beats.len) {
+    // case 1: beat is between two time/beat pairs
+    if (0 < i && i < beats.len) {
+        mbi = &beats[i - 1];
+        mbi1 = &beats[i];
+    // case 2: beat is beyond last time/beat pair
+    } else if (i == beats.len) {
         if (last_tempo_flag) {
             return beats[i - 1].time + 
                    (beat - beats[i - 1].beat) / last_tempo;
@@ -859,11 +865,11 @@ double Alg_time_map::beat_to_time(double beat)
             mbi = &beats[i - 2];
             mbi1 = &beats[i - 1];
         }
-    } else {
-        mbi = &beats[i - 1];
-        mbi1 = &beats[i];
+    // case 3: beat is at time 0
+    } else /* if (i == 0) */ {
+        return beats[0].time;
     }
-    // whether w extrapolate or interpolate, the math is the same
+    // whether we extrapolate or interpolate, the math is the same
     double time_dif = mbi1->time - mbi->time;
     double beat_dif = mbi1->beat - mbi->beat;
     return mbi->time + (beat - mbi->beat) * time_dif / beat_dif;
@@ -946,12 +952,45 @@ bool Alg_time_map::insert_tempo(double tempo, double beat)
         // compute difference too
         diff = diff - old_diff;
         // apply new_diff to score and beats
+        i++;
         while (i < beats.len) {
             beats[i].time = beats[i].time + diff;
             i++;
         }
     }
     return true;
+}
+
+
+double Alg_time_map::get_tempo(double beat)
+{
+    Alg_beat_ptr mbi;
+    Alg_beat_ptr mbi1;
+    // if beat < 0, there is probably an error; return something nice anyway
+    if (beat < 0) return ALG_DEFAULT_BPM / 60.0;
+    long i = locate_beat(beat);
+    // this code is similar to beat_to_time() so far, but we want to get
+    // beyond beat if possible because we want the tempo FOLLOWING beat
+    // (Consider the case beat == 0.0)
+    if (i < beats.len && beat >= beats[i].beat) i++;
+    // case 1: beat is between two time/beat pairs
+    if (i < beats.len) {
+        mbi = &beats[i - 1];
+        mbi1 = &beats[i];
+    // case 2: beat is beyond last time/beat pair
+    } else /* if (i == beats.len) */ {
+        if (last_tempo_flag) {
+            return last_tempo;
+        } else if (i == 1) {
+            return ALG_DEFAULT_BPM / 60.0;
+        } else {
+            mbi = &beats[i - 2];
+            mbi1 = &beats[i - 1];
+        }
+    }
+    double time_dif = mbi1->time - mbi->time;
+    double beat_dif = mbi1->beat - mbi->beat;
+    return beat_dif / time_dif;
 }
 
 
@@ -973,6 +1012,34 @@ bool Alg_time_map::set_tempo(double tempo, double start_beat, double end_beat)
     }
     beats.len = start_x; // truncate the map to new length
     return insert_tempo(tempo, start_beat);
+}
+
+
+bool Alg_time_map::stretch_region(double b0, double b1, double dur)
+{
+    // find current duration
+    double t0 = beat_to_time(b0);
+    double t1 = beat_to_time(b1);
+    double old_dur = t1 - t0;
+    if (old_dur <= 0 || dur <= 0) return false;
+    double scale = dur / old_dur; // larger scale => slower
+    // insert a beat if necessary at b0 and b1
+    insert_beat(t0, b0);
+    insert_beat(t1, b1);
+    long start_x = locate_beat(b0);
+    long stop_x = locate_beat(b1);
+    double orig_time = beats[start_x].time;
+    double prev_time = orig_time;
+    for (int i = start_x + 1; i < beats.len; i++) {
+        double delta = beats[i].time - orig_time;
+        if (i <= stop_x) { // change tempo to next Alg_beat
+            delta *= scale;
+        }
+        orig_time = beats[i].time;
+        prev_time += delta;
+        beats[i].time = prev_time;
+    }
+    return true;
 }
 
 
@@ -1920,7 +1987,7 @@ void Alg_time_sigs::expand()
 }
 
 
-void Alg_time_sigs::insert(double beat, double num, double den)
+void Alg_time_sigs::insert(double beat, double num, double den, bool force)
 {
     // find insertion point:
     for (int i = 0; i < len; i++) {
@@ -1940,7 +2007,7 @@ void Alg_time_sigs::insert(double beat, double num, double den)
                 // check if redundant with implied initial 4/4 time sig:
                 (i == 0 && num == 4 && den == 4 &&
                  within(fmod(beat, 4), 0, ALG_EPS))) {
-                return; // redundant inserts are ignored here
+                if (!force) return; // redundant inserts can be ignored here
             }
             // make room for new event
             if (maxlen <= len) expand();
@@ -1982,55 +2049,225 @@ int Alg_time_sigs::find_beat(double beat)
 }
 
 
-void Alg_time_sigs::cut(double start, double end)
+double Alg_time_sigs::get_bar_len(double beat)
 {
-    // remove time_sig's from start to start+len -- these must be
-    //   in beats (not seconds)
-    // now rewrite time_sig[]: copy from i_in to i_out (more or less)
-    int i_in = 0;
-    int i_out = 0;
-    // first, figure out where to begin cut region
-    i_in = find_beat(start);
-    i_out = i_in;
-    // scan to end of cut region
-    while (i_in < len && time_sigs[i_in].beat < end) {
-        i_in = i_in + 1;
+    int i = find_beat(beat);
+    double num = 4.0;
+    double den = 4.0;
+    if (i != 0) {
+        num = time_sigs[i - 1].num;
+        den = time_sigs[i - 1].den;
     }
-    // change time_sig at start if necessary
-    //    there's a time_sig that was skipped if i_in > i_out. 
-    //    if that's true and the next time change is at end, we're
-    //    ok because it will be copied, but if the next time change
-    //    is after end, then maybe we should insert a time change
-    //    corresponding to what's in effect at end. We can skip this
-    //    insert if it corresponds to whatever is in effect at start
-    if (i_in > i_out && i_in < len && 
-        time_sigs[i_in].beat > end + ALG_EPS &&
-        (i_out == 0 || time_sigs[i_out - 1].num != time_sigs[i_in - 1].num ||
-         time_sigs[i_out - 1].den != time_sigs[i_in - 1].den)) {
-        time_sigs[i_out] = time_sigs[i_in - 1];
-        time_sigs[i_out].beat = start;
+    return 4 * num / den;
+}
+
+void Alg_time_sigs::cut(double start, double end, double dur)
+{
+    // remove time_sig's from start to end -- these must be
+    //   in beats (not seconds). 
+    // The duration of the whole sequence is dur (beats).
+
+    // If the first bar line after end comes before a time signature
+    // and does not fall on a bar line, insert a time signature at
+    // the time of the bar line to retain relative bar line positions
+
+    int i = find_beat(end);
+    // i is where you would insert a new time sig at beat, 
+    // Case 1: beat coincides with a time sig at i. Time signature
+    // at beat means that there is a barline at beat, so when beat
+    // is shifted to start, the relative barline positions are preserved
+    if (len > 0 &&
+        within(end, time_sigs[i].beat, ALG_EPS)) {
+        // beat coincides with time signature change, so end is on a barline
+        /* do nothing */ ;
+    // Case 2: there is no time signature before end
+    } else if (i == 0 && (len == 0 ||
+                          time_sigs[0].beat > end)) {
+        // If the next time signature does not fall on a barline,
+        // then end must not be on a barline, so there is a partial
+        // measure from end to the next barline. We need 
+        // a time signature there to preserve relative barline
+        // locations. It may be that the next bar after start is
+        // due to another time signature, in which case we do not
+        // need to insert anything.
+        double measures = end / 4.0;
+        double imeasures = ROUND(measures);
+        if (!within(measures, imeasures, ALG_EPS)) {
+            // start is not on a barline, maybe add one here:
+            double bar_loc = (int(measures) + 1) * 4.0;
+            if (bar_loc < dur - ALG_EPS &&
+                (len == 0 || time_sigs[0].beat > bar_loc + ALG_EPS)) {
+                insert(bar_loc, 4, 4, true); // forced insert
+            }
+        }
+    // This case should never be true because if i == 0, either there
+    // are no time signatures before beat (Case 2), 
+    // or there is one time signature at beat (Case 1)
+    } else if (i == 0) {
+        /* do nothing (might be good to assert(false)) */ ;
+    // Case 3: i-1 must be the effective time sig position
+    } else { 
+        // get the time signature in effect at end
+        Alg_time_sig &tsp = time_sigs[i - 1];
+        double beats_per_measure = (tsp.num * 4) / tsp.den;
+        double measures = (end - tsp.beat) / beats_per_measure;
+        int imeasures = ROUND(measures);
+        if (!within(measures, imeasures, ALG_EPS)) {
+            // end is not on a measure, so we need to insert a time sig
+            // to force a bar line at the first measure location after
+            // beat, if any
+            double bar_loc = tsp.beat + beats_per_measure * (int(measures) + 1);
+            // insert new time signature at bar_loc
+            // It will have the same time signature, but the position will
+            // force a barline to match the barline before the shift
+            // However, we should not insert a barline if there is a
+            // time signature earlier than the barline time
+            if (i < len /* time_sigs[i] is the last one */ &&
+                time_sigs[i].beat < bar_loc - ALG_EPS) {
+                /* do not insert because there's already a time signature */;
+            } else if (bar_loc < dur - ALG_EPS) {
+                insert(bar_loc, tsp.num, tsp.den, true); // forced insert
+            }
+        }
+        // else beat coincides with a barline, so no need for an extra
+        // time signature to force barline alignment
+    }
+
+    // Figure out if time signature at start matches
+    // the time signature at end. If not, we need to insert a
+    // time signature at end to force the correct time signature
+    // there. 
+    // Find time signature at start:
+    double start_num = 4.0; // default if no time signature specified
+    double start_den = 4.0;
+    i = find_beat(start);
+    // A time signature at start would go at index i, so the effective
+    // time signature prior to start is at i - 1. If i == 0, the default
+    // time signature is in effect prior to start.
+    if (i != 0) {
+        start_num = time_sigs[i - 1].num;
+        start_den = time_sigs[i - 1].den;
+    }
+    // Find the time signature at end:
+    double end_num = 4.0; // default if no time signature specified
+    double end_den = 4.0;
+    int j = find_beat(end);
+    if (j != 0) {
+        end_num = time_sigs[j - 1].num;
+        end_den = time_sigs[j - 1].den;
+    }
+    // compare: If meter changes and there is no time signature at end,
+    // insert a time signature at end
+    if (end < dur - ALG_EPS &&
+        (start_num != end_num || start_den != end_den) &&
+        (j >= len || !within(time_sigs[j].beat, end, ALG_EPS))) {
+        insert(end, end_num, end_den, true);
+    }
+
+    // Remove time signatures from start to end (not including one AT
+    // end, if there is one there. Be careful with ALG_EPS on that one.)
+
+    // since we may have inserted a time signature, find position again:
+    int i0 = find_beat(start);
+    int i1 = i0;
+    // scan to end of cut region
+    while (i1 < len && time_sigs[i1].beat < end - ALG_EPS) {
+        i1++;
     }
     // scan from end to len(time_sig)
-    while (i_in < length()) {
-        Alg_time_sig &ts = time_sigs[i_in];
-        ts.beat = ts.beat - (end - start);
-        time_sigs[i_out] = ts;
-        i_in = i_in + 1;
-        i_out = i_out + 1;
+    while (i1 < len) {
+        Alg_time_sig &ts = time_sigs[i1];
+        ts.beat -= (end - start);
+        time_sigs[i0] = ts;
+        i0++;
+        i1++;
     }
-    len = i_out;
+    len = i1;
 }
 
 
 void Alg_time_sigs::trim(double start, double end)
 {
-    // remove time_sig's not in [start, start+end)
+    // remove time_sig's not in [start, end), but retain
+    // barline positions relative to the notes. This means that
+    // if the meter (time signature) changes between start and
+    // end that we need to insert a time signature at start.
+    // Also, if trim() would cause barlines to move, we need to
+    // insert a time signature on a barline (timesignatures
+    // imply the beginning of a bar even if the previous bar
+    // does not have enough beats. Note that bars do not need
+    // to have an integer number of beats).
+    //
     // units must be in beats (not seconds)
-    // copy from i_in to i_out as we scan time_sig array
-    int i_in = 0;
-    int i_out = 0;
+    //
+    // Uses Alg_time_sigs::cut() to avoid writing a special case
+    double dur = end + 1000;
+    if (len > 0) {
+        dur = time_sigs[len - 1].beat + 1000;
+    }
+    cut(end, dur, dur);
+    cut(0, start, dur);
+
+#ifdef IGNORE_THIS_OLD_CODE
     // first, skip time signatures up to start
-    i_in = find_beat(start);
+    int i = find_beat(start);
+    // i is where you would insert a new time sig at beat, 
+    // Case 1: beat coincides with a time sig at i. Time signature
+    // at beat means that there is a barline at beat, so when beat
+    // is shifted to 0, the relative barline positions are preserved
+    if (len > 0 &&
+        within(start, time_sigs[i].beat, ALG_EPS)) {
+        // beat coincides with time signature change, so offset must
+        // be a multiple of beats
+        /* do nothing */ ;
+    // Case 2: there is no time signature before start
+    } else if (i == 0 && (len == 0 ||
+                             time_sigs[0].beat > start)) {
+        // If the next time signature does not fall on a barline,
+        // then start must not be on a barline, so there is a partial
+        // measure from start to the next barline. We need 
+        // a time signature there to preserve relative barline
+        // locations. It may be that the next bar after start is
+        // due to another time signature, in which case we do not
+        // need to insert anything.
+        double measures = start / 4.0;
+        double imeasures = ROUND(measures);
+        if (!within(measures, imeasures, ALG_EPS)) {
+            // start is not on a barline, maybe add one here:
+            double bar_loc = (int(measures) + 1) * 4.0;
+            if (len == 0 || time_sigs[1].beat > bar_loc + ALG_EPS) {
+                insert(bar_loc, 4, 4, true);
+            }
+        }
+    // This case should never be true because if i == 0, either there
+    // are no time signatures before beat (Case 2), 
+    // or there is one time signature at beat (Case 1)
+    } else if (i == 0) {
+        /* do nothing (might be good to assert(false)) */ ;
+    // Case 3: i-1 must be the effective time sig position
+    } else { 
+        i -= 1; // index the time signature in effect at start
+        Alg_time_sig &tsp = time_sigs[i];
+        double beats_per_measure = (tsp.num * 4) / tsp.den;
+        double measures = (start - tsp.beat) / beats_per_measure;
+        int imeasures = ROUND(measures);
+        if (!within(measures, imeasures, ALG_EPS)) {
+            // beat is not on a measure, so we need to insert a time sig
+            // to force a bar line at the first measure location after
+            // beat, if any
+            double bar_loc = tsp.beat + beats_per_measure * (int(measures) + 1);
+            // insert new time signature at bar_loc
+            // It will have the same time signature, but the position will
+            // force a barline to match the barline before the shift
+            insert(bar_loc, tsp.num, tsp.den, true);
+        } 
+        // else beat coincides with a barline, so no need for an extra
+        // time signature to force barline alignment
+    }
+    // since we may have inserted a time signature, find position again:
+    int i_in = find_beat(start);
+    int i_out = 0;
+       
     // put time_sig at start if necessary
     // if 0 < i_in < len, then the time sig at i_in is either
     // at start or after start. 
@@ -2057,7 +2294,7 @@ void Alg_time_sigs::trim(double start, double end)
         time_sigs[0].beat = 0.0;
         i_out = 1;
     }
-    // scan to end of cut region
+    // copy from i_in to i_out as we scan time_sig array to end of cut region
     while (i_in < len && time_sigs[i_in].beat < end - ALG_EPS) {
         Alg_time_sig &ts = time_sigs[i_in];
         ts.beat = ts.beat - start;
@@ -2066,6 +2303,7 @@ void Alg_time_sigs::trim(double start, double end)
         i_out++;
     }
     len = i_out;
+#endif
 }
 
 
@@ -2084,6 +2322,13 @@ void Alg_time_sigs::paste(double start, Alg_seq *seq)
     // remember the time signature at the splice point
     double num_after_splice = 4;
     double den_after_splice = 4; // default
+    double num_before_splice = 4;
+    double den_before_splice = 4; // default
+    // this is computed for use in aligning beats after the inserted 
+    // time signatures and duration. It is the position of time signature
+    // in effect immediately after start (the time signature will be 
+    // before start or at start)
+    double beat_after_splice = 0.0; 
     // three cases: 
     //  1) time sig at splice is at i-1
     //     for this, we must have len>0 & i>0
@@ -2096,13 +2341,23 @@ void Alg_time_sigs::paste(double start, Alg_seq *seq)
     if (len > 0 && i > 0 &&
         ((i < len && time_sigs[i].beat > start + ALG_EPS) ||
          (i == len))) {
+        // no time_signature at i
         num_after_splice = time_sigs[i-1].num;
         den_after_splice = time_sigs[i-1].den;
+        beat_after_splice = time_sigs[i - 1].beat;
+        num_before_splice = num_after_splice;
+        den_before_splice = den_after_splice;
     } else if (i < len && time_sigs[i].beat <= start + ALG_EPS) {
+        // time_signature at i is at "start" beats
         num_after_splice = time_sigs[i].num;
         den_after_splice = time_sigs[i].den;
+        beat_after_splice = start;
+        if (i > 0) { // time signature before start is at i - 1
+            num_before_splice = time_sigs[i-1].num;
+            den_before_splice = time_sigs[i-1].den;
+        }          
     }
-    // i is where insert will go, time_sig[i].beat > start
+    // i is where insert will go, time_sig[i].beat >= start
     // begin by adding duration to time_sig's at i and above
     // move time signatures forward by duration of seq
     double dur = seq->get_beat_dur();
@@ -2112,37 +2367,183 @@ void Alg_time_sigs::paste(double start, Alg_seq *seq)
     }
     //printf("time_sig::insert after making space\n");
     //show();
-    // now insert initial time_signature at start. This may create
+    // If time signature of "from" is not the effective time signature
+    // at start, insert a time_signature at start.  This may create
     // an extra measure if seq does not begin on a measure boundary
-    insert(start, 4, 4); // in case seq uses default starting signature
+    double num_of_insert = 4.0;
+    double den_of_insert = 4.0;
+    double beat_of_insert = 0.0;
+    int first_from_index = 0; // where to start copying from
+    if (from.length() > 0 && from[0].beat < ALG_EPS) {
+        // there is an initial time signature in "from"
+        num_of_insert = from[0].num;
+        den_of_insert = from[0].den;
+        // since we are handling the first time signature in from,
+        // we can start copying at index == 1:
+        first_from_index = 1;
+    }
+    // compare time signatures to see if we need a change at start:
+    if (num_before_splice != num_of_insert ||
+        den_before_splice != den_of_insert) {
+        // note that this will overwrite an existing time signature if
+        // it is within ALG_EPS of start -- this is correct because the
+        // existing time signature will already be recorded as
+        // num_after_splice and den_after_splice
+        insert(start, num_of_insert, den_of_insert);
+    }
     //printf("time_sig::insert after 4/4 at start\n");
     //show();
     // insert time signatures from seq offset by start
-    for (i = 0; i < from.length(); i++) {
-        insert(start + from[i].beat, from[i].num, from[i].den);
+    for (i = 0; i < from.length() && from[i].beat < dur - ALG_EPS; i++) {
+        num_of_insert = from[i].num; // keep latest time signature info
+        den_of_insert = from[i].den;
+        beat_of_insert = from[i].beat;
+        insert(start + beat_of_insert, num_of_insert, den_of_insert);
     }
     //printf("time_sig::insert after pasting in sigs\n");
     //show();
-    // now insert time signature at end of splice
-    insert(start + dur, num_after_splice, den_after_splice);
+    // now insert time signature at end of splice if necessary
+    // if the time signature changes, we need to insert a time signature
+    // immediately:
+    if (num_of_insert != num_after_splice &&
+        den_of_insert != den_after_splice) {
+        insert(start + dur, num_after_splice, den_after_splice);
+        num_of_insert = num_after_splice;
+        den_of_insert = den_after_splice;
+        beat_of_insert = start + dur;
+    }
+    // if the insert had a partial number of measures, we might need an
+    // additional time signature to realign the barlines after the insert
+    // To decide, we compare the beat of the first barline on or after
+    // start before the splice to the beat of the first barline on or
+    // after start + dur after the splice. In a sense, this is the "same"
+    // barline, so it should be shifted exactly by dur.
+    // First, compute the beat of the first barline on or after start:
+    double beats_per_measure = (num_after_splice * 4) / den_after_splice;
+    double measures = (start - beat_after_splice) / beats_per_measure;
+    // Measures might be slightly negative due to rounding. Use max()
+    // to eliminate any negative rounding error:
+    int imeasures = int(max(measures, 0.0));
+    double old_bar_loc = beat_after_splice + (imeasures * beats_per_measure);
+    if (old_bar_loc < start) old_bar_loc += beats_per_measure;
+    // now old_bar_loc is the original first bar position after start
+    // Do similar calculation for position after end after the insertion:
+    // beats_per_measure already calculated because signatures match
+    measures = (start + dur - beat_of_insert) / beats_per_measure;
+    imeasures = int(max(measures, 0.0));
+    double new_bar_loc = beat_of_insert + (imeasures * beats_per_measure);
+    if (new_bar_loc < start + dur) new_bar_loc += beats_per_measure;
+    // old_bar_loc should be shifted by dur:
+    old_bar_loc += dur;
+    // now the two bar locations should be equal, but due to rounding,
+    // they could be off by one measure
+    double diff = (new_bar_loc - old_bar_loc) + beats_per_measure;
+    double diff_in_measures = diff / beats_per_measure;
+    // if diff_in_measures is not (approximately) integer, we need to
+    // force a barline (time signature) after start + dur to maintain
+    // the relationship between barliness and notes
+    if (!within(diff_in_measures, ROUND(diff_in_measures), ALG_EPS)) {
+        // recall that old_bar_loc is shifted by dur
+        insert(old_bar_loc, num_after_splice, den_after_splice);
+    }
     //printf("time_sig::insert after sig at end of splice\n");
     //show();
 }
 
 
-void Alg_time_sigs::insert_beats(double beat, double len)
+void Alg_time_sigs::insert_beats(double start, double dur)
 {
-    int i;
-    // find the time_sig entry in effect at t
-    for (i = 0; i < len; i++) {
-        if (time_sigs[i].beat < beat + ALG_EPS) {
-            break;
+    int i = find_beat(start);
+
+    // time_sigs[i] is after beat and needs to shift
+    // Compute the time of the first bar at or after beat so that
+    // a bar can be placed at bar_loc + dur
+    double tsnum = 4.0;
+    double tsden = 4.0;
+    double tsbeat = 0.0; // defaults
+    
+    // three cases: 
+    //  1) time sig at splice is at i-1
+    //     for this, we must have len>0 & i>0
+    //     two sub-cases:
+    //       A) i < len && time_sig[i].beat > start
+    //       B) i == len
+    //  2) time_sig at splice is at i
+    //     for this, i < len && time_sig[i].beat ~= start
+    //  3) time_sig at splice is default 4/4
+    if (len > 0 && i > 0 &&
+        ((i < len && time_sigs[i].beat > start + ALG_EPS) ||
+         (i == len))) {
+        // no time_signature at i
+        tsnum = time_sigs[i-1].num;
+        tsden = time_sigs[i-1].den;
+        tsbeat = time_sigs[i-1].beat;
+    } else if (i < len && time_sigs[i].beat <= start + ALG_EPS) {
+        // time_signature at i is at "start" beats
+        tsnum = time_sigs[i].num;
+        tsden = time_sigs[i].den;
+        tsbeat = start;
+        i++; // we want i to be index of next time signature after start
+    }
+    // invariant: i is index of next time signature after start
+
+    // increase beat times from i to len - 1 by dur
+    for (int j = i; j < len; j++) {
+        time_sigs[j].beat += dur;
+    }
+
+    // insert a time signature to maintain bar positions if necessary
+    double beats_per_measure = (tsnum * 4) / tsden;
+    double measures = dur / beats_per_measure; // shift distance
+    int imeasures = ROUND(measures);
+    if (!within(measures, imeasures, ALG_EPS)) {
+        // shift is not a whole number of measures, so we may need to insert
+        // time signature after silence
+        // compute measures from time signature to next bar after time
+        measures = (start - tsbeat) / beats_per_measure;
+        // round up and add to tsbeat to get time of next bar
+        double bar_loc = tsbeat + beats_per_measure * (int(measures) + 1);
+        // translate bar_loc by len:
+        bar_loc += dur; // this is where we want a bar to be, but maybe
+        // there is a time signature change before bar, in which case we
+        // should not insert a new time signature
+        // The next time signature after start is at i if i < len
+        if (i < len && time_sigs[i].beat < bar_loc) {
+            /* do not insert */;
+        } else {
+            insert(bar_loc, tsnum, tsden);
         }
     }
-    // now, increase beat times by len
-    for (; i < len; i++) {
-        time_sigs[i].beat += len;
+}
+
+
+double Alg_time_sigs::nearest_beat(double beat)
+{
+    int i = find_beat(beat);
+    // i is where we would insert time signature at beat
+    // case 1: there is no time signature
+    if (i == 0 && len == 0) {
+        return ROUND(beat);
+    // case 2: beat falls approximately on time signature
+    } else if (i < len && within(time_sigs[i].beat, beat, ALG_EPS)) {
+        return time_sigs[i].beat;
+    // case 3: beat is after no time signature and before one
+    } else if (i == 0) {
+        double trial_beat = ROUND(beat);
+        // it is possible that we rounded up past a time signature
+        if (trial_beat > time_sigs[0].beat - ALG_EPS) {
+            return time_sigs[0].beat;
+        }
+        return trial_beat;
     }
+    // case 4: beat is after some time signature
+    double trial_beat = time_sigs[i - 1].beat + 
+                        ROUND(beat - time_sigs[i - 1].beat);
+    // rounding may advance trial_beat past next time signature:
+    if (i < len && trial_beat > time_sigs[i].beat - ALG_EPS) {
+        return time_sigs[i].beat;
+    }      
+    return trial_beat;
 }
 
 
@@ -2265,7 +2666,8 @@ void Alg_iterator::show()
 {
     for (int i = 0; i < len; i++) {
         Alg_pending_event_ptr p = &(pending_events[i]);
-        printf("    %d: %p[%d] on %d\n", i, p->events, p->index, p->note_on);
+        printf("    %d: %p[%ld]@%g on %d\n", i, p->events, p->index, 
+               p->offset, p->note_on);
     }
 }
 
@@ -2275,11 +2677,11 @@ bool Alg_iterator::earlier(int i, int j)
 {
     Alg_pending_event_ptr p_i = &(pending_events[i]);
     Alg_event_ptr e_i = (*(p_i->events))[p_i->index];
-    double t_i = (p_i->note_on ? e_i->time : e_i->get_end_time());
+    double t_i = (p_i->note_on ? e_i->time : e_i->get_end_time()) + p_i->offset;
     
     Alg_pending_event_ptr p_j = &(pending_events[j]);
     Alg_event_ptr e_j = (*(p_j->events))[p_j->index];
-    double t_j = (p_j->note_on ? e_j->time : e_j->get_end_time());
+    double t_j = (p_j->note_on ? e_j->time : e_j->get_end_time()) + p_j->offset;
 
     if (t_i < t_j) return true;
     // not sure if this case really exists or this is the best rule, but
@@ -2289,12 +2691,15 @@ bool Alg_iterator::earlier(int i, int j)
 }
 
 
-void Alg_iterator::insert(Alg_events_ptr events, long index, bool note_on)
+void Alg_iterator::insert(Alg_events_ptr events, long index, 
+                          bool note_on, void *cookie, double offset)
 {
     if (len == maxlen) expand();
     pending_events[len].events = events;
     pending_events[len].index = index;
     pending_events[len].note_on = note_on;
+    pending_events[len].cookie = cookie;
+    pending_events[len].offset = offset;
     int loc = len;
     int loc_parent = HEAP_PARENT(loc);
     len++;
@@ -2312,12 +2717,16 @@ void Alg_iterator::insert(Alg_events_ptr events, long index, bool note_on)
 }
 
 bool Alg_iterator::remove_next(Alg_events_ptr &events, long &index, 
-                              bool &note_on)
+                               bool &note_on, void *&cookie, 
+                               double &offset)
 {
     if (len == 0) return false; // empty!
     events = pending_events[0].events;
     index = pending_events[0].index;
     note_on = pending_events[0].note_on;
+    offset = pending_events[0].offset;
+    cookie = pending_events[0].cookie;
+    offset = pending_events[0].offset;
     len--;
     pending_events[0] = pending_events[len];
     // sift down
@@ -2344,7 +2753,7 @@ bool Alg_iterator::remove_next(Alg_events_ptr &events, long &index,
 }
 
 
-Alg_seq::Alg_seq(const char *filename, bool smf)
+Alg_seq::Alg_seq(const char *filename, bool smf, double *offset_ptr)
 {
     basic_initialization();
     ifstream inf(filename, smf ? ios::binary | ios::in : ios::in);
@@ -2354,20 +2763,22 @@ Alg_seq::Alg_seq(const char *filename, bool smf)
     }
     if (smf) {
         error = alg_smf_read(inf, this);
+        if (offset_ptr) *offset_ptr = 0.0;
     } else {
-        error = alg_read(inf, this);
+        error = alg_read(inf, this, offset_ptr);
     }
     inf.close();
 }
 
 
-Alg_seq::Alg_seq(istream &file, bool smf)
+Alg_seq::Alg_seq(istream &file, bool smf, double *offset_ptr)
 {
     basic_initialization();
     if (smf) {
         error = alg_smf_read(file, this);
+        if (offset_ptr) *offset_ptr = 0.0;
     } else {
-        error = alg_read(file, this);
+        error = alg_read(file, this, offset_ptr);
     }
 }
 
@@ -2512,11 +2923,12 @@ Alg_seq_ptr Alg_seq::cut(double start, double len, bool all)
     // return sequence from start to start+len and modify this
     // sequence by removing that time-span
 {
+    double dur = get_dur();
     // fix parameters to fall within existing sequence
-    if (start > get_dur()) return NULL; // nothing to cut
+    if (start > dur) return NULL; // nothing to cut
     if (start < 0) start = 0; // can't start before sequence starts
-    if (start + len > get_dur()) // can't cut after end:
-        len = get_dur() - start; 
+    if (start + len > dur) // can't cut after end:
+        len = dur - start; 
 
     Alg_seq_ptr result = new Alg_seq();
     Alg_time_map_ptr map = new Alg_time_map(get_time_map());
@@ -2542,11 +2954,13 @@ Alg_seq_ptr Alg_seq::cut(double start, double len, bool all)
     // we use len.
     double ts_start = start;
     double ts_end = start + len;
+    double ts_dur = dur;
     double ts_last_note_off = start + result->last_note_off;
     if (units_are_seconds) {
         ts_start = time_map->time_to_beat(ts_start);
         ts_end = time_map->time_to_beat(ts_end);
         ts_last_note_off = time_map->time_to_beat(ts_last_note_off);
+        ts_dur = time_map->time_to_beat(ts_dur);
     }
     // result is shifted from start to 0 and has length len, but
     // time_sig and time_map are copies from this. Adjust time_sig,
@@ -2568,9 +2982,9 @@ Alg_seq_ptr Alg_seq::cut(double start, double len, bool all)
     // we sliced out a portion of each track, so now we need to
     // slice out the corresponding sections of time_sig and time_map
     // as well as to adjust the duration.
-    time_sig.cut(ts_start, ts_end);
+    time_sig.cut(ts_start, ts_end, ts_dur);
     time_map->cut(start, len, units_are_seconds);
-    set_dur(get_dur() - len);
+    set_dur(dur - len);
 
     return result;
 }
@@ -2599,9 +3013,11 @@ void Alg_seq::insert_silence(double t, double len)
     } else {
         time_map->insert_beats(t_beats, len_beats);
     }
-    if (time_sig.length() > 0) {
-        time_sig.insert_beats(t_beats, len_beats);
-    }
+    time_sig.insert_beats(t_beats, len_beats);
+    // Final duration is defined to be t + len + whatever was
+    // in the sequence after t (if any). This translates to
+    // t + len + max(dur - t, 0)
+    set_dur(t + len + max(get_dur() - t, 0.0));
 }
 
 
@@ -2659,9 +3075,9 @@ Alg_seq *Alg_seq::copy(double start, double len, bool all)
 
 void Alg_seq::paste(double start, Alg_seq *seq)
 {
-    // insert seq at time; open up space for it
-    // to manipulate time map, we need units as beats
-    // save original form so we can convert back if necessary
+    // Insert seq at time, opening up space for it.
+    // To manipulate time map, we need units as beats.
+    // Save original form so we can convert back if necessary.
     bool units_should_be_seconds = units_are_seconds;
     bool seq_units_should_be_seconds = seq->get_units_are_seconds();
     if (units_are_seconds) {
@@ -2738,10 +3154,11 @@ void Alg_seq::clear_track(int track_num, double start, double len, bool all)
 void Alg_seq::clear(double start, double len, bool all)
 {
     // Fix parameters to fall within existing sequence
-    if (start > get_dur()) return; // nothing to cut
+    double dur = get_dur();
+    if (start > dur) return; // nothing to cut
     if (start < 0) start = 0; // can't start before sequence starts
-    if (start + len > get_dur()) // can't cut after end:
-        len = get_dur() - start;
+    if (start + len > dur) // can't cut after end:
+        len = dur - start;
 
     for (int i = 0; i < tracks(); i++)
         clear_track(i, start, len, all);
@@ -2749,17 +3166,19 @@ void Alg_seq::clear(double start, double len, bool all)
     // Put units in beats to match time_sig's.
     double ts_start = start;
     double ts_end = start + len;
+    double ts_dur = dur;
     if (units_are_seconds) {
         ts_start = time_map->time_to_beat(ts_start);
         ts_end = time_map->time_to_beat(ts_end);
+        ts_dur = time_map->time_to_beat(ts_dur);
     }
 
     // we sliced out a portion of each track, so now we need to
     // slice out the corresponding sections of time_sig and time_map
     // as well as to adjust the duration.
-    time_sig.cut(ts_start, ts_end);
+    time_sig.cut(ts_start, ts_end, ts_dur);
     time_map->cut(start, len, units_are_seconds);
-    set_dur(get_dur() - len);
+    set_dur(dur - len);
 }
 
 
@@ -2817,6 +3236,26 @@ bool Alg_seq::insert_beat(double time, double beat)
 }
 
 
+// input is time, return value is time
+double Alg_seq::nearest_beat_time(double time, double *beat)
+{
+    double b = time_map->time_to_beat(time);
+    b = time_sig.nearest_beat(b);
+    if (beat) *beat = b;
+    return time_map->beat_to_time(b);
+}
+
+
+bool Alg_seq::stretch_region(double b0, double b1, double dur)
+{
+    bool units_should_be_seconds = units_are_seconds;
+    convert_to_beats();
+    bool result = time_map->stretch_region(b0, b1, dur);
+    if (units_should_be_seconds) convert_to_seconds();
+    return result;
+}
+
+
 bool Alg_seq::insert_tempo(double bpm, double beat)
 {
     double bps = bpm / 60.0; // convert to beats per second
@@ -2867,6 +3306,12 @@ void Alg_seq::add_event(Alg_event_ptr event, int track_num)
 }
 
 
+double Alg_seq::get_tempo(double beat)
+{
+    return time_map->get_tempo(beat);
+}
+
+
 bool Alg_seq::set_tempo(double bpm, double start_beat, double end_beat)
 // set tempo from start_beat to end_beat
 {
@@ -2874,9 +3319,18 @@ bool Alg_seq::set_tempo(double bpm, double start_beat, double end_beat)
     if (start_beat >= end_beat) return false;
     bool units_should_be_seconds = units_are_seconds;
     convert_to_beats();
+    double dur = get_dur();
     bool result = time_map->set_tempo(bpm, start_beat, end_beat);
+    // preserve sequence duration in beats when tempo changes
+    set_dur(dur);
     if (units_should_be_seconds) convert_to_seconds();
     return result;
+}
+
+
+double Alg_seq::get_bar_len(double beat)
+{
+    return time_sig.get_bar_len(beat);
 }
 
 
@@ -2942,41 +3396,51 @@ void Alg_seq::set_events(Alg_event_ptr *events, long len, long max)
 */
 
 
-void Alg_iterator::begin(bool note_off_flag)
+void Alg_iterator::begin_seq(Alg_seq_ptr s, void *cookie, double offset)
 {
     // keep an array of indexes into tracks
-    printf("new pending\n");
+    // printf("new pending\n");
     int i;
-    for (i = 0; i < seq->track_list.length(); i++) {
-        if (seq->track_list[i].length() > 0) {
-            insert(&(seq->track_list[i]), 0, true);
+    for (i = 0; i < s->track_list.length(); i++) {
+        if (s->track_list[i].length() > 0) {
+            insert(&(s->track_list[i]), 0, true, cookie, offset);
         }
     }    
 }
 
 
-Alg_event_ptr Alg_iterator::next(bool *note_on)
+Alg_event_ptr Alg_iterator::next(bool *note_on, void **cookie_ptr, 
+                                 double *offset_ptr, double end_time)
     // return the next event in time from any track
 {
     Alg_events_ptr events_ptr;
     long index;
     bool on;
-    if (!remove_next(events_ptr, index, on)) {
+    void *cookie;
+    double offset;
+    if (!remove_next(events_ptr, index, on, cookie, offset)) {
         return NULL;
     }
     if (note_on) *note_on = on;
     Alg_event_ptr event = (*events_ptr)[index];
     if (on) {
-        if (note_off_flag && event->is_note()) {
+        if (note_off_flag && event->is_note() &&
+            (end_time == 0 ||
+             (*events_ptr)[index]->get_end_time() + offset < end_time)) {
             // this was a note-on, so insert pending note-off
-            insert(events_ptr, index, false);
+            insert(events_ptr, index, false, cookie, offset);
         }
-        // for both notes and updates, insert next event (at index + 1)
+        // for both note-ons and updates, insert next event (at index + 1)
         index++;
-        if (index < events_ptr->length()) {
-            insert(events_ptr, index, true);
+        if (index < events_ptr->length() &&
+            (end_time == 0 || // zero means ignore end time
+             // stop iterating when end time is reached
+             (*events_ptr)[index]->time + offset < end_time)) {
+            insert(events_ptr, index, true, cookie, offset);
         }
     }
+    if (cookie_ptr) *cookie_ptr = cookie;
+    if (offset_ptr) *offset_ptr = offset;
     return event;
 }
 

@@ -487,13 +487,16 @@ void Effect::Preview()
       if (mixRight)
          playbackTracks.Add(mixRight);
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+      NoteTrackArray empty;
+#endif
       // Start audio playing
       int token =
-         gAudioIO->StartStream(playbackTracks, recordingTracks, NULL,
+         gAudioIO->StartStream(playbackTracks, recordingTracks, 
 #ifdef EXPERIMENTAL_MIDI_OUT
-                               NULL,
+                               empty,
 #endif
-                               rate, t0, t1, NULL);
+                               NULL, rate, t0, t1, NULL);
 
       if (token) {
          int previewing = eProgressSuccess;

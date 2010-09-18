@@ -111,7 +111,7 @@ void FFT3(int NumSamples,
    int i, j, k, n;
    int BlockSize, BlockEnd;
 
-   float angle_numerator = 2.0 * M_PI;
+   float angle_numerator = float(2.0 * M_PI);
    float tr, ti;                /* temp real, temp imaginary */
 
    if (!IsPowerOfTwo(NumSamples)) {
@@ -224,7 +224,7 @@ void RealFFT3(int NumSamples, float *RealIn, float *RealOut, float *ImagOut)
    int Half = NumSamples / 2;
    int i;
 
-   float theta = M_PI / Half;
+   float theta = float(M_PI / Half);
 
    float *tmpReal = (float *) alloca(sizeof(float) * Half);
    float *tmpImag = (float *) alloca(sizeof(float) * Half);
@@ -289,7 +289,7 @@ void PowerSpectrum3(int NumSamples, float *In, float *Out)
    int Half = NumSamples / 2;
    int i;
 
-   float theta = M_PI / Half;
+   float theta = float(M_PI / Half);
 
    float *tmpReal = (float *) alloca(sizeof(float) * Half);;
    float *tmpImag = (float *) alloca(sizeof(float) * Half);

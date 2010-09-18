@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "portmidi.h"
+#include "pmutil.h"
+#include "pminternal.h"
 #include "pmmacosxcm.h"
 #include "readbinaryplist.h"
 

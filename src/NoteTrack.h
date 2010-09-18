@@ -15,8 +15,32 @@
 #include "Audacity.h"
 #include "Experimental.h"
 #include "Track.h"
+#include "allegro.h"
 
 #if defined(USE_MIDI)
+
+// define this switch to play MIDI during redisplay to sonify run times
+// Note that if SONIFY is defined, the default MIDI device will be opened
+// and may block normal MIDI playback.
+//#define SONIFY 1
+
+#ifdef SONIFY
+
+#define SONFNS(name) \
+   void Begin ## name(); \
+   void End ## name();
+
+SONFNS(NoteBackground)
+SONFNS(NoteForeground)
+SONFNS(Measures)
+SONFNS(Serialize)
+SONFNS(Unserialize)
+SONFNS(ModifyState)
+SONFNS(AutoSave)
+
+#undef SONFNS
+
+#endif
 
 class wxDC;
 class wxRect;
@@ -35,10 +59,10 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    
    virtual int GetKind() const { return Note; } 
 
-   virtual double GetStartTime() { return 0.0; }
-   virtual double GetEndTime() { return mLen; }
+   virtual double GetStartTime();
+   virtual double GetEndTime();
 
-   void DrawLabelControls(wxDC & dc, wxRect & r);
+   int DrawLabelControls(wxDC & dc, wxRect & r);
    bool LabelClick(wxRect & r, int x, int y, bool right);
 
    void SetSequence(Alg_seq *seq);
@@ -47,6 +71,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
 
    int GetVisibleChannels();
 
+   Alg_seq_ptr MakeExportableSeq();
    bool ExportMIDI(wxString f);
    bool ExportAllegro(wxString f);
 
@@ -60,10 +85,59 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // High-level editing
    virtual bool Cut  (double t0, double t1, Track **dest);
    virtual bool Copy (double t0, double t1, Track **dest);
+   virtual bool Trim (double t0, double t1);
    virtual bool Clear(double t0, double t1);
    virtual bool Paste(double t, Track *src);
+   virtual bool Shift(double t);
+
+   float GetGain() const { return mGain; }
+   void SetGain(float gain) { mGain = gain; }
+
+   double NearestBeatTime(double time, double *beat);
+   bool StretchRegion(double b0, double b1, double dur);
 
    int GetBottomNote() const { return mBottomNote; }
+   int GetPitchHeight() const { return mPitchHeight; }
+   void SetPitchHeight(int h) { mPitchHeight = h; }
+   void ZoomOut(int y) { Zoom(y, -1); }
+   void ZoomIn(int y) { Zoom(y, 1); }
+   void Zoom(int centerY, int amount);
+   void ZoomTo(int start, int end);
+   int GetNoteMargin() const { return (mPitchHeight + 1) / 2; }
+   int GetOctaveHeight() const { return mPitchHeight * 12 + 2; }
+   // call this once before a series of calls to IPitchToY(). It
+   // sets mBottom to offset of octave 0 so that mBottomNote
+   // is located at r.y + r.height - (GetNoteMargin() + 1 + mPitchHeight)
+   void PrepareIPitchToY(const wxRect &r) {
+       mBottom = r.y + r.height - GetNoteMargin() - 1 - mPitchHeight +
+          (mBottomNote / 12) * GetOctaveHeight() + 
+          GetNotePos(mBottomNote % 12);
+   }
+   // IPitchToY returns Y coordinate of top of pitch p
+   int IPitchToY(int p) const {
+      return mBottom - (p / 12) * GetOctaveHeight() - GetNotePos(p % 12);
+   }
+   // compute the window coordinate of the bottom of an octave: This is
+   // the bottom of the line separating B and C.
+   int GetOctaveBottom(int oct) const {
+      return IPitchToY(oct * 12) + mPitchHeight + 1;
+   }
+   // Y coordinate for given floating point pitch (rounded to int)
+   int PitchToY(double p) const {
+      return IPitchToY((int) (p + 0.5));
+   }
+   // Integer pitch corresponding to a Y coordinate
+   int YToIPitch(int y);
+   // map pitch class number (0-11) to pixel offset from bottom of octave
+   // (the bottom of the black line between B and C) to the top of the
+   // note. Note extra pixel separates B(11)/C(0) and E(4)/F(5). 
+   int GetNotePos(int p) const { return 1 + mPitchHeight * (p + 1) + (p > 4); }
+   // get pixel offset to top of ith black key note
+   int GetBlackPos(int i) const { return GetNotePos(i * 2 + 1 + (i > 1)); }
+   // GetWhitePos tells where to draw lines between keys as an offset from
+   // GetOctaveBottom. GetWhitePos(0) returns 1, which matches the location
+   // of the line separating B and C
+   int GetWhitePos(int i) const { return 1 + (i * GetOctaveHeight()) / 7; }
    void SetBottomNote(int note) 
    { 
       if (note < 0)
@@ -73,6 +147,17 @@ class AUDACITY_DLL_API NoteTrack:public Track {
 
       mBottomNote = note; 
    }
+   // Vertical scrolling is performed by dragging the keyboard at 
+   // left of track. Protocol is call StartVScroll, then update by
+   // calling VScroll with original and final mouse position.
+   // These functions are not used -- instead, zooming/dragging works like
+   // audio track zooming/dragging. The vertical scrolling is nice however,
+   // so I left these functions here for possible use in the future.
+   void StartVScroll();
+   void VScroll(int start, int end);
+
+   wxRect GetGainPlacementRect() const { return mGainPlacementRect; }
+   void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
@@ -93,17 +178,43 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // even number of times, otherwise mSeq will be NULL).
    char *mSerializationBuffer; // NULL means no buffer
    long mSerializationLength;
-   double mLen;
 
    DirManager *mDirManager;
 
-   int mBottomNote;
+   float mGain; // velocity offset
 
+   // mBottom is the Y offset of pitch 0 (normally off screen)
+   int mBottom;
+   int mBottomNote;
+   int mStartBottomNote;
+   int mPitchHeight;
    int mVisibleChannels;
    int mLastMidiPosition;
+   wxRect mGainPlacementRect;
 };
 
 #endif // USE_MIDI
+
+#ifndef SONIFY
+// no-ops:
+#define SonifyBeginSonification()
+#define SonifyEndSonification()
+#define SonifyBeginNoteBackground()
+#define SonifyEndNoteBackground()
+#define SonifyBeginNoteForeground()
+#define SonifyEndNoteForeground()
+#define SonifyBeginMeasures()
+#define SonifyEndMeasures()
+#define SonifyBeginSerialize()
+#define SonifyEndSerialize()
+#define SonifyBeginUnserialize()
+#define SonifyEndUnserialize()
+#define SonifyBeginAutoSave()
+#define SonifyEndAutoSave()
+#define SonifyBeginModifyState()
+#define SonifyEndModifyState()
+#endif
+
 
 #endif
 

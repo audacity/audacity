@@ -110,6 +110,9 @@ private:
    void DrawTitleBar(wxDC * dc, const wxRect r, Track * t, bool down);
    void DrawMuteSolo(wxDC * dc, const wxRect r, Track * t, bool down, bool solo, bool bHasSoloButton);
    void DrawVRuler(wxDC * dc, const wxRect r, Track * t);
+#ifdef EXPERIMENTAL_MIDI_OUT
+   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect r);
+#endif
    void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r);
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
@@ -263,6 +266,33 @@ class TrackPanel:public wxPanel {
    bool HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event);
    bool HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event);
    bool HitTestSlide(Track *track, wxRect &r, wxMouseEvent & event);
+#ifdef USE_MIDI
+   // data for NoteTrack interactive stretch operations:
+   // Stretching applies to a selected region after quantizing the
+   // region to beat boundaries (subbeat stretching is not supported,
+   // but maybe it should be enabled with shift or ctrl or something)
+   // Stretching can drag the left boundary (the right stays fixed),
+   // the right boundary (the left stays fixed), or the center (splits
+   // the selection into two parts: when left part grows, the right
+   // part shrinks, keeping the leftmost and rightmost boundaries 
+   // fixed.
+   enum StretchEnum {
+      stretchLeft,
+      stretchCenter,
+      stretchRight
+   };
+   StretchEnum mStretchMode; // remembers what to drag
+   bool mStretching; // true between mouse down and mouse up
+   bool mStretched; // true after drag has pushed state
+   double mStretchStart; // time of initial mouse position, quantized
+                         // to the nearest beat
+   double mStretchSel0;  // initial sel0 (left) quantized to nearest beat
+   double mStretchSel1;  // initial sel1 (left) quantized to nearest beat
+   double mStretchLeftBeats; // how many beats from left to cursor
+   double mStretchRightBeats; // how many beats from cursor to right
+   bool HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event);
+   void Stretch(int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
+#endif
 
    // AS: Selection handling
    void HandleSelect(wxMouseEvent & event);
@@ -501,6 +531,10 @@ private:
    // us to undo the slide and then slide it by another amount
    double mHSlideAmount;
 
+#ifdef USE_MIDI
+   NoteTrack *mCapturedNoteClip;
+#endif
+
    bool mDidSlideVertically;
 
    bool mRedrawAfterStop;
@@ -564,6 +598,9 @@ private:
       IsOverCutLine,
       WasOverCutLine,
       IsPopping,
+#ifdef USE_MIDI
+      IsStretching,
+#endif
       IsZooming
    };
 
@@ -595,6 +632,11 @@ private:
    wxCursor *mDisabledCursor;
    wxCursor *mAdjustLeftSelectionCursor;
    wxCursor *mAdjustRightSelectionCursor;
+#if USE_MIDI
+   wxCursor *mStretchCursor;
+   wxCursor *mStretchLeftCursor;
+   wxCursor *mStretchRightCursor;
+#endif
 
    wxMenu *mWaveTrackMenu;
    wxMenu *mNoteTrackMenu;

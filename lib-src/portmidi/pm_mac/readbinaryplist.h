@@ -3,6 +3,8 @@
    Roger B. Dannenberg, Jun 2008
 */
 
+#include <stdint.h> /* for uint8_t ... */
+
 #ifndef TRUE
     #define TRUE 1
     #define FALSE 0
@@ -34,13 +36,13 @@ enum
 };
 
 
-typedef struct {
+typedef struct pldata_struct {
     uint8_t *data;
     size_t len;
 } pldata_node, *pldata_ptr;
 
 
-typedef struct {
+typedef struct array_struct {
     struct value_struct **array;
     uint64_t length;
 } array_node, *array_ptr;

@@ -21,7 +21,7 @@ void CALLBACK winmm_time_callback(UINT uID, UINT uMsg, DWORD_PTR dwUser,
 }
  
 
-PtError Pt_Start(int resolution, PtCallback *callback, void *userData)
+PMEXPORT PtError Pt_Start(int resolution, PtCallback *callback, void *userData)
 {
     if (time_started_flag) return ptAlreadyStarted;
     timeBeginPeriod(resolution);
@@ -38,7 +38,7 @@ PtError Pt_Start(int resolution, PtCallback *callback, void *userData)
 }
 
 
-PtError Pt_Stop()
+PMEXPORT PtError Pt_Stop()
 {
     if (!time_started_flag) return ptAlreadyStopped;
     if (time_callback && timer_id) {
@@ -52,19 +52,19 @@ PtError Pt_Stop()
 }
 
 
-int Pt_Started()
+PMEXPORT int Pt_Started()
 {
     return time_started_flag;
 }
 
 
-PtTimestamp Pt_Time()
+PMEXPORT PtTimestamp Pt_Time()
 {
     return timeGetTime() - time_offset;
 }
 
 
-void Pt_Sleep(long duration)
+PMEXPORT void Pt_Sleep(int32_t duration)
 {
     Sleep(duration);
 }

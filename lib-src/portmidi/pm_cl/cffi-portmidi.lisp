@@ -6,9 +6,6 @@
 ;;; See http://www.cliki.net/LLGPL for the text of this agreement.
 ;;; **********************************************************************
 
-;;; $Name: not supported by cvs2svn $
-;;; $Revision: 1.1 $
-;;; $Date: 2009-06-24 20:37:25 $
 
 ;;; A CFFI interface to Portmidi. Should run in most Common Lisp
 ;;; implementations on Linux, OS X and Windows. For information about

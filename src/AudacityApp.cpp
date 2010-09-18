@@ -94,6 +94,10 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "import/Import.h"
 
+#ifdef EXPERIMENTAL_SCOREALIGN
+#include "effects/ScoreAlignDialog.h"
+#endif
+
 #ifdef _DEBUG
     #ifdef _MSC_VER
         #undef THIS_FILE
@@ -279,6 +283,9 @@ void QuitAudacity(bool bForce)
    gParentFrame = NULL;
 
    CloseContrastDialog();
+#ifdef EXPERIMENTAL_SCOREALIGN
+   CloseScoreAlignDialog();
+#endif
    CloseScreenshotTools();
    
    //release ODManager Threads

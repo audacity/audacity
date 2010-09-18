@@ -92,6 +92,8 @@ void MidiIOPrefs::Populate()
 /// The corresponding labels are what gets stored.
 void MidiIOPrefs::GetNamesAndLabels() {
    // Gather list of hosts.  Only added hosts that have devices attached.
+   Pm_Terminate(); // close and open to refresh device lists
+   Pm_Initialize();
    int nDevices = Pm_CountDevices();
    for (int i = 0; i < nDevices; i++) {
       const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
@@ -122,8 +124,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
                              mHostLabels);
          S.SetSizeHints(mHostNames);
 
-         S.AddPrompt(_("Using:"));
-         S.AddFixedText(wxString(Pa_GetVersionText(), wxConvLocal));
+         S.AddPrompt(_("Using: PortMidi"));
       }
       S.EndMultiColumn();
    }                              
@@ -137,6 +138,11 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          mPlay = S.AddChoice(_("Device") + wxString(wxT(":")),
                              wxEmptyString,
                              &empty);
+         int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"), 
+                                    DEFAULT_SYNTH_LATENCY);
+         mLatency = S.TieTextBox(_("MIDI Synthesizer Latency (ms):"),
+                                 wxT("/MidiIO/SynthLatency"),
+                                 latency, 3);
       }
       S.EndMultiColumn();
    }
@@ -162,88 +168,6 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
    }
    S.EndStatic();
 }
-
-// Not sure that these settings are needed right now.
-#if 0
-   S.StartStatic( _("Playthrough") );
-   {
-      S.TieCheckBox( _("&Play other tracks while recording new one"),
-         wxT("Duplex"),true);
-#ifdef __MACOSX__
-      S.TieCheckBox( _("&Hardware Playthrough (Play new track while recording it)"),
-         wxT("Playthrough"),false);
-#endif
-      S.TieCheckBox( _("&Software Playthrough (Play new track while recording it)"),
-         wxT("SWPlaythrough"),false);
-   }
-   S.EndStatic();
-   S.StartHorizontalLay( wxEXPAND, 0 );
-   S.StartStatic( _("Cut Preview"),1 );
-   {
-      S.StartThreeColumn();
-      S.TieTextBox( _("Play before cut region:"), wxT("CutPreviewBeforeLen"),1.0,9);
-      S.AddUnits(  _("seconds") );
-      S.TieTextBox( _("Play after cut region:"),wxT("CutPreviewAfterLen"), 1.0,9);
-      S.AddUnits(  _("seconds") );
-      S.EndThreeColumn();
-   }
-   S.EndStatic();
-   S.StartStatic( _("Latency"),1 );
-   {
-      S.StartThreeColumn();
-      // only show the following controls if we use Portaudio v19, because
-      // for Portaudio v19 we always use default buffer sizes
-      S.TieTextBox( _("Audio to buffer:"),wxT("LatencyDuration"),100.0,9);
-      S.AddUnits(  _("milliseconds") );
-      S.TieTextBox( _("Latency correction:"),wxT("LatencyCorrection"),0.0,9);
-      S.AddUnits(  _("milliseconds") );
-      S.EndThreeColumn();
-   }
-   S.EndStatic();
-   S.EndHorizontalLay();
-   S.StartHorizontalLay( wxEXPAND, 0 );
-   S.StartStatic( _("Seek Time"),1 );
-   {
-      S.StartThreeColumn();
-      S.TieTextBox( _("Short period:"), wxT("SeekShortPeriod"),1.0,9);
-      S.AddUnits(  _("seconds") );
-      S.TieTextBox( _("Long period:"),wxT("SeekLongPeriod"), 15.0,9);
-      S.AddUnits(  _("seconds") );
-      S.EndThreeColumn();
-   }
-   S.EndStatic();
-   S.StartStatic( _("Effects Preview"),1 );
-   {
-      S.StartThreeColumn();
-      S.TieTextBox( _("Play when previewing:"), wxT("EffectsPreviewLen"), 3.0,9);
-      S.AddUnits( _("seconds") );
-      S.EndThreeColumn();
-   }
-
-   gPrefs->SetPath(wxT("/"));
-#endif
-
-// JKC: This is some old code that was sizing control labels all the same, 
-// even if in different static controls.  It made for a nicer layout.
-// We might want to do something like that again in future.
-#if 0
-
-   // find out the biggest minimum size of labels
-   int maxIndex = 0,r;
-   wxSize maxMinSize = textSizer[0]->GetMinSize();
-   for (r = 1; r < 3; r++) {
-      if (textSizer[r]->GetMinSize().GetWidth() > maxMinSize.GetWidth()) {
-         maxMinSize = textSizer[r]->GetMinSize();
-         maxIndex = r;
-      }
-   }
-
-   // set small minimum sizes to max minumum size
-   for (r = 0; r < 3; r++) {
-      if (r != maxIndex) 
-         textSizer[r]->SetMinSize( maxMinSize );
-   }
-#endif
 
 void MidiIOPrefs::OnHost(wxCommandEvent & e)
 {
@@ -315,65 +239,6 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
 //   OnDevice(e);
 }
 
-/*
-void MidiIOPrefs::OnDevice(wxCommandEvent & e)
-{
-   int ndx = mRecord->GetCurrentSelection();
-   if (ndx == wxNOT_FOUND) {
-      ndx = 0;
-   }
-
-   int sel = mChannels->GetSelection();
-   int cnt = 0;
-
-   const PmDeviceInfo *info = (const PmDeviceInfo *) mRecord->GetClientData(ndx);
-   if (info != NULL) {
-      cnt = info->input;
-   }
-
-   if (sel != wxNOT_FOUND) {
-      mRecordChannels = sel + 1;
-   }
-
-   mChannels->Clear();
-
-   // Limit cnt
-   cnt = cnt <= 0  ? 16  : cnt;
-   cnt = cnt > 256 ? 256 : cnt;
-      
-   wxArrayString channelnames;
-
-   // Channel counts, mono, stereo etc...
-   for (int i = 0; i < cnt; i++) {
-      wxString name;
-
-      if (i == 0) {
-         name = _("1 (Mono)");
-      }
-      else if (i == 1) {
-         name = _("2 (Stereo)");
-      }
-      else {
-         name = wxString::Format(wxT("%d"), i + 1);
-      }
-
-      channelnames.Add(name);
-      int index = mChannels->Append(name);
-      if (i == mRecordChannels - 1) {
-         mChannels->SetSelection(index);
-      }
-   }
-
-   if (mChannels->GetCount() && mChannels->GetCurrentSelection() == wxNOT_FOUND) {
-      mChannels->SetSelection(0);
-   }
-
-   ShuttleGui S(this, eIsCreating);
-   S.SetSizeHints(mChannels, channelnames);
-   Layout();
-}
-*/
-
 bool MidiIOPrefs::Apply()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
@@ -397,17 +262,16 @@ bool MidiIOPrefs::Apply()
                                      wxString(info->name, wxConvLocal).c_str()));
    }
 
-/*
-   gPrefs->Write(wxT("/MidiIO/RecordChannels"),
-                 wxString::Format(wxT("%d"),
-                                  mChannels->GetSelection() + 1));
-*/
+   return true;
+}
 
-   #if USE_PORTMIXER
-   if (gAudioIO)
-      gAudioIO->HandleDeviceChange();
-   #endif // USE_PORTMIXER
-
+bool MidiIOPrefs::Validate()
+{
+   long latency;
+   if (!mLatency->GetValue().ToLong(&latency)) {
+      wxMessageBox(_("The MIDI Synthesizer Latency must be an integer"));
+      return false;
+   }
    return true;
 }
 

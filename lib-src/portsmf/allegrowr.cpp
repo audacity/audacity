@@ -56,32 +56,34 @@ Alg_event_ptr Alg_seq::write_track_name(ostream &file, int n,
 // find a name and write it, return a pointer to it so the track
 // writer knows what update (if any) to skip
 {
-    Alg_event_ptr e = NULL;
+    Alg_event_ptr e = NULL; // e is the result, default is NULL
     file << "#track " << n;
     const char *attr = symbol_table.insert_string(
                                n == 0 ? "seqnames" : "tracknames");
     // search for name in events with timestamp of 0
     for (int i = 0; i < events.length(); i++) {
-        e = events[i];
-        if (e->time > 0) break;
-        if (e->is_update()) {
-            Alg_update_ptr u = (Alg_update_ptr) e;
+        Alg_event_ptr ue = events[i];
+        if (ue->time > 0) break;
+        if (ue->is_update()) {
+            Alg_update_ptr u = (Alg_update_ptr) ue;
             if (u->parameter.attr == attr) {
                 file << " " << u->parameter.s;
+                e = ue; // return the update event we found
                 break;
             }
         }
     }
-    file << endl;
-    return e;
+    file << endl; // end of line containing #track [<name>]
+    return e; // return parameter event with name if one was found
 }
 
 
-void Alg_seq::write(ostream &file, bool in_secs)
+void Alg_seq::write(ostream &file, bool in_secs, double offset)
 {
     int i, j;
     if (in_secs) convert_to_seconds();
     else convert_to_beats();
+    file << "#offset " << offset << endl;
     Alg_event_ptr update_to_skip = write_track_name(file, 0, track_list[0]);
     Alg_beats &beats = time_map->beats;
     for (i = 0; i < beats.len - 1; i++) {
@@ -171,11 +173,11 @@ void Alg_seq::write(ostream &file, bool in_secs)
     }
 }
 
-bool Alg_seq::write(const char *filename)
+bool Alg_seq::write(const char *filename, double offset)
 {
     ofstream file(filename);
     if (file.fail()) return false;
-     write(file, units_are_seconds);
-     file.close();
-     return true;
+    write(file, units_are_seconds, offset);
+    file.close();
+    return true;
 }

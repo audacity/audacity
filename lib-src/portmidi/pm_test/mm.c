@@ -83,12 +83,12 @@ boolean chmode = true;      /* show channel mode messages */
 boolean pgchanges = true;   /* show program changes */
 boolean flush = false;	    /* flush all pending MIDI data */
 
-long filter = 0;            /* remember state of midi filter */
+uint32_t filter = 0;            /* remember state of midi filter */
 
-long clockcount = 0;        /* count of clocks */
-long actsensecount = 0;     /* cout of active sensing bytes */
-long notescount = 0;        /* #notes since last request */
-long notestotal = 0;        /* total #notes */
+uint32_t clockcount = 0;        /* count of clocks */
+uint32_t actsensecount = 0;     /* cout of active sensing bytes */
+uint32_t notescount = 0;        /* #notes since last request */
+uint32_t notestotal = 0;        /* total #notes */
 
 char val_format[] = "    Val %d\n";
 
@@ -102,11 +102,11 @@ extern  int     abort_flag;
 *    Routines local to this module
 *****************************************************************************/
 
-private    void    mmexit();
+private    void    mmexit(int code);
 private    void    output(PmMessage data);
 private    int     put_pitch(int p);
 private    void    showhelp();
-private    void    showbytes(long data, int len, boolean newline);
+private    void    showbytes(PmMessage data, int len, boolean newline);
 private    void    showstatus(boolean flag);
 private    void    doascii(char c);
 private    int     get_number(char *prompt);
@@ -133,7 +133,7 @@ void receive_poll(PtTimestamp timestamp, void *userData)
     PmEvent event;
     int count;
     if (!active) return;
-    while (count = Pm_Read(midi_in, &event, 1)) {
+    while ((count = Pm_Read(midi_in, &event, 1))) {
         if (count == 1) output(event.message);
         else            printf(Pm_GetErrorText(count));
     }
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
     if (err) {
         printf(Pm_GetErrorText(err));
         Pt_Stop();
-        exit(1);
+        mmexit(1);
     }
     Pm_SetFilter(midi_in, filter);
     inited = true; /* now can document changes, set filter */
@@ -185,7 +185,8 @@ int main(int argc, char **argv)
     Pm_Close(midi_in);
     Pt_Stop();
     Pm_Terminate();
-    exit(0);
+    mmexit(0);
+    return 0; // make the compiler happy be returning a value
 }
 
 
@@ -240,7 +241,7 @@ private void doascii(char c)
         if (clksencnt) {
             if (inited)
                 printf("Clock Count %ld\nActive Sense Count %ld\n", 
-                        clockcount, actsensecount);
+                        (long) clockcount, (long) actsensecount);
         } else if (inited) {
             printf("Clock Counting not on\n");
         }
@@ -248,7 +249,7 @@ private void doascii(char c)
         notestotal+=notescount;
         if (inited)
             printf("This Note Count %ld\nTotal Note Count %ld\n",
-                    notescount, notestotal);
+                    (long) notescount, (long) notestotal);
         notescount=0;
     } else if (c == 'v') {
         verbose = !verbose;
@@ -272,12 +273,12 @@ private void doascii(char c)
 
 
 
-private void mmexit()
+private void mmexit(int code)
 {
     /* if this is not being run from a console, maybe we should wait for
      * the user to read error messages before exiting
      */
-    exit(1);
+    exit(code);
 }
 
 
@@ -304,7 +305,7 @@ private void output(PmMessage data)
     if (in_sysex || Pm_MessageStatus(data) == MIDI_SYSEX) {
 #define sysex_max 16
         int i;
-        long data_copy = data;
+        PmMessage data_copy = data;
         in_sysex = true;
         /* look for MIDI_EOX in first 3 bytes 
          * if realtime messages are embedded in sysex message, they will
@@ -491,7 +492,7 @@ private int put_pitch(int p)
 
 char nib_to_hex[] = "0123456789ABCDEF";
 
-private void showbytes(long data, int len, boolean newline)
+private void showbytes(PmMessage data, int len, boolean newline)
 {
     int count = 0;
     int i;

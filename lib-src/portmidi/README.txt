@@ -11,6 +11,10 @@ Additional documentation:
   - Linux: see pm_linux/README_LINUX.txt
   - Mac OSX: see pm_mac/README_MAC.txt
   - Common Lisp: see pm_cl/README_CL.txt
+  - Eclipse: see portmidi_cdt.zip (this was contributed as is; the dlls here
+        are now -- Sep 09 -- out of date. What is really needed is a script
+        to generate this release automatically so we can maintain it.)
+  - C-Sharp: see pm_csharp.zip (also contributed as is)
 
 ---------- some notes on the design of PortMidi ----------
 

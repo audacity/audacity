@@ -8,6 +8,7 @@
  */
 
 #define ALLOC(t, n) (t *) malloc(sizeof(t) * (n))
+#define FREE(p) free(p)
 
 #define ROUND(x) ((int) (0.5 + (x)))
 

@@ -111,6 +111,7 @@ simplifies construction of menu items.
 #include "CaptureEvents.h"
 
 #ifdef EXPERIMENTAL_SCOREALIGN
+#include "effects/ScoreAlignDialog.h"
 #include "audioreader.h"
 #include "scorealign.h"
 #include "scorealign-glue.h"
@@ -3652,9 +3653,23 @@ void AudacityProject::OnTrim()
    Track *n = iter.First();
 
    while (n) {
-      if ((n->GetKind() == Track::Wave) && n->GetSelected()) {
-         //Delete the section before the left selector
-        ((WaveTrack*)n)->Trim(mViewInfo.sel0, mViewInfo.sel1);
+      if (n->GetSelected()) {
+         switch (n->GetKind())
+         {
+#if defined(USE_MIDI)
+            case Track::Note:
+               ((NoteTrack*)n)->Trim(mViewInfo.sel0, mViewInfo.sel1);
+            break;
+#endif
+
+            case Track::Wave:
+               //Delete the section before the left selector
+               ((WaveTrack*)n)->Trim(mViewInfo.sel0, mViewInfo.sel1);
+            break;
+
+            default:
+            break;
+         }
       }
       n = iter.Next();
    }
@@ -4933,6 +4948,143 @@ void AudacityProject::OnAlignMoveSel(int index)
 }
 
 #ifdef EXPERIMENTAL_SCOREALIGN
+// rough relative amount of time to compute one 
+//    frame of audio or midi, or one cell of matrix, or one iteration
+//    of smoothing, measured on a 1.9GHz Core 2 Duo in 32-bit mode
+//    (see COLLECT_TIMING_DATA below)
+#define AUDIO_WORK_UNIT 0.004F
+#define MIDI_WORK_UNIT 0.0001F
+#define MATRIX_WORK_UNIT 0.000002F
+#define SMOOTHING_WORK_UNIT 0.000001F
+
+// Write timing data to a file; useful for calibrating AUDIO_WORK_UNIT,
+// MIDI_WORK_UNIT, MATRIX_WORK_UNIT, and SMOOTHING_WORK_UNIT coefficients
+// Data is written to timing-data.txt; look in 
+//     audacity-src/win/Release/modules/
+#define COLLECT_TIMING_DATA
+
+// Audacity Score Align Progress class -- progress reports come here
+class ASAProgress : public SAProgress {
+ private:
+   float mTotalWork;
+   float mFrames[2];
+   long mTotalCells; // how many matrix cells?
+   long mCellCount; // how many cells so far?
+   long mPrevCellCount; // cell_count last reported with Update()
+   ProgressDialog *mProgress;
+   #ifdef COLLECT_TIMING_DATA
+      FILE *mTimeFile;
+      wxDateTime mStartTime;
+      long iterations;
+   #endif
+
+ public:
+   ASAProgress() { 
+      smoothing = false;
+      mProgress = NULL; 
+      #ifdef COLLECT_TIMING_DATA
+         mTimeFile = fopen("timing-data.txt", "w");
+      #endif
+   }
+   ~ASAProgress() { 
+      delete mProgress; 
+      #ifdef COLLECT_TIMING_DATA
+         fclose(mTimeFile);
+      #endif
+   }
+   virtual void set_phase(int i) {
+      float work[2]; // chromagram computation work estimates
+      float work2, work3 = 0; // matrix and smoothing work estimates
+      SAProgress::set_phase(i);
+      #ifdef COLLECT_TIMING_DATA
+         long ms = 0;
+         wxDateTime now = wxDateTime::UNow();
+         fprintf(mTimeFile, "Phase %d begins at %s\n", 
+                 i, now.FormatTime().c_str());
+         if (i != 0)
+            ms = now.Subtract(mStartTime).GetMilliseconds().ToLong();
+         mStartTime = now;
+      #endif
+      if (i == 0) {
+         mCellCount = 0;
+         for (int j = 0; j < 2; j++) {
+            mFrames[j] = durations[j] / frame_period;
+         }
+         mTotalWork = 0;
+         for (int j = 0; j < 2; j++) {
+             work[j] =
+                (is_audio[j] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[j];
+             mTotalWork += work[j];
+         }
+         mTotalCells = mFrames[0] * mFrames[1];
+         work2 = mTotalCells * MATRIX_WORK_UNIT;
+         mTotalWork += work2;
+         // arbitarily assume 60 iterations to fit smooth segments and
+         // per frame per iteration is SMOOTHING_WORK_UNIT
+         if (smoothing) {
+            work3 = 
+               wxMax(mFrames[0], mFrames[1]) * SMOOTHING_WORK_UNIT * 40;
+            mTotalWork += work3;
+         }
+         #ifdef COLLECT_TIMING_DATA
+            fprintf(mTimeFile, " mTotalWork (an estimate) = %g\n", mTotalWork);
+            fprintf(mTimeFile, " work0 = %g, frames %g, is_audio %d\n", 
+                    work[0], mFrames[0], is_audio[0]);
+            fprintf(mTimeFile, " work1 = %g, frames %g, is_audio %d\n", 
+                    work[1], mFrames[1], is_audio[1]);
+            fprintf(mTimeFile, "work2 = %g, work3 = %g\n", work2, work3);
+         #endif
+         mProgress = new ProgressDialog(_("Synchronize MIDI with Audio"),
+                               _("Synchronizing MIDI and Audio Tracks"));
+      } else if (i < 3) {
+         fprintf(mTimeFile,
+               "Phase %d took %d ms for %g frames, coefficient = %g s/frame\n", 
+               i - 1, ms, mFrames[i - 1], (ms * 0.001) / mFrames[i - 1]);
+      } else if (i == 3) {
+        fprintf(mTimeFile,
+                "Phase 2 took %d ms for %d cells, coefficient = %g s/cell\n", 
+                ms, mCellCount, (ms * 0.001) / mCellCount);
+      } else if (i == 4) {
+        fprintf(mTimeFile, "Phase 3 took %d ms for %d iterations on %g frames, coefficient = %g s per frame per iteration\n", 
+                ms, iterations, wxMax(mFrames[0], mFrames[1]), 
+                (ms * 0.001) / (wxMax(mFrames[0], mFrames[1]) * iterations));
+      }
+   }
+   virtual bool set_feature_progress(float s) {
+      float work;
+      if (phase == 0) {
+         float f = s / frame_period;
+         work = (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * f;
+      } else if (phase == 1) {
+         float f = s / frame_period;
+         work = (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] + 
+                (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * f;
+      }
+      int updateResult = mProgress->Update(int(work), int(mTotalWork));
+      return (updateResult == eProgressSuccess);
+   }   
+   virtual bool set_matrix_progress(int cells) {
+      mCellCount += cells;
+      float work = 
+             (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] + 
+             (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1];
+      work += mCellCount * MATRIX_WORK_UNIT;
+      int updateResult = mProgress->Update(int(work), int(mTotalWork));
+      return (updateResult == eProgressSuccess);
+   }   
+   virtual bool set_smoothing_progress(int i) {
+      iterations = i;
+      float work = 
+             (is_audio[0] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[0] + 
+             (is_audio[1] ? AUDIO_WORK_UNIT : MIDI_WORK_UNIT) * mFrames[1] +
+             MATRIX_WORK_UNIT * mFrames[0] * mFrames[1];
+      work += i * wxMax(mFrames[0], mFrames[1]) * SMOOTHING_WORK_UNIT;
+      int updateResult = mProgress->Update(int(work), int(mTotalWork));
+      return (updateResult == eProgressSuccess);
+   }
+};
+
+
 long mixer_process(void *mixer, float **buffer, long n)
 {
    Mixer *mix = (Mixer *) mixer;
@@ -4974,6 +5126,27 @@ void AudacityProject::OnScoreAlign()
       return;
    }
 
+   // Creating the dialog also stores dialog into gScoreAlignDialog so
+   // that it can be delted by CloseScoreAlignDialog() either here or
+   // if the program is quit by the user while the dialog is up.
+   ScoreAlignParams params;
+   ScoreAlignDialog *dlog = new ScoreAlignDialog(NULL, params);
+   CloseScoreAlignDialog();
+
+   if (params.mStatus != wxID_OK) return;
+
+   // We're going to do it. 
+   PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
+   // Remove offset from NoteTrack because audio is
+   // mixed starting at zero and incorporating clip offsets.
+   if (nt->GetOffset() < 0) {
+      // remove the negative offset data before alignment
+      nt->Clear(nt->GetOffset(), 0);
+   } else if (nt->GetOffset() > 0) {
+      nt->Shift(nt->GetOffset());
+   }
+   nt->SetOffset(0);
+
    WaveTrack **waveTracks;
    mTracks->GetWaveTracks(true /* selectionOnly */, 
                           &numWaveTracksSelected, &waveTracks);
@@ -4992,24 +5165,48 @@ void AudacityProject::OnScoreAlign()
                           NULL);                   // MixerSpec *mixerSpec = NULL
    delete [] waveTracks;
 
-   // debugging/testing
-   //float *buffer;
-   //long buffer_len = mixer_process((void *) mix, &buffer, 4096);
-   //while (buffer_len) 
-   //   buffer_len = mixer_process((void *) mix, &buffer, 4096);
-   
-   scorealign((void *) mix, &mixer_process,
-              2 /* channels */, 44100.0 /* srate */, endTime, nt->GetSequence());
+   ASAProgress *progress = new ASAProgress;
 
+   // There's a lot of adjusting made to incorporate the note track offset into
+   // the note track while preserving the position of notes within beats and
+   // measures. For debugging, you can see just the pre-scorealign note track 
+   // manipulation by setting SKIP_ACTUAL_SCORE_ALIGNMENT. You could then, for
+   // example, save the modified note track in ".gro" form to read the details.
+   //#define SKIP_ACTUAL_SCORE_ALIGNMENT 1
+#ifndef SKIP_ACTUAL_SCORE_ALIGNMENT
+   int result = scorealign((void *) mix, &mixer_process,
+                           2 /* channels */, 44100.0 /* srate */, endTime,
+                           nt->GetSequence(), progress, params);
+#else
+   int result = SA_SUCCESS;
+#endif
+
+   delete progress;
    delete mix;
 
-   PushState(_("Sync MIDI with Audio"), _("Sync MIDI with Audio"));
-
-   RedrawProject();
-
-   wxMessageBox(_("Alignment completed."));
+   if (result == SA_SUCCESS) {
+      
+      RedrawProject();
+      wxMessageBox(wxString::Format(
+         _("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."), 
+         params.mMidiStart, params.mMidiEnd, 
+         params.mAudioStart, params.mAudioEnd));
+   } else if (result == SA_TOOSHORT) {
+      wxMessageBox(wxString::Format(
+         _("Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."), 
+         params.mMidiStart, params.mMidiEnd, 
+         params.mAudioStart, params.mAudioEnd));
+   } else if (result == SA_CANCEL) {
+      GetActiveProject()->OnUndo(); // recover any changes to note track
+      return; // no message when user cancels alignment
+   } else {
+      GetActiveProject()->OnUndo(); // recover any changes to note track
+      wxMessageBox(_("Internal error reported by alignment process."));
+   }
 }
 #endif /* EXPERIMENTAL_SCOREALIGN */
+
+
 void AudacityProject::OnNewWaveTrack()
 {
    WaveTrack *t = mTrackFactory->NewWaveTrack(mDefaultFormat, mRate);

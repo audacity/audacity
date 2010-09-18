@@ -317,6 +317,8 @@ void EffectNyquist::Parse(wxString line)
 
 void EffectNyquist::ParseFile()
 {
+   wxLogDebug(wxT("EffectNyquist::ParseFile called"));
+
    wxTextFile f(mFileName.GetFullPath());
    if (!f.Open())
       return;
@@ -326,6 +328,7 @@ void EffectNyquist::ParseFile()
    mOK = false;
    mIsSal = false;
    mControls.Clear();
+   mDebug = false;
 
    int i;
    int len = f.GetLineCount();
@@ -421,9 +424,10 @@ bool EffectNyquist::PromptUser()
          return false;
       }
 
-      if (result == eDebugID) {
+      /*if (result == eDebugID) {
          mDebug = true;
-      }
+      }*/
+      mDebug = (result == eDebugID);
 
       mCmd = dlog.GetCommand();
 
@@ -604,7 +608,7 @@ bool EffectNyquist::Process()
 
    this->ReplaceProcessedTracks(success);
 
-   mDebug = false;
+   //mDebug = false;
 
    return success;
 }

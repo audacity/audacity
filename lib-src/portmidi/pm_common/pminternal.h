@@ -95,7 +95,7 @@ extern int pm_descriptor_max;
 extern descriptor_type descriptors;
 extern int pm_descriptor_index;
 
-typedef unsigned long (*time_get_proc_type)(void *time_info);
+typedef uint32_t (*time_get_proc_type)(void *time_info);
 
 typedef struct pm_internal_struct {
     int device_id; /* which device is open (index to descriptors) */
@@ -103,10 +103,10 @@ typedef struct pm_internal_struct {
     
     PmTimeProcPtr time_proc; /* where to get the time */
     void *time_info; /* pass this to get_time() */
-    long buffer_len; /* how big is the buffer or queue? */
+    int32_t buffer_len; /* how big is the buffer or queue? */
     PmQueue *queue;
 
-    long latency; /* time delay in ms between timestamps and actual output */
+    int32_t latency; /* time delay in ms between timestamps and actual output */
                   /* set to zero to get immediate, simple blocking output */
                   /* if latency is zero, timestamps will be ignored; */
                   /* if midi input device, this field ignored */
@@ -122,8 +122,8 @@ typedef struct pm_internal_struct {
     PmMessage sysex_message; /* buffer for 4 bytes of sysex data */
     int sysex_message_count; /* how many bytes in sysex_message so far */
 
-    long filters; /* flags that filter incoming message classes */
-    int channel_mask; /* flter incoming messages based on channel */
+    int32_t filters; /* flags that filter incoming message classes */
+    int32_t channel_mask; /* filter incoming messages based on channel */
     PmTimestamp last_msg_time; /* timestamp of last message */
     PmTimestamp sync_time; /* time of last synchronization */
     PmTimestamp now; /* set by PmWrite to current time */
@@ -137,8 +137,8 @@ typedef struct pm_internal_struct {
      * important
      */
     unsigned char *fill_base; /* addr of ptr to sysex data */
-    unsigned long *fill_offset_ptr; /* offset of next sysex byte */
-    int fill_length; /* how many sysex bytes to write */
+    uint32_t *fill_offset_ptr; /* offset of next sysex byte */
+    int32_t fill_length; /* how many sysex bytes to write */
 } PmInternal;
 
 
@@ -157,7 +157,7 @@ PmError pm_fail_timestamp_fn(PmInternal *midi, PmTimestamp timestamp);
 PmError pm_success_fn(PmInternal *midi);
 PmError pm_add_device(char *interf, char *name, int input, void *descriptor,
                       pm_fns_type dictionary);
-unsigned int pm_read_bytes(PmInternal *midi, unsigned char *data, int len,
+uint32_t pm_read_bytes(PmInternal *midi, const unsigned char *data, int len,
                            PmTimestamp timestamp);
 void pm_read_short(PmInternal *midi, PmEvent *event);
 

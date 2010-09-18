@@ -27,6 +27,7 @@ UndoManager
 #include "Sequence.h"
 #include "Track.h"
 #include "WaveTrack.h"          // temp
+#include "NoteTrack.h"  // for Sonify* function declarations
 
 #include <map>
 #include <set>
@@ -185,6 +186,7 @@ bool UndoManager::RedoAvailable()
 
 void UndoManager::ModifyState(TrackList * l, double sel0, double sel1)
 {
+   SonifyBeginModifyState();
    // Delete current
    stack[current]->tracks->Clear(true);
    delete stack[current]->tracks;
@@ -202,6 +204,7 @@ void UndoManager::ModifyState(TrackList * l, double sel0, double sel1)
    stack[current]->tracks = tracksCopy;
    stack[current]->sel0 = sel0;
    stack[current]->sel1 = sel1;
+   SonifyEndModifyState();
 }
 
 void UndoManager::PushState(TrackList * l, double sel0, double sel1,

@@ -478,6 +478,17 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mZoomOutCursor = MakeCursor( wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
    mLabelCursorLeft  = MakeCursor( wxCURSOR_ARROW,  LabelCursorLeftXpm, 19, 15);
    mLabelCursorRight = MakeCursor( wxCURSOR_ARROW,  LabelCursorRightXpm, 16, 16);
+#if USE_MIDI
+   mStretchMode = stretchCenter;
+   mStretching = false;
+   mStretched = false;
+   mStretchStart = 0;
+   mStretchCursor = MakeCursor( wxCURSOR_BULLSEYE,  StretchCursorXpm, 16, 16);
+   mStretchLeftCursor = MakeCursor( wxCURSOR_BULLSEYE,  
+                                    StretchLeftCursorXpm, 16, 16);
+   mStretchRightCursor = MakeCursor( wxCURSOR_BULLSEYE,  
+                                     StretchRightCursorXpm, 16, 16);
+#endif
 
    mArrowCursor = new wxCursor(wxCURSOR_ARROW);
    mSmoothCursor = new wxCursor(wxCURSOR_SPRAYCAN);
@@ -883,11 +894,7 @@ void TrackPanel::OnTimer()
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (p->GetAudioIOToken()>0 &&
-         !gAudioIO->IsStreamActive(p->GetAudioIOToken())
-         #ifdef EXPERIMENTAL_MIDI_OUT
-            && !gAudioIO->IsMidiActive()
-         #endif
-      ) 
+         !gAudioIO->IsStreamActive(p->GetAudioIOToken())) 
    {  
       //the stream may have been started up after this one finished (by some other project)
       //in that case reset the buttons don't stop the stream
@@ -911,11 +918,7 @@ void TrackPanel::OnTimer()
    // and flush the tracks once we've completely finished
    // recording new state.
    if (p->GetAudioIOToken()>0 &&
-         !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken())
-         #ifdef EXPERIMENTAL_MIDI_OUT
-            && !gAudioIO->IsMidiActive()
-         #endif       
-         ) 
+         !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken())) 
    {
       if (gAudioIO->GetNumCaptureChannels() > 0) {
          // Tracks are buffered during recording.  This flushes
@@ -944,7 +947,8 @@ void TrackPanel::OnTimer()
    }
 
    // AS: The "indicator" is the little graphical mark shown in the ruler
-   //  that indicates where the current play/record position is.
+   //  that indicates where the current play/record position is. (This also
+   //  draws the moving vertical line.)
    if (!gAudioIO->IsPaused() &&
        ( mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
    {
@@ -1396,6 +1400,11 @@ bool TrackPanel::SetCursorByActivity( )
       return true;
    case IsAdjustingLabel:
       return true;
+#ifdef USE_MIDI
+   case IsStretching:
+      SetCursor( unsafe ? *mDisabledCursor : *mStretchCursor);
+      return true;
+#endif
    case IsOverCutLine:
       SetCursor( unsafe ? *mDisabledCursor : *mArrowCursor);
    default:
@@ -1417,6 +1426,12 @@ void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
       *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
    }
+#ifdef USE_MIDI
+   else if (event.m_x >= GetVRulerOffset() && t->GetKind() == Track::Note) {
+      *ppTip = _("Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region.");
+      SetCursor(event.ShiftDown() ? *mZoomOutCursor : *mZoomInCursor);
+   }
+#endif
    else {
       // Set a status message if over TrackInfo.
       *ppTip = _("Drag the track vertically to change the order of the tracks.");
@@ -1539,14 +1554,34 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    }
    // Is the cursor over the left selection boundary?
    else if (within(event.m_x, leftSel, SELECTION_RESIZE_REGION)) {
+#ifdef USE_MIDI
+      if (HitTestStretch(t, r, event)) {
+         *ppTip = _("Click and drag to stretch selected region.");
+         SetCursor(*mStretchLeftCursor);
+         return;
+      }
+#endif
       *ppTip = _("Click and drag to move left selection boundary.");
       SetCursor(*mAdjustLeftSelectionCursor);
    }
    // Is the cursor over the right selection boundary?
    else if (within(event.m_x, rightSel, SELECTION_RESIZE_REGION)) {
+#ifdef USE_MIDI
+      if (HitTestStretch(t, r, event)) {
+         *ppTip = _("Click and drag to stretch selected region.");
+         SetCursor(*mStretchRightCursor);
+         return;
+      }
+#endif
       *ppTip = _("Click and drag to move right selection boundary.");
       SetCursor(*mAdjustRightSelectionCursor);
    }
+#ifdef USE_MIDI
+   else if (HitTestStretch(t, r, event)) {
+      *ppTip = _("Click and drag to stretch within selected region.");
+      SetCursor(*mStretchCursor);
+   }
+#endif
    else
    {
       //For OD regions, we need to override and display the percent complete for this task.
@@ -1796,7 +1831,16 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    mSnapLeft = -1;
    mSnapRight = -1;
 
-   if (event.ShiftDown()) {
+#ifdef USE_MIDI
+   mStretching = false;
+   bool stretch = HitTestStretch(pTrack, r, event);
+#endif
+
+   if (event.ShiftDown()
+#ifdef USE_MIDI
+                         && !stretch
+#endif
+                                   ) {
       // If the shift button is down and no track is selected yet,
       // at least select the track we clicked into.
       bool isAtLeastOneTrackSelected = false;
@@ -1827,8 +1871,11 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
    // A control-click will set just the indicator to the clicked spot,
    // and turn playback on.  
-   else if(event.CmdDown())
-      {
+   else if(event.CmdDown()
+#ifdef USE_MIDI
+                           && !stretch
+#endif
+                                     ) {
          AudacityProject *p = GetActiveProject();
          if (p) {
             
@@ -1906,7 +1953,84 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          return;
       }
    }
-  
+
+#ifdef USE_MIDI
+   if (stretch) {
+      NoteTrack *nt = (NoteTrack *) pTrack;
+      // find nearest beat to sel0, sel1
+      double minPeriod = 0.05; // minimum beat period
+      double qBeat0, qBeat1;
+      double centerBeat;
+      mStretchSel0 = nt->NearestBeatTime(mViewInfo->sel0, &qBeat0);
+      mStretchSel1 = nt->NearestBeatTime(mViewInfo->sel1, &qBeat1);
+
+      // If there is not (almost) a beat to stretch that is slower
+      // than 20 beats per second, don't stretch
+      if (within(qBeat0, qBeat1, 0.9) ||
+          (mStretchSel1 - mStretchSel0) / (qBeat1 - qBeat0) < minPeriod) return;
+
+      if (startNewSelection) { // mouse is not at an edge, but after
+         // quantization, we could be indicating the selection edge
+         mSelStart = PositionToTime(event.m_x, r.x);
+         mStretchStart = nt->NearestBeatTime(mSelStart, &centerBeat);
+         if (within(qBeat0, centerBeat, 0.1)) {
+            mListener->TP_DisplayStatusMessage(
+                    _("Click and drag to stretch selected region."));
+            SetCursor(*mStretchLeftCursor);
+            // mStretchMode = stretchLeft;
+            mSelStart = mViewInfo->sel1; // condition that implies stretchLeft
+            startNewSelection = false;
+         } else if (within(qBeat1, centerBeat, 0.1)) {
+            mListener->TP_DisplayStatusMessage(
+                    _("Click and drag to stretch selected region."));
+            SetCursor(*mStretchRightCursor);
+            // mStretchMode = stretchRight;
+            mSelStart = mViewInfo->sel0; // condition that implies stretchRight
+            startNewSelection = false;
+         }
+      }
+
+      if (startNewSelection) {
+         mStretchMode = stretchCenter;
+         mStretchLeftBeats = qBeat1 - centerBeat;
+         mStretchRightBeats = centerBeat - qBeat0;
+      } else if (mViewInfo->sel1 == mSelStart) {
+         // note that at this point, mSelStart is at the opposite
+         // end of the selection from the cursor. If the cursor is
+         // over sel0, then mSelStart is at sel1.
+         mStretchMode = stretchLeft;
+      } else {
+         mStretchMode = stretchRight;
+      }
+
+      if (mStretchMode == stretchLeft) {
+         mStretchLeftBeats = 0;
+         mStretchRightBeats = qBeat1 - qBeat0;
+      } else if (mStretchMode == stretchRight) {
+         mStretchLeftBeats = qBeat1 - qBeat0;
+         mStretchRightBeats = 0;
+      }         
+      mViewInfo->sel0 = mStretchSel0;
+      mViewInfo->sel1 = mStretchSel1;
+      mStretching = true;
+      mStretched = false;
+
+      MakeParentPushState(_("Stretch Note Track"), _("Stretch"), false);
+
+      // Full refresh since the label area may need to indicate
+      // newly selected tracks. (I'm really not sure if the label area
+      // needs to be refreshed or how to just refresh non-label areas.-RBD)
+      Refresh(false);
+
+      // Make sure the ruler follows suit.
+      mRuler->DrawSelection();
+
+      // As well as the SelectionBar.
+      DisplaySelection();
+
+      return;
+   }
+#endif
    if (startNewSelection) {
       // If we didn't move a selection boundary, start a new selection
       SelectNone();
@@ -1945,8 +2069,9 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
    mViewInfo->sel0 = s;
    mViewInfo->sel1 = s;
       
-
+   SonifyBeginModifyState();
    MakeParentModifyState();
+   SonifyEndModifyState();
 }
 
 /// Extend the existing selection
@@ -2020,6 +2145,109 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
    DisplaySelection();
 }
 
+#ifdef USE_MIDI
+void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
+                         Track *pTrack)
+{
+   if (mStretched) { // Undo stretch and redo it with new mouse coordinates
+      // Drag handling was not originally implemented with Undo in mind --
+      // there are saved pointers to tracks that are not supposed to change.
+      // Undo will change tracks, so convert pTrack, mCapturedTrack to index
+      // values, then look them up after the Undo
+      TrackListIterator iter(mTracks);
+      int pTrackIndex = pTrack->GetIndex();
+      int capturedTrackIndex = 
+         (mCapturedTrack ? mCapturedTrack->GetIndex() : 0);
+
+      GetProject()->OnUndo();
+
+      // Undo brings us back to the pre-click state, but we want to 
+      // quantize selected region to integer beat boundaries. These
+      // were saved in mStretchSel[12] variables:
+      mViewInfo->sel0 = mStretchSel0;
+      mViewInfo->sel1 = mStretchSel1;
+
+      mStretched = false;
+      int index = 0;
+      for (Track *t = iter.First(mTracks); t; t = iter.Next()) {
+         if (index == pTrackIndex) pTrack = t;
+         if (mCapturedTrack && index == capturedTrackIndex) mCapturedTrack = t;
+         index++;
+      }
+   }
+
+   if (pTrack == NULL && mCapturedTrack != NULL)
+      pTrack = mCapturedTrack;
+
+   if (!pTrack || pTrack->GetKind() != Track::Note) {
+      return;
+   }
+
+   NoteTrack *pNt = (NoteTrack *) pTrack;
+   double moveto = PositionToTime(mouseXCoordinate, trackLeftEdge);
+
+   // check to make sure tempo is not higher than 20 beats per second
+   // (In principle, tempo can be higher, but not infinity.)
+   double minPeriod = 0.05; // minimum beat period
+   double qBeat0, qBeat1;
+   pNt->NearestBeatTime(mViewInfo->sel0, &qBeat0); // get beat
+   pNt->NearestBeatTime(mViewInfo->sel1, &qBeat1);
+
+   // We could be moving 3 things: left edge, right edge, a point between
+   switch (mStretchMode) {
+   case stretchLeft: {
+      // make sure target duration is not too short
+      double dur = mViewInfo->sel1 - moveto;
+      if (dur < mStretchRightBeats * minPeriod) {
+         dur = mStretchRightBeats * minPeriod;
+         moveto = mViewInfo->sel1 - dur;
+      }         
+      if (pNt->StretchRegion(mStretchSel0, mStretchSel1, dur)) {
+         pNt->SetOffset(pNt->GetOffset() + moveto - mStretchSel0);
+         mViewInfo->sel0 = moveto;
+      }
+      break;
+   }
+   case stretchRight: {
+      // make sure target duration is not too short
+      double dur = moveto - mViewInfo->sel0;
+      if (dur < mStretchLeftBeats * minPeriod) {
+         dur = mStretchLeftBeats * minPeriod;
+         moveto = mStretchSel0 + dur;
+      }
+      if (pNt->StretchRegion(mStretchSel0, mStretchSel1, dur)) {
+         mViewInfo->sel1 = moveto;
+      }
+      break;
+   }
+   case stretchCenter: {
+      // make sure both left and right target durations are not too short
+      double left_dur = moveto - mViewInfo->sel0;
+      double right_dur = mViewInfo->sel1 - moveto;
+      double centerBeat;
+      pNt->NearestBeatTime(mSelStart, &centerBeat);
+      if (left_dur < mStretchLeftBeats * minPeriod) {
+         left_dur = mStretchLeftBeats * minPeriod;
+         moveto = mStretchSel0 + left_dur;
+      }
+      if (right_dur < mStretchRightBeats * minPeriod) {
+         right_dur = mStretchRightBeats * minPeriod;
+         moveto = mStretchSel1 - right_dur;
+      }
+      pNt->StretchRegion(mStretchStart, mStretchSel1, right_dur);
+      pNt->StretchRegion(mStretchSel0, mStretchStart, left_dur);
+      break;
+   }
+   default:
+      wxASSERT(false);
+      break;
+   }
+   MakeParentPushState(_("Stretch Note Track"), _("Stretch"), true);
+   mStretched = true;
+   Refresh(false);
+}
+#endif
+
 /// AS: If we're dragging to extend a selection (or actually,
 ///  if the screen is scrolling while you're selecting), we
 ///  handle it here.
@@ -2056,7 +2284,11 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    const int minimumSizedSelection = 5; //measured in pixels
    wxInt64 SelStart=TimeToPosition( mSelStart, r.x); //cvt time to pixels.
    // Abandon this drag if selecting < 5 pixels.
-   if (wxLongLong(SelStart-x).Abs() < minimumSizedSelection)
+   if (wxLongLong(SelStart-x).Abs() < minimumSizedSelection
+#ifdef USE_MIDI        // limiting selection size is good, and not starting
+       && !mStretching // stretch unless mouse moves 5 pixels is good, but
+#endif                 // once stretching starts, it's ok to move even 1 pixel 
+       )
        return;
 
    // Handle which tracks are selected
@@ -2079,7 +2311,16 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
          pTrack = iter.Next();
       } while (pTrack);
    }
-
+#ifdef USE_MIDI
+   if (mStretching) {
+      // the following is also in ExtendSelection, called below
+      // probably a good idea to "hoist" the code to before this "if" stmt
+      if (clickedTrack == NULL && mCapturedTrack != NULL)
+         clickedTrack = mCapturedTrack;
+      Stretch(x, r.x, clickedTrack);
+      return;
+   }
+#endif
    ExtendSelection(x, r.x, clickedTrack);
 }
 
@@ -2314,13 +2555,25 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    ToolsToolBar * ttb = mListener->TP_GetToolsToolBar();
    bool multiToolModeActive = (ttb && ttb->IsDown(multiTool));
 
-   if (vt->GetKind() == Track::Wave && !event.ShiftDown())
+   if ((vt->GetKind() == Track::Wave
+#ifdef USE_MIDI
+        || vt->GetKind() == Track::Note
+#endif
+       ) && !event.ShiftDown())
    {
-      WaveTrack* wt = (WaveTrack*)vt;
-      mCapturedClip = wt->GetClipAtX(event.m_x);
-      if (mCapturedClip == NULL)
-         return;
-
+#ifdef USE_MIDI
+      if (vt->GetKind() == Track::Wave) {
+#endif
+         WaveTrack* wt = (WaveTrack*)vt;
+         mCapturedClip = wt->GetClipAtX(event.m_x);
+         if (mCapturedClip == NULL)
+            return;
+#ifdef USE_MIDI
+      }
+      else {
+         mCapturedClip = NULL;
+      }
+#endif
       // The captured clip is the focus, but we need to create a list
       // of all clips that have to move, also...
       
@@ -2329,7 +2582,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       double clickTime = 
          PositionToTime(event.m_x, GetLeftOffset());
       bool clickedInSelection =
-         (wt->GetSelected() &&
+         (vt->GetSelected() &&
           clickTime > mViewInfo->sel0 &&
           clickTime < mViewInfo->sel1);
       
@@ -2347,10 +2600,10 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       }
       else {
          mCapturedClipIsSelection = false;
-         mCapturedClipArray.Add(TrackClip(wt, mCapturedClip));
+         mCapturedClipArray.Add(TrackClip(vt, mCapturedClip));
 
          // Check for stereo partner
-         Track *partner = mTracks->GetLink(wt);
+         Track *partner = mTracks->GetLink(vt);
          if (partner && partner->GetKind() == Track::Wave) {
             WaveClip *clip = ((WaveTrack *)partner)->GetClipAtX(event.m_x);
             if (clip) {
@@ -2367,7 +2620,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          // because AddClipsToCapture doesn't add duplicate clips); to remove
          // this behavior just store the array size beforehand.
          for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
-            // Only capture based on tracks that have clips -- that means we
+            // Capture based on tracks that have clips -- that means we
             // don't capture based on links to label tracks for now (until
             // we can treat individual labels as clips)
             if (mCapturedClipArray[i].clip) {
@@ -2381,6 +2634,18 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
                         mCapturedClipArray[i].clip->GetEndTime() );
                }
             }
+#ifdef USE_MIDI
+            // Capture additional clips from NoteTracks
+            Track *nt = mCapturedClipArray[i].track;
+            if (nt->GetKind() == Track::Note) {
+               // Iterate over group tracks
+               SyncLockedTracksIterator git(mTracks);
+               for (Track *t = git.First(nt); t; t = git.Next())
+               {
+                  AddClipsToCaptured(t, nt->GetStartTime(), nt->GetEndTime());
+               }
+            }
+#endif            
          }
       }
 
@@ -2470,8 +2735,16 @@ void TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1)
          }
       }
 
-      if (newClip)
+      if (newClip) {
+#ifdef USE_MIDI
+         // do not add NoteTrack if the data is outside of time bounds
+         if (t->GetKind() == Track::Note) {
+            if (t->GetEndTime() < t0 || t->GetStartTime() > t1) 
+               return;
+         }
+#endif
          mCapturedClipArray.Add(TrackClip(t, NULL));
+      }
    }
 }
 
@@ -2486,16 +2759,26 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    // find which track the mouse is currently in (mouseTrack) -
    // this may not be the same as the one we started in...
+#ifdef USE_MIDI
+   Track *mouseTrack = FindTrack(event.m_x, event.m_y, false, false, NULL);
+   if (!mouseTrack || (mouseTrack->GetKind() != Track::Wave &&
+                       mouseTrack->GetKind() != Track::Note)) {
+#else
    WaveTrack *mouseTrack =
       (WaveTrack *)FindTrack(event.m_x, event.m_y, false, false, NULL);
    if (!mouseTrack || mouseTrack->GetKind() != Track::Wave) {
+#endif
       return;
    }
 
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
    // each clip...
+#ifdef USE_MIDI
+   if (mCapturedClipArray.GetCount()) {
+#else
    if (mCapturedClip) {
+#endif
       for(i=0; i<mCapturedClipArray.GetCount(); i++) {
          if (mCapturedClipArray[i].clip)
             mCapturedClipArray[i].clip->Offset(-mHSlideAmount);
@@ -2518,12 +2801,31 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    mHSlideAmount = 0.0;
 
    double desiredSlideAmount = (event.m_x - mMouseClickX) / mViewInfo->zoom;
-   desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) / mouseTrack->GetRate();  // set it to a sample point
-
+#ifdef USE_MIDI
+   if (mouseTrack->GetKind() == Track::Wave) {
+      WaveTrack *mtw = (WaveTrack *) mouseTrack;
+      desiredSlideAmount = rint(mtw->GetRate() * desiredSlideAmount) / 
+                           mtw->GetRate();  // set it to a sample point
+   }
    // Adjust desiredSlideAmount using SnapManager
+   if (mSnapManager && mCapturedClipArray.GetCount()) {
+      double clipLeft; 
+      double clipRight;
+      if (mCapturedClip) {
+         clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
+         clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
+      }
+      else {
+         clipLeft = mCapturedTrack->GetStartTime() + desiredSlideAmount;
+         clipRight = mCapturedTrack->GetEndTime() + desiredSlideAmount;
+      }
+#else
+   desiredSlideAmount = rint(mouseTrack->GetRate() * desiredSlideAmount) / 
+                        mouseTrack->GetRate();  // set it to a sample point
    if (mSnapManager && mCapturedClip) {
       double clipLeft = mCapturedClip->GetStartTime() + desiredSlideAmount;
       double clipRight = mCapturedClip->GetEndTime() + desiredSlideAmount;
+#endif
 
       double newClipLeft = clipLeft;
       double newClipRight = clipRight;
@@ -2569,7 +2871,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    {
       // Make sure we always have the first linked track of a stereo track
       if (!mouseTrack->GetLinked() && mTracks->GetLink(mouseTrack))
-         mouseTrack = (WaveTrack*)mTracks->GetLink(mouseTrack);
+         mouseTrack = 
+#ifndef USE_MIDI
+                      (WaveTrack*)
+#endif
+                                   mTracks->GetLink(mouseTrack);
 
       // Temporary apply the offset because we want to see if the
       // track fits with the desired offset
@@ -2578,7 +2884,8 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             mCapturedClipArray[i].clip->Offset(desiredSlideAmount);
       // See if it can be moved
       if (MoveClipToTrack(mCapturedClip,
-                          (WaveTrack*)mCapturedTrack, mouseTrack)) {
+                          (WaveTrack*)mCapturedTrack, 
+                          (WaveTrack*)mouseTrack)) {
          mCapturedTrack = mouseTrack;
          mDidSlideVertically = true;
 
@@ -2609,13 +2916,17 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       return;
    }
 
+#ifdef USE_MIDI
+   if (mCapturedClipArray.GetCount()) {
+#else
    if (mCapturedClip) {
+#endif
       double allowed;
       double initialAllowed;
       double safeBigDistance = 1000 + 2.0 * (mTracks->GetEndTime() -
                                              mTracks->GetStartTime());
 
-      do {
+      do { // loop to compute allowed, does not actually move anything yet
          initialAllowed = mHSlideAmount;
 
          unsigned int i, j;
@@ -2623,7 +2934,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
             WaveTrack *track = (WaveTrack *)mCapturedClipArray[i].track;
             WaveClip *clip = mCapturedClipArray[i].clip;
             
-            if (clip) {
+            if (clip) { // only audio clips are used to compute allowed
                // Move all other selected clips totally out of the way
                // temporarily because they're all moving together and
                // we want to find out if OTHER clips are in the way,
@@ -2649,7 +2960,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
          }
       } while (mHSlideAmount != initialAllowed);
 
-      if (mHSlideAmount != 0.0) {
+      if (mHSlideAmount != 0.0) { // finally, here is where clips are moved
          unsigned int i;
          for(i=0; i<mCapturedClipArray.GetCount(); i++) {
             Track *track = mCapturedClipArray[i].track;
@@ -2662,7 +2973,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       }
    }
    else {
-      // For non wavetracks...
+      // For non wavetracks, specifically label tracks ...
       mCapturedTrack->Offset(mHSlideAmount);
       Track* link = mTracks->GetLink(mCapturedTrack);
       if (link)
@@ -2836,12 +3147,22 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
       return;
 
    // don't do anything if track is not wave or Spectrum/log Spectrum
-   if (mCapturedTrack->GetKind() != Track::Wave
-      || ((WaveTrack *) mCapturedTrack)->GetDisplay() > WaveTrack::SpectrumLogDisplay)
-      return;
-   mMouseCapture = IsVZooming;
-   mZoomStart = event.m_y;
-   mZoomEnd = event.m_y;
+   if ((mCapturedTrack->GetKind() == Track::Wave
+       && ((WaveTrack *) mCapturedTrack)->GetDisplay() <= WaveTrack::SpectrumLogDisplay)
+#ifdef USE_MIDI
+       || mCapturedTrack->GetKind() == Track::Note 
+#endif
+      ) {
+      mMouseCapture = IsVZooming;
+      mZoomStart = event.m_y;
+      mZoomEnd = event.m_y;
+      // change note track to zoom like audio track
+//#ifdef USE_MIDI
+//      if (mCapturedTrack->GetKind() == Track::Note) {
+//          ((NoteTrack *) mCapturedTrack)->StartVScroll();
+//      }
+//#endif
+   }
 }
 
 /// VZoom drag
@@ -2849,6 +3170,12 @@ void TrackPanel::HandleVZoomDrag( wxMouseEvent & event )
 {
    mZoomEnd = event.m_y;
    if (IsDragZooming()){
+      // changed Note track to work like audio track
+      //#ifdef USE_MIDI
+      //      if (mCapturedTrack && mCapturedTrack->GetKind() == Track::Note) {
+      //         ((NoteTrack *) mCapturedTrack)->VScroll(mZoomStart, mZoomEnd);
+      //      }
+      //#endif
       Refresh(false);
    }
 }
@@ -2866,10 +3193,30 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 
    mMouseCapture = IsUncaptured;
 
+#ifdef USE_MIDI
+   // handle vertical scrolling in Note Track. This is so different from
+   // zooming in audio tracks that it is handled as a special case from
+   // which we then return
+   if (mCapturedTrack->GetKind() == Track::Note) {
+      NoteTrack *nt = (NoteTrack *) mCapturedTrack;
+      if (IsDragZooming()) {
+         nt->ZoomTo(mZoomStart, mZoomEnd);
+      } else if (event.ShiftDown() || event.RightUp()) {
+         nt->ZoomOut(mZoomEnd);
+      } else {
+         nt->ZoomIn(mZoomEnd);
+      }
+      mZoomEnd = mZoomStart = 0;
+      Refresh(false);
+      mCapturedTrack = NULL;
+      MakeParentModifyState();
+      return;
+   }
+#endif
+
    // don't do anything if track is not wave
    if (mCapturedTrack->GetKind() != Track::Wave)
       return;
-
    WaveTrack *track = (WaveTrack *)mCapturedTrack;
    WaveTrack *partner = (WaveTrack *)mTracks->GetLink(track);
    int height = track->GetHeight();
@@ -2889,7 +3236,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    int fftSkipPoints=0; 
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
    double rate = ((WaveTrack *)track)->GetRate();
-   ((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumDisplay ? spectrum = true : spectrum = false;
+   spectrum = ((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumDisplay;
    spectrumLog=(((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumLogDisplay);
    if(spectrum) {
       min = mTrackArtist->GetSpectrumMinFreq(0);
@@ -3625,8 +3972,11 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
       mMouseCapture = IsUncaptured;
 
    float newValue = slider->Get();
-   WaveTrack *link = (WaveTrack *)mTracks->GetLink(mCapturedTrack);
    MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
+   #ifdef USE_MIDI
+  if (mCapturedTrack->GetKind() == Track::Wave) {
+   #endif
+   WaveTrack *link = (WaveTrack *)mTracks->GetLink(mCapturedTrack);
    
    if (pan) {
       ((WaveTrack *)mCapturedTrack)->SetPan(newValue);
@@ -3644,6 +3994,19 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
       if (pMixerBoard) 
          pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
    }
+   #ifdef USE_MIDI
+  } else {
+      if (!pan) {
+         ((NoteTrack *) mCapturedTrack)->SetGain(newValue);
+         #ifdef EXPERIMENTAL_MIXER_BOARD
+            if (pMixerBoard)
+               // probably should modify UpdateGain to take a track that is
+               // either a WaveTrack or a NoteTrack.
+               pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
+         #endif
+      }
+  }
+   #endif
 
    VisibleTrackIterator iter(GetProject());
    for (Track *t = iter.First(); t; t = iter.Next())
@@ -3761,10 +4124,28 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       else if (t->GetKind() == Track::Note)
       {
          wxRect midiRect;
+         #ifdef EXPERIMENTAL_MIDI_OUT
+            // this is an awful hack: make a new rectangle at an offset because
+            // MuteSoloFunc thinks buttons are located below some text, e.g.
+            // "Mono, 44100Hz 32-bit float", but this is not true for a Note track
+            wxRect muteSoloRect(r);
+            muteSoloRect.y -= 34; // subtract the height of wave track text
+            if (MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, false) ||
+                MuteSoloFunc(t, muteSoloRect, event.m_x, event.m_y, true))
+               return;
+
+            // this is a similar hack: GainFunc expects a Wave track slider, so it's
+            // looking in the wrong place. We pass it a bogus rectangle created when
+            // the slider was placed to "fake" GainFunc into finding the slider in
+            // its actual location.
+            if (GainFunc(t, ((NoteTrack *) t)->GetGainPlacementRect(), 
+                         event, event.m_x, event.m_y))
+               return;
+         #endif
          mTrackInfo.GetTrackControlsRect(r, midiRect);
-         if (midiRect.Contains(event.m_x, event.m_y)) {
-            ((NoteTrack *) t)->LabelClick(midiRect, event.m_x, event.m_y,
-                                          event.Button(wxMOUSE_BTN_RIGHT));
+         if (midiRect.Contains(event.m_x, event.m_y) &&
+             ((NoteTrack *) t)->LabelClick(midiRect, event.m_x, event.m_y,
+                                      event.Button(wxMOUSE_BTN_RIGHT))) {
             Refresh(false);
             return;
          }
@@ -4785,7 +5166,32 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
    return currentTool;
 }
 
-/// method that tells us if the mouse event landed on a 
+
+#ifdef USE_MIDI
+bool TrackPanel::HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event)
+{
+   // later, we may want a different policy, but for now, stretch is
+   // selected when the cursor is near the center of the track and
+   // within the selection
+   if (!track || !track->GetSelected() || track->GetKind() != Track::Note ||
+       gAudioIO->IsStreamActive( GetProject()->GetAudioIOToken())) {
+      return false;
+   }
+   NoteTrack *nt = (NoteTrack *) track;
+   int center = r.y + r.height / 2;
+   int distance = abs(event.m_y - center);
+   const int yTolerance = 10;
+   wxInt64 leftSel = TimeToPosition(mViewInfo->sel0, r.x);
+   wxInt64 rightSel = TimeToPosition(mViewInfo->sel1, r.x);
+   // Something is wrong if right edge comes before left edge
+   wxASSERT(!(rightSel < leftSel));
+   return (leftSel <= event.m_x && event.m_x <= rightSel &&
+           distance < yTolerance);
+}
+#endif
+
+
+/// method that tells us if the mouse event landed on an 
 /// envelope boundary.
 bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
 {
@@ -5083,7 +5489,12 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
    }
 
    if ((mMouseCapture == IsZooming || mMouseCapture == IsVZooming) &&
-       IsDragZooming()) {
+       IsDragZooming()
+       // note track zooming now works like audio track
+       //#ifdef USE_MIDI
+       //       && mCapturedTrack && mCapturedTrack->GetKind() != Track::Note
+       //#endif
+       ) {
       DrawZooming(dc, clip);
    }
 
@@ -5162,7 +5573,11 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
 
    bool bIsWave = (t->GetKind() == Track::Wave);
-
+#ifdef USE_MIDI
+   bool bIsNote = (t->GetKind() == Track::Note);
+#endif
+   // don't enable bHasMuteSolo for Note track because it will draw in the 
+   // wrong place.
    mTrackInfo.DrawBackground(dc, r, t->GetSelected(), bIsWave, labelw, vrul);
 
    // Vaughan, 2010-08-24: No longer doing this.
@@ -5220,10 +5635,50 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
    }
 
    #ifdef USE_MIDI
-   else if (t->GetKind() == Track::Note) {
+   else if (bIsNote) {
+      // Note tracks do not have text, e.g. "Mono, 44100Hz, 32-bit float", so 
+      // Mute & Solo button goes higher. To preserve existing AudioTrack code, 
+      // we move the buttons up by pretending track is higher (at lower y)
+      r.y -= 34;
+      r.height += 34;
       wxRect midiRect;
       mTrackInfo.GetTrackControlsRect(trackRect, midiRect);
-      ((NoteTrack *) t)->DrawLabelControls(*dc, midiRect);
+      // Offset by height of Solo/Mute buttons:
+      midiRect.y += 15;
+      midiRect.height -= 21; // allow room for minimize button at bottom
+
+      // the offset 2 is just to leave a little space between channel buttons
+      // and velocity slider (if any)
+      int h = ((NoteTrack *) t)->DrawLabelControls(*dc, midiRect) + 2;
+
+      #ifdef EXPERIMENTAL_MIDI_OUT
+         // Draw some lines for MuteSolo buttons:
+         if (r.height > 84) {
+            AColor::Line(*dc, r.x+48 , r.y+50, r.x+48, r.y + 66); 
+            // bevel below mute/solo
+            AColor::Line(*dc, r.x, r.y + 66, mTrackInfo.GetTrackInfoWidth(), r.y + 66);
+         }
+         mTrackInfo.DrawMuteSolo(dc, r, t, 
+               (captured && mMouseCapture == IsMuting), false, HasSoloButton());
+         mTrackInfo.DrawMuteSolo(dc, r, t, 
+               (captured && mMouseCapture == IsSoloing), true, HasSoloButton());
+
+         // place a volume control below channel buttons (this will
+         // control an offset to midi velocity).
+         // DrawVelocitySlider places slider assuming this is a Wave track
+         // and using a large offset to leave room for other things,
+         // so here we make a fake rectangle as if it is for a Wave
+         // track, but it is offset to place the slider properly in
+         // a Note track. This whole placement thing should be redesigned
+         // to lay out different types of tracks and controls
+         wxRect gr; // gr is gain rectangle where slider is drawn
+         mTrackInfo.GetGainRect(r, gr);
+         r.y = r.y + h - gr.y; // ultimately want slider at r.y + h
+         r.height = r.height - h + gr.y;
+         // save for mouse hit detect:
+         ((NoteTrack *) t)->SetGainPlacementRect(r); 
+         mTrackInfo.DrawVelocitySlider(dc, (NoteTrack *) t, r);
+      #endif
    }
    #endif // USE_MIDI
 }
@@ -7036,6 +7491,11 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip,
    WaveTrack *src2 = NULL;
    WaveTrack *dst2 = NULL;
 
+#ifdef USE_MIDI
+   // dst could be a note track. Can't move clip to a note track.
+   if (dst->GetKind() != Track::Wave) return false;
+#endif
+
    // Make sure we have the first track of two stereo tracks
    // with both source and destination
    if (!src->GetLinked() && mTracks->GetLink(src)) {
@@ -7299,7 +7759,7 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
    //{
    //   fill=wxRect( r.x+1, r.y+17, vrul-6, 32); 
    //   AColor::BevelTrackInfo( *dc, true, fill );
-
+   //
    //   fill=wxRect( r.x+1, r.y+67, fill.width, r.height-87); 
    //   AColor::BevelTrackInfo( *dc, true, fill );
    //}
@@ -7320,9 +7780,10 @@ void TrackInfo::GetTrackControlsRect(const wxRect r, wxRect & dest) const
 
    dest.x = r.x;
    dest.width = kTrackInfoWidth - dest.x;
-   dest.y = top.GetBottom() + 2;
+   dest.y = top.GetBottom() + 2; // BUG
    dest.height = bot.GetTop() - top.GetBottom() - 2;
 }
+
 
 void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect r, bool down)
 {
@@ -7509,6 +7970,22 @@ void TrackInfo::EnsureSufficientSliders(int index)
       MakeMoreSliders();
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect r)
+{
+    wxRect gainRect;
+    int index = t->GetIndex();
+    EnsureSufficientSliders(index);
+    GetGainRect(r, gainRect);
+    if (gainRect.y + gainRect.height < r.y + r.height - 19) {
+       mGains[index]->SetStyle(VEL_SLIDER);
+       GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
+       GainSlider(index)->Set(t->GetGain());
+       GainSlider(index)->OnPaint(*dc, t->GetSelected());
+    }
+}
+#endif
+
 void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect r)
 {
    wxRect gainRect;
@@ -7521,6 +7998,9 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect r)
    GetPanRect(r, panRect);
 
    if (gainRect.y + gainRect.height < r.y + r.height - 19) {
+#ifdef USE_MIDI
+      GainSlider(index)->SetStyle(DB_SLIDER);
+#endif
       GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
       GainSlider(index)->Set(t->GetGain());
       GainSlider(index)->OnPaint(*dc, t->GetSelected());

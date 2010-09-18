@@ -8,6 +8,7 @@
  */
 
 #include "assert.h"
+#include <math.h>
 #include "comp_chroma.h"
 #include "sautils.h"
 // the following are needed to get Scorealign
@@ -48,9 +49,15 @@ void save_path(char *filename);
 
 class Curvefit : public Hillclimb {
 public:
-    Curvefit(Scorealign *sa_, bool verbose_) { sa = sa_; verbose = verbose_; }
+    Curvefit(Scorealign *sa_, bool verbose_) { 
+        sa = sa_; 
+        verbose = verbose_; 
+        p1_cache = p2_cache = d_cache = x = NULL;
+    }
+    ~Curvefit();
     virtual double evaluate();
     void setup(int n);
+    void set_step_size(double ss);
     double *get_x() { return x; }
 private:
     Scorealign *sa;
@@ -101,32 +108,38 @@ void Curvefit::setup(int segments)
     // number of parameters is greater than segments because the left
     // col of segment i is parameter i, so the right col of 
     // the last segment == parameter[segments].
-    n = segments + 1;
-    parameters = ALLOC(double, n);
+    Hillclimb::setup(segments + 1);
     p1_cache = ALLOC(double, n);
     p2_cache = ALLOC(double, n);
     d_cache = ALLOC(double, n);
     x = ALLOC(double, n);
-    step_size = ALLOC(double, n);
-    min_param = ALLOC(double, n);
-    max_param = ALLOC(double, n);
     int i;
     // ideal frames per segment
-    float seg_length = ((float) (sa->file1_frames - 1)) / segments;
+    float seg_length = ((float) (sa->last_x - sa->first_x)) / segments;
     for (i = 0; i < n; i++) { // initialize cache keys to garbage
         p1_cache[i] = p2_cache[i] = -999999.99;
         // initialize x values
-        x[i] = ROUND(i * seg_length);
+        x[i] = ROUND(sa->first_x + i * seg_length);
         // now initialize parameters based on pathx/pathy/time_map
         // time_map has y values for each x
         parameters[i] = sa->time_map[(int) x[i]];
+        assert(parameters[i] >= 0);
         if (verbose)
             printf("initial x[%d] = %g, parameters[%d] = %g\n", 
                    i, x[i], i, parameters[i]);
         step_size[i] = 0.5;
         min_param[i] = 0;
-        max_param[i] = sa->file2_frames - 1;
+        max_param[i] = sa->last_y;
     }
+}
+
+
+Curvefit::~Curvefit()
+{
+    if (p1_cache) FREE(p1_cache);
+    if (p2_cache) FREE(p2_cache);
+    if (d_cache)  FREE(d_cache);
+    if (x)        FREE(x);
 }
 
 
@@ -142,7 +155,7 @@ void Curvefit::setup(int segments)
 // Since distance can be computed relatively quickly, a better plan
 // would be to cache values along the path. Here's a brief design
 // (for the future, assuming this routine is actually a hot spot):
-// Allocate a matrix that is, say, 20 x file1_frames to contain distances
+// Allocate a matrix that is, say, 20 x file0_frames to contain distances
 // that are +/- 10 frames from the path. Initialize cells to -1.
 // Allocate an array of integer offsets of size file1_frames.
 // Fill in the integer offsets with the column number (pathy) value of
@@ -157,7 +170,10 @@ void Curvefit::setup(int segments)
 //
 double Curvefit::distance_rc(int row, int col)
 {
-    return gen_dist(row, col, sa->chrom_energy1, sa->chrom_energy2);
+    double dist = sa->gen_dist(row, col);
+    if (dist > 20)  // DEBUGGING
+        printf("internal error");
+    return dist;
 }
 
 
@@ -190,6 +206,7 @@ double Curvefit::compute_dist(int i)
     double dx = x2 - x1, dy = y2 - y1;
     double sum = 0;
     int n;
+    assert(x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0);
     if (dx > dy) { // evauate at each x
         n = (int) dx;
         for (int x = (int) x1; x < x2; x++) {
@@ -204,14 +221,52 @@ double Curvefit::compute_dist(int i)
         }
     }
     // normalize using line length: sum/n is average distance. Multiply
-    // avg. distance (cost per unit length) by length to get total cost:
+    // avg. distance (cost per unit length) by length to get total cost.
+    // Note: this gives an advantage to direct diagonal paths without bends
+    // because longer path lengths result in higher total cost. This also
+    // gives heigher weight to longer segments, although all segments are 
+    // about the same length.
     double rslt = sqrt(dx*dx + dy*dy) * sum / n;
     // printf("compute_dist %d: x1 %g y1 %g x2 %g y2 %g sum %g rslt %g\n",
     //        i, x1, y1, x2, y2, sum, rslt);
+    if (rslt < 0 || rslt > 20 * n) { // DEBUGGING
+        printf("internal error");
+    }
     return rslt;
 }
 
-    
+
+void Curvefit::set_step_size(double ss)
+{
+    for (int i = 0; i < n; i++) { 
+        step_size[i] = ss;  
+    }
+}
+
+
+static long curvefit_iterations;
+
+// This is a callback from Hillclimb::optimize to report progress
+// We can't know percentage completion because we don't know how
+// many iterations it will take to converge, so we just report
+// iterations. The SAProgress class assumes some number based
+// on experience.
+//
+// Normally, the iterations parameter is a good indicator of work
+// expended so far, but since we call Hillclimb::optimize twice
+// (second time with a finer grid to search), ignore iterations
+// and use curvefit_iterations, a global counter, instead. This
+// assumes that curvefit_progress is called once for each iteration.
+//
+void curvefit_progress(void *cookie, int iterations, double best)
+{
+    Scorealign *sa = (Scorealign *) cookie;
+    if (sa->progress) {
+        sa->progress->set_smoothing_progress(++curvefit_iterations);
+    }
+}
+
+
 void curve_fitting(Scorealign *sa, bool verbose)
 {
     if (verbose)
@@ -220,12 +275,17 @@ void curve_fitting(Scorealign *sa, bool verbose)
     Curvefit curvefit(sa, verbose);
     double *parameters;
     double *x;
+    curvefit_iterations = 0;
     // how many segments? About total time / line_time:
     int segments = 
-        (int) (0.5 + (sa->actual_frame_period_1 * sa->file1_frames) /
+      (int) (0.5 + (sa->actual_frame_period_0 * (sa->last_x - sa->first_x)) /
                      sa->line_time);
     curvefit.setup(segments);
-    curvefit.optimize();
+    curvefit.optimize(&curvefit_progress, sa);
+    // further optimization with smaller step sizes:
+    // this step size will interpolate 0.25s frames down to 10ms
+    curvefit.set_step_size(0.04); 
+    curvefit.optimize(&curvefit_progress, sa);
     parameters = curvefit.get_parameters();
     x = curvefit.get_x();
     // now, rewrite pathx and pathy according to segments

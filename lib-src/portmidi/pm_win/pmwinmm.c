@@ -23,7 +23,6 @@
 /* asserts used to verify portMidi code logic is sound; later may want
     something more graceful */
 #include <assert.h>
-#define DEBUG 1
 #ifdef DEBUG
 /* this printf stuff really important for debugging client app w/host errors.
     probably want to do something else besides read/write from/to console
@@ -740,19 +739,20 @@ static void FAR PASCAL winmm_in_callback(
            case, we do not want to send them back to the interface (if
            we do, the interface will not close, and Windows OS may hang). */
         if (lpMidiHdr->dwBytesRecorded > 0) {
+            MMRESULT rslt;
             lpMidiHdr->dwBytesRecorded = 0;
             lpMidiHdr->dwFlags = 0;
 			
             /* note: no error checking -- can this actually fail? */
-            assert(midiInPrepareHeader(hMidiIn, lpMidiHdr, 
-                        sizeof(MIDIHDR)) == MMSYSERR_NOERROR);
+            rslt = midiInPrepareHeader(hMidiIn, lpMidiHdr, sizeof(MIDIHDR));
+            assert(rslt == MMSYSERR_NOERROR);
             /* note: I don't think this can fail except possibly for
              * MMSYSERR_NOMEM, but the pain of reporting this
              * unlikely but probably catastrophic error does not seem
              * worth it.
              */
-            assert(midiInAddBuffer(hMidiIn, lpMidiHdr, 
-                        sizeof(MIDIHDR)) == MMSYSERR_NOERROR);
+            rslt = midiInAddBuffer(hMidiIn, lpMidiHdr, sizeof(MIDIHDR));
+            assert(rslt == MMSYSERR_NOERROR);
             LeaveCriticalSection(&m->lock);
         } else {
             midiInUnprepareHeader(hMidiIn,lpMidiHdr,sizeof(MIDIHDR));
@@ -1313,9 +1313,11 @@ static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
     printf("out_callback: hdr %x, wMsg %x, MOM_DONE %x\n", 
            hdr, wMsg, MOM_DONE);
     */
-    if (wMsg == MOM_DONE)
-        assert(midiOutUnprepareHeader(m->handle.out, hdr,
-                        sizeof(MIDIHDR)) == MMSYSERR_NOERROR);
+    if (wMsg == MOM_DONE) {
+        MMRETURN ret = midiOutUnprepareHeader(m->handle.out, hdr, 
+                                              sizeof(MIDIHDR));
+        assert(ret == MMSYSERR_NOERROR);
+    }
     /* notify waiting sender that a buffer is available */
     err = SetEvent(m->buffer_signal);
     assert(err); /* false -> error */
@@ -1337,8 +1339,9 @@ static void CALLBACK winmm_streamout_callback(HMIDIOUT hmo, UINT wMsg,
     /* printf("streamout_callback: hdr %x, wMsg %x, MOM_DONE %x\n", 
            hdr, wMsg, MOM_DONE); */
     if (wMsg == MOM_DONE) {
-        assert(midiOutUnprepareHeader(m->handle.out, hdr, 
-                    sizeof(MIDIHDR)) == MMSYSERR_NOERROR);
+        MMRESULT ret = midiOutUnprepareHeader(m->handle.out, hdr, 
+                                              sizeof(MIDIHDR));
+        assert(ret == MMSYSERR_NOERROR);
     }
     /* signal client in case it is blocked waiting for buffer */
     err = SetEvent(m->buffer_signal);

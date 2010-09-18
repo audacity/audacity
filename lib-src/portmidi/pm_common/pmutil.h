@@ -44,8 +44,8 @@ typedef void PmQueue;
     Pm_QueueDestroy() destroys the queue and frees its storage.
  */
 
-PmQueue *Pm_QueueCreate(long num_msgs, long bytes_per_msg);
-PmError Pm_QueueDestroy(PmQueue *queue);
+PMEXPORT PmQueue *Pm_QueueCreate(long num_msgs, int32_t bytes_per_msg);
+PMEXPORT PmError Pm_QueueDestroy(PmQueue *queue);
 
 /* 
     Pm_Dequeue() removes one item from the queue, copying it into msg.
@@ -56,7 +56,7 @@ PmError Pm_QueueDestroy(PmQueue *queue);
     overflow report. This protocol ensures that the reader will be 
     notified when data is lost due to overflow.
  */
-PmError Pm_Dequeue(PmQueue *queue, void *msg);
+PMEXPORT PmError Pm_Dequeue(PmQueue *queue, void *msg);
 
 
 /*
@@ -64,7 +64,7 @@ PmError Pm_Dequeue(PmQueue *queue, void *msg);
     Returns pmNoError if successful and pmBufferOverflow if the queue was 
     already full. If pmBufferOverflow is returned, the overflow flag is set.
  */
-PmError Pm_Enqueue(PmQueue *queue, void *msg);
+PMEXPORT PmError Pm_Enqueue(PmQueue *queue, void *msg);
 
 
 /*
@@ -82,8 +82,8 @@ PmError Pm_Enqueue(PmQueue *queue, void *msg);
     Error conditions: Pm_QueueFull() returns pmBadPtr if queue is NULL.
     Pm_QueueEmpty() returns FALSE if queue is NULL.
  */
-int Pm_QueueFull(PmQueue *queue);
-int Pm_QueueEmpty(PmQueue *queue);
+PMEXPORT int Pm_QueueFull(PmQueue *queue);
+PMEXPORT int Pm_QueueEmpty(PmQueue *queue);
 
 
 /*
@@ -109,7 +109,7 @@ int Pm_QueueEmpty(PmQueue *queue);
     Note that Pm_QueuePeek() is not a fast check, so if possible, you 
     might as well just call Pm_Dequeue() and accept the data if it is there.
  */
-void *Pm_QueuePeek(PmQueue *queue);
+PMEXPORT void *Pm_QueuePeek(PmQueue *queue);
 
 /*
     Pm_SetOverflow() allows the writer (enqueuer) to signal an overflow
@@ -120,7 +120,7 @@ void *Pm_QueuePeek(PmQueue *queue);
     is NULL, returns pmBufferOverflow if buffer is already in an overflow
     state, returns pmNoError if successfully set overflow state.
  */
-PmError Pm_SetOverflow(PmQueue *queue);
+PMEXPORT PmError Pm_SetOverflow(PmQueue *queue);
 
 #ifdef __cplusplus
 }

@@ -114,8 +114,16 @@ class AUDACITY_DLL_API TrackArtist {
                      wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
                      bool autocorrelation, bool logF);
 #ifdef USE_MIDI
+   int GetBottom(NoteTrack *t, const wxRect &r);
+   void DrawNoteBackground(NoteTrack *track, wxDC &dc, 
+                           const wxRect &r, const wxRect &sel,
+                           const ViewInfo *viewInfo,
+                           const wxBrush &wb, const wxPen &wp,
+                           const wxBrush &bb, const wxPen &bp,
+                           const wxPen &mp);
    void DrawNoteTrack(NoteTrack *track,
-                      wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
+                      wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
+                      bool muted);
 #endif // USE_MIDI
 
    void DrawLabelTrack(LabelTrack *track,

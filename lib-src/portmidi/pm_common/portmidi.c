@@ -173,14 +173,14 @@ portmidi implementation
 ====================================================================
 */
 
-int Pm_CountDevices( void ) {
+PMEXPORT int Pm_CountDevices( void ) {
     Pm_Initialize();
     /* no error checking -- Pm_Initialize() does not fail */
     return pm_descriptor_index;
 }
 
 
-const PmDeviceInfo* Pm_GetDeviceInfo( PmDeviceID id ) {
+PMEXPORT const PmDeviceInfo* Pm_GetDeviceInfo( PmDeviceID id ) {
     Pm_Initialize(); /* no error check needed */
     if (id >= 0 && id < pm_descriptor_index) {
         return &descriptors[id].pub;
@@ -217,7 +217,7 @@ static PmError none_open(PmInternal *midi, void *driverInfo) {
     return pmBadPtr;
 }
 static void none_get_host_error(PmInternal * midi, char * msg, unsigned int len) {
-    strcpy(msg, "");
+    *msg = 0; // empty string
 }
 static unsigned int none_has_host_error(PmInternal * midi) {
     return FALSE;
@@ -246,7 +246,7 @@ pm_fns_node pm_none_dictionary = {
 };
 
 
-const char *Pm_GetErrorText( PmError errnum ) {
+PMEXPORT const char *Pm_GetErrorText( PmError errnum ) {
     const char *msg;
 
     switch(errnum)
@@ -292,7 +292,7 @@ const char *Pm_GetErrorText( PmError errnum ) {
 /* This can be called whenever you get a pmHostError return value.
  * The error will always be in the global pm_hosterror_text.
  */
-void Pm_GetHostErrorText(char * msg, unsigned int len) {
+PMEXPORT void Pm_GetHostErrorText(char * msg, unsigned int len) {
     assert(msg);
     assert(len > 0);
     if (pm_hosterror) {
@@ -307,7 +307,7 @@ void Pm_GetHostErrorText(char * msg, unsigned int len) {
 }
 
 
-int Pm_HasHostError(PortMidiStream * stream) {
+PMEXPORT int Pm_HasHostError(PortMidiStream * stream) {
     if (pm_hosterror) return TRUE;
     if (stream) {
         PmInternal * midi = (PmInternal *) stream;
@@ -323,7 +323,7 @@ int Pm_HasHostError(PortMidiStream * stream) {
 }
 
 
-PmError Pm_Initialize( void ) {
+PMEXPORT PmError Pm_Initialize( void ) {
     if (!pm_initialized) {
         pm_hosterror = FALSE;
         pm_hosterror_text[0] = 0; /* the null string */
@@ -334,7 +334,7 @@ PmError Pm_Initialize( void ) {
 }
 
 
-PmError Pm_Terminate( void ) {
+PMEXPORT PmError Pm_Terminate( void ) {
     if (pm_initialized) {
         pm_term();
         // if there are no devices, descriptors might still be NULL
@@ -350,11 +350,11 @@ PmError Pm_Terminate( void ) {
 }
 
 
-/* Pm_Read -- read up to length longs from source into buffer */
+/* Pm_Read -- read up to length messages from source into buffer */
 /*
- * returns number of longs actually read, or error code
+ * returns number of messages actually read, or error code
  */
-int Pm_Read(PortMidiStream *stream, PmEvent *buffer, long length) {
+PMEXPORT int Pm_Read(PortMidiStream *stream, PmEvent *buffer, int32_t length) {
     PmInternal *midi = (PmInternal *) stream;
     int n = 0;
     PmError err = pmNoError;
@@ -395,7 +395,7 @@ int Pm_Read(PortMidiStream *stream, PmEvent *buffer, long length) {
     return n;
 }
 
-PmError Pm_Poll( PortMidiStream *stream )
+PMEXPORT PmError Pm_Poll( PortMidiStream *stream )
 {
     PmInternal *midi = (PmInternal *) stream;
     PmError err;
@@ -445,7 +445,7 @@ static PmError pm_end_sysex(PmInternal *midi)
    Pm_WriteSysEx all operate a state machine that "outputs" calls to
    write_short, begin_sysex, write_byte, end_sysex, and write_realtime */
 
-PmError Pm_Write( PortMidiStream *stream, PmEvent *buffer, long length)
+PMEXPORT PmError Pm_Write( PortMidiStream *stream, PmEvent *buffer, int32_t length)
 {
     PmInternal *midi = (PmInternal *) stream;
     PmError err = pmNoError;
@@ -489,7 +489,7 @@ PmError Pm_Write( PortMidiStream *stream, PmEvent *buffer, long length)
      *   sysex messages in a partially transmitted state.
      */
     for (i = 0; i < length; i++) {
-        unsigned long msg = buffer[i].message;
+        uint32_t msg = buffer[i].message;
         bits = 0;
         /* is this a sysex message? */
         if (Pm_MessageStatus(msg) == MIDI_SYSEX) {
@@ -541,7 +541,7 @@ PmError Pm_Write( PortMidiStream *stream, PmEvent *buffer, long length)
                     unsigned char *ptr = midi->fill_base + 
                                          *(midi->fill_offset_ptr);
                     ptr[0] = msg; ptr[1] = msg >> 8; 
-                    ptr[2] = msg >> 18; ptr[3] = msg >> 24;
+                    ptr[2] = msg >> 16; ptr[3] = msg >> 24;
                     (*midi->fill_offset_ptr) += 4;
                      continue;
             }
@@ -578,7 +578,7 @@ error_exit:
 }
 
 
-PmError Pm_WriteShort(PortMidiStream *stream, long when, long msg)
+PMEXPORT PmError Pm_WriteShort(PortMidiStream *stream, PmTimestamp when, PmMessage msg)
 {
     PmEvent event;
     
@@ -588,12 +588,12 @@ PmError Pm_WriteShort(PortMidiStream *stream, long when, long msg)
 }
 
 
-PmError Pm_WriteSysEx(PortMidiStream *stream, PmTimestamp when, 
+PMEXPORT PmError Pm_WriteSysEx(PortMidiStream *stream, PmTimestamp when, 
                       unsigned char *msg)
 {
     /* allocate buffer space for PM_DEFAULT_SYSEX_BUFFER_SIZE bytes */
     /* each PmEvent holds sizeof(PmMessage) bytes of sysex data */
-    #define BUFLEN (PM_DEFAULT_SYSEX_BUFFER_SIZE / sizeof(PmMessage))
+    #define BUFLEN ((int) (PM_DEFAULT_SYSEX_BUFFER_SIZE / sizeof(PmMessage)))
     PmEvent buffer[BUFLEN];
     int buffer_size = 1; /* first time, send 1. After that, it's BUFLEN */
     PmInternal *midi = (PmInternal *) stream;
@@ -666,10 +666,10 @@ end_of_sysex:
 
 
 
-PmError Pm_OpenInput(PortMidiStream** stream,
+PMEXPORT PmError Pm_OpenInput(PortMidiStream** stream,
                      PmDeviceID inputDevice,
                      void *inputDriverInfo,
-                     long bufferSize,
+                     int32_t bufferSize,
                      PmTimeProcPtr time_proc,
                      void *time_info)
 {
@@ -706,7 +706,7 @@ PmError Pm_OpenInput(PortMidiStream** stream,
        system-specific midi_out_open() method.
      */
     if (bufferSize <= 0) bufferSize = 256; /* default buffer size */
-    midi->queue = Pm_QueueCreate(bufferSize, sizeof(PmEvent));
+    midi->queue = Pm_QueueCreate(bufferSize, (int32_t) sizeof(PmEvent));
     if (!midi->queue) {
         /* free portMidi data */
         *stream = NULL;
@@ -749,13 +749,13 @@ error_return:
 }
 
 
-PmError Pm_OpenOutput(PortMidiStream** stream,
+PMEXPORT PmError Pm_OpenOutput(PortMidiStream** stream,
                       PmDeviceID outputDevice,
                       void *outputDriverInfo,
-                      long bufferSize,
+                      int32_t bufferSize,
                       PmTimeProcPtr time_proc,
                       void *time_info,
-                      long latency ) 
+                      int32_t latency ) 
 {
     PmInternal *midi;
     PmError err = pmNoError;
@@ -828,7 +828,7 @@ error_return:
 }
 
 
-PmError Pm_SetChannelMask(PortMidiStream *stream, int mask)
+PMEXPORT PmError Pm_SetChannelMask(PortMidiStream *stream, int mask)
 {
     PmInternal *midi = (PmInternal *) stream;
     PmError err = pmNoError;
@@ -842,7 +842,7 @@ PmError Pm_SetChannelMask(PortMidiStream *stream, int mask)
 }
 
 
-PmError Pm_SetFilter(PortMidiStream *stream, long filters) {
+PMEXPORT PmError Pm_SetFilter(PortMidiStream *stream, int32_t filters) {
     PmInternal *midi = (PmInternal *) stream;
     PmError err = pmNoError;
 
@@ -857,7 +857,7 @@ PmError Pm_SetFilter(PortMidiStream *stream, long filters) {
 }
 
 
-PmError Pm_Close( PortMidiStream *stream ) {
+PMEXPORT PmError Pm_Close( PortMidiStream *stream ) {
     PmInternal *midi = (PmInternal *) stream;
     PmError err = pmNoError;
 
@@ -889,8 +889,21 @@ error_return:
     return pm_errmsg(err);
 }
 
+PmError Pm_Synchronize( PortMidiStream* stream ) {
+    PmInternal *midi = (PmInternal *) stream;
+    PmError err = pmNoError;
+    if (midi == NULL)
+        err = pmBadPtr;
+    else if (!descriptors[midi->device_id].pub.output)
+        err = pmBadPtr;
+    else if (!descriptors[midi->device_id].pub.opened)
+        err = pmBadPtr;
+    else
+        midi->first_message = TRUE;
+    return err;
+}
 
-PmError Pm_Abort( PortMidiStream* stream ) {
+PMEXPORT PmError Pm_Abort( PortMidiStream* stream ) {
     PmInternal *midi = (PmInternal *) stream;
     PmError err;
     /* arg checking */
@@ -1039,7 +1052,7 @@ void pm_read_short(PmInternal *midi, PmEvent *event)
 /*
  * returns how many bytes processed
  */
-unsigned int pm_read_bytes(PmInternal *midi, unsigned char *data, 
+unsigned int pm_read_bytes(PmInternal *midi, const unsigned char *data, 
                     int len, PmTimestamp timestamp)
 {
     int i = 0; /* index into data, must not be unsigned (!) */
@@ -1084,10 +1097,10 @@ unsigned int pm_read_bytes(PmInternal *midi, unsigned char *data,
      */
     while (i < len && midi->sysex_in_progress) {
         if (midi->sysex_message_count == 0 && i <= len - 4 &&
-            ((event.message = (((long) data[i]) | 
-                             (((long) data[i+1]) << 8) |
-                             (((long) data[i+2]) << 16) |
-                             (((long) data[i+3]) << 24))) &
+            ((event.message = (((PmMessage) data[i]) | 
+                             (((PmMessage) data[i+1]) << 8) |
+                             (((PmMessage) data[i+2]) << 16) |
+                             (((PmMessage) data[i+3]) << 24))) &
              0x80808080) == 0) { /* all data, no status */ 
             if (Pm_Enqueue(midi->queue, &event) == pmBufferOverflow) {
                 midi->sysex_in_progress = FALSE;

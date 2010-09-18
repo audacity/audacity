@@ -26,11 +26,32 @@
  * maximum.
  */
 
-#include "hillclimb.h"
+
 #include "stdio.h"
+#include "malloc.h"
+#include "sautils.h"
+#include "hillclimb.h"
 
 #define HC_VERBOSE 0
 #define V if (HC_VERBOSE)
+
+Hillclimb::~Hillclimb()
+{
+    if (parameters) FREE(parameters);
+    if (step_size)  FREE(step_size);
+    if (min_param)  FREE(min_param);
+    if (max_param)  FREE(max_param);
+}
+
+
+void Hillclimb::setup(int n_) {
+    n = n_;
+    parameters = ALLOC(double, n);
+    step_size = ALLOC(double, n);
+    min_param = ALLOC(double, n);
+    max_param = ALLOC(double, n);
+}
+
 
 void Hillclimb::set_parameters(double *p, double *ss, 
                                double *min_, double *max_, int plen)
@@ -108,17 +129,20 @@ double Hillclimb::optimize()
 }
 */
 
-double Hillclimb::optimize()
+double Hillclimb::optimize(Report_fn_ptr report, void *cookie)
 {
     double best = evaluate();
+    int iterations = 0;
     while (true) {
+        (*report)(cookie, iterations, best);
         V printf("best %g ", best);
         // eval partial derivatives
         int i;
         // variables to search for max partial derivative
         double max_y = best; // max of evaluate() so far
-        int max_i; // index where best max was found
-        double max_parameter; // the good parameter value for max_i
+        int max_i = 0; // index where best max was found
+        // the good parameter value for max_i:
+        double max_parameter = parameters[0]; 
         // now search over all parameters for best improvement
         for (i = 0; i < n; i++) {
             V printf("optimize at %d param %g ", i, parameters[i]);
@@ -148,8 +172,10 @@ double Hillclimb::optimize()
             parameters[i] = save_param;
             V printf("\n");
         }
+        iterations++; // for debugging, reporting
         if (max_y <= best) { // no improvement, we're done
             V printf("\nCompleted hillclimbing, best %g\n", best);
+            (*report)(cookie, iterations, best);
             return best;
         }
         // improvement because max_y higher than best:

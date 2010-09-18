@@ -31,6 +31,7 @@ class MidiIOPrefs:public PrefsPanel
    MidiIOPrefs(wxWindow * parent);
    virtual ~MidiIOPrefs();
    virtual bool Apply();
+   virtual bool Validate();
 
  private:
    void Populate();
@@ -49,6 +50,7 @@ class MidiIOPrefs:public PrefsPanel
 
    wxChoice *mHost;
    wxChoice *mPlay;
+   wxTextCtrl *mLatency;
    wxChoice *mRecord;
 //   wxChoice *mChannels;
 

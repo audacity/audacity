@@ -22,7 +22,7 @@ void print_msg(long msg[], int n)
 {
     int i;
     for (i = 0; i < n; i++) {
-        printf(" %d", msg[i]);
+        printf(" %li", msg[i]);
     }
 }
 

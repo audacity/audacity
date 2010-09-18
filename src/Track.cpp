@@ -519,7 +519,11 @@ Track *SyncLockedTracksIterator::First(Track * member)
       member = l->GetPrev(member);
    }
 
-   while (member && member->GetKind() == Track::Wave) {
+   while (member && (member->GetKind() == Track::Wave
+#ifdef USE_MIDI
+                  || member->GetKind() == Track::Note
+#endif
+                    )) {
       t = member;
       member = l->GetPrev(member);
    }
@@ -551,13 +555,14 @@ Track *SyncLockedTracksIterator::Next(bool skiplinked)
       cur = NULL;
       return NULL;
    }
-
+// This code block stops a group when a NoteTrack is encountered
+#ifndef USE_MIDI
    // Encounter a non-wave non-label track
    if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label) {
       cur = NULL;
       return NULL;
    }
-
+#endif
    // Otherwise, check if we're in the label section
    mInLabelSection = (t->GetKind() == Track::Label);
 
@@ -581,13 +586,13 @@ Track *SyncLockedTracksIterator::Prev(bool skiplinked)
       cur = NULL;
       return NULL;
    }
-
+#ifndef USE_MIDI
    // Encounter a non-wave non-label track
    if (t->GetKind() != Track::Wave && t->GetKind() != Track::Label) {
       cur = NULL;
       return NULL;
    }
-
+#endif
    // Otherwise, check if we're in the label section
    mInLabelSection = (t->GetKind() == Track::Label);
 
@@ -606,7 +611,11 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
       int nextKind = l->GetNext(t)->GetKind();
       if (mInLabelSection && nextKind != Track::Label)
          break;
-      if (nextKind != Track::Label && nextKind != Track::Wave)
+      if (nextKind != Track::Label && nextKind != Track::Wave
+#ifdef USE_MIDI
+          && nextKind != Track::Note
+#endif
+          )
          break;
 
       t = Next(skiplinked);

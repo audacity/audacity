@@ -15,7 +15,12 @@ are estimated directly from pitch data without synthesis. A similarity matrix
 is constructed and dynamic programming finds the lowest-cost path through the
 matrix.
 
-(some more details should be added here about handling boundaries)
+The alignment can optionally skip the initial silence and final silence 
+frames in both files. The "best" path matches from the beginning times
+(with or without silence) to the end of either sequence but not
+necessarily to the end of both. In other words, the match will match
+all of the first file to an initial segment of the second, or it will
+match all of the second to an initial segment of the first.
 
 Output includes a map from one version to the other. If one file is MIDI, 
 output also includes (1) an estimated transcript in ASCII format with time, 
@@ -32,10 +37,15 @@ For Windows, open score-align.vcproj (probably out of date now -- please
 
 Command line parameters:
 
-scorealign [-<flags> [<period><windowsize><path> <smooth><trans> <midi>]] 
+scorealign [-<flags> [<period> <windowsize> <path> <smooth> 
+           <trans> <midi> <beatmap> <image>]] 
                  <file1> [<file2>]
    specifying only <file1> simply transcribes MIDI in <file1> to  
    transcription.txt. Otherwise, align <file1> and <file2>.
+   Flags are all listed together, e.g. -hwrstm, followed by filenames
+   and arguments corresponding to the flags in the order the flags are
+   given. Do not try something like "-h 0.1 -w 0.25" Instead, use
+   "-hw 0.1 0.25". The flags are:
    -h 0.25 indicates a frame period of 0.25 seconds
    -w 0.25 indicates a window size of 0.25 seconds. 
    -r indicates filename to write raw alignment path to (default path.data)
@@ -44,6 +54,8 @@ scorealign [-<flags> [<period><windowsize><path> <smooth><trans> <midi>]]
       (default is transcription.txt)
    -m is filename to write the time aligned midi file (default is midi.mid)
    -b is filename to write the time aligned beat times (default is beatmap.txt)
+   -i is filename to write an image of the distance matrix 
+         (default is distance.pnm)
    -o 2.0 indicates a smoothing window of 2.0s
    -p 3.0 means pre-smooth with a 3s window
    -x 6.0 indicates 6s line segment approximation
@@ -80,9 +92,9 @@ linear regression values. Next, a hill-climbing search is performed to
 minimize the total distance along the path. This is like dynamic programming
 except that each line spans many frames, so the resulting path is forced to 
 be fairly straight. Linear interpolation is used to estimate chroma distance
-since the lines do always pass through integer frame locations. This approach
-is probably good when the audio is known to have a steady tempo or be 
-performed with tempo changes that match those in the midi file.
+since the lines do not always pass through integer frame locations. This 
+approach is probably good when the audio is known to have a steady tempo or 
+be performed with tempo changes that match those in the midi file.
 
 Some notes on the software architecture of scorealign:
 

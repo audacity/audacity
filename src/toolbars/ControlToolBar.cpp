@@ -544,7 +544,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
                mCutPreviewTracks->GetWaveTrackArray(false),
                WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
-               &NoteTrackArray(),
+               NoteTrackArray(),
 #endif
                NULL, p->GetRate(), tcp0, tcp1, p, false,
                t0, t1-t0);
@@ -563,7 +563,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
          token = gAudioIO->StartStream(t->GetWaveTrackArray(false),
                                        WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
-                                       &(t->GetNoteTrackArray(false)),
+                                       t->GetNoteTrackArray(false),
 #endif
                                        timetrack,
                                        p->GetRate(), t0, t1, p, looped);
@@ -900,7 +900,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       int token = gAudioIO->StartStream(playbackTracks,
                                         newRecordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT                                        
-                                        &midiTracks,
+                                        midiTracks,
 #endif
                                         t->GetTimeTrack(),
                                         p->GetRate(), t0, t1, p);

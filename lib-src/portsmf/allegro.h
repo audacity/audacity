@@ -114,6 +114,11 @@ extern Alg_atoms symbol_table;
 // Alg_parameter class
 typedef class Alg_parameter {
 public:
+    // This constructor guarantees that an Alg_parameter can be
+    // deleted safely without further initialization. It does not
+    // do anything useful, so it is expected that the creator will
+    // set attr and store a value in the appropriate union field.
+    Alg_parameter() { attr = "i"; }
     ~Alg_parameter();
     Alg_attribute attr;
     union {
@@ -481,8 +486,11 @@ public:
     // you want tracks to be in beat units.
     void insert_beat(double time, double beat);   // add a point to the map
     bool insert_tempo(double tempo, double beat); // insert a tempo change
+    // get the tempo starting at beat
+    double get_tempo(double beat);
     // set the tempo over a region
     bool set_tempo(double tempo, double start_beat, double end_beat);
+    bool stretch_region(double b0, double b1, double dur);
     void cut(double start, double len, bool units_are_seconds);
     void trim(double start, double end, bool units_are_seconds);
     void paste(double start, Alg_track *tr);
@@ -581,7 +589,7 @@ typedef class Serial_write_buffer: public Serial_buffer {
     void set_string(char *s) { 
         char *fence = buffer + len;
         assert(ptr < fence);
-        // two lots of brackets surpress a g++ warning, because this is an
+        // two brackets surpress a g++ warning, because this is an
         // assignment operator inside a test.
         while ((*ptr++ = *s++)) assert(ptr < fence);
         // 4311 is type cast pointer to long warning
@@ -847,11 +855,15 @@ public:
     void show();
     long length() { return len; }
     int find_beat(double beat);
-    void insert(double beat, double num, double den);
-    void cut(double start, double end); // remove from start to end
+    // get the number of beats per measure starting at beat
+    double get_bar_len(double beat);
+    void insert(double beat, double num, double den, bool force = false);
+    void cut(double start, double end, double dur); // remove from start to end
     void trim(double start, double end); // retain just start to end
     void paste(double start, Alg_seq *seq);
     void insert_beats(double beat, double len); // insert len beats at beat
+    // find the nearest beat (see Alg_seq::nearest_beat) to beat
+    double nearest_beat(double beat);
 };
 
 
@@ -894,10 +906,13 @@ typedef enum {
 
 
 typedef struct Alg_pending_event {
+    void *cookie; // client-provided sequence identifier
     Alg_events *events; // the array of events
     long index; // offset of this event
     bool note_on; // is this a note-on or a note-off (if applicable)?
+    double offset; // time offset for events
 } *Alg_pending_event_ptr;
+
 
 typedef class Alg_iterator {
 private:
@@ -910,8 +925,11 @@ private:
 
     void show();
     bool earlier(int i, int j);
-    void insert(Alg_events_ptr events, long index, bool note_on);
-    bool remove_next(Alg_events_ptr &events, long &index, bool &note_on);
+    void insert(Alg_events_ptr events, long index, bool note_on, 
+                void *cookie, double offset);
+    // returns the info on the next pending event in the priority queue
+    bool remove_next(Alg_events_ptr &events, long &index, bool &note_on,
+                     void *&cookie, double &offset);
 public:
     bool note_off_flag; // remembers if we are iterating over note-off
                         // events as well as note-on and update events
@@ -922,17 +940,28 @@ public:
         maxlen = len = 0;
         pending_events = NULL;
     }
+    // Normally, iteration is over the events in the one sequence used
+    // to instatiate the iterator (see above), but with this method, you
+    // can add more sequences to the iteration. Events are returned in
+    // time order, so effectively sequence events are merged.
+    // The optional offset is added to each event time of sequence s
+    // before merging/sorting.
+    void begin_seq(Alg_seq_ptr s, void *cookie = NULL, double offset = 0.0);
     ~Alg_iterator();
     // Prepare to enumerate events in order. If note_off_flag is true, then
     // iteration_next will merge note-off events into the sequence.
-    void begin(bool note_off_flag = false); 
+    void begin(void *cookie = NULL) { begin_seq(seq, cookie); }
     // return next event (or NULL). If iteration_begin was called with
     // note_off_flag = true, and if note_on is not NULL, then *note_on
     // is set to true when the result value represents a note-on or update.
     // (With note_off_flag, each Alg_note event is returned twice, once
     // at the note-on time, with *note_on == true, and once at the note-off
-    // time, with *note_on == false
-    Alg_event_ptr next(bool *note_on = NULL); 
+    // time, with *note_on == false. If a cookie_ptr is passed, then the
+    // cookie corresponding to the event is stored at that address
+    // If end_time is 0, iterate through the entire sequence, but if
+    // end_time is non_zero, stop iterating at the last event before end_time
+    Alg_event_ptr next(bool *note_on = NULL, void **cookie_ptr = NULL,
+                       double *offset_ptr = NULL, double end_time = 0); 
     void end();   // clean up after enumerating events
 } *Alg_iterator_ptr;
 
@@ -967,8 +996,10 @@ public:
     Alg_seq(Alg_track_ref track) { seq_from_track(track); }
     Alg_seq(Alg_track_ptr track) { seq_from_track(*track); }
     void seq_from_track(Alg_track_ref tr);
-    Alg_seq(std::istream &file, bool smf); // create from file
-    Alg_seq(const char *filename, bool smf); // create from filename
+    // create from file:
+    Alg_seq(std::istream &file, bool smf, double *offset_ptr = NULL);
+    // create from filename
+    Alg_seq(const char *filename, bool smf, double *offset_ptr = NULL);
     virtual ~Alg_seq();
     int get_read_error() { return error; }
     void serialize(void **buffer, long *bytes);
@@ -981,9 +1012,9 @@ public:
     void unserialize_seq();
 
     // write an ascii representation to file
-    void write(std::ostream &file, bool in_secs);
+    void write(std::ostream &file, bool in_secs, double offset = 0.0);
     // returns true on success
-    bool write(const char *filename);
+    bool write(const char *filename, double offset = 0.0);
     void smf_write(std::ostream &file);
     bool smf_write(const char *filename);
 
@@ -1024,15 +1055,28 @@ public:
     // find index of first score event after time
     long seek_time(double time, int track_num);
     bool insert_beat(double time, double beat);
+    // return the time of the beat nearest to time, also returns beat
+    // number through beat. This will correspond to an integer number
+    // of beats from the nearest previous time signature or 0.0, but
+    // since time signatures need not be on integer beat boundaries
+    // the beat location may not be on an integer beat (beat locations
+    // are measured from the beginning which is beat 0.
+    double nearest_beat_time(double time, double *beat);
     // warning: insert_tempo may change representation from seconds to beats
     bool insert_tempo(double bpm, double beat);
-
+    // change the duration from b0 to b1 (beats) to dur (seconds) by
+    // scaling the intervening tempos
+    bool stretch_region(double b0, double b1, double dur);
     // add_event takes a pointer to an event on the heap. The event is not
     // copied, and this Alg_seq becomes the owner and freer of the event.
     void add_event(Alg_event_ptr event, int track_num);
     void add(Alg_event_ptr event) { assert(false); } // call add_event instead
-    // warning: set_tempo may change representation from seconds to beats
+    // get the tempo starting at beat
+    double get_tempo(double beat);
     bool set_tempo(double bpm, double start_beat, double end_beat);
+
+    // get the bar length in beats starting at beat
+    double get_bar_len(double beat);
     void set_time_sig(double beat, double num, double den);
     void beat_to_measure(double beat, long *measure, double *m_beat,
                          double *num, double *den);

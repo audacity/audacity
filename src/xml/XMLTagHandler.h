@@ -42,6 +42,7 @@ public:
    static bool IsGoodInt(const wxString strInt);
 
    static bool IsValidChannel(const int nValue); 
+   static bool IsValidVisibleChannels(const int nValue);
    static bool IsValidSampleFormat(const int nValue); // true if nValue is one sampleFormat enum values
 };
 

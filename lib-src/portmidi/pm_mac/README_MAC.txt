@@ -1,46 +1,147 @@
 README_MAC.txt for PortMidi
 Roger Dannenberg
-17 jan 2007
+20 nov 2009
 
-To build PortMidi for Mac OS X:
+To build PortMidi for Mac OS X, you must install Xcode, and
+if you want to build from the command line, you should install
+CMake.
 
-==== USING MAKE ====
+CMake can build either Makefiles or Xcode projects, or you
+can use the pre-built Xcode project. These approaches are 
+described in separate sections below.
 
-go back up to the portmidi
-directory and type 
+==== CLEANING UP ====
+You can remove previously built apps, object code, and libraries by
+running "cd pm_mac; sh cleanslate.sh"
+
+==== USING CMAKE (AND COMMAND LINE TOOLS) ====
+
+Start in the portmedia/portmidi directory.
 
 make -f pm_mac/Makefile.osx
 
-(You can also copy pm_mac/Makefile.osx to Makfile in the 
-portmidi directory and just type "make".)
+(Begin note: make will invoke cmake to build a Makefile and then make to
+build portmidi. This extra level allows you to correctly build 
+both Release and Debug versions. Release is the default, so to get
+the Debug version, use:
 
-The Makefile.osx will build all test programs and the portmidi
-library. You may want to modify the Makefile.osx to remove the
-PM_CHECK_ERRORS definition. For experimental software,
-especially programs running from the command line, we 
-recommend using PM_CHECK_ERRORS -- it will terminate your
-program and print a helpful message if any PortMidi 
-function returns an error code.
+make -f pm_mac/Makefile.osx configuration=Debug
+)
 
-If you do not compile with PM_CHECK_ERRORS, you should 
-check for errors yourself.
+Release version executables and libraries are now in
+    portmedia/portmidi/Release
 
-The make file will also build an OS X Universal (ppc and i386)
-dynamic link library using xcode. For instructions about this
-and other options, type
+Debug version executables and libraries are created in
+    portmedia/portmidi/Debug
+The Debug versions are compiled with PM_CHECK_ERRORS which
+prints an error message and aborts when an error code is returned
+by PortMidi functions. This is useful for small command line 
+applications. Otherwise, you should check and handle error returns
+in your program.
 
-make -f pm_mac/Makefile.osx help
+You can install portmidi as follows:
+
+cd Release; sudo make install
+
+This will install /usr/local/include/{portmidi.h, porttime.h}
+and /usr/local/lib/{libportmidi.dylib, libportmidi_s.a, libpmjni.dylib}
+
+You should now make the pmdefaults.app:
+
+make -f pm_mac/Makefile.osx pmdefaults
+
+NOTES: xcode is likely to crash after building pmdefaults, but
+       pmdefaults should be OK (it will be in Release)
+   Once you get started, you can run make directly in the 
+       Debug or Release directories
+
 
 ==== USING XCODE ====
 
-Open portmidi/pm_mac/pm_mac.xcode with Xcode and 
-build what you need: if you are just exploring, start with 
-the lib+test suite.
+(1) Open portmidi/portmidi.xcodeproj with Xcode and 
+build what you need. The simplest thing is to build the
+ALL_BUILD target. The default will be to build the Debug
+version, but you may want to change this to Release. 
 
-[pm_mac.xcodeproj courtesy of Leigh Smith]
+The Debug version is compiled with PM_CHECK_ERRORS, and the
+Release version is not. PM_CHECK_ERRORS will print an error
+message and exit your program if any error is returned from
+a call into PortMidi.
+
+CMake (currently) also creates MinSizRel and RelWithDebInfo
+versions, but only because I cannot figure out how to disable
+them.
+
+You will probably want the application PmDefaults, which sets
+default MIDI In and Out devices for PortMidi. You may also
+want to build a Java application using PortMidi. Since I have
+not figured out how to use CMake to make an OS X Java application,
+use pm_mac/pm_mac.xcodeproj as follows:
+
+(2) open pm_mac/pm_mac.xcodeproj
+
+(3) pm_java/pmjni/portmidi_JportmidiApi.h is needed
+by libpmjni.jnilib, the Java native interface library. Since
+portmidi_JportmidiApi.h is included with PortMidi, you can skip
+to step 4, but if you really want to rebuild everything from 
+scratch, build the JPortMidiHeaders project.
+
+(4) If you did not build libpmjni.dylib using portmidi.xcodeproj,
+do it now. (It depends on portmidi_JportmidiApi.h, and the 
+PmDefaults project depends on libpmjni.dylib.)
+
+(5) Returning to pm_mac.xcodeproj, build the PmDefaults program.
+
+(6) If you wish, copy pm_mac/build/Deployment/PmDefaults.app to
+your applications folder.
+
+(7) If you want to install libportmidi.dylib, first make it with 
+Xcode, then
+    sudo make -f pm_mac/Makefile.osx install
+This command will install /usr/local/include/{porttime.h, portmidi.h} 
+and /usr/local/lib/libportmidi.dylib
+Note that the "install" function of xcode creates portmidi/Release
+and does not install the library to /usr/local/lib, so please use
+the command line installer.
+
+==== USING CMAKE TO BUILD Xcode PROJECT ====
+
+(1) Install CMake if you do not have it already.
+
+(2) Open portmedia/portmidi/CMakeLists.txt with CMake
+
+(3) Use Configure and Generate buttons
+
+(4) This creates portmedia/portmidi/portmidi.xcodeproj.
+
+(5) Follow the directions above using Xcode to compile
+PortMidi.
+
+Notes: 
+   (1) You will also use pm_mac/pm_mac.xcodeproj, which
+is not generated by CMake.
+   (2) The portmidi.xcodeproj created by CMake will have absolute
+paths and depend on CMake, so it will not be very portable to other 
+machines or even directories. You can cd to pm_mac and run 
+clean_up_project.sh to convert pm_mac.xcodeproj to use relative 
+paths and to remove the scripts that run CMake. You'll first have 
+to modify pm_mac/clean_up_project.awk to contain the particular
+absolute path or your portmidi project. Also, this is a pretty simple
+and probably fragile hack to make a stand-alone xcode project. I
+don't recommend it. Instead, either use CMake all the time, or use
+the portmidi.xcodeproj you get with the distribution.
+
 
 CHANGELOG
 
+20-Nov-2009 Roger B. Dannenberg
+    Added some install instructions
+26-Sep-2009 Roger B. Dannenberg
+    More changes for using CMake, Makefiles, XCode
+20-Sep-2009 Roger B. Dannenberg
+    Modifications for using CMake
+14-Sep-2009 Roger B. Dannenberg
+    Modifications for using CMake
 17-Jan-2007 Roger B. Dannenberg
     Explicit instructions for Xcode
 15-Jan-2007 Roger B. Dannenberg

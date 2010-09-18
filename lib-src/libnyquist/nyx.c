@@ -354,6 +354,7 @@ LOCAL void nyx_save_obarray()
 LOCAL void nyx_restore_obarray()
 {
    LVAL obvec = getvalue(obarray);
+   LVAL sscratch = xlenter("*SCRATCH*"); // one-time lookup
    int i;
 
    // Scan all obarray vectors
@@ -391,15 +392,21 @@ LOCAL void nyx_restore_obarray()
             }
          }
 
-         // If we didn't find the symbol in the original obarray, then it must've
-         // been added and must be removed from the current obarray.
+         // If we didn't find the symbol in the original obarray, then it 
+         // must've been added and must be removed from the current obarray.
+         // Exception: if the new symbol is a property symbol of *scratch*,
+         // then allow the symbol to stay; otherwise, property lookups will
+         // fail.
          if (scon == NULL) {
-            if (last) {
-               rplacd(last, cdr(dcon));
-            }
-            else {
-               setelement(obvec, i, cdr(dcon));
-            }
+            // check property list of scratch
+            if (findprop(sscratch, dsym) == NIL) {
+               if (last) {
+                  rplacd(last, cdr(dcon));
+               }
+               else {
+                  setelement(obvec, i, cdr(dcon));
+               }
+            } // otherwise, keep new property symbol
          }
 
          // Must track the last dcon for symbol removal
