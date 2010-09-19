@@ -26,11 +26,13 @@ typedef struct avg_susp_struct {
     sound_type s;
     long s_cnt;
     sample_block_values_type s_ptr;
+    /* blocksize is how many input samples to process for an output sample */
     long blocksize;
+    /* stepsize is how far to advance to get the next block of samples */
     long stepsize;
-    sample_type *block;
-    sample_type *fillptr;
-    sample_type *endptr;
+    sample_type *buffer;
+    sample_type *fillptr;  /* samples are added to buffer at fillptr */
+    sample_type *endptr;   /* until endptr is reached */
     process_block_type process_block;
 } avg_susp_node, *avg_susp_type;
 
@@ -41,10 +43,10 @@ sample_type average_block(avg_susp_type susp)
     double sum = 0.0;
     int i;
     for (i = 0; i < susp->blocksize; i++) {
-        sum += susp->block[i];
+        sum += susp->buffer[i];
     }
     for (i = susp->stepsize; i < susp->blocksize; i++) {
-    susp->block[i - susp->stepsize] = susp->block[i];
+        susp->buffer[i - susp->stepsize] = susp->buffer[i];
     }
     return (sample_type) (sum / susp->blocksize);
 }
@@ -57,7 +59,7 @@ sample_type peak_block(avg_susp_type susp)
     sample_type minus_peak = 0.0F;
     int i;
     for (i = 0; i < susp->blocksize; i++) {
-        sample_type s = susp->block[i];
+        sample_type s = susp->buffer[i];
     if (s > peak) {
         peak = s; minus_peak = -s;
     } else if (s < minus_peak) {
@@ -65,7 +67,7 @@ sample_type peak_block(avg_susp_type susp)
     }
     }
     for (i = susp->stepsize; i < susp->blocksize; i++) {
-    susp->block[i - susp->stepsize] = susp->block[i];
+        susp->buffer[i - susp->stepsize] = susp->buffer[i];
     }
     return peak;
 }
@@ -200,7 +202,7 @@ void avg_mark(avg_susp_type susp)
 void avg_free(avg_susp_type susp)
 {
     sound_unref(susp->s);
-    free(susp->block);
+    free(susp->buffer);
     ffree_generic(susp, sizeof(avg_susp_node), "avg_free");
 }
 
@@ -215,6 +217,7 @@ void avg_print_tree(avg_susp_type susp, int n)
 
 sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
 {
+    long buffersize;
     register avg_susp_type susp;
     rate_type sr = s->sr;
     time_type t0 = s->t0;
@@ -249,9 +252,13 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     susp->s_cnt = 0;
     susp->blocksize = blocksize;
     susp->stepsize = stepsize;
-    susp->block = (sample_type *) malloc(blocksize * sizeof(sample_type));
-    susp->fillptr = susp->block;
-    susp->endptr = susp->block + blocksize;
+    /* We need at least blocksize samples in buffer, but if stepsize > blocksize,
+       it is convenient to put stepsize samples in buffer. This allows us to
+       step ahead by stepsize samples just by flushing the buffer. */
+    buffersize = MAX(blocksize, stepsize);
+    susp->buffer = (sample_type *) malloc(buffersize * sizeof(sample_type));
+    susp->fillptr = susp->buffer;
+    susp->endptr = susp->buffer + buffersize;
     susp->process_block = average_block;
     if (op == op_peak) susp->process_block = peak_block;
     /* scale factor gets passed to output signal: */
