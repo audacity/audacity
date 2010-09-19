@@ -684,7 +684,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetBottomNote(nValue);
          else if (!wxStrcmp(attr, wxT("data"))) {
-             std::string s(wxString::FromUTF8(strValue.c_str()));
+             std::string s(strValue.mb_str(wxConvUTF8));
              std::istringstream data(s);
              mSeq = new Alg_seq(data, false);
          }
@@ -730,7 +730,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("minimized"), saveme->GetMinimized());
    xmlFile.WriteAttr(wxT("velocity"), (double) saveme->mGain);
    xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
-   xmlFile.WriteAttr(wxT("data"), data.str());
+   xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));
    if (this != saveme) {
       delete saveme; // delete the duplicate

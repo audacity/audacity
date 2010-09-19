@@ -1362,6 +1362,8 @@
 		ED2707510EF9C64F007D4FFD /* TimeScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074D0EF9C64F007D4FFD /* TimeScale.cpp */; };
 		ED3D7FF00DF73889000F43E3 /* EffectCategory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEC0DF73889000F43E3 /* EffectCategory.cpp */; };
 		ED3D7FF10DF73889000F43E3 /* EffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */; };
+		ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
+		ED64C82512456831007CF2FC /* ScoreAlignParams.h in Headers */ = {isa = PBXBuildFile; fileRef = ED64C82412456831007CF2FC /* ScoreAlignParams.h */; };
 		ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
 		EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
 		EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */; };
@@ -3206,6 +3208,9 @@
 		ED3D7FED0DF73889000F43E3 /* EffectCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectCategory.h; sourceTree = "<group>"; };
 		ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectManager.cpp; sourceTree = "<group>"; };
 		ED3D7FEF0DF73889000F43E3 /* EffectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectManager.h; sourceTree = "<group>"; };
+		ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScoreAlignDialog.cpp; sourceTree = "<group>"; };
+		ED64C822124567ED007CF2FC /* ScoreAlignDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreAlignDialog.h; sourceTree = "<group>"; };
+		ED64C82412456831007CF2FC /* ScoreAlignParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreAlignParams.h; sourceTree = "<group>"; };
 		ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtImportPrefs.cpp; sourceTree = "<group>"; };
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; };
 		EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImportExportCommands.cpp; sourceTree = "<group>"; };
@@ -4173,6 +4178,8 @@
 		1790AFFD09883BFD008A330A /* effects */ = {
 			isa = PBXGroup;
 			children = (
+				ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */,
+				ED64C822124567ED007CF2FC /* ScoreAlignDialog.h */,
 				1790B00009883BFD008A330A /* audiounits */,
 				1790B02309883BFD008A330A /* ladspa */,
 				28D587C50E264CBB009C7DEA /* lv2 */,
@@ -5719,6 +5726,7 @@
 		ED05D0FF0E50AD5600CC4BD3 /* libscorealign */ = {
 			isa = PBXGroup;
 			children = (
+				ED64C82412456831007CF2FC /* ScoreAlignParams.h */,
 				ED05D1180E50AD5700CC4BD3 /* fft3 */,
 				ED05D1000E50AD5700CC4BD3 /* audiomixerreader.cpp */,
 				ED05D1010E50AD5700CC4BD3 /* audiomixerreader.h */,
@@ -6400,6 +6408,7 @@
 				28E2371E0E515D9D00281398 /* sautils.h in Headers */,
 				28E237200E515D9E00281398 /* scorealign-glue.h in Headers */,
 				28E237220E515D9F00281398 /* scorealign.h in Headers */,
+				ED64C82512456831007CF2FC /* ScoreAlignParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7793,6 +7802,7 @@
 				284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */,
 				18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */,
 				ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */,
+				ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

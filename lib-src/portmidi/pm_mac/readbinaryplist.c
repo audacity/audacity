@@ -78,7 +78,7 @@ memory requested or calls longjmp, so callers don't have to check.
 #include <stdio.h>
 #include <sys/stat.h>
 #include "readbinaryplist.h"
-#include "Folders.h"
+#include <Carbon/Carbon.h>
 
 #define NO 0
 #define YES 1

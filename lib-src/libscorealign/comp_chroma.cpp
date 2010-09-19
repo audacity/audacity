@@ -9,6 +9,11 @@
 #include  "comp_chroma.h"
 using namespace std;
 
+#ifdef min
+#undef min
+#endif
+#define min(x,y) ((x)<(y)?(x):(y))
+
 #define SILENCE_DISTANCE 16.0
 
 /*				GEN_DIST

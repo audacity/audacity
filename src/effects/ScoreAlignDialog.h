@@ -11,6 +11,7 @@
 
 #include <wx/dialog.h>
 #include <wx/slider.h>
+#include <wx/checkbox.h>
 #include "ScoreAlignParams.h"
 
 class wxButton;
