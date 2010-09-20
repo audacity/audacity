@@ -19,6 +19,9 @@ and grids used by Audacity.
 This will be split up into separate include files to reduce the amount
 of recompilation on a change.
 
+Meantime, do NOT delete any of these declarations, even if they're 
+unused, as they're all offset by prior declarations.
+
 To add an image, you give its size and name like so:
 
 \code
@@ -331,6 +334,11 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrProgressDone,     wxColour(60, 240, 60, 128),   wxT("ProgressDone"));
    DEFINE_COLOUR( clrProgressNotYet,   wxColour(255, 255, 255,220), wxT("ProgressNotYet"));
    DEFINE_COLOUR( clrSyncLockSel,          wxColour(192, 192, 192),      wxT("SyncLockSel"));
+
+   // Vaughan, 2010-09-20: clrTrackInfoSyncLockSel is unused so this is cruft, but 
+   //    do NOT delete it as it's in the theme image, so offsets subsequent colors.
+   DEFINE_COLOUR( clrTrackInfoSyncLockSel, wxColour( 64,  64,  64),      wxT("TrackInfoSyncLockSel"));
+   
    DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
    // This is for waveform drawing, selected outside of clips
    DEFINE_COLOUR( clrBlankSelected, wxColour(170, 170, 192), wxT("BlankSelected"));
