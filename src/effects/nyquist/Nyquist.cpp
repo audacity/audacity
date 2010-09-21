@@ -414,7 +414,7 @@ bool EffectNyquist::PromptUser()
 
    if (mInteractive) {
       NyquistInputDialog dlog(wxGetTopLevelParent(NULL), -1,
-                              _("Nyquist Prompt..."),
+                              _("Nyquist Prompt"),
                               _("Enter Nyquist Command: "),
                               mCmd);
       dlog.CentreOnParent();
