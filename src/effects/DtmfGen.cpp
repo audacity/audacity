@@ -66,8 +66,8 @@ bool EffectDtmf::Init()
       // but we do need to make sure we have the right number of samples at the project rate
       AudacityProject *p = GetActiveProject();
       double projRate = p->GetRate();
-      double quantMT0 = (double)((sampleCount)floor(mT0 * projRate + 0.5))/projRate;
-      double quantMT1 = (double)((sampleCount)floor(mT1 * projRate + 0.5))/projRate;
+      double quantMT0 = QUANTIZED_TIME(mT0, projRate);
+      double quantMT1 = QUANTIZED_TIME(mT1, projRate);
       mDuration = quantMT1 - quantMT0;
       mIsSelection = true;
    } else {
