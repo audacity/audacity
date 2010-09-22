@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-08-17 22:57+0100\n"
-"PO-Revision-Date: 2010-08-18 00:52-0000\n"
+"PO-Revision-Date: 2010-09-22 06:08-0000\n"
 "Last-Translator: Thomas Breinstrup <info@interlingua.dk>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -526,9 +526,8 @@ msgstr "Bekræft?"
 
 #: AutoRecovery.cpp:148
 #: AutoRecovery.cpp:185
-#, fuzzy
 msgid "Could not enumerate files in auto save directory."
-msgstr "Kan ikke optælle filer i mappen, hvori de gemmes automatisk"
+msgstr "Kan ikke optælle filer i mappen, hvori de gemmes automatisk."
 
 #: AutoRecovery.cpp:149
 #: AutoRecovery.cpp:186
@@ -809,12 +808,10 @@ msgid "Copying audio data into project..."
 msgstr "Kopiere lyddata ind i projektet...."
 
 #: Dependencies.cpp:318
-#, fuzzy
 msgid "Project Depends on Other Audio Files"
 msgstr "Projektet er koblet sammen med andre lydfiler"
 
 #: Dependencies.cpp:338
-#, fuzzy
 msgid ""
 "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
@@ -829,25 +826,26 @@ msgid ""
 "Files shown as MISSING have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
 msgstr ""
+"\n"
+"\n"
+"Filer vist som MANGLER er blevet flyttet eller slettet og kan ikke kopieres.\n"
+"Gendan dem til deres oprindelige placering for at kunne kopiere dem ind i projektet."
 
 #: Dependencies.cpp:352
 msgid "Project Dependencies"
 msgstr "Sammenkoblinger i projektet"
 
 #: Dependencies.cpp:355
-#, fuzzy
 msgid "Audio File"
 msgstr "Lydfil"
 
 #: Dependencies.cpp:357
-#, fuzzy
 msgid "Disk Space"
 msgstr "Plads på harddisk"
 
 #: Dependencies.cpp:363
-#, fuzzy
 msgid "Copy Selected Files"
-msgstr "Kopiér de valgte lyddata ind i projektet"
+msgstr "Kopiér de valgte filer"
 
 #: Dependencies.cpp:375
 #: Dependencies.cpp:512
@@ -856,17 +854,15 @@ msgstr "Annullér Gem"
 
 #: Dependencies.cpp:376
 msgid "Save without Copying"
-msgstr ""
+msgstr "Gem uden at kopiere"
 
 #: Dependencies.cpp:379
-#, fuzzy
 msgid "Do Not Copy"
-msgstr "Kopiér ingen lyddata"
+msgstr "Kopiér ikke"
 
 #: Dependencies.cpp:382
-#, fuzzy
 msgid "Copy All Files (Safer)"
-msgstr "Kopiér alle lyddata ind i projektet (sikrere)"
+msgstr "Kopiér alle filer (sikrere)"
 
 #: Dependencies.cpp:395
 #: Dependencies.cpp:401
@@ -874,14 +870,12 @@ msgid "Ask me"
 msgstr "Spørg mig"
 
 #: Dependencies.cpp:396
-#, fuzzy
 msgid "Always copy all files (safest)"
-msgstr "Kopiér altid alle lyddata (sikrest)"
+msgstr "Kopiér altid alle filer (sikrest)"
 
 #: Dependencies.cpp:397
-#, fuzzy
 msgid "Never copy any files"
-msgstr "Kopiér aldrig lyddata"
+msgstr "Kopiér aldrig nogen filer"
 
 #: Dependencies.cpp:400
 msgid "Whenever a project depends on other files:"
@@ -889,7 +883,7 @@ msgstr "Når et projekt er koblet sammen med andre filer:"
 
 #: Dependencies.cpp:436
 msgid "MISSING "
-msgstr ""
+msgstr "MANGLER"
 
 #: Dependencies.cpp:511
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
@@ -903,7 +897,6 @@ msgid ""
 msgstr ""
 
 #: Dependencies.cpp:555
-#, fuzzy
 msgid "Dependency Check"
 msgstr "Kontrol af sammenkoblinger"
 
@@ -939,7 +932,7 @@ msgid "mkdir in DirManager::MakeBlockFilePath failed.\n"
 msgstr ""
 
 #: DirManager.cpp:606
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity found an orphan blockfile: %s. \n"
 "Please consider saving and reloading the project to perform a complete project check.\n"
@@ -956,14 +949,13 @@ msgid "%s-old%d"
 msgstr "%s-gammel%d"
 
 #: DirManager.cpp:1252
-#, fuzzy
 msgid "Unable to open/create test file."
-msgstr "Kan ikke åbne/oprette en testfil"
+msgstr "Kan ikke åbne/oprette en testfil."
 
 #: DirManager.cpp:1261
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to remove '%s'."
-msgstr "Kan ikke fjerne '%s'"
+msgstr "Kan ikke fjerne '%s'."
 
 #: DirManager.cpp:1266
 #, c-format
@@ -971,9 +963,9 @@ msgid "Renamed file: %s\n"
 msgstr "Omdøbt fil: %s\n"
 
 #: DirManager.cpp:1329
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to rename '%s' to '%s'."
-msgstr "Kan ikke omdøbe '%s' til '%s'"
+msgstr "Kan ikke omdøbe '%s' til '%s'."
 
 #: DirManager.cpp:1348
 #, c-format
@@ -982,19 +974,15 @@ msgstr "Ændrede blokken %s til nyt aliasnavn\n"
 
 #: DirManager.cpp:1405
 #: DirManager.cpp:1768
-#, fuzzy
 msgid "Inspecting project file data"
-msgstr "Undersøger projektfilens data..."
+msgstr "Undersøger projektfilens data"
 
 #: DirManager.cpp:1432
-#, fuzzy
 msgid "Project check found inconsistencies inspecting the loaded project data."
-msgstr ""
-"Kontrollen af projektet fandt uoverensstemmelser i de indlæste projektdata;\n"
-"klik på 'Detailler' for at se en komplet liste over fejl eller 'OK' for at fortsætte til flere muligheder."
+msgstr "Kontrollen af projektet fandt uoverensstemmelser i de indlæste projektdata."
 
 #: DirManager.cpp:1442
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check found %d orphan blockfile(s). These files are \n"
 "unused and probably left over from a crash or some other bug. \n"
@@ -1003,17 +991,16 @@ msgid ""
 msgstr ""
 "Kontrollen af projektet fandt %d herreløse blokfiler. Disse filer er\n"
 "ikke i brug og sandsynligvis efterladt efter et nedbrud eller en anden fejl.\n"
+"\n"
 "De bør slettes for at undgå problemer."
 
 #: DirManager.cpp:1449
-#, fuzzy
 msgid "Delete orphan files immediately (safe and recommended)"
-msgstr "Slet herreløse filer (sikkert og anbefalet)"
+msgstr "Slet herreløse filer straks (sikkert og anbefalet)"
 
 #: DirManager.cpp:1450
-#, fuzzy
 msgid "Continue without deleting; ignore the extra files this session"
-msgstr "Fortsæt uden at slette - arbejd stille uden om de ekstra filer"
+msgstr "Fortsæt uden at slette - ignorér de ekstra filer denne gang"
 
 #: DirManager.cpp:1451
 #: DirManager.cpp:1491
@@ -1023,12 +1010,11 @@ msgid "Close project immediately with no changes"
 msgstr "Luk straks projektet uden at foretage ændringer"
 
 #: DirManager.cpp:1453
-#, fuzzy
 msgid "Warning - Orphan Blockfile(s)"
-msgstr "Herreløs blokfil: (%s)"
+msgstr "Advarsel - herreløs blokfil"
 
 #: DirManager.cpp:1483
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check detected %d external audio file(s) ('aliased files') \n"
 "are now missing. There is no way for Audacity to recover these \n"
@@ -1037,58 +1023,52 @@ msgid ""
 "If you choose the first or second option below, you can try to \n"
 "find and restore the missing files to their previous location."
 msgstr ""
-"Kontrollen af projektet fandt %d inputfiler i brug i stedet\n"
-"('aliasfiler') mangler. Der er ingen måde, hvorpå Audacity\n"
-"kan genskabe disse filer automatisk. Du kan vælge permanent\n"
-"at fylde den tid, som de manglende filer udgør, med stilhed,\n"
-"fylde den midlertidigt med stilhed lige nu eller lukke projektet\n"
-"nu og forsøge at genskabe de manglende filer manuelt."
+"Kontrollen af projektet fandt, at %d lydfil(er) udefra ('aliasfiler')\n"
+"mangler. Der er ingen måde, hvorpå Audacity kan genskabe\n"
+"disse filer automatisk.\n"
+"\n"
+"Hvis du vælger første eller anden mulighed herunder, kan du forsøge\n"
+"at finde og genskabe de manglende filer på den tidligere placering."
 
 #: DirManager.cpp:1492
 #: DirManager.cpp:1606
-#, fuzzy
 msgid "Temporarily replace missing audio with silence (this session only)"
 msgstr "Erstat de manglende data midlertidigt med stilhed (kun denne gang)"
 
 #: DirManager.cpp:1493
 #: DirManager.cpp:1607
-#, fuzzy
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Erstat tabte data med stilhed (vil blive permanent)"
+msgstr "Erstat tabte lyddata med stilhed (vil straks blive permanent)"
 
 #: DirManager.cpp:1495
-#, fuzzy
 msgid "Warning - Missing Aliased File(s)"
-msgstr "Manglende aliasfil: (%s)"
+msgstr "Advarsel - manglende aliasfil(er)"
 
 #: DirManager.cpp:1554
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check detected %d missing summary (.auf) file(s). \n"
 "Audacity can fully regenerate these summary files from the \n"
 "original audio in the project."
 msgstr ""
-"Kontrollen af projektet fandt %d manglende oversigtsfil(er) (.auf)\n"
+"Kontrollen af projektet fandt %d manglende oversigtsfil(er) (.auf).\n"
 "Audacity kan fuldtud genskabe disse oversigtsfiler fra de\n"
 "oprindelige lyddata i projektet."
 
 #: DirManager.cpp:1560
-#, fuzzy
 msgid "Regenerate summary files (safe and recommended)"
 msgstr "Genskab oversigtsfilerne (sikkert og anbefalet)"
 
 #: DirManager.cpp:1561
-#, fuzzy
 msgid "Fill in silence for missing display data (this session only)"
 msgstr "Fyld stilhed ind for de manglende data (kun denne gang)"
 
 #: DirManager.cpp:1564
-#, fuzzy
 msgid "Warning - Missing Summary File(s)"
-msgstr "Manglende oversigtsfil: (%s.auf)"
+msgstr "Advarsel - manglende oversigtsfil(er)"
 
 #: DirManager.cpp:1596
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Project check detected %d missing audio data blockfile(s) (.au), \n"
 "probably due to a bug, system crash, or accidental deletion. \n"
@@ -1101,58 +1081,56 @@ msgid ""
 msgstr ""
 "Kontrollen af projektet fandt %d manglende lyddatablokfil(er) (.au), \n"
 "sandsynligvis på grund af en fejl, et nedbrud eller en fejlagtig sletning.\n"
+"\n"
 "Audacity har ingen mulighed for at genskabe disse tabte data\n"
-"automatisk. Du kan vælge permanent at fylde ud med stilhed\n"
-"for de manglende data, midlertidigt fylde ud med stilhed blot\n"
-"denne gang eller lukke projektet nu og forsøge at genskabe\n"
-"de tabte data manuelt."
+"automatisk.\n"
+"\n"
+"Hvis du vælger første eller anden mulighed herunder, kan du forsøge\n"
+"at finde og genskabe de manglende filer på deres hidtidige placering."
 
 #: DirManager.cpp:1609
 msgid "Warning - Missing Audio Data Blockfile(s)"
-msgstr ""
+msgstr "Advarsel - manglende lyddatablokfil(er)"
 
 #: DirManager.cpp:1637
-#, fuzzy
 msgid "Cleaning up unused directories in project data"
-msgstr "Rydder ubrugte mapper op i projektdata...."
+msgstr "Rydder ubrugte mapper op i projektdata"
 
 #: DirManager.cpp:1677
-#, fuzzy, c-format
+#, c-format
 msgid "Missing aliased audio file: %s"
-msgstr "Manglende aliasfil: (%s)"
+msgstr "Manglende aliaslydfil(er): %s"
 
 #: DirManager.cpp:1703
-#, fuzzy, c-format
+#, c-format
 msgid "Missing summary blockfile: %s.auf"
-msgstr "Manglende oversigtsfil: (%s.auf)"
+msgstr "Manglende oversigtsfil: %s.auf"
 
 #: DirManager.cpp:1728
-#, fuzzy, c-format
+#, c-format
 msgid "Missing data blockfile: %s.au"
-msgstr "Manglende datafil: (%s.au)"
+msgstr "Manglende datafil: %s.au"
 
 #: DirManager.cpp:1755
-#, fuzzy, c-format
+#, c-format
 msgid "Orphan blockfile: %s"
-msgstr "Herreløs blokfil: (%s)"
+msgstr "Herreløs blokfil: %s"
 
 #: DirManager.cpp:1810
 msgid "Caching audio"
 msgstr "Gemmer lyd midlertidigt"
 
 #: DirManager.cpp:1811
-#, fuzzy
 msgid "Caching audio into memory"
-msgstr "Gemmer lyd i hukommelsen..."
+msgstr "Gemmer lyd i hukommelsen"
 
 #: DirManager.cpp:1846
 msgid "Saving recorded audio"
 msgstr "Gemmer indspillet lyd"
 
 #: DirManager.cpp:1847
-#, fuzzy
 msgid "Saving recorded audio to disk"
-msgstr "Gemmer indspillet lyd på harddisken..."
+msgstr "Gemmer indspillet lyd på harddisken"
 
 #: FFT.cpp:495
 msgid "Rectangular"
@@ -1679,7 +1657,7 @@ msgstr "Vælg en tekstfil, der indeholder etiketter..."
 #: LabelDialog.cpp:520
 #: Menus.cpp:4538
 msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
-msgstr "Tekst filer (*.txt)|*.txt|Alle filer (*.*)|*.*"
+msgstr "Tekstfiler (*.txt)|*.txt|Alle filer (*.*)|*.*"
 
 #: LabelDialog.cpp:534
 #: Menus.cpp:4550
@@ -1984,13 +1962,12 @@ msgid "Cursor to Track &End"
 msgstr "Fra markør til s&lut på spor"
 
 #: Menus.cpp:444
-#, fuzzy
 msgid "In All &Tracks"
-msgstr "F&old alle spor ud"
+msgstr "I alle spor"
 
 #: Menus.cpp:449
 msgid "In All S&ync-Locked Tracks"
-msgstr ""
+msgstr "I alle s&ynkront låste spor"
 
 #: Menus.cpp:459
 msgid "Find &Zero Crossings"
@@ -2294,9 +2271,8 @@ msgid "Synchronize MIDI with Audio"
 msgstr "Synkronisér MIDI med lyd"
 
 #: Menus.cpp:721
-#, fuzzy
 msgid "Sync-&Lock Tracks"
-msgstr "Sammenføj lydspor"
+msgstr "&Lås spor synkront"
 
 #: Menus.cpp:726
 msgid "Add Label At &Selection"
@@ -2371,11 +2347,11 @@ msgstr "Om &Audacity CleanSpeech..."
 
 #: Menus.cpp:1000
 msgid "&Quick Help (in web browser)"
-msgstr "&Hurtighjælp (i internetprogram)"
+msgstr "&Hurtighjælp (på Internet)"
 
 #: Menus.cpp:1001
 msgid "&Manual (in web browser)"
-msgstr "&Vejledning (i internetprogram)"
+msgstr "&Vejledning (på Internet)"
 
 #: Menus.cpp:1002
 msgid "Show &Log..."
@@ -2851,11 +2827,11 @@ msgstr "Duplikeret"
 
 #: Menus.cpp:3790
 msgid "Cut Labels"
-msgstr ""
+msgstr "Klip etiketter"
 
 #: Menus.cpp:3790
 msgid "Cut labeled regions to the clipboard"
-msgstr ""
+msgstr "Klip områder med etiket til klippebordet"
 
 #: Menus.cpp:3804
 msgid "SplitCut labeled regions to the clipboard"
@@ -3078,7 +3054,7 @@ msgstr "Nyt etiketspor oprettet"
 
 #: Menus.cpp:5047
 msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
+msgstr "Denne udgave af Audacity tillader kun en tidslinie for hvert projektvindue."
 
 #: Menus.cpp:5058
 msgid "Created new time track"
@@ -3368,9 +3344,8 @@ msgid "Could not remove old auto save file"
 msgstr "Kunne ikke fjerne gamle, automatisk gemte filer"
 
 #: Project.cpp:2487
-#, fuzzy
 msgid "Project Repair"
-msgstr "Sammenkoblinger i projektet"
+msgstr "Reparation af projekt"
 
 #: Project.cpp:2487
 msgid "Project checker repaired file"
@@ -4102,7 +4077,7 @@ msgstr "Varighed"
 
 #: TimeTrack.cpp:44
 msgid "Time Track"
-msgstr ""
+msgstr "Tidsspor"
 
 #: TimerRecordDialog.cpp:70
 msgid "Audacity Timer Record"
@@ -4546,12 +4521,12 @@ msgstr "Skrifttype til etiketspor"
 #: TrackPanel.cpp:6855
 #: TrackPanel.cpp:6861
 msgid "Face name"
-msgstr ""
+msgstr "Skriftnavn"
 
 #: TrackPanel.cpp:6865
 #: TrackPanel.cpp:6872
 msgid "Face size"
-msgstr ""
+msgstr "Skriftstørrelse"
 
 #: TrackPanel.cpp:7131
 msgid "Stereo, 999999Hz"
@@ -4636,7 +4611,6 @@ msgstr ""
 "at det er en fejl, fortæl da venligst præcis, hvordan den opstod."
 
 #: commands/CommandManager.cpp:953
-#, fuzzy
 msgid ""
 "You can only do this when playing and recording are\n"
 " stopped. (Pausing is not sufficient.)"
@@ -4645,7 +4619,6 @@ msgstr ""
 " er stoppet. (Det er ikke tilstrækkeligt med Pause.)"
 
 #: commands/CommandManager.cpp:955
-#, fuzzy
 msgid ""
 "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
@@ -4658,13 +4631,12 @@ msgid "You must first select some audio for this to use."
 msgstr "Du skal først markere noget lyd for at bruge denne funktion."
 
 #: commands/CommandManager.cpp:959
-#, fuzzy
 msgid ""
 "You must first select some audio for this\n"
 " to use. (Selecting other kinds of track won't work.)"
 msgstr ""
-"Du skal først vælge noget lyd, før denne\n"
-" funktion kan bruges. (Det virker ikke at vælge andre slags spor.)"
+"Du skal først vælge noget lyd, før denne funktion\n"
+"kan bruges. (Det virker ikke at vælge andre slags spor.)"
 
 #: commands/CommandManager.cpp:964
 msgid "Disallowed"
@@ -5111,11 +5083,11 @@ msgstr "Tærskel"
 
 #: effects/Compressor.cpp:640
 msgid "Noise Floor:"
-msgstr "Støjniveau:"
+msgstr "Grundstøj:"
 
 #: effects/Compressor.cpp:644
 msgid "Noise Floor"
-msgstr "Støjniveau"
+msgstr "Grundstøj"
 
 #: effects/Compressor.cpp:648
 msgid "Ratio:"
@@ -5163,7 +5135,7 @@ msgstr "%3d dB"
 #: effects/Compressor.cpp:722
 #, c-format
 msgid "Noise Floor %d dB"
-msgstr ""
+msgstr "Grundstøj %d dB"
 
 #: effects/Compressor.cpp:726
 #, c-format
@@ -5340,11 +5312,11 @@ msgstr "Målt niveau for baggrund"
 
 #: effects/Contrast.cpp:446
 msgid "WCAG2 Pass"
-msgstr ""
+msgstr "WCAG2 bestået"
 
 #: effects/Contrast.cpp:448
 msgid "WCAG2 Fail"
-msgstr ""
+msgstr "WCAG2 ikke bestået"
 
 #: effects/Contrast.cpp:449
 msgid "Current difference"
@@ -5373,7 +5345,7 @@ msgstr "Eksportér kontrastresultater som:"
 
 #: effects/Contrast.cpp:493
 msgid "WCAG 2.0 Success Criteria 1.4.7 Contrast Results"
-msgstr ""
+msgstr "Resultater af WCAG 2.0 Succeskriterier 1.4.7-kontrast"
 
 #: effects/Contrast.cpp:495
 #, c-format
@@ -5435,11 +5407,11 @@ msgstr "Forskel = ubestemt gennemsnitlig RMS dB."
 
 #: effects/Contrast.cpp:545
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Pass"
-msgstr ""
+msgstr "Succeskriterier 1.4.7 ved WCAG 2.0: Bestået"
 
 #: effects/Contrast.cpp:547
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Fail"
-msgstr ""
+msgstr "Succeskriterier 1.4.7. ved WCAG 2.0: Ikke bestået"
 
 #: effects/Contrast.cpp:550
 msgid "Data gathered"
@@ -5450,9 +5422,8 @@ msgid "DTMF Tone Generator"
 msgstr "DTMF-/tonevalgsgenerator"
 
 #: effects/DtmfGen.cpp:429
-#, fuzzy
 msgid "by Salvo Ventura"
-msgstr "af Salvo Ventura (2006)"
+msgstr "af Salvo Ventura"
 
 #: effects/DtmfGen.cpp:433
 msgid "DTMF sequence:"
@@ -5486,7 +5457,7 @@ msgstr "Forhold klang/stilhed:"
 
 #: effects/DtmfGen.cpp:470
 msgid "Duty cycle:"
-msgstr ""
+msgstr "Arbejdscyklus:"
 
 #: effects/DtmfGen.cpp:472
 msgid "Tone duration:"
@@ -5588,16 +5559,18 @@ msgid ""
 "EQCurves.xml not found on your system.\n"
 "Please press 'help' to visit the download page."
 msgstr ""
+"EQCurves.xml blev ikke fundet på dit system.\n"
+"Tryk venligst på 'Hjælp' for at nå downloadsiden."
 
 #: effects/Equalization.cpp:989
 msgid "EQCurves.xml missing"
-msgstr ""
+msgstr "EQCurves.xml mangler"
 
 #: effects/Equalization.cpp:991
 #: effects/Equalization.cpp:1015
 #: effects/Equalization.cpp:1016
 msgid "unnamed"
-msgstr ""
+msgstr "unavngivet"
 
 #: effects/Equalization.cpp:1011
 msgid "Error loading EQ curve"
@@ -5626,81 +5599,72 @@ msgid "kHz"
 msgstr "kHz"
 
 #: effects/Equalization.cpp:1218
-#, fuzzy
 msgid "&Draw curves"
-msgstr "Tegn kurver"
+msgstr "&Tegn kurver"
 
 #: effects/Equalization.cpp:1220
 msgid "Draw curves"
 msgstr "Tegn kurver"
 
 #: effects/Equalization.cpp:1224
-#, fuzzy
 msgid "&Graphic EQ"
-msgstr "Grafisk modforvrænger (EQ)"
+msgstr "&Grafisk modforvrænger (EQ)"
 
 #: effects/Equalization.cpp:1226
 msgid "Graphic EQ"
 msgstr "Grafisk modforvrænger (EQ)"
 
 #: effects/Equalization.cpp:1239
-#, fuzzy
 msgid "Li&near frequency scale"
-msgstr "Lineær frekvensskala"
+msgstr "Li&neær frekvensskala"
 
 #: effects/Equalization.cpp:1240
 msgid "Linear frequency scale"
 msgstr "Lineær frekvensskala"
 
 #: effects/Equalization.cpp:1249
-#, fuzzy
 msgid "Length of &filter:"
-msgstr "Længde på filter:"
+msgstr "Længde på &filter:"
 
 #: effects/Equalization.cpp:1255
-#, fuzzy
 msgid "Length of filter"
-msgstr "Længde på filter:"
+msgstr "Længde på filter"
 
 #: effects/Equalization.cpp:1271
-#, fuzzy
 msgid "&Select curve:"
-msgstr "Vælg kurve:"
+msgstr "Vælg &kurve:"
 
 #: effects/Equalization.cpp:1281
 msgid "S&ave/Manage curves..."
-msgstr ""
+msgstr "G&em/håndtér kurver..."
 
 #: effects/Equalization.cpp:1282
 msgid "Save and Manage curves"
-msgstr ""
+msgstr "Gem og håndtér kurver"
 
 #: effects/Equalization.cpp:1285
-#, fuzzy
 msgid "Fla&tten"
-msgstr "Gør flad"
+msgstr "Gør f&lad"
 
 #: effects/Equalization.cpp:1287
-#, fuzzy
 msgid "&Invert"
-msgstr "Spejlvend (lodret)"
+msgstr "Spe&jlvend (lodret)"
 
 #: effects/Equalization.cpp:1289
-#, fuzzy
 msgid "G&rids"
-msgstr "Fastholdelsespunkter"
+msgstr "Fastholdelsespunkte&r"
 
 #: effects/Equalization.cpp:1354
-#, fuzzy
 msgid "Select curve"
-msgstr "Vælg kurve:"
+msgstr "Vælg kurve"
 
 #: effects/Equalization.cpp:1370
-#, fuzzy
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Manage curves list...' button and rename the 'unnamed' curve, then use that one."
-msgstr "Giv denne udligningskurve (EQ) et nyt navn for at anvende den til en gruppe"
+msgstr ""
+"Giv denne udligningskurve (EQ) et nyt navn for at anvende den til en gruppe.\n"
+"Anvend 'Håndtér liste over kurver...'-knappen, omdøb kurven 'unavngiven' og brug den så."
 
 #: effects/Equalization.cpp:1371
 msgid "EQ Curve needs a different name"
@@ -5708,47 +5672,40 @@ msgstr "Udligningskurven (EQ) skal have et andet navn"
 
 #: effects/Equalization.cpp:2806
 #: effects/Equalization.cpp:2811
-#, fuzzy
 msgid "Manage Curves List"
-msgstr "Håndtér historik"
+msgstr "Håndtér liste over kurser"
 
 #: effects/Equalization.cpp:2810
 msgid "Manage Curves"
-msgstr ""
+msgstr "Håndtér kurver"
 
 #: effects/Equalization.cpp:2843
 msgid "&Curves"
-msgstr ""
+msgstr "&Kurver"
 
 #: effects/Equalization.cpp:2847
-#, fuzzy
 msgid "Curve Name"
-msgstr "Opret"
+msgstr "Navn på kurve"
 
 #: effects/Equalization.cpp:2854
-#, fuzzy
 msgid "&Rename..."
-msgstr "Ny samplingshastighed..."
+msgstr "O&mdøb..."
 
 #: effects/Equalization.cpp:2855
-#, fuzzy
 msgid "D&elete..."
-msgstr "Slet"
+msgstr "Sl&et..."
 
 #: effects/Equalization.cpp:2856
-#, fuzzy
 msgid "I&mport..."
 msgstr "&Importér..."
 
 #: effects/Equalization.cpp:2857
-#, fuzzy
 msgid "E&xport..."
 msgstr "&Eksportér..."
 
 #: effects/Equalization.cpp:2858
-#, fuzzy
 msgid "&Get More..."
-msgstr "&Historik..."
+msgstr "&Hent mere..."
 
 #: effects/Equalization.cpp:2865
 #: widgets/ErrorDialog.cpp:98
@@ -5760,74 +5717,69 @@ msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
+"Omdøb 'unavngiven' for at gemme et nyt element.\n"
+"'OK' gemmer alle ændringer, 'Annullér' gør ikke."
 
 #: effects/Equalization.cpp:2901
 msgid "'unnamed' always stays at the bottom of the list"
-msgstr ""
+msgstr "'unavngiven' vil altid stå i bunden af listen"
 
 #: effects/Equalization.cpp:2901
 #: effects/Equalization.cpp:3207
 msgid "'unnamed' is special"
-msgstr ""
+msgstr "'unavngiven' er speciel"
 
 #: effects/Equalization.cpp:2995
 msgid "' to..."
-msgstr ""
+msgstr "' til..."
 
 #: effects/Equalization.cpp:2995
 #: effects/Equalization.cpp:2998
-#, fuzzy
 msgid "Rename '"
-msgstr "O&mdøb"
+msgstr "Omdøb '"
 
 #: effects/Equalization.cpp:2996
-#, fuzzy
 msgid "Rename..."
-msgstr "Ny samplingshastighed..."
+msgstr "Omdøb..."
 
 #: effects/Equalization.cpp:3018
 msgid "Name is the same as the original one"
-msgstr ""
+msgstr "Navnet er identisk med det oprindelige"
 
 #: effects/Equalization.cpp:3018
-#, fuzzy
 msgid "Same name"
-msgstr "Lydsamplingshastigheder"
+msgstr "Samme navn"
 
 #: effects/Equalization.cpp:3022
 msgid "'?"
-msgstr ""
+msgstr "'?"
 
 #: effects/Equalization.cpp:3022
-#, fuzzy
 msgid "Overwrite existing curve '"
-msgstr "Overskriv eksisterende filer"
+msgstr "Overskriv eksisterende kurve '"
 
 #: effects/Equalization.cpp:3023
-#, fuzzy
 msgid "Curve exists"
-msgstr "Anerkendelse"
+msgstr "Kurve findes allerede"
 
 #: effects/Equalization.cpp:3099
-#, fuzzy
 msgid "You cannot delete the 'unnamed' curve."
-msgstr "Faste indstillinger uden et navn kan ikke slettes"
+msgstr "En unavngiven kurve kan ikke slettes"
 
 #: effects/Equalization.cpp:3100
 #: effects/Equalization.cpp:3149
 msgid "Can't delete 'unnamed'"
-msgstr ""
+msgstr "Kan ikke slette 'unavngiven'"
 
 #: effects/Equalization.cpp:3106
 #: effects/Equalization.cpp:3135
 msgid "' ?"
-msgstr ""
+msgstr "' ?"
 
 #: effects/Equalization.cpp:3106
 #: effects/Equalization.cpp:3135
-#, fuzzy
 msgid "Delete '"
-msgstr "Slet"
+msgstr "Slet '"
 
 #: effects/Equalization.cpp:3109
 #: effects/Equalization.cpp:3139
@@ -5836,46 +5788,41 @@ msgid "Confirm Deletion"
 msgstr "Bekræft sletning"
 
 #: effects/Equalization.cpp:3132
-#, fuzzy
 msgid "Delete "
 msgstr "Slet"
 
 #: effects/Equalization.cpp:3132
-#, fuzzy
 msgid "items?"
-msgstr "minutter"
+msgstr "elementer?"
 
 #: effects/Equalization.cpp:3148
 msgid "You cannot delete the 'unnamed' curve, it is special."
-msgstr ""
+msgstr "Du kan ikke slette kurven 'unavngiven', den er speciel."
 
 #: effects/Equalization.cpp:3165
-#, fuzzy
 msgid "Choose an EQ curve file"
-msgstr "Vælg placering af filer"
+msgstr "Vælg en udligningskurve"
 
 #: effects/Equalization.cpp:3185
-#, fuzzy
 msgid "Export EQ curves as..."
-msgstr "Eksportér &etiketter"
+msgstr "Eksportér udligningskurver som..."
 
 #: effects/Equalization.cpp:3207
 msgid "You cannot export 'unnamed' curve"
-msgstr ""
+msgstr "Du kan ikke eksportere kurven 'unavngiven'"
 
 #: effects/Equalization.cpp:3217
 #, c-format
 msgid "%d curves exported to %s"
-msgstr ""
+msgstr "%d kurver eksporteret til %s"
 
 #: effects/Equalization.cpp:3218
 msgid "Curves exported"
-msgstr ""
+msgstr "Kurver eksporteret"
 
 #: effects/Equalization.cpp:3221
-#, fuzzy
 msgid "No curves exported"
-msgstr "Ingen etiketter at eksportere."
+msgstr "Ingen kurver eksporteret"
 
 #: effects/Equalization.h:85
 msgid "Equalization..."
@@ -5983,7 +5930,7 @@ msgstr "af Lynn Allan"
 
 #: effects/Leveller.cpp:224
 msgid "Degree of Leveling"
-msgstr "Udjævning (stille passager bliver kraftigere, kraftige/npassager mere stille)"
+msgstr "Stille passager bliver kraftigere, kraftige passager mere stille"
 
 #: effects/Leveller.cpp:228
 msgid "Degree of Leveling:"
@@ -6052,7 +5999,7 @@ msgstr "Faseskift"
 
 #: effects/LoadEffects.cpp:127
 msgid "Flanger"
-msgstr ""
+msgstr "Flanger"
 
 #: effects/LoadEffects.cpp:129
 msgid "Chorus"
@@ -6230,14 +6177,12 @@ msgid "Noise Removal by Dominic Mazzoni"
 msgstr "Fjern støj af Dominic Mazzoni"
 
 #: effects/NoiseRemoval.cpp:893
-#, fuzzy
 msgid "&Get Noise Profile"
-msgstr "Hent støjprofil"
+msgstr "&Hent støjprofil"
 
 #: effects/NoiseRemoval.cpp:904
-#, fuzzy
 msgid "Noise re&duction (dB):"
-msgstr "Støjreduktion (dB):"
+msgstr "Støjre&duktion (dB):"
 
 #: effects/NoiseRemoval.cpp:909
 msgid "Noise reduction"
@@ -6245,45 +6190,41 @@ msgstr "Støjreduktion"
 
 #: effects/NoiseRemoval.cpp:913
 msgid "&Sensitivity (dB):"
-msgstr ""
+msgstr "Føl&somhed (dB):"
 
 #: effects/NoiseRemoval.cpp:918
 #: toolbars/TranscriptionToolBar.cpp:220
 #: toolbars/TranscriptionToolBar.cpp:276
 msgid "Sensitivity"
-msgstr ""
+msgstr "Følsomhed"
 
 #: effects/NoiseRemoval.cpp:922
-#, fuzzy
 msgid "Fr&equency smoothing (Hz):"
-msgstr "Frekvensudjævning (Hz):"
+msgstr "Fr&ekvensudjævning (Hz):"
 
 #: effects/NoiseRemoval.cpp:927
 msgid "Frequency smoothing"
 msgstr "Frekvensudjævning"
 
 #: effects/NoiseRemoval.cpp:931
-#, fuzzy
 msgid "Attac&k/decay time (secs):"
-msgstr "Reaktionstid/frakoblingstid (sekunder):"
+msgstr "Rea&ktionstid/frakoblingstid (sekunder):"
 
 #: effects/NoiseRemoval.cpp:936
 msgid "Attack/decay time"
 msgstr "Reaktionstid/frakoblingstid"
 
 #: effects/NoiseRemoval.cpp:940
-#, fuzzy
 msgid "Noise:"
-msgstr "Støj..."
+msgstr "Støj:"
 
 #: effects/NoiseRemoval.cpp:942
-#, fuzzy
 msgid "Re&move"
-msgstr "Fjern"
+msgstr "Fje&rn"
 
 #: effects/NoiseRemoval.cpp:944
 msgid "&Isolate"
-msgstr ""
+msgstr "&Isolér"
 
 #: effects/NoiseRemoval.h:37
 msgid "Noise Removal..."
@@ -6567,30 +6508,26 @@ msgid "Final Tempo Change (%)"
 msgstr "Afsluttende temposkift (%)"
 
 #: effects/TimeScale.cpp:259
-#, fuzzy
 msgid "Initial Pitch Shift"
-msgstr "Tonehøjdeskift"
+msgstr "Tonehøjdeskift ved begyndelse"
 
 #: effects/TimeScale.cpp:264
 #: effects/TimeScale.cpp:281
-#, fuzzy
 msgid "(semitones) [-12 to 12]:"
-msgstr "Afsluttende skift i tonehøjde (halvtoner) [-12 til 12]:"
+msgstr "(halvtoner) [-12 til 12]:"
 
 #: effects/TimeScale.cpp:268
 #: effects/TimeScale.cpp:285
 msgid "(%) [-50 to 100]:"
-msgstr ""
+msgstr "(%) [-50 til 100]:"
 
 #: effects/TimeScale.cpp:276
-#, fuzzy
 msgid "Final Pitch Shift"
-msgstr "Tonehøjdeskift"
+msgstr "Tonehøjdeskift ved slutning"
 
 #: effects/TimeScale.cpp:293
-#, fuzzy
 msgid "Options"
-msgstr "Opsætning..."
+msgstr "Opsætning"
 
 #: effects/TimeScale.h:33
 msgid "Sliding Time Scale/Pitch Shift..."
@@ -6665,7 +6602,7 @@ msgstr "Slut udsving"
 
 #: effects/ToneGen.cpp:322
 msgid "Interpolation:"
-msgstr ""
+msgstr "Interpolation:"
 
 #: effects/ToneGen.h:40
 msgid "Chirp..."
@@ -6785,11 +6722,11 @@ msgstr "Gem VST-program som:"
 #: effects/VST/VSTEffect.cpp:768
 #, c-format
 msgid "This parameter file was saved from %s.  Continue?"
-msgstr ""
+msgstr "Denne parameterfil blev gemt fra %s. Ønsker du at fortsætte?"
 
 #: effects/VST/VSTEffect.cpp:1222
 msgid "Performing Effect: "
-msgstr ""
+msgstr "Opførelseseffekt:"
 
 #: effects/VST/VSTEffect.cpp:1253
 msgid "Both channels of a stereo track must be the same sample rate."
@@ -7114,7 +7051,7 @@ msgstr ""
 "Understøttelse af dette codec er sandsynligvis ikke lagt ind."
 
 #: export/ExportFFmpeg.cpp:709
-#, fuzzy, c-format
+#, c-format
 msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr "Forsøgte at eksportere %d kanaler, men det max. antal kanaler for det valgte format er %d"
 
@@ -8081,12 +8018,12 @@ msgid "Edit metadata"
 msgstr "Redigér metadata"
 
 #: export/ExportMultiple.cpp:923
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
 msgstr ""
-"Etiketten %s har ikke et gyldigt navn. Du må ikke bruge:  %s\n"
+"Etiketten eller sporet \"%s\" har ikke et gyldigt navn. Du må ikke bruge: %s\n"
 "Brug..."
 
 #: export/ExportMultiple.cpp:924
@@ -8810,83 +8747,72 @@ msgstr "&Genscan VST-effekter, næste gang Audacity startes"
 
 #: prefs/ExtImportPrefs.cpp:59
 msgid "Extended Import"
-msgstr ""
+msgstr "Udvidet import"
 
 #: prefs/ExtImportPrefs.cpp:92
 msgid "Filter chosen in OpenFile dialog overrides any rules"
-msgstr ""
+msgstr "Filteret valgt i ÅbnFil-menuen overskriver alle regler"
 
 #: prefs/ExtImportPrefs.cpp:95
 msgid "Rules to choose import filters"
-msgstr ""
+msgstr "Regler for at vælge importfiltre"
 
 #: prefs/ExtImportPrefs.cpp:114
 msgid "File extensions"
-msgstr ""
+msgstr "Filendelser"
 
 #: prefs/ExtImportPrefs.cpp:116
-#, fuzzy
 msgid "Mime-types"
-msgstr "Støjtype"
+msgstr "MIME-typer"
 
 #: prefs/ExtImportPrefs.cpp:134
-#, fuzzy
 msgid "Importer order"
-msgstr "Hent faste indstillinger"
+msgstr "Importrækkefølge"
 
 #: prefs/ExtImportPrefs.cpp:150
-#, fuzzy
 msgid "Move rule &up"
-msgstr "Flyt &op"
+msgstr "Flyt regel &op"
 
 #: prefs/ExtImportPrefs.cpp:152
-#, fuzzy
 msgid "Move rule &down"
-msgstr "Flyt &ned"
+msgstr "Flyt regel &ned"
 
 #: prefs/ExtImportPrefs.cpp:154
-#, fuzzy
 msgid "Move f&ilter up"
-msgstr "Flyt &op"
+msgstr "Flyt f&ilter op"
 
 #: prefs/ExtImportPrefs.cpp:156
-#, fuzzy
 msgid "Move &filter down"
-msgstr "Flyt &ned"
+msgstr "Flyt &filter ned"
 
 #: prefs/ExtImportPrefs.cpp:161
 msgid "&Add new rule"
-msgstr ""
+msgstr "&Tilføj ny regel"
 
 #: prefs/ExtImportPrefs.cpp:162
-#, fuzzy
 msgid "De&lete selected rule"
-msgstr "Slet områder med etiketter"
+msgstr "S&let den valgte regel"
 
 #: prefs/ExtImportPrefs.cpp:406
 #: prefs/ExtImportPrefs.cpp:423
-#, fuzzy
 msgid "Unused filters:"
-msgstr "Filnavne: %s"
+msgstr "Ubrugte filtre:"
 
 #: prefs/ExtImportPrefs.cpp:471
 msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr ""
+msgstr "Der er mellemrum, linieskift eller tabulator i et af elementerne. De vil sandsynligvis bryde mønsteret. Medmindre du ved, hvad du gør, anbefales det at fjerne mellemrummene. Ønsker du, at Audacity skal fjerne mellemrummene for dig?"
 
 #: prefs/ExtImportPrefs.cpp:475
-#, fuzzy
 msgid "Spaces detected"
-msgstr "Sikkerhedskopifil fundet"
+msgstr "Mellemrum fundet"
 
 #: prefs/ExtImportPrefs.cpp:560
-#, fuzzy
 msgid "Do you really want to delete selected rule?"
-msgstr "Er du sikker på, at du vil slette %s?"
+msgstr "Ønsker du virkelig at slette den valgte regel?"
 
 #: prefs/ExtImportPrefs.cpp:561
-#, fuzzy
 msgid "Rule deletion confirmation"
-msgstr "Versionsoplysninger"
+msgstr "Bekræftelse af sletning af regel"
 
 #: prefs/GUIPrefs.cpp:49
 msgid "Local"
@@ -9753,7 +9679,7 @@ msgstr "Forstærknin&g (dB):"
 
 #: prefs/SpectrumPrefs.cpp:152
 msgid "&Range (dB):"
-msgstr ""
+msgstr "Om&råde (dB):"
 
 #: prefs/SpectrumPrefs.cpp:158
 msgid "Frequency g&ain (dB/dec):"
@@ -9765,7 +9691,7 @@ msgstr "Vis spektrummet med gråtonede farver"
 
 #: prefs/SpectrumPrefs.cpp:170
 msgid "Show a grid along the &Y-axis"
-msgstr ""
+msgstr "Vis fastholdelsespunkt langs &Y-aksen"
 
 #: prefs/SpectrumPrefs.cpp:178
 msgid "FFT Find Notes"
@@ -9785,7 +9711,7 @@ msgstr "&Find toner"
 
 #: prefs/SpectrumPrefs.cpp:200
 msgid "&Quantize Notes"
-msgstr ""
+msgstr "&Kvantisér noder"
 
 #: prefs/SpectrumPrefs.cpp:212
 msgid "The maximum frequency must be an integer"
@@ -10041,9 +9967,8 @@ msgstr "Stilhedsmarkering"
 
 #: toolbars/EditToolBar.cpp:152
 #: toolbars/EditToolBar.cpp:203
-#, fuzzy
 msgid "Sync-Lock Tracks"
-msgstr "Sammenføj lydspor"
+msgstr "Lås spor synkront"
 
 #: toolbars/EditToolBar.cpp:158
 #: toolbars/EditToolBar.cpp:205
@@ -10284,7 +10209,7 @@ msgstr ""
 
 #: toolbars/TranscriptionToolBar.cpp:215
 msgid "Adjust Sensitivity"
-msgstr ""
+msgstr "Justér følsomhed"
 
 #: toolbars/TranscriptionToolBar.cpp:225
 msgid "Energy"
@@ -10489,7 +10414,7 @@ msgstr "Vælg en handling"
 
 #: widgets/MultiDialog.cpp:102
 msgid "Show Log for Details"
-msgstr ""
+msgstr "Vis logfil med detailler"
 
 #: widgets/ProgressDialog.cpp:1069
 msgid "Elapsed Time:"
@@ -10738,7 +10663,7 @@ msgstr "Kunne ikke indlæse fil: \"%s\""
 
 #: xml/XMLWriter.cpp:348
 msgid "Error flushing file"
-msgstr ""
+msgstr "Fejl ved rydning af fil"
 
 #: xml/XMLWriter.cpp:353
 msgid "Error closing file"
