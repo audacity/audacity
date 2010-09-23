@@ -317,7 +317,7 @@ WaveClip::WaveClip(WaveClip& orig, DirManager *projDirManager)
    // current project's DirManager, because we might be copying
    // from one project to another
 
-   mOffset = orig.mOffset;
+   mOffset = QUANTIZED_TIME(orig.mOffset, orig.mRate);   // Just in case the offset is off
    mRate = orig.mRate;
    mSequence = new Sequence(*orig.mSequence, projDirManager);
    mEnvelope = new Envelope();
@@ -366,7 +366,7 @@ WaveClip::~WaveClip()
 
 void WaveClip::SetOffset(double offset)
 {
-    mOffset = offset;
+    mOffset = QUANTIZED_TIME(offset, mRate); // put on a sample
     mEnvelope->SetOffset(mOffset);
 }
 
