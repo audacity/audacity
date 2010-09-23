@@ -1108,16 +1108,13 @@ bool WaveClip::AppendCoded(wxString fName, sampleCount start,
 
 bool WaveClip::Flush()
 {
-   //wxLogDebug(wxT("Flush!"));
+   //wxLogDebug(wxT("WaveClip::Flush"));
+   //wxLogDebug(wxT("   mAppendBufferLen=%i\n"), mAppendBufferLen);
+   //wxLogDebug(wxT("   previous sample count %i\n"), mSequence->GetNumSamples());
 
    bool success = true;
-   sampleFormat seqFormat = mSequence->GetSampleFormat();
-
-   //wxLogDebug(wxT("mAppendBufferLen=%i\n"), mAppendBufferLen);
-   //wxLogDebug(wxT("previous sample count %i\n"), mSequence->GetNumSamples());
-
    if (mAppendBufferLen > 0) {
-      success = mSequence->Append(mAppendBuffer, seqFormat, mAppendBufferLen);
+      success = mSequence->Append(mAppendBuffer, mSequence->GetSampleFormat(), mAppendBufferLen);
       if (success) {
          mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();

@@ -8,20 +8,22 @@
 
 *******************************************************************//**
 \file Sequence.cpp
-\brief Appears to duplicate some structures such as SeqBlock that are 
-also found in Track.cpp. 
+\brief Implements classes Sequence and SeqBlock.
 
 *//****************************************************************//**
 
 \class Sequence
-\brief Has a sequence of samples.  Compare with RingBuffer.
+\brief A WaveTrack contains WaveClip(s). 
+   A WaveClip contains a Sequence. A Sequence is primarily an 
+   interface to an array of SeqBlock instances, corresponding to 
+   the audio BlockFiles on disk.
+   Contrast with RingBuffer.
 
 *//****************************************************************//**
 
 \class SeqBlock
-\brief Pointer to a BlockFile along with a start time.  Element of 
-a BlockArray.  WARNING defined differently in Track.cpp and 
-Sequence.cpp.  Not yet sure why.
+\brief Data structure containing pointer to a BlockFile and 
+   a start time. Element of a BlockArray. 
 
 *//*******************************************************************/
 
