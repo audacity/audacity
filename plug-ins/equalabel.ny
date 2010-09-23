@@ -4,7 +4,7 @@
 ;categories "http://audacityteam.org/namespace#TimeAnalyser"
 ;name "Regular Interval Labels..."
 ;action "Adding equally-spaced labels to the label track..."
-;info "equalabel.ny by David R. Sky www.shellworld.net/~davidsky/ \nReleased under terms of the GNU General Public License version 2\nCreate equally spaced labels by choosing the number of labels or the interval\nbetween them. Making your final audio segment equal with others may slightly\nchange the label interval that you had set.\nNote: Equalabel.ny does not overwrite an existing label track, but adds to it.\nCode for label placement based on silencemarker.ny by Alex S.Brown."
+;info "By David R. Sky, http://www.garyallendj.com/davidsky/index.html, after Alex S.Brown.\nReleased under GPL v2." 
 
 ;control start "Time to place first label [seconds]" string " " "0.0"
 ;control placement "Label placement method" choice "Label interval,Number of labels" 0
@@ -16,10 +16,11 @@
 ;control t-choice "Final audio segment equal with others?" choice "No,Yes" 1
 
 ; Regular interval labels by David R. Sky, June-October 2007.
+; Code for label placement based on silencemarker.ny by Alex S.Brown.
+; Modified by Steve Daulton, September 2010 to disallow labels before zero.
 ; Released under terms of the GNU General Public License version 2
-; http://www.gnu.org/copyleft/gpl.html
+; http://www.gnu.org/copyleft/gpl.html .
 ; Thanks Sami Jumppanen for plug-in suggestion.
-; Thanks Alex S. Brown for code showing how to place labels.
 ; Thanks Dominic Mazzoni, Pierre M.I., Gale Andrews 
 ; for improvement suggestions.
 
@@ -31,6 +32,7 @@
 
 ; convert start string to a number
 (setf start (first (string-to-list start)))
+(setq start (max 0 start)) ; disallow negative label time
 
 ; convert time string to a number
 (setf time (first (string-to-list time)))
