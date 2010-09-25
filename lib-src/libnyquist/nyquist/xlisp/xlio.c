@@ -72,7 +72,7 @@ void xlungetc(LVAL fptr, int ch)
     
     /* check for ungetc from nil */
     if (fptr == NIL)
-        ;
+        ; //ANSWER-ME: Return? "else if"?
         
     /* otherwise, check for ungetc to a stream */
     if (ustreamp(fptr)) {
@@ -85,7 +85,7 @@ void xlungetc(LVAL fptr, int ch)
     }
     
     /* otherwise, it must be a file */
-    else
+    else if (fptr)
         setsavech(fptr,ch);
 }
 
