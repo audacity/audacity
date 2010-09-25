@@ -172,7 +172,9 @@ void ExportMultiple::CountTracksAndLabels()
 int ExportMultiple::ShowModal()
 {
    if (mNumWaveTracks < 2 && mNumLabels < 1) {
-      ::wxMessageBox(_("If you have more than one Audio Track, you can export each track as a separate file,\nor if you have a Label Track, you can export a new file for each label.\n\nThis project does not have multiple tracks or a Label Track, so you cannot export multiple files."),
+      ::wxMessageBox(_("If you have more than one Audio Track, you can export\neach track as a separate file. \
+If you have a Label Track\ndirectly underneath an Audio Track, you can export a\nnew file for each label in \
+that track.\n\nThis Project does not meet the above criteria for\nexporting multiple files."),
                      _("Can't export multiple files"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
