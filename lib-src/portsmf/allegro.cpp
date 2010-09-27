@@ -54,7 +54,7 @@ void Alg_atoms::expand()
 {
     maxlen = (maxlen + 5);   // extra growth for small sizes
     maxlen += (maxlen >> 2); // add 25%
-    char **new_atoms = new Alg_attribute[maxlen];
+    Alg_attribute *new_atoms = new Alg_attribute[maxlen];
     // now do copy
     memcpy(new_atoms, atoms, len * sizeof(Alg_attribute));
     if (atoms) delete[] atoms;
@@ -81,6 +81,7 @@ Alg_attribute Alg_atoms::insert_new(const char *name, char attr_type)
 
 Alg_attribute Alg_atoms::insert_attribute(Alg_attribute attr)
 {
+    // should use hash algorithm
     for (int i = 0; i < len; i++) {
         if (STREQL(attr, atoms[i])) {
             return atoms[i];
@@ -421,7 +422,7 @@ char Alg_event::get_attribute_type(char *a)
 }
 
 
-char *Alg_event::get_string_value(char *a, char *value)
+const char *Alg_event::get_string_value(char *a, char *value)
 {
     assert(is_note());
     assert(a); // must be non-null
@@ -473,7 +474,7 @@ long Alg_event::get_integer_value(char *a, long value)
 }
 
 
-char *Alg_event::get_atom_value(char *a, char *value)
+const char *Alg_event::get_atom_value(char *a, char *value)
 {	
     assert(is_note());
     assert(a);
@@ -514,12 +515,12 @@ char Alg_event::get_update_type()
 }
 
 
-char *Alg_event::get_string_value()
+const char *Alg_event::get_string_value()
 {
     assert(is_update());
     Alg_update* update = (Alg_update *) this;
     assert(get_update_type() == 's');
-    return update->parameter.attr_name();
+    return update->parameter.s;
 }
 
 
@@ -550,7 +551,7 @@ long Alg_event::get_integer_value()
 }
 
 
-char *Alg_event::get_atom_value()
+const char *Alg_event::get_atom_value()
 {
     assert(is_update());
     Alg_update* update = (Alg_update *) this;
@@ -1640,7 +1641,7 @@ void Alg_track::unserialize_track()
 
 void Alg_track::unserialize_parameter(Alg_parameter_ptr parm_ptr)
 {
-    char *attr = ser_read_buf.get_string();
+    Alg_attribute attr = ser_read_buf.get_string();
     parm_ptr->attr = symbol_table.insert_string(attr);
     switch (parm_ptr->attr_type()) {
     case 'r':
@@ -2675,13 +2676,19 @@ void Alg_iterator::show()
 bool Alg_iterator::earlier(int i, int j)
 // see if event i is earlier than event j
 {
+    // note-offs are scheduled ALG_EPS early so that if a note-off is
+    // followed immediately with the same timestamp by a note-on (common
+    // in MIDI files), the note-off will be scheduled first
+
     Alg_pending_event_ptr p_i = &(pending_events[i]);
     Alg_event_ptr e_i = (*(p_i->events))[p_i->index];
-    double t_i = (p_i->note_on ? e_i->time : e_i->get_end_time()) + p_i->offset;
+    double t_i = (p_i->note_on ? e_i->time : 
+                  e_i->get_end_time() - ALG_EPS) + p_i->offset;
     
     Alg_pending_event_ptr p_j = &(pending_events[j]);
     Alg_event_ptr e_j = (*(p_j->events))[p_j->index];
-    double t_j = (p_j->note_on ? e_j->time : e_j->get_end_time()) + p_j->offset;
+    double t_j = (p_j->note_on ? e_j->time :
+                  e_j->get_end_time() - ALG_EPS) + p_j->offset;
 
     if (t_i < t_j) return true;
     // not sure if this case really exists or this is the best rule, but
@@ -3413,11 +3420,7 @@ Alg_event_ptr Alg_iterator::next(bool *note_on, void **cookie_ptr,
                                  double *offset_ptr, double end_time)
     // return the next event in time from any track
 {
-    Alg_events_ptr events_ptr;
-    long index;
     bool on;
-    void *cookie;
-    double offset;
     if (!remove_next(events_ptr, index, on, cookie, offset)) {
         return NULL;
     }
@@ -3442,6 +3445,12 @@ Alg_event_ptr Alg_iterator::next(bool *note_on, void **cookie_ptr,
     if (cookie_ptr) *cookie_ptr = cookie;
     if (offset_ptr) *offset_ptr = offset;
     return event;
+}
+
+
+void Alg_iterator::request_note_off()
+{
+    insert(events_ptr, index, false, cookie, offset);
 }
 
 

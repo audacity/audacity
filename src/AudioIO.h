@@ -350,8 +350,9 @@ private:
    void AudacityMidiCallback();
    double AudioTime() { return mT0 + mNumFrames / mRate; }
    double PauseTime();
-   double getCurrentTrackTime();
-   long calculateMidiTimeStamp(double time);
+   // double getCurrentTrackTime();
+   // long CalculateMidiTimeStamp(double time);
+   void AllNotesOff();
 #endif
 
    /** \brief Get the number of audio samples free in all of the playback
@@ -411,6 +412,10 @@ private:
    volatile long    mPauseTime;         // pause in ms if no audio playback
    volatile double  mMidiLoopOffset;    // total of backward jumps
    volatile long    mAudioFramesPerBuffer;
+   volatile bool    mMidiPaused;        // used by Midi process to record
+       // that pause has begun. Pause time is accumulated in mPauseTime.
+       // This variable is shared so that it can be cleared when playback
+       // begins.
 
    Alg_seq_ptr      mSeq;
    Alg_iterator_ptr mIterator;

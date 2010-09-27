@@ -46,7 +46,7 @@ private:
     void write_note(Alg_note_ptr note, bool on);
     void write_update(Alg_update_ptr update);
     void write_text(Alg_update_ptr update, char type);
-    void write_binary(int type_byte, char *msg);
+    void write_binary(int type_byte, const char *msg);
     void write_midi_channel_prefix(Alg_update_ptr update);
     void write_smpteoffset(Alg_update_ptr update, char *s);
     void write_data(int data);
@@ -255,13 +255,13 @@ static char hex_to_nibble(char c)
 }
 
 
-static char hex_to_char(char *s)
+static char hex_to_char(const char *s)
 {
     return (hex_to_nibble(s[0]) << 4) + hex_to_nibble(s[1]);
 }
 
 
-void Alg_smf_write::write_binary(int type_byte, char *msg)
+void Alg_smf_write::write_binary(int type_byte, const char *msg)
 {
     int len = strlen(msg) / 2;
     out_file->put(type_byte);
@@ -275,7 +275,7 @@ void Alg_smf_write::write_binary(int type_byte, char *msg)
 
 void Alg_smf_write::write_update(Alg_update_ptr update)
 {
-    char *name = update->parameter.attr_name();
+    const char *name = update->parameter.attr_name();
 
     /****Non-Meta Events****/
     if (!strcmp(name, "pressurer")) {
@@ -312,7 +312,7 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
       write_data(val);
     } else if (!strcmp(name, "sysexs") &&
                update->parameter.attr_type() == 's') {
-        char *s = update->parameter.s;
+        const char *s = update->parameter.s;
         if (s[0] && s[1] && toupper(s[0]) == 'F' && s[1] == '0') {
             s += 2; // skip the initial "F0" byte in message: it is implied
         }
@@ -320,7 +320,7 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
         write_binary(0xF0, s);
     } else if (!strcmp(name, "sqspecifics") &&
                update->parameter.attr_type() == 's') {
-        char *s = update->parameter.s;
+        const char *s = update->parameter.s;
         write_delta(update->time);
         out_file->put('\xFF');
         write_binary(0x7F, s);
@@ -349,7 +349,7 @@ void Alg_smf_write::write_update(Alg_update_ptr update)
         // smpteoffset is specified as "24fps:00h:10m:00s:11.00f"
         // the following simple parser does not reject all badly
         // formatted strings, but it should parse good strings ok
-        char *s = update->parameter.s;
+        const char *s = update->parameter.s;
         int len = strlen(s);
         char smpteoffset[5];
         if (len < 24) return; // not long enough, must be bad format

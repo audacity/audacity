@@ -2050,18 +2050,18 @@ and optional attributes as follows:
 */
 
 /* Declare Static functions */
-static char *IsShape(Alg_note_ptr note);
+static const char *IsShape(Alg_note_ptr note);
 static double LookupRealAttribute(Alg_note_ptr note, Alg_attribute attr, double def);
 static long LookupIntAttribute(Alg_note_ptr note, Alg_attribute attr, long def);
 static bool LookupLogicalAttribute(Alg_note_ptr note, Alg_attribute attr, bool def);
 static const char *LookupStringAttribute(Alg_note_ptr note, Alg_attribute attr, const char *def);
-static char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def);
+static const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def);
 static int PITCH_TO_Y(double p, int bottom);
-static char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def);
+
 
 // returns NULL if note is not a shape,
 // returns atom (string) value of note if note is a shape
-char *IsShape(Alg_note_ptr note)
+const char *IsShape(Alg_note_ptr note)
 {
   Alg_parameters_ptr parameters = note->parameters;
   while (parameters) {
@@ -2130,7 +2130,7 @@ const char *LookupStringAttribute(Alg_note_ptr note, Alg_attribute attr, const c
 }
 
 // returns value of attr, or default if not found
-char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def)
+const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def)
 {
   Alg_parameters_ptr parameters = note->parameters;
   while (parameters) {
@@ -2417,7 +2417,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
             double x = note->time + track->GetOffset();
             double x1 = x + note->dur;
             if (x < h1 && x1 > h) { // omit if outside box
-               char *shape = NULL;
+               const char *shape = NULL;
                if (note->loud > 0.0 || !(shape = IsShape(note))) {
                   wxRect nr; // "note rectangle"
                   nr.y = track->PitchToY(note->pitch);
@@ -2589,8 +2589,8 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                      //// if no color specified, copy color from brush
                      //else dc.SetTextBackground(dc.GetPen().GetColour());
 
-                     char *font = LookupAtomAttribute(note, fonta, NULL);
-                     char *weight = LookupAtomAttribute(note, weighta, NULL);
+                     const char *font = LookupAtomAttribute(note, fonta, NULL);
+                     const char *weight = LookupAtomAttribute(note, weighta, NULL);
                      int size = LookupIntAttribute(note, sizei, 8);
                      const char *justify = LookupStringAttribute(note, justifys, "ld");
                      wxFont wxfont;

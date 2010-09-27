@@ -67,7 +67,7 @@ char *heapify(const char *s); // put a string on the heap
 // the attribute 'tempor' (a real) is stored
 // as 'rtempor'. To get the string name, just
 // use attribute+1.
-typedef char *Alg_attribute;
+typedef const char *Alg_attribute;
 #define alg_attr_name(a) ((a) + 1)
 #define alg_attr_type(a) (*(a))
 
@@ -99,7 +99,7 @@ public:
 private:
     long maxlen;
     long len;
-    char **atoms;
+    Alg_attribute *atoms;
 
     // insert an Attriubute not in table after moving attr to heap
     Alg_attribute insert_new(const char *name, char attr_type);
@@ -118,19 +118,20 @@ public:
     // deleted safely without further initialization. It does not
     // do anything useful, so it is expected that the creator will
     // set attr and store a value in the appropriate union field.
-    Alg_parameter() { attr = "i"; }
-    ~Alg_parameter();
     Alg_attribute attr;
     union {
         double r;// real
-        char *s; // string
+        const char *s; // string
         long i;  // integer
         bool l;  // logical
-        char *a; // symbol (atom)
+        const char *a; // symbol (atom)
     }; // anonymous union
+
+    Alg_parameter() { attr = "i"; }
+    ~Alg_parameter();
     void copy(Alg_parameter *); // copy from another parameter
-    char attr_type() { return alg_attr_type(attr); }
-    char *attr_name() { return alg_attr_name(attr); }
+    const char attr_type() { return alg_attr_type(attr); }
+    const char *attr_name() { return alg_attr_name(attr); }
     void set_attr(Alg_attribute a) { attr = a; }
     void show();
 } *Alg_parameter_ptr;
@@ -245,11 +246,11 @@ public:
         // 's' = string, 
         // 'r' = real (double), 'l' = logical (bool), 'i' = integer (long),
         // 'a' = atom (char *), a unique string stored in Alg_seq
-    char *get_string_value(char *attr, char *value = NULL);  // get the string value
+    const char *get_string_value(char *attr, char *value = NULL);  // get the string value
     double get_real_value(char *attr, double value = 0.0);   // get the real value
     bool get_logical_value(char *attr, bool value = false);  // get the logical value
     long get_integer_value(char *attr, long value = 0);      // get the integer value
-    char *get_atom_value(char *attr, char *value = NULL);    // get the atom value
+    const char *get_atom_value(char *attr, char *value = NULL);    // get the atom value
     void delete_attribute(char *attr);   // delete an attribute/value pair
         // (ignore if no matching attribute/value pair exists)
 
@@ -261,13 +262,13 @@ public:
     char get_update_type();   // get the update's type: 's' = string, 
         // 'r' = real (double), 'l' = logical (bool), 'i' = integer (long),
         // 'a' = atom (char *), a unique string stored in Alg_seq
-    char *get_string_value(); // get the update's string value
+    const char *get_string_value(); // get the update's string value
         // Notes: Caller does not own the return value. Do not modify.
         // Do not use after underlying Alg_seq is modified.
     double get_real_value();  // get the update's real value
     bool get_logical_value(); // get the update's logical value
     long get_integer_value(); // get the update's integer value
-    char *get_atom_value();   // get the update's atom value
+    const char *get_atom_value();   // get the update's atom value
         // Notes: Caller does not own the return value. Do not modify.
         // The return value's lifetime is forever.
 
@@ -558,7 +559,7 @@ public:
     float get_float() { float f = *((float *) ptr); ptr += 4; return f; }
     double get_double() { double d = *((double *) ptr); ptr += sizeof(double); 
                           return d; }
-    char *get_string() { char *s = ptr; char *fence = buffer + len;
+    const char *get_string() { char *s = ptr; char *fence = buffer + len;
                          assert(ptr < fence);
                          while (*ptr++) assert(ptr < fence);
                          get_pad();
@@ -586,7 +587,7 @@ typedef class Serial_write_buffer: public Serial_buffer {
         *loc = value;
     }
     void check_buffer(long needed);
-    void set_string(char *s) { 
+    void set_string(const char *s) { 
         char *fence = buffer + len;
         assert(ptr < fence);
         // two brackets surpress a g++ warning, because this is an
@@ -922,7 +923,11 @@ private:
     long len;
     Alg_seq_ptr seq;
     Alg_pending_event *pending_events;
-
+    // the next four fields are mainly for request_note_off()
+    Alg_events_ptr events_ptr; // remembers events containing current event
+    long index; // remembers index of current event
+    void *cookie; // remembers the cookie associated with next event
+    double offset;
     void show();
     bool earlier(int i, int j);
     void insert(Alg_events_ptr events, long index, bool note_on, 
@@ -945,11 +950,14 @@ public:
     // can add more sequences to the iteration. Events are returned in
     // time order, so effectively sequence events are merged.
     // The optional offset is added to each event time of sequence s
-    // before merging/sorting.
+    // before merging/sorting. You should call begin_seq() for each
+    // sequence to be included in the iteration unless you call begin()
+    // (see below).
     void begin_seq(Alg_seq_ptr s, void *cookie = NULL, double offset = 0.0);
     ~Alg_iterator();
     // Prepare to enumerate events in order. If note_off_flag is true, then
-    // iteration_next will merge note-off events into the sequence.
+    // iteration_next will merge note-off events into the sequence. If you
+    // call begin(), you should not normally call begin_seq(). See above.
     void begin(void *cookie = NULL) { begin_seq(seq, cookie); }
     // return next event (or NULL). If iteration_begin was called with
     // note_off_flag = true, and if note_on is not NULL, then *note_on
@@ -962,6 +970,12 @@ public:
     // end_time is non_zero, stop iterating at the last event before end_time
     Alg_event_ptr next(bool *note_on = NULL, void **cookie_ptr = NULL,
                        double *offset_ptr = NULL, double end_time = 0); 
+    // Sometimes, the caller wants to receive note-off events for a subset
+    // of the notes, typically the notes that are played and need to be
+    // turned off. In this case, when a note is turned on, the client
+    // should call request_note_off(). This will insert a note-off into
+    // the queue for the most recent note returned by next(). 
+    void request_note_off();
     void end();   // clean up after enumerating events
 } *Alg_iterator_ptr;
 

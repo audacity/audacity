@@ -914,6 +914,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
 #ifdef EXPERIMENTAL_MIDI_OUT
    mNumFrames = 0;
    mNumPauseFrames = 0;
+   mPauseTime = 0;
 #endif
    mLastPaError = paNoError;
    // pick a rate to do the audio I/O at, from those available. The project
@@ -1322,7 +1323,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    int nTracks = mMidiPlaybackTracks.GetCount();
    // Set up to play only one track:
    mSeq = mMidiPlaybackTracks[0]->GetSequence();
-   mIterator = new Alg_iterator(mSeq, true);
+   mIterator = new Alg_iterator(mSeq, false);
    // Iterator not yet intialized, must add each track...
    for (i = 0; i < nTracks; i++) {
       NoteTrack *t = mMidiPlaybackTracks[i];
@@ -1390,6 +1391,7 @@ bool AudioIO::StartPortMidiStream()
 
    mMidiStreamActive = true;
    mPauseTime = 0;
+   mMidiPaused = false;
    mMidiLoopOffset = 0;
    mMidiOutputComplete = false;
    //   mCnt = 0;
@@ -1512,9 +1514,7 @@ void AudioIO::StopStream()
       }
       // now we can assume "ownership" of the mMidiStream
       // if output in progress, send all off, etc.
-      for (int i = 0; i < 16; i++) {
-         Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + i, 0x7B, 0));
-      }
+      AllNotesOff();
       // Note: this code is here for future consideration. It's
       // possible sometimes to abort some messages waiting in the 
       // output buffers, but if you do that, you might leave notes
@@ -2035,7 +2035,6 @@ AudioThread::ExitCode AudioThread::Entry()
 #ifdef EXPERIMENTAL_MIDI_OUT
 MidiThread::ExitCode MidiThread::Entry()
 {
-   bool paused = false;
    long pauseStart = 0;
    while( !TestDestroy() )
    {
@@ -2047,13 +2046,14 @@ MidiThread::ExitCode MidiThread::Entry()
       {
          // Keep track of time paused. If not paused, fill buffers.
          if (gAudioIO->mNumPlaybackChannels == 0 && gAudioIO->IsPaused()) {
-            if (!paused) {
-               paused = true;
+            if (!gAudioIO->mMidiPaused) {
+               gAudioIO->mMidiPaused = true;
                pauseStart = MidiTime(NULL);
+               gAudioIO->AllNotesOff(); // to avoid hanging notes during pause
             }
          } else {
-            if (paused) {
-               paused = false;
+            if (gAudioIO->mMidiPaused) {
+               gAudioIO->mMidiPaused = false;
                gAudioIO->mPauseTime += (MidiTime(NULL) - pauseStart);
             }
             gAudioIO->FillMidiBuffers();
@@ -2622,10 +2622,7 @@ void AudioIO::OutputEvent()
    // The special event gAllNotesOffEvent means "end of playback, send
    // all notes off on all channels"
    if (mNextEvent == &gAllNotesOff) {
-      for (channel = 0; channel < 16; channel++) {
-         Pm_WriteShort(mMidiStream, timestamp, 
-                       Pm_Message(0xB0 + channel, 0x7B, 0));
-      }
+      AllNotesOff();
       if (mPlayLooped) {
          // jump back to beginning of loop
          mMidiLoopOffset += (mT1 - mT0);
@@ -2644,9 +2641,10 @@ void AudioIO::OutputEvent()
    if (((mNextEventTrack->GetVisibleChannels() & (1 << channel)) && 
         // only play if note is not muted:
         !((mHasSolo || mNextEventTrack->GetMute()) && 
-          !mNextEventTrack->GetSolo())) ||
+          !mNextEventTrack->GetSolo()))) {
+        // ||
         // the following allows note-offs even when muted or not selected
-       (mNextEvent->is_note() && !mNextIsNoteOn)) { 
+        // (mNextEvent->is_note() && !mNextIsNoteOn)) { 
       // Note event
       if (mNextEvent->is_note() && !mSendMidiState) {
          // Pitch and velocity
@@ -2657,6 +2655,8 @@ void AudioIO::OutputEvent()
             data2 += offset; // offset comes from per-track slider
             // clip velocity to insure a legal note-on value
             data2 = (data2 < 0 ? 1 : (data2 > 127 ? 127 : data2));
+            // since we are going to play this note, we need to get a note_off
+            mIterator->request_note_off();
          } else data2 = 0; // 0 velocity means "note off"
          command = 0x90; // MIDI NOTE ON (or OFF when velocity == 0)
       // Update event
@@ -2709,6 +2709,9 @@ void AudioIO::OutputEvent()
          Pm_WriteShort(mMidiStream, timestamp, 
                        Pm_Message((int) (command + channel), 
                                   (long) data1, (long) data2));
+         printf("Pm_WriteShort %x @ %d\n", 
+                Pm_Message((int) (command + channel), 
+                           (long) data1, (long) data2), timestamp);
       }
    }
 }
@@ -2774,6 +2777,8 @@ void AudioIO::FillMidiBuffers()
       if (mNumCaptureChannels <= 0) {
          // no audio callback, so move the time cursor here:
          double track_time = time - mMidiLoopOffset;
+         printf("mTime set. mT0 %g Pt_Time() %gs PauseTime %g\n",
+                mT0, Pt_Time() * 0.001, PauseTime());
          // Since loop offset is incremented when we fill the
          // buffer, the cursor tends to jump back to mT0 early.
          // Therefore, if we are in loop mode, and if mTime < mT0,
@@ -2821,6 +2826,13 @@ PmTimestamp AudioIO::MidiTime()
    } else {
       return Pt_Time();
    }
+}
+
+void AudioIO::AllNotesOff()
+{
+  for (int chan = 0; chan < 16; chan++) {
+     Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
+  }
 }
 
 #endif
