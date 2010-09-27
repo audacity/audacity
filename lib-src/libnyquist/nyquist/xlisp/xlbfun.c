@@ -603,6 +603,9 @@ LVAL xcleanup(void)
 {
     xllastarg();
     xlcleanup();
+    /* this point will never be reached because xlcleanup() does a
+       longjmp(). The return is added to avoid false positive 
+       error messages from static analyzers and compilers */
     return (NIL);
 }
 
@@ -611,7 +614,10 @@ LVAL xtoplevel(void)
 {
     xllastarg();
     xltoplevel();
-    return (NIL);
+    /* this point will never be reached because xltoplevel() does a
+       longjmp(). The return is added to avoid false positive 
+       error messages from static analyzers and compilers */
+    return (NIL); 
 }
 
 /* xcontinue - special form 'continue' */

@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <assert.h>
 #include "xlisp.h"
 #include "sound.h"
 #include "falloc.h"
@@ -75,7 +76,7 @@ void new_pool(void)
     poolp = (char *) round_size(((long) poolp));
 }
 
-/* new_pool -- allocate a new pool from which mem is allocated */
+/* new_spool -- allocate a new spool from which sample blocks are allocated */
 /**/
 void new_spool(void)
 {
@@ -165,7 +166,12 @@ char *get_from_pool(size_t siz)
 #if defined(TRACK_POOLS) && TRACK_POOLS
 
 /* falloc_gc -- return empty pools to the system */
-/**/
+/*
+ * Algorithm: for each pool, move all free sample blocks 
+ * (on the sample_block_free list) to tlist. If tlist
+ * has ALL of the blocks in the pool (determined by
+ * byte counts), the pool is returned to the heap.
+ */
 void falloc_gc()
 {
    CQUE *lp = NULL;
@@ -241,8 +247,18 @@ void falloc_gc()
          cp = NULL;
       }
       else {
-         if (lp)
-            lp->qnext = np;
+         /* lp cannot be null here: On 1st iteration, lp == NULL, but
+          * cp == pools, so code above is executed. Before the for-loop
+          * iterates, pools == np (assigned above), and cp == NULL. The
+          * for-loop update (lp=cp,cp=np) produces lp == NULL, cp == pools.
+          * Since cp == pools, this else branch will not be taken.
+          * The other path to this code is via the "continue" above. In that
+          * case, the update (lp=cp,cp=np) makes lp a valid pointer or else
+          * the loop exits.
+          * The assert(lp) is here to possibly make static analyzers happy.
+          */
+         assert(lp);
+         lp->qnext = np;
          cp = lp;
       }
    }

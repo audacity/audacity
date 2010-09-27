@@ -72,10 +72,10 @@ void xlungetc(LVAL fptr, int ch)
     
     /* check for ungetc from nil */
     if (fptr == NIL)
-        ; //ANSWER-ME: Return? "else if"?
+        ;
         
     /* otherwise, check for ungetc to a stream */
-    if (ustreamp(fptr)) {
+    else if (ustreamp(fptr)) {
         if (ch != EOF) {
             lptr = cons(cvchar(ch),gethead(fptr));
             if (gethead(fptr) == NIL)

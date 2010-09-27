@@ -565,7 +565,25 @@ D	nyquist_printf("add_s_nn_fetch: special return, susp %p\n", susp);
         /* check if we've seen the logical stop from s2. If so then
            log_stop_cnt is max of s1 and s2 stop times */
         (susp->logical_stop_bits & 2)) {
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.log_stop_cnt %d\n",
+                       susp->susp.log_stop_cnt);
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.current %d\n", 
+                       susp->susp.current);
         int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
+        // to_stop can be less than zero if we've been adding in sounds with
+        // t0 less than the time when the sound is added. E.g. if the user
+        // wants a sequence of two sounds that start at 0, the second sound
+        // will be spliced onto the first because we don't look at it until
+        // the first finishes -- we cannot go back in time and start adding
+        // from time 0. This creates a mismatch between the sample count and
+        // the logical time, so we could actually set a logical stop time that
+        // is back in history, and therefore before susp.current, resulting
+        // in a negative to_stop. The problem is really with trying to 
+        // sequence two sounds rather than two behaviors, and a warning has
+        // already been issued, so we'll just try not to crash here. It's too
+        // late to compute the correct answer, which would respect t0 of both
+        // sounds.
+        if (to_stop < 0) to_stop = 0;
         if (to_stop < togo) {
             if (to_stop == 0) {
                 susp->logically_stopped = true;

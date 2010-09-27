@@ -5,6 +5,9 @@
 
 /* HISTORY
  *
+ * 11-Dec-09    Roger Dannenberg
+ *  Added getenv
+ *
  * 28-Apr-03	Dominic Mazzoni
  *  Eliminated some compiler warnings
  *
@@ -48,6 +51,20 @@ extern LVAL s_true;
 /* external routines */
 extern FILE *osaopen();
 extern LVAL exttype();
+
+/* xget_env - get the value of an environment variable */
+LVAL xget_env(void)
+{
+    const char *name = (char *) getstring(xlgetfname());
+    char *val;
+
+    /* check for too many arguments */
+    xllastarg();
+
+    /* get the value of the environment variable */
+    val = getenv(name);
+    return (val ? cvstring(val) : NULL);
+}
 
 /* xload - read and evaluate expressions from a file */
 LVAL xload(void)

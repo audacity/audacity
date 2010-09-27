@@ -961,6 +961,7 @@ LVAL findprop(LVAL sym, LVAL prp);
 
 /* xlsys.c */
 
+LVAL xget_env(void);
 LVAL xload(void);
 LVAL xtranscript(void);
 LVAL xtype(void);

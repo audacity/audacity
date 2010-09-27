@@ -62,7 +62,7 @@ extern LVAL
     xflatsize(void),xflatc(void),
     xopen(void),xbopen(void),xclose(void),xrdchar(void),xpkchar(void),xwrchar(void),xreadline(void),
     xrdint(void),xwrint(void),xrdfloat(void),xwrfloat(void),
-    xload(void),xtranscript(void),
+    xget_env(void), xload(void),xtranscript(void),
     xtype(void),xquit(void),xexit(void),xpeek(void),xpoke(void),xaddrs(void),
     xvector(void),xblock(void),xrtnfrom(void),xtagbody(void),
     xpsetq(void),xflet(void),xlabels(void),xmacrolet(void),xunwindprotect(void),xpp(void),
@@ -485,6 +485,7 @@ FUNDEF funtab[] = {
 {       "GET-TEMP-PATH",                S, xget_temp_path       }, /* 305 */
 {       "GET-USER",                     S, xget_user            }, /* 306 */
 {       "FIND-IN-XLISP-PATH",           S, xfind_in_xlisp_path  }, /* 307 */
+{       "GET-ENV",                      S, xget_env             }, /* 308 */
 
 #ifdef MACINTOSH
 #include "macptrs.h"

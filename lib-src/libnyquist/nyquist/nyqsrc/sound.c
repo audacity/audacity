@@ -861,7 +861,8 @@ sample_block_type SND_flush(sound_type snd, long * cnt)
 {
     long mycnt;
     sample_block_type block = SND_get_first(snd, &mycnt);
-    while (snd->current < 0) {
+    /* changed from < to <= because we want to read at least the first sample */
+    while (snd->current <= 0) {
         block = SND_get_next(snd, &mycnt);
     }
     /* at this point, we've read to and including the block with

@@ -333,9 +333,11 @@ int readone(LVAL fptr, LVAL *pval)
     }
 
     /* handle illegal characters */
-    else
-    {
+    else {
         xlerror("illegal character",cvfixnum((FIXTYPE)ch));
+        /* this point will never be reached because xlerror() does a
+           longjmp(). The return is added to avoid false positive 
+           error messages from static analyzers and compilers */
         return (FALSE);
     }
 }
