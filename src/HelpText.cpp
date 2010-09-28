@@ -173,19 +173,19 @@ wxString HelpTextBuiltIn( const wxString & Key )
    {
       return WrapText(
          wxString(wxT("")) +
-         _("<center><h3>How to get Help</h3></center>") +
+         _("<center><h3>How to Get Help</h3></center>") +
          _("Welcome to Audacity ") + AUDACITY_VERSION_STRING + wxT("!<p>") +
          _("These are our support methods:") + wxT("</p>") + wxT("<ul><li>") + 
-         _(" [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">internet version if it isn't</a>)") + wxT("</li><li>") +
-         _(" [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">internet version if it isn't</a>)") + wxT("</li><li>") +
-         _(" [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the internet)") + wxT("</li><li>") +
-         _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the internet)") + wxT("</li></ul></p><p>") +
+         _(" [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)") + wxT("</li><li>") +
+         _(" [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)") + wxT("</li><li>") +
+         _(" [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)") + wxT("</li><li>") +
+         _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)") + wxT("</li></ul></p><p>") +
          _(" For even quicker answers, all the online resources above are <b>searchable</b>.")  + wxT("</p>") 
       );
    }
 
    // Remote help allows us to link to a local copy of the help if it exists,
-   // or provide a message that takes you to the internet if it does not.
+   // or provide a message that takes you to the Internet if it does not.
    // It's used by the menu item Help > Index
    if(Key ==  wxT("remotehelp") )
    {
