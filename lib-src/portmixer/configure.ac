@@ -49,34 +49,57 @@ if [[ with_portaudio != "" ]] ; then
 fi
 
 #
+# Check which APIs are available
+#
+
+have_oss=no
+AC_CHECK_HEADERS([sys/soundcard.h linux/soundcard.h machine/soundcard.h], have_oss=yes)
+
+AC_CHECK_HEADER(alsa/asoundlib.h, have_alsa=yes, have_alsa=no)
+AC_CHECK_HEADER(CoreAudio/CoreAudio.h, have_coreaudio=yes, have_coreaudio=no)
+AC_CHECK_HEADER(windows.h, have_windows=yes, have_windows=no)
+
+#
 # Make sure the support is there
 #
 have_support=yes
-AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_support=no])
-if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_win_ds.h");
-fi
-AC_EGREP_HEADER([PaAlsa_GetStreamInputCard], [pa_linux_alsa.h], , [have_support=no])
-if [[ $have_support = "no" ]] ; then
+
+if [[ $have_alsa = "yes" ]] ; then
+	AC_EGREP_HEADER([PaAlsa_GetStreamInputCard], [pa_linux_alsa.h], , [have_support=no])
+	if [[ $have_support = "no" ]] ; then
 		AC_MSG_WARN("Missing support in pa_linux_alsa.h");
+	fi
 fi
-AC_EGREP_HEADER([PaWinMME_GetStreamInputHandle], [pa_win_wmme.h], , [have_support=no])
-if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_win_wmme.h");
-fi
-AC_EGREP_HEADER([PaMacCore_GetStreamInputDevice], [pa_mac_core.h], , [have_support=no])
-if [[ $have_support = "no" ]] ; then
+
+if [[ $have_coreaudio = "yes" ]] ; then
+	AC_EGREP_HEADER([PaMacCore_GetStreamInputDevice], [pa_mac_core.h], , [have_support=no])
+	if [[ $have_support = "no" ]] ; then
 		AC_MSG_WARN("Missing support in pa_mac_core.h");
+	fi
 fi
-AC_EGREP_HEADER([PaOSS_GetStreamInputDevice], [pa_unix_oss.h], , [have_support=no])
-if [[ $have_support = "no" ]] ; then
+
+if [[ $have_oss = "yes" ]] ; then
+	AC_EGREP_HEADER([PaOSS_GetStreamInputDevice], [pa_unix_oss.h], , [have_support=no])
+	if [[ $have_support = "no" ]] ; then
 		AC_MSG_WARN("Missing support in pa_unix_oss.h");
+	fi
 fi
+
+if [[ $have_windows = "yes" ]] ; then
+	AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_support=no])
+	if [[ $have_support = "no" ]] ; then
+		AC_MSG_WARN("Missing support in pa_win_ds.h");
+	fi
+	AC_EGREP_HEADER([PaWinMME_GetStreamInputHandle], [pa_win_wmme.h], , [have_support=no])
+	if [[ $have_support = "no" ]] ; then
+		AC_MSG_WARN("Missing support in pa_win_wmme.h");
+	fi
+fi
+
 AC_EGREP_HEADER([Pa_GetStreamHostApiType], [portaudio.h], , [have_support=no])
 if [[ $have_support = "no" ]] ; then
 		AC_MSG_WARN("Missing support in portaudio.h");
 fi
-
 if [[ $have_support = "no" ]] ; then
    AC_MSG_ERROR("Your version of portaudio does not include required functions"); 
 fi
@@ -86,16 +109,6 @@ fi
 #
 AC_SUBST( include, [-Iinclude] )
 AC_SUBST( objects, [px_mixer.o] )
-
-#
-# Check which APIs are available
-#
-
-have_oss=no
-AC_CHECK_HEADERS([sys/soundcard.h linux/soundcard.h machine/soundcard.h], have_oss=yes)
-
-AC_CHECK_HEADER(alsa/asoundlib.h,  have_alsa=yes, have_alsa=no)
-AC_CHECK_HEADER(CoreAudio/CoreAudio.h, have_coreaudio=yes, have_coreaudio=no)
 
 #
 # Set up to use the identified ones
