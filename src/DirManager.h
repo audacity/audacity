@@ -49,7 +49,7 @@ class DirManager: public XMLTagHandler {
    // Returns true on success.
    // If SetProject is told NOT to create the directory
    // but it doesn't already exist, SetProject fails and returns false.
-   bool SetProject(wxString & projPath, wxString & projName, bool create);
+   bool SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate);
 
    wxString GetProjectDataDir();
    wxString GetProjectName();

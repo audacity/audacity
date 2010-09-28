@@ -381,8 +381,7 @@ void DirManager::CleanTempDir()
    RecursivelyRemove(filePathArray, count, true, true, _("Cleaning up temporary files"));
 }
 
-bool DirManager::SetProject(wxString & projPath, wxString & projName,
-                            bool create)
+bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const bool bCreate)
 {
    wxString oldPath = this->projPath;
    wxString oldName = this->projName;
@@ -391,17 +390,20 @@ bool DirManager::SetProject(wxString & projPath, wxString & projName,
    if (oldLoc == wxT(""))
       oldLoc = mytemp;
 
-   if (projPath == wxT(""))
-      projPath = ::wxGetCwd();
+   if (newProjPath == wxT(""))
+      newProjPath = ::wxGetCwd();
 
-   this->projPath = projPath;
-   this->projName = projName;
-   this->projFull = projPath + wxFILE_SEP_PATH + projName;
+   this->projPath = newProjPath;
+   this->projName = newProjName;
+   if (newProjPath.Last() == wxFILE_SEP_PATH)
+      this->projFull = newProjPath + newProjName;
+   else
+      this->projFull = newProjPath + wxFILE_SEP_PATH + newProjName;
 
    wxString cleanupLoc1=oldLoc;
    wxString cleanupLoc2=projFull;
 
-   if (create) {
+   if (bCreate) {
       if (!wxDirExists(projFull))
          if (!wxMkdir(projFull))
             return false;
