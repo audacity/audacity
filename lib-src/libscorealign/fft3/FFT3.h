@@ -94,7 +94,7 @@ void WindowFunc3(int whichFunction, int NumSamples, float *data);
  * Returns the name of the windowing function (for UI display)
  */
 
-char *WindowFuncName3(int whichFunction);
+const char *WindowFuncName3(int whichFunction);
 
 /*
  * Returns the number of windowing functions supported

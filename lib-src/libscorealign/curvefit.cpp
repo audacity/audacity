@@ -3,11 +3,12 @@
  *  scorealign
  *
  *  Created by Roger Dannenberg on 10/20/07.
- *  Copyright 2007 __MyCompanyName__. All rights reserved.
  *
  */
 
-#include "assert.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "comp_chroma.h"
 #include "sautils.h"

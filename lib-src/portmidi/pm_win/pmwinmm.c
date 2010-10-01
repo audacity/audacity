@@ -43,9 +43,11 @@ static void CALLBACK winmm_in_callback(HMIDIIN hMidiIn,
 static void CALLBACK winmm_streamout_callback(HMIDIOUT hmo, UINT wMsg,
                                               DWORD dwInstance, DWORD dwParam1, 
                                               DWORD dwParam2);
+#ifdef USE_SYSEX_BUFFERS
 static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
                                         DWORD dwInstance, DWORD dwParam1, 
                                         DWORD dwParam2);
+#endif
 
 extern pm_fns_node pm_winmm_in_dictionary;
 extern pm_fns_node pm_winmm_out_dictionary;
@@ -1314,7 +1316,7 @@ static void CALLBACK winmm_out_callback(HMIDIOUT hmo, UINT wMsg,
            hdr, wMsg, MOM_DONE);
     */
     if (wMsg == MOM_DONE) {
-        MMRETURN ret = midiOutUnprepareHeader(m->handle.out, hdr, 
+        MMRESULT ret = midiOutUnprepareHeader(m->handle.out, hdr, 
                                               sizeof(MIDIHDR));
         assert(ret == MMSYSERR_NOERROR);
     }

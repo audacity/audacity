@@ -15,6 +15,9 @@ of PortMidi, so these files may be out-of-date or have other problems.
 Feel free to submit updates or discuss the possibility of maintaining
 these or some equivalent files for MinGw.
 
+Update, 20 Sep 2010: CMake supports Code::Blocks in conjunction with
+MinGW.
+
 Roger Dannenberg
 18-Oct-2008
 

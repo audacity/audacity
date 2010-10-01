@@ -5,7 +5,7 @@
  * and subsequent work by Andrew Zeldis and Zico Kolter
  * and Roger B. Dannenberg
  *
- * $Id: pmmacosxcm.c,v 1.1 2009-06-24 20:37:25 gswillia Exp $
+ * $Id: pmmacosx.c,v 1.17 2002/01/27 02:40:40 jon Exp $
  */
  
 /* Notes:
@@ -38,17 +38,34 @@
 #include <CoreServices/CoreServices.h>
 #include <CoreMIDI/MIDIServices.h>
 #include <CoreAudio/HostTime.h>
+#include <unistd.h>
 
 #define PACKET_BUFFER_SIZE 1024
+/* maximum overall data rate (OS X limit is 15000 bytes/second) */
+#define MAX_BYTES_PER_S 14000
 
-/* this is very strange: if I put in a reasonable 
-   number here, e.g. 128, which would allow sysex data
-   to be sent 128 bytes at a time, then I lose sysex
-   data in my loopback test. With a buffer size of 4,
-   we put at most 4 bytes in a packet (but maybe many
-   packets in a packetList), and everything works fine.
+/* Apple reports that packets are dropped when the MIDI bytes/sec
+   exceeds 15000. This is computed by "tracking the number of MIDI 
+   bytes scheduled into 1-second buckets over the last six seconds
+   and averaging these counts." 
+
+   This is apparently based on timestamps, not on real time, so 
+   we have to avoid constructing packets that schedule high speed
+   output even if the actual writes are delayed (which was my first
+   solution).
+
+   The LIMIT_RATE symbol, if defined, enables code to modify 
+   timestamps as follows:
+     After each packet is formed, the next allowable timestamp is
+     computed as this_packet_time + this_packet_len * delay_per_byte
+
+     This is the minimum timestamp allowed in the next packet. 
+
+     Note that this distorts accurate timestamps somewhat.
  */
-#define SYSEX_BUFFER_SIZE 4
+#define LIMIT_RATE 1
+
+#define SYSEX_BUFFER_SIZE 128
 
 #define VERBOSE_ON 1
 #define VERBOSE if (VERBOSE_ON)
@@ -75,7 +92,7 @@ extern pm_fns_node pm_macosx_out_dictionary;
 typedef struct midi_macosxcm_struct {
     PmTimestamp sync_time; /* when did we last determine delta? */
     UInt64 delta;	/* difference between stream time and real time in ns */
-    UInt64 last_time;	/* last output time */
+    UInt64 last_time;	/* last output time in host units*/
     int first_message;  /* tells midi_write to sychronize timestamps */
     int sysex_mode;     /* middle of sending sysex */
     uint32_t sysex_word; /* accumulate data when receiving sysex */
@@ -90,6 +107,11 @@ typedef struct midi_macosxcm_struct {
     /* allow for running status (is running status possible here? -rbd): -cpr */
     unsigned char last_command; 
     int32_t last_msg_length;
+    /* limit midi data rate (a CoreMidi requirement): */
+    UInt64 min_next_time; /* when can the next send take place? */
+    int byte_count; /* how many bytes in the next packet list? */
+    Float64 us_per_host_tick; /* host clock frequency, units of min_next_time */
+    UInt64 host_ticks_per_byte; /* host clock units per byte at maximum rate */
 } midi_macosxcm_node, *midi_macosxcm_type;
 
 /* private function declarations */
@@ -405,7 +427,11 @@ midi_out_open(PmInternal *midi, void *driverInfo)
     m->packet = NULL;
     m->last_command = 0;
     m->last_msg_length = 0;
-
+    m->min_next_time = 0;
+    m->byte_count = 0;
+    m->us_per_host_tick = 1000000.0 / AudioGetHostClockFrequency();
+    m->host_ticks_per_byte = (UInt64) (1000000.0 / 
+                                       (m->us_per_host_tick * MAX_BYTES_PER_S));
     return pmNoError;
 }
 
@@ -451,8 +477,17 @@ midi_write_flush(PmInternal *midi, PmTimestamp timestamp)
     assert(endpoint);
     if (m->packet != NULL) {
         /* out of space, send the buffer and start refilling it */
+        /* before we can send, maybe delay to limit data rate. OS X allows
+         * 15KB/s. */
+        UInt64 now = AudioGetCurrentHostTime();
+        if (now < m->min_next_time) {
+            usleep((useconds_t) 
+                   ((m->min_next_time - now) * m->us_per_host_tick));
+        }
         macHostError = MIDISend(portOut, endpoint, m->packetList);
         m->packet = NULL; /* indicate no data in packetList now */
+        m->min_next_time = now + m->byte_count * m->host_ticks_per_byte;
+        m->byte_count = 0;
         if (macHostError != noErr) goto send_packet_error;
     }
     return pmNoError;
@@ -475,9 +510,11 @@ send_packet(PmInternal *midi, Byte *message, unsigned int messageLength,
     midi_macosxcm_type m = (midi_macosxcm_type) midi->descriptor;
     assert(m);
     
+    /* printf("add %d to packet %p len %d\n", message[0], m->packet, messageLength); */
     m->packet = MIDIPacketListAdd(m->packetList, sizeof(m->packetBuffer), 
                                   m->packet, timestamp, messageLength, 
                                   message);
+    m->byte_count += messageLength;
     if (m->packet == NULL) {
         /* out of space, send the buffer and start refilling it */
         /* make midi->packet non-null to fool midi_write_flush into sending */
@@ -522,9 +559,6 @@ midi_write_short(PmInternal *midi, PmEvent *event)
     /* if latency == 0, midi->now is not valid. We will just set it to zero */
     if (midi->latency == 0) when = 0;
     when_ns = ((UInt64) (when + midi->latency) * (UInt64) 1000000) + m->delta;
-    /* make sure we don't go backward in time */
-    if (when_ns < m->last_time) when_ns = m->last_time;
-    m->last_time = when_ns;
     timestamp = (MIDITimeStamp) AudioConvertNanosToHostTime(when_ns);
 
     message[0] = Pm_MessageStatus(what);
@@ -532,6 +566,15 @@ midi_write_short(PmInternal *midi, PmEvent *event)
     message[2] = Pm_MessageData2(what);
     messageLength = midi_length(what);
         
+    /* make sure we go foreward in time */
+    if (timestamp < m->min_next_time) timestamp = m->min_next_time;
+
+    #ifdef LIMIT_RATE
+        if (timestamp < m->last_time)
+            timestamp = m->last_time;
+	m->last_time = timestamp + messageLength * m->host_ticks_per_byte;
+    #endif
+
     /* Add this message to the packet list */
     return send_packet(midi, message, messageLength, timestamp);
 }
@@ -569,8 +612,16 @@ midi_end_sysex(PmInternal *midi, PmTimestamp when)
     midi_macosxcm_type m = (midi_macosxcm_type) midi->descriptor;
     assert(m);
     
-    /* make sure we don't go backward in time */
-    if (m->sysex_timestamp < m->last_time) m->sysex_timestamp = m->last_time;
+    /* make sure we go foreward in time */
+    if (m->sysex_timestamp < m->min_next_time) 
+        m->sysex_timestamp = m->min_next_time;
+
+    #ifdef LIMIT_RATE
+        if (m->sysex_timestamp < m->last_time) 
+            m->sysex_timestamp = m->last_time;
+        m->last_time = m->sysex_timestamp + m->sysex_byte_count *
+                                            m->host_ticks_per_byte;
+    #endif
     
     /* now send what's in the buffer */
     err = send_packet(midi, m->sysex_buffer, m->sysex_byte_count,

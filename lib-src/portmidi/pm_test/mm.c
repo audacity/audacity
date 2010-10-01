@@ -48,6 +48,7 @@
 #define MIDI_ACTIVE_SENSING 0xfe
 #define MIDI_SYS_RESET  0xff
 
+#define MIDI_ALL_SOUND_OFF 0x78
 #define MIDI_RESET_CONTROLLERS 0x79
 #define MIDI_LOCAL	0x7a
 #define MIDI_ALL_OFF	0x7b
@@ -345,7 +346,7 @@ private void output(PmMessage data)
     } else if (command == MIDI_CTRL) {
                /* controls 121 (MIDI_RESET_CONTROLLER) to 127 are channel
                 * mode messages. */
-        if (Pm_MessageData1(data) < MIDI_RESET_CONTROLLERS) {
+        if (Pm_MessageData1(data) < MIDI_ALL_SOUND_OFF) {
             showbytes(data, 3, verbose);
             if (verbose) {
                 printf("CtrlChg Chan %2d Ctrl %2d Val %2d\n",
@@ -355,8 +356,11 @@ private void output(PmMessage data)
             showbytes(data, 3, verbose);
             if (verbose) {
                 switch (Pm_MessageData1(data)) {
+                  case MIDI_ALL_SOUND_OFF:
+                      printf("All Sound Off, Chan %2d\n", chan);
+                    break;
                   case MIDI_RESET_CONTROLLERS:
-                    printf("Reset All Controllers\n");
+                    printf("Reset All Controllers, Chan %2d\n", chan);
                     break;
                   case MIDI_LOCAL:
                     printf("LocCtrl Chan %2d %s\n",

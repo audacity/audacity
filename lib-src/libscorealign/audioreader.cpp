@@ -3,9 +3,11 @@
  * 14-Jul-08  RBD
  */
 
-#include "assert.h"
-#include "stdio.h"
-#include "math.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 #include "sautils.h"
 #include "string.h"
 #include <fstream>

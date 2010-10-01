@@ -2,8 +2,10 @@
 *
 * 17-Jun-08  RBD created based on audiofilereader.cpp
 */
-#include "assert.h"
-#include "stdlib.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "audioreader.h"
 #include "allegro.h"
 #include "scorealign.h"
@@ -75,5 +77,5 @@ void Audio_mixer_reader::print_info()
 {
     printf("   Audacity mixer at @ %p\n", mixer);
     printf("   sample rate %g\n", get_sample_rate());
-    printf("   total frames %d\n", get_frames());
+    printf("   total frames %ld\n", get_frames());
 }

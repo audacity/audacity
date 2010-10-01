@@ -79,6 +79,8 @@ TO COMPILE PORTMIDI:
         - these are absolute paths to the Java SDK; you'll need to install the
           Java SDK (from Sun) and update these directories in order to build
           this project.
+        - similarly, the Linker->Input->Additional Dependencies list has a
+          path to the jvm.lib file, which needs to be correct(ed).
 
 6)  use Build->Batch Build ... to build everything in the project
 	

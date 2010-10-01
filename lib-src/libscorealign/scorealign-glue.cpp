@@ -3,6 +3,8 @@
  * 21-Jul-08 RBD
  */
 
+#include <stdlib.h>
+#include <string.h>
 #include "allegro.h"
 #include "audioreader.h"
 #include "scorealign.h"

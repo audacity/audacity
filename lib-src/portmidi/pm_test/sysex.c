@@ -64,6 +64,8 @@ void loopback_test()
     int data;
     PmEvent event;
     int shift;
+    long total_bytes = 0;
+    int32_t begin_time;
 
     Pt_Start(1, 0, 0);
     
@@ -87,6 +89,7 @@ void loopback_test()
 
     srand((unsigned int) Pt_Time()); /* seed for random numbers */
 
+    begin_time = Pt_Time();
     while (1) {
         PmError count;
         int32_t start_time;
@@ -157,14 +160,19 @@ void loopback_test()
             }
         }
         if (error_position >= 0) {
-            printf("Error at byte %d: sent %x recd %x\n", error_position, 
+            printf("Error at byte %d: sent %x recd %x.\n", error_position, 
                    expected, actual);
+            break;
         } else if (i != len + 2) {
-            printf("Error: byte %d not received\n", i);
+            printf("Error: byte %d not received.\n", i);
+            break;
         } else {
-            printf("Correctly ");
+            int seconds = (Pt_Time() - begin_time) / 1000;
+	    if (seconds == 0) seconds = 1;
+            printf("Correctly received %d byte sysex message.\n", i);
+	    total_bytes += i;
+	    printf("Cummulative bytes/sec: %d\n", total_bytes / seconds);
         }
-        printf("received %d byte sysex message.\n", i);
     }
 cleanup:
     Pm_Close(midi_out);

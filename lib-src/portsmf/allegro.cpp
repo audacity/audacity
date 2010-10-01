@@ -3450,6 +3450,7 @@ Alg_event_ptr Alg_iterator::next(bool *note_on, void **cookie_ptr,
 
 void Alg_iterator::request_note_off()
 {
+    assert(index >= 0 && index < events_ptr->length());
     insert(events_ptr, index, false, cookie, offset);
 }
 
@@ -3473,7 +3474,7 @@ void Alg_seq::merge_tracks()
     long notes_index = 0;
 
     Alg_event_ptr event;
-    while (event = iterator.next()) {
+    while ((event = iterator.next())) {
         notes[notes_index++] = event;
     }
     track_list.reset(); // don't need them any more

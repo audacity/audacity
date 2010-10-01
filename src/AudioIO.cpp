@@ -1363,12 +1363,11 @@ bool AudioIO::StartPortMidiStream()
       for (i = 0; i < Pm_CountDevices(); i++) {
          const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
          if (!info) continue;
+         if (!info->output) continue;
          wxString interf(info->interf, wxConvLocal);
          wxString name(info->name, wxConvLocal);
-         wxString device = wxString::Format(wxT("%s: %s"),
-                                            interf.c_str(),
-                                            name.c_str());
-        if (wxStrcmp(device, playbackDeviceName) == 0) {
+         interf.Append(wxT(": ")).Append(name);
+        if (wxStrcmp(interf, playbackDeviceName) == 0) {
             playbackDevice = i;
          }
       }
@@ -1515,14 +1514,16 @@ void AudioIO::StopStream()
       // now we can assume "ownership" of the mMidiStream
       // if output in progress, send all off, etc.
       AllNotesOff();
-      // Note: this code is here for future consideration. It's
-      // possible sometimes to abort some messages waiting in the 
-      // output buffers, but if you do that, you might leave notes
-      // hanging. It seems better to deliver all-off messages and
-      // flush all the messages, even if that delays things by
-      // the midi latency.
-      // wxMilliSleep(40); // deliver the all-off messages
-      // Pm_Abort(mMidiStream);
+      // AllNotesOff() should be sufficient to stop everything, but
+      // in Linux, if you Pm_Close() immediately, it looks like 
+      // messages are dropped. ALSA then seems to send All Sound Off
+      // and Reset All Controllers messages, but not all synthesizers
+      // respond to these messages. This is probably a bug in PortMidi
+      // if the All Off messages do not get out, but for security,
+      // delay a bit so that messages can be delivered before closing
+      // the stream. It should take about 16ms to send All Off messages,
+      // so this will add 24ms latency.
+      wxMilliSleep(40); // deliver the all-off messages
       Pm_Close(mMidiStream);
       mMidiStream = NULL;
       mIterator->end();
@@ -2709,7 +2710,7 @@ void AudioIO::OutputEvent()
          Pm_WriteShort(mMidiStream, timestamp, 
                     Pm_Message((int) (command + channel), 
                                   (long) data1, (long) data2));
-         //printf("Pm_WriteShort %x @ %d\n", 
+         //printf("Pm_WriteShort %lx @ %d\n", 
          //       Pm_Message((int) (command + channel), 
          //                  (long) data1, (long) data2), timestamp);
       }
@@ -2833,9 +2834,10 @@ PmTimestamp AudioIO::MidiTime()
 
 void AudioIO::AllNotesOff()
 {
-  for (int chan = 0; chan < 16; chan++) {
-     Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
-  }
+   printf("AudioIO::AllNotesOff()\n");
+   for (int chan = 0; chan < 16; chan++) {
+      Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
+   }
 }
 
 #endif

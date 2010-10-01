@@ -1,4 +1,9 @@
+/* comp_chroma.cpp -- compute chroma distance
+ *
+ * 2008 RBD
+ */
 
+#include <string.h>
 #include <math.h>
 #include <fstream>
 #include <algorithm>
