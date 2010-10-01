@@ -3434,12 +3434,12 @@ Alg_event_ptr Alg_iterator::next(bool *note_on, void **cookie_ptr,
             insert(events_ptr, index, false, cookie, offset);
         }
         // for both note-ons and updates, insert next event (at index + 1)
-        index++;
-        if (index < events_ptr->length() &&
+        // DO NOT INCREMENT index: it must be preserved for request_note_off()
+        if (index + 1 < events_ptr->length() &&
             (end_time == 0 || // zero means ignore end time
              // stop iterating when end time is reached
-             (*events_ptr)[index]->time + offset < end_time)) {
-            insert(events_ptr, index, true, cookie, offset);
+             (*events_ptr)[index + 1]->time + offset < end_time)) {
+            insert(events_ptr, index + 1, true, cookie, offset);
         }
     }
     if (cookie_ptr) *cookie_ptr = cookie;

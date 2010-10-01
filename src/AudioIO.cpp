@@ -1350,8 +1350,8 @@ bool AudioIO::StartPortMidiStream()
       return false;
 
    mMidiLatency = 1; // arbitrary, but small
-   printf("StartPortMidiStream: mT0 %g mTime %g\n", 
-          gAudioIO->mT0, gAudioIO->mTime);
+   //printf("StartPortMidiStream: mT0 %g mTime %g\n", 
+   //       gAudioIO->mT0, gAudioIO->mTime);
 
    /* get midi playback device */
    PmDeviceID playbackDevice = Pm_GetDefaultOutputDeviceID();
@@ -1383,11 +1383,11 @@ bool AudioIO::StartPortMidiStream()
                                 NULL, 
                                 mMidiLatency);
    // DEBUGGING
-      const PmDeviceInfo *info = Pm_GetDeviceInfo(playbackDevice);
-      printf("Pm_OpenOutput on %s, return code %d\n", 
-             info->name, mLastPmError);
-
-   fprintf(stderr, "mT0: %f\n", mT0);
+   //const PmDeviceInfo *info = Pm_GetDeviceInfo(playbackDevice);
+   //printf("Pm_OpenOutput on %s, return code %d\n", 
+   //       info->name, mLastPmError);
+   
+   //fprintf(stderr, "mT0: %f\n", mT0);
 
    mMidiStreamActive = true;
    mPauseTime = 0;
@@ -2707,11 +2707,11 @@ void AudioIO::OutputEvent()
       }
       if (command != -1) {
          Pm_WriteShort(mMidiStream, timestamp, 
-                       Pm_Message((int) (command + channel), 
+                    Pm_Message((int) (command + channel), 
                                   (long) data1, (long) data2));
-         printf("Pm_WriteShort %x @ %d\n", 
-                Pm_Message((int) (command + channel), 
-                           (long) data1, (long) data2), timestamp);
+         //printf("Pm_WriteShort %x @ %d\n", 
+         //       Pm_Message((int) (command + channel), 
+         //                  (long) data1, (long) data2), timestamp);
       }
    }
 }
@@ -2777,8 +2777,8 @@ void AudioIO::FillMidiBuffers()
       if (mNumCaptureChannels <= 0) {
          // no audio callback, so move the time cursor here:
          double track_time = time - mMidiLoopOffset;
-         printf("mTime set. mT0 %g Pt_Time() %gs PauseTime %g\n",
-                mT0, Pt_Time() * 0.001, PauseTime());
+         //printf("mTime set. mT0 %g Pt_Time() %gs PauseTime %g\n",
+         //       mT0, Pt_Time() * 0.001, PauseTime());
          // Since loop offset is incremented when we fill the
          // buffer, the cursor tends to jump back to mT0 early.
          // Therefore, if we are in loop mode, and if mTime < mT0,
@@ -2819,10 +2819,13 @@ double AudioIO::PauseTime()
 PmTimestamp AudioIO::MidiTime()
 {
    if (mNumPlaybackChannels > 0) {
-      // note: the extra 0.0005 is for rounding
-      return PmTimestamp(1000 * (AudioTime() + 1.0005 - 
+      //printf("AudioIO:MidiTime: PaUtil_GetTime() %g mAudioCallbackOutputTime %g time - outputTime %g\n",
+      //        PaUtil_GetTime(), mAudioCallbackOutputTime, PaUtil_GetTime() - mAudioCallbackOutputTime);
+      // note: the extra 0.0005 is for rounding. Round down by casting to
+      // unsigned long, then convert to PmTimeStamp (currently signed)
+      return (PmTimestamp) ((unsigned long) (1000 * (AudioTime() + 1.0005 - 
                               mAudioFramesPerBuffer / mRate + 
-                              PaUtil_GetTime() - mAudioCallbackOutputTime));
+                              PaUtil_GetTime() - mAudioCallbackOutputTime)));
    } else {
       return Pt_Time();
    }
@@ -3048,6 +3051,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* GSW: Save timeInfo in case MidiPlayback needs it */
    gAudioIO->mAudioCallbackOutputTime = timeInfo->outputBufferDacTime;
+   // printf("in callback, mAudioCallbackOutputTime %g\n", gAudioIO->mAudioCallbackOutputTime); //DBG
    gAudioIO->mAudioFramesPerBuffer = framesPerBuffer;
    if(gAudioIO->IsPaused())
       gAudioIO->mNumPauseFrames += framesPerBuffer;

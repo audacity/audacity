@@ -475,7 +475,6 @@ send_packet(PmInternal *midi, Byte *message, unsigned int messageLength,
     midi_macosxcm_type m = (midi_macosxcm_type) midi->descriptor;
     assert(m);
     
-    /* printf("add %d to packet %lx len %d\n", message[0], m->packet, messageLength); */
     m->packet = MIDIPacketListAdd(m->packetList, sizeof(m->packetBuffer), 
                                   m->packet, timestamp, messageLength, 
                                   message);
