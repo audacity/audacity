@@ -25,26 +25,61 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however,
+ * The text above constitutes the entire PortAudio license; however, 
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also
- * requested that these non-binding requests be included along with the
+ * they can be incorporated into the canonical version. It is also 
+ * requested that these non-binding requests be included along with the 
  * license above.
  */
 
 #include <windows.h>
 #include <mmreg.h>
+#ifndef WAVE_FORMAT_IEEE_FLOAT
+    #define WAVE_FORMAT_IEEE_FLOAT 0x0003   // MinGW32 does not define this
+#endif    
+#ifndef _WAVEFORMATEXTENSIBLE_
+    #define _WAVEFORMATEXTENSIBLE_          // MinGW32 does not define this
+#endif
+#ifndef _INC_MMREG
+    #define _INC_MMREG                      // for STATIC_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT
+#endif
+#include <winioctl.h>						// MinGW32 does not define this automatically
 #include <ks.h>
 #include <ksmedia.h>
-#include <stdio.h>              // just for some development printfs
-#include <stddef.h>
+#include <stdio.h>                          // just for some development printfs
 
 #include "portaudio.h"
 #include "pa_util.h"
 #include "pa_win_wdmks_utils.h"
+
+#if !defined(PA_WDMKS_NO_KSGUID_LIB) && !defined(PAWIN_WDMKS_NO_KSGUID_LIB)
+    #if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) /* MSC version 6 and above */
+        #pragma comment( lib, "ksguid.lib" )
+    #endif
+    #define pa_KSDATAFORMAT_TYPE_AUDIO            KSDATAFORMAT_TYPE_AUDIO
+    #define pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT    KSDATAFORMAT_SUBTYPE_IEEE_FLOAT
+    #define pa_KSDATAFORMAT_SUBTYPE_PCM           KSDATAFORMAT_SUBTYPE_PCM
+    #define pa_KSDATAFORMAT_SUBTYPE_WAVEFORMATEX  KSDATAFORMAT_SUBTYPE_WAVEFORMATEX
+    #define pa_KSMEDIUMSETID_Standard             KSMEDIUMSETID_Standard
+    #define pa_KSINTERFACESETID_Standard          KSINTERFACESETID_Standard
+    #define pa_KSPROPSETID_Pin                    KSPROPSETID_Pin
+#else
+    static const GUID pa_KSDATAFORMAT_TYPE_AUDIO            = { STATIC_KSDATAFORMAT_TYPE_AUDIO };
+    static const GUID pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT    = { STATIC_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT };
+    static const GUID pa_KSDATAFORMAT_SUBTYPE_PCM           = { STATIC_KSDATAFORMAT_SUBTYPE_PCM };
+    static const GUID pa_KSDATAFORMAT_SUBTYPE_WAVEFORMATEX  = { STATIC_KSDATAFORMAT_SUBTYPE_WAVEFORMATEX };
+    static const GUID pa_KSMEDIUMSETID_Standard             = { STATIC_KSMEDIUMSETID_Standard };
+    static const GUID pa_KSINTERFACESETID_Standard          = { STATIC_KSINTERFACESETID_Standard };
+    static const GUID pa_KSPROPSETID_Pin                    = { STATIC_KSPROPSETID_Pin };
+#endif
+
+
+#define pa_IS_VALID_WAVEFORMATEX_GUID(Guid)\
+    (!memcmp(((PUSHORT)&pa_KSDATAFORMAT_SUBTYPE_WAVEFORMATEX) + 1, ((PUSHORT)(Guid)) + 1, sizeof(GUID) - sizeof(USHORT)))
+
 
 
 static PaError WdmGetPinPropertySimple(
@@ -56,7 +91,7 @@ static PaError WdmGetPinPropertySimple(
 {
     DWORD bytesReturned;
     KSP_PIN ksPProp;
-    ksPProp.Property.Set = KSPROPSETID_Pin;
+    ksPProp.Property.Set = pa_KSPROPSETID_Pin;
     ksPProp.Property.Id = property;
     ksPProp.Property.Flags = KSPROPERTY_TYPE_GET;
     ksPProp.PinId = pinId;
@@ -86,7 +121,7 @@ static PaError WdmGetPinPropertyMulti(
 
     *ksMultipleItem = 0;
 
-    ksPProp.Property.Set = KSPROPSETID_Pin;
+    ksPProp.Property.Set = pa_KSPROPSETID_Pin;
     ksPProp.Property.Id = property;
     ksPProp.Property.Flags = KSPROPERTY_TYPE_GET;
     ksPProp.PinId = pinId;
@@ -151,20 +186,20 @@ static KSPIN_DATAFLOW GetKSFilterPinPropertyDataflow( HANDLE deviceHandle, int p
 }
 
 
-static int KSFilterPinPropertyIdentifiersInclude(
+static int KSFilterPinPropertyIdentifiersInclude( 
         HANDLE deviceHandle, int pinId, unsigned long property, const GUID *identifierSet, unsigned long identifierId  )
 {
     KSMULTIPLE_ITEM* item = NULL;
     KSIDENTIFIER* identifier;
-    size_t i;
+    int i;
     int result = 0;
 
     if( WdmGetPinPropertyMulti( deviceHandle, pinId, property, &item) != paNoError )
         return 0;
-
+    
     identifier = (KSIDENTIFIER*)(item+1);
 
-    for( i = 0; i < item->Count; i++ )
+    for( i = 0; i < (int)item->Count; i++ )
     {
         if( !memcmp( (void*)&identifier[i].Set, (void*)identifierSet, sizeof( GUID ) ) &&
            ( identifier[i].Id == identifierId ) )
@@ -180,17 +215,17 @@ static int KSFilterPinPropertyIdentifiersInclude(
 }
 
 
-/* return the maximum channel count supported by any pin on the device.
+/* return the maximum channel count supported by any pin on the device. 
    if isInput is non-zero we query input pins, otherwise output pins.
 */
 int PaWin_WDMKS_QueryFilterMaximumChannelCount( void *wcharDevicePath, int isInput )
 {
     HANDLE deviceHandle;
+	ULONG i;
     int pinCount, pinId;
     int result = 0;
-    size_t i;
     KSPIN_DATAFLOW requiredDataflowDirection = (isInput ? KSPIN_DATAFLOW_OUT : KSPIN_DATAFLOW_IN );
-
+    
     if( !wcharDevicePath )
         return 0;
 
@@ -205,13 +240,13 @@ int PaWin_WDMKS_QueryFilterMaximumChannelCount( void *wcharDevicePath, int isInp
         KSPIN_DATAFLOW dataflow = GetKSFilterPinPropertyDataflow( deviceHandle, pinId );
         if( ( dataflow == requiredDataflowDirection ) &&
                 (( communication == KSPIN_COMMUNICATION_SINK) ||
-                 ( communication == KSPIN_COMMUNICATION_BOTH))
-             && ( KSFilterPinPropertyIdentifiersInclude( deviceHandle, pinId,
-                    KSPROPERTY_PIN_INTERFACES, &KSINTERFACESETID_Standard, KSINTERFACE_STANDARD_STREAMING )
-                || KSFilterPinPropertyIdentifiersInclude( deviceHandle, pinId,
-                    KSPROPERTY_PIN_INTERFACES, &KSINTERFACESETID_Standard, KSINTERFACE_STANDARD_LOOPED_STREAMING ) )
-             && KSFilterPinPropertyIdentifiersInclude( deviceHandle, pinId,
-                    KSPROPERTY_PIN_MEDIUMS, &KSMEDIUMSETID_Standard, KSMEDIUM_STANDARD_DEVIO ) )
+                 ( communication == KSPIN_COMMUNICATION_BOTH)) 
+             && ( KSFilterPinPropertyIdentifiersInclude( deviceHandle, pinId, 
+                    KSPROPERTY_PIN_INTERFACES, &pa_KSINTERFACESETID_Standard, KSINTERFACE_STANDARD_STREAMING )
+                || KSFilterPinPropertyIdentifiersInclude( deviceHandle, pinId, 
+                    KSPROPERTY_PIN_INTERFACES, &pa_KSINTERFACESETID_Standard, KSINTERFACE_STANDARD_LOOPED_STREAMING ) )
+             && KSFilterPinPropertyIdentifiersInclude( deviceHandle, pinId, 
+                    KSPROPERTY_PIN_MEDIUMS, &pa_KSMEDIUMSETID_Standard, KSMEDIUM_STANDARD_DEVIO ) )
          {
             KSMULTIPLE_ITEM* item = NULL;
             if( WdmGetPinPropertyMulti( deviceHandle, pinId, KSPROPERTY_PIN_DATARANGES, &item ) == paNoError )
@@ -220,17 +255,17 @@ int PaWin_WDMKS_QueryFilterMaximumChannelCount( void *wcharDevicePath, int isInp
 
                 for( i=0; i < item->Count; ++i ){
 
-                    if( IS_VALID_WAVEFORMATEX_GUID(&dataRange->SubFormat)
-                            || memcmp( (void*)&dataRange->SubFormat, (void*)&KSDATAFORMAT_SUBTYPE_PCM, sizeof(GUID) ) == 0
-                            || memcmp( (void*)&dataRange->SubFormat, (void*)&KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, sizeof(GUID) ) == 0
-                            || ( ( memcmp( (void*)&dataRange->MajorFormat, (void*)&KSDATAFORMAT_TYPE_AUDIO, sizeof(GUID) ) == 0 )
+                    if( pa_IS_VALID_WAVEFORMATEX_GUID(&dataRange->SubFormat)
+                            || memcmp( (void*)&dataRange->SubFormat, (void*)&pa_KSDATAFORMAT_SUBTYPE_PCM, sizeof(GUID) ) == 0
+                            || memcmp( (void*)&dataRange->SubFormat, (void*)&pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, sizeof(GUID) ) == 0
+                            || ( ( memcmp( (void*)&dataRange->MajorFormat, (void*)&pa_KSDATAFORMAT_TYPE_AUDIO, sizeof(GUID) ) == 0 )
                                 && ( memcmp( (void*)&dataRange->SubFormat, (void*)&KSDATAFORMAT_SUBTYPE_WILDCARD, sizeof(GUID) ) == 0 ) ) )
                     {
                         KSDATARANGE_AUDIO *dataRangeAudio = (KSDATARANGE_AUDIO*)dataRange;
-
+                        
                         /*
                         printf( ">>> %d %d %d %d %S\n", isInput, dataflow, communication, dataRangeAudio->MaximumChannels, devicePath );
-
+                       
                         if( memcmp((void*)&dataRange->Specifier, (void*)&KSDATAFORMAT_SPECIFIER_WAVEFORMATEX, sizeof(GUID) ) == 0 )
                             printf( "\tspecifier: KSDATAFORMAT_SPECIFIER_WAVEFORMATEX\n" );
                         else if( memcmp((void*)&dataRange->Specifier, (void*)&KSDATAFORMAT_SPECIFIER_DSOUND, sizeof(GUID) ) == 0 )
@@ -248,7 +283,7 @@ int PaWin_WDMKS_QueryFilterMaximumChannelCount( void *wcharDevicePath, int isInp
                         if( dataRangeAudio->MaximumChannels  < 0xFFFFUL && (int)dataRangeAudio->MaximumChannels > result )
                             result = (int)dataRangeAudio->MaximumChannels;
                     }
-
+                    
                     dataRange = (KSDATARANGE*)( ((char*)dataRange) + dataRange->FormatSize);
                 }
 
@@ -256,7 +291,7 @@ int PaWin_WDMKS_QueryFilterMaximumChannelCount( void *wcharDevicePath, int isInp
             }
         }
     }
-
+    
     CloseHandle( deviceHandle );
     return result;
 }

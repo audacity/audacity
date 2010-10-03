@@ -1,7 +1,7 @@
 #ifndef PA_DITHER_H
 #define PA_DITHER_H
 /*
- * $Id: pa_dither.h,v 1.8 2008-12-31 15:38:32 richardash1981 Exp $
+ * $Id: pa_dither.h 1418 2009-10-12 21:00:53Z philburk $
  * Portable Audio I/O Library triangular dither generator
  *
  * Based on the Open Source API proposed by Ross Bencina
@@ -44,18 +44,24 @@
  @brief Functions for generating dither noise
 */
 
+#include "pa_types.h"
+
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif /* __cplusplus */
 
+/* Note that the linear congruential algorithm requires 32 bit integers
+ * because it uses arithmetic overflow. So use PaUint32 instead of
+ * unsigned long so it will work on 64 bit systems.
+ */
 
 /** @brief State needed to generate a dither signal */
 typedef struct PaUtilTriangularDitherGenerator{
-    unsigned long previous;
-    unsigned long randSeed1;
-    unsigned long randSeed2;
+    PaUint32 previous;
+    PaUint32 randSeed1;
+    PaUint32 randSeed2;
 } PaUtilTriangularDitherGenerator;
 
 
@@ -73,9 +79,9 @@ void PaUtil_InitializeTriangularDitherState( PaUtilTriangularDitherGenerator *di
     signed short out = (signed short)(((in>>1) + dither) >> 15);
 </pre>
  @return
- A signed long with a range of +32767 to -32768
+ A signed 32-bit integer with a range of +32767 to -32768
 */
-signed long PaUtil_Generate16BitTriangularDither( PaUtilTriangularDitherGenerator *ditherState );
+PaInt32 PaUtil_Generate16BitTriangularDither( PaUtilTriangularDitherGenerator *ditherState );
 
 
 /**

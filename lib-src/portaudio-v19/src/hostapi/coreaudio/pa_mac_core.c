@@ -249,7 +249,6 @@ static PaError AbortStream( PaStream *stream );
 static PaError IsStreamStopped( PaStream *s );
 static PaError IsStreamActive( PaStream *stream );
 static PaTime GetStreamTime( PaStream *stream );
-static void setStreamStartTime( PaStream *stream );
 static OSStatus AudioIOProc( void *inRefCon,
                                AudioUnitRenderActionFlags *ioActionFlags,
                                const AudioTimeStamp *inTimeStamp,
@@ -530,12 +529,27 @@ PaError PaMacCore_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIn
 {
     PaError result = paNoError;
     int i;
-    PaMacAUHAL *auhalHostApi;
+    PaMacAUHAL *auhalHostApi = NULL;
     PaDeviceInfo *deviceInfoArray;
     int unixErr;
 
     VVDBUG(("PaMacCore_Initialize(): hostApiIndex=%d\n", hostApiIndex));
-
+	
+	SInt32 major;
+	SInt32 minor;
+	Gestalt(gestaltSystemVersionMajor, &major);
+	Gestalt(gestaltSystemVersionMinor, &minor);
+	
+	// Starting with 10.6 systems, the HAL notification thread is created internally
+	if (major == 10 && minor >= 6) {
+		CFRunLoopRef theRunLoop = NULL;
+		AudioObjectPropertyAddress theAddress = { kAudioHardwarePropertyRunLoop, kAudioObjectPropertyScopeGlobal, kAudioObjectPropertyElementMaster };
+		OSStatus osErr = AudioObjectSetPropertyData (kAudioObjectSystemObject, &theAddress, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
+		if (osErr != noErr) {
+			goto error;
+		}
+	}
+	
     unixErr = initializeXRunListenerList();
     if( 0 != unixErr ) {
        return UNIX_ERR(unixErr);
@@ -782,6 +796,75 @@ static PaError IsFormatSupported( struct PaUtilHostApiRepresentation *hostApi,
 
     return paFormatIsSupported;
 }
+
+
+static void UpdateReciprocalOfActualOutputSampleRateFromDeviceProperty( PaMacCoreStream *stream )
+{
+	/* FIXME: not sure if this should be the sample rate of the output device or the output unit */
+	Float64 actualOutputSampleRate = stream->outDeviceSampleRate;
+	UInt32 propSize = sizeof(Float64);
+	OSStatus osErr = AudioDeviceGetProperty( stream->outputDevice, 0, /* isInput = */ FALSE, kAudioDevicePropertyActualSampleRate, &propSize, &actualOutputSampleRate);
+	if( osErr != noErr || actualOutputSampleRate < .01 ) // avoid divide by zero if there's an error
+		actualOutputSampleRate = stream->outDeviceSampleRate;
+	
+	stream->recipricalOfActualOutputSampleRate = 1. / actualOutputSampleRate;
+}
+
+static OSStatus AudioDevicePropertyActualSampleRateListenerProc( AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput, AudioDevicePropertyID inPropertyID, void *inClientData )
+{
+	PaMacCoreStream *stream = (PaMacCoreStream*)inClientData;
+	
+	pthread_mutex_lock( &stream->timingInformationMutex );
+	UpdateReciprocalOfActualOutputSampleRateFromDeviceProperty( stream );
+	pthread_mutex_unlock( &stream->timingInformationMutex );
+
+	return noErr;
+}
+
+static void UpdateOutputLatencySamplesFromDeviceProperty( PaMacCoreStream *stream )
+{
+	UInt32 deviceOutputLatencySamples = 0;
+	UInt32 propSize = sizeof(UInt32);
+	OSStatus osErr = AudioDeviceGetProperty( stream->outputDevice, 0, /* isInput= */ FALSE, kAudioDevicePropertyLatency, &propSize, &deviceOutputLatencySamples);
+	if( osErr != noErr )
+		deviceOutputLatencySamples = 0;
+	
+	stream->deviceOutputLatencySamples = deviceOutputLatencySamples;
+}
+
+static OSStatus AudioDevicePropertyOutputLatencySamplesListenerProc( AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput, AudioDevicePropertyID inPropertyID, void *inClientData )
+{
+	PaMacCoreStream *stream = (PaMacCoreStream*)inClientData;
+	
+	pthread_mutex_lock( &stream->timingInformationMutex );
+	UpdateOutputLatencySamplesFromDeviceProperty( stream );
+	pthread_mutex_unlock( &stream->timingInformationMutex );
+
+	return noErr;
+}
+
+static void UpdateInputLatencySamplesFromDeviceProperty( PaMacCoreStream *stream )
+{
+	UInt32 deviceInputLatencySamples = 0;
+	UInt32 propSize = sizeof(UInt32);
+	OSStatus osErr = AudioDeviceGetProperty( stream->inputDevice, 0, /* isInput= */ TRUE, kAudioDevicePropertyLatency, &propSize, &deviceInputLatencySamples);
+	if( osErr != noErr )
+		deviceInputLatencySamples = 0;
+	
+	stream->deviceInputLatencySamples = deviceInputLatencySamples;
+}
+
+static OSStatus AudioDevicePropertyInputLatencySamplesListenerProc( AudioDeviceID inDevice, UInt32 inChannel, Boolean isInput, AudioDevicePropertyID inPropertyID, void *inClientData )
+{
+	PaMacCoreStream *stream = (PaMacCoreStream*)inClientData;
+	
+	pthread_mutex_lock( &stream->timingInformationMutex );
+	UpdateInputLatencySamplesFromDeviceProperty( stream );
+	pthread_mutex_unlock( &stream->timingInformationMutex );
+
+	return noErr;
+}
+
 
 static PaError OpenAndSetupOneAudioUnit(
                                    const PaMacCoreStream *stream,
@@ -1341,6 +1424,7 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     stream->inputFramesPerBuffer = 0;
     stream->outputFramesPerBuffer = 0;
     stream->bufferProcessorIsInitialized = FALSE;
+	stream->timingInformationMutexIsInitialized = 0;
 
     /* assert( streamCallback ) ; */ /* only callback mode is implemented */
     if( streamCallback )
@@ -1641,7 +1725,39 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     stream->userInChan  = inputChannelCount;
     stream->userOutChan = outputChannelCount;
 
-    stream->isTimeSet   = FALSE;
+	pthread_mutex_init( &stream->timingInformationMutex, NULL );
+	stream->timingInformationMutexIsInitialized = 1;
+	
+	if( stream->outputUnit ) {
+		UpdateReciprocalOfActualOutputSampleRateFromDeviceProperty( stream );
+		stream->recipricalOfActualOutputSampleRate_ioProcCopy = stream->recipricalOfActualOutputSampleRate;
+		
+		AudioDeviceAddPropertyListener( stream->outputDevice, 0, /* isInput = */ FALSE, kAudioDevicePropertyActualSampleRate, 
+									   AudioDevicePropertyActualSampleRateListenerProc, stream );
+									   		
+		UpdateOutputLatencySamplesFromDeviceProperty( stream );
+		stream->deviceOutputLatencySamples_ioProcCopy = stream->deviceOutputLatencySamples;
+		
+		AudioDeviceAddPropertyListener( stream->outputDevice, 0, /* isInput = */ FALSE, kAudioDevicePropertyLatency, 
+									   AudioDevicePropertyOutputLatencySamplesListenerProc, stream );
+		
+	}else{
+		stream->recipricalOfActualOutputSampleRate = 1.;
+		stream->recipricalOfActualOutputSampleRate_ioProcCopy = 0.;
+		stream->deviceOutputLatencySamples_ioProcCopy = 0;
+	}
+	
+	if( stream->inputUnit ) {
+		UpdateInputLatencySamplesFromDeviceProperty( stream );
+		stream->deviceInputLatencySamples_ioProcCopy = stream->deviceInputLatencySamples;
+		
+		AudioDeviceAddPropertyListener( stream->inputDevice, 0, /* isInput = */ TRUE, kAudioDevicePropertyLatency, 
+									   AudioDevicePropertyInputLatencySamplesListenerProc, stream );
+	}else{
+		stream->deviceInputLatencySamples = 0;
+		stream->deviceInputLatencySamples_ioProcCopy = 0;
+	}
+	
     stream->state = STOPPED;
     stream->xrunFlags = 0;
 
@@ -1654,56 +1770,12 @@ error:
     return result;
 }
 
+
+#define HOST_TIME_TO_PA_TIME( x ) ( AudioConvertHostTimeToNanos( (x) ) * 1.0E-09) /* convert to nanoseconds and then to seconds */
+
 PaTime GetStreamTime( PaStream *s )
 {
-   /* FIXME: I am not at all sure this timing info stuff is right.
-             patest_sine_time reports negative latencies, which is wierd.*/
-    PaMacCoreStream *stream = (PaMacCoreStream*)s;
-    AudioTimeStamp timeStamp;
-
-    VVDBUG(("GetStreamTime()\n"));
-
-    if ( !stream->isTimeSet )
-        return (PaTime)0;
-
-    if ( stream->outputDevice ) {
-        AudioDeviceGetCurrentTime( stream->outputDevice, &timeStamp);
-        return (PaTime)(timeStamp.mSampleTime - stream->startTime.mSampleTime)/stream->outDeviceSampleRate;
-    } else if ( stream->inputDevice ) {
-        AudioDeviceGetCurrentTime( stream->inputDevice, &timeStamp);
-    return (PaTime)(timeStamp.mSampleTime - stream->startTime.mSampleTime)/stream->inDeviceSampleRate;
-    } else {
-        return (PaTime)0;
-    }
-}
-
-static void setStreamStartTime( PaStream *stream )
-{
-   /* FIXME: I am not at all sure this timing info stuff is right.
-             patest_sine_time reports negative latencies, which is wierd.*/
-   PaMacCoreStream *s = (PaMacCoreStream *) stream;
-   VVDBUG(("setStreamStartTime()\n"));
-   if( s->outputDevice )
-      AudioDeviceGetCurrentTime( s->outputDevice, &s->startTime);
-   else if( s->inputDevice )
-      AudioDeviceGetCurrentTime( s->inputDevice, &s->startTime);
-   else
-      bzero( &s->startTime, sizeof( s->startTime ) );
-
-   //FIXME: we need a memory barier here
-
-   s->isTimeSet = TRUE;
-}
-
-
-static PaTime TimeStampToSecs(PaMacCoreStream *stream, const AudioTimeStamp* timeStamp)
-{
-    VVDBUG(("TimeStampToSecs()\n"));
-    //printf( "ATS: %lu, %g, %g\n", timeStamp->mFlags, timeStamp->mSampleTime, timeStamp->mRateScalar );
-    if (timeStamp->mFlags & kAudioTimeStampSampleTimeValid)
-        return (timeStamp->mSampleTime / stream->sampleRate);
-    else
-        return 0;
+	return HOST_TIME_TO_PA_TIME( AudioGetCurrentHostTime() ); 
 }
 
 #define RING_BUFFER_EMPTY (1000)
@@ -1714,19 +1786,19 @@ static OSStatus ringBufferIOProc( AudioConverterRef inAudioConverter,
                              void*inUserData )
 {
    void *dummyData;
-   long dummySize;
+   ring_buffer_size_t dummySize;
    PaUtilRingBuffer *rb = (PaUtilRingBuffer *) inUserData;
 
    VVDBUG(("ringBufferIOProc()\n"));
 
-   assert( sizeof( UInt32 ) == sizeof( long ) );
    if( PaUtil_GetRingBufferReadAvailable( rb ) == 0 ) {
       *outData = NULL;
       *ioDataSize = 0;
       return RING_BUFFER_EMPTY;
    }
+   assert(sizeof(UInt32) == sizeof(ring_buffer_size_t));
    PaUtil_GetRingBufferReadRegions( rb, *ioDataSize,
-                                    outData, (long *)ioDataSize, 
+                                    outData, (ring_buffer_size_t *)ioDataSize, 
                                     &dummyData, &dummySize );
       
    assert( *ioDataSize );
@@ -1784,24 +1856,68 @@ static OSStatus AudioIOProc( void *inRefCon,
    }
       ----------------------------------------------------------------- */
 
-   if( !stream->isTimeSet )
-      setStreamStartTime( stream );
-
-   if( isRender ) {
-      AudioTimeStamp currentTime;
-      timeInfo.outputBufferDacTime = TimeStampToSecs(stream, inTimeStamp);
-      AudioDeviceGetCurrentTime(stream->outputDevice, &currentTime);
-      timeInfo.currentTime = TimeStampToSecs(stream, &currentTime);
-   }
-   if( isRender && stream->inputUnit == stream->outputUnit )
-      timeInfo.inputBufferAdcTime = TimeStampToSecs(stream, inTimeStamp);
-   if( !isRender ) {
-      AudioTimeStamp currentTime;
-      timeInfo.inputBufferAdcTime = TimeStampToSecs(stream, inTimeStamp);
-      AudioDeviceGetCurrentTime(stream->inputDevice, &currentTime);
-      timeInfo.currentTime = TimeStampToSecs(stream, &currentTime);
-   }
-
+	/* compute PaStreamCallbackTimeInfo */
+	
+	if( pthread_mutex_trylock( &stream->timingInformationMutex ) == 0 ){
+		/* snapshot the ioproc copy of timing information */
+		stream->deviceOutputLatencySamples_ioProcCopy = stream->deviceOutputLatencySamples;
+		stream->recipricalOfActualOutputSampleRate_ioProcCopy = stream->recipricalOfActualOutputSampleRate;
+		stream->deviceInputLatencySamples_ioProcCopy = stream->deviceInputLatencySamples;
+		pthread_mutex_unlock( &stream->timingInformationMutex );
+	}
+	
+	/* For timeInfo.currentTime we could calculate current time backwards from the HAL audio 
+	 output time to give a more accurate impression of the current timeslice but it doesn't 
+	 seem worth it at the moment since other PA host APIs don't do any better.
+	 */
+	timeInfo.currentTime = HOST_TIME_TO_PA_TIME( AudioGetCurrentHostTime() );
+	
+	/*
+	 For an input HAL AU, inTimeStamp is the time the samples are received from the hardware,
+	 for an output HAL AU inTimeStamp is the time the samples are sent to the hardware. 
+	 PA expresses timestamps in terms of when the samples enter the ADC or leave the DAC
+	 so we add or subtract kAudioDevicePropertyLatency below.
+	 */
+	
+	/* FIXME: not sure what to do below if the host timestamps aren't valid (kAudioTimeStampHostTimeValid isn't set)
+	 Could ask on CA mailing list if it is possible for it not to be set. If so, could probably grab a now timestamp
+	 at the top and compute from there (modulo scheduling jitter) or ask on mailing list for other options. */
+	
+	if( isRender )
+	{
+		if( stream->inputUnit ) /* full duplex */
+		{
+			if( stream->inputUnit == stream->outputUnit ) /* full duplex AUHAL IOProc */
+			{
+				/* FIXME: review. i'm not sure this computation of inputBufferAdcTime is correct for a full-duplex AUHAL */
+				timeInfo.inputBufferAdcTime = HOST_TIME_TO_PA_TIME(inTimeStamp->mHostTime) 
+						- stream->deviceInputLatencySamples_ioProcCopy * stream->recipricalOfActualOutputSampleRate_ioProcCopy; // FIXME should be using input sample rate here?
+				timeInfo.outputBufferDacTime = HOST_TIME_TO_PA_TIME(inTimeStamp->mHostTime) 
+						+ stream->deviceOutputLatencySamples_ioProcCopy * stream->recipricalOfActualOutputSampleRate_ioProcCopy;
+			}
+			else /* full duplex with ring-buffer from a separate input AUHAL ioproc */
+			{
+				/* FIXME: review. this computation of inputBufferAdcTime is definitely wrong since it doesn't take the ring buffer latency into account */
+				timeInfo.inputBufferAdcTime = HOST_TIME_TO_PA_TIME(inTimeStamp->mHostTime) 
+						- stream->deviceInputLatencySamples_ioProcCopy * stream->recipricalOfActualOutputSampleRate_ioProcCopy; // FIXME should be using input sample rate here?
+				timeInfo.outputBufferDacTime = HOST_TIME_TO_PA_TIME(inTimeStamp->mHostTime)
+						+ stream->deviceOutputLatencySamples_ioProcCopy * stream->recipricalOfActualOutputSampleRate_ioProcCopy;
+			}
+		}
+		else /* output only */
+		{
+			timeInfo.inputBufferAdcTime = 0;
+			timeInfo.outputBufferDacTime = HOST_TIME_TO_PA_TIME(inTimeStamp->mHostTime)
+					+ stream->deviceOutputLatencySamples_ioProcCopy * stream->recipricalOfActualOutputSampleRate_ioProcCopy;
+		}
+	}
+	else /* input only */
+	{
+		timeInfo.inputBufferAdcTime = HOST_TIME_TO_PA_TIME(inTimeStamp->mHostTime) 
+				- stream->deviceInputLatencySamples_ioProcCopy * stream->recipricalOfActualOutputSampleRate_ioProcCopy; // FIXME should be using input sample rate here?
+		timeInfo.outputBufferDacTime = 0;
+	}
+	
    //printf( "---%g, %g, %g\n", timeInfo.inputBufferAdcTime, timeInfo.currentTime, timeInfo.outputBufferDacTime );
 
    if( isRender && stream->inputUnit == stream->outputUnit
@@ -1938,7 +2054,7 @@ static OSStatus AudioIOProc( void *inRefCon,
                because we have to do a little buffer processing that the
                AudioConverter would otherwise handle for us. */
             void *data1, *data2;
-            long size1, size2;
+            ring_buffer_size_t size1, size2;
             PaUtil_GetRingBufferReadRegions( &stream->inputRingBuffer,
                                              inChan*frames*flsz,
                                              &data1, &size1,
@@ -2113,7 +2229,6 @@ static OSStatus AudioIOProc( void *inRefCon,
    case paContinue: break;
    case paComplete:
    case paAbort:
-      stream->isTimeSet = FALSE;
       stream->state = CALLBACK_STOPPED ;
       if( stream->outputUnit )
          AudioOutputUnitStop(stream->outputUnit);
@@ -2142,6 +2257,19 @@ static PaError CloseStream( PaStream* s )
     VDBUG( ( "Closing stream.\n" ) );
 
     if( stream ) {
+		
+		if( stream->outputUnit ) {
+			AudioDeviceRemovePropertyListener( stream->outputDevice, 0, /* isInput = */ FALSE, kAudioDevicePropertyActualSampleRate, 
+											  AudioDevicePropertyActualSampleRateListenerProc );
+			AudioDeviceRemovePropertyListener( stream->outputDevice, 0, /* isInput = */ FALSE, kAudioDevicePropertyLatency, 
+											  AudioDevicePropertyOutputLatencySamplesListenerProc );
+		}
+		
+		if( stream->inputUnit ) {
+			AudioDeviceRemovePropertyListener( stream->inputDevice, 0, /* isInput = */ TRUE, kAudioDevicePropertyLatency, 
+											  AudioDevicePropertyInputLatencySamplesListenerProc );
+		}
+		
        if( stream->outputUnit ) {
           int count = removeFromXRunListenerList( stream );
           if( count == 0 )
@@ -2188,6 +2316,10 @@ static PaError CloseStream( PaStream* s )
           return result;
        if( stream->bufferProcessorIsInitialized )
           PaUtil_TerminateBufferProcessor( &stream->bufferProcessor );
+		
+       if( stream->timingInformationMutexIsInitialized )
+          pthread_mutex_destroy( &stream->timingInformationMutex );
+
        PaUtil_TerminateStreamRepresentation( &stream->streamRepresentation );
        PaUtil_FreeMemory( stream );
     }
@@ -2217,10 +2349,7 @@ static PaError StartStream( PaStream *s )
     if( stream->outputUnit && stream->outputUnit != stream->inputUnit ) {
        ERR_WRAP( AudioOutputUnitStart(stream->outputUnit) );
     }
-
-    //setStreamStartTime( stream );
-    //stream->isTimeSet = TRUE;
-
+	
     return paNoError;
 #undef ERR_WRAP
 }
@@ -2251,7 +2380,6 @@ static PaError StopStream( PaStream *s )
     waitUntilBlioWriteBufferIsFlushed( &stream->blio );
     VDBUG( ( "Stopping stream.\n" ) );
 
-    stream->isTimeSet = FALSE;
     stream->state = STOPPING;
 
 #define ERR_WRAP(mac_err) do { result = mac_err ; if ( result != noErr ) return ERR(result) ; } while(0)
@@ -2298,10 +2426,6 @@ static PaError StopStream( PaStream *s )
     paErr = resetBlioRingBuffers( &stream->blio );
     if( paErr )
        return paErr;
-
-/*
-    //stream->isTimeSet = FALSE;
-*/
 
     VDBUG( ( "Stream Stopped.\n" ) );
     return paNoError;

@@ -1,7 +1,7 @@
 #ifndef PA_PROCESS_H
 #define PA_PROCESS_H
 /*
- * $Id: pa_process.h,v 1.8 2008-12-31 15:38:32 richardash1981 Exp $
+ * $Id: pa_process.h 1523 2010-07-10 17:41:25Z dmitrykos $
  * Portable Audio I/O Library callback buffer processing adapters
  *
  * Based on the Open Source API proposed by Ross Bencina
@@ -256,6 +256,8 @@ typedef struct {
 
     PaUtilHostBufferSizeMode hostBufferSizeMode;
     int useNonAdaptingProcess;
+    int userOutputSampleFormatIsEqualToHost;
+    int userInputSampleFormatIsEqualToHost;
     unsigned long framesPerTempBuffer;
 
     unsigned int inputChannelCount;
@@ -287,12 +289,14 @@ typedef struct {
 
     PaStreamCallbackFlags callbackStatusFlags;
 
+    int hostInputIsInterleaved;
     unsigned long hostInputFrameCount[2];
     PaUtilChannelDescriptor *hostInputChannels[2]; /**< pointers to arrays of channel descriptors.
                                                         pointers are NULL for half-duplex output processing.
                                                         hostInputChannels[i].data is NULL when the caller
                                                         calls PaUtil_SetNoInput()
                                                         */
+    int hostOutputIsInterleaved;
     unsigned long hostOutputFrameCount[2];
     PaUtilChannelDescriptor *hostOutputChannels[2]; /**< pointers to arrays of channel descriptors.
                                                          pointers are NULL for half-duplex input processing.

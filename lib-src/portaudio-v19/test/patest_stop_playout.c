@@ -6,7 +6,7 @@
 	@author Ross Bencina <rossb@audiomulch.com>
 */
 /*
- * $Id: patest_stop_playout.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_stop_playout.c 1446 2010-01-24 12:27:31Z rossb $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/
@@ -331,16 +331,14 @@ int main(void)
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
 
-
     printf("\nPlaying 'tone-blip' %d times using callback, stops by returning paComplete from callback.\n", NUM_REPEATS );
     printf("If final blip is not intact, callback+paComplete implementation may be faulty.\n\n" );
 
     while( (err = Pa_IsStreamActive( stream )) == 1 )
-        Pa_Sleep( 5 );
+        Pa_Sleep( 2 );
 
     if( err != 0 ) goto error;
 
-    
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;
 
@@ -348,6 +346,45 @@ int main(void)
     if( err != paNoError ) goto error;
 
     Pa_Sleep( 500 );
+
+
+/* test paComplete ---------------------------------------------------------- */
+
+    ResetTestSignalGenerator( &data );
+
+    err = Pa_OpenStream(
+              &stream,
+              NULL, /* no input */
+              &outputParameters,
+              SAMPLE_RATE,
+              FRAMES_PER_BUFFER,
+              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+              TestCallback1,
+              &data );
+    if( err != paNoError ) goto error;
+
+    err = Pa_StartStream( stream );
+    if( err != paNoError ) goto error;
+
+    printf("\nPlaying 'tone-blip' %d times using callback, stops by returning paComplete from callback.\n", NUM_REPEATS );
+    printf("If final blip is not intact or is followed by garbage, callback+paComplete implementation may be faulty.\n\n" );
+
+    while( (err = Pa_IsStreamActive( stream )) == 1 )
+        Pa_Sleep( 5 );
+
+    printf("Waiting 5 seconds after paComplete before stopping the stream. Tests that buffers are flushed correctly.\n");
+    Pa_Sleep( 5000 );
+
+    if( err != 0 ) goto error;
+
+    err = Pa_StopStream( stream );
+    if( err != paNoError ) goto error;
+
+    err = Pa_CloseStream( stream );
+    if( err != paNoError ) goto error;
+
+    Pa_Sleep( 500 );
+
 
 /* test Pa_StopStream() with callback --------------------------------------- */
 
@@ -377,6 +414,8 @@ int main(void)
         the callback, but it's the best we can do portably. */
     while( !testCallback2Finished )
         Pa_Sleep( 2 );
+
+    Pa_Sleep( 500 );
 
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;

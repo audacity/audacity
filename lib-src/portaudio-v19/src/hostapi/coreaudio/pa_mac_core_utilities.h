@@ -143,18 +143,6 @@ long computeRingBufferSize( const PaStreamParameters *inputParameters,
                                    long outputFramesPerBuffer,
                                    double sampleRate );
 
-/*
- * Durring testing of core audio, I found that serious crashes could occur
- * if properties such as sample rate were changed multiple times in rapid
- * succession. The function below has some fancy logic to make sure that changes
- * are acknowledged before another is requested. That seems to help a lot.
- */
-
-typedef struct {
-   bool once; /* I didn't end up using this. bdr */
-   pthread_mutex_t mutex;
-} MutexAndBool ;
-
 OSStatus propertyProc(
     AudioDeviceID inDevice, 
     UInt32 inChannel, 

@@ -1,5 +1,5 @@
 /*
- * $Id: pa_asio.cpp,v 1.10 2009-07-01 19:28:02 richardash1981 Exp $
+ * $Id: pa_asio.cpp 1525 2010-07-14 06:45:25Z rossb $
  * Portable Audio I/O Library for ASIO Drivers
  *
  * Author: Stephane Letz
@@ -167,6 +167,12 @@
 /*
 #endif
 */
+
+
+/* winmm.lib is needed for timeGetTime() (this is in winmm.a if you're using gcc) */
+#if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) /* MSC version 6 and above */
+#pragma comment(lib, "winmm.lib")
+#endif
 
 
 /* external reference to ASIO SDK's asioDrivers.
@@ -1164,7 +1170,7 @@ PaError PaAsio_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex
             goto error;
         }
 
-        IsDebuggerPresent_ = GetProcAddress( LoadLibrary( "Kernel32.dll" ), "IsDebuggerPresent" );
+        IsDebuggerPresent_ = (IsDebuggerPresentPtr)GetProcAddress( LoadLibrary( "Kernel32.dll" ), "IsDebuggerPresent" );
 
         for( i=0; i < driverCount; ++i )
         {
@@ -2528,8 +2534,8 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     else /* Using callback interface... */
     {
         result =  PaUtil_InitializeBufferProcessor( &stream->bufferProcessor,
-                        inputChannelCount, inputSampleFormat, hostInputSampleFormat,
-                        outputChannelCount, outputSampleFormat, hostOutputSampleFormat,
+                        inputChannelCount, inputSampleFormat, (hostInputSampleFormat | paNonInterleaved),
+                        outputChannelCount, outputSampleFormat, (hostOutputSampleFormat | paNonInterleaved),
                         sampleRate, streamFlags, framesPerBuffer,
                         framesPerHostBuffer, paUtilFixedHostBufferSize,
                         streamCallback, userData );

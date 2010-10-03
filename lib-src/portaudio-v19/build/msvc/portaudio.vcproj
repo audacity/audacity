@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="portaudio"
 	ProjectGUID="{0A18A071-125E-442F-AFF7-A3F68ABECF99}"
+	RootNamespace="portaudio"
 	>
 	<Platforms>
 		<Platform
@@ -50,7 +51,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -79,6 +82,7 @@
 				OutputFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories=""
 				ModuleDefinitionFile=".\portaudio.def"
 				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.pdb"
 				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x86.lib"
@@ -145,8 +149,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
-				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
+				PreprocessorDefinitions="_WIN64;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -174,6 +180,7 @@
 				OutputFile="$(PlatformName)\$(ConfigurationName)\portaudio_x64.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories=""
 				ModuleDefinitionFile=".\portaudio.def"
 				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)/portaudio_x64.pdb"
 				ImportLibrary="$(PlatformName)\$(ConfigurationName)/portaudio_x64.lib"
@@ -239,7 +246,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
+				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
 				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -336,7 +343,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
-				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO"
+				PreprocessorDefinitions="_WIN64;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -719,7 +726,6 @@
 							PreprocessorDefinitions=""
 						/>
 					</FileConfiguration>
-
 					<FileConfiguration
 						Name="Debug|x64"
 						>
@@ -945,6 +951,7 @@
 							>
 							<FileConfiguration
 								Name="Release|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -954,6 +961,7 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Release|x64"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -963,6 +971,7 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Debug|Win32"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -972,6 +981,7 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Debug|x64"
+								ExcludedFromBuild="true"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1314,44 +1324,8 @@
 					Name="wasapi"
 					>
 					<File
-						RelativePath="..\..\src\hostapi\wasapi\pa_win_wasapi.cpp"
+						RelativePath="..\..\src\hostapi\wasapi\pa_win_wasapi.c"
 						>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AdditionalIncludeDirectories=""
-								PreprocessorDefinitions=""
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|x64"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AdditionalIncludeDirectories=""
-								PreprocessorDefinitions=""
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AdditionalIncludeDirectories=""
-								PreprocessorDefinitions=""
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Debug|x64"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								AdditionalIncludeDirectories=""
-								PreprocessorDefinitions=""
-							/>
-						</FileConfiguration>
 					</File>
 				</Filter>
 			</Filter>

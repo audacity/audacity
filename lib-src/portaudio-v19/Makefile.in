@@ -3,6 +3,7 @@
 #
 # Dominic Mazzoni
 # Modifications by Mikael Magnusson
+# Modifications by Stelios Bounanos
 #
 
 top_srcdir = @top_srcdir@
@@ -16,6 +17,7 @@ bindir = @bindir@
 libdir = @libdir@
 includedir = @includedir@
 CC = @CC@
+CXX = @CXX@
 CFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/src/common -I$(top_srcdir)/src/os/unix @CFLAGS@ @DEFS@
 LIBS = @LIBS@
 AR = @AR@
@@ -40,7 +42,7 @@ PALIB = libportaudio.la
 PAINC = include/portaudio.h
 
 PA_LDFLAGS = $(LDFLAGS) -rpath $(libdir) -no-undefined \
-	     -export-symbols-regex "(Pa|PaMacCore|PaJack|PaAlsa)_.*" \
+	     -export-symbols-regex "(Pa|PaMacCore|PaJack|PaAlsa|PaAsio)_.*" \
 	     -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 COMMON_OBJS = \
@@ -84,6 +86,7 @@ TESTS = \
 	bin/patest_sine_channelmaps \
 	bin/patest_sine_formats \
 	bin/patest_sine_time \
+	bin/patest_sine_srate \
 	bin/patest_start_stop \
 	bin/patest_stop \
 	bin/patest_stop_playout \
@@ -141,11 +144,14 @@ all: lib/$(PALIB) all-recursive tests
 tests: bin-stamp $(TESTS)
 
 
+# With ASIO enabled we must link libportaudio and all test programs with CXX
 lib/$(PALIB): lib-stamp $(LTOBJS) $(MAKEFILE) $(PAINC)
-	$(LIBTOOL) --mode=link $(CC) $(PA_LDFLAGS) -o lib/$(PALIB) $(LTOBJS) $(DLL_LIBS)
+	@WITH_ASIO_FALSE@ $(LIBTOOL) --mode=link $(CC) $(PA_LDFLAGS) -o lib/$(PALIB) $(LTOBJS) $(DLL_LIBS)
+	@WITH_ASIO_TRUE@  $(LIBTOOL) --mode=link --tag=CXX $(CXX) $(PA_LDFLAGS) -o lib/$(PALIB) $(LTOBJS) $(DLL_LIBS)
 
 $(ALL_TESTS): bin/%: lib/$(PALIB) $(MAKEFILE) $(PAINC) test/%.c
-	$(LIBTOOL) --mode=link $(CC) -o $@ $(CFLAGS) $(top_srcdir)/test/$*.c lib/$(PALIB) $(LIBS)
+	@WITH_ASIO_FALSE@ $(LIBTOOL) --mode=link $(CC) -o $@ $(CFLAGS) $(top_srcdir)/test/$*.c lib/$(PALIB) $(LIBS)
+	@WITH_ASIO_TRUE@  $(LIBTOOL) --mode=link --tag=CXX $(CXX) -o $@ $(CXXFLAGS) $(top_srcdir)/test/$*.c lib/$(PALIB) $(LIBS)
 
 
 install: lib/$(PALIB) portaudio-2.0.pc
@@ -185,6 +191,9 @@ distclean: clean
 
 %.lo: %.c $(MAKEFILE) $(PAINC)
 	$(LIBTOOL) --mode=compile $(CC) -c $(CFLAGS) $< -o $@
+
+%.lo: %.cpp $(MAKEFILE) $(PAINC)
+	$(LIBTOOL) --mode=compile --tag=CXX $(CXX) -c $(CXXFLAGS) $< -o $@
 
 %.o: %.cpp $(MAKEFILE) $(PAINC)
 	$(CXX) -c $(CXXFLAGS) $< -o $@

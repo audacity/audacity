@@ -1,5 +1,5 @@
 /*
- * $Id: pa_dither.c,v 1.8 2008-12-31 15:38:32 richardash1981 Exp $
+ * $Id: pa_dither.c 1418 2009-10-12 21:00:53Z philburk $
  * Portable Audio I/O Library triangular dither generator
  *
  * Based on the Open Source API proposed by Ross Bencina
@@ -42,9 +42,14 @@
  @brief Functions for generating dither noise
 */
 
-
-#include "pa_dither.h"
 #include "pa_types.h"
+#include "pa_dither.h"
+
+
+/* Note that the linear congruential algorithm requires 32 bit integers
+ * because it uses arithmetic overflow. So use PaUint32 instead of
+ * unsigned long so it will work on 64 bit systems.
+ */
 
 #define PA_DITHER_BITS_   (15)
 
@@ -57,9 +62,9 @@ void PaUtil_InitializeTriangularDitherState( PaUtilTriangularDitherGenerator *st
 }
 
 
-signed long PaUtil_Generate16BitTriangularDither( PaUtilTriangularDitherGenerator *state )
+PaInt32 PaUtil_Generate16BitTriangularDither( PaUtilTriangularDitherGenerator *state )
 {
-    signed long current, highPass;
+    PaInt32 current, highPass;
 
     /* Generate two random numbers. */
     state->randSeed1 = (state->randSeed1 * 196314165) + 907633515;
@@ -69,9 +74,10 @@ signed long PaUtil_Generate16BitTriangularDither( PaUtilTriangularDitherGenerato
      * Shift before adding to prevent overflow which would skew the distribution.
      * Also shift an extra bit for the high pass filter. 
      */
-#define DITHER_SHIFT_  ((SIZEOF_LONG*8 - PA_DITHER_BITS_) + 1)
-    current = (((signed long)state->randSeed1)>>DITHER_SHIFT_) +
-              (((signed long)state->randSeed2)>>DITHER_SHIFT_);
+#define DITHER_SHIFT_  ((sizeof(PaInt32)*8 - PA_DITHER_BITS_) + 1)
+	
+    current = (((PaInt32)state->randSeed1)>>DITHER_SHIFT_) +
+              (((PaInt32)state->randSeed2)>>DITHER_SHIFT_);
 
     /* High pass filter to reduce audibility. */
     highPass = current - state->previous;
@@ -86,7 +92,7 @@ static const float const_float_dither_scale_ = PA_FLOAT_DITHER_SCALE_;
 
 float PaUtil_GenerateFloatTriangularDither( PaUtilTriangularDitherGenerator *state )
 {
-    signed long current, highPass;
+    PaInt32 current, highPass;
 
     /* Generate two random numbers. */
     state->randSeed1 = (state->randSeed1 * 196314165) + 907633515;
@@ -96,9 +102,8 @@ float PaUtil_GenerateFloatTriangularDither( PaUtilTriangularDitherGenerator *sta
      * Shift before adding to prevent overflow which would skew the distribution.
      * Also shift an extra bit for the high pass filter. 
      */
-#define DITHER_SHIFT_  ((SIZEOF_LONG*8 - PA_DITHER_BITS_) + 1)
-    current = (((signed long)state->randSeed1)>>DITHER_SHIFT_) +
-              (((signed long)state->randSeed2)>>DITHER_SHIFT_);
+    current = (((PaInt32)state->randSeed1)>>DITHER_SHIFT_) +
+              (((PaInt32)state->randSeed2)>>DITHER_SHIFT_);
 
     /* High pass filter to reduce audibility. */
     highPass = current - state->previous;

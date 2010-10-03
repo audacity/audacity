@@ -14,6 +14,8 @@ This DLL contains all 3 current win32 PA APIS (MM/DS/ASIO)
   portaudio19svn\src\hostapi\asio\ASIOSDK\host\mac (not needed)
   
   You dont need "driver"
+
+  To build without ASIO (or another Host API) see the "Building without ASIO support" section below.
   
 2)
   *If you have Visual Studio 6.0*, please make sure you have it updated with the latest (and final)
@@ -75,6 +77,33 @@ PaUtil_InitializeX86PlainConverters @52
 PaAsio_GetInputChannelName          @53
 PaAsio_GetOutputChannelName         @54
 PaUtil_SetLogPrintFunction          @55
+
+
+*** Building without ASIO support ***
+
+To build PortAudio without ASIO support you need to:
+  A. Make sure your project doesn't try to build any ASIO SDK files.
+     If you're using one of the shipped projects, remove the ASIO related files 
+     from the project.
+
+  B. Make sure your project doesn't try to build the PortAudio ASIO
+     implementation files:
+	 src/hostapi/pa_asio.cpp src/hostapi/iasiothiscallresolver.cpp
+     If you're using one of the shipped projects remove them from the project.
+
+  C. Define the PA_NO_ASIO preprocessor symbol in the project properties.
+     In VS2005 this can be added under
+     Project Properties > Configuration Properties > C/C++ > Preprocessor > Preprocessor Definitions
+
+     Defining PA_NO_ASIO stops src/os/win/pa_win_hostapis.c 
+     from trying to initialize the PA ASIO implementation.
+
+  D. Remove PaAsio_* entry points from portaudio.def
+
+A similar procedure can be used to omit any of the other host APIs from the 
+build. The relevant preprocessor symbols used by pa_win_hostapis.c are:
+PA_NO_WMME, PA_NO_DS, PA_NO_ASIO, PA_NO_WASAPI and PA_NO_WDMKS
+
 
 -----
 David Viens, davidv@plogue.com

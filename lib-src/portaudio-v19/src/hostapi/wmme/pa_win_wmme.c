@@ -1,5 +1,5 @@
 /*
- * $Id: pa_win_wmme.c,v 1.9 2009-05-25 21:40:16 richardash1981 Exp $
+ * $Id: pa_win_wmme.c 1432 2009-12-09 01:31:44Z rossb $
  * pa_win_wmme.c
  * Implementation of PortAudio for Windows MultiMedia Extensions (WMME)       
  *                                                                                         
@@ -152,13 +152,16 @@ Non-critical stuff for the future:
 #endif /* PAWIN_USE_WDMKS_DEVICE_INFO */
 
 /* use CreateThread for CYGWIN, _beginthreadex for all others */
-#ifndef __CYGWIN__
+#if !defined(__CYGWIN__) && !defined(_WIN32_WCE)
 #define CREATE_THREAD (HANDLE)_beginthreadex( 0, 0, ProcessingThreadProc, stream, 0, &stream->processingThreadId )
+#define PA_THREAD_FUNC static unsigned WINAPI
+#define PA_THREAD_ID unsigned
 #else
 #define CREATE_THREAD CreateThread( 0, 0, ProcessingThreadProc, stream, 0, &stream->processingThreadId )
+#define PA_THREAD_FUNC static DWORD WINAPI
+#define PA_THREAD_ID DWORD
 #endif
-
-#if (defined(UNDER_CE))
+#if (defined(_WIN32_WCE))
 #pragma comment(lib, "Coredll.lib")
 #elif (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) /* MSC version 6 and above */
 #pragma comment(lib, "winmm.lib")
@@ -168,7 +171,11 @@ Non-critical stuff for the future:
  provided in newer platform sdks
  */
 #ifndef DWORD_PTR
-#define DWORD_PTR DWORD
+    #if defined(_WIN64)
+        #define DWORD_PTR unsigned __int64
+    #else
+        #define DWORD_PTR unsigned long
+    #endif
 #endif
 
 /************************************************* Constants ********/
@@ -204,6 +211,34 @@ Non-critical stuff for the future:
 
 static const char constInputMapperSuffix_[] = " - Input";
 static const char constOutputMapperSuffix_[] = " - Output";
+
+/*
+copies TCHAR string to explicit char string
+*/
+char *StrTCpyToC(char *to, const TCHAR *from)
+{
+#if !defined(_UNICODE) && !defined(UNICODE)
+	return strcpy(to, from);
+#else
+	int count = wcslen(from);
+	if (count != 0)
+		if (WideCharToMultiByte(CP_ACP, 0, from, count, to, count, NULL, NULL) == 0)
+			return NULL;
+	return to;
+#endif
+}
+
+/*
+returns length of TCHAR string
+*/
+size_t StrTLen(const TCHAR *str)
+{
+#if !defined(_UNICODE) && !defined(UNICODE)
+	return strlen(str);
+#else
+	return wcslen(str);	
+#endif
+}
 
 /********************************************************************/
 
@@ -685,25 +720,25 @@ static PaError InitializeInputDeviceInfo( PaWinMmeHostApiRepresentation *winMmeH
     {
         /* Append I/O suffix to WAVE_MAPPER device. */
         deviceName = (char *)PaUtil_GroupAllocateMemory(
-                    winMmeHostApi->allocations, strlen( wic.szPname ) + 1 + sizeof(constInputMapperSuffix_) );
+                    winMmeHostApi->allocations, StrTLen( wic.szPname ) + 1 + sizeof(constInputMapperSuffix_) );
         if( !deviceName )
         {
             result = paInsufficientMemory;
             goto error;
         }
-        strcpy( deviceName, wic.szPname );
+        StrTCpyToC( deviceName, wic.szPname );
         strcat( deviceName, constInputMapperSuffix_ );
     }
     else
     {
         deviceName = (char*)PaUtil_GroupAllocateMemory(
-                    winMmeHostApi->allocations, strlen( wic.szPname ) + 1 );
+                    winMmeHostApi->allocations, StrTLen( wic.szPname ) + 1 );
         if( !deviceName )
         {
             result = paInsufficientMemory;
             goto error;
         }
-        strcpy( deviceName, wic.szPname  );
+        StrTCpyToC( deviceName, wic.szPname  );
     }
     deviceInfo->name = deviceName;
 
@@ -785,6 +820,7 @@ static PaError InitializeOutputDeviceInfo( PaWinMmeHostApiRepresentation *winMme
     MMRESULT mmresult;
     WAVEOUTCAPS woc;
     PaDeviceInfo *deviceInfo = &winMmeDeviceInfo->inheritedDeviceInfo;
+    int wdmksDeviceOutputChannelCountIsKnown;
 
     *success = 0;
 
@@ -808,25 +844,25 @@ static PaError InitializeOutputDeviceInfo( PaWinMmeHostApiRepresentation *winMme
     {
         /* Append I/O suffix to WAVE_MAPPER device. */
         deviceName = (char *)PaUtil_GroupAllocateMemory(
-                    winMmeHostApi->allocations, strlen( woc.szPname ) + 1 + sizeof(constOutputMapperSuffix_) );
+                    winMmeHostApi->allocations, StrTLen( woc.szPname ) + 1 + sizeof(constOutputMapperSuffix_) );
         if( !deviceName )
         {
             result = paInsufficientMemory;
             goto error;
         }
-        strcpy( deviceName, woc.szPname );
+        StrTCpyToC( deviceName, woc.szPname );
         strcat( deviceName, constOutputMapperSuffix_ );
     }
     else
     {
         deviceName = (char*)PaUtil_GroupAllocateMemory(
-                    winMmeHostApi->allocations, strlen( woc.szPname ) + 1 );
+                    winMmeHostApi->allocations, StrTLen( woc.szPname ) + 1 );
         if( !deviceName )
         {
             result = paInsufficientMemory;
             goto error;
         }
-        strcpy( deviceName, woc.szPname  );
+        StrTCpyToC( deviceName, woc.szPname  );
     }
     deviceInfo->name = deviceName;
 
@@ -850,8 +886,10 @@ static PaError InitializeOutputDeviceInfo( PaWinMmeHostApiRepresentation *winMme
     }
 
 #ifdef PAWIN_USE_WDMKS_DEVICE_INFO
-    winMmeDeviceInfo->deviceOutputChannelCountIsKnown = 
-            QueryWaveOutKSFilterMaxChannels( winMmeOutputDeviceId, &deviceInfo->maxOutputChannels );
+    wdmksDeviceOutputChannelCountIsKnown = QueryWaveOutKSFilterMaxChannels( 
+			winMmeOutputDeviceId, &deviceInfo->maxOutputChannels );
+    if( wdmksDeviceOutputChannelCountIsKnown && !winMmeDeviceInfo->deviceOutputChannelCountIsKnown )
+        winMmeDeviceInfo->deviceOutputChannelCountIsKnown = 1;
 #endif /* PAWIN_USE_WDMKS_DEVICE_INFO */
 
     winMmeDeviceInfo->dwFormats = woc.dwFormats;
@@ -940,11 +978,11 @@ PaError PaWinMme_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
     /* the following calls assume that if wave*Message fails the preferred device parameter won't be modified */
     preferredDeviceStatusFlags = 0;
     waveInPreferredDevice = -1;
-    waveInMessage( (HWAVEIN)WAVE_MAPPER, DRVM_MAPPER_PREFERRED_GET, (DWORD)&waveInPreferredDevice, (DWORD)&preferredDeviceStatusFlags );
+    waveInMessage( (HWAVEIN)WAVE_MAPPER, DRVM_MAPPER_PREFERRED_GET, (DWORD_PTR)&waveInPreferredDevice, (DWORD_PTR)&preferredDeviceStatusFlags );
 
     preferredDeviceStatusFlags = 0;
     waveOutPreferredDevice = -1;
-    waveOutMessage( (HWAVEOUT)WAVE_MAPPER, DRVM_MAPPER_PREFERRED_GET, (DWORD)&waveOutPreferredDevice, (DWORD)&preferredDeviceStatusFlags );
+    waveOutMessage( (HWAVEOUT)WAVE_MAPPER, DRVM_MAPPER_PREFERRED_GET, (DWORD_PTR)&waveOutPreferredDevice, (DWORD_PTR)&preferredDeviceStatusFlags );
 
     maximumPossibleDeviceCount = 0;
 
@@ -2092,7 +2130,7 @@ struct PaWinMmeStream
     /* Processing thread management -------------- */
     HANDLE abortEvent;
     HANDLE processingThread;
-    DWORD processingThreadId;
+    PA_THREAD_ID processingThreadId;
 
     char throttleProcessingThreadOnOverload; /* 0 -> don't throtte, non-0 -> throttle */
     int processingThreadPriority;
@@ -2758,7 +2796,7 @@ static PaError CatchUpOutputBuffers( PaWinMmeStream *stream )
 }
 
 
-static DWORD WINAPI ProcessingThreadProc( void *pArg )
+PA_THREAD_FUNC ProcessingThreadProc( void *pArg )
 {
     PaWinMmeStream *stream = (PaWinMmeStream *)pArg;
     HANDLE events[3];
