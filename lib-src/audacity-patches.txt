@@ -1,6 +1,7 @@
 This is intended as a list of all the patches that have been incorporated into
 the lib-src copies of libraries, to avoid them getting lost in version upgrades
-from upstream, and to remind us of the versions we are using.
+from upstream, and to remind us of the versions we are using. See the notes at
+the end for how external libraries are brought in and maintained.
 
 Libraries
 =========
@@ -163,13 +164,13 @@ portaudio-v19
 -------------
 http://portaudio.com/
 cross-platform audio I/O library version 19, used for 1.3.2 onwards releases
-Version in Audacity SVN: 1st July 2009 SVN snapshot (r1416)
+Version in Audacity SVN: 3rd October 2010 SVN snapshot (r1541 = aud r10711)
 Patches:
 ../portmixer/portaudio.patch	add features needed to make portmixer work.
 		Integration by upstream in progress. Will need updating as upstream
 		portaudio moves
 
-portaudio/libtool22.patch	Patch from Gentoo to ensure that static libraries
+?portaudio/libtool22.patch	Patch from Gentoo to ensure that static libraries
 are always built, not shared ones, otherwise the assumptions elsewhere in the
 build system break. Not suitable for upstream, what is needed is more
 powerfull autoconf features to pass the right options to portaudio's configure
@@ -293,56 +294,111 @@ wave++
 http://www.scs.ryerson.ca/~lkolasa/CppWavelets.html
 disused?
 
-Crib notes on upgrading lib-src trees:
-======================================
-1 Remove old files
-------------------
-find . -not -wholename '*CVS*' -delete
-will remove all the source files but not any directories or the CVS files, so
-after this you have an empty place into which you can unpack the new tarball
+Crib notes on upgrading lib-src trees
+=====================================
+With extensive reference to
+http://svnbook.red-bean.com/en/1.5/svn.advanced.vendorbr.html
 
-2 Bring in new files
---------------------
-Next unpack the tarball. If you want to unpack within a package directory,
-then tar --strip-components 1 will remove the un-needed top level directory.
+This directory (audacity-src/trunk/lib-src/) is the working copy of the
+imported libraries, with changes made to them. The current upstream version of
+the libraries is imported into the audacity-src/vendor/ tree, which is _not
+modified_ except for new imports. The unmodified upstream sources are then
+used to merge forward the changes between releases into the
+audacity-src/trunk/lib-src/ copy which contains the audacity project changes.
 
-3 Apply patches and updates
----------------------------
-Now we have a new file tree. This is the point at which to clean out any
-un-needed files, re-apply any local patches so on. To clean up after patching,
-run  find . -name '*.orig' -delete and  find . -name '*~' -delete. To remove
-.svn directories from projects that use SVN upstream, use
-find . -wholename '*/.svn/*' -delete and then find . -name '.svn' -delete
+The version of a given <library> in lib-src should be the version from
+vendor/<library>/current/ with the audacity changes added in.
 
-* run autoreconf if we have modified configure.in or configure.ac
+1. We will update the vendor branch copy with the new upstream source first,
+then merge into the working copy. As always we need a new set of clean source
+to import. If pulling from upstream version control, do an export to loose
+version control files first.
+2. Use the svn_load_dirs.pl script to upgrade the vendor branch to the new
+upstream source (which will deal with adds, deletions and renaming in the
+source tree without too much effort). You need to specify a tag name for the
+new update (which should reflect the upstream release, in this case an SVN
+revision in upstream's repository)
+	svn_load_dirs.pl -t r1541 \
+	https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/ \
+	current /path/to/newver
+Note that the URL excludes the final 'current' section, which is specified
+separately in the next argument, with the final one being the path to inside
+the directory with the new source in it.
+Note that the URL excludes the final 'current' section, which is specified
+separately in the next argument, with the final one being the path to inside
+the directory with the new source in it.Note that the URL excludes the final
+'current' section, which is specified separately in the next argument, with
+the final one being the path to inside the directory with the new source in
+it.Note that the URL excludes the final 'current' section, which is specified
+separately in the next argument, with the final one being the path to inside
+the directory with the new source in it.
+3. Answer the questions as posed by the script (it is interactive). The tag
+should sort itself out fairly easily. Several temporary SVN checkouts will be
+created and merges done. Deleted and Added files will be printed (with a pause
+after each screen). If some of these should actually be renames (that is, a
+delete and an addition go together), then enter the numbers of those two files
+to sort that out for the script. Getting this correct makes the merge of
+changes much less painful.
+4. Much churning will occur to update all the files, remove orphans etc. The
+new version of the library will now be in vendor/<library>/current/, with a
+tag of the given name at vendor/<library>/<tag>/
+5. Merge the changes between the previous and current upstream versions into
+the lib-src copy used in Audacity using svn merge. Do this from the
+audacity-src/lib-src/ directory of a working copy, as you will need to resolve
+some conflicts along the way.
+svn merge
+https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/r1416 \
+https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/current \
+portaudio-v19
+6. When prompted with a conflict, most of the time, you want to see the
+changes, which you can get with the 'df' (diff full) response. In many cases
+the changes may be trivial (e.g. version headers), in which case you can just
+choose to use the new version with the 'tf' (theirs full) command.
+* For generated files (e.g. configure), accept upstream's version because we
+  will re-generate them later.
+* If there is a minor conflict, then going to 'e' (edit) will let you clean
+  the remaining issues in the file up. Save the file, then 'r' (resolved)
+  accepts the updated file.
+* Mangled line endings cause a load of grief here, so try to make sure they
+  don't happen. SVN shouldn't have trouble with this, provided that the
+  svn:eol property is correctly set
+7. Check the SVN status output to see what has changed. In particularly, look
+for files not under version control and which are, but have been deleted.
+svn st | grep '^?'
+svn st | grep '^!'
+Ideally there shouldn't be any!
+8. Do some local updates to help reliable builds (especially if upstream
+aren't very good at doing these) 
 * If the package uses libtool, run libtoolize --copy --force to update 
 	ltmain.sh, config.sub, config.guess. If not, update config.sub,
 	config.guess from /usr/share/gnuconfig/
+* run autoreconf
+9. Build and test the code! Make sure that your merges actually work!
+10. Commit to repository - svn commit as usual.
+11. To re-generate the patches in the Audacity tree, diff the original in
+/vendor/ against the patched version in lib-src/ (you will need to use both
+URLs on the server for this to work)
 
-By doing it this way we have already updated the mtime on all files, so we
-don't need to do a recusive touch.
+Bringing in a new (or only previously in CVS) library
+-----------------------------------------------------
+We start out with the svn import command to to all the adding and setting up
+for us. We need a set of files to import (for old CVS libs, a set of whatever
+was imported last time), without any version control droppings (to get this
+from someone else's SVN repository, use
+svn export -r <revision> https://wherever <local directory>)
 
-4 Add new files to CVS and remove old ones
-------------------------------------------
-CVS will list files with a ? if they are new and need to be added to the
-repository. To get a list, run 
-cvs st 2>/dev/null | grep '?'
-Remember to ignore the generated files from the build system which don't need
-to be included in CVS, like aclocal.m4 and autom4te.cache
+So to push our local folder tree into the vendor branch:
+1. Create a directory to put it in the vendor branch
+	svn mkdir --parents https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/current/
 
-Finding which files have been removed is a bit harder:
-cvs st 2>/dev/null | grep 'Status: Needs Checkout'
-gives file names but not their paths, so you have to go back and grep each
-file name to find them and do cvs rm on them.
+2. Do the svn import
+	 svn import portaudio/pa-r1416/ https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/current/ -m 'Import the previous SVN snapshot of portaudio as a base'
+  portaudio/pa-r1416/ is the source directory, e.g. an unpacked tarball. Note
+  that we don't want the versioned top level directory from the tarball, so we
+  give the path including that directory with a trailing slash on it.
 
-To remove all the files that are in the working directory but aren't under CVS
-control, you can use this incantation:
-\rm $(cvs st 2>/dev/null | grep '?' | cut -d '?' -f 2)
-
-5 Commit the lot to CVS
------------------------
-Run cvs ci -f -R to commit all the files in the new library tree. Use an
-appropriate message that says what library version this is. This should do
-all the required changes and add / remove files.
-
-
+3. The import will list the files by their source directory as it goes on and
+  commits as part of the import. At the end you should have all the files for
+  the library in the
+  https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/current/
+  directory.
