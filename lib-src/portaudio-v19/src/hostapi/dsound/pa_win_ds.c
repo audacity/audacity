@@ -2066,7 +2066,6 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                                        (WORD)outputParameters->channelCount, bytesPerDirectSoundOutputBuffer,
                                        outputChannelMask );
             DBUG(("InitOutputBuffer() returns %x\n", hr));
->>>>>>> .merge-right.r10709
             if( hr != DS_OK )
             {
                 result = paUnanticipatedHostError;
