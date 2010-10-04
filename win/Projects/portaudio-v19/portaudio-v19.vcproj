@@ -92,7 +92,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_DS &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_ASIO &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_DS &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_ASIO &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_NO_WASAPI  &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
