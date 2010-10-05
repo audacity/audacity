@@ -54,22 +54,21 @@ WX_DEFINE_LIST(AboutDialogCreditItemsList);
 void AboutDialog::CreateCreditsList()
 {
    // The Audacity 1.3.x and 2.0.x team: developers and support
-   // These will be split into two separate categories
-
-   AddCredit(wxT("Gale Andrews"), roleTeamSupport);
    AddCredit(wxT("Richard Ash"), roleTeamDeveloper);
-   AddCredit(wxT("Christian Brochec"), roleTeamSupport);
    AddCredit(wxT("Michael Chinen"), roleTeamDeveloper);
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
-   AddCredit(wxT("Steve Daulton"), roleTeamSupport);
    AddCredit(wxT("Al Dimond"), roleTeamDeveloper);
    AddCredit(wxT("Ruslan Ijbulatov"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
-   AddCredit(wxT("Greg Kozikowski"), roleTeamSupport);
    AddCredit(wxT("Dominic Mazzoni"), roleTeamDeveloper);
+   AddCredit(wxT("Martyn Shaw"), roleTeamDeveloper);
+
+   AddCredit(wxT("Gale Andrews"), roleTeamSupport);
+   AddCredit(wxT("Christian Brochec"), roleTeamSupport);
+   AddCredit(wxT("Steve Daulton"), roleTeamSupport);
+   AddCredit(wxT("Greg Kozikowski"), roleTeamSupport);
    AddCredit(wxT("Alexandre Prokoudine"), roleTeamSupport);
    AddCredit(wxT("Peter Sampson"), roleTeamSupport);
-   AddCredit(wxT("Martyn Shaw"), roleTeamDeveloper);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
@@ -78,8 +77,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Matt Brubeck"), roleEmeritusDeveloper);
    AddCredit(wxT("Roger Dannenberg"), roleEmeritusDeveloper);
    AddCredit(wxT("Joshua Haberman"), roleEmeritusDeveloper);
-   AddCredit(wxT("Leland Lucius"), roleTeamDeveloper);
-   AddCredit(wxT("Markus Meyer"), roleTeamDeveloper);
+   AddCredit(wxT("Leland Lucius"), roleEmeritusDeveloper);
+   AddCredit(wxT("Markus Meyer"), roleEmeritusDeveloper);
    AddCredit(wxT("Monty Montgomery"), roleEmeritusDeveloper);
    AddCredit(wxT("Shane Mueller"), roleEmeritusDeveloper);
    AddCredit(wxT("Tony Oetzmann"), roleEmeritusSupport);
