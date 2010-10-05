@@ -871,6 +871,8 @@ void TrackPanel::OnTimer()
    wxCommandEvent dummyEvent;
    AudacityProject *p = GetProject();
 
+   static int rptcnt = 0;
+   _RPT1(_CRT_WARN, "OnTimer %d\n", rptcnt++);
    if ((p->GetAudioIOToken() > 0) &&
          gAudioIO->IsStreamActive(p->GetAudioIOToken()))
    {

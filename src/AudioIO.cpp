@@ -515,6 +515,7 @@ AudioIO::AudioIO()
    mMidiStreamActive = false;
    mSendMidiState = false;
    mIterator = NULL;
+   mMidiPlaySpeed = 1.0;
 
    mNumFrames = 0;
    mNumPauseFrames = 0;
@@ -1423,6 +1424,7 @@ void AudioIO::SetMeters(Meter *inputMeter, Meter *outputMeter)
 
 void AudioIO::StopStream()
 {
+   _RPT0(_CRT_WARN, "StopStream");
    if( mPortStreamV19 == NULL 
 #ifdef EXPERIMENTAL_MIDI_OUT
        && mMidiStream == NULL 
@@ -1529,6 +1531,7 @@ void AudioIO::StopStream()
       mIterator->end();
       delete mIterator;
       mIterator = NULL; // just in case someone tries to reference it
+      mMidiPlaySpeed = 1.0;
    }
 #endif
 
@@ -1678,6 +1681,8 @@ bool AudioIO::IsStreamActive()
    else isActive = false;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
+   _RPT2(_CRT_WARN, "mMidiStreamActive %d, mMidiOutputComplete %d\n", 
+         mMidiStreamActive, mMidiOutputComplete);
    if( mMidiStreamActive && !mMidiOutputComplete )
       isActive = true;
 #endif
@@ -2062,10 +2067,10 @@ MidiThread::ExitCode MidiThread::Entry()
             gAudioIO->FillMidiBuffers();
 
             // test for end
-            double real_time = gAudioIO->mT0 + gAudioIO->MidiTime() * 0.001 - 
+            double realTime = gAudioIO->mT0 + gAudioIO->MidiTime() * 0.001 - 
                                gAudioIO->PauseTime();
             if (gAudioIO->mNumPlaybackChannels != 0) {
-               real_time -= 1; // with audio, MidiTime() runs ahead 1s
+               realTime -= 1; // with audio, MidiTime() runs ahead 1s
             }
             // The TrackPanel::OnTimer() method updates the time position 
             // indicator every 200ms, so it tends to not advance the 
@@ -2077,8 +2082,13 @@ MidiThread::ExitCode MidiThread::Entry()
             // 0.22s beyond mT1 (even though we stop playing at mT1. This
             // gives OnTimer() time to wake up and draw the final time 
             // position at mT1 before shutting down the stream.
+            double timeAtSpeed = (realTime - gAudioIO->mT0) * 
+                                 gAudioIO->mMidiPlaySpeed + gAudioIO->mT0;
+            _RPT2(_CRT_WARN, "realTime %g, timeAtSpeed %g\n", 
+                  realTime, timeAtSpeed);
+
             gAudioIO->mMidiOutputComplete = 
-               (!gAudioIO->mPlayLooped && real_time >= gAudioIO->mT1 + 0.220);
+               (!gAudioIO->mPlayLooped && timeAtSpeed >= gAudioIO->mT1 + 0.220);
             // !gAudioIO->mNextEvent);
          }
       }
@@ -2609,7 +2619,8 @@ void AudioIO::OutputEvent()
    int data2 = -1;
 
    // 0.0005 is for rounding
-   double time = mNextEventTime + PauseTime() + 0.0005 - 
+   double eventTime = (mNextEventTime - mT0) / mMidiPlaySpeed + mT0;
+   double time = eventTime + PauseTime() + 0.0005 - 
                  ((mMidiLatency + mSynthLatency) * 0.001);
    if (mNumPlaybackChannels > 0) { // is there audio playback?
       time += 1; // MidiTime() has a 1s offset
@@ -2752,7 +2763,6 @@ bool AudioIO::SetHasSolo(bool hasSolo)
 }
 
 
-// returns estimated current track time
 void AudioIO::FillMidiBuffers()
 {
    bool hasSolo = false;
@@ -2777,22 +2787,23 @@ void AudioIO::FillMidiBuffers()
       time = AudioTime() - PauseTime();
    } else {
       time = mT0 + Pt_Time() * 0.001 - PauseTime();
+      double timeAtSpeed = (time - mT0) * mMidiPlaySpeed + mT0;
       if (mNumCaptureChannels <= 0) {
          // no audio callback, so move the time cursor here:
-         double track_time = time - mMidiLoopOffset;
+         double trackTime = timeAtSpeed - mMidiLoopOffset;
          //printf("mTime set. mT0 %g Pt_Time() %gs PauseTime %g\n",
          //       mT0, Pt_Time() * 0.001, PauseTime());
          // Since loop offset is incremented when we fill the
          // buffer, the cursor tends to jump back to mT0 early.
          // Therefore, if we are in loop mode, and if mTime < mT0,
          // we must not be at the end of the loop yet.
-         if (mPlayLooped && track_time < mT0) {
-            track_time += (mT1 - mT0);
+         if (mPlayLooped && trackTime < mT0) {
+            trackTime += (mT1 - mT0);
          }
          // mTime is shared with another thread so we stored
-         // intermediate values in track_time. Do the update
+         // intermediate values in trackTime. Do the update
          // atomically now that we have the final value:
-         mTime = track_time;
+         mTime = trackTime;
       }
       // advance time so that midi messages are written a little early, 
       // timestamps will insure accurate output timing. This is an "extra"
@@ -2802,7 +2813,7 @@ void AudioIO::FillMidiBuffers()
       time += MIDI_SLEEP * 0.001;
    }
    while (mNextEvent && 
-          mNextEventTime < time +
+          (mNextEventTime - mT0) / mMidiPlaySpeed + mT0 < time +
                            ((MIDI_SLEEP + mSynthLatency) * 0.001)) {
       OutputEvent();
       GetNextEvent();

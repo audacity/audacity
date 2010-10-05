@@ -71,7 +71,9 @@ void MidiIOPrefs::Populate()
 
    // Get current setting for devices
    mPlayDevice = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"), wxT(""));
+#ifdef EXPERIMENTAL_MIDI_IN
    mRecordDevice = gPrefs->Read(wxT("/MidiIO/RecordingDevice"), wxT(""));
+#endif
 //   mRecordChannels = gPrefs->Read(wxT("/MidiIO/RecordChannels"), 2L);
 
    //------------------------- Main section --------------------
@@ -147,7 +149,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.EndMultiColumn();
    }
    S.EndStatic();
-
+#ifdef EXPERIMENTAL_MIDI_IN
    S.StartStatic(_("Recording"));
    {
       S.StartMultiColumn(2);
@@ -167,6 +169,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.EndMultiColumn();
    }
    S.EndStatic();
+#endif
 }
 
 void MidiIOPrefs::OnHost(wxCommandEvent & e)
@@ -182,7 +185,9 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
    }
 
    mPlay->Clear();
+#ifdef EXPERIMENTAL_MIDI_IN
    mRecord->Clear();
+#endif
 
    wxArrayString playnames;
    wxArrayString recordnames;
@@ -204,7 +209,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
                mPlay->SetSelection(index);
             }
          }
-
+#ifdef EXPERIMENTAL_MIDI_IN
          if (info->input) {
             recordnames.Add(name);
             index = mRecord->Append(name, (void *) info);
@@ -212,6 +217,7 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
                mRecord->SetSelection(index);
             }
          }
+#endif
       }
    }
 
@@ -219,23 +225,25 @@ void MidiIOPrefs::OnHost(wxCommandEvent & e)
       playnames.Add(_("No devices found"));
       mPlay->Append(playnames[0], (void *) NULL);
    }
-
+#ifdef EXPERIMENTAL_MIDI_IN
    if (mRecord->GetCount() == 0) {
       recordnames.Add(_("No devices found"));
       mRecord->Append(recordnames[0], (void *) NULL);
    }
-
+#endif
    if (mPlay->GetCount() && mPlay->GetSelection() == wxNOT_FOUND) {
       mPlay->SetSelection(0);
    }
-
+#ifdef EXPERIMENTAL_MIDI_IN
    if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
       mRecord->SetSelection(0);
    }
-
+#endif
    ShuttleGui S(this, eIsCreating);
    S.SetSizeHints(mPlay, playnames);
+#ifdef EXPERIMENTAL_MIDI_IN
    S.SetSizeHints(mRecord, recordnames);
+#endif
 //   OnDevice(e);
 }
 
@@ -253,7 +261,7 @@ bool MidiIOPrefs::Apply()
                                      wxString(info->interf, wxConvLocal).c_str(),
                                      wxString(info->name, wxConvLocal).c_str()));
    }
-
+#ifdef EXPERIMENTAL_MIDI_IN
    info = (const PmDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
    if (info) {
       gPrefs->Write(wxT("/MidiIO/RecordingDevice"),
@@ -261,7 +269,7 @@ bool MidiIOPrefs::Apply()
                                      wxString(info->interf, wxConvLocal).c_str(),
                                      wxString(info->name, wxConvLocal).c_str()));
    }
-
+#endif
    return true;
 }
 

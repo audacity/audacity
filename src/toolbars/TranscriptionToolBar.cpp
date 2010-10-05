@@ -415,7 +415,9 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & event)
    // Start playing
    if (playRegionStart >= 0) {
 //      playRegionEnd = playRegionStart + (playRegionEnd-playRegionStart)* 100.0/mPlaySpeed;
-
+#ifdef EXPERIMENTAL_MIDI_OUT
+      gAudioIO->SetMidiPlaySpeed(mPlaySpeed);
+#endif
       p->GetControlToolBar()->PlayPlayRegion(playRegionStart,
                                              playRegionEnd,
                                              false,
