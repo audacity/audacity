@@ -2046,17 +2046,19 @@ MidiThread::ExitCode MidiThread::Entry()
           gAudioIO->mNumFrames > 0)
       {
          // Keep track of time paused. If not paused, fill buffers.
-         if (gAudioIO->mNumPlaybackChannels == 0 && gAudioIO->IsPaused()) {
+         if (gAudioIO->IsPaused()) {
             if (!gAudioIO->mMidiPaused) {
                gAudioIO->mMidiPaused = true;
-               pauseStart = MidiTime(NULL);
                gAudioIO->AllNotesOff(); // to avoid hanging notes during pause
+               pauseStart = MidiTime(NULL);
             }
          } else {
             if (gAudioIO->mMidiPaused) {
                gAudioIO->mMidiPaused = false;
+               // note: mPauseTime ignored if audio is playing
                gAudioIO->mPauseTime += (MidiTime(NULL) - pauseStart);
             }
+
             gAudioIO->FillMidiBuffers();
 
             // test for end
