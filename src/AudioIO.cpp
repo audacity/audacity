@@ -1424,7 +1424,6 @@ void AudioIO::SetMeters(Meter *inputMeter, Meter *outputMeter)
 
 void AudioIO::StopStream()
 {
-   _RPT0(_CRT_WARN, "StopStream");
    if( mPortStreamV19 == NULL 
 #ifdef EXPERIMENTAL_MIDI_OUT
        && mMidiStream == NULL 
@@ -1681,8 +1680,6 @@ bool AudioIO::IsStreamActive()
    else isActive = false;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   _RPT2(_CRT_WARN, "mMidiStreamActive %d, mMidiOutputComplete %d\n", 
-         mMidiStreamActive, mMidiOutputComplete);
    if( mMidiStreamActive && !mMidiOutputComplete )
       isActive = true;
 #endif
@@ -2084,8 +2081,6 @@ MidiThread::ExitCode MidiThread::Entry()
             // position at mT1 before shutting down the stream.
             double timeAtSpeed = (realTime - gAudioIO->mT0) * 
                                  gAudioIO->mMidiPlaySpeed + gAudioIO->mT0;
-            _RPT2(_CRT_WARN, "realTime %g, timeAtSpeed %g\n", 
-                  realTime, timeAtSpeed);
 
             gAudioIO->mMidiOutputComplete = 
                (!gAudioIO->mPlayLooped && timeAtSpeed >= gAudioIO->mT1 + 0.220);
