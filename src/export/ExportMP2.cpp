@@ -261,7 +261,7 @@ int ExportMP2::Export(AudacityProject *project,
    int numWaveTracks;
    WaveTrack **waveTracks;
    tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = new Mixer(numWaveTracks, waveTracks,
+   Mixer *mixer = CreateMixer(numWaveTracks, waveTracks,
                             tracks->GetTimeTrack(),
                             t0, t1,
                             stereo? 2: 1, pcmBufferSize, true,

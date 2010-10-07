@@ -338,7 +338,7 @@ int ExportCL::Export(AudacityProject *project,
    WaveTrack **waveTracks;
    TrackList *tracks = project->GetTracks();
    tracks->GetWaveTracks(selectionOnly, &numWaveTracks, &waveTracks);
-   Mixer *mixer = new Mixer(numWaveTracks,
+   Mixer *mixer = CreateMixer(numWaveTracks,
                             waveTracks,
                             tracks->GetTimeTrack(),
                             t0,

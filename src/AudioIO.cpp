@@ -1124,14 +1124,9 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    mCutPreviewGapLen = cutPreviewGapLen;
 
    double factor = 1.0;
-   if (mTimeTrack) {
-      factor = mTimeTrack->GetEnvelope()->Average(mT0, mT1);
-      factor = (mTimeTrack->GetRangeLower() *
-               (1 - factor) +
-               factor *
-               mTimeTrack->GetRangeUpper()) / 
-               100.0;
-   }
+   if (mTimeTrack)
+      factor = mTimeTrack->ComputeWarpFactor(mT0, mT1);
+
    mWarpedT1 = factor >= 1 ? mT1 : mT0 + ((mT1 - mT0) / factor);
 
    //

@@ -21,6 +21,7 @@
 
 struct ViewInfo;
 class AudacityProject;
+class TimeTrack;
 
 class AUDACITY_DLL_API Ruler {
  public:
@@ -115,7 +116,7 @@ class AUDACITY_DLL_API Ruler {
 
    // Note that it will not erase for you...
    void Draw(wxDC& dc);
-   void Draw(wxDC& dc, Envelope *speedEnv, long minSpeed, long maxSpeed);
+   void Draw(wxDC& dc, TimeTrack* timetrack);
    // If length <> 0, draws lines perpendiculars to ruler corresponding
    // to selected ticks (major, minor, or both), in an adjacent window.
    // You may need to use the offsets if you are using part of the dc for rulers, borders etc.
@@ -128,7 +129,7 @@ class AUDACITY_DLL_API Ruler {
  private:
    void Invalidate();
    void Update();
-   void Update(Envelope *speedEnv, long minSpeed, long maxSpeed);
+   void Update(TimeTrack* timetrack);
    void FindTickSizes();
    void FindLinearTickSizes(double UPP);
    wxString LabelString(double d, bool major);

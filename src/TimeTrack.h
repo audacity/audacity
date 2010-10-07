@@ -57,6 +57,9 @@ class TimeTrack: public Track {
    // Access the track's speed envelope
 
    Envelope *GetEnvelope() { return mEnvelope; }
+   
+   //Compute the integral warp factor between two non-warped time points
+   double ComputeWarpFactor(double t0, double t1);
 
    // Get/Set the speed-warping range, as percentage of original speed (e.g. 90%-110%)
 

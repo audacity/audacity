@@ -72,6 +72,7 @@
 #include "../WaveTrack.h"
 #include "../widgets/Warning.h"
 #include "../AColor.h"
+#include "../TimeTrack.h"
 
 // Callback to display format options
 static void ExportCallback(void *cbdata, int index)
@@ -264,6 +265,28 @@ int ExportPlugin::DoExport(AudacityProject *project,
    return false;
 }
 
+//Create a mixer by computing the time warp factor
+Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
+         TimeTrack *timeTrack,
+         double startTime, double stopTime,
+         int numOutChannels, int outBufferSize, bool outInterleaved,
+         double outRate, sampleFormat outFormat,
+         bool highQuality, MixerSpec *mixerSpec)
+{
+   double warpedStopTime;
+   double warpFactor = 1.0;
+   if(timeTrack)
+      warpFactor = timeTrack->ComputeWarpFactor(startTime, stopTime);
+
+   warpedStopTime = warpFactor >= 1.0 ? stopTime : (startTime + ((stopTime - startTime) / warpFactor));
+   printf("warpfactor %f, stoptime %f, warpstoptime %f\n",warpFactor, stopTime, warpedStopTime);
+   return new Mixer(numInputTracks, inputTracks,
+                  timeTrack,
+                  startTime, warpedStopTime,
+                  numOutChannels, outBufferSize, outInterleaved,
+                  outRate, outFormat,
+                  highQuality, mixerSpec);
+}
 //----------------------------------------------------------------------------
 // Export
 //----------------------------------------------------------------------------

@@ -109,6 +109,19 @@ double TimeTrack::warp( double t )
    return result;
 }
 
+//Compute the integral warp factor between two non-warped time points
+double TimeTrack::ComputeWarpFactor(double t0, double t1)
+{
+   double factor;
+   factor = GetEnvelope()->Average(t0, t1);
+   factor = (GetRangeLower() *
+            (1 - factor) +
+            factor *
+            GetRangeUpper()) / 
+            100.0;
+   return factor;
+}
+
 bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if (!wxStrcmp(tag, wxT("timetrack"))) {
@@ -208,7 +221,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps)
                             // LL:  It's because the ruler only Invalidate()s when the new value is different
                             //      than the current value.
    mRuler->SetFlip(GetHeight() > 75 ? true : true);
-   mRuler->Draw(dc, GetEnvelope(), GetRangeLower(), GetRangeUpper());
+   mRuler->Draw(dc, this);
 
    int *heights = new int[mid.width];
    double *envValues = new double[mid.width];

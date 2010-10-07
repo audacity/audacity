@@ -16,6 +16,7 @@
 #include <wx/filename.h>
 #include <wx/panel.h>
 #include "../Tags.h"
+#include "../SampleFormat.h"
 
 class wxMemoryDC;
 class wxStaticText;
@@ -25,6 +26,8 @@ class WaveTrack;
 class TrackList;
 class MixerSpec;
 class FileDialog;
+class TimeTrack;
+class Mixer;
 
 class FormatInfo
 {
@@ -114,8 +117,15 @@ public:
                          MixerSpec *mixerSpec,
                          int subformat);
 
-private:
+protected:
+   Mixer* CreateMixer(int numInputTracks, WaveTrack **inputTracks,
+         TimeTrack *timeTrack,
+         double startTime, double stopTime,
+         int numOutChannels, int outBufferSize, bool outInterleaved,
+         double outRate, sampleFormat outFormat,
+         bool highQuality = true, MixerSpec *mixerSpec = NULL);
 
+private:
    FormatInfoArray mFormatInfos;
 };
 
