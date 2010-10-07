@@ -698,6 +698,7 @@ void Alg_events::append(Alg_event_ptr event)
 
 Alg_events::~Alg_events()
 {
+    assert(!in_use);
     // individual events are not deleted, only the array
     if (events) {
         delete[] events;
@@ -2622,7 +2623,15 @@ void Alg_tracks::reset()
     if (tracks) delete [] tracks;
     tracks = NULL;
     len = 0;
-    maxlen = 0;               // Modified by Ning Hu Nov.19 2002
+    maxlen = 0;
+}
+
+
+void Alg_tracks::set_in_use(bool flag)
+{
+    for (int i = 0; i < len; i++) {
+        tracks[i]->in_use = flag;
+    }
 }
 
 
@@ -2680,15 +2689,8 @@ bool Alg_iterator::earlier(int i, int j)
     // followed immediately with the same timestamp by a note-on (common
     // in MIDI files), the note-off will be scheduled first
 
-    Alg_pending_event_ptr p_i = &(pending_events[i]);
-    Alg_event_ptr e_i = (*(p_i->events))[p_i->index];
-    double t_i = (p_i->note_on ? e_i->time : 
-                  e_i->get_end_time() - ALG_EPS) + p_i->offset;
-    
-    Alg_pending_event_ptr p_j = &(pending_events[j]);
-    Alg_event_ptr e_j = (*(p_j->events))[p_j->index];
-    double t_j = (p_j->note_on ? e_j->time :
-                  e_j->get_end_time() - ALG_EPS) + p_j->offset;
+    double t_i = pending_events[i].time;
+    double t_j = pending_events[j].time;
 
     if (t_i < t_j) return true;
     // not sure if this case really exists or this is the best rule, but
@@ -2707,6 +2709,17 @@ void Alg_iterator::insert(Alg_events_ptr events, long index,
     pending_events[len].note_on = note_on;
     pending_events[len].cookie = cookie;
     pending_events[len].offset = offset;
+    Alg_event_ptr event = (*events)[index];
+    pending_events[len].time = (note_on ?  event->time : 
+                                event->get_end_time() - ALG_EPS) + offset;
+    /* BEGIN DEBUG *
+        printf("insert %p=%p[%d] @ %g\n", event, events, index, 
+               pending_events[len].time);
+        printf("    is_note %d note_on %d time %g dur %g end_time %g offset %g\n",
+               event->is_note(), note_on, event->time, event->get_duration(), 
+               event->get_end_time(), offset);
+    }
+     * END DEBUG */
     int loc = len;
     int loc_parent = HEAP_PARENT(loc);
     len++;
@@ -2720,12 +2733,12 @@ void Alg_iterator::insert(Alg_events_ptr events, long index,
         loc = loc_parent;
         loc_parent = HEAP_PARENT(loc);
     }
-    //    printf("After insert:"); show();
 }
+
 
 bool Alg_iterator::remove_next(Alg_events_ptr &events, long &index, 
                                bool &note_on, void *&cookie, 
-                               double &offset)
+                               double &offset, double &time)
 {
     if (len == 0) return false; // empty!
     events = pending_events[0].events;
@@ -2734,6 +2747,7 @@ bool Alg_iterator::remove_next(Alg_events_ptr &events, long &index,
     offset = pending_events[0].offset;
     cookie = pending_events[0].cookie;
     offset = pending_events[0].offset;
+    time = pending_events[0].time;
     len--;
     pending_events[0] = pending_events[len];
     // sift down
@@ -3421,7 +3435,8 @@ Alg_event_ptr Alg_iterator::next(bool *note_on, void **cookie_ptr,
     // return the next event in time from any track
 {
     bool on;
-    if (!remove_next(events_ptr, index, on, cookie, offset)) {
+    double when;
+    if (!remove_next(events_ptr, index, on, cookie, offset, when)) {
         return NULL;
     }
     if (note_on) *note_on = on;
@@ -3481,6 +3496,13 @@ void Alg_seq::merge_tracks()
     add_track(0);
     track(0)->set_events(notes, sum, sum);
     iterator.end();
+}
+
+
+void Alg_seq::set_in_use(bool flag)
+{
+    Alg_track::set_in_use(flag);
+    track_list.set_in_use(flag);
 }
 
 

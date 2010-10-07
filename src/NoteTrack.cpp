@@ -206,7 +206,11 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
          if (mVisibleChannels & (1 << (channel - 1))) {
             AColor::MIDIChannel(&dc, channel);
             dc.DrawRectangle(box);
-
+// two choices: channel is enabled (to see and play) when button is in
+// "up" position (original Audacity style) or in "down" position
+// 
+#define CHANNEL_ON_IS_DOWN 0
+#if !CHANNEL_ON_IS_DOWN
             AColor::LightMIDIChannel(&dc, channel);
             AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
             AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
@@ -218,9 +222,23 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
             AColor::Line(dc,
                          box.x, box.y + box.height - 1,
                          box.x + box.width - 1, box.y + box.height - 1);
+#endif
          } else {
             AColor::MIDIChannel(&dc, 0);
             dc.DrawRectangle(box);
+#if CHANNEL_ON_IS_DOWN
+            AColor::LightMIDIChannel(&dc, 0);
+            AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
+            AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
+
+            AColor::DarkMIDIChannel(&dc, 0);
+            AColor::Line(dc,
+                         box.x + box.width - 1, box.y,
+                         box.x + box.width - 1, box.y + box.height - 1);
+            AColor::Line(dc,
+                         box.x, box.y + box.height - 1,
+                         box.x + box.width - 1, box.y + box.height - 1);
+#endif
          }
 
          wxString t;
@@ -233,6 +251,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
          dc.DrawText(t, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
       }
    }
+   AColor::MIDIChannel(&dc, 0); // always return with gray color selected
    return box.GetBottom();
 }
 

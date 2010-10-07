@@ -2252,7 +2252,7 @@ void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc,
    // Iterate over all time signatures to generate beat positions of
    // bar lines, map the beats to times, map the times to position,
    // and draw the bar lines that fall within the region of interest (sel)
-   seq->convert_to_beats();
+   // seq->convert_to_beats();
    dc.SetPen(mp);
    Alg_time_sigs &sigs = seq->time_sig;
    int i = 0; // index into ts[]
@@ -2408,7 +2408,6 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    iterator.begin();
    //for every event
    Alg_event_ptr evt;
-   printf ("go time\n");
    while (evt = iterator.next()) {
       if (evt->get_type() == 'n') { // 'n' means a note
          Alg_note_ptr note = (Alg_note_ptr) evt;

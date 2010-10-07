@@ -1322,13 +1322,18 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
 {
    int i;
    int nTracks = mMidiPlaybackTracks.GetCount();
-   // Set up to play only one track:
-   mSeq = mMidiPlaybackTracks[0]->GetSequence();
-   mIterator = new Alg_iterator(mSeq, false);
+   // instead of initializing with an Alg_seq, we use begin_seq()
+   // below to add ALL Alg_seq's.
+   mIterator = new Alg_iterator(NULL, false);
    // Iterator not yet intialized, must add each track...
    for (i = 0; i < nTracks; i++) {
       NoteTrack *t = mMidiPlaybackTracks[i];
-      mIterator->begin_seq(t->GetSequence(), t, t->GetOffset() + offset);
+      Alg_seq_ptr seq = t->GetSequence();
+      // mark sequence tracks as "in use" since we're handing this
+      // off to another thread and want to make sure nothing happens
+      // to the data until playback finishes. This is just a sanity check.
+      seq->set_in_use(true);
+      mIterator->begin_seq(seq, t, t->GetOffset() + offset);
    }
    GetNextEvent(); // prime the pump for FillMidiBuffers
 
@@ -1382,13 +1387,6 @@ bool AudioIO::StartPortMidiStream()
                                 &::MidiTime,
                                 NULL, 
                                 mMidiLatency);
-   // DEBUGGING
-   //const PmDeviceInfo *info = Pm_GetDeviceInfo(playbackDevice);
-   //printf("Pm_OpenOutput on %s, return code %d\n", 
-   //       info->name, mLastPmError);
-   
-   //fprintf(stderr, "mT0: %f\n", mT0);
-
    mMidiStreamActive = true;
    mPauseTime = 0;
    mMidiPaused = false;
@@ -1528,6 +1526,15 @@ void AudioIO::StopStream()
       Pm_Close(mMidiStream);
       mMidiStream = NULL;
       mIterator->end();
+
+      // set in_use flags to false
+      int nTracks = mMidiPlaybackTracks.GetCount();
+      for (int i = 0; i < nTracks; i++) {
+         NoteTrack *t = mMidiPlaybackTracks[i];
+         Alg_seq_ptr seq = t->GetSequence();
+         seq->set_in_use(false);
+      }
+
       delete mIterator;
       mIterator = NULL; // just in case someone tries to reference it
       mMidiPlaySpeed = 1.0;
@@ -2612,11 +2619,11 @@ void AudioIO::OutputEvent()
    int command = -1;
    int data1 = -1;
    int data2 = -1;
-
    // 0.0005 is for rounding
    double eventTime = (mNextEventTime - mT0) / mMidiPlaySpeed + mT0;
    double time = eventTime + PauseTime() + 0.0005 - 
                  ((mMidiLatency + mSynthLatency) * 0.001);
+
    if (mNumPlaybackChannels > 0) { // is there audio playback?
       time += 1; // MidiTime() has a 1s offset
    } else {
@@ -2645,15 +2652,25 @@ void AudioIO::OutputEvent()
    // if mNextEvent's channel is visible, play it, visibility can
    // be updated while playing. Be careful: if we have a note-off,
    // then we must not pay attention to the channel selection
-   // because we must turn the note off even if the user changed
-   // the channel selection after the note began
+   // or mute/solo buttons because we must turn the note off 
+   // even if the user changed something after the note began
+   // Note that because multiple tracks can output to the same
+   // MIDI channels, it is not a good idea to send "All Notes Off"
+   // when the user presses the mute button. We have no easy way
+   // to know what notes are sounding on any given muted track, so
+   // we'll just wait for the note-off events to happen.
+   // Also note that note-offs are only sent when we call 
+   // mIterator->request_note_off(), so notes that are not played
+   // will note generate random note-offs. There is the interesting
+   // case that if the playback is paused, all-notes-off WILL be sent
+   // and if playback resumes, the pending note-off events WILL also
+   // be sent (but if that is a problem, there would also be a problem
+   // in the non-pause case.
    if (((mNextEventTrack->GetVisibleChannels() & (1 << channel)) && 
         // only play if note is not muted:
         !((mHasSolo || mNextEventTrack->GetMute()) && 
-          !mNextEventTrack->GetSolo()))) {
-        // ||
-        // the following allows note-offs even when muted or not selected
-        // (mNextEvent->is_note() && !mNextIsNoteOn)) { 
+          !mNextEventTrack->GetSolo())) ||
+       (mNextEvent->is_note() && !mNextIsNoteOn)) { 
       // Note event
       if (mNextEvent->is_note() && !mSendMidiState) {
          // Pitch and velocity
@@ -2718,9 +2735,10 @@ void AudioIO::OutputEvent()
          Pm_WriteShort(mMidiStream, timestamp, 
                     Pm_Message((int) (command + channel), 
                                   (long) data1, (long) data2));
-         //printf("Pm_WriteShort %lx @ %d\n", 
-         //       Pm_Message((int) (command + channel), 
-         //                  (long) data1, (long) data2), timestamp);
+         /* printf("Pm_WriteShort %lx (%p) @ %d, advance %d\n", 
+                Pm_Message((int) (command + channel), 
+                           (long) data1, (long) data2), 
+                           mNextEvent, timestamp, timestamp - Pt_Time()); */
       }
    }
 }

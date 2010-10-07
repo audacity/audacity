@@ -3996,7 +3996,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
          pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
    }
    #ifdef USE_MIDI
-  } else {
+   } else {
       if (!pan) {
          ((NoteTrack *) mCapturedTrack)->SetGain(newValue);
          #ifdef EXPERIMENTAL_MIXER_BOARD
@@ -4006,7 +4006,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
                pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
          #endif
       }
-  }
+   }
    #endif
 
    VisibleTrackIterator iter(GetProject());

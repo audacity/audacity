@@ -324,6 +324,9 @@ public:
     // creating a new track and adding notes to it. It is *not*
     // updated after uninsert(), so use it with care.
     double last_note_off;
+    // initially false, in_use can be used to mark "do not delete". If an
+    // Alg_events instance is deleted while "in_use", an assertion will fail.
+    bool in_use;
     virtual int length() { return len; }
     Alg_event_ptr &operator[](int i) {
         assert(i >= 0 && i < len);
@@ -333,6 +336,7 @@ public:
         maxlen = len = 0;
         events = NULL;
         last_note_off = 0;
+        in_use = false;
     }
     // destructor deletes the events array, but not the
     // events themselves
@@ -797,6 +801,7 @@ public:
     virtual Alg_event_list *find(double t, double len, bool all,
                                  long channel_mask, long event_type_mask);
 
+    virtual void set_in_use(bool flag) { in_use = flag; }
     //
     // MIDI playback
     //
@@ -891,6 +896,7 @@ public:
     void append(Alg_track_ptr track);
     void add_track(int track_num, Alg_time_map_ptr time_map, bool seconds);
     void reset();
+    void set_in_use(bool flag); // handy to set in_use flag on all tracks
 } *Alg_tracks_ptr;
 
 
@@ -912,6 +918,7 @@ typedef struct Alg_pending_event {
     long index; // offset of this event
     bool note_on; // is this a note-on or a note-off (if applicable)?
     double offset; // time offset for events
+    double time; // time for this event
 } *Alg_pending_event_ptr;
 
 
@@ -934,7 +941,7 @@ private:
                 void *cookie, double offset);
     // returns the info on the next pending event in the priority queue
     bool remove_next(Alg_events_ptr &events, long &index, bool &note_on,
-                     void *&cookie, double &offset);
+                     void *&cookie, double &offset, double &time);
 public:
     bool note_off_flag; // remembers if we are iterating over note-off
                         // events as well as note-on and update events
@@ -1096,6 +1103,7 @@ public:
                          double *num, double *den);
     // void set_events(Alg_event_ptr *events, long len, long max);
     void merge_tracks();    // move all track data into one track
+    void set_in_use(bool flag); // set in_use flag on all tracks
 } *Alg_seq_ptr, &Alg_seq_ref;
 
 
