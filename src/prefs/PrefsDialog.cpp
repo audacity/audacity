@@ -209,6 +209,25 @@ void PrefsDialog::OnOK(wxCommandEvent & event)
 
 #if USE_PORTMIXER
    if (gAudioIO) {
+      // We cannot have opened this dialog if gAudioIO->IsAudioTokenActive(), 
+      // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in 
+      // AudacityProject::GetUpdateFlags().
+      // However, we can have an invalid audio token (so IsAudioTokenActive() 
+      // is false), but be monitoring. 
+      // If monitoring, have to stop the stream, so HandleDeviceChange() can work. 
+      // We could disable the Preferences command while monitoring, i.e., 
+      // set AudioIONotBusyFlag/AudioIOBusyFlag according to monitoring, as well. 
+      // Instead allow it because unlike recording, for example, monitoring 
+      // is not clearly something that should prohibit opening prefs. 
+      // TO-DO: We *could* be smarter in this method and call HandleDeviceChange()  
+      // only when the device choices actually changed. True of lots of prefs!
+      // As is, we always stop monitoring before handling the device change.
+      if (gAudioIO->IsMonitoring()) 
+      {
+         gAudioIO->StopStream();
+         while (gAudioIO->IsBusy())
+            wxMilliSleep(100);
+      }
       gAudioIO->HandleDeviceChange();
    }
 #endif

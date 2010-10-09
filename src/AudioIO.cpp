@@ -720,6 +720,9 @@ wxArrayString AudioIO::GetInputSourceNames()
 void AudioIO::HandleDeviceChange()
 {
    // This should not happen, but it would screw things up if it did.
+   // Vaughan, 2010-10-08: But it *did* happen, due to a bug, and nobody 
+   // caught it because this method just returned. Added wxASSERT().
+   wxASSERT(!IsStreamActive()); 
    if (IsStreamActive())
       return;
 
@@ -1679,7 +1682,6 @@ bool AudioIO::IsStreamActive()
    bool isActive = false;
    if( mPortStreamV19 )
       isActive = (Pa_IsStreamActive( mPortStreamV19 ) > 0);
-   else isActive = false;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    if( mMidiStreamActive && !mMidiOutputComplete )
@@ -1690,10 +1692,7 @@ bool AudioIO::IsStreamActive()
 
 bool AudioIO::IsStreamActive(int token)
 {
-   if( IsStreamActive() && token > 0 && token == mStreamToken )
-      return true;
-   else
-      return false;
+   return (this->IsStreamActive() && this->IsAudioTokenActive(token));
 }
 
 bool AudioIO::IsAudioTokenActive(int token)

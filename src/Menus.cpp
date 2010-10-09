@@ -1354,8 +1354,7 @@ wxUint32 AudacityProject::GetUpdateFlags()
    // have changed, it's not necessary to even check for updates.
    wxUint32 flags = 0;
 
-   if (GetAudioIOToken() == 0 ||
-       !gAudioIO->IsAudioTokenActive(GetAudioIOToken()))
+   if (!gAudioIO->IsAudioTokenActive(GetAudioIOToken()))
       flags |= AudioIONotBusyFlag;
    else
       flags |= AudioIOBusyFlag;
