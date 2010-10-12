@@ -1655,7 +1655,12 @@ void EqualizationDialog::setCurve(int currentCurve)
                if(when <= 1)
                   env->Insert(when, value);
                else
+               {  // we have a point beyond fs/2.  Insert it so that env code can use it.
+                  // but just this one, we have no use for the rest
+                  env->SetTrackLen(when); // can't Insert if the envelope isn't long enough
+                  env->Insert(when, value);
                   break;
+               }
             }
             else
             {  //get the first point as close as we can to the last point requested
@@ -1664,13 +1669,6 @@ void EqualizationDialog::setCurve(int currentCurve)
                //double v = mCurves[currentCurve].points[i].dB;
                mLogEnvelope->Insert(0., mCurves[currentCurve].points[i].dB);
             }
-         }
-         if ( i != nCurvePoints)
-         {
-            when = 1.;
-            value = mCurves[currentCurve].points[nCurvePoints-1].dB;
-            env->Insert(when, value);
-            changed = true;
          }
       }
    }
