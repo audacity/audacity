@@ -229,7 +229,7 @@ not all sound card drivers support them.
 TO ADD SUPPORT FOR DIRECTSOUND: 
 Install the DirectX SDK from Microsoft (http://msdn.microsoft.com/directx).  
 The installation will automatically define the DXSDK_DIR
-environment variable and its presense will cause DirectSound
+environment variable and its presence will cause DirectSound
 support to be automatically included when Audacity is built.
 
 Audacity releases from 1.3.7 onwards include DirectSound support. 
