@@ -1215,9 +1215,9 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrH = new wxBoxSizer( wxHORIZONTAL );
 
    mFaderOrDraw[0] = new wxRadioButton(
-         this, drawRadioID, _("&Draw curves"),
+         this, drawRadioID, _("&Draw Curves"),
          wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
-   mFaderOrDraw[0]->SetName(_("Draw curves"));
+   mFaderOrDraw[0]->SetName(_("Draw Curves"));
    szrH->Add( mFaderOrDraw[0], 0, wxRIGHT, 10 );
 
    mFaderOrDraw[1] = new wxRadioButton(
@@ -1236,8 +1236,8 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrH->Add( szrI );
 
    szrL = new wxBoxSizer( wxHORIZONTAL );
-   mLinFreq = new wxCheckBox(this, ID_LIN_FREQ, _("Li&near frequency scale"));
-   mLinFreq->SetName(_("Linear frequency scale"));
+   mLinFreq = new wxCheckBox(this, ID_LIN_FREQ, _("Li&near Frequency Scale"));
+   mLinFreq->SetName(_("Linear Frequency Scale"));
    szrL->Add( mLinFreq, 0 );
    szrH->Add(szrL);  // either szrI or szrL are visible, not both.
 
@@ -1246,13 +1246,13 @@ void EqualizationDialog::MakeEqualizationDialog()
    // -------------------------------------------------------------------
 
    // length of filter (M) label
-   txt = new wxStaticText(this, wxID_ANY, _("Length of &filter:"));
+   txt = new wxStaticText(this, wxID_ANY, _("Length of &Filter:"));
    szrH->Add( txt, 0 );
 
    // length of filter (M) slider
    MSlider = new wxSliderBugfix(this, ID_LENGTH, (M -1)/2, 10, 4095,
                            wxDefaultPosition, wxSize(200, -1), wxSL_HORIZONTAL);
-   MSlider->SetName(_("Length of filter"));
+   MSlider->SetName(_("Length of Filter"));
    szrH->Add( MSlider, 0, wxEXPAND );
 
    wxString label;
@@ -1268,7 +1268,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    // -------------------------------------------------------------------
    szrC = new wxBoxSizer( wxHORIZONTAL );   //szrC is for the curves bits
 
-   txt = new wxStaticText( this, wxID_ANY, _("&Select curve:") );
+   txt = new wxStaticText( this, wxID_ANY, _("&Select Curve:") );
    szrC->Add( txt, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT, 4 );
 
    // Create the choice sizer (helps in recreating choice control)
@@ -1278,8 +1278,8 @@ void EqualizationDialog::MakeEqualizationDialog()
    // Create the choice control
    CreateChoice();
 
-   mManage = new wxButton( this, ID_MANAGE, _("S&ave/Manage curves...") );
-   mManage->SetName(_("Save and Manage curves"));
+   mManage = new wxButton( this, ID_MANAGE, _("S&ave/Manage Curves...") );
+   mManage->SetName(_("Save and Manage Curves"));
    szrC->Add( mManage, 0, wxALIGN_CENTRE|wxLEFT, 4 );
 
    btn = new wxButton( this, ID_CLEAR, _("Fla&tten"));
@@ -1351,7 +1351,7 @@ void EqualizationDialog::CreateChoice()
 
    // Save control ptr and add to its sizer
    mCurve = choice;
-   mCurve->SetName(_("Select curve"));
+   mCurve->SetName(_("Select Curve"));
    mCurveSizer->Add( mCurve, 0 );
 
    // Delete the array of names
