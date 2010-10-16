@@ -115,9 +115,14 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
-   // Vaughan, 2010-07-30: AudacityProject::OnHistory always calls Show() then 
-   // HistoryWindow::UpdateDisplay, so no need to do it here.
-   //    DoUpdate();
+   // Vaughan, 2010-07-30: AudacityProject::OnHistory always calls Show() 
+   //    then HistoryWindow::UpdateDisplay, so no need to do it here.
+   // Vaughan, 2010-10-16: Not on Windows, anyway. 
+   //    But Steve reported that on Ubuntu, View > History now crashes, 
+   //    so restore it for non-Windows.
+   #ifdef __WXGTK__
+      DoUpdate();
+   #endif
    mList->SetMinSize(mList->GetSize());
    Fit();
    SetMinSize(GetSize());
