@@ -3,7 +3,7 @@
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-unicode-1.3.11
+OutputBaseFilename=audacity-win-unicode-1.3.13
 SetupIconFile=audacity.ico
 
 WizardImageFile=audacity_InnoWizardImage.bmp
@@ -13,7 +13,7 @@ SolidCompression=yes
 
 ; installer-related directives
 AppName=Audacity 1.3 Beta (Unicode)
-AppVerName=Audacity 1.3.11 (Unicode)
+AppVerName=Audacity 1.3.13 (Unicode)
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -28,6 +28,7 @@ DefaultDirName={pf}\Audacity 1.3 Beta (Unicode)
 DirExistsWarning=yes
 DisableProgramGroupPage=yes
 UninstallDisplayIcon="{app}\audacity.exe"
+
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=..\LICENSE.txt
 InfoAfterFile=..\README.txt
@@ -61,6 +62,7 @@ Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Add
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Name: associate_aup; Description: "&Associate Audacity project files"; GroupDescription: "Other tasks:"; Flags: checkedonce
 
+
 [Files]
 ; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
@@ -70,6 +72,8 @@ Source: "..\win\unicode release\audacity.exe"; DestDir: "{app}"; Flags: ignoreve
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
+
+Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
 ; wxWidgets DLLs. Be specific (not *.dll) so we don't accidentally distribute avformat.dll, for example.
 ; Don't use the WXWIN environment variable, because...
@@ -86,9 +90,9 @@ Source: "..\win\unicode release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; 
 ; This is not an ideal solution, but should need the least tech support.
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{pf}\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{pf}\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{pf}\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\win\unicode release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
@@ -137,12 +141,4 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 
 [Run]
 Filename: "{app}\audacity.exe"; Description: "Launch Audacity"; Flags: nowait postinstall skipifsilent
-
-
-
-
-
-
-
-
 
