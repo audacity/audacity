@@ -39,11 +39,9 @@
 
 #include "../ondemand/ODManager.h"
 #include "../ondemand/ODComputeSummaryTask.h"
-//temporarilly commented out till it is added to all projects
-//#include "../Profiler.h"
-//the minimum number of samples a file has to use the OD compute summary task
-//Otherwise, we use the older PCMAliasBlockFile method since it should be instant  enough
-//and the overhead of starting the thread might be slower.
+
+//If OD is enabled, he minimum number of samples a file has to use it.
+//Otherwise, we use the older PCMAliasBlockFile method since it should be fast enough.
 #define kMinimumODFileSampleSize 44100*30
 
 #ifndef SNDFILE_1
@@ -233,19 +231,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    // arbitrary location in the file.
    if (!mInfo.seekable)
       doEdit = false;
-   //for profiling, uncomment and look in audacity.app/exe's folder for AudacityProfile.txt
-   //BEGIN_TASK_PROFILING("ON Demand Load 2hr stereo wav");
-   
-   //BEGIN_TASK_PROFILING("Pre-GSOC (PCMAliasBlockFile) Drag and Drop 5 80 mb files into audacity (average per file)");
-   //BEGIN_TASK_PROFILING("Pre-GSOC (PCMAliasBlockFile) open an 80 mb wav stereo file");
-    //for profiling, uncomment and look in audacity.app/exe's folder for AudacityProfile.txt
-   //static int tempLog =0;
-   //if(tempLog++ % 5==0)
-   //   BEGIN_TASK_PROFILING("On Demand Drag and Drop 5 80 mb files into audacity, 5 wavs per task");
-   //BEGIN_TASK_PROFILING("On Demand open an 80 mb wav stereo file");   
-   if (doEdit) {
-      wxLogDebug(wxT("Importing PCM Start"));
 
+   if (doEdit) {
       // If this mode has been selected, we form the tracks as
       // aliases to the files we're editing, i.e. ("foo.wav", 12000-18000)
       // instead of actually making fresh copies of the samples.
@@ -272,10 +259,6 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          }
       }
       updateResult = mProgress->Update(fileTotalFrames, fileTotalFrames);
-      
-      //now go over the wavetrack/waveclip/sequence and load all the blockfiles into a ComputeSummaryTask.  
-      //Add this task to the ODManager and the Track itself.      
-      wxLogDebug(wxT("Importing PCM"));
        
       if(useOD)
       { 
@@ -529,9 +512,6 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    }
 #endif
 
-   //comment out to undo profiling.
-   //END_TASK_PROFILING("Pre-GSOC (PCMAliasBlockFile) open an 80 mb wav stereo file");
-
    return updateResult;
 }
 
@@ -540,14 +520,4 @@ PCMImportFileHandle::~PCMImportFileHandle()
    sf_close(mFile);
 }
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 2e9db06a-fd0b-4af3-badd-eeb8437067e7
 
