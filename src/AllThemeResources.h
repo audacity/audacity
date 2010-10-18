@@ -141,8 +141,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpRedo, wxImage( 26, 24 ), wxT("Redo"));
    DEFINE_IMAGE( bmpRedoDisabled, wxImage( 26, 24 ), wxT("RedoDisabled"));
 
-   //v These are currently a chain-link image. 
-   // Might want to turn it into a lock or, clockface, or some combination (clock-in-lock?).
    DEFINE_IMAGE( bmpSyncLockTracks, wxImage( 20, 20 ), wxT("SyncLockTracks"));
    DEFINE_IMAGE( bmpSyncLockTracksDisabled, wxImage( 20, 20 ), wxT("SyncLockTracksDisabled"));
 
@@ -215,8 +213,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpAudacityLogo, wxImage( 215, 190 ), wxT("AudacityLogo")); 
    DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
 
-   //v These are currently a chain-link image. 
-   // Might want to turn it into a lock or, clockface, or some combination (clock-in-lock?).
    DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
    DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
 
