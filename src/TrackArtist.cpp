@@ -441,7 +441,6 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
       }
       // draw lines delineating the out-of-bounds margins
       dc->SetPen(*wxBLACK_PEN);
-      int m = track->GetNoteMargin();
       // you would think the -1 offset here should be -2 to match the
       // adjustment to r.y (see above), but -1 produces correct output
       AColor::Line(*dc, r.x, r.y + marg - 1, r.x + r.width, r.y + marg - 1);
@@ -2056,7 +2055,7 @@ static long LookupIntAttribute(Alg_note_ptr note, Alg_attribute attr, long def);
 static bool LookupLogicalAttribute(Alg_note_ptr note, Alg_attribute attr, bool def);
 static const char *LookupStringAttribute(Alg_note_ptr note, Alg_attribute attr, const char *def);
 static const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def);
-static int PITCH_TO_Y(double p, int bottom);
+//static int PITCH_TO_Y(double p, int bottom);
 
 
 // returns NULL if note is not a shape,
@@ -2316,9 +2315,6 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    int numPitches = (r.height) / track->GetPitchHeight();
    if (numPitches < 0) numPitches = 0; // cannot be negative
 
-   // bottomNote is the pitch of the note at the bottom of the track
-   // default is 24 (C1)
-   int bottomNote = track->GetBottomNote();
    // bottom is the hypothetical location of the bottom of pitch 0 relative to 
    // the top of the clipping region r: r.height - PITCH_HEIGHT/2 is where the 
    // bottomNote is displayed, and to that
@@ -2408,7 +2404,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    iterator.begin();
    //for every event
    Alg_event_ptr evt;
-   while (evt = iterator.next()) {
+   while ((evt = iterator.next())) {
       if (evt->get_type() == 'n') { // 'n' means a note
          Alg_note_ptr note = (Alg_note_ptr) evt;
          // if the note's channel is visible
@@ -2765,41 +2761,122 @@ void TrackArtist::SetSpectrumLogMaxFreq(int freq)
 }
 
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
+//
+// AWD: now that the tiles don't link together, we're drawing a tilted grid, at
+// two steps down for every one across. This creates a pattern that repeats in
+// 5-step by 5-step boxes. Because we're only drawing in 5/25 possible positions
+// we have a grid spacing somewhat smaller than the image dimensions. Thus we
+// acheive lower density than with a square grid and eliminate edge cases where
+// no tiles are displayed.
+//
+// The pattern draws in tiles at (0,0), (2,1), (4,2), (1,3), and (3,4) in each
+// 5x5 box.
+//
+// There may be a better way to do this, or a more appealing pattern.
 void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
 {
    wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockSelTile));
 
-   int xOffset = r.x % syncLockBitmap.GetWidth();
-   if (xOffset < 0) xOffset += syncLockBitmap.GetWidth();
-   int width;
-   for (int x = 0; x < r.width; x += width) {
-      width = syncLockBitmap.GetWidth() - xOffset;
+   // Grid spacing is a bit smaller than actual image size
+   int gridW = syncLockBitmap.GetWidth() - 6;
+   int gridH = syncLockBitmap.GetHeight() - 8;
+
+   // Horizontal position within the grid, modulo its period
+   int blockX = (r.x / gridW) % 5;
+   
+   // Amount to offset drawing of first column
+   int xOffset = r.x % gridW;
+   if (xOffset < 0) xOffset += gridW;
+
+   // Check if we're missing an extra column to the left (this can happen
+   // because the tiles are bigger than the grid spacing)
+   bool extraCol = false;
+   if (syncLockBitmap.GetWidth() - gridW > xOffset) {
+      extraCol = true;
+      xOffset += gridW;
+      blockX = (blockX - 1) % 5;
+   }
+   // Make sure blockX is non-negative
+   if (blockX < 0) blockX += 5;
+   
+   int x = 0;
+   while (x < r.width) {
+      int width = syncLockBitmap.GetWidth() - xOffset;
       if (x + width > r.width)
          width = r.width - x;
 
-      int yOffset = r.y % syncLockBitmap.GetHeight();
-      if (yOffset < 0) yOffset += syncLockBitmap.GetWidth();
-      int height;
-      for (int y = 0; y < r.height; y += height) {
-         height = syncLockBitmap.GetHeight() - yOffset;
+      //
+      // Draw each row in this column
+      //
+
+      // Vertical position in the grid, modulo its period
+      int blockY = (r.y / gridH) % 5;
+
+      // Amount to offset drawing of first row
+      int yOffset = r.y % gridH;
+      if (yOffset < 0) yOffset += gridH;
+      
+      // Check if we're missing an extra row on top (this can happen because
+      // the tiles are bigger than the grid spacing)
+      bool extraRow = false;
+      if (syncLockBitmap.GetHeight() - gridH > yOffset) {
+         extraRow = true;
+         yOffset += gridH;
+         blockY = (blockY - 1) % 5;
+      }
+      // Make sure blockY is non-negative
+      if (blockY < 0) blockY += 5;
+
+      int y = 0;
+      while (y < r.height)
+      {
+         int height = syncLockBitmap.GetHeight() - yOffset;
          if (y + height > r.height)
             height = r.height - y;
 
-         // Do we need to get a sub-bitmap?
-         if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
-            wxBitmap subSyncLockBitmap = 
-               syncLockBitmap.GetSubBitmap(wxRect(xOffset, yOffset, width, height));
-            dc->DrawBitmap(subSyncLockBitmap, r.x + x, r.y + y, true);
-         }
-         else {
-            dc->DrawBitmap(syncLockBitmap, r.x + x, r.y + y, true);
+         // AWD: draw blocks according to our pattern
+         if ((blockX == 0 && blockY == 0) || (blockX == 2 && blockY == 1) ||
+             (blockX == 4 && blockY == 2) || (blockX == 1 && blockY == 3) ||
+             (blockX == 3 && blockY == 4))
+         {
+
+            // Do we need to get a sub-bitmap?
+            if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
+               wxBitmap subSyncLockBitmap = 
+                  syncLockBitmap.GetSubBitmap(wxRect(xOffset, yOffset, width, height));
+               dc->DrawBitmap(subSyncLockBitmap, r.x + x, r.y + y, true);
+            }
+            else {
+               dc->DrawBitmap(syncLockBitmap, r.x + x, r.y + y, true);
+            }
          }
 
-         // Only offset first row
-         yOffset = 0;
+         // Updates for next row
+         if (extraRow) {
+            // Second offset row, still at y = 0; no more extra rows
+            yOffset -= gridH;
+            extraRow = false;
+         }
+         else {
+            // Move on in y, no more offset rows
+            y += gridH - yOffset;
+            yOffset = 0;
+         }
+         blockY = (blockY + 1) % 5;
       }
-      // Only offset first column
-      xOffset = 0;
+
+      // Updates for next column
+      if (extraCol) {
+         // Second offset column, still at x = 0; no more extra columns
+         xOffset -= gridW;
+         extraCol = false;
+      }
+      else {
+         // Move on in x, no more offset rows
+         x += gridW - xOffset;
+         xOffset = 0;
+      }
+      blockX = (blockX + 1) % 5;
    }
 }
 

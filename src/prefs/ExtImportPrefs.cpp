@@ -345,7 +345,6 @@ void ExtImportPrefs::OnRuleTableKeyDown(wxKeyEvent& event)
 
 void ExtImportPrefs::DoOnRuleTableKeyDown (int keycode)
 {
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
    int selrow = RuleTable->GetGridCursorRow ();
    wxString ts;
    if (keycode == WXK_UP)

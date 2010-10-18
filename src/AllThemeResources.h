@@ -217,7 +217,7 @@ from there.  Audacity will look for a file called "Pause.png".
 
    //v These are currently a chain-link image. 
    // Might want to turn it into a lock or, clockface, or some combination (clock-in-lock?).
-   DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(27, 27), wxT("SyncLockSelTile"));
+   DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
    DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
 
 #ifdef OLD_COLOURS

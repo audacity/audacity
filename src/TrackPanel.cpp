@@ -871,7 +871,6 @@ void TrackPanel::OnTimer()
    wxCommandEvent dummyEvent;
    AudacityProject *p = GetProject();
 
-   static int rptcnt = 0;
    if ((p->GetAudioIOToken() > 0) &&
          gAudioIO->IsStreamActive(p->GetAudioIOToken()))
    {
@@ -5178,7 +5177,6 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event)
        gAudioIO->IsStreamActive( GetProject()->GetAudioIOToken())) {
       return false;
    }
-   NoteTrack *nt = (NoteTrack *) track;
    int center = r.y + r.height / 2;
    int distance = abs(event.m_y - center);
    const int yTolerance = 10;

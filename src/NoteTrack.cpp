@@ -416,7 +416,6 @@ bool NoteTrack::Trim(double t0, double t1)
 {
    if (t1 <= t0)
       return false;
-   double len = t1 - t0;
    mSeq->convert_to_seconds();
    // delete way beyond duration just in case something is out there:
    mSeq->clear(t1 - GetOffset(), mSeq->get_dur() + 10000.0, false);
