@@ -598,6 +598,13 @@ void LWSlider::OnPaint(wxDC &dc, bool selected)
       dc.Clear();
    }
 #endif
+#if defined(__WXGTK__)
+   if (mHW)
+   {
+      dc.SetBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND));
+      dc.Clear();
+   }
+#endif
 
    dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
    if (mOrientation == wxHORIZONTAL)
@@ -721,13 +728,7 @@ void LWSlider::Draw()
    TransparentColour = theTheme.Colour( clrTrackInfo );
 #endif
 
-#ifdef __WXGTK__
-   // AWD: this is from a patch posted by B. Drung on bug #175, but it breaks
-   // things on Windows
-   dc->SetBackground( wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND) );
-#else
    dc->SetBackground( wxBrush( TransparentColour  ) );
-#endif
    dc->Clear();
 
    // Draw the line along which the thumb moves.
