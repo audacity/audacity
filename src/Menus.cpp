@@ -1558,12 +1558,11 @@ void AudacityProject::UpdateMenus()
    if (!IsActive())
       return;
 
-   // Return from this function if nothing's changed since
-   // the last time we were here.
    wxUint32 flags = GetUpdateFlags();
    wxUint32 flags2 = flags;
 
-   // We can enable some extra items if we have select-all-on-none
+   // We can enable some extra items if we have select-all-on-none.
+   //EXPLAIN-ME: Why is this here rather than in GetUpdateFlags()?
    if (mSelectAllOnNone)
    {
       if ((flags & TracksExistFlag) != 0)
@@ -1578,6 +1577,8 @@ void AudacityProject::UpdateMenus()
       }
    }
 
+   // Return from this function if nothing's changed since
+   // the last time we were here.
    if (flags == mLastFlags)
       return;
    mLastFlags = flags;
