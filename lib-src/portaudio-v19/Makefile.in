@@ -133,7 +133,6 @@ SRC_DIRS = \
 	src/hostapi/wasapi \
 	src/hostapi/wdmks \
 	src/hostapi/wmme \
-	src/os/mac_osx \
 	src/os/unix \
 	src/os/win
 
