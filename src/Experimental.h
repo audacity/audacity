@@ -38,7 +38,7 @@
 // This mostly sets up a weird color scheme currently. 
 //#define EXPERIMENTAL_THEMING
 
-//August 2009 - Theming not locked down enough enough for a stable release.
+//August 2009 - Theming not locked down enough for a stable release.
 // This turns on the Theme panel in Prefs dialog. It is independent of EXPERIMENTAL_THEMING.
 //#define EXPERIMENTAL_THEME_PREFS
 
