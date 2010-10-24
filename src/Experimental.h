@@ -35,11 +35,12 @@
 
 // experimental theming
 // Work in progress, June-2008.
+// This mostly sets up a weird color scheme currently. 
 //#define EXPERIMENTAL_THEMING
-#if IS_BETA
-   //August 2009 - Theming not locked down enough enough for a stable release.
-   //#define EXPERIMENTAL_THEME_PREFS
-#endif
+
+//August 2009 - Theming not locked down enough enough for a stable release.
+// This turns on the Theme panel in Prefs dialog. It is independent of EXPERIMENTAL_THEMING.
+//#define EXPERIMENTAL_THEME_PREFS
 
 //Next line enables Mic monitoring at times when it was previously off.
 //More work is needed as after recording or playing it results in an 
