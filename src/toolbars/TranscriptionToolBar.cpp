@@ -145,7 +145,7 @@ AButton *TranscriptionToolBar::AddButton(
 
    r = ToolBar::MakeButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      eFore, eDisabled,
+      eFore, eFore, eDisabled,
       wxWindowID(id),
       wxDefaultPosition, 
       false,

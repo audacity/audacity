@@ -166,7 +166,7 @@ AButton * ToolsToolBar::MakeTool( teBmps eTool,
 {
    AButton *button = ToolBar::MakeButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      eTool, eTool,
+      eTool, eTool, eTool,
       wxWindowID(id),
       wxDefaultPosition, true,
       theTheme.ImageSize( bmpRecoloredUpSmall ));

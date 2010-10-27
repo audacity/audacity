@@ -98,7 +98,7 @@ void EditToolBar::AddSeparator()
 /// MakeButtons() with fewer arguments
 /// Very similar to code in ControlToolBar...
 AButton *EditToolBar::AddButton(
-   teBmps eFore, teBmps eDisabled,
+   teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
    int id,
    const wxChar *label,
    bool toggle)
@@ -107,7 +107,7 @@ AButton *EditToolBar::AddButton(
 
    r = ToolBar::MakeButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
-      eFore, eDisabled,
+      eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
       wxDefaultPosition, 
       toggle,
@@ -127,41 +127,41 @@ void EditToolBar::Populate()
    MakeButtonBackgroundsSmall();
 
    /* Buttons */
-   AddButton(bmpCut, bmpCutDisabled, ETBCutID,
+   AddButton(bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
       _("Cut"));
-   AddButton(bmpCopy, bmpCopyDisabled, ETBCopyID,
+   AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
       _("Copy"));
-   AddButton(bmpPaste, bmpPasteDisabled, ETBPasteID,
+   AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
       _("Paste"));
-   AddButton(bmpTrim, bmpTrimDisabled, ETBTrimID,
+   AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
       _("Trim outside selection"));
-   AddButton(bmpSilence, bmpSilenceDisabled, ETBSilenceID,
+   AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
       _("Silence selection"));
 
    AddSeparator();
 
-   AddButton(bmpUndo, bmpUndoDisabled, ETBUndoID,
+   AddButton(bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
       _("Undo"));
-   AddButton(bmpRedo, bmpRedoDisabled, ETBRedoID,
+   AddButton(bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
       _("Redo"));
 
    AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   AddButton(bmpSyncLockTracks, bmpSyncLockTracksDisabled, ETBSyncLockID,
+   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksDisabled, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
    
    AddSeparator();
 #endif
    
-   AddButton(bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
+   AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
       _("Zoom In"));
-   AddButton(bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
+   AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
       _("Zoom Out"));
 
-   AddButton(bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
+   AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
       _("Fit selection in window"));
-   AddButton(bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
+   AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
       _("Fit project in window"));
 
    mButtons[ETBZoomInID]->SetEnabled(false);

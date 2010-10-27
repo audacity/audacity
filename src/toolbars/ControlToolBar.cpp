@@ -122,14 +122,14 @@ void ControlToolBar::Create(wxWindow * parent)
 
 // This is a convenience function that allows for button creation in
 // MakeButtons() with fewer arguments
-AButton *ControlToolBar::MakeButton(teBmps eFore, teBmps eDisabled,
+AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
                                     int id,
                                     bool processdownevents,
                                     const wxChar *label)
 {
    AButton *r = ToolBar::MakeButton(
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
-      eFore, eDisabled,
+      eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
       wxDefaultPosition, processdownevents,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
@@ -166,27 +166,27 @@ void ControlToolBar::Populate()
 {
    MakeButtonBackgroundsLarge();
 
-   mPause = MakeButton(bmpPause,bmpPauseDisabled,
+   mPause = MakeButton(bmpPause, bmpPause, bmpPauseDisabled,
       ID_PAUSE_BUTTON,  true,  _("Pause"));
 
-   mPlay = MakeButton( bmpPlay, bmpPlayDisabled, 
+   mPlay = MakeButton( bmpPlay, bmpPlay, bmpPlayDisabled, 
       ID_PLAY_BUTTON, true, _("Play"));
 
    MakeLoopImage();
 
-   mStop = MakeButton( bmpStop, bmpStopDisabled ,
+   mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
       ID_STOP_BUTTON, false, _("Stop"));
 
-   mRewind = MakeButton(bmpRewind, bmpRewindDisabled,
+   mRewind = MakeButton(bmpRewind, bmpRewind, bmpRewindDisabled,
       ID_REW_BUTTON, false, _("Start"));
 
-   mFF = MakeButton(bmpFFwd, bmpFFwdDisabled,
+   mFF = MakeButton(bmpFFwd, bmpFFwd, bmpFFwdDisabled,
       ID_FF_BUTTON, false, _("End"));
 
-   mRecord = MakeButton(bmpRecord, bmpRecordDisabled,
+   mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
 
-   mBatch = MakeButton(bmpCleanSpeech,bmpCleanSpeechDisabled,
+   mBatch = MakeButton(bmpCleanSpeech, bmpCleanSpeech, bmpCleanSpeechDisabled,
       ID_BATCH_BUTTON, false, _("Clean Speech"));
 
 #if wxUSE_TOOLTIPS

@@ -83,7 +83,7 @@ class ControlToolBar:public ToolBar {
 
  private:
 
-   AButton *MakeButton(teBmps eFore, teBmps eDisabled,
+   AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
       int id,
       bool processdownevents,
       const wxChar *label);

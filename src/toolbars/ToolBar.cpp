@@ -458,31 +458,33 @@ void ToolBar::MakeButtonBackgroundsSmall()
 }
 
 /// Makes a button and its four different state bitmaps
-/// @param eUp        Background for when button is Up.
-/// @param eDown      Background for when button is Down.
-/// @param eHilite    Background for when button is Hilit.
-/// @param eStandard  Foreground when enabled.
-/// @param eDisabled  Foreground when disabled.
-/// @param id         Windows Id.
-/// @param placement  Placement position
+/// @param eUp               Background for when button is Up.
+/// @param eDown             Background for when button is Down.
+/// @param eHilite           Background for when button is Hilit.
+/// @param eStandardUp       Foreground when enabled, up.
+/// @param eStandardDown     Foregrounde when enabled, down.
+/// @param eDisabled         Foreground when disabled.
+/// @param id                Windows Id.
+/// @param placement         Placement position
 /// @param processdownevents true iff button handles down events.
-/// @param size       Size of the background.
+/// @param size              Size of the background.
 AButton * ToolBar::MakeButton(teBmps eUp,
                               teBmps eDown,
                               teBmps eHilite,
-                              teBmps eStandard,
+                              teBmps eStandardUp,
+                              teBmps eStandardDown,
                               teBmps eDisabled,
                               wxWindowID id,
                               wxPoint placement,
                               bool processdownevents, 
                               wxSize size) 
 {
-   int xoff = (size.GetWidth() - theTheme.Image(eStandard).GetWidth())/2;
-   int yoff = (size.GetHeight() - theTheme.Image(eStandard).GetHeight())/2;
+   int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
+   int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
    
-   wxImage * up2        = OverlayImage(eUp,     eStandard, xoff, yoff);
-   wxImage * hilite2    = OverlayImage(eHilite, eStandard, xoff, yoff);
-   wxImage * down2      = OverlayImage(eDown,   eStandard, xoff + 1, yoff + 1);
+   wxImage * up2        = OverlayImage(eUp,     eStandardUp, xoff, yoff);
+   wxImage * hilite2    = OverlayImage(eHilite, eStandardUp, xoff, yoff);
+   wxImage * down2      = OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1);
    wxImage * disable2   = OverlayImage(eUp,     eDisabled, xoff, yoff);
 
    AButton * button =
@@ -553,7 +555,7 @@ void ToolBar::OnPaint( wxPaintEvent & event )
       int y;
       for(y=0;y<sz.y;y++)
       {
-         int yPix = ((float)y * imSz.y - 0.0001f)/(sz.y-1);
+         int yPix = ((float)y * imSz.y - 1.0f)/(sz.y-1);
          wxColour col( 
             mpBackGradient->GetRed( 0, yPix),
             mpBackGradient->GetGreen( 0, yPix),
