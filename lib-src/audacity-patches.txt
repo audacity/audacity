@@ -114,6 +114,7 @@ Patches: macro-quoting.patch: quote arguments to AC_DEFUN such that
 			autoreconf works with autorecnf 2.63. Has been accepted upstream
 		 portability.patch: add portability macros / pre-processor to 
 			enable build on non-standard platforms. Not yet accepted upstream.
+fix-aiff-offset.patch: fixes ignoring of offset in aiff files (accepted upstream oct. 23 '10)
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
 Upstream Version: 1.0.18
