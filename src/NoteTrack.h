@@ -15,6 +15,7 @@
 #include "Audacity.h"
 #include "Experimental.h"
 #include "Track.h"
+#include "effects/TimeWarper.h"
 
 #if defined(USE_MIDI)
 

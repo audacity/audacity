@@ -22,6 +22,7 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "../Project.h"
 #include "SoundTouchEffect.h"
 #include "TimeWarper.h"
+#include "NoteTrack.h"
 
 bool EffectSoundTouch::ProcessLabelTrack(Track *track)
 {

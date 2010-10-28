@@ -118,7 +118,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 {
    mMixerBoard = grandParent;
    mProject = project;
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    if (pLeftTrack->GetKind() == Track::Note) {
       mLeftTrack = NULL;
       mNoteTrack = (NoteTrack*) pLeftTrack;
@@ -128,6 +128,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       mNoteTrack = NULL;
    }
 #else
+   wxASSERT(pLeftTrack->GetKind() == Track::Wave);
    mTrack = mLeftTrack = pLeftTrack;
 #endif
    mRightTrack = pRightTrack;
@@ -156,7 +157,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    const int nGainSliderHeight = 
       size.GetHeight() - ctrlPos.y - kQuadrupleInset;
    ctrlSize.Set(kLeftSideStackWidth - kQuadrupleInset, nGainSliderHeight);
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    if (mNoteTrack) {
       mSlider_Gain = 
          new MixerTrackSlider(
@@ -815,7 +816,7 @@ void MixerBoard::UpdateTrackClusters()
       pRightTrack = pLeftTrack->GetLinked() ? iterTracks.Next() : NULL;
 
       if (pLeftTrack->GetKind() == Track::Wave 
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
           || pLeftTrack->GetKind() == Track::Note
 #endif
           ) 
@@ -826,7 +827,7 @@ void MixerBoard::UpdateTrackClusters()
             // Track clusters are maintained in the same order as the WaveTracks.
             // Track pointers can change for the "same" track for different states 
             // on the undo stack, so update the pointers and display name.
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
             if (pLeftTrack->GetKind() == Track::Note) {
                mMixerTrackClusters[nClusterIndex]->mNoteTrack = (NoteTrack*)pLeftTrack;
                mMixerTrackClusters[nClusterIndex]->mLeftTrack = NULL;
