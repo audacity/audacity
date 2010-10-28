@@ -655,7 +655,8 @@ bool EffectNyquist::ProcessOne()
       }
       else if (mControls[j].type == NYQ_CTRL_STRING) {
          wxString str = mControls[j].valStr;
-         str.Replace(wxT("\""), wxT("'"));
+         str.Replace(wxT("\\"), wxT("\\\\"));
+         str.Replace(wxT("\""), wxT("\\\""));
          cmd += wxString::Format(wxT("(setf %s \"%s\")\n"),
                                  mControls[j].var.c_str(),
                                  str.c_str());
