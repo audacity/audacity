@@ -156,6 +156,16 @@ bool EffectChangePitch::Process()
    mSoundTouch = new SoundTouch();
    SetTimeWarper(new IdentityTimeWarper());
    mSoundTouch->setPitchSemiTones((float)(m_SemitonesChange));
+#ifdef USE_MIDI
+   // Note: m_SemitonesChange is private to ChangePitch because it only
+   // needs to pass it along to mSoundTouch (above). I added mSemitones
+   // to SoundTouchEffect (the super class) to convey this value
+   // to process Note tracks. This approach minimizes changes to existing 
+   // code, but it would be cleaner to change all m_SemitonesChange to
+   // mSemitones, make mSemitones exist with or without USE_MIDI, and 
+   // eliminate the next line:
+   mSemitones = m_SemitonesChange;
+#endif
    return this->EffectSoundTouch::Process();
 }
 

@@ -63,6 +63,9 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    virtual double GetStartTime();
    virtual double GetEndTime();
 
+   void WarpAndTransposeNotes(double t0, double t1,
+                              const TimeWarper &warper, double semitones);
+
    int DrawLabelControls(wxDC & dc, wxRect & r);
    bool LabelClick(wxRect & r, int x, int y, bool right);
 
@@ -164,6 +167,17 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
+   // channels are numbered as integers 0-15, visible channels
+   // (mVisibleChannels) is a bit set. Channels are displayed as
+   // integers 1-16.
+#define CHANNEL_BIT(c) (1 << (c))
+#define ALL_CHANNELS 0xFFFF
+   bool IsVisibleChan(int c) {
+      return (mVisibleChannels & CHANNEL_BIT(c)) != 0;
+   }
+   void SetVisibleChan(int c) { mVisibleChannels |= CHANNEL_BIT(c); }
+   void ClearVisibleChan(int c) { mVisibleChannels &= ~CHANNEL_BIT(c); }
+   void ToggleVisibleChan(int c) { mVisibleChannels ^= CHANNEL_BIT(c); }
  private:
    Alg_seq *mSeq; // NULL means no sequence
    // when Duplicate() is called, assume that it is to put a copy
@@ -189,7 +203,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    int mBottomNote;
    int mStartBottomNote;
    int mPitchHeight;
-   int mVisibleChannels;
+   int mVisibleChannels; // bit set of visible channels
    int mLastMidiPosition;
    wxRect mGainPlacementRect;
 };

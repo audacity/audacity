@@ -36,6 +36,10 @@ class EffectSoundTouch:public Effect {
 
  public:
    virtual bool Process();
+#ifdef USE_MIDI
+   double mSemitones; // pitch change for NoteTracks
+   EffectSoundTouch() { mSemitones = 0; }
+#endif
 
  protected:
    SoundTouch *mSoundTouch;
@@ -44,6 +48,7 @@ class EffectSoundTouch:public Effect {
 
  private:
    bool ProcessLabelTrack(Track *track);
+   bool ProcessNoteTrack(Track *track);
    bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
    bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack, 
                         sampleCount start, sampleCount end);

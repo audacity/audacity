@@ -34,6 +34,14 @@ bool EffectSoundTouch::ProcessLabelTrack(Track *track)
    return true;
 }
 
+bool EffectSoundTouch::ProcessNoteTrack(Track *track)
+{
+   NoteTrack *nt = (NoteTrack *) track;
+   if (nt == NULL) return false;
+   nt->WarpAndTransposeNotes(mCurT0, mCurT1, *GetTimeWarper(), mSemitones);
+   return true;
+}
+
 bool EffectSoundTouch::Process()
 {
    // Assumes that mSoundTouch has already been initialized
@@ -68,6 +76,17 @@ bool EffectSoundTouch::Process()
             break;
          }
       }
+#ifdef USE_MIDI
+      else if (t->GetKind() == Track::Note && 
+               (t->GetSelected() || (mustSync && t->IsSyncLockSelected())))
+      {
+         if (!ProcessNoteTrack(t))
+         {
+            bGoodResult = false;
+            break;
+         }
+      }
+#endif
       else if (t->GetKind() == Track::Wave && t->GetSelected())
       {
          WaveTrack* leftTrack = (WaveTrack*)t;

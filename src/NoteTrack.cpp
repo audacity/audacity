@@ -31,6 +31,7 @@
 #include "DirManager.h"
 #include "Internat.h"
 #include "Prefs.h"
+#include "effects/TimeWarper.h"
 
 #ifdef SONIFY
 #include "portmidi.h"
@@ -117,7 +118,7 @@ Track(projDirManager)
    mBottomNote = 24;
    mPitchHeight = 5;
 
-   mVisibleChannels = 0xFFFF;
+   mVisibleChannels = ALL_CHANNELS;
    mLastMidiPosition = 0;
 }
 
@@ -181,6 +182,65 @@ double NoteTrack::GetEndTime()
 }
 
 
+void NoteTrack::WarpAndTransposeNotes(double t0, double t1, 
+                                      const TimeWarper &warper, 
+                                      double semitones)
+{
+   // Since this is a duplicate and duplicates convert mSeq to
+   // a text string for saving as XML, we probably have to
+   // duplicate again to get back an mSeq
+   NoteTrack *nt = this;
+   double offset = nt->GetOffset(); // track is shifted this amount
+   if (!mSeq) { // replace saveme with an (unserialized) duplicate
+      nt = (NoteTrack *) this->Duplicate();
+      wxASSERT(!mSeq && nt->mSeq && !nt->mSerializationBuffer);
+      // swap mSeq and Buffer between this and nt
+      nt->mSerializationBuffer = mSerializationBuffer;
+      nt->mSerializationLength = mSerializationLength;
+      mSerializationBuffer = NULL;
+      mSerializationLength = 0;
+      mSeq = nt->mSeq;
+      nt->mSeq = NULL;
+      delete nt; // delete the duplicate
+   }
+   mSeq->convert_to_seconds(); // make sure time units are right
+   t1 -= offset; // adjust time range to compensate for track offset
+   t0 -= offset;
+   if (t1 > mSeq->get_dur()) { // make sure t0, t1 are within sequence
+      t1 = mSeq->get_dur();
+      if (t0 >= t1) return;
+   }
+   Alg_iterator iter(mSeq, false);
+   iter.begin();
+   Alg_event_ptr event;
+   while ((event = iter.next()) && event->time < t1) {
+      if (event->is_note() && event->time >= t0 && 
+          // Allegro data structure does not restrict channels to 16.
+          // Since there is not way to select more than 16 channels,
+          // map all channel numbers mod 16. This will have no effect
+          // on MIDI files, but it will allow users to at least select
+          // all channels on non-MIDI event sequence data.
+          IsVisibleChan(event->chan % 16)) {
+         event->set_pitch(event->get_pitch() + semitones);
+      }
+   }
+   iter.end();
+   // now, use warper to warp the tempo map
+   mSeq->convert_to_beats(); // beats remain the same
+   Alg_time_map_ptr map = mSeq->get_time_map();
+   map->insert_beat(t0, map->time_to_beat(t0));
+   map->insert_beat(t1, map->time_to_beat(t1));
+   int i, len = map->length();
+   for (i = 0; i < len; i++) {
+      Alg_beat &beat = map->beats[i];
+      beat.time = warper.Warp(beat.time + offset) - offset;
+   }
+   // about to redisplay, so might as well convert back to time now
+   mSeq->convert_to_seconds();
+}
+
+
+
 int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
 {
    int wid = 23;
@@ -196,32 +256,34 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
    wxRect box;
    for (int row = 0; row < 4; row++) {
       for (int col = 0; col < 4; col++) {
-         int channel = row * 4 + col + 1;
+         // chanName is the "external" channel number (1-16)
+         // used by AColor and button labels
+         int chanName = row * 4 + col + 1;
 
          box.x = x + col * wid;
          box.y = y + row * ht;
          box.width = wid;
          box.height = ht;
 
-         if (mVisibleChannels & (1 << (channel - 1))) {
-            AColor::MIDIChannel(&dc, channel);
+         if (IsVisibleChan(chanName - 1)) {
+            AColor::MIDIChannel(&dc, chanName);
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in
 // "up" position (original Audacity style) or in "down" position
 // 
 #define CHANNEL_ON_IS_DOWN 1
 #if CHANNEL_ON_IS_DOWN
-            AColor::DarkMIDIChannel(&dc, channel);
+            AColor::DarkMIDIChannel(&dc, chanName);
 #else
-            AColor::LightMIDIChannel(&dc, channel);
+            AColor::LightMIDIChannel(&dc, chanName);
 #endif
             AColor::Line(dc, box.x, box.y, box.x + box.width - 1, box.y);
             AColor::Line(dc, box.x, box.y, box.x, box.y + box.height - 1);
 
 #if CHANNEL_ON_IS_DOWN
-            AColor::LightMIDIChannel(&dc, channel);
+            AColor::LightMIDIChannel(&dc, chanName);
 #else
-            AColor::DarkMIDIChannel(&dc, channel);
+            AColor::DarkMIDIChannel(&dc, chanName);
 #endif
             AColor::Line(dc,
                          box.x + box.width - 1, box.y,
@@ -258,7 +320,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
          long w;
          long h;
 
-         t.Printf(wxT("%d"), channel);
+         t.Printf(wxT("%d"), chanName);
          dc.GetTextExtent(t, &w, &h);
    
          dc.DrawText(t, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
@@ -290,12 +352,12 @@ bool NoteTrack::LabelClick(wxRect & r, int mx, int my, bool right)
    int channel = row * 4 + col;
 
    if (right) {
-      if (mVisibleChannels == (1 << channel))
-         mVisibleChannels = 0xFFFF;
+      if (mVisibleChannels == CHANNEL_BIT(channel))
+         mVisibleChannels = ALL_CHANNELS;
       else
-         mVisibleChannels = (1 << channel);
+         mVisibleChannels = CHANNEL_BIT(channel);
    } else
-      mVisibleChannels ^= (1 << channel);
+      ToggleVisibleChan(channel);
 
    return true;
 }

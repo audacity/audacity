@@ -196,6 +196,7 @@ double Curvefit::distance_xy(double x, double y)
         printf("FATAL INTERNAL ERROR IN distance_xy: neither x nor y is "
                "an integer\n");
         assert(false);
+        return 100.0; // to make the compiler happy
     }
 }
 
