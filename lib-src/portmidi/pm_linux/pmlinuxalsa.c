@@ -201,7 +201,7 @@ static PmError alsa_write_byte(PmInternal *midi, unsigned char byte,
             /* compute relative time of event = timestamp - now + latency */
             PmTimestamp now = (midi->time_proc ? 
                                midi->time_proc(midi->time_info) : 
-                               Pt_Time(NULL));
+                               Pt_Time());
             int when = timestamp;
             /* if timestamp is zero, send immediately */
             /* otherwise compute time delay and use delay if positive */
@@ -242,8 +242,8 @@ static PmError alsa_out_close(PmInternal *midi)
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
     if (!desc) return pmBadPtr;
 
-    if (pm_hosterror = snd_seq_disconnect_to(seq, desc->this_port, 
-                                             desc->client, desc->port)) {
+    if ((pm_hosterror = snd_seq_disconnect_to(seq, desc->this_port, 
+                                              desc->client, desc->port))) {
         // if there's an error, try to delete the port anyway, but don't
         // change the pm_hosterror value so we retain the first error
         snd_seq_delete_port(seq, desc->this_port);
@@ -332,8 +332,8 @@ static PmError alsa_in_close(PmInternal *midi)
 {
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
     if (!desc) return pmBadPtr;
-    if (pm_hosterror = snd_seq_disconnect_from(seq, desc->this_port, 
-                                               desc->client, desc->port)) {
+    if ((pm_hosterror = snd_seq_disconnect_from(seq, desc->this_port, 
+                                                desc->client, desc->port))) {
         snd_seq_delete_port(seq, desc->this_port); /* try to close port */
     } else {
         pm_hosterror = snd_seq_delete_port(seq, desc->this_port);

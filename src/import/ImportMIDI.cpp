@@ -68,7 +68,7 @@ bool ImportMIDI(wxString fName, NoteTrack * dest)
    Alg_event_ptr evt;
    int note_count = 0;
    int pitch_sum = 0;
-   while (evt = iterator.next()) {
+   while ((evt = iterator.next())) {
       // if the event is a note
        if (evt->get_type() == 'n') {
            Alg_note_ptr note = (Alg_note_ptr) evt;

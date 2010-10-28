@@ -1385,22 +1385,21 @@ bool AudioIO::StartPortMidiStream()
                                 &::MidiTime,
                                 NULL, 
                                 mMidiLatency);
-   mMidiStreamActive = true;
-   mPauseTime = 0;
-   mMidiPaused = false;
-   mMidiLoopOffset = 0;
-   mMidiOutputComplete = false;
-   //   mCnt = 0;
+   if (mLastPmError == pmNoError) {
+      mMidiStreamActive = true;
+      mPauseTime = 0;
+      mMidiPaused = false;
+      mMidiLoopOffset = 0;
+      mMidiOutputComplete = false;
+      PrepareMidiIterator();
 
-   PrepareMidiIterator();
-
-   // It is ok to call this now, but do not send timestamped midi
-   // until after the first audio callback, which provides necessary
-   // data for MidiTime().
-   Pm_Synchronize(mMidiStream); // start using timestamps
-   // start midi output flowing (pending first audio callback)
-   mMidiThreadFillBuffersLoopRunning = true;
-
+      // It is ok to call this now, but do not send timestamped midi
+      // until after the first audio callback, which provides necessary
+      // data for MidiTime().
+      Pm_Synchronize(mMidiStream); // start using timestamps
+      // start midi output flowing (pending first audio callback)
+      mMidiThreadFillBuffersLoopRunning = true;
+   }
    return (mLastPmError == pmNoError);      
 }
 #endif
@@ -2854,7 +2853,6 @@ PmTimestamp AudioIO::MidiTime()
 
 void AudioIO::AllNotesOff()
 {
-   printf("AudioIO::AllNotesOff()\n");
    for (int chan = 0; chan < 16; chan++) {
       Pm_WriteShort(mMidiStream, 0, Pm_Message(0xB0 + chan, 0x7B, 0));
    }
