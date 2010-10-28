@@ -17,6 +17,128 @@
   waveforms at least it needs to cache the samples that are
   currently on-screen.
 
+<b>How Audacity Redisplay Works \n
+ Roger Dannenberg</b> \n
+Oct 2010 \n
+
+This is a brief guide to Audacity redisplay -- it may not be complete. It
+is my attempt to understand the complicated graphics strategy.
+
+One basic idea is that redrawing waveforms is rather slow, so Audacity
+saves waveform images in bitmaps to make redrawing faster. In particular,
+during audio playback (and recording), the vertical time indicator is 
+drawn over the waveform about 20 times per second. To avoid unnecessary
+computation, the indicator is erased by copying a column of pixels from
+a bitmap image of the waveform. Notice that this implies a two-stage
+process: first, waveforms are drawn to the bitmp; then, the bitmap
+(or pieces of it) are copied to the screen, perhaps along with other
+graphics.
+
+The bitmap is for the entire track panel, i.e. multiple tracks, and
+includes things like the Gain and Pan slders to the left of the 
+waveform images.
+
+The screen update uses a mixture of direct drawing and indirect paint
+events. The "normal" way to update a graphical display is to call
+the Refresh() method when something invalidates the screen. Later, the
+system calls OnPaint(), which the application overrides to (re)draw the
+screen. In wxWidgets, you can also draw directly to the screen without
+calling Refresh() and without waiting for OnPaint() to be called.
+
+I would expect there to be a 2-level invalidation scheme: Some changes
+invalidate the bitmap, forcing a bitmap redraw *and* a screen redraw.
+Other changes merely update the screen using pre-existing bitmaps. In
+Audacity, the "2-level" invalidation works like this: Anything
+that invalidates the bitmap calls TrackPanel::Refresh(), which
+has an eraseBackground parameter. This flag says to redraw the 
+bitmap when OnPaint() is called. If eraseBackground is false, the
+existing bitmap can be used for waveform imges. Audacity also
+draws directly to the screen to update the time indicator during
+playback. To move the indicator, one column of pixels is drawn to 
+the screen to remove the indicator. Then the indicator is drawn at
+a new time location.
+
+The track panel consists of many components. The tree of calls that
+update the bitmap looks like this:
+
+\code
+TrackPanel::DrawTracks(), calls
+       TrackArtist::DrawTracks();
+       TrackPanel::DrawEverythingElse();
+               for each track,
+                       TrackPanel::DrawOutside();
+                               TrackPanel::DrawOutsideOfTrack();
+                               TrackPanel::DrawBordersAroundTrack();
+                               TrackPanel::DrawShadow();
+                               TrackInfo::DrawCloseBox();
+                               TrackInfo::DrawTitleBar();
+                               TrackInfo::DrawMinimize();
+                               TrackInfo::DrawBordersWithin();
+                               various TrackInfo sliders and buttons
+                       TrackArtist::DrawVRuler();
+               TrackPanel::DrawZooming();
+                       draws horizontal dashed lines during zoom-drag
+               TrackPanel::HighlightFocusedTrack();
+                       draws yellow highlight on selected track
+               draw snap guidelines if any
+\endcode
+
+After drawing the bitmap and blitting the bitmap to the screen,
+the following calls are (sometimes) made. To keep track of what has
+been drawn on screen over the bitmap images,
+\li \c mLastCursor is the position of the vertical line representing sel0,
+        the selected time position
+\li \c mLastIndicator is the position of the moving vertical line during
+        playback
+
+\code
+TrackPanel::DoDrawIndicator();
+        copy pixel column from bitmap to screen to erase indicator line
+        TrackPanel::DoDrawCursor(); [if mLastCursor == mLastIndicator]
+        TrackPanel::DisplaySelection();
+        AdornedRulerPanel::DrawIndicator(); [not part of TrackPanel graphics]
+        draw indicator on each track
+TrackPanel::DoDrawCursor();
+        draw cursor on each track  [at mViewInfo->sel0]
+        AdornedRulerPanel::DrawCursor(); [not part of TrackPanel graphics]
+        TrackPanel::DisplaySelection();
+\endcode
+
+To move the indicator, TrackPanel::OnTimer() calls the following, using 
+a drawing context (DC) for the screen. (Refresh is not called to create
+an OnPaint event. Instead, drawing is direct to the screen.)
+\code
+TrackPanel::DrawIndicator();
+        TrackPanel::DoDrawIndicator();
+\endcode
+
+Notice that TrackPanel::DrawZooming(), TrackPanel::HighlightFocusedTrack(), 
+and snap guidelines could be drawn directly to the screen rather than to 
+the bitmap, generally eliminating redraw work.
+
+One problem is slider udpates. Sliders are in the left area of the track
+panel. They are not wxWindows like wxSliders, but instead are just drawn
+on the TrackPanel. When slider state changes, *all* tracks do a full
+refresh, including recomputing the backing store. It would make more sense
+to just invalidate the region containing the slider. However, doing that
+would require either incrementally updating the bitmap (not currently done),
+or maintaining the sliders and other track info on the screen and not in
+the bitmap.
+
+In my opinion, the bitmap should contain only the waveform, note, and 
+label images along with gray selection highlights. The track info
+(sliders, buttons, title, etc.), track selection highlight, cursor, and
+indicator should be drawn in the normal way, and clipping regions should
+be used to avoid excessive copying of bitmaps (say, when sliders move),
+or excessive redrawing of track info widgets (say, when scrolling occurs).
+This is a fairly tricky code change since it requires careful specification
+of what and where redraw should take place when any state changes. One
+surprising finding is that NoteTrack display is slow compared to WaveTrack
+display. Each note takes some time to gather attributes and select colors,
+and while audio draws two amplitudes per horizontal pixels, large MIDI
+scores can have more notes than horizontal pixels. This can make slider
+changes very sluggish, but this can also be a problem with many 
+audio tracks.
 
 *//*******************************************************************/
 

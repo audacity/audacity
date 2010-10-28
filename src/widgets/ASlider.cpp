@@ -76,8 +76,8 @@ of an LWSlider or ASlider.
 #include <wx/sysopt.h>
 #endif
 
-#include "ASlider.h"
 #include "../Experimental.h"
+#include "ASlider.h"
 
 #include "../AColor.h"
 #include "../ImageManipulation.h"
@@ -395,7 +395,7 @@ void LWSlider::SetStyle(int style)
       mMaxValue = SPEED_MAX;
       mStepValue = STEP_CONTINUOUS;
       break;
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    case VEL_SLIDER:
       mMinValue = VEL_MIN;
       mMaxValue = VEL_MAX;
@@ -541,7 +541,7 @@ void LWSlider::CreatePopWin()
    wxString maxStr = mName + wxT(": 000000");
 
    if (mStyle == PAN_SLIDER || mStyle == DB_SLIDER || mStyle == SPEED_SLIDER
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
        || mStyle == VEL_SLIDER
 #endif
        )
@@ -917,7 +917,7 @@ void LWSlider::FormatPopWin()
    case SPEED_SLIDER:
       label.Printf(wxT("%s: %.2fx"), mName.c_str(), mCurrentValue);
       break;
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    case VEL_SLIDER:
        label.Printf(wxT("%s: %s%d"), mName.c_str(), 
                     (mCurrentValue > 0.0f ? _("+") : _("")), 
@@ -1543,7 +1543,7 @@ void ASlider::Set(float value)
    mLWSlider->Set(value);
 }
 
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
 void ASlider::SetStyle(int style)
 {
    mStyle = style;
@@ -1785,7 +1785,7 @@ wxAccStatus ASliderAx::GetValue(int childId, wxString* strValue)
          case SPEED_SLIDER:
             strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue * 100 );
             break;
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
          case VEL_SLIDER:
             strValue->Printf( wxT("%.0f"), as->mLWSlider->mCurrentValue);
             break;

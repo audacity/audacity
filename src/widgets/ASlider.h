@@ -39,7 +39,7 @@ class Ruler;
 #define DB_SLIDER 2      // -36...36 dB
 #define PAN_SLIDER 3     // -1.0...1.0
 #define SPEED_SLIDER 4  // 0.01 ..3.0 
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
 #define VEL_SLIDER 5    // -50..50
 #endif
 
@@ -257,7 +257,7 @@ class ASlider :public wxPanel
 
    float Get( bool convert = true );
    void Set(float value);
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    void SetStyle(int style);
 #endif
 

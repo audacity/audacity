@@ -1052,7 +1052,7 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
          if (x >= w) {
             x = w - 1;
          }
-
+          
          dc.Blit( x, 0, 1, mBacking->GetHeight(), &mBackingDC, x, 0 );
       }
 
@@ -1146,7 +1146,7 @@ void TrackPanel::DoDrawIndicator(wxDC & dc)
 /// This method draws the cursor things, both in the
 /// ruler as seen at the top of the screen, but also in each of the
 /// selected tracks.
-/// These are the 'vertical lines' through waves and ruler.
+/// These are the 'vertical lines' through waves, notes, and ruler.
 void TrackPanel::DrawCursor()
 {
    wxClientDC dc( this );
@@ -3973,7 +3973,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 
    float newValue = slider->Get();
    MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
-   #ifdef USE_MIDI
+   #ifdef EXPERIMENTAL_MIDI_OUT
   if (mCapturedTrack->GetKind() == Track::Wave) {
    #endif
    WaveTrack *link = (WaveTrack *)mTracks->GetLink(mCapturedTrack);
@@ -3994,7 +3994,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
       if (pMixerBoard) 
          pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
    }
-   #ifdef USE_MIDI
+   #ifdef EXPERIMENTAL_MIDI_OUT
    } else {
       if (!pan) {
          ((NoteTrack *) mCapturedTrack)->SetGain(newValue);
@@ -4015,9 +4015,17 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    }
 
    if (event.ButtonUp()) {
+   #ifdef EXPERIMENTAL_MIDI_OUT
+    if (mCapturedTrack->GetKind() == Track::Wave) {
+   #endif
       MakeParentPushState(pan ? _("Moved pan slider") : _("Moved gain slider"),
                           pan ? _("Pan") : _("Gain"),
                           true /* consolidate */);
+   #ifdef EXPERIMENTAL_MIDI_OUT
+    } else {
+      MakeParentPushState(_("Moved velocity slider"), _("Velocity"), true);
+    }
+   #endif
       SetCapturedTrack( NULL );
    }
 }
@@ -5507,7 +5515,10 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
                         clip.height - trackRect.y);
    }
 
-   if (GetFocusedTrack() != NULL && wxWindow::FindFocus() == this) {
+   // Previous code that caused highlight NOT to be drawn on backing
+   // bitmap due to wxWindow::FindFocus() not returning "this" on Mac:
+   // if (GetFocusedTrack() != NULL) && wxWindow::FindFocus() == this) {
+   if (GetFocusedTrack() != NULL) {
       HighlightFocusedTrack(dc, focusRect);
    }
 
@@ -7997,7 +8008,7 @@ void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect r)
    GetPanRect(r, panRect);
 
    if (gainRect.y + gainRect.height < r.y + r.height - 19) {
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
       GainSlider(index)->SetStyle(DB_SLIDER);
 #endif
       GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
