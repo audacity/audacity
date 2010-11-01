@@ -1026,7 +1026,9 @@
   (if (token-is '(:define :load :chdir :variable :function
                   ;  :system 
                   :play :print :display))
-      (parse-command)))
+      (parse-command)
+      (if (and (token-is '(:return)) *audacity-top-level-return-flag*)
+          (parse-command))))
 
 
 (defun parse-command ()
@@ -1044,6 +1046,8 @@
          (parse-print-display :print 'sal-print))
         ((token-is :display)
          (parse-print-display :display 'display))
+        ((and *audacity-top-level-return-flag* (token-is :return))
+         (parse-return))
 ;        ((token-is :output)
 ;         (parse-output))
         (t
@@ -1251,12 +1255,16 @@
 
 (defun parse-return ()
   (or (token-is :return) (error "parse-return internal error"))
-  (let (loc)
-    (if (null *sal-fn-name*)
+  (let (loc expr)
+    ;; this seems to be a redundant test
+    (if (and (null *sal-fn-name*)
+             (not *audacity-top-level-return-flag*))
         (errexit "Return must be inside a function body"))
     (setf loc (parse-token))
-    (add-line-info-to-stmt (list 'sal-return-from *sal-fn-name*
-                                 (parse-sexpr)) loc)))
+    (setf expr (parse-sexpr))
+    (if *sal-fn-name*
+      (add-line-info-to-stmt (list 'sal-return-from *sal-fn-name* expr) loc)
+      (list 'defun 'main '() (add-line-info-to-stmt expr loc)))))
 
 
 (defun parse-load ()

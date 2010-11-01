@@ -118,6 +118,8 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
 
  private:
 
+   static wxString NyquistToWxString(const char *nyqString);
+
    bool ProcessOne();
 
    static int StaticGetCallback(float *buffer, int channel,
@@ -161,7 +163,8 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
     */
    bool              mInteractive;  
    bool              mOK;
-   wxString          mCmd;
+   wxString          mInputCmd; // history: exactly what the user typed
+   wxString          mCmd;      // the command to be processed
    wxString          mName;   ///< Name of the Effect
    wxString          mAction;
    wxString          mInfo;

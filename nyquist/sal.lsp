@@ -487,6 +487,21 @@
   (if *sal-traceback* (sal-traceback))
   (setf *sal-call-stack* stack)) ;; clear the stack
 
+
+;; when true, top-level return statement is legal and compiled into MAIN
+(setf *audacity-top-level-return-flag* nil)
+
+;; SAL-COMPILE-AUDACITY -- special treatment of RETURN
+;;
+;; This works like SAL-COMPILE, but if there is a top-level
+;; return statement (not normally legal), it is compiled into
+;; a function named MAIN. This is a shorthand for Audacity plug-ins
+;;
+(defun sal-compile-audacity (input eval-flag multiple-statements filename)
+  (progv '(*audacity-top-level-return-flag*) '(t)
+    (sal-compile input eval-flag multiple-statements filename)))
+
+
 ;; SAL-COMPILE -- translate string or token list to lisp and eval
 ;;
 ;; input is either a string or a token list

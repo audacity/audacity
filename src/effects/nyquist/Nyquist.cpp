@@ -71,6 +71,7 @@ WX_DEFINE_OBJARRAY(NyqControlArray);
 EffectNyquist::EffectNyquist(wxString fName)
 {
    mAction = _("Applying Nyquist Effect...");
+   mInputCmd = wxEmptyString;
    mCmd = wxEmptyString;
    SetEffectFlags(HIDDEN_EFFECT);
    mInteractive = false;
@@ -104,6 +105,18 @@ EffectNyquist::EffectNyquist(wxString fName)
 EffectNyquist::~EffectNyquist()
 {
 }
+
+wxString EffectNyquist::NyquistToWxString(const char *nyqString)
+{
+    wxString str(nyqString, wxConvUTF8);
+    if (nyqString != NULL && nyqString[0] && str.IsEmpty()) {
+        // invalid UTF-8 string, convert as Latin-1
+        str = _("[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]");
+        str += LAT1CTOWX(nyqString);
+    }
+    return str;
+}
+
 
 void EffectNyquist::Break()
 {
@@ -416,7 +429,7 @@ bool EffectNyquist::PromptUser()
       NyquistInputDialog dlog(wxGetTopLevelParent(NULL), -1,
                               _("Nyquist Prompt"),
                               _("Enter Nyquist Command: "),
-                              mCmd);
+                              mInputCmd);
       dlog.CentreOnParent();
       int result = dlog.ShowModal();
 
@@ -429,7 +442,83 @@ bool EffectNyquist::PromptUser()
       }*/
       mDebug = (result == eDebugID);
 
-      mCmd = dlog.GetCommand();
+      // remember exact input in mInputCmd which will appear in the next
+      // NyquistInputDialog. Copy to mCmd for possible embedding in
+      // "function main() begin ... end":
+      mCmd = mInputCmd = dlog.GetCommand();
+
+      // Is this LISP or SAL? Both allow comments. After comments, LISP
+      // must begin with "(". Technically, a LISP expression could be a
+      // symbol or number or string, etc., but these are not really 
+      // useful expressions. If the input begins with a symbol, number,
+      // or string, etc., it is more likely an erroneous attempt to type
+      // a SAL expression (which should probably begin with "return"),
+      // so we will treat it as SAL.
+
+      // this is a state machine to scan past LISP comments and white
+      // space to find the first real character of LISP or SAL. Note
+      // that #| ... |# style comments are not valid in SAL, so we do
+      // not skip these. Instead, "#|" indicates LISP if found.
+      //
+      int i = 0;
+      bool inComment = false; // handle "; ... \n" comments
+      while (i < mCmd.Len()) {
+         if (inComment) {
+            inComment = (mCmd[i] != wxT('\n'));
+         } else if (mCmd[i] == wxT(';')) {
+            inComment = true;
+         } else if (!wxIsspace(mCmd[i])) { 
+            break; // found the first non-comment, non-space character
+         }
+         i++;
+      }
+
+      // invariant: i == mCmd.Len() | 
+      //            mCmd[i] is first non-comment, non-space character
+      
+      mIsSal = false;
+      mCmd = mCmd.Mid(i); // remove initial comments
+      if (mCmd.Len() > 0 && mCmd[0] != wxT('(') && mCmd[0] != wxT('#')) {
+         mIsSal = true;
+         wxString cmdUp = mCmd.Upper();
+         int returnLoc = cmdUp.Find(wxT("RETURN"));
+         if (returnLoc == wxNOT_FOUND) {
+            wxMessageBox(_("Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n\treturn s * 0.1\nfor SAL, or begin with an open parenthesis such as\n\t(mult s 0.1)\n for LISP."), _("Error in Nyquist code"), wxOK | wxCENTRE);
+            return false;
+         }
+         /*
+         // Allow two forms of SAL "expressions":
+         // 1) a bunch of statements that do not define "main" followed by
+         //    "return ...": wrap the return statement in main
+         // 2) a bunch of statements that include a definition of "main":
+         //    return the code as is
+         // This allows a simple input of the form "return <expression>"
+         // but since this does not match the syntax of a real SAL plug-in,
+         // we want to allow user to define "main"
+         
+         // Search for "function main". This might be fooled if user puts
+         // "function main" inside a string or comment
+         bool definesMain = false;
+         int loc = cmdUp.Find(wxT("FUNCTION"));
+         while (loc != wxNOT_FOUND) {
+            // remove everything up to FUNCTION and additional white space
+            cmdUp = cmdUp.Mid(loc + 8).Trim(false);
+            // see if the function name is MAIN
+            if (cmdUp.StartsWith(wxT("MAIN"))) {
+               definesMain = true;
+               break;
+            }
+            loc = cmdUp.Find(wxT("FUNCTION")); // look for next definition
+         }
+         if (loc == wxNOT_FOUND) {
+            // replace the LAST return
+            returnLoc = FindFromEnd(mCmd, wxT("RETURN"));
+            
+            // wrap Sal statements in a function (main)
+            mCmd = mCmd.Prepend(wxT("function main() begin\n"));
+            mCmd += wxT("\nend\n");
+         */
+      }
 
       return true;
    }
@@ -601,7 +690,7 @@ bool EffectNyquist::Process()
       NyquistOutputDialog dlog(mParent, -1,
                                _("Nyquist"),
                                _("Nyquist Output: "),
-                               wxString(mDebugOutput.c_str(), wxConvISO8859_1));
+                               NyquistToWxString(mDebugOutput.c_str()));
       dlog.CentreOnParent();
       dlog.ShowModal();
    }
@@ -657,9 +746,12 @@ bool EffectNyquist::ProcessOne()
          wxString str = mControls[j].valStr;
          str.Replace(wxT("\\"), wxT("\\\\"));
          str.Replace(wxT("\""), wxT("\\\""));
-         cmd += wxString::Format(wxT("(setf %s \"%s\")\n"),
-                                 mControls[j].var.c_str(),
-                                 str.c_str());
+         cmd += wxT("(setf ");
+         // restrict variable names to 7-bit ASCII:
+         cmd += mControls[j].var.c_str();
+         cmd += wxT(" \"");
+         cmd += str; // unrestricted value will become quoted UTF-8
+         cmd += wxT("\")\n");
       }
    }
 
@@ -672,7 +764,7 @@ bool EffectNyquist::ProcessOne()
       }
 
       cmd += wxT("(setf *sal-call-stack* nil)\n");
-      cmd += wxT("(sal-compile \"\n") + str + wxT("\n\" t t nil)\n");
+      cmd += wxT("(sal-compile-audacity \"\n") + str + wxT("\n\" t t nil)\n");
       cmd += wxT("(main)\n");
    }
    else {
@@ -684,11 +776,12 @@ bool EffectNyquist::ProcessOne()
 		mCurBuffer[i] = NULL;
    }
 
-   rval = nyx_eval_expression(cmd.mb_str());
+   rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
    if (rval == nyx_string) {
-      wxMessageBox(wxString(nyx_get_string(), wxConvISO8859_1), wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
+       wxMessageBox(NyquistToWxString(nyx_get_string()), 
+                    wxT("Nyquist"),
+                    wxOK | wxCENTRE, mParent);
       return true;
    }
 
@@ -734,7 +827,7 @@ bool EffectNyquist::ProcessOne()
 
          nyx_get_label(l, &t0, &t1, &str);
 
-         ltrack->AddLabel(t0 + mT0, t1 + mT0, LAT1CTOWX(str));
+         ltrack->AddLabel(t0 + mT0, t1 + mT0, UTF8CTOWX(str));
       }
       return true;
    }
