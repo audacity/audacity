@@ -757,15 +757,38 @@ bool EffectNyquist::ProcessOne()
 
    if (mIsSal) {
       wxString str = mCmd;
+      str.Replace(wxT("\\"), wxT("\\\\"));
       str.Replace(wxT("\""), wxT("\\\""));
+      // this is tricky: we need SAL to call main so that we can get a
+      // SAL traceback in the event of an error (sal-compile catches the
+      // error and calls sal-error-output), but SAL does not return values.
+      // We will catch the value in a special global aud:result and if no
+      // error occurs, we will grab the value with a LISP expression
+      str += wxT("set aud:result = main()\n");
+
+      if (mDebug) {
+         // since we're about to evaluate SAL, remove LISP trace enable and
+         // break enable (which stops SAL processing) and turn on SAL stack
+         // trace
+         cmd += wxT("(setf *tracenable* nil)\n");
+         cmd += wxT("(setf *breakenable* nil)\n");
+         cmd += wxT("(setf *sal-traceback* t)\n");
+      }
 
       if (mCompiler) {
          cmd += wxT("(setf *sal-compiler-debug* t)\n");
       }
 
       cmd += wxT("(setf *sal-call-stack* nil)\n");
+      // if we do not set this here and an error occurs in main, another
+      // error will be raised when we try to return the value of aud:result
+      // which is unbound
+      cmd += wxT("(setf aud:result nil)\n");
       cmd += wxT("(sal-compile-audacity \"\n") + str + wxT("\n\" t t nil)\n");
-      cmd += wxT("(main)\n");
+      // Capture the value returned by main (saved in aud:result), but
+      // set aud:result to nil so sound results can be evaluated without
+      // retaining audio in memory
+      cmd += wxT("(prog1 aud:result (setf aud:result nil))\n");
    }
    else {
       cmd += mCmd;
