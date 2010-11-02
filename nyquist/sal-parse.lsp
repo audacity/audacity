@@ -1264,7 +1264,8 @@
     (setf expr (parse-sexpr))
     (if *sal-fn-name*
       (add-line-info-to-stmt (list 'sal-return-from *sal-fn-name* expr) loc)
-      (list 'defun 'main '() (add-line-info-to-stmt expr loc)))))
+      (list 'defun 'main '() (list 'sal-trace-enter '(quote main) '() '())
+                             (add-line-info-to-stmt expr loc)))))
 
 
 (defun parse-load ()

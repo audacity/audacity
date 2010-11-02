@@ -520,7 +520,7 @@
     (let (output remainder rslt stack)
       (setf stack *sal-call-stack*)
       ;; if first input char is "(", then eval as a lisp expression:
-      ;(display "sal-compile" input)
+      ;(display "sal-compile" input)(setf *sal-compiler-debug* t)
       (cond ((input-starts-with-open-paren input)
              ;(print "input is lisp expression")
              (errset

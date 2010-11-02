@@ -351,9 +351,8 @@ void EffectNyquist::ParseFile()
       if (line.Length() > 1 && line[0] == wxT(';')) {
          Parse(line);
       }
-      else {
-         mCmd += line + wxT("\n");
-      }
+      // preserve comments so that SAL effects compile with proper line numbers
+      mCmd += line + wxT("\n");
    }
 }
 
@@ -477,8 +476,9 @@ bool EffectNyquist::PromptUser()
       //            mCmd[i] is first non-comment, non-space character
       
       mIsSal = false;
-      mCmd = mCmd.Mid(i); // remove initial comments
-      if (mCmd.Len() > 0 && mCmd[0] != wxT('(') && mCmd[0] != wxT('#')) {
+      if (mCmd.Len() > i && mCmd[i] != wxT('(') && 
+          (mCmd[i] != wxT('#') || mCmd.Len() <= i + 1 ||
+           mCmd[i + 1] != wxT('|'))) {
          mIsSal = true;
          wxString cmdUp = mCmd.Upper();
          int returnLoc = cmdUp.Find(wxT("RETURN"));
@@ -486,38 +486,6 @@ bool EffectNyquist::PromptUser()
             wxMessageBox(_("Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n\treturn s * 0.1\nfor SAL, or begin with an open parenthesis such as\n\t(mult s 0.1)\n for LISP."), _("Error in Nyquist code"), wxOK | wxCENTRE);
             return false;
          }
-         /*
-         // Allow two forms of SAL "expressions":
-         // 1) a bunch of statements that do not define "main" followed by
-         //    "return ...": wrap the return statement in main
-         // 2) a bunch of statements that include a definition of "main":
-         //    return the code as is
-         // This allows a simple input of the form "return <expression>"
-         // but since this does not match the syntax of a real SAL plug-in,
-         // we want to allow user to define "main"
-         
-         // Search for "function main". This might be fooled if user puts
-         // "function main" inside a string or comment
-         bool definesMain = false;
-         int loc = cmdUp.Find(wxT("FUNCTION"));
-         while (loc != wxNOT_FOUND) {
-            // remove everything up to FUNCTION and additional white space
-            cmdUp = cmdUp.Mid(loc + 8).Trim(false);
-            // see if the function name is MAIN
-            if (cmdUp.StartsWith(wxT("MAIN"))) {
-               definesMain = true;
-               break;
-            }
-            loc = cmdUp.Find(wxT("FUNCTION")); // look for next definition
-         }
-         if (loc == wxNOT_FOUND) {
-            // replace the LAST return
-            returnLoc = FindFromEnd(mCmd, wxT("RETURN"));
-            
-            // wrap Sal statements in a function (main)
-            mCmd = mCmd.Prepend(wxT("function main() begin\n"));
-            mCmd += wxT("\nend\n");
-         */
       }
 
       return true;
@@ -764,7 +732,7 @@ bool EffectNyquist::ProcessOne()
       // error and calls sal-error-output), but SAL does not return values.
       // We will catch the value in a special global aud:result and if no
       // error occurs, we will grab the value with a LISP expression
-      str += wxT("set aud:result = main()\n");
+      str += wxT("\nset aud:result = main()\n");
 
       if (mDebug) {
          // since we're about to evaluate SAL, remove LISP trace enable and
@@ -784,7 +752,7 @@ bool EffectNyquist::ProcessOne()
       // error will be raised when we try to return the value of aud:result
       // which is unbound
       cmd += wxT("(setf aud:result nil)\n");
-      cmd += wxT("(sal-compile-audacity \"\n") + str + wxT("\n\" t t nil)\n");
+      cmd += wxT("(sal-compile-audacity \"") + str + wxT("\" t t nil)\n");
       // Capture the value returned by main (saved in aud:result), but
       // set aud:result to nil so sound results can be evaluated without
       // retaining audio in memory
