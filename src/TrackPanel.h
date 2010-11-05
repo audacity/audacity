@@ -79,14 +79,16 @@ class AUDACITY_DLL_API TrackPanelListener {
 };
 
 // 
-// TrackInfo sliders: we keep a constant number of sliders, and attach them to
-// tracks as they come on screen (this helps deal with very large numbers of
-// tracks, esp. on MSW).
+// TrackInfo sliders: we keep a pool of sliders, and attach them to tracks as
+// they come on screen (this helps deal with very large numbers of tracks, esp.
+// on MSW).
 //
-
-const unsigned int kInitialSliders = 100;
-// kInitialSliders-kSliderPageFlipshould be around the most tracks you could
-// ever fit vertically on the screen (but if more fit on that's OK too)
+// With the initial set of sliders smaller than the page size, a new slider is
+// created at track-creation time for tracks between 16 and when 80 goes past
+// the top of the screen. After that, existing sliders are re-used for new
+// tracks.
+//
+const unsigned int kInitialSliders = 16;
 const unsigned int kSliderPageFlip = 80;
 
 class TrackInfo
