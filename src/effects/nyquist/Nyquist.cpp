@@ -459,7 +459,7 @@ bool EffectNyquist::PromptUser()
       // that #| ... |# style comments are not valid in SAL, so we do
       // not skip these. Instead, "#|" indicates LISP if found.
       //
-      int i = 0;
+      unsigned int i = 0;
       bool inComment = false; // handle "; ... \n" comments
       while (i < mCmd.Len()) {
          if (inComment) {
