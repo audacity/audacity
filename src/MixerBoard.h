@@ -114,6 +114,13 @@ public:
    Track* mTrack; // either mLeftTrack or mNoteTrack, whichever is not NULL
    WaveTrack* mLeftTrack; // NULL if Note Track
    WaveTrack* mRightTrack; // NULL if mono
+
+   //vvv Vaughan, 2010-11-05: 
+   //    I suggest that when this is no longer experimental, rather than all these #ifdef's, 
+   //    this be done by factoring, i.e., add two subclasses to MixerTrackCluster, 
+   //    MixerNoteTrackCluster and MixerWaveTrackCluster, such that all the common 
+   //    code is in the parent, and these #ifdef's are only around 
+   //    MixerNoteTrackCluster rather than sprinkled throughout MixerTrackCluster.
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrack* mNoteTrack; // NULL if Wave Track
 #endif
