@@ -61,8 +61,8 @@ class AudacityProject;
 class MixerBoard;
 class Track;
 class WaveTrack;
-#ifdef USE_MIDI
-class NoteTrack;
+#ifdef EXPERIMENTAL_MIDI_OUT
+   class NoteTrack;
 #endif
 
 class MixerTrackCluster : public wxPanel 
@@ -114,7 +114,7 @@ public:
    Track* mTrack; // either mLeftTrack or mNoteTrack, whichever is not NULL
    WaveTrack* mLeftTrack; // NULL if Note Track
    WaveTrack* mRightTrack; // NULL if mono
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrack* mNoteTrack; // NULL if Wave Track
 #endif
 

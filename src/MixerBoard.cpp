@@ -22,8 +22,8 @@
 #include "AColor.h"
 #include "MixerBoard.h"
 #include "Project.h"
-#ifdef USE_MIDI
-#include "NoteTrack.h"
+#ifdef EXPERIMENTAL_MIDI_OUT
+   #include "NoteTrack.h"
 #endif
 
 #include "../images/MusicalInstruments.h"
@@ -124,6 +124,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       mNoteTrack = (NoteTrack*) pLeftTrack;
       mTrack = pLeftTrack;
    } else {
+      wxASSERT(pLeftTrack->GetKind() == Track::Wave);
       mTrack = mLeftTrack = pLeftTrack;
       mNoteTrack = NULL;
    }
@@ -162,7 +163,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
       mSlider_Gain = 
          new MixerTrackSlider(
                this, ID_SLIDER_GAIN,
-               /* i18n-hint: Title of the Gain slider, used to adjust the volume */
+               /* i18n-hint: title of the MIDI Velocity slider */
                _("Velocity"), 
                ctrlPos, ctrlSize, VEL_SLIDER, true, 
                true, 0.0, wxVERTICAL);
@@ -171,7 +172,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mSlider_Gain = 
       new MixerTrackSlider(
             this, ID_SLIDER_GAIN, 
-            /* i18n-hint: Title of the Gain slider, used to adjust the volume */
+            /* i18n-hint: title of the Gain slider, used to adjust the volume */
             _("Gain"), 
             ctrlPos, ctrlSize, DB_SLIDER, true, 
             true, 0.0, wxVERTICAL);
@@ -382,7 +383,7 @@ void MixerTrackCluster::UpdateSolo()
 
 void MixerTrackCluster::UpdatePan()
 {
-#ifdef USE_MIDI
+#ifdef EXPERIMENTAL_MIDI_OUT
    if (mNoteTrack) {
       mSlider_Pan->Hide();
       return;
@@ -793,7 +794,8 @@ MixerBoard::~MixerBoard()
 }
 
 // Reassign mixer input strips (MixerTrackClusters) to Track Clusters
-// both have the same order. If USE_MIDI, then Note Tracks appear in the
+// both have the same order. 
+// If EXPERIMENTAL_MIDI_OUT, then Note Tracks appear in the
 // mixer, and we must be able to convert and reuse a MixerTrackCluster 
 // from audio to midi or midi to audio. This task is handled by
 // UpdateForStateChange().
