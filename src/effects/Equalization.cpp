@@ -3160,7 +3160,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent &event)
 
 void EditCurvesDialog::OnImport( wxCommandEvent &event )
 {
-   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), wxT("xml files (*.xml;*.XML)|*.xml;*.XML"));
+   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
