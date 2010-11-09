@@ -104,7 +104,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
    mIgnoreSilenceCheckBox->SetName(
                      _("Ignore Silence at Beginnings and Endings"));
    // need a third column after checkboxes:
-   S.AddVariableText(_(""), true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+   S.AddVariableText(wxT(""), true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
    mSilenceThresholdLabel = S.AddVariableText(_("Silence Threshold:"), 
                              true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

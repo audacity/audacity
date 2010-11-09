@@ -920,7 +920,7 @@ void LWSlider::FormatPopWin()
 #ifdef EXPERIMENTAL_MIDI_OUT
    case VEL_SLIDER:
        label.Printf(wxT("%s: %s%d"), mName.c_str(), 
-                    (mCurrentValue > 0.0f ? _("+") : _("")), 
+                    (mCurrentValue > 0.0f ? _("+") : wxT("")), 
                     (int) mCurrentValue);
 #endif
    }
