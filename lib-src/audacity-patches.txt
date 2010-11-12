@@ -165,9 +165,9 @@ portaudio-v19
 -------------
 http://portaudio.com/
 cross-platform audio I/O library version 19, used for 1.3.2 onwards releases
-Version in Audacity SVN: 3rd October 2010 SVN snapshot (r1541 = aud r10711)
+Version in Audacity SVN: 12th October 2010 SVN snapshot (r1554 = aud r10783
 Patches:
-../portmixer/portaudio.patch	add features needed to make portmixer work.
+../portmixer/portaudio.patch	add features needed to make portmixer work
 		Integration by upstream in progress. Will need updating as upstream
 		portaudio moves
 
@@ -314,6 +314,8 @@ vendor/<library>/current/ with the audacity changes added in.
 then merge into the working copy. As always we need a new set of clean source
 to import. If pulling from upstream version control, do an export to loose
 version control files first.
+   svn export -r HEAD https://www.portaudio.com/repos/portaudio/trunk export
+
 2. Use the svn_load_dirs.pl script to upgrade the vendor branch to the new
 upstream source (which will deal with adds, deletions and renaming in the
 source tree without too much effort). You need to specify a tag name for the
@@ -325,24 +327,20 @@ revision in upstream's repository)
 Note that the URL excludes the final 'current' section, which is specified
 separately in the next argument, with the final one being the path to inside
 the directory with the new source in it.
-Note that the URL excludes the final 'current' section, which is specified
-separately in the next argument, with the final one being the path to inside
-the directory with the new source in it.Note that the URL excludes the final
-'current' section, which is specified separately in the next argument, with
-the final one being the path to inside the directory with the new source in
-it.Note that the URL excludes the final 'current' section, which is specified
-separately in the next argument, with the final one being the path to inside
-the directory with the new source in it.
+
 3. Answer the questions as posed by the script (it is interactive). The tag
-should sort itself out fairly easily. Several temporary SVN checkouts will be
-created and merges done. Deleted and Added files will be printed (with a pause
-after each screen). If some of these should actually be renames (that is, a
-delete and an addition go together), then enter the numbers of those two files
-to sort that out for the script. Getting this correct makes the merge of
-changes much less painful.
+should be correct as you specfied it in the command. Several temporary SVN
+checkouts will be created (in /tmp) and merges done. Deleted and Added files
+will be printed (with a pause after each screen). If some of these should
+actually be renames (that is, a delete and an addition go together), then
+enter the numbers of those two files to sort that out for the script. Getting
+this correct makes the merge of changes much less painful.
+
 4. Much churning will occur to update all the files, remove orphans etc. The
 new version of the library will now be in vendor/<library>/current/, with a
-tag of the given name at vendor/<library>/<tag>/
+tag of the given name at vendor/<library>/<tag>/. This will be autotmatically 
+committed to SVN by the script.
+
 5. Merge the changes between the previous and current upstream versions into
 the lib-src copy used in Audacity using svn merge. Do this from the
 audacity-src/lib-src/ directory of a working copy, as you will need to resolve
@@ -351,6 +349,7 @@ svn merge
 https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/r1416 \
 https://audacity.googlecode.com/svn/audacity-src/vendor/portaudio-v19/current \
 portaudio-v19
+
 6. When prompted with a conflict, most of the time, you want to see the
 changes, which you can get with the 'df' (diff full) response. In many cases
 the changes may be trivial (e.g. version headers), in which case you can just
@@ -363,19 +362,24 @@ choose to use the new version with the 'tf' (theirs full) command.
 * Mangled line endings cause a load of grief here, so try to make sure they
   don't happen. SVN shouldn't have trouble with this, provided that the
   svn:eol property is correctly set
+
 7. Check the SVN status output to see what has changed. In particularly, look
 for files not under version control and which are, but have been deleted.
 svn st | grep '^?'
 svn st | grep '^!'
 Ideally there shouldn't be any!
+
 8. Do some local updates to help reliable builds (especially if upstream
 aren't very good at doing these) 
 * If the package uses libtool, run libtoolize --copy --force to update 
 	ltmain.sh, config.sub, config.guess. If not, update config.sub,
 	config.guess from /usr/share/gnuconfig/
 * run autoreconf
+
 9. Build and test the code! Make sure that your merges actually work!
+
 10. Commit to repository - svn commit as usual.
+
 11. To re-generate the patches in the Audacity tree, diff the original in
 /vendor/ against the patched version in lib-src/ (you will need to use both
 URLs on the server for this to work)
