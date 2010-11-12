@@ -231,6 +231,8 @@ void EffectNyquist::Parse(wxString line)
 
    if (len >= 2 && tokens[0] == wxT("debugflags")) {
       for (int i = 1; i < len; i++) {
+         // Note: "trace" and "notrace" are overridden by "Debug" and "OK"
+         // buttons if the plug-in generates a dialog box by using controls 
          if (tokens[i] == wxT("trace")) {
             mDebug = true;
          }
@@ -547,9 +549,10 @@ bool EffectNyquist::PromptUser()
       return false;
    }
    
-   if (result == eDebugID) {
+   /* if (result == eDebugID) {
       mDebug = true;
-   }
+   } */
+   mDebug = (result == eDebugID);
 
    return true;
 }
