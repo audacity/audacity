@@ -46,6 +46,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <process.h>
+#include <assert.h>
 #include <mmsystem.h>
 #include <mmreg.h>  // must be before other Wasapi headers
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
@@ -631,13 +632,13 @@ static UINT32 ALIGN_BWD(UINT32 v, UINT32 align)
 
 // ------------------------------------------------------------------------------------------
 // Aligns 'v' forward
-/*static UINT32 ALIGN_FWD(UINT32 v, UINT32 align)
+static UINT32 ALIGN_FWD(UINT32 v, UINT32 align)
 {
 	UINT32 remainder = (align ? (v % align) : 0);
 	if (remainder == 0)
 		return v;
 	return v + (align - remainder);
-}*/
+}
 
 // ------------------------------------------------------------------------------------------
 // Aligns WASAPI buffer to 128 byte packet boundary. HD Audio will fail to play if buffer
@@ -653,6 +654,11 @@ static UINT32 AlignFramesPerBuffer(UINT32 nFrames, UINT32 nSamplesPerSec, UINT32
 
 	// align to packet size
 	frame_bytes  = pAlignFunc(frame_bytes, HDA_PACKET_SIZE); // use ALIGN_FWD if bigger but safer period is more desired
+
+	// atlest 1 frame must be available
+	if (frame_bytes < HDA_PACKET_SIZE)
+		frame_bytes = HDA_PACKET_SIZE;
+
 	nFrames      = frame_bytes / nBlockAlign;
 	packets      = frame_bytes / HDA_PACKET_SIZE;
 
@@ -675,6 +681,19 @@ static UINT32 GetFramesSleepTime(UINT32 nFrames, UINT32 nSamplesPerSec)
 	// Calculate the actual duration of the allocated buffer.
 	nDuration = (REFERENCE_TIME)((double)REFTIMES_PER_SEC * nFrames / nSamplesPerSec);
 	return (UINT32)(nDuration/REFTIMES_PER_MILLISEC/2);
+}
+
+// ------------------------------------------------------------------------------------------
+static UINT32 GetFramesSleepTimeMicroseconds(UINT32 nFrames, UINT32 nSamplesPerSec)
+{
+	REFERENCE_TIME nDuration;
+	if (nSamplesPerSec == 0)
+		return 0;
+#define REFTIMES_PER_SEC  10000000
+#define REFTIMES_PER_MILLISEC  10000
+	// Calculate the actual duration of the allocated buffer.
+	nDuration = (REFERENCE_TIME)((double)REFTIMES_PER_SEC * nFrames / nSamplesPerSec);
+	return (UINT32)(nDuration/10/2);
 }
 
 // ------------------------------------------------------------------------------------------
@@ -1371,20 +1390,20 @@ static void LogWAVEFORMATEXTENSIBLE(const WAVEFORMATEXTENSIBLE *in)
 	{
 	case WAVE_FORMAT_EXTENSIBLE: {
 
-		PRINT(("wFormatTag=WAVE_FORMAT_EXTENSIBLE\n"));
+		PRINT(("wFormatTag     =WAVE_FORMAT_EXTENSIBLE\n"));
 
 		if (IsEqualGUID(&in->SubFormat, &pa_KSDATAFORMAT_SUBTYPE_IEEE_FLOAT))
 		{
-			PRINT(("SubFormat=KSDATAFORMAT_SUBTYPE_IEEE_FLOAT\n"));
+			PRINT(("SubFormat      =KSDATAFORMAT_SUBTYPE_IEEE_FLOAT\n"));
 		}
 		else
 		if (IsEqualGUID(&in->SubFormat, &pa_KSDATAFORMAT_SUBTYPE_PCM))
 		{
-			PRINT(("SubFormat=KSDATAFORMAT_SUBTYPE_PCM\n"));
+			PRINT(("SubFormat      =KSDATAFORMAT_SUBTYPE_PCM\n"));
 		}
 		else
 		{
-			PRINT(("SubFormat=CUSTOM GUID{%d:%d:%d:%d%d%d%d%d%d%d%d}\n",
+			PRINT(("SubFormat      =CUSTOM GUID{%d:%d:%d:%d%d%d%d%d%d%d%d}\n",
 										in->SubFormat.Data1,
 										in->SubFormat.Data2,
 										in->SubFormat.Data3,
@@ -1397,14 +1416,15 @@ static void LogWAVEFORMATEXTENSIBLE(const WAVEFORMATEXTENSIBLE *in)
 										(int)in->SubFormat.Data4[6],
 										(int)in->SubFormat.Data4[7]));
 		}
-		PRINT(("Samples.wValidBitsPerSample=%d\n",  in->Samples.wValidBitsPerSample));
+		PRINT(("Samples.wValidBitsPerSample =%d\n",  in->Samples.wValidBitsPerSample));
 		PRINT(("dwChannelMask  =0x%X\n",in->dwChannelMask));
 
 		break; }
 
-	case WAVE_FORMAT_PCM:        PRINT(("wFormatTag=WAVE_FORMAT_PCM\n")); break;
-	case WAVE_FORMAT_IEEE_FLOAT: PRINT(("wFormatTag=WAVE_FORMAT_IEEE_FLOAT\n")); break;
-	default : PRINT(("wFormatTag=UNKNOWN(%d)\n",old->wFormatTag)); break;
+	case WAVE_FORMAT_PCM:        PRINT(("wFormatTag     =WAVE_FORMAT_PCM\n")); break;
+	case WAVE_FORMAT_IEEE_FLOAT: PRINT(("wFormatTag     =WAVE_FORMAT_IEEE_FLOAT\n")); break;
+	default: 
+		PRINT(("wFormatTag     =UNKNOWN(%d)\n",old->wFormatTag)); break;
 	}
 
 	PRINT(("nChannels      =%d\n",old->nChannels));
@@ -1487,14 +1507,14 @@ static PaError MakeWaveFormatFromParams(WAVEFORMATEXTENSIBLE *wavex, const PaStr
     old->nBlockAlign     = (old->nChannels * (old->wBitsPerSample/8));
     old->nAvgBytesPerSec = (old->nSamplesPerSec * old->nBlockAlign);
 
-    //WAVEFORMATEX
-    /*if ((params->channelCount <= 2) && ((bitsPerSample == 16) || (bitsPerSample == 8)))
+    // WAVEFORMATEX
+    if ((params->channelCount <= 2) && ((bitsPerSample == 16) || (bitsPerSample == 8)))
 	{
         old->cbSize		= 0;
         old->wFormatTag	= WAVE_FORMAT_PCM;
     }
-    //WAVEFORMATEXTENSIBLE
-    else*/
+    // WAVEFORMATEXTENSIBLE
+    else
 	{
         old->wFormatTag = WAVE_FORMAT_EXTENSIBLE;
         old->cbSize		= sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
@@ -1517,10 +1537,26 @@ static PaError MakeWaveFormatFromParams(WAVEFORMATEXTENSIBLE *wavex, const PaStr
 			{
 			case 1:  wavex->dwChannelMask = KSAUDIO_SPEAKER_MONO; break;
 			case 2:  wavex->dwChannelMask = KSAUDIO_SPEAKER_STEREO; break;
+			case 3:  wavex->dwChannelMask = KSAUDIO_SPEAKER_STEREO|SPEAKER_LOW_FREQUENCY; break;
 			case 4:  wavex->dwChannelMask = KSAUDIO_SPEAKER_QUAD; break;
+			case 5:  wavex->dwChannelMask = KSAUDIO_SPEAKER_QUAD|SPEAKER_LOW_FREQUENCY; break;
+#ifdef KSAUDIO_SPEAKER_5POINT1_SURROUND
+			case 6:  wavex->dwChannelMask = KSAUDIO_SPEAKER_5POINT1_SURROUND; break;
+#else
 			case 6:  wavex->dwChannelMask = KSAUDIO_SPEAKER_5POINT1; break;
+#endif
+#ifdef KSAUDIO_SPEAKER_5POINT1_SURROUND
+			case 7:  wavex->dwChannelMask = KSAUDIO_SPEAKER_5POINT1_SURROUND|SPEAKER_BACK_CENTER; break;
+#else
+			case 7:  wavex->dwChannelMask = KSAUDIO_SPEAKER_5POINT1|SPEAKER_BACK_CENTER; break;
+#endif	
+#ifdef KSAUDIO_SPEAKER_7POINT1_SURROUND
+			case 8:  wavex->dwChannelMask = KSAUDIO_SPEAKER_7POINT1_SURROUND; break;
+#else
 			case 8:  wavex->dwChannelMask = KSAUDIO_SPEAKER_7POINT1; break;
-			default: wavex->dwChannelMask = 0; break;
+#endif
+
+			default: wavex->dwChannelMask = 0;
 			}
 		}
 	}
@@ -2036,7 +2072,7 @@ static HRESULT CreateAudioClient(PaWasapiStream *pStream, PaWasapiSubStream *pSu
 			pSub->period = pInfo->MinimumDevicePeriod;
 			// Recalculate aligned period
 			framesPerLatency = MakeFramesFromHns(pSub->period, pSub->wavex.Format.nSamplesPerSec);
-			_CalculateAlignedPeriod(pSub, &framesPerLatency, ALIGN_BWD);
+			_CalculateAlignedPeriod(pSub, &framesPerLatency, ALIGN_FWD);
 		}
 	}
 
@@ -3699,14 +3735,17 @@ static HRESULT ProcessInputBuffer(PaWasapiStream *stream, PaWasapiHostProcessor 
 	for (;;)
 	{
 		// Check if blocking call must be interrupted
-		if (WaitForSingleObject(stream->hCloseRequest, 1) != WAIT_TIMEOUT)
+		if (WaitForSingleObject(stream->hCloseRequest, 0) != WAIT_TIMEOUT)
 			break;
 
 		// Get the available data in the shared buffer.
 		if ((hr = IAudioCaptureClient_GetBuffer(stream->cclient, &data, &frames, &flags, NULL, NULL)) != S_OK)
 		{
 			if (hr == AUDCLNT_S_BUFFER_EMPTY)
+			{
+				hr = S_OK;
 				break; // capture buffer exhausted
+			}
 
 			return LogHostError(hr);
 			break;
@@ -3977,6 +4016,46 @@ static HRESULT PollGetOutputFramesAvailable(PaWasapiStream *stream, UINT32 *avai
 }
 
 // ------------------------------------------------------------------------------------------
+/*! \class ThreadSleepScheduler
+           Allows to emulate thread sleep of less than 1 millisecond under Windows. Scheduler
+		   calculates number of times the thread must run untill next sleep of 1 millisecond.
+		   It does not make thread sleeping for real number of microseconds but rather controls
+		   how many of imaginary microseconds the thread task can allow thread to sleep.
+*/
+typedef struct ThreadIdleScheduler
+{
+	UINT32 m_idle_microseconds; //!< number of microseconds to sleep
+	UINT32 m_next_sleep;        //!< next sleep round
+	UINT32 m_i;					//!< current round iterator position
+	UINT32 m_resolution;		//!< resolution in number of milliseconds
+}
+ThreadIdleScheduler;
+//! Setup scheduler.
+static void ThreadIdleScheduler_Setup(ThreadIdleScheduler *sched, UINT32 resolution, UINT32 microseconds)
+{
+	assert(microseconds != 0);
+	assert(resolution != 0);
+	assert((resolution * 1000) >= microseconds);
+
+	memset(sched, 0, sizeof(*sched));
+
+	sched->m_idle_microseconds = microseconds;
+	sched->m_resolution         = resolution;
+	sched->m_next_sleep         = (resolution * 1000) / microseconds;
+}
+//! Iterate and check if can sleep.
+static UINT32 ThreadIdleScheduler_NextSleep(ThreadIdleScheduler *sched)
+{
+	// advance and check if thread can sleep
+	if (++ sched->m_i == sched->m_next_sleep)
+	{
+		sched->m_i = 0;
+		return sched->m_resolution;
+	}
+	return 0;
+}
+
+// ------------------------------------------------------------------------------------------
 PA_THREAD_FUNC ProcThreadPoll(void *param)
 {
     PaWasapiHostProcessor processor[S_COUNT];
@@ -3984,6 +4063,7 @@ PA_THREAD_FUNC ProcThreadPoll(void *param)
     PaWasapiStream *stream = (PaWasapiStream *)param;
 	PaWasapiHostProcessor defaultProcessor;
 	INT32 i;
+	ThreadIdleScheduler scheduler;
 
 	// Calculate the actual duration of the allocated buffer.
 	DWORD sleep_ms     = 0;
@@ -4004,9 +4084,24 @@ PA_THREAD_FUNC ProcThreadPoll(void *param)
 	{
 		sleep_ms = (sleep_ms_in ? sleep_ms_in : sleep_ms_out);
 	}
-	// Make sure not 0
+	// Make sure not 0, othervise use ThreadIdleScheduler
 	if (sleep_ms == 0)
-		sleep_ms = 1;
+	{
+		sleep_ms_in  = GetFramesSleepTimeMicroseconds(stream->bufferProcessor.framesPerUserBuffer, stream->in.wavex.Format.nSamplesPerSec);
+		sleep_ms_out = GetFramesSleepTimeMicroseconds(stream->bufferProcessor.framesPerUserBuffer, stream->out.wavex.Format.nSamplesPerSec);
+
+		// Choose smallest
+		if ((sleep_ms_in != 0) && (sleep_ms_out != 0))
+			sleep_ms = min(sleep_ms_in, sleep_ms_out);
+		else
+		{
+			sleep_ms = (sleep_ms_in ? sleep_ms_in : sleep_ms_out);
+		}
+
+		// Setup thread sleep scheduler
+		ThreadIdleScheduler_Setup(&scheduler, 1, sleep_ms/* microseconds here actually */);
+		sleep_ms = 0;
+	}
 
     // Setup data processors
     defaultProcessor.processor = WaspiHostProcessingLoop;
@@ -4093,8 +4188,15 @@ PA_THREAD_FUNC ProcThreadPoll(void *param)
 	if (!PA_WASAPI__IS_FULLDUPLEX(stream))
 	{
 		// Processing Loop
-		while (WaitForSingleObject(stream->hCloseRequest, sleep_ms) == WAIT_TIMEOUT)
+		UINT32 next_sleep = sleep_ms;
+		while (WaitForSingleObject(stream->hCloseRequest, next_sleep) == WAIT_TIMEOUT)
 		{
+			// Get next sleep time
+			if (sleep_ms == 0)
+			{
+				next_sleep = ThreadIdleScheduler_NextSleep(&scheduler);
+			}
+
 			for (i = 0; i < S_COUNT; ++i)
 			{
 				// Process S_INPUT/S_OUTPUT
@@ -4267,8 +4369,8 @@ PA_THREAD_FUNC ProcThreadPoll(void *param)
 		}
 #else
 		// Processing Loop
-		//sleep_ms = 1;
-		while (WaitForSingleObject(stream->hCloseRequest, sleep_ms) == WAIT_TIMEOUT)
+		UINT32 next_sleep = sleep_ms;
+		while (WaitForSingleObject(stream->hCloseRequest, next_sleep) == WAIT_TIMEOUT)
 		{
 			UINT32 i_frames = 0, i_processed = 0;
 			BYTE *i_data = NULL, *o_data = NULL, *o_data_host = NULL;
@@ -4279,6 +4381,12 @@ PA_THREAD_FUNC ProcThreadPoll(void *param)
 			// going below 1 msec resolution, switching between 1 ms and no waiting
 			//if (stream->in.shareMode == AUDCLNT_SHAREMODE_EXCLUSIVE)
 			//	sleep_ms = !sleep_ms;
+
+			// Get next sleep time
+			if (sleep_ms == 0)
+			{
+				next_sleep = ThreadIdleScheduler_NextSleep(&scheduler);
+			}
 
 			// get available frames
 			if ((hr = PollGetOutputFramesAvailable(stream, &o_frames)) != S_OK)

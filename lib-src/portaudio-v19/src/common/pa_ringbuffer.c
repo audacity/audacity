@@ -1,5 +1,5 @@
 /*
- * $Id: pa_ringbuffer.c 1421 2009-11-18 16:09:05Z bjornroche $
+ * $Id: pa_ringbuffer.c 1549 2010-10-24 10:21:35Z rossb $
  * Portable Audio I/O Library
  * Ring Buffer utility.
  *
@@ -91,7 +91,7 @@ ring_buffer_size_t PaUtil_GetRingBufferWriteAvailable( PaUtilRingBuffer *rbuf )
 }
 
 /***************************************************************************
-** Clear buffer. Should only be called when buffer is NOT being read. */
+** Clear buffer. Should only be called when buffer is NOT being read or written. */
 void PaUtil_FlushRingBuffer( PaUtilRingBuffer *rbuf )
 {
     rbuf->writeIndex = rbuf->readIndex = 0;
