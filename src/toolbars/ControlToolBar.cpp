@@ -12,12 +12,14 @@
 *******************************************************************//**
 
 \class ControlToolBar
-\brief A ToolBar that has the main control buttons.
+\brief A ToolBar that has the main Transport buttons.
 
+  In the GUI, this is referred to as "Transport Toolbar", as 
+  it corresponds to commands in the Transport menu. 
+  "Control Toolbar" is historic.
   This class, which is a child of Toolbar, creates the
-  window containing the tool selection (ibeam, envelope,
-  move, zoom), the rewind/play/stop/record/ff buttons, and
-  the volume control. The window can be embedded within a
+  window containing the Transport (rewind/play/stop/record/ff)
+  buttons. The window can be embedded within a
   normal project window, or within a ToolbarFrame that is
   managed by a global ToolBarStub called
   gControlToolBarStub.
@@ -80,7 +82,7 @@ END_EVENT_TABLE()
 
 //Standard constructor
 ControlToolBar::ControlToolBar()
-: ToolBar(ControlBarID, _("Control"), wxT("Control"))
+: ToolBar(TransportBarID, _("Transport"), wxT("Transport"))
 {
    mPaused = false;
    mSizer = NULL;
@@ -240,7 +242,7 @@ void ControlToolBar::UpdatePrefs()
    }
 
    // Set label to pull in language change
-   SetLabel(_("Control"));
+   SetLabel(_("Transport"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();

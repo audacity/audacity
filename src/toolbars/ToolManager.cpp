@@ -407,7 +407,7 @@ ToolManager::ToolManager( AudacityProject *parent )
 
    // Create all of the toolbars
    mBars[ ToolsBarID ]         = new ToolsToolBar();
-   mBars[ ControlBarID ]       = new ControlToolBar();
+   mBars[ TransportBarID ]       = new ControlToolBar();
    mBars[ MeterBarID ]         = new MeterToolBar();
    mBars[ EditBarID ]          = new EditToolBar();
    mBars[ MixerBarID ]         = new MixerToolBar();

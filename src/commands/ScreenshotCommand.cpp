@@ -217,7 +217,7 @@ void ScreenshotCommandType::BuildSignature(CommandSignature &signature)
    captureModeValidator->AddOption(wxT("toolbars"));
    captureModeValidator->AddOption(wxT("selectionbar"));
    captureModeValidator->AddOption(wxT("tools"));
-   captureModeValidator->AddOption(wxT("control"));
+   captureModeValidator->AddOption(wxT("transport"));
    captureModeValidator->AddOption(wxT("mixer"));
    captureModeValidator->AddOption(wxT("meter"));
    captureModeValidator->AddOption(wxT("edit"));
@@ -367,9 +367,9 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    {
       CaptureToolbar(context.proj->mToolManager, ToolsBarID, fileName);
    }
-   else if (captureMode.IsSameAs(wxT("control")))
+   else if (captureMode.IsSameAs(wxT("transport")))
    {
-      CaptureToolbar(context.proj->mToolManager, ControlBarID, fileName);
+      CaptureToolbar(context.proj->mToolManager, TransportBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("mixer")))
    {

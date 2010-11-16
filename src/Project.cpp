@@ -3766,14 +3766,14 @@ void AudacityProject::SkipEnd(bool shift)
 
 
 ////////////////////////////////////////////////////////////
-//  This fetches a pointer to the control toolbar.  It may
+//  This fetches a pointer to the Transport Toolbar.  It may
 //  either be docked or floating out in the open.
 ////////////////////////////////////////////////////////////
 ControlToolBar *AudacityProject::GetControlToolBar()
 {
    return (ControlToolBar *)
           (mToolManager ?
-           mToolManager->GetToolBar(ControlBarID) :
+           mToolManager->GetToolBar(TransportBarID) :
            NULL);
 }
 

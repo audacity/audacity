@@ -333,7 +333,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // ToolBar
 
-   ControlToolBar *GetControlToolBar();
+   // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
+   ControlToolBar *GetControlToolBar(); 
+
    DeviceToolBar *GetDeviceToolBar();
    EditToolBar *GetEditToolBar();
    MeterToolBar *GetMeterToolBar();

@@ -69,7 +69,7 @@ class ScreenFrame:public wxFrame
    void OnCaptureToolbars(wxCommandEvent & e);
    void OnCaptureSelectionBar(wxCommandEvent & e);
    void OnCaptureTools(wxCommandEvent & e);
-   void OnCaptureControl(wxCommandEvent & e);
+   void OnCaptureTransport(wxCommandEvent & e);
    void OnCaptureMixer(wxCommandEvent & e);
    void OnCaptureMeter(wxCommandEvent & e);
    void OnCaptureEdit(wxCommandEvent & e);
@@ -179,7 +179,7 @@ enum
    IdCaptureToolbars,
    IdCaptureSelectionBar,
    IdCaptureTools,
-   IdCaptureControl,
+   IdCaptureTransport,
    IdCaptureMixer,
    IdCaptureMeter,
    IdCaptureEdit,
@@ -223,7 +223,7 @@ BEGIN_EVENT_TABLE(ScreenFrame, wxFrame)
    EVT_BUTTON(IdCaptureToolbars,        ScreenFrame::OnCaptureToolbars)
    EVT_BUTTON(IdCaptureSelectionBar,    ScreenFrame::OnCaptureSelectionBar)
    EVT_BUTTON(IdCaptureTools,           ScreenFrame::OnCaptureTools)
-   EVT_BUTTON(IdCaptureControl,         ScreenFrame::OnCaptureControl)
+   EVT_BUTTON(IdCaptureTransport,       ScreenFrame::OnCaptureTransport)
    EVT_BUTTON(IdCaptureMixer,           ScreenFrame::OnCaptureMixer)
    EVT_BUTTON(IdCaptureMeter,           ScreenFrame::OnCaptureMeter)
    EVT_BUTTON(IdCaptureEdit,            ScreenFrame::OnCaptureEdit)
@@ -368,7 +368,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
             S.Id(IdCaptureToolbars).AddButton(_("All Toolbars"));
             S.Id(IdCaptureSelectionBar).AddButton(_("SelectionBar"));
             S.Id(IdCaptureTools).AddButton(_("Tools"));
-            S.Id(IdCaptureControl).AddButton(_("Control"));
+            S.Id(IdCaptureTransport).AddButton(_("Transport"));
          }
          S.EndHorizontalLay();
 
@@ -594,9 +594,9 @@ void ScreenFrame::OnCaptureTools(wxCommandEvent & e)
    DoCapture(wxT("tools"));
 }
 
-void ScreenFrame::OnCaptureControl(wxCommandEvent & e)
+void ScreenFrame::OnCaptureTransport(wxCommandEvent & e)
 {
-   DoCapture(wxT("control"));
+   DoCapture(wxT("transport"));
 }
 
 void ScreenFrame::OnCaptureMixer(wxCommandEvent & e)

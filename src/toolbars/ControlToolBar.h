@@ -28,6 +28,7 @@ class AudacityProject;
 class TrackList;
 class TimeTrack;
 
+// In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar:public ToolBar {
 
  public:

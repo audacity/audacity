@@ -582,7 +582,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->BeginSubMenu(_("&Toolbars"));
 
-   c->AddCheck(wxT("ShowControlTB"), _("&Control Toolbar"), FN(OnShowControlToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+   c->AddCheck(wxT("ShowTransportTB"), _("&Transport Toolbar"), FN(OnShowTransportToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    c->AddCheck(wxT("ShowDeviceTB"), _("&Device Toolbar"), FN(OnShowDeviceToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    c->AddCheck(wxT("ShowEditTB"), _("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    c->AddCheck(wxT("ShowMeterTB"), _("&Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
@@ -1507,8 +1507,8 @@ void AudacityProject::ModifyToolbarMenus()
       return;
    }
 
-   mCommandManager.Check(wxT("ShowControlTB"),
-                        mToolManager->IsVisible(ControlBarID));
+   mCommandManager.Check(wxT("ShowTransportTB"),
+                         mToolManager->IsVisible(TransportBarID));
    mCommandManager.Check(wxT("ShowDeviceTB"),
                          mToolManager->IsVisible(DeviceBarID));
    mCommandManager.Check(wxT("ShowEditTB"),
@@ -4488,9 +4488,9 @@ void AudacityProject::OnContrast()
 }
 
 
-void AudacityProject::OnShowControlToolBar()
+void AudacityProject::OnShowTransportToolBar()
 {
-   mToolManager->ShowHide( ControlBarID );
+   mToolManager->ShowHide(TransportBarID);
    ModifyToolbarMenus();
 }
 

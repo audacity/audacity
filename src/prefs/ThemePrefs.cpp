@@ -88,7 +88,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Info"));
    {
       S.AddFixedText(
-         _("Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the control toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
+         _("Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
          );
 
 #ifdef __WXDEBUG__

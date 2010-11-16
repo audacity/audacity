@@ -269,7 +269,7 @@ void OnMixerBoard();
 void OnPlotSpectrum();
 void OnContrast();
 
-void OnShowControlToolBar();
+void OnShowTransportToolBar();
 void OnShowDeviceToolBar();
 void OnShowEditToolBar();
 void OnShowMeterToolBar();

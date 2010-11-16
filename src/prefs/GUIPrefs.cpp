@@ -84,7 +84,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Display"));
    {
-      S.TieCheckBox(_("&Ergonomic order of audio I/O buttons"),
+      S.TieCheckBox(_("&Ergonomic order of Transport Toolbar buttons"),
                     wxT("/GUI/ErgonomicTransportButtons"),
                     true);
       S.TieCheckBox(_("S&how 'How to Get Help' dialog box at program start up"),
