@@ -52,8 +52,9 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
                                    parent->GetName().c_str()).c_str())),
             wxPoint(100, 300), gSize, 
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
-            // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow, you can't restore project frame until you close
-            // LyricsWindow, but then project frame and LyricsWindow are restored but LyricsWindow is unresponsive because it thinks it's not shown.
+            // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow, 
+            // you can't restore project frame until you close LyricsWindow, but then project frame and 
+            // LyricsWindow are restored but LyricsWindow is unresponsive because it thinks it's not shown.
             //    wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
             wxDEFAULT_FRAME_STYLE)
 {

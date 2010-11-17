@@ -1408,8 +1408,9 @@ MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
                                                 parent->GetName().c_str()).c_str())), 
             wxDefaultPosition, kDefaultSize, 
             //vvv Bug in wxFRAME_FLOAT_ON_PARENT:
-            // If both the project frame and MixerBoardFrame are minimized and you restore MixerBoardFrame, you can't restore project frame until you close
-            // MixerBoardFrame, but then project frame and MixerBoardFrame are restored but MixerBoardFrame is unresponsive because it thinks it's not shown.
+            // If both the project frame and MixerBoardFrame are minimized and you restore MixerBoardFrame, 
+            // you can't restore project frame until you close MixerBoardFrame, but then project frame and 
+            // MixerBoardFrame are restored but MixerBoardFrame is unresponsive because it thinks it's not shown.
             //    wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
             wxDEFAULT_FRAME_STYLE)
 {
