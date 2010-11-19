@@ -80,7 +80,7 @@ public:
    void HandleSliderGain(const bool bWantPushState = false);
    void HandleSliderPan(const bool bWantPushState = false);
 
-   void ResetMeter();
+   void ResetMeter(const bool bResetClipping);
 
    // These are used by TrackPanel for synchronizing control states.
    void UpdateForStateChange(); // Update the controls that can be affected by state change.
@@ -214,7 +214,7 @@ public:
    void RefreshTrackClusters(bool bEraseBackground = true);
    void ResizeTrackClusters();
 
-   void ResetMeters();
+   void ResetMeters(const bool bResetClipping);
 
    void UpdateName(const Track* pTrack);
    void UpdateMute(const Track* pTrack = NULL); // NULL means update for all tracks.

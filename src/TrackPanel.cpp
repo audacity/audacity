@@ -909,7 +909,7 @@ void TrackPanel::OnTimer()
       }
 
       if (pMixerBoard) 
-         pMixerBoard->ResetMeters();
+         pMixerBoard->ResetMeters(false);
    }
 
    // Next, check to see if we were playing or recording

@@ -294,26 +294,27 @@ writing audio.
 
 #include "AudacityApp.h"
 #include "AudioIO.h"
-#include "WaveTrack.h"
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-#define MIDI_SLEEP 10 /* milliseconds */
-#define ROUND(x) (int) ((x)+0.5)
-//#include <string.h>
-#include "portmidi.h"
-#include "../src/common/pa_util.h"
-#include "NoteTrack.h"
-#endif
-
 #include "Mix.h"
+#include "MixerBoard.h"
 #include "Resample.h"
 #include "RingBuffer.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "toolbars/ControlToolBar.h"
+#include "WaveTrack.h"
 
+#include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
+
 #include "../Experimental.h"
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   #define MIDI_SLEEP 10 /* milliseconds */
+   #define ROUND(x) (int) ((x)+0.5)
+   //#include <string.h>
+   #include "portmidi.h"
+   #include "../src/common/pa_util.h"
+   #include "NoteTrack.h"
+#endif
 
 #define NO_STABLE_INDICATOR -1000000000
 #define LOWER_BOUND 0.0
@@ -1414,6 +1415,11 @@ void AudioIO::SetMeters(Meter *inputMeter, Meter *outputMeter)
    if (mOutputMeter)
       mOutputMeter->Reset(mRate, true);
 
+   AudacityProject* pProj = GetActiveProject();
+   MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+   if (pMixerBoard)
+      pMixerBoard->ResetMeters(true);
+
    mUpdateMeters = true;
 }
 
@@ -1647,6 +1653,11 @@ void AudioIO::StopStream()
       mInputMeter->Reset(mRate, false);
    if (mOutputMeter)
       mOutputMeter->Reset(mRate, false);
+
+   AudacityProject* pProj = GetActiveProject();
+   MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+   if (pMixerBoard)
+      pMixerBoard->ResetMeters(false);
 
    if (mListener && mNumCaptureChannels > 0)
       mListener->OnAudioIOStopRecording();

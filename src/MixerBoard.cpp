@@ -334,10 +334,10 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
       mProject->TP_PushState(_("Moved pan slider"), _("Pan"), true /* consolidate */);
 }
 
-void MixerTrackCluster::ResetMeter()
+void MixerTrackCluster::ResetMeter(const bool bResetClipping)
 {
    if (mLeftTrack) 
-       mMeter->Reset(mLeftTrack->GetRate(), true);
+       mMeter->Reset(mLeftTrack->GetRate(), bResetClipping);
 }
 
 
@@ -410,7 +410,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    if ((t0 < 0.0) || (t1 < 0.0) || (t0 >= t1) || // bad time value or nothing to show
          ((mMixerBoard->HasSolo() || mTrack->GetMute()) && !mTrack->GetSolo()))
    {
-      this->ResetMeter();
+      this->ResetMeter(false);
       return;
    }
 
@@ -1033,7 +1033,7 @@ void MixerBoard::ResizeTrackClusters()
       mMixerTrackClusters[nClusterIndex]->HandleResize();
 }
 
-void MixerBoard::ResetMeters()
+void MixerBoard::ResetMeters(const bool bResetClipping)
 {
    mPrevT1 = 0.0;
 
@@ -1041,7 +1041,7 @@ void MixerBoard::ResetMeters()
       return;
 
    for (unsigned int i = 0; i < mMixerTrackClusters.GetCount(); i++)
-      mMixerTrackClusters[i]->ResetMeter();
+      mMixerTrackClusters[i]->ResetMeter(bResetClipping);
 }
 
 void MixerBoard::UpdateName(const Track* pTrack)

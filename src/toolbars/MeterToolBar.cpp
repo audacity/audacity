@@ -97,14 +97,6 @@ void MeterToolBar::Populate()
    mSizer->Add( mRecordMeter, wxGBPosition( 0, 1 ), wxDefaultSpan, wxEXPAND );
 
    RegenerateTooltips();
-
-#if defined(THIS_PROBABY_SHOULD_NOT_BE_DONE_HERE)
-   // If AudioIO changes the meters while it's currently busy, then crashes are
-   // very likely.
-   if (gAudioIO && !gAudioIO->IsBusy()) {
-      gAudioIO->SetMeters(mRecordMeter, mPlayMeter);
-   }
-#endif
 }
 
 void MeterToolBar::UpdatePrefs()
@@ -135,14 +127,6 @@ bool MeterToolBar::DestroyChildren()
 {
    mPlayMeter = NULL;
    mRecordMeter = NULL;
-
-#if defined(THIS_PROBABY_SHOULD_NOT_BE_DONE_HERE)
-   // If AudioIO changes the meters while it's currently busy, then crashes are
-   // very likely...especially in this case.
-   if (gAudioIO && !gAudioIO->IsBusy()) {
-      gAudioIO->SetMeters(NULL, NULL);
-   }
-#endif
 
    return ToolBar::DestroyChildren();
 }
