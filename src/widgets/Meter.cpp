@@ -543,7 +543,7 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
 
    for(i=0; i<numFrames; i++) {
       for(j=0; j<num; j++) {
-         msg.peak[j] = floatMax(msg.peak[j], sptr[j]);
+         msg.peak[j] = floatMax(msg.peak[j], fabs(sptr[j]));
          msg.rms[j] += sptr[j]*sptr[j];
 
          // In addition to looking for mNumPeakSamplesToClip peaked
