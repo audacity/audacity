@@ -385,19 +385,19 @@ void MixerToolBar::SetToolTips()
 {
 #if wxUSE_TOOLTIPS
    if (mInputSlider->IsEnabled()) {
-      mInputSlider->SetToolTip(_("Input Level Slider"));
+      mInputSlider->SetToolTip(_("Input Volume Slider"));
    }
    else {
       mInputSlider->SetToolTip(
-            _("Cannot control input level; use system mixer."));
+            _("Cannot control input volume; use system mixer."));
    }
 
    if (mOutputSlider->IsEnabled()) {
-      mOutputSlider->SetToolTip(_("Output Level Slider"));
+      mOutputSlider->SetToolTip(_("Output Volume Slider"));
    }
    else {
       mOutputSlider->SetToolTip(
-            _("Cannot control output level; use system mixer."));
+            _("Cannot control output volume; use system mixer."));
    }
 #endif
 }
