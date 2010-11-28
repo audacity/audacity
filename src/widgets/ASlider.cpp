@@ -1032,6 +1032,8 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       FormatPopWin();
       SetPopWinPosition();
       LWSlider::sharedTipPanel->Show();
+      //hide mouseover tooltip
+      wxToolTip::Enable(false);
    }
    else if( event.ButtonUp() )
    {
@@ -1039,6 +1041,8 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
       if (mParent->HasCapture())
          mParent->ReleaseMouse();
       LWSlider::sharedTipPanel->Hide();
+      //restore normal tooltip behavor for mouseovers
+      wxToolTip::Enable(true);
       // wxSetCursor(wxNullCursor);
    }
    else if (event.Dragging() && mIsDragging)
