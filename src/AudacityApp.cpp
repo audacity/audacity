@@ -66,6 +66,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "effects/LoadEffects.h"
 #include "effects/Contrast.h"
 #include "effects/VST/VSTEffect.h"
+#include "widgets/ASlider.h"
 #include "FFmpeg.h"
 #include "GStreamerLoader.h"
 #include "Internat.h"
@@ -266,6 +267,8 @@ void QuitAudacity(bool bForce)
          }
       }
    }
+
+   LWSlider::DeleteSharedTipPanel();
 
    ModuleManager::Dispatch(AppQuiting);
 

@@ -64,7 +64,7 @@ of an LWSlider or ASlider.
 #include <wx/sizer.h>
 #include <wx/settings.h>
 
-#if defined(__WXMSW__) && !defined(__CYGWIN__)
+#ifndef __WXMAC__
 #define USE_POPUPWIN 1
 #endif
 
@@ -101,44 +101,45 @@ const int sliderFontSize = 10;
 const int sliderFontSize = 12;
 #endif
 
+wxWindow* LWSlider::sharedTipPanel;
 //
 // TipPanel
 //
 
 #if USE_POPUPWIN
 class TipPanel : public wxPopupWindow
-#elif defined(__WXMAC__)
-// On the Mac, we use a wxFrame as a wxPanel will appear to fall behind
-// whatever window it is hovering above if that window is refreshed.  A frame
-// does not have this problem.  One unfortunate side effect is that a shadow
-// now appears below the tip panel.
-class TipPanel : public wxFrame
 #else
-class TipPanel : public wxPanel
+// On the Mac we use a wxFrame since wxPopWindow isn't supported yet
+class TipPanel : public wxFrame
 #endif
 {
  public:
    TipPanel(wxWindow * parent, wxWindowID id,
             wxString label,
             const wxPoint &pos);
-   
-   void SetPos(const wxPoint &pos);
+   virtual ~TipPanel(){}
+   void SetPos(const wxPoint &pos, wxString maxLabel);
 
    void OnPaint(wxPaintEvent & event);
 
-#if defined(__WXMAC__)
-   bool Show(bool show);
-#endif
+   void SetTargetParent( wxWindowBase *newParent ){mParent = (wxWindow*)newParent;}
 
    wxString label;
-   wxString origLabel;
 
    wxWindow *mParent;
+#ifdef USE_POPUPWIN
+   //wxwin won't let you create a wxPopupWindow without a parent frame.
+   //so we use a permanent offscreen dummy since projects can be deleted and their childs go with them.
+   static wxFrame*  sharedDummyParent;
+#endif
 
    DECLARE_EVENT_TABLE()
 };
 
 #if USE_POPUPWIN
+#define kDummyOffsetX -32000
+#define kDummyOffsetY -32000
+wxFrame*  TipPanel::sharedDummyParent;
 
 BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
    EVT_PAINT(TipPanel::OnPaint)
@@ -146,34 +147,32 @@ END_EVENT_TABLE()
 
 TipPanel::TipPanel(wxWindow *parent, wxWindowID id,
                    wxString label, const wxPoint &pos):
-   wxPopupWindow(parent)
+wxPopupWindow(TipPanel::sharedDummyParent)
 {
    this->label = label;
-   this->origLabel = label;
    mParent = parent;
-   SetPos(pos);
+   SetPos(pos, label);
 }
 
-void TipPanel::SetPos(const wxPoint& pos)
+void TipPanel::SetPos(const wxPoint& pos, wxString maxLabel)
 {
    int x = pos.x;
    int y = pos.y;
 
-   if (mParent)
-      mParent->ClientToScreen(&x,&y);
+//   if (mParent)
+//      mParent->ClientToScreen(&x,&y);
 
    wxClientDC dc(this);
    wxFont labelFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL);
    dc.SetFont(labelFont);
    int width, height;
-   dc.GetTextExtent(origLabel, &width, &height);
+   dc.GetTextExtent(maxLabel, &width, &height);
    height += 4;
    SetSize(x - width/2, y, width, height);
 }
 
 #else
 
-#if defined(__WXMAC__)
 BEGIN_EVENT_TABLE(TipPanel, wxFrame)
    EVT_PAINT(TipPanel::OnPaint)
 END_EVENT_TABLE()
@@ -181,32 +180,21 @@ END_EVENT_TABLE()
 TipPanel::TipPanel(wxWindow *parent, wxWindowID id,
                    wxString label,
                    const wxPoint &pos):
-   wxFrame(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+   wxFrame(NULL, id, wxEmptyString, wxDefaultPosition, wxDefaultSize,
            wxNO_BORDER | wxFRAME_NO_TASKBAR)
-#else
-BEGIN_EVENT_TABLE(TipPanel, wxPanel)
-   EVT_PAINT(TipPanel::OnPaint)
-END_EVENT_TABLE()
-
-TipPanel::TipPanel(wxWindow *parent, wxWindowID id,
-                   wxString label,
-                   const wxPoint &pos):
-   wxPanel(parent, id)
-#endif
-
 {
+   mParent = parent;
    this->label = label;
-   this->origLabel = label;
-   SetPos(pos);
+   SetPos(pos, label);
 }
 
-void TipPanel::SetPos(const wxPoint& pos)
+void TipPanel::SetPos(const wxPoint& pos, wxString maxLabel)
 {
    wxClientDC dc(this);
    wxFont labelFont(sliderFontSize, wxSWISS, wxNORMAL, wxNORMAL);
    dc.SetFont(labelFont);
    int width, height;
-   dc.GetTextExtent(origLabel, &width, &height);
+   dc.GetTextExtent(maxLabel, &width, &height);
    width += 4;
    height += 4;
    int left = pos.x - width/2;
@@ -215,25 +203,6 @@ void TipPanel::SetPos(const wxPoint& pos)
    SetSize(left, pos.y, width, height);
    Raise();
 }
-
-#if defined(__WXMAC__)
-bool TipPanel::Show(bool show)
-{
-   // Save original transition
-   int trans = wxSystemOptions::GetOptionInt( wxMAC_WINDOW_PLAIN_TRANSITION );
-
-   // Disable window animation
-   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
-
-   // Show/Hide the window
-   bool shown = wxFrame::Show(show);
-
-   // Disable window animation
-   wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, trans );
-
-   return shown;
-}
-#endif
 
 #endif
 
@@ -476,7 +445,6 @@ void LWSlider::Init(wxWindow * parent,
    Move(pos);
    Draw();
 
-   mPopWin = NULL;
    CreatePopWin();
 }
 
@@ -486,7 +454,6 @@ LWSlider::~LWSlider()
    if (mThumbBitmapAllocated) {
       delete mThumbBitmap;
    }
-   delete mPopWin;
    delete mpRuler;
 }
 
@@ -534,21 +501,24 @@ wxWindow* LWSlider::GetToolTipParent() const
 }
 
 void LWSlider::CreatePopWin()
-{
-   if (mPopWin)
-      return;
-
-   wxString maxStr = mName + wxT(": 000000");
+{   
+   maxTipLabel = mName + wxT(": 000000");
 
    if (mStyle == PAN_SLIDER || mStyle == DB_SLIDER || mStyle == SPEED_SLIDER
 #ifdef EXPERIMENTAL_MIDI_OUT
        || mStyle == VEL_SLIDER
 #endif
        )
-      maxStr += wxT("000");
+      maxTipLabel += wxT("000");
 
-   mPopWin = new TipPanel(GetToolTipParent(), -1, maxStr, wxDefaultPosition);
-   mPopWin->Hide();
+   
+   if(!LWSlider::sharedTipPanel) {
+#ifdef USE_POPUPWIN
+      TipPanel::sharedDummyParent = new wxFrame(NULL, -1, wxT("offscreentip"), wxPoint(kDummyOffsetX, kDummyOffsetY));
+#endif
+      LWSlider::sharedTipPanel = new TipPanel(mParent, -1, maxTipLabel, wxDefaultPosition);
+      LWSlider::sharedTipPanel->Hide();
+   }
 }
 
 void LWSlider::SetPopWinPosition()
@@ -560,13 +530,8 @@ void LWSlider::SetPopWinPosition()
       pt = wxPoint(mWidth + mLeft + 1, mHeight/2 + mTop);
    pt = mParent->ClientToScreen(pt);
 
-#if !defined(__WXMAC__)
-   if (GetToolTipParent())
-      pt = GetToolTipParent()->ScreenToClient(pt);
-#endif
-
-   if (mPopWin)
-      ((TipPanel *)mPopWin)->SetPos(pt);
+   if (LWSlider::sharedTipPanel)
+      ((TipPanel *)LWSlider::sharedTipPanel)->SetPos(pt, maxTipLabel);
 }
 
 void LWSlider::Move(const wxPoint &newpos)
@@ -577,8 +542,8 @@ void LWSlider::Move(const wxPoint &newpos)
 
 void LWSlider::RecreateTipWin()
 {
-   delete mPopWin;
-   mPopWin = NULL;
+   LWSlider::sharedTipPanel->Destroy();
+   LWSlider::sharedTipPanel = NULL;
    CreatePopWin();
 }
 
@@ -612,8 +577,8 @@ void LWSlider::OnPaint(wxDC &dc, bool selected)
    else
       dc.DrawBitmap(*mThumbBitmap, mLeft+thumbOrtho, mTop+thumbPos, true);
 
-   if (mPopWin)
-      mPopWin->Refresh();
+   if (LWSlider::sharedTipPanel)
+      LWSlider::sharedTipPanel->Refresh();
 }
 
 void LWSlider::OnSize( wxSizeEvent & event )
@@ -925,7 +890,7 @@ void LWSlider::FormatPopWin()
 #endif
    }
 
-   ((TipPanel *)mPopWin)->label = label;
+   ((TipPanel *)LWSlider::sharedTipPanel)->label = label;
 }
 
 bool LWSlider::ShowDialog()
@@ -967,6 +932,17 @@ bool LWSlider::DoShowDialog(wxPoint pos)
    }
 
    return changed;
+}
+
+void LWSlider::DeleteSharedTipPanel()
+{
+   if(LWSlider::sharedTipPanel) {
+      ((TipPanel*)LWSlider::sharedTipPanel)->Destroy();
+#ifdef USE_POPUPWIN
+      TipPanel::sharedDummyParent->Destroy();
+#endif
+   }
+   LWSlider::sharedTipPanel = NULL;
 }
 
 void LWSlider::OnMouseEvent(wxMouseEvent & event)
@@ -1052,18 +1028,17 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
 
       mParent->CaptureMouse();
       // wxSetCursor(wxCURSOR_BLANK);
-
+      ((TipPanel*)LWSlider::sharedTipPanel)->SetTargetParent(mParent);
       FormatPopWin();
       SetPopWinPosition();
-      mPopWin->Show();
+      LWSlider::sharedTipPanel->Show();
    }
    else if( event.ButtonUp() )
    {
       mIsDragging = false;
       if (mParent->HasCapture())
          mParent->ReleaseMouse();
-      mPopWin->Hide();
-      ((TipPanel *)mPopWin)->SetPos(wxPoint(-32000, -32000));
+      LWSlider::sharedTipPanel->Hide();
       // wxSetCursor(wxNullCursor);
    }
    else if (event.Dragging() && mIsDragging)
@@ -1198,7 +1173,7 @@ void LWSlider::SendUpdate( float newValue )
 {
    mCurrentValue = newValue;
    FormatPopWin();
-   mPopWin->Refresh();
+   LWSlider::sharedTipPanel->Refresh();
    Refresh();
 
    wxCommandEvent e( wxEVT_COMMAND_SLIDER_UPDATED, mID );

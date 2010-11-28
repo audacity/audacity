@@ -146,6 +146,8 @@ class LWSlider
 
    void SetEnabled(bool enabled);
    bool GetEnabled();
+   
+   static void DeleteSharedTipPanel();
 
  private:
 
@@ -165,6 +167,8 @@ class LWSlider
    wxWindow* GetToolTipParent() const;
       
    wxWindow *mParent;
+   
+   wxString maxTipLabel; //string with the max num of chars for tip
 
    int mStyle;
    int mOrientation; // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
@@ -216,7 +220,8 @@ class LWSlider
 
    wxWindowID mID;
 
-   wxWindow *mPopWin;
+   //since we only need to show one tip at a time, just share one instance over all sliders.
+   static wxWindow* sharedTipPanel;
 
    Ruler* mpRuler;
 
