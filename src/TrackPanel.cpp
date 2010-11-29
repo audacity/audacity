@@ -883,6 +883,10 @@ void TrackPanel::OnTimer()
       }
    }
 
+   //vvvvv Vaughan, 2010-11-27: 
+   // Since all we're doing here is updating the meters, maybe we should remove it from here 
+   // and we do that in audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
+   // Thread issues?
    MixerBoard* pMixerBoard = this->GetMixerBoard();
    if (pMixerBoard && 
          (p->GetAudioIOToken() > 0) &&

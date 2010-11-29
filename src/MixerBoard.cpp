@@ -21,13 +21,14 @@
 
 #include "AColor.h"
 #include "MixerBoard.h"
-#include "Project.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
    #include "NoteTrack.h"
 #endif
+#include "Project.h"
+#include "Track.h"
+
 
 #include "../images/MusicalInstruments.h"
-
 #ifdef __WXMSW__
    #include "../images/AudacityLogo.xpm"
 #else
@@ -407,77 +408,135 @@ void MixerTrackCluster::UpdateGain()
 
 void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 {
+   wxASSERT(mLeftTrack && (mLeftTrack->GetKind() == Track::Wave));
+
+   //vvv Vaughan, 2010-11-27: 
+   // NOTE TO ROGER DANNENBERG: 
+   // I undid the mTrack HACK in this conditional, as the rest of the method still assumed it's a wavetrack
+   // so dereferencing mLeftTrack would have gotten a NULL pointer fault. 
+   // I really think MixerTrackCluster should be factored for NoteTracks.
    if ((t0 < 0.0) || (t1 < 0.0) || (t0 >= t1) || // bad time value or nothing to show
-         ((mMixerBoard->HasSolo() || mTrack->GetMute()) && !mTrack->GetSolo()))
+         ((mMixerBoard->HasSolo() || mLeftTrack->GetMute()) && !mLeftTrack->GetSolo()))
    {
       this->ResetMeter(false);
       return;
    }
 
-   const int nFramesPerBuffer = 4; 
-   float min; // A dummy, since it's not shown in meters. 
-   float* maxLeft = new float[nFramesPerBuffer];
-   float* rmsLeft = new float[nFramesPerBuffer];
-   float* maxRight = new float[nFramesPerBuffer];
-   float* rmsRight = new float[nFramesPerBuffer];
-   
-   bool bSuccess = (mLeftTrack != NULL);
-   const double dFrameInterval = (t1 - t0) / (double)nFramesPerBuffer;
-   double dFrameT0 = t0;
-   double dFrameT1 = t0 + dFrameInterval;
-   int i = 0;
-   while (bSuccess && (i < nFramesPerBuffer))
+   // Vaughan, 2010-11-27: 
+   // This commented out code is flawed. Mistaken understanding of "frame" vs "window".
+   // Caused me to override Meter::UpdateDisplay().
+   // But I think it's got a good idea, of calling WaveTracks' GetMinMax and GetRMS 
+   // instead of passing in all the data and asking the meter to derive peak and rms.
+   // May be worth revisiting as I think it should perform better, because it uses the min/max/rms 
+   // stored in blockfiles, rather than calculating them, but for now, changing it to use the 
+   // original Meter::UpdateDisplay(). New code is intermixed with the previous (now commented out).
+   // 
+   //const int kFramesPerBuffer = 4; 
+   //float min; // dummy, since it's not shown in meters
+   //float* maxLeft = new float[kFramesPerBuffer];
+   //float* rmsLeft = new float[kFramesPerBuffer];
+   //float* maxRight = new float[kFramesPerBuffer];
+   //float* rmsRight = new float[kFramesPerBuffer];
+   //
+   //const double dFrameInterval = (t1 - t0) / (double)kFramesPerBuffer;
+   //double dFrameT0 = t0;
+   //double dFrameT1 = t0 + dFrameInterval;
+   //int i = 0;
+   //while (bSuccess && (i < kFramesPerBuffer))
+   //{
+   //   bSuccess &= 
+   //      mLeftTrack->GetMinMax(&min, &(maxLeft[i]), dFrameT0, dFrameT1) && 
+   //      mLeftTrack->GetRMS(&(rmsLeft[i]), dFrameT0, dFrameT1);
+   //   if (bSuccess && mRightTrack)
+   //      bSuccess &=
+   //         mRightTrack->GetMinMax(&min, &(maxRight[i]), dFrameT0, dFrameT1) && 
+   //         mRightTrack->GetRMS(&(rmsRight[i]), dFrameT0, dFrameT1);
+   //   else
+   //   {
+   //      // Mono: Start with raw values same as left. 
+   //      // To be modified by bWantPostFadeValues and channel pan/gain.
+   //      maxRight[i] = maxLeft[i];
+   //      rmsRight[i] = rmsLeft[i];
+   //   }
+   //   dFrameT0 += dFrameInterval;
+   //   dFrameT1 += dFrameInterval;
+   //   i++;
+   //}
+   //
+   //const bool bWantPostFadeValues = true; //v Turn this into a checkbox on MixerBoard? For now, always true.
+   //if (bSuccess && bWantPostFadeValues)
+   //if (bSuccess)
+   //{
+   //   for (i = 0; i < kFramesPerBuffer; i++)
+   //   {
+   //      float gain = mLeftTrack->GetChannelGain(0);
+   //      maxLeft[i] *= gain;
+   //      rmsLeft[i] *= gain;
+   //      if (mRightTrack)
+   //         gain = mRightTrack->GetChannelGain(1);
+   //      maxRight[i] *= gain;
+   //      rmsRight[i] *= gain;
+   //   }
+   //   mMeter->UpdateDisplay(
+   //      2, // If mono, show left track values in both meters, as in MeterToolBar, rather than kNumChannels.
+   //      kFramesPerBuffer, 
+   //      maxLeft, rmsLeft, 
+   //      maxRight, rmsRight, 
+   //      mLeftTrack->TimeToLongSamples(t1 - t0));
+   //}
+   //
+   //delete[] maxLeft;
+   //delete[] rmsLeft;
+   //delete[] maxRight;
+   //delete[] rmsRight;
+
+   sampleCount startSample = (sampleCount)((mLeftTrack->GetRate() * t0) + 0.5);
+   sampleCount nFrames = (sampleCount)((mLeftTrack->GetRate() * (t1 - t0)) + 0.5);
+   float* meterFloatsArray = NULL;
+   float* tempFloatsArray = new float[nFrames];
+   bool bSuccess = mLeftTrack->Get((samplePtr)tempFloatsArray, floatSample, startSample, nFrames);
+   if (bSuccess)
    {
-      bSuccess &= 
-         mLeftTrack->GetMinMax(&min, &(maxLeft[i]), dFrameT0, dFrameT1) && 
-         mLeftTrack->GetRMS(&(rmsLeft[i]), dFrameT0, dFrameT1);
-      if (bSuccess && mRightTrack)
-         bSuccess &=
-            mRightTrack->GetMinMax(&min, &(maxRight[i]), dFrameT0, dFrameT1) && 
-            mRightTrack->GetRMS(&(rmsRight[i]), dFrameT0, dFrameT1);
-      else
-      {
-         // Mono: Start with raw values same as left. 
-         // To be modified by bWantPostFadeValues and channel pan/gain.
-         maxRight[i] = maxLeft[i];
-         rmsRight[i] = rmsLeft[i];
-      }
-      dFrameT0 += dFrameInterval;
-      dFrameT1 += dFrameInterval;
-      i++;
+      // We always pass a stereo sample array to the meter, as it shows 2 channels. 
+      // Mono shows same in both meters.
+      // Since we're not mixing, need to duplicate same signal for "right" channel in mono case.
+      meterFloatsArray = new float[2 * nFrames];
+
+      // Interleave for stereo. Left/mono first.
+      for (int index = 0; index < nFrames; index++)
+         meterFloatsArray[2 * index] = tempFloatsArray[index];
+
+      if (mRightTrack) 
+         bSuccess = mRightTrack->Get((samplePtr)tempFloatsArray, floatSample, startSample, nFrames);
+
+      if (bSuccess)
+         // Interleave right channel, or duplicate same signal for "right" channel in mono case.
+         for (int index = 0; index < nFrames; index++)
+            meterFloatsArray[(2 * index) + 1] = tempFloatsArray[index];
    }
 
-   //const bool bWantPostFadeValues = true; //v Turn this into a checkbox on MixerBoard?
+   //const bool bWantPostFadeValues = true; //v Turn this into a checkbox on MixerBoard? For now, always true.
    //if (bSuccess && bWantPostFadeValues)
    if (bSuccess)
    {
-      for (i = 0; i < nFramesPerBuffer; i++)
-      {
-         float gain = mLeftTrack->GetChannelGain(0);
-         maxLeft[i] *= gain;
-         rmsLeft[i] *= gain;
-         if (mRightTrack)
-            gain = mRightTrack->GetChannelGain(1);
-         else
-            gain = mLeftTrack->GetChannelGain(1);
-         maxRight[i] *= gain;
-         rmsRight[i] *= gain;
-      }
+      float gain = mLeftTrack->GetChannelGain(0);
+      if (gain < 1.0)
+         for (int index = 0; index < nFrames; index++)
+            meterFloatsArray[2 * index] *= gain;
+      if (mRightTrack)
+         gain = mRightTrack->GetChannelGain(1);
+      else
+         gain = mLeftTrack->GetChannelGain(1);
+      if (gain < 1.0)
+         for (int index = 0; index < nFrames; index++)
+            meterFloatsArray[(2 * index) + 1] *= gain;
+      mMeter->UpdateDisplay(2, nFrames, meterFloatsArray);
    }
+   else
+      this->ResetMeter(false);
 
-   if (bSuccess)
-      mMeter->UpdateDisplay(
-         2, // If mono, show left track values in both meters, as in MeterToolBar, rather than kNumChannels.
-         nFramesPerBuffer, 
-         maxLeft, rmsLeft, 
-         maxRight, rmsRight, 
-         mLeftTrack->TimeToLongSamples(t1 - t0));
-
-
-   delete[] maxLeft;
-   delete[] rmsLeft;
-   delete[] maxRight;
-   delete[] rmsRight;
+   delete[] meterFloatsArray;
+   delete[] tempFloatsArray;
 }
 
 // private
