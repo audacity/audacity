@@ -1310,7 +1310,7 @@ bool VSTEffect::Process()
       }
 
       if (mBlockSize == 0) {
-         mBlockSize = left->GetMaxBlockSize() * 2;
+         mBlockSize = mWTBlockSize = left->GetMaxBlockSize() * 2;
 
          // Some VST effects (Antress Modern is an example), do not like
          // overly large block sizes.  Unfortunately, I have not found a
@@ -1327,9 +1327,11 @@ bool VSTEffect::Process()
             mInBuffer[i] = new float[mBlockSize];
          }
 
+         //Process 2 audacity blockfiles per WaveTrack::Set independently of mBlockSize
+         //because it is extremely slow to do multiple Set()s per blockfile.
          mOutBuffer = new float *[mOutputs];
          for (int i = 0; i < mOutputs; i++) {
-            mOutBuffer[i] = new float[mBlockSize];
+            mOutBuffer[i] = new float[mWTBlockSize + mBlockSize];
          }
 
          // Turn the power off
@@ -1385,6 +1387,7 @@ bool VSTEffect::ProcessStereo(int count,
                               sampleCount len)
 {
    bool rc = true;
+   sampleCount amountLeft = 0;
 
    // Initialize time info
    mTimeInfo.samplePos = 0.0;
@@ -1401,6 +1404,10 @@ bool VSTEffect::ProcessStereo(int count,
    sampleCount originalLen = len;
    sampleCount ls = lstart;
    sampleCount rs = rstart;
+   sampleCount outls = lstart;
+   sampleCount outrs = rstart;
+   sampleCount outBufferCursor = 0;
+   float **outBufSegment = new float *[mOutputs];
    while (len) {
       int block = mBlockSize;
       if (block > len) {
@@ -1412,12 +1419,27 @@ bool VSTEffect::ProcessStereo(int count,
          right->Get((samplePtr)mInBuffer[1], floatSample, rs, block);
       }
 
-      callProcessReplacing(mInBuffer, mOutBuffer, block);
-
-      left->Set((samplePtr)mOutBuffer[0], floatSample, ls, block);
-      if (right) {
-         right->Set((samplePtr)mOutBuffer[1], floatSample, rs, block);
-      }      
+      for (int i = 0; i < mOutputs; i++)
+         outBufSegment[i] = mOutBuffer[i ] + outBufferCursor;
+      callProcessReplacing(mInBuffer, outBufSegment, block);
+      outBufferCursor += block;
+      //Process 2 audacity blockfiles per WaveTrack::Set independently of mBlockSize
+      //because it is extremely slow to do multiple Set()s per blockfile due to Undo History
+      //If we do more optimization we should probably align the Sets to blockfile boundries.
+      if (outBufferCursor >= mWTBlockSize) {
+         left->Set((samplePtr)mOutBuffer[0], floatSample, outls, mWTBlockSize);
+         if (right) {
+            right->Set((samplePtr)mOutBuffer[1], floatSample, outrs, mWTBlockSize);
+         }
+         if (outBufferCursor > mWTBlockSize) {
+            //snake the buffer down
+            memmove(mOutBuffer[0], mOutBuffer[0] + mWTBlockSize, SAMPLE_SIZE(floatSample) * (outBufferCursor - mWTBlockSize));
+            memmove(mOutBuffer[1], mOutBuffer[1] + mWTBlockSize, SAMPLE_SIZE(floatSample) * (outBufferCursor - mWTBlockSize));
+         }
+         outBufferCursor -= mWTBlockSize;
+         outls += mWTBlockSize;
+         outrs += mWTBlockSize;
+      }
 
       len -= block;
       ls += block;
@@ -1435,6 +1457,14 @@ bool VSTEffect::ProcessStereo(int count,
             rc = false;
             break;
          }
+      }
+   }
+
+   //finish taking the remainder.
+   if (outBufferCursor) {
+     left->Set((samplePtr)mOutBuffer[0], floatSample, ls, outBufferCursor);
+     if (right) {
+         right->Set((samplePtr)mOutBuffer[1], floatSample, rs, outBufferCursor);
       }
    }
 

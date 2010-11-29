@@ -108,6 +108,7 @@ class VSTEffect:public Effect
    VstTimeInfo mTimeInfo;
 
    sampleCount mBlockSize;
+   sampleCount mWTBlockSize;
    float **mInBuffer;
    float **mOutBuffer;
    int mInputs;
