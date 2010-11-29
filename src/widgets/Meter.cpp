@@ -575,56 +575,57 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
    mQueue.Put(msg);
 }
 
-void Meter::UpdateDisplay(int numChannels, int numFrames, 
-                           // Need to make these double-indexed arrays if we handle more than 2 channels.
-                           float* maxLeft, float* rmsLeft, 
-                           float* maxRight, float* rmsRight, 
-                           const sampleCount kSampleCount)
-{
-   int i, j;
-   int num = intmin(numChannels, mNumBars);
-   MeterUpdateMsg msg;
-
-   msg.numFrames = kSampleCount;
-   for(j=0; j<mNumBars; j++) {
-      msg.peak[j] = 0.0;
-      msg.rms[j] = 0.0;
-      msg.clipping[j] = false;
-      msg.headPeakCount[j] = 0;
-      msg.tailPeakCount[j] = 0;
-   }
-
-   for(i=0; i<numFrames; i++) {
-      for(j=0; j<num; j++) {
-         msg.peak[j] = floatMax(msg.peak[j], ((j == 0) ? maxLeft[i] : maxRight[i]));
-         msg.rms[j] = floatMax(msg.rms[j], ((j == 0) ? rmsLeft[i] : rmsRight[i]));
-
-         // In addition to looking for mNumPeakSamplesToClip peaked
-         // samples in a row, also send the number of peaked samples
-         // at the head and tail, in case there's a run 
-         // of peaked samples that crosses block boundaries.
-         if (fabs((j == 0) ? maxLeft[i] : maxRight[i]) >= MAX_AUDIO)
-         {
-            if (msg.headPeakCount[j]==i)
-               msg.headPeakCount[j]++;
-            msg.tailPeakCount[j]++;
-            if (msg.tailPeakCount[j] > mNumPeakSamplesToClip)
-               msg.clipping[j] = true;
-         }
-         else
-            msg.tailPeakCount[j] = 0;
-      }
-   }
-
-   if (mDB) {
-      for(j=0; j<mNumBars; j++) {
-         msg.peak[j] = ToDB(msg.peak[j], mDBRange);
-         msg.rms[j] = ToDB(msg.rms[j], mDBRange);
-      }
-   }
-
-   mQueue.Put(msg);
-}
+// Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
+//void Meter::UpdateDisplay(int numChannels, int numFrames, 
+//                           // Need to make these double-indexed arrays if we handle more than 2 channels.
+//                           float* maxLeft, float* rmsLeft, 
+//                           float* maxRight, float* rmsRight, 
+//                           const sampleCount kSampleCount)
+//{
+//   int i, j;
+//   int num = intmin(numChannels, mNumBars);
+//   MeterUpdateMsg msg;
+//
+//   msg.numFrames = kSampleCount;
+//   for(j=0; j<mNumBars; j++) {
+//      msg.peak[j] = 0.0;
+//      msg.rms[j] = 0.0;
+//      msg.clipping[j] = false;
+//      msg.headPeakCount[j] = 0;
+//      msg.tailPeakCount[j] = 0;
+//   }
+//
+//   for(i=0; i<numFrames; i++) {
+//      for(j=0; j<num; j++) {
+//         msg.peak[j] = floatMax(msg.peak[j], ((j == 0) ? maxLeft[i] : maxRight[i]));
+//         msg.rms[j] = floatMax(msg.rms[j], ((j == 0) ? rmsLeft[i] : rmsRight[i]));
+//
+//         // In addition to looking for mNumPeakSamplesToClip peaked
+//         // samples in a row, also send the number of peaked samples
+//         // at the head and tail, in case there's a run 
+//         // of peaked samples that crosses block boundaries.
+//         if (fabs((j == 0) ? maxLeft[i] : maxRight[i]) >= MAX_AUDIO)
+//         {
+//            if (msg.headPeakCount[j]==i)
+//               msg.headPeakCount[j]++;
+//            msg.tailPeakCount[j]++;
+//            if (msg.tailPeakCount[j] > mNumPeakSamplesToClip)
+//               msg.clipping[j] = true;
+//         }
+//         else
+//            msg.tailPeakCount[j] = 0;
+//      }
+//   }
+//
+//   if (mDB) {
+//      for(j=0; j<mNumBars; j++) {
+//         msg.peak[j] = ToDB(msg.peak[j], mDBRange);
+//         msg.rms[j] = ToDB(msg.rms[j], mDBRange);
+//      }
+//   }
+//
+//   mQueue.Put(msg);
+//}
 
 void Meter::OnMeterUpdate(wxTimerEvent &evt)
 {
