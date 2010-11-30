@@ -1001,6 +1001,15 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    if (numPlaybackChannels == 0 && numCaptureChannels == 0) 
       return true;
 #endif
+
+#ifdef USE_PORTMIXER
+#ifdef __WXMSW__
+   //mchinen nov 30 2010.  For some reason Pa_OpenStream resets the input volume on windows.
+   //so cache and restore after it.
+   //The actual problem is likely in portaudio's pa_win_wmme.c OpenStream().
+   float oldRecordVolume = Px_GetInputVolume(mPortMixer);
+#endif
+#endif
    mLastPaError = Pa_OpenStream( &mPortStreamV19,
                                  captureParameters, playbackParameters,
                                  mRate, paFramesPerBufferUnspecified,
@@ -1008,6 +1017,9 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
                                  audacityAudioCallback, NULL );
 
 #if USE_PORTMIXER
+#ifdef __WXMSW__
+   Px_SetInputVolume(mPortMixer, oldRecordVolume);
+#endif
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
       #ifdef __WXMAC__
       if (mPortMixer) {
