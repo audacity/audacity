@@ -85,7 +85,7 @@ void MixerTrackSlider::OnMouseEvent(wxMouseEvent &event)
 #define MUTE_SOLO_HEIGHT                     16
 #define PAN_HEIGHT                           24
 
-#define kLeftSideStackWidth         MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset //vvvvv Change when numbers shown on slider scale.
+#define kLeftSideStackWidth         MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH - kDoubleInset //vvv Change when numbers shown on slider scale.
 #define kRightSideStackWidth        MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset
 #define kMixerTrackClusterWidth     kLeftSideStackWidth + kRightSideStackWidth + kQuadrupleInset // kDoubleInset margin on both sides
 
@@ -412,7 +412,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 
    //vvv Vaughan, 2010-11-27: 
    // NOTE TO ROGER DANNENBERG: 
-   // I undid the mTrack HACK in this conditional, as the rest of the method still assumed it's a wavetrack
+   // I undid the mTrack hack in this conditional, as the rest of the method still assumed it's a wavetrack
    // so dereferencing mLeftTrack would have gotten a NULL pointer fault. 
    // I really think MixerTrackCluster should be factored for NoteTracks.
    if ((t0 < 0.0) || (t1 < 0.0) || (t0 >= t1) || // bad time value or nothing to show
@@ -906,7 +906,7 @@ void MixerBoard::UpdateTrackClusters()
          {
             // Not already showing it. Add a new MixerTrackCluster.
             wxPoint clusterPos(
-               (kInset +                                       // extra inset to left for first one.
+               (kInset +                                       // extra inset to left for first one, so it's double
                   (nClusterIndex * 
                      (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each to its left
                   kInset),                                     // plus left margin for new cluster
@@ -946,7 +946,7 @@ int MixerBoard::GetTrackClustersWidth()
    return 
       kInset +                                     // extra margin at left for first one
       (mMixerTrackClusters.GetCount() *            // number of tracks times
-         (kInset + kMixerTrackClusterWidth)) +   //    left margin and width for each
+         (kInset + kMixerTrackClusterWidth)) +     // left margin and width for each
       kDoubleInset;                                // plus final right margin
 }
 
@@ -962,7 +962,7 @@ void MixerBoard::MoveTrackCluster(const Track* pTrack,
    if (bUp)
    {  // Move it up (left).
       if (nIndex <= 0)
-         return; // It's already first.
+         return; // It's already first (0), or not found (-1).
 
       pos = pMixerTrackCluster->GetPosition();
       mMixerTrackClusters[nIndex] = mMixerTrackClusters[nIndex - 1];
@@ -992,7 +992,7 @@ void MixerBoard::RemoveTrackCluster(const Track* pTrack)
    int nIndex = FindMixerTrackCluster(pTrack, &pMixerTrackCluster);
    if (pMixerTrackCluster == NULL) 
       return; // Couldn't find it.
-      
+
    mMixerTrackClusters.RemoveAt(nIndex);
    pMixerTrackCluster->Destroy(); // delete is unsafe on wxWindow.
 
@@ -1003,8 +1003,9 @@ void MixerBoard::RemoveTrackCluster(const Track* pTrack)
    {
       pos = mMixerTrackClusters[i]->GetPosition();
       targetX = 
-         (i * (kInset + kMixerTrackClusterWidth)) + // left margin and width for each
-         kInset; // plus left margin for this cluster
+         kInset +                                     // extra inset to left for first one, so it's double
+         (i * (kInset + kMixerTrackClusterWidth)) +   // left margin and width for each
+         kInset;                                      // plus left margin for this cluster
       if (pos.x != targetX)
          mMixerTrackClusters[i]->Move(targetX, pos.y);
    }
