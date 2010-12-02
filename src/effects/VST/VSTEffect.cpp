@@ -1431,7 +1431,7 @@ bool VSTEffect::ProcessStereo(int count,
          if (right) {
             right->Set((samplePtr)mOutBuffer[1], floatSample, outrs, mWTBlockSize);
          }
-         if (outBufferCursor > mWTBlockSize) {
+         if (outBufferCursor >= mWTBlockSize) {
             //snake the buffer down
             memmove(mOutBuffer[0], mOutBuffer[0] + mWTBlockSize, SAMPLE_SIZE(floatSample) * (outBufferCursor - mWTBlockSize));
             memmove(mOutBuffer[1], mOutBuffer[1] + mWTBlockSize, SAMPLE_SIZE(floatSample) * (outBufferCursor - mWTBlockSize));
@@ -1462,9 +1462,9 @@ bool VSTEffect::ProcessStereo(int count,
 
    //finish taking the remainder.
    if (outBufferCursor) {
-     left->Set((samplePtr)mOutBuffer[0], floatSample, ls, outBufferCursor);
+     left->Set((samplePtr)mOutBuffer[0], floatSample, outls, outBufferCursor);
      if (right) {
-         right->Set((samplePtr)mOutBuffer[1], floatSample, rs, outBufferCursor);
+         right->Set((samplePtr)mOutBuffer[1], floatSample, outrs, outBufferCursor);
       }
    }
 
