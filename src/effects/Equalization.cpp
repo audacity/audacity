@@ -985,9 +985,10 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
       wxString fullFn = fn.GetFullPath();
       if( !fn.FileExists() )
       {  // Default file not found.  Give up and advise user
-         wxString errorMessage = _("EQCurves.xml not found on your system.\nPlease press 'help' to visit the download page.");
+         wxString errorMessage;
+         errorMessage.Printf(_("EQCurves.xml not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
          ShowErrorDialog(this, _("EQCurves.xml missing"),
-            errorMessage, wxT("http://wiki.audacityteam.org/wiki/Default_EQCurves"));   
+            errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"));   
          mCurves.Add( _("unnamed") );   // we still need a default curve to use
          return;
       }
