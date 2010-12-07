@@ -12,5 +12,6 @@ Description: Extras for wxwidgets
 Requires: 
 Version: 1
 
-Libs: -L${libdir} -lwidgetextra @LIBS@
-Cflags: -I${includedir} @CXXFLAGS@
+Libs: -L${libdir} -lwidgetextra
+Libs.private: @LIBS@ 
+Cflags: -I${includedir}
