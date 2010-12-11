@@ -964,7 +964,7 @@ EqualizationDialog::~EqualizationDialog()
 //
 void EqualizationDialog::LoadCurves(wxString fileName, bool append)
 {
-   // Construct default curve filename
+   // Construct normal curve filename
    //
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
    //       between wxStandardPaths and wxConfig under Linux.  The latter
@@ -975,22 +975,31 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
    if(fileName == wxT(""))
       fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
    else
-      fn = wxFileName(fileName);
+      fn = wxFileName(fileName); // user is loading a specific set of curves
 
-   // If it doesn't exist...
+   // If requested file doesn't exist...
    if( !fn.FileExists() )
-   {  // Fallback to the default curves file in exe directory
-      wxFileName exePath(PlatformCompatibility::GetExecutablePath());
-      fn = wxFileName( exePath.GetPath(), wxT("EQCurves.xml") );
-      wxString fullFn = fn.GetFullPath();
+   {
+      // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
+      fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
       if( !fn.FileExists() )
-      {  // Default file not found.  Give up and advise user
+      {  // Default file not found in the data dir.  Fall back to exe dir.
+         wxFileName exePath(PlatformCompatibility::GetExecutablePath());
+         fn = wxFileName( exePath.GetPath(), wxT("EQDefaultCurves.xml") );
+      }
+      if( !fn.FileExists() )
+      {
          wxString errorMessage;
-         errorMessage.Printf(_("EQCurves.xml not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
-         ShowErrorDialog(this, _("EQCurves.xml missing"),
-            errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"));   
-         mCurves.Add( _("unnamed") );   // we still need a default curve to use
-         return;
+         errorMessage.Printf(_("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s"), FileNames::DataDir().c_str());
+         ShowErrorDialog(this, _("EQCurves.xml and EQDefaultCurves.xml missing"),
+            errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
+         // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped
+         fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
+         if( !fn.FileExists() )
+         {
+            mCurves.Add( _("unnamed") );   // we still need a default curve to use
+            return;
+         }
       }
    }
 
@@ -3222,10 +3231,6 @@ void EditCurvesDialog::OnExport( wxCommandEvent &event )
 
 void EditCurvesDialog::OnLibrary( wxCommandEvent &event )
 {
-/* Original code, now simpler
-   wxString message = _("Please press 'help' to visit the download page.");
-   ShowErrorDialog(this, _("Get more curves"),
-   message, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload")); */
    wxLaunchDefaultBrowser(wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"));
 }
 
@@ -3234,7 +3239,8 @@ void EditCurvesDialog::OnDefaults( wxCommandEvent &event )
    EQCurveArray temp;
    temp = mParent->mCurves;
    wxFileName exePath(PlatformCompatibility::GetExecutablePath());
-   mParent->LoadCurves(wxFileName( exePath.GetPath(), wxT("EQCurves.xml")).GetFullPath() );
+   // we expect this to fail in LoadCurves (due to a lack of path) and handle that there
+   mParent->LoadCurves( wxT("EQDefaultCurves.xml") );
    mEditCurves = mParent->mCurves;
    mParent->mCurves = temp;
    PopulateList(0);  // update the EditCurvesDialog dialog

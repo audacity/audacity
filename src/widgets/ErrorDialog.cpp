@@ -43,10 +43,12 @@ class ErrorDialog : public wxDialog
    ErrorDialog(wxWindow *parent, 
       const wxString & dlogTitle, 
       const wxString & message, 
-      const wxString & helpURL);
+      const wxString & helpURL,
+      const bool Close = true);
 
 private:
 	wxString dhelpURL;
+   bool dClose;
 	
    void OnOk( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );
@@ -63,10 +65,12 @@ ErrorDialog::ErrorDialog(
    wxWindow *parent, 
    const wxString & dlogTitle, 
    const wxString & message, 
-   const wxString & helpURL):
+   const wxString & helpURL,
+   const bool Close):
    wxDialog(parent, (wxWindowID)-1, dlogTitle)
 {
    dhelpURL = helpURL;
+   dClose = Close;
 
    ShuttleGui S(this, eIsCreating);
 
@@ -116,7 +120,6 @@ ErrorDialog::ErrorDialog(
 
 void ErrorDialog::OnOk(wxCommandEvent &event)
 {	
-
    EndModal(true);
 }
 
@@ -234,15 +237,17 @@ void ErrorDialog::OnHelp(wxCommandEvent &event)
       return;
    }
    OpenInDefaultBrowser( dhelpURL );
-	EndModal(true);
+   if(dClose)
+	   EndModal(true);
 }
 
 void ShowErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
                      const wxString &message, 
-                     const wxString &helpURL)
+                     const wxString &helpURL,
+                     const bool Close)
 {
-   ErrorDialog dlog(parent, dlogTitle, message, helpURL);
+   ErrorDialog dlog(parent, dlogTitle, message, helpURL, Close);
    dlog.CentreOnParent();
    dlog.ShowModal();
 }
