@@ -105,12 +105,14 @@ bool EffectTimeScale::TransferParameters( Shuttle & shuttle )
 
 inline double PercentChangeToRatio(double percentChange)
 {
-   return 1.0 + percentChange / 100.0;
+   //mchinen hack: invert the ratio so it works with the sbsms bug.
+   return 1.0/(1.0 + percentChange / 100.0);
 }
 
 inline double HalfStepsToPercentChange(double halfSteps)
 {
-   return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
+   //mchinen hack: invert the ratio so it works with the sbsms bug.
+   return 1.0/(100.0 * (pow(2.0,halfSteps/12.0) - 1.0));
 }
 
 inline double PercentChangeToHalfSteps(double percentChange)

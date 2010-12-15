@@ -223,7 +223,8 @@ bool EffectSBSMS::Process()
 
             // SBSMS has a fixed sample rate - we just convert to its sample rate and then convert back
             float srIn = leftTrack->GetRate();
-            float srSBSMS = 44100.0;
+            // mchinen: srSBMS doesn't do the right thing when it was set to fixed 44100.  This seems to fix it.
+            float srSBSMS = leftTrack->GetRate();
             
             // the resampler needs a callback to supply its samples
             resampleBuf rb;
