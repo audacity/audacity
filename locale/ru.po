@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.13\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2009-07-30 01:32+0300\n"
-"PO-Revision-Date: 2010-11-08 03:31+0300\n"
+"PO-Revision-Date: 2010-12-16 01:10+0300\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -7112,19 +7112,19 @@ msgstr "Файлы WMA версии 2 (FFmpeg)"
 
 #: export/ExportFFmpegDialogs.h:58
 msgid "Custom FFmpeg Export"
-msgstr "Экспорте через FFmpeg"
+msgstr "Экспорт через FFmpeg"
 
 #: export/ExportFFmpegDialogs.h:676
 msgid "2-level"
-msgstr ""
+msgstr "2-уровневый"
 
 #: export/ExportFFmpegDialogs.h:676
 msgid "4-level"
-msgstr ""
+msgstr "4-уровневый"
 
 #: export/ExportFFmpegDialogs.h:676
 msgid "8-level"
-msgstr ""
+msgstr "8-уровневый"
 
 #: export/ExportFFmpegDialogs.h:676
 msgid "Estimate"
@@ -7140,7 +7140,7 @@ msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:803
 msgid "Specify Other Options"
-msgstr "Укажите прочие параметры"
+msgstr "Укажите параметры кодирования"
 
 #: export/ExportFFmpegDialogs.cpp:897
 msgid "Preset:"
@@ -7148,23 +7148,23 @@ msgstr "Предустановка:"
 
 #: export/ExportFFmpegDialogs.cpp:898
 msgid "Load Preset"
-msgstr "Загрузить предустановку"
+msgstr "Загрузить"
 
 #: export/ExportFFmpegDialogs.cpp:899
 msgid "Save Preset"
-msgstr "Сохранить предустановку"
+msgstr "Сохранить"
 
 #: export/ExportFFmpegDialogs.cpp:900
 msgid "Delete Preset"
-msgstr "Удалить предустановку"
+msgstr "Удалить"
 
 #: export/ExportFFmpegDialogs.cpp:901
 msgid "Import Presets"
-msgstr "Импортировать предустановки"
+msgstr "Импортировать"
 
 #: export/ExportFFmpegDialogs.cpp:902
 msgid "Export Presets"
-msgstr "Экспортировать предустановки"
+msgstr "Экспортировать"
 
 #: export/ExportFFmpegDialogs.cpp:907
 msgid "Format:"
@@ -7179,6 +7179,8 @@ msgid ""
 "Not all formats and codecs are compatible. Nor are all option combinations "
 "compatible with all codecs."
 msgstr ""
+"Не все форматы и кодеки совместимы. Не все комбинации параметров совместимы "
+"со всеми кодеками."
 
 #: export/ExportFFmpegDialogs.cpp:919
 msgid "Show All Formats"
@@ -7190,7 +7192,7 @@ msgstr "Показать все кодеки"
 
 #: export/ExportFFmpegDialogs.cpp:1427
 msgid "General Options"
-msgstr ""
+msgstr "Общие параметры"
 
 #: export/ExportFFmpegDialogs.cpp:931 prefs/GUIPrefs.cpp:166
 msgid "Language:"
@@ -7202,6 +7204,9 @@ msgid ""
 "Optional\n"
 "empty - automatic"
 msgstr ""
+"Трёхбуквенный код языка по ISO 639 3\n"
+"Необязательный параметр\n"
+"Если значение не указано, оно выбирается автоматически"
 
 #: export/ExportFFmpegDialogs.cpp:1435
 msgid "Bit Reservoir"
@@ -7213,7 +7218,7 @@ msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:934
 msgid "Tag:"
-msgstr "Тэг:"
+msgstr "Поле кодека:"
 
 #: export/ExportFFmpegDialogs.cpp:935
 msgid ""
@@ -7221,6 +7226,10 @@ msgid ""
 "Optional\n"
 "empty - automatic"
 msgstr ""
+"Поле кодека (FOURCC)\n"
+"Необязательный параметр\n"
+"Если значение не указано, \n"
+"оно выбирается автоматически"
 
 #: export/ExportFFmpegDialogs.cpp:938
 msgid ""
@@ -7288,6 +7297,11 @@ msgid ""
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
 msgstr ""
+"Уровень сжатия\n"
+"Необходим для FLAC\n"
+"-1 — автоматический подбор значения\n"
+"мин. —- 0 (быстрое кодирование, большой конечный файл)\n"
+"макс. — 10 (медленное кодирование, небольшой конечный файл)"
 
 #: export/ExportFFmpegDialogs.cpp:1476
 msgid "Frame:"
@@ -7424,7 +7438,7 @@ msgstr "Вы не можете сохранить безымянную пред�
 
 #: export/ExportFFmpegDialogs.cpp:1277
 msgid "Select xml file with presets to import"
-msgstr ""
+msgstr "Выберите XML-файл с предустановками для импорта"
 
 #: prefs/KeyConfigPrefs.cpp:202
 msgid "XML files (*.xml)|*.xml|All files (*.*)|*.*"
@@ -7432,7 +7446,7 @@ msgstr "XML-файлы (*.xml)|*.txt|Все файлы (*.*)|*.*"
 
 #: export/ExportFFmpegDialogs.cpp:1292
 msgid "Select xml file to export presets into"
-msgstr "Укажите файл XML для сохранения предустановок"
+msgstr "Укажите XML-файл для сохранения предустановок"
 
 #: export/ExportFFmpegDialogs.cpp:1361
 msgid "Failed to guess format"
