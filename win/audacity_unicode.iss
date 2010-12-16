@@ -99,8 +99,6 @@ Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ig
 Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion
 Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
 
-Source: "..\presets\EQDefaultCurves.xml"; DestDir: "{app}"; Flags: ignoreversion
-
 [Icons]
 Name: "{commonprograms}\Audacity 1.3 Beta (Unicode)"; Filename: "{app}\audacity.exe"
 Name: "{userdesktop}\Audacity 1.3 Beta (Unicode)"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
