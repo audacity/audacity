@@ -255,6 +255,7 @@ the full path to the base directory of the ASIO SDK, e.g.,
 
          set ASIOSDK_DIR=C:\ASIOSDK2
 
+
 Build Audacity
 
 Select the configuration that you wish to build:
@@ -272,7 +273,7 @@ Build Audacity by giving the "Build" menu > "Rebuild Solution"
 command.
 
 
-Provide access to the wxWidgets DLLs
+Provide Access to the wxWidgets DLLs
 
 Each Audacity executable needs access to five specific wxWidgets
 DLLs from those you built in "MSVC++ STEP 2:  Build wxWidgets" 
