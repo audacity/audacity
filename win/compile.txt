@@ -49,6 +49,7 @@ Audacity 1.3.13 requires wxWidgets 2.8.11.
 To build on Windows only, download the wxMSW package
 (installer or zip).
 
+
 ------------------------
 MSVC++ STEP 2:  Build wxWidgets
 ------------------------
@@ -98,7 +99,7 @@ static libraries.
     * Build "DLL Unicode Debug" to use in a "Unicode Debug"
        version of Audacity.
 
-   See "MSVC++ STEP 5:  Build Audacity" for the differences
+   See "MSVC++ STEP 6:  Build Audacity" for the differences
    between these versions of Audacity.
 
    If you use "Batch Build" under the "Build" menu, you need select
@@ -120,12 +121,6 @@ static libraries.
 
    If you build the whole solution, ignore the linker errors for 
    wxbase28*_odbc*.* dbgrid.
- 
-
-4. Proceed with the rest of the process for building Audacity. 
-   You will see the instructions for how to copy the appropriate 
-   wxWidgets DLL's in the section "MSVC++ STEP 5:  Build Audacity" 
-   at the step "Provide access to the wxWidgets DLLs". 
 
 
 --------------------------
@@ -179,21 +174,16 @@ the computer to ensure the variables are read correctly.
 
 
 -----------------------
-MSVC++ STEP 5:  Build Audacity
+MSVC++ STEP 5:  Consider and Configure Optional Features
 -----------------------
 
-Run Visual C++ and load the Audacity solution, 
-"audacity\win\audacity.sln".
-
-
-Optional Features
-
-1. Locally installed help is optional, but required for a full release 
-build (the "help" folder is included in the installer, but removed from 
-the zip distribution). The Python library is required, obtainable from
+1. Locally installed help is optional, but required for a full Release 
+build. (The "help" folder is included in the installer, but removed from 
+the zip distribution.) The Python library is required, obtainable from
 http://www.python.org/download/ . Add the location of the top-level
 directory where you installed Python to your Path environment 
-variable. For help with environment variables, see MSVC++ STEP 4 above.  
+variable. For instructions on setting environment variables, see the 
+previous section, "MSVC++ STEP 4:  Set wxWidgets location for Audacity".
 
 Build the "help" project by enabling it in the MSVC++ Configuration 
 Manager. This will download a copy of the Manual wiki onto your machine 
@@ -256,7 +246,12 @@ the full path to the base directory of the ASIO SDK, e.g.,
          set ASIOSDK_DIR=C:\ASIOSDK2
 
 
-Build Audacity
+-----------------------
+MSVC++ STEP 6:  Build Audacity
+-----------------------
+
+Run Visual C++ and load the Audacity solution, 
+"audacity\win\audacity.sln".
 
 Select the configuration that you wish to build:
 * "Release" for general use 
@@ -273,7 +268,9 @@ Build Audacity by giving the "Build" menu > "Rebuild Solution"
 command.
 
 
-Provide Access to the wxWidgets DLLs
+-----------------------
+MSVC++ STEP 7:  Provide Access to the wxWidgets DLLs
+-----------------------
 
 Each Audacity executable needs access to five specific wxWidgets
 DLLs from those you built in "MSVC++ STEP 2:  Build wxWidgets" 
