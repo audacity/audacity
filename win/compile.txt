@@ -185,17 +185,22 @@ directory where you installed Python to your Path environment
 variable. For instructions on setting environment variables, see the 
 previous section, "MSVC++ STEP 4:  Set wxWidgets location for Audacity".
 
-Build the "help" project by enabling it in the MSVC++ Configuration 
-Manager. This will download a copy of the Manual wiki onto your machine 
-and copy it to the correct place for your build. If the local copy needs 
-updating at any time, run audacity\scripts\mw2html_audacity\wiki2htm.bat
+Build the "help" project by enabling it in the MS Visual Studio 
+Configuration Manager (Build menu). This will download a copy of the 
+Manual wiki onto your machine and copy it to the correct place for 
+your build. If the local copy needs to be updated, run 
+audacity\scripts\mw2html_audacity\wiki2htm.bat
 and re-build the "help" project.
+
 
 2. To support languages other than English in your build of Audacity,
 you must enable and build the optional "locale" project. This is 
 required for a full release. You will need to obtain msgfmt.exe from
 http://audacity.sourceforge.net/files/msgfmt.zip. Add the location of 
-the directory containing msgfmt.exe to your Path environment variable.  
+the directory containing msgfmt.exe to your Path environment variable. 
+Alternatively, put msgfmt.exe somewhere already in the Path, 
+e.g., C:\Windows\System32.
+
 
 3. Some functionality in Audacity is currently turned on its default
 configuration, but requires that extra libraries be downloaded
@@ -207,10 +212,11 @@ separately to use it.
 * To allow import and export of a much wider range of audio formats
   (including WMA, M4A and AC3), and to import audio from video files,
   download FFmpeg:
-  http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins#installffmpeg    
+  http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins#installffmpeg
 
 To change the libraries that are enabled in Audacity, open the file 
-"win\configwin.h" and comment or uncomment the libraries as required.
+"win\configwin.h" and comment or uncomment the libraries as desired.
+
 
 4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
 protocols that are more efficient than the standard WMME. Unlike WMME,
@@ -237,13 +243,14 @@ ASIO support, for personal use, you cannot distribute them without
 violating the Audacity license and the ASIO license. 
 If you build ASIO support into Audacity, do not distribute that build. 
 
-If you wish ASIO support, install the ASIO SDK from Steinberg 
-(http://www.steinberg.net ... select Company, then 3rd Party
-Developers), then define an environment variable called
-ASIOSDK_DIR, as you did for WXWIN, above. The value should be 
+If you would like ASIO support, install the ASIO SDK from Steinberg 
+(http://www.steinberg.net ... select Company, then Developer), 
+install at C:\ASIOSDK, then define an environment variable called
+ASIOSDK_DIR, as for WXWIN, above. The value should be 
 the full path to the base directory of the ASIO SDK, e.g., 
 
          set ASIOSDK_DIR=C:\ASIOSDK2
+
 
 
 -----------------------

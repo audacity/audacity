@@ -4,7 +4,7 @@
 // Author:      Julian Smart
 // Modified by:
 // Created:     2003-02-12
-// RCS-ID:      $Id: access.cpp,v 1.2 2008-10-23 03:12:30 windinthew Exp $
+// RCS-ID:      $Id: access.cpp 62067 2009-09-24 10:15:06Z JS $
 // Copyright:   (c) 2003 Julian Smart
 // Licence:     wxWindows licence
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,8 @@ class wxIAccessible : public IAccessible
 {
 public:
     wxIAccessible(wxAccessible *pAccessible);
-// Called to indicate object should prepare to be deleted.
+
+    // Called to indicate object should prepare to be deleted.
     void Quiesce();
 
     DECLARE_IUNKNOWN_METHODS;
@@ -338,6 +339,7 @@ public:
 private:
     wxAccessible *m_pAccessible;      // pointer to C++ class we belong to
     bool m_bQuiescing;                // Object is to be deleted
+
     DECLARE_NO_COPY_CLASS(wxIAccessible)
 };
 
