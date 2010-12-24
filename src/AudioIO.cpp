@@ -1138,6 +1138,10 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    mPlayLooped = playLooped;
    mCutPreviewGapStart = cutPreviewGapStart;
    mCutPreviewGapLen = cutPreviewGapLen;
+   mPlaybackBuffers = NULL;
+   mPlaybackMixers = NULL;
+   mCaptureBuffers = NULL;
+   mResample = NULL;
 
    double factor = 1.0;
    if (mTimeTrack)
@@ -1152,11 +1156,11 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    // killing performance.
    //
 
-   mPlaybackRingBufferSecs = 4.5 + (0.5 * mPlaybackTracks.GetCount());
-   mMaxPlaybackSecsToCopy = 0.75 + (0.25 * mPlaybackTracks.GetCount());
+   mPlaybackRingBufferSecs = 10.0;
+   mMaxPlaybackSecsToCopy = 4.0;
 
-   mCaptureRingBufferSecs = 4.5 + 0.5 * mCaptureTracks.GetCount();   
-   mMinCaptureSecsToCopy = 0.2 + (0.2 * mCaptureTracks.GetCount());
+   mCaptureRingBufferSecs = 4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.GetCount());
+   mMinCaptureSecsToCopy = 0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.GetCount());
 
    unsigned int playbackChannels = 0;
    unsigned int captureChannels = 0;
@@ -1219,45 +1223,90 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    // allocate the memory structures the stream will need.
    //
 
-   if( mNumPlaybackChannels > 0 ) {
-      // Allocate output buffers.  For every output track we allocate
-      // a ring buffer of five seconds
-      sampleCount playbackBufferSize =
-         (sampleCount)(mRate * mPlaybackRingBufferSecs + 0.5);
-      sampleCount playbackMixBufferSize = 
-         (sampleCount)(mRate * mMaxPlaybackSecsToCopy + 0.5);
-      mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.GetCount()];
-      mPlaybackMixers  = new Mixer*      [mPlaybackTracks.GetCount()];
-
-      for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
-      {
-         mPlaybackBuffers[i] = new RingBuffer(floatSample, playbackBufferSize);
-
-         mPlaybackMixers[i]  = new Mixer(1, &mPlaybackTracks[i],
-                                         mTimeTrack, mT0, mWarpedT1, 1,
-                                         playbackMixBufferSize, false,
-                                         mRate, floatSample, false);
-         mPlaybackMixers[i]->ApplyTrackGains(false);
-      }
-   }
-
-   if( mNumCaptureChannels > 0 )
+   bool bDone;
+   do
    {
-      // Allocate input buffers.  For every input track we allocate
-      // a ring buffer of five seconds
-      sampleCount captureBufferSize =
-         (sampleCount)(mRate * mCaptureRingBufferSecs + 0.5);
-      mCaptureBuffers = new RingBuffer* [mCaptureTracks.GetCount()];
-      mResample = new Resample* [mCaptureTracks.GetCount()];
-      mFactor = sampleRate / mRate;
-
-      for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+      bDone = true; // assume success
+      try
       {
-         mCaptureBuffers[i] = new RingBuffer( mCaptureTracks[i]->GetSampleFormat(),
-                                              captureBufferSize );
-         mResample[i] = new Resample( true, mFactor, mFactor );
+         if( mNumPlaybackChannels > 0 ) {
+            // Allocate output buffers.  For every output track we allocate
+            // a ring buffer of five seconds
+            sampleCount playbackBufferSize =
+               (sampleCount)(mRate * mPlaybackRingBufferSecs + 0.5f);
+            sampleCount playbackMixBufferSize = 
+               (sampleCount)(mRate * mMaxPlaybackSecsToCopy + 0.5f);
+
+            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+            if(playbackBufferSize < 100 || playbackMixBufferSize < 100)
+            {
+               StartStreamCleanup();
+               wxMessageBox(_("Out of memory!"));
+               return 0;
+            }
+
+            mPlaybackBuffers = new RingBuffer* [mPlaybackTracks.GetCount()];
+            mPlaybackMixers  = new Mixer*      [mPlaybackTracks.GetCount()];
+
+            // Set everything to zero in case we have to delete these due to a memory exception.
+            memset(mPlaybackBuffers, NULL, sizeof(RingBuffer*)*mPlaybackTracks.GetCount());
+            memset(mPlaybackMixers, NULL, sizeof(Mixer*)*mPlaybackTracks.GetCount());
+
+            for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+            {
+               mPlaybackBuffers[i] = new RingBuffer(floatSample, playbackBufferSize);
+
+               mPlaybackMixers[i]  = new Mixer(1, &mPlaybackTracks[i],
+                                               mTimeTrack, mT0, mWarpedT1, 1,
+                                               playbackMixBufferSize, false,
+                                               mRate, floatSample, false);
+               mPlaybackMixers[i]->ApplyTrackGains(false);
+            }
+         }
+
+         if( mNumCaptureChannels > 0 )
+         {
+            // Allocate input buffers.  For every input track we allocate
+            // a ring buffer of five seconds
+            sampleCount captureBufferSize =
+               (sampleCount)(mRate * mCaptureRingBufferSecs + 0.5);
+
+            // In the extraordinarily rare case that we can't even afford 100 samples, just give up.
+            if(captureBufferSize < 100)
+            {
+               StartStreamCleanup();
+               wxMessageBox(_("Out of memory!"));
+               return 0;
+            }
+
+            mCaptureBuffers = new RingBuffer* [mCaptureTracks.GetCount()];
+            mResample = new Resample* [mCaptureTracks.GetCount()];
+            mFactor = sampleRate / mRate;
+
+            // Set everything to zero in case we have to delete these due to a memory exception.
+            memset(mCaptureBuffers, NULL, sizeof(RingBuffer*)*mCaptureTracks.GetCount());
+            memset(mResample, NULL, sizeof(Resample*)*mCaptureTracks.GetCount());
+
+            for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+            {
+               mCaptureBuffers[i] = new RingBuffer( mCaptureTracks[i]->GetSampleFormat(),
+                                                    captureBufferSize );
+               mResample[i] = new Resample( true, mFactor, mFactor );
+            }
+         }
       }
-   }
+      catch(std::bad_alloc&)
+      {
+         // Oops!  Ran out of memory.  This is pretty rare, so we'll just
+         // try deleting everything, halving our buffer size, and try again.
+         StartStreamCleanup(true);
+         mPlaybackRingBufferSecs *= 0.5;
+         mMaxPlaybackSecsToCopy *= 0.5;
+         mCaptureRingBufferSecs *= 0.5;
+         mMinCaptureSecsToCopy *= 0.5;
+         bDone = false;
+       }
+   } while(!bDone);
 
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
@@ -1288,13 +1337,10 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
       if( err != paNoError )
       {
-         // TODO
-         // we'll need a more complete way to indicate error.
-         // AND we need to delete the ring buffers and mixers, etc.
          if (mListener && mNumCaptureChannels > 0)
             mListener->OnAudioIOStopRecording();
-         wxPrintf(wxT("%hs\n"), Pa_GetErrorText(err));
-         mStreamToken = 0;
+         StartStreamCleanup();
+         wxMessageBox(LAT1CTOWX(Pa_GetErrorText(err)));
          return 0;
       }
    }
@@ -1316,6 +1362,49 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    mStreamToken = (++mNextStreamToken);
 
    return mStreamToken;
+}
+
+void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
+{
+   if(mPlaybackBuffers)
+   {
+      for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+         delete mPlaybackBuffers[i];
+      delete [] mPlaybackBuffers;
+      mPlaybackBuffers = NULL;
+   }
+
+   if(mPlaybackMixers)
+   {
+      for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+         delete mPlaybackMixers[i];
+      delete [] mPlaybackMixers;
+      mPlaybackMixers = NULL;
+   }
+
+   if(mCaptureBuffers)
+   {
+
+         delete mCaptureBuffers;
+      delete [] mCaptureBuffers;
+      mCaptureBuffers = NULL;
+   }
+
+   if(mResample)
+   {
+      for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+         delete mResample;
+      delete [] mResample;
+      mResample = NULL;
+   }
+
+   if(!bOnlyBuffers)
+   {
+      Pa_AbortStream( mPortStreamV19 );
+      Pa_CloseStream( mPortStreamV19 );
+      mPortStreamV19 = NULL;
+      mStreamToken = 0;
+   }
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT

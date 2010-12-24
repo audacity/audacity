@@ -399,6 +399,11 @@ private:
 
    double NormalizeStreamTime(double absoluteTime) const;
 
+   /** \brief Clean up after StartStream if it fails.
+     *
+     * If bOnlyBuffers is specified, it only cleans up the buffers. */
+   void StartStreamCleanup(bool bOnlyBuffers = false);
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
