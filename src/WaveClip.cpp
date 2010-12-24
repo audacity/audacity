@@ -1219,23 +1219,23 @@ bool WaveClip::CreateFromCopy(double t0, double t1, WaveClip* other)
 
 bool WaveClip::Paste(double t0, WaveClip* other)
 {
-   WaveClip* resampledClip;
+   WaveClip* pastedClip;
 
    bool clipNeedsResampling = other->mRate != mRate;
 
    if (clipNeedsResampling)
    {
       // The other clip's rate is different to our's, so resample
-      resampledClip = new WaveClip(*other, mSequence->GetDirManager());
-      if (!resampledClip->Resample(mRate))
+      pastedClip = new WaveClip(*other, mSequence->GetDirManager());
+      if (!pastedClip->Resample(mRate))
       {
-         delete resampledClip;
+         delete pastedClip;
          return false;
       }
    } else
    {
       // No resampling needed, just use original clip without making a copy
-      resampledClip = other;
+      pastedClip = other;
    }
 
    sampleCount s0;
@@ -1243,15 +1243,15 @@ bool WaveClip::Paste(double t0, WaveClip* other)
    
    bool result = false;
 
-   if (mSequence->Paste(s0, other->mSequence))
+   if (mSequence->Paste(s0, pastedClip->mSequence))
    {
       MarkChanged();
-      mEnvelope->Paste((double)s0/mRate, other->mEnvelope);
+      mEnvelope->Paste((double)s0/mRate, pastedClip->mEnvelope);
       mEnvelope->RemoveUnneededPoints();
-      OffsetCutLines(t0, other->GetEndTime()-other->GetStartTime());
+      OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
       
       // Paste cut lines contained in pasted clip
-      for (WaveClipList::compatibility_iterator it=other->mCutLines.GetFirst(); it; it=it->GetNext())
+      for (WaveClipList::compatibility_iterator it = pastedClip->mCutLines.GetFirst(); it; it=it->GetNext())
       {
          WaveClip* cutline = it->GetData();
          WaveClip* newCutLine = new WaveClip(*cutline,
@@ -1266,7 +1266,7 @@ bool WaveClip::Paste(double t0, WaveClip* other)
    if (clipNeedsResampling)
    {
       // Clip was constructed as a copy, so delete it
-      delete resampledClip;
+      delete pastedClip;
    }
 
    return result;
