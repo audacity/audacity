@@ -983,9 +983,12 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
       // look in data dir first, in case the user has their own defaults (maybe downloaded ones)
       fn = wxFileName( FileNames::DataDir(), wxT("EQDefaultCurves.xml") );
       if( !fn.FileExists() )
-      {  // Default file not found in the data dir.  Fall back to exe dir.
-         wxFileName exePath(PlatformCompatibility::GetExecutablePath());
-         fn = wxFileName( exePath.GetPath(), wxT("EQDefaultCurves.xml") );
+      {  // Default file not found in the data dir.  Fall back to Resources dir.
+         // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
+         static wxString resourcesDir;
+         wxStandardPaths std;
+         resourcesDir = std.GetResourcesDir();
+         fn = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
       }
       if( !fn.FileExists() )
       {
@@ -3238,7 +3241,6 @@ void EditCurvesDialog::OnDefaults( wxCommandEvent &event )
 {
    EQCurveArray temp;
    temp = mParent->mCurves;
-   wxFileName exePath(PlatformCompatibility::GetExecutablePath());
    // we expect this to fail in LoadCurves (due to a lack of path) and handle that there
    mParent->LoadCurves( wxT("EQDefaultCurves.xml") );
    mEditCurves = mParent->mCurves;
