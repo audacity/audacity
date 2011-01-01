@@ -195,10 +195,10 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 
    #if IS_BETA // Is this beta or not?
    wxString par2Str = _(
-     "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>.");
+     "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>.");
    #else
    wxString par2Str = _(
-     "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>.");
+     "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>.");
    #endif
 
    wxString translatorCredits;
@@ -267,7 +267,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       wxT("<p><br></center>") +
 	  
       _("<b>Audacity&reg;</b> software is copyright")+
-      wxT("&copy; 1999-2010 Audacity Team.<br>") +
+      wxT("&copy; 1999-2011 Audacity Team.<br>") +
      
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") + 
       wxT("</font></body></html>");
