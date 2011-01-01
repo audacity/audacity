@@ -111,8 +111,7 @@ inline double PercentChangeToRatio(double percentChange)
 
 inline double HalfStepsToPercentChange(double halfSteps)
 {
-   //mchinen hack: invert the ratio so it works with the sbsms bug.
-   return 1.0/(100.0 * (pow(2.0,halfSteps/12.0) - 1.0));
+   return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
 }
 
 inline double PercentChangeToHalfSteps(double percentChange)
