@@ -172,9 +172,11 @@ void ExportMultiple::CountTracksAndLabels()
 int ExportMultiple::ShowModal()
 {
    if (mNumWaveTracks < 2 && mNumLabels < 1) {
-      ::wxMessageBox(_("If you have more than one Audio Track, you can export\neach track as a separate file. \
-If you have a Label Track\ndirectly underneath an Audio Track, you can export a\nnew file for each label in \
-that track.\n\nThis Project does not meet the above criteria for\nexporting multiple files."),
+      ::wxMessageBox(_("If you have more than one Audio Track, you can\nexport each track \
+as a separate audio file.\n\nIf you have a Label Track, you can export a separate\naudio file \
+for each label in that track. You can have\nmore than one Label Track, but files will only \
+be\nexported for the uppermost Label Track.\n\nThis Project does not meet the above criteria \
+for\nexporting multiple files."),
                      _("Can't export multiple files"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
@@ -317,7 +319,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
                .TieRadioButton(_("Numbering before Label/Track Name"), wxT("numberBefore"));
 
             mByNumber = S.Id(ByNumberID)
-               .TieRadioButton(_("Numbering after Label/Track Name"), wxT("numberAfter"));
+               .TieRadioButton(_("Numbering after File name prefix"), wxT("numberAfter"));
          }
          S.EndRadioButtonGroup();
 
