@@ -84,6 +84,18 @@ static wxString MakeDeviceSourceString(DeviceSourceMap *map)
    return ret;
 }
 
+//Port Audio requires we open the stream with a callback or a lot of devices will fail
+//as this means open in blocking mode, so we use a dummy one.
+static int DummyPaStreamCallback(
+    const void *input, void *output,
+    unsigned long frameCount,
+    const PaStreamCallbackTimeInfo* timeInfo,
+    PaStreamCallbackFlags statusFlags,
+    void *userData )
+{
+
+}
+
 static void AddSourcesFromStream(int deviceIndex, wxString &devName, wxArrayString *descs, std::vector<DeviceSourceMap> *maps, PaStream *stream)
 {
    int i;
@@ -155,7 +167,7 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *descs, std::vec
                          isInput ? NULL : &parameters,
                          rate, paFramesPerBufferUnspecified,
                          paClipOff | paDitherOff,
-                         NULL, NULL);
+                         DummyPaStreamCallback, NULL);
    if (stream) {
       AddSourcesFromStream(deviceIndex, devName, descs, maps, stream);
       Pa_CloseStream(stream);
