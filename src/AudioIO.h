@@ -182,6 +182,7 @@ class AUDACITY_DLL_API AudioIO {
     * with that stream.  If no mixer is available, output is emulated and 
     * input is stuck at 1.0f (a gain is applied to output samples).
     */
+   void SetMixer(int inputSource);
    void SetMixer(int inputSource, float inputVolume,
                  float playbackVolume);
    void GetMixer(int *inputSource, float *inputVolume,
@@ -379,6 +380,13 @@ private:
     * default device index.
     */
    static int getRecordDevIndex(wxString devName = wxT(""));
+   /** \brief get the index of the device selected in the preferences.
+    *
+    * If the device isn't found, returns -1
+    */
+#if USE_PORTMIXER
+   static int getRecordSourceIndex(PxMixer *portMixer);
+#endif
 
    /** \brief get the index of the supplied (named) playback device, or the
     * device selected in the preferences if none given.

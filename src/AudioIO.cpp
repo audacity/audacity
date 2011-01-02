@@ -628,7 +628,15 @@ AudioIO::~AudioIO()
    delete mThread;
 }
 
-void AudioIO::SetMixer(int recordDevice, float recordVolume,
+void AudioIO::SetMixer(int inputSource)
+{
+#if defined(USE_PORTMIXER)
+   int oldRecordSource = Px_GetCurrentInputSource(mPortMixer);
+   if ( inputSource != oldRecordSource )
+         Px_SetCurrentInputSource(mPortMixer, inputSource);
+#endif
+}
+void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
    mMixerOutputVol = playbackVolume;
@@ -638,12 +646,10 @@ void AudioIO::SetMixer(int recordDevice, float recordVolume,
 
    if( mixer )
    {
-      int oldRecordDevice = Px_GetCurrentInputSource(mixer);
       float oldRecordVolume = Px_GetInputVolume(mixer);
       float oldPlaybackVolume = Px_GetPCMOutputVolume(mixer);
 
-      if( recordDevice != oldRecordDevice )
-         Px_SetCurrentInputSource(mixer, recordDevice);
+      SetMixer(inputSource);
       if( oldRecordVolume != recordVolume )
          Px_SetInputVolume(mixer, recordVolume);
       if( oldPlaybackVolume != playbackVolume )
@@ -859,6 +865,20 @@ void AudioIO::HandleDeviceChange()
    if( error )
       return;
 
+   // Set input source
+#if USE_PORTMIXER
+   int sourceIndex;
+   if (gPrefs->Read(wxT("/AudioIO/RecordingSourceIndex"), &sourceIndex)) {
+      if (sourceIndex >= 0) {
+         //the current index of our source may be different because the stream
+         //is a combination of two devices, so update it.
+         sourceIndex = getRecordSourceIndex(mPortMixer);
+         if (sourceIndex >= 0)
+            SetMixer(sourceIndex);
+      }
+   }
+#endif
+
    // Determine mixer capabilities - if it doesn't support control of output
    // signal level, we emulate it (by multiplying this value by all outgoing
    // samples)
@@ -886,6 +906,7 @@ void AudioIO::HandleDeviceChange()
    Px_SetInputVolume(mPortMixer, inputVol);
 
    Pa_CloseStream(stream);
+ 
 
    #if 0
    printf("PortMixer: Output: %s Input: %s\n",
@@ -2268,6 +2289,20 @@ int AudioIO::getRecordDevIndex(wxString devName)
       recDeviceNum = 0;
    return recDeviceNum;
 }
+
+#if USE_PORTMIXER
+int AudioIO::getRecordSourceIndex(PxMixer *portMixer)
+{
+   int i;
+   wxString sourceName = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
+   int numSources = Px_GetNumInputSources(portMixer);
+   for (i = 0; i < numSources; i++) {
+      if (sourceName == wxString(Px_GetInputSourceName(portMixer, i), wxConvLocal))
+         return i;
+   }
+   return -1;
+}
+#endif
 
 int AudioIO::getPlayDevIndex(wxString devName )
 {

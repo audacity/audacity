@@ -11,12 +11,21 @@
 #ifndef __AUDACITY_DEVICE_TOOLBAR__
 #define __AUDACITY_DEVICE_TOOLBAR__
 
+#include <vector>
 #include "ToolBar.h"
 
 class wxImage;
 class wxSize;
 class wxPoint;
 class wxChoice;
+
+typedef struct DeviceSourceMap {
+   int deviceIndex;
+   int sourceIndex;
+   int totalSources;
+   wxString sourceString;
+   wxString deviceString;
+} DeviceSourceMap;
 
 class DeviceToolBar:public ToolBar {
 
@@ -47,6 +56,9 @@ class DeviceToolBar:public ToolBar {
 
    wxChoice *mInput;
    wxChoice *mOutput;
+
+   std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
+   std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;
 
  public:
 
