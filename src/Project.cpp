@@ -2586,8 +2586,9 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
 bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   wxString fileVersion;
-   wxString audacityVersion;
+   bool bFileVersionFound = false;
+   wxString fileVersion = _("<unrecognized version -- possibly corrupt project file>");
+   wxString audacityVersion = _("<unrecognized version -- possibly corrupt project file>");
    int requiredTags = 0;
 
    // loop through attrs, which is a null-terminated list of
@@ -2596,17 +2597,18 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       const wxChar *attr = *attrs++;
       const wxChar *value = *attrs++;
 
-      if (!value)
+      if (!value || !XMLValueChecker::IsGoodString(value))
          break;
 
-      if (!wxStrcmp(attr, wxT("datadir"))) {
+      if (!wxStrcmp(attr, wxT("datadir"))) 
+	  {
          //
          // This is an auto-saved version whose data is in another directory
          //
          // Note: This attribute must currently be written and parsed before
          //       any other attributes
          //
-         if (value[0] != 0)
+         if ((value[0] != 0) && XMLValueChecker::IsGoodPathString(value))
          {
             // Remember that this is a recovered project
             mIsRecovered = true;
@@ -2614,8 +2616,10 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
       }
 
-      if (!wxStrcmp(attr, wxT("version"))) {
+      if (!wxStrcmp(attr, wxT("version"))) 
+	  {
          fileVersion = value;
+         bFileVersionFound = true;
          requiredTags++;
       }
 
@@ -2711,10 +2715,13 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // We're able to do a shortcut and use string comparison because we know 
    // that does not happen.
 
-   if (fileVersion.Length() != 5 || // expecting '1.1.0', for example
-       fileVersion > wxT(AUDACITY_FILE_FORMAT_VERSION)) {
+   if (!bFileVersionFound || 
+         (fileVersion.Length() != 5) || // expecting '1.1.0', for example
+         !XMLValueChecker::IsGoodInt(fileVersion) || 
+         (fileVersion > wxT(AUDACITY_FILE_FORMAT_VERSION)))
+   {
       wxString msg;
-      msg.Printf(_("This file was saved using Audacity %s.\nYou are using Audacity %s - you need to upgrade to\na newer version to open this file."),
+      msg.Printf(_("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file."),
                  audacityVersion.c_str(),
                  AUDACITY_VERSION_STRING);
       wxMessageBox(msg,
