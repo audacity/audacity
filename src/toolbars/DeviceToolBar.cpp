@@ -93,7 +93,7 @@ static int DummyPaStreamCallback(
     PaStreamCallbackFlags statusFlags,
     void *userData )
 {
-
+   return 0;
 }
 
 static void AddSourcesFromStream(int deviceIndex, wxString &devName, wxArrayString *descs, std::vector<DeviceSourceMap> *maps, PaStream *stream)
