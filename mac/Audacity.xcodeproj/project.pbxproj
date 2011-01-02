@@ -1331,6 +1331,7 @@
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
 		28FE4A3A0ABF58360056F5C4 /* soundtouch_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FE4A390ABF58360056F5C4 /* soundtouch_config.h */; };
+		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
 		ED2707240EF9C51D007D4FFD /* audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707020EF9C51D007D4FFD /* audio.cpp */; };
 		ED2707250EF9C51D007D4FFD /* audio.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707030EF9C51D007D4FFD /* audio.h */; };
@@ -3151,6 +3152,7 @@
 		28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.cpp.cpp; path = mmx_optimized.cpp; sourceTree = "<group>"; };
 		28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.cpp.cpp; path = sse_optimized.cpp; sourceTree = "<group>"; };
 		28FE4A390ABF58360056F5C4 /* soundtouch_config.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; name = soundtouch_config.h; path = "../lib-src/soundtouch/include/soundtouch_config.h"; sourceTree = SOURCE_ROOT; };
+		8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EQDefaultCurves.xml; path = ../presets/EQDefaultCurves.xml; sourceTree = SOURCE_ROOT; };
 		ED05D1000E50AD5700CC4BD3 /* audiomixerreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = audiomixerreader.cpp; sourceTree = "<group>"; };
 		ED05D1010E50AD5700CC4BD3 /* audiomixerreader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = audiomixerreader.h; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; };
@@ -3820,6 +3822,7 @@
 		174F73C8098D516D009CD6E0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */,
 				174F73C9098D516D009CD6E0 /* Audacity.icns */,
 				174F73CA098D516D009CD6E0 /* AudacityAIFF.icns */,
 				174F73CB098D516D009CD6E0 /* AudacityAU.icns */,
@@ -6918,7 +6921,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 1790ABE109883346008A330A;
 			productRefGroup = 1790AFB109883B6D008A330A /* Products */;
 			projectDirPath = "";
@@ -6969,6 +6979,7 @@
 				174F73D6098D516D009CD6E0 /* AudacityWAV.icns in Resources */,
 				2806D5BF11108FC800BAF530 /* hi.po in Resources */,
 				2806D5C011108FC800BAF530 /* my.po in Resources */,
+				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
