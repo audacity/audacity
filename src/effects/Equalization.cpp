@@ -986,8 +986,7 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
       {  // Default file not found in the data dir.  Fall back to Resources dir.
          // See http://docs.wxwidgets.org/trunk/classwx_standard_paths.html#5514bf6288ee9f5a0acaf065762ad95d
          static wxString resourcesDir;
-         wxStandardPaths std;
-         resourcesDir = std.GetResourcesDir();
+         resourcesDir = wxStandardPaths::Get().GetResourcesDir();
          fn = wxFileName( resourcesDir, wxT("EQDefaultCurves.xml") );
       }
       if( !fn.FileExists() )
