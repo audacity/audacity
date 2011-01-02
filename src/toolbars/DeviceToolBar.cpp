@@ -155,7 +155,7 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *descs, std::vec
                          isInput ? NULL : &parameters,
                          rate, paFramesPerBufferUnspecified,
                          paClipOff | paDitherOff,
-                         audacityAudioCallback, NULL);
+                         NULL, NULL);
    if (stream) {
       AddSourcesFromStream(deviceIndex, devName, descs, maps, stream);
       Pa_CloseStream(stream);
