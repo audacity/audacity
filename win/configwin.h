@@ -1,4 +1,18 @@
-// Microsoft Windows specific include file
+/**********************************************************************
+
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2011 Audacity Team.
+   License: GPL v2.  See License.txt.
+
+   configwin.h 
+   Dominic Mazzoni, et al
+
+******************************************************************//**
+
+   Microsoft Windows specific include file
+
+*//*******************************************************************/
+
 
 #define MP3SUPPORT 1
 #define USE_FFMPEG 1	//define this to build with ffmpeg import/export

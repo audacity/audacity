@@ -238,11 +238,8 @@ BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
       const wxString strValue = value;
       if (!wxStricmp(attr, wxT("summaryfile")) && 
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-            XMLValueChecker::IsGoodFileString(strValue)
-            #ifdef _WIN32
-               && (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= MAX_PATH)
-            #endif
-            )
+            XMLValueChecker::IsGoodFileString(strValue) && 
+            (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(summaryFileName, strValue, false))
             // Make sure summaryFileName is back to uninitialized state so we can detect problem later.

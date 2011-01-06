@@ -1,11 +1,14 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2011 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  Audacity.h
+   Audacity.h
 
-  Dominic Mazzoni
-  Joshua Haberman
+   Dominic Mazzoni
+   Joshua Haberman
+   et al
 
 ********************************************************************//*!
 
@@ -69,20 +72,31 @@ class wxWindow;
 void QuitAudacity(bool bForce);
 void QuitAudacity();
 
+// Define one constant for maximum path value, so we don't have to do 
+// platform-specific conditionals everywhere we want to check it. 
+#define PLATFORM_MAX_PATH 260 // Play it safe for default, with same value as Windows' MAX_PATH.
+
 #ifdef __WXMAC__
 #include "configmac.h"
+#undef PLATFORM_MAX_PATH
+#define PLATFORM_MAX_PATH PATH_MAX
 #endif
 
 #ifdef __WXGTK__
 #include "configunix.h"
+#undef PLATFORM_MAX_PATH
+#define PLATFORM_MAX_PATH PATH_MAX
 #endif
 
 #ifdef __WXX11__
 #include "configunix.h"
+// wxX11 should also get the platform-specific definition of PLATFORM_MAX_PATH, so do not declare here.
 #endif
 
 #ifdef __WXMSW__
 #include "configwin.h"
+#undef PLATFORM_MAX_PATH
+#define PLATFORM_MAX_PATH MAX_PATH
 #endif
 
 /* Magic for dynamic library import and export. This is unfortunately

@@ -41,7 +41,7 @@ bool XMLValueChecker::IsGoodString(const wxString str)
 {
    size_t len = str.Length();
    int nullIndex = str.Find('\0', false);
-   if ((len < 2048) && // Shouldn't be any reason for longer strings, except intentional file corruption.
+   if ((len <= PLATFORM_MAX_PATH) && // Shouldn't be any reason for longer strings, except intentional file corruption.
          (nullIndex == -1)) // No null characters except terminator.
       return true;
    else
@@ -52,13 +52,9 @@ bool XMLValueChecker::IsGoodString(const wxString str)
 bool XMLValueChecker::IsGoodFileName(const wxString strFileName, const wxString strDirName /* = "" */)
 {
    // Test strFileName.
-   if (!IsGoodFileString(strFileName)) 
+   if (!IsGoodFileString(strFileName) || 
+         (strDirName.Length() + 1 + strFileName.Length() > PLATFORM_MAX_PATH))
       return false;
-
-   #ifdef _WIN32
-      if (strFileName.Length() + 1 + strDirName.Length() > MAX_PATH)
-         return false;
-   #endif
 
    // Test the corresponding wxFileName.
    wxFileName fileName(strDirName, strFileName);
@@ -83,13 +79,10 @@ bool XMLValueChecker::IsGoodSubdirName(const wxString strSubdirName, const wxStr
    // Note this prevents path separators, and relative path to parents (strDirName), 
    // so fixes vulnerability #3 in the NGS report for UmixIt, 
    // where an attacker could craft an AUP file with relative pathnames to get to system files, for example.
-   if (!IsGoodFileString(strSubdirName) || (strSubdirName == wxT(".")) || (strSubdirName == wxT("..")))
+   if (!IsGoodFileString(strSubdirName) || 
+         (strSubdirName == wxT(".")) || (strSubdirName == wxT("..")) || 
+         (strDirName.Length() + 1 + strSubdirName.Length() > PLATFORM_MAX_PATH))
       return false;
-
-   #ifdef _WIN32
-      if (strSubdirName.Length() + 1 + strDirName.Length() > MAX_PATH)
-         return false;
-   #endif
 
    // Test the corresponding wxFileName.
    wxFileName fileName(strDirName, strSubdirName);
@@ -106,12 +99,8 @@ bool XMLValueChecker::IsGoodPathName(const wxString strPathName)
 bool XMLValueChecker::IsGoodPathString(wxString str)
 {
    return (IsGoodString(str) && 
-            !str.IsEmpty() 
-
-            #ifdef _WIN32
-               && (str.Length() <= MAX_PATH)
-            #endif
-            );
+            !str.IsEmpty() && 
+            (str.Length() <= PLATFORM_MAX_PATH));
 }
 
 

@@ -21,14 +21,6 @@
 #include "xml/XMLTagHandler.h"
 #include "xml/XMLWriter.h"
 
-#if defined(_WIN32)
-  //taken from private.h (wxWidgets internal declarations)
-  #ifndef MAX_PATH
-    #define MAX_PATH  260
-  #endif
-#endif
-
-class wxFFile;
 
 class SummaryInfo {
  public:
