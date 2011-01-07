@@ -807,9 +807,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mViewInfo.bRedrawWaveform = false;
 
    mLockPlayRegion = false;
-   bool bSyncLockTracks;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
-   SetSyncLock(bSyncLockTracks);
+
+   // Make sure valgrind sees mIsSyncLocked is initialized, even 
+   // though we're about to set it from prefs.
+   mIsSyncLocked = false; 
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
    CreateMenusAndCommands();
 
