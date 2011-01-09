@@ -1135,10 +1135,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("InputGainInc"), _("Increase input gain"), FN(OnInputGainInc));
    c->AddCommand(wxT("InputGainDec"), _("Decrease input gain"), FN(OnInputGainDec));
 
-   c->AddCommand(wxT("InputSource"), _("Adjust input source"), FN(OnInputSource),
-                 AudioIONotBusyFlag,
-                 AudioIONotBusyFlag);
-
    c->AddCommand(wxT("PlayAtSpeed"), _("Play at speed"), FN(OnPlayAtSpeed));
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
@@ -2413,14 +2409,6 @@ void AudacityProject::OnInputGain()
    MixerToolBar *tb = GetMixerToolBar();
    if (tb) {
       tb->ShowInputGainDialog();
-   }
-}
-
-void AudacityProject::OnInputSource()
-{
-   MixerToolBar *tb = GetMixerToolBar();
-   if (tb) {
-      tb->ShowInputSourceDialog();
    }
 }
 

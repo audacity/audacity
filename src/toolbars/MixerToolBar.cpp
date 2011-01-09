@@ -58,7 +58,6 @@ END_EVENT_TABLE()
 MixerToolBar::MixerToolBar()
 : ToolBar(MixerBarID, _("Mixer"), wxT("Mixer"))
 {
-   mInputSourceChoice = NULL;
 }
 
 MixerToolBar::~MixerToolBar()
@@ -103,8 +102,6 @@ void MixerToolBar::Populate()
    mInputSlider->SetName(_("Slider Input"));
    Add(mInputSlider, 0, wxALIGN_CENTER);
 
-   mInputSourceChoice = NULL;
-
    // this bit taken from SelectionBar::Populate()
    mOutputSlider->Connect(wxEVT_SET_FOCUS,
                  wxFocusEventHandler(MixerToolBar::OnFocus),
@@ -122,39 +119,6 @@ void MixerToolBar::Populate()
                  wxFocusEventHandler(MixerToolBar::OnFocus),
                  NULL,
                  this);
-
-#if USE_PORTMIXER
-   wxArrayString inputSources = gAudioIO->GetInputSourceNames();
-
-   mInputSourceChoice = new wxChoice(this,
-                                     wxID_ANY,
-                                     wxDefaultPosition,
-                                     wxDefaultSize,
-                                     inputSources);
-   mInputSourceChoice->SetName(_("Input Source"));
-   Add(mInputSourceChoice, 0, wxALIGN_CENTER | wxLEFT, 2);
-   mInputSourceChoice->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
-                 this);
-
-   // Set choice control to default value
-   float inputVolume;
-   float playbackVolume;
-   int inputSource;
-   gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
-   mInputSourceChoice->SetSelection(inputSource);
-
-   // Show or hide the control based on input sources
-   mInputSourceChoice->Show( inputSources.GetCount() != 0 );
-
-   // Show or hide the input slider based on whether it works
-   mInputSlider->Enable(gAudioIO->InputMixerWorks());
-   SetToolTips();
-
-   UpdateControls();
-
-#endif
 
    // Add a little space
    Add(2, -1);
@@ -192,11 +156,6 @@ void MixerToolBar::OnCaptureKey(wxCommandEvent &event)
                                     || keyCode == WXK_PAGEUP || keyCode == WXK_PAGEDOWN)) {
       return;
    }
-   // Pass LEFT/RIGHT/UP/DOWN through for SourceChoice
-   if (FindFocus() == mInputSourceChoice && (keyCode == WXK_LEFT || keyCode == WXK_RIGHT
-                                    || keyCode == WXK_UP || keyCode == WXK_DOWN)) {
-      return;
-   }
 
    event.Skip();
 
@@ -210,22 +169,9 @@ void MixerToolBar::UpdatePrefs()
    float playbackVolume;
    int inputSource;
 
-   wxArrayString inputSources = gAudioIO->GetInputSourceNames();
-
-   // Repopulate the selections
-   mInputSourceChoice->Clear();
-   mInputSourceChoice->Append(inputSources);
-
    // Reset the selected source
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
-   mInputSourceChoice->SetSelection(inputSource);
 
-   // Resize the control
-   mInputSourceChoice->SetSize(mInputSourceChoice->GetEffectiveMinSize());
-
-   // Show or hide the control based on input sources
-   mInputSourceChoice->Show( inputSources.GetCount() != 0 );
-   
    // Show or hide the input slider based on whether it works
    mInputSlider->Enable(gAudioIO->InputMixerWorks());
    SetToolTips();
@@ -260,26 +206,6 @@ void MixerToolBar::UpdateControls()
 
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 
-   // This causes weird GUI behavior and isn't really essential.
-   // We could enable it again later.
-   //
-   // LL: Re-enabled to keep the Audacity source in sync with
-   //     the operating systems if the latter is changed outsize
-   //     of Audacity.
-   if (inputSource != mInputSourceChoice->GetSelection()) {
-       mInputSourceChoice->SetSelection(inputSource);
-#if defined(__WXMSW__)
-      // LL:  Hack to reset volume to reported level after the input
-      //      source is changed outside of Audacity.  Not sure why
-      //      the input comes in as if it were at a volume of 1.0,
-      //      but this will put it back to where it should be.  This
-      //      should be removed in the future...once the problem is
-      //      fully understood.
-      gAudioIO->SetMixer(inputSource, 1.0, playbackVolume);
-      gAudioIO->SetMixer(inputSource, inputVolume, playbackVolume);
-#endif
-   }
-
    if (mOutputSlider->Get() != playbackVolume) {
       mOutputSlider->Set(playbackVolume);
    }
@@ -295,8 +221,10 @@ void MixerToolBar::SetMixer(wxCommandEvent &event)
 #if USE_PORTMIXER
    float inputVolume = mInputSlider->Get();
    float outputVolume = mOutputSlider->Get();
-   int inputSource = mInputSourceChoice->GetSelection();
+   float oldIn, oldOut;
+   int inputSource;
 
+   gAudioIO->GetMixer(&inputSource, &oldIn, &oldOut);
    gAudioIO->SetMixer(inputSource, inputVolume, outputVolume);
 #endif // USE_PORTMIXER
 }
@@ -315,44 +243,6 @@ void MixerToolBar::ShowInputGainDialog()
    wxCommandEvent e;
    SetMixer(e);
    UpdateControls();
-}
-
-void MixerToolBar::ShowInputSourceDialog()
-{
-   if (!mInputSourceChoice || mInputSourceChoice->GetCount() == 0) {
-      wxMessageBox(_("Input source information is not available."));
-      return;
-   }
-
-#if USE_PORTMIXER
-   wxArrayString inputSources = mInputSourceChoice->GetStrings();
-
-   wxDialog dlg(NULL, wxID_ANY, wxString(_("Select Input Source")));
-   ShuttleGui S(&dlg, eIsCreating);
-   wxChoice *c;
-
-   S.StartVerticalLay(true);
-   {
-      S.StartHorizontalLay(wxCENTER, false);
-      {
-         c = S.AddChoice(_("Input Source:"),
-                         mInputSourceChoice->GetStringSelection(),
-                         &inputSources);
-      }
-      S.EndHorizontalLay();
-      S.AddStandardButtons();
-   }
-   S.EndVerticalLay();
-
-   dlg.SetSize(dlg.GetSizer()->GetMinSize());
-   dlg.Center();
-
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      // This will fire an event which will invoke SetMixer above.
-      mInputSourceChoice->SetSelection(c->GetSelection());
-   }
-#endif
 }
 
 void MixerToolBar::AdjustOutputGain(int adj)
@@ -401,15 +291,4 @@ void MixerToolBar::SetToolTips()
    }
 #endif
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 6a50243e-9fc9-4f0f-b344-bd3044dc09ad
 

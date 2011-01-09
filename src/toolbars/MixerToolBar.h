@@ -46,7 +46,6 @@ class MixerToolBar:public ToolBar {
 
    void ShowOutputGainDialog();
    void ShowInputGainDialog();
-   void ShowInputSourceDialog();
 
    void AdjustOutputGain(int adj);
    void AdjustInputGain(int adj);
@@ -61,8 +60,6 @@ class MixerToolBar:public ToolBar {
 
    ASlider *mInputSlider;
    ASlider *mOutputSlider;
-
-   wxChoice *mInputSourceChoice;
 
  public:
 
