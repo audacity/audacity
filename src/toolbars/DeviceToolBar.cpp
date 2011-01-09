@@ -478,7 +478,7 @@ void DeviceToolBar::FillHostDevices()
          mInput->Append(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
    }
    mInput->Enable(mInput->GetCount() ? true : false);
-   mInput->SetSize(mInput->GetBestFittingSize());
+   mInput->SetSize(mInput->GetEffectiveMinSize());
 //   mInput->Layout();
    mOutput->Clear();
    for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
@@ -486,7 +486,11 @@ void DeviceToolBar::FillHostDevices()
          mOutput->Append(MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]));
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
-   mOutput->SetSize(mOutput->GetBestFittingSize());
+   mOutput->SetSize(mOutput->GetEffectiveMinSize());
+
+   mInputChannels->SetSize(mInputChannels->GetEffectiveMinSize());
+   
+   mHost->SetSize(mHost->GetEffectiveMinSize());
 //   mOutput->Layout();
 
    // make the device display selection reflect the prefs if they exist
