@@ -459,8 +459,7 @@ void InitAudioIO()
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info) {
          gPrefs->Write(wxT("/AudioIO/RecordingDevice"), DeviceName(info));
-         gPrefs->Write(wxT("/AudioIO/Host"),
-               wxString(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal));
+         gPrefs->Write(wxT("/AudioIO/Host"), HostName(info));
       }
    }
 
@@ -469,8 +468,7 @@ void InitAudioIO()
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info) {
          gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), DeviceName(info));
-         gPrefs->Write(wxT("/AudioIO/Host"),
-               wxString(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal));
+         gPrefs->Write(wxT("/AudioIO/Host"), HostName(info));
       }
    }
 }
@@ -482,12 +480,16 @@ void DeinitAudioIO()
 
 wxString DeviceName(const PaDeviceInfo* info)
 {
-   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
    wxString infoName(info->name, wxConvLocal);
 
-   return wxString::Format(wxT("%s: %s"),
-                           hostapiName.c_str(),
-                           infoName.c_str());
+   return infoName;
+}
+
+wxString HostName(const PaDeviceInfo* info)
+{
+   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
+
+   return hostapiName;
 }
 
 bool AudioIO::ValidateDeviceNames(wxString play, wxString rec)
@@ -2260,6 +2262,8 @@ int AudioIO::GetCommonlyAvailCapture()
 
 int AudioIO::getRecordDevIndex(wxString devName)
 {
+   wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+
    // if we don't get given a device, look up the preferences
    if (devName.IsEmpty())
    {
@@ -2271,7 +2275,8 @@ int AudioIO::getRecordDevIndex(wxString devName)
    {
       const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
 
-      if (info && (DeviceName(info) == devName) && (info->maxInputChannels > 0))
+      if (info && (DeviceName(info) == devName) &&
+          HostName(info) == hostName && (info->maxInputChannels > 0))
       {
          // this device name matches the stored one, and works.
          // So we say this is the answer and return it
@@ -2306,6 +2311,7 @@ int AudioIO::getRecordSourceIndex(PxMixer *portMixer)
 
 int AudioIO::getPlayDevIndex(wxString devName )
 {
+   wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    // if we don't get given a device, look up the preferences
    if (devName.IsEmpty())
    {
@@ -2317,7 +2323,8 @@ int AudioIO::getPlayDevIndex(wxString devName )
    {
       const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
 
-      if (info && (DeviceName(info) == devName) && (info->maxOutputChannels > 0))
+      if (info && (DeviceName(info) == devName) && 
+          HostName(info) == hostName && (info->maxOutputChannels > 0))
       {
          // this device name matches the stored one, and works.
          // So we say this is the answer and return it
@@ -2379,9 +2386,10 @@ wxString AudioIO::GetDeviceInfo()
       }
 
       wxString name = DeviceName(info);
-
+      wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
       s << wxT("Device ID: ") << j << e;
       s << wxT("Device name: ") << name << e;
+      s << wxT("Host name: ") << hostName << e;
       s << wxT("Input channels: ") << info->maxInputChannels << e;
       s << wxT("Output channels: ") << info->maxOutputChannels << e;
       s << wxT("Low Input Latency: ") << info->defaultLowInputLatency << e;

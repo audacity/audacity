@@ -22,9 +22,12 @@ class wxChoice;
 typedef struct DeviceSourceMap {
    int deviceIndex;
    int sourceIndex;
+   int hostIndex;
    int totalSources;
+   int numChannels;
    wxString sourceString;
    wxString deviceString;
+   wxString hostString;
 } DeviceSourceMap;
 
 class DeviceToolBar:public ToolBar {
@@ -49,6 +52,10 @@ class DeviceToolBar:public ToolBar {
    void OnChoice(wxCommandEvent & event);
 
  private:
+   int  ChangeHost();
+   void FillHostDevices();
+   void FillInputChannels();
+   void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);
    void RegenerateTooltips();
 
    wxBitmap *mPlayBitmap;
@@ -56,6 +63,8 @@ class DeviceToolBar:public ToolBar {
 
    wxChoice *mInput;
    wxChoice *mOutput;
+   wxChoice *mInputChannels;
+   wxChoice *mHost;
 
    std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
    std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;

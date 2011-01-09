@@ -76,10 +76,9 @@ void DeviceToolBar::RecreateTipWindows()
 static wxString MakeDeviceSourceString(DeviceSourceMap *map)
 {
    wxString ret;
-   if (map->totalSources <= 1)
-      ret = map->deviceString;
-   else
-      ret = map->deviceString + wxString(": ", wxConvLocal) + map->sourceString;
+   ret = map->deviceString;
+   if (map->totalSources > 1)
+      ret += wxString(": ", wxConvLocal) + map->sourceString;
    
    return ret;
 }
@@ -96,20 +95,30 @@ static int DummyPaStreamCallback(
    return 0;
 }
 
-static void AddSourcesFromStream(int deviceIndex, wxString &devName, wxArrayString *descs, std::vector<DeviceSourceMap> *maps, PaStream *stream)
+static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, int deviceIndex)
+{
+   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
+   wxString infoName(info->name, wxConvLocal);
+
+   map->deviceIndex  = deviceIndex;
+   map->hostIndex    = info->hostApi;
+   map->deviceString = infoName;
+   map->hostString   = hostapiName;
+   map->numChannels  = info->maxInputChannels;
+}
+
+static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std::vector<DeviceSourceMap> *maps, PaStream *stream)
 {
    int i;
    PxMixer *portMixer;
    DeviceSourceMap map;
 
-   map.deviceIndex  = deviceIndex;
    map.sourceIndex  = -1;
-   map.deviceString = devName;
    map.totalSources = 0;
+   FillHostDeviceInfo(&map, info, deviceIndex);
    portMixer = Px_OpenMixer(stream, 0);
    if (!portMixer) {
       maps->push_back(map);
-      descs->Add(MakeDeviceSourceString(&((*maps)[maps->size() - 1])));
       return;
    }
 
@@ -123,26 +132,25 @@ static void AddSourcesFromStream(int deviceIndex, wxString &devName, wxArrayStri
    if (map.totalSources <= 1) {
       map.sourceIndex = 0;
       maps->push_back(map);
-      descs->Add(MakeDeviceSourceString(&((*maps)[maps->size() - 1])));
    } else {
       //open up a stream with the device so portmixer can get the info out of it.
       for (i = 0; i < map.totalSources; i++) {
          map.sourceIndex  = i;
          map.sourceString = wxString(Px_GetInputSourceName(portMixer, i), wxConvLocal);
          maps->push_back(map);
-         descs->Add(MakeDeviceSourceString(&((*maps)[maps->size() - 1])));
       }
    }
    Px_CloseMixer(portMixer);
 }
 
-static void AddSources(int deviceIndex, int rate, wxArrayString *descs, std::vector<DeviceSourceMap> *maps, int isInput)
+static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vector<DeviceSourceMap> *maps, int isInput)
 {
    int error;
    DeviceSourceMap map;
-   wxString devName;
+   wxString hostDevName;
+   const PaDeviceInfo *info = Pa_GetDeviceInfo(deviceIndex);
 
-   devName = DeviceName(Pa_GetDeviceInfo(deviceIndex));
+   hostDevName = DeviceName(info);
    // This tries to open the device with the samplerate worked out above, which
    // will be the highest available for play and record on the device, or
    // 44.1kHz if the info cannot be fetched.
@@ -155,10 +163,9 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *descs, std::vec
    parameters.sampleFormat = paFloat32;
    parameters.hostApiSpecificStreamInfo = NULL;
    parameters.channelCount = 1;
-   if (Pa_GetDeviceInfo(deviceIndex))
-      parameters.suggestedLatency = isInput ?
-      Pa_GetDeviceInfo(deviceIndex)->defaultLowInputLatency:
-         Pa_GetDeviceInfo(deviceIndex)->defaultLowOutputLatency;
+   if (info)
+      parameters.suggestedLatency = isInput ? info->defaultLowInputLatency:
+                                              info->defaultLowOutputLatency;
    else
       parameters.suggestedLatency = DEFAULT_LATENCY_CORRECTION/1000.0;
       // try opening for record and playback
@@ -169,15 +176,18 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *descs, std::vec
                          paClipOff | paDitherOff,
                          DummyPaStreamCallback, NULL);
    if (stream) {
-      AddSourcesFromStream(deviceIndex, devName, descs, maps, stream);
+      AddSourcesFromStream(deviceIndex, info, maps, stream);
       Pa_CloseStream(stream);
    } else {
-      map.deviceIndex  = deviceIndex;
       map.sourceIndex  = -1;
-      map.deviceString = devName;
       map.totalSources = 0;
+      FillHostDeviceInfo(&map, info, deviceIndex);
       maps->push_back(map);
-      descs->Add(MakeDeviceSourceString(&((*maps)[maps->size() - 1])));
+   }
+   //add the host to the list if it isn't there yet
+   wxString hostName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
+   if (hosts->Index(hostName) == wxNOT_FOUND) {
+      hosts->Add(hostName);
    }
 }
 
@@ -186,6 +196,10 @@ void DeviceToolBar::Populate()
    int i;
    wxArrayString inputs;
    wxArrayString outputs;
+   wxArrayString hosts;
+   wxArrayString channels;
+
+   channels.Add(wxT("1 (Mono)"));
 
    int nDevices = Pa_GetDeviceCount();
 
@@ -195,13 +209,25 @@ void DeviceToolBar::Populate()
    for (i = 0; i < nDevices; i++) {
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info->maxOutputChannels > 0) {
-         AddSources(i, info->defaultSampleRate, &outputs, &mOutputDeviceSourceMaps, 0);
+         AddSources(i, info->defaultSampleRate, &hosts, &mOutputDeviceSourceMaps, 0);
       }
 
       if (info->maxInputChannels > 0) {
-         AddSources(i, info->defaultSampleRate, &inputs, &mInputDeviceSourceMaps, 1);
+         AddSources(i, info->defaultSampleRate, &hosts, &mInputDeviceSourceMaps, 1);
       }
    }
+
+   // Hosts
+   mHost = new wxChoice(this,
+                        wxID_ANY,
+                        wxDefaultPosition,
+                        wxDefaultSize,
+                        hosts);
+   mHost->SetName(_("Audio Host"));
+
+   Add(mHost, 0, wxALIGN_CENTER);
+   if (hosts.GetCount() == 0)
+      mHost->Enable(false);
 
    // Output device
    mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
@@ -234,11 +260,34 @@ void DeviceToolBar::Populate()
                          wxDefaultSize,
                          inputs);
    mInput->SetName(_("Input Device"));
-
    Add(mInput, 0, wxALIGN_CENTER);
    if (inputs.GetCount() == 0)
       mInput->Enable(false);
 
+
+   wxStaticText *channelsLabel = new wxStaticText(this, wxID_ANY, wxT("# Channels:"),
+                                                 wxDefaultPosition, wxDefaultSize, 
+                                                 wxALIGN_LEFT);
+   Add(channelsLabel, 0, wxALIGN_CENTER);
+
+   mInputChannels = new wxChoice(this,
+                         wxID_ANY,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         channels);
+   mInputChannels->SetName(_("Input Channels"));
+   Add(mInputChannels, 0, wxALIGN_CENTER);
+   // hide the number of channels until we have some to display
+   mInputChannels->Enable(false);
+
+   mHost->Connect(wxEVT_SET_FOCUS,
+                 wxFocusEventHandler(DeviceToolBar::OnFocus),
+                 NULL,
+                 this);
+   mHost->Connect(wxEVT_KILL_FOCUS,
+                 wxFocusEventHandler(DeviceToolBar::OnFocus),
+                 NULL,
+                 this);
    mOutput->Connect(wxEVT_SET_FOCUS,
                  wxFocusEventHandler(DeviceToolBar::OnFocus),
                  NULL,
@@ -256,7 +305,8 @@ void DeviceToolBar::Populate()
                  NULL,
                  this);
 
-   UpdatePrefs();
+   FillHostDevices();
+   FillInputChannels();
 }
 
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
@@ -296,17 +346,32 @@ void DeviceToolBar::OnCaptureKey(wxCommandEvent &event)
 
 void DeviceToolBar::UpdatePrefs()
 {
+   wxString hostName;
    wxString devName;
    wxString sourceName;
    wxString desc;
+
+   hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
    if (sourceName == wxT(""))
       desc = devName;
    else
       desc = devName + wxString(": ", wxConvLocal) + sourceName; 
-   mInput->SetStringSelection(desc);
 
+   if (mInput->FindString(desc) != wxNOT_FOUND)
+      mInput->SetStringSelection(desc);
+   else if (mInput->GetCount()) {
+      //use the 0th index if we have no familiar devices
+      mInput->SetSelection(0);
+      for (size_t i = 0; i < mInputDeviceSourceMaps.size(); i++) {
+         if (mInputDeviceSourceMaps[i].hostString == hostName &&
+             MakeDeviceSourceString(&mInputDeviceSourceMaps[i]) == mInput->GetString(0)) {
+            SetDevices(&mInputDeviceSourceMaps[i], NULL);
+            break;
+         }
+      }
+   }
 
    devName = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/PlaybackSource"), wxT(""));
@@ -315,6 +380,22 @@ void DeviceToolBar::UpdatePrefs()
    else
       desc = devName + wxString(": ", wxConvLocal) + sourceName; 
    mOutput->SetStringSelection(desc);
+
+   if (mOutput->FindString(desc) != wxNOT_FOUND)
+      mOutput->SetStringSelection(desc);
+   else if (mOutput->GetCount()) {
+      //use the 0th index if we have no familiar devices
+      mOutput->SetSelection(0);
+      for (size_t i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
+         if (mOutputDeviceSourceMaps[i].hostString == hostName &&
+             MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]) == mOutput->GetString(0)) {
+            SetDevices(NULL, &mOutputDeviceSourceMaps[i]);
+            break;
+         }
+      }
+   }
+
+   mHost->SetStringSelection(hostName);
 
    RegenerateTooltips();
 
@@ -330,122 +411,207 @@ void DeviceToolBar::RegenerateTooltips()
 #if wxUSE_TOOLTIPS
    mOutput->SetToolTip(_("Output Device"));
    mInput->SetToolTip(_("Input Device"));
+   mHost->SetToolTip(_("Audio Host"));
 #endif
+}
+
+void DeviceToolBar::FillHostDevices()
+{
+   //read what is in the prefs
+   wxString host = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   size_t i;
+   int foundHostIndex = -1;
+   for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
+      if (mOutputDeviceSourceMaps[i].hostString == host) {
+         foundHostIndex = mOutputDeviceSourceMaps[i].hostIndex;
+         break;
+      }
+   }
+   
+   if (foundHostIndex == -1) {
+      for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
+         if (mInputDeviceSourceMaps[i].hostString == host) {
+            foundHostIndex = mInputDeviceSourceMaps[i].hostIndex;
+            break;
+         }
+      } 
+   }
+
+   // If no host was found based on the prefs device host, load the first available one
+   if (foundHostIndex == -1) {
+      if (mOutputDeviceSourceMaps.size())
+         foundHostIndex = mOutputDeviceSourceMaps[0].hostIndex;
+      else if (mInputDeviceSourceMaps.size())
+         foundHostIndex = mInputDeviceSourceMaps[0].hostIndex;
+   }
+
+   // If we still have no host it means no devices, in which case do nothing.
+   if (foundHostIndex == -1)
+      return;
+
+   // Repopulate the Input/Output device list available to the user
+   mInput->Clear();
+   for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
+      if (foundHostIndex == mInputDeviceSourceMaps[i].hostIndex)
+         mInput->Append(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
+   }
+   mInput->Enable(mInput->GetCount() ? true : false);
+   mInput->SetSize(mInput->GetBestFittingSize());
+//   mInput->Layout();
+   mOutput->Clear();
+   for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
+      if (foundHostIndex == mOutputDeviceSourceMaps[i].hostIndex)
+         mOutput->Append(MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]));
+   }
+   mOutput->Enable(mOutput->GetCount() ? true : false);
+   mOutput->SetSize(mOutput->GetBestFittingSize());
+//   mOutput->Layout();
+
+   // make the device display selection reflect the prefs if they exist
+   UpdatePrefs();
+   Layout();
+   this->Refresh();
+   Update();
+   // The setting of the Device is left up to OnChoice
+}
+
+//return 1 if host changed, 0 otherwise.
+int DeviceToolBar::ChangeHost()
+{
+   int hostSelectionIndex;
+   hostSelectionIndex = mHost->GetSelection();
+
+   wxString oldHost = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   wxString newHost = hostSelectionIndex >= 0 ? mHost->GetString(mHost->GetSelection()) :
+                                                oldHost;
+   
+   if (oldHost == newHost)
+      return 0;
+   
+   //change the host and switch to correct devices.
+   gPrefs->Write(wxT("/AudioIO/Host"), newHost);
+   FillHostDevices();
+
+   return 1;
+}
+
+void DeviceToolBar::FillInputChannels()
+{
+   wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
+   wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
+   long oldChannels = 1, newChannels;
+   
+   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &oldChannels);
+   int index = -1;
+   size_t i, j;
+   mInputChannels->Clear();
+   for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
+      if (source == mInputDeviceSourceMaps[i].sourceString &&
+          device == mInputDeviceSourceMaps[i].deviceString &&
+          host   == mInputDeviceSourceMaps[i].hostString) {
+
+         // add one selection for each channel of this source
+         for (j = 0; j < mInputDeviceSourceMaps[i].numChannels; j++) {
+            wxString name;
+
+            if (j == 0) {
+               name = _("1 (Mono)");
+            }
+            else if (j == 1) {
+               name = _("2 (Stereo)");
+            }
+            else {
+               name = wxString::Format(wxT("%d"), j + 1);
+            }
+            mInputChannels->Append(name);
+         }
+         newChannels = mInputDeviceSourceMaps[i].numChannels;
+         if (oldChannels < newChannels && oldChannels >= 1)
+            newChannels = oldChannels;
+         mInputChannels->SetSelection(newChannels - 1);
+         gPrefs->Write(wxT("/AudioIO/RecordChannels"), newChannels);
+         mInputChannels->Enable(mInputChannels->GetCount() ? true : false);
+         index = i;
+         break;
+      }
+   }
+   if (index == -1)
+      mInputChannels->Enable(false);
+}
+void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
+{
+   if (in) {
+      gPrefs->Write(wxT("/AudioIO/RecordingDevice"), in->deviceString);
+      gPrefs->Write(wxT("/AudioIO/RecordingSourceIndex"), in->sourceIndex);
+      if (in->sourceIndex >= 0) {
+         gPrefs->Write(wxT("/AudioIO/RecordingSource"),in->sourceString);
+      } else
+         gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
+      FillInputChannels();
+   }
+
+   if (out) {
+      gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), out->deviceString);
+      if (out->sourceIndex >= 0) {
+         gPrefs->Write(wxT("/AudioIO/PlaybackSource"), out->sourceString);
+      } else
+         gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
+   }
 }
 
 void DeviceToolBar::OnChoice(wxCommandEvent &event)
 {
    int inputSelectionIndex;
    int outputSelectionIndex;
+   int channelsSelectionIndex;
 
-   inputSelectionIndex  = mInput->GetSelection();
-   outputSelectionIndex = mOutput->GetSelection();
+   //if we've changed hosts, we've handled the device switching already.
+   if (!ChangeHost()) {
+      inputSelectionIndex  = mInput->GetSelection();
+      outputSelectionIndex = mOutput->GetSelection();
+      channelsSelectionIndex = mInputChannels->GetSelection();
 
-   wxString oldInput = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
-   wxString newInput = inputSelectionIndex >= 0 ? 
-                        mInputDeviceSourceMaps[inputSelectionIndex].deviceString:
-                        oldInput;
-   wxString oldOutput = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
-   wxString newOutput = outputSelectionIndex >= 0 ?
-                        mOutputDeviceSourceMaps[outputSelectionIndex].deviceString:
-                        oldOutput;
-   int oldInIndex = -1, newInIndex = -1, oldOutIndex = -1, newOutIndex = -1;
-   int nDevices = Pa_GetDeviceCount();
-   int i;
-   bool foundCompatibleDevice = false;
-
-   // Find device indices for input and output
-   for (i = 0; i < nDevices; ++i)
-   {
-      const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
-      wxString name = DeviceName(info);
-
-      if (name == oldInput) oldInIndex = i;
-      if (name == newInput) newInIndex = i;
-      if (name == oldOutput) oldOutIndex = i;
-      if (name == newOutput) newOutIndex = i;
-   }
-
-   // This shouldn't happen for new choices (it's OK for old ones)
-   if (newInIndex < 0 || newOutIndex < 0)
-   {
-      wxLogDebug(wxT("DeviceToolBar::OnChoice(): couldn't find device indices"));
-      return;
-   }
-
-   const PaDeviceInfo *inInfo = Pa_GetDeviceInfo(newInIndex);
-   const PaDeviceInfo *outInfo = Pa_GetDeviceInfo(newOutIndex);
-   if (oldInIndex != newInIndex)
-   {
-      // We changed input; be sure the output device has the same API
-      if (inInfo->hostApi != outInfo->hostApi) {
-         // First try setting the same device as the input
-         // I think it is okay to set the string selection as devicename
-         // because I *believe* that the input sources only refer to inputs
-         // but if we end up with blanks in the combobox post selection due
-         // to api mismatch, then this needs to change.
-         if (!mOutput->SetStringSelection(DeviceName(inInfo)))
-         {
-            // Not found; set output device to default for the API
-            const PaHostApiInfo *apiInfo = Pa_GetHostApiInfo(inInfo->hostApi);
-            outInfo = Pa_GetDeviceInfo(apiInfo->defaultOutputDevice);
-            mOutput->SetStringSelection(DeviceName(outInfo));
-         }
+      if (channelsSelectionIndex >= 0) {
+         gPrefs->Write(wxT("/AudioIO/RecordChannels"),
+                       channelsSelectionIndex + 1);
       }
-   }
-   else if (oldOutIndex != newOutIndex)
-   {
-      // We changed output; be sure the input device has the same API
-      if (outInfo->hostApi != inInfo->hostApi) {
-         // First try setting the same device as the output
-         for (i = 0; i < (int)mInputDeviceSourceMaps.size(); i++) {
-            if (mInputDeviceSourceMaps[i].deviceString == DeviceName(outInfo)) {
-               mInput->SetStringSelection(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
-               foundCompatibleDevice = true;
-               break;
-            }
-         }
-         if (!foundCompatibleDevice) {
-            // Not found; set input device to default for the API
-            const PaHostApiInfo *apiInfo = Pa_GetHostApiInfo(outInfo->hostApi);
-            inInfo = Pa_GetDeviceInfo(apiInfo->defaultInputDevice);
-            for (i = 0; i < (int)mInputDeviceSourceMaps.size(); i++) {
-               if (mInputDeviceSourceMaps[i].deviceString == DeviceName(inInfo)) {
-                  break;
-               }
-            }
-            mInput->SetStringSelection(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
-         }
+
+      wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+      wxString oldInput = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
+      wxString newInput = inputSelectionIndex >= 0 ? 
+                             MakeDeviceSourceString(&mInputDeviceSourceMaps[inputSelectionIndex]):
+                             oldInput;
+      wxString oldOutput = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
+      wxString newOutput = outputSelectionIndex >= 0 ?
+                              MakeDeviceSourceString(&mOutputDeviceSourceMaps[outputSelectionIndex]):
+                              oldOutput;
+      int newInIndex = -1, newOutIndex = -1;
+      size_t i;
+
+      // Find device indices for input and output
+      for (i = 0; i < mInputDeviceSourceMaps.size(); ++i) {
+         wxString name;
+         name = MakeDeviceSourceString(&mInputDeviceSourceMaps[i]);
+         if (name == newInput && mInputDeviceSourceMaps[i].hostString == host)
+            newInIndex = i;
       }
+      for (i = 0; i < mOutputDeviceSourceMaps.size(); ++i) {
+         wxString name;
+         name = MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]);
+         if (name == newOutput && mOutputDeviceSourceMaps[i].hostString == host)
+            newOutIndex = i;
+      }
+
+      // This shouldn't happen for new choices (it's OK for old ones)
+      if (newInIndex < 0 || newOutIndex < 0) {
+         wxLogDebug(wxT("DeviceToolBar::OnChoice(): couldn't find device indices"));
+         return;
+      }
+
+      SetDevices(&mInputDeviceSourceMaps[newInIndex], &mOutputDeviceSourceMaps[newOutIndex]);
    }
 
-   inputSelectionIndex  = mInput->GetSelection();
-   outputSelectionIndex = mOutput->GetSelection();
-
-   gPrefs->Write(wxT("/AudioIO/Host"),
-         wxString(Pa_GetHostApiInfo(inInfo->hostApi)->name, wxConvLocal));
-
-   if (inputSelectionIndex >= 0) {
-      gPrefs->Write(wxT("/AudioIO/RecordingDevice"),
-         mInputDeviceSourceMaps[inputSelectionIndex].deviceString);
-      gPrefs->Write(wxT("/AudioIO/RecordingSourceIndex"),
-         mInputDeviceSourceMaps[inputSelectionIndex].sourceIndex);
-      if (mInputDeviceSourceMaps[inputSelectionIndex].sourceIndex >= 0) {
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"),
-            mInputDeviceSourceMaps[inputSelectionIndex].sourceString);
-      } else
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
-   }
-
-   if (outputSelectionIndex >= 0) {
-      gPrefs->Write(wxT("/AudioIO/PlaybackDevice"),
-         mOutputDeviceSourceMaps[outputSelectionIndex].deviceString);
-      if (mOutputDeviceSourceMaps[outputSelectionIndex].sourceIndex >= 0) {
-         gPrefs->Write(wxT("/AudioIO/PlaybackSource"),
-            mOutputDeviceSourceMaps[outputSelectionIndex].sourceString);
-      } else
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
-   }
    if (gAudioIO)
       gAudioIO->HandleDeviceChange();
    GetActiveProject()->UpdatePrefs();
