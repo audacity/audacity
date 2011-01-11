@@ -49,6 +49,9 @@ install: audacity $(EXTRAINSTALLTARGETS)
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/plug-ins
 	$(INSTALL) -m 644 plug-ins/*.ny $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/plug-ins
 
+	# install resources that use wxStandardPaths::GetResourceDir()
+	$(INSTALL) -m 644 presets/EQDefaultCurves.xml $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/EQDefaultCurves.xml
+
 	# install locales
 	$(MAKE) -C locale install
 
