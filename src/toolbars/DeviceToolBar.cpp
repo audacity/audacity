@@ -163,18 +163,27 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vec
    parameters.sampleFormat = paFloat32;
    parameters.hostApiSpecificStreamInfo = NULL;
    parameters.channelCount = 1;
-   if (info)
-      parameters.suggestedLatency = isInput ? info->defaultLowInputLatency:
-                                              info->defaultLowOutputLatency;
-   else
-      parameters.suggestedLatency = DEFAULT_LATENCY_CORRECTION/1000.0;
+
+   // If the device is for input, open a stream so we can use portmixer to query
+   // the number of inputs.  We skip this for outputs because there are no 'sources'
+   // and some platforms (e.g. XP) have the same device for input and output, (while
+   // Vista/Win7 seperate these into two devices with the same names (but different
+   // portaudio indecies)
+   if (isInput) {
+      if (info)
+         parameters.suggestedLatency = isInput ? info->defaultLowInputLatency:
+                                                 info->defaultLowOutputLatency;
+      else
+         parameters.suggestedLatency = DEFAULT_LATENCY_CORRECTION/1000.0;
       // try opening for record and playback
-   error = Pa_OpenStream(&stream,
-                         isInput ? &parameters : NULL,
-                         isInput ? NULL : &parameters,
-                         rate, paFramesPerBufferUnspecified,
-                         paClipOff | paDitherOff,
-                         DummyPaStreamCallback, NULL);
+      error = Pa_OpenStream(&stream,
+                            isInput ? &parameters : NULL,
+                            isInput ? NULL : &parameters,
+                            rate, paFramesPerBufferUnspecified,
+                            paClipOff | paDitherOff,
+                            DummyPaStreamCallback, NULL);
+   }
+
    if (stream) {
       AddSourcesFromStream(deviceIndex, info, maps, stream);
       Pa_CloseStream(stream);
