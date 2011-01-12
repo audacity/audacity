@@ -573,6 +573,13 @@ void DeviceToolBar::FillInputChannels()
    }
    if (index == -1)
       mInputChannels->Enable(false);
+
+   // Resize if necessary
+   mInputChannels->SetSize(mInputChannels->GetEffectiveMinSize());
+   
+   Layout();
+   this->Refresh();
+   Update();
 }
 void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
 {
@@ -580,7 +587,7 @@ void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
       gPrefs->Write(wxT("/AudioIO/RecordingDevice"), in->deviceString);
       gPrefs->Write(wxT("/AudioIO/RecordingSourceIndex"), in->sourceIndex);
       if (in->sourceIndex >= 0) {
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"),in->sourceString);
+         gPrefs->Write(wxT("/AudioIO/RecordingSource"), in->sourceString);
       } else
          gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
       FillInputChannels();
@@ -591,7 +598,7 @@ void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
       if (out->sourceIndex >= 0) {
          gPrefs->Write(wxT("/AudioIO/PlaybackSource"), out->sourceString);
       } else
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
+         gPrefs->Write(wxT("/AudioIO/PlaybackSource"), wxT(""));
    }
 }
 
