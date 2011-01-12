@@ -95,7 +95,7 @@ static int DummyPaStreamCallback(
    return 0;
 }
 
-static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, int deviceIndex)
+static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, int deviceIndex, int isInput)
 {
    wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
    wxString infoName(info->name, wxConvLocal);
@@ -104,7 +104,7 @@ static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, i
    map->hostIndex    = info->hostApi;
    map->deviceString = infoName;
    map->hostString   = hostapiName;
-   map->numChannels  = info->maxInputChannels;
+   map->numChannels  = isInput ? info->maxInputChannels : info->maxOutputChannels;
 }
 
 static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std::vector<DeviceSourceMap> *maps, PaStream *stream)
@@ -115,7 +115,8 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
 
    map.sourceIndex  = -1;
    map.totalSources = 0;
-   FillHostDeviceInfo(&map, info, deviceIndex);
+   // Only inputs have sources, so we call FillHostDeviceInfo with a 1 to indicate this
+   FillHostDeviceInfo(&map, info, deviceIndex, 1);
    portMixer = Px_OpenMixer(stream, 0);
    if (!portMixer) {
       maps->push_back(map);
@@ -145,12 +146,10 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
 
 static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vector<DeviceSourceMap> *maps, int isInput)
 {
-   int error;
+   int error = 0;
    DeviceSourceMap map;
-   wxString hostDevName;
    const PaDeviceInfo *info = Pa_GetDeviceInfo(deviceIndex);
 
-   hostDevName = DeviceName(info);
    // This tries to open the device with the samplerate worked out above, which
    // will be the highest available for play and record on the device, or
    // 44.1kHz if the info cannot be fetched.
@@ -171,28 +170,34 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vec
    // portaudio indecies)
    if (isInput) {
       if (info)
-         parameters.suggestedLatency = isInput ? info->defaultLowInputLatency:
-                                                 info->defaultLowOutputLatency;
+         parameters.suggestedLatency = info->defaultLowInputLatency;
       else
          parameters.suggestedLatency = DEFAULT_LATENCY_CORRECTION/1000.0;
-      // try opening for record and playback
+
       error = Pa_OpenStream(&stream,
-                            isInput ? &parameters : NULL,
-                            isInput ? NULL : &parameters,
+                            &parameters,
+                            NULL,
                             rate, paFramesPerBufferUnspecified,
                             paClipOff | paDitherOff,
                             DummyPaStreamCallback, NULL);
    }
 
-   if (stream) {
+   if (stream && !error) {
       AddSourcesFromStream(deviceIndex, info, maps, stream);
       Pa_CloseStream(stream);
    } else {
       map.sourceIndex  = -1;
       map.totalSources = 0;
-      FillHostDeviceInfo(&map, info, deviceIndex);
+      FillHostDeviceInfo(&map, info, deviceIndex, isInput);
       maps->push_back(map);
    }
+
+   if(error) {
+      wxLogDebug(wxT("PortAudio stream error creating device list: ") +
+                 map.hostString + wxT(":") + map.deviceString + wxT(": ") +
+                 wxString(Pa_GetErrorText( (PaError)error), wxConvLocal));
+   }
+
    //add the host to the list if it isn't there yet
    wxString hostName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
    if (hosts->Index(hostName) == wxNOT_FOUND) {
