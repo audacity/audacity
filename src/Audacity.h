@@ -20,6 +20,9 @@
 
 *//********************************************************************/
 
+#ifndef __AUDACITY_H__
+#define __AUDACITY_H__
+
 // Set to 0 for a release version and 1 for a beta version
 #define IS_BETA 1
 
@@ -168,3 +171,5 @@ void QuitAudacity();
 
 // This macro is used widely, so declared here.
 #define QUANTIZED_TIME(time, rate) ((double)((sampleCount)floor(((double)(time) * (rate)) + 0.5))) / (rate)
+
+#endif // __AUDACITY_H__
