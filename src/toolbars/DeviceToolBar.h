@@ -18,6 +18,7 @@ class wxImage;
 class wxSize;
 class wxPoint;
 class wxChoice;
+class wxStaticText;
 
 typedef struct DeviceSourceMap {
    int deviceIndex;
