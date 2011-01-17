@@ -32,6 +32,7 @@
 #include "../AudacityApp.h"
 
 #include "DeviceToolBar.h"
+#include "ToolDock.h"
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
@@ -54,7 +55,7 @@ END_EVENT_TABLE()
 
 //Standard contructor
 DeviceToolBar::DeviceToolBar()
-: ToolBar(DeviceBarID, _("Device"), wxT("Device"))
+: ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
 {
 }
 
@@ -79,7 +80,7 @@ static wxString MakeDeviceSourceString(DeviceSourceMap *map)
    ret = map->deviceString;
    if (map->totalSources > 1)
       ret += wxString(": ", wxConvLocal) + map->sourceString;
-   
+
    return ret;
 }
 
@@ -279,10 +280,10 @@ void DeviceToolBar::Populate()
       mInput->Enable(false);
 
 
-   wxStaticText *channelsLabel = new wxStaticText(this, wxID_ANY, _("Rec Channels:"),
+   mChannelsLabel = new wxStaticText(this, wxID_ANY, _(" Rec Channels:"),
                                                  wxDefaultPosition, wxDefaultSize, 
-                                                 wxALIGN_LEFT);
-   Add(channelsLabel, 0, wxALIGN_CENTER);
+                                                 wxALIGN_RIGHT);
+   Add(mChannelsLabel, 0, wxALIGN_CENTER);
 
    mInputChannels = new wxChoice(this,
                          wxID_ANY,
@@ -329,6 +330,7 @@ void DeviceToolBar::Populate()
 
    FillHostDevices();
    FillInputChannels();
+   Layout();
 }
 
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
@@ -451,6 +453,86 @@ void DeviceToolBar::RegenerateTooltips()
 #endif
 }
 
+bool DeviceToolBar::Layout()
+{
+   bool ret;
+   RepositionCombos();
+   ret = ToolBar::Layout();
+   return ret;
+}
+
+//These don't add up to 1 because there is a bit of margin that we allow
+//the layout sizer to handle.
+#define kHostWidthRatio 0.14
+#define kInputWidthRatio 0.32
+#define kOutputWidthRatio 0.32
+#define kChannelsWidthRatio 0.2
+
+void DeviceToolBar::RepositionCombos()
+{
+   int w, h, dockw, dockh, minw;
+   wxWindow *window;
+   wxSize desiredInput, desiredOutput, desiredHost, desiredChannels, chanLabel;
+
+   // if the toolbar is docked then the width we should use is the project width.
+   // as the toolbar's with can extend past this.
+   GetClientSize(&w, &h);
+   if (IsDocked()) {
+      // If the toolbar is docked its width can be larger than what is actually viewable
+      // So take the min.  We don't need to worry about having another toolbar to the left off us
+      // because if we are larger than the dock size we always get our own row.
+      // and if smaller then we don't use the dock size (because we take the min).
+      window = GetDock();
+      window->GetClientSize(&dockw, &dockh);
+      if (dockw < w)
+         w = dockw;
+   }
+   desiredHost = mHost->GetBestSize();
+   if (desiredHost.x > w * kHostWidthRatio){
+      desiredHost.SetWidth(w *kHostWidthRatio);
+   }
+   mHost->SetMinSize(desiredHost);
+   mHost->SetMaxSize(desiredHost);
+
+   desiredInput = mInput->GetBestSize();
+   desiredInput.x += mRecordBitmap->GetWidth();
+   if (desiredInput.x > w * kInputWidthRatio) {
+      desiredInput.SetWidth(w *kInputWidthRatio );
+   }
+   desiredInput.x -= mRecordBitmap->GetWidth();
+   mInput->SetMinSize(desiredInput);
+   mInput->SetMaxSize(desiredInput);
+
+   desiredOutput = mOutput->GetBestSize();
+   desiredOutput.x += mPlayBitmap->GetWidth();
+   if (desiredOutput.x > w * kOutputWidthRatio)
+      desiredOutput.SetWidth(w *kOutputWidthRatio);
+   desiredOutput.x -= mPlayBitmap->GetWidth();
+   minw = mOutput->GetMinWidth();
+   mOutput->SetMinSize(desiredOutput);
+   mOutput->SetMaxSize(desiredOutput);
+
+   chanLabel = mChannelsLabel->GetBestSize();
+   chanLabel.x += mInputChannels->GetBestSize().GetX();
+   if (chanLabel.x > w * kChannelsWidthRatio)
+      chanLabel.SetWidth(w * kChannelsWidthRatio);
+   chanLabel.x -= mInputChannels->GetBestSize().GetX();
+   if (chanLabel.x > 0) {
+      mChannelsLabel->SetMinSize(chanLabel);
+      mChannelsLabel->SetMaxSize(chanLabel);
+   }
+
+   desiredChannels = mInputChannels->GetBestSize();
+   desiredChannels.x += mChannelsLabel->GetSize().GetX();
+   if (desiredChannels.x > w * kChannelsWidthRatio)
+      desiredChannels.SetWidth(w * kChannelsWidthRatio);
+   desiredChannels.x -= mChannelsLabel->GetSize().GetX();
+   mInputChannels->SetMinSize(desiredChannels);
+   mInputChannels->SetMaxSize(desiredChannels);
+
+   Refresh();
+   Update();
+}
 void DeviceToolBar::FillHostDevices()
 {
    //read what is in the prefs
@@ -492,7 +574,6 @@ void DeviceToolBar::FillHostDevices()
          mInput->Append(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
    }
    mInput->Enable(mInput->GetCount() ? true : false);
-   mInput->SetSize(mInput->GetEffectiveMinSize());
 //   mInput->Layout();
    mOutput->Clear();
    for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
@@ -500,18 +581,9 @@ void DeviceToolBar::FillHostDevices()
          mOutput->Append(MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]));
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
-   mOutput->SetSize(mOutput->GetEffectiveMinSize());
-
-   mInputChannels->SetSize(mInputChannels->GetEffectiveMinSize());
-   
-   mHost->SetSize(mHost->GetEffectiveMinSize());
-//   mOutput->Layout();
 
    // make the device display selection reflect the prefs if they exist
    UpdatePrefs();
-   Layout();
-   this->Refresh();
-   Update();
    // The setting of the Device is left up to OnChoice
 }
 
@@ -531,7 +603,7 @@ int DeviceToolBar::ChangeHost()
    //change the host and switch to correct devices.
    gPrefs->Write(wxT("/AudioIO/Host"), newHost);
    FillHostDevices();
-
+   Layout();
    return 1;
 }
 
@@ -552,7 +624,7 @@ void DeviceToolBar::FillInputChannels()
           host   == mInputDeviceSourceMaps[i].hostString) {
 
          // add one selection for each channel of this source
-         for (j = 0; j < mInputDeviceSourceMaps[i].numChannels; j++) {
+         for (j = 0; j < (unsigned int) mInputDeviceSourceMaps[i].numChannels; j++) {
             wxString name;
 
             if (j == 0) {
@@ -578,13 +650,8 @@ void DeviceToolBar::FillInputChannels()
    }
    if (index == -1)
       mInputChannels->Enable(false);
-
-   // Resize if necessary
-   mInputChannels->SetSize(mInputChannels->GetEffectiveMinSize());
    
    Layout();
-   this->Refresh();
-   Update();
 }
 void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
 {

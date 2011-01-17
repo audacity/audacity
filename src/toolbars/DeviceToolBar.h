@@ -45,7 +45,7 @@ class DeviceToolBar:public ToolBar {
    virtual void Populate();
    virtual void Repaint(wxDC *dc) {};
    virtual void EnableDisableButtons();
-
+   virtual bool Layout();
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
 
@@ -56,10 +56,12 @@ class DeviceToolBar:public ToolBar {
    void FillHostDevices();
    void FillInputChannels();
    void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);
+   void RepositionCombos();
    void RegenerateTooltips();
 
    wxBitmap *mPlayBitmap;
    wxBitmap *mRecordBitmap;
+   wxStaticText *mChannelsLabel;
 
    wxChoice *mInput;
    wxChoice *mOutput;

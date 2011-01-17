@@ -561,6 +561,10 @@ void ToolManager::ReadConfig()
       gPrefs->Read( wxT("Dock"), &dock, ndx == SelectionBarID ? BotDockID : TopDockID );
       gPrefs->Read( wxT("Order"), &ord, NoBarID );
       gPrefs->Read( wxT("Show"), &show[ ndx ], true );
+
+      //we turned the device preferences on by default for the first time
+      //as of prefs version 1.1.2r.
+      //For users that have older prefs, turn it on once.
       gPrefs->Read( wxT("X"), &x, -1 );
       gPrefs->Read( wxT("Y"), &y, -1 );
       gPrefs->Read( wxT("W"), &width[ ndx ], -1 );
