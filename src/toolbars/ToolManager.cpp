@@ -506,7 +506,7 @@ void ToolManager::Reset()
 #endif
       dock->Dock( bar );
 
-      Expose( ndx, ndx ==  DeviceBarID ? false : true );
+      Expose( ndx, true );
 
       if( parent )
       {
