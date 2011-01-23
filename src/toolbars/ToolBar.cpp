@@ -264,12 +264,12 @@ void ToolBar::ReCreateButtons()
    sz.y = ( ( ( sz.y + tbs ) / tbs ) * tbs ) - 1;
 
    // Set the true AND minimum sizes and do final layout
-   SetInitialSize(sz);
    if(IsResizable())
    {// EM: allows narrow Meter Toolbar
       sz.SetWidth(GetInitialWidth());
       SetMinSize(sz);
    }
+   SetInitialSize(sz);
    Layout();
 }
 
