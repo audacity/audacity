@@ -623,7 +623,7 @@ void DeviceToolBar::FillHostDevices()
          mInput->Append(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
    }
    mInput->Enable(mInput->GetCount() ? true : false);
-//   mInput->Layout();
+
    mOutput->Clear();
    for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
       if (foundHostIndex == mOutputDeviceSourceMaps[i].hostIndex)
@@ -741,29 +741,29 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       }
 
       wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-      wxString oldInput = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
-      wxString newInput = inputSelectionIndex >= 0 ? 
-                             MakeDeviceSourceString(&mInputDeviceSourceMaps[inputSelectionIndex]):
-                             oldInput;
-      wxString oldOutput = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
-      wxString newOutput = outputSelectionIndex >= 0 ?
-                              MakeDeviceSourceString(&mOutputDeviceSourceMaps[outputSelectionIndex]):
-                              oldOutput;
       int newInIndex = -1, newOutIndex = -1;
       size_t i;
 
       // Find device indices for input and output
-      for (i = 0; i < mInputDeviceSourceMaps.size(); ++i) {
-         wxString name;
-         name = MakeDeviceSourceString(&mInputDeviceSourceMaps[i]);
-         if (name == newInput && mInputDeviceSourceMaps[i].hostString == host)
-            newInIndex = i;
+      if (inputSelectionIndex >= 0 ) {
+         wxString newInput = mInput->GetStringSelection();
+         for (i = 0; i < mInputDeviceSourceMaps.size(); ++i) {
+            wxString name;
+            name = MakeDeviceSourceString(&mInputDeviceSourceMaps[i]);
+            if (name == newInput && mInputDeviceSourceMaps[i].hostString == host) {
+               newInIndex = i;
+            }
+         }
       }
-      for (i = 0; i < mOutputDeviceSourceMaps.size(); ++i) {
-         wxString name;
-         name = MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]);
-         if (name == newOutput && mOutputDeviceSourceMaps[i].hostString == host)
-            newOutIndex = i;
+
+      if (outputSelectionIndex >= 0) {  
+         wxString newOutput = mOutput->GetStringSelection();
+         for (i = 0; i < mOutputDeviceSourceMaps.size(); ++i) {
+            wxString name;
+            name = MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]);
+            if (name == newOutput && mOutputDeviceSourceMaps[i].hostString == host)
+               newOutIndex = i;
+         }
       }
 
       // This shouldn't happen for new choices (it's OK for old ones)
@@ -772,7 +772,8 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
          return;
       }
 
-      SetDevices(&mInputDeviceSourceMaps[newInIndex], &mOutputDeviceSourceMaps[newOutIndex]);
+      SetDevices(newInIndex  >= 0 ? &mInputDeviceSourceMaps[newInIndex]   : NULL,
+                 newOutIndex >= 0 ? &mOutputDeviceSourceMaps[newOutIndex] : NULL);
    }
 
    if (gAudioIO) {
@@ -797,17 +798,5 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       }
       gAudioIO->HandleDeviceChange();
    }
-   GetActiveProject()->UpdatePrefs();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 6a50243e-9fc9-4f0f-b344-bd3044dc09ad
 
