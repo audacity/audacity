@@ -55,7 +55,7 @@ class DeviceToolBar:public ToolBar {
 
    /// When the prefs don't exist this value is used.
    /// It should be small enough to work on tiny screens
-   int GetInitialWidth() {return 600;}
+   int GetInitialWidth() {return 520;}
  private:
    int  ChangeHost();
    void FillHostDevices();

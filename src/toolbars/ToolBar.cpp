@@ -591,6 +591,12 @@ void ToolBar::OnPaint( wxPaintEvent & event )
    }
 }
 
+int ToolBar::GetResizeGrabberWidth()
+{
+   return RWIDTH;
+}
+
+
 /// @return true iff pos is in resize grabber.
 bool ToolBar::IsResizeGrabberHit( wxPoint & pos )
 {

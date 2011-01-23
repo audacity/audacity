@@ -479,21 +479,59 @@ bool DeviceToolBar::Layout()
    return ret;
 }
 
+// returns true if the combo is constrained and false otherwise
+// @param toolbarWidth the width of the toolbar in pixels
+// @param ratio an in/out for the desired and resultant width ratio.
+// @param flex the amount of extra space allowed to have past the available.
+//             the amount used is subtracted.
+static bool RepositionCombo(wxWindow *combo, int toolbarWidth, wxSize desiredSize,
+                            float &ratio, float &flex, int marginPixels, bool changesRatio)
+{
+   float ratioChange;
+   bool constrained = false;
 
+   // push margin pixels 
+   desiredSize.x += marginPixels;
+
+   // truncate the window size if necessary
+   if (desiredSize.x > toolbarWidth * (flex + ratio)) {
+      constrained = true;
+      desiredSize.SetWidth(toolbarWidth * (flex + ratio));
+      if (desiredSize.GetWidth() - marginPixels < 0)
+         desiredSize.SetWidth(marginPixels);
+   }
+
+   // keep track of how much space gained or lost so it can be used by other combos.
+   if (changesRatio) {
+      ratioChange = (desiredSize.x / ((float) toolbarWidth)) - ratio;
+      ratio += ratioChange;
+      flex  -= ratioChange;
+   }
+
+   // pop the margin pixels
+   desiredSize.x -= marginPixels;
+
+   combo->SetMinSize(desiredSize);
+   combo->SetMaxSize(desiredSize);
+
+   return constrained;
+}
 
 //These don't add up to 1 because there is a bit of margin that we allow
 //the layout sizer to handle.
-#define kHostWidthRatio 0.13
-#define kInputWidthRatio 0.32
-#define kOutputWidthRatio 0.32
-#define kChannelsWidthRatio 0.19
+#define kHostWidthRatio 0.13f
+#define kInputWidthRatio 0.32f
+#define kOutputWidthRatio 0.32f
+#define kChannelsWidthRatio 0.18f
 
 void DeviceToolBar::RepositionCombos()
 {
-   int w, h, dockw, dockh, minw;
+   int w, h, dockw, dockh;
+   float ratioUnused;
+   bool constrained = true;
    wxWindow *window;
    wxSize desiredInput, desiredOutput, desiredHost, desiredChannels, chanLabel;
-
+   float hostRatio, outputRatio, inputRatio, channelsRatio;
    // if the toolbar is docked then the width we should use is the project width.
    // as the toolbar's with can extend past this.
    GetClientSize(&w, &h);
@@ -507,51 +545,41 @@ void DeviceToolBar::RepositionCombos()
       if (dockw < w)
          w = dockw;
    }
+   w -= GetResizeGrabberWidth();
+   if (w <= 0)
+      return;
+   
+   // set up initial sizes and ratios
+   hostRatio     = kHostWidthRatio;
+   inputRatio    = kInputWidthRatio;
+   outputRatio   = kOutputWidthRatio;
+   channelsRatio = kChannelsWidthRatio;
 
-   desiredHost = mHost->GetBestSize();
-   if (desiredHost.x > w * kHostWidthRatio){
-      desiredHost.SetWidth(w * kHostWidthRatio);
-   }
-   mHost->SetMinSize(desiredHost);
-   mHost->SetMaxSize(desiredHost);
-
-   desiredInput = mInput->GetBestSize();
-   desiredInput.x += mRecordBitmap->GetWidth();
-   if (desiredInput.x > w * kInputWidthRatio) {
-      desiredInput.SetWidth(w *kInputWidthRatio );
-   }
-   desiredInput.x -= mRecordBitmap->GetWidth();
-   mInput->SetMinSize(desiredInput);
-   mInput->SetMaxSize(desiredInput);
-
-   desiredOutput = mOutput->GetBestSize();
-   desiredOutput.x += mPlayBitmap->GetWidth();
-   if (desiredOutput.x > w * kOutputWidthRatio)
-      desiredOutput.SetWidth(w *kOutputWidthRatio);
-   desiredOutput.x -= mPlayBitmap->GetWidth();
-   minw = mOutput->GetMinWidth();
-   mOutput->SetMinSize(desiredOutput);
-   mOutput->SetMaxSize(desiredOutput);
-
-   chanLabel = mChannelsLabel->GetBestSize();
-   chanLabel.x += mInputChannels->GetBestSize().GetX();
-   if (chanLabel.x > w * kChannelsWidthRatio)
-      chanLabel.SetWidth(w * kChannelsWidthRatio);
-   chanLabel.x -= mInputChannels->GetBestSize().GetX();
-   if (chanLabel.x < 0)
-      chanLabel.x = 0;
-   mChannelsLabel->SetMinSize(chanLabel);
-   mChannelsLabel->SetMaxSize(chanLabel);
-
+   desiredHost     = mHost->GetBestSize();
+   desiredInput    = mInput->GetBestSize();
+   desiredOutput   = mOutput->GetBestSize();
+   chanLabel       = mChannelsLabel->GetBestSize();
    desiredChannels = mInputChannels->GetBestSize();
-   desiredChannels.x += mChannelsLabel->GetSize().GetX();
-   if (desiredChannels.x > w * kChannelsWidthRatio)
-      desiredChannels.SetWidth(w * kChannelsWidthRatio);
-   desiredChannels.x -= mChannelsLabel->GetSize().GetX();
-   mInputChannels->SetMinSize(desiredChannels);
-   mInputChannels->SetMaxSize(desiredChannels);
 
-   Refresh();
+   ratioUnused = 0.98f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
+   int i = 0;
+   // limit the amount of times we solve contraints to 5
+   while (constrained && ratioUnused > 0.01f && i < 5) {
+      i++;
+      constrained = false;
+
+      constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true) || constrained;
+      constrained = RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, mRecordBitmap->GetWidth(), true) || constrained;
+      constrained = RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, mPlayBitmap->GetWidth(), true) || constrained;
+      
+      // the channels label belongs to the input channels combo so doesn't change any ratios.
+      // Always take the input channel combo's best width so that the combo has priority
+      constrained = RepositionCombo(mChannelsLabel, w, chanLabel, channelsRatio, ratioUnused,
+                                                   mInputChannels->GetBestSize().GetX(), false) || constrained;
+      constrained = RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused,
+                                                   mChannelsLabel->GetSize().GetX(), true) || constrained;
+   }
+
    Update();
 }
 void DeviceToolBar::FillHostDevices()

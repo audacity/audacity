@@ -151,6 +151,9 @@ class ToolBar:public wxPanel
 
    void Updated();
 
+   /// Returns the width in pixels of the resizer element
+   int GetResizeGrabberWidth();
+
    virtual void Populate() = 0;
    virtual void Repaint(wxDC *dc) = 0;
 
