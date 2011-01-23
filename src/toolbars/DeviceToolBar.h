@@ -43,6 +43,7 @@ class DeviceToolBar:public ToolBar {
    void RecreateTipWindows();
    void UpdatePrefs();
 
+   void DeinitChildren();
    virtual void Populate();
    virtual void Repaint(wxDC *dc) {};
    virtual void EnableDisableButtons();
@@ -52,6 +53,8 @@ class DeviceToolBar:public ToolBar {
 
    void OnChoice(wxCommandEvent & event);
 
+   /// When the prefs don't exist this value is used.
+   /// It should be small enough to work on tiny screens
    int GetInitialWidth() {return 600;}
  private:
    int  ChangeHost();

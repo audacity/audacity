@@ -210,6 +210,21 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vec
    }
 }
 
+void DeviceToolBar::DeinitChildren()
+{
+   mPlayBitmap    = NULL;
+   mRecordBitmap  = NULL;
+   mChannelsLabel = NULL;
+   
+   mInput         = NULL;
+   mOutput        = NULL;
+   mInputChannels = NULL;
+   mHost          = NULL;
+
+   mInputDeviceSourceMaps.clear();
+   mOutputDeviceSourceMaps.clear();
+}
+
 void DeviceToolBar::Populate()
 {
    int i;
@@ -218,8 +233,9 @@ void DeviceToolBar::Populate()
    wxArrayString hosts;
    wxArrayString channels;
 
-   channels.Add(wxT("1 (Mono)"));
+   DeinitChildren();
 
+   channels.Add(wxT("1 (Mono)"));
    int nDevices = Pa_GetDeviceCount();
 
    //The heirarchy for devices is Host/device/source.
@@ -462,6 +478,8 @@ bool DeviceToolBar::Layout()
    ret = ToolBar::Layout();
    return ret;
 }
+
+
 
 //These don't add up to 1 because there is a bit of margin that we allow
 //the layout sizer to handle.
