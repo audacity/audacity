@@ -267,7 +267,7 @@ void ToolBar::ReCreateButtons()
    SetInitialSize(sz);
    if(IsResizable())
    {// EM: allows narrow Meter Toolbar
-      sz.SetWidth(160);
+      sz.SetWidth(GetInitialWidth());
       SetMinSize(sz);
    }
    Layout();

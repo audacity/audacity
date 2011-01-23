@@ -100,6 +100,8 @@ class ToolBar:public wxPanel
    bool IsVisible();
    bool IsDocked();
 
+   /// Resizable toolbars should implement this.
+   virtual int GetInitialWidth() {return -1;}
  protected:
 
    AButton *MakeButton(teBmps eUp,

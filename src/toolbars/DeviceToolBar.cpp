@@ -68,6 +68,10 @@ DeviceToolBar::~DeviceToolBar()
 void DeviceToolBar::Create(wxWindow *parent)
 {
    ToolBar::Create(parent);
+
+   // Simulate a size event to set initial meter placement/size
+   wxSizeEvent dummy;
+   OnSize(dummy);
 }
 
 void DeviceToolBar::RecreateTipWindows()
@@ -330,9 +334,7 @@ void DeviceToolBar::Populate()
 
    FillHostDevices();
    FillInputChannels();
-   Layout();
 }
-
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
 {
    wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
@@ -463,10 +465,10 @@ bool DeviceToolBar::Layout()
 
 //These don't add up to 1 because there is a bit of margin that we allow
 //the layout sizer to handle.
-#define kHostWidthRatio 0.14
+#define kHostWidthRatio 0.13
 #define kInputWidthRatio 0.32
 #define kOutputWidthRatio 0.32
-#define kChannelsWidthRatio 0.2
+#define kChannelsWidthRatio 0.19
 
 void DeviceToolBar::RepositionCombos()
 {
@@ -487,9 +489,10 @@ void DeviceToolBar::RepositionCombos()
       if (dockw < w)
          w = dockw;
    }
+
    desiredHost = mHost->GetBestSize();
    if (desiredHost.x > w * kHostWidthRatio){
-      desiredHost.SetWidth(w *kHostWidthRatio);
+      desiredHost.SetWidth(w * kHostWidthRatio);
    }
    mHost->SetMinSize(desiredHost);
    mHost->SetMaxSize(desiredHost);
@@ -517,10 +520,10 @@ void DeviceToolBar::RepositionCombos()
    if (chanLabel.x > w * kChannelsWidthRatio)
       chanLabel.SetWidth(w * kChannelsWidthRatio);
    chanLabel.x -= mInputChannels->GetBestSize().GetX();
-   if (chanLabel.x > 0) {
-      mChannelsLabel->SetMinSize(chanLabel);
-      mChannelsLabel->SetMaxSize(chanLabel);
-   }
+   if (chanLabel.x < 0)
+      chanLabel.x = 0;
+   mChannelsLabel->SetMinSize(chanLabel);
+   mChannelsLabel->SetMaxSize(chanLabel);
 
    desiredChannels = mInputChannels->GetBestSize();
    desiredChannels.x += mChannelsLabel->GetSize().GetX();

@@ -52,6 +52,7 @@ class DeviceToolBar:public ToolBar {
 
    void OnChoice(wxCommandEvent & event);
 
+   int GetInitialWidth() {return 600;}
  private:
    int  ChangeHost();
    void FillHostDevices();
