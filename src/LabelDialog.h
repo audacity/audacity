@@ -37,7 +37,8 @@ class LabelDialog:public wxDialog
                DirManager *dirmanager,
                TrackList *tracks,
                ViewInfo &viewinfo,
-               double rate);
+               double rate,
+               const wxString & format);
    ~LabelDialog();
 
     virtual bool Show(bool show = true);

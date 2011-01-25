@@ -5413,8 +5413,11 @@ void AudacityProject::OnAddLabelPlaying()
 
 void AudacityProject::OnEditLabels()
 {
-   LabelDialog dlg(this, mDirManager, mTracks, mViewInfo, mRate);
-   
+   wxString format;
+   gPrefs->Read(wxT("/SelectionFormat"), &format);
+
+   LabelDialog dlg(this, mDirManager, mTracks, mViewInfo, mRate, format);
+
    if (dlg.ShowModal() == wxID_OK) {
       PushState(_("Edited labels"), _("Label"));
       RedrawProject();

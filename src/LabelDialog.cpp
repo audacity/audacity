@@ -94,7 +94,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          DirManager *dirmanager,
                          TrackList *tracks,
                          ViewInfo &viewinfo,
-                         double rate)
+                         double rate,
+                         const wxString & format)
 : wxDialog(parent,
            wxID_ANY,
            _("Edit Labels"),
@@ -104,7 +105,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
   mDirManager(dirmanager),
   mTracks(tracks),
   mViewInfo(&viewinfo),
-  mRate(rate)
+  mRate(rate),
+  mFormat(format)
 {
    // Create the main sizer
    wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
