@@ -106,11 +106,16 @@ void OnTrackMute();
 void OnTrackSolo();
 void OnTrackClose();
 
+        // Device control
+void OnInputDevice();
+void OnOutputDevice();
+void OnAudioHost();
+void OnInputChannels();
+
         // Mixer control
 
 void OnOutputGain();
 void OnInputGain();
-void OnInputSource();
 void OnOutputGainInc();
 void OnOutputGainDec();
 void OnInputGainInc();

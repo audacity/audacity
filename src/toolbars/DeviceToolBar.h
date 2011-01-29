@@ -57,6 +57,12 @@ class DeviceToolBar:public ToolBar {
    /// It should be small enough to work on tiny screens
    int GetInitialWidth() {return 520;}
    virtual int GetMinToolbarWidth() {return 200;}
+
+   void ShowInputDialog();
+   void ShowOutputDialog();
+   void ShowHostDialog();
+   void ShowChannelsDialog();
+
  private:
    int  ChangeHost();
    void FillHostDevices();
@@ -64,6 +70,8 @@ class DeviceToolBar:public ToolBar {
    void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);
    void RepositionCombos();
    void RegenerateTooltips();
+
+   void ShowComboDialog(wxChoice *combo, wxString &title);
 
    wxBitmap *mPlayBitmap;
    wxBitmap *mRecordBitmap;

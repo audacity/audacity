@@ -92,6 +92,7 @@ simplifies construction of menu items.
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/EditToolBar.h"
+#include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
@@ -1127,6 +1128,19 @@ void AudacityProject::CreateMenusAndCommands()
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
    c->AddCommand(wxT("FullScreenOnOff"), _("Full screen on/off"), FN(OnFullScreen), wxT("F11"));
+
+   c->AddCommand(wxT("InputDevice"), _("Change input device"), FN(OnInputDevice), wxT("Shift+I"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->AddCommand(wxT("OutputDevice"), _("Change output device"), FN(OnOutputDevice), wxT("Shift+O"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->AddCommand(wxT("AudioHost"), _("Change audio host"), FN(OnAudioHost), wxT("Shift+H"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
+   c->AddCommand(wxT("InputChannels"), _("Change input channels"), FN(OnInputChannels), wxT("Shift+N"),
+                 AudioIONotBusyFlag,
+                 AudioIONotBusyFlag);
 
    c->AddCommand(wxT("OutputGain"), _("Adjust output gain"), FN(OnOutputGain));
    c->AddCommand(wxT("OutputGainInc"), _("Increase output gain"), FN(OnOutputGainInc));
@@ -2394,6 +2408,38 @@ void AudacityProject::OnTrackSolo()
 void AudacityProject::OnTrackClose()
 {
    mTrackPanel->OnTrackClose();
+}
+
+void AudacityProject::OnInputDevice()
+{
+   DeviceToolBar *tb = GetDeviceToolBar();
+   if (tb) {
+      tb->ShowInputDialog();
+   }
+}
+
+void AudacityProject::OnOutputDevice()
+{
+   DeviceToolBar *tb = GetDeviceToolBar();
+   if (tb) {
+      tb->ShowOutputDialog();
+   }
+}
+
+void AudacityProject::OnAudioHost()
+{
+   DeviceToolBar *tb = GetDeviceToolBar();
+   if (tb) {
+      tb->ShowHostDialog();
+   }
+}
+
+void AudacityProject::OnInputChannels()
+{
+   DeviceToolBar *tb = GetDeviceToolBar();
+   if (tb) {
+      tb->ShowChannelsDialog();
+   }
 }
 
 void AudacityProject::OnOutputGain()

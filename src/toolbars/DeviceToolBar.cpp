@@ -812,3 +812,59 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
    }
 }
 
+void DeviceToolBar::ShowInputDialog()
+{
+   ShowComboDialog(mInput, wxString(_("Select Input Device")));
+}
+void DeviceToolBar::ShowOutputDialog()
+{
+   ShowComboDialog(mOutput, wxString(_("Select Output Device")));
+}
+void DeviceToolBar::ShowHostDialog()
+{
+   ShowComboDialog(mHost, wxString(_("Select Audio Host")));
+}
+void DeviceToolBar::ShowChannelsDialog()
+{
+   ShowComboDialog(mInputChannels, wxString(_("Select Input Channels")));
+}
+
+void DeviceToolBar::ShowComboDialog(wxChoice *combo, wxString &title)
+{
+   if (!combo || combo->GetCount() == 0) {
+      wxMessageBox(_("Device information is not available."));
+      return;
+   }
+
+#if USE_PORTMIXER
+   wxArrayString inputSources = combo->GetStrings();
+
+   wxDialog dlg(NULL, wxID_ANY, title);
+   ShuttleGui S(&dlg, eIsCreating);
+   wxChoice *c;
+
+   S.StartVerticalLay(true);
+   {
+     S.StartHorizontalLay(wxCENTER, false);
+      {
+         c = S.AddChoice(combo->GetName(),
+                         combo->GetStringSelection(),
+                         &inputSources);
+      }
+      S.EndHorizontalLay();
+      S.AddStandardButtons();
+   }
+   S.EndVerticalLay();
+
+   dlg.SetSize(dlg.GetSizer()->GetMinSize());
+   dlg.Center();
+
+   if (dlg.ShowModal() == wxID_OK)
+   {
+      wxCommandEvent e(wxEVT_COMMAND_CHOICE_SELECTED, dlg.GetId());
+      combo->SetSelection(c->GetSelection());
+      // This will fire an event which will invoke OnChoice above.
+      combo->ProcessCommand(e);
+   }
+#endif
+}
