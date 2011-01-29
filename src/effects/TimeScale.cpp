@@ -103,10 +103,15 @@ bool EffectTimeScale::TransferParameters( Shuttle & shuttle )
    return true;
 }
 
+inline double InvertedPercentChangeToRatio(double percentChange)
+{
+   //mchinen hack: invert the ratio so it works with the sbsms bug which requires the reciprocal number.
+   return 1.0/(1.0 + percentChange / 100.0);
+}
+
 inline double PercentChangeToRatio(double percentChange)
 {
-   //mchinen hack: invert the ratio so it works with the sbsms bug.
-   return 1.0/(1.0 + percentChange / 100.0);
+   return 1.0 + percentChange / 100.0;
 }
 
 inline double HalfStepsToPercentChange(double halfSteps)
@@ -116,13 +121,16 @@ inline double HalfStepsToPercentChange(double halfSteps)
 
 inline double PercentChangeToHalfSteps(double percentChange)
 {
+   // mchinen: hack: take the negative of this so the correct value is displayed
+   // (see the InvertedPercentChangeToRatio hack for why this is needed)
    return 17.312340490667560888319096172023 * log(PercentChangeToRatio(percentChange));
 }
 
 bool EffectTimeScale::Process()
 {
-   double pitchStart = PercentChangeToRatio(m_PitchPercentChangeStart);
-   double pitchEnd = PercentChangeToRatio(m_PitchPercentChangeEnd);
+   // The pitch part of sbsms is backwards, so use an inverted function
+   double pitchStart = InvertedPercentChangeToRatio(m_PitchPercentChangeStart);
+   double pitchEnd = InvertedPercentChangeToRatio(m_PitchPercentChangeEnd);
    double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
    double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
    this->EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,m_PreAnalyze);
