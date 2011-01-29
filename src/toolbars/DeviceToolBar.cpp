@@ -634,7 +634,7 @@ void DeviceToolBar::FillHostDevices()
       if (foundHostIndex == mOutputDeviceSourceMaps[i].hostIndex) {
          mOutput->Append(MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]));
          if (host == wxT("")) {
-            host = mInputDeviceSourceMaps[i].hostString;
+            host = mOutputDeviceSourceMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
          }
       }
