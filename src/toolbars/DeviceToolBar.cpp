@@ -619,15 +619,25 @@ void DeviceToolBar::FillHostDevices()
    // Repopulate the Input/Output device list available to the user
    mInput->Clear();
    for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
-      if (foundHostIndex == mInputDeviceSourceMaps[i].hostIndex)
+      if (foundHostIndex == mInputDeviceSourceMaps[i].hostIndex) {
          mInput->Append(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
+         if (host == wxT("")) {
+            host = mInputDeviceSourceMaps[i].hostString;
+            gPrefs->Write(wxT("/AudioIO/Host"), host);
+         }
+      }
    }
    mInput->Enable(mInput->GetCount() ? true : false);
 
    mOutput->Clear();
    for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
-      if (foundHostIndex == mOutputDeviceSourceMaps[i].hostIndex)
+      if (foundHostIndex == mOutputDeviceSourceMaps[i].hostIndex) {
          mOutput->Append(MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]));
+         if (host == wxT("")) {
+            host = mInputDeviceSourceMaps[i].hostString;
+            gPrefs->Write(wxT("/AudioIO/Host"), host);
+         }
+      }
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
 
@@ -707,19 +717,21 @@ void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
    if (in) {
       gPrefs->Write(wxT("/AudioIO/RecordingDevice"), in->deviceString);
       gPrefs->Write(wxT("/AudioIO/RecordingSourceIndex"), in->sourceIndex);
-      if (in->sourceIndex >= 0) {
+      if (in->totalSources >= 1) {
          gPrefs->Write(wxT("/AudioIO/RecordingSource"), in->sourceString);
-      } else
+      } else {
          gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
+      }
       FillInputChannels();
    }
 
    if (out) {
       gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), out->deviceString);
-      if (out->sourceIndex >= 0) {
+      if (out->totalSources >= 1) {
          gPrefs->Write(wxT("/AudioIO/PlaybackSource"), out->sourceString);
-      } else
+      } else {
          gPrefs->Write(wxT("/AudioIO/PlaybackSource"), wxT(""));
+      }
    }
 }
 
