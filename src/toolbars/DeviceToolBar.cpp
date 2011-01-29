@@ -301,8 +301,8 @@ void DeviceToolBar::Populate()
 
 
    mChannelsLabel = new wxStaticText(this, wxID_ANY, _(" Rec Channels:"),
-                                                 wxDefaultPosition, wxDefaultSize, 
-                                                 wxALIGN_RIGHT);
+                                     wxDefaultPosition, wxDefaultSize, 
+				     wxALIGN_RIGHT);
    Add(mChannelsLabel, 0, wxALIGN_CENTER);
 
    mInputChannels = new wxChoice(this,
@@ -560,6 +560,16 @@ void DeviceToolBar::RepositionCombos()
    desiredOutput   = mOutput->GetBestSize();
    chanLabel       = mChannelsLabel->GetBestSize();
    desiredChannels = mInputChannels->GetBestSize();
+
+   // wxGtk has larger comboboxes than the other platforms.  For DeviceToolBar this will cause
+   // the height to be double because of the discrete grid layout.  So we shrink it to prevent this.
+#ifdef __WXGTK__
+   desiredHost.SetHeight(desiredHost.GetHeight() -4);
+   desiredInput.SetHeight(desiredHost.GetHeight());
+   desiredOutput.SetHeight(desiredHost.GetHeight());
+   desiredChannels.SetHeight(desiredHost.GetHeight());
+   chanLabel.SetHeight(desiredHost.GetHeight());
+#endif
 
    ratioUnused = 0.98f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
    int i = 0;
