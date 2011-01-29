@@ -71,7 +71,7 @@ class DeviceToolBar:public ToolBar {
    void RepositionCombos();
    void RegenerateTooltips();
 
-   void ShowComboDialog(wxChoice *combo, wxString &title);
+   void ShowComboDialog(wxChoice *combo, const wxString &title);
 
    wxBitmap *mPlayBitmap;
    wxBitmap *mRecordBitmap;

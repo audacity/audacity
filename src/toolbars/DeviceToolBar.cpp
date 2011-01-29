@@ -829,7 +829,7 @@ void DeviceToolBar::ShowChannelsDialog()
    ShowComboDialog(mInputChannels, wxString(_("Select Input Channels")));
 }
 
-void DeviceToolBar::ShowComboDialog(wxChoice *combo, wxString &title)
+void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
 {
    if (!combo || combo->GetCount() == 0) {
       wxMessageBox(_("Device information is not available."));
