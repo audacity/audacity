@@ -102,6 +102,7 @@ class ToolBar:public wxPanel
 
    /// Resizable toolbars should implement this.
    virtual int GetInitialWidth() {return -1;}
+   virtual int GetMinToolbarWidth() {return GetInitialWidth();}
  protected:
 
    AButton *MakeButton(teBmps eUp,
