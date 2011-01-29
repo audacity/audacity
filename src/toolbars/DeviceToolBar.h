@@ -66,7 +66,6 @@ class DeviceToolBar:public ToolBar {
 
    wxBitmap *mPlayBitmap;
    wxBitmap *mRecordBitmap;
-   wxStaticText *mChannelsLabel;
 
    wxChoice *mInput;
    wxChoice *mOutput;

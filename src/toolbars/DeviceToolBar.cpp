@@ -214,7 +214,6 @@ void DeviceToolBar::DeinitChildren()
 {
    mPlayBitmap    = NULL;
    mRecordBitmap  = NULL;
-   mChannelsLabel = NULL;
    
    mInput         = NULL;
    mOutput        = NULL;
@@ -299,11 +298,6 @@ void DeviceToolBar::Populate()
    if (inputs.GetCount() == 0)
       mInput->Enable(false);
 
-
-   mChannelsLabel = new wxStaticText(this, wxID_ANY, _(" Rec Channels:"),
-                                     wxDefaultPosition, wxDefaultSize, 
-				     wxALIGN_RIGHT);
-   Add(mChannelsLabel, 0, wxALIGN_CENTER);
 
    mInputChannels = new wxChoice(this,
                          wxID_ANY,
@@ -530,7 +524,7 @@ void DeviceToolBar::RepositionCombos()
    float ratioUnused;
    bool constrained = true;
    wxWindow *window;
-   wxSize desiredInput, desiredOutput, desiredHost, desiredChannels, chanLabel;
+   wxSize desiredInput, desiredOutput, desiredHost, desiredChannels;
    float hostRatio, outputRatio, inputRatio, channelsRatio;
    // if the toolbar is docked then the width we should use is the project width.
    // as the toolbar's with can extend past this.
@@ -558,7 +552,6 @@ void DeviceToolBar::RepositionCombos()
    desiredHost     = mHost->GetBestSize();
    desiredInput    = mInput->GetBestSize();
    desiredOutput   = mOutput->GetBestSize();
-   chanLabel       = mChannelsLabel->GetBestSize();
    desiredChannels = mInputChannels->GetBestSize();
 
    // wxGtk has larger comboboxes than the other platforms.  For DeviceToolBar this will cause
@@ -568,7 +561,6 @@ void DeviceToolBar::RepositionCombos()
    desiredInput.SetHeight(desiredHost.GetHeight());
    desiredOutput.SetHeight(desiredHost.GetHeight());
    desiredChannels.SetHeight(desiredHost.GetHeight());
-   chanLabel.SetHeight(desiredHost.GetHeight());
 #endif
 
    ratioUnused = 0.98f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
@@ -578,16 +570,14 @@ void DeviceToolBar::RepositionCombos()
       i++;
       constrained = false;
 
-      constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true) || constrained;
-      constrained = RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, mRecordBitmap->GetWidth(), true) || constrained;
-      constrained = RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, mPlayBitmap->GetWidth(), true) || constrained;
-      
-      // the channels label belongs to the input channels combo so doesn't change any ratios.
-      // Always take the input channel combo's best width so that the combo has priority
-      constrained = RepositionCombo(mChannelsLabel, w, chanLabel, channelsRatio, ratioUnused,
-                                                   mInputChannels->GetBestSize().GetX(), false) || constrained;
+      constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused,
+				    0, true) || constrained;
+      constrained = RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused,
+				    mRecordBitmap->GetWidth(), true) || constrained;
+      constrained = RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused,
+				    mPlayBitmap->GetWidth(), true) || constrained;      
       constrained = RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused,
-                                                   mChannelsLabel->GetSize().GetX(), true) || constrained;
+				    0, true) || constrained;
    }
 
    Update();
@@ -687,10 +677,10 @@ void DeviceToolBar::FillInputChannels()
             wxString name;
 
             if (j == 0) {
-               name = _("1 (Mono)");
+               name = _("1 (Mono) Input Channel");
             }
             else if (j == 1) {
-               name = _("2 (Stereo)");
+               name = _("2 (Stereo) Input Channels");
             }
             else {
                name = wxString::Format(wxT("%d"), j + 1);
