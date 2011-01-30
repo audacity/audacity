@@ -20,7 +20,6 @@
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-#include <wx/control.h>
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>
@@ -862,10 +861,10 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      wxCommandEvent e(wxEVT_COMMAND_CHOICE_SELECTED, dlg.GetId());
+      wxCommandEvent dummyEvent;
+      // SetSelection() doesn't send an event, so we call OnChoice explicitly
       combo->SetSelection(c->GetSelection());
-      // This will fire an event which will invoke OnChoice above.
-      combo->ProcessCommand(e);
+      OnChoice(dummyEvent);
    }
 #endif
 }
