@@ -662,6 +662,7 @@ int DeviceToolBar::ChangeHost()
    //change the host and switch to correct devices.
    gPrefs->Write(wxT("/AudioIO/Host"), newHost);
    FillHostDevices();
+   Refresh();
    Layout();
    return 1;
 }
