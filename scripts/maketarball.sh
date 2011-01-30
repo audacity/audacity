@@ -89,7 +89,10 @@ function cleanfulltree {
 	printf "removing vim / emacs temp files... ";
 	myfindrm $1 "*~"
 	printf "\nremoving SVN conflict files... ";
-	myfindrm $1 ".#*"
+	myfindrm $1 "*.mine"
+	myfindrm $1 "?*.r[0-9]*"
+	# I wonder if we should throw some sort of error if these are found,
+	# because we shouldn't be releasing from a working copy with conflicts?
 	printf "Done\n"
 
 	printf "removing executable and other intermediate files... ";
@@ -144,6 +147,8 @@ function slimtree {
 	myrmrvf $1 lib-src/libsamplerate lib-src/libsndfile;
 	myrmrvf $1 lib-src/libvorbis lib-src/redland lib-src/slv2 lib-src/soundtouch;
 	myrmrvf $1 lib-src/twolame;
+	# these bindings aren't built by default, we don't need them
+	myrmrvf $1 lib-src/portaudio-v19/bindings/;
 	printf "Done\n"
 
 	printf "removing qa ... ";
