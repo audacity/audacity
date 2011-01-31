@@ -119,6 +119,11 @@ void MixerToolBar::Populate()
                  wxFocusEventHandler(MixerToolBar::OnFocus),
                  NULL,
                  this);
+   // Show or hide the input slider based on whether it works
+   mInputSlider->Enable(gAudioIO->InputMixerWorks());
+   SetToolTips();
+
+   UpdateControls();
 
    // Add a little space
    Add(2, -1);
@@ -203,6 +208,9 @@ void MixerToolBar::UpdateControls()
    float inputVolume;
    float playbackVolume;
    int inputSource;
+
+   // Show or hide the input slider based on whether it works
+   mInputSlider->Enable(gAudioIO->InputMixerWorks());
 
    gAudioIO->GetMixer(&inputSource, &inputVolume, &playbackVolume);
 
