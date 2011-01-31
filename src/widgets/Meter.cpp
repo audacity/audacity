@@ -814,7 +814,7 @@ void Meter::HandleLayout()
             left += mLeftSize.x+4;
          }
          mRightTextPos = wxPoint(width-mLeftSize.x, height-2-mLeftSize.y);
-         width -= mLeftSize.x + mRightSize.x + 8; //vvvvv ...but then -8 in UmixIt? -- for vertical only?
+         width -= mLeftSize.x + mRightSize.x + 8; //vvv ...but then -8 in UmixIt? -- for vertical only?
       }
       barw = (width-2)/2;
       barh = height - 4;

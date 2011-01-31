@@ -63,6 +63,8 @@ public:
    virtual void OnAudioIONewBlockFiles(const wxString& blockFileLog) = 0;
 };
 
+#define BAD_STREAM_TIME -1000000000.0
+
 #define MAX_MIDI_BUFFER_SIZE 5000
 #define DEFAULT_SYNTH_LATENCY 5
 

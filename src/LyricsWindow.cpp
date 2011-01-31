@@ -78,7 +78,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
    wxPoint panelPos(0, 0);
    wxSize panelSize = gSize;
 
-   //vvvvv not yet working right in ported version, so choice is disabled.
+   //vvv not yet working right in ported version, so choice is disabled.
    // It seems when you select highlight style, the TrackPanel timer stops working, but 
    // going back to bouncing ball style starts it up again (!!!), per breakpoints in TrackPanel::OnTimer().
    //
@@ -112,7 +112,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
 
    mLyricsPanel = new Lyrics(this, -1, panelPos, panelSize);
 
-   //vvvvv Highlight style is broken in ported version.
+   //vvv Highlight style is broken in ported version.
    //switch (mLyricsPanel->GetLyricsStyle()) 
    //{
    //   case Lyrics::kBouncingBallLyrics:

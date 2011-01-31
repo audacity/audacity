@@ -883,18 +883,17 @@ void TrackPanel::OnTimer()
       }
    }
 
-   //vvvvv Vaughan, 2010-11-27: 
-   // Since all we're doing here is updating the meters, maybe we should remove it from here 
-   // and we do that in audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
-   // Thread issues?
-   MixerBoard* pMixerBoard = this->GetMixerBoard();
-   if (pMixerBoard && 
-         (p->GetAudioIOToken() > 0) &&
-         gAudioIO->IsStreamActive(p->GetAudioIOToken()))
-   {
-      pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
-                                 (p->mLastPlayMode == loopedPlay));
-   }
+   // Vaughan, 2010-01-30: 
+   //    Since all we're doing here is updating the meters, I moved it to 
+   //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
+   //MixerBoard* pMixerBoard = this->GetMixerBoard();
+   //if (pMixerBoard && 
+   //      (p->GetAudioIOToken() > 0) &&
+   //      gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+   //{
+   //   pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
+   //                              (p->mLastPlayMode == loopedPlay));
+   //}
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (p->GetAudioIOToken()>0 &&
@@ -912,8 +911,10 @@ void TrackPanel::OnTimer()
          pLyricsPanel->Update(p->GetSel0());
       }
 
-      if (pMixerBoard) 
-         pMixerBoard->ResetMeters(false);
+      // Vaughan, 2011-01-28: No longer doing this on timer. 
+      //   Now it's in AudioIO::SetMeters() and AudioIO::StopStream(), as with Meter Toolbar meters.
+      //if (pMixerBoard) 
+      //   pMixerBoard->ResetMeters(false);
    }
 
    // Next, check to see if we were playing or recording

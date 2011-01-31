@@ -3647,7 +3647,10 @@ void AudacityProject::UpdateMixerBoard()
    if (!mMixerBoard)
       return;
    mMixerBoard->UpdateTrackClusters();
-   mMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), (mLastPlayMode == loopedPlay)); 
+
+   // Vaughan, 2011-01-28: AudacityProject::UpdateMixerBoard() is called on state changes, 
+   //   so don't really need to call UpdateMeters().
+   //mMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), (mLastPlayMode == loopedPlay)); 
 }
 
 //

@@ -78,6 +78,7 @@ void MixerTrackSlider::OnMouseEvent(wxMouseEvent &event)
 
 #define kInset             4
 #define kDoubleInset       (2 * kInset)
+#define kTripleInset       (3 * kInset)
 #define kQuadrupleInset    (4 * kInset)
 
 #define TRACK_NAME_HEIGHT                    18
@@ -354,7 +355,7 @@ void MixerTrackCluster::UpdateForStateChange()
 
 void MixerTrackCluster::UpdateName()
 {
-  wxString newName = mTrack->GetName();
+  wxString newName = mLeftTrack->GetName();
    mStaticText_TrackName->SetLabel(newName); 
    #if wxUSE_TOOLTIPS
       mStaticText_TrackName->SetToolTip(newName);
@@ -429,7 +430,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    // instead of passing in all the data and asking the meter to derive peak and rms.
    // May be worth revisiting as I think it should perform better, because it uses the min/max/rms 
    // stored in blockfiles, rather than calculating them, but for now, changing it to use the 
-   // original Meter::UpdateDisplay(). New code is intermixed with the previous (now commented out).
+   // original Meter::UpdateDisplay(). New code is below the previous (now commented out).
    // 
    //const int kFramesPerBuffer = 4; 
    //float min; // dummy, since it's not shown in meters
@@ -518,7 +519,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //const bool bWantPostFadeValues = true; //v Turn this into a checkbox on MixerBoard? For now, always true.
    //if (bSuccess && bWantPostFadeValues)
    if (bSuccess)
-   {
+   { 
+      //vvv Need to apply envelope, too? See Mixer::MixSameRate.
       float gain = mLeftTrack->GetChannelGain(0);
       if (gain < 1.0)
          for (int index = 0; index < nFrames; index++)
@@ -530,6 +532,13 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
       if (gain < 1.0)
          for (int index = 0; index < nFrames; index++)
             meterFloatsArray[(2 * index) + 1] *= gain;
+      // Clip to [-1.0, 1.0] range.
+      for (int index = 0; index < 2 * nFrames; index++)
+         if (meterFloatsArray[index] < -1.0)
+            meterFloatsArray[index] = -1.0;
+         else if (meterFloatsArray[index] > 1.0)
+            meterFloatsArray[index] = 1.0;
+
       mMeter->UpdateDisplay(2, nFrames, meterFloatsArray);
    }
    else
@@ -771,7 +780,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
 #define MIXER_BOARD_MIN_HEIGHT      460
 
 // Min width is one cluster wide, plus margins.
-#define MIXER_BOARD_MIN_WIDTH       kDoubleInset + kMixerTrackClusterWidth + kDoubleInset
+#define MIXER_BOARD_MIN_WIDTH       kTripleInset + kMixerTrackClusterWidth + kTripleInset 
 
 
 BEGIN_EVENT_TABLE(MixerBoard, wxWindow)
@@ -1095,7 +1104,7 @@ void MixerBoard::ResizeTrackClusters()
 
 void MixerBoard::ResetMeters(const bool bResetClipping)
 {
-   mPrevT1 = 0.0;
+   mPrevT1 = BAD_STREAM_TIME;
 
    if (!this->IsShown())
       return;
@@ -1162,8 +1171,14 @@ void MixerBoard::UpdateGain(const Track* pTrack)
 
 void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
 {
-   if (!this->IsShown())
+   if (!this->IsShown() || (t1 == BAD_STREAM_TIME))
       return;
+
+   if (mPrevT1 == BAD_STREAM_TIME)
+   {
+      mPrevT1 = t1;
+      return;
+   }
 
    // In loopedPlay mode, at the end of the loop, mPrevT1 is set to 
    // selection end, so the next t1 will be less, but we do want to 

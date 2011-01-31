@@ -316,7 +316,6 @@ writing audio.
    #include "NoteTrack.h"
 #endif
 
-#define NO_STABLE_INDICATOR -1000000000
 #define LOWER_BOUND 0.0
 #define UPPER_BOUND 1.0
 
@@ -1875,7 +1874,7 @@ double AudioIO::NormalizeStreamTime(double absoluteTime) const
 double AudioIO::GetStreamTime()
 {
    if( !IsStreamActive() )
-      return -1000000000;
+      return BAD_STREAM_TIME;
 
    return NormalizeStreamTime(mTime);
 }
@@ -3648,6 +3647,11 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          gAudioIO->mOutputMeter->UpdateDisplay(numPlaybackChannels,
                                                framesPerBuffer,
                                                outputMeterFloats);
+         AudacityProject* pProj = GetActiveProject();
+         MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+         if (pMixerBoard)
+            pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
+                                       (pProj->mLastPlayMode == loopedPlay));
       }
       gAudioIO->mUpdatingMeters = false;
    }  // end playback VU meter update
