@@ -50,7 +50,9 @@ BEGIN_EVENT_TABLE(WarningDialog, wxDialog)
 END_EVENT_TABLE()
 
 WarningDialog::WarningDialog(wxWindow *parent, wxString message)
-:  wxDialog(parent, wxID_ANY, (wxString)_("Warning"))
+:  wxDialog(parent, wxID_ANY, (wxString)_("Warning"), 
+            wxDefaultPosition, wxDefaultSize, 
+            wxCAPTION | wxSYSTEM_MENU) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
    ShuttleGui S(this, eIsCreating);
 

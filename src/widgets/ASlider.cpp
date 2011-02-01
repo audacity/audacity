@@ -701,7 +701,7 @@ void LWSlider::Draw()
 
    if (mOrientation == wxHORIZONTAL)
       AColor::Line(*dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
-   else //vvvvv if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
+   else //vvv if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
       AColor::Line(*dc, mCenterX+1, mTopY, mCenterX+1, mBottomY+2);
 
 
@@ -773,7 +773,7 @@ void LWSlider::Draw()
       }
    }
 
-   //vvvvv 20090820: Ruler doesn't align with slider correctly -- yet.
+   //vvv 20090820: Ruler doesn't align with slider correctly -- yet.
    //if ((mOrientation == wxVERTICAL) && (mStyle == DB_SLIDER))
    //{
    //   if (!mpRuler)
@@ -797,7 +797,7 @@ void LWSlider::Draw()
    //      mpRuler->SetRange(mMaxValue, mMinValue);
    //      mpRuler->SetFormat(Ruler::LinearDBFormat);
    //   }
-   //   mpRuler->SetBounds(mLeft, mTop,  mWidth, mHeightY); //vvvvv Why the magic number reqd on height to get it to line up?    + 9); 
+   //   mpRuler->SetBounds(mLeft, mTop,  mWidth, mHeightY); //vvv Why the magic number reqd on height to get it to line up?    + 9); 
    //   mpRuler->Draw(*dc);
    //}
    //else 
