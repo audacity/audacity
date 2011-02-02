@@ -1088,10 +1088,10 @@ bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
          {
             if(!wxRenameFile(f->GetFileName().GetFullPath(),
                              newFileName.GetFullPath()))
-                             /*wxCopyFile(f->GetFileName().GetFullPath(), //ANSWER-ME: In or out? Cruft?
+                             /*wxCopyFile(f->GetFileName().GetFullPath(), //vvvvv ANSWER-ME: In or out? Cruft?
                                  newFileName.GetFullPath()))*/
                return false;
-               //wxRemoveFile(f->GetFileName().GetFullPath()); //ANSWER-ME: In or out? Cruft?
+               //wxRemoveFile(f->GetFileName().GetFullPath()); //vvvvv ANSWER-ME: In or out? Cruft?
          }
          f->SetFileName(newFileName);
             
@@ -1174,7 +1174,7 @@ bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
    }
    return true;
 
-   //ANSWER-ME: In or out? Cruft?
+   //vvvvv ANSWER-ME: In or out? Cruft? 
    //   
    //   if ( !(newFileName == f->mFileName) ) {
    //      bool ok = wxCopyFile(f->mFileName.GetFullPath(),
