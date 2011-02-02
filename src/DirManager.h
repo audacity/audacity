@@ -156,6 +156,7 @@ class DirManager: public XMLTagHandler {
    wxFileName MakeBlockFileName();
    wxFileName MakeBlockFilePath(wxString value);
 
+   bool MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy);
 
    int mRef; // MM: Current refcount
 

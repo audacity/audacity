@@ -1060,7 +1060,7 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
+bool DirManager::MoveOrCopyToNewProjectDirectory(BlockFile *f, bool copy)
 {
    // Check that this BlockFile corresponds to a file on disk
    //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case 
@@ -1074,44 +1074,35 @@ bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
    if (!this->AssignFile(newFileName, f->GetFileName().GetFullName(), false))
       return false; 
 
-   if (newFileName != f->GetFileName())
-   {
-      bool ok = f->IsSummaryAvailable() && 
-                  wxRenameFile(f->GetFileName().GetFullPath(), newFileName.GetFullPath());
-      if (ok)
-         f->SetFileName(newFileName);
-      else {
-         
-         //check to see that summary exists before we copy.
-         bool summaryExisted =  f->IsSummaryAvailable();
-         if( summaryExisted)
-         {
-            if(!wxRenameFile(f->GetFileName().GetFullPath(),
-                             newFileName.GetFullPath()))
+   if (newFileName != f->GetFileName()) {
+      //check to see that summary exists before we copy.
+      bool summaryExisted = f->IsSummaryAvailable();
+      if (summaryExisted) {
+         if(!copy && !wxRenameFile(f->GetFileName().GetFullPath(), newFileName.GetFullPath()))
+            return false;
+         if(copy && !wxCopyFile(f->GetFileName().GetFullPath(), newFileName.GetFullPath()))
                return false;
-         }
-         f->SetFileName(newFileName);
-            
-         //there is a small chance that the summary has begun to be computed on a different thread with the
-         //original filename.  we need to catch this case by waiting for it to finish and then copy.
-         if(!summaryExisted && (f->IsSummaryAvailable()||f->IsSummaryBeingComputed()))
+      }
+      f->SetFileName(newFileName);
+      
+      //there is a small chance that the summary has begun to be computed on a different thread with the
+      //original filename.  we need to catch this case by waiting for it to finish and then copy.
+      if (!summaryExisted && (f->IsSummaryAvailable() || f->IsSummaryBeingComputed())) {
+         //block to make sure OD files don't get written while we are changing file names.
+         //(It is important that OD files set this lock while computing their summary files.)
+         while(f->IsSummaryBeingComputed() && !f->IsSummaryAvailable())
+            ::wxMilliSleep(50);
+         
+         //check to make sure the oldfile exists.  
+         //if it doesn't, we can assume it was written to the new name, which is fine.
+         if (oldFileName.FileExists())
          {
-            //block to make sure OD files don't get written while we are changing file names.
-            //(It is important that OD files set this lock while computing their summary files.)
-            while(f->IsSummaryBeingComputed() && !f->IsSummaryAvailable())
-               ::wxMilliSleep(50);
-            
-            //check to make sure the oldfile exists.  
-            //if it doesn't, we can assume it was written to the new name, which is fine.
-            if (oldFileName.FileExists())
-            {
-               ok = wxCopyFile(oldFileName.GetFullPath(),
-                        newFileName.GetFullPath());
-               if(ok)
-                  wxRemoveFile(f->GetFileName().GetFullPath());
-               else
-                  return false;
-            }
+            bool ok = wxCopyFile(oldFileName.GetFullPath(),
+                            newFileName.GetFullPath());
+            if(ok && !copy)
+               wxRemoveFile(f->GetFileName().GetFullPath());
+            else if (!ok)
+               return false;
          }
       }
    }
@@ -1119,57 +1110,14 @@ bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
    return true;
 }
 
+bool DirManager::MoveToNewProjectDirectory(BlockFile *f)
+{
+   return MoveOrCopyToNewProjectDirectory(f, false);
+}
+
 bool DirManager::CopyToNewProjectDirectory(BlockFile *f)
 {
-   // Check that this BlockFile corresponds to a file on disk
-   //ANSWER-ME: Is this checking only for SilentBlockFiles, in which case 
-   //    (!f->GetFileName().IsOk()) is a more correct check?
-   if (f->GetFileName().GetName().IsEmpty()) {
-      return true;
-   }
-   wxFileName newFileName;
-   wxFileName oldFileName=f->GetFileName();
-   if (!this->AssignFile(newFileName, f->GetFileName().GetFullName(), false))
-      return false; 
-
-   //mchinen:5/31/08:adding OD support 
-   //But also I'm also wondering if we need to delete the copied file here, while i'm reimplementing.
-   //see original code below - I don't see where that file will ever get delted or used again.
-   if (newFileName != f->GetFileName())
-   {
-      bool summaryExisted =  f->IsSummaryAvailable();      
-      if( summaryExisted)
-      {   
-        if(!wxCopyFile(f->GetFileName().GetFullPath(),
-                        newFileName.GetFullPath()))
-               return false;
-         //TODO:make sure we shouldn't delete               
-         //   wxRemoveFile(f->mFileName.GetFullPath());
-      }  
-        
-      f->SetFileName(newFileName);
-            
-      //there is a small chance that the summary has begun to be computed on a different thread with the
-      //original filename.  we need to catch this case by waiting for it to finish and then copy.
-      if(!summaryExisted && (f->IsSummaryAvailable()||f->IsSummaryBeingComputed()))
-      {
-         //block to make sure OD files don't get written while we are changing file names.
-         //(It is important that OD files set this lock while computing their summary files.)
-         while(f->IsSummaryBeingComputed() && !f->IsSummaryAvailable())
-            ::wxMilliSleep(50);
-            
-         //check to make sure the oldfile exists.  
-         //if it doesn't, we can assume it was written to the new name, which is fine.
-         if (oldFileName.FileExists())
-         {
-            bool ok = wxCopyFile(oldFileName.GetFullPath(),
-                                 newFileName.GetFullPath());
-            if(!ok)
-               return false;
-         }
-      }
-   }
-   return true;
+   return MoveOrCopyToNewProjectDirectory(f, true);
 }
 
 void DirManager::Ref(BlockFile * f)
