@@ -519,49 +519,45 @@ void WindowFunc(int whichFunction, int NumSamples, float *in)
    int i;
    double A;
 
-   if (whichFunction == 1) {
+   switch( whichFunction )
+   {
+   case 1:
       // Bartlett (triangular) window
       for (i = 0; i < NumSamples / 2; i++) {
          in[i] *= (i / (float) (NumSamples / 2));
          in[i + (NumSamples / 2)] *=
              (1.0 - (i / (float) (NumSamples / 2)));
       }
-   }
-
-   if (whichFunction == 2) {
+      break;
+   case 2:
       // Hamming
       for (i = 0; i < NumSamples; i++)
          in[i] *= 0.54 - 0.46 * cos(2 * M_PI * i / (NumSamples - 1));
-   }
-
-   if (whichFunction == 3) {
+      break;
+   case 3:
       // Hanning
       for (i = 0; i < NumSamples; i++)
          in[i] *= 0.50 - 0.50 * cos(2 * M_PI * i / (NumSamples - 1));
-   }
-
-   if (whichFunction == 4) {
+      break;
+   case 4:
       // Blackman
       for (i = 0; i < NumSamples; i++) {
           in[i] *= 0.42 - 0.5 * cos (2 * M_PI * i / (NumSamples - 1)) + 0.08 * cos (4 * M_PI * i / (NumSamples - 1));
       }
-   }
-
-   if (whichFunction == 5) {
+      break;
+   case 5:
       // Blackman-Harris
       for (i = 0; i < NumSamples; i++) {
           in[i] *= 0.35875 - 0.48829 * cos(2 * M_PI * i /(NumSamples-1)) + 0.14128 * cos(4 * M_PI * i/(NumSamples-1)) - 0.01168 * cos(6 * M_PI * i/(NumSamples-1));
       }
-   }
-
-   if (whichFunction == 6) {
+      break;
+   case 6:
       // Welch
       for (i = 0; i < NumSamples; i++) {
           in[i] *= 4*i/(float)NumSamples*(1-(i/(float)NumSamples));
       }
-   }
-
-   if (whichFunction == 7) {
+      break;
+   case 7:
       // Gaussian (a=2.5)
       // Precalculate some values, and simplify the fmla to try and reduce overhead
       A=-2*2.5*2.5;
@@ -572,19 +568,16 @@ void WindowFunc(int whichFunction, int NumSamples, float *in)
           // reduced
           in[i] *= exp(A*(0.25 + ((i/(float)NumSamples)*(i/(float)NumSamples)) - (i/(float)NumSamples)));
       }
-   }
-
-   if (whichFunction == 8) {
+      break;
+   case 8:
       // Gaussian (a=3.5)
       A=-2*3.5*3.5;
-
       for (i = 0; i < NumSamples; i++) {
           // reduced
           in[i] *= exp(A*(0.25 + ((i/(float)NumSamples)*(i/(float)NumSamples)) - (i/(float)NumSamples)));
       }
-   }
-
-   if (whichFunction == 9) {
+      break;
+   case 9:
       // Gaussian (a=4.5)
       A=-2*4.5*4.5;
 
@@ -592,9 +585,10 @@ void WindowFunc(int whichFunction, int NumSamples, float *in)
           // reduced
           in[i] *= exp(A*(0.25 + ((i/(float)NumSamples)*(i/(float)NumSamples)) - (i/(float)NumSamples)));
       }
+      break;
+   default:
+      fprintf(stderr,"FFT::WindowFunc - Invalid window function: %d\n",whichFunction);
    }
-
-
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
