@@ -5365,7 +5365,11 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
       mRefreshBacking = true;
    }
 
-   Refresh( false, &r );
+   //vvv Vaughan, 2011-02-04:
+   //    Roger's patch for Bug 255 is to Refresh the whole TrackPanel. 
+   //    We'll see if it's too much of a performance hit.
+   //Refresh( false, &r );
+   Refresh(false); 
 }
 
 
