@@ -5344,21 +5344,23 @@ double TrackPanel::GetMostRecentXPos()
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 {
-   Track *link = trk->GetLink();
-
-   if (link && !trk->GetLinked()) {
-      trk = link;
-      link = trk->GetLink();
-   }
-
-   wxRect r(kLeftInset,
-            -mViewInfo->vpos + trk->GetY() + kTopInset,
-            GetRect().GetWidth() - kLeftInset * 2 - 1,
-            trk->GetHeight() - kTopInset - 1);
-
-   if (link) {
-      r.height += link->GetHeight();
-   }
+   //vvv Vaughan, 2011-02-04:
+   //   Since Roger's fix is to not use r, no reason to declare or calculate it, or link.
+   //Track *link = trk->GetLink();
+   //
+   //if (link && !trk->GetLinked()) {
+   //   trk = link;
+   //   link = trk->GetLink();
+   //}
+   //
+   //wxRect r(kLeftInset,
+   //         -mViewInfo->vpos + trk->GetY() + kTopInset,
+   //         GetRect().GetWidth() - kLeftInset * 2 - 1,
+   //         trk->GetHeight() - kTopInset - 1);
+   //
+   //if (link) {
+   //   r.height += link->GetHeight();
+   //}
 
    if( refreshbacking )
    {
