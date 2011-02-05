@@ -41,6 +41,7 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
+#include "../widgets/Grabber.h"
 
 IMPLEMENT_CLASS(DeviceToolBar, ToolBar);
 
@@ -539,7 +540,8 @@ void DeviceToolBar::RepositionCombos()
       if (dockw < w)
          w = dockw;
    }
-   w -= GetResizeGrabberWidth();
+   // subtract the main grabber on the left and the resizer as well
+   w -= grabberWidth + GetResizeGrabberWidth();
    if (w <= 0)
       return;
    
@@ -563,7 +565,7 @@ void DeviceToolBar::RepositionCombos()
    desiredChannels.SetHeight(desiredHost.GetHeight());
 #endif
 
-   ratioUnused = 0.98f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
+   ratioUnused = 0.995f - (kHostWidthRatio + kInputWidthRatio + kOutputWidthRatio + kChannelsWidthRatio);
    int i = 0;
    // limit the amount of times we solve contraints to 5
    while (constrained && ratioUnused > 0.01f && i < 5) {
