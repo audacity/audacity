@@ -244,9 +244,6 @@ void ToolDock::LayoutToolBars()
          ct->SetPosition( wxPoint( cpos.x, cpos.y ) );
       }
 
-      // Resize/position elements for toolbars that change (like device toolbar)
-      ct->Layout();
-
       // Remember for next iteration
       lt = ct;
       lpos = cpos;

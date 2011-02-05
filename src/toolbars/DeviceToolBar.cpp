@@ -713,8 +713,6 @@ void DeviceToolBar::FillInputChannels()
    }
    if (index == -1)
       mInputChannels->Enable(false);
-   
-   Layout();
 }
 void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
 {

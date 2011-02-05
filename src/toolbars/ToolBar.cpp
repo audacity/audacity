@@ -254,9 +254,8 @@ void ToolBar::ReCreateButtons()
       mSpacer = ms->Add( RWIDTH, 1 );
    }
 
-   // Set the sizer and do initial layout
+   // Set the sizer
    SetSizerAndFit( ms );
-   Layout();
 
    // Recalculate the height to be a multiple of toolbarSingle
    const int tbs = toolbarSingle + toolbarGap;
