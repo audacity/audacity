@@ -150,6 +150,25 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
    Px_CloseMixer(portMixer);
 }
 
+static bool IsInputDeviceAMapperDevice(const PaDeviceInfo *info)
+{
+   // For Windows only, portaudio returns the default mapper object
+   // as the first index after a new hostApi index is detected (true for MME and DS)
+   // this is a bit of a hack, but there's no other way to find out which device is a mapper,
+   // I've looked at string comparisons, but if the system is in a different language this breaks.
+#ifdef __WXMSW__
+   static int lastHostApiTypeId = -1;
+   int hostApiTypeId = Pa_GetHostApiInfo(info->hostApi)->type;
+   if(hostApiTypeId != lastHostApiTypeId &&
+      (hostApiTypeId == paMME || hostApiTypeId == paDirectSound)) {
+      lastHostApiTypeId = hostApiTypeId;
+      return true;
+   }
+#endif
+
+   return false;
+}
+
 static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vector<DeviceSourceMap> *maps, int isInput)
 {
    int error = 0;
@@ -174,7 +193,8 @@ static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vec
    // and some platforms (e.g. XP) have the same device for input and output, (while
    // Vista/Win7 seperate these into two devices with the same names (but different
    // portaudio indecies)
-   if (isInput) {
+   // Also, for mapper devices we don't want to keep any sources, so check for it here
+   if (isInput && !IsInputDeviceAMapperDevice(info)) {
       if (info)
          parameters.suggestedLatency = info->defaultLowInputLatency;
       else
