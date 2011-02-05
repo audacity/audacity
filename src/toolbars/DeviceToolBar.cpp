@@ -701,7 +701,8 @@ void DeviceToolBar::FillInputChannels()
          newChannels = mInputDeviceSourceMaps[i].numChannels;
          if (oldChannels < newChannels && oldChannels >= 1)
             newChannels = oldChannels;
-         mInputChannels->SetSelection(newChannels - 1);
+         if (newChannels >= 1)
+            mInputChannels->SetSelection(newChannels - 1);
          gPrefs->Write(wxT("/AudioIO/RecordChannels"), newChannels);
          mInputChannels->Enable(mInputChannels->GetCount() ? true : false);
          index = i;
