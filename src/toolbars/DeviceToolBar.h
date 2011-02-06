@@ -65,6 +65,7 @@ class DeviceToolBar:public ToolBar {
 
  private:
    int  ChangeHost();
+   void ChangeDevice(bool isInput);
    void FillHostDevices();
    void FillInputChannels();
    void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);

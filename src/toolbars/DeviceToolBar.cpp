@@ -675,7 +675,7 @@ int DeviceToolBar::ChangeHost()
    hostSelectionIndex = mHost->GetSelection();
 
    wxString oldHost = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-   wxString newHost = hostSelectionIndex >= 0 ? mHost->GetString(mHost->GetSelection()) :
+   wxString newHost = hostSelectionIndex >= 0 ? mHost->GetString(hostSelectionIndex) :
                                                 oldHost;
    
    if (oldHost == newHost)
@@ -757,57 +757,54 @@ void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
    }
 }
 
+void DeviceToolBar::ChangeDevice(bool isInput)
+{
+   int newIndex = -1;
+   wxChoice *combo = isInput ? mInput :mOutput;
+   size_t i;
+
+   int selectionIndex  = mInput->GetSelection();
+   std::vector<DeviceSourceMap> &maps = isInput ? mInputDeviceSourceMaps : mOutputDeviceSourceMaps;
+
+   wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   // Find device indices for input and output
+   if (selectionIndex >= 0 ) {
+      wxString newDevice = combo->GetStringSelection();
+      for (i = 0; i < maps.size(); ++i) {
+         wxString name;
+         name = MakeDeviceSourceString(&maps[i]);
+         if (name == newDevice && maps[i].hostString == host) {
+            newIndex = i;
+         }
+      }
+   }
+
+   if (newIndex < 0) {
+      wxLogDebug(wxT("DeviceToolBar::OnChoice(): couldn't find device indices"));
+      return;
+   }
+
+   SetDevices(isInput ? &maps[newIndex] : NULL,
+              isInput ? NULL            : &maps[newIndex]);
+}
+
 void DeviceToolBar::OnChoice(wxCommandEvent &event)
 {
-   int inputSelectionIndex;
    int outputSelectionIndex;
-   int channelsSelectionIndex;
 
+   wxObject *eventObject = event.GetEventObject();
    //if we've changed hosts, we've handled the device switching already.
-   if (!ChangeHost()) {
-      inputSelectionIndex  = mInput->GetSelection();
-      outputSelectionIndex = mOutput->GetSelection();
-      channelsSelectionIndex = mInputChannels->GetSelection();
-
-      if (channelsSelectionIndex >= 0) {
-         gPrefs->Write(wxT("/AudioIO/RecordChannels"),
-                       channelsSelectionIndex + 1);
-      }
-
-      wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-      int newInIndex = -1, newOutIndex = -1;
-      size_t i;
-
-      // Find device indices for input and output
-      if (inputSelectionIndex >= 0 ) {
-         wxString newInput = mInput->GetStringSelection();
-         for (i = 0; i < mInputDeviceSourceMaps.size(); ++i) {
-            wxString name;
-            name = MakeDeviceSourceString(&mInputDeviceSourceMaps[i]);
-            if (name == newInput && mInputDeviceSourceMaps[i].hostString == host) {
-               newInIndex = i;
-            }
-         }
-      }
-
-      if (outputSelectionIndex >= 0) {  
-         wxString newOutput = mOutput->GetStringSelection();
-         for (i = 0; i < mOutputDeviceSourceMaps.size(); ++i) {
-            wxString name;
-            name = MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]);
-            if (name == newOutput && mOutputDeviceSourceMaps[i].hostString == host)
-               newOutIndex = i;
-         }
-      }
-
-      // This shouldn't happen for new choices (it's OK for old ones)
-      if (newInIndex < 0 || newOutIndex < 0) {
-         wxLogDebug(wxT("DeviceToolBar::OnChoice(): couldn't find device indices"));
-         return;
-      }
-
-      SetDevices(newInIndex  >= 0 ? &mInputDeviceSourceMaps[newInIndex]   : NULL,
-                 newOutIndex >= 0 ? &mOutputDeviceSourceMaps[newOutIndex] : NULL);
+   if (eventObject == mHost) {
+      ChangeHost();
+   } else if (eventObject == mInputChannels) {
+      int channelsSelectionIndex = mInputChannels->GetSelection();
+      if (channelsSelectionIndex >= 0)
+         gPrefs->Write(wxT("/AudioIO/RecordChannels"),channelsSelectionIndex + 1);
+   } else if (eventObject == mInput) {
+      ChangeDevice(true);
+   }
+   else if (eventObject == mOutput) {
+      ChangeDevice(false);
    }
 
    if (gAudioIO) {
@@ -884,6 +881,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    if (dlg.ShowModal() == wxID_OK)
    {
       wxCommandEvent dummyEvent;
+      dummyEvent.SetEventObject(combo);
       // SetSelection() doesn't send an event, so we call OnChoice explicitly
       combo->SetSelection(c->GetSelection());
       OnChoice(dummyEvent);
