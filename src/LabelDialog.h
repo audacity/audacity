@@ -78,8 +78,8 @@ class LabelDialog:public wxDialog
    TrackList *mTracks;
    ViewInfo *mViewInfo;
    wxArrayString mTrackNames;
-   wxString mFormat;
    double mRate;
+   wxString mFormat;
 
    int mInitialRow;
 

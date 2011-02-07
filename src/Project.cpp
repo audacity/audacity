@@ -3562,7 +3562,7 @@ void AudacityProject::PopState(TrackList * l)
    TrackListIterator iter(l);
    Track *t = iter.First();
    bool odUsed = false;
-   ODComputeSummaryTask* computeTask;
+   ODComputeSummaryTask* computeTask = NULL;
    Track* copyTrack;
 
    while (t) 

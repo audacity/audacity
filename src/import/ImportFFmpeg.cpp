@@ -867,7 +867,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Try to update the progress indicator (and see if user wants to cancel)
    int updateResult = eProgressSuccess;
    // PTS (presentation time) is the proper way of getting current position
-   if (sc->m_pkt.pts != AV_NOPTS_VALUE && mFormatContext->duration != AV_NOPTS_VALUE)
+   if (sc->m_pkt.pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
    {
       mProgressPos = sc->m_pkt.pts * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
       mProgressLen = (mFormatContext->duration > 0 ? mFormatContext->duration / AV_TIME_BASE: 1);

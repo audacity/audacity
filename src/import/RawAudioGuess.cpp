@@ -1043,14 +1043,15 @@ int RawAudioGuess(const wxString &in_fname,
                   int *out_offset, int *out_channels)
 {
    const int numTests = 11;
-   int headerSkipSize = 64;
-   int dataSize = 16384;
+   size_t headerSkipSize = 64;
+   size_t dataSize = 16384;
    int format = SF_FORMAT_RAW;
    FILE *inf;
-   int fileLen;
+   size_t fileLen;
    char *rawData[numTests];
    int test;
-   
+   size_t read_data;
+
   #if RAW_GUESS_DEBUG
    FILE *af = fopen("raw.txt", "a");
    g_raw_debug_file = af;
@@ -1096,7 +1097,10 @@ int RawAudioGuess(const wxString &in_fname,
       startPoint = (startPoint/16)*16;
 
       fseek(inf, headerSkipSize + startPoint, SEEK_SET);
-      fread(rawData[test], 1, dataSize, inf);
+      read_data = fread(rawData[test], 1, dataSize, inf);
+      if (read_data != dataSize && ferror(inf)) {
+         perror("fread error in RawAudioGuess");
+      }
    }
 
    in_wxFFile.Close();

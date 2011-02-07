@@ -434,7 +434,7 @@ bool ODManager::MakeWaveTrackDependent(WaveTrack* dependentTrack,WaveTrack* mast
    //then delete this one.
    ODWaveTrackTaskQueue* masterQueue=NULL;
    ODWaveTrackTaskQueue* dependentQueue=NULL;
-   unsigned int dependentIndex;
+   unsigned int dependentIndex = 0;
    bool canMerge = false;
 
    mQueuesMutex.Lock();

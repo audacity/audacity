@@ -1271,8 +1271,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
             mPlaybackMixers  = new Mixer*      [mPlaybackTracks.GetCount()];
 
             // Set everything to zero in case we have to delete these due to a memory exception.
-            memset(mPlaybackBuffers, NULL, sizeof(RingBuffer*)*mPlaybackTracks.GetCount());
-            memset(mPlaybackMixers, NULL, sizeof(Mixer*)*mPlaybackTracks.GetCount());
+            memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks.GetCount());
+            memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks.GetCount());
 
             for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
             {
@@ -1306,8 +1306,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
             mFactor = sampleRate / mRate;
 
             // Set everything to zero in case we have to delete these due to a memory exception.
-            memset(mCaptureBuffers, NULL, sizeof(RingBuffer*)*mCaptureTracks.GetCount());
-            memset(mResample, NULL, sizeof(Resample*)*mCaptureTracks.GetCount());
+            memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks.GetCount());
+            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks.GetCount());
 
             for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
             {

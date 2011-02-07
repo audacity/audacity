@@ -215,7 +215,7 @@ static int64_t ufile_seek(URLContext *h, int64_t pos, int whence)
 static offset_t ufile_seek(URLContext *h, offset_t pos, int whence)
 #endif
 {
-   wxSeekMode mode;
+   wxSeekMode mode = wxFromStart;
 
    switch (whence)
    {

@@ -352,7 +352,7 @@ int ExportCL::Export(AudacityProject *project,
                             mixerSpec);
 
    size_t numBytes = 0;
-   samplePtr mixed;
+   samplePtr mixed = NULL;
    int updateResult = eProgressSuccess;
 
    // Prepare the progress display

@@ -149,6 +149,7 @@ audio tracks.
 
 #include <math.h>
 #include <float.h>
+#include <limits>
 
 #include <wx/brush.h>
 #include <wx/colour.h>
@@ -942,11 +943,13 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
 {
    // Display a line representing the
    // min and max of the samples in this region
-   int lasth1, h1;
-   int lasth2, h2;
+   int lasth1 = std::numeric_limits<int>::max();
+   int lasth2 = std::numeric_limits<int>::min();
+   int h1;
+   int h2;
    int *r1 = new int[r.width];
    int *r2 = new int[r.width];
-   int *clipped;
+   int *clipped = NULL;
    int clipcnt = 0;
    int x;
 
@@ -1097,7 +1100,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, const wxRect &r,
 
    int *xpos = new int[slen];
    int *ypos = new int[slen];
-   int *clipped;
+   int *clipped = NULL;
    int clipcnt = 0;
    sampleCount s;
 

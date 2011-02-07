@@ -65,8 +65,8 @@ void ODComputeSummaryTask::DoSomeInternal()
    }
 
    ODPCMAliasBlockFile* bf;
-   sampleCount blockStartSample;
-   sampleCount blockEndSample;
+   sampleCount blockStartSample = 0;
+   sampleCount blockEndSample = 0;
    bool success =false;
 
    mBlockFilesMutex.Lock();

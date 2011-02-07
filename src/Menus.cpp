@@ -1989,7 +1989,7 @@ double AudacityProject::GetTime(Track *t)
 //sort based on flags.  see Project.h for sort flags
 void AudacityProject::SortTracks(int flags)
 {
-   int ndx;
+   int ndx = 0;
    int cmpValue;
    wxArrayPtrVoid arr;
    TrackListIterator iter(mTracks);

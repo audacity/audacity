@@ -41,8 +41,8 @@ void ODDecodeTask::DoSomeInternal()
    
    ODDecodeBlockFile* bf;
    ODFileDecoder* decoder;
-   sampleCount blockStartSample;
-   sampleCount blockEndSample;
+   sampleCount blockStartSample = 0;
+   sampleCount blockEndSample = 0;
    bool success =false;
    
    for(size_t i=0; i < mWaveTracks.size() && mBlockFiles.size();i++)

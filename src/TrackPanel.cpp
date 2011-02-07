@@ -3192,7 +3192,7 @@ void TrackPanel::HandleVZoomDrag( wxMouseEvent & event )
 ///   - Zoom in; ensure we don't go too large.
 void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 {
-   int minBins;
+   int minBins = 0;
    if (!mCapturedTrack)
       return;
 
@@ -5668,11 +5668,11 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
       midiRect.y += 15;
       midiRect.height -= 21; // allow room for minimize button at bottom
 
-      // the offset 2 is just to leave a little space between channel buttons
-      // and velocity slider (if any)
-      int h = ((NoteTrack *) t)->DrawLabelControls(*dc, midiRect) + 2;
-
       #ifdef EXPERIMENTAL_MIDI_OUT
+         // the offset 2 is just to leave a little space between channel buttons
+         // and velocity slider (if any)
+         int h = ((NoteTrack *) t)->DrawLabelControls(*dc, midiRect) + 2;
+
          // Draw some lines for MuteSolo buttons:
          if (r.height > 84) {
             AColor::Line(*dc, r.x+48 , r.y+50, r.x+48, r.y + 66); 
