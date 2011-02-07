@@ -240,7 +240,7 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
          return false;
 
    long itemIndex = -1;
-   long itemIndex2;
+   long itemIndex2 = -1;
    itemIndex = PluginList->GetNextItem(itemIndex,
          wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    if (itemIndex == -1)
