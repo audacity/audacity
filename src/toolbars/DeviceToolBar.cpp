@@ -365,6 +365,8 @@ void DeviceToolBar::Populate()
 
    FillHostDevices();
    FillInputChannels();
+   // make the device display selection reflect the prefs if they exist
+   UpdatePrefs();
 }
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
 {
@@ -408,7 +410,16 @@ void DeviceToolBar::UpdatePrefs()
    wxString sourceName;
    wxString desc;
 
+   int hostSelectionIndex = mHost->GetSelection();
+   wxString oldHost = hostSelectionIndex >= 0 ? mHost->GetString(hostSelectionIndex) :
+                                                wxT("");
    hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+
+   // if the prefs host name doesn't match the one displayed, it changed
+   // in another project's DeviceToolBar, so we need to repopulate everything.
+   if (oldHost != hostName)
+      FillHostDevices();
+
    devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    sourceName = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
    if (sourceName == wxT(""))
@@ -416,9 +427,11 @@ void DeviceToolBar::UpdatePrefs()
    else
       desc = devName + wxString(": ", wxConvLocal) + sourceName; 
 
-   if (mInput->FindString(desc) != wxNOT_FOUND)
+   if (mInput->GetStringSelection() != desc &&
+       mInput->FindString(desc) != wxNOT_FOUND) {
       mInput->SetStringSelection(desc);
-   else if (mInput->GetCount()) {
+      FillInputChannels();
+   } else if (mInput->GetStringSelection() != desc && mInput->GetCount()) {
       //use the 0th index if we have no familiar devices
       mInput->SetSelection(0);
       for (size_t i = 0; i < mInputDeviceSourceMaps.size(); i++) {
@@ -438,9 +451,11 @@ void DeviceToolBar::UpdatePrefs()
       desc = devName + wxString(": ", wxConvLocal) + sourceName; 
    mOutput->SetStringSelection(desc);
 
-   if (mOutput->FindString(desc) != wxNOT_FOUND)
+   if (mOutput->GetStringSelection() != desc &&
+       mOutput->FindString(desc) != wxNOT_FOUND) {
       mOutput->SetStringSelection(desc);
-   else if (mOutput->GetCount()) {
+   } else if (mOutput->GetStringSelection() != desc &&
+              mOutput->GetCount()) {
       //use the 0th index if we have no familiar devices
       mOutput->SetSelection(0);
       for (size_t i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
@@ -451,6 +466,12 @@ void DeviceToolBar::UpdatePrefs()
          }
       }
    }
+
+   long oldChannels = 1, newChannels;
+   oldChannels = mInputChannels->GetSelection() + 1;
+   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &newChannels, 0);
+   if (newChannels > 0 && oldChannels != newChannels)
+      mInputChannels->SetSelection(newChannels - 1);
 
    mHost->SetStringSelection(hostName);
 
@@ -663,8 +684,6 @@ void DeviceToolBar::FillHostDevices()
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
 
-   // make the device display selection reflect the prefs if they exist
-   UpdatePrefs();
    // The setting of the Device is left up to OnChoice
 }
 
@@ -683,7 +702,10 @@ int DeviceToolBar::ChangeHost()
    
    //change the host and switch to correct devices.
    gPrefs->Write(wxT("/AudioIO/Host"), newHost);
+   // populate the devices
    FillHostDevices();
+   // make the device display selection reflect the prefs if they exist
+   UpdatePrefs();
    Refresh();
    Layout();
    return 1;
@@ -828,6 +850,11 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
             wxMilliSleep(100);
       }
       gAudioIO->HandleDeviceChange();
+   }
+
+   // Update the other project's DeviceToolBar.
+   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+      gAudacityProjects[i]->GetDeviceToolBar()->UpdatePrefs();
    }
 }
 
