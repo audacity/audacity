@@ -749,7 +749,12 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("AddLabel"), _("Add Label At &Selection"), FN(OnAddLabel), wxT("Ctrl+B"),
                  AlwaysEnabledFlag, AlwaysEnabledFlag);
       c->AddItem(wxT("AddLabelPlaying"), _("Add Label At &Playback Position"), 
-                 FN(OnAddLabelPlaying), wxT("Ctrl+M"), 
+                 FN(OnAddLabelPlaying), 
+#ifdef __WXMAC__                 
+                 wxT("Ctrl+."), 
+#else
+                 wxT("Ctrl+M"), 
+#endif
                  0, AudioIONotBusyFlag);
       c->AddItem(wxT("EditLabels"), _("&Edit Labels"), FN(OnEditLabels));
 
@@ -1127,7 +1132,12 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
-   c->AddCommand(wxT("FullScreenOnOff"), _("Full screen on/off"), FN(OnFullScreen), wxT("F11"));
+   c->AddCommand(wxT("FullScreenOnOff"), _("Full screen on/off"), FN(OnFullScreen), 
+#ifdef __WXMAC__      
+      wxT("Ctrl+/"));
+#else
+      wxT("F11"));
+#endif
 
    c->AddCommand(wxT("InputDevice"), _("Change input device"), FN(OnInputDevice), wxT("Shift+I"),
                  AudioIONotBusyFlag,
