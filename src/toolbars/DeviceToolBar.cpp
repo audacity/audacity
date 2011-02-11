@@ -812,8 +812,6 @@ void DeviceToolBar::ChangeDevice(bool isInput)
 
 void DeviceToolBar::OnChoice(wxCommandEvent &event)
 {
-   int outputSelectionIndex;
-
    wxObject *eventObject = event.GetEventObject();
    //if we've changed hosts, we've handled the device switching already.
    if (eventObject == mHost) {
