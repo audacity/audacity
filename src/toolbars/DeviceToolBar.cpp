@@ -482,6 +482,9 @@ void DeviceToolBar::UpdatePrefs()
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
+   
+   Layout();
+   Refresh();
 }
 
 
@@ -704,10 +707,7 @@ int DeviceToolBar::ChangeHost()
    gPrefs->Write(wxT("/AudioIO/Host"), newHost);
    // populate the devices
    FillHostDevices();
-   // make the device display selection reflect the prefs if they exist
-   UpdatePrefs();
-   Refresh();
-   Layout();
+
    return 1;
 }
 
@@ -850,7 +850,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       gAudioIO->HandleDeviceChange();
    }
 
-   // Update the other project's DeviceToolBar.
+   // Update all projects' DeviceToolBar.
    for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
       gAudacityProjects[i]->GetDeviceToolBar()->UpdatePrefs();
    }
