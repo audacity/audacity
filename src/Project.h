@@ -198,6 +198,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void AddImportedTracks(wxString fileName,
                           Track **newTracks, int numTracks);
+   void LockAllBlocks();
+   void UnlockAllBlocks();
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
    bool SaveAs(bool bWantSaveCompressed = false);
    #ifdef USE_LIBVORBIS

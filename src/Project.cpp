@@ -2945,6 +2945,30 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    }
 }
 
+// Lock all blocks in all tracks of the last saved version
+void AudacityProject::LockAllBlocks()
+{
+   TrackListIterator iter(mLastSavedTracks);
+   Track *t = iter.First();
+   while (t) {
+      if (t->GetKind() == Track::Wave)
+         ((WaveTrack *) t)->Lock();
+      t = iter.Next();
+   }
+}
+
+// Unlock all blocks in all tracks of the last saved version
+void AudacityProject::UnlockAllBlocks()
+{
+   TrackListIterator iter(mLastSavedTracks);
+   Track *t = iter.First();
+   while (t) {
+      if (t->GetKind() == Track::Wave)
+         ((WaveTrack *) t)->Unlock();
+      t = iter.Next();
+   }
+}
+
 bool AudacityProject::Save(bool overwrite /* = true */ ,
                            bool fromSaveAs /* = false */, 
                            bool bWantSaveCompressed /*= false*/) 
@@ -3025,6 +3049,16 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       
       mWantSaveCompressed = bWantSaveCompressed;
       bool success = false;
+
+      if( !wxDir::Exists( projPath ) ){
+         wxMessageBox(wxString::Format(
+            _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
+            projPath.c_str()),
+                      _("Error saving project"),
+                      wxICON_ERROR, this);
+         return false;
+      }
+
       if (bWantSaveCompressed)
       {
          //v Move this condition into SaveCompressedWaveTracks() if want to support other formats.
@@ -3041,30 +3075,15 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          // (Otherwise the new project would be fine, but the old one would
          // be empty of all of its files.)
          
-         // Lock all blocks in all tracks of the last saved version
-         if (mLastSavedTracks && !overwrite) {
-            TrackListIterator iter(mLastSavedTracks);
-            Track *t = iter.First();
-            while (t) {
-               if (t->GetKind() == Track::Wave)
-                  ((WaveTrack *) t)->Lock();
-               t = iter.Next();
-            }
-         }
+         if (mLastSavedTracks && !overwrite) 
+            LockAllBlocks();
+
          // This renames the project directory, and moves or copies
          // all of our block files over.
          success = mDirManager->SetProject(projPath, projName, !overwrite);
          
-         // Unlock all blocks in all tracks of the last saved version
-         if (mLastSavedTracks && !overwrite) {
-            TrackListIterator iter(mLastSavedTracks);
-            Track *t = iter.First();
-            while (t) {
-               if (t->GetKind() == Track::Wave)
-                  ((WaveTrack *) t)->Unlock();
-               t = iter.Next();
-            }
-         }
+         if (mLastSavedTracks && !overwrite)
+            UnlockAllBlocks();
       }
       
       if (!success) {
