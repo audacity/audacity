@@ -3051,6 +3051,8 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       bool success = false;
 
       if( !wxDir::Exists( projPath ) ){
+         if (safetyFileName != wxT(""))
+            wxRename(safetyFileName, mFileName);
          wxMessageBox(wxString::Format(
             _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
             projPath.c_str()),
@@ -3087,13 +3089,12 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       }
       
       if (!success) {
+         if (safetyFileName != wxT(""))
+            wxRename(safetyFileName, mFileName);
          wxMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
                                        project.c_str()),
                       _("Error saving project"),
                       wxICON_ERROR, this);
-         if (safetyFileName != wxT(""))
-            wxRename(safetyFileName, mFileName);
-         
          return false;
       }
    }
