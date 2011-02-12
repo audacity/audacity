@@ -361,36 +361,34 @@ void KeyConfigPrefs::OnCaptureChar(wxKeyEvent & e)
 {
 }
 
+// Given a hotkey combination, returns the name (description) of the 
+// corresponding command, or the empty string if none is found.
+wxString KeyConfigPrefs::NameFromKey( const wxString & Key )
+{
+   int i;
+   i=mKeys.Index( Key );
+   if( i== wxNOT_FOUND )
+      return wxT("");
+   return mNames[i];
+}
+
 void KeyConfigPrefs::OnSet(wxCommandEvent & e)
 {
-   if (mCommandSelected < 0 || mCommandSelected >= mNames.GetCount()) {
+   if (mCommandSelected < 0 || mCommandSelected >= mNames.GetCount())
       return;
-   }
 
    wxString newKey = mKey->GetValue();
+   wxString alreadyAssignedName = NameFromKey( newKey );
 
-   // Check if shortcut has already been assigned
-   for (int i = 0; i < mList->GetItemCount(); i++) {
-      wxListItem item;
-
-      item.SetColumn(KeyComboColumn);
-      item.SetMask(wxLIST_MASK_TEXT);
-      item.SetId(i);
-      mList->GetItem(item);
-
-      if (item.GetText() == newKey) {
-         item.SetColumn(CommandColumn);
-         mList->GetItem(item);
-
-         wxString prompt;
-         prompt = wxString::Format(_("The keyboard shortcut '%s' is already assigned to:\n\n'%s'"),
-                                   newKey.c_str(),
-                                   item.GetText().c_str());
-            
-         wxMessageBox(prompt, _("Error"), wxICON_STOP | wxCENTRE, this);
-         
-         return;
-      }
+   // Prevent same hotkey combination being used twice.
+   if( !alreadyAssignedName.IsEmpty() ) {
+      wxMessageBox(
+         wxString::Format(
+            _("The keyboard shortcut '%s' is already assigned to:\n\n'%s'"),
+            newKey.c_str(),
+            alreadyAssignedName.c_str()),
+         _("Error"), wxICON_STOP | wxCENTRE, this);
+      return;
    }
 
    mList->SetItem(mCommandSelected, KeyComboColumn, newKey);

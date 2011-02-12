@@ -35,6 +35,7 @@ class KeyConfigPrefs:public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
    void RepopulateBindingsList();
+   wxString NameFromKey( const wxString & Key );
 
    void OnDefaults(wxCommandEvent & e);
    void OnLoad(wxCommandEvent & e);
