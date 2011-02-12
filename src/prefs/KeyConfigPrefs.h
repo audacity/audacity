@@ -35,7 +35,8 @@ class KeyConfigPrefs:public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
    void RepopulateBindingsList();
-   wxString NameFromKey( const wxString & Key );
+   wxString NameFromKey( const wxString & key );
+   void SetKeyForSelected( const wxString & key );
 
    void OnDefaults(wxCommandEvent & e);
    void OnLoad(wxCommandEvent & e);
@@ -59,6 +60,7 @@ class KeyConfigPrefs:public PrefsPanel
    wxArrayString mCats;
    wxArrayString mNames;
    wxArrayString mKeys;
+   wxArrayString mNewKeys; // Used for work in progress.
 
    DECLARE_EVENT_TABLE();
 };

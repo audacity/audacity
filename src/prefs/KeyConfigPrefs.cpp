@@ -223,6 +223,8 @@ void KeyConfigPrefs::RepopulateBindingsList()
       // Save the original key value to support canceling
       if (save) {
          mKeys.Add(key);
+         // mNewKeys is what mKeys will change to
+         mNewKeys.Add(key);
       }
 
       if (cat != _("All") && mManager->GetCategoryFromName(name) != cat) {
@@ -363,14 +365,29 @@ void KeyConfigPrefs::OnCaptureChar(wxKeyEvent & e)
 
 // Given a hotkey combination, returns the name (description) of the 
 // corresponding command, or the empty string if none is found.
-wxString KeyConfigPrefs::NameFromKey( const wxString & Key )
+wxString KeyConfigPrefs::NameFromKey( const wxString & key )
 {
    int i;
-   i=mKeys.Index( Key );
+   i=mNewKeys.Index( key );
    if( i== wxNOT_FOUND )
       return wxT("");
    return mNames[i];
 }
+
+// Sets the selected command to have this key
+// This is not yet a committed change, which will happen on a save.
+void KeyConfigPrefs::SetKeyForSelected( const wxString & key )
+{
+   wxString name = mNames[mList->GetItemData(mCommandSelected)];
+
+   mList->SetItem(mCommandSelected, KeyComboColumn, key);
+   mManager->SetKeyFromName(name, key);
+
+   int i=mNames.Index( name );
+   if( i!=wxNOT_FOUND ) 
+      mNewKeys[i]=key;
+}
+
 
 void KeyConfigPrefs::OnSet(wxCommandEvent & e)
 {
@@ -391,8 +408,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & e)
       return;
    }
 
-   mList->SetItem(mCommandSelected, KeyComboColumn, newKey);
-   mManager->SetKeyFromName(mNames[mList->GetItemData(mCommandSelected)], newKey);
+   SetKeyForSelected( newKey );
 }
 
 void KeyConfigPrefs::OnClear(wxCommandEvent& event)
@@ -401,9 +417,7 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& event)
    if (mCommandSelected < 0 || mCommandSelected >= mNames.GetCount()) {
       return;
    }
-
-   mList->SetItem(mCommandSelected, KeyComboColumn, wxT(""));
-   mManager->SetKeyFromName(mNames[mList->GetItemData(mCommandSelected)], wxT(""));
+   SetKeyForSelected( wxT("") );
 }
 
 void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
