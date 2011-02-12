@@ -4493,6 +4493,7 @@ void AudacityProject::OnKaraoke()
    if (!mLyricsWindow)
       mLyricsWindow = new LyricsWindow(this);
    mLyricsWindow->Show();
+   UpdateLyrics();
    mLyricsWindow->Raise();
 }
 

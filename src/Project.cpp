@@ -3653,6 +3653,13 @@ void AudacityProject::UpdateLyrics()
       mLyricsWindow->Show(false); // Don't show it. Need to update content regardless.
    }
 
+   // The code that updates the lyrics is rather expensive when there
+   // are a lot of labels.
+   // So - bail out early if the lyrics window is not visible.
+   // We will later force an update when the lyrics window is made visible.
+   if( !mLyricsWindow->IsVisible() )
+      return;
+
    Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
    pLyricsPanel->Clear();
    for (int i = 0; i < pLabelTrack->GetNumLabels(); i++) 
