@@ -477,8 +477,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
    c->AddItem(wxT("SelSave"), _("Re&gion Save"), FN(OnSelectionSave),
-              TimeSelectedFlag | WaveTracksSelectedFlag,
-              TimeSelectedFlag | WaveTracksSelectedFlag);
+              WaveTracksSelectedFlag,
+              WaveTracksSelectedFlag);
    c->AddItem(wxT("SelRestore"), _("Regio&n Restore"), FN(OnSelectionRestore),
               TracksExistFlag, 
               TracksExistFlag);
