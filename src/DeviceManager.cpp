@@ -10,6 +10,21 @@
 #include "portmixer.h"
 
 #include "Audacity.h"
+// For compilers that support precompilation, includes "wx/wx.h".
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#include <wx/choice.h>
+#include <wx/event.h>
+#include <wx/intl.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/statbmp.h>
+#include <wx/tooltip.h>
+#endif
+
+#include "Project.h"
+
 #include "AudioIO.h"
 
 #include "DeviceManager.h"
