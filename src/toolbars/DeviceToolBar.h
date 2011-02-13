@@ -19,17 +19,7 @@ class wxSize;
 class wxPoint;
 class wxChoice;
 class wxStaticText;
-
-typedef struct DeviceSourceMap {
-   int deviceIndex;
-   int sourceIndex;
-   int hostIndex;
-   int totalSources;
-   int numChannels;
-   wxString sourceString;
-   wxString deviceString;
-   wxString hostString;
-} DeviceSourceMap;
+struct DeviceSourceMap;
 
 class DeviceToolBar:public ToolBar {
 
@@ -66,6 +56,7 @@ class DeviceToolBar:public ToolBar {
  private:
    int  ChangeHost();
    void ChangeDevice(bool isInput);
+   void FillHosts(wxArrayString &hosts);
    void FillHostDevices();
    void FillInputChannels();
    void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);
@@ -81,9 +72,6 @@ class DeviceToolBar:public ToolBar {
    wxChoice *mOutput;
    wxChoice *mInputChannels;
    wxChoice *mHost;
-
-   std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
-   std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;
 
  public:
 

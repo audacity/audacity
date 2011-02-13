@@ -59,6 +59,7 @@ OBJS = \
 	Benchmark.o \
 	CaptureEvents.o \
 	Dependencies.o \
+	DeviceManager.o \
 	Envelope.o \
 	FFmpeg.o \
 	FFT.o \

@@ -42,6 +42,7 @@
 #include "../Project.h"
 #include "../Theme.h"
 #include "../widgets/Grabber.h"
+#include "../DeviceManager.h"
 
 IMPLEMENT_CLASS(DeviceToolBar, ToolBar);
 
@@ -89,148 +90,6 @@ static wxString MakeDeviceSourceString(DeviceSourceMap *map)
    return ret;
 }
 
-//Port Audio requires we open the stream with a callback or a lot of devices will fail
-//as this means open in blocking mode, so we use a dummy one.
-static int DummyPaStreamCallback(
-    const void *input, void *output,
-    unsigned long frameCount,
-    const PaStreamCallbackTimeInfo* timeInfo,
-    PaStreamCallbackFlags statusFlags,
-    void *userData )
-{
-   return 0;
-}
-
-static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, int deviceIndex, int isInput)
-{
-   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
-   wxString infoName(info->name, wxConvLocal);
-
-   map->deviceIndex  = deviceIndex;
-   map->hostIndex    = info->hostApi;
-   map->deviceString = infoName;
-   map->hostString   = hostapiName;
-   map->numChannels  = isInput ? info->maxInputChannels : info->maxOutputChannels;
-}
-
-static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std::vector<DeviceSourceMap> *maps, PaStream *stream)
-{
-   int i;
-   PxMixer *portMixer;
-   DeviceSourceMap map;
-
-   map.sourceIndex  = -1;
-   map.totalSources = 0;
-   // Only inputs have sources, so we call FillHostDeviceInfo with a 1 to indicate this
-   FillHostDeviceInfo(&map, info, deviceIndex, 1);
-   portMixer = Px_OpenMixer(stream, 0);
-   if (!portMixer) {
-      maps->push_back(map);
-      return;
-   }
-
-   //if there is only one source, we don't need to concatenate the source
-   //or enumerate, because it is something meaningless like 'master' 
-   //(as opposed to 'mic in' or 'line in'), and the user doesn't have any choice.
-   //note that some devices have no input sources at all but are still valid.
-   //the behavior we do is the same for 0 and 1 source cases.
-   map.totalSources = Px_GetNumInputSources(portMixer);
-    
-   if (map.totalSources <= 1) {
-      map.sourceIndex = 0;
-      maps->push_back(map);
-   } else {
-      //open up a stream with the device so portmixer can get the info out of it.
-      for (i = 0; i < map.totalSources; i++) {
-         map.sourceIndex  = i;
-         map.sourceString = wxString(Px_GetInputSourceName(portMixer, i), wxConvLocal);
-         maps->push_back(map);
-      }
-   }
-   Px_CloseMixer(portMixer);
-}
-
-static bool IsInputDeviceAMapperDevice(const PaDeviceInfo *info)
-{
-   // For Windows only, portaudio returns the default mapper object
-   // as the first index after a new hostApi index is detected (true for MME and DS)
-   // this is a bit of a hack, but there's no other way to find out which device is a mapper,
-   // I've looked at string comparisons, but if the system is in a different language this breaks.
-#ifdef __WXMSW__
-   static int lastHostApiTypeId = -1;
-   int hostApiTypeId = Pa_GetHostApiInfo(info->hostApi)->type;
-   if(hostApiTypeId != lastHostApiTypeId &&
-      (hostApiTypeId == paMME || hostApiTypeId == paDirectSound)) {
-      lastHostApiTypeId = hostApiTypeId;
-      return true;
-   }
-#endif
-
-   return false;
-}
-
-static void AddSources(int deviceIndex, int rate, wxArrayString *hosts, std::vector<DeviceSourceMap> *maps, int isInput)
-{
-   int error = 0;
-   DeviceSourceMap map;
-   const PaDeviceInfo *info = Pa_GetDeviceInfo(deviceIndex);
-
-   // This tries to open the device with the samplerate worked out above, which
-   // will be the highest available for play and record on the device, or
-   // 44.1kHz if the info cannot be fetched.
-
-   PaStream *stream = NULL;
-
-   PaStreamParameters parameters;
-
-   parameters.device = deviceIndex;
-   parameters.sampleFormat = paFloat32;
-   parameters.hostApiSpecificStreamInfo = NULL;
-   parameters.channelCount = 1;
-
-   // If the device is for input, open a stream so we can use portmixer to query
-   // the number of inputs.  We skip this for outputs because there are no 'sources'
-   // and some platforms (e.g. XP) have the same device for input and output, (while
-   // Vista/Win7 seperate these into two devices with the same names (but different
-   // portaudio indecies)
-   // Also, for mapper devices we don't want to keep any sources, so check for it here
-   if (isInput && !IsInputDeviceAMapperDevice(info)) {
-      if (info)
-         parameters.suggestedLatency = info->defaultLowInputLatency;
-      else
-         parameters.suggestedLatency = DEFAULT_LATENCY_CORRECTION/1000.0;
-
-      error = Pa_OpenStream(&stream,
-                            &parameters,
-                            NULL,
-                            rate, paFramesPerBufferUnspecified,
-                            paClipOff | paDitherOff,
-                            DummyPaStreamCallback, NULL);
-   }
-
-   if (stream && !error) {
-      AddSourcesFromStream(deviceIndex, info, maps, stream);
-      Pa_CloseStream(stream);
-   } else {
-      map.sourceIndex  = -1;
-      map.totalSources = 0;
-      FillHostDeviceInfo(&map, info, deviceIndex, isInput);
-      maps->push_back(map);
-   }
-
-   if(error) {
-      wxLogDebug(wxT("PortAudio stream error creating device list: ") +
-                 map.hostString + wxT(":") + map.deviceString + wxT(": ") +
-                 wxString(Pa_GetErrorText( (PaError)error), wxConvLocal));
-   }
-
-   //add the host to the list if it isn't there yet
-   wxString hostName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
-   if (hosts->Index(hostName) == wxNOT_FOUND) {
-      hosts->Add(hostName);
-   }
-}
-
 void DeviceToolBar::DeinitChildren()
 {
    mPlayBitmap    = NULL;
@@ -240,14 +99,10 @@ void DeviceToolBar::DeinitChildren()
    mOutput        = NULL;
    mInputChannels = NULL;
    mHost          = NULL;
-
-   mInputDeviceSourceMaps.clear();
-   mOutputDeviceSourceMaps.clear();
 }
 
 void DeviceToolBar::Populate()
 {
-   int i;
    wxArrayString inputs;
    wxArrayString outputs;
    wxArrayString hosts;
@@ -256,23 +111,9 @@ void DeviceToolBar::Populate()
    DeinitChildren();
 
    channels.Add(wxT("1 (Mono)"));
-   int nDevices = Pa_GetDeviceCount();
-
-   //The heirarchy for devices is Host/device/source.
-   //Some newer systems aggregate this.
-   //So we need to call port mixer for every device to get the sources
-   for (i = 0; i < nDevices; i++) {
-      const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
-      if (info->maxOutputChannels > 0) {
-         AddSources(i, info->defaultSampleRate, &hosts, &mOutputDeviceSourceMaps, 0);
-      }
-
-      if (info->maxInputChannels > 0) {
-         AddSources(i, info->defaultSampleRate, &hosts, &mInputDeviceSourceMaps, 1);
-      }
-   }
 
    // Hosts
+   FillHosts(hosts);
    mHost = new wxChoice(this,
                         wxID_ANY,
                         wxDefaultPosition,
@@ -368,6 +209,7 @@ void DeviceToolBar::Populate()
    // make the device display selection reflect the prefs if they exist
    UpdatePrefs();
 }
+
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
 {
    wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
@@ -409,6 +251,9 @@ void DeviceToolBar::UpdatePrefs()
    wxString devName;
    wxString sourceName;
    wxString desc;
+   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+
 
    int hostSelectionIndex = mHost->GetSelection();
    wxString oldHost = hostSelectionIndex >= 0 ? mHost->GetString(hostSelectionIndex) :
@@ -434,10 +279,10 @@ void DeviceToolBar::UpdatePrefs()
    } else if (mInput->GetStringSelection() != desc && mInput->GetCount()) {
       //use the 0th index if we have no familiar devices
       mInput->SetSelection(0);
-      for (size_t i = 0; i < mInputDeviceSourceMaps.size(); i++) {
-         if (mInputDeviceSourceMaps[i].hostString == hostName &&
-             MakeDeviceSourceString(&mInputDeviceSourceMaps[i]) == mInput->GetString(0)) {
-            SetDevices(&mInputDeviceSourceMaps[i], NULL);
+      for (size_t i = 0; i < inMaps.size(); i++) {
+         if (inMaps[i].hostString == hostName &&
+             MakeDeviceSourceString(&inMaps[i]) == mInput->GetString(0)) {
+            SetDevices(&inMaps[i], NULL);
             break;
          }
       }
@@ -458,10 +303,10 @@ void DeviceToolBar::UpdatePrefs()
               mOutput->GetCount()) {
       //use the 0th index if we have no familiar devices
       mOutput->SetSelection(0);
-      for (size_t i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
-         if (mOutputDeviceSourceMaps[i].hostString == hostName &&
-             MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]) == mOutput->GetString(0)) {
-            SetDevices(NULL, &mOutputDeviceSourceMaps[i]);
+      for (size_t i = 0; i < outMaps.size(); i++) {
+         if (outMaps[i].hostString == hostName &&
+             MakeDeviceSourceString(&outMaps[i]) == mOutput->GetString(0)) {
+            SetDevices(NULL, &outMaps[i]);
             break;
          }
       }
@@ -628,23 +473,43 @@ void DeviceToolBar::RepositionCombos()
 
    Update();
 }
+
+void DeviceToolBar::FillHosts(wxArrayString &hosts)
+{
+   size_t i;
+   
+   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+   // go over our lists add the host to the list if it isn't there yet
+   
+   for (i = 0; i < inMaps.size(); i++)
+      if (hosts.Index(inMaps[i].hostString) == wxNOT_FOUND)
+         hosts.Add(inMaps[i].hostString);
+   for (i = 0; i < outMaps.size(); i++)
+      if (hosts.Index(outMaps[i].hostString) == wxNOT_FOUND)
+         hosts.Add(outMaps[i].hostString);
+}
+
 void DeviceToolBar::FillHostDevices()
 {
+   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+
    //read what is in the prefs
    wxString host = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    size_t i;
    int foundHostIndex = -1;
-   for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
-      if (mOutputDeviceSourceMaps[i].hostString == host) {
-         foundHostIndex = mOutputDeviceSourceMaps[i].hostIndex;
+   for (i = 0; i < outMaps.size(); i++) {
+      if (outMaps[i].hostString == host) {
+         foundHostIndex = outMaps[i].hostIndex;
          break;
       }
    }
    
    if (foundHostIndex == -1) {
-      for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
-         if (mInputDeviceSourceMaps[i].hostString == host) {
-            foundHostIndex = mInputDeviceSourceMaps[i].hostIndex;
+      for (i = 0; i < inMaps.size(); i++) {
+         if (inMaps[i].hostString == host) {
+            foundHostIndex = inMaps[i].hostIndex;
             break;
          }
       } 
@@ -652,10 +517,10 @@ void DeviceToolBar::FillHostDevices()
 
    // If no host was found based on the prefs device host, load the first available one
    if (foundHostIndex == -1) {
-      if (mOutputDeviceSourceMaps.size())
-         foundHostIndex = mOutputDeviceSourceMaps[0].hostIndex;
-      else if (mInputDeviceSourceMaps.size())
-         foundHostIndex = mInputDeviceSourceMaps[0].hostIndex;
+      if (outMaps.size())
+         foundHostIndex = outMaps[0].hostIndex;
+      else if (inMaps.size())
+         foundHostIndex = inMaps[0].hostIndex;
    }
 
    // If we still have no host it means no devices, in which case do nothing.
@@ -664,11 +529,11 @@ void DeviceToolBar::FillHostDevices()
 
    // Repopulate the Input/Output device list available to the user
    mInput->Clear();
-   for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
-      if (foundHostIndex == mInputDeviceSourceMaps[i].hostIndex) {
-         mInput->Append(MakeDeviceSourceString(&mInputDeviceSourceMaps[i]));
+   for (i = 0; i < inMaps.size(); i++) {
+      if (foundHostIndex == inMaps[i].hostIndex) {
+         mInput->Append(MakeDeviceSourceString(&inMaps[i]));
          if (host == wxT("")) {
-            host = mInputDeviceSourceMaps[i].hostString;
+            host = inMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
          }
       }
@@ -676,11 +541,11 @@ void DeviceToolBar::FillHostDevices()
    mInput->Enable(mInput->GetCount() ? true : false);
 
    mOutput->Clear();
-   for (i = 0; i < mOutputDeviceSourceMaps.size(); i++) {
-      if (foundHostIndex == mOutputDeviceSourceMaps[i].hostIndex) {
-         mOutput->Append(MakeDeviceSourceString(&mOutputDeviceSourceMaps[i]));
+   for (i = 0; i < outMaps.size(); i++) {
+      if (foundHostIndex == outMaps[i].hostIndex) {
+         mOutput->Append(MakeDeviceSourceString(&outMaps[i]));
          if (host == wxT("")) {
-            host = mOutputDeviceSourceMaps[i].hostString;
+            host = outMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
          }
       }
@@ -713,6 +578,7 @@ int DeviceToolBar::ChangeHost()
 
 void DeviceToolBar::FillInputChannels()
 {
+   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
    wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
@@ -722,13 +588,13 @@ void DeviceToolBar::FillInputChannels()
    int index = -1;
    size_t i, j;
    mInputChannels->Clear();
-   for (i = 0; i < mInputDeviceSourceMaps.size(); i++) {
-      if (source == mInputDeviceSourceMaps[i].sourceString &&
-          device == mInputDeviceSourceMaps[i].deviceString &&
-          host   == mInputDeviceSourceMaps[i].hostString) {
+   for (i = 0; i < inMaps.size(); i++) {
+      if (source == inMaps[i].sourceString &&
+          device == inMaps[i].deviceString &&
+          host   == inMaps[i].hostString) {
 
          // add one selection for each channel of this source
-         for (j = 0; j < (unsigned int) mInputDeviceSourceMaps[i].numChannels; j++) {
+         for (j = 0; j < (unsigned int) inMaps[i].numChannels; j++) {
             wxString name;
 
             if (j == 0) {
@@ -742,7 +608,7 @@ void DeviceToolBar::FillInputChannels()
             }
             mInputChannels->Append(name);
          }
-         newChannels = mInputDeviceSourceMaps[i].numChannels;
+         newChannels = inMaps[i].numChannels;
          if (oldChannels < newChannels && oldChannels >= 1)
             newChannels = oldChannels;
          if (newChannels >= 1)
@@ -786,7 +652,8 @@ void DeviceToolBar::ChangeDevice(bool isInput)
    size_t i;
 
    int selectionIndex  = mInput->GetSelection();
-   std::vector<DeviceSourceMap> &maps = isInput ? mInputDeviceSourceMaps : mOutputDeviceSourceMaps;
+   std::vector<DeviceSourceMap> &maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
+                                                : DeviceManager::Instance()->GetOutputDeviceMaps();
 
    wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    // Find device indices for input and output
