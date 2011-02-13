@@ -1332,6 +1332,7 @@
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
 		28FE4A3A0ABF58360056F5C4 /* soundtouch_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FE4A390ABF58360056F5C4 /* soundtouch_config.h */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
+		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
 		ED2707240EF9C51D007D4FFD /* audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707020EF9C51D007D4FFD /* audio.cpp */; };
 		ED2707250EF9C51D007D4FFD /* audio.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707030EF9C51D007D4FFD /* audio.h */; };
@@ -1869,7 +1870,7 @@
 		1790AFF109883BFD008A330A /* configunix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = configunix.h; sourceTree = "<group>"; };
 		1790AFF409883BFD008A330A /* CrossFade.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CrossFade.cpp; sourceTree = "<group>"; };
 		1790AFF509883BFD008A330A /* CrossFade.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CrossFade.h; sourceTree = "<group>"; };
-		1790AFF709883BFD008A330A /* DirManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = DirManager.cpp; sourceTree = "<group>"; };
+		1790AFF709883BFD008A330A /* DirManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DirManager.cpp; sourceTree = "<group>"; tabWidth = 3; usesTabs = 0; };
 		1790AFF809883BFD008A330A /* DirManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DirManager.h; sourceTree = "<group>"; };
 		1790AFF909883BFD008A330A /* Dither.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Dither.cpp; sourceTree = "<group>"; };
 		1790AFFA09883BFD008A330A /* Dither.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Dither.h; sourceTree = "<group>"; };
@@ -3153,6 +3154,8 @@
 		28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.cpp.cpp; path = sse_optimized.cpp; sourceTree = "<group>"; };
 		28FE4A390ABF58360056F5C4 /* soundtouch_config.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; name = soundtouch_config.h; path = "../lib-src/soundtouch/include/soundtouch_config.h"; sourceTree = SOURCE_ROOT; };
 		8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EQDefaultCurves.xml; path = ../presets/EQDefaultCurves.xml; sourceTree = SOURCE_ROOT; };
+		8484F31213086237002DF7F0 /* DeviceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceManager.cpp; sourceTree = "<group>"; };
+		8484F31313086237002DF7F0 /* DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceManager.h; sourceTree = "<group>"; };
 		ED05D1000E50AD5700CC4BD3 /* audiomixerreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = audiomixerreader.cpp; sourceTree = "<group>"; };
 		ED05D1010E50AD5700CC4BD3 /* audiomixerreader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = audiomixerreader.h; sourceTree = "<group>"; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; };
@@ -4024,6 +4027,8 @@
 				1790AFF509883BFD008A330A /* CrossFade.h */,
 				2849B4600A7444BE00ECF12D /* Dependencies.cpp */,
 				2849B4610A7444BE00ECF12D /* Dependencies.h */,
+				8484F31213086237002DF7F0 /* DeviceManager.cpp */,
+				8484F31313086237002DF7F0 /* DeviceManager.h */,
 				1790AFF709883BFD008A330A /* DirManager.cpp */,
 				1790AFF809883BFD008A330A /* DirManager.h */,
 				1790AFF909883BFD008A330A /* Dither.cpp */,
@@ -7814,6 +7819,7 @@
 				18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */,
 				ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */,
 				ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */,
+				8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
