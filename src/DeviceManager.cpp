@@ -9,9 +9,11 @@
 #include "portaudio.h"
 #include "portmixer.h"
 
-#include "../Audacity.h"
+#include "Audacity.h"
+#include "AudioIO.h"
 
 #include "DeviceManager.h"
+#include "toolbars/DeviceToolBar.h"
 
 DeviceManager DeviceManager::dm;
 
@@ -30,13 +32,13 @@ void DeviceManager::Destroy()
 std::vector<DeviceSourceMap> &DeviceManager::GetInputDeviceMaps()
 {
    if (!m_inited)
-      Rescan();
+      Init();
    return mInputDeviceSourceMaps;
 }
 std::vector<DeviceSourceMap> &DeviceManager::GetOutputDeviceMaps()
 {
    if (!m_inited)
-      Rescan();
+      Init();
    return mOutputDeviceSourceMaps;
 }
 
@@ -191,7 +193,17 @@ void DeviceManager::Rescan()
    if (m_inited) {
       // check to see if there is a stream open - can happen if monitoring,
       // but otherwise Rescan() should not be available to the user.
-
+      if (gAudioIO) {
+         if (gAudioIO->IsMonitoring()) 
+         {
+            gAudioIO->StopStream();
+            while (gAudioIO->IsBusy())
+               wxMilliSleep(100);
+         }
+         gAudioIO->HandleDeviceChange();
+      }
+      
+      // restart portaudio - this updates the device list
       Pa_Terminate();
       Pa_Initialize();
    }
@@ -213,6 +225,15 @@ void DeviceManager::Rescan()
       }
    }
 
+   // If this was not an initial scan update each device toolbar.
+   // Hosts may have disappeared or appeared so a complete repopulate is needed.
+   if (m_inited) {
+      DeviceToolBar *dt;
+      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+         dt = gAudacityProjects[i]->GetDeviceToolBar();
+         dt->RefillCombos();
+      }
+   }
 	m_inited = true;
 }
 

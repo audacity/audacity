@@ -53,10 +53,12 @@ class DeviceToolBar:public ToolBar {
    void ShowHostDialog();
    void ShowChannelsDialog();
 
+   void RefillCombos();
+
  private:
    int  ChangeHost();
    void ChangeDevice(bool isInput);
-   void FillHosts(wxArrayString &hosts);
+   void FillHosts();
    void FillHostDevices();
    void FillInputChannels();
    void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);

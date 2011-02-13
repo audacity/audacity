@@ -103,31 +103,18 @@ void DeviceToolBar::DeinitChildren()
 
 void DeviceToolBar::Populate()
 {
-   wxArrayString inputs;
-   wxArrayString outputs;
-   wxArrayString hosts;
-   wxArrayString channels;
-
    DeinitChildren();
-
-   channels.Add(wxT("1 (Mono)"));
-
    // Hosts
-   FillHosts(hosts);
    mHost = new wxChoice(this,
                         wxID_ANY,
                         wxDefaultPosition,
-                        wxDefaultSize,
-                        hosts);
+                        wxDefaultSize);
    mHost->SetName(_("Audio Host"));
 
    Add(mHost, 0, wxALIGN_CENTER);
-   if (hosts.GetCount() == 0)
-      mHost->Enable(false);
 
    // Output device
    mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
-
    Add(new wxStaticBitmap(this,
                           wxID_ANY, 
                           *mPlayBitmap), 0, wxALIGN_CENTER);
@@ -135,13 +122,9 @@ void DeviceToolBar::Populate()
    mOutput = new wxChoice(this,
                                wxID_ANY,
                                wxDefaultPosition,
-                               wxDefaultSize,
-                               outputs);
+                               wxDefaultSize);
    mOutput->SetName(_("Output Device"));
-
    Add(mOutput, 0, wxALIGN_CENTER);
-   if (outputs.GetCount() == 0)
-      mOutput->Enable(false);
 
    // Input device
    mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
@@ -153,23 +136,16 @@ void DeviceToolBar::Populate()
    mInput = new wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
-                         wxDefaultSize,
-                         inputs);
+                         wxDefaultSize);
    mInput->SetName(_("Input Device"));
    Add(mInput, 0, wxALIGN_CENTER);
-   if (inputs.GetCount() == 0)
-      mInput->Enable(false);
-
 
    mInputChannels = new wxChoice(this,
                          wxID_ANY,
                          wxDefaultPosition,
-                         wxDefaultSize,
-                         channels);
+                         wxDefaultSize);
    mInputChannels->SetName(_("Input Channels"));
    Add(mInputChannels, 0, wxALIGN_CENTER);
-   // hide the number of channels until we have some to display
-   mInputChannels->Enable(false);
 
    mHost->Connect(wxEVT_SET_FOCUS,
                  wxFocusEventHandler(DeviceToolBar::OnFocus),
@@ -204,6 +180,12 @@ void DeviceToolBar::Populate()
                  NULL,
                  this);
 
+   RefillCombos();
+}
+
+void DeviceToolBar::RefillCombos()
+{
+   FillHosts();
    FillHostDevices();
    FillInputChannels();
    // make the device display selection reflect the prefs if they exist
@@ -474,20 +456,26 @@ void DeviceToolBar::RepositionCombos()
    Update();
 }
 
-void DeviceToolBar::FillHosts(wxArrayString &hosts)
+void DeviceToolBar::FillHosts()
 {
+   wxArrayString hosts;
    size_t i;
    
    std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
    std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
    // go over our lists add the host to the list if it isn't there yet
-   
    for (i = 0; i < inMaps.size(); i++)
       if (hosts.Index(inMaps[i].hostString) == wxNOT_FOUND)
          hosts.Add(inMaps[i].hostString);
    for (i = 0; i < outMaps.size(); i++)
       if (hosts.Index(outMaps[i].hostString) == wxNOT_FOUND)
          hosts.Add(outMaps[i].hostString);
+
+   mHost->Clear();
+   mHost->Append(hosts);
+   
+   if (hosts.GetCount() == 0)
+      mHost->Enable(false);
 }
 
 void DeviceToolBar::FillHostDevices()
@@ -499,6 +487,12 @@ void DeviceToolBar::FillHostDevices()
    wxString host = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    size_t i;
    int foundHostIndex = -1;
+
+   // if the host is not in the hosts combo then we rescanned.
+   // set it to blank so we search for another host.
+   if (mHost->FindString(host) == wxNOT_FOUND)
+      host = wxT("");
+
    for (i = 0; i < outMaps.size(); i++) {
       if (outMaps[i].hostString == host) {
          foundHostIndex = outMaps[i].hostIndex;
@@ -535,6 +529,7 @@ void DeviceToolBar::FillHostDevices()
          if (host == wxT("")) {
             host = inMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
+            mHost->SetStringSelection(host);
          }
       }
    }
@@ -547,6 +542,7 @@ void DeviceToolBar::FillHostDevices()
          if (host == wxT("")) {
             host = outMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
+            mHost->SetStringSelection(host);
          }
       }
    }

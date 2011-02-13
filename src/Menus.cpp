@@ -108,6 +108,7 @@ simplifies construction of menu items.
 #include "FileDialog.h"
 #include "SplashDialog.h"
 #include "widgets/ErrorDialog.h"
+#include "DeviceManager.h"
 
 #include "CaptureEvents.h"
 
@@ -643,6 +644,7 @@ void AudacityProject::CreateMenusAndCommands()
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("Automated Input Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
 #endif
+   c->AddItem(wxT("RescanDevices"), _("Rescan Audio Devices"), FN(OnRescanDevices));
 
    if (!mCleanSpeechMode) {
 
@@ -5389,6 +5391,11 @@ void AudacityProject::OnSoundActivated()
 {
    SoundActivatedRecord dialog(this /* parent */ );
    dialog.ShowModal();
+}
+
+void AudacityProject::OnRescanDevices()
+{
+   DeviceManager::Instance()->Rescan();
 }
 
 int AudacityProject::DoAddLabel(double left, double right)

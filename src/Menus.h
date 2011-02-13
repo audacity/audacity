@@ -294,6 +294,7 @@ void OnToggleSWPlaythrough();
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    void OnToogleAutomatedInputLevelAdjustment();
 #endif
+void OnRescanDevices();
 
         // Tracks Menu
 
