@@ -1,0 +1,233 @@
+/**********************************************************************
+
+   Audacity - A Digital Audio Editor
+   Copyright 1999-2010 Audacity Team
+   Michael Chinen
+
+******************************************************************/
+
+#include "portaudio.h"
+#include "portmixer.h"
+
+#include "../Audacity.h"
+
+#include "DeviceManager.h"
+
+DeviceManager DeviceManager::dm;
+
+/// Gets the singleton instance 
+DeviceManager* DeviceManager::Instance()
+{
+	return &dm;
+}
+   
+/// Releases memory assosiated with the singleton
+void DeviceManager::Destroy()
+{
+
+}
+
+std::vector<DeviceSourceMap> &DeviceManager::GetInputDeviceMaps()
+{
+   if (!m_inited)
+      Rescan();
+   return mInputDeviceSourceMaps;
+}
+std::vector<DeviceSourceMap> &DeviceManager::GetOutputDeviceMaps()
+{
+   if (!m_inited)
+      Rescan();
+   return mOutputDeviceSourceMaps;
+}
+
+//--------------- Device Enumeration --------------------------
+
+//Port Audio requires we open the stream with a callback or a lot of devices will fail
+//as this means open in blocking mode, so we use a dummy one.
+static int DummyPaStreamCallback(
+    const void *input, void *output,
+    unsigned long frameCount,
+    const PaStreamCallbackTimeInfo* timeInfo,
+    PaStreamCallbackFlags statusFlags,
+    void *userData )
+{
+   return 0;
+}
+
+static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, int deviceIndex, int isInput)
+{
+   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
+   wxString infoName(info->name, wxConvLocal);
+
+   map->deviceIndex  = deviceIndex;
+   map->hostIndex    = info->hostApi;
+   map->deviceString = infoName;
+   map->hostString   = hostapiName;
+   map->numChannels  = isInput ? info->maxInputChannels : info->maxOutputChannels;
+}
+
+static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std::vector<DeviceSourceMap> *maps, PaStream *stream)
+{
+   int i;
+   PxMixer *portMixer;
+   DeviceSourceMap map;
+
+   map.sourceIndex  = -1;
+   map.totalSources = 0;
+   // Only inputs have sources, so we call FillHostDeviceInfo with a 1 to indicate this
+   FillHostDeviceInfo(&map, info, deviceIndex, 1);
+   portMixer = Px_OpenMixer(stream, 0);
+   if (!portMixer) {
+      maps->push_back(map);
+      return;
+   }
+
+   //if there is only one source, we don't need to concatenate the source
+   //or enumerate, because it is something meaningless like 'master' 
+   //(as opposed to 'mic in' or 'line in'), and the user doesn't have any choice.
+   //note that some devices have no input sources at all but are still valid.
+   //the behavior we do is the same for 0 and 1 source cases.
+   map.totalSources = Px_GetNumInputSources(portMixer);
+    
+   if (map.totalSources <= 1) {
+      map.sourceIndex = 0;
+      maps->push_back(map);
+   } else {
+      //open up a stream with the device so portmixer can get the info out of it.
+      for (i = 0; i < map.totalSources; i++) {
+         map.sourceIndex  = i;
+         map.sourceString = wxString(Px_GetInputSourceName(portMixer, i), wxConvLocal);
+         maps->push_back(map);
+      }
+   }
+   Px_CloseMixer(portMixer);
+}
+
+static bool IsInputDeviceAMapperDevice(const PaDeviceInfo *info)
+{
+   // For Windows only, portaudio returns the default mapper object
+   // as the first index after a new hostApi index is detected (true for MME and DS)
+   // this is a bit of a hack, but there's no other way to find out which device is a mapper,
+   // I've looked at string comparisons, but if the system is in a different language this breaks.
+#ifdef __WXMSW__
+   static int lastHostApiTypeId = -1;
+   int hostApiTypeId = Pa_GetHostApiInfo(info->hostApi)->type;
+   if(hostApiTypeId != lastHostApiTypeId &&
+      (hostApiTypeId == paMME || hostApiTypeId == paDirectSound)) {
+      lastHostApiTypeId = hostApiTypeId;
+      return true;
+   }
+#endif
+
+   return false;
+}
+
+static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *maps, int isInput)
+{
+   int error = 0;
+   DeviceSourceMap map;
+   const PaDeviceInfo *info = Pa_GetDeviceInfo(deviceIndex);
+
+   // This tries to open the device with the samplerate worked out above, which
+   // will be the highest available for play and record on the device, or
+   // 44.1kHz if the info cannot be fetched.
+
+   PaStream *stream = NULL;
+
+   PaStreamParameters parameters;
+
+   parameters.device = deviceIndex;
+   parameters.sampleFormat = paFloat32;
+   parameters.hostApiSpecificStreamInfo = NULL;
+   parameters.channelCount = 1;
+
+   // If the device is for input, open a stream so we can use portmixer to query
+   // the number of inputs.  We skip this for outputs because there are no 'sources'
+   // and some platforms (e.g. XP) have the same device for input and output, (while
+   // Vista/Win7 seperate these into two devices with the same names (but different
+   // portaudio indecies)
+   // Also, for mapper devices we don't want to keep any sources, so check for it here
+   if (isInput && !IsInputDeviceAMapperDevice(info)) {
+      if (info)
+         parameters.suggestedLatency = info->defaultLowInputLatency;
+      else
+         parameters.suggestedLatency = 10.0;
+
+      error = Pa_OpenStream(&stream,
+                            &parameters,
+                            NULL,
+                            rate, paFramesPerBufferUnspecified,
+                            paClipOff | paDitherOff,
+                            DummyPaStreamCallback, NULL);
+   }
+
+   if (stream && !error) {
+      AddSourcesFromStream(deviceIndex, info, maps, stream);
+      Pa_CloseStream(stream);
+   } else {
+      map.sourceIndex  = -1;
+      map.totalSources = 0;
+      FillHostDeviceInfo(&map, info, deviceIndex, isInput);
+      maps->push_back(map);
+   }
+
+   if(error) {
+      wxLogDebug(wxT("PortAudio stream error creating device list: ") +
+                 map.hostString + wxT(":") + map.deviceString + wxT(": ") +
+                 wxString(Pa_GetErrorText( (PaError)error), wxConvLocal));
+   }
+}
+
+
+/// Gets a new list of devices by terminating and restarting portaudio
+/// Assumes that DeviceManager is only used on the main thread.
+void DeviceManager::Rescan()
+{
+   // get rid of the previous scan info
+   this->mInputDeviceSourceMaps.clear();
+   this->mOutputDeviceSourceMaps.clear();
+
+   // if we are doing a second scan then restart portaudio to get new devices
+   if (m_inited) {
+      // check to see if there is a stream open - can happen if monitoring,
+      // but otherwise Rescan() should not be available to the user.
+
+      Pa_Terminate();
+      Pa_Initialize();
+   }
+
+   int nDevices = Pa_GetDeviceCount();
+   int i;
+
+   //The heirarchy for devices is Host/device/source.
+   //Some newer systems aggregate this.
+   //So we need to call port mixer for every device to get the sources
+   for (i = 0; i < nDevices; i++) {
+      const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
+      if (info->maxOutputChannels > 0) {
+         AddSources(i, info->defaultSampleRate, &mOutputDeviceSourceMaps, 0);
+      }
+
+      if (info->maxInputChannels > 0) {
+         AddSources(i, info->defaultSampleRate, &mInputDeviceSourceMaps, 1);
+      }
+   }
+
+	m_inited = true;
+}
+
+//private constructor - Singleton.
+DeviceManager::DeviceManager()
+{
+	m_inited = false;
+}
+
+DeviceManager::~DeviceManager()
+{
+
+}
+
+void DeviceManager::Init()
+{
+    Rescan();
+}
