@@ -508,6 +508,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\DeviceManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\DeviceManager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\DirManager.cpp"
 				>
 			</File>
