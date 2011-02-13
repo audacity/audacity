@@ -90,7 +90,7 @@ int open_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
 
    res = mixerGetID((HMIXEROBJ) (deviceOut == WAVE_MAPPER ? 0 : deviceOut),
                     &deviceOut,
-                    MIXER_OBJECTF_WAVEIN);
+                    MIXER_OBJECTF_WAVEOUT);
    if (res != MMSYSERR_NOERROR) {
       return FALSE;
    }
