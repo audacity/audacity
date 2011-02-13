@@ -3044,13 +3044,14 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       wxString project = mFileName;
       if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
          project = project.Mid(0, project.Len() - 4);
-      wxString projName = wxFileNameFromPath(project) + wxT("_data");
 // We suspect that wxWidget's wxPathOnly is Windows specific and incorrectly
 // treats '\' the same as '/' under Linux.  So we comment it out
+//    wxString projName = wxFileNameFromPath(project) + wxT("_data");
 //    wxString projPath = wxPathOnly(project);
 // ...and try this approach instead.
       wxFileName filenameAsClass( project );
       wxString projPath = filenameAsClass.GetPath();
+      wxString projName = filenameAsClass.GetFullName() + wxT("_data");
 
       mWantSaveCompressed = bWantSaveCompressed;
       bool success = false;
