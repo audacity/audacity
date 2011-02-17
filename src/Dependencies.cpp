@@ -313,11 +313,13 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
                                    wxWindowID id,
                                    AudacityProject *project,
                                    AliasedFileArray *aliasedFiles,
-                                   bool isSaving):
-   wxDialog(parent, id, _("Project Depends on Other Audio Files"),
+                                   bool isSaving)
+: wxDialog(parent, id, _("Project Depends on Other Audio Files"),
             wxDefaultPosition, wxDefaultSize,
-            isSaving ? wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX) :
-                       wxDEFAULT_DIALOG_STYLE), // no close box when saving
+            (isSaving ? 
+                  (wxDEFAULT_DIALOG_STYLE & ~wxCLOSE_BOX) : // no close box when saving
+                  wxDEFAULT_DIALOG_STYLE) | 
+               wxRESIZE_BORDER), 
    mProject(project),
    mAliasedFiles(aliasedFiles),
    mIsSaving(isSaving),
