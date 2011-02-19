@@ -32,6 +32,8 @@ typedef struct DeviceSourceMap {
    wxString hostString;
 } DeviceSourceMap;
 
+wxString MakeDeviceSourceString(DeviceSourceMap *map);
+
 class DeviceManager
 {
  public:
@@ -45,6 +47,9 @@ class DeviceManager
    /// Assumes that DeviceManager is only used on the main thread.
    void Rescan();
 
+   DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
+   DeviceSourceMap* GetDefaultInputDevice(int hostIndex);
+
    std::vector<DeviceSourceMap> &GetInputDeviceMaps();
    std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
 
@@ -55,6 +60,8 @@ class DeviceManager
    /// Does an initial scan.
    /// Called by GetInputDeviceMaps and GetOutputDeviceMaps when needed.
    void Init();
+
+   DeviceSourceMap* GetDefaultDevice(int hostIndex, int isInput);
 
    bool m_inited;
    

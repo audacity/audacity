@@ -36,6 +36,7 @@ other settings.
 #include "../Internat.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../DeviceManager.h"
 
 #include "DevicePrefs.h"
 
@@ -69,6 +70,7 @@ void DevicePrefs::Populate()
    // Get current setting for devices
    mPlayDevice = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
    mRecordDevice = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
+   mRecordSource = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
    mRecordChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2L);
 
    //------------------------- Main section --------------------
@@ -187,35 +189,40 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       mHost->SetSelection(0);
    }
 
-   mPlay->Clear();
-   mRecord->Clear();
+   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
 
    wxArrayString playnames;
    wxArrayString recordnames;
-
+   size_t i;
    int devindex;  /* temp variable to hold the numeric ID of each device in turn */
+   wxString device;
+   wxString recDevice;
 
-   for (int i = 0; i < nDevices; i++) {
-      const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
-      if (info->hostApi == index) { /* if the device is for the current HostAPI */
-         wxString name(info->name, wxConvLocal);
-         wxString device = DeviceName(info);
+   recDevice = mRecordDevice;
+   if (this->mRecordSource != wxT(""))
+      recDevice += wxString(": ", wxConvLocal) + mRecordSource;
 
-
-         if (info->maxOutputChannels > 0) {
-            playnames.Add(name);
-            devindex = mPlay->Append(name, (void *) info);
-            if (device == mPlayDevice) {  /* if this is the default device, select it */
-               mPlay->SetSelection(devindex);
-            }
+   mRecord->Clear();
+   for (i = 0; i < inMaps.size(); i++) {
+      if (index == inMaps[i].hostIndex) {
+         device   = MakeDeviceSourceString(&inMaps[i]);
+         devindex = mRecord->Append(device);
+         mRecord->SetClientData(devindex, &inMaps[i]);
+         if (device == recDevice) {  /* if this is the default device, select it */
+            mRecord->SetSelection(devindex);
          }
+      }
+   }
 
-         if (info->maxInputChannels > 0) {
-            recordnames.Add(name);
-            devindex = mRecord->Append(name, (void *) info);
-            if (device == mRecordDevice) {
-               mRecord->SetSelection(devindex);
-            }
+   mPlay->Clear();
+   for (i = 0; i < outMaps.size(); i++) {
+      if (index == outMaps[i].hostIndex) {
+         device   = MakeDeviceSourceString(&outMaps[i]);
+         devindex = mPlay->Append(device);
+         mPlay->SetClientData(devindex, &outMaps[i]);
+         if (device == mPlayDevice) {  /* if this is the default device, select it */
+            mPlay->SetSelection(devindex);
          }
       }
    }
@@ -236,8 +243,9 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
     * this API, as defined by PortAudio. We then fall back to using 0 only if
     * that fails */
    if (mPlay->GetCount() && mPlay->GetSelection() == wxNOT_FOUND) {
-      wxLogDebug(wxT("DevicePrefs::OnHost(): no play device selected"));
-      mPlay->SetStringSelection(GetDefaultPlayDevice(index));
+      DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(index);
+      if (defaultMap)
+         mPlay->SetStringSelection(MakeDeviceSourceString(defaultMap));
 
       if (mPlay->GetSelection() == wxNOT_FOUND) {
          mPlay->SetSelection(0);
@@ -245,8 +253,9 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    }
 
    if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
-      wxLogDebug(wxT("DevicePrefs::OnHost(): no record device selected"));
-      mRecord->SetStringSelection(GetDefaultRecordDevice(index));
+      DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(index);
+      if (defaultMap)
+         mRecord->SetStringSelection(MakeDeviceSourceString(defaultMap));
 
       if (mPlay->GetSelection() == wxNOT_FOUND) {
          mPlay->SetSelection(0);
@@ -254,8 +263,8 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    }
 
    ShuttleGui S(this, eIsCreating);
-   S.SetSizeHints(mPlay, playnames);
-   S.SetSizeHints(mRecord, recordnames);
+   S.SetSizeHints(mPlay, mPlay->GetStrings());
+   S.SetSizeHints(mRecord, mRecord->GetStrings());
    OnDevice(e);
 }
 
@@ -269,9 +278,9 @@ void DevicePrefs::OnDevice(wxCommandEvent & e)
    int sel = mChannels->GetSelection();
    int cnt = 0;
 
-   const PaDeviceInfo *info = (const PaDeviceInfo *) mRecord->GetClientData(ndx);
-   if (info != NULL) {
-      cnt = info->maxInputChannels;
+   DeviceSourceMap *inMap = (DeviceSourceMap *) mRecord->GetClientData(ndx);
+   if (inMap != NULL) {
+      cnt = inMap->numChannels;
    }
 
    if (sel != wxNOT_FOUND) {
@@ -324,67 +333,36 @@ void DevicePrefs::OnDevice(wxCommandEvent & e)
    Layout();
 }
 
-wxString DevicePrefs::GetDefaultPlayDevice(int index)
-{
-   if (index < 0 || index >= Pa_GetHostApiCount()) {
-      return wxEmptyString;
-   }
-
-   const struct PaHostApiInfo *apiinfo = Pa_GetHostApiInfo(index);   // get info on API
-   wxLogDebug(wxT("GetDefaultPlayDevice(): HostAPI index %d, name %s"), index, wxString(apiinfo->name, wxConvLocal).c_str());
-   wxLogDebug(wxT("GetDefaultPlayDevice() default output %d"), apiinfo->defaultOutputDevice);
-   const PaDeviceInfo* devinfo = Pa_GetDeviceInfo(apiinfo->defaultOutputDevice);
-   if (devinfo == NULL) {
-     wxLogDebug(wxT("GetDefaultPlayDevice() no default output device"));
-     return wxString("", wxConvLocal);
-   }
-   wxString name(devinfo->name, wxConvLocal);
-   wxLogDebug(wxT("GetDefaultPlayDevice() default output device name %s"), name.c_str());
-   return name;
-}
-
-wxString DevicePrefs::GetDefaultRecordDevice(int index)
-{
-   if (index < 0 || index >= Pa_GetHostApiCount()) {
-      return wxEmptyString;
-   }
-
-   const struct PaHostApiInfo *apiinfo = Pa_GetHostApiInfo(index);   // get info on API
-   wxLogDebug(wxT("GetDefaultRecordDevice(): HostAPI index %d, name %s"), index, wxString(apiinfo->name, wxConvLocal).c_str());
-   wxLogDebug(wxT("GetDefaultRecordDevice() default input %d"), apiinfo->defaultInputDevice);
-   const PaDeviceInfo* devinfo = Pa_GetDeviceInfo(apiinfo->defaultInputDevice);
-   if (devinfo == NULL) {
-     wxLogDebug(wxT("GetDefaultRecordDevice() no default input device"));
-     return wxString("", wxConvLocal);
-   }
-   wxString name(devinfo->name, wxConvLocal);
-   wxLogDebug(wxT("GetDefaultRecordDevice() default input device name %s"), name.c_str());
-   return name;
-}
-
 bool DevicePrefs::Apply()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
-
-   const PaDeviceInfo *info = NULL;
+   DeviceSourceMap *map = NULL;
 
    if (mPlay->GetCount() > 0) {
-      info = (const PaDeviceInfo *) mPlay->GetClientData(
+      map = (DeviceSourceMap *) mPlay->GetClientData(
             mPlay->GetSelection());
    }
-   if (info) {
-      gPrefs->Write(wxT("/AudioIO/PlaybackDevice"),
-                    DeviceName(info));
+   if (map) {
+      gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), map->deviceString);
    }
 
-   info = NULL;
+   map = NULL;
    if (mRecord->GetCount() > 0) {
-      info = (const PaDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
+      map = (DeviceSourceMap *) mRecord->GetClientData(mRecord->GetSelection());
    }
-   if (info) {
+   if (map) {
       gPrefs->Write(wxT("/AudioIO/RecordingDevice"),
-                    DeviceName(info));
+                    map->deviceString);
+      gPrefs->Write(wxT("/AudioIO/RecordingSourceIndex"),
+                    map->sourceIndex);
+      if (map->totalSources >= 1) {
+         gPrefs->Write(wxT("/AudioIO/RecordingSource"),
+                       map->sourceString);
+      } else {
+         gPrefs->Write(wxT("/AudioIO/RecordingSource"),
+                       wxT(""));
+      }
 
       gPrefs->Write(wxT("/AudioIO/RecordChannels"),
                     mChannels->GetSelection() + 1);
@@ -392,15 +370,3 @@ bool DevicePrefs::Apply()
 
    return true;
 }
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: d6904b91-a320-4194-8d60-caa9175b6bb4

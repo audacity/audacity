@@ -80,16 +80,6 @@ void DeviceToolBar::RecreateTipWindows()
 {
 }
 
-static wxString MakeDeviceSourceString(DeviceSourceMap *map)
-{
-   wxString ret;
-   ret = map->deviceString;
-   if (map->totalSources > 1)
-      ret += wxString(": ", wxConvLocal) + map->sourceString;
-
-   return ret;
-}
-
 void DeviceToolBar::DeinitChildren()
 {
    mPlayBitmap    = NULL;
@@ -264,7 +254,14 @@ void DeviceToolBar::UpdatePrefs()
       for (size_t i = 0; i < inMaps.size(); i++) {
          if (inMaps[i].hostString == hostName &&
              MakeDeviceSourceString(&inMaps[i]) == mInput->GetString(0)) {
-            SetDevices(&inMaps[i], NULL);
+            // use the default.  It should exist but check just in case, falling back on the 0 index.
+            DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(inMaps[i].hostIndex);
+            if (defaultMap) {
+               mInput->SetStringSelection(MakeDeviceSourceString(defaultMap));
+               SetDevices(defaultMap, NULL);
+            } else {
+               SetDevices(&inMaps[i], NULL);
+            }
             break;
          }
       }
@@ -288,7 +285,14 @@ void DeviceToolBar::UpdatePrefs()
       for (size_t i = 0; i < outMaps.size(); i++) {
          if (outMaps[i].hostString == hostName &&
              MakeDeviceSourceString(&outMaps[i]) == mOutput->GetString(0)) {
-            SetDevices(NULL, &outMaps[i]);
+            // use the default.  It should exist but check just in case, falling back on the 0 index.
+            DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(inMaps[i].hostIndex);
+            if (defaultMap) {
+               mOutput->SetStringSelection(MakeDeviceSourceString(defaultMap));
+               SetDevices(NULL, defaultMap);
+            } else {
+               SetDevices(NULL, &outMaps[i]);
+            }
             break;
          }
       }

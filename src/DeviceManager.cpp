@@ -57,6 +57,46 @@ std::vector<DeviceSourceMap> &DeviceManager::GetOutputDeviceMaps()
    return mOutputDeviceSourceMaps;
 }
 
+
+wxString MakeDeviceSourceString(DeviceSourceMap *map)
+{
+   wxString ret;
+   ret = map->deviceString;
+   if (map->totalSources > 1)
+      ret += wxString(": ", wxConvLocal) + map->sourceString;
+
+   return ret;
+}
+
+DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
+{
+   if (hostIndex < 0 || hostIndex >= Pa_GetHostApiCount()) {
+      return NULL;
+   }
+
+   const struct PaHostApiInfo *apiinfo = Pa_GetHostApiInfo(hostIndex);   // get info on API
+   std::vector<DeviceSourceMap> & maps = isInput ? mInputDeviceSourceMaps : mOutputDeviceSourceMaps;
+   size_t i;
+   int targetDevice = isInput ? apiinfo->defaultInputDevice : apiinfo->defaultOutputDevice;
+
+   for (i = 0; i < maps.size(); i++) {
+      if (maps[i].deviceIndex == targetDevice)
+         return &maps[i];
+   }
+   
+   wxLogDebug(wxT("GetDefaultDevice() no default device"));
+   return NULL;
+}
+
+DeviceSourceMap* DeviceManager::GetDefaultOutputDevice(int hostIndex)
+{
+   return GetDefaultDevice(hostIndex, 0);
+}
+DeviceSourceMap* DeviceManager::GetDefaultInputDevice(int hostIndex)
+{
+   return GetDefaultDevice(hostIndex, 1);
+}
+
 //--------------- Device Enumeration --------------------------
 
 //Port Audio requires we open the stream with a callback or a lot of devices will fail
