@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-01-17 12:09+0000\n"
-"PO-Revision-Date: 2011-02-11 01:09-0000\n"
+"PO-Revision-Date: 2011-02-18 16:25+0100\n"
 "Last-Translator: Thomas De Rocker <thomasderocker.at.h0tmail.d0t.c0m>\n"
 "Language-Team: Dutch <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -6298,11 +6298,11 @@ msgstr "Er is niet genoeg ruimte beschikbaar om de audio te genereren"
 # wat vertaald wordt met omkeren (vertaling voor reverse)
 #: effects/Invert.h:27
 msgid "Invert"
-msgstr "Spiegelen"
+msgstr "Inverteren"
 
 #: effects/Invert.h:41
 msgid "Inverting"
-msgstr "Bezig met spiegelen"
+msgstr "Bezig met inverteren"
 
 # de extremen eruit halen/nivelleren
 #: effects/Leveller.cpp:192
