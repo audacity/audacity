@@ -13,7 +13,7 @@ AC_PROG_CC
 AC_PROG_RANLIB
 AC_PATH_PROG(AR, ar, no)
 if [[ $AR = "no" ]] ; then
-    AC_MSG_ERROR("Could not find ar - needed to create a library");
+    AC_MSG_ERROR([Could not find ar - needed to create a library]);
 fi
 
 #
@@ -67,41 +67,41 @@ have_support=yes
 if [[ $have_alsa = "yes" ]] ; then
 	AC_EGREP_HEADER([PaAlsa_GetStreamInputCard], [pa_linux_alsa.h], , [have_support=no])
 	if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_linux_alsa.h");
+		AC_MSG_WARN([Missing support in pa_linux_alsa.h]);
 	fi
 fi
 
 if [[ $have_coreaudio = "yes" ]] ; then
 	AC_EGREP_HEADER([PaMacCore_GetStreamInputDevice], [pa_mac_core.h], , [have_support=no])
 	if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_mac_core.h");
+		AC_MSG_WARN([Missing support in pa_mac_core.h]);
 	fi
 fi
 
 if [[ $have_oss = "yes" ]] ; then
 	AC_EGREP_HEADER([PaOSS_GetStreamInputDevice], [pa_unix_oss.h], , [have_support=no])
 	if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_unix_oss.h");
+		AC_MSG_WARN([Missing support in pa_unix_oss.h]);
 	fi
 fi
 
 if [[ $have_windows = "yes" ]] ; then
 	AC_EGREP_HEADER([PaWinDS_GetStreamInputGUID], [pa_win_ds.h], , [have_support=no])
 	if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_win_ds.h");
+		AC_MSG_WARN([Missing support in pa_win_ds.h]);
 	fi
 	AC_EGREP_HEADER([PaWinMME_GetStreamInputHandle], [pa_win_wmme.h], , [have_support=no])
 	if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in pa_win_wmme.h");
+		AC_MSG_WARN([Missing support in pa_win_wmme.h]);
 	fi
 fi
 
 AC_EGREP_HEADER([Pa_GetStreamHostApiType], [portaudio.h], , [have_support=no])
 if [[ $have_support = "no" ]] ; then
-		AC_MSG_WARN("Missing support in portaudio.h");
+		AC_MSG_WARN([Missing support in portaudio.h]);
 fi
 if [[ $have_support = "no" ]] ; then
-   AC_MSG_ERROR("Your version of portaudio does not include required functions"); 
+   AC_MSG_ERROR([Your version of portaudio does not include required functions.]);
 fi
 
 #
