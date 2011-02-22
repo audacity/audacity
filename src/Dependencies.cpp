@@ -272,6 +272,7 @@ private:
    void OnCancel(wxCommandEvent& evt);
    void OnCopySelectedFiles(wxCommandEvent &evt);
    void OnList(wxListEvent &evt);
+   void OnSize(wxSizeEvent &evt);
    void OnNo(wxCommandEvent &evt);
    void OnYes(wxCommandEvent &evt);
 
@@ -304,6 +305,7 @@ BEGIN_EVENT_TABLE(DependencyDialog, wxDialog)
    EVT_LIST_ITEM_SELECTED(FileListID, DependencyDialog::OnList)
    EVT_LIST_ITEM_DESELECTED(FileListID, DependencyDialog::OnList)
    EVT_BUTTON(CopySelectedFilesButtonID, DependencyDialog::OnCopySelectedFiles)
+   EVT_SIZE(DependencyDialog::OnSize)
    EVT_BUTTON(wxID_NO, DependencyDialog::OnNo) // mIsSaving ? "Cancel Save" : "Save without Copying"
    EVT_BUTTON(wxID_YES, DependencyDialog::OnYes) // "Copy All Files (Safer)"
    EVT_BUTTON(wxID_CANCEL, DependencyDialog::OnCancel)  // "Cancel Save"
@@ -467,6 +469,19 @@ void DependencyDialog::OnList(wxListEvent &evt)
 
    mCopySelectedFilesButton->Enable(
       mFileListCtrl->GetSelectedItemCount() > 0);
+}
+
+void DependencyDialog::OnSize(wxSizeEvent &evt)
+{
+   int fileListCtrlWidth, fileListCtrlHeight;
+   mFileListCtrl->GetSize(&fileListCtrlWidth, &fileListCtrlHeight);
+
+   // File path is column 0. File size is column 1. 
+   // File size column is always 120 px wide. 
+   // Also subtract 8 from file path column width for borders.
+   mFileListCtrl->SetColumnWidth(0, fileListCtrlWidth - 120 - 8);    
+   mFileListCtrl->SetColumnWidth(1, 120);
+   wxDialog::OnSize(evt);
 }
 
 void DependencyDialog::OnNo(wxCommandEvent &evt)
