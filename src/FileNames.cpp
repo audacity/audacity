@@ -28,7 +28,12 @@ used throughout Audacity into this one place.
 #include <wx/stdpaths.h>
 #include "Prefs.h"
 #include "FileNames.h"
+#include "Internat.h"
 #include "PlatformCompatibility.h"
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
+#include <dlfcn.h>
+#endif
 
 static wxString gDataDir;
 
@@ -204,4 +209,34 @@ wxString FileNames::ThemeCacheAsCee( )
 wxString FileNames::ThemeComponent(const wxString &Str)
 {
    return wxFileName( ThemeComponentsDir(), Str, wxT("png") ).GetFullPath();
+}
+
+//
+// Returns the full path of program module (.exe, .dll, .so, .dylib) containing address
+//
+wxString FileNames::PathFromAddr(void *addr)
+{
+    wxFileName name;
+
+#if defined(__WXMAC__) || defined(__WXGTK__)
+   Dl_info info;
+   if (dladdr(addr, &info)) {      
+      name = LAT1CTOWX(info.dli_fname);
+   }
+#elif defined(__WXMSW__)
+   HMODULE module;
+   if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                         (LPCWSTR) addr,
+                         &module)) {
+      TCHAR path[MAX_PATH];
+      DWORD nSize;
+
+      nSize = GetModuleFileName(module, path, MAX_PATH);
+      if (nSize && nSize < MAX_PATH) {
+         name = LAT1CTOWX(path);
+      }
+   }
+#endif
+
+    return name.GetFullPath();
 }

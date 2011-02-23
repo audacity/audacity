@@ -55,6 +55,9 @@ public:
    static wxString ThemeCacheHtm();
    static wxString ThemeImageDefsAsCee();
 
+   // Obtain name of loaded module that contains address
+   static wxString PathFromAddr(void *addr);
+
 private:
    // Private constructors: No one is ever going to instantiate it.
    // 

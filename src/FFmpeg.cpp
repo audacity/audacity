@@ -19,6 +19,7 @@ License: GPL v2.  See License.txt.
 #include "Audacity.h"	// for config*.h
 #include "FFmpeg.h"
 #include "AudacityApp.h"
+#include "FileNames.h"
 
 #include <wx/file.h>
 
@@ -674,12 +675,12 @@ bool FFmpegLibs::ValidLibsLoaded()
 
 bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
 {
-   wxString syspath;
-   bool pathfix = false;
-
    FreeLibs();
 
 #if defined(__WXMSW__)
+   wxString syspath;
+   bool pathfix = false;
+
    wxLogMessage(wxT("Looking up PATH environment variable..."));
    // First take PATH environment variable and store its content.
    if (wxGetEnv(wxT("PATH"),&syspath))
@@ -728,55 +729,57 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    wxFileName name(libpath_format);
    bool gotError = false;
 
+   // Check for a monolithic avformat
    avformat = new wxDynamicLibrary();
-   wxLogDebug(wxT("Loading avformat from '%s'."), libpath_format.c_str());
-   // Vaughan, 2010-08-17: No explanation why logging was turned off, so commented these out.
-   //wxLogWindow* pLogger = wxGetApp().mLogger;
-   //if (showerr)
-   //   pLogger->SetActiveTarget(NULL);
-   gotError = !avformat->Load(libpath_format, wxDL_LAZY);
-   //if (showerr)
-   //   pLogger->SetActiveTarget(pLogger);
+   wxLogDebug(wxT("Checking for monolithic avformat from '%s'."), name.GetFullPath().c_str());
+   gotError = !avformat->Load(name.GetFullPath(), wxDL_LAZY);
 
+   // Verify it really is monolithic
    if (!gotError) {
-      if (avformat->HasSymbol(wxT("av_free"))) {
-         util = avformat;
+      wxFileName actual;
+
+      actual = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
+      if (actual.GetPath().IsSameAs(name.GetPath())) {
+
+         actual = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
+         if (actual.GetPath().IsSameAs(name.GetPath())) {
+             util = avformat;
+             codec = avformat;
+         }
       }
-      if (avformat->HasSymbol(wxT("avcodec_init"))) {
-         codec = avformat;
+
+      if (util == NULL || codec == NULL) {
+         wxLogDebug(wxT("avformat not monolithic"));
+         avformat->Unload();
+         util = NULL;
+         codec = NULL;
+      }
+      else {
+         wxLogDebug(wxT("avformat is monolithic"));
       }
    }
 
    if (!util) {
       name.SetFullName(GetLibAVUtilName());
-      avutil = util =  new wxDynamicLibrary();
+      avutil = util = new wxDynamicLibrary();
       wxLogDebug(wxT("Loading avutil from '%s'."), name.GetFullPath().c_str());
-      //if (showerr)
-      //   pLogger->SetActiveTarget(NULL);
       util->Load(name.GetFullPath(), wxDL_LAZY);
-      //if (showerr)
-      //   pLogger->SetActiveTarget(pLogger);
    }
 
    if (!codec) {
       name.SetFullName(GetLibAVCodecName());
       avcodec = codec = new wxDynamicLibrary();
       wxLogDebug(wxT("Loading avcodec from '%s'."), name.GetFullPath().c_str());
-      //if (showerr)
-      //   pLogger->SetActiveTarget(NULL);
       codec->Load(name.GetFullPath(), wxDL_LAZY);
-      //if (showerr)
-      //   pLogger->SetActiveTarget(pLogger);
    }
 
    if (!avformat->IsLoaded()) {
-      //if (showerr)
-      //   pLogger->SetActiveTarget(NULL);
-      gotError = !avformat->Load(libpath_format, wxDL_LAZY);
-      //if (showerr)
-      //   pLogger->SetActiveTarget(pLogger);
+      name.SetFullName(libpath_format);
+      wxLogDebug(wxT("Loading avformat from '%s'."), name.GetFullPath().c_str());
+      gotError = !avformat->Load(name.GetFullPath(), wxDL_LAZY);
    }
 
+#if defined(__WXMSW__)
    //Return PATH to normal
    if ( pathfix )
    {
@@ -784,11 +787,26 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
       wxLogMessage(wxT("Returning PATH to previous setting..."));
       wxSetEnv(wxT("PATH"),oldpath.c_str());
    }
+#endif
 
    if (gotError) {
       wxLogError(wxT("Failed to load FFmpeg libraries."));
       FreeLibs();
       return false;
+   }
+
+   // Show the actual libraries loaded
+   if (avutil) {
+      wxLogDebug(wxT("Actual avutil path %s"),
+                 FileNames::PathFromAddr(avutil->GetSymbol(wxT("avutil_version"))).c_str());
+   }
+   if (avcodec) {
+      wxLogDebug(wxT("Actual avcodec path %s"),
+                 FileNames::PathFromAddr(avcodec->GetSymbol(wxT("avcodec_version"))).c_str());
+   }
+   if (avformat) {
+      wxLogDebug(wxT("Actual avformat path %s"),
+                 FileNames::PathFromAddr(avformat->GetSymbol(wxT("avformat_version"))).c_str());
    }
 
    wxLogDebug(wxT("Importing symbols..."));
