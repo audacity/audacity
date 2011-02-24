@@ -35,6 +35,10 @@ used throughout Audacity into this one place.
 #include <dlfcn.h>
 #endif
 
+#if defined(__WXMSW__)
+#include <windows.h>
+#endif
+
 static wxString gDataDir;
 
 wxString FileNames::MkDir(const wxString &Str)
