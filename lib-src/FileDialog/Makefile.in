@@ -26,4 +26,4 @@ clean:
 	-$(RM) -f $(OBJS)
 
 distclean: clean
-	-$(RM) -rf config.log config.status autom4te.cache Makefile
+	-$(RM) -rf config.h config.log config.status autom4te.cache Makefile
