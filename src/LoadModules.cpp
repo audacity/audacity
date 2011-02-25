@@ -73,7 +73,6 @@ tpRegScriptServerFunc scriptFn;
 void LoadModule(wxString fname)
 {
    wxLogDebug(wxT("About to load %s"), fname.c_str() );
-   wxLogNull logNo;
    tModuleInit mainFn = NULL;
 
    // As a courtesy to some modules that might be bridges to

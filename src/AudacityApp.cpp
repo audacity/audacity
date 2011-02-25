@@ -1306,6 +1306,8 @@ bool AudacityApp::OnInit()
 
    mWindowRectAlreadySaved = FALSE;
 
+   wxLog::FlushActive(); // Make sure all log messages are written.
+
    return TRUE;
 }
 
