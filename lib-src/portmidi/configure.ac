@@ -31,7 +31,7 @@ dnl set up automake
 AM_INIT_AUTOMAKE([-Wall foreign])
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
-AM_MAINTAINER_MODE([enabled])
+AM_MAINTAINER_MODE([enable])
 
 dnl -------------------------------------------------------
 dnl Checks for programs.
