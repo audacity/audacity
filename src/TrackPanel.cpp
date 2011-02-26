@@ -883,17 +883,18 @@ void TrackPanel::OnTimer()
       }
    }
 
+   //vvv Vaughan, 2011-02-25: Move this update back here from audacityAudioCallback.
    // Vaughan, 2010-01-30: 
    //    Since all we're doing here is updating the meters, I moved it to 
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
-   //MixerBoard* pMixerBoard = this->GetMixerBoard();
-   //if (pMixerBoard && 
-   //      (p->GetAudioIOToken() > 0) &&
-   //      gAudioIO->IsStreamActive(p->GetAudioIOToken()))
-   //{
-   //   pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
-   //                              (p->mLastPlayMode == loopedPlay));
-   //}
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard && 
+         (p->GetAudioIOToken() > 0) &&
+         gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+   {
+      pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
+                                 (p->mLastPlayMode == loopedPlay));
+   }
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (p->GetAudioIOToken()>0 &&

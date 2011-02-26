@@ -3647,11 +3647,15 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          gAudioIO->mOutputMeter->UpdateDisplay(numPlaybackChannels,
                                                framesPerBuffer,
                                                outputMeterFloats);
-         AudacityProject* pProj = GetActiveProject();
-         MixerBoard* pMixerBoard = pProj->GetMixerBoard();
-         if (pMixerBoard)
-            pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
-                                       (pProj->mLastPlayMode == loopedPlay));
+
+         //vvv Vaughan, 2011-02-25: Move this update back to 
+         //    TrackPanel::OnTimer() to see if it helps with 
+         //    playback issues reported by Bill and noted on Bug 258.
+         //AudacityProject* pProj = GetActiveProject();
+         //MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+         //if (pMixerBoard)
+         //   pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(), 
+         //                              (pProj->mLastPlayMode == loopedPlay));
       }
       gAudioIO->mUpdatingMeters = false;
    }  // end playback VU meter update
