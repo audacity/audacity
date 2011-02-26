@@ -99,7 +99,7 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **a
 
       const wxString strValue = value;
       if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
-         //vvv Should this be 
+         //v Should this be 
          //    dm.AssignFile(summaryFileName, strValue, false);
          // as in PCMAliasBlockFile::BuildFromXML? Test with an old project.
          summaryFileName.Assign(projDir, strValue, wxT(""));

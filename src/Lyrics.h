@@ -116,7 +116,7 @@ private:
    int            mWidth;  // client width
    int            mHeight; // client height
 
-   int            mKaraokeHeight; //vvv mHeight - mBrandingHeight (so just mHeight now that Branding is removed).
+   int            mKaraokeHeight; //v mHeight - mBrandingHeight (so just mHeight now that Branding is removed).
    unsigned int   mKaraokeFontSize;
 
    LyricsStyle          mLyricsStyle; // default kHighlightLyrics

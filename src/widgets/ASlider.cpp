@@ -349,7 +349,7 @@ void LWSlider::SetStyle(int style)
       if (mOrientation == wxHORIZONTAL)
          mMaxValue = DB_MAX;
       else 
-         mMaxValue = DB_MAX; // for MixerBoard //vvv Previously was 6dB for MixerBoard, but identical for now. 
+         mMaxValue = DB_MAX; // for MixerBoard //v Previously was 6dB for MixerBoard, but identical for now. 
       mStepValue = 1.0f;
       mSpeed = 0.5;
       mName = _("Gain");
@@ -609,7 +609,7 @@ void LWSlider::Draw()
       mThumbBitmap = &theTheme.Bitmap( bmpSliderThumb );
       mThumbBitmapAllocated = false;
    }
-   //vvv \todo Convert this to an image in AllThemeResources, as bmpSliderThumb. Make an alpha also, as for horizontal slider thumb?
+   //v \todo Convert this to an image in AllThemeResources, as bmpSliderThumb. Make an alpha also, as for horizontal slider thumb?
    else if (mOrientation == wxHORIZONTAL)
    {
       wxImage thumbImage(wxBitmap(SliderThumbDisabled).ConvertToImage());
@@ -701,7 +701,7 @@ void LWSlider::Draw()
 
    if (mOrientation == wxHORIZONTAL)
       AColor::Line(*dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
-   else //vvv if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
+   else //v if (mStyle != DB_SLIDER) // Let the ruler do it for vertical DB_SLIDER.
       AColor::Line(*dc, mCenterX+1, mTopY, mCenterX+1, mBottomY+2);
 
 
@@ -773,7 +773,7 @@ void LWSlider::Draw()
       }
    }
 
-   //vvv 20090820: Ruler doesn't align with slider correctly -- yet.
+   //v 20090820: Ruler doesn't align with slider correctly -- yet.
    //if ((mOrientation == wxVERTICAL) && (mStyle == DB_SLIDER))
    //{
    //   if (!mpRuler)
@@ -797,7 +797,7 @@ void LWSlider::Draw()
    //      mpRuler->SetRange(mMaxValue, mMinValue);
    //      mpRuler->SetFormat(Ruler::LinearDBFormat);
    //   }
-   //   mpRuler->SetBounds(mLeft, mTop,  mWidth, mHeightY); //vvv Why the magic number reqd on height to get it to line up?    + 9); 
+   //   mpRuler->SetBounds(mLeft, mTop,  mWidth, mHeightY); //v Why the magic number reqd on height to get it to line up?    + 9); 
    //   mpRuler->Draw(*dc);
    //}
    //else 

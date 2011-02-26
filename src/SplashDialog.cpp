@@ -65,7 +65,7 @@ SplashDialog::SplashDialog(wxWindow * parent)
 {
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    m_pIcon = NULL;
-   m_pLogo = NULL; //vvv
+   m_pLogo = NULL; //v
    ShuttleGui S( this, eIsCreating );
    Populate( S );
    Fit();
@@ -82,8 +82,8 @@ void SplashDialog::Populate( ShuttleGui & S )
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &bShow, true );
    S.StartVerticalLay(1);
 
-   //vvv For now, change to AudacityLogoWithName via old-fashioned ways, not Theme.
-   m_pLogo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //vvv
+   //v For now, change to AudacityLogoWithName via old-fashioned ways, not Theme.
+   m_pLogo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
 
    // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
    // our source, but this allows us to tweak the size - if we want to.
@@ -95,7 +95,7 @@ void SplashDialog::Populate( ShuttleGui & S )
    wxBitmap RescaledBitmap( RescaledImage );
    m_pIcon =
        new wxStaticBitmap(S.GetParent(), -1, 
-                          //*m_pLogo, //vvv theTheme.Bitmap(bmpAudacityLogoWithName), 
+                          //*m_pLogo, //v theTheme.Bitmap(bmpAudacityLogoWithName), 
                           RescaledBitmap,
                           wxDefaultPosition, 
                           wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));

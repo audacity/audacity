@@ -280,8 +280,8 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    S.StartNotebookPage( _("Audacity") );
    S.StartVerticalLay(1);
 
-   //vvv For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
-   logo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //vvv
+   //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
+   logo = new wxBitmap((const char **) AudacityLogoWithName_xpm); //v
 
    // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
    // our source, but this allows us to tweak the size - if we want to.
@@ -294,9 +294,9 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 
    icon =
        new wxStaticBitmap(S.GetParent(), -1, 
-                          //*logo, //vvv
-                          //vvv theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
-                          //vvv theTheme.Bitmap(bmpAudacityLogoWithName), 
+                          //*logo, //v
+                          //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
+                          //v theTheme.Bitmap(bmpAudacityLogoWithName), 
                           RescaledBitmap,
                           wxDefaultPosition, 
                           wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
