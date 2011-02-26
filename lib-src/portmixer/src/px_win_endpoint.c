@@ -168,7 +168,7 @@ int open_ep_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
       }
    }
 
-   if (deviceIn == WAVE_MAPPER) {
+   if (deviceOut == WAVE_MAPPER) {
       hr = IMMDeviceEnumerator_GetDefaultAudioEndpoint(denum,
                                                        eRender,
                                                        eMultimedia,
