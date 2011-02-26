@@ -72,7 +72,7 @@ tpRegScriptServerFunc scriptFn;
 
 void LoadModule(wxString fname)
 {
-   wxLogDebug(wxT("About to load %s"), fname.c_str() );
+   wxLogDebug(wxT("About to load module %s"), fname.c_str());
    tModuleInit mainFn = NULL;
 
    // As a courtesy to some modules that might be bridges to
@@ -102,14 +102,14 @@ void LoadModule(wxString fname)
          wxString moduleVersion = versionFn();
          if (!moduleVersion.IsSameAs(AUDACITY_VERSION_STRING))
          {
-            wxLogDebug(wxT("The module %s is designed to work with Audacity version %s; it will not be loaded."), fname.c_str(), moduleVersion.c_str());
+            wxLogError(wxT("The module %s is designed to work with Audacity version %s; it will not be loaded."), fname.c_str(), moduleVersion.c_str());
             delete pDLL;
             return;
          }
       }
       else
       {
-         wxLogDebug(wxT("The module %s does not provide a version string. Attempting to load it anyway."), fname.c_str());
+         wxLogWarning(wxT("The module %s does not provide a version string. Attempting to load it anyway."), fname.c_str());
       }
 
       if(( scriptFn == NULL ) &&(result>=0 ))
