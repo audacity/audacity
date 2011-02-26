@@ -883,7 +883,8 @@ void TrackPanel::OnTimer()
       }
    }
 
-   //vvv Vaughan, 2011-02-25: Move this update back here from audacityAudioCallback.
+   //v Vaughan, 2011-02-25: Moved this update back here from audacityAudioCallback.
+   //    See note there. 
    // Vaughan, 2010-01-30: 
    //    Since all we're doing here is updating the meters, I moved it to 
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
@@ -5345,7 +5346,7 @@ double TrackPanel::GetMostRecentXPos()
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 {
-   //vvv Vaughan, 2011-02-04:
+   //v Vaughan, 2011-02-04:
    //   Since Roger's fix is to not use r, no reason to declare or calculate it, or link.
    //Track *link = trk->GetLink();
    //
@@ -5368,7 +5369,7 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
       mRefreshBacking = true;
    }
 
-   //vvv Vaughan, 2011-02-04:
+   //v Vaughan, 2011-02-04:
    //    Roger's patch for Bug 255 is to Refresh the whole TrackPanel. 
    //    We'll see if it's too much of a performance hit.
    //Refresh( false, &r );

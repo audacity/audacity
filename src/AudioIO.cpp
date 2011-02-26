@@ -3648,9 +3648,11 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                                                framesPerBuffer,
                                                outputMeterFloats);
 
-         //vvv Vaughan, 2011-02-25: Move this update back to 
-         //    TrackPanel::OnTimer() to see if it helps with 
-         //    playback issues reported by Bill and noted on Bug 258.
+         //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer() 
+         //    as it helps with playback issues reported by Bill and noted on Bug 258.
+         //    The problem there occurs if Software Playthrough is on. 
+         //    Could conditionally do the update here if Software Playthrough is off, 
+         //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now. 
          //AudacityProject* pProj = GetActiveProject();
          //MixerBoard* pMixerBoard = pProj->GetMixerBoard();
          //if (pMixerBoard)

@@ -419,9 +419,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    if ((t0 < 0.0) || (t1 < 0.0) || (t0 >= t1) || // bad time value or nothing to show
          ((mMixerBoard->HasSolo() || mLeftTrack->GetMute()) && !mLeftTrack->GetSolo()))
    {
-      //vvv Vaughan, 2011-02-25: Moved this update back to 
-      //    TrackPanel::OnTimer() to see if it helps with 
-      //    playback issues reported by Bill and noted on Bug 258.
+      //v Vaughan, 2011-02-25: Moved the update back to TrackPanel::OnTimer() as it helps with 
+      //    playback issues reported by Bill and noted on Bug 258, so no assert.
       // Vaughan, 2011-02-04: Now that we're updating all meters from audacityAudioCallback, 
       //    this causes an assert if you click Mute while playing, because ResetMeter() resets 
       //    the timer, and wxTimerbase says that can only be done from main thread -- 
