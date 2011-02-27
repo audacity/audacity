@@ -230,7 +230,7 @@ wxString FileNames::PathFromAddr(void *addr)
 #elif defined(__WXMSW__)
    HMODULE module;
    if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                         (LPCWSTR) addr,
+                         (LPTSTR) addr,
                          &module)) {
       TCHAR path[MAX_PATH];
       DWORD nSize;
