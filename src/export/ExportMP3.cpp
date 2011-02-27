@@ -1485,7 +1485,9 @@ private:
    wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
    int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags);
-
+#ifdef USE_LIBID3TAG 
+   void AddFrame(struct id3_tag *tp, bool v2, const wxString & n, const wxString & v, const char *name);
+#endif
 };
 
 ExportMP3::ExportMP3()
@@ -1862,10 +1864,10 @@ int ExportMP3::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
          name = ID3_FRAME_ALBUM;
       }
       else if (n.CmpNoCase(TAG_YEAR) == 0) {
-         // LLL:  This should be ID3_FRAME_YEAR, but some apps do not like the
-         //       newer frame ID, so we force usage of the older one.  (For now
-         //       anyway.)
-         name = "TYER";
+         // LLL:  Some apps do not like the newer frame ID (ID3_FRAME_YEAR),
+         //       so we add old one as well.
+         AddFrame(tp, v2, n, v, "TYER");
+         name = ID3_FRAME_YEAR;
       }
       else if (n.CmpNoCase(TAG_GENRE) == 0) {
          name = ID3_FRAME_GENRE;
@@ -1880,45 +1882,7 @@ int ExportMP3::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
          name = ID3_FRAME_TRACK;
       }
 
-      struct id3_frame *frame = id3_frame_new(name);
-
-      if (v2) {
-         if (!n.IsAscii() || !v.IsAscii()) {
-            id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_UTF_16);
-         }
-         else {
-            id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
-         }
-      }
-
-      id3_ucs4_t *ucs4 =
-         id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
-
-      if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
-         // A hack to get around iTunes not recognizing the comment.  The
-         // language defaults to XXX and, since it's not a valid language,
-         // iTunes just ignores the tag.  So, either set it to a valid language
-         // (which one???) or just clear it.  Unfortunately, there's no supported
-         // way of clearing the field, so do it directly.
-         id3_field *f = id3_frame_field(frame, 1);
-         memset(f->immediate.value, 0, sizeof(f->immediate.value));
-         id3_field_setfullstring(id3_frame_field(frame, 3), ucs4);
-      }
-      else if (strcmp(name, "TXXX") == 0) {
-         id3_field_setstring(id3_frame_field(frame, 2), ucs4);
-         free(ucs4);
-
-         ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
-           
-         id3_field_setstring(id3_frame_field(frame, 1), ucs4);
-      }
-      else {
-         id3_field_setstrings(id3_frame_field(frame, 1), 1, &ucs4);
-      }
-
-      free(ucs4);
-
-      id3_tag_attachframe(tp, frame);
+      AddFrame(tp, v2, n, v, name);
    }
 
    if (v2) {
@@ -1951,6 +1915,51 @@ int ExportMP3::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
    return 0;
 #endif
 }
+
+#ifdef USE_LIBID3TAG 
+void ExportMP3::AddFrame(struct id3_tag *tp, bool v2, const wxString & n, const wxString & v, const char *name)
+{
+   struct id3_frame *frame = id3_frame_new(name);
+
+   if (v2) {
+      if (!n.IsAscii() || !v.IsAscii()) {
+         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_UTF_16);
+      }
+      else {
+         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
+      }
+   }
+
+   id3_ucs4_t *ucs4 =
+      id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
+
+   if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
+      // A hack to get around iTunes not recognizing the comment.  The
+      // language defaults to XXX and, since it's not a valid language,
+      // iTunes just ignores the tag.  So, either set it to a valid language
+      // (which one???) or just clear it.  Unfortunately, there's no supported
+      // way of clearing the field, so do it directly.
+      id3_field *f = id3_frame_field(frame, 1);
+      memset(f->immediate.value, 0, sizeof(f->immediate.value));
+      id3_field_setfullstring(id3_frame_field(frame, 3), ucs4);
+   }
+   else if (strcmp(name, "TXXX") == 0) {
+      id3_field_setstring(id3_frame_field(frame, 2), ucs4);
+      free(ucs4);
+
+      ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
+        
+      id3_field_setstring(id3_frame_field(frame, 1), ucs4);
+   }
+   else {
+      id3_field_setstrings(id3_frame_field(frame, 1), 1, &ucs4);
+   }
+
+   free(ucs4);
+
+   id3_tag_attachframe(tp, frame);
+}
+#endif
 
 //----------------------------------------------------------------------------
 // Constructor
