@@ -68,16 +68,40 @@ static void dprintf(const char *format, ...)
 }
 #endif
 
+static BOOL is_vista_or_later() 
+{
+   OSVERSIONINFOEX osvi;
+   DWORDLONG dwlConditionMask = 0;
+   int op=VER_GREATER_EQUAL;
+
+   // Initialize the OSVERSIONINFOEX structure.
+
+   ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+   osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+   osvi.dwMajorVersion = 6;
+   osvi.dwMinorVersion = 0;
+   osvi.wServicePackMajor = 0;
+   osvi.wServicePackMinor = 0;
+
+   // Initialize the condition mask.
+
+   VER_SET_CONDITION( dwlConditionMask, VER_MAJORVERSION, op );
+   VER_SET_CONDITION( dwlConditionMask, VER_MINORVERSION, op );
+
+   // Perform the test.
+
+   return VerifyVersionInfo(
+      &osvi, 
+      VER_MAJORVERSION | VER_MINORVERSION,
+      dwlConditionMask);
+}
+
 int open_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
 {
    PxInfo*info;
    MMRESULT res;
-   OSVERSIONINFO verInfo;
-
-   memset(&verInfo, 0, sizeof(verInfo));
-   verInfo.dwOSVersionInfoSize = sizeof(verInfo);
-   GetVersionEx(&verInfo);
-   if (verInfo.dwMajorVersion >= 6) {
+  
+   if (is_vista_or_later()) {
       return open_ep_mixers(Px, deviceIn, deviceOut);
    }
 
