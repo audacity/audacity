@@ -16,18 +16,10 @@
   This class holds a few informational tags, such as Title, Author,
   etc. that can be associated with a project or other audio file.
   It is modeled after the ID3 format for MP3 files, and it can
-  both import ID3 tags from MP3 files, and export them as well.
+  both import and export ID3 tags from/to MP2, MP3, and AIFF files.
 
   It can present the user with a dialog for editing this information.
 
-  It only keeps track of the fields that are standard in ID3v1
-  (title, author, artist, track num, year, genre, and comments),
-  but it can export both ID3v1 or the newer ID3v2 format.  The primary
-  reason you would want to export ID3v2 tags instead of ID3v1,
-  since we're not supporting any v2 fields, is that ID3v2 tags are
-  inserted at the BEGINNING of an mp3 file, which is far more
-  useful for streaming.
-  
   Use of this functionality requires that libid3tag be compiled in
   with Audacity.
 
@@ -238,8 +230,6 @@ static const wxChar *DefaultGenres[] =
 
 Tags::Tags()
 {
-   mID3V2 = true;
-
    mEditTitle = true;
    mEditTrackNumber = true;
 
@@ -253,8 +243,6 @@ Tags::~Tags()
 
 Tags & Tags::operator=(const Tags & src)
 {
-   mID3V2 = src.mID3V2;
-
    mEditTitle = src.mEditTitle;
    mEditTrackNumber = src.mEditTrackNumber;
 
@@ -287,7 +275,7 @@ void Tags::LoadDefaults()
       gPrefs->Read(name, &value, wxT(""));
 
       if (name == wxT("ID3V2")) {
-         mID3V2 = value == wxT("1");
+         // LLL:  This is obsolute, but it must be handled and ignored.
       }
       else {
          SetTag(name, value);
@@ -313,19 +301,8 @@ bool Tags::IsEmpty()
 
 void Tags::Clear()
 {
-   mID3V2 = true;
    mXref.clear();
    mMap.clear();
-}
-
-void Tags::SetID3V2(bool id3v2)
-{
-   mID3V2 = id3v2;
-}
-
-bool Tags::GetID3V2()
-{
-   return mID3V2;
 }
 
 void Tags::AllowEditTitle(bool editTitle)
@@ -523,10 +500,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       if (n == wxT("id3v2")) {
-         long nValue;
-         if (XMLValueChecker::IsGoodInt(v) && v.ToLong(&nValue)) {
-            mID3V2 = (nValue != 0);
-         }
+         // LLL:  This is obsolute, but it must be handled and ignored.
       }
       else {
          SetTag(n, v);
@@ -554,11 +528,6 @@ XMLTagHandler *Tags::HandleXMLChild(const wxChar *tag)
 void Tags::WriteXML(XMLWriter &xmlFile)
 {
    xmlFile.StartTag(wxT("tags"));
-
-   xmlFile.StartTag(wxT("tag"));
-   xmlFile.WriteAttr(wxT("name"), wxT("id3v2"));
-   xmlFile.WriteAttr(wxT("value"), mID3V2);
-   xmlFile.EndTag(wxT("tag"));
 
    wxString n, v;
    for (bool cont = GetFirst(n, v); cont; cont = GetNext(n, v)) {

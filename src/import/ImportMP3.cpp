@@ -302,7 +302,6 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
    }
 
    tags->Clear();
-   tags->SetID3V2( tp->options & ID3_TAG_OPTION_ID3V1 ? false : true );
 
    // Loop through all frames
    for (int i = 0; i < (int) tp->nframes; i++) {

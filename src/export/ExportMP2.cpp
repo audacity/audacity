@@ -187,7 +187,7 @@ private:
 
    int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags);
 #ifdef USE_LIBID3TAG 
-   void AddFrame(struct id3_tag *tp, bool v2, const wxString & n, const wxString & v, const char *name);
+   void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
 
 };
@@ -344,8 +344,6 @@ int ExportMP2::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
 #ifdef USE_LIBID3TAG 
    struct id3_tag *tp = id3_tag_new();
 
-   bool v2 = tags->GetID3V2();
-
    wxString n, v;
    for (bool cont = tags->GetFirst(n, v); cont; cont = tags->GetNext(n, v)) {
       const char *name = "TXXX";
@@ -362,14 +360,11 @@ int ExportMP2::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
       else if (n.CmpNoCase(TAG_YEAR) == 0) {
          // LLL:  Some apps do not like the newer frame ID (ID3_FRAME_YEAR),
          //       so we add old one as well.
-         AddFrame(tp, v2, n, v, "TYER");
+         AddFrame(tp, n, v, "TYER");
          name = ID3_FRAME_YEAR;
       }
       else if (n.CmpNoCase(TAG_GENRE) == 0) {
          name = ID3_FRAME_GENRE;
-         if (!v2) {
-            v.Printf(wxT("%d"), tags->GetGenre(v));
-         }
       }
       else if (n.CmpNoCase(TAG_COMMENTS) == 0) {
          name = ID3_FRAME_COMMENT;
@@ -378,25 +373,19 @@ int ExportMP2::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
          name = ID3_FRAME_TRACK;
       }
 
-      AddFrame(tp, v2, n, v, name);
+      AddFrame(tp, n, v, name);
    }
 
-   if (v2) {
-      tp->options &= (~ID3_TAG_OPTION_COMPRESSION); // No compression
+   tp->options &= (~ID3_TAG_OPTION_COMPRESSION); // No compression
 
-      // If this version of libid3tag supports it, use v2.3 ID3
-      // tags instead of the newer, but less well supported, v2.4
-      // that libid3tag uses by default.
-      #ifdef ID3_TAG_HAS_TAG_OPTION_ID3V2_3
-      tp->options |= ID3_TAG_OPTION_ID3V2_3;
-      #endif
+   // If this version of libid3tag supports it, use v2.3 ID3
+   // tags instead of the newer, but less well supported, v2.4
+   // that libid3tag uses by default.
+   #ifdef ID3_TAG_HAS_TAG_OPTION_ID3V2_3
+   tp->options |= ID3_TAG_OPTION_ID3V2_3;
+   #endif
 
-      *endOfFile = false;
-   }
-   else {
-      tp->options |= ID3_TAG_OPTION_ID3V1;
-      *endOfFile = true;
-   }
+   *endOfFile = false;
 
    id3_length_t len;
    
@@ -413,17 +402,15 @@ int ExportMP2::AddTags(AudacityProject *project, char **buffer, bool *endOfFile,
 }
 
 #ifdef USE_LIBID3TAG 
-void ExportMP2::AddFrame(struct id3_tag *tp, bool v2, const wxString & n, const wxString & v, const char *name)
+void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
 {
    struct id3_frame *frame = id3_frame_new(name);
 
-   if (v2) {
-      if (!n.IsAscii() || !v.IsAscii()) {
-         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_UTF_16);
-      }
-      else {
-         id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
-      }
+   if (!n.IsAscii() || !v.IsAscii()) {
+      id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_UTF_16);
+   }
+   else {
+      id3_field_settextencoding(id3_frame_field(frame, 0), ID3_FIELD_TEXTENCODING_ISO_8859_1);
    }
 
    id3_ucs4_t *ucs4 =

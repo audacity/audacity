@@ -414,8 +414,6 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                break;
             }
 
-            tags->SetID3V2( tp->options & ID3_TAG_OPTION_ID3V1 ? false : true );
-
             // Loop through all frames
             for (int i = 0; i < (int) tp->nframes; i++) {
                struct id3_frame *frame = tp->frames[i];

@@ -74,9 +74,6 @@ class Tags: public XMLTagHandler {
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
-   void SetID3V2(bool id3v2);
-   bool GetID3V2();
-
    void AllowEditTitle(bool editTitle);
    void AllowEditTrackNumber(bool editTrackNumber);
 
@@ -103,8 +100,6 @@ class Tags: public XMLTagHandler {
 
  private:
    void LoadDefaults();
-
-   bool mID3V2;
 
    TagMap::iterator mIter;
    TagMap mXref;
