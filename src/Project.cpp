@@ -3898,6 +3898,15 @@ void AudacityProject::OnTimer(wxTimerEvent& event)
    if( mixerToolBar )
       mixerToolBar->UpdateControls();
 
+   // Check if a warning for missing aliased files should be displayed
+   if (gAudioIO->ShouldShowMissingAliasedFileWarning()) {
+      wxString errorMessage = _("One or more external audio files could not be found.\nIt is possible they were moved, deleted, or the drive they were on was unmounted.\nSilence is being substituted for the affected audio.");
+      ShowModelessErrorDialog(this, _("Files Missing"),
+                 errorMessage, wxT("innerlink:wma-proprietary"), true);
+      // Only show this warning once per playback.
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(false);
+   }
+
    if (::wxGetUTCTime() - mLastStatusUpdateTime < 3)
       return;
 

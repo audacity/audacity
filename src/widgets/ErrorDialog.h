@@ -23,6 +23,13 @@ void ShowErrorDialog(wxWindow *parent,
                      const wxString &helpURL,
                      bool Close = true);
 
+/// Displays a modeless error dialog with a button that offers help
+void ShowModelessErrorDialog(wxWindow *parent,
+                     const wxString &dlogTitle,
+                     const wxString &message, 
+                     const wxString &helpURL,
+                     bool Close = true);
+
 /// Displays cutable information in a text ctrl, with an OK button.
 void ShowInfoDialog( wxWindow *parent,
                      const wxString &dlogTitle,

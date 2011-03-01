@@ -44,11 +44,12 @@ class ErrorDialog : public wxDialog
       const wxString & dlogTitle, 
       const wxString & message, 
       const wxString & helpURL,
-      const bool Close = true);
+      const bool Close = true, const bool modal = true);
 
 private:
 	wxString dhelpURL;
    bool dClose;
+   bool dModal;
 	
    void OnOk( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );
@@ -66,11 +67,12 @@ ErrorDialog::ErrorDialog(
    const wxString & dlogTitle, 
    const wxString & message, 
    const wxString & helpURL,
-   const bool Close):
+   const bool Close, const bool modal):
    wxDialog(parent, (wxWindowID)-1, dlogTitle)
 {
    dhelpURL = helpURL;
    dClose = Close;
+   dModal = modal;
 
    ShuttleGui S(this, eIsCreating);
 
@@ -119,8 +121,11 @@ ErrorDialog::ErrorDialog(
 }
 
 void ErrorDialog::OnOk(wxCommandEvent &event)
-{	
-   EndModal(true);
+{
+   if (dModal)
+      EndModal(true);
+   else
+      Destroy();
 }
 
 // Helper class to make browser "simulate" a modal dialog
@@ -250,6 +255,17 @@ void ShowErrorDialog(wxWindow *parent,
    ErrorDialog dlog(parent, dlogTitle, message, helpURL, Close);
    dlog.CentreOnParent();
    dlog.ShowModal();
+}
+
+void ShowModelessErrorDialog(wxWindow *parent,
+                     const wxString &dlogTitle,
+                     const wxString &message, 
+                     const wxString &helpURL,
+                     const bool Close)
+{
+   ErrorDialog *dlog = new ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
+   dlog->CentreOnParent();
+   dlog->Show();
 }
 
 

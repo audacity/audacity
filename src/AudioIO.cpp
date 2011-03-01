@@ -477,6 +477,30 @@ void DeinitAudioIO()
    delete gAudioIO;
 }
 
+void AudioIO::MarkAliasedFilesMissingWarning()
+{
+   // only show the warning when we are playing or recording
+   if (IsStreamActive()) {
+      m_aliasMissingWarning = true;
+   }
+}
+
+void AudioIO::SetMissingAliasedFileWarningShouldShow(bool b)
+{
+   m_aliasMissingWarningShouldShow = b;
+   // reset the warnings as they were probably marked by a previous run
+   if (m_aliasMissingWarningShouldShow) {
+      m_aliasMissingWarning = false;
+   }
+}
+
+bool AudioIO::ShouldShowMissingAliasedFileWarning()
+{
+   bool ret = m_aliasMissingWarning && m_aliasMissingWarningShouldShow;
+
+   return ret;
+}
+
 wxString DeviceName(const PaDeviceInfo* info)
 {
    wxString infoName(info->name, wxConvLocal);
@@ -509,6 +533,9 @@ AudioIO::AudioIO()
    mAudioThreadFillBuffersLoopRunning = false;
    mAudioThreadFillBuffersLoopActive = false;
    mPortStreamV19 = NULL;
+
+   m_aliasMissingWarningShouldShow = false;
+   m_aliasMissingWarning           = false;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiStream = NULL;
@@ -1375,6 +1402,9 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       mNumFrames = 1;
    }
 #endif
+
+   // Enable warning popups for unfound aliased blockfiles.
+   SetMissingAliasedFileWarningShouldShow(true);
 
    //
    // Generate an unique value each time, to be returned to

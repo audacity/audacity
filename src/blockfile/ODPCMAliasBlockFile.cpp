@@ -34,9 +34,11 @@ The summary is eventually computed and written to a file in a background thread.
 #include "../Internat.h"
 
 #include "../ondemand/ODManager.h"
+#include "../AudioIO.h"
 
 //#include <errno.h>
 
+extern AudioIO *gAudioIO;
 
 const int aheaderTagLen = 20;
 char aheaderTag[aheaderTagLen + 1] = "AudacityBlockFile112";
@@ -631,6 +633,9 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       memset(data,0,SAMPLE_SIZE(format)*len);
 
       mSilentAliasLog=TRUE;
+      // Set a marker to display an error message
+      if (gAudioIO)
+         gAudioIO->MarkAliasedFilesMissingWarning();
 
       UnlockRead();
       return len;

@@ -305,6 +305,22 @@ class AUDACITY_DLL_API AudioIO {
     */
    static bool ValidateDeviceNames(wxString play, wxString rec);
 
+   /** \brief Mark playback as having missing aliased blockfiles
+     *
+     * Playback will continue, but the missing files will be silenced
+     * ShouldShowMissingAliasedFileWarning can be called to determine
+     * if the user should be notified
+     */
+   void MarkAliasedFilesMissingWarning();
+
+   /** \brief Changes the behavior of missing aliased blockfiles warnings
+     */
+   void SetMissingAliasedFileWarningShouldShow(bool b);
+   
+   /** \brief Returns true if the user should be notified of missing alias warnings
+     */
+   bool ShouldShowMissingAliasedFileWarning();
+
    /** \brief Function to automatically set an acceptable volume
     *
     */
@@ -508,6 +524,9 @@ private:
    volatile bool       mAudioThreadShouldCallFillBuffersOnce;
    volatile bool       mAudioThreadFillBuffersLoopRunning;
    volatile bool       mAudioThreadFillBuffersLoopActive;
+
+   bool                m_aliasMissingWarningShouldShow;
+   bool                m_aliasMissingWarning;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    volatile bool       mMidiThreadFillBuffersLoopRunning;

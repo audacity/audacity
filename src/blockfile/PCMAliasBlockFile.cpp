@@ -24,6 +24,9 @@
 #include "../Internat.h"
 
 #include "../ondemand/ODManager.h"
+#include "../AudioIO.h"
+
+extern AudioIO *gAudioIO;
 
 PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileName fileName,
@@ -104,6 +107,10 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       memset(data,0,SAMPLE_SIZE(format)*len);
       if(silence) delete silence;
       mSilentAliasLog=TRUE;
+      
+      // Set a marker to display an error message for the silence
+      if (gAudioIO)
+         gAudioIO->MarkAliasedFilesMissingWarning();
       return len;
    }
 
