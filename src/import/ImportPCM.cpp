@@ -415,6 +415,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
             }
 
             // Loop through all frames
+            bool have_year = false;
             for (int i = 0; i < (int) tp->nframes; i++) {
                struct id3_frame *frame = tp->frames[i];
 
@@ -444,11 +445,18 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                else if (strcmp(frame->id, ID3_FRAME_TRACK) == 0) {
                   n = TAG_TRACK;
                }
-               else if (strcmp(frame->id, "TYER") == 0) {
-                  n = TAG_YEAR;
-               }
                else if (strcmp(frame->id, ID3_FRAME_YEAR) == 0) {
+                  // LLL:  When libid3tag encounters the "TYER" tag, it converts it to a
+                  //       "ZOBS" (obsolete) tag and adds a "TDRC" tag at the end of the
+                  //       list of tags using the first 4 characters of the "TYER" tag.
+                  //       Since we write both the "TDRC" and "TYER" tags, the "TDRC" tag
+                  //       will always be encountered first in the list.  We want use it
+                  //       since the converted "TYER" tag may have been truncated.
+                  if (have_year) {
+                     continue;
+                  }
                   n = TAG_YEAR;
+                  have_year = true;
                }
                else if (strcmp(frame->id, ID3_FRAME_COMMENT) == 0) {
                   n = TAG_COMMENTS;
