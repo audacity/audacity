@@ -226,6 +226,10 @@ int open_ep_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
       }
    }
 
+   if (denum) {
+      IUnknown_Release(denum);
+   }
+
    return TRUE;
 
 fail:
