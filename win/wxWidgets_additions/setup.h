@@ -1054,7 +1054,7 @@
 // ----------------------------------------------------------------------------
 
 // wxSingleInstanceChecker class allows to verify at startup if another program
-W// instance is running (available only under Win32).
+// instance is running (available only under Win32).
 //
 // Default is 1
 //
