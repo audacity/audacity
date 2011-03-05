@@ -1718,27 +1718,46 @@ void VSTEffect::Scan()
 #elif defined(__WXMSW__)
    TCHAR dpath[MAX_PATH];
    TCHAR tpath[MAX_PATH];
-   DWORD len = WXSIZEOF(tpath);
+   DWORD len;
 
-   // Setup the default VST path.
-   dpath[0] = '\0';
-   ExpandEnvironmentStrings(wxT("%ProgramFiles%\\Steinberg\\VSTPlugins"),
-                            dpath,
-                            WXSIZEOF(dpath));
-
-   // Check registry for the real path
+   // Try HKEY_CURRENT_USER registry key first
+   len = sizeof(tpath) / sizeof(TCHAR);
    if (SHRegGetUSValue(wxT("Software\\VST"),
-                          wxT("VSTPluginsPath"),
-                          NULL,
-                          tpath,
-                          &len,
-                          FALSE,
-                          dpath,
-                          (DWORD) _tcslen(dpath)) == ERROR_SUCCESS) {
+                       wxT("VSTPluginsPath"),
+                       NULL,
+                       tpath,
+                       &len,
+                       FALSE,
+                       NULL,
+                       0) == ERROR_SUCCESS) {
       tpath[len] = 0;
+      dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
       wxGetApp().AddUniquePathToPathList(LAT1CTOWX(dpath), pathList);
    }
+
+   // Then try HKEY_LOCAL_MACHINE registry key
+   len = sizeof(tpath) / sizeof(TCHAR);
+   if (SHRegGetUSValue(wxT("Software\\VST"),
+                       wxT("VSTPluginsPath"),
+                       NULL,
+                       tpath,
+                       &len,
+                       TRUE,
+                       NULL,
+                       0) == ERROR_SUCCESS) {
+      tpath[len] = 0;
+      dpath[0] = 0;
+      ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
+      wxGetApp().AddUniquePathToPathList(LAT1CTOWX(dpath), pathList);
+   }
+
+   // Add the default path last
+   dpath[0] = 0;
+   ExpandEnvironmentStrings(wxT("%ProgramFiles%\\Steinberg\\VSTPlugins"),
+                            dpath,
+                            WXSIZEOF(dpath));
+   wxGetApp().AddUniquePathToPathList(LAT1CTOWX(dpath), pathList);
 
    // Recursively scan for all DLLs
    wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files, wxDIR_DEFAULT);
