@@ -99,12 +99,15 @@ void FFmpegStartup()
    bool enabled = false;
    gPrefs->Read(wxT("/FFmpeg/Enabled"),&enabled);
    // 'false' means that no errors should be shown whatsoever
-   if (enabled && !LoadFFmpeg(false))
+   if (!LoadFFmpeg(false))
    {
-     wxMessageBox(_("FFmpeg was configured in Preferences and successfully loaded before, \
-                      \nbut this time Audacity failed to load it at startup. \
-                      \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
-                  _("FFmpeg startup failed"));
+      if (enabled)
+      {
+         wxMessageBox(_("FFmpeg was configured in Preferences and successfully loaded before, \
+                        \nbut this time Audacity failed to load it at startup. \
+                        \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
+                      _("FFmpeg startup failed"));
+      }
    }
 }
 
@@ -739,10 +742,9 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
       wxFileName actual;
 
       actual = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
-      if (actual.GetPath().IsSameAs(name.GetPath())) {
-
+      if (actual.GetFullPath().IsSameAs(name.GetFullPath())) {
          actual = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
-         if (actual.GetPath().IsSameAs(name.GetPath())) {
+         if (actual.GetFullPath().IsSameAs(name.GetFullPath())) {
              util = avformat;
              codec = avformat;
          }
