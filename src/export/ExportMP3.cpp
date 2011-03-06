@@ -76,6 +76,7 @@
 #include <wx/window.h>
 
 #include "../Audacity.h"
+#include "../FileNames.h"
 #include "../float_cast.h"
 #include "../Internat.h"
 #include "../Mix.h"
@@ -903,8 +904,6 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
 
 bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 {
-   wxLogNull logNo;
-
    if (ValidLibraryLoaded()) {
       FreeLibrary();
       mLibraryLoaded = false;
@@ -916,17 +915,20 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 
    // First try loading it from a previously located path
    if (!mLibPath.IsEmpty()) {
+      wxLogMessage(wxT("Attempting to load LAME from previously defined path"));
       mLibraryLoaded = InitLibrary(mLibPath);
    }
 
    // If not successful, try loading using system search paths
    if (!ValidLibraryLoaded()) {
+      wxLogMessage(wxT("Attempting to load LAME from system search paths"));
       mLibPath = GetLibraryName();
       mLibraryLoaded = InitLibrary(mLibPath);
    }
 
    // If not successful, try loading using compiled in path
    if (!ValidLibraryLoaded()) {
+      wxLogMessage(wxT("Attempting to load LAME from builtin path"));
       wxFileName fn(GetLibraryPath(), GetLibraryName());
       mLibPath = fn.GetFullPath();
       mLibraryLoaded = InitLibrary(mLibPath);
@@ -934,6 +936,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
 
    // If not successful, must ask the user
    if (!ValidLibraryLoaded()) {
+      wxLogMessage(wxT("(Maybe) ask user for library"));
       if (askuser == MP3Exporter::Maybe && FindLibrary(parent)) {
          mLibraryLoaded = InitLibrary(mLibPath);
       }
@@ -946,9 +949,12 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
          wxMessageBox(mBladeVersion);
       }
 #endif
+      wxLogMessage(wxT("Failed to locate LAME library"));
 
       return false;
    }
+
+   wxLogMessage(wxT("LAME library successfully loaded"));
 
    return true;
 }
@@ -981,9 +987,15 @@ void MP3Exporter::SetChannel(int mode)
 
 bool MP3Exporter::InitLibrary(wxString libpath)
 {
+   wxLogMessage(wxT("Loading LAME from %s"), libpath.c_str());
+
    if (!lame_lib.Load(libpath, wxDL_LAZY)) {
+      wxLogMessage(wxT("load failed"));
       return false;
    }
+
+   wxLogMessage(wxT("Actual LAME path %s"),
+              FileNames::PathFromAddr(lame_lib.GetSymbol(wxT("lame_init"))).c_str());
 
    lame_init = (lame_init_t *)
       lame_lib.GetSymbol(wxT("lame_init"));
@@ -1062,6 +1074,7 @@ bool MP3Exporter::InitLibrary(wxString libpath)
       !lame_set_padding_type ||
       !lame_set_bWriteVbrTag)
    {
+      wxLogMessage(wxT("Failed to find a required symbol in the LAME library\n"));
 #if defined(__WXMSW__)
       if (beVersion) {
          be_version v;
