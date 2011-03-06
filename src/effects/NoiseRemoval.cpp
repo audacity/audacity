@@ -377,7 +377,7 @@ void EffectNoiseRemoval::Initialize()
    mHistoryLen = (2 * mAttackDecayBlocks) - 1;
 
    if (mHistoryLen < mMinSignalBlocks)
-      mHistoryLen++;
+      mHistoryLen = mMinSignalBlocks;
 
    mSpectrums = new float*[mHistoryLen];
    mGains = new float*[mHistoryLen];
