@@ -70,6 +70,10 @@ ErrorDialog::ErrorDialog(
    const bool Close, const bool modal):
    wxDialog(parent, (wxWindowID)-1, dlogTitle)
 {
+   long buttonMask;
+
+   // only add the help button if we have a URL
+   buttonMask = (helpURL == wxT("")) ? eOkButton : (eHelpButton | eOkButton);
    dhelpURL = helpURL;
    dClose = Close;
    dModal = modal;
@@ -81,7 +85,7 @@ ErrorDialog::ErrorDialog(
       S.SetBorder( 20 );
       S.AddFixedText( message );
       S.SetBorder( 2 );
-      S.AddStandardButtons(eHelpButton | eOkButton);
+      S.AddStandardButtons( buttonMask );
    }
    S.EndVerticalLay();
 
