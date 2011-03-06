@@ -1,5 +1,5 @@
-#ifndef PX_WIN_COMMON_H
-#define PX_WIN_COMMON_H
+#ifndef PX_WIN_ENDPOINT_H
+#define PX_WIN_ENDPOINT_H
 /*
  * PortMixer
  * Windows Common Header for Vista/7
