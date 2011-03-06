@@ -3900,12 +3900,13 @@ void AudacityProject::OnTimer(wxTimerEvent& event)
 
    // Check if a warning for missing aliased files should be displayed
    if (gAudioIO->ShouldShowMissingAliasedFileWarning()) {
-      wxString errorMessage = _("One or more external audio files could not be found.\n"\
-                                "It is possible they were moved, deleted, or the drive they "\
-                                "were on was unmounted.\n"\
-                                "Silence is being substituted for the affected audio.\n"\
-                                "Choose File > Check Dependencies to view the "\
-                                "original location of the missing files.");
+      wxString errorMessage = _(
+"One or more external audio files could not be found.\n\
+It is possible they were moved, deleted, or the drive they \
+were on was unmounted.\n\
+Silence is being substituted for the affected audio.\n\
+Choose File > Check Dependencies to view the \
+original location of the missing files.");
       ShowModelessErrorDialog(this, _("Files Missing"),
                  errorMessage, wxT(""), true);
       // Only show this warning once per playback.
