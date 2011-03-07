@@ -1325,8 +1325,14 @@ wxString MP3Exporter::GetLibraryPath()
    wxString path;
 
    if (reg.Exists()) {
+      wxLogMessage(wxT("LAME registry key exists."));
       reg.QueryValue(wxT("InstallPath"), path);
    }
+   else {
+      wxLogMessage(wxT("LAME registry key does not exist."));
+   }
+
+   wxLogMessage(wxT("Library path is: ") + path);
 
    return path;
 }
