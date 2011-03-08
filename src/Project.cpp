@@ -1728,6 +1728,31 @@ void AudacityProject::OnUpdateUI(wxUpdateUIEvent & event)
    UpdateMenus();
 }
 
+#if defined(__WXGTK__)
+// Under wxGTK, we seem to experience focus issues related to improper "buffering" of active focus.  This causes
+// the normal SetFocus() to be ignored if it thinks the target window already has focus, even though it may not
+// really have it.
+//
+// Thus the reason for this hackage.  It basically, forces focus to another, known to exist, window before
+// forcing focus to the TrackPanel.  This is not at all a perfect solution, but until wxGTK is fixed, this
+// may provide some relief from focus not returning to the TrackPanel after modal dialogs are closed.
+//
+// This also means that it may not work the same way on different versions of wxGTK other than 2.8.11, which
+// is the version this was tested on.
+void AudacityProject::SetFocus()
+{
+   if (mTrackPanel) {
+      wxWindow *w = GetSelectionBar();
+      if (w)
+      {
+         w->SetFocus();
+         OnInternalIdle();
+      }
+      mTrackPanel->SetFocus();
+   }
+}
+#endif
+
 void AudacityProject::OnActivate(wxActivateEvent & event)
 {
    // Activate events can fire during window teardown, so just
@@ -1737,6 +1762,12 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    }
 
    mActive = event.GetActive();
+
+#if defined(__WXGTK__)
+   // See AudacityProject::SetFocus() above for further wxGTK handling
+   event.Skip();
+   return;
+#endif
 
    // Under Windows, focus can be "lost" when returning to 
    // Audacity from a different application.
