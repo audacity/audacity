@@ -127,11 +127,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
 
-#if defined(__WXGTK__)
-   // See comments in Project.cpp/AudacityProject::SetFocus()
-   virtual void SetFocus();
-#endif
-
    TrackList *GetTracks() { return mTracks; };
    UndoManager *GetUndoManager() { return &mUndoManager; }
 
