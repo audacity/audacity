@@ -708,6 +708,10 @@ void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
 
 typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
 
+#define ID_RECENT_CLEAR 6100
+#define ID_RECENT_FIRST 6101
+#define ID_RECENT_LAST  6112
+
 BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_QUERY_END_SESSION(AudacityApp::OnEndSession)
 
@@ -724,9 +728,8 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, AudacityApp::OnMacOpenFile)
 #endif
    // Recent file event handlers.  
-   EVT_MENU(wxID_FILE, AudacityApp::OnMRUClear)
-   EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9, AudacityApp::OnMRUFile)
-// EVT_MENU_RANGE(6050, 6060, AudacityApp::OnMRUProject)
+   EVT_MENU(ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
+   EVT_MENU_RANGE(ID_RECENT_FIRST, ID_RECENT_LAST, AudacityApp::OnMRUFile)
 
    // Handle AppCommandEvents (usually from a script)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
@@ -793,7 +796,7 @@ void AudacityApp::OnMRUClear(wxCommandEvent& event)
 }
 
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
-   int n = event.GetId() - wxID_FILE1;
+   int n = event.GetId() - ID_RECENT_FIRST;
    wxString fullPathStr = mRecentFiles->GetHistoryFile(n);
 
    bool opened = MRUOpen(fullPathStr);
@@ -944,7 +947,7 @@ bool AudacityApp::OnInit()
    #endif
 
    // TODO - read the number of files to store in history from preferences
-   mRecentFiles = new FileHistory(/* number of files */);
+   mRecentFiles = new FileHistory(ID_RECENT_LAST - ID_RECENT_FIRST, ID_RECENT_CLEAR);
    mRecentFiles->Load(*gPrefs, wxT("RecentFiles"));
 
    //

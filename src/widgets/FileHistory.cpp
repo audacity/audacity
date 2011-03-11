@@ -142,7 +142,7 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
    // Stored in reverse order
    int n = mHistory.GetCount() - 1;
    for (size_t i = 1; i <= mHistory.GetCount(); i++) {
-      config.Write(wxString::Format(wxT("file%d"), i), mHistory[n--]);
+      config.Write(wxString::Format(wxT("file%02d"), i), mHistory[n--]);
    }
 
    config.SetPath(wxT(".."));
