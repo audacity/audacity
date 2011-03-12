@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
-<plist version="0.9">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
-
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -27,7 +26,6 @@
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>WAV Audio File</string>
@@ -53,7 +51,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>AIFF Audio File</string>
@@ -78,7 +75,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>AU Audio File</string>
@@ -101,7 +97,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>MP3 Audio File</string>
@@ -134,7 +129,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>Ogg Vorbis Audio File</string>
@@ -165,7 +159,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>FLAC Audio File</string>
@@ -187,7 +180,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>MPEG-4 Audio File</string>
@@ -207,9 +199,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 		</dict>
-
 	</array>
-
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleIdentifier</key>
@@ -217,7 +207,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>Audacity.sh</string>
+	<string>AUDACITY_EXECUTABLE</string>
 	<key>CFBundleIconFile</key>
 	<string>Audacity.icns</string>
 	<key>CFBundleName</key>
@@ -237,7 +227,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Audacity version AUDACITY_VERSION.AUDACITY_RELEASE.AUDACITY_REVISION.AUDACITY_MODLEVEL</string>
 	<key>LSRequiresCarbon</key>
-        <true/>
+	<true/>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 </dict>

@@ -1,0 +1,2 @@
+To install Audacity, copy the Audacity folder to /Applications
+or any other location of your choosing.
