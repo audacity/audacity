@@ -1819,6 +1819,8 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                                       Track * pTrack, wxRect r)
 {
+   Track *rightTrack = NULL;
+   bool nextTrackIsLinkFromPTrack = false;
    mCapturedTrack = pTrack;
    mCapturedRect = r;
 
@@ -1854,14 +1856,25 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       double selend = PositionToTime(event.m_x, r.x);
      
       TrackListIterator iter(mTracks);
-      for (Track *t = iter.First(); t; t = iter.Next())
+      for (Track *t = iter.First(); t; t = iter.Next()) {
          if (t->GetSelected()) {
             isAtLeastOneTrackSelected = true;
             break;
+         } else if (t == pTrack && t->GetLinked()) {
+            nextTrackIsLinkFromPTrack = true;
+         } else if (nextTrackIsLinkFromPTrack) {
+            rightTrack = t;
+            nextTrackIsLinkFromPTrack = false;
          }
+      }
       
-      if (!isAtLeastOneTrackSelected)
+      if (!isAtLeastOneTrackSelected) {
          pTrack->SetSelected(true);
+         if (rightTrack)
+            rightTrack->SetSelected(true);
+         else if (pTrack->GetLink())
+            pTrack->GetLink()->SetSelected(true);
+      }
 
       // Edit the selection boundary nearest the mouse click.
       if (fabs(selend - mViewInfo->sel0) < fabs(selend - mViewInfo->sel1))
