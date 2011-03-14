@@ -232,14 +232,14 @@ void ExportFFmpegAACOptions::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartStatic(_("AAC Export Setup"), 1);
    {
-      S.StartTwoColumn();
+      S.StartMultiColumn(2, wxEXPAND);
       {
-      S.TieSlider(_("Quality:"),wxT("/FileFormats/AACQuality"),100,500,10);
-   }
-      S.EndTwoColumn();
+         S.SetStretchyCol(1);
+         S.TieSlider(_("Quality:"),wxT("/FileFormats/AACQuality"),100,500,10);
+      }
+      S.EndMultiColumn();
    }
    S.EndStatic();
-
    S.AddStandardButtons();
 
    Layout();
