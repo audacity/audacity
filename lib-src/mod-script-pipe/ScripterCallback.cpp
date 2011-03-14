@@ -13,6 +13,7 @@
 #include <wx/wx.h>
 #include "ScripterCallback.h"
 //#include "../lib_widget_extra/ShuttleGuiBase.h"
+#include "../../src/Audacity.h"
 #include "../../src/ShuttleGui.h"
 
 #ifdef NOT_DEFINED
@@ -177,7 +178,12 @@ int SCRIPT_PIPE_DLL_API ExtensionModuleInit(int ix)
 
 wxString SCRIPT_PIPE_DLL_API GetVersionString()
 {
-   return SCRIPT_PIPE_VERSION_STRING;
+   // Make sure that this version of the module requires the version 
+   // of Audacity it is built with. 
+   // For now, the versions must match exactly for Audacity to 
+   // agree to load the module.
+
+   return AUDACITY_VERSION_STRING;
 }
 
 } // End extern "C"

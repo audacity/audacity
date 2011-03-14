@@ -37,18 +37,3 @@
    #endif
 #endif
 
-// This should be set to the version of Audacity that this version of
-// mod-scipt-pipe is designed to work with. For now, the versions must match
-// exactly for Audacity to agree to load the module.
-#define SCRIPT_PIPE_VERSION   1
-#define SCRIPT_PIPE_RELEASE   3
-#define SCRIPT_PIPE_REVISION  10
-#define SCRIPT_PIPE_SUFFIX wxT("-alpha-") __TDATE__
-
-#define SCRIPT_PIPE_MAKESTR( x ) #x
-#define SCRIPT_PIPE_QUOTE( x ) SCRIPT_PIPE_MAKESTR( x )
-
-#define SCRIPT_PIPE_VERSION_STRING wxT( SCRIPT_PIPE_QUOTE( SCRIPT_PIPE_VERSION ) ) wxT(".") \
-                                wxT( SCRIPT_PIPE_QUOTE( SCRIPT_PIPE_RELEASE ) ) wxT(".") \
-                                wxT( SCRIPT_PIPE_QUOTE( SCRIPT_PIPE_REVISION ) ) \
-                                SCRIPT_PIPE_SUFFIX
