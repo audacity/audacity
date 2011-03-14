@@ -947,7 +947,7 @@ bool AudacityApp::OnInit()
    #endif
 
    // TODO - read the number of files to store in history from preferences
-   mRecentFiles = new FileHistory(ID_RECENT_LAST - ID_RECENT_FIRST, ID_RECENT_CLEAR);
+   mRecentFiles = new FileHistory(ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR);
    mRecentFiles->Load(*gPrefs, wxT("RecentFiles"));
 
    //
