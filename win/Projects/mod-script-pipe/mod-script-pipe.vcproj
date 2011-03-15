@@ -47,7 +47,6 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				CompileAs="0"
 			/>
 			<Tool
@@ -122,7 +121,6 @@
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 				CompileAs="0"
 			/>
