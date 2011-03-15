@@ -6780,7 +6780,7 @@
 				28C816B7131255550035BB10 /* Install wrapper */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
 				28006FF9132C15E800BD34D7 /* Install instructions */,
-				282413D8131D51FC009FD931 /* Set permissions */,
+				282413D8131D51FC009FD931 /* Create dist */,
 			);
 			buildRules = (
 				286D31370F264C38004E6E4A /* PBXBuildRule */,
@@ -7152,19 +7152,19 @@
 			shellPath = /bin/sh;
 			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
 		};
-		282413D8131D51FC009FD931 /* Set permissions */ = {
+		282413D8131D51FC009FD931 /* Create dist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Set permissions";
+			name = "Create dist";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "cd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n";
+			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\"* \"${DMG}\"\n\n# Create and mount the image\nhdiutil create -ov -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"*\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
 		};
 		282413DA131D52CE009FD931 /* Install plugins */ = {
 			isa = PBXShellScriptBuildPhase;
