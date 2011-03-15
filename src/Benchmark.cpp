@@ -530,6 +530,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
    d->Deref();
 
    Sequence::SetMaxDiskBlockSize(oldBlockSize);
+   Printf(wxT("Benchmark completed successfully.\n"));
    HoldPrint(false);
 
    gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
