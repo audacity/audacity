@@ -223,8 +223,8 @@ void DeviceToolBar::UpdatePrefs()
    wxString devName;
    wxString sourceName;
    wxString desc;
-   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
-   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
 
 
    int hostSelectionIndex = mHost->GetSelection();
@@ -465,8 +465,8 @@ void DeviceToolBar::FillHosts()
    wxArrayString hosts;
    size_t i;
    
-   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
-   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
    // go over our lists add the host to the list if it isn't there yet
    for (i = 0; i < inMaps.size(); i++)
       if (hosts.Index(inMaps[i].hostString) == wxNOT_FOUND)
@@ -484,8 +484,8 @@ void DeviceToolBar::FillHosts()
 
 void DeviceToolBar::FillHostDevices()
 {
-   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
-   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
 
    //read what is in the prefs
    wxString host = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
@@ -578,7 +578,7 @@ int DeviceToolBar::ChangeHost()
 
 void DeviceToolBar::FillInputChannels()
 {
-   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
    wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
@@ -622,7 +622,7 @@ void DeviceToolBar::FillInputChannels()
    if (index == -1)
       mInputChannels->Enable(false);
 }
-void DeviceToolBar::SetDevices(DeviceSourceMap *in, DeviceSourceMap *out)
+void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out)
 {
    if (in) {
       gPrefs->Write(wxT("/AudioIO/RecordingDevice"), in->deviceString);
@@ -652,10 +652,10 @@ void DeviceToolBar::ChangeDevice(bool isInput)
    size_t i;
 
    int selectionIndex  = mInput->GetSelection();
-   std::vector<DeviceSourceMap> &maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
-                                                : DeviceManager::Instance()->GetOutputDeviceMaps();
+   wxString host       = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   const std::vector<DeviceSourceMap> &maps = isInput ? DeviceManager::Instance()->GetInputDeviceMaps()
+                                                      : DeviceManager::Instance()->GetOutputDeviceMaps();
 
-   wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    // Find device indices for input and output
    if (selectionIndex >= 0 ) {
       wxString newDevice = combo->GetStringSelection();

@@ -189,8 +189,8 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       mHost->SetSelection(0);
    }
 
-   std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
-   std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+   const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
 
    wxArrayString playnames;
    wxArrayString recordnames;
@@ -208,7 +208,9 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       if (index == inMaps[i].hostIndex) {
          device   = MakeDeviceSourceString(&inMaps[i]);
          devindex = mRecord->Append(device);
-         mRecord->SetClientData(devindex, &inMaps[i]);
+         // We need to const cast here because SetClientData is a wx function
+         // It is okay beause the original variable is non-const.
+         mRecord->SetClientData(devindex, const_cast<DeviceSourceMap *>(&inMaps[i]));
          if (device == recDevice) {  /* if this is the default device, select it */
             mRecord->SetSelection(devindex);
          }
@@ -220,7 +222,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       if (index == outMaps[i].hostIndex) {
          device   = MakeDeviceSourceString(&outMaps[i]);
          devindex = mPlay->Append(device);
-         mPlay->SetClientData(devindex, &outMaps[i]);
+         mPlay->SetClientData(devindex, const_cast<DeviceSourceMap *>(&outMaps[i]));
          if (device == mPlayDevice) {  /* if this is the default device, select it */
             mPlay->SetSelection(devindex);
          }

@@ -44,13 +44,13 @@ void DeviceManager::Destroy()
 
 }
 
-std::vector<DeviceSourceMap> &DeviceManager::GetInputDeviceMaps()
+const std::vector<DeviceSourceMap> &DeviceManager::GetInputDeviceMaps()
 {
    if (!m_inited)
       Init();
    return mInputDeviceSourceMaps;
 }
-std::vector<DeviceSourceMap> &DeviceManager::GetOutputDeviceMaps()
+const std::vector<DeviceSourceMap> &DeviceManager::GetOutputDeviceMaps()
 {
    if (!m_inited)
       Init();
@@ -58,7 +58,7 @@ std::vector<DeviceSourceMap> &DeviceManager::GetOutputDeviceMaps()
 }
 
 
-wxString MakeDeviceSourceString(DeviceSourceMap *map)
+wxString MakeDeviceSourceString(const DeviceSourceMap *map)
 {
    wxString ret;
    ret = map->deviceString;

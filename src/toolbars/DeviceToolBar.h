@@ -61,7 +61,7 @@ class DeviceToolBar:public ToolBar {
    void FillHosts();
    void FillHostDevices();
    void FillInputChannels();
-   void SetDevices(DeviceSourceMap *in, DeviceSourceMap *out);
+   void SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out);
    void RepositionCombos();
    void RegenerateTooltips();
 

@@ -32,7 +32,7 @@ typedef struct DeviceSourceMap {
    wxString hostString;
 } DeviceSourceMap;
 
-wxString MakeDeviceSourceString(DeviceSourceMap *map);
+wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
 class DeviceManager
 {
@@ -50,8 +50,8 @@ class DeviceManager
    DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
    DeviceSourceMap* GetDefaultInputDevice(int hostIndex);
 
-   std::vector<DeviceSourceMap> &GetInputDeviceMaps();
-   std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
+   const std::vector<DeviceSourceMap> &GetInputDeviceMaps();
+   const std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
 
   protected:
    //private constructor - Singleton.
