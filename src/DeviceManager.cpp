@@ -255,7 +255,6 @@ void DeviceManager::Rescan()
             while (gAudioIO->IsBusy())
                wxMilliSleep(100);
          }
-         gAudioIO->HandleDeviceChange();
       }
       
       // restart portaudio - this updates the device list

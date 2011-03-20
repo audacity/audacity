@@ -249,8 +249,6 @@ void DeviceToolBar::UpdatePrefs()
       mInput->SetStringSelection(desc);
       FillInputChannels();
    } else if (mInput->GetStringSelection() != desc && mInput->GetCount()) {
-      //use the 0th index if we have no familiar devices
-      mInput->SetSelection(0);
       for (size_t i = 0; i < inMaps.size(); i++) {
          if (inMaps[i].hostString == hostName &&
              MakeDeviceSourceString(&inMaps[i]) == mInput->GetString(0)) {
@@ -260,6 +258,8 @@ void DeviceToolBar::UpdatePrefs()
                mInput->SetStringSelection(MakeDeviceSourceString(defaultMap));
                SetDevices(defaultMap, NULL);
             } else {
+               //use the first item (0th index) if we have no familiar devices
+               mInput->SetSelection(0);
                SetDevices(&inMaps[i], NULL);
             }
             break;
@@ -273,15 +273,12 @@ void DeviceToolBar::UpdatePrefs()
       desc = devName;
    else
       desc = devName + wxString(": ", wxConvLocal) + sourceName; 
-   mOutput->SetStringSelection(desc);
 
    if (mOutput->GetStringSelection() != desc &&
        mOutput->FindString(desc) != wxNOT_FOUND) {
       mOutput->SetStringSelection(desc);
    } else if (mOutput->GetStringSelection() != desc &&
               mOutput->GetCount()) {
-      //use the 0th index if we have no familiar devices
-      mOutput->SetSelection(0);
       for (size_t i = 0; i < outMaps.size(); i++) {
          if (outMaps[i].hostString == hostName &&
              MakeDeviceSourceString(&outMaps[i]) == mOutput->GetString(0)) {
@@ -291,6 +288,8 @@ void DeviceToolBar::UpdatePrefs()
                mOutput->SetStringSelection(MakeDeviceSourceString(defaultMap));
                SetDevices(NULL, defaultMap);
             } else {
+               //use the first item (0th index) if we have no familiar devices
+               mOutput->SetSelection(0);
                SetDevices(NULL, &outMaps[i]);
             }
             break;
@@ -304,7 +303,8 @@ void DeviceToolBar::UpdatePrefs()
    if (newChannels > 0 && oldChannels != newChannels)
       mInputChannels->SetSelection(newChannels - 1);
 
-   mHost->SetStringSelection(hostName);
+   if (hostName != wxT("") && mHost->GetStringSelection() != hostName)
+      mHost->SetStringSelection(hostName);
 
    RegenerateTooltips();
 
