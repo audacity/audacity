@@ -215,6 +215,7 @@ static CHOICES sampRates[] =
 #define ID_VBR 7001
 #define ID_ABR 7002
 #define ID_CBR 7003
+#define ID_QUALITY 7004
 
 void InitMP3_Statics()
 {
@@ -273,9 +274,12 @@ public:
    void OnVBR(wxCommandEvent& evt);
    void OnABR(wxCommandEvent& evt);
    void OnCBR(wxCommandEvent& evt);
+   void OnQuality(wxCommandEvent& evt);
+
    void LoadNames(CHOICES *choices, int count);
    wxArrayString GetNames(CHOICES *choices, int count);
    wxArrayInt GetLabels(CHOICES *choices, int count);
+   int FindIndex(CHOICES *choices, int cnt, int needle, int def);
 
 private:
 
@@ -288,6 +292,11 @@ private:
    wxChoice *mRate;
    wxChoice *mMode;
 
+   long mSetRate;
+   long mVbrRate;
+   long mAbrRate;
+   long mCbrRate;
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -296,6 +305,7 @@ BEGIN_EVENT_TABLE(ExportMP3Options, wxDialog)
    EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
    EVT_RADIOBUTTON(ID_CBR,    ExportMP3Options::OnCBR)
+   EVT_CHOICE(wxID_ANY,       ExportMP3Options::OnQuality)
    EVT_BUTTON(wxID_OK,        ExportMP3Options::OnOK)
 END_EVENT_TABLE()
 
@@ -306,6 +316,12 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent)
             wxString(_("Specify MP3 Options")))
 {
    InitMP3_Statics();
+
+   mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
+   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_4);
+   mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 128);
+   mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 128);
+
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    PopulateOrExchange(S);
@@ -342,40 +358,38 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                int cnt;
                bool enable;
                int defrate;
-               bool preset = false;
 
                if (mSET->GetValue()) {
                   choices = setRates;
                   cnt = WXSIZEOF(setRates);
                   enable = true;
-                  defrate = PRESET_STANDARD;
-                  preset = true;
+                  defrate = mSetRate;
                }
                else if (mVBR->GetValue()) {
                   choices = varRates;
                   cnt = WXSIZEOF(varRates);
                   enable = true;
-                  defrate = QUALITY_4;
+                  defrate = mVbrRate;
                }
                else if (mABR->GetValue()) {
                   choices = fixRates;
                   cnt = WXSIZEOF(fixRates);
                   enable = false;
-                  defrate = 128;
+                  defrate = mAbrRate;
                }
                else {
                   mCBR->SetValue(true);
                   choices = fixRates;
                   cnt = WXSIZEOF(fixRates);
                   enable = false;
-                  defrate = 128;
+                  defrate = mCbrRate;
                }
 
-               mRate = S.TieChoice(_("Quality"),
-                                   wxT("/FileFormats/MP3Bitrate"), 
-                                   defrate,
-                                   GetNames(choices, cnt),
-                                   GetLabels(choices, cnt));
+               mRate = S.Id(ID_QUALITY).TieChoice(_("Quality"),
+                                                  wxT("/FileFormats/MP3Bitrate"), 
+                                                  defrate,
+                                                  GetNames(choices, cnt),
+                                                  GetLabels(choices, cnt));
 
                mMode = S.TieChoice(_("Variable Speed:"),
                                    wxT("/FileFormats/MP3VarMode"), 
@@ -387,14 +401,10 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                S.AddPrompt(_("Channel Mode:"));
                S.StartTwoColumn();
                {
-                  S.StartRadioButtonGroup(wxT("/FileFormats/MP3ChannelMode"), CHANNEL_STEREO);
+                  S.StartRadioButtonGroup(wxT("/FileFormats/MP3ChannelMode"), CHANNEL_JOINT);
                   {
                      mJoint = S.TieRadioButton(_("Joint Stereo"), CHANNEL_JOINT);
                      mStereo = S.TieRadioButton(_("Stereo"), CHANNEL_STEREO);
-#if defined(__WXMSW__)
-                     mJoint->Enable(!preset);
-                     mStereo->Enable(!preset);
-#endif
                   }
                   S.EndRadioButtonGroup();
                }
@@ -425,6 +435,11 @@ void ExportMP3Options::OnOK(wxCommandEvent& event)
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   gPrefs->Write(wxT("/FileFormats/MP3SetRate"), mSetRate);
+   gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
+   gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
+   gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
+
    EndModal(wxID_OK);
 
    return;
@@ -436,13 +451,9 @@ void ExportMP3Options::OnSET(wxCommandEvent& evt)
 {
    LoadNames(setRates, WXSIZEOF(setRates));
 
-   mRate->SetSelection(2);
+   mRate->SetSelection(FindIndex(setRates, WXSIZEOF(setRates), mSetRate, 2));
    mRate->Refresh();
    mMode->Enable(true);
-#if defined(__WXMSW__)
-   mJoint->Enable(false);
-   mStereo->Enable(false);
-#endif
 }
 
 /// 
@@ -451,13 +462,9 @@ void ExportMP3Options::OnVBR(wxCommandEvent& evt)
 {
    LoadNames(varRates, WXSIZEOF(varRates));
 
-   mRate->SetSelection(2);
+   mRate->SetSelection(FindIndex(varRates, WXSIZEOF(varRates), mVbrRate, 2));
    mRate->Refresh();
    mMode->Enable(true);
-#if defined(__WXMSW__)
-   mJoint->Enable(true);
-   mStereo->Enable(true);
-#endif
 }
 
 /// 
@@ -466,13 +473,9 @@ void ExportMP3Options::OnABR(wxCommandEvent& evt)
 {
    LoadNames(fixRates, WXSIZEOF(fixRates));
 
-   mRate->SetSelection(10);
+   mRate->SetSelection(FindIndex(fixRates, WXSIZEOF(fixRates), mAbrRate, 10));
    mRate->Refresh();
    mMode->Enable(false);
-#if defined(__WXMSW__)
-   mJoint->Enable(true);
-   mStereo->Enable(true);
-#endif
 }
 
 /// 
@@ -481,13 +484,27 @@ void ExportMP3Options::OnCBR(wxCommandEvent& evt)
 {
    LoadNames(fixRates, WXSIZEOF(fixRates));
 
-   mRate->SetSelection(10);
+   mRate->SetSelection(FindIndex(fixRates, WXSIZEOF(fixRates), mCbrRate, 10));
    mRate->Refresh();
    mMode->Enable(false);
-#if defined(__WXMSW__)
-   mJoint->Enable(true);
-   mStereo->Enable(true);
-#endif
+}
+
+void ExportMP3Options::OnQuality(wxCommandEvent& evt)
+{
+   int sel = mRate->GetSelection();
+
+   if (mSET->GetValue()) {
+      mSetRate = setRates[sel].label;
+   }
+   else if (mVBR->GetValue()) {
+      mVbrRate = varRates[sel].label;
+   }
+   else if (mABR->GetValue()) {
+      mAbrRate = fixRates[sel].label;
+   }
+   else {
+      mCbrRate = fixRates[sel].label;
+   }
 }
 
 void ExportMP3Options::LoadNames(CHOICES *choices, int count)
@@ -520,6 +537,17 @@ wxArrayInt ExportMP3Options::GetLabels(CHOICES *choices, int count)
    }
 
    return labels;
+}
+
+int ExportMP3Options::FindIndex(CHOICES *choices, int cnt, int needle, int def)
+{
+   for (int i = 0; i < cnt; i++) {
+      if (choices[i].label == needle) {
+         return i;
+      }
+   }
+
+   return def;
 }
 
 //----------------------------------------------------------------------------
