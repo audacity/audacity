@@ -78,6 +78,13 @@ static void dprintf(const char *format, ...)
 }
 #endif
 
+// Apparently sometimes IKsPropertySet_Get succeeds and does not change
+// the value of WaveDeviceId.  So use a crazy device index (we cant use 
+// ((UINT) -1) because this is for the WAVE_MAPPER.
+// I believe the wave ids just start from zero so I think -111 is an acceptable value
+// I suspect this happens with USB Devices.
+#define kImpossibleWaveID ((ULONG) -111)
+
 int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
 {
    DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_DATA desc;
@@ -91,12 +98,13 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
    LPGUID guidOut;
    UINT deviceIn = -1;
    UINT deviceOut = -1;
+   int ret = FALSE;
 
    guidIn = PaWinDS_GetStreamInputGUID(Px->pa_stream);
    guidOut = PaWinDS_GetStreamOutputGUID(Px->pa_stream);
 
    do {
-      hDsound = LoadLibrary("dsound.dll");
+      hDsound = LoadLibraryA("dsound.dll");
       if (hDsound == NULL) {
          break;
       }
@@ -122,8 +130,12 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
       }
    
       if (guidIn) {
+         memset(&desc, 0, sizeof(desc));
          memcpy(&desc.DeviceId, guidIn, sizeof(desc.DeviceId));
+
+         desc.WaveDeviceId = kImpossibleWaveID;
          desc.DataFlow = DIRECTSOUNDDEVICE_DATAFLOW_CAPTURE;
+
          hr = IKsPropertySet_Get(pps,
                                  &DSPROPSETID_DirectSoundDevice,
                                  DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION,
@@ -132,15 +144,19 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
                                  &desc,
                                  sizeof(desc),
                                  &bytes);
-         if (FAILED(hr)) {
+         if (FAILED(hr) || kImpossibleWaveID == desc.WaveDeviceId) {
             break;
          }
          deviceIn = desc.WaveDeviceId;
       }
    
       if (guidOut) {
+         memset(&desc, 0, sizeof(desc));
          memcpy(&desc.DeviceId, guidOut, sizeof(desc.DeviceId));
+
+         desc.WaveDeviceId = kImpossibleWaveID;
          desc.DataFlow = DIRECTSOUNDDEVICE_DATAFLOW_RENDER;
+
          hr = IKsPropertySet_Get(pps,
                                  &DSPROPSETID_DirectSoundDevice,
                                  DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION,
@@ -149,7 +165,7 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
                                  &desc,
                                  sizeof(desc),
                                  &bytes);
-         if (FAILED(hr)) {
+         if (FAILED(hr) || kImpossibleWaveID == desc.WaveDeviceId) {
             break;
          }
          deviceOut = desc.WaveDeviceId;
@@ -157,7 +173,7 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
 
       if (open_mixers(Px, deviceIn, deviceOut))
       {
-         return TRUE;
+         ret = TRUE;
       }
    } while( FALSE );
 
@@ -169,9 +185,11 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
       IUnknown_Release(pcf);
    }
 
+   // Free the library.  Note that portaudio also opens dsound.dll
+   // so this probably doesn't do anything until Pa_Terminate is called.
    if (hDsound != INVALID_HANDLE_VALUE) {
       FreeLibrary(hDsound);
    }
 
-   return FALSE;
+   return ret;
 }
