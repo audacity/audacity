@@ -30,6 +30,13 @@ void ShowModelessErrorDialog(wxWindow *parent,
                      const wxString &helpURL,
                      bool Close = true);
 
+/// Displays a custom modeless error dialog for aliased file errors
+void ShowAliasMissingDialog(wxWindow *parent,
+                     const wxString &dlogTitle,
+                     const wxString &message, 
+                     const wxString &helpURL,
+                     const bool Close = true);
+
 /// Displays cutable information in a text ctrl, with an OK button.
 void ShowInfoDialog( wxWindow *parent,
                      const wxString &dlogTitle,

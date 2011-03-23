@@ -43,6 +43,7 @@ class TimeTrack;
 class AudioThread;
 class Meter;
 class TimeTrack;
+class wxDialog;
 
 extern AUDACITY_DLL_API AudioIO *gAudioIO;
 
@@ -320,6 +321,15 @@ class AUDACITY_DLL_API AudioIO {
    /** \brief Returns true if the user should be notified of missing alias warnings
      */
    bool ShouldShowMissingAliasedFileWarning();
+   
+   /** \brief Sets the wxDialog that is being displayed 
+     * Used by the custom dialog warning constructor and destructor
+     */
+   void SetMissingAliasFileDialog(wxDialog *dialog);
+   
+   /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
+     */
+   wxDialog *GetMissingAliasFileDialog();
 
    /** \brief Function to automatically set an acceptable volume
     *
@@ -527,6 +537,7 @@ private:
 
    bool                m_aliasMissingWarningShouldShow;
    bool                m_aliasMissingWarning;
+   wxDialog            *m_aliasMissingWarningDialog;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    volatile bool       mMidiThreadFillBuffersLoopRunning;

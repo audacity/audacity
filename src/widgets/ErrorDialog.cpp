@@ -35,6 +35,9 @@ Gives an Error message with an option for help.
 #include "../Internat.h"
 #include "../Project.h"
 #include "../Prefs.h"
+#include "../AudioIO.h"
+
+
 
 class ErrorDialog : public wxDialog
 {
@@ -45,6 +48,8 @@ class ErrorDialog : public wxDialog
       const wxString & message, 
       const wxString & helpURL,
       const bool Close = true, const bool modal = true);
+
+   virtual ~ErrorDialog(){}
 
 private:
 	wxString dhelpURL;
@@ -57,10 +62,38 @@ private:
 	   
 };
 
+// special case for alias missing dialog because we keep track of if it exists.
+class AliasedFileMissingDialog : public ErrorDialog
+{
+   public:
+   AliasedFileMissingDialog(wxWindow *parent, 
+      const wxString & dlogTitle, 
+      const wxString & message, 
+      const wxString & helpURL,
+      const bool Close = true, const bool modal = true);
+   virtual ~AliasedFileMissingDialog();
+};
+
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialog)
    EVT_BUTTON( wxID_OK, ErrorDialog::OnOk)
    EVT_BUTTON( wxID_HELP, ErrorDialog::OnHelp)
 END_EVENT_TABLE()
+
+
+AliasedFileMissingDialog::AliasedFileMissingDialog(wxWindow *parent, 
+      const wxString & dlogTitle, 
+      const wxString & message, 
+      const wxString & helpURL,
+      const bool Close, const bool modal):
+ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
+{
+   gAudioIO->SetMissingAliasFileDialog(this);
+}
+
+AliasedFileMissingDialog::~AliasedFileMissingDialog()
+{
+   gAudioIO->SetMissingAliasFileDialog(NULL);
+}
 
 ErrorDialog::ErrorDialog(
    wxWindow *parent, 
@@ -272,6 +305,27 @@ void ShowModelessErrorDialog(wxWindow *parent,
    dlog->Show();
 }
 
+void ShowAliasMissingDialog(wxWindow *parent,
+                     const wxString &dlogTitle,
+                     const wxString &message, 
+                     const wxString &helpURL,
+                     const bool Close)
+{
+   ErrorDialog *dlog = new AliasedFileMissingDialog(parent, dlogTitle, message, helpURL, Close, false);
+   // Don't center because in many cases (effect, export, etc) there will be a progress bar in the center that blocks this.
+   // instead put it just above or on the top of the project.
+   wxPoint point;
+   point.x = 0;
+   
+   point.y = parent ? parent->GetPosition().y - 200 : 100;
+   
+   if (point.y < 100)
+      point.y = 100;
+   dlog->SetPosition(point);
+   dlog->CentreOnParent(wxHORIZONTAL);
+   
+   dlog->Show();
+}
 
 /// Mostly we use this so that we have the code for resizability
 /// in one place.  Other considerations like screen readers are also

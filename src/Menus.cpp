@@ -2665,6 +2665,9 @@ bool AudacityProject::OnEffect(int type,
                                wxString params,
                                bool saveState)
 {
+   if (gAudioIO)
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
+
    TrackListIterator iter(mTracks);
    Track *t = iter.First();
    WaveTrack *newTrack = NULL;
@@ -3024,6 +3027,8 @@ void AudacityProject::OnExport()
 {
    Exporter e;
 
+   if (gAudioIO)
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
    e.Process(this, false, 0.0, mTracks->GetEndTime());
 }
 
@@ -3031,6 +3036,8 @@ void AudacityProject::OnExportSelection()
 {
    Exporter e;
 
+   if (gAudioIO)
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
    e.Process(this, true, mViewInfo.sel0, mViewInfo.sel1);
 }
 
@@ -3038,6 +3045,8 @@ void AudacityProject::OnExportMultiple()
 {
    ExportMultiple em(this);
    
+   if (gAudioIO)
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
    em.ShowModal();
 }
 
@@ -4603,6 +4612,11 @@ void AudacityProject::OnSimplifiedView()
 
 void AudacityProject::OnImport()
 {
+   // An import trigger for the alias missing dialog might not be intuitive, but
+   // this serves to track the file if the users zooms in and such.
+   if (gAudioIO)
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
+      
    wxArrayString selectedFiles = ShowOpenDialog(wxT(""));
    if (selectedFiles.GetCount() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
@@ -4747,6 +4761,9 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
 {
    WaveTrack *newLeft = NULL;
    WaveTrack *newRight = NULL;
+
+   if (gAudioIO)
+      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
 
    if (::MixAndRender(mTracks, mTrackFactory, mRate, mDefaultFormat, 0.0, 0.0,
                       &newLeft, &newRight)) {
