@@ -274,9 +274,13 @@ void ToneGenDialog::PopulateOrExchangeStandard( ShuttleGui & S )
    {
       S.TieChoice(_("Waveform") + wxString(wxT(":")), waveform,  waveforms);
       S.SetSizeHints(-1, -1);
-      S.TieTextBox(_("Frequency (Hz)"),frequency[0], 5);
-      S.TieTextBox(_("Amplitude (0-1)"),amplitude[0], 5);
-      S.AddFixedText(_("Duration"), false);
+
+      // The added colon to improve visual consistency was placed outside 
+      // the translatable strings to avoid breaking translations close to 2.0. 
+      // TODO: Make colon part of the translatable string after 2.0.
+      S.TieTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 5);
+      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 5);
+      S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mToneDurationT == NULL)
       {
          mToneDurationT = new
@@ -311,16 +315,20 @@ void ToneGenDialog::PopulateOrExchangeExtended( ShuttleGui & S )
       S.AddFixedText(wxT(""));
       S.AddTitle(_("Start"));
       S.AddTitle(_("End"));
-      S.TieTextBox(_("Frequency (Hz)"),frequency[0], 10)->SetName(_("Frequency Hertz Start"));
+
+      // The added colon to improve visual consistency was placed outside 
+      // the translatable strings to avoid breaking translations close to 2.0. 
+      // TODO: Make colon part of the translatable string after 2.0.
+      S.TieTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 10)->SetName(_("Frequency Hertz Start"));
       S.TieTextBox(wxT(""), frequency[1], 10)->SetName(_("Frequency Hertz End"));
-      S.TieTextBox(_("Amplitude (0-1)"),amplitude[0], 10)->SetName(_("Amplitude Start"));
+      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 10)->SetName(_("Amplitude Start"));
       S.TieTextBox(wxT(""), amplitude[1], 10)->SetName(_("Amplitude End"));
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxCENTER);
    {
       S.TieChoice(_("Interpolation:"), interpolation,  interpolations);
-      S.AddFixedText(_("Duration"), false);
+      S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mToneDurationT == NULL)
       {
          mToneDurationT = new

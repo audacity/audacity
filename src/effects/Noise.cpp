@@ -192,9 +192,12 @@ void NoiseDialog::PopulateOrExchange( ShuttleGui & S )
 {
    S.StartMultiColumn(2, wxCENTER);
    {
-      S.TieChoice(_("Noise type"), nType, nTypeList);
-      S.TieTextBox(_("Amplitude (0-1)"),  nAmplitude, 10);
-      S.AddPrompt(_("Duration"));
+      // The added colon to improve visual consistency was placed outside 
+      // the translatable strings to avoid breaking translations close to 2.0. 
+      // TODO: Make colon part of the translatable string after 2.0.
+      S.TieChoice(_("Noise type") + wxString(wxT(":")), nType, nTypeList);
+      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), nAmplitude, 10);
+      S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mNoiseDurationT == NULL)
       {
          mNoiseDurationT = new
