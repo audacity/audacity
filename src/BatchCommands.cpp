@@ -279,7 +279,7 @@ wxArrayString BatchCommands::GetAllCommands()
    }
    delete effects;
 
-/* This is for later in development: include the menu commands.
+//vvvvv /* This is for later in development: include the menu commands.
    CommandManager * mManager = project->GetCommandManager();
    wxArrayString mNames;
    mNames.Clear();
@@ -287,7 +287,7 @@ wxArrayString BatchCommands::GetAllCommands()
    for(i=0; i<mNames.GetCount(); i++) {
       commands.Add( mNames[i] );
    }
-*/
+//vvvvv */
    return commands;
 }
 

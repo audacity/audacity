@@ -1522,7 +1522,7 @@ _("Project check detected %d missing audio data \
    }
 
    //
-   // MISSING ORPHAN BLOCKFILES (.AU AND .AUF)
+   // ORPHAN BLOCKFILES (.au and .auf files that are not in the project.)
    //
    wxArrayString orphanFilePathArray;     // orphan .au and .auf files
    this->FindOrphanBlockFiles(filePathArray, orphanFilePathArray);
