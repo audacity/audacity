@@ -178,9 +178,9 @@ int Resample::GetBestMethodDefault()
 
 Resample::Resample(bool useBestMethod, double minFactor, double maxFactor)
 {
-   if (minFactor < 1.0 / 12.0 || maxFactor > 12.0) {
-      fprintf(stderr, "Libsamplerate only supports resampling factors\n");
-      fprintf(stderr, "between 1/12 and 12\n");
+   if (!src_is_valid_ratio (minFactor) || !src_is_valid_ratio (maxFactor)) {
+      fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
+      // FIXME: Audacity will hang after this if branch.
       mHandle = NULL;
       return;
    }
