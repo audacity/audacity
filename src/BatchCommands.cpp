@@ -279,15 +279,15 @@ wxArrayString BatchCommands::GetAllCommands()
    }
    delete effects;
 
-//vvvvv /* This is for later in development: include the menu commands.
-   CommandManager * mManager = project->GetCommandManager();
-   wxArrayString mNames;
-   mNames.Clear();
-   mManager->GetAllCommandNames(mNames, false);
-   for(i=0; i<mNames.GetCount(); i++) {
-      commands.Add( mNames[i] );
-   }
-//vvvvv */
+   /* This is for later in development: include the menu commands.
+         CommandManager * mManager = project->GetCommandManager();
+         wxArrayString mNames;
+         mNames.Clear();
+         mManager->GetAllCommandNames(mNames, false);
+         for(i=0; i<mNames.GetCount(); i++) {
+            commands.Add( mNames[i] );
+         }
+   */
    return commands;
 }
 
