@@ -57,6 +57,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Richard Ash"), roleTeamDeveloper);
    AddCredit(wxT("Michael Chinen"), roleTeamDeveloper);
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
+   AddCredit(wxT("Roger Dannenberg"), roleTeamDeveloper);
    AddCredit(wxT("Al Dimond"), roleTeamDeveloper);
    AddCredit(wxT("Ruslan Ijbulatov"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
@@ -69,13 +70,13 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Greg Kozikowski"), roleTeamSupport);
    AddCredit(wxT("Alexandre Prokoudine"), roleTeamSupport);
    AddCredit(wxT("Peter Sampson"), roleTeamSupport);
+   AddCredit(wxT("Bill Wharrie"), roleTeamSupport);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
  
    AddCredit(wxT("Matt Brubeck"), roleEmeritusDeveloper);
-   AddCredit(wxT("Roger Dannenberg"), roleEmeritusDeveloper);
    AddCredit(wxT("Joshua Haberman"), roleEmeritusDeveloper);
    AddCredit(wxT("Leland Lucius"), roleEmeritusDeveloper);
    AddCredit(wxT("Markus Meyer"), roleEmeritusDeveloper);
