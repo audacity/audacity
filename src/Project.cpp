@@ -2681,14 +2681,22 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
 
          if (!projName.IsEmpty())
-         {
+         {            
+            // First try to load the data files based on the _data dir given in the .aup file
+            // If this fails then try to use the filename of the .aup as the base directory
+            // This is because unzipped projects e.g. those that get transfered between mac-pc
+            // have encoding issues and end up expanding the wrong filenames for certain
+            // international characters (such as capital 'A' with an umlaut.)
             if (!mDirManager->SetProject(projPath, projName, false))
             {
-               wxMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
+               projName = GetName() + wxT("_data");
+               if (!mDirManager->SetProject(projPath, projName, false)) {
+                  wxMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
                                              projName.c_str()),
                                              _("Error opening project"),
                                              wxOK | wxCENTRE, this);
-               return false;
+                  return false;
+               }
             }
          }
 

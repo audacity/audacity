@@ -417,10 +417,8 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       #endif
 
    } else {
-      #ifndef __WXMAC__
       if (!wxDirExists(projFull))
          return false;
-      #endif
    }
 
    /* Move all files into this new directory.  Files which are
