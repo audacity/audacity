@@ -1331,7 +1331,7 @@ void AudacityProject::RebuildMenuBar()
 // Under Windows we delete the menus, since we will soon recreate them.
 // rather oddly, the menus don't vanish as a result of doing this.
 // Under Linux we can't delete them as this crashes gtk2....
-// FIXME: So we have a memory leak of menu items under linux?  Oops.  
+// FIX-ME: So we have a memory leak of menu items under linux?  Oops.  
 #ifdef __WXMSW__
    wxMenuBar *menuBar = GetMenuBar();
 

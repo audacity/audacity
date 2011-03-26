@@ -180,7 +180,7 @@ Resample::Resample(bool useBestMethod, double minFactor, double maxFactor)
 {
    if (!src_is_valid_ratio (minFactor) || !src_is_valid_ratio (maxFactor)) {
       fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
-      // FIXME: Audacity will hang after this if branch.
+      // FIX-ME: Audacity will hang after this if branch.
       mHandle = NULL;
       return;
    }
