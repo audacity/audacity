@@ -19,8 +19,6 @@
 #include <wx/process.h>
 #include <wx/textctrl.h>
 
-#include <FileDialog.h>
-
 #include "Export.h"
 
 #include "../Project.h"
@@ -29,6 +27,9 @@
 #include "../Internat.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
+
+#include <FileDialog.h>
+
 
 //----------------------------------------------------------------------------
 // ExportCLOptions
