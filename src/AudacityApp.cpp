@@ -701,7 +701,7 @@ void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
    while (ofqueue.GetCount()) {
       wxString name(ofqueue[0]);
       ofqueue.RemoveAt(0);
-      MRUOpen(name);
+      MRUOpen(name); // FIX-ME: Check the return result?
    }
 }
 #endif //__WXMAC__
@@ -735,7 +735,7 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
 END_EVENT_TABLE()
 
-// Backend for OnMRUFile and OnMRUProject
+// backend for OnMRUFile 
 bool AudacityApp::MRUOpen(wxString fullPathStr) {
    // Most of the checks below are copied from AudacityProject::OpenFiles.
    // - some rationalisation might be possible.
@@ -749,18 +749,12 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
       {
          gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr));
          
-         // Make sure it isn't already open
-         wxFileName newFileName(fullPathStr);
-         size_t numProjects = gAudacityProjects.Count();
-         for (size_t i = 0; i < numProjects; i++) {
-            if (newFileName.SameAs(gAudacityProjects[i]->GetFileName())) {
-               wxMessageBox(wxString::Format(_("%s is already open in another window."),
-                  newFileName.GetName().c_str()),
-                  _("Error opening project"),
-                  wxOK | wxCENTRE);
-               return(true);
-            }
-         }
+         // Make sure it isn't already open.
+         // Test here even though AudacityProject::OpenFile() also now checks, because 
+         // that method does not return the bad result. 
+         // That itself may be a FIX-ME.
+         if (AudacityProject::IsAlreadyOpen(fullPathStr))
+            return false;
          
          // DMM: If the project is dirty, that means it's been touched at
          // all, and it's not safe to open a new project directly in its
@@ -795,39 +789,21 @@ void AudacityApp::OnMRUClear(wxCommandEvent& event)
    mRecentFiles->Clear();
 }
 
+//vvv Basically, anything from Recent Files is treated as a .aup, until proven otherwise, 
+// then it tries to Import(). Very questionable handling, imo. 
+// Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - ID_RECENT_FIRST;
    wxString fullPathStr = mRecentFiles->GetHistoryFile(n);
 
-   bool opened = MRUOpen(fullPathStr);
-   if(!opened) {
+   // Try to open only if not already open. 
+   // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks, 
+   // because we don't want to RemoveFileFromHistory() just because it already exists,
+   // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
+   // that method does not return the bad result. 
+   if (!AudacityProject::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       mRecentFiles->RemoveFileFromHistory(n);
-   }
 }
-
-#if 0
-//FIX-ME: Was this OnMRUProject lost in an edit??  Should we have it back?
-//vvv I think it was removed on purpose, but I don't know why it's still here. 
-// Basically, anything from Recent Files is treated as a .aup, until proven otherwise, 
-// then it tries to Import(). Very questionable handling, imo. 
-// Better, for example, to check the file type early on.
-// 
-void AudacityApp::OnMRUProject(wxCommandEvent& event) {
-   AudacityProject *proj = GetActiveProject();
-
-   int n = event.GetId() - 6050;//FIX-ME: Use correct ID name.
-   wxString fullPathStr = proj->GetRecentProjects()->GetHistoryFile(n);
-
-   bool opened = MRUOpen(fullPathStr);
-   if(!opened) {
-      proj->GetRecentProjects()->RemoveFileFromHistory(n);
-      gPrefs->SetPath("/RecentProjects");
-      proj->GetRecentProjects()->Save(*gPrefs);
-      gPrefs->SetPath("..");
-   }
-}
-#endif
-
 
 void AudacityApp::InitLang( const wxString & lang )
 {

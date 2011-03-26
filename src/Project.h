@@ -189,6 +189,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
     */
    static wxArrayString ShowOpenDialog(wxString extraformat = wxEmptyString,
          wxString extrafilter = wxEmptyString);
+   static bool IsAlreadyOpen(const wxString projPathName);
    static void OpenFiles(AudacityProject *proj);
    void OpenFile(wxString fileName, bool addtohistory = true);
    bool WarnOfLegacyFile( );

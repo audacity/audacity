@@ -2161,6 +2161,26 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 }
 
 // static method, can be called outside of a project
+bool AudacityProject::IsAlreadyOpen(const wxString projPathName)
+{
+   wxFileName newProjPathName(projPathName);
+   size_t numProjects = gAudacityProjects.Count();
+   for (size_t i = 0; i < numProjects; i++) 
+   {
+      if (newProjPathName.SameAs(gAudacityProjects[i]->mFileName)) 
+      {
+         wxString errMsg = 
+            wxString::Format(_("%s is already open in another window."),
+                              newProjPathName.GetName().c_str());
+         wxLogError(errMsg);
+         wxMessageBox(errMsg, _("Error opening project"), wxOK | wxCENTRE);
+         return true;
+      }
+   }
+   return false;
+}
+
+// static method, can be called outside of a project
 void AudacityProject::OpenFiles(AudacityProject *proj)
 {
    /* i18n-hint: This string is a label in the file type filter in the open 
@@ -2182,25 +2202,10 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
    for (size_t ff = 0; ff < selectedFiles.GetCount(); ff++) {
       wxString fileName = selectedFiles[ff];
-      wxFileName newFileName(fileName);
-      bool skip = false;
 
-      // Make sure it isn't already open
-      size_t numProjects = gAudacityProjects.Count();
-      for (size_t i = 0; i < numProjects; i++) {
-         if (newFileName.SameAs(gAudacityProjects[i]->mFileName)) {
-            wxMessageBox(wxString::Format(_("%s is already open in another window."),
-                                          newFileName.GetName().c_str()),
-                         _("Error opening project"),
-                         wxOK | wxCENTRE);
-            skip = true;
-            break;
-         }
-      }
-
-      if (skip) {
-         continue;
-      }
+      // Make sure it isn't already open.
+      if (AudacityProject::IsAlreadyOpen(fileName))
+         continue; // Skip ones that are already open.
 
       gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fileName));
       
@@ -2250,7 +2255,8 @@ bool AudacityProject::WarnOfLegacyFile( )
 }
 
 
-
+// FIX-ME? This should return a result that is checked. 
+//    See comment in AudacityApp::MRUOpen().
 void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 {
    // On Win32, we may be given a short (DOS-compatible) file name on rare
@@ -2258,6 +2264,17 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    // convert these to long file name first.
    fileName = PlatformCompatibility::ConvertSlashInFileName(
       PlatformCompatibility::GetLongFileName(fileName));
+
+   // Make sure it isn't already open.
+   // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles() 
+   //    and AudacityApp::MRUOpen(), but if you open an aup file by double-clicking it 
+   //    from, e.g., Win Explorer, it would bypass those, get to here with no check, 
+   //    then open a new project from the same data with no warning. 
+   //    This was reported in http://bugzilla.audacityteam.org/show_bug.cgi?id=137#c17, 
+   //    but is not really part of that bug. Anyway, prevent it!
+   if (AudacityProject::IsAlreadyOpen(fileName))
+      return;
+
 
    // Data loss may occur if users mistakenly try to open ".aup.bak" files
    // left over from an unsuccessful save or by previous versions of Audacity.
