@@ -2,18 +2,16 @@
 Audacity(R): A Free, Cross-Platform Digital Audio Editor
   WWW: http://audacity.sourceforge.net/
 
-We welcome feedback on Audacity, suggestions for new or
-improved features, bug reports and patches at:
+We welcome feedback on Audacity, suggestions for new or improved features, 
+bug reports and patches at:
   feedback@audacityteam.org
 
-Personal support with Audacity is not provided by e-mail,
-but on our Forum:
+Personal support with Audacity is not provided by e-mail, but on our Forum:
   http://audacityteam.org/forum/
 
-Audacity is copyright (c) 1999-2010 by Audacity Team.
-This copyright notice applies to all documents in the
-Audacity source code archive, except as otherwise noted
-(mostly in the lib-src subdirectories).
+Audacity is copyright (c) 1999-2011 by Audacity Team. This copyright notice
+applies to all documents in the Audacity source code archive, except as
+otherwise noted (mostly in the lib-src subdirectories).
 
 The documentation for Audacity is licensed under the Creative Commons
 Attribution 3.0 license:
@@ -22,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 1.3.12 Beta 
+Version 1.3.13 Beta
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes in version 1.3.12 Beta
+2.  Changes in version 1.3.13 Beta 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -58,290 +56,81 @@ to http://www.gnu.org/copyleft/gpl.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes in version 1.3.12 Beta: 
+2. Changes in version 1.3.13 Beta: 
 
 Bug fixes for:
 
- * Imports and Exports:
-   * AAC files could not be exported at 48000 Hz 
-   * When importing multiple native file formats using FFmpeg, all 
-      files after the first reverted to using the native importer
-   * FFmpeg custom export window too large on 800 x 600 resolution 
-      monitors 
-   * Projects froze if files imported via On-Demand were no longer 
-      available
-   * (Linux) WAV/AIFF exports were corrupted if overwriting an aliased 
-      file which had been imported using the command line
+ * Interface:
+    * Cutting or copying from a track at a given sample rate into a track
+	   at another rate resulted in speed-changed audio. 
+    * Generating inside a clip could modify the clip length or create 
+       spurious clips. 	
+    * Recorded stereo tracks were only half the height of imported or 
+       generated stereo tracks. Imported stereo files had a "1" appended 
+	   to the track name.  
+    * Edit > Region Save did not save the cursor position.  
+    * (Windows) Projects crashed when clicking rapidly inside the interface
+       or when applying repeated effects towards the end of audio tracks. 
+    * (Windows) Some Unicode characters could not be typed into labels,
+       or caused a freeze using some input methods.
+    * Numerous other interface fixes including Dependencies dialog, 
+       Keyboard Preferences and spurious lines drawn on waveform.
 
- * Labels:
-   * Cutting or deleting a region in the waveform and label track did 
-      not move the labels in advance of the cut 
-   * Incorrect behavior snapping to labels and boundaries when Snep To 
-      was enabled
-   * Labels can now be reversed if included with the audio selection 
+ * Imports and Exports: 	  
+    * (Windows, OS X) Audacity's optional FFmpeg and LAME libraries were not
+       detected when other versions of those libraries existed on the system.
+    * Imported ID3v2 metadata tags were removed when exporting without the 
+	   Metadata Editor appearing (for example, when using an export command
+       in Chains). Note: As a result of this fix, ID3v1 tags must now be 
+	   written by exporting using (external program) and an installed LAME. 
+    * (OS X) Files imported from iTunes could create invalid characters in the
+       .aup project file, causing an error when re-opening the project. Note: 
+	   An error "reference to invalid character number" will still occur if 
+	   re-opening a project created in previous Betas that contains such 
+	   characters. To fix the issue, open a back-up copy of the .aup file in a
+	   text editor, turn off word wrap, then in the line indicated in the error
+	   message, remove the string of characters that starts with &# and ends
+	   with a semi-colon (;).
 
- * Other bug fixes:
-   * When using non-English languages, Generate effects truncated the 
-      selected region
-   * Mice with high-precision scroll-wheels could cause a crash   
-   * Changing recording preferences using the Transport menu did
-      not update the menu in other open projects  
-   * (Windows 7) Clicking in a file open or save dialog caused files or 
-      folders to disappear from the list, and file filtering was broken
+ *  Other bug fixes:	   
+    * Nyquist effects: fixes for crashes, incorrect slider behaviour and better
+       support for backslashes, double quotes and Unicode characters. 
+    * (Windows and OS X) Processing of VST effects was substantially slower than
+	   in previous versions of Audacity.
+    * (Linux) Recordings made with the pulse device crashed or stalled when
+	   using overdub and/or software playthrough.  
+    * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Audacity was
+	   compiled with libsamplerate. 
+ 
+Changes and Improvements:
 
-Changes and improvements:
-
- * A hover tooltip is now provided if the Mixer Toolbar input selector 
-    cannot control the system slider for the selected input. 
- * More intuitive behavior when moving and resizing labels by dragging 
- * Support added for importing lists of files (LOF) containing relative 
-    paths  
- * Export Multiple: new option to use a numerical prefix before existing 
-    label or track names; "Success" dialog now resizable 
- * New Equalization preset "Inverse RIAA", with new button to invert  
-    other curves
- * Timer Record now remembers last scheduled duration 
- * Meter Toolbar can now be made much narrower, and so more suitable for
-    vertical orientation  
- * New Preferences choice for "System" language which is used on first 
-    run instead of asking user to choose language    
- * Warning now provided if WAV/AIFF exports are not successfully
-    completed   
- * (Linux) Improved icon set in compliance with freedesktop.org 
-    Icon Theme Specification 0.6
-
+ * Control Toolbar renamed to Transport Toolbar.  
+ * Device Toolbar (on by default) now contains all input and output device 
+    choices, including host and recording channels. Input/output choices are 
+    longer in Mixer Toolbar on Windows XP or some older operating systems.
+    New Transport > Rescan Audio Devices menu item to refresh the device list.  
+ * New "Sync-Lock Tracks" feature (turned on in the Tracks menu) to allow
+    groups of audio and/or label tracks to retain synchronisation when the
+	track length changes. 
+ * Equalization: New "Manage Curves" dialog for importing and exporting curves.
+ * Noise Removal: New "Sensitivity" slider and "Isolate Noise" choice.
+ * New "Extended Import" Preferences for specifying different importers to
+    open specific file extensions.
+ * Improved Automatic Crash Recovery with all project changes autosaved. 
+ * Improved error reporting when read-directly imported files are missing. 
+ * MIDI tracks can be vertically zoomed, time shifted and display bar lines.   
+ * On Windows and Linux, the window Close button and other system close or
+    shutdown commands now quit on closing the last window. File > Close now 
+	always clears to a new, empty project. 
+ * (OS X) Simpler installer with top level "Audacity" folder. 
+ 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues at Release
+3. Known Issues in 1.3.13 Beta:
 
-Please also check:
-  http://wiki.audacityteam.org/index.php?title=Known_Issues
-
-for details of any issues that have been identified after release of
-this version.
-
- * Imports:
-    * Even if the file filter in the File Open or Import window is set
-       to "FFmpeg-compatible files", native formats like WAV or MP3 
-       still import using the native importer when using File > Recent
-       Files, dragging in or opening from a file manager program
-    * On-Demand WAV/AIFF import is not available if using the optional 
-       FFmpeg importer (that is, if "FFmpeg-compatible files" set in 
-       the import dialog)
-    * If a WAV/AIFF file is imported into a project using On-Demand 
-       import, then the file is deleted whilst the project is still
-       open, the track plays silently with no warning about not 
-       being able to read the file 
-    * (Windows) The Audacity executable cannot be added to the 
-       Explorer "Open With" menu if you have another version
-       of Audacity also called "audacity.exe". You can set the 
-       file association to always use the Audacity Beta executable
-       to open the required file type, but it will not appear in 
-       the list accessed by the "Open With" context menu item
-       whilst there is another "audacity.exe" on the computer
-    * (Mac) Files imported from iTunes may create invalid characters in 
-       the .aup project file, which will cause an error at a stated line
-       when re-opening the .aup file. Workaround: open the .aup file in a
-       text editor and in the affected lines, remove everything except 
-       a to z characters and whole numbers between the quotes in value=""
-
- * Exports:
-    * Album art and lyrics in imported metadata lost when exporting   
-    * WAVEX (Microsoft) headers: GSM 6.10 files cannot be exported, and
-       U-Law/A-Law files may not be playable
-    * M4A: exports at 38000 Hz may not play properly (FFmpeg bug); M4A
-       renamed to MOV will not play on Windows in iTunes or QuickTime
-    * WMA: no metadata is exported; this has been disabled because 
-       Windows cannot play the files if metadata is included (due to 
-       a current limitation in FFmpeg)
-    * Custom FFmpeg Export: many combinations of formats and codecs 
-       are incompatible, as are some combinations of general options 
-       and codecs. Some files may be exported as zero kb files.
-    * Muting specific time-shifted mono tracks produces audio at wrong 
-       point on timeline in exported file if muted tracks are to left 
-       of unmuted
-    * (Windows) Exported "Comments" ID3 tag not recognized by Windows 
-       Media Player or Explorer
-
- * The optional FFmpeg library is not automatically detected after 
-    installation. Before importing or exporting using FFmpeg, you 
-    will need to go the Libraries tab of Preferences and click "Locate" 
-    in order to detect the installed library.  
-
- * Genre WAV info tag (IGNR) not supported due to limitation in
-    libsndfile 
-
- * It is currently possible to attempt simultaneous imports or exports
-    by using shortcuts (or File > New on Mac): Audacity is not yet
-    capable of running these simultaneous operations safely, and
-    attempting this may crash your project
-
- * Effects and Analysis:
-    * Built-in Generate effects may create additional unwanted split lines
-       if generated inside an existing clip 
-    * Truncate Silence does not adjust clip boundaries inside the selection
-       being truncated 
-    * Truncate Silence may not give intuitive results on multiple tracks
-    * Nyquist effects join separate clips together
-    * LADSPA Multiband EQ (optional download) may not be visible in 
-       the Effect menu, or may crash in use
-    * (Windows) On a few Windows XP or 2000 machines, the background of the 
-       Frequency Analysis graph is reported to be completely transparent, and 
-       new spectrum plots are drawn underneath previous plots 
-    * (Windows) VST plug-ins are not detected in the registry VSTPluginsPath
-       or in C:\Program Files\Steinberg\VSTPlugins
-    * (Windows) Visible scanning dialog may appear on every launch of Audacity
-       when no VST plug-ins are present
-
- * Playback and Recording:
-    * If you add an external audio device while Audacity is open, you 
-       must restart Audacity to enable it to recognize that device 
-    * Play-at-Speed slider: Change of playback speed is no longer automatic 
-       after you move the play-at-speed slider. To change speed, move the 
-       slider, then click the green button to left of the slider to play at
-       the new speed. 
-    * If playback scrolls, cursor jumps to start of scroll on stop, hiding
-       previously visible audio preceding the playback position  
-    * Calculation of "disk space remains for recording (time)" incorrect
-       when recording in 24-bit quality. You may record for 50% longer
-       than the indicated time.
-    * (Windows Vista and 7) input sources such as microphone and line-in 
-       must be selected in the Audacity Audio I/O Preferences, not the 
-       Mixer Toolbar input selector   
-    * (Windows Vista) If you change the input volume in Audacity and then
-       record, the volume is reset to its original level 
-    * (Windows XP) The input slider and selector for inbuilt devices are 
-       unavailable if a USB device is also connected
-    * (Windows) Timer Record cannot maintain scheduled duration if system 
-       clock changes
-    * (Windows) Audacity is incompatible with some professional sound
-       cards and may crash if one of these cards is the default when you
-       open Audacity. Workaround: make a different sound card your
-       default when using Audacity, but please let us know if this affects
-       you so we can track down and solve the problem.
-    * (Linux) Audacity now supports interfacing with JACK, but this has
-       not been tested, and has a number of known reliability and usability
-       issues: patches to improve both will be welcomed
-
- * Mixer Board:
-    * The meter range does not reflect a change in the dB range meter 
-       preferences until restart 
-
- * Interface:
-    * Entering a backslash "\" in a file name when using File > Save Project
-       gives a "not writable or disk full" error, after which the menu item 
-       cannot access the save dialog. Workaround: Use File > Save Project As
-       to enter another legal character. 
-    * Dependencies dialog shows no warning if listed files no longer exist, 
-       and may give a false "self-contained" indication if a longer waveform 
-       has been edited down to a short selection 
-    * Not all menu items are correctly enabled when the preference:
-       "Select all audio in project, if none selected" is checked
-    * A few interface elements do not change correctly after a language 
-       change until restart
-    * Automatic Crash Recovery disregards track zoom level and position
-    * (Windows, Linux) File > Close performed on the last window does not by
-       default clear to an empty workspace. This ability can be enabled in
-       the Interface preferences, but then ALT + F4, window [X], Taskbar close
-       and system shutdown will not quit the application on closing the last 
-       window. Only File > Exit will do so. 
-    * (Linux) If Audacity is left open but without focus, its CPU use
-       will rise slowly until all available system CPU is consumed. 
-       This is a bug in wxGTK 2.8.10 (not previous versions) which will
-       be fixed in wxGTK 2.8.11. See: http://trac.wxwidgets.org/ticket/11315
-    * (Linux) The OK button has focus on opening effects and other dialogs,
-       instead of fields for changing values. This is a bug in wxGTK. To 
-       navigate the dialog, tab into it or click in it. 
-    * (Linux) Custom FFmpeg Export dialog does not respond to ENTER after
-       clicking in the Formats or Codecs selector   
-
- * Label tracks:
-    * After adding a label at the playback position and confirming with
-       ENTER, using an unmodified shortcut to stop or pause will not do
-       so, but will write a label at the cursor position. Workaround:
-       use up arrow instead of ENTER to confirm the label.  
-    * (Linux) In projects containing several hundred labels or more,
-       Audacity may appear to freeze on 100% CPU when performing effects 
-       or other actions. Since this problem may affect only the first 
-       label track in a project, you can work around it by adding an empty 
-       first label track and then work on a second one. 
-    * (Linux) Typing in a label while playing draws temporary spurious 
-       lines at the playback position 
-
- * Accessibility:
-    * The following may not read correctly in screen readers:
-       Labels, cells in Label Editor, time values in Generate effects,
-       accelerators in Preferences, Metadata Editor(JAWS 11)   
-    * Toolbar buttons cannot be clicked on by using ENTER on the keyboard:
-       ENTER navigates to the next button instead  
-
- * It is no longer possible to use Save Project or Save Project As to
-    overwrite another pre-existing project, even if that project is not
-    in use. Functionality to overwrite a project not in use will be 
-    restored in a future version of Audacity when we are sure it will
-    always be safe.   
-
- * Projects created by Audacity 1.1.x or earlier are no longer
-    supported. Workaround: Export each project track as WAV using the 
-    appropriate legacy version of Audacity, then import the WAV files
-    into current Audacity.
-
- * Audacity can import, display and cut/copy/paste MIDI files, then
-    export them, but they cannot be played; undoing an edit with a MIDI
-    track open causes the MIDI data to be lost in Windows builds
-
- * Intermittently occurring bugs: Please write to feedback@audacityteam.org   
-    if you experience any of these known but not fully understood 
-    issues, giving us steps to reproduce them so they can be fixed.
-    For items marked ^, some work has already been done which may
-    have eliminated the issue - your help with testing these issues 
-    is especially welcome.  
- 
-    * Projects do not reopen properly with "orphaned" or "missing"
-       blockfiles or "duplicate attribute" errors
-    * Projects do not re-open properly from the Automatic 	
-       Crash Recovery dialog
-    * Projects crash when applying repeated effects towards
-       the end of audio tracks^ 
-    * Typing "j" or "k" in a label may activate the "move cursor" 
-       shortcut instead 
-    * WAV or AIFF files freeze or crash Audacity on import     
-    * (Windows XP, reported on) Clicks during recording 
-    * (Windows) Timer Record unreliable with recordings starting
-       before and ending after midnight
-    * (Windows) On Vista and 7, and on XP with some USB devices, the
-       Audacity input/output level sliders act independently of/incorrectly
-       with system level sliders. The achieved recorded level may only 
-       match the level indicated on the Recording VU meter if the Audacity 
-       input slider is at 100%.^ 
-    * (Windows) Effects processing/waveform rendering after completion 
-       may be much slower than Audacity Beta 1.3.8
-    * (Mac OS X 10.5.8 PPC) Hang when scanning for VST effects on first
-       install of Audacity Beta. Workaround: rename the system VST folders
-       /Library/Audio/Plug-ins/VST or ~/Library/Audio/Plug-ins/VST
-    * (Linux) After opening a sufficiently long audio file, opening a 
-       second file of any size leads to locked GUI/console messages 
-       until first file completes play
-
- * Miscellaneous platform-specific issues:
-    * (Windows 7) On launching Audacity, "Runtime Error Program:(location)
-       R6034" occurs. Workaround: Right-click over audacity.exe > Properties
-       and change compatibility mode to Vista SP2 or XP SP3. 
-    * (Mac OS X) Very occasionally, users may find that recording causes 
-       "error opening sound device", or that after running Audacity, other
-       media players don't produce any sound, or crash:  to resolve this, 
-       set up your sound device in Apple Audio MIDI Setup to work in stereo,
-       16-bit, with a sample rate of 44100 Hz or 48000 Hz, and set the 
-       sample format and rate identically in Audacity. More help at:
-       http://audacityteam.org/forum/viewtopic.php?f=17&t=5064
-    * (Mac OS X) If using Audacity when the "Hear" audio plug-in is
-       running (or has been since boot), there will be excessive memory
-       usage which could cause a crash: appears to be due to buggy
-       memory allocation in "Hear"
-
-Also note the Windows installer will not replace 1.2.x installations,
-but will install alongside them. 
+Please see:
+http://tinyurl.com/4fagk5m
 
 
 --------------------------------------------------------------------------------
@@ -492,8 +281,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 1.3.8 and later requires
-wxWidgets 2.8.10 from:
+First you must download wxWidgets. Audacity 1.3.13 requires wxWidgets 2.8.11
+from:
 
   http://www.wxWidgets.org/
 
@@ -532,6 +321,59 @@ or e-mail us at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 1.3.12 Beta: 
+
+Bug fixes for:
+
+ * Imports and Exports:
+   * AAC files could not be exported at 48000 Hz 
+   * When importing multiple native file formats using FFmpeg, all 
+      files after the first reverted to using the native importer
+   * FFmpeg custom export window too large on 800 x 600 resolution 
+      monitors 
+   * Projects froze if files imported via On-Demand were no longer 
+      available
+   * (Linux) WAV/AIFF exports were corrupted if overwriting an aliased 
+      file which had been imported using the command line
+
+ * Labels:
+   * Cutting or deleting a region in the waveform and label track did 
+      not move the labels in advance of the cut 
+   * Incorrect behavior snapping to labels and boundaries when Snep To 
+      was enabled
+   * Labels can now be reversed if included with the audio selection 
+
+ * Other bug fixes:
+   * When using non-English languages, Generate effects truncated the 
+      selected region
+   * Mice with high-precision scroll-wheels could cause a crash   
+   * Changing recording preferences using the Transport menu did
+      not update the menu in other open projects  
+   * (Windows 7) Clicking in a file open or save dialog caused files or 
+      folders to disappear from the list, and file filtering was broken
+
+Changes and improvements:
+
+ * A hover tooltip is now provided if the Mixer Toolbar input selector 
+    cannot control the system slider for the selected input. 
+ * More intuitive behavior when moving and resizing labels by dragging 
+ * Support added for importing lists of files (LOF) containing relative 
+    paths  
+ * Export Multiple: new option to use a numerical prefix before existing 
+    label or track names; "Success" dialog now resizable 
+ * New Equalization preset "Inverse RIAA", with new button to invert  
+    other curves
+ * Timer Record now remembers last scheduled duration 
+ * Meter Toolbar can now be made much narrower, and so more suitable for
+    vertical orientation  
+ * New Preferences choice for "System" language which is used on first 
+    run instead of asking user to choose language    
+ * Warning now provided if WAV/AIFF exports are not successfully
+    completed   
+ * (Linux) Improved icon set in compliance with freedesktop.org 
+    Icon Theme Specification 0.6
+
 
 Changes in version 1.3.11 Beta: 
 
@@ -662,6 +504,8 @@ Bug fixes for:
               or recording 
            * DTMF generator defaulted to zero duration on open   	
            * Unwanted interactions between linked audio and label tracks  
+           * Noise Removal shifted clips if the selection region included
+              white space
            * (Windows XP) Failure to launch on some machines due to
               "incorrect configuration" issue 
            * (Windows) Crash importing a stereo file while a screen reader
