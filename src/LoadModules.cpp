@@ -74,6 +74,9 @@ void LoadModule(wxString fname)
 {
    wxLogDebug(wxT("About to load module %s"), fname.c_str());
    tModuleInit mainFn = NULL;
+#if defined(__WXMAC__)
+   wxLogNull logNo;
+#endif
 
    // As a courtesy to some modules that might be bridges to
    // open other modules, we set the current working
