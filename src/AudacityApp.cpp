@@ -901,10 +901,12 @@ bool AudacityApp::OnInit()
    }
 #endif
 
-   mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
-   mLogger->SetActiveTarget(mLogger);
-   mLogger->EnableLogging(true);
-   mLogger->SetLogLevel(wxLOG_Max);
+   #ifndef __WXMAC__
+      mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
+      mLogger->SetActiveTarget(mLogger);
+      mLogger->EnableLogging(true);
+      mLogger->SetLogLevel(wxLOG_Max);
+   #endif
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
@@ -1111,6 +1113,13 @@ bool AudacityApp::OnInit()
    // PLAY or RECORD completes.  
    // So we also call StartMonitoring when STOP is called.
    project->MayStartMonitoring();
+
+   #ifdef __WXMAC__
+      mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
+      mLogger->SetActiveTarget(mLogger);
+      mLogger->EnableLogging(true);
+      mLogger->SetLogLevel(wxLOG_Max);
+   #endif
 
    #ifdef USE_FFMPEG
    FFmpegStartup();
