@@ -1387,7 +1387,7 @@
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
 			);
-			script = "if [ -n \"`which msgfmt`\" ]\nthen\n   msgfmt -v -o \"${SCRIPT_OUTPUT_FILE_0}\" \"${SCRIPT_INPUT_FILE}\"\n\n   OD=\"${TARGET_BUILD_DIR}/Languages\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   OD=\"${TARGET_BUILD_DIR}/Languages/${INPUT_FILE_BASE}\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   cp \"${SCRIPT_OUTPUT_FILE_0}\" \"${OD}/audacity.mo\"\n   chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/audacity.mo\"\n   chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/audacity.mo\"\nelse\n   echo \"msgfmt not available\"\n   touch \"${SCRIPT_OUTPUT_FILE_0}\"\nfi";
+			script = "if [ -n \"`which msgfmt`\" ]\nthen\n   msgfmt -v -o \"${SCRIPT_OUTPUT_FILE_0}\" \"${SCRIPT_INPUT_FILE}\"\n\n   OD=\"${TARGET_BUILD_DIR}/Languages\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   OD=\"${TARGET_BUILD_DIR}/Languages/${INPUT_FILE_BASE}\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   cp \"${SCRIPT_OUTPUT_FILE_0}\" \"${OD}/audacity.mo\"\n   chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/audacity.mo\"\n   chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/audacity.mo\"\n\n   case \"${INPUT_FILE_BASE}\" in\n      gl)\n\t\tINPUT_FILE_BASE=gl_ES\n      ;;\n   esac\n\n   if [ -e \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" ]\n   then\n      cp \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" \"${OD}/wxstd.mo\"\n      chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/wxstd.mo\"\n      chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/wxstd.mo\"\n   fi\n   \nelse\n   echo \"msgfmt not available\"\n   touch \"${SCRIPT_OUTPUT_FILE_0}\"\nfi";
 		};
 /* End PBXBuildRule section */
 
@@ -9325,7 +9325,10 @@
 		288052DF0DEA74FD00671EA4 /* Release Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
@@ -9945,7 +9948,10 @@
 		28E5DA3A0AC4CBA200E7F64C /* Release Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
