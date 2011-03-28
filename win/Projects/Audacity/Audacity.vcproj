@@ -2476,6 +2476,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\plug-ins\notch.ny"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\plug-ins\pluck.ny"
 				>
 			</File>
