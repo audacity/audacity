@@ -122,7 +122,6 @@ class AudacityApp:public wxApp {
    // Most Recently Used File support (for all platforms).
    void OnMRUClear(wxCommandEvent &event);
    void OnMRUFile(wxCommandEvent &event);
-// void OnMRUProject(wxCommandEvent &event);
    // Backend for above - returns true for success, false for failure
    bool MRUOpen(wxString fileName);
 
