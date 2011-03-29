@@ -371,7 +371,11 @@ void ExtImportPrefs::OnRuleTableSelect (wxGridEvent& event)
    event.Skip();
    if (!event.Selecting() || mStopRecursiveSelection)
       return;
+
    toprow = event.GetRow();
+   if (toprow < 0)
+      return;
+
    DoOnRuleTableSelect (toprow);
 }
 
@@ -381,7 +385,11 @@ void ExtImportPrefs::OnRuleTableSelectRange (wxGridRangeSelectEvent& event)
    event.Skip();
    if (!event.Selecting() || mStopRecursiveSelection)
       return;
+
    toprow = event.GetTopRow();
+   if (toprow < 0)
+      return;
+
    DoOnRuleTableSelect (toprow);
    mStopRecursiveSelection = true;
    RuleTable->SelectRow (toprow);
@@ -392,6 +400,12 @@ void ExtImportPrefs::OnRuleTableSelectRange (wxGridRangeSelectEvent& event)
 void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
 {
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   
+   if (toprow < 0 || toprow > items->GetCount())
+   {
+      return;
+   }
+
    ExtImportItem *item = &(*items)[toprow];
    PluginList->DeleteAllItems();
    
