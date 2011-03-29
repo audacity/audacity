@@ -306,13 +306,13 @@ if [[ x"$reconf" = x1 ]] ; then
 	echo "Your Makefiles are out of date or missing. (Re)running configure to"
 	echo "create up-to-date Makefiles before building tarballs..."
 	echo "   ./configure ${configargs}"
-fi
 
-# if we are in silent mode, then redirect the output of configure
-if [ $mode -eq 1 ]; then
-	$SHELL -c "./configure ${configargs}"
-else
-	$SHELL -c "./configure ${configargs}" > /dev/null 2>&1
+   # if we are in silent mode, then redirect the output of configure
+   if [ $mode -eq 1 ]; then
+      $SHELL -c "./configure ${configargs}"
+   else
+      $SHELL -c "./configure ${configargs}" > /dev/null 2>&1
+   fi
 fi
 
 # The version number is stored in a C++ header as a set of #defines. Trying to 

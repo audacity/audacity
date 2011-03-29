@@ -24,7 +24,7 @@ dnl automatically choose whether or not to make some libs
 dnl based on:
 dnl
 dnl AC_CHECK_LIB(z, compress2, build_libz=false, build_libz=true)
-dnl AM_CONDITIONAL(BUILD_LIBZ, test $build_libz = true)
+dnl AM_CONDITIONAL(BUILD_LIBZ, test "$build_libz" = true)
 dnl
 dnl
 
@@ -352,26 +352,26 @@ for lib in $LIBRARIES ; do
             break
          fi
       done
-      if test $lib_activated = no ; then
+      if test "$lib_activated" = no ; then
          AC_MSG_NOTICE([disabling $lib])
       fi
    else
       dnl lib_ARGUMENT is something other than "unspecified"
-      if test $LIB_ARGUMENT = local ; then
-         if test $LIB_LOCAL_AVAILABLE = yes ; then
+      if test "$LIB_ARGUMENT" = local ; then
+         if test "$LIB_LOCAL_AVAILABLE" = yes ; then
             eval ${lib}_USE_LOCAL="yes"
             AC_MSG_NOTICE([Using the LOCAL libraries for $lib because you specifically requested this])
          else
             AC_MSG_ERROR([You requested using the local libraries for $lib but they are not available])
          fi
-      elif test $LIB_ARGUMENT = system ; then
-         if test $LIB_SYSTEM_AVAILABLE = yes ; then
+      elif test "$LIB_ARGUMENT" = system ; then
+         if test "$LIB_SYSTEM_AVAILABLE" = yes ; then
             eval ${lib}_USE_SYSTEM="yes"
             AC_MSG_NOTICE([Using the SYSTEM libraries for $lib because you specifically requested this])
          else
             AC_MSG_ERROR([You requested using the system libraries for $lib but they are not available])
          fi
-      elif test $LIB_ARGUMENT = no ; then
+      elif test "$LIB_ARGUMENT" = no ; then
          AC_MSG_NOTICE([disabling $lib at your request])
       else
          AC_MSG_ERROR(I didn't understand the argument $LIB_ARGUMENT for $lib)

@@ -31,6 +31,11 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOUNDTOUCH], [
                      soundtouch_available_system="yes",
                      soundtouch_available_system="no")
    fi
+   if test "x$soundtouch_available_system" = "xno" ; then
+      PKG_CHECK_MODULES(SOUNDTOUCH, soundtouch >= 1.3.0,
+                     soundtouch_available_system="yes",
+                     soundtouch_available_system="no")
+   fi
 
    if test "x$soundtouch_available_system" = "xyes" ; then
       LIBSOUNDTOUCH_SYSTEM_AVAILABLE="yes"

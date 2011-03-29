@@ -1,8 +1,10 @@
 all: @LOCAL_LIBS@ @LIBSRC_BUILD@
 
 # portSMF
-portSMF:
+portsmf-recursive:
 	$(MAKE) -C portsmf
+libportSMF.a: portsmf-recursive
+	ln -sf portsmf/libportSMF.a libportSMF.a
 
 # dlcompat
 dl-recursive:
@@ -167,7 +169,7 @@ portaudio/pa_mac_core/portaudio.a:
 # Utility rules
 clean:
 	-$(MAKE) -C portsmf clean
-	-$(MAKE) -C dlcompat clean	
+	-$(MAKE) -C dlcompat clean
 	-$(MAKE) -C expat clean
 	-$(MAKE) -C FileDialog clean
 	-$(MAKE) -C libid3tag clean
@@ -218,8 +220,8 @@ distclean:
 	-rm -f @LOCAL_LIBS@
 
 # list here all the targets that aren't actually files to be made
-.PHONY: portSMF eexpat-recursive FileDialog-recursive \
-		widgetextra libogg-recursive \
+.PHONY: portsmf-recursive eexpat-recursive FileDialog-recursive \
+	widgetextra libogg-recursive \
 	libvorbis-recursive libnyquist-recursive libmad-recursive \
 	libid3tag-recursive sbsms-recursive soundtouch-recursive libsndfile-recursive \
 	libresample-recursive libsamplerate-recursive vamp-sdk \
