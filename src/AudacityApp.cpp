@@ -88,6 +88,8 @@ It handles initialization and termination by subclassing wxApp.
 #include "BlockFile.h"
 #include "ondemand/ODManager.h"
 #include "commands/Keyboard.h"
+#include "widgets/ErrorDialog.h"
+
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
 
@@ -712,12 +714,16 @@ typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
 #define ID_RECENT_FIRST 6101
 #define ID_RECENT_LAST  6112
 
+// we don't really care about the timer id, but set this value just in case we do in the future
+#define kAudacityAppTimerID 0
+
 BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_QUERY_END_SESSION(AudacityApp::OnEndSession)
 
    EVT_KEY_DOWN(AudacityApp::OnKeyDown)
    EVT_CHAR(AudacityApp::OnChar)
    EVT_KEY_UP(AudacityApp::OnKeyUp)
+   EVT_TIMER(kAudacityAppTimerID, AudacityApp::OnTimer)
 #ifdef __WXMAC__
    EVT_MENU(wxID_NEW, AudacityApp::OnMenuNew)
    EVT_MENU(wxID_OPEN, AudacityApp::OnMenuOpen)
@@ -805,6 +811,99 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
       mRecentFiles->RemoveFileFromHistory(n);
 }
 
+void AudacityApp::OnTimer(wxTimerEvent& event)
+{
+   // Check if a warning for missing aliased files should be displayed
+   if (ShouldShowMissingAliasedFileWarning()) {
+      if (GetMissingAliasFileDialog()) {
+         // if it is already shown, just bring it to the front instead of
+         // creating a new one.
+         GetMissingAliasFileDialog()->Raise();
+      } else {
+         wxString errorMessage = _(
+"One or more external audio files could not be found.\n\
+It is possible they were moved, deleted, or the drive they \
+were on was unmounted.\n\
+Silence is being substituted for the affected audio.\n\
+Choose File > Check Dependencies to view the \
+original location of the missing files.");
+
+         // find which project owns the blockfile
+         // note: there may be more than 1, but just go with the first one.
+         size_t numProjects = gAudacityProjects.Count();
+         AudacityProject *offendingProject = NULL;
+         if (numProjects == 1) {
+            // if there is only one project open, no need to search
+            offendingProject = gAudacityProjects[0];
+         } else if (numProjects > 1) {   
+            
+            m_LastMissingBlockFileLock.Lock();
+            for (size_t i = 0; i < numProjects; i++)
+            {
+               // search each project for the blockfile
+               if (gAudacityProjects[i]->GetDirManager()->ContainsBlockFile(m_LastMissingBlockFile)) {
+                  offendingProject = gAudacityProjects[i];
+                  break;
+               }
+            }
+            m_LastMissingBlockFileLock.Unlock();
+         }
+
+         // if there are no projects open, don't show the warning (user has closed it)
+         if (offendingProject)
+            ShowAliasMissingDialog(offendingProject, _("Files Missing"),
+                                   errorMessage, wxT(""), true);
+         // Only show this warning once per playback.
+      }
+      SetMissingAliasedFileWarningShouldShow(false);
+   }
+}
+
+void AudacityApp::MarkAliasedFilesMissingWarning(BlockFile *b)
+{
+   // the reference counting provides thread safety.
+   if (b)
+      b->Ref();
+
+   m_LastMissingBlockFileLock.Lock();
+   if (m_LastMissingBlockFile)
+      m_LastMissingBlockFile->Deref();
+
+   m_LastMissingBlockFile = b;
+
+   m_LastMissingBlockFileLock.Unlock();
+}
+
+void AudacityApp::SetMissingAliasedFileWarningShouldShow(bool b)
+{
+   // Note that this is can be called by both the main thread and other threads.
+   // I don't believe we need a mutex because we are checking zero vs non-zero,
+   // and the setting from other threads will always be non-zero (true), and the
+   // setting from the main thread is always false.
+   m_aliasMissingWarningShouldShow = b;
+   // reset the warnings as they were probably marked by a previous run
+   if (m_aliasMissingWarningShouldShow) {
+      MarkAliasedFilesMissingWarning(NULL);
+   }
+}
+
+bool AudacityApp::ShouldShowMissingAliasedFileWarning()
+{
+   bool ret = m_LastMissingBlockFile && m_aliasMissingWarningShouldShow;
+
+   return ret;
+}
+
+void AudacityApp::SetMissingAliasFileDialog(wxDialog *dialog)
+{
+   m_aliasMissingWarningDialog = dialog;
+}
+   
+wxDialog *AudacityApp::GetMissingAliasFileDialog()
+{
+   return m_aliasMissingWarningDialog;
+}
+
 void AudacityApp::InitLang( const wxString & lang )
 {
    if( mLocale )
@@ -862,6 +961,10 @@ void AudacityApp::OnFatalException()
 // main frame
 bool AudacityApp::OnInit()
 {
+   m_aliasMissingWarningShouldShow = true;
+   m_LastMissingBlockFile = NULL;
+   m_aliasMissingWarningDialog     = NULL;
+
 #if defined(__WXGTK__)
    // Workaround for bug 154 -- initialize to false
    inKbdHandler = false;
@@ -1296,6 +1399,8 @@ bool AudacityApp::OnInit()
 
    wxLog::FlushActive(); // Make sure all log messages are written.
 
+   mTimer = new wxTimer(this, kAudacityAppTimerID);
+   mTimer->Start(200);
    return TRUE;
 }
 

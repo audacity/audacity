@@ -477,42 +477,6 @@ void DeinitAudioIO()
    delete gAudioIO;
 }
 
-void AudioIO::MarkAliasedFilesMissingWarning()
-{
-   m_aliasMissingWarning = true;
-}
-
-void AudioIO::SetMissingAliasedFileWarningShouldShow(bool b)
-{
-   // Note that this is can be called by both the main thread and other threads.
-   // I don't believe we need a mutex because we are checking zero vs non-zero,
-   // and the setting from other threads will always be non-zero (true), and the
-   // setting from the main thread is always false.
-   m_aliasMissingWarningShouldShow = b;
-   // reset the warnings as they were probably marked by a previous run
-   if (m_aliasMissingWarningShouldShow) {
-      m_aliasMissingWarning = false;
-   }
-}
-
-bool AudioIO::ShouldShowMissingAliasedFileWarning()
-{
-   bool ret = m_aliasMissingWarning && m_aliasMissingWarningShouldShow;
-
-   return ret;
-}
-
-void AudioIO::SetMissingAliasFileDialog(wxDialog *dialog)
-{
-   m_aliasMissingWarningDialog = dialog;
-}
-   
-wxDialog *AudioIO::GetMissingAliasFileDialog()
-{
-   return m_aliasMissingWarningDialog;
-}
-
-
 wxString DeviceName(const PaDeviceInfo* info)
 {
    wxString infoName(info->name, wxConvLocal);
@@ -545,10 +509,6 @@ AudioIO::AudioIO()
    mAudioThreadFillBuffersLoopRunning = false;
    mAudioThreadFillBuffersLoopActive = false;
    mPortStreamV19 = NULL;
-
-   m_aliasMissingWarningShouldShow = true;
-   m_aliasMissingWarning           = false;
-   m_aliasMissingWarningDialog     = NULL;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiStream = NULL;
@@ -1417,7 +1377,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 #endif
 
    // Enable warning popups for unfound aliased blockfiles.
-   SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
    //
    // Generate an unique value each time, to be returned to

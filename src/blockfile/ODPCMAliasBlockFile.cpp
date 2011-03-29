@@ -634,8 +634,8 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
       mSilentAliasLog=TRUE;
       // Set a marker to display an error message
-      if (gAudioIO)
-         gAudioIO->MarkAliasedFilesMissingWarning();
+      if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
+         wxGetApp().MarkAliasedFilesMissingWarning(this);
 
       UnlockRead();
       return len;

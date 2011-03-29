@@ -133,6 +133,7 @@ class BlockFile {
  private:
 
    friend class DirManager;
+   friend class AudacityApp;
    //needed for Ref/Deref access.
    friend class ODComputeSummaryTask;
    friend class ODDecodeTask;

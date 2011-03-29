@@ -70,6 +70,9 @@ class DirManager: public XMLTagHandler {
    BlockFile *NewODDecodeBlockFile( wxString aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel, int decodeType);
 
+   /// Returns true if the blockfile is contained by the DirManager
+   bool ContainsBlockFile(BlockFile *b);
+
    // Adds one to the reference count of the block file,
    // UNLESS it is "locked", then it makes a new copy of
    // the BlockFile.

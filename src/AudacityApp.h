@@ -25,6 +25,7 @@
 #include <wx/log.h>
 
 #include "widgets/FileHistory.h"
+#include "ondemand/ODTaskThread.h"
 
 class IPCServ;
 class Importer;
@@ -87,6 +88,8 @@ enum
    NoFlagsSpecifed        = 0xffffffff
 };
 
+class BlockFile;
+
 class AudacityApp:public wxApp {
  public:
    virtual bool OnInit(void);
@@ -126,6 +129,33 @@ class AudacityApp:public wxApp {
    bool MRUOpen(wxString fileName);
 
    void OnReceiveCommand(AppCommandEvent &event);
+
+   void OnTimer(wxTimerEvent & event);
+
+   /** \brief Mark playback as having missing aliased blockfiles
+     *
+     * Playback will continue, but the missing files will be silenced
+     * ShouldShowMissingAliasedFileWarning can be called to determine
+     * if the user should be notified
+     */
+   void MarkAliasedFilesMissingWarning(BlockFile *b);
+
+   /** \brief Changes the behavior of missing aliased blockfiles warnings
+     */
+   void SetMissingAliasedFileWarningShouldShow(bool b);
+   
+   /** \brief Returns true if the user should be notified of missing alias warnings
+     */
+   bool ShouldShowMissingAliasedFileWarning();
+   
+   /** \brief Sets the wxDialog that is being displayed 
+     * Used by the custom dialog warning constructor and destructor
+     */
+   void SetMissingAliasFileDialog(wxDialog *dialog);
+   
+   /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
+     */
+   wxDialog *GetMissingAliasFileDialog();
 
    #ifdef __WXMAC__
     // In response to Apple Events
@@ -185,6 +215,14 @@ class AudacityApp:public wxApp {
    wxLocale *mLocale;
 
    wxSingleInstanceChecker *mChecker;
+
+   wxTimer *mTimer;
+   
+   bool                 m_aliasMissingWarningShouldShow;
+   wxDialog            *m_aliasMissingWarningDialog;
+   BlockFile           *m_LastMissingBlockFile;
+   
+   ODLock               m_LastMissingBlockFileLock;
 
    void InitCommandHandler();
    void DeInitCommandHandler();

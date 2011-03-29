@@ -910,6 +910,11 @@ BlockFile *DirManager::NewODDecodeBlockFile(
    return newBlockFile;
 }
 
+bool DirManager::ContainsBlockFile(BlockFile *b) {
+   // check what the hash returns in case the blockfile is from a different project
+   return b ? mBlockFileHash[b->GetFileName().GetName()] == b : NULL;
+}
+
 // Adds one to the reference count of the block file,
 // UNLESS it is "locked", then it makes a new copy of
 // the BlockFile.

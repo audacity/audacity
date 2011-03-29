@@ -760,8 +760,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mStatusBar = CreateStatusBar(2);
    mStatusBar->SetStatusWidths(2, widths);
 
-   if (gAudioIO)
-      gAudioIO->SetMissingAliasedFileWarningShouldShow(true);
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
    // MM: DirManager is created dynamically, freed on demand via ref-counting
    // MM: We don't need to Ref() here because it start with refcount=1
@@ -3930,27 +3929,6 @@ void AudacityProject::OnTimer(wxTimerEvent& event)
    MixerToolBar *mixerToolBar = GetMixerToolBar();
    if( mixerToolBar )
       mixerToolBar->UpdateControls();
-
-   // Check if a warning for missing aliased files should be displayed
-   if (gAudioIO->ShouldShowMissingAliasedFileWarning()) {
-      if (gAudioIO->GetMissingAliasFileDialog()) {
-         // if it is already shown, just bring it to the front instead of
-         // creating a new one.
-         gAudioIO->GetMissingAliasFileDialog()->Raise();
-      } else {
-         wxString errorMessage = _(
-"One or more external audio files could not be found.\n\
-It is possible they were moved, deleted, or the drive they \
-were on was unmounted.\n\
-Silence is being substituted for the affected audio.\n\
-Choose File > Check Dependencies to view the \
-original location of the missing files.");
-         ShowAliasMissingDialog(this, _("Files Missing"),
-                  errorMessage, wxT(""), true);
-         // Only show this warning once per playback.
-      }
-      gAudioIO->SetMissingAliasedFileWarningShouldShow(false);
-   }
 
    if (::wxGetUTCTime() - mLastStatusUpdateTime < 3)
       return;

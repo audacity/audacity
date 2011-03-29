@@ -35,8 +35,7 @@ Gives an Error message with an option for help.
 #include "../Internat.h"
 #include "../Project.h"
 #include "../Prefs.h"
-#include "../AudioIO.h"
-
+#include "../AudacityApp.h"
 
 
 class ErrorDialog : public wxDialog
@@ -87,12 +86,12 @@ AliasedFileMissingDialog::AliasedFileMissingDialog(wxWindow *parent,
       const bool Close, const bool modal):
 ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
 {
-   gAudioIO->SetMissingAliasFileDialog(this);
+   wxGetApp().SetMissingAliasFileDialog(this);
 }
 
 AliasedFileMissingDialog::~AliasedFileMissingDialog()
 {
-   gAudioIO->SetMissingAliasFileDialog(NULL);
+   wxGetApp().SetMissingAliasFileDialog(NULL);
 }
 
 ErrorDialog::ErrorDialog(

@@ -109,8 +109,8 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       mSilentAliasLog=TRUE;
       
       // Set a marker to display an error message for the silence
-      if (gAudioIO)
-         gAudioIO->MarkAliasedFilesMissingWarning();
+      if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
+         wxGetApp().MarkAliasedFilesMissingWarning(this);
       return len;
    }
 
