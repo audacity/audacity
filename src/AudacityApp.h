@@ -23,6 +23,7 @@
 #include <wx/intl.h>
 #include <wx/snglinst.h>
 #include <wx/log.h>
+#include <wx/timer.h>
 
 #include "widgets/FileHistory.h"
 #include "ondemand/ODTaskThread.h"
