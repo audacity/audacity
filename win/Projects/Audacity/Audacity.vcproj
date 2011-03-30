@@ -2558,6 +2558,42 @@
 			<File
 				RelativePath="..\..\..\nyquist\nyquist-plot.txt"
 				>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy /Y &quot;$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy /Y &quot;$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy /Y &quot;$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\nyquist\nyquist.lsp"
