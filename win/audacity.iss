@@ -98,7 +98,7 @@ Source: "C:\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\msvcr80.d
 
 Source: "..\win\Release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\Release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: "..\win\Release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion
+Source: "..\win\Release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\Release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
 
 
