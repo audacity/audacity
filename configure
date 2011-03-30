@@ -609,6 +609,8 @@ build_os
 build_vendor
 build_cpu
 build
+PORTAUDIO_LIBS
+PORTAUDIO_CFLAGS
 PORTSMF_LIBS
 PORTSMF_CFLAGS
 AVFORMAT_LIBS
@@ -728,6 +730,7 @@ with_libvamp
 with_libtwolame
 with_ffmpeg
 with_midi
+with_portaudio
 enable_audiounits
 enable_ladspa
 enable_quicktime
@@ -768,13 +771,14 @@ AVFORMAT_CFLAGS
 AVFORMAT_LIBS
 PORTSMF_CFLAGS
 PORTSMF_LIBS
+PORTAUDIO_CFLAGS
+PORTAUDIO_LIBS
 GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
 JACK_LIBS'
 ac_subdirs_all='"lib-src/FileDialog"
 $CONFIG_SUBDIRS
-lib-src/portaudio-v19
 lib-src/portmixer'
 
 # Initialize some variables set by options.
@@ -1425,6 +1429,7 @@ Optional Packages:
   --with-libtwolame       use libtwolame for MP2 export support
   --with-ffmpeg           use ffmpeg for import and export support
   --with-midi             use portSMF for Midi support
+  --with-portaudio        use portaudio19
   --with-portmixer        compile with PortMixer [default=yes]
 
 Some influential environment variables:
@@ -1479,6 +1484,10 @@ Some influential environment variables:
               C compiler flags for PORTSMF, overriding pkg-config
   PORTSMF_LIBS
               linker flags for PORTSMF, overriding pkg-config
+  PORTAUDIO_CFLAGS
+              C compiler flags for PORTAUDIO, overriding pkg-config
+  PORTAUDIO_LIBS
+              linker flags for PORTAUDIO, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
   JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
@@ -5112,7 +5121,7 @@ BUILD_LDFLAGS="$BUILD_LDFLAGS $WIDGETEXTRA_LIBS"
 CXXFLAGS="$CXXFLAGS $WIDGETEXTRA_CFLAGS"
 LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
 
-LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSAMPLERATE LIBRESAMPLE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF"
+LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSAMPLERATE LIBRESAMPLE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -5243,7 +5252,7 @@ fi
 $as_echo "$as_me: libsndfile libraries are available in this source tree" >&6;}
 
 
-            ac_configure_args="$ac_configure_args --disable-sqlite --disable-external-libs --disable-alsa"
+            LIBSNDFILE_LOCAL_CONFIGURE_ARGS="--disable-sqlite --disable-external-libs --disable-alsa"
    else
       LIBSNDFILE_LOCAL_AVAILABLE="no"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsndfile libraries are NOT available in this source tree" >&5
@@ -6313,7 +6322,7 @@ fi
       LIBSBSMS_LOCAL_CPPSYMBOLS="USE_SBSMS"
 
 	        LIBSBSMS_LOCAL_CONFIG_SUBDIRS="lib-src/sbsms"
-	  ac_configure_args="$ac_configure_args --disable-programs"
+	  	   LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsbsms libraries are available in the local tree" >&5
 $as_echo "$as_me: libsbsms libraries are available in the local tree" >&6;}
@@ -6792,7 +6801,7 @@ fi
 	        LIBVAMP_LOCAL_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
 	  	        LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
 	        LIBVAMP_LOCAL_CONFIG_SUBDIRS="lib-src/libvamp"
-	  ac_configure_args="$ac_configure_args --disable-programs"
+	  	   LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: Vamp libraries are available in the local tree" >&5
 $as_echo "$as_me: Vamp libraries are available in the local tree" >&6;}
@@ -6932,7 +6941,7 @@ fi
       LIBTWOLAME_LOCAL_CPPSYMBOLS="USE_LIBTWOLAME"
 
 	        LIBTWOLAME_LOCAL_CONFIG_SUBDIRS="lib-src/twolame"
-	  	  ac_configure_args="$ac_configure_args --disable-programs"
+	  	   LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: libtwolame library is available in the local tree" >&5
 $as_echo "$as_me: libtwolame library is available in the local tree" >&6;}
@@ -7314,6 +7323,159 @@ fi
 
 
 
+# Check whether --with-portaudio was given.
+if test "${with_portaudio+set}" = set; then :
+  withval=$with_portaudio; PORTAUDIO_ARGUMENT=$withval
+else
+  PORTAUDIO_ARGUMENT="unspecified"
+fi
+
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for PORTAUDIO" >&5
+$as_echo_n "checking for PORTAUDIO... " >&6; }
+
+if test -n "$PORTAUDIO_CFLAGS"; then
+    pkg_cv_PORTAUDIO_CFLAGS="$PORTAUDIO_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"portaudio-2.0 >= 19\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "portaudio-2.0 >= 19") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_PORTAUDIO_CFLAGS=`$PKG_CONFIG --cflags "portaudio-2.0 >= 19" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$PORTAUDIO_LIBS"; then
+    pkg_cv_PORTAUDIO_LIBS="$PORTAUDIO_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"portaudio-2.0 >= 19\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "portaudio-2.0 >= 19") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_PORTAUDIO_LIBS=`$PKG_CONFIG --libs "portaudio-2.0 >= 19" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        PORTAUDIO_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "portaudio-2.0 >= 19" 2>&1`
+        else
+	        PORTAUDIO_PKG_ERRORS=`$PKG_CONFIG --print-errors "portaudio-2.0 >= 19" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$PORTAUDIO_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                portaudio_available_system="no"
+elif test $pkg_failed = untried; then
+	portaudio_available_system="no"
+else
+	PORTAUDIO_CFLAGS=$pkg_cv_PORTAUDIO_CFLAGS
+	PORTAUDIO_LIBS=$pkg_cv_PORTAUDIO_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	portaudio_available_system="yes"
+fi
+
+   if test "x$portaudio_available_system" = "xyes" ; then
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <portaudio.h>
+
+_ACEOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  $EGREP "Pa_GetStreamHostApiType" >/dev/null 2>&1; then :
+  have_portaudio_support=yes
+else
+  have_portaudio_support=no
+fi
+rm -f conftest*
+
+
+      if test "x$have_portaudio_support" = "xyes" ; then
+         PORTAUDIO_SYSTEM_AVAILABLE="yes"
+         PORTAUDIO_SYSTEM_LIBS=$PORTAUDIO_LIBS
+         PORTAUDIO_SYSTEM_CXXFLAGS=$PORTAUDIO_CFLAGS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is available as system library" >&5
+$as_echo "$as_me: portaudio19 library is available as system library" >&6;}
+      else
+         PORTAUDIO_SYSTEM_AVAILABLE="no"
+         { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is available as system library, but does not have the Pa_GetStreamHostApiType function." >&5
+$as_echo "$as_me: portaudio19 library is available as system library, but does not have the Pa_GetStreamHostApiType function." >&6;}
+      fi
+   else
+      PORTAUDIO_SYSTEM_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is NOT available as system library" >&5
+$as_echo "$as_me: portaudio19 library is NOT available as system library" >&6;}
+   fi
+
+
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/portaudio-v19/include/portaudio.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/portaudio-v19/include/portaudio.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/portaudio-v19/include/portaudio.h... " >&6; }
+if eval "test \"\${$as_ac_File+set}\"" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/portaudio-v19/include/portaudio.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  portaudio_h_found="yes"
+else
+  portaudio_h_found="no"
+fi
+
+
+   if test "x$portaudio_h_found" = "xyes" ; then
+      PORTAUDIO_LOCAL_AVAILABLE="yes"
+      PORTAUDIO_LOCAL_LIBS="libportaudio.a"
+      PORTAUDIO_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portaudio-v19/include'
+
+            PORTAUDIO_LOCAL_CONFIG_SUBDIRS="lib-src/portaudio-v19"
+      PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=../portaudio-v19/include"
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is available in the local tree" >&5
+$as_echo "$as_me: portaudio19 library is available in the local tree" >&6;}
+   else
+      PORTAUDIO_LOCAL_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is NOT available in the local tree" >&5
+$as_echo "$as_me: portaudio19 library is NOT available in the local tree" >&6;}
+   fi
+
+
+
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: Figuring out what libraries to enable" >&5
 $as_echo "$as_me: Figuring out what libraries to enable" >&6;}
 
@@ -7386,6 +7548,10 @@ $as_echo "#define USE_SYSTEM_EXPAT 1" >>confdefs.h
    fi
 fi
 
+if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes" ; then
+   as_fn_error $? "Audacity requires portaudio to be enabled" "$LINENO" 5
+fi
+
 if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Both libresample and libsamplerate are available" >&5
 $as_echo "$as_me: Both libresample and libsamplerate are available" >&6;}
@@ -7420,6 +7586,7 @@ for lib in $LIBRARIES ; do
       eval OPTOBJS=\"$OPTOBJS \$${lib}_LOCAL_OPTOBJS\"
       eval CXXFLAGS=\"\$CXXFLAGS \$${lib}_LOCAL_CXXFLAGS\"
       eval CONFIG_SUBDIRS=\"\$${lib}_LOCAL_CONFIG_SUBDIRS\"
+      eval ac_configure_args=\"\$ac_configure_args \$${lib}_LOCAL_CONFIGURE_ARGS\"
       subdirs="$subdirs $CONFIG_SUBDIRS"
 
 
@@ -7732,13 +7899,6 @@ $as_echo "#define HAVE_GTK 1" >>confdefs.h
 esac
 
 
-LOCAL_LIBS="$LOCAL_LIBS portaudio-v19/lib/libportaudio.a"
-EXTRAOBJS="$EXTRAOBJS ../lib-src/portaudio-v19/lib/libportaudio.a"
-CXXFLAGS="-I\$(top_srcdir)/lib-src/portaudio-v19/include $CXXFLAGS"
-
-subdirs="$subdirs lib-src/portaudio-v19"
-
-
 case "${host_os}" in
    darwin* | rhapsody*)
       LIBS="-framework AudioUnit -framework AudioToolbox $LIBS"
@@ -7970,11 +8130,10 @@ $as_echo "#define USE_PORTMIXER 1" >>confdefs.h
 
 
    CXXFLAGS="-I\$(top_srcdir)/lib-src/portmixer/include $CXXFLAGS"
-   LOCAL_LIBS="$LOCAL_LIBS portmixer/libportmixer.a"
+   LOCAL_LIBS="$LOCAL_LIBS libportmixer.a"
 
    subdirs="$subdirs lib-src/portmixer"
 
-   ac_configure_args="$ac_configure_args --with-pa-include=../portaudio-v19/include"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for lrint" >&5
@@ -9543,10 +9702,6 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
-
-pa_libs=
-pa_libs=`grep 'Libs:' lib-src/portaudio-v19/portaudio-2.0.pc | sed -e 's/Libs://;s/-L${libdir}//;s/-lportaudio//'`
-sed -i -e "s/@PA_LIBS@/$pa_libs/" src/Makefile
 
 echo ""
 echo "Finished configure:"

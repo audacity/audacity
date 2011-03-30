@@ -48,7 +48,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBTWOLAME], [
 	  dnl request library is configured
       LIBTWOLAME_LOCAL_CONFIG_SUBDIRS="lib-src/twolame"
 	  dnl disable programs we don't need to build
-	  ac_configure_args="$ac_configure_args --disable-programs"
+	   LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       AC_MSG_NOTICE([libtwolame library is available in the local tree])
    else

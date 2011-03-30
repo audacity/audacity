@@ -47,8 +47,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSBSMS], [
 
 	  dnl set up configuring sbsms
       LIBSBSMS_LOCAL_CONFIG_SUBDIRS="lib-src/sbsms"
-	  ac_configure_args="$ac_configure_args --disable-programs"
 	  dnl do not build programs we don't need
+	   LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       AC_MSG_NOTICE([libsbsms libraries are available in the local tree])
    else

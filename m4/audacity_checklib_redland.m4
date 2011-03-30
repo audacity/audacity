@@ -41,9 +41,9 @@ AC_DEFUN([AUDACITY_CHECKLIB_REDLAND], [
          # This is a horrible hack to keep from having to modify the raptor/configure.ac.  It makes
          # the raptor configure think there's a full expat source tree.  But, all we have is expat.h
          # tucked away in audacity/src/include.  So, we trick it...
-         ac_configure_args="$ac_configure_args \"--with-expat-source=dummy_magic\" CPPFLAGS='$CPPFLAGS -I../../../src/include'"
+         REDLAND_LOCAL_CONFIGURE_ARGS="\"--with-expat-source=dummy_magic\" CPPFLAGS='$CPPFLAGS -I../../../src/include'"
       fi
-      ac_configure_args="$ac_configure_args RAPTOR_CFLAGS='-I../../redland/raptor/src' RAPTOR_LIBS='-L.. -L../.. -lraptor' REDLAND_CFLAGS='-I../../redland/raptor/src -I../../redland/rasqal/src -I../../redland/librdf' REDLAND_LIBS='-L.. -L../.. -lrdf -lraptor -lrasqal'"
+      REDLAND_LOCAL_CONFIGURE_ARGS="$REDLAND_LOCAL_CONFIGURE_ARGS RAPTOR_CFLAGS='-I../../redland/raptor/src' RAPTOR_LIBS='-L.. -L../.. -lraptor' REDLAND_CFLAGS='-I../../redland/raptor/src -I../../redland/rasqal/src -I../../redland/librdf' REDLAND_LIBS='-L.. -L../.. -lrdf -lraptor -lrasqal'"
       AC_MSG_NOTICE([Redland is available in the local tree])
    else
       REDLAND_LOCAL_AVAILABLE="no"

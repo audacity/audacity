@@ -41,9 +41,9 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRAPTOR], [
       fi
       AC_MSG_NOTICE([libraptor is available in the local tree])
       if test "x$LIBEXPAT_SYSTEM_AVAILABLE" = "xno" ; then
-      ac_configure_args="$ac_configure_args \"--with-expat-source=${srcdir}/src/include\""
+         LIBRAPTOR_LOCAL_CONFIGURE_ARGS="\"--with-expat-source=${srcdir}/src/include\""
       fi
-      ac_configure_args="$ac_configure_args RAPTOR_CFLAGS='-I../../libraptor/src' RAPTOR_LIBS='-L../.. -lraptor'"
+      LIBRAPTOR_LOCAL_CONFIGURE_ARGS="$LIBRAPTOR_LOCAL_CONFIGURE_ARGS RAPTOR_CFLAGS='-I../../libraptor/src' RAPTOR_LIBS='-L../.. -lraptor'"
    else
       LIBRAPTOR_LOCAL_AVAILABLE="no"
       AC_MSG_NOTICE([libraptor is NOT available in the local tree])

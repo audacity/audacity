@@ -55,8 +55,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
       LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
 	  dnl schedule the directory to be configured
       LIBVAMP_LOCAL_CONFIG_SUBDIRS="lib-src/libvamp"
-	  ac_configure_args="$ac_configure_args --disable-programs"
 	  dnl do not build programs we don't need
+	   LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       AC_MSG_NOTICE([Vamp libraries are available in the local tree])
    else
