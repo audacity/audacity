@@ -2563,7 +2563,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -2581,7 +2581,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -2590,7 +2590,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>
