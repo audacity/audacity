@@ -1164,7 +1164,7 @@ int MP3Exporter::InitializeStream(int channels, int sampleRate)
    lame_set_num_channels(mGF, channels);
    lame_set_in_samplerate(mGF, sampleRate);
    lame_set_out_samplerate(mGF, sampleRate);
-   lame_set_disable_reservoir(mGF, true);
+   lame_set_disable_reservoir(mGF, false);
    lame_set_padding_type(mGF, PAD_NO);
 
    // Add the VbrTag for all types.  For ABR/VBR, a Xing tag will be created.
