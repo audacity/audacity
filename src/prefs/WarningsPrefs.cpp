@@ -69,6 +69,9 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Mixing down to &mono during export"),
                     wxT("/Warnings/MixMono"),
                     true);
+      S.TieCheckBox(_("Warn when &importing uncompressed files"),
+                    wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
+                    true);
    }
    S.EndStatic();
 }

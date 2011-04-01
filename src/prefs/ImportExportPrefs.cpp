@@ -52,7 +52,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("When importing audio files"));
    {
-      S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("edit"));
+      S.StartRadioButtonGroup(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
       {
          S.TieRadioButton(_("&Make a copy of uncompressed audio files before editing (safer)"),
                           wxT("copy"));

@@ -182,12 +182,90 @@ int PCMImportFileHandle::GetFileUncompressedBytes()
    return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
 }
 
+// returns "copy" or "edit" (aliased) as the user selects.
+// if the cancel button is hit then "cancel" is returned.
+static wxString AskCopyOrEdit()
+{
+   wxString oldCopyPref = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
+
+   // check the current preferences for whether or not we should ask the user about this.
+   if (oldAskPref) {
+      wxString newCopyPref = wxT("copy");
+      wxDialog dialog(NULL, -1, _("Importing Uncompressed Audio Files"));
+
+      wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
+      dialog.SetSizer(vbox);
+
+      wxStaticText *message = new wxStaticText(&dialog, -1, wxString::Format(_("You can import uncompressed audio files by copying them into the project, \
+or by reading them directly from their current location (without copying).\n\n\
+Your current preference is set to %s.\n\n\
+\
+Reading the files directly allows you to play or edit them almost immediately.\n\
+It is less safe than copying in, because you must retain the files with their\
+original names in their original location.\n\
+File > Check Dependencies will show the original names and location of any files that you are reading directly.\n\n\
+\
+How do you want to import The current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
+      message->Wrap(500);
+                               
+      vbox->Add(message, 1, wxALL | wxEXPAND, 10);
+
+      wxRadioButton *copyRadio  = new wxRadioButton(&dialog, -1, _("Make a copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+      vbox->Add(copyRadio, 0, wxALL);
+
+      wxRadioButton *aliasRadio = new wxRadioButton(&dialog, -1, _("Read the files directly from the original (faster)"));
+      vbox->Add(aliasRadio, 0, wxALL);
+
+      wxCheckBox *dontAskNextTimeBox = new wxCheckBox(&dialog, -1, _("Don't ask again and always use my choice above"));
+      vbox->Add(dontAskNextTimeBox, 0, wxALL);
+
+      wxRadioButton *prefsRadio = oldCopyPref == wxT("copy") ? copyRadio : aliasRadio;
+      prefsRadio->SetValue(true);
+
+      wxSizer *buttonSizer = dialog.CreateButtonSizer(wxOK | wxCANCEL);
+      vbox->Add(buttonSizer, 0, wxALL | wxEXPAND);
+      dialog.SetSize(dialog.GetBestSize());
+      dialog.Layout();
+
+      if (dialog.ShowModal() == wxID_OK) {
+         if (aliasRadio->GetValue()) {
+            newCopyPref = wxT("edit");
+         }
+         if (dontAskNextTimeBox->IsChecked()) {
+            gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
+         }
+      } else {
+         return wxT("cancel");
+      }
+
+      // if the preference changed, save it.
+      if (newCopyPref != oldCopyPref) {
+         gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), newCopyPref);
+      }
+      oldCopyPref = newCopyPref;
+   }
+   return oldCopyPref;
+}
+
 int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                                 Track ***outTracks,
                                 int *outNumTracks,
                                 Tags *tags)
 {
    wxASSERT(mFile);
+
+   // Get the preference / warn the user about aliased files.
+   wxString copyEdit = AskCopyOrEdit();
+
+   if (copyEdit == wxT("cancel"))
+      return eProgressCancelled;
+
+   // Fall back to "copy" if it doesn't match anything else, since it is safer
+   bool doEdit = false;
+   if (copyEdit.IsSameAs(wxT("edit"), false))
+      doEdit = true;
+      
 
    CreateProgress();
 
@@ -218,14 +296,6 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    sampleCount maxBlockSize = channels[0]->GetMaxBlockSize();
    int updateResult = false;
    
-   wxString copyEdit =
-       gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("edit"));
-
-   // Fall back to "edit" if it doesn't match anything else
-   bool doEdit = true;          
-   if (copyEdit.IsSameAs(wxT("copy"), false))
-      doEdit = false;
-      
    // If the format is not seekable, we must use 'copy' mode,
    // because 'edit' mode depends on the ability to seek to an
    // arbitrary location in the file.
