@@ -5,11 +5,6 @@ the end for how external libraries are brought in and maintained.
 
 Libraries
 =========
-dlcompat
---------
-Support library for dynamic loading of modules on OS X 10.3 and older. Used
-for LADSPA on OS X support, and probably not any where else
-
 expat
 -----
 XML parser library used to parse project files and so on. By default the
