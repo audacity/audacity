@@ -781,7 +781,7 @@ GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
 JACK_LIBS'
-ac_subdirs_all='"lib-src/FileDialog"
+ac_subdirs_all='lib-src/FileDialog
 $CONFIG_SUBDIRS
 lib-src/portmixer'
 
@@ -4803,7 +4803,7 @@ CXXFLAGS="$CXXFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
 
 
 
-subdirs="$subdirs "lib-src/FileDialog""
+subdirs="$subdirs lib-src/FileDialog"
 
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"

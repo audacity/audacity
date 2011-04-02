@@ -286,7 +286,7 @@ dnl LOCAL_LIBS="$LOCAL_LIBS allegro.a"
 dnl CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/allegro"
 
 dnl Include FileDialog
-AC_CONFIG_SUBDIRS(["lib-src/FileDialog"])
+AC_CONFIG_SUBDIRS([lib-src/FileDialog])
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 
