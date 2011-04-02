@@ -192,7 +192,7 @@ static wxString AskCopyOrEdit()
    // check the current preferences for whether or not we should ask the user about this.
    if (oldAskPref) {
       wxString newCopyPref = wxT("copy");
-      wxDialog dialog(NULL, -1, _("Importing Uncompressed Audio Files"));
+      wxDialog dialog(NULL, -1, wxString(_("Importing Uncompressed Audio Files")));
 
       wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
       dialog.SetSizer(vbox);
