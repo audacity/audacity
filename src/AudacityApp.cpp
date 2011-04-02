@@ -818,6 +818,9 @@ void AudacityApp::OnTimer(wxTimerEvent& event)
       if (GetMissingAliasFileDialog()) {
          // if it is already shown, just bring it to the front instead of
          // creating a new one.
+         // Also ensure the parent is behind it.
+        ((wxTopLevelWindow*)GetMissingAliasFileDialog()->GetParent())->Iconize(false);
+         GetMissingAliasFileDialog()->GetParent()->Raise();
          GetMissingAliasFileDialog()->Raise();
       } else {
          wxString errorMessage = _(
@@ -850,9 +853,12 @@ original location of the missing files.");
          }
 
          // if there are no projects open, don't show the warning (user has closed it)
-         if (offendingProject)
+         if (offendingProject) {
+            offendingProject->Iconize(false);
+            offendingProject->Raise();
             ShowAliasMissingDialog(offendingProject, _("Files Missing"),
                                    errorMessage, wxT(""), true);
+         }
          // Only show this warning once per playback.
       }
       SetMissingAliasedFileWarningShouldShow(false);
