@@ -815,44 +815,34 @@ void AudacityApp::OnTimer(wxTimerEvent& event)
 {
    // Check if a warning for missing aliased files should be displayed
    if (ShouldShowMissingAliasedFileWarning()) {
-      if (GetMissingAliasFileDialog()) {
-         // if it is already shown, just bring it to the front instead of
-         // creating a new one.
-         // Also ensure the parent is behind it.
-         // Note: this won't change the missing filename displayed in the dialog (user must close it first)
-         ((wxTopLevelWindow*)GetMissingAliasFileDialog()->GetParent())->Iconize(false);
-         GetMissingAliasFileDialog()->GetParent()->Raise();
-         GetMissingAliasFileDialog()->Raise();
-      } else {
-         // find which project owns the blockfile
-         // note: there may be more than 1, but just go with the first one.
-         size_t numProjects = gAudacityProjects.Count();
-         wxString missingFileName;
-         AudacityProject *offendingProject = NULL;
+      // find which project owns the blockfile
+      // note: there may be more than 1, but just go with the first one.
+      size_t numProjects = gAudacityProjects.Count();
+      wxString missingFileName;
+      AudacityProject *offendingProject = NULL;
 
-         m_LastMissingBlockFileLock.Lock();
-         if (numProjects == 1) {
-            // if there is only one project open, no need to search
-            offendingProject = gAudacityProjects[0];
-         } else if (numProjects > 1) {
-            for (size_t i = 0; i < numProjects; i++)
-            {
-               // search each project for the blockfile
-               if (gAudacityProjects[i]->GetDirManager()->ContainsBlockFile(m_LastMissingBlockFile)) {
-                  offendingProject = gAudacityProjects[i];
-                  break;
-               }
+      m_LastMissingBlockFileLock.Lock();
+      if (numProjects == 1) {
+         // if there is only one project open, no need to search
+         offendingProject = gAudacityProjects[0];
+      } else if (numProjects > 1) {
+         for (size_t i = 0; i < numProjects; i++) {
+            // search each project for the blockfile
+            if (gAudacityProjects[i]->GetDirManager()->ContainsBlockFile(m_LastMissingBlockFile)) {
+               offendingProject = gAudacityProjects[i];
+               break;
             }
          }
-         missingFileName = ((AliasBlockFile*)m_LastMissingBlockFile)->GetAliasedFileName().GetFullPath();
-         m_LastMissingBlockFileLock.Unlock();
+      }
+      missingFileName = ((AliasBlockFile*)m_LastMissingBlockFile)->GetAliasedFileName().GetFullPath();
+      m_LastMissingBlockFileLock.Unlock();
 
-         // if there are no projects open, don't show the warning (user has closed it)
-         if (offendingProject) {
-            offendingProject->Iconize(false);
-            offendingProject->Raise();
-
-            wxString errorMessage = wxString::Format(_(
+      // if there are no projects open, don't show the warning (user has closed it)
+      if (offendingProject) {
+         offendingProject->Iconize(false);
+         offendingProject->Raise();
+        
+         wxString errorMessage = wxString::Format(_(
 "One or more external audio files could not be found.\n\
 It is possible they were moved, deleted, or the drive they \
 were on was unmounted.\n\
@@ -863,12 +853,15 @@ There may be additional missing files.\n\
 Choose File > Check Dependencies to view a list of \
 locations of the missing files."), missingFileName.c_str());
 
-
+         // if an old dialog exists, raise it if it is 
+         if (offendingProject->GetMissingAliasFileDialog()) {
+            offendingProject->GetMissingAliasFileDialog()->Raise();
+         } else {
             ShowAliasMissingDialog(offendingProject, _("Files Missing"),
                                    errorMessage, wxT(""), true);
          }
-         // Only show this warning once per playback.
       }
+      // Only show this warning once per event (playback/menu item/etc).
       SetMissingAliasedFileWarningShouldShow(false);
    }
 }
@@ -906,16 +899,6 @@ bool AudacityApp::ShouldShowMissingAliasedFileWarning()
    bool ret = m_LastMissingBlockFile && m_aliasMissingWarningShouldShow;
 
    return ret;
-}
-
-void AudacityApp::SetMissingAliasFileDialog(wxDialog *dialog)
-{
-   m_aliasMissingWarningDialog = dialog;
-}
-   
-wxDialog *AudacityApp::GetMissingAliasFileDialog()
-{
-   return m_aliasMissingWarningDialog;
 }
 
 void AudacityApp::InitLang( const wxString & lang )
@@ -982,7 +965,6 @@ bool AudacityApp::OnInit()
 {
    m_aliasMissingWarningShouldShow = true;
    m_LastMissingBlockFile = NULL;
-   m_aliasMissingWarningDialog     = NULL;
 
 #if defined(__WXGTK__)
    // Workaround for bug 154 -- initialize to false

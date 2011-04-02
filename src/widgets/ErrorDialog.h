@@ -16,6 +16,8 @@
 #include <wx/defs.h>
 #include <wx/window.h>
 
+class AudacityProject;
+
 /// Displays an error dialog with a button that offers help
 void ShowErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
@@ -31,7 +33,7 @@ void ShowModelessErrorDialog(wxWindow *parent,
                      bool Close = true);
 
 /// Displays a custom modeless error dialog for aliased file errors
-void ShowAliasMissingDialog(wxWindow *parent,
+void ShowAliasMissingDialog(AudacityProject *parent,
                      const wxString &dlogTitle,
                      const wxString &message, 
                      const wxString &helpURL,

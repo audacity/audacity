@@ -149,15 +149,6 @@ class AudacityApp:public wxApp {
      */
    bool ShouldShowMissingAliasedFileWarning();
    
-   /** \brief Sets the wxDialog that is being displayed 
-     * Used by the custom dialog warning constructor and destructor
-     */
-   void SetMissingAliasFileDialog(wxDialog *dialog);
-   
-   /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
-     */
-   wxDialog *GetMissingAliasFileDialog();
-
    #ifdef __WXMAC__
     // In response to Apple Events
     virtual void MacOpenFile(const wxString &fileName) ;
@@ -220,7 +211,6 @@ class AudacityApp:public wxApp {
    wxTimer *mTimer;
    
    bool                 m_aliasMissingWarningShouldShow;
-   wxDialog            *m_aliasMissingWarningDialog;
    BlockFile           *m_LastMissingBlockFile;
    
    ODLock               m_LastMissingBlockFileLock;

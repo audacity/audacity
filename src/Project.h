@@ -228,6 +228,15 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool GetNormalizeOnLoad() { return mNormalizeOnLoad; } //lda
    void SetNormalizeOnLoad(bool flag) { mNormalizeOnLoad = flag; } //lda
 
+   /** \brief Sets the wxDialog that is being displayed 
+     * Used by the custom dialog warning constructor and destructor
+     */
+   void SetMissingAliasFileDialog(wxDialog *dialog);
+   
+   /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
+     */
+   wxDialog *GetMissingAliasFileDialog();
+
 #include "Menus.h"
 
    CommandManager *GetCommandManager() { return &mCommandManager; }
@@ -475,6 +484,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    MixerBoardFrame* mMixerBoardFrame;
 
    FreqWindow *mFreqWindow;
+
+   // dialog for missing alias warnings
+   wxDialog            *mAliasMissingWarningDialog;
 
  public:
    ToolManager *mToolManager;

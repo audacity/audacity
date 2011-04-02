@@ -35,7 +35,6 @@ Gives an Error message with an option for help.
 #include "../Internat.h"
 #include "../Project.h"
 #include "../Prefs.h"
-#include "../AudacityApp.h"
 
 
 class ErrorDialog : public wxDialog
@@ -65,7 +64,7 @@ private:
 class AliasedFileMissingDialog : public ErrorDialog
 {
    public:
-   AliasedFileMissingDialog(wxWindow *parent, 
+   AliasedFileMissingDialog(AudacityProject *parent, 
       const wxString & dlogTitle, 
       const wxString & message, 
       const wxString & helpURL,
@@ -79,19 +78,19 @@ BEGIN_EVENT_TABLE(ErrorDialog, wxDialog)
 END_EVENT_TABLE()
 
 
-AliasedFileMissingDialog::AliasedFileMissingDialog(wxWindow *parent, 
+AliasedFileMissingDialog::AliasedFileMissingDialog(AudacityProject *parent, 
       const wxString & dlogTitle, 
       const wxString & message, 
       const wxString & helpURL,
       const bool Close, const bool modal):
 ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
 {
-   wxGetApp().SetMissingAliasFileDialog(this);
+   parent->SetMissingAliasFileDialog(this);
 }
 
 AliasedFileMissingDialog::~AliasedFileMissingDialog()
 {
-   wxGetApp().SetMissingAliasFileDialog(NULL);
+   ((AudacityProject*)GetParent())->SetMissingAliasFileDialog(NULL);
 }
 
 ErrorDialog::ErrorDialog(
@@ -304,7 +303,7 @@ void ShowModelessErrorDialog(wxWindow *parent,
    dlog->Show();
 }
 
-void ShowAliasMissingDialog(wxWindow *parent,
+void ShowAliasMissingDialog(AudacityProject *parent,
                      const wxString &dlogTitle,
                      const wxString &message, 
                      const wxString &helpURL,

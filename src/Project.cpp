@@ -754,7 +754,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mLastEffect(NULL),
      mLastEffectType(0),
      mTimerRecordCanceled(false),
-     mMenuClose(false)
+     mMenuClose(false),
+     mAliasMissingWarningDialog(NULL)
 {
    int widths[] = {-2, -1};
    mStatusBar = CreateStatusBar(2);
@@ -1050,6 +1051,16 @@ void AudacityProject::UpdatePrefs()
    // The toolbars will be recreated, so make sure we don't leave
    // a stale pointer hanging around.
    mLastFocusedWindow = NULL;
+}
+
+void AudacityProject::SetMissingAliasFileDialog(wxDialog *dialog)
+{
+   mAliasMissingWarningDialog = dialog;
+}
+   
+wxDialog *AudacityProject::GetMissingAliasFileDialog()
+{
+   return mAliasMissingWarningDialog;
 }
 
 void AudacityProject::RedrawProject(const bool bForceWaveTracks /*= false*/)
