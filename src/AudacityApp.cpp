@@ -936,6 +936,11 @@ void AudacityApp::InitLang( const wxString & lang )
       for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
          mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
 
+      // LL:  Must add the wxWidgets catalog manually since the search
+      //      paths were not set up when mLocale was created.  The
+      //      catalogs are search in LIFO order, so add wxstd first.
+      mLocale->AddCatalog(wxT("wxstd"));
+
 #ifdef AUDACITY_NAME
       mLocale->AddCatalog(wxT(AUDACITY_NAME));
 #else
