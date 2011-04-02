@@ -73,6 +73,7 @@
 #include "../widgets/Warning.h"
 #include "../AColor.h"
 #include "../TimeTrack.h"
+#include "../Dependencies.h"
 
 // Callback to display format options
 static void ExportCallback(void *cbdata, int index)
@@ -634,6 +635,29 @@ bool Exporter::GetFilename()
          wxMessageBox(_("Sorry, pathnames longer than 256 characters not supported."));
          continue;
       }
+
+      // Check to see if we are writing to a path that a missing aliased file existed at.
+      // This causes problems for the exporter, so we don't allow it.
+      // Overwritting non-missing aliased files is okay.
+      // Also, this can only happen for uncompressed audio.
+      size_t i;
+      bool overwritingMissingAlias;
+      overwritingMissingAlias = false;
+      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+         AliasedFileArray aliasedFiles;
+         FindDependencies(gAudacityProjects[i], &aliasedFiles);
+         if (mFilename.GetFullPath() == aliasedFiles[i].mFileName.GetFullPath() &&
+             !mFilename.FileExists()) {
+            // Warn and return to the dialog
+            wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
+The file cannot be written because the path is needed to restore the original audio to the project.\n\
+You can see the missing files in File > Check Dependencies.\n\
+If you still wish to export, please choose a different filename."));
+            overwritingMissingAlias = true;
+         }
+      }
+      if (overwritingMissingAlias)
+         continue;
 
       if (mFilename.FileExists()) {
          wxString prompt;

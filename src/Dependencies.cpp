@@ -38,23 +38,6 @@
 #include "ShuttleGui.h"
 #include "Track.h"
 
-
-class AliasedFile 
-{
-public:
-   AliasedFile(wxFileName fileName, wxLongLong byteCount, bool bOriginalExists) 
-   {
-      mFileName = fileName;
-      mByteCount = byteCount;
-      mbOriginalExists = bOriginalExists;
-   };
-   wxFileName  mFileName;
-   wxLongLong  mByteCount; // if stored as current default sample format
-   bool        mbOriginalExists;
-};
-
-WX_DECLARE_OBJARRAY(AliasedFile, AliasedFileArray);
-
 // Note, this #include must occur here, not up with the others!
 // It must be between the WX_DECLARE_OBJARRAY and WX_DEFINE_OBJARRAY. 
 #include <wx/arrimpl.cpp> 
