@@ -613,6 +613,8 @@ PORTAUDIO_LIBS
 PORTAUDIO_CFLAGS
 PORTSMF_LIBS
 PORTSMF_CFLAGS
+AVUTIL_LIBS
+AVUTIL_CFLAGS
 AVFORMAT_LIBS
 AVFORMAT_CFLAGS
 AVCODEC_LIBS
@@ -769,6 +771,8 @@ AVCODEC_CFLAGS
 AVCODEC_LIBS
 AVFORMAT_CFLAGS
 AVFORMAT_LIBS
+AVUTIL_CFLAGS
+AVUTIL_LIBS
 PORTSMF_CFLAGS
 PORTSMF_LIBS
 PORTAUDIO_CFLAGS
@@ -1480,6 +1484,9 @@ Some influential environment variables:
               C compiler flags for AVFORMAT, overriding pkg-config
   AVFORMAT_LIBS
               linker flags for AVFORMAT, overriding pkg-config
+  AVUTIL_CFLAGS
+              C compiler flags for AVUTIL, overriding pkg-config
+  AVUTIL_LIBS linker flags for AVUTIL, overriding pkg-config
   PORTSMF_CFLAGS
               C compiler flags for PORTSMF, overriding pkg-config
   PORTSMF_LIBS
@@ -7103,17 +7110,82 @@ $as_echo "yes" >&6; }
 	avformat_available_system="yes"
 fi
 
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for AVUTIL" >&5
+$as_echo_n "checking for AVUTIL... " >&6; }
+
+if test -n "$AVUTIL_CFLAGS"; then
+    pkg_cv_AVUTIL_CFLAGS="$AVUTIL_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libavutil\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libavutil") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_AVUTIL_CFLAGS=`$PKG_CONFIG --cflags "libavutil" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$AVUTIL_LIBS"; then
+    pkg_cv_AVUTIL_LIBS="$AVUTIL_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libavutil\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libavutil") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_AVUTIL_LIBS=`$PKG_CONFIG --libs "libavutil" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        AVUTIL_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libavutil" 2>&1`
+        else
+	        AVUTIL_PKG_ERRORS=`$PKG_CONFIG --print-errors "libavutil" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$AVUTIL_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                libavutil_available_system="no"
+elif test $pkg_failed = untried; then
+	libavutil_available_system="no"
+else
+	AVUTIL_CFLAGS=$pkg_cv_AVUTIL_CFLAGS
+	AVUTIL_LIBS=$pkg_cv_AVUTIL_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	libavutil_available_system="yes"
+fi
+
    FFMPEG_SYSTEM_AVAILABLE="no"
-   if test "x$avcodec_available_system" = "xyes" ; then
-      if test "x$avformat_available_system" = "xyes" ; then
-	     FFMPEG_SYSTEM_AVAILABLE="yes"
-         FFMPEG_SYSTEM_CXXFLAGS="$AVCODEC_CFLAGS $AVFORMAT_CFLAGS"
-         FFMPEG_SYSTEM_CPPSYMBOLS="USE_FFMPEG"
-		 		 		 FFMPEG_SYSTEM_OPTOBJS="import/ImportFFmpeg.o export/ExportFFmpeg.o \
-		 	export/ExportFFmpegDialogs.o"
-         { $as_echo "$as_me:${as_lineno-$LINENO}: FFmpeg library available as system library" >&5
+   if test "$avcodec_available_system" = "yes" -a "$avformat_available_system" = "yes" -a "$libavutil_available_system" = "yes"; then
+      FFMPEG_SYSTEM_AVAILABLE="yes"
+      FFMPEG_SYSTEM_CXXFLAGS="$AVCODEC_CFLAGS $AVFORMAT_CFLAGS $AVUTIL_CFLAGS"
+      FFMPEG_SYSTEM_CPPSYMBOLS="USE_FFMPEG"
+                  FFMPEG_SYSTEM_OPTOBJS="import/ImportFFmpeg.o export/ExportFFmpeg.o \
+         export/ExportFFmpegDialogs.o"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: FFmpeg library available as system library" >&5
 $as_echo "$as_me: FFmpeg library available as system library" >&6;}
-      fi
    fi
    if test "x$FFMPEG_SYSTEM_AVAILABLE" = "xno" ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: FFmpeg library NOT available as system library" >&5

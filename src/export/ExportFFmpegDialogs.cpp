@@ -26,11 +26,6 @@
 
 *//***************************************************************//**
 
-\class ExportFFmpegAMRWBOptions
-\brief Options dialog for FFmpeg exporting of AMRWB format.
-
-*//***************************************************************//**
-
 \class ExportFFmpegWMAOptions
 \brief Options dialog for FFmpeg exporting of WMA format.
 
@@ -161,7 +156,7 @@ ExportFFmpegAC3Options::ExportFFmpegAC3Options(wxWindow *parent)
 
    for (unsigned int i=0; i < (sizeof(iAC3BitRates)/sizeof(int)); i++)
    {
-      mBitRateNames.Add(wxString::Format(wxT("%i"),iAC3BitRates[i]/1000));
+      mBitRateNames.Add(wxString::Format(_("%i kbps"),iAC3BitRates[i]/1000));
       mBitRateLabels.Add(iAC3BitRates[i]);
    }
 
@@ -284,7 +279,7 @@ ExportFFmpegAMRNBOptions::ExportFFmpegAMRNBOptions(wxWindow *parent)
 
    for (unsigned int i=0; i < (sizeof(iAMRNBBitRate)/sizeof(int)); i++)
    {
-      mBitRateNames.Add(wxString::Format(wxT("%i"),iAMRNBBitRate[i]/1000));
+      mBitRateNames.Add(wxString::Format(_("%.2f kbps"),(float)iAMRNBBitRate[i]/1000));
       mBitRateLabels.Add(iAMRNBBitRate[i]);
    }
 
@@ -333,75 +328,6 @@ void ExportFFmpegAMRNBOptions::OnOK(wxCommandEvent& event)
 }
 
 //----------------------------------------------------------------------------
-// ExportFFmpegAMRWBOptions Class
-//----------------------------------------------------------------------------
-
-BEGIN_EVENT_TABLE(ExportFFmpegAMRWBOptions, wxDialog)
-   EVT_BUTTON(wxID_OK,ExportFFmpegAMRWBOptions::OnOK)
-END_EVENT_TABLE()
-
-/// Bit Rates supported by libAMR-WB encoder
-/// Sample Rate is always 16 kHz
-int ExportFFmpegAMRWBOptions::iAMRWBBitRate[] =
-{ 6600, 8850, 12650, 14250, 15850, 18250, 19850, 23050, 23850 };
-
-ExportFFmpegAMRWBOptions::ExportFFmpegAMRWBOptions(wxWindow *parent)
-:  wxDialog(parent, wxID_ANY,
-            wxString(_("Specify AMR-WB Options")))
-{
-   ShuttleGui S(this, eIsCreatingFromPrefs);
-
-   for (unsigned int i=0; i < (sizeof(iAMRWBBitRate)/sizeof(int)); i++)
-   {
-      mBitRateNames.Add(wxString::Format(wxT("%i"),iAMRWBBitRate[i]/1000));
-      mBitRateLabels.Add(iAMRWBBitRate[i]);
-   }
-
-   PopulateOrExchange(S);
-}
-
-/// 
-/// 
-void ExportFFmpegAMRWBOptions::PopulateOrExchange(ShuttleGui & S)
-{
-   S.StartHorizontalLay(wxEXPAND, 0);
-   {
-      S.StartStatic(_("AMR-WB Export Setup"), 0);
-      {
-         S.StartTwoColumn();
-         {
-            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/AMRWBBitRate"), 
-               23850, mBitRateNames, mBitRateLabels);
-         }
-         S.EndTwoColumn();
-      }
-      S.EndStatic();
-   }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
-
-   return;
-}
-
-/// 
-/// 
-void ExportFFmpegAMRWBOptions::OnOK(wxCommandEvent& event)
-{
-   ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);
-
-   EndModal(wxID_OK);
-
-   return;
-}
-
-//----------------------------------------------------------------------------
 // ExportFFmpegWMAOptions Class
 //----------------------------------------------------------------------------
 
@@ -414,8 +340,7 @@ const int ExportFFmpegWMAOptions::iWMASampleRates[] =
 
 /// Bit Rates supported by WMA encoder. Setting bit rate to other values will not result in different file size.
 const int ExportFFmpegWMAOptions::iWMABitRate[] =
-{ 24634, 26012, 27734, 29457, 31524, 33764, 36348, 39448, 42894, 47028, 52024,
-   58225, 65805, 75624, 88716, 106976, 134539, 180189, 271835, 546598 };
+{ 24000, 32000, 40000, 48000, 64000, 80000, 96000, 128000, 160000, 192000, 256000, 320000 };
 
 
 ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent)
@@ -426,7 +351,7 @@ ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent)
 
    for (unsigned int i=0; i < (sizeof(iWMABitRate)/sizeof(int)); i++)
    {
-      mBitRateNames.Add(wxString::Format(wxT("%i"),iWMABitRate[i]/1000));
+      mBitRateNames.Add(wxString::Format(wxT("%i kbps"),iWMABitRate[i]/1000));
       mBitRateLabels.Add(iWMABitRate[i]);
    }
 
@@ -444,7 +369,7 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
          S.StartTwoColumn();
          {
             S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/WMABitRate"), 
-               180189, mBitRateNames, mBitRateLabels);
+               96000, mBitRateNames, mBitRateLabels);
          }
          S.EndTwoColumn();
       }
@@ -1185,14 +1110,11 @@ const wxChar *ExportFFmpegOptions::iAACProfileNames[] = {
 /// List of export types
 ExposedFormat ExportFFmpegOptions::fmts[] =
 {
-   {FMT_M4A,         wxT("M4A"),     wxT("m4a"),  wxT("ipod"), 48,  true ,true ,_("M4A (AAC) Files (FFmpeg)"),         CODEC_ID_AAC,    true},
-   {FMT_AC3,         wxT("AC3"),     wxT("ac3"),  wxT("ac3"),  7,   false,false,_("AC3 Files (FFmpeg)"),               CODEC_ID_AC3,    true},
-   {FMT_AMRNB,       wxT("AMRNB"),   wxT("amr"),  wxT("amr"),  1,   false,false,_("AMR (narrow band) Files (FFmpeg)"), CODEC_ID_AMR_NB, true},
-#if FFMPEG_STABLE
-   {FMT_AMRWB,       wxT("AMRWB"),   wxT("amr"),  wxT("amr"),  1,   false,false,_("AMR (wide band) Files (FFmpeg)"),   CODEC_ID_AMR_WB, true},
-#endif
-   {FMT_WMA2,        wxT("WMA"),     wxT("wma"),  wxT("asf"),  2,   false,false,_("WMA (version 2) Files (FFmpeg)"),   CODEC_ID_WMAV2,  true},
-   {FMT_OTHER,       wxT("FFMPEG"),  wxT(""),     wxT(""),     255, true ,true ,_("Custom FFmpeg Export"),             CODEC_ID_NONE,   true}
+   {FMT_M4A,   wxT("M4A"),    wxT("m4a"), wxT("ipod"), 48,  AV_VERSION_INT(-1,-1,-1), true,  _("M4A (AAC) Files (FFmpeg)"),         CODEC_ID_AAC,    true},
+   {FMT_AC3,   wxT("AC3"),    wxT("ac3"), wxT("ac3"),  7,   AV_VERSION_INT(0,0,0),    false, _("AC3 Files (FFmpeg)"),               CODEC_ID_AC3,    true},
+   {FMT_AMRNB, wxT("AMRNB"),  wxT("amr"), wxT("amr"),  1,   AV_VERSION_INT(0,0,0),    false, _("AMR (narrow band) Files (FFmpeg)"), CODEC_ID_AMR_NB, true},
+   {FMT_WMA2,  wxT("WMA"),    wxT("wma"), wxT("asf"),  2,   AV_VERSION_INT(52,53,0),  false, _("WMA (version 2) Files (FFmpeg)"),   CODEC_ID_WMAV2,  true},
+   {FMT_OTHER, wxT("FFMPEG"), wxT(""),    wxT(""),     255, AV_VERSION_INT(-1,-1,-1), true,  _("Custom FFmpeg Export"),             CODEC_ID_NONE,   true}
 };
 
 /// Sample rates supported by AAC encoder (must end with zero-element)
@@ -1329,7 +1251,7 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
       DoOnFormatList();
 
       //Select the codec that was selected last time this dialog was closed
-      AVCodec *codec = FFmpegLibsInst->avcodec_find_encoder((CodecID)gPrefs->Read(wxT("/FileFormats/FFmpegCodec"),(long)CODEC_ID_NONE));
+      AVCodec *codec = avcodec_find_encoder((CodecID)gPrefs->Read(wxT("/FileFormats/FFmpegCodec"),(long)CODEC_ID_NONE));
       if (codec != NULL) mCodecList->Select(mCodecList->FindString(wxString::FromUTF8(codec->name)));
       DoOnCodecList();
    }
@@ -1342,7 +1264,7 @@ void ExportFFmpegOptions::FetchFormatList()
 {
    // Enumerate all output formats
    AVOutputFormat *ofmt = NULL;
-   while ((ofmt = FFmpegLibsInst->av_oformat_next(ofmt)))
+   while ((ofmt = av_oformat_next(ofmt)))
    {
       // Any audio-capable format has default audio codec.
       // If it doesn't, then it doesn't supports any audio codecs
@@ -1363,7 +1285,7 @@ void ExportFFmpegOptions::FetchCodecList()
 {
    // Enumerate all codecs
    AVCodec *codec = NULL;
-   while ((codec = FFmpegLibsInst->av_codec_next(codec)))
+   while ((codec = av_codec_next(codec)))
    {
       // We're only interested in audio and only in encoders
       if (codec->type == CODEC_TYPE_AUDIO && codec->encode)
@@ -1604,7 +1526,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, CodecID id)
             break;
          }
          // Find the codec, that is claimed to be compatible
-         AVCodec *codec = FFmpegLibsInst->avcodec_find_encoder(CompatibilityList[i].codec);
+         AVCodec *codec = avcodec_find_encoder(CompatibilityList[i].codec);
          // If it exists, is audio and has encoder
          if (codec != NULL && (codec->type == CODEC_TYPE_AUDIO) && codec->encode)
          {
@@ -1619,7 +1541,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, CodecID id)
    if (found == 2)
    {
       AVCodec *codec = NULL;
-      while ((codec = FFmpegLibsInst->av_codec_next(codec)))
+      while ((codec = av_codec_next(codec)))
       {
          if (codec->type == CODEC_TYPE_AUDIO && codec->encode)
          {
@@ -1637,10 +1559,10 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, CodecID id)
    else if (found == 0)
    {
       wxCharBuffer buf = str.ToUTF8();
-      AVOutputFormat *format = FFmpegLibsInst->guess_format(buf,NULL,NULL);
+      AVOutputFormat *format = av_guess_format(buf,NULL,NULL);
       if (format != NULL)
       {
-         AVCodec *codec = FFmpegLibsInst->avcodec_find_encoder(format->audio_codec);
+         AVCodec *codec = avcodec_find_encoder(format->audio_codec);
          if (codec != NULL && (codec->type == CODEC_TYPE_AUDIO) && codec->encode)
          {
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
@@ -1674,7 +1596,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(CodecID id, wxString *selfmt)
          if ((selfmt != NULL) && (selfmt->Cmp(CompatibilityList[i].fmt) == 0)) index = mShownFormatNames.GetCount();
          FromList.Add(CompatibilityList[i].fmt);
          mShownFormatNames.Add(CompatibilityList[i].fmt);
-         AVOutputFormat *tofmt = FFmpegLibsInst->guess_format(wxString(CompatibilityList[i].fmt).ToUTF8(),NULL,NULL);
+         AVOutputFormat *tofmt = av_guess_format(wxString(CompatibilityList[i].fmt).ToUTF8(),NULL,NULL);
          if (tofmt != NULL) mShownFormatLongNames.Add(wxString::Format(wxT("%s - %s"),CompatibilityList[i].fmt,wxString::FromUTF8(tofmt->long_name).c_str()));
       }
    }
@@ -1694,7 +1616,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(CodecID id, wxString *selfmt)
    if (found)
    {
       // Find all formats which have this codec as default and which are not in the list yet and add them too
-      while ((ofmt = FFmpegLibsInst->av_oformat_next(ofmt)))
+      while ((ofmt = av_oformat_next(ofmt)))
       {
          if (ofmt->audio_codec == id)
          {
@@ -1879,7 +1801,7 @@ void ExportFFmpegOptions::DoOnFormatList()
    wxString *selcdclong = NULL;
    FindSelectedCodec(&selcdc, &selcdclong);
 
-   AVOutputFormat *fmt = FFmpegLibsInst->guess_format(selfmt->ToUTF8(),NULL,NULL);
+   AVOutputFormat *fmt = av_guess_format(selfmt->ToUTF8(),NULL,NULL);
    if (fmt == NULL)
    {
       //This shouldn't really happen
@@ -1891,7 +1813,7 @@ void ExportFFmpegOptions::DoOnFormatList()
 
    if (selcdc != NULL)
    {
-      AVCodec *cdc = FFmpegLibsInst->avcodec_find_encoder_by_name(selcdc->ToUTF8());
+      AVCodec *cdc = avcodec_find_encoder_by_name(selcdc->ToUTF8());
       if (cdc != NULL)
       {
          selcdcid = cdc->id;
@@ -1902,7 +1824,7 @@ void ExportFFmpegOptions::DoOnFormatList()
 
    AVCodec *cdc = NULL;
    if (selcdc != NULL)
-      cdc = FFmpegLibsInst->avcodec_find_encoder_by_name(selcdc->ToUTF8());
+      cdc = avcodec_find_encoder_by_name(selcdc->ToUTF8());
    EnableDisableControls(cdc, selfmt);
    Layout();
    Fit();
@@ -1923,7 +1845,7 @@ void ExportFFmpegOptions::DoOnCodecList()
    wxString *selfmtlong = NULL;
    FindSelectedFormat(&selfmt, &selfmtlong);
 
-   AVCodec *cdc = FFmpegLibsInst->avcodec_find_encoder_by_name(selcdc->ToUTF8());
+   AVCodec *cdc = avcodec_find_encoder_by_name(selcdc->ToUTF8());
    if (cdc == NULL)
    {
       //This shouldn't really happen
@@ -1934,7 +1856,7 @@ void ExportFFmpegOptions::DoOnCodecList()
 
    if (selfmt != NULL)
    {
-      AVOutputFormat *fmt = FFmpegLibsInst->guess_format(selfmt->ToUTF8(),NULL,NULL);
+      AVOutputFormat *fmt = av_guess_format(selfmt->ToUTF8(),NULL,NULL);
       if (fmt == NULL)
       {
          selfmt = NULL;
@@ -1971,7 +1893,7 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& event)
 {
    int selcdc = mCodecList->GetSelection();
    int selfmt = mFormatList->GetSelection();
-   if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),(long)FFmpegLibsInst->avcodec_find_encoder_by_name(mCodecList->GetString(selcdc).ToUTF8())->id);
+   if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),(long)avcodec_find_encoder_by_name(mCodecList->GetString(selcdc).ToUTF8())->id);
    if (selfmt > -1) gPrefs->Write(wxT("/FileFormats/FFmpegFormat"),mFormatList->GetString(selfmt));
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

@@ -80,11 +80,11 @@ Importer::Importer()
    GetMP3ImportPlugin(mImportPluginList, mUnusableImportPluginList);
    GetLOFImportPlugin(mImportPluginList, mUnusableImportPluginList);
 
-   #ifdef USE_QUICKTIME
-   GetQTImportPlugin(mImportPluginList, mUnusableImportPluginList);
-   #endif
    #if defined(USE_FFMPEG)
    GetFFmpegImportPlugin(mImportPluginList, mUnusableImportPluginList);
+   #endif
+   #ifdef USE_QUICKTIME
+   GetQTImportPlugin(mImportPluginList, mUnusableImportPluginList);
    #endif
    #if defined(USE_GSTREAMER)
    GetGStreamerImportPlugin(mImportPluginList, mUnusableImportPluginList);

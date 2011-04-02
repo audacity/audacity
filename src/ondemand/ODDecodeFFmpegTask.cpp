@@ -175,9 +175,9 @@ bool ODFFmpegDecoder::SeekingAllowed()
       goto test_failed;
    //TODO: now try a seek and see if dts/pts (decode/presentation timestamp) is updated as we expected it to be.  
    //This should be done using a new AVFormatContext clone so that we don't ruin the file pointer if we fail.
-//   FFmpegLibsInst->url_fseek(mFormatContext->pb,0,SEEK_SET);                              
+//   url_fseek(mFormatContext->pb,0,SEEK_SET);                              
    
-   if(FFmpegLibsInst->av_seek_frame(mFormatContext,st->index,0,0) >= 0) {
+   if(av_seek_frame(mFormatContext,st->index,0,0) >= 0) {
    
       mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_SUCCESS;
       return SeekingAllowed();
@@ -226,14 +226,14 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 {
    if (FFmpegLibsInst->ValidLibsLoaded())
    {
-      if (mFormatContext) FFmpegLibsInst->av_close_input_file(mFormatContext);
-      FFmpegLibsInst->av_log_set_callback(FFmpegLibsInst->av_log_default_callback);
+      if (mFormatContext) av_close_input_file(mFormatContext);
+      av_log_set_callback(av_log_default_callback);
    }
 
    for (int i = 0; i < mNumStreams; i++)
    {
       if (mScs[i]->m_decodedAudioSamples != NULL)
-         FFmpegLibsInst->av_free(mScs[i]->m_decodedAudioSamples);
+         av_free(mScs[i]->m_decodedAudioSamples);
 
       delete mScs[i];
    }
@@ -304,7 +304,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
             targetts = (start-kDecodeSampleAllowance*numAttempts/kMaxSeekRewindAttempts)  * ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ));
             if(targetts<0) 
                targetts=0;
-            if(FFmpegLibsInst->av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
+            if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
                //find out the dts we've seekd to.  
                sampleCount actualDecodeStart = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
                double actualDecodeStartDouble = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
@@ -317,7 +317,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
          }
          if(mCurrentPos>start){
             mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
-            //               FFmpegLibsInst->url_fseek(mFormatContext->pb,sc->m_pkt.pos,SEEK_SET);                              
+            //               url_fseek(mFormatContext->pb,sc->m_pkt.pos,SEEK_SET);                              
             printf("seek fail, reverting to previous pos\n");
             return -1;
          }
@@ -367,11 +367,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
          // Cleanup after frame decoding
          if (sc->m_pktValid)
          {
-#if FFMPEG_STABLE
             av_free_packet(&sc->m_pkt);
-#else
-            FFmpegLibsInst->av_free_packet(&sc->m_pkt);
-#endif
             sc->m_pktValid = 0;
          }    
       }
@@ -386,11 +382,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
          {
             if (mScs[i]->m_pktValid)
             {
-#if FFMPEG_STABLE
                av_free_packet(&mScs[i]->m_pkt);
-#else
-               FFmpegLibsInst->av_free_packet(&mScs[i]->m_pkt);
-#endif
                mScs[i]->m_pktValid = 0;
             }				
          }
@@ -505,7 +497,7 @@ streamContext* ODFFmpegDecoder::ReadNextFrame()
    streamContext *sc = NULL;
    AVPacket pkt;
 
-   if (FFmpegLibsInst->av_read_frame(mFormatContext,&pkt) < 0)
+   if (av_read_frame(mFormatContext,&pkt) < 0)
    {
       return NULL;
    }
@@ -521,11 +513,7 @@ streamContext* ODFFmpegDecoder::ReadNextFrame()
    // When not all streams are selected for import this will happen very often.
    if (sc == NULL)
    {
-#if FFMPEG_STABLE
       av_free_packet(&pkt);
-#else
-      FFmpegLibsInst->av_free_packet(&pkt);
-#endif
       return (streamContext*)1;
    }
 
@@ -573,7 +561,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //\warning { for some reason using the following macro call right in the function call
       // causes Audacity to crash in some unknown place. With "newsize" it works fine }
       int newsize = FFMAX(sc->m_pkt.size*sizeof(*sc->m_decodedAudioSamples), AVCODEC_MAX_AUDIO_FRAME_SIZE);
-      sc->m_decodedAudioSamples = (int16_t*)FFmpegLibsInst->av_fast_realloc(sc->m_decodedAudioSamples, 
+      sc->m_decodedAudioSamples = (int16_t*)av_fast_realloc(sc->m_decodedAudioSamples, 
          &sc->m_decodedAudioSamplesSiz,
          newsize
          );
@@ -588,7 +576,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
    // avcodec_decode_audio2() expects the size of the output buffer as the 3rd parameter but
    // also returns the number of bytes it decoded in the same parameter.
    sc->m_decodedAudioSamplesValidSiz = sc->m_decodedAudioSamplesSiz;
-   nBytesDecoded = FFmpegLibsInst->avcodec_decode_audio2(sc->m_codecCtx, 
+   nBytesDecoded = avcodec_decode_audio2(sc->m_codecCtx, 
       sc->m_decodedAudioSamples,		      // out
       &sc->m_decodedAudioSamplesValidSiz,	// in/out
       pDecode, nDecodeSiz);				   // in

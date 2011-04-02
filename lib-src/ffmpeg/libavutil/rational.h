@@ -20,7 +20,7 @@
  */
 
 /**
- * @file libavutil/rational.h
+ * @file
  * rational numbers
  * @author Michael Niedermayer <michaelni@gmx.at>
  */
@@ -29,7 +29,7 @@
 #define AVUTIL_RATIONAL_H
 
 #include <stdint.h>
-#include "common.h"
+#include "attributes.h"
 
 /**
  * rational number numerator/denominator

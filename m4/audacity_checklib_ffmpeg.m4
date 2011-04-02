@@ -26,19 +26,20 @@ AC_DEFUN([AUDACITY_CHECKLIB_FFMPEG], [
    PKG_CHECK_MODULES(AVFORMAT, libavformat >= 52.12,
                      avformat_available_system="yes",
                      avformat_available_system="no")
+   PKG_CHECK_MODULES(AVUTIL, libavutil,
+                     libavutil_available_system="yes",
+                     libavutil_available_system="no")
 
    FFMPEG_SYSTEM_AVAILABLE="no"
-   if test "x$avcodec_available_system" = "xyes" ; then
-      if test "x$avformat_available_system" = "xyes" ; then
-	     FFMPEG_SYSTEM_AVAILABLE="yes"
-         FFMPEG_SYSTEM_CXXFLAGS="$AVCODEC_CFLAGS $AVFORMAT_CFLAGS"
-         FFMPEG_SYSTEM_CPPSYMBOLS="USE_FFMPEG"
-		 dnl build the extra object files needed to use FFmpeg. Paths inside
-		 dnl the audacity src/ dir, as this is subsitiuted into src/Makefile.in
-		 FFMPEG_SYSTEM_OPTOBJS="import/ImportFFmpeg.o export/ExportFFmpeg.o \
-		 	export/ExportFFmpegDialogs.o"
-         AC_MSG_NOTICE([FFmpeg library available as system library])
-      fi
+   if test "$avcodec_available_system" = "yes" -a "$avformat_available_system" = "yes" -a "$libavutil_available_system" = "yes"; then
+      FFMPEG_SYSTEM_AVAILABLE="yes"
+      FFMPEG_SYSTEM_CXXFLAGS="$AVCODEC_CFLAGS $AVFORMAT_CFLAGS $AVUTIL_CFLAGS"
+      FFMPEG_SYSTEM_CPPSYMBOLS="USE_FFMPEG"
+      dnl build the extra object files needed to use FFmpeg. Paths inside
+      dnl the audacity src/ dir, as this is subsitiuted into src/Makefile.in
+      FFMPEG_SYSTEM_OPTOBJS="import/ImportFFmpeg.o export/ExportFFmpeg.o \
+         export/ExportFFmpegDialogs.o"
+      AC_MSG_NOTICE([FFmpeg library available as system library])
    fi
    if test "x$FFMPEG_SYSTEM_AVAILABLE" = "xno" ; then
       AC_MSG_NOTICE([FFmpeg library NOT available as system library])

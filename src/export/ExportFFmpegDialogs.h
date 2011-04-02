@@ -27,9 +27,6 @@ enum FFmpegExposedFormat
    FMT_M4A,
    FMT_AC3,
    FMT_AMRNB,
-#if FFMPEG_STABLE
-   FMT_AMRWB,
-#endif
    FMT_WMA2,
    FMT_OTHER,
    FMT_LAST
@@ -43,7 +40,7 @@ struct ExposedFormat
    const wxChar *extension;   //!< default extension for this format. More extensions may be added later via AddExtension.
    const wxChar *shortname;   //!< used to guess the format
    int maxchannels;           //!< how much channels this format could handle
-   bool canmetadata;          //!< true if format supports metadata, false otherwise
+   int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
    const wxChar *description; //!< format description (will be shown in export dialog)
    CodecID codecid;           //!< codec ID (see libavcodec/avcodec.h)
@@ -110,28 +107,6 @@ public:
    void OnOK(wxCommandEvent& event);
 
    static int iAMRNBBitRate[];
-
-private:
-
-   wxArrayString mBitRateNames;
-   wxArrayInt    mBitRateLabels;
-
-   wxChoice *mBitRateChoice;
-   wxButton *mOk;
-   int mBitRateFromChoice;
-
-   DECLARE_EVENT_TABLE()
-};
-
-class ExportFFmpegAMRWBOptions : public wxDialog
-{
-public:
-
-   ExportFFmpegAMRWBOptions(wxWindow *parent);
-   void PopulateOrExchange(ShuttleGui & S);
-   void OnOK(wxCommandEvent& event);
-
-   static int iAMRWBBitRate[];
 
 private:
 

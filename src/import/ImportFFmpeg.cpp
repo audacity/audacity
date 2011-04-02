@@ -23,8 +23,8 @@ Licensed under the GNU General Public License v2 or later
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "../Audacity.h"	// needed before FFmpeg.h
-#include "../FFmpeg.h"		// which brings in avcodec.h, avformat.h
+#include "../Audacity.h"    // needed before FFmpeg.h
+#include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
 #include "../ondemand/ODManager.h"
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
@@ -167,22 +167,29 @@ class FFmpegImportFileHandle;
 typedef struct _streamContext
 {
    bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
-   AVStream            *m_stream;		      	         // an AVStream *
-   AVCodecContext      *m_codecCtx;			               // pointer to m_stream->codec
+   AVStream            *m_stream;                        // an AVStream *
+   AVCodecContext      *m_codecCtx;                      // pointer to m_stream->codec
 
-   AVPacket             m_pkt;				               // the last AVPacket we read for this stream
-   int                  m_pktValid;			               // is m_pkt valid?
-   uint8_t             *m_pktDataPtr;		           	   // pointer into m_pkt.data
-   int                  m_pktRemainingSiz;	
+   AVPacket             m_pkt;                           // the last AVPacket we read for this stream
+   int                  m_pktValid;                      // is m_pkt valid?
+   uint8_t             *m_pktDataPtr;                    // pointer into m_pkt.data
+   int                  m_pktRemainingSiz;  
 
-   int64_t			      m_pts;			              	   // the current presentation time of the input stream
-   int64_t			      m_ptsOffset;		    	         // packets associated with stream are relative to this
+   int64_t              m_pts;                           // the current presentation time of the input stream
+   int64_t              m_ptsOffset;                     // packets associated with stream are relative to this
 
-   int                  m_frameValid;		               // is m_decodedVideoFrame/m_decodedAudioSamples valid?
-   int16_t             *m_decodedAudioSamples;           // decoded audio samples stored here
-   unsigned int			m_decodedAudioSamplesSiz;        // current size of m_decodedAudioSamples
-   int			         m_decodedAudioSamplesValidSiz;   // # valid bytes in m_decodedAudioSamples
+   int                  m_frameValid;                    // is m_decodedVideoFrame/m_decodedAudioSamples valid?
+   uint8_t             *m_decodedAudioSamples;           // decoded audio samples stored here
+   unsigned int         m_decodedAudioSamplesSiz;        // current size of m_decodedAudioSamples
+   int                  m_decodedAudioSamplesValidSiz;   // # valid bytes in m_decodedAudioSamples
    int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
+
+   int                  m_samplesize;                    // input sample size in bytes
+   SampleFormat         m_samplefmt;                     // input sample format
+
+   int                  m_osamplesize;                   // output sample size in bytes
+   sampleFormat         m_osamplefmt;                    // output sample format
+
 } streamContext;
 #endif
 /// A representative of FFmpeg loader in
@@ -247,8 +254,15 @@ public:
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
    ///\ tags - Audacity tags object
-   void WriteMetadata(AVFormatContext *avf, Tags *tags);
+   void WriteMetadata(Tags *tags);
    
+   ///! Retrieves metadata from FFmpeg and converts to wxString
+   ///\param avf - file context
+   ///\ tags - Audacity tags object
+   ///\ tag - name of tag to set
+   ///\ name - name of metadata item to retrieve
+   void GetMetadata(Tags *tags, const wxChar *tag, const char *name);
+
    ///! Called by Import.cpp
    ///\return number of readable streams in the file
    wxInt32 GetStreamCount()
@@ -374,7 +388,7 @@ bool FFmpegImportFileHandle::Init()
 
    if (!FFmpegLibsInst->ValidLibsLoaded()) return false;
 
-   FFmpegLibsInst->av_log_set_callback(av_log_wx_callback);
+   av_log_set_callback(av_log_wx_callback);
 
    int err = ufile_fopen_input(&mFormatContext, mName);
    if (err < 0)
@@ -383,7 +397,7 @@ bool FFmpegImportFileHandle::Init()
       return false;
    }
 
-   err = FFmpegLibsInst->av_find_stream_info(mFormatContext);
+   err = av_find_stream_info(mFormatContext);
    if (err < 0)
    {
       wxLogError(wxT("FFmpeg : av_find_stream_info() failed for file %s"),mName.c_str());
@@ -411,7 +425,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          sc->m_stream = mFormatContext->streams[i];
          sc->m_codecCtx = sc->m_stream->codec;
 
-         AVCodec *codec = FFmpegLibsInst->avcodec_find_decoder(sc->m_codecCtx->codec_id);
+         AVCodec *codec = avcodec_find_decoder(sc->m_codecCtx->codec_id);
          if (codec == NULL)
          {
             wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
@@ -427,7 +441,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             continue;
          }
 
-         if (FFmpegLibsInst->avcodec_open(sc->m_codecCtx, codec) < 0)
+         if (avcodec_open(sc->m_codecCtx, codec) < 0)
          {
             wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //Can't open decoder - skip this stream
@@ -447,7 +461,14 @@ bool FFmpegImportFileHandle::InitCodecs()
            bitrate.Printf(wxT("%d"),sc->m_codecCtx->bit_rate);
          else
            bitrate.Printf(wxT("?"));
-         strinfo.Printf(_("Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,sc->m_stream->language,bitrate.c_str(),sc->m_stream->codec->channels, duration);
+
+         AVMetadataTag *tag = av_metadata_get(sc->m_stream->metadata, "language", NULL, 0);
+         wxString lang;
+         if (tag)
+         {
+            lang.FromUTF8(tag->value);
+         }
+         strinfo.Printf(_("Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
          mStreamInfo->Add(strinfo);
          mScs[mNumStreams++] = sc;
       }
@@ -468,7 +489,6 @@ int FFmpegImportFileHandle::GetFileUncompressedBytes()
    // TODO: Get Uncompressed byte count.
    return 0;
 }
-
 
 int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
               Track ***outTracks,
@@ -497,13 +517,26 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
    for (int s = 0; s < mNumStreams; s++)
    {
+      switch (mScs[s]->m_stream->codec->sample_fmt)
+      {
+         case SAMPLE_FMT_U8:
+         case SAMPLE_FMT_S16:
+            mScs[s]->m_osamplesize = sizeof(int16_t);
+            mScs[s]->m_osamplefmt = int16Sample;
+         break;
+         default:
+            mScs[s]->m_osamplesize = sizeof(float);
+            mScs[s]->m_osamplefmt = floatSample;
+         break;
+      }
+
       // There is a possibility that number of channels will change over time, but we do not have WaveTracks for new channels. Remember the number of channels and stick to it.
       mScs[s]->m_initialchannels = mScs[s]->m_stream->codec->channels;
       mChannels[s] = new WaveTrack *[mScs[s]->m_stream->codec->channels];
       int c;
       for (c = 0; c < mScs[s]->m_stream->codec->channels; c++)
       {
-         mChannels[s][c] = trackFactory->NewWaveTrack(int16Sample, mScs[s]->m_stream->codec->sample_rate);
+         mChannels[s][c] = trackFactory->NewWaveTrack(mScs[s]->m_osamplefmt, mScs[s]->m_stream->codec->sample_rate);
 
          if (mScs[s]->m_stream->codec->channels == 2)
          {
@@ -531,7 +564,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    for (int s = 0; s < mNumStreams; s++)
    {
       int64_t stream_delay = 0;
-      if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE))
+      if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && mScs[s]->m_stream->start_time > 0)
       {
          stream_delay = mScs[s]->m_stream->start_time;
          wxLogError(wxT("Stream %d start_time = %d, that would be %f milliseconds."), s, mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
@@ -629,11 +662,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          // Cleanup after frame decoding
          if (sc->m_pktValid)
          {
-#if FFMPEG_STABLE
             av_free_packet(&sc->m_pkt);
-#else
-            FFmpegLibsInst->av_free_packet(&sc->m_pkt);
-#endif
             sc->m_pktValid = 0;
          }    
       }
@@ -650,13 +679,9 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
 
             if (mScs[i]->m_pktValid)
             {
-#if FFMPEG_STABLE
                av_free_packet(&mScs[i]->m_pkt);
-#else
-               FFmpegLibsInst->av_free_packet(&mScs[i]->m_pkt);
-#endif
                mScs[i]->m_pktValid = 0;
-            }				
+            }               
          }
       }
    }
@@ -698,7 +723,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    delete[] mChannels;
 
    // Save metadata
-   WriteMetadata(mFormatContext,tags);
+   WriteMetadata(tags);
 
    return res;
 }
@@ -708,7 +733,7 @@ streamContext *FFmpegImportFileHandle::ReadNextFrame()
    streamContext *sc = NULL;
    AVPacket pkt;
 
-   if (FFmpegLibsInst->av_read_frame(mFormatContext,&pkt) < 0)
+   if (av_read_frame(mFormatContext,&pkt) < 0)
    {
       return NULL;
    }
@@ -724,11 +749,7 @@ streamContext *FFmpegImportFileHandle::ReadNextFrame()
    // When not all streams are selected for import this will happen very often.
    if (sc == NULL)
    {
-#if FFMPEG_STABLE
       av_free_packet(&pkt);
-#else
-      FFmpegLibsInst->av_free_packet(&pkt);
-#endif
       return (streamContext*)1;
    }
 
@@ -744,9 +765,9 @@ streamContext *FFmpegImportFileHandle::ReadNextFrame()
 
 int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
 {
-   int		nBytesDecoded;			
+   int      nBytesDecoded;          
    wxUint8 *pDecode = sc->m_pktDataPtr;
-   int		nDecodeSiz = sc->m_pktRemainingSiz;
+   int      nDecodeSiz = sc->m_pktRemainingSiz;
 
    sc->m_frameValid = 0;
 
@@ -765,18 +786,20 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
       }
    }
 
+   sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
+   sc->m_samplesize = av_get_bits_per_sample_fmt(sc->m_samplefmt) / 8;
+
+   unsigned int newsize = FFMAX(sc->m_pkt.size * sc->m_samplesize, AVCODEC_MAX_AUDIO_FRAME_SIZE);
    // Reallocate the audio sample buffer if it's smaller than the frame size.
-   if (!flushing)
+   if (newsize > sc->m_decodedAudioSamplesSiz )
    {
-      // av_fast_realloc() will only reallocate the buffer if m_decodedAudioSamplesSiz is 
-      // smaller than third parameter. It also returns new size in m_decodedAudioSamplesSiz
-      //\warning { for some reason using the following macro call right in the function call
-      // causes Audacity to crash in some unknown place. With "newsize" it works fine }
-      int newsize = FFMAX(sc->m_pkt.size*sizeof(*sc->m_decodedAudioSamples), AVCODEC_MAX_AUDIO_FRAME_SIZE);
-      sc->m_decodedAudioSamples = (int16_t*)FFmpegLibsInst->av_fast_realloc(sc->m_decodedAudioSamples, 
-         &sc->m_decodedAudioSamplesSiz,
-         newsize
-         );
+      if (sc->m_decodedAudioSamples)
+      {
+         av_free(sc->m_decodedAudioSamples);
+      }
+
+      sc->m_decodedAudioSamples = (uint8_t *) av_malloc(newsize);
+      sc->m_decodedAudioSamplesSiz = newsize;
 
       if (sc->m_decodedAudioSamples == NULL)
       {
@@ -785,13 +808,18 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
       }
    }
 
-   // avcodec_decode_audio2() expects the size of the output buffer as the 3rd parameter but
+   // avcodec_decode_audio3() expects the size of the output buffer as the 3rd parameter but
    // also returns the number of bytes it decoded in the same parameter.
    sc->m_decodedAudioSamplesValidSiz = sc->m_decodedAudioSamplesSiz;
-   nBytesDecoded = FFmpegLibsInst->avcodec_decode_audio2(sc->m_codecCtx, 
-      sc->m_decodedAudioSamples,		      // out
-      &sc->m_decodedAudioSamplesValidSiz,	// in/out
-      pDecode, nDecodeSiz);				   // in
+   AVPacket avpkt;
+   av_init_packet(&avpkt);
+   avpkt.data = pDecode;
+   avpkt.size = nDecodeSiz;
+   nBytesDecoded =
+      avcodec_decode_audio3(sc->m_codecCtx,
+                            (int16_t *)sc->m_decodedAudioSamples,    // out
+                            &sc->m_decodedAudioSamplesValidSiz,      // in/out
+                            &avpkt);                                 // in
 
    if (nBytesDecoded < 0)
    {
@@ -816,8 +844,6 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
 
 int FFmpegImportFileHandle::WriteData(streamContext *sc)
 {
-
-   size_t pos = 0;
    // Find the stream index in mScs array
    int streamid = -1;
    for (int i = 0; i < mNumStreams; i++)
@@ -835,21 +861,53 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    }
 
    // Allocate the buffer to store audio.
+   int insamples = sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize;
    int nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
-   int16_t **tmp = (int16_t**)malloc(sizeof(short*)*nChannels);
+   uint8_t **tmp = (uint8_t **) malloc(sizeof(uint8_t *) * nChannels);
    for (int chn = 0; chn < nChannels; chn++)
    {
-      tmp[chn] = (int16_t*)malloc(sizeof(int16_t)*sc->m_decodedAudioSamplesValidSiz/sizeof(int16_t)/sc->m_stream->codec->channels);
+      tmp[chn] = (uint8_t *) malloc(sc->m_osamplesize * (insamples / nChannels));
    }
 
-   // Separate the channels
+   // Separate the channels and convert input sample format to 16-bit
+   uint8_t *in = sc->m_decodedAudioSamples;
    int index = 0;
-   while (pos < sc->m_decodedAudioSamplesValidSiz/sizeof(int16_t))
+   int pos = 0;
+   while (pos < insamples)
    {
-      for (int chn=0; chn < sc->m_stream->codec->channels; chn++)
+      for (int chn = 0; chn < sc->m_stream->codec->channels; chn++)
       {
          if (chn < nChannels)
-            tmp[chn][index] = sc->m_decodedAudioSamples[pos];
+         {
+            switch (sc->m_samplefmt)
+            {
+               case SAMPLE_FMT_U8:
+                  ((int16_t *)tmp[chn])[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
+               break;
+               
+               case SAMPLE_FMT_S16:
+                  ((int16_t *)tmp[chn])[index] = (int16_t) *(int16_t *)in;
+               break;
+               
+               case SAMPLE_FMT_S32:
+                  ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1 << 31));
+               break;
+               
+               case SAMPLE_FMT_FLT:
+                  ((float *)tmp[chn])[index] = (float) *(float *)in;
+               break;
+               
+               case SAMPLE_FMT_DBL:
+                  ((float *)tmp[chn])[index] = (float) *(double *)in;
+               break;
+
+               default:
+                  wxLogError(wxT("Stream %d has unrecognized sample format %d."), streamid, sc->m_samplefmt);
+                  return 1;
+               break;
+            }
+         }
+         in += sc->m_samplesize;
          pos++;
       }
       index++;
@@ -858,7 +916,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    // Write audio into WaveTracks
    for (int chn=0; chn < nChannels; chn++)
    {
-      mChannels[streamid][chn]->Append((samplePtr)tmp[chn],int16Sample,index);
+      mChannels[streamid][chn]->Append((samplePtr)tmp[chn],sc->m_osamplefmt,index);
       free(tmp[chn]);
    }
 
@@ -889,20 +947,29 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    return updateResult;
 }
 
-void FFmpegImportFileHandle::WriteMetadata(AVFormatContext *avf,Tags *tags)
+void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
 {
    tags->Clear();
 
-   // We are assuming that tags are in UTF8.
-   // TODO: for some formats tags are not in UTF8. Detect and handle that.
-   tags->SetTag(TAG_TITLE,wxString::FromUTF8(avf->title));
-   tags->SetTag(TAG_ARTIST,wxString::FromUTF8(avf->author));
-   //tags->SetTag(TAG_COPYRIGHT,avf->copyright);
-   tags->SetTag(TAG_COMMENTS,wxString::FromUTF8(avf->comment));
-   tags->SetTag(TAG_ALBUM,wxString::FromUTF8(avf->album));
-   tags->SetTag(TAG_YEAR,avf->year);
-   tags->SetTag(TAG_TRACK,avf->track);
-   tags->SetTag(TAG_GENRE,wxString::FromUTF8(avf->genre));
+   GetMetadata(tags, TAG_TITLE, "title");
+   GetMetadata(tags, TAG_ARTIST, "author");
+//   GetMetadata(tags, TAG_COPYRIGHT, "copyright");
+   GetMetadata(tags, TAG_COMMENTS, "comment");
+   GetMetadata(tags, TAG_ALBUM, "album");
+   GetMetadata(tags, TAG_YEAR, "year");
+   GetMetadata(tags, TAG_TRACK, "track");
+   GetMetadata(tags, TAG_GENRE, "genre");
+}
+
+void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const char *name)
+{
+   AVMetadataTag *meta;
+
+   meta = av_metadata_get(mFormatContext->metadata, name, NULL, AV_METADATA_IGNORE_SUFFIX);
+   if (meta)
+   {
+      tags->SetTag(tag, wxString::FromUTF8(meta->value));
+   }
 }
 
 
@@ -915,14 +982,14 @@ FFmpegImportFileHandle::~FFmpegImportFileHandle()
 #endif
    if (FFmpegLibsInst->ValidLibsLoaded())
    {
-      if (mFormatContext) FFmpegLibsInst->av_close_input_file(mFormatContext);
-      FFmpegLibsInst->av_log_set_callback(FFmpegLibsInst->av_log_default_callback);
+      if (mFormatContext) av_close_input_file(mFormatContext);
+      av_log_set_callback(av_log_default_callback);
    }
 
    for (int i = 0; i < mNumStreams; i++)
    {
       if (mScs[i]->m_decodedAudioSamples != NULL)
-         FFmpegLibsInst->av_free(mScs[i]->m_decodedAudioSamples);
+         av_free(mScs[i]->m_decodedAudioSamples);
 
       delete mScs[i];
    }

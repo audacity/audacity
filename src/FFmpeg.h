@@ -39,6 +39,14 @@ extern "C" {
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
    #include <libavutil/fifo.h>
+
+   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 102, 0)
+   #define AVIOContext ByteIOContext
+   #endif
+
+   #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(52, 94, 1)
+   #define AVSampleFormat SampleFormat
+   #endif
 }
 #endif
 
@@ -61,9 +69,6 @@ extern "C" {
 
 // if you needed them, any other audacity header files would go here
 
-/* These defines apply whether or not ffmpeg is available */
-#define INITDYN(w,f) if ((*(void**)&this->f=(void*)w->GetSymbol(wxT(#f))) == NULL) { wxLogError(wxT("Failed to load symbol ") wxT(#f)); return false; };
-
 /// Callback function to catch FFmpeg log messages.
 void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl);
 
@@ -74,20 +79,6 @@ wxString GetFFmpegVersion(wxWindow *parent);
 
 /* from here on in, this stuff only applies when ffmpeg is available */
 #if defined(USE_FFMPEG)
-
-/* This is a bit shortsighted (matches only 0.5 exactly), but i can't come up with anything smarter at the moment */
-#if LIBAVFORMAT_VERSION_MAJOR == 52 && LIBAVFORMAT_VERSION_MINOR == 31 && LIBAVCODEC_VERSION_MAJOR == 52 && LIBAVCODEC_VERSION_MINOR == 20
-#define FFMPEG_STABLE 1
-#else
-#define FFMPEG_STABLE 0
-#endif
-
-int ufile_fopen(ByteIOContext **s, const wxString & name, int flags);
-
-#if defined(__WXMSW__)
-int modify_file_url_to_utf8(char* buffer, size_t buffer_size, const char* url);
-int modify_file_url_to_utf8(char* buffer, size_t buffer_size, const wchar_t* url);
-#endif
 
 //----------------------------------------------------------------------------
 // Attempt to load and enable/disable FFmpeg at startup
@@ -166,84 +157,6 @@ class FFmpegLibs
 public:
    FFmpegLibs();
    ~FFmpegLibs();
-
-   void              (*av_log_set_callback)           (void (*)(void*, int, const char*, va_list));
-   void              (*av_log_default_callback)       (void* ptr, int level, const char* fmt, va_list vl);
-   void              (*av_free)                       (void *ptr);
-   unsigned          (*avcodec_version)               (void);
-   unsigned          (*avformat_version)              (void);
-   unsigned          (*avutil_version)                (void);
-   void              (*avcodec_init)                  (void);
-   AVCodec*          (*avcodec_find_encoder)          (enum CodecID id);
-   AVCodec*          (*avcodec_find_encoder_by_name)  (const char *name);
-   AVCodec*          (*avcodec_find_decoder)          (enum CodecID id);
-   AVCodec*          (*avcodec_find_decoder_by_name)  (const char *name);
-   enum CodecID      (*av_codec_get_id)               (const struct AVCodecTag * const *tags, unsigned int tag);
-   unsigned int      (*av_codec_get_tag)              (const struct AVCodecTag * const *tags, enum CodecID id);
-   void              (*avcodec_string)                (char *buf, int buf_size, AVCodecContext *enc, int encode);
-   void              (*avcodec_get_context_defaults)  (AVCodecContext *s);
-   AVCodecContext*   (*avcodec_alloc_context)         (void);
-   void              (*avcodec_get_frame_defaults)    (AVFrame *pic);
-   AVFrame*          (*avcodec_alloc_frame)           (void);
-   int               (*avcodec_open)                  (AVCodecContext *avctx, AVCodec *codec);
-   int               (*avcodec_decode_audio2)         (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, const uint8_t *buf, int buf_size);
-   int               (*avcodec_encode_audio)          (AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples);
-   int               (*avcodec_close)                 (AVCodecContext *avctx);
-   void              (*avcodec_register_all)          (void);
-   void              (*avcodec_flush_buffers)         (AVCodecContext *avctx);
-   int               (*av_get_bits_per_sample)        (enum CodecID codec_id);
-   int               (*av_get_bits_per_sample_format) (enum SampleFormat sample_fmt);
-   void*             (*av_fast_realloc)               (void *ptr, unsigned int *size, unsigned int min_size);
-   int               (*av_open_input_file)            (AVFormatContext **ic_ptr, const char *filename, AVInputFormat *fmt, int buf_size, AVFormatParameters *ap);
-   int               (*av_open_input_stream)          (AVFormatContext **ic_ptr, ByteIOContext *pb, const char *filename, AVInputFormat *fmt, AVFormatParameters *ap);
-   int               (*get_buffer)                    (ByteIOContext *s, unsigned char *buf, int size);
-   void              (*av_register_all)               (void);
-#if LIBAVFORMAT_VERSION_MAJOR < 53
-   int               (*register_protocol)             (URLProtocol *protocol);
-#endif
-   int               (*av_register_protocol)          (URLProtocol *protocol);
-   int               (*av_strstart)                   (const char *str, const char *pfx, const char **ptr);
-   int               (*av_find_stream_info)           (AVFormatContext *ic);
-   int               (*av_read_frame)                 (AVFormatContext *s, AVPacket *pkt);
-   int               (*av_seek_frame)                 (AVFormatContext *s, int stream_index, int64_t timestamp, int flags);
-   int               (*av_close_input_file)           (AVFormatContext *s);
-   int               (*av_index_search_timestamp)     (AVStream *st, int64_t timestamp, int flags);
-   int               (*av_write_header)               (AVFormatContext *s);
-   AVInputFormat*    (*av_iformat_next)               (AVInputFormat *f);
-   AVOutputFormat*   (*av_oformat_next)               (AVOutputFormat *f);
-   AVCodec*          (*av_codec_next)                 (AVCodec *c);
-   int               (*av_set_parameters)             (AVFormatContext *s, AVFormatParameters *ap);
-   int               (*url_open_protocol)             (URLContext **puc, struct URLProtocol *up, const char *filename, int flags);
-   int               (*url_fdopen)                    (ByteIOContext **s, URLContext *h);
-   int               (*url_close)                     (URLContext *h);
-   int               (*url_fopen)                     (ByteIOContext **s, const char *filename, int flags);
-   int64_t           (*url_fseek)                     (ByteIOContext *s, int64_t offset, int whence);
-   int               (*url_fclose)                    (ByteIOContext *s);
-   int               (*url_fsize)                     (ByteIOContext *s);
-   AVStream*         (*av_new_stream)                 (AVFormatContext *s, int id);
-   AVFormatContext*  (*av_alloc_format_context)       (void);
-   AVOutputFormat*   (*guess_format)                  (const char *short_name, const char *filename, const char *mime_type);
-   int               (*match_ext)                     (const char *filename, const char *extensions);
-   int               (*av_write_trailer)              (AVFormatContext *s);
-   int               (*av_interleaved_write_frame)    (AVFormatContext *s, AVPacket *pkt);
-   int               (*av_write_frame)                (AVFormatContext *s, AVPacket *pkt);
-   void              (*av_init_packet)                (AVPacket *pkt);
-   int               (*av_fifo_generic_write)         (AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int));   
-   void              (*av_fifo_free)                  (AVFifoBuffer *f);
-   int               (*av_fifo_size)                  (AVFifoBuffer *f);
-   void*             (*av_malloc)                     (unsigned int size);
-   void              (*av_freep)                      (void *ptr);
-   int64_t           (*av_rescale_q)                  (int64_t a, AVRational bq, AVRational cq);
-#if !FFMPEG_STABLE
-   void              (*av_free_packet)                (AVPacket *pkt);
-   AVFifoBuffer*     (*av_fifo_alloc)                 (unsigned int size);
-   int               (*av_fifo_generic_read)          (AVFifoBuffer *f, uint8_t *buf, int buf_size, int (*func)(void*, void*, int));
-   int               (*av_fifo_realloc2)              (AVFifoBuffer *f, unsigned int size);
-#else
-   int               (*av_fifo_init)                  (AVFifoBuffer *f, int size);
-   int               (*av_fifo_read)                  (AVFifoBuffer *f, uint8_t *buf, int buf_size);
-   void              (*av_fifo_realloc)               (AVFifoBuffer *f, unsigned int size);
-#endif
 
    ///! Finds libav* libraries
    ///\return true if found, false if not found
@@ -395,7 +308,7 @@ FFmpegLibs *PickFFmpegLibs();
 ///! anymore, or just decrements it's reference count
 void        DropFFmpegLibs();
 
-int ufile_fopen(ByteIOContext **s, const wxString & name, int flags);
+int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
 int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
 
 //moving from ImportFFmpeg.cpp to FFMpeg.h so other cpp files can use this struct.
@@ -421,6 +334,499 @@ typedef struct _streamContext
    int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
 } streamContext;
 #endif
+
+extern "C" {
+   // A little explanation of what's going on here.
+   //
+   // The FFmpeg function pointers used to be defined in the FFmpegLibs class and all calls would
+   // be done via the global class pointer FFmpegLibsInst.  This was fine as long as the prototypes
+   // defined in the class matched the actual functions in the FFmpeg libraries.  There was no
+   // compile time validation to prevent invalid function calls.  So, what follows is one way of
+   // getting the extra validation.
+   //
+   // Only one source file should define DEFINE_FFMPEG_POINTERS before including ffmpeg.h.  This
+   // will cause the compiler to dump all of the function pointers to a single object file and
+   // prevent duplicate symbol definitions during link.  This is currently done in ffmpeg.cpp.
+   //
+   // The FFMPEG_FUNCTION_WITH_RETURN and FFMPEG_FUNCTION_NO_RETURN macros do two things each:
+   // 1)  Define or reference the variable that contains the actual function pointer
+   // 2)  Define an inline function to pass control to the real function
+   //
+   // Since the macros redefine the real ffmpeg functions of the same name, the compiler will
+   // make sure that the definitions are the same.  If not, it will complain.  For this to occur,
+   // the functions MUST be defined in an extern "C" block otherwise the compiler just thinks the
+   // functions are being overloaded.
+   // 
+   // The compiler should optimize away the inline function since it just passes control to the real
+   // function and we should wind up with about the same function call we had before, only now it is
+   // safer due to the validation.
+   //
+   // The FFMPEG_FUNCTION_WITH_RETURN takes 4 arguments:
+   // 1)  The return type           <---|
+   // 2)  The function name             | Taken from the FFmpeg funciton prototype
+   // 3)  The function arguments    <---|
+   // 4)  The argument list to pass to the real function
+   //
+   // The FFMPEG_FUNCTION_NO_RETURN takes 3 arguments:
+   // 1)  The function name         <---| Taken from the FFmpeg funciton prototype
+   // 2)  The function arguments    <---|
+   // 3)  The argument list to pass to the real function
+   //
+   // The FFMPEG_INITDYN macro is responsible for retrieving the address of the real function
+   // and storing that address in the function pointer variable.  It will emit an error to the
+   // currently define log destination and return to the calling function.
+   //
+#if defined(DEFINE_FFMPEG_POINTERS)
+   #define FFX
+#else
+   #define FFX extern
+#endif
+
+#define FFMPEG_FUNCTION_WITH_RETURN(r, n, a, p)                         \
+   extern "C"                                                           \
+   {                                                                    \
+      FFX r (*n ## _fp) a;                                              \
+      inline r n a                                                      \
+      {                                                                 \
+         return n ## _fp p;                                             \
+      }                                                                 \
+   }
+
+#define FFMPEG_FUNCTION_NO_RETURN(n, a, p)                              \
+   extern "C"                                                           \
+   {                                                                    \
+      FFX void (*n ## _fp) a;                                           \
+      inline void n a                                                   \
+      {                                                                 \
+         n ## _fp p;                                                    \
+      }                                                                 \
+   }
+
+#define FFMPEG_INITDYN(w, f)                                            \
+   {                                                                    \
+      wxLogNull off;                                                    \
+      *(void**)&f ## _fp = (void*)w->GetSymbol(wxT(#f));                \
+   }                                                                    \
+   if (f ## _fp == NULL)                                                \
+   {                                                                    \
+      wxLogError(wxT("Failed to load symbol ") wxT(#f));                \
+      return false;                                                     \
+   }
+
+#define FFMPEG_INITALT(w, f, a)                                         \
+   {                                                                    \
+      wxLogNull off;                                                    \
+      *(void**)&f ## _fp = (void*)w->GetSymbol(wxT(#f));                \
+   }                                                                    \
+   if (f ## _fp == NULL)                                                \
+   {                                                                    \
+      {                                                                 \
+         wxLogNull off;                                                 \
+         *(void**)&f ## _fp = (void*)w->GetSymbol(wxT(#a));             \
+      }                                                                 \
+      if (f ## _fp == NULL)                                             \
+      {                                                                 \
+         wxLogError(wxT("Failed to load symbol ") wxT(#f));             \
+         return false;                                                  \
+      }                                                                 \
+   }
+
+   // 
+   // libavutil
+   //
+   FFMPEG_FUNCTION_WITH_RETURN(
+      unsigned,
+      avutil_version,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_log_set_callback,           
+      (void (*cb)(void*, int, const char*, va_list)),
+      (cb)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_log_default_callback,
+      (void* ptr, int level, const char* fmt, va_list vl),
+      (ptr, level, fmt, vl)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_free,
+      (void *ptr),
+      (ptr)
+   );
+
+   //
+   // libavcodec
+   //
+   FFMPEG_FUNCTION_WITH_RETURN(
+      unsigned,
+      avcodec_version,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      avcodec_init,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVCodec*,
+      avcodec_find_encoder,
+      (enum CodecID id),
+      (id)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVCodec*,
+      avcodec_find_encoder_by_name,
+      (const char *name),
+      (name)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVCodec*,
+      avcodec_find_decoder,
+      (enum CodecID id),
+      (id)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      unsigned int,
+      av_codec_get_tag,
+      (const struct AVCodecTag * const *tags, enum CodecID id),
+      (tags, id)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      avcodec_get_context_defaults,
+      (AVCodecContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_open,
+      (AVCodecContext *avctx, AVCodec *codec),
+      (avctx, codec);
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_decode_audio2,
+      (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, const uint8_t *buf, int buf_size),
+      (avctx, samples, frame_size_ptr, buf, buf_size)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_decode_audio3,
+      (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, AVPacket *avpkt),
+      (avctx, samples, frame_size_ptr, avpkt)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_encode_audio,
+      (AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples),
+      (avctx, buf, buf_size, samples)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_close,
+      (AVCodecContext *avctx),
+      (avctx)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      avcodec_register_all,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_get_bits_per_sample_format,
+      (enum SampleFormat sample_fmt),
+      (sample_fmt)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_get_bits_per_sample_fmt,
+      (enum AVSampleFormat sample_fmt),
+      (sample_fmt)
+   );
+
+   //
+   // libavformat
+   //
+   FFMPEG_FUNCTION_WITH_RETURN(
+      unsigned,
+      avformat_version,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      void*,
+      av_fast_realloc,
+      (void *ptr, unsigned int *size, unsigned int min_size),
+      (ptr, size, min_size)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_open_input_stream,
+      (AVFormatContext **ic_ptr, AVIOContext *pb, const char *filename, AVInputFormat *fmt, AVFormatParameters *ap),
+      (ic_ptr, pb, filename, fmt, ap)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      get_buffer,
+      (AVIOContext *s, unsigned char *buf, int size),
+      (s, buf, size)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_register_all,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_register_protocol,
+      (URLProtocol *protocol),
+      (protocol)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_find_stream_info,
+      (AVFormatContext *ic),
+      (ic)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_read_frame,
+      (AVFormatContext *s, AVPacket *pkt),
+      (s, pkt)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_seek_frame,
+      (AVFormatContext *s, int stream_index, int64_t timestamp, int flags),
+      (s, stream_index, timestamp, flags)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_close_input_file,
+      (AVFormatContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_write_header,
+      (AVFormatContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVInputFormat*,
+      av_iformat_next,
+      (AVInputFormat *f),
+      (f)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVOutputFormat*,
+      av_oformat_next,
+      (AVOutputFormat *f),
+      (f)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVCodec*,
+      av_codec_next,
+      (AVCodec *c),
+      (c)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_set_parameters,
+      (AVFormatContext *s, AVFormatParameters *ap),
+      (s, ap)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      url_open_protocol,
+      (URLContext **puc, struct URLProtocol *up, const char *filename, int flags),
+      (puc, up, filename, flags)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      url_open,
+      (URLContext **puc, const char *filename, int flags),
+      (puc, filename, flags)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      url_fdopen,
+      (AVIOContext **s, URLContext *h),
+      (s, h)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      url_close,
+      (URLContext *h),
+      (h)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      url_fopen,
+      (AVIOContext **s, const char *filename, int flags),
+      (s, filename, flags)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      url_fseek,
+      (AVIOContext *s, int64_t offset, int whence),
+      (s, offset, whence)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      url_fclose,
+      (AVIOContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      url_fsize,
+      (AVIOContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVStream*,
+      av_new_stream,
+      (AVFormatContext *s, int id),
+      (s, id)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVFormatContext*,
+      avformat_alloc_context,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVOutputFormat*,
+      av_guess_format,
+      (const char *short_name, const char *filename, const char *mime_type),
+      (short_name, filename, mime_type)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_match_ext,
+      (const char *filename, const char *extensions),
+      (filename, extensions)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_write_trailer,
+      (AVFormatContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_interleaved_write_frame,
+      (AVFormatContext *s, AVPacket *pkt),
+      (s, pkt)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_init_packet,
+      (AVPacket *pkt),
+      (pkt)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_fifo_generic_write,
+      (AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int)),
+      (f, src, size, func)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_fifo_free,
+      (AVFifoBuffer *f),
+      (f)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_fifo_size,
+      (AVFifoBuffer *f),
+      (f)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      void*,
+      av_malloc,
+      (unsigned int size),
+      (size)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_freep,
+      (void *ptr),
+      (ptr)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      av_rescale_q,
+      (int64_t a, AVRational bq, AVRational cq),
+      (a, bq, cq)
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_free_packet,
+      (AVPacket *pkt),
+      (pkt)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVFifoBuffer*,
+      av_fifo_alloc,
+      (unsigned int size),
+      (size)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_fifo_generic_read,
+      (AVFifoBuffer *f, void *buf, int buf_size, void (*func)(void*, void*, int)),
+      (f, buf, buf_size, func)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_fifo_realloc2,
+      (AVFifoBuffer *f, unsigned int size),
+      (f, size)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVMetadataTag *,
+      av_metadata_get,
+      (AVMetadata *m, const char *key, const AVMetadataTag *prev, int flags),
+      (m, key, prev, flags)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_metadata_set,
+      (AVMetadata **pm, const char *key, const char *value),
+      (pm, key, value)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_metadata_set2,
+      (AVMetadata **pm, const char *key, const char *value, int flags),
+      (pm, key, value, flags)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avio_read,
+      (AVIOContext *s, unsigned char *buf, int size),
+      (s, buf, size)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      avio_seek,
+      (AVIOContext *s, int64_t offset, int whence),
+      (s, offset, whence)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avio_close,
+      (AVIOContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_register_protocol2,
+      (URLProtocol *protocol, int size),
+      (protocol, size)
+   );
+};
 
 #endif // USE_FFMPEG
 #endif // __AUDACITY_FFMPEG__
