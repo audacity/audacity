@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-08-17 22:57+0100\n"
-"PO-Revision-Date: 2010-09-22 06:08-0000\n"
+"PO-Revision-Date: 2011-04-02 18:40-0000\n"
 "Last-Translator: Thomas Breinstrup <info@interlingua.dk>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -895,6 +895,9 @@ msgid ""
 "\n"
 "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
 msgstr ""
+"Dit projekt er i øjeblikket komplet. Der er ingen eksterne lydfiler.\n"
+"\n"
+"Hvis du ændrer projektet til at være afhængig af eksterne, importerede filer, vil det ikke længere være komplet. Hvis man vælger Gem uden at kopiere disse filer ind i projektet, kan man miste data."
 
 #: Dependencies.cpp:555
 msgid "Dependency Check"
@@ -2117,7 +2120,7 @@ msgstr "Forenklet visning"
 #. play, record, pause etc.
 #: Menus.cpp:591
 msgid "T&ransport"
-msgstr "T&ransport"
+msgstr "&Kommandoer"
 
 #: Menus.cpp:594
 #: toolbars/ControlToolBar.cpp:173
@@ -2679,11 +2682,11 @@ msgstr "Placering"
 
 #: Menus.cpp:2201
 msgid "Set Left Selection Boundary"
-msgstr ""
+msgstr "Angiv grænse for markering mod venstre"
 
 #: Menus.cpp:2237
 msgid "Set Right Selection Boundary"
-msgstr ""
+msgstr "Angiv grænse for markering mod højre"
 
 #: Menus.cpp:2614
 msgid "You must select a track first."
@@ -2783,11 +2786,11 @@ msgstr "Beskær filen til det markerede"
 #: Menus.cpp:3671
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr ""
+msgstr "Slettede og delte %.2f sekunder ved t=%.2f"
 
 #: Menus.cpp:3674
 msgid "Split Delete"
-msgstr ""
+msgstr "Slet og del"
 
 #: Menus.cpp:3695
 #, c-format
@@ -2859,11 +2862,11 @@ msgstr "Slet områder med etiketter"
 
 #: Menus.cpp:3845
 msgid "Split Delete Labels"
-msgstr ""
+msgstr "Slet og del etiketter"
 
 #: Menus.cpp:3845
 msgid "Split Deleted labeled regions"
-msgstr ""
+msgstr "Slettede og delte områder med etiketter"
 
 #: Menus.cpp:3857
 msgid "Silence Labels"
@@ -2875,11 +2878,11 @@ msgstr ""
 
 #: Menus.cpp:3866
 msgid "Split Labels"
-msgstr ""
+msgstr "Del etiketter"
 
 #: Menus.cpp:3866
 msgid "Split labeled regions"
-msgstr ""
+msgstr "Del områder med etiketter"
 
 #: Menus.cpp:3878
 msgid "Join Labels"
@@ -3585,7 +3588,7 @@ msgstr "Kunne ikke fjerne tidligere sikkerhedskopi af filen:"
 #: Project.cpp:4332
 #, c-format
 msgid "Actual Rate: %d"
-msgstr "Nuværende hastighed: %d"
+msgstr "Hastighed: %d"
 
 #: Resample.cpp:62
 msgid "Libresample by Dominic Mazzoni and Julius Smith"
@@ -6337,11 +6340,11 @@ msgstr "Dybde i procent"
 
 #: effects/Phaser.cpp:269
 msgid "Feedback (%):"
-msgstr ""
+msgstr "Feedback (%):"
 
 #: effects/Phaser.cpp:272
 msgid "Feedback in percent"
-msgstr ""
+msgstr "Feedback i procent"
 
 #: effects/Phaser.h:45
 msgid "Phaser..."
@@ -9795,6 +9798,8 @@ msgid ""
 "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
 msgstr ""
+"Du har kompileret Audacity med en ekstra knap, 'Output Sourcery'. Dette vil gemme en\n"
+"C-udgave af image-cachen, der kan kompileres ind som standard."
 
 #: prefs/ThemePrefs.cpp:101
 msgid ""
