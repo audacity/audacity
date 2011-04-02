@@ -819,28 +819,22 @@ void AudacityApp::OnTimer(wxTimerEvent& event)
          // if it is already shown, just bring it to the front instead of
          // creating a new one.
          // Also ensure the parent is behind it.
-        ((wxTopLevelWindow*)GetMissingAliasFileDialog()->GetParent())->Iconize(false);
+         // Note: this won't change the missing filename displayed in the dialog (user must close it first)
+         ((wxTopLevelWindow*)GetMissingAliasFileDialog()->GetParent())->Iconize(false);
          GetMissingAliasFileDialog()->GetParent()->Raise();
          GetMissingAliasFileDialog()->Raise();
       } else {
-         wxString errorMessage = _(
-"One or more external audio files could not be found.\n\
-It is possible they were moved, deleted, or the drive they \
-were on was unmounted.\n\
-Silence is being substituted for the affected audio.\n\
-Choose File > Check Dependencies to view the \
-original location of the missing files.");
-
          // find which project owns the blockfile
          // note: there may be more than 1, but just go with the first one.
          size_t numProjects = gAudacityProjects.Count();
+         wxString missingFileName;
          AudacityProject *offendingProject = NULL;
+
+         m_LastMissingBlockFileLock.Lock();
          if (numProjects == 1) {
             // if there is only one project open, no need to search
             offendingProject = gAudacityProjects[0];
-         } else if (numProjects > 1) {   
-            
-            m_LastMissingBlockFileLock.Lock();
+         } else if (numProjects > 1) {
             for (size_t i = 0; i < numProjects; i++)
             {
                // search each project for the blockfile
@@ -849,13 +843,27 @@ original location of the missing files.");
                   break;
                }
             }
-            m_LastMissingBlockFileLock.Unlock();
          }
+         missingFileName = ((AliasBlockFile*)m_LastMissingBlockFile)->GetAliasedFileName().GetFullPath();
+         m_LastMissingBlockFileLock.Unlock();
 
          // if there are no projects open, don't show the warning (user has closed it)
          if (offendingProject) {
             offendingProject->Iconize(false);
             offendingProject->Raise();
+
+            wxString errorMessage = wxString::Format(_(
+"One or more external audio files could not be found.\n\
+It is possible they were moved, deleted, or the drive they \
+were on was unmounted.\n\
+Silence is being substituted for the affected audio.\n\
+The first detected missing file is:\n\
+%s\n\
+There may be additional missing files.\n\
+Choose File > Check Dependencies to view a list of \
+locations of the missing files."), missingFileName.c_str());
+
+
             ShowAliasMissingDialog(offendingProject, _("Files Missing"),
                                    errorMessage, wxT(""), true);
          }
