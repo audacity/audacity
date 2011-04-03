@@ -643,7 +643,7 @@ bool Exporter::GetFilename()
       size_t i;
       bool overwritingMissingAlias;
       overwritingMissingAlias = false;
-      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+      for (i = 0; i < gAudacityProjects.GetCount(); i++) {
          AliasedFileArray aliasedFiles;
          FindDependencies(gAudacityProjects[i], &aliasedFiles);
          if (mFilename.GetFullPath() == aliasedFiles[i].mFileName.GetFullPath() &&
