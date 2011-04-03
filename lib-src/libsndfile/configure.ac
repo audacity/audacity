@@ -20,7 +20,7 @@ AM_SILENT_RULES([yes])
 
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
-AM_MAINTAINER_MODE([enable])
+AM_MAINTAINER_MODE
 
 dnl Add parameters for aclocal
 AC_SUBST(ACLOCAL_AMFLAGS, "-I M4")

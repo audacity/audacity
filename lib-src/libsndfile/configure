@@ -1479,7 +1479,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-silent-rules          less verbose build output (undo: `make V=1')
   --disable-silent-rules         verbose build output (undo: `make V=0')
-  --disable-maintainer-mode  disable make rules and dependencies not useful
+  --enable-maintainer-mode  enable make rules and dependencies not useful
 			  (and sometimes confusing) to the casual installer
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
@@ -3369,13 +3369,13 @@ AM_BACKSLASH='\'
 
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to disable maintainer-specific portions of Makefiles" >&5
-$as_echo_n "checking whether to disable maintainer-specific portions of Makefiles... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
+$as_echo_n "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
     # Check whether --enable-maintainer-mode was given.
 if test "${enable_maintainer_mode+set}" = set; then :
   enableval=$enable_maintainer_mode; USE_MAINTAINER_MODE=$enableval
 else
-  USE_MAINTAINER_MODE=yes
+  USE_MAINTAINER_MODE=no
 fi
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $USE_MAINTAINER_MODE" >&5
