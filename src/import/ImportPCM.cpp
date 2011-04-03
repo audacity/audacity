@@ -187,38 +187,55 @@ int PCMImportFileHandle::GetFileUncompressedBytes()
 static wxString AskCopyOrEdit()
 {
    wxString oldCopyPref = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+   bool firstTimeAsk    = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), true);
    bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
+
+   // The first time the user is asked we force it to 'copy'.
+   // This effectively does a one-time change to the preferences.
+   if (firstTimeAsk) {
+      if (oldCopyPref != wxT("copy")) {
+         gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
+         oldCopyPref = wxT("copy");
+      }
+      gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), (long) false);
+   }
 
    // check the current preferences for whether or not we should ask the user about this.
    if (oldAskPref) {
       wxString newCopyPref = wxT("copy");
-      wxDialog dialog(NULL, -1, wxString(_("Importing Uncompressed Audio Files")));
+      wxDialog dialog(NULL, -1, wxString(_("Warning")));
 
       wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
       dialog.SetSizer(vbox);
 
-      wxStaticText *message = new wxStaticText(&dialog, -1, wxString::Format(_("You can import uncompressed audio files by copying them into the project, \
-or by reading them directly from their current location (without copying).\n\n\
+      wxStaticText *message = new wxStaticText(&dialog, -1, wxString::Format(_("\
+When importing uncompressed audio files you can either copy them \
+into the project, or read them directly from their current location (without copying.)\n\n\
 Your current preference is set to %s.\n\n\
 \
-Reading the files directly allows you to play or edit them almost immediately.\n\
-It is less safe than copying in, because you must retain the files with their\
+Reading the files directly allows you to play or edit them almost immediately.  \
+This is less safe than copying in, because you must retain the files with their \
 original names in their original location.\n\
 File > Check Dependencies will show the original names and location of any files that you are reading directly.\n\n\
 \
-How do you want to import The current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
+How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
       message->Wrap(500);
                                
       vbox->Add(message, 1, wxALL | wxEXPAND, 10);
+      
+      wxStaticBox *box = new wxStaticBox(&dialog, -1, _("Choose an import method"));
+      wxStaticBoxSizer *boxsizer = new wxStaticBoxSizer(box, wxVERTICAL);
 
-      wxRadioButton *copyRadio  = new wxRadioButton(&dialog, -1, _("Make a copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-      vbox->Add(copyRadio, 0, wxALL);
+      wxRadioButton *copyRadio  = new wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+      boxsizer->Add(copyRadio, 0, wxALL);
 
-      wxRadioButton *aliasRadio = new wxRadioButton(&dialog, -1, _("Read the files directly from the original (faster)"));
-      vbox->Add(aliasRadio, 0, wxALL);
+      wxRadioButton *aliasRadio = new wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
+      boxsizer->Add(aliasRadio, 0, wxALL);
 
-      wxCheckBox *dontAskNextTimeBox = new wxCheckBox(&dialog, -1, _("Don't ask again and always use my choice above"));
-      vbox->Add(dontAskNextTimeBox, 0, wxALL);
+      wxCheckBox *dontAskNextTimeBox = new wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
+      boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
+      vbox->Add(boxsizer, 0, wxALL, 10);
+      
 
       wxRadioButton *prefsRadio = oldCopyPref == wxT("copy") ? copyRadio : aliasRadio;
       prefsRadio->SetValue(true);
