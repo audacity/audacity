@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -137,7 +137,7 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 		return SFE_INTERNAL ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 		samplesperblock = 2 + 2 * (blockalign - 7 * psf->sf.channels) / psf->sf.channels ;
 
 	pmssize = sizeof (MSADPCM_PRIVATE) + blockalign + 3 * psf->sf.channels * samplesperblock ;
@@ -159,7 +159,7 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 		return SFE_INTERNAL ;
 		} ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	pms->dataremaining	 = psf->datalength ;
 
 		if (psf->datalength % pms->blocksize)
@@ -185,7 +185,7 @@ wav_w64_msadpcm_init	(SF_PRIVATE *psf, int blockalign, int samplesperblock)
 		psf->read_double	= msadpcm_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	pms->samples = pms->dummydata ;
 
 		pms->samplecount = 0 ;
@@ -764,7 +764,7 @@ msadpcm_close	(SF_PRIVATE *psf)
 
 	pms = (MSADPCM_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*  Now we know static int for certain the length of the file we can
 		**  re-write the header.
 		*/

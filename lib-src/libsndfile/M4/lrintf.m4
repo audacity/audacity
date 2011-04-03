@@ -1,4 +1,4 @@
-dnl @synopsis AC_C99_FUNC_LRINTF
+dnl @synopsis MN_C99_FUNC_LRINTF
 dnl
 dnl Check whether C99's lrintf function is available.
 dnl @version 1.3	Feb 12 2002
@@ -10,7 +10,7 @@ dnl and this permission notice appear in all copies.  No representations are
 dnl made about the suitability of this software for any purpose.  It is 
 dnl provided "as is" without express or implied warranty.
 dnl
-AC_DEFUN([AC_C99_FUNC_LRINTF],
+AC_DEFUN([MN_C99_FUNC_LRINTF],
 [AC_CACHE_CHECK(for lrintf,
   ac_cv_c99_lrintf,
 [
@@ -33,5 +33,5 @@ if test "$ac_cv_c99_lrintf" = yes; then
   AC_DEFINE(HAVE_LRINTF, 1,
             [Define if you have C99's lrintf function.])
 fi
-])# AC_C99_FUNC_LRINTF
+])# MN_C99_FUNC_LRINTF
 

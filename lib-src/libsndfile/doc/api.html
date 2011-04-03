@@ -3,12 +3,13 @@
 
 <HEAD>
 	<TITLE>
-	The libsndfile API.
+	The libsndfile API
 	</TITLE>
 	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
 	<META NAME="Description" CONTENT="The libsndfile API.">
 	<META NAME="Keywords"    CONTENT="WAV AIFF AU libsndfile sound audio dsp Linux">
-	<LINK REL=StyleSheet HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="print.css" TYPE="text/css" MEDIA="print">
 </HEAD>
 
 <BODY>
@@ -34,9 +35,15 @@
 	unambiguous.
 	However, since maintaining the documentation is the least fun part of working
 	on libsndfile, these docs can and do fall behind the behaviour of library.
-	If any errors omissions or ambiguities are found, please notify
-		<A HREF="m&#97;ilt&#111;:&#101;rikd&#64;z&#105;p.&#99;om.au">
-	Erik de Castro Lopo</a>.
+	If any errors, omissions or ambiguities are found, please notify me (erikd)
+	at mega-nerd dot com.
+</P>
+<!-- pepper -->
+<P>
+	To supplement this reference documentation, there are simple example programs
+	included in the source code tarball.
+	The test suite which is also part of the source code tarball is also a good
+	place to look for the correct usage of the library functions.
 </P>
 <!-- pepper -->
 <P>
@@ -46,7 +53,7 @@
 	</B>
 </P>
 
-<H2><B>SYNOPSIS</B></H2>
+<H2><B>Synopsis</B></H2>
 <P>
 The functions of libsndfile are defined as follows:
 </P>
@@ -57,7 +64,7 @@ The functions of libsndfile are defined as follows:
 
       SNDFILE*    <A HREF="#open">sf_open</A>          (const char *path, int mode, SF_INFO *sfinfo) ;
       SNDFILE*    <A HREF="#open_fd">sf_open_fd</A>       (int fd, int mode, SF_INFO *sfinfo, int close_desc) ;
-
+      SNDFILE* 	  <A HREF="#open_virtual">sf_open_virtual</A>  (SF_VIRTUAL_IO *sfvirtual, int mode, SF_INFO *sfinfo, void *user_data) ;
       int         <A HREF="#check">sf_format_check</A>  (const SF_INFO *info) ;
 
       sf_count_t  <A HREF="#seek">sf_seek</A>          (SNDFILE *sndfile, sf_count_t frames, int whence) ;
@@ -186,6 +193,10 @@ Not all combinations of endian-ness and major and minor file types are valid.
           SF_FORMAT_SD2          = 0x160000,     /* Sound Designer 2 */
           SF_FORMAT_FLAC         = 0x170000,     /* FLAC lossless file format */
           SF_FORMAT_CAF          = 0x180000,     /* Core Audio File format */
+          SF_FORMAT_WVE          = 0x190000,     /* Psion WVE format */
+          SF_FORMAT_OGG          = 0x200000,     /* Xiph OGG container */
+          SF_FORMAT_MPC2K        = 0x210000,     /* Akai MPC 2000 sampler */
+          SF_FORMAT_RF64         = 0x220000,     /* RF64 WAV file */
 
           /* Subtypes from here on. */
 
@@ -219,6 +230,8 @@ Not all combinations of endian-ness and major and minor file types are valid.
           SF_FORMAT_DPCM_8       = 0x0050,       /* 8 bit differential PCM (XI only) */
           SF_FORMAT_DPCM_16      = 0x0051,       /* 16 bit differential PCM (XI only) */
 
+          SF_FORMAT_VORBIS       = 0x0060,       /* Xiph Vorbis encoding. */
+
           /* Endian-ness options. */
 
           SF_ENDIAN_FILE         = 0x00000000,   /* Default file endian-ness. */
@@ -238,10 +251,12 @@ memory allocated during the call to sf_open().
 </P>
 <!-- pepper -->
 <P>
-On success, the sf_open function returns a non NULL pointer which should be
+On success, the sf_open function returns a non-NULL pointer which should be
 passed as the first parameter to all subsequent libsndfile calls dealing with
 that audio file.
 On fail, the sf_open function returns a NULL pointer.
+An explanation of the error can obtained by passing NULL to
+	<A HREF="#error">sf_strerror</A>.
 </P>
 
 <A NAME="open_fd"></A>
@@ -251,6 +266,11 @@ On fail, the sf_open function returns a NULL pointer.
       SNDFILE*  sf_open_fd (int fd, int mode, SF_INFO *sfinfo, int close_desc) ;
 </PRE>
 
+<P>
+<b>Note:</b> On Microsoft Windows, this function does not work if the
+application and the libsndfile DLL are linked to different versions of the
+Microsoft C runtime DLL.
+</P>
 <P>
 The second open function takes a file descriptor of a file that has already been
 opened.
@@ -280,11 +300,91 @@ parameter was TRUE when the sf_open_fd() function was called.
 </P>
 
 <P>
-On success, the sf_open_fd function returns a non NULL pointer which should be
+On success, the sf_open_fd function returns a non-NULL pointer which should be
 passed as the first parameter to all subsequent libsndfile calls dealing with
 that audio file.
 On fail, the sf_open_fd function returns a NULL pointer.
 </P>
+
+<A NAME="open_virtual"></A>
+<h3><b>Virtual File Open Function</b></h3>
+<pre>
+      SNDFILE* 	sf_open_virtual	(SF_VIRTUAL_IO *sfvirtual, int mode, SF_INFO *sfinfo, void *user_data) ;
+</pre>
+<p>
+	Opens a soundfile from a virtual file I/O context which is provided
+	by the caller. This is usually used to interface libsndfile to a stream or buffer
+	based system. Apart from the sfvirtual and the user_data parameters this function behaves
+	like <a href="#open">sf_open</a>.
+</p>
+
+<pre>
+      typedef struct
+      {    sf_vio_get_filelen  get_filelen ;
+           sf_vio_seek         seek ;
+           sf_vio_read         read ;
+           sf_vio_write        write ;
+           sf_vio_tell         tell ;
+      } SF_VIRTUAL_IO ;
+</pre>
+<p>
+Libsndfile calls the callbacks provided by the SF_VIRTUAL_IO structure when opening, reading
+and writing to the virtual file context. The user_data pointer is a user defined context which
+will be available in the callbacks.
+</p>
+<pre>
+      typedef sf_count_t  (*sf_vio_get_filelen) (void *user_data) ;
+      typedef sf_count_t  (*sf_vio_seek)        (sf_count_t offset, int whence, void *user_data) ;
+      typedef sf_count_t  (*sf_vio_read)        (void *ptr, sf_count_t count, void *user_data) ;
+      typedef sf_count_t  (*sf_vio_write)       (const void *ptr, sf_count_t count, void *user_data) ;
+      typedef sf_count_t  (*sf_vio_tell)        (void *user_data) ;
+</pre>
+<h4>sf_vio_get_filelen</h4>
+<pre>
+      typedef sf_count_t  (*sf_vio_get_filelen) (void *user_data) ;
+</pre>
+<p>
+The virtual file contex must return the length of the virtual file in bytes.<br>
+</p>
+<h4>sf_vio_seek</h4>
+<pre>
+      typedef sf_count_t  (*sf_vio_seek)        (sf_count_t offset, int whence, void *user_data) ;
+</pre>
+<p>
+The virtual file context must seek to offset using the seek mode provided by whence which is one of<br>
+</p>
+<pre>
+      SEEK_CUR
+      SEEK_SET
+      SEEK_END
+</pre>
+<p>
+The return value must contain the new offset in the file.
+</p>
+<h4>sf_vio_read</h4>
+<pre>
+      typedef sf_count_t  (*sf_vio_read)        (void *ptr, sf_count_t count, void *user_data) ;
+</pre>
+<p>
+The virtual file context must copy ("read") "count" bytes into the
+buffer provided by ptr and return the count of actually copied bytes.
+</p>
+<h4>sf_vio_write</h4>
+<pre>
+      typedef sf_count_t  (*sf_vio_write)       (const void *ptr, sf_count_t count, void *user_data) ;
+</pre>
+<p>
+The virtual file context must process "count" bytes stored in the
+buffer passed with ptr and return the count of actually processed bytes.<br>
+</p>
+<h4>sf_vio_tell</h4>
+<pre>
+      typedef sf_count_t  (*sf_vio_tell)        (void *user_data) ;
+</pre>
+<p>
+Return the current position of the virtual file context.<br>
+</p>
+
 
 <A NAME="check"></A>
 <BR><H2><B>Format Check Function</B></H2>
@@ -542,6 +642,12 @@ same as the frames parameter).
 </PRE>
 
 <P>
+<b>Note:</b> Unless you are writing an external decoder/encode that uses
+libsndfile to handle the file headers, you should not be using these
+functions.
+</P>
+
+<P>
 The raw read and write functions read raw audio data from the audio file (not to be
 confused with reading RAW header-less PCM files). The number of bytes read or written
 must always be an integer multiple of the number of channels multiplied by the number
@@ -591,7 +697,7 @@ The <B>str_type</B> parameter can be any one of the following string types:
 </PRE>
 
 <P>
-The sf_get_string() function returns the specificed string if it exists and a
+The sf_get_string() function returns the specified string if it exists and a
 NULL pointer otherwise.
 In addition to the string ids above, SF_STR_FIRST (== SF_STR_TITLE) and
 SF_STR_LAST (always the same as the highest numbers string id) are also
@@ -648,7 +754,7 @@ would mean that all sample values read from the file will be zero.
 In order to read these files correctly using integer read methods, it is recommended
 that you use the
      <A HREF="command.html">sf_command</A>
-interface a command of
+interface, a command of
      <A HREF="command.html#SFC_SET_SCALE_FLOAT_INT_READ">SFC_SET_SCALE_FLOAT_INT_READ</A>
 and a parameter of SF_TRUE to force correct scaling.
 </P>
@@ -660,7 +766,7 @@ and a parameter of SF_TRUE to force correct scaling.
 		<A HREF="http://www.mega-nerd.com/libsndfile/">here</A>.
 </P>
 <P>
-Version : 1.0.18
+Version : 1.0.24
 </P>
 <!-- pepper -->
 <!-- pepper -->

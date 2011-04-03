@@ -116,7 +116,6 @@
 		1707402C0988EEBA008541CC /* dwvw.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734A70988D6AD008541CC /* dwvw.c */; };
 		1707402D0988EEBA008541CC /* file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734A80988D6AD008541CC /* file_io.c */; };
 		1707402E0988EEBA008541CC /* float32.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734A90988D6AD008541CC /* float32.c */; };
-		1707402F0988EEBA008541CC /* float_cast.h in Headers */ = {isa = PBXBuildFile; fileRef = 170734AA0988D6AD008541CC /* float_cast.h */; };
 		170740300988EEBA008541CC /* g721.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734B50988D6AD008541CC /* g721.c */; };
 		170740310988EEBA008541CC /* g723_16.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734B60988D6AD008541CC /* g723_16.c */; };
 		170740320988EEBA008541CC /* g723_24.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734B70988D6AD008541CC /* g723_24.c */; };
@@ -1025,6 +1024,9 @@
 		28884971131B6CF600B59735 /* vi.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884940131B6CF600B59735 /* vi.po */; };
 		28884972131B6CF600B59735 /* zh_TW.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884941131B6CF600B59735 /* zh_TW.po */; };
 		28884973131B6CF600B59735 /* zh.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884942131B6CF600B59735 /* zh.po */; };
+		288A544B1346D1BA0050D774 /* chanmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A54481346D1BA0050D774 /* chanmap.c */; };
+		288A544C1346D1BA0050D774 /* chanmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 288A54491346D1BA0050D774 /* chanmap.h */; };
+		288A544D1346D1BA0050D774 /* id3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A544A1346D1BA0050D774 /* id3.c */; };
 		2891B2870C531D2C0044FBE3 /* FindClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2891B2850C531D2C0044FBE3 /* FindClipping.cpp */; };
 		2892CE24131AFAE200E1E17D /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
 		2892CE25131AFAEF00E1E17D /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
@@ -1682,7 +1684,6 @@
 		170734A70988D6AD008541CC /* dwvw.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = dwvw.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734A80988D6AD008541CC /* file_io.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = file_io.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734A90988D6AD008541CC /* float32.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = float32.c; sourceTree = "<group>"; tabWidth = 3; };
-		170734AA0988D6AD008541CC /* float_cast.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = float_cast.h; sourceTree = "<group>"; tabWidth = 3; };
 		170734B50988D6AD008541CC /* g721.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = g721.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734B60988D6AD008541CC /* g723_16.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = g723_16.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734B70988D6AD008541CC /* g723_24.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = g723_24.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -2839,6 +2840,9 @@
 		28884940131B6CF600B59735 /* vi.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = vi.po; path = ../locale/vi.po; sourceTree = SOURCE_ROOT; };
 		28884941131B6CF600B59735 /* zh_TW.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh_TW.po; path = ../locale/zh_TW.po; sourceTree = SOURCE_ROOT; };
 		28884942131B6CF600B59735 /* zh.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh.po; path = ../locale/zh.po; sourceTree = SOURCE_ROOT; };
+		288A54481346D1BA0050D774 /* chanmap.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = chanmap.c; sourceTree = "<group>"; };
+		288A54491346D1BA0050D774 /* chanmap.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; path = chanmap.h; sourceTree = "<group>"; };
+		288A544A1346D1BA0050D774 /* id3.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = id3.c; sourceTree = "<group>"; };
 		288F0977131A3EE00008E860 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = LICENSE.txt; path = ../LICENSE.txt; sourceTree = "<group>"; };
 		288F097A131A3F130008E860 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = README.txt; path = ../README.txt; sourceTree = "<group>"; };
 		2891B2850C531D2C0044FBE3 /* FindClipping.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FindClipping.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3547,6 +3551,8 @@
 				1707349C0988D6AD008541CC /* avr.c */,
 				283A11A40A2C0DE7004372C4 /* broadcast.c */,
 				176EE9DB09A2EC1000188F3B /* caf.c */,
+				288A54481346D1BA0050D774 /* chanmap.c */,
+				288A54491346D1BA0050D774 /* chanmap.h */,
 				287DBE840F3F6B2700C5BBED /* chunk.c */,
 				1707349D0988D6AD008541CC /* command.c */,
 				1707349E0988D6AD008541CC /* common.c */,
@@ -3559,10 +3565,10 @@
 				170734A80988D6AD008541CC /* file_io.c */,
 				176EE9DC09A2EC1000188F3B /* flac.c */,
 				170734A90988D6AD008541CC /* float32.c */,
-				170734AA0988D6AD008541CC /* float_cast.h */,
 				176EE9DD09A2EC1000188F3B /* g72x.c */,
 				170734EA0988D6AD008541CC /* gsm610.c */,
 				170734EB0988D6AD008541CC /* htk.c */,
+				288A544A1346D1BA0050D774 /* id3.c */,
 				170734EC0988D6AD008541CC /* ima_adpcm.c */,
 				287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */,
 				287DBE860F3F6B2700C5BBED /* ima_oki_adpcm.h */,
@@ -5981,7 +5987,6 @@
 			files = (
 				170740270988EEBA008541CC /* common.h in Headers */,
 				170740280988EEBA008541CC /* config.h in Headers */,
-				1707402F0988EEBA008541CC /* float_cast.h in Headers */,
 				170740350988EEBA008541CC /* g72x.h in Headers */,
 				170740360988EEBA008541CC /* g72x_priv.h in Headers */,
 				170740390988EEBA008541CC /* config.h in Headers */,
@@ -5992,6 +5997,7 @@
 				1707405E0988EEBA008541CC /* sndfile.h in Headers */,
 				170740680988EEBA008541CC /* wav_w64.h in Headers */,
 				287DBE8C0F3F6B2700C5BBED /* ima_oki_adpcm.h in Headers */,
+				288A544C1346D1BA0050D774 /* chanmap.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7103,7 +7109,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\ntouch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\nif [ \"$ACTION\" = \"install\" ]\nthen\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity.sh'\nelse\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\nfi \n\nexit 0\n";
+			shellScript = "if [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\nif [ \"$ACTION\" = \"install\" ]\nthen\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity.sh'\nelse\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\nfi \n\nexit 0\n";
 		};
 		17073FEB0988E6C9008541CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7357,6 +7363,8 @@
 				287DBE8B0F3F6B2700C5BBED /* ima_oki_adpcm.c in Sources */,
 				287DBE8D0F3F6B2700C5BBED /* mpc2k.c in Sources */,
 				287DBE8E0F3F6B2700C5BBED /* rf64.c in Sources */,
+				288A544B1346D1BA0050D774 /* chanmap.c in Sources */,
+				288A544D1346D1BA0050D774 /* id3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

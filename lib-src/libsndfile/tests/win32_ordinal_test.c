@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2006-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@
 
 #include <string.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <sys/types.h>
 
 #include "utils.h"
@@ -48,7 +47,7 @@
 
 
 static const char * locations [] =
-{	"../src/", "src/", "../src/.libs/", "src/.libs/",
+{	".", "../src/", "src/", "../src/.libs/", "src/.libs/",
 	NULL
 } ; /* locations. */
 

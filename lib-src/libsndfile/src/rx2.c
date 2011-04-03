@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -306,7 +306,7 @@ rx2_open	(SF_PRIVATE *psf)
 static int
 rx2_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*  Now we know for certain the length of the file we can re-write
 		**	correct values for the FORM, 8SVX and BODY chunks.
 		*/

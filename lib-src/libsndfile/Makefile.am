@@ -9,13 +9,16 @@ endif
 SUBDIRS = M4 man doc Win32 src $(octave_dir) examples regtest tests programs
 DIST_SUBDIRS = M4 man doc Win32 src Octave examples regtest tests programs
 
-EXTRA_DIST = libsndfile.spec.in sndfile.pc.in Mingw-make-dist.sh
+EXTRA_DIST = libsndfile.spec.in sndfile.pc.in
 
+CLEANFILES = *~
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = sndfile.pc
 
 m4datadir = $(datadir)/aclocal
+
+#===============================================================================
 
 test: check-recursive
 
@@ -25,3 +28,11 @@ genfiles :
 	(cd tests ; make genfiles)
 
 
+testprogs :
+	(cd src ; make testprogs)
+	(cd tests ; make testprogs)
+
+
+test-tarball : build-test-tarball.mk
+	make all
+	make -f build-test-tarball.mk

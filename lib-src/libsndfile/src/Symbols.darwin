@@ -30,6 +30,7 @@ _sf_write_double
 _sf_strerror
 _sf_get_string
 _sf_set_string
+_sf_version_string
 _sf_open_fd
 _sf_open_virtual
 _sf_write_sync

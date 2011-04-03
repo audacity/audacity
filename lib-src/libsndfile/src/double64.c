@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -95,7 +95,7 @@ double64_init	(SF_PRIVATE *psf)
 
 	psf->blockwidth = sizeof (double) * psf->sf.channels ;
 
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	switch (psf->endian + double64_caps)
 		{	case (SF_ENDIAN_BIG + DOUBLE_CAN_RW_BE) :
 					psf->data_endswap = SF_FALSE ;
@@ -166,7 +166,7 @@ double64_init	(SF_PRIVATE *psf)
 			} ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	switch (psf->endian + double64_caps)
 		{	case (SF_ENDIAN_LITTLE + DOUBLE_CAN_RW_LE) :
 					psf->data_endswap = SF_FALSE ;

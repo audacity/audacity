@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2007-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2007-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@
 #include	<sndfile.h>
 
 #include	"utils.h"
-#include	"generate.h"
 
 #define	SAMPLE_RATE			44100
 #define	DATA_LENGTH			(SAMPLE_RATE / 8)

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -34,15 +34,17 @@
 #define		S_IXUSR	0000100	/* execute/search permission, owner */
 #endif
 
-#define	S_IRWXG		0000070	/* rwx, group */
-#define		S_IRGRP	0000040	/* read permission, group */
-#define		S_IWGRP	0000020	/* write permission, grougroup */
-#define		S_IXGRP	0000010	/* execute/search permission, group */
+/* Windows doesn't have group permissions so set all these to zero. */
+#define	S_IRWXG		0	/* rwx, group */
+#define		S_IRGRP	0	/* read permission, group */
+#define		S_IWGRP	0	/* write permission, grougroup */
+#define		S_IXGRP	0	/* execute/search permission, group */
 
-#define	S_IRWXO		0000007	/* rwx, other */
-#define		S_IROTH	0000004	/* read permission, other */
-#define		S_IWOTH	0000002	/* write permission, other */
-#define		S_IXOTH	0000001	/* execute/search permission, other */
+/* Windows doesn't have others permissions so set all these to zero. */
+#define	S_IRWXO		0	/* rwx, other */
+#define		S_IROTH	0	/* read permission, other */
+#define		S_IWOTH	0	/* write permission, other */
+#define		S_IXOTH	0	/* execute/search permission, other */
 
 #ifndef S_ISFIFO
 #define S_ISFIFO(mode)	(((mode) & _S_IFMT) == _S_IFIFO)

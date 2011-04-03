@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ int
 psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 {	static char lsf_name [] = PACKAGE "-" VERSION ;
 	static char bracket_name [] = " (" PACKAGE "-" VERSION ")" ;
-	int		k, str_len, len_remaining, str_flags, str_type_replace = 0 ;
+	int		k, str_len, len_remaining, str_flags ;
 
 	if (str == NULL)
 		return SFE_STR_BAD_STRING ;
@@ -42,7 +42,7 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 	str_len = strlen (str) ;
 
 	/* A few extra checks for write mode. */
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((psf->str_flags & SF_STR_ALLOW_START) == 0)
 			return SFE_STR_NO_SUPPORT ;
 		if (psf->have_written && (psf->str_flags & SF_STR_ALLOW_END) == 0)
@@ -64,7 +64,7 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 
 	/* Determine flags */
 	str_flags = SF_STR_LOCATE_START ;
-	if (psf->mode == SFM_RDWR || psf->have_written || str_type_replace)
+	if (psf->file.mode == SFM_RDWR || psf->have_written)
 	{	if ((psf->str_flags & SF_STR_ALLOW_END) == 0)
 			return SFE_STR_NO_ADD_END ;
 		str_flags = SF_STR_LOCATE_END ;
@@ -96,7 +96,7 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 	switch (str_type)
 	{	case SF_STR_SOFTWARE :
 				/* In write mode, want to append libsndfile-version to string. */
-				if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+				if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 				{	psf->strings [k].type = str_type ;
 					psf->strings [k].str = psf->str_end ;
 					psf->strings [k].flags = str_flags ;
@@ -110,9 +110,9 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 					*/
 					if (strstr (str, PACKAGE) == NULL && len_remaining > (int) (strlen (bracket_name) + str_len + 2))
 					{	if (strlen (str) == 0)
-							strncat (psf->str_end, lsf_name, len_remaining) ;
+							psf_strlcat (psf->str_end, sizeof (psf->str_storage), lsf_name) ;
 						else
-							strncat (psf->str_end, bracket_name, len_remaining) ;
+							psf_strlcat (psf->str_end, sizeof (psf->str_storage), bracket_name) ;
 						psf->str_end += strlen (psf->str_end) ;
 						} ;
 
@@ -130,6 +130,8 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 		case SF_STR_DATE :
 		case SF_STR_ALBUM :
 		case SF_STR_LICENSE :
+		case SF_STR_TRACKNUMBER :
+		case SF_STR_GENRE :
 				psf->strings [k].type = str_type ;
 				psf->strings [k].str = psf->str_end ;
 				psf->strings [k].flags = str_flags ;
@@ -161,7 +163,7 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 
 int
 psf_set_string (SF_PRIVATE *psf, int str_type, const char *str)
-{	if (psf->mode == SFM_READ)
+{	if (psf->file.mode == SFM_READ)
 		return SFE_STR_NOT_WRITE ;
 
 	return psf_store_string (psf, str_type, str) ;
@@ -208,7 +210,7 @@ hexdump (void *data, int len)
 			printf ("%02X ", ptr [k] & 0xFF) ;
 		printf ("   ") ;
 		for (k = 0 ; k < 16 ; k++)
-			printf ("%c", isprint (ptr [k]) ? ptr [k] : '.') ;
+			printf ("%c", psf_isprint (ptr [k]) ? ptr [k] : '.') ;
 		puts ("") ;
 		ptr += 16 ;
 		len -= 16 ;

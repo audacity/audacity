@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -41,6 +41,10 @@
 #include <unistd.h>
 #endif
 
+#include <sndfile.h>
+
+#include "common.h"
+
 #if HAVE_ALSA_ASOUNDLIB_H
 	#define ALSA_PCM_NEW_HW_PARAMS_API
 	#define ALSA_PCM_NEW_SW_PARAMS_API
@@ -48,7 +52,7 @@
 	#include <sys/time.h>
 #endif
 
-#if defined (__linux__)
+#if defined (__linux__) || defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
 	#include 	<fcntl.h>
 	#include 	<sys/ioctl.h>
 	#include 	<sys/soundcard.h>
@@ -56,6 +60,9 @@
 #elif (defined (__MACH__) && defined (__APPLE__))
 	#include <Carbon.h>
 	#include <CoreAudio/AudioHardware.h>
+
+#elif defined (HAVE_SNDIO_H)
+	#include <sndio.h>
 
 #elif (defined (sun) && defined (unix))
 	#include <fcntl.h>
@@ -67,8 +74,6 @@
 	#include <mmsystem.h>
 
 #endif
-
-#include	<sndfile.h>
 
 #define	SIGNED_SIZEOF(x)	((int) sizeof (x))
 #define	BUFFER_LEN			(2048)
@@ -348,12 +353,12 @@ alsa_write_float (snd_pcm_t *alsa_dev, float *data, int frames, int channels)
 **	Linux/OSS functions for playing a sound.
 */
 
-#if defined (__linux__)
+#if defined (__linux__) || defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
 
-static	int	linux_open_dsp_device (int channels, int srate) ;
+static	int	opensoundsys_open_device (int channels, int srate) ;
 
 static void
-linux_play (int argc, char *argv [])
+opensoundsys_play (int argc, char *argv [])
 {	static short buffer [BUFFER_LEN] ;
 	SNDFILE *sndfile ;
 	SF_INFO sfinfo ;
@@ -373,7 +378,7 @@ linux_play (int argc, char *argv [])
 			continue ;
 			} ;
 
-		audio_device = linux_open_dsp_device (sfinfo.channels, sfinfo.samplerate) ;
+		audio_device = opensoundsys_open_device (sfinfo.channels, sfinfo.samplerate) ;
 
 		subformat = sfinfo.format & SF_FORMAT_SUBMASK ;
 
@@ -411,53 +416,53 @@ linux_play (int argc, char *argv [])
 		} ;
 
 	return ;
-} /* linux_play */
+} /* opensoundsys_play */
 
 static int
-linux_open_dsp_device (int channels, int srate)
+opensoundsys_open_device (int channels, int srate)
 {	int fd, stereo, fmt ;
 
 	if ((fd = open ("/dev/dsp", O_WRONLY, 0)) == -1 &&
 		(fd = open ("/dev/sound/dsp", O_WRONLY, 0)) == -1)
-	{	perror ("linux_open_dsp_device : open ") ;
+	{	perror ("opensoundsys_open_device : open ") ;
 		exit (1) ;
 		} ;
 
 	stereo = 0 ;
 	if (ioctl (fd, SNDCTL_DSP_STEREO, &stereo) == -1)
 	{ 	/* Fatal error */
-		perror ("linux_open_dsp_device : stereo ") ;
+		perror ("opensoundsys_open_device : stereo ") ;
 		exit (1) ;
 		} ;
 
 	if (ioctl (fd, SNDCTL_DSP_RESET, 0))
-	{	perror ("linux_open_dsp_device : reset ") ;
+	{	perror ("opensoundsys_open_device : reset ") ;
 		exit (1) ;
 		} ;
 
 	fmt = CPU_IS_BIG_ENDIAN ? AFMT_S16_BE : AFMT_S16_LE ;
 	if (ioctl (fd, SNDCTL_DSP_SETFMT, &fmt) != 0)
-	{	perror ("linux_open_dsp_device : set format ") ;
+	{	perror ("opensoundsys_open_device : set format ") ;
 		exit (1) ;
   		} ;
 
 	if (ioctl (fd, SNDCTL_DSP_CHANNELS, &channels) != 0)
-	{	perror ("linux_open_dsp_device : channels ") ;
+	{	perror ("opensoundsys_open_device : channels ") ;
 		exit (1) ;
 		} ;
 
 	if (ioctl (fd, SNDCTL_DSP_SPEED, &srate) != 0)
-	{	perror ("linux_open_dsp_device : sample rate ") ;
+	{	perror ("opensoundsys_open_device : sample rate ") ;
 		exit (1) ;
 		} ;
 
 	if (ioctl (fd, SNDCTL_DSP_SYNC, 0) != 0)
-	{	perror ("linux_open_dsp_device : sync ") ;
+	{	perror ("opensoundsys_open_device : sync ") ;
 		exit (1) ;
 		} ;
 
 	return 	fd ;
-} /* linux_open_dsp_device */
+} /* opensoundsys_open_device */
 
 #endif /* __linux__ */
 
@@ -820,6 +825,66 @@ win32_play (int argc, char *argv [])
 #endif /* Win32 */
 
 /*------------------------------------------------------------------------------
+**	OpenBDS's sndio.
+*/
+
+#if defined (HAVE_SNDIO_H)
+
+static void
+sndio_play (int argc, char *argv [])
+{	struct sio_hdl	*hdl ;
+	struct sio_par	par ;
+	short	 	buffer [BUFFER_LEN] ;
+	SNDFILE	*sndfile ;
+	SF_INFO	sfinfo ;
+	int		k, readcount ;
+
+	for (k = 1 ; k < argc ; k++)
+	{	printf ("Playing %s\n", argv [k]) ;
+		if (! (sndfile = sf_open (argv [k], SFM_READ, &sfinfo)))
+		{	puts (sf_strerror (NULL)) ;
+			continue ;
+			} ;
+
+		if (sfinfo.channels < 1 || sfinfo.channels > 2)
+		{	printf ("Error : channels = %d.\n", sfinfo.channels) ;
+			continue ;
+			} ;
+
+		if ((hdl = sio_open (NULL, SIO_PLAY, 0)) == NULL)
+		{	fprintf (stderr, "open sndio device failed") ;
+			return ;
+			} ;
+
+		sio_initpar (&par) ;
+		par.rate = sfinfo.samplerate ;
+		par.pchan = sfinfo.channels ;
+		par.bits = 16 ;
+		par.sig = 1 ;
+		par.le = SIO_LE_NATIVE ;
+
+		if (! sio_setpar (hdl, &par) || ! sio_getpar (hdl, &par))
+		{	fprintf (stderr, "set sndio params failed") ;
+			return ;
+			} ;
+
+		if (! sio_start (hdl))
+		{	fprintf (stderr, "sndio start failed") ;
+			return ;
+			} ;
+
+		while ((readcount = sf_read_short (sndfile, buffer, BUFFER_LEN)))
+			sio_write (hdl, buffer, readcount * sizeof (short)) ;
+
+		sio_close (hdl) ;
+		} ;
+
+	return ;
+} /* sndio_play */
+
+#endif /* sndio */
+
+/*------------------------------------------------------------------------------
 **	Solaris.
 */
 
@@ -914,17 +979,13 @@ main (int argc, char *argv [])
 {
 	if (argc < 2)
 	{
-		printf ("\nUsage : %s <input sound file>\n\n", argv [0]) ;
+		printf ("\nUsage : %s <input sound file>\n\n", program_name (argv [0])) ;
+		printf ("  Using %s.\n\n", sf_version_string ()) ;
 #if (OS_IS_WIN32 == 1)
 		printf ("This is a Unix style command line application which\n"
 				"should be run in a MSDOS box or Command Shell window.\n\n") ;
 		printf ("Sleeping for 5 seconds before exiting.\n\n") ;
 
-		/* This is the officially blessed by microsoft way but I can't get
-		** it to link.
-		**     Sleep (15) ;
-		** Instead, use this:
-		*/
 		Sleep (5 * 1000) ;
 #endif
 		return 1 ;
@@ -936,9 +997,13 @@ main (int argc, char *argv [])
 			alsa_play (argc, argv) ;
 		else
 	#endif
-		linux_play (argc, argv) ;
+		opensoundsys_play (argc, argv) ;
+#elif defined (__FreeBSD_kernel__) || defined (__FreeBSD__)
+	opensoundsys_play (argc, argv) ;
 #elif (defined (__MACH__) && defined (__APPLE__))
 	macosx_play (argc, argv) ;
+#elif defined HAVE_SNDIO_H
+	sndio_play (argc, argv) ;
 #elif (defined (sun) && defined (unix))
 	solaris_play (argc, argv) ;
 #elif (OS_IS_WIN32 == 1)

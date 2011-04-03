@@ -1,0 +1,1 @@
+/* dummy file to satisfy include without having to patch libsndfile */

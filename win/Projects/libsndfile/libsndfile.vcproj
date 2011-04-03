@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;"
+				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;;&quot;..\..\..\lib-src\ffmpeg\win32&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;inline=__inline;LIBSNDFILE_PRIVATE_CONFIG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -105,7 +105,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;"
+				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;;&quot;..\..\..\lib-src\ffmpeg\win32&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;inline=__inline;LIBSNDFILE_PRIVATE_CONFIG"
 				StringPooling="true"
 				BasicRuntimeChecks="3"
@@ -171,7 +171,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;"
+				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;;&quot;..\..\..\lib-src\ffmpeg\win32&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;inline=__inline;LIBSNDFILE_PRIVATE_CONFIG"
 				StringPooling="true"
 				BasicRuntimeChecks="3"
@@ -237,7 +237,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;"
+				AdditionalIncludeDirectories=".;&quot;..\..\..\lib-src\libsndfile\include&quot;;&quot;..\..\..\lib-src\libsndfile\src&quot;;&quot;..\..\..\lib-src\ffmpeg\win32&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;inline=__inline;LIBSNDFILE_PRIVATE_CONFIG"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -311,6 +311,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\lib-src\libsndfile\src\chanmap.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\lib-src\libsndfile\src\chunk.c"
 				>
 			</File>
@@ -360,6 +364,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\lib-src\libsndfile\src\htk.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\lib-src\libsndfile\src\id3.c"
 				>
 			</File>
 			<File
@@ -494,6 +502,10 @@
 		<Filter
 			Name="Header Files"
 			>
+			<File
+				RelativePath="..\..\..\lib-src\libsndfile\src\chanmap.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\lib-src\libsndfile\src\common.h"
 				>

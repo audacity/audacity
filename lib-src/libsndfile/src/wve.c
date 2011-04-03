@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2007 Reuben Thomas
 **
 ** This program is free software; you can redistribute it and/or modify
@@ -58,12 +58,12 @@ wve_open (SF_PRIVATE *psf)
 	if (psf->is_pipe)
 		return SFE_WVE_NO_PIPE ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = wve_read_header (psf)))
 			return error ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_WVE)
 			return	SFE_BAD_OPEN_FORMAT ;
 
@@ -198,7 +198,7 @@ wve_write_header (SF_PRIVATE *psf, int calc_length)
 static int
 wve_close (SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	/*  Now we know for certain the length of the file we can re-write
 		**	the header.
 		*/

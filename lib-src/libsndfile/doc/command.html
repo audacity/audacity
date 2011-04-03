@@ -9,7 +9,8 @@
 	<!-- Another version at the bottom of the page.  -->
 	<META NAME="Description" CONTENT="The libsndfile API.">
 	<META NAME="Keywords"    CONTENT="WAV AIFF AU libsndfile sound audio dsp Linux">
-	<LINK REL=StyleSheet HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="print.css" TYPE="text/css" MEDIA="print">
 </HEAD>
 
 <BODY>
@@ -27,7 +28,7 @@
 	Most of these operations are performed on a per-file basis.
 </P>
 <P>
-	The cmd parameter is a integer identifier which is defined in &lt;sndfile.h&gt;.
+	The cmd parameter is an integer identifier which is defined in &lt;sndfile.h&gt;.
 	All of the valid command identifiers have names beginning with "SFC_".
 	Data is passed to and returned from the library by use of a void pointer.
 	The library will not read or write more than datasize bytes from the void pointer.
@@ -167,12 +168,12 @@
 
 <TR>
 	<TD><A HREF="#SFC_GET_CLIPPING">SFC_GET_CLIPPING</A></TD>
-	<TD>Retreive current clipping setting.</TD>
+	<TD>Retrieve current clipping setting.</TD>
 </TR>
 
 <TR>
 	<TD><A HREF="#SFC_GET_EMBED_FILE_INFO">SFC_GET_EMBED_FILE_INFO</A></TD>
-	<TD>Retreive information about audio files embedded inside other files.</TD>
+	<TD>Retrieve information about audio files embedded inside other files.</TD>
 </TR>
 
 <TR>
@@ -891,7 +892,7 @@ Example:
 <A NAME="SFC_GET_FORMAT_SUBTYPE"></A>
 <H2><BR><B>SFC_GET_FORMAT_SUBTYPE</B></H2>
 <P>
-Enumerate the subtypes (this function does not translate a sub type into
+Enumerate the subtypes (this function does not translate a subtype into
 a string describing that subtype).
 A typical use case might be retrieving a string description of all subtypes
 so that a dialog box can be filled in.
@@ -909,7 +910,7 @@ Parameters:
         datasize : sizeof (SF_FORMAT_INFO)
 </PRE>
 <P>
-Example 1: Retrieve all subytpes supported by the WAV format.
+Example 1: Retrieve all sybtypes supported by the WAV format.
 </P>
 <PRE>
         SF_FORMAT_INFO	format_info ;
@@ -1334,7 +1335,7 @@ Parameters:
 <A NAME="SFC_GET_BROADCAST_INFO"></A>
 <H2><BR><B>SFC_GET_BROADCAST_INFO</B></H2>
 <P>
-Retrieve the Broadcast Extention Chunk from WAV (and related) files.
+Retrieve the Broadcast Extension Chunk from WAV (and related) files.
 </P>
 <p>
 Parameters:
@@ -1367,7 +1368,7 @@ The SF_BROADCAST_INFO struct is defined in &lt;sndfile.h&gt; as:
 
 <DL>
 <DT>Return value: </DT>
-	<DD>SF_TRUE if the file contained a Broadcast Extention chunk or SF_FALSE
+	<DD>SF_TRUE if the file contained a Broadcast Extension chunk or SF_FALSE
 	otherwise.
 </DL>
 
@@ -1375,7 +1376,7 @@ The SF_BROADCAST_INFO struct is defined in &lt;sndfile.h&gt; as:
 <A NAME="SFC_SET_BROADCAST_INFO"></A>
 <H2><BR><B>SFC_SET_BROADCAST_INFO</B></H2>
 <P>
-Set the Broadcast Extention Chunk for WAV (and related) files.
+Set the Broadcast Extension Chunk for WAV (and related) files.
 </P>
 <p>
 Parameters:
@@ -1389,7 +1390,7 @@ Parameters:
 
 <DL>
 <DT>Return value: </DT>
-	<DD>SF_TRUE if setting the Broadcast Extention chunk was successful and SF_FALSE
+	<DD>SF_TRUE if setting the Broadcast Extension chunk was successful and SF_FALSE
 	otherwise.
 </DL>
 <!-- ========================================================================= -->
@@ -1401,7 +1402,7 @@ Parameters:
 		<A HREF="http://www.mega-nerd.com/libsndfile/">
 			http://www.mega-nerd.com/libsndfile/</A>.
 <BR>
-Version : 1.0.18
+Version : 1.0.24
 </P>
 
 </BODY>

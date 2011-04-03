@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -71,7 +71,7 @@ int
 dwd_open (SF_PRIVATE *psf)
 {	int	subformat, error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = dwd_read_header (psf)))
 			return error ;
 		} ;
@@ -81,7 +81,7 @@ dwd_open (SF_PRIVATE *psf)
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{
 		/*-psf->endian = SF_ENDIAN (psf->sf.format) ;
 		if (CPU_IS_LITTLE_ENDIAN && psf->endian == SF_ENDIAN_CPU)

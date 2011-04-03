@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -84,7 +84,7 @@ gsm610_init	(SF_PRIVATE *psf)
 		return SFE_INTERNAL ;
 		} ;
 
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		return SFE_BAD_MODE_RW ;
 
 	psf->sf.seekable = SF_FALSE ;
@@ -132,7 +132,7 @@ Need separate gsm_data structs for encode and decode.
 			break ;
 		} ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	if (psf->datalength % pgsm610->blocksize == 0)
 			pgsm610->blocks = psf->datalength / pgsm610->blocksize ;
 		else if (psf->datalength % pgsm610->blocksize == 1 && pgsm610->blocksize == GSM610_BLOCKSIZE)
@@ -162,7 +162,7 @@ Need separate gsm_data structs for encode and decode.
 		psf->read_double	= gsm610_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	pgsm610->blockcount = 0 ;
 		pgsm610->samplecount = 0 ;
 
@@ -406,7 +406,7 @@ gsm610_seek	(SF_PRIVATE *psf, int UNUSED (mode), sf_count_t offset)
 	newblock	= offset / pgsm610->samplesperblock ;
 	newsample	= offset % pgsm610->samplesperblock ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	if (psf->read_current != newblock * pgsm610->samplesperblock + newsample)
 		{	psf_fseek (psf, psf->dataoffset + newblock * pgsm610->samplesperblock, SEEK_SET) ;
 			pgsm610->blockcount = newblock ;
@@ -604,7 +604,7 @@ gsm610_close	(SF_PRIVATE *psf)
 
 	pgsm610 = (GSM610_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*	If a block has been partially assembled, write it out
 		**	as the final block.
 		*/

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -188,7 +188,9 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 		} ;
 
 	for (m = 0 ; m < 3 ; m++)
-	{	if ((k = sf_readf_int (file, data, 11)) != 11)
+	{	int n ;
+
+		if ((k = sf_readf_int (file, data, 11)) != 11)
 		{	printf ("Line %d: Incorrect read length (11 => %d).\n", __LINE__, k) ;
 			exit (1) ;
 			} ;
@@ -196,8 +198,8 @@ lcomp_test_int (const char *str, const char *filename, int filetype, double marg
 		for (k = 0 ; k < 11 ; k++)
 			if (error_function (data [k] / scale, orig [k + m * 11] / scale, margin))
 			{	printf ("Line %d: Incorrect sample (m = %d) (#%d : %d => %d).\n", __LINE__, m, k + m * 11, orig [k + m * 11], data [k]) ;
-				for (m = 0 ; m < 1 ; m++)
-					printf ("%d ", data [m]) ;
+				for (n = 0 ; n < 1 ; n++)
+					printf ("%d ", data [n]) ;
 				printf ("\n") ;
 				exit (1) ;
 				} ;

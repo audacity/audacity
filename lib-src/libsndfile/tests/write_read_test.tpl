@@ -1,6 +1,6 @@
 [+ AutoGen5 template c +]
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -345,9 +345,9 @@ main (int argc, char **argv)
 		} ;
 
 	if (do_all || ! strcmp (argv [1], "sds"))
-	{	pcm_test_char	("char.sds"		, SF_FORMAT_SDS | SF_FORMAT_PCM_S8, SF_TRUE) ;
-		pcm_test_short	("short.sds"	, SF_FORMAT_SDS | SF_FORMAT_PCM_16, SF_TRUE) ;
-		pcm_test_24bit	("24bit.sds"	, SF_FORMAT_SDS | SF_FORMAT_PCM_24, SF_TRUE) ;
+	{	pcm_test_char	("char.sds"		, SF_FORMAT_SDS | SF_FORMAT_PCM_S8, SF_FALSE) ;
+		pcm_test_short	("short.sds"	, SF_FORMAT_SDS | SF_FORMAT_PCM_16, SF_FALSE) ;
+		pcm_test_24bit	("24bit.sds"	, SF_FORMAT_SDS | SF_FORMAT_PCM_24, SF_FALSE) ;
 
 		empty_file_test ("empty_char.sds", SF_FORMAT_SDS | SF_FORMAT_PCM_S8) ;
 		empty_file_test ("empty_short.sds", SF_FORMAT_SDS | SF_FORMAT_PCM_16) ;

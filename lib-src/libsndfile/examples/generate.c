@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -119,7 +119,7 @@ encode_file (const char *infilename, const char *outfilename, int filetype)
 		} ;
 
 	while ((readcount = sf_read_float (infile, buffer, BUFFER_LEN)) > 0)
-		sf_write_float (outfile, buffer, BUFFER_LEN) ;
+		sf_write_float (outfile, buffer, readcount) ;
 
 	sf_close (infile) ;
 	sf_close (outfile) ;

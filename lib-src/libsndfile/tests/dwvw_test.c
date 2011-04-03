@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #if HAVE_UNISTD_H
@@ -65,15 +66,11 @@ dwvw_test (const char *filename, int format, int bit_width)
 
 	print_test_name ("dwvw_test", filename) ;
 
-	sfinfo.format		= format ;
-	sfinfo.samplerate	= 44100 ;
-	sfinfo.frames		= -1 ; /* Unknown! */
-	sfinfo.channels		= 1 ;
+	sf_info_setup (&sfinfo, format, 44100, 1) ;
 
 	file = test_open_file_or_die (filename, SFM_WRITE, &sfinfo, SF_TRUE, __LINE__) ;
 
 	/* Generate random.frames. */
-	k = 0 ;
 	for (k = 0 ; k < BUFFER_SIZE / 2 ; k++)
 	{	value = 0x7FFFFFFF * sin (123.0 / sfinfo.samplerate * 2 * k * M_PI) ;
 		write_buf [k] = bit_mask & lrint (value) ;

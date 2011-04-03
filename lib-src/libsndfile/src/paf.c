@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -108,14 +108,14 @@ paf_open	(SF_PRIVATE *psf)
 
  	psf->dataoffset = PAF_HEADER_LENGTH ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = paf_read_header (psf)))
 			return error ;
 		} ;
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_PAF)
 			return	SFE_BAD_OPEN_FORMAT ;
 
@@ -369,7 +369,7 @@ paf24_init (SF_PRIVATE *psf)
 	ppaf24->blocksize = PAF24_BLOCK_SIZE * ppaf24->channels ;
 	ppaf24->samplesperblock = PAF24_SAMPLES_PER_BLOCK ;
 
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	paf24_read_block (psf, ppaf24) ;	/* Read first block. */
 
 		psf->read_short		= paf24_read_s ;
@@ -378,7 +378,7 @@ paf24_init (SF_PRIVATE *psf)
 		psf->read_double	= paf24_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	psf->write_short	= paf24_write_s ;
 		psf->write_int		= paf24_write_i ;
 		psf->write_float	= paf24_write_f ;
@@ -392,7 +392,7 @@ paf24_init (SF_PRIVATE *psf)
 	psf->datalength = psf->filelength - psf->dataoffset ;
 
 	if (psf->datalength % PAF24_BLOCK_SIZE)
-	{	if (psf->mode == SFM_READ)
+	{	if (psf->file.mode == SFM_READ)
 			psf_log_printf (psf, "*** Warning : file seems to be truncated.\n") ;
 		ppaf24->max_blocks = psf->datalength / ppaf24->blocksize + 1 ;
 		}
@@ -400,7 +400,7 @@ paf24_init (SF_PRIVATE *psf)
 		ppaf24->max_blocks = psf->datalength / ppaf24->blocksize ;
 
 	ppaf24->read_block = 0 ;
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		ppaf24->write_block = ppaf24->max_blocks ;
 	else
 		ppaf24->write_block = 0 ;
@@ -472,7 +472,7 @@ paf24_close (SF_PRIVATE *psf)
 
 	ppaf24 = (PAF24_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (ppaf24->write_count > 0)
 			paf24_write_block (psf, ppaf24) ;
 		} ;

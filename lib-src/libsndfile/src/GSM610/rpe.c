@@ -9,8 +9,6 @@
 
 #include "gsm610_priv.h"
 
-#include "gsm.h"
-
 /*  4.2.13 .. 4.2.17  RPE ENCODING SECTION
  */
 

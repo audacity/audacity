@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@
 #include	<ctype.h>
 #include	<math.h>
 #include	<time.h>
-#if defined(HAVE_SYS_TIME_H)
+#ifdef HAVE_SYS_TIME_H
 #include	<sys/time.h>
 #endif
 
@@ -338,7 +338,7 @@ psf_asciiheader_printf (SF_PRIVATE *psf, const char *format, ...)
 	maxlen	= sizeof (psf->header) - maxlen ;
 
 	va_start (argptr, format) ;
-	LSF_VSNPRINTF (start, maxlen, format, argptr) ;
+	vsnprintf (start, maxlen, format, argptr) ;
 	va_end (argptr) ;
 
 	/* Make sure the string is properly terminated. */
@@ -1036,14 +1036,14 @@ psf_binheader_readf (SF_PRIVATE *psf, char const *format, ...)
 
 			case 'b' :
 					charptr = va_arg (argptr, char*) ;
-					count = va_arg (argptr, int) ;
+					count = va_arg (argptr, size_t) ;
 					if (count > 0)
 						byte_count += header_read (psf, charptr, count) ;
 					break ;
 
 			case 'G' :
 					charptr = va_arg (argptr, char*) ;
-					count = va_arg (argptr, int) ;
+					count = va_arg (argptr, size_t) ;
 					if (count > 0)
 						byte_count += header_gets (psf, charptr, count) ;
 					break ;
@@ -1062,14 +1062,14 @@ psf_binheader_readf (SF_PRIVATE *psf, char const *format, ...)
 
 			case 'p' :
 					/* Get the seek position first. */
-					count = va_arg (argptr, int) ;
+					count = va_arg (argptr, size_t) ;
 					header_seek (psf, count, SEEK_SET) ;
 					byte_count = count ;
 					break ;
 
 			case 'j' :
 					/* Get the seek position first. */
-					count = va_arg (argptr, int) ;
+					count = va_arg (argptr, size_t) ;
 					header_seek (psf, count, SEEK_CUR) ;
 					byte_count += count ;
 					break ;
@@ -1134,7 +1134,7 @@ psf_hexdump (const void *ptr, int len)
 		printf ("%08X: ", k) ;
 		for (m = 0 ; m < 16 && k + m < len ; m++)
 		{	printf (m == 8 ? " %02X " : "%02X ", data [k + m] & 0xFF) ;
-			ascii [m] = isprint (data [k + m]) ? data [k + m] : '.' ;
+			ascii [m] = psf_isprint (data [k + m]) ? data [k + m] : '.' ;
 			} ;
 
 		if (m <= 8) printf (" ") ;
@@ -1209,7 +1209,7 @@ psf_sanitize_string (char * cptr, int len)
 	do
 	{
 		len -- ;
-		cptr [len] = isprint (cptr [len]) ? cptr [len] : '.' ;
+		cptr [len] = psf_isprint (cptr [len]) ? cptr [len] : '.' ;
 	}
 	while (len > 0) ;
 } /* psf_sanitize_string */
@@ -1233,11 +1233,11 @@ psf_get_date_str (char *str, int maxlen)
 #endif
 
 	if (tmptr)
-		LSF_SNPRINTF (str, maxlen, "%4d-%02d-%02d %02d:%02d:%02d UTC",
+		snprintf (str, maxlen, "%4d-%02d-%02d %02d:%02d:%02d UTC",
 			1900 + timedata.tm_year, timedata.tm_mon, timedata.tm_mday,
 			timedata.tm_hour, timedata.tm_min, timedata.tm_sec) ;
 	else
-		LSF_SNPRINTF (str, maxlen, "Unknown date") ;
+		snprintf (str, maxlen, "Unknown date") ;
 
 	return ;
 } /* psf_get_date_str */
@@ -1315,6 +1315,57 @@ psf_rand_int32 (void)
 
 	return value ;
 } /* psf_rand_int32 */
+
+void
+append_snprintf (char * dest, size_t maxlen, const char * fmt, ...)
+{	size_t len = strlen (dest) ;
+
+	if (len < maxlen)
+	{	va_list ap ;
+
+		va_start (ap, fmt) ;
+		vsnprintf (dest + len, maxlen - len, fmt, ap) ;
+		va_end (ap) ;
+		} ;
+
+	return ;
+} /* append_snprintf */
+
+
+void
+psf_strlcpy_crlf (char *dest, const char *src, size_t destmax, size_t srcmax)
+{	/* Must be minus 2 so it can still expand a single trailing '\n' or '\r'. */
+	char * destend = dest + destmax - 2 ;
+	const char * srcend = src + srcmax ;
+
+	while (dest < destend && src < srcend)
+	{	if ((src [0] == '\r' && src [1] == '\n') || (src [0] == '\n' && src [1] == '\r'))
+		{	*dest++ = '\r' ;
+			*dest++ = '\n' ;
+			src += 2 ;
+			continue ;
+			} ;
+
+		if (src [0] == '\r')
+		{	*dest++ = '\r' ;
+			*dest++ = '\n' ;
+			src += 1 ;
+			continue ;
+			} ;
+
+		if (src [0] == '\n')
+		{	*dest++ = '\r' ;
+			*dest++ = '\n' ;
+			src += 1 ;
+			continue ;
+			} ;
+
+		*dest++ = *src++ ;
+		} ;
+
+	/* Make sure dest is terminated. */
+	*dest = 0 ;
+} /* psf_strlcpy_crlf */
 
 /*==============================================================================
 */

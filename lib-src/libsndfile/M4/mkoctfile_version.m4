@@ -1,4 +1,4 @@
-dnl @synopsis AC_MKOCTFILE_VERSION
+dnl @synopsis OCTAVE_MKOCTFILE_VERSION
 dnl
 dnl Find the version of mkoctfile.
 dnl @version 1.0	Aug 23 2007
@@ -11,12 +11,13 @@ dnl made about the suitability of this software for any purpose.  It is
 dnl provided "as is" without express or implied warranty.
 dnl
 
-AC_DEFUN([AC_MKOCTFILE_VERSION],
+AC_DEFUN([OCTAVE_MKOCTFILE_VERSION],
 [
 
 
 AC_ARG_WITH(mkoctfile,
-	[  --with-mkoctfile        choose the mkoctfile version], [ with_mkoctfile=$withval ])
+	AC_HELP_STRING([--with-mkoctfile], [choose the mkoctfile version]),
+	[ with_mkoctfile=$withval ])
 
 test -z "$with_mkoctfile" && with_mkoctfile=mkoctfile
 
@@ -33,5 +34,5 @@ if test "x$ac_cv_prog_HAVE_MKOCTFILE" = "xyes" ; then
 AC_SUBST(MKOCTFILE)
 AC_SUBST(MKOCTFILE_VERSION)
 
-])# AC_MKOCTFILE_VERSION
+])# OCTAVE_MKOCTFILE_VERSION
 

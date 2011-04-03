@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2008-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -34,3 +34,6 @@ void test_double_convert (void) ;
 
 void test_audio_detect (void) ;
 void test_ima_oki_adpcm (void) ;
+
+void test_psf_strlcpy_crlf (void) ;
+void test_broadcast_var (void) ;

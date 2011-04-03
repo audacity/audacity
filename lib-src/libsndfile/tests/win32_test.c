@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -38,7 +38,8 @@
 
 #define SIGNED_SIZEOF(x)	((int) sizeof (x))
 
-#if defined (__CYGWIN__)
+/* EMX is OS/2. */
+#if defined (__CYGWIN__) || defined (__EMX__)
 
 	#define		LSEEK	lseek
 	#define		FSTAT	fstat
@@ -74,6 +75,7 @@
 static void show_fstat_error (void) ;
 static void show_lseek_error (void) ;
 static void show_stat_fstat_error (void) ;
+static void write_to_closed_file (void) ;
 
 int
 main (void)
@@ -88,6 +90,7 @@ main (void)
 	show_fstat_error () ;
 	show_lseek_error () ;
 	show_stat_fstat_error () ;
+	write_to_closed_file () ;
 
 	puts ("\n\n") ;
 
@@ -130,7 +133,13 @@ show_fstat_error (void)
 	ignored = write (fd, data, sizeof (data)) ;
 
 	printf ("2) Now use system (\"%s %s\") to show the file length.\n\n", dir_cmd, filename) ;
-	sprintf (data, "%s %s", dir_cmd, filename) ;
+
+	/* Would use snprintf, but thats not really available on windows. */
+	memset (data, 0, sizeof (data)) ;
+	strncpy (data, dir_cmd, sizeof (data) - 1) ;
+	strncat (data, " ", sizeof (data) - 1 - strlen (data)) ;
+	strncat (data, filename, sizeof (data) - 1 - strlen (data)) ;
+
 	ignored = system (data) ;
 	puts ("") ;
 
@@ -185,7 +194,13 @@ show_lseek_error (void)
 	ignored = write (fd, data, sizeof (data)) ;
 
 	printf ("2) Now use system (\"%s %s\") to show the file length.\n\n", dir_cmd, filename) ;
-	sprintf (data, "%s %s", dir_cmd, filename) ;
+
+	/* Would use snprintf, but thats not really available on windows. */
+	memset (data, 0, sizeof (data)) ;
+	strncpy (data, dir_cmd, sizeof (data) - 1) ;
+	strncat (data, " ", sizeof (data) - 1 - strlen (data)) ;
+	strncat (data, filename, sizeof (data) - 1 - strlen (data)) ;
+
 	ignored = system (data) ;
 	puts ("") ;
 
@@ -232,26 +247,71 @@ show_stat_fstat_error (void)
 
 	if (stat (filename, &buf) != 0)
 	{	printf ("\n\nLine %d: stat() failed : %s\n\n", __LINE__, strerror (errno)) ;
-		return ;
+		goto error_exit ;
 		} ;
 	stat_size = buf.st_size ;
 
 	if (fstat (fd, &buf) != 0)
 	{	printf ("\n\nLine %d: fstat() failed : %s\n\n", __LINE__, strerror (errno)) ;
-		return ;
+		goto error_exit ;
 		} ;
 	fstat_size = buf.st_size ;
 
-	printf ("3) Size returned by stat and fstat is %d and %d, ", stat_size, fstat_size) ;
+	printf ("2) Size returned by stat and fstat is %d and %d, ", stat_size, fstat_size) ;
+
 
 	if (stat_size == 0 || stat_size != fstat_size)
 		printf ("but thats just plain ***WRONG***.\n\n") ;
 	else
-	{	printf ("which is correct.\n\n") ;
-		unlink (filename) ;
-		} ;
+		printf ("which is correct.\n\n") ;
+
+error_exit :
+
+	close (fd) ;
+	unlink (filename) ;
 
 	return ;
 } /* show_stat_fstat_error */
 
 
+static void
+write_to_closed_file (void)
+{	const char * filename = "closed_write_test.txt" ;
+	struct stat buf ;
+	FILE * file ;
+	int		fd, ignored ;
+
+	puts ("\nWrite to closed file test.\n--------------------------") ;
+
+	printf ("0) First we open file for write using fopen().\n") ;
+	if ((file = fopen (filename, "w")) == NULL)
+	{	printf ("\n\nLine %d: fopen() failed : %s\n\n", __LINE__, strerror (errno)) ;
+		return ;
+		} ;
+
+	printf ("1) Now we grab the file descriptor fileno().\n") ;
+	fd = fileno (file) ;
+
+	printf ("2) Write some text via the file descriptor.\n") ;
+	ignored = write (fd, "a\n", 2) ;
+
+	printf ("3) Now we close the file using fclose().\n") ;
+	fclose (file) ;
+
+	stat (filename, &buf) ;
+	printf ("   File size is %d bytes.\n", (int) buf.st_size) ;
+
+	printf ("4) Now write more data to the file descriptor which should fail.\n") ;
+	if (write (fd, "b\n", 2) < 0)
+		printf ("5) Good, write returned an error code as it should have.\n") ;
+	else
+	{	printf ("5) Attempting to write to a closed file should have failed but didn't! *** WRONG ***\n") ;
+
+		stat (filename, &buf) ;
+		printf ("   File size is %d bytes.\n", (int) buf.st_size) ;
+		} ;
+
+	unlink (filename) ;
+
+	return ;
+} /* write_to_closed_file */

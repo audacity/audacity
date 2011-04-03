@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2007 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2007-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -367,7 +367,7 @@ string_of_minor_format (int format)
 		case SF_FORMAT_G723_40 : return "g723_40" ;
 		default : break ;
 		} ;
-	
+
 	return "unknown" ;
 } /* string_of_minor_format */
 

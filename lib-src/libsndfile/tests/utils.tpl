@@ -1,6 +1,6 @@
 [+ AutoGen5 template h c +]
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -41,9 +41,6 @@ extern "C" {
 #define	PIPE_INDEX(x)	((x) + 500)
 #define	PIPE_TEST_LEN	12345
 
-#if (defined (WIN32) || defined (_WIN32) || defined (__OS2__))
-#define	snprintf	_snprintf
-#endif
 
 [+ FOR float_type
 +]void gen_windowed_sine_[+ (get "name") +] ([+ (get "name") +] *data, int len, double maximum) ;
@@ -89,6 +86,21 @@ void	check_open_file_count_or_die (int lineno) ;
 
 #ifdef SNDFILE_H
 
+static inline void
+sf_info_clear (SF_INFO * info)
+{	memset (info, 0, sizeof (SF_INFO)) ;
+} /* sf_info_clear */
+
+static inline void
+sf_info_setup (SF_INFO * info, int format, int samplerate, int channels)
+{	sf_info_clear (info) ;
+
+	info->format = format ;
+	info->samplerate = samplerate ;
+	info->channels = channels ;
+} /* sf_info_setup */
+
+
 void 	dump_log_buffer (SNDFILE *file) ;
 void 	check_log_buffer_or_die (SNDFILE *file, int line_num) ;
 int 	string_in_log_buffer (SNDFILE *file, const char *s) ;
@@ -110,11 +122,17 @@ void	test_seek_or_die
 			(SNDFILE *file, int pass, [+ (get "io_element") +] *test, sf_count_t [+ (get "count_name") +], int line_num) ;
 [+ ENDFOR io_type +][+ ENDFOR read_op +]
 
+void
+test_read_raw_or_die (SNDFILE *file, int pass, void *test, sf_count_t items, int line_num) ;
+
 [+ FOR write_op +]
 [+ FOR io_type
 +]void 	test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die
 			(SNDFILE *file, int pass, const [+ (get "io_element") +] *test, sf_count_t [+ (get "count_name") +], int line_num) ;
 [+ ENDFOR io_type +][+ ENDFOR write_op +]
+
+void
+test_write_raw_or_die (SNDFILE *file, int pass, const void *test, sf_count_t items, int line_num) ;
 
 [+ FOR io_type
 +]void compare_[+ (get "io_element") +]_or_die (const [+ (get "io_element") +] *left, const [+ (get "io_element") +] *right, unsigned count, int line_num) ;
@@ -470,7 +488,7 @@ test_open_file_or_die (const char *filename, int mode, SF_INFO *sfinfo, int allo
 
 	SNDFILE *file ;
 	const char *modestr, *func_name ;
-	int oflags = 0, omode = 0 ;
+	int oflags = 0, omode = 0, err ;
 
 	/*
 	** Need to test both sf_open() and sf_open_fd().
@@ -501,17 +519,20 @@ test_open_file_or_die (const char *filename, int mode, SF_INFO *sfinfo, int allo
 		} ;
 
 	if (OS_IS_WIN32)
-	{	/* Windows doesn't support Unix file permissions so set it to zero. */
-		omode = 0 ;
+	{	/* Windows does not understand and ignores the S_IRGRP flag, but Wine
+		** gives a run time warning message, so just clear it.
+		*/
+		omode &= ~S_IRGRP ;
 		} ;
 
 	if (allow_fd && ((++count) & 1) == 1)
 	{	int fd ;
 
-		fd = open (filename, oflags, omode) ;
+		/* Only use the three argument open() function if omode != 0. */
+		fd = (omode == 0) ? open (filename, oflags) : open (filename, oflags, omode) ;
 
 		if (fd < 0)
-		{	perror ("open") ;
+		{	printf ("\n\n%s : open failed : %s\n", __func__, strerror (errno)) ;
 			exit (1) ;
 			} ;
 
@@ -525,6 +546,13 @@ test_open_file_or_die (const char *filename, int mode, SF_INFO *sfinfo, int allo
 
 	if (file == NULL)
 	{	printf ("\n\nLine %d: %s (%s) failed : %s\n\n", line_num, func_name, modestr, sf_strerror (NULL)) ;
+		dump_log_buffer (file) ;
+		exit (1) ;
+		} ;
+
+	err = sf_error (file) ;
+	if (err != SF_ERR_NO_ERROR)
+	{	printf ("\n\nLine %d : sf_error : %s\n\n", line_num, sf_error_number (err)) ;
 		dump_log_buffer (file) ;
 		exit (1) ;
 		} ;
@@ -630,8 +658,26 @@ test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die (SNDFILE *file, in
 		} ;
 
 	return ;
-} /* test_[+ (get "op_element") +]_[+ (get "io_element") +] */
+} /* test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die */
 [+ ENDFOR io_type +][+ ENDFOR read_op +]
+
+void
+test_read_raw_or_die (SNDFILE *file, int pass, void *test, sf_count_t items, int line_num)
+{	sf_count_t count ;
+
+	if ((count = sf_read_raw (file, test, items)) != items)
+	{	printf ("\n\nLine %d", line_num) ;
+		if (pass > 0)
+			printf (" (pass %d)", pass) ;
+		printf (" : sf_read_raw failed with short read (%ld => %ld).\n",
+						SF_COUNT_TO_LONG (items), SF_COUNT_TO_LONG (count)) ;
+		fflush (stdout) ;
+		puts (sf_strerror (file)) ;
+		exit (1) ;
+		} ;
+
+	return ;
+} /* test_read_raw_or_die */
 
 [+ FOR write_op +]
 [+ FOR io_type +]
@@ -651,8 +697,27 @@ test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die (SNDFILE *file, in
 		} ;
 
 	return ;
-} /* test_[+ (get "op_element") +]_[+ (get "io_element") +] */
+} /* test_[+ (get "op_element") +]_[+ (get "io_element") +]_or_die */
 [+ ENDFOR io_type +][+ ENDFOR write_op +]
+
+void
+test_write_raw_or_die (SNDFILE *file, int pass, const void *test, sf_count_t items, int line_num)
+{	sf_count_t count ;
+
+	if ((count = sf_write_raw (file, test, items)) != items)
+	{	printf ("\n\nLine %d", line_num) ;
+		if (pass > 0)
+			printf (" (pass %d)", pass) ;
+		printf (" : sf_write_raw failed with short write (%ld => %ld).\n",
+						SF_COUNT_TO_LONG (items), SF_COUNT_TO_LONG (count)) ;
+		fflush (stdout) ;
+		puts (sf_strerror (file)) ;
+		exit (1) ;
+		} ;
+
+	return ;
+} /* test_write_raw_or_die */
+
 
 [+ FOR io_type
 +]void
@@ -705,7 +770,7 @@ static int allowed_open_files = -1 ;
 void
 count_open_files (void)
 {
-#if (defined (WIN32) || defined (_WIN32))
+#if OS_IS_WIN32
 	return ;
 #else
 	int k, count = 0 ;
@@ -730,7 +795,7 @@ increment_open_file_count (void)
 void
 check_open_file_count_or_die (int lineno)
 {
-#if (defined (WIN32) || defined (_WIN32))
+#if OS_IS_WIN32
 	lineno = 0 ;
 	return ;
 #else

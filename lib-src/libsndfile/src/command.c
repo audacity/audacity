@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -124,12 +124,14 @@ static SF_FORMAT_INFO const major_formats [] =
 	{	SF_FORMAT_SVX,		"IFF (Amiga IFF/SVX8/SV16)",			"iff"	},
 	{	SF_FORMAT_MAT4,		"MAT4 (GNU Octave 2.0 / Matlab 4.2)",	"mat"	},
 	{	SF_FORMAT_MAT5,		"MAT5 (GNU Octave 2.1 / Matlab 5.0)",	"mat"	},
+	{	SF_FORMAT_MPC2K,	"MPC (Akai MPC 2k)",					"mpc"	},
 #if HAVE_EXTERNAL_LIBS
 	{	SF_FORMAT_OGG,		"OGG (OGG Container format)",		 	"oga"	},
 #endif
 	{	SF_FORMAT_PAF,		"PAF (Ensoniq PARIS)", 					"paf"	},
 	{	SF_FORMAT_PVF,		"PVF (Portable Voice Format)",			"pvf"	},
 	{	SF_FORMAT_RAW,		"RAW (header-less)",				 	"raw"	},
+	{	SF_FORMAT_RF64,		"RF64 (RIFF 64)",						"rf64"	},
 	{	SF_FORMAT_SD2,		"SD2 (Sound Designer II)", 				"sd2"	},
 	{	SF_FORMAT_SDS,		"SDS (Midi Sample Dump Standard)", 		"sds"	},
 	{	SF_FORMAT_IRCAM,	"SF (Berkeley/IRCAM/CARL)",				"sf"	},

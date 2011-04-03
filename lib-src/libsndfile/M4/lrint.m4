@@ -1,4 +1,4 @@
-dnl @synopsis AC_C99_FUNC_LRINT
+dnl @synopsis MN_C99_FUNC_LRINT
 dnl
 dnl Check whether C99's lrint function is available.
 dnl @version 1.3	Feb 12 2002
@@ -10,7 +10,7 @@ dnl and this permission notice appear in all copies.  No representations are
 dnl made about the suitability of this software for any purpose.  It is 
 dnl provided "as is" without express or implied warranty.
 dnl
-AC_DEFUN([AC_C99_FUNC_LRINT],
+AC_DEFUN([MN_C99_FUNC_LRINT],
 [AC_CACHE_CHECK(for lrint,
   ac_cv_c99_lrint,
 [
@@ -33,5 +33,5 @@ if test "$ac_cv_c99_lrint" = yes; then
   AC_DEFINE(HAVE_LRINT, 1,
             [Define if you have C99's lrint function.])
 fi
-])# AC_C99_FUNC_LRINT
+])# MN_C99_FUNC_LRINT
 

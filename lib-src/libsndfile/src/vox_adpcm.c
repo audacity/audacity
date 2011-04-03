@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -71,10 +71,10 @@ int
 vox_adpcm_init (SF_PRIVATE *psf)
 {	IMA_OKI_ADPCM *pvox = NULL ;
 
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		return SFE_BAD_MODE_RW ;
 
-	if (psf->mode == SFM_WRITE && psf->sf.channels != 1)
+	if (psf->file.mode == SFM_WRITE && psf->sf.channels != 1)
 		return SFE_CHANNEL_COUNT ;
 
 	if ((pvox = malloc (sizeof (IMA_OKI_ADPCM))) == NULL)
@@ -83,7 +83,7 @@ vox_adpcm_init (SF_PRIVATE *psf)
 	psf->codec_data = (void*) pvox ;
 	memset (pvox, 0, sizeof (IMA_OKI_ADPCM)) ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	psf->write_short	= vox_write_s ;
 		psf->write_int		= vox_write_i ;
 		psf->write_float	= vox_write_f ;

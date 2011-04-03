@@ -78,9 +78,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Set to 1 if you have JACK. */
-#undef HAVE_JACK
-
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
@@ -114,6 +111,9 @@
 /* Define to 1 if you have the `open' function. */
 #undef HAVE_OPEN
 
+/* Define to 1 if you have the `pipe' function. */
+#undef HAVE_PIPE
+
 /* Define to 1 if you have the `pread' function. */
 #undef HAVE_PREAD
 
@@ -128,6 +128,9 @@
 
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the <sndio.h> header file. */
+#undef HAVE_SNDIO_H
 
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
@@ -168,6 +171,9 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
+/* Define to 1 if you have the `waitpid' function. */
+#undef HAVE_WAITPID
+
 /* Define to 1 if you have the `write' function. */
 #undef HAVE_WRITE
 
@@ -198,6 +204,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
@@ -247,6 +256,9 @@
 /* The size of `void*', as computed by sizeof. */
 #undef SIZEOF_VOIDP
 
+/* The size of `wchar_t', as computed by sizeof. */
+#undef SIZEOF_WCHAR_T
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
@@ -273,3 +285,6 @@
 
 /* Define for large files, on AIX-style hosts. */
 #undef _LARGE_FILES
+
+/* Set to 1 to use C99 printf/snprintf in MinGW. */
+#undef __USE_MINGW_ANSI_STDIO

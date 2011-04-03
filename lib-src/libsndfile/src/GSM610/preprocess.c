@@ -9,8 +9,6 @@
 
 #include "gsm610_priv.h"
 
-#include	"gsm.h"
-
 /*	4.2.0 .. 4.2.3	PREPROCESSING SECTION
  *  
  *  	After A-law to linear conversion (or directly from the

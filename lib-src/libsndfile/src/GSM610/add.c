@@ -12,7 +12,6 @@
 #include	<assert.h>
 
 #include	"gsm610_priv.h"
-#include	"gsm.h"
 
 #define	saturate(x) 	\
 	((x) < MIN_WORD ? MIN_WORD : (x) > MAX_WORD ? MAX_WORD: (x))

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2004 Paavo Jumppanen
 **
 ** This program is free software; you can redistribute it and/or modify
@@ -58,6 +58,7 @@ enum
 typedef struct
 {	unsigned char * rsrc_data ;
 	int rsrc_len ;
+	int need_to_free_rsrc_data ;
 
 	int data_offset, data_length ;
 	int map_offset, map_length ;
@@ -103,12 +104,12 @@ sd2_open (SF_PRIVATE *psf)
 	/* SD2 is always big endian. */
 	psf->endian = SF_ENDIAN_BIG ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->rsrclength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->rsrclength > 0))
 	{	psf_use_rsrc (psf, SF_TRUE) ;
 		valid = psf_file_valid (psf) ;
 		psf_use_rsrc (psf, SF_FALSE) ;
 		if (! valid)
-		{	psf_log_printf (psf, "sd2_open : psf->rsrcdes < 0\n") ;
+		{	psf_log_printf (psf, "sd2_open : psf->rsrc.filedes < 0\n") ;
 			return SFE_SD2_BAD_RSRC ;
 			} ;
 
@@ -127,8 +128,9 @@ sd2_open (SF_PRIVATE *psf)
 	psf->dataoffset = 0 ;
 
 	/* Only open and write the resource in RDWR mode is its current length is zero. */
-	if (psf->mode == SFM_WRITE || (psf->mode == SFM_RDWR && psf->rsrclength == 0))
-	{	psf_open_rsrc (psf, psf->mode) ;
+	if (psf->file.mode == SFM_WRITE || (psf->file.mode == SFM_RDWR && psf->rsrclength == 0))
+	{	psf->rsrc.mode = psf->file.mode ;
+		psf_open_rsrc (psf) ;
 
 		error = sd2_write_rsrc_fork (psf, SF_FALSE) ;
 
@@ -171,7 +173,7 @@ error_cleanup:
 static int
 sd2_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*  Now we know for certain the audio_length of the file we can re-write
 		**	correct values for the FORM, 8SVX and BODY chunks.
 		*/
@@ -221,7 +223,7 @@ write_marker (unsigned char * data, int offset, int value)
 } /* write_marker */
 
 static void
-write_str (unsigned char * data, int offset, char * buffer, int buffer_len)
+write_str (unsigned char * data, int offset, const char * buffer, int buffer_len)
 {	memcpy (data + offset, buffer, buffer_len) ;
 } /* write_str */
 
@@ -249,9 +251,9 @@ sd2_write_rsrc_fork (SF_PRIVATE *psf, int UNUSED (calc_length))
 	rsrc.rsrc_len = sizeof (psf->header) ;
 	memset (rsrc.rsrc_data, 0xea, rsrc.rsrc_len) ;
 
-	LSF_SNPRINTF (str_rsrc [0].value, sizeof (str_rsrc [0].value), "_%d", rsrc.sample_size) ;
-	LSF_SNPRINTF (str_rsrc [1].value, sizeof (str_rsrc [1].value), "_%d.000000", rsrc.sample_rate) ;
-	LSF_SNPRINTF (str_rsrc [2].value, sizeof (str_rsrc [2].value), "_%d", rsrc.channels) ;
+	snprintf (str_rsrc [0].value, sizeof (str_rsrc [0].value), "_%d", rsrc.sample_size) ;
+	snprintf (str_rsrc [1].value, sizeof (str_rsrc [1].value), "_%d.000000", rsrc.sample_rate) ;
+	snprintf (str_rsrc [2].value, sizeof (str_rsrc [2].value), "_%d", rsrc.channels) ;
 
 	for (k = 0 ; k < ARRAY_LEN (str_rsrc) ; k++)
 	{	if (str_rsrc [k].value_len == 0)
@@ -280,8 +282,8 @@ sd2_write_rsrc_fork (SF_PRIVATE *psf, int UNUSED (calc_length))
 	write_int (rsrc.rsrc_data, 4, rsrc.map_offset) ;
 	write_int (rsrc.rsrc_data, 8, rsrc.data_length) ;
 
-	write_char (rsrc.rsrc_data, 0x30, strlen (psf->filename)) ;
-	write_str (rsrc.rsrc_data, 0x31, psf->filename, strlen (psf->filename)) ;
+	write_char (rsrc.rsrc_data, 0x30, strlen (psf->file.name.c)) ;
+	write_str (rsrc.rsrc_data, 0x31, psf->file.name.c, strlen (psf->file.name.c)) ;
 
 	write_short (rsrc.rsrc_data, 0x50, 0) ;
 	write_marker (rsrc.rsrc_data, 0x52, Sd2f_MARKER) ;
@@ -400,7 +402,7 @@ read_str (const unsigned char * data, int offset, char * buffer, int buffer_len)
 	memset (buffer, 0, buffer_len) ;
 
 	for (k = 0 ; k < buffer_len - 1 ; k++)
-	{	if (isprint (data [offset + k]) == 0)
+	{	if (psf_isprint (data [offset + k]) == 0)
 			return ;
 		buffer [k] = data [offset + k] ;
 		} ;
@@ -420,7 +422,9 @@ sd2_parse_rsrc_fork (SF_PRIVATE *psf)
 	psf_log_printf (psf, "Resource length : %d (0x%04X)\n", rsrc.rsrc_len, rsrc.rsrc_len) ;
 
 	if (rsrc.rsrc_len > SIGNED_SIZEOF (psf->header))
-		rsrc.rsrc_data = calloc (1, rsrc.rsrc_len) ;
+	{	rsrc.rsrc_data = calloc (1, rsrc.rsrc_len) ;
+		rsrc.need_to_free_rsrc_data = SF_TRUE ;
+		}
 	else
 		rsrc.rsrc_data = psf->header ;
 
@@ -477,6 +481,12 @@ sd2_parse_rsrc_fork (SF_PRIVATE *psf)
 		goto parse_rsrc_fork_cleanup ;
 		} ;
 
+	if (rsrc.map_offset + 28 >= rsrc.rsrc_len)
+	{	psf_log_printf (psf, "Bad map offset (%d + 28 > %d).\n", rsrc.map_offset, rsrc.rsrc_len) ;
+		error = SFE_SD2_BAD_RSRC ;
+		goto parse_rsrc_fork_cleanup ;
+		} ;
+
 	rsrc.string_offset = rsrc.map_offset + read_short (rsrc.rsrc_data, rsrc.map_offset + 26) ;
 	if (rsrc.string_offset > rsrc.rsrc_len)
 	{	psf_log_printf (psf, "Bad string offset (%d).\n", rsrc.string_offset) ;
@@ -519,7 +529,7 @@ parse_rsrc_fork_cleanup :
 
 	psf_use_rsrc (psf, SF_FALSE) ;
 
-	if ((void *) rsrc.rsrc_data < (void *) psf || (void *) rsrc.rsrc_data > (void *) (psf + 1))
+	if (rsrc.need_to_free_rsrc_data)
 		free (rsrc.rsrc_data) ;
 
 	return error ;

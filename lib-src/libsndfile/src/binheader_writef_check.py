@@ -1,6 +1,6 @@
-#!/usr/bin/python2.5
+#!/usr/bin/python
 
-# Copyright (C) 2006 Erik de Castro Lopo <erikd@mega-nerd.com>
+# Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 #
 # All rights reserved.
 #
@@ -97,13 +97,13 @@ def handle_file (fname):
 				print "    %s" % item
 				errors += 1
 			param_index += 2
-			
+
 	return errors
 
 #===============================================================================
 
 if len (sys.argv) > 1:
-	print "%s\n    binheader_writef_check   :" % sys.argv [0],
+	print "\n    binheader_writef_check                   :",
 	sys.stdout.flush ()
 	errors = 0
 	for fname in sys.argv [1:]:
@@ -112,5 +112,5 @@ if len (sys.argv) > 1:
 		print "\nErrors : %d\n" % errors
 		sys.exit (1)
 
-print "ok"
+print "ok\n"
 

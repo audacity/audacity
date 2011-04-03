@@ -6,8 +6,8 @@ dnl http://www.sas.com/standards/large.file/x_open.20Mar96.html
 dnl Written by Paul Eggert <eggert@twinsun.com>.
 
 dnl Internal subroutine of AC_SYS_EXTRA_LARGEFILE.
-dnl AC_SYS_EXTRA_LARGEFILE_FLAGS(FLAGSNAME)
-AC_DEFUN([AC_SYS_EXTRA_LARGEFILE_FLAGS],
+dnl MN_SYS_EXTRA_LARGEFILE_FLAGS(FLAGSNAME)
+AC_DEFUN([MN_SYS_EXTRA_LARGEFILE_FLAGS],
   [AC_CACHE_CHECK([for $1 value to request large file support],
      ac_cv_sys_largefile_$1,
      [ac_cv_sys_largefile_$1=`($GETCONF LFS_$1) 2>/dev/null` || {
@@ -67,9 +67,9 @@ AC_DEFUN([AC_SYS_EXTRA_LARGEFILE],
      [  --disable-largefile     omit support for large files])
    if test "$enable_largefile" != no; then
      AC_CHECK_TOOL(GETCONF, getconf)
-     AC_SYS_EXTRA_LARGEFILE_FLAGS(CFLAGS)
-     AC_SYS_EXTRA_LARGEFILE_FLAGS(LDFLAGS)
-     AC_SYS_EXTRA_LARGEFILE_FLAGS(LIBS)
+     MN_SYS_EXTRA_LARGEFILE_FLAGS(CFLAGS)
+     MN_SYS_EXTRA_LARGEFILE_FLAGS(LDFLAGS)
+     MN_SYS_EXTRA_LARGEFILE_FLAGS(LIBS)
 	
      for ac_flag in $ac_cv_sys_largefile_CFLAGS no; do
        case "$ac_flag" in

@@ -9,8 +9,6 @@
 
 #include "gsm610_priv.h"
 
-#include "gsm.h"
-
 /*
  *  4.2.4 .. 4.2.7 LPC ANALYSIS SECTION
  */

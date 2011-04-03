@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -44,12 +45,11 @@ main (void)
 	const char	*filename ;
 	int			k ;
 
+	print_test_name ("ulaw_test", "encoder") ;
+
 	filename = "test.raw" ;
 
-	sfinfo.format		= SF_FORMAT_RAW | SF_FORMAT_ULAW ;
-	sfinfo.samplerate	= 44100 ;
-	sfinfo.frames		= 123456789 ;
-	sfinfo.channels		= 1 ;
+	sf_info_setup (&sfinfo, SF_FORMAT_RAW | SF_FORMAT_ULAW, 44100, 1) ;
 
 	if ((file = sf_open (filename, SFM_WRITE, &sfinfo)) == NULL)
 	{	printf ("sf_open_write failed with error : ") ;
@@ -94,7 +94,9 @@ main (void)
 
 	sf_close (file) ;
 
-	printf ("    ulaw_test : encoder ... ok\n") ;
+	puts ("ok") ;
+
+	print_test_name ("ulaw_test", "decoder") ;
 
 	/* Now generate a file containing all possible 8 bit encoded
 	** sample values and write it to disk as ulaw encoded.frames.
@@ -139,7 +141,7 @@ main (void)
 
 	sf_close (file) ;
 
-	printf ("    ulaw_test : decoder ... ok\n") ;
+	puts ("ok") ;
 
 	unlink (filename) ;
 

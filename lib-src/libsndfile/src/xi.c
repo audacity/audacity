@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2003-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2003-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -75,14 +75,14 @@ xi_open	(SF_PRIVATE *psf)
 
 	psf->codec_data = pxi ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = xi_read_header (psf)))
 			return error ;
 		} ;
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_XI)
 			return	SFE_BAD_OPEN_FORMAT ;
 
@@ -95,7 +95,7 @@ xi_open	(SF_PRIVATE *psf)
 		memcpy (pxi->software, PACKAGE "-" VERSION "               ", sizeof (pxi->software)) ;
 
 		memset (pxi->sample_name, 0, sizeof (pxi->sample_name)) ;
-		LSF_SNPRINTF (pxi->sample_name, sizeof (pxi->sample_name), "%s", "Sample #1") ;
+		snprintf (pxi->sample_name, sizeof (pxi->sample_name), "%s", "Sample #1") ;
 
 		pxi->sample_flags = (subformat == SF_FORMAT_DPCM_16) ? 16 : 0 ;
 
@@ -163,7 +163,7 @@ dpcm_init (SF_PRIVATE *psf)
 
 	psf->blockwidth = psf->bytewidth * psf->sf.channels ;
 
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	switch (psf->bytewidth)
 		{	case 1 :
 					psf->read_short		= dpcm_read_dsc2s ;
@@ -183,7 +183,7 @@ dpcm_init (SF_PRIVATE *psf)
 			} ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	switch (psf->bytewidth)
 		{	case 1 :
 					psf->write_short	= dpcm_write_s2dsc ;
@@ -442,10 +442,14 @@ xi_read_header (SF_PRIVATE *psf)
 		return SFE_XI_EXCESS_SAMPLES ;
 		} ;
 
-	psf->dataoffset = psf_fseek (psf, 0, SEEK_CUR) ;
-	psf_log_printf (psf, "Data Offset : %D\n", psf->dataoffset) ;
-
 	psf->datalength = sample_sizes [0] ;
+
+	psf->dataoffset = psf_ftell (psf) ;
+	if (psf->dataoffset < 0)
+	{	psf_log_printf (psf, "*** Bad Data Offset : %D\n", psf->dataoffset) ;
+		return SFE_BAD_OFFSET ;
+		} ;
+	psf_log_printf (psf, "Data Offset : %D\n", psf->dataoffset) ;
 
 	if (psf->dataoffset + psf->datalength > psf->filelength)
 	{	psf_log_printf (psf, "*** File seems to be truncated. Should be at least %D bytes long.\n",
@@ -453,7 +457,7 @@ xi_read_header (SF_PRIVATE *psf)
 		psf->datalength = psf->filelength - psf->dataoffset ;
 		} ;
 
- 	if (psf_fseek (psf, psf->dataoffset, SEEK_SET) != psf->dataoffset)
+	if (psf_fseek (psf, psf->dataoffset, SEEK_SET) != psf->dataoffset)
 		return SFE_BAD_SEEK ;
 
 	psf->endian = SF_ENDIAN_LITTLE ;

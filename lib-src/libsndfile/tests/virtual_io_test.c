@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ main (void)
 	vio_test ("vio_pcm16.wav", SF_FORMAT_WAV | SF_FORMAT_PCM_16) ;
 	vio_test ("vio_pcm24.aiff", SF_FORMAT_AIFF | SF_FORMAT_PCM_24) ;
 	vio_test ("vio_float.au", SF_FORMAT_AU | SF_FORMAT_FLOAT) ;
+	vio_test ("vio_pcm24.paf", SF_FORMAT_PAF | SF_FORMAT_PCM_24) ;
 
 	return 0 ;
 } /* main */
@@ -186,6 +187,11 @@ vio_test (const char *fname, int format)
 	{	printf ("\n\nLine %d : sf_open_write failed with error : ", __LINE__) ;
 		fflush (stdout) ;
 		puts (sf_strerror (NULL)) ;
+		exit (1) ;
+		} ;
+
+	if (vfget_filelen (&vio_data) < 0)
+	{	printf ("\n\nLine %d : vfget_filelen returned negative length.\n\n", __LINE__) ;
 		exit (1) ;
 		} ;
 

@@ -1,6 +1,6 @@
 /*
+** Copyright (C) 2007-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (c) 2007 <robs@users.sourceforge.net>
-** Copyright (C) 2007-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This library is free software; you can redistribute it and/or modify it
 ** under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,8 @@
 */
 
 /* ADPCM: IMA, OKI <==> 16-bit PCM. */
+
+#include "sfconfig.h"
 
 #include <string.h>
 
@@ -137,7 +139,7 @@ ima_oki_adpcm_encode_block (IMA_OKI_ADPCM * state)
 
 	/*
 	**	The codec expects an even number of input samples.
-	**	
+	**
 	**	Samples should always be passed in even length blocks. If the last block to
 	**	be encoded is odd length, extend that block by one zero valued sample.
 	*/

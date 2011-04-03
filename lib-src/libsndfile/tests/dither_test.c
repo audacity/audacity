@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2003-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2003-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -134,7 +134,6 @@ dither_test (const char *filename, int filetype)
 {	SNDFILE			*file ;
 	SF_INFO			sfinfo ;
 	SF_DITHER_INFO	dither ;
-	int				frames ;
 
 	filetype = filetype ;
 
@@ -144,8 +143,6 @@ dither_test (const char *filename, int filetype)
 	sfinfo.format		= filetype ;
 	sfinfo.channels		= 1 ;
 	sfinfo.frames		= 0 ;
-
-	frames = BUFFER_LEN / sfinfo.channels ;
 
 	file = test_open_file_or_die (filename, SFM_WRITE, &sfinfo, SF_TRUE, __LINE__) ;
 

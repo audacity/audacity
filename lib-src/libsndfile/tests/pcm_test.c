@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -79,8 +79,6 @@ main (void)
 
 	pcm_test_double	("le-double.raw", SF_ENDIAN_LITTLE	| SF_FORMAT_RAW | SF_FORMAT_DOUBLE, 0xc682726f958f669cLL, SF_FALSE) ;
 	pcm_test_double	("be-double.raw", SF_ENDIAN_BIG	| SF_FORMAT_RAW | SF_FORMAT_DOUBLE, 0xd9a3583f8ee51164LL, SF_FALSE) ;
-
-	puts ("Test IEEE replacement code.") ;
 
 	pcm_test_float	("le-float.raw", SF_ENDIAN_LITTLE	| SF_FORMAT_RAW | SF_FORMAT_FLOAT, 0x3c2ad04f7554267aLL, SF_TRUE) ;
 	pcm_test_float	("be-float.raw", SF_ENDIAN_BIG		| SF_FORMAT_RAW | SF_FORMAT_FLOAT, 0x074de3e248fa9186LL, SF_TRUE) ;
@@ -318,7 +316,6 @@ pcm_test_bits_8 (const char *filename, int filetype, uint64_t hash)
 		if (fabs (float_out [k] - float_in [k]) > 1e-10)
 		{	printf ("\n\nLine %d: float : Incorrect sample (#%d : %f => %f).\n", __LINE__, k, (double) float_out [k], (double) float_in [k]) ;
 			exit (1) ;
-			break ;
 			} ;
 
 	sf_close (file) ;
@@ -585,7 +582,6 @@ pcm_test_bits_16 (const char *filename, int filetype, uint64_t hash)
 		if (fabs (float_out [k] - float_in [k]) > 1e-10)
 		{	printf ("\n\nLine %d: float : Incorrect sample (#%d : %f => %f).\n", __LINE__, k, (double) float_out [k], (double) float_in [k]) ;
 			exit (1) ;
-			break ;
 			} ;
 
 	sf_close (file) ;
@@ -852,7 +848,6 @@ pcm_test_bits_24 (const char *filename, int filetype, uint64_t hash)
 		if (fabs (float_out [k] - float_in [k]) > 1e-10)
 		{	printf ("\n\nLine %d: float : Incorrect sample (#%d : %f => %f).\n", __LINE__, k, (double) float_out [k], (double) float_in [k]) ;
 			exit (1) ;
-			break ;
 			} ;
 
 	sf_close (file) ;
@@ -1119,7 +1114,6 @@ pcm_test_bits_32 (const char *filename, int filetype, uint64_t hash)
 		if (fabs (float_out [k] - float_in [k]) > 1e-10)
 		{	printf ("\n\nLine %d: float : Incorrect sample (#%d : %f => %f).\n", __LINE__, k, (double) float_out [k], (double) float_in [k]) ;
 			exit (1) ;
-			break ;
 			} ;
 
 	sf_close (file) ;
@@ -1205,7 +1199,7 @@ pcm_test_float (const char *filename, int filetype, uint64_t hash, int replace_f
 	int				sign ;
 	double			*data, error ;
 
-	print_test_name ("pcm_test_float", filename) ;
+	print_test_name (replace_float ?  "pcm_test_float (replace)" : "pcm_test_float", filename) ;
 
 	items = BUFFER_SIZE ;
 
@@ -1461,7 +1455,7 @@ pcm_test_double (const char *filename, int	filetype, uint64_t hash, int replace_
 
 	/* This is the best test routine. Other should be brought up to this standard. */
 
-	print_test_name ("pcm_test_double", filename) ;
+	print_test_name (replace_float ?  "pcm_test_double (replace)" : "pcm_test_double", filename) ;
 
 	items = BUFFER_SIZE ;
 

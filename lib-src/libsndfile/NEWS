@@ -1,3 +1,36 @@
+Version 1.0.24 (2011-03-23)
+  * WAV files now have an 18 byte u-law and A-law fmt chunk.
+  * Document virtual I/O functionality.
+  * Two new methods rawHandle() and takeOwnership() in sndfile.hh.
+  * AIFF fix for non-zero offset value in SSND chunk.
+  * Minor bug fixes and improvements.
+
+Version 1.0.23 (2010-10-10)
+  * Add version metadata to Windows DLL.
+  * Add a missing 'inline' to sndfile.hh.
+  * Update docs.
+  * Minor bug fixes and improvements.
+
+Version 1.0.22 (2010-10-04)
+  * Couple of fixes for SDS file writer.
+  * Fixes arising from static analysis.
+  * Handle FLAC files with ID3 meta data at start of file.
+  * Handle FLAC files which report zero length.
+  * Other minor bug fixes and improvements.
+
+Version 1.0.21 (2009-12-13)
+  * Add a couple of new binary programs to programs/ dir.
+  * Remove sndfile-jackplay (now in sndfile-tools package).
+  * Add windows only function sf_wchar_open().
+  * Bunch of minor bug fixes.
+
+Version 1.0.20 (2009-05-14)
+  * Fix potential heap overflow in VOC file parser (Tobias Klein, http://www.trapkit.de/).
+
+Version 1.0.19 (2009-03-02)
+  * Fix for CVE-2009-0186 (Alin Rad Pop, Secunia Research).
+  * Huge number of minor bug fixes as a result of static analysis.
+
 Version 1.0.18 (2009-02-07)
   * Add Ogg/Vorbis support (thanks to John ffitch).
   * Remove captive FLAC library.

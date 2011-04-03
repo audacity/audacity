@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -55,14 +55,14 @@ htk_open	(SF_PRIVATE *psf)
 	if (psf->is_pipe)
 		return SFE_HTK_NO_PIPE ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = htk_read_header (psf)))
 			return error ;
 		} ;
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_HTK)
 			return	SFE_BAD_OPEN_FORMAT ;
 
@@ -95,7 +95,7 @@ htk_open	(SF_PRIVATE *psf)
 static int
 htk_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		htk_write_header (psf, SF_TRUE) ;
 
 	return 0 ;
@@ -195,10 +195,17 @@ htk_read_header (SF_PRIVATE *psf)
 		return SFE_HTK_NOT_WAVEFORM ;
 
 	psf->sf.channels = 1 ;
-	psf->sf.samplerate = 10000000 / sample_period ;
 
-	psf_log_printf (psf, "HTK Waveform file\n  Sample Count  : %d\n  Sample Period : %d => %d Hz\n",
-				sample_count, sample_period, psf->sf.samplerate) ;
+	if (sample_period > 0)
+	{	psf->sf.samplerate = 10000000 / sample_period ;
+		psf_log_printf (psf, "HTK Waveform file\n  Sample Count  : %d\n  Sample Period : %d => %d Hz\n",
+					sample_count, sample_period, psf->sf.samplerate) ;
+		}
+	else
+	{	psf->sf.samplerate = 16000 ;
+		psf_log_printf (psf, "HTK Waveform file\n  Sample Count  : %d\n  Sample Period : %d (should be > 0) => Guessed sample rate %d Hz\n",
+					sample_count, sample_period, psf->sf.samplerate) ;
+		} ;
 
 	psf->sf.format = SF_FORMAT_HTK | SF_FORMAT_PCM_16 ;
 	psf->bytewidth = 2 ;

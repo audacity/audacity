@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** All rights reserved.
 **
@@ -30,7 +30,9 @@
 ** ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <sndfile.h>
+
+#define	ARRAY_LEN(x)	((int) (sizeof (x) / sizeof (x [0])))
+#define	MAX(a,b)		((a) > (b) ? (a) : (b))
 
 typedef struct
 {	const char * title ;
@@ -53,6 +55,7 @@ typedef struct
 	const char * origination_time ;
 	const char * umid ;
 	const char * coding_history ;
+	const char * time_ref ;
 } METADATA_INFO ;
 
 typedef SF_BROADCAST_INFO_VAR (2048) SF_BROADCAST_INFO_2K ;
@@ -62,3 +65,9 @@ void sfe_apply_metadata_changes (const char * filenames [2], const METADATA_INFO
 void sfe_copy_data_fp (SNDFILE *outfile, SNDFILE *infile, int channels) ;
 
 void sfe_copy_data_int (SNDFILE *outfile, SNDFILE *infile, int channels) ;
+
+int sfe_file_type_of_ext (const char *filename, int format) ;
+
+void sfe_dump_format_map (void) ;
+
+const char * program_name (const char * argv0) ;

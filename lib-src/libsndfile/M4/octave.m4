@@ -7,7 +7,7 @@ dnl Stolen from octave-forge
 AC_DEFUN([OCTAVE_EVAL],
 [
 AC_MSG_CHECKING([for $1 in $OCTAVE])
-$2=`echo "disp($1)" | $OCTAVE -qfH`
+$2=`TERM=;$OCTAVE -qfH --eval "disp($1)"`
 AC_MSG_RESULT($$2)
 AC_SUBST($2)
 ]) # OCTAVE_EVAL
@@ -29,7 +29,8 @@ AC_DEFUN([AC_OCTAVE_VERSION],
 [
 
 AC_ARG_WITH(octave,
-	[  --with-octave           choose the octave version], [ with_octave=$withval ])
+	AC_HELP_STRING([--with-octave], [choose the octave version]),
+	[ with_octave=$withval ])
 
 test -z "$with_octave" && with_octave=octave
 
@@ -62,7 +63,8 @@ AC_DEFUN([AC_OCTAVE_CONFIG_VERSION],
 [
 
 AC_ARG_WITH(octave-config,
-	[  --with-octave-config    choose the octave-config version], [ with_octave_config=$withval ])
+	AC_HELP_STRING([--with-octave-config], [choose the octave-config version]),
+	[ with_octave_config=$withval ])
 
 test -z "$with_octave_config" && with_octave_config=octave-config
 
@@ -100,7 +102,7 @@ dnl Default to no.
 OCTAVE_BUILD=no
 
 AC_OCTAVE_VERSION
-AC_MKOCTFILE_VERSION
+OCTAVE_MKOCTFILE_VERSION
 AC_OCTAVE_CONFIG_VERSION
 
 prog_concat="$ac_cv_prog_HAVE_OCTAVE$ac_cv_prog_HAVE_OCTAVE_CONFIG$ac_cv_prog_HAVE_MKOCTFILE"
@@ -127,8 +129,8 @@ if test "x$prog_concat" = "xyesyesyes" ; then
 				AC_MSG_WARN([Octave version $MKOCTFILE_VERSION is not supported.])
 				;;
 				esac
-		AC_MSG_RESULT([building octave libsndfile module... $OCTAVE_BUILD])
 		fi
+	AC_MSG_RESULT([building octave libsndfile module... $OCTAVE_BUILD])
 	fi
 
 AC_SUBST(OCTAVE_DEST_ODIR)
@@ -136,6 +138,6 @@ AC_SUBST(OCTAVE_DEST_MDIR)
 
 AC_SUBST(MKOCTFILE)
 
-AM_CONDITIONAL(BUILD_OCTAVE_MOD, test -n "$MKOCTFILE")
+AM_CONDITIONAL(BUILD_OCTAVE_MOD, test "x$OCTAVE_BUILD" = xyes)
 
 ])# AC_OCTAVE_BUILD

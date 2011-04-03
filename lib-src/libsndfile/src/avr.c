@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2004-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2004-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -80,7 +80,7 @@ int
 avr_open	(SF_PRIVATE *psf)
 {	int		error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = avr_read_header (psf)))
 			return error ;
 		} ;
@@ -88,7 +88,7 @@ avr_open	(SF_PRIVATE *psf)
 	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_AVR)
 		return	SFE_BAD_OPEN_FORMAT ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	psf->endian = SF_ENDIAN (psf->sf.format) ;
 		psf->endian = SF_ENDIAN_BIG ;
 
@@ -239,7 +239,7 @@ avr_write_header (SF_PRIVATE *psf, int calc_length)
 static int
 avr_close (SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		avr_write_header (psf, SF_TRUE) ;
 
 	return 0 ;

@@ -1,4 +1,4 @@
-dnl @synopsis AC_GCC_VERSION
+dnl @synopsis MN_GCC_VERSION
 dnl
 dnl Find the version of gcc.
 dnl @version 1.0	Nov 05 2007
@@ -11,7 +11,7 @@ dnl made about the suitability of this software for any purpose.  It is
 dnl provided "as is" without express or implied warranty.
 dnl
 
-AC_DEFUN([AC_GCC_VERSION],
+AC_DEFUN([MN_GCC_VERSION],
 [
 if test "x$ac_cv_c_compiler_gnu" = "xyes" ; then
 
@@ -29,5 +29,5 @@ AC_SUBST(GCC_VERSION)
 AC_SUBST(GCC_MAJOR_VERSION)
 AC_SUBST(GCC_MINOR_VERSION)
 
-])# AC_GCC_VERSION
+])# MN_GCC_VERSION
 

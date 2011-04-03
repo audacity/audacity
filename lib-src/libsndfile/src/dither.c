@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2003,2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2003-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -133,6 +133,7 @@ dither_init (SF_PRIVATE *psf, int mode)
 			case SF_FORMAT_FLOAT :
 					pdither->read_int = psf->read_int ;
 					psf->read_int = dither_read_int ;
+					break ;
 
 			case SF_FORMAT_PCM_32 :
 			case SF_FORMAT_PCM_24 :
@@ -141,6 +142,7 @@ dither_init (SF_PRIVATE *psf, int mode)
 			case SF_FORMAT_PCM_U8 :
 					pdither->read_short = psf->read_short ;
 					psf->read_short = dither_read_short ;
+					break ;
 
 			default : break ;
 			} ;
@@ -158,12 +160,14 @@ dither_init (SF_PRIVATE *psf, int mode)
 			case SF_FORMAT_FLOAT :
 					pdither->write_int = psf->write_int ;
 					psf->write_int = dither_write_int ;
+					break ;
 
 			case SF_FORMAT_PCM_32 :
 			case SF_FORMAT_PCM_24 :
 			case SF_FORMAT_PCM_16 :
 			case SF_FORMAT_PCM_S8 :
 			case SF_FORMAT_PCM_U8 :
+					break ;
 
 			default : break ;
 			} ;
@@ -264,6 +268,7 @@ dither_write_int	(SF_PRIVATE *psf, const int *ptr, sf_count_t len)
 		case SF_FORMAT_PCM_U8 :
 		case SF_FORMAT_PCM_16 :
 		case SF_FORMAT_PCM_24 :
+				break ;
 
 		case SF_FORMAT_DPCM_8 :
 		case SF_FORMAT_DPCM_16 :
@@ -309,6 +314,7 @@ dither_write_float	(SF_PRIVATE *psf, const float *ptr, sf_count_t len)
 		case SF_FORMAT_PCM_U8 :
 		case SF_FORMAT_PCM_16 :
 		case SF_FORMAT_PCM_24 :
+				break ;
 
 		case SF_FORMAT_DPCM_8 :
 		case SF_FORMAT_DPCM_16 :
@@ -353,6 +359,7 @@ dither_write_double	(SF_PRIVATE *psf, const double *ptr, sf_count_t len)
 		case SF_FORMAT_PCM_U8 :
 		case SF_FORMAT_PCM_16 :
 		case SF_FORMAT_PCM_24 :
+				break ;
 
 		case SF_FORMAT_DPCM_8 :
 		case SF_FORMAT_DPCM_16 :

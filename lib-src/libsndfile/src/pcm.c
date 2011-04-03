@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -137,7 +137,7 @@ pcm_init (SF_PRIVATE *psf)
 	else
 		psf->data_endswap = (psf->endian == SF_ENDIAN_LITTLE) ? SF_FALSE : SF_TRUE ;
 
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	switch (psf->bytewidth * 0x10000 + psf->endian + chars)
 		{	case (0x10000 + SF_ENDIAN_BIG + SF_CHARS_SIGNED) :
 			case (0x10000 + SF_ENDIAN_LITTLE + SF_CHARS_SIGNED) :
@@ -198,7 +198,7 @@ pcm_init (SF_PRIVATE *psf)
 			} ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	switch (psf->bytewidth * 0x10000 + psf->endian + chars)
 		{	case (0x10000 + SF_ENDIAN_BIG + SF_CHARS_SIGNED) :
 			case (0x10000 + SF_ENDIAN_LITTLE + SF_CHARS_SIGNED) :
@@ -271,7 +271,7 @@ pcm_init (SF_PRIVATE *psf)
 	else
 		psf->datalength = 0 ;
 
-	psf->sf.frames = psf->datalength / psf->blockwidth ;
+	psf->sf.frames = psf->blockwidth > 0 ? psf->datalength / psf->blockwidth : 0 ;
 
 	return 0 ;
 } /* pcm_init */

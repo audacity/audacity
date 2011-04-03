@@ -1,5 +1,5 @@
 /*
-**	Copyright (C) 2005 Erik de Castro Lopo
+**	Copyright (C) 2005-2011 Erik de Castro Lopo
 **
 **	This program is free software; you can redistribute it and/or modify
 **	it under the terms of the GNU General Public License as published by
@@ -311,8 +311,8 @@ get_filename_pathname_by_ekey (REGTEST_DB * db, int ekey)
 		exit (1) ;
 		} ;
 
-	strncpy (db->filename, result [2], sizeof (db->filename)) ;
-	strncpy (db->pathname, result [3], sizeof (db->pathname)) ;
+	snprintf (db->filename, sizeof (db->filename), "%s", result [2]) ;
+	snprintf (db->pathname, sizeof (db->pathname), "%s", result [3]) ;
 
 	sqlite3_free_table (result) ;
 
@@ -411,6 +411,7 @@ check_file_by_ekey (REGTEST_DB * db, int ekey)
 static void
 get_filename_pathname (REGTEST_DB * db, const char *filepath)
 {	const char * cptr ;
+	int slen ;
 
 	if (filepath [0] != '/')
 	{	memset (db->pathname, 0, sizeof (db->pathname)) ;
@@ -419,18 +420,19 @@ get_filename_pathname (REGTEST_DB * db, const char *filepath)
 			exit (1) ;
 			} ;
 
-		db->pathname [strlen (db->pathname)] = '/' ;
-		strncat (db->pathname, filepath, sizeof (db->pathname)) ;
+		slen = strlen (db->pathname) ;
+		db->pathname [slen ++] = '/' ;
+		snprintf (db->pathname + slen, sizeof (db->pathname) - slen, "%s", filepath) ;
 		}
 	else
-		strncpy (db->pathname, filepath, sizeof (db->pathname)) ;
+		snprintf (db->pathname, sizeof (db->pathname), "%s", filepath) ;
 
 	if ((cptr = strrchr (db->pathname, '/')) == NULL)
 	{	printf ("\nError : bad pathname %s\n", filepath) ;
 		exit (1) ;
 		} ;
 
-	strncpy (db->filename, cptr + 1, sizeof (db->filename)) ;
+	snprintf (db->filename, sizeof (db->filename), "%s", cptr + 1) ;
 } /* get filename_pathname */
 
 static void
@@ -443,9 +445,9 @@ static int
 count_callback (REGTEST_DB * db, int argc, char **argv, char **colname)
 {	db->count ++ ;
 
-	argc = 0 ;
-	argv = NULL ;
-	colname = NULL ;
+	(void) argc ;
+	(void) argv ;
+	(void) colname ;
 	return 0 ;
 } /* count_callback */
 
@@ -453,8 +455,8 @@ static int
 ekey_max_callback (REGTEST_DB * db, int argc, char **argv, char **unused)
 {	int ekey ;
 
-	argc = 0 ;
-	unused = NULL ;
+	(void) argc ;
+	(void) unused ;
 
 	ekey = strtol (argv [0], NULL, 10) ;
 	if (ekey > db->ekey_max)
@@ -467,7 +469,7 @@ static int
 callback (void *unused, int argc, char **argv, char **colname)
 {	int k ;
 
-	unused = NULL ;
+	(void) unused ;
 
 	for (k = 0 ; k < argc ; k++)
 		printf ("%s = %s\n", colname [k], argv [k] ? argv [k] : "NULL") ;

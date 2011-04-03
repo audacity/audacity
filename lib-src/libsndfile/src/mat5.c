@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -86,7 +86,7 @@ int
 mat5_open	(SF_PRIVATE *psf)
 {	int		subformat, error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = mat5_read_header (psf)))
 			return error ;
 		} ;
@@ -96,7 +96,7 @@ mat5_open	(SF_PRIVATE *psf)
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (psf->is_pipe)
 			return SFE_NO_PIPE_WRITE ;
 
@@ -143,7 +143,7 @@ mat5_open	(SF_PRIVATE *psf)
 static int
 mat5_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		mat5_write_header (psf, SF_TRUE) ;
 
 	return 0 ;
@@ -360,7 +360,7 @@ mat5_read_header (SF_PRIVATE *psf)
 				{	double	samplerate ;
 
 					psf_binheader_readf (psf, "d", &samplerate) ;
-					LSF_SNPRINTF (name, sizeof (name), "%f\n", samplerate) ;
+					snprintf (name, sizeof (name), "%f\n", samplerate) ;
 					psf_log_printf (psf, "    Val  : %s\n", name) ;
 
 					psf->sf.samplerate = lrint (samplerate) ;

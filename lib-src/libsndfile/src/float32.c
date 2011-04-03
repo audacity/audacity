@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -92,7 +92,7 @@ float32_init	(SF_PRIVATE *psf)
 
 	psf->blockwidth = sizeof (float) * psf->sf.channels ;
 
-	if (psf->mode == SFM_READ || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_READ || psf->file.mode == SFM_RDWR)
 	{	switch (psf->endian + float_caps)
 		{	case (SF_ENDIAN_BIG + FLOAT_CAN_RW_BE) :
 					psf->data_endswap = SF_FALSE ;
@@ -163,7 +163,7 @@ float32_init	(SF_PRIVATE *psf)
 			} ;
 		} ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	switch (psf->endian + float_caps)
 		{	case (SF_ENDIAN_LITTLE + FLOAT_CAN_RW_LE) :
 					psf->data_endswap = SF_FALSE ;
@@ -241,7 +241,7 @@ float32_init	(SF_PRIVATE *psf)
 	else
 		psf->datalength = 0 ;
 
-	psf->sf.frames = psf->datalength / psf->blockwidth ;
+	psf->sf.frames = psf->blockwidth > 0 ? psf->datalength / psf->blockwidth : 0 ;
 
 	return 0 ;
 } /* float32_init */
@@ -444,7 +444,7 @@ f2s_clip_array (const float *src, int count, short *dest, float scale)
 
 		if (CPU_CLIPS_POSITIVE == 0 && tmp > 32767.0)
 			dest [count] = SHRT_MAX ;
-		else if (CPU_CLIPS_NEGATIVE == 0 && tmp < 32768.0)
+		else if (CPU_CLIPS_NEGATIVE == 0 && tmp < -32768.0)
 			dest [count] = SHRT_MIN ;
 		else
 			dest [count] = lrintf (tmp) ;
@@ -523,7 +523,7 @@ host_read_f2s	(SF_PRIVATE *psf, short *ptr, sf_count_t len)
 		if (psf->data_endswap == SF_TRUE)
 			endswap_int_array (psf->u.ibuf, bufferlen) ;
 
-		f2s_array (psf->u.fbuf, readcount, ptr + total, scale) ;
+		convert (psf->u.fbuf, readcount, ptr + total, scale) ;
 		total += readcount ;
 		if (readcount < bufferlen)
 			break ;

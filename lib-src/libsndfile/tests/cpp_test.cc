@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2006 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -28,6 +28,41 @@ static short	sbuffer [100] ;
 static int 		ibuffer [100] ;
 static float	fbuffer [100] ;
 static double	dbuffer [100] ;
+
+static void
+ceeplusplus_wchar_test (void)
+{
+#if 0
+	LPCWSTR filename = L"wchar_test.wav" ;
+
+	print_test_name (__func__, "ceeplusplus_wchar_test.wav") ;
+
+	/* Use this scope to make sure the created file is closed. */
+	{
+		SndfileHandle file (filename, SFM_WRITE, SF_FORMAT_WAV | SF_FORMAT_PCM_16, 2, 44100) ;
+
+		if (file.refCount () != 1)
+		{	printf ("\n\n%s %d : Error : Reference count (%d) should be 1.\n\n", __func__, __LINE__, file.refCount ()) ;
+			exit (1) ;
+			} ;
+
+		/*	This should check that the file did in fact get created with a
+		**	wchar_t * filename.
+		*/
+		exit_if_true (
+			GetFileAttributesW (filename) == INVALID_FILE_ATTRIBUTES,
+			"\n\nLine %d : GetFileAttributes failed.\n\n", __LINE__
+			) ;
+	}
+
+	/* Use this because the file was created with CreateFileW. */
+	DeleteFileW (filename) ;
+
+	puts ("ok") ;
+#endif
+} /* ceeplusplus_wchar_test */
+
+
 
 static void
 create_file (const char * filename, int format)
@@ -207,6 +242,60 @@ ceeplusplus_extra_test (void)
 	puts ("ok") ;
 } /* ceeplusplus_extra_test */
 
+
+static void
+ceeplusplus_rawhandle_test (const char *filename)
+{
+	SNDFILE* handle ;
+	{
+		SndfileHandle file (filename) ;
+		handle = file.rawHandle () ;
+		sf_read_float (handle, fbuffer, ARRAY_LEN (fbuffer)) ;
+	}
+} /* ceeplusplus_rawhandle_test */
+
+static void
+ceeplusplus_takeOwnership_test (const char *filename)
+{
+	SNDFILE* handle ;
+	{
+		SndfileHandle file (filename) ;
+		handle = file.takeOwnership () ;
+	}
+
+	if (sf_read_float (handle, fbuffer, ARRAY_LEN (fbuffer)) <= 0)
+	{	printf ("\n\n%s %d : error when taking ownership of handle.\n\n", __func__, __LINE__) ;
+		exit (1) ;
+		}
+
+	if (sf_close (handle) != 0)
+	{	printf ("\n\n%s %d : cannot close file.\n\n", __func__, __LINE__) ;
+		exit (1) ;
+		}
+
+	SndfileHandle file (filename) ;
+	SndfileHandle file2 (file) ;
+
+	if (file2.takeOwnership ())
+	{	printf ("\n\n%s %d : taking ownership of shared handle is not allowed.\n\n", __func__, __LINE__) ;
+		exit (1) ;
+		}
+} /* ceeplusplus_takeOwnership_test */
+
+static void
+ceeplusplus_handle_test (const char *filename, int format)
+{
+	print_test_name ("ceeplusplus_handle_test", filename) ;
+
+	create_file (filename, format) ;
+
+	if (0) ceeplusplus_rawhandle_test (filename) ;
+	ceeplusplus_takeOwnership_test (filename) ;
+
+	remove (filename) ;
+	puts ("ok") ;
+} /* ceeplusplus_test */
+
 int
 main (void)
 {
@@ -215,6 +304,9 @@ main (void)
 	ceeplusplus_test ("cpp_test.au", SF_FORMAT_AU | SF_FORMAT_FLOAT) ;
 
 	ceeplusplus_extra_test () ;
+	ceeplusplus_handle_test ("cpp_test.wav", SF_FORMAT_WAV | SF_FORMAT_PCM_16) ;
+
+	ceeplusplus_wchar_test () ;
 
 	return 0 ;
 } /* main */

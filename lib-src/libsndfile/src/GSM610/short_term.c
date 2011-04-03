@@ -9,8 +9,6 @@
 
 #include "gsm610_priv.h"
 
-#include "gsm.h"
-
 /*
  *  SHORT TERM ANALYSIS FILTERING SECTION
  */

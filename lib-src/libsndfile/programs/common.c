@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2008 George Blood Audio
 **
 ** All rights reserved.
@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdint.h>
 
 #include <sndfile.h>
 
@@ -146,6 +147,14 @@ merge_broadcast_info (SNDFILE * infile, SNDFILE * outfile, int format, const MET
 	REPLACE_IF_NEW (origination_time) ;
 	REPLACE_IF_NEW (umid) ;
 
+	/* Special case for Time Ref. */
+	if (info->time_ref != NULL)
+	{	uint64_t ts = atoll (info->time_ref) ;
+
+		binfo.time_reference_high = (ts >> 32) ;
+		binfo.time_reference_low = (ts & 0xffffffff) ;
+		} ;
+
 	/* Special case for coding_history because we may want to append. */
 	if (info->coding_history != NULL)
 	{	if (info->coding_hist_append)
@@ -180,22 +189,22 @@ update_strings (SNDFILE * outfile, const METADATA_INFO * info)
 		sf_set_string (outfile, SF_STR_TITLE, info->title) ;
 
 	if (info->copyright != NULL)
-		sf_set_string (outfile, SF_STR_TITLE, info->copyright) ;
+		sf_set_string (outfile, SF_STR_COPYRIGHT, info->copyright) ;
 
 	if (info->artist != NULL)
 		sf_set_string (outfile, SF_STR_ARTIST, info->artist) ;
 
 	if (info->comment != NULL)
-		sf_set_string (outfile, SF_STR_TITLE, info->comment) ;
+		sf_set_string (outfile, SF_STR_COMMENT, info->comment) ;
 
 	if (info->date != NULL)
 		sf_set_string (outfile, SF_STR_DATE, info->date) ;
 
 	if (info->album != NULL)
-		sf_set_string (outfile, SF_STR_TITLE, info->album) ;
+		sf_set_string (outfile, SF_STR_ALBUM, info->album) ;
 
 	if (info->license != NULL)
-		sf_set_string (outfile, SF_STR_TITLE, info->license) ;
+		sf_set_string (outfile, SF_STR_LICENSE, info->license) ;
 
 } /* update_strings */
 
@@ -238,8 +247,6 @@ sfe_apply_metadata_changes (const char * filenames [2], const METADATA_INFO * in
 		goto cleanup_exit ;
 		} ;
 
-	update_strings (outfile, info) ;
-
 	if (infile != outfile)
 	{	int infileminor = SF_FORMAT_SUBMASK & sfinfo.format ;
 
@@ -249,6 +256,8 @@ sfe_apply_metadata_changes (const char * filenames [2], const METADATA_INFO * in
 		else
 			sfe_copy_data_int (outfile, infile, sfinfo.channels) ;
 		} ;
+
+	update_strings (outfile, info) ;
 
 cleanup_exit :
 
@@ -264,3 +273,107 @@ cleanup_exit :
 	return ;
 } /* sfe_apply_metadata_changes */
 
+/*==============================================================================
+*/
+
+typedef struct
+{	const char	*ext ;
+	int			len ;
+	int			format ;
+} OUTPUT_FORMAT_MAP ;
+
+static OUTPUT_FORMAT_MAP format_map [] =
+{
+	{	"aif",		3,	SF_FORMAT_AIFF	},
+	{	"wav", 		0,	SF_FORMAT_WAV	},
+	{	"au",		0,	SF_FORMAT_AU	},
+	{	"caf",		0,	SF_FORMAT_CAF	},
+	{	"flac",		0,	SF_FORMAT_FLAC	},
+	{	"snd",		0,	SF_FORMAT_AU	},
+	{	"svx",		0,	SF_FORMAT_SVX	},
+	{	"paf",		0,	SF_ENDIAN_BIG | SF_FORMAT_PAF	},
+	{	"fap",		0,	SF_ENDIAN_LITTLE | SF_FORMAT_PAF	},
+	{	"gsm",		0,	SF_FORMAT_RAW	},
+	{	"nist", 	0,	SF_FORMAT_NIST	},
+	{	"htk",		0,	SF_FORMAT_HTK	},
+	{	"ircam",	0,	SF_FORMAT_IRCAM	},
+	{	"sf",		0, 	SF_FORMAT_IRCAM	},
+	{	"voc",		0, 	SF_FORMAT_VOC	},
+	{	"w64", 		0, 	SF_FORMAT_W64	},
+	{	"raw",		0,	SF_FORMAT_RAW	},
+	{	"mat4", 	0,	SF_FORMAT_MAT4	},
+	{	"mat5", 	0, 	SF_FORMAT_MAT5 	},
+	{	"mat",		0, 	SF_FORMAT_MAT4 	},
+	{	"pvf",		0, 	SF_FORMAT_PVF 	},
+	{	"sds",		0, 	SF_FORMAT_SDS 	},
+	{	"sd2",		0, 	SF_FORMAT_SD2 	},
+	{	"vox",		0, 	SF_FORMAT_RAW 	},
+	{	"xi",		0, 	SF_FORMAT_XI 	},
+	{	"wve",		0,	SF_FORMAT_WVE	},
+	{	"oga",		0,	SF_FORMAT_OGG	},
+	{	"mpc",		0,	SF_FORMAT_MPC2K	},
+	{	"rf64",		0,	SF_FORMAT_RF64	},
+} ; /* format_map */
+
+int
+sfe_file_type_of_ext (const char *str, int format)
+{	char	buffer [16], *cptr ;
+	int		k ;
+
+	format &= SF_FORMAT_SUBMASK ;
+
+	if ((cptr = strrchr (str, '.')) == NULL)
+		return 0 ;
+
+	strncpy (buffer, cptr + 1, 15) ;
+	buffer [15] = 0 ;
+
+	for (k = 0 ; buffer [k] ; k++)
+		buffer [k] = tolower ((buffer [k])) ;
+
+	if (strcmp (buffer, "gsm") == 0)
+		return SF_FORMAT_RAW | SF_FORMAT_GSM610 ;
+
+	if (strcmp (buffer, "vox") == 0)
+		return SF_FORMAT_RAW | SF_FORMAT_VOX_ADPCM ;
+
+	for (k = 0 ; k < (int) (sizeof (format_map) / sizeof (format_map [0])) ; k++)
+	{	if (format_map [k].len > 0 && strncmp (buffer, format_map [k].ext, format_map [k].len) == 0)
+			return format_map [k].format | format ;
+		else if (strcmp (buffer, format_map [k].ext) == 0)
+			return format_map [k].format | format ;
+		} ;
+
+	/* Default if all the above fails. */
+	return (SF_FORMAT_WAV | SF_FORMAT_PCM_24) ;
+} /* sfe_file_type_of_ext */
+
+void
+sfe_dump_format_map (void)
+{	SF_FORMAT_INFO	info ;
+	int k ;
+
+	for (k = 0 ; k < ARRAY_LEN (format_map) ; k++)
+	{	info.format = format_map [k].format ;
+		sf_command (NULL, SFC_GET_FORMAT_INFO, &info, sizeof (info)) ;
+		printf ("        %-10s : %s\n", format_map [k].ext, info.name == NULL ? "????" : info.name) ;
+		} ;
+
+} /* sfe_dump_format_map */
+
+const char *
+program_name (const char * argv0)
+{	const char * tmp ;
+
+	tmp = strrchr (argv0, '/') ;
+	argv0 = tmp ? tmp + 1 : argv0 ;
+
+	tmp = strrchr (argv0, '/') ;
+	argv0 = tmp ? tmp + 1 : argv0 ;
+
+	/* Remove leading libtool name mangling. */
+	if (strstr (argv0, "lt-") == argv0)
+		return argv0 + 3 ;
+
+	return argv0 ;
+} /* program_name */

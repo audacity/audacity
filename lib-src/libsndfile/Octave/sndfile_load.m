@@ -1,4 +1,4 @@
-## Copyright (C) 2002  Erik de Castro Lopo
+## Copyright (C) 2002-2011  Erik de Castro Lopo
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ samplingrate = -1 ;
 wavedata = -1 ;
 
 
-eval (sprintf ('load -f %s', filename)) ; 
+eval (sprintf ('load -f %s', filename)) ;
 
 if (samplerate > 0),
 	fs = samplerate ;
@@ -42,7 +42,7 @@ elseif (samplingrate > 0),
 else
 	error ("Not able to find sample rate.") ;
 	endif
-	
+
 if (max (size (wavedata)) > 1),
 	data = wavedata ;
 else

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -86,7 +86,7 @@ dwvw_init (SF_PRIVATE *psf, int bitwidth)
 	if (bitwidth > 24)
 		return SFE_DWVW_BAD_BITWIDTH ;
 
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		return SFE_BAD_MODE_RW ;
 
 	if ((pdwvw = calloc (1, sizeof (DWVW_PRIVATE))) == NULL)
@@ -101,14 +101,14 @@ dwvw_init (SF_PRIVATE *psf, int bitwidth)
 
 	dwvw_read_reset (pdwvw) ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	psf->read_short		= dwvw_read_s ;
 		psf->read_int		= dwvw_read_i ;
 		psf->read_float		= dwvw_read_f ;
 		psf->read_double	= dwvw_read_d ;
 		} ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	psf->write_short	= dwvw_write_s ;
 		psf->write_int		= dwvw_write_i ;
 		psf->write_float	= dwvw_write_f ;
@@ -137,7 +137,7 @@ dwvw_close (SF_PRIVATE *psf)
 		return 0 ;
 	pdwvw = (DWVW_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	static int last_values [12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } ;
 
 		/* Write 8 zero samples to fully flush output. */

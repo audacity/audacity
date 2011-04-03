@@ -8,10 +8,7 @@
 #include	<stdlib.h>
 #include	<string.h>
 
-#include	"config.h"
-
 #include	"gsm610_priv.h"
-#include	"gsm.h"
 
 /* 
  *  4.2 FIXED POINT IMPLEMENTATION OF THE RPE-LTP CODER 

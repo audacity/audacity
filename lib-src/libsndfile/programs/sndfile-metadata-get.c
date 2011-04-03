@@ -1,6 +1,6 @@
 /*
-** Copyright (C) 2008 George Blood Audio
-** Written by Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2010 George Blood Audio
 **
 ** All rights reserved.
 **
@@ -37,7 +37,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <math.h>
 #include <time.h>
 
 #include <sndfile.h>
@@ -59,8 +58,7 @@ main (int argc, char *argv [])
 	int	start ;
 
 	/* Store the program name. */
-	progname = strrchr (argv [0], '/') ;
-	progname = progname ? progname + 1 : argv [0] ;
+	progname = program_name (argv [0]) ;
 
 	/* Check if we've been asked for help. */
 	if (argc <= 2 || strcmp (argv [1], "--help") == 0 || strcmp (argv [1], "-h") == 0)
@@ -124,6 +122,7 @@ usage_exit (const char *progname, int exit_code)
 		"    --str-license         Print the license metadata.\n"
 		) ;
 
+	printf ("Using %s.\n\n", sf_version_string ()) ;
 	exit (exit_code) ;
 } /* usage_exit */
 

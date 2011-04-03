@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -122,7 +122,7 @@ g72x_init (SF_PRIVATE * psf)
 	if (psf->dataend > 0)
 		psf->datalength -= psf->filelength - psf->dataend ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	pg72x->private = g72x_reader_init (codec, &(pg72x->blocksize), &(pg72x->samplesperblock)) ;
 		if (pg72x->private == NULL)
 			return SFE_MALLOC_FAILED ;
@@ -147,7 +147,7 @@ g72x_init (SF_PRIVATE * psf)
 
 		psf_g72x_decode_block (psf, pg72x) ;
 		}
-	else if (psf->mode == SFM_WRITE)
+	else if (psf->file.mode == SFM_WRITE)
 	{	pg72x->private = g72x_writer_init (codec, &(pg72x->blocksize), &(pg72x->samplesperblock)) ;
 		if (pg72x->private == NULL)
 			return SFE_MALLOC_FAILED ;
@@ -401,7 +401,7 @@ g72x_seek (SF_PRIVATE *psf, int UNUSED (mode), sf_count_t UNUSED (offset))
 **					return	PSF_SEEK_ERROR ;
 **			} ;
 **
-**		if (psf->mode == SFM_READ)
+**		if (psf->file.mode == SFM_READ)
 **		{	psf_fseek (psf, psf->dataoffset + newblock * pg72x->blocksize, SEEK_SET) ;
 **			pg72x->block_curr  = newblock ;
 **			psf_g72x_decode_block (psf, pg72x) ;
@@ -584,7 +584,7 @@ g72x_close (SF_PRIVATE *psf)
 
 	pg72x = (G72x_PRIVATE*) psf->codec_data ;
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{	/*	If a block has been partially assembled, write it out
 		**	as the final block.
 		*/

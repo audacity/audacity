@@ -7,7 +7,6 @@
 #include <stdio.h>
 
 #include	"gsm610_priv.h"
-#include	"gsm.h"
 
 /*
  *  4.3 FIXED POINT IMPLEMENTATION OF THE RPE-LTP DECODER

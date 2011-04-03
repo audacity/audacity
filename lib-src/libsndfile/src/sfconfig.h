@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2005-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2005-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -95,6 +95,14 @@
 
 #ifndef HAVE_UNISTD_H
 #define HAVE_UNISTD_H 0
+#endif
+
+#ifndef HAVE_PIPE
+#define HAVE_PIPE 0
+#endif
+
+#ifndef HAVE_WAITPID
+#define	HAVE_WAITPID 0
 #endif
 
 #endif

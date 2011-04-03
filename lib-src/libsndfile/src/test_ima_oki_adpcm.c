@@ -1,6 +1,6 @@
 /*
+** Copyright (C) 2007-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (c) 2007 <robs@users.sourceforge.net>
-** Copyright (C) 2007-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This library is free software; you can redistribute it and/or modify it
 ** under the terms of the GNU Lesser General Public License as published by
@@ -16,6 +16,8 @@
 ** along with this library.  If not, write to the Free Software Foundation,
 ** Fifth Floor, 51 Franklin Street, Boston, MA 02111-1301, USA.
 */
+
+#include "sfconfig.h"
 
 #include <stdio.h>
 
@@ -71,7 +73,7 @@ test_oki_adpcm (void)
 	print_test_name ("Testing ima/oki decoder") ;
 
 	ima_oki_adpcm_init (&adpcm, IMA_OKI_ADPCM_TYPE_OKI) ;
-	for (i = 0 ; i < ARRAY_LEN (test_pcm) ; i += j)
+	for (i = 0 ; i < ARRAY_LEN (test_pcm) - 1 ; i += 2)
 	{	code = adpcm_encode (&adpcm, test_pcm [i]) ;
 		code = (code << 4) | adpcm_encode (&adpcm, test_pcm [i + 1]) ;
 		if (code != test_codes [i / 2])

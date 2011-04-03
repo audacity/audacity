@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -53,7 +53,7 @@ int
 interleave_init	(SF_PRIVATE *psf)
 {	INTERLEAVE_DATA *pdata ;
 
-	if (psf->mode != SFM_READ)
+	if (psf->file.mode != SFM_READ)
 		return SFE_INTERLEAVE_MODE ;
 
 	if (psf->interleave)

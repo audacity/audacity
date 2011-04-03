@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2003-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2003-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -140,7 +140,9 @@ static const char
 	license		[]	= "The license",
 	title		[]	= "This is the title",
 	long_title	[]	= "This is a very long and very boring title for this file",
-	long_artist	[]	= "The artist who kept on changing its name" ;
+	long_artist	[]	= "The artist who kept on changing its name",
+	genre		[]	= "The genre",
+	trackno		[]	= "Track three" ;
 
 
 static	short	data_out [BUFFER_LEN] ;
@@ -169,6 +171,8 @@ string_start_end_test (const char *filename, int typemajor)
 	sf_set_string (file, SF_STR_TITLE, filename) ;
 	sf_set_string (file, SF_STR_SOFTWARE, software) ;
 	sf_set_string (file, SF_STR_ARTIST, artist) ;
+	sf_set_string (file, SF_STR_GENRE, genre) ;
+	sf_set_string (file, SF_STR_TRACKNUMBER, trackno) ;
 
 	/* Write data to file. */
 	test_write_short_or_die (file, 0, data_out, BUFFER_LEN, __LINE__) ;
@@ -240,6 +244,13 @@ string_start_end_test (const char *filename, int typemajor)
 				puts ("\n") ;
 			printf ("    Bad date      : %s\n", cptr) ;
 			} ;
+
+		cptr = sf_get_string (file, SF_STR_GENRE) ;
+		if (cptr == NULL || strcmp (genre, cptr) != 0)
+		{	if (errors++ == 0)
+				puts ("\n") ;
+			printf ("    Bad genre     : %s\n", cptr) ;
+			} ;
 		} ;
 
 	switch (typemajor)
@@ -264,6 +275,12 @@ string_start_end_test (const char *filename, int typemajor)
 				printf ("    Bad license : %s\n", cptr) ;
 				} ;
 
+			cptr = sf_get_string (file, SF_STR_TRACKNUMBER) ;
+			if (cptr == NULL || strcmp (genre, cptr) != 0)
+			{	if (errors++ == 0)
+					puts ("\n") ;
+				printf ("    Bad track no. : %s\n", cptr) ;
+				} ;
 			break ;
 		} ;
 

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -51,14 +51,14 @@ pvf_open	(SF_PRIVATE *psf)
 {	int		subformat ;
 	int		error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = pvf_read_header (psf)))
 			return error ;
 		} ;
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_PVF)
 			return	SFE_BAD_OPEN_FORMAT ;
 
@@ -112,7 +112,7 @@ pvf_write_header (SF_PRIVATE *psf, int UNUSED (calc_length))
 	if (psf->is_pipe == SF_FALSE)
 		psf_fseek (psf, 0, SEEK_SET) ;
 
-	LSF_SNPRINTF ((char*) psf->header, sizeof (psf->header), "PVF1\n%d %d %d\n",
+	snprintf ((char*) psf->header, sizeof (psf->header), "PVF1\n%d %d %d\n",
 		psf->sf.channels, psf->sf.samplerate, psf->bytewidth * 8) ;
 
 	psf->headindex = strlen ((char*) psf->header) ;

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -40,7 +40,8 @@
 
 #include "utils.h"
 
-#if (OS_IS_WIN32)
+/* EMX is OS/2. */
+#if (OS_IS_WIN32) || defined (__EMX__)
 
 int
 main (void)

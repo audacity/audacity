@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -76,7 +76,7 @@ int
 mat4_open	(SF_PRIVATE *psf)
 {	int		subformat, error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = mat4_read_header (psf)))
 			return error ;
 		} ;
@@ -86,7 +86,7 @@ mat4_open	(SF_PRIVATE *psf)
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (psf->is_pipe)
 			return SFE_NO_PIPE_WRITE ;
 
@@ -135,7 +135,7 @@ mat4_open	(SF_PRIVATE *psf)
 static int
 mat4_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		mat4_write_header (psf, SF_TRUE) ;
 
 	return 0 ;
@@ -244,7 +244,7 @@ mat4_read_header (SF_PRIVATE *psf)
 
 	psf_binheader_readf (psf, "d", &value) ;
 
-	LSF_SNPRINTF (psf->u.cbuf, sizeof (psf->u.cbuf), " Value : %f\n", value) ;
+	snprintf (psf->u.cbuf, sizeof (psf->u.cbuf), " Value : %f\n", value) ;
 	psf_log_printf (psf, psf->u.cbuf) ;
 
 	if ((rows != 1) || (cols != 1))
@@ -383,7 +383,7 @@ mat4_marker_to_str (int marker)
 
 	/* This is a little unsafe but is really only for debugging. */
 	str [sizeof (str) - 1] = 0 ;
-	LSF_SNPRINTF (str, sizeof (str) - 1, "%08X", marker) ;
+	snprintf (str, sizeof (str) - 1, "%08X", marker) ;
 	return str ;
 } /* mat4_marker_to_str */
 

@@ -6,11 +6,12 @@
 	libsndfile
 	</TITLE>
 	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
-    <META NAME="Version"     CONTENT="libsndfile-1.0.18">
+    <META NAME="Version"     CONTENT="libsndfile-1.0.24">
 	<META NAME="Description" CONTENT="The libsndfile Home Page">
 	<META NAME="Keywords"    CONTENT="WAV AIFF AU SVX PAF NIST W64 libsndfile sound audio dsp Linux">
 	<META NAME="ROBOTS" 	 CONTENT="NOFOLLOW">
-	<LINK REL=StyleSheet HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="print.css" TYPE="text/css" MEDIA="print">
 </HEAD>
 
 <BODY>
@@ -33,7 +34,8 @@
 		<A HREF="FAQ.html">FAQ</A> -+-
 		<A HREF="lists.html">Mailing Lists</A> -+-
 		<A HREF="ChangeLog">Change Log</A> -+-
-		<A HREF="#Licensing">Licensing Information</A>
+		<A HREF="#Licensing">Licensing Information</A> -+-
+		<A HREF="#SeeAlso">See Also</A>
 </CENTER>
 
 <br><br>
@@ -46,11 +48,8 @@
 <!-- pepper -->
 <P>
 	The library was written to compile and run on a Linux system but should compile
-	and run on just about any Unix (including MacOSX).
-	It can also be compiled and run on Win32 systems using the Microsoft compiler and
-	MacOS (OS9 and earlier) using the Metrowerks compiler.
-	There are directions for compiling libsndfile on these platforms in the Win32 and
-	MacOS directories of the source code distribution.
+	and run on just about any Unix (including MacOS X).
+	There are also pre-compiled binaries available for 32 and 64 bit windows.
 </P>
 <P>
 	It was designed to handle both little-endian (such as WAV) and big-endian
@@ -66,18 +65,20 @@
 </P>
 <!-- pepper -->
 <UL>
-	<LI>i586-pc-linux-gnu (Linux on PC hardware)
- 	<LI>powerpc-unknown-linux-gnu (Linux on Apple Mac hardware)
-	<LI>powerpc-apple-darwin7.0 (Mac OS X 10.3)
-	<LI>sparc-sun-solaris2.8 (using gcc)
-	<LI>mips-sgi-irix5.3 (using gcc)
-	<LI>QNX 6.0
-	<LI>i386-unknown-openbsd2.9
+	<LI>Every platform supported by Debian GNU/Linux including x86_64-linux-gnu,
+		i486-linux-gnu, powerpc-linux-gnu, sparc-linux-gnu, alpha-linux-gnu,
+		mips-linux-gnu and armel-linux-gnu.</LI>
+	<LI>arm-linux-androideab (Android phones OS)</LI>
+	<LI>powerpc-apple-darwin7.0 (Mac OS X 10.3)</LI>
+	<LI>sparc-sun-solaris2.8 (using gcc)</LI>
+	<LI>mips-sgi-irix5.3 (using gcc)</LI>
+	<LI>QNX 6.0</LI>
+	<LI>i386-unknown-openbsd2.9</LI>
 </UL>
 <!-- pepper -->
 <P>
-	At the moment, each new release is being tested on i386 Linux, PowerPC Linux,
-	MacOSX on PowerPC and Win32.
+	At the moment, each new release is being tested on i386 Linux, x86_64 Linux,
+	PowerPC Linux, Win32 and Win64.
 </P>
 <!-- pepper -->
 
@@ -342,7 +343,7 @@ and
 	<LI>Version 1.0.5 (May 03 2003) One new file format and new functionality.
 	<LI>Version 1.0.6 (Feb 08 2004) Large file fix for Linux/Solaris, new functionality
 		and Win32 improvements.
-	<LI>Version 1.0.7 (Feb 24 2004) Fix build problems on MacOSX and fix ia64/MIPS etc
+	<LI>Version 1.0.7 (Feb 24 2004) Fix build problems on MacOS X and fix ia64/MIPS etc
 		clip mode detction.
 	<LI>Version 1.0.8 (Mar 14 2004) Minor bug fixes.
 	<LI>Version 1.0.9 (Mar 30 2004) Add AVR format. Improve handling of some WAV files.
@@ -359,6 +360,13 @@ and
 	<LI>Version 1.0.17 (Aug 31 2006) Add C++ wrapper sndfile.hh. Minor bug fixes and cleanups.
 	<LI>Version 1.0.18 (Feb 07 2009) Add Ogg/Vorbis suppport, remove captive libraries, many
 				new features and bug fixes. Generate Win32 and Win64 pre-compiled binaries.
+	<LI>Version 1.0.19 (Mar 02 2009) Fix for CVE-2009-0186. Huge number of minor fixes as a
+				result of static analysis.
+	<LI>Version 1.0.20 (May 14 2009) Fix for potential heap overflow.
+	<LI>Version 1.0.21 (December 13 2009) Bunch of minor bug fixes.
+	<LI>Version 1.0.22 (October 04 2010) Bunch of minor bug fixes.
+	<LI>Version 1.0.23 (October 10 2010) Minor bug fixes.
+	<LI>Version 1.0.24 (March 23 2011) Minor bug fixes.
 	</UL>
 
 <A NAME="Similar"></A>
@@ -386,7 +394,7 @@ and
 		<a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">version 2.1</a>
 	and
 		<a href="http://www.gnu.org/copyleft/lesser.html">version 3</a>.
-	To mamximise the compatibility of libsndfile, the user may choose to use libsndfile
+	To maximise the compatibility of libsndfile, the user may choose to use libsndfile
 	under either of the above two licenses.
 	You can also read a simple explanation of the ideas behind the GPL and the LGPL
 		<A HREF="http://www.gnu.org/copyleft/copyleft.html">here</A>.
@@ -407,48 +415,35 @@ and
 		<A HREF="http://www.gnu.org/">Free Software</A>
 	or
 		<A HREF="http://www.opensource.org/">Open Source</A>.
-	However, if you put in a great deal of effort building a huge application
+	However, if you put in a great deal of effort building a significant application
 	which simply uses libsndfile for file I/O, then I have no problem with you releasing
 	that as closed source and charging as much money as you want for it as long as you
 	abide by <A HREF="http://www.gnu.org/copyleft/lesser.html">the license</A>.
 </P>
 
 <A NAME="Download"></A>
-<P>
-	What I don't like to see is things like Steve Dekorte's <b>SoundConverter</b>
-	(no I won't link to his page) for Mac OSX.
-	Mr Dekorte has grabbed a number of Free Software packages and wrapped them in a
-	rather amateurish, buggy GUI and released the result as shareware.
-	He charges US$10 for the full version when his contribution to the whole is, by
-	his own
-		<A HREF="http://groups.google.com/groups?selm=3F9B8F8B.7853300B@mega-nerd.com">
-		admission</A>,
-	less than 10%.
-</P>
-
 <H1><B>Download</B></H1>
 <P>
 	Here is the latest version. It is available in the following formats:
 </P>
 	<UL>
 	<LI>Source code as a .tar.gz :
-			<A HREF="libsndfile-1.0.18.tar.gz">libsndfile-1.0.18.tar.gz</A>
+			<A HREF="files/libsndfile-1.0.24.tar.gz">libsndfile-1.0.24.tar.gz</A>
 			and
-			<A HREF="libsndfile-1.0.18.tar.gz.asc">(GPG signature)</A>.
+			<A HREF="files/libsndfile-1.0.24.tar.gz.asc">(GPG signature)</A>.
 	<LI>Win32 installer:
-			<A HREF="libsndfile-1.0.18-w32-setup.exe">
-			libsndfile-1.0.18-w32-setup.exe</A> (thoroughly tested under
+			<A HREF="files/libsndfile-1.0.24-w32-setup.exe">
+			libsndfile-1.0.24-w32-setup.exe</A> (thoroughly tested under
 			<a href="http://www.winehq.com/">Wine</a> and Windows XP).
 	<LI>Win64 installer:
-			<A HREF="libsndfile-1.0.18-w64-setup.exe">
-			libsndfile-1.0.18-w64-setup.exe</A> (alpha quality release).
+			<A HREF="files/libsndfile-1.0.24-w64-setup.exe">
+			libsndfile-1.0.24-w64-setup.exe</A>
+			(thoroughly tested on 64 bit Windows 7).
 	</UL>
 
 <P>
 The Win32 installer was compiled for Windows XP but should also work on Windows
-2000  and Vista.
-It may even work on earlier versions of Windows.
-The Win64 is pretty much untested.
+2000, Vista and Windows 7.
 </p>
 
 <P>
@@ -458,6 +453,15 @@ The Win64 is pretty much untested.
 			<A HREF="lists.html">libsndfile-devel</A>
 	mailing list.
 </P>
+
+<A NAME="SeeAlso"></A>
+<H1><B>See Also</B></H1>
+	<UL>
+	<LI><a href="http://www.mega-nerd.com/libsndfile/tools/">
+		sndfile-tools</a>
+		: a small collection of programs which use libsndfile.
+	</UL>
+
 <br><br>
 
 <hr>
@@ -475,7 +479,7 @@ Author :
 <P>
 This page has been accessed
 	<IMG SRC=
-	"/cgi-bin/Count.cgi?ft=6|frgb=55;55;55|tr=0|trgb=0;0;0|wxh=15;20|md=6|dd=B|st=1|sh=1|df=libsndfile.dat"
+	"/cgi-bin/Count.cgi?ft=6|frgb=55;55;55|tr=0|trgb=0;0;0|wxh=15;20|md=7|dd=B|st=1|sh=1|df=libsndfile.dat"
 	HEIGHT=30 WIDTH=100 ALT="counter.gif">
 times.
 </P>

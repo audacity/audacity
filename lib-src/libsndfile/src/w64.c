@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -129,7 +129,7 @@ w64_open	(SF_PRIVATE *psf)
 		return SFE_MALLOC_FAILED ;
 	psf->container_data = wpriv ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR &&psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR &&psf->filelength > 0))
 	{	if ((error = w64_read_header (psf, &blockalign, &framesperblock)))
 			return error ;
 		} ;
@@ -139,7 +139,7 @@ w64_open	(SF_PRIVATE *psf)
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (psf->is_pipe)
 			return SFE_NO_PIPE_WRITE ;
 
@@ -377,7 +377,7 @@ w64_read_header	(SF_PRIVATE *psf, int *blockalign, int *framesperblock)
 			break ;
 		} ; /* while (1) */
 
-	if (! psf->dataoffset)
+	if (psf->dataoffset <= 0)
 		return SFE_W64_NO_DATA ;
 
 	psf->endian = SF_ENDIAN_LITTLE ;		/* All W64 files are little endian. */
@@ -631,7 +631,7 @@ w64_write_header (SF_PRIVATE *psf, int calc_length)
 static int
 w64_close (SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		w64_write_header (psf, SF_TRUE) ;
 
 	return 0 ;

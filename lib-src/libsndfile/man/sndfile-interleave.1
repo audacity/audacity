@@ -1,0 +1,23 @@
+.TH SNDFILE-INTERLEAVE 1 "December 14, 2009"
+.SH NAME
+sndfile-interleave \- convert multiple single channel files into a multi-channel file
+.br
+sndfile-deinterleave \- split a multi-channel into multiple single channel files
+.SH SYNOPSIS
+.B sndfile-interleave
+.RI "<input 1> <input 2> ... -o <output file>"
+.br
+.B sndfile-deinterleave
+.RI "filename"
+
+.SH DESCRIPTION
+sndfile-interleave and sndfile-deinterleave use libsndfile
+(http://www.mega-nerd.com/libsndfile/) to convert back and forth between multiple
+single channel files and a single multi-channel sound file.
+
+Run "sndfile\-interleave \-\-help" or "sndfile\-deinterleave \-\-help" for
+more information
+
+.SH AUTHOR
+This manual page was written by Erik de Castro Lopo <erikd@mega-nerd.com>.
+

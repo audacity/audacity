@@ -1,3 +1,1089 @@
+2011-03-23  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * NEWS README docs/*.html
+    Updates for 1.0.24 release.
+
+2011-03-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Fix up usage of sed (should not assume GNU sed).
+
+    * M4/add_(c|cxx)flags.m4
+    Test flags in isolation.
+
+    * tests/cpp_test.cc
+    Fix a broken test (test segfaults). Report by Dave Flogeras.
+
+2011-03-21  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/common.[ch]
+    Add function program_name() which returns the program name minus the path
+    from argv [0].
+
+    * programs/*.c programs/Makefile.am
+    Use program_name() where appropriate. Fix build.
+
+2011-03-20  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/wav.c
+    For u-law and A-law files, write an 18 byte 'fmt ' chunk instead of a 16
+    byte one. Win98 accepts files with a 16 but not 18 byte 'fmt' chunk. Later
+    version accept 18 byte but not 16 byte.
+
+2011-03-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/FAQ.html
+    Add examples for question 12.
+
+    * doc/libsndfile.css.in
+    Add tweaks for h4 element.
+
+    * doc/api.html
+    Add documentation for virtual I/O functionality. Thanks to Uli Franke.
+
+    * tests/util.tpl
+    Add static inline functions sf_info_clear() and sf_info_setup().
+
+    * tests/(alaw|dwvw|ulaw)_test.c
+    Use functions sf_info_clear() and sf_info_setup().
+
+2011-03-08  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Fail more gracefully if pkg-config is missing. Suggestion from Brian
+    Willoughby.
+
+2011-02-27  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.c
+    Use size_t instead of int for size params with varargs.
+
+2011-02-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/index.html
+    Update supported platforms with more Debian platforms and Android.
+
+2011-01-27  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.hh
+    Add an LPCWSTR version of the SndfileHandle constructor to the SndfileHandle
+    class definition. Thanks to Eric Eizenman for pointing out this was missing.
+
+    * tests/cpp_test.cc
+    Add test for LPCWSTR version of the SndfileHandle constructor.
+
+2011-01-19  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-play.c
+    Remove cruft.
+
+2010-12-01  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.hh
+    Add methods rawHandle() and takeOwnership(). Thanks to Tim Blechmann for
+    the patch.
+
+    * tests/cpp_test.cc
+    Add tests for above two methods. Also supplied by Tim Blechmann.
+
+2010-11-11  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/api.html
+    Add mention of use of sf_strerror() when sf_open() fails.
+
+2010-11-01  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Make TYPEOF_SF_COUNT_T int64_t where possible. This may fix problems where
+    people are compiling on a 64 bit system with the GCC -m32 flag.
+
+    * src/sndfile.h.in
+    Fix comments on sf_count_t.
+
+2010-10-26  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/aiff.c
+    Handle non-zero offset field in SSND chunk. Thanks to Michael Chinen.
+
+2010-10-20  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Sed fix for FreeBSD. Thanks Tony Theodore.
+
+2010-10-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * shave.in M4/shave.m4
+    Fix shave invocation of windres compiler. Thanks Damien Lespiau (upstream
+    shave author).
+
+    * configure.ac M4/shave.m4 shave-libtool.in shave.in
+    Switch from shave to automake-1.11's AM_SILENT_RULES.
+
+2010-10-13  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * shave-libtool.in shave.in
+    Sync to upstream version.
+
+    * src/rf64.c
+    More work to make the parser more robust and accepting of mal-formed files.
+
+2010-10-12  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Add functions psf_strlcpy() and psf_strlcat().
+
+    * src/broadcast.c src/sndfile.c src/strings.c src/test_main.c
+        src/test_main.h src/test_strncpy_crlf.c
+    Use functions psf_strlcpy() and psf_strlcat() as appropriate.
+
+    * tests/string_test.c
+    Add tests for SF_STR_GENRE and SF_STR_TRACKNUMBER.
+
+    * src/rf64.c
+    Fix size of 'ds64' chunk when writing RF64.
+
+2010-10-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/*.c
+    Add the libsndfile version to the usage message of all programs.
+
+2010-10-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac src/version-metadata.rc.in src/Makefile.am
+    Add version string resources to the windows DLL.
+
+    * doc/api.html
+    Update to add missing SF_FORMAT_* values. Closed Debian bug #545257.
+
+    * NEWS README configure.ac doc/*.html
+    Updates for 1.0.23 release.
+
+2010-10-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/pedantic-header-test.sh.in
+    Handle unusual values of CC environment variable.
+
+    * src/rf64.c
+    Minor tweaks and additional sanity checking.
+
+    * src/Makefile.am src/binheader_writef_check.py
+    Use python 2.6.
+
+2010-10-08  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.hh
+    Add a missing 'inline' before a constructor defintion.
+
+2010-10-06  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Add macro NOT.
+
+    * src/rf64.c
+    Minor tweaks.
+
+    * Makefile.am */Makefile.am
+    Add *~ to CLEANFILES.
+
+2010-10-05  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.c
+    Fix a typo in the error string for SFE_OPEN_PIPE_RDWR. Thanks to Charles
+    Van Winkle for the report.
+
+2010-10-04  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/flac.c src/ogg.c src/sndfile.h.in src/strings.c src/wav.c
+    Add ability to read/write tracknumber and genre to flac/ogg/wav files.
+    Thanks to Matti Nykyri for the patch.
+
+    * src/common.h src/broadcast.c src/strings.c
+    Add function psf_safe_strncpy() and use where appropriate.
+
+2010-10-04  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * NEWS README configure.ac doc/*.html
+    Updates for 1.0.22 release.
+
+2010-10-03  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h src/broadcast.c src/rf64.c src/sndfile.c src/wav.c
+    Rewrite of SF_BROADCAST_INFO handling.
+
+    * src/test_broadcast_var.c tests/command_test.c
+    Tweak SF_BROADCAST_INFO tests.
+
+    * src/test_broadcast_var.c
+    Fix OSX stack check error.
+
+2010-09-30  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sds.c
+    Set sustain_loop_end to 0 as suggested by Brian Lewis.
+
+2010-09-29  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sds.c
+    Make sure the correct frame count gets written into the header.
+
+    * tests/write_read_test.tpl
+    Don't allow SDS files to have a long frame count.
+
+2010-09-17  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sds.c
+    Apply a pair of patches from Brian Lewis to fix the packet number location
+    and the checksum.
+
+2010-09-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    *  src/aiff.c src/file_io.c src/ogg.c src/rf64.c src/sndfile.c
+        src/strings.c src/test_audio_detect.c src/test_strncpy_crlf.c
+        src/wav.c tests/pcm_test.tpl
+   Fix a bunch of minor issues found using static analysis.
+
+2010-08-23  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/test_broadcast_var.c
+    New file containing tests for broadcast_set_var().
+
+    * src/Makefile.am src/test_main.[ch]
+    Hook test_broadcast_var.c into tests.
+
+2010-08-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/broadcast.c src/common.(c|h)
+    Move function strncpy_crlf() to src/common.c so the function can be tested
+    in isolation.
+
+    * src/test_strncpy_crlf.c
+    New file.
+
+    * src/Makefile.am src/test_main.[ch]
+    Hook test_strncpy_crlf.c into tests.
+
+2010-08-18  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Move code around to make comments make sense.
+
+    * src/broadcast.c
+    Add debugging code that is disabled by default.
+
+2010-08-02  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/flac.c
+    When the file meta data says the file has zero frames set psf->sf.frames
+    to SF_COUNT_MAX. Fixes Debian bug #590752.
+
+    * programs/sndfile-info.c
+    Print 'unknown' if frame count == SF_COUNT_MAX.
+
+2010-06-27  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.c
+    Only support writing mono SVX files. Multichannel SVX files are not
+    interleaved and there is no support infrastructure to cache and write
+	multiple channels to create a non-interleaved file.
+
+    * src/file_io.c
+    Don't call close() on a file descriptor of -1. Thanks to Jeremy Friesner
+    for the bug report.
+
+2010-06-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Add macro SF_ASSERT.
+
+    * src/sndfile.c
+    Use SF_ASSERT to ensure sizeof (sf_count_t) == 8.
+
+    * src/svx.c
+    Add support for reading and writing stereo SVX files.
+
+2010-05-07  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    When compiling with x86_64-w64-mingw32-gcc link with -static-libgcc flags.
+
+    * programs/common.c programs/sndfile-metadata-set.c
+    Update metadata after the audio data is copied. Other minor fixes. Patch
+    from Marius Hennecke.
+
+2010-05-04  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/nist.c
+    Fix a regression reported by Hugh Secker-Walker.
+
+    * src/api.html
+    Add comment about sf_open_fd() not working on Windows if the application
+    and the libsndfile DLL are linked to different versions of the Microsoft
+    C runtime DLL.
+
+2010-04-23  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/pedantic-header-test.sh.in
+    Fix 'make distcheck'.
+
+2010-04-21  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/pedantic-header-test.sh.in
+    New file to test whether sndfile.h can be compiled with gcc's -pedantic
+    flag.
+
+    * configure.ac tests/test_wrapper.sh.in
+    Hook pedantic-header-test into test suite.
+
+    * src/sndfile.h.in
+    Fix -pedantic warning.
+
+2010-04-19  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-salvage.c programs/Makefile.am
+    New program to salvage the audio data from WAV/WAVEX/AIFF files which are
+    greater than 4Gig in size.
+
+2010-04-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-convert.c
+    Fix valgrind warning.
+
+2010-04-06  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-cmp.c
+    When files differ in the PCM data, also print the difference offset.
+    Minor cleanup.
+
+2010-03-19  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/aiff.c
+    Don't use the 'twos' marker for 24 and 32 bit PCM, use 'in24' and 'in32'
+    instead. Thanks to Paul Davis (Ardour) for this suggestion.
+
+2010-02-28  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Clean up configure report.
+
+    * tests/utils.tpl
+    Add functions test_read_raw_or_die and test_write_raw_or_die.
+
+    * tests/rdwr_test.(def|tpl) tests/Makefile.am
+    Add new test program and hook into build.
+
+    * src/sndfile.c
+    Fix minor issues with sf_read/write_raw(). Bug reported by Milan Křápek.
+
+    * tests/test_wrapper.sh.in
+    Add rdwr_test to the test wrapper script.
+
+2010-02-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Remove -fpascal-strings from OSX's OS_SPECIFIC_CFLAGS.
+
+    * programs/common.[ch] programs/sndfile-metadata-set.c
+    Apply a patch from Robin Gareus allowing the setting of the time reference
+    field of the BEXT chunk.
+
+2010-02-06  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/ima_adpcm.c
+    Add a fix from Jonatan Liljedahl to handle predictor overflow when decoding
+    IMA4.
+
+2010-01-26  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.hh
+    Add a constructor which takes an existing file descriptor and then calls
+    sf_open_fd(). Patch from Sakari Bergen.
+
+2010-01-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-deinterleave.c programs/sndfile-interleave.c
+    Improve usage messages.
+
+2010-01-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/id3.c src/Makefile.am
+    Add new file src/id3.c and hook into build.
+
+    * src/sndfile.c src/common.h
+    Detect and skip and ID3 header at the start of the file.
+
+2010-01-07  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/common.c
+    Fix update_strings() copyright, comment, album and license are correctly
+    written. Thanks to Todd Allen for reporting this.
+
+    * man/Makefile.am
+    Change GNU makeism to something more widely supported. Thanks to Christian
+    Weisgerber for reporting this.
+
+    * configure.ac programs/Makefile.am programs/sndfile-play.c
+    Apply patch from Christian Weisgerber and Jacob Meuserto add support for
+    OpenBSD's sndio.
+
+2010-01-05  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/api.html
+    Discourage the use of sf_read/write_raw().
+
+2009-12-28  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Test for Unix pipe() and waitpid() functions.
+
+    * src/sfconfig.h tests/pipe_test.tpl
+    Disable pipe_test if pipe() and waitpid() aren't available.
+
+2009-12-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac src/Makefile.am src/create_symbols_file.py
+        src/make-static-lib-hidden-privates.sh
+    Change name of generated file src/Symbols.linux to Symbols.gnu-binutils and
+    and use the same symbols file for other systems which use GNU binutils like
+    Debian's kfreebsd.
+
+    * M4/shave.m4 shave.in
+    Update shave files from upstream.
+
+2009-12-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * man/sndfile-metadata-get.1
+    Fix typo.
+
+    * man/sndfile-interleave.1 man/Makefile.am
+    New man page.
+
+2009-12-13  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/ogg.c
+    When decoding to short or int, clip the decoded signal to [-1.0, 1.0] if
+    its too hot. Thanks to Dmitry Baikov for suggesting this.
+
+    * NEWS README doc/*.html
+    Updates for 1.0.21.
+
+2009-12-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-jackplay.c man/sndfile-jackplay.1
+    Remove these which will now be in found in the sndfile-tools package.
+
+    * programs/Makefile.am man/Makefile.am
+    Remove build rules for sndfile-jackplay.
+
+    * configure.ac
+    Remove detection of JACK Audio Connect Kit.
+
+    * programs/sndfile-concat.c man/sndfile-concat.1
+    Add new program with man page.
+
+    * man/Makefile.am programs/Makefile.am
+    Hook sndfile-concat into build system.
+
+2009-12-08  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/error_test.c
+    Don't terminate when sf_close() returns zero in error_close_test().
+    It seems that Windows 7 behaves differently from earlier versions of
+    Windows.
+
+2009-12-03  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac M4/*.m4
+    Rename all custom macros from AC_* to MN_*.
+
+    * programs/sndfile-interleave.c
+    Make it actually work.
+
+2009-12-02  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/*.html configure.ac
+    Corrections and clarifications courtesy of Robin Forder.
+
+    * programs/sndfile-convert.c programs/common.[ch]
+    Move some code from convert to common for reuse.
+
+    * programs/sndfile-interleave.c programs/sndfile-interleave.c
+    Add new programs sndfile-interleave and sndfile-deinterleave.
+
+    * programs/Makefile.am
+    Hook new programs into build.
+
+2009-12-01  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/create_symbols_file.py tests/stdio_test.c tests/win32_test.c
+    Minor OS/2 tweaks as suggested by David Yeo.
+
+    * tests/multi_file_test.c
+    Fix file creation flags on windows. Thanks to Bruce Sharpe.
+
+    * src/sf_unistd.h
+    Set all group and other file create permssions to zero.
+
+    * tests/win32_test.c
+    Add a new test.
+
+2009-11-30  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/print.css doc/*.html
+    Add a print stylesheet and update all HTML documents to reference it.
+    Thanks to Aditya Bhargava for suggesting this.
+
+    * doc/index.html
+    Minor corrections.
+
+2009-11-29  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * sndfile.pc.in
+    Add a Libs.private entry to assist with static linking.
+
+2009-11-28  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/make-static-lib-hidden-privates.sh src/Makefile.am
+    Add a script to hide all non-public symbols in the libsndfile.a static
+    library.
+
+2009-11-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/locale_test.c
+    Correct usage of ENABLE_SNDFILE_WINDOWS_PROTOTYPES.
+
+2009-11-20  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/windows.c
+    Correct usage of ENABLE_SNDFILE_WINDOWS_PROTOTYPES.
+
+2009-11-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-convert.c
+    Allow the program to read from stdin by specifying '-' on the command line
+    as the input file.
+
+    * src/sndfile.h.in
+    Hash define ENABLE_SNDFILE_WINDOWS_PROTOTYPES to 1 for greater safety.
+
+    * tests/virtual_io_test.c
+    Add a PAF/PCM_24 test and verify the file length is not negative
+    immediately after openning the file for write.
+
+2009-10-18  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/wav.c
+    When writing loop lengths, adjust the end position by one to make up for
+    Microsoft's screwed up spec. Thanks to Olivier Tristan for the patch.
+
+2009-10-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/flac.c
+    Apply patch from Uli Franke allowing FLAC files to be encoded at any sample
+    rate.
+
+2009-10-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/nist.c
+    Fix parsing of odd ulaw encoded file provided by Jan Silovsky.
+
+    * configure.ac
+    Insist on libvorbis >= 1.2.3. Earlier verions have bugs that cause the
+    libsndfile test suite to fail on MIPS, PowerPC and others.
+    See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=549899
+
+2009-10-06  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * man/sndfile-convert.1
+    Fix warning from Debian's lintian checks.
+
+    * man/sndfile-cmp.1 man/sndfile-jackplay.1 man/sndfile-metadata-get.1
+        man/Makefile.am
+    Add three new minimal manpages and hook into build.
+
+2009-10-05  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/test_wrapper.sh.in
+    Don't run cpp_test on x86_64-w64-mingw32.
+
+2009-09-28  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/utils.tpl
+    On windows, make sure the open() function doesn't get called with a third
+    parameter of 0 which fails for no good reason. Also make sure this third
+    parameter doesn't get called with S_IRGRP when compiling for windows because
+    Wine complains.
+
+    * src/sndfile.hh
+    Add a SndfileHandle constructor for windows that takes a 'const wchar_t *'
+    string.
+
+    * doc/FAQ.html
+    Add Q/A : I'm cross compiling libsndfile for another platform. How can I
+    run the test suite?
+
+    * src/create_symbols_file.py src/Makefile.am
+    Add Symbols.static target, a list of symbols, one per line.
+
+2009-09-27  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/test_wrapper.sh.in
+    Update to allow all tests to be gathered up into a testsuite tarball and
+    then be run using this script.
+
+    * build-test-tarball.mk.in
+    Add a Make script to build a tarball of all the test binaries and the test
+    wrapper script. This is useful for cross compiling; you can build the
+    binaries, build test test tarball and transfer the test tarball to the
+    target machine for testing.
+
+2009-09-26  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h src/*.c
+    Modify SF_FILE struct to allow it to carry either 8-bit or 16-bit strings
+    for the file path, directory and name. Fixes for this change throughout.
+
+    * src/windows.c src/Makefile.am
+    New file defining new windows only public function sf_wchar_open() which
+    takes a 'const wchar_t *' string (LPCWSTR) for the file name parameter.
+
+    * src/sndfile.h.in
+    Add SF_CHANNEL_MAP_ABISONIC_* entries.
+    Add windows only defintion for sf_wchar_open().
+
+    * src/create_symbols_file.py
+    Add sf_wchar_open() to the list of public symbols (windows only).
+
+    * tests/locale_test.c
+    Add a wchar_test() to test sf_wchar_open().
+
+2009-09-25  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h src/*.c
+    Split file stuff into PSF_FILE struct within the SF_PRIVATE struct.
+
+2009-09-23  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/aiff.c src/voc.c
+    When a byte is needed, use unsigned char.
+
+    * src/ima_oki_adpcm.c src/broadcast.c src/test_ima_oki_adpcm.c
+    Include sfconfig.h to prevent compile errors with MinGW compilers.
+
+    * configure.ac
+    Remove AM_CONFIG_HEADER due to warnings from autoconf 2.64.
+
+    * tests/locale_test.c
+    Update to work with xx_XX.UTF-8 style locales. Refactoring.
+
+2009-09-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Set __USE_MINGW_ANSI_STDIO to 1 when compiling using MinGW compilers.
+    Remove unneeded AC_SUBST.
+    Report Host CPU/OS/vendor.
+
+2009-09-19  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.c
+    Fix error message string.
+
+    * src/flac.c
+    Add 88200 to the list of supported sample rates.
+
+    * src/ogg.c
+    Fix compiler warning when using gcc-4.5.0.
+
+    * programs/sndfile-info.c tests/utils.tpl
+    Remove WIN32 snprintf #define.
+
+    * src/ima_adpcm.c
+    Fix minor bug in aiff_ima_encode_block. Thanks to Denis Fileev for finding
+    this.
+
+2009-09-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/caf.c
+    Use the correct C99 format specifier for int64_t.
+
+    * M4/endian.m4
+    Fix detection of CPU endian-ness when cross compiling. Thanks to Pierre
+    Ossman for the bug report.
+
+    * src/caf.c src/sndfile.c
+    Fix reading and writing of PEAK chunks in CAF files.
+
+    * tests/peak_chunk_test.c tests/test_wrapper.sh.in
+    Run peak_chunk_test on CAF files.
+
+2009-09-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/aiff.c src/wav.c
+    Use the correct C99 format specifier for int64_t.
+
+2009-08-30  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/rf64.c src/sndfile.c src/wav.c src/wav_w64.h
+    Apply a patch (massaged slightly) from Uli Franke adding handling of the
+    BEXT chunk in RF64 files.
+
+    * tests/command_test.c
+    Update channel_map_test() function so WAV test passes.
+
+    * src/rf64.c
+    Add channel mapping and ambisonic support.
+
+    * src/sndfile.h
+    Add comments showing correspondance between libsndfile channel map
+    defintiions and those used by Apple and MS.
+
+    Add handling of reading/writing channel map info.
+
+    * tests/command_test.c tests/test_wrapper.sh.in
+    Update channel map tests.
+
+2009-07-29  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Add function psf_isprint() a replacement for the standard C isprint()
+    function which ignores any locale settings and treats all input as ASCII.
+
+    * src/(aiff|common|rf64|sd2|strings|svx|wav).c
+    Use psf_isprint() instead of isprint().
+
+2009-07-13  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/command.c
+    Add string descriptions for SF_FORMAT_RF64 and SF_FORMAT_MPC2K.
+
+2009-06-30  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-play.c
+    Allow use of Open Sound System audio output under FreeBSD.
+
+2009-06-24  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Add patch from Conrad Parker to add --disable-jack.
+
+2009-05-28  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/alaw.c src/float32.c src/htk.c src/pcm.c src/sds.c src/ulaw.c
+    Fix bugs where invalid files can cause a divide by zero error (SIGFPE).
+    Thanks to Sami Liedes for reporting this a Debian bug #530831.
+
+2009-05-26  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/chanmap.[ch]
+    New files for channel map decoding/encoding.
+
+2009-05-25  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac src/sndfile.h.in
+    Fix MSVC definition of sf_count_t.
+
+2009-05-24  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/wav_w64.[ch]
+    Add wavex_channelmask to WAV_PRIVATE struct and add a function to convert
+    an array of SF_CHANNEL_MASK_* values into a bit mask for use in WAV files.
+
+    * src/wav.c
+    Add ability to write the channel mask.
+
+2009-05-23  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * programs/sndfile-info.c
+    Add -c command line option to dump the channel map information.
+
+    * src/wav_w64.c
+    Don't bail from parser if channel map bitmask is faulty.
+
+    * src/common.h src/sndfile.c
+    Remove error code SFE_W64_BAD_CHANNEL_MAP which is not needed any more.
+
+    * src/sndfile.c
+    On SFC_SET_CHANNEL_MAP_INFO pass the channel map command down to container's
+    command handler.
+
+2009-05-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sndfile.h.in src/common.h src/sndfile.c src/wav_w64.c
+    Apply a patch from Lennart Poettering (PulseAudio) to allow reading of
+    channel data in WAV and W64 files.
+    Add a test for the above.
+
+2009-05-20  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/FAQ.html
+    Update the section about pre-compiled binaries for Win64.
+
+2009-05-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h src/test_conversions.c
+    Be more careful when including <stdint.h> so compiling on pre-C99 platforms
+    (hello Slowlaris) might actually work.
+
+    * NEWS README doc/*.html
+    Updates for 1.0.20.
+
+2009-04-21  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/voc.c
+    Fix a bug whereby opening a specially crafted VOC file could result in a
+    heap overflow. Thanks to Tobias Klein (http://www.trapkit.de) for reporting
+    this issue.
+
+    * src/aiff.c
+    Fix potential (heap) buffer overflow when parsing 'MARK' chunk.
+
+2009-04-12  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/stdin_test.c
+    Check psf->error after opening file.
+
+    * src/file_io.c
+    Fix obscure seeking bug reported by Hugh Secker-Walker.
+
+    * tests/utils.tpl
+    Add check of sf_error to test_open_file_or_die().
+
+    * src/sndfile.c
+    Clear error if opening resource fork fails.
+
+2009-04-11  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/alaw_test.c tests/locale_test.c tests/ulaw_test.c
+    Cleanup output.
+
+2009-03-25  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/float32.c
+    Fix f2s_clip_array.
+
+2009-03-24  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/float32.c
+    In host_read_f2s call convert instead of f2s_array.
+
+    * src/ima_adpcm.c
+    Remove dead code.
+
+    * src/test_ima_oki_adpcm.c examples/generate.c tests/dither_test.c
+        tests/dwvw_test.c tests/fix_this.c tests/generate.c
+        tests/multi_file_test.c
+    Minor fixes.
+
+2009-03-23  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * M4/shave.m4 shave.in
+    Pulled update from upstream.
+
+2009-03-19  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/api.html
+    Add pointers to example programs in source code tarball.
+
+2009-03-17  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h
+    Define SF_PLATFORM_S64 for non-gcc compilers with 'long long' type.
+
+    * configure.ac
+    Add documentation for --disable-external-libs and improve error handling
+    for that option.
+
+    * src/sndfile.c src/sndfile.h.in src/create_symbols_file.py
+    Add public function sf_version_string.
+
+    * tests/sfversion.c
+    Test function sf_version_string.
+
+    * M4/shave.m4 shave-libtool.in shave.in
+    Add new files from 'git clone git://git.lespiau.name/shave'.
+
+    * configure.ac
+    Enable shave.
+
+    * src/Makefile.am src/binheader_writef_check.py Octave/*
+    Shave related tweaks.
+
+2009-03-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h src/caf.c src/sndfile.c
+    Add SF_MAX_CHANNELS (set to 256) and use it.
+
+    * src/sndfile.h.in
+    Check for either _MSCVER or _MSC_VER being defined.
+
+2009-03-04  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/vorbis_test.c
+    Relax test slighly to allow test to pass on more CPUs etc.
+
+2009-03-03  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * configure.ac
+    Detect vorbis_version_string() correctly.
+
+2009-03-02  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * doc/index.html
+    Add a 'See Also' section with a link to sndfile-tools.
+
+    * NEWS README doc/*.html
+    Updates for 1.0.19 release.
+
+    * configure.ac
+    Fix --enable-external-libs logic.
+
+2009-03-01  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/aiff.c
+    Fix resource leak and potential read beyond end of buffer.
+
+    * src/nist.c
+    Fix reading of header value sample_n_bytes.
+
+    * src/sd2.c src/wav.c
+    Fix potential read beyond end of buffer.
+
+    * src/sndfile.c src/svx.c
+    Check return values of file_io functions.
+
+    * tests/win32_test.c
+    Fix resource leak.
+
+    * configure.ac
+    Detect the presence/absence of vorbis_version_string() in libvorbis.
+
+    * src/ogg.c
+    Only call vorbis_version_string() from libvorbis if present.
+
+2009-02-24  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/win32_test.c
+    Don't use sprintf, even on windows.
+
+    * src/aiff.c src/rf64.c src/wav.c
+    Eliminate dead code, more validation of data read from file.
+
+2009-02-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/ima_adpcm.c
+    Clamp values to a valid range before indexing ima_step_size array.
+
+    * src/GSM610/*.c tests/*c programs/*.c src/audio_detect.c
+    Don't include un-needed headers.
+
+    * programs/sndfile-info.c
+    Remove dead code.
+
+    * tests/test_wrapper.sh.in
+    Add 'set -e' so the script exits on error.
+
+    * src/test_ima_oki_adpcm.c
+    Fix read beyond end of array.
+
+    * tests/win32_test.c
+    Add missing close on file descriptor.
+
+    * src/nist.c programs/sndfile-metadata-set.c
+    Fix 'unused variable' warnings.
+
+    * src/aiff.c
+    Fix potential memory leak in handling of 'MARK' chunk.
+    Remove un-needed test (unsigned > 0).
+
+    * src/sd2.c
+    Improve handling of heap allocated buffer.
+
+    * src/sndfile.c
+    Remove un-needed test (always true).
+
+    * src/wav.c src/rf64.c
+    Ifdef out dead code that will be resurected some time in the future.
+
+    * src/wav.c src/w64.c src/xi.c
+    Handle error return values from psf_ftell.
+
+    * src/wav_w64.c
+    Fix handling and error checking of MSADPCM coefficient arrays.
+
+    * regtest/*.c
+    Bunch of fixes.
+
+    * src/test_file_io.c
+    Use snprintf instead of strncpy in test program.
+
+2009-02-21  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/sd2.c
+    Validate data before using.
+
+    * src/caf.c
+    Validate channels per frame value before using, fixing a possible integer
+    overflow bug, leading to a possible heap overflow. Found by Alin Rad Pop of
+    Secunia Research (CVE-2009-0186).
+
+2009-02-20  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * Octave/octave_test.sh
+    Unset TERM environment variable and export LD_LIBRARY_PATH.
+
+2009-02-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/file_io.c
+    In windows code, cast LPVOID to 'char*' in printf.
+
+2009-02-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * M4/octave.m4
+    Clear the TERM environment before evaluating anything in Octave. This works
+    around problems that might occur if a users TERM settings are incorrect.
+    Thanks to Rob Til Freedmen for helping to debug this.
+
+    * src/wav.c
+    Handle four zero bytes as a marker within a LIST or INFO chunk.
+    Thanks to Rogério Brito for supplying an example file.
+
+2009-02-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/common.h src/*.c
+    Use C99 snprintf everywhere.
+
+2009-02-11  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * tests/test_wrapper.sh.in
+    New file to act as the template for the test wrapper script.
+
+    * configure.ac
+    Generate tests/test_wrapper.sh from the template.
+
+    * tests/Makefile.am
+    Replace all tests with a single invocation of the test wrapper script.
+
+2009-02-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * src/ogg.c
+    Record vorbis library version string.
+
+    * configure.ac
+    Require libvorbis >= 1.2.2.
+
+    * M4/endian.m4
+    Fix bracketing of function for autoconf 2.63. Thanks to Richard Ash.
+
+    * M4/octave.m4 M4/mkoctfile_version.m4
+    Clean up AC_WITH_ARG usage using AC_HELP_STRING.
+
+2009-02-08  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * Octave/Makefile.am
+    Use $(top_buildir) instead of $(builddir) which may not be defined.
+
+    * M4/octave.m4
+    Improve logic and status reporting.
+
 2009-02-07  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * configure.ac  AUTHORS NEWS README doc/*.html
@@ -27,7 +1113,7 @@
 2009-01-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * doc/index.html
-	Fix links to versions of the LGPL.
+    Fix links to versions of the LGPL.
 
 2008-12-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -519,7 +1605,7 @@
 2008-06-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/aiff.c
-    Apply a fix from Axel Roebel where if the second loop in the instrument
+    Apply a fix from Axel Röbel where if the second loop in the instrument
     chunk is none, the loop mode is written into the first loop.
 
 2008-05-31  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
@@ -633,7 +1719,7 @@
 2008-04-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/aiff.c
-    Fix up handling of 'APPL' chunk. Thanks to Axel Roebel for bringing up
+    Fix up handling of 'APPL' chunk. Thanks to Axel Röbel for bringing up
     this issue.
 
 2008-04-06  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
@@ -784,10 +1870,10 @@
     Allow use of either LGPL v2.1 or LGPL v3.
 
     * tests/header_test.tpl
-    Add header_shrink_test from Axel Roebel.
+    Add header_shrink_test from Axel Röbel.
 
     * src/wav.c
-    Add fix from Axel Roebel for writing files with float data but no peak
+    Add fix from Axel Röbel for writing files with float data but no peak
     chunk (ie peak chunk gets removed after the file is opened).
 
     * src/aiff.c tests/header_test.tpl
@@ -1244,7 +2330,7 @@
 2007-04-14  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/GSM610/long_term.c src/macbinary3.c tests/cpp_test.cc
-    Add patch from Andr� Pang to clean up compiles on OSX.
+    Add patch from André Pang to clean up compiles on OSX.
 
     * src/wve.c src/common.h src/sndfile.c src/sndfile.h.in
         examples/sndfile-convert.c
@@ -1257,7 +2343,7 @@
 
     * src/sndfile.hh
     Add a static SndfileHandle::formatCheck method as suggested by Jorge
-    Jim�nez.
+    Jiménez.
 
 2007-04-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -1762,7 +2848,7 @@
 
     * configure.ac
     Fix handling of --enable and --disable configure args. Thanks to Diego
-    'Flameeyes' Petten� who sent the patch.
+    'Flameeyes' Pettenò who sent the patch.
 
 2006-03-22  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -1933,11 +3019,11 @@
 2006-01-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * examples/sndfile-play.c
-    Fix calculation of samples remaining in win32 code. Thanks Axel Roebel.
+    Fix calculation of samples remaining in win32 code. Thanks Axel Röbel.
 
     * src/common.h
     Make sure length of header buffer can hold header plus strings. Thanks Axel
-    Roebel.
+    Röbel.
 
 2006-01-09  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -2151,7 +3237,7 @@
 
     * tests/locale_test.c
     Modify the way the unicode strings were encoded so that older compilers
-    do not complain. Thanks Axel Roebel.
+    do not complain. Thanks Axel Röbel.
 
     * configure.ac
     Bump the version to 1.0.12 for release.
@@ -2380,7 +3466,7 @@
     style strings (no terminating character).
 
     * src/aiff.c
-    Move to new (correct) AIFF string style. Thanks to Axel Roebel for being
+    Move to new (correct) AIFF string style. Thanks to Axel Röbel for being
     so persistent on this issue.
 
 2005-07-11  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
@@ -2539,7 +3625,7 @@
 2005-05-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/ircam.c
-    Fix writing of IRCAM files on big endian systems (thanks to Axel Roebel).
+    Fix writing of IRCAM files on big endian systems (thanks to Axel Röbel).
 
     * src/wav.c
     Add workaround for files created by the Peak audio editor on Mac which can
@@ -3138,7 +4224,7 @@
 2004-04-03  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * configure.ac
-    Improve printout configuration summary (as suggested by Axel R�bel).
+    Improve printout configuration summary (as suggested by Axel Röbel).
 
     * doc/index.html
     Add link to pre-release location.
@@ -3412,7 +4498,7 @@
 2003-12-07  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/file_io.c
-    Axel Roebel pointed out that on Mac OSX a pipe is not considered a fifo
+    Axel Röbel pointed out that on Mac OSX a pipe is not considered a fifo
     (S_ISFIFO (st.st_mode) is false) but a socket (S_ISSOCK (st.st_mode) is
     true). The test has therefore been changed to is S_ISREG and anything
     which which does not return true for S_ISREG is considered a pipe.
@@ -3616,11 +4702,11 @@
 
     * src/aiff.c
     Fixed a bug where opening a file with a non-trival header in SFM_RDWR mode
-    would over-write part of the header. Thanks to Axel Roebel for pointing
+    would over-write part of the header. Thanks to Axel Röbel for pointing
     this out. Axel also provided a patch to fix this but I came up with a
     neater and more general solution.
     Return error when openning an AIFF file with data after the SSND chunk
-    (Thanks Axel Roebel).
+    (Thanks Axel Röbel).
 
     * tests/aiff_rw_test.c
     Improvements to test program which will later allow it to be generalised to
@@ -3904,28 +4990,28 @@
 
     * src/common.c src/common.h src/file_io.h
     Added is_pipe field to SF_PRIVATE and declaration of psf_is_pipe()
-    function. (Axel Roebel)
+    function. (Axel Röbel)
 
     * src/sndfile.c
-    Fixed determination of whether the file is a pipe. (Axel Roebel)
+    Fixed determination of whether the file is a pipe. (Axel Röbel)
 
     * src/paf.c
-    Force paf24 to start with undefined mode. (Axel Roebel)
+    Force paf24 to start with undefined mode. (Axel Röbel)
 
     * tests/pipe_test.c
     Mods to make this test work and actually do the test on RAW files. (Axel
-    Roebel).
+    Röbel).
 
 2003-05-05  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/sndfile.c
     Fixed a potential bug where psf->sf.seekable was being set to FALSE when
     operating on stdin or stdout but then the default initialiser was reseting
-    it to TRUE. Thanks to Axel Roebel.
+    it to TRUE. Thanks to Axel Röbel.
 
     * src/aiff.c
     Fixed a bug in the header parser where it was not handling an odd length
-    COMM chunk correctly. Thanks to Axel Roebel.
+    COMM chunk correctly. Thanks to Axel Röbel.
 
     * src/test_file_io.c
     Add more tests.
@@ -6849,7 +7935,7 @@ This is the boundary between version 1 of the library above and version 0 below.
 
     * src/paf.c src/wav_gsm610.c
     Removed two printf()s which had escaped notice for some time (thanks
-    Sigbj�rn Skj�ret).
+    Sigbjørn Skjæret).
 
 2001-07-19  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -7169,7 +8255,7 @@ This is the boundary between version 1 of the library above and version 0 below.
 
     * src/sndfile.h
     Removed prototype of unimplemented function sf_get_info(). Added prototype
-    for sf_error_number() Thanks to Sigbj�rn Skj�ret for spotting these.
+    for sf_error_number() Thanks to Sigbjørn Skjæret for spotting these.
 
 2000-08-18  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -7179,8 +8265,8 @@ This is the boundary between version 1 of the library above and version 0 below.
 2000-08-15  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/sndfile.c
-    Fixed a leak of FILE* pointers in sf_open_write(). Thanks to Sigbj�rn
-    Skj�ret for spotting this one.
+    Fixed a leak of FILE* pointers in sf_open_write(). Thanks to Sigbjørn
+    Skjæret for spotting this one.
 
 2000-08-13  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -7274,7 +8360,7 @@ This is the boundary between version 1 of the library above and version 0 below.
 
     * src/wav.c
     Fixed bug in GSM 6.10 handling for big-endian machines. Thanks
-    to Sigbj�rn Skj�ret for reporting this.
+    to Sigbjørn Skjæret for reporting this.
 
 2000-04-25  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
@@ -7456,7 +8542,7 @@ This is the boundary between version 1 of the library above and version 0 below.
 
     * src/aiff.c
     Fixed calculation of datalength when reading SSND chunk. Thanks to
-    Sigbj�rn Skj�ret for pointing out this error.
+    Sigbjørn Skjæret for pointing out this error.
 
 1999-07-29  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 

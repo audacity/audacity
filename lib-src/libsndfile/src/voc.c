@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -107,14 +107,14 @@ voc_open	(SF_PRIVATE *psf)
 	if (psf->is_pipe)
 		return SFE_VOC_NO_PIPE ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = voc_read_header (psf)))
 			return error ;
 		} ;
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if ((SF_CONTAINER (psf->sf.format)) != SF_FORMAT_VOC)
 			return	SFE_BAD_OPEN_FORMAT ;
 
@@ -199,7 +199,7 @@ voc_read_header	(SF_PRIVATE *psf)
 	psf->endian = SF_ENDIAN_LITTLE ;
 
 	while (1)
-	{	int size ;
+	{	unsigned size ;
 		short count ;
 
 		block_type = 0 ;
@@ -211,9 +211,14 @@ voc_read_header	(SF_PRIVATE *psf)
 
 					psf_log_printf (psf, " ASCII : %d\n", size) ;
 
-					offset += psf_binheader_readf (psf, "b", psf->header, size) ;
-					psf->header [size] = 0 ;
-					psf_log_printf (psf, "  text : %s\n", psf->header) ;
+					if (size < sizeof (psf->header) - 1)
+					{	offset += psf_binheader_readf (psf, "b", psf->header, size) ;
+						psf->header [size] = 0 ;
+						psf_log_printf (psf, "  text : %s\n", psf->header) ;
+						continue ;
+						}
+
+					offset += psf_binheader_readf (psf, "j", size) ;
 					continue ;
 
 			case VOC_REPEAT :
@@ -523,11 +528,11 @@ voc_write_header (SF_PRIVATE *psf, int calc_length)
 static int
 voc_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	/*  Now we know for certain the length of the file we can re-write
 		**	correct values for the FORM, 8SVX and BODY chunks.
 		*/
-		unsigned byte = VOC_TERMINATOR ;
+		unsigned char byte = VOC_TERMINATOR ;
 
 
 		psf_fseek (psf, 0, SEEK_END) ;

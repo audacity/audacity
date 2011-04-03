@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2007-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2007-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -88,8 +88,7 @@ test_audio_detect (void)
 	ad.endianness = SF_ENDIAN_LITTLE ;
 	ad.channels = 1 ;
 	if (audio_detect (&psf, &ad, float_le_mono, sizeof (float_le_mono)) != SF_FORMAT_FLOAT)
-	{	if (errors == 0) puts ("\nFailed tests :\n") ;
-		puts ("    float_le_mono") ;
+	{	puts ("    float_le_mono") ;
 		errors ++ ;
 		} ;
 

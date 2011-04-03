@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 ** Copyright (C) 2007 John ffitch
 **
 ** This program is free software ; you can redistribute it and/or modify
@@ -104,6 +104,8 @@ static STR_PAIRS vorbis_metatypes [] =
 	{	SF_STR_DATE,		"Date" },
 	{	SF_STR_ALBUM,		"Album" },
 	{	SF_STR_LICENSE,		"License" },
+	{	SF_STR_TRACKNUMBER,	"Tracknumber" },
+	{	SF_STR_GENRE,		"Genre" },
 } ;
 
 typedef struct
@@ -265,7 +267,7 @@ ogg_read_header (SF_PRIVATE *psf, int log_data)
 			buffer = ogg_sync_buffer (&odata->oy, 4096) ;
 			bytes = psf_fread (buffer, 1, 4096, psf) ;
 
-			if (bytes == 0 && i < 2)
+			if (bytes == 0)
 			{	psf_log_printf (psf, "End of file before finding all Vorbis headers!\n") ;
 				return SFE_MALFORMED_FILE ;
 				} ;
@@ -378,14 +380,16 @@ ogg_write_header (SF_PRIVATE *psf, int UNUSED (calc_length))
 			break ;
 
 		switch (psf->strings [k].type)
-		{	case SF_STR_TITLE :		name = "TITLE" ; break ;
-			case SF_STR_COPYRIGHT : name = "COPYRIGHT" ; break ;
-			case SF_STR_SOFTWARE :	name = "SOFTWARE" ; break ;
-			case SF_STR_ARTIST :	name = "ARTIST" ; break ;
-			case SF_STR_COMMENT :	name = "COMMENT" ; break ;
-			case SF_STR_DATE :		name = "DATE" ; break ;
-			case SF_STR_ALBUM :		name = "ALBUM" ; break ;
-			case SF_STR_LICENSE :	name = "LICENSE" ; break ;
+		{	case SF_STR_TITLE :			name = "TITLE" ; break ;
+			case SF_STR_COPYRIGHT : 	name = "COPYRIGHT" ; break ;
+			case SF_STR_SOFTWARE :		name = "SOFTWARE" ; break ;
+			case SF_STR_ARTIST :		name = "ARTIST" ; break ;
+			case SF_STR_COMMENT :		name = "COMMENT" ; break ;
+			case SF_STR_DATE :			name = "DATE" ; break ;
+			case SF_STR_ALBUM :			name = "ALBUM" ; break ;
+			case SF_STR_LICENSE :		name = "LICENSE" ; break ;
+			case SF_STR_TRACKNUMBER :	name = "TRACKNUMBER" ; break ;
+			case SF_STR_GENRE :			name = "GENRE" ; break ;
 			default : continue ;
 			} ;
 
@@ -445,7 +449,7 @@ ogg_close (SF_PRIVATE *psf)
 	/*	Clean up this logical bitstream ; before exit we shuld see if we're
 	**	followed by another [chained]. */
 
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{
 		if (psf->write_current <= 0)
 			ogg_write_header (psf, 0) ;
@@ -500,13 +504,20 @@ ogg_open (SF_PRIVATE *psf)
 	VORBIS_PRIVATE* vdata = calloc (1, sizeof (VORBIS_PRIVATE)) ;
 	int	error = 0 ;
 
+	if (vdata == NULL || odata == NULL)
+		return SFE_MALLOC_FAILED ;
+
 	psf->container_data = odata ;
 	psf->codec_data = vdata ;
 
-	if (psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_RDWR)
 		return SFE_BAD_MODE_RW ;
 
-	if (psf->mode == SFM_READ)
+#if HAVE_VORBIS_VERSION_STRING
+	psf_log_printf (psf, "Vorbis library version : %s\n", vorbis_version_string ()) ;
+#endif
+
+	if (psf->file.mode == SFM_READ)
 	{	/* Call this here so it only gets called once, so no memory is leaked. */
 		ogg_sync_init (&odata->oy) ;
 
@@ -521,7 +532,7 @@ ogg_open (SF_PRIVATE *psf)
 		} ;
 
 	psf->container_close = ogg_close ;
-	if (psf->mode == SFM_WRITE)
+	if (psf->file.mode == SFM_WRITE)
 	{
 		/* Set the default vorbis quality here. */
 		vdata->quality = 0.4 ;
@@ -593,7 +604,20 @@ ogg_rshort (int samples, void *vptr, int off, int channels, float **pcm)
 	int i = 0, j, n ;
 	for (j = 0 ; j < samples ; j++)
 		for (n = 0 ; n < channels ; n++)
-			ptr [i++] = lrintf (pcm [n][j] * 32767.0f) ;
+		{	float value = pcm [n][j] ;
+
+			if (CPU_CLIPS_POSITIVE == 0 && value >= 1.0)
+			{	ptr [i++] = 0x7fff ;
+				continue ;
+				} ;
+			if (CPU_CLIPS_NEGATIVE == 0 && value <= -1.0)
+			{	ptr [i++] = 0x8000 ;
+				continue ;
+				} ;
+
+			ptr [i++] = lrintf (value * 32767.0f) ;
+			} ;
+
 	return i ;
 } /* ogg_rshort */
 
@@ -605,7 +629,20 @@ ogg_rint (int samples, void *vptr, int off, int channels, float **pcm)
 
 	for (j = 0 ; j < samples ; j++)
 		for (n = 0 ; n < channels ; n++)
-			ptr [i++] = lrintf (pcm [n][j] * 2147483647.0f) ;
+		{	float value = pcm [n][j] ;
+
+			if (CPU_CLIPS_POSITIVE == 0 && value >= 1.0)
+			{	ptr [i++] = 0x7fffffff ;
+				continue ;
+				} ;
+			if (CPU_CLIPS_NEGATIVE == 0 && value <= -1.0)
+			{	ptr [i++] = 0x80000000 ;
+				continue ;
+				} ;
+
+			ptr [i++] = lrintf (value * 2147483647.0f) ;
+			} ;
+
 	return i ;
 } /* ogg_rint */
 
@@ -637,7 +674,7 @@ ogg_read_sample (SF_PRIVATE *psf, void *ptr, sf_count_t lens, convert_func *tran
 {
 	VORBIS_PRIVATE *vdata = psf->codec_data ;
 	OGG_PRIVATE *odata = psf->container_data ;
-	int len, samples, i = 0 ;
+	int result, len, samples, i = 0 ;
 	float **pcm ;
 
 	len = lens / psf->sf.channels ;
@@ -656,7 +693,7 @@ ogg_read_sample (SF_PRIVATE *psf, void *ptr, sf_count_t lens, convert_func *tran
 	while (len > 0 && !odata->eos)
 	{
 		while (len > 0 && !odata->eos)
-		{	int result = ogg_sync_pageout (&odata->oy, &odata->og) ;
+		{	result = ogg_sync_pageout (&odata->oy, &odata->og) ;
 			if (result == 0) break ; /* need more data */
 			if (result < 0)
 			{	/* missing or corrupt data at this page position */
@@ -678,11 +715,12 @@ ogg_read_sample (SF_PRIVATE *psf, void *ptr, sf_count_t lens, convert_func *tran
 					{	/* we have a packet.	Decode it */
 						if (vorbis_synthesis (&vdata->vb, &odata->op) == 0) /* test for success! */
 							vorbis_synthesis_blockin (&vdata->vd, &vdata->vb) ;
-		  /*
-		  **pcm is a multichannel float vector.	 In stereo, for
-		  example, pcm [0] is left, and pcm [1] is right.	 samples is
-		  the size of each channel.	 Convert the float values
-		  (-1.<=range<=1.) to whatever PCM format and write it out */
+						/*
+						** The **pcm variable is a multichannel float vector.	 In stereo, for
+						** example, pcm [0] is left, and pcm [1] is right.	 samples is
+						** the size of each channel.	 Convert the float values
+						** (-1.<=range<=1.) to whatever PCM format and write it out.
+						*/
 
 						while ((samples = vorbis_synthesis_pcmout (&vdata->vd, &pcm)) > 0)
 						{	if (samples>len) samples = len ;
@@ -854,7 +892,7 @@ ogg_seek (SF_PRIVATE *psf, int UNUSED (mode), sf_count_t offset)
 		return ((sf_count_t) -1) ;
 		} ;
 
-	if (psf->mode == SFM_READ)
+	if (psf->file.mode == SFM_READ)
 	{	sf_count_t target = offset - vdata->loc ;
 
 		if (target < 0)
@@ -918,9 +956,11 @@ static stream_set *
 create_stream_set (void)
 {	stream_set *set = calloc (1, sizeof (stream_set)) ;
 
-	set->streams = calloc (5, sizeof (stream_processor)) ;
-	set->allocated = 5 ;
-	set->used = 0 ;
+	if (set)
+	{	set->streams = calloc (5, sizeof (stream_processor)) ;
+		set->allocated = 5 ;
+		set->used = 0 ;
+		} ;
 
 	return set ;
 } /* create_stream_set */

@@ -1,4 +1,4 @@
-dnl @synopsis AC_C99_FLEXIBLE_ARRAY
+dnl @synopsis MN_C99_FLEXIBLE_ARRAY
 dnl
 dnl Dose the compiler support the 1999 ISO C Standard "stuct hack".
 dnl @version 1.1	Mar 15 2004
@@ -10,7 +10,7 @@ dnl and this permission notice appear in all copies.  No representations are
 dnl made about the suitability of this software for any purpose.  It is 
 dnl provided "as is" without express or implied warranty.
 
-AC_DEFUN([AC_C99_FLEXIBLE_ARRAY],
+AC_DEFUN([MN_C99_FLEXIBLE_ARRAY],
 [AC_CACHE_CHECK(C99 struct flexible array support, 
 	ac_cv_c99_flexible_array,
 
@@ -28,5 +28,5 @@ AC_TRY_LINK([[
 	ac_cv_c99_flexible_array=yes,
 	ac_cv_c99_flexible_array=no
 	))]
-) # AC_C99_FLEXIBLE_ARRAY
+) # MN_C99_FLEXIBLE_ARRAY
 

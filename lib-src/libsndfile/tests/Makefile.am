@@ -15,7 +15,7 @@ noinst_PROGRAMS = sfversion floating_point_test write_read_test \
 	raw_test string_test multi_file_test dither_test \
 	scale_clip_test win32_test fix_this aiff_rw_test virtual_io_test \
 	locale_test largefile_test win32_ordinal_test ogg_test vorbis_test \
-	checksum_test external_libs_test $(CPP_TEST)
+	checksum_test external_libs_test rdwr_test $(CPP_TEST)
 
 noinst_HEADERS = dft_cmp.h utils.h generate.h
 
@@ -25,10 +25,13 @@ autogen_sources = write_read_test.tpl write_read_test.def	\
 					utils.tpl utils.def						\
 					scale_clip_test.tpl scale_clip_test.def	\
 					pipe_test.tpl pipe_test.def				\
+					rdwr_test.tpl rdwr_test.def				\
 					floating_point_test.tpl floating_point_test.def	\
 					benchmark.tpl benchmark.def
 
 EXTRA_DIST = $(autogen_sources)
+
+CLEANFILES = *~
 
 #===============================================================================
 
@@ -113,8 +116,12 @@ ogg_test_LDADD = $(top_builddir)/src/libsndfile.la
 vorbis_test_SOURCES = vorbis_test.c utils.c
 vorbis_test_LDADD = $(top_builddir)/src/libsndfile.la
 
+rdwr_test_SOURCES = rdwr_test.c utils.c
+rdwr_test_LDADD = $(top_builddir)/src/libsndfile.la
+
 win32_test_SOURCES = win32_test.c
-win32_test_LDADD =
+# Link lib here so that generating the testsuite tarball works correctly.
+win32_test_LDADD = $(top_builddir)/src/libsndfile.la
 
 win32_ordinal_test_SOURCES = win32_ordinal_test.c utils.c
 win32_ordinal_test_LDADD = $(top_builddir)/src/libsndfile.la
@@ -162,6 +169,9 @@ scale_clip_test.c: scale_clip_test.def scale_clip_test.tpl
 pipe_test.c: pipe_test.def pipe_test.tpl
 	autogen --writable pipe_test.def
 
+rdwr_test.c: rdwr_test.def rdwr_test.tpl
+	autogen --writable rdwr_test.def
+
 floating_point_test.c: floating_point_test.def floating_point_test.tpl
 	autogen --writable floating_point_test.def
 
@@ -169,7 +179,8 @@ benchmark.c: benchmark.def benchmark.tpl
 	autogen --writable benchmark.def
 
 genfiles : write_read_test.c pcm_test.c header_test.c utils.c \
-		scale_clip_test.c pipe_test.c floating_point_test.c benchmark.c
+		scale_clip_test.c pipe_test.c floating_point_test.c rdwr_test.c \
+		benchmark.c
 
 #===============================================================================
 # If we're cross compiling from Linux to Windows and running the test suite
@@ -189,280 +200,7 @@ endif
 
 #===============================================================================
 
-check: generic-tests wav-tests aiff-tests au-tests caf-tests raw-tests \
-	paf-tests svx-tests nist-tests ircam-tests voc-tests w64-tests rf64-tests \
-	mat4-tests mat5-tests pvf-tests xi-tests htk-tests avr-tests sds-tests \
-	sd2-tests flac-tests caf-tests wve-tests vorbis-tests mpc2k-tests io-tests
-
-generic-tests : $(noinst_PROGRAMS)
-	uname -a
-	./error_test$(EXEEXT)
-	./pcm_test$(EXEEXT)
-	./ulaw_test$(EXEEXT)
-	./alaw_test$(EXEEXT)
-	./dwvw_test$(EXEEXT)
-	./command_test$(EXEEXT) ver
-	./command_test$(EXEEXT) norm
-	./command_test$(EXEEXT) format
-	./command_test$(EXEEXT) peak
-	./command_test$(EXEEXT) trunc
-	./command_test$(EXEEXT) inst
-	./command_test$(EXEEXT) current_sf_info
-	./command_test$(EXEEXT) bext
-	./command_test$(EXEEXT) bextch
-	./floating_point_test$(EXEEXT)
-	./checksum_test$(EXEEXT)
-	./scale_clip_test$(EXEEXT)
-	./headerless_test$(EXEEXT)
-	./locale_test$(EXEEXT)
-	./win32_ordinal_test$(EXEEXT)
-	./external_libs_test$(EXEEXT)
-if ENABLE_TEST_COVERAGE
-	@echo "cpp_test not under test coverage"
-else
-	./cpp_test$(EXEEXT)
-endif
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed common tests."
-	@echo "----------------------------------------------------------------------"
-
-wav-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) wav
-	./lossy_comp_test$(EXEEXT) wav_pcm
-	./lossy_comp_test$(EXEEXT) wav_ima
-	./lossy_comp_test$(EXEEXT) wav_msadpcm
-	./lossy_comp_test$(EXEEXT) wav_ulaw
-	./lossy_comp_test$(EXEEXT) wav_alaw
-	./lossy_comp_test$(EXEEXT) wav_gsm610
-	./lossy_comp_test$(EXEEXT) wav_g721
-	./peak_chunk_test$(EXEEXT) wav
-	./header_test$(EXEEXT) wav
-	./misc_test$(EXEEXT) wav
-	./string_test$(EXEEXT) wav
-	./multi_file_test$(EXEEXT) wav
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on WAV files."
-	@echo "----------------------------------------------------------------------"
-
-w64-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) w64
-	./lossy_comp_test$(EXEEXT) w64_ima
-	./lossy_comp_test$(EXEEXT) w64_msadpcm
-	./lossy_comp_test$(EXEEXT) w64_ulaw
-	./lossy_comp_test$(EXEEXT) w64_alaw
-	./lossy_comp_test$(EXEEXT) w64_gsm610
-	./header_test$(EXEEXT) w64
-	./misc_test$(EXEEXT) w64
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on W64 files."
-	@echo "----------------------------------------------------------------------"
-
-rf64-tests: $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) rf64
-	./header_test$(EXEEXT) rf64
-	./misc_test$(EXEEXT) rf64
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on RF64 files."
-	@echo "----------------------------------------------------------------------"
-
-aiff-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) aiff
-	./lossy_comp_test$(EXEEXT) aiff_ulaw
-	./lossy_comp_test$(EXEEXT) aiff_alaw
-	./lossy_comp_test$(EXEEXT) aiff_gsm610
-	@echo "=========================="
-	@echo "./lossy_comp_test$(EXEEXT) aiff_ima"
-	@echo "=========================="
-	./peak_chunk_test$(EXEEXT) aiff
-	./header_test$(EXEEXT) aiff
-	./misc_test$(EXEEXT) aiff
-	./string_test$(EXEEXT) aiff
-	./multi_file_test$(EXEEXT) aiff
-	./aiff_rw_test$(EXEEXT)
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on AIFF files."
-	@echo "----------------------------------------------------------------------"
-
-caf-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) caf
-	./lossy_comp_test$(EXEEXT) caf_ulaw
-	./lossy_comp_test$(EXEEXT) caf_alaw
-	./header_test$(EXEEXT) caf
-	./misc_test$(EXEEXT) caf
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on CAF files."
-	@echo "----------------------------------------------------------------------"
-
-au-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) au
-	./lossy_comp_test$(EXEEXT) au_ulaw
-	./lossy_comp_test$(EXEEXT) au_alaw
-	./lossy_comp_test$(EXEEXT) au_g721
-	./lossy_comp_test$(EXEEXT) au_g723
-	./header_test$(EXEEXT) au
-	./misc_test$(EXEEXT) au
-	./multi_file_test$(EXEEXT) au
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on AU files."
-	@echo "----------------------------------------------------------------------"
-
-raw-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) raw
-	./lossy_comp_test$(EXEEXT) raw_ulaw
-	./lossy_comp_test$(EXEEXT) raw_alaw
-	./lossy_comp_test$(EXEEXT) raw_gsm610
-	./lossy_comp_test$(EXEEXT) vox_adpcm
-	./raw_test$(EXEEXT)
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on RAW (header-less) files."
-	@echo "----------------------------------------------------------------------"
-
-wve-tests : $(noinst_PROGRAMS)
-	./lossy_comp_test$(EXEEXT) wve
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on WVE files."
-	@echo "----------------------------------------------------------------------"
-
-# Lite remove start
-paf-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) paf
-	./header_test$(EXEEXT) paf
-	./misc_test$(EXEEXT) paf
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on PAF files."
-	@echo "----------------------------------------------------------------------"
-
-svx-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) svx
-	./header_test$(EXEEXT) svx
-	./misc_test$(EXEEXT) svx
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on SVX files."
-	@echo "----------------------------------------------------------------------"
-
-nist-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) nist
-	./lossy_comp_test$(EXEEXT) nist_ulaw
-	./lossy_comp_test$(EXEEXT) nist_alaw
-	./header_test$(EXEEXT) nist
-	./misc_test$(EXEEXT) nist
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on NIST files."
-	@echo "----------------------------------------------------------------------"
-
-ircam-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) ircam
-	./lossy_comp_test$(EXEEXT) ircam_ulaw
-	./lossy_comp_test$(EXEEXT) ircam_alaw
-	./header_test$(EXEEXT) ircam
-	./misc_test$(EXEEXT) ircam
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on IRCAM files."
-	@echo "----------------------------------------------------------------------"
-
-voc-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) voc
-	./lossy_comp_test$(EXEEXT) voc_ulaw
-	./lossy_comp_test$(EXEEXT) voc_alaw
-	./header_test$(EXEEXT) voc
-	./misc_test$(EXEEXT) voc
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on VOC files."
-	@echo "----------------------------------------------------------------------"
-
-mat4-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) mat4
-	./header_test$(EXEEXT) mat4
-	./misc_test$(EXEEXT) mat4
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on MAT4 files."
-	@echo "----------------------------------------------------------------------"
-
-mat5-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) mat5
-	./header_test$(EXEEXT) mat5
-	./misc_test$(EXEEXT) mat5
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on MAT5 files."
-	@echo "----------------------------------------------------------------------"
-
-pvf-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) pvf
-	./header_test$(EXEEXT) pvf
-	./misc_test$(EXEEXT) pvf
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on PVF files."
-	@echo "----------------------------------------------------------------------"
-
-xi-tests : $(noinst_PROGRAMS)
-	./lossy_comp_test$(EXEEXT) xi_dpcm
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on XI files."
-	@echo "----------------------------------------------------------------------"
-
-htk-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) htk
-	./header_test$(EXEEXT) htk
-	./misc_test$(EXEEXT) htk
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on HTK files."
-	@echo "----------------------------------------------------------------------"
-
-avr-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) avr
-	./header_test$(EXEEXT) avr
-	./misc_test$(EXEEXT) avr
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on AVR files."
-	@echo "----------------------------------------------------------------------"
-
-sds-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) sds
-	./header_test$(EXEEXT) sds
-	./misc_test$(EXEEXT) sds
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on SDS files."
-	@echo "----------------------------------------------------------------------"
-
-sd2-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) sd2
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on SD2 files."
-	@echo "----------------------------------------------------------------------"
-
-flac-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) flac
-	./string_test$(EXEEXT) flac
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on FLAC files."
-	@echo "----------------------------------------------------------------------"
-
-mpc2k-tests : $(noinst_PROGRAMS)
-	./write_read_test$(EXEEXT) mpc2k
-	./header_test$(EXEEXT) mpc2k
-	./misc_test$(EXEEXT) mpc2k
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on MPC 2000 files."
-	@echo "----------------------------------------------------------------------"
-
-vorbis-tests : $(noinst_PROGRAMS)
-	./ogg_test$(EXEEXT)
-	./vorbis_test$(EXEEXT)
-	./lossy_comp_test$(EXEEXT) ogg_vorbis
-	./string_test$(EXEEXT) ogg
-	./misc_test$(EXEEXT) ogg
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed tests on OGG/VORBIS files."
-	@echo "----------------------------------------------------------------------"
-
-# Lite remove end
-
-io-tests : $(noinst_PROGRAMS)
-	./stdio_test$(EXEEXT)
-	./pipe_test$(EXEEXT)
-	./virtual_io_test$(EXEEXT)
-	@echo "----------------------------------------------------------------------"
-	@echo "  `./sfversion$(EXEEXT)` passed stdio/pipe/vio tests."
-	@echo "----------------------------------------------------------------------"
+check: $(noinst_PROGRAMS) test_wrapper.sh
+	sh test_wrapper.sh
 
 

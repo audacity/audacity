@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -54,8 +54,9 @@ main (int argc, char *argv [])
 	if (argc != 2)
 	{	printf ("Usage : %s <test>\n", argv [0]) ;
 		printf ("    Where <test> is one of the following:\n") ;
-		printf ("           wav  - test WAV file peak chunk\n") ;
 		printf ("           aiff - test AIFF file PEAK chunk\n") ;
+		printf ("           caf  - test CAF file PEAK chunk\n") ;
+		printf ("           wav  - test WAV file peak chunk\n") ;
 		printf ("           all  - perform all tests\n") ;
 		exit (1) ;
 		} ;
@@ -76,6 +77,13 @@ main (int argc, char *argv [])
 	{	test_float_peak	("peak_float.aiff", SF_FORMAT_AIFF | SF_FORMAT_FLOAT) ;
 
 		read_write_peak_test ("rw_peak.aiff", SF_FORMAT_AIFF | SF_FORMAT_FLOAT) ;
+		test_count++ ;
+		} ;
+
+	if (do_all || ! strcmp (argv [1], "caf"))
+	{	test_float_peak	("peak_float.caf", SF_FORMAT_CAF | SF_FORMAT_FLOAT) ;
+
+		read_write_peak_test ("rw_peak.caf", SF_FORMAT_CAF | SF_FORMAT_FLOAT) ;
 		test_count++ ;
 		} ;
 
@@ -248,7 +256,13 @@ check_logged_peaks (char *buffer)
 		exit (1) ;
 		} ;
 
-	if (! (cptr = strstr (buffer, "Channels")) || sscanf (cptr, "Channels      : %d", &channel_count) != 1)
+	channel_count = 0 ;
+	cptr = strstr (buffer, "Channels") ;
+	if (cptr && sscanf (cptr, "Channels      : %d", &k) == 1)
+		channel_count = k ;
+	else if (cptr && sscanf (cptr, "Channels / frame : %d", &k) == 1)
+		channel_count = k ;
+	else
 	{	printf ("\n\nLine %d: Couldn't find channel count.\n", __LINE__) ;
 		exit (1) ;
 		} ;

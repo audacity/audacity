@@ -1,4 +1,4 @@
-dnl @synopsis AC_C_CLIP_MODE
+dnl @synopsis MN_C_CLIP_MODE
 dnl
 dnl Determine the clipping mode when converting float to int.
 dnl @version 1.0	May 17 2003
@@ -20,7 +20,7 @@ dnl Find the clipping mode in the following way:
 dnl    1) If we are not cross compiling test it.
 dnl    2) IF we are cross compiling, assume that clipping isn't done correctly.
 
-AC_DEFUN([AC_C_CLIP_MODE],
+AC_DEFUN([MN_C_CLIP_MODE],
 [AC_CACHE_CHECK(processor clipping capabilities, 
 	ac_cv_c_clip_type,
 
@@ -119,6 +119,6 @@ case "$ac_cv_c_clip_positive$ac_cv_c_clip_negative" in
 )
 ]
 
-)# AC_C_CLIP_MODE
+)# MN_C_CLIP_MODE
 
 

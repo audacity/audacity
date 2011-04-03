@@ -1,21 +1,21 @@
 /*
-** Copyright (C) 1999-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
-**  
+** Copyright (C) 1999-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
- 
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -77,20 +77,20 @@ main (int argc, char *argv [])
 	return 0 ;
 } /* main */
 
-static void 
+static void
 g721_test	(void)
 {
 	return ;
 } /* g721_test */
 
-static void 
+static void
 g723_test	(double margin)
 {	static double	orig_buffer [BUFFER_SIZE] ;
 	static short 	orig [BUFFER_SIZE] ;
 	static short 	data [BUFFER_SIZE] ;
 
 	G72x_STATE encoder_state, decoder_state ;
-	
+
 	long	k ;
 	int 	code, position, max_err ;
 
@@ -104,10 +104,10 @@ g723_test	(double margin)
 
 	memset (data, 0, BUFFER_SIZE * sizeof (short)) ;
 	memset (orig, 0, BUFFER_SIZE * sizeof (short)) ;
-	
+
 	printf ("    g723_test    : ") ;
 	fflush (stdout) ;
-	
+
 	gen_signal_double (orig_buffer, 32000.0, BUFFER_SIZE) ;
 	for (k = 0 ; k < BUFFER_SIZE ; k++)
 		orig [k] = (short) orig_buffer [k] ;
@@ -144,13 +144,13 @@ g723_test	(double margin)
 #define		SIGNAL_MAXVAL	30000.0
 #define		DECAY_COUNT		1000
 
-static void	
+static void
 gen_signal_double (double *gendata, double scale, int gendatalen)
 {	int		k, ramplen ;
 	double	amp = 0.0 ;
-	
+
 	ramplen = DECAY_COUNT ;
-	
+
 	for (k = 0 ; k < gendatalen ; k++)
 	{	if (k <= ramplen)
 			amp = scale * k / ((double) ramplen) ;
@@ -160,11 +160,11 @@ gen_signal_double (double *gendata, double scale, int gendatalen)
 		gendata [k] = amp * (0.4 * sin (33.3 * 2.0 * M_PI * ((double) (k+1)) / ((double) SAMPLE_RATE))
 						+ 0.3 * cos (201.1 * 2.0 * M_PI * ((double) (k+1)) / ((double) SAMPLE_RATE))) ;
 		} ;
-	
+
 	return ;
 } /* gen_signal_double */
 
-static int 
+static int
 error_function (double data, double orig, double margin)
 {	double error ;
 
@@ -174,7 +174,7 @@ error_function (double data, double orig, double margin)
 		error = fabs (data - orig) / 3000.0 ;
 	else
 		error = fabs (data - orig) / fabs (orig) ;
-		
+
 	if (error > margin)
 	{	printf ("\n\n*******************\nError : %f\n", error) ;
 		return 1 ;
@@ -182,21 +182,21 @@ error_function (double data, double orig, double margin)
 	return 0 ;
 } /* error_function */
 
-static int		
+static int
 oct_save_short	(short *a, short *b, int len)
 {	FILE 	*file ;
 	int		k ;
 
 	if (! (file = fopen ("error.dat", "w")))
 		return 1 ;
-		
+
 	fprintf (file, "# Not created by Octave\n") ;
-	
+
 	fprintf (file, "# name: a\n") ;
 	fprintf (file, "# type: matrix\n") ;
 	fprintf (file, "# rows: %d\n", len) ;
 	fprintf (file, "# columns: 1\n") ;
-	
+
 	for (k = 0 ; k < len ; k++)
 		fprintf (file, "% d\n", a [k]) ;
 
@@ -204,7 +204,7 @@ oct_save_short	(short *a, short *b, int len)
 	fprintf (file, "# type: matrix\n") ;
 	fprintf (file, "# rows: %d\n", len) ;
 	fprintf (file, "# columns: 1\n") ;
-	
+
 	for (k = 0 ; k < len ; k++)
 		fprintf (file, "% d\n", b [k]) ;
 

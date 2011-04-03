@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2001-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2001-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -141,6 +141,9 @@ main (int argc, char *argv [])
 
 		broadcast_test ("broadcast.wavex", SF_FORMAT_WAVEX | SF_FORMAT_PCM_16) ;
 		broadcast_rdwr_test	("broadcast.wavex", SF_FORMAT_WAVEX | SF_FORMAT_PCM_16) ;
+
+		broadcast_test ("broadcast.rf64", SF_FORMAT_RF64 | SF_FORMAT_PCM_16) ;
+		broadcast_rdwr_test	("broadcast.rf64", SF_FORMAT_RF64 | SF_FORMAT_PCM_16) ;
 		test_count ++ ;
 		} ;
 
@@ -151,8 +154,10 @@ main (int argc, char *argv [])
 		} ;
 
 	if (do_all || strcmp (argv [1], "chanmap") == 0)
-	{	channel_map_test ("chanmap.wav", SF_FORMAT_WAV | SF_FORMAT_PCM_16) ;
-		channel_map_test ("chanmap.aiff" , SF_FORMAT_AIFF | SF_FORMAT_PCM_24) ;
+	{	channel_map_test ("chanmap.wavex", SF_FORMAT_WAVEX | SF_FORMAT_PCM_16) ;
+		channel_map_test ("chanmap.rf64", SF_FORMAT_RF64 | SF_FORMAT_PCM_16) ;
+		channel_map_test ("chanmap.aifc" , SF_FORMAT_AIFF | SF_FORMAT_PCM_16) ;
+		channel_map_test ("chanmap.caf" , SF_FORMAT_CAF | SF_FORMAT_PCM_16) ;
 		test_count ++ ;
 		} ;
 
@@ -1093,7 +1098,9 @@ broadcast_coding_history_test (const char *filename)
 		} ;
 
 	if (bc_read.coding_history_size < strlen (default_history) || memcmp (bc_read.coding_history, default_history, strlen (default_history)) != 0)
-	{	printf ("\n\nLine %d : unexpected coding history '%.*s'.\n\n", __LINE__, bc_read.coding_history_size, bc_read.coding_history) ;
+	{	printf ("\n\n"
+				"Line %d : unexpected coding history '%.*s',\n"
+				"            should be '%s'\n\n", __LINE__, bc_read.coding_history_size, bc_read.coding_history, default_history) ;
 		exit (1) ;
 		} ;
 
@@ -1212,8 +1219,8 @@ channel_map_test (const char *filename, int filetype)
 {	SNDFILE	 *file ;
 	SF_INFO	 sfinfo ;
 	int channel_map_read [4], channel_map_write [4] =
-	{	SF_CHANNEL_MAP_FRONT_LEFT, SF_CHANNEL_MAP_FRONT_CENTER,
-		SF_CHANNEL_MAP_REAR_LEFT, SF_CHANNEL_MAP_REAR_RIGHT
+	{	SF_CHANNEL_MAP_LEFT, SF_CHANNEL_MAP_RIGHT, SF_CHANNEL_MAP_LFE,
+		SF_CHANNEL_MAP_REAR_CENTER
 		} ;
 
 	print_test_name ("channel_map_test", filename) ;
@@ -1223,27 +1230,36 @@ channel_map_test (const char *filename, int filetype)
 	sfinfo.format		= filetype ;
 	sfinfo.channels		= ARRAY_LEN (channel_map_read) ;
 
-	/* Write file without channel map. */
-	file = test_open_file_or_die (filename, SFM_WRITE, &sfinfo, SF_TRUE, __LINE__) ;
-	test_write_double_or_die (file, 0, double_data, BUFFER_LEN, __LINE__) ;
-	sf_close (file) ;
+	switch (filetype & SF_FORMAT_TYPEMASK)
+	{	/* WAVEX and RF64 have a default channel map, even if you don't specify one. */
+		case SF_FORMAT_WAVEX :
+		case SF_FORMAT_RF64 :
+			/* Write file without channel map. */
+			file = test_open_file_or_die (filename, SFM_WRITE, &sfinfo, SF_TRUE, __LINE__) ;
+			test_write_double_or_die (file, 0, double_data, BUFFER_LEN, __LINE__) ;
+			sf_close (file) ;
 
-	/* Read file making sure no channel map exists. */
-	file = test_open_file_or_die (filename, SFM_READ, &sfinfo, SF_TRUE, __LINE__) ;
-	exit_if_true (
-		sf_command (file, SFC_GET_CHANNEL_MAP_INFO, channel_map_read, sizeof (channel_map_read)) != SF_FALSE,
-		"\n\nLine %d : sf_command (SFC_GET_CHANNEL_MAP_INFO) should have failed.\n\n", __LINE__
-		) ;
-	check_log_buffer_or_die (file, __LINE__) ;
-	sf_close (file) ;
+			/* Read file making default channel map exists. */
+			file = test_open_file_or_die (filename, SFM_READ, &sfinfo, SF_TRUE, __LINE__) ;
+			exit_if_true (
+				sf_command (file, SFC_GET_CHANNEL_MAP_INFO, channel_map_read, sizeof (channel_map_read)) == SF_FALSE,
+				"\n\nLine %d : sf_command (SFC_GET_CHANNEL_MAP_INFO) should not have failed.\n\n", __LINE__
+				) ;
+			check_log_buffer_or_die (file, __LINE__) ;
+			sf_close (file) ;
+			break ;
+
+		default :
+			break ;
+		} ;
 
 	/* Write file with a channel map. */
 	file = test_open_file_or_die (filename, SFM_WRITE, &sfinfo, SF_TRUE, __LINE__) ;
-	test_write_double_or_die (file, 0, double_data, BUFFER_LEN, __LINE__) ;
 	exit_if_true (
 		sf_command (file, SFC_SET_CHANNEL_MAP_INFO, channel_map_write, sizeof (channel_map_write)) == SF_FALSE,
 		"\n\nLine %d : sf_command (SFC_SET_CHANNEL_MAP_INFO) failed.\n\n", __LINE__
 		) ;
+	test_write_double_or_die (file, 0, double_data, BUFFER_LEN, __LINE__) ;
 	sf_close (file) ;
 
 	/* Read file making sure no channel map exists. */

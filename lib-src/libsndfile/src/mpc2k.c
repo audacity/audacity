@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2008-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2008-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -38,7 +38,7 @@
 **	1 byte: loopMode (0 no loop, 1 forward looping)
 **	1 byte: number of beat in loop
 **	1 uint16: sampleRate
-**	
+**
 **	DATA
 **	Data are always non compressed 16 bits interleaved
 */
@@ -66,7 +66,7 @@ mpc2k_open	(SF_PRIVATE *psf)
 {	int		subformat ;
 	int		error = 0 ;
 
-	if (psf->mode == SFM_READ || (psf->mode == SFM_RDWR && psf->filelength > 0))
+	if (psf->file.mode == SFM_READ || (psf->file.mode == SFM_RDWR && psf->filelength > 0))
 	{	if ((error = mpc2k_read_header (psf)))
 			return error ;
 		} ;
@@ -76,7 +76,7 @@ mpc2k_open	(SF_PRIVATE *psf)
 
 	subformat = SF_CODEC (psf->sf.format) ;
 
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 	{	if (mpc2k_write_header (psf, SF_FALSE))
 			return psf->error ;
 
@@ -98,7 +98,7 @@ mpc2k_open	(SF_PRIVATE *psf)
 static int
 mpc2k_close	(SF_PRIVATE *psf)
 {
-	if (psf->mode == SFM_WRITE || psf->mode == SFM_RDWR)
+	if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
 		mpc2k_write_header (psf, SF_TRUE) ;
 
 	return 0 ;
@@ -134,7 +134,7 @@ mpc2k_write_header (SF_PRIVATE *psf, int calc_length)
 	if (psf->is_pipe == SF_FALSE)
 		psf_fseek (psf, 0, SEEK_SET) ;
 
-	LSF_SNPRINTF (sample_name, sizeof (sample_name), "%s                    ", psf->filename) ;
+	snprintf (sample_name, sizeof (sample_name), "%s                    ", psf->file.name.c) ;
 
 	psf_binheader_writef (psf, "e11b", 1, 4, sample_name, make_size_t (HEADER_NAME_LEN)) ;
 	psf_binheader_writef (psf, "e111", 100, 0, (psf->sf.channels - 1) & 1) ;

@@ -15,7 +15,6 @@
 
 #define	GSM_TABLE_C
 #include "gsm610_priv.h"
-#include	"gsm.h"
 
 /*  Table 4.1  Quantization of the Log.-Area Ratios
  */

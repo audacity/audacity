@@ -9,8 +9,6 @@
 
 #include "gsm610_priv.h"
 
-#include "gsm.h"
-
 /*
  *  4.2.11 .. 4.2.12 LONG TERM PREDICTOR (LTP) SECTION
  */

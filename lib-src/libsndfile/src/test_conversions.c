@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2006-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2006-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
@@ -62,7 +61,10 @@ conversion_test (char endian)
 	psf = &sf_private ;
 	memset (psf, 0, sizeof (sf_private)) ;
 
-	if (psf_fopen (psf, filename, SFM_WRITE) != 0)
+	psf->file.mode = SFM_WRITE ;
+	snprintf (psf->file.path.c, sizeof (psf->file.path.c), "%s", filename) ;
+
+	if (psf_fopen (psf) != 0)
 	{	printf ("\n\nError : failed to open file '%s' for write.\n\n", filename) ;
 		exit (1) ;
 		} ;
@@ -72,7 +74,11 @@ conversion_test (char endian)
 	psf_fclose (psf) ;
 
 	memset (psf, 0, sizeof (sf_private)) ;
-	if (psf_fopen (psf, filename, SFM_READ) != 0)
+
+	psf->file.mode = SFM_READ ;
+	snprintf (psf->file.path.c, sizeof (psf->file.path.c), "%s", filename) ;
+
+	if (psf_fopen (psf) != 0)
 	{	printf ("\n\nError : failed to open file '%s' for read.\n\n", filename) ;
 		exit (1) ;
 		} ;

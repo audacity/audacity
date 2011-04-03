@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2002-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2002-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -39,9 +39,6 @@ extern "C" {
 #define	PIPE_INDEX(x)	((x) + 500)
 #define	PIPE_TEST_LEN	12345
 
-#if (defined (WIN32) || defined (_WIN32) || defined (__OS2__))
-#define	snprintf	_snprintf
-#endif
 
 void gen_windowed_sine_float (float *data, int len, double maximum) ;
 void gen_windowed_sine_double (double *data, int len, double maximum) ;
@@ -87,6 +84,21 @@ void	check_open_file_count_or_die (int lineno) ;
 
 #ifdef SNDFILE_H
 
+static inline void
+sf_info_clear (SF_INFO * info)
+{	memset (info, 0, sizeof (SF_INFO)) ;
+} /* sf_info_clear */
+
+static inline void
+sf_info_setup (SF_INFO * info, int format, int samplerate, int channels)
+{	sf_info_clear (info) ;
+
+	info->format = format ;
+	info->samplerate = samplerate ;
+	info->channels = channels ;
+} /* sf_info_setup */
+
+
 void 	dump_log_buffer (SNDFILE *file) ;
 void 	check_log_buffer_or_die (SNDFILE *file, int line_num) ;
 int 	string_in_log_buffer (SNDFILE *file, const char *s) ;
@@ -122,6 +134,9 @@ void 	test_readf_double_or_die
 			(SNDFILE *file, int pass, double *test, sf_count_t frames, int line_num) ;
 
 
+void
+test_read_raw_or_die (SNDFILE *file, int pass, void *test, sf_count_t items, int line_num) ;
+
 
 void 	test_write_short_or_die
 			(SNDFILE *file, int pass, const short *test, sf_count_t items, int line_num) ;
@@ -141,6 +156,9 @@ void 	test_writef_float_or_die
 void 	test_writef_double_or_die
 			(SNDFILE *file, int pass, const double *test, sf_count_t frames, int line_num) ;
 
+
+void
+test_write_raw_or_die (SNDFILE *file, int pass, const void *test, sf_count_t items, int line_num) ;
 
 void compare_short_or_die (const short *left, const short *right, unsigned count, int line_num) ;
 void compare_int_or_die (const int *left, const int *right, unsigned count, int line_num) ;

@@ -1,5 +1,5 @@
 /*
-** Copyright (C) 2007-2009 Erik de Castro Lopo <erikd@mega-nerd.com>
+** Copyright (C) 2007-2011 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@
 #include	<sndfile.h>
 
 #include	"utils.h"
-#include	"generate.h"
 #include	"dft_cmp.h"
 
 #define	SAMPLE_RATE		16000
@@ -97,8 +96,8 @@ vorbis_test (void)
 	for (k = 0 ; k < ARRAY_LEN (float_data) ; k ++)
 		max_abs = max_float (max_abs, fabs (float_data [k])) ;
 
-	if (max_abs > 1.02)
-	{	printf ("\n\n    Error : max_abs %f should be < 1.02.\n\n", max_abs) ;
+	if (max_abs > 1.021)
+	{	printf ("\n\n    Error : max_abs %f should be < 1.021.\n\n", max_abs) ;
 		exit (1) ;
 		} ;
 
