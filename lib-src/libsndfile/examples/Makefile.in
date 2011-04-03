@@ -46,8 +46,10 @@ am__aclocal_m4_deps = $(top_srcdir)/M4/add_cflags.m4 \
 	$(top_srcdir)/M4/endian.m4 $(top_srcdir)/M4/extra_largefile.m4 \
 	$(top_srcdir)/M4/extra_pkg.m4 \
 	$(top_srcdir)/M4/flexible_array.m4 \
-	$(top_srcdir)/M4/gcc_version.m4 $(top_srcdir)/M4/lrint.m4 \
-	$(top_srcdir)/M4/lrintf.m4 \
+	$(top_srcdir)/M4/gcc_version.m4 $(top_srcdir)/M4/libtool.m4 \
+	$(top_srcdir)/M4/lrint.m4 $(top_srcdir)/M4/lrintf.m4 \
+	$(top_srcdir)/M4/ltoptions.m4 $(top_srcdir)/M4/ltsugar.m4 \
+	$(top_srcdir)/M4/ltversion.m4 $(top_srcdir)/M4/lt~obsolete.m4 \
 	$(top_srcdir)/M4/mkoctfile_version.m4 \
 	$(top_srcdir)/M4/octave.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -152,7 +154,6 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
-DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -194,7 +195,6 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 MKOCTFILE = @MKOCTFILE@
 MKOCTFILE_VERSION = @MKOCTFILE_VERSION@
@@ -249,7 +249,6 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
-ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
@@ -284,6 +283,7 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
+lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
