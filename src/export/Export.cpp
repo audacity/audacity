@@ -646,14 +646,17 @@ bool Exporter::GetFilename()
       for (i = 0; i < gAudacityProjects.GetCount(); i++) {
          AliasedFileArray aliasedFiles;
          FindDependencies(gAudacityProjects[i], &aliasedFiles);
-         if (mFilename.GetFullPath() == aliasedFiles[i].mFileName.GetFullPath() &&
-             !mFilename.FileExists()) {
-            // Warn and return to the dialog
-            wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
+         size_t j;
+         for (j = 0; j< aliasedFiles.GetCount(); j++) {
+            if (mFilename.GetFullPath() == aliasedFiles[j].mFileName.GetFullPath() &&
+                !mFilename.FileExists()) {
+               // Warn and return to the dialog
+               wxMessageBox(_("You are attempting to overwrite an aliased file that is missing.\n\
 The file cannot be written because the path is needed to restore the original audio to the project.\n\
 You can see the missing files in File > Check Dependencies.\n\
 If you still wish to export, please choose a different filename."));
-            overwritingMissingAlias = true;
+               overwritingMissingAlias = true;
+            }
          }
       }
       if (overwritingMissingAlias)
