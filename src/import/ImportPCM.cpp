@@ -210,7 +210,7 @@ static wxString AskCopyOrEdit()
 
       wxStaticText *message = new wxStaticText(&dialog, -1, wxString::Format(_("\
 When importing uncompressed audio files you can either copy them \
-into the project, or read them directly from their current location (without copying.)\n\n\
+into the project, or read them directly from their current location (without copying).\n\n\
 Your current preference is set to %s.\n\n\
 \
 Reading the files directly allows you to play or edit them almost immediately.  \
