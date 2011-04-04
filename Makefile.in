@@ -43,7 +43,9 @@ install: audacity $(EXTRAINSTALLTARGETS)
 
 	# install nyquist
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist
-	$(INSTALL) -m 644 nyquist/*.lsp $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist
+	$(INSTALL) -m 644 nyquist/*.lsp nyquist/nyquist-plot.txt $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist/rawwaves
+	$(INSTALL) -m 644 nyquist/rawwaves/*.raw $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/nyquist/rawwaves
 
 	# install plug-ins
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/plug-ins
