@@ -234,17 +234,31 @@ wxString FileNames::PathFromAddr(void *addr)
          name.SetFullName(LAT1CTOWX(realname));
       }
    }
-#elif defined(__WXMSW__)
-   HMODULE module;
-   if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                         (LPTSTR) addr,
-                         &module)) {
-      TCHAR path[MAX_PATH];
-      DWORD nSize;
+#elif defined(__WXMSW__) && defined(wxUSE_UNICODE)
+   // The GetModuleHandlEx() function did not appear until Windows XP and
+   // GetModuleFileName() did appear until Windows 2000, so we have to 
+   // check for them at runtime.
+   typedef BOOL (WINAPI *getmodulehandleex)(DWORD dwFlags, LPCWSTR lpModuleName, HMODULE* phModule);
+   typedef DWORD (WINAPI *getmodulefilename)(HMODULE hModule, LPWCH lpFilename, DWORD nSize);
+   getmodulehandleex gmhe =
+      (getmodulehandleex) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
+                                         "GetModuleHandleExW");
+   getmodulefilename gmfn =
+      (getmodulefilename) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
+                                         "GetModuleFileNameW");
 
-      nSize = GetModuleFileName(module, path, MAX_PATH);
-      if (nSize && nSize < MAX_PATH) {
-         name = LAT1CTOWX(path);
+   if (gmhe != NULL && gmfn != NULL) {
+      HMODULE module;
+      if (gmhe(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+               (LPTSTR) addr,
+               &module)) {
+         TCHAR path[MAX_PATH];
+         DWORD nSize;
+
+         nSize = gmfn(module, path, MAX_PATH);
+         if (nSize && nSize < MAX_PATH) {
+            name = LAT1CTOWX(path);
+         }
       }
    }
 #endif
