@@ -241,9 +241,11 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
       prefsRadio->SetValue(true);
 
       wxSizer *buttonSizer = dialog.CreateButtonSizer(wxOK | wxCANCEL);
-      vbox->Add(buttonSizer, 0, wxALL | wxEXPAND);
+      vbox->Add(buttonSizer, 0, wxALL | wxEXPAND, 10);
+      
       dialog.SetSize(dialog.GetBestSize());
       dialog.Layout();
+      dialog.Center();
 
       if (dialog.ShowModal() == wxID_OK) {
          if (aliasRadio->GetValue()) {
