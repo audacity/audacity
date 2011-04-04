@@ -95,7 +95,7 @@ public:
    bool CheckFileName(wxFileName &filename, int format = 0);
 
    /// Format intialization
-   bool Init(const char *shortname, AudacityProject *project, Tags *metadata);
+   bool Init(const char *shortname, AudacityProject *project, Tags *metadata, int subformat);
    
    /// Codec intialization
    bool InitCodecs(AudacityProject *project);
@@ -246,7 +246,7 @@ bool ExportFFmpeg::CheckFileName(wxFileName &filename, int format)
    return result;
 }
 
-bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *metadata)
+bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *metadata, int subformat)
 {
    int err;
    //FFmpegLibsInst->LoadLibs(NULL,true); //Loaded at startup or from Prefs now
@@ -317,7 +317,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *m
 
    // Add metadata BEFORE writing the header.
    // At the moment that works with ffmpeg-git and ffmpeg-0.5 for MP4.
-   if (GetCanMetaData(mSubFormat))
+   if (GetCanMetaData(subformat))
    {
       mSupportsUTF8 = ExportFFmpegOptions::fmts[mSubFormat].canutf8;
       AddTags(metadata);
@@ -698,7 +698,7 @@ int ExportFFmpeg::Export(AudacityProject *project,
    wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
    if (mSubFormat == FMT_OTHER)
       shortname = gPrefs->Read(wxT("/FileFormats/FFmpegFormat"),wxT("matroska"));
-   ret = Init(shortname.mb_str(),project, metadata);
+   ret = Init(shortname.mb_str(),project, metadata, subformat);
 
    if (!ret) return false;
 
