@@ -234,7 +234,7 @@ wxString FileNames::PathFromAddr(void *addr)
          name.SetFullName(LAT1CTOWX(realname));
       }
    }
-#elif defined(__WXMSW__) && defined(wxUSE_UNICODE)
+#elif defined(__WXMSW__) && defined(_UNICODE)
    // The GetModuleHandlEx() function did not appear until Windows XP and
    // GetModuleFileName() did appear until Windows 2000, so we have to 
    // check for them at runtime.
