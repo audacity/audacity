@@ -81,8 +81,12 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
 END_EVENT_TABLE()
 
 //Standard constructor
+// This was called "Control" toolbar in the GUI before - now it is "Transport".
+// Note that we use the legacy "Control" string as the section because this
+// gets written to prefs and cannot be changed in prefs to maintain backwards
+// compatibility
 ControlToolBar::ControlToolBar()
-: ToolBar(TransportBarID, _("Transport"), wxT("Transport"))
+: ToolBar(TransportBarID, _("Transport"), wxT("Control"))
 {
    mPaused = false;
    mSizer = NULL;
