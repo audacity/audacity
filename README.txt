@@ -61,79 +61,101 @@ to http://www.gnu.org/copyleft/gpl.html or write to
 Bug fixes for:
 
  * Interface:
-    * Cutting or copying from a track at a given sample rate into a track
-	   at another rate resulted in speed-changed audio. 
-    * Generating inside a clip could modify the clip length or create 
-       spurious clips. 	
-    * Recorded stereo tracks were only half the height of imported or 
-       generated stereo tracks. Imported stereo files had a "1" appended 
-	   to the track name.  
-    * Edit > Region Save did not save the cursor position.  
-    * (Windows) Projects crashed when clicking rapidly inside the interface
-       or when applying repeated effects towards the end of audio tracks. 
-    * (Windows) Some Unicode characters could not be typed into labels,
-       or caused a freeze using some input methods.
-    * Numerous other interface fixes including Dependencies dialog, 
-       Keyboard Preferences and spurious lines drawn on waveform.
+   * Cutting or copying from a track at a given sample rate into a track
+      at another rate resulted in speed-changed audio. 
+   * Generating inside a clip could modify the clip length or create 
+      spurious clips.
+   * Recorded stereo tracks were only half the height of imported or 
+      generated stereo tracks. Imported stereo files had a "1" appended 
+      to the track name.  
+   * Edit > Region Save did not save the cursor position.  
+   * (Windows) Projects crashed when clicking rapidly inside the interface
+      or when applying repeated effects towards the end of audio tracks. 
+   * (Windows) Some Unicode characters could not be typed into labels,
+      or caused a freeze using some input methods.
+   * (OS X) Crash when quitting an empty project window, or when closing the
+      main project window while a progress dialog was on screen.
+   * Numerous other interface fixes including Dependencies dialog, 
+      Keyboard Preferences and spurious lines drawn on waveform.
 
- * Imports and Exports: 	  
-    * (Windows, OS X) Audacity's optional FFmpeg and LAME libraries were not
-       detected when other versions of those libraries existed on the system.
-    * Imported ID3v2 metadata tags were removed when exporting without the 
-	   Metadata Editor appearing (for example, when using an export command
-       in Chains). Note: As a result of this fix, ID3v1 tags must now be 
-	   written by exporting using (external program) and an installed LAME. 
-    * (OS X) Files imported from iTunes could create invalid characters in the
-       .aup project file, causing an error when re-opening the project. Note: 
-	   An error "reference to invalid character number" will still occur if 
-	   re-opening a project created in previous Betas that contains such 
-	   characters. To fix the issue, open a back-up copy of the .aup file in a
-	   text editor, turn off word wrap, then in the line indicated in the error
-	   message, remove the string of characters that starts with &# and ends
-	   with a semi-colon (;).
+ * Imports and Exports:
+   * Support added for later versions of the optional FFmpeg library up to 
+      current FFmpeg HEAD. This should significantly improve FFmpeg support
+      on Linux. FFmpeg downloads for Windows and Mac updated to v0.6. This
+      fixes mono AAC files importing as stereo, though current 0.5 versions
+      of FFmpeg will still work.
+   * Both FFmpeg and LAME should now be properly detected even when other 
+      versions of those libraries exist on the system. 
+   * New warning (on by default) for importing uncompressed audio files. 
+      Better error messages when read-directly uncompressed files are missing. 
+   * Imported ID3v2 metadata tags were removed when exporting without the 
+      Metadata Editor appearing (for example, when using an export command
+      in Chains). Note: As a result of this fix, ID3v1 tags must now be 
+      written by exporting using (external program) and an installed LAME. 
+   * U-Law/A-Law files with WAV headers now use the standard 18 byte fmt chunk,
+      so should now be recognised by most telephony applications.   
+   * Variable bit rate MP3s exported using "MP3 Files" were larger than 
+      necessary because using the bit reservoir was disabled.   
+   * (OS X) Files imported from iTunes could create invalid characters in the
+      .aup project file, causing an error when re-opening the project. Note: 
+      An error "reference to invalid character number" will still occur if 
+      re-opening a project created in previous Betas that contains such 
+      characters. To fix the issue, open a back-up copy of the .aup file in a
+      text editor, turn off word wrap, then in the line indicated in the error
+      message, remove the string of characters that starts with &# and ends
+      with a semi-colon (;).
 
- *  Other bug fixes:	   
-    * Nyquist effects: fixes for crashes, incorrect slider behaviour and better
-       support for backslashes, double quotes and Unicode characters. 
-    * (Windows and OS X) Processing of VST effects was substantially slower than
-	   in previous versions of Audacity.
-    * (Linux) Recordings made with the pulse device crashed or stalled when
-	   using overdub and/or software playthrough.  
-    * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Audacity was
-	   compiled with libsamplerate. 
+ * Other bug fixes:
+   * Nyquist effects: fixes for crashes, incorrect slider behaviour and better
+      support for backslashes, double quotes and Unicode characters. 
+   * (Windows and OS X) Processing of VST effects was substantially slower than
+      in previous versions of Audacity.
+   * (OS X 10.5 PPC) A first-time installation of Audacity Beta would hang
+      on launch if VST effects were detected. 
+   * (Linux) Recordings made with the pulse device crashed or stalled when
+      using overdub and/or software playthrough.  
+   * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Audacity was
+      configured with libsamplerate. 
  
 Changes and Improvements:
 
  * Control Toolbar renamed to Transport Toolbar.  
  * Device Toolbar (on by default) now contains all input and output device 
     choices, including host and recording channels. Input/output choices are 
-    longer in Mixer Toolbar on Windows XP or some older operating systems.
+    no longer in Mixer Toolbar on Windows XP or some older operating systems.
     New Transport > Rescan Audio Devices menu item to refresh the device list.  
  * New "Sync-Lock Tracks" feature (turned on in the Tracks menu) to allow
     groups of audio and/or label tracks to retain synchronisation when the
-	track length changes. 
+    track length changes. 
  * Equalization: New "Manage Curves" dialog for importing and exporting curves.
- * Noise Removal: New "Sensitivity" slider and "Isolate Noise" choice.
+ * Noise Removal: New "Sensitivity" slider to adjust the noise threshold, and
+    new option to isolate noise.
  * New "Extended Import" Preferences for specifying different importers to
     open specific file extensions.
  * Improved Automatic Crash Recovery with all project changes autosaved. 
- * Improved error reporting when read-directly imported files are missing. 
- * MIDI tracks can be vertically zoomed, time shifted and display bar lines.   
- * On Windows and Linux, the window Close button and other system close or
+ * MIDI tracks can be vertically zoomed, time shifted and display bar lines.
+    Note: the channel selection buttons are not available in 1.3.13.    
+ * (Windows and Linux) The window Close button and other system close or
     shutdown commands now quit on closing the last window. File > Close now 
-	always clears to a new, empty project. 
- * (OS X) Simpler installer with top level "Audacity" folder. 
+    always clears to a new, empty project. 
+ * (OS X) Simpler installer with top-level "Auadacity" folder. 
  
 
 -------------------------------------------------------------------------------
 
 3. Known Issues in 1.3.13 Beta:
 
-Please see:
-http://tinyurl.com/4fagk5m
+For known issues at release of 1.3.13, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_1.3.13#known
+
+Please also check:
+  http://wiki.audacityteam.org/index.php?title=Known_Issues
+
+for details of any issues that have been identified after release of
+this version.
 
 
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -183,7 +205,7 @@ GPL-compatible license.  Specifically:
 
   libvamp: new-style BSD
     Plug-in interface and support library for audio analysis plug-ins.
-	Included with Audacity.
+    Included with Audacity.
 
   libvorbis: BSD-like license.
     Decodes and encodes Ogg Vorbis files.  Optional
@@ -284,7 +306,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 First you must download wxWidgets. Audacity 1.3.13 requires wxWidgets 2.8.11
 from:
 
-  http://www.wxWidgets.org/
+   http://www.wxWidgets.org/
 
 If you install the RPM, make sure you install the devel RPM as well, 
 otherwise you won't be able to compile Audacity from source.
@@ -502,7 +524,7 @@ Bug fixes for:
               fit now done only if generating in new track  
            * View menu items/shortcuts incorrectly disabled when playing
               or recording 
-           * DTMF generator defaulted to zero duration on open   	
+           * DTMF generator defaulted to zero duration on open
            * Unwanted interactions between linked audio and label tracks  
            * Noise Removal shifted clips if the selection region included
               white space
@@ -665,7 +687,7 @@ Interface:
         * Default temporary directory on Mac now accessible in Finder
 
 Import / Export:
-	* Stability improvements in on-demand loading
+        * Stability improvements in on-demand loading
         * FFmpeg: support for latest version of library, improved
            version checks and error messages, stability improvements
            in custom exporter
@@ -818,15 +840,15 @@ Miscellaneous:
 Changes in 1.3.6a1:
 
 Interface:
-	* Further improvements to menu navigation and wordings.
-	* All file dialogs are now resizable, and support "Places"
-	   sidebar on Windows 2000 or later.
-	* Preferences:
-	        * New "Theme" preference for modifying interface
-	           colours and images, with experimental new default
-	           colour scheme.
-	        * New "Smart Recording" preference automatically pauses
-	           recordings that fall below a pre-defined input level.
+        * Further improvements to menu navigation and wordings.
+        * All file dialogs are now resizable, and support "Places"
+           sidebar on Windows 2000 or later.
+        * Preferences:
+          * New "Theme" preference for modifying interface
+             colours and images, with experimental new default
+             colour scheme.
+          * New "Smart Recording" preference automatically pauses
+             recordings that fall below a pre-defined input level.
 
 Compilation:
         * Simplified modular builds for Windows, removing
@@ -843,102 +865,102 @@ Miscellaneous:
 Changes in 1.3.5:
 
 Recording  / Playback:
-	* Several bugs fixed so that latency correction should be better, and more
-	   devices work correctly. Problems with invalid sample rates under Linux
-	   should be much rarer.
-	* Newer version of Portaudio library.
-	* New feature to record onto the end of an existing track
-	   (hold Shift while clicking Record).
+   * Several bugs fixed so that latency correction should be better, and more
+      devices work correctly. Problems with invalid sample rates under Linux
+      should be much rarer.
+   * Newer version of Portaudio library.
+   * New feature to record onto the end of an existing track
+      (hold Shift while clicking Record).
 
 Import / Export:
-	* Updated versions of Libogg, Libvorbis, Libflac, Libsndfile and Twolame
-	   libraries.
-	* Handling of unsupported file formats more informative.
-	* Handling of file names with slashes on OS X improved. New dialog
-	   allows replacement of illegal file name characters on all platforms.
+   * Updated versions of Libogg, Libvorbis, Libflac, Libsndfile and Twolame
+      libraries.
+   * Handling of unsupported file formats more informative.
+   * Handling of file names with slashes on OS X improved. New dialog
+      allows replacement of illegal file name characters on all platforms.
 
 Interface:
-	* Improved scaling and layout for rulers and VU meters.
-	* Envelope fixes/improvements including full control of undo/redo.
-	* New keyboard shortcuts and improved menu navigation.
-	* Preferences: More intuitive tab arrangement. New options for
-	   mute/solo and Metadata Editor behavior. Language can now be
-	   changed without restart.
-	* Expanded Build Information tab.
+   * Improved scaling and layout for rulers and VU meters.
+   * Envelope fixes/improvements including full control of undo/redo.
+   * New keyboard shortcuts and improved menu navigation.
+   * Preferences: More intuitive tab arrangement. New options for
+      mute/solo and Metadata Editor behavior. Language can now be
+      changed without restart.
+   * Expanded Build Information tab.
 
 Effects:
-	* New Vocal Remover plug-in, improvements for Generate effects.
+   * New Vocal Remover plug-in, improvements for Generate effects.
 
 Compilation:
-	* Fixes when building Audacity with libraries disabled.
-	* Improvements to make Mac and Solaris builds easier.
+   * Fixes when building Audacity with libraries disabled.
+   * Improvements to make Mac and Solaris builds easier.
 
 Security:
-	* Full fix for issue CVE-2007-6061 on systems where temporary directories
-	   can be changed by other users (thanks to Michael Schwendt).
+   * Full fix for issue CVE-2007-6061 on systems where temporary directories
+      can be changed by other users (thanks to Michael Schwendt).
 
 Miscellaneous:
-	* Updated translations for many locales.
-	* Several stability improvements.
+   * Updated translations for many locales.
+   * Several stability improvements.
 
 
 Changes in 1.3.4:
 
 New Features
-	* New Welcome Screen with introduction to Audacity
-	* Enhanced Windows Shell integration, so Audacity shows up in lots of
-		Windows places such as "Open With".
-	* New keyboard command: 'Mix and Render to New Track'
-		(bound to Ctrl+Shift+M).
-	* New keyboard shortcut: "Shift-A" starts playback when stopped,
-		or performs "Stop and Select" when playing.
-	* Added support for VAMP audio analysis plug-ins.
-	* Solo button solos only one track at a time, and a track cannot be both
-		mute and solo.
+   * New Welcome Screen with introduction to Audacity
+   * Enhanced Windows Shell integration, so Audacity shows up in lots of
+      Windows places such as "Open With".
+   * New keyboard command: 'Mix and Render to New Track'
+      (bound to Ctrl+Shift+M).
+   * New keyboard shortcut: "Shift-A" starts playback when stopped,
+      or performs "Stop and Select" when playing.
+   * Added support for VAMP audio analysis plug-ins.
+   * Solo button solos only one track at a time, and a track cannot be both
+      mute and solo.
 
 Interface:
-	* Keyboard shortcuts for making short/long jumps along the timeline.
-	* Added 'Snap To' in the Selection Bar.
-	* Made keyboard navigation easier when multiple menu items with the
-		same first letter exist.
-	* Enhanced interface for label editing.
-	* Layout of OK/Cancel buttons consistency improved.
-	* Preferences:
-		* "Select all audio in project, if none selected" (on by default)
-		* "Beep on completion of longer activities" (system bell, not
-			main output).
-		* Other preferences cleaned up and explanations improved.
-	* Envelopes: Many fixes when copying / pasting / repeating.
-	* Many translation updates.
-	* Track height fixed in several cases.
-	* CleanSpeech mode switching without closing and re-opening fixed.
+   * Keyboard shortcuts for making short/long jumps along the timeline.
+   * Added 'Snap To' in the Selection Bar.
+   * Made keyboard navigation easier when multiple menu items with the
+      same first letter exist.
+   * Enhanced interface for label editing.
+   * Layout of OK/Cancel buttons consistency improved.
+   * Preferences:
+      * "Select all audio in project, if none selected" (on by default)
+      * "Beep on completion of longer activities" (system bell, not
+         main output).
+      * Other preferences cleaned up and explanations improved.
+   * Envelopes: Many fixes when copying / pasting / repeating.
+   * Many translation updates.
+   * Track height fixed in several cases.
+   * CleanSpeech mode switching without closing and re-opening fixed.
 
 Opening/saving formats:
-	* Metadata editor added for OGG, FLAC and WAV/AIFF exports, and
-		general improvements in this area.
-	* Import of metadata improved.
-	* Muted tracks are no longer audible in the exported mix.
+   * Metadata editor added for OGG, FLAC and WAV/AIFF exports, and
+      general improvements in this area.
+   * Import of metadata improved.
+   * Muted tracks are no longer audible in the exported mix.
 
 Effects:
-	* Truncate Silence: support for multiple and stereo tracks.
-	* Dtmf Generator:
-		* added support for keypad letters
-		* added an amplitude control.
-	* Compressor: variable decay time added.
-	* Equalization:
-		* Clicks at start / end prevented
-		* Improvements to saved curves being found
-		* Preview works correctly
-	* 'Merge' command appears in Undo history.
-	* Clipping detected more reliably.
-	* Nyquist plug-ins reviewed and enhanced.
-	* Better (and more) progress bars.
-	* Cancelling effect always restores previous audio.
-	* Several improvement to effects in batch mode.
+   * Truncate Silence: support for multiple and stereo tracks.
+   * Dtmf Generator:
+      * added support for keypad letters
+      * added an amplitude control.
+   * Compressor: variable decay time added.
+   * Equalization:
+      * Clicks at start / end prevented
+      * Improvements to saved curves being found
+      * Preview works correctly
+   * 'Merge' command appears in Undo history.
+   * Clipping detected more reliably.
+   * Nyquist plug-ins reviewed and enhanced.
+   * Better (and more) progress bars.
+   * Cancelling effect always restores previous audio.
+   * Several improvement to effects in batch mode.
 
 Recording / Playback:
-	* Improvements to latency correction.
-	* Updated version of portaudio-v19 library.
+   * Improvements to latency correction.
+   * Updated version of portaudio-v19 library.
 
 Note that Help is no longer built in, but accessible on the Web via links
 in Audacity.
@@ -1534,11 +1556,11 @@ New features in Audacity 1.1.3:
 New features in Audacity 1.1.2:
   * User Interface
     - Fixed bug in Windows version, for track menu commands
-	  "Name..." and "Split Stereo Track"/"Make Stereo Track".
+     "Name..." and "Split Stereo Track"/"Make Stereo Track".
   * Effects
     - Nyquist support on Windows (supports plug-ins written
-	  in Nyquist, an interpreted functional language based
-	  on Lisp).
+     in Nyquist, an interpreted functional language based
+     on Lisp).
 
 
 New features in Audacity 1.1.1:
