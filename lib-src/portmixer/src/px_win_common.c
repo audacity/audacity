@@ -74,6 +74,19 @@ static BOOL is_vista_or_later()
    DWORDLONG dwlConditionMask = 0;
    int op=VER_GREATER_EQUAL;
 
+   // The VerifyVersionInfo() function did not appear until Windows 2000,
+   // so check for it at runtime.  However, post 2.0, this can be dropped
+   // since pre-Win2k support will be dropped.
+   typedef BOOL (WINAPI *verifyversioninfo)(LPOSVERSIONINFOEXA lpVersionInformation,
+                                            DWORD dwTypeMask,
+                                            DWORDLONG dwlConditionMask);
+   verifyversioninfo vvi =
+      (verifyversioninfo) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
+                                         "VerifyVersionInfoA");
+   if (vvi == NULL) {
+      return FALSE;
+   }
+
    // Initialize the OSVERSIONINFOEX structure.
 
    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
@@ -90,7 +103,7 @@ static BOOL is_vista_or_later()
 
    // Perform the test.
 
-   return VerifyVersionInfo(
+   return vvi(
       &osvi, 
       VER_MAJORVERSION | VER_MINORVERSION,
       dwlConditionMask);
