@@ -68,15 +68,40 @@ static void dprintf(const char *format, ...)
 }
 #endif
 
-static BOOL is_vista_or_later() 
+// The VerSetConditionMask() function did not appear until Windows 2000,
+// so check for it at runtime.  However, post 2.0, this can be deleted
+// since pre-Win2k support will be dropped.
+#define VerSetConditionMask VerSetConditionMaskThunk
+LONGLONG
+VerSetConditionMaskThunk(ULONGLONG ConditionMask,
+                         DWORD TypeMask,
+                         BYTE Condition)
 {
-   OSVERSIONINFOEX osvi;
-   DWORDLONG dwlConditionMask = 0;
-   int op=VER_GREATER_EQUAL;
-
    // The VerifyVersionInfo() function did not appear until Windows 2000,
    // so check for it at runtime.  However, post 2.0, this can be dropped
    // since pre-Win2k support will be dropped.
+   typedef BOOL (WINAPI *versetconditionask)(ULONGLONG ConditionMask,
+                                             DWORD TypeMask,
+                                             BYTE Condition);
+   versetconditionask vscm =
+      (versetconditionask) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
+                                         "VerSetConditionMask");
+   if (vscm == NULL) {
+      return 0;
+   }
+
+   return vscm(ConditionMask, TypeMask, Condition);
+}
+
+// The VerifyVersionInfo() function did not appear until Windows 2000,
+// so check for it at runtime.  However, post 2.0, this can be deleted
+// since pre-Win2k support will be dropped.
+#define VerifyVersionInfoA VerifyVersionInfoAThunk
+BOOL
+VerifyVersionInfoAThunk(LPOSVERSIONINFOEXA lpVersionInformation,
+                        DWORD dwTypeMask,
+                        DWORDLONG dwlConditionMask)
+{
    typedef BOOL (WINAPI *verifyversioninfo)(LPOSVERSIONINFOEXA lpVersionInformation,
                                             DWORD dwTypeMask,
                                             DWORDLONG dwlConditionMask);
@@ -86,6 +111,15 @@ static BOOL is_vista_or_later()
    if (vvi == NULL) {
       return FALSE;
    }
+
+   return vvi(lpVersionInformation, dwTypeMask, dwlConditionMask);
+}
+
+static BOOL is_vista_or_later() 
+{
+   OSVERSIONINFOEX osvi;
+   DWORDLONG dwlConditionMask = 0;
+   int op=VER_GREATER_EQUAL;
 
    // Initialize the OSVERSIONINFOEX structure.
 
@@ -103,7 +137,7 @@ static BOOL is_vista_or_later()
 
    // Perform the test.
 
-   return vvi(
+   return VerifyVersionInfo(
       &osvi, 
       VER_MAJORVERSION | VER_MINORVERSION,
       dwlConditionMask);
