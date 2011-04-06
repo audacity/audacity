@@ -1155,12 +1155,25 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    //      while we're active, so we have to kludge around a bit to keep this
    //      from happening.
    WindowRef windowRef = (WindowRef) MacGetWindowRef();
-   SetWindowModality( windowRef, kWindowModalityAppModal, NULL ) ;
-   BeginAppModalStateForWindow(windowRef);
+   if (windowRef) {
+      SetWindowModality(windowRef, kWindowModalityAppModal, NULL);
+      BeginAppModalStateForWindow(windowRef);
+   }
 
-   wxMenuBar *bar = wxStaticCast(wxGetTopLevelParent(wxTheApp->GetTopWindow()), wxFrame)->GetMenuBar();
-   bar->Enable(wxID_PREFERENCES, false);
-   bar->Enable(wxID_EXIT, false);
+   w = wxTheApp->GetTopWindow();
+   if (w) {
+      w = wxGetTopLevelParent(w);
+      if (w) {
+         wxFrame *f = wxStaticCast(w, wxFrame);
+         if (f) {
+            wxMenuBar *bar = f->GetMenuBar();
+            if (bar) {
+               bar->Enable(wxID_PREFERENCES, false);
+               bar->Enable(wxID_EXIT, false);
+            }
+         }
+      }
+   }
 #endif
 }
 
@@ -1177,12 +1190,25 @@ ProgressDialog::~ProgressDialog()
    }
 
 #if defined(__WXMAC__)
-   wxMenuBar *bar = wxStaticCast(wxGetTopLevelParent(wxTheApp->GetTopWindow()), wxFrame)->GetMenuBar();
-   bar->Enable(wxID_PREFERENCES, true);
-   bar->Enable(wxID_EXIT, true);
+   wxWindow *w = wxTheApp->GetTopWindow();
+   if (w) {
+      w = wxGetTopLevelParent(w);
+      if (w) {
+         wxFrame *f = wxStaticCast(w, wxFrame);
+         if (f) {
+            wxMenuBar *bar = f->GetMenuBar();
+            if (bar) {
+               bar->Enable(wxID_PREFERENCES, true);
+               bar->Enable(wxID_EXIT, true);
+            }
+         }
+      }
+   }
 
    WindowRef windowRef = (WindowRef) MacGetWindowRef();
-   EndAppModalStateForWindow(windowRef);
+   if (windowRef) {
+      EndAppModalStateForWindow(windowRef);
+   }
 #endif
 
    if (mDisable)
