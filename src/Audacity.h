@@ -30,7 +30,7 @@
 // alphas of a stable release, typically the nightly builds. 
 // Most of the time we're in development, so IS_ALPHA should be defined
 // to 1.
-#define IS_ALPHA 0   // Turn it off for beta release.
+#define IS_ALPHA 1
 
 // Increment as appropriate every time you release a new version
 #define AUDACITY_VERSION   1
