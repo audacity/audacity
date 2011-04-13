@@ -324,6 +324,18 @@ void DeviceToolBar::EnableDisableButtons()
    if (gAudioIO) {
       // we allow changes when monitoring, but not when recording
       bool audioStreamActive = gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
+      
+      // Here we should relinquish focus
+      if (audioStreamActive) {
+         wxWindow *focus = wxWindow::FindFocus(); 
+         if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels) {
+            AudacityProject *activeProject = GetActiveProject();
+            if (activeProject) {
+               activeProject->GetTrackPanel()->SetFocus();
+            }
+         }
+      }
+      
       mHost->Enable(!audioStreamActive);
       mInput->Enable(!audioStreamActive);
       mOutput->Enable(!audioStreamActive);
