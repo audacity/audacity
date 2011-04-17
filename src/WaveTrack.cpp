@@ -653,7 +653,7 @@ bool WaveTrack::SplitDelete(double t0, double t1)
 
 WaveClip* WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 {
-   wxWaveClipListNode* node = mClips.Find(clip);
+   WaveClipList::compatibility_iterator node = mClips.Find(clip);
    WaveClip* clipReturn = node->GetData();
    mClips.DeleteNode(node);
    return clipReturn;

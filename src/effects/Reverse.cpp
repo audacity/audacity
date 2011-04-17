@@ -81,8 +81,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // STEP 1:
    // If a reverse selection begins and/or ends at the inside of a clip
    // perform a split at the start and/or end of the reverse selection
-   WaveClipList::compatibility_iterator clipIterator = track->GetClipIterator();
-   wxWaveClipListNode *node = (wxWaveClipListNode*)clipIterator;
+   WaveClipList::compatibility_iterator node = track->GetClipIterator();
    while (node) {
       WaveClip *clip = node->GetData();
       sampleCount clipStart = clip->GetStartSample();
@@ -176,13 +175,13 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // revClips and otherClips back to the track
    size_t revClipsCount = revClips.GetCount();
    for (i = 0; i < revClipsCount; i++) {
-      wxWaveClipListNode *node = revClips.Item(revClipsCount - 1 - i); // the last clip of revClips is appended to the track first
+      WaveClipList::compatibility_iterator node = revClips.Item(revClipsCount - 1 - i); // the last clip of revClips is appended to the track first
       WaveClip *clip = node->GetData();
       track->AddClip(clip);
    }
 
    for (i = 0; i < otherClips.GetCount(); i++) {
-      wxWaveClipListNode *node = otherClips.Item(i);
+      WaveClipList::compatibility_iterator node = otherClips.Item(i);
       track->AddClip(node->GetData());
    }
 

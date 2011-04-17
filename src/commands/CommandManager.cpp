@@ -480,7 +480,7 @@ void CommandManager::AddItem(const wxChar *name,
 {
    wxString label(label_in);
    label += wxT("\t");
-   label += accel;
+   label += accel ? accel : wxEmptyString;
 
    if (ItemShouldBeHidden(label)) {
       delete callback;

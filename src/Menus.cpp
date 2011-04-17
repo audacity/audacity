@@ -1517,7 +1517,7 @@ void AudacityProject::ModifyAllProjectToolbarMenus()
 {
    AProjectArray::iterator i;
    for (i = gAudacityProjects.begin(); i != gAudacityProjects.end(); ++i) {
-      (*i)->ModifyToolbarMenus();
+      ((AudacityProject *)*i)->ModifyToolbarMenus();
    }
 }
 
