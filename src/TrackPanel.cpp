@@ -7572,13 +7572,20 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip,
    if (src2)
       src2->MoveClipToTrack(clip2, dst2);
 
+   // If sync-lock is on then one of the mCapturedClipArray indexes may be a labeltrack.
+   // This means that we are not really copying a stereo track and cannot assume dst2 exists.
+   // If we found a src2 is the best indicator of whether or not it is stereo.
+   // This assumes that the first captured tracks will be WaveTracks - I believe this is the case
+   // from whats generated in StartSlide()
    if (mCapturedClipArray.GetCount() == 2) {
       if (mCapturedClipArray[0].clip == clip) {
          mCapturedClipArray[0].track = dst;
-         mCapturedClipArray[1].track = dst2;
+         if (src2)
+            mCapturedClipArray[1].track = dst2;
       }
       else {
-         mCapturedClipArray[0].track = dst2;
+         if (src2)
+            mCapturedClipArray[0].track = dst2;
          mCapturedClipArray[1].track = dst;
       }
    }
