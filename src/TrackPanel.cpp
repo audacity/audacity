@@ -7555,7 +7555,18 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip,
 
    // Get the second track of two stereo tracks
    src2 = (WaveTrack*)mTracks->GetLink(src);
+   if (clip2 && !src2) {
+      // if we are copying two mono linked tracks we have to ask for it differently
+      src2 = (WaveTrack*)mTracks->GetNext(src, false);
+      if (src2 && src2->GetKind() != Track::Wave)
+         src2 = NULL;
+   }
    dst2 = (WaveTrack*)mTracks->GetLink(dst);
+   if (clip2 && !dst2) {
+      dst2 = (WaveTrack*)mTracks->GetNext(dst, false);
+      if (dst2 && dst2->GetKind() != Track::Wave)
+         dst2 = NULL;
+   }
 
    if ((src2 && !dst2) || (dst2 && !src2))
       return false; // cannot move stereo- to mono track or other way around

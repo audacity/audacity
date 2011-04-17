@@ -354,6 +354,11 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    Track *GetLink(Track * t) const;
 
    Track *GetPrev(Track * t, bool linked = false) const;
+   
+   /** Return a track in the list that comes after Track t
+     * @param t a track in the list
+     * @param linked if true, skips over linked tracks, if false returns the next track even if it is a linked track
+    **/
    Track *GetNext(Track * t, bool linked = false) const;
    int GetGroupHeight(Track * t) const;
 

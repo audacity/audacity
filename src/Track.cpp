@@ -831,6 +831,7 @@ Track *TrackList::GetLink(Track * t) const
    return NULL;
 }
 
+/// Return a track in the list that comes after Track t
 Track *TrackList::GetNext(Track * t, bool linked) const
 {
    if (t) {
