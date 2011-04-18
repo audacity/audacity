@@ -26,7 +26,8 @@ bool Generator::Process()
 
    BeforeGenerate();
 
-   // Set up mOutputTracks. This effect needs Track::All for grouping
+   // Set up mOutputTracks. 
+   // This effect needs Track::All for sync-lock grouping.
    this->CopyInputTracks(Track::All);
 
    // Iterate over the tracks

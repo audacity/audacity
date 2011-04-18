@@ -110,8 +110,9 @@ bool EffectChangeSpeed::Process()
 {
    // Similar to EffectSoundTouch::Process()
 
-   //Iterate over each track
-   //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
+   // Iterate over each track.
+   // Track::All is needed because this effect needs to introduce 
+   // silence in the sync-lock group tracks to keep sync
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
    bool bGoodResult = true;
 

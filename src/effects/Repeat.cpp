@@ -110,7 +110,8 @@ bool EffectRepeat::TransferParameters( Shuttle & shuttle )
 
 bool EffectRepeat::Process()
 {
-   // Set up mOutputTracks. This effect needs Track::All for grouping
+   // Set up mOutputTracks. 
+   // This effect needs Track::All for sync-lock grouping.
    this->CopyInputTracks(Track::All);
 
    int nTrack = 0;

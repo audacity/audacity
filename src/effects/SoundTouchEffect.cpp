@@ -57,7 +57,7 @@ bool EffectSoundTouch::Process()
    }
    
    //Iterate over each track
-   //Track::All is needed for group behavior
+   // Needs Track::All for sync-lock grouping.
    this->CopyInputTracks(Track::All);
    bool bGoodResult = true;
 

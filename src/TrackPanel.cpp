@@ -789,9 +789,9 @@ void TrackPanel::SelectTracksByLabel( LabelTrack *lt )
    }
 }
 
-/// Set selection length to the length of a track -- but if linking is turned
-/// on, use the largest possible selection in the group.  And if it's a stereo
-/// track, do the same for the stereo channels.
+// Set selection length to the length of a track -- but if sync-lock is turned
+// on, use the largest possible selection in the sync-lock group.  
+// If it's a stereo track, do the same for the stereo channels.
 void TrackPanel::SelectTrackLength(Track *t)
 {
    AudacityProject *p = GetActiveProject();
@@ -800,7 +800,7 @@ void TrackPanel::SelectTrackLength(Track *t)
    double minOffset = t->GetOffset();
    double maxEnd = t->GetEndTime();
 
-   // If we have a group and linking is on, check the group tracks
+   // If we have a sync-lock group and sync-lock linking is on, check the tracks in the group.
    if (p->IsSyncLocked() && t1 != NULL)
    {
       for ( ; t1; t1 = it.Next())
@@ -2644,7 +2644,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             // don't capture based on links to label tracks for now (until
             // we can treat individual labels as clips)
             if (mCapturedClipArray[i].clip) {
-               // Iterate over group tracks
+               // Iterate over sync-lock group tracks.
                SyncLockedTracksIterator git(mTracks);
                for ( Track *t = git.First(mCapturedClipArray[i].track);
                      t; t = git.Next() )
@@ -2658,7 +2658,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
             // Capture additional clips from NoteTracks
             Track *nt = mCapturedClipArray[i].track;
             if (nt->GetKind() == Track::Note) {
-               // Iterate over group tracks
+               // Iterate over sync-lock group tracks.
                SyncLockedTracksIterator git(mTracks);
                for (Track *t = git.First(nt); t; t = git.Next())
                {

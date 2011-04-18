@@ -566,7 +566,7 @@ bool EffectNyquist::Process()
    }
 
    // We must copy all the tracks, because Paste needs label tracks to ensure
-   // correct group behavior when the timeline is affected; then we just want
+   // correct sync-lock group behavior when the timeline is affected; then we just want
    // to operate on the selected wave tracks
    this->CopyInputTracks(Track::All);
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
@@ -584,9 +584,9 @@ bool EffectNyquist::Process()
 
    mDebugOutput = "";
 
-   // Keep track of whether the current track is first selected in its group
+   // Keep track of whether the current track is first selected in its sync-lock group
    // (we have no idea what the length of the returned audio will be, so we have
-   // to handle group behavior the "old" way).
+   // to handle sync-lock group behavior the "old" way).
    mFirstInGroup = true;
    Track *gtLast = NULL;
 

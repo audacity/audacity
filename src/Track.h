@@ -216,6 +216,8 @@ class AUDACITY_DLL_API TrackListIterator
    TrackListNode *cur;
 };
 
+// TrackListCondIterator (base class for iterators that iterate over all tracks)
+// that meet a condition)
 class AUDACITY_DLL_API TrackListCondIterator: public TrackListIterator
 {
    public:
@@ -442,15 +444,4 @@ class AUDACITY_DLL_API TrackFactory
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 2214d773-8e6c-4117-a03d-36c9722ace52
 
