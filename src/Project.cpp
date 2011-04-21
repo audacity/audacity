@@ -3728,6 +3728,12 @@ void AudacityProject::UpdateMixerBoard()
 //
 
 //static
+TrackList *AudacityProject::GetClipboardTracks()
+{
+   return msClipboard;
+}
+
+//static
 void AudacityProject::DeleteClipboard()
 {
    if (msClipboard) {

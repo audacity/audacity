@@ -910,9 +910,15 @@ BlockFile *DirManager::NewODDecodeBlockFile(
    return newBlockFile;
 }
 
-bool DirManager::ContainsBlockFile(BlockFile *b) {
-   // check what the hash returns in case the blockfile is from a different project
+bool DirManager::ContainsBlockFile(BlockFile *b)
+{
    return b ? mBlockFileHash[b->GetFileName().GetName()] == b : NULL;
+}
+
+bool DirManager::ContainsBlockFile(wxString filepath)
+{
+   // check what the hash returns in case the blockfile is from a different project
+   return mBlockFileHash[filepath] != NULL;
 }
 
 // Adds one to the reference count of the block file,
@@ -1695,6 +1701,8 @@ void DirManager::FindOrphanBlockFiles(
       const wxArrayString& filePathArray,       // input: all files in project directory
       wxArrayString& orphanFilePathArray)       // output: orphan files
 {
+   DirManager *clipboardDM = NULL;
+
    for (size_t i = 0; i < filePathArray.GetCount(); i++) 
    {
       wxFileName fullname = filePathArray[i];
@@ -1705,7 +1713,20 @@ void DirManager::FindOrphanBlockFiles(
             (fullname.GetExt().IsSameAs(wxT("au")) ||
                fullname.GetExt().IsSameAs(wxT("auf"))))
       {
-         orphanFilePathArray.Add(fullname.GetFullPath());
+         if (!clipboardDM) {
+            TrackList *clipTracks = AudacityProject::GetClipboardTracks();
+            
+            if (clipTracks) {
+               TrackListIterator clipIter(clipTracks);
+               Track *track = clipIter.First();
+               if (track)
+                  clipboardDM = track->GetDirManager();
+            }
+         }
+         
+         // Ignore it if it exists in the clipboard (from a previously closed project)
+         if (clipboardDM && clipboardDM->ContainsBlockFile(fullname.GetFullPath()))
+            orphanFilePathArray.Add(fullname.GetFullPath());
       }
    }
    for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++) 

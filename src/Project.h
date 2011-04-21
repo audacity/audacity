@@ -275,7 +275,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void UpdateLayout();
 
    // Other commands
-
+   static TrackList *GetClipboardTracks();
    static void DeleteClipboard();
    static void DeleteAllProjectsDeleteLock();
 
