@@ -401,7 +401,7 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
 {
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
    
-   if (toprow < 0 || toprow > items->GetCount())
+   if (toprow < 0 || toprow > (int)items->GetCount())
    {
       return;
    }

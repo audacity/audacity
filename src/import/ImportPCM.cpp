@@ -187,8 +187,8 @@ int PCMImportFileHandle::GetFileUncompressedBytes()
 static wxString AskCopyOrEdit()
 {
    wxString oldCopyPref = gPrefs->Read(wxT("/FileFormats/CopyOrEditUncompressedData"), wxT("copy"));
-   bool firstTimeAsk    = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), true);
-   bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true);
+   bool firstTimeAsk    = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), true)?true:false;
+   bool oldAskPref      = gPrefs->Read(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), true)?true:false;
 
    // The first time the user is asked we force it to 'copy'.
    // This effectively does a one-time change to the preferences.
