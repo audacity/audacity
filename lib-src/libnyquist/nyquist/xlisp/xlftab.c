@@ -4,6 +4,8 @@
     Permission is granted for unrestricted non-commercial use
 
 HISTORY
+23-Apr-11   Dannenberg/Crook 
+        EXIT instruction removed by using NULL for funtab[195].fd_name.
 23-Apr-03   Mazzoni
         Eliminated some compiler warnings
  1-Apr-88	Dale Amon at CSD
@@ -357,7 +359,7 @@ FUNDEF funtab[] = {
 /* end of functions specific to xldmem.c */
 
 {	"TYPE-OF",			S, xtype		}, /* 194 */
-{	"EXIT",				S, xexit		}, /* 195 */
+{	NULL,				S, xexit		}, /* 195 */ /* fd_name used to be "EXIT" */
 #ifdef PEEK_AND_POKE
 {	"PEEK",				S, xpeek		}, /* 196 */
 {	"POKE",				S, xpoke		}, /* 197 */

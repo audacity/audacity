@@ -4,6 +4,7 @@
         Permission is granted for unrestricted non-commercial use	*/
 
 /* CHANGELOG:
+ 23 Apr 11 (Dannenberg/Crook) xlrand() now retuns zero on zero range.
   8 Oct 90 (Dannenberg) changed main() to xlisp_main_init and xlisp_main.
                made xlisp run as a module that evaluates expressions and
                retains state
@@ -76,11 +77,12 @@ long random() {
 
 /* xlrand - return next random number in sequence */
 long xlrand (long range) {
+     if (range == 0) return 0;
 #ifdef USE_RAND
-    return rand() % range;
+     return rand() % range;
 #endif
 #ifdef USE_RANDOM
-    return random() % range;
+     return random() % range;
 #endif
 }
 
