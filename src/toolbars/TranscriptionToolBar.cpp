@@ -449,28 +449,26 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent &event)
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
 	
- 
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
-        
-         //Adjust length to end if selection is null
-         //if(len == 0)
-         //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
-        
-         sampleCount newstart = mVk->OnForward(*(WaveTrack*)t,start,len);
-         double newpos = newstart / ((WaveTrack*)t)->GetRate();
-        
-         p->SetSel0(newpos);
-         p->RedrawProject();
+   if(t ) {		
+      sampleCount start,len;
+      GetSamples((WaveTrack*)t, &start,&len);
+     
+      //Adjust length to end if selection is null
+      //if(len == 0)
+      //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
+     
+      sampleCount newstart = mVk->OnForward(*(WaveTrack*)t,start,len);
+      double newpos = newstart / ((WaveTrack*)t)->GetRate();
+     
+      p->SetSel0(newpos);
+      p->RedrawProject();
 
-         SetButton(false, mButtons[TTB_StartOn]); 
-      }
+      SetButton(false, mButtons[TTB_StartOn]); 
+   }
 }
 
 void TranscriptionToolBar::OnStartOff(wxCommandEvent &event)
@@ -484,29 +482,26 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent &event)
    AudacityProject *p = GetActiveProject();
    
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
    
    SetButton(false, mButtons[TTB_StartOff]);
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
-         
-         //Adjust length to end if selection is null
-         //if(len == 0)
-         //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
-         
-         sampleCount newstart = mVk->OffForward(*(WaveTrack*)t,start,len);
-         double newpos = newstart / ((WaveTrack*)t)->GetRate();
-         
-         p->SetSel0(newpos);
-         p->RedrawProject();
-         
-         SetButton(false, mButtons[TTB_StartOn]); 
-      }
-   
-	
+   if(t) {		
+      sampleCount start,len;
+      GetSamples((WaveTrack*)t, &start,&len);
+      
+      //Adjust length to end if selection is null
+      //if(len == 0)
+      //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
+      
+      sampleCount newstart = mVk->OffForward(*(WaveTrack*)t,start,len);
+      double newpos = newstart / ((WaveTrack*)t)->GetRate();
+      
+      p->SetSel0(newpos);
+      p->RedrawProject();
+      
+      SetButton(false, mButtons[TTB_StartOn]); 
+   }
 }
 
 void TranscriptionToolBar::OnEndOn(wxCommandEvent &event)
@@ -521,31 +516,27 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent &event)
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
-
-
+   TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
-        
-         //Adjust length to end if selection is null
-         if(len == 0)
-            {
-               len = start;
-               start = 0;
-            }
-         sampleCount newEnd = mVk->OnBackward(*(WaveTrack*)t,start+ len,len);
-         double newpos = newEnd / ((WaveTrack*)t)->GetRate();
-        
-         p->SetSel1(newpos);
-         p->RedrawProject();
-        
-         SetButton(false, mButtons[TTB_EndOn]);		
-
-      }
+   if(t) {		
+      sampleCount start,len;
+      GetSamples((WaveTrack*)t, &start,&len);
+     
+      //Adjust length to end if selection is null
+      if(len == 0)
+         {
+            len = start;
+            start = 0;
+         }
+      sampleCount newEnd = mVk->OnBackward(*(WaveTrack*)t,start+ len,len);
+      double newpos = newEnd / ((WaveTrack*)t)->GetRate();
+     
+      p->SetSel1(newpos);
+      p->RedrawProject();
+     
+      SetButton(false, mButtons[TTB_EndOn]);		
+   }
 }
 
 
@@ -561,29 +552,26 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent &event)
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
    TrackList *tl = p->GetTracks();
-   TrackListIterator iter(tl);
+   TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
-         sampleCount start,len;
-         GetSamples((WaveTrack*)t, &start,&len);
-        
-         //Adjust length to end if selection is null
-         if(len == 0)
-            {
-               len = start;
-               start = 0;
-            }
-         sampleCount newEnd = mVk->OffBackward(*(WaveTrack*)t,start+ len,len);
-         double newpos = newEnd / ((WaveTrack*)t)->GetRate();
-        
-         p->SetSel1(newpos);
-         p->RedrawProject();
-        
-         SetButton(false, mButtons[TTB_EndOff]);
+   if(t) {		
+      sampleCount start,len;
+      GetSamples((WaveTrack*)t, &start,&len);
+     
+      //Adjust length to end if selection is null
+      if(len == 0) {
+         len = start;
+         start = 0;
       }
-
+      sampleCount newEnd = mVk->OffBackward(*(WaveTrack*)t,start+ len,len);
+      double newpos = newEnd / ((WaveTrack*)t)->GetRate();
+     
+      p->SetSel1(newpos);
+      p->RedrawProject();
+     
+      SetButton(false, mButtons[TTB_EndOff]);
+   }
 }
 
 

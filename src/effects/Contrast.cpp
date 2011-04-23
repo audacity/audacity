@@ -94,13 +94,11 @@ void CloseContrastDialog()
 
 float ContrastDialog::GetDB()
 {
-//   not good
-//  why not?
-// what if more than one track?
+// FIX-ME: what if more than one track?
    float rms = float(0.0);
 
    AudacityProject *p = GetActiveProject();
-   TrackListIterator iter(p->GetTracks());
+   TrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    Track *t = iter.First();
    if(mT0 > mT1)
    {
@@ -120,10 +118,15 @@ float ContrastDialog::GetDB()
    }
    if(mT0 == mT1)
       return 1234.0;
-   while(t) {  // this isn't quite right.  What to do if more than one track selected?
+   while(t) {  
+      // FIX-ME: This isn't quite right.  
+      // What to do if more than one track selected?
+      // Also what if tracks in selection are not wavetracks?
       ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
       t = iter.Next();
    }
+   if( rms < 1.0E-30 )
+      return -60.0;
    return 20.0*log10(rms);
 }
 

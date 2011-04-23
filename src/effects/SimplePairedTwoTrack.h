@@ -93,10 +93,11 @@ bool EffectSimplePairedTwoTrack<_DataType,_xxxSample>::Init()
    mnTracks = 1;
    mnBlockSize = 0;
 
-   TrackListIterator iter(mTracks);
-   WaveTrack *left = (WaveTrack*)(iter.First());
-   if ( left == 0 )
-      return false;      // Must have an existing track.
+   // FIX-ME: Should this be SelectedTrackListOfKindIterator?
+   TrackListOfKindIterator iter(Track::Wave, mTracks);
+   WaveTrack *left = (WaveTrack*)iter.First();
+   if( NULL == left )
+      return false;
 
    while(left) {
        sampleCount lstart, rstart;

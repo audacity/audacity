@@ -3512,6 +3512,9 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
    mDrawingTrack = NULL;
    t = FindTrack(event.m_x, event.m_y, false, false, &r);
    
+   if( t->GetKind() != Track::Wave )
+	   return;
+
    if( !IsSampleEditingPossible( event, t ) )
    {
       if( HasCapture() )
@@ -5222,6 +5225,8 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event)
 /// envelope boundary.
 bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
 {
+   if( track->GetKind() != Track::Wave )
+      return false;
    WaveTrack *wavetrack = (WaveTrack *)track;
    Envelope *envelope = wavetrack->GetEnvelopeAtX(event.GetX());
 
@@ -5285,6 +5290,9 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
 /// editable sample
 bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
 {
+   if( track->GetKind() != Track::Wave )
+      return false;
+
    WaveTrack *wavetrack = (WaveTrack *)track;
    //Get rate in order to calculate the critical zoom threshold
    double rate = wavetrack->GetRate();
@@ -6516,6 +6524,8 @@ void TrackPanel::OnTrackPanRight()
 
 void TrackPanel::SetTrackPan(Track * t, LWSlider * s)
 {
+   if( t->GetKind() != Track::Wave )
+      return;
    float newValue = s->Get();
 
    WaveTrack *link = (WaveTrack *)mTracks->GetLink(t);
@@ -6568,6 +6578,8 @@ void TrackPanel::OnTrackGainDec()
 
 void TrackPanel::SetTrackGain(Track * t, LWSlider * s)
 {
+   if( t->GetKind() != Track::Wave )
+      return ;
    float newValue = s->Get();
 
    WaveTrack *link = (WaveTrack *)mTracks->GetLink(t);
