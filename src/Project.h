@@ -571,5 +571,28 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
     DECLARE_EVENT_TABLE()
 };
 
+typedef void (AudacityProject::*audCommandFunction)();
+typedef void (AudacityProject::*audCommandListFunction)(int);
+
+// Previously this was in menus.cpp, and the declaration of the
+// command functor was not visible anywhere else.
+class AudacityProjectCommandFunctor : public CommandFunctor
+{
+public:
+   AudacityProjectCommandFunctor(AudacityProject *project,
+      audCommandFunction commandFunction);
+   AudacityProjectCommandFunctor(AudacityProject *project,
+      audCommandListFunction commandFunction);
+   AudacityProjectCommandFunctor(AudacityProject *project,
+      audCommandListFunction commandFunction,
+      wxArrayInt explicitIndices);
+   virtual void operator()(int index = 0);
+private:
+   AudacityProject *mProject;
+   audCommandFunction mCommandFunction;
+   audCommandListFunction mCommandListFunction;
+   wxArrayInt mExplicitIndices;
+};
+
 #endif
 

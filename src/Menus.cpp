@@ -130,54 +130,43 @@ enum {
    kAlign
 };
 
-typedef void (AudacityProject::*audCommandFunction)();
-typedef void (AudacityProject::*audCommandListFunction)(int);
 
-class AudacityProjectCommandFunctor:public CommandFunctor
+AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
+                              audCommandFunction commandFunction)
 {
-public:
-   AudacityProjectCommandFunctor(AudacityProject *project,
-                                 audCommandFunction commandFunction)
-   {
-      mProject = project;
-      mCommandFunction = commandFunction;
-      mCommandListFunction = NULL;
-   }
+   mProject = project;
+   mCommandFunction = commandFunction;
+   mCommandListFunction = NULL;
+}
 
-   AudacityProjectCommandFunctor(AudacityProject *project,
-                                 audCommandListFunction commandFunction)
-   {
-      mProject = project;
-      mCommandFunction = NULL;
-      mCommandListFunction = commandFunction;
-   }
+AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
+                              audCommandListFunction commandFunction)
+{
+   mProject = project;
+   mCommandFunction = NULL;
+   mCommandListFunction = commandFunction;
+}
 
-   AudacityProjectCommandFunctor(AudacityProject *project,
-                                 audCommandListFunction commandFunction,
-                                 wxArrayInt explicitIndices)
-   {
-      mProject = project;
-      mCommandFunction = NULL;
-      mCommandListFunction = commandFunction;
-      mExplicitIndices = explicitIndices;
-   }
+AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
+                              audCommandListFunction commandFunction,
+                              wxArrayInt explicitIndices)
+{
+   mProject = project;
+   mCommandFunction = NULL;
+   mCommandListFunction = commandFunction;
+   mExplicitIndices = explicitIndices;
+}
 
-   virtual void operator()(int index = 0)
-   {
-      if (mCommandListFunction && mExplicitIndices.GetCount() > 0)
-         (mProject->*(mCommandListFunction)) (mExplicitIndices[index]);
-      else if (mCommandListFunction)
-         (mProject->*(mCommandListFunction)) (index);
-      else
-         (mProject->*(mCommandFunction)) ();
-   }
+void AudacityProjectCommandFunctor::operator()(int index )
+{
+   if (mCommandListFunction && mExplicitIndices.GetCount() > 0)
+      (mProject->*(mCommandListFunction)) (mExplicitIndices[index]);
+   else if (mCommandListFunction)
+      (mProject->*(mCommandListFunction)) (index);
+   else
+      (mProject->*(mCommandFunction)) ();
+}
 
-private:
-   AudacityProject *mProject;
-   audCommandFunction mCommandFunction;
-   audCommandListFunction mCommandListFunction;
-   wxArrayInt mExplicitIndices;
-};
 
 #define FN(X) new AudacityProjectCommandFunctor(this, &AudacityProject:: X )
 #define FNI(X, I) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, I)
