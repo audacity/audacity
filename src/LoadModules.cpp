@@ -90,36 +90,35 @@ void LoadModule(wxString fname)
    if (pDLL && pDLL->Load(fname, wxDL_LAZY)) 
    {
       int result = 1;
+      // A little strange.  The main function is called whether or not the version is OK.
       mainFn   = (tModuleInit)(pDLL->GetSymbol(wxT(initFnName)));
-
       if (mainFn) 
          result = mainFn( 0 );
 
       // If the module provides a version string, check that it matches the
       // Audacity version string. (For now, they must match exactly)
-      // For compatibility reasons, if no version string is provided we try to
-      // load the module anyway.
       tVersionFn versionFn = (tVersionFn)(pDLL->GetSymbol(wxT(versionFnName)));
-      if (versionFn)
-      {
+      bool bOK = versionFn != NULL;
+      if (!bOK){
+         wxLogWarning(wxT("The module %s does not provide a version string. It will not be loaded."), fname.c_str());
+      }
+      else {
          wxString moduleVersion = versionFn();
-         if (!moduleVersion.IsSameAs(AUDACITY_VERSION_STRING))
-         {
+         bOK = moduleVersion.IsSameAs(AUDACITY_VERSION_STRING);
+         if( !bOK ){
             wxLogError(wxT("The module %s is designed to work with Audacity version %s; it will not be loaded."), fname.c_str(), moduleVersion.c_str());
-            delete pDLL;
-            return;
          }
       }
-      else
-      {
-         wxLogWarning(wxT("The module %s does not provide a version string. Attempting to load it anyway."), fname.c_str());
+
+      if( !bOK ){
+         delete pDLL;
       }
-
-      if(( scriptFn == NULL ) &&(result>=0 ))
-         scriptFn = (tpRegScriptServerFunc)(pDLL->GetSymbol(wxT(scriptFnName)));
-
-      if((pPanelHijack==NULL ) && (result>=0))
-         pPanelHijack = (tPanelFn)(pDLL->GetSymbol(wxT(mainPanelFnName)));
+      else {
+         if(( scriptFn == NULL ) &&(result>=0 ))
+            scriptFn = (tpRegScriptServerFunc)(pDLL->GetSymbol(wxT(scriptFnName)));
+         if((pPanelHijack==NULL ) && (result>=0))
+            pPanelHijack = (tPanelFn)(pDLL->GetSymbol(wxT(mainPanelFnName)));
+      }
    }
 
    ::wxSetWorkingDirectory(saveOldCWD);
