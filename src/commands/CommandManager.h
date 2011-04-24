@@ -20,7 +20,7 @@
 #include "../AudacityApp.h"
 #include "../xml/XMLTagHandler.h"
 
-class CommandFunctor
+class AUDACITY_DLL_API CommandFunctor
 {
 public:
    CommandFunctor(){};
@@ -90,6 +90,9 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 
    wxMenu* BeginSubMenu(wxString tName);
    void EndSubMenu();
+   void SetToMenu( wxMenu * menu ){
+      mCurrentMenu = menu;
+   };
 
    void InsertItem(wxString name, wxString label, CommandFunctor *callback,
                    wxString after, int checkmark = -1);

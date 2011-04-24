@@ -576,7 +576,7 @@ typedef void (AudacityProject::*audCommandListFunction)(int);
 
 // Previously this was in menus.cpp, and the declaration of the
 // command functor was not visible anywhere else.
-class AudacityProjectCommandFunctor : public CommandFunctor
+class AUDACITY_DLL_API AudacityProjectCommandFunctor : public CommandFunctor
 {
 public:
    AudacityProjectCommandFunctor(AudacityProject *project,
