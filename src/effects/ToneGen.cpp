@@ -127,7 +127,7 @@ bool EffectToneGen::TransferParameters( Shuttle & shuttle )
 bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
 {
    double throwaway = 0;        //passed to modf but never used
-   int i;
+   sampleCount i;
    double f = 0.0;
 
    double BlendedFrequency;

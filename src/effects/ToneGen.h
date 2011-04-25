@@ -85,7 +85,7 @@ class EffectToneGen : public BlockGenerator {
 
    // mSample is an external placeholder to remember the last "buffer"
    // position so we use it to reinitialize from where we left
-   int mSample;
+   sampleCount mSample;
  // friendship ...
  friend class ToneGenDialog;
 
