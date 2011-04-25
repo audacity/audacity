@@ -1751,6 +1751,24 @@ WaveClip* WaveTrack::GetClipAtX(int xcoord)
    return NULL;
 }
 
+WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
+{
+   for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
+   {
+      WaveClip *clip;
+      sampleCount start, len;
+
+      clip  = it->GetData();
+      start = clip->GetStartSample();
+      len   = clip->GetNumSamples();
+
+      if (sample >= start && sample < start + len)
+         return clip;
+   }
+
+   return NULL;
+}
+
 Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)
 {
    WaveClip* clip = GetClipAtX(xcoord);

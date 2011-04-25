@@ -1030,6 +1030,18 @@ void WaveClip::GetDisplayRect(wxRect* r)
    *r = mDisplayRect;
 }
 
+// only works if the clip is on screen an mDisplayRect is set.
+sampleCount WaveClip::GetSampleNumberAtX(int xcoord)
+{
+   if (mDisplayRect.width > 0 &&
+       xcoord >= mDisplayRect.x && xcoord < mDisplayRect.x + mDisplayRect.width) {
+      float cursor = (xcoord - mDisplayRect.x) / mDisplayRect.width;
+      return GetStartSample() + GetNumSamples() * cursor;
+   }
+
+   return -1;
+}
+
 bool WaveClip::Append(samplePtr buffer, sampleFormat format,
                       sampleCount len, unsigned int stride /* = 1 */,
                       XMLWriter* blockFileLog /*=NULL*/)

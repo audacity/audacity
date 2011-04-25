@@ -2624,10 +2624,17 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 
          // Check for stereo partner
          Track *partner = mTracks->GetLink(vt);
-         if (partner && partner->GetKind() == Track::Wave) {
-            WaveClip *clip = ((WaveTrack *)partner)->GetClipAtX(event.m_x);
-            if (clip) {
-               mCapturedClipArray.Add(TrackClip(partner, clip));
+         if (mCapturedClip && partner && partner->GetKind() == Track::Wave) {
+            // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
+            // vt is guaranteed to be onscreen, so we ask for the approx. time at that point
+            
+            sampleCount xSample = mCapturedClip->GetSampleNumberAtX(event.m_x);
+            
+            if (xSample >= 0) {
+               WaveClip *clip = ((WaveTrack *)partner)->GetClipAtSample(xSample);
+               if (clip) {
+                  mCapturedClipArray.Add(TrackClip(partner, clip));
+               }
             }
          }
       }
