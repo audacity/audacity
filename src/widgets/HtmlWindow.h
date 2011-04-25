@@ -32,7 +32,7 @@ around to new positions.
 /// HtmlWindow Class
 ////////////////////////////////////////////////////////////
 
-class HtmlWindow:public wxHtmlWindow
+class AUDACITY_DLL_API HtmlWindow:public wxHtmlWindow
 {
 public:
    HtmlWindow(wxWindow *parent,

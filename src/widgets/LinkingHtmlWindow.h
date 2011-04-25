@@ -24,7 +24,7 @@
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
-class LinkingHtmlWindow : public HtmlWindow 
+class AUDACITY_DLL_API LinkingHtmlWindow : public HtmlWindow 
 {
  public:
    LinkingHtmlWindow(wxWindow *parent, wxWindowID id = -1, 
