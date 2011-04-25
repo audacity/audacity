@@ -13,7 +13,7 @@
 
 \class ModTrackPanelCallback
 \brief ModTrackPanelCallback is a class containing all the callback 
-functions for the second generation ModTrackPanel.  These functions are 
+functions for the second generation TrackPanel.  These functions are 
 added into the standard Audacity Project Menus.
 
 *//*****************************************************************//**
@@ -21,7 +21,7 @@ added into the standard Audacity Project Menus.
 \class ModTrackPanelCommandFunctor
 \brief We create one of these functors for each menu item or 
 command which we register with the Command Manager.  These take the 
-click from the menu into the actaul function to be called.
+click from the menu into the actual function to be called.
 
 *//********************************************************************/
 
