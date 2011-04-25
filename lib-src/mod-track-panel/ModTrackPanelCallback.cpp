@@ -27,10 +27,11 @@ click from the menu into the actual function to be called.
 
 #include <wx/wx.h>
 #include "ModTrackPanelCallback.h"
-#include "../../src/Audacity.h"
-#include "../../src/ShuttleGui.h"
-#include "../../src/Project.h"
-#include "../../src/LoadModules.h"
+#include "Audacity.h"
+#include "ShuttleGui.h"
+#include "Project.h"
+#include "LoadModules.h"
+#include "Registrar.h"
 
 /*
 There are several functions that can be used in a GUI module.
@@ -53,15 +54,29 @@ and replace the main project window with our own wxFrame.
 
 */
 
+// The machinery here is somewhat overkill for what we need.
+// It allows us to add lots of menu and other actions into Audacity.
+// We need to jump through these hoops even if only adding
+// two menu items into Audacity.
+
+// The OnFunc functrions are functions which can be invoked 
+// by Audacity.  Mostly they are for menu items.  They could
+// be for buttons.  They could be for commands invokable by
+// script (but no examples of that yet).
 class ModTrackPanelCallback
 {
 public:
-   void OnFuncShow();
-   void OnFuncHide();
+   void OnFuncShowAudioExplorer();
+   void OnFuncShowAnotherExtension();
 };
 
 typedef void (ModTrackPanelCallback::*ModTrackPanelCommandFunction)();
 
+// We have an instance of this CommandFunctor for each 
+// instance of a command we attach to Audacity.
+// Although the commands have void argument,
+// they do receive an instance of ModTrackPanelCallback as a 'this', 
+// so if we want to, we can pass data to each function instance.
 class ModTrackPanelCommandFunctor:public CommandFunctor
 {
 public:
@@ -73,6 +88,9 @@ public:
    ModTrackPanelCommandFunction mpFunction;
 };
 
+// If pData is NULL we will later be passing a NULL 'this' to pFunction.
+// This may be quite OK if the class function is written as if it
+// could be static.
 ModTrackPanelCommandFunctor::ModTrackPanelCommandFunctor(ModTrackPanelCallback *pData,
       ModTrackPanelCommandFunction pFunction)
 {
@@ -80,7 +98,7 @@ ModTrackPanelCommandFunctor::ModTrackPanelCommandFunctor(ModTrackPanelCallback *
    mpFunction = pFunction;
 }
 
-// The dispatching function.
+// The dispatching function in the command functor.
 void ModTrackPanelCommandFunctor::operator()(int index )
 {
    (mpData->*(mpFunction))();
@@ -90,18 +108,27 @@ void ModTrackPanelCommandFunctor::operator()(int index )
    (ModTrackPanelCommandFunction)(&ModTrackPanelCallback::X)) 
 
 
-void ModTrackPanelCallback::OnFuncShow()
+void ModTrackPanelCallback::OnFuncShowAudioExplorer()
 {
    int k=3;
 }
 
-void ModTrackPanelCallback::OnFuncHide()
+void ModTrackPanelCallback::OnFuncShowAnotherExtension()
 {
    int k=4;
 }
 
+// Oooh look, we're using a NULL object, and hence a NULL 'this'.
+// That's OK.
 ModTrackPanelCallback * pModTrackPanelCallback=NULL;
 
+//This is the DLL related machinery that actually gets called by Audacity
+//as prt of loading and using a DLL.
+//It is MUCH simpler to use C for this interface because then the
+//function names are not 'mangled'.
+//The function names are important, because they are what Audacity looks
+//for.  Change the name and they won't be found.
+//Change the signature, e.g. return type, and you probably have a crash.
 extern "C" {
 // GetVersionString
 // REQUIRED for the module to be accepted by Audacity.
@@ -116,13 +143,15 @@ MOD_TRACK_PANEL_DLL_API wchar_t * GetVersionString()
 }
 
 // This is the function that connects us to Audacity.
-int MOD_TRACK_PANEL_DLL_API ModuleDispatch(ModuleDispatchTypes type)
+MOD_TRACK_PANEL_DLL_API int ModuleDispatch(ModuleDispatchTypes type)
 {
    switch (type)
    {
    case AppInitialized:
+      ModTrackPanel::Registrar::Start();
       break;
    case AppQuiting:
+      ModTrackPanel::Registrar::Finish();
       break;
    case ProjectInitialized:
    case MenusRebuilt:
@@ -139,9 +168,9 @@ int MOD_TRACK_PANEL_DLL_API ModuleDispatch(ModuleDispatchTypes type)
          c->AddSeparator();
          // We add two new commands into the Analyze menu.
          c->AddItem( _T("Audio Explorer..."), _T("Experimental GUI for audio analysis"),
-            ModTrackPanelFN( OnFuncShow ) );
+            ModTrackPanelFN( OnFuncShowAudioExplorer ) );
          c->AddItem( _T("Another Extension..."), _T("Experimental GUI for other things"),
-            ModTrackPanelFN( OnFuncHide ) );
+            ModTrackPanelFN( OnFuncShowAnotherExtension ) );
       }
       break;
    default:

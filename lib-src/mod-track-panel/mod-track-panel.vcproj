@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswud&quot;;&quot;$(WXWIN)\include&quot;;&quot;$(SolutionDir)&quot;;..\..\..;..\..\..\..\src\include\win32;..\..\..\..\src\include;..\FileDialog;..\expat;&quot;..\lib-widget-extra&quot;;..\libflac\include;..\libid3tag;..\liblrdf;..\libmad;..\libnyquist;..\libogg\include;..\libresample\include;..\libsamplerate\src;..\libscorealign;..\libsndfile;..\libvamp;..\libvorbis\include;&quot;..\portaudio-v19\include&quot;;..\portmixer\include;..\portsmf;..\redland\raptor\src;..\slv2;..\sbsms\include;..\soundtouch\include;..\twolame\libtwolame;..\portmidi\pm_common;..\portmidi\pm_win;..\portmidi\porttime;..\ffmpeg\win32;..\ffmpeg"
+				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswud&quot;;&quot;$(WXWIN)\include&quot;;&quot;$(SolutionDir)&quot;;..\..\src;..\..\src\include\win32;..\..\src\include;..\FileDialog;..\expat;&quot;..\lib-widget-extra&quot;;..\libflac\include;..\libid3tag;..\liblrdf;..\libmad;..\libnyquist;..\libogg\include;..\libresample\include;..\libsamplerate\src;..\libscorealign;..\libsndfile;..\libvamp;..\libvorbis\include;&quot;..\portaudio-v19\include&quot;;..\portmixer\include;..\portsmf;..\redland\raptor\src;..\slv2;..\sbsms\include;..\soundtouch\include;..\twolame\libtwolame;..\portmidi\pm_common;..\portmidi\pm_win;..\portmidi\porttime;..\ffmpeg\win32;..\ffmpeg"
 				PreprocessorDefinitions="BUILDING_MOD_TRACK_PANEL;WXUSINGDLL;__WXMSW__;__WXDEBUG__;WIN32;_DEBUG;_USRDLL"
 				StringPooling="true"
 				BasicRuntimeChecks="3"
@@ -119,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswu&quot;;&quot;$(WXWIN)\include&quot;;&quot;$(SolutionDir)&quot;;..\..\..;..\..\..\..\src\include\win32;..\..\..\..\src\include;..\FileDialog;..\expat;&quot;..\lib-widget-extra&quot;;..\libflac\include;..\libid3tag;..\liblrdf;..\libmad;..\libnyquist;..\libogg\include;..\libresample\include;..\libsamplerate\src;..\libscorealign;..\libsndfile;..\libvamp;..\libvorbis\include;&quot;..\portaudio-v19\include&quot;;..\portmixer\include;..\portsmf;..\redland\raptor\src;..\slv2;..\sbsms\include;..\soundtouch\include;..\twolame\libtwolame;..\portmidi\pm_common;..\portmidi\pm_win;..\portmidi\porttime;..\ffmpeg\win32;..\ffmpeg"
+				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswu&quot;;&quot;$(WXWIN)\include&quot;;&quot;$(SolutionDir)&quot;;..\..\src;..\..\src\include\win32;..\..\src\include;..\FileDialog;..\expat;&quot;..\lib-widget-extra&quot;;..\libflac\include;..\libid3tag;..\liblrdf;..\libmad;..\libnyquist;..\libogg\include;..\libresample\include;..\libsamplerate\src;..\libscorealign;..\libsndfile;..\libvamp;..\libvorbis\include;&quot;..\portaudio-v19\include&quot;;..\portmixer\include;..\portsmf;..\redland\raptor\src;..\slv2;..\sbsms\include;..\soundtouch\include;..\twolame\libtwolame;..\portmidi\pm_common;..\portmidi\pm_win;..\portmidi\porttime;..\ffmpeg\win32;..\ffmpeg"
 				PreprocessorDefinitions="BUILDING_MOD_TRACK_PANEL;WXUSINGDLL;__WXMSW__;NDEBUG;_WINDOWS;WIN32;_USRDLL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -193,6 +193,14 @@
 			</File>
 			<File
 				RelativePath=".\Registrar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkewedRuler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkewedRuler.h"
 				>
 			</File>
 		</Filter>
