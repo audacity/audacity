@@ -2,20 +2,17 @@
 
   Audacity: A Digital Audio Editor
 
-  SkewedRuler.h
+  TrackPanel2.h
 
   James Crook
 
-  Draws a ruler used for aligning two time sequences.
-
 **********************************************************************/
 
-#ifndef __AUDACITY_SKEWED_RULER__
-#define __AUDACITY_SKEWED_RULER__
+#ifndef __AUDACITY_TRACK_PANEL2__
+#define __AUDACITY_TRACK_PANEL2__
 
 
-
-class SkewedRuler {
+class TrackPanel2 {
 public:
 
 };

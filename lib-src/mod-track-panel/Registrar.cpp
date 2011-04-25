@@ -21,8 +21,6 @@ plugging in of new resources.
 #include <wx/wx.h>
 #include "Registrar.h"
 
-START_NAMESPACE
-
 Registrar * pRegistrar = NULL;
 
 // By defining the external function and including it here, we save ourselves maintaing two lists.
@@ -44,6 +42,7 @@ int RegistrarDispatch( t_RegistrarDispatchType Type )
    DISPATCH( EnvelopeArtist );
    DISPATCH( LabelArtist );
    DISPATCH( DragGridSizer );
+   DISPATCH( TrackPanel2 );
    return 0;
 }
 
@@ -54,6 +53,7 @@ void Registrar::Start()
    wxASSERT( pRegistrar ==NULL );
    pRegistrar = new Registrar();
 
+   RegistrarDispatch( RegResource );
    RegistrarDispatch( RegArtist );
    RegistrarDispatch( RegDataType );
    RegistrarDispatch( RegCommand );
@@ -69,6 +69,9 @@ void Registrar::Finish()
    pRegistrar = NULL;
 }
 
-
-
-};//End of Namespace.
+void Registrar::ShowNewPanel()
+{
+   wxASSERT( pRegistrar !=NULL );
+   if( pRegistrar->pShowFn != NULL)
+      pRegistrar->pShowFn();
+}

@@ -111,6 +111,7 @@ void ModTrackPanelCommandFunctor::operator()(int index )
 void ModTrackPanelCallback::OnFuncShowAudioExplorer()
 {
    int k=3;
+   Registrar::ShowNewPanel();
 }
 
 void ModTrackPanelCallback::OnFuncShowAnotherExtension()
@@ -148,10 +149,10 @@ MOD_TRACK_PANEL_DLL_API int ModuleDispatch(ModuleDispatchTypes type)
    switch (type)
    {
    case AppInitialized:
-      ModTrackPanel::Registrar::Start();
+      Registrar::Start();
       break;
    case AppQuiting:
-      ModTrackPanel::Registrar::Finish();
+      Registrar::Finish();
       break;
    case ProjectInitialized:
    case MenusRebuilt:

@@ -11,18 +11,14 @@
 
 ********************************************************************//**
 
-\class Registrar
-\brief Registrar is a class that other classes register resources of
-various kinds with.  It makes a system that is much more amenable to 
-plugging in of new resources.
+\class SkewedRuller
+\brief SkewedRuler draws a ruler for aligning two sequences.
 
 *//********************************************************************/
 
 #include <wx/wx.h>
+#include "Registrar.h"
 #include "SkewedRuler.h"
-
-START_NAMESPACE
-
 
 extern int SkewedRulerDispatch( Registrar & R, t_RegistrarDispatchType Type )
 {
@@ -137,4 +133,4 @@ int DragGridSizerDispatch( Registrar & R, t_RegistrarDispatchType Type )
 }
 
 
-};//End of Namespace.
+

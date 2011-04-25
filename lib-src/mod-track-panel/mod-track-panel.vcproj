@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28ud_core.lib wxbase28ud.lib odbc32.lib odbccp32.lib oldnames.lib comctl32.lib rpcrt4.lib wsock32.lib netapi32.lib Audacity.lib"
+				AdditionalDependencies="wxmsw28ud_core.lib wxbase28ud.lib wxmsw28ud_html.lib odbc32.lib odbccp32.lib oldnames.lib comctl32.lib rpcrt4.lib wsock32.lib netapi32.lib Audacity.lib"
 				OutputFile="$(OutDir)\modules\$(ProjectName).dll"
 				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_dll&quot;;&quot;$(OutDir)&quot;"
 				GenerateDebugInformation="true"
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw28u_core.lib wxbase28u.lib odbc32.lib odbccp32.lib oldnames.lib comctl32.lib rpcrt4.lib wsock32.lib netapi32.lib Audacity.lib"
+				AdditionalDependencies="wxmsw28u_core.lib wxbase28u.lib wxmsw28u_html.lib odbc32.lib odbccp32.lib oldnames.lib comctl32.lib rpcrt4.lib wsock32.lib netapi32.lib Audacity.lib"
 				OutputFile="$(OutDir)\modules\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_dll&quot;;&quot;$(OutDir)&quot;"
@@ -201,6 +201,14 @@
 			</File>
 			<File
 				RelativePath=".\SkewedRuler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TrackPanel2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TrackPanel2.h"
 				>
 			</File>
 		</Filter>
