@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NyqBench", "NyqBench.vcproj", "{4A36EB5E-CD32-40E3-AFB3-146369081D83}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Unicode Debug|Win32 = Unicode Debug|Win32
+		Unicode Release|Win32 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A36EB5E-CD32-40E3-AFB3-146369081D83}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{4A36EB5E-CD32-40E3-AFB3-146369081D83}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{4A36EB5E-CD32-40E3-AFB3-146369081D83}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{4A36EB5E-CD32-40E3-AFB3-146369081D83}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

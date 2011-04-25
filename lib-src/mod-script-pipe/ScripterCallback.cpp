@@ -16,39 +16,96 @@
 #include "../../src/Audacity.h"
 #include "../../src/ShuttleGui.h"
 
-#ifdef NOT_DEFINED
+/*
+There are several functions that can be used in a GUI module.
 
-// This is 'traditional code' for DLLs, which we're not
-// using.
+//#define versionFnName   "GetVersionString"
+If the version is wrong, the module will be rejected.
+That is it will be loaded and then unloaded.
 
-//#include "stdafx.h"
+//#define ModuleDispatchName "ModuleDispatch"
+The most useful function.  See the example in this 
+file.  It has several cases/options in it.
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+//#define scriptFnName    "RegScriptServerFunc"
+This function is run from a non gui thread.  It was originally 
+created for the benefit of mod-script-pipe.
+
+//#define mainPanelFnName "MainPanelFunc"
+This function is the hijacking function, to take over Audacity
+and replace the main project window with our own wxFrame.
+
+*/
+
+// HACK!
+// This must match the enum in LoadModules.h
+// We do NOT include LoadModules.h, because we want
+// this DLL to be usable with programs other than Audacity.
+// (More work required for this to be possible -
+// we need new header files that just define the interface).
+typedef enum
 {
-    switch (ul_reason_for_call)
-	{
-		case DLL_PROCESS_ATTACH:
-		case DLL_THREAD_ATTACH:
-		case DLL_THREAD_DETACH:
-		case DLL_PROCESS_DETACH:
-			break;
-    }
-    return TRUE;
-}
-
-#endif
+   ModuleInitialize,
+   ModuleTerminate,
+   AppInitialized,
+   AppQuiting,
+   ProjectInitialized,
+   ProjectClosing,
+   MenusRebuilt
+} ModuleDispatchTypes;
 
 
 extern void PipeServer();
+typedef SCRIPT_PIPE_DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
+static tpExecScriptServerFunc pScriptServerFn=NULL;
+
 
 extern "C" {
 
-typedef SCRIPT_PIPE_DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
+SCRIPT_PIPE_DLL_API  wchar_t * GetVersionString()
+{
+   // Make sure that this version of the module requires the version 
+   // of Audacity it is built with. 
+   // For now the versions must match exactly for Audacity to 
+   // agree to load the module.
+   return AUDACITY_VERSION_STRING;
+}
 
-static tpExecScriptServerFunc pScriptServerFn=NULL;
+extern int SCRIPT_PIPE_DLL_API  ModuleDispatch(ModuleDispatchTypes type);
+// ModuleDispatch
+// is called by Audacity to initialize/terminmate the module,
+// and ask if it has anything for the menus.
+// We don't (yet) do anything in this, since we have a special function for the scripter
+// all we need to do is return 1.
+int ModuleDispatch(ModuleDispatchTypes type){
+   switch (type){
+      case AppInitialized:{
+      }
+      break;
+      case AppQuiting: {
+      }
+      break;
+      case ProjectInitialized:
+      case MenusRebuilt:  {
+      }
+      break;
+      default:
+      break;
+   }
+   return 1;
+}   
+
+// And here is our special registration function.
+int SCRIPT_PIPE_DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
+{
+   if( pFn )
+   {
+      pScriptServerFn = pFn;
+      PipeServer();
+   }
+   return 4;
+}
+
 
 wxString Str2;
 wxArrayString aStr;
@@ -128,62 +185,6 @@ int DoSrvMore(char *pOut, size_t nMax)
       }
    }
    return 0;
-}
-
-int SCRIPT_PIPE_DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
-{
-   if( pFn )
-   {
-      pScriptServerFn = pFn;
-      PipeServer();
-   }
-   return 4;
-}
-
-// This is an example of an exported function.
-int SCRIPT_PIPE_DLL_API ExtensionModuleInit(int ix)
-{
-//   pExecFunc = NULL;
-   ix;// compiler food.
-
-#if defined(_DEBUG)
-   wxLogDebug(wxT("Got into DLL"));
-#endif
-
-   // Here is proof that the DLL was dynamically loaded and this Init function
-   // called.
-   //wxDialog Dlg( (wxWindow*)NULL, (wxWindowID)-1, wxT("mod-script-pipe - Dialog Loaded by Plug In"), wxPoint(0,0));
-
-
-#if 0
-   ShuttleGui S( &Dlg, eIsCreating );
-   S.StartStatic( "Scripter Initialising" );
-   S.StartHorizontalLay();
-   S.Id(wxID_CANCEL).AddButton( "Cancel" ); 
-   S.Id(wxID_OK).AddButton( "OK" )->SetFocus(); 
-   S.EndHorizontalLay();
-   S.EndStatic();
-#endif
-
-   /*
-   Dlg.Fit();
-   Dlg.Move( 100,100 );
-   int id = Dlg.ShowModal();
-   */
-//printf("id = %d\n", id);
-   // return -1 for cancel, anything else for OK.
-//   return (id==wxID_CANCEL)?-1:42;
-   return 0;
-}
-
-wxString SCRIPT_PIPE_DLL_API GetVersionString()
-{
-   // Make sure that this version of the module requires the version 
-   // of Audacity it is built with. 
-   // For now, the versions must match exactly for Audacity to 
-   // agree to load the module.
-
-   return AUDACITY_VERSION_STRING;
 }
 
 } // End extern "C"
