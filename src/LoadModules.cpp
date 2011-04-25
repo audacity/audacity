@@ -39,7 +39,8 @@ i.e. an alternative to the usual interface, for Audacity.
 
 typedef wxWindow * pwxWindow;
 typedef int (*tModuleInit)(int);
-typedef wxString (*tVersionFn)();
+//typedef wxString (*tVersionFn)();
+typedef wchar_t * (*tVersionFn)();
 typedef pwxWindow (*tPanelFn)(int);
 
 // This variable will hold the address of a subroutine in 
@@ -89,36 +90,14 @@ void LoadModule(wxString fname)
    wxDynamicLibrary* pDLL = new wxDynamicLibrary();
    if (pDLL && pDLL->Load(fname, wxDL_LAZY)) 
    {
-      int result = 1;
-      // A little strange.  The main function is called whether or not the version is OK.
-      mainFn   = (tModuleInit)(pDLL->GetSymbol(wxT(initFnName)));
-      if (mainFn) 
-         result = mainFn( 0 );
-
-      // If the module provides a version string, check that it matches the
-      // Audacity version string. (For now, they must match exactly)
-      tVersionFn versionFn = (tVersionFn)(pDLL->GetSymbol(wxT(versionFnName)));
-      bool bOK = versionFn != NULL;
-      if (!bOK){
-         wxLogWarning(wxT("The module %s does not provide a version string. It will not be loaded."), fname.c_str());
-      }
-      else {
-         wxString moduleVersion = versionFn();
-         bOK = moduleVersion.IsSameAs(AUDACITY_VERSION_STRING);
-         if( !bOK ){
-            wxLogError(wxT("The module %s is designed to work with Audacity version %s; it will not be loaded."), fname.c_str(), moduleVersion.c_str());
-         }
-      }
-
-      if( !bOK ){
-         delete pDLL;
-      }
-      else {
-         if(( scriptFn == NULL ) &&(result>=0 ))
-            scriptFn = (tpRegScriptServerFunc)(pDLL->GetSymbol(wxT(scriptFnName)));
-         if((pPanelHijack==NULL ) && (result>=0))
-            pPanelHijack = (tPanelFn)(pDLL->GetSymbol(wxT(mainPanelFnName)));
-      }
+      // We've loaded and initialised OK.
+      // So look for special case functions:
+      // (a) for scripting.
+      if( scriptFn == NULL )
+         scriptFn = (tpRegScriptServerFunc)(pDLL->GetSymbol(wxT(scriptFnName)));
+      // (b) for hijacking the entire Audacity panel.
+      if( pPanelHijack==NULL )
+         pPanelHijack = (tPanelFn)(pDLL->GetSymbol(wxT(mainPanelFnName)));
    }
 
    ::wxSetWorkingDirectory(saveOldCWD);
@@ -195,9 +174,22 @@ bool Module::Load()
       return false;
    }
 
-   mDispatch = (fnModuleDispatch) mLib->GetSymbol(wxT(ModuleDispatchName));
+   // Check version string matches.  (For now, they must match exactly)
+   tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
+   if (versionFn == NULL){
+      wxLogWarning(wxT("The module %s does not provide a version string. It will not be loaded."), mName.c_str());
+      return false;
+   }
 
+   wxString moduleVersion = versionFn();
+   if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
+      wxLogError(wxT("The module %s is designed to work with Audacity version %s; it will not be loaded."), mName.c_str(), moduleVersion.c_str());
+      return false;
+   }
+
+   mDispatch = (fnModuleDispatch) mLib->GetSymbol(wxT(ModuleDispatchName));
    if (!mDispatch) {
+      // Module does not provide a dispacth function...
       return false;
    }
 
@@ -207,7 +199,6 @@ bool Module::Load()
    }
 
    mDispatch = NULL;
-
    return false;
 }
 
