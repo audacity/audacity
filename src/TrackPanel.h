@@ -19,7 +19,6 @@
 
 #include "LabelTrack.h"
 #include "Sequence.h"  //Stm: included for the sampleCount declaration
-#include "TrackGroup.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
