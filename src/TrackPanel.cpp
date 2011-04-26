@@ -2626,12 +2626,14 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          Track *partner = mTracks->GetLink(vt);
          if (mCapturedClip && partner && partner->GetKind() == Track::Wave) {
             // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
-            // vt is guaranteed to be onscreen, so we ask for the approx. time at that point
-            
-            sampleCount xSample = mCapturedClip->GetSampleNumberAtX(event.m_x);
-            
-            if (xSample >= 0) {
-               WaveClip *clip = ((WaveTrack *)partner)->GetClipAtSample(xSample);
+            // instead calculate the time manually
+            double rate = ((WaveTrack*)partner)->GetRate();
+            double pps = mViewInfo->zoom;
+            double tt = (event.m_x - GetLeftOffset()) / pps + mViewInfo->h;
+            sampleCount s0 = (sampleCount)(tt * rate + 0.5);
+
+            if (s0 >= 0) {
+               WaveClip *clip = ((WaveTrack *)partner)->GetClipAtSample(s0);
                if (clip) {
                   mCapturedClipArray.Add(TrackClip(partner, clip));
                }

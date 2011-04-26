@@ -152,9 +152,6 @@ public:
    void ClearDisplayRect();
    void SetDisplayRect(const wxRect& r);
    void GetDisplayRect(wxRect* r);
-   /// Get the absolute sample number at the x pixel specified by xcoord.
-   /// Only works if the clip is onscreen (returned by WaveTrack::GetClipAtX)
-   sampleCount GetSampleNumberAtX(int xcoord);
 
    /** Whenever you do an operation to the sequence that will change the number
 	* of samples (that is, the length of the clip), you will want to call this
