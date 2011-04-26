@@ -2910,8 +2910,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
          if (mCapturedClipArray[i].clip)
             mCapturedClipArray[i].clip->Offset(desiredSlideAmount);
       // See if it can be moved
-      if (MoveClipToTrack(mCapturedClip,
-                          (WaveTrack*)mCapturedTrack, 
+      if (MoveClipToTrack(mCapturedClip, 
                           (WaveTrack*)mouseTrack)) {
          mCapturedTrack = mouseTrack;
          mDidSlideVertically = true;
@@ -7539,43 +7538,57 @@ void TrackPanel::DisplaySelection()
    mListener->TP_DisplaySelection();
 }
 
-bool TrackPanel::MoveClipToTrack(WaveClip *clip,
-                                 WaveTrack* src, WaveTrack* dst)
+bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
 {
+   WaveTrack *src  = NULL;
    WaveClip *clip2 = NULL;
    WaveTrack *src2 = NULL;
    WaveTrack *dst2 = NULL;
+   int i;
 
 #ifdef USE_MIDI
    // dst could be a note track. Can't move clip to a note track.
    if (dst->GetKind() != Track::Wave) return false;
 #endif
 
+   for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+      if (clip == mCapturedClipArray[i].clip) {
+         src = (WaveTrack*)mCapturedClipArray[i].track;
+         break;
+      }
+   }
+   
+   if (!src)
+      return false;
+   
    // Make sure we have the first track of two stereo tracks
    // with both source and destination
    if (!src->GetLinked() && mTracks->GetLink(src)) {
-      src = (WaveTrack*)mTracks->GetLink(src);
-      if (mCapturedClipArray.GetCount() == 2) {
-         if (mCapturedClipArray[0].clip == clip)
-            clip = mCapturedClipArray[1].clip;
-         else
-            clip = mCapturedClipArray[0].clip;
+      // find the first track by getting the linked track from src
+      // assumes that mCapturedArray[i].clip and .track is not NULL.
+      for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+         if (mTracks->GetLink(src) == mCapturedClipArray[i].track) {
+            clip = mCapturedClipArray[i].clip;
+            break;
+         }
       }
+
+      src = (WaveTrack*)mTracks->GetLink(src);
    }
    if (!dst->GetLinked() && mTracks->GetLink(dst))
       dst = (WaveTrack*)mTracks->GetLink(dst);
-
-   if (mCapturedClipArray.GetCount() == 2) {
-      if (mCapturedClipArray[0].clip == clip)
-         clip2 = mCapturedClipArray[1].clip;
-      else
-         clip2 = mCapturedClipArray[0].clip;
-   }
 
    // Get the second track of two stereo tracks
    src2 = (WaveTrack*)mTracks->GetLink(src);
    dst2 = (WaveTrack*)mTracks->GetLink(dst);
 
+   for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+      if (mCapturedClipArray[i].track == src2) {
+         clip2 = mCapturedClipArray[i].clip;
+         break;
+      }
+   }
+   
    if ((src2 && !dst2) || (dst2 && !src2))
       return false; // cannot move stereo- to mono track or other way around
 
@@ -7583,27 +7596,9 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip,
       return false;
 
    if (clip2) {
-      // linking can cause pairs of mono tracks to get here.
-      // allow this case (both these won't have links)
-      if ((!src2 && !dst2) && (dst2 || src2))
-         return false;
-   
-      if (!src2) {
-         // if we are copying two mono linked tracks we have to ask for it differently
-         src2 = (WaveTrack*)mTracks->GetNext(src, false);
-         if (src2 && src2->GetKind() != Track::Wave)
-            src2 = NULL;
-      }
-      if (!dst2) {
-         dst2 = (WaveTrack*)mTracks->GetNext(dst, false);
-         if (dst2 && dst2->GetKind() != Track::Wave)
-            dst2 = NULL;
-      }
-      
       // we should have a source and dest track
       if (!dst2 || !src2)
          return false;
-
 
       if (!dst2->CanInsertClip(clip2))
          return false;
@@ -7613,27 +7608,17 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip,
    if (src2)
       src2->MoveClipToTrack(clip2, dst2);
 
-   // If sync-lock is on then one of the mCapturedClipArray indexes may be a labeltrack.
-   // This means that we are not really copying a stereo track and cannot assume dst2 exists.
-   // If we found a src2 is the best indicator of whether or not it is stereo.
-   // This assumes that the first captured tracks will be WaveTracks - I believe this is the case
-   // from whats generated in StartSlide()
-   if (mCapturedClipArray.GetCount() == 2) {
-      if (mCapturedClipArray[0].clip == clip) {
-         mCapturedClipArray[0].track = dst;
-         if (src2)
-            mCapturedClipArray[1].track = dst2;
-      }
-      else {
-         if (src2)
-            mCapturedClipArray[0].track = dst2;
-         mCapturedClipArray[1].track = dst;
+   // update the captured clip array.
+   bool did1, did2;
+   did1 = did2 = false;
+   for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
+      if (mCapturedClipArray[i].clip == clip) {
+         mCapturedClipArray[i].track = dst;
+      } else if (mCapturedClipArray[i].clip == clip2) {
+         mCapturedClipArray[i].track = dst2;
       }
    }
-   else {
-      mCapturedClipArray[0].track = dst;
-   }
-
+         
    return true;
 }
 

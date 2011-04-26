@@ -468,7 +468,7 @@ private:
    
    wxString TrackSubText(Track *t);
 
-   bool MoveClipToTrack(WaveClip *clip, WaveTrack* src, WaveTrack* dst);
+   bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
 
    TrackInfo mTrackInfo;
 
