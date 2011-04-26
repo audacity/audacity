@@ -5315,7 +5315,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
    float oneSample;
    double pps = mViewInfo->zoom;
    double tt = (event.m_x - r.x) / pps + mViewInfo->h;
-   int    s0 = (int)(tt * rate + 0.5);
+   sampleCount s0 = (sampleCount)(tt * rate + 0.5);
 
    // Just get one sample.
    wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1);
