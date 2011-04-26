@@ -7547,7 +7547,7 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
    WaveClip *clip2 = NULL;
    WaveTrack *src2 = NULL;
    WaveTrack *dst2 = NULL;
-   int i;
+   size_t i;
 
 #ifdef USE_MIDI
    // dst could be a note track. Can't move clip to a note track.
