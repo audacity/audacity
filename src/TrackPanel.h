@@ -17,11 +17,11 @@
 #include <wx/timer.h>
 #include <wx/window.h>
 
-//Stm:  The following included because of the sampleCount struct.
-#include "Sequence.h"  
+#include "LabelTrack.h"
+#include "Sequence.h"  //Stm: included for the sampleCount declaration
+#include "TrackGroup.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "LabelTrack.h"
 
 class wxMenu;
 class wxRect;

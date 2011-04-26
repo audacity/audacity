@@ -124,7 +124,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    void Init(const Track &orig);
    virtual Track *Duplicate() = 0;
 
-   // Called when this track is merged with another, and should
+   // Called when this track is merged to stereo with another, and should
    // take on some paramaters of its partner.
    virtual void Merge(const Track &orig);
 
@@ -335,7 +335,8 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    friend class Track;
    friend class TrackListIterator;
 
-   /// Add this Track or all children of this TrackGroup
+   /// Add this Track or all children of this TrackGroup 
+   // FIX-ME: What does that comment mean by "TrackGroup"? There was no such class at tag Audacity_1_3_13.
    void Add(Track * t);
    void AddToHead(Track * t);
 
@@ -343,6 +344,7 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    void Replace(Track * t, Track * with, bool deletetrack = false);
 
    /// Remove this Track or all children of this TrackGroup
+   // FIX-ME: What does that comment mean by "TrackGroup"? There was no such class at tag Audacity_1_3_13.
    void Remove(Track * t, bool deletetrack = false);
 
    /// Make the list empty
@@ -444,4 +446,15 @@ class AUDACITY_DLL_API TrackFactory
 };
 
 #endif
+
+// Indentation settings for Vim and Emacs and unique identifier for Arch, a
+// version control system. Please do not modify past this point.
+//
+// Local Variables:
+// c-basic-offset: 3
+// indent-tabs-mode: nil
+// End:
+//
+// vim: et sts=3 sw=3
+// arch-tag: 2214d773-8e6c-4117-a03d-36c9722ace52
 

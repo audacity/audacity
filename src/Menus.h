@@ -296,8 +296,7 @@ void OnToggleSWPlaythrough();
 #endif
 void OnRescanDevices();
 
-        // Tracks Menu
-
+// Import Submenu
 void OnImport();
 void OnImportLabels();
 void OnImportMIDI();
@@ -329,6 +328,7 @@ void HandleAlign(int index, bool moveSel);
 void OnScoreAlign();
 #endif // EXPERIMENTAL_SCOREALIGN
 
+// Tracks menu
 void OnNewWaveTrack();
 void OnNewStereoTrack();
 void OnNewLabelTrack();

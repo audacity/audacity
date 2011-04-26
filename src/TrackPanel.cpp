@@ -800,7 +800,8 @@ void TrackPanel::SelectTrackLength(Track *t)
    double minOffset = t->GetOffset();
    double maxEnd = t->GetEndTime();
 
-   // If we have a sync-lock group and sync-lock linking is on, check the tracks in the group.
+   // If we have a sync-lock group and sync-lock linking is on, 
+   // check the sync-lock group tracks.
    if (p->IsSyncLocked() && t1 != NULL)
    {
       for ( ; t1; t1 = it.Next())
