@@ -7567,6 +7567,9 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
    // Make sure we have the first track of two stereo tracks
    // with both source and destination
    if (!src->GetLinked() && mTracks->GetLink(src)) {
+      // set it to NULL in case there is no L channel clip
+      clip = NULL;
+
       // find the first track by getting the linked track from src
       // assumes that mCapturedArray[i].clip and .track is not NULL.
       for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
@@ -7594,6 +7597,15 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
    
    if ((src2 && !dst2) || (dst2 && !src2))
       return false; // cannot move stereo- to mono track or other way around
+
+   // if only the right clip of a stereo pair is being dragged, use clip instead of clip2 to get mono behavior.
+   if (!clip && clip2) {
+      clip  = clip2;
+      src   = src2;
+      dst   = dst2;
+      clip2 = NULL;
+      src2 = dst2 = NULL;
+   }
 
    if (!dst->CanInsertClip(clip))
       return false;
