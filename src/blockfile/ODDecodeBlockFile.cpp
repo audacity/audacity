@@ -272,7 +272,8 @@ BlockFile *ODDecodeBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
    }
 
    return new ODDecodeBlockFile(summaryFileName, audioFileName,
-                                aliasStart, aliasLen, aliasChannel,decodeType);
+                                aliasStart, aliasLen, aliasChannel,decodeType,
+                                0,0,0, false);
 
 }
 

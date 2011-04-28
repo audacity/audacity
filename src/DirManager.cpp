@@ -1578,6 +1578,7 @@ _("Project check found %d orphan blockfile(s). These files are \
    }
 
    if (nResult != FSCKstatus_CLOSE_REQ)
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !ODManager::HasLoadedODFlag())
    {
       // Remove any empty directories.
       ProgressDialog* pProgress = 

@@ -339,7 +339,8 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
    }
 
    return new ODPCMAliasBlockFile(summaryFileName, aliasFileName,
-                                    aliasStart, aliasLen, aliasChannel);
+                                    aliasStart, aliasLen, aliasChannel,
+                                    0,0,0, false);
 }
 
 
@@ -406,7 +407,6 @@ void ODPCMAliasBlockFile::WriteSummary()
    char* fileNameChar = new char[strlen(sFullPath.mb_str(wxConvFile)) + 1];
    strcpy(fileNameChar, sFullPath.mb_str(wxConvFile));
    FILE* summaryFile = fopen(fileNameChar, "wb");
-   delete [] fileNameChar;
 
    mFileNameMutex.Unlock();
 
@@ -415,12 +415,11 @@ void ODPCMAliasBlockFile::WriteSummary()
       // Never silence the Log w.r.t write errors; they always count
       //however, this is going to be called from a non-main thread,
       //and wxLog calls are not thread safe.
-      printf("Unable to write summary data to file: ");// %s",
-      printf("test..\n");
-      printf(" filename: %s\n", fileNameChar);
-      mFileNameMutex.Unlock();
+      printf("Unable to write summary data to file: %s", fileNameChar);
+      delete [] fileNameChar;
       return;
    }
+   delete [] fileNameChar;
 
    // To build the summary data, call ReadData (implemented by the
    // derived classes) to get the sample data
