@@ -7627,9 +7627,9 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
    bool did1, did2;
    did1 = did2 = false;
    for (i = 0; i < mCapturedClipArray.GetCount(); i++) {
-      if (mCapturedClipArray[i].clip == clip) {
+      if (clip && mCapturedClipArray[i].clip == clip) {
          mCapturedClipArray[i].track = dst;
-      } else if (mCapturedClipArray[i].clip == clip2) {
+      } else if (clip2 && mCapturedClipArray[i].clip == clip2) {
          mCapturedClipArray[i].track = dst2;
       }
    }
