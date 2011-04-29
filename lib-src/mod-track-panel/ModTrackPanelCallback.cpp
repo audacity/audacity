@@ -134,7 +134,7 @@ extern "C" {
 // GetVersionString
 // REQUIRED for the module to be accepted by Audacity.
 // Without it Audacity will see a version number mismatch.
-MOD_TRACK_PANEL_DLL_API wchar_t * GetVersionString()
+MOD_TRACK_PANEL_DLL_API _TCHAR * GetVersionString()
 {
    // Make sure that this version of the module requires the version 
    // of Audacity it is built with. 

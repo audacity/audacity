@@ -62,7 +62,8 @@ static tpExecScriptServerFunc pScriptServerFn=NULL;
 
 extern "C" {
 
-SCRIPT_PIPE_DLL_API  wchar_t * GetVersionString()
+
+SCRIPT_PIPE_DLL_API _TCHAR * GetVersionString()
 {
    // Make sure that this version of the module requires the version 
    // of Audacity it is built with. 
