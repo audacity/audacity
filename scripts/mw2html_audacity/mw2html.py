@@ -249,6 +249,8 @@ def pre_html_transform(doc, url):
         doc = fix_move_href_tags(doc)
     if config.remove_history:
         doc = html_remove_image_history(doc)
+        
+    doc = html_remove_translation_links(doc)
 
     return doc
 
@@ -333,6 +335,16 @@ def html_remove_image_history(doc):
     """
     doc = re.sub(r'<h2>Image history</h2>[\s\S]+?</ul>', r'', doc)
     doc = re.sub(r'<h2>Image links</h2>[\s\S]+?</ul>', r'', doc)
+    return doc
+
+def html_remove_translation_links(doc):
+    """
+    Remove translation links (the international flags).
+    We identify them by the pattern for a 2 letter language code, /[\s\S][\s\S][/"]
+    in the URL.
+    """
+    doc = re.sub(r'<a href="[^"]+/[\s\S][\s\S][/"][\s\S]+?</a>', r'<!--Removed Translation Flag-->', doc)
+    doc = re.sub(r'<a href="[^"]+/[\s\S][\s\S]_[\s\S][\s\S][/"][\s\S]+?</a>', r'<!--Removed Translation Flag2-->', doc)
     return doc
 
 def monobook_hack_skin_html(doc):
@@ -624,6 +636,10 @@ def url_to_filename(url):
         if L[4].startswith('title=') and L[2].endswith('index.php'):
             L[4] = L[4][len('title='):]
             L[2] = L[2][:-len('index.php')]
+            
+    if lpath[-1]=='man':
+        L[2] += '/' + INDEX_HTML
+       
 
     L[2] = L[2].strip('/')
 
@@ -933,15 +949,8 @@ def run(out=sys.stdout):
         elif filename.endswith('.css'):
             (doc, new_urls) = parse_css(doc, url)
 
-        # Enqueue URLs that we haven't yet spidered.
-        for u in new_urls:
-            if normalize_url(u) not in complete:
-                # Strip off any #section link.
-                if '#' in u:
-                    u = u[:u.index('#')]
-                pending.add(u)
-
         # Save document changes to disk
+        # The unmodified file already exists on disk.
         update = False
         text_ext = ('txt', 'html', 'rtf', 'css', 'sgml', 'xml')
         for ext in text_ext:
@@ -957,6 +966,14 @@ def run(out=sys.stdout):
         if config.debug:
             out.write(url + '\n => ' + filename + '\n\n')
         n += 1
+        
+        # Enqueue URLs that we haven't yet spidered.
+        for u in new_urls:
+            if normalize_url(u) not in complete:
+                # Strip off any #section link.
+                if '#' in u:
+                    u = u[:u.index('#')]
+                pending.add(u)        
 
     conn.close()
     print "connection to", domain, "closed."
