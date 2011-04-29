@@ -341,7 +341,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
    
-   c->BeginSubMenu(_("&Remove Audio"));
+   c->BeginSubMenu(_("R&emove Audio"));
    c->AddItem(wxT("Cut"), _("Cu&t"), FN(OnCut), wxT("Ctrl+X"),
               AudioIONotBusyFlag | CutCopyAvailableFlag,
               AudioIONotBusyFlag | CutCopyAvailableFlag);
@@ -354,7 +354,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("Trim"), _("Tri&m"), FN(OnTrim), wxT("Ctrl+T"));
    c->EndSubMenu();
    
-   c->BeginSubMenu(_("&Clip Boundaries"));
+   c->BeginSubMenu(_("Clip Boun&daries"));
    c->AddItem(wxT("Split"), _("Sp&lit"), FN(OnSplit), wxT("Ctrl+I"),
               AudioIONotBusyFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | WaveTracksSelectedFlag);
