@@ -638,7 +638,7 @@ def url_to_filename(url):
             L[2] = L[2][:-len('index.php')]
             
     if lpath[-1]=='man':
-        L[2] += '/' + INDEX_HTML
+        L[2] = INDEX_HTML
        
 
     L[2] = L[2].strip('/')
