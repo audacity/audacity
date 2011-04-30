@@ -114,7 +114,7 @@ extern "C"
       #define DLL_API __attribute__ ((visibility("default")))
    #endif
 
-   extern DLL_API _TCHAR * GetVersionString();
+   extern DLL_API wxChar * GetVersionString();
    // GetVersionString
    // REQUIRED for the module to be accepted by Audacity.
    // Without it Audacity will see a version number mismatch.
