@@ -40,7 +40,7 @@ i.e. an alternative to the usual interface, for Audacity.
 typedef wxWindow * pwxWindow;
 typedef int (*tModuleInit)(int);
 //typedef wxString (*tVersionFn)();
-typedef _TCHAR * (*tVersionFn)();
+typedef wxChar * (*tVersionFn)();
 typedef pwxWindow (*tPanelFn)(int);
 
 // This variable will hold the address of a subroutine in 
