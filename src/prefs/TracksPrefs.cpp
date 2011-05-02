@@ -57,8 +57,8 @@ void TracksPrefs::Populate()
 
    mViewChoices.Add(_("Waveform"));
    mViewChoices.Add(_("Waveform (dB)"));
-   mViewChoices.Add(_("Spectrum"));
-   mViewChoices.Add(_("Spectrum log(f)"));
+   mViewChoices.Add(_("Spectrogram"));
+   mViewChoices.Add(_("Spectrogram log(f)"));
    mViewChoices.Add(_("Pitch (EAC)"));
 
    //------------------------- Main section --------------------
