@@ -466,6 +466,10 @@ void ToolManager::Reset()
 {
    int ndx;
 
+   // The mInputMeter and mOutputMeter may be in use if audio is playing
+   // when this happens.
+   gAudioIO->SetMeters( NULL, NULL );
+
    // Disconnect all docked bars
    for( ndx = 0; ndx < ToolBarCount; ndx++ )
    {
@@ -513,7 +517,11 @@ void ToolManager::Reset()
          parent->Destroy();
       }
    }
-
+   // TODO:??
+   // If audio was playing, we stopped the VU meters,
+   // It would be nice to show them again, but hardly essential as
+   // they will show up again on the next play.
+   // SetVUMeters(AudacityProject *p);
    LayoutToolBars();
    Updated();
 } 

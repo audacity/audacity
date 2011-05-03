@@ -281,7 +281,10 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
 
    Populate();
 
-   // Reset the toolbars to a known state
+   // Reset the toolbars to a known state.
+   // Note that the audio could be playing.
+   // The monitoring will switch off temporarily
+   // because we've switched monitor mid play.
    mContext.proj->mToolManager->Reset();
 }
 
