@@ -47,14 +47,10 @@ void SpectrumPrefs::Populate()
    mSizeChoices.Add(_("512"));
    mSizeChoices.Add(_("1024"));
    mSizeChoices.Add(_("2048"));
-#ifdef EXPERIMENTAL_FIND_NOTES
    mSizeChoices.Add(_("4096"));
    mSizeChoices.Add(_("8192"));
    mSizeChoices.Add(_("16384"));
    mSizeChoices.Add(_("32768 - most narrowband"));
-#else
-   mSizeChoices.Add(_("4096 - most narrowband"));
-#endif //LOGARITHMIC_SPECTRUM
 
    for (size_t i = 0; i < mSizeChoices.GetCount(); i++) {
       mSizeCodes.Add(1 << (i + 3));
