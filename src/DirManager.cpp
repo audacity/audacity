@@ -912,7 +912,7 @@ BlockFile *DirManager::NewODDecodeBlockFile(
 
 bool DirManager::ContainsBlockFile(BlockFile *b)
 {
-   return b ? mBlockFileHash[b->GetFileName().GetName()] == b : NULL;
+   return b ? mBlockFileHash[b->GetFileName().GetName()] == b : false;
 }
 
 bool DirManager::ContainsBlockFile(wxString filepath)
@@ -1726,7 +1726,7 @@ void DirManager::FindOrphanBlockFiles(
          }
          
          // Ignore it if it exists in the clipboard (from a previously closed project)
-         if (clipboardDM && clipboardDM->ContainsBlockFile(fullname.GetFullPath()))
+         if (!(clipboardDM && clipboardDM->ContainsBlockFile(basename)))
             orphanFilePathArray.Add(fullname.GetFullPath());
       }
    }
