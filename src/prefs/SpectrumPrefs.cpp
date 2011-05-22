@@ -208,8 +208,8 @@ bool SpectrumPrefs::Validate()
       wxMessageBox(_("The maximum frequency must be an integer"));
       return false;
    }
-   if (maxFreq < 100 || maxFreq > 100000) {
-      wxMessageBox(_("Maximum frequency must be in the range 100 Hz - 100,000 Hz"));
+   if (maxFreq < 100) {
+      wxMessageBox(_("Maximum frequency must be 100 Hz or above"));
       return false;
    }
 
