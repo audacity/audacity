@@ -210,13 +210,12 @@ void UndoManager::ModifyState(TrackList * l, double sel0, double sel1)
 void UndoManager::PushState(TrackList * l, double sel0, double sel1,
                             wxString longDescription,
                             wxString shortDescription,
-                            bool consolidate)
+                            int flags)
 {
    unsigned int i;
 
    // If consolidate is set to true, group up to 3 identical operations.
-
-   if (consolidate && lastAction == longDescription &&
+   if (((flags&PUSH_CONSOLIDATE)!=0) && lastAction == longDescription &&
        consolidationCount < 2) {
       consolidationCount++;
       ModifyState(l, sel0, sel1);
@@ -253,7 +252,8 @@ void UndoManager::PushState(TrackList * l, double sel0, double sel1,
 
    stack.Add(push);
    current++;
-   push->spaceUsage = this->CalculateSpaceUsage(current);
+   if( (flags&PUSH_CALC_SPACE)!=0)
+      push->spaceUsage = this->CalculateSpaceUsage(current);
 
    if (saved >= current) {
       saved = -1;

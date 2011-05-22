@@ -3579,10 +3579,10 @@ void AudacityProject::InitialState()
 
 void AudacityProject::PushState(wxString desc,
                                 wxString shortDesc,
-                                bool consolidate)
+                                int flags )
 {
    mUndoManager.PushState(mTracks, mViewInfo.sel0, mViewInfo.sel1,
-                          desc, shortDesc, consolidate);
+                          desc, shortDesc, flags);
 
    mDirty = true;
 
@@ -3606,8 +3606,8 @@ void AudacityProject::PushState(wxString desc,
 
    if (GetTracksFitVerticallyZoomed())
       this->DoZoomFitV();
-
-   AutoSave();
+   if( (flags & PUSH_AUTOSAVE)!= 0)
+      AutoSave();
 }
 
 void AudacityProject::ModifyState()
@@ -3685,16 +3685,15 @@ void AudacityProject::SetStateTo(unsigned int n)
 
 void AudacityProject::UpdateLyrics()
 {
+   // JKC: Previously we created a lyrics window, 
+   // if it did not exist.  But we don't need to.
+   if (!mLyricsWindow) 
+      return;
+
    TrackListOfKindIterator iter(Track::Label, mTracks);
    LabelTrack* pLabelTrack = (LabelTrack*)(iter.First()); // Lyrics come from only the first label track.
    if (!pLabelTrack)
       return;
-
-   if (!mLyricsWindow) 
-   {
-      mLyricsWindow = new LyricsWindow(this); 
-      mLyricsWindow->Show(false); // Don't show it. Need to update content regardless.
-   }
 
    // The code that updates the lyrics is rather expensive when there
    // are a lot of labels.
@@ -4275,9 +4274,9 @@ void AudacityProject::TP_OnPlayKey()
 
 // TrackPanel callback method
 void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
-                                   bool consolidate)
+                                   int flags)
 {
-   PushState(desc, shortDesc, consolidate);
+   PushState(desc, shortDesc, flags);
 }
 
 // TrackPanel callback method
@@ -4336,6 +4335,7 @@ void AudacityProject::ReleaseKeyboard(wxWindow *w)
 
 void AudacityProject::AutoSave()
 {
+   return;
    // To minimize the possibility of race conditions, we first write to a
    // file with the extension ".tmp", then rename the file to .autosave
    SonifyBeginAutoSave();

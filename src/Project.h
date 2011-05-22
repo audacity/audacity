@@ -334,7 +334,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    virtual void TP_OnPlayKey();
    virtual void TP_PushState(wxString longDesc, wxString shortDesc,
-                             bool consolidate);
+                             int flags);
    virtual void TP_ModifyState();
    virtual void TP_RedrawScrollbars();
    virtual void TP_ScrollLeft();
@@ -397,7 +397,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    static void AllProjectsDeleteUnlock();
    
    void PushState(wxString desc, wxString shortDesc,
-                  bool consolidate = false);
+                  int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
 
  private:
 

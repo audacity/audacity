@@ -71,6 +71,36 @@ BEGIN_EVENT_TABLE(PrefsDialog, wxDialog)
    EVT_TREE_KEY_DOWN(wxID_ANY, PrefsDialog::OnTreeKeyDown) // Handles key events when tree has focus
 END_EVENT_TABLE()
 
+
+class wxTreebookExt : public wxTreebook
+{
+public:
+	wxTreebookExt( wxWindow *parent,
+		wxWindowID id) : wxTreebook( parent, id )
+	{;};
+	~wxTreebookExt(){;};
+	virtual int ChangeSelection(size_t n);
+    virtual int SetSelection(size_t n);
+};
+
+
+int wxTreebookExt::ChangeSelection(size_t n) { 
+	int i = wxTreebook::ChangeSelection(n); 
+	wxString Temp = GetPageText( n );
+	((wxDialog*)GetParent())->SetTitle( Temp );
+	return i;
+};
+
+int wxTreebookExt::SetSelection(size_t n) 
+{
+	int i = wxTreebook::SetSelection(n);
+	wxString Temp = wxString(wxT("Preferences: ")) + GetPageText( n );
+	((wxDialog*)GetParent())->SetTitle( Temp );
+	return i;
+}
+
+
+
 PrefsDialog::PrefsDialog(wxWindow * parent)
 :  wxDialog(parent, wxID_ANY, wxString(_("Audacity Preferences")),
             wxDefaultPosition,
@@ -83,7 +113,7 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
    {
       S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, true);
       {
-         mCategories = new wxTreebook(this, wxID_ANY);
+         mCategories = new wxTreebookExt(this, wxID_ANY);
          S.Prop(1);
          S.AddWindow(mCategories, wxEXPAND);
 

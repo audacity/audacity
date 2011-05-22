@@ -1329,9 +1329,9 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 /// Makes our Parent (well, whoever is listening to us) push their state.
 /// this causes application state to be preserved on a stack for undo ops.
 void TrackPanel::MakeParentPushState(wxString desc, wxString shortDesc,
-                                     bool consolidate)
+                                     int flags)
 {
-   mListener->TP_PushState(desc, shortDesc, consolidate);
+   mListener->TP_PushState(desc, shortDesc, flags);
 }
 
 void TrackPanel::MakeParentModifyState()
@@ -1963,7 +1963,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                           &mViewInfo->sel0, &mViewInfo->sel1)) {
          MakeParentPushState(_("Modified Label"),
                              _("Label Edit"),
-                             true /* consolidate */);
+                             PUSH_CONSOLIDATE);
       }
 
       // IF the user clicked a label, THEN select all other tracks by Label
@@ -2036,7 +2036,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       mStretching = true;
       mStretched = false;
 
-      MakeParentPushState(_("Stretch Note Track"), _("Stretch"), false);
+      MakeParentPushState(_("Stretch Note Track"), _("Stretch"));
 
       // Full refresh since the label area may need to indicate
       // newly selected tracks. (I'm really not sure if the label area
@@ -2263,7 +2263,8 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       wxASSERT(false);
       break;
    }
-   MakeParentPushState(_("Stretch Note Track"), _("Stretch"), true);
+   MakeParentPushState(_("Stretch Note Track"), _("Stretch"), 
+      PUSH_CONSOLIDATE | PUSH_AUTOSAVE | PUSH_CALC_SPACE);
    mStretched = true;
    Refresh(false);
 }
@@ -2397,8 +2398,7 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
       mCapturedTrack = NULL;
       MakeParentPushState(
          _("Adjusted envelope."),
-         _("Envelope"),
-         false /* do not consolidate these actions */
+         _("Envelope")
          );
    }
 }
@@ -2557,7 +2557,8 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
                     direction.c_str(), fabs(mHSlideAmount));
          consolidate = true;
       }
-      MakeParentPushState(msg, _("Time-Shift"), consolidate);
+      MakeParentPushState(msg, _("Time-Shift"), 
+         consolidate ? (PUSH_CONSOLIDATE) : (PUSH_AUTOSAVE|PUSH_CALC_SPACE));
    }
 }
 
@@ -3778,7 +3779,7 @@ void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & event )
    mDrawingTrack=NULL;       //Set this to NULL so it will catch improper drag events.
    MakeParentPushState(_("Moved Sample"),
                        _("Sample Edit"),
-                       true /* consolidate */);
+                       PUSH_CONSOLIDATE|PUSH_AUTOSAVE|PUSH_CALC_SPACE);
 }
 
 
@@ -4052,7 +4053,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    #endif
       MakeParentPushState(pan ? _("Moved pan slider") : _("Moved gain slider"),
                           pan ? _("Pan") : _("Gain"),
-                          true /* consolidate */);
+                          PUSH_CONSOLIDATE);
    #ifdef EXPERIMENTAL_MIDI_OUT
     } else {
       MakeParentPushState(_("Moved velocity slider"), _("Velocity"), true);
@@ -4661,7 +4662,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    if (lt->OnKeyDown(mViewInfo->sel0, mViewInfo->sel1, event))
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
-                          true /* consolidate */);
+                          PUSH_CONSOLIDATE);
 
    // Make sure caret is in view
    int x;
@@ -4699,7 +4700,7 @@ void TrackPanel::OnChar(wxKeyEvent & event)
    if (((LabelTrack *)t)->OnChar(mViewInfo->sel0, mViewInfo->sel1, event))
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
-                          true /* consolidate */);
+                          PUSH_CONSOLIDATE);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
@@ -4865,7 +4866,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
                mViewInfo->sel0 = cutlineStart;
                mViewInfo->sel1 = cutlineEnd;
                DisplaySelection();
-               MakeParentPushState(_("Expanded Cut Line"), _("Expand"), false );
+               MakeParentPushState(_("Expanded Cut Line"), _("Expand"));
                handled = true;
             }
          } else if (mCapturedTrackLocation.typ == WaveTrack::locationMergePoint)
@@ -4874,7 +4875,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
             if (linked)
                linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
-            MakeParentPushState(_("Merged Clips"),_("Merge"), true );
+            MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE|PUSH_CALC_SPACE);
             handled = true;
          }
       }
@@ -4885,7 +4886,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
          WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
          if (linked)
             linked->RemoveCutLine(mCapturedTrackLocation.pos);
-         MakeParentPushState(_("Removed Cut Line"), _("Remove"), false );
+         MakeParentPushState(_("Removed Cut Line"), _("Remove") );
          handled = true;
       }
       
@@ -4966,7 +4967,7 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
 
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
-                          true /* consolidate */);
+                          PUSH_CONSOLIDATE);
    }
 
    
@@ -6542,7 +6543,7 @@ void TrackPanel::SetTrackPan(Track * t, LWSlider * s)
    if (link)
       link->SetPan(newValue);
 
-   MakeParentPushState(_("Adjusted Pan"), _("Pan"), true );
+   MakeParentPushState(_("Adjusted Pan"), _("Pan"), PUSH_CONSOLIDATE );
 
    RefreshTrack(t);
 }
@@ -6596,7 +6597,7 @@ void TrackPanel::SetTrackGain(Track * t, LWSlider * s)
    if (link)
       link->SetGain(newValue);
 
-   MakeParentPushState(_("Adjusted gain"), _("Gain"), true );
+   MakeParentPushState(_("Adjusted gain"), _("Gain"), PUSH_CONSOLIDATE);
 
    RefreshTrack(t);
 }
@@ -7330,7 +7331,7 @@ void TrackPanel::OnCutSelectedText(wxCommandEvent &event)
    if (lt->CutSelectedText()) {
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
-                          true /* consolidate */);
+                          PUSH_CONSOLIDATE);
    }
    RefreshTrack(lt);
 }

@@ -66,6 +66,14 @@ struct UndoStackElem {
 
 WX_DEFINE_USER_EXPORTED_ARRAY(UndoStackElem *, UndoStack, class AUDACITY_DLL_API);
 
+// These flags control what extra to do on a PushState
+// Default is PUSH_AUTOSAVE | PUSH_CALC_SPACE
+// Frequent/faster actions use PUSH_CONSOLIDATE
+const int PUSH_MINIMAL = 0;
+const int PUSH_CONSOLIDATE = 1;
+const int PUSH_CALC_SPACE = 2;
+const int PUSH_AUTOSAVE = 4;
+
 class AUDACITY_DLL_API UndoManager {
  public:
    UndoManager();
@@ -73,7 +81,7 @@ class AUDACITY_DLL_API UndoManager {
 
    void PushState(TrackList * l, double sel0, double sel1,
                   wxString longDescription, wxString shortDescription,
-                  bool consolidate = false);
+                  int flags = PUSH_CALC_SPACE|PUSH_AUTOSAVE );
    void ModifyState(TrackList * l, double sel0, double sel1);
    void ClearStates();
    void RemoveStates(int num);  // removes the 'num' oldest states

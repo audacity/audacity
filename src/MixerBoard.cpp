@@ -318,7 +318,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    mProject->RefreshTPTrack(mTrack);
 
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), true /* consolidate */);
+      mProject->TP_PushState(_("Moved gain slider"), _("Gain"), PUSH_CONSOLIDATE );
 }
 
 void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
@@ -333,7 +333,7 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
    mProject->RefreshTPTrack(mTrack);
 
    if (bWantPushState)
-      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), true /* consolidate */);
+      mProject->TP_PushState(_("Moved pan slider"), _("Pan"), PUSH_CONSOLIDATE );
 }
 
 void MixerTrackCluster::ResetMeter(const bool bResetClipping)

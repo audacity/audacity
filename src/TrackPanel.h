@@ -67,7 +67,7 @@ class AUDACITY_DLL_API TrackPanelListener {
 
    virtual void TP_OnPlayKey() = 0;
    virtual void TP_PushState(wxString shortDesc, wxString longDesc,
-                             bool consolidate = false) = 0;
+                            int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE) = 0;
    virtual void TP_ModifyState() = 0;
    virtual void TP_RedrawScrollbars() = 0;
    virtual void TP_ScrollLeft() = 0;
@@ -395,7 +395,7 @@ class TrackPanel:public wxPanel {
    
    // AS: Pushing the state preserves state for Undo operations.
    void MakeParentPushState(wxString desc, wxString shortDesc,
-                            bool consolidate = false);
+                            int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
    void MakeParentModifyState();
 
    void MakeParentResize();
