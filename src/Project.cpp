@@ -4335,7 +4335,6 @@ void AudacityProject::ReleaseKeyboard(wxWindow *w)
 
 void AudacityProject::AutoSave()
 {
-   return;
    // To minimize the possibility of race conditions, we first write to a
    // file with the extension ".tmp", then rename the file to .autosave
    SonifyBeginAutoSave();
