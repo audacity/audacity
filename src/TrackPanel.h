@@ -21,6 +21,7 @@
 #include "Sequence.h"  //Stm: included for the sampleCount declaration
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
 
 class wxMenu;
 class wxRect;
