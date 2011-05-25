@@ -1806,8 +1806,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
 #endif
    }
 
-   int minSamples = int (minFreq * windowSize / rate + 0.5);   // units are fft bins
-   int maxSamples = int (maxFreq * windowSize / rate + 0.5);
+   int minSamples = int ((double)minFreq * (double)windowSize / rate + 0.5);   // units are fft bins
+   int maxSamples = int ((double)maxFreq * (double)windowSize / rate + 0.5);
+   int temp = sizeof(int);
    float binPerPx = float(maxSamples - minSamples) / float(mid.height);
 
    int x = 0;
@@ -2810,7 +2811,11 @@ void TrackArtist::UpdatePrefs()
    mMaxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), -1);
    mMinFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1);
    mLogMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
+   if( mLogMaxFreq < 0 )
+      mLogMaxFreq = mMaxFreq;
    mLogMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
+   if( mLogMinFreq < 0 )
+      mLogMinFreq = mMinFreq;
 
    mWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
    mIsGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
