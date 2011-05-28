@@ -531,9 +531,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Last auto-save file name and path (empty if none)
    wxString mAutoSaveFileName;
    
-   // When the last auto-save took place (as returned wx wxGetLocalTime)
-   long mLastAutoSaveTime;
-   
    // Are we currently auto-saving or not?
    bool mAutoSaving;
 

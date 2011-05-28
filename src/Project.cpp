@@ -745,7 +745,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mLastFocusedWindow(NULL),
      mKeyboardCaptured(false),
      mImportXMLTagHandler(NULL),
-     mLastAutoSaveTime(0),
      mAutoSaving(false),
      mIsRecovered(false),
      mRecordingRecoveryHandler(NULL),
@@ -4337,7 +4336,11 @@ void AudacityProject::AutoSave()
 {
    // To minimize the possibility of race conditions, we first write to a
    // file with the extension ".tmp", then rename the file to .autosave
-   SonifyBeginAutoSave();
+   // FIX-ME: What's up with this no-op cruft that's not #ifdefed for NoteTrack? 
+   // Let's not clutter the code with stuff that's not implemented, and not 
+   // even clear we ever will need it.
+   //vvvvv (part of RBD's r10680 stuff to back out.)
+   //    SonifyBeginAutoSave();
    wxString projName;
 
    if (mFileName.IsEmpty())
@@ -4392,8 +4395,9 @@ void AudacityProject::AutoSave()
    }
    
    mAutoSaveFileName += fn + wxT(".autosave");
-   mLastAutoSaveTime = wxGetLocalTime();
-   SonifyEndAutoSave();
+   // no-op cruft that's not #ifdefed for NoteTrack
+   // See above for further comments. 
+   //   SonifyEndAutoSave();
 }
 
 void AudacityProject::DeleteCurrentAutoSaveFile()
