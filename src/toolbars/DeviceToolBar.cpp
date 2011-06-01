@@ -594,7 +594,7 @@ void DeviceToolBar::FillInputChannels()
    wxString host     = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
-   long oldChannels = 1, newChannels;
+   long oldChannels = 2, newChannels;
    
    gPrefs->Read(wxT("/AudioIO/RecordChannels"), &oldChannels);
    int index = -1;
@@ -621,7 +621,7 @@ void DeviceToolBar::FillInputChannels()
             mInputChannels->Append(name);
          }
          newChannels = inMaps[i].numChannels;
-         if (oldChannels < newChannels && oldChannels >= 1)
+         if (oldChannels <= newChannels && oldChannels >= 1)
             newChannels = oldChannels;
          if (newChannels >= 1)
             mInputChannels->SetSelection(newChannels - 1);
