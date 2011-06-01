@@ -1137,9 +1137,9 @@ bool WaveTrack::Disjoin(double t0, double t1)
                   
                   //consider the end case, where selection ends in zeroes
                   if( curSamplePos == end - 1 && buffer[ i ] == 0.0 )
-                     seqEnd = end - 1;
+                     seqEnd = end;
                   else
-                     seqEnd = curSamplePos - 1;
+                     seqEnd = curSamplePos;
                   if( seqEnd - seqStart + 1 > minSamples )
                   {
                      Region *region = new Region;
