@@ -1318,7 +1318,18 @@ void TimeConverter::ValueToControls( double RawTime )
 {
    RawTime = (double)((sampleCount)floor(RawTime * mSampleRate + 0.5)) / mSampleRate; // put on a sample
    double theValue = RawTime * mScalingFactor + .000001; // what's this .000001 for?
-   int t_int = int(theValue);
+   int t_int;
+   bool round = true;
+   // If we have a fractional field further on then we will be using t_frac, and will round there.
+   // Otherwise round t_int to the nearest value
+   for(unsigned int i=0; i<mFields.GetCount(); i++) {
+      if (mFields[i].frac)
+         round = false;
+   }
+   if(round)
+      t_int = int(theValue + 0.5);
+   else
+      t_int = int(theValue);
    double t_frac = (theValue - t_int);
    unsigned int i;
    int tenMins;
@@ -1330,7 +1341,7 @@ void TimeConverter::ValueToControls( double RawTime )
    mValueString = mPrefix;
 
    if(mNtscDrop) {
-      frames = (int)(theValue*30./1.001);
+      frames = (int)(theValue*30./1.001 + 0.5);
       tenMins = frames/17982;
       frames -= tenMins*17982;
       mins = tenMins * 10;
@@ -1359,7 +1370,7 @@ void TimeConverter::ValueToControls( double RawTime )
    for(i=0; i<mFields.GetCount(); i++) {
       int value;
       if (mFields[i].frac) {
-         value = (int)(t_frac * mFields[i].base);
+         value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
          if (mFields[i].range > 0)
             value = value % mFields[i].range;
       }
