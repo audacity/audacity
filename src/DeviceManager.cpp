@@ -7,7 +7,9 @@
 ******************************************************************/
 
 #include "portaudio.h"
+#ifdef USE_PORTMIXER
 #include "portmixer.h"
+#endif
 
 #include "Audacity.h"
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -126,14 +128,15 @@ static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, i
 static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std::vector<DeviceSourceMap> *maps, PaStream *stream)
 {
    int i;
-   PxMixer *portMixer;
    DeviceSourceMap map;
 
    map.sourceIndex  = -1;
    map.totalSources = 0;
    // Only inputs have sources, so we call FillHostDeviceInfo with a 1 to indicate this
    FillHostDeviceInfo(&map, info, deviceIndex, 1);
-   portMixer = Px_OpenMixer(stream, 0);
+
+#ifdef USE_PORTMIXER
+   PxMixer *portMixer = Px_OpenMixer(stream, 0);
    if (!portMixer) {
       maps->push_back(map);
       return;
@@ -145,11 +148,14 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
    //note that some devices have no input sources at all but are still valid.
    //the behavior we do is the same for 0 and 1 source cases.
    map.totalSources = Px_GetNumInputSources(portMixer);
+#endif
     
    if (map.totalSources <= 1) {
       map.sourceIndex = 0;
       maps->push_back(map);
-   } else {
+   } 
+#ifdef USE_PORTMIXER
+     else {
       //open up a stream with the device so portmixer can get the info out of it.
       for (i = 0; i < map.totalSources; i++) {
          map.sourceIndex  = i;
@@ -158,6 +164,7 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
       }
    }
    Px_CloseMixer(portMixer);
+#endif
 }
 
 static bool IsInputDeviceAMapperDevice(const PaDeviceInfo *info)
