@@ -1332,6 +1332,7 @@ void DirManager::Deref()
 // recent savefile.
 int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
 {
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(false);
    wxArrayString filePathArray; // *all* files in the project directory/subdirectories
    wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
    RecursivelyEnumerateWithProgress(
@@ -1608,6 +1609,7 @@ _("Project check found %d orphan blockfile(s). These files are \
             wxOK  | wxICON_EXCLAMATION);
    }
 
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
    return nResult;
 }
 
