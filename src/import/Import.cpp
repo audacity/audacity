@@ -343,13 +343,14 @@ int Importer::Import(wxString fName,
    // False if override filter is not found
    bool foundOverride = false;
    gPrefs->Read(wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), &usersSelectionOverrides, false);
+
    wxLogDebug(wxT("LastOpenType is %s"),type.c_str());
    wxLogDebug(wxT("OverrideExtendedImportByOpenFileDialogChoice is %i"),usersSelectionOverrides);
+
    if (usersSelectionOverrides)
    {
-      
       importPluginNode = mImportPluginList->GetFirst();
-      while(importPluginNode)
+      while (importPluginNode)
       {
          ImportPlugin *plugin = importPluginNode->GetData();
          if (plugin->GetPluginFormatDescription().CompareTo(type) == 0)
@@ -362,9 +363,11 @@ int Importer::Import(wxString fName,
          importPluginNode = importPluginNode->GetNext();
       }
    }
-   bool foundItem = false;
+
    wxLogMessage(wxT("File name is %s"),fName.Lower().c_str());
    wxLogMessage(wxT("Mime type is %s"),mime_type.Lower().c_str());
+
+   bool foundItem = false;
    for (size_t i = 0; i < mExtImportItems->Count(); i++)
    {
       ExtImportItem *item = &(*mExtImportItems)[i];
@@ -415,44 +418,37 @@ int Importer::Import(wxString fName,
       }
    }
 
-   if (!foundItem || (usersSelectionOverrides && !foundOverride))
+   // Add all plugins that support the extension
+   importPluginNode = mImportPluginList->GetFirst();
+   while (importPluginNode)
    {
-      bool prioritizeMp3 = false;
-      if (usersSelectionOverrides && !foundOverride)
-         importPlugins.Clear();
-      wxLogDebug(wxT("Applying default rule"));
-      // Special treatment for mp3 files
-      if (wxMatchWild (wxT("*.mp3"),fName.Lower(), false))
-         prioritizeMp3 = true;
-      // By default just add all plugins (except for MP3)
-      importPluginNode = mImportPluginList->GetFirst();
-      while(importPluginNode)
+      ImportPlugin *plugin = importPluginNode->GetData();
+      // Make sure its not already in the list
+      if (importPlugins.Find(plugin) == NULL)
       {
-         ImportPlugin *plugin = importPluginNode->GetData();
-         if (importPlugins.Find(plugin) == NULL)
+         if (plugin->SupportsExtension(extension))
          {
-            // Skip MP3 import plugin. Opens some non-mp3 audio files (ac3 for example) as garbage.
-            if (plugin->GetPluginFormatDescription().CompareTo( _("MP3 files") ) != 0)
-            {
-               wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
-               importPlugins.Append(plugin);
-            }
-            else if (prioritizeMp3)
-            {
-               if (usersSelectionOverrides)
-               {
-                  wxLogDebug(wxT("Inserting %s at 1"),plugin->GetPluginStringID().c_str());
-                  importPlugins.Insert((size_t) 1, plugin);
-               }
-               else
-               {
-                  wxLogDebug(wxT("Inserting %s at 0"),plugin->GetPluginStringID().c_str());
-                  importPlugins.Insert((size_t) 0, plugin);
-               }
-            }
+            wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
+            importPlugins.Append(plugin);
          }
-         importPluginNode = importPluginNode->GetNext();
       }
+
+      importPluginNode = importPluginNode->GetNext();
+   }
+
+   // Add all remaining plugins
+   importPluginNode = mImportPluginList->GetFirst();
+   while (importPluginNode)
+   {
+      ImportPlugin *plugin = importPluginNode->GetData();
+      // Make sure its not already in the list
+      if (importPlugins.Find(plugin) == NULL)
+      {
+         wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
+         importPlugins.Append(plugin);
+      }
+
+      importPluginNode = importPluginNode->GetNext();
    }
 
    importPluginNode = importPlugins.GetFirst();
@@ -511,6 +507,7 @@ int Importer::Import(wxString fName,
       importPluginNode = importPluginNode->GetNext();
    }
    wxLogError(wxT("Importer::Import: Opening failed."));
+
    // None of our plugins can handle this file.  It might be that
    // Audacity supports this format, but support was not compiled in.
    // If so, notify the user of this fact
