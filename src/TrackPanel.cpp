@@ -1039,77 +1039,84 @@ void TrackPanel::DrawIndicator()
 }
 
 /// Second level DrawIndicator()
-void TrackPanel::DoDrawIndicator(wxDC & dc)
+void TrackPanel::DoDrawIndicator(wxDC & dc, bool repairOld /* = false */)
 {
    bool onScreen;
    int x;
+   double pos;
 
-   if( mLastIndicator != -1 )
+   if (!repairOld)
    {
-      onScreen = between_inclusive( mViewInfo->h,
-                                    mLastIndicator,
-                                    mViewInfo->h + mViewInfo->screen );
-      if( onScreen )
+      // Erase the old indicator.
+      if( mLastIndicator != -1 )
       {
-         x = GetLeftOffset() + int ( ( mLastIndicator - mViewInfo->h) * mViewInfo->zoom );
-
-         // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
-         //      OSX due to allocating memory using negative sizes and can be caused by resizing
-         //      the project window while recording or playing.
-         int w = dc.GetSize().GetWidth();
-         if (x >= w) {
-            x = w - 1;
+         onScreen = between_inclusive( mViewInfo->h,
+                                      mLastIndicator,
+                                      mViewInfo->h + mViewInfo->screen );
+         if( onScreen )
+         {
+            x = GetLeftOffset() + int ( ( mLastIndicator - mViewInfo->h) * mViewInfo->zoom );
+            
+            // LL:  Keep from trying to blit outsize of the source DC.  This results in a crash on
+            //      OSX due to allocating memory using negative sizes and can be caused by resizing
+            //      the project window while recording or playing.
+            int w = dc.GetSize().GetWidth();
+            if (x >= w) {
+               x = w - 1;
+            }
+            
+            dc.Blit( x, 0, 1, mBacking->GetHeight(), &mBackingDC, x, 0 );
          }
-          
-         dc.Blit( x, 0, 1, mBacking->GetHeight(), &mBackingDC, x, 0 );
+         
+         // Nothing's ever perfect...
+         //
+         // Redraw the cursor since we may have just wiped it out
+         if( mLastCursor == mLastIndicator )
+         {
+            DoDrawCursor( dc );
+         }
+         
+         mLastIndicator = -1;
       }
-
-      // Nothing's ever perfect...
-      //
-      // Redraw the cursor since we may have just wiped it out
-      if( mLastCursor == mLastIndicator )
+      
+      // The stream time can be < 0 if the audio is currently stopped
+      pos = gAudioIO->GetStreamTime();
+      
+      AudacityProject *p = GetProject();
+      bool audioActive = ( gAudioIO->IsStreamActive( p->GetAudioIOToken() ) != 0 );
+      onScreen = between_inclusive( mViewInfo->h,
+                                   pos,
+                                   mViewInfo->h + mViewInfo->screen );
+      
+      // This displays the audio time, too...
+      DisplaySelection();
+      
+      // BG: Scroll screen if option is set
+      // msmeyer: But only if not playing looped or in one-second mode
+      if( mViewInfo->bUpdateTrackIndicator &&
+         p->mLastPlayMode != loopedPlay &&
+         p->mLastPlayMode != oneSecondPlay && 
+         audioActive &&
+         pos >= 0 &&
+         !onScreen &&
+         !gAudioIO->IsPaused() )
       {
-         DoDrawCursor( dc );
+         mListener->TP_ScrollWindow( pos );
       }
-
-      mLastIndicator = -1;
+      
+      // Always update scrollbars even if not scrolling the window. This is
+      // important when new audio is recorded, because this can change the
+      // length of the project and therefore the appearance of the scrollbar.
+      MakeParentRedrawScrollbars();
+      
+      mIndicatorShowing = ( onScreen && audioActive );
+      
+      // Remember it
+      mLastIndicator = pos;
+   } else {
+      pos = mLastIndicator;
    }
-
-   // The stream time can be < 0 if the audio is currently stopped
-   double pos = gAudioIO->GetStreamTime();
-
-   AudacityProject *p = GetProject();
-   bool audioActive = ( gAudioIO->IsStreamActive( p->GetAudioIOToken() ) != 0 );
-   onScreen = between_inclusive( mViewInfo->h,
-                                 pos,
-                                 mViewInfo->h + mViewInfo->screen );
-
-   // This displays the audio time, too...
-   DisplaySelection();
-
-   // BG: Scroll screen if option is set
-   // msmeyer: But only if not playing looped or in one-second mode
-   if( mViewInfo->bUpdateTrackIndicator &&
-       p->mLastPlayMode != loopedPlay &&
-       p->mLastPlayMode != oneSecondPlay && 
-       audioActive &&
-       pos >= 0 &&
-       !onScreen &&
-       !gAudioIO->IsPaused() )
-   {
-      mListener->TP_ScrollWindow( pos );
-   }
-
-   // Always update scrollbars even if not scrolling the window. This is
-   // important when new audio is recorded, because this can change the
-   // length of the project and therefore the appearance of the scrollbar.
-   MakeParentRedrawScrollbars();
-
-   mIndicatorShowing = ( onScreen && audioActive );
-
-   // Remember it
-   mLastIndicator = pos;
-
+   
    // Set play/record color
    bool rec = (gAudioIO->GetNumCaptureChannels() > 0);
    AColor::IndicatorColor( &dc, !rec);
@@ -1312,7 +1319,9 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    if (!gAudioIO->IsPaused() &&
        ( mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
    {
-      DoDrawIndicator( cdc );
+      // We just want to repair, not update the old, so set the second param to true.
+      // This is important because this onPaint could be for just some of the tracks.
+      DoDrawIndicator( cdc, true);
    }
 
    // Draw the cursor
@@ -5377,39 +5386,33 @@ double TrackPanel::GetMostRecentXPos()
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 {
-   //v Vaughan, 2011-02-04:
-   //   Since Roger's fix is to not use r, no reason to declare or calculate it, or link.
-   //Track *link = trk->GetLink();
-   //
-   //if (link && !trk->GetLinked()) {
-   //   trk = link;
-   //   link = trk->GetLink();
-   //}
-   //
-   //wxRect r(kLeftInset,
-   //         -mViewInfo->vpos + trk->GetY() + kTopInset,
-   //         GetRect().GetWidth() - kLeftInset * 2 - 1,
-   //         trk->GetHeight() - kTopInset - 1);
-   //
-   //if (link) {
-   //   r.height += link->GetHeight();
-   //}
+   Track *link = trk->GetLink();
+   
+   if (link && !trk->GetLinked()) {
+      trk = link;
+      link = trk->GetLink();
+   }
+   
+   wxRect r(kLeftInset,
+            -mViewInfo->vpos + trk->GetY() + kTopInset,
+            GetRect().GetWidth() - kLeftInset * 2 - 1,
+            trk->GetHeight() - kTopInset - 1);
+   
+   if (link) {
+      r.height += link->GetHeight();
+   }
 
    if( refreshbacking )
    {
       mRefreshBacking = true;
    }
 
-   //v Vaughan, 2011-02-04:
-   //    Roger's patch for Bug 255 is to Refresh the whole TrackPanel. 
-   //    We'll see if it's too much of a performance hit.
-   //Refresh( false, &r );
-   Refresh(false); 
+   Refresh( false, &r );
 }
 
 
 /// This method overrides Refresh() of wxWindow so that the 
-/// boolean play indicator can be set to false, so that an old play indicator that is
+/// boolean play indictaor can be set to false, so that an old play indicator that is
 /// no longer there won't get  XORed (to erase it), thus redrawing it on the 
 /// TrackPanel
 void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,

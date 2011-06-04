@@ -257,7 +257,9 @@ class TrackPanel:public wxPanel {
    bool HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event);
    void HandleTrackSpecificMouseEvent(wxMouseEvent & event);
    void DrawIndicator();
-   void DoDrawIndicator(wxDC & dc);
+   /// draws the green line on the tracks to show playback position
+   /// @param repairOld if true the playback position is not updated/erased, and simply redrawn
+   void DoDrawIndicator(wxDC & dc, bool repairOld = false);
    void DrawCursor();
    void DoDrawCursor(wxDC & dc);
 
