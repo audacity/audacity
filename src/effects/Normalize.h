@@ -72,6 +72,7 @@ class EffectNormalize: public Effect
    bool   mGain;
    bool   mDC;
    double mLevel;
+   bool   mStereoInd;
 
    int    mCurTrackNum;
    double mCurRate;
@@ -112,9 +113,9 @@ class NormalizeDialog: public EffectDialog
    EffectNormalize *mEffect;
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
-   wxStaticText *mLevelMinux;
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
+   wxCheckBox *mStereoIndCheckBox;
 
    DECLARE_EVENT_TABLE()
 
@@ -122,6 +123,7 @@ class NormalizeDialog: public EffectDialog
    bool mGain;
    bool mDC;
    double mLevel;
+   bool mStereoInd;
 };
 
 #endif
