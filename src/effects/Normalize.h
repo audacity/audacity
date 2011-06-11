@@ -115,6 +115,7 @@ class NormalizeDialog: public EffectDialog
    wxCheckBox *mDCCheckBox;
    wxTextCtrl *mLevelTextCtrl;
    wxStaticText *mLeveldB;
+   wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
 
    DECLARE_EVENT_TABLE()

@@ -53,12 +53,14 @@ static double gFrameSum; //lda odd ... having this as member var crashed on exit
 
 bool EffectNormalize::Init()
 {
-   int boolProxy = gPrefs->Read(wxT("/CsPresets/Norm_AmpDbGain"), 1);
+   int boolProxy = gPrefs->Read(wxT("/Presets/Norm_AmpDbGain"), 1);
    mGain = (boolProxy == 1);
-   boolProxy = gPrefs->Read(wxT("/CsPresets/Norm_RemoveDcOffset"), 1);
+   boolProxy = gPrefs->Read(wxT("/Presets/Norm_RemoveDcOffset"), 1);
    mDC = (boolProxy == 1);
-   gPrefs->Read(wxT("/CsPresets/Norm_Level"), &mLevel, 0.0);
-   boolProxy = gPrefs->Read(wxT("/CsPresets/Norm_StereoIndependent"), 0L);
+   gPrefs->Read(wxT("/Presets/Norm_Level"), &mLevel, -1.0);
+   if(mLevel > 0.0) 
+      mLevel = -mLevel;
+   boolProxy = gPrefs->Read(wxT("/Presets/Norm_StereoIndependent"), 0L);
    mStereoInd = (boolProxy == 1);
    return true;
 }
@@ -131,10 +133,10 @@ bool EffectNormalize::PromptUser()
    mDC = dlog.mDC;
    mLevel = dlog.mLevel;
    mStereoInd = dlog.mStereoInd;
-   gPrefs->Write(wxT("/CsPresets/Norm_AmpDbGain"), mGain);
-   gPrefs->Write(wxT("/CsPresets/Norm_RemoveDcOffset"), mDC);
-   gPrefs->Write(wxT("/CsPresets/Norm_Level"), mLevel);
-   gPrefs->Write(wxT("/CsPresets/Norm_StereoIndependent"), mStereoInd);
+   gPrefs->Write(wxT("/Presets/Norm_AmpDbGain"), mGain);
+   gPrefs->Write(wxT("/Presets/Norm_RemoveDcOffset"), mDC);
+   gPrefs->Write(wxT("/Presets/Norm_Level"), mLevel);
+   gPrefs->Write(wxT("/Presets/Norm_StereoIndependent"), mStereoInd);
 
    return true;
 }
@@ -338,11 +340,15 @@ void EffectNormalize::ProcessData(float *buffer, sampleCount len)
 // NormalizeDialog
 //----------------------------------------------------------------------------
 
-#define ID_NORMALIZE_AMPLITUDE 10002
+#define ID_DC_REMOVE 10002
+#define ID_NORMALIZE_AMPLITUDE 10003
+#define ID_LEVEL_TEXT 10004
 
 BEGIN_EVENT_TABLE(NormalizeDialog, EffectDialog)
-	EVT_CHECKBOX(ID_NORMALIZE_AMPLITUDE, NormalizeDialog::OnUpdateUI)
-	EVT_BUTTON(ID_EFFECT_PREVIEW, NormalizeDialog::OnPreview)
+   EVT_CHECKBOX(ID_DC_REMOVE, NormalizeDialog::OnUpdateUI)
+   EVT_CHECKBOX(ID_NORMALIZE_AMPLITUDE, NormalizeDialog::OnUpdateUI)
+   EVT_BUTTON(ID_EFFECT_PREVIEW, NormalizeDialog::OnPreview)
+   EVT_TEXT(ID_LEVEL_TEXT, NormalizeDialog::OnUpdateUI)
 END_EVENT_TABLE()
 
 NormalizeDialog::NormalizeDialog(EffectNormalize *effect,
@@ -360,6 +366,8 @@ NormalizeDialog::NormalizeDialog(EffectNormalize *effect,
 
 void NormalizeDialog::PopulateOrExchange(ShuttleGui & S)
 {
+   wxTextValidator vld(wxFILTER_NUMERIC);
+
    S.StartHorizontalLay(wxCENTER, false);
    {
       S.AddTitle(_("by Dominic Mazzoni"));
@@ -376,19 +384,20 @@ void NormalizeDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         mDCCheckBox = S.AddCheckBox(_("Remove any DC offset (center on 0.0 vertically)"),
+         mDCCheckBox = S.Id(ID_DC_REMOVE).AddCheckBox(_("Remove any DC offset (center on 0.0 vertically)"),
                                      mDC ? wxT("true") : wxT("false"));
    
          mGainCheckBox = S.Id(ID_NORMALIZE_AMPLITUDE).AddCheckBox(_("Normalize maximum amplitude to:"),
                                        mGain ? wxT("true") : wxT("false"));
    
-         S.StartHorizontalLay(wxALIGN_LEFT, false);
+         S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            mLevelTextCtrl = S.AddTextBox(wxT(""),
-                                          Internat::ToString(mLevel, 1),
-                                          10);
+            mLevelTextCtrl = S.Id(ID_LEVEL_TEXT).AddTextBox(wxT(""), wxT(""), 10);
+            mLevelTextCtrl->SetValidator(vld);
             mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
             mLeveldB = S.AddVariableText(_("dB"), false,
+                                         wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            mWarning = S.AddVariableText( wxT(""), false,
                                          wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
          }
          S.EndHorizontalLay();
@@ -431,10 +440,39 @@ void NormalizeDialog::OnUpdateUI(wxCommandEvent& evt)
 
 void NormalizeDialog::UpdateUI()
 {
+   // Disallow level stuff if not normalizing
    bool enable = mGainCheckBox->GetValue();
    mLevelTextCtrl->Enable(enable);
    mLeveldB->Enable(enable);
    mStereoIndCheckBox->Enable(enable);
+
+   // Disallow OK/Preview if doing nothing
+   wxButton *ok = (wxButton *) FindWindow(wxID_OK);
+   wxButton *preview = (wxButton *) FindWindow(ID_EFFECT_PREVIEW);
+   bool dc = mDCCheckBox->GetValue();
+   if( !enable && !dc )
+   {
+      ok->Enable(false);
+      preview->Enable(false);
+   }
+   else
+   {
+      ok->Enable(true);
+      preview->Enable(true);
+   }
+
+   // Disallow OK/Preview if requested level is > 0
+   wxString val = mLevelTextCtrl->GetValue();
+   double r;
+   val.ToDouble(&r);
+   if(r > 0.0)
+   {
+      ok->Enable(false);
+      preview->Enable(false);
+      mWarning->SetLabel(_(".  Maximum 0dB."));
+   }
+   else
+      mWarning->SetLabel(wxT(""));
 }
 
 void NormalizeDialog::OnPreview(wxCommandEvent &event)
