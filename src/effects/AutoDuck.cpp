@@ -18,6 +18,7 @@
 #include <wx/dynarray.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
+#include <wx/valtext.h>
 
 #include "../Audacity.h"
 #include "../Prefs.h"
