@@ -468,6 +468,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
                                 wxDefaultPosition, wxDefaultSize)
 {
    mEffect = effect;
+   wxTextValidator vld(wxFILTER_NUMERIC);
 
    ShuttleGui S(this, eIsCreating);
    
@@ -501,31 +502,37 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
             _("Duck amount:"),
             Internat::ToDisplayString(mEffect->mDuckAmountDb), 10);
          S.AddUnits(_("dB"));
-         
+         mDuckAmountDbBox->SetValidator(vld);
+        
          mMaximumPauseBox = S.Id(ID_MAXIMUM_PAUSE).AddTextBox(
             _("Maximum pause:"),
             Internat::ToDisplayString(mEffect->mMaximumPause), 10);
          S.AddUnits(_("seconds"));
+         mMaximumPauseBox->SetValidator(vld);
 
          mOuterFadeDownLenBox = S.Id(ID_OUTER_FADE_DOWN_LEN).AddTextBox(
             _("Outer fade down length:"),
             Internat::ToDisplayString(mEffect->mOuterFadeDownLen), 10);
          S.AddUnits(_("seconds"));
+         mOuterFadeDownLenBox->SetValidator(vld);
          
          mOuterFadeUpLenBox = S.Id(ID_OUTER_FADE_UP_LEN).AddTextBox(
             _("Outer fade up length:"),
             Internat::ToDisplayString(mEffect->mOuterFadeUpLen), 10);
          S.AddUnits(_("seconds"));
+         mOuterFadeUpLenBox->SetValidator(vld);
 
          mInnerFadeDownLenBox = S.Id(ID_INNER_FADE_DOWN_LEN).AddTextBox(
             _("Inner fade down length:"),
             Internat::ToDisplayString(mEffect->mInnerFadeDownLen), 10);
          S.AddUnits(_("seconds"));
+         mInnerFadeDownLenBox->SetValidator(vld);
          
          mInnerFadeUpLenBox = S.Id(ID_INNER_FADE_UP_LEN).AddTextBox(
             _("Inner fade up length:"),
             Internat::ToDisplayString(mEffect->mInnerFadeUpLen), 10);
          S.AddUnits(_("seconds"));
+         mInnerFadeUpLenBox->SetValidator(vld);
       }
       S.EndMultiColumn();
       
@@ -535,6 +542,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
             _("Threshold:"),
             Internat::ToDisplayString(mEffect->mThresholdDb), 10);
          S.AddUnits(_("dB"));
+         mThresholdDbBox->SetValidator(vld);
       }
       S.EndMultiColumn();
 
