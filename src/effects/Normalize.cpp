@@ -53,14 +53,14 @@ static double gFrameSum; //lda odd ... having this as member var crashed on exit
 
 bool EffectNormalize::Init()
 {
-   int boolProxy = gPrefs->Read(wxT("/Presets/Norm_AmpDbGain"), 1);
-   mGain = (boolProxy == 1);
-   boolProxy = gPrefs->Read(wxT("/Presets/Norm_RemoveDcOffset"), 1);
+   int boolProxy = gPrefs->Read(wxT("/Effects/Normalize/RemoveDcOffset"), 1);
    mDC = (boolProxy == 1);
-   gPrefs->Read(wxT("/Presets/Norm_Level"), &mLevel, -1.0);
-   if(mLevel > 0.0) 
+   boolProxy = gPrefs->Read(wxT("/Effects/Normalize/Normalize"), 1);
+   mGain = (boolProxy == 1);
+   gPrefs->Read(wxT("/Effects/Normalize/Level"), &mLevel, -1.0);
+   if(mLevel > 0.0)  // this should never happen
       mLevel = -mLevel;
-   boolProxy = gPrefs->Read(wxT("/Presets/Norm_StereoIndependent"), 0L);
+   boolProxy = gPrefs->Read(wxT("/Effects/Normalize/StereoIndependent"), 0L);
    mStereoInd = (boolProxy == 1);
    return true;
 }
@@ -102,7 +102,7 @@ bool EffectNormalize::CheckWhetherSkipEffect()
 void EffectNormalize::End()
 {
 	bool bValidate;
-	gPrefs->Read(wxT("/Validate/Enabled"), &bValidate, false );
+	gPrefs->Read(wxT("/Validate/Enabled"), &bValidate, false ); // this never get written!  Why is this here? MJS
 	if( bValidate )
 	{
       int checkOffset = abs((int)(mOffset * 1000.0));
@@ -133,10 +133,10 @@ bool EffectNormalize::PromptUser()
    mDC = dlog.mDC;
    mLevel = dlog.mLevel;
    mStereoInd = dlog.mStereoInd;
-   gPrefs->Write(wxT("/Presets/Norm_AmpDbGain"), mGain);
-   gPrefs->Write(wxT("/Presets/Norm_RemoveDcOffset"), mDC);
-   gPrefs->Write(wxT("/Presets/Norm_Level"), mLevel);
-   gPrefs->Write(wxT("/Presets/Norm_StereoIndependent"), mStereoInd);
+   gPrefs->Write(wxT("/Effects/Normalize/RemoveDcOffset"), mDC);
+   gPrefs->Write(wxT("/Effects/Normalize/Normalize"), mGain);
+   gPrefs->Write(wxT("/Effects/Normalize/Level"), mLevel);
+   gPrefs->Write(wxT("/Effects/Normalize/StereoIndependent"), mStereoInd);
 
    return true;
 }
@@ -235,8 +235,10 @@ bool EffectNormalize::ProcessOne(WaveTrack * track,
 
    int pass;
 
-   for(pass=0; pass<2; pass++) {
-
+   for(pass=0; pass<2; pass++)
+   {
+      if(pass==0 && !mDC)  // we don't need an analysis pass if not doing dc removal
+         continue;
       if (pass==0)
          StartAnalysis();  // dc offset only.  Max/min done in Process().
       if (pass==1)
