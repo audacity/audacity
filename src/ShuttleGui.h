@@ -91,6 +91,7 @@ public:
    wxBitmapButton * AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE);
    wxStaticText * AddVariableText(const wxString &Str, bool bCenter = false, int PositionFlags = 0);
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
+   wxTextCtrl * AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
    wxListBox * AddListBox(const wxArrayString * pChoices, long style = 0);
    wxListCtrl * AddListControl();
@@ -158,6 +159,11 @@ public:
    wxTextCtrl * TieTextBox( const wxString &Prompt, int &Selected, const int nChars=0);
    wxTextCtrl * TieTextBox( const wxString &Prompt, double &Value, const int nChars=0);
 
+   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, WrappedType &  WrappedRef, const int nChars);
+   wxTextCtrl * TieNumericTextBox( const wxString &Caption, wxString & Value, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, int &Selected, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars=0);
+
    wxCheckBox * TieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
    wxCheckBox * TieCheckBox( const wxString &Prompt, const wxString &Selected );
 	wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
@@ -211,6 +217,16 @@ public:
       const wxString &Default,
       const int nChars);
    wxTextCtrl * TieTextBox(
+      const wxString & Prompt, 
+      const wxString & SettingName, 
+      const double & Default,
+      const int nChars);
+   wxTextCtrl * TieNumericTextBox(
+      const wxString &Prompt, 
+      const wxString &SettingName, 
+      const wxString &Default,
+      const int nChars);
+   wxTextCtrl * TieNumericTextBox(
       const wxString & Prompt, 
       const wxString & SettingName, 
       const double & Default,

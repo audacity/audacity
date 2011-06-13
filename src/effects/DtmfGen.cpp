@@ -449,7 +449,7 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
       // The added colon to improve visual consistency was placed outside 
       // the translatable strings to avoid breaking translations close to 2.0. 
       // TODO: Make colon part of the translatable string after 2.0.
-      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")),  dAmplitude, 10);
+      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")),  dAmplitude, 10);
 
       S.AddPrompt(_("Duration:"));
       if (mDtmfDurationT == NULL)

@@ -510,6 +510,36 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString 
    return pTextCtrl;
 }
 
+wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wxString &Value, const int nChars)
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxTextCtrl);
+   wxTextCtrl * pTextCtrl;
+   wxSize Size(wxDefaultSize);
+   if( nChars > 0 )
+   {
+      Size.SetWidth( nChars *5 );
+   }
+   AddPrompt( Caption );
+   miProp=0;
+
+#ifdef RIGHT_ALIGNED_TEXTBOXES
+   long flags = wxTE_RIGHT;
+#else
+   long flags = wxTE_LEFT;
+#endif
+
+   wxTextValidator Validator(wxFILTER_NUMERIC);
+   mpWind = pTextCtrl = new wxTextCtrl(mpParent, miId, Value,
+      wxDefaultPosition, Size, Style( flags ),
+      Validator // It's OK to pass this.  It will be cloned.
+      );
+   mpWind->SetName( Caption );
+   UpdateSizers();
+   return pTextCtrl;
+}
+
 /// Multiline text box that grows.
 wxTextCtrl * ShuttleGuiBase::AddTextWindow(const wxString &Value)
 {
@@ -1147,6 +1177,46 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, WrappedType & W
    return pTextBox;
 }
 
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, WrappedType & WrappedRef, const int nChars)
+{
+   // The Add function does a UseUpId(), so don't do it here in that case.
+   if( mShuttleMode == eIsCreating )
+      return AddNumericTextBox( Prompt, WrappedRef.ReadAsString(), nChars );
+
+   UseUpId();
+   wxTextCtrl * pTextBox=NULL;
+
+   wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
+   pTextBox = wxDynamicCast(pWnd, wxTextCtrl);
+
+   switch( mShuttleMode )
+   {
+   // IF setting internal storage from the controls.
+   case eIsGettingFromDialog:
+      {
+         wxASSERT( pTextBox );
+         WrappedRef.WriteToAsString( pTextBox->GetValue() );
+      }
+      break;
+   case eIsSettingToDialog:
+      {
+         wxASSERT( pTextBox );
+         pTextBox->SetValue( WrappedRef.ReadAsString() );
+      }
+      break;
+   // IF Saving settings to external storage...
+   // or IF Getting settings from external storage.
+   case eIsGettingViaShuttle:
+   case eIsSavingViaShuttle:
+      DoDataShuttle( Prompt, WrappedRef );
+      break;
+   default:
+      wxASSERT( false );
+      break;
+   }
+   return pTextBox;
+}
+
 wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, int min )
 {
    // The Add function does a UseUpId(), so don't do it here in that case.
@@ -1355,6 +1425,24 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, double &Value, 
 {
    WrappedType WrappedRef( Value );
    return TieTextBox( Prompt, WrappedRef, nChars );
+}
+
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, wxString &Selected, const int nChars)
+{  
+   WrappedType WrappedRef(Selected);
+   return TieNumericTextBox( Prompt, WrappedRef, nChars );
+}
+
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, int &Selected, const int nChars)
+{
+   WrappedType WrappedRef( Selected );
+   return TieNumericTextBox( Prompt, WrappedRef, nChars );
+}
+
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, double &Value, const int nChars)
+{
+   WrappedType WrappedRef( Value );
+   return TieNumericTextBox( Prompt, WrappedRef, nChars );
 }
 
 wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, int &pos, const int max, const int min )
@@ -1619,6 +1707,23 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
 
 /// Variant of the standard TieTextBox which does the two step exchange 
 /// between gui and stack variable and stack variable and shuttle.
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
+   const wxString & Prompt, 
+   const wxString & SettingName, 
+   const wxString & Default,
+   const int nChars)
+{
+   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+
+   wxString Temp = Default;
+   WrappedType WrappedRef( Temp );
+   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
+   if( DoStep(2) ) pText = TieNumericTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   return pText;
+}
+/// Variant of the standard TieTextBox which does the two step exchange 
+/// between gui and stack variable and stack variable and shuttle.
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
    const wxString & Prompt, 
@@ -1632,6 +1737,25 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
    WrappedType WrappedRef( Temp );
    if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
    if( DoStep(2) ) pText = TieTextBox( Prompt, WrappedRef, nChars );
+   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
+   return pText;
+}
+
+/// Variant of the standard TieTextBox which does the two step exchange 
+/// between gui and stack variable and stack variable and shuttle.
+/// This one does it for double values...
+wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
+   const wxString & Prompt, 
+   const wxString & SettingName, 
+   const double & Default,
+   const int nChars)
+{
+   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+
+   double Temp = Default;
+   WrappedType WrappedRef( Temp );
+   if( DoStep(1) ) DoDataShuttle( SettingName, WrappedRef );
+   if( DoStep(2) ) pText = TieNumericTextBox( Prompt, WrappedRef, nChars );
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
    return pText;
 }
