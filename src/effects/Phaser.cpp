@@ -37,6 +37,7 @@
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
+#include <wx/valtext.h>
 
 #include <math.h>
 
@@ -213,6 +214,7 @@ PhaserDialog::PhaserDialog(EffectPhaser * effect, wxWindow * parent)
 
 void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
 {
+   wxTextValidator vld(wxFILTER_NUMERIC);
    S.SetBorder(10);
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -224,33 +226,38 @@ void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       wxSlider *s;
+      wxTextCtrl * tempTC;
       S.SetStretchyCol(1);
-      S.Id(ID_PHASER_STAGESTEXT).AddTextBox(_("Stages:"), wxT(""), 12);
+      tempTC = S.Id(ID_PHASER_STAGESTEXT).AddTextBox(_("Stages:"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
+      tempTC->SetValidator(vld);
       s = S.Id(ID_PHASER_STAGESSLIDER).AddSlider(wxT(""), 2, STAGES_MAX, STAGES_MIN);
       s->SetName(_("Stages"));
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif
 
-      S.Id(ID_PHASER_DRYWETTEXT).AddTextBox(_("Dry/Wet:"), wxT(""), 12);
+      tempTC = S.Id(ID_PHASER_DRYWETTEXT).AddTextBox(_("Dry/Wet:"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
+      tempTC->SetValidator(vld);
       s = S.Id(ID_PHASER_DRYWETSLIDER).AddSlider(wxT(""), 0, DRYWET_MAX, DRYWET_MIN);
       s->SetName(_("Dry Wet"));
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif
 
-      S.Id(ID_PHASER_FREQTEXT).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
+      tempTC = S.Id(ID_PHASER_FREQTEXT).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
+      tempTC->SetValidator(vld);
       s = S.Id(ID_PHASER_FREQSLIDER).AddSlider(wxT(""), 100, FREQ_MAX, FREQ_MIN);
       s->SetName(_("LFO frequency in hertz"));
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif
 
-      S.Id(ID_PHASER_PHASETEXT).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 12);
+      tempTC = S.Id(ID_PHASER_PHASETEXT).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
+      tempTC->SetValidator(vld);
       s = S.Id(ID_PHASER_PHASESLIDER).AddSlider(wxT(""), 0, PHASE_MAX, PHASE_MIN);
       s->SetName(_("LFO start phase in degrees"));
       s->SetLineSize(10);
@@ -258,16 +265,18 @@ void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
       s->SetMinSize(wxSize(100, -1));
 #endif
 
-      S.Id(ID_PHASER_DEPTHTEXT).AddTextBox(_("Depth:"), wxT(""), 12);
+      tempTC = S.Id(ID_PHASER_DEPTHTEXT).AddTextBox(_("Depth:"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
+      tempTC->SetValidator(vld);
       s = S.Id(ID_PHASER_DEPTHSLIDER).AddSlider(wxT(""), 0, DEPTH_MAX, DEPTH_MIN);
       s->SetName(_("Depth in percent"));
 #if defined(__WXGTK__)
       s->SetMinSize(wxSize(100, -1));
 #endif
 
-      S.Id(ID_PHASER_FEEDBACKTEXT).AddTextBox(_("Feedback (%):"), wxT(""), 12);
+      tempTC = S.Id(ID_PHASER_FEEDBACKTEXT).AddTextBox(_("Feedback (%):"), wxT(""), 12);
       S.SetStyle(wxSL_HORIZONTAL);
+      tempTC->SetValidator(vld);
       s = S.Id(ID_PHASER_FEEDBACKSLIDER).AddSlider(wxT(""), 0, FB_MAX, FB_MIN);
       s->SetName(_("Feedback in percent"));
       s->SetLineSize(10);

@@ -145,9 +145,9 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
             S.SetSizeHints(mSampleRateNames);
 
             // Now do the edit box...
-            mOtherSampleRate = S.TieTextBox(wxT(""),
-                                            mOtherSampleRateValue,
-                                            15);
+            mOtherSampleRate = S.TieNumericTextBox(wxT(""),
+                                                   mOtherSampleRateValue,
+                                                   15);
          }
          S.EndHorizontalLay();
 

@@ -197,10 +197,10 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
          tempNames.Add(name);
          tempHash[code] = name;
 
-         wxLogDebug(wxT("code=%s name=%s fullCode=%s name=%s -> %s"),
+/*         wxLogDebug(wxT("code=%s name=%s fullCode=%s name=%s -> %s"),
                       code.c_str(), localLanguageName[code].c_str(),
                       fullCode.c_str(), localLanguageName[fullCode].c_str(),
-                      name.c_str());
+                      name.c_str());*/
       }
    }
 

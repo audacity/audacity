@@ -1128,6 +1128,8 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
          item = new wxTextCtrl(this, ID_NYQ_TEXT+i, wxT(""),
                                wxDefaultPosition, wxSize(60, -1));
          item->SetName(ctrl->name);
+         wxTextValidator vld(wxFILTER_NUMERIC);
+         item->SetValidator(vld);
 
          grid->Add(item, 0, wxALIGN_CENTRE | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          

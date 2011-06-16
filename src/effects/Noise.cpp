@@ -196,7 +196,7 @@ void NoiseDialog::PopulateOrExchange( ShuttleGui & S )
       // the translatable strings to avoid breaking translations close to 2.0. 
       // TODO: Make colon part of the translatable string after 2.0.
       S.TieChoice(_("Noise type") + wxString(wxT(":")), nType, nTypeList);
-      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), nAmplitude, 10);
+      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), nAmplitude, 10);
       S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mNoiseDurationT == NULL)
       {

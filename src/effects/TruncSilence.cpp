@@ -878,15 +878,15 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
    {
       wxArrayString choices(Enums::NumDbChoices, Enums::GetDbChoices());
 
-      S.Id( ID_SHORTEST_SILENCE_TEXT ).TieTextBox(_("Min silence duration:"),
+      S.Id( ID_SHORTEST_SILENCE_TEXT ).TieNumericTextBox(_("Min silence duration:"),
                    mEffect->mTruncInitialAllowedSilentMs,
                    10);
       S.AddUnits( _("milliseconds") );
-      S.Id( ID_LONGEST_SILENCE_TEXT ).TieTextBox(_("Max silence duration:"),
+      S.Id( ID_LONGEST_SILENCE_TEXT ).TieNumericTextBox(_("Max silence duration:"),
                    mEffect->mTruncLongestAllowedSilentMs,
                    10);
       S.AddUnits( _("milliseconds") );
-      S.Id( ID_COMPRESS_FACTOR ).TieTextBox(_("Silence compression:"),
+      S.Id( ID_COMPRESS_FACTOR ).TieNumericTextBox(_("Silence compression:"),
                    mEffect->mSilenceCompressRatio,
                    10);
       S.AddUnits( _(":1") );

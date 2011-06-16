@@ -127,34 +127,34 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartTwoColumn();
       {
          mMinFreq =
-            S.TieTextBox(_("Mi&nimum Frequency (Hz):"),
-                         wxT("/Spectrum/MinFreq"),
-                         0,
-                         12);
+            S.TieNumericTextBox(_("Mi&nimum Frequency (Hz):"),
+                                wxT("/Spectrum/MinFreq"),
+                                0,
+                                12);
 
          mMaxFreq =
-            S.TieTextBox(_("Ma&ximum Frequency (Hz):"),
-                         wxT("/Spectrum/MaxFreq"),
-                         8000,
-                         12);
+            S.TieNumericTextBox(_("Ma&ximum Frequency (Hz):"),
+                                wxT("/Spectrum/MaxFreq"),
+                                8000,
+                                12);
 
          mGain =
-            S.TieTextBox(_("&Gain (dB):"),
-                         wxT("/Spectrum/Gain"),
-                         20,
-                         8);
+            S.TieNumericTextBox(_("&Gain (dB):"),
+                                wxT("/Spectrum/Gain"),
+                                20,
+                                8);
 
          mRange =
-            S.TieTextBox(_("&Range (dB):"),
-                         wxT("/Spectrum/Range"),
-                         80,
-                         8);
+            S.TieNumericTextBox(_("&Range (dB):"),
+                                wxT("/Spectrum/Range"),
+                                80,
+                                8);
 
          mFrequencyGain =
-			 S.TieTextBox(_("Frequency g&ain (dB/dec):"),
-                    wxT("/Spectrum/FrequencyGain"),
-                    0,
-                    4);
+			 S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
+                              wxT("/Spectrum/FrequencyGain"),
+                              0,
+                              4);
       }
       S.EndTwoColumn();
 
@@ -176,16 +176,16 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartTwoColumn();
       {
          mFindNotesMinA =
-            S.TieTextBox(_("Minimum Amplitude (dB):"),
-                         wxT("/Spectrum/FindNotesMinA"),
-                         -30L,
-                         8);
+            S.TieNumericTextBox(_("Minimum Amplitude (dB):"),
+                                wxT("/Spectrum/FindNotesMinA"),
+                                -30L,
+                                8);
 
          mFindNotesN =
-            S.TieTextBox(_("Max. Number of Notes (1..128):"),
-                         wxT("/Spectrum/FindNotesN"),
-                         5L,
-                         8);
+            S.TieNumericTextBox(_("Max. Number of Notes (1..128):"),
+                                wxT("/Spectrum/FindNotesN"),
+                                5L,
+                                8);
       }
       S.EndTwoColumn();
 

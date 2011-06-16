@@ -70,6 +70,7 @@
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/valtext.h>
 
 
 #include "../AudacityApp.h"
@@ -901,10 +902,12 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
+         wxTextValidator vld(wxFILTER_NUMERIC);
          mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise re&duction (dB):"),
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
+         mGainT->SetValidator(vld);
          mGainS = S.Id(ID_GAIN_SLIDER).AddSlider(wxT(""), 0, GAIN_MAX);
          mGainS->SetName(_("Noise reduction"));
          mGainS->SetRange(GAIN_MIN, GAIN_MAX);
@@ -914,6 +917,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
+         mSensitivityT->SetValidator(vld);
          mSensitivityS = S.Id(ID_SENSITIVITY_SLIDER).AddSlider(wxT(""), 0, SENSITIVITY_MAX);
          mSensitivityS->SetName(_("Sensitivity"));
          mSensitivityS->SetRange(SENSITIVITY_MIN, SENSITIVITY_MAX);
@@ -923,6 +927,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
+         mFreqT->SetValidator(vld);
          mFreqS = S.Id(ID_FREQ_SLIDER).AddSlider(wxT(""), 0, FREQ_MAX);
          mFreqS->SetName(_("Frequency smoothing"));
          mFreqS->SetRange(FREQ_MIN, FREQ_MAX);
@@ -932,6 +937,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
                                                 wxT(""),
                                                 0);
          S.SetStyle(wxSL_HORIZONTAL);
+         mTimeT->SetValidator(vld);
          mTimeS = S.Id(ID_TIME_SLIDER).AddSlider(wxT(""), 0, TIME_MAX);
          mTimeS->SetName(_("Attack/decay time"));
          mTimeS->SetRange(TIME_MIN, TIME_MAX);

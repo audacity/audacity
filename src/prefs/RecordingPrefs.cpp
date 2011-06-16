@@ -85,17 +85,17 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       {
          // only show the following controls if we use Portaudio v19, because
          // for Portaudio v18 we always use default buffer sizes
-         w = S.TieTextBox(_("Audio to &buffer:"),
-                          wxT("/AudioIO/LatencyDuration"),
-                          DEFAULT_LATENCY_DURATION,
-                          9);
+         w = S.TieNumericTextBox(_("Audio to &buffer:"),
+                                 wxT("/AudioIO/LatencyDuration"),
+                                 DEFAULT_LATENCY_DURATION,
+                                 9);
          S.AddUnits(_("milliseconds (higher = more latency)"));
          w->SetName(w->GetName() + wxT(" ") + _("milliseconds (higher = more latency)"));
 
-         w = S.TieTextBox(_("L&atency correction:"),
-                          wxT("/AudioIO/LatencyCorrection"),
-                          DEFAULT_LATENCY_CORRECTION,
-                          9);
+         w = S.TieNumericTextBox(_("L&atency correction:"),
+                                 wxT("/AudioIO/LatencyCorrection"),
+                                 DEFAULT_LATENCY_CORRECTION,
+                                 9);
          S.AddUnits(_("milliseconds (negative = backwards)"));
          w->SetName(w->GetName() + wxT(" ") + _("milliseconds (negative = backwards)"));
       }
@@ -151,16 +151,16 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartThreeColumn();
          {
-            S.TieTextBox(_("Analysis Time:"),
-                             wxT("/AudioIO/AnalysisTime"),
-                             AILA_DEF_ANALYSIS_TIME,
-                             9);
+            S.TieNumericTextBox(_("Analysis Time:"),
+                                wxT("/AudioIO/AnalysisTime"),
+                                AILA_DEF_ANALYSIS_TIME,
+                                9);
             S.AddUnits(_("milliseconds (time of one analysis)"));
 
-            S.TieTextBox(_("Number of consecutive analysis:"),
-                          wxT("/AudioIO/NumberAnalysis"),
-                          AILA_DEF_NUMBER_ANALYSIS,
-                          2);
+            S.TieNumericTextBox(_("Number of consecutive analysis:"),
+                                wxT("/AudioIO/NumberAnalysis"),
+                                AILA_DEF_NUMBER_ANALYSIS,
+                                2);
             S.AddUnits(_("0 means endless"));
           }
           S.EndThreeColumn();

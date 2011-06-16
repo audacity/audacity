@@ -278,8 +278,8 @@ void ToneGenDialog::PopulateOrExchangeStandard( ShuttleGui & S )
       // The added colon to improve visual consistency was placed outside 
       // the translatable strings to avoid breaking translations close to 2.0. 
       // TODO: Make colon part of the translatable string after 2.0.
-      S.TieTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 5);
-      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 5);
+      S.TieNumericTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 5);
+      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 5);
       S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mToneDurationT == NULL)
       {
@@ -319,10 +319,10 @@ void ToneGenDialog::PopulateOrExchangeExtended( ShuttleGui & S )
       // The added colon to improve visual consistency was placed outside 
       // the translatable strings to avoid breaking translations close to 2.0. 
       // TODO: Make colon part of the translatable string after 2.0.
-      S.TieTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 10)->SetName(_("Frequency Hertz Start"));
-      S.TieTextBox(wxT(""), frequency[1], 10)->SetName(_("Frequency Hertz End"));
-      S.TieTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 10)->SetName(_("Amplitude Start"));
-      S.TieTextBox(wxT(""), amplitude[1], 10)->SetName(_("Amplitude End"));
+      S.TieNumericTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 10)->SetName(_("Frequency Hertz Start"));
+      S.TieNumericTextBox(wxT(""), frequency[1], 10)->SetName(_("Frequency Hertz End"));
+      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 10)->SetName(_("Amplitude Start"));
+      S.TieNumericTextBox(wxT(""), amplitude[1], 10)->SetName(_("Amplitude End"));
    }
    S.EndMultiColumn();
    S.StartMultiColumn(2, wxCENTER);
