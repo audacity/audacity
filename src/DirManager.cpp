@@ -1440,7 +1440,7 @@ _("Project check detected %d missing external audio \
          wxString msgA =
 _("Project check detected %d missing alias (.auf) \
 \nblockfile(s). Audacity can fully regenerate these \
-\nfiles from the original audio in the project.");
+\nfiles from the current audio in the project.");
          wxString msg;
          msg.Printf(msgA, missingAUFHash.size());
          const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
