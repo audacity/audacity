@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-03-28 17:14+0100\n"
-"PO-Revision-Date: 2011-04-14 09:02-0000\n"
+"PO-Revision-Date: 2011-06-20 20:23-0000\n"
 "Last-Translator: Thomas De Rocker <thomasderocker.at.h0tmail.d0t.c0m>\n"
 "Language-Team: Dutch <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -2418,7 +2418,7 @@ msgstr "Synchroniseer MIDI met audio"
 
 #: Menus.cpp:746
 msgid "Sync-&Lock Tracks"
-msgstr "Sporen sync-selecteren"
+msgstr "Sporen sync-vastzetten"
 
 #: Menus.cpp:751
 msgid "Add Label At &Selection"
