@@ -2884,10 +2884,6 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile)
    xmlFile.Write(wxT("standalone=\"no\" "));
    xmlFile.Write(wxT("?>\n"));
 
-   wxString dtdName = wxT("-//audacityproject-1.3.0//DTD//EN");
-   wxString dtdURI =
-      wxT("http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd");
-
    xmlFile.Write(wxT("<!DOCTYPE "));
    xmlFile.Write(wxT("project "));
    xmlFile.Write(wxT("PUBLIC "));
