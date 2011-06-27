@@ -246,7 +246,7 @@ static int RecursivelyRemoveEmptyDirs(wxString dirPath,
          }
       }
       // Have to recheck dir.HasSubDirs() again, in case they all were deleted in recursive calls.
-      if (!dir.HasSubDirs() && !dir.HasFiles())
+      if (!dir.HasSubDirs() && !dir.HasFiles() && (dirPath.Right(5) != wxT("_data")))
       {
          // No subdirs or files. It's empty so delete it. 
          // Vaughan, 2010-07-07: 
