@@ -128,6 +128,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+#ifdef CLEANSPEECH
    S.StartStatic(_("Modes"));
    {
       S.TieCheckBox(_("Clea&nSpeech Mode (Customized GUI)"), 
@@ -140,6 +141,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    }
    S.EndStatic();
+#endif   // CLEANSPEECH
 }
 
 bool GUIPrefs::Apply()
