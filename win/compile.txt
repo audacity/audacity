@@ -199,7 +199,7 @@ required for a full release. You will need to obtain msgfmt.exe from
 http://audacity.sourceforge.net/files/msgfmt.zip. Add the location of 
 the directory containing msgfmt.exe to your Path environment variable. 
 Alternatively, put msgfmt.exe somewhere already in the Path, 
-e.g., C:\Windows\System32.
+e.g., C:\Windows.
 
 
 3. Some functionality in Audacity is currently turned on its default
