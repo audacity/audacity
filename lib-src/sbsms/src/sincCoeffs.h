@@ -1,18 +1,14 @@
-#ifndef SBSMS_SINCCOEFFS_H
-#define SBSMS_SINCCOEFFS_H
+// -*- mode: c++ -*-
+#ifndef SINCCOEFFS_H
+#define SINCCOEFFS_H
 
-#include "sbsms.h"
-#define SBSMS_SINC_SIZE 5286
-#ifdef SBSMS_REAL_FLOAT
-#define SBSMS_SINC_RES 128.0f
-#define SBSMS_SINC_SAMPLES 41.0f
-#else
-#define SBSMS_SINC_RES 128.0
-#define SBSMS_SINC_SAMPLES 41.0
-#endif
+enum { 
+  resampleSincSize = 5286,
+  resampleSincRes = 128,
+  resampleSincSamples = 41 };
 
 namespace _sbsms_ {
-real sincTable[SBSMS_SINC_SIZE] = 
+float sincTable[resampleSincSize] = 
 {
 0.920381425342433f,
 0.920302993473145f,

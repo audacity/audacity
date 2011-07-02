@@ -1,171 +1,176 @@
+// -*- mode: c++ -*-
 #ifndef SBSMS_INCLUDE
 #define SBSMS_INCLUDE
 
 #include <stdio.h>
 
-#define SBSMS_REAL_FLOAT 1
-
 namespace _sbsms_ {
-typedef float real;
-typedef real interleaved[2];
-typedef interleaved audio;
 
-struct sbsms_quality {
-  long inframesize;
-  long maxoutframesize;
-  real minrate;
-  real maxrate;
-  int bands;
-  int M_MAX;
-  int H[5];
-  int N[8];
-  int S[8];
-  int res[8];
-  real pad[8];
-  real P[8];
-  real Q[8];
+typedef float t_fft[2];
+typedef t_fft audio;
+typedef long long int SampleCountType;
+typedef long long int TimeType;
+typedef unsigned char TrackIndexType;
+
+enum {
+  maxBands = 10,
+  numQualityParams = 52
 };
 
-extern const sbsms_quality sbsms_quality_standard;
-extern const sbsms_quality sbsms_quality_fast;
+struct SBSMSQualityParams {
+  int bands;
+  int H;
+  int N[maxBands];
+  int N0[maxBands];
+  int N1[maxBands];
+  int N2[maxBands];
+  int res[maxBands];
+};
 
-struct sbsms_resample_frame {
-  real ratio0;
-  real ratio1;
-  audio *in;
+class SBSMSQuality {
+ public:
+  SBSMSQuality(const SBSMSQualityParams *params);
+  SBSMSQualityParams params;
+  long getFrameSize();
+  long getMaxPresamples();
+};
+
+extern const SBSMSQualityParams SBSMSQualityStandard;
+
+struct SBSMSFrame {
+  float ratio0;
+  float ratio1;
+  audio *buf;
   long size;
 };
 
-typedef long (*sbsms_cb)(audio *buf, long n, void *data);
-typedef real (*sbsms_rate_cb)(long nProcessed, void *data);
-typedef real (*sbsms_pitch_cb)(long nProcessed, void *data);
-typedef long (*sbsms_resample_cb)(void *cb_data, sbsms_resample_frame *frame);
+typedef long (*SBSMSResampleCB)(void *cbData, SBSMSFrame *frame);
 
-class subband;
-class TrackAllocator;
-class PeakAllocator;
-
-struct sbsms {
-  FILE *fp;
-  sbsms_cb getSamplesCB;
-  sbsms_rate_cb getRateCB;
-  sbsms_pitch_cb getPitchCB;
-  subband *top;
-  TrackAllocator *ta;
-  PeakAllocator *pa;
-  long n_prepad, n_postpad, n_prespent, n_processed;
-  bool bWritingComplete;
-  sbsms_quality quality;
-  int channels;
-  audio *ina;
-  void *threadData;
-};
-
-class SampleBufBase {
+class SBSMSInterface {
  public:
-  SampleBufBase() {};
-  virtual ~SampleBufBase() {};
-  virtual long read(audio *buf, long n)=0;
-  virtual void advance(long n)=0;
-  virtual long n_readable()=0;
+  virtual ~SBSMSInterface() {}
+  virtual long samples(audio *buf, long n) { return 0; }
+  virtual float getStretch(float t)=0;
+  virtual float getPitch(float t)=0;
+  virtual long getPresamples()=0;
+  virtual SampleCountType getSamplesToInput()=0;
+  virtual SampleCountType getSamplesToOutput()=0;
 };
 
-class grain;
-
-class SampleBuf {
+class SBSMSTrackPoint {
  public:
-  //SampleBuf() {};
-  SampleBuf(int N);
-  SampleBuf(int N, long delay);
-  void init(int N, long delay);
-  void clear();
-  virtual ~SampleBuf();
-
-  void grow(long pos);
-  long write(audio *buf, long n);
-  long write(grain* g, int h);
-  virtual long read(audio *buf, long n);
-  virtual void advance(long n);
-  virtual long n_readable();
-  audio *getReadBuf();
-
-  long readPos, writePos;
-  long delay;
-
-  int N;
-  long length;
-  audio *buf;  
+  virtual ~SBSMSTrackPoint() {}
+  virtual float getF()=0;
+  virtual float getM()=0;
+  virtual float getPhase()=0;
 };
+
+class SBSMSTrack {
+ public:
+  virtual ~SBSMSTrack() {}
+  virtual SBSMSTrackPoint *getSBSMSTrackPoint(const TimeType &time)=0;
+  virtual TrackIndexType getIndex()=0;
+  virtual bool isFirst(const TimeType &synthtime)=0;
+  virtual bool isLast(const TimeType &synthtime)=0;
+};
+
+class SBSMSRenderer {
+ public:
+  virtual ~SBSMSRenderer() {}
+  virtual void startFrame() {}
+  virtual void startTime(int c, const TimeType &time, int n) {}
+  virtual void render(int c, SBSMSTrack *t) {}
+  virtual void endTime(int c) {}
+  virtual void endFrame() {}
+  virtual void end(const SampleCountType &samples) {}
+};
+
+enum SBSMSError {
+  SBSMSErrorNone = 0,
+  SBSMSErrorInvalidRate
+};
+
+class SBSMSImp;
+
+class SBSMS {
+ public:
+  SBSMS(int channels, SBSMSQuality *quality, bool bSynthesize);
+  ~SBSMS();
+
+  long read(SBSMSInterface *iface, audio *buf, long n);
+  void addRenderer(SBSMSRenderer *renderer);
+  void removeRenderer(SBSMSRenderer *renderer);
+  long renderFrame(SBSMSInterface *iface);
+  long getInputFrameSize();
+  SBSMSError getError();
+  friend class SBSMSImp;
+ protected:
+  SBSMSImp *imp;
+};
+
+enum SlideType {
+  SlideIdentity = 0,
+  SlideConstant,
+  SlideLinearInputRate,
+  SlideLinearOutputRate,
+  SlideLinearInputStretch,
+  SlideLinearOutputStretch,
+  SlideGeometricInput,
+  SlideGeometricOutput
+};
+
+class SlideImp;
+
+class Slide {
+ public:
+  Slide(SlideType slideType, float rate0 = 1.0f, float rate1 = 1.0f, const SampleCountType &n = 0);
+  ~Slide();
+  float getTotalStretch();
+  float getStretchedTime(float t);
+  float getRate(float t);
+  float getStretch(float t);
+  float getRate();
+  float getStretch();
+  void step();
+ protected:
+  SlideImp *imp;
+};
+ 
+class SBSMSInterfaceSlidingImp;
+
+class SBSMSInterfaceSliding : public SBSMSInterface {
+public:
+  SBSMSInterfaceSliding(Slide *rateSlide, 
+                        Slide *pitchSlide, 
+                        bool bPitchReferenceInput, 
+                        const SampleCountType &samplesToInput, 
+                        long preSamples,
+                        SBSMSQuality *quality);
+  virtual ~SBSMSInterfaceSliding();
+  virtual float getStretch(float t);
+  virtual float getPitch(float t);
+  virtual long getPresamples();
+  virtual SampleCountType getSamplesToInput();
+  virtual SampleCountType getSamplesToOutput();
+
+  friend class SBSMSInterfaceSlidingImp;
+protected:
+  SBSMSInterfaceSlidingImp *imp;
+};
+
+class ResamplerImp;
 
 class Resampler {
  public:
-  Resampler(sbsms_resample_cb func, void *data);
-  Resampler(SampleBuf *in, real pitch);
+  Resampler(SBSMSResampleCB func, void *data, SlideType slideType = SlideConstant);
   ~Resampler();
   long read(audio *audioOut, long frames);
-  void writingComplete();
   void reset();
-  void init();
   long samplesInOutput();
 
  protected:
-  sbsms_resample_frame frame;
-  long startAbs;
-  long midAbs;
-  real midAbsf;
-  long endAbs;
-  long writePosAbs;
-  bool bInput;
-  SampleBuf *out;
-  sbsms_resample_cb cb;
-  void *data;
-  bool bPull;
-  SampleBuf *in;
-  long inOffset;
-  real sincZeros;
-  bool bWritingComplete;
+  ResamplerImp *imp;
 };
-
-void sbsms_init(int n);
-void sbsms_reset(sbsms *sbsmser);
-void sbsms_seek(sbsms *sbsmser, long framePos, long samplePos);
-sbsms* sbsms_create(sbsms_cb getSamplesCB, sbsms_rate_cb getRateCB, sbsms_pitch_cb getPitchCB, int channels, sbsms_quality *quality, bool bPreAnalyze, bool bSynthesize);
-sbsms* sbsms_create(FILE *fp, sbsms_rate_cb getRateCB, sbsms_pitch_cb getPitchCB);
-void sbsms_destroy(sbsms* sbsmser);
-long sbsms_read_frame(audio *out, void *data, sbsms *sbsmer, real *pitch0, real *pitch1);
-long sbsms_write_frame(FILE *fp, void *data, sbsms *sbsmser);
-long sbsms_samples_processed(sbsms *sbsmser);
-long sbsms_pre_analyze(sbsms_cb getSamplesCB, void *data, sbsms *sbsmser);
-void sbsms_pre_analyze_complete(sbsms *sbsmser);
-
-long sbsms_get_samples_queued(sbsms *sbsmser);
-long sbsms_get_frames_queued(sbsms *sbsmser);
-long sbsms_get_last_input_frame_size(sbsms *sbsmser);
-long sbsms_get_frame_pos(sbsms *sbsmser);
-
-void sbsms_close_write(FILE *fp, sbsms *sbsmser);
-FILE *sbsms_open_write(const char *fileName, sbsms *sbsmser, long samples_to_process);
-void sbsms_close_read(FILE *fp);
-FILE *sbsms_open_read(const char *fileName);
-long sbsms_get_samples_to_process(FILE *fp);
-long sbsms_get_frames_to_process(FILE *fp);
-long sbsms_get_channels(FILE *fp);
-void sbsms_get_quality(FILE *fp, sbsms_quality *quality);
-void sbsms_seek_start_data(FILE *fp);
-
-struct sbsmsInfo {
-  real rate0, rate1;
-  real pitch0, pitch1;
-  long samplesToProcess;
-  long samplesToGenerate;
-  Resampler *rs;
-};
-
-long getLinearOutputSamples(sbsmsInfo *si);
-real rateCBLinear(long nProcessed, void *userData);
-real rateCBConstant(long nProcessed, void *userData);
-real pitchCBLinear(long nProcessed, void *userData);
-real pitchCBConstant(long nProcessed, void *userData);
 
 }
 

@@ -10,7 +10,9 @@
 
 \file TimeWarper.h
 \brief Contains declarations for TimeWarper, IdentityTimeWarper,
-ShiftTimeWarper, LinearTimeWarper, LogarithmicTimeWarper classes
+ShiftTimeWarper, LinearTimeWarper, LinearInputRateSlideTimeWarper,
+LinearOutputRateSlideTimeWarper, LinearInputInverseRateTimeWarper,
+GeometricInputRateTimeWarper, GeometricOutputRateTimeWarper classes
 
 \class TimeWarper
 \brief Transforms one point in time to another point. For example, a time
@@ -26,8 +28,20 @@ split points in the input.
 \class LinearTimeWarper
 \brief Linear scaling, initialised by giving two points on the line
 
-\class LogarithmicTimeWarper
-\brief TimeScale - rate varies linearly, so time changes logarithmically.
+\class LinearInputRateTimeWarper
+\brief TimeScale - rate varies linearly with input
+
+\class LinearOutputRateTimeWarper
+\brief TimeScale - rate varies linearly with output
+
+\class LinearInputInverseRateTimeWarper
+\brief TimeScale - inverse rate varies linearly with input
+
+\class GeometricInputRateTimeWarper
+\brief TimeScale - rate varies geometrically with input
+
+\class GeometricOutputRateTimeWarper
+\brief TimeScale - rate varies geometrically with output
 
 \class StepTimeWarper
 \brief Like identity but with a jump
@@ -82,7 +96,7 @@ public:
    virtual double Warp(double originalTime) const;
 };
 
-class LogarithmicTimeWarper : public TimeWarper
+class LinearInputRateTimeWarper : public TimeWarper
 {
 private:
    LinearTimeWarper mRateWarper;
@@ -90,8 +104,75 @@ private:
    double mTStart;
    double mScale;
 public:
-   LogarithmicTimeWarper(double tStart, double tEnd,
-                         double rStart, double rEnd);
+   LinearInputRateTimeWarper(double tStart, double tEnd,
+                             double rStart, double rEnd);
+   virtual double Warp(double originalTime) const;
+};
+
+class LinearOutputRateTimeWarper : public TimeWarper
+{
+private:
+   LinearTimeWarper mTimeWarper;
+   double mRStart;
+   double mTStart;                              
+   double mScale;
+   double mC1;
+   double mC2;
+public:
+   LinearOutputRateTimeWarper(double tStart, double tEnd,
+                              double rStart, double rEnd);
+   virtual double Warp(double originalTime) const;
+};
+
+class LinearInputStretchTimeWarper : public TimeWarper
+{
+private:
+   LinearTimeWarper mTimeWarper;
+   double mTStart;
+   double mC1;
+   double mC2;
+public:
+   LinearInputStretchTimeWarper(double tStart, double tEnd,
+                                double rStart, double rEnd);
+   virtual double Warp(double originalTime) const;
+};
+
+class LinearOutputStretchTimeWarper : public TimeWarper
+{
+private:
+   LinearTimeWarper mTimeWarper;
+   double mTStart;
+   double mC1;
+   double mC2;
+public:
+   LinearOutputStretchTimeWarper(double tStart, double tEnd,
+                                 double rStart, double rEnd);
+   virtual double Warp(double originalTime) const;
+};
+
+class GeometricInputTimeWarper : public TimeWarper
+{
+private:
+   LinearTimeWarper mTimeWarper;
+   double mTStart;
+   double mScale;
+   double mRatio;
+public:
+   GeometricInputTimeWarper(double tStart, double tEnd,
+                            double rStart, double rEnd);
+   virtual double Warp(double originalTime) const;
+};
+
+class GeometricOutputTimeWarper : public TimeWarper
+{
+private:
+   LinearTimeWarper mTimeWarper;
+   double mTStart;
+   double mScale;
+   double mC0;
+public:
+   GeometricOutputTimeWarper(double tStart, double tEnd,
+                             double rStart, double rEnd);
    virtual double Warp(double originalTime) const;
 };
 

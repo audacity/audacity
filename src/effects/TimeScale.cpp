@@ -27,6 +27,8 @@
 #include "../ShuttleGui.h"
 
 #include <math.h>
+#include <iostream>
+using namespace std;
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -38,7 +40,7 @@
 // EffectTimeScale
 //
 
-EffectTimeScale::EffectTimeScale()
+EffectTimeScale::EffectTimeScale() 
 {
    m_RatePercentChangeStart = 0;
    m_RatePercentChangeEnd = 0;
@@ -46,7 +48,13 @@ EffectTimeScale::EffectTimeScale()
    m_PitchHalfStepsEnd = 0;
    m_PitchPercentChangeStart = 0;
    m_PitchPercentChangeEnd = 0;
-   m_PreAnalyze = false;
+   m_RateSlideType = 0;
+   m_PitchSlideType = 0;
+   m_RateSlideReference = 0;
+   m_PitchSlideReference = 0;
+   m_RateLinkInitialFinal = false;
+   m_PitchLinkInitialFinal = false;
+   m_LinkRatePitch = false;
 }
 
 wxString EffectTimeScale::GetEffectDescription() { 
@@ -68,7 +76,13 @@ bool EffectTimeScale::PromptUser()
    dlog.m_PitchHalfStepsEnd = m_PitchHalfStepsEnd;
    dlog.m_PitchPercentChangeStart = m_PitchPercentChangeStart;
    dlog.m_PitchPercentChangeEnd = m_PitchPercentChangeEnd;
-   dlog.m_PreAnalyze = m_PreAnalyze;
+   dlog.m_LinkRatePitch = m_LinkRatePitch;
+   dlog.m_RateSlideType = m_RateSlideType;
+   dlog.m_PitchSlideType = m_PitchSlideType;
+   dlog.m_RateSlideReference = m_RateSlideReference;
+   dlog.m_PitchSlideReference = m_PitchSlideReference;
+   dlog.m_RateLinkInitialFinal = m_RateLinkInitialFinal;
+   dlog.m_PitchLinkInitialFinal = m_PitchLinkInitialFinal;
 
    // Don't need to call TransferDataToWindow, although other 
    // Audacity dialogs (from which I derived this one) do it, because 
@@ -86,7 +100,13 @@ bool EffectTimeScale::PromptUser()
    m_PitchHalfStepsEnd = dlog.m_PitchHalfStepsEnd;
    m_PitchPercentChangeStart = dlog.m_PitchPercentChangeStart;
    m_PitchPercentChangeEnd = dlog.m_PitchPercentChangeEnd;
-   m_PreAnalyze = dlog.m_PreAnalyze;
+   m_LinkRatePitch = dlog.m_LinkRatePitch;
+   m_RateSlideType = dlog.m_RateSlideType;
+   m_PitchSlideType = dlog.m_PitchSlideType;
+   m_RateSlideReference = dlog.m_RateSlideReference;
+   m_PitchSlideReference = dlog.m_PitchSlideReference;
+   m_RateLinkInitialFinal = dlog.m_RateLinkInitialFinal;
+   m_PitchLinkInitialFinal = dlog.m_PitchLinkInitialFinal;
    
    return true;
 }
@@ -99,14 +119,15 @@ bool EffectTimeScale::TransferParameters( Shuttle & shuttle )
    shuttle.TransferDouble(wxT("PitchHalfStepsEnd"),m_PitchHalfStepsEnd,0.0);
    shuttle.TransferDouble(wxT("PitchPercentChangeStart"),m_PitchPercentChangeStart,0.0);
    shuttle.TransferDouble(wxT("PitchPercentChangeEnd"),m_PitchPercentChangeEnd,0.0);
-   shuttle.TransferBool(wxT("PreAnalyze"),m_PreAnalyze,false);
-   return true;
-}
+   shuttle.TransferBool(wxT("LinkRatePitch"),m_LinkRatePitch,false);
+   shuttle.TransferInt(wxT("RateSlideType"),m_RateSlideType,0);
+   shuttle.TransferInt(wxT("PitchSlideType"),m_PitchSlideType,0);
+   shuttle.TransferInt(wxT("RateSlideReference"),m_RateSlideReference,0);
+   shuttle.TransferInt(wxT("PitchSlideReference"),m_PitchSlideReference,0);
+   shuttle.TransferBool(wxT("RateLinkInitialFinal"),m_RateLinkInitialFinal,false);
+   shuttle.TransferBool(wxT("PitchLinkInitialFinal"),m_PitchLinkInitialFinal,false);
 
-inline double InvertedPercentChangeToRatio(double percentChange)
-{
-   //mchinen hack: invert the ratio so it works with the sbsms bug which requires the reciprocal number.
-   return 1.0/(1.0 + percentChange / 100.0);
+   return true;
 }
 
 inline double PercentChangeToRatio(double percentChange)
@@ -121,19 +142,50 @@ inline double HalfStepsToPercentChange(double halfSteps)
 
 inline double PercentChangeToHalfSteps(double percentChange)
 {
-   // mchinen: hack: take the negative of this so the correct value is displayed
-   // (see the InvertedPercentChangeToRatio hack for why this is needed)
    return 17.312340490667560888319096172023 * log(PercentChangeToRatio(percentChange));
 }
 
 bool EffectTimeScale::Process()
 {
-   // The pitch part of sbsms is backwards, so use an inverted function
-   double pitchStart = InvertedPercentChangeToRatio(m_PitchPercentChangeStart);
-   double pitchEnd = InvertedPercentChangeToRatio(m_PitchPercentChangeEnd);
+   double pitchStart = PercentChangeToRatio(m_PitchPercentChangeStart);
+   double pitchEnd = PercentChangeToRatio(m_PitchPercentChangeEnd);
    double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
    double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
-   this->EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,m_PreAnalyze);
+   SlideType rateSlideType;
+   SlideType pitchSlideType;
+   if(rateStart == rateEnd || m_RateLinkInitialFinal) {
+     rateSlideType = SlideConstant;
+   } else if(m_RateSlideType == 0) {
+      if(m_RateSlideReference == 1) {
+         rateSlideType = SlideLinearInputRate;
+      } else {
+         rateSlideType = SlideLinearOutputRate;
+      }
+   } else if(m_RateSlideType == 1) {
+      if(m_RateSlideReference == 1) {
+         rateSlideType = SlideLinearInputStretch;
+      } else {
+         rateSlideType = SlideLinearOutputStretch;
+      }
+   } else if(m_RateSlideType == 2) {
+      if(m_RateSlideReference == 1) {
+         rateSlideType = SlideGeometricInput;
+      } else {
+         rateSlideType = SlideGeometricOutput;
+      }
+   }
+   if(pitchStart == pitchEnd || m_PitchLinkInitialFinal) {
+      pitchSlideType = SlideConstant;
+   } else if(m_PitchSlideType == 0) {
+      pitchSlideType = SlideLinearInputRate;
+   } else if(m_PitchSlideType == 1) {
+      pitchSlideType = SlideLinearInputStretch;
+   } else if(m_PitchSlideType == 2) {
+      pitchSlideType = SlideGeometricInput;
+   }
+   bool rateReferenceInput = (m_RateSlideReference == 1);
+   bool pitchReferenceInput = (m_PitchSlideReference == 1);
+   this->EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,rateSlideType,pitchSlideType,m_LinkRatePitch,rateReferenceInput,pitchReferenceInput);
    return this->EffectSBSMS::Process();
 }
 
@@ -141,16 +193,15 @@ bool EffectTimeScale::Process()
 // TimeScaleDialog
 //----------------------------------------------------------------------------
 
-#define RATE_PERCENTCHANGE_MAX_SLIDER 150
 #define RATE_PERCENTCHANGE_MIN_SLIDER -75
-#define RATE_PERCENTCHANGE_MAX_TEXT 500
+#define RATE_PERCENTCHANGE_MAX_SLIDER 150
 #define RATE_PERCENTCHANGE_MIN_TEXT -90
+#define RATE_PERCENTCHANGE_MAX_TEXT 500
 #define RATE_PERCENTCHANGE_DEFAULT 0
-#define PITCH_HALFSTEPS_MIN_TEXT -12
-#define PITCH_HALFSTEPS_MAX_TEXT 12
-#define PITCH_PERCENTCHANGE_MIN_TEXT -50
-#define PITCH_PERCENTCHANGE_MAX_TEXT 100
-
+#define PITCH_HALFSTEPS_MIN_TEXT -24
+#define PITCH_HALFSTEPS_MAX_TEXT 24
+#define PITCH_PERCENTCHANGE_MIN_TEXT -75
+#define PITCH_PERCENTCHANGE_MAX_TEXT 300
 
 #define ID_TEXT_RATE_PERCENTCHANGE_START 10001
 #define ID_TEXT_RATE_PERCENTCHANGE_END 10002
@@ -160,7 +211,13 @@ bool EffectTimeScale::Process()
 #define ID_TEXT_PITCH_PERCENTCHANGE_END 10006
 #define ID_SLIDER_RATE_PERCENTCHANGE_START 10007
 #define ID_SLIDER_RATE_PERCENTCHANGE_END 10008
-#define ID_CHECKBOX_PREANALYZE 10009
+#define ID_CHECKBOX_LINKRATEPITCH 10010
+#define ID_CHOICE_RATE_SLIDETYPE 10011
+#define ID_CHOICE_PITCH_SLIDETYPE 10012
+#define ID_CHOICE_RATE_SLIDEREFERENCE 10013
+#define ID_CHOICE_PITCH_SLIDEREFERENCE 10014
+#define ID_CHECKBOX_RATE_LINKINITIALFINAL 10015
+#define ID_CHECKBOX_PITCH_LINKINITIALFINAL 10016
 
 // event table for TimeScaleDialog
 
@@ -173,13 +230,31 @@ BEGIN_EVENT_TABLE(TimeScaleDialog, EffectDialog)
    EVT_TEXT(ID_TEXT_PITCH_PERCENTCHANGE_END, TimeScaleDialog::OnText_PitchPercentChangeEnd)
    EVT_SLIDER(ID_SLIDER_RATE_PERCENTCHANGE_START, TimeScaleDialog::OnSlider_RatePercentChangeStart)
    EVT_SLIDER(ID_SLIDER_RATE_PERCENTCHANGE_END, TimeScaleDialog::OnSlider_RatePercentChangeEnd)
-   EVT_CHECKBOX(ID_CHECKBOX_PREANALYZE, TimeScaleDialog::OnCheckBox_PreAnalyze)
+   EVT_CHECKBOX(ID_CHECKBOX_LINKRATEPITCH, TimeScaleDialog::OnCheckBox_LinkRatePitch)
+   EVT_CHOICE(ID_CHOICE_RATE_SLIDETYPE, TimeScaleDialog::OnChoice_RateSlideType)
+   EVT_CHOICE(ID_CHOICE_PITCH_SLIDETYPE, TimeScaleDialog::OnChoice_PitchSlideType)
+   EVT_CHOICE(ID_CHOICE_RATE_SLIDEREFERENCE, TimeScaleDialog::OnChoice_RateSlideReference)
+   EVT_CHOICE(ID_CHOICE_PITCH_SLIDEREFERENCE, TimeScaleDialog::OnChoice_PitchSlideReference)
+   EVT_CHECKBOX(ID_CHECKBOX_RATE_LINKINITIALFINAL, TimeScaleDialog::OnCheckBox_RateLinkInitialFinal)
+   EVT_CHECKBOX(ID_CHECKBOX_PITCH_LINKINITIALFINAL, TimeScaleDialog::OnCheckBox_PitchLinkInitialFinal)
+   EVT_BUTTON(ID_EFFECT_PREVIEW, TimeScaleDialog::OnPreview)
 END_EVENT_TABLE()
 
 TimeScaleDialog::TimeScaleDialog(EffectTimeScale *effect, wxWindow *parent)
-   :  EffectDialog(parent, _("Time Scale"), INSERT_EFFECT),
+   :  EffectDialog(parent, _("Time Scale"), PROCESS_EFFECT),
       mEffect(effect)
 {
+   rateSlideTypes.Add(_("Linear Rate"));
+   rateSlideTypes.Add(_("Linear Stretch"));
+   rateSlideTypes.Add(_("Geometric"));
+   pitchSlideTypes.Add(_("Linear Rate"));
+   pitchSlideTypes.Add(_("Linear Stretch"));
+   pitchSlideTypes.Add(_("Geometric"));
+   rateSlideReferences.Add(_("Output"));
+   rateSlideReferences.Add(_("Input"));
+   pitchSlideReferences.Add(_("Output"));
+   pitchSlideReferences.Add(_("Input"));
+
    m_bLoopDetect = false;
    
    // NULL out these control members because there are some cases where the 
@@ -194,7 +269,13 @@ TimeScaleDialog::TimeScaleDialog(EffectTimeScale *effect, wxWindow *parent)
    m_pTextCtrl_PitchPercentChangeEnd = NULL; 
    m_pTextCtrl_PitchHalfStepsStart = NULL;
    m_pTextCtrl_PitchHalfStepsEnd = NULL;
-   m_pCheckBox_PreAnalyze = NULL;
+   m_pCheckBox_LinkRatePitch = NULL;
+   m_pChoice_RateSlideType = NULL;
+   m_pChoice_PitchSlideType = NULL;
+   m_pChoice_RateSlideReference = NULL;
+   m_pChoice_PitchSlideReference = NULL;
+   m_pCheckBox_RateLinkInitialFinal = NULL;
+   m_pCheckBox_PitchLinkInitialFinal = NULL;
 
    // effect parameters
    m_RatePercentChangeStart = 0;
@@ -203,17 +284,27 @@ TimeScaleDialog::TimeScaleDialog(EffectTimeScale *effect, wxWindow *parent)
    m_PitchPercentChangeEnd = 0;
    m_PitchHalfStepsStart = 0;
    m_PitchHalfStepsEnd = 0;
-   m_PreAnalyze = false;
+   m_LinkRatePitch = false;
+   m_RateSlideType = 0;
+   m_PitchSlideType = 0;
+   m_RateSlideReference = 0;
+   m_PitchSlideReference = 0;
+   m_RateLinkInitialFinal = false;
+   m_PitchLinkInitialFinal = false;
 
    Init();
 }
 
+void TimeScaleDialog::OnPreview(wxCommandEvent & event)
+{
+  mEffect->Preview();
+}
+
 void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
 {
-
    wxTextValidator nullvld(wxFILTER_INCLUDE_CHAR_LIST);
    wxTextValidator numvld(wxFILTER_NUMERIC);
-
+   
    S.SetBorder(10);
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -223,94 +314,130 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
    S.SetBorder(5);
-   
-   S.StartMultiColumn(2, 0);
-   // Rate Start
-   S.StartStatic(_("Initial Tempo Change (%)"));
+
+   S.StartStatic(_("Tempo Change"));   
    {
-      S.StartMultiColumn(1, wxCENTER);
+      S.StartHorizontalLay(wxEXPAND);
       {
-         m_pTextCtrl_RatePercentChangeStart = S.Id(ID_TEXT_RATE_PERCENTCHANGE_START)
-            .AddTextBox(wxT(""), wxT(""), 12);
-         m_pTextCtrl_RatePercentChangeStart->SetValidator(numvld);
+         S.StartVerticalLay(wxCENTER);
+         {
+            S.StartHorizontalLay(wxCENTER,0);
+            {
+               m_pTextCtrl_RatePercentChangeStart = S.Id(ID_TEXT_RATE_PERCENTCHANGE_START)
+                  .AddTextBox(_("Initial (%)"), wxT(""), 12);
+               m_pTextCtrl_RatePercentChangeStart->SetValidator(numvld);
+            }
+            S.EndHorizontalLay();
+            
+            S.StartHorizontalLay(wxEXPAND,0);
+            {
+               S.SetStyle(wxSL_HORIZONTAL);
+               m_pSlider_RatePercentChangeStart = S.Id(ID_SLIDER_RATE_PERCENTCHANGE_START)
+                  .AddSlider(wxT(""), (int)RATE_PERCENTCHANGE_DEFAULT, (int)RATE_PERCENTCHANGE_MAX_SLIDER, (int)RATE_PERCENTCHANGE_MIN_SLIDER);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndVerticalLay();
+
+         S.StartVerticalLay(wxCENTER);
+         {
+            S.StartHorizontalLay(wxCENTER,0);
+            {
+               m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_TEXT_RATE_PERCENTCHANGE_END)
+                  .AddTextBox(_("Final (%)"), wxT(""), 12);
+               m_pTextCtrl_RatePercentChangeEnd->SetValidator(numvld);
+            }
+            S.EndHorizontalLay();
+            
+            S.StartHorizontalLay(wxEXPAND,0);
+            {         
+               S.SetStyle(wxSL_HORIZONTAL);
+               m_pSlider_RatePercentChangeEnd = S.Id(ID_SLIDER_RATE_PERCENTCHANGE_END)
+                  .AddSlider(wxT(""), (int)RATE_PERCENTCHANGE_DEFAULT, (int)RATE_PERCENTCHANGE_MAX_SLIDER, (int)RATE_PERCENTCHANGE_MIN_SLIDER);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndVerticalLay();
       }
-      S.EndMultiColumn();
-      S.StartHorizontalLay(wxEXPAND,0);
+      S.EndHorizontalLay();
+
+      S.StartHorizontalLay(0,0);
       {
-         S.SetStyle(wxSL_HORIZONTAL);
-         m_pSlider_RatePercentChangeStart = S.Id(ID_SLIDER_RATE_PERCENTCHANGE_START)
-            .AddSlider(wxT(""), (int)RATE_PERCENTCHANGE_DEFAULT, (int)RATE_PERCENTCHANGE_MAX_SLIDER, (int)RATE_PERCENTCHANGE_MIN_SLIDER);
+         m_pChoice_RateSlideType = S.Id(ID_CHOICE_RATE_SLIDETYPE)
+            .AddChoice(_("Slide Type"),_("Linear Rate"),&rateSlideTypes);
+         m_pChoice_RateSlideType->SetSelection(0);
+         m_pChoice_RateSlideType->SetSizeHints(-1,-1);
+         m_pChoice_RateSlideReference = S.Id(ID_CHOICE_RATE_SLIDEREFERENCE)
+            .AddChoice(_("Reference"),_("Output"),&rateSlideReferences);
+         m_pChoice_RateSlideReference->SetSelection(0);
+         m_pChoice_RateSlideReference->SetSizeHints(-1,-1);
+         m_pCheckBox_RateLinkInitialFinal = S.Id(ID_CHECKBOX_RATE_LINKINITIALFINAL)
+            .AddCheckBox(_("Link Initial/Final"), wxT("false"));
       }
       S.EndHorizontalLay();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Final Tempo Change (%)"));
+   // Pitch Change
+   S.StartStatic(_("Pitch Shift"));
    {
-      S.StartMultiColumn(1, wxCENTER);
+      S.StartMultiColumn(2, wxCENTER);
       {
-         m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_TEXT_RATE_PERCENTCHANGE_END)
-            .AddTextBox(wxT(""), wxT(""), 12);
-         m_pTextCtrl_RatePercentChangeEnd->SetValidator(numvld);
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            m_pTextCtrl_PitchHalfStepsStart = S.Id(ID_TEXT_PITCH_HALFSTEPS_START)
+               .AddTextBox(_("Initial (semitones) [-24 to 24]:"), wxT(""), 12);
+            m_pTextCtrl_PitchHalfStepsStart->SetValidator(numvld);
+            m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_TEXT_PITCH_PERCENTCHANGE_START)
+               .AddTextBox(_("Initial (%) [-75 to 300]:"), wxT(""), 12);
+            m_pTextCtrl_PitchPercentChangeStart->SetValidator(numvld);
+         }
+         S.EndMultiColumn();
+         
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            m_pTextCtrl_PitchHalfStepsEnd = S.Id(ID_TEXT_PITCH_HALFSTEPS_END)
+               .AddTextBox(_("Final (semitones) [-24 to 24]:"), wxT(""), 12);
+            m_pTextCtrl_PitchHalfStepsEnd->SetValidator(numvld);
+            
+            m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_TEXT_PITCH_PERCENTCHANGE_END)
+               .AddTextBox(_("Final (%) [-75 to 300]:"), wxT(""), 12);
+            m_pTextCtrl_PitchPercentChangeEnd->SetValidator(numvld);
+         }
+         S.EndMultiColumn();
       }
       S.EndMultiColumn();
-      S.StartHorizontalLay(wxEXPAND,0);
-      {         
-         S.SetStyle(wxSL_HORIZONTAL);
-         m_pSlider_RatePercentChangeEnd = S.Id(ID_SLIDER_RATE_PERCENTCHANGE_END)
-            .AddSlider(wxT(""), (int)RATE_PERCENTCHANGE_DEFAULT, (int)RATE_PERCENTCHANGE_MAX_SLIDER, (int)RATE_PERCENTCHANGE_MIN_SLIDER);
+
+      S.StartHorizontalLay(0,0);
+      {
+         m_pChoice_PitchSlideType = S.Id(ID_CHOICE_PITCH_SLIDETYPE)
+            .AddChoice(_("Slide Type"),_("Linear"),&pitchSlideTypes);
+         m_pChoice_PitchSlideType->SetSelection(0);
+         m_pChoice_PitchSlideType->SetSizeHints(-1,-1);
+         m_pChoice_PitchSlideReference = S.Id(ID_CHOICE_PITCH_SLIDEREFERENCE)
+            .AddChoice(_("Reference"),_("Output"),&pitchSlideReferences);
+         m_pChoice_PitchSlideReference->SetSelection(0);
+         m_pChoice_PitchSlideReference->SetSizeHints(-1,-1);
+         m_pCheckBox_PitchLinkInitialFinal = S.Id(ID_CHECKBOX_PITCH_LINKINITIALFINAL)
+            .AddCheckBox(_("Link Initial/Final"), wxT("false"));
       }
       S.EndHorizontalLay();
    }
    S.EndStatic();
 
-   // Pitch Start
-   S.StartStatic(_("Initial Pitch Shift"));
-   {
-      S.StartMultiColumn(2, wxCENTER);
-      {
-         m_pTextCtrl_PitchHalfStepsStart = S.Id(ID_TEXT_PITCH_HALFSTEPS_START)
-            .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
-         m_pTextCtrl_PitchHalfStepsStart->SetValidator(numvld);
-         
-         m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_TEXT_PITCH_PERCENTCHANGE_START)
-            .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
-         m_pTextCtrl_PitchPercentChangeStart->SetValidator(numvld);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
-
-   // Pitch End
-   S.StartStatic(_("Final Pitch Shift"));
-   {
-      S.StartMultiColumn(2, wxCENTER);
-      {
-         m_pTextCtrl_PitchHalfStepsEnd = S.Id(ID_TEXT_PITCH_HALFSTEPS_END)
-            .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
-         m_pTextCtrl_PitchHalfStepsEnd->SetValidator(numvld);
-         
-         m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_TEXT_PITCH_PERCENTCHANGE_END)
-            .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
-         m_pTextCtrl_PitchPercentChangeEnd->SetValidator(numvld);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
-   S.EndMultiColumn();
    
    S.StartStatic(_("Options"));
    {
       S.StartHorizontalLay(wxEXPAND);
       {
          S.SetStyle(wxSL_HORIZONTAL);
-         m_pCheckBox_PreAnalyze = S.Id(ID_CHECKBOX_PREANALYZE)
-            .AddCheckBox(wxT("Dynamic Transient Sharpening"), wxT("Dynamic Transient Sharpening"));
+         m_pCheckBox_LinkRatePitch = S.Id(ID_CHECKBOX_LINKRATEPITCH)
+            .AddCheckBox(_("Link Rate/Pitch (Resample)"), wxT("false"));
       }
       S.EndHorizontalLay();
    }
    S.EndStatic();
-   
+
    return;
 }
 
@@ -326,7 +453,13 @@ bool TimeScaleDialog::TransferDataToWindow()
    this->Update_Text_PitchHalfStepsEnd();
    this->Update_Text_PitchPercentChangeStart();
    this->Update_Text_PitchPercentChangeEnd();
-   this->Update_CheckBox_PreAnalyze();
+   this->Update_CheckBox_LinkRatePitch();
+   this->Update_Choice_RateSlideType();
+   this->Update_Choice_PitchSlideType();
+   this->Update_Choice_RateSlideReference();
+   this->Update_Choice_PitchSlideReference();
+   this->Update_CheckBox_RateLinkInitialFinal();
+   this->Update_CheckBox_PitchLinkInitialFinal();
 
    m_bLoopDetect = false;
    
@@ -379,8 +512,32 @@ bool TimeScaleDialog::TransferDataFromWindow()
       m_PitchPercentChangeEnd = newValue;
    }
 
-   if(m_pCheckBox_PreAnalyze) {
-      m_PreAnalyze = m_pCheckBox_PreAnalyze->GetValue();
+   if(m_pCheckBox_LinkRatePitch) {
+      m_LinkRatePitch = m_pCheckBox_LinkRatePitch->GetValue();
+   }
+
+   if(m_pChoice_RateSlideType) {
+      m_RateSlideType = m_pChoice_RateSlideType->GetSelection();
+   }
+
+   if(m_pChoice_PitchSlideType) {
+      m_PitchSlideType = m_pChoice_PitchSlideType->GetSelection();
+   }
+
+   if(m_pChoice_RateSlideReference) {
+      m_RateSlideReference = m_pChoice_RateSlideReference->GetSelection();
+   }
+
+   if(m_pChoice_PitchSlideReference) {
+      m_PitchSlideReference = m_pChoice_PitchSlideReference->GetSelection();
+   }
+
+   if(m_pCheckBox_RateLinkInitialFinal) {
+      m_RateLinkInitialFinal = m_pCheckBox_RateLinkInitialFinal->GetValue();
+   }
+
+   if(m_pCheckBox_PitchLinkInitialFinal) {
+      m_PitchLinkInitialFinal = m_pCheckBox_PitchLinkInitialFinal->GetValue();
    }
 
    return true;
@@ -395,17 +552,18 @@ bool TimeScaleDialog::CheckParameters()
       (m_RatePercentChangeEnd >= RATE_PERCENTCHANGE_MIN_TEXT && 
        m_RatePercentChangeEnd <= RATE_PERCENTCHANGE_MAX_TEXT) 
       &&
-      (m_PitchHalfStepsStart >= PITCH_HALFSTEPS_MIN_TEXT &&
-       m_PitchHalfStepsStart <= PITCH_HALFSTEPS_MAX_TEXT)
-      &&
-      (m_PitchHalfStepsEnd >= PITCH_HALFSTEPS_MIN_TEXT &&
-       m_PitchHalfStepsEnd <= PITCH_HALFSTEPS_MAX_TEXT)
-      &&
-      (m_PitchPercentChangeStart >= PITCH_PERCENTCHANGE_MIN_TEXT &&
-       m_PitchPercentChangeStart <= PITCH_PERCENTCHANGE_MAX_TEXT)
-      &&
-      (m_PitchPercentChangeEnd >= PITCH_PERCENTCHANGE_MIN_TEXT &&
-       m_PitchPercentChangeEnd <= PITCH_PERCENTCHANGE_MAX_TEXT);
+      (m_LinkRatePitch || 
+       ((m_PitchHalfStepsStart >= PITCH_HALFSTEPS_MIN_TEXT &&
+         m_PitchHalfStepsStart <= PITCH_HALFSTEPS_MAX_TEXT)
+        &&
+        (m_PitchHalfStepsEnd >= PITCH_HALFSTEPS_MIN_TEXT &&
+         m_PitchHalfStepsEnd <= PITCH_HALFSTEPS_MAX_TEXT)
+        &&
+        (m_PitchPercentChangeStart >= PITCH_PERCENTCHANGE_MIN_TEXT &&
+         m_PitchPercentChangeStart <= PITCH_PERCENTCHANGE_MAX_TEXT)
+        &&
+        (m_PitchPercentChangeEnd >= PITCH_PERCENTCHANGE_MIN_TEXT &&
+         m_PitchPercentChangeEnd <= PITCH_PERCENTCHANGE_MAX_TEXT)));
 }
 
 // handler implementations for TimeScaleDialog
@@ -423,6 +581,23 @@ void TimeScaleDialog::OnText_RatePercentChangeStart(wxCommandEvent & event)
 
       m_bLoopDetect = true;
       this->Update_Slider_RatePercentChangeStart();
+      if(m_LinkRatePitch) {
+         m_PitchPercentChangeStart = m_RatePercentChangeStart;
+         m_PitchHalfStepsStart = PercentChangeToHalfSteps(m_PitchPercentChangeStart);
+         this->Update_Text_PitchPercentChangeStart();
+         this->Update_Text_PitchHalfStepsStart();
+         if(m_PitchLinkInitialFinal) {
+            m_PitchPercentChangeEnd = m_RatePercentChangeStart;
+            m_PitchHalfStepsEnd = m_PitchHalfStepsStart;
+            this->Update_Text_PitchPercentChangeEnd();
+            this->Update_Text_PitchHalfStepsEnd();
+         }
+      }
+      if(m_RateLinkInitialFinal) {
+         m_RatePercentChangeEnd = m_RatePercentChangeStart;
+         this->Update_Text_RatePercentChangeEnd();
+         this->Update_Slider_RatePercentChangeEnd();
+      }
       m_bLoopDetect = false;
 
       FindWindow(wxID_OK)->Enable(CheckParameters());
@@ -442,6 +617,23 @@ void TimeScaleDialog::OnText_RatePercentChangeEnd(wxCommandEvent & event)
 
       m_bLoopDetect = true;
       this->Update_Slider_RatePercentChangeEnd();
+      if(m_LinkRatePitch) {
+         m_PitchPercentChangeEnd = m_RatePercentChangeEnd;
+         m_PitchHalfStepsEnd = PercentChangeToHalfSteps(m_PitchPercentChangeEnd);
+         this->Update_Text_PitchPercentChangeEnd();
+         this->Update_Text_PitchHalfStepsEnd();
+         if(m_PitchLinkInitialFinal) {
+            m_PitchPercentChangeStart = m_RatePercentChangeEnd;
+            m_PitchHalfStepsStart = m_PitchHalfStepsEnd;
+            this->Update_Text_PitchPercentChangeStart();
+            this->Update_Text_PitchHalfStepsStart();
+         }
+      }
+      if(m_RateLinkInitialFinal) {
+         m_RatePercentChangeStart = m_RatePercentChangeEnd;
+         this->Update_Text_RatePercentChangeStart();
+         this->Update_Slider_RatePercentChangeStart();
+      }
       m_bLoopDetect = false;
       
       FindWindow(wxID_OK)->Enable(CheckParameters());
@@ -458,7 +650,26 @@ void TimeScaleDialog::OnSlider_RatePercentChangeStart(wxCommandEvent & event)
       
       m_bLoopDetect = true;
       this->Update_Text_RatePercentChangeStart();
+      if(m_LinkRatePitch) {
+         m_PitchPercentChangeStart = m_RatePercentChangeStart;
+         m_PitchHalfStepsStart = PercentChangeToHalfSteps(m_PitchPercentChangeStart);
+         this->Update_Text_PitchPercentChangeStart();
+         this->Update_Text_PitchHalfStepsStart();
+         if(m_PitchLinkInitialFinal) {
+            m_PitchPercentChangeEnd = m_RatePercentChangeStart;
+            m_PitchHalfStepsEnd = m_PitchHalfStepsStart;
+            this->Update_Text_PitchPercentChangeEnd();
+            this->Update_Text_PitchHalfStepsEnd();
+         }
+      }
+      if(m_RateLinkInitialFinal) {
+         m_RatePercentChangeEnd = m_RatePercentChangeStart;
+         this->Update_Text_RatePercentChangeEnd();
+         this->Update_Slider_RatePercentChangeEnd();
+      }
       m_bLoopDetect = false;
+
+      FindWindow(wxID_OK)->Enable(CheckParameters());
    }
 }
 
@@ -472,7 +683,26 @@ void TimeScaleDialog::OnSlider_RatePercentChangeEnd(wxCommandEvent & event)
       
       m_bLoopDetect = true;
       this->Update_Text_RatePercentChangeEnd();
+      if(m_LinkRatePitch) {
+         m_PitchPercentChangeEnd = m_RatePercentChangeEnd;
+         m_PitchHalfStepsEnd = PercentChangeToHalfSteps(m_PitchPercentChangeEnd);
+         this->Update_Text_PitchPercentChangeEnd();
+         this->Update_Text_PitchHalfStepsEnd();
+         if(m_PitchLinkInitialFinal) {
+            m_PitchPercentChangeStart = m_RatePercentChangeEnd;
+            m_PitchHalfStepsStart = m_PitchHalfStepsEnd;
+            this->Update_Text_PitchPercentChangeStart();
+            this->Update_Text_PitchHalfStepsStart();
+         }
+      }
+      if(m_RateLinkInitialFinal) {
+         m_RatePercentChangeStart = m_RatePercentChangeEnd;
+         this->Update_Text_RatePercentChangeStart();
+         this->Update_Slider_RatePercentChangeStart();
+      }
       m_bLoopDetect = false;
+
+      FindWindow(wxID_OK)->Enable(CheckParameters());
    }
 }
 
@@ -490,6 +720,22 @@ void TimeScaleDialog::OnText_PitchHalfStepsStart(wxCommandEvent & event)
       
       m_bLoopDetect = true;
       this->Update_Text_PitchPercentChangeStart();
+      if(m_LinkRatePitch) {
+         m_RatePercentChangeStart = m_PitchPercentChangeStart;
+         this->Update_Text_RatePercentChangeStart();
+         this->Update_Slider_RatePercentChangeStart();
+         if(m_RateLinkInitialFinal) {
+            m_RatePercentChangeEnd = m_PitchPercentChangeStart;
+            this->Update_Text_RatePercentChangeEnd();
+            this->Update_Slider_RatePercentChangeEnd();
+         }
+      }
+      if(m_PitchLinkInitialFinal) {
+         m_PitchPercentChangeEnd = m_PitchPercentChangeStart;
+         m_PitchHalfStepsEnd = m_PitchHalfStepsStart;
+         this->Update_Text_PitchPercentChangeEnd();
+         this->Update_Text_PitchHalfStepsEnd();
+      }
       m_bLoopDetect = false;
       
       FindWindow(wxID_OK)->Enable(CheckParameters());
@@ -510,6 +756,22 @@ void TimeScaleDialog::OnText_PitchHalfStepsEnd(wxCommandEvent & event)
 
       m_bLoopDetect = true;
       this->Update_Text_PitchPercentChangeEnd();
+      if(m_LinkRatePitch) {
+         m_RatePercentChangeEnd = m_PitchPercentChangeEnd;
+         this->Update_Text_RatePercentChangeEnd();
+         this->Update_Slider_RatePercentChangeEnd();
+         if(m_RateLinkInitialFinal) {
+            m_RatePercentChangeStart = m_PitchPercentChangeEnd;
+            this->Update_Text_RatePercentChangeStart();
+            this->Update_Slider_RatePercentChangeStart();
+         }
+      }
+      if(m_PitchLinkInitialFinal) {
+         m_PitchPercentChangeStart = m_PitchPercentChangeEnd;
+         m_PitchHalfStepsStart = m_PitchHalfStepsEnd;
+         this->Update_Text_PitchPercentChangeStart();
+         this->Update_Text_PitchHalfStepsStart();
+      }
       m_bLoopDetect = false;
 
       FindWindow(wxID_OK)->Enable(CheckParameters());
@@ -527,11 +789,27 @@ void TimeScaleDialog::OnText_PitchPercentChangeStart(wxCommandEvent & event)
       str.ToDouble(&newValue);
       m_PitchPercentChangeStart = newValue;
       m_PitchHalfStepsStart = PercentChangeToHalfSteps(newValue);
-      
+
       m_bLoopDetect = true;
       this->Update_Text_PitchHalfStepsStart();
+      if(m_LinkRatePitch) {
+         m_RatePercentChangeStart = m_PitchPercentChangeStart;
+         this->Update_Text_RatePercentChangeStart();
+         this->Update_Slider_RatePercentChangeStart();
+         if(m_PitchLinkInitialFinal) {
+            m_RatePercentChangeEnd = m_PitchPercentChangeStart;
+            this->Update_Text_RatePercentChangeEnd();
+            this->Update_Slider_RatePercentChangeEnd();
+         }
+      }
+      if(m_PitchLinkInitialFinal) {
+         m_PitchPercentChangeEnd = m_PitchPercentChangeStart;
+         m_PitchHalfStepsEnd = m_PitchHalfStepsStart;
+         this->Update_Text_PitchPercentChangeEnd();
+         this->Update_Text_PitchHalfStepsEnd();
+      }
       m_bLoopDetect = false;
-      
+
       FindWindow(wxID_OK)->Enable(CheckParameters());
    }
 }
@@ -550,16 +828,156 @@ void TimeScaleDialog::OnText_PitchPercentChangeEnd(wxCommandEvent & event)
 
       m_bLoopDetect = true;
       this->Update_Text_PitchHalfStepsEnd();
+      if(m_LinkRatePitch) {
+         m_RatePercentChangeEnd = m_PitchPercentChangeEnd;
+         this->Update_Text_RatePercentChangeEnd();
+         this->Update_Slider_RatePercentChangeEnd();
+         if(m_PitchLinkInitialFinal) {
+            m_RatePercentChangeStart = m_PitchPercentChangeEnd;
+            this->Update_Text_RatePercentChangeStart();
+            this->Update_Slider_RatePercentChangeStart();
+         }
+      }
+      if(m_PitchLinkInitialFinal) {
+         m_PitchPercentChangeStart = m_PitchPercentChangeEnd;
+         m_PitchHalfStepsStart = m_PitchHalfStepsEnd;
+         this->Update_Text_PitchPercentChangeStart();
+         this->Update_Text_PitchHalfStepsStart();
+      }
       m_bLoopDetect = false;
 
       FindWindow(wxID_OK)->Enable(CheckParameters());
    }
 }
 
-void TimeScaleDialog::OnCheckBox_PreAnalyze(wxCommandEvent & event)
+void TimeScaleDialog::OnCheckBox_LinkRatePitch(wxCommandEvent & event)
 {
-   if (m_pCheckBox_PreAnalyze) {
-      m_PreAnalyze = m_pCheckBox_PreAnalyze->GetValue();
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pCheckBox_LinkRatePitch) {
+      m_LinkRatePitch = m_pCheckBox_LinkRatePitch->GetValue();
+
+      if(m_LinkRatePitch) {
+         m_bLoopDetect = true;
+         m_RatePercentChangeStart = m_PitchPercentChangeStart;
+         m_RatePercentChangeEnd = m_PitchPercentChangeEnd;
+         m_RateSlideType = m_PitchSlideType;
+         m_RateSlideReference = m_PitchSlideReference;
+         m_RateLinkInitialFinal = m_PitchLinkInitialFinal;
+         this->Update_Text_RatePercentChangeStart();
+         this->Update_Text_RatePercentChangeEnd();
+         this->Update_Slider_RatePercentChangeStart();
+         this->Update_Slider_RatePercentChangeEnd();
+         this->Update_Choice_RateSlideType();
+         this->Update_Choice_RateSlideReference();
+         this->Update_CheckBox_RateLinkInitialFinal();
+         m_bLoopDetect = false;
+      } else {
+      }
+
+      FindWindow(wxID_OK)->Enable(CheckParameters());
+   }
+}
+
+void TimeScaleDialog::OnCheckBox_RateLinkInitialFinal(wxCommandEvent & event)
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pCheckBox_RateLinkInitialFinal) {
+     m_RateLinkInitialFinal = m_pCheckBox_RateLinkInitialFinal->GetValue();
+
+     if(m_RateLinkInitialFinal) {
+        m_bLoopDetect = true;
+        m_RatePercentChangeEnd = m_RatePercentChangeStart;
+        this->Update_Text_RatePercentChangeEnd();
+        this->Update_Slider_RatePercentChangeEnd();
+        m_bLoopDetect = false;
+     }
+   }
+}
+
+void TimeScaleDialog::OnCheckBox_PitchLinkInitialFinal(wxCommandEvent & event)
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pCheckBox_PitchLinkInitialFinal) {
+     m_PitchLinkInitialFinal = m_pCheckBox_PitchLinkInitialFinal->GetValue();
+
+     if(m_PitchLinkInitialFinal) {
+        m_bLoopDetect = true;
+        m_PitchPercentChangeEnd = m_PitchPercentChangeStart;
+        m_PitchHalfStepsEnd = m_PitchHalfStepsStart;
+        this->Update_Text_PitchPercentChangeEnd();
+        this->Update_Text_PitchHalfStepsEnd();
+        m_bLoopDetect = false;
+     }
+   }
+}
+
+void TimeScaleDialog::OnChoice_RateSlideType(wxCommandEvent & event)
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pChoice_RateSlideType) {
+      m_RateSlideType = m_pChoice_RateSlideType->GetSelection();
+      if(m_LinkRatePitch) {
+         m_PitchSlideType = m_RateSlideType;
+         m_bLoopDetect = true;
+         this->Update_Choice_PitchSlideType();
+         m_bLoopDetect = false;
+      }
+   }
+}
+
+void TimeScaleDialog::OnChoice_PitchSlideType(wxCommandEvent & event)
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pChoice_PitchSlideType) {
+      m_PitchSlideType = m_pChoice_PitchSlideType->GetSelection();
+      if(m_LinkRatePitch) {
+         m_RateSlideType = m_PitchSlideType;
+         m_bLoopDetect = true;
+         this->Update_Choice_RateSlideType();
+         m_bLoopDetect = false;
+      }
+   }
+}
+
+void TimeScaleDialog::OnChoice_RateSlideReference(wxCommandEvent & event)
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pChoice_RateSlideReference) {
+      m_RateSlideReference = m_pChoice_RateSlideReference->GetSelection();
+      if(m_LinkRatePitch) {
+         m_PitchSlideReference = m_RateSlideReference;
+         m_bLoopDetect = true;
+         this->Update_Choice_PitchSlideReference();
+         m_bLoopDetect = false;
+      }
+   }
+}
+
+void TimeScaleDialog::OnChoice_PitchSlideReference(wxCommandEvent & event)
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pChoice_PitchSlideReference) {
+      m_PitchSlideReference = m_pChoice_PitchSlideReference->GetSelection();
+      if(m_LinkRatePitch) {
+         m_RateSlideReference = m_PitchSlideReference;
+         m_bLoopDetect = true;
+         this->Update_Choice_RateSlideReference();
+         m_bLoopDetect = false;
+      }
    }
 }
 
@@ -631,10 +1049,52 @@ void TimeScaleDialog::Update_Text_PitchPercentChangeEnd()
    }
 }
 
-void TimeScaleDialog::Update_CheckBox_PreAnalyze()
+void TimeScaleDialog::Update_CheckBox_LinkRatePitch()
 {
-   if (m_pCheckBox_PreAnalyze) {
-      m_pCheckBox_PreAnalyze->SetValue(m_PreAnalyze);
+   if (m_pCheckBox_LinkRatePitch) {
+      m_pCheckBox_LinkRatePitch->SetValue(m_LinkRatePitch);
+   }
+}
+
+void TimeScaleDialog::Update_CheckBox_RateLinkInitialFinal()
+{
+   if (m_pCheckBox_RateLinkInitialFinal) {
+      m_pCheckBox_RateLinkInitialFinal->SetValue(m_RateLinkInitialFinal);
+   }
+}
+
+void TimeScaleDialog::Update_CheckBox_PitchLinkInitialFinal()
+{
+   if (m_pCheckBox_PitchLinkInitialFinal) {
+      m_pCheckBox_PitchLinkInitialFinal->SetValue(m_PitchLinkInitialFinal);
+   }
+}
+
+void TimeScaleDialog::Update_Choice_RateSlideType()
+{
+   if (m_pChoice_RateSlideType) {
+      m_pChoice_RateSlideType->SetSelection(m_RateSlideType);
+   }
+}
+
+void TimeScaleDialog::Update_Choice_PitchSlideType()
+{
+   if (m_pChoice_PitchSlideType) {
+      m_pChoice_PitchSlideType->SetSelection(m_PitchSlideType);
+   }
+}
+
+void TimeScaleDialog::Update_Choice_RateSlideReference()
+{
+   if (m_pChoice_RateSlideReference) {
+      m_pChoice_RateSlideReference->SetSelection(m_RateSlideReference);
+   }
+}
+
+void TimeScaleDialog::Update_Choice_PitchSlideReference()
+{
+   if (m_pChoice_PitchSlideReference) {
+      m_pChoice_PitchSlideReference->SetSelection(m_PitchSlideReference);
    }
 }
 

@@ -10,7 +10,8 @@
 
 \file TimeWarper.cpp
 \brief Contains definitions for IdentityTimeWarper, ShiftTimeWarper,
-LinearTimeWarper, LogarithmicTimeWarper classes
+LinearTimeWarper, LogarithmicTimeWarper, QuadraticTimeWarper, 
+Geometric TimeWarper classes
 
 *//*******************************************************************/
 
@@ -33,18 +34,103 @@ double LinearTimeWarper::Warp(double originalTime) const
    return originalTime*mScale + mShift;
 }
 
-double LogarithmicTimeWarper::Warp(double originalTime) const
+double LinearInputRateTimeWarper::Warp(double originalTime) const
 {
    double rate = mRateWarper.Warp(originalTime);
    return mTStart + mScale*log(rate/mRStart);
 }
 
-LogarithmicTimeWarper::LogarithmicTimeWarper(double tStart, double tEnd,
-                                             double rStart, double rEnd)
+LinearInputRateTimeWarper::LinearInputRateTimeWarper(double tStart, double tEnd,
+                                                     double rStart, double rEnd)
 : mRateWarper(tStart, rStart, tEnd, rEnd), mRStart(rStart),
   mTStart(tStart), mScale((tEnd-tStart)/(rEnd-rStart))
 {
    wxASSERT(mRStart != 0.0);
+   wxASSERT(tStart < tEnd);
+}
+
+double LinearOutputRateTimeWarper::Warp(double originalTime) const
+{
+   double scaledTime = mTimeWarper.Warp(originalTime);
+   return mTStart + mScale*(sqrt(mC1 + scaledTime * mC2) - mRStart);
+}
+
+LinearOutputRateTimeWarper::LinearOutputRateTimeWarper(double tStart, double tEnd,
+                                                       double rStart, double rEnd)
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), 
+  mRStart(rStart), mTStart(tStart), 
+  mScale(2.0*(tEnd-tStart)/(rEnd*rEnd-rStart*rStart)),
+  mC1(rStart*rStart), mC2(rEnd*rEnd-rStart*rStart)
+{
+   wxASSERT(rStart != rEnd);
+   wxASSERT(rStart > 0.0);
+   wxASSERT(rEnd > 0.0);
+   wxASSERT(tStart < tEnd);
+}
+
+double LinearInputStretchTimeWarper::Warp(double originalTime) const
+{
+   double scaledTime = mTimeWarper.Warp(originalTime);
+   return mTStart + mC1 * scaledTime * (1.0 + mC2 * scaledTime);
+}
+
+LinearInputStretchTimeWarper::LinearInputStretchTimeWarper(double tStart, double tEnd,
+                                                           double rStart, double rEnd)
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart), 
+  mC1((tEnd-tStart)/rStart), mC2(0.5*(rStart/rEnd - 1.0))
+{
+   wxASSERT(rStart > 0.0);
+   wxASSERT(rEnd > 0.0);
+   wxASSERT(tStart < tEnd);
+}
+
+double LinearOutputStretchTimeWarper::Warp(double originalTime) const
+{
+   double scaledTime = mTimeWarper.Warp(originalTime);
+   return mTStart + mC1 * (pow(mC2, scaledTime) - 1.0);
+}
+
+LinearOutputStretchTimeWarper::LinearOutputStretchTimeWarper(double tStart, double tEnd,
+                                                             double rStart, double rEnd)
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart), 
+  mC1((tEnd-tStart)/(rStart*log(rStart/rEnd))), mC2(rStart/rEnd)
+{
+   wxASSERT(rStart != rEnd);
+   wxASSERT(rStart > 0.0);
+   wxASSERT(rEnd > 0.0);
+   wxASSERT(tStart < tEnd);
+}
+
+double GeometricInputTimeWarper::Warp(double originalTime) const
+{
+   double scaledTime = mTimeWarper.Warp(originalTime);
+   return mTStart + mScale*(pow(mRatio,scaledTime) - 1.0);
+}
+
+GeometricInputTimeWarper::GeometricInputTimeWarper(double tStart, double tEnd,
+                                                   double rStart, double rEnd)
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart),
+  mScale((tEnd-tStart)/(log(rStart/rEnd)*rStart)), mRatio(rStart/rEnd)
+{
+   wxASSERT(rStart != rEnd);
+   wxASSERT(rStart > 0.0);
+   wxASSERT(rEnd > 0.0);
+   wxASSERT(tStart < tEnd);
+}
+
+double GeometricOutputTimeWarper::Warp(double originalTime) const
+{
+   double scaledTime = mTimeWarper.Warp(originalTime);
+   return mTStart + mScale*log(mC0 * scaledTime + 1.0);
+}
+
+GeometricOutputTimeWarper::GeometricOutputTimeWarper(double tStart, double tEnd,
+                                                     double rStart, double rEnd)
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart),
+  mScale((tEnd-tStart)/(rEnd-rStart)), mC0((rEnd-rStart)/rStart)
+{
+   wxASSERT(rStart > 0.0);
+   wxASSERT(rEnd > 0.0);
    wxASSERT(tStart < tEnd);
 }
 
