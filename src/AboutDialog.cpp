@@ -56,7 +56,9 @@ void AboutDialog::CreateCreditsList()
    // The Audacity 1.3.x and 2.0.x team: developers and support
    AddCredit(wxT("Richard Ash"), roleTeamDeveloper);
    AddCredit(wxT("Michael Chinen"), roleTeamDeveloper);
+#if IS_BETA
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
+#endif
    AddCredit(wxT("Roger Dannenberg"), roleTeamDeveloper);
    AddCredit(wxT("Al Dimond"), roleTeamDeveloper);
    AddCredit(wxT("Ruslan Ijbulatov"), roleTeamDeveloper);
