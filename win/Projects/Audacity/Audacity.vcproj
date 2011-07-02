@@ -560,6 +560,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\FFTMixedRadix.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FFTMixedRadix.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\FileFormats.cpp"
 				>
 			</File>
@@ -2563,7 +2571,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -2572,7 +2580,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -2581,7 +2589,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -2590,7 +2598,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;"
+						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
 					/>
 				</FileConfiguration>

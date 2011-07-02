@@ -142,7 +142,8 @@ public:
                        int numPixels, double t0, double pixelsPerSecond, bool &isLoadingOD);
    bool GetSpectrogram(float *buffer, sampleCount *where,
                        int numPixels,
-                       double t0, double pixelsPerSecond,
+                       double t0,
+                       double pixelsPerSecond,
                        bool autocorrelation);
    bool GetMinMax(float *min, float *max, double t0, double t1);
    bool GetRMS(float *rms, double t0, double t1);

@@ -7,6 +7,9 @@
 /* Define we are compiling Audacity itself, not an Audacity plug-in */
 #undef BUILDING_AUDACITY
 
+/* Define to enable sse */
+#undef ENABLE_SSE
+
 /* Define to 1 if you have the <alloca.h> header file. */
 #undef HAVE_ALLOCA_H
 

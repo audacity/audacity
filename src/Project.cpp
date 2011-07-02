@@ -132,6 +132,8 @@ scroll information.  It also has some status flags.
 #endif
 #include "LoadModules.h"
 
+#include "FFTMixedRadix.h"
+
 #include "Theme.h"
 #include "AllThemeResources.h"
 
@@ -803,7 +805,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mViewInfo.sbarScale = 1.0;
 
    UpdatePrefs();
-   
+
    // Some extra information
    mViewInfo.bIsPlaying = false;
    mViewInfo.bRedrawWaveform = false;

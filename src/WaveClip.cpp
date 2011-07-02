@@ -35,6 +35,7 @@ drawing).  Cache's the Spectrogram frequency samples.
 #include "Envelope.h"
 #include "Resample.h"
 #include "Project.h"
+#include "Experimental.h"
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
@@ -289,6 +290,29 @@ void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window, int l
    }
 }
 #endif // EXPERIMENTAL_USE_REALFFTF
+
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+#include "FFTMixedRadix.h"
+void ComputeSpectrumUsingMixedRadixFFT(float *in, float *out, int windowSize, float *window, MixedRadixFFTFunc FFTFunc)
+{
+   for(int i=0; i<windowSize; i++) {
+      in[i] *= window[i];
+   }
+   FFTFunc(in);
+   int half = windowSize>>1;
+   for(int k=0; k<half; k++) {
+      int k2 = k<<1;
+      float r = in[k2];
+      float i = in[k2+1];
+      float p = r*r + i*i;
+      if(p <= 0) {
+         out[k] = -160.0f;
+      } else {
+         out[k] = 10.0f*log10f(p);
+      }
+   }
+}
+#endif
 
 WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
 {
@@ -718,9 +742,9 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
 }
 
 bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
-                               int numPixels,
-                               double t0, double pixelsPerSecond,
-                               bool autocorrelation)
+                              int numPixels,
+                              double t0, double pixelsPerSecond,
+                              bool autocorrelation)
 {
    int minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), 0L);
    int maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
@@ -763,6 +787,30 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
       }
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
+
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+   if((mWindowType != windowType) || (mWindowSize != windowSize) || (mWindow == NULL) ) {
+      mWindowType = windowType;
+      mWindowSize = windowSize;
+      if(mWindow != NULL) delete[] mWindow;
+      mWindow = new float[mWindowSize];
+      for(int i=0; i<windowSize; i++) {
+         mWindow[i]=1.0;
+      }
+      WindowFunc(mWindowType, mWindowSize, mWindow);
+      // Scale the window function to give 0dB spectrum for 0dB sine tone
+      double ws=0;
+      for(int i=0; i<windowSize; i++) {
+         ws += mWindow[i];
+      }
+      if(ws > 0) {
+         ws = 2.0/ws;
+         for(int i=0; i<windowSize; i++) {
+            mWindow[i] *= ws;
+         }
+      }
+   }
+#endif
 
    if (mSpecCache &&
        mSpecCache->minFreqOld == minFreq &&
@@ -867,6 +915,9 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
       }
    }
 
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+   MixedRadixFFTFunc FFTFunc = GetMixedRadixFFTFunc(windowSize);
+#endif
    for (x = 0; x < mSpecCache->len; x++)
       if (recalc[x]) {
 
@@ -925,7 +976,11 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
                                mRate, &mSpecCache->freq[half * x],
                                autocorrelation, windowType);
             } else {
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+               ComputeSpectrumUsingMixedRadixFFT(buffer, &mSpecCache->freq[half * x], mWindowSize, mWindow, FFTFunc);
+#else
                ComputeSpectrumUsingRealFFTf(buffer, hFFT, mWindow, mWindowSize, &mSpecCache->freq[half * x]);
+#endif
             }
 #else  // EXPERIMENTAL_USE_REALFFTF
            ComputeSpectrum(buffer, windowSize, windowSize,

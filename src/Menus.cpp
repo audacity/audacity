@@ -82,6 +82,7 @@ simplifies construction of menu items.
 #include "Benchmark.h"
 #include "Screenshot.h"
 #include "ondemand/ODManager.h"
+#include "Spectrum.h"
 
 #include "Resample.h"
 #include "BatchProcessDialog.h"
@@ -95,6 +96,8 @@ simplifies construction of menu items.
 #include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
+
+#include "FFTMixedRadix.h"
 
 #include "Experimental.h"
 #include "PlatformCompatibility.h"
@@ -537,6 +540,15 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
    c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
 
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+   c->AddSeparator();
+   c->AddItem(wxT("Narrow Spectrum"), _("Narrow &Spectrum"), FN(OnNarrowSpectrum), wxT("Ctrl+["),
+              NarrowSpectrumAvailableFlag,
+              NarrowSpectrumAvailableFlag);
+   c->AddItem(wxT("Broaden Spectrum"), _("Broaden &Spectrum"), FN(OnBroadenSpectrum), wxT("Ctrl+]"),
+              BroadenSpectrumAvailableFlag,
+              BroadenSpectrumAvailableFlag);
+#endif
    c->AddSeparator();
 
    c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
@@ -1475,6 +1487,14 @@ wxUint32 AudacityProject::GetUpdateFlags()
 
    if (GetZoom() > gMinZoom && (flags & TracksExistFlag))
       flags |= ZoomOutAvailableFlag;
+
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+   //spectrum zoom
+   int size = gPrefs->Read(wxT("/Spectrum/FFTSize"),256);
+   int index = FFTMixedRadixGetIndex(size);
+   if(index > 0) flags |= NarrowSpectrumAvailableFlag;
+   if(index < nFFTMixedRadixN-1) flags |= BroadenSpectrumAvailableFlag;
+#endif
 
    if ((flags & LabelTracksExistFlag) && LabelTrack::IsTextClipSupported())
       flags |= TextClipFlag;
@@ -4475,6 +4495,30 @@ void AudacityProject::OnZoomSel()
    Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) / (mViewInfo.sel1 - mViewInfo.sel0));
    TP_ScrollWindow(mViewInfo.sel0);
 }
+
+#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
+void AudacityProject::OnNarrowSpectrum()
+{
+   int size = gPrefs->Read(wxT("/Spectrum/FFTSize"),256);
+   int index = FFTMixedRadixGetIndex(size);
+   if(index > 0) index--;
+   fprintf(stderr,"%d %d\n",size,index);
+   size = FFTMixedRadixGetSize(index);
+   gPrefs->Write(wxT("/Spectrum/FFTSize"),size);
+   RedrawProject();
+}
+
+void AudacityProject::OnBroadenSpectrum()
+{
+   int size = gPrefs->Read(wxT("/Spectrum/FFTSize"),256);
+   int index = FFTMixedRadixGetIndex(size);
+   if(index < nFFTMixedRadixN-1) index++;
+   size = FFTMixedRadixGetSize(index);
+   fprintf(stderr,"%d %d\n",size,index);
+   gPrefs->Write(wxT("/Spectrum/FFTSize"),size);
+   RedrawProject();
+}
+#endif
 
 void AudacityProject::OnShowClipping()
 {
