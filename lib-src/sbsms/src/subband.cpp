@@ -7,999 +7,1221 @@ using namespace std;
 
 namespace _sbsms_ {
 
-SubBand :: SubBand(SubBand *parent, int band, int channels, SBSMSQuality *quality, bool bSynthesize)
+#define SUB_BUF_SIZE 4096
+
+bool subband :: isWriteReady()
 {
-  if(band<quality->params.bands-1) {
-    sub = new SubBand(this,band+1,channels,quality,bSynthesize);
-  } else {
-    sub = NULL;
+  return (getFramesAtFront() <= 8);
+}
+
+bool subband :: isAddReady()
+{
+  return addInit(false)?true:false;
+}
+
+bool subband :: isMarkReady()
+{
+  bool bReady = false;
+  for(int c=0;c<channels;c++) {
+    if(markInit(false,c)) 
+      bReady = true;
   }
+  return bReady;
+}
+
+bool subband :: isAssignReady()
+{
+  bool bReady = false;
+  for(int c=0;c<channels;c++) {
+    if(assignInit(false,c)) 
+      bReady = true;
+  }
+  return bReady;
+}
+
+bool subband :: isSynthReady()
+{
+  return synthInit(false)?true:false;
+}
+
+subband :: subband(subband *parent, unsigned short M, int channels, sbsms_quality *quality, int latency, bool bPreAnalyze, TrackAllocator *ta, PeakAllocator *pa)
+{
   this->quality = quality;
+  this->ta = ta;
+  this->pa = pa;
+  int k = ilog2(M);
   this->channels = channels;
   this->parent = parent;
-  this->band = band;
-  int M = (1<<band);
-  int M_MAX = 1<<(quality->params.bands-1);
-  this->N = quality->params.N[band];
-  int N0 = quality->params.N0[band];
-  int N1 = quality->params.N1[band];  
-  int N2 = quality->params.N2[band];
-  this->res = quality->params.res[band];
-  this->resMask = res - 1;
-  this->bSynthesize = bSynthesize;
+  this->N = quality->N[k];
+  this->M = M;
+  this->s = quality->S[k];
+  this->res = quality->res[k];
+  real pad = quality->pad[k];
+  if(M<quality->M_MAX) 
+    sub = new subband(this,M*2,channels,quality,latency,bPreAnalyze,ta,pa);
+  else 
+    sub = NULL;
+  int Nlo = sub?quality->N[k+1]:0;
+  
   nGrainsPerFrame = res;
   if(sub) nGrainsPerFrame *= sub->nGrainsPerFrame;
-  inputFrameSize = M_MAX*quality->params.H;
-  h = inputFrameSize / (M*nGrainsPerFrame);
-  nToDrop0 = (quality->getMaxPresamples()/M - N0/2);
-  nToDrop1 = (quality->getMaxPresamples()/M - N1/2);
-  nToDrop2 = (quality->getMaxPresamples()/M - N2/2);
-  nToWriteForGrain = (quality->getMaxPresamples()/M + N2/2);
-  nToPrepad1 = N1/2;
-  nToPrepad0 = N0/2;
-  nReadFromOutputFrame = 0;
-  for(int i=0; i<3; i++) {
-    nFramesAnalyzed[i] = 0;
+  
+  if(sub) resTotal = 2*sub->resTotal;
+  else resTotal = 1;
+
+  nLatencyOriginal = latency;
+  gPrev = NULL;
+
+  init();
+
+  // sms 
+  in0 = new GrainBuf(N, h, pad*quality->P[k]);
+  in1 = new GrainBuf(N, h, pad);
+  in2 = new GrainBuf(N, h, pad*quality->Q[k]);
+
+  // synthesize
+  smser = new sms(N,(short)M,(short)quality->M_MAX,res,latency,quality->P[k],quality->Q[k],pad,Nlo,channels,ta,pa);
+
+  if(!parent && bPreAnalyze) {
+    this->bPreAnalyze = true;
+    inPre = new GrainBuf(N, h, 2);
+    x1[0] = grain :: create(N,pad);
+    x1[1] = grain :: create(N,pad);
+    x2[0] = grain :: create(N,pad);
+    x2[1] = grain :: create(N,pad);
+  } else {
+    this->bPreAnalyze = false;
+    inPre = NULL;
   }
-  for(int c=0; c<channels; c++) {
-    nFramesExtracted[c] = 0;
-    nFramesMarked[c] = 0;
-    nFramesAssigned[c] = 0;
-    nFramesTrialed2[c] = 0;
-    nFramesTrialed1[c] = 0;
-    nFramesRendered[c] = 0;
-    nGrainsMarked[c] = 0;
-    nGrainsAssigned[c] = 0;
-    nGrainsTrialed2[c] = 0;
-    nGrainsTrialed1[c] = 0;
-    nGrainsAdvanced[c] = 0;
-  }
-  nGrainsWritten = 0;
-  nFramesAdjusted2 = 0;
-  nGrainsAdjusted2 = 0;
-  nFramesAdjusted1 = 0;
-  nGrainsAdjusted1 = 0;
-  nFramesRead = 0;
-  totalSizef = 0.0;
+
   if(sub) {
-    samplesSubIn = new SampleBuf(NDownSample/2);
-    grainsIn = new GrainBuf(NDownSample, NDownSample/SDownSample, NDownSample, hann);
-    downSampledGrainAllocator = new GrainAllocator(NDownSample/2,NDownSample/2,hann);
-  }
-  if(band >= minTrial1Band) {
-    grains[0] = new GrainBuf(N, h, N0, hannpoisson);
+    subOut = new SampleBuf(0);
+
+    // receive
+    in = new GrainBuf(N, N/s, 1);
+
+    // samples to sub
+    subIn = new SampleBuf(N/2);
+
+    // output samples
+    outMixer = new Mixer(smser,subOut);
   } else {
-    grains[0] = NULL;
+    outMixer = smser;
   }
-  if(band >= minTrial2Band) {
-    grains[1] = new GrainBuf(N, h, N1, hannpoisson);
-  } else {
-    grains[1] = NULL;
-  }
-  grains[2] = new GrainBuf(N, h, N2, hannpoisson);
-  for(int c=0; c<channels; c++) {
-    if(band >= minTrial1Band) {
-      analyzedGrains[0][c] = new GrainBuf(N, h, N0, hannpoisson);
-    } else {
-      analyzedGrains[0][c] = NULL;
-    }
-    if(band >= minTrial2Band) {
-      analyzedGrains[1][c] = new GrainBuf(N, h, N1, hannpoisson);
-    } else {
-      analyzedGrains[1][c] = NULL;
-    }
-    analyzedGrains[2][c] = new GrainBuf(N, h, N2, hannpoisson);
-  }
+
 #ifdef MULTITHREADED
   pthread_mutex_init(&dataMutex, NULL);
-  for(int i=0; i<3; i++) {
-    pthread_mutex_init(&grainMutex[i], NULL);
-  }
+  pthread_mutex_init(&bufferMutex, NULL);
 #endif
-  sms = new SMS(sub?sub->sms:NULL,N,band,quality->params.bands-1,h,res,N0,N1,N2,channels,analyzedGrains[2][0]->getWindowFFT());
-  nTrial2Latency = sms->getTrial2Latency() / nGrainsPerFrame + 1;
-  if(sms->getTrial2Latency() % nGrainsPerFrame) nTrial2Latency++;
-  int nAdjust2LatencyGrains = N1/(2*h);
-  nAdjust2Latency = nAdjust2LatencyGrains / nGrainsPerFrame + 1;
-  if(nAdjust2LatencyGrains % nGrainsPerFrame) nAdjust2Latency++;
-  int nAdjust1LatencyGrains = N0/(2*h);
-  nAdjust1Latency = nAdjust1LatencyGrains / nGrainsPerFrame + 1;
-  if(nAdjust1LatencyGrains % nGrainsPerFrame) nAdjust1Latency++;
-  if(sub) nTrial2Latency = max(nTrial2Latency,sub->nTrial2Latency);
-  if(sub) nAdjust2Latency = max(nAdjust2Latency,sub->nAdjust2Latency);
-  if(sub) nAdjust1Latency = max(nAdjust1Latency,sub->nAdjust1Latency);
-  nMarkLatency = 1;
-  nAssignLatency = 1;
-  nTrial1Latency = 1;
-  nRenderLatency = 1;
-  if(band==0) {
-    SubBand *s = sub;
-    while(s) {
-      s->nTrial2Latency = nTrial2Latency;
-      s->nAdjust2Latency = nAdjust2Latency;
-      s->nAdjust1Latency = nAdjust1Latency;
-      s = s->sub;
-    }
-  }
-#ifdef MULTITHREADED
-  nWriteSlack = 6;
-  nAnalyzeSlack = 6;
-  nExtractSlack = 6;
-  nMarkSlack = 6;
-  nAssignSlack = 6;
-  nTrial2Slack = 6;
-  nAdjust2Slack = 6;
-  nTrial1Slack = 6;
-  nAdjust1Slack = 6;
-  nRenderSlack = 6;
-#else
-  nWriteSlack = 2;
-  nAnalyzeSlack = 2;
-  nExtractSlack = 2;
-  nMarkSlack = 2;
-  nAssignSlack = 2;
-  nTrial2Slack = 2;
-  nAdjust2Slack = 2;
-  nTrial1Slack = 2;
-  nAdjust1Slack = 2;
-  nRenderSlack = 2;
-#endif
-  synthRenderer = NULL;
-  outMixer = NULL;
-  if(bSynthesize) {
-    synthRenderer = new SynthRenderer(channels,M*h);
-    renderers.push_back(synthRenderer);
-    if(sub) {
-      samplesSubOut = new SampleBuf(0);
-      outMixer = new Mixer(synthRenderer,samplesSubOut);
-    } else {
-      outMixer = synthRenderer;
-    }
-  }       
+  
 }
 
-SubBand :: ~SubBand() 
+long subband :: getFramePos()
 {
-  for(int i=0; i<3; i++) {
-    if(grains[i]) {
-      delete grains[i];
-    }
-    for(int c=0; c<channels; c++) {
-      if(analyzedGrains[i][c]) {
-        delete analyzedGrains[i][c];
-      }
-    }
+  return nFramesRead;  
+}
+
+void subband :: seek(long framePos) {
+  if(sub) sub->seek(framePos);
+  nFramesWritten = framePos;
+  nFramesAdded = framePos;
+  nFramesMarked[0] = framePos;
+  nFramesMarked[1] = framePos;
+  nFramesAssigned[0] = framePos;
+  nFramesAssigned[1] = framePos;
+  nFramesSynthed = framePos;
+  nFramesRead = framePos;
+}
+
+void subband :: reset() {
+  if(sub) sub->reset();
+  init();
+  inputFrameSize.clear();
+  outputFrameSize.clear();
+  aForH.clear();
+  aSynth.clear();
+  fSynth.clear();
+  frameRatio.clear();
+  in0->clear();
+  in1->clear();
+  in2->clear();
+  if(sub) {
+    in->clear();
+    subIn->clear();
+    subOut->clear();
   }
-  delete sms;
+  smser->reset();
+}
+
+void subband :: init()
+{
+  int ssms = (N*nGrainsPerFrame)/(resTotal*quality->H[2]);
+  h = N/ssms;
+  lastInputFrameSize = h*nGrainsPerFrame;
+  lastFrameA = 1.0f;
+  lastFrameRatio = 1.0f;
+  nLatency = nLatencyOriginal;
+  nToDrop = (quality->N[quality->bands-1]/quality->H[2]*nGrainsPerFrame-ssms)/2;
+  nDropped = 0;
+  nFramesSkipped = 0;
+  nFramesWritten = 0;
+  nFramesAdded = 0;
+  nFramesMarked[0] = 0;
+  nFramesMarked[1] = 0;
+  nFramesAssigned[0] = 0;
+  nFramesAssigned[1] = 0;
+  nFramesSynthed = 0;
+  nFramesRead = 0;
+  nTrackPointsWritten = 0;
+  nTrackPointsMarked[0] = 0;
+  nTrackPointsMarked[1] = 0;
+  nTrackPointsAssigned[0] = 0;
+  nTrackPointsAssigned[1] = 0;
+  nTrackPointsStarted[0] = 0;
+  nTrackPointsStarted[1] = 0;
+  nTrackPointsAdvanced[0] = 0;
+  nTrackPointsAdvanced[1] = 0;
+
+  samplesQueued = 0;
+
+  bWritingComplete = false;
+  
+  totalSizef = 0.0;
+}
+
+subband :: ~subband() 
+{
+  delete in0;
+  delete in1;
+  delete in2;
+  delete smser;
+
+  if(inPre) {
+    delete inPre;
+    grain ::destroy(x1[0]);
+    grain ::destroy(x1[1]);
+    grain ::destroy(x2[0]);
+    grain ::destroy(x2[1]);
+  }
   if(sub) {
     delete sub;
-    delete grainsIn;
-    delete samplesSubIn;
-    delete downSampledGrainAllocator;
-    if(bSynthesize) {
-      delete samplesSubOut;
-      delete outMixer;
-    }
+    delete in;
+    delete subIn;
+    delete subOut;
+    delete outMixer;
   }
-  if(bSynthesize) delete synthRenderer;
 }
 
-void SubBand :: addRenderer(SBSMSRenderer *renderer)
+void subband :: setFrameSize(int iFrameSize, real a, real ratio)
 {
-  if(sub) sub->addRenderer(renderer);
-  renderers.push_back(renderer);
+  real oFrameSizef = a*(real)iFrameSize;
+  totalSizef += oFrameSizef;
+  long oFrameSizei = round2int(totalSizef);
+  totalSizef -= oFrameSizei;
+  inputFrameSize.write(iFrameSize);
+  outputFrameSize.write(oFrameSizei);
+  lastInputFrameSize = iFrameSize;
+  lastOutputFrameSize = oFrameSizei;
+  samplesQueued += oFrameSizei * ratio;
+  //samplesQueued += oFrameSizei;
 }
 
-void SubBand :: removeRenderer(SBSMSRenderer *renderer)
+void subband :: setH(real ratio)
 {
-  if(sub) sub->removeRenderer(renderer);
-  renderers.remove(renderer);
+  real a = aForH.read(aForH.readPos);
+  if(a > 4.0)
+    h = quality->H[0];
+  else if(a > 2.0 && a <= 4.0)
+    h = quality->H[1];
+  else if(a >= 0.5 && a <= 2.0)
+    h = quality->H[2];
+  else if(a >= 0.25 && a < 0.5)
+    h = quality->H[3];
+  else
+    h = quality->H[4];
+
+  h = (h*resTotal)/nGrainsPerFrame;
+  in0->h = h;
+  in1->h = h;
+  in2->h = h;
+  if(inPre) inPre->h = h;
+  if(!parent) 
+    setFrameSize(h*nGrainsPerFrame,a,ratio);
+  aForH.advance(1);
 }
 
-void SubBand :: setStretch(float stretch)
+void subband :: setAForH(real a)
 {
+  aForH.write(a);
+  if(sub) sub->setAForH(a);
+}
+
+void subband :: setA(real a)
+{
+  aSynth.write(a);
+  if(sub) sub->setA(a);
+  lastFrameA = a;
+}
+
+void subband :: setF(real f)
+{
+  fSynth.write(f);
+  if(sub) sub->setF(f);
+}
+
+void subband :: setAMod(real a)
+{
+  aMod.write(a);
+}
+
+void subband :: setRatio(real ratio)
+{
+  frameRatio.write(ratio);
+  lastFrameRatio = ratio;
+}
+
+void subband :: write_(audio *inBuf, long n, real a, real ratio) 
+{
+  long nwritten = 0;
 #ifdef MULTITHREADED
   pthread_mutex_lock(&dataMutex);
 #endif
-  if(!parent) {
-    float oFrameSizef = (stretch==0.0f?1.0f:stretch)*(float)inputFrameSize;
-    totalSizef += oFrameSizef;
-    long oFrameSizei = lrintf(totalSizef);
-    totalSizef -= oFrameSizei;
-    outputFrameSize.write(oFrameSizei);
+
+  while(nwritten<n) {
+    long ntowrite = min((long)h,n-nwritten);
+    long ng = in1->write(inBuf+nwritten, ntowrite);
+    in0->write(inBuf+nwritten, ntowrite);
+    in2->write(inBuf+nwritten, ntowrite);
+    nwritten += ntowrite;
+    long n_advance = 0;
+    for(int k=0;k<ng;k++) {
+      if(nDropped < nToDrop) {
+        n_advance++;
+        nDropped++;
+      } else {
+	if(!parent && nTrackPointsWritten%nGrainsPerFrame == 0) {
+    real amod;
+    if(bPreAnalyze && aPreAnalysis.n_readable()) {
+	    amod = aPreAnalysis.read(aPreAnalysis.readPos);
+	    aPreAnalysis.advance(1);
+	  } else {
+      amod = 1.0f;
+	  }
+	  setA(amod*a);
+    setAMod(amod);	 
+	  setRatio(ratio);
+    setF(1.0f/ratio);
+	}
+	if(!parent && (nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
+	  setAForH(a);
+	}
+	if((nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
+	  setH(ratio);
+	  nFramesWritten++;
+	}
+	nTrackPointsWritten++;
+      }
+    }
+    if(n_advance) {
+      in0->advance(n_advance);
+      in1->advance(n_advance);
+      in2->advance(n_advance);
+    }
   }
-  stretchRender.write(stretch);
+
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&dataMutex);
 #endif
-  if(sub) sub->setStretch(stretch);
+  
+  if(sub) {
+    in->write(inBuf, n);
+    long ng_read = 0;
+    for(int k=in->readPos;k<in->writePos;k++) {
+      grain *gdown = in->read(k)->downsample();
+      subIn->write(gdown, N/2/s);
+      grain :: destroy(gdown);
+      ng_read++;
+    }
+    in->advance(ng_read);  
+    long n_tosub = subIn->n_readable();
+    audio *subBuf = subIn->getReadBuf();
+    n_tosub = subIn->read(subBuf,n_tosub);
+    sub->write_(subBuf,n_tosub,a,ratio);
+    subIn->advance(n_tosub);
+  }
 }
 
-void SubBand :: setPitch(float f)
+void subband :: stepAddFrame()
 {
-  if(sub) sub->setPitch(f);
-#ifdef MULTITHREADED
-    pthread_mutex_lock(&dataMutex);
-#endif
-  pitchRender.write(f);
-#ifdef MULTITHREADED
-    pthread_mutex_unlock(&dataMutex);
-#endif    
+  if(sub) sub->stepAddFrame();
+  nFramesAdded++;
 }
 
-void SubBand :: stepAnalyzeFrame(int i)
-{
-  if(sub) sub->stepAnalyzeFrame(i);
-  nFramesAnalyzed[i]++;
-}
-
-void SubBand :: stepExtractFrame(int c)
-{
-  if(sub) sub->stepExtractFrame(c);
-  nFramesExtracted[c]++;
-}
-
-void SubBand :: stepMarkFrame(int c)
+void subband :: stepMarkFrame(int c)
 {
   if(sub) sub->stepMarkFrame(c);
   nFramesMarked[c]++;
 }
 
-void SubBand :: stepAssignFrame(int c)
+void subband :: stepAssignFrame(int c)
 {
   if(sub) sub->stepAssignFrame(c);
   nFramesAssigned[c]++;
 }
 
-void SubBand :: stepTrial2Frame(int c)
+void subband :: stepSynthFrame()
 {
-  if(sub) sub->stepTrial2Frame(c);
-  nFramesTrialed2[c]++;
-}
-
-void SubBand :: stepAdjust2Frame()
-{
-  if(sub) sub->stepAdjust2Frame();
-  nFramesAdjusted2++;
-}
-void SubBand :: stepTrial1Frame(int c)
-{
-  if(sub) sub->stepTrial1Frame(c);
-  nFramesTrialed1[c]++;
-}
-
-void SubBand :: stepAdjust1Frame()
-{
-  if(sub) sub->stepAdjust1Frame();
+  if(sub) sub->stepSynthFrame();
 #ifdef MULTITHREADED
   pthread_mutex_lock(&dataMutex);
 #endif
-  stretchRender.advance(1);
-  pitchRender.advance(1);
+  if(!parent) aMod.advance(1);
+  aSynth.advance(1);
+  fSynth.advance(1);
+  nFramesSynthed++;
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&dataMutex);
 #endif
-  nFramesAdjusted1++;
 }
 
-void SubBand :: stepRenderFrame(int c)
+void subband :: stepReadFrame()
 {
-  if(sub) sub->stepRenderFrame(c);
-  nFramesRendered[c]++;
-}
-
-void SubBand :: stepReadFrame()
-{
-  if(sub) sub->stepReadFrame();
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
   nFramesRead++;
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
 }
 
-bool SubBand :: writeInit()
-{
-  long n = getFramesAtFront(0);
-  n = min(n,getFramesAtFront(1));
-  n = min(n,getFramesAtFront(2));
-  return (n <= nWriteSlack);
-}
-
-long SubBand :: readInit()
-{
-  long n = nFramesRendered[0];
-  for(int c=1; c<channels; c++) {
-    n = max(0L,min(1L,min(n,nFramesRendered[c]-nFramesRead)));
-  }
-  if(sub) n = min(n,sub->readInit());
-  return n;
-}
-
-long SubBand :: analyzeInit(int i, bool bSet, long n)
-{
-  if(!parent) {
-    n = getFramesAtFront(i);
-    for(int c=0; c<channels; c++) {
-      n = max(0L,min(1L,min(n,nAnalyzeSlack-(long)(nFramesAnalyzed[i]-nFramesExtracted[c]))));
-    }
-  }
-  if(bSet) {
-    nGrainsToAnalyze[i] = n * nGrainsPerFrame;
-    if(sub) {
-      sub->analyzeInit(i,bSet,n);
-    }
-  }
-  return n;
-}
-
-long SubBand :: extractInit(int c, bool bSet)
+long subband :: addInit(bool bSet)
 {
   long n;
-  if(sub) n = res*sub->extractInit(c,bSet);
-  if(!sub) {
-    n = max(0L,min(1L,nExtractSlack+nMarkLatency-(long)(nFramesExtracted[c]-nFramesMarked[c])));
-    for(int i=0; i<3; i++) {
-      n = max(0L,min(1L,min(n,(long)(nFramesAnalyzed[i]-nFramesExtracted[c]))));
+  if(sub) n = res*sub->addInit(bSet);
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  if(!sub) n = max((long)0,min((long)1,min(in1->n_readable(),4-(nFramesAdded-getFramesMarked()))));
+  if(bSet) {
+    nTrackPointsToAdd = n;
+  }
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+void subband :: addTrackPoints()
+{
+  if(sub) sub->addTrackPoints();
+  vector<grain*> g0V;
+  vector<grain*> g1V;
+  vector<grain*> g2V;
+
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  for(int k=in1->readPos;k<in1->readPos+nTrackPointsToAdd;k++) {
+    grain *g0 = in0->read(k);
+    grain *g1 = in1->read(k);
+    grain *g2 = in2->read(k);
+    g0V.push_back(g0);
+    g1V.push_back(g1);
+    g2V.push_back(g2);
+  }
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+
+  int size = (int)g1V.size();
+  for(int k=0;k<size;k++) {
+    smser->addTrackPoints(g0V[k],g1V[k],g2V[k]);
+  }
+
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  in0->advance(nTrackPointsToAdd);
+  in1->advance(nTrackPointsToAdd);
+  in2->advance(nTrackPointsToAdd);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+
+}
+
+long subband :: markInit(bool bSet, int c)
+{
+  long n;
+  if(sub) n = res*sub->markInit(bSet,c);
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  if(!sub) n = max((long)0,min((long)1,min(nFramesAdded-nFramesMarked[c]-1,4-(nFramesMarked[c]-nFramesAssigned[c]))));
+  if(bSet) {
+    nTrackPointsToMark[c] = n;
+  }
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+void subband :: markDuplicates(int c)
+{
+  long ntodo = parent?1:nTrackPointsToMark[c];
+  long ndone = 0;
+  while(ndone<ntodo) {  
+    smser->markDuplicates(nTrackPointsMarked[c],
+                          parent?parent->smser:NULL,
+                          sub?sub->smser:NULL,
+                          c);
+    if(nTrackPointsMarked[c]%res==1 || res==1) {
+      if(sub) sub->markDuplicates(c);
     }
+    ndone++;
+    nTrackPointsMarked[c]++;
   }
-  if(bSet) {
-    nGrainsToExtract[c] = n;
-  }
-  return n;
 }
 
-long SubBand :: markInit(int c, bool bSet)
+long subband :: assignInit(bool bSet, int c)
 {
   long n;
-  if(sub) n = res*sub->markInit(c,bSet);
-  if(!sub) n = max(0L,min(1L,min((long)(nFramesExtracted[c]-nFramesMarked[c])-nMarkLatency,
-                                 nMarkSlack+nAssignLatency-(long)(nFramesMarked[c]-nFramesAssigned[c]))));
+  if(sub) n = res*sub->assignInit(bSet,c);
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  if(!sub) n = max((long)0,min((long)1,min(nFramesMarked[c]-nFramesAssigned[c]-1,4+nLatency-(nFramesAssigned[c]-nFramesSynthed))));
   if(bSet) {
-    nGrainsToMark[c] = n;
-  }
-  return n;
-}
-
-long SubBand :: assignInit(int c, bool bSet)
-{
-  long n;
-  if(sub) {
-    n = res * sub->assignInit(c,bSet);
-  } else {
-    n = max(0L,min(1L,min((long)(nFramesMarked[c]-nFramesAssigned[c])-nAssignLatency,
-                          nAssignSlack+nTrial2Latency-(long)(nFramesAssigned[c]-nFramesTrialed2[c]))));
-  }
-  if(bSet) {
-    nGrainsToAdvance[c] = n;
-    nGrainsToAssign[c] = n;
-    if(n) {
+    nTrackPointsToAdvance[c] = n;
+    nTrackPointsToAssign[c] = n;
+    if(nTrackPointsToAssign[c]) {
       if(nFramesAssigned[c]==0) {
-        sms->start(0,c);
+        smser->assignTrackPoints(nTrackPointsAssigned[c]++,
+                                 parent?parent->smser:NULL,
+                                 sub?sub->smser:NULL,
+                                 c);
+        smser->startNewTracks(nTrackPointsStarted[c]++,c);
       }      
     }
   }
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
   return n;
 }
 
-long SubBand :: trial2Init(int c, bool bSet)
+long subband :: assignTrackPoints(int c) 
 {
-  long n;
-  if(sub) {
-    n = res * sub->trial2Init(c,bSet);
-  } else {
-    n = max(0L,min(1L,min((long)(nFramesAssigned[c]-nFramesTrialed2[c])-nTrial2Latency,
-                          nTrial2Slack+nAdjust2Latency-(long)(nFramesTrialed2[c]-nFramesAdjusted2))));
-  }
-  if(bSet) {
-    nGrainsToTrial2[c] = n;
-    nGrainsTrialed2[c] = 0;
-  }
-  return n;
-}
-
-long SubBand :: adjust2Init(bool bSet)
-{
-  long n;
-  if(sub) {
-    n = res * sub->adjust2Init(bSet);
-  } else {
-    n = 1;
-    for(int c=0; c<channels; c++) {
-      n = min(n,(long)(nFramesTrialed2[c]-nFramesAdjusted2-nAdjust2Latency));
-      n = min(n,nAdjust2Slack+nTrial1Latency-(long)(nFramesAdjusted2-nFramesTrialed1[c]));
-    }
-    n = max(0L,n);
-  }
-  if(bSet) {
-    nGrainsToAdjust2 = n;
-    nGrainsAdjusted2 = 0;
-  }
-  return n;
-}
-
-long SubBand :: trial1Init(int c, bool bSet)
-{
-  long n;
-  if(sub) {
-    n = res * sub->trial1Init(c,bSet);
-  } else {
-    n = max(0L,min(1L,min((long)(nFramesAdjusted2-nFramesTrialed1[c])-nTrial1Latency,
-                          nTrial1Slack+nAdjust1Latency-(long)(nFramesTrialed1[c]-nFramesAdjusted1))));
-  }
-  if(bSet) {
-    nGrainsToTrial1[c] = n;
-    nGrainsTrialed1[c] = 0;
-  }
-  return n;
-}
-
-long SubBand :: adjust1Init(bool bSet)
-{
-  long n;
-  if(sub) {
-    n = res * sub->adjust1Init(bSet);
-  } else {
-    n = 1;
-    for(int c=0; c<channels; c++) {
-      n = min(n,(long)(nFramesTrialed1[c]-nFramesAdjusted1-nAdjust1Latency));
-      n = min(n,nAdjust1Slack+nRenderLatency-(long)(nFramesAdjusted1-nFramesRendered[c]));
-    }
-    n = max(0L,n);
-  }
-  if(bSet) {
-    nGrainsToAdjust1 = n;
-    nGrainsAdjusted1 = 0;
-  }
-  return n;
-}
-
-long SubBand :: renderInit(int c, bool bSet) 
-{
-  long n;
-  if(sub) {
-    n = res * sub->renderInit(c,bSet);
-  } else {
-    n = max(0L,min(1L,min((long)(nFramesAdjusted1-nFramesRendered[c])-nRenderLatency,
-                          nRenderSlack-(long)(nFramesRendered[c]-nFramesRead))));
-  }
-  if(bSet) {
-    nGrainsRendered[c] = 0;
-    nGrainsToRender[c] = n;
-  }
-  return n;
-}
-
-void SubBand :: analyze(int i)
-{
-  if(sub) sub->analyze(i);
-  if(grains[i]) {
-    vector<grain*> gV;
-#ifdef MULTITHREADED
-    pthread_mutex_lock(&grainMutex[i]);
-#endif
-    for(int k=grains[i]->readPos;k<grains[i]->readPos+nGrainsToAnalyze[i];k++) {
-      grain *g = grains[i]->read(k);
-      gV.push_back(g);
-    }
-#ifdef MULTITHREADED
-    pthread_mutex_unlock(&grainMutex[i]);
-#endif
-
-    for(int k=0;k<nGrainsToAnalyze[i];k++) {
-      gV[k]->analyze();
-    }
-
-#ifdef MULTITHREADED
-    pthread_mutex_lock(&grainMutex[i]);
-#endif
-    for(int k=0;k<nGrainsToAnalyze[i];k++) {
-      for(int c=0; c<channels; c++) {
-        analyzedGrains[i][c]->write(gV[k]);
-      }
-    }
-    grains[i]->advance(nGrainsToAnalyze[i]);
-#ifdef MULTITHREADED
-    pthread_mutex_unlock(&grainMutex[i]);
-#endif
-  }
-}
-
-void SubBand :: extract(int c)
-{
-  if(sub) sub->extract(c);
-  vector<grain*> gV[3];
-
-  for(int i=0; i<3; i++) {
-    if(grains[i]) {
-#ifdef MULTITHREADED
-      pthread_mutex_lock(&grainMutex[i]);
-#endif    
-      for(int k=analyzedGrains[i][c]->readPos;
-          k<analyzedGrains[i][c]->readPos+nGrainsToExtract[c];
-          k++) {
-        grain *g = analyzedGrains[i][c]->read(k);
-        gV[i].push_back(g);
-      }
-#ifdef MULTITHREADED
-      pthread_mutex_unlock(&grainMutex[i]);
-#endif
-    }
-  }
-
-  for(int k=0;k<nGrainsToExtract[c];k++) {
-    grain *g0 = (grains[0]?gV[0][k]:NULL);
-    grain *g1 = (grains[1]?gV[1][k]:NULL);
-    grain *g2 = gV[2][k];
-    sms->add(g0,g1,g2,c);
-  }
-
-  for(int i=0; i<3; i++) {
-    if(grains[i]) {
-#ifdef MULTITHREADED
-      pthread_mutex_lock(&grainMutex[i]);
-#endif
-      analyzedGrains[i][c]->advance(nGrainsToExtract[c]);
-#ifdef MULTITHREADED
-      pthread_mutex_unlock(&grainMutex[i]);
-#endif
-    }
-  }
-}
-
-void SubBand :: mark(int c)
-{
-  long ntodo = parent?1:nGrainsToMark[c];
+  long ntodo = parent?1:nTrackPointsToAssign[c];
   long ndone = 0;
   while(ndone<ntodo) {  
-    sms->mark(nGrainsMarked[c],c);
-    if(nGrainsMarked[c]&resMask || res==1) {
-      if(sub) sub->mark(c);
+    if(nTrackPointsAssigned[c]%res==0) {
+      if(sub) sub->assignTrackPoints(c);
+      smser->assignTrackPoints(nTrackPointsAssigned[c]++,
+                               parent?parent->smser:NULL,
+                               sub?sub->smser:NULL,
+                               c);
+      if(!parent) startNewTracks(c);
+    } else {
+      smser->assignTrackPoints(nTrackPointsAssigned[c]++,
+                               parent?parent->smser:NULL,
+                               sub?sub->smser:NULL,
+                               c);
     }
+    if(parent && parent->res != 1)
+      parent->smser->startNewTracks(parent->nTrackPointsStarted[c]++,c);
+    
     ndone++;
-    nGrainsMarked[c]++;
+  }
+  
+  return nTrackPointsAssigned[c];
+}
+
+void subband :: startNewTracks(int c)
+{
+  if(!parent||!sub||nTrackPointsAssigned[c]%2==1||res==1) {
+    smser->startNewTracks(nTrackPointsStarted[c]++,c);
+  }
+  if(sub&&(nTrackPointsAssigned[c]%2==1||res==1)) {
+    sub->startNewTracks(c);
   }
 }
 
-void SubBand :: assign(int c) 
+void subband :: advanceTrackPoints(int c)
 {
-  for(int ndone=0; ndone<nGrainsToAssign[c]; ndone++) {
-    assignStart(c);
-    bool bCont = true;
-    while(bCont) {
-      assignInit(c);
-      assignFind(c);
-      bCont = assignConnect(c);
-    }
-    assignStep(c);
-    splitMerge(c);
-  }
-}
-
-void SubBand :: assignStart(int c)
-{
-  if(sub && !(nGrainsAssigned[c]&resMask)) sub->assignStart(c);
-  sms->assignStart(nGrainsAssigned[c],c);
-}
-
-void SubBand :: assignInit(int c)
-{
-  if(sub) sub->assignInit(c);
-  sms->assignInit(nGrainsAssigned[c],c);
-}
-
-void SubBand :: assignFind(int c)
-{
-  if(sub) sub->assignFind(c);
-  sms->assignFind(nGrainsAssigned[c],c);
-}
-
-bool SubBand :: assignConnect(int c)
-{
-  bool bCont = false;
-  if(sub) {
-    if(sub->assignConnect(c)) {
-      bCont = true;
-    }
-  }  
-  if(sms->assignConnect(nGrainsAssigned[c],c,false)) {
-    bCont = true;
-  }
-  return bCont;
-}
-
-void SubBand :: assignStep(int c)
-{
-  sms->assignConnect(nGrainsAssigned[c],c,true);
-  if(sub && !((nGrainsAssigned[c]+1)&resMask)) {
-    sub->assignStep(c);
-  }
-  sms->start(nGrainsAssigned[c]+1,c);
-}
-
-void SubBand :: splitMerge(int c)
-{
-  nGrainsAssigned[c]++;
-  if(sub && !(nGrainsAssigned[c]&resMask)) {
-    sub->splitMerge(c);
-  }
-  sms->splitMerge(c);
-}
-
-void SubBand :: advance(int c)
-{
-  long ntodo = parent?1:nGrainsToAdvance[c];
+  long ntodo = parent?1:nTrackPointsToAdvance[c];
   long ndone = 0;
+
   while(ndone<ntodo) {
-    if(sub && !(nGrainsAdvanced[c]&resMask)) {
-      sub->advance(c);
-    }
-    sms->advance(c);
-    nGrainsMarked[c]--;
-    nGrainsAssigned[c]--;
-    nGrainsAdvanced[c]++;
+    if(nTrackPointsAdvanced[c]%res==0)
+      if(sub) sub->advanceTrackPoints(c);
+    smser->advanceTrackPoints(c);
+	nTrackPointsMarked[c]--;
+	nTrackPointsAssigned[c]--;
+	nTrackPointsStarted[c]--;
+    nTrackPointsAdvanced[c]++;
     ndone++;
   }
 }
 
-void SubBand :: trial2(int c)
+long subband :: getFramesAssigned()
 {
-  for(int i=0; i<nGrainsToTrial2[c]; i++) {  
-    trial2Start(c);
-    trial2Trial(c);
-    trial2End(c);
+  long assigned = LONG_MAX;
+  for(int c=0;c<channels;c++) {
+    if(nFramesAssigned[c] < assigned)
+      assigned = nFramesAssigned[c];
   }
+  return assigned;
 }
 
-void SubBand :: trial2Start(int c)
+long subband :: getFramesMarked()
 {
-  if(!(nGrainsTrialed2[c]&resMask)) {
-    if(sub) sub->trial2Start(c);
-    sms->trial2Start(c);
+  long marked = LONG_MAX;
+  for(int c=0;c<channels;c++) {
+    if(nFramesMarked[c] < marked)
+      marked = nFramesMarked[c];
   }
+  return marked;
 }
 
-void SubBand :: trial2Trial(int c)
+long subband :: readInit(bool bSet)
 {
-  if(sub && !(nGrainsTrialed2[c]&resMask)) {
-    sub->trial2Trial(c);
-  }
-  sms->trial2(c);
-}
-
-void SubBand :: trial2End(int c)
-{
-  nGrainsTrialed2[c]++;
-  if(!(nGrainsTrialed2[c]&resMask)) {
-    if(sub) sub->trial2End(c);
-    sms->trial2End(c);
-  }
-}
-
-void SubBand :: adjust2()
-{
-  long ntodo = parent?1:nGrainsToAdjust2;
-  long ndone = 0;
-  while(ndone<ntodo) {  
-    if(!(nGrainsAdjusted2&resMask)) {
-      if(sub) sub->adjust2();
-    }
-    sms->adjust2();
-    ndone++;
-    nGrainsAdjusted2++;
-  }
-}
-
-void SubBand :: trial1(int c)
-{
-  for(int i=0; i<nGrainsToTrial1[c]; i++) {  
-    trial1Start(c);
-    trial1Trial(c);
-    trial1End(c);
-  }
-}
-
-void SubBand :: trial1Start(int c)
-{
-  if(!(nGrainsTrialed1[c]&resMask)) {
-    if(sub) sub->trial1Start(c);
-    sms->trial1Start(c);
-  }
-}
-
-void SubBand :: trial1Trial(int c)
-{
-  if(sub && !(nGrainsTrialed1[c]&resMask)) {
-    sub->trial1Trial(c);
-  }
-  sms->trial1(c);
-}
-
-void SubBand :: trial1End(int c)
-{
-  nGrainsTrialed1[c]++;
-  if(!(nGrainsTrialed1[c]&resMask)) {
-    if(sub) sub->trial1End(c);
-    sms->trial1End(c);
-  }
-}
-
-void SubBand :: adjust1()
-{
+  long n;
+  if(sub) n = res*sub->readInit(bSet);
 #ifdef MULTITHREADED
   pthread_mutex_lock(&dataMutex);
 #endif
-  float stretch = stretchRender.read();
-  float f0 = pitchRender.read(pitchRender.readPos);
-  float f1;
-  if(pitchRender.nReadable()>=2) {
-    f1 = pitchRender.read(pitchRender.readPos+1);
-  } else {
-    f1 = f0;
+  if(!sub) n = max((long)0,min((long)1,nFramesInFile-getFramesAssigned()));
+  if(bSet) {
+    nTrackPointsToAssign[0] = n;
+    nTrackPointsToAssign[1] = n;
   }
 #ifdef MULTITHREADED
   pthread_mutex_unlock(&dataMutex);
 #endif
-  long ntodo = parent?1:nGrainsToAdjust1;
+
+  return n;
+}
+
+void subband :: readTrackPointsFromFile(FILE *fp)
+{
+  long ntodo = parent?1:nTrackPointsToAssign[0];
   long ndone = 0;
-  float df = (f1-f0)/(float)nGrainsToAdjust1;
-  while(ndone<ntodo) {  
-    if(!(nGrainsAdjusted1&resMask)) {
-      if(sub) sub->adjust1();
-    }
-    sms->adjust1(stretch,f0+nGrainsAdjusted1*df,f0+(nGrainsAdjusted1+1)*df);
+
+  while(ndone<ntodo) {
+    if(nTrackPointsAssigned[0]%res==0)
+      if(sub) sub->readTrackPointsFromFile(fp);
+    smser->readTrackPointsFromFile(fp);
+#ifdef MULTITHREADED
+    pthread_mutex_lock(&dataMutex);
+#endif
+    nTrackPointsAssigned[0]++;
+    nTrackPointsAssigned[1]++;
+    nTrackPointsStarted[0]++;
+    nTrackPointsStarted[1]++;
+    nTrackPointsMarked[0]++;
+    nTrackPointsMarked[1]++;
+#ifdef MULTITHREADED
+    pthread_mutex_unlock(&dataMutex);
+#endif
     ndone++;
-    nGrainsAdjusted1++;
   }
 }
 
-void SubBand :: readSubSamples()
+
+long subband :: writeTrackPointsToFile(FILE *fp) 
+{
+  long ntodo = parent?1:nTrackPointsToSynth;
+  long ndone = 0;
+  long frameBytes = 0;
+
+  while(ndone<ntodo) {
+    if(nTrackPointsSynthed%res==0)
+      if(sub) frameBytes += sub->writeTrackPointsToFile(fp);
+    
+    frameBytes += smser->writeTrackPointsToFile(fp);
+    nTrackPointsSynthed++;
+    ndone++;
+  }
+  return frameBytes;
+}
+
+long subband :: synthInit(bool bSet) 
+{
+  long n;
+  if(sub) n = res*sub->synthInit(bSet);
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  if(!sub) n = max((long)0,min((long)1,getFramesAssigned()-nFramesSynthed-nLatency));
+  if(bSet) {
+    nTrackPointsSynthed = 0;
+    nTrackPointsToSynth = n;
+  }
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+void subband :: synthTracks() 
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  real a = aSynth.read(aSynth.readPos);
+  real f0 = fSynth.read(fSynth.readPos);
+  real f1;
+  if(fSynth.n_readable()>=2)
+    f1 = fSynth.read(fSynth.readPos+1);
+  else
+    f1 = f0;
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  long ntodo = parent?1:nTrackPointsToSynth;
+  long ndone = 0;
+
+  while(ndone<ntodo) {
+    if(nTrackPointsSynthed%res==0)
+      if(sub) sub->synthTracks();   
+    real df = (f1-f0)/(real)nTrackPointsToSynth;
+    smser->synthTracks(a,f0+nTrackPointsSynthed*df,f0+(nTrackPointsSynthed+1)*df);
+    nTrackPointsSynthed++;
+    ndone++;
+  }
+}
+
+void subband :: readSubSamples()
 {
   if(sub) sub->readSubSamples();
   if(sub) {
-    audio fromSub[subBufSize];
-    long nFromSub = 0;
+    audio fromSub[SUB_BUF_SIZE];
+    long n_fromsub = 0;
     do {
-      nFromSub = sub->outMixer->read(fromSub,subBufSize);
-      samplesSubOut->write(fromSub, nFromSub);
-    } while(nFromSub>0);
+      n_fromsub = min((long)SUB_BUF_SIZE,sub->n_readable());
+      n_fromsub = sub->read(fromSub,n_fromsub);
+      subOut->write(fromSub, n_fromsub);
+    } while(n_fromsub>0);
   }
 }
 
-long SubBand :: read(audio *buf, long n) 
+long subband :: write(audio *inBuf, long n, real a, real ratio)
 {
-  long nRead = 0;
-  long nToRead = n;
-  readSubSamples();
-  while(nToRead && nRead < n && outputFrameSize.nReadable()) {
-    long nToReadFromOutputFrame = outputFrameSize.read();
-    nToRead = min(n-nRead,nToReadFromOutputFrame-nReadFromOutputFrame);
-    nToRead = outMixer->read(buf+nRead, nToRead);
-    nReadFromOutputFrame += nToRead;
-    nRead += nToRead;
-    if(nReadFromOutputFrame == nToReadFromOutputFrame) {
-      nReadFromOutputFrame = 0;
-      outputFrameSize.advance(1);
-      stepReadFrame();
-    }
-  }
-  return nRead;
+  write_(inBuf, n, a, ratio);
+  return n;
 }
 
-long SubBand :: renderSynchronous() 
+void subband :: process()
 {
-  for(list<SBSMSRenderer*>::iterator i = renderers.begin(); i != renderers.end(); ++i) {
-    SBSMSRenderer *renderer = *i;
-    renderer->startFrame();
+  do { 
+    addInit(true);
+    addTrackPoints();
+    if(nTrackPointsToAdd) stepAddFrame();
+  } while(nTrackPointsToAdd);
+
+
+  for(int c=0;c<channels;c++) {
+    do { 
+      markInit(true,c);
+      markDuplicates(c);
+      if(nTrackPointsToMark[c]) stepMarkFrame(c);
+    } while(nTrackPointsToMark[c]);
+    
+    do {
+      assignInit(true,c);
+      assignTrackPoints(c);
+      advanceTrackPoints(c);
+      if(nTrackPointsToAssign[c]) stepAssignFrame(c);
+    } while(nTrackPointsToAssign[c]);
   }
-  for(int c=0; c<channels; c++) {    
-    renderInit(c,true);
-    render(c);
-    stepRenderFrame(c);
+}
+
+void subband :: setFramesInFile(long frames) 
+{
+  if(sub) sub->setFramesInFile(frames);
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  nFramesInFile = frames;
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+}
+
+long subband :: readFromFile(FILE *fp, real a, real ratio)
+{
+  long samples = 0; 
+  if(readInit(true)) {
+    int framesize;
+    real amod;
+    fread(&framesize,sizeof(int),1,fp);
+    fread(&amod,sizeof(real),1,fp);
+    readTrackPointsFromFile(fp);
+    for(int c=0;c<channels;c++)
+      stepAssignFrame(c);
+    samples += framesize;
+#ifdef MULTITHREADED
+    pthread_mutex_lock(&dataMutex);
+#endif    
+    setA(1.0f+amod*(a-1.0f));
+    setAMod(amod);
+    setF(1.0f/ratio);
+    setRatio(ratio);
+    setFrameSize(framesize,a,ratio);
+#ifdef MULTITHREADED
+    pthread_mutex_unlock(&dataMutex);
+#endif    
   }
-  for(list<SBSMSRenderer*>::iterator i = renderers.begin(); i != renderers.end(); ++i) {
-    SBSMSRenderer *renderer = *i;
-    renderer->endFrame();
-  }
-  long samples = outputFrameSize.read();
-  outputFrameSize.advance(1);
-  stepReadFrame();
   return samples;
 }
 
-void SubBand :: render(int c)
+void subband :: writeFramePositionsToFile(FILE *fp)
 {
-  long ntodo = parent?1:nGrainsToRender[c];
-  long ndone = 0;
-  long nRenderedTotal = 0;
+  long frames = 0;
+  // samples, frames, channels, quality
+  long offset = 2*sizeof(long) + sizeof(int) + sizeof(sbsms_quality);
+  unsigned short maxtrackindex = ta->size();
+  fseek(fp,offset,SEEK_SET);
+  fwrite(&maxtrackindex,sizeof(unsigned short),1,fp); offset += sizeof(unsigned short);
+  fseek(fp,0,SEEK_END);
+  for(int k=frameBytes.readPos+nFramesSkipped; k<frameBytes.writePos;k++) {
+    long samples = inputFrameSize.read(k);
+    int bytes = frameBytes.read(k);
+    fwrite(&offset,sizeof(long),1,fp);
+    fwrite(&samples,sizeof(long),1,fp);
+    offset += bytes;
+    frames++;
+  }
+  //samples
+  offset = sizeof(long);
+  fseek(fp,offset,SEEK_SET);
+  fwrite(&frames,sizeof(long),1,fp);
+}
 
-  while(ndone<ntodo) {
-    if(sub && !(nGrainsRendered[c]&resMask)) {
-      sub->render(c);
+long subband :: getFramesWrittenToFile()
+{
+  long samples = 0;
+  bool bRead;
+  do {
+#ifdef MULTITHREADED
+    pthread_mutex_lock(&dataMutex);
+#endif    
+    bRead = (nFramesSynthed > nFramesRead);
+#ifdef MULTITHREADED
+    pthread_mutex_unlock(&dataMutex);
+#endif    
+    if(bRead) {
+      stepReadFrame();
+      if(nFramesRead > nFramesSkipped)
+	samples += inputFrameSize.read(nFramesSynthed);
     }
-    sms->render(c,renderers);
-    nGrainsRendered[c]++;
-    ndone++;
-  }
+  } while(bRead);
+  return samples;
 }
 
-void SubBand :: renderComplete(const SampleCountType &samples)
+long subband :: writeTracksToFile(FILE *fp)
 {
-  for(list<SBSMSRenderer*>::iterator i = renderers.begin(); i != renderers.end(); ++i) {
-    SBSMSRenderer *renderer = *i;
-    renderer->end(samples);
+  long samples = 0;
+  bool bReady = false;
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif    
+  if(inputFrameSize.n_readable() > nFramesSynthed) bReady = true;
+  if(!bReady) {
+#ifdef MULTITHREADED
+    pthread_mutex_unlock(&dataMutex);
+#endif    
+    return 0;
   }
+  int framesize = inputFrameSize.read(nFramesSynthed);
+  real amod = aMod.read(aMod.readPos);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif    
+  samples += framesize;
+  int bytes = 0;
+  if(fp) {
+    fwrite(&framesize,sizeof(int),1,fp); bytes += sizeof(int);
+    fwrite(&amod,sizeof(real),1,fp); bytes += sizeof(real);
+  } else {
+    nFramesSkipped++;
+  }
+  bytes += writeTrackPointsToFile(fp);
+  frameBytes.write(bytes);
+  frameRatio.advance(1);
+  outputFrameSize.advance(1);
+  return samples;
 }
 
-long SubBand :: write(audio *inBuf, long n, float stretch, float pitch)
+long subband :: writeToFile(FILE *fp)
 {
-  long nWritten = 0;
+  long samples = 0; 
+  if(synthInit(true)) {
+    samples = writeTracksToFile(fp);
+    stepSynthFrame();
+  }
+  return samples;
+}
 
-  while(nWritten<n) {
-    long nToWrite = min(nToWriteForGrain,n-nWritten);
-    if(nToDrop2) {
-      nToWrite = min(nToDrop2,nToWrite);
-      nToDrop2 -= nToWrite;
-      nToDrop1 -= nToWrite;
-      nToDrop0 -= nToWrite;
+long subband :: synth()
+{
+  long frames = 0;
+  do {
+    if(synthInit(true)) {
+      synthTracks();
+      stepSynthFrame();
+      frames++;
+    }
+  } while(nTrackPointsToSynth);
+  return frames;
+}
+
+long subband :: zeroPad()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  frameRatio.write(lastFrameRatio);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  long samples = zeroPad_();
+  return samples;
+}
+
+long subband :: zeroPad_()
+{
+  if(sub) sub->zeroPad_();
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  setFrameSize(lastInputFrameSize,lastFrameA,lastFrameRatio);
+  smser->zeroPad(lastOutputFrameSize);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return lastOutputFrameSize;
+}
+
+bool subband :: isframe_readable()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  if(!outputFrameSize.n_readable())
+    return false;
+  long n = outputFrameSize.read(outputFrameSize.readPos);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return (n_readable()>=n);
+}
+
+long subband :: getSamplesQueued()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  long n = (long)round2int(samplesQueued);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+long subband :: getFramesQueued()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  long n = outputFrameSize.n_readable();
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+long subband :: getFramesAtFront()
+{
+  if(sub) return sub->getFramesAtFront();
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  long n = in1->n_readable();
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+long subband :: getFramesAtBack()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  long n =  getFramesAssigned() - nFramesSynthed;
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+long subband :: getLastInputFrameSize()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  long n = lastInputFrameSize;
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+  return n;
+}
+
+long subband :: n_readable()
+{
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&bufferMutex);
+#endif
+  long n = outMixer->n_readable();
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&bufferMutex);
+#endif
+  return n;
+}
+
+long subband :: read(audio *buf, real *ratio0, real *ratio1) 
+{
+  readSubSamples();
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  long n = 0;
+  if(outputFrameSize.n_readable() >= 2) {
+    n = outputFrameSize.read(outputFrameSize.readPos);
+    if(n_readable()>=n) {
+      real rat0 = frameRatio.read(frameRatio.readPos);
+      real rat1 = frameRatio.read(frameRatio.readPos+1);
+      if(ratio0 != NULL) *ratio0 = rat0;
+      if(ratio1 != NULL) *ratio1 = rat1;
+      samplesQueued -= n*0.5f*(rat0+rat1);
+      outputFrameSize.advance(1);
+      inputFrameSize.advance(1);
+      frameRatio.advance(1);
+#ifdef MULTITHREADED
+      pthread_mutex_unlock(&dataMutex);
+#endif
+      if(buf) {
+        stepReadFrame();
+      }
+      n = read(buf, n);
     } else {
-      if(nToDrop1) {
-        nToWrite = min(nToDrop1,nToWrite);
-        nToDrop1 -= nToWrite;
-        nToDrop0 -= nToWrite;
-      } else {
-        if(nToDrop0) {
-          nToWrite = min(nToDrop0,nToWrite);
-        } else if(nToPrepad0) {
-          nToWrite = min(nToPrepad0,nToWrite);
-        }
-        if(nToPrepad1) {
-          nToWrite = min(nToPrepad1,nToWrite);
-          sms->prepad1(inBuf+nWritten, nToWrite);
-          nToPrepad1 -= nToWrite;
-        }
-        if(nToDrop0) {
-          nToDrop0 -= nToWrite;
-        } else {
-          if(nToPrepad0) {
-            sms->prepad0(inBuf+nWritten, nToWrite);
-            nToPrepad0 -= nToWrite;
-          }
+      n = 0;
 #ifdef MULTITHREADED
-          pthread_mutex_lock(&grainMutex[0]);
-#endif      
-          if(grains[0]) {
-            grains[0]->write(inBuf+nWritten, nToWrite);
-          }
-#ifdef MULTITHREADED
-          pthread_mutex_unlock(&grainMutex[0]);
-#endif
-        }
-#ifdef MULTITHREADED
-        pthread_mutex_lock(&grainMutex[1]);
-#endif      
-        if(grains[1]) {
-          grains[1]->write(inBuf+nWritten, nToWrite);
-        }
-#ifdef MULTITHREADED
-        pthread_mutex_unlock(&grainMutex[1]);
-#endif
-      }
-#ifdef MULTITHREADED
-      pthread_mutex_lock(&grainMutex[2]);
-#endif      
-      grains[2]->write(inBuf+nWritten, nToWrite);
-#ifdef MULTITHREADED
-      pthread_mutex_unlock(&grainMutex[2]);
+      pthread_mutex_unlock(&dataMutex);
 #endif
     }
-    nWritten += nToWrite;
-    nToWriteForGrain -= nToWrite;
-    if(nToWriteForGrain == 0) {
-      nToWriteForGrain = h;
-      if(!parent) {
-        if(nGrainsWritten == 0) {
-          setStretch(stretch);
-          setPitch(pitch);
-        }
-        nGrainsWritten++;
-        if(nGrainsWritten == nGrainsPerFrame) {
-          nGrainsWritten = 0;
-        }
-      }
-    }
+  } else {
+#ifdef MULTITHREADED
+    pthread_mutex_unlock(&dataMutex);
+#endif
   }
 
-  if(sub) {
-    grainsIn->write(inBuf, n);
-    long nGrainsRead = 0;
-    for(int k=grainsIn->readPos;k<grainsIn->writePos;k++) {
-      grain *g = grainsIn->read(k); g->analyze();
-      grain *gdown = downSampledGrainAllocator->create();
-      g->downsample(gdown);
-      samplesSubIn->write(gdown, hSub);
-      downSampledGrainAllocator->forget(gdown);
-      nGrainsRead++;
-    }
-    grainsIn->advance(nGrainsRead);  
-    long nWriteToSub = samplesSubIn->nReadable();
-    audio *subBuf = samplesSubIn->getReadBuf();
-    nWriteToSub = sub->write(subBuf,nWriteToSub,stretch,pitch);
-    samplesSubIn->advance(nWriteToSub);
-  }
   return n;
 }
 
-void SubBand :: process(bool bRender)
+long subband :: read(audio *buf, long n)
 {
-  for(int i=0; i<3; i++) {
-    if(analyzeInit(i,true)) {
-      analyze(i);
-      stepAnalyzeFrame(i);
-    }
-  }
+  if(n==0)
+    return 0;
+  long n_read = n;
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&bufferMutex);
+#endif
+  if(buf) n_read = outMixer->read(buf, n_read);
+  outMixer->advance(n_read);
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&bufferMutex);
+#endif
 
-  for(int c=0; c<channels; c++) {
-    if(extractInit(c,true)) {
-      extract(c);
-      stepExtractFrame(c);
-    }
+  return n_read;
+}
 
-    if(markInit(c,true)) {
-      mark(c);
-      stepMarkFrame(c);
-    }
+void subband :: writingComplete()
+{
+  if(sub) sub->writingComplete();
+#ifdef MULTITHREADED
+  pthread_mutex_lock(&dataMutex);
+#endif
+  nLatency = 0;
+  bWritingComplete = true;
+#ifdef MULTITHREADED
+  pthread_mutex_unlock(&dataMutex);
+#endif
+}
+
+long subband :: preAnalyze(audio *buf, long n, real a, real ratio)
+{
+  long nwritten = 0;
+  while(nwritten<n) {
+    long ntowrite = min((long)(inPre->h),n-nwritten);
+    inPre->write(buf+nwritten,ntowrite);
+
+    nwritten += ntowrite;
     
-    if(assignInit(c,true)) {
-      assign(c);
-      advance(c);
-      stepAssignFrame(c);
+    long ng_read = 0;
+    for(int k=inPre->readPos;k<inPre->writePos;k++) {
+      if(nDropped < nToDrop) {
+        nDropped++;
+      } else {
+        if(!parent && (nTrackPointsWritten)%nGrainsPerFrame == 0) {
+          grain *g = inPre->read(k);
+          grain::referenced(g);
+          real o = calculateOnset(gPrev,g);
+          onset.write(o);
+          if(gPrev) grain::forget(gPrev);
+          gPrev = g;
+          setA(a);
+        }
+        if(!parent && (nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
+          setAForH(a);
+        }
+        if((nTrackPointsWritten+1)%nGrainsPerFrame == 0) {
+          setH(ratio);
+        }
+        nTrackPointsWritten++;
+      }
+      ng_read++;
     }
+    inPre->advance(ng_read);
+  }
+  long samples = 0;
+  while(inputFrameSize.n_readable()) {
+    samples += inputFrameSize.read(inputFrameSize.readPos);
+    inputFrameSize.advance(1);
+    outputFrameSize.advance(1);
+  }
+  return samples;
+}
 
-    if(trial2Init(c,true)) {
-      trial2(c);
-      stepTrial2Frame(c);
-    }
+real subband :: getOnset(long k)
+{
+  real tot = 2.0f*onset.read(k);
+  real c = 2.0f;
+  if(k-1>=onset.readPos) {
+    tot += onset.read(k-1);
+    c += 1.0f;
+  }
+  if(k+1<onset.writePos) {
+    tot += onset.read(k+1);
+    c += 1.0f;
+  }
+  return tot / c;
+}
 
-    if(adjust2Init(true)) {
-      adjust2();
-      stepAdjust2Frame();
-    }
+void subband :: preAnalyzeComplete()
+{
+  long k0 = onset.readPos;
+  long k1 = onset.writePos;
+  long kstart = 0;
+  long kend = 0;
 
-    if(trial1Init(c,true)) {
-      trial1(c);
-      stepTrial1Frame(c);
-    }
-
-    if(adjust1Init(true)) {
-      adjust1();
-      stepAdjust1Frame();
-    }
-
-    if(bRender) {
-      if(renderInit(c,true)) {
-        render(c);
-        stepRenderFrame(c);
+  for(long k=k0;k<k1;k++) {
+    bool bOnset = false;
+    if(k==k0) {
+      bOnset = true;
+    } else {
+      real o0 = getOnset(k);
+      if(o0 < 0.1f) continue;
+      real o1 = getOnset(k-1);
+      if(o0 < 1.1f*o1) continue;
+      if(o0 < 0.22f) continue;
+      bOnset = ((o0 > 0.4f) || (o0>1.4f*o1));
+      if(!bOnset && k>k0+1) {
+        real o2 = getOnset(k-2);
+        bOnset = ((o0 > 1.2f*o1) && (o1 > 1.2f * o2));
+        if(!bOnset && k>k0+2) {
+          real o3 = getOnset(k-3);
+          bOnset = ((o0 > 0.3f) && (o1 > 1.1f * o2) && (o2 > 1.1f * o3));
+        }
       }
     }
+    if(bOnset) {
+      if(kend != 0) {
+        calculateA(kstart,kend);
+      }
+      kstart = kend;
+      kend = k;
+    }
   }
+  calculateA(kstart,k1);
+  aPreAnalysis.write(1.0f);
+  aPreAnalysis.advance(1);
 }
 
-long SubBand :: getFramesAtFront(int i)
+void subband :: calculateA(long kstart, long kend)
 {
-  long n = 65536;
-#ifdef MULTITHREADED
-  pthread_mutex_lock(&grainMutex[i]);
-#endif
-  if(grains[i]) {
-    n = grains[i]->nReadable() / nGrainsPerFrame;
+  real oMax = 0.0f;
+  real dTotal = 0.0f;
+
+  for(long k=kstart;k<kend;k++) {
+    real o = getOnset(k);
+    if(o > oMax) oMax = o;
   }
-#ifdef MULTITHREADED
-  pthread_mutex_unlock(&grainMutex[i]);
-#endif
-  if(sub) n = min(n,sub->getFramesAtFront(i));
-  return n;
+
+  oMax *= 1.3;
+
+  for(long k=kstart;k<kend;k++) {
+    real o = getOnset(k);
+    real d = oMax - o;
+    dTotal += d;
+  }
+
+  real aAllot = (real)(kend-kstart);
+  for(long k=kstart;k<kend;k++) {
+    real o = getOnset(k);
+    real d = oMax - o;
+    real da;
+    if(dTotal == 0.0 || k+1==kend) {
+      da = aAllot;
+    } else {
+      da = d/dTotal*aAllot;
+    }
+
+    dTotal -= d;
+    aAllot -= da;
+    aPreAnalysis.write(da);
+  }
+
 }
 
-long SubBand :: getInputFrameSize()
-{
-  return inputFrameSize;
+real subband :: calculateOnset(grain *g1, grain *g2)
+{  
+  _c2evenodd(g2->x, x2[0]->x, x2[1]->x, g2->N);
+  real o = 1.0f;
+  if(g1!=NULL) {
+    int Nover2 = N/2;
+    int nOnset = 0;
+    int nThresh = 0;
+    for(int k=0;k<Nover2;k++) {
+      real m2 = norm2(x2[0]->x[k]) + norm2(x2[1]->x[k]);
+      real m1 = norm2(x1[0]->x[k]) + norm2(x1[1]->x[k]);
+      bool bThresh = (m2 > 1e-6);
+      bool bOnset = (m2 > 2.0f*m1) && bThresh;
+      if(bOnset) nOnset++;
+      if(bThresh) nThresh++;
+    }
+    if(nThresh == 0)
+      o = 0.0f;
+    else
+      o = (real)nOnset/(real)nThresh;
+  } 
+  memcpy(x1[0]->x,x2[0]->x,g2->N*sizeof(audio));
+  memcpy(x1[1]->x,x2[1]->x,g2->N*sizeof(audio));
+  return o;
 }
 
 }

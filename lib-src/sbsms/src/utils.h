@@ -1,10 +1,11 @@
-// -*- mode: c++ -*-
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef FFTUTILS_H
+#define FFTUTILS_H
 
 #include "real.h"
-#include "config.h"
 #include "sbsms.h"
+#include <math.h>
+#include <limits.h>
+#include <stdlib.h>
 
 namespace _sbsms_ {
 
@@ -12,54 +13,65 @@ namespace _sbsms_ {
 #define PI 3.1415926535897932384626433832795f
 #define TWOPI 6.28318530717958647692528676655900576f
 
-inline void c2even(audio *eo, audio *even, int N)
+extern int COSSIZE;
+extern real COSFACTOR;
+extern real *COSTABLE;
+
+void cosinit(int size);
+void _evenodd2c(audio *eo, audio *even, audio *odd, int N);
+void _c2evenodd(audio *eo, audio *even, audio *odd, int N);
+inline real COS(real x);
+inline real square(real x);
+void _c2magphase(audio *g, int N);
+void _magphase2c(audio *g, int N);
+inline real canon(real ph);
+inline real norm(audio x);
+inline real norm2(audio x);
+inline real sign(real x);
+inline real dBApprox(real x);
+int *factor(int n);
+void factor(int n, int *f, int m);
+
+inline int ilog2(int x)
 {
-  int Nover2 = N/2;
-  even[0][0] = eo[0][0];
-  even[0][1] = 0.0f;
-  for(int k=1;k<=Nover2;k++) {
-    int Nk = N-k;
-    even[k][0] = 0.5f*(eo[k][0] + eo[Nk][0]);
-    even[k][1] = 0.5f*(eo[k][1] - eo[Nk][1]);
-  }
+	int n = 0;
+	while(x>1) {
+		x>>=1;
+		n++;
+	}
+	return n;
 }
 
-inline void c2odd(audio *eo, audio *odd, int N)
+inline real dBApprox(real x) 
 {
-  int Nover2 = N/2;
-  odd[0][0] = eo[0][1];
-  odd[0][1] = 0.0f;
-  for(int k=1;k<=Nover2;k++) {
-    int Nk = N-k;
-    odd[k][0] = 0.5f*(eo[k][1] + eo[Nk][1]);
-    odd[k][1] = 0.5f*(eo[Nk][0] - eo[k][0]);
-  }
+  real u = (x-1.0f)/(x+1.0f);
+  real u2 = u*u;
+  return 17.37177927613007f*u*(1.0f + u2*(0.333333333333333f + u2*(0.2f + u2*0.14285714285714f)));
 }
 
-inline float canonPI(float ph) 
+inline real canon(real ph) 
 {
-  ph -= TWOPI * lrintf(ph * ONEOVERTWOPI);
-  if(ph < -PI) ph += TWOPI;
-  else if(ph >= PI) ph -= TWOPI;
-  return ph;
+  return ph - TWOPI*(real)round2int(ph*ONEOVERTWOPI);
 }
 
-inline float canon2PI(float ph) 
-{
-  ph -= TWOPI * lrintf(ph * ONEOVERTWOPI);
-  if(ph < 0.0f) ph += TWOPI;
-  if(ph >= TWOPI) ph -= TWOPI;
-  return ph;
-}
-
-inline float square(float x)
-{ 
-  return x*x;
-}
-
-inline float norm2(t_fft x)
+inline real norm2(audio x)
 {
   return square(x[0]) + square(x[1]);
+}
+
+inline real norm(audio x)
+{
+  return sqrt(norm2(x));
+}
+
+inline real COS(real x)
+{
+  return COSTABLE[round2int(COSFACTOR*fabsf(x))];
+}
+
+inline real square(real x)
+{ 
+  return x*x;
 }
 
 }

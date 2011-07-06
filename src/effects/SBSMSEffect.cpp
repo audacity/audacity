@@ -6,7 +6,7 @@ SBSMSEffect.cpp
 
 Clayton Otey
 
-This class contains all of the common code for an
+This abstract class contains all of the common code for an
 effect that uses SBSMS to do its processing (TimeScale)
 
 **********************************************************************/
@@ -22,90 +22,79 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include "../Project.h"
 #include "TimeWarper.h"
 
-enum {
-  SBSMSOutBlockSize = 512
-};
-
-class ResampleBuf
+class resampleBuf
 {
 public:
-   ResampleBuf()
+   resampleBuf()
    {
-      processed = 0;
       buf = NULL;
       leftBuffer = NULL;
       rightBuffer = NULL;
-      quality = NULL;
-      iface = NULL;
-      sbsms = NULL;
 
-      resampler = NULL;
-      SBSMSBuf = NULL;
+      sbsmser = NULL;
+      outBuf = NULL;
+      outputLeftBuffer = NULL;
+      outputRightBuffer = NULL;
       outputLeftTrack = NULL;
       outputRightTrack = NULL;
+      resampler = NULL;
    }
 
-   ~ResampleBuf()
+   ~resampleBuf()
    {
       if(buf)                 free(buf);
       if(leftBuffer)          free(leftBuffer);
       if(rightBuffer)         free(rightBuffer);
-      if(SBSMSBuf)            free(SBSMSBuf);
+      if(sbsmser)             sbsms_destroy(sbsmser);
+      if(outBuf)              free(outBuf);
+      if(outputLeftBuffer)    free(outputLeftBuffer);
+      if(outputRightBuffer)   free(outputRightBuffer);
       if(outputLeftTrack)     delete outputLeftTrack;
       if(outputRightTrack)    delete outputRightTrack;
-      if(quality)             delete quality;
-      if(sbsms)               delete sbsms;
-      if(iface)           delete iface;
       if(resampler)           delete resampler;
    }
 
-   bool bPitch;
    audio *buf;
    double ratio;
-   sampleCount processed;
-   sampleCount blockSize;
-   sampleCount SBSMSBlockSize;
+   sampleCount block;
    sampleCount offset;
    sampleCount end;
    float *leftBuffer;
    float *rightBuffer;
    WaveTrack *leftTrack;
    WaveTrack *rightTrack;
-   SBSMS *sbsms;
-   SBSMSInterface *iface;
-   audio *SBSMSBuf;
 
    // Not required by callbacks, but makes for easier cleanup
-   Resampler *resampler;
-   SBSMSQuality *quality;
+   sbsms *sbsmser;
+   audio *outBuf;
+   float *outputLeftBuffer;
+   float *outputRightBuffer;
    WaveTrack *outputLeftTrack;
    WaveTrack *outputRightTrack;
-};
-
-class SBSMSEffectInterface : public SBSMSInterfaceSliding {
-public:
-   SBSMSEffectInterface(Resampler *resampler,
-                        Slide *rateSlide, Slide *pitchSlide,
-                        bool bReferenceInput,
-                        long samples, long preSamples,
-                        SBSMSQuality *quality) 
-      : SBSMSInterfaceSliding(rateSlide,pitchSlide,bReferenceInput,samples,preSamples,quality)
-   {
-      this->resampler = resampler;
-   }
-   virtual ~SBSMSEffectInterface() {}
-
-   long samples(audio *buf, long n) { 
-      return resampler->read(buf, n);
-   }
-
-protected:
    Resampler *resampler;
 };
 
-long resampleCB(void *cb_data, SBSMSFrame *data) 
+long samplesCB(audio *chdata, long numFrames, void *userData)
+{ 
+   sbsmsInfo *si = (sbsmsInfo*) userData;
+   long n_read = si->rs->read(chdata, numFrames);
+   return n_read;
+}
+
+void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd, bool bPreAnalyze)
 {
-   ResampleBuf *r = (ResampleBuf*) cb_data;
+   this->rateStart = rateStart;
+   this->rateEnd = rateEnd;
+   this->pitchStart = pitchStart;
+   this->pitchEnd = pitchEnd;
+   this->bPreAnalyze = bPreAnalyze;
+}
+
+bool EffectSBSMS :: bInit = FALSE;
+
+long resampleCB(void *cb_data, sbsms_resample_frame *data) 
+{
+   resampleBuf *r = (resampleBuf*) cb_data;
    
    long blockSize = r->leftTrack->GetBestBlockSize(r->offset);
    
@@ -123,75 +112,29 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
       r->buf[i][1] = r->rightBuffer[i];
    }
    
-   data->buf = r->buf;
-   data->size = blockSize;
-   if(r->bPitch) {
-     float t0 = (float)(r->processed) / r->iface->getSamplesToInput();
-     float t1 = (float)(r->processed + blockSize) / r->iface->getSamplesToInput();
-     data->ratio0 = r->iface->getStretch(t0);
-     data->ratio1 = r->iface->getStretch(t1);
-   } else {
-     data->ratio0 = r->ratio;
-     data->ratio1 = r->ratio;
-   }
-   r->processed += blockSize;
    r->offset += blockSize;
+   data->in = r->buf;
+   data->size = blockSize;
+   data->ratio0 = r->ratio;
+   data->ratio1 = r->ratio;
+   
    return blockSize;
-}
-
-long postResampleCB(void *cb_data, SBSMSFrame *data)
-{
-   ResampleBuf *r = (ResampleBuf*) cb_data;
-   long sampleCount = r->sbsms->read(r->iface, r->SBSMSBuf, r->SBSMSBlockSize);
-   data->buf = r->SBSMSBuf;
-   data->size = sampleCount;
-   data->ratio0 = 1.0 / r->ratio;
-   data->ratio1 = 1.0 / r->ratio;
-   return sampleCount;
-}
-
-void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
-                                  SlideType rateSlideType, SlideType pitchSlideType,
-                                  bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput)
-{
-   this->rateStart = rateStart;
-   this->rateEnd = rateEnd;
-   this->pitchStart = pitchStart;
-   this->pitchEnd = pitchEnd;
-   this->bLinkRatePitch = bLinkRatePitch;
-   this->rateSlideType = rateSlideType;
-   this->pitchSlideType = pitchSlideType;
-   this->bRateReferenceInput = bRateReferenceInput;
-   this->bPitchReferenceInput = bPitchReferenceInput;
-}
-
-TimeWarper *createTimeWarper(double t0, double t1, double duration, 
-                             double rateStart, double rateEnd, SlideType rateSlideType)
-{
-   TimeWarper *warper = NULL;
-   if (rateStart == rateEnd || rateSlideType == SlideConstant) {
-      warper = new LinearTimeWarper(t0, t0, t1, t0+duration);
-   } else if(rateSlideType == SlideLinearInputRate) {
-      warper = new LinearInputRateTimeWarper(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearOutputRate) {
-      warper = new LinearOutputRateTimeWarper(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearInputStretch) {
-      warper = new LinearInputStretchTimeWarper(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideLinearOutputStretch) {
-      warper = new LinearOutputStretchTimeWarper(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricInput) {
-      warper = new GeometricInputTimeWarper(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricOutput) {                
-      warper = new GeometricOutputTimeWarper(t0, t1, rateStart, rateEnd);
-   }
-   return warper;
 }
 
 // Labels inside the affected region are moved to match the audio; labels after
 // it are shifted along appropriately.
 bool EffectSBSMS::ProcessLabelTrack(Track *t)
 {
-   TimeWarper *warper = createTimeWarper(mT0,mT1,(mT1-mT0)*mTotalStretch,rateStart,rateEnd,rateSlideType);
+   TimeWarper *warper = NULL;
+   if (rateStart == rateEnd)
+   {
+      warper = new LinearTimeWarper(mT0, mT0,
+            mT1, mT0+(mT1-mT0)*mTotalStretch);
+   } else
+   {
+      warper = new LogarithmicTimeWarper(mT0, mT1,
+            rateStart, rateEnd);
+   }
    SetTimeWarper(new RegionTimeWarper(mT0, mT1, warper));
    LabelTrack *lt = (LabelTrack*)t;
    if (lt == NULL) return false;
@@ -201,10 +144,16 @@ bool EffectSBSMS::ProcessLabelTrack(Track *t)
 
 bool EffectSBSMS::Process()
 {
+   if(!bInit) {
+      sbsms_init(8192);
+      bInit = TRUE;
+   }
+   
    bool bGoodResult = true;
    
    //Iterate over each track
-   //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
+   // Track::All is needed because this effect needs to introduce 
+   // silence in the group tracks to keep sync-lock.
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
    TrackListIterator iter(mOutputTracks);
    Track* t;
@@ -212,11 +161,13 @@ bool EffectSBSMS::Process()
 
    double maxDuration = 0.0;
 
+   if(rateStart == rateEnd)
+      mTotalStretch = 1.0/rateStart;
+   else
+      mTotalStretch = 1.0/(rateEnd-rateStart)*log(rateEnd/rateStart);
+
    // Must sync if selection length will change
-   bool mustSync = (rateStart != rateEnd);
-   Slide rateSlide(rateSlideType,rateStart,rateEnd);
-   Slide pitchSlide(pitchSlideType,pitchStart,pitchEnd);
-   mTotalStretch = rateSlide.getTotalStretch();
+   bool mustSync = (mTotalStretch != 1.0);
 
    t = iter.First();
    while (t != NULL) {
@@ -267,116 +218,131 @@ bool EffectSBSMS::Process()
                
                mCurTrackNum++; // Increment for rightTrack, too.	
             }
-            sampleCount trackStart = leftTrack->TimeToLongSamples(leftTrack->GetStartTime());
+            
             sampleCount trackEnd = leftTrack->TimeToLongSamples(leftTrack->GetEndTime());
 
             // SBSMS has a fixed sample rate - we just convert to its sample rate and then convert back
-            float srTrack = leftTrack->GetRate();
-            float srProcess = bLinkRatePitch?srTrack:44100.0;
-
+            float srIn = leftTrack->GetRate();
+            // mchinen: srSBMS doesn't do the right thing when it was set to fixed 44100.  This seems to fix it.
+            float srSBSMS = leftTrack->GetRate();
+            
             // the resampler needs a callback to supply its samples
-            ResampleBuf rb;
+            resampleBuf rb;
             sampleCount maxBlockSize = leftTrack->GetMaxBlockSize();
-            rb.blockSize = maxBlockSize;
-            rb.buf = (audio*)calloc(rb.blockSize,sizeof(audio));
+            rb.block = maxBlockSize;
+            rb.buf = (audio*)calloc(rb.block,sizeof(audio));
             rb.leftTrack = leftTrack;
             rb.rightTrack = rightTrack?rightTrack:leftTrack;
             rb.leftBuffer = (float*)calloc(maxBlockSize,sizeof(float));
             rb.rightBuffer = (float*)calloc(maxBlockSize,sizeof(float));
+            rb.offset = start;
+            rb.end = trackEnd;
+            rb.ratio = srSBSMS/srIn;
+            rb.resampler = new Resampler(resampleCB, &rb);
             
             // Samples in selection
             sampleCount samplesIn = end-start;
             
             // Samples for SBSMS to process after resampling
-            sampleCount samplesToProcess = (sampleCount) ((float)samplesIn*(srProcess/srTrack));
-
-            SlideType outSlideType;
-            SBSMSResampleCB outResampleCB;
-
-            sampleCount processPresamples = 0;
-            sampleCount trackPresamples = 0;
-
-            if(bLinkRatePitch) {
-              rb.bPitch = true;
-              outSlideType = rateSlideType;
-              outResampleCB = resampleCB;
-              rb.offset = start;
-              rb.end = end;
-              rb.iface = new SBSMSInterfaceSliding(&rateSlide,&pitchSlide,
-                                                       bPitchReferenceInput,
-                                                       samplesToProcess,0,
-                                                       NULL);              
-            } else {
-              rb.bPitch = false;
-              outSlideType = (srProcess==srTrack?SlideIdentity:SlideConstant);
-              outResampleCB = postResampleCB;
-              rb.ratio = srProcess/srTrack;
-              rb.quality = new SBSMSQuality(&SBSMSQualityStandard);
-              rb.resampler = new Resampler(resampleCB, &rb, srProcess==srTrack?SlideIdentity:SlideConstant);
-              rb.sbsms = new SBSMS(rightTrack?2:1,rb.quality,true);
-              rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
-              rb.SBSMSBuf = (audio*)calloc(rb.SBSMSBlockSize,sizeof(audio));
-
-              processPresamples = wxMin(rb.quality->getMaxPresamples(),
-                                        (long)((float)(start-trackStart)*(srProcess/srTrack)));
-              trackPresamples = wxMin(start-trackStart,
-                                      (long)((float)(processPresamples)*(srTrack/srProcess)));
-              rb.offset = start - trackPresamples;
-              rb.end = trackEnd;
-              rb.iface = new SBSMSEffectInterface(rb.resampler,
-                                                      &rateSlide,&pitchSlide,
-                                                      bPitchReferenceInput,
-                                                      samplesToProcess,processPresamples,
-                                                      rb.quality);              
-            }
-
-            Resampler resampler(outResampleCB,&rb,outSlideType);
+            sampleCount samplesToProcess = (sampleCount) ((real)samplesIn*(srSBSMS/srIn));
             
-            audio outBuf[SBSMSOutBlockSize];
-            float outBufLeft[2*SBSMSOutBlockSize];
-            float outBufRight[2*SBSMSOutBlockSize];
-            
-            // Samples in output after SBSMS
-            sampleCount samplesToOutput = rb.iface->getSamplesToOutput();
-
             // Samples in output after resampling back
-            sampleCount samplesOut = (sampleCount) ((float)samplesToOutput * (srTrack/srProcess));
-
-            // Duration in track time
+            sampleCount samplesToGenerate = (sampleCount) ((real)samplesToProcess * mTotalStretch);
+            sampleCount samplesOut = (sampleCount) ((real)samplesIn * mTotalStretch);
             double duration =  (mCurT1-mCurT0) * mTotalStretch;
 
             if(duration > maxDuration)
                maxDuration = duration;
 
-            TimeWarper *warper = createTimeWarper(mCurT0,mCurT1,maxDuration,rateStart,rateEnd,rateSlideType);
+            TimeWarper *warper = NULL;
+            if (rateStart == rateEnd)
+            {
+               warper = new LinearTimeWarper(mCurT0, mCurT0,
+                                             mCurT1, mCurT0+maxDuration);
+            } else
+            {
+               warper = new LogarithmicTimeWarper(mCurT0, mCurT1,
+                                                  rateStart, rateEnd);
+            }
             SetTimeWarper(warper);
-
+            
+            sbsmsInfo si;
+            si.rs = rb.resampler;
+            si.samplesToProcess = samplesToProcess;
+            si.samplesToGenerate = samplesToGenerate;
+            si.rate0 = rateStart;
+            si.rate1 = rateEnd;
+            si.pitch0 = pitchStart;
+            si.pitch1 = pitchEnd;
+            
+            sbsms_quality quality = sbsms_quality_fast;
+            rb.sbsmser = sbsms_create(&samplesCB,&rateCBLinear,&pitchCBLinear,rightTrack?2:1,&quality,bPreAnalyze,true);
+            
             rb.outputLeftTrack = mFactory->NewWaveTrack(leftTrack->GetSampleFormat(),
                                                         leftTrack->GetRate());
             if(rightTrack)
                rb.outputRightTrack = mFactory->NewWaveTrack(rightTrack->GetSampleFormat(),
                                                             rightTrack->GetRate());
+            
+            
+            sampleCount blockSize = quality.maxoutframesize;
+            rb.outBuf = (audio*)calloc(blockSize,sizeof(audio));
+            rb.outputLeftBuffer = (float*)calloc(blockSize*2,sizeof(float));
+            if(rightTrack)
+               rb.outputRightBuffer = (float*)calloc(blockSize*2,sizeof(float));
+            
             long pos = 0;
             long outputCount = -1;
-
+            
+            // pre analysis
+            real fracPre = 0.0f;
+            if(bPreAnalyze) {
+               fracPre = 0.05f;
+               resampleBuf rbPre;
+               rbPre.block = maxBlockSize;
+               rbPre.buf = (audio*)calloc(rb.block,sizeof(audio));
+               rbPre.leftTrack = leftTrack;
+               rbPre.rightTrack = rightTrack?rightTrack:leftTrack;
+               rbPre.leftBuffer = (float*)calloc(maxBlockSize,sizeof(float));
+               rbPre.rightBuffer = (float*)calloc(maxBlockSize,sizeof(float));
+               rbPre.offset = start;
+               rbPre.end = end;
+               rbPre.ratio = srSBSMS/srIn;
+               rbPre.resampler = new Resampler(resampleCB, &rbPre);
+               si.rs = rbPre.resampler;
+               
+               long pos = 0;
+               long lastPos = 0;
+               long ret = 0;
+               while(lastPos<samplesToProcess) {
+                  ret = sbsms_pre_analyze(&samplesCB,&si,rb.sbsmser);
+                  lastPos = pos;
+                  pos += ret;
+                  real completion = (real)lastPos/(real)samplesToProcess;
+                  if (TrackProgress(0,fracPre*completion))
+                     return false;
+               }
+               sbsms_pre_analyze_complete(rb.sbsmser);
+               sbsms_reset(rb.sbsmser);
+               si.rs = rb.resampler;
+            }
+            
             // process
             while(pos<samplesOut && outputCount) {
-               long frames;
-               if(pos+SBSMSOutBlockSize>samplesOut) {
-                  frames = samplesOut - pos;
-               } else {
-                  frames = SBSMSOutBlockSize;
+               outputCount = sbsms_read_frame(rb.outBuf, &si, rb.sbsmser, NULL, NULL);
+               if(pos+outputCount>samplesOut) {
+                  outputCount = samplesOut - pos;
                }
-               outputCount = resampler.read(outBuf,frames);
+
                for(int i = 0; i < outputCount; i++) {
-                  outBufLeft[i] = outBuf[i][0];
+                  rb.outputLeftBuffer[i] = rb.outBuf[i][0];
                   if(rightTrack)
-                     outBufRight[i] = outBuf[i][1];
+                     rb.outputRightBuffer[i] = rb.outBuf[i][1];
                }
                pos += outputCount;
-               rb.outputLeftTrack->Append((samplePtr)outBufLeft, floatSample, outputCount);
+               rb.outputLeftTrack->Append((samplePtr)rb.outputLeftBuffer, floatSample, outputCount);
                if(rightTrack)
-                  rb.outputRightTrack->Append((samplePtr)outBufRight, floatSample, outputCount);
+                  rb.outputRightTrack->Append((samplePtr)rb.outputRightBuffer, floatSample, outputCount);
                
                double frac = (double)pos/(double)samplesOut;
                int nWhichTrack = mCurTrackNum;
@@ -390,7 +356,7 @@ bool EffectSBSMS::Process()
                      frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once. 
                   }
                }
-               if (TrackProgress(nWhichTrack, frac))
+               if (TrackProgress(nWhichTrack, fracPre + (1.0-fracPre)*frac))
                   return false;
             }
             rb.outputLeftTrack->Flush();

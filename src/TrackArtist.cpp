@@ -2859,7 +2859,6 @@ int TrackArtist::GetSpectrumLogMaxFreq(int deffreq)
 
 int TrackArtist::GetSpectrumWindowSize()
 {
-   mWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
    return mWindowSize;
 }
 

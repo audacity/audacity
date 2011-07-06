@@ -1,4 +1,3 @@
-// -*- mode: c++ -*-
 /*
 ** Copyright (C) 2001-2003 Erik de Castro Lopo <erikd@mega-nerd.com>
 **
@@ -202,6 +201,12 @@
 	#define	lrint(dbl)		((long) (dbl))
 	#define	lrintf(flt)		((long) (flt))
 
+#endif
+
+#ifdef SBSMS_REAL_FLOAT
+#define round2int(x) lrintf(x)
+#else
+#define round2int(x) lrint(x)
 #endif
 
 #endif

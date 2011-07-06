@@ -1,9 +1,9 @@
-// -*- mode: c++ -*-
 #ifndef SUBBAND_H
 #define SUBBAND_H
 
 #include "real.h"
 #include "buffer.h"
+#include "audio.h"
 #include "sms.h"
 #include <stdio.h>
 #include "config.h"
@@ -13,172 +13,164 @@
 
 namespace _sbsms_ {
 
-enum {
-  NDownSample = 256,
-  SDownSample = 4,
-  subBufSize = 512,
-  hSub = NDownSample/(2*SDownSample)
-};
+class renderer;
 
-class SubBand {
+class subband {
+  friend class renderer;
  public:
-  SubBand(SubBand *parent, int band, int channels, SBSMSQuality *quality, bool bSynthesize);
-  ~SubBand();
+  subband(subband *parent, unsigned short M, int channels, sbsms_quality *quality, int latency, bool bPreAnalysis, TrackAllocator *ta, PeakAllocator *pa);
+  ~subband();
 
-  long write(audio *buf, long n, float stretch, float pitch);
-  long read(audio *buf, long n);
-  long getInputFrameSize();
+  long write(audio *buf, long n, real a, real ratio);
+  void process();
+  long read(audio *buf, real *ratio0, real *ratio1);
+  long n_readable();
+  bool isframe_readable();
+  void writingComplete();
+  long readFromFile(FILE *fp, real a, real ratio);
+  long synth();
+  long getFramesWrittenToFile();
+  long writeToFile(FILE *fp);
+  void init();
+  void reset();
+  void seek(long framePos);
+  long getSamplesQueued();
+  long getFramesQueued();
+  long getFramesAtFront();
+  long getFramesAtBack();
+  long getLastInputFrameSize();
+  long getFramePos();
+  void write_(audio *buf, long n, real a, real ratio);
 
-  bool writeInit();
-  long analyzeInit(int,bool,long n=0);
-  long extractInit(int,bool);
-  long markInit(int,bool);
-  long assignInit(int,bool);
-  long trial2Init(int,bool);
-  long adjust2Init(bool);
-  long trial1Init(int,bool);
-  long adjust1Init(bool);
-  long renderInit(int,bool);
-  long writeFromFileInit(int,bool);
-  long readInit();
-
-  void analyze(int);
-  void extract(int);
-  void mark(int);
-  void assign(int);
-  void trial2(int);
-  void trial2Start(int);
-  void trial2Trial(int);
-  void trial2End(int);
-  void adjust2();
-  void trial1(int);
-  void trial1Start(int);
-  void trial1Trial(int);
-  void trial1End(int);
-  void adjust1();
-  void advance(int);
-  void render(int);
-
-  void assignStart(int c);
-  void assignInit(int c);
-  void assignFind(int c);
-  bool assignConnect(int c);
-  void assignStep(int c);
-  void splitMerge(int c);
-  void addRenderer(SBSMSRenderer *);
-  void removeRenderer(SBSMSRenderer *);
-  long renderSynchronous();
-  void renderComplete(const SampleCountType &samples);
-  void process(bool);
-
-  void stepAnalyzeFrame(int);
-  void stepExtractFrame(int);
-  void stepMarkFrame(int);
-  void stepAssignFrame(int);
-  void stepTrial2Frame(int);
-  void stepAdjust2Frame();
-  void stepTrial1Frame(int);
-  void stepAdjust1Frame();
-  void stepRenderFrame(int);
+  void writeFramePositionsToFile(FILE *fp);
+  long addInit(bool);
+  void addTrackPoints();
+  long markInit(bool, int c);
+  void markDuplicates(int c);
+  long assignInit(bool,int c);
+  long assignTrackPoints(int c);
+  void startNewTracks(int c);
+  void advanceTrackPoints(int c);
+  long synthInit(bool);
+  void synthTracks();
+  long readInit(bool);
+  long writeTracksToFile(FILE *fp);
+  void readTrackPointsFromFile(FILE *fp);
+  long writeTrackPointsToFile(FILE *fp); 
+  void stepAddFrame();
+  void stepMarkFrame(int c);
+  void stepAssignFrame(int c);
+  void stepSynthFrame();
   void stepReadFrame();
+  void readSubSamples();
+  void setA(real a);
+  void setAMod(real a);
+  void setAForH(real a);
+  void setH(real ratio);
+  void setF(real f);
+  void setFrameSize(int inputSize, real a, real ratio);
+  void setRatio(real ratio);
+  void setFramesInFile(long frames);
+  long zeroPad();
+  long zeroPad_();
 
+  long preAnalyze(audio *buf, long n, real a, real ratio);
+  void preAnalyzeComplete();
+
+  FILE *fp;
+
+  long getFramesAssigned();
+  long getFramesMarked();
+
+  bool isWriteReady();
+  bool isAddReady();
+  bool isMarkReady();
+  bool isAssignReady();
+  bool isSynthReady();
 #ifdef MULTITHREADED
   pthread_mutex_t dataMutex;
-  pthread_mutex_t grainMutex[3];
+  pthread_mutex_t bufferMutex;
 #endif
-  friend class SBSMSImp;
+
+  long nLatency;
+  long nLatencyOriginal;
 
  protected:
-  void resetNoRecurse();
-  
-  long getFramesAtFront(int);
-  void readSubSamples();
-  void setStretch(float stretch);
-  void setPitch(float pitch);
+  long read(audio *buf, long n);
+  void calculateA(long kstart, long kend);
+  real calculateOnset(grain *g1, grain *g2);
 
-  int nMarkLatency;
-  int nAssignLatency;
-  int nTrial2Latency;
-  int nAdjust2Latency;
-  int nTrial1Latency;
-  int nAdjust1Latency;
-  int nRenderLatency;
-  int nWriteSlack;
-  int nExtractSlack;
-  int nAnalyzeSlack;
-  int nMarkSlack;
-  int nAssignSlack;
-  int nTrial2Slack;
-  int nAdjust2Slack;
-  int nTrial1Slack;
-  int nAdjust1Slack;
-  int nRenderSlack;
-  list<SBSMSRenderer*> renderers;
-  RingBuffer<float> stretchRender;
-  RingBuffer<float> pitchRender;
-  int inputFrameSize;
+  TrackAllocator *ta;
+  PeakAllocator *pa;
+
+  RingBuffer<real> aPreAnalysis;
+  RingBuffer<real> aMod;
+  RingBuffer<real> aSynth;
+  RingBuffer<real> aForH;
+  RingBuffer<real> fSynth;
+  RingBuffer<int> inputFrameSize;
   RingBuffer<int> outputFrameSize;
-  float totalSizef;
-  SBSMSQuality *quality;
+  RingBuffer<real> frameRatio;
+  RingBuffer<int> frameBytes;
+  RingBuffer<real> onset;
+  grain *gPrev;
+
+  real getOnset(long k);
+  int lastInputFrameSize;
+  int lastOutputFrameSize;
+  real samplesQueued;
+  real lastFrameA;
+  real lastFrameRatio;
+  real totalSizef;
+  bool bPreAnalyze;
+  sbsms_quality *quality;
   int channels;
   int N;
   int h;
-  int band;
-  long nReadFromOutputFrame;
-  long nToWriteForGrain;
-  long res;
-  long resMask;
-  long nGrainsPerFrame;
-  long nToDrop0;
-  long nToDrop1;
-  long nToDrop2;
-  long nToPrepad1;
-  long nToPrepad0;
-  bool bSynthesize;
+  unsigned short M;
+  int s;
+  int res;
+  int nGrainsPerFrame;
+  int resTotal;
+  long nDropped;
+  long nToDrop;
 
-  long nGrainsToAnalyze[3];
-  long nGrainsToExtract[2];
-  long nGrainsToMark[2];
-  long nGrainsToAssign[2];
-  long nGrainsToAdvance[2];
-  long nGrainsToTrial2[2];
-  long nGrainsToAdjust2;
-  long nGrainsToTrial1[2];
-  long nGrainsToAdjust1;
-  long nGrainsToRender[2];
-  long nGrainsWritten;
-  long nGrainsMarked[2];
-  long nGrainsAssigned[2];
-  long nGrainsTrialed2[2];
-  long nGrainsAdjusted2;
-  long nGrainsTrialed1[2];
-  long nGrainsAdjusted1;
-  long nGrainsAdvanced[2];
-  long nGrainsRendered[2];
-  long nGrainsRead;
+  long nTrackPointsToAdd;
+  long nTrackPointsToMark[2];
+  long nTrackPointsToAssign[2];
+  long nTrackPointsToAdvance[2];
+  long nTrackPointsToSynth;
 
-  long nFramesAnalyzed[3];
-  long nFramesExtracted[2];
+  long nTrackPointsMarked[2];
+  long nTrackPointsAssigned[2];
+  long nTrackPointsStarted[2];
+  long nTrackPointsAdvanced[2];
+  long nTrackPointsSynthed;
+  long nTrackPointsRead;
+  long nFramesSkipped;
+  long nFramesWritten;
+  long nFramesAdded;
   long nFramesMarked[2];
   long nFramesAssigned[2];
-  long nFramesTrialed2[2];
-  long nFramesAdjusted2;
-  long nFramesTrialed1[2];
-  long nFramesAdjusted1;
-  long nFramesRendered[2];
   long nFramesRead;
+  long nFramesSynthed;
+  long nFramesInFile;
+  long nTrackPointsWritten;
 
-  SubBand *parent;
-  SubBand *sub;
+  bool bWritingComplete;
+  subband *parent;
+  subband *sub;
+  GrainBuf *in0,*in1,*in2;
   SampleBufBase *outMixer;
-  SynthRenderer *synthRenderer;
-  SMS *sms;
-  SampleBuf *samplesSubIn;
-  SampleBuf *samplesSubOut;
-  GrainBuf *grains[3];
-  GrainBuf *analyzedGrains[3][2];
-  GrainBuf *grainsIn;
-  GrainAllocator *downSampledGrainAllocator;
+  sms *smser;
+  SampleBuf *subIn;
+  SampleBuf *subOut;
+  GrainBuf *in;
+  GrainBuf *inPre;
+  
+  grain *x1[2];
+  grain *x2[2];
+
 };
 
 }

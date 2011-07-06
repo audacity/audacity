@@ -1,13 +1,13 @@
 /* src/config.h.in.  Generated from configure.in by autoheader.  */
 
-/* Define to enable sse */
-#undef ENABLE_SSE
-
 /* Define to 1 if you have the `calloc' function. */
 #undef HAVE_CALLOC
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the `floor' function. */
+#undef HAVE_FLOOR
 
 /* Define to 1 if you have the `free' function. */
 #undef HAVE_FREE
@@ -18,11 +18,17 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
+/* Define to 1 if you have the `log' function. */
+#undef HAVE_LOG
+
 /* Define if you have C99's lrint function. */
 #undef HAVE_LRINT
 
 /* Define if you have C99's lrintf function. */
 #undef HAVE_LRINTF
+
+/* Define to use libmad */
+#undef HAVE_MAD
 
 /* Define to 1 if you have the `malloc' function. */
 #undef HAVE_MALLOC
@@ -33,8 +39,14 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
-/* Define to 1 if you have the `memset' function. */
-#undef HAVE_MEMSET
+/* Define to use libportaudio */
+#undef HAVE_PORTAUDIO
+
+/* Define to use libsndfile */
+#undef HAVE_SNDFILE
+
+/* Define to 1 if you have the `sqrt' function. */
+#undef HAVE_SQRT
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

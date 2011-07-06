@@ -1,341 +1,309 @@
 #include "track.h"
-#include "real.h"
-#include "dBTable.h"
-#include "synthTable.h"
+#include <math.h>
 #include "utils.h"
-
-#include <algorithm>
+#include "real.h"
+#include "sbsms.h"
+#include "sms.h"
+#include <vector>
 using namespace std;
 
 namespace _sbsms_ {
 
-Track :: Track(float h, TrackIndexType index, TrackPoint *p, const TimeType &time, bool bStitch)
+#define SBSMS_TRACK_BLOCK 2048
+
+TrackAllocator :: TrackAllocator(bool bManageIndex)
 {
-  this->h = h;
-  jumpThresh2 = 1.0e-5f * h;
-  this->index = index;
-  bEnd = false;
-  bEnded = false;
-  bRender = false;
-  bSplit = false;
-  bMerge = false;
-  first = time;
-  start = time;
-  if(bStitch) {
-    this->bStitch = true;
-  } else {
-    this->bStitch = false;
-    if(start > 0) {
-      start--;
+  this-> bManageIndex = bManageIndex;
+}
+
+TrackAllocator :: TrackAllocator(bool bManageIndex, unsigned short maxtrackindex)
+{
+  this-> bManageIndex = bManageIndex;
+  gTrack.resize(maxtrackindex);
+  init();
+}
+
+TrackAllocator :: ~TrackAllocator()
+{
+}
+
+void TrackAllocator :: init()
+{
+  for(unsigned short k=0;k<gTrack.size();k++)
+    gTrack[k] = NULL;
+  while(!gTrackIndex.empty())
+    gTrackIndex.pop();
+#ifdef MULTITHREADED
+	pthread_mutex_init(&taMutex,NULL);
+#endif
+}
+
+track *TrackAllocator :: getTrack(unsigned short index)
+{
+  return gTrack[index];
+}
+
+int TrackAllocator :: size()
+{
+  return gTrack.size();
+}
+
+track *TrackAllocator :: create(track *precursor, sms *owner, int res, unsigned short index) 
+{
+  track *t = new track(precursor,owner,res);
+  t->index = index;
+  gTrack[index] = t;
+  return t;
+}
+
+track *TrackAllocator :: create(track *precursor, sms *owner, int res) 
+{
+#ifdef MULTITHREADED
+	pthread_mutex_lock(&taMutex);
+#endif
+  if(gTrackIndex.empty()) {
+    unsigned short n = gTrack.size();
+    gTrack.resize(n+SBSMS_TRACK_BLOCK);
+    for(int k=n+SBSMS_TRACK_BLOCK-1;k>=n;k--) {
+      gTrackIndex.push(k);
+      gTrack[k] = NULL;
     }
   }
-  point.push_back(p);
-  p->owner = this;
-  p->refCount++;
-  end = time;
-  last = time;
+  unsigned short index = gTrackIndex.top();
+  gTrackIndex.pop();
+#ifdef MULTITHREADED
+	pthread_mutex_unlock(&taMutex);
+#endif
+  return create(precursor, owner, res, index);
 }
 
-Track :: ~Track() {
-  for(vector<TrackPoint*>::iterator i = point.begin();
-      i != point.end();
-      ++i) {
-    TrackPoint *tp = (*i);
-    if(tp) tp->destroy();
-  }
-}
-
-TrackIndexType Track :: getIndex()
+void TrackAllocator :: destroy(track *t)
 {
-  return index;
+#ifdef MULTITHREADED
+	pthread_mutex_lock(&taMutex);
+#endif
+  gTrack[t->index] = NULL;
+  if(bManageIndex) 
+    gTrackIndex.push(t->index);
+  delete t;
+#ifdef MULTITHREADED
+	pthread_mutex_unlock(&taMutex);
+#endif
 }
 
-bool Track :: isFirst(const TimeType &time)
+track :: track(track *precursor, sms *owner, int res) 
 {
-  return (time == first);
+  this->owner = owner;
+  this->res = res;
+  this->descendant = NULL;
+  this->precursor = precursor;
+  this->end = LONG_MAX;
+  this->rise = 0.3f;
+  this->fall = 0.5f;
+  tailEnd = 0;
+  tailStart = 0;
+  m_p = 0.0;
+  currtime = 0;
 }
 
-bool Track :: isLast(const TimeType &time)
+
+void track :: endTrack(bool bTail)
 {
-  return (time == last);
-}
-
-TimeType Track :: size()
-{
-  return point.size();
-}
-
-TrackPoint *Track :: back() 
-{
-  return point.back(); 
-}
-
-TrackPoint *Track :: getTrackPoint(const TimeType &time)
-{
-  return point[time - first];
-}
-
-SBSMSTrackPoint *Track :: getSBSMSTrackPoint(const TimeType &time)
-{
-  return getTrackPoint(time);
-}
-
-bool Track :: jump(TrackPoint *tp0, TrackPoint *tp1)
-{
-  if(tp1->m > tp0->m) {
-    float cost = 1.0e-4f * dBApprox(tp0->m,tp1->m);
-    return (cost > jumpThresh2);
-  } else {
-    return false;
-  }
-}
-          
-TrackPoint *Track :: updateFPH(const TimeType &time, int mode, int n, float f0, float f1)
-{
-  if(time == start && time < first) {
-    TrackPoint *tp1 = getTrackPoint(time+1);
-    tp1->fSynth1 = max(0.0f,min(6.0f,f1 * tp1->f));
-    tp1->fSynth0 = tp1->fSynth1;
-    tp1->phSynth = tp1->ph;
-    if(mode == synthModeOutput && tp1->dupStereo) {
-      return tp1;
-    }
-  } else if(time == last) {
-    if(last < end) {
-      TrackPoint *tp0 = getTrackPoint(time);
-      tp0->fSynth0 = tp0->fSynth1;
-    }
-  } else {
-    TrackPoint *tp0 = getTrackPoint(time);
-    TrackPoint *tp1 = getTrackPoint(time+1);
-
-    if(mode == synthModeOutput) {
-      if(tp0->dupStereo && tp1->dupStereo && tp0->dupStereo->owner == tp1->dupStereo->owner) {
-        float dp = tp1->ph - tp0->ph;
-        float dp0 = 0.5f*h*(tp0->f + tp1->f);
-        float dw = canonPI(dp - dp0)/h;
-        float dpStereo = tp1->dupStereo->ph - tp0->dupStereo->ph;
-        float dp0Stereo = 0.5f*h*(tp0->dupStereo->f + tp1->dupStereo->f);
-        float dwStereo = canonPI(dpStereo - dp0Stereo)/h;
-        if(dw > .0013f * (tp0->f + tp1->f)) {
-          dw = 0;
-          dwStereo = 0;
-        } else if(dwStereo > .0013f * (tp0->dupStereo->f + tp1->dupStereo->f)) {
-          dwStereo = 0;
-        }
-        float w0 = 0.5f * (tp0->f + tp0->dupStereo->f + dw + dwStereo);
-        float w1 = 0.5f * (tp1->f + tp1->dupStereo->f + dw + dwStereo);
-        float dwSynth = 0.5f * canonPI(dp - dpStereo) / n;
-        if(!(bSplit && time == first)) {
-          tp0->fSynth0 = max(0.0f,min(6.0f,f0 * (w0 + dwSynth)));
-        }
-        if(!(bMerge && time + 1 == last)) {
-          tp1->fSynth1 = max(0.0f,min(6.0f,f1 * (w1 + dwSynth)));
-        }
-      } else {
-        float dp = tp1->ph - tp0->ph;
-        float dp0 = 0.5f*h*(tp0->f + tp1->f);
-        float dw = canonPI(dp - dp0)/h;
-        if(dw > .0013f * (tp0->f + tp1->f)) {
-          dw = 0;
-        }
-        if(!(bSplit && time == first)) {
-          tp0->fSynth0 = max(0.0f,min(6.0f,f0 * (tp0->f + dw)));
-        }
-        if(!(bMerge && time + 1 == last)) {
-          tp1->fSynth1 = max(0.0f,min(6.0f,f1 * (tp1->f + dw)));
-        }
-      }
-  
-      if(!(tp0->bSplit || tp0->bMerge || tp1->bSplit || tp1->bMerge) && jump(tp0,tp1)) {
-        tp1->bJump = true;
-        if(tp0->dupStereo && tp1->dupStereo) {
-          if(tp0->dupStereo->owner == tp1->dupStereo->owner) {
-            tp1->bSyncStereo = !jump(tp0->dupStereo,tp1->dupStereo);
-          }
-        }
-      }
-
-      if(!tp0->bSplit) {
-        if(tp0->bJump) {
-          if(tp0->bSyncStereo) {
-            tp0->phSynth = canon2PI(tp0->dupStereo->phSynth + tp0->ph - tp0->dupStereo->ph);
-          } else {
-            tp0->phSynth = tp0->ph;
-          }
-        }
-      }
-
-      if(!(bMerge && time + 1 == last)) {
-        tp1->phSynth = canon2PI(tp0->phSynth + 0.5f * (tp0->fSynth0 + tp1->fSynth1) * n);
-      }
-    } else {
-      float dp = tp1->ph - tp0->ph;
-      float dp0 = 0.5f*h*(tp0->f + tp1->f);
-      float dw = canonPI(dp - dp0)/h;
-      if(dw > .0013f * (tp0->f + tp1->f)) {
-        dw = 0;
-      }
-      if(!(bSplit && time == first)) {
-        tp0->fSynth0 = max(0.0f,min(6.0f,f0 * (tp0->f + dw)));
-        tp0->phSynth = tp0->ph;
-      }
-      if(!(bMerge && time + 1 == last)) {
-        tp1->fSynth1 = max(0.0f,min(6.0f,f1 * (tp1->f + dw)));
-        tp1->phSynth = tp1->ph;
-      }
-    }
-  }
-  return NULL;
-}
-
-void Track :: updateM(const TimeType &time, int mode)
-{
-  if(mode == synthModeTrial2) {
-    if(time == first && time == start) {
-      TrackPoint *tp0 = getTrackPoint(time);
-      tp0->m = (tp0->m2>0.0f?sqrt(tp0->m2):0.0f);
-    }
-    if(time < last) {
-      TrackPoint *tp1 = getTrackPoint(time+1);
-      tp1->m = (tp1->m2>0.0f?sqrt(tp1->m2):0.0f);
-    }
-  }
-}
-
-void Track :: step(const TimeType &time)
-{
-  if(time > first && time < last) {
-    TrackPoint *tp = point[time-first];
-    tp->destroy();
-    point[time-first] = NULL;
-  }
-}
-
-void Track :: push_back(TrackPoint *p)
-{
-  point.push_back(p);
-  p->owner = this;
-  p->refCount++;
-  last++;
-  end++;
-}
-
-void Track :: endTrack(bool bStitch)
-{
-  if(bStitch) {
-    this->bStitch = true;
-  } else {
+  end = back()->time;
+  if(bTail) {
+    this->fall = min(1.5f,.25f + back()->y / point[point.size()-2]->y);
+    tailEnd = 1;
     end++;
+    trackpoint *f = new trackpoint(back());
+    f->time = back()->time + 1;
+    point.push_back(f);
   }
-  bEnded = true;
 }
 
-void Track :: synth(float *out,
-                    const TimeType &time,
-                    int n,
-                    int mode,
-                    int c)
+void track :: synth(SampleBuf *out,
+                    long writePos,
+                    int c,
+                    long synthtime,
+                    int steps,
+                    real fScale0,
+                    real fScale1,
+                    real mScale) {
+  if(point.size()==0) return;
+  long k = synthtime - start;
+  if(k>=(long)point.size()-1) return;
+  currtime = synthtime;
+  if(k<0) return;
+  int k1 = k + 1;  
+
+  tpoint *tp0 = point[k];
+  tpoint *tp1 = point[k1];
+
+  real w0 = tp0->f;
+  real w1 = tp1->f;
+  real ph0 = tp0->ph;
+  real ph1 = tp1->ph;
+  real h = tp0->h;
+ 
+  real dp = ph1 - ph0;
+  if(dp>PI) dp-=TWOPI;
+  else if(dp<-PI) dp+=TWOPI;
+  real dp0 = 0.5f*h*(w0 + w1);
+  real dw = canon(dp - dp0)/h;
+
+  if(k==0) {
+    if(precursor) {
+      m_p = precursor->m_pDescendant;
+    }  else {    
+      dw = 0;
+    }
+  }
+  
+  real dt = (real)steps;
+  w0 = (w0+dw);
+  w1 = (w1+dw);
+  w0 = w0*fScale0;
+  w1 = w1*fScale1;
+  dp = dt*0.5f*(w0 + w1);
+  real b = (w1 - w0)/(2.0f*dt);
+
+  bool bEnd = (k1==(long)point.size()-1);
+  bool bStart = (k==0);
+
+  if(bStart && tailStart) {
+    if(w0 < PI && w0 > -PI) {
+      real ph = m_p;
+      int rise = round2int(this->rise * (real)steps);
+      real dm = mScale*tp1->y/(real)rise;
+      real m = mScale*tp1->y - dm;
+      for(int i=steps-1;i>=steps-rise+1;i--) {
+        ph -= w0;     
+        if(ph<-PI) ph += TWOPI;
+        else if(ph>PI) ph -= TWOPI;
+        out->buf[writePos+i][c] += m * COS(ph);
+        m -= dm;
+      }
+    }
+  } else if(bEnd && tailEnd) {
+    if(w0 < PI && w0 > -PI) {
+      real ph = m_p;
+      int fall = round2int(this->fall * (real)steps);
+      real dm = mScale*tp0->y/(real)fall;
+      real m = mScale*tp0->y;
+      for(int i=0;i<fall;i++) {
+        out->buf[writePos+i][c] += m * COS(ph); 
+        ph += w0;
+        if(ph<-PI) ph += TWOPI;
+        else if(ph>PI) ph -= TWOPI;
+        m -= dm;
+      }
+    }
+  } else  {
+    real m = mScale*tp0->y;
+    real dm = mScale*(tp1->y0 - tp0->y)/dt;
+    real ph = m_p;
+    real b2tt1 = b;
+    real b2 = 2.0f*b;
+    real dph;
+
+    audio *o = &(out->buf[writePos]);
+    for(int i=0;i<steps;i++) {
+      dph = w0 + b2tt1;      
+      if(dph < PI && dph > -PI) (*o)[c] += m * COS(ph);
+      ph += dph;
+      if(ph<-PI) ph += TWOPI;
+      else if(ph>PI) ph -= TWOPI;
+      b2tt1 += b2;
+      m += dm;
+      o++;
+    }
+  }
+
+  if(bEnd) {
+    if(descendant && descendant->back()->M < tp0->M) {
+      m_pDescendant = canon(m_p + dp/dt*(real)(descendant->owner->samplePos - owner->samplePos));
+    }
+  } else if(bStart && tailStart) {
+  } else {
+    m_p = canon(m_p + dp);
+    if(descendant && descendant->back()->M > tp0->M && (k1+res==(long)point.size()-1)) {
+      m_pDescendant = canon(m_p + dp/dt*(real)(descendant->owner->samplePos - (owner->samplePos+steps)));
+    }
+  }
+}
+
+bool track :: isEnded()
 {
-  float m0, m1;
-  float w0, w1;
-  float dw;
-  float ph0, ph1;
-  bool bTailStart;
-  bool bTailEnd;
-  if(time >= end) return;
-  if(time < last) {
-    TrackPoint *tp1 = getTrackPoint(time+1);
-    w1 = tp1->fSynth1;
-    m1 = tp1->m;
-    ph1 = tp1->phSynth;
-    if(bMerge && time + 1 == last) {
-      m1 = 0.0f;
-    }
-    bTailStart = tp1->bJump;
-    bTailEnd = tp1->bJump;
-  } else {
-    bTailStart = false;
-    bTailEnd = (last != end);
-  }
-  if(time >= first) {
-    TrackPoint *tp0 = getTrackPoint(time);
-    w0 = tp0->fSynth0;
-    m0 = tp0->m;
-    ph0 = tp0->phSynth;
-    if(bSplit && time == first) {
-      m0 = 0.0f;
-    }
-  } else {
-    bTailStart = true;
-  }
+  return (end!=LONG_MAX);
+}
 
-  if(bTailEnd) {
-    int fall = min(n,w0==0.0f?384:min(384,(int)lrintf(PI * 4.0f / w0)));
-    float dm = m0 / (float)fall;
-    float w = w0;
-    float *out2 = out;
-    float *end = out + fall;
-    long iph = lrintf(ph0 * WScale);
-    if(iph>=W2PI) iph -= W2PI;
-    long iw = lrintf(w * WScale);
-    while(out2 != end) {
-      if(iw < WPI) {
-        long f = (iph>>PhShift)&Ph1;
-        long i = iph>>WShift;
-        *out2 += m0 * (float)(synthTable1[i] + f * synthTable2[i]);
-      }
-      out2++;
-      m0 -= dm;
-      iph += iw;
-      iph &= W2PIMask;
-    }
+void track :: push_back_tpoint(tpoint *p)
+{
+  point.push_back(p);
+}
+
+void track :: push_back(trackpoint *p)
+{
+  point.push_back(p);
+  p->owner = this;
+}
+  
+void track :: startTrack(trackpoint *p, bool bTail)
+{
+  push_back(p);
+  start = p->time;
+  m_pDescendant = p->ph;
+  if(bTail) {
+    tailStart = 1;
+    start--;
+    trackpoint *s = new trackpoint(p);
+    s->time = p->time - 1;
+    point.insert(point.begin(),s);
+    m_p = p->ph;
   }
+  currtime = p->time-1;
+}
 
-  if(bTailStart) {
-    int rise = min(n,w1==0.0f?384:min(384,(int)lrintf(PI * 3.0f / w1)));
-    float dm = m1 / (float)rise;
-    float w = w1;
-    out += n;
-    float *end = out-rise;
-    long iph = lrintf(ph1 * WScale);
-    iph &= W2PIMask;
-    long iw = lrintf(w * WScale);
-    while(out != end) {
-      out--;
-      m1 -= dm;
-      iph -= iw;
-      if(iph<0) iph += W2PI;
-      if(iw < WPI) {
-        long f = (iph>>PhShift)&Ph1;
-        long i = iph>>WShift;
-        *out += m1 * (float)(synthTable1[i] + f * synthTable2[i]);
-      }
-    }
-  }
+trackpoint *track :: back() 
+{
+  return (trackpoint*)point.back(); 
+}
 
-  if(!(bTailStart || bTailEnd)) {
-    float dw = (w1 - w0) / n;
-    float w = w0 + 0.5f * dw;
-    float dm = (m1 - m0) / n;
-    long iph = lrintf(ph0 * WScale);
-    if(iph>=W2PI) iph -= W2PI;
-    long iw = lrintf(w * WScale);
-    long idw = lrintf(dw * WScale) + 1;
+trackpoint *track :: getTrackPoint(long time)
+{
+  long k = time-start;
+  if(k<0 || k >= (long)point.size())
+    return NULL;
+  else
+    return (trackpoint*)point[k];
+}
 
-    float *end = out + n;
-    while(out != end) {
-      if(iw < WPI) {
-        long f = (iph>>PhShift)&Ph1;
-        long i = iph>>WShift;
-        *out += m0 * (float)(synthTable1[i] + f * synthTable2[i]);
-      }
-      iph += iw;
-      iw += idw;
-      iph &= W2PIMask;
-      m0 += dm;
-      out++;
-    }
+bool track :: isStart(long synthtime)
+{
+  return (synthtime == start);
+}
+
+bool track :: isEnd(long synthtime)
+{
+  return (synthtime == end);
+}
+
+bool track :: isDone() 
+{
+  return (currtime-start+1 >= (long)point.size()-1);
+}
+
+long track :: size()
+{
+  return 1+end-start-tailEnd-tailStart;
+}
+
+track :: ~track() {
+  if(precursor) precursor->descendant = NULL;
+  if(descendant) descendant->precursor = NULL;
+  for(vector<tpoint*>::iterator i = point.begin();
+      i != point.end();
+      i++) {
+    delete (*i);
   }
 }
 

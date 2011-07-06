@@ -40,8 +40,6 @@ DIST_COMMON = $(libsbsmsinclude_HEADERS) $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/ac_c99_func_lrintf.m4 \
-	$(top_srcdir)/m4/ax_check_compiler_flags.m4 \
-	$(top_srcdir)/m4/ax_compiler_vendor.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
 	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/configure.in
@@ -61,9 +59,9 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libsbsms_la_LIBADD =
-am_libsbsms_la_OBJECTS = sms.lo track.lo trackpoint.lo resample.lo \
-	sbsms.lo fft.lo grain.lo buffer.lo subband.lo dBTable.lo \
-	slide.lo
+am_libsbsms_la_OBJECTS = peak.lo sms.lo track.lo trackpoint.lo \
+	utils.lo audio.lo resample.lo sbsms.lo fft.lo grain.lo \
+	buffer.lo subband.lo
 libsbsms_la_OBJECTS = $(am_libsbsms_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -215,11 +213,11 @@ target_os = @target_os@
 target_vendor = @target_vendor@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CXXFLAGS = @SBSMS_CFLAGS@ -I../include
+AM_CXXFLAGS = -I../include @SBSMS_CFLAGS@
 libsbsmsincludedir = $(includedir)
 libsbsmsinclude_HEADERS = ../include/sbsms.h
 lib_LTLIBRARIES = libsbsms.la
-libsbsms_la_SOURCES = sms.cpp track.cpp trackpoint.cpp resample.cpp sbsms.cpp fft.cpp grain.cpp buffer.cpp subband.cpp dBTable.cpp buffer.h fft.h sse.h utils.h trackpoint.h grain.h real.h synthTable.h dBTable.h sincCoeffs.h ../include/sbsms.h sms.h subband.h track.h slide.cpp
+libsbsms_la_SOURCES = peak.cpp sms.cpp track.cpp trackpoint.cpp utils.cpp audio.cpp resample.cpp sbsms.cpp fft.cpp grain.cpp buffer.cpp subband.cpp audio.h buffer.h fft.h utils.h peak.h trackpoint.h grain.h real.h resample.h ../include/sbsms.h sms.h subband.h track.h
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -307,17 +305,18 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buffer.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dBTable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fft.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/grain.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/peak.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resample.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sbsms.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/slide.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sms.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/subband.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/track.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trackpoint.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

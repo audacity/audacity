@@ -89,7 +89,6 @@ OBJS = \
 	Profiler.o \
 	Project.o \
 	RealFFTf.o \
-	FFTMixedRadix.o \
 	Resample.o \
 	RingBuffer.o \
 	Screenshot.o \

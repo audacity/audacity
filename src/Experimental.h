@@ -90,10 +90,6 @@
 // Replace RealFFT() and PowerSpectrum function to use (faster) RealFFTf function
 #define EXPERIMENTAL_USE_REALFFTF
 
-// Clayton Otey
-// mixed radix sse enabled fft
-#define EXPERIMENTAL_USE_MIXEDRADIX_FFT
-
 // RBD, 1 Sep 2008
 // Enables MIDI Output of NoteTrack (MIDI) data during playback
 // USE_MIDI must be defined in order for EXPERIMENTAL_MIDI_OUT to work

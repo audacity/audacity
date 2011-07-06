@@ -258,11 +258,6 @@ void OnZoomFitV();
 void DoZoomFitV();
 void OnZoomSel();
 
-#ifdef EXPERIMENTAL_USE_MIXEDRADIX_FFT
-void OnNarrowSpectrum();
-void OnBroadenSpectrum();
-#endif
-
 void OnExpandAllTracks();
 void OnCollapseAllTracks();
 

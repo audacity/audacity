@@ -285,11 +285,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\buffer.cpp"
+				RelativePath="..\..\..\lib-src\sbsms\src\audio.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\dBTable.cpp"
+				RelativePath="..\..\..\lib-src\sbsms\src\buffer.cpp"
 				>
 			</File>
 			<File
@@ -301,15 +301,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\lib-src\sbsms\src\peak.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\lib-src\sbsms\src\resample.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\lib-src\sbsms\src\sbsms.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\slide.cpp"
 				>
 			</File>
 			<File
@@ -328,6 +328,10 @@
 				RelativePath="..\..\..\lib-src\sbsms\src\trackpoint.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\lib-src\sbsms\src\utils.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -335,11 +339,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\buffer.h"
+				RelativePath="..\..\..\lib-src\sbsms\src\audio.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\dBTable.h"
+				RelativePath="..\..\..\lib-src\sbsms\src\buffer.h"
 				>
 			</File>
 			<File
@@ -348,6 +352,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\lib-src\sbsms\src\grain.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\lib-src\sbsms\src\peak.h"
 				>
 			</File>
 			<File
@@ -363,15 +371,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\sse.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\lib-src\sbsms\src\subband.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\lib-src\sbsms\src\synthTable.h"
 				>
 			</File>
 			<File
