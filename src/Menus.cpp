@@ -2587,6 +2587,7 @@ double AudacityProject::NearestZeroCrossing(double t0)
          dist[i] += 0.1 * (abs(i - windowSize/2)) / float(windowSize/2);
       }
 
+      delete [] oneDist;
       track = iter.Next();
    }
 
@@ -2599,6 +2600,8 @@ double AudacityProject::NearestZeroCrossing(double t0)
          min = dist[i];
       }
    }
+
+   delete [] dist;
 
    return t0 + (argmin - windowSize/2)/GetRate();
 }
