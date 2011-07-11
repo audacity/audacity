@@ -1338,7 +1338,14 @@ ProgressDialog::Update(double current, const wxString & message)
 int
 ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxString & message)
 {
-   return Update((int)(current * 1000 / total), message);
+   if (total != 0)
+   {
+      return Update((int)(current * 1000 / total), message);
+   }
+   else
+   {
+      return Update(1000, message);
+   }
 }
 
 //
@@ -1347,7 +1354,14 @@ ProgressDialog::Update(wxULongLong_t current, wxULongLong_t total, const wxStrin
 int
 ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & message)
 {
-   return Update((int)(current.GetValue() * 1000ll / total.GetValue()), message);
+   if (total.GetValue() != 0)
+   {
+      return Update((int)(current.GetValue() * 1000ll / total.GetValue()), message);
+   }
+   else
+   {
+      return Update(1000, message);
+   }
 }
 
 //
@@ -1356,7 +1370,14 @@ ProgressDialog::Update(wxLongLong current, wxLongLong total, const wxString & me
 int
 ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString & message)
 {
-   return Update((int)(current * 1000ll / total), message);
+   if (total != 0)
+   {
+      return Update((int)(current * 1000ll / total), message);
+   }
+   else
+   {
+      return Update(1000, message);
+   }
 }
 
 //
@@ -1365,7 +1386,14 @@ ProgressDialog::Update(wxLongLong_t current, wxLongLong_t total, const wxString 
 int
 ProgressDialog::Update(int current, int total, const wxString & message)
 {
-   return Update((int)(current *  ((double)(1000.0 / total))), message);
+   if (total != 0)
+   {
+      return Update((int)(current *  ((double)(1000.0 / total))), message);
+   }
+   else
+   {
+      return Update(1000, message);
+   }
 }
 
 //
@@ -1374,7 +1402,14 @@ ProgressDialog::Update(int current, int total, const wxString & message)
 int
 ProgressDialog::Update(double current, double total, const wxString & message)
 {
-   return Update((int)(current * 1000.0 / total), message);
+   if (total != 0)
+   {
+      return Update((int)(current * 1000.0 / total), message);
+   }
+   else
+   {
+      return Update(1000, message);
+   }
 }
 
 //
