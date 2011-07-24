@@ -1038,7 +1038,6 @@ void TagsEditor::OnReset(wxCommandEvent & event)
       tf.AddLine(mLocal.GetUserGenre(i));
    }
 
-   tf.Write();
    if (!tf.Write()) {
       wxMessageBox(_("Unable to save genre file."), _("Reset Genres"));
       mLocal.LoadGenres();
