@@ -49,7 +49,7 @@ EffectToneGen::EffectToneGen()
    frequency[0] = float(440.0);          //Hz
    frequency[1] = float(1320.0);          //Hz
    amplitude[0] = float(0.8);
-   amplitude[1] = float(0.8);
+   amplitude[1] = float(0.1);
    interpolation = 0;
 }
 
