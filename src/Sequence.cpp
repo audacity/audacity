@@ -1286,12 +1286,6 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
    if (((double)mNumSamples) + ((double)len) > wxLL(9223372036854775807))
       return false;
 
-   samplePtr temp = NULL;
-   if (format != mSampleFormat) {
-      temp = NewSamples(mMaxSamples, mSampleFormat);
-      wxASSERT(temp);
-   }
-
    // If the last block is not full, we need to add samples to it
    int numBlocks = mBlock->Count();
    if (numBlocks > 0 && mBlock->Item(numBlocks - 1)->f->GetLength() < mMinSamples) {
@@ -1333,6 +1327,15 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       buffer += addLen * SAMPLE_SIZE(format);
    }
    // Append the rest as new blocks
+   samplePtr temp = NULL;
+   if (format != mSampleFormat) {
+      temp = NewSamples(mMaxSamples, mSampleFormat);
+      wxASSERT(temp);
+      if (!temp) {
+         wxMessageBox(_("Memory allocation failed -- NewSamples"));
+         return false;
+      }
+   }
    while (len) {
       sampleCount idealSamples = GetIdealBlockSize();
       sampleCount l = (len > idealSamples ? idealSamples : len);
@@ -1358,8 +1361,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       mNumSamples += l;
       len -= l;
    }
-
-   if (format != mSampleFormat)
+   if (temp)
       DeleteSamples(temp);
 
 // JKC: During generate we use Append again and again.
@@ -1691,16 +1693,3 @@ void Sequence::AppendBlockFile(BlockFile* blockFile)
    ConsistencyCheck(wxT("AppendBlockFile"));
 #endif
 }
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: db4a8822-8419-4e37-869e-957151956fb7
-
