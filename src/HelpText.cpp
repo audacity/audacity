@@ -154,7 +154,7 @@ wxString TitleText( const wxString & Key )
    }
    if(Key ==wxT("wma-proprietary") )
    {
-      return _("Unsupported Formats");
+      return _("Support for Other Formats");
    }
    if(Key ==wxT("burncd") )
    {
@@ -181,6 +181,20 @@ wxString HelpTextBuiltIn( const wxString & Key )
          _(" [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)") + wxT("</li><li>") +
          _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)") + wxT("</li></ul></p><p>") +
          _(" For even quicker answers, all the online resources above are <b>searchable</b>.")  + wxT("</p>") 
+      );
+   }
+   if(Key==wxT("wma-proprietary"))
+   {
+      return WrapText(
+         wxString(wxT("<p>"))+
+         _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
+compressed WAV files from portable recorders and audio from video files) if you download and install \
+the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> \
+FFmpeg library</a> to your computer.") + wxT("</p><p>") +
+         _("You can also read our help on importing \
+<a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> \
+and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> \
+audio CDs</a>.") + wxT("</p>")
       );
    }
 
@@ -215,15 +229,3 @@ wxString HelpText( const wxString & Key )
    // Perhaps useful for debugging - we'll return key that we didn't find.
    return WrapText( Key );
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: a8955864-40e2-47aa-923b-cace3994493a
-
