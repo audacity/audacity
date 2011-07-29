@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-07-18 04:15+0100\n"
-"PO-Revision-Date: 2011-03-30 00:37-0000\n"
+"PO-Revision-Date: 2011-07-29 17:06-0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -235,6 +235,28 @@ msgstr ""
 "Не вдалося знайти %s.\n"
 "\n"
 "Його вилучено зі списку нещодавніх файлів."
+
+#: AudacityApp.cpp:846
+#, c-format
+msgid ""
+"One or more external audio files could not be found.\n"
+"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
+"Silence is being substituted for the affected audio.\n"
+"The first detected missing file is:\n"
+"%s\n"
+"There may be additional missing files.\n"
+"Choose File > Check Dependencies to view a list of locations of the missing files."
+msgstr ""
+"Не вдалося знайти один або декілька зовнішніх звукових файлів.\n"
+"Ймовірно, ці файли пересунуто, вилучено або збережено на носії, який зараз не з’єднано з системою.\n"
+"Звукові дані файлів, які не знайдено, буде замінено тишею.\n"
+"Першою виявлено нестачу цього файла:\n"
+"%s\n"
+"Може не вистачати інших файлів. Скористайтеся пунктом меню «Файл -> Перевірити залежності», щоб переглянути дані щодо розташування файлів."
+
+#: Project.cpp:3948
+msgid "Files Missing"
+msgstr "Не вистачає файлів"
 
 #: AudacityApp.cpp:915
 msgid "Master Gain Control"
@@ -1027,16 +1049,16 @@ msgstr "Попередження: не знайдено приєднаних ф�
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr "   Інструмент перевірки проекту замінив пропущені приєднані файли тишею."
 
-#: DirManager.cpp:1500
+#: DirManager.cpp:1441
 #, c-format
 msgid ""
 "Project check detected %d missing alias (.auf) \n"
 "blockfile(s). Audacity can fully regenerate these \n"
-"files from the original audio in the project."
+"files from the current audio in the project."
 msgstr ""
 "Перевірка проекту виявила %d пропущених приєднаних файлів (auf)\n"
 "Audacity може повторно створити приєднані файли з \n"
-"аудіоданих у проекті."
+"аудіоданих у поточному проекті."
 
 #: DirManager.cpp:1505
 msgid "Regenerate alias summary files (safe and recommended)"
@@ -1888,34 +1910,22 @@ msgstr "В&ернути"
 msgid "&Redo"
 msgstr "Повт&орити"
 
+#: Menus.cpp:344
+msgid "R&emove Audio"
+msgstr "Ви&лучити звук"
+
 #: Menus.cpp:357
 msgid "Cu&t"
 msgstr "&Вирізати"
-
-#: Menus.cpp:360
-msgid "Spl&it Cut"
-msgstr "Вирізати без з'&єднання"
-
-#: Menus.cpp:361
-msgid "&Copy"
-msgstr "&Копіювати"
-
-#: Menus.cpp:364
-msgid "&Paste"
-msgstr "Вст&авити"
-
-#: Menus.cpp:367
-msgid "Paste Te&xt to New Label"
-msgstr "Вставити те&кст до нової мітки"
-
-#: Menus.cpp:369
-msgid "Tri&m"
-msgstr "Обр&ізати"
 
 #: Menus.cpp:373
 #: Menus.cpp:415
 msgid "&Delete"
 msgstr "В&илучити"
+
+#: Menus.cpp:360
+msgid "Spl&it Cut"
+msgstr "Вирізати без з'&єднання"
 
 #: Menus.cpp:374
 msgid "Split D&elete"
@@ -1924,6 +1934,14 @@ msgstr "Вилучити без з'є&днання"
 #: Menus.cpp:375
 msgid "Silence Audi&o"
 msgstr "Заповнити &тишею"
+
+#: Menus.cpp:369
+msgid "Tri&m"
+msgstr "Обр&ізати"
+
+#: Menus.cpp:357
+msgid "Clip Boun&daries"
+msgstr "Обрізати &межі"
 
 #: Menus.cpp:379
 msgid "Sp&lit"
@@ -1942,6 +1960,18 @@ msgstr "&З'єднати"
 #: Menus.cpp:427
 msgid "Detac&h at Silences"
 msgstr "Р&оз'єднати за тишею"
+
+#: Menus.cpp:361
+msgid "&Copy"
+msgstr "&Копіювати"
+
+#: Menus.cpp:364
+msgid "&Paste"
+msgstr "Вст&авити"
+
+#: Menus.cpp:367
+msgid "Paste Te&xt to New Label"
+msgstr "Вставити те&кст до нової мітки"
 
 #: Menus.cpp:389
 msgid "Duplic&ate"
@@ -1964,10 +1994,6 @@ msgstr "&Вирізати"
 msgid "&Split Cut"
 msgstr "Ви&різати без з'єднання"
 
-#: Menus.cpp:411
-msgid "Co&py"
-msgstr "&Копіювати"
-
 #: Menus.cpp:418
 msgid "Sp&lit Delete"
 msgstr "Ви&лучити без з'єднання"
@@ -1975,6 +2001,10 @@ msgstr "Ви&лучити без з'єднання"
 #: Menus.cpp:419
 msgid "Silence &Audio"
 msgstr "Заповнити &тишею"
+
+#: Menus.cpp:411
+msgid "Co&py"
+msgstr "&Копіювати"
 
 #: Menus.cpp:423
 msgid "Spli&t"
@@ -3630,22 +3660,6 @@ msgstr "Вилучено %.2f секунд починаючи з t=%.2f"
 msgid "Delete"
 msgstr "Вилучити"
 
-#: Project.cpp:3942
-msgid ""
-"One or more external audio files could not be found.\n"
-"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
-"Silence is being substituted for the affected audio.\n"
-"Choose File > Check Dependencies to view the original location of the missing files."
-msgstr ""
-"Не вдалося знайти один або декілька зовнішніх звукових файлів.\n"
-"Ймовірно, ці файли пересунуто, вилучено або збережено на носії, який зараз не з’єднано з системою.\n"
-"Звукові дані файлів, які не знайдено, буде замінено тишею.\n"
-"Скористайтеся пунктом меню «Файл -> Перевірити залежності», щоб переглянути дані щодо початкового розташування файлів."
-
-#: Project.cpp:3948
-msgid "Files Missing"
-msgstr "Не вистачає файлів"
-
 #: Project.cpp:3896
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
@@ -3935,6 +3949,10 @@ msgstr "Оберіть адресу, за якою слід зберігати �
 #: Sequence.cpp:847
 msgid "Gap detected in project file\n"
 msgstr "У файлі проекту виявлено прогалину\n"
+
+#: Sequence.cpp:1335
+msgid "Memory allocation failed -- NewSamples"
+msgstr "Не вдалося отримати місце у пам'яті — NewSamples"
 
 #: ShuttleGui.cpp:2051
 #: effects/Effect.cpp:413
@@ -4285,10 +4303,15 @@ msgstr "Хвиля"
 msgid "Waveform (dB)"
 msgstr "Хвиля (дБ)"
 
-#: TrackPanel.cpp:624
+#: TrackPanel.cpp:633
+#: prefs/TracksPrefs.cpp:60
+msgid "Spectrogram"
+msgstr "Спектрограма"
+
+#: TrackPanel.cpp:634
 #: prefs/TracksPrefs.cpp:61
-msgid "Spectrum log(f)"
-msgstr "Спектр ln(f)"
+msgid "Spectrogram log(f)"
+msgstr "Спектрограма ln(f)"
 
 #. i18n-hint: short form of 'logarithm'
 #: TrackPanel.cpp:625
@@ -6394,10 +6417,10 @@ msgstr "Вилучається шум"
 
 #. i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
 #. * false (translated below) if those options were selected
-#: effects/Normalize.cpp:70
+#: effects/Normalize.cpp:74
 #, c-format
-msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s"
-msgstr "Застосовано ефект: %s вилучення відхилення = %s, нормалізація амплітуди = %s"
+msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"
+msgstr "Застосовано ефект: %s вилучення відхилення = %s, нормалізація амплітуди = %s, незалежні канали %s"
 
 #. i18n-hint: true here means that the option was
 #. * selected. Opposite false if not selected
@@ -6423,13 +6446,17 @@ msgstr "Вилучити будь-яке відхилення від осі (ц�
 msgid "Normalize maximum amplitude to:"
 msgstr "Нормалізувати максимальну амплітуду до:"
 
-#: effects/Normalize.cpp:366
-msgid "-"
-msgstr "-"
-
 #: effects/Normalize.cpp:371
 msgid "Maximum amplitude dB"
 msgstr "Максимальна амплітуда (дБ)"
+
+#: effects/Normalize.cpp:406
+msgid "Normalize stereo channels independently"
+msgstr "Нормалізувати канали стерело окремо"
+
+#: effects/Normalize.cpp:474
+msgid ".  Maximum 0dB."
+msgstr ".  Максимум — 0 дБ."
 
 #: effects/Normalize.h:33
 msgid "Normalize..."
@@ -7210,6 +7237,18 @@ msgstr ""
 "\n"
 "Ви справді бажаєте зберегти файл з цією назвою?"
 
+#: export/Export.cpp:654
+msgid ""
+"You are attempting to overwrite an aliased file that is missing.\n"
+"The file cannot be written because the path is needed to restore the original audio to the project.\n"
+"Choose File > Check Dependencies to view the locations of all missing files.\n"
+"If you still wish to export, please choose a different filename or folder."
+msgstr ""
+"Ви наказали програмі перезаписати пов’язаний файл, якого не вистачає у проекті.\n"
+"Запис цього файла неможливий, оскільки для відновлення початкових звукових даних у проекті слід вказати шлях до них.\n"
+"Скористайтеся пунктом меню «Файл > Перевірити залежності», щоб переглянути записи щодо розташування всіх файлів, яких не вистачає.\n"
+"Якщо ви все ще бажаєте експортувати дані, будь ласка, вкажіть іншу назву файла або теки."
+
 #: export/Export.cpp:618
 #, c-format
 msgid "A file named \"%s\" already exists.  Replace?"
@@ -7252,11 +7291,11 @@ msgstr "Вихідні канали: %2d"
 
 #: export/ExportCL.cpp:55
 msgid "Specify Command Line Encoder"
-msgstr "Визначте кодувальник, що працює з командного рядка"
+msgstr "Визначення рядка команди кодування"
 
 #: export/ExportCL.cpp:68
 msgid "Command Line Export Setup"
-msgstr "Налаштування командного рядку експорту"
+msgstr "Налаштування командного рядка експортування"
 
 #: export/ExportCL.cpp:73
 msgid "Command:"
@@ -7304,24 +7343,6 @@ msgid ""
 msgstr ""
 "Для продовження виконання дій потрібна належно налаштована бібліотека FFmpeg.\n"
 "Ви можете налаштувати цю бібліотеку за допомогою сторінки «Параметри->Бібліотеки»."
-
-#: export/ExportFFmpeg.cpp:237
-msgid "AMR support is not distributable"
-msgstr "Підтримку AMR не передбачено у дистрибутивах програми"
-
-#: export/ExportFFmpeg.cpp:237
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
-"You can configure it at Preferences > Libraries.\n"
-"\n"
-"Note that AMR support is not available with our FFmpeg\n"
-"installer, but requires you compile FFmpeg yourself."
-msgstr ""
-"Для продовження роботи потрібна належним чином налаштована бібліотека FFmpeg.\n"
-"Налаштувати її можна на сторінці «Параметри > Бібліотеки».\n"
-"\n"
-"Зауважте, що у поширюваній нами версії FFmpeg не передбачено підтримки\n"
-"AMR, для цього вам доведеться зібрати FFmpeg власноруч."
 
 #: export/ExportFFmpeg.cpp:454
 #, c-format
@@ -7384,6 +7405,11 @@ msgstr "Частоти дискретизації"
 msgid "Specify AC3 Options"
 msgstr "Вказати параметри AC3"
 
+#: export/ExportMP2.cpp:114
+#, c-format
+msgid "%i kbps"
+msgstr "%i кбіт/с"
+
 #: export/ExportFFmpegDialogs.cpp:177
 msgid "AC3 Export Setup"
 msgstr "Налаштування експорту до AC3"
@@ -7415,17 +7441,14 @@ msgstr "Якість:"
 msgid "Specify AMR-NB Options"
 msgstr "Вказати параметри AMR-NB"
 
+#: export/ExportFFmpegDialogs.cpp:282
+#, c-format
+msgid "%.2f kbps"
+msgstr "%.2f кбіт/с"
+
 #: export/ExportFFmpegDialogs.cpp:300
 msgid "AMR-NB Export Setup"
 msgstr "Налаштування експорту до AMR-NB"
-
-#: export/ExportFFmpegDialogs.cpp:350
-msgid "Specify AMR-WB Options"
-msgstr "Вказати параметри AMR-WB"
-
-#: export/ExportFFmpegDialogs.cpp:369
-msgid "AMR-WB Export Setup"
-msgstr "Налаштування експорту до AMR-WB"
 
 #: export/ExportFFmpegDialogs.cpp:423
 msgid "Specify WMA Options"
@@ -7480,10 +7503,6 @@ msgstr "Файли AC3 (FFmpeg)"
 #: export/ExportFFmpegDialogs.cpp:1190
 msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "Файли AMR (вузькосмугові) (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.cpp:1192
-msgid "AMR (wide band) Files (FFmpeg)"
-msgstr "Файли AMR (широкосмугові) (FFmpeg)"
 
 #: export/ExportFFmpegDialogs.cpp:1194
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -7976,11 +7995,6 @@ msgstr "Експорт всього проекту до FLAC"
 #: export/ExportMP2.cpp:108
 msgid "Specify MP2 Options"
 msgstr "Визначення параметрів MP2"
-
-#: export/ExportMP2.cpp:114
-#, c-format
-msgid "%i kbps"
-msgstr "%i кбіт/с"
 
 #: export/ExportMP2.cpp:127
 msgid "MP2 Export Setup"
@@ -8503,11 +8517,6 @@ msgstr "Ваш файл буде експортовано як 16-бітовий
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
 msgstr "Ваш файл буде експортовано як GSM 6.10 WAV.\n"
 
-#: import/Import.cpp:435
-#: import/ImportMP3.cpp:47
-msgid "MP3 files"
-msgstr "Файли MP3"
-
 #: import/Import.cpp:471
 msgid "Select stream(s) to import"
 msgstr "Оберіть потоки для імпорту"
@@ -8760,6 +8769,11 @@ msgstr "Не вдалося відкрити файл "
 msgid ": Incorrect filetype."
 msgstr ": неправильний тип файла."
 
+#: import/Import.cpp:435
+#: import/ImportMP3.cpp:47
+msgid "MP3 files"
+msgstr "Файли MP3"
+
 #: import/ImportOGG.cpp:44
 msgid "Ogg Vorbis files"
 msgstr "Файли Ogg Vorbis"
@@ -8787,6 +8801,51 @@ msgstr "Внутрішня логічна помилка"
 #: import/ImportPCM.cpp:70
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, та інші типи без стискання"
+
+#: import/ImportPCM.cpp:211
+#, c-format
+msgid ""
+"When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+"\n"
+"Your current preference is set to %s.\n"
+"\n"
+"Reading the files directly allows you to play or edit them almost immediately.  This is less safe than copying in, because you must retain the files with their original names in their original location.\n"
+"File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
+"\n"
+"How do you want to import the current file(s)?"
+msgstr ""
+"Під час імпортування нестиснених файлів звукових даних програма може або скопіювати ці файли до проекту, або прочитати їх безпосередньо з поточного файла (без копіювання).\n"
+"\n"
+"За поточних налаштувань буде виконано дію «%s».\n"
+"\n"
+"Безпосереднє читання файлів надасть вам змогу відтворювати та редагувати дані майже негайно. Використання цього способу є менш безпечним, оскільки вам доведеться зберігати початкові назви та розташування редагованих файлів.\n"
+"Переглянути список назв та розташування файлів, дані яких використовуються безпосерердньо, можна за допомогою пункту меню «Файл > Перевірити залежності».\n"
+"\n"
+"Отже, який спосіб слід використати для імпортування поточних файлів?"
+
+#: import/ImportPCM.cpp:221
+msgid "copy in"
+msgstr "скопіювати"
+
+#: import/ImportPCM.cpp:221
+msgid "read directly"
+msgstr "прочитати безпосередньо"
+
+#: import/ImportPCM.cpp:226
+msgid "Choose an import method"
+msgstr "Вибір способу імпортування"
+
+#: import/ImportPCM.cpp:229
+msgid "Make a &copy of the files before editing (safer)"
+msgstr "Зробити &копію файлів до внесення змін (безпечніше)"
+
+#: import/ImportPCM.cpp:232
+msgid "Read the files &directly from the original (faster)"
+msgstr "Прочитати дані &безпосередньо з джерела (швидше)"
+
+#: import/ImportPCM.cpp:235
+msgid "Don't &warn again and always use my choice above"
+msgstr "Більше не &попереджати, використовувати вказаних вище спосіб"
 
 #: import/ImportPlugin.h:141
 #: import/ImportRaw.cpp:210
@@ -9108,8 +9167,8 @@ msgid "Extended Import"
 msgstr "Розш. імпортування"
 
 #: prefs/ExtImportPrefs.cpp:92
-msgid "Filter chosen in OpenFile dialog overrides any rules"
-msgstr "Вказаний у вікні відкриття фільтр має вищий пріоритет"
+msgid "Attempt to use filter in OpenFile dialog first"
+msgstr "Спробуйте спочатку скористатися фільтром у вікні відкриття файлів"
 
 #: prefs/ExtImportPrefs.cpp:95
 msgid "Rules to choose import filters"
@@ -9978,10 +10037,6 @@ msgstr "16384"
 msgid "32768 - most narrowband"
 msgstr "32768 — найточніше"
 
-#: prefs/SpectrumPrefs.cpp:56
-msgid "4096 - most narrowband"
-msgstr "4096 — найбільш вузькосмуговий"
-
 #: prefs/SpectrumPrefs.cpp:82
 msgid "FFT Window"
 msgstr "Вікно FFT"
@@ -10054,9 +10109,9 @@ msgstr "Зауваження щодо &квантизації"
 msgid "The maximum frequency must be an integer"
 msgstr "Максимально можлива частота повинна бути цілою величиною"
 
-#: prefs/SpectrumPrefs.cpp:216
-msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-msgstr "Максимальна частота повинна знаходитись у межах 100 Гц — 100,000 Гц"
+#: prefs/SpectrumPrefs.cpp:212
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "Максимальна частота повинна бути вищою за 100 Гц"
 
 #: prefs/SpectrumPrefs.cpp:222
 msgid "The minimum frequency must be an integer"
@@ -10257,6 +10312,10 @@ msgstr "Мікшування у &стерео під час експорту"
 #: prefs/WarningsPrefs.cpp:69
 msgid "Mixing down to &mono during export"
 msgstr "Мікшування у &моно під час експорту"
+
+#: prefs/WarningsPrefs.cpp:72
+msgid "&Importing uncompressed audio files"
+msgstr "&Імпортування нестиснених звукових файлів"
 
 #: toolbars/ControlToolBar.cpp:170
 #: toolbars/ControlToolBar.cpp:205
