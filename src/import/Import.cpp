@@ -420,6 +420,16 @@ int Importer::Import(wxString fName,
 
    // Add all plugins that support the extension
    importPluginNode = mImportPluginList->GetFirst();
+
+   // Here we rely on the fact that the first plugin in mImportPluginList is libsndfile.
+   // We want to save this for later insertion ahead of libmad, if libmad supports the extension.
+   // The order of plugins in mImportPluginList is determined by the Importer constructor alone and
+   // is not changed by user selection overrides or any other mechanism, but we include an assert
+   // in case subsequent code revisions to the constructor should break this assumption that 
+   // libsndfile is first. 
+   ImportPlugin *libsndfilePlugin = importPluginNode->GetData();
+   wxASSERT(libsndfilePlugin->GetPluginStringID().IsSameAs(wxT("libsndfile")));
+
    while (importPluginNode)
    {
       ImportPlugin *plugin = importPluginNode->GetData();
@@ -428,6 +438,23 @@ int Importer::Import(wxString fName,
       {
          if (plugin->SupportsExtension(extension))
          {
+            // If libmad is accidentally fed a wav file which has been incorrectly
+            // given an .mp3 extension then it can choke on the contents and crash.
+            // To avoid this, put libsndfile ahead of libmad in the lists created for 
+            // mp3 files, or for any of the extensions supported by libmad. 
+            // A genuine .mp3 file will first fail an attempted import with libsndfile
+            // but then get processed as desired by libmad.
+            // But a wav file which bears an incorrect .mp3 extension will be successfully 
+            // processed by libsndfile and thus avoid being submitted to libmad.
+            if (plugin->GetPluginStringID().IsSameAs(wxT("libmad")))
+            {
+               // Make sure libsndfile is not already in the list
+               if (importPlugins.Find(libsndfilePlugin) == NULL)
+               {
+                  wxLogDebug(wxT("Appending %s"),libsndfilePlugin->GetPluginStringID().c_str());
+                  importPlugins.Append(libsndfilePlugin);
+               }
+            }
             wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
             importPlugins.Append(plugin);
          }
@@ -436,16 +463,22 @@ int Importer::Import(wxString fName,
       importPluginNode = importPluginNode->GetNext();
    }
 
-   // Add all remaining plugins
+   // Add remaining plugins, except for libmad, which should not be used as a fallback for anything.
+   // Otherwise, if FFmpeg (libav) has not been installed, libmad will still be there near the 
+   // end of the preference list importPlugins, where it will claim success importing FFmpeg file
+   // formats unsuitable for it, and produce distorted results.
    importPluginNode = mImportPluginList->GetFirst();
    while (importPluginNode)
    {
       ImportPlugin *plugin = importPluginNode->GetData();
-      // Make sure its not already in the list
-      if (importPlugins.Find(plugin) == NULL)
+      if (!(plugin->GetPluginStringID().IsSameAs(wxT("libmad"))))
       {
-         wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
-         importPlugins.Append(plugin);
+         // Make sure its not already in the list
+         if (importPlugins.Find(plugin) == NULL)
+         {
+            wxLogDebug(wxT("Appending %s"),plugin->GetPluginStringID().c_str());
+            importPlugins.Append(plugin);
+         }
       }
 
       importPluginNode = importPluginNode->GetNext();
