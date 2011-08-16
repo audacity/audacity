@@ -201,6 +201,7 @@ void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxSt
    if( item != -1 )
    {
       mChoices->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+      mEditParams->Enable( true );
    }
 }
 
