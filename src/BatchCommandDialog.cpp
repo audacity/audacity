@@ -82,6 +82,7 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
          mCommand = S.AddTextBox(_("&Command"), wxT(""), 20);
          mCommand->SetEditable(false);
          mEditParams = S.Id(EditParamsButtonID).AddButton(_("&Edit Parameters"));
+         mEditParams->Enable( false ); // disable button as box is empty
       }
       S.EndMultiColumn();
 

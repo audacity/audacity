@@ -118,6 +118,8 @@ Effect *EffectManager::GetEffect(int ID)
 
 Effect* EffectManager::GetEffectByIdentifier(const wxString strTarget, const int kFlags /*= ALL_EFFECTS*/)
 {
+   if( strTarget == wxT("") ) // set GetEffectIdentifier to wxT("") to not show an effect in Batch mode
+      return NULL;
    for (unsigned int i = 0; i < mEffects.GetCount(); i++) 
    {
       int nFlags = mEffects[i]->GetEffectFlags();
