@@ -1379,7 +1379,7 @@ bool EqualizationDialog::Validate()
    // we offer to save it.
    while (mDisallowCustom && curveName.IsSameAs(wxT("unnamed")))
    {
-      wxMessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it.\nChoose the 'Manage curves list...' button and rename the 'unnamed' curve, then use that one."),
+      wxMessageBox(_("To use this EQ curve in a batch chain, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
             _("EQ Curve needs a different name"),
             wxOK | wxCENTRE,
             this);
