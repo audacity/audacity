@@ -1117,6 +1117,10 @@ bool AudacityApp::OnInit()
    wxFrame *temporarywindow = new wxFrame(NULL, -1, wxT("temporarytopwindow"));
    SetTopWindow(temporarywindow);
 
+   wxLog::FlushActive(); // Make sure all log messages are written.
+
+   wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
+
    // Initialize the ModuleManager
    ModuleManager::Initialize();
 
@@ -1397,8 +1401,6 @@ bool AudacityApp::OnInit()
    ModuleManager::Dispatch(AppInitialized);
 
    mWindowRectAlreadySaved = FALSE;
-
-   wxLog::FlushActive(); // Make sure all log messages are written.
 
    mTimer = new wxTimer(this, kAudacityAppTimerID);
    mTimer->Start(200);
