@@ -784,14 +784,17 @@ void EditChainsDialog::OnInsert(wxCommandEvent &event)
       return;
    }
 
-   mBatchCommands.AddToChain(d.mSelectedCommand,
-                             d.mSelectedParameters,
-                             item);
-   mChanged = true;
+   if(d.mSelectedCommand != wxT(""))
+   {
+      mBatchCommands.AddToChain(d.mSelectedCommand,
+                                d.mSelectedParameters,
+                                item);
+      mChanged = true;
 
-   mSelectedCommand = item + 1;
+      mSelectedCommand = item + 1;
 
-   PopulateList();
+      PopulateList();
+   }
 }
 
 ///
@@ -904,16 +907,3 @@ void EditChainsDialog::OnKeyDown(wxKeyEvent &event)
 
    event.Skip();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: TBD
-
-
