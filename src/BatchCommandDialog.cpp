@@ -56,8 +56,7 @@ END_EVENT_TABLE();
 BatchCommandDialog::BatchCommandDialog(wxWindow * parent, wxWindowID id):
    wxDialog(parent, id, _("Select Command"),
             wxDefaultPosition, wxSize(250,200),
-            wxCAPTION)
-//            wxCAPTION | wxTHICK_FRAME)
+            wxCAPTION | wxRESIZE_BORDER)
 {
    SetLabel(_("Select Command"));         // Provide visual label
    SetName(_("Select Command"));          // Provide audible label
