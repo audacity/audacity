@@ -14,12 +14,12 @@
 #include "../EffectManager.h"
 #include "AudioUnitEffect.h"
 
-void LoadAudioUnits()
+void LoadAudioUnitsOfType(OSType inAUType)
 {
    ComponentDescription desc;
    Component component;
    
-   desc.componentType = kAudioUnitType_Effect; //'aufx'
+   desc.componentType = inAUType;
    desc.componentSubType = 0;
    desc.componentManufacturer = 0;
    desc.componentFlags = 0;
@@ -40,6 +40,12 @@ void LoadAudioUnits()
 
       component = FindNextComponent (component, &desc);
    }
+}
+
+void LoadAudioUnits()
+{
+   LoadAudioUnitsOfType(kAudioUnitType_Effect); //'aufx'
+   LoadAudioUnitsOfType(kAudioUnitType_MusicEffect); //'aumf'
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
