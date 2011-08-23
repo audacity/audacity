@@ -1902,7 +1902,6 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
    const PaDeviceInfo* devInfo = NULL;
    int i;
 
-   wxLogDebug(wxT("Getting supported playback rates for device %d"), devIndex);
    devInfo = Pa_GetDeviceInfo(devIndex);
    
    if (!devInfo)
@@ -1922,19 +1921,13 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
    for (i = 0; i < NumRatesToTry; i++)
    {
       if (Pa_IsFormatSupported(NULL, &pars, RatesToTry[i]) == 0)
-      {
-         wxLogDebug(wxT("Rate %ld Hz is supported"), RatesToTry[i]);
          supported.Add(RatesToTry[i]);
-      }
    }
 
    if (irate != 0 && supported.Index(irate) == wxNOT_FOUND)
    {
       if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
-      {
-         wxLogDebug(wxT("Suggested rate %ld Hz is supported"), irate);
          supported.Add(irate);
-      }
    }
 
    return supported;
@@ -1959,7 +1952,6 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
    const PaDeviceInfo* devInfo = NULL;
    int i;
 
-   wxLogDebug(wxT("Getting supported capture rates for device %d"), devIndex);
    devInfo = Pa_GetDeviceInfo(devIndex);
 
    if (!devInfo)
@@ -1984,19 +1976,13 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
    for (i = 0; i < NumRatesToTry; i++)
    {
       if (Pa_IsFormatSupported(&pars, NULL, RatesToTry[i]) == 0)
-      {
-         wxLogDebug(wxT("Rate %ld Hz is supported"), RatesToTry[i]);
          supported.Add(RatesToTry[i]);
-      }
    }
 
    if (irate != 0 && supported.Index(irate) == wxNOT_FOUND)
    {
       if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
-      {
-         wxLogDebug(wxT("Suggested rate %ld Hz is supported"), irate);
          supported.Add(irate);
-      }
    }
 
    return supported;
