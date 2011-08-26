@@ -95,9 +95,9 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
                                      wxDefaultPosition,
                                      wxDefaultSize,
                                      wxSP_ARROW_KEYS,
-                                     1,
+                                     0,
                                      mManager->GetCurrentState() - 1,
-                                     1);
+                                     0);
             S.AddWindow(mLevels);
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
          }
