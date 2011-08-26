@@ -616,7 +616,7 @@ public:
    IPCServ()
    : wxServer()
    {
-      Create(wxT("audacity"));
+      Create(IPC_APPL);
    };
 
    ~IPCServ()
@@ -938,10 +938,11 @@ void AudacityApp::InitLang( const wxString & lang )
       //      catalogs are search in LIFO order, so add wxstd first.
       mLocale->AddCatalog(wxT("wxstd"));
 
+// AUDACITY_NAME is legitimately used on some *nix configurations. 
 #ifdef AUDACITY_NAME
       mLocale->AddCatalog(wxT(AUDACITY_NAME));
 #else
-      mLocale->AddCatalog(wxT("audacity"));
+      mLocale->AddCatalog(IPC_APPL);
 #endif
    } else
       mLocale = NULL;
