@@ -58,6 +58,10 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    int w;
 
    TrackListIterator iter(tracks);
+   SelectedTrackListOfKindIterator usefulIter(Track::Wave, tracks);
+   // this only iterates tracks which are relevant to this function, i.e.
+   // selected WaveTracks. The tracklist is (confusingly) the list of all 
+   // tracks in the project
 
    t = iter.First();
    while (t) {
@@ -114,13 +118,13 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    }
 
    /* create the destination track (new track) */
-   if ((numWaves == 1) || ((numWaves == 2) && (iter.First()->GetLink() != NULL)))
+   if ((numWaves == 1) || ((numWaves == 2) && (usefulIter.First()->GetLink() != NULL)))
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
    WaveTrack *mixLeft = trackFactory->NewWaveTrack(format, rate);
    if (oneinput)
-      mixLeft->SetName(iter.First()->GetName()); /* set name of output track to be the same as the sole input track */
+      mixLeft->SetName(usefulIter.First()->GetName()); /* set name of output track to be the same as the sole input track */
    else
       mixLeft->SetName(_("Mix"));
    mixLeft->SetOffset(mixStartTime);
@@ -131,7 +135,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    else {
       mixRight = trackFactory->NewWaveTrack(format, rate);
       if (oneinput)
-         mixLeft->SetName(iter.First()->GetLink()->GetName()); /* set name to match input track's right channel!*/
+         mixLeft->SetName(usefulIter.First()->GetLink()->GetName()); /* set name to match input track's right channel!*/
       else
          mixRight->SetName(_("Mix"));
       mixLeft->SetChannel(Track::LeftChannel);
