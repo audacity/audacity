@@ -47,13 +47,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double startTime, double endTime,
                   WaveTrack **newLeft, WaveTrack **newRight)
 {
-   // This function was formerly known as "Quick Mix".  It takes one or
-   // more tracks as input; of all tracks that are selected, it mixes
-   // them together, applying any envelopes, amplitude gain, panning,
-   // and real-time effects in the process.  The resulting pair of
-   // tracks (stereo) are "rendered" and have no effects, gain, panning,
-   // or envelopes.
-
+   // This function was formerly known as "Quick Mix".
    WaveTrack **waveArray;
    Track *t;
    int numWaves = 0; /* number of wave tracks in the selection */
@@ -79,22 +73,47 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    if (numMono == numWaves)
       mono = true;
 
-   double totalTime = 0.0;
+   /* the next loop will do two things at once:
+    * 1. build an array of all the wave tracks were are trying to process
+    * 2. determine when the set of WaveTracks starts and ends, in case we
+    *    need to work out for ourselves when to start and stop rendering.
+    */
+
+   double mixStartTime;    /* start time of first track to start */
+   bool gotstart = false;  // flag indicates we have found a start time
+   double mixEndTime = 0.0;   /* end time of last track to end */
+   double tstart, tend;    // start and end times for one track.
 
    waveArray = new WaveTrack *[numWaves];
    w = 0;
    t = iter.First();
+
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
          waveArray[w++] = (WaveTrack *) t;
-         if (t->GetEndTime() > totalTime)
-            totalTime = t->GetEndTime();
-      }
+         tstart = t->GetStartTime();
+         tend = t->GetEndTime();
+         if (tend > mixEndTime)
+            mixEndTime = tend;
+         // try and get the start time. If the track is empty we will get 0,
+         // which is ambiguous because it could just mean the track starts at
+         // the beginning of the project, as well as empty track. The give-away
+         // is that an empty track also ends at zero.
+
+         if (tstart != tend) {
+            // we don't get empty tracks here
+            if (!gotstart) {
+               // no previous start, use this one unconditionally
+               mixStartTime = tstart;
+            } else if (tstart < mixStartTime)
+               mixStartTime = tstart;  // have a start, only make it smaller
+         }  // end if start and end are different
+      }  // end if track is a selected WaveTrack.
+      /** @TODO: could we not use a SelectedTrackListOfKindIterator here? */
       t = iter.Next();
    }
 
    /* create the destination track (new track) */
-
    if ((numWaves == 1) || ((numWaves == 2) && (iter.First()->GetLink() != NULL)))
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
@@ -104,6 +123,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       mixLeft->SetName(iter.First()->GetName()); /* set name of output track to be the same as the sole input track */
    else
       mixLeft->SetName(_("Mix"));
+   mixLeft->SetOffset(mixStartTime);
    WaveTrack *mixRight = 0;
    if (mono) {
       mixLeft->SetChannel(Track::MonoChannel);
@@ -116,14 +136,19 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
          mixRight->SetName(_("Mix"));
       mixLeft->SetChannel(Track::LeftChannel);
       mixRight->SetChannel(Track::RightChannel);
+      mixRight->SetOffset(mixStartTime);
       mixLeft->SetLinked(true);
    }
 
+
+
    int maxBlockLen = mixLeft->GetIdealBlockSize();
 
+   // If the caller didn't specify a time range, use the whole range in which
+   // any input track had clips in it.
    if (startTime == endTime) {
-      startTime = 0.0;
-      endTime = totalTime;
+      startTime = mixStartTime;
+      endTime = mixEndTime;
    }
 
    Mixer *mixer = new Mixer(numWaves, waveArray, tracks->GetTimeTrack(),
@@ -153,7 +178,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
          mixRight->Append(buffer, format, blockLen);
       }
 
-      updateResult = progress->Update(mixer->MixGetCurrentTime(), totalTime);
+      updateResult = progress->Update(mixer->MixGetCurrentTime() - startTime, endTime - startTime);
    }
 
    delete progress;
