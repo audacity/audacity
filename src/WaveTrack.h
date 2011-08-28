@@ -88,10 +88,17 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    virtual double GetOffset();
    virtual void SetOffset (double o);
 
-   // Start time is the earliest time there is a clip
+   /** @brief Get the time at which the first clip in the track starts
+	*
+	* @return time in seconds, or zero if there are no clips in the track
+	*/
    double GetStartTime();
 
-   // End time is where the last clip ends, plus recorded stuff
+   /** @brief Get the time at which the last clip in the track ends, plus
+    * recorded stuff
+	*
+	* @return time in seconds, or zero if there are no clips in the track.
+    */
    double GetEndTime();
 
    //
@@ -157,10 +164,20 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    virtual bool SyncLockAdjust(double oldT1, double newT1);
 
-   // Returns true if there are no WaveClips in that region
+   /** @brief Returns true if there are no WaveClips in the specified region
+    *
+    * @return true if no clips in the track overlap the specified time range,
+    * false otherwise.
+    */
    bool IsEmpty(double t0, double t1);
 
-   /// You must call Flush after the last Append
+   /** @brief Append the sample data to the WaveTrack. You must call Flush()
+    * after the last Append.
+    *
+    * If there is an existing WaveClip in the WaveTrack then the data is
+    * appended to that clip. If there are no WaveClips in the track, then a new
+    * one is created.
+    */
    bool Append(samplePtr buffer, sampleFormat format,
                sampleCount len, unsigned int stride=1,
                XMLWriter* blockFileLog=NULL);
@@ -264,8 +281,11 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // to the newly created clip.
    WaveClip* CreateClip();
 
-   // Get access to the last clip, or create a clip, if there is not
-   // already one.
+   /** @brief Get access to the last clip, or create a clip, if there is not
+    *  already one.
+    *
+    *  @return a pointer to a WaveClip at the end of the track
+    */
    WaveClip* GetLastOrCreateClip();
 
    // Get the linear index of a given clip (-1 if the clip is not found)
