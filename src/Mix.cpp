@@ -83,7 +83,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
     *    need to work out for ourselves when to start and stop rendering.
     */
 
-   double mixStartTime;    /* start time of first track to start */
+   double mixStartTime = 0.0;    /* start time of first track to start */
    bool gotstart = false;  // flag indicates we have found a start time
    double mixEndTime = 0.0;   /* end time of last track to end */
    double tstart, tend;    // start and end times for one track.
