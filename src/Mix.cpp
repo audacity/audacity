@@ -109,6 +109,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
             if (!gotstart) {
                // no previous start, use this one unconditionally
                mixStartTime = tstart;
+               gotstart = true;
             } else if (tstart < mixStartTime)
                mixStartTime = tstart;  // have a start, only make it smaller
          }  // end if start and end are different
