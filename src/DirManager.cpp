@@ -1550,14 +1550,13 @@ _("Project check detected %d missing audio data \
       {
          wxString msgA =
 _("Project check found %d orphan blockfile(s). These files are \
-\nunused and probably left over from a crash or some other bug. \
-\n\nThey should be deleted to avoid disk contention.");
+\nunused and probably left over from a crash or some other bug.");
       wxString msg;
          msg.Printf(msgA, (int)orphanFilePathArray.GetCount());
 
          const wxChar *buttons[] = {_("Close project immediately with no further changes"),
                                     _("Continue without deleting; ignore the extra files this session"),
-                                    _("Delete orphan files immediately"),
+                                    _("Delete orphan files permanently"),
                                     NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);
