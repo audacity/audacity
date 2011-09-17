@@ -94,7 +94,7 @@ int wxTreebookExt::ChangeSelection(size_t n) {
 int wxTreebookExt::SetSelection(size_t n) 
 {
 	int i = wxTreebook::SetSelection(n);
-	wxString Temp = wxString(wxT("Preferences: ")) + GetPageText( n );
+	wxString Temp = wxString(_("Preferences: ")) + GetPageText( n );
 	((wxDialog*)GetParent())->SetTitle( Temp );
 	return i;
 }
