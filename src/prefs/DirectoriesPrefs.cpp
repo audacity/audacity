@@ -224,7 +224,7 @@ bool DirectoriesPrefs::Validate()
    if (tempDir != oldDir) {
       wxMessageBox(
          _("Changes to temporary directory will not take effect until Audacity is restarted"),
-         wxT("Temp Directory Update"),
+         _("Temp Directory Update"),
          wxOK | wxCENTRE | wxICON_INFORMATION);
    }
 
