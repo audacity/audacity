@@ -789,7 +789,14 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mSampleFormat = (sampleFormat)nValue;
          }
          else if (!wxStrcmp(attr, wxT("numsamples")))
+         {
+            if (nValue > mMaxSamples) // Disallow "numsamples" tag value > "maxsamples" tag value
+            {
+               mErrorOpening = true;
+               return false;
+            }
             mNumSamples = nValue;
+         }
       } // while
 
       //// Both mMaxSamples and mSampleFormat should have been set. 
