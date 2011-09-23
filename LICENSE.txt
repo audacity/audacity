@@ -6,7 +6,7 @@ directory may be released under a different license
 README.txt file, and for specific details, see the license
 information inside each subdirectory of lib-src.
 
-Documentation is distributed under the Creative Commoms license.
+Documentation is distributed under the Creative Commons license.
 Please see here for that:
 http://creativecommons.org/licenses/by/3.0/legalcode
 
@@ -352,6 +352,4 @@ proprietary programs.  If your program is a subroutine library, you may
 consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
-
-arch-tag: 38005ac9-ac1f-4d4b-82c9-905b976dc7aa
 
