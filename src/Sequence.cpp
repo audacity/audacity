@@ -789,14 +789,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mSampleFormat = (sampleFormat)nValue;
          }
          else if (!wxStrcmp(attr, wxT("numsamples")))
-         {
-            if (nValue > mMaxSamples) // Disallow "numsamples" tag value > "maxsamples" tag value
-            {
-               mErrorOpening = true;
-               return false;
-            }
             mNumSamples = nValue;
-         }
       } // while
 
       //// Both mMaxSamples and mSampleFormat should have been set. 
@@ -880,6 +873,8 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
 
    for (b = 0; b < mBlock->Count(); b++) {
       SeqBlock *bb = mBlock->Item(b);
+
+      wxASSERT(bb->f->GetLength() <= mMaxSamples);  // it has been reported that this has been seen in aup files, see bug 451
 
       xmlFile.StartTag(wxT("waveblock"));
       xmlFile.WriteAttr(wxT("start"), bb->start);
