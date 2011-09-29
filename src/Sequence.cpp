@@ -738,10 +738,15 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!wxStrcmp(attr, wxT("start")))
             wb->start = nValue;
 
-         // Handle length tag from legacy project file
          if (!wxStrcmp(attr, wxT("len")))
+         {
+            if (nValue > mMaxSamples) // mMaxSamples should already have been set by calls to the "sequence" clause below. 
+            {
+               mErrorOpening = true;
+               return false;
+            }
             mDirManager->SetLoadingBlockLength(nValue);
- 
+         }
       } // while
 
       mBlock->Add(wb);
