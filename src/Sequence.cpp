@@ -731,6 +731,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxString strValue = value;
          if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || (nValue < 0))
          {
+            delete (wb);
             mErrorOpening = true;
             return false;
          }
@@ -742,6 +743,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          {
             if (nValue > mMaxSamples) // mMaxSamples should already have been set by calls to the "sequence" clause below. 
             {
+               delete (wb);
                mErrorOpening = true;
                return false;
             }
