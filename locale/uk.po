@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-07-18 04:15+0100\n"
-"PO-Revision-Date: 2011-07-29 17:06-0000\n"
+"PO-Revision-Date: 2011-10-07 16:50-0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -98,10 +98,6 @@ msgstr "Авторські права на програму <b>Audacity&reg;</b>
 #: AboutDialog.cpp:271
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr "Назва продукту <b>Audacity&reg;</b> є зареєстрованою торговельною маркою Домініка Маццоні (Dominic Mazzoni)."
-
-#: AboutDialog.cpp:279
-msgid "Audacity"
-msgstr "Audacity"
 
 #. i18n-hint: Information about when audacity was compiled
 #: AboutDialog.cpp:325
@@ -1121,26 +1117,22 @@ msgstr "   Інструмент перевірки проекту замінив
 msgid "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
 msgstr "   Інструментом перевірки проекту проігноровано зайві блок-файли. Їх буде вилучено під час збереження проекту."
 
-#: DirManager.cpp:1611
+#: DirManager.cpp:1552
 #, c-format
 msgid ""
 "Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug. \n"
-"\n"
-"They should be deleted to avoid disk contention."
+"unused and probably left over from a crash or some other bug."
 msgstr ""
 "Перевірка проекту виявила %d нез'єднані блок-файли. Ці файли\n"
-"не використовуються і ймовірно залишилися після краху або іншої помилки.\n"
-"\n"
-"Їх слід вилучити, щоб уникнути засмічення диска."
+"не використовуються і ймовірно залишилися після краху або іншої помилки."
 
 #: DirManager.cpp:1506
 msgid "Continue without deleting; ignore the extra files this session"
-msgstr "Продовжити без копіювання; ігнорувати додаткові файли цього сеансу"
+msgstr "Продовжити без вилучення; ігнорувати зайві файли цього сеансу"
 
-#: DirManager.cpp:1619
-msgid "Delete orphan files immediately"
-msgstr "Вилучити зайві файли негайно"
+#: DirManager.cpp:1559
+msgid "Delete orphan files permanently"
+msgstr "Вилучити залишкові файли остаточно"
 
 #: DirManager.cpp:1622
 msgid "Warning - Orphan Blockfile(s)"
@@ -1549,8 +1541,8 @@ msgid "Saving an Audacity Project"
 msgstr "Збереження проекту Audacity"
 
 #: HelpText.cpp:157
-msgid "Unsupported Formats"
-msgstr "Непідтримувані формати"
+msgid "Support for Other Formats"
+msgstr "Підтримка інших форматів"
 
 #: HelpText.cpp:161
 msgid "Burn to CD"
@@ -1591,6 +1583,14 @@ msgstr " <a href=\"http://forum.audacityteam.org/\">Форум</a> (задайт
 #: HelpText.cpp:183
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
 msgstr " Якщо вам потрібна коротка відповідь, ви можете скористатися <b>пошуком</b> на наведених вище ресурсах інтернету."
+
+#: HelpText.cpp:190
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
+msgstr "Audacity зможе імпортувати файли без захисту даних у багатьох інших форматах (зокрема M4A і WMA, файли стиснених даних WAV з портативних записувачів та звукові дані з відеофайлів), якщо ви встановите у вашій системі додаткову <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\">бібліотеку FFmpeg</a>."
+
+#: HelpText.cpp:194
+msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
+msgstr "Ви також можете ознайомитися з нашою довідкою щодо імпортування <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">файлів MIDI</a> та доріжок з <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\">звукових компакт-дисків</a>."
 
 #: HelpText.cpp:193
 msgid "<p>You do not appear to have 'help' installed on your computer.<br> Please <a href=\"*URL*\">view or download it online</a>."
@@ -2269,15 +2269,15 @@ msgstr "Додати &нову"
 
 #: Menus.cpp:646
 msgid "&Audio Track"
-msgstr "&Аудіо доріжку"
+msgstr "&Аудіодоріжку"
 
 #: Menus.cpp:647
 msgid "&Stereo Track"
-msgstr "&Стерео доріжку"
+msgstr "&Стереодоріжку"
 
 #: Menus.cpp:648
 msgid "&Label Track"
-msgstr "Доріжка для &позначок"
+msgstr "Доріжку для &позначок"
 
 #: Menus.cpp:649
 msgid "&Time Track"
@@ -2436,7 +2436,7 @@ msgstr "П&ідручник (у переглядачі інтернету)"
 
 #: Menus.cpp:1017
 msgid "&Screenshot Tools..."
-msgstr "Інструменти для &Знімків екрану…"
+msgstr "Створення &знімків екрана…"
 
 #: Menus.cpp:1022
 msgid "&Run Benchmark..."
@@ -2444,7 +2444,7 @@ msgstr "&Тестування швидкодії…"
 
 #: Menus.cpp:1027
 msgid "&Audio Device Info..."
-msgstr "Інформація про &аудіо пристрій…"
+msgstr "Інформація про &аудіопристрій…"
 
 #: Menus.cpp:1011
 msgid "Show &Log..."
@@ -3203,7 +3203,7 @@ msgstr "Доріжку(и) вилучено"
 
 #: Menus.cpp:5499
 msgid "Audio Device Info"
-msgstr "Інформація про аудіо пристрої"
+msgstr "Інформація про аудіопристрої"
 
 #: Menus.cpp:5599
 #: Menus.cpp:5655
@@ -5831,13 +5831,13 @@ msgstr "С&ітки"
 msgid "Select Curve"
 msgstr "Вибрати криву"
 
-#: effects/Equalization.cpp:1370
+#: effects/Equalization.cpp:1382
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
-"Choose the 'Manage curves list...' button and rename the 'unnamed' curve, then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 "Щоб кривою еквалайзера можна було скористатися у пакетному режимі, будь ласка, вкажіть нову назву кривої.\n"
-"Натисніть кнопку «Керування списком кривих…» і перейменуйте криву «Без назви», потім скористайтеся нею."
+"Натисніть кнопку «Збереження/Керування кривими…» і перейменуйте криву «Без назви», потім скористайтеся нею."
 
 #: effects/Equalization.cpp:1371
 msgid "EQ Curve needs a different name"
@@ -6538,7 +6538,7 @@ msgid ""
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"Ефект відновлення спрямований на використання на дуже коротких відрізках аудіо (до 128 фрагментів).\n"
+"Ефект відновлення спрямований на використання на дуже коротких ділянках аудіо (до 128 фрагментів).\n"
 "\n"
 "Збільшіть масштаб та вкажіть частинку запису для відновлення."
 
@@ -8581,7 +8581,7 @@ msgid ""
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"«%s» є файлом Вдосконаленого Аудіо Кодування. \n"
+"«%s» є файлом вдосконаленого аудіокодування (AAC). \n"
 "Audacity не може відкривати цей тип файлів. \n"
 "слід перетворити цей файл на файл підтримуваного аудіоформату на зразок WAV або AIFF."
 
@@ -8633,7 +8633,7 @@ msgid ""
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
-"«%s» є файлом аудіо формату Musepack. \n"
+"«%s» є файлом аудіоформату Musepack. \n"
 "Audacity не може відкривати цей тип файлів. \n"
 "Якщо ви впевнені, що насправді це файл mp3, змініть його суфікс назви на «.mp3»\n"
 "і ще раз спробуйте його імпортувати. У іншому випадку Вам слід спочатку перетворити цей файл на файл формату, \n"
@@ -8646,7 +8646,7 @@ msgid ""
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"«%s» є файлом аудіо формату Wavpack. \n"
+"«%s» є файлом аудіоформату Wavpack. \n"
 "Audacity не може відкривати цей тип файлів. \n"
 "Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на зразок WAV або AIFF."
 
@@ -8657,7 +8657,7 @@ msgid ""
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"«%s» є файлом аудіо формату Dolby Digital. \n"
+"«%s» є файлом аудіоформату Dolby Digital. \n"
 "Audacity на даний момент не може відкривати цей тип файлів. \n"
 "Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на зразок WAV або AIFF."
 
@@ -9106,6 +9106,10 @@ msgstr "Немає прав на запис у каталог %s"
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Зміни каталогу для зберігання тимчасових файлів не наберуть сили, доки програму Audacity не буде перезавантажено."
 
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr "Оновлення теки тимчасових даних"
+
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
 msgstr "Ефекти"
@@ -9335,7 +9339,7 @@ msgstr "Імпорт / Експорт"
 
 #: prefs/ImportExportPrefs.cpp:53
 msgid "When importing audio files"
-msgstr "Під час імпорту аудіо файлів"
+msgstr "Під час імпорту аудіофайлів"
 
 #: prefs/ImportExportPrefs.cpp:57
 msgid "&Make a copy of uncompressed audio files before editing (safer)"
@@ -9585,7 +9589,7 @@ msgstr "← — Клацання"
 #: prefs/MousePrefs.cpp:105
 #: prefs/MousePrefs.cpp:106
 msgid "Select"
-msgstr "Вибрати"
+msgstr "Вибір"
 
 #: prefs/MousePrefs.cpp:102
 #: prefs/MousePrefs.cpp:126
@@ -9637,7 +9641,7 @@ msgstr "Вибрати місце та відтворити"
 #: prefs/MousePrefs.cpp:112
 #: prefs/MousePrefs.cpp:113
 msgid "Zoom"
-msgstr "Масштаб"
+msgstr "Масштабування"
 
 #: prefs/MousePrefs.cpp:108
 msgid "Zoom in on Point"
@@ -9690,7 +9694,7 @@ msgstr "Типовий масштаб"
 
 #: prefs/MousePrefs.cpp:115
 msgid "Time shift clip or move up/down between tracks"
-msgstr "Пересунути відрізок, пересування вгору-вниз між доріжками"
+msgstr "Пересунути ділянку, пересування вгору-вниз між доріжками"
 
 #: prefs/MousePrefs.cpp:116
 msgid "Shift-Left-Drag"
@@ -9707,7 +9711,7 @@ msgstr "Ліва-Ctrl-перетягування"
 
 #: prefs/MousePrefs.cpp:117
 msgid "Move clip up/down between tracks"
-msgstr "Перемістити відрізок вгору або вниз між доріжками"
+msgstr "Перемістити ділянку вгору або вниз між доріжками"
 
 #: prefs/MousePrefs.cpp:119
 msgid "Change Amplification Envelope"
@@ -9820,6 +9824,10 @@ msgstr "&Короткий проміжок:"
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
 msgstr "&Довгий проміжок:"
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
+msgstr "Параметри: "
 
 #: prefs/PrefsDialog.cpp:75
 msgid "Audacity Preferences"
