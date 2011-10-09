@@ -332,8 +332,6 @@ void EffectNyquist::Parse(wxString line)
 
 void EffectNyquist::ParseFile()
 {
-   wxLogDebug(wxT("EffectNyquist::ParseFile called"));
-
    wxTextFile f(mFileName.GetFullPath());
    if (!f.Open())
       return;

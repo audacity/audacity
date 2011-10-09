@@ -1102,7 +1102,7 @@ bool MP3Exporter::InitLibrary(wxString libpath)
       !lame_set_padding_type ||
       !lame_set_bWriteVbrTag)
    {
-      wxLogMessage(wxT("Failed to find a required symbol in the LAME library\n"));
+      wxLogMessage(wxT("Failed to find a required symbol in the LAME library."));
 #if defined(__WXMSW__)
       if (beVersion) {
          be_version v;

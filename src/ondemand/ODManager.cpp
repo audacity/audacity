@@ -212,7 +212,7 @@ void ODManager::Init()
    mCurrentThreads = 0;
    mMaxThreads = 5;
 
-   //   wxLogDebug(wxT("Initializing ODManager...Creating manager thread\n"));
+   //   wxLogDebug(wxT("Initializing ODManager...Creating manager thread"));
    ODManagerHelperThread* startThread = new ODManagerHelperThread;
 
 //   startThread->SetPriority(0);//default of 50.

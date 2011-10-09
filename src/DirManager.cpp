@@ -566,7 +566,7 @@ wxFileName DirManager::MakeBlockFilePath(wxString value){
       dir.AppendDir(middir);
 
       if(!dir.DirExists() && !dir.Mkdir(0777,wxPATH_MKDIR_FULL))
-         wxLogSysError(_("mkdir in DirManager::MakeBlockFilePath failed.\n"));
+         wxLogSysError(_("mkdir in DirManager::MakeBlockFilePath failed."));
    }
    return dir;
 }
@@ -596,7 +596,7 @@ bool DirManager::AssignFile(wxFileName &fileName,
          wxString collision;
          checkit.GetFirst(&collision,filespec);
          
-         wxLogWarning(_("Audacity found an orphan blockfile: %s. \nPlease consider saving and reloading the project to perform a complete project check.\n"),
+         wxLogWarning(_("Audacity found an orphan blockfile: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
                       collision.c_str());
          
          return FALSE;

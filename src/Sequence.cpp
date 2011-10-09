@@ -836,7 +836,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          	// the silent replacement to mMaxSamples.
             len = mMaxSamples;
          mBlock->Item(b)->f = new SilentBlockFile(len);
-         wxLogWarning(_("Gap detected in project file\n"));
+         wxLogError(_("Gap detected in project file."));
          mErrorOpening = true;
       }
    }
@@ -846,14 +846,14 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    for (b = 0; b < mBlock->Count(); b++) {
       if (mBlock->Item(b)->start != numSamples) {
          mBlock->Item(b)->start = numSamples;
-         wxLogWarning(_("Gap detected in project file\n"));
+         wxLogError(_("Gap detected in project file."));
          mErrorOpening = true;         
       }
       numSamples += mBlock->Item(b)->f->GetLength();
    }
    if (mNumSamples != numSamples) {
       mNumSamples = numSamples;
-      wxLogWarning(_("Gap detected in project file\n"));
+      wxLogError(_("Gap detected in project file."));
       mErrorOpening = true;
    }
 }
@@ -947,7 +947,7 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
    if (result != len) 
    {
-      wxLogError(wxT("Expected to read %d samples, got %d samples.\n"), len, result);
+      wxLogError(wxT("Expected to read %d samples, got %d samples."), len, result);
       if (result < 0)
          result = 0;
       ClearSamples(buffer, format, result, len-result);
@@ -1645,11 +1645,11 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr)
 
    if (bError) 
    {
-      wxLogError(wxT("*** Consistency check failed after %s ***\n"), whereStr);
+      wxLogError(wxT("*** Consistency check failed after %s. ***"), whereStr);
       wxString str;
       DebugPrintf(&str);
       wxLogError(wxT("%s"), str.c_str());
-      wxLogError(wxT("*** Please report this error to feedback@audacityteam.org ***\n\nRecommended course of action:\nUndo the failed operation(s), then export or save your work and quit.\n"));   
+      wxLogError(wxT("*** Please report this error to feedback@audacityteam.org. ***\n\nRecommended course of action:\nUndo the failed operation(s), then export or save your work and quit."));   
    }
 
    return !bError;
