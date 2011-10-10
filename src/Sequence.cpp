@@ -739,9 +739,17 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!wxStrcmp(attr, wxT("start")))
             wb->start = nValue;
 
+         // Vaughan, 2011-10-10: I don't think we ever write a "len" attribute for "waveblock" tag, 
+         // so I think this is actually legacy code, or something intended, but not completed. 
+         // Anyway, might as well leave this code in, especially now that it has the check 
+         // against mMaxSamples.
          if (!wxStrcmp(attr, wxT("len")))
          {
-            if (nValue > mMaxSamples) // mMaxSamples should already have been set by calls to the "sequence" clause below. 
+            // mMaxSamples should already have been set by calls to the "sequence" clause below. 
+            // The check intended here was already done in DirManager::HandleXMLTag(), where 
+            // it let the block be built, then checked against mMaxSamples, and deleted the block 
+            // if the size of the block is bigger than mMaxSamples.
+            if (nValue > mMaxSamples) 
             {
                delete (wb);
                mErrorOpening = true;
