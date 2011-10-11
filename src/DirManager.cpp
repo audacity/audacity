@@ -43,6 +43,21 @@
   when reading a project from disk, multiple copies of the
   same block still get mapped to the same BlockFile object.
 
+  The blockfile/directory scheme is rather complicated with two different schemes.
+  The current scheme uses two levels of subdirectories - up to 256 'eXX' and up to
+  256 'dYY' directories with in each of the 'eXX' dirs, where XX and YY are hex chars.
+  In each of the dXX directories there are up to 256 audio files (e.g. .au or .auf).
+  They have a filename scheme of 'eXXYYZZZZ', where XX and YY refers to the 
+  subdirectories as above.  The 'ZZZZ' component is generated randomly for some reason.
+  The XX and YY components are sequential.
+  DirManager fills up the current dYY subdir until 256 are created, and moves on to the next one.
+
+  So for example, the first blockfile created may be 'e00/d00/e0000a23b.au' and the next
+  'e00/d00/e000015e8.au', and the 257th may be 'e00/d01/e0001f02a.au'.
+  On close the blockfiles that are no longer referenced by the project (edited or deleted) are removed,
+  along with the consequent empty directories.
+  
+
 *//*******************************************************************/
 
 
@@ -809,7 +824,7 @@ wxFileName DirManager::MakeBlockFileName()
          topnum  = (int)(256.*rand()/(RAND_MAX+1.));
          midkey=(topnum<<8)+midnum;
 
-            
+
       }else{
          
          DirHash::iterator iter = dirMidPool.begin();
