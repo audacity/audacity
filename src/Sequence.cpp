@@ -827,7 +827,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    if (wxStrcmp(tag, wxT("sequence")) != 0)
       return;
 
-   // Make sure that the sequence is valid
+   // Make sure that the sequence is valid.
    // First, replace missing blockfiles with SilentBlockFiles
    unsigned int b;
    for (b = 0; b < mBlock->Count(); b++) {
@@ -840,11 +840,15 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             len = mNumSamples - mBlock->Item(b)->start;
 
          if (len > mMaxSamples) 
+         {
          	// This could be why the blockfile failed, so limit 
          	// the silent replacement to mMaxSamples.
             len = mMaxSamples;
+            wxLogError(_("   Sequence has missing block file with length > mMaxSamples."));
+         }
          mBlock->Item(b)->f = new SilentBlockFile(len);
-         wxLogError(_("Gap detected in project file."));
+         wxLogError(
+            _("Gap detected in project file. Missing block file replaced with silence."));
          mErrorOpening = true;
       }
    }
@@ -854,14 +858,14 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    for (b = 0; b < mBlock->Count(); b++) {
       if (mBlock->Item(b)->start != numSamples) {
          mBlock->Item(b)->start = numSamples;
-         wxLogError(_("Gap detected in project file."));
+         wxLogError(_("Gap detected in project file.\n   Block specification for block file started after end of previous block.\n   Start has been moved back so blocks are contiguous."));
          mErrorOpening = true;         
       }
       numSamples += mBlock->Item(b)->f->GetLength();
    }
    if (mNumSamples != numSamples) {
       mNumSamples = numSamples;
-      wxLogError(_("Gap detected in project file."));
+      wxLogError(_("Gap detected in project file. Sequence sample count corrected."));
       mErrorOpening = true;
    }
 }

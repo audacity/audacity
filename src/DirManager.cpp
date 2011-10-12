@@ -45,7 +45,7 @@
 
   The blockfile/directory scheme is rather complicated with two different schemes.
   The current scheme uses two levels of subdirectories - up to 256 'eXX' and up to
-  256 'dYY' directories with in each of the 'eXX' dirs, where XX and YY are hex chars.
+  256 'dYY' directories within each of the 'eXX' dirs, where XX and YY are hex chars.
   In each of the dXX directories there are up to 256 audio files (e.g. .au or .auf).
   They have a filename scheme of 'eXXYYZZZZ', where XX and YY refers to the 
   subdirectories as above.  The 'ZZZZ' component is generated randomly for some reason.
@@ -1050,6 +1050,9 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          ((mMaxSamples > -1) && // is initialized
             (pBlockFile->GetLength() > mMaxSamples)))
    {
+      // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c13. 
+      // Lock pBlockFile so that the ~BlockFile() will not delete the file on disk. 
+      pBlockFile->Lock();
       delete pBlockFile;
       return false;
    }
