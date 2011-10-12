@@ -844,10 +844,10 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          	// This could be why the blockfile failed, so limit 
          	// the silent replacement to mMaxSamples.
             len = mMaxSamples;
-            wxLogError(_("   Sequence has missing block file with length > mMaxSamples."));
+            wxLogWarning(_("   Sequence has missing block file with length > mMaxSamples."));
          }
          mBlock->Item(b)->f = new SilentBlockFile(len);
-         wxLogError(
+         wxLogWarning(
             _("Gap detected in project file. Missing block file replaced with silence."));
          mErrorOpening = true;
       }
@@ -858,14 +858,20 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    for (b = 0; b < mBlock->Count(); b++) {
       if (mBlock->Item(b)->start != numSamples) {
          mBlock->Item(b)->start = numSamples;
-         wxLogError(_("Gap detected in project file.\n   Block specification for block file started after end of previous block.\n   Start has been moved back so blocks are contiguous."));
+         wxString sFileAndExtension = mBlock->Item(b)->f->GetFileName().GetFullName();
+         if (sFileAndExtension.IsEmpty())
+            sFileAndExtension = _("(replaced with silence)");
+         else 
+            sFileAndExtension = wxT("\"") + sFileAndExtension + wxT("\"");
+         wxLogWarning(_("Gap detected in project file.\n   Start for block file %s is more than one sample past end of previous block.\n   Start has been moved back so blocks are contiguous."), 
+                     sFileAndExtension);
          mErrorOpening = true;         
       }
       numSamples += mBlock->Item(b)->f->GetLength();
    }
    if (mNumSamples != numSamples) {
       mNumSamples = numSamples;
-      wxLogError(_("Gap detected in project file. Sequence sample count corrected."));
+      wxLogWarning(_("Gap detected in project file. Sequence sample count corrected."));
       mErrorOpening = true;
    }
 }
@@ -959,7 +965,7 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
    if (result != len) 
    {
-      wxLogError(wxT("Expected to read %d samples, got %d samples."), len, result);
+      wxLogWarning(wxT("Expected to read %d samples, got %d samples."), len, result);
       if (result < 0)
          result = 0;
       ClearSamples(buffer, format, result, len-result);

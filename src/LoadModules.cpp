@@ -177,7 +177,7 @@ bool Module::Load()
    // Check version string matches.  (For now, they must match exactly)
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
-      wxLogWarning(wxT("The module %s does not provide a version string. It will not be loaded."), mName.c_str());
+      wxLogError(wxT("The module %s does not provide a version string. It will not be loaded."), mName.c_str());
       return false;
    }
 
