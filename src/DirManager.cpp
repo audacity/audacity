@@ -1044,11 +1044,14 @@ bool DirManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
    else
       return false;
-      
-   if ((pBlockFile == NULL) || 
-         // Check the length here so we don't have to do it in each BuildFromXML method.
-         ((mMaxSamples > -1) && // is initialized
-            (pBlockFile->GetLength() > mMaxSamples)))
+
+   if (!pBlockFile)
+      // BuildFromXML failed, or we didn't find a valid blockfile tag.
+      return false;
+
+   // Check the length here so we don't have to do it in each BuildFromXML method.
+   if ((mMaxSamples > -1) && // is initialized
+         (pBlockFile->GetLength() > mMaxSamples))
    {
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c13. 
       // Lock pBlockFile so that the ~BlockFile() will not delete the file on disk. 
@@ -1350,17 +1353,6 @@ void DirManager::Deref()
 // recent savefile.
 int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
 {
-   wxGetApp().SetMissingAliasedFileWarningShouldShow(false);
-   wxArrayString filePathArray; // *all* files in the project directory/subdirectories
-   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
-   RecursivelyEnumerateWithProgress(
-      dirPath, 
-      filePathArray,          // output: all files in project directory tree
-      wxEmptyString, 
-      true, false, 
-      mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
-      _("Inspecting project file data"));
-
    // In earlier versions of this method, enumerations of errors were 
    // all done in sequence, then the user was prompted for each type of error. 
    // The enumerations are now interleaved with prompting, because, for example, 
@@ -1373,15 +1365,40 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    int action; // choice of action for each type of error
    int nResult = 0;
    
+   if (bForceError && !bAutoRecoverMode)
+   {
+      wxString msg = _("Project check read faulty Sequence tags.");
+      const wxChar *buttons[] = 
+         {_("Close project immediately with no changes"),
+            _("Continue with repairs already noted in log, and check for more errors"),
+            NULL};
+      wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
+      action = ShowMultiDialog(msg, _("Warning - Problems Reading Sequence Tags"), buttons);
+      if (action == 0) 
+         nResult = FSCKstatus_CLOSE_REQ;
+      else 
+         nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP; 
+   }
+
+   wxArrayString filePathArray; // *all* files in the project directory/subdirectories
+   wxString dirPath = (projFull != wxT("") ? projFull : mytemp);
+   RecursivelyEnumerateWithProgress(
+      dirPath, 
+      filePathArray,          // output: all files in project directory tree
+      wxEmptyString, 
+      true, false, 
+      mBlockFileHash.size(),  // rough guess of how many BlockFiles will be found/processed, for progress
+      _("Inspecting project file data"));
+
    //
    // MISSING ALIASED AUDIO FILES
    //
+   wxGetApp().SetMissingAliasedFileWarningShouldShow(false);
    BlockHash missingAliasedFileAUFHash;   // (.auf) AliasBlockFiles whose aliased files are missing
    BlockHash missingAliasedFilePathHash;  // full paths of missing aliased files
    this->FindMissingAliasedFiles(missingAliasedFileAUFHash, missingAliasedFilePathHash);
 
-   // No need to check (nResult != FSCKstatus_CLOSE_REQ) as this is first check.
-   if (!missingAliasedFileAUFHash.empty()) 
+   if ((nResult != FSCKstatus_CLOSE_REQ) && !missingAliasedFileAUFHash.empty()) 
    {
       // In auto-recover mode, we always create silent blocks, and do not ask user.
       // This makes sure the project is complete next time we open it.
@@ -1480,7 +1497,7 @@ _("Project check detected %d missing alias (.auf) \
             if(action==0){
                //regenerate from data
                b->Recover();
-               nResult = FSCKstatus_CHANGED; 
+               nResult |= FSCKstatus_CHANGED; 
             }else if (action==1){
                // Silence error logging for this block in this session.
                b->SilenceLog(); 
@@ -1595,7 +1612,6 @@ _("Project check found %d orphan blockfile(s). These files are \
       }
    }
 
-   if (nResult != FSCKstatus_CLOSE_REQ)
    if ((nResult != FSCKstatus_CLOSE_REQ) && !ODManager::HasLoadedODFlag())
    {
       // Remove any empty directories.

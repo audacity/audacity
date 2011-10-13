@@ -733,6 +733,9 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          {
             delete (wb);
             mErrorOpening = true;
+            wxLogWarning(
+               wxT("   Sequence has bad %s attribute value, %s, that should be a positive integer."), 
+               attr, strValue.c_str());
             return false;
          }
          
@@ -843,12 +846,15 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          {
          	// This could be why the blockfile failed, so limit 
          	// the silent replacement to mMaxSamples.
+            wxLogWarning(
+               wxT("   Sequence has missing block file with length %s > mMaxSamples %s. Setting length to mMaxSamples."), 
+               Internat::ToString(((wxLongLong)len).ToDouble(), 0), 
+               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
             len = mMaxSamples;
-            wxLogWarning(_("   Sequence has missing block file with length > mMaxSamples."));
          }
          mBlock->Item(b)->f = new SilentBlockFile(len);
          wxLogWarning(
-            _("Gap detected in project file. Missing block file replaced with silence."));
+            wxT("Gap detected in project file. Replacing missing block file with silence."));
          mErrorOpening = true;
       }
    }
@@ -857,21 +863,27 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    sampleCount numSamples = 0;
    for (b = 0; b < mBlock->Count(); b++) {
       if (mBlock->Item(b)->start != numSamples) {
-         mBlock->Item(b)->start = numSamples;
          wxString sFileAndExtension = mBlock->Item(b)->f->GetFileName().GetFullName();
          if (sFileAndExtension.IsEmpty())
-            sFileAndExtension = _("(replaced with silence)");
+            sFileAndExtension = wxT("(replaced with silence)");
          else 
             sFileAndExtension = wxT("\"") + sFileAndExtension + wxT("\"");
-         wxLogWarning(_("Gap detected in project file.\n   Start for block file %s is more than one sample past end of previous block.\n   Start has been moved back so blocks are contiguous."), 
-                     sFileAndExtension);
+         wxLogWarning(
+            wxT("Gap detected in project file.\n   Start (%s) for block file %s is more than one sample past end of previous block (%s).\n   Moving start back so blocks are contiguous."), 
+            Internat::ToString(((wxLongLong)(mBlock->Item(b)->start)).ToDouble(), 0), 
+            sFileAndExtension, 
+            Internat::ToString(((wxLongLong)(numSamples)).ToDouble(), 0));
+         mBlock->Item(b)->start = numSamples;
          mErrorOpening = true;         
       }
       numSamples += mBlock->Item(b)->f->GetLength();
    }
    if (mNumSamples != numSamples) {
+      wxLogWarning(
+         wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."), 
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0), 
+         Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0));
       mNumSamples = numSamples;
-      wxLogWarning(_("Gap detected in project file. Sequence sample count corrected."));
       mErrorOpening = true;
    }
 }
