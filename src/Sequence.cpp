@@ -848,8 +848,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          	// the silent replacement to mMaxSamples.
             wxLogWarning(
                wxT("   Sequence has missing block file with length %s > mMaxSamples %s. Setting length to mMaxSamples."), 
-               Internat::ToString(((wxLongLong)len).ToDouble(), 0), 
-               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
+               Internat::ToString(((wxLongLong)len).ToDouble(), 0).c_str(), 
+               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
             len = mMaxSamples;
          }
          mBlock->Item(b)->f = new SilentBlockFile(len);
@@ -870,9 +870,9 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
             sFileAndExtension = wxT("\"") + sFileAndExtension + wxT("\"");
          wxLogWarning(
             wxT("Gap detected in project file.\n   Start (%s) for block file %s is more than one sample past end of previous block (%s).\n   Moving start back so blocks are contiguous."), 
-            Internat::ToString(((wxLongLong)(mBlock->Item(b)->start)).ToDouble(), 0), 
+            Internat::ToString(((wxLongLong)(mBlock->Item(b)->start)).ToDouble(), 0).c_str(), 
             sFileAndExtension, 
-            Internat::ToString(((wxLongLong)(numSamples)).ToDouble(), 0));
+            Internat::ToString(((wxLongLong)(numSamples)).ToDouble(), 0).c_str());
          mBlock->Item(b)->start = numSamples;
          mErrorOpening = true;         
       }
@@ -881,8 +881,8 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    if (mNumSamples != numSamples) {
       wxLogWarning(
          wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."), 
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0), 
-         Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0));
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(), 
+         Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0).c_str());
       mNumSamples = numSamples;
       mErrorOpening = true;
    }
