@@ -611,7 +611,7 @@ bool DirManager::AssignFile(wxFileName &fileName,
          wxString collision;
          checkit.GetFirst(&collision,filespec);
          
-         wxLogWarning(_("Audacity found an orphan blockfile: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
+         wxLogWarning(_("Audacity found an orphan block file: %s. \nPlease consider saving and reloading the project to perform a complete project check."),
                       collision.c_str());
          
          return FALSE;
@@ -1562,7 +1562,7 @@ _("Project check detected %d missing audio data \
             iter++;
          }
          if ((action == 2) && bAutoRecoverMode)
-            wxLogWarning(_("   Project check replaced missing audio data blockfile(s) with silence."));
+            wxLogWarning(_("   Project check replaced missing audio data block file(s) with silence."));
       }
    }
 
@@ -1578,13 +1578,13 @@ _("Project check detected %d missing audio data \
       // They will be deleted when project is saved the first time.
       if (bAutoRecoverMode)
       {
-         wxLogWarning(_("   Project check ignored orphan blockfile(s). They will be deleted when project is saved."));
+         wxLogWarning(_("   Project check ignored orphan block file(s). They will be deleted when project is saved."));
          action = 1;
       }
       else
       {
          wxString msgA =
-_("Project check found %d orphan blockfile(s). These files are \
+_("Project check found %d orphan block file(s). These files are \
 \nunused and probably left over from a crash or some other bug.");
       wxString msg;
          msg.Printf(msgA, (int)orphanFilePathArray.GetCount());
@@ -1700,7 +1700,7 @@ void DirManager::FindMissingAUFs(
          if (!fileName.FileExists()) 
          {
             missingAUFHash[key] = b;
-            wxLogWarning(_("Missing alias (.auf) blockfile: '%s'"), 
+            wxLogWarning(_("Missing alias (.auf) block file: '%s'"), 
                            fileName.GetFullPath().c_str());
          }
       }
@@ -1724,7 +1724,7 @@ void DirManager::FindMissingAUs(
          if (!fileName.FileExists())
          {
             missingAUHash[key] = b;
-            wxLogWarning(_("Missing data blockfile: '%s'"), 
+            wxLogWarning(_("Missing data block file: '%s'"), 
                            fileName.GetFullPath().c_str());
          }
       }
@@ -1766,7 +1766,7 @@ void DirManager::FindOrphanBlockFiles(
       }
    }
    for (size_t i = 0; i < orphanFilePathArray.GetCount(); i++) 
-      wxLogWarning(_("Orphan blockfile: '%s'"), orphanFilePathArray[i].c_str());
+      wxLogWarning(_("Orphan block file: '%s'"), orphanFilePathArray[i].c_str());
 }
 
 
