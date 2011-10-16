@@ -311,7 +311,7 @@ void SimpleBlockFile::FillCache()
    mCache.active = true;
    mCache.needWrite = false;
    
-   DEBUG_OUTPUT("Succesfully read simple blockfile into cache");
+   DEBUG_OUTPUT("Succesfully read simple block file into cache");
 }
 
 /// Read the summary section of the disk file.
