@@ -871,7 +871,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          wxLogWarning(
             wxT("Gap detected in project file.\n   Start (%s) for block file %s is more than one sample past end of previous block (%s).\n   Moving start back so blocks are contiguous."), 
             Internat::ToString(((wxLongLong)(mBlock->Item(b)->start)).ToDouble(), 0).c_str(), 
-            sFileAndExtension, 
+            sFileAndExtension.c_str(), 
             Internat::ToString(((wxLongLong)(numSamples)).ToDouble(), 0).c_str());
          mBlock->Item(b)->start = numSamples;
          mErrorOpening = true;         
