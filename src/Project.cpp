@@ -2613,7 +2613,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
                   createdODTasks= createdODTasks | ODTask::eODPCMSummary;
                }
                else {
-                  printf("unrecognized OD Flag in blockfile.\n");
+                  printf("unrecognized OD Flag in block file.\n");
                   //TODO:ODTODO: display to user.  This can happen when we build audacity on a system that doesnt have libFLAC
                   break;
                }
