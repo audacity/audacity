@@ -1370,7 +1370,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
       wxString msg = _("Project check read faulty Sequence tags.");
       const wxChar *buttons[] = 
          {_("Close project immediately with no changes"),
-            _("Continue with repairs already noted in log, and check for more errors"),
+            _("Continue with repairs noted in log, and check for more errors"),
             NULL};
       wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
       action = ShowMultiDialog(msg, _("Warning - Problems Reading Sequence Tags"), buttons);
