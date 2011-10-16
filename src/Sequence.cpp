@@ -847,7 +847,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          	// This could be why the blockfile failed, so limit 
          	// the silent replacement to mMaxSamples.
             wxLogWarning(
-               wxT("   Sequence has missing block file with length %s > mMaxSamples %s. Setting length to mMaxSamples."), 
+               wxT("   Sequence has missing block file with length %s > mMaxSamples %s.\n      Setting length to mMaxSamples. This will likely cause some block files to be considered orphans."), 
                Internat::ToString(((wxLongLong)len).ToDouble(), 0).c_str(), 
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
             len = mMaxSamples;
