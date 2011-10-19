@@ -590,6 +590,11 @@ TrackPanel::~TrackPanel()
    delete mRearrangeCursor;
    delete mAdjustLeftSelectionCursor;
    delete mAdjustRightSelectionCursor;
+#if USE_MIDI
+   delete mStretchCursor;
+   delete mStretchLeftCursor;
+   delete mStretchRightCursor;
+#endif
 
    delete mSnapManager;
 
@@ -2911,11 +2916,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    {
       // Make sure we always have the first linked track of a stereo track
       if (!mouseTrack->GetLinked() && mTracks->GetLink(mouseTrack))
-         mouseTrack = 
-#ifndef USE_MIDI
-                      (WaveTrack*)
-#endif
-                                   mTracks->GetLink(mouseTrack);
+         mouseTrack = mTracks->GetLink(mouseTrack);
 
       // Temporary apply the offset because we want to see if the
       // track fits with the desired offset
@@ -3186,21 +3187,22 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
       return;
 
    // don't do anything if track is not wave or Spectrum/log Spectrum
-   if ((mCapturedTrack->GetKind() == Track::Wave
-       && ((WaveTrack *) mCapturedTrack)->GetDisplay() <= WaveTrack::SpectrumLogDisplay)
-#ifdef USE_MIDI
-       || mCapturedTrack->GetKind() == Track::Note 
-#endif
-      ) {
+   if (((mCapturedTrack->GetKind() == Track::Wave) && 
+            (((WaveTrack*)mCapturedTrack)->GetDisplay() <= WaveTrack::SpectrumLogDisplay))
+         #ifdef USE_MIDI
+            || mCapturedTrack->GetKind() == Track::Note 
+         #endif
+         ) 
+   {
       mMouseCapture = IsVZooming;
       mZoomStart = event.m_y;
       mZoomEnd = event.m_y;
       // change note track to zoom like audio track
-//#ifdef USE_MIDI
-//      if (mCapturedTrack->GetKind() == Track::Note) {
-//          ((NoteTrack *) mCapturedTrack)->StartVScroll();
-//      }
-//#endif
+      //#ifdef USE_MIDI
+      //      if (mCapturedTrack->GetKind() == Track::Note) {
+      //          ((NoteTrack *) mCapturedTrack)->StartVScroll();
+      //      }
+      //#endif
    }
 }
 
@@ -4037,7 +4039,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
          pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
    }
    #ifdef EXPERIMENTAL_MIDI_OUT
-   } else {
+  } else { // Note: funny indentation to match "if" about 20 lines back
       if (!pan) {
          ((NoteTrack *) mCapturedTrack)->SetGain(newValue);
          #ifdef EXPERIMENTAL_MIXER_BOARD
@@ -4258,14 +4260,26 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
       mTracks->MoveUp(mCapturedTrack);
       dir = _("up");
+#ifdef EXPERIMENTAL_MIDI_OUT
+      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
+                          mCapturedTrack->GetKind() == Track::Note))
+         pMixerBoard->MoveTrackCluster(mCapturedTrack, true /* up */);
+#else
       if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, true);
+         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, true /* up */);
+#endif
    }
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
       dir = _("down");
+#ifdef EXPERIMENTAL_MIDI_OUT
+      if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
+                          mCapturedTrack->GetKind() == Track::Note))
+         pMixerBoard->MoveTrackCluster(mCapturedTrack, false /* down */);
+#else
       if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, false);
+         pMixerBoard->MoveTrackCluster((WaveTrack*)mCapturedTrack, false /* down */);
+#endif
    }
    else
    {
@@ -5562,10 +5576,13 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
                         clip.height - trackRect.y);
    }
 
-   // Previous code that caused highlight NOT to be drawn on backing
-   // bitmap due to wxWindow::FindFocus() not returning "this" on Mac:
-   // if (GetFocusedTrack() != NULL) && wxWindow::FindFocus() == this) {
-   if (GetFocusedTrack() != NULL) {
+   // Sometimes highlight is not drawn on backing bitmap. I thought
+   // it was because FindFocus did not return "this" on Mac, but 
+   // when I removed that test, yielding this condition:
+   //     if (GetFocusedTrack() != NULL) {
+   // the highlight was reportedly drawn even when something else
+   // was the focus and no highlight should be drawn. -RBD
+   if (GetFocusedTrack() != NULL && wxWindow::FindFocus() == this) {
       HighlightFocusedTrack(dc, focusRect);
    }
 

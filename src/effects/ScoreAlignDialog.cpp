@@ -1,4 +1,25 @@
+/**********************************************************************
+
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+   License: GPL v2.  See License.txt.
+
+   ScoreAlignDialog.cpp
+   <TODO: authors>
+
+******************************************************************//**
+
+\class ScoreAlignDialog
+\brief ScoreAlignDialog is <TODO>.
+
+It <TODO: description>
+
+*//*******************************************************************/
+
 #include "../Audacity.h"
+#include "../Experimental.h"
+
+#ifdef EXPERIMENTAL_SCOREALIGN
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -262,3 +283,5 @@ BEGIN_EVENT_TABLE(ScoreAlignDialog, wxDialog)
    EVT_SLIDER(ID_LINETIME, ScoreAlignDialog::OnSlider)
    EVT_SLIDER(ID_SMOOTHTIME, ScoreAlignDialog::OnSlider)
 END_EVENT_TABLE()
+
+#endif

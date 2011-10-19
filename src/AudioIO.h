@@ -21,8 +21,8 @@
 #ifdef EXPERIMENTAL_MIDI_OUT
 #include "portmidi.h"
 #include "porttime.h"
-#endif // EXPERIMENTAL_MIDI_OUT
 #include "allegro.h"
+#endif // EXPERIMENTAL_MIDI_OUT
 #endif // USE_MIDI
 
 #if USE_PORTMIXER
@@ -549,7 +549,9 @@ private:
    AudioIOListener*    mListener;
 
    friend class AudioThread;
+#ifdef EXPERIMENTAL_MIDI_OUT
    friend class MidiThread;
+#endif
 
    friend void InitAudioIO();
    friend void DeinitAudioIO();

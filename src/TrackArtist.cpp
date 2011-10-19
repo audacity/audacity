@@ -52,7 +52,7 @@ Audacity, the "2-level" invalidation works like this: Anything
 that invalidates the bitmap calls TrackPanel::Refresh(), which
 has an eraseBackground parameter. This flag says to redraw the 
 bitmap when OnPaint() is called. If eraseBackground is false, the
-existing bitmap can be used for waveform imges. Audacity also
+existing bitmap can be used for waveform images. Audacity also
 draws directly to the screen to update the time indicator during
 playback. To move the indicator, one column of pixels is drawn to 
 the screen to remove the indicator. Then the indicator is drawn at
@@ -2182,7 +2182,6 @@ static bool LookupLogicalAttribute(Alg_note_ptr note, Alg_attribute attr, bool d
 static const char *LookupStringAttribute(Alg_note_ptr note, Alg_attribute attr, const char *def);
 static const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def);
 //static int PITCH_TO_Y(double p, int bottom);
-
 
 // returns NULL if note is not a shape,
 // returns atom (string) value of note if note is a shape

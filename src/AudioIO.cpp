@@ -3387,6 +3387,20 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                linkFlag = vt->GetLinked();
             }
             
+#define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
+#ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
+            // this is original code prior to r10680 -RBD
+            if (cut)
+               {
+                  gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
+                  continue;
+               }
+
+            unsigned int len = (unsigned int)
+               gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
+                                                  floatSample,
+                                                  (int)framesPerBuffer);
+#else
             // This code was reorganized so that if all audio tracks
             // are muted, we still return paComplete when the end of
             // a selection is reached.
@@ -3402,6 +3416,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                                                      floatSample,
                                                      (int)framesPerBuffer);
             }
+#endif
             // If our buffer is empty and the time indicator is past
             // the end, then we've actually finished playing the entire
             // selection.
@@ -3411,9 +3426,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             {
                callbackReturn = paComplete;
             }
-
+#ifndef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
             if (cut) // no samples to process, they've been discarded
                continue;
+#endif
 
             if (vt->GetChannel() == Track::LeftChannel ||
                 vt->GetChannel() == Track::MonoChannel)

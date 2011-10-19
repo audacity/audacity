@@ -535,10 +535,6 @@ private:
    // us to undo the slide and then slide it by another amount
    double mHSlideAmount;
 
-#ifdef USE_MIDI
-   NoteTrack *mCapturedNoteClip;
-#endif
-
    bool mDidSlideVertically;
 
    bool mRedrawAfterStop;

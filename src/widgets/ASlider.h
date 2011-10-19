@@ -123,7 +123,9 @@ class LWSlider
 
    float Get(bool convert = true);
    void Set(float value);
+#ifdef EXPERIMENTAL_MIDI_OUT
    void SetStyle(int style);
+#endif
    void Increase(float steps);
    void Decrease(float steps);
 

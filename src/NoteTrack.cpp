@@ -21,9 +21,9 @@
 
 #include "Audacity.h"
 
+#if defined(USE_MIDI)
 #include <sstream>
 
-#if defined(USE_MIDI)
 #define ROUND(x) ((int) ((x) + 0.5))
 
 #include "AColor.h"
@@ -112,9 +112,9 @@ Track(projDirManager)
    mSerializationLength = 0;
 
    mDirManager = projDirManager;
-
+#ifdef EXPERIMENTAL_MIDI_OUT
    mGain = 0;
-
+#endif
    mBottomNote = 24;
    mPitchHeight = 5;
 
@@ -164,8 +164,9 @@ Track *NoteTrack::Duplicate()
    duplicate->mLastMidiPosition = mLastMidiPosition;
    duplicate->mVisibleChannels = mVisibleChannels;
    duplicate->SetOffset(GetOffset());
+#ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetGain(GetGain());
-
+#endif
    return duplicate;
 }
 
@@ -769,10 +770,12 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("minimized")) && 
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mMinimized = (nValue != 0);
+#ifdef EXPERIMENTAL_MIDI_OUT
          else if (!wxStrcmp(attr, wxT("velocity")) && 
                   XMLValueChecker::IsGoodString(strValue) && 
                   Internat::CompatibleToDouble(strValue, &dblValue))
             mGain = (float) dblValue;
+#endif
          else if (!wxStrcmp(attr, wxT("bottomnote")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetBottomNote(nValue);
@@ -821,7 +824,9 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("visiblechannels"), saveme->mVisibleChannels);
    xmlFile.WriteAttr(wxT("height"), saveme->GetActualHeight());
    xmlFile.WriteAttr(wxT("minimized"), saveme->GetMinimized());
+#ifdef EXPERIMENTAL_MIDI_OUT
    xmlFile.WriteAttr(wxT("velocity"), (double) saveme->mGain);
+#endif
    xmlFile.WriteAttr(wxT("bottomnote"), saveme->mBottomNote);
    xmlFile.WriteAttr(wxT("data"), wxString(data.str().c_str(), wxConvUTF8));
    xmlFile.EndTag(wxT("notetrack"));

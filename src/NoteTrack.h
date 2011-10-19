@@ -95,8 +95,10 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    virtual bool Paste(double t, Track *src);
    virtual bool Shift(double t);
 
+#ifdef EXPERIMENTAL_MIDI_OUT
    float GetGain() const { return mGain; }
    void SetGain(float gain) { mGain = gain; }
+#endif
 
    double NearestBeatTime(double time, double *beat);
    bool StretchRegion(double b0, double b1, double dur);
@@ -161,8 +163,10 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    void StartVScroll();
    void VScroll(int start, int end);
 
+#ifdef EXPERIMENTAL_MIDI_OUT
    wxRect GetGainPlacementRect() const { return mGainPlacementRect; }
    void SetGainPlacementRect(const wxRect &r) { mGainPlacementRect = r; }
+#endif
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
@@ -197,7 +201,9 @@ class AUDACITY_DLL_API NoteTrack:public Track {
 
    DirManager *mDirManager;
 
+#ifdef EXPERIMENTAL_MIDI_OUT
    float mGain; // velocity offset
+#endif
 
    // mBottom is the Y offset of pitch 0 (normally off screen)
    int mBottom;

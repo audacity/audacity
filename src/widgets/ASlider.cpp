@@ -330,7 +330,7 @@ LWSlider::LWSlider(wxWindow * parent,
         stepValue, canUseShift, style, heavyweight, popup, 1.0, orientation);
 }
 
-
+#ifdef EXPERIMENTAL_MIDI_OUT
 void LWSlider::SetStyle(int style)
 {
    mStyle = style;
@@ -380,7 +380,7 @@ void LWSlider::SetStyle(int style)
       wxASSERT(false); // undefined style
    }
 }
-
+#endif
 
 // Construct predefined slider
 LWSlider::LWSlider(wxWindow *parent,
@@ -393,6 +393,7 @@ LWSlider::LWSlider(wxWindow *parent,
                    int orientation /* = wxHORIZONTAL */) // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER. 
 {
    wxString leftLabel, rightLabel;
+#ifdef EXPERIMENTAL_MIDI_OUT
    mOrientation = orientation;
    mName = name;
 
@@ -400,6 +401,49 @@ LWSlider::LWSlider(wxWindow *parent,
 
    Init(parent, mName, pos, size, mMinValue, mMaxValue, mStepValue,
         true, style, heavyweight, popup, mSpeed, mOrientation);
+#else
+   float minValue, maxValue, stepValue;
+   float speed = 1.0;
+
+   switch(style)
+   {
+   case PAN_SLIDER:
+      minValue = -1.0f;
+      maxValue = +1.0f;
+      stepValue = 0.1f;
+      orientation = wxHORIZONTAL; //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
+      break;
+   case DB_SLIDER:
+      minValue = -36.0f;
+      if (orientation == wxHORIZONTAL)
+         maxValue = 36.0f;
+      else 
+         maxValue = 36.0f; // for MixerBoard //vvv Previously was 6dB for MixerBoard, but identical for now. 
+      stepValue = 1.0f;
+      speed = 0.5;
+      break;
+   case FRAC_SLIDER:
+      minValue = 0.0f;
+      maxValue = 1.0f;
+      stepValue = STEP_CONTINUOUS;
+      break;
+   case SPEED_SLIDER:
+      minValue = 0.01f;
+      maxValue = 3.0f;
+      stepValue = STEP_CONTINUOUS;
+      break;
+
+   default:
+      minValue = 0.0f;
+      maxValue = 1.0f;
+      stepValue = 0.0f;
+      wxASSERT(false); // undefined style
+   }
+
+   Init(parent, name, pos, size, minValue, maxValue, stepValue,
+        true, style, heavyweight, popup, speed, orientation);
+
+#endif
 }
 
 void LWSlider::Init(wxWindow * parent,

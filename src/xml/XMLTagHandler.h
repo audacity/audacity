@@ -42,7 +42,9 @@ public:
    static bool IsGoodInt(const wxString strInt);
 
    static bool IsValidChannel(const int nValue); 
+#ifdef USE_MIDI
    static bool IsValidVisibleChannels(const int nValue);
+#endif
    static bool IsValidSampleFormat(const int nValue); // true if nValue is one sampleFormat enum values
 };
 
