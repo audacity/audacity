@@ -141,6 +141,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    localLanguageName[wxT("ru")] = wxT("Russky");
    localLanguageName[wxT("sk")] = wxT("Slovak");
    localLanguageName[wxT("sl")] = wxT("Slovenscina");
+   localLanguageName[wxT("sr_RS")] = wxT("Serbian");
    localLanguageName[wxT("sv")] = wxT("Svenska");
    localLanguageName[wxT("tg")] = wxT("Tajik");
    localLanguageName[wxT("tr")] = wxT("Turkce");
