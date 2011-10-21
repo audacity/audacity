@@ -3404,6 +3404,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             // This code was reorganized so that if all audio tracks
             // are muted, we still return paComplete when the end of
             // a selection is reached.
+            // Vaughan, 2011-10-20: Further comments from Roger, by off-list email:
+            //    ...something to do with what it means to mute all audio tracks. E.g. if you
+            // mute all and play, does the playback terminate immediately or play
+            // silence? If it terminates immediately, does that terminate any MIDI
+            // playback that might also be going on? ...Maybe muted audio tracks + MIDI,
+            // the playback would NEVER terminate. ...I think the #else part is probably preferable...
             unsigned int len;
             if (cut)
             {
