@@ -1,35 +1,20 @@
-# Nederlandse vertaling van Audacity
-# Tino Meinen <a.t.meinen@chello.nl>, 2002, 2003, 2004, 2005, 2006, 2007, 2008.
-# Feedback van Sander J. Alkemade <jubbetje@ilse.nl> 2003.
-# ----------------------------------------------------------------
-# Voordat het vertalen begint eerst doen: make updatepo in /locale
-# ----------------------------------------------------------------
-# audio file   audiobestand/geluidsbestand
-# autosave     autosave
-# click        click/klik/tik
-# cut line     snijlijn
-# orphaned     verdwaald (Engels 'lost')
-# pan          balans
-# pop          buts/kraak/krassen (tikken en krassen verwijderen?)
-# playthrough  playthrough
-# summary file overzichtbestand
-# -
-# TODO:
-# specify xx options - xx opties kiezen/specificeren
+# Audacity Strings for Translation.
+# Copyright (C) YEAR Audacity Development Team
+# This file is distributed under the same license as Audacity.
+# Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 2.0\n"
+"Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-08-31 04:02+0100\n"
-"PO-Revision-Date: 2011-09-17 21:16-0000\n"
-"Last-Translator: Thomas De Rocker <thomasderocker.at.h0tmail.d0t.c0m>\n"
-"Language-Team: Dutch <audacity-translation@lists.sourceforge.net>\n"
+"POT-Creation-Date: 2011-10-25 03:58+0100\n"
+"PO-Revision-Date: 2011-10-26 00:33-0000\n"
+"Last-Translator: Thomas De Rocker\n"
+"Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Dutch\n"
-"X-Poedit-Country: BELGIUM\n"
-"X-Poedit-Basepath: Y:\\Documents\\Vertalingen\n"
 
 #: AboutDialog.cpp:162
 msgid "About Audacity..."
@@ -569,10 +554,10 @@ msgstr "Kon de bestanden in de autosave-map niet nummeren."
 #: Menus.cpp:3371
 #: Menus.cpp:3383
 #: Menus.cpp:5982
-#: Project.cpp:2490
-#: Project.cpp:4389
-#: Project.cpp:4408
-#: TrackPanel.cpp:7213
+#: Project.cpp:2504
+#: Project.cpp:4403
+#: Project.cpp:4422
+#: TrackPanel.cpp:7230
 #: WaveTrack.cpp:971
 #: WaveTrack.cpp:990
 #: WaveTrack.cpp:2069
@@ -950,14 +935,14 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Afhankelijkheidscontrole"
 
-#: DirManager.cpp:194
-#: DirManager.cpp:280
-#: DirManager.cpp:430
-#: DirManager.cpp:1586
+#: DirManager.cpp:209
+#: DirManager.cpp:295
+#: DirManager.cpp:445
+#: DirManager.cpp:1619
 msgid "Progress"
 msgstr "Voortgang"
 
-#: DirManager.cpp:349
+#: DirManager.cpp:364
 msgid ""
 "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
@@ -965,72 +950,89 @@ msgstr ""
 "Er is erg weinig vrije ruimte over op deze partitie.\n"
 "Gelieve een andere tijdelijke map bij ‘Voorkeuren’ te kiezen."
 
-#: DirManager.cpp:381
+#: DirManager.cpp:396
 msgid "Cleaning up temporary files"
 msgstr "Opruimen van tijdelijke bestanden"
 
-#: DirManager.cpp:431
+#: DirManager.cpp:446
 msgid "Saving project data files"
 msgstr "Opslaan van projectdatabestanden"
 
 # tijdelije opslagmappen/cache
-#: DirManager.cpp:506
+#: DirManager.cpp:521
 msgid "Cleaning up cache directories"
 msgstr "Opruimen van cachemappen"
 
-#: DirManager.cpp:569
-msgid "mkdir in DirManager::MakeBlockFilePath failed.\n"
-msgstr "mkdir in DirManager::MakeBlockFilePath mislukt.\n"
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
+msgstr "mkdir in DirManager::MakeBlockFilePath mislukt."
 
 # verdwaald/los/vrij/vondeling/zwevend/ongebonden/losgelaten/weesbestand
-#: DirManager.cpp:599
+#: DirManager.cpp:614
 #, c-format
 msgid ""
-"Audacity found an orphan blockfile: %s. \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
+"Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
 msgstr ""
 "Audacity heeft een verdwaald blokbestand gevonden: %s. \n"
-"U kunt overwegen om het project op te slaan en opnieuw te laden zodat het project volledig wordt nagekeken.\n"
+"U kunt overwegen om het project op te slaan en opnieuw te laden zodat het project volledig wordt nagekeken."
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
 #. example, mysong would become mysong-old1, mysong-old2, etc.
-#: DirManager.cpp:1184
+#: DirManager.cpp:1205
 #, c-format
 msgid "%s-old%d"
 msgstr "%s-oud%d"
 
-#: DirManager.cpp:1192
+#: DirManager.cpp:1213
 msgid "Unable to open/create test file."
 msgstr "Kon geen testbestand openen of aanmaken."
 
-#: DirManager.cpp:1201
+#: DirManager.cpp:1222
 #, c-format
 msgid "Unable to remove '%s'."
 msgstr "Kon ‘%s’ niet verwijderen."
 
-#: DirManager.cpp:1206
+#: DirManager.cpp:1227
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "Bestand hernoemd: %s\n"
 
-#: DirManager.cpp:1269
+#: DirManager.cpp:1290
 #, c-format
 msgid "Unable to rename '%s' to '%s'."
 msgstr "Kon ‘%s’ niet naar ‘%s’ hernoemen."
 
-#: DirManager.cpp:1288
+#: DirManager.cpp:1309
 #, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "Gewijzigd blok %s naar nieuw pseudoniem\n"
 
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr "Projectcontrole las foute sequence-tags."
+
+#: DirManager.cpp:1372
+#: DirManager.cpp:1421
+msgid "Close project immediately with no changes"
+msgstr "Sluit het project onmiddelijk zonder wijzigingen"
+
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors"
+msgstr "Doorgaan met reparaties die in log genoteerd zijn, en controleren op meer fouten"
+
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr "Waarschuwing - problemen bij lezen van sequence-tags"
+
 # vrij vertaald
-#: DirManager.cpp:1344
-#: DirManager.cpp:1750
+#: DirManager.cpp:1391
+#: DirManager.cpp:1783
 msgid "Inspecting project file data"
 msgstr "Data van projectbestand wordt geïnspecteerd"
 
-#: DirManager.cpp:1375
+#: DirManager.cpp:1410
 #, c-format
 msgid ""
 "Project check detected %d missing external audio \n"
@@ -1055,29 +1057,25 @@ msgstr ""
 "Merk op dat de tweede optie er kan voor zorgen dat de golfvorm \n"
 "geen stilte weergeeft."
 
-#: DirManager.cpp:1386
-msgid "Close project immediately with no changes"
-msgstr "Sluit het project onmiddelijk zonder wijzigingen"
-
-#: DirManager.cpp:1387
-#: DirManager.cpp:1504
+#: DirManager.cpp:1422
+#: DirManager.cpp:1539
 msgid "Treat missing audio as silence (this session only)"
 msgstr "Ontbrekende audio vervangen door stilte (alleen deze sessie)"
 
-#: DirManager.cpp:1388
-#: DirManager.cpp:1505
+#: DirManager.cpp:1423
+#: DirManager.cpp:1540
 msgid "Replace missing audio with silence (permanent immediately)"
 msgstr "Ontbrekende data vervangen door stilte (direct, permanent)"
 
-#: DirManager.cpp:1391
+#: DirManager.cpp:1426
 msgid "Warning - Missing Aliased File(s)"
 msgstr "Waarschuwing - Ontbrekend(e) ge-aliast(e) bestand(en)"
 
-#: DirManager.cpp:1421
+#: DirManager.cpp:1456
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr "   Projectcontrole verving ontbrekende gealiaste bestanden door stilte."
 
-#: DirManager.cpp:1441
+#: DirManager.cpp:1476
 #, c-format
 msgid ""
 "Project check detected %d missing alias (.auf) \n"
@@ -1088,29 +1086,29 @@ msgstr ""
 "Audacity kan deze overzichtbestanden volledig regenereren vanuit de\n"
 "oorspronkelijke audiodata van het project."
 
-#: DirManager.cpp:1446
+#: DirManager.cpp:1481
 msgid "Regenerate alias summary files (safe and recommended)"
 msgstr "Alias-overzichtbestanden opnieuw genereren (veilig en aangeraden)"
 
-#: DirManager.cpp:1447
+#: DirManager.cpp:1482
 msgid "Fill in silence for missing display data (this session only)"
 msgstr "Ontbrekende data met stilte opvullen (alleen deze sessie)"
 
-#: DirManager.cpp:1448
-#: DirManager.cpp:1503
-#: DirManager.cpp:1558
+#: DirManager.cpp:1483
+#: DirManager.cpp:1538
+#: DirManager.cpp:1592
 msgid "Close project immediately with no further changes"
 msgstr "Project onmiddelijk en zonder verdere wijzigingen sluiten"
 
-#: DirManager.cpp:1451
+#: DirManager.cpp:1486
 msgid "Warning - Missing Alias Summary File(s)"
 msgstr "Waarschuwing - Ontbrekend(e) alias-overzichtbestand(en)"
 
-#: DirManager.cpp:1473
+#: DirManager.cpp:1508
 msgid "   Project check regenerated missing alias summary file(s)."
 msgstr "   Projectcontrole regenereerde ontbrekende alias-opsommingsbestand(en)."
 
-#: DirManager.cpp:1491
+#: DirManager.cpp:1526
 #, c-format
 msgid ""
 "Project check detected %d missing audio data \n"
@@ -1136,57 +1134,53 @@ msgstr ""
 "Merk op dat de tweede optie er kan voor zorgen dat de golfvorm \n"
 "geen stilte weergeeft."
 
-#: DirManager.cpp:1508
+#: DirManager.cpp:1543
 msgid "Warning - Missing Audio Data Blockfile(s)"
 msgstr "Waarschuwing - ontbrekend(e) audiodata-blokbestand(en)"
 
-#: DirManager.cpp:1530
-msgid "   Project check replaced missing audio data blockfile(s) with silence."
+#: DirManager.cpp:1565
+msgid "   Project check replaced missing audio data block file(s) with silence."
 msgstr "   Projectcontrole verving ontbrekende audiodata-blokbestanden door stilte."
 
-#: DirManager.cpp:1546
-msgid "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
+#: DirManager.cpp:1581
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
 msgstr "   Projectcontrole negeerde alleenstaande blokbestanden. Ze zullen gewist worden als het project opgeslagen wordt."
 
 # disk contention niet vertaald (schijfstrijd?)
-#: DirManager.cpp:1552
+#: DirManager.cpp:1587
 #, c-format
 msgid ""
-"Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug. \n"
-"\n"
-"They should be deleted to avoid disk contention."
+"Project check found %d orphan block file(s). These files are \n"
+"unused and probably left over from a crash or some other bug."
 msgstr ""
 "De projectcontrole heeft %d verdwaalde blokbestanden aangetroffen. Deze bestanden\n"
-"zijn ongebruikt en zijn waarschijnlijk achtergebleven na een crash of een andere fout.\n"
-"\n"
-"Ze kunnen het beste verwijderd worden om schijffouten te vermijden."
+"zijn ongebruikt en zijn waarschijnlijk achtergebleven na een crash of een andere fout."
 
 # geruisloos om de extra bestanden heen werken/langs de bestanden gaan
 # eromheen gaan
-#: DirManager.cpp:1559
+#: DirManager.cpp:1593
 msgid "Continue without deleting; ignore the extra files this session"
 msgstr "Doorgaan zonder te verwijderen; negeer de extra bestanden in deze sessie"
 
-#: DirManager.cpp:1560
-msgid "Delete orphan files immediately"
-msgstr "Verdwaalde bestanden onmiddellijk verwijderen"
+#: DirManager.cpp:1594
+msgid "Delete orphan files permanently"
+msgstr "Verdwaalde bestanden permanent verwijderen"
 
-#: DirManager.cpp:1563
+#: DirManager.cpp:1597
 msgid "Warning - Orphan Blockfile(s)"
 msgstr "Waarschuwing - Verdwaald(e) blokbestand(en)"
 
-#: DirManager.cpp:1587
+#: DirManager.cpp:1620
 msgid "Cleaning up unused directories in project data"
 msgstr "Ongebruikte mappen in projectdata worden opgeruimd"
 
 # de newlines zijn niet nodig in dit dialoog, regels wordt uitmatisch afgebroken
-#: DirManager.cpp:1601
+#: DirManager.cpp:1634
 msgid "Project check found file inconsistencies inspecting the loaded project data."
 msgstr "De projectcontrole heeft inconsistenties aangetroffen tijdens de inspectie van de ingeladen projectdata."
 
 # de newlines zijn niet nodig in dit dialoog, regels wordt uitmatisch afgebroken
-#: DirManager.cpp:1607
+#: DirManager.cpp:1640
 msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
@@ -1196,44 +1190,44 @@ msgstr ""
 "\n"
 "Selecteer 'Log weergeven...' in het help-menu om details weer te geven."
 
-#: DirManager.cpp:1608
+#: DirManager.cpp:1641
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Waarschuwing: problemen bij automatisch herstel"
 
-#: DirManager.cpp:1647
+#: DirManager.cpp:1680
 #, c-format
 msgid "Missing aliased audio file: '%s'"
 msgstr "Ontbrekend gealiast audiobestand: '%s'"
 
-#: DirManager.cpp:1670
+#: DirManager.cpp:1703
 #, c-format
-msgid "Missing alias (.auf) blockfile: '%s'"
+msgid "Missing alias (.auf) block file: '%s'"
 msgstr "Ontbrekend alias (.auf) blokbestand: '%s'"
 
-#: DirManager.cpp:1694
+#: DirManager.cpp:1727
 #, c-format
-msgid "Missing data blockfile: '%s'"
+msgid "Missing data block file: '%s'"
 msgstr "Ontbrekend datablokbestand: '%s'"
 
-#: DirManager.cpp:1736
+#: DirManager.cpp:1769
 #, c-format
-msgid "Orphan blockfile: '%s'"
+msgid "Orphan block file: '%s'"
 msgstr "Verdwaald blokbestand: '%s'"
 
-#: DirManager.cpp:1791
+#: DirManager.cpp:1824
 msgid "Caching audio"
 msgstr "Audio bufferen"
 
-#: DirManager.cpp:1792
+#: DirManager.cpp:1825
 msgid "Caching audio into memory"
 msgstr "Audio bufferen naar het geheugen"
 
 # vrij vertaald
-#: DirManager.cpp:1827
+#: DirManager.cpp:1860
 msgid "Saving recorded audio"
 msgstr "Opname wordt opgeslagen"
 
-#: DirManager.cpp:1828
+#: DirManager.cpp:1861
 msgid "Saving recorded audio to disk"
 msgstr "Opgenomen audio naar schijf opslaan"
 
@@ -2934,7 +2928,7 @@ msgid "Nothing to redo"
 msgstr "Niets te herhalen"
 
 #: Menus.cpp:3209
-#: TrackPanel.cpp:674
+#: TrackPanel.cpp:679
 #: toolbars/EditToolBar.cpp:131
 #: toolbars/EditToolBar.cpp:195
 msgid "Cut"
@@ -2963,7 +2957,7 @@ msgstr "Stereogeluid kopiëren naar een monospoor is niet toegestaan."
 #: Menus.cpp:3500
 #: Menus.cpp:3523
 #: Menus.cpp:3628
-#: TrackPanel.cpp:676
+#: TrackPanel.cpp:681
 #: toolbars/EditToolBar.cpp:135
 #: toolbars/EditToolBar.cpp:197
 msgid "Paste"
@@ -3119,7 +3113,7 @@ msgid "Detached labeled regions"
 msgstr "Losgekoppelde gelabelde gebieden"
 
 #: Menus.cpp:4021
-#: TrackPanel.cpp:6965
+#: TrackPanel.cpp:6982
 msgid "Split"
 msgstr "Splitsen"
 
@@ -3346,13 +3340,13 @@ msgid "Resample"
 msgstr "Resampelen"
 
 #: Menus.cpp:5958
-#: TrackPanel.cpp:7189
+#: TrackPanel.cpp:7206
 msgid "New sample rate (Hz):"
 msgstr "Nieuwe samplefrequentie (Hz):"
 
 # ongeldige waarde!
 #: Menus.cpp:5982
-#: TrackPanel.cpp:7213
+#: TrackPanel.cpp:7230
 msgid "The entered value is invalid"
 msgstr "De ingevoerde waarde is ongeldig"
 
@@ -3379,8 +3373,8 @@ msgid "Mixing and rendering tracks"
 msgstr "Sporen mixen en doorrekenen"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#: MixerBoard.cpp:169
-#: TrackPanel.cpp:4068
+#: MixerBoard.cpp:173
+#: TrackPanel.cpp:4070
 #: widgets/ASlider.cpp:373
 msgid "Velocity"
 msgstr "Snelheid"
@@ -3388,59 +3382,59 @@ msgstr "Snelheid"
 # onvertaald laten?
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: title of the Gain slider, used to adjust the volume
-#: MixerBoard.cpp:178
-#: MixerBoard.cpp:321
-#: TrackPanel.cpp:4064
-#: TrackPanel.cpp:6603
-#: TrackPanel.cpp:8036
+#: MixerBoard.cpp:182
+#: MixerBoard.cpp:350
+#: TrackPanel.cpp:4066
+#: TrackPanel.cpp:6620
+#: TrackPanel.cpp:8053
 #: widgets/ASlider.cpp:355
 msgid "Gain"
 msgstr "Versterking"
 
-#: MixerBoard.cpp:195
+#: MixerBoard.cpp:203
 msgid "Musical Instrument"
 msgstr "Muziekinstrument"
 
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: MixerBoard.cpp:211
-#: MixerBoard.cpp:336
-#: TrackPanel.cpp:4064
-#: TrackPanel.cpp:6549
-#: TrackPanel.cpp:8044
+#: MixerBoard.cpp:219
+#: MixerBoard.cpp:369
+#: TrackPanel.cpp:4066
+#: TrackPanel.cpp:6566
+#: TrackPanel.cpp:8061
 #: widgets/ASlider.cpp:345
 msgid "Pan"
 msgstr "Balans"
 
 # Dimmen is net iets te lang voor het label
-#: MixerBoard.cpp:258
-#: MixerBoard.cpp:1226
-#: TrackPanel.cpp:7984
+#: MixerBoard.cpp:278
+#: MixerBoard.cpp:1387
+#: TrackPanel.cpp:8001
 msgid "Mute"
 msgstr "Dempen"
 
-#: MixerBoard.cpp:259
-#: MixerBoard.cpp:1276
-#: TrackPanel.cpp:7984
+#: MixerBoard.cpp:279
+#: MixerBoard.cpp:1437
+#: TrackPanel.cpp:8001
 msgid "Solo"
 msgstr "Solo"
 
 # meter aan/aanzetten/inschakelen/meten
-#: MixerBoard.cpp:260
+#: MixerBoard.cpp:283
 msgid "Signal Level Meter"
 msgstr "Signaalhoogtemeter"
 
-#: MixerBoard.cpp:321
-#: TrackPanel.cpp:4063
+#: MixerBoard.cpp:350
+#: TrackPanel.cpp:4065
 msgid "Moved gain slider"
 msgstr "Hoofdvolumeschuif verplaatst"
 
-#: MixerBoard.cpp:336
-#: TrackPanel.cpp:4063
+#: MixerBoard.cpp:369
+#: TrackPanel.cpp:4065
 msgid "Moved pan slider"
 msgstr "Balansschuif verplaatst"
 
 #  =venstertitel
-#: MixerBoard.cpp:1485
+#: MixerBoard.cpp:1655
 #, c-format
 msgid "Audacity Mixer Board%s"
 msgstr "Audacity mengpaneel%s"
@@ -3472,7 +3466,7 @@ msgid "(Recovered)"
 msgstr "(Hersteld)"
 
 #: Project.cpp:1850
-#: TrackPanel.cpp:941
+#: TrackPanel.cpp:946
 #: toolbars/ControlToolBar.cpp:193
 msgid "Record"
 msgstr "Opnemen"
@@ -3480,7 +3474,7 @@ msgstr "Opnemen"
 # Dit komt in het geschiedenis-venster en moet dus een actie zijn:
 # Wat is er gedaan? Geluid opgenomen
 #: Project.cpp:1850
-#: TrackPanel.cpp:941
+#: TrackPanel.cpp:946
 msgid "Recorded Audio"
 msgstr "Geluid opgenomen"
 
@@ -3519,8 +3513,8 @@ msgstr "%s is reeds geopend in een ander venster."
 
 #: Project.cpp:2185
 #: Project.cpp:2345
-#: Project.cpp:2546
-#: Project.cpp:2722
+#: Project.cpp:2560
+#: Project.cpp:2736
 msgid "Error opening project"
 msgstr "Fout bij openen project"
 
@@ -3529,12 +3523,12 @@ msgstr "Fout bij openen project"
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
 #. * now be added automatically for the Save Projects dialogues).
 #: Project.cpp:2199
-#: Project.cpp:3499
+#: Project.cpp:3513
 msgid "Audacity projects"
 msgstr "Audacity-projecten"
 
 #: Project.cpp:2251
-#: Project.cpp:2799
+#: Project.cpp:2813
 #, c-format
 msgid ""
 "This file was saved by Audacity %s, a much\n"
@@ -3560,7 +3554,7 @@ msgid "1.0 or earlier"
 msgstr "1.0 of ouder"
 
 #: Project.cpp:2258
-#: Project.cpp:2811
+#: Project.cpp:2825
 msgid "Opening old project file"
 msgstr "Oud projectbestand wordt geopend"
 
@@ -3603,29 +3597,29 @@ msgstr "Fout bij openen van bestand of project"
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity was niet in staat een Audacity 1.0 project om te zetten naar het nieuwe projectformat."
 
-#: Project.cpp:2486
+#: Project.cpp:2500
 msgid "Project was recovered"
 msgstr "Project is hersteld"
 
-#: Project.cpp:2486
+#: Project.cpp:2500
 msgid "Recover"
 msgstr "Herstellen"
 
-#: Project.cpp:2489
+#: Project.cpp:2503
 msgid "Could not remove old auto save file"
 msgstr "Kon het oude autosavebestand niet verwijderen"
 
-#: Project.cpp:2626
-#: Project.cpp:2627
+#: Project.cpp:2640
+#: Project.cpp:2641
 msgid "<unrecognized version -- possibly corrupt project file>"
 msgstr "<niet herkende versie -- mogelijk corrupt projectbestand>"
 
-#: Project.cpp:2720
+#: Project.cpp:2734
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Kon de map met projectdata niet vinden: ‘%s’"
 
-#: Project.cpp:2768
+#: Project.cpp:2782
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3634,11 +3628,11 @@ msgstr ""
 "Dit bestand is opgeslagen met Audacity %s.\n"
 "U maakt echter gebruik van Audacity versie %s. U moet upgraden naar een nieuwere versie om dit bestand te kunnen openen."
 
-#: Project.cpp:2772
+#: Project.cpp:2786
 msgid "Can't open project file"
 msgstr "Kan projectbestand niet openen"
 
-#: Project.cpp:2806
+#: Project.cpp:2820
 #, c-format
 msgid ""
 "This file was saved by Audacity %s.\n"
@@ -3655,7 +3649,7 @@ msgstr ""
 "\n"
 "Dit bestand nu openen?"
 
-#: Project.cpp:3023
+#: Project.cpp:3037
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3675,11 +3669,11 @@ msgstr ""
 "\n"
 "Toch opslaan?"
 
-#: Project.cpp:3024
+#: Project.cpp:3038
 msgid "Warning empty project"
 msgstr "Waarschuwing leeg project"
 
-#: Project.cpp:3095
+#: Project.cpp:3109
 #, c-format
 msgid ""
 "Could not save project. Path not found.  Try creating \n"
@@ -3688,13 +3682,13 @@ msgstr ""
 "Kon project niet opslaan. Pad niet gevonden. Probeer de map \n"
 "\"%s\" aan te maken voordat u het project met deze naam opslaat."
 
-#: Project.cpp:3097
-#: Project.cpp:3134
-#: Project.cpp:3157
+#: Project.cpp:3111
+#: Project.cpp:3148
+#: Project.cpp:3171
 msgid "Error saving project"
 msgstr "Fout bij opslaan project"
 
-#: Project.cpp:3132
+#: Project.cpp:3146
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -3703,44 +3697,44 @@ msgstr ""
 "Het project kon niet opslagen worden. Misschien \n"
 "is %s niet beschrijfbaar of is de schijf vol."
 
-#: Project.cpp:3155
-#: Project.cpp:4371
+#: Project.cpp:3169
+#: Project.cpp:4385
 #: Tags.cpp:1171
 #: effects/Equalization.cpp:1086
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "Kon niet schrijven naar bestand \"%s\": %s"
 
-#: Project.cpp:3235
+#: Project.cpp:3249
 #, c-format
 msgid "Saved %s"
 msgstr "%s Opgeslagen"
 
-#: Project.cpp:3391
+#: Project.cpp:3405
 #, c-format
 msgid "Imported '%s'"
 msgstr "‘%s’ is geïmporteerd"
 
-#: Project.cpp:3392
+#: Project.cpp:3406
 msgid "Import"
 msgstr "Importeren"
 
-#: Project.cpp:3427
+#: Project.cpp:3441
 msgid "Error importing"
 msgstr "Fout bij importeren"
 
-#: Project.cpp:3475
+#: Project.cpp:3489
 msgid "Save Speech As:"
 msgstr "Spraak opslaan als:"
 
-#: Project.cpp:3477
+#: Project.cpp:3491
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM-audiobestand *.wav)|*.wav"
 
 # Een beetje vrij vertaald, maar de boodschap is zo wel duidelijk
 # LET OP! dit bericht mag maximaal 5 regels bevatten, alle overige regels
 # worden niet in het dialoog getoond.
-#: Project.cpp:3486
+#: Project.cpp:3500
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
@@ -3755,11 +3749,11 @@ msgstr ""
 "\n"
 "Als u het bestand ook in andere programma's wilt kunnen openen moet u ‘Exporteren als…’ gebruiken."
 
-#: Project.cpp:3487
+#: Project.cpp:3501
 msgid "Save Compressed Project As..."
 msgstr "Gecomprimeerd project opslaan als..."
 
-#: Project.cpp:3492
+#: Project.cpp:3506
 msgid ""
 "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3773,15 +3767,15 @@ msgstr ""
 "\n"
 "Om een audiobestand op te slaan voor andere programma's, gebruik een van de \"Bestand > Exporteren\"-commando's.\n"
 
-#: Project.cpp:3493
+#: Project.cpp:3507
 msgid "Save Project As..."
 msgstr "Project opslaan als…"
 
-#: Project.cpp:3520
+#: Project.cpp:3534
 msgid "Error Saving Project"
 msgstr "Fout bij opslaan project"
 
-#: Project.cpp:3520
+#: Project.cpp:3534
 msgid ""
 "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
@@ -3789,77 +3783,77 @@ msgstr ""
 "Het project werd niet opgeslagen omdat de ingegeven naam een ander project zou overschrijven.\n"
 "Gelieve opnieuw te proberen en een andere naam te gebruiken."
 
-#: Project.cpp:3561
+#: Project.cpp:3575
 msgid "Created new project"
 msgstr "Nieuw project aangemaakt"
 
-#: Project.cpp:3777
+#: Project.cpp:3791
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "%.2f seconden verwijderd bij t=%.2f"
 
-#: Project.cpp:3780
+#: Project.cpp:3794
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: Project.cpp:3964
+#: Project.cpp:3978
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "Vrije schijfruimte voor opname van %d uur en %d minuten."
 
-#: Project.cpp:3967
+#: Project.cpp:3981
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "Vrije schijfruimte voor opname van 1 uur en %d minuten."
 
-#: Project.cpp:3970
+#: Project.cpp:3984
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "Vrije schijfruimte voor opname van %d minuten."
 
-#: Project.cpp:3973
+#: Project.cpp:3987
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "Vrije schijfruimte voor opname van %d seconden."
 
-#: Project.cpp:3976
+#: Project.cpp:3990
 msgid "Out of disk space"
 msgstr "Geen vrije schijfruimte over"
 
-#: Project.cpp:3998
+#: Project.cpp:4012
 msgid "On-demand import and waveform calculation complete."
 msgstr "Importeren en golfvorm-berekening op aanvraag voltooid."
 
-#: Project.cpp:4003
+#: Project.cpp:4017
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
 msgstr "Import(s) compleet. Bezig met %d golfvorm-berekeningen op aanvraag. %2.0f%% voltooid van totaal."
 
-#: Project.cpp:4006
+#: Project.cpp:4020
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "Importeren compleet. Bezig met golfvorm-berekening op aanvraag. %2.0f%% voltooid."
 
-#: Project.cpp:4343
+#: Project.cpp:4357
 msgid "New Project"
 msgstr "Nieuw project"
 
-#: Project.cpp:4373
+#: Project.cpp:4387
 msgid "Error writing autosave file"
 msgstr "Fout bij het schrijven van het autosave-bestand"
 
-#: Project.cpp:4388
+#: Project.cpp:4402
 msgid "Could not create autosave file: "
 msgstr "Kon het autosave-bestand niet aanmaken: "
 
-#: Project.cpp:4407
+#: Project.cpp:4421
 msgid "Could not remove old autosave file: "
 msgstr "Kon oud autosavebestand niet verwijderen: "
 
 #  =statusbalkmelding
 # feitelijke/werkelijke/daadwerkelijke snelheid/frequentie
 # het gaat hier om de samplefrequentie
-#: Project.cpp:4436
+#: Project.cpp:4450
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Werkelijke rate: %d"
@@ -4109,13 +4103,7 @@ msgstr "Lange sporen"
 msgid "Choose a location to save screenshot images"
 msgstr "Kies een locatie om screenshot-afbeeldingen op te slaan"
 
-#: Sequence.cpp:832
-#: Sequence.cpp:842
-#: Sequence.cpp:849
-msgid "Gap detected in project file\n"
-msgstr "Gat ontdekt in projectbestand\n"
-
-#: Sequence.cpp:1335
+#: Sequence.cpp:1374
 msgid "Memory allocation failed -- NewSamples"
 msgstr "Geheugentoewijzing mislukt -- NewSamples"
 
@@ -4442,228 +4430,228 @@ msgstr "Audacity ingeplande opname - Wachten op begin opname"
 
 # Anders/overige/andere
 # bijvoorbeed: Audiospoor->frequentie instellen->[8000][11025][44100][Anders}
-#: TrackPanel.cpp:618
+#: TrackPanel.cpp:623
 #: prefs/QualityPrefs.cpp:99
 msgid "Other..."
 msgstr "Andere…"
 
 # Benoemen/Titel/Naam/Benaming/Nieuwe naam
 # het brengt een dialoog op waarin je een spoor een naam/titel kunt geven
-#: TrackPanel.cpp:626
-#: TrackPanel.cpp:649
-#: TrackPanel.cpp:658
-#: TrackPanel.cpp:666
+#: TrackPanel.cpp:631
+#: TrackPanel.cpp:654
+#: TrackPanel.cpp:663
+#: TrackPanel.cpp:671
 msgid "Name..."
 msgstr "Nieuwe naam…"
 
-#: TrackPanel.cpp:628
-#: TrackPanel.cpp:651
-#: TrackPanel.cpp:662
-#: TrackPanel.cpp:668
+#: TrackPanel.cpp:633
+#: TrackPanel.cpp:656
+#: TrackPanel.cpp:667
+#: TrackPanel.cpp:673
 msgid "Move Track Up"
 msgstr "Spoor naar boven verplaatsen"
 
-#: TrackPanel.cpp:629
-#: TrackPanel.cpp:652
-#: TrackPanel.cpp:663
-#: TrackPanel.cpp:669
+#: TrackPanel.cpp:634
+#: TrackPanel.cpp:657
+#: TrackPanel.cpp:668
+#: TrackPanel.cpp:674
 msgid "Move Track Down"
 msgstr "Spoor naar beneden verplaatsen"
 
-#: TrackPanel.cpp:631
+#: TrackPanel.cpp:636
 #: effects/ToneGen.cpp:275
 #: prefs/TracksPrefs.cpp:58
 msgid "Waveform"
 msgstr "Golfvorm"
 
-#: TrackPanel.cpp:632
+#: TrackPanel.cpp:637
 #: prefs/TracksPrefs.cpp:59
 msgid "Waveform (dB)"
 msgstr "Golfvorm (dB)"
 
-#: TrackPanel.cpp:633
+#: TrackPanel.cpp:638
 #: prefs/TracksPrefs.cpp:60
 msgid "Spectrogram"
 msgstr "Spectrogram"
 
-#: TrackPanel.cpp:634
+#: TrackPanel.cpp:639
 #: prefs/TracksPrefs.cpp:61
 msgid "Spectrogram log(f)"
 msgstr "Spectrogram log(f)"
 
 #. i18n-hint: short form of 'logarithm'
-#: TrackPanel.cpp:635
+#: TrackPanel.cpp:640
 #: prefs/TracksPrefs.cpp:62
 msgid "Pitch (EAC)"
 msgstr "Toonhoogte (EAC)"
 
-#: TrackPanel.cpp:637
-#: TrackPanel.cpp:6908
+#: TrackPanel.cpp:642
+#: TrackPanel.cpp:6925
 msgid "Mono"
 msgstr "Mono"
 
-#: TrackPanel.cpp:638
-#: TrackPanel.cpp:6907
+#: TrackPanel.cpp:643
+#: TrackPanel.cpp:6924
 msgid "Left Channel"
 msgstr "Linker kanaal"
 
-#: TrackPanel.cpp:639
-#: TrackPanel.cpp:6907
+#: TrackPanel.cpp:644
+#: TrackPanel.cpp:6924
 msgid "Right Channel"
 msgstr "Rechter kanaal"
 
-#: TrackPanel.cpp:640
+#: TrackPanel.cpp:645
 msgid "Make Stereo Track"
 msgstr "Stereospoor maken"
 
-#: TrackPanel.cpp:641
+#: TrackPanel.cpp:646
 msgid "Split Stereo Track"
 msgstr "Stereospoor splitsen"
 
-#: TrackPanel.cpp:642
+#: TrackPanel.cpp:647
 msgid "Split Stereo to Mono"
 msgstr "Van stereo naar mono splitsen"
 
-#: TrackPanel.cpp:644
+#: TrackPanel.cpp:649
 msgid "Set Sample Format"
 msgstr "Sampleformaat instellen"
 
-#: TrackPanel.cpp:646
-#: TrackPanel.cpp:7169
+#: TrackPanel.cpp:651
+#: TrackPanel.cpp:7186
 msgid "Set Rate"
 msgstr "Frequentie instellen"
 
-#: TrackPanel.cpp:654
+#: TrackPanel.cpp:659
 msgid "Up Octave"
 msgstr "Octaaf naar boven"
 
-#: TrackPanel.cpp:655
+#: TrackPanel.cpp:660
 msgid "Down Octave"
 msgstr "Octaaf naar beneden"
 
-#: TrackPanel.cpp:660
+#: TrackPanel.cpp:665
 msgid "Font..."
 msgstr "Lettertype…"
 
-#: TrackPanel.cpp:671
+#: TrackPanel.cpp:676
 msgid "Set Range..."
 msgstr "Bereik instellen…"
 
-#: TrackPanel.cpp:675
+#: TrackPanel.cpp:680
 #: toolbars/EditToolBar.cpp:133
 #: toolbars/EditToolBar.cpp:196
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: TrackPanel.cpp:1443
+#: TrackPanel.cpp:1448
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "Klikken om verticaal in te zoomen. Shift-klikken om uit te zoomen. Slepen om op een bepaald gebied te zoomen."
 
-#: TrackPanel.cpp:1448
+#: TrackPanel.cpp:1453
 msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "Klikken om verticaal in te zoomen. Shift-klikken om uit te zoomen. Slepen om op een bepaald gebied te zoomen."
 
-#: TrackPanel.cpp:1454
+#: TrackPanel.cpp:1459
 msgid "Drag the track vertically to change the order of the tracks."
 msgstr "Sleep de track verticaal om de volgorde van de tracks aan te passen."
 
-#: TrackPanel.cpp:1474
+#: TrackPanel.cpp:1479
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr "Klik en sleep om de relatieve afmeting van de stereo-sporen aan te passen."
 
-#: TrackPanel.cpp:1477
+#: TrackPanel.cpp:1482
 msgid "Click and drag to resize the track."
 msgstr "Klik en sleep om de grootte van het spoor aan te passen."
 
-#: TrackPanel.cpp:1508
+#: TrackPanel.cpp:1513
 msgid "Drag one or more label boundaries"
 msgstr "Versleep een of meer grenzen van het label"
 
 # statusbalkmelding
-#: TrackPanel.cpp:1509
+#: TrackPanel.cpp:1514
 msgid "Drag label boundary"
 msgstr "Versleep de grens van het label"
 
 #. i18n-hint: This string is for the Mac OS, which uses Command-, as the shortcut for Preferences
-#: TrackPanel.cpp:1525
+#: TrackPanel.cpp:1530
 msgid "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
 msgstr "Combinatiestand: Cmd- voor muis en toetsenbord voorkeuren"
 
 #. i18n-hint: This string is for Windows and Linux, which uses Control-P as the shortcut for Preferences
-#: TrackPanel.cpp:1528
+#: TrackPanel.cpp:1533
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "Combinatiestand: Ctrl-P voor muis en toetsenbord voorkeuren"
 
-#: TrackPanel.cpp:1576
-#: TrackPanel.cpp:1588
-#: TrackPanel.cpp:2008
-#: TrackPanel.cpp:2015
+#: TrackPanel.cpp:1581
+#: TrackPanel.cpp:1593
+#: TrackPanel.cpp:2013
+#: TrackPanel.cpp:2020
 msgid "Click and drag to stretch selected region."
 msgstr "Klik en sleep om het geselecteerde gebied uit te rekken."
 
-#: TrackPanel.cpp:1581
+#: TrackPanel.cpp:1586
 msgid "Click and drag to move left selection boundary."
 msgstr "Klik en sleep om de linker selectiegrens te verplaatsen."
 
-#: TrackPanel.cpp:1593
+#: TrackPanel.cpp:1598
 msgid "Click and drag to move right selection boundary."
 msgstr "Klik en sleep om de rechter selectiegrens te verplaatsen."
 
-#: TrackPanel.cpp:1598
+#: TrackPanel.cpp:1603
 msgid "Click and drag to stretch within selected region."
 msgstr "Klik en sleep om binnen het geselecteerde gebied uit te rekken."
 
-#: TrackPanel.cpp:1973
-#: TrackPanel.cpp:4672
-#: TrackPanel.cpp:4710
-#: TrackPanel.cpp:4977
-#: TrackPanel.cpp:7335
-#: TrackPanel.cpp:7355
+#: TrackPanel.cpp:1978
+#: TrackPanel.cpp:4686
+#: TrackPanel.cpp:4724
+#: TrackPanel.cpp:4991
+#: TrackPanel.cpp:7352
+#: TrackPanel.cpp:7372
 msgid "Modified Label"
 msgstr "Label aangepast"
 
-#: TrackPanel.cpp:1974
-#: TrackPanel.cpp:4673
-#: TrackPanel.cpp:4711
-#: TrackPanel.cpp:4978
-#: TrackPanel.cpp:7336
-#: TrackPanel.cpp:7356
+#: TrackPanel.cpp:1979
+#: TrackPanel.cpp:4687
+#: TrackPanel.cpp:4725
+#: TrackPanel.cpp:4992
+#: TrackPanel.cpp:7353
+#: TrackPanel.cpp:7373
 msgid "Label Edit"
 msgstr "Label bewerken"
 
 # begin en eind/start en einde
-#: TrackPanel.cpp:2048
-#: TrackPanel.cpp:2275
+#: TrackPanel.cpp:2053
+#: TrackPanel.cpp:2280
 msgid "Stretch"
 msgstr "Uitrekken"
 
 # notenbalk (sander)
-#: TrackPanel.cpp:2048
-#: TrackPanel.cpp:2275
+#: TrackPanel.cpp:2053
+#: TrackPanel.cpp:2280
 msgid "Stretch Note Track"
 msgstr "Notenspoor uitrekken"
 
 # begrensing aangepast
-#: TrackPanel.cpp:2409
+#: TrackPanel.cpp:2414
 msgid "Adjusted envelope."
 msgstr "Verloop aangepast."
 
 # the envelope tool in muis-voorkeuren
-#: TrackPanel.cpp:2410
+#: TrackPanel.cpp:2415
 #: prefs/MousePrefs.cpp:119
 msgid "Envelope"
 msgstr "Verloop"
 
-#: TrackPanel.cpp:2559
+#: TrackPanel.cpp:2564
 msgid "Moved clip to another track"
 msgstr "Clip is naar ander spoor verplaatst"
 
 # naar links/links
-#: TrackPanel.cpp:2563
+#: TrackPanel.cpp:2568
 msgid "left"
 msgstr "links"
 
-#: TrackPanel.cpp:2563
+#: TrackPanel.cpp:2568
 msgid "right"
 msgstr "rechts"
 
@@ -4672,239 +4660,239 @@ msgstr "rechts"
 # Sporen/clips %2$.02f seconden naar %1$s verschoven<
 # Sporen/clips %.02f seconden naar %s verschoven
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2565
+#: TrackPanel.cpp:2570
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "Sporen/clips %s verschoven over %.02f seconden"
 
-#: TrackPanel.cpp:2569
+#: TrackPanel.cpp:2574
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "Tijd verschuiven"
 
-#: TrackPanel.cpp:3495
+#: TrackPanel.cpp:3497
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "Om te Tekenen, kies 'Golfvorm' in het Sporen-dropdownmenu."
 
-#: TrackPanel.cpp:3512
+#: TrackPanel.cpp:3514
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "Om te Tekenen, zoom zover in dat U de afzonderlijke samples kunt zien."
 
-#: TrackPanel.cpp:3789
+#: TrackPanel.cpp:3791
 msgid "Moved Sample"
 msgstr "Sample verplaatst"
 
-#: TrackPanel.cpp:3790
+#: TrackPanel.cpp:3792
 msgid "Sample Edit"
 msgstr "Sample bewerken"
 
-#: TrackPanel.cpp:3891
+#: TrackPanel.cpp:3893
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "Spoor ‘%s’ verwijderd."
 
-#: TrackPanel.cpp:3893
+#: TrackPanel.cpp:3895
 msgid "Track Remove"
 msgstr "Spoor verwijderen"
 
-#: TrackPanel.cpp:4068
+#: TrackPanel.cpp:4070
 msgid "Moved velocity slider"
 msgstr "Snelheidsschuif verplaatst"
 
 # boven/naar boven
 # vergelijk links/naar links etc.
-#: TrackPanel.cpp:4260
-#: TrackPanel.cpp:7274
+#: TrackPanel.cpp:4262
+#: TrackPanel.cpp:7291
 msgid "up"
 msgstr "naar boven"
 
-#: TrackPanel.cpp:4266
-#: TrackPanel.cpp:7275
+#: TrackPanel.cpp:4274
+#: TrackPanel.cpp:7292
 msgid "down"
 msgstr "naar beneden"
 
 # tweede %s is links/rechts/beneden/boven
-#: TrackPanel.cpp:4275
-#: TrackPanel.cpp:7270
+#: TrackPanel.cpp:4289
+#: TrackPanel.cpp:7287
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "‘%s’ naar %s verplaatst"
 
-#: TrackPanel.cpp:4278
-#: TrackPanel.cpp:7276
+#: TrackPanel.cpp:4292
+#: TrackPanel.cpp:7293
 msgid "Move Track"
 msgstr "Spoor verplaatsen"
 
-#: TrackPanel.cpp:4878
+#: TrackPanel.cpp:4892
 msgid "Expand"
 msgstr "Uitvouwen"
 
-#: TrackPanel.cpp:4878
+#: TrackPanel.cpp:4892
 msgid "Expanded Cut Line"
 msgstr "Snijlijn uitgebreid"
 
 # vastplakken/samenvoegen
-#: TrackPanel.cpp:4887
+#: TrackPanel.cpp:4901
 msgid "Merge"
 msgstr "Samenvoegen"
 
-#: TrackPanel.cpp:4887
+#: TrackPanel.cpp:4901
 msgid "Merged Clips"
 msgstr "Samengevoegde clips"
 
-#: TrackPanel.cpp:4898
+#: TrackPanel.cpp:4912
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: TrackPanel.cpp:4898
+#: TrackPanel.cpp:4912
 msgid "Removed Cut Line"
 msgstr "Snijlijn verwijderd"
 
-#: TrackPanel.cpp:6549
+#: TrackPanel.cpp:6566
 msgid "Adjusted Pan"
 msgstr "Balans aangepast"
 
-#: TrackPanel.cpp:6603
+#: TrackPanel.cpp:6620
 msgid "Adjusted gain"
 msgstr "Versterking aangepast"
 
 # actieve audio/terwijl audio nog bewerkt wordt?
-#: TrackPanel.cpp:6738
+#: TrackPanel.cpp:6755
 msgid "Can't delete track with active audio"
 msgstr "Kan spoor niet verwijderen met actieve audio"
 
-#: TrackPanel.cpp:6888
+#: TrackPanel.cpp:6905
 msgid "Stereo, "
 msgstr "Stereo, "
 
-#: TrackPanel.cpp:6891
+#: TrackPanel.cpp:6908
 msgid "Mono, "
 msgstr "Mono, "
 
-#: TrackPanel.cpp:6893
+#: TrackPanel.cpp:6910
 msgid "Left, "
 msgstr "Links, "
 
-#: TrackPanel.cpp:6895
+#: TrackPanel.cpp:6912
 msgid "Right, "
 msgstr "Rechts, "
 
 # veranderd/gewijzigd
-#: TrackPanel.cpp:6917
-#: TrackPanel.cpp:7079
+#: TrackPanel.cpp:6934
+#: TrackPanel.cpp:7096
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "‘%s’ gewijzigd in %s"
 
-#: TrackPanel.cpp:6920
+#: TrackPanel.cpp:6937
 msgid "Channel"
 msgstr "Kanaal"
 
-#: TrackPanel.cpp:6961
+#: TrackPanel.cpp:6978
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "Stereospoor ‘%s’ gedeeld"
 
-#: TrackPanel.cpp:6963
+#: TrackPanel.cpp:6980
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "Van stereo naar mono splitsen '%s'"
 
-#: TrackPanel.cpp:6995
+#: TrackPanel.cpp:7012
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "‘%s’ omgezet in een stereospoor"
 
 # naar stereo omzetten
-#: TrackPanel.cpp:6998
+#: TrackPanel.cpp:7015
 msgid "Make Stereo"
 msgstr "Stereo maken"
 
-#: TrackPanel.cpp:7043
+#: TrackPanel.cpp:7060
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "‘%s’ omgezet naar %d Hz"
 
 # wijziging/verandering
-#: TrackPanel.cpp:7045
+#: TrackPanel.cpp:7062
 msgid "Rate Change"
 msgstr "Snelheidsverandering"
 
 # format/formaat wijziging/verandering
-#: TrackPanel.cpp:7083
+#: TrackPanel.cpp:7100
 msgid "Format Change"
 msgstr "Formatwijziging"
 
-#: TrackPanel.cpp:7233
+#: TrackPanel.cpp:7250
 msgid "Change lower speed limit (%) to:"
 msgstr "Onderlimiet snelheidspercentage wijzigen naar:"
 
-#: TrackPanel.cpp:7234
-#: TrackPanel.cpp:7235
+#: TrackPanel.cpp:7251
+#: TrackPanel.cpp:7252
 msgid "Lower speed limit"
 msgstr "Onderlimiet snelheid"
 
-#: TrackPanel.cpp:7240
+#: TrackPanel.cpp:7257
 msgid "Change upper speed limit (%) to:"
 msgstr "Bovenlimiet snelheidspercentage wijzigen naar:"
 
-#: TrackPanel.cpp:7241
-#: TrackPanel.cpp:7242
+#: TrackPanel.cpp:7258
+#: TrackPanel.cpp:7259
 msgid "Upper speed limit"
 msgstr "Bovenlimiet snelheid"
 
 # geen strikte vertaling, maar het is zo duidelijker.
 # Tekst verschijnt in Bewerkingsgeschiedenis
 # (rapporteren aan developers)
-#: TrackPanel.cpp:7250
+#: TrackPanel.cpp:7267
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "Snelheidsbereik ingesteld op ‘%d’ - ‘%d’"
 
-#: TrackPanel.cpp:7253
+#: TrackPanel.cpp:7270
 msgid "Set Range"
 msgstr "Bereik instellen"
 
 # geef het spoor een nieuwe naam/titel
 # wijzig/verander
-#: TrackPanel.cpp:7306
+#: TrackPanel.cpp:7323
 msgid "Change track name to:"
 msgstr "Verander de naam van het spoor naar:"
 
 # Dit is de titel van het dialoogvenster als je een spoor gaat hernoemen
-#: TrackPanel.cpp:7307
+#: TrackPanel.cpp:7324
 msgid "Track Name"
 msgstr "Spoornaam"
 
-#: TrackPanel.cpp:7320
+#: TrackPanel.cpp:7337
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "‘%s’ is hernoemd naar ‘%s’"
 
 # naamsverandering/naamwijziging
-#: TrackPanel.cpp:7323
+#: TrackPanel.cpp:7340
 msgid "Name Change"
 msgstr "Naamwijziging"
 
 # Labelspoor lettertype
-#: TrackPanel.cpp:7390
+#: TrackPanel.cpp:7407
 msgid "Label Track Font"
 msgstr "Lettertype labelspoor"
 
 # typeface?
-#: TrackPanel.cpp:7402
-#: TrackPanel.cpp:7408
+#: TrackPanel.cpp:7419
+#: TrackPanel.cpp:7425
 msgid "Face name"
 msgstr "Lettertype"
 
-#: TrackPanel.cpp:7412
-#: TrackPanel.cpp:7419
+#: TrackPanel.cpp:7429
+#: TrackPanel.cpp:7436
 msgid "Face size"
 msgstr "Grootte"
 
-#: TrackPanel.cpp:7709
+#: TrackPanel.cpp:7726
 msgid "Stereo, 999999Hz"
 msgstr "Stereo, 999999Hz"
 
@@ -5182,7 +5170,7 @@ msgstr "Automatisch dempen verwerken…"
 
 #: effects/AvcCompressor.cpp:738
 #: effects/audiounits/AudioUnitEffect.cpp:876
-#: effects/nyquist/Nyquist.cpp:1409
+#: effects/nyquist/Nyquist.cpp:1407
 #: widgets/ErrorDialog.cpp:142
 #: widgets/MultiDialog.cpp:110
 msgid "OK"
@@ -6930,84 +6918,84 @@ msgstr "Omkeren"
 msgid "Reversing"
 msgstr "Bezig met omkeren"
 
-#: effects/ScoreAlignDialog.cpp:40
+#: effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
 msgstr "MIDI met audio synchroniseren"
 
-#: effects/ScoreAlignDialog.cpp:78
+#: effects/ScoreAlignDialog.cpp:99
 msgid "Frame Period:"
 msgstr "Frame-periode:"
 
-#: effects/ScoreAlignDialog.cpp:84
+#: effects/ScoreAlignDialog.cpp:105
 msgid "Frame Period"
 msgstr "Frame-periode"
 
-#: effects/ScoreAlignDialog.cpp:88
+#: effects/ScoreAlignDialog.cpp:109
 msgid "Window Size:"
 msgstr "Venstergrootte:"
 
-#: effects/ScoreAlignDialog.cpp:93
+#: effects/ScoreAlignDialog.cpp:114
 msgid "Window Size"
 msgstr "Venstergrootte"
 
-#: effects/ScoreAlignDialog.cpp:100
+#: effects/ScoreAlignDialog.cpp:121
 msgid "Force Final Alignment"
 msgstr "Uiteindelijke uitlijning forceren"
 
-#: effects/ScoreAlignDialog.cpp:105
+#: effects/ScoreAlignDialog.cpp:126
 msgid "Ignore Silence at Beginnings and Endings"
 msgstr "Stilte aan begin en einde negeren"
 
-#: effects/ScoreAlignDialog.cpp:109
+#: effects/ScoreAlignDialog.cpp:130
 msgid "Silence Threshold:"
 msgstr "Stilte-drempelwaarde:"
 
-#: effects/ScoreAlignDialog.cpp:114
+#: effects/ScoreAlignDialog.cpp:135
 msgid "Silence Threshold"
 msgstr "Stilte-drempelwaarde"
 
-#: effects/ScoreAlignDialog.cpp:118
+#: effects/ScoreAlignDialog.cpp:139
 msgid "Presmooth Time:"
 msgstr "Presmooth-tijd:"
 
-#: effects/ScoreAlignDialog.cpp:123
+#: effects/ScoreAlignDialog.cpp:144
 msgid "Presmooth Time"
 msgstr "Presmooth-tijd"
 
-#: effects/ScoreAlignDialog.cpp:127
+#: effects/ScoreAlignDialog.cpp:148
 msgid "Line Time:"
 msgstr "Lijntijd:"
 
-#: effects/ScoreAlignDialog.cpp:132
+#: effects/ScoreAlignDialog.cpp:153
 msgid "Line Time"
 msgstr "Lijntijd"
 
-#: effects/ScoreAlignDialog.cpp:136
+#: effects/ScoreAlignDialog.cpp:157
 msgid "Smooth Time:"
 msgstr "Smooth-tijd:"
 
-#: effects/ScoreAlignDialog.cpp:141
+#: effects/ScoreAlignDialog.cpp:162
 msgid "Smooth Time"
 msgstr "Smooth-tijd"
 
-#: effects/ScoreAlignDialog.cpp:148
+#: effects/ScoreAlignDialog.cpp:169
 msgid "Use Defaults"
 msgstr "Standaardwaarden"
 
-#: effects/ScoreAlignDialog.cpp:149
+#: effects/ScoreAlignDialog.cpp:170
 msgid "Restore Defaults"
 msgstr "Standaardinstellingen herstellen"
 
-#: effects/ScoreAlignDialog.cpp:227
-#: effects/ScoreAlignDialog.cpp:229
-#: effects/ScoreAlignDialog.cpp:233
-#: effects/ScoreAlignDialog.cpp:236
-#: effects/ScoreAlignDialog.cpp:238
+#: effects/ScoreAlignDialog.cpp:248
+#: effects/ScoreAlignDialog.cpp:250
+#: effects/ScoreAlignDialog.cpp:254
+#: effects/ScoreAlignDialog.cpp:257
+#: effects/ScoreAlignDialog.cpp:259
 #, c-format
 msgid "%.2f secs"
 msgstr "%.2f seconden"
 
-#: effects/ScoreAlignDialog.cpp:230
+#: effects/ScoreAlignDialog.cpp:251
 #, c-format
 msgid "%.3f"
 msgstr "%.3f"
@@ -7433,19 +7421,19 @@ msgstr ""
 "Slechte Nyquist 'control'-type specificatie: '%s' in pluginbestand '%s'.\n"
 "Control niet aangemaakt."
 
-#: effects/nyquist/Nyquist.cpp:431
+#: effects/nyquist/Nyquist.cpp:429
 msgid "Nyquist Prompt"
 msgstr "Nyquist Prompt"
 
-#: effects/nyquist/Nyquist.cpp:432
+#: effects/nyquist/Nyquist.cpp:430
 msgid "Enter Nyquist Command: "
 msgstr "Nyquist opdracht invoeren:"
 
-#: effects/nyquist/Nyquist.cpp:488
+#: effects/nyquist/Nyquist.cpp:486
 msgid "Error in Nyquist code"
 msgstr "Fout in Nyquist code"
 
-#: effects/nyquist/Nyquist.cpp:488
+#: effects/nyquist/Nyquist.cpp:486
 msgid ""
 "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
@@ -7459,29 +7447,29 @@ msgstr ""
 "\t(mult s 0.1)\n"
 " voor LISP."
 
-#: effects/nyquist/Nyquist.cpp:601
+#: effects/nyquist/Nyquist.cpp:599
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 msgstr "Sorry, effect kan niet toegepast worden op stereosporen waarbij de sporen niet overeenkomen."
 
-#: effects/nyquist/Nyquist.cpp:662
+#: effects/nyquist/Nyquist.cpp:660
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: effects/nyquist/Nyquist.cpp:663
+#: effects/nyquist/Nyquist.cpp:661
 msgid "Nyquist Output: "
 msgstr "Nyquist uitvoer: "
 
 # waarde/waarde terug
-#: effects/nyquist/Nyquist.cpp:784
-#: effects/nyquist/Nyquist.cpp:793
+#: effects/nyquist/Nyquist.cpp:782
+#: effects/nyquist/Nyquist.cpp:791
 msgid "Nyquist returned the value:"
 msgstr "Nyquist gaf de volgende waarde:"
 
-#: effects/nyquist/Nyquist.cpp:830
+#: effects/nyquist/Nyquist.cpp:828
 msgid "Nyquist did not return audio.\n"
 msgstr "Nyquist gaf geen audio terug.\n"
 
-#: effects/nyquist/Nyquist.cpp:839
+#: effects/nyquist/Nyquist.cpp:837
 msgid "Nyquist returned too many audio channels.\n"
 msgstr "Nyquist gaf te veel audiokanalen terug.\n"
 
@@ -9471,6 +9459,10 @@ msgstr "De map %s is niet beschrijfbaar"
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Wijziging van de tijdelijke map zal pas van kracht zijn nadat Audacity herstart is."
 
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr "Update tijdelijke map"
+
 # meervoud is mooier/beter
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
@@ -10211,6 +10203,10 @@ msgstr "Kleine stap:"
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
 msgstr "Grote stap:"
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
+msgstr "Voorkeuren:"
 
 #: prefs/PrefsDialog.cpp:105
 msgid "Audacity Preferences"
@@ -11173,32 +11169,32 @@ msgstr "Knop"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: widgets/ASlider.cpp:740
+#: widgets/ASlider.cpp:784
 #: widgets/Meter.cpp:945
 msgid "L"
 msgstr "L"
 
 #. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: widgets/ASlider.cpp:743
+#: widgets/ASlider.cpp:787
 #: widgets/Meter.cpp:948
 msgid "R"
 msgstr "R"
 
 # Het centrum tussen het linker en rechter kanaal (Balans)
-#: widgets/ASlider.cpp:871
+#: widgets/ASlider.cpp:915
 msgid "Center"
 msgstr "Centrum"
 
-#: widgets/ASlider.cpp:875
+#: widgets/ASlider.cpp:919
 msgid "Left"
 msgstr "Links"
 
-#: widgets/ASlider.cpp:878
+#: widgets/ASlider.cpp:922
 msgid "Right"
 msgstr "Rechts"
 
-#: widgets/ASlider.cpp:888
+#: widgets/ASlider.cpp:932
 msgid "+"
 msgstr "+"
 
@@ -11570,6 +11566,9 @@ msgstr "Fout bij sluiten bestand"
 #: xml/XMLWriter.cpp:363
 msgid "Error writing to file"
 msgstr "Fout bij schrijven naar bestand"
+
+#~ msgid "Gap detected in project file\n"
+#~ msgstr "Gat ontdekt in projectbestand\n"
 
 #~ msgid "Audacity"
 #~ msgstr "Audacity"
