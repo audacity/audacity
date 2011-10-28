@@ -1407,8 +1407,9 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
       else
       {
          wxString msgA =
-_("Project check detected %d missing external audio \
-\nfile(s) ('aliased files'). There is no way for Audacity \
+_("Project check of \"%s\" folder \
+\ndetected %d missing external audio file(s) \
+\n('aliased files'). There is no way for Audacity \
 \nto recover these files automatically. \
 \n\nIf you choose the first or second option below, \
 \nyou can try to find and restore the missing files \
@@ -1416,7 +1417,7 @@ _("Project check detected %d missing external audio \
 \n\nNote that for the second option, the waveform \
 \nmay not show silence.");
          wxString msg;
-         msg.Printf(msgA, missingAliasedFilePathHash.size());
+         msg.Printf(msgA, this->projName.c_str(), missingAliasedFilePathHash.size());
          const wxChar *buttons[] = 
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"), 
@@ -1473,11 +1474,12 @@ _("Project check detected %d missing external audio \
       else
       {
          wxString msgA =
-_("Project check detected %d missing alias (.auf) \
-\nblockfile(s). Audacity can fully regenerate these \
-\nfiles from the current audio in the project.");
+_("Project check of \"%s\" folder \
+\ndetected %d missing alias (.auf) blockfile(s). \
+\nAudacity can fully regenerate these files \
+\nfrom the current audio in the project.");
          wxString msg;
-         msg.Printf(msgA, missingAUFHash.size());
+         msg.Printf(msgA, this->projName.c_str(), missingAUFHash.size());
          const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
                                     _("Fill in silence for missing display data (this session only)"),
                                     _("Close project immediately with no further changes"), 
@@ -1523,17 +1525,18 @@ _("Project check detected %d missing alias (.auf) \
       else
       {
          wxString msgA =
-_("Project check detected %d missing audio data \
-\n(.au) blockfile(s), probably due to a bug, system \
-\ncrash, or accidental deletion. There is no way for \
-\nAudacity to recover these missing files automatically. \
+_("Project check of \"%s\" folder \
+\ndetected %d missing audio data (.au) blockfile(s), \
+\nprobably due to a bug, system crash, or accidental \
+\ndeletion. There is no way for Audacity to recover \
+\nthese missing files automatically. \
 \n\nIf you choose the first or second option below, \
 \nyou can try to find and restore the missing files \
 \nto their previous location. \
 \n\nNote that for the second option, the waveform \
 \nmay not show silence.");
          wxString msg;
-         msg.Printf(msgA, missingAUHash.size());
+         msg.Printf(msgA, this->projName.c_str(), missingAUHash.size());
          const wxChar *buttons[] = 
             {_("Close project immediately with no further changes"), 
                _("Treat missing audio as silence (this session only)"), 
@@ -1584,22 +1587,24 @@ _("Project check detected %d missing audio data \
       else
       {
          wxString msgA =
-_("Project check found %d orphan block file(s). These files are \
-\nunused and probably left over from a crash or some other bug.");
-      wxString msg;
-         msg.Printf(msgA, (int)orphanFilePathArray.GetCount());
+_("Project check of \"%s\" folder \
+\nfound %d orphan block file(s). These files are \
+\nunused by this project, but doing no harm.");
+         wxString msg;
+         msg.Printf(msgA, this->projName.c_str(), (int)orphanFilePathArray.GetCount());
 
-         const wxChar *buttons[] = {_("Close project immediately with no further changes"),
-                                    _("Continue without deleting; ignore the extra files this session"),
-                                    _("Delete orphan files permanently"),
-                                    NULL};
+         const wxChar *buttons[] = 
+            {_("Continue without deleting; ignore the extra files this session"),
+            _("Close project immediately with no further changes"),
+            _("Delete orphan files permanently"),
+            NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);
       }
 
-      if (action == 0)
+      if (action == 1)
          nResult = FSCKstatus_CLOSE_REQ;
-      // Nothing is done if (action == 1).
+      // Nothing is done if (action == 0).
       else if (action == 2)
       {
          // FSCKstatus_CHANGED was bogus here. 
