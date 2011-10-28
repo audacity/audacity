@@ -1370,7 +1370,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
       wxString msg = _("Project check read faulty Sequence tags.");
       const wxChar *buttons[] = 
          {_("Close project immediately with no changes"),
-            _("Continue with repairs noted in log, and check for more errors"),
+            _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you opt out on further error checks."),
             NULL};
       wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
       action = ShowMultiDialog(msg, _("Warning - Problems Reading Sequence Tags"), buttons);
@@ -1421,7 +1421,7 @@ _("Project check of \"%s\" folder \
          const wxChar *buttons[] = 
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"), 
-               _("Replace missing audio with silence (permanent immediately)"),
+               _("Replace missing audio with silence (permanent immediately). This will save the project in its current state."),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
