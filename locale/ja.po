@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2011-08-31 04:02+0100\n"
-"PO-Revision-Date: 2011-09-04 13:25-0000\n"
-"Last-Translator: Atsushi YOSHIDA <ayoshida.pub@gmail.com>\n"
+"POT-Creation-Date: 2011-10-25 03:58+0100\n"
+"PO-Revision-Date: 2011-10-29 17:40-0000\n"
+"Last-Translator:Atsushi YOSHIDA <ayoshida.pub@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA <ayoshida.pub@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -566,10 +566,10 @@ msgstr "自動保存ディレクトリ内のファイルに番号を振ること
 #: Menus.cpp:3371
 #: Menus.cpp:3383
 #: Menus.cpp:5982
-#: Project.cpp:2490
-#: Project.cpp:4389
-#: Project.cpp:4408
-#: TrackPanel.cpp:7213
+#: Project.cpp:2504
+#: Project.cpp:4403
+#: Project.cpp:4422
+#: TrackPanel.cpp:7230
 #: WaveTrack.cpp:971
 #: WaveTrack.cpp:990
 #: WaveTrack.cpp:2069
@@ -937,14 +937,14 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "依存性のチェック"
 
-#: DirManager.cpp:194
-#: DirManager.cpp:280
-#: DirManager.cpp:430
-#: DirManager.cpp:1586
+#: DirManager.cpp:209
+#: DirManager.cpp:295
+#: DirManager.cpp:445
+#: DirManager.cpp:1619
 msgid "Progress"
 msgstr "進行"
 
-#: DirManager.cpp:349
+#: DirManager.cpp:364
 msgid ""
 "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
@@ -952,30 +952,30 @@ msgstr ""
 "ディスクの空き容量がわずかしか残っていません. \n"
 "設定にて他のテンポラリディレクトリを選択してください."
 
-#: DirManager.cpp:381
+#: DirManager.cpp:396
 msgid "Cleaning up temporary files"
 msgstr "テンポラリファイルのクリア中"
 
-#: DirManager.cpp:431
+#: DirManager.cpp:446
 msgid "Saving project data files"
 msgstr "プロジェクトファイルを保存中"
 
-#: DirManager.cpp:506
+#: DirManager.cpp:521
 msgid "Cleaning up cache directories"
 msgstr "キャッシュディレクトリをクリア中"
 
-#: DirManager.cpp:569
-msgid "mkdir in DirManager::MakeBlockFilePath failed.\n"
-msgstr "mkdir in DirManager::MakeBlockFilePathが失敗しました.\n"
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
+msgstr "DirManager::MakeBlockFilePathにてmkdirが失敗しました."
 
-#: DirManager.cpp:599
+#: DirManager.cpp:614
 #, c-format
 msgid ""
-"Audacity found an orphan blockfile: %s. \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
+"Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
 msgstr ""
-"Audacity は無用なブロックファイル %s を見つけました! \n"
-"プロジェクトを全チェックするために, プロジェクトを保存して再読み込みすることを検討してください. \n"
+"Audacity は無用なブロックファイル %s を見つけました. \n"
+"プロジェクトを全チェックするために, プロジェクトを保存して再読み込みすることを検討してください. "
 
 #  i18n-hint: This is the pattern for filenames that are created
 #  when a file needs to be backed up to a different name.  For
@@ -986,41 +986,58 @@ msgstr ""
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
 #. example, mysong would become mysong-old1, mysong-old2, etc.
-#: DirManager.cpp:1184
+#: DirManager.cpp:1205
 #, c-format
 msgid "%s-old%d"
 msgstr "%s-old%d"
 
-#: DirManager.cpp:1192
+#: DirManager.cpp:1213
 msgid "Unable to open/create test file."
 msgstr "テストファイルを作成あるいは開けません．"
 
-#: DirManager.cpp:1201
+#: DirManager.cpp:1222
 #, c-format
 msgid "Unable to remove '%s'."
 msgstr "'%s' を削除できません． "
 
-#: DirManager.cpp:1206
+#: DirManager.cpp:1227
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "リネームされたファイル: %s\n"
 
-#: DirManager.cpp:1269
+#: DirManager.cpp:1290
 #, c-format
 msgid "Unable to rename '%s' to '%s'."
 msgstr "'%s' から '%s' へリネームできません．"
 
-#: DirManager.cpp:1288
+#: DirManager.cpp:1309
 #, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "ブロック %s は新しいエイリアス名に変更されました\n"
 
-#: DirManager.cpp:1344
-#: DirManager.cpp:1750
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr "プロジェクトチェッカーが不正なシーケンスタグを読み込みました. "
+
+#: DirManager.cpp:1372
+#: DirManager.cpp:1421
+msgid "Close project immediately with no changes"
+msgstr "何も変更せずにすぐにプロジェクトを閉じる"
+
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors"
+msgstr "ログに記載のとおり修復を続け, 更なるエラーをチェックします."
+
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr "警告 - シーケンスタグ読込みに問題が発生しています．"
+
+#: DirManager.cpp:1391
+#: DirManager.cpp:1783
 msgid "Inspecting project file data"
 msgstr "プロジェクトファイルを精査しています"
 
-#: DirManager.cpp:1375
+#: DirManager.cpp:1410
 #, c-format
 msgid ""
 "Project check detected %d missing external audio \n"
@@ -1041,29 +1058,25 @@ msgstr ""
 "下記のオプションのいずれかにより，それらのファイルを見つけ出し元の場所\n"
 "への回復を試みることができます．2つ目のオプションの場合は波形ファイルが無音を表示しないこともあります．"
 
-#: DirManager.cpp:1386
-msgid "Close project immediately with no changes"
-msgstr "何も変更せずにすぐにプロジェクトを閉じる"
-
-#: DirManager.cpp:1387
-#: DirManager.cpp:1504
+#: DirManager.cpp:1422
+#: DirManager.cpp:1539
 msgid "Treat missing audio as silence (this session only)"
 msgstr "欠落したオーディオを無音として扱う (このセッションのみ)"
 
-#: DirManager.cpp:1388
-#: DirManager.cpp:1505
+#: DirManager.cpp:1423
+#: DirManager.cpp:1540
 msgid "Replace missing audio with silence (permanent immediately)"
 msgstr "欠落したオーディオデータを無音で置換する (恒久的にいますぐ)"
 
-#: DirManager.cpp:1391
+#: DirManager.cpp:1426
 msgid "Warning - Missing Aliased File(s)"
 msgstr "警告　-　エイリアスファイルが不足しています"
 
-#: DirManager.cpp:1421
+#: DirManager.cpp:1456
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr "プロジェクトチェックは欠落したエイリアスファイルを無音で置換しました．"
 
-#: DirManager.cpp:1441
+#: DirManager.cpp:1476
 #, c-format
 msgid ""
 "Project check detected %d missing alias (.auf) \n"
@@ -1074,29 +1087,29 @@ msgstr ""
 "を検出しました．Audacity は, それらのファイルをプロジェクト中の元の\n"
 "オーディオから復元することができます."
 
-#: DirManager.cpp:1446
+#: DirManager.cpp:1481
 msgid "Regenerate alias summary files (safe and recommended)"
 msgstr "エイリアス要約ファイルを再生成する (安全かつ推奨)"
 
-#: DirManager.cpp:1447
+#: DirManager.cpp:1482
 msgid "Fill in silence for missing display data (this session only)"
 msgstr "表示データの欠落を無音で埋める (このセッションのみ)"
 
-#: DirManager.cpp:1448
-#: DirManager.cpp:1503
-#: DirManager.cpp:1558
+#: DirManager.cpp:1483
+#: DirManager.cpp:1538
+#: DirManager.cpp:1592
 msgid "Close project immediately with no further changes"
 msgstr "これ以上の変更をしないでプロジェクトをすぐに閉じる"
 
-#: DirManager.cpp:1451
+#: DirManager.cpp:1486
 msgid "Warning - Missing Alias Summary File(s)"
 msgstr "警告　-　エイリアス要約ファイルが不足しています"
 
-#: DirManager.cpp:1473
+#: DirManager.cpp:1508
 msgid "   Project check regenerated missing alias summary file(s)."
 msgstr "プロジェクトチェックは欠落したエイリアス要約ファイルを再生成しました．"
 
-#: DirManager.cpp:1491
+#: DirManager.cpp:1526
 #, c-format
 msgid ""
 "Project check detected %d missing audio data \n"
@@ -1120,52 +1133,48 @@ msgstr ""
 "の回復を試みることができます．\n"
 "2番目のオプションでは波形が無音を表示しない可能性があります．"
 
-#: DirManager.cpp:1508
+#: DirManager.cpp:1543
 msgid "Warning - Missing Audio Data Blockfile(s)"
 msgstr "警告　-　オーディオデータブロックファイルが見つかりません"
 
-#: DirManager.cpp:1530
-msgid "   Project check replaced missing audio data blockfile(s) with silence."
+#: DirManager.cpp:1565
+msgid "   Project check replaced missing audio data block file(s) with silence."
 msgstr "プロジェクトチェックは欠落したオーディオデータブロックファイルを無音によって置換しました．"
 
-#: DirManager.cpp:1546
-msgid "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
+#: DirManager.cpp:1581
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
 msgstr "プロジェクトチェックは無効なブロックファイルを無視しました．　これらはプロジェクトの保存時に削除されます．"
 
-#: DirManager.cpp:1552
+#: DirManager.cpp:1587
 #, c-format
 msgid ""
-"Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug. \n"
-"\n"
-"They should be deleted to avoid disk contention."
+"Project check found %d orphan block file(s). These files are \n"
+"unused and probably left over from a crash or some other bug."
 msgstr ""
 "プロジェクトチェックは %d 個の無用なブロックファイルを見つけました. これらのファイルは\n"
-"使われておらず, なんらかのバグかクラッシュ時に残されたものと思われます.\n"
-"\n"
-"ディスク競合を防ぐため, それらを消去することをお勧めします."
+"使われておらず, なんらかのバグかクラッシュ時に残されたものと思われます."
 
-#: DirManager.cpp:1559
+#: DirManager.cpp:1593
 msgid "Continue without deleting; ignore the extra files this session"
 msgstr "削除せずに続行; 余分なファイルは無視してください."
 
-#: DirManager.cpp:1560
-msgid "Delete orphan files immediately"
+#: DirManager.cpp:1594
+msgid "Delete orphan files permanently"
 msgstr "無用なファイルの削除"
 
-#: DirManager.cpp:1563
+#: DirManager.cpp:1597
 msgid "Warning - Orphan Blockfile(s)"
 msgstr "警告　-　無用なブロックファイル "
 
-#: DirManager.cpp:1587
+#: DirManager.cpp:1620
 msgid "Cleaning up unused directories in project data"
 msgstr "プロジェクトデータの中で使われていないディレクトリをクリーンアップ中"
 
-#: DirManager.cpp:1601
+#: DirManager.cpp:1634
 msgid "Project check found file inconsistencies inspecting the loaded project data."
 msgstr "プロジェクトチェックは読み込まれたプロジェクトデータに不整合性を見つけました．"
 
-#: DirManager.cpp:1607
+#: DirManager.cpp:1640
 msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
@@ -1175,43 +1184,43 @@ msgstr ""
 "\n"
 "ヘルプメニューの 'ログの表示...' により詳細表示できます．"
 
-#: DirManager.cpp:1608
+#: DirManager.cpp:1641
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "警告：　自動回復に問題が発生しています．"
 
-#: DirManager.cpp:1647
+#: DirManager.cpp:1680
 #, c-format
 msgid "Missing aliased audio file: '%s'"
 msgstr "行方不明のエイリアスオーディオファイル:  '%s'"
 
-#: DirManager.cpp:1670
+#: DirManager.cpp:1703
 #, c-format
-msgid "Missing alias (.auf) blockfile: '%s'"
+msgid "Missing alias (.auf) block file: '%s'"
 msgstr "行方不明のエイリアス (.auf) ブロックファイル: '%s'"
 
-#: DirManager.cpp:1694
+#: DirManager.cpp:1727
 #, c-format
-msgid "Missing data blockfile: '%s'"
+msgid "Missing data block file: '%s'"
 msgstr "行方不明のデータブロックファイル: '%s'"
 
-#: DirManager.cpp:1736
+#: DirManager.cpp:1769
 #, c-format
-msgid "Orphan blockfile: '%s'"
+msgid "Orphan block file: '%s'"
 msgstr "無用なブロックファイル: '%s'"
 
-#: DirManager.cpp:1791
+#: DirManager.cpp:1824
 msgid "Caching audio"
 msgstr "オーディオをキャッシュしています"
 
-#: DirManager.cpp:1792
+#: DirManager.cpp:1825
 msgid "Caching audio into memory"
 msgstr "オーディオをメモリにキャッシュしています"
 
-#: DirManager.cpp:1827
+#: DirManager.cpp:1860
 msgid "Saving recorded audio"
 msgstr "録音されたオーディオを保存中"
 
-#: DirManager.cpp:1828
+#: DirManager.cpp:1861
 msgid "Saving recorded audio to disk"
 msgstr "録音されたオーディオをディスクに保存しています"
 
@@ -2859,7 +2868,7 @@ msgid "Nothing to redo"
 msgstr "繰り返しはありません"
 
 #: Menus.cpp:3209
-#: TrackPanel.cpp:674
+#: TrackPanel.cpp:679
 #: toolbars/EditToolBar.cpp:131
 #: toolbars/EditToolBar.cpp:195
 msgid "Cut"
@@ -2888,7 +2897,7 @@ msgstr "ステレオのオーディオデータはモノラルトラックにコ
 #: Menus.cpp:3500
 #: Menus.cpp:3523
 #: Menus.cpp:3628
-#: TrackPanel.cpp:676
+#: TrackPanel.cpp:681
 #: toolbars/EditToolBar.cpp:135
 #: toolbars/EditToolBar.cpp:197
 msgid "Paste"
@@ -3035,7 +3044,7 @@ msgid "Detached labeled regions"
 msgstr "分離されたラベル付けされた領域"
 
 #: Menus.cpp:4021
-#: TrackPanel.cpp:6965
+#: TrackPanel.cpp:6982
 msgid "Split"
 msgstr "分離"
 
@@ -3257,12 +3266,12 @@ msgid "Resample"
 msgstr "リサンプリング"
 
 #: Menus.cpp:5958
-#: TrackPanel.cpp:7189
+#: TrackPanel.cpp:7206
 msgid "New sample rate (Hz):"
 msgstr "新しいサンプリング周波数(Hz):"
 
 #: Menus.cpp:5982
-#: TrackPanel.cpp:7213
+#: TrackPanel.cpp:7230
 msgid "The entered value is invalid"
 msgstr "入力された値は不適切です. "
 
@@ -3289,8 +3298,8 @@ msgid "Mixing and rendering tracks"
 msgstr "トラックの合成と表示"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#: MixerBoard.cpp:169
-#: TrackPanel.cpp:4068
+#: MixerBoard.cpp:173
+#: TrackPanel.cpp:4070
 #: widgets/ASlider.cpp:373
 msgid "Velocity"
 msgstr "ベロシティ"
@@ -3299,58 +3308,58 @@ msgstr "ベロシティ"
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: title of the Gain slider, used to adjust the volume
-#: MixerBoard.cpp:178
-#: MixerBoard.cpp:321
-#: TrackPanel.cpp:4064
-#: TrackPanel.cpp:6603
-#: TrackPanel.cpp:8036
+#: MixerBoard.cpp:182
+#: MixerBoard.cpp:350
+#: TrackPanel.cpp:4066
+#: TrackPanel.cpp:6620
+#: TrackPanel.cpp:8053
 #: widgets/ASlider.cpp:355
 msgid "Gain"
 msgstr "ゲイン調整"
 
-#: MixerBoard.cpp:195
+#: MixerBoard.cpp:203
 msgid "Musical Instrument"
 msgstr "楽器"
 
 #  i18n-hint: Title of the Pan slider, used to move the sound left or right stereoscopically
 #  i18n-hint: Title of the Pan slider, used to move the sound left or right stereoscopically
 #. i18n-hint: Title of the Pan slider, used to move the sound left or right
-#: MixerBoard.cpp:211
-#: MixerBoard.cpp:336
-#: TrackPanel.cpp:4064
-#: TrackPanel.cpp:6549
-#: TrackPanel.cpp:8044
+#: MixerBoard.cpp:219
+#: MixerBoard.cpp:369
+#: TrackPanel.cpp:4066
+#: TrackPanel.cpp:6566
+#: TrackPanel.cpp:8061
 #: widgets/ASlider.cpp:345
 msgid "Pan"
 msgstr "パンスライダー"
 
-#: MixerBoard.cpp:258
-#: MixerBoard.cpp:1226
-#: TrackPanel.cpp:7984
+#: MixerBoard.cpp:278
+#: MixerBoard.cpp:1387
+#: TrackPanel.cpp:8001
 msgid "Mute"
 msgstr "ミュート"
 
-#: MixerBoard.cpp:259
-#: MixerBoard.cpp:1276
-#: TrackPanel.cpp:7984
+#: MixerBoard.cpp:279
+#: MixerBoard.cpp:1437
+#: TrackPanel.cpp:8001
 msgid "Solo"
 msgstr "ソロ"
 
-#: MixerBoard.cpp:260
+#: MixerBoard.cpp:283
 msgid "Signal Level Meter"
 msgstr "信号レベルメーター"
 
-#: MixerBoard.cpp:321
-#: TrackPanel.cpp:4063
+#: MixerBoard.cpp:350
+#: TrackPanel.cpp:4065
 msgid "Moved gain slider"
 msgstr "移動されたゲインススライダー"
 
-#: MixerBoard.cpp:336
-#: TrackPanel.cpp:4063
+#: MixerBoard.cpp:369
+#: TrackPanel.cpp:4065
 msgid "Moved pan slider"
 msgstr "移動されたパンスライダー"
 
-#: MixerBoard.cpp:1485
+#: MixerBoard.cpp:1655
 #, c-format
 msgid "Audacity Mixer Board%s"
 msgstr "Audacity ミキサーボード%s"
@@ -3381,13 +3390,13 @@ msgid "(Recovered)"
 msgstr "回復済み"
 
 #: Project.cpp:1850
-#: TrackPanel.cpp:941
+#: TrackPanel.cpp:946
 #: toolbars/ControlToolBar.cpp:193
 msgid "Record"
 msgstr "録音"
 
 #: Project.cpp:1850
-#: TrackPanel.cpp:941
+#: TrackPanel.cpp:946
 msgid "Recorded Audio"
 msgstr "録音されたオーディオ"
 
@@ -3427,8 +3436,8 @@ msgstr "%s は他のウィンドウで既に開かれています."
 
 #: Project.cpp:2185
 #: Project.cpp:2345
-#: Project.cpp:2546
-#: Project.cpp:2722
+#: Project.cpp:2560
+#: Project.cpp:2736
 msgid "Error opening project"
 msgstr "Audacity プロジェクトを開く際にエラーが発生しました"
 
@@ -3437,12 +3446,12 @@ msgstr "Audacity プロジェクトを開く際にエラーが発生しました
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
 #. * now be added automatically for the Save Projects dialogues).
 #: Project.cpp:2199
-#: Project.cpp:3499
+#: Project.cpp:3513
 msgid "Audacity projects"
 msgstr "Audacity プロジェクト"
 
 #: Project.cpp:2251
-#: Project.cpp:2799
+#: Project.cpp:2813
 #, c-format
 msgid ""
 "This file was saved by Audacity %s, a much\n"
@@ -3466,7 +3475,7 @@ msgid "1.0 or earlier"
 msgstr "1.0 より以前"
 
 #: Project.cpp:2258
-#: Project.cpp:2811
+#: Project.cpp:2825
 msgid "Opening old project file"
 msgstr "古いプロジェクトファイルを開いています"
 
@@ -3509,29 +3518,29 @@ msgstr "プロジェクトあるいはファイルを開く際にエラーが発
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity 1.0 形式のプロジェクトファイルを新しいフォーマットに変換することができませんでした."
 
-#: Project.cpp:2486
+#: Project.cpp:2500
 msgid "Project was recovered"
 msgstr "プロジェクトは回復されました. "
 
-#: Project.cpp:2486
+#: Project.cpp:2500
 msgid "Recover"
 msgstr "回復"
 
-#: Project.cpp:2489
+#: Project.cpp:2503
 msgid "Could not remove old auto save file"
 msgstr "古い自動保存ファイルを削除できませんでした"
 
-#: Project.cpp:2626
-#: Project.cpp:2627
+#: Project.cpp:2640
+#: Project.cpp:2641
 msgid "<unrecognized version -- possibly corrupt project file>"
 msgstr "<バージョンを認識できません　--　プロジェクトファイルが破壊されている可能性があります>"
 
-#: Project.cpp:2720
+#: Project.cpp:2734
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "プロジェクトデータフォルダーが見つかりません: \"%s\""
 
-#: Project.cpp:2768
+#: Project.cpp:2782
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3540,11 +3549,11 @@ msgstr ""
 "このファイルは Audacity %s を用いて保存されました. \n"
 "あなたは Audacity %s を使用しています - このファイルを開くには, 新しいバージョンにアップグレードする必要があります. "
 
-#: Project.cpp:2772
+#: Project.cpp:2786
 msgid "Can't open project file"
 msgstr "プロジェクトファイルを開けません"
 
-#: Project.cpp:2806
+#: Project.cpp:2820
 #, c-format
 msgid ""
 "This file was saved by Audacity %s.\n"
@@ -3561,7 +3570,7 @@ msgstr ""
 "\n"
 "このファイルを開きますか?"
 
-#: Project.cpp:3023
+#: Project.cpp:3037
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3581,11 +3590,11 @@ msgstr ""
 "\n"
 "保存しますか？"
 
-#: Project.cpp:3024
+#: Project.cpp:3038
 msgid "Warning empty project"
 msgstr "警告：プロジェクトは空です. "
 
-#: Project.cpp:3095
+#: Project.cpp:3109
 #, c-format
 msgid ""
 "Could not save project. Path not found.  Try creating \n"
@@ -3594,13 +3603,13 @@ msgstr ""
 "プロジェクトを保存できませんでした． パスが不明です． \n"
 "ディレクトリ \"%s\"を作成してからやり直してください．"
 
-#: Project.cpp:3097
-#: Project.cpp:3134
-#: Project.cpp:3157
+#: Project.cpp:3111
+#: Project.cpp:3148
+#: Project.cpp:3171
 msgid "Error saving project"
 msgstr "Audacity プロジェクトファイルの保存時にエラーが発生しました"
 
-#: Project.cpp:3132
+#: Project.cpp:3146
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -3609,41 +3618,41 @@ msgstr ""
 "プロジェクトファイルが保存できません. %s は書き込みできないか,\n"
 "ディスクが一杯です."
 
-#: Project.cpp:3155
-#: Project.cpp:4371
+#: Project.cpp:3169
+#: Project.cpp:4385
 #: Tags.cpp:1171
 #: effects/Equalization.cpp:1086
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "ファイル \"%s\"に書き込めません: %s"
 
-#: Project.cpp:3235
+#: Project.cpp:3249
 #, c-format
 msgid "Saved %s"
 msgstr "%s を保存しました"
 
-#: Project.cpp:3391
+#: Project.cpp:3405
 #, c-format
 msgid "Imported '%s'"
 msgstr "'%s' を取り込む"
 
-#: Project.cpp:3392
+#: Project.cpp:3406
 msgid "Import"
 msgstr "取り込み"
 
-#: Project.cpp:3427
+#: Project.cpp:3441
 msgid "Error importing"
 msgstr "ファイルの取り込み時にエラーが発生しました"
 
-#: Project.cpp:3475
+#: Project.cpp:3489
 msgid "Save Speech As:"
 msgstr "スピーチを保存:"
 
-#: Project.cpp:3477
+#: Project.cpp:3491
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM オーディオファイル (*.wav)|*.wav"
 
-#: Project.cpp:3486
+#: Project.cpp:3500
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
@@ -3661,11 +3670,11 @@ msgstr ""
 "Audacity プロジェクトファイルは他のプログラムでは開くことができません. 他のプログラムから開くことのできるファ\n"
 "イルとして保存したい場合, 書き出しコマンドを使って下さい."
 
-#: Project.cpp:3487
+#: Project.cpp:3501
 msgid "Save Compressed Project As..."
 msgstr "圧縮されたプロジェクトを別名で保存..."
 
-#: Project.cpp:3492
+#: Project.cpp:3506
 msgid ""
 "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3680,15 +3689,15 @@ msgstr ""
 "他のプログラムで利用するオーディオファイルを保存するには, \"ファイル > 書き出し\" \n"
 "コマンドを選んでください.\n"
 
-#: Project.cpp:3493
+#: Project.cpp:3507
 msgid "Save Project As..."
 msgstr "プロジェクトを別名で保存... "
 
-#: Project.cpp:3520
+#: Project.cpp:3534
 msgid "Error Saving Project"
 msgstr "プロジェクトファイルの保存時にエラーが発生しました"
 
-#: Project.cpp:3520
+#: Project.cpp:3534
 msgid ""
 "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
@@ -3696,74 +3705,74 @@ msgstr ""
 "指定されたファイル名は他プロジェクトを上書きする可能性があるのでプロジェクトは保存されませんでした.\n"
 "別のファイル名でやりなおしてください."
 
-#: Project.cpp:3561
+#: Project.cpp:3575
 msgid "Created new project"
 msgstr "新しいプロジェクトが作られました"
 
-#: Project.cpp:3777
+#: Project.cpp:3791
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "%.2f 秒削除しました (位置 %.2f)"
 
-#: Project.cpp:3780
+#: Project.cpp:3794
 msgid "Delete"
 msgstr "削除"
 
-#: Project.cpp:3964
+#: Project.cpp:3978
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "録音可能時間: %d 時間 %d 分"
 
-#: Project.cpp:3967
+#: Project.cpp:3981
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "録音可能時間: 1 時間 %d 分"
 
-#: Project.cpp:3970
+#: Project.cpp:3984
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "録音可能時間: %d 分"
 
-#: Project.cpp:3973
+#: Project.cpp:3987
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "録音可能時間: %d 秒"
 
-#: Project.cpp:3976
+#: Project.cpp:3990
 msgid "Out of disk space"
 msgstr "ディスクスペースが一杯です"
 
-#: Project.cpp:3998
+#: Project.cpp:4012
 msgid "On-demand import and waveform calculation complete."
 msgstr "オンデマンド取り込みおよび波形計算完了."
 
-#: Project.cpp:4003
+#: Project.cpp:4017
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
 msgstr "複数取り込み完了. オンデマンドによる %d この波形計算が実行中. 全体の %2.0f%% 完了."
 
-#: Project.cpp:4006
+#: Project.cpp:4020
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "取り込み完了. オンデマンドの波形計算が実行中. %2.0f%% 完了."
 
-#: Project.cpp:4343
+#: Project.cpp:4357
 msgid "New Project"
 msgstr "新しいプロジェクト"
 
-#: Project.cpp:4373
+#: Project.cpp:4387
 msgid "Error writing autosave file"
 msgstr "自動保存ファイルの書き込みにエラーが発生しました"
 
-#: Project.cpp:4388
+#: Project.cpp:4402
 msgid "Could not create autosave file: "
 msgstr "自動保存ファイルが書き込めません:"
 
-#: Project.cpp:4407
+#: Project.cpp:4421
 msgid "Could not remove old autosave file: "
 msgstr "古い自動保存ファイルを削除できません:"
 
-#: Project.cpp:4436
+#: Project.cpp:4450
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "本来のレート: %d"
@@ -3997,13 +4006,7 @@ msgstr "トラック（高）"
 msgid "Choose a location to save screenshot images"
 msgstr "ファイルの保存場所を選んでください"
 
-#: Sequence.cpp:832
-#: Sequence.cpp:842
-#: Sequence.cpp:849
-msgid "Gap detected in project file\n"
-msgstr "プロジェクトファイルに空白が検知されました. \n"
-
-#: Sequence.cpp:1335
+#: Sequence.cpp:1374
 msgid "Memory allocation failed -- NewSamples"
 msgstr "メモリ割付失敗 -- NewSamples"
 
@@ -4309,440 +4312,440 @@ msgstr "録音開始を待っています %s \n"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity タイマー録音 - 開始待機中"
 
-#: TrackPanel.cpp:618
+#: TrackPanel.cpp:623
 #: prefs/QualityPrefs.cpp:99
 msgid "Other..."
 msgstr "その他..."
 
-#: TrackPanel.cpp:626
-#: TrackPanel.cpp:649
-#: TrackPanel.cpp:658
-#: TrackPanel.cpp:666
+#: TrackPanel.cpp:631
+#: TrackPanel.cpp:654
+#: TrackPanel.cpp:663
+#: TrackPanel.cpp:671
 msgid "Name..."
 msgstr "名前..."
 
-#: TrackPanel.cpp:628
-#: TrackPanel.cpp:651
-#: TrackPanel.cpp:662
-#: TrackPanel.cpp:668
+#: TrackPanel.cpp:633
+#: TrackPanel.cpp:656
+#: TrackPanel.cpp:667
+#: TrackPanel.cpp:673
 msgid "Move Track Up"
 msgstr "トラックを上へ移動"
 
-#: TrackPanel.cpp:629
-#: TrackPanel.cpp:652
-#: TrackPanel.cpp:663
-#: TrackPanel.cpp:669
+#: TrackPanel.cpp:634
+#: TrackPanel.cpp:657
+#: TrackPanel.cpp:668
+#: TrackPanel.cpp:674
 msgid "Move Track Down"
 msgstr "トラックを下へ移動"
 
-#: TrackPanel.cpp:631
+#: TrackPanel.cpp:636
 #: effects/ToneGen.cpp:275
 #: prefs/TracksPrefs.cpp:58
 msgid "Waveform"
 msgstr "波形"
 
-#: TrackPanel.cpp:632
+#: TrackPanel.cpp:637
 #: prefs/TracksPrefs.cpp:59
 msgid "Waveform (dB)"
 msgstr "波形 (dB)"
 
-#: TrackPanel.cpp:633
+#: TrackPanel.cpp:638
 #: prefs/TracksPrefs.cpp:60
 msgid "Spectrogram"
 msgstr "スペクトログラム"
 
-#: TrackPanel.cpp:634
+#: TrackPanel.cpp:639
 #: prefs/TracksPrefs.cpp:61
 msgid "Spectrogram log(f)"
 msgstr "スペクトラム表示 (対数周波数)"
 
 #. i18n-hint: short form of 'logarithm'
-#: TrackPanel.cpp:635
+#: TrackPanel.cpp:640
 #: prefs/TracksPrefs.cpp:62
 msgid "Pitch (EAC)"
 msgstr "ピッチ (EAC)"
 
-#: TrackPanel.cpp:637
-#: TrackPanel.cpp:6908
+#: TrackPanel.cpp:642
+#: TrackPanel.cpp:6925
 msgid "Mono"
 msgstr "モノラル"
 
-#: TrackPanel.cpp:638
-#: TrackPanel.cpp:6907
+#: TrackPanel.cpp:643
+#: TrackPanel.cpp:6924
 msgid "Left Channel"
 msgstr "左チャンネル"
 
-#: TrackPanel.cpp:639
-#: TrackPanel.cpp:6907
+#: TrackPanel.cpp:644
+#: TrackPanel.cpp:6924
 msgid "Right Channel"
 msgstr "右チャンネル"
 
-#: TrackPanel.cpp:640
+#: TrackPanel.cpp:645
 msgid "Make Stereo Track"
 msgstr "ステレオトラックの作成"
 
-#: TrackPanel.cpp:641
+#: TrackPanel.cpp:646
 msgid "Split Stereo Track"
 msgstr "ステレオトラックを分離"
 
-#: TrackPanel.cpp:642
+#: TrackPanel.cpp:647
 msgid "Split Stereo to Mono"
 msgstr "ステレオからモノラルへ "
 
-#: TrackPanel.cpp:644
+#: TrackPanel.cpp:649
 msgid "Set Sample Format"
 msgstr "サンプル形式を設定"
 
-#: TrackPanel.cpp:646
-#: TrackPanel.cpp:7169
+#: TrackPanel.cpp:651
+#: TrackPanel.cpp:7186
 msgid "Set Rate"
 msgstr "サンプリング周波数設定"
 
-#: TrackPanel.cpp:654
+#: TrackPanel.cpp:659
 msgid "Up Octave"
 msgstr "オクターブを上げる"
 
-#: TrackPanel.cpp:655
+#: TrackPanel.cpp:660
 msgid "Down Octave"
 msgstr "オクターブを下げる"
 
-#: TrackPanel.cpp:660
+#: TrackPanel.cpp:665
 msgid "Font..."
 msgstr "フォント..."
 
-#: TrackPanel.cpp:671
+#: TrackPanel.cpp:676
 msgid "Set Range..."
 msgstr "範囲をセット..."
 
-#: TrackPanel.cpp:675
+#: TrackPanel.cpp:680
 #: toolbars/EditToolBar.cpp:133
 #: toolbars/EditToolBar.cpp:196
 msgid "Copy"
 msgstr "コピー"
 
-#: TrackPanel.cpp:1443
+#: TrackPanel.cpp:1448
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "クリックで垂直方向に拡大, シフトキーを押しながらクリックで縮小, 範囲を選択するためにはドラッグして下さい."
 
-#: TrackPanel.cpp:1448
+#: TrackPanel.cpp:1453
 msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "クリックで垂直方向に拡大, シフトキーを押しながらクリックで縮小, 範囲を選択するためにはドラッグして下さい."
 
-#: TrackPanel.cpp:1454
+#: TrackPanel.cpp:1459
 msgid "Drag the track vertically to change the order of the tracks."
 msgstr "ラベルを垂直方向にドラッグしてトラックの順番を変更します."
 
-#: TrackPanel.cpp:1474
+#: TrackPanel.cpp:1479
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr "ステレオトラックの相対サイズを変更するためにはクリックした後にドラッグして下さい"
 
-#: TrackPanel.cpp:1477
+#: TrackPanel.cpp:1482
 msgid "Click and drag to resize the track."
 msgstr "トラックをリサイズするためにはクリック後にドラックして下さい."
 
-#: TrackPanel.cpp:1508
+#: TrackPanel.cpp:1513
 msgid "Drag one or more label boundaries"
 msgstr "ひとつあるいはそれ以上のラベル境界をドラッグ"
 
-#: TrackPanel.cpp:1509
+#: TrackPanel.cpp:1514
 msgid "Drag label boundary"
 msgstr "ラベル境界をドラッグ"
 
 #. i18n-hint: This string is for the Mac OS, which uses Command-, as the shortcut for Preferences
-#: TrackPanel.cpp:1525
+#: TrackPanel.cpp:1530
 msgid "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
 msgstr "マルチツールモード: Cmd-, マウスとキーボードの設定"
 
 #. i18n-hint: This string is for Windows and Linux, which uses Control-P as the shortcut for Preferences
-#: TrackPanel.cpp:1528
+#: TrackPanel.cpp:1533
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "マルチツールモード: Ctrl-P, マウスとキーボードの設定"
 
-#: TrackPanel.cpp:1576
-#: TrackPanel.cpp:1588
-#: TrackPanel.cpp:2008
-#: TrackPanel.cpp:2015
+#: TrackPanel.cpp:1581
+#: TrackPanel.cpp:1593
+#: TrackPanel.cpp:2013
+#: TrackPanel.cpp:2020
 msgid "Click and drag to stretch selected region."
 msgstr "クリックおよびドラッグして選択領域をストレッチします."
 
-#: TrackPanel.cpp:1581
+#: TrackPanel.cpp:1586
 msgid "Click and drag to move left selection boundary."
 msgstr "左の選択範囲を移動させるためにはクリックした後にドラッグして下さい."
 
-#: TrackPanel.cpp:1593
+#: TrackPanel.cpp:1598
 msgid "Click and drag to move right selection boundary."
 msgstr "右の選択範囲を移動させるためにはクリックした後にドラッグして下さい."
 
-#: TrackPanel.cpp:1598
+#: TrackPanel.cpp:1603
 msgid "Click and drag to stretch within selected region."
 msgstr "クリックおよびドラッグして選択領域をストレッチして下さい."
 
-#: TrackPanel.cpp:1973
-#: TrackPanel.cpp:4672
-#: TrackPanel.cpp:4710
-#: TrackPanel.cpp:4977
-#: TrackPanel.cpp:7335
-#: TrackPanel.cpp:7355
+#: TrackPanel.cpp:1978
+#: TrackPanel.cpp:4686
+#: TrackPanel.cpp:4724
+#: TrackPanel.cpp:4991
+#: TrackPanel.cpp:7352
+#: TrackPanel.cpp:7372
 msgid "Modified Label"
 msgstr "変更されたラベル"
 
-#: TrackPanel.cpp:1974
-#: TrackPanel.cpp:4673
-#: TrackPanel.cpp:4711
-#: TrackPanel.cpp:4978
-#: TrackPanel.cpp:7336
-#: TrackPanel.cpp:7356
+#: TrackPanel.cpp:1979
+#: TrackPanel.cpp:4687
+#: TrackPanel.cpp:4725
+#: TrackPanel.cpp:4992
+#: TrackPanel.cpp:7353
+#: TrackPanel.cpp:7373
 msgid "Label Edit"
 msgstr "ラベルの編集"
 
-#: TrackPanel.cpp:2048
-#: TrackPanel.cpp:2275
+#: TrackPanel.cpp:2053
+#: TrackPanel.cpp:2280
 msgid "Stretch"
 msgstr "ストレッチ"
 
-#: TrackPanel.cpp:2048
-#: TrackPanel.cpp:2275
+#: TrackPanel.cpp:2053
+#: TrackPanel.cpp:2280
 msgid "Stretch Note Track"
 msgstr "ノートトラックをストレッチ"
 
-#: TrackPanel.cpp:2409
+#: TrackPanel.cpp:2414
 msgid "Adjusted envelope."
 msgstr "エンベロープの調整."
 
-#: TrackPanel.cpp:2410
+#: TrackPanel.cpp:2415
 #: prefs/MousePrefs.cpp:119
 msgid "Envelope"
 msgstr "エンベロープ"
 
-#: TrackPanel.cpp:2559
+#: TrackPanel.cpp:2564
 msgid "Moved clip to another track"
 msgstr "別のトラックを移動されたクリップ"
 
-#: TrackPanel.cpp:2563
+#: TrackPanel.cpp:2568
 msgid "left"
 msgstr "左"
 
-#: TrackPanel.cpp:2563
+#: TrackPanel.cpp:2568
 msgid "right"
 msgstr "右"
 
 #  i18n-hint: %s is a direction like left or right
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2565
+#: TrackPanel.cpp:2570
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "タイムシフトされたトラック/クリップ %s %.02f 秒"
 
-#: TrackPanel.cpp:2569
+#: TrackPanel.cpp:2574
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "タイムシフト"
 
-#: TrackPanel.cpp:3495
+#: TrackPanel.cpp:3497
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "描画を行うには, '波形'をトラックのドロップダウンメニューで選んでください. "
 
-#: TrackPanel.cpp:3512
+#: TrackPanel.cpp:3514
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "描画を行うには個々のサンプルが見えるまで拡大をしてください."
 
-#: TrackPanel.cpp:3789
+#: TrackPanel.cpp:3791
 msgid "Moved Sample"
 msgstr "移動されたサンプル"
 
-#: TrackPanel.cpp:3790
+#: TrackPanel.cpp:3792
 msgid "Sample Edit"
 msgstr "サンプルの編集"
 
-#: TrackPanel.cpp:3891
+#: TrackPanel.cpp:3893
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "削除されたトラック '%s'"
 
-#: TrackPanel.cpp:3893
+#: TrackPanel.cpp:3895
 msgid "Track Remove"
 msgstr "トラックの削除"
 
-#: TrackPanel.cpp:4068
+#: TrackPanel.cpp:4070
 msgid "Moved velocity slider"
 msgstr "移動されたベロシティスライダー"
 
-#: TrackPanel.cpp:4260
-#: TrackPanel.cpp:7274
+#: TrackPanel.cpp:4262
+#: TrackPanel.cpp:7291
 msgid "up"
 msgstr "アップ"
 
-#: TrackPanel.cpp:4266
-#: TrackPanel.cpp:7275
+#: TrackPanel.cpp:4274
+#: TrackPanel.cpp:7292
 msgid "down"
 msgstr "ダウン"
 
-#: TrackPanel.cpp:4275
-#: TrackPanel.cpp:7270
+#: TrackPanel.cpp:4289
+#: TrackPanel.cpp:7287
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "移動 '%s' %s"
 
-#: TrackPanel.cpp:4278
-#: TrackPanel.cpp:7276
+#: TrackPanel.cpp:4292
+#: TrackPanel.cpp:7293
 msgid "Move Track"
 msgstr "トラックの移動"
 
-#: TrackPanel.cpp:4878
+#: TrackPanel.cpp:4892
 msgid "Expand"
 msgstr "拡張"
 
-#: TrackPanel.cpp:4878
+#: TrackPanel.cpp:4892
 msgid "Expanded Cut Line"
 msgstr "切り取り線を拡張"
 
-#: TrackPanel.cpp:4887
+#: TrackPanel.cpp:4901
 msgid "Merge"
 msgstr "連結"
 
-#: TrackPanel.cpp:4887
+#: TrackPanel.cpp:4901
 msgid "Merged Clips"
 msgstr "クリップを連結"
 
-#: TrackPanel.cpp:4898
+#: TrackPanel.cpp:4912
 msgid "Remove"
 msgstr "削除"
 
-#: TrackPanel.cpp:4898
+#: TrackPanel.cpp:4912
 msgid "Removed Cut Line"
 msgstr "カットラインの除去"
 
-#: TrackPanel.cpp:6549
+#: TrackPanel.cpp:6566
 msgid "Adjusted Pan"
 msgstr "パンの調整."
 
-#: TrackPanel.cpp:6603
+#: TrackPanel.cpp:6620
 msgid "Adjusted gain"
 msgstr "ゲインの調整:"
 
-#: TrackPanel.cpp:6738
+#: TrackPanel.cpp:6755
 msgid "Can't delete track with active audio"
 msgstr "アクティブなオーディオと一緒にトラックの削除はできません. "
 
-#: TrackPanel.cpp:6888
+#: TrackPanel.cpp:6905
 msgid "Stereo, "
 msgstr "Stereo, "
 
-#: TrackPanel.cpp:6891
+#: TrackPanel.cpp:6908
 msgid "Mono, "
 msgstr "Mono, "
 
-#: TrackPanel.cpp:6893
+#: TrackPanel.cpp:6910
 msgid "Left, "
 msgstr "左,"
 
-#: TrackPanel.cpp:6895
+#: TrackPanel.cpp:6912
 msgid "Right, "
 msgstr "右,"
 
-#: TrackPanel.cpp:6917
-#: TrackPanel.cpp:7079
+#: TrackPanel.cpp:6934
+#: TrackPanel.cpp:7096
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "'%s' から %s に変更されました"
 
-#: TrackPanel.cpp:6920
+#: TrackPanel.cpp:6937
 msgid "Channel"
 msgstr "チャンネル"
 
-#: TrackPanel.cpp:6961
+#: TrackPanel.cpp:6978
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "ステレオトラック '%s' を分離"
 
-#: TrackPanel.cpp:6963
+#: TrackPanel.cpp:6980
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "ステレオからモノラルへ'%s'"
 
-#: TrackPanel.cpp:6995
+#: TrackPanel.cpp:7012
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "ステレオトラック '%s' が作られました"
 
-#: TrackPanel.cpp:6998
+#: TrackPanel.cpp:7015
 msgid "Make Stereo"
 msgstr "ステレオの作製"
 
-#: TrackPanel.cpp:7043
+#: TrackPanel.cpp:7060
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "'%s' から %d Hz に変更されました"
 
-#: TrackPanel.cpp:7045
+#: TrackPanel.cpp:7062
 msgid "Rate Change"
 msgstr "レートの変更"
 
-#: TrackPanel.cpp:7083
+#: TrackPanel.cpp:7100
 msgid "Format Change"
 msgstr "フォーマットの変更"
 
-#: TrackPanel.cpp:7233
+#: TrackPanel.cpp:7250
 msgid "Change lower speed limit (%) to:"
 msgstr "最低速度制限を変更 (%):"
 
-#: TrackPanel.cpp:7234
-#: TrackPanel.cpp:7235
+#: TrackPanel.cpp:7251
+#: TrackPanel.cpp:7252
 msgid "Lower speed limit"
 msgstr "最低スピードの制限"
 
-#: TrackPanel.cpp:7240
+#: TrackPanel.cpp:7257
 msgid "Change upper speed limit (%) to:"
 msgstr "最高速度制限を変更 (%):"
 
-#: TrackPanel.cpp:7241
-#: TrackPanel.cpp:7242
+#: TrackPanel.cpp:7258
+#: TrackPanel.cpp:7259
 msgid "Upper speed limit"
 msgstr "上位速度の制限"
 
-#: TrackPanel.cpp:7250
+#: TrackPanel.cpp:7267
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "範囲を '%d' から '%d' に設定"
 
-#: TrackPanel.cpp:7253
+#: TrackPanel.cpp:7270
 msgid "Set Range"
 msgstr "範囲をセット"
 
-#: TrackPanel.cpp:7306
+#: TrackPanel.cpp:7323
 msgid "Change track name to:"
 msgstr "トラック名の変更:"
 
-#: TrackPanel.cpp:7307
+#: TrackPanel.cpp:7324
 msgid "Track Name"
 msgstr "トラック名"
 
-#: TrackPanel.cpp:7320
+#: TrackPanel.cpp:7337
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "%s' から '%s' へリネーム"
 
-#: TrackPanel.cpp:7323
+#: TrackPanel.cpp:7340
 msgid "Name Change"
 msgstr "名前の変更"
 
-#: TrackPanel.cpp:7390
+#: TrackPanel.cpp:7407
 msgid "Label Track Font"
 msgstr "トラックラベルのフォント"
 
-#: TrackPanel.cpp:7402
-#: TrackPanel.cpp:7408
+#: TrackPanel.cpp:7419
+#: TrackPanel.cpp:7425
 msgid "Face name"
 msgstr "フォント名"
 
-#: TrackPanel.cpp:7412
-#: TrackPanel.cpp:7419
+#: TrackPanel.cpp:7429
+#: TrackPanel.cpp:7436
 msgid "Face size"
 msgstr "フォントサイズ"
 
-#: TrackPanel.cpp:7709
+#: TrackPanel.cpp:7726
 msgid "Stereo, 999999Hz"
 msgstr "ステレオトラック, 999999Hz"
 
@@ -5009,7 +5012,7 @@ msgstr "オーディオドックでの処理..."
 
 #: effects/AvcCompressor.cpp:738
 #: effects/audiounits/AudioUnitEffect.cpp:876
-#: effects/nyquist/Nyquist.cpp:1409
+#: effects/nyquist/Nyquist.cpp:1407
 #: widgets/ErrorDialog.cpp:142
 #: widgets/MultiDialog.cpp:110
 msgid "OK"
@@ -6668,84 +6671,84 @@ msgstr "前後を反転"
 msgid "Reversing"
 msgstr "前後を反転"
 
-#: effects/ScoreAlignDialog.cpp:40
+#: effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
 msgstr "MIDIをオーディオに同期"
 
-#: effects/ScoreAlignDialog.cpp:78
+#: effects/ScoreAlignDialog.cpp:99
 msgid "Frame Period:"
 msgstr "フレーム長："
 
-#: effects/ScoreAlignDialog.cpp:84
+#: effects/ScoreAlignDialog.cpp:105
 msgid "Frame Period"
 msgstr "フレーム長"
 
-#: effects/ScoreAlignDialog.cpp:88
+#: effects/ScoreAlignDialog.cpp:109
 msgid "Window Size:"
 msgstr "ウィンドウサイズ:"
 
-#: effects/ScoreAlignDialog.cpp:93
+#: effects/ScoreAlignDialog.cpp:114
 msgid "Window Size"
 msgstr "ウィンドウサイズ"
 
-#: effects/ScoreAlignDialog.cpp:100
+#: effects/ScoreAlignDialog.cpp:121
 msgid "Force Final Alignment"
 msgstr "強制最終アラインメント"
 
-#: effects/ScoreAlignDialog.cpp:105
+#: effects/ScoreAlignDialog.cpp:126
 msgid "Ignore Silence at Beginnings and Endings"
 msgstr "最初と最後の無音部分を無視"
 
-#: effects/ScoreAlignDialog.cpp:109
+#: effects/ScoreAlignDialog.cpp:130
 msgid "Silence Threshold:"
 msgstr "無音のスレッショルド:"
 
-#: effects/ScoreAlignDialog.cpp:114
+#: effects/ScoreAlignDialog.cpp:135
 msgid "Silence Threshold"
 msgstr "無音のスレッショルド"
 
-#: effects/ScoreAlignDialog.cpp:118
+#: effects/ScoreAlignDialog.cpp:139
 msgid "Presmooth Time:"
 msgstr "プリスムース時間："
 
-#: effects/ScoreAlignDialog.cpp:123
+#: effects/ScoreAlignDialog.cpp:144
 msgid "Presmooth Time"
 msgstr "プリスムース時間"
 
-#: effects/ScoreAlignDialog.cpp:127
+#: effects/ScoreAlignDialog.cpp:148
 msgid "Line Time:"
 msgstr "ライン時間:"
 
-#: effects/ScoreAlignDialog.cpp:132
+#: effects/ScoreAlignDialog.cpp:153
 msgid "Line Time"
 msgstr "ライン時間"
 
-#: effects/ScoreAlignDialog.cpp:136
+#: effects/ScoreAlignDialog.cpp:157
 msgid "Smooth Time:"
 msgstr "スムーズ時間:"
 
-#: effects/ScoreAlignDialog.cpp:141
+#: effects/ScoreAlignDialog.cpp:162
 msgid "Smooth Time"
 msgstr "スムーズ時間"
 
-#: effects/ScoreAlignDialog.cpp:148
+#: effects/ScoreAlignDialog.cpp:169
 msgid "Use Defaults"
 msgstr "デフォルト"
 
-#: effects/ScoreAlignDialog.cpp:149
+#: effects/ScoreAlignDialog.cpp:170
 msgid "Restore Defaults"
 msgstr "デフォルトに復旧"
 
-#: effects/ScoreAlignDialog.cpp:227
-#: effects/ScoreAlignDialog.cpp:229
-#: effects/ScoreAlignDialog.cpp:233
-#: effects/ScoreAlignDialog.cpp:236
-#: effects/ScoreAlignDialog.cpp:238
+#: effects/ScoreAlignDialog.cpp:248
+#: effects/ScoreAlignDialog.cpp:250
+#: effects/ScoreAlignDialog.cpp:254
+#: effects/ScoreAlignDialog.cpp:257
+#: effects/ScoreAlignDialog.cpp:259
 #, c-format
 msgid "%.2f secs"
 msgstr "%.2f 秒"
 
-#: effects/ScoreAlignDialog.cpp:230
+#: effects/ScoreAlignDialog.cpp:251
 #, c-format
 msgid "%.3f"
 msgstr "%.3f"
@@ -7161,19 +7164,19 @@ msgstr ""
 "不正なNyquist 'control' タイプ: '%s' －　プラグインファイル　'%s'.\n"
 "Controlは作成できませんでした．"
 
-#: effects/nyquist/Nyquist.cpp:431
+#: effects/nyquist/Nyquist.cpp:429
 msgid "Nyquist Prompt"
 msgstr "Nyquist プロンプト"
 
-#: effects/nyquist/Nyquist.cpp:432
+#: effects/nyquist/Nyquist.cpp:430
 msgid "Enter Nyquist Command: "
 msgstr "Nyquist コマンドを入力:"
 
-#: effects/nyquist/Nyquist.cpp:488
+#: effects/nyquist/Nyquist.cpp:486
 msgid "Error in Nyquist code"
 msgstr "Nyquistコードのエラー"
 
-#: effects/nyquist/Nyquist.cpp:488
+#: effects/nyquist/Nyquist.cpp:486
 msgid ""
 "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
@@ -7187,28 +7190,28 @@ msgstr ""
 "\t(mult s 0.1)\n"
 "のように文頭の括弧を使用してください．."
 
-#: effects/nyquist/Nyquist.cpp:601
+#: effects/nyquist/Nyquist.cpp:599
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 msgstr "個々のチャンネルが一致しないステレオトラック上では適用できません."
 
-#: effects/nyquist/Nyquist.cpp:662
+#: effects/nyquist/Nyquist.cpp:660
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: effects/nyquist/Nyquist.cpp:663
+#: effects/nyquist/Nyquist.cpp:661
 msgid "Nyquist Output: "
 msgstr "Nyquist 出力"
 
-#: effects/nyquist/Nyquist.cpp:784
-#: effects/nyquist/Nyquist.cpp:793
+#: effects/nyquist/Nyquist.cpp:782
+#: effects/nyquist/Nyquist.cpp:791
 msgid "Nyquist returned the value:"
 msgstr "Nyquist が返した値: "
 
-#: effects/nyquist/Nyquist.cpp:830
+#: effects/nyquist/Nyquist.cpp:828
 msgid "Nyquist did not return audio.\n"
 msgstr "Nyquist はオーディオを返しませんでした.\n"
 
-#: effects/nyquist/Nyquist.cpp:839
+#: effects/nyquist/Nyquist.cpp:837
 msgid "Nyquist returned too many audio channels.\n"
 msgstr "Nyquist は複数のオーディオチャンネルを返しました.\n"
 
@@ -9171,6 +9174,10 @@ msgstr "ディレクトリ %s は書き込みできません"
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "変更されたテンポラリディレクトリは Audacity を再起動するまで有効になりません"
 
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr "テンポラリディレクトリの更新"
+
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
 msgstr "エフェクト"
@@ -9883,6 +9890,10 @@ msgstr "ステップ(短)(&S):"
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
 msgstr "ステップ(長)(&n):"
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
+msgstr "性能:"
 
 #: prefs/PrefsDialog.cpp:105
 msgid "Audacity Preferences"
@@ -10787,7 +10798,7 @@ msgstr "ボタン"
 #  i18n-hint: One-letter abbreviation for Left, in VU Meter
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: widgets/ASlider.cpp:740
+#: widgets/ASlider.cpp:784
 #: widgets/Meter.cpp:945
 msgid "L"
 msgstr "L"
@@ -10797,24 +10808,24 @@ msgstr "L"
 #  i18n-hint: One-letter abbreviation for Right, in VU Meter
 #. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: widgets/ASlider.cpp:743
+#: widgets/ASlider.cpp:787
 #: widgets/Meter.cpp:948
 msgid "R"
 msgstr "R"
 
-#: widgets/ASlider.cpp:871
+#: widgets/ASlider.cpp:915
 msgid "Center"
 msgstr "中央"
 
-#: widgets/ASlider.cpp:875
+#: widgets/ASlider.cpp:919
 msgid "Left"
 msgstr "左"
 
-#: widgets/ASlider.cpp:878
+#: widgets/ASlider.cpp:922
 msgid "Right"
 msgstr "右"
 
-#: widgets/ASlider.cpp:888
+#: widgets/ASlider.cpp:932
 msgid "+"
 msgstr "+"
 
@@ -11192,6 +11203,9 @@ msgstr "ファイルを閉じる際にエラーが発生しました"
 msgid "Error writing to file"
 msgstr "ファイルへの書き込みでエラー発生"
 
+#~ msgid "Gap detected in project file\n"
+#~ msgstr "プロジェクトファイルに空白が検知されました. \n"
+
 #~ msgid "Audacity"
 #~ msgstr "Audacity"
 
@@ -11249,9 +11263,6 @@ msgstr "ファイルへの書き込みでエラー発生"
 
 #~ msgid "Project Repair"
 #~ msgstr "プロジェクトの修復"
-
-#~ msgid "Project checker repaired file"
-#~ msgstr "プロジェクトチェッカーがファイルを修復しました. "
 
 #~ msgid "Control"
 #~ msgstr "コントロール"
