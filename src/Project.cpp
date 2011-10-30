@@ -2182,7 +2182,7 @@ bool AudacityProject::IsAlreadyOpen(const wxString projPathName)
             wxString::Format(_("%s is already open in another window."),
                               newProjPathName.GetName().c_str());
          wxLogError(errMsg);
-         wxMessageBox(errMsg, _("Error opening project"), wxOK | wxCENTRE);
+         wxMessageBox(errMsg, _("Error Opening Project"), wxOK | wxCENTRE);
          return true;
       }
    }
@@ -2342,7 +2342,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       bool success = ConvertLegacyProjectFile(wxFileName(fileName));
       if (!success) {
          wxMessageBox(_("Audacity was unable to convert an Audacity 1.0 project to the new project format."),
-                      _("Error opening project"),
+                      _("Error Opening Project"),
                       wxOK | wxCENTRE, this);
          return;
       }
@@ -2408,7 +2408,8 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
    XMLFileReader xmlFile;
 
-   if (xmlFile.Parse(this, fileName)) {
+   bool bParseSuccess = xmlFile.Parse(this, fileName);
+   if (bParseSuccess) {
       // By making a duplicate set of pointers to the existing blocks
       // on disk, we add one to their reference count, guaranteeing
       // that their reference counts will never reach zero and thus
@@ -2551,13 +2552,17 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
          }
       }
    } else {
-      mTracks->Clear(true);
+      // Vaughan, 2011-10-30: 
+      // See first topic at http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c16.
+      // Calling mTracks->Clear() with deleteTracks true results in data loss. 
+      //   mTracks->Clear(true);
+      mTracks->Clear(); 
 
       mFileName = wxT("");
       SetProjectTitle();
 
       wxMessageBox(xmlFile.GetErrorStr(),
-                   _("Error opening project"),
+                   _("Error Opening Project"),
                    wxOK | wxCENTRE, this);
    }
    
@@ -2567,6 +2572,9 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       delete mRecordingRecoveryHandler;
       mRecordingRecoveryHandler = NULL;
    }
+
+   if (!bParseSuccess)
+      return; // No need to do further processing if parse failed.
 
    GetDirManager()->FillBlockfilesCache();
 
@@ -2733,7 +2741,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                if (!mDirManager->SetProject(projPath, projName, false)) {
                   wxMessageBox(wxString::Format(_("Couldn't find the project data folder: \"%s\""),
                                              projName.c_str()),
-                                             _("Error opening project"),
+                                             _("Error Opening Project"),
                                              wxOK | wxCENTRE, this);
                   return false;
                }
