@@ -57,14 +57,20 @@ struct EnvPoint : public XMLTagHandler {
 
    void WriteXML(XMLWriter &xmlFile)
    {
-      xmlFile.StartTag(wxT("controlpoint"));
-      xmlFile.WriteAttr(wxT("t"), t, 8);
-      xmlFile.WriteAttr(wxT("val"), val);
-      xmlFile.EndTag(wxT("controlpoint"));
+      // FIX-ME: Is this ever called, vs the loop in Envelope::WriteXML()?
+      wxASSERT(false); 
+      //xmlFile.StartTag(wxT("controlpoint"));
+      //xmlFile.WriteAttr(wxT("t"), t, 8);
+      //xmlFile.WriteAttr(wxT("val"), val);
+      //xmlFile.EndTag(wxT("controlpoint"));
    }
 };
 
 // TODO: Become an array of EnvPoint rather than of pointers to.
+//    Really? wxWidgets help says: 
+//    "wxArray is suitable for storing integer types and pointers which it does not 
+//       treat as objects in any way..."
+//    And why is this a TODO in any case, if it works correctly?
 WX_DEFINE_ARRAY(EnvPoint *, EnvArray);
 
 class Envelope : public XMLTagHandler {

@@ -2555,8 +2555,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       // Vaughan, 2011-10-30: 
       // See first topic at http://bugzilla.audacityteam.org/show_bug.cgi?id=451#c16.
       // Calling mTracks->Clear() with deleteTracks true results in data loss. 
-      //   mTracks->Clear(true);
-      mTracks->Clear(); 
+      mTracks->Clear(); //mTracks->Clear(true);
 
       mFileName = wxT("");
       SetProjectTitle();

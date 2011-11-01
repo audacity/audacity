@@ -160,7 +160,9 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
       SeqBlock *b = mBlock->Item(i);
       BlockFile *oldBlock = b->f;
       sampleCount len = b->f->GetLength();
+      wxASSERT(len <= mMaxSamples); // FIX-ME: Want to enforce mMaxSamples in this case, or adjust it?
 
+      // FIX-ME: So we do nothing if the block is an alias? Shouldn't the user be alerted?
       if (!oldBlock->IsAlias()) {
          BlockFile *newBlock;
 
@@ -186,6 +188,8 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
 bool Sequence::GetMinMax(sampleCount start, sampleCount len,
                          float * outMin, float * outMax) const
 {
+   wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
+
    if (len == 0 || mBlock->Count() == 0) {
       *outMin = float(0.0);
       *outMax = float(0.0);
@@ -226,6 +230,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
       s0 = start - mBlock->Item(block0)->start;
       l0 = len;
       maxl0 = mBlock->Item(block0)->start + mBlock->Item(block0)->f->GetLength() - start;
+      wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
       if (l0 > maxl0)
          l0 = maxl0;
 
@@ -246,6 +251,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
 
       s0 = 0;
       l0 = (start + len) - mBlock->Item(block1)->start;
+      wxASSERT(l0 <= mMaxSamples); // Vaughan, 2011-10-19
 
       float partialMin, partialMax, partialRMS;
       mBlock->Item(block1)->f->GetMinMax(s0, l0,
@@ -265,6 +271,7 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
 bool Sequence::GetRMS(sampleCount start, sampleCount len,
                          float * outRMS) const
 {
+   wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
    if (len == 0 || mBlock->Count() == 0) {
       *outRMS = float(0.0);
       return true;
@@ -289,6 +296,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
 
       sumsq += blockRMS * blockRMS * mBlock->Item(block0)->f->GetLength();
       length += mBlock->Item(block0)->f->GetLength();
+      wxASSERT(length <= mMaxSamples); // Vaughan, 2011-10-19
    }
 
    // Now we take the first and last blocks into account, noting that the
@@ -296,7 +304,9 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // If not, we need read some samples and summaries from disk.
    s0 = start - mBlock->Item(block0)->start;
    l0 = len;
+   wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
    maxl0 = mBlock->Item(block0)->start + mBlock->Item(block0)->f->GetLength() - start;
+   wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
    if (l0 > maxl0)
       l0 = maxl0;
 
@@ -314,6 +324,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
                                          &partialMin, &partialMax, &partialRMS);
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
+      wxASSERT(length <= mMaxSamples); // Vaughan, 2011-10-19
    }
 
    *outRMS = sqrt(sumsq/length);
@@ -348,6 +359,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       blocklen = (mBlock->Item(b0)->start + mBlock->Item(b0)->f->GetLength() - s0);
       if (blocklen > (s1 - s0))
          blocklen = s1 - s0;
+      wxASSERT(blocklen <= mMaxSamples); // Vaughan, 2011-10-19
       Get(buffer, mSampleFormat, s0, blocklen);
 
       (*dest)->Append(buffer, mSampleFormat, blocklen);
@@ -363,6 +375,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
    // Do the last block
    if (b1 > b0 && b1 < numBlocks) {
       blocklen = (s1 - mBlock->Item(b1)->start);
+      wxASSERT(blocklen <= mMaxSamples); // Vaughan, 2011-10-19
       Get(buffer, mSampleFormat, mBlock->Item(b1)->start, blocklen);
       (*dest)->Append(buffer, mSampleFormat, blocklen);
    }
@@ -407,7 +420,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    }
 
    if (b >= 0 && b < numBlocks
-       && mBlock->Item(b)->f->GetLength() + addedLen < mMaxSamples) {
+       && ((mBlock->Item(b)->f->GetLength() + addedLen) < mMaxSamples)) {
       // Special case: we can fit all of the new samples inside of
       // one block!
 
@@ -423,9 +436,15 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
       SeqBlock *largerBlock = new SeqBlock();
       largerBlock->start = mBlock->Item(b)->start;
-      int largerBlockLen = mBlock->Item(b)->f->GetLength() + addedLen;
+      sampleCount largerBlockLen = mBlock->Item(b)->f->GetLength() + addedLen;
       if (largerBlockLen > mMaxSamples) 
+      {
+         wxLogError(
+            wxT("Sequence::Paste: (largerBlockLen %s > mMaxSamples %s). largerBlockLen truncated to mMaxSamples."), 
+            Internat::ToString(((wxLongLong)largerBlockLen).ToDouble(), 0).c_str(), 
+            Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
          largerBlockLen = mMaxSamples; // Prevent overruns, per NGS report for UmixIt.
+      }
       largerBlock->f =
          mDirManager->NewSimpleBlockFile(buffer, largerBlockLen, mSampleFormat);
 
@@ -715,7 +734,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (!wxStrcmp(tag, wxT("waveblock"))) {
       SeqBlock *wb = new SeqBlock();
-      wb->f = 0;
+      wb->f = NULL;
       wb->start = 0;
 
       // loop through attrs, which is a null-terminated list of
@@ -911,7 +930,18 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
    for (b = 0; b < mBlock->Count(); b++) {
       SeqBlock *bb = mBlock->Item(b);
 
-      wxASSERT(bb->f->GetLength() <= mMaxSamples);  // it has been reported that this has been seen in aup files, see bug 451
+      // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
+      if (bb->f->GetLength() > mMaxSamples)
+      {
+         wxString sMsg = 
+            wxString::Format(
+               _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."), 
+               Internat::ToString(((wxLongLong)(bb->f->GetLength())).ToDouble(), 0).c_str(), 
+               Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
+         ::wxMessageBox(sMsg, _("Warning Writing Sequence"), wxICON_EXCLAMATION | wxOK);
+         ::wxLogWarning(sMsg);
+         bb->f->SetLength(mMaxSamples);
+      }
 
       xmlFile.StartTag(wxT("waveblock"));
       xmlFile.WriteAttr(wxT("start"), bb->start);

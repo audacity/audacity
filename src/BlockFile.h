@@ -75,6 +75,7 @@ class BlockFile {
    virtual void SetFileName(wxFileName &name);
 
    virtual sampleCount GetLength() { return mLen; }
+   virtual void SetLength(const sampleCount newLen) { mLen = newLen; }
 
    /// Locks this BlockFile, to prevent it from being moved
    virtual void Lock();

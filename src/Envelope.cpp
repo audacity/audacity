@@ -97,6 +97,7 @@ EnvPoint * Envelope::AddPointAtEnd( double t, double val )
    // JC: Gross! (allocating one point at a time.)
    // TODO: switch over to using an array of EnvPoints
    // rather than an array of pointers to EnvPoints.
+   //    What value does that add?
    EnvPoint *pt = new EnvPoint();
    pt->t = t;
    pt->val = val;
