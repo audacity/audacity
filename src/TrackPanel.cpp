@@ -3532,8 +3532,8 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
    //Get the track the mouse is over, and save it away for future events
    mDrawingTrack = NULL;
    t = FindTrack(event.m_x, event.m_y, false, false, &r);
-   
-   if( t->GetKind() != Track::Wave )
+
+   if (!t || (t->GetKind() != Track::Wave))
 	   return;
 
    if( !IsSampleEditingPossible( event, t ) )
@@ -5258,6 +5258,7 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event)
 /// envelope boundary.
 bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
 {
+   wxASSERT(track);
    if( track->GetKind() != Track::Wave )
       return false;
    WaveTrack *wavetrack = (WaveTrack *)track;
@@ -5323,6 +5324,7 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
 /// editable sample
 bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
 {
+   wxASSERT(track);
    if( track->GetKind() != Track::Wave )
       return false;
 
@@ -6554,6 +6556,7 @@ void TrackPanel::OnTrackPanRight()
 
 void TrackPanel::SetTrackPan(Track * t, LWSlider * s)
 {
+   wxASSERT(t);
    if( t->GetKind() != Track::Wave )
       return;
    float newValue = s->Get();
@@ -6608,6 +6611,7 @@ void TrackPanel::OnTrackGainDec()
 
 void TrackPanel::SetTrackGain(Track * t, LWSlider * s)
 {
+   wxASSERT(t);
    if( t->GetKind() != Track::Wave )
       return ;
    float newValue = s->Get();
