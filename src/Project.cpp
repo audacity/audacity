@@ -2244,23 +2244,30 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
 }
 
+// Most of this string was duplicated 3 places. Made the warning consistent in this global. 
+// The %s is to be filled with the version string.
+wxString gsLegacyFileWarning = 
+_("This file was saved by Audacity version %s. The format has changed. \
+\n\nAudacity can try to open and save this file, but saving it in this \
+\nversion will then prevent any 1.2 or earlier version opening it. \
+\n\nAudacity might corrupt the file in opening it, so you should \
+back it up first. \
+\n\nOpen this file now?");
+
 bool AudacityProject::WarnOfLegacyFile( )
 {
    wxString msg;
-   int icon_choice = wxICON_EXCLAMATION;
-   msg.Printf(_("This file was saved by Audacity %s, a much\nolder version.  The format has changed.\n\nAudacity could corrupt the file in opening\nit, so you must back it up first.\n\nOpen this file now?"),
-              _("1.0 or earlier"));
-      // Stop icon, and choose 'NO' by default.
-      icon_choice = wxICON_STOP | wxNO_DEFAULT;
+   msg.Printf(gsLegacyFileWarning, _("1.0 or earlier"));
 
-   int action;
-   action = wxMessageBox(msg,
-                         _("Opening old project file"),
-                         wxYES_NO | icon_choice | wxCENTRE,
-                         this);
-   if (action == wxNO)
-      return false;
-   return true;
+   // Stop icon, and choose 'NO' by default.
+   int icon_choice = wxICON_STOP | wxNO_DEFAULT;
+
+   int action = 
+      wxMessageBox(msg,
+                   _("Opening old project file"),
+                   wxYES_NO | wxICON_STOP | wxNO_DEFAULT | wxCENTRE,
+                   this);
+   return (action != wxNO);
 }
 
 
@@ -2814,24 +2821,17 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    // Specifically detect older versions of Audacity
    if ( bIsOld | bIsVeryOld ) {
       wxString msg;
+      msg.Printf(gsLegacyFileWarning, audacityVersion.c_str());
+
       int icon_choice = wxICON_EXCLAMATION;
       if( bIsVeryOld )
-      {
-         msg.Printf(_("This file was saved by Audacity %s, a much\nolder version.  The format has changed.\n\nAudacity could corrupt the file in opening\nit, so you must back it up first.\n\nOpen this file now?"),
-                 audacityVersion.c_str());
          // Stop icon, and choose 'NO' by default.
          icon_choice = wxICON_STOP | wxNO_DEFAULT;
-      }
-      else
-      {
-         msg.Printf(_("This file was saved by Audacity %s.\n\nAudacity can open and save this file, but saving it in this version\nwill then prevent any 1.2 or earlier version opening it.\n\nOpen this file now?"),
-                 audacityVersion.c_str());
-      }
-      int action;
-      action = wxMessageBox(msg,
-                            _("Opening old project file"),
-                            wxYES_NO | icon_choice | wxCENTRE,
-                            this);
+      int action =
+         wxMessageBox(msg,
+                      _("Opening old project file"),
+                      wxYES_NO | icon_choice | wxCENTRE,
+                      this);
       if (action == wxNO)
          return false;
    }
