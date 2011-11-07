@@ -188,8 +188,6 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
 bool Sequence::GetMinMax(sampleCount start, sampleCount len,
                          float * outMin, float * outMax) const
 {
-   wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
-
    if (len == 0 || mBlock->Count() == 0) {
       *outMin = float(0.0);
       *outMax = float(0.0);
