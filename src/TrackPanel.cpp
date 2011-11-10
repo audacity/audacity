@@ -5830,6 +5830,7 @@ void TrackPanel::UpdateVRuler(Track *t)
 
 void TrackPanel::UpdateTrackVRuler(Track *t)
 {
+   wxASSERT(t);
    wxRect r(GetVRulerOffset(),
             kTopInset,
             GetVRulerWidth(),
