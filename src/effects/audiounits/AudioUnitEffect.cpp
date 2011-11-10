@@ -454,6 +454,12 @@ bool AudioUnitEffect::ProcessStereo(int count,
 
    bufferList = (AudioBufferList *)malloc(sizeof(UInt32) +
                                           numChannels * sizeof(AudioBuffer));
+   if (!bufferList) 
+   {
+      printf("Setting input render callback failed.\n");
+      AudioUnitUninitialize(trackUnit);
+      return false;
+   }
    bufferList->mNumberBuffers = numChannels;
 
    sampleCount originalLen = len;
