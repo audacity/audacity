@@ -1370,7 +1370,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
       wxString msg = _("Project check read faulty Sequence tags.");
       const wxChar *buttons[] = 
          {_("Close project immediately with no changes"),
-            _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you opt out on further error checks."),
+            _("Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."),
             NULL};
       wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
       action = ShowMultiDialog(msg, _("Warning - Problems Reading Sequence Tags"), buttons);
@@ -1421,7 +1421,7 @@ _("Project check of \"%s\" folder \
          const wxChar *buttons[] = 
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"), 
-               _("Replace missing audio with silence (permanent immediately). This will save the project in its current state."),
+               _("Replace missing audio with silence (permanent immediately). This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
@@ -1589,14 +1589,16 @@ _("Project check of \"%s\" folder \
          wxString msgA =
 _("Project check of \"%s\" folder \
 \nfound %d orphan block file(s). These files are \
-\nunused by this project, but doing no harm.");
+\nunused by this project, but might belong to \
+other projects. \
+\nThey are doing no harm and are small.");
          wxString msg;
          msg.Printf(msgA, this->projName.c_str(), (int)orphanFilePathArray.GetCount());
 
          const wxChar *buttons[] = 
             {_("Continue without deleting; ignore the extra files this session"),
             _("Close project immediately with no further changes"),
-            _("Delete orphan files permanently"),
+            _("Delete orphan files (permanent immediately)"),
             NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);

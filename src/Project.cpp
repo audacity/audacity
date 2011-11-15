@@ -2264,7 +2264,7 @@ bool AudacityProject::WarnOfLegacyFile( )
 
    int action = 
       wxMessageBox(msg,
-                   _("Opening old project file"),
+                   _("Warning - Opening Old Project File"),
                    wxYES_NO | wxICON_STOP | wxNO_DEFAULT | wxCENTRE,
                    this);
    return (action != wxNO);
@@ -2299,7 +2299,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    {
       wxMessageBox(
          _("You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Audacity project file instead."),
-         _("Backup file detected"),
+         _("Warning - Backup File Detected"),
          wxOK | wxCENTRE, this);
       return;
    }
@@ -2313,7 +2313,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
    if (!::wxFileExists(fileName)) {
       wxMessageBox(_("Could not open file: ") + fileName,
-                   _("Error opening file"),
+                   _("Error Opening File"),
                    wxOK | wxCENTRE, this);
       return;
    }
@@ -2567,6 +2567,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       mFileName = wxT("");
       SetProjectTitle();
 
+      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName.c_str(), xmlFile.GetErrorStr());
       wxMessageBox(xmlFile.GetErrorStr(),
                    _("Error Opening Project"),
                    wxOK | wxCENTRE, this);
@@ -2829,7 +2830,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          icon_choice = wxICON_STOP | wxNO_DEFAULT;
       int action =
          wxMessageBox(msg,
-                      _("Opening old project file"),
+                      _("Warning - Opening Old Project File"),
                       wxYES_NO | icon_choice | wxCENTRE,
                       this);
       if (action == wxNO)
