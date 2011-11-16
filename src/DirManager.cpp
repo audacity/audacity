@@ -1543,7 +1543,7 @@ _("Project check of \"%s\" folder \
                _("Replace missing audio with silence (permanent immediately)"),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Missing Audio Data Blockfile(s)"), buttons);
+         action = ShowMultiDialog(msg, _("Warning - Missing Audio Data Block File(s)"), buttons);
       }
       
       if (action == 0)
@@ -1601,7 +1601,7 @@ other projects. \
             _("Delete orphan files (permanent immediately)"),
             NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
-         action = ShowMultiDialog(msg, _("Warning - Orphan Blockfile(s)"), buttons);
+         action = ShowMultiDialog(msg, _("Warning - Orphan Block File(s)"), buttons);
       }
 
       if (action == 1)
