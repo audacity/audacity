@@ -264,11 +264,10 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // Take the output track and insert it in place of the original
    // sample data
    double newLength = outputTrack->GetEndTime(); 
-   if (bLoopSuccess) {
-      SetTimeWarper(new LinearTimeWarper(
-                       mCurT0, mCurT0, mCurT1, mCurT0 + newLength ));
-      track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false,
-                           GetTimeWarper());
+   if (bLoopSuccess) 
+   {
+      SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
+      wxASSERT(track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper()));
    }
 
    if (newLength > mMaxNewLength) 

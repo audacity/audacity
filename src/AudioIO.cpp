@@ -1754,7 +1754,7 @@ void AudioIO::StopStream()
                      if (recordingOffset < 0)
                         track->Clear(mT0, mT0 - recordingOffset); // cut the latency out
                      else
-                        track->InsertSilence(mT0, recordingOffset); // put silence in
+                        wxASSERT(track->InsertSilence(mT0, recordingOffset)); // put silence in
                   }
                   else
                   {  // recording into a new track

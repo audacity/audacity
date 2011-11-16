@@ -1577,7 +1577,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
          runningTwoCopiesStr +
          _("Do you still want to start Audacity?");
       int action = wxMessageBox(prompt,
-                                _("Error locking temporary folder"),
+                                _("Error Locking Temporary Folder"),
                                 wxYES_NO | wxICON_EXCLAMATION,
                                 NULL);
       if (action == wxNO) {

@@ -4885,7 +4885,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             {
                WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
                if (linked)
-                  linked->ExpandCutLine(mCapturedTrackLocation.pos);
+                  wxASSERT(linked->ExpandCutLine(mCapturedTrackLocation.pos));
                mViewInfo->sel0 = cutlineStart;
                mViewInfo->sel1 = cutlineEnd;
                DisplaySelection();
@@ -4894,10 +4894,10 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             }
          } else if (mCapturedTrackLocation.typ == WaveTrack::locationMergePoint)
          {
-            track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
+            wxASSERT(track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2));
             WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
             if (linked)
-               linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
+               wxASSERT(linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2));
             MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE|PUSH_CALC_SPACE);
             handled = true;
          }
@@ -7090,13 +7090,14 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
       break;
    default:
       // ERROR -- should not happen
+      wxASSERT(false);
       break;
    }
 
-   ((WaveTrack *) mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
+   wxASSERT(((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat));
    Track *partner = mTracks->GetLink(mPopupMenuTarget);
    if (partner)
-      ((WaveTrack *) partner)->ConvertToSampleFormat(newFormat);
+      wxASSERT(((WaveTrack *) partner)->ConvertToSampleFormat(newFormat));
 
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s"),
                                         mPopupMenuTarget->GetName().
@@ -7577,6 +7578,7 @@ bool TrackPanel::MoveClipToTrack(WaveClip *clip, WaveTrack* dst)
 
 #ifdef USE_MIDI
    // dst could be a note track. Can't move clip to a note track.
+   // EXPLAIN: How could dst be a note track (pointer)? It's declared to be a WaveTrack*. I think this test is pointless.
    if (dst->GetKind() != Track::Wave) return false;
 #endif
 

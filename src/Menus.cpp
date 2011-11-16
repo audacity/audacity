@@ -3465,7 +3465,7 @@ void AudacityProject::OnPaste()
             }else{
                WaveTrack *tmp;
                tmp = mTrackFactory->NewWaveTrack( ((WaveTrack*)n)->GetSampleFormat(), ((WaveTrack*)n)->GetRate());
-               tmp->InsertSilence(0.0, msClipT1 - msClipT0); // MJS: Is this correct?
+               wxASSERT(tmp->InsertSilence(0.0, msClipT1 - msClipT0)); // MJS: Is this correct?
                tmp->Flush();
 
                bPastedSomething |= 
@@ -3590,19 +3590,16 @@ bool AudacityProject::HandlePasteNothingSelected()
             pNewTrack = mTrackFactory->NewTimeTrack();
             break;
          default:
-            // Vaughan, 2010-08-05: 
-            //    This is probably an error, but was never checked...
-            //    The only kinds of tracks not checked above are Track::None and Track::All. 
             pClip = iterClip.Next();
             continue;
          }
+         wxASSERT(pClip);
 
          pNewTrack->SetLinked(pClip->GetLinked());
          pNewTrack->SetChannel(pClip->GetChannel());
          pNewTrack->SetName(pClip->GetName());
 
-         // Vaughan, 2010-08-05: This code never checked the paste result...
-         pNewTrack->Paste(0.0, pClip); 
+         wxASSERT(pNewTrack->Paste(0.0, pClip)); 
          mTracks->Add(pNewTrack);
          pNewTrack->SetSelected(true);         
          

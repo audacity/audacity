@@ -856,7 +856,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
                   wt->Clear(t1, t0);
-                  wt->Paste(t1, newTrack);
+                  wxASSERT(wt->Paste(t1, newTrack));
                   delete newTrack;
                }
                newRecordingTracks.Add(wt);

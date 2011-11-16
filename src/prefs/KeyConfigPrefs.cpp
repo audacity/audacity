@@ -284,7 +284,7 @@ void KeyConfigPrefs::OnLoad(wxCommandEvent & e)
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
       wxMessageBox(reader.GetErrorStr(),
-                   _("Error loading keyboard shortcuts"),
+                   _("Error Loading Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
    }
 
@@ -323,7 +323,7 @@ void KeyConfigPrefs::OnSave(wxCommandEvent & e)
    catch (XMLFileWriterException* pException)
    {
       wxMessageBox(_("Couldn't write to file: ") + file,
-                   _("Error saving keyboard shortcuts"),
+                   _("Error Saving Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
 
       delete pException;

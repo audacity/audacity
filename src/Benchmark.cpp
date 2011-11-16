@@ -423,7 +423,11 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
       if (mEditDetail)
          Printf(wxT("Paste: %d\n"), y0 * chunkSize);
 
-      t->Paste(double (y0 * chunkSize), tmp);
+      if (!t->Paste((double)(y0 * chunkSize), tmp))
+      {
+         Printf(wxT("Trial %d\nFailed on Paste.\n"), z);
+         goto fail;
+      }
 
       if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != (sampleCount) nChunks * chunkSize) {
          Printf(wxT("Trial %d\n"), z);

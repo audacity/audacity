@@ -610,7 +610,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & evt)
    if (!reader.Parse(this, fn)) {
       // Inform user of load failure
       wxMessageBox(reader.GetErrorStr(),
-                   _("Error loading program"),
+                   _("Error Loading VST Program"),
                    wxOK | wxCENTRE,
                    this);
    }

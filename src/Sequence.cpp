@@ -80,7 +80,7 @@ Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
 
    mBlock = new BlockArray();
 
-   Paste(0, &orig);
+   wxASSERT(Paste(0, &orig));
 }
 
 Sequence::~Sequence()
@@ -533,6 +533,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
          insertBlock->f = mDirManager->CopyBlockFile(srcBlock->Item(i)->f);
          if (!insertBlock->f) {
             // TODO error: Could not paste!  (Out of disk space?)
+            wxASSERT(false);
             return false;
          }
 
@@ -622,6 +623,7 @@ bool Sequence::InsertSilence(sampleCount s0, sampleCount len)
    sTrack->mNumSamples = pos;
 
    bool bResult = Paste(s0, sTrack);
+   wxASSERT(bResult);
 
    delete sTrack;
 
@@ -936,7 +938,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
                _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."), 
                Internat::ToString(((wxLongLong)(bb->f->GetLength())).ToDouble(), 0).c_str(), 
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
-         ::wxMessageBox(sMsg, _("Warning Writing Sequence"), wxICON_EXCLAMATION | wxOK);
+         ::wxMessageBox(sMsg, _("Warning - Length in Writing Sequence"), wxICON_EXCLAMATION | wxOK);
          ::wxLogWarning(sMsg);
          bb->f->SetLength(mMaxSamples);
       }

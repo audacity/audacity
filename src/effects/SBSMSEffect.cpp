@@ -363,13 +363,14 @@ bool EffectSBSMS::Process()
             if(rightTrack)
                rb.outputRightTrack->Flush();
             
-            leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack,
-                  true, false, GetTimeWarper());
+            wxASSERT(leftTrack->ClearAndPaste(
+                        mCurT0, mCurT1, rb.outputLeftTrack,
+                        true, false, GetTimeWarper()));
 
-            if(rightTrack) {
-               rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack,
-                     true, false, GetTimeWarper());
-            }
+            if(rightTrack) 
+               wxASSERT(rightTrack->ClearAndPaste(
+                           mCurT0, mCurT1, rb.outputRightTrack,
+                           true, false, GetTimeWarper()));
          }
          mCurTrackNum++;
       }

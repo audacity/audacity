@@ -2328,7 +2328,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    int numRead = ff->Read(buf, 15);
    if (numRead != 15) {
       wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"), 
-                   (const wxChar*)fileName), _("Error opening file or project"),
+                   (const wxChar*)fileName), _("Error Opening File or Project"),
                    wxOK | wxCENTRE, this);
      ff->Close();
      delete ff;
@@ -3043,7 +3043,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       {
          if (mUndoManager.UnsavedChanges() && mEmptyCanBeDirty) {
             int result = wxMessageBox(_("Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
-                                      _("Warning empty project"),
+                                      _("Warning - Empty Project"),
                                       wxYES_NO | wxICON_QUESTION, this);
             if (result == wxNO)
                return false;
@@ -3116,7 +3116,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          wxMessageBox(wxString::Format(
             _("Could not save project. Path not found.  Try creating \ndirectory \"%s\" before saving project with this name."),
             projPath.c_str()),
-                      _("Error saving project"),
+                      _("Error Saving Project"),
                       wxICON_ERROR, this);
          return false;
       }
@@ -3153,7 +3153,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
             wxRename(safetyFileName, mFileName);
          wxMessageBox(wxString::Format(_("Could not save project. Perhaps %s \nis not writable or the disk is full."),
                                        project.c_str()),
-                      _("Error saving project"),
+                      _("Error Saving Project"),
                       wxICON_ERROR, this);
          return false;
       }
@@ -3176,7 +3176,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
          mFileName.c_str(), pException->GetMessage().c_str()),
-         _("Error saving project"), wxICON_ERROR);
+         _("Error Saving Project"), wxICON_ERROR);
 
       delete pException;
 
@@ -3443,10 +3443,10 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
 
    if (!errorMessage.IsEmpty()) {
 // Version that goes to internet...
-//      ShowErrorDialog(this, _("Error importing"),
+//      ShowErrorDialog(this, _("Error Importing"),
 //                 errorMessage, wxT("http://audacity.sourceforge.net/help/faq?s=files&i=wma-proprietary"));   
 // Version that looks locally for the text.
-      ShowErrorDialog(this, _("Error importing"),
+      ShowErrorDialog(this, _("Error Importing"),
                  errorMessage, wxT("innerlink:wma-proprietary"));   
    }
    if (numTracks <= 0)
@@ -3539,7 +3539,11 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    //We should only overwrite it if this project already has the same name, where the user
    //simply chose to use the save as command although the save command would have the effect.
    if(mFileName!=fName+ext && wxFileExists(fName+ext)) {
-      wxMessageDialog m(NULL, _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."), _("Error Saving Project"), wxOK|wxICON_ERROR);
+      wxMessageDialog m(
+         NULL, 
+         _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."), 
+         _("Error Saving Project"), 
+         wxOK|wxICON_ERROR);
       m.ShowModal();
       return false;
    }
@@ -4190,7 +4194,7 @@ void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
                            regions.Item(i+1)->start - regions.Item(i)->end);
                   }
 
-                  merged->Paste( 0.0 , dest );
+                  wxASSERT(merged->Paste( 0.0 , dest ));
                   delete dest;
                }
             }
@@ -4392,7 +4396,7 @@ void AudacityProject::AutoSave()
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
          (fn + wxT(".tmp")).c_str(), pException->GetMessage().c_str()),
-         _("Error writing autosave file"), wxICON_ERROR, this);
+         _("Error Writing Autosave File"), wxICON_ERROR, this);
 
       delete pException;
 

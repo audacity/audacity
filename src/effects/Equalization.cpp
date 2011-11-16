@@ -531,7 +531,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          if(toClipOutput)
          {
             //put the processed audio in
-            t->Paste(clipStartEndTimes[i].first,toClipOutput);
+            wxASSERT(t->Paste(clipStartEndTimes[i].first,toClipOutput));
             //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
             //This is not true when the selection is fully contained within one clip (second half of conditional)
             if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first || 
@@ -1020,7 +1020,7 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
    {
       // Inform user of load failure
       wxMessageBox( reader.GetErrorStr(),
-                    _("Error loading EQ curve"),
+                    _("ErrorLoading EQ Curve"),
                     wxOK | wxCENTRE,
                     this );
    }
@@ -1085,7 +1085,7 @@ void EqualizationDialog::SaveCurves(wxString fileName)
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
          fn.GetFullPath().c_str(), pException->GetMessage().c_str()),
-         _("Error saving equalization curves"), wxICON_ERROR, this);
+         _("Error Saving Equalization Curves"), wxICON_ERROR, this);
 
       delete pException;
    }

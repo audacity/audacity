@@ -1086,7 +1086,7 @@ void TagsEditor::OnLoad(wxCommandEvent & event)
    if (!reader.Parse(&mLocal, fn)) {
       // Inform user of load failure
       wxMessageBox(reader.GetErrorStr(),
-                   _("Error loading metadata"),
+                   _("Error Loading Metadata"),
                    wxOK | wxCENTRE,
                    this);
    }
@@ -1170,7 +1170,7 @@ void TagsEditor::OnSave(wxCommandEvent & event)
       wxMessageBox(wxString::Format(
          _("Couldn't write to file \"%s\": %s"),
          fn.c_str(), pException->GetMessage().c_str()),
-         _("Error saving tags file"), wxICON_ERROR, this);
+         _("Error Saving Tags File"), wxICON_ERROR, this);
 
       delete pException;
    }
