@@ -638,7 +638,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    }
 
    // If we created a default time warper, we need to delete it
-   delete warper;
+   if (effectWarper == NULL)
+      delete warper;
 
    return true;
 }
