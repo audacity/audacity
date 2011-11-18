@@ -2260,8 +2260,6 @@ bool AudacityProject::WarnOfLegacyFile( )
    msg.Printf(gsLegacyFileWarning, _("1.0 or earlier"));
 
    // Stop icon, and choose 'NO' by default.
-   int icon_choice = wxICON_STOP | wxNO_DEFAULT;
-
    int action = 
       wxMessageBox(msg,
                    _("Warning - Opening Old Project File"),
@@ -2567,7 +2565,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       mFileName = wxT("");
       SetProjectTitle();
 
-      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName.c_str(), xmlFile.GetErrorStr());
+      wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName.c_str(), xmlFile.GetErrorStr().c_str());
       wxMessageBox(xmlFile.GetErrorStr(),
                    _("Error Opening Project"),
                    wxOK | wxCENTRE, this);
