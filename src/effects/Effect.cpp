@@ -189,7 +189,8 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
       t1 = t0 + mLength;
       if (mT0 == mT1) {
          // Not really part of the calculation, but convenient to put here
-         wxASSERT(track->InsertSilence(t0, t1));
+         bool bResult = track->InsertSilence(t0, t1);
+         wxASSERT(bResult); // TO DO: Actually handle this.
       }
    }
 

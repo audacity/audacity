@@ -576,7 +576,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                // falls within it and this isn't the first clip in the track.
                if (fabs(t1 - clip->GetStartTime()) < WAVETRACK_MERGE_POINT_TOLERANCE) {
                   if (i > 0) {
-                     wxASSERT(MergeClips(GetClipIndex(clips[i - 1]), GetClipIndex(clip)));
+                     bool bResult = MergeClips(GetClipIndex(clips[i - 1]), GetClipIndex(clip));
+                     wxASSERT(bResult); // TO DO: Actually handle this.
                   }
                   break;
                }
@@ -594,7 +595,8 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                // falls within it and this isn't the last clip in the track.
                if (fabs(t0 - clip->GetEndTime()) < WAVETRACK_MERGE_POINT_TOLERANCE) {
                   if (i < clips.GetCount() - 1) {
-                     wxASSERT(MergeClips(GetClipIndex(clip), GetClipIndex(clips[i + 1])));
+                     bool bResult = MergeClips(GetClipIndex(clip), GetClipIndex(clips[i + 1]));
+                     wxASSERT(bResult); // TO DO: Actually handle this.
                   }
                   break;
                }
@@ -829,9 +831,11 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          if (!f) return false;
          WaveTrack *tmp = f->NewWaveTrack(GetSampleFormat(), GetRate());
 
-         wxASSERT(tmp->InsertSilence(0.0, newT1 - oldT1));
+         bool bResult = tmp->InsertSilence(0.0, newT1 - oldT1);
+         wxASSERT(bResult); // TO DO: Actually handle this.
          tmp->Flush();
-         wxASSERT(Paste(oldT1, tmp));
+         bResult = Paste(oldT1, tmp);
+         wxASSERT(bResult); // TO DO: Actually handle this.
          delete tmp;
       }
    }
@@ -898,7 +902,8 @@ bool WaveTrack::Paste(double t0, Track *src)
          if (!IsEmpty(t0, GetEndTime())) {
             Track *tmp = NULL;
             Cut(t0, GetEndTime()+1.0/mRate, &tmp);
-            wxASSERT(Paste(t0 + insertDuration, tmp));
+            bool bResult = Paste(t0 + insertDuration, tmp);
+            wxASSERT(bResult); // TO DO: Actually handle this.
             delete tmp;
          }
       } else
@@ -1202,12 +1207,14 @@ bool WaveTrack::Join(double t0, double t1)
       if (clip->GetOffset() - t > (1.0 / mRate)) {
          double addedSilence = (clip->GetOffset() - t);
          //printf("Adding %.6f seconds of silence\n");
-         wxASSERT(newClip->InsertSilence(t, addedSilence));
+         bool bResult = newClip->InsertSilence(t, addedSilence);
+         wxASSERT(bResult); // TO DO: Actually handle this.
          t += addedSilence;
       }
 
       //printf("Pasting at %.6f\n", t);
-      wxASSERT(newClip->Paste(t, clip));
+      bool bResult = newClip->Paste(t, clip);
+      wxASSERT(bResult); // TO DO: Actually handle this.
       t = newClip->GetEndTime();      
 
       mClips.DeleteObject(clip);

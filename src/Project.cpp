@@ -4192,7 +4192,8 @@ void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
                            regions.Item(i+1)->start - regions.Item(i)->end);
                   }
 
-                  wxASSERT(merged->Paste( 0.0 , dest ));
+                  bool bResult = merged->Paste( 0.0 , dest );
+                  wxASSERT(bResult); // TO DO: Actually handle this.
                   delete dest;
                }
             }

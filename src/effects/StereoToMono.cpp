@@ -72,11 +72,11 @@ bool EffectStereoToMono::ProcessOne(int count)
    sampleCount index = mStart;
    float *leftBuffer = new float[idealBlockLen];
    float *rightBuffer = new float[idealBlockLen];
-   bool rc;
+   bool bResult = true;
 
    while (index < mEnd) {
-      rc = mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
-      rc = mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
+      bResult &= mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
+      bResult &= mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
       sampleCount limit = idealBlockLen;
       if ((index + idealBlockLen) > mEnd) {
          limit = mEnd - index;
@@ -88,15 +88,15 @@ bool EffectStereoToMono::ProcessOne(int count)
          curMonoFrame = (curLeftFrame + curRightFrame) / 2.0;
          leftBuffer[i] = curMonoFrame;
       }
-      rc = mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
+      bResult &= mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
       if (TrackProgress(count, 2.*((double)index / (double)(mEnd - mStart))))
          return false;
    }
 
    double minStart = wxMin(mLeftTrack->GetStartTime(), mRightTrack->GetStartTime());
-   mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
-   mOutTrack->Flush();
-   wxASSERT(mLeftTrack->Paste(minStart, mOutTrack));
+   bResult &= mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
+   bResult &= mOutTrack->Flush();
+   bResult &= mLeftTrack->Paste(minStart, mOutTrack);
    mLeftTrack->SetLinked(false);
    mRightTrack->SetLinked(false);
    mLeftTrack->SetChannel(Track::MonoChannel);
@@ -106,7 +106,7 @@ bool EffectStereoToMono::ProcessOne(int count)
    delete [] leftBuffer;
    delete [] rightBuffer;
 
-   return true;
+   return bResult;
 }
 
 bool EffectStereoToMono::Process()

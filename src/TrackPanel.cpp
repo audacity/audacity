@@ -4885,7 +4885,10 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             {
                WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
                if (linked)
-                  wxASSERT(linked->ExpandCutLine(mCapturedTrackLocation.pos));
+               {
+                  bool bResult = linked->ExpandCutLine(mCapturedTrackLocation.pos);
+                  wxASSERT(bResult); // TO DO: Actually handle this.
+               }
                mViewInfo->sel0 = cutlineStart;
                mViewInfo->sel1 = cutlineEnd;
                DisplaySelection();
@@ -4894,10 +4897,14 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             }
          } else if (mCapturedTrackLocation.typ == WaveTrack::locationMergePoint)
          {
-            wxASSERT(track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2));
+            bool bResult = track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
+            wxASSERT(bResult); // TO DO: Actually handle this.
             WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
             if (linked)
-               wxASSERT(linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2));
+            {
+               bResult = linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
+               wxASSERT(bResult); // TO DO: Actually handle this.
+            }
             MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE|PUSH_CALC_SPACE);
             handled = true;
          }
@@ -7094,10 +7101,14 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
       break;
    }
 
-   wxASSERT(((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat));
+   bool bResult = ((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
+   wxASSERT(bResult); // TO DO: Actually handle this.
    Track *partner = mTracks->GetLink(mPopupMenuTarget);
    if (partner)
-      wxASSERT(((WaveTrack *) partner)->ConvertToSampleFormat(newFormat));
+   {
+      bResult = ((WaveTrack*)partner)->ConvertToSampleFormat(newFormat);
+      wxASSERT(bResult); // TO DO: Actually handle this.
+   }
 
    MakeParentPushState(wxString::Format(_("Changed '%s' to %s"),
                                         mPopupMenuTarget->GetName().

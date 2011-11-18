@@ -1751,10 +1751,12 @@ void AudioIO::StopStream()
                   }
                   if( appendRecord )
                   {  // append-recording
+                     bool bResult = true;
                      if (recordingOffset < 0)
-                        track->Clear(mT0, mT0 - recordingOffset); // cut the latency out
+                        bResult = track->Clear(mT0, mT0 - recordingOffset); // cut the latency out
                      else
-                        wxASSERT(track->InsertSilence(mT0, recordingOffset)); // put silence in
+                        bResult = track->InsertSilence(mT0, recordingOffset); // put silence in
+                     wxASSERT(bResult); // TO DO: Actually handle this.
                   }
                   else
                   {  // recording into a new track

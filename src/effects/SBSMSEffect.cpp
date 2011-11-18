@@ -362,15 +362,19 @@ bool EffectSBSMS::Process()
             rb.outputLeftTrack->Flush();
             if(rightTrack)
                rb.outputRightTrack->Flush();
-            
-            wxASSERT(leftTrack->ClearAndPaste(
-                        mCurT0, mCurT1, rb.outputLeftTrack,
-                        true, false, GetTimeWarper()));
+
+            bool bResult = 
+               leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack,
+                                          true, false, GetTimeWarper());
+            wxASSERT(bResult); // TO DO: Actually handle this.
 
             if(rightTrack) 
-               wxASSERT(rightTrack->ClearAndPaste(
-                           mCurT0, mCurT1, rb.outputRightTrack,
-                           true, false, GetTimeWarper()));
+            {
+               bResult = 
+                  rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack,
+                                             true, false, GetTimeWarper());
+               wxASSERT(bResult); // TO DO: Actually handle this.
+            }
          }
          mCurTrackNum++;
       }

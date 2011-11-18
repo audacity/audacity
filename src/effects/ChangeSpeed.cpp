@@ -213,7 +213,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    //Go through the track one buffer at a time. samplePos counts which
    //sample the current buffer starts at.
-   bool bLoopSuccess = true;
+   bool bResult = true;
    sampleCount blockSize;
    sampleCount samplePos = start;
    while (samplePos < end) {
@@ -236,7 +236,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
                                     outBuffer,
                                     outBufferSize);
       if (outgen < 0) {
-         bLoopSuccess = false;
+         bResult = false;
          break;
       }
 
@@ -249,7 +249,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
       // Update the Progress meter
       if (TrackProgress(mCurTrackNum, (samplePos - start) / len)) {
-         bLoopSuccess = false;
+         bResult = false;
          break;
       }
    }
@@ -264,10 +264,10 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // Take the output track and insert it in place of the original
    // sample data
    double newLength = outputTrack->GetEndTime(); 
-   if (bLoopSuccess) 
+   if (bResult) 
    {
       SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
-      wxASSERT(track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper()));
+      bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper());
    }
 
    if (newLength > mMaxNewLength) 
@@ -276,7 +276,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    // Delete the outputTrack now that its data is inserted in place
    delete outputTrack;
 
-   return bLoopSuccess;
+   return bResult;
 }
 
 
