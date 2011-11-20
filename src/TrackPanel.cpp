@@ -5838,18 +5838,20 @@ void TrackPanel::UpdateVRuler(Track *t)
 void TrackPanel::UpdateTrackVRuler(Track *t)
 {
    wxASSERT(t);
+   if (!t)
+      return;
+
    wxRect r(GetVRulerOffset(),
             kTopInset,
             GetVRulerWidth(),
             t->GetHeight() - (kTopInset + 2));
 
-   if (t) {
-      mTrackArtist->UpdateVRuler(t, r);
-      Track *l = t->GetLink();
-      if (l) {
-         r.height = l->GetHeight() - (kTopInset + 2);
-         mTrackArtist->UpdateVRuler(l, r);
-      }
+   mTrackArtist->UpdateVRuler(t, r);
+   Track *l = t->GetLink();
+   if (l) 
+   {
+      r.height = l->GetHeight() - (kTopInset + 2);
+      mTrackArtist->UpdateVRuler(l, r);
    }
 }
 

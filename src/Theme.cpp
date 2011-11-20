@@ -1043,14 +1043,14 @@ wxCursor & ThemeBase::Cursor( int iIndex )
 {
    wxASSERT( iIndex >= 0 );
    EnsureInitialised();
-   return *(wxCursor*)NULL;
+   return *(wxCursor*)NULL; // ANSWER-ME: Purposeful null deref?
 }
 
 wxFont   & ThemeBase::Font( int iIndex )
 {
    wxASSERT( iIndex >= 0 );
    EnsureInitialised();
-   return *(wxFont*)NULL;
+   return *(wxFont*)NULL; // ANSWER-ME: Purposeful null deref?
 }
 
 /// Replaces both the image and the bitmap.
