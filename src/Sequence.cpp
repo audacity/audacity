@@ -386,14 +386,41 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
 
 bool Sequence::Paste(sampleCount s, const Sequence *src)
 {
-   if (s < 0)
-      s = 0;
-   if (s >= mNumSamples)
-      s = mNumSamples;
+   // This ancient code just blithely bounded s, rather than throwing an error. 
+   // Now enforcing the bounds. 
+   //if ((s < 0)
+   //   s = 0;
+   //if (s >= mNumSamples)
+   //   s = mNumSamples;
+   if ((s < 0) || (s >= mNumSamples))
+   {
+      wxLogError(
+         wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."), 
+         Internat::ToString(((wxLongLong)s).ToDouble(), 0).c_str(), 
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str());
+      wxASSERT(false);
+      return false;
+   }
 
    // Quick check to make sure that it doesn't overflow
    if (((double)mNumSamples) + ((double)src->mNumSamples) > wxLL(9223372036854775807))
+   {
+      wxLogError(
+         wxT("Sequence::Paste: mNumSamples %s + src->mNumSamples %s would overflow."), 
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(), 
+         Internat::ToString(((wxLongLong)src->mNumSamples).ToDouble(), 0).c_str());
+      wxASSERT(false);
       return false;
+   }
+
+   if (src->mSampleFormat != mSampleFormat)
+   {
+      wxLogError(
+         wxT("Sequence::Paste: Sample format to be pasted, %s, does not match destination format, %s."), 
+         GetSampleFormatStr(src->mSampleFormat), GetSampleFormatStr(src->mSampleFormat));
+      wxASSERT(false);
+      return false;
+   }
 
    BlockArray *srcBlock = src->mBlock;
    sampleCount addedLen = src->mNumSamples;
