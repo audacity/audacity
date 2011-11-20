@@ -388,11 +388,13 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 {
    // This ancient code just blithely bounded s, rather than throwing an error. 
    // Now enforcing the bounds. 
+   // Also, the second test should have been >, not >=, because if (s == mNumSamples), 
+   // there's no point in setting s to mNumSamples.
    //if ((s < 0)
    //   s = 0;
    //if (s >= mNumSamples)
    //   s = mNumSamples;
-   if ((s < 0) || (s >= mNumSamples))
+   if ((s < 0) || (s > mNumSamples))
    {
       wxLogError(
          wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."), 
