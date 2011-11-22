@@ -1246,9 +1246,8 @@ bool WaveClip::Paste(double t0, WaveClip* other)
    {
       // In debug mode, fail because that's probably a bad call to this method.
       // In release, adjust the source to match the destination, so we don't do a bad paste.
-      // Conversion probably should have been done earlier than here. 
       wxASSERT(false);
-      pastedClip->mSequence->ConvertToSampleFormat(mSequence->GetSampleFormat());
+      pastedClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
    }
 
    bool result = false;
