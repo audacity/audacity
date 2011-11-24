@@ -2967,7 +2967,9 @@ void AudacityProject::OnExportMIDI(){
       return;
    }
 
-   assert(nt);
+   wxASSERT(nt);
+   if (!nt) 
+      return;
 
    while(true){
 

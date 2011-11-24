@@ -330,6 +330,9 @@ bool LabelDialog::TransferDataFromWindow()
             break;
          }
       }
+      wxASSERT(t);
+      if (!t)
+         return false;
 
       // Add the label to it
       if (!rd->title.IsEmpty()) {

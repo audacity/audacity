@@ -969,7 +969,8 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
       double v;
 
       v = min[x] * env[x];
-      if (mShowClipping && v <= -MAX_AUDIO) {
+      if (clipped && mShowClipping && (v <= -MAX_AUDIO)) 
+      {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
             clipped[clipcnt++] = xx;
          }
@@ -978,7 +979,8 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                        r.height, dB, true, mdBrange, true);
 
       v = max[x] * env[x];
-      if (mShowClipping && v >= MAX_AUDIO) {
+      if (clipped && mShowClipping && (v >= MAX_AUDIO)) 
+      {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
             clipped[clipcnt++] = xx;
          }
@@ -1128,9 +1130,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, const wxRect &r,
 
       // t0 + clip->GetOffset() is 'h' (the absolute time of the left edge) for 'r'.
       tt = buffer[s] * clip->GetEnvelope()->GetValueAtX(xx + r.x, r, t0 + clip->GetOffset(), pps);
-      if (mShowClipping && (tt <= -MAX_AUDIO || tt >= MAX_AUDIO)) {
+      if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO))) 
          clipped[clipcnt++] = xx;
-      }
       ypos[s] = GetWaveYPos(tt, zoomMin, zoomMax,
                             r.height, dB, true, mdBrange, false);
       if (ypos[s] < -1) {
@@ -2422,12 +2423,13 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    Alg_seq_ptr seq = track->mSeq;
    if (!seq) {
       assert(track->mSerializationBuffer);
-      Alg_track_ptr alg_track = seq->unserialize(track->mSerializationBuffer,
-            track->mSerializationLength);
-      assert(alg_track->get_type() == 's');
-      track->mSeq = seq = (Alg_seq_ptr) alg_track;
-      free(track->mSerializationBuffer);
-      track->mSerializationBuffer = NULL;
+      // FIX-ME: This is in a clause where we *know* seq is NULL, so why are you dereferencing it?!!! I'm commenting out the rest of this clause.
+      //Alg_track_ptr alg_track = seq->unserialize(track->mSerializationBuffer,
+      //      track->mSerializationLength);
+      //assert(alg_track->get_type() == 's');
+      //track->mSeq = seq = (Alg_seq_ptr) alg_track;
+      //free(track->mSerializationBuffer);
+      //track->mSerializationBuffer = NULL;
    }
    assert(seq);
    int visibleChannels = track->mVisibleChannels;

@@ -1970,7 +1970,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    }
  
    //Determine if user clicked on a label track. 
-   if (pTrack->GetKind() == Track::Label) {
+   if (pTrack && (pTrack->GetKind() == Track::Label)) 
+   {
       LabelTrack *lt = (LabelTrack *) pTrack;
       if (lt->HandleMouse(event, r,//mCapturedRect,
                           mViewInfo->h, mViewInfo->zoom,
@@ -2164,10 +2165,8 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
    mViewInfo->sel1 = sel1;
    
    //On-Demand: check to see if there is an OD thing associated with this track.  If so we want to update the focal point for the task.
-   if (pTrack->GetKind() == Track::Wave) {
-      if(ODManager::IsInstanceCreated())
-         ODManager::Instance()->DemandTrackUpdate((WaveTrack*)pTrack,sel0); //sel0 is sometimes less than mSelStart
-   }
+   if (pTrack && (pTrack->GetKind() == Track::Wave) && ODManager::IsInstanceCreated())
+      ODManager::Instance()->DemandTrackUpdate((WaveTrack*)pTrack,sel0); //sel0 is sometimes less than mSelStart
 
    // Full refresh since the label area may need to indicate
    // newly selected tracks.
@@ -4524,7 +4523,8 @@ void TrackPanel::HandleResizeDrag(wxMouseEvent & event)
       // minimized heights.
       if (mCapturedTrack->GetLinked()) {
          mInitialUpperTrackHeight = mCapturedTrack->GetHeight();
-         mInitialTrackHeight = link->GetHeight();
+         if (link) // FIX-ME: This wasn't checked previously. Is mInitialTrackHeight safe if this doesn't fire?
+            mInitialTrackHeight = link->GetHeight();
       }
       else if (link) {
          mInitialUpperTrackHeight = link->GetHeight();
@@ -5882,12 +5882,8 @@ void TrackPanel::UpdateVRulerSize()
 /// TrackPanel::OnNextTrack.
 void TrackPanel::OnPrevTrack( bool shift )
 {
-   Track *t;
-   Track *p;
    TrackListIterator iter( mTracks );
-   bool tSelected,pSelected;
-
-   t = GetFocusedTrack();   // Get currently focused track
+   Track* t = GetFocusedTrack();
    if( t == NULL )   // if there isn't one, focus on last
    {
       t = iter.Last();
@@ -5896,18 +5892,21 @@ void TrackPanel::OnPrevTrack( bool shift )
       return;
    }
 
+   Track* p = NULL;
+   bool tSelected = false;
+   bool pSelected = false;
    if( shift )
    {
       p = mTracks->GetPrev( t, true ); // Get previous track
       if( p == NULL )   // On first track
       {
-         wxBell();
+         wxBell(); // ANSWER-ME: Why?
          if( mCircularTrackNavigation )
          {
             TrackListIterator iter( mTracks );
             for( Track *d = iter.First(); d; d = iter.Next( true ) )
             {
-               p = d;
+               p = d; // ANSWER-ME: Is there supposed to be a stopping condition here? If seeking last, why not just use iter.Last()? And what does "d" stand for?!
             }
          }
          else
@@ -5917,7 +5916,8 @@ void TrackPanel::OnPrevTrack( bool shift )
          }
       }
       tSelected = t->GetSelected();
-      pSelected = p->GetSelected();
+      if (p)
+         pSelected = p->GetSelected();
       if( tSelected && pSelected )
       {
          mTracks->Select( t, false );
