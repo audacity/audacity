@@ -32,6 +32,7 @@ click from the menu into the actual function to be called.
 #include "Project.h"
 #include "LoadModules.h"
 #include "Registrar.h"
+#include "TrackPanel2.h"
 
 /*
 There are several functions that can be used in a GUI module.
@@ -67,7 +68,7 @@ class ModTrackPanelCallback
 {
 public:
    void OnFuncShowAudioExplorer();
-   void OnFuncShowAnotherExtension();
+   void OnFuncReplaceTrackPanel();
 };
 
 typedef void (ModTrackPanelCallback::*ModTrackPanelCommandFunction)();
@@ -114,9 +115,17 @@ void ModTrackPanelCallback::OnFuncShowAudioExplorer()
    Registrar::ShowNewPanel();
 }
 
-void ModTrackPanelCallback::OnFuncShowAnotherExtension()
+void ModTrackPanelCallback::OnFuncReplaceTrackPanel()
 {
+   // Upgrade the factory.  Now all TrackPanels will be created as TrackPanel 2's
+
+#if 0
+   AudacityProject *p = GetActiveProject();
+   wxASSERT( p!= NULL );
+   // Change it's type (No new storage allocated).
+   TrackPanel2::Upgrade( &p->mTrackPanel );
    int k=4;
+#endif
 }
 
 // Oooh look, we're using a NULL object, and hence a NULL 'this'.
@@ -150,6 +159,8 @@ MOD_TRACK_PANEL_DLL_API int ModuleDispatch(ModuleDispatchTypes type)
    {
    case AppInitialized:
       Registrar::Start();
+      // Demand that all track panels be created using the TrackPanel2Factory.
+      TrackPanel::FactoryFunction = TrackPanel2Factory;
       break;
    case AppQuiting:
       Registrar::Finish();
@@ -168,10 +179,11 @@ MOD_TRACK_PANEL_DLL_API int ModuleDispatch(ModuleDispatchTypes type)
          c->SetToMenu( pMenu );
          c->AddSeparator();
          // We add two new commands into the Analyze menu.
-         c->AddItem( _T("Audio Explorer..."), _T("Experimental GUI for audio analysis"),
+         c->AddItem( _T("Extra Dialog..."), _T("Experimental Extra Dialog for whatever you want."),
             ModTrackPanelFN( OnFuncShowAudioExplorer ) );
-         c->AddItem( _T("Another Extension..."), _T("Experimental GUI for other things"),
-            ModTrackPanelFN( OnFuncShowAnotherExtension ) );
+         //Second menu tweak no longer needed as we always make TrackPanel2's.
+         //c->AddItem( _T("Replace TrackPanel..."), _T("Replace Current TrackPanel with TrackPanel2"),
+         //   ModTrackPanelFN( OnFuncReplaceTrackPanel ) );
       }
       break;
    default:
