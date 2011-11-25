@@ -2423,13 +2423,15 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    Alg_seq_ptr seq = track->mSeq;
    if (!seq) {
       assert(track->mSerializationBuffer);
-      // FIX-ME: This is in a clause where we *know* seq is NULL, so why are you dereferencing it?!!! I'm commenting out the rest of this clause.
-      //Alg_track_ptr alg_track = seq->unserialize(track->mSerializationBuffer,
-      //      track->mSerializationLength);
-      //assert(alg_track->get_type() == 's');
-      //track->mSeq = seq = (Alg_seq_ptr) alg_track;
-      //free(track->mSerializationBuffer);
-      //track->mSerializationBuffer = NULL;
+      // JKC: Previously this indirected via seq->, a NULL pointer.
+      // This was actually OK, since unserialize is a static function.
+      // Alg_seq:: is clearer.
+      Alg_track_ptr alg_track = Alg_seq::unserialize(track->mSerializationBuffer,
+            track->mSerializationLength);
+      assert(alg_track->get_type() == 's');
+      track->mSeq = seq = (Alg_seq_ptr) alg_track;
+      free(track->mSerializationBuffer);
+      track->mSerializationBuffer = NULL;
    }
    assert(seq);
    int visibleChannels = track->mVisibleChannels;

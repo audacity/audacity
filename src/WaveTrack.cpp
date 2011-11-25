@@ -2137,6 +2137,7 @@ bool WaveTrack::Resample(int rate, ProgressDialog *progress)
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
       if (!it->GetData()->Resample(rate, progress))
       {
+         wxLogDebug( wxT("Resampling problem!  We're partially resampled") );
          // FIX-ME: The track is now in an inconsistent state since some
          //        clips are resampled and some are not
          return false;

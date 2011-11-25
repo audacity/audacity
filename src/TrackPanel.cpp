@@ -4517,16 +4517,8 @@ void TrackPanel::HandleResizeDrag(wxMouseEvent & event)
       if (link) {
          link->SetHeight(link->GetHeight());
          link->SetMinimized(false);
-      }
-
-      // Initial values must be reset since they weren't based on the 
-      // minimized heights.
-      if (mCapturedTrack->GetLinked()) {
-         mInitialUpperTrackHeight = mCapturedTrack->GetHeight();
-         if (link) // FIX-ME: This wasn't checked previously. Is mInitialTrackHeight safe if this doesn't fire?
-            mInitialTrackHeight = link->GetHeight();
-      }
-      else if (link) {
+         // Initial values must be reset since they weren't based on the 
+         // minimized heights.
          mInitialUpperTrackHeight = link->GetHeight();
          mInitialTrackHeight = mCapturedTrack->GetHeight();
       }
@@ -5900,14 +5892,13 @@ void TrackPanel::OnPrevTrack( bool shift )
       p = mTracks->GetPrev( t, true ); // Get previous track
       if( p == NULL )   // On first track
       {
-         wxBell(); // ANSWER-ME: Why?
+         // JKC: wxBell() is probably for accessibility, so a blind
+         // user knows they were at the top track.
+         wxBell();
          if( mCircularTrackNavigation )
          {
             TrackListIterator iter( mTracks );
-            for( Track *d = iter.First(); d; d = iter.Next( true ) )
-            {
-               p = d; // ANSWER-ME: Is there supposed to be a stopping condition here? If seeking last, why not just use iter.Last()? And what does "d" stand for?!
-            }
+            p = iter.Last();
          }
          else
          {
