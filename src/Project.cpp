@@ -893,14 +893,16 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    SetSizer( bs );
    bs->Layout();
 
-   mTrackPanel = new TrackPanel(pPage,
-                                TrackPanelID,
-                                wxDefaultPosition,
-                                wxDefaultSize,
-                                mTracks,
-                                &mViewInfo,
-                                this,
-                                mRuler);
+   // The right hand side translates to new TrackPanel(... in normal
+   // Audacity without additional DLLs.
+   mTrackPanel = TrackPanel::FactoryFunction(pPage,
+                                             TrackPanelID,
+                                             wxDefaultPosition,
+                                             wxDefaultSize,
+                                             mTracks,
+                                             &mViewInfo,
+                                             this,
+                                             mRuler);
 
    // LLL: When Audacity starts or becomes active after returning from
    //      another application, the first window that can accept focus

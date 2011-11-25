@@ -8234,3 +8234,36 @@ LWSlider * TrackInfo::PanSlider(int trackIndex)
    return mPans[trackIndex - mSliderOffset];
 }
 
+TrackPanel * TrackPanelFactory(wxWindow * parent,
+   wxWindowID id,
+   const wxPoint & pos,
+   const wxSize & size,
+   TrackList * tracks,
+   ViewInfo * viewInfo,
+   TrackPanelListener * listener,
+   AdornedRulerPanel * ruler)
+{
+   return new TrackPanel(
+      parent,
+      id,
+      pos,
+      size,
+      tracks,
+      viewInfo,
+      listener,
+      ruler);
+}
+
+
+// Declare the static factory function.
+// We defined it in the class.
+TrackPanel *(*TrackPanel::FactoryFunction)(
+              wxWindow * parent,
+              wxWindowID id,
+              const wxPoint & pos,
+              const wxSize & size,
+              TrackList * tracks,
+              ViewInfo * viewInfo,
+              TrackPanelListener * listener,
+              AdornedRulerPanel * ruler) = TrackPanelFactory;
+
