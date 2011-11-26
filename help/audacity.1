@@ -73,19 +73,24 @@ set the audacity block size for writing files to disk to nnn bytes
 Per user configuration file.
 .RE
 
-.I /tmp/audacity\-<user>/
+.I /var/tmp/audacity\-<user>/
 .RS
 Default location of Audacity's temp directory, where <user> is your
 username.  If this location is not suitable (not enough space in
-/tmp, for example), you should change the temp directory in
+/var/tmp, for example), you should change the temp directory in
 the Preferences and restart Audacity.  Audacity is a disk-based
 editor, so the temp directory is very important: it should always
-be on a fast disk with lots of free space.
+be on a fast (local) disk with lots of free space.
 
 Note that older versions of Audacity put the temp directory inside
 of the user's home directory.  This is undesirable on many systems,
-and using some directory in /tmp is recommended.  Open the Preferences
-to check.
+and using some directory in /tmp is recommended.
+
+On many modern Linux systems all files in /tmp/ will be deleted 
+each time the system boots up, which makes recovering a recording
+that was going on when the system crashed much harder. This is why
+the default is to use a directory in /var/tmp/ which will not
+normally be deleted by the system. Open the Preferences to check.
 .RE
 .SH SEARCH PATH
 When looking for plug-ins, help files, localization files, or other

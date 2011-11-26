@@ -1045,14 +1045,14 @@ bool AudacityApp::OnInit()
    // AColor depends on theTheme.
    AColor::Init(); 
 
-   /* On Unix systems, the default temp dir is in /tmp. */
    /* Search path (for plug-ins, translations etc) is (in this order):
       * The AUDACITY_PATH environment variable
       * The current directory
       * The user's .audacity-files directory in their home directory
       * The "share" and "share/doc" directories in their install path */
    #ifdef __WXGTK__
-   defaultTempDir.Printf(wxT("/tmp/audacity-%s"), wxGetUserId().c_str());
+   /* On Unix systems, the default temp dir is in /var/tmp. */
+   defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
    
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
    if (pathVar != wxT(""))
