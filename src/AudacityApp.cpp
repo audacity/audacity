@@ -1058,18 +1058,21 @@ bool AudacityApp::OnInit()
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
-   AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
-                                            home.c_str()),
-                           audacityPathList);
    #ifdef AUDACITY_NAME
-      AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
+     AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
+                                            home.c_str(), wxT(AUDACITY_NAME)),
+                              audacityPathList);
+     AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
                                                wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
                               audacityPathList);
       AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/%s"),
                                                wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
                               audacityPathList);
    #else //AUDACITY_NAME
-      AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
+     AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
+                                              home.c_str()),
+                              audacityPathList);
+    AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
                                                wxT(INSTALL_PREFIX)),
                               audacityPathList);
       AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/audacity"),
