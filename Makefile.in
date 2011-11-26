@@ -132,10 +132,10 @@ uninstall-extra-data:
 uninstall-lrdf-data:
 	rm -f $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf/ladspa.rdfs
 
-help/audacity.1.gz:
-	# gzipping the file this way prevents audacity.1 from getting deleted
+help/audacity.1.gz: help/audacity.1
 	cat help/audacity.1 | gzip -9 > help/audacity.1.gz
-
+# gzipping the file this way prevents audacity.1 from getting deleted
+	
 dox: audacity.dox
 	doxygen audacity.dox
 
