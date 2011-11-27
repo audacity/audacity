@@ -1,5 +1,5 @@
 Compiling Audacity(R) for Microsoft Windows(TM)
-copyright (c) 1999-2010 Audacity Team
+copyright (c) 1999-2011 Audacity Team
 
 Authors:
   Asger Ottar Alstrup
@@ -14,7 +14,7 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This version is currently accurate for Audacity version 1.3.13.
+This version is currently accurate for Audacity version 1.3.14.
 If you find the advice here inaccurate or incomplete, please
 e-mail feedback@audacityteam.org .
 ========================================================================
@@ -44,7 +44,7 @@ attempting to compile Audacity, or nothing will work!
 
 wxWidgets is available at "http://www.wxwidgets.org/".
 
-Audacity 1.3.13 requires wxWidgets 2.8.11.
+Audacity 1.3.14 requires wxWidgets 2.8.12.
 
 To build on Windows only, download the wxMSW package
 (installer or zip).
@@ -59,34 +59,35 @@ build it.
 
 For wxWidgets' instructions on compilation 
 (and details about static versus dll linkage), see 
-"C:\wxWidgets-2.8.11\docs\msw\install.txt". 
+"C:\wxWidgets-2.8.12\docs\msw\install.txt". 
 Note therein that wx_dll.dsw adds the dependencies to
 force the correct build order for DLLs, which wx.dsw
 does not. Because of this, wx_dll.dsw doesn't work for
 static libraries.
 
 
-1. Open "C:\wxWidgets-2.8.11\build\msw\wx_dll.dsw" with 
+1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
    Visual Studio 2008 (for VC9). 
    Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
    does not have the correct dependencies for the DLL builds.
    When you open wx_dll.dsw, Visual Studio will prompt whether
    to convert. Click "Yes To All". Next time you open a Visual
    Studio session, you can avoid this prompt by opening 
-   "C\wxWidgets-2.8.11\build\msw\wx_dll.sln" instead of wx_dll.dsw.
+   "C\wxWidgets-2.8.12\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
 2. If you want to use the accessibility features, we have modified a
    couple of the wxWidgets files. Rather than provide a patch, we 
-   store the modified files in SVN, and you can replace the 
-   corresponding wxWidgets files. 
+   store the modified files in the Audacity code repository, and you 
+   can replace the corresponding wxWidgets files. 
+
    In "audacity\win\wxWidgets_additions" are one .cpp and one .h file. 
    You may want to make backups of the wxWidgets originals of these, 
    in case you also build without these accessibility features. 
 
-   * Copy access.cpp to "C:\wxWidgets-2.8.11\src\msw\ole\". 
+   * Copy access.cpp to "C:\wxWidgets-2.8.12\src\msw\ole\". 
 
-   * Copy setup.h to "C:\wxWidgets-2.8.11\include\wx\msw\".
+   * Copy setup.h to "C:\wxWidgets-2.8.12\include\wx\msw\".
 
    Audacity releases are built with these accessibility features.
 
@@ -139,9 +140,9 @@ MSVC++ STEP 4:  Set wxWidgets location for Audacity
 Before you can start the build process, you must update the
 project settings to tell Visual C++ where to find wxWidgets.
 There are three settings that need changing:
-    1.  Include Directory (e.g., "C:\wxWidgets-2.8.11\include")
-    2.  Resource Directory (e.g., "C:\wxWidgets-2.8.11\include")
-    3.  Library Directory (e.g., "C:\wxWidgets-2.8.11\lib")
+    1.  Include Directory (e.g., "C:\wxWidgets-2.8.12\include")
+    2.  Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
+    3.  Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
 
 Fortunately, this is parameterized, using a Windows system 
 environment variable. There are various ways to set these, so 
@@ -150,7 +151,7 @@ environment variable WXWIN, set to the top-level directory
 where you installed wxWidgets. For example, 
 in your "autoexec.bat" file, you might have a line:
 
-   set WXWIN=C:\wxWidgets-2.8.11
+   set WXWIN=C:\wxWidgets-2.8.12
 
 Note that you don't want a trailing backslash on that.
 
@@ -163,7 +164,7 @@ In the Audacity project file, there are declarations like
 
    $(WXWIN)\include
 
-that get interpreted as, e.g., "C:\wxWidgets-2.8.11\include".
+that get interpreted as, e.g., "C:\wxWidgets-2.8.12\include".
 
 Once you have set the WXWIN environment variable correctly, 
 the Audacity project file's declarations will do the rest.
@@ -285,7 +286,7 @@ above. You can copy them to your Windows PATH, or more simply,
 to the same directory as the executable. If you are building 
 Audacity for public release using the *.iss installer script, 
 you must copy them to the executable directory. The DLLs required 
-are at "C:\wxWidgets-2.8.11\lib\vc_dll":
+are at "C:\wxWidgets-2.8.12\lib\vc_dll":
 
 	wxbase28*_net_vc_custom.dll
 	wxbase28*_vc_custom.dll
@@ -433,7 +434,7 @@ Cygwin STEP 1:  Installing Cygwin
 Cygwin STEP 2:  Download and install wxWidgets
 ---------------------------------------
 
-1.  Go to http://www.wxwidgets.org/ and download wxWidgets v2.8.11 or greater.  Make
+1.  Go to http://www.wxwidgets.org/ and download wxWidgets v2.8.12 or greater.  Make
 sure you download the "wxAll" package that contains source code for all ports.  The
 Win32 port will not work for compiling Audacity, since it was compiled and installed
 to work with MS Visual C++.
