@@ -57,14 +57,6 @@ MSVC++ STEP 2:  Build wxWidgets
 When you have downloaded and installed wxWidgets, you must
 build it. 
 
-For wxWidgets' instructions on compilation 
-(and details about static versus dll linkage), see 
-"C:\wxWidgets-2.8.12\docs\msw\install.txt". 
-Note therein that wx_dll.dsw adds the dependencies to
-force the correct build order for DLLs, which wx.dsw
-does not. Because of this, wx_dll.dsw doesn't work for
-static libraries.
-
 
 1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
    Visual Studio 2008 (for VC9). 
