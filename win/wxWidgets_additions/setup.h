@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name:        include/wx/msw/setup.h
+// Name:        wx/msw/setup.h
 // Purpose:     Configuration for the library
 // Author:      Julian Smart
 // Modified by:
@@ -1054,7 +1054,7 @@
 // ----------------------------------------------------------------------------
 
 // wxSingleInstanceChecker class allows to verify at startup if another program
-// instance is running (available only under Win32).
+// instance is running.
 //
 // Default is 1
 //

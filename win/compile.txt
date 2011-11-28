@@ -54,8 +54,8 @@ To build on Windows only, download the wxMSW package
 MSVC++ STEP 2:  Build wxWidgets
 ------------------------
 
-When you have downloaded and installed wxWidgets, you must
-build it. 
+When you have downloaded and installed wxWidgets, the next step
+is to build it. 
 
 
 1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
@@ -68,16 +68,14 @@ build it.
    "C\wxWidgets-2.8.12\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-2. If you want to use the accessibility features, we have modified a
-   couple of the wxWidgets files. Rather than provide a patch, we 
-   store the modified files in the Audacity code repository, and you 
+2. If you want to use the accessibility features, we have modified 
+   one of the wxWidgets files. Rather than provide a patch, we 
+   store any modified files in the Audacity code repository, and you 
    can replace the corresponding wxWidgets files. 
 
-   In "audacity\win\wxWidgets_additions" are one .cpp and one .h file. 
-   You may want to make backups of the wxWidgets originals of these, 
+   In "audacity\win\wxWidgets_additions" is one .h file. 
+   You may want to make backups of the wxWidgets original of it, 
    in case you also build without these accessibility features. 
-
-   * Copy access.cpp to "C:\wxWidgets-2.8.12\src\msw\ole\". 
 
    * Copy setup.h to "C:\wxWidgets-2.8.12\include\wx\msw\".
 
