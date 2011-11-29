@@ -4142,10 +4142,7 @@ void AudacityProject::OnSplitLabelsToTracks()
       n = iter.Next();
    }
 
-   // one new track for every label, from that label to the next
-   
-   TrackList newTracks;
-
+   wxASSERT(label); // per Vigilant Sentry report on possible null deref, FIX-ME: Report error or validate?
    for(int i = 0; i < label->GetNumLabels(); i++) {
       wxString name = label->GetLabel(i)->title;
       double begin = label->GetLabel(i)->t;
