@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-07-18 04:15+0100\n"
-"PO-Revision-Date: 2011-10-07 16:50-0000\n"
+"PO-Revision-Date: 2011-11-29 08:03-0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -335,8 +335,8 @@ msgstr ""
 msgid "Do you still want to start Audacity?"
 msgstr "Досі бажаєте запустити Audacity?"
 
-#: AudacityApp.cpp:1469
-msgid "Error locking temporary folder"
+#: AudacityApp.cpp:1578
+msgid "Error Locking Temporary Folder"
 msgstr "Помилка при блокуванні теки тимчасових фалів"
 
 #: AudacityApp.cpp:1507
@@ -947,19 +947,19 @@ msgstr "Збереження файлів даних проекту"
 msgid "Cleaning up cache directories"
 msgstr "Очищення тек кешування"
 
-#: DirManager.cpp:571
-msgid "mkdir in DirManager::MakeBlockFilePath failed.\n"
-msgstr "Спроба створення каталогу у DirManager::MakeBlockFilePath зазнала невдачі.\n"
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
+msgstr "Спроба створення каталогу у DirManager::MakeBlockFilePath зазнала невдачі."
 
-#: DirManager.cpp:601
+#: DirManager.cpp:614
 #, c-format
 msgid ""
-"Audacity found an orphan blockfile: %s. \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
+"Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
 msgstr ""
 "Audacity знайшов незв'язаний блок-файл %s. \n"
 "Збережіть та перезавантажте проект, щоб здійснити повну перевірку \n"
-"проекту.\n"
+"проекту."
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
@@ -993,16 +993,33 @@ msgstr "Не вдалося перейменувати «%s» на «%s»."
 msgid "Changed block %s to new alias name\n"
 msgstr "Блок %s змінено за новою назвою\n"
 
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr "Перевіркою проекту виявлено помилкові мітки послідовності."
+
+#: DirManager.cpp:1507
+msgid "Close project immediately with no changes"
+msgstr "Закрити проект негайно без змін"
+
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "Продовжити роботу з виправленими відповідно до журналу дій даними і виконати пошук інших помилок. Проект буде збережено у поточному стані, якщо ви не натиснете кнопку «Закрити проект негайно» у відповідь на подальші сповіщення про помилки."
+
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr "Попередження: проблеми під час читання міток послідовності"
+
 #: DirManager.cpp:1393
 #: DirManager.cpp:1686
 msgid "Inspecting project file data"
 msgstr "Вивчення даних файла проекту"
 
-#: DirManager.cpp:1434
+#: DirManager.cpp:1410
 #, c-format
 msgid ""
-"Project check detected %d missing external audio \n"
-"file(s) ('aliased files'). There is no way for Audacity \n"
+"Project check of \"%s\" folder \n"
+"detected %d missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -1012,7 +1029,7 @@ msgid ""
 "Note that for the second option, the waveform \n"
 "may not show silence."
 msgstr ""
-"Перевіркою проекту не виявлено %d зовнішніх звукових \n"
+"Перевіркою теки «%s» не виявлено %d зовнішніх звукових \n"
 "файлів («приєднаних файлів»). Audacity не зможе відновити \n"
 "дані цих файлів у автоматичному режимі. \n"
 "\n"
@@ -1023,19 +1040,14 @@ msgstr ""
 "Зауважте, що у разі вибору другого варіанта, на панелі форми \n"
 "хвилі може бути не показано ділянки тиші."
 
-#: DirManager.cpp:1507
-msgid "Close project immediately with no changes"
-msgstr "Закрити проект негайно без змін"
-
 #: DirManager.cpp:1446
 #: DirManager.cpp:1563
 msgid "Treat missing audio as silence (this session only)"
 msgstr "Вважати пропущені звукові дані тишею (тільки для цього сеансу)"
 
-#: DirManager.cpp:1447
-#: DirManager.cpp:1564
-msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Замінити пропущені дані тишею (негайне і незворотне)"
+#: DirManager.cpp:1424
+msgid "Replace missing audio with silence (permanent immediately). This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "Замінити звукові фрагменти, яких не вистачає, тишею (негайно і остаточно). Проект буде збережено у поточному стані, якщо ви не натиснете кнопку «Закрити проект негайно» у відповідь на подальші сповіщення про помилки."
 
 #: DirManager.cpp:1450
 msgid "Warning - Missing Aliased File(s)"
@@ -1045,14 +1057,15 @@ msgstr "Попередження: не знайдено приєднаних ф�
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr "   Інструмент перевірки проекту замінив пропущені приєднані файли тишею."
 
-#: DirManager.cpp:1441
+#: DirManager.cpp:1477
 #, c-format
 msgid ""
-"Project check detected %d missing alias (.auf) \n"
-"blockfile(s). Audacity can fully regenerate these \n"
-"files from the current audio in the project."
+"Project check of \"%s\" folder \n"
+"detected %d missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
 msgstr ""
-"Перевірка проекту виявила %d пропущених приєднаних файлів (auf)\n"
+"Перевірка теки «%s» виявила %d пропущених приєднаних файлів (auf)\n"
 "Audacity може повторно створити приєднані файли з \n"
 "аудіоданих у поточному проекті."
 
@@ -1078,13 +1091,14 @@ msgstr "Попередження: не вистачає приєднаних ф�
 msgid "   Project check regenerated missing alias summary file(s)."
 msgstr "   Інструментом перевірки проекту було повторно створено незнайдені приєднані файли резюме."
 
-#: DirManager.cpp:1550
+#: DirManager.cpp:1528
 #, c-format
 msgid ""
-"Project check detected %d missing audio data \n"
-"(.au) blockfile(s), probably due to a bug, system \n"
-"crash, or accidental deletion. There is no way for \n"
-"Audacity to recover these missing files automatically. \n"
+"Project check of \"%s\" folder \n"
+"detected %d missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
 "you can try to find and restore the missing files \n"
@@ -1093,8 +1107,8 @@ msgid ""
 "Note that for the second option, the waveform \n"
 "may not show silence."
 msgstr ""
-"Інструментом перевірки проекту не було виявлено %d блок-файлів \n"
-"звукових даних (.au). Ймовірною причиною може бути вада у \n"
+"Інструментом перевірки теки «%s» не було виявлено %d блок-файлів \n"
+"звукових даних (au). Ймовірною причиною може бути вада у \n"
 "програмі, аварія у системі або випадкове вилучення даних. \n"
 "Audacity не зможе відновити дані у автоматичному режимі. \n"
 "\n"
@@ -1105,37 +1119,46 @@ msgstr ""
 "Зауважте, що у разі вибору другого варіанта, на панелі форми \n"
 "хвилі може бути не показано ділянки тиші."
 
-#: DirManager.cpp:1567
-msgid "Warning - Missing Audio Data Blockfile(s)"
+#: DirManager.cpp:1447
+#: DirManager.cpp:1564
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr "Замінити пропущені дані тишею (негайне і незворотне)"
+
+#: DirManager.cpp:1546
+msgid "Warning - Missing Audio Data Block File(s)"
 msgstr "Попередження: не вистачає блок-файлів звукових даних"
 
-#: DirManager.cpp:1589
-msgid "   Project check replaced missing audio data blockfile(s) with silence."
+#: DirManager.cpp:1568
+msgid "   Project check replaced missing audio data block file(s) with silence."
 msgstr "   Інструмент перевірки проекту замінив незнайдені блок-файли звукових даних тишею."
 
-#: DirManager.cpp:1605
-msgid "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
+#: DirManager.cpp:1584
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
 msgstr "   Інструментом перевірки проекту проігноровано зайві блок-файли. Їх буде вилучено під час збереження проекту."
 
-#: DirManager.cpp:1552
+#: DirManager.cpp:1590
 #, c-format
 msgid ""
-"Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug."
+"Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
 msgstr ""
-"Перевірка проекту виявила %d нез'єднані блок-файли. Ці файли\n"
-"не використовуються і ймовірно залишилися після краху або іншої помилки."
+"Перевіркою проекту у теці «%s» виявлено \n"
+"%d зайвих блок-файлів. Ці файли не використовуються \n"
+"у поточному проекті, але можуть належати іншим проектам. \n"
+"Ці файли не зашкодять роботі і займають небагато місця."
 
 #: DirManager.cpp:1506
 msgid "Continue without deleting; ignore the extra files this session"
 msgstr "Продовжити без вилучення; ігнорувати зайві файли цього сеансу"
 
-#: DirManager.cpp:1559
-msgid "Delete orphan files permanently"
-msgstr "Вилучити залишкові файли остаточно"
+#: DirManager.cpp:1601
+msgid "Delete orphan files (permanent immediately)"
+msgstr "Вилучити зайві файли (негайно і остаточно)"
 
-#: DirManager.cpp:1622
-msgid "Warning - Orphan Blockfile(s)"
+#: DirManager.cpp:1604
+msgid "Warning - Orphan Block File(s)"
 msgstr "Попередження: зайві блок-файли"
 
 #: DirManager.cpp:1655
@@ -1165,19 +1188,19 @@ msgstr "Попередження: проблеми з автоматичним �
 msgid "Missing aliased audio file: '%s'"
 msgstr "Не знайдено приєднаного файла звукових даних: «%s»"
 
-#: DirManager.cpp:1727
+#: DirManager.cpp:1710
 #, c-format
-msgid "Missing alias (.auf) blockfile: '%s'"
+msgid "Missing alias (.auf) block file: '%s'"
 msgstr "Не вистачає приєднаного (.auf) блок-файла: «%s»"
 
-#: DirManager.cpp:1751
+#: DirManager.cpp:1734
 #, c-format
-msgid "Missing data blockfile: '%s'"
-msgstr "Не вистачає блок-файла: «%s»"
+msgid "Missing data block file: '%s'"
+msgstr "Не вистачає блок-файла даних: «%s»"
 
-#: DirManager.cpp:1778
+#: DirManager.cpp:1776
 #, c-format
-msgid "Orphan blockfile: '%s'"
+msgid "Orphan block file: '%s'"
 msgstr "Незв'язаний блок-файл: «%s»"
 
 #: DirManager.cpp:1735
@@ -3375,12 +3398,11 @@ msgstr "Виберіть один чи більше звукових файлі�
 msgid "%s is already open in another window."
 msgstr "%s вже відкрито у іншому вікні."
 
-#: AudacityApp.cpp:746
-#: Project.cpp:2193
-#: Project.cpp:2318
-#: Project.cpp:2502
-#: Project.cpp:2667
-msgid "Error opening project"
+#: Project.cpp:2185
+#: Project.cpp:2350
+#: Project.cpp:2570
+#: Project.cpp:2749
+msgid "Error Opening Project"
 msgstr "Помилка під час відкриття файла проекту"
 
 #. i18n-hint: This string is a label in the file type filter in the open
@@ -3392,35 +3414,35 @@ msgstr "Помилка під час відкриття файла проект�
 msgid "Audacity projects"
 msgstr "Проекти Audacity"
 
-#: Project.cpp:2236
-#: Project.cpp:2740
+#: Project.cpp:2250
 #, c-format
 msgid ""
-"This file was saved by Audacity %s, a much\n"
-"older version.  The format has changed.\n"
+"This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
-"Audacity could corrupt the file in opening\n"
-"it, so you must back it up first.\n"
+"Audacity can try to open and save this file, but saving it in this \n"
+"version will then prevent any 1.2 or earlier version opening it. \n"
+"\n"
+"Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
 msgstr ""
-"Цей файл було збережено за допомогою Audacity %s,\n"
-"давнішої версії Audacity.  Формат змінився.\n"
-"Audacity може пошкодити файл у спробі\n"
-"відкрити його. Задля безпеки зробіть\n"
-"спочатку резервну копію проекту.\n"
+"Цей файл було збережено за допомогою Audacity версії %s. З того часу формат даних було змінено. \n"
 "\n"
-"Все одно бажаєте відкрити цей файл\n"
-"зараз же?"
+"Audacity може спробувати відкрити і зберегти цей файл, але збереженими даними \n"
+"вже не можна буде скористатися для роботи у версії 1.2 та попередніх версіях. \n"
+"\n"
+"Audacity може пошкодити дані у процесі відкриття, отже вам варто створити резервну копію даних. \n"
+"\n"
+"Відкрити файл зараз?"
 
 #: Project.cpp:2237
 msgid "1.0 or earlier"
 msgstr "1.0 або ранішою"
 
-#: Project.cpp:2243
-#: Project.cpp:2752
-msgid "Opening old project file"
-msgstr "Відкриття старого файла проекту"
+#: Project.cpp:2265
+#: Project.cpp:2831
+msgid "Warning - Opening Old Project File"
+msgstr "Попередження: відкриття застарілого файла проекту"
 
 #: Project.cpp:2267
 msgid ""
@@ -3434,9 +3456,14 @@ msgstr ""
 "\n"
 "Будь ласка, спробуйте відкрити справжній файл проекту Audacity."
 
-#: Project.cpp:2268
-msgid "Backup file detected"
-msgstr "Виявлено файл резервної копії"
+#: Project.cpp:2300
+msgid "Warning - Backup File Detected"
+msgstr "Попередження: виявлено файл резервної копії"
+
+#: Project.cpp:2314
+#: xml/XMLWriter.cpp:329
+msgid "Error Opening File"
+msgstr "Помилка під час відкриття файла"
 
 #: Project.cpp:2282
 #: Project.cpp:2290
@@ -3453,8 +3480,8 @@ msgstr ""
 "Можливо файл є некоректним або пошкодженим: \n"
 "%s"
 
-#: Project.cpp:2297
-msgid "Error opening file or project"
+#: Project.cpp:2329
+msgid "Error Opening File or Project"
 msgstr "Помилка під час відкриття файла або проекту"
 
 #: Project.cpp:2317
@@ -3496,23 +3523,6 @@ msgstr ""
 msgid "Can't open project file"
 msgstr "Не вдається відкрити файл проекту"
 
-#: Project.cpp:2747
-#, c-format
-msgid ""
-"This file was saved by Audacity %s.\n"
-"\n"
-"Audacity can open and save this file, but saving it in this version\n"
-"will then prevent any 1.2 or earlier version opening it.\n"
-"\n"
-"Open this file now?"
-msgstr ""
-"Цей файл було збережено у Audacity %s.\n"
-"\n"
-"Audacity може відкрити і зберегти цей файл, але збереження файла у цій версії\n"
-"призведе до втрати можливості відкрити файл у 1.2 та попередніх версіях програми.\n"
-"\n"
-"Відкрити цей файл?"
-
 #: Project.cpp:2945
 msgid ""
 "Your project is now empty.\n"
@@ -3534,8 +3544,8 @@ msgstr ""
 "\n"
 "Все одно зберегти?"
 
-#: Project.cpp:2946
-msgid "Warning empty project"
+#: Project.cpp:3044
+msgid "Warning - Empty Project"
 msgstr "Попередження про порожній проект"
 
 #: Project.cpp:3090
@@ -3547,9 +3557,8 @@ msgstr ""
 "Не вдалося зберегти проект. Не знайдено відповідного каталогу. Спробуйте \n"
 "створити каталог «%s» перед зберіганням проекту з цією назвою."
 
-#: Project.cpp:3057
-#: Project.cpp:3083
-msgid "Error saving project"
+#: Project.cpp:3446
+msgid "Error Saving Project"
 msgstr "Помилка під час спроби збереження файла проекту"
 
 #: Project.cpp:3055
@@ -3583,9 +3592,9 @@ msgstr "Імпортовано файл «%s»"
 msgid "Import"
 msgstr "Імпорт"
 
-#: Project.cpp:3353
-msgid "Error importing"
-msgstr "Помилка при імпортуванні"
+#: Project.cpp:3447
+msgid "Error Importing"
+msgstr "Помилка під час спроби імпортування"
 
 #: Project.cpp:3401
 msgid "Save Speech As:"
@@ -3634,10 +3643,6 @@ msgstr ""
 #: Project.cpp:3419
 msgid "Save Project As..."
 msgstr "Зберегти проект як…"
-
-#: Project.cpp:3446
-msgid "Error Saving Project"
-msgstr "Помилка під час спроби збереження файла проекту"
 
 #: Project.cpp:3446
 msgid ""
@@ -3702,8 +3707,8 @@ msgstr "Імпортування завершено. Виконується по
 msgid "New Project"
 msgstr "Створити проект"
 
-#: Project.cpp:4300
-msgid "Error writing autosave file"
+#: Project.cpp:4398
+msgid "Error Writing Autosave File"
 msgstr "Помилка під час запису файла автозбереження"
 
 #: Project.cpp:4315
@@ -3944,11 +3949,18 @@ msgstr "Високі доріжки"
 msgid "Choose a location to save screenshot images"
 msgstr "Оберіть адресу, за якою слід зберігати знімки"
 
-#: Sequence.cpp:830
-#: Sequence.cpp:840
-#: Sequence.cpp:847
-msgid "Gap detected in project file\n"
-msgstr "У файлі проекту виявлено прогалину\n"
+#: Sequence.cpp:968
+#, c-format
+msgid ""
+"Sequence has block file with length %s > mMaxSamples %s.\n"
+"Truncating to mMaxSamples."
+msgstr ""
+"У послідовності є блок-файл з тривалістю %s > mMaxSamples %s.\n"
+"Дані обрізано до mMaxSamples."
+
+#: Sequence.cpp:971
+msgid "Warning - Length in Writing Sequence"
+msgstr "Попередження: тривалість у послідовності запису"
 
 #: Sequence.cpp:1335
 msgid "Memory allocation failed -- NewSamples"
@@ -4084,16 +4096,16 @@ msgstr "Не вдалося відкрити файл зі списком жан
 msgid "Load Metadata As:"
 msgstr "Завантажити метадані як:"
 
-#: Tags.cpp:1121
-msgid "Error loading metadata"
+#: Tags.cpp:1089
+msgid "Error Loading Metadata"
 msgstr "Помилка під час завантаження метаданих"
 
 #: Tags.cpp:1150
 msgid "Save Metadata As:"
 msgstr "Зберегти метадані як:"
 
-#: Tags.cpp:1205
-msgid "Error saving tags file"
+#: Tags.cpp:1173
+msgid "Error Saving Tags File"
 msgstr "Помилка під час спроби запису файла міток"
 
 #: Theme.cpp:638
@@ -5745,12 +5757,12 @@ msgstr "Не вистачає EQCurves.xml і EQDefaultCurves.xml"
 msgid "unnamed"
 msgstr "Без назви"
 
-#: effects/Equalization.cpp:1011
-msgid "Error loading EQ curve"
+#: effects/Equalization.cpp:1024
+msgid "Error Loading EQ Curve"
 msgstr "Помилка під час завантаження кривої EQ"
 
-#: effects/Equalization.cpp:1076
-msgid "Error saving equalization curves"
+#: effects/Equalization.cpp:1089
+msgid "Error Saving Equalization Curves"
 msgstr "Помилка під час спроби збереження кривих вирівнювання"
 
 #. i18n-hint: && in here is an escape character to get a single &
@@ -6978,8 +6990,8 @@ msgid "Load VST Program:"
 msgstr "Завантажити програму VST:"
 
 #: effects/VST/VSTEffect.cpp:613
-msgid "Error loading program"
-msgstr "Помилка під час спроби завантаження програми"
+msgid "Error Loading VST Program"
+msgstr "Помилка під час завантаження програми VST"
 
 #: effects/VST/VSTEffect.cpp:629
 msgid "Save VST Program As:"
@@ -9448,16 +9460,16 @@ msgstr "Повторити"
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Виберіть XML-файл, що містить комбінації клавіш Audacity…"
 
-#: prefs/KeyConfigPrefs.cpp:285
-msgid "Error loading keyboard shortcuts"
+#: prefs/KeyConfigPrefs.cpp:287
+msgid "Error Loading Keyboard Shortcuts"
 msgstr "Помилка при завантаженні комбінацій клавіш"
 
 #: prefs/KeyConfigPrefs.cpp:298
 msgid "Export Keyboard Shortcuts As:"
 msgstr "Експортувати комбінації клавіш як:"
 
-#: prefs/KeyConfigPrefs.cpp:324
-msgid "Error saving keyboard shortcuts"
+#: prefs/KeyConfigPrefs.cpp:326
+msgid "Error Saving Keyboard Shortcuts"
 msgstr "Помилка при збереженні комбінацій клавіш"
 
 #: prefs/KeyConfigPrefs.cpp:386
@@ -11103,14 +11115,14 @@ msgid "Could not load file: \"%s\""
 msgstr "Не вдалося завантажити файл: «%s»"
 
 #: xml/XMLWriter.cpp:348
-msgid "Error flushing file"
-msgstr "Помилка під час спроби синхронізації файла"
+msgid "Error Flushing File"
+msgstr "Помилка під час спроби спорожнити файл"
 
 #: xml/XMLWriter.cpp:353
-msgid "Error closing file"
-msgstr "Помилка під час спроби закрити файл"
+msgid "Error Closing File"
+msgstr "Помилка під час закриття файла"
 
 #: xml/XMLWriter.cpp:363
-msgid "Error writing to file"
-msgstr "Помилка під час спроби запису до файла"
+msgid "Error Writing to File"
+msgstr "Помилка під час спроби запису файла"
 
