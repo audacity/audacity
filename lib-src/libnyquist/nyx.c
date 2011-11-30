@@ -1520,7 +1520,7 @@ void get_xlisp_path(char *p, long p_max)
    }
 
    strncpy(p, paths, p_max);
-   p[p_max] = 0;
+   p[p_max-1] = 0;
 }
 #endif
 
