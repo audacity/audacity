@@ -60,10 +60,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
 #endif
    AddCredit(wxT("Roger Dannenberg"), roleTeamDeveloper);
-   AddCredit(wxT("Al Dimond"), roleTeamDeveloper);
-   AddCredit(wxT("Ruslan Ijbulatov"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
-   AddCredit(wxT("Dominic Mazzoni"), roleTeamDeveloper);
+   AddCredit(wxT("Leland Lucius"), roleTeamDeveloper);
    AddCredit(wxT("Martyn Shaw"), roleTeamDeveloper);
 
    AddCredit(wxT("Gale Andrews"), roleTeamSupport);
@@ -80,7 +78,7 @@ void AboutDialog::CreateCreditsList()
  
    AddCredit(wxT("Matt Brubeck"), roleEmeritusDeveloper);
    AddCredit(wxT("Joshua Haberman"), roleEmeritusDeveloper);
-   AddCredit(wxT("Leland Lucius"), roleEmeritusDeveloper);
+   AddCredit(wxT("Dominic Mazzoni"), roleEmeritusDeveloper);
    AddCredit(wxT("Markus Meyer"), roleEmeritusDeveloper);
    AddCredit(wxT("Monty Montgomery"), roleEmeritusDeveloper);
    AddCredit(wxT("Shane Mueller"), roleEmeritusDeveloper);
@@ -92,8 +90,10 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
+   AddCredit(wxT("Al Dimond"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
    AddCredit(wxT("Daniel Horgan"), roleContributor);
+   AddCredit(wxT("Ruslan Ijbulatov"), roleContributor);
    AddCredit(wxT("Arun Kishore"), roleContributor);
    AddCredit(wxT("Paul Livesey"), roleContributor);
    AddCredit(wxT("Harvey Lubin"), roleContributor);
