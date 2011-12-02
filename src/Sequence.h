@@ -136,7 +136,7 @@ class Sequence: public XMLTagHandler {
 
    sampleFormat GetSampleFormat() const;
    bool SetSampleFormat(sampleFormat format);
-   bool ConvertToSampleFormat(sampleFormat format);
+   bool ConvertToSampleFormat(sampleFormat format, bool* pbChanged);
 
    //
    // Retrieving summary info

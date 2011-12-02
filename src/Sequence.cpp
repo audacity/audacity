@@ -86,7 +86,7 @@ Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
 
 Sequence::~Sequence()
 {
-   for (unsigned int i = 0; i < mBlock->Count(); i++) {
+   for (unsigned int i = 0; i < mBlock->GetCount(); i++) {
       if (mBlock->Item(i)->f)
          mDirManager->Deref(mBlock->Item(i)->f);
       delete mBlock->Item(i);
@@ -108,7 +108,7 @@ sampleCount Sequence::GetIdealBlockSize() const
 
 bool Sequence::Lock()
 {
-   for (unsigned int i = 0; i < mBlock->Count(); i++)
+   for (unsigned int i = 0; i < mBlock->GetCount(); i++)
       mBlock->Item(i)->f->Lock();
 
    return true;
@@ -116,7 +116,7 @@ bool Sequence::Lock()
 
 bool Sequence::CloseLock()
 {
-   for (unsigned int i = 0; i < mBlock->Count(); i++)
+   for (unsigned int i = 0; i < mBlock->GetCount(); i++)
       mBlock->Item(i)->f->CloseLock();
 
    return true;
@@ -124,7 +124,7 @@ bool Sequence::CloseLock()
 
 bool Sequence::Unlock()
 {
-   for (unsigned int i = 0; i < mBlock->Count(); i++)
+   for (unsigned int i = 0; i < mBlock->GetCount(); i++)
       mBlock->Item(i)->f->Unlock();
 
    return true;
@@ -137,59 +137,126 @@ sampleFormat Sequence::GetSampleFormat() const
 
 bool Sequence::SetSampleFormat(sampleFormat format)
 {
-   if (mBlock->Count() > 0 || mNumSamples > 0)
+   if (mBlock->GetCount() > 0 || mNumSamples > 0)
       return false;
 
    mSampleFormat = format;
    return true;
 }
 
-bool Sequence::ConvertToSampleFormat(sampleFormat format)
+bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
 {
+   wxASSERT(pbChanged);
+   *pbChanged = false;
+
+   // Caller should check this no-change case before calling; we ignore it here.
    if (format == mSampleFormat)
       return true;
 
-   if (mBlock->Count() == 0) {
+   if (mBlock->GetCount() == 0) 
+   {
       mSampleFormat = format;
+      *pbChanged = true;
       return true;
    }
 
    sampleFormat oldFormat = mSampleFormat;
    mSampleFormat = format;
 
-   for (unsigned int i = 0; i < mBlock->Count(); i++) {
-      SeqBlock *b = mBlock->Item(i);
-      BlockFile *oldBlock = b->f;
-      sampleCount len = b->f->GetLength();
-      wxASSERT(len <= mMaxSamples); // FIX-ME: Want to enforce mMaxSamples in this case, or adjust it?
+   sampleCount oldMaxSamples = mMaxSamples;
+   // These are the same calculations as in the constructor.
+   mMinSamples = sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2;
+   mMaxSamples = mMinSamples * 2;
 
-      // FIX-ME: So we do nothing if the block is an alias? Shouldn't the user be alerted?
-      if (!oldBlock->IsAlias()) {
-         BlockFile *newBlock;
+   BlockArray* pNewBlockArray = new BlockArray();
+   // Use the ratio of old to new mMaxSamples to make a reasonable guess at allocation.
+   pNewBlockArray->Alloc(mBlock->GetCount() * ((float)oldMaxSamples / (float)mMaxSamples));
 
-         samplePtr buffer1 = NewSamples(len, oldFormat);
-         samplePtr buffer2 = NewSamples(len, mSampleFormat);
+   bool bSuccess = true;
+   for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++) 
+   {
+      SeqBlock* pOldSeqBlock = mBlock->Item(i);
+      BlockFile* pOldBlockFile = pOldSeqBlock->f;
 
-         oldBlock->ReadData(buffer1, oldFormat, 0, len);
-         CopySamples(buffer1, oldFormat,
-                     buffer2, mSampleFormat, len);
-         newBlock = mDirManager->NewSimpleBlockFile(buffer2, len, mSampleFormat);
+      if (pOldBlockFile->IsAlias()) 
+      {
+         // No conversion of aliased data. 
+         //vvvvv Should the user be alerted, as we're not actually converting the aliased file? 
+         //   James (2011-12-01, offlist) believes this is okay because we are assuring 
+         //   the user we'll do the format conversion if we turn this into a non-aliased block.
+         //   TO-DO: Confirm that.
+         pNewBlockArray->Add(pOldSeqBlock);
+      }
+      else
+      {
+         sampleCount len = pOldSeqBlock->f->GetLength();
+         samplePtr bufferOld = NewSamples(len, oldFormat);
+         samplePtr bufferNew = NewSamples(len, mSampleFormat);
 
-         mBlock->Item(i)->f = newBlock;
-         mDirManager->Deref(oldBlock);
+         bSuccess = (pOldBlockFile->ReadData(bufferOld, oldFormat, 0, len) > 0);
+         if (!bSuccess)
+            break;
 
-         DeleteSamples(buffer2);
-         DeleteSamples(buffer1);
+         CopySamples(bufferOld, oldFormat, bufferNew, mSampleFormat, len);
+
+         // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451, 
+         // using Blockify, allows (len < mMinSamples).
+         // This will happen consistently when going from more bytes per sample to fewer...
+         // This will create a block that's smaller than mMinSamples, which 
+         // shouldn't be allowed, but we agreed it's okay for now.
+         //vvvvv ANSWER-ME: Does this cause any bugs, or failures on write, elsewhere?
+         //    If so, need to special-case (len < mMinSamples) and start combining data 
+         //    from the old blocks... Oh no!
+
+         // Using Blockify will handle the cases where len > the new mMaxSamples. Previous code did not.
+         BlockArray* pSplitBlockArray = Blockify(bufferNew, len);
+         bSuccess = (pSplitBlockArray->GetCount() > 0);
+         if (bSuccess)
+         {
+            for (size_t j = 0; j < pSplitBlockArray->GetCount(); j++)
+            {
+               pSplitBlockArray->Item(j)->start += mBlock->Item(i)->start;
+               pNewBlockArray->Add(pSplitBlockArray->Item(j));
+            }
+            *pbChanged = true;
+         }
+         delete pSplitBlockArray;
+
+         DeleteSamples(bufferNew);
+         DeleteSamples(bufferOld);
       }
    }
 
-   return true;
+   if (bSuccess)
+   {
+      // Invalidate all the old block files.
+      for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++) 
+      {
+         SeqBlock* pOldSeqBlock = mBlock->Item(i);
+         mDirManager->Deref(pOldSeqBlock->f);
+         pOldSeqBlock->f = NULL; // ...so we don't delete the file when we delete mBlock, next.
+      }
+      delete mBlock;
+
+      // Replace with new blocks.
+      mBlock = pNewBlockArray;
+   }
+   else
+   {
+      delete pNewBlockArray; // Failed. Throw out the scratch array. 
+      *pbChanged = false;  // Revert overall change flag, in case we had some partial success in the loop.
+   }
+
+   //vvvvv bSuccess &= ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
+   ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
+   
+   return bSuccess;
 }
 
 bool Sequence::GetMinMax(sampleCount start, sampleCount len,
                          float * outMin, float * outMax) const
 {
-   if (len == 0 || mBlock->Count() == 0) {
+   if (len == 0 || mBlock->GetCount() == 0) {
       *outMin = float(0.0);
       *outMax = float(0.0);
       return true;
@@ -271,7 +338,7 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
                          float * outRMS) const
 {
    wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
-   if (len == 0 || mBlock->Count() == 0) {
+   if (len == 0 || mBlock->GetCount() == 0) {
       *outRMS = float(0.0);
       return true;
    }
@@ -338,7 +405,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0)
       return false;
 
-   int numBlocks = mBlock->Count();
+   int numBlocks = mBlock->GetCount();
    int b0 = FindBlock(s0);
    int b1 = FindBlock(s1);
 
@@ -426,14 +493,14 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
    BlockArray *srcBlock = src->mBlock;
    sampleCount addedLen = src->mNumSamples;
-   unsigned int srcNumBlocks = srcBlock->Count();
+   unsigned int srcNumBlocks = srcBlock->GetCount();
    int sampleSize = SAMPLE_SIZE(mSampleFormat);
 
    if (addedLen == 0 || srcNumBlocks == 0)
       return true;
 
    unsigned int b = FindBlock(s);
-   unsigned int numBlocks = mBlock->Count();
+   unsigned int numBlocks = mBlock->GetCount();
 
    if (numBlocks == 0 ||
        (s == mNumSamples && mBlock->Item(numBlocks-1)->f->GetLength() >= mMinSamples)) {
@@ -523,7 +590,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
            splitBlock->f->GetLength() - splitPoint);
 
       BlockArray *split = Blockify(sumBuffer, sum);
-      for (i = 0; i < split->Count(); i++) {
+      for (i = 0; i < split->GetCount(); i++) {
          split->Item(i)->start += splitBlock->start;
          newBlock->Add(split->Item(i));
          newNumBlocks++;
@@ -548,7 +615,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
                mSampleFormat, 0, srcFirstTwoLen);
 
       BlockArray *split = Blockify(leftBuffer, leftLen);
-      for (i = 0; i < split->Count(); i++) {
+      for (i = 0; i < split->GetCount(); i++) {
          split->Item(i)->start += splitBlock->start;
          newBlock->Add(split->Item(i));
          newNumBlocks++;
@@ -727,7 +794,7 @@ bool Sequence::AppendBlock(SeqBlock * b)
 unsigned int Sequence::GetODFlags()
 {
    unsigned int ret = 0;
-   for (unsigned int i = 0; i < mBlock->Count(); i++){
+   for (unsigned int i = 0; i < mBlock->GetCount(); i++){
       if(!mBlock->Item(i)->f->IsDataAvailable())
          ret = ret|((ODDecodeBlockFile*)mBlock->Item(i)->f)->GetDecodeType();
       else if(!mBlock->Item(i)->f->IsSummaryAvailable())
@@ -743,7 +810,7 @@ sampleCount Sequence::GetBestBlockSize(sampleCount start) const
    // sample.  The value returned will always be nonzero and will be no larger
    // than the value of GetMaxBlockSize();
    int b = FindBlock(start);
-   int numBlocks = mBlock->Count();
+   int numBlocks = mBlock->GetCount();
    
    sampleCount result = (mBlock->Item(b)->start + mBlock->Item(b)->f->GetLength() - start);
    
@@ -882,11 +949,11 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    // Make sure that the sequence is valid.
    // First, replace missing blockfiles with SilentBlockFiles
    unsigned int b;
-   for (b = 0; b < mBlock->Count(); b++) {
+   for (b = 0; b < mBlock->GetCount(); b++) {
       if (!mBlock->Item(b)->f) {
          sampleCount len;
 
-         if (b < mBlock->Count()-1)
+         if (b < mBlock->GetCount()-1)
             len = mBlock->Item(b+1)->start - mBlock->Item(b)->start;
          else
             len = mNumSamples - mBlock->Item(b)->start;
@@ -910,7 +977,7 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
 
    // Next, make sure that start times and lengths are consistent
    sampleCount numSamples = 0;
-   for (b = 0; b < mBlock->Count(); b++) {
+   for (b = 0; b < mBlock->GetCount(); b++) {
       if (mBlock->Item(b)->start != numSamples) {
          wxString sFileAndExtension = mBlock->Item(b)->f->GetFileName().GetFullName();
          if (sFileAndExtension.IsEmpty())
@@ -957,7 +1024,7 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("sampleformat"), mSampleFormat);
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples);
 
-   for (b = 0; b < mBlock->Count(); b++) {
+   for (b = 0; b < mBlock->GetCount(); b++) {
       SeqBlock *bb = mBlock->Item(b);
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
@@ -1007,7 +1074,7 @@ int Sequence::FindBlock(sampleCount pos) const
 {
    wxASSERT(pos >= 0 && pos <= mNumSamples);
 
-   int numBlocks = mBlock->Count();
+   int numBlocks = mBlock->GetCount();
 
    if (pos == 0)
       return 0;
@@ -1329,7 +1396,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
 
       srcX += num * divisor;
 
-      if (b >= mBlock->Count())
+      if (b >= mBlock->GetCount())
          break;
 
       srcX = mBlock->Item(b)->start;
@@ -1364,7 +1431,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
 
 sampleCount Sequence::GetIdealAppendLen()
 {
-   int numBlocks = mBlock->Count();
+   int numBlocks = mBlock->GetCount();
    sampleCount max = GetMaxBlockSize();
    sampleCount lastBlockLen;
 
@@ -1386,7 +1453,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       return false;
 
    // If the last block is not full, we need to add samples to it
-   int numBlocks = mBlock->Count();
+   int numBlocks = mBlock->GetCount();
    if (numBlocks > 0 && mBlock->Item(numBlocks - 1)->f->GetLength() < mMinSamples) {
       SeqBlock *lastBlock = mBlock->Item(numBlocks - 1);
       sampleCount addLen;
@@ -1476,10 +1543,10 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
 BlockArray *Sequence::Blockify(samplePtr buffer, sampleCount len)
 {
    BlockArray *list = new BlockArray();
-   list->Alloc(10);
-
-   if (len == 0)
+   if (len <= 0)
       return list;
+
+   list->Alloc(10);
 
    int num = (len + (mMaxSamples - 1)) / mMaxSamples;
 
@@ -1512,7 +1579,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
    //both functions,
    LockDeleteUpdateMutex();
 
-   unsigned int numBlocks = mBlock->Count();
+   unsigned int numBlocks = mBlock->GetCount();
    unsigned int newNumBlocks = 0;
 
    unsigned int b0 = FindBlock(start);
@@ -1607,7 +1674,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
          BlockArray *split = Blockify(sumBuffer, sum);
          split->Item(0)->start += prepreBlock->start;
          newBlock->Item(b0 - 1) = split->Item(0);
-         for (i = 1; i < split->Count(); i++) {
+         for (i = 1; i < split->GetCount(); i++) {
             split->Item(i)->start += prepreBlock->start;
             newBlock->Add(split->Item(i));
             newNumBlocks++;
@@ -1678,7 +1745,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
               postpostBlock, 0, postpostLen);
 
          BlockArray *split = Blockify(sumBuffer, sum);
-         for (i = 0; i < split->Count(); i++) {
+         for (i = 0; i < split->GetCount(); i++) {
             split->Item(i)->start += start;
             newBlock->Add(split->Item(i));
             newNumBlocks++;
@@ -1722,7 +1789,7 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr)
 {
    unsigned int i;
    sampleCount pos = 0;
-   unsigned int numBlocks = mBlock->Count();
+   unsigned int numBlocks = mBlock->GetCount();
    bool bError = false;
 
    for (i = 0; i < numBlocks; i++) {
@@ -1750,7 +1817,7 @@ void Sequence::DebugPrintf(wxString *dest)
    unsigned int i;
    int pos = 0;
 
-   for (i = 0; i < mBlock->Count(); i++) {
+   for (i = 0; i < mBlock->GetCount(); i++) {
       *dest += wxString::Format
          (wxT("   Block %3d: start %8d len %8d refs %d %s"),
           i,

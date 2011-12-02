@@ -993,10 +993,11 @@ bool WaveClip::GetRMS(float *rms, double t0,
 
 void WaveClip::ConvertToSampleFormat(sampleFormat format)
 {
-   bool bResult = mSequence->ConvertToSampleFormat(format);
-   if (bResult)
+   bool bChanged;
+   bool bResult = mSequence->ConvertToSampleFormat(format, &bChanged);
+   if (bResult && bChanged)
       MarkChanged();
-   wxASSERT(bResult);
+   wxASSERT(bResult); // TO-DO: Throw an actual error.
 }
 
 void WaveClip::UpdateEnvelopeTrackLen()
