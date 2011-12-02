@@ -7093,6 +7093,8 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
       wxASSERT(false);
       break;
    }
+   if (newFormat == ((WaveTrack*)mPopupMenuTarget)->GetSampleFormat())
+      return; // Nothing to do.
 
    bool bResult = ((WaveTrack*)mPopupMenuTarget)->ConvertToSampleFormat(newFormat);
    wxASSERT(bResult); // TO DO: Actually handle this.
