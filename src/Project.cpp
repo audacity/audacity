@@ -4357,13 +4357,10 @@ void AudacityProject::ReleaseKeyboard(wxWindow *w)
 
 void AudacityProject::AutoSave()
 {
+   //    SonifyBeginAutoSave(); // part of RBD's r10680 stuff now backed out
+
    // To minimize the possibility of race conditions, we first write to a
    // file with the extension ".tmp", then rename the file to .autosave
-   // FIX-ME: What's up with this no-op cruft that's not #ifdefed for NoteTrack? 
-   // Let's not clutter the code with stuff that's not implemented, and not 
-   // even clear we ever will need it.
-   //vvvvv (part of RBD's r10680 stuff to back out.)
-   //    SonifyBeginAutoSave();
    wxString projName;
 
    if (mFileName.IsEmpty())
