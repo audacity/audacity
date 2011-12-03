@@ -234,7 +234,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       {
          SeqBlock* pOldSeqBlock = mBlock->Item(i);
          mDirManager->Deref(pOldSeqBlock->f);
-         pOldSeqBlock->f = NULL; // ...so we don't delete the file when we delete mBlock, next.
+         pOldSeqBlock->f = NULL; //vvvvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
       }
       delete mBlock;
 
@@ -247,8 +247,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       *pbChanged = false;  // Revert overall change flag, in case we had some partial success in the loop.
    }
 
-   //vvvvv bSuccess &= ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
-   ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
+   bSuccess &= ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
    
    return bSuccess;
 }
