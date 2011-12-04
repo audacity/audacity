@@ -1,20 +1,23 @@
 # Audacity Strings for Translation.
 # Copyright (C) YEAR Audacity Development Team
 # This file is distributed under the same license as Audacity.
-# Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 #
+# Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
+# Antonio Paniagua Navarro <aplist@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-11-28 06:52+0000\n"
-"PO-Revision-Date: 2011-12-02 01:35-0000\n"
-"Last-Translator: Gale <gale@audacityteam.org>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2011-12-04 01:16-0000\n"
+"Last-Translator: Antonio Paniagua Navarro <aplist en gmail.com>\n"
+"Language-Team: Spanish <audacity-translation@lists.sourceforge.net>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: AboutDialog.cpp:162
 msgid "About Audacity..."
@@ -9104,9 +9107,8 @@ msgid "Changes to temporary directory will not take effect until Audacity is res
 msgstr "Los cambios de la carpeta temporal no tendrán efecto hasta que se reinicie Audacity"
 
 #: prefs/DirectoriesPrefs.cpp:227
-#, fuzzy
 msgid "Temp Directory Update"
-msgstr "Nueva carpeta temporal"
+msgstr "Actualizar carpeta temporal"
 
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
@@ -9447,18 +9449,16 @@ msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Seleccione un archivo XML que contenga accesos directos de teclado de Audacity..."
 
 #: prefs/KeyConfigPrefs.cpp:287
-#, fuzzy
 msgid "Error Loading Keyboard Shortcuts"
-msgstr "Error al cargar accesos directos de teclado"
+msgstr "Error al cargar los accesos directos de teclado"
 
 #: prefs/KeyConfigPrefs.cpp:300
 msgid "Export Keyboard Shortcuts As:"
 msgstr "Exportar accesos directos de teclado como:"
 
 #: prefs/KeyConfigPrefs.cpp:326
-#, fuzzy
 msgid "Error Saving Keyboard Shortcuts"
-msgstr "Error al guardar accesos directos de teclado"
+msgstr "Error al guardar los accesos directos de teclado"
 
 #: prefs/KeyConfigPrefs.cpp:404
 #, c-format
@@ -9824,9 +9824,8 @@ msgid "Lo&ng period:"
 msgstr "Pe&riodo largo:"
 
 #: prefs/PrefsDialog.cpp:97
-#, fuzzy
 msgid "Preferences: "
-msgstr "Preferencias..."
+msgstr "Preferencias: "
 
 #: prefs/PrefsDialog.cpp:105
 msgid "Audacity Preferences"
@@ -11102,17 +11101,14 @@ msgid "Could not load file: \"%s\""
 msgstr "No se ha podido abrir el archivo: \"%s\""
 
 #: xml/XMLWriter.cpp:348
-#, fuzzy
 msgid "Error Flushing File"
 msgstr "Error al recargar el archivo"
 
 #: xml/XMLWriter.cpp:353
-#, fuzzy
 msgid "Error Closing File"
 msgstr "Error al cerrar el archivo"
 
 #: xml/XMLWriter.cpp:363
-#, fuzzy
 msgid "Error Writing to File"
 msgstr "Error al escribir el archivo"
 
