@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 1.3.13 Beta
+Version 1.3.14 Beta
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes in version 1.3.13 Beta 
+2.  Changes in version 1.3.14 Beta 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -56,97 +56,69 @@ to http://www.gnu.org/copyleft/gpl.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes in version 1.3.13 Beta: 
+2. Changes in version 1.3.14 Beta: 
 
 Bug fixes for:
 
  * Interface:
-   * Cutting or copying from a track at a given sample rate into a track
-      at another rate resulted in speed-changed audio. 
-   * Generating inside a clip could modify the clip length or create 
-      spurious clips.
-   * Recorded stereo tracks were only half the height of imported or 
-      generated stereo tracks. Imported stereo files had a "1" appended 
-      to the track name.  
-   * Edit > Region Save did not save the cursor position.  
-   * (Windows) Projects crashed when clicking rapidly inside the interface
-      or when applying repeated effects towards the end of audio tracks. 
-   * (Windows) Some Unicode characters could not be typed into labels,
-      or caused a freeze using some input methods.
-   * (OS X) Crash when quitting an empty project window, or when closing the
-      main project window while a progress dialog was on screen.
-   * Numerous other interface fixes including Dependencies dialog, 
-      Keyboard Preferences and spurious lines drawn on waveform.
+   * Excessive delay occurred when typing into labels in long projects. 
+   * Last digit of TimeText controls could not be manipulated in some formats.
+   * (Windows, OS X) Play and Record shortcuts did not work after clicking in
+      Device Toolbar. 
+   * (OS X, Linux) Crash occurred if Toolbars were reset during playback or
+      recording. 
 
  * Imports and Exports:
-   * Support added for later versions of the optional FFmpeg library up to 
-      current FFmpeg HEAD. This should significantly improve FFmpeg support
-      on Linux. FFmpeg downloads for Windows and Mac updated to v0.6. This
-      fixes mono AAC files importing as stereo, though current 0.5 versions
-      of FFmpeg will still work.
-   * Both FFmpeg and LAME should now be properly detected even when other 
-      versions of those libraries exist on the system. 
-   * New warning (on by default) for importing uncompressed audio files. 
-      Better error messages when read-directly uncompressed files are missing. 
-   * Imported ID3v2 metadata tags were removed when exporting without the 
-      Metadata Editor appearing (for example, when using an export command
-      in Chains). Note: As a result of this fix, ID3v1 tags must now be 
-      written by exporting using (external program) and an installed LAME. 
-   * U-Law/A-Law files with WAV headers now use the standard 18 byte fmt chunk,
-      so should now be recognised by most telephony applications.   
-   * Variable bit rate MP3s exported using "MP3 Files" were larger than 
-      necessary because using the bit reservoir was disabled.   
-   * (OS X) Files imported from iTunes could create invalid characters in the
-      .aup project file, causing an error when re-opening the project. Note: 
-      An error "reference to invalid character number" will still occur if 
-      re-opening a project created in previous Betas that contains such 
-      characters. To fix the issue, open a back-up copy of the .aup file in a
-      text editor, turn off word wrap, then in the line indicated in the error
-      message, remove the string of characters that starts with &# and ends
-      with a semi-colon (;).
+   * MP2 files were not importable without FFmpeg library or an import rule. 
+   * Files that could only be imported using FFmpeg imported as noise with
+      no error message if FFmpeg was not available. 
+   * Files containing PCM audio but an incorrect extension (such as MP3) 
+      caused a freeze. 
+
+ * Effects and Analysis:
+   * An empty command could be added to a Chain which then displayed a 
+      Nyquist error message when run.  
+   * Plot Spectrum didn't preserve signal level if multiple tracks were 
+      analyzed.  
 
  * Other bug fixes:
-   * Nyquist effects: fixes for crashes, incorrect slider behaviour and better
-      support for backslashes, double quotes and Unicode characters. 
-   * (Windows and OS X) Processing of VST effects was substantially slower than
-      in previous versions of Audacity.
-   * (OS X 10.5 PPC) A first-time installation of Audacity Beta would hang
-      on launch if VST effects were detected. 
-   * (Linux) Recordings made with the pulse device crashed or stalled when
-      using overdub and/or software playthrough.  
-   * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Audacity was
-      configured with libsamplerate. 
+   * Audacity has been provisionally fixed so that it can no longer create 
+      block files longer than the sample format or project format allows, 
+      and can no longer delete these, which led to data loss. Any overlong 
+      blocks found are preserved but "orphaned", so will appear as silence.
+   * Orphan block files were wrongly reported if cutting or copying to 
+      the clipboard then reopening the project in the same session. 
+   * Fixed some crashes and incorrect movement of audio when dragging tracks.
+   * (Windows) Data loss is now prevented when encountering a corrupted
+      .aup file created in ANSI builds. 
+   * (Linux) Restore building if USE_PORTMIXER is not defined. 
  
 Changes and Improvements:
 
- * Control Toolbar renamed to Transport Toolbar.  
- * Device Toolbar (on by default) now contains all input and output device 
-    choices, including host and recording channels. Input/output choices are 
-    no longer in Mixer Toolbar on Windows XP or some older operating systems.
-    New Transport > Rescan Audio Devices menu item to refresh the device list.  
- * New "Sync-Lock Tracks" feature (turned on in the Tracks menu) to allow
-    groups of audio and/or label tracks to retain synchronisation when the
-    track length changes. 
- * Equalization: New "Manage Curves" dialog for importing and exporting curves.
- * Noise Removal: New "Sensitivity" slider to adjust the noise threshold, and
-    new option to isolate noise.
- * New "Extended Import" Preferences for specifying different importers to
-    open specific file extensions.
- * Improved Automatic Crash Recovery with all project changes autosaved. 
- * MIDI tracks can be vertically zoomed, time shifted and display bar lines.
-    Note: the channel selection buttons are not available in 1.3.13.    
- * (Windows and Linux) The window Close button and other system close or
-    shutdown commands now quit on closing the last window. File > Close now 
-    always clears to a new, empty project. 
- * (OS X) Simpler installer with top-level "Auadacity" folder. 
- 
+ * Normalize: Faster processing and improved interface. Left-right balance 
+    in unsplit stereo tracks is now preserved by default, with a checkbox 
+    option provided to process stereo channels independently.   
+ * Spectrograms now allow window sizes up to 32768 and frequencies up to
+    half the sample rate (the maximum possible).
+ * Mix and Render now preserves clip length by not rendering white space 
+    between time zero and first audio, and preserves audio before time zero.
+    To retain silence before the audio starts, generate silence after render.     
+ * Grouped some Edit Menu items into "Remove Audio" and "Clip Boundaries".  
+ * CleanSpeech Mode removed from Interface Preferences (it still runs if it
+    was enabled in a previous Audacity but can only be turned off there). 
+ * (OS X) Added support for AudioUnit MusicEffects (but no MIDI support). 
+ * (Linux) Set the per-user files directory per the program name set in 
+    configure.
+ * (Linux) Changed the default location of the Audacity temporary directory
+    to be in /var/tmp not /tmp, so preserving the directory between reboots. 
+
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 1.3.13 Beta:
+3. Known Issues in 1.3.14 Beta:
 
-For known issues at release of 1.3.13, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_1.3.13#known
+For known issues at release of 1.3.14, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_1.3.14#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -303,7 +275,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 1.3.13 requires wxWidgets 2.8.11
+First you must download wxWidgets. Audacity 1.3.14 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/
@@ -343,6 +315,91 @@ or e-mail us at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 1.3.13 Beta: 
+
+Bug fixes for:
+
+ * Interface:
+   * Cutting or copying from a track at a given sample rate into a track
+      at another rate resulted in speed-changed audio. 
+   * Generating inside a clip could modify the clip length or create 
+      spurious clips.
+   * Recorded stereo tracks were only half the height of imported or 
+      generated stereo tracks. Imported stereo files had a "1" appended 
+      to the track name.  
+   * Edit > Region Save did not save the cursor position.  
+   * (Windows) Projects crashed when clicking rapidly inside the interface
+      or when applying repeated effects towards the end of audio tracks. 
+   * (Windows) Some Unicode characters could not be typed into labels,
+      or caused a freeze using some input methods.
+   * (OS X) Crash when quitting an empty project window, or when closing the
+      main project window while a progress dialog was on screen.
+   * Numerous other interface fixes including Dependencies dialog, 
+      Keyboard Preferences and spurious lines drawn on waveform.
+
+ * Imports and Exports:
+   * Support added for later versions of the optional FFmpeg library up to 
+      current FFmpeg HEAD. This should significantly improve FFmpeg support
+      on Linux. FFmpeg downloads for Windows and Mac updated to v0.6. This
+      fixes mono AAC files importing as stereo, though current 0.5 versions
+      of FFmpeg will still work.
+   * Both FFmpeg and LAME should now be properly detected even when other 
+      versions of those libraries exist on the system. 
+   * New warning (on by default) for importing uncompressed audio files. 
+      Better error messages when read-directly uncompressed files are missing. 
+   * Imported ID3v2 metadata tags were removed when exporting without the 
+      Metadata Editor appearing (for example, when using an export command
+      in Chains). Note: As a result of this fix, ID3v1 tags must now be 
+      written by exporting using (external program) and an installed LAME. 
+   * U-Law/A-Law files with WAV headers now use the standard 18 byte fmt chunk,
+      so should now be recognised by most telephony applications.   
+   * Variable bit rate MP3s exported using "MP3 Files" were larger than 
+      necessary because using the bit reservoir was disabled.   
+   * (OS X) Files imported from iTunes could create invalid characters in the
+      .aup project file, causing an error when re-opening the project. Note: 
+      An error "reference to invalid character number" will still occur if 
+      re-opening a project created in previous Betas that contains such 
+      characters. To fix the issue, open a back-up copy of the .aup file in a
+      text editor, turn off word wrap, then in the line indicated in the error
+      message, remove the string of characters that starts with &# and ends
+      with a semi-colon (;).
+
+ * Other bug fixes:
+   * Nyquist effects: fixes for crashes, incorrect slider behaviour and better
+      support for backslashes, double quotes and Unicode characters. 
+   * (Windows and OS X) Processing of VST effects was substantially slower than
+      in previous versions of Audacity.
+   * (OS X 10.5 PPC) A first-time installation of Audacity Beta would hang
+      on launch if VST effects were detected. 
+   * (Linux) Recordings made with the pulse device crashed or stalled when
+      using overdub and/or software playthrough.  
+   * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Audacity was
+      configured with libsamplerate. 
+ 
+Changes and Improvements:
+
+ * Control Toolbar renamed to Transport Toolbar.  
+ * Device Toolbar (on by default) now contains all input and output device 
+    choices, including host and recording channels. Input/output choices are 
+    no longer in Mixer Toolbar on Windows XP or some older operating systems.
+    New Transport > Rescan Audio Devices menu item to refresh the device list.  
+ * New "Sync-Lock Tracks" feature (turned on in the Tracks menu) to allow
+    groups of audio and/or label tracks to retain synchronisation when the
+    track length changes. 
+ * Equalization: New "Manage Curves" dialog for importing and exporting curves.
+ * Noise Removal: New "Sensitivity" slider to adjust the noise threshold, and
+    new option to isolate noise.
+ * New "Extended Import" Preferences for specifying different importers to
+    open specific file extensions.
+ * Improved Automatic Crash Recovery with all project changes autosaved. 
+ * MIDI tracks can be vertically zoomed, time shifted and display bar lines.
+    Note: the channel selection buttons are not available in 1.3.13.    
+ * (Windows and Linux) The window Close button and other system close or
+    shutdown commands now quit on closing the last window. File > Close now 
+    always clears to a new, empty project. 
+ * (OS X) Simpler installer with top-level "Audacity" folder. 
+
 
 Changes in version 1.3.12 Beta: 
 
