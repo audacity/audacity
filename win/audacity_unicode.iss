@@ -3,7 +3,7 @@
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-unicode-1.3.13
+OutputBaseFilename=audacity-win-unicode-1.3.14
 SetupIconFile=audacity.ico
 
 WizardImageFile=audacity_InnoWizardImage.bmp
@@ -13,7 +13,7 @@ SolidCompression=yes
 
 ; installer-related directives
 AppName=Audacity 1.3 Beta (Unicode)
-AppVerName=Audacity 1.3.13 (Unicode)
+AppVerName=Audacity 1.3.14 (Unicode)
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -72,7 +72,7 @@ Source: "..\win\unicode release\audacity.exe"; DestDir: "{app}"; Flags: ignoreve
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 ; //FIX-ME    Why mandatory? I thought we were avoiding that. And if mandatory, why not automatic, or in code repository (SVN)? "should be got" is a step one should not have to do.  
-;    Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
+Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
 
 Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
@@ -91,9 +91,9 @@ Source: "..\win\unicode release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; 
 ; This is not an ideal solution, but should need the least tech support.
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\win\unicode release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
