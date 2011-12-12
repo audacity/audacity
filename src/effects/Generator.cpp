@@ -24,7 +24,6 @@ bool Generator::Process()
    if (mDuration < 0.0)
       return false;
 
-   BeforeGenerate();
 
    // Set up mOutputTracks. 
    // This effect needs Track::All for sync-lock grouping.
@@ -63,6 +62,7 @@ bool Generator::Process()
             WaveTrack *tmp = mFactory->NewWaveTrack(track->GetSampleFormat(),
                                                     track->GetRate());
             BeforeTrack(*track);
+            BeforeGenerate();
 
             // Fill it with data
             if (!GenerateTrack(tmp, *track, ntrack))
