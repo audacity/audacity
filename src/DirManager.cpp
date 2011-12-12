@@ -1415,13 +1415,16 @@ _("Project check of \"%s\" folder \
 \nyou can try to find and restore the missing files \
 \nto their previous location. \
 \n\nNote that for the second option, the waveform \
-\nmay not show silence.");
+\nmay not show silence. \
+\n\nIf you choose the third option, this will save the \
+\nproject in its current state, unless you \"Close \
+\nproject immediately\" on further error alerts.");
          wxString msg;
          msg.Printf(msgA, this->projName.c_str(), missingAliasedFilePathHash.size());
          const wxChar *buttons[] = 
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"), 
-               _("Replace missing audio with silence (permanent immediately). This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."),
+               _("Replace missing audio with silence (permanent immediately)."),
                NULL};
          wxLog::FlushActive(); // MultiDialog has "Show Log..." button, so make sure log is current.
          action = ShowMultiDialog(msg, _("Warning - Missing Aliased File(s)"), buttons);
