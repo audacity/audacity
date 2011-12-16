@@ -38,6 +38,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -60,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -82,6 +84,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -104,6 +107,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -116,1252 +120,202 @@
 			<File
 				RelativePath="..\..\..\locale\af.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ar.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\be.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\bg.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\bn.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\bs.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ca.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ca@valencia.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\cs.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\cy.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\da.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\de.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\el.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\es.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\eu.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\fa.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\fi.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\fr.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ga.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\gl.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\he.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\hi.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\hu.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\id.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\it.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ja.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ka.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\km.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ko.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\lt.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\mk.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\my.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\nb.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\nl.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\oc.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\pl.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\pt.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\pt_BR.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ro.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\ru.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\sk.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\sl.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
-         <File
+			<File
 				RelativePath="..\..\..\locale\sr_RS.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\sv.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\tg.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\tr.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\uk.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\vi.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\zh.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\locale\zh_TW.po"
 				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="msgfmt"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>
