@@ -87,6 +87,10 @@ SelectionBar::SelectionBar()
   mListener(NULL), mRate(0.0), mStart(0.0), mEnd(0.0), mAudio(0.0),
   mLeftTime(NULL), mRightTime(NULL), mAudioTime(NULL)
 {
+   // Make sure we have a valid rate as the TimeTextCtrl()s created in Populate()
+   // depend on it.  Otherwise, division-by-zero floating point exceptions will occur.
+   // Refer to bug #462 for a scenario where the division-by-zero causes Audacity to fail.
+   mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate());
 }
 
 SelectionBar::~SelectionBar()
