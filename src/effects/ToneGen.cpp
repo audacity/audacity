@@ -29,6 +29,7 @@ frequency changes smoothly during the tone.
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../Prefs.h"
 
 #include <wx/choice.h>
 #include <wx/intl.h>
@@ -79,7 +80,11 @@ bool EffectToneGen::PromptUser()
       mDuration = mT1 - mT0;
       dlog.isSelection= true;
    }
-  
+   else {
+      // Retrieve last used values
+      gPrefs->Read(wxT("/Effects/ToneGen/Duration"), &mDuration, 30L);
+   }
+
    dlog.mbChirp = mbChirp;
    dlog.waveform = waveform;
    dlog.frequency[0] = frequency[0];
@@ -114,6 +119,11 @@ bool EffectToneGen::PromptUser()
       amplitude[1] = amplitude[0];
    }
    mDuration = dlog.mDuration;
+   /* Save last used values.
+      Save duration unless value was got from selection, so we save only
+      when user explicitly set up a value */
+   if (mT1 == mT0)
+      gPrefs->Write(wxT("/Effects/ToneGen/Duration"), mDuration);
    return true;
 }
 

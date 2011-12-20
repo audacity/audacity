@@ -26,6 +26,7 @@
 #include "Silence.h"
 #include "../WaveTrack.h"
 #include "../TimeDialog.h"
+#include "../Prefs.h"
 
 bool EffectSilence::PromptUser()
 {
@@ -37,9 +38,9 @@ bool EffectSilence::PromptUser()
       // there is a selection: let's fit in there...
       mDuration = mT1 - mT0;
       dlog.SetFormatString(_("hh:mm:ss + samples"));
-
    } else {
-      // retrieve last used values
+      // Retrieve last used values
+      gPrefs->Read(wxT("/Effects/SilenceGen/Duration"), &mDuration, 30L);
       dlog.SetFormatString(_("seconds"));
    }
    dlog.SetTimeValue(mDuration);
@@ -48,6 +49,11 @@ bool EffectSilence::PromptUser()
       return false;
 
    mDuration = dlog.GetTimeValue();
+   /* Save last used values.
+      Save duration unless value was got from selection, so we save only
+      when user explicitly set up a value */
+   if (mT1 == mT0)
+      gPrefs->Write(wxT("/Effects/SilenceGen/Duration"), mDuration);
 
    return true;
 }
