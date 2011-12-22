@@ -1949,6 +1949,16 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       mLastSavedTracks = NULL;
    }
 
+   // Get rid of the history window
+   // LL:  Destroy it before the TrackPanel and ToolBars since they
+   //      may/will get additional wxEVT_PAINT events since window
+   //      destruction may be queued.  This seems to only be a problem
+   //      on the Mac.
+   if (mHistoryWindow) {
+      mHistoryWindow->Destroy();
+      mHistoryWindow = NULL;
+   }
+
    // Destroy the TrackPanel early so it's not around once we start
    // deleting things like tracks and such out from underneath it.
    mTrackPanel->Destroy();
@@ -1958,12 +1968,6 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    // to save the state of the toolbars.
    delete mToolManager;
    mToolManager = NULL;
-
-   // Get rid of the history window
-   if (mHistoryWindow) {
-      mHistoryWindow->Destroy();
-      mHistoryWindow = NULL;
-   }
 
    DestroyChildren();
 
