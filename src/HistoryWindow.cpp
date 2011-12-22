@@ -240,7 +240,8 @@ void HistoryWindow::OnSize(wxSizeEvent & event)
 {
    Layout();
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
-   mList->EnsureVisible(mSelected);
+   if (mList->GetItemCount() > 0)
+      mList->EnsureVisible(mSelected);
 }
 
 void HistoryWindow::OnChar(wxKeyEvent &event)
