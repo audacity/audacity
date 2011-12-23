@@ -225,7 +225,9 @@ Use whole numbers only.~%"))))
   (setq amp (if (= accent 1) 0.75 0.5))
   (stretch-abs ticklen 
     ;pwl is used to add 5ms fade-in and fade-out of clicks
-    (mult (pwl 0.005 amp 0.995 amp 1)
+    (mult 
+      (control-srate-abs *sound-srate*
+        (pwl 0.005 amp 0.995 amp 1))
       (case type
         (0 (osc pitch)) ;ping click
         (1 (normalize (lowpass2 (noise 1) (step-to-hz pitch) q))) ;noise click
@@ -258,7 +260,7 @@ Use whole numbers only.~%"))))
   ((= action 1)(help1)); display help screen 1
   ((= action 2)(help2)) ; display help screen 2
   (t ;Run Program
-
+    (setq len (/ (* 60.0 *sound-srate* sig measures) tempo))
     (setq error-msg "") ;initialize error-msg	
     
     ;convert minutes-seconds string to a list
