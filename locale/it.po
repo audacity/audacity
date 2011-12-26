@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-08-31 04:02+0100\n"
-"PO-Revision-Date: 2011-09-11 13:37-0000\n"
+"PO-Revision-Date: 2011-12-25 19:20-0000\n"
 "Last-Translator: Carmelo Battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -4308,7 +4308,6 @@ msgstr "Spettro"
 
 #: TrackPanel.cpp:634
 #: prefs/TracksPrefs.cpp:61
-#, fuzzy
 msgid "Spectrogram log(f)"
 msgstr "Log(f) dello spettro"
 
