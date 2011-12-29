@@ -4,10 +4,14 @@
 ;categories "http://audacityteam.org/namespace#NoiseRemoval"
 ;name "Clip Fix..."
 ;action "Reconstructing clips..."
-;info "Designed and implemented by Benjamin Schwartz.\n\nClip Fix attempts to reconstruct clipped regions by interpolating the\nlost signal. Before use, reduce amplification by 10 dB to give room for\nthe reconstruction. 'Threshold' is how close to the maximum sample\nmagnitude any sample must be to be considered clipped. If processing\nis slow, select only a few seconds of clipped audio at a time."    
+;info "By Benjamin Schwartz. Released under terms of the GNU General Public License version 2.\n\nClip Fix attempts to reconstruct clipped regions by interpolating the\nlost signal. Before use, reduce amplification by 10 dB to give room for\nthe reconstruction. 'Threshold' is how close to the maximum sample\nmagnitude any sample must be to be considered clipped. If processing\nis slow, select only a few seconds of clipped audio at a time."    
 ;control thresh "Threshold of Clipping [%]" real "" 95 0 100
 (setf largenumber 100000000) ;;Largest number of samples that can be imported
 (setf blocksize 100000)
+
+;; Licensing confirmed under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
+;; with kind agreement of Benjamin Schwartz, December 2011.
 
 ;;Clip Fix is a simple, stupid (but not blind) digital-clipping-corrector
 ;;The algorithm is fairly simple:
@@ -21,7 +25,6 @@
 ;;(fully working, more or less) in one afternoon (and some evening).
 ;;Written by Benjamin Schwartz, MIT class of 2006, on May 25, 2004.
 ;;Explanatory text added by Gale Andrews, May 2008.
-;;If you modify this code, please retain the original credit to Benjamin Schwartz.
 
 (defun declip (sin) ;;Central function
 (let* ((threshold  (* (peak sin largenumber) thresh 0.01))
