@@ -117,17 +117,41 @@ float ContrastDialog::GetDB()
       return 1234.0;
    }
    if(mT0 == mT1)
+   {
+      wxMessageDialog m(NULL, _("Nothing to measure.\nPlease select a section of a track."), _("Error"), wxOK);
+      m.ShowModal();
       return 1234.0;
+   }
+   bool mSelected = false;
    while(t) {  
-      // FIX-ME: This isn't quite right.  
-      // What to do if more than one track selected?
-      // Also what if tracks in selection are not wavetracks?
-      ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
+      if( ((WaveTrack *)t)->GetSelected() )
+      {
+         if( mSelected == true ) // already measured one track
+         {
+            wxMessageDialog m(NULL, _("You can only measure one track at a time."), _("Error"), wxOK);
+            m.ShowModal();
+            return 1234.0;
+         }
+         else
+         {
+            ((WaveTrack *)t)->GetRMS(&rms, mT0, mT1);
+            mSelected = true;
+         }
+      }
       t = iter.Next();
    }
-   if( rms < 1.0E-30 )
-      return -60.0;
-   return 20.0*log10(rms);
+   if( mSelected )
+   {
+      if( rms < 1.0E-30 )
+         return -60.0;
+      return 20.0*log10(rms);
+   }
+   else
+   {
+      wxMessageDialog m(NULL, _("Please select something to be measured."), _("Error"), wxOK);
+      m.ShowModal();
+      return 1234.0;
+   }
 }
 
 double ContrastDialog::GetStartTime()
