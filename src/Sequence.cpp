@@ -336,14 +336,15 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
 bool Sequence::GetRMS(sampleCount start, sampleCount len,
                          float * outRMS) const
 {
-   wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
+   // len is the number of samples that we want the rms of.
+   // it may be longer than a block, and the code is carefully set up to handle that.
    if (len == 0 || mBlock->GetCount() == 0) {
       *outRMS = float(0.0);
       return true;
    }
 
    double sumsq = 0.0;
-   sampleCount length = 0;
+   sampleCount length = 0; // this is the cumulative length of the bits we have the ms of so far, and should end up == len
 
    unsigned int block0 = FindBlock(start);
    unsigned int block1 = FindBlock(start + len);
@@ -361,7 +362,6 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
 
       sumsq += blockRMS * blockRMS * mBlock->Item(block0)->f->GetLength();
       length += mBlock->Item(block0)->f->GetLength();
-      wxASSERT(length <= mMaxSamples); // Vaughan, 2011-10-19
    }
 
    // Now we take the first and last blocks into account, noting that the
@@ -369,7 +369,6 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
    // If not, we need read some samples and summaries from disk.
    s0 = start - mBlock->Item(block0)->start;
    l0 = len;
-   wxASSERT(len <= mMaxSamples); // Vaughan, 2011-10-19
    maxl0 = mBlock->Item(block0)->start + mBlock->Item(block0)->f->GetLength() - start;
    wxASSERT(maxl0 <= mMaxSamples); // Vaughan, 2011-10-19
    if (l0 > maxl0)
@@ -389,7 +388,6 @@ bool Sequence::GetRMS(sampleCount start, sampleCount len,
                                          &partialMin, &partialMax, &partialRMS);
       sumsq += partialRMS * partialRMS * l0;
       length += l0;
-      wxASSERT(length <= mMaxSamples); // Vaughan, 2011-10-19
    }
 
    *outRMS = sqrt(sumsq/length);
