@@ -468,7 +468,7 @@ void FreqWindow::DrawPlot()
    wxMemoryDC memDC;
    memDC.SelectObject(*mBitmap);
 
-   memDC.SetBackground(wxBrush(wxColour(254, 254, 254)));// DONT-THEM Mask colour.
+   memDC.SetBackground(wxBrush(wxColour(254, 254, 254)));// DONT-THEME Mask colour.
    memDC.Clear();
 
    wxRect r = mPlotRect;
@@ -594,8 +594,6 @@ void FreqWindow::DrawPlot()
    }
 
    memDC.SelectObject( wxNullBitmap );
-
-   mBitmap->SetMask( new wxMask( *mBitmap, wxColour(254, 254, 254) ) );
 }
 
 
