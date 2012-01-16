@@ -145,6 +145,20 @@ ImportFileHandle *PCMImportPlugin::Open(wxString filename)
       //sf_error_str((SNDFILE *)NULL, str, 1000);
 
       return NULL;
+   } else if (file &&
+              (info.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_OGG) {
+      // mchinen 15.1.2012 - disallowing libsndfile to handle
+      // ogg files because seeking is broken at this date (very slow,
+      // seeks from beginning of file each seek).
+      // This was said by Erik (libsndfile maintainer).
+      // Note that this won't apply to our local libsndfile, so only
+      // linux builds that use --with-libsndfile=system are affected,
+      // as our local libsndfile doesn't do OGG.
+      // In particular ubuntu 10.10 and 11.04 are known to be affected
+      // When the bug is fixed, we can check version to avoid only
+      // the broken builds.
+
+      return NULL;
    }
 
    return new PCMImportFileHandle(filename, file, info);
