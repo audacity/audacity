@@ -179,6 +179,7 @@ class AUDACITY_DLL_API TrackArtist {
    int mMinFreq;              // "/Spectrum/MinFreq"
    int mWindowSize;           // "/Spectrum/FFTSize"
    bool mIsGrayscale;         // "/Spectrum/Grayscale"
+   bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    int mFftSkipPoints;        // "/Spectrum/FFTSkipPoints"
