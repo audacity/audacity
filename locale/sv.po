@@ -1,6 +1,5 @@
 msgid ""
-msgstr ""
-"Project-Id-Version: Audacity 1.4.0\n"
+msgstr "Project-Id-Version: Audacity 1.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2009-06-30 22:14+0100\n"
 "PO-Revision-Date: 2011-04-28 23:48-0000\n"
@@ -84,10 +83,6 @@ msgstr "<b>Audacity&reg;</b> mjukvara är copyright-skyddad"
 #: AboutDialog.cpp:273
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr "Namnet <b>Audacity&reg;</b> är ett registrerat varumärke av Dominic Mazzoni."
-
-#: AboutDialog.cpp:281
-msgid "Audacity"
-msgstr "Audacity"
 
 #. i18n-hint: Information about when audacity was compiled
 #: AboutDialog.cpp:328
@@ -213,14 +208,27 @@ msgstr "GPL licens"
 
 #: AudacityApp.cpp:779
 #, c-format
-msgid ""
-"%s could not be found.\n"
+msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr ""
-"%s gick inte att hitta.\n"
+msgstr "%s gick inte att hitta.\n"
 "\n"
 "Den har raderats från historia-listan."
+
+#: AudacityApp.cpp:846
+#, c-format
+msgid "One or more external audio files could not be found.\n"
+"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
+"Silence is being substituted for the affected audio.\n"
+"The first detected missing file is:\n"
+"%s\n"
+"There may be additional missing files.\n"
+"Choose File > Check Dependencies to view a list of locations of the missing files."
+msgstr ""
+
+#: Project.cpp:3948
+msgid "Files Missing"
+msgstr "Filer saknas"
 
 #: AudacityApp.cpp:913
 msgid "Master Gain Control"
@@ -270,11 +278,9 @@ msgid "Unknown command line option: %s\n"
 msgstr "Okänd command line option: %s\n"
 
 #: AudacityApp.cpp:1422
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Audacity kunde inte hitta plats att spara temporära filer. \n"
+msgstr "Audacity kunde inte hitta plats att spara temporära filer. \n"
 "Var vänlig och skriv in lämplig plats i Inställningar"
 
 #: AudacityApp.cpp:1428
@@ -282,41 +288,35 @@ msgid "Audacity is now going to exit. Please launch Audacity again to use the ne
 msgstr " Audacity kommer nu att avslutas. Var vänlig och starta om Audacity för att använda den nya temporära katalogen."
 
 #: AudacityApp.cpp:1460
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"Om du kör två versioner av Audacity samtidigt, kan detta\n"
+msgstr "Om du kör två versioner av Audacity samtidigt, kan detta\n"
 "orsaka systemkrasch och att data går förlorat\n"
 "\n"
 
 #: AudacityApp.cpp:1467
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Audacity kunde inte stänga mappen med temporära filer.\n"
+msgstr "Audacity kunde inte stänga mappen med temporära filer.\n"
 "Denna mapp används eventuellt av en annan version av Audacity.\n"
 
 #: AudacityApp.cpp:1469
 msgid "Do you still want to start Audacity?"
 msgstr "Vill du ändå starta Audacity?"
 
-#: AudacityApp.cpp:1471
-msgid "Error locking temporary folder"
-msgstr "Fel vid stängning av temporär mapp"
+#: AudacityApp.cpp:1581
+msgid "Error Locking Temporary Folder"
+msgstr ""
 
 #: AudacityApp.cpp:1509
 msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "Systemet har upptäckt att en annan version av Audacity körs\n"
 
 #: AudacityApp.cpp:1511
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"Använd kommandon Nytt eller Öppna i pågående Audacity\n"
+msgstr "Använd kommandon Nytt eller Öppna i pågående Audacity\n"
 "process för att öppna flera projekt samtidigt.\n"
 
 #: AudacityApp.cpp:1512
@@ -352,13 +352,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "Dessutom, namnge ljudfilen eller Audacity-projektet för att öppna adet."
 
 #: AudacityApp.cpp:1855
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"Audacity projektfiler (.aup) låter dig spara allt som du arbetat med exakt som det\n"
+msgstr "Audacity projektfiler (.aup) låter dig spara allt som du arbetat med exakt som det\n"
 "ser ut på skärmen, men de flesta av andra program kan inte öppna Audacity projektfiler.\n"
 "\n"
 "Om du vill spara en fil som skall kunna öppnas med andra program, välj en av\n"
@@ -373,11 +371,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "Kan inte hitta några ljudenheter\n"
 
 #: AudioIO.cpp:591
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"Du kommer inte att kunna spela upp eller spela in ljud.\n"
+msgstr "Du kommer inte att kunna spela upp eller spela in ljud.\n"
 "\n"
 
 #: AudioIO.cpp:594
@@ -394,11 +390,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "Det uppstod ett fel vid start av midi i/o lager.\n"
 
 #: AudioIO.cpp:611
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"Du kommer inte att kunna spela midi.\n"
+msgstr "Du kommer inte att kunna spela midi.\n"
 "\n"
 
 #: AudioIO.cpp:617
@@ -411,12 +405,10 @@ msgid "Out of memory!"
 msgstr "Minnet slut!"
 
 #: AudioIO.cpp:1804
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"Inställningarna för latency har orsakat att det inspelade ljudet är gömt\n"
+msgstr "Inställningarna för latency har orsakat att det inspelade ljudet är gömt\n"
 "innan noll. Audacity har flyttat början på ljudet till noll.\n"
 "Du kanske måste använda Time Shift-verktyget (<---> eller F5) för att dra spåret till rätt plats. "
 
@@ -460,11 +452,9 @@ msgid "Automatic Crash Recovery"
 msgstr "Automatiskt återskapande vid krasch"
 
 #: AutoRecovery.cpp:75
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"Några projekt blev inte sparade rätt förra gången Audacity kördes.\n"
+msgstr "Några projekt blev inte sparade rätt förra gången Audacity kördes.\n"
 "Lyckligtvis kan följande projekt återskapas automatiskt."
 
 #: AutoRecovery.cpp:77
@@ -492,11 +482,9 @@ msgid "Recover Projects"
 msgstr "Återskapade projekt"
 
 #: AutoRecovery.cpp:129
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"Är du säker på att du inte vill återkspa några projekt?\n"
+msgstr "Är du säker på att du inte vill återkspa några projekt?\n"
 "De kan inte återskapas senare."
 
 #: AutoRecovery.cpp:130
@@ -575,11 +563,9 @@ msgstr "Kommandot %s är inte implementerat än"
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:120
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"Kunde inte ställa in parametrar kring effekt %s\n"
+msgstr "Kunde inte ställa in parametrar kring effekt %s\n"
 "till %s."
 
 #: BatchCommands.cpp:557
@@ -589,12 +575,10 @@ msgstr "Ditt konverteringskommando för %s kändes inte igen."
 
 #: BatchCommands.cpp:676
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"Lägg till %s med parameter(s)\n"
+msgstr "Lägg till %s med parameter(s)\n"
 "\n"
 "%s"
 
@@ -791,21 +775,17 @@ msgid "Project Depends on Other Audio Files"
 msgstr "Projektet är beroende av andra ljudfiler"
 
 #: Dependencies.cpp:341
-msgid ""
-"Copying these files into your project will remove this dependency.\n"
+msgid "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
-msgstr ""
-"Om du kopierar följande filer till ditt projekt ändras berendeföhållandet.\n"
+msgstr "Om du kopierar följande filer till ditt projekt ändras berendeföhållandet.\n"
 "Detta sätt behöver mer diskutrymme men är säkrare."
 
 #: Dependencies.cpp:345
-msgid ""
-"\n"
+msgid "\n"
 "\n"
 "Files shown as MISSING have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
-msgstr ""
-"\n"
+msgstr "\n"
 "\n"
 "Filer som visas som SAKNAS har flyttats elelr raderats och kan inte kopieras.\n"
 "Placera dem tillbaka till deras ursprungliga plats för att kunna kopiera in i projektet."
@@ -869,12 +849,10 @@ msgid "If you proceed, your project will not be saved to disk. Is this what you 
 msgstr "Om du fortsätter, kommer inte ditt projekt att sparas. Är det det du vill?"
 
 #: Dependencies.cpp:566
-msgid ""
-"Your project is currently self-contained; it does not depend on any external audio files. \n"
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
 "\n"
 "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
-msgstr ""
-"Ditt projekt är oberoende; du använder inga externa ljudfiler. \n"
+msgstr "Ditt projekt är oberoende; du använder inga externa ljudfiler. \n"
 "\n"
 "Om du ändrar dina förutsättningar, så du måste använda importerade externa filer, måste du kopiera in dessa filer när du sparar. Annars är det risk att du förlorar data."
 
@@ -890,11 +868,9 @@ msgid "Progress"
 msgstr "Progress"
 
 #: DirManager.cpp:349
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"För lite utrymme kvar i denna katalog.\n"
+msgstr "För lite utrymme kvar i denna katalog.\n"
 " Välj annat utrymme för de temporära filerna i Inställningar."
 
 #: DirManager.cpp:381
@@ -909,18 +885,17 @@ msgstr "Spara projektdatafiler"
 msgid "Cleaning up cache directories"
 msgstr "Rensar temporära filer"
 
-#: DirManager.cpp:569
-msgid "mkdir in DirManager::MakeBlockFilePath failed.\n"
-msgstr "mkdir in DirManager::MakeBlockFilePath failed.\n"
-
-#: DirManager.cpp:599
-#, c-format
-msgid ""
-"Audacity found an orphan blockfile: %s. \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
 msgstr ""
-"Audacity hittade en ursprunglig blockfil: %s! \n"
-"Vänligen överväg att spara och starta om projektet för att göra en komplett projektkontroll.\n"
+
+#: DirManager.cpp:614
+#, c-format
+#, fuzzy
+msgid "Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
+msgstr "Audacity hittade en ursprunglig blockfil: %s! \n"
+"Vänligen överväg att spara och starta om projektet för att göra en komplett projektkontroll."
 
 #. i18n-hint: This is the pattern for filenames that are created
 #: DirManager.cpp:1173
@@ -952,16 +927,32 @@ msgstr "Kan ej namnändra '%s' till '%s'."
 msgid "Changed block %s to new alias name\n"
 msgstr "Ändrat block %s till nytt alias\n"
 
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr ""
+
+#: DirManager.cpp:1374
+msgid "Close project immediately with no changes"
+msgstr "Stäng projekt omedelbart utan ändringar"
+
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr ""
+
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr ""
+
 #: DirManager.cpp:1332
 #: DirManager.cpp:1721
 msgid "Inspecting project file data"
 msgstr "Undersöker data i projektfil"
 
-#: DirManager.cpp:1363
+#: DirManager.cpp:1410
 #, c-format
-msgid ""
-"Project check detected %d missing external audio \n"
-"file(s) ('aliased files'). There is no way for Audacity \n"
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -969,28 +960,21 @@ msgid ""
 "to their previous location. \n"
 "\n"
 "Note that for the second option, the waveform \n"
-"may not show silence."
-msgstr ""
-"Projektkoll har hittat %d externa ljudfiler ('aliased files') \n"
-"som saknades. Audacity kan tyvärr inte återskapa filerna \n"
-"automatiskt. \n"
+"may not show silence. \n"
 "\n"
-"Om du väljer första eller andra  alternativet nedan, kan du pröva att \n"
-"hitta och flytta de saknade filerna till deras ursprungliga plats."
-
-#: DirManager.cpp:1374
-msgid "Close project immediately with no changes"
-msgstr "Stäng projekt omedelbart utan ändringar"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
+msgstr ""
 
 #: DirManager.cpp:1375
 #: DirManager.cpp:1492
 msgid "Treat missing audio as silence (this session only)"
 msgstr "Ersätt saknat ljud med tystnad [gäller bara denna inspelning]"
 
-#: DirManager.cpp:1376
-#: DirManager.cpp:1493
-msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Ersätt försvunnen data med tystnad  [genast och permanent]"
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
 
 #: DirManager.cpp:1379
 msgid "Warning - Missing Aliased File(s)"
@@ -1000,16 +984,13 @@ msgstr "Varning - saknar alias fil(er)"
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr "   Projekt kollen ersätter saknade alias filer med tystnad."
 
-#: DirManager.cpp:1429
+#: DirManager.cpp:1480
 #, c-format
-msgid ""
-"Project check detected %d missing alias (.auf) \n"
-"blockfile(s). Audacity can fully regenerate these \n"
-"files from the original audio in the project."
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
 msgstr ""
-"Project check detected %d missing alias (.auf) \n"
-"blockfile(s). Audacity can fully regenerate these \n"
-"files from the original audio in the project."
 
 #: DirManager.cpp:1434
 msgid "Regenerate alias summary files (safe and recommended)"
@@ -1033,13 +1014,13 @@ msgstr "Varning - Saknar summary fil(er)"
 msgid "   Project check regenerated missing alias summary file(s)."
 msgstr "   Project check regenerated missing alias summary file(s)."
 
-#: DirManager.cpp:1479
+#: DirManager.cpp:1531
 #, c-format
-msgid ""
-"Project check detected %d missing audio data \n"
-"(.au) blockfile(s), probably due to a bug, system \n"
-"crash, or accidental deletion. There is no way for \n"
-"Audacity to recover these missing files automatically. \n"
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
 "you can try to find and restore the missing files \n"
@@ -1048,54 +1029,45 @@ msgid ""
 "Note that for the second option, the waveform \n"
 "may not show silence."
 msgstr ""
-"Project check detected %d missing audio data \n"
-"(.au) blockfile(s), probably due to a bug, system \n"
-"crash, or accidental deletion. There is no way for \n"
-"Audacity to recover these missing files automatically. \n"
-"\n"
-"If you choose the first or second option below, \n"
-"you can try to find and restore the missing files \n"
-"to their previous location. \n"
-"\n"
-"Note that for the second option, the waveform \n"
-"may not show silence."
 
-#: DirManager.cpp:1496
-msgid "Warning - Missing Audio Data Blockfile(s)"
-msgstr "Varning - Ljuddata blockfil(er) saknas"
+#: DirManager.cpp:1376
+#: DirManager.cpp:1493
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr "Ersätt försvunnen data med tystnad  [genast och permanent]"
 
-#: DirManager.cpp:1518
-msgid "   Project check replaced missing audio data blockfile(s) with silence."
+#: DirManager.cpp:1549
+msgid "Warning - Missing Audio Data Block File(s)"
+msgstr ""
+
+#: DirManager.cpp:1571
+#, fuzzy
+msgid "   Project check replaced missing audio data block file(s) with silence."
 msgstr "   Projekt kollen ersätter saknade ljudfiler med tystnad."
 
-#: DirManager.cpp:1534
-msgid "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
+#: DirManager.cpp:1587
+#, fuzzy
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
 msgstr "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
 
-#: DirManager.cpp:1540
+#: DirManager.cpp:1593
 #, c-format
-msgid ""
-"Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug. \n"
-"\n"
-"They should be deleted to avoid disk contention."
+msgid "Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
 msgstr ""
-"Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug. \n"
-"\n"
-"They should be deleted to avoid disk contention."
 
 #: DirManager.cpp:1547
 msgid "Continue without deleting; ignore the extra files this session"
 msgstr "Fortsätt utan att radera; ignorera de extra filerna denna session"
 
-#: DirManager.cpp:1548
-msgid "Delete orphan files immediately"
-msgstr "Radera ursprungliga filer  genast"
+#: DirManager.cpp:1604
+msgid "Delete orphan files (permanent immediately)"
+msgstr ""
 
-#: DirManager.cpp:1551
-msgid "Warning - Orphan Blockfile(s)"
-msgstr "Varning - Ursprunglig blockfil(er)"
+#: DirManager.cpp:1607
+msgid "Warning - Orphan Block File(s)"
+msgstr ""
 
 #: DirManager.cpp:1574
 msgid "Cleaning up unused directories in project data"
@@ -1106,12 +1078,10 @@ msgid "Project check found file inconsistencies inspecting the loaded project da
 msgstr "Project check found file inconsistencies inspecting the loaded project data."
 
 #: DirManager.cpp:1594
-msgid ""
-"Project check found file inconsistencies during automatic recovery.\n"
+msgid "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Show Log...' in the Help menu to see details."
-msgstr ""
-"Project check found file inconsistencies during automatic recovery.\n"
+msgstr "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Show Log...' in the Help menu to see details."
 
@@ -1124,19 +1094,22 @@ msgstr "Varning: Problem med automatisk återställning"
 msgid "Missing aliased audio file: '%s'"
 msgstr "Saknar alias ljudfil: '%s':"
 
-#: DirManager.cpp:1656
+#: DirManager.cpp:1713
 #, c-format
-msgid "Missing alias (.auf) blockfile: '%s'"
+#, fuzzy
+msgid "Missing alias (.auf) block file: '%s'"
 msgstr "Saknar alias (.auf) ljudfil: '%s':"
 
-#: DirManager.cpp:1680
+#: DirManager.cpp:1737
 #, c-format
-msgid "Missing data blockfile: '%s'"
+#, fuzzy
+msgid "Missing data block file: '%s'"
 msgstr "Saknade data blockfiler: '%s'"
 
-#: DirManager.cpp:1707
+#: DirManager.cpp:1779
 #, c-format
-msgid "Orphan blockfile: '%s'"
+#, fuzzy
+msgid "Orphan block file: '%s'"
 msgstr "Ursprunglig blockfil:  '%s':"
 
 #: DirManager.cpp:1762
@@ -1164,13 +1137,11 @@ msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg support inte kompilerat i"
 
 #: FFmpeg.cpp:106
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
 "but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpeg var konfigurerat i Inställningar och kunde startas tidigare,                       \n"
+msgstr "FFmpeg var konfigurerat i Inställningar och kunde startas tidigare,                       \n"
 "men denna gång misslyckades Audacity att starta vid uppstart.                       \n"
 "\n"
 "Gå till Inställningar > Bibliotek och konfigurera rätt."
@@ -1232,14 +1203,12 @@ msgid "FFmpeg not found"
 msgstr "Hittade inte FFmpeg"
 
 #: FFmpeg.h:121
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity förösökte använda FFmpeg för att importera en ljudfil,\n"
+msgstr "Audacity förösökte använda FFmpeg för att importera en ljudfil,\n"
 "men biblioteken gick inte att finna.\n"
 "\n"
 "För att kunna importera med FFmpeg, gå till Inställningar > Bibliotek\n"
@@ -1445,12 +1414,10 @@ msgid "GStreamer %s: %s"
 msgstr "GStreamer %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpeg var konfigurerat i Inställningar och kunde startas tidigare, \n"
+msgstr "FFmpeg var konfigurerat i Inställningar och kunde startas tidigare, \n"
 "                      men denna gång misslyckades Audacity att starta vid uppstart.\n"
 "                     Gå till Inställningar > Bibliotek och konfigurera rätt."
 
@@ -1495,8 +1462,8 @@ msgid "Saving an Audacity Project"
 msgstr "Spara ett Audacity projekt"
 
 #: HelpText.cpp:157
-msgid "Unsupported Formats"
-msgstr "Format som inte stöds"
+msgid "Support for Other Formats"
+msgstr ""
 
 #: HelpText.cpp:161
 msgid "Burn to CD"
@@ -1537,6 +1504,14 @@ msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ställ din fråga
 #: HelpText.cpp:183
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
 msgstr "För ännu snabbare svar, alla online-resurser ovan är <b>sökbara</b>."
+
+#: HelpText.cpp:190
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
+msgstr ""
+
+#: HelpText.cpp:194
+msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
+msgstr ""
 
 #: HelpText.cpp:193
 msgid "<p>You do not appear to have 'help' installed on your computer.<br> Please <a href=\"*URL*\">view or download it online</a>."
@@ -1648,13 +1623,11 @@ msgid "New..."
 msgstr "Nytt..."
 
 #: LabelDialog.cpp:356
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"Du har kvar etiketter utan namn.Dessa kommer inte att\n"
+msgstr "Du har kvar etiketter utan namn.Dessa kommer inte att\n"
 "användas när etikettspår skapas.\n"
 "\n"
 "Vill du gå tillbaka och ge dem namn?"
@@ -1729,11 +1702,9 @@ msgstr "Det språk du valt, %s (%s), är inte samma som språket på datorn, %s 
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"Konverterade ett projekt i version 1.0 till det nya formatet.\n"
+msgstr "Konverterade ett projekt i version 1.0 till det nya formatet.\n"
 "Den gamla filen sparades som '%s'"
 
 #: Legacy.cpp:373
@@ -1856,34 +1827,22 @@ msgstr "&Ångra"
 msgid "&Redo"
 msgstr "&Gör om"
 
+#: Menus.cpp:344
+msgid "R&emove Audio"
+msgstr ""
+
 #: Menus.cpp:355
 msgid "Cu&t"
 msgstr "Kli&pp ut"
-
-#: Menus.cpp:358
-msgid "Spl&it Cut"
-msgstr "Del&a och klipp ut"
-
-#: Menus.cpp:359
-msgid "&Copy"
-msgstr "&Kopiera"
-
-#: Menus.cpp:362
-msgid "&Paste"
-msgstr "&Klistra in"
-
-#: Menus.cpp:365
-msgid "Paste Te&xt to New Label"
-msgstr "Klistra in te&xt till ny etikett"
-
-#: Menus.cpp:367
-msgid "Tri&m"
-msgstr "Be&skär"
 
 #: Menus.cpp:371
 #: Menus.cpp:413
 msgid "&Delete"
 msgstr "&Radera"
+
+#: Menus.cpp:358
+msgid "Spl&it Cut"
+msgstr "Del&a och klipp ut"
 
 #: Menus.cpp:372
 msgid "Split D&elete"
@@ -1892,6 +1851,14 @@ msgstr "Dela och ra&dera"
 #: Menus.cpp:373
 msgid "Silence Audi&o"
 msgstr "Skapa tystna&d"
+
+#: Menus.cpp:367
+msgid "Tri&m"
+msgstr "Be&skär"
+
+#: Menus.cpp:357
+msgid "Clip Boun&daries"
+msgstr ""
 
 #: Menus.cpp:377
 msgid "Sp&lit"
@@ -1910,6 +1877,18 @@ msgstr "&Sammanfoga"
 #: Menus.cpp:425
 msgid "Detac&h at Silences"
 msgstr "Avskil&j vid tystnad"
+
+#: Menus.cpp:359
+msgid "&Copy"
+msgstr "&Kopiera"
+
+#: Menus.cpp:362
+msgid "&Paste"
+msgstr "&Klistra in"
+
+#: Menus.cpp:365
+msgid "Paste Te&xt to New Label"
+msgstr "Klistra in te&xt till ny etikett"
 
 #: Menus.cpp:387
 msgid "Duplic&ate"
@@ -1932,10 +1911,6 @@ msgstr "&Klipp ut"
 msgid "&Split Cut"
 msgstr "&Dela och klipp ut"
 
-#: Menus.cpp:409
-msgid "Co&py"
-msgstr "Kop&iera"
-
 #: Menus.cpp:416
 msgid "Sp&lit Delete"
 msgstr "Del&a radera"
@@ -1943,6 +1918,10 @@ msgstr "Del&a radera"
 #: Menus.cpp:417
 msgid "Silence &Audio"
 msgstr "Tystnad &Ljud"
+
+#: Menus.cpp:409
+msgid "Co&py"
+msgstr "Kop&iera"
 
 #: Menus.cpp:421
 msgid "Spli&t"
@@ -2379,9 +2358,9 @@ msgstr "&Skärmdump verktyg..."
 msgid "&Run Benchmark..."
 msgstr "&Kör hastighetstest..."
 
-#: Menus.cpp:1046
-msgid "&Audio Device Info..."
-msgstr "&Ljudenhet Info..."
+#: Menus.cpp:1045
+msgid "Au&dio Device Info..."
+msgstr ""
 
 #: Menus.cpp:1047
 msgid "Show &Log..."
@@ -2732,11 +2711,9 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI filer (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 
 #: Menus.cpp:3011
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr ""
-"Du har valt ett filnamn med filextension som programmet inte känner igen.\n"
+msgstr "Du har valt ett filnamn med filextension som programmet inte känner igen.\n"
 "Vill du fortsätta?"
 
 #: Menus.cpp:3012
@@ -2939,10 +2916,6 @@ msgstr "Dela - nytt spår"
 #: Menus.cpp:4112
 msgid "Split to new track"
 msgstr "Dela till nytt spår"
-
-#: Menus.cpp:4194
-msgid "Split at labels"
-msgstr "Dela vid etiketter"
 
 #: Menus.cpp:4531
 msgid "Frequency Analysis"
@@ -3284,15 +3257,13 @@ msgid "Save changes before closing?"
 msgstr "Spara ändringar innan programmet avslutas?"
 
 #: Project.cpp:1870
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "\n"
 "Sparat projekt kommer inte att ha några spår.\n"
 "\n"
@@ -3313,12 +3284,9 @@ msgstr "Välj en eller flera ljudfiler..."
 msgid "%s is already open in another window."
 msgstr "%s är redan öppnad i ett annat fönster"
 
-#: Project.cpp:2176
-#: Project.cpp:2336
-#: Project.cpp:2537
-#: Project.cpp:2713
-msgid "Error opening project"
-msgstr "Fel när projektet öppnades"
+#: Project.cpp:2191 Project.cpp:2356 Project.cpp:2576 Project.cpp:2755
+msgid "Error Opening Project"
+msgstr ""
 
 #. i18n-hint: This string is a label in the file type filter in the open
 #: Project.cpp:2190
@@ -3326,51 +3294,43 @@ msgstr "Fel när projektet öppnades"
 msgid "Audacity projects"
 msgstr "Audacity projekt"
 
-#: Project.cpp:2242
-#: Project.cpp:2790
+#: Project.cpp:2256
 #, c-format
-msgid ""
-"This file was saved by Audacity %s, a much\n"
-"older version.  The format has changed.\n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
-"Audacity could corrupt the file in opening\n"
-"it, so you must back it up first.\n"
+"Audacity can try to open and save this file, but saving it in this \n"
+"version will then prevent any 1.2 or earlier version opening it. \n"
+"\n"
+"Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
 msgstr ""
-"Denna fil blev sparad av Audacity %s, en mycket\n"
-"äldre version av Audacity.  Formatet har ändrats.\n"
-"\n"
-"Audacity kan förstöra filen genom att öppna den\n"
-"så du behöver göra en backup på den först\n"
-"den först. \n"
-"\n"
-"Vill du öppna filen nu?"
 
 #: Project.cpp:2243
 msgid "1.0 or earlier"
 msgstr "1.0 eller tidigare"
 
-#: Project.cpp:2249
-#: Project.cpp:2802
-msgid "Opening old project file"
-msgstr "Öppnar gammal projektfil"
+#: Project.cpp:2271 Project.cpp:2837
+msgid "Warning - Opening Old Project File"
+msgstr ""
 
 #: Project.cpp:2285
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"Du försöker öppna en automatisk skapad backup-fil.\n"
+msgstr "Du försöker öppna en automatisk skapad backup-fil.\n"
 "Detta kan orsaka att data går förlorad.\n"
 "\n"
 "Vänligen öppna den aktuella Audacity projektfilen istället."
 
-#: Project.cpp:2286
-msgid "Backup file detected"
-msgstr "Backup-fil hittad"
+#: Project.cpp:2306
+msgid "Warning - Backup File Detected"
+msgstr ""
+
+#: Project.cpp:2320 xml/XMLWriter.cpp:329
+msgid "Error Opening File"
+msgstr ""
 
 #: Project.cpp:2300
 #: Project.cpp:2308
@@ -3380,16 +3340,14 @@ msgstr "Fel när filen öppnades"
 
 #: Project.cpp:2314
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"Fil är kanske skadad: \n"
+msgstr "Fil är kanske skadad: \n"
 "%s"
 
-#: Project.cpp:2315
-msgid "Error opening file or project"
-msgstr "Fel när fil eller projekt skulle öppnades"
+#: Project.cpp:2335
+msgid "Error Opening File or Project"
+msgstr ""
 
 #: Project.cpp:2335
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
@@ -3419,11 +3377,9 @@ msgstr "Det gick inte att hitta projektets datafolder: \"%s\""
 
 #: Project.cpp:2759
 #, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr ""
-"Denna fil är sparad i Audacity %s.\n"
+msgstr "Denna fil är sparad i Audacity %s.\n"
 "Du använder Audacity %s. Du behöver kanske uppgradera till\n"
 "en nyare version för att kunna öppna denna fil."
 
@@ -3431,25 +3387,8 @@ msgstr ""
 msgid "Can't open project file"
 msgstr "Det går inte att öppna projektfil"
 
-#: Project.cpp:2797
-#, c-format
-msgid ""
-"This file was saved by Audacity %s.\n"
-"\n"
-"Audacity can open and save this file, but saving it in this version\n"
-"will then prevent any 1.2 or earlier version opening it.\n"
-"\n"
-"Open this file now?"
-msgstr ""
-"Denna fil blev sparad av Audacity %s.\\n"
-"Audacity kan öppna och spara denna fil, men om du sparar den med denna version\n"
-" kan du inte längre öppna den i versioner som 1.2 eller tidigare.\n"
-" \n"
-"Vill du öppna filen nu?"
-
 #: Project.cpp:3018
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3457,8 +3396,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"Ditt projekt är nu tomt.\n"
+msgstr "Ditt projekt är nu tomt.\n"
 "Sparat projekt kommer inte att ha några spår.\n"
 "\n"
 "För att spara spår som du hade tidigare:\n"
@@ -3467,32 +3405,26 @@ msgstr ""
 "\n"
 "Spara ändå?"
 
-#: Project.cpp:3019
-msgid "Warning empty project"
-msgstr "Varning tomma projekt"
+#: Project.cpp:3050
+msgid "Warning - Empty Project"
+msgstr ""
 
 #: Project.cpp:3090
 #, c-format
-msgid ""
-"Could not save project. Path not found.  Try creating \n"
+msgid "Could not save project. Path not found.  Try creating \n"
 "directory \"%s\" before saving project with this name."
-msgstr ""
-"Kan inte spara projekt. Hittade inte sökvägen. Försök skapa \n"
+msgstr "Kan inte spara projekt. Hittade inte sökvägen. Försök skapa \n"
 "mapp \"%s\" innan du sparar projekt med detta namn."
 
-#: Project.cpp:3092
-#: Project.cpp:3129
-#: Project.cpp:3152
-msgid "Error saving project"
-msgstr "Fel när projekt skulle sparas"
+#: Project.cpp:3515
+msgid "Error Saving Project"
+msgstr "Fel när projektet sparades"
 
 #: Project.cpp:3127
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"Kan inte spara projektet. Kanske %s \n"
+msgstr "Kan inte spara projektet. Kanske %s \n"
 "är det inte skrivbart,\n"
 "eller det finns för lite utrymme att spara på."
 
@@ -3518,8 +3450,9 @@ msgstr "Importerat '%s'"
 msgid "Import"
 msgstr "Importera"
 
-#: Project.cpp:3422
-msgid "Error importing"
+#: Project.cpp:3453
+#, fuzzy
+msgid "Error Importing"
 msgstr "Fel vid import"
 
 #: Project.cpp:3470
@@ -3531,16 +3464,14 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM ljudfill (*.wav)|*.wav"
 
 #: Project.cpp:3481
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"Audacity komprimerade projektfiler (.aup) sparar ditt arbete i mindre,komprimerat (.ogg) format.\n"
+msgstr "Audacity komprimerade projektfiler (.aup) sparar ditt arbete i mindre,komprimerat (.ogg) format.\n"
 "Komprimerade projektfiler är ett bra sätt att skicka ditt projekt online,eftersom de ändra mindre i storlek.\n"
 "Att öppna ett komprimerat projekt tar längre tid än vanligt, då det importerarvarje komprimerat spår.\n"
 "\n"
@@ -3553,14 +3484,12 @@ msgid "Save Compressed Project As..."
 msgstr "Spara komprimerat projektet som"
 
 #: Project.cpp:3487
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"Du sparar en Audacity projektfil (.aup).\n"
+msgstr "Du sparar en Audacity projektfil (.aup).\n"
 "\n"
 "Spara ett projekt skapar en fil som bara Audacity kan öppna.\n"
 "\n"
@@ -3571,15 +3500,9 @@ msgid "Save Project As..."
 msgstr "Spara projekt som..."
 
 #: Project.cpp:3515
-msgid "Error Saving Project"
-msgstr "Fel när projektet sparades"
-
-#: Project.cpp:3515
-msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
-msgstr ""
-"Detta projekt kunde inte sparas då det angivna namnet skulle orsaka att en annan fil med samma namn skulle skrivas över.\n"
+msgstr "Detta projekt kunde inte sparas då det angivna namnet skulle orsaka att en annan fil med samma namn skulle skrivas över.\n"
 "Försök igen med ett annat namn."
 
 #: Project.cpp:3556
@@ -3594,22 +3517,6 @@ msgstr "Raderat %.2f sekunder vid t=%.2f"
 #: Project.cpp:3770
 msgid "Delete"
 msgstr "Radera"
-
-#: Project.cpp:3942
-msgid ""
-"One or more external audio files could not be found.\n"
-"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
-"Silence is being substituted for the affected audio.\n"
-"Choose File > Check Dependencies to view the original location of the missing files."
-msgstr ""
-"En eller fler externa ljudfiler hittades inte.\n"
-"Det är möjligt att de har flyttats, raderats, eller att enheten de var påinte var inkopplad.\n"
-"Dessa ljud har ersatts med tystnad.\n"
-"Välj Arkiv > Kontrollera tillbehör för att se var filerna var placerade från början."
-
-#: Project.cpp:3948
-msgid "Files Missing"
-msgstr "Filer saknas"
 
 #: Project.cpp:3975
 #, c-format
@@ -3653,9 +3560,9 @@ msgstr "Import complete. Running an on-demand waveform calculation. %2.0f%% comp
 msgid "New Project"
 msgstr "Nytt projekt"
 
-#: Project.cpp:4380
-msgid "Error writing autosave file"
-msgstr "Fel vid skriva till autosparad fil"
+#: Project.cpp:4401
+msgid "Error Writing Autosave File"
+msgstr ""
 
 #: Project.cpp:4395
 msgid "Could not create autosave file: "
@@ -3895,11 +3802,19 @@ msgstr "Breda spår"
 msgid "Choose a location to save screenshot images"
 msgstr "Välj plats att spara skärmdumpar"
 
-#: Sequence.cpp:832
-#: Sequence.cpp:842
-#: Sequence.cpp:849
-msgid "Gap detected in project file\n"
-msgstr "Hål hittat i projektfil\n"
+#: Sequence.cpp:1032
+#, c-format
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
+"Truncating to mMaxSamples."
+msgstr ""
+
+#: Sequence.cpp:1035
+msgid "Warning - Length in Writing Sequence"
+msgstr ""
+
+#: Sequence.cpp:1498
+msgid "Memory allocation failed -- NewSamples"
+msgstr ""
 
 #: ShuttleGui.cpp:2051
 #: effects/Effect.cpp:407
@@ -4031,116 +3946,96 @@ msgstr "Det gick inte att öppna genrefil."
 msgid "Load Metadata As:"
 msgstr "Öppna metadata som:"
 
-#: Tags.cpp:1090
-msgid "Error loading metadata"
-msgstr "Fel vid laddande av metadata"
+#: Tags.cpp:1089
+msgid "Error Loading Metadata"
+msgstr ""
 
 #: Tags.cpp:1119
 msgid "Save Metadata As:"
 msgstr "Spara metadata som:"
 
-#: Tags.cpp:1174
-msgid "Error saving tags file"
-msgstr "Fel när tagfil sparades"
+#: Tags.cpp:1173
+msgid "Error Saving Tags File"
+msgstr ""
 
 #: Theme.cpp:637
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
-msgstr ""
-"Audacity kunde inte skriva till fil:\n"
+msgstr "Audacity kunde inte skriva till fil:\n"
 "  %s."
 
 #: Theme.cpp:655
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr ""
-"Det gick inte att öppna önskad fil:\n"
+msgstr "Det gick inte att öppna önskad fil:\n"
 "  %s\n"
 " för att spara."
 
 #: Theme.cpp:663
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
-msgstr ""
-"Audacity kunde inte skriva image till fil:\n"
+msgstr "Audacity kunde inte skriva image till fil:\n"
 "  %s."
 
 #: Theme.cpp:798
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"Audacity kunde inte hitta fil:\n"
+msgstr "Audacity kunde inte hitta fil:\n"
 "  %s.\n"
 "Tema gick inte att öppna."
 
 #: Theme.cpp:806
 #: Theme.cpp:895
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"Audacity kunde inte ladda fil:\n"
+msgstr "Audacity kunde inte ladda fil:\n"
 "  %s.\n"
 "Kanske dåligt png format?"
 
 #: Theme.cpp:822
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"Audacity kunde inte läsa defaulttemat.\n"
+msgstr "Audacity kunde inte läsa defaulttemat.\n"
 "Var vänlig och rapportera problemet."
 
 #: Theme.cpp:917
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr ""
-"Ingen av de förväntade temafilerna\n"
+msgstr "Ingen av de förväntade temafilerna\n"
 "kunde hittas.\n"
 "  %s."
 
 #: Theme.cpp:941
 #: effects/NoiseRemoval.cpp:181
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"Kunde inte skapa mapp:\n"
+msgstr "Kunde inte skapa mapp:\n"
 "  %s"
 
 #: Theme.cpp:962
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"Audacity kunde inte spara fil:\n"
+msgstr "Audacity kunde inte spara fil:\n"
 "  %s"
 
 #: Theme.cpp:974
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"Alla nödvändiga filer i:\n"
+msgstr "Alla nödvändiga filer i:\n"
 "  %s\n"
 "finns redan."
 
@@ -4249,10 +4144,13 @@ msgstr "Vågform"
 msgid "Waveform (dB)"
 msgstr "Vågform (dB)"
 
-#: TrackPanel.cpp:634
-#: prefs/TracksPrefs.cpp:61
-msgid "Spectrum log(f)"
-msgstr "Spectrum log(f)"
+#: TrackPanel.cpp:638 prefs/TracksPrefs.cpp:60
+msgid "Spectrogram"
+msgstr ""
+
+#: TrackPanel.cpp:639 prefs/TracksPrefs.cpp:61
+msgid "Spectrogram log(f)"
+msgstr ""
 
 #. i18n-hint: short form of 'logarithm'
 #: TrackPanel.cpp:635
@@ -4714,27 +4612,21 @@ msgid "Plugins %i to %i"
 msgstr "Plugins %i till %i"
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Det uppstod ett problem med ditt sista val. Om du tror\n"
+msgstr "Det uppstod ett problem med ditt sista val. Om du tror\n"
 "att det är en bugg, var vänlig tala om för oss exakt när det uppstod."
 
 #: commands/CommandManager.cpp:953
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped. (Pausing is not sufficient.)"
-msgstr ""
-"Du kan bara göra detta när uppspelning och inspelning\n"
+msgstr "Du kan bara göra detta när uppspelning och inspelning\n"
 "är stoppad. (Pausa är inte passande.)"
 
 #: commands/CommandManager.cpp:955
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
-msgstr ""
-"Du måste först välja något stereoljud för att\n"
+msgstr "Du måste först välja något stereoljud för att\n"
 "använda denna funktion. (Du kan inte använda detta med mono.)"
 
 #: commands/CommandManager.cpp:957
@@ -4742,11 +4634,9 @@ msgid "You must first select some audio for this to use."
 msgstr "Var vänlig välj lite ljud först för att använda detta."
 
 #: commands/CommandManager.cpp:959
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. (Selecting other kinds of track won't work.)"
-msgstr ""
-"Du måste först välja något ljud för att\n"
+msgstr "Du måste först välja något ljud för att\n"
 " använda denna funktion. (Välja andra typer av spår fungerar inte.)"
 
 #: commands/CommandManager.cpp:964
@@ -5291,20 +5181,29 @@ msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr "Kontrastanalys (WCAG 2 stämmer)"
 
 #: effects/Contrast.cpp:107
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
-msgstr ""
-"Starta tid efter efter sluttid!\n"
+msgstr "Starta tid efter efter sluttid!\n"
 "Vänligen skriv in vettiga tider."
 
 #: effects/Contrast.cpp:117
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"Tiderna är inte vettiga!\n"
+msgstr "Tiderna är inte vettiga!\n"
 "Var vänlig använd riktiga tider."
+
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
 
 #: effects/Contrast.cpp:214
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
@@ -5658,13 +5557,11 @@ msgstr "Equalization"
 
 #: effects/Equalization.cpp:995
 #, c-format
-msgid ""
-"EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
 "Please press 'help' to visit the download page.\n"
 "\n"
 "Save the curves at %s"
-msgstr ""
-"EQCurves.xml kunde inte hittas på ditt system.\n"
+msgstr "EQCurves.xml kunde inte hittas på ditt system.\n"
 "Var vänlig tryck 'hjälp' för att gå till sida för nedladdning.\n"
 "\n"
 "Spara kurvorna i %s"
@@ -5679,13 +5576,13 @@ msgstr "EQCurves.xml och EQDefaultCurves.xml saknas"
 msgid "unnamed"
 msgstr "namnlös"
 
-#: effects/Equalization.cpp:1023
-msgid "Error loading EQ curve"
-msgstr "Fel vid laddande av EQ kurva"
+#: effects/Equalization.cpp:1024
+msgid "Error Loading EQ Curve"
+msgstr ""
 
-#: effects/Equalization.cpp:1088
-msgid "Error saving equalization curves"
-msgstr "Fel vid sparande av Equalization kurvor"
+#: effects/Equalization.cpp:1089
+msgid "Error Saving Equalization Curves"
+msgstr ""
 
 #. i18n-hint: && in here is an escape character to get a single &
 #: effects/Equalization.cpp:1111
@@ -5764,13 +5661,10 @@ msgstr "R&utnät"
 msgid "Select Curve"
 msgstr "Välj kurva"
 
-#: effects/Equalization.cpp:1382
-msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
-"Choose the 'Manage curves list...' button and rename the 'unnamed' curve, then use that one."
+#: effects/Equalization.cpp:1383
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
-"För att använda EQ-kurva i batch-kedjan, välj ett nytt för den.\n"
-"Välj 'Hantera kurvlista...' - knappen och namnge 'namnlös' -kurvan, och använd den sedan."
 
 #: effects/Equalization.cpp:1383
 msgid "EQ Curve needs a different name"
@@ -5819,11 +5713,9 @@ msgid "Help"
 msgstr "Hjälp"
 
 #: effects/Equalization.cpp:2876
-msgid ""
-"Rename 'unnamed' to save a new entry.\n"
+msgid "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
-msgstr ""
-"Byt namn på 'namnlös' för att spara en ny ingång.\n"
+msgstr "Byt namn på 'namnlös' för att spara en ny ingång.\n"
 "'OK' sparar alla ändringar, 'Avbryt' gör det inte."
 
 #: effects/Equalization.cpp:2911
@@ -6247,11 +6139,9 @@ msgstr "Skapar brus"
 
 #: effects/NoiseRemoval.cpp:200
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"Det gick inte att öppna fil:\n"
+msgstr "Det gick inte att öppna fil:\n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:294
@@ -6263,11 +6153,9 @@ msgid "Step 1"
 msgstr "Steg 1"
 
 #: effects/NoiseRemoval.cpp:878
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"Välj några sekunder brus så Audacity vet vad som skall filtreras bort,\n"
+msgstr "Välj några sekunder brus så Audacity vet vad som skall filtreras bort,\n"
 " klicka sedan på Ladda brusprofil:"
 
 #: effects/NoiseRemoval.cpp:879
@@ -6275,11 +6163,9 @@ msgid "Step 2"
 msgstr "Steg 2"
 
 #: effects/NoiseRemoval.cpp:880
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Välj allt ljud som du vill filtrera, välj hur mycket brus du vill\n"
+msgstr "Välj allt ljud som du vill filtrera, välj hur mycket brus du vill\n"
 " filtrera bort, klicka sedan på 'OK' för att radera brus.\n"
 
 #: effects/NoiseRemoval.cpp:885
@@ -6349,10 +6235,11 @@ msgid "Removing Noise"
 msgstr "Raderar brus"
 
 #. i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
-#: effects/Normalize.cpp:70
+#. * false (translated below) if those options were selected
+#: effects/Normalize.cpp:74
 #, c-format
-msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s"
-msgstr "Tillämpad effekt: %s radera dc offset = %s, normalisera amplituden = %s"
+msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"
+msgstr ""
 
 #. i18n-hint: true here means that the option was
 #: effects/Normalize.cpp:74
@@ -6377,13 +6264,17 @@ msgstr "Radera ändrad DC startposition (centrera på 0.0 vertikalt)"
 msgid "Normalize maximum amplitude to:"
 msgstr "Normalisera maxamplitud till:"
 
-#: effects/Normalize.cpp:366
-msgid "-"
-msgstr "-"
-
 #: effects/Normalize.cpp:371
 msgid "Maximum amplitude dB"
 msgstr "Max Amplitude (dB)"
+
+#: effects/Normalize.cpp:406
+msgid "Normalize stereo channels independently"
+msgstr ""
+
+#: effects/Normalize.cpp:474
+msgid ".  Maximum 0dB."
+msgstr ""
 
 #: effects/Normalize.h:33
 msgid "Normalize..."
@@ -6460,24 +6351,20 @@ msgid "Applying Phaser"
 msgstr "Lägger till Phaser"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Reparationseffekten är gjord för att användas på en mycket kort del av skadat ljud (upp till 128 samples).\n"
+msgstr "Reparationseffekten är gjord för att användas på en mycket kort del av skadat ljud (upp till 128 samples).\n"
 "\n"
 "Zooma in och välj en liten bråkdel av en sekund för att reparera."
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"Reparera arbete genom att använda ljuddata utanför valt område.\n"
+msgstr "Reparera arbete genom att använda ljuddata utanför valt område.\n"
 "\n"
 "Välj ett område där ljud har kontakt med annat ljud på minst ena sidan.\n"
 "\n"
@@ -6651,11 +6538,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "SpikeCleaner av Lynn Allan"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"Max tid för Spike (millisekunder): \n"
+msgstr "Max tid för Spike (millisekunder): \n"
 "(99999 eller större är Av)"
 
 #: effects/SpikeCleaner.cpp:178
@@ -6851,11 +6736,9 @@ msgid "Threshold for silence:"
 msgstr "Tröskel för tystnad:"
 
 #: effects/TruncSilence.cpp:920
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"  Varaktighet måste vara minst 1 millisekund\n"
+msgstr "  Varaktighet måste vara minst 1 millisekund\n"
 "  Compress ratio måste vara minst 1:1"
 
 #: effects/TruncSilence.h:37
@@ -6901,8 +6784,8 @@ msgid "Load VST Program:"
 msgstr "Ladda VST-program:"
 
 #: effects/VST/VSTEffect.cpp:613
-msgid "Error loading program"
-msgstr "Fel vid öppnande av program"
+msgid "Error Loading VST Program"
+msgstr ""
 
 #: effects/VST/VSTEffect.cpp:629
 msgid "Save VST Program As:"
@@ -7025,11 +6908,9 @@ msgstr "[Obs: Nyquist returnerade felaktig UTF-8 sträng, nu konverterad som Lat
 
 #: effects/nyquist/Nyquist.cpp:305
 #, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
 "Control not created."
-msgstr ""
-"Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+msgstr "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
 "Control not created."
 
 #: effects/nyquist/Nyquist.cpp:431
@@ -7045,14 +6926,12 @@ msgid "Error in Nyquist code"
 msgstr "Fel i  Nyquist kod"
 
 #: effects/nyquist/Nyquist.cpp:488
-msgid ""
-"Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
 "for SAL, or begin with an open parenthesis such as\n"
 "\t(mult s 0.1)\n"
 " for LISP."
-msgstr ""
-"Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+msgstr "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
 "for SAL, or begin with an open parenthesis such as\n"
 "\t(mult s 0.1)\n"
@@ -7142,18 +7021,23 @@ msgstr "Varning"
 
 #: export/Export.cpp:620
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to save the file under this name?"
-msgstr ""
-"Du vill spara en %s fil med namnet \"%s\".\n"
+msgstr "Du vill spara en %s fil med namnet \"%s\".\n"
 "\n"
 "Vanligtvis har dessa extensionen \"%s\", och vissa program kommer inte att kunna öppna filerna om du väljer andra extensioner.\n"
 "\n"
 "Är du säker på att du vill spara filen med detta namn?"
+
+#: export/Export.cpp:654
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
+"The file cannot be written because the path is needed to restore the original audio to the project.\n"
+"Choose File > Check Dependencies to view the locations of all missing files.\n"
+"If you still wish to export, please choose a different filename or folder."
+msgstr ""
 
 #: export/Export.cpp:641
 #, c-format
@@ -7243,38 +7127,16 @@ msgid "Command Output"
 msgstr "Kommando output"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
-msgstr ""
-"Rätt konfigurerad FFmpeg är nödvändig för att fortsätta.\n"
+msgstr "Rätt konfigurerad FFmpeg är nödvändig för att fortsätta.\n"
 "Du kan konfigurera det i Inställningar> Bibliotek."
-
-#: export/ExportFFmpeg.cpp:237
-msgid "AMR support is not distributable"
-msgstr "AMR support är inte distribuerbar"
-
-#: export/ExportFFmpeg.cpp:237
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
-"You can configure it at Preferences > Libraries.\n"
-"\n"
-"Note that AMR support is not available with our FFmpeg\n"
-"installer, but requires you compile FFmpeg yourself."
-msgstr ""
-"Rätt konfigurerad FFmpeg är nödvändig för att fortsätta.\n"
-"Du kan konfigurera det i Inställningar> Bibliotek.\n"
-"\n"
-"Observera att AMR support saknas med vår FFmpeg\n"
-"installer, men det krävs att du kompilerar FFmpeg själv."
 
 #: export/ExportFFmpeg.cpp:454
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
-msgstr ""
-"FFmpeg kan inte ljudcodec 0x%x.\n"
+msgstr "FFmpeg kan inte ljudcodec 0x%x.\n"
 "Support för denna codec är förmodligen inte inkompilerad."
 
 #: export/ExportFFmpeg.cpp:709
@@ -7299,20 +7161,16 @@ msgstr "Felaktig samplingsfrekvens"
 
 #: export/ExportFFmpeg.cpp:818
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
-msgstr ""
-"Projektets samplingsfrekvens (%d) supportas inte av nuvarande\n"
+msgstr "Projektets samplingsfrekvens (%d) supportas inte av nuvarande\n"
 " filformat."
 
 #: export/ExportFFmpeg.cpp:821
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
-msgstr ""
-"Kombinationen av projektets samplingsfrekvens (%d) och bit rate (%d kbps)\n"
+msgstr "Kombinationen av projektets samplingsfrekvens (%d) och bit rate (%d kbps)\n"
 "är inte supportad av nuvarade filformat.  "
 
 #: export/ExportFFmpeg.cpp:824
@@ -7328,6 +7186,11 @@ msgstr "Samplingsfrekvenser"
 #: export/ExportFFmpegDialogs.cpp:158
 msgid "Specify AC3 Options"
 msgstr "Bestäm FLAC Inställningar"
+
+#: export/ExportMP2.cpp:114
+#, c-format
+msgid "%i kbps"
+msgstr "%i kbps"
 
 #: export/ExportFFmpegDialogs.cpp:177
 msgid "AC3 Export Setup"
@@ -7360,17 +7223,14 @@ msgstr "Kvalité:"
 msgid "Specify AMR-NB Options"
 msgstr "Bestäm AMR-NB inställningar"
 
+#: export/ExportFFmpegDialogs.cpp:282
+#, c-format
+msgid "%.2f kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:300
 msgid "AMR-NB Export Setup"
 msgstr "AMR-NB Export Setup"
-
-#: export/ExportFFmpegDialogs.cpp:350
-msgid "Specify AMR-WB Options"
-msgstr "Bestäm AMR-WB inställningar"
-
-#: export/ExportFFmpegDialogs.cpp:369
-msgid "AMR-WB Export Setup"
-msgstr "AMR-WB Export Setup"
 
 #: export/ExportFFmpegDialogs.cpp:423
 msgid "Specify WMA Options"
@@ -7425,10 +7285,6 @@ msgstr "AC3 Filer (FFmpeg)"
 #: export/ExportFFmpegDialogs.cpp:1190
 msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (narrow band) Files (FFmpeg)"
-
-#: export/ExportFFmpegDialogs.cpp:1192
-msgid "AMR (wide band) Files (FFmpeg)"
-msgstr "AMR (wide band) Filer (FFmpeg)"
 
 #: export/ExportFFmpegDialogs.cpp:1194
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -7519,12 +7375,10 @@ msgid "Language:"
 msgstr "Språk:"
 
 #: export/ExportFFmpegDialogs.cpp:1432
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"ISO 639 3-letter language code\n"
+msgstr "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
 
@@ -7541,35 +7395,29 @@ msgid "Tag:"
 msgstr "Tag:"
 
 #: export/ExportFFmpegDialogs.cpp:1446
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"Codec tag (FOURCC)\n"
+msgstr "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
 
 #: export/ExportFFmpegDialogs.cpp:1449
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
-msgstr ""
-"Bit Rate (bits/second) - påverkar den slutliga filens storlek och kvalité\n"
+msgstr "Bit Rate (bits/second) - påverkar den slutliga filens storlek och kvalité\n"
 "Vissa codecs kan bara acceptera vissa specifika värden (128k, 192k, 256k etc)\n"
 "0 - automatik\n"
 "Rekommenderad - 192000"
 
 #: export/ExportFFmpegDialogs.cpp:1452
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
-msgstr ""
-"Overall quality, used differently by different codecs\n"
+msgstr "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
@@ -7579,11 +7427,9 @@ msgid "Sample Rate:"
 msgstr "Samplingsfrekvens:"
 
 #: export/ExportFFmpegDialogs.cpp:1455
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
-msgstr ""
-"Sample rate (Hz)\n"
+msgstr "Sample rate (Hz)\n"
 "0 - ändra inte sample rate"
 
 #: export/ExportFFmpegDialogs.cpp:1457
@@ -7591,12 +7437,10 @@ msgid "Cutoff:"
 msgstr "Cutoff:"
 
 #: export/ExportFFmpegDialogs.cpp:1458
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
-msgstr ""
-"Audio cutoff bandwidth (Hz)\n"
+msgstr "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
 
@@ -7605,12 +7449,10 @@ msgid "Profile:"
 msgstr "Profil:"
 
 #: export/ExportFFmpegDialogs.cpp:1463
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
-msgstr ""
-"AAC Profile\n"
+msgstr "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
 
@@ -7623,14 +7465,12 @@ msgid "Compression:"
 msgstr "Kompression:"
 
 #: export/ExportFFmpegDialogs.cpp:1474
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr ""
-"Compression level\n"
+msgstr "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
@@ -7641,14 +7481,12 @@ msgid "Frame:"
 msgstr "Frame:"
 
 #: export/ExportFFmpegDialogs.cpp:1477
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr ""
-"Frame size\n"
+msgstr "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
@@ -7659,14 +7497,12 @@ msgid "LPC"
 msgstr "LPC"
 
 #: export/ExportFFmpegDialogs.cpp:1480
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr ""
-"LPC coefficients precision\n"
+msgstr "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
@@ -7677,13 +7513,11 @@ msgid "PdO Method:"
 msgstr "PdO Metod:"
 
 #: export/ExportFFmpegDialogs.cpp:1485
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
-msgstr ""
-"Prediction Order Method\n"
+msgstr "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
@@ -7693,14 +7527,12 @@ msgid "Min. PdO"
 msgstr "Min. PdO"
 
 #: export/ExportFFmpegDialogs.cpp:1488
-msgid ""
-"Minimal prediction order\n"
+msgid "Minimal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Minimal prediction order\n"
+msgstr "Minimal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7711,14 +7543,12 @@ msgid "Max. PdO"
 msgstr "Max. PdO"
 
 #: export/ExportFFmpegDialogs.cpp:1491
-msgid ""
-"Maximal prediction order\n"
+msgid "Maximal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Maximal prediction order\n"
+msgstr "Maximal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7729,14 +7559,12 @@ msgid "Min. PtO"
 msgstr "Min. PtO"
 
 #: export/ExportFFmpegDialogs.cpp:1494
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Minimal partition order\n"
+msgstr "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7747,14 +7575,12 @@ msgid "Max. PtO"
 msgstr "Max. PtO"
 
 #: export/ExportFFmpegDialogs.cpp:1497
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Maximal partition order\n"
+msgstr "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
@@ -7773,12 +7599,10 @@ msgid "Mux Rate:"
 msgstr "Mux Rate:"
 
 #: export/ExportFFmpegDialogs.cpp:1511
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Maximum bit rate of the multiplexed stream\n"
+msgstr "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
 
@@ -7787,12 +7611,10 @@ msgid "Packet Size:"
 msgstr "Packet Size:"
 
 #: export/ExportFFmpegDialogs.cpp:1514
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Packet size\n"
+msgstr "Packet size\n"
 "Optional\n"
 "0 - default"
 
@@ -7903,11 +7725,9 @@ msgstr "FLAC export kunde inte öppna %s"
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
-msgstr ""
-"FLAC encoder lyckades inte initiera\n"
+msgstr "FLAC encoder lyckades inte initiera\n"
 "Status: %d"
 
 #: export/ExportFLAC.cpp:324
@@ -7921,11 +7741,6 @@ msgstr "Exportera hela projektet som FLAC"
 #: export/ExportMP2.cpp:108
 msgid "Specify MP2 Options"
 msgstr "Bestäm MP2 Inställningar"
-
-#: export/ExportMP2.cpp:114
-#, c-format
-msgid "%i kbps"
-msgstr "%i kbps"
 
 #: export/ExportMP2.cpp:127
 msgid "MP2 Export Setup"
@@ -8071,11 +7886,9 @@ msgstr "Var hittar man %s?"
 
 #: export/ExportMP3.cpp:1111
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
-msgstr ""
-"Du är länkad till lame_enc.dll v%d.%d. Denna version är inte kompatibel med Audacity %d.%d.%d.\n"
+msgstr "Du är länkad till lame_enc.dll v%d.%d. Denna version är inte kompatibel med Audacity %d.%d.%d.\n"
 "Var vänlig och ladda ner senaste versionen av LAME MP3 bibliotek."
 
 #: export/ExportMP3.cpp:1375
@@ -8143,20 +7956,16 @@ msgstr "Fel %d rapporterades från MP3 encoder"
 
 #: export/ExportMP3.cpp:1839
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
-msgstr ""
-"Projektets samplingsfrekvens (%d) supportas inte av MP3\n"
+msgstr "Projektets samplingsfrekvens (%d) supportas inte av MP3\n"
 "filformat"
 
 #: export/ExportMP3.cpp:1842
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
-msgstr ""
-"Kombinationen av projektets samplingsfrekvens (%d) och bit rate (%d kbps)\n"
+msgstr "Kombinationen av projektets samplingsfrekvens (%d) och bit rate (%d kbps)\n"
 "är inte supportad av MP3 filformat.  "
 
 #: export/ExportMP3.cpp:2013
@@ -8170,8 +7979,7 @@ msgid "Export Multiple"
 msgstr "Multipel export"
 
 #: export/ExportMultiple.cpp:175
-msgid ""
-"If you have more than one Audio Track, you can\n"
+msgid "If you have more than one Audio Track, you can\n"
 "export each track as a separate audio file.\n"
 "\n"
 "If you have a Label Track, you can export a separate\n"
@@ -8181,8 +7989,7 @@ msgid ""
 "\n"
 "This Project does not meet the above criteria for\n"
 "exporting multiple files."
-msgstr ""
-"Om du har mer än ett ljudspår, kan du exportera varje spår som en separat ljudfil,\n"
+msgstr "Om du har mer än ett ljudspår, kan du exportera varje spår som en separat ljudfil,\n"
 "eller om du har ett etikettspår, så kan du exportera en separat ljudfil\n"
 " för varje etikett i det spåret. Du kan ha mer än ett etikettspår\n"
 "men filerna kommer bara att exporteras till det översta etikettspåret.\n"
@@ -8295,12 +8102,10 @@ msgstr "Något blev riktigt fel efter export av följande %ld fil(er)."
 
 #: export/ExportMultiple.cpp:572
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr ""
-"\"%s\" finns inte.\n"
+msgstr "\"%s\" finns inte.\n"
 "\n"
 "Vill du skapa det?"
 
@@ -8316,11 +8121,9 @@ msgstr "Redigera metadata"
 
 #: export/ExportMultiple.cpp:927
 #, c-format
-msgid ""
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
-msgstr ""
-"Etiketten eller spåret %s är inte ett fungerande filnamn. Du kan inte använda något av:    %s\n"
+msgstr "Etiketten eller spåret %s är inte ett fungerande filnamn. Du kan inte använda något av:    %s\n"
 "Välj..."
 
 #: export/ExportMultiple.cpp:928
@@ -8401,11 +8204,9 @@ msgstr "Exportera hela projektet som %s"
 #. i18n-hint: %s will be the error message from libsndfile, which
 #: export/ExportPCM.cpp:556
 #, c-format
-msgid ""
-"Error while writing %s file (disk full?).\n"
+msgid "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
-msgstr ""
-"Fel vid sparande av %s fil (disk full?).\n"
+msgstr "Fel vid sparande av %s fil (disk full?).\n"
 "Libsndfile säger \"%s\""
 
 #. i18n-hint: %s will be the error message from libsndfile
@@ -8435,11 +8236,6 @@ msgstr "Din fil kommer att exporteras som en 16-bit WAV (Microsoft)-fil.\n"
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
 msgstr "Din fil kommer att exporteras som en GSM 6.10 WAV-fil.\n"
 
-#: import/Import.cpp:435
-#: import/ImportMP3.cpp:47
-msgid "MP3 files"
-msgstr "MP3 filer"
-
 #: import/Import.cpp:471
 msgid "Select stream(s) to import"
 msgstr "Välj stream(s) att importera"
@@ -8451,73 +8247,61 @@ msgstr "Denna version av audacity var inte kompilerad med %s support."
 
 #: import/Import.cpp:537
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" /nis a MIDI-fil, inte en ljudfil. \n"
+msgstr "\"%s\" /nis a MIDI-fil, inte en ljudfil. \n"
 "Audacity kan inte öppna denna filtyp för uppspel och redigering, men\n"
 "du kan redigera den genom att välja Arkiv > Importera > MIDI."
 
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:547
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en Audio CD-fil. \n"
+msgstr "\"%s\" är en Audio CD-fil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Försök rippa filen till ett ursprungligt ljudformat \n"
 "som Audacity kan importera som WAV eller AIFF."
 
 #: import/Import.cpp:553
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr ""
-"\"%s\" är en spellista.\n"
+msgstr "\"%s\" är en spellista.\n"
 "Audacity kan inte öppna denna fil eftersom den bara innehåller länkar till andra filer.\n"
 "Du kanske kan öppna filen i en texteditor och ladda ner de aktuella ljudfilerna."
 
 #: import/Import.cpp:558
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" is a Windows Media Audio fil (.wma). \n"
+msgstr "\"%s\" is a Windows Media Audio fil (.wma). \n"
 "Audacity kan inte öppna denna filtyp p g a patentrestriktioner.\n"
 "Du behöver konvertera filen till en supportat ljudformat som WAV eller AIFF."
 
 #: import/Import.cpp:563
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en avancerad ljudkodningsfil. \n"
+msgstr "\"%s\" är en avancerad ljudkodningsfil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Du behöver konvertera den till ett ljudformat som WAV eller AIFF."
 
 #: import/Import.cpp:568
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en krypterad ljudfil. \n"
+msgstr "\"%s\" är en krypterad ljudfil. \n"
 " Dessa kommer från en musikshop på nätet. \n"
 "Audacity kan inte öppna denna fil på grund av krypteringen.\n"
 "Pröva att spela in filen i Audacity, eller bränn den på en audio-CD för\n"
@@ -8525,38 +8309,32 @@ msgstr ""
 
 #: import/Import.cpp:573
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en RealPlayer mediafil. \n"
+msgstr "\"%s\" är en RealPlayer mediafil. \n"
 "Audadcity kan inte öppna detta licensierade format.\n"
 "Du måste konvertera det till ett supportat ljudformat, som WAV eller AIFF."
 
 #: import/Import.cpp:579
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr ""
-"\"%s\" är en textbaserad fil, inte en ljudfil. \n"
+msgstr "\"%s\" är en textbaserad fil, inte en ljudfil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Du behöver konvertera den till ett ljudformat som WAV eller AIFF och \n"
 "sedan importera den, eller spela in den i Audacity."
 
 #: import/Import.cpp:585
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" is a Musepack audio fil. \n"
+msgstr "\"%s\" is a Musepack audio fil. \n"
 "Audacity kan inte öppna denna filtyp. \n"
 "Om du tror att det kan vara en mp3-fil, byt namn så det slutar på \".mp3\"\n"
 "och pröva att importera det igen. Annars får du konvertera filen \n"
@@ -8564,66 +8342,54 @@ msgstr ""
 
 #: import/Import.cpp:591
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en Wavpack audio fil. \n"
+msgstr "\"%s\" är en Wavpack audio fil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Du behöver konvertera den till ett ljudformat som WAV eller AIFF."
 
 #: import/Import.cpp:597
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en Dolby Digital audio fil. \n"
+msgstr "\"%s\" är en Dolby Digital audio fil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Du behöver konvertera den till ett ljudformat som WAV eller AIFF."
 
 #: import/Import.cpp:603
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en Ogg Speex audio fil. \n"
+msgstr "\"%s\" är en Ogg Speex audio fil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Du behöver konvertera den till ett ljudformat som WAV eller AIFF."
 
 #: import/Import.cpp:609
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" är en videofil. \n"
+msgstr "\"%s\" är en videofil. \n"
 "Audacity kan inte öppna denna typ av fil. \n"
 "Du behöver extrahera den till ett ljudformat som WAV eller AIFF."
 
 #: import/Import.cpp:614
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
-msgstr ""
-"Audacity känner inte igen denna typ av fil '%s'.\n"
+msgstr "Audacity känner inte igen denna typ av fil '%s'.\n"
 "Om det är okomprimerad, pröva att importera med \"Importera Rådata\"."
 
 #: import/Import.cpp:632
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+msgid "Audacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr ""
-"Audacity recognized the type of the file '%s'.\n"
+msgstr "Audacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
@@ -8692,6 +8458,11 @@ msgstr "Det gick inte att öppna fil"
 msgid ": Incorrect filetype."
 msgstr ": Felaktig filtyp."
 
+#: import/Import.cpp:435
+#: import/ImportMP3.cpp:47
+msgid "MP3 files"
+msgstr "MP3 filer"
+
 #: import/ImportOGG.cpp:44
 msgid "Ogg Vorbis files"
 msgstr "Ogg Vorbis-filer"
@@ -8719,6 +8490,42 @@ msgstr "Intert logiskt fel"
 #: import/ImportPCM.cpp:68
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, och andra okomprimerade format"
+
+#: import/ImportPCM.cpp:225
+#, c-format
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+"\n"
+"Your current preference is set to %s.\n"
+"\n"
+"Reading the files directly allows you to play or edit them almost immediately.  This is less safe than copying in, because you must retain the files with their original names in their original location.\n"
+"File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
+"\n"
+"How do you want to import the current file(s)?"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "copy in"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "read directly"
+msgstr ""
+
+#: import/ImportPCM.cpp:240
+msgid "Choose an import method"
+msgstr ""
+
+#: import/ImportPCM.cpp:243
+msgid "Make a &copy of the files before editing (safer)"
+msgstr ""
+
+#: import/ImportPCM.cpp:246
+msgid "Read the files &directly from the original (faster)"
+msgstr ""
+
+#: import/ImportPCM.cpp:249
+msgid "Don't &warn again and always use my choice above"
+msgstr ""
 
 #: import/ImportPlugin.h:141
 #: import/ImportRaw.cpp:210
@@ -8941,11 +8748,9 @@ msgid "Mi&nimum Free Memory (MB):"
 msgstr "Mi&nimum fritt minne (MB):"
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
-msgstr ""
-"Om det tillgängliga dataminnet sjunker under detta värde, kommer ljud inte\n"
+msgstr "Om det tillgängliga dataminnet sjunker under detta värde, kommer ljud inte\n"
 "att cashas i minnet utan skrivs till disk."
 
 #: prefs/DirectoriesPrefs.cpp:126
@@ -8973,6 +8778,10 @@ msgstr "Katalog %s är inte skrivbar"
 #: prefs/DirectoriesPrefs.cpp:226
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Ändringar i den temporära katalogen kommer inte att få effekt förrän Audacity startas om."
+
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr ""
 
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
@@ -9035,8 +8844,8 @@ msgid "Extended Import"
 msgstr "Utökad import"
 
 #: prefs/ExtImportPrefs.cpp:92
-msgid "Filter chosen in OpenFile dialog overrides any rules"
-msgstr "Filter valda i Öppna fil-dialogrutan skriver över andra regler"
+msgid "Attempt to use filter in OpenFile dialog first"
+msgstr ""
 
 #: prefs/ExtImportPrefs.cpp:95
 msgid "Rules to choose import filters"
@@ -9185,6 +8994,10 @@ msgstr "Placering av &manual:"
 msgid "&Beep on completion of longer activities"
 msgstr "&Ljud när längre aktiviteter är klara"
 
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
+msgstr ""
+
 #: prefs/GUIPrefs.cpp:131
 msgid "Modes"
 msgstr "Lägen"
@@ -9234,8 +9047,7 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr "V&isa Metadata Editor främst för att exportera"
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
 msgstr "Obs! Val av ljudkvalité vid export kan väljas genom att klicka på knappen för Inställningar i Exportera-dialogrutan."
 
@@ -9311,25 +9123,23 @@ msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Välj en XML-fil som innehåller Audacity kortkommandon..."
 
 #: prefs/KeyConfigPrefs.cpp:287
-msgid "Error loading keyboard shortcuts"
-msgstr "Fel uppstod när kortkommandon skulle laddas"
+msgid "Error Loading Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:300
 msgid "Export Keyboard Shortcuts As:"
 msgstr "Exportera kortkommandon som:"
 
 #: prefs/KeyConfigPrefs.cpp:326
-msgid "Error saving keyboard shortcuts"
-msgstr "Fel vid sparande av kortkommandon"
+msgid "Error Saving Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:404
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
-msgstr ""
-"Kortkommandot '%s' är redan valt för:\n"
+msgstr "Kortkommandot '%s' är redan valt för:\n"
 "\n"
 "'%s'"
 
@@ -9387,11 +9197,9 @@ msgid "Dow&nload"
 msgstr "Lad&da ner"
 
 #: prefs/LibraryPrefs.cpp:186
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
-msgstr ""
-"Audacity har automatiskt hittat FFmpeg bibliotek.\n"
+msgstr "Audacity har automatiskt hittat FFmpeg bibliotek.\n"
 "Vill du fortfarande söka det manuellt?"
 
 #: prefs/MidiIOPrefs.cpp:58
@@ -9685,6 +9493,10 @@ msgstr "&Kort period:"
 msgid "Lo&ng period:"
 msgstr "Lå&ng period:"
 
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
+msgstr ""
+
 #: prefs/PrefsDialog.cpp:75
 msgid "Audacity Preferences"
 msgstr "Audacity Inställningar"
@@ -9899,10 +9711,6 @@ msgstr "16384"
 msgid "32768 - most narrowband"
 msgstr "32768 - most narrowband"
 
-#: prefs/SpectrumPrefs.cpp:56
-msgid "4096 - most narrowband"
-msgstr "4096 - most narrowband"
-
 #: prefs/SpectrumPrefs.cpp:82
 msgid "FFT Window"
 msgstr "FFT Window"
@@ -9975,9 +9783,9 @@ msgstr "&Kvantisera noter"
 msgid "The maximum frequency must be an integer"
 msgstr "Den maximala frekvensen måste vara ett heltal"
 
-#: prefs/SpectrumPrefs.cpp:216
-msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-msgstr "Max frekvens måste vara mellan 100 Hz - 100 000 Hz"
+#: prefs/SpectrumPrefs.cpp:212
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:222
 msgid "The minimum frequency must be an integer"
@@ -10036,8 +9844,7 @@ msgid "Info"
 msgstr "Info"
 
 #: prefs/ThemePrefs.cpp:91
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -10046,8 +9853,7 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr ""
-"Themability är en experimentell funktion..\n"
+msgstr "Themability är en experimentell funktion..\n"
 "\n"
 "För att testa den, klicka \"Spara tema cache\". Pröva sedan att modifiera bilderna och färgerna  i\n"
 "ImageCacheVxx.png med hjälp av en bildredigerare som Gimp.\n"
@@ -10058,27 +9864,21 @@ msgstr ""
 "om bildfilen visar andra ikoner också.]"
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
-msgstr ""
-"Du har kompilerat Audacity med en extra knapp, 'Output Sourcery'.  Detta sparar en\n"
+msgstr "Du har kompilerat Audacity med en extra knapp, 'Output Sourcery'.  Detta sparar en\n"
 "C version av bldcachen som kan bli kompilerat in som grundläge."
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
-msgstr ""
-"Om 'Ladda tema cache vid uppstart' är ibockad, kommer tema cache att laddas\n"
+msgstr "Om 'Ladda tema cache vid uppstart' är ibockad, kommer tema cache att laddas\n"
 "när programmet startar upp."
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr ""
-"Spara och ladda individuella temafiler använder en separat fil för varje bild, men är\n"
+msgstr "Spara och ladda individuella temafiler använder en separat fil för varje bild, men är\n"
 "annars samma idé."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -10177,6 +9977,10 @@ msgstr "Mixning ner till &stereo vid export"
 #: prefs/WarningsPrefs.cpp:69
 msgid "Mixing down to &mono during export"
 msgstr "Mixning ner till &mono vid export"
+
+#: prefs/WarningsPrefs.cpp:72
+msgid "&Importing uncompressed audio files"
+msgstr ""
 
 #: toolbars/ControlToolBar.cpp:172
 #: toolbars/ControlToolBar.cpp:207
@@ -10679,12 +10483,10 @@ msgid "Automated Input Level Adjustment stopped as requested by user."
 msgstr "Automatisk justering av inputnivån stoppad av användare."
 
 #: widgets/Meter.cpp:1286
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"Högre uppdaterade värden gör att mätaren visar mer\n"
+msgstr "Högre uppdaterade värden gör att mätaren visar mer\n"
 "ändringar. Ett värde på 30 per sekund eller mindre,borde\n"
 "förhindra att mätaren påverkar ljudkvalitén på långsamma datorer."
 
@@ -10893,14 +10695,14 @@ msgid "Could not load file: \"%s\""
 msgstr "Det gick inte att öppna fil: \"%s\""
 
 #: xml/XMLWriter.cpp:348
-msgid "Error flushing file"
-msgstr "Error flushing file"
+msgid "Error Flushing File"
+msgstr ""
 
 #: xml/XMLWriter.cpp:353
-msgid "Error closing file"
-msgstr "Fel när filen stängdes"
+msgid "Error Closing File"
+msgstr ""
 
 #: xml/XMLWriter.cpp:363
-msgid "Error writing to file"
-msgstr "Fel vid skrivning till fil"
+msgid "Error Writing to File"
+msgstr ""
 

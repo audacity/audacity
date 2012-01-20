@@ -4,8 +4,7 @@
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: Audacity 2.0.0\n"
+msgstr "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-11-28 06:52+0000\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
@@ -219,19 +218,16 @@ msgstr "Lisensi GPL"
 
 #: AudacityApp.cpp:785
 #, c-format
-msgid ""
-"%s could not be found.\n"
+msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr ""
-"%s tidak bisa ditemukan.\n"
+msgstr "%s tidak bisa ditemukan.\n"
 "\n"
 "Ini sudah dibuang dari daftar file terkini."
 
 #: AudacityApp.cpp:846
 #, c-format
-msgid ""
-"One or more external audio files could not be found.\n"
+msgid "One or more external audio files could not be found.\n"
 "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
 "Silence is being substituted for the affected audio.\n"
 "The first detected missing file is:\n"
@@ -293,11 +289,9 @@ msgid "Unknown command line option: %s\n"
 msgstr "Opsi baris komando tidak diketahui: %s\n"
 
 #: AudacityApp.cpp:1532
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Audacity tidak bisa mencari tempat untuk meletakkan file temporary.\n"
+msgstr "Audacity tidak bisa mencari tempat untuk meletakkan file temporary.\n"
 "Tolong masukkan direktori yang benar ke dalam dialog preferensi."
 
 #: AudacityApp.cpp:1538
@@ -305,21 +299,17 @@ msgid "Audacity is now going to exit. Please launch Audacity again to use the ne
 msgstr "Audacity sekarang ingin keluar. Tolong aktifkan Audacity kembali untuk menggunakan direktori file temporary yang baru."
 
 #: AudacityApp.cpp:1570
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"Menjalankan dua Audacity yang sama sekaligus dapat menyebabkan\n"
+msgstr "Menjalankan dua Audacity yang sama sekaligus dapat menyebabkan\n"
 "hilangnya data atau dapat merusak sistem Anda.\n"
 "\n"
 
 #: AudacityApp.cpp:1577
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Audacity tidak bisa mengunci direktori file temporary.\n"
+msgstr "Audacity tidak bisa mengunci direktori file temporary.\n"
 "Folder ini mungkin digunakan oleh program Audacity yang Lain.\n"
 
 #: AudacityApp.cpp:1579
@@ -336,11 +326,9 @@ msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "Sistem telah mendeteksi bahwa Audacity yang lainnya sedang berjalan.\n"
 
 #: AudacityApp.cpp:1621
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"Gunakan komando Baru atau Buka waktu menjalankan\n"
+msgstr "Gunakan komando Baru atau Buka waktu menjalankan\n"
 "Audacity untuk membuka beberapa proyek sekaligus.\n"
 
 #: AudacityApp.cpp:1622
@@ -382,13 +370,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "Tambahan, spesifikasikan nama file audio atau proyek audacity terlebih dahul untuk membukanya."
 
 #: AudacityApp.cpp:1965
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"File Proyek Audacity (.AUP) tidak\n"
+msgstr "File Proyek Audacity (.AUP) tidak\n"
 "berasosiasi dengan Audacity.\n"
 "\n"
 "Hubungkan terlebih dahulu baru file tersebut bisa dibuka dengan klik ganda?"
@@ -402,11 +388,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "Tidak dapat mencari perangkat audio.\n"
 
 #: AudioIO.cpp:551
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"Anda tidak akan bisa memainkan ataupun merekam audio.\n"
+msgstr "Anda tidak akan bisa memainkan ataupun merekam audio.\n"
 "\n"
 
 #: AudioIO.cpp:554
@@ -423,11 +407,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "Ada kesalahan daam menginisialisasi latar i/o midi.\n"
 
 #: AudioIO.cpp:571
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"Anda tidak akan bisa memainkan midi.\n"
+msgstr "Anda tidak akan bisa memainkan midi.\n"
 "\n"
 
 #: AudioIO.cpp:577
@@ -440,12 +422,10 @@ msgid "Out of memory!"
 msgstr ""
 
 #: AudioIO.cpp:1766
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"Aturan perbaikan laten telah menyebabkan audio yang direkam dihilangkan sebelum nol.\n"
+msgstr "Aturan perbaikan laten telah menyebabkan audio yang direkam dihilangkan sebelum nol.\n"
 "Audacity telah mengembalikannya untuk mulai dari nol.\n"
 "Anda bisa menggunakan Alat Time Shift (<--> atau F5) untuk memindahkan trak ke tempat yang tepat."
 
@@ -489,11 +469,9 @@ msgid "Automatic Crash Recovery"
 msgstr "Pengembalian Otomatis Akibat Crash"
 
 #: AutoRecovery.cpp:75
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"Beberapa proyek tidak disimpan sebelumnya waktu Audacity terakhir dijalankan.\n"
+msgstr "Beberapa proyek tidak disimpan sebelumnya waktu Audacity terakhir dijalankan.\n"
 "Pada yang akan datang, proyek-proyek ini bisa dikembalikan secara otomatis:"
 
 #: AutoRecovery.cpp:77
@@ -521,11 +499,9 @@ msgid "Recover Projects"
 msgstr "Kembalikan proyek-proyek"
 
 #: AutoRecovery.cpp:129
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"Apakah Anda yakin tidak mau mengembalikan proyek apapun?\n"
+msgstr "Apakah Anda yakin tidak mau mengembalikan proyek apapun?\n"
 "Proyek tersebut tidak akan bisa dikembalikan lagi."
 
 #: AutoRecovery.cpp:130
@@ -605,11 +581,9 @@ msgstr "Komando %s belum bisa diimplementasikan"
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:120
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"Tidak dapat mengatur parameters efek %s\n"
+msgstr "Tidak dapat mengatur parameters efek %s\n"
 "ke %s."
 
 #: BatchCommands.cpp:557
@@ -619,12 +593,10 @@ msgstr "%s Komando Anda tidak bisa dijalankan."
 
 #: BatchCommands.cpp:676
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"Mengaplikasikan %s dengan (beberapa) parameter\n"
+msgstr "Mengaplikasikan %s dengan (beberapa) parameter\n"
 "\n"
 "%s"
 
@@ -823,16 +795,13 @@ msgstr "Proyek membutuhkan file audio lainnya"
 
 #: Dependencies.cpp:324
 #, fuzzy
-msgid ""
-"Copying these files into your project will remove this dependency.\n"
+msgid "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
-msgstr ""
-"Menyalin file-file ini ke dalam proyek dapat menghapus ketergantungan ini.\n"
+msgstr "Menyalin file-file ini ke dalam proyek dapat menghapus ketergantungan ini.\n"
 "Ini membutuhkan ruang lebih banyak, tetapi lebih aman."
 
 #: Dependencies.cpp:328
-msgid ""
-"\n"
+msgid "\n"
 "\n"
 "Files shown as MISSING have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
@@ -904,8 +873,7 @@ msgid "If you proceed, your project will not be saved to disk. Is this what you 
 msgstr "Proyek Anda tidak akan disimpad di disk. Itukan yang Anda mau?"
 
 #: Dependencies.cpp:549
-msgid ""
-"Your project is currently self-contained; it does not depend on any external audio files. \n"
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
 "\n"
 "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
 msgstr ""
@@ -923,11 +891,9 @@ msgid "Progress"
 msgstr "Kemajuan"
 
 #: DirManager.cpp:364
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"Ruang disk yang tersisa tinggal sedikit.\n"
+msgstr "Ruang disk yang tersisa tinggal sedikit.\n"
 "Mohon pilih direktori temporer lainnya dalam Preferensi."
 
 #: DirManager.cpp:396
@@ -948,12 +914,10 @@ msgstr ""
 
 #: DirManager.cpp:614
 #, fuzzy, c-format
-msgid ""
-"Audacity found an orphan block file: %s. \n"
+msgid "Audacity found an orphan block file: %s. \n"
 "Please consider saving and reloading the project to perform a complete project check."
-msgstr ""
-"Audacity menemukan anak file blok %s! \n"
-"Silahkan Anda simpan dan buka kembali proyek Anda untuk melakukan pengecekan penuh.\n"
+msgstr "Audacity menemukan anak file blok %s! \n"
+"Silahkan Anda simpan dan buka kembali proyek Anda untuk melakukan pengecekan penuh."
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
@@ -1013,9 +977,8 @@ msgid "Inspecting project file data"
 msgstr "Memeriksa data file proyek..."
 
 #: DirManager.cpp:1410
-#, fuzzy, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+#, c-format
+msgid "Project check of \"%s\" folder \n"
 "detected %d missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
@@ -1025,13 +988,12 @@ msgid ""
 "to their previous location. \n"
 "\n"
 "Note that for the second option, the waveform \n"
-"may not show silence."
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
 msgstr ""
-"Pengecekan menemukan file input %d yang telah digunakan\n"
-"('alias file') sekarang telah menghilang. Tidak ada cara lain\n"
-"selain mengembalikan file tersebut secara otomatis; Anda bisa memilih\n"
-"mengosongkan file yang hilang secara permanen pada sesi ini, atau\n"
-"tutup proyek ini dan coba mencari file itu sendiri."
 
 #: DirManager.cpp:1423
 #: DirManager.cpp:1542
@@ -1039,8 +1001,8 @@ msgstr ""
 msgid "Treat missing audio as silence (this session only)"
 msgstr "Mengembalikan data yang hilang diam-diam secara sementara [hanya sesi ini saja]"
 
-#: DirManager.cpp:1424
-msgid "Replace missing audio with silence (permanent immediately). This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
 msgstr ""
 
 #: DirManager.cpp:1427
@@ -1054,13 +1016,11 @@ msgstr ""
 
 #: DirManager.cpp:1477
 #, fuzzy, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "detected %d missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
-msgstr ""
-"Pengecekan menemukan file rangkuman %d yang hilang (.auf).\n"
+msgstr "Pengecekan menemukan file rangkuman %d yang hilang (.auf).\n"
 "Audacity bisa membuat ulang file tersebut dari data aslinya pada proyek."
 
 #: DirManager.cpp:1483
@@ -1090,8 +1050,7 @@ msgstr ""
 
 #: DirManager.cpp:1528
 #, fuzzy, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "detected %d missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
@@ -1103,8 +1062,7 @@ msgid ""
 "\n"
 "Note that for the second option, the waveform \n"
 "may not show silence."
-msgstr ""
-"Pengecekan menemukan file data blok audio %d yang menghilang (.au), \n"
+msgstr "Pengecekan menemukan file data blok audio %d yang menghilang (.au), \n"
 "mungkin karena bug, crash, atau ketidaksengajaan. \n"
 "Tidak ada jalan lain selain mengembalikan data yang hilang\n"
 "secara otomatis; Anda bisa memilih untuk tetap mengosongkan data tadi\n"
@@ -1129,13 +1087,11 @@ msgstr ""
 
 #: DirManager.cpp:1590
 #, fuzzy, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "found %d orphan block file(s). These files are \n"
 "unused by this project, but might belong to other projects. \n"
 "They are doing no harm and are small."
-msgstr ""
-"Pengecekan menemukan %d anak file blok. File ini tidak berguna\n"
+msgstr "Pengecekan menemukan %d anak file blok. File ini tidak berguna\n"
 "dan mungkin tertinggal waktu crash atau bug lainya.\n"
 "Ini harus dihapus untuk menghemat ruang disk."
 
@@ -1162,13 +1118,11 @@ msgstr "Membersihkan direktori yang tak berguna apda data proyek..."
 #: DirManager.cpp:1641
 #, fuzzy
 msgid "Project check found file inconsistencies inspecting the loaded project data."
-msgstr ""
-"Pengecekan menemukan ketidakkonsistenan keteka memeriksa data yang diambil;\n"
+msgstr "Pengecekan menemukan ketidakkonsistenan keteka memeriksa data yang diambil;\n"
 "Tekan 'Detail' untuk daftar error, atau 'OK' untuk meneruskan ke opsi lainnya."
 
 #: DirManager.cpp:1647
-msgid ""
-"Project check found file inconsistencies during automatic recovery.\n"
+msgid "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Show Log...' in the Help menu to see details."
 msgstr ""
@@ -1225,13 +1179,11 @@ msgstr "Dukungan FFMpeg tidak terkompilasi"
 
 #: FFmpeg.cpp:110
 #, fuzzy
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
 "but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpeg terkonfigurasi pada Preferensi dan diambil dengan sukses sebelumnya,                       \n"
+msgstr "FFmpeg terkonfigurasi pada Preferensi dan diambil dengan sukses sebelumnya,                       \n"
 "tapi kali ini Audacity gagal mengambilnya pada awal dinyalakan.                       \n"
 "\n"
 "Anda butuh kembali ke Preferensi > Impor/Ekspor dan mengkonfigurasikan ulang."
@@ -1296,14 +1248,12 @@ msgid "FFmpeg not found"
 msgstr "FFmpeg tidak ada"
 
 #: FFmpeg.h:112
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"Audacity menggunakan referensi FFmpeg untuk mengimpor file audio,\n"
+msgstr "Audacity menggunakan referensi FFmpeg untuk mengimpor file audio,\n"
 "tapi referensi tidak ditemukan.\n"
 "\n"
 "Untuk menggunakan fitur impor FFmpeg, silahkan ke Preferensi > Referensi\n"
@@ -1511,12 +1461,10 @@ msgid "GStreamer %s: %s"
 msgstr "GStreamer %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"GStreamer terkonfigurasi pada Preferensi dan diambil dengan sukses sebelumnya,\n"
+msgstr "GStreamer terkonfigurasi pada Preferensi dan diambil dengan sukses sebelumnya,\n"
 "                      tapi kali ini Audacity gagal mengambilnya pada awal dinyalakan.\n"
 "                      Anda butuh kembali ke Preferensi > Preferensi dan mengkonfigurasikannya kembali."
 
@@ -1728,13 +1676,11 @@ msgid "New..."
 msgstr "Baru..."
 
 #: LabelDialog.cpp:359
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"Anda telah mengosongkan nama label. Ini akan\n"
+msgstr "Anda telah mengosongkan nama label. Ini akan\n"
 "dilewatkan ketika memasukkan Trek Label.\n"
 "\n"
 "Apakah Anda ingin untuk kembali dan memasukkan namanya kembali?"
@@ -1809,11 +1755,9 @@ msgstr "Bahasa yang Anda gunakan, %s (%s), tidak sama dengan bahasa sistem, %s (
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"Mengubah file proyek 1.0 ke format baru.\n"
+msgstr "Mengubah file proyek 1.0 ke format baru.\n"
 "File lama telah disimpan sebagai '%s'"
 
 #: Legacy.cpp:373
@@ -2476,8 +2420,8 @@ msgid "&Run Benchmark..."
 msgstr "&Jalankan Benchmark..."
 
 #: Menus.cpp:1045
-msgid "&Audio Device Info..."
-msgstr "&Info Perangkat Audio..."
+msgid "Au&dio Device Info..."
+msgstr ""
 
 #: Menus.cpp:1046
 msgid "Show &Log..."
@@ -2832,11 +2776,9 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "File MIDI (*.mid)|*.mid|File Allegro (*.gro)|*.gro"
 
 #: Menus.cpp:3014
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr ""
-"Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
+msgstr "Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
 " Anda ingin meneruskan?"
 
 #: Menus.cpp:3015
@@ -3039,10 +2981,6 @@ msgstr "Perbaharui sekaligus"
 #: Menus.cpp:4111
 msgid "Split to new track"
 msgstr "Sekaliguskan ke trek baru"
-
-#: Menus.cpp:4193
-msgid "Split at labels"
-msgstr "Sekaliguskan pada label"
 
 #: Menus.cpp:4530
 msgid "Frequency Analysis"
@@ -3387,15 +3325,13 @@ msgid "Save changes before closing?"
 msgstr "Simpan perubahan sebelum ditutup?"
 
 #: Project.cpp:1881
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "Jika disimpan, proyek tidak akan punya trek.\n"
 "\n"
 "Untuk menyimpan trek yang dibuka sebelumnya:\n"
@@ -3434,8 +3370,7 @@ msgstr "Proyek Audacity"
 
 #: Project.cpp:2252
 #, fuzzy, c-format
-msgid ""
-"This file was saved by Audacity version %s. The format has changed. \n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
 "Audacity can try to open and save this file, but saving it in this \n"
 "version will then prevent any 1.2 or earlier version opening it. \n"
@@ -3443,8 +3378,7 @@ msgid ""
 "Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
-msgstr ""
-"File ini disimpan dengan Audacity %s.\n"
+msgstr "File ini disimpan dengan Audacity %s.\n"
 "\n"
 "Anda bisa membuka dan menyimpan file ini, tapi meyimpannya di versi ini\n"
 "akan menghalangi versi 1.2 atau yang lebih lama untu membukanya\n"
@@ -3462,13 +3396,11 @@ msgid "Warning - Opening Old Project File"
 msgstr "Membuka file proyek yang lama"
 
 #: Project.cpp:2301
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"Anda mencoba membuka file backup yang dibuat otomatis.\n"
+msgstr "Anda mencoba membuka file backup yang dibuat otomatis.\n"
 "Melakukannya memungkinkan beberapa data hilang.\n"
 "\n"
 "Silahkan buka file proyek Audacity yang sesungguhnya."
@@ -3490,11 +3422,9 @@ msgstr "Error dalam mebuka file"
 
 #: Project.cpp:2330
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"File mungkin tidak ada atau terhapus: \n"
+msgstr "File mungkin tidak ada atau terhapus: \n"
 "%s"
 
 #: Project.cpp:2331
@@ -3530,11 +3460,9 @@ msgstr "Tidak bisa menemukan folder data proyek: \"%s\""
 
 #: Project.cpp:2797
 #, fuzzy, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr ""
-"File ini disimpan dengan Audacity %s.\n"
+msgstr "File ini disimpan dengan Audacity %s.\n"
 "Anda menggunakan Audacity %s - anda diharuskan untuk\n"
 "meng-upgrade versi terbaru untuk membuka file ini."
 
@@ -3543,8 +3471,7 @@ msgid "Can't open project file"
 msgstr "Tidak bisa membuka file proyek"
 
 #: Project.cpp:3045
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3552,8 +3479,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"Proyek Anda sekarang kosong.\n"
+msgstr "Proyek Anda sekarang kosong.\n"
 "Jika disimpan, proyek tidak akan punya trek.\n"
 "\n"
 "Untuk menyimpan trek yang terbuka sebelumnya:\n"
@@ -3569,8 +3495,7 @@ msgstr "Peringatan proyek kosong"
 
 #: Project.cpp:3117
 #, c-format
-msgid ""
-"Could not save project. Path not found.  Try creating \n"
+msgid "Could not save project. Path not found.  Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
 
@@ -3583,11 +3508,9 @@ msgstr "Error Meyimpan Proyek"
 
 #: Project.cpp:3154
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"Tidak bisa menyimpan proyek. Mungkin %s \n"
+msgstr "Tidak bisa menyimpan proyek. Mungkin %s \n"
 "tidak bisa ditulis atau disk penuh."
 
 #: Project.cpp:3177
@@ -3626,16 +3549,14 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "File Windows PCM Audio(*.wav)|*.wav"
 
 #: Project.cpp:3508
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"File proyek Audacity (.aup) menyimpan pekerjaan Anda lebih kecil, karena format terkompres (.ogg) \n"
+msgstr "File proyek Audacity (.aup) menyimpan pekerjaan Anda lebih kecil, karena format terkompres (.ogg) \n"
 "Proyek yang terkompres baik untuk menyebarkan proyek Anda secara online karena saking kecilnya.\n"
 "Untuk membuka proyek terkompres butuh waktu lebih lama, karena harus mengimpor setiap trek yang terkompres.\n"
 "\n"
@@ -3648,14 +3569,12 @@ msgid "Save Compressed Project As..."
 msgstr "Simpan Proyek Terkompres Sebagai..."
 
 #: Project.cpp:3514
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"Anda sedang menyimpan file proyek Audacity (.aup).\n"
+msgstr "Anda sedang menyimpan file proyek Audacity (.aup).\n"
 "\n"
 "Menyimpan proyek akan membuat file dimana hanya Audacity yang bisa membukanya.\n"
 "\n"
@@ -3666,11 +3585,9 @@ msgid "Save Project As..."
 msgstr "Simpan Proyek Sebagai..."
 
 #: Project.cpp:3544
-msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
-msgstr ""
-"Proyek ini tidak disimpan karena nama file yang ada akan menimpa proyek lainnya.\n"
+msgstr "Proyek ini tidak disimpan karena nama file yang ada akan menimpa proyek lainnya.\n"
 "Silahkan coba lagi dan pilih nama yang aslinya."
 
 #: Project.cpp:3587
@@ -3975,8 +3892,7 @@ msgstr "Pilih lokasi untuk menyimpan gambar hasil screenshot"
 
 #: Sequence.cpp:968
 #, c-format
-msgid ""
-"Sequence has block file with length %s > mMaxSamples %s.\n"
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
 "Truncating to mMaxSamples."
 msgstr ""
 
@@ -4134,102 +4050,82 @@ msgstr "Error menyimpan file tags"
 
 #: Theme.cpp:637
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
-msgstr ""
-"Audacity tidak bisa menulis file:\n"
+msgstr "Audacity tidak bisa menulis file:\n"
 "  %s."
 
 #: Theme.cpp:655
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr ""
-"Audacity tidak bisa membuka file:\n"
+msgstr "Audacity tidak bisa membuka file:\n"
 "  %s\n"
 "untuk ditulis."
 
 #: Theme.cpp:663
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
-msgstr ""
-"Audacity tidak bisa menulis gambar ke file:\n"
+msgstr "Audacity tidak bisa menulis gambar ke file:\n"
 "  %s."
 
 #: Theme.cpp:798
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"Audacity tidak bisa menemukan file:\n"
+msgstr "Audacity tidak bisa menemukan file:\n"
 "  %s.\n"
 "Tema tidak diambil."
 
 #: Theme.cpp:806
 #: Theme.cpp:895
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"Audacity tidak bisa mengambil file:\n"
+msgstr "Audacity tidak bisa mengambil file:\n"
 "  %s.\n"
 "Format png yang buruk mungkin?"
 
 #: Theme.cpp:822
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"Audacity tidak bisa membaca tema normalnya.\n"
+msgstr "Audacity tidak bisa membaca tema normalnya.\n"
 "Tolong segera laporkan masalah ini."
 
 #: Theme.cpp:917
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr ""
-"Tidak ditemukan file komponen\n"
+msgstr "Tidak ditemukan file komponen\n"
 " tema di:\n"
 "  %s."
 
 #: Theme.cpp:941
 #: effects/NoiseRemoval.cpp:182
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"Tidak bisa membuat direktori:\n"
+msgstr "Tidak bisa membuat direktori:\n"
 "  %s"
 
 #: Theme.cpp:962
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"Audacity tidak bisa menyimpan file:\n"
+msgstr "Audacity tidak bisa menyimpan file:\n"
 "  %s"
 
 #: Theme.cpp:974
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"Semua file yang dibutuhjkan di:\n"
+msgstr "Semua file yang dibutuhjkan di:\n"
 "  %s\n"
 "sudah ada."
 
@@ -4819,29 +4715,23 @@ msgid "Plugins %i to %i"
 msgstr "Plugin %i ke %i"
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Ada masalah dengan perintah terakhirAnda. Jika Anda\n"
+msgstr "Ada masalah dengan perintah terakhirAnda. Jika Anda\n"
 "pikir itu adalah bug, silahkan beritahu kami apa yang terjadi."
 
 #: commands/CommandManager.cpp:953
 #, fuzzy
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped. (Pausing is not sufficient.)"
-msgstr ""
-"Anda hanya bisa melakukannya ketika berhenti memainkan atau\n"
+msgstr "Anda hanya bisa melakukannya ketika berhenti memainkan atau\n"
 " merekam.  [Pause juga tidak berpengaruh.]"
 
 #: commands/CommandManager.cpp:955
 #, fuzzy
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
-msgstr ""
-"Anda harus pilih beberapa trek stereo dahulu\n"
+msgstr "Anda harus pilih beberapa trek stereo dahulu\n"
 " untuk menggunakannya. [Anda tidak bisa menggunakannya pada Mono.]"
 
 #: commands/CommandManager.cpp:957
@@ -4850,11 +4740,9 @@ msgstr "Anda harus pilih beberapa audio terlebih dahulu."
 
 #: commands/CommandManager.cpp:959
 #, fuzzy
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. (Selecting other kinds of track won't work.)"
-msgstr ""
-"Anda harus pilih beberapa audio dahulu\n"
+msgstr "Anda harus pilih beberapa audio dahulu\n"
 " untuk menggunakannya. [Memilih jenis trek yang lain tidak akan bekerja.]"
 
 #: commands/CommandManager.cpp:964
@@ -5399,18 +5287,28 @@ msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr "Analisis Kontras (Permasalahan WCAG 2)"
 
 #: effects/Contrast.cpp:105
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
 msgstr "Waktu mulai jauh setelah waktu selesai!]nSilahkan masukkan watu yang logis."
 
 #: effects/Contrast.cpp:115
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"Waktunya tidak beralasan!\n"
+msgstr "Waktunya tidak beralasan!\n"
 "Silakan masukkan waktu yang beralasan."
+
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
 
 #: effects/Contrast.cpp:217
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
@@ -5768,8 +5666,7 @@ msgstr "Ekualisasi"
 
 #: effects/Equalization.cpp:996
 #, c-format
-msgid ""
-"EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
 "Please press 'help' to visit the download page.\n"
 "\n"
 "Save the curves at %s"
@@ -5889,8 +5786,7 @@ msgstr "Pilih kurva:"
 
 #: effects/Equalization.cpp:1383
 #, fuzzy
-msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr "Untuk menggunakan kurva EQ pada untaian batch, silahkan pilih nama baru untuknya."
 
@@ -5948,8 +5844,7 @@ msgid "Help"
 msgstr "Bantuan"
 
 #: effects/Equalization.cpp:2877
-msgid ""
-"Rename 'unnamed' to save a new entry.\n"
+msgid "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
 
@@ -6386,11 +6281,9 @@ msgstr "Membuat Bising"
 
 #: effects/NoiseRemoval.cpp:201
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"Tidak bisa membuka file:\n"
+msgstr "Tidak bisa membuka file:\n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:295
@@ -6402,11 +6295,9 @@ msgid "Step 1"
 msgstr "Tahap 1"
 
 #: effects/NoiseRemoval.cpp:880
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"Pilih beberapa detik bising agar Audacity tahu apa yang harus dibuang,\n"
+msgstr "Pilih beberapa detik bising agar Audacity tahu apa yang harus dibuang,\n"
 "kemudian klik Ambil Profil Bising:"
 
 #: effects/NoiseRemoval.cpp:881
@@ -6414,11 +6305,9 @@ msgid "Step 2"
 msgstr "Tahap 2"
 
 #: effects/NoiseRemoval.cpp:882
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Pilih seluruh audio yang anda mau disaring, pilih seberapa banyak bising\n"
+msgstr "Pilih seluruh audio yang anda mau disaring, pilih seberapa banyak bising\n"
 "yang Anda ingin buang, dan klik 'OK' untuk membuangnya.\n"
 
 #: effects/NoiseRemoval.cpp:887
@@ -6614,24 +6503,20 @@ msgid "Applying Phaser"
 msgstr "Membuat Fase"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Efek perbaikan hanya digunakan pada sesi sangat pendek pada audio yang hancur (lebih dari 128 sampel).\n"
+msgstr "Efek perbaikan hanya digunakan pada sesi sangat pendek pada audio yang hancur (lebih dari 128 sampel).\n"
 "\n"
 "Perbesar dan pilih fraksi kecil untuk memperbaikinya."
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"Perbaikan bekerja dengan menggunakan data audio di luar wilayah yang dipilih.\n"
+msgstr "Perbaikan bekerja dengan menggunakan data audio di luar wilayah yang dipilih.\n"
 "\n"
 "Silahkan pilih wilayah yang mempinyai sentuhan audio sedikitnya satu sisi ini.\n"
 "\n"
@@ -6819,11 +6704,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "Pembersih Spike dari Lynn Allan"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"Durasi Spike Maksimum (millidetik): \n"
+msgstr "Durasi Spike Maksimum (millidetik): \n"
 "(99999 atau lebih berarti dimatikan)"
 
 #: effects/SpikeCleaner.cpp:178
@@ -7022,11 +6905,9 @@ msgid "Threshold for silence:"
 msgstr "Ambang Batas untuk Diam:"
 
 #: effects/TruncSilence.cpp:920
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"   Durasi harus minimal 1 milidetik\n"
+msgstr "   Durasi harus minimal 1 milidetik\n"
 "   Rasio kompresi harus minimal 1:1"
 
 #: effects/TruncSilence.h:37
@@ -7197,8 +7078,7 @@ msgstr ""
 
 #: effects/nyquist/Nyquist.cpp:305
 #, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
 "Control not created."
 msgstr ""
 
@@ -7217,8 +7097,7 @@ msgid "Error in Nyquist code"
 msgstr "Error dalam Durasi"
 
 #: effects/nyquist/Nyquist.cpp:486
-msgid ""
-"Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
 "for SAL, or begin with an open parenthesis such as\n"
 "\t(mult s 0.1)\n"
@@ -7310,22 +7189,19 @@ msgstr "Perhatian"
 
 #: export/Export.cpp:621
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to save the file under this name?"
-msgstr ""
-"Anda ingin menyimpan file %s dengan nama \"%s\".\n"
+msgstr "Anda ingin menyimpan file %s dengan nama \"%s\".\n"
 "\n"
 "Biasanya file berakhiran dengan \".%s\", dan beberapa program tidak dapat membuka file dengan ekstensi nonstandar.\n"
 "\n"
 "Anda yakin ingin menyimpan file dangan nama ini?"
 
 #: export/Export.cpp:654
-msgid ""
-"You are attempting to overwrite an aliased file that is missing.\n"
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the original audio to the project.\n"
 "Choose File > Check Dependencies to view the locations of all missing files.\n"
 "If you still wish to export, please choose a different filename or folder."
@@ -7419,20 +7295,16 @@ msgid "Command Output"
 msgstr "Output Perintah"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
-msgstr ""
-"FFMpeg yang dikonfigurasi diperlukan sebelumnya untuk diproses.\n"
+msgstr "FFMpeg yang dikonfigurasi diperlukan sebelumnya untuk diproses.\n"
 "Anda bisa mengaturnya di Preferensi > referensi."
 
 #: export/ExportFFmpeg.cpp:457
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
-msgstr ""
-"FFmpeg tidak bisa mencari codec audio 0x%x.\n"
+msgstr "FFmpeg tidak bisa mencari codec audio 0x%x.\n"
 "Pendukuk codec ini mungkin belum dibuat."
 
 #: export/ExportFFmpeg.cpp:686
@@ -7457,20 +7329,16 @@ msgstr "Rate sampel tidak valid"
 
 #: export/ExportFFmpeg.cpp:805
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
-msgstr ""
-"Rate Sampel proyek (%d) tidak mendukung \n"
+msgstr "Rate Sampel proyek (%d) tidak mendukung \n"
 "file format output yang ada.  "
 
 #: export/ExportFFmpeg.cpp:808
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
-msgstr ""
-"Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
+msgstr "Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
 "mendukung format file output yang ada."
 
 #: export/ExportFFmpeg.cpp:811
@@ -7675,12 +7543,10 @@ msgid "Language:"
 msgstr "Bahasa:"
 
 #: export/ExportFFmpegDialogs.cpp:1354
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"Tiga karakter kode bahasa berdasarkan ISO 639\n"
+msgstr "Tiga karakter kode bahasa berdasarkan ISO 639\n"
 "Opsi\n"
 "kosong - otomatis"
 
@@ -7697,35 +7563,29 @@ msgid "Tag:"
 msgstr "Tag:"
 
 #: export/ExportFFmpegDialogs.cpp:1368
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"Tag codec (FOURCC)\n"
+msgstr "Tag codec (FOURCC)\n"
 "Opsi\n"
 "kosong - otomatis"
 
 #: export/ExportFFmpegDialogs.cpp:1371
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
-msgstr ""
-"Bit Rate (bit/detik) - menunjukkan hasil pada ukuran file dan kualitas\n"
+msgstr "Bit Rate (bit/detik) - menunjukkan hasil pada ukuran file dan kualitas\n"
 "Beberapa codec mungkin hanya menunjukkan nilai spesifik (128k, 192k, 256k, dll)\n"
 "0 - otomatis\n"
 "Direkomendasikan - 192000"
 
 #: export/ExportFFmpegDialogs.cpp:1374
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
-msgstr ""
-"Kualitas keseluruhan, digunakan berbeda oleh codec yang berbeda pula\n"
+msgstr "Kualitas keseluruhan, digunakan berbeda oleh codec yang berbeda pula\n"
 "Diperlukan untuk Vorbis\n"
 "0 - otomatis\n"
 "-1 - mati (gunakan bitrate)"
@@ -7735,11 +7595,9 @@ msgid "Sample Rate:"
 msgstr "Rate Sampel:"
 
 #: export/ExportFFmpegDialogs.cpp:1377
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
-msgstr ""
-"Rate sampel (Hz)\n"
+msgstr "Rate sampel (Hz)\n"
 "0 - jangan ubah rate sampel"
 
 #: export/ExportFFmpegDialogs.cpp:1379
@@ -7747,12 +7605,10 @@ msgid "Cutoff:"
 msgstr "Potong:"
 
 #: export/ExportFFmpegDialogs.cpp:1380
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
-msgstr ""
-"Bandwidth audio yang dipotong (Hz)\n"
+msgstr "Bandwidth audio yang dipotong (Hz)\n"
 "Opsi\n"
 "0 - otomatis"
 
@@ -7761,12 +7617,10 @@ msgid "Profile:"
 msgstr "Profil:"
 
 #: export/ExportFFmpegDialogs.cpp:1385
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
-msgstr ""
-"Profil AAC\n"
+msgstr "Profil AAC\n"
 "Kompleksitas Rendah (LC) -biasa\n"
 "Kebannyakan player tidak mau mainkan apapun selain LC"
 
@@ -7779,14 +7633,12 @@ msgid "Compression:"
 msgstr "Kompresi:"
 
 #: export/ExportFFmpegDialogs.cpp:1396
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr ""
-"Level pengompresan\n"
+msgstr "Level pengompresan\n"
 "Diperlukan untuk FLAC\n"
 "-1 - otomatis\n"
 "min - 0 (encoding cepat, file output besar)\n"
@@ -7797,14 +7649,12 @@ msgid "Frame:"
 msgstr "Bingkai:"
 
 #: export/ExportFFmpegDialogs.cpp:1399
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr ""
-"Ukuran bingkai\n"
+msgstr "Ukuran bingkai\n"
 "Opsi\n"
 "0 - biasa\n"
 "min - 16\n"
@@ -7815,14 +7665,12 @@ msgid "LPC"
 msgstr "LPC"
 
 #: export/ExportFFmpegDialogs.cpp:1402
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr ""
-"Presisi koefisien LPC\n"
+msgstr "Presisi koefisien LPC\n"
 "Opsi\n"
 "0 - biasa\n"
 "min - 1\n"
@@ -7833,13 +7681,11 @@ msgid "PdO Method:"
 msgstr "Metode PdO:"
 
 #: export/ExportFFmpegDialogs.cpp:1407
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
-msgstr ""
-"Metode Prediksi Persebaran\n"
+msgstr "Metode Prediksi Persebaran\n"
 "Mapan - tercepat, kompresi lebih rendah\n"
 "Pencarian Log - terlambat, kompresi lebih tinggi\n"
 "Pencarian Penuh - biasa"
@@ -7849,14 +7695,12 @@ msgid "Min. PdO"
 msgstr "PdO Min."
 
 #: export/ExportFFmpegDialogs.cpp:1410
-msgid ""
-"Minimal prediction order\n"
+msgid "Minimal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Prediksi persebaran minimal\n"
+msgstr "Prediksi persebaran minimal\n"
 "Opsi\n"
 "-1 - biasa\n"
 "min - 0\n"
@@ -7867,14 +7711,12 @@ msgid "Max. PdO"
 msgstr "PdO Maks."
 
 #: export/ExportFFmpegDialogs.cpp:1413
-msgid ""
-"Maximal prediction order\n"
+msgid "Maximal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Prediksi persebaran maksimal\n"
+msgstr "Prediksi persebaran maksimal\n"
 "Opsi\n"
 "-1 - biasa\n"
 "min - 0\n"
@@ -7885,14 +7727,12 @@ msgid "Min. PtO"
 msgstr "PtO Min."
 
 #: export/ExportFFmpegDialogs.cpp:1416
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Pembagian persebaran minimal\n"
+msgstr "Pembagian persebaran minimal\n"
 "Opsi\n"
 "-1 - biasa\n"
 "min - 0\n"
@@ -7903,14 +7743,12 @@ msgid "Max. PtO"
 msgstr "PtO Maks."
 
 #: export/ExportFFmpegDialogs.cpp:1419
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Pembagian persebaran maksimall\n"
+msgstr "Pembagian persebaran maksimall\n"
 "Opsi\n"
 "-1 - biasa\n"
 "min - 0\n"
@@ -7929,12 +7767,10 @@ msgid "Mux Rate:"
 msgstr "Mux Rate:"
 
 #: export/ExportFFmpegDialogs.cpp:1433
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Bit rate maksimum stream rumit\n"
+msgstr "Bit rate maksimum stream rumit\n"
 "Opsi\n"
 "0 - biasa"
 
@@ -7943,12 +7779,10 @@ msgid "Packet Size:"
 msgstr "Ukuran paket:"
 
 #: export/ExportFFmpegDialogs.cpp:1436
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Ukuran paket\n"
+msgstr "Ukuran paket\n"
 "Opsi\n"
 "0 - biasa"
 
@@ -8059,11 +7893,9 @@ msgstr "Eksortir FLAC tidak bisa membuka %s"
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
-msgstr ""
-"Encoder FLAC gagal menginisialisasi\n"
+msgstr "Encoder FLAC gagal menginisialisasi\n"
 "Status: %d"
 
 #: export/ExportFLAC.cpp:324
@@ -8224,11 +8056,9 @@ msgstr "Dimana %s?"
 
 #: export/ExportMP3.cpp:1111
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
-msgstr ""
-"Anda menghubungkan lame_enc.dll v%d.%d. Viersi ini tidak cocok dengan Audacity %d.%d.%d.\n"
+msgstr "Anda menghubungkan lame_enc.dll v%d.%d. Viersi ini tidak cocok dengan Audacity %d.%d.%d.\n"
 "Silahkan download versi akhir referensi LAME MP3."
 
 #: export/ExportMP3.cpp:1375
@@ -8296,20 +8126,16 @@ msgstr "Error %d ditolak dari encoder MP3"
 
 #: export/ExportMP3.cpp:1839
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
-msgstr ""
-"Rate Sampel proyek (%d) tidak mendukung \n"
+msgstr "Rate Sampel proyek (%d) tidak mendukung \n"
 "file format MP3.  "
 
 #: export/ExportMP3.cpp:1842
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
-msgstr ""
-"Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
+msgstr "Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
 "mendukung format file MP3."
 
 #: export/ExportMP3.cpp:2013
@@ -8324,8 +8150,7 @@ msgstr "Ekspor Banyak"
 
 #: export/ExportMultiple.cpp:175
 #, fuzzy
-msgid ""
-"If you have more than one Audio Track, you can\n"
+msgid "If you have more than one Audio Track, you can\n"
 "export each track as a separate audio file.\n"
 "\n"
 "If you have a Label Track, you can export a separate\n"
@@ -8335,8 +8160,7 @@ msgid ""
 "\n"
 "This Project does not meet the above criteria for\n"
 "exporting multiple files."
-msgstr ""
-"Jika Anda mempunyai lebih dari satu Trek Audio, Anda bisa mengekspor setiap trek dalam file-file terpisah,\n"
+msgstr "Jika Anda mempunyai lebih dari satu Trek Audio, Anda bisa mengekspor setiap trek dalam file-file terpisah,\n"
 "atau jika Anda mempunyai label pada trek, Anda bisa mengekspornya berdasarkan labelnya.\n"
 "\n"
 "Proyek ini tidak mempunyai trek atau label yang banyak, jadi Anda tidak bisa mengekspor file seperti yang Anda perintahkan."
@@ -8447,12 +8271,10 @@ msgstr "Ada sesuatu yang fatal setelah mengekspor %ld file."
 
 #: export/ExportMultiple.cpp:572
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr ""
-"\"%s\" tidak ada.\n"
+msgstr "\"%s\" tidak ada.\n"
 "\n"
 "Apakah Anda mingin membuatnya?"
 
@@ -8468,11 +8290,9 @@ msgstr "Edit Metadata"
 
 #: export/ExportMultiple.cpp:927
 #, fuzzy, c-format
-msgid ""
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
-msgstr ""
-"Label %s bukan nama file yang legal. Anda tidak bisa menggunakan:   %s\n"
+msgstr "Label %s bukan nama file yang legal. Anda tidak bisa menggunakan:   %s\n"
 "Gunakan..."
 
 #: export/ExportMultiple.cpp:928
@@ -8555,11 +8375,9 @@ msgstr "Mengekspor proyek yang tersedia sebagai %s"
 #. * error"
 #: export/ExportPCM.cpp:556
 #, c-format
-msgid ""
-"Error while writing %s file (disk full?).\n"
+msgid "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
-msgstr ""
-"Error ketika menulis %s file (diska penuh?). \n"
+msgstr "Error ketika menulis %s file (diska penuh?). \n"
 "Libsndfile bilang \"%s\""
 
 #. i18n-hint: %s will be the error message from libsndfile
@@ -8603,13 +8421,11 @@ msgstr "Versi Audacity ini tidak di-compile dengan dukungan %s."
 
 #: import/Import.cpp:567
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
+msgstr "\"%s\" \n"
 "adalah file MIDI, buka file audio. \n"
 "Audacity tidak bisa membuka tipe file ini untuk dimainkan, tapi Anda bisa \n"
 "mengeditnya dengan mengklik Berkas > Impor > MIDI."
@@ -8617,60 +8433,50 @@ msgstr ""
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:577
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah trek CD audio. \n"
+msgstr "\"%s\" adalah trek CD audio. \n"
 "Audacity tidak bisa membuka CD audio secara langsung. \n"
 "Ekstrak (rip) trek CD ke format Audio itu \n"
 "Audacity bisa mengimpor salah satunya WAV atau AIFF."
 
 #: import/Import.cpp:583
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr ""
-"\"%s\" adalah file playlist. \n"
+msgstr "\"%s\" adalah file playlist. \n"
 "Audacity tidak bisa membuka file karena ini hanya mempunyai link ke file lain. \n"
 "Anda bisa membuka file ini pada editor teks dan download file audio yang asli."
 
 #: import/Import.cpp:588
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file Windows Media Audio. \n"
+msgstr "\"%s\" adalah file Windows Media Audio. \n"
 "Audacity tidak bisa membuka tipe file ini karena pelarangan paten. \n"
 "Anda perlu mengubahnya ke format audio yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:593
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file Advanced Audio Coding. \n"
+msgstr "\"%s\" adalah file Advanced Audio Coding. \n"
 "Audacity tidak bisa membuka file ini. \n"
 "Anda perlu mengubahnya ke format audio yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:598
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file audio terenkripsi. \n"
+msgstr "\"%s\" adalah file audio terenkripsi. \n"
 "Ini biasanya didapat dari toko musik online. \n"
 "Audacity tidak bisa membuka tipe file ini karena enkripsi. \n"
 "Coba rekam file ke dalam Audacity, atau bakar ke CD audio kemudian \n"
@@ -8678,38 +8484,32 @@ msgstr ""
 
 #: import/Import.cpp:603
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" is a file media RealPlayer. \n"
+msgstr "\"%s\" is a file media RealPlayer. \n"
 "Audacity tidak bisa membuka format berbayar ini. \n"
 "Anda perlu mengubah ke format audio yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:609
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr ""
-"\"%s\" adalah file berbasis nada, bukan file audio. \n"
+msgstr "\"%s\" adalah file berbasis nada, bukan file audio. \n"
 "Audacity tidak bisa membuka tipe file ini. \n"
 "Coba ubah ke format audio seperti WAV atau AIFF dan \n"
 "kemudian imporkan, atau rekam ke dalam Audacity."
 
 #: import/Import.cpp:615
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file audio Musepack. \n"
+msgstr "\"%s\" adalah file audio Musepack. \n"
 "Audacity tidak bisa membuka tipe file ini. \n"
 "Jika anda berpikir ini adalah file mp3, ganti nama ekstensi file Anda ke \".mp3\" \n"
 "dan coba mengimpor lagi. Atau anda perlu mengubah ke format audio yang mendukung, \n"
@@ -8717,66 +8517,54 @@ msgstr ""
 
 #: import/Import.cpp:621
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file audio Wavpack. \n"
+msgstr "\"%s\" adalah file audio Wavpack. \n"
 "Audacity tidak bisa membuka tipe file ini. \n"
 "Anda perlu mengubah ke format audio yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:627
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file audio Dolby Digital. \n"
+msgstr "\"%s\" adalah file audio Dolby Digital. \n"
 "Audacity tidak bisa membuka tipe file ini. \n"
 "Anda perlu mengubah ke format audio yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:633
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file audio Ogg Speex. \n"
+msgstr "\"%s\" adalah file audio Ogg Speex. \n"
 "Audacity tidak bisa membuka tipe file ini. \n"
 "Anda perlu mengubah ke format audio yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:639
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" adalah file video. \n"
+msgstr "\"%s\" adalah file video. \n"
 "Audacity belum bisa membuka tipe file ini. \n"
 "Anda perlu mengekstrak audio ke format yang mendukung, seperti WAV atau AIFF."
 
 #: import/Import.cpp:644
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
-msgstr ""
-"Audacity tidak dapat membaca tipe file '%s'.\n"
+msgstr "Audacity tidak dapat membaca tipe file '%s'.\n"
 "Jika ini tidak dikompres, coba mengimpornya dengan menggunakan \"Import Raw\""
 
 #: import/Import.cpp:662
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+msgid "Audacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr ""
-"Audacity mendeteksi tipe file '%s'.\n"
+msgstr "Audacity mendeteksi tipe file '%s'.\n"
 "Pengimpor yang mendukung file-file ini adalah:\n"
 "%s,\n"
 "tapi tidak ada yang mengerti format ini."
@@ -8879,8 +8667,7 @@ msgstr "WAV, AIFF, dan tipe tanpa terkompres lainnya"
 
 #: import/ImportPCM.cpp:211
 #, c-format
-msgid ""
-"When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
 "\n"
 "Your current preference is set to %s.\n"
 "\n"
@@ -9142,11 +8929,9 @@ msgid "Mi&nimum Free Memory (MB):"
 msgstr "Memori Bebas Mi&nimum (MB):"
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
-msgstr ""
-"Jika memori sistem yang ada di bawah biasanya, audio tidak akan\n"
+msgstr "Jika memori sistem yang ada di bawah biasanya, audio tidak akan\n"
 "disimpan di memori dan akan ditulis ke disk."
 
 #: prefs/DirectoriesPrefs.cpp:126
@@ -9404,6 +9189,10 @@ msgstr "Lokasi &Manual:"
 msgid "&Beep on completion of longer activities"
 msgstr "&Beep pada penyelesaian aktivitas lama"
 
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
+msgstr ""
+
 #: prefs/GUIPrefs.cpp:132
 msgid "Modes"
 msgstr "Mode"
@@ -9453,11 +9242,9 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr "&Tunjukkan Editor Metadata dahulu dalam langkah mengekspor"
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
-msgstr ""
-"Catatan: Opsi kualitas ekspor bisa dipilih dengan mengklik tombol\n"
+msgstr "Catatan: Opsi kualitas ekspor bisa dipilih dengan mengklik tombol\n"
 "Opsi pada dialog Ekspor."
 
 #: prefs/ImportExportPrefs.cpp:88
@@ -9548,12 +9335,10 @@ msgstr "Error dalam menyimpan jalan pintas keyboard"
 
 #: prefs/KeyConfigPrefs.cpp:404
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
-msgstr ""
-"Jalan pintas keyboard '%s' telah ditandai untuk:\n"
+msgstr "Jalan pintas keyboard '%s' telah ditandai untuk:\n"
 "\n"
 "'%s'"
 
@@ -9611,11 +9396,9 @@ msgid "Dow&nload"
 msgstr "U&nduh"
 
 #: prefs/LibraryPrefs.cpp:186
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
-msgstr ""
-"Audacity telah mendeteksi referensi FFmpeg yang valid.\n"
+msgstr "Audacity telah mendeteksi referensi FFmpeg yang valid.\n"
 "Apakah Anda tetap ingin meletakkannya sendiri?"
 
 #: prefs/MidiIOPrefs.cpp:58
@@ -10264,8 +10047,7 @@ msgstr "Info"
 
 #: prefs/ThemePrefs.cpp:91
 #, fuzzy
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -10274,8 +10056,7 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr ""
-"Tema adalah fitur percobaan.\n"
+msgstr "Tema adalah fitur percobaan.\n"
 "\n"
 "Untuk mencobanya, klik \"Simpan Cache Tema\" kemudian cari dan ubah gambar dan\n"
 "warna pada ImageCacheVxx.png dengan editor gambar seperti Gimp.\n"
@@ -10286,27 +10067,21 @@ msgstr ""
 "yang berubah, walaupun file gambar mempunyai icon juga.]"
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
-msgstr ""
-"Anda telah mengkompilasikan Audacity dengan tombol tambahan, 'Sumber Output'.\n"
+msgstr "Anda telah mengkompilasikan Audacity dengan tombol tambahan, 'Sumber Output'.\n"
 "Ini akan menyimpan gambar versi C yang bisa dikompilasi sebagaimana mestinya."
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
-msgstr ""
-"Jika 'Ambil Cache Tema Pada Permulaan' ditandai, Cache Tema akan diambil ketika\n"
+msgstr "Jika 'Ambil Cache Tema Pada Permulaan' ditandai, Cache Tema akan diambil ketika\n"
 "program dimulai."
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr ""
-"Menyimpan atau mengambil file tema sendiri menggunakan file terpisah untuk setiap\n"
+msgstr "Menyimpan atau mengambil file tema sendiri menggunakan file terpisah untuk setiap\n"
 "gambar, tapi tetap berhubungan."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -10927,12 +10702,10 @@ msgid "Automated Input Level Adjustment stopped as requested by user."
 msgstr "Perubahan Level Input Otomatis dihentikan sesuai yang pengguna minta."
 
 #: widgets/Meter.cpp:1286
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"Refresh Rate yang tinggi membuat meter manampilkan perubahan\n"
+msgstr "Refresh Rate yang tinggi membuat meter manampilkan perubahan\n"
 "lebih sering. 30 per detik atau lebih rendah dapat mencegah\n"
 "meter mempengaruhi kualitas audio pada mesin yang lebih lambat."
 
@@ -11216,860 +10989,3 @@ msgstr "Error dalam menutup file"
 msgid "Error Writing to File"
 msgstr "Error menulis ke file"
 
-#~ msgid "Audacity"
-#~ msgstr "Audacity"
-
-#~ msgid ""
-#~ "Your project is self-contained; it does not depend on any external audio "
-#~ "files."
-#~ msgstr ""
-#~ "Proyek Anda terisi sendiri; proyek ini tidak membutuhkan file audio "
-#~ "eksternal apapun."
-
-#~ msgid "Replace missing data with silence [permanent upon save]"
-#~ msgstr ""
-#~ "Mengembalikan data yang hilang diam-diam [permanen pada penyimpanan]"
-
-#~ msgid "&Control Toolbar"
-#~ msgstr "Toolbar &Kontrol"
-
-#~ msgid "Adjust input source"
-#~ msgstr "Ubah Sumber Input"
-
-#~ msgid "Alignment completed."
-#~ msgstr "Perataan selesai."
-
-#~ msgid ""
-#~ "This file was saved by Audacity %s, a much\n"
-#~ "older version.  The format has changed.\n"
-#~ "\n"
-#~ "Audacity could corrupt the file in opening\n"
-#~ "it, so you must back it up first.\n"
-#~ "\n"
-#~ "Open this file now?"
-#~ msgstr ""
-#~ "File ini disimpan dengan Audacity %s, versi\n"
-#~ "yang sudah lama.  Formatnya telah berbeda.\n"
-#~ "\n"
-#~ "Audacity bisa menghancurkan file dalam membukanya,\n"
-#~ "jadi Anda harus membuat back-upnya dahulu.\n"
-#~ "\n"
-#~ "Buka filenya sekarang?"
-
-#~ msgid "Error saving project"
-#~ msgstr "Error dalam meyimpan proyek"
-
-#~ msgid "Control"
-#~ msgstr "Kontrol"
-
-#~ msgid "Gap detected in project file\n"
-#~ msgstr "Pemisah terdeteksi pada file proyek\n"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "AMR support is not distributable"
-#~ msgstr "AMR support is not distributable"
-
-#~ msgid ""
-#~ "Properly configured FFmpeg is required to proceed.\n"
-#~ "You can configure it at Preferences > Libraries.\n"
-#~ "\n"
-#~ "Note that AMR support is not available with our FFmpeg\n"
-#~ "installer, but requires you compile FFmpeg yourself."
-#~ msgstr ""
-#~ "FFMpeg yang dikonfigurasi diperlukan sebelumnya untuk diproses.\n"
-#~ "Anda bisa mengaturnya di Preferensi->Referensi.\n"
-#~ "\n"
-#~ "Tetapi, dukungan AMR tidak ada dalam installer FFmpeg kami,\n"
-#~ "jadi anda butuh mengcompile FFmpeg sendiri."
-
-#~ msgid "Specify AMR-WB Options"
-#~ msgstr "Opsi Spesifikasi AMR-WB"
-
-#~ msgid "AMR-WB Export Setup"
-#~ msgstr "Pengaturan Ekspor AMR-WB"
-
-#~ msgid "AMR (wide band) Files (FFmpeg)"
-#~ msgstr "File AMR (jangkuan sempit) (FFmpeg)"
-
-#~ msgid "Numbering after Label/Track Name"
-#~ msgstr "Penomoran setelah Nama Trek/Label"
-
-#~ msgid "&Play other tracks while recording new one"
-#~ msgstr "&Mainkan trek lain ketika merekam"
-
-#~ msgid "&Hardware Playthrough (Play new track while recording it)"
-#~ msgstr "Selama Bermain pada &Hardware (Mainkan trek baru ketika merekamnya)"
-
-#~ msgid "&Software Playthrough (Play new track while recording it)"
-#~ msgstr "Selama Bermain pada &Software (Mainkan trek baru ketika merekamnya)"
-
-#~ msgid "Play before cut region:"
-#~ msgstr "Mainkan sebelum wilayah dipotong:"
-
-#~ msgid "Play after cut region:"
-#~ msgstr "Mainkan sesudah wilayah dipotong:"
-
-#~ msgid "Audio to buffer:"
-#~ msgstr "Audio yang dibuffer:"
-
-#~ msgid "Latency correction:"
-#~ msgstr "Koreksi laten:"
-
-#~ msgid "Seek Time"
-#~ msgstr "Waktu Percobaan"
-
-#~ msgid "Short period:"
-#~ msgstr "Periode pendek:"
-
-#~ msgid "Long period:"
-#~ msgstr "Periode panjang:"
-
-#~ msgid "Play when previewing:"
-#~ msgstr "Meinkan ketika melakukan preview:"
-
-#~ msgid "4096 - most narrowband"
-#~ msgstr "4096 - jangkauan terkecil"
-
-#~ msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-#~ msgstr "Frekuensi maksimum harus diantara 100 Hz - 100.000 Hz"
-
-#~ msgid "Input Source"
-#~ msgstr "Sumber Input"
-
-#~ msgid "Input Source:"
-#~ msgstr "Sumber Input:"
-
-#~ msgid "Input Level Slider"
-#~ msgstr "Pengatur Level Input"
-
-#~ msgid "Output Level Slider"
-#~ msgstr "Pengatur Level Output"
-
-#~ msgid "&Link Audio and Label Tracks"
-#~ msgstr "&Link Audio dan Trek Label"
-
-#~ msgid ""
-#~ "The version of Audacity you are using does not support multiple time "
-#~ "tracks."
-#~ msgstr "Varsi Audacity anda tidak mendukung multi-trek "
-
-#~ msgid "custom"
-#~ msgstr "pilihan sendiri"
-
-#~ msgid "Enter the desired name of the curve"
-#~ msgstr "Masukkan nama untuk kurva"
-
-#~ msgid "Initial Tempo Change (%):"
-#~ msgstr "Perubahan Tempo Inisial (%):"
-
-#~ msgid "Final Tempo Change (%):"
-#~ msgstr "Perubahan Tempo Final (%):"
-
-#~ msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
-#~ msgstr "Pitch Shift Inisal (seminada) [-12 to 12]:"
-
-#~ msgid "Closing last window &quits Audacity"
-#~ msgstr "Menutup jendela terakhir akan mematikan Auda&city"
-
-#~ msgid "Auto save"
-#~ msgstr "Simpan otomatis"
-
-#~ msgid "Auto &save a copy of the project in a separate folder"
-#~ msgstr "&Simpan otomatis salinan proyek pada folder terpisah"
-
-#~ msgid "Auto save in&terval:"
-#~ msgstr "Jarak wak&tu penyimpanan otomatis:"
-
-#~ msgid "Numbering consecutively"
-#~ msgstr "Penomoran secara otomatis"
-
-#~ msgid "Format selector:"
-#~ msgstr "Pemilih format:"
-
-#~ msgid "Codec selector:"
-#~ msgstr "Pemilih codec:"
-
-#~ msgid "Cutoff Bandwidth:"
-#~ msgstr "Bandwidth yang Dipotong:"
-
-#~ msgid "Use Variable Block Length"
-#~ msgstr "Gunakan Panjang Blok Variabel"
-
-#~ msgid "Compression Level:"
-#~ msgstr "Level pengompres:"
-
-#~ msgid "LPC coefficients precision"
-#~ msgstr "Presisi Koefisien LPC"
-
-#~ msgid "Minimal prediction order"
-#~ msgstr "Prediksi persebaran minimal"
-
-#~ msgid "Maximal prediction order"
-#~ msgstr "Prediksi persebaran maksimal"
-
-#~ msgid "Minimal partition order"
-#~ msgstr "Pembagian persebaran minimal"
-
-#~ msgid "Maximal partition order"
-#~ msgstr "Pembagian persebaran maksimal"
-
-#~ msgid "Low Complexity"
-#~ msgstr "Kompleksitas Rendah"
-
-#~ msgid "Main profile"
-#~ msgstr "Profil utama"
-
-#~ msgid "ExportMultiple"
-#~ msgstr "EksporMultipel"
-
-#~ msgid ""
-#~ "Audacity recognized the type of the file '%s',\n"
-#~ "but was unable to import it."
-#~ msgstr ""
-#~ "Audacity dapat membaca tipe file '%s'.\n"
-#~ "Tapi tidak bisa diimpor."
-
-#~ msgid ""
-#~ "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files "
-#~ "(*.mp3)|*.mp3"
-#~ msgstr ""
-#~ "File vokal (*.wav;*.mp3)|*.wav;*.mp3|file WAV (*.wav)|*.wav|file MP3 (*."
-#~ "mp3)|*.mp3"
-
-#~ msgid ""
-#~ "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU "
-#~ "files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|"
-#~ "FLAC files (*.flac)|*.flac"
-#~ msgstr ""
-#~ "Semua file (*.*)|*.*|File WAV(*.wav)|*.wav|File AIFF (*.aif)|*.aif|File "
-#~ "AU (*.au)|*.au|File MP3 (*.mp3)|*.mp3|File Ogg Vorbis (*.ogg)|*.ogg|File "
-#~ "FLAC (*.flac)|*.flac"
-
-#~ msgid ""
-#~ "Your project currently depends on the presence of other files.\n"
-#~ "Copy audio from the following files into your project to make it self-"
-#~ "contained?\n"
-#~ "This will need more disc space but is safer."
-#~ msgstr ""
-#~ "Proyek Anda membutuhkan file lainnya.\n"
-#~ "Salin audio dari file tersebut ke dalam proyek Anda supaya proyek anda "
-#~ "terisi sendiri?\n"
-#~ "Ini akan membutuhkan ruang lebig besar, tetapi lebih aman."
-
-#~ msgid "Audacity projects (*.aup)|*.aup"
-#~ msgstr "Proyek Audacity (*.aup)|*.aup"
-
-#~ msgid "Track Accessible out of sync"
-#~ msgstr "Trek tidak bisa disinkronkan"
-
-#~ msgid "Sile&nce"
-#~ msgstr "Dia&m"
-
-#~ msgid "Can't Undo"
-#~ msgstr "Tidak Dapat Membatalkan"
-
-#~ msgid "Can't Redo"
-#~ msgstr "Tidak Dapat Mengulang"
-
-#~ msgid "Disjoined %.2f seconds at t=%.2f"
-#~ msgstr "Berpisah %.2f detik pada t=%.2f"
-
-#~ msgid "Disjoin"
-#~ msgstr "Pisah"
-
-#~ msgid "Disjoin Labels"
-#~ msgstr "Pisahkan Label"
-
-#~ msgid "Disjoined labeled regions"
-#~ msgstr "Wilayah berlabel dipisahkan"
-
-#~ msgid "Contrast Tool Foreground"
-#~ msgstr "latar Depan Alat ontras"
-
-#~ msgid ""
-#~ "Foreground times selected.\n"
-#~ "Now select background and use Ctrl+Shift+T or menu again."
-#~ msgstr ""
-#~ "Waktu latar depan dipilih.\n"
-#~ "Sekarang pilih latar belakang dan gunakan Ctrl+Shift+t atau menu kembali."
-
-#~ msgid "Contrast Analyzer"
-#~ msgstr "Penganalisa Kontras"
-
-#~ msgid "Measured"
-#~ msgstr "Terukur"
-
-#~ msgid "Information"
-#~ msgstr "Informasi"
-
-#~ msgid "Help for WCAG2 Audio Contrast Analyzer"
-#~ msgstr "Bantuan untuk Penganalisa Kontras Audio WCAG2"
-
-#~ msgid "Close (keeping times)"
-#~ msgstr "Tutup (waktu tetap)"
-
-#~ msgid "Measure"
-#~ msgstr "Ukuran"
-
-#~ msgid "Enable"
-#~ msgstr "Bolehkan"
-
-#~ msgid "LADSPA effects"
-#~ msgstr "Efek LADSPA"
-
-#~ msgid "Nyquist effects"
-#~ msgstr "Efek Nyquist"
-
-#~ msgid "VAMP effects"
-#~ msgstr "Efek VAMP"
-
-#~ msgid "Enable Audio Unit effects"
-#~ msgstr "HIdupkan efek Unit Audio"
-
-#~ msgid "&Hardware Playthrough: Play new track while recording it"
-#~ msgstr "Selama Bermain pada &Hardware: Mainkan trek baru ketika merekamnya"
-
-#~ msgid "When saving &empty project"
-#~ msgstr "Ketika menyimpan proy&ek kosong"
-
-#~ msgid "When &disk space is getting low"
-#~ msgstr "Ketika ruang &disk menurun"
-
-#~ msgid "Bouncing Ball"
-#~ msgstr "Pemantulan Bola"
-
-#~ msgid "Highlight"
-#~ msgstr "Highlight"
-
-#~ msgid "Automatic Volume Recording"
-#~ msgstr "Perekaman Bervolume Otomatis"
-
-#~ msgid "Enable Automatic Volume recording."
-#~ msgstr "Hidupkan perekaman Bervolume Otomatis."
-
-#~ msgid "Stop Automatic Volume"
-#~ msgstr "Hentikan Volume Otomatis"
-
-#~ msgid "To [[welcome|Welcome screen]]"
-#~ msgstr "Ke [[welcome|Awal]]"
-
-#~ msgid ""
-#~ "Learn how to: <ul><li>[[play|play]] an existing audio file <li>[[record|"
-#~ "record]] your voice, LP or tape <li>[[edit|edit]] sounds <li>[[save|save "
-#~ "or open an Audacity project]] <li>[[export|export]] to an MP3 or other "
-#~ "audio file, or [[burncd|burn to a CD]]  </ul></p><p>"
-#~ msgstr ""
-#~ "Belajar mengenai: <ul><li>[[play|memainkan]] file audio yang ada <li>"
-#~ "[[record|merekam]] suara Anda, LP atau tape <li>[[edit|mengedit]] suara "
-#~ "<li>[[save|simpan atau buka proyek Audacity]] <li>[[export|mengekspor]] "
-#~ "ke file MP3 atau format lainnya, or [[burncd|bakar ke CD]]  </ul></p><p>"
-
-#~ msgid ""
-#~ "This screen can be viewed at any time by clicking the <i>Help</i> menu, "
-#~ "then <i>Show Welcome Message</i>. For a detailed guide to all the "
-#~ "Audacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, "
-#~ "or download our <a href=\"http://audacity.sourceforge.net/help/"
-#~ "documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
-#~ msgstr ""
-#~ "Tampilan ini bisa dilihat kapan saja dengan mengklik menu <i>Bantuan</i>, "
-#~ "kemudian <i>Tampilkan Pesan Awal</i>. Untuk pentunjuk yang lebih detil, "
-#~ "klik menu <i>Bantuan</i> kemudian <i>Indeks</i>, atau download <a href="
-#~ "\"http://audacity.sourceforge.net/help/documentation/manual_1.4.pdf"
-#~ "\">Manual lengkap</a> kami dalam format PDF.</p>"
-
-#~ msgid ""
-#~ "<p><b>Opening audio files:</b> Either drag the files into the current "
-#~ "project window, or click <i>File &gt; Import &gt; Audio</i>. Files can be "
-#~ "opened into a new project window with <i>File &gt; Open</i>. The main "
-#~ "formats Audacity plays are <b>AIFF, AU, FLAC, M4A</b> (only on a Mac), "
-#~ "<b>MP2/MP3, OGG Vorbis</b> and <b>WAV</b>. Click [[wma-proprietary|here]] "
-#~ "if your file is in some other format. <b>To import a CD:</b> extract it "
-#~ "to WAV or AIFF using iTunes, Windows Media Player 11 or similar. See our "
-#~ "online guide: [[wiki:How_to_import_CDs|importing CDs]].</p><p> "
-#~ "<p><b>Playing audio:</b> Press the green Play button to start playback. "
-#~ "Press the blue Pause button once to pause playback, and again to resume. "
-#~ "To stop, press the yellow Stop button. Spacebar can be used to either "
-#~ "play or stop. After stopping, playback resumes from its last starting "
-#~ "point. To change the starting point, click in the track at your desired "
-#~ "starting point. The <b>|&lt;&lt;</b> and <b>&gt;&gt;|</b> buttons can be "
-#~ "used to skip to the start or end of the track respectively. </p><br><br>"
-#~ msgstr ""
-#~ "<p><b>Membuka file audio:</b> masukkan (drag) file ke jendela proyek yang "
-#~ "ada, atau klik <i>Berkas &gt; Impor &gt; Audio</i>. File juga bisa dibuka "
-#~ "ke dalam proyek dengan <i>Berkas &gt; Buka</i>. Format-format yang bisa "
-#~ "dimainkan adalah <b>AIFF, AU, FLAC, M4A</b> (hanya pada Mac), <b>MP2/MP3, "
-#~ "OGG Vorbis</b> dan <b>WAV</b>. Click [[wma-proprietary|di sini]] jika "
-#~ "file Anda berformat selain yang disebutkan tadi. <b>Untuk mengimpor CD:</"
-#~ "b> ekstrak ke format WAV atau AIFF dengan iTunes, Windows Media Player 11 "
-#~ "atau yang lainnya. Lihat petunjuk online kami: [[wiki:How_to_import_CDs|"
-#~ "mengimpor CD]].</p><p> <p><b>Memainkan audio:</b> Tekan tombol hijau "
-#~ "untuk memainkan. Tekan tombol biru untuk menghentikan sementara, dan "
-#~ "tekan lagi untuk melanjutkan. Untuk berhenti, tekan tombol kuning. Spasi "
-#~ "bisa digunakan untuk memainkan atau berhenti. Setelah berhenti, akan "
-#~ "dilanjutkan pada titik awal yang terakhir ditentukan. Untuk mengubah "
-#~ "titik awal, klik pada tempat yang anda ingin tentukan. Tombol <b>|&lt;&lt;"
-#~ "</b> dan <b>&gt;&gt;|</b> bisa digunakan pindah ke awal atau akhir trek. "
-#~ "</p><br><br>"
-
-#~ msgid ""
-#~ "<p><b>To record:</b> Set the recording device and input source, adjust "
-#~ "the input level, then press the red Record button.</b></p><p> 1) "
-#~ "[[inputdevice|Set Recording Device]] either in the <i>Audio I/O tab of "
-#~ "Preferences</i> or in <i>Device Toolbar</i>. Audio I/O Preferences lets "
-#~ "you choose stereo recording if required.<br> 2) [[inputsource|Set input "
-#~ "source]] for that device (for example, microphone or line-in) in the "
-#~ "dropdown selector of the <i>Mixer Toolbar</i>, or (on some systems) at "
-#~ "Recording Device in the <i>Audio I/O tab of Preferences</i> or in "
-#~ "<i>Device Toolbar</i>.<br> 3) [[inputlevel|Adjust input level]] using the "
-#~ "right-hand slider on the <i>Mixer Toolbar</i>. Correct adjustment of "
-#~ "level before recording is essential to avoid noise or distortion. </p><p> "
-#~ "More help at: \"Recording\" <a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq\">FAQs</a>, our Tutorial <a href=\"http://www.audacityteam.org/"
-#~ "manual/index.php?title=Tutorial_-_Your_First_Recording\"> Your First "
-#~ "Recording</a> in the <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">Manual</a>, and our Wiki [[wiki:Recording_Tips|"
-#~ "Recording Tips]] and [[wiki:Troubleshooting_Recordings|Troubleshooting "
-#~ "Recordings]] pages. </p><br><br>"
-#~ msgstr ""
-#~ "<p><b>Untuk merekam:</b> Atur perekam dan inputnya, atur volume input, "
-#~ "kemudian tekan tombol merah.</b></p><p> 1) [[inputdevice|Atur perekam]] "
-#~ "bisa di <i>Tab Audio I/O pada Preferensi</i> atau pada <i>Toolbar "
-#~ "Perangkat</i>. Preferences Audio I/O memungkinkan anda memilih rekaman "
-#~ "stereo jika mau.<br> 2) [[inputsource|Atur sumber input]] untuk "
-#~ "perangkate (contoh: mikropon atau line-in) pada pilihan di bawah "
-#~ "<i>Toolbar Mixer</i>, atau (pada beberapa sistem) di Perangkat Rekaman "
-#~ "dalam <i>Tab Audio I/O pada Preferensi</i> atau pada <i>Toolbar "
-#~ "Perangkat</i>.<br> 3) [[inputlevel|Atur tingkatan input]] menggunakan "
-#~ "slider kanan pada <i>Toolbar Mixer</i>. Memeriksa tingkatan sebelum "
-#~ "merekam sangat penting untuk mencegah bising. </p><p> Bantuan lainnya ada "
-#~ "di: \"Recording\" <a href=\"http://audacity.sourceforge.net/help/faq"
-#~ "\">FAQs</a>, Tutorial kami <a href=\"http://www.audacityteam.org/manual/"
-#~ "index.php?title=Tutorial_-_Your_First_Recording\"> \"Your First Recording"
-#~ "\"</a> di <a href=\"http://www.audacityteam.org/manual/index.php?"
-#~ "title=Main_Page\">Manual kami</a>, dan halaman Wiki kami [[wiki:"
-#~ "Recording_Tips|Tips Merekam]] dan [[wiki:Troubleshooting_Recordings|"
-#~ "Memecahkan masalah pada rekaman]]. </p><br><br>"
-
-#~ msgid ""
-#~ "<p>The input device is the actual physical sound device you are recording "
-#~ "from. This is chosen at \"Recording Device\" in the <i>Audio I/O tab of "
-#~ "Preferences</i>, On Windows and Linux, Preferences are at the bottom of "
-#~ "the <i>Edit</i> Menu. On a Mac, they in the <i>Audacity</i> Menu. You can "
-#~ "also conveniently select Recording Device in the <i>Device Toolbar</i>, "
-#~ "which can be enabled at <i>View &gt; Toolbars...</i>. </p><p> By default, "
-#~ "Audacity uses the device currently being used by the system, (usually "
-#~ "your inbuilt sound device), so it is often not necessary to change the "
-#~ "input device. On Windows, this current system device can be selected as "
-#~ "\"Microsoft Sound Mapper\". If you are recording from an external USB or "
-#~ "Firewire device such as a USB turntable, select it explicitly by name as "
-#~ "recording device after connecting it. </p><p> Back to [[record|Recording "
-#~ "Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>Perangkat input adalah perangkat suara fisik yang digunakan untuk "
-#~ "merekam. Bisa dipilih di \"Perangkat Rekaman\" pada <i>tab Audio I/O pada "
-#~ "Preferensi</i>, Pada windows dan Linux, Preferensi ada di bawah Menu "
-#~ "<i>Edit</i>. Pada Mac, ada di menu <i>Audacity</i>. Anda bisa juga "
-#~ "memilih perangkat rekaman di <i>Toolbar Perangkat</i>, yang bisa "
-#~ "ditampilkan pada <i>View &gt; Toolbar...</i>. </p><p> Biasanya, Audacity "
-#~ "memakai perangkat yang digunakan oleh sistem, (biasanya perangkat suara "
-#~ "yang bulit-in), jadi ini sering tidak diperlukan untuk mengubah perangkat "
-#~ "input. Pada Windows, perangkat untuk sistem bisa dipilih di \"Microsoft "
-#~ "Sound Mapper\". Jika Anda merekam dari USB eksternal atau perangkat "
-#~ "Firewire seperti USB turntable, pilih secara terpisah sebagai perangkat "
-#~ "rekaman setelah dihubungkan. </p><p> Kembali ke [[record|Merekam Audio]] "
-#~ "<br></p>"
-
-#~ msgid ""
-#~ "<p>Select the input source (such as microphone or line-in) for your "
-#~ "[[inputdevice|recording device]]:<br> - <b>On Windows (except Vista)</b> "
-#~ "and <b>Linux</b>, in the dropdown selector on the right of the <i>Mixer "
-#~ "Toolbar</i>.<br> - <b>On Windows Vista</b> and <b>Mac</b>, at Recording "
-#~ "Device on the <i>Audio I/O tab of Preferences</i>, or in <i>Device "
-#~ "Toolbar</i>. The source will be shown as part of the parent device (for "
-#~ "example, <i>High Def Audio Card: Microphone</i>). If necessary, Mac users "
-#~ "can choose the input source at Apple Audio MIDI Setup. <br><i><b>Note:</"
-#~ "b> many USB or Firewire recording devices don't have a choice of inputs, "
-#~ "so this step is not necessary. If in doubt, see the documentation for "
-#~ "your device. </i></p><p> <b>Tip:</b> To <a href=\"http://audacity."
-#~ "sourceforge.net/help/faq?s=recording&i=streaming\">record audio playing "
-#~ "on the computer</a>, Windows and Linux users can choose the \"Stereo Mix"
-#~ "\", \"Wave Out\", \"Sum\" or comparable input source. </p><p> Back to "
-#~ "[[record|Recording Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>Memilih sumber input (seperti mikropon atau line-in) untuk "
-#~ "[[inputdevice|perangkat rekaman]] Anda:<br> - <b>Pada windows (kecuali "
-#~ "Vista)</b> dan <b>Linux</b>, pada pilihan kebawah di kanan <i>Toolbar "
-#~ "Mixer</i>.<br> - <b>Pada Windows Vista</b> dan <b>Mac</b>, pada Perangkat "
-#~ "Rekaman di <i>tab Audio I/O dari Preferensi</i>, atau di <i>Toolbar "
-#~ "Perangkat</i>. Sumber akan terlihat sebagai bagian dari perangkat "
-#~ "(contoh: <i>High Def Audio Card: Mikropon</i>). Jika memungkinkan, "
-#~ "Pengguna Mac bisa memilih sumber input di Apple Audio MIDI Setup. "
-#~ "<br><i><b>Catatan:</b> beberapa perangkat rekaman USB atau Firewire tidak "
-#~ "mempunyai pilihan input, jadi langkah ini bisa diabaikan. Jika ragu, "
-#~ "silahkan lihat dokumen untuk perangkat Anda. </i></p><p> <b>Tips:</b> "
-#~ "Untuk <a href=\"http://audacity.sourceforge.net/help/faq?"
-#~ "s=recording&i=streaming\">merekam audio yang dimainkan di komputer</a>, "
-#~ "pengguna Windows dan Linux bisa memilih \"Stereo Mix\", \"Wave Out\", "
-#~ "\"Sum\" atau sumber input yang cocok lainnya. </p><p> Kembali ke [[record|"
-#~ "Merekam Audio]] <br></p>"
-
-#~ msgid ""
-#~ "<p>The input level must be set correctly. If the level is too low, there "
-#~ "will be background noise. If the level is too high, there will be "
-#~ "distortion in the loud parts. </p><p>To set the level, either see this "
-#~ "[[wiki:Recording_levels|illustrated online guide]] or follow these steps: "
-#~ "<ol><li>Turn on <b>monitoring</b>. Double-click the right-hand of the two "
-#~ "<i>VU Meters</i> (or right-click over it) and click \"Start Monitoring\". "
-#~ "If the meters are not visible, click <i>View &gt; Toolbars</i> and check "
-#~ "\"Meter Toolbar\". </li><li>Adjust the input slider on the <i>Mixer "
-#~ "Toolbar</i> (by the microphone symbol), so that the red bars in the meter "
-#~ "come close to <b>but do not touch</b> the right edge of the scale. If you "
-#~ "can't hear the monitored audio, go to the <i>Audio I/O tab of "
-#~ "Preferences</i> and check \"Software Playthrough\". </li></ol></p><p> "
-#~ "Back to [[record|Recording Audio]] <br></p>"
-#~ msgstr ""
-#~ "<p>tingkatan input harus diatur dengan benar. Jika terlalu rendah, akan "
-#~ "menjadi suara latar belakang. Jika terlalu tinggi, suara akan pecah. </"
-#~ "p><p>untuk mengatur level, bisa lihat ini [[wiki:Recording_levels|"
-#~ "pentunjuk online yang diilustrasikan]] atau ikuti langkah ini: "
-#~ "<ol><li>Hidupkan <b>pemantauan</b>. Klik-ganda the right-hand of the two "
-#~ "<i>VU Meters</i> (or right-click over it) and click \"Start Monitoring\". "
-#~ "If the meters are not visible, click <i>View &gt; Toolbars</i> and check "
-#~ "\"Meter Toolbar\". </li><li>Adjust the input slider on the <i>Mixer "
-#~ "Toolbar</i> (by the microphone symbol), so that the red bars in the meter "
-#~ "come close to <b>but do not touch</b> the right edge of the scale. If you "
-#~ "can't hear the monitored audio, go to the <i>Audio I/O tab of "
-#~ "Preferences</i> and check \"Software Playthrough\". </li></ol></p><p> "
-#~ "Back to [[record|Recording Audio]] <br></p>"
-
-#~ msgid ""
-#~ "<p>The main commands for editing audio are under the <i>Edit</i> menu "
-#~ "(such as cut, copy and paste) and the <i>Effect</i> menu (you can do "
-#~ "things like boost the bass, change pitch or tempo, or remove noise). </"
-#~ "p><p> Audacity applies edits to selected areas of the audio track. To "
-#~ "select a particular area, click in the track and drag the shaded area "
-#~ "with the mouse. If no audio is selected, Audacity selects all the audio "
-#~ "in the project window.</p><p> When playing or recording, the Edit and "
-#~ "Effect menus will appear greyed out, because a moving track can't be "
-#~ "edited. Commands can sometimes be unavailable for other reasons too. For "
-#~ "example, you can't run effects until you have audio on the screen, and "
-#~ "you can't paste audio until you've cut or copied it to Audacity's "
-#~ "clipboard. </p><br><br>"
-#~ msgstr ""
-#~ "<p>Perintah utama untuk mengedit audio ada di menu <i>Edit</i> (seperti "
-#~ "potong, salin dan tempel) dan menu <i>Efek</i> (Anda bisa mengecangkan "
-#~ "bass, mengubah pitch atau tempo, atau membuang bising). </p><p> Audacity "
-#~ "mengaplikasikan efek hanya pada daerah terpilih. Untuk memilih area, klik "
-#~ "pada trek dan arahkan dengan mouse. Jika tidak ada yang dipilih, Audacity "
-#~ "akan memilih semua yang ada di jendela proyek.</p><p> Ketika memainkan "
-#~ "atau merekam, menu Edit dan Efek tidak akan aktif, karena trek yang "
-#~ "bergerak tidak bisa diedit. Perintah bisa sewaktu-waktu tidak bisa karena "
-#~ "alasan lain. Contohnya, Anda  tidak bisa menjalankan efek sampai Anda "
-#~ "mempunyai audio pada jendela, dan Anda tidak bisa menempel audio sampai "
-#~ "Anda memotong atau menyalin dahulu. </p><br><br>"
-
-#~ msgid ""
-#~ "<p>To return later to your unfinished work in Audacity with all tracks "
-#~ "and edits as you left them, save an Audacity project. To play your "
-#~ "current work in other media programs or send it to others, [[export|"
-#~ "export]] an audio file such as WAV or MP3. </p><p> <i>File &gt; Save "
-#~ "Project</i> saves an <b>.aup</b> project file and  a <b>_data</b> folder "
-#~ "containing the actual audio. To re-open a saved project, click <i>File "
-#~ "&gt; Open</i> and open the .aup file. If you save and exit more than "
-#~ "once, an .aup.bak backup file is created, but the .aup file should always "
-#~ "be opened if present. When your final exported file is exactly as you "
-#~ "want, delete the project files and _data folder to save disc space. </"
-#~ "p><p><i>File &gt; Save Project As...</i> is for saving an empty project. "
-#~ "It also lets you save an existing Project to a <b> new</b> name. This is "
-#~ "the only safe way to rename a project. The .aup file and _data folder "
-#~ "should not be moved or renamed manually. </p><p>"
-#~ msgstr ""
-#~ "<p>Untuk melanjutkan kembali proyek pada Audacity, simpan proyek Audacity "
-#~ "terlebih dahulu. Untuk memainkan pekerjaan Anda di program media atau "
-#~ "mengirimkannya kepada orang lain, [[export|ekspor]] file audio ke format "
-#~ "WAV atau MP3. </p><p> <i>Berkas &gt; Simpan Proyek</i> menyimpan file "
-#~ "proyek <b>.aup</b> dan folder <b>_data</b> berisi audio yang diperlukan. "
-#~ "Untuk membuka kembali proyek yang telah disimpan, klik <i>Berkas &gt; "
-#~ "Buka</i> dan pilih file .aup. Jika anda menyimpan dan keluar lebih dari "
-#~ "sekali, file backup .aup.bak akan dibuat, tapi file .aup seharusnya "
-#~ "salalu dibuka jika terjadi. Ketika file ekspor akhir Anda sesuai dengan "
-#~ "yang anda minta, hapus file proyek dan folder _data untuk menghemat ruang "
-#~ "disk. </p><p><i>Berkas &gt; Simpan Proyek Sebagai...</i> digunakan untuk "
-#~ "menyimpan proyek kosong. Ini juga digunakan untuk menyimpan Proyek yang "
-#~ "sudah ada dengan nama<b> baru</b>. Inilah langkah teraman untuk menamai "
-#~ "ulang proyek. File .aup dan folder _data tidak seharusnya dipindahkan "
-#~ "atau diganti namanya secara manual. </p><p>"
-
-#~ msgid ""
-#~ "To hear your work in other media programs, export it to an audio file "
-#~ "such as WAV or MP3 (some formats are [[wma-proprietary|unsupported]]). "
-#~ "[[save|Saving an Audacity project]] creates a project file (and linked "
-#~ "_data folder) containing all your edited tracks, so you can return to "
-#~ "your work later. However, other programs can't read Audacity projects. </"
-#~ "p><p> To export, click <i>File &gt; Export</i> then choose the file "
-#~ "format you want to export to in the \"Save as type\" dropdown. To "
-#~ "[[burncd|burn a CD]] for standalone CD players, choose WAV or AIFF. To "
-#~ "export as MP3, the [[wiki:Lame_Installation|Lame Encoder]] must be "
-#~ "installed. </p><p> <i>File &gt; Export Selection</i> exports only a "
-#~ "selected area of audio. <i>Use File &gt; Export Multiple</i> to export "
-#~ "multiple files at the same time, either one for each audio track, or one "
-#~ "for each labeled area in a single track. <i>Tracks &gt; Add Label At "
-#~ "Selection</i> lets you [[wiki:Splitting_recordings_into_separate_tracks|"
-#~ "split the tracks]] from an album for multiple export as separate files. </"
-#~ "p><br><br>"
-#~ msgstr ""
-#~ "Untuk mendengarkan pekerjaan Anda di program media, eksporkan ke file "
-#~ "audio seperti WAV atau MP3 (beberapa format [[wma-proprietary|tidak "
-#~ "mendukung]]). [[save|Menyimpan proyek Audacity]] akan membuat file proyek "
-#~ "(dan berhubungan dengan folder _data) yang mengandung semua trek yang "
-#~ "telah diedit, jadi anda bisa melanjutkannya kembali. Tetapi, program "
-#~ "lainnya tidak bisa membaca proyek Audacity. </p><p> Untuk mengekspor, "
-#~ "klik <i>Berkas &gt; Ekspor</i> kemudian pilih format file yang anda "
-#~ "inginkan pada \"Save as type\". Untuk [[burncd|membakar ke CD]] untuk CD "
-#~ "player yang tunggal, pilih WAV atau AIFF. Untuk mengekspor sebagai MP3, "
-#~ "[[wiki:Lame_Installation|Encoder Lame]] harus sudah terinstal. </p><p> "
-#~ "<i>Berkas &gt; Ekspor Terpilih</i> mengekspor area audio yang dipilih "
-#~ "saja. <i>Gunakan Berkas &gt; Ekspor Multipel</i> untuk mengekspor banyak "
-#~ "file sekaligus, baik pada setiap trek, maupun pada area-area yang "
-#~ "ditandai pada satu trek. <i>Trek &gt; Tambahkan Label pada yang Dipilih</"
-#~ "i> memungkinkan Anda [[wiki:Splitting_recordings_into_separate_tracks|"
-#~ "menyederhanakan trek]] dari satu album ke beberapa file. </p><br><br>"
-
-#~ msgid ""
-#~ "<p>Audacity <b>cannot</b> [[play|play]] or [[export|export]] files in "
-#~ "<b>WMA, RealAudio, Shorten (SHN)</b> or most other proprietary formats, "
-#~ "due to licensing and patent restrictions.  On a Mac computer, unprotected "
-#~ "<b>AAC</b> formats such as <b>M4A</b> can be imported. Some open formats "
-#~ "are not yet supported, including <b>Ogg Speex</b> and <b>Musepack</b>. "
-#~ "Files protected by any kind of Digital Rights Management (DRM), including "
-#~ "most purchased online such as from iTunes or Napster, <b>cannot</b> be "
-#~ "imported.</p><p> If you can't import your file into Audacity, then if it "
-#~ "is not DRM-protected, use iTunes or <a href=\"http://www.erightsoft.com/"
-#~ "SUPER.html#Dnload\">SUPER</a> to convert it to WAV or AIFF. If it is "
-#~ "protected, burn it to an audio CD in the program licensed to play it, "
-#~ "then extract the CD track to WAV or AIFF using iTunes or (on Windows) <a "
-#~ "href=\"http://cdexos.sourceforge.net/?q=download\">CDex</a> or Windows "
-#~ "Media Player 11. You could also <a href=\"http://audacity.sourceforge.net/"
-#~ "help/faq?s=recording&amp;i=streaming\">record</a> the CD to your "
-#~ "computer. <i>To export to an unsupported format, export to WAV or AIFF "
-#~ "and convert it to the desired format in iTunes or <a href=\"http://www."
-#~ "erightsoft.com/SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-#~ msgstr ""
-#~ "<p>Audacity <b>tidak bisa</b> [[play|memainkan]] atau [[export|"
-#~ "mengekspor]] file ke <b>WMA, RealAudio, Shorten (SHN)</b> atau format-"
-#~ "format berbayar lainnya, karena larangan lisensi dan paten.  Pada "
-#~ "komputer Mac, format <b>AAC</b> yang tidak terproteksi seperti <b>M4A</b> "
-#~ "bisa diimpor. Beberapa format open-source belum didukung, termasuk <b>Ogg "
-#~ "Speex</b> dan <b>Musepack</b>. File yang diproteksi oleh Digital Rights "
-#~ "Management (DRM), termasuk yang berbayar seperti dari iTunes atau "
-#~ "Napster, <b>tidak bisa</b> diimpor.</p><p> Jika Anda tidak bisa mengimpor "
-#~ "file Anda ke Audacity, kemudian jika itu tidak terlindungi oleh DRM, "
-#~ "gunakan iTunes atau <a href=\"http://www.erightsoft.com/SUPER.html#Dnload"
-#~ "\">SUPER</a> untuk mengubahnya ke WAV atau AIFF. Jika dilindungi, bakar "
-#~ "ke CD audio pada program berlisensi untuk memainkannya, kemudian ekstrak "
-#~ "CD ke WAV atau AIFF dengan ITunes atau (pada Windows) <a href=\"http://"
-#~ "cdexos.sourceforge.net/?q=download\">CDex</a> atau Windows Media Player "
-#~ "11. Anda bisa juga <a href=\"http://audacity.sourceforge.net/help/faq?"
-#~ "s=recording&amp;i=streaming\">merekam</a> CD ke komputer Anda. <i>Untuk "
-#~ "mengekspor ke format yang tidak terdukung, ekspor ke WAV atau AIFF dan "
-#~ "ubah ke formatnya dengan iTunes atau <a href=\"http://www.erightsoft.com/"
-#~ "SUPER.html#Dnload\">SUPER</a>. </i></p><p>"
-
-#~ msgid ""
-#~ "<p>To burn your work to an audio CD for standalone CD players, first "
-#~ "[[export|export]] it as WAV or AIFF. The exported file should be stereo, "
-#~ "44100 Hz (set in the \"Project Rate\" button bottom left) and 16 bit (set "
-#~ "in the \"Options\" button in the file export dialog). These are "
-#~ "Audacity's default settings, so normally you will not need to change "
-#~ "these before exporting. <p>Burn the exported file to an \"audio CD\" - "
-#~ "not a \"data CD\" or \"MP3 CD\" - with a CD burning program like iTunes "
-#~ "or Windows Media Player. For more help, see [[wiki:How_to_burn_CDs|How to "
-#~ "burn CDs]] online. </p><p>"
-#~ msgstr ""
-#~ "<p>UNtuk membakar pekerjaan Anda ke CD audio untuk CD player, pertama "
-#~ "[[export|ekspor]] sebagai WAV atau AIFF. File yang diekspor haruslah "
-#~ "stereo, 44100 Hz (atur pada tombol \"Project Rate\" di kiri bawah) dan 16 "
-#~ "bit (atur pada tombol \"Options\" dialog ekspor file). Inilah aturan "
-#~ "dasar Audacity, Jadi Anda tidak perlu mengubah aturannya sebelum "
-#~ "diekspor. <p>Bakar file tersebut ke \"audio CD\" - bukan \"data CD\" atau "
-#~ "\"MP3 CD\" - dengan program pembakar CD seperti iTunes atau Windows Media "
-#~ "Player. Untuk bantuan lainnya, silahkan lihat [[wiki:How_to_burn_CDs|"
-#~ "Bagaimana membakar CD]] secara online. </p><p>"
-
-#~ msgid ""
-#~ "<p>Help for Audacity Beta is currently unfinished. For now, a draft "
-#~ "manual is available <a href=\"http://www.audacityteam.org/manual/index."
-#~ "php?title=Main_Page\">online</a>. Alternatively, click <a href=\"http://"
-#~ "www.audacityteam.org/manual/index.php?title=Temporary_HTML_Manual_Export"
-#~ "\">here</a> to download a single-page version of the manual which can be "
-#~ "viewed in this window."
-#~ msgstr ""
-#~ "<p>Bantuan untuk Audacity Beta belum selesai. Untuk saat ini, manual "
-#~ "draft telah ada <a href=\"http://www.audacityteam.org/manual/index.php?"
-#~ "title=Main_Page\">pada online</a>. Atau dengan cara lain, klik <a href="
-#~ "\"http://www.audacityteam.org/manual/index.php?"
-#~ "title=Temporary_HTML_Manual_Export\">di sini</a> untuk mendownload manual "
-#~ "berhalaman tunggal yang bisa dilihat di jendela ini."
-
-#~ msgid "&Show Welcome Message..."
-#~ msgstr "&Tampilkan Pesan Awal..."
-
-#~ msgid "&Help..."
-#~ msgstr "&Bantuan..."
-
-#~ msgid "AMR (wide band) Files (FFmpeg, undistributable)"
-#~ msgstr "File AMR (jangakuan luas) (FFmpeg, tidak terdistribusi)"
-
-#~ msgid "In Browser"
-#~ msgstr "Pada Browser"
-
-#~ msgid "Help:"
-#~ msgstr "Bantuan:"
-
-#~ msgid "Mix Volume"
-#~ msgstr "Volume Mix"
-
-#~ msgid ""
-#~ "This determines how often the meter is refreshed.\n"
-#~ "If you have a slower PC you may want to select a\n"
-#~ "lower refresh rate (30 per second or lower), so that\n"
-#~ "audio qualtiy is not affected by the meter display."
-#~ msgstr ""
-#~ "Ini menunjukkan sesering apa meteran disegarkan.\n"
-#~ "Jika performa PC Anda tidak tinggi, Anda pilih rate\n"
-#~ "penyegaran lebih rendah (30 per detik atau lebih rendah), supaya\n"
-#~ "kualitas audio tidak berdampak kepada penunjuk ini."
-
-#~ msgid "CleanSpeech C&hain..."
-#~ msgstr "Sa&mbungan CleanSpeech..."
-
-#~ msgid "Turn Snap-To On"
-#~ msgstr "&Hidupkan Snap-To"
-
-#~ msgid "Turn Snap-To Off"
-#~ msgstr "&Matikan Snap-To"
-
-#~ msgid "Turn Grid Snap On"
-#~ msgstr "H&idupkan Grid Snap"
-
-#~ msgid "Turn Grid Snap Off"
-#~ msgstr "M&atikan Grid Snap"
-
-#~ msgid "&Index..."
-#~ msgstr "&Indeks..."
-
-#~ msgid "&Mix and Render"
-#~ msgstr "&Mix dan Render"
-
-#~ msgid "Tag Name"
-#~ msgstr "Nama Tag"
-
-#~ msgid ""
-#~ "Sorry, VST Effects cannot be performed on stereo tracks where the "
-#~ "individual channels of the track do not match."
-#~ msgstr ""
-#~ "Maaf, Efek VST tidak bisa dipakai pada trek stereo yang masing-masing "
-#~ "salurannya tidak cocok."
-
-#~ msgid "Can't process replacing"
-#~ msgstr "Tidak bisa memindahkan"
-
-#~ msgid "VST Plug-in parameters:"
-#~ msgstr "Parameter Plug-in VST:"
-
-#~ msgid "Audio I/O"
-#~ msgstr "Audio I/O"
-
-#~ msgid "Portaudio v"
-#~ msgstr "Portaudio v"
-
-#~ msgid "Smart Recording"
-#~ msgstr "Rekaman Pintar"
-
-#~ msgid "Zoom Toggle"
-#~ msgstr "Fokuskan"
-
-#~ msgid "%d rows, %d columns"
-#~ msgstr "%d baris, %d kolom"
-
-#~ msgid "Row %d"
-#~ msgstr "Baris %d"
-
-#~ msgid "Time Control"
-#~ msgstr "Kontrol Waktu"
-
-#~ msgid "No"
-#~ msgstr "Tidak"
-
-#~ msgid "Record Append"
-#~ msgstr "Penambahan Rekaman"
-
-#~ msgid "Play Looped"
-#~ msgstr "Maikan berulang"
-
-#~ msgid "Group with Wave Track"
-#~ msgstr "Grupkan dengan Trek Wave"
-
-#~ msgid "Clear any grouping"
-#~ msgstr "Hapus grup apapun"
-
-#~ msgid "Disallowed for some reason.  Try selecting some audio first?"
-#~ msgstr ""
-#~ "Tidak diperbolehkan karena beberapa alasan.  Coba memilih beberapa audio "
-#~ "dahulu?"
-
-#~ msgid "Hello.\n"
-#~ msgstr "Halo. \n"
-
-#~ msgid "WCAG2 Audio Contrast Analyzer"
-#~ msgstr "Penganalisa Kontras Audio WCAG2"
-
-#~ msgid "Note: The 'OK' button resets time values."
-#~ msgstr "Catatan: Tombol 'OK' mengubah ulang nilai waktu."
-
-#~ msgid "Measuring background"
-#~ msgstr "Mengukur latar belakang"
-
-#~ msgid "Measuring foreground"
-#~ msgstr "Mengukur latar depan"
-
-#~ msgid "&Software Playthrough: Play new track while recording it"
-#~ msgstr "Selama Bermain pada &Software: Mainkan trek baru ketika merekamnya"
-
-#~ msgid "Show / Hide"
-#~ msgstr "Lihat / Sembunyi"
-
-#~ msgid "Show prompt to sa&ve, even if project is empty"
-#~ msgstr "Tunjukkan prompt untuk menyimpan, bahkan jika proyek masih kosong"
-
-#~ msgid "Display range minimum: meters and 'Waveform (dB)'"
-#~ msgstr "Tampilkan range minimum: meter dan 'waveform (dB)'"
-
-#~ msgid "Other interface choices"
-#~ msgstr "Pilihan interface lainnya"
-
-#~ msgid "Real-time sample rate converter:"
-#~ msgstr "Pengkonversi rate sampel yang cepat:"
-
-#~ msgid "High-quality sample rate converter:"
-#~ msgstr "Pengkonversi rate sampel berkualitas tinggi:"
-
-#~ msgid "Real-time dither:"
-#~ msgstr "Dither tepat waktu:"
-
-#~ msgid "High-quality dither:"
-#~ msgstr "Dither berkualitas tinggi:"
-
-#~ msgid "Conversion"
-#~ msgstr "Konversi"
-
-#~ msgid "Real-time:"
-#~ msgstr "Tepat Waktu:"
-
-#~ msgid "FFT Size"
-#~ msgstr "Ukuran FFT"
-
-#~ msgid "&Grayscale"
-#~ msgstr "&Hitam Putih"

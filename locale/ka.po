@@ -29,12 +29,12 @@ msgstr "OK... Audacious!"
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
 msgstr ""
 
-#: AboutDialog.cpp:196
-msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:201
+msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr ""
 
-#: AboutDialog.cpp:199
-msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:204
+msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
@@ -92,10 +92,6 @@ msgstr ""
 #: AboutDialog.cpp:270
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr ""
-
-#: AboutDialog.cpp:258
-msgid "Audacity"
-msgstr "Audacity"
 
 #. i18n-hint: Information about when audacity was compiled
 #: AboutDialog.cpp:304 AboutDialog.cpp:317 AboutDialog.cpp:473
@@ -200,21 +196,26 @@ msgstr "პარამეტრების საქაღალდე:"
 msgid "GPL License"
 msgstr "GPL ლიცენზია:"
 
-#: AudacityApp.cpp:507 Project.cpp:1844
-#, c-format
-msgid "%s is already open in another window."
-msgstr "%s უკვე გახსნილია სხვა ფანჯარაში."
-
-#: AudacityApp.cpp:509 Project.cpp:1846 Project.cpp:1951 Project.cpp:2095
-#: Project.cpp:2232
-msgid "Error opening project"
-msgstr "პროექტის გახსნის შეცდომა"
-
 #: AudacityApp.cpp:772
 #, c-format
 msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
+msgstr ""
+
+#: AudacityApp.cpp:846
+#, c-format
+msgid "One or more external audio files could not be found.\n"
+"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
+"Silence is being substituted for the affected audio.\n"
+"The first detected missing file is:\n"
+"%s\n"
+"There may be additional missing files.\n"
+"Choose File > Check Dependencies to view a list of locations of the missing files."
+msgstr ""
+
+#: AudacityApp.cpp:860
+msgid "Files Missing"
 msgstr ""
 
 #: AudacityApp.cpp:643
@@ -287,9 +288,9 @@ msgstr "Audacity-მა ვერ შეძლო დროებითი ფ�
 msgid "Do you still want to start Audacity?"
 msgstr "კვლავ გსურთ  Audacity-ის დაწყება?"
 
-#: AudacityApp.cpp:1176
-msgid "Error locking temporary folder"
-msgstr "დროებითი საქაღალდის ჩაკეტვის შეცდომა"
+#: AudacityApp.cpp:1581
+msgid "Error Locking Temporary Folder"
+msgstr ""
 
 #: AudacityApp.cpp:1214
 msgid "The system has detected that another copy of Audacity is running.\n"
@@ -384,6 +385,10 @@ msgstr ""
 msgid "Error Initializing Midi"
 msgstr ""
 
+#: AudioIO.cpp:1266 AudioIO.cpp:1300
+msgid "Out of memory!"
+msgstr ""
+
 #: AudioIO.cpp:1225
 msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -469,8 +474,9 @@ msgstr "დარწმუნებული ხართ, რომ არ გ�
 msgid "Confirm?"
 msgstr "დავადასტურო?"
 
-#: AutoRecovery.cpp:146 AutoRecovery.cpp:183
-msgid "Could not enumerate files in auto save directory"
+#: AutoRecovery.cpp:148 AutoRecovery.cpp:185
+#, fuzzy
+msgid "Could not enumerate files in auto save directory."
 msgstr "შეუძლებელია ფაილების დათვლა ავტო შენახვის დირექტორიაში"
 
 #: AutoRecovery.cpp:147 AutoRecovery.cpp:184 Menus.cpp:3053 Menus.cpp:3065
@@ -716,79 +722,99 @@ msgstr "დამოკიდებულთა წაშლა"
 msgid "Copying audio data into project..."
 msgstr "აუდიო მონაცემების პროექტის კოპირება..."
 
-#: Dependencies.cpp:226
-msgid "Copying the following files into your project will remove this dependency.\n"
-"This needs more disk space, but is safer."
+#: Dependencies.cpp:302
+msgid "Project Depends on Other Audio Files"
 msgstr ""
 
-#: Dependencies.cpp:270
-msgid "Project depends on other audio files"
-msgstr "პროექტი სხვა აუდიო ფაილებზეა დამოკიდებული"
+#: Dependencies.cpp:324
+msgid "Copying these files into your project will remove this dependency.\n"
+"This is safer, but needs more disk space."
+msgstr ""
+
+#: Dependencies.cpp:328
+msgid "\n"
+"\n"
+"Files shown as MISSING have been moved or deleted and cannot be copied.\n"
+"Restore them to their original location to be able to copy into project."
+msgstr ""
 
 #: Dependencies.cpp:291
 msgid "Project Dependencies"
 msgstr "პროექტის დამოკიდებულებანი"
 
-#: Dependencies.cpp:294
-msgid "Audio file"
+#: Dependencies.cpp:341
+#, fuzzy
+msgid "Audio File"
 msgstr "აუდიო ფაილი"
 
-#: Dependencies.cpp:296
-msgid "Disk space"
+#: Dependencies.cpp:343
+#, fuzzy
+msgid "Disk Space"
 msgstr "დისკის ზომა"
 
-#: Dependencies.cpp:301
-msgid "Copy Selected Audio Into Project"
-msgstr "მონიშნული აუდიოდან  კოპირება პროექტში"
+#: Dependencies.cpp:349
+msgid "Copy Selected Files"
+msgstr ""
 
 #: Dependencies.cpp:308 Dependencies.cpp:414
 msgid "Cancel Save"
 msgstr "შენახვის გაუქმება"
 
-#: Dependencies.cpp:310
-msgid "Do Not Copy Any Audio"
-msgstr "არ დააკოპიროთ არცერთი აუდიო"
+#: Dependencies.cpp:362
+msgid "Save without Copying"
+msgstr ""
 
-#: Dependencies.cpp:312
-msgid "Copy All Audio into Project (Safer)"
-msgstr "ყველა აუდიო ფაილის პროექტში კოპირება (Safer)"
+#: Dependencies.cpp:365
+msgid "Do Not Copy"
+msgstr ""
+
+#: Dependencies.cpp:368
+msgid "Copy All Files (Safer)"
+msgstr ""
 
 #: Dependencies.cpp:321 Dependencies.cpp:326
 msgid "Ask me"
 msgstr "მკითხე"
 
-#: Dependencies.cpp:322
-msgid "Always copy all audio (safest)"
-msgstr "ყოველთვის დააკოპირე ყველა აუდიო (ყველაზე უსაფრთხო)"
+#: Dependencies.cpp:382
+msgid "Always copy all files (safest)"
+msgstr ""
 
-#: Dependencies.cpp:323
-msgid "Never copy any audio"
-msgstr "არასდროს დააკოპირო აუდიო"
+#: Dependencies.cpp:383
+msgid "Never copy any files"
+msgstr ""
 
 #: Dependencies.cpp:325
 msgid "Whenever a project depends on other files:"
 msgstr "როდესაც პროექტი დამოკიდებულია სხვა ფაილებზე:"
 
+#: Dependencies.cpp:422
+msgid "MISSING "
+msgstr ""
+
 #: Dependencies.cpp:413
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "თუ გააგრძელებთ, თქვენი პროექტი არ შეინახება დისკზე. ასე გსურთ?"
 
-#: Dependencies.cpp:453
-msgid "Your project is self-contained; it does not depend on any external audio files."
-msgstr "თქვენი პროექტი თვითტევადია; ეს არაა დამოკიდებული არცერთ გარე აუდიო ფაილზე."
+#: Dependencies.cpp:549
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
+"\n"
+"If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
+msgstr ""
 
-#: Dependencies.cpp:454
-msgid "Dependency check"
+#: Dependencies.cpp:554
+#, fuzzy
+msgid "Dependency Check"
 msgstr "დამოკიდებულების შემოწმება"
+
+#: DirManager.cpp:223 DirManager.cpp:254 DirManager.cpp:337
+msgid "Progress"
+msgstr "მიმდინარეობა"
 
 #: DirManager.cpp:143
 msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
 msgstr ""
-
-#: DirManager.cpp:223 DirManager.cpp:254 DirManager.cpp:337
-msgid "Progress"
-msgstr "მიმდინარეობა"
 
 #: DirManager.cpp:288
 msgid "Cleaning up temporary files"
@@ -802,12 +828,15 @@ msgstr "პროექტის მონაცემთა ფაილებ�
 msgid "Cleaning up cache directories"
 msgstr "ქეშის დირექტორიების გაწმენდა"
 
-#: DirManager.cpp:505
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
+msgstr ""
+
+#: DirManager.cpp:614
 #, c-format
-msgid "Audacity found an orphaned blockfile %s! \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
-msgstr "Audacity found an orphaned blockfile %s! \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
+msgid "Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
+msgstr ""
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
@@ -817,13 +846,15 @@ msgstr "Audacity found an orphaned blockfile %s! \n"
 msgid "%s-old%d"
 msgstr "%s-old%d"
 
-#: DirManager.cpp:1102
-msgid "Unable to open/create test file"
+#: DirManager.cpp:1213
+#, fuzzy
+msgid "Unable to open/create test file."
 msgstr "შეუძლებელია ტესტის ფაილის გახსნა/შექმნა"
 
-#: DirManager.cpp:1111
+#: DirManager.cpp:1222
 #, c-format
-msgid "Unable to remove '%s'"
+#, fuzzy
+msgid "Unable to remove '%s'."
 msgstr "შეუძლებელია '%s'-ის წაშლა"
 
 #: DirManager.cpp:1116
@@ -831,9 +862,10 @@ msgstr "შეუძლებელია '%s'-ის წაშლა"
 msgid "Renamed file: %s\n"
 msgstr "სახელშეცვლილი ფაილი: %s\n"
 
-#: DirManager.cpp:1160
+#: DirManager.cpp:1290
 #, c-format
-msgid "Unable to rename '%s' to '%s'"
+#, fuzzy
+msgid "Unable to rename '%s' to '%s'."
 msgstr "შეუძლებელია '%s'-ის სახელის გადარქმევა  '%s'-ად"
 
 #: DirManager.cpp:1183
@@ -841,147 +873,195 @@ msgstr "შეუძლებელია '%s'-ის სახელის გ�
 msgid "Changed block %s to new alias name\n"
 msgstr ""
 
-#: DirManager.cpp:1224 DirManager.cpp:1515
-msgid "Inspecting project file data..."
-msgstr "ფაილების მონაცემების გამოკვლევა.."
-
-#: DirManager.cpp:1240
-#, c-format
-msgid "Orphaned blockfile: (%s)"
-msgstr "დაცალკევებული ბლოკის ფაილი: (%s)"
-
-#: DirManager.cpp:1265
-#, c-format
-msgid "Missing alias file: (%s)"
-msgstr "მეტსახელის ფაილი აკლია: (%s)"
-
-#: DirManager.cpp:1285
-#, c-format
-msgid "Missing summary file: (%s.auf)"
-msgstr "რეზიუმეს ფაილი აკლია: (%s.auf)"
-
-#: DirManager.cpp:1305
-#, c-format
-msgid "Missing data file: (%s.au)"
-msgstr "მონაცემების ფაილი აკლია: (%s.au)"
-
-#: DirManager.cpp:1319
-msgid "Project check found inconsistencies inspecting the loaded project data;\n"
-"click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
-msgstr "პროექტის შემოწმებისას აღმოჩენილია არამდგრადობანი ჩატვირთული პროექტის მონაცემებში;\n"
-"დაუწკაპუნეთ 'დეტალებს' შეცდომათა სრული სიისთვის ან   'დიახ' -ს დამატებითი პარამეტრებზე გადასვლისთვის."
-
-#: DirManager.cpp:1331
-#, c-format
-msgid "Project check found %d orphaned blockfile[s]. These files are\n"
-"unused and probably left over from a crash or some other bug.\n"
-"They should be deleted to avoid disk contention."
-msgstr "Project check found %d orphaned blockfile[s]. These files are\n"
-"unused and probably left over from a crash or some other bug.\n"
-"They should be deleted to avoid disk contention."
-
-#: DirManager.cpp:1336
-msgid "Delete orphaned files [safe and recommended]"
-msgstr "Delete orphaned files [safe and recommended]"
-
-#: DirManager.cpp:1337
-msgid "Continue without deleting; silently work around the extra files"
-msgstr "წაშლის გარეშე გაგრძელება; დამატებით ფაილებთან ჩუმად მუშაობა"
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr ""
 
 #: DirManager.cpp:1338
 msgid "Close project immediately with no changes"
 msgstr "პროექტის მყისიერი დახურვა ცვლილებების გარეშე"
 
-#: DirManager.cpp:1340 DirManager.cpp:1375 DirManager.cpp:1421
-#: DirManager.cpp:1463 export/Export.cpp:576 export/Export.cpp:597
-#: export/Export.cpp:616 widgets/Warning.cpp:55
-msgid "Warning"
-msgstr "გაფრთხილება"
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr ""
 
-#: DirManager.cpp:1366
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr ""
+
+#: DirManager.cpp:1391 DirManager.cpp:1793
+msgid "Inspecting project file data"
+msgstr ""
+
+#: DirManager.cpp:1410
 #, c-format
-msgid "Project check detected %d input file[s] being used in place\n"
-"('alias files') are now missing.  There is no way for Audacity\n"
-"to recover these files automatically; you may choose to\n"
-"permanently fill in silence for the missing files, temporarily\n"
-"fill in silence for this session only, or close the project now\n"
-"and try to restore the missing files by hand."
-msgstr "პროექტის შემოწმებისას აღმოჩენილია, რომ %d შენატანი ფაილ[ებ]ი, რომელიც გამოიყენება ადგილზე\n"
-"('მეტსახელის ფაილები') ახლა აკლია. Audacity-ის არ შეუძლია დაკარგული მონაცემების\n"
-"ავტომატური აღდგენა, შეიძლება ნაკლული მონაცემების სიჩუმის მუდმივი შევსება,\n"
-"მხოლოდ ამ სესიისთვის დროებითი შევსება\n"
-"ან პროექტის დახურვა ახლა და შემდეგ აღდგენის მცდელობა\n"
-"ხელით."
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
+"to recover these files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
+msgstr ""
 
-#: DirManager.cpp:1371
-msgid "Replace missing data with silence [permanent upon save]"
-msgstr "ნაკლული მონაცემების სიჩუმით ჩანაცვლება [შენახვისას მუდმივია]"
+#: DirManager.cpp:1426 DirManager.cpp:1545
+msgid "Treat missing audio as silence (this session only)"
+msgstr ""
 
-#: DirManager.cpp:1372 DirManager.cpp:1460
-msgid "Temporarily replace missing data with silence [this session only]"
-msgstr "ნაკლული მონაცემების სიჩუმით დროებითი ჩანაცვლება [მხოლოდ ეს სესია]"
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
+
+#: DirManager.cpp:1430
+msgid "Warning - Missing Aliased File(s)"
+msgstr ""
+
+#: DirManager.cpp:1460
+msgid "   Project check replaced missing aliased file(s) with silence."
+msgstr ""
+
+#: DirManager.cpp:1480
+#, c-format
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
+msgstr ""
+
+#: DirManager.cpp:1486
+msgid "Regenerate alias summary files (safe and recommended)"
+msgstr ""
+
+#: DirManager.cpp:1487
+#, fuzzy
+msgid "Fill in silence for missing display data (this session only)"
+msgstr "სიჩუმის ამოვსება  ნაკლული მონაცემებისთვის [მხოლოდ ეს სესია]"
 
 #: DirManager.cpp:1373 DirManager.cpp:1419 DirManager.cpp:1461
 msgid "Close project immediately with no further changes"
 msgstr "პროექტის მყისიერი დახურვა შემდგომი ცვლილებების გარეშე"
 
-#: DirManager.cpp:1412
+#: DirManager.cpp:1491
+msgid "Warning - Missing Alias Summary File(s)"
+msgstr ""
+
+#: DirManager.cpp:1513
+msgid "   Project check regenerated missing alias summary file(s)."
+msgstr ""
+
+#: DirManager.cpp:1531
 #, c-format
-msgid "Project check detected %d missing summary file[s] (.auf).\n"
-"Audacity can fully regenerate these summary files from the\n"
-"original audio data in the project."
-msgstr "პროექტის შემოწმებისას აღმოჩენილია %d ნაკლული რეზიუმეს ფაილ[ებ]ი (.auf).\n"
-"Audacity-ის შეუძლია ამ რეზიუმეს ფაილების რეგენერაცია\n"
-"ორიგინალური აუდიო მონაცემებიდან პროექტში,."
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence."
+msgstr ""
 
-#: DirManager.cpp:1417
-msgid "Regenerate summary files [safe and recommended]"
-msgstr "რეზიუმეს ფაილების რეგენერაცია [უსაფრთხო და რეკომენდებული]"
+#: DirManager.cpp:1546
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr ""
 
-#: DirManager.cpp:1418
-msgid "Fill in silence for missing display data [this session only]"
-msgstr "სიჩუმის ამოვსება  ნაკლული მონაცემებისთვის [მხოლოდ ეს სესია]"
+#: DirManager.cpp:1549
+msgid "Warning - Missing Audio Data Block File(s)"
+msgstr ""
 
-#: DirManager.cpp:1454
+#: DirManager.cpp:1571
+msgid "   Project check replaced missing audio data block file(s) with silence."
+msgstr ""
+
+#: DirManager.cpp:1587
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
+msgstr ""
+
+#: DirManager.cpp:1593
 #, c-format
-msgid "Project check detected %d missing audio data blockfile[s] (.au), \n"
-"probably due to a bug, system crash or accidental deletion.\n"
-"There is no way for Audacity to recover this lost data\n"
-"automatically; you may choose to permanently fill in silence\n"
-"for the missing data, temporarily fill in silence for this\n"
-"session only, or close the project now and try to restore the\n"
-"missing data by hand."
-msgstr "პროექტის შემოწმებისას აღმოჩენილია %d ნაკლული აუდიო მონაცემთა ბლოკფაილები[ებ]ი(.au), \n"
-"სავარაუდოდ სისტემური ხარვეზის, მარცხის ან შემთხვევითი წაშლის გამო.\n"
-"Audacity-ის არ შეუძლია დაკარგული მონაცემების\n"
-"ავტომატური აღდგენა, შეიძლება ნაკლული მონაცემების სიჩუმის მუდმივი შევსება,\n"
-"მხოლოდ ამ სესიისთვის დროებითი შევსება\n"
-"ან პროექტის დახურვა ახლა და შემდეგ აღდგენის მცდელობა\n"
-"ხელით."
+msgid "Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
+msgstr ""
 
-#: DirManager.cpp:1459
-msgid "Replace missing data with silence [permanent immediately]"
-msgstr "ნაკლული მონაცემების ჩანაცვლება სიჩუმით [მყისიერი მუდმივი]"
+#: DirManager.cpp:1602
+msgid "Continue without deleting; ignore the extra files this session"
+msgstr ""
 
-#: DirManager.cpp:1487
-msgid "Cleaning up unused directories in project data..."
-msgstr "გამოუყენებელი დირექტორიების გაწმენდა პროექტის მონაცემებში.."
+#: DirManager.cpp:1604
+msgid "Delete orphan files (permanent immediately)"
+msgstr ""
+
+#: DirManager.cpp:1607
+msgid "Warning - Orphan Block File(s)"
+msgstr ""
+
+#: DirManager.cpp:1630
+msgid "Cleaning up unused directories in project data"
+msgstr ""
+
+#: DirManager.cpp:1644
+msgid "Project check found file inconsistencies inspecting the loaded project data."
+msgstr ""
+
+#: DirManager.cpp:1650
+msgid "Project check found file inconsistencies during automatic recovery.\n"
+"\n"
+"Select 'Show Log...' in the Help menu to see details."
+msgstr ""
+
+#: DirManager.cpp:1651
+msgid "Warning: Problems in Automatic Recovery"
+msgstr ""
+
+#: DirManager.cpp:1690
+#, c-format
+msgid "Missing aliased audio file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1713
+#, c-format
+msgid "Missing alias (.auf) block file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1737
+#, c-format
+msgid "Missing data block file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1779
+#, c-format
+msgid "Orphan block file: '%s'"
+msgstr ""
 
 #: DirManager.cpp:1558
 msgid "Caching audio"
 msgstr "აუდიოს ქეშირება"
 
-#: DirManager.cpp:1559
-msgid "Caching audio into memory..."
-msgstr "აუდიოს ქეშირება მეხსიერებაში..."
+#: DirManager.cpp:1835
+msgid "Caching audio into memory"
+msgstr ""
 
 #: DirManager.cpp:1592
 msgid "Saving recorded audio"
 msgstr "ჩაწერილი აუდიოს შენახვა"
 
-#: DirManager.cpp:1593
-msgid "Saving recorded audio to disk..."
-msgstr "ჩაწერილი აუდიოს შენახვა დისკზე"
+#: DirManager.cpp:1871
+msgid "Saving recorded audio to disk"
+msgstr ""
 
 #: FFT.cpp:389
 msgid "Rectangular"
@@ -991,9 +1071,9 @@ msgstr "მართკუთხედი"
 msgid "FFmpeg support not compiled in"
 msgstr ""
 
-#: FFmpeg.cpp:103
-msgid "FFmpeg was configured in Preferences and successfully loaded before,                       \n"
-"but this time Audacity failed to load it at startup.                       \n"
+#: FFmpeg.cpp:110
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+"but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
@@ -1010,20 +1090,21 @@ msgstr "FFmpeg ბიბლიოთეკა ვერ მოიძებნა
 msgid "Locate FFmpeg"
 msgstr "FFmpeg მდებარეობის დადგენა"
 
-#: FFmpeg.cpp:190
+#: FFmpeg.cpp:450
 #, c-format
-msgid "Audacity needs the file %s to import and export audio via FFmpeg."
+#, fuzzy
+msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "Audacity-ის სჭირდება ფაილი %s აუდიოს იმპორტისა და ექსპორტისთვის FFmpeg-ის საშუალებით."
 
-#: FFmpeg.cpp:196 export/ExportMP3.cpp:562
+#: FFmpeg.cpp:456
 #, c-format
-msgid "Location of %s:"
-msgstr "%s'-ის მდებარეობა:"
+msgid "Location of '%s':"
+msgstr ""
 
-#: FFmpeg.cpp:205 export/ExportMP3.cpp:571
+#: FFmpeg.cpp:465
 #, c-format
-msgid "To find %s, click here -->"
-msgstr "%s'-ის მოსაძებნად აქ დაუწკაპუნეთ -->"
+msgid "To find '%s', click here -->"
+msgstr ""
 
 #: FFmpeg.cpp:211 export/ExportMP3.cpp:577
 msgid "Browse..."
@@ -1039,14 +1120,14 @@ msgstr ""
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
-#. "Where would I find the file %s" instead if you want.
-#: FFmpeg.cpp:235 export/ExportMP3.cpp:601
+#. "Where would I find the file '%s'?" instead if you want.
+#: FFmpeg.cpp:495
 #, c-format
-msgid "Where is %s?"
-msgstr "სად არის %s'?"
+msgid "Where is '%s'?"
+msgstr ""
 
-#: FFmpeg.cpp:407
-msgid "Failed to find compatible FFmpeg libraries"
+#: FFmpeg.cpp:666
+msgid "Failed to find compatible FFmpeg libraries."
 msgstr ""
 
 #: FFmpeg.h:95
@@ -1279,9 +1360,9 @@ msgstr "აუდიო ფაილის ექსპორტი"
 msgid "Saving an Audacity Project"
 msgstr "Audacity პროექტის შენახვა"
 
-#: HelpText.cpp:129
-msgid "Unsupported Formats"
-msgstr "მხარდაუჭერელი ფორმატები"
+#: HelpText.cpp:157
+msgid "Support for Other Formats"
+msgstr ""
 
 #: HelpText.cpp:133
 msgid "Burn to CD"
@@ -1292,7 +1373,7 @@ msgid "No Local Help"
 msgstr "ლოკალური დახმარების გარეშე"
 
 #: HelpText.cpp:176
-msgid "<center><h3>How to get Help</h3></center>"
+msgid "<center><h3>How to Get Help</h3></center>"
 msgstr ""
 
 #: HelpText.cpp:150
@@ -1304,23 +1385,31 @@ msgid "These are our support methods:"
 msgstr ""
 
 #: HelpText.cpp:179
-msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">internet version if it isn't</a>)"
+msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)"
 msgstr ""
 
 #: HelpText.cpp:180
-msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">internet version if it isn't</a>)"
+msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)"
 msgstr ""
 
 #: HelpText.cpp:181
-msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the internet)"
+msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)"
 msgstr ""
 
 #: HelpText.cpp:182
-msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the internet)"
+msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)"
 msgstr ""
 
 #: HelpText.cpp:183
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
+msgstr ""
+
+#: HelpText.cpp:190
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
+msgstr ""
+
+#: HelpText.cpp:194
+msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
 msgstr ""
 
 #: HelpText.cpp:193
@@ -1475,6 +1564,10 @@ msgstr "ტრეკის სახელის შეყვანა"
 msgid "Label Track"
 msgstr ""
 
+#: Menus.cpp:4677
+msgid "Added label"
+msgstr "დამატებული იარლიყი"
+
 #: LangChoice.cpp:57
 msgid "Audacity First Run"
 msgstr "Audacity-ის პირველი გაშვება"
@@ -1612,33 +1705,21 @@ msgstr "&უკუსვლა"
 msgid "&Redo"
 msgstr "&გამეორება"
 
+#: Menus.cpp:344
+msgid "R&emove Audio"
+msgstr ""
+
 #: Menus.cpp:363
 msgid "Cu&t"
 msgstr "ამ&ოჭრა"
 
-#: Menus.cpp:367
-msgid "Spl&it Cut"
-msgstr "დაყ&ოფის ამოჭრა"
-
-#: Menus.cpp:368
-msgid "&Copy"
-msgstr "&კპირება"
-
-#: Menus.cpp:372
-msgid "&Paste"
-msgstr "&ჩასმა"
-
-#: Menus.cpp:366
-msgid "Paste Te&xt to New Label"
-msgstr ""
-
-#: Menus.cpp:376
-msgid "Tri&m"
-msgstr "დაჭრ&რა"
-
 #: Menus.cpp:378
 msgid "&Delete"
 msgstr "&წაშლა"
+
+#: Menus.cpp:367
+msgid "Spl&it Cut"
+msgstr "დაყ&ოფის ამოჭრა"
 
 #: Menus.cpp:379
 msgid "Split D&elete"
@@ -1647,6 +1728,14 @@ msgstr "დაყოფის  წაშლა"
 #: Menus.cpp:380
 msgid "Silence Audi&o"
 msgstr "აუდ&იოს დაჩუმება"
+
+#: Menus.cpp:376
+msgid "Tri&m"
+msgstr "დაჭრ&რა"
+
+#: Menus.cpp:357
+msgid "Clip Boun&daries"
+msgstr ""
 
 #: Menus.cpp:382
 msgid "Sp&lit"
@@ -1663,6 +1752,18 @@ msgstr "&შეერთება"
 #: Menus.cpp:393
 msgid "Detac&h at Silences"
 msgstr "სიჩუმეებთან მი&ერთება"
+
+#: Menus.cpp:368
+msgid "&Copy"
+msgstr "&კპირება"
+
+#: Menus.cpp:372
+msgid "&Paste"
+msgstr "&ჩასმა"
+
+#: Menus.cpp:366
+msgid "Paste Te&xt to New Label"
+msgstr ""
 
 #: Menus.cpp:394
 msgid "Duplic&ate"
@@ -1687,11 +1788,6 @@ msgid "&Split Cut"
 msgstr "&დაყოფის ამოჭრა"
 
 #. i18n-hint: Labeled Regions submenu
-#: Menus.cpp:419
-msgid "Co&py"
-msgstr "კო&პირება"
-
-#. i18n-hint: Labeled Regions submenu
 #: Menus.cpp:430
 msgid "Sp&lit Delete"
 msgstr "და&ყოფის წაშლა"
@@ -1699,6 +1795,11 @@ msgstr "და&ყოფის წაშლა"
 #: Menus.cpp:418
 msgid "Silence &Audio"
 msgstr ""
+
+#. i18n-hint: Labeled Regions submenu
+#: Menus.cpp:419
+msgid "Co&py"
+msgstr "კო&პირება"
 
 #. i18n-hint: Labeled Regions submenu
 #: Menus.cpp:441
@@ -1732,6 +1833,14 @@ msgstr "ტრეკის &საწყისი კურსორთან"
 #: Menus.cpp:468
 msgid "Cursor to Track &End"
 msgstr "კურსორი ტრეკის &დასასრულთან"
+
+#: Menus.cpp:446
+msgid "In All &Tracks"
+msgstr ""
+
+#: Menus.cpp:451
+msgid "In All S&ync-Locked Tracks"
+msgstr ""
 
 #: Menus.cpp:474
 msgid "Find &Zero Crossings"
@@ -1837,10 +1946,6 @@ msgstr ""
 msgid "&Toolbars"
 msgstr "&ხელსაწყოთა ზოლები"
 
-#: Menus.cpp:567
-msgid "&Control Toolbar"
-msgstr "&მართვის ზოლი"
-
 #: Menus.cpp:568
 msgid "&Device Toolbar"
 msgstr "&მოწყობილობათა ზოლი"
@@ -1868,6 +1973,10 @@ msgstr "ხ&ელსაწყოთა ზოლი"
 #: Menus.cpp:574
 msgid "Transcri&ption Toolbar"
 msgstr "ტრანსკრი&პციის ხელსაწყოთა ზოლი"
+
+#: Menus.cpp:593
+msgid "&Transport Toolbar"
+msgstr ""
 
 #: Menus.cpp:576
 msgid "&Reset Toolbars"
@@ -1937,6 +2046,10 @@ msgstr "ხმის გააქტიურების დონე..."
 
 #: Menus.cpp:616
 msgid "Automated Input Level Adjustment (on/off)"
+msgstr ""
+
+#: Menus.cpp:646
+msgid "Rescan Audio Devices"
 msgstr ""
 
 #: Menus.cpp:622
@@ -2031,10 +2144,9 @@ msgstr "გა&სწორება და კურსორის გად�
 msgid "Synchronize MIDI with Audio"
 msgstr "MIDI-ის სინქრონიზაცია აუდიოსთან"
 
-#: Menus.cpp:686
-#, fuzzy
-msgid "&Link Audio and Label Tracks"
-msgstr "აუდიო და იარლიყების ტრეკების დაკავშირება"
+#: Menus.cpp:745
+msgid "Sync-&Lock Tracks"
+msgstr ""
 
 #: Menus.cpp:690
 msgid "Add Label At &Selection"
@@ -2109,10 +2221,6 @@ msgstr ""
 msgid "&Manual (in web browser)"
 msgstr ""
 
-#: Menus.cpp:959
-msgid "Show &Log..."
-msgstr "&ჩანაწერის ჩვენება ..."
-
 #: Menus.cpp:967
 msgid "&Screenshot Tools..."
 msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
@@ -2121,9 +2229,13 @@ msgstr "&ეკრანის ანაბეჭდის ხელსაწყ
 msgid "&Run Benchmark..."
 msgstr "Benchmark-ის &გაშვება..."
 
-#: Menus.cpp:972
-msgid "&Audio Device Info..."
-msgstr "&აუდიო მოწყობილობის ინფორმაცია..."
+#: Menus.cpp:1045
+msgid "Au&dio Device Info..."
+msgstr ""
+
+#: Menus.cpp:959
+msgid "Show &Log..."
+msgstr "&ჩანაწერის ჩვენება ..."
 
 #: Menus.cpp:986
 msgid "Move backward from toolbars to tracks"
@@ -2337,6 +2449,22 @@ msgstr "გადაღების გამორთვა"
 msgid "Full screen on/off"
 msgstr ""
 
+#: Menus.cpp:1143
+msgid "Change input device"
+msgstr ""
+
+#: Menus.cpp:1146
+msgid "Change output device"
+msgstr ""
+
+#: Menus.cpp:1149
+msgid "Change audio host"
+msgstr ""
+
+#: Menus.cpp:1152
+msgid "Change input channels"
+msgstr ""
+
 #: Menus.cpp:1067
 msgid "Adjust output gain"
 msgstr ""
@@ -2359,10 +2487,6 @@ msgstr ""
 
 #: Menus.cpp:1072
 msgid "Decrease input gain"
-msgstr ""
-
-#: Menus.cpp:1074
-msgid "Adjust input source"
 msgstr ""
 
 #: Menus.cpp:1116
@@ -2479,19 +2603,6 @@ msgstr "დაყოფის ამოჭრა"
 msgid "Split-cut to the clipboard"
 msgstr "დაყოფა-ამოჭრა და გაცვლის ბუფერში შენახვა"
 
-#: Menus.cpp:2914 Menus.cpp:2986 Menus.cpp:3178 TrackPanel.cpp:598
-#: toolbars/EditToolBar.cpp:137
-msgid "Paste"
-msgstr "ჩასმა"
-
-#: Menus.cpp:2914
-msgid "Pasted text from the clipboard"
-msgstr "გაცვლის ბუფერიდან ჩასმული ტექსტი"
-
-#: Menus.cpp:2986 Menus.cpp:3178
-msgid "Pasted from the clipboard"
-msgstr "გაცვლის ბუფერიდან ჩასმული"
-
 #: Menus.cpp:3052
 msgid "Pasting one type of track into another is not allowed."
 msgstr "ერთი ტიპის ტრეკის მეორეში ჩასმა დაუშვებელია."
@@ -2499,6 +2610,19 @@ msgstr "ერთი ტიპის ტრეკის მეორეში �
 #: Menus.cpp:3064
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "სტერეო აუდიოდან მონო ტრეკზე კოპირება დაუშვებელია."
+
+#: Menus.cpp:2914 Menus.cpp:2986 Menus.cpp:3178 TrackPanel.cpp:598
+#: toolbars/EditToolBar.cpp:137
+msgid "Paste"
+msgstr "ჩასმა"
+
+#: Menus.cpp:2986 Menus.cpp:3178
+msgid "Pasted from the clipboard"
+msgstr "გაცვლის ბუფერიდან ჩასმული"
+
+#: Menus.cpp:2914
+msgid "Pasted text from the clipboard"
+msgstr "გაცვლის ბუფერიდან ჩასმული ტექსტი"
 
 #: Menus.cpp:3538
 msgid "Paste Text to New Label"
@@ -2640,10 +2764,6 @@ msgstr "ახლის დაყოფა"
 msgid "Split to new track"
 msgstr "ახალ ტრეკზე დაყოფა"
 
-#: Menus.cpp:3668
-msgid "Split at labels"
-msgstr "იარლიყებზე დაყოფა"
-
 #: FreqWindow.cpp:103
 msgid "Frequency Analysis"
 msgstr "სიხშირის ანალიზი"
@@ -2754,13 +2874,27 @@ msgstr "გახსწორებული"
 msgid "Align"
 msgstr "გასწორება"
 
+#: Menus.cpp:5117
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr ""
+
+#: Menus.cpp:5283
+#, c-format
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr ""
+
 #: Menus.cpp:4549
 msgid "Sync MIDI with Audio"
 msgstr "MIDI სინქრონიზაცია აუდიოსთან"
 
-#: Menus.cpp:4553
-msgid "Alignment completed."
-msgstr "გასწორება დასრულებულია."
+#: Menus.cpp:5290
+#, c-format
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr ""
+
+#: Menus.cpp:5301
+msgid "Internal error reported by alignment process."
+msgstr ""
 
 #: Menus.cpp:4564
 msgid "Created new audio track"
@@ -2778,17 +2912,13 @@ msgstr "ძშექმნილია ახალი სტერეო აუ
 msgid "Created new label track"
 msgstr "შექმნილია ახალი იარლიყის ტრეკი"
 
-#: Menus.cpp:4611
-msgid "The version of Audacity you are using does not support multiple time tracks."
-msgstr "Audacity-ის ამ ვერსიას არ გააჩნია მრავალჯერადი დროის ტრეკების მხარდაჭერა."
+#: Menus.cpp:5361
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr ""
 
 #: Menus.cpp:4622
 msgid "Created new time track"
 msgstr "შექმნილი ახალი დროის ტრეკი"
-
-#: Menus.cpp:4677
-msgid "Added label"
-msgstr "დამატებული იარლიყი"
 
 #: Menus.cpp:4712
 msgid "Edited labels"
@@ -2859,6 +2989,11 @@ msgstr "არევა"
 #: Mix.cpp:122
 msgid "Mixing and rendering tracks"
 msgstr "ტრეკების არევა და რენდერინგი"
+
+#. i18n-hint: title of the MIDI Velocity slider
+#: MixerBoard.cpp:173 TrackPanel.cpp:4069 widgets/ASlider.cpp:373
+msgid "Velocity"
+msgstr ""
 
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: TrackPanel.cpp:3449 TrackPanel.cpp:5703 TrackPanel.cpp:7244
@@ -2958,6 +3093,15 @@ msgstr "შევინახო ცვლილებები?"
 msgid "Select one or more audio files..."
 msgstr "ერთი ან მეტი აუდიო ფაილის მონიშვნა..."
 
+#: AudacityApp.cpp:507 Project.cpp:1844
+#, c-format
+msgid "%s is already open in another window."
+msgstr "%s უკვე გახსნილია სხვა ფანჯარაში."
+
+#: Project.cpp:2191 Project.cpp:2356 Project.cpp:2576 Project.cpp:2755
+msgid "Error Opening Project"
+msgstr ""
+
 #. i18n-hint: This string is a label in the file type filter in the open
 #. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
@@ -2966,30 +3110,25 @@ msgstr "ერთი ან მეტი აუდიო ფაილის მ�
 msgid "Audacity projects"
 msgstr ""
 
-#: Project.cpp:1882 Project.cpp:2304
+#: Project.cpp:2256
 #, c-format
-msgid "This file was saved by Audacity %s, a much\n"
-"older version.  The format has changed.\n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
-"Audacity could corrupt the file in opening\n"
-"it, so you must back it up first.\n"
+"Audacity can try to open and save this file, but saving it in this \n"
+"version will then prevent any 1.2 or earlier version opening it. \n"
+"\n"
+"Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
-msgstr "ეს ფაილი შენახულია Audacity %s'-ის, უფრო ადრინდელი\n"
-"ვერსიის მიერ. ფორმატი შეცვლილია.\n"
-"\n"
-"Audacity გახსნისას შეიძლება დააზიანოს ფაილი,\n"
-"ამიტომ ჯერ დაამარქაფეთ.\n"
-"\n"
-"გავხსნა ეს ფაილი?"
+msgstr ""
 
 #: Project.cpp:1883
 msgid "1.0 or earlier"
 msgstr "1.0 ან უფრო ადრეული"
 
-#: Project.cpp:1889 Project.cpp:2316
-msgid "Opening old project file"
-msgstr "ძველი პროექტის ფაილის გახსნა"
+#: Project.cpp:2271 Project.cpp:2837
+msgid "Warning - Opening Old Project File"
+msgstr ""
 
 #: Project.cpp:2073
 msgid "You are trying to open an automatically created backup file.\n"
@@ -2998,8 +3137,12 @@ msgid "You are trying to open an automatically created backup file.\n"
 "Please open the actual Audacity project file instead."
 msgstr ""
 
-#: Project.cpp:2074
-msgid "Backup file detected"
+#: Project.cpp:2306
+msgid "Warning - Backup File Detected"
+msgstr ""
+
+#: Project.cpp:2320 xml/XMLWriter.cpp:329
+msgid "Error Opening File"
 msgstr ""
 
 #: Project.cpp:1915 Project.cpp:1923
@@ -3013,17 +3156,13 @@ msgid "File may be invalid or corrupted: \n"
 msgstr "ფაილი შესაძლოა არასწორია ან დაზიანებული: \n"
 "%s"
 
-#: Project.cpp:1930
-msgid "Error opening file or project"
-msgstr "ფაილის ან პროექტის გახსნის შეცდომა"
+#: Project.cpp:2335
+msgid "Error Opening File or Project"
+msgstr ""
 
 #: Project.cpp:1950
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity-იმ ვერ შეძლოა  Audacity 1.0 პროექტის კონვერტაცია ახალი პროექტის ფორმატად."
-
-#: Project.cpp:2053
-msgid "Could not remove old auto save file"
-msgstr "შეუძლებელია ძველი ავტოშენახული ფაილის წაშლა"
 
 #: Project.cpp:2055
 msgid "Project was recovered"
@@ -3033,41 +3172,28 @@ msgstr "პროექტი აღდგენილია"
 msgid "Recover"
 msgstr "აღდგენა"
 
-#: Project.cpp:2084
-msgid "Project checker repaired file"
-msgstr "პროექტის შემმოწმებელმა აღადგინა ფაილი"
+#: Project.cpp:2053
+msgid "Could not remove old auto save file"
+msgstr "შეუძლებელია ძველი ავტოშენახული ფაილის წაშლა"
 
-#: Project.cpp:2084 effects/Repair.h:29
-msgid "Repair"
-msgstr "აღდგნა"
+#: Project.cpp:2659 Project.cpp:2660
+msgid "<unrecognized version -- possibly corrupt project file>"
+msgstr ""
 
 #: Project.cpp:2230
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "შეუძლებელია პროექტის მონაცემთა საქაღალდის პოვნა: \"%s\""
 
-#: Project.cpp:2273
+#: Project.cpp:2801
 #, c-format
 msgid "This file was saved using Audacity %s.\n"
-"You are using Audacity %s - you need to upgrade to\n"
-"a newer version to open this file."
-msgstr "ეს ფაილი შეინახული იყო Audacity %s-ის გამოყენებით.\n"
-"თქვენ გამოიყენებთ Audacity %s - ფაილის გასახსნელად საჭიროა განახლება\n"
-"ახალ ვერსიამდე."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+msgstr ""
 
 #: Project.cpp:2277
 msgid "Can't open project file"
 msgstr "შეუძლებელია პროექტის ფაილის გახსნა"
-
-#: Project.cpp:2484
-#, c-format
-msgid "This file was saved by Audacity %s.\n"
-"\n"
-"Audacity can open and save this file, but saving it in this version\n"
-"will then prevent any 1.2 or earlier version opening it.\n"
-"\n"
-"Open this file now?"
-msgstr ""
 
 #: Project.cpp:2537
 msgid "Your project is now empty.\n"
@@ -3080,8 +3206,18 @@ msgid "Your project is now empty.\n"
 "Save anyway?"
 msgstr ""
 
-#: Project.cpp:2538
-msgid "Warning empty project"
+#: Project.cpp:3050
+msgid "Warning - Empty Project"
+msgstr ""
+
+#: Project.cpp:3121
+#, c-format
+msgid "Could not save project. Path not found.  Try creating \n"
+"directory \"%s\" before saving project with this name."
+msgstr ""
+
+#: Project.cpp:3431
+msgid "Error Saving Project"
 msgstr ""
 
 #: Project.cpp:2792
@@ -3091,10 +3227,6 @@ msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
 msgstr "შეუძლებელია პროექტის გახსნა. შესაძლოა%s \n"
 "არ არის ჩაწერადი ან დისკია გადავსებული."
-
-#: Project.cpp:2590 Project.cpp:2605
-msgid "Error saving project"
-msgstr "პროექტის შენახვის შეცდომა"
 
 #: Project.cpp:2818 Project.cpp:3919 Tags.cpp:1203
 #: effects/Equalization.cpp:1098
@@ -3116,8 +3248,9 @@ msgstr "იმპორტირებულია '%s'"
 msgid "Import"
 msgstr "იმპორტი"
 
-#: Project.cpp:2840 Project.cpp:2848
-msgid "Error importing"
+#: Project.cpp:3453
+#, fuzzy
+msgid "Error Importing"
 msgstr "იმპორტის შეცდომა"
 
 #: Project.cpp:2882
@@ -3162,10 +3295,6 @@ msgstr "თქვენ ინხავთ  Audacity პროექტის �
 
 #: Project.cpp:3404
 msgid "Save Project As..."
-msgstr ""
-
-#: Project.cpp:3431
-msgid "Error Saving Project"
 msgstr ""
 
 #: Project.cpp:3431
@@ -3225,21 +3354,21 @@ msgstr "იმპორტირება დასრულებულია. 
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "მპორტირება დასრულებულია. გაშვებულია მოთხოვნადი ტალღოვანი გამოთვლები. დასრულებულია %2.0f%%."
 
-#: Project.cpp:3614
-msgid "Could not remove old autosave file: "
-msgstr "შეუძლებელია ძველი ავტოშენახული ფაილის წაშლა:"
-
 #: Project.cpp:3655
 msgid "New Project"
 msgstr "ახალი პროექტი"
 
-#: Project.cpp:3668
-msgid "Error writing autosave file"
-msgstr "ავტოშენახვის ფაილის ჩაწერის შეცდომა"
+#: Project.cpp:4401
+msgid "Error Writing Autosave File"
+msgstr ""
 
 #: Project.cpp:3693
 msgid "Could not create autosave file: "
 msgstr "შეუძლებელია ავტოშენახვის ფაილის შექმნა:"
+
+#: Project.cpp:3614
+msgid "Could not remove old autosave file: "
+msgstr "შეუძლებელია ძველი ავტოშენახული ფაილის წაშლა:"
 
 #: Project.cpp:3719
 #, c-format
@@ -3362,9 +3491,10 @@ msgstr ""
 msgid "Tools"
 msgstr "ხელსაწყოები"
 
-#: toolbars/ControlToolBar.cpp:83
-msgid "Control"
-msgstr "კონტროლი"
+#: Screenshot.cpp:374 toolbars/ControlToolBar.cpp:89
+#: toolbars/ControlToolBar.cpp:249
+msgid "Transport"
+msgstr ""
 
 #: effects/LoadEffects.cpp:114 toolbars/MixerToolBar.cpp:60
 msgid "Mixer"
@@ -3448,9 +3578,19 @@ msgstr ""
 msgid "Choose a location to save screenshot images"
 msgstr ""
 
-#: Sequence.cpp:804 Sequence.cpp:814 Sequence.cpp:821
-msgid "Gap detected in project file\n"
-msgstr "პროექტის ფაილში შეიმჩნევა რღვევა\n"
+#: Sequence.cpp:1032
+#, c-format
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
+"Truncating to mMaxSamples."
+msgstr ""
+
+#: Sequence.cpp:1035
+msgid "Warning - Length in Writing Sequence"
+msgstr ""
+
+#: Sequence.cpp:1498
+msgid "Memory allocation failed -- NewSamples"
+msgstr ""
 
 #: ShuttleGui.cpp:1972 effects/Effect.cpp:417
 #: effects/audiounits/AudioUnitEffect.cpp:877
@@ -3577,17 +3717,17 @@ msgstr "შეუძლებელია ჟანრის ფაილის 
 msgid "Load Metadata As:"
 msgstr ""
 
-#: Tags.cpp:1122 Tags.cpp:1772 Tags.cpp:2494
-msgid "Error loading metadata"
-msgstr "მეტამონაცემების ჩატვირთვის შეცდომა"
+#: Tags.cpp:1089
+msgid "Error Loading Metadata"
+msgstr ""
 
 #: Tags.cpp:1097 Tags.cpp:1151 Tags.cpp:1751 Tags.cpp:1787 Tags.cpp:2473
 #: Tags.cpp:2509
 msgid "Save Metadata As:"
 msgstr "მეტამონაცემების შენახვა როგორც:"
 
-#: Tags.cpp:1205
-msgid "Error saving tags file"
+#: Tags.cpp:1173
+msgid "Error Saving Tags File"
 msgstr ""
 
 #: Theme.cpp:638
@@ -3757,9 +3897,13 @@ msgstr "ტალღოვანი"
 msgid "Waveform (dB)"
 msgstr "ტალღოვანი (dB)"
 
-#: TrackPanel.cpp:557 prefs/GUIPrefs.cpp:157
-msgid "Spectrum log(f)"
-msgstr "სპექტრის ჩანაწერი(f)"
+#: TrackPanel.cpp:638 prefs/TracksPrefs.cpp:60
+msgid "Spectrogram"
+msgstr ""
+
+#: TrackPanel.cpp:639 prefs/TracksPrefs.cpp:61
+msgid "Spectrogram log(f)"
+msgstr ""
 
 #. i18n-hint: short form of 'logarithm'
 #: TrackPanel.cpp:558 prefs/GUIPrefs.cpp:158
@@ -3818,13 +3962,18 @@ msgstr "დიაპაზონის მომართვა..."
 msgid "Copy"
 msgstr "კოპირება"
 
-#: TrackPanel.cpp:1258
-msgid "Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
+#: TrackPanel.cpp:1448
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr ""
+
+#: TrackPanel.cpp:1453
+#, fuzzy
+msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "ვერტიკალური შემცირებისთვის დაუწკაპუნეთ, Shift-დაწკაპუნება გადიდებისთვის, გადათრევა კი ქმნის მასშტაბირების კონკრეტული არეს."
 
-#: TrackPanel.cpp:1263
-msgid "Drag the label vertically to change the order of the tracks."
-msgstr "იარლიყი გადაათრიეთ ვერტიკალურად ტრეკების რიგის შესაცვლელად."
+#: TrackPanel.cpp:1459
+msgid "Drag the track vertically to change the order of the tracks."
+msgstr ""
 
 #: TrackPanel.cpp:1283
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -3852,6 +4001,11 @@ msgstr "მრავალ-ხელსაწყოიანი რეჟიმ�
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "მრავალ-ხელსაწყოიანი რეჟიმი: Ctrl-P   მაუსისა და კლავიატურის პარამეტრებისთვის"
 
+#: TrackPanel.cpp:1581 TrackPanel.cpp:1593 TrackPanel.cpp:2014
+#: TrackPanel.cpp:2021
+msgid "Click and drag to stretch selected region."
+msgstr ""
+
 #: TrackPanel.cpp:1383
 msgid "Click and drag to move left selection boundary."
 msgstr "დაუწკაპუნეთ და გადაათრიეთ მონიშვნის საზღვრის მარცხნივ გადატანისთვის."
@@ -3859,6 +4013,10 @@ msgstr "დაუწკაპუნეთ და გადაათრიეთ 
 #: TrackPanel.cpp:1388
 msgid "Click and drag to move right selection boundary."
 msgstr "დაუწკაპუნეთ და გადაათრიეთ მონიშვნის საზღვრის მარჯვნივ გადატანისთვის."
+
+#: TrackPanel.cpp:1603
+msgid "Click and drag to stretch within selected region."
+msgstr ""
 
 #: TrackPanel.cpp:1730 TrackPanel.cpp:3959 TrackPanel.cpp:3991
 #: TrackPanel.cpp:4255 TrackPanel.cpp:6490 TrackPanel.cpp:6510
@@ -3869,6 +4027,14 @@ msgstr "შეცვლილი იარლიყი"
 #: TrackPanel.cpp:4256 TrackPanel.cpp:6491 TrackPanel.cpp:6511
 msgid "Label Edit"
 msgstr "იარლიყის რედაქტირება"
+
+#: TrackPanel.cpp:2054 TrackPanel.cpp:2279
+msgid "Stretch"
+msgstr ""
+
+#: TrackPanel.cpp:2054 TrackPanel.cpp:2279
+msgid "Stretch Note Track"
+msgstr ""
 
 #: TrackPanel.cpp:1971
 msgid "Adjusted envelope."
@@ -3925,6 +4091,10 @@ msgstr "წაშლილი ტრეკი '%s.'"
 #: TrackPanel.cpp:3307
 msgid "Track Remove"
 msgstr "ტრეკის წაშლა"
+
+#: TrackPanel.cpp:4069
+msgid "Moved velocity slider"
+msgstr ""
 
 #: TrackPanel.cpp:3576 TrackPanel.cpp:6441
 msgid "up"
@@ -4165,25 +4335,26 @@ msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
 
-#: commands/CommandManager.cpp:892
+#: commands/CommandManager.cpp:953
+#, fuzzy
 msgid "You can only do this when playing and recording are\n"
-" stopped.  [Pausing is not sufficient.]"
+" stopped. (Pausing is not sufficient.)"
 msgstr "ამის გაკეთება შეგიძლიათ მარტო მაშინ, როდესაც დაკვრა და ჩაწერა\n"
 " შეჩერებულია.  [პაუზა არ არის საკმარისი.]"
 
-#: commands/CommandManager.cpp:894
+#: commands/CommandManager.cpp:955
 msgid "You must first select some stereo audio for this\n"
-" to use.  [You can't use this with mono.]"
-msgstr "ჯერ უნდა ამოირჩიოთ რაიმე სტერო აუდიო\n"
-"ამის გამოსაყენებლად [არ გამოიყენება მონოსთან.]"
+" to use. (You cannot use this with mono.)"
+msgstr ""
 
 #: commands/CommandManager.cpp:896
 msgid "You must first select some audio for this to use."
 msgstr "ჯერ უნდა აირჩიოთ აუდიო."
 
-#: commands/CommandManager.cpp:898
+#: commands/CommandManager.cpp:959
+#, fuzzy
 msgid "You must first select some audio for this\n"
-" to use. [Selecting other kinds of track won't work.]"
+" to use. (Selecting other kinds of track won't work.)"
 msgstr "ჯერ უნდა აირჩიოთ რაიმე აუდიო\n"
 "ამის გამოსაყენებლად [სხვა სახის ტრეკების ამორჩევა უშედეგოა.]"
 
@@ -4477,12 +4648,6 @@ msgstr "გამოყენებული ეფექტი: %s %.1f%%"
 msgid "Change Speed"
 msgstr "სიჩქარის შეცვლა"
 
-#. i18n-hint: n/a is an English abbreviation meaning "not applicable"
-#. (in other words, unimportant, not relevant).
-#: effects/ChangeSpeed.cpp:329
-msgid "n/a"
-msgstr "მიუწვდომელია"
-
 #: effects/ChangeSpeed.cpp:334
 msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "სიჩქარის შეცვლა, გავლენას ახდენს ორივეზე -Tempo და Pitch-ზე"
@@ -4494,6 +4659,12 @@ msgstr "SampleRate-ის გამოყენება, Erik de Castro Lopo-�
 #: effects/ChangeSpeed.cpp:366
 msgid "Standard Vinyl RPM:"
 msgstr "სტანდარტული Vinyl RPM:"
+
+#. i18n-hint: n/a is an English abbreviation meaning "not applicable"
+#. (in other words, unimportant, not relevant).
+#: effects/ChangeSpeed.cpp:329
+msgid "n/a"
+msgstr "მიუწვდომელია"
 
 #: effects/ChangeSpeed.cpp:370
 msgid "From RPM"
@@ -4703,6 +4874,19 @@ msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
 msgstr ""
 
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
+
 #: effects/Contrast.cpp:214
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
 msgstr ""
@@ -4728,6 +4912,12 @@ msgstr "წინა პლანი:"
 
 #: effects/Contrast.cpp:347
 msgid "Foreground start time"
+msgstr ""
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundreths of a second (1/100 second)
+#: widgets/TimeTextCtrl.cpp:288
+msgid "hh:mm:ss + hundredths"
 msgstr ""
 
 #: effects/Contrast.cpp:365
@@ -4901,9 +5091,9 @@ msgstr ""
 msgid "DTMF Tone Generator"
 msgstr "DTMF ტონის გენერატორი"
 
-#: effects/DtmfGen.cpp:456
-msgid "by Salvo Ventura (2006)"
-msgstr "Salvo Ventura (2006)"
+#: effects/DtmfGen.cpp:442
+msgid "by Salvo Ventura"
+msgstr ""
 
 #: effects/DtmfGen.cpp:460
 msgid "DTMF sequence:"
@@ -4917,6 +5107,12 @@ msgstr "ამპლიტუდა (0-1)"
 #: effects/DtmfGen.cpp:465
 msgid "Duration:"
 msgstr "ხანგრძლივობა:"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: widgets/TimeTextCtrl.cpp:297
+msgid "hh:mm:ss + samples"
+msgstr "სს:წწ:წწ + სემპლები"
 
 #: effects/DtmfGen.cpp:486
 msgid "Tone/silence ratio:"
@@ -5016,16 +5212,29 @@ msgstr "კუბური"
 msgid "Equalization"
 msgstr "ეკვალიზაცია"
 
-#: effects/Equalization.cpp:994
-msgid "Error loading EQ curve"
-msgstr "EQ ხვეულას ჩატვირთვის შეცდომა"
+#: effects/Equalization.cpp:996
+#, c-format
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+"Please press 'help' to visit the download page.\n"
+"\n"
+"Save the curves at %s"
+msgstr ""
 
-#: effects/Equalization.cpp:1033
-msgid "custom"
-msgstr "ინდივიდუალური"
+#: effects/Equalization.cpp:997
+msgid "EQCurves.xml and EQDefaultCurves.xml missing"
+msgstr ""
 
-#: effects/Equalization.cpp:1100
-msgid "Error saving equalization curves"
+#: effects/Equalization.cpp:1003 effects/Equalization.cpp:1028
+#: effects/Equalization.cpp:1029
+msgid "unnamed"
+msgstr ""
+
+#: effects/Equalization.cpp:1024
+msgid "Error Loading EQ Curve"
+msgstr ""
+
+#: effects/Equalization.cpp:1089
+msgid "Error Saving Equalization Curves"
 msgstr ""
 
 #. i18n-hint: && in here is an escape character to get a single &
@@ -5046,54 +5255,221 @@ msgstr "Min dB"
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1214
-msgid "Draw curves"
+#: effects/Equalization.cpp:1231
+msgid "&Draw Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:1233
+#, fuzzy
+msgid "Draw Curves"
 msgstr "ხვეულების დახაზვა"
+
+#: effects/Equalization.cpp:1237
+msgid "&Graphic EQ"
+msgstr ""
 
 #: effects/Equalization.cpp:1219
 msgid "Graphic EQ"
 msgstr "გრაფიკული EQ"
 
-#: effects/Equalization.cpp:1233
-msgid "Linear frequency scale"
-msgstr "ლინეარული სიხშირის მასშტაბი"
-
-#: effects/Equalization.cpp:1242
-msgid "Length of filter:"
-msgstr "ფილტრის სიგრძე:"
-
-#: effects/Equalization.cpp:1263
-msgid "Select curve:"
-msgstr "ხვეულას ამორჩევა:"
-
-#: effects/Equalization.cpp:1273 effects/Equalization.cpp:2512
-#: export/ExportMultiple.cpp:882
-msgid "Save As..."
-msgstr "შენახვა, როგორც..."
-
-#: effects/Equalization.cpp:1407
-msgid "Flatten"
+#: effects/Equalization.cpp:1252
+msgid "Li&near Frequency Scale"
 msgstr ""
 
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "ინვერსია"
+#: effects/Equalization.cpp:1253
+msgid "Linear Frequency Scale"
+msgstr ""
 
-#: effects/Equalization.cpp:1491
-msgid "To use this EQ curve in a batch chain, please choose a new name for it."
+#: effects/Equalization.cpp:1262
+msgid "Length of &Filter:"
+msgstr ""
+
+#: effects/Equalization.cpp:1268
+msgid "Length of Filter"
+msgstr ""
+
+#: effects/Equalization.cpp:1284
+msgid "&Select Curve:"
+msgstr ""
+
+#: effects/Equalization.cpp:1294
+msgid "S&ave/Manage Curves..."
+msgstr ""
+
+#: effects/Equalization.cpp:1295
+msgid "Save and Manage Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:1298
+msgid "Fla&tten"
+msgstr ""
+
+#: effects/Equalization.cpp:1300
+msgid "&Invert"
+msgstr ""
+
+#: effects/Equalization.cpp:1302
+msgid "G&rids"
+msgstr ""
+
+#: effects/Equalization.cpp:1367
+msgid "Select Curve"
+msgstr ""
+
+#: effects/Equalization.cpp:1383
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 
 #: effects/Equalization.cpp:1492
 msgid "EQ Curve needs a different name"
 msgstr ""
 
-#: effects/Equalization.cpp:2511
-msgid "Enter the desired name of the curve"
-msgstr "შეიყვანეთ ხვეულას სასურველი სახელი"
+#: effects/Equalization.cpp:2817 effects/Equalization.cpp:2822
+msgid "Manage Curves List"
+msgstr ""
+
+#: effects/Equalization.cpp:2821
+msgid "Manage Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:2854
+msgid "&Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:2858
+msgid "Curve Name"
+msgstr ""
+
+#: effects/Equalization.cpp:2865
+msgid "&Rename..."
+msgstr ""
+
+#: effects/Equalization.cpp:2866
+msgid "D&elete..."
+msgstr ""
+
+#: effects/Equalization.cpp:2867
+msgid "I&mport..."
+msgstr ""
+
+#: effects/Equalization.cpp:2868
+msgid "E&xport..."
+msgstr ""
+
+#: effects/Equalization.cpp:2869
+msgid "&Get More..."
+msgstr ""
+
+#: widgets/ErrorDialog.cpp:98
+msgid "Help"
+msgstr "დახმარება"
+
+#: effects/Equalization.cpp:2877
+msgid "Rename 'unnamed' to save a new entry.\n"
+"'OK' saves all changes, 'Cancel' doesn't."
+msgstr ""
+
+#: effects/Equalization.cpp:2912
+msgid "'unnamed' always stays at the bottom of the list"
+msgstr ""
+
+#: effects/Equalization.cpp:2912 effects/Equalization.cpp:3218
+msgid "'unnamed' is special"
+msgstr ""
+
+#: effects/Equalization.cpp:3006
+msgid "' to..."
+msgstr ""
+
+#: effects/Equalization.cpp:3006 effects/Equalization.cpp:3009
+msgid "Rename '"
+msgstr ""
+
+#: effects/Equalization.cpp:3007
+msgid "Rename..."
+msgstr ""
+
+#: effects/Equalization.cpp:3029
+msgid "Name is the same as the original one"
+msgstr ""
+
+#: effects/Equalization.cpp:3029
+msgid "Same name"
+msgstr ""
+
+#: effects/Equalization.cpp:3033
+msgid "'?"
+msgstr ""
+
+#: effects/Equalization.cpp:3033
+msgid "Overwrite existing curve '"
+msgstr ""
+
+#: effects/Equalization.cpp:3034
+msgid "Curve exists"
+msgstr ""
+
+#: effects/Equalization.cpp:3110
+msgid "You cannot delete the 'unnamed' curve."
+msgstr ""
+
+#: effects/Equalization.cpp:3111 effects/Equalization.cpp:3160
+msgid "Can't delete 'unnamed'"
+msgstr ""
+
+#: effects/Equalization.cpp:3117 effects/Equalization.cpp:3146
+msgid "' ?"
+msgstr ""
+
+#: effects/Equalization.cpp:3117 effects/Equalization.cpp:3146
+msgid "Delete '"
+msgstr ""
 
 #: effects/Equalization.cpp:2611 export/ExportFFmpegDialogs.cpp:1220
 msgid "Confirm Deletion"
 msgstr "წაშლის დადასტურება"
+
+#: effects/Equalization.cpp:3143
+msgid "Delete "
+msgstr ""
+
+#: effects/Equalization.cpp:3143
+msgid "items?"
+msgstr ""
+
+#: effects/Equalization.cpp:3159
+msgid "You cannot delete the 'unnamed' curve, it is special."
+msgstr ""
+
+#: effects/Equalization.cpp:3176
+msgid "Choose an EQ curve file"
+msgstr ""
+
+#: effects/Equalization.cpp:3176
+msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
+msgstr ""
+
+#: effects/Equalization.cpp:3196
+msgid "Export EQ curves as..."
+msgstr ""
+
+#: effects/Equalization.cpp:3218
+msgid "You cannot export 'unnamed' curve"
+msgstr ""
+
+#: effects/Equalization.cpp:3228
+#, c-format
+msgid "%d curves exported to %s"
+msgstr ""
+
+#: effects/Equalization.cpp:3229
+msgid "Curves exported"
+msgstr ""
+
+#: effects/Equalization.cpp:3232
+msgid "No curves exported"
+msgstr ""
 
 #: effects/Equalization.h:84
 msgid "Equalization..."
@@ -5158,6 +5534,10 @@ msgstr "კლიპინგის დადგენა"
 #: effects/Generator.cpp:51
 msgid "There is not enough room available to generate the audio"
 msgstr ""
+
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "ინვერსია"
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -5435,32 +5815,56 @@ msgstr "ამოირჩეით ყველა გასაფილტრ�
 msgid "Noise Removal by Dominic Mazzoni"
 msgstr "ხარვეზის გაწმენდა Dominic Mazzoni-ის მიერ"
 
-#: effects/NoiseRemoval.cpp:830
-msgid "Get Noise Profile"
+#: effects/NoiseRemoval.cpp:895
+#, fuzzy
+msgid "&Get Noise Profile"
 msgstr "ხარვეზის პროფილი"
 
-#: effects/NoiseRemoval.cpp:841
-msgid "Noise reduction (dB):"
+#: effects/NoiseRemoval.cpp:907
+#, fuzzy
+msgid "Noise re&duction (dB):"
 msgstr "ხარვეზის შემცირება (dB):"
 
 #: effects/NoiseRemoval.cpp:850
 msgid "Noise reduction"
 msgstr ""
 
-#: effects/NoiseRemoval.cpp:849
-msgid "Frequency smoothing (Hz):"
+#: effects/NoiseRemoval.cpp:917
+msgid "&Sensitivity (dB):"
+msgstr ""
+
+#: toolbars/TranscriptionToolBar.cpp:230
+msgid "Sensitivity"
+msgstr "მგრძNობელობა"
+
+#: effects/NoiseRemoval.cpp:927
+#, fuzzy
+msgid "Fr&equency smoothing (Hz):"
 msgstr "სიხშირის დარბილება (Hz):"
 
 #: effects/NoiseRemoval.cpp:859
 msgid "Frequency smoothing"
 msgstr ""
 
-#: effects/NoiseRemoval.cpp:857
-msgid "Attack/decay time (secs):"
+#: effects/NoiseRemoval.cpp:937
+#, fuzzy
+msgid "Attac&k/decay time (secs):"
 msgstr "შეტევის/დანებების დრო (წამები):"
 
-#: effects/NoiseRemoval.cpp:868
-msgid "Attach/decay time"
+#: effects/NoiseRemoval.cpp:943
+msgid "Attack/decay time"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:947
+msgid "Noise:"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:949
+msgid "Re&move"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:951
+msgid "&Isolate"
 msgstr ""
 
 #: effects/NoiseRemoval.h:35
@@ -5477,10 +5881,10 @@ msgstr "ხარვეზის წაშლა"
 
 #. i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
 #. * false (translated below) if those options were selected
-#: effects/Normalize.cpp:70
+#: effects/Normalize.cpp:74
 #, c-format
-msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s"
-msgstr "გააქტიურებული ეფექტი: %s dc ოფსეტის წაშლა = %s, ამპლიტუდის ნორმალიზაცია = %s"
+msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"
+msgstr ""
 
 #. i18n-hint: true here means that the option was
 #. * selected. Opposite false if not selected
@@ -5505,12 +5909,16 @@ msgstr "ნებისმიერი DC ოფსეტის წაშლა 
 msgid "Normalize maximum amplitude to:"
 msgstr "მაქსიმალური ამპლიტუდის ნორმალიზაცია :"
 
-#: effects/Normalize.cpp:362
-msgid "-"
-msgstr "-"
-
 #: effects/Normalize.cpp:367
 msgid "Maximum amplitude dB"
+msgstr ""
+
+#: effects/Normalize.cpp:406
+msgid "Normalize stereo channels independently"
+msgstr ""
+
+#: effects/Normalize.cpp:474
+msgid ".  Maximum 0dB."
 msgstr ""
 
 #: effects/Normalize.h:33
@@ -5602,6 +6010,10 @@ msgstr "აღდგენა მუშაობს მონიშვნის 
 "\n"
 "რაც მეტია მოცულობითი აუდიო, მით უკეთ მუშაობს."
 
+#: Project.cpp:2084 effects/Repair.h:29
+msgid "Repair"
+msgstr "აღდგნა"
+
 #: effects/Repair.h:43
 msgid "Repairing damaged audio"
 msgstr "დაზიანებული აუდიოს აღდგენა"
@@ -5652,6 +6064,86 @@ msgstr "რევერსია"
 #: effects/Reverse.h:44
 msgid "Reversing"
 msgstr "რევერსია"
+
+#: effects/ScoreAlignDialog.cpp:61
+msgid "Align MIDI to Audio"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:99
+msgid "Frame Period:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:105
+msgid "Frame Period"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:109
+msgid "Window Size:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:114
+msgid "Window Size"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:121
+msgid "Force Final Alignment"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:126
+msgid "Ignore Silence at Beginnings and Endings"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:130
+msgid "Silence Threshold:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:135
+msgid "Silence Threshold"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:139
+msgid "Presmooth Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:144
+msgid "Presmooth Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:148
+msgid "Line Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:153
+msgid "Line Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:157
+msgid "Smooth Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:162
+msgid "Smooth Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:169
+msgid "Use Defaults"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:170
+msgid "Restore Defaults"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:248 effects/ScoreAlignDialog.cpp:250
+#: effects/ScoreAlignDialog.cpp:254 effects/ScoreAlignDialog.cpp:257
+#: effects/ScoreAlignDialog.cpp:259
+#, c-format
+msgid "%.2f secs"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:251
+#, c-format
+msgid "%.3f"
+msgstr ""
 
 #: effects/Silence.cpp:32
 msgid "Silence Generator"
@@ -5721,14 +6213,6 @@ msgstr ""
 msgid "using SBSMS, by Clayton Otey"
 msgstr ""
 
-#: effects/TimeScale.cpp:187
-msgid "Initial Tempo Change (%):"
-msgstr ""
-
-#: effects/TimeScale.cpp:191
-msgid "Final Tempo Change (%):"
-msgstr ""
-
 #: effects/TimeScale.cpp:202
 msgid "Initial Tempo Change (%)"
 msgstr ""
@@ -5737,12 +6221,24 @@ msgstr ""
 msgid "Final Tempo Change (%)"
 msgstr ""
 
-#: effects/TimeScale.cpp:219
-msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
+#: effects/TimeScale.cpp:268
+msgid "Initial Pitch Shift"
 msgstr ""
 
-#: effects/TimeScale.cpp:223
-msgid "Final Pitch Shift (semitones) [-12 to 12]:"
+#: effects/TimeScale.cpp:273 effects/TimeScale.cpp:290
+msgid "(semitones) [-12 to 12]:"
+msgstr ""
+
+#: effects/TimeScale.cpp:277 effects/TimeScale.cpp:294
+msgid "(%) [-50 to 100]:"
+msgstr ""
+
+#: effects/TimeScale.cpp:285
+msgid "Final Pitch Shift"
+msgstr ""
+
+#: effects/TimeScale.cpp:302
+msgid "Options"
 msgstr ""
 
 #: effects/TimeScale.h:33
@@ -5914,8 +6410,8 @@ msgstr ""
 msgid "Load VST Program:"
 msgstr ""
 
-#: effects/VST/VSTEffect.cpp:476
-msgid "Error loading program"
+#: effects/VST/VSTEffect.cpp:613
+msgid "Error Loading VST Program"
 msgstr ""
 
 #: effects/VST/VSTEffect.cpp:492
@@ -6025,9 +6521,35 @@ msgstr "Nyquist ეფექტის გააქტიურება..."
 msgid "Nyquist Prompt..."
 msgstr "Nyquist Prompt..."
 
+#: effects/nyquist/Nyquist.cpp:114
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:305
+#, c-format
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+"Control not created."
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:429
+msgid "Nyquist Prompt"
+msgstr ""
+
 #: effects/nyquist/Nyquist.cpp:327
 msgid "Enter Nyquist Command: "
 msgstr "Nyquist ბრძანების შეყვანა:"
+
+#: effects/nyquist/Nyquist.cpp:486
+msgid "Error in Nyquist code"
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:486
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+"\treturn s * 0.1\n"
+"for SAL, or begin with an open parenthesis such as\n"
+"\t(mult s 0.1)\n"
+" for LISP."
+msgstr ""
 
 #: effects/nyquist/Nyquist.cpp:417
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
@@ -6102,6 +6624,12 @@ msgstr "&პარამეტრები..."
 msgid "Are you sure you want to save the file as \""
 msgstr "მართლა გსურთ შეინახოთ ეს ფაილი როგორც \""
 
+#: DirManager.cpp:1340 DirManager.cpp:1375 DirManager.cpp:1421
+#: DirManager.cpp:1463 export/Export.cpp:576 export/Export.cpp:597
+#: export/Export.cpp:616 widgets/Warning.cpp:55
+msgid "Warning"
+msgstr "გაფრთხილება"
+
 #: export/Export.cpp:591
 #, c-format
 msgid "You are about to save a %s file with the name \"%s\".\n"
@@ -6114,6 +6642,13 @@ msgstr "თქვენ ახლა ინახავთ %s ფაილს �
 "ჩვეულებისამებრ ეს ფაილები მთავრდება \".%s\"-ით, და ზოგიერთი პროგრამა არ გახსნის არასტანდარტული გაფართოების ფაილებს.\n"
 "\n"
 "მაინც გსურთ ფაილების შენახვა ამ სახელით?"
+
+#: export/Export.cpp:654
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
+"The file cannot be written because the path is needed to restore the original audio to the project.\n"
+"Choose File > Check Dependencies to view the locations of all missing files.\n"
+"If you still wish to export, please choose a different filename or folder."
+msgstr ""
 
 #: export/Export.cpp:612
 #, c-format
@@ -6175,6 +6710,10 @@ msgstr "გამონატანის ჩვენება"
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr ""
 
+#: export/ExportCL.cpp:161
+msgid "Find path to command"
+msgstr ""
+
 #: export/ExportCL.cpp:222
 msgid "(external program)"
 msgstr "(გარე პროგრამა)"
@@ -6201,27 +6740,15 @@ msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
 msgstr ""
 
-#: export/ExportFFmpeg.cpp:237
-msgid "AMR support is not distributable"
-msgstr ""
-
-#: export/ExportFFmpeg.cpp:232
-msgid "Properly configured FFmpeg is required to proceed.\n"
-"You can configure it at Preferences > Libraries.\n"
-"\n"
-"Note that AMR support is not available with our FFmpeg\n"
-"installer, but requires you compile FFmpeg yourself."
-msgstr ""
-
 #: export/ExportFFmpeg.cpp:394
 #, c-format
 msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
 msgstr ""
 
-#: export/ExportFFmpeg.cpp:614
+#: export/ExportFFmpeg.cpp:686
 #, c-format
-msgid "Attempted to export %d channels, but max. channels for selected output format is %d"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr ""
 
 #: export/ExportFFmpeg.cpp:638
@@ -6264,6 +6791,11 @@ msgstr "სემპლის კ0ოეფიციენტები"
 msgid "Specify AC3 Options"
 msgstr "AC3 პარამეტრების განსაზვრა"
 
+#: export/ExportFFmpegDialogs.cpp:159 export/ExportMP2.cpp:114
+#, c-format
+msgid "%i kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:117
 msgid "AC3 Export Setup"
 msgstr "AC3 ექსპორტის მომართვა"
@@ -6290,17 +6822,14 @@ msgstr "ხარისხი"
 msgid "Specify AMR-NB Options"
 msgstr "AMR-NB პარამეტრების განსაზღვრა"
 
+#: export/ExportFFmpegDialogs.cpp:282
+#, c-format
+msgid "%.2f kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:241
 msgid "AMR-NB Export Setup"
 msgstr "AMR-NB  ექსპორტის მომართვა"
-
-#: export/ExportFFmpegDialogs.cpp:286
-msgid "Specify AMR-WB Options"
-msgstr "AMR-WB პარამეტრების განსაზღვრა"
-
-#: export/ExportFFmpegDialogs.cpp:310
-msgid "AMR-WB Export Setup"
-msgstr "AMR-WB Export Setup"
 
 #: export/ExportFFmpegDialogs.cpp:357
 msgid "Specify WMA Options"
@@ -6354,10 +6883,6 @@ msgstr "AC3 Fფაილები (FFmpeg)"
 
 #: export/ExportFFmpegDialogs.cpp:1190
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.cpp:1192
-msgid "AMR (wide band) Files (FFmpeg)"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.h:57
@@ -6928,9 +7453,27 @@ msgstr "Lame მდებარეობის განსაზღვრა"
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "Audacity საჭიროებს %s  ფაილს MP3 შესაქმნელად."
 
+#: FFmpeg.cpp:196 export/ExportMP3.cpp:562
+#, c-format
+msgid "Location of %s:"
+msgstr "%s'-ის მდებარეობა:"
+
+#: FFmpeg.cpp:205 export/ExportMP3.cpp:571
+#, c-format
+msgid "To find %s, click here -->"
+msgstr "%s'-ის მოსაძებნად აქ დაუწკაპუნეთ -->"
+
 #: export/ExportMP3.cpp:578
 msgid "To get a free copy of Lame, click here -->"
 msgstr "Lame უფასო ასლის მისაღებად დააწკაპუნეთ აქ -->"
+
+#. i18n-hint: It's asking for the location of a file, for
+#. example, "Where is lame_enc.dll?" - you could translate
+#. "Where would I find the file %s" instead if you want.
+#: FFmpeg.cpp:235 export/ExportMP3.cpp:601
+#, c-format
+msgid "Where is %s?"
+msgstr "სად არის %s'?"
 
 #: export/ExportMP3.cpp:1070
 #, c-format
@@ -7024,15 +7567,18 @@ msgstr ""
 msgid "Export Multiple"
 msgstr "მრავალჯერადი ექსპორტი"
 
-#: export/ExportMultiple.cpp:166
-msgid "If you have more than one Audio Track, you can export each track as a separate file,\n"
-"or if you have a Label Track, you can export a new file for each label.\n"
+#: export/ExportMultiple.cpp:175
+msgid "If you have more than one Audio Track, you can\n"
+"export each track as a separate audio file.\n"
 "\n"
-"This project does not have multiple tracks or a Label Track, so you cannot export multiple files."
-msgstr "თუ გაქვთ ერთ აუდიო ტრეკზე მეტი, შეგიძლიათ თვითეული ტრეკის ცალცალკე ექსპორტი,\n"
-"ან თუ გაქვთ იარლიყიანი ტრეკი, შეგიძლიათ ახალი ფაილის ექსპორტი თითოეული იარლიყისთვის.\n"
+"If you have a Label Track, you can export a separate\n"
+"audio file for each label in that track. You can have\n"
+"more than one Label Track, but files will only be\n"
+"exported for the uppermost Label Track.\n"
 "\n"
-"ამ პროექტს არ გააჩნია მრავალჯერადი ტრეკები ან იარლიყები, ასე, რომ არ შეგიძლიათ მრავალი ფაილის თანადროული ექსპორტი."
+"This Project does not meet the above criteria for\n"
+"exporting multiple files."
+msgstr ""
 
 #: export/ExportMultiple.cpp:167
 msgid "Can't export multiple files"
@@ -7086,8 +7632,8 @@ msgstr "იარლიყის/ტრეკის სახელის გა
 msgid "Numbering before Label/Track Name"
 msgstr ""
 
-#: export/ExportMultiple.cpp:318
-msgid "Numbering after Label/Track Name"
+#: export/ExportMultiple.cpp:322
+msgid "Numbering after File name prefix"
 msgstr ""
 
 #: export/ExportMultiple.cpp:322
@@ -7153,12 +7699,16 @@ msgstr ""
 msgid "Edit metadata"
 msgstr "მეტამონაცემების რედაქტირება"
 
-#: export/ExportMultiple.cpp:881
+#: export/ExportMultiple.cpp:927
 #, c-format
-msgid "Label %s is not a legal file name. You cannot use any of:   %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
-msgstr "იარლიყი %s  არ არის ფაილის სწორი სახელი. არ შეგიძლიათ გამოიყენოთ:  %s\n"
-"გამოიყენეთ..."
+msgstr ""
+
+#: effects/Equalization.cpp:1273 effects/Equalization.cpp:2512
+#: export/ExportMultiple.cpp:882
+msgid "Save As..."
+msgstr "შენახვა, როგორც..."
 
 #: export/ExportOGG.cpp:64
 msgid "Specify Ogg Vorbis Options"
@@ -7265,10 +7815,6 @@ msgstr ""
 #: export/ExportPCM.cpp:743
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
 msgstr ""
-
-#: import/Import.cpp:156 import/ImportMP3.cpp:47
-msgid "MP3 files"
-msgstr "MP3 ფაილები"
 
 #: import/Import.cpp:175
 msgid "Select stream(s) to import"
@@ -7485,6 +8031,10 @@ msgstr "შეუძლებელია ფაილის გახსნა"
 msgid ": Incorrect filetype."
 msgstr ": ფაილის არასწორი ტიპი."
 
+#: import/Import.cpp:156 import/ImportMP3.cpp:47
+msgid "MP3 files"
+msgstr "MP3 ფაილები"
+
 #: import/ImportOGG.cpp:44
 msgid "Ogg Vorbis files"
 msgstr "Ogg Vorbis ფაილები"
@@ -7512,6 +8062,42 @@ msgstr "შიდა ლოგიკური შეცდომა"
 #: import/ImportPCM.cpp:54
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, და სხვა არაკომპრესირებული ტიპები"
+
+#: import/ImportPCM.cpp:225
+#, c-format
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+"\n"
+"Your current preference is set to %s.\n"
+"\n"
+"Reading the files directly allows you to play or edit them almost immediately.  This is less safe than copying in, because you must retain the files with their original names in their original location.\n"
+"File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
+"\n"
+"How do you want to import the current file(s)?"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "copy in"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "read directly"
+msgstr ""
+
+#: import/ImportPCM.cpp:240
+msgid "Choose an import method"
+msgstr ""
+
+#: import/ImportPCM.cpp:243
+msgid "Make a &copy of the files before editing (safer)"
+msgstr ""
+
+#: import/ImportPCM.cpp:246
+msgid "Read the files &directly from the original (faster)"
+msgstr ""
+
+#: import/ImportPCM.cpp:249
+msgid "Don't &warn again and always use my choice above"
+msgstr ""
 
 #: import/ImportPlugin.h:142 import/ImportRaw.cpp:203
 #, c-format
@@ -7757,6 +8343,10 @@ msgstr "%s დირექტორია არაჩაწერადია"
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "დროებით დირექტორიაში შეტანილიც ცვლილებები არ გააქტიურდება Audacity-ის გადატვირთვამდე"
 
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr ""
+
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
 msgstr ""
@@ -7811,6 +8401,74 @@ msgstr ""
 
 #: prefs/EffectsPrefs.cpp:114
 msgid "&Rescan VST effects next time Audacity is started"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:59
+msgid "Extended Import"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:92
+msgid "Attempt to use filter in OpenFile dialog first"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:95
+msgid "Rules to choose import filters"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:114
+msgid "File extensions"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:116
+msgid "Mime-types"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:134
+msgid "Importer order"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:150
+msgid "Move rule &up"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:152
+msgid "Move rule &down"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:154
+msgid "Move f&ilter up"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:156
+msgid "Move &filter down"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:161
+msgid "&Add new rule"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:162
+msgid "De&lete selected rule"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:419 prefs/ExtImportPrefs.cpp:436
+msgid "Unused filters:"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:484
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:488
+msgid "Spaces detected"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:573
+msgid "Do you really want to delete selected rule?"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:574
+msgid "Rule deletion confirmation"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:49
@@ -7873,12 +8531,12 @@ msgstr "-145 dB (PCM დიაპაზონი 24 ბიტიანი სე
 msgid "Display"
 msgstr "ეკრანი"
 
-#: prefs/GUIPrefs.cpp:96
-msgid "&Ergonomic order of audio I/O buttons"
+#: prefs/GUIPrefs.cpp:87
+msgid "&Ergonomic order of Transport Toolbar buttons"
 msgstr ""
 
-#: prefs/GUIPrefs.cpp:99
-msgid "S&how 'How to get Help' message at program start up"
+#: prefs/GUIPrefs.cpp:90
+msgid "S&how 'How to Get Help' dialog box at program start up"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:107
@@ -7893,13 +8551,13 @@ msgstr ""
 msgid "Location of &Manual:"
 msgstr ""
 
-#: prefs/GUIPrefs.cpp:134
-msgid "Closing last window &quits Audacity"
-msgstr ""
-
 #: prefs/GUIPrefs.cpp:110
 msgid "&Beep on completion of longer activities"
 msgstr "დიდი ხანგრძლივობის მოქმედებების დასრულებისას სიგნალი"
+
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:126
 msgid "Modes"
@@ -7952,6 +8610,18 @@ msgstr "მეტამონაცემების რედაქტორ�
 #: prefs/ImportExportPrefs.cpp:84
 msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:88
+msgid "When exporting track to an Allegro (.gro) file"
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:92
+msgid "Represent times and durations in &seconds"
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:94
+msgid "Represent times and durations in &beats"
 msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:64 prefs/KeyConfigPrefs.cpp:65
@@ -8007,17 +8677,17 @@ msgstr ""
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "მონიშნეთ XML ფაილი, რომელიც შეიცავს Audacity კლავიშების მალსახმობებს..."
 
-#: prefs/KeyConfigPrefs.cpp:215
-msgid "Error loading keyboard shortcuts"
-msgstr "კლავიშების მალსახმობები ჩატვირთვის შეცდომა"
+#: prefs/KeyConfigPrefs.cpp:287
+msgid "Error Loading Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:163
 msgid "Export Keyboard Shortcuts As:"
 msgstr "კლავიშების მალსახმობების ექსპორტი როგორც:"
 
-#: prefs/KeyConfigPrefs.cpp:183
-msgid "Error saving keyboard shortcuts"
-msgstr "კლავიშების მალსახმობები შენახვის შეცდომა"
+#: prefs/KeyConfigPrefs.cpp:326
+msgid "Error Saving Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:243
 #, c-format
@@ -8093,68 +8763,20 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: prefs/AudioIOPrefs.cpp:147 prefs/MidiIOPrefs.cpp:144
-msgid "Playthrough"
-msgstr "დაკვრა"
+#: prefs/MidiIOPrefs.cpp:129
+msgid "Using: PortMidi"
+msgstr ""
 
-#: prefs/MidiIOPrefs.cpp:146
-msgid "&Play other tracks while recording new one"
-msgstr "სხვა ტრეკების დაკვრა &ახალი ტრეკის ჩაწერისას"
-
-#: prefs/MidiIOPrefs.cpp:149
-msgid "&Hardware Playthrough (Play new track while recording it)"
-msgstr "&მოწყობილობის მიერ დაკვრა (ახალი ტრეკის დაკვრა  ჩაწერისას)"
-
-#: prefs/MidiIOPrefs.cpp:152
-msgid "&Software Playthrough (Play new track while recording it)"
-msgstr "&პროგრამული დაკვრა (ახალი ტრეკის დაკვრა  ჩაწერისას)"
-
-#: prefs/AudioIOPrefs.cpp:176 prefs/MidiIOPrefs.cpp:157
-msgid "Cut Preview"
-msgstr "ესკიზის ამოჭრა"
-
-#: prefs/MidiIOPrefs.cpp:160
-msgid "Play before cut region:"
-msgstr "არეს ამოჭრამდე დაკვრა:"
-
-#: prefs/MidiIOPrefs.cpp:162
-msgid "Play after cut region:"
-msgstr "არეს ამოჭრის შემდეგ დაკვრა:"
-
-#: prefs/AudioIOPrefs.cpp:189 prefs/MidiIOPrefs.cpp:167
-msgid "Latency"
-msgstr "ლატენცია"
-
-#: prefs/MidiIOPrefs.cpp:173
-msgid "Audio to buffer:"
-msgstr "გასაცვლელი აუდიო:"
-
-#: prefs/MidiIOPrefs.cpp:176
-msgid "Latency correction:"
-msgstr "ლატენციის კორექცია:"
-
-#: prefs/MidiIOPrefs.cpp:183
-msgid "Seek Time"
-msgstr "ძიების დრო"
-
-#: prefs/AudioIOPrefs.cpp:206 prefs/MidiIOPrefs.cpp:186
-msgid "Short period:"
-msgstr "მოკლე პერიოდი:"
-
-#: prefs/AudioIOPrefs.cpp:208 prefs/MidiIOPrefs.cpp:188
-msgid "Long period:"
-msgstr "გრძელი პერიოდი:"
-
-#: prefs/AudioIOPrefs.cpp:168 prefs/MidiIOPrefs.cpp:193
-msgid "Effects Preview"
-msgstr "ეფექტის დათვალიერება"
-
-#: prefs/MidiIOPrefs.cpp:196
-msgid "Play when previewing:"
-msgstr "დაკვრა დათვალიერებისას:"
+#: prefs/MidiIOPrefs.cpp:145
+msgid "MIDI Synthesizer Latency (ms):"
+msgstr ""
 
 #: prefs/MidiIOPrefs.cpp:256
 msgid "No MIDI interfaces"
+msgstr ""
+
+#: prefs/MidiIOPrefs.cpp:280
+msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
 #: prefs/MousePrefs.cpp:55 prefs/MousePrefs.cpp:56
@@ -8363,10 +8985,18 @@ msgstr "Ctrl-ბორბალი-ტრიალი"
 msgid "Zoom in or out"
 msgstr "გადიდება ან შემცირება"
 
+#: prefs/AudioIOPrefs.cpp:168 prefs/MidiIOPrefs.cpp:193
+msgid "Effects Preview"
+msgstr "ეფექტის დათვალიერება"
+
 #: prefs/PlaybackPrefs.cpp:61
 #, fuzzy
 msgid "&Length of preview:"
 msgstr "დათვალიერების რეჟიმის სიგრძე:"
+
+#: prefs/AudioIOPrefs.cpp:176 prefs/MidiIOPrefs.cpp:157
+msgid "Cut Preview"
+msgstr "ესკიზის ამოჭრა"
 
 #: prefs/PlaybackPrefs.cpp:76
 #, fuzzy
@@ -8388,6 +9018,10 @@ msgstr ""
 
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
+msgstr ""
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
 msgstr ""
 
 #: prefs/PrefsDialog.cpp:94
@@ -8413,24 +9047,6 @@ msgstr ""
 #: prefs/ProjectsPrefs.cpp:67
 msgid "As&k user"
 msgstr ""
-
-#: prefs/DirectoriesPrefs.cpp:99
-msgid "Auto save"
-msgstr "ავტოშენახვა"
-
-#: prefs/ProjectsPrefs.cpp:76
-#, fuzzy
-msgid "Auto &save a copy of the project in a separate folder"
-msgstr "პროექტის ასლის ცალკე საქაღალდეში ავტოშენახვა"
-
-#: prefs/ProjectsPrefs.cpp:82
-#, fuzzy
-msgid "Auto save in&terval:"
-msgstr "ავტოშენახვის ინტერვალი:"
-
-#: prefs/DirectoriesPrefs.cpp:105
-msgid "minutes"
-msgstr "წუთები"
 
 #: prefs/QualityPrefs.cpp:73
 msgid "Rectangle"
@@ -8484,6 +9100,10 @@ msgstr "სემპლის კოეფიციენტის კონვ�
 msgid "Dit&her:"
 msgstr ""
 
+#: prefs/AudioIOPrefs.cpp:147 prefs/MidiIOPrefs.cpp:144
+msgid "Playthrough"
+msgstr "დაკვრა"
+
 #: prefs/AudioIOPrefs.cpp:149
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr "ოვერდუბლიკაცია: სხვა ტრეკების &დაკვრა ახლის ჩაწერის პარალელურად"
@@ -8499,6 +9119,10 @@ msgstr ""
 #: prefs/AudioIOPrefs.cpp:160
 msgid "(uncheck when recording \"stereo mix\")"
 msgstr "(ამორთვა ჩაწერისას  \"სტერეო შერევა\")"
+
+#: prefs/AudioIOPrefs.cpp:189 prefs/MidiIOPrefs.cpp:167
+msgid "Latency"
+msgstr "ლატენცია"
 
 #: prefs/RecordingPrefs.cpp:88
 msgid "Audio to &buffer:"
@@ -8617,10 +9241,6 @@ msgstr ""
 msgid "32768 - most narrowband"
 msgstr "32768 - ყველაზე ვიწრო"
 
-#: prefs/SpectrumPrefs.cpp:109
-msgid "4096 - most narrowband"
-msgstr "4096 - ყველაზე ვიწრო"
-
 #: prefs/SpectrumPrefs.cpp:82
 msgid "FFT Window"
 msgstr ""
@@ -8696,9 +9316,9 @@ msgstr "&კვანტიაზაციის შენიშნები"
 msgid "The maximum frequency must be an integer"
 msgstr "მაქსიმალური სიხშირე ინტეგრალი უნდა იყოს"
 
-#: prefs/SpectrumPrefs.cpp:201
-msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-msgstr "მაქსიმალური სიხშირე უნდა იყოს 100 Hz - 100,000 Hz დიაპაზონში"
+#: prefs/SpectrumPrefs.cpp:212
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:209
 msgid "The minimum frequency must be an integer"
@@ -8765,8 +9385,8 @@ msgid "Themability is an experimental feature.\n"
 "\n"
 "Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"[Only the control toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.]"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
+"though the image file shows other icons too.)"
 msgstr "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then\n"
@@ -8896,6 +9516,10 @@ msgstr ""
 msgid "Mixing down to &mono during export"
 msgstr ""
 
+#: prefs/WarningsPrefs.cpp:72
+msgid "&Importing uncompressed audio files"
+msgstr ""
+
 #: Menus.cpp:997
 msgid "Pause"
 msgstr "შეჩერება"
@@ -8928,6 +9552,10 @@ msgstr "CleanSpeech ის რეჟიმში ჩაწერა შეუძ
 msgid "Recording not permitted"
 msgstr "ჩაწერა არ არის ნებადართული"
 
+#: toolbars/DeviceToolBar.cpp:102 toolbars/DeviceToolBar.cpp:351
+msgid "Audio Host"
+msgstr ""
+
 #: toolbars/DeviceToolBar.cpp:113 toolbars/DeviceToolBar.cpp:115
 msgid "Output Device"
 msgstr "გამონატანის მოწყობილობა"
@@ -8935,6 +9563,38 @@ msgstr "გამონატანის მოწყობილობა"
 #: toolbars/DeviceToolBar.cpp:134 toolbars/DeviceToolBar.cpp:136
 msgid "Input Device"
 msgstr "შენატანი მოწყობილობა"
+
+#: toolbars/DeviceToolBar.cpp:137 toolbars/DeviceToolBar.cpp:352
+msgid "Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:613
+msgid "1 (Mono) Input Channel"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:616
+msgid "2 (Stereo) Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:740
+msgid "Select Input Device"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:744
+msgid "Select Output Device"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:748
+msgid "Select Audio Host"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:752
+msgid "Select Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:758
+msgid "Device information is not available."
+msgstr ""
 
 #: toolbars/EditToolBar.cpp:139
 msgid "Trim outside selection"
@@ -8944,9 +9604,9 @@ msgstr "ამოჭრა მონიშვნის გარეთ"
 msgid "Silence selection"
 msgstr "სიჩუმის მონიშვნა"
 
-#: toolbars/EditToolBar.cpp:150
-msgid "Link Tracks"
-msgstr "ტრეკების გადაბმა"
+#: toolbars/EditToolBar.cpp:152 toolbars/EditToolBar.cpp:203
+msgid "Sync-Lock Tracks"
+msgstr ""
 
 #: toolbars/EditToolBar.cpp:155
 msgid "Zoom In"
@@ -9012,36 +9672,20 @@ msgstr "შენატანის ხმა"
 msgid "Slider Input"
 msgstr "ცოციას შენატანი"
 
-#: toolbars/MixerToolBar.cpp:134
-msgid "Input Source"
-msgstr "შენატანი წყარო"
-
-#: toolbars/MixerToolBar.cpp:299
-msgid "Input source information is not available."
+#: toolbars/MixerToolBar.cpp:286
+msgid "Input Volume Slider"
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:306
-msgid "Select Input Source"
+#: toolbars/MixerToolBar.cpp:290
+msgid "Cannot control input volume; use system mixer."
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:338
-msgid "Input Source:"
+#: toolbars/MixerToolBar.cpp:294
+msgid "Output Volume Slider"
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:388
-msgid "Input Level Slider"
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:392
-msgid "Cannot control input level; use system mixer."
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:396
-msgid "Output Level Slider"
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:400
-msgid "Cannot control output level; use system mixer."
+#: toolbars/MixerToolBar.cpp:298
+msgid "Cannot control output volume; use system mixer."
 msgstr ""
 
 #: toolbars/SelectionBar.cpp:86
@@ -9178,10 +9822,6 @@ msgstr "ხმის გასაღების კალიბრაცია"
 msgid "Adjust Sensitivity"
 msgstr "მგრძნობელობის მორგება"
 
-#: toolbars/TranscriptionToolBar.cpp:230
-msgid "Sensitivity"
-msgstr "მგრძNობელობა"
-
 #: toolbars/TranscriptionToolBar.cpp:235
 msgid "Energy"
 msgstr "ენერგია"
@@ -9282,9 +9922,9 @@ msgstr "მარცენა"
 msgid "Right"
 msgstr "მარჯვენა"
 
-#: widgets/ErrorDialog.cpp:98
-msgid "Help"
-msgstr "დახმარება"
+#: widgets/ASlider.cpp:932
+msgid "+"
+msgstr ""
 
 #: widgets/ErrorDialog.cpp:137
 msgid "<"
@@ -9380,6 +10020,10 @@ msgstr "გთხოვთ, ამოირჩიოთ მოქმედებ
 msgid "Please select an action"
 msgstr "გთხოვთ, ამოირჩიოთ მოქმედება"
 
+#: widgets/MultiDialog.cpp:104
+msgid "Show Log for Details"
+msgstr ""
+
 #: widgets/ProgressDialog.cpp:97
 msgid "Elapsed Time:"
 msgstr "გასული დრო:"
@@ -9427,12 +10071,6 @@ msgstr "სს:წწ:წწ"
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 დღე 024 ს 060 წ 060 წ"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundreths of a second (1/100 second)
-#: widgets/TimeTextCtrl.cpp:288
-msgid "hh:mm:ss + hundredths"
-msgstr ""
-
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -9456,12 +10094,6 @@ msgstr "სს:წწ:წწ + მილიწამები"
 #: widgets/TimeTextCtrl.cpp:294
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 ს 060 წ 060.01000 წ"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: widgets/TimeTextCtrl.cpp:297
-msgid "hh:mm:ss + samples"
-msgstr "სს:წწ:წწ + სემპლები"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -9636,15 +10268,15 @@ msgstr "შეცდომა: %hs at line %lu"
 msgid "Could not load file: \"%s\""
 msgstr "შეუძლებელია ფაილის ჩატვირთვა: \"%s\""
 
-#: xml/XMLWriter.cpp:325
-msgid "Error flushing file"
+#: xml/XMLWriter.cpp:348
+msgid "Error Flushing File"
 msgstr ""
 
-#: xml/XMLWriter.cpp:330
-msgid "Error closing file"
+#: xml/XMLWriter.cpp:353
+msgid "Error Closing File"
 msgstr ""
 
-#: xml/XMLWriter.cpp:340
-msgid "Error writing to file"
+#: xml/XMLWriter.cpp:363
+msgid "Error Writing to File"
 msgstr ""
 

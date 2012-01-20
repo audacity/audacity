@@ -30,12 +30,12 @@ msgstr ""
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
 msgstr ""
 
-#: AboutDialog.cpp:196
-msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:201
+msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr ""
 
-#: AboutDialog.cpp:199
-msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:204
+msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
@@ -92,10 +92,6 @@ msgstr ""
 
 #: AboutDialog.cpp:270
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
-msgstr ""
-
-#: AboutDialog.cpp:258
-msgid "Audacity"
 msgstr ""
 
 #. i18n-hint: Information about when audacity was compiled
@@ -201,21 +197,26 @@ msgstr "Танзимоти пӯша: "
 msgid "GPL License"
 msgstr ""
 
-#: AudacityApp.cpp:418 Project.cpp:1654
-#, c-format
-msgid "%s is already open in another window."
-msgstr "%s аллакай дар равзанаи дигар кушода шудааст."
-
-#: AudacityApp.cpp:420 Project.cpp:1656 Project.cpp:1737 Project.cpp:1881
-#: Project.cpp:1983
-msgid "Error opening project"
-msgstr "Лоиҳаро кушода натавонист"
-
 #: AudacityApp.cpp:772
 #, c-format
 msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
+msgstr ""
+
+#: AudacityApp.cpp:846
+#, c-format
+msgid "One or more external audio files could not be found.\n"
+"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
+"Silence is being substituted for the affected audio.\n"
+"The first detected missing file is:\n"
+"%s\n"
+"There may be additional missing files.\n"
+"Choose File > Check Dependencies to view a list of locations of the missing files."
+msgstr ""
+
+#: AudacityApp.cpp:860
+msgid "Files Missing"
 msgstr ""
 
 #: AudacityApp.cpp:500
@@ -288,9 +289,9 @@ msgstr "Audacity наметавонад каталогро бо файлҳои �
 msgid "Do you still want to start Audacity?"
 msgstr "Шумо то ҳол мехоҳед Audacity- ро ба кор дароред?"
 
-#: AudacityApp.cpp:1027
-msgid "Error locking temporary folder"
-msgstr "Хато дар ҳолати бастани каталог барои пӯшаҳои муваққатӣ"
+#: AudacityApp.cpp:1581
+msgid "Error Locking Temporary Folder"
+msgstr ""
 
 #: AudacityApp.cpp:1065
 msgid "The system has detected that another copy of Audacity is running.\n"
@@ -384,6 +385,10 @@ msgstr ""
 msgid "Error Initializing Midi"
 msgstr ""
 
+#: AudioIO.cpp:1266 AudioIO.cpp:1300
+msgid "Out of memory!"
+msgstr ""
+
 #: AudioIO.cpp:1225
 msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -470,8 +475,9 @@ msgstr ""
 msgid "Confirm?"
 msgstr ""
 
-#: AutoRecovery.cpp:132 AutoRecovery.cpp:169
-msgid "Could not enumerate files in auto save directory"
+#: AutoRecovery.cpp:148 AutoRecovery.cpp:185
+#, fuzzy
+msgid "Could not enumerate files in auto save directory."
 msgstr "Файлҳоро дар пӯшаи худнигоҳдоркунанда рақамгузорӣ карда нашуд"
 
 #: AutoRecovery.cpp:133 AutoRecovery.cpp:170 Menus.cpp:2551 Menus.cpp:4386
@@ -732,81 +738,99 @@ msgstr "Бастагиҳо бекор мешаванд"
 msgid "Copying audio data into project..."
 msgstr "Файлҳои савтӣ дар лоиҳа нусхабардорӣ шуда..."
 
-#: Dependencies.cpp:226
-msgid "Copying the following files into your project will remove this dependency.\n"
-"This needs more disk space, but is safer."
+#: Dependencies.cpp:302
+msgid "Project Depends on Other Audio Files"
 msgstr ""
 
-#: Dependencies.cpp:266
-msgid "Project depends on other audio files"
-msgstr "Лоиҳа ба дигар файлҳои аудиоӣ вобаста аст"
+#: Dependencies.cpp:324
+msgid "Copying these files into your project will remove this dependency.\n"
+"This is safer, but needs more disk space."
+msgstr ""
+
+#: Dependencies.cpp:328
+msgid "\n"
+"\n"
+"Files shown as MISSING have been moved or deleted and cannot be copied.\n"
+"Restore them to their original location to be able to copy into project."
+msgstr ""
 
 #: Dependencies.cpp:287
 msgid "Project Dependencies"
 msgstr "Вобастагиҳои лоиҳа"
 
-#: Dependencies.cpp:290
-msgid "Audio file"
+#: Dependencies.cpp:341
+#, fuzzy
+msgid "Audio File"
 msgstr "Файли аудиоӣ"
 
-#: Dependencies.cpp:292
-msgid "Disk space"
+#: Dependencies.cpp:343
+#, fuzzy
+msgid "Disk Space"
 msgstr "Фазои диск"
 
-#: Dependencies.cpp:297
-msgid "Copy Selected Audio Into Project"
-msgstr "Нусхабардории интихоби аудиоӣ дар лоиҳа"
+#: Dependencies.cpp:349
+msgid "Copy Selected Files"
+msgstr ""
 
 #: Dependencies.cpp:304 Dependencies.cpp:413
 msgid "Cancel Save"
 msgstr "Бекорсозии сабт"
 
-#: Dependencies.cpp:310
-msgid "Do Not Copy Any Audio"
+#: Dependencies.cpp:362
+msgid "Save without Copying"
 msgstr ""
 
-#: Dependencies.cpp:312
-msgid "Copy All Audio into Project (Safer)"
+#: Dependencies.cpp:365
+msgid "Do Not Copy"
+msgstr ""
+
+#: Dependencies.cpp:368
+msgid "Copy All Files (Safer)"
 msgstr ""
 
 #: Dependencies.cpp:320 Dependencies.cpp:325
 msgid "Ask me"
 msgstr "Маро пурсед"
 
-#: Dependencies.cpp:322
-#, fuzzy
-msgid "Always copy all audio (safest)"
-msgstr "Нус&хабардории ҳамаи файлҳо дар ҳама ҳолат (бехатар)"
+#: Dependencies.cpp:382
+msgid "Always copy all files (safest)"
+msgstr ""
 
-#: Dependencies.cpp:323
-#, fuzzy
-msgid "Never copy any audio"
-msgstr "&Аудио дар ягон ҳолат нусхабардорӣ нашавад"
+#: Dependencies.cpp:383
+msgid "Never copy any files"
+msgstr ""
 
 #: Dependencies.cpp:324
 msgid "Whenever a project depends on other files:"
 msgstr "Дар мавриде, ки дар лоиҳа файлҳои берунӣ мавҷуданд:"
 
+#: Dependencies.cpp:422
+msgid "MISSING "
+msgstr ""
+
 #: Dependencies.cpp:412
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "Агар идома диҳед лоиҳаи Шумо дар диск сабт намешавад. Шумо инро мехоҳед?"
 
-#: Dependencies.cpp:452
-msgid "Your project is self-contained; it does not depend on any external audio files."
-msgstr "Лоиҳаи Шумо худмаҳдуд буда, ба ягон файлҳои аудиоии беруна вобастагӣ надорад."
+#: Dependencies.cpp:549
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
+"\n"
+"If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
+msgstr ""
 
-#: Dependencies.cpp:453
-msgid "Dependency check"
+#: Dependencies.cpp:554
+#, fuzzy
+msgid "Dependency Check"
 msgstr "Санҷиши вобаста"
+
+#: DirManager.cpp:221 DirManager.cpp:251 DirManager.cpp:332
+msgid "Progress"
+msgstr "Раванди иҷроиш"
 
 #: DirManager.cpp:143
 msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
 msgstr ""
-
-#: DirManager.cpp:221 DirManager.cpp:251 DirManager.cpp:332
-msgid "Progress"
-msgstr "Раванди иҷроиш"
 
 #: DirManager.cpp:285
 msgid "Cleaning up temporary files"
@@ -820,12 +844,15 @@ msgstr "Сабти додаҳои лоиҳа"
 msgid "Cleaning up cache directories"
 msgstr "Раванди тозакунии феҳрист бо кеш"
 
-#: DirManager.cpp:493
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
+msgstr ""
+
+#: DirManager.cpp:614
 #, c-format
-msgid "Audacity found an orphaned blockfile %s! \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
-msgstr "Audacity қисмати файли харобгаштаи %s ёфт! \n"
-"Лутфан, сабт ва аз нав боркунии лоиҳаро барои иҷрои тафтиши пурра дар назар гиред.\n"
+msgid "Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
+msgstr ""
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
@@ -835,13 +862,15 @@ msgstr "Audacity қисмати файли харобгаштаи %s ёфт! \n"
 msgid "%s-old%d"
 msgstr "%s-кӯҳна%d"
 
-#: DirManager.cpp:993
-msgid "Unable to open/create test file"
+#: DirManager.cpp:1213
+#, fuzzy
+msgid "Unable to open/create test file."
 msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
 
-#: DirManager.cpp:1002
+#: DirManager.cpp:1222
 #, c-format
-msgid "Unable to remove '%s'"
+#, fuzzy
+msgid "Unable to remove '%s'."
 msgstr "'%s' тоза намешавад"
 
 #: DirManager.cpp:1007
@@ -849,9 +878,10 @@ msgstr "'%s' тоза намешавад"
 msgid "Renamed file: %s\n"
 msgstr "Тағйири номи файл: %s\n"
 
-#: DirManager.cpp:1051
+#: DirManager.cpp:1290
 #, c-format
-msgid "Unable to rename '%s' to '%s'"
+#, fuzzy
+msgid "Unable to rename '%s' to '%s'."
 msgstr "Тағйири номи '%s' ба '%s' номумкин аст"
 
 #: DirManager.cpp:1183
@@ -859,145 +889,195 @@ msgstr "Тағйири номи '%s' ба '%s' номумкин аст"
 msgid "Changed block %s to new alias name\n"
 msgstr ""
 
-#: DirManager.cpp:1115 DirManager.cpp:1403
-msgid "Inspecting project file data..."
-msgstr "Тафтиши додаҳои файл дар лоиҳаи..."
-
-#: DirManager.cpp:1128
-#, c-format
-msgid "Orphaned blockfile: (%s)"
-msgstr "Қисмати харобгаштаи файлҳо: (%s)"
-
-#: DirManager.cpp:1153
-#, c-format
-msgid "Missing alias file: (%s)"
-msgstr "Норасоии тахаллуси файли: (%s)"
-
-#: DirManager.cpp:1173
-#, c-format
-msgid "Missing summary file: (%s.auf)"
-msgstr "Норасоии файли ҷамбастии: (%s.auf)"
-
-#: DirManager.cpp:1193
-#, c-format
-msgid "Missing data file: (%s.au)"
-msgstr "Норасоии додаҳои файл: (%s.au)"
-
-#: DirManager.cpp:1207
-msgid "Project check found inconsistencies inspecting the loaded project data;\n"
-"click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
-msgstr "Тафтиши лоиҳа дар вақти санҷиши додаҳои лоиҳаи боршуда носозгориро ёфт;\n"
-" 'Тафсилот' -ро барои варақаи пурраи хатоҳо ё 'OK' -ро барои гирифтани интихоби зиёд пахш кунед."
-
-#: DirManager.cpp:1219
-#, c-format
-msgid "Project check found %d orphaned blockfile[s]. These files are\n"
-"unused and probably left over from a crash or some other bug.\n"
-"They should be deleted to avoid disk contention."
-msgstr "Тафтиши лоиҳа қисмати файл(ҳо)и харобгаштаи %d ёфт. Ин файлҳо\n"
-"истифода нашудаанд ва шояд дар ягон хато ё ин ки вайроншавӣ партофта шудаанд.\n"
-"Онҳо бояд тоза карда шаванд то ки дар диск ҷой надошта бошанд."
-
-#: DirManager.cpp:1224
-msgid "Delete orphaned files [safe and recommended]"
-msgstr "Файлҳои харобгаштаро тоза кунед [бехатар ва тавсия намуданд]"
-
-#: DirManager.cpp:1225
-msgid "Continue without deleting; silently work around the extra files"
-msgstr "Бе тозакунӣ идома диҳед; бо файлҳои иловагӣ ба хомӯшӣ кор кунед"
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr ""
 
 #: DirManager.cpp:1226
 msgid "Close project immediately with no changes"
 msgstr "Лоиҳаро бе таъхир бе тағирот пӯшед"
 
-#: DirManager.cpp:1228 DirManager.cpp:1263 DirManager.cpp:1309
-#: DirManager.cpp:1351 export/Export.cpp:458 export/Export.cpp:475
-#: export/Export.cpp:494 widgets/Warning.cpp:55
-msgid "Warning"
-msgstr "Огоҳӣ"
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr ""
 
-#: DirManager.cpp:1254
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr ""
+
+#: DirManager.cpp:1391 DirManager.cpp:1793
+msgid "Inspecting project file data"
+msgstr ""
+
+#: DirManager.cpp:1410
 #, c-format
-msgid "Project check detected %d input file[s] being used in place\n"
-"('alias files') are now missing.  There is no way for Audacity\n"
-"to recover these files automatically; you may choose to\n"
-"permanently fill in silence for the missing files, temporarily\n"
-"fill in silence for this session only, or close the project now\n"
-"and try to restore the missing files by hand."
-msgstr "Тафтиши лоиҳа боз ёфт, ки файл(ҳо)и вуруди %d -е, ки дар айни ҳол\n"
-" истифода мешаванд (файлҳои тахаллус) вуҷуд надоранд.\n"
-"Audacity наметавонад ин файлҳои дар бар гирифташударо барқарор\n"
-" созад; Шумо метавонед бесадо пуррасозии доимии файлҳои партофташударо танҳо дар ин қисмат пур намоед, ё лоиҳаро дар айни ҳол пӯшонед\n"
-" ва барқарорсозии файлҳои гумшударо дастӣ кӯшиш намоед."
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
+"to recover these files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
+msgstr ""
 
-#: DirManager.cpp:1259
-msgid "Replace missing data with silence [permanent upon save]"
-msgstr "Додаҳои ҷойнадоштаро аз рӯи хомушӣ иваз намоед [сабти доимӣ]"
+#: DirManager.cpp:1426 DirManager.cpp:1545
+msgid "Treat missing audio as silence (this session only)"
+msgstr ""
 
-#: DirManager.cpp:1260 DirManager.cpp:1348
-msgid "Temporarily replace missing data with silence [this session only]"
-msgstr "Муваққатан додаҳои ҷойнадоштаро аз рӯи хомушӣ иваз намоед [танҳо ин қисмат]"
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
+
+#: DirManager.cpp:1430
+msgid "Warning - Missing Aliased File(s)"
+msgstr ""
+
+#: DirManager.cpp:1460
+msgid "   Project check replaced missing aliased file(s) with silence."
+msgstr ""
+
+#: DirManager.cpp:1480
+#, c-format
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
+msgstr ""
+
+#: DirManager.cpp:1486
+msgid "Regenerate alias summary files (safe and recommended)"
+msgstr ""
+
+#: DirManager.cpp:1487
+#, fuzzy
+msgid "Fill in silence for missing display data (this session only)"
+msgstr "Барои додаҳои намоишии гумшуда аз рӯи хомӯшӣ пурра намоед [танҳо ин қисмат]"
 
 #: DirManager.cpp:1261 DirManager.cpp:1307 DirManager.cpp:1349
 msgid "Close project immediately with no further changes"
 msgstr "Лоиҳаро бе иловаи тағиротҳо, фавран пӯшонед"
 
-#: DirManager.cpp:1300
+#: DirManager.cpp:1491
+msgid "Warning - Missing Alias Summary File(s)"
+msgstr ""
+
+#: DirManager.cpp:1513
+msgid "   Project check regenerated missing alias summary file(s)."
+msgstr ""
+
+#: DirManager.cpp:1531
 #, c-format
-msgid "Project check detected %d missing summary file[s] (.auf).\n"
-"Audacity can fully regenerate these summary files from the\n"
-"original audio data in the project."
-msgstr "Лоиҳа боз ёфт, ки %d файл[ҳо] -и ҷамъбастӣ партофта шудаанд(.auf).\n"
-"Audacity метавонад ба пуррагӣ ин файлҳои ҷамбастиро дар шакли асли лоиҳа, барқарор созад."
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence."
+msgstr ""
 
-# айлҳ#: DirManager.cpp:1305
-msgid "Regenerate summary files [safe and recommended]"
-msgstr "Барқарорсозии файлҳои ҷамъбастӣ [бехатар ва тавсияшуда]"
+#: DirManager.cpp:1546
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr ""
 
-#: DirManager.cpp:1306
-msgid "Fill in silence for missing display data [this session only]"
-msgstr "Барои додаҳои намоишии гумшуда аз рӯи хомӯшӣ пурра намоед [танҳо ин қисмат]"
+#: DirManager.cpp:1549
+msgid "Warning - Missing Audio Data Block File(s)"
+msgstr ""
 
-#: DirManager.cpp:1342
+#: DirManager.cpp:1571
+msgid "   Project check replaced missing audio data block file(s) with silence."
+msgstr ""
+
+#: DirManager.cpp:1587
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
+msgstr ""
+
+#: DirManager.cpp:1593
 #, c-format
-msgid "Project check detected %d missing audio data blockfile[s] (.au), \n"
-"probably due to a bug, system crash or accidental deletion.\n"
-"There is no way for Audacity to recover this lost data\n"
-"automatically; you may choose to permanently fill in silence\n"
-"for the missing data, temporarily fill in silence for this\n"
-"session only, or close the project now and try to restore the\n"
-"missing data by hand."
-msgstr "Лоиҳа %d додаҳои аудиоии файл[ҳо]-ро бозёфт(.au), \n"
-"шояд хатое вуҷуд дорад, ки ба харобии систем ё қисман тозашавии он оварда расонад.\n"
-"Audacity наметавонад додаҳои гумшударо\n"
-"ба таври автоматӣ барқарор созад; Шумо метавонед бесадо пуррасозии доимии файлҳои партофташударо\n"
-"танҳо дар ин қисмат пур намоед, ё лоиҳаро дар айни ҳол пӯшонед\n"
-"ва барқарорсозии файлҳои гумшударо\n"
-"дастӣ кӯшиш намоед."
+msgid "Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
+msgstr ""
 
-#: DirManager.cpp:1347
-msgid "Replace missing data with silence [permanent immediately]"
-msgstr "Додаҳои мавҷуднабударо аз рӯи хомӯшӣ ҷойиваз намоед [фавран ва абадан]"
+#: DirManager.cpp:1602
+msgid "Continue without deleting; ignore the extra files this session"
+msgstr ""
 
-#: DirManager.cpp:1375
-msgid "Cleaning up unused directories in project data..."
-msgstr "Тозакунии ҷузвдонҳои истифоданашуда дар додаҳои лоиҳа ..."
+#: DirManager.cpp:1604
+msgid "Delete orphan files (permanent immediately)"
+msgstr ""
+
+#: DirManager.cpp:1607
+msgid "Warning - Orphan Block File(s)"
+msgstr ""
+
+#: DirManager.cpp:1630
+msgid "Cleaning up unused directories in project data"
+msgstr ""
+
+#: DirManager.cpp:1644
+msgid "Project check found file inconsistencies inspecting the loaded project data."
+msgstr ""
+
+#: DirManager.cpp:1650
+msgid "Project check found file inconsistencies during automatic recovery.\n"
+"\n"
+"Select 'Show Log...' in the Help menu to see details."
+msgstr ""
+
+#: DirManager.cpp:1651
+msgid "Warning: Problems in Automatic Recovery"
+msgstr ""
+
+#: DirManager.cpp:1690
+#, c-format
+msgid "Missing aliased audio file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1713
+#, c-format
+msgid "Missing alias (.auf) block file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1737
+#, c-format
+msgid "Missing data block file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1779
+#, c-format
+msgid "Orphan block file: '%s'"
+msgstr ""
 
 #: DirManager.cpp:1448
 msgid "Caching audio"
 msgstr "Кэширонидани додаҳои садоӣ"
 
-#: DirManager.cpp:1449
-msgid "Caching audio into memory..."
-msgstr "Сабти додаҳои садогӣ дар хотираи..."
+#: DirManager.cpp:1835
+msgid "Caching audio into memory"
+msgstr ""
 
 #: DirManager.cpp:1486
 msgid "Saving recorded audio"
 msgstr "Савти навишташуда сабт шуда истодааст"
 
-#: DirManager.cpp:1487
-msgid "Saving recorded audio to disk..."
-msgstr "Нигоҳдории сабти аудиои ба диски..."
+#: DirManager.cpp:1871
+msgid "Saving recorded audio to disk"
+msgstr ""
 
 #: FFT.cpp:379
 msgid "Rectangular"
@@ -1007,9 +1087,9 @@ msgstr "Устувор"
 msgid "FFmpeg support not compiled in"
 msgstr ""
 
-#: FFmpeg.cpp:103
-msgid "FFmpeg was configured in Preferences and successfully loaded before,                       \n"
-"but this time Audacity failed to load it at startup.                       \n"
+#: FFmpeg.cpp:110
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+"but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
@@ -1026,20 +1106,20 @@ msgstr ""
 msgid "Locate FFmpeg"
 msgstr ""
 
-#: FFmpeg.cpp:190
+#: FFmpeg.cpp:450
 #, c-format
-msgid "Audacity needs the file %s to import and export audio via FFmpeg."
+msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
 
-#: export/ExportMP3.cpp:958
+#: FFmpeg.cpp:456
 #, c-format
-msgid "Location of %s:"
-msgstr "Мавқеъи %s:"
+msgid "Location of '%s':"
+msgstr ""
 
-#: export/ExportMP3.cpp:967
+#: FFmpeg.cpp:465
 #, c-format
-msgid "To find %s, click here -->"
-msgstr "Барои ёфтани %s --> пахш кунед"
+msgid "To find '%s', click here -->"
+msgstr ""
 
 #: export/ExportMP3.cpp:973
 msgid "Browse..."
@@ -1055,14 +1135,14 @@ msgstr ""
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
-#. "Where would I find the file %s" instead if you want.
-#: export/ExportMP3.cpp:1011
+#. "Where would I find the file '%s'?" instead if you want.
+#: FFmpeg.cpp:495
 #, c-format
-msgid "Where is %s?"
-msgstr "%s дар куҷо ҷойгир аст?"
+msgid "Where is '%s'?"
+msgstr ""
 
-#: FFmpeg.cpp:407
-msgid "Failed to find compatible FFmpeg libraries"
+#: FFmpeg.cpp:666
+msgid "Failed to find compatible FFmpeg libraries."
 msgstr ""
 
 #: FFmpeg.h:95
@@ -1296,8 +1376,8 @@ msgstr ""
 msgid "Saving an Audacity Project"
 msgstr ""
 
-#: HelpText.cpp:129
-msgid "Unsupported Formats"
+#: HelpText.cpp:157
+msgid "Support for Other Formats"
 msgstr ""
 
 #: HelpText.cpp:133
@@ -1309,7 +1389,7 @@ msgid "No Local Help"
 msgstr ""
 
 #: HelpText.cpp:176
-msgid "<center><h3>How to get Help</h3></center>"
+msgid "<center><h3>How to Get Help</h3></center>"
 msgstr ""
 
 #: HelpText.cpp:150
@@ -1321,23 +1401,31 @@ msgid "These are our support methods:"
 msgstr ""
 
 #: HelpText.cpp:179
-msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">internet version if it isn't</a>)"
+msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)"
 msgstr ""
 
 #: HelpText.cpp:180
-msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">internet version if it isn't</a>)"
+msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)"
 msgstr ""
 
 #: HelpText.cpp:181
-msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the internet)"
+msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)"
 msgstr ""
 
 #: HelpText.cpp:182
-msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the internet)"
+msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)"
 msgstr ""
 
 #: HelpText.cpp:183
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
+msgstr ""
+
+#: HelpText.cpp:190
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
+msgstr ""
+
+#: HelpText.cpp:194
+msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
 msgstr ""
 
 #: HelpText.cpp:193
@@ -1507,6 +1595,10 @@ msgstr "Номи роҳчаро ворид кунед"
 msgid "Label Track"
 msgstr ""
 
+#: Menus.cpp:4006
+msgid "Added label"
+msgstr "Нишонаҳои иловашуда"
+
 #: LangChoice.cpp:56
 msgid "Audacity First Run"
 msgstr "Аввал Audacity Бакордарорӣ"
@@ -1644,33 +1736,21 @@ msgstr "&Барҳамдихӣ"
 msgid "&Redo"
 msgstr "&Такрор"
 
+#: Menus.cpp:344
+msgid "R&emove Audio"
+msgstr ""
+
 #: Menus.cpp:368
 msgid "Cu&t"
 msgstr "Бу&ридан"
 
-#: Menus.cpp:372
-msgid "Spl&it Cut"
-msgstr "Пор&акунӣ Буридан"
-
-#: Menus.cpp:373
-msgid "&Copy"
-msgstr "&Нусхабардорӣ"
-
-#: Menus.cpp:377
-msgid "&Paste"
-msgstr "&Гузоштан"
-
-#: Menus.cpp:366
-msgid "Paste Te&xt to New Label"
-msgstr ""
-
-#: Menus.cpp:381
-msgid "Tri&m"
-msgstr "Бур&иши қолабӣ"
-
 #: Menus.cpp:383
 msgid "&Delete"
 msgstr "&Нест кардан"
+
+#: Menus.cpp:372
+msgid "Spl&it Cut"
+msgstr "Пор&акунӣ Буридан"
 
 #: Menus.cpp:384
 msgid "Split D&elete"
@@ -1678,6 +1758,14 @@ msgstr "Поракунӣ Т&озакунӣ"
 
 #: Menus.cpp:380
 msgid "Silence Audi&o"
+msgstr ""
+
+#: Menus.cpp:381
+msgid "Tri&m"
+msgstr "Бур&иши қолабӣ"
+
+#: Menus.cpp:357
+msgid "Clip Boun&daries"
 msgstr ""
 
 #: Menus.cpp:387
@@ -1694,6 +1782,18 @@ msgstr "&Муттаҳидсозӣ"
 
 #: Menus.cpp:393
 msgid "Detac&h at Silences"
+msgstr ""
+
+#: Menus.cpp:373
+msgid "&Copy"
+msgstr "&Нусхабардорӣ"
+
+#: Menus.cpp:377
+msgid "&Paste"
+msgstr "&Гузоштан"
+
+#: Menus.cpp:366
+msgid "Paste Te&xt to New Label"
 msgstr ""
 
 #: Menus.cpp:400
@@ -1719,11 +1819,6 @@ msgid "&Split Cut"
 msgstr "&Поракунӣ Буриш"
 
 #. i18n-hint: Labeled Regions submenu
-#: Menus.cpp:425
-msgid "Co&py"
-msgstr "Нусхабар&дорӣ"
-
-#. i18n-hint: Labeled Regions submenu
 #: Menus.cpp:436
 msgid "Sp&lit Delete"
 msgstr "По&ракунӣ Тозакунӣ"
@@ -1731,6 +1826,11 @@ msgstr "По&ракунӣ Тозакунӣ"
 #: Menus.cpp:418
 msgid "Silence &Audio"
 msgstr ""
+
+#. i18n-hint: Labeled Regions submenu
+#: Menus.cpp:425
+msgid "Co&py"
+msgstr "Нусхабар&дорӣ"
 
 #. i18n-hint: Labeled Regions submenu
 #: Menus.cpp:447
@@ -1765,6 +1865,14 @@ msgstr ""
 
 #: Menus.cpp:468
 msgid "Cursor to Track &End"
+msgstr ""
+
+#: Menus.cpp:446
+msgid "In All &Tracks"
+msgstr ""
+
+#: Menus.cpp:451
+msgid "In All S&ync-Locked Tracks"
 msgstr ""
 
 #: Menus.cpp:481
@@ -1873,11 +1981,6 @@ msgstr ""
 msgid "&Toolbars"
 msgstr ""
 
-#: Menus.cpp:567
-#, fuzzy
-msgid "&Control Toolbar"
-msgstr "Лавҳаи асбобҳои идоракунӣ"
-
 #: Menus.cpp:568
 #, fuzzy
 msgid "&Device Toolbar"
@@ -1912,6 +2015,10 @@ msgstr "Лавҳаи хадамотӣ"
 #, fuzzy
 msgid "Transcri&ption Toolbar"
 msgstr "Лавҳаи Рӯйнависӣ"
+
+#: Menus.cpp:593
+msgid "&Transport Toolbar"
+msgstr ""
 
 #: Menus.cpp:576
 msgid "&Reset Toolbars"
@@ -1981,6 +2088,10 @@ msgstr ""
 
 #: Menus.cpp:616
 msgid "Automated Input Level Adjustment (on/off)"
+msgstr ""
+
+#: Menus.cpp:646
+msgid "Rescan Audio Devices"
 msgstr ""
 
 #: Menus.cpp:591
@@ -2079,8 +2190,8 @@ msgstr ""
 msgid "Synchronize MIDI with Audio"
 msgstr ""
 
-#: Menus.cpp:686
-msgid "&Link Audio and Label Tracks"
+#: Menus.cpp:745
+msgid "Sync-&Lock Tracks"
 msgstr ""
 
 #: Menus.cpp:690
@@ -2157,10 +2268,6 @@ msgstr ""
 msgid "&Manual (in web browser)"
 msgstr ""
 
-#: Menus.cpp:959
-msgid "Show &Log..."
-msgstr ""
-
 #: Menus.cpp:967
 msgid "&Screenshot Tools..."
 msgstr ""
@@ -2169,8 +2276,12 @@ msgstr ""
 msgid "&Run Benchmark..."
 msgstr "&Боркунии Озмоишии..."
 
-#: Menus.cpp:972
-msgid "&Audio Device Info..."
+#: Menus.cpp:1045
+msgid "Au&dio Device Info..."
+msgstr ""
+
+#: Menus.cpp:959
+msgid "Show &Log..."
 msgstr ""
 
 #: Menus.cpp:986
@@ -2385,6 +2496,22 @@ msgstr ""
 msgid "Full screen on/off"
 msgstr ""
 
+#: Menus.cpp:1143
+msgid "Change input device"
+msgstr ""
+
+#: Menus.cpp:1146
+msgid "Change output device"
+msgstr ""
+
+#: Menus.cpp:1149
+msgid "Change audio host"
+msgstr ""
+
+#: Menus.cpp:1152
+msgid "Change input channels"
+msgstr ""
+
 #: Menus.cpp:1067
 msgid "Adjust output gain"
 msgstr ""
@@ -2407,10 +2534,6 @@ msgstr ""
 
 #: Menus.cpp:1072
 msgid "Decrease input gain"
-msgstr ""
-
-#: Menus.cpp:1074
-msgid "Adjust input source"
 msgstr ""
 
 #: Menus.cpp:1116
@@ -2526,19 +2649,6 @@ msgstr "Ҷудокунӣ бо Буриш"
 msgid "Split-cut to the clipboard"
 msgstr "Бо буриш дар буфер ҷудо карда шудааст"
 
-#: Menus.cpp:2445 Menus.cpp:2520 Menus.cpp:2607 TrackPanel.cpp:552
-#: toolbars/EditToolBar.cpp:137
-msgid "Paste"
-msgstr "Гузоштан"
-
-#: Menus.cpp:2445
-msgid "Pasted text from the clipboard"
-msgstr "Гузориши матн аз буфери табадулот"
-
-#: Menus.cpp:2520 Menus.cpp:2607
-msgid "Pasted from the clipboard"
-msgstr "Гузориш аз буфери табадулот"
-
 #: Menus.cpp:3053
 msgid "Pasting one type of track into another is not allowed."
 msgstr ""
@@ -2546,6 +2656,19 @@ msgstr ""
 #: Menus.cpp:2550
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "Нусхабардории стерео ба аудио иҷозат дода намешавад."
+
+#: Menus.cpp:2445 Menus.cpp:2520 Menus.cpp:2607 TrackPanel.cpp:552
+#: toolbars/EditToolBar.cpp:137
+msgid "Paste"
+msgstr "Гузоштан"
+
+#: Menus.cpp:2520 Menus.cpp:2607
+msgid "Pasted from the clipboard"
+msgstr "Гузориш аз буфери табадулот"
+
+#: Menus.cpp:2445
+msgid "Pasted text from the clipboard"
+msgstr "Гузориши матн аз буфери табадулот"
 
 #: Menus.cpp:3538
 msgid "Paste Text to New Label"
@@ -2687,10 +2810,6 @@ msgstr "Ҷудокунии Нав"
 msgid "Split to new track"
 msgstr "Ҷудокунӣ ба роҳчаи нав"
 
-#: Menus.cpp:3094
-msgid "Split at labels"
-msgstr "Ҷудокунӣ дар нишонаҳо"
-
 #: FreqWindow.cpp:104
 msgid "Frequency Analysis"
 msgstr "Таҳлили басомадӣ"
@@ -2801,12 +2920,26 @@ msgstr "Ҷобаҷогузошта"
 msgid "Align"
 msgstr "Ҷобаҷогузорӣ"
 
+#: Menus.cpp:5117
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr ""
+
+#: Menus.cpp:5283
+#, c-format
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr ""
+
 #: Menus.cpp:4550
 msgid "Sync MIDI with Audio"
 msgstr ""
 
-#: Menus.cpp:4554
-msgid "Alignment completed."
+#: Menus.cpp:5290
+#, c-format
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr ""
+
+#: Menus.cpp:5301
+msgid "Internal error reported by alignment process."
 msgstr ""
 
 #: Menus.cpp:3899
@@ -2825,17 +2958,13 @@ msgstr "Созиши роҳчаи аудиоии нави стерео"
 msgid "Created new label track"
 msgstr "Созиши нишонаи нави роҳча"
 
-#: Menus.cpp:3946
-msgid "The version of Audacity you are using does not support multiple time tracks."
-msgstr "Тариқаи Audacity-е, ки Шумо кор карда истодаед вақти зарби роҳчаҳоро дастгирӣ намекунад."
+#: Menus.cpp:5361
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr ""
 
 #: Menus.cpp:3957
 msgid "Created new time track"
 msgstr "Созиши вақти роҳчаи нав"
-
-#: Menus.cpp:4006
-msgid "Added label"
-msgstr "Нишонаҳои иловашуда"
 
 #: Menus.cpp:4034
 msgid "Edited labels"
@@ -2905,6 +3034,11 @@ msgstr "Омехта"
 #: Mix.cpp:120
 msgid "Mixing and rendering tracks"
 msgstr "Омехтакунӣ ва муттаҳидсозии роҳчаҳо"
+
+#. i18n-hint: title of the MIDI Velocity slider
+#: MixerBoard.cpp:173 TrackPanel.cpp:4069 widgets/ASlider.cpp:373
+msgid "Velocity"
+msgstr ""
 
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: TrackPanel.cpp:3232 TrackPanel.cpp:5276 TrackPanel.cpp:6492
@@ -2999,6 +3133,15 @@ msgstr "Тағиротҳо сабт шаванд?"
 msgid "Select one or more audio files..."
 msgstr "Интихоби як ё якчанд файлҳои аудиои..."
 
+#: AudacityApp.cpp:418 Project.cpp:1654
+#, c-format
+msgid "%s is already open in another window."
+msgstr "%s аллакай дар равзанаи дигар кушода шудааст."
+
+#: Project.cpp:2191 Project.cpp:2356 Project.cpp:2576 Project.cpp:2755
+msgid "Error Opening Project"
+msgstr ""
+
 #. i18n-hint: This string is a label in the file type filter in the open
 #. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
@@ -3007,13 +3150,14 @@ msgstr "Интихоби як ё якчанд файлҳои аудиои..."
 msgid "Audacity projects"
 msgstr ""
 
-#: Project.cpp:1885 Project.cpp:2307
+#: Project.cpp:2256
 #, c-format
-msgid "This file was saved by Audacity %s, a much\n"
-"older version.  The format has changed.\n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
-"Audacity could corrupt the file in opening\n"
-"it, so you must back it up first.\n"
+"Audacity can try to open and save this file, but saving it in this \n"
+"version will then prevent any 1.2 or earlier version opening it. \n"
+"\n"
+"Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
 msgstr ""
@@ -3022,9 +3166,9 @@ msgstr ""
 msgid "1.0 or earlier"
 msgstr ""
 
-#: Project.cpp:2035
-msgid "Opening old project file"
-msgstr "Кушодашавии лоиҳаи куҳнаи файл"
+#: Project.cpp:2271 Project.cpp:2837
+msgid "Warning - Opening Old Project File"
+msgstr ""
 
 #: Project.cpp:2073
 msgid "You are trying to open an automatically created backup file.\n"
@@ -3033,8 +3177,12 @@ msgid "You are trying to open an automatically created backup file.\n"
 "Please open the actual Audacity project file instead."
 msgstr ""
 
-#: Project.cpp:2074
-msgid "Backup file detected"
+#: Project.cpp:2306
+msgid "Warning - Backup File Detected"
+msgstr ""
+
+#: Project.cpp:2320 xml/XMLWriter.cpp:329
+msgid "Error Opening File"
 msgstr ""
 
 #: Project.cpp:1704 Project.cpp:1712
@@ -3048,17 +3196,13 @@ msgid "File may be invalid or corrupted: \n"
 msgstr "Файл нодуруст ё вайрон аст: \n"
 "%s"
 
-#: Project.cpp:1719
-msgid "Error opening file or project"
-msgstr "Хатои кушодани файл ё лоиҳа"
+#: Project.cpp:2335
+msgid "Error Opening File or Project"
+msgstr ""
 
 #: Project.cpp:1736
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity натавонист Audacity 1.0-ро дар қолаби лоиҳаи нав дигар кунад."
-
-#: Project.cpp:1839
-msgid "Could not remove old auto save file"
-msgstr "Файлҳои қаблии худсабт ҷойиваз карда нашуданд"
 
 #: Project.cpp:1841
 msgid "Project was recovered"
@@ -3068,41 +3212,28 @@ msgstr "Лоиҳа барқарор шуд"
 msgid "Recover"
 msgstr "Барқарорсозӣ"
 
-#: Project.cpp:1870
-msgid "Project checker repaired file"
-msgstr "Санҷишгари лоиҳа файлро таъмир кард"
+#: Project.cpp:1839
+msgid "Could not remove old auto save file"
+msgstr "Файлҳои қаблии худсабт ҷойиваз карда нашуданд"
 
-#: Project.cpp:1870 effects/Repair.h:29
-msgid "Repair"
-msgstr "Таъмир"
+#: Project.cpp:2659 Project.cpp:2660
+msgid "<unrecognized version -- possibly corrupt project file>"
+msgstr ""
 
 #: Project.cpp:1981
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Лоиҳаи додаи пӯша ёфт нашуд: \"%s\""
 
-#: Project.cpp:2019
+#: Project.cpp:2801
 #, c-format
 msgid "This file was saved using Audacity %s.\n"
-"You are using Audacity %s - you need to upgrade to\n"
-"a newer version to open this file."
-msgstr "Ин файл дар вақти истифодаи Audacity сабт шуд %s.\n"
-"Шумо бо Audacity кор мекунед%s - ба Шумо лозим меояд, ки барои кушодани ин файл \n"
-"тариқаи навини онро насб намоед."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+msgstr ""
 
 #: Project.cpp:2023
 msgid "Can't open project file"
 msgstr "Лоиҳаи файлро кушода наметавонад"
-
-#: Project.cpp:2484
-#, c-format
-msgid "This file was saved by Audacity %s.\n"
-"\n"
-"Audacity can open and save this file, but saving it in this version\n"
-"will then prevent any 1.2 or earlier version opening it.\n"
-"\n"
-"Open this file now?"
-msgstr ""
 
 #: Project.cpp:2537
 msgid "Your project is now empty.\n"
@@ -3115,8 +3246,18 @@ msgid "Your project is now empty.\n"
 "Save anyway?"
 msgstr ""
 
-#: Project.cpp:2538
-msgid "Warning empty project"
+#: Project.cpp:3050
+msgid "Warning - Empty Project"
+msgstr ""
+
+#: Project.cpp:3121
+#, c-format
+msgid "Could not save project. Path not found.  Try creating \n"
+"directory \"%s\" before saving project with this name."
+msgstr ""
+
+#: Project.cpp:3431
+msgid "Error Saving Project"
 msgstr ""
 
 #: Project.cpp:2792
@@ -3124,10 +3265,6 @@ msgstr ""
 msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
 msgstr ""
-
-#: Project.cpp:2260 Project.cpp:2274
-msgid "Error saving project"
-msgstr "Хатои сабти лоиҳа"
 
 #: Project.cpp:2818 Project.cpp:3919 Tags.cpp:1203
 #: effects/Equalization.cpp:1098
@@ -3150,8 +3287,9 @@ msgstr "Вориди '%s'"
 msgid "Import"
 msgstr "Воридот"
 
-#: Project.cpp:2458
-msgid "Error importing"
+#: Project.cpp:3453
+#, fuzzy
+msgid "Error Importing"
 msgstr "Воридшавии хато"
 
 #: Project.cpp:2499
@@ -3186,10 +3324,6 @@ msgstr ""
 
 #: Project.cpp:3404
 msgid "Save Project As..."
-msgstr ""
-
-#: Project.cpp:3431
-msgid "Error Saving Project"
 msgstr ""
 
 #: Project.cpp:3431
@@ -3249,21 +3383,21 @@ msgstr ""
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr ""
 
-#: Project.cpp:3161
-msgid "Could not remove old autosave file: "
-msgstr "Файлҳои қаблии худсабтшударо ҷойгузорӣ карда нашуд: "
-
 #: Project.cpp:3202
 msgid "New Project"
 msgstr "Лоиҳаи Нав"
 
-#: Project.cpp:3215
-msgid "Error writing autosave file"
-msgstr "Хато дар ҳолати худсабтшавии файл"
+#: Project.cpp:4401
+msgid "Error Writing Autosave File"
+msgstr ""
 
 #: Project.cpp:3236
 msgid "Could not create autosave file: "
 msgstr "Созиши файли худсабт номумкин аст: "
+
+#: Project.cpp:3161
+msgid "Could not remove old autosave file: "
+msgstr "Файлҳои қаблии худсабтшударо ҷойгузорӣ карда нашуд: "
 
 #: Project.cpp:3722
 #, fuzzy
@@ -3386,9 +3520,10 @@ msgstr ""
 msgid "Tools"
 msgstr "Абзорҳо"
 
-#: toolbars/ControlToolBar.cpp:82
-msgid "Control"
-msgstr "Идоракунӣ"
+#: Screenshot.cpp:374 toolbars/ControlToolBar.cpp:89
+#: toolbars/ControlToolBar.cpp:249
+msgid "Transport"
+msgstr ""
 
 #: toolbars/MixerToolBar.cpp:58
 msgid "Mixer"
@@ -3471,9 +3606,19 @@ msgstr ""
 msgid "Choose a location to save screenshot images"
 msgstr ""
 
-#: Sequence.cpp:732 Sequence.cpp:742 Sequence.cpp:749
-msgid "Gap detected in project file\n"
-msgstr "Фосила дар лоиҳаи файл бозёфт шуд\n"
+#: Sequence.cpp:1032
+#, c-format
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
+"Truncating to mMaxSamples."
+msgstr ""
+
+#: Sequence.cpp:1035
+msgid "Warning - Length in Writing Sequence"
+msgstr ""
+
+#: Sequence.cpp:1498
+msgid "Memory allocation failed -- NewSamples"
+msgstr ""
 
 #: effects/Effect.cpp:255 effects/Effect.cpp:382 effects/Phaser.cpp:595
 #: effects/Wahwah.cpp:582 effects/audiounits/AudioUnitEffect.cpp:872
@@ -3599,8 +3744,8 @@ msgstr ""
 msgid "Load Metadata As:"
 msgstr ""
 
-#: Tags.cpp:1122 Tags.cpp:1772 Tags.cpp:2494
-msgid "Error loading metadata"
+#: Tags.cpp:1089
+msgid "Error Loading Metadata"
 msgstr ""
 
 #: Tags.cpp:1097 Tags.cpp:1151 Tags.cpp:1751 Tags.cpp:1787 Tags.cpp:2473
@@ -3608,8 +3753,8 @@ msgstr ""
 msgid "Save Metadata As:"
 msgstr ""
 
-#: Tags.cpp:1205
-msgid "Error saving tags file"
+#: Tags.cpp:1173
+msgid "Error Saving Tags File"
 msgstr ""
 
 #: Theme.cpp:628
@@ -3774,8 +3919,12 @@ msgstr "Мавҷшакл"
 msgid "Waveform (dB)"
 msgstr "Мавҷшакл (dB)"
 
-#: TrackPanel.cpp:557 prefs/GUIPrefs.cpp:157
-msgid "Spectrum log(f)"
+#: TrackPanel.cpp:638 prefs/TracksPrefs.cpp:60
+msgid "Spectrogram"
+msgstr ""
+
+#: TrackPanel.cpp:639 prefs/TracksPrefs.cpp:61
+msgid "Spectrogram log(f)"
 msgstr ""
 
 #: TrackPanel.cpp:512
@@ -3834,13 +3983,18 @@ msgstr "Насби маҳдудият..."
 msgid "Copy"
 msgstr "Нусха"
 
-#: TrackPanel.cpp:1239
-msgid "Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
+#: TrackPanel.cpp:1448
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr ""
+
+#: TrackPanel.cpp:1453
+#, fuzzy
+msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "Барои наздиксозии амудӣ пахшро иҷро кунед, Shift-ро барои дурсозӣ ва Drag-ро барои сохтани наздиксозии муҳити махсус истифода кунед."
 
-#: TrackPanel.cpp:1244
-msgid "Drag the label vertically to change the order of the tracks."
-msgstr "Кашидани нишонаи амудӣ барои иваз намудани тартиби роҳчаҳо."
+#: TrackPanel.cpp:1459
+msgid "Drag the track vertically to change the order of the tracks."
+msgstr ""
 
 #: TrackPanel.cpp:1264
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -3868,6 +4022,11 @@ msgstr "Ҳолати Multi-Tool: Cmd-, барои абзорҳои муш ва �
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "Ҳолати Multi-Tool: Ctrl-P барои абзорҳои муш ва саҳфакалид"
 
+#: TrackPanel.cpp:1581 TrackPanel.cpp:1593 TrackPanel.cpp:2014
+#: TrackPanel.cpp:2021
+msgid "Click and drag to stretch selected region."
+msgstr ""
+
 #: TrackPanel.cpp:1338
 msgid "Click and drag to move left selection boundary."
 msgstr "Пахш ва кашидан барои ҷойивазкунии интихоби сарҳади чап."
@@ -3875,6 +4034,10 @@ msgstr "Пахш ва кашидан барои ҷойивазкунии инт�
 #: TrackPanel.cpp:1343
 msgid "Click and drag to move right selection boundary."
 msgstr "Пахш ва кашидан барои ҷойивазкунии интихоби сарҳади рост."
+
+#: TrackPanel.cpp:1603
+msgid "Click and drag to stretch within selected region."
+msgstr ""
 
 #: TrackPanel.cpp:1669 TrackPanel.cpp:3736 TrackPanel.cpp:3768
 #: TrackPanel.cpp:4013 TrackPanel.cpp:5935 TrackPanel.cpp:5955
@@ -3885,6 +4048,14 @@ msgstr "Тағиротҳои Нишонавӣ"
 #: TrackPanel.cpp:4014 TrackPanel.cpp:5936 TrackPanel.cpp:5956
 msgid "Label Edit"
 msgstr "Таҳрири Нишона"
+
+#: TrackPanel.cpp:2054 TrackPanel.cpp:2279
+msgid "Stretch"
+msgstr ""
+
+#: TrackPanel.cpp:2054 TrackPanel.cpp:2279
+msgid "Stretch Note Track"
+msgstr ""
 
 #: TrackPanel.cpp:1897
 msgid "Adjusted envelope."
@@ -3941,6 +4112,10 @@ msgstr "Ҷойгузории роҳча '%s.'"
 #: TrackPanel.cpp:3090
 msgid "Track Remove"
 msgstr "Ҷойгузории Роҳча"
+
+#: TrackPanel.cpp:4069
+msgid "Moved velocity slider"
+msgstr ""
 
 #: TrackPanel.cpp:3357 TrackPanel.cpp:5888 effects/ChangePitch.cpp:281
 msgid "up"
@@ -4181,23 +4356,23 @@ msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
 
-#: commands/CommandManager.cpp:892
+#: commands/CommandManager.cpp:953
 msgid "You can only do this when playing and recording are\n"
-" stopped.  [Pausing is not sufficient.]"
+" stopped. (Pausing is not sufficient.)"
 msgstr ""
 
-#: commands/CommandManager.cpp:894
+#: commands/CommandManager.cpp:955
 msgid "You must first select some stereo audio for this\n"
-" to use.  [You can't use this with mono.]"
+" to use. (You cannot use this with mono.)"
 msgstr ""
 
 #: commands/CommandManager.cpp:896
 msgid "You must first select some audio for this to use."
 msgstr ""
 
-#: commands/CommandManager.cpp:898
+#: commands/CommandManager.cpp:959
 msgid "You must first select some audio for this\n"
-" to use. [Selecting other kinds of track won't work.]"
+" to use. (Selecting other kinds of track won't work.)"
 msgstr ""
 
 #: commands/CommandManager.cpp:903
@@ -4488,14 +4663,6 @@ msgstr "Натиҷаи корфармудашуда: %s %.1f%%"
 msgid "Change Speed"
 msgstr "Ивазшавии суръат"
 
-#. i18n-hint: n/a is an English
-#. abbreviation meaning "not
-#. applicable" (in other words,
-#. unimportant, not relevant).
-#: effects/ChangeSpeed.cpp:356
-msgid "n/a"
-msgstr "д/н"
-
 #: effects/ChangeSpeed.cpp:300
 msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "Ивазшавии суръат ба зарба ва баландкунӣ таъсир мерасонад"
@@ -4507,6 +4674,14 @@ msgstr "истифодаи SampleRate, бо ёрии Эрик де Кастро 
 #: effects/ChangeSpeed.cpp:366
 msgid "Standard Vinyl RPM:"
 msgstr ""
+
+#. i18n-hint: n/a is an English
+#. abbreviation meaning "not
+#. applicable" (in other words,
+#. unimportant, not relevant).
+#: effects/ChangeSpeed.cpp:356
+msgid "n/a"
+msgstr "д/н"
 
 #: effects/ChangeSpeed.cpp:370
 msgid "From RPM"
@@ -4717,6 +4892,19 @@ msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
 msgstr ""
 
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
+
 #: effects/Contrast.cpp:214
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
 msgstr ""
@@ -4740,6 +4928,12 @@ msgstr ""
 
 #: effects/Contrast.cpp:347
 msgid "Foreground start time"
+msgstr ""
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundreths of a second (1/100 second)
+#: widgets/TimeTextCtrl.cpp:288
+msgid "hh:mm:ss + hundredths"
 msgstr ""
 
 #: effects/Contrast.cpp:365
@@ -4913,9 +5107,9 @@ msgstr ""
 msgid "DTMF Tone Generator"
 msgstr "Муваллиди оҳанги DTMF"
 
-#: effects/DtmfGen.cpp:386
-msgid "by Salvo Ventura (2006)"
-msgstr "бо ёрии Салво Вентура (2006)"
+#: effects/DtmfGen.cpp:442
+msgid "by Salvo Ventura"
+msgstr ""
 
 #: effects/DtmfGen.cpp:390
 msgid "DTMF sequence:"
@@ -4928,6 +5122,10 @@ msgstr "Доманаи (0-1)"
 #: effects/DtmfGen.cpp:465
 msgid "Duration:"
 msgstr ""
+
+#: widgets/TimeTextCtrl.cpp:205
+msgid "hh:mm:ss + samples"
+msgstr "сс:дд:сс + мисолҳо"
 
 #: effects/DtmfGen.cpp:411
 msgid "Tone/silence ratio:"
@@ -5026,17 +5224,29 @@ msgstr "Куб"
 msgid "Equalization"
 msgstr "Баробарсозӣ"
 
-#: effects/Equalization.cpp:917
-msgid "Error loading EQ curve"
-msgstr "Хато ҳангоми боркунии EQ"
+#: effects/Equalization.cpp:996
+#, c-format
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+"Please press 'help' to visit the download page.\n"
+"\n"
+"Save the curves at %s"
+msgstr ""
 
-#: effects/Equalization.cpp:1033
-#, fuzzy
-msgid "custom"
-msgstr "Танзим"
+#: effects/Equalization.cpp:997
+msgid "EQCurves.xml and EQDefaultCurves.xml missing"
+msgstr ""
 
-#: effects/Equalization.cpp:1100
-msgid "Error saving equalization curves"
+#: effects/Equalization.cpp:1003 effects/Equalization.cpp:1028
+#: effects/Equalization.cpp:1029
+msgid "unnamed"
+msgstr ""
+
+#: effects/Equalization.cpp:1024
+msgid "Error Loading EQ Curve"
+msgstr ""
+
+#: effects/Equalization.cpp:1089
+msgid "Error Saving Equalization Curves"
 msgstr ""
 
 #: effects/Equalization.cpp:1023
@@ -5055,53 +5265,221 @@ msgstr "Миним dB"
 msgid "kHz"
 msgstr "kҲертз"
 
-#: effects/Equalization.cpp:1162
-msgid "Draw curves"
+#: effects/Equalization.cpp:1231
+msgid "&Draw Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:1233
+#, fuzzy
+msgid "Draw Curves"
 msgstr "Кашидани тавсирҳо"
+
+#: effects/Equalization.cpp:1237
+msgid "&Graphic EQ"
+msgstr ""
 
 #: effects/Equalization.cpp:1167
 msgid "Graphic EQ"
 msgstr "Графики EQ"
 
-#: effects/Equalization.cpp:1183
-msgid "Linear frequency scale"
-msgstr "Масофаи хатии басомад"
-
-#: effects/Equalization.cpp:1192
-msgid "Length of filter:"
-msgstr "Дарозии полуна:"
-
-#: effects/Equalization.cpp:1100
-msgid "Select curve:"
-msgstr "Интихоби тавсиф (хати каҷ):"
-
-#: effects/Equalization.cpp:1110 effects/Equalization.cpp:2322
-msgid "Save As..."
-msgstr "Сабт ҳамчун..."
-
-#: effects/Equalization.cpp:1407
-msgid "Flatten"
+#: effects/Equalization.cpp:1252
+msgid "Li&near Frequency Scale"
 msgstr ""
 
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "Табдилдиҳӣ"
+#: effects/Equalization.cpp:1253
+msgid "Linear Frequency Scale"
+msgstr ""
 
-#: effects/Equalization.cpp:1491
-msgid "To use this EQ curve in a batch chain, please choose a new name for it."
+#: effects/Equalization.cpp:1262
+msgid "Length of &Filter:"
+msgstr ""
+
+#: effects/Equalization.cpp:1268
+msgid "Length of Filter"
+msgstr ""
+
+#: effects/Equalization.cpp:1284
+msgid "&Select Curve:"
+msgstr ""
+
+#: effects/Equalization.cpp:1294
+msgid "S&ave/Manage Curves..."
+msgstr ""
+
+#: effects/Equalization.cpp:1295
+msgid "Save and Manage Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:1298
+msgid "Fla&tten"
+msgstr ""
+
+#: effects/Equalization.cpp:1300
+msgid "&Invert"
+msgstr ""
+
+#: effects/Equalization.cpp:1302
+msgid "G&rids"
+msgstr ""
+
+#: effects/Equalization.cpp:1367
+msgid "Select Curve"
+msgstr ""
+
+#: effects/Equalization.cpp:1383
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 
 #: effects/Equalization.cpp:1492
 msgid "EQ Curve needs a different name"
 msgstr ""
 
-#: effects/Equalization.cpp:2321
-msgid "Enter the desired name of the curve"
-msgstr "Вориди номи хосташудаи тавсир"
+#: effects/Equalization.cpp:2817 effects/Equalization.cpp:2822
+msgid "Manage Curves List"
+msgstr ""
+
+#: effects/Equalization.cpp:2821
+msgid "Manage Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:2854
+msgid "&Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:2858
+msgid "Curve Name"
+msgstr ""
+
+#: effects/Equalization.cpp:2865
+msgid "&Rename..."
+msgstr ""
+
+#: effects/Equalization.cpp:2866
+msgid "D&elete..."
+msgstr ""
+
+#: effects/Equalization.cpp:2867
+msgid "I&mport..."
+msgstr ""
+
+#: effects/Equalization.cpp:2868
+msgid "E&xport..."
+msgstr ""
+
+#: effects/Equalization.cpp:2869
+msgid "&Get More..."
+msgstr ""
+
+#: widgets/ErrorDialog.cpp:98
+msgid "Help"
+msgstr ""
+
+#: effects/Equalization.cpp:2877
+msgid "Rename 'unnamed' to save a new entry.\n"
+"'OK' saves all changes, 'Cancel' doesn't."
+msgstr ""
+
+#: effects/Equalization.cpp:2912
+msgid "'unnamed' always stays at the bottom of the list"
+msgstr ""
+
+#: effects/Equalization.cpp:2912 effects/Equalization.cpp:3218
+msgid "'unnamed' is special"
+msgstr ""
+
+#: effects/Equalization.cpp:3006
+msgid "' to..."
+msgstr ""
+
+#: effects/Equalization.cpp:3006 effects/Equalization.cpp:3009
+msgid "Rename '"
+msgstr ""
+
+#: effects/Equalization.cpp:3007
+msgid "Rename..."
+msgstr ""
+
+#: effects/Equalization.cpp:3029
+msgid "Name is the same as the original one"
+msgstr ""
+
+#: effects/Equalization.cpp:3029
+msgid "Same name"
+msgstr ""
+
+#: effects/Equalization.cpp:3033
+msgid "'?"
+msgstr ""
+
+#: effects/Equalization.cpp:3033
+msgid "Overwrite existing curve '"
+msgstr ""
+
+#: effects/Equalization.cpp:3034
+msgid "Curve exists"
+msgstr ""
+
+#: effects/Equalization.cpp:3110
+msgid "You cannot delete the 'unnamed' curve."
+msgstr ""
+
+#: effects/Equalization.cpp:3111 effects/Equalization.cpp:3160
+msgid "Can't delete 'unnamed'"
+msgstr ""
+
+#: effects/Equalization.cpp:3117 effects/Equalization.cpp:3146
+msgid "' ?"
+msgstr ""
+
+#: effects/Equalization.cpp:3117 effects/Equalization.cpp:3146
+msgid "Delete '"
+msgstr ""
 
 #: effects/Equalization.cpp:2421
 msgid "Confirm Deletion"
 msgstr "Тасдиқоти несткунӣ"
+
+#: effects/Equalization.cpp:3143
+msgid "Delete "
+msgstr ""
+
+#: effects/Equalization.cpp:3143
+msgid "items?"
+msgstr ""
+
+#: effects/Equalization.cpp:3159
+msgid "You cannot delete the 'unnamed' curve, it is special."
+msgstr ""
+
+#: effects/Equalization.cpp:3176
+msgid "Choose an EQ curve file"
+msgstr ""
+
+#: effects/Equalization.cpp:3176
+msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
+msgstr ""
+
+#: effects/Equalization.cpp:3196
+msgid "Export EQ curves as..."
+msgstr ""
+
+#: effects/Equalization.cpp:3218
+msgid "You cannot export 'unnamed' curve"
+msgstr ""
+
+#: effects/Equalization.cpp:3228
+#, c-format
+msgid "%d curves exported to %s"
+msgstr ""
+
+#: effects/Equalization.cpp:3229
+msgid "Curves exported"
+msgstr ""
+
+#: effects/Equalization.cpp:3232
+msgid "No curves exported"
+msgstr ""
 
 #: effects/Equalization.h:87
 msgid "Equalization..."
@@ -5166,6 +5544,10 @@ msgstr ""
 #: effects/Generator.cpp:51
 msgid "There is not enough room available to generate the audio"
 msgstr ""
+
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "Табдилдиҳӣ"
 
 #: effects/Invert.h:35
 msgid "Inverting"
@@ -5446,32 +5828,56 @@ msgstr "Ҳамаи аудиоҳои полоишшавандаро ҷудо ку
 msgid "Noise Removal by Dominic Mazzoni"
 msgstr "Ҷудосозии Хаш бо ёрии Доминик Мазони"
 
-#: effects/NoiseRemoval.cpp:780
-msgid "Get Noise Profile"
+#: effects/NoiseRemoval.cpp:895
+#, fuzzy
+msgid "&Get Noise Profile"
 msgstr "Навъи хашро созед"
 
-#: effects/NoiseRemoval.cpp:791
-msgid "Noise reduction (dB):"
+#: effects/NoiseRemoval.cpp:907
+#, fuzzy
+msgid "Noise re&duction (dB):"
 msgstr "Табдили хаш (dB):"
 
 #: effects/NoiseRemoval.cpp:850
 msgid "Noise reduction"
 msgstr ""
 
-#: effects/NoiseRemoval.cpp:799
-msgid "Frequency smoothing (Hz):"
+#: effects/NoiseRemoval.cpp:917
+msgid "&Sensitivity (dB):"
+msgstr ""
+
+#: toolbars/TranscriptionToolBar.cpp:214
+msgid "Sensitivity"
+msgstr "Қобилияти ҳис (эҳсос)"
+
+#: effects/NoiseRemoval.cpp:927
+#, fuzzy
+msgid "Fr&equency smoothing (Hz):"
 msgstr "Суфтагии басомад (Hz):"
 
 #: effects/NoiseRemoval.cpp:859
 msgid "Frequency smoothing"
 msgstr ""
 
-#: effects/NoiseRemoval.cpp:807
-msgid "Attack/decay time (secs):"
+#: effects/NoiseRemoval.cpp:937
+#, fuzzy
+msgid "Attac&k/decay time (secs):"
 msgstr "Ҳуҷум/вақти хомушшавӣ (сон-ҳо):"
 
-#: effects/NoiseRemoval.cpp:868
-msgid "Attach/decay time"
+#: effects/NoiseRemoval.cpp:943
+msgid "Attack/decay time"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:947
+msgid "Noise:"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:949
+msgid "Re&move"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:951
+msgid "&Isolate"
 msgstr ""
 
 #: effects/NoiseRemoval.h:35
@@ -5488,9 +5894,9 @@ msgstr "Тозашавии хаш"
 
 #. i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
 #. * false (translated below) if those options were selected
-#: effects/Normalize.cpp:70
+#: effects/Normalize.cpp:74
 #, c-format
-msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s"
+msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"
 msgstr ""
 
 #. i18n-hint: true here means that the option was
@@ -5516,12 +5922,16 @@ msgstr ""
 msgid "Normalize maximum amplitude to:"
 msgstr ""
 
-#: effects/Normalize.cpp:336
-msgid "-"
-msgstr "-"
-
 #: effects/Normalize.cpp:367
 msgid "Maximum amplitude dB"
+msgstr ""
+
+#: effects/Normalize.cpp:406
+msgid "Normalize stereo channels independently"
+msgstr ""
+
+#: effects/Normalize.cpp:474
+msgid ".  Maximum 0dB."
 msgstr ""
 
 #: effects/Normalize.h:32
@@ -5609,6 +6019,10 @@ msgid "Repair works by using audio data outside the selection region.\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
 
+#: Project.cpp:1870 effects/Repair.h:29
+msgid "Repair"
+msgstr "Таъмир"
+
 #: effects/Repair.h:37
 msgid "Repairing damaged audio"
 msgstr "Таъмири аудиоҳои вайроншуда"
@@ -5658,6 +6072,86 @@ msgstr "Маъкус"
 #: effects/Reverse.h:38
 msgid "Reversing"
 msgstr "Маъкусшавӣ"
+
+#: effects/ScoreAlignDialog.cpp:61
+msgid "Align MIDI to Audio"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:99
+msgid "Frame Period:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:105
+msgid "Frame Period"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:109
+msgid "Window Size:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:114
+msgid "Window Size"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:121
+msgid "Force Final Alignment"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:126
+msgid "Ignore Silence at Beginnings and Endings"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:130
+msgid "Silence Threshold:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:135
+msgid "Silence Threshold"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:139
+msgid "Presmooth Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:144
+msgid "Presmooth Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:148
+msgid "Line Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:153
+msgid "Line Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:157
+msgid "Smooth Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:162
+msgid "Smooth Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:169
+msgid "Use Defaults"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:170
+msgid "Restore Defaults"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:248 effects/ScoreAlignDialog.cpp:250
+#: effects/ScoreAlignDialog.cpp:254 effects/ScoreAlignDialog.cpp:257
+#: effects/ScoreAlignDialog.cpp:259
+#, c-format
+msgid "%.2f secs"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:251
+#, c-format
+msgid "%.3f"
+msgstr ""
 
 #: effects/Silence.cpp:32
 msgid "Silence Generator"
@@ -5730,14 +6224,6 @@ msgstr ""
 msgid "using SBSMS, by Clayton Otey"
 msgstr ""
 
-#: effects/TimeScale.cpp:187
-msgid "Initial Tempo Change (%):"
-msgstr ""
-
-#: effects/TimeScale.cpp:191
-msgid "Final Tempo Change (%):"
-msgstr ""
-
 #: effects/TimeScale.cpp:202
 msgid "Initial Tempo Change (%)"
 msgstr ""
@@ -5746,12 +6232,24 @@ msgstr ""
 msgid "Final Tempo Change (%)"
 msgstr ""
 
-#: effects/TimeScale.cpp:219
-msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
+#: effects/TimeScale.cpp:268
+msgid "Initial Pitch Shift"
 msgstr ""
 
-#: effects/TimeScale.cpp:223
-msgid "Final Pitch Shift (semitones) [-12 to 12]:"
+#: effects/TimeScale.cpp:273 effects/TimeScale.cpp:290
+msgid "(semitones) [-12 to 12]:"
+msgstr ""
+
+#: effects/TimeScale.cpp:277 effects/TimeScale.cpp:294
+msgid "(%) [-50 to 100]:"
+msgstr ""
+
+#: effects/TimeScale.cpp:285
+msgid "Final Pitch Shift"
+msgstr ""
+
+#: effects/TimeScale.cpp:302
+msgid "Options"
 msgstr ""
 
 #: effects/TimeScale.h:33
@@ -5921,8 +6419,8 @@ msgstr ""
 msgid "Load VST Program:"
 msgstr ""
 
-#: effects/VST/VSTEffect.cpp:476
-msgid "Error loading program"
+#: effects/VST/VSTEffect.cpp:613
+msgid "Error Loading VST Program"
 msgstr ""
 
 #: effects/VST/VSTEffect.cpp:492
@@ -6030,9 +6528,35 @@ msgstr "Корбарии натиҷаи Nyquist..."
 msgid "Nyquist Prompt..."
 msgstr "Дархости Nyquist..."
 
+#: effects/nyquist/Nyquist.cpp:114
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:305
+#, c-format
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+"Control not created."
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:429
+msgid "Nyquist Prompt"
+msgstr ""
+
 #: effects/nyquist/Nyquist.cpp:323
 msgid "Enter Nyquist Command: "
 msgstr "Вуруди фармони Nyquist: "
+
+#: effects/nyquist/Nyquist.cpp:486
+msgid "Error in Nyquist code"
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:486
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+"\treturn s * 0.1\n"
+"for SAL, or begin with an open parenthesis such as\n"
+"\t(mult s 0.1)\n"
+" for LISP."
+msgstr ""
 
 #: effects/nyquist/Nyquist.cpp:412
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
@@ -6107,6 +6631,12 @@ msgstr "&Қисматҳо..."
 msgid "Are you sure you want to save the file as \""
 msgstr "Шумо файлро бо аломати \" сабт кардан мехоҳед"
 
+#: DirManager.cpp:1228 DirManager.cpp:1263 DirManager.cpp:1309
+#: DirManager.cpp:1351 export/Export.cpp:458 export/Export.cpp:475
+#: export/Export.cpp:494 widgets/Warning.cpp:55
+msgid "Warning"
+msgstr "Огоҳӣ"
+
 #: export/Export.cpp:469
 #, c-format
 msgid "You are about to save a %s file with the name \"%s\".\n"
@@ -6119,6 +6649,13 @@ msgstr "Шумо %s-и файлро бо номи \"%s\" сабт кардан �
 "Одатан ин файлҳо дар \".%s\" ба охир мерасанд ва баъзе барномаҳо файлҳоро бо пасвандҳои ғайритартибӣ намекушоянд.\n"
 "\n"
 "Шумо файлро бо ин ном сабт кардан мехоҳед?"
+
+#: export/Export.cpp:654
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
+"The file cannot be written because the path is needed to restore the original audio to the project.\n"
+"Choose File > Check Dependencies to view the locations of all missing files.\n"
+"If you still wish to export, please choose a different filename or folder."
+msgstr ""
 
 #: export/Export.cpp:490
 #, c-format
@@ -6180,6 +6717,10 @@ msgstr "Намоиши бурунӣ"
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr ""
 
+#: export/ExportCL.cpp:161
+msgid "Find path to command"
+msgstr ""
+
 #: export/Export.cpp:264
 msgid "(external program)"
 msgstr "(барномаи берунӣ)"
@@ -6206,27 +6747,15 @@ msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
 msgstr ""
 
-#: export/ExportFFmpeg.cpp:237
-msgid "AMR support is not distributable"
-msgstr ""
-
-#: export/ExportFFmpeg.cpp:232
-msgid "Properly configured FFmpeg is required to proceed.\n"
-"You can configure it at Preferences > Libraries.\n"
-"\n"
-"Note that AMR support is not available with our FFmpeg\n"
-"installer, but requires you compile FFmpeg yourself."
-msgstr ""
-
 #: export/ExportFFmpeg.cpp:394
 #, c-format
 msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
 msgstr ""
 
-#: export/ExportFFmpeg.cpp:614
+#: export/ExportFFmpeg.cpp:686
 #, c-format
-msgid "Attempted to export %d channels, but max. channels for selected output format is %d"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr ""
 
 #: export/ExportFFmpeg.cpp:638
@@ -6267,6 +6796,11 @@ msgstr ""
 msgid "Specify AC3 Options"
 msgstr ""
 
+#: export/ExportFFmpegDialogs.cpp:159 export/ExportMP2.cpp:114
+#, c-format
+msgid "%i kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:117
 msgid "AC3 Export Setup"
 msgstr ""
@@ -6291,16 +6825,13 @@ msgstr "Сифат:"
 msgid "Specify AMR-NB Options"
 msgstr ""
 
+#: export/ExportFFmpegDialogs.cpp:282
+#, c-format
+msgid "%.2f kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:241
 msgid "AMR-NB Export Setup"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.cpp:286
-msgid "Specify AMR-WB Options"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.cpp:310
-msgid "AMR-WB Export Setup"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:357
@@ -6355,10 +6886,6 @@ msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:1190
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.cpp:1192
-msgid "AMR (wide band) Files (FFmpeg)"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.h:57
@@ -6878,9 +7405,27 @@ msgstr "Хатои ҷойшуда"
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "Файли %s ба Audacity барои сохтани MP3-ҳо лозим аст."
 
+#: export/ExportMP3.cpp:958
+#, c-format
+msgid "Location of %s:"
+msgstr "Мавқеъи %s:"
+
+#: export/ExportMP3.cpp:967
+#, c-format
+msgid "To find %s, click here -->"
+msgstr "Барои ёфтани %s --> пахш кунед"
+
 #: export/ExportMP3.cpp:974
 msgid "To get a free copy of Lame, click here -->"
 msgstr "Барои нусхабардории хато -->-ро пахш кунед "
+
+#. i18n-hint: It's asking for the location of a file, for
+#. example, "Where is lame_enc.dll?" - you could translate
+#. "Where would I find the file %s" instead if you want.
+#: export/ExportMP3.cpp:1011
+#, c-format
+msgid "Where is %s?"
+msgstr "%s дар куҷо ҷойгир аст?"
 
 #: export/ExportMP3.cpp:1070
 #, c-format
@@ -6973,18 +7518,18 @@ msgstr ""
 msgid "Export Multiple"
 msgstr "Вуруди бисёркарата"
 
-#: export/ExportMultiple.cpp:153
-msgid "If you have more than one Audio Track, you can export each track as a separate file,\n"
-"or if you have a Label Track, you can export a new file for each label.\n"
+#: export/ExportMultiple.cpp:175
+msgid "If you have more than one Audio Track, you can\n"
+"export each track as a separate audio file.\n"
 "\n"
-"This project does not have multiple tracks or a Label Track, so you cannot export multiple files."
-msgstr "Агар дар лоиҳаи Шумо якчанд роҳчаи садогӣ бошад, пас Шумо\n"
-" метавонад ҳар яки онро ба файли ҷудогона вуруд созед,\n"
-"ё агар Шумо роҳчаи нишонадор дошта бошед, дар ин ҳолат метавонед\n"
-"файли навро барои ҳар як нишона вуруд созед.\n"
+"If you have a Label Track, you can export a separate\n"
+"audio file for each label in that track. You can have\n"
+"more than one Label Track, but files will only be\n"
+"exported for the uppermost Label Track.\n"
 "\n"
-"Ин лоиҳа роҳчаҳои чандкарата ва роҳчаҳои нишонадор надорад,\n"
-"бинобарин Шумо файлҳои чандкаратаро вуруд карда наметавонед."
+"This Project does not meet the above criteria for\n"
+"exporting multiple files."
+msgstr ""
 
 #: export/ExportMultiple.cpp:154
 msgid "Can't export multiple files"
@@ -7038,8 +7583,8 @@ msgstr "Истифодаи нишона/Номи роҳча"
 msgid "Numbering before Label/Track Name"
 msgstr ""
 
-#: export/ExportMultiple.cpp:318
-msgid "Numbering after Label/Track Name"
+#: export/ExportMultiple.cpp:322
+msgid "Numbering after File name prefix"
 msgstr ""
 
 #: export/ExportMultiple.cpp:276
@@ -7105,11 +7650,15 @@ msgstr ""
 msgid "Edit metadata"
 msgstr ""
 
-#: export/ExportMultiple.cpp:881
+#: export/ExportMultiple.cpp:927
 #, c-format
-msgid "Label %s is not a legal file name. You cannot use any of:   %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
 msgstr ""
+
+#: effects/Equalization.cpp:1110 effects/Equalization.cpp:2322
+msgid "Save As..."
+msgstr "Сабт ҳамчун..."
 
 #: export/ExportOGG.cpp:64
 msgid "Specify Ogg Vorbis Options"
@@ -7215,10 +7764,6 @@ msgstr ""
 
 #: export/ExportPCM.cpp:743
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
-msgstr ""
-
-#: import/Import.cpp:156 import/ImportMP3.cpp:47
-msgid "MP3 files"
 msgstr ""
 
 #: import/Import.cpp:175
@@ -7402,6 +7947,10 @@ msgstr ""
 msgid ": Incorrect filetype."
 msgstr ""
 
+#: import/Import.cpp:156 import/ImportMP3.cpp:47
+msgid "MP3 files"
+msgstr ""
+
 #: import/ImportOGG.cpp:44
 msgid "Ogg Vorbis files"
 msgstr ""
@@ -7429,6 +7978,42 @@ msgstr "Хатои мантиқии дохилӣ"
 #: export/Export.cpp:242
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF ва дигар намунаҳои фишурданашуда"
+
+#: import/ImportPCM.cpp:225
+#, c-format
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+"\n"
+"Your current preference is set to %s.\n"
+"\n"
+"Reading the files directly allows you to play or edit them almost immediately.  This is less safe than copying in, because you must retain the files with their original names in their original location.\n"
+"File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
+"\n"
+"How do you want to import the current file(s)?"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "copy in"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "read directly"
+msgstr ""
+
+#: import/ImportPCM.cpp:240
+msgid "Choose an import method"
+msgstr ""
+
+#: import/ImportPCM.cpp:243
+msgid "Make a &copy of the files before editing (safer)"
+msgstr ""
+
+#: import/ImportPCM.cpp:246
+msgid "Read the files &directly from the original (faster)"
+msgstr ""
+
+#: import/ImportPCM.cpp:249
+msgid "Don't &warn again and always use my choice above"
+msgstr ""
 
 #: import/ImportPlugin.h:142 import/ImportRaw.cpp:203
 #, c-format
@@ -7674,6 +8259,10 @@ msgstr "Рӯйхати %s навишта намешавад"
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Тағиротҳо ба рӯйхати муваққатӣ то аз навборкунии Audacity натиҷагирӣ намешаванд"
 
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr ""
+
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
 msgstr ""
@@ -7728,6 +8317,74 @@ msgstr ""
 
 #: prefs/EffectsPrefs.cpp:114
 msgid "&Rescan VST effects next time Audacity is started"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:59
+msgid "Extended Import"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:92
+msgid "Attempt to use filter in OpenFile dialog first"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:95
+msgid "Rules to choose import filters"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:114
+msgid "File extensions"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:116
+msgid "Mime-types"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:134
+msgid "Importer order"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:150
+msgid "Move rule &up"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:152
+msgid "Move rule &down"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:154
+msgid "Move f&ilter up"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:156
+msgid "Move &filter down"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:161
+msgid "&Add new rule"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:162
+msgid "De&lete selected rule"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:419 prefs/ExtImportPrefs.cpp:436
+msgid "Unused filters:"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:484
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:488
+msgid "Spaces detected"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:573
+msgid "Do you really want to delete selected rule?"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:574
+msgid "Rule deletion confirmation"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:49
@@ -7790,12 +8447,12 @@ msgstr "-145 dB (соҳаи PCM намунаҳои 24 бита)"
 msgid "Display"
 msgstr "Намуд"
 
-#: prefs/GUIPrefs.cpp:96
-msgid "&Ergonomic order of audio I/O buttons"
+#: prefs/GUIPrefs.cpp:87
+msgid "&Ergonomic order of Transport Toolbar buttons"
 msgstr ""
 
-#: prefs/GUIPrefs.cpp:99
-msgid "S&how 'How to get Help' message at program start up"
+#: prefs/GUIPrefs.cpp:90
+msgid "S&how 'How to Get Help' dialog box at program start up"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:107
@@ -7810,12 +8467,12 @@ msgstr ""
 msgid "Location of &Manual:"
 msgstr ""
 
-#: prefs/GUIPrefs.cpp:134
-msgid "Closing last window &quits Audacity"
-msgstr ""
-
 #: prefs/GUIPrefs.cpp:110
 msgid "&Beep on completion of longer activities"
+msgstr ""
+
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:126
@@ -7871,6 +8528,18 @@ msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
 msgstr ""
 
+#: prefs/ImportExportPrefs.cpp:88
+msgid "When exporting track to an Allegro (.gro) file"
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:92
+msgid "Represent times and durations in &seconds"
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:94
+msgid "Represent times and durations in &beats"
+msgstr ""
+
 #: prefs/KeyConfigPrefs.cpp:64 prefs/KeyConfigPrefs.cpp:65
 msgid "Keyboard"
 msgstr "Саҳвакалид"
@@ -7924,17 +8593,17 @@ msgstr ""
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Интихоби файли XML, ки дорои тугмаҳои фаъоли саҳфакалиди Audacity..."
 
-#: prefs/KeyConfigPrefs.cpp:213
-msgid "Error loading keyboard shortcuts"
-msgstr "Хато ҳангоми сабти таркиббандии саҳфакалид"
+#: prefs/KeyConfigPrefs.cpp:287
+msgid "Error Loading Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:163
 msgid "Export Keyboard Shortcuts As:"
 msgstr "Вуруди таркиббандии саҳфакалид ҳамчун:"
 
-#: prefs/KeyConfigPrefs.cpp:181
-msgid "Error saving keyboard shortcuts"
-msgstr "Хатои ҳангоми сабти таркиббандии саҳфакалид"
+#: prefs/KeyConfigPrefs.cpp:326
+msgid "Error Saving Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:241
 #, c-format
@@ -8010,68 +8679,20 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: prefs/AudioIOPrefs.cpp:145
-msgid "Playthrough"
-msgstr "Иҷрогари убурӣ"
+#: prefs/MidiIOPrefs.cpp:129
+msgid "Using: PortMidi"
+msgstr ""
 
-#: prefs/AudioIOPrefs.cpp:147
-msgid "&Play other tracks while recording new one"
-msgstr "&Хониши роҳчаҳои дигар ҳангоми сабти роҳчаи нав"
-
-#: prefs/AudioIOPrefs.cpp:150
-msgid "&Hardware Playthrough (Play new track while recording it)"
-msgstr "&Иҷрогари убурии сахтафзор (хониши роҳчаи нав ҳангоми сабти он)"
-
-#: prefs/AudioIOPrefs.cpp:153
-msgid "&Software Playthrough (Play new track while recording it)"
-msgstr "&Иҷрогари убурии нармафзор (хониши роҳчаи нав ҳангоми сабтшавии он)"
-
-#: prefs/AudioIOPrefs.cpp:158
-msgid "Cut Preview"
-msgstr "Буриши пешнамоиш"
-
-#: prefs/AudioIOPrefs.cpp:161
-msgid "Play before cut region:"
-msgstr "Хониш пеш аз буриши маҳал:"
-
-#: prefs/AudioIOPrefs.cpp:163
-msgid "Play after cut region:"
-msgstr "Хониш баъд аз буриши маҳал:"
-
-#: prefs/AudioIOPrefs.cpp:168
-msgid "Latency"
-msgstr "Таваққуф"
-
-#: prefs/AudioIOPrefs.cpp:174
-msgid "Audio to buffer:"
-msgstr "Аудио ба миёнгир:"
-
-#: prefs/AudioIOPrefs.cpp:177
-msgid "Latency correction:"
-msgstr "Тавақкуфи ислоҳкунӣ:"
-
-#: prefs/AudioIOPrefs.cpp:184
-msgid "Seek Time"
-msgstr "Ҷустуҷӯи вақт"
-
-#: prefs/AudioIOPrefs.cpp:187
-msgid "Short period:"
-msgstr "Марҳилаи кӯтоҳ:"
-
-#: prefs/AudioIOPrefs.cpp:189
-msgid "Long period:"
-msgstr "Марҳилаи дароз:"
-
-#: prefs/AudioIOPrefs.cpp:194
-msgid "Effects Preview"
-msgstr "Пешнамоиши натиҷаҳо"
-
-#: prefs/AudioIOPrefs.cpp:197
-msgid "Play when previewing:"
-msgstr "Хониш ҳангоми пешнамоиш:"
+#: prefs/MidiIOPrefs.cpp:145
+msgid "MIDI Synthesizer Latency (ms):"
+msgstr ""
 
 #: prefs/MidiIOPrefs.cpp:256
 msgid "No MIDI interfaces"
+msgstr ""
+
+#: prefs/MidiIOPrefs.cpp:280
+msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
 #: prefs/MousePrefs.cpp:55 prefs/MousePrefs.cpp:56
@@ -8279,9 +8900,17 @@ msgstr "Ctrl-гардиш ба воситаи чарх"
 msgid "Zoom in or out"
 msgstr "Калонкунии намуд"
 
+#: prefs/AudioIOPrefs.cpp:194
+msgid "Effects Preview"
+msgstr "Пешнамоиши натиҷаҳо"
+
 #: prefs/PlaybackPrefs.cpp:61
 msgid "&Length of preview:"
 msgstr ""
+
+#: prefs/AudioIOPrefs.cpp:158
+msgid "Cut Preview"
+msgstr "Буриши пешнамоиш"
 
 #: prefs/PlaybackPrefs.cpp:76
 msgid "Preview &before cut region:"
@@ -8301,6 +8930,10 @@ msgstr ""
 
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
+msgstr ""
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
 msgstr ""
 
 #: prefs/PrefsDialog.cpp:97
@@ -8326,23 +8959,6 @@ msgstr ""
 #: prefs/ProjectsPrefs.cpp:67
 msgid "As&k user"
 msgstr ""
-
-#: prefs/DirectoriesPrefs.cpp:99
-msgid "Auto save"
-msgstr "Худсабткунӣ"
-
-#: prefs/ProjectsPrefs.cpp:76
-#, fuzzy
-msgid "Auto &save a copy of the project in a separate folder"
-msgstr "Худсабткунии нусхаи лоиҳа дар пӯшаи алоҳида"
-
-#: prefs/ProjectsPrefs.cpp:82
-msgid "Auto save in&terval:"
-msgstr ""
-
-#: prefs/DirectoriesPrefs.cpp:105
-msgid "minutes"
-msgstr "дақиқа"
 
 #: prefs/QualityPrefs.cpp:73
 msgid "Rectangle"
@@ -8396,6 +9012,10 @@ msgstr "Табдилдиҳии басомади намуна"
 msgid "Dit&her:"
 msgstr ""
 
+#: prefs/AudioIOPrefs.cpp:145
+msgid "Playthrough"
+msgstr "Иҷрогари убурӣ"
+
 #: prefs/AudioIOPrefs.cpp:149
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr ""
@@ -8411,6 +9031,10 @@ msgstr ""
 #: prefs/AudioIOPrefs.cpp:160
 msgid "(uncheck when recording \"stereo mix\")"
 msgstr ""
+
+#: prefs/AudioIOPrefs.cpp:168
+msgid "Latency"
+msgstr "Таваққуф"
 
 #: prefs/RecordingPrefs.cpp:88
 msgid "Audio to &buffer:"
@@ -8528,10 +9152,6 @@ msgstr ""
 msgid "32768 - most narrowband"
 msgstr ""
 
-#: prefs/SpectrumPrefs.cpp:84
-msgid "4096 - most narrowband"
-msgstr "4096 - бештар камхат"
-
 #: prefs/SpectrumPrefs.cpp:82
 msgid "FFT Window"
 msgstr ""
@@ -8607,9 +9227,9 @@ msgstr ""
 msgid "The maximum frequency must be an integer"
 msgstr "Имконияти бештари басомад бояд бузургии тағирёбанда бошад"
 
-#: prefs/SpectrumPrefs.cpp:138
-msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-msgstr "Имконияти бештари басомад бояд дар 100 Hz - 100,000 Hz бошад"
+#: prefs/SpectrumPrefs.cpp:212
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:146
 msgid "The minimum frequency must be an integer"
@@ -8676,8 +9296,8 @@ msgid "Themability is an experimental feature.\n"
 "\n"
 "Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"[Only the control toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.]"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
+"though the image file shows other icons too.)"
 msgstr "Масъалагузорӣ хусусияти санҷишӣ дорад.\n"
 "\n"
 "Барои фаъолсозии он \"Сабти мавзӯъи Кэш\"-ро пахш кунед,\n"
@@ -8804,6 +9424,10 @@ msgstr ""
 msgid "Mixing down to &mono during export"
 msgstr ""
 
+#: prefs/WarningsPrefs.cpp:72
+msgid "&Importing uncompressed audio files"
+msgstr ""
+
 #: Menus.cpp:816
 msgid "Pause"
 msgstr "Таваққуф"
@@ -8836,6 +9460,10 @@ msgstr ""
 msgid "Recording not permitted"
 msgstr "Сабт иҷозат нашудааст"
 
+#: toolbars/DeviceToolBar.cpp:102 toolbars/DeviceToolBar.cpp:351
+msgid "Audio Host"
+msgstr ""
+
 #: toolbars/DeviceToolBar.cpp:113 toolbars/DeviceToolBar.cpp:115
 msgid "Output Device"
 msgstr "Афзори бурунӣ"
@@ -8843,6 +9471,38 @@ msgstr "Афзори бурунӣ"
 #: toolbars/DeviceToolBar.cpp:134 toolbars/DeviceToolBar.cpp:136
 msgid "Input Device"
 msgstr "Афзори вурудӣ"
+
+#: toolbars/DeviceToolBar.cpp:137 toolbars/DeviceToolBar.cpp:352
+msgid "Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:613
+msgid "1 (Mono) Input Channel"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:616
+msgid "2 (Stereo) Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:740
+msgid "Select Input Device"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:744
+msgid "Select Output Device"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:748
+msgid "Select Audio Host"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:752
+msgid "Select Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:758
+msgid "Device information is not available."
+msgstr ""
 
 #: toolbars/EditToolBar.cpp:139
 msgid "Trim outside selection"
@@ -8852,8 +9512,8 @@ msgstr "Буриши ҳамаи ғайриҷудошудаҳо"
 msgid "Silence selection"
 msgstr "Интихоб аз рӯи хомӯшӣ"
 
-#: toolbars/EditToolBar.cpp:150
-msgid "Link Tracks"
+#: toolbars/EditToolBar.cpp:152 toolbars/EditToolBar.cpp:203
+msgid "Sync-Lock Tracks"
 msgstr ""
 
 #: toolbars/EditToolBar.cpp:150
@@ -8922,36 +9582,20 @@ msgstr "Дараҷаи ворид"
 msgid "Slider Input"
 msgstr "Воридкунии намоиш"
 
-#: toolbars/MixerToolBar.cpp:117
-msgid "Input Source"
-msgstr "Манбаъи ворид"
-
-#: toolbars/MixerToolBar.cpp:299
-msgid "Input source information is not available."
+#: toolbars/MixerToolBar.cpp:286
+msgid "Input Volume Slider"
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:306
-msgid "Select Input Source"
+#: toolbars/MixerToolBar.cpp:290
+msgid "Cannot control input volume; use system mixer."
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:338
-msgid "Input Source:"
+#: toolbars/MixerToolBar.cpp:294
+msgid "Output Volume Slider"
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:388
-msgid "Input Level Slider"
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:392
-msgid "Cannot control input level; use system mixer."
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:396
-msgid "Output Level Slider"
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:400
-msgid "Cannot control output level; use system mixer."
+#: toolbars/MixerToolBar.cpp:298
+msgid "Cannot control output volume; use system mixer."
 msgstr ""
 
 #: toolbars/SelectionBar.cpp:76
@@ -9088,10 +9732,6 @@ msgstr "Андозагароии калиди савтӣ"
 msgid "Adjust Sensitivity"
 msgstr "Қобилияти ҳиси (эҳсос) ҳақиқӣ"
 
-#: toolbars/TranscriptionToolBar.cpp:214
-msgid "Sensitivity"
-msgstr "Қобилияти ҳис (эҳсос)"
-
 #: toolbars/TranscriptionToolBar.cpp:219
 msgid "Energy"
 msgstr "Нерӯ"
@@ -9192,8 +9832,8 @@ msgstr "Чап"
 msgid "Right"
 msgstr "Рост"
 
-#: widgets/ErrorDialog.cpp:98
-msgid "Help"
+#: widgets/ASlider.cpp:932
+msgid "+"
 msgstr ""
 
 #: widgets/ErrorDialog.cpp:137
@@ -9290,6 +9930,10 @@ msgstr " Лутфан, амалиётро интихоб намоед "
 msgid "Please select an action"
 msgstr ""
 
+#: widgets/MultiDialog.cpp:104
+msgid "Show Log for Details"
+msgstr ""
+
 #: widgets/ProgressDialog.cpp:97
 msgid "Elapsed Time:"
 msgstr ""
@@ -9322,12 +9966,6 @@ msgstr "рр:сс:дд:сс"
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 рӯз 024 с 060 д 060 с"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundreths of a second (1/100 second)
-#: widgets/TimeTextCtrl.cpp:288
-msgid "hh:mm:ss + hundredths"
-msgstr ""
-
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -9344,10 +9982,6 @@ msgstr "сс:дд:сс + миллисония"
 #: widgets/TimeTextCtrl.cpp:204
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 с 060 д 060.01000 с"
-
-#: widgets/TimeTextCtrl.cpp:205
-msgid "hh:mm:ss + samples"
-msgstr "сс:дд:сс + мисолҳо"
 
 #: widgets/TimeTextCtrl.cpp:206
 msgid "0100 h 060 m 060 s+.# samples"
@@ -9460,15 +10094,15 @@ msgstr ""
 msgid "Could not load file: \"%s\""
 msgstr ""
 
-#: xml/XMLWriter.cpp:325
-msgid "Error flushing file"
+#: xml/XMLWriter.cpp:348
+msgid "Error Flushing File"
 msgstr ""
 
-#: xml/XMLWriter.cpp:330
-msgid "Error closing file"
+#: xml/XMLWriter.cpp:353
+msgid "Error Closing File"
 msgstr ""
 
-#: xml/XMLWriter.cpp:340
-msgid "Error writing to file"
+#: xml/XMLWriter.cpp:363
+msgid "Error Writing to File"
 msgstr ""
 

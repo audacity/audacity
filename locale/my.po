@@ -28,12 +28,12 @@ msgstr "ဟုတ်တယ်... ရဲမာန်တင်းလျှက်�
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
 msgstr ""
 
-#: AboutDialog.cpp:196
-msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:201
+msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr ""
 
-#: AboutDialog.cpp:199
-msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> or visit our <a href=\"http://audacityteam.org/forum/\">Forum</a>."
+#: AboutDialog.cpp:204
+msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
@@ -92,10 +92,6 @@ msgstr ""
 #: AboutDialog.cpp:270
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr ""
-
-#: AboutDialog.cpp:258
-msgid "Audacity"
-msgstr "အိုဒေးစီးတီး"
 
 #. i18n-hint: Information about when audacity was compiled
 #: AboutDialog.cpp:304
@@ -219,25 +215,26 @@ msgstr "တပ်ဆင်ချက်များ ဖိုင်တွဲ -"
 msgid "GPL License"
 msgstr "GPL ခွင့်ပြုချက်"
 
-#: AudacityApp.cpp:507
-#: Project.cpp:2002
-#, c-format
-msgid "%s is already open in another window."
-msgstr "%s ကို အခြား ၀င်းဒိုးမှာ ဖွင့်ထားပြီး။"
-
-#: AudacityApp.cpp:509
-#: Project.cpp:2004
-#: Project.cpp:2124
-#: Project.cpp:2272
-#: Project.cpp:2404
-msgid "Error opening project"
-msgstr "စီမံချက် ဖွင့်ထားမှု အမှားအယွင်း"
-
 #: AudacityApp.cpp:772
 #, c-format
 msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
+msgstr ""
+
+#: AudacityApp.cpp:846
+#, c-format
+msgid "One or more external audio files could not be found.\n"
+"It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
+"Silence is being substituted for the affected audio.\n"
+"The first detected missing file is:\n"
+"%s\n"
+"There may be additional missing files.\n"
+"Choose File > Check Dependencies to view a list of locations of the missing files."
+msgstr ""
+
+#: AudacityApp.cpp:860
+msgid "Files Missing"
 msgstr ""
 
 #: AudacityApp.cpp:642
@@ -316,9 +313,9 @@ msgstr "အိုဒေးစီးတီးက ယာယီဖိုင်မ�
 msgid "Do you still want to start Audacity?"
 msgstr "အိုဒေးစီးတီးကို သင် စတင် လိုသေးသလား။"
 
-#: AudacityApp.cpp:1193
-msgid "Error locking temporary folder"
-msgstr "ယာယီဖိုင်တွဲ သော့ခတ်ထားခြင်း အမှားအယွင်း"
+#: AudacityApp.cpp:1581
+msgid "Error Locking Temporary Folder"
+msgstr ""
 
 #: AudacityApp.cpp:1231
 msgid "The system has detected that another copy of Audacity is running.\n"
@@ -413,6 +410,10 @@ msgstr ""
 msgid "Error Initializing Midi"
 msgstr ""
 
+#: AudioIO.cpp:1266 AudioIO.cpp:1300
+msgid "Out of memory!"
+msgstr ""
+
 #: AudioIO.cpp:1225
 msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -500,9 +501,9 @@ msgstr "စီမံချက်များ တခုခုကို မဆယ�
 msgid "Confirm?"
 msgstr "အတည်ပြုသလား။"
 
-#: AutoRecovery.cpp:146
-#: AutoRecovery.cpp:183
-msgid "Could not enumerate files in auto save directory"
+#: AutoRecovery.cpp:148 AutoRecovery.cpp:185
+#, fuzzy
+msgid "Could not enumerate files in auto save directory."
 msgstr "ဖိုင်များကို အလိုအလျှောက် သိမ်းဆည်းရေး ဖိုင်တွဲထဲမှာ မရေတွက်နိုင်ဘူး"
 
 #: AutoRecovery.cpp:147
@@ -773,83 +774,103 @@ msgstr "မှီခို အားပြုချက်များကို �
 msgid "Copying audio data into project..."
 msgstr "အသံ အချက်အလက်ကြမ်းကို စီမံချက်ထဲမှာ မိတ္တူကူးနေခြင်း..."
 
-#: Dependencies.cpp:226
-msgid "Copying the following files into your project will remove this dependency.\n"
-"This needs more disk space, but is safer."
+#: Dependencies.cpp:302
+msgid "Project Depends on Other Audio Files"
 msgstr ""
 
-#: Dependencies.cpp:273
-msgid "Project depends on other audio files"
-msgstr "စီမံချက်က အခြား အသံဖိုင်များပေါ် မှီခိုနေတယ်"
+#: Dependencies.cpp:324
+msgid "Copying these files into your project will remove this dependency.\n"
+"This is safer, but needs more disk space."
+msgstr ""
+
+#: Dependencies.cpp:328
+msgid "\n"
+"\n"
+"Files shown as MISSING have been moved or deleted and cannot be copied.\n"
+"Restore them to their original location to be able to copy into project."
+msgstr ""
 
 #: Dependencies.cpp:294
 msgid "Project Dependencies"
 msgstr "စီမံချက် မှီခို အားပြုချက်များ"
 
-#: Dependencies.cpp:297
-msgid "Audio file"
+#: Dependencies.cpp:341
+#, fuzzy
+msgid "Audio File"
 msgstr "အသံ ဖိုင်"
 
-#: Dependencies.cpp:299
-msgid "Disk space"
+#: Dependencies.cpp:343
+#, fuzzy
+msgid "Disk Space"
 msgstr "ဓါတ်ပြား နေရာ"
 
-#: Dependencies.cpp:304
-msgid "Copy Selected Audio Into Project"
-msgstr "ရွေးထားတဲ့ အသံကို စီမံချက်ထဲ မိတ္တူကူးပါ"
+#: Dependencies.cpp:349
+msgid "Copy Selected Files"
+msgstr ""
 
 #: Dependencies.cpp:311
 #: Dependencies.cpp:417
 msgid "Cancel Save"
 msgstr "သိမ်းဆည်းမှုကို ရပ်ဆိုင်းပါ"
 
-#: Dependencies.cpp:313
-msgid "Do Not Copy Any Audio"
-msgstr "ဘယ် အသံကိုမျှ မိတ္တူ မကူးပါနဲ့"
+#: Dependencies.cpp:362
+msgid "Save without Copying"
+msgstr ""
 
-#: Dependencies.cpp:315
-msgid "Copy All Audio into Project (Safer)"
-msgstr "အသံ အားလုံးကို စီမံချက် (အန္တရယ် ပိုကင်းတယ်) ထဲ မိတ္တူကူးပါ"
+#: Dependencies.cpp:365
+msgid "Do Not Copy"
+msgstr ""
+
+#: Dependencies.cpp:368
+msgid "Copy All Files (Safer)"
+msgstr ""
 
 #: Dependencies.cpp:324
 #: Dependencies.cpp:329
 msgid "Ask me"
 msgstr "ကျွန်ပ်ကို မေးပါ"
 
-#: Dependencies.cpp:325
-msgid "Always copy all audio (safest)"
-msgstr "အသံ အားလုံးကို အမြဲ မိတ္တူကူးပါ (အန္တရယ် အကင်းဆုံး)"
+#: Dependencies.cpp:382
+msgid "Always copy all files (safest)"
+msgstr ""
 
-#: Dependencies.cpp:326
-msgid "Never copy any audio"
-msgstr "အသံ တခုခုကို ဘယ်တော့မှ မိတ္တူမကူးနဲ့"
+#: Dependencies.cpp:383
+msgid "Never copy any files"
+msgstr ""
 
 #: Dependencies.cpp:328
 msgid "Whenever a project depends on other files:"
 msgstr "ဘယ်အချိန်မဆို စီမံချက် တခုက အခြား ဖိုင်များကို မှီခိုတယ် -"
 
+#: Dependencies.cpp:422
+msgid "MISSING "
+msgstr ""
+
 #: Dependencies.cpp:416
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "သင် ဆက်လက် ဆောင်​ရွတ်ရင်၊ သင့်ရဲ့ စီမံချက်ကို ဓါတ်ပြားထဲ သိမ်းဆည်းထားမှာ မဟုတ်ဘူး။ ဒါဟာ သင်လိုချင်တဲ့ အရာလား။"
 
-#: Dependencies.cpp:456
-msgid "Your project is self-contained; it does not depend on any external audio files."
-msgstr "သင့်ရဲ့ စီမံချက်ဟာ ကိုယ်တိုင်-ရပ်တည်နိုင်တယ် -၄င်းက အခြား ပြင်ပ အသံဖိုင်များ အပေါ် မမှီခိုဘူး။"
-
-#: Dependencies.cpp:457
-msgid "Dependency check"
-msgstr "မှီခိုအားပြုချက် စစ်ဆေးမှု"
-
-#: DirManager.cpp:143
-msgid "There is very little free disk space left on this volume.\n"
-"Please select another temporary directory in Preferences."
+#: Dependencies.cpp:549
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
+"\n"
+"If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
 msgstr ""
+
+#: Dependencies.cpp:554
+#, fuzzy
+msgid "Dependency Check"
+msgstr "မှီခိုအားပြုချက် စစ်ဆေးမှု"
 
 #: DirManager.cpp:221
 #: DirManager.cpp:252
 #: DirManager.cpp:335
 msgid "Progress"
 msgstr "တိုးတက်မှု"
+
+#: DirManager.cpp:143
+msgid "There is very little free disk space left on this volume.\n"
+"Please select another temporary directory in Preferences."
+msgstr ""
 
 #: DirManager.cpp:286
 msgid "Cleaning up temporary files"
@@ -863,12 +884,15 @@ msgstr "စီမံချက် အချက်အလက်ကြမ်း ဖ�
 msgid "Cleaning up cache directories"
 msgstr "ယာယီသိမ်းဆည်းခန်း ဖိုင်တွဲများကို ရှင်းလင်းနေတယ်"
 
-#: DirManager.cpp:503
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
+msgstr ""
+
+#: DirManager.cpp:614
 #, c-format
-msgid "Audacity found an orphaned blockfile %s! \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
-msgstr "အိုဒေးစီးတီးက အထီးကျန်တဲ့ အုပ်စုဖိုင် %s တခုကို တွေ့ရှိတယ်။\n"
-"ပြည့်စုံတဲ့ စီမံချက် စစ်ဆေးမှု တခုကို ပြုဖို့ စီမံချက်ကို သိမ်းဆည်းခြင်းနဲ့ ပြန်ဖွင့်ခြင်းကို စဉ်းစားပါ။\n"
+msgid "Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
+msgstr ""
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
@@ -878,13 +902,15 @@ msgstr "အိုဒေးစီးတီးက အထီးကျန်တဲ�
 msgid "%s-old%d"
 msgstr "%s-အဟောင်း%d"
 
-#: DirManager.cpp:1100
-msgid "Unable to open/create test file"
+#: DirManager.cpp:1213
+#, fuzzy
+msgid "Unable to open/create test file."
 msgstr "စမ်းသပ်ဖိုင်ကို မဖွင့်နိုင်/မဖန်တီးနိုင်ဘူး"
 
-#: DirManager.cpp:1109
+#: DirManager.cpp:1222
 #, c-format
-msgid "Unable to remove '%s'"
+#, fuzzy
+msgid "Unable to remove '%s'."
 msgstr "'%s' ကို မဖယ်ရှားနိုင်ဘူး"
 
 #: DirManager.cpp:1114
@@ -892,9 +918,10 @@ msgstr "'%s' ကို မဖယ်ရှားနိုင်ဘူး"
 msgid "Renamed file: %s\n"
 msgstr "အမည်ပြောင်းထားတဲ့ ဖိုင် - %s\n"
 
-#: DirManager.cpp:1164
+#: DirManager.cpp:1290
 #, c-format
-msgid "Unable to rename '%s' to '%s'"
+#, fuzzy
+msgid "Unable to rename '%s' to '%s'."
 msgstr "'%s' ကို '%s' အဖြစ် အမည် မပြောင်းနိုင်ဘူး"
 
 #: DirManager.cpp:1181
@@ -902,91 +929,77 @@ msgstr "'%s' ကို '%s' အဖြစ် အမည် မပြောင်�
 msgid "Changed block %s to new alias name\n"
 msgstr "%s ကို အမည်ပွား အသစ်အဖြစ် ပြောင်းလဲထားတဲ့ အုပ်စု\n"
 
-#: DirManager.cpp:1247
-#: DirManager.cpp:1538
-msgid "Inspecting project file data..."
-msgstr "စီမံချက် ဖိုင် အချက်အလက်ကြမ်းကို စစ်ဆေးနေတယ်..."
-
-#: DirManager.cpp:1263
-#, c-format
-msgid "Orphaned blockfile: (%s)"
-msgstr "အထီးကျန်တဲ့ အုပ်စုဖိုင် - (%s)"
-
-#: DirManager.cpp:1288
-#, c-format
-msgid "Missing alias file: (%s)"
-msgstr "ပျောက်ဆုံးနေတဲ့ ဖိုင်အမည်ပွား - (%s)"
-
-#: DirManager.cpp:1308
-#, c-format
-msgid "Missing summary file: (%s.auf)"
-msgstr "ပျောက်ဆုံးနေတဲ့ အနှစ်ချုပ် ဖိုင် - (%s.auf)"
-
-#: DirManager.cpp:1328
-#, c-format
-msgid "Missing data file: (%s.au)"
-msgstr "ပျောက်ဆုံးနေတဲ့ အချက်အလက်ကြမ်း ဖိုင် - (%s.au)"
-
-#: DirManager.cpp:1342
-msgid "Project check found inconsistencies inspecting the loaded project data;\n"
-"click 'Details' for a complete list of errors, or 'OK' to proceed to more options."
-msgstr "စီမံချက် စစ်ဆေးချက်က ထည့်သွင်းထားတဲ့ စီမံချက် အချက်အလက်ကြမ်း စစ်ဆေးရာမှာ ကွဲလွဲမှုများ တွေ့ရှိတယ်၊\n"
-"အမှားအယွင်း ​အပြည့်အစုံ စာရင်း တခုအတွက် 'အသေးစိတ်များ' (သို့) ပိုမို ရွေးစရာများ ဆက်လုပ်ဖို့ 'ကောင်းပြီး' ကို နှိုပ်ပါ"
-
-#: DirManager.cpp:1354
-#, c-format
-msgid "Project check found %d orphaned blockfile[s]. These files are\n"
-"unused and probably left over from a crash or some other bug.\n"
-"They should be deleted to avoid disk contention."
-msgstr "စီမံချက် စစ်ဆေးမှုက အထီးကျန်တဲ့ အုပ်စုဖိုင်(များ) %d ကို တွေ့ရှိတယ်။ အဲဒီ ဖိုင်များကတော့\n"
-"သုံးစွဲမထားပဲ ပျက်စီးမှု တခု (သို့) တချို့ အခြား ပရိုဂရမ် အမှားမှ ချန်ထားတဲ့ အရာ ဖြစ်နိုင်တယ်။\n"
-"ဓါတ်ပြား အခြေအတင်ဖြစ်မှုကို ရှောင်ရှားဖို့ ၄င်းတို့ကို ပယ်ဖျက်သင့်တယ်။"
-
-#: DirManager.cpp:1359
-msgid "Delete orphaned files [safe and recommended]"
-msgstr "အထီးကျန်တဲ့ ဖိုင်များကို ပယ်ဖျက်ပါ [အန္တရယ်ကင်းပြီး ထောက်ခံမှုပြုထားတယ်]"
-
-#: DirManager.cpp:1360
-msgid "Continue without deleting; silently work around the extra files"
-msgstr "မပယ်ဖျက်ပဲ ဆက်လုပ်ပါ၊ အပို ဖိုင်များအပေါ် တိတ်တဆိတ် လုပ်ဆောင်ပါ"
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr ""
 
 #: DirManager.cpp:1361
 msgid "Close project immediately with no changes"
 msgstr "စီမံချက်ကို ပြင်ဆင်ချက်များ မပြုပဲ ချက်ခြင်း ပိတ်ပါ"
 
-#: DirManager.cpp:1363
-#: DirManager.cpp:1398
-#: DirManager.cpp:1444
-#: DirManager.cpp:1486
-#: export/Export.cpp:581
-#: export/Export.cpp:602
-#: export/Export.cpp:621
-#: widgets/Warning.cpp:53
-msgid "Warning"
-msgstr "သတိပေးချက်"
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr ""
 
-#: DirManager.cpp:1389
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr ""
+
+#: DirManager.cpp:1391 DirManager.cpp:1793
+msgid "Inspecting project file data"
+msgstr ""
+
+#: DirManager.cpp:1410
 #, c-format
-msgid "Project check detected %d input file[s] being used in place\n"
-"('alias files') are now missing.  There is no way for Audacity\n"
-"to recover these files automatically; you may choose to\n"
-"permanently fill in silence for the missing files, temporarily\n"
-"fill in silence for this session only, or close the project now\n"
-"and try to restore the missing files by hand."
-msgstr "စီမံချက် စစ်ဆေးမှုက အခု ပျောက်ဆုံးနေတဲ့ ('အမည်ပွား ဖိုင်များ') နေရာမှာ သုံးစွဲနေတဲ့\n"
-"%d ထည့်သွင်း ဖိုင်(များ) ကို တွေ့ရှိတယ်။ ဒီဖိုင်များကို အိုဒေးစီးတီးက အလိုအလျှောက်\n"
-"ဆယ်တင်ဖို့ နည်းလမ်း မရှိဘူး၊ ပျောက်ဆုံးနေတဲ့ ဖိုင်များအတွက် တိတ်ဆိတ်ပြီး အမြဲတမ်း\n"
-"ဖြည့်ဆည်းဖို့၊ ဒီအခန်းအတွက်သာ တိတ်ဆိပ်ပြီး ယာယီ ဖြည်းဆည်းဖို့ သင် ရွေးချယ်နိုင်တယ်၊ \n"
-"(သို့) စီမံချက်ကို အခု ပိတ်ပြီး ပျောက်ဆုံးတဲ့ ဖိုင်များကို လက်ဖြင့် ပြန်ထားဖို့ ကြိုးစားနိုင်တယ်။"
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
+"to recover these files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
+msgstr ""
 
-#: DirManager.cpp:1394
-msgid "Replace missing data with silence [permanent upon save]"
-msgstr "ပျောက်ဆုံးနေတဲ့ အချက်အလက်ကြမ်းကို တိတ်ဆိတ်ပြီး အစားထိုးပါ [သိမ်းဆည်းချက်ကို အတည်ထားပါ]"
+#: DirManager.cpp:1426 DirManager.cpp:1545
+msgid "Treat missing audio as silence (this session only)"
+msgstr ""
 
-#: DirManager.cpp:1395
-#: DirManager.cpp:1483
-msgid "Temporarily replace missing data with silence [this session only]"
-msgstr "ပျောက်ဆုံးနေတဲ့ အချက်အလက်ကြမ်းကို တိတ်ဆိတ်ပြီး ယာယီ အစားထိုးပါ [ဒီအခန်း အတွက်သာ]"
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
+
+#: DirManager.cpp:1430
+msgid "Warning - Missing Aliased File(s)"
+msgstr ""
+
+#: DirManager.cpp:1460
+msgid "   Project check replaced missing aliased file(s) with silence."
+msgstr ""
+
+#: DirManager.cpp:1480
+#, c-format
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
+msgstr ""
+
+#: DirManager.cpp:1486
+msgid "Regenerate alias summary files (safe and recommended)"
+msgstr ""
+
+#: DirManager.cpp:1487
+#, fuzzy
+msgid "Fill in silence for missing display data (this session only)"
+msgstr "ပျောက်ဆုံးနေတဲ့ ဒေတာ ပြသမှုအတွက် တိတ်ဆိတ်ပြီး ဖြည့်ဆည်းပါ [ဒီ အခန်း အတွက်သာ]"
 
 #: DirManager.cpp:1396
 #: DirManager.cpp:1442
@@ -994,63 +1007,119 @@ msgstr "ပျောက်ဆုံးနေတဲ့ အချက်အလက�
 msgid "Close project immediately with no further changes"
 msgstr "စီမံချက်ကို နောက်ထပ် ပြင်ဆင်ချက်များ ချက်ခြင်း မပြုပဲ ပိတ်ပါ"
 
-#: DirManager.cpp:1435
+#: DirManager.cpp:1491
+msgid "Warning - Missing Alias Summary File(s)"
+msgstr ""
+
+#: DirManager.cpp:1513
+msgid "   Project check regenerated missing alias summary file(s)."
+msgstr ""
+
+#: DirManager.cpp:1531
 #, c-format
-msgid "Project check detected %d missing summary file[s] (.auf).\n"
-"Audacity can fully regenerate these summary files from the\n"
-"original audio data in the project."
-msgstr "စီမံချက် စစ်ဆေးချက်က ပျောက်ဆုံးနေတဲ့ အနှစ်ချုပ် %d ဖိုင်[များ] (.auf) ကို တွေ့ရှိတယ်။\n"
-"အိုဒေးစီးတီးက စီမံချက်၌ရှိ မူရင်း အသံ ဒေတာမှ အဲဒီ အနှစ်ချုပ် ဖိုင်များကို\n"
-" အပြည့်အ၀ ပြန်ထုတ်လုပ်နိုင်တယ်။"
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
+"\n"
+"If you choose the first or second option below, \n"
+"you can try to find and restore the missing files \n"
+"to their previous location. \n"
+"\n"
+"Note that for the second option, the waveform \n"
+"may not show silence."
+msgstr ""
 
-#: DirManager.cpp:1440
-msgid "Regenerate summary files [safe and recommended]"
-msgstr "ပြန်ထုတ်လုပ်တဲ့ အနှစ်ချုပ် ဖိုင်များ [အန္တရယ်ကင်းပြီး ထောက်ခံထားတယ်]"
+#: DirManager.cpp:1546
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr ""
 
-#: DirManager.cpp:1441
-msgid "Fill in silence for missing display data [this session only]"
-msgstr "ပျောက်ဆုံးနေတဲ့ ဒေတာ ပြသမှုအတွက် တိတ်ဆိတ်ပြီး ဖြည့်ဆည်းပါ [ဒီ အခန်း အတွက်သာ]"
+#: DirManager.cpp:1549
+msgid "Warning - Missing Audio Data Block File(s)"
+msgstr ""
 
-#: DirManager.cpp:1477
+#: DirManager.cpp:1571
+msgid "   Project check replaced missing audio data block file(s) with silence."
+msgstr ""
+
+#: DirManager.cpp:1587
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
+msgstr ""
+
+#: DirManager.cpp:1593
 #, c-format
-msgid "Project check detected %d missing audio data blockfile[s] (.au), \n"
-"probably due to a bug, system crash or accidental deletion.\n"
-"There is no way for Audacity to recover this lost data\n"
-"automatically; you may choose to permanently fill in silence\n"
-"for the missing data, temporarily fill in silence for this\n"
-"session only, or close the project now and try to restore the\n"
-"missing data by hand."
-msgstr "စီမံချက် စစ်ဆေးချက်က ပျောက်ဆုံးနေတဲ့ အသံ ဒေတာ အုပ်စုဖိုင်[များ] %d  (.auf) ကို တွေ့ရှိတယ်။\n"
-"ပရိုဂရမ် အမှား တခုကြောင့်၊ စက် ပျက်စီးပြီး အခန့်မသင့် ပယ်ဖျက်မှု ဖြစ်စေတယ်။\n"
-"ဒီပျောက်ဆုံးတဲ့ ဒေတာကို ပြန်ဖေါ်ဖို့ အိုဒေးစီးတီးအတွက် နည်းလမ်း မရှိဘူး၊\n"
-"ပျောက်ဆုံးသွားတဲ့ ဒေတာအတွက် အမြဲတမ်း တိတ်ဆိတ်ပြီး ဖြည့်ဆည်းခြင်း\n"
-"ဒီအခန်းအတွက်သာ ယာယီ တိတ်ဆိတ်ပြီး ဖြည့်ဆည်းခြင်းကို သင်ရွေးချယ်နိုင်တယ်၊ (သို့)\n"
-" စီမံချက်ကို အခု ပိတ်ထားပြီး ပျောက်ဆုံးသွားတဲ့ ဒေတာကို လက်ဖြင့်\n"
-" ပြန်ပေးအပ်ဖို့ ကြိုးစားနိုင်တယ်။"
+msgid "Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
+msgstr ""
 
-#: DirManager.cpp:1482
-msgid "Replace missing data with silence [permanent immediately]"
-msgstr "ပျောက်ဆုံးနေတဲ့​​ ဒေတာကို တိတ်ဆိတ်ပြီး အစားထိုးပါ [ချက်ခြင်း အမြဲတမ်း]"
+#: DirManager.cpp:1602
+msgid "Continue without deleting; ignore the extra files this session"
+msgstr ""
 
-#: DirManager.cpp:1510
-msgid "Cleaning up unused directories in project data..."
-msgstr "စီမံချက် ဒေတာထဲမှ အသုံးမပြုတဲ့ ဖိုင်တွဲများကို ရှင်းလင်းနေတယ်..."
+#: DirManager.cpp:1604
+msgid "Delete orphan files (permanent immediately)"
+msgstr ""
+
+#: DirManager.cpp:1607
+msgid "Warning - Orphan Block File(s)"
+msgstr ""
+
+#: DirManager.cpp:1630
+msgid "Cleaning up unused directories in project data"
+msgstr ""
+
+#: DirManager.cpp:1644
+msgid "Project check found file inconsistencies inspecting the loaded project data."
+msgstr ""
+
+#: DirManager.cpp:1650
+msgid "Project check found file inconsistencies during automatic recovery.\n"
+"\n"
+"Select 'Show Log...' in the Help menu to see details."
+msgstr ""
+
+#: DirManager.cpp:1651
+msgid "Warning: Problems in Automatic Recovery"
+msgstr ""
+
+#: DirManager.cpp:1690
+#, c-format
+msgid "Missing aliased audio file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1713
+#, c-format
+msgid "Missing alias (.auf) block file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1737
+#, c-format
+msgid "Missing data block file: '%s'"
+msgstr ""
+
+#: DirManager.cpp:1779
+#, c-format
+msgid "Orphan block file: '%s'"
+msgstr ""
 
 #: DirManager.cpp:1587
 msgid "Caching audio"
 msgstr "အသံကို ယာယီသိမ်းဆည်းနေတယ်"
 
-#: DirManager.cpp:1588
-msgid "Caching audio into memory..."
-msgstr "အသံကို မှတ်ဉာဏ်ထဲမှာ ယာယီသိမ်းဆည်းနေတယ်..."
+#: DirManager.cpp:1835
+msgid "Caching audio into memory"
+msgstr ""
 
 #: DirManager.cpp:1623
 msgid "Saving recorded audio"
 msgstr "အသံသွင်းထားချက်ကို သိမ်းဆည်းနေတယ်"
 
-#: DirManager.cpp:1624
-msgid "Saving recorded audio to disk..."
-msgstr "အသံသွင်းထားချက်ကို ဓါတ်ပြားထဲမှာ သိမ်းဆည်းနေတယ်..."
+#: DirManager.cpp:1871
+msgid "Saving recorded audio to disk"
+msgstr ""
 
 #: FFT.cpp:389
 msgid "Rectangular"
@@ -1060,9 +1129,10 @@ msgstr "စတုဂံပုံ"
 msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg ပံ့ပိုးချက်ကို မပြုစုတဲ့နေရာ"
 
-#: FFmpeg.cpp:103
-msgid "FFmpeg was configured in Preferences and successfully loaded before,                       \n"
-"but this time Audacity failed to load it at startup.                       \n"
+#: FFmpeg.cpp:110
+#, fuzzy
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+"but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr "FFmpegကို ဦး​စားပေးချက်များထဲ စီစဉ်ဖန်တီးထားပြီး နဂိုက အောင်အောင်မြင်မြင်\n"
@@ -1082,22 +1152,21 @@ msgstr "FFmpeg စုစည်းခန်း မတွေ့ရဘူး"
 msgid "Locate FFmpeg"
 msgstr "FFmpeg ကို ရှာပါ"
 
-#: FFmpeg.cpp:428
+#: FFmpeg.cpp:450
 #, c-format
-msgid "Audacity needs the file %s to import and export audio via FFmpeg."
+#, fuzzy
+msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "အိုဒေးစီးတီးက အသံကို FFmpeg ကတဆင့် တင်သွင်းပြီး တင်ပို့ဖို့ %s ဖိုင်ကို လိုအပ်တယ်။"
 
-#: FFmpeg.cpp:434
-#: export/ExportMP3.cpp:562
+#: FFmpeg.cpp:456
 #, c-format
-msgid "Location of %s:"
-msgstr "%s ရဲ့ တည်နေရာ -"
+msgid "Location of '%s':"
+msgstr ""
 
-#: FFmpeg.cpp:443
-#: export/ExportMP3.cpp:571
+#: FFmpeg.cpp:465
 #, c-format
-msgid "To find %s, click here -->"
-msgstr "%s ကို ရှာတွေ့ဖို့၊ ဒီနေရာကို နှိုပ်ပါ -->"
+msgid "To find '%s', click here -->"
+msgstr ""
 
 #: FFmpeg.cpp:449
 #: export/ExportMP3.cpp:577
@@ -1115,15 +1184,15 @@ msgstr "ဆွဲချပါ"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
-#. "Where would I find the file %s" instead if you want.
-#: FFmpeg.cpp:473
-#: export/ExportMP3.cpp:601
+#. "Where would I find the file '%s'?" instead if you want.
+#: FFmpeg.cpp:495
 #, c-format
-msgid "Where is %s?"
-msgstr "%s ဘယ်မှာ ရှိလဲ။"
+msgid "Where is '%s'?"
+msgstr ""
 
-#: FFmpeg.cpp:643
-msgid "Failed to find compatible FFmpeg libraries"
+#: FFmpeg.cpp:666
+#, fuzzy
+msgid "Failed to find compatible FFmpeg libraries."
 msgstr "လိုက်ဖက်တဲ့ FFmpeg စုစည်းချက်များကို မတွေ့နိုင်ဘူး"
 
 #: FFmpeg.h:97
@@ -1393,9 +1462,9 @@ msgstr "အသံဖိုင်တခု တင်ပို့နေတယ်"
 msgid "Saving an Audacity Project"
 msgstr "အိုဒေးစီးတီး စီမံချက် တခုကို သိမ်းဆည်းနေတယ်"
 
-#: HelpText.cpp:129
-msgid "Unsupported Formats"
-msgstr "ပံ့ပိုးမထားတဲ့ အမျိုးအစားများ"
+#: HelpText.cpp:157
+msgid "Support for Other Formats"
+msgstr ""
 
 #: HelpText.cpp:133
 msgid "Burn to CD"
@@ -1406,7 +1475,7 @@ msgid "No Local Help"
 msgstr "အနီးအနား အကူအညီ မရှိဘူး"
 
 #: HelpText.cpp:176
-msgid "<center><h3>How to get Help</h3></center>"
+msgid "<center><h3>How to Get Help</h3></center>"
 msgstr ""
 
 #: HelpText.cpp:150
@@ -1418,23 +1487,31 @@ msgid "These are our support methods:"
 msgstr ""
 
 #: HelpText.cpp:179
-msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">internet version if it isn't</a>)"
+msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)"
 msgstr ""
 
 #: HelpText.cpp:180
-msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">internet version if it isn't</a>)"
+msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)"
 msgstr ""
 
 #: HelpText.cpp:181
-msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the internet)"
+msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)"
 msgstr ""
 
 #: HelpText.cpp:182
-msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the internet)"
+msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)"
 msgstr ""
 
 #: HelpText.cpp:183
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
+msgstr ""
+
+#: HelpText.cpp:190
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
+msgstr ""
+
+#: HelpText.cpp:194
+msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
 msgstr ""
 
 #: HelpText.cpp:193
@@ -1602,6 +1679,10 @@ msgstr "အသံလမ်းကြော အမည် ရေးသွင်း�
 msgid "Label Track"
 msgstr ""
 
+#: Menus.cpp:4807
+msgid "Added label"
+msgstr "ပေါင်းထည့်ထားတဲ့ အမှတ်အသား"
+
 #: LangChoice.cpp:57
 msgid "Audacity First Run"
 msgstr "အိုဒေးစီးတီး ပထမဆုံး လည်ပတ်မှု"
@@ -1741,34 +1822,22 @@ msgstr "ပြန်ဖြည်ပါ"
 msgid "&Redo"
 msgstr "ပြန်ပြင်ပါ"
 
+#: Menus.cpp:344
+msgid "R&emove Audio"
+msgstr ""
+
 #: Menus.cpp:345
 msgid "Cu&t"
 msgstr "ဖြတ်ယူပါ"
-
-#: Menus.cpp:348
-msgid "Spl&it Cut"
-msgstr "ခွဲခြမ်းပါ"
-
-#: Menus.cpp:349
-msgid "&Copy"
-msgstr "မိတ္တူကူးပါ"
-
-#: Menus.cpp:352
-msgid "&Paste"
-msgstr "ပွားယူပါ"
-
-#: Menus.cpp:366
-msgid "Paste Te&xt to New Label"
-msgstr ""
-
-#: Menus.cpp:355
-msgid "Tri&m"
-msgstr "တိဖြတ်ပါ"
 
 #: Menus.cpp:359
 #: Menus.cpp:398
 msgid "&Delete"
 msgstr "ပယ်ဖျက်ပါ"
+
+#: Menus.cpp:348
+msgid "Spl&it Cut"
+msgstr "ခွဲခြမ်းပါ"
 
 #: Menus.cpp:360
 msgid "Split D&elete"
@@ -1777,6 +1846,14 @@ msgstr "ပယ်ဖျက်မှုကို ခွဲခြမ်းပါ"
 #: Menus.cpp:361
 msgid "Silence Audi&o"
 msgstr "အသံတိတ်စေပါ"
+
+#: Menus.cpp:355
+msgid "Tri&m"
+msgstr "တိဖြတ်ပါ"
+
+#: Menus.cpp:357
+msgid "Clip Boun&daries"
+msgstr ""
 
 #: Menus.cpp:365
 msgid "Sp&lit"
@@ -1795,6 +1872,18 @@ msgstr "ပါဝင်ပါ"
 #: Menus.cpp:406
 msgid "Detac&h at Silences"
 msgstr "တိတ်ဆိတ်မှုများမှာ ဖြတ်ထုတ်လိုက်ပါ"
+
+#: Menus.cpp:349
+msgid "&Copy"
+msgstr "မိတ္တူကူးပါ"
+
+#: Menus.cpp:352
+msgid "&Paste"
+msgstr "ပွားယူပါ"
+
+#: Menus.cpp:366
+msgid "Paste Te&xt to New Label"
+msgstr ""
 
 #: Menus.cpp:375
 msgid "Duplic&ate"
@@ -1817,10 +1906,6 @@ msgstr "ဖြတ်ယူပါ"
 msgid "&Split Cut"
 msgstr "ဖြတ်ယူချက်ကို ခွဲခြမ်းပါ"
 
-#: Menus.cpp:394
-msgid "Co&py"
-msgstr "မိတ္တူကူးပါ"
-
 #: Menus.cpp:399
 msgid "Sp&lit Delete"
 msgstr "ပယ်ဖျက်ချက်ကို ခွဲခြမ်းပါ"
@@ -1828,6 +1913,10 @@ msgstr "ပယ်ဖျက်ချက်ကို ခွဲခြမ်းပ�
 #: Menus.cpp:418
 msgid "Silence &Audio"
 msgstr ""
+
+#: Menus.cpp:394
+msgid "Co&py"
+msgstr "မိတ္တူကူးပါ"
 
 #: Menus.cpp:404
 msgid "Spli&t"
@@ -1860,6 +1949,14 @@ msgstr "အသံလမ်းကြောဟာ ခါဆာဖက်ကို �
 #: Menus.cpp:424
 msgid "Cursor to Track &End"
 msgstr "ခါဆာမှ အသံလမ်းကြော ပြီးဆုံးပြီ"
+
+#: Menus.cpp:446
+msgid "In All &Tracks"
+msgstr ""
+
+#: Menus.cpp:451
+msgid "In All S&ync-Locked Tracks"
+msgstr ""
 
 #: Menus.cpp:430
 msgid "Find &Zero Crossings"
@@ -1965,10 +2062,6 @@ msgstr ""
 msgid "&Toolbars"
 msgstr "ခလုတ်တန်းများ"
 
-#: Menus.cpp:531
-msgid "&Control Toolbar"
-msgstr "အထိန်း ခလုတ်တန်း"
-
 #: Menus.cpp:532
 msgid "&Device Toolbar"
 msgstr "ကိရိယာ ခလုတ်တန်း"
@@ -1996,6 +2089,10 @@ msgstr "ကိရိယာများ ခလုတ်တန်း"
 #: Menus.cpp:538
 msgid "Transcri&ption Toolbar"
 msgstr "ရေးမှတ်ချက် ခလုတ်တန်း"
+
+#: Menus.cpp:593
+msgid "&Transport Toolbar"
+msgstr ""
 
 #: Menus.cpp:542
 msgid "&Reset Toolbars"
@@ -2068,6 +2165,10 @@ msgstr "အသံ သက်၀င်မှု အဆင့်..."
 
 #: Menus.cpp:616
 msgid "Automated Input Level Adjustment (on/off)"
+msgstr ""
+
+#: Menus.cpp:646
+msgid "Rescan Audio Devices"
 msgstr ""
 
 #: Menus.cpp:596
@@ -2166,9 +2267,9 @@ msgstr "ခါဆာကို တန်းညှိပြီး ရွှေ့�
 msgid "Synchronize MIDI with Audio"
 msgstr "MIDI ကို အသံနဲ့ တပြိုင်တည်းလုပ်ဆောင်ပါ"
 
-#: Menus.cpp:686
-msgid "&Link Audio and Label Tracks"
-msgstr "အသံနဲ့ အမှတ်အသား အသံလမ်းကြောများကို ချိတ်ဆက်ပါ"
+#: Menus.cpp:745
+msgid "Sync-&Lock Tracks"
+msgstr ""
 
 #: Menus.cpp:690
 msgid "Add Label At &Selection"
@@ -2247,10 +2348,6 @@ msgstr ""
 msgid "&Manual (in web browser)"
 msgstr ""
 
-#: Menus.cpp:959
-msgid "Show &Log..."
-msgstr "လော့ဂ်ကို ပြပါ..."
-
 #: Menus.cpp:965
 msgid "&Screenshot Tools..."
 msgstr "မျက်နှာပြင်ရိုက်ချက် ကိရိယာများ..."
@@ -2259,9 +2356,13 @@ msgstr "မျက်နှာပြင်ရိုက်ချက် ကိရ�
 msgid "&Run Benchmark..."
 msgstr "စံအမှတ်ကို လည်ပတ်ပါ..."
 
-#: Menus.cpp:975
-msgid "&Audio Device Info..."
-msgstr "အသံ ကိရိယာ အချက်အလက်..."
+#: Menus.cpp:1045
+msgid "Au&dio Device Info..."
+msgstr ""
+
+#: Menus.cpp:959
+msgid "Show &Log..."
+msgstr "လော့ဂ်ကို ပြပါ..."
 
 #: Menus.cpp:986
 msgid "Move backward from toolbars to tracks"
@@ -2486,6 +2587,22 @@ msgstr "အပိတ်ဆီ ကူးသွားပါ"
 msgid "Full screen on/off"
 msgstr "မျက်နှာပြင်အပြည့် ဖွင့်/ပိတ်ပါ"
 
+#: Menus.cpp:1143
+msgid "Change input device"
+msgstr ""
+
+#: Menus.cpp:1146
+msgid "Change output device"
+msgstr ""
+
+#: Menus.cpp:1149
+msgid "Change audio host"
+msgstr ""
+
+#: Menus.cpp:1152
+msgid "Change input channels"
+msgstr ""
+
 #: Menus.cpp:1067
 msgid "Adjust output gain"
 msgstr "တိုးတက်မှု ရလဒ်ကို ညှိနှိုင်းပါ"
@@ -2509,10 +2626,6 @@ msgstr "တိုးတက်မှု ရလဒ်ကို တိုးမြ�
 #: Menus.cpp:1072
 msgid "Decrease input gain"
 msgstr "တိုးတက်မှု ရလဒ်ကို လျှော့ချပါ"
-
-#: Menus.cpp:1074
-msgid "Adjust input source"
-msgstr "ထည့်သွင်ချက် အရင်းအဖြစ်ကို ညှိနှိုင်းပါ"
 
 #: Menus.cpp:1116
 msgid "Play at speed"
@@ -2631,6 +2744,14 @@ msgstr "ဖြတ်ယူမှုကို ခွဲခြမ်းပါ"
 msgid "Split-cut to the clipboard"
 msgstr "အောက်ခံကတ်ပြားကို ဖြတ်ယူခွဲခြမ်းပါ"
 
+#: Menus.cpp:3229
+msgid "Pasting one type of track into another is not allowed."
+msgstr "အသံလမ်းကြော တမျိုးကို အခြား တမျိုး ပွားယူမှု ခွင့်မပြုဘူး။"
+
+#: Menus.cpp:3241
+msgid "Copying stereo audio into a mono track is not allowed."
+msgstr "စတီရီယို အသံကို မိုနို အသံလမ်းကြောတခု အဖြစ် မိတ္တူကူးခြင်းကို ခွင့်မပြုဘူး။"
+
 #: Menus.cpp:3015
 #: Menus.cpp:3080
 #: Menus.cpp:3161
@@ -2641,23 +2762,15 @@ msgstr "အောက်ခံကတ်ပြားကို ဖြတ်ယူ�
 msgid "Paste"
 msgstr "ပွားယူပါ"
 
-#: Menus.cpp:3015
-msgid "Pasted text from the clipboard"
-msgstr "အောက်ခံကတ်ပြားမှ ပွားယူထားတဲ့ စာသား"
-
 #: Menus.cpp:3080
 #: Menus.cpp:3161
 #: Menus.cpp:3360
 msgid "Pasted from the clipboard"
 msgstr "အောက်ခံကတ်ပြားမှ ပွားယူထားချက်"
 
-#: Menus.cpp:3229
-msgid "Pasting one type of track into another is not allowed."
-msgstr "အသံလမ်းကြော တမျိုးကို အခြား တမျိုး ပွားယူမှု ခွင့်မပြုဘူး။"
-
-#: Menus.cpp:3241
-msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "စတီရီယို အသံကို မိုနို အသံလမ်းကြောတခု အဖြစ် မိတ္တူကူးခြင်းကို ခွင့်မပြုဘူး။"
+#: Menus.cpp:3015
+msgid "Pasted text from the clipboard"
+msgstr "အောက်ခံကတ်ပြားမှ ပွားယူထားတဲ့ စာသား"
 
 #: Menus.cpp:3538
 msgid "Paste Text to New Label"
@@ -2802,10 +2915,6 @@ msgstr "အသစ်ကို ခွဲခြမ်းပါ"
 msgid "Split to new track"
 msgstr "အသံလမ်းကြောသစ်ကို ခွဲခြမ်းပါ"
 
-#: Menus.cpp:3840
-msgid "Split at labels"
-msgstr "အမှတ်အသားများကို ခွဲခြမ်းပါ"
-
 #: FreqWindow.cpp:107
 msgid "Frequency Analysis"
 msgstr "ကြိမ်နှုန်း စိစစ်ချက်"
@@ -2917,13 +3026,27 @@ msgstr "တန်းညှိချက်"
 msgid "Align"
 msgstr "တန်းညှိပါ"
 
+#: Menus.cpp:5117
+msgid "Synchronizing MIDI and Audio Tracks"
+msgstr ""
+
+#: Menus.cpp:5283
+#, c-format
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr ""
+
 #: Menus.cpp:4675
 msgid "Sync MIDI with Audio"
 msgstr "MIDI ကို အသံနဲ့ တပြိုင်တည်း လုပ်ဆောင်ပါ"
 
-#: Menus.cpp:4679
-msgid "Alignment completed."
-msgstr "တန်းညှိချက် ပြီးဆုံးပြီ။"
+#: Menus.cpp:5290
+#, c-format
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr ""
+
+#: Menus.cpp:5301
+msgid "Internal error reported by alignment process."
+msgstr ""
 
 #: Menus.cpp:4690
 msgid "Created new audio track"
@@ -2944,17 +3067,13 @@ msgstr "ဖန်တီးထားတဲ့ စတီရီယို အသံ 
 msgid "Created new label track"
 msgstr "ဖန်တီးထားတဲ့ အမှတ်အသား လမ်းကြောင်းသစ်"
 
-#: Menus.cpp:4736
-msgid "The version of Audacity you are using does not support multiple time tracks."
-msgstr "သင်သုံးစွဲနေတဲ့ အိုဒေးစီးတီး မူအဆင့်က အချိန် အသံလမ်းကြောများ မျိုးစုံကို ပံ့ပိုး​မပေးဘူး။"
+#: Menus.cpp:5361
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr ""
 
 #: Menus.cpp:4747
 msgid "Created new time track"
 msgstr "ဖန်တီးထားတဲ့ အချိန်လမ်းကြောသစ်"
-
-#: Menus.cpp:4807
-msgid "Added label"
-msgstr "ပေါင်းထည့်ထားတဲ့ အမှတ်အသား"
 
 #: Menus.cpp:4842
 msgid "Edited labels"
@@ -3033,6 +3152,11 @@ msgstr "ပေါင်းစပ်ပါ"
 #: Mix.cpp:121
 msgid "Mixing and rendering tracks"
 msgstr "အသံလမ်းကြောများကို ပေါင်းစပ်ခြင်းနဲ့ တင်ဆက်ခြင်း"
+
+#. i18n-hint: title of the MIDI Velocity slider
+#: MixerBoard.cpp:173 TrackPanel.cpp:4069 widgets/ASlider.cpp:373
+msgid "Velocity"
+msgstr ""
 
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: TrackPanel.cpp:3500
@@ -3139,6 +3263,16 @@ msgstr "ပြင်ဆင်ချက်များကို သိမ်း�
 msgid "Select one or more audio files..."
 msgstr "အသံတခု (သို့) အများကို ရွေးပါ..."
 
+#: AudacityApp.cpp:507
+#: Project.cpp:2002
+#, c-format
+msgid "%s is already open in another window."
+msgstr "%s ကို အခြား ၀င်းဒိုးမှာ ဖွင့်ထားပြီး။"
+
+#: Project.cpp:2191 Project.cpp:2356 Project.cpp:2576 Project.cpp:2755
+msgid "Error Opening Project"
+msgstr ""
+
 #. i18n-hint: This string is a label in the file type filter in the open
 #. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
@@ -3147,32 +3281,25 @@ msgstr "အသံတခု (သို့) အများကို ရွေး�
 msgid "Audacity projects"
 msgstr ""
 
-#: Project.cpp:2042
-#: Project.cpp:2477
+#: Project.cpp:2256
 #, c-format
-msgid "This file was saved by Audacity %s, a much\n"
-"older version.  The format has changed.\n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
-"Audacity could corrupt the file in opening\n"
-"it, so you must back it up first.\n"
+"Audacity can try to open and save this file, but saving it in this \n"
+"version will then prevent any 1.2 or earlier version opening it. \n"
+"\n"
+"Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
-msgstr "ဒီဖိုင်ကို ပိုအရင်ကျတဲ့ အိုဒေးစီးတီး %s က \n"
-"သိမ်းဆည်ထားတယ်။ အမျိုးအစားက ပြောင်းလဲသွားတယ်။\n"
-"\n"
-"၄င်းကို အိုဒေးစီးတီးက ဖိုင်ကို ဖွင့်တဲ့အခါ ပျက်စီးစေနိုင်တယ်၊\n"
-"ဒါကြောင့် ၄င်းကို သင် အလျင် အရန်သင့် သိမ်းဆည်းထားရမယ်။\n"
-"\n"
-"ဒီဖိုင်ကို အခု ဖွင့်မလား။"
+msgstr ""
 
 #: Project.cpp:2043
 msgid "1.0 or earlier"
 msgstr "၁.၀ (သို့) ပိုအလျင်ကျတဲ့အရာ"
 
-#: Project.cpp:2049
-#: Project.cpp:2489
-msgid "Opening old project file"
-msgstr "စီမံချက် ဖိုင်အဟောင်းကို ဖွင့်နေတယ်"
+#: Project.cpp:2271 Project.cpp:2837
+msgid "Warning - Opening Old Project File"
+msgstr ""
 
 #: Project.cpp:2073
 msgid "You are trying to open an automatically created backup file.\n"
@@ -3184,9 +3311,13 @@ msgstr "သင်ဟာ အလိုအလျှောက် ဖန်တီး�
 "\n"
 "တကယ့် အိုဒေးစီးတီး စီမံချက် ဖိုင်ကို အစားထိုး ဖွင့်ပါ။"
 
-#: Project.cpp:2074
-msgid "Backup file detected"
-msgstr "အရံသင့်သိမ်းဆည်းထားတဲ့ ဖိုင်ကို တွေ့ရှိခဲ့တယ်"
+#: Project.cpp:2306
+msgid "Warning - Backup File Detected"
+msgstr ""
+
+#: Project.cpp:2320 xml/XMLWriter.cpp:329
+msgid "Error Opening File"
+msgstr ""
 
 #: Project.cpp:2088
 #: Project.cpp:2096
@@ -3201,17 +3332,13 @@ msgid "File may be invalid or corrupted: \n"
 msgstr "ဖိုင်ဟာ မမှန်တာ (သို့) ပျက်စီးတာ ဖြစ်နိုင်တယ် -\n"
 "%s"
 
-#: Project.cpp:2103
-msgid "Error opening file or project"
-msgstr "ဖိုင် (သို့) စီမံချက် ဖွင့်လှစ်မှု အမှားအယွင်း"
+#: Project.cpp:2335
+msgid "Error Opening File or Project"
+msgstr ""
 
 #: Project.cpp:2123
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "အိုဒေးစီးတီးက အိုဒေးစီးတီး ၁.၀ စီမံချက် တခုကို စီမံချက် အမျိုးအစား သစ်ကို အသွင်မပြောင်းနိုင်ဘူး။"
-
-#: Project.cpp:2230
-msgid "Could not remove old auto save file"
-msgstr "အလိုအလျှောက် သိမ်းဆည်းတဲ့ ဖိုင်ဟောင်းကို မဖယ်ရှားနိုင်ဘူး"
 
 #: Project.cpp:2232
 msgid "Project was recovered"
@@ -3221,47 +3348,28 @@ msgstr "စီမံချက်ကို ပြန်ဆယ်တင်ထာ�
 msgid "Recover"
 msgstr "ပြန်ဆယ်တင်ပါ"
 
-#: Project.cpp:2261
-msgid "Project checker repaired file"
-msgstr "စီမံချက် စစ်ဆေးကိရိယာ ပြုပြင်တဲ့ ဖိုင်"
+#: Project.cpp:2230
+msgid "Could not remove old auto save file"
+msgstr "အလိုအလျှောက် သိမ်းဆည်းတဲ့ ဖိုင်ဟောင်းကို မဖယ်ရှားနိုင်ဘူး"
 
-#: Project.cpp:2261
-#: effects/Repair.h:29
-msgid "Repair"
-msgstr "ပြုပြင်ပါ"
+#: Project.cpp:2659 Project.cpp:2660
+msgid "<unrecognized version -- possibly corrupt project file>"
+msgstr ""
 
 #: Project.cpp:2402
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "စီမံချက် ဒေတာ ဖိုင်တွဲကို မတွေ့နိုင်ဘူး - \"%s\""
 
-#: Project.cpp:2446
+#: Project.cpp:2801
 #, c-format
 msgid "This file was saved using Audacity %s.\n"
-"You are using Audacity %s - you need to upgrade to\n"
-"a newer version to open this file."
-msgstr "ဒီဖိုင်ကို အိုဒေးစီးတီး %s အသုံးပြုပြီး သိမ်းဆည်းထားတယ်။\n"
-"သင်ဟာ အိုဒေးစီးတီး %s ကို သုံးစွဲနေတယ် - ဒီဖိုင်ကို ဖွင့်ဖို့\n"
-"ပိုမို သစ်လွင်တဲ့ မူအဆင့်တခုကို အဆင့်မြှင့်ဖို့ သင်လိုအပ်တယ်။"
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+msgstr ""
 
 #: Project.cpp:2450
 msgid "Can't open project file"
 msgstr "စီမံချက်ဖိုင်ကို မဖွင့်နိုင်ဘူး"
-
-#: Project.cpp:2484
-#, c-format
-msgid "This file was saved by Audacity %s.\n"
-"\n"
-"Audacity can open and save this file, but saving it in this version\n"
-"will then prevent any 1.2 or earlier version opening it.\n"
-"\n"
-"Open this file now?"
-msgstr "ဒီဖိုင်ကို အိုဒေးစီးတီး %s နဲ့ သိမ်းဆည်းထားတယ်။\n"
-"\n"
-"ဒီဖိုင်ကို အိုဒေးစီးတီးက ဖွင့်ပြီး သိမ်းဆည်းနိုင်တယ်၊ ဒါပေမဲ့ ဒီမူအဆင့်နဲ့ သိမ်းဆည်းခြင်းက\n"
-"၁.၂ တခုခု (သို့) ပို​အလျင်ကျတဲ့ မူအဆင့်က ၄င်းကို ဖွင့်ဖို့ တားဆီးနိုင်တယ်။\n"
-"\n"
-"ဒီဖိုင်ကို အခု ဖွင့်မလား။"
 
 #: Project.cpp:2682
 msgid "Your project is now empty.\n"
@@ -3281,9 +3389,19 @@ msgstr "သင့်ရဲ့ စီမံချက်ဟာ အခု ဗလာ
 "\n"
 "ဘာပဲဖြစ်ဖြစ် သိမ်းဆည်းမလား။"
 
-#: Project.cpp:2683
-msgid "Warning empty project"
-msgstr "ဗလာ စီမံချက်အတွက် သတိပေးချက်"
+#: Project.cpp:3050
+msgid "Warning - Empty Project"
+msgstr ""
+
+#: Project.cpp:3121
+#, c-format
+msgid "Could not save project. Path not found.  Try creating \n"
+"directory \"%s\" before saving project with this name."
+msgstr ""
+
+#: Project.cpp:3431
+msgid "Error Saving Project"
+msgstr ""
 
 #: Project.cpp:2792
 #, c-format
@@ -3291,11 +3409,6 @@ msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
 msgstr "စီမံချက်ကို မသိမ်းဆည်းနိုင်ဘူး။ %s ကို မသိမ်းဆည်းနိုင်တာ\n"
 "(သို့) ဓါတ်ပြား ပြည့်သွားတာ ဖြစ်နိုင်တယ်။"
-
-#: Project.cpp:2794
-#: Project.cpp:2820
-msgid "Error saving project"
-msgstr "စီမံချက် သိမ်းဆည်းနေမှု အမှားအယွင်း"
 
 #: Project.cpp:2818
 #: Project.cpp:3919
@@ -3319,8 +3432,9 @@ msgstr "တင်သွင်းချက် %s"
 msgid "Import"
 msgstr "တင်သွင်းပါ"
 
-#: Project.cpp:3087
-msgid "Error importing"
+#: Project.cpp:3453
+#, fuzzy
+msgid "Error Importing"
 msgstr "တင်သွင်းနေတဲ့ အမှားအယွင်း"
 
 #: Project.cpp:3134
@@ -3365,10 +3479,6 @@ msgstr "သင်ဟာ အိုဒေးစီးတီး စီမံချ�
 
 #: Project.cpp:3404
 msgid "Save Project As..."
-msgstr ""
-
-#: Project.cpp:3431
-msgid "Error Saving Project"
 msgstr ""
 
 #: Project.cpp:3431
@@ -3429,21 +3539,21 @@ msgstr "တင်သွင်းချက်(များ) ပြီးသွာ
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "တင်သွင်းချက် ပြီးသွားပြီ။ တောင်းဆိုချက်အရ လှိုင်းသဏ္ဍာန် တွက်ချက်မှု တခုအတွက် လည်ပတ်မှု။ %2.0f%% ပြီးသွားပြီ။"
 
-#: Project.cpp:3850
-msgid "Could not remove old autosave file: "
-msgstr "အလိုအလျှောက် သိမ်းဆည်းဖိုင် အဟောင်းကို မဖယ်ရှားနိုင်ဘူး -"
-
 #: Project.cpp:3891
 msgid "New Project"
 msgstr "စီမံချက် အသစ်"
 
-#: Project.cpp:3921
-msgid "Error writing autosave file"
-msgstr "အလိုအလျှောက် သိမ်းဆည်းဖိုင် ရေးသားမှု အမှားအယွင်း"
+#: Project.cpp:4401
+msgid "Error Writing Autosave File"
+msgstr ""
 
 #: Project.cpp:3936
 msgid "Could not create autosave file: "
 msgstr "အလိုအလျှောက် သိမ်းဆည်းမှု ဖိုင်ကို မဖန်တီးနိုင်ဘူး -"
+
+#: Project.cpp:3850
+msgid "Could not remove old autosave file: "
+msgstr "အလိုအလျှောက် သိမ်းဆည်းဖိုင် အဟောင်းကို မဖယ်ရှားနိုင်ဘူး -"
 
 #: Project.cpp:3962
 #, c-format
@@ -3572,12 +3682,10 @@ msgstr "ရွေးချယ်မှုတန်းလျာ"
 msgid "Tools"
 msgstr "ကိရိယာများ"
 
-#: Screenshot.cpp:382
-#: effects/Contrast.cpp:410
-#: toolbars/ControlToolBar.cpp:83
-#: toolbars/ControlToolBar.cpp:243
-msgid "Control"
-msgstr "အထိန်း"
+#: Screenshot.cpp:374 toolbars/ControlToolBar.cpp:89
+#: toolbars/ControlToolBar.cpp:249
+msgid "Transport"
+msgstr ""
 
 #: Screenshot.cpp:388
 #: effects/LoadEffects.cpp:114
@@ -3679,11 +3787,19 @@ msgstr "အသံလမ်းကြောမြင့်များ"
 msgid "Choose a location to save screenshot images"
 msgstr "မျက်နှာပြင်ရိုက်ချက် ရုပ်ပုံများ သိမ်းဆည်းဖို့ တည်နေရာ တခုကို ရွေးပါ"
 
-#: Sequence.cpp:799
-#: Sequence.cpp:809
-#: Sequence.cpp:816
-msgid "Gap detected in project file\n"
-msgstr "စီမံချက် ဖိုင်ထဲမှာ တွေ့ရှိတဲ့ ကွာဟချက်\n"
+#: Sequence.cpp:1032
+#, c-format
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
+"Truncating to mMaxSamples."
+msgstr ""
+
+#: Sequence.cpp:1035
+msgid "Warning - Length in Writing Sequence"
+msgstr ""
+
+#: Sequence.cpp:1498
+msgid "Memory allocation failed -- NewSamples"
+msgstr ""
 
 #: ShuttleGui.cpp:2034
 #: effects/Effect.cpp:458
@@ -3815,17 +3931,17 @@ msgstr "အမျိုအစားဖိုင်ကို မဖွင့်�
 msgid "Load Metadata As:"
 msgstr "မက်တာဒေတာကို ဖွင့်မဲ့ ပုံစံ -"
 
-#: Tags.cpp:1121
-msgid "Error loading metadata"
-msgstr "မက်တာဒေတာ ဖွင့်လှစ်မှု အမှားအယွင်း"
+#: Tags.cpp:1089
+msgid "Error Loading Metadata"
+msgstr ""
 
 #: Tags.cpp:1150
 msgid "Save Metadata As:"
 msgstr "မက်တာဒေတာ သိမ်းဆည်းမဲ့ ပုံစံ -"
 
-#: Tags.cpp:1205
-msgid "Error saving tags file"
-msgstr "စာအမှတ်များ ဖိုင် သိမ်းဆည်းမှု အမှားအယွင်း"
+#: Tags.cpp:1173
+msgid "Error Saving Tags File"
+msgstr ""
 
 #: Theme.cpp:638
 #, c-format
@@ -4016,10 +4132,13 @@ msgstr "လှိုင်းသဏ္ဍာန်"
 msgid "Waveform (dB)"
 msgstr "လှိုင်းသဏ္ဍာန် (dB)"
 
-#: TrackPanel.cpp:613
-#: prefs/TracksPrefs.cpp:59
-msgid "Spectrum log(f)"
-msgstr "ရောင်စဉ် လော့ဂ်(f)"
+#: TrackPanel.cpp:638 prefs/TracksPrefs.cpp:60
+msgid "Spectrogram"
+msgstr ""
+
+#: TrackPanel.cpp:639 prefs/TracksPrefs.cpp:61
+msgid "Spectrogram log(f)"
+msgstr ""
 
 #. i18n-hint: short form of 'logarithm'
 #: TrackPanel.cpp:614
@@ -4085,13 +4204,18 @@ msgstr "အတိုင်းအတာကို ချမှတ်ပါ..."
 msgid "Copy"
 msgstr "မိတ္တူကူးပါ"
 
-#: TrackPanel.cpp:1304
-msgid "Click to vertically zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
+#: TrackPanel.cpp:1448
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr ""
+
+#: TrackPanel.cpp:1453
+#, fuzzy
+msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "ဒေါင်လိုက် ချဲ့ကားဖို့ နှိုပ်ပါ၊ ကျုံ့ဖို့ Shift-နှိုပ်ပါ၊ သီးခြား ချဲ့ထွင် နယ်ပယ်တခုကို ဖန်တီးဖို့ ဒရွတ်ဆွဲပါ။"
 
-#: TrackPanel.cpp:1309
-msgid "Drag the label vertically to change the order of the tracks."
-msgstr "အသံလမ်းကြောများရဲ့ အစီအစဉ်ကို ပြောင်းလဲဖို့ အမှတ်အသားကို ဒေါင်လိုက် ဒရွတ်ဆွဲပါ။"
+#: TrackPanel.cpp:1459
+msgid "Drag the track vertically to change the order of the tracks."
+msgstr ""
 
 #: TrackPanel.cpp:1329
 msgid "Click and drag to adjust relative size of stereo tracks."
@@ -4119,6 +4243,11 @@ msgstr "ကိရိယာ-မျိုးစုံ စနစ် - ကြွတ�
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "ကိရိယာ-မျိုးစုံ စနစ် - ကြွတ်ခလုတ်နဲ့ ကီးဘုတ် ဦးစားပေးချက်များ အတွက် Ctrl-P"
 
+#: TrackPanel.cpp:1581 TrackPanel.cpp:1593 TrackPanel.cpp:2014
+#: TrackPanel.cpp:2021
+msgid "Click and drag to stretch selected region."
+msgstr ""
+
 #: TrackPanel.cpp:1429
 msgid "Click and drag to move left selection boundary."
 msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
@@ -4126,6 +4255,10 @@ msgstr "ဘယ်ဖက် ရွေးချယ်မှု နယ်သတ်�
 #: TrackPanel.cpp:1434
 msgid "Click and drag to move right selection boundary."
 msgstr "ညာဖက် ရွေးချယ်မှု နယ်သတ်မျဉ်းဆီ ရွှေ့ဖို့ နှိုပ်ပြီး ဒရွတ်ဆွဲပါ။"
+
+#: TrackPanel.cpp:1603
+msgid "Click and drag to stretch within selected region."
+msgstr ""
 
 #: TrackPanel.cpp:1772
 #: TrackPanel.cpp:4056
@@ -4144,6 +4277,14 @@ msgstr "မွမ်းမံထားတဲ့ အမှတ်အသား"
 #: TrackPanel.cpp:6629
 msgid "Label Edit"
 msgstr "အမှတ်အသား တည်းဖြတ်မှု"
+
+#: TrackPanel.cpp:2054 TrackPanel.cpp:2279
+msgid "Stretch"
+msgstr ""
+
+#: TrackPanel.cpp:2054 TrackPanel.cpp:2279
+msgid "Stretch Note Track"
+msgstr ""
 
 #: TrackPanel.cpp:2011
 msgid "Adjusted envelope."
@@ -4203,6 +4344,10 @@ msgstr "ရွှေ့ထားတဲ့ အသံလမ်းကြော '%s�
 #: TrackPanel.cpp:3353
 msgid "Track Remove"
 msgstr "အသံလမ်းကြော ဖယ်ရှားမှု"
+
+#: TrackPanel.cpp:4069
+msgid "Moved velocity slider"
+msgstr ""
 
 #: TrackPanel.cpp:3666
 #: TrackPanel.cpp:6559
@@ -4457,24 +4602,26 @@ msgid "There was a problem with your last action. If you think\n"
 msgstr "သင့်ရဲ့ နောက်ဆုံး လုပ်ဆောင်ချက်မှာ ပြဿနာတခု ရှိတယ်။ ဒီအရာကို ပရိုဂရမ် အမှား\n"
 "တခုလို့ သင်ယူဆရင်၊ ၄င်းဖြစ်ပွားတဲ့ နေရာအတိအကျကို ကျွန်ပ်တို့ကို ပြောပြပါ။"
 
-#: commands/CommandManager.cpp:927
+#: commands/CommandManager.cpp:953
+#, fuzzy
 msgid "You can only do this when playing and recording are\n"
-" stopped.  [Pausing is not sufficient.]"
+" stopped. (Pausing is not sufficient.)"
 msgstr "ဖွင့်ပြမှုနဲ့ အသံသွင်းမှုတွေ ရပ်နားတဲ့ အခါ၌သာ ဒီအ​ရာကို\n"
 " သင် လုပ်ဆောင်နိုင်တယ်။ [ရပ်ဆိုင်းခြင်းဟာ မလုံလောက်ဘူး။]"
 
-#: commands/CommandManager.cpp:929
+#: commands/CommandManager.cpp:955
 msgid "You must first select some stereo audio for this\n"
-" to use.  [You can't use this with mono.]"
-msgstr "ဒီအရာကို သုံးစွဲဖို့ အချို့ စတီရီယို အသံကို သင် ပထမဦးဆုံး ရွေးရမယ်။ [ဒီအရာကို မိုနိုနဲ့ သင် မသုံးစွဲနိုင်ဘူး။]"
+" to use. (You cannot use this with mono.)"
+msgstr ""
 
 #: commands/CommandManager.cpp:931
 msgid "You must first select some audio for this to use."
 msgstr "ဒီအရာကို သုံးစွဲဖို့ အချို့ အသံကို သင် ပထမဦးဆုံး ရွေးရမယ်။"
 
-#: commands/CommandManager.cpp:933
+#: commands/CommandManager.cpp:959
+#, fuzzy
 msgid "You must first select some audio for this\n"
-" to use. [Selecting other kinds of track won't work.]"
+" to use. (Selecting other kinds of track won't work.)"
 msgstr "ဒီအရာကို သုံးစွဲဖို့ အချို့ အသံကို သင် ပထမဦးဆုံး ရွေးရမယ်။ \n"
 "[တခြား အသံလမ်းကြော အမျိုးအစားများကို ရွေးချယ်မှုဟာ အလုပ်ဖြစ်မှာ မဟုတ်ဘူး]"
 
@@ -4796,12 +4943,6 @@ msgstr "သုံးစွဲထားတဲ့ သက်ရောက်မှ�
 msgid "Change Speed"
 msgstr "အမြန်နှုန်းကို ပြောင်းလဲပါ"
 
-#. i18n-hint: n/a is an English abbreviation meaning "not applicable"
-#. (in other words, unimportant, not relevant).
-#: effects/ChangeSpeed.cpp:330
-msgid "n/a"
-msgstr "ဘာမှမရှိ"
-
 #: effects/ChangeSpeed.cpp:335
 msgid "Change Speed, affecting both Tempo and Pitch"
 msgstr "နရီအနှေးအမြန်နဲ့ အသံပေါက် နှစ်ခုစလုံး ထိခိုက်တဲ့ အမြန်နှုန်းကို ပြောင်းလဲပါ"
@@ -4813,6 +4954,12 @@ msgstr "ဧရစ် ဒီ ကာစထရို လိုပို စီမ�
 #: effects/ChangeSpeed.cpp:367
 msgid "Standard Vinyl RPM:"
 msgstr "စံညွှန်း Vinyl RPM:"
+
+#. i18n-hint: n/a is an English abbreviation meaning "not applicable"
+#. (in other words, unimportant, not relevant).
+#: effects/ChangeSpeed.cpp:330
+msgid "n/a"
+msgstr "ဘာမှမရှိ"
 
 #: effects/ChangeSpeed.cpp:371
 msgid "From RPM"
@@ -5025,6 +5172,19 @@ msgid "Times are not reasonable!\n"
 msgstr "အချိန်များဟာ လက်တွေ့မကျဘူး။\n"
 "လက်တွေ့ကျတဲ့ အချိန်များကို ရေးသွင်းပါ။"
 
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
+
 #: effects/Contrast.cpp:214
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
 msgstr ""
@@ -5055,6 +5215,12 @@ msgstr "အနီးကပ်မြင်ကွင်း -"
 #: effects/Contrast.cpp:305
 msgid "Foreground start time"
 msgstr "အနီးကပ်မြင်ကွင်း စတင်ချိန်"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and hundredths of a second (1/100 second)
+#: widgets/TimeTextCtrl.cpp:289
+msgid "hh:mm:ss + hundredths"
+msgstr "hh:mm:ss + ရာပြည့်များ"
 
 #: effects/Contrast.cpp:323
 msgid "Foreground end time"
@@ -5232,9 +5398,9 @@ msgstr "ဒေတာ စုဆောင်းချက်"
 msgid "DTMF Tone Generator"
 msgstr "DTMF အသံ ထုတ်လုပ်ကိရိယာ"
 
-#: effects/DtmfGen.cpp:421
-msgid "by Salvo Ventura (2006)"
-msgstr "ဆာလဝေါ ဗင်တူရာ (၂၀၀၆) အားဖြင့်"
+#: effects/DtmfGen.cpp:442
+msgid "by Salvo Ventura"
+msgstr ""
 
 #: effects/DtmfGen.cpp:425
 msgid "DTMF sequence:"
@@ -5250,6 +5416,12 @@ msgstr "ကျယ်ပြန့်မှု (၀-၁)"
 #: effects/DtmfGen.cpp:430
 msgid "Duration:"
 msgstr "ကြာမြင့်ချိန် -"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and samples (at the current project sample rate)
+#: widgets/TimeTextCtrl.cpp:307
+msgid "hh:mm:ss + samples"
+msgstr "hh:mm:ss + နမူနာများ"
 
 #: effects/DtmfGen.cpp:452
 msgid "Tone/silence ratio:"
@@ -5354,17 +5526,30 @@ msgstr "ကုဗယူနစ်"
 msgid "Equalization"
 msgstr "ညီမျှစေခြင်း"
 
-#: effects/Equalization.cpp:1012
-msgid "Error loading EQ curve"
-msgstr "EQ မျဉ်းခုံး ဖွင့်နေစဉ် အမှားအယွင်း"
+#: effects/Equalization.cpp:996
+#, c-format
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+"Please press 'help' to visit the download page.\n"
+"\n"
+"Save the curves at %s"
+msgstr ""
 
-#: effects/Equalization.cpp:1051
-msgid "custom"
-msgstr "စိတ်ကြိုက်ဖန်တီးမှု"
+#: effects/Equalization.cpp:997
+msgid "EQCurves.xml and EQDefaultCurves.xml missing"
+msgstr ""
 
-#: effects/Equalization.cpp:1100
-msgid "Error saving equalization curves"
-msgstr "ညီမျှစေခြင်း မျဉ်းခုံးများ သိမ်းဆည်းမှု အမှားအယွင်း"
+#: effects/Equalization.cpp:1003 effects/Equalization.cpp:1028
+#: effects/Equalization.cpp:1029
+msgid "unnamed"
+msgstr ""
+
+#: effects/Equalization.cpp:1024
+msgid "Error Loading EQ Curve"
+msgstr ""
+
+#: effects/Equalization.cpp:1089
+msgid "Error Saving Equalization Curves"
+msgstr ""
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
@@ -5384,56 +5569,222 @@ msgstr "အနည်းဆုံး dB"
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1236
-msgid "Draw curves"
+#: effects/Equalization.cpp:1231
+msgid "&Draw Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:1233
+#, fuzzy
+msgid "Draw Curves"
 msgstr "မျဉ်းခုံးများကို ရေးဆွဲပါ"
+
+#: effects/Equalization.cpp:1237
+msgid "&Graphic EQ"
+msgstr ""
 
 #: effects/Equalization.cpp:1241
 msgid "Graphic EQ"
 msgstr "EQ ရုပ်ကား"
 
-#: effects/Equalization.cpp:1255
-msgid "Linear frequency scale"
-msgstr "အစဉ်လိုက် ကြိမ်နှုန်း ​စကေး"
-
-#: effects/Equalization.cpp:1264
-msgid "Length of filter:"
-msgstr "စစ်ထုတ်ကိရိယာ အရှည် -"
-
-#: effects/Equalization.cpp:1285
-msgid "Select curve:"
-msgstr "မျဉ်းခုံးကို ရွေးပါ -"
-
-#: effects/Equalization.cpp:1295
-#: effects/Equalization.cpp:2553
-#: export/ExportMultiple.cpp:924
-msgid "Save As..."
-msgstr "သိမ်းဆည်းမဲ့ ပုံစံ..."
-
-#: effects/Equalization.cpp:1407
-msgid "Flatten"
+#: effects/Equalization.cpp:1252
+msgid "Li&near Frequency Scale"
 msgstr ""
 
-#: effects/Invert.h:27
-msgid "Invert"
-msgstr "ပြောင်းပြန်လှန်ပါ"
+#: effects/Equalization.cpp:1253
+msgid "Linear Frequency Scale"
+msgstr ""
 
-#: effects/Equalization.cpp:1491
-msgid "To use this EQ curve in a batch chain, please choose a new name for it."
+#: effects/Equalization.cpp:1262
+msgid "Length of &Filter:"
+msgstr ""
+
+#: effects/Equalization.cpp:1268
+msgid "Length of Filter"
+msgstr ""
+
+#: effects/Equalization.cpp:1284
+msgid "&Select Curve:"
+msgstr ""
+
+#: effects/Equalization.cpp:1294
+msgid "S&ave/Manage Curves..."
+msgstr ""
+
+#: effects/Equalization.cpp:1295
+msgid "Save and Manage Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:1298
+msgid "Fla&tten"
+msgstr ""
+
+#: effects/Equalization.cpp:1300
+msgid "&Invert"
+msgstr ""
+
+#: effects/Equalization.cpp:1302
+msgid "G&rids"
+msgstr ""
+
+#: effects/Equalization.cpp:1367
+msgid "Select Curve"
+msgstr ""
+
+#: effects/Equalization.cpp:1383
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 
 #: effects/Equalization.cpp:1492
 msgid "EQ Curve needs a different name"
 msgstr ""
 
-#: effects/Equalization.cpp:2552
-msgid "Enter the desired name of the curve"
-msgstr "မျဉ်းခုံးရဲ့ စိတ်ကြိုက်အမည်ကို ရေးသွင်းပါ"
+#: effects/Equalization.cpp:2817 effects/Equalization.cpp:2822
+msgid "Manage Curves List"
+msgstr ""
+
+#: effects/Equalization.cpp:2821
+msgid "Manage Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:2854
+msgid "&Curves"
+msgstr ""
+
+#: effects/Equalization.cpp:2858
+msgid "Curve Name"
+msgstr ""
+
+#: effects/Equalization.cpp:2865
+msgid "&Rename..."
+msgstr ""
+
+#: effects/Equalization.cpp:2866
+msgid "D&elete..."
+msgstr ""
+
+#: effects/Equalization.cpp:2867
+msgid "I&mport..."
+msgstr ""
+
+#: effects/Equalization.cpp:2868
+msgid "E&xport..."
+msgstr ""
+
+#: effects/Equalization.cpp:2869
+msgid "&Get More..."
+msgstr ""
+
+#: widgets/ErrorDialog.cpp:96
+msgid "Help"
+msgstr "အကူအညီ"
+
+#: effects/Equalization.cpp:2877
+msgid "Rename 'unnamed' to save a new entry.\n"
+"'OK' saves all changes, 'Cancel' doesn't."
+msgstr ""
+
+#: effects/Equalization.cpp:2912
+msgid "'unnamed' always stays at the bottom of the list"
+msgstr ""
+
+#: effects/Equalization.cpp:2912 effects/Equalization.cpp:3218
+msgid "'unnamed' is special"
+msgstr ""
+
+#: effects/Equalization.cpp:3006
+msgid "' to..."
+msgstr ""
+
+#: effects/Equalization.cpp:3006 effects/Equalization.cpp:3009
+msgid "Rename '"
+msgstr ""
+
+#: effects/Equalization.cpp:3007
+msgid "Rename..."
+msgstr ""
+
+#: effects/Equalization.cpp:3029
+msgid "Name is the same as the original one"
+msgstr ""
+
+#: effects/Equalization.cpp:3029
+msgid "Same name"
+msgstr ""
+
+#: effects/Equalization.cpp:3033
+msgid "'?"
+msgstr ""
+
+#: effects/Equalization.cpp:3033
+msgid "Overwrite existing curve '"
+msgstr ""
+
+#: effects/Equalization.cpp:3034
+msgid "Curve exists"
+msgstr ""
+
+#: effects/Equalization.cpp:3110
+msgid "You cannot delete the 'unnamed' curve."
+msgstr ""
+
+#: effects/Equalization.cpp:3111 effects/Equalization.cpp:3160
+msgid "Can't delete 'unnamed'"
+msgstr ""
+
+#: effects/Equalization.cpp:3117 effects/Equalization.cpp:3146
+msgid "' ?"
+msgstr ""
+
+#: effects/Equalization.cpp:3117 effects/Equalization.cpp:3146
+msgid "Delete '"
+msgstr ""
 
 #: effects/Equalization.cpp:2652
 #: export/ExportFFmpegDialogs.cpp:1214
 msgid "Confirm Deletion"
 msgstr "ပယ်ဖျက်မှုကို အတည်ပြုပါ"
+
+#: effects/Equalization.cpp:3143
+msgid "Delete "
+msgstr ""
+
+#: effects/Equalization.cpp:3143
+msgid "items?"
+msgstr ""
+
+#: effects/Equalization.cpp:3159
+msgid "You cannot delete the 'unnamed' curve, it is special."
+msgstr ""
+
+#: effects/Equalization.cpp:3176
+msgid "Choose an EQ curve file"
+msgstr ""
+
+#: effects/Equalization.cpp:3176
+msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
+msgstr ""
+
+#: effects/Equalization.cpp:3196
+msgid "Export EQ curves as..."
+msgstr ""
+
+#: effects/Equalization.cpp:3218
+msgid "You cannot export 'unnamed' curve"
+msgstr ""
+
+#: effects/Equalization.cpp:3228
+#, c-format
+msgid "%d curves exported to %s"
+msgstr ""
+
+#: effects/Equalization.cpp:3229
+msgid "Curves exported"
+msgstr ""
+
+#: effects/Equalization.cpp:3232
+msgid "No curves exported"
+msgstr ""
 
 #: effects/Equalization.h:84
 msgid "Equalization..."
@@ -5498,6 +5849,10 @@ msgstr "တွဲညှပ်မှုကို ဖေါ်ထုတ်ခြ�
 #: effects/Generator.cpp:51
 msgid "There is not enough room available to generate the audio"
 msgstr ""
+
+#: effects/Invert.h:27
+msgid "Invert"
+msgstr "ပြောင်းပြန်လှန်ပါ"
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -5777,33 +6132,59 @@ msgstr "သင် စစ်ထုတ်လိုတဲ့ အသံ အားလ
 msgid "Noise Removal by Dominic Mazzoni"
 msgstr "ဒိုမီနစ် မာဇုံနီ စီမံတဲ့ ဆူညံသံ ဖယ်ရှားခြင်း"
 
-#: effects/NoiseRemoval.cpp:835
-msgid "Get Noise Profile"
+#: effects/NoiseRemoval.cpp:895
+#, fuzzy
+msgid "&Get Noise Profile"
 msgstr "ဆူညံသံ ခြုံငုံချက်ကို ရယူပါ"
 
-#: effects/NoiseRemoval.cpp:846
-msgid "Noise reduction (dB):"
+#: effects/NoiseRemoval.cpp:907
+#, fuzzy
+msgid "Noise re&duction (dB):"
 msgstr "ဆူညံသံ လျှော့ချခြင်း (dB) -"
 
 #: effects/NoiseRemoval.cpp:851
 msgid "Noise reduction"
 msgstr "ဆူညံသံ လျှော့ချခြင်း"
 
-#: effects/NoiseRemoval.cpp:855
-msgid "Frequency smoothing (Hz):"
+#: effects/NoiseRemoval.cpp:917
+msgid "&Sensitivity (dB):"
+msgstr ""
+
+#: toolbars/TranscriptionToolBar.cpp:219
+#: toolbars/TranscriptionToolBar.cpp:275
+msgid "Sensitivity"
+msgstr "အာရုံခံနိုင်မှု"
+
+#: effects/NoiseRemoval.cpp:927
+#, fuzzy
+msgid "Fr&equency smoothing (Hz):"
 msgstr "ကြိမ်နှုန်း ချောမွေ့စေခြင်း (Hz) -"
 
 #: effects/NoiseRemoval.cpp:860
 msgid "Frequency smoothing"
 msgstr "ကြိမ်နှုန်း ချောမွေ့စေခြင်း"
 
-#: effects/NoiseRemoval.cpp:864
-msgid "Attack/decay time (secs):"
+#: effects/NoiseRemoval.cpp:937
+#, fuzzy
+msgid "Attac&k/decay time (secs):"
 msgstr "တိုက်ခိုက်/ယိုယွင်းတဲ့ အချိန် (စက္ကန့်များ) -"
 
-#: effects/NoiseRemoval.cpp:869
-msgid "Attach/decay time"
+#: effects/NoiseRemoval.cpp:943
+#, fuzzy
+msgid "Attack/decay time"
 msgstr "တိုက်ခိုက်/ယိုယွင်းတဲ့ အချိန်"
+
+#: effects/NoiseRemoval.cpp:947
+msgid "Noise:"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:949
+msgid "Re&move"
+msgstr ""
+
+#: effects/NoiseRemoval.cpp:951
+msgid "&Isolate"
+msgstr ""
 
 #: effects/NoiseRemoval.h:35
 msgid "Noise Removal..."
@@ -5819,10 +6200,10 @@ msgstr "ဆူညံသံ ဖယ်ရှားခြင်း"
 
 #. i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
 #. * false (translated below) if those options were selected
-#: effects/Normalize.cpp:70
+#: effects/Normalize.cpp:74
 #, c-format
-msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s"
-msgstr "သုံးစွဲတဲ့ သက်ရောက်မှု - %s  dc အော့ဖ်ဆက် ဖယ်ရှားမှု = %s, ကျယ်ပြန့်မှုကို ပုံမှန်ဖြစ်စေပါ = %s"
+msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"
+msgstr ""
 
 #. i18n-hint: true here means that the option was
 #. * selected. Opposite false if not selected
@@ -5848,13 +6229,17 @@ msgstr "DC အော့ဖ်ဆက် တခုခုကို ဖယ်ရှ�
 msgid "Normalize maximum amplitude to:"
 msgstr "အများဆုံး ကျယ်ပြန့်မှုကို ပုံမှန်ဖြစ်စေမဲ့နေရာ -"
 
-#: effects/Normalize.cpp:366
-msgid "-"
-msgstr "-"
-
 #: effects/Normalize.cpp:371
 msgid "Maximum amplitude dB"
 msgstr "အများဆုံး ကျယ်ပြန့်မှု dB"
+
+#: effects/Normalize.cpp:406
+msgid "Normalize stereo channels independently"
+msgstr ""
+
+#: effects/Normalize.cpp:474
+msgid ".  Maximum 0dB."
+msgstr ""
 
 #: effects/Normalize.h:33
 msgid "Normalize..."
@@ -5950,6 +6335,11 @@ msgstr "ရွေးချယ်မှု နယ်ပယ် ပြင်ပမ�
 "\n"
 "အသံ ဝိုင်းရံမှု များလေ၊ ၄င်းရဲ့ လုပ်ဆောင်မှု ပိုကောင်းလေဖြစ်တယ်။"
 
+#: Project.cpp:2261
+#: effects/Repair.h:29
+msgid "Repair"
+msgstr "ပြုပြင်ပါ"
+
 #: effects/Repair.h:43
 msgid "Repairing damaged audio"
 msgstr "ပျက်စီးတဲ့ အသံကို ပြုပြင်နေတယ်"
@@ -6002,6 +6392,86 @@ msgstr "ပြောင်းပြန်လှန်ပါ"
 #: effects/Reverse.h:44
 msgid "Reversing"
 msgstr "ပြောင်းပြန်လှန်နေခြင်း"
+
+#: effects/ScoreAlignDialog.cpp:61
+msgid "Align MIDI to Audio"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:99
+msgid "Frame Period:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:105
+msgid "Frame Period"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:109
+msgid "Window Size:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:114
+msgid "Window Size"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:121
+msgid "Force Final Alignment"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:126
+msgid "Ignore Silence at Beginnings and Endings"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:130
+msgid "Silence Threshold:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:135
+msgid "Silence Threshold"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:139
+msgid "Presmooth Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:144
+msgid "Presmooth Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:148
+msgid "Line Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:153
+msgid "Line Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:157
+msgid "Smooth Time:"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:162
+msgid "Smooth Time"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:169
+msgid "Use Defaults"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:170
+msgid "Restore Defaults"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:248 effects/ScoreAlignDialog.cpp:250
+#: effects/ScoreAlignDialog.cpp:254 effects/ScoreAlignDialog.cpp:257
+#: effects/ScoreAlignDialog.cpp:259
+#, c-format
+msgid "%.2f secs"
+msgstr ""
+
+#: effects/ScoreAlignDialog.cpp:251
+#, c-format
+msgid "%.3f"
+msgstr ""
 
 #: effects/Silence.cpp:32
 msgid "Silence Generator"
@@ -6071,14 +6541,6 @@ msgstr "အချိန် ​​စကေး/အသံပေါက် ရွှ
 msgid "using SBSMS, by Clayton Otey"
 msgstr "ခလေတွန် အိုတေး စီမံတဲ့ SBSMS သုံးစွဲမှု"
 
-#: effects/TimeScale.cpp:187
-msgid "Initial Tempo Change (%):"
-msgstr "အစပိုင်း နရီအနှေးအမြန် ပြောင်း​လဲမှု (%) -"
-
-#: effects/TimeScale.cpp:191
-msgid "Final Tempo Change (%):"
-msgstr "နောက်ဆုံး နရီအနှေးအမြန် ပြောင်း​လဲမှု (%) -"
-
 #: effects/TimeScale.cpp:202
 msgid "Initial Tempo Change (%)"
 msgstr "အစပိုင်း နရီအနှေးအမြန် ပြောင်း​လဲမှု (%)"
@@ -6087,13 +6549,25 @@ msgstr "အစပိုင်း နရီအနှေးအမြန် ပြ�
 msgid "Final Tempo Change (%)"
 msgstr "နောက်ဆုံး နရီအနှေးအမြန် ပြောင်း​လဲမှု (%)"
 
-#: effects/TimeScale.cpp:219
-msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
-msgstr "အစပိုင်း အသံပေါက် ရွှေ့ပြောင်းမှု (အသံ၀က်များ) [-၁၂ မှ ၁၂ သို့] -"
+#: effects/TimeScale.cpp:268
+msgid "Initial Pitch Shift"
+msgstr ""
 
-#: effects/TimeScale.cpp:223
-msgid "Final Pitch Shift (semitones) [-12 to 12]:"
-msgstr "နောက်ဆုံး အသံပေါက် ရွှေ့ပြောင်းမှု (အသံ၀က်များ) [-၁၂ မှ ၁၂ သို့] -"
+#: effects/TimeScale.cpp:273 effects/TimeScale.cpp:290
+msgid "(semitones) [-12 to 12]:"
+msgstr ""
+
+#: effects/TimeScale.cpp:277 effects/TimeScale.cpp:294
+msgid "(%) [-50 to 100]:"
+msgstr ""
+
+#: effects/TimeScale.cpp:285
+msgid "Final Pitch Shift"
+msgstr ""
+
+#: effects/TimeScale.cpp:302
+msgid "Options"
+msgstr ""
 
 #: effects/TimeScale.h:33
 msgid "Sliding Time Scale/Pitch Shift..."
@@ -6274,9 +6748,9 @@ msgstr "သိမ်းဆည်းပါ"
 msgid "Load VST Program:"
 msgstr "VST ပရိုဂရမ်ကို ဖွင့်ပါ -"
 
-#: effects/VST/VSTEffect.cpp:476
-msgid "Error loading program"
-msgstr "ပ​ရိုဂရမ် ဖွင့်ပြမှု အမှားအယွင်း"
+#: effects/VST/VSTEffect.cpp:613
+msgid "Error Loading VST Program"
+msgstr ""
 
 #: effects/VST/VSTEffect.cpp:492
 msgid "Save VST Program As:"
@@ -6394,9 +6868,35 @@ msgstr "နိုင်ခွီးစ်ထ် သ​က်ရောက်မ�
 msgid "Nyquist Prompt..."
 msgstr "နိုင်ခွီးစ်ထ် လှုံ့ဆော်ချက်..."
 
+#: effects/nyquist/Nyquist.cpp:114
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:305
+#, c-format
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+"Control not created."
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:429
+msgid "Nyquist Prompt"
+msgstr ""
+
 #: effects/nyquist/Nyquist.cpp:402
 msgid "Enter Nyquist Command: "
 msgstr "နိုင်ခွီးစ်ထ် ညွှန်ကြားချက်ကို ရေးသွင်းပါ -"
+
+#: effects/nyquist/Nyquist.cpp:486
+msgid "Error in Nyquist code"
+msgstr ""
+
+#: effects/nyquist/Nyquist.cpp:486
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+"\treturn s * 0.1\n"
+"for SAL, or begin with an open parenthesis such as\n"
+"\t(mult s 0.1)\n"
+" for LISP."
+msgstr ""
 
 #: effects/nyquist/Nyquist.cpp:515
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
@@ -6473,6 +6973,17 @@ msgstr "ရွေးစရာများ..."
 msgid "Are you sure you want to save the file as \""
 msgstr "အောက်ပါအတိုင်း ဖိုင်ကို သင်တကယ် သိမ်းဆည်းလိုသလား \""
 
+#: DirManager.cpp:1363
+#: DirManager.cpp:1398
+#: DirManager.cpp:1444
+#: DirManager.cpp:1486
+#: export/Export.cpp:581
+#: export/Export.cpp:602
+#: export/Export.cpp:621
+#: widgets/Warning.cpp:53
+msgid "Warning"
+msgstr "သတိပေးချက်"
+
 #: export/Export.cpp:596
 #, c-format
 msgid "You are about to save a %s file with the name \"%s\".\n"
@@ -6485,6 +6996,13 @@ msgstr "သင်ဟာ ဖိုင် %s တခုကို \"%s\" အမည�
 "သာမန်အားဖြင့် ဒီဖိုင်များဟာ \".%s\" နဲ့ ဆုံးပြီး၊ တချို့ ပရိုဂရမ်များဟာ ဖိုင်များကို စံညွှန်းမဟုတ်တဲ့ တိုးချဲ့ချက်များနဲ့ ဖွင့်ပေးမှာ မဟုတ်ဘူး။\n"
 "\n"
 "ဒီ​အမည်နဲ့ ဖိုင်ကို သင်တကယ် သိမ်းဆည်းလိုသလား?"
+
+#: export/Export.cpp:654
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
+"The file cannot be written because the path is needed to restore the original audio to the project.\n"
+"Choose File > Check Dependencies to view the locations of all missing files.\n"
+"If you still wish to export, please choose a different filename or folder."
+msgstr ""
 
 #: export/Export.cpp:617
 #, c-format
@@ -6547,6 +7065,10 @@ msgstr "ရလဒ်ကို ပြသပါ"
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr ""
 
+#: export/ExportCL.cpp:161
+msgid "Find path to command"
+msgstr ""
+
 #: export/ExportCL.cpp:220
 msgid "(external program)"
 msgstr "(ပြင်ပ ပရိုဂရမ်)"
@@ -6575,23 +7097,6 @@ msgid "Properly configured FFmpeg is required to proceed.\n"
 msgstr "ကောင်းမွန်စွာ စီစဉ်ဖန်တီးထားတဲ့ FFmpeg ကို လုပ်ဆောင်ဖို့ လိုတယ်။\n"
 "၄င်းကို ဦးစားပေးချက်များ > စုစည်းခန်းများ မှာ သင် စီစဉ်ဖန်တီးနိုင်တယ်။"
 
-#: export/ExportFFmpeg.cpp:237
-msgid "AMR support is not distributable"
-msgstr ""
-
-#. Russell->The last lines are missing.
-#: export/ExportFFmpeg.cpp:232
-msgid "Properly configured FFmpeg is required to proceed.\n"
-"You can configure it at Preferences > Libraries.\n"
-"\n"
-"Note that AMR support is not available with our FFmpeg\n"
-"installer, but requires you compile FFmpeg yourself."
-msgstr "ကောင်းမွန်စွာ စီစဉ်ဖန်တီးထားတဲ့ FFmpeg ကို လုပ်ဆောင်ဖို့ လိုတယ်။\n"
-"၄င်းကို ဦးစားပေးချက်များ > စုစည်းခန်းများ မှာ သင် စီစဉ်ဖန်တီးနိုင်တယ်။\n"
-"\n"
-"AMR ပံ့ပိုချက်ဟာ ကျွန်ပ်တို့ရဲ့ FFmpeg တပ်ဆင်ကိရိယာနဲ့\n"
-"မရနိုင်တာကို သတိပြုပါ၊ ဒါပေမဲ့ FFmpeg ကို သင်ကိုယ်တိုင် ပြုစုဖို့ လိုအပ်တယ်။"
-
 #: export/ExportFFmpeg.cpp:433
 #, c-format
 msgid "FFmpeg cannot find audio codec 0x%x.\n"
@@ -6599,10 +7104,10 @@ msgid "FFmpeg cannot find audio codec 0x%x.\n"
 msgstr "FFmpeg က အသံ ကုဓ 0x%x ကို မတွေ့နိုင်ဘူး။\n"
 "ဒီကုဓ အတွက် ပံ့ပိုးမှုကို ပြုစုမထားတဲ့ ဖြစ်နိုင်တယ်။"
 
-#: export/ExportFFmpeg.cpp:655
+#: export/ExportFFmpeg.cpp:686
 #, c-format
-msgid "Attempted to export %d channels, but max. channels for selected output format is %d"
-msgstr "ချာနယ်များ %d ကို တင်ပို့ဖို့ ကြိုးပမ်းခဲ့တယ်၊ ဒါပေမဲ့ များလွန်းတယ်။ ရွေးထားတဲ့ ရလဒ် အမျိုးအစား အတွက် ချာနယ်များဟာ %d ဖြစ်တယ်"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
+msgstr ""
 
 #: export/ExportFFmpeg.cpp:684
 #, c-format
@@ -6646,6 +7151,11 @@ msgstr "နမူနာ နှုန်းထားများ"
 msgid "Specify AC3 Options"
 msgstr "AC3 ရွေးစရာများကို သတ်မှတ်ပါ"
 
+#: export/ExportFFmpegDialogs.cpp:159 export/ExportMP2.cpp:114
+#, c-format
+msgid "%i kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:112
 msgid "AC3 Export Setup"
 msgstr "AC3 တင်ပို့မှု တပ်ဆင်ချက်"
@@ -6677,17 +7187,14 @@ msgstr "အရည်​​အသွေး -"
 msgid "Specify AMR-NB Options"
 msgstr "AMR-NB ရွေးစရာများကို သတ်မှတ်ပါ"
 
+#: export/ExportFFmpegDialogs.cpp:282
+#, c-format
+msgid "%.2f kbps"
+msgstr ""
+
 #: export/ExportFFmpegDialogs.cpp:230
 msgid "AMR-NB Export Setup"
 msgstr "AMR-NB တင်ပို့မှု တပ်ဆင်ချက်"
-
-#: export/ExportFFmpegDialogs.cpp:275
-msgid "Specify AMR-WB Options"
-msgstr "AMR-WB ရွေးစရာများကို သတ်မှတ်ပါ"
-
-#: export/ExportFFmpegDialogs.cpp:294
-msgid "AMR-WB Export Setup"
-msgstr "AMR-WB တင်ပို့မှု တပ်ဆင်ချက်"
 
 #: export/ExportFFmpegDialogs.cpp:341
 msgid "Specify WMA Options"
@@ -6741,10 +7248,6 @@ msgstr "AC3 ဖိုင်များ (FFmpeg)"
 
 #: export/ExportFFmpegDialogs.cpp:1190
 msgid "AMR (narrow band) Files (FFmpeg)"
-msgstr ""
-
-#: export/ExportFFmpegDialogs.cpp:1192
-msgid "AMR (wide band) Files (FFmpeg)"
 msgstr ""
 
 #: export/ExportFFmpegDialogs.h:58
@@ -7326,9 +7829,30 @@ msgstr "လမ်ကို ရှာဖွေပါ"
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "အိုဒေးစီးတီးက MP3များကို ဖန်တီးဖို့ %s ဖိုင် လိုအပ်တယ်။"
 
+#: FFmpeg.cpp:434
+#: export/ExportMP3.cpp:562
+#, c-format
+msgid "Location of %s:"
+msgstr "%s ရဲ့ တည်နေရာ -"
+
+#: FFmpeg.cpp:443
+#: export/ExportMP3.cpp:571
+#, c-format
+msgid "To find %s, click here -->"
+msgstr "%s ကို ရှာတွေ့ဖို့၊ ဒီနေရာကို နှိုပ်ပါ -->"
+
 #: export/ExportMP3.cpp:578
 msgid "To get a free copy of Lame, click here -->"
 msgstr "လမ်ရဲ့ အခမဲ့ မိတ္တတခုကို ရရှိဖို့၊ ဒီမှာ နှိုပ်ပါ -->"
+
+#. i18n-hint: It's asking for the location of a file, for
+#. example, "Where is lame_enc.dll?" - you could translate
+#. "Where would I find the file %s" instead if you want.
+#: FFmpeg.cpp:473
+#: export/ExportMP3.cpp:601
+#, c-format
+msgid "Where is %s?"
+msgstr "%s ဘယ်မှာ ရှိလဲ။"
 
 #: export/ExportMP3.cpp:1070
 #, c-format
@@ -7423,16 +7947,18 @@ msgstr "MP3 တင်ပို့မှု စုစည်းခန်းကိ�
 msgid "Export Multiple"
 msgstr "အမျိုးစုံကို တင်ပို့ပါ"
 
-#: export/ExportMultiple.cpp:163
-msgid "If you have more than one Audio Track, you can export each track as a separate file,\n"
-"or if you have a Label Track, you can export a new file for each label.\n"
+#: export/ExportMultiple.cpp:175
+msgid "If you have more than one Audio Track, you can\n"
+"export each track as a separate audio file.\n"
 "\n"
-"This project does not have multiple tracks or a Label Track, so you cannot export multiple files."
-msgstr "သင့်မှာ အသံကြောတခုထက် ပိုပြီး ရှိတယ်၊ အသံလမ်းကြော တခုစီကို သီးခြားဖိုင် တခု​အနေဖြင့်\n"
-"သင် တင်ပို့နိုင်တယ်၊ (သို့) အကယ်၍ သင့်မှာ အမှတ်အသား အသံကြော တခုရှိရင်၊ \n"
-"အမှတ်အသား တခုစီအတွက် ဖိုင်အသစ်တခုကို သင် တင်ပို့နိုင်တယ်။\n"
+"If you have a Label Track, you can export a separate\n"
+"audio file for each label in that track. You can have\n"
+"more than one Label Track, but files will only be\n"
+"exported for the uppermost Label Track.\n"
 "\n"
-"ဒီစီမံချက်မှာ အသံလမ်းကြောမျိုးစုံ (သို့) အမှတ်အသား အသံကြောတခု မရှိဘူး၊ ဒါကြောင့် ဖိုင်များ မျိုးစုံကို သင် မတင်ပို့နိုင်ဘူး။"
+"This Project does not meet the above criteria for\n"
+"exporting multiple files."
+msgstr ""
 
 #: export/ExportMultiple.cpp:164
 msgid "Can't export multiple files"
@@ -7488,8 +8014,8 @@ msgstr "အမှတ်အသား/အသံကြော အမည်ကို 
 msgid "Numbering before Label/Track Name"
 msgstr ""
 
-#: export/ExportMultiple.cpp:318
-msgid "Numbering after Label/Track Name"
+#: export/ExportMultiple.cpp:322
+msgid "Numbering after File name prefix"
 msgstr ""
 
 #: export/ExportMultiple.cpp:319
@@ -7557,12 +8083,17 @@ msgstr ""
 msgid "Edit metadata"
 msgstr "မက်တာဒေတာကို တည်းဖြတ်ပါ"
 
-#: export/ExportMultiple.cpp:923
+#: export/ExportMultiple.cpp:927
 #, c-format
-msgid "Label %s is not a legal file name. You cannot use any of:   %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
-msgstr "အမှတ်အသား %s ဟာ တရား၀င် ဖိုင်အမည် တခု မဟုတ်ဘူး။ အောက်ပါ တခုခုကို သင် မသုံးစွဲနိုင်ဘူး - %s\n"
-"သုံးစွဲပါ..."
+msgstr ""
+
+#: effects/Equalization.cpp:1295
+#: effects/Equalization.cpp:2553
+#: export/ExportMultiple.cpp:924
+msgid "Save As..."
+msgstr "သိမ်းဆည်းမဲ့ ပုံစံ..."
 
 #: export/ExportOGG.cpp:64
 msgid "Specify Ogg Vorbis Options"
@@ -7670,11 +8201,6 @@ msgstr "သင့်ရဲ့ ဖိုင်ကို ၁၆-ဘစ် WAV (မ
 #: export/ExportPCM.cpp:755
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
 msgstr "သင့်ရဲ့ ဖိုင်ကို GSM ၆.၁၀ WAV ဖိုင်တခု အဖြစ် တင်ပို့လိမ့်မယ်။\n"
-
-#: import/Import.cpp:162
-#: import/ImportMP3.cpp:47
-msgid "MP3 files"
-msgstr "MP3 ဖိုင်များ"
 
 #: import/Import.cpp:181
 msgid "Select stream(s) to import"
@@ -7902,6 +8428,11 @@ msgstr "ဖိုင်ကို မဖွင့်နိုင်ဘူး"
 msgid ": Incorrect filetype."
 msgstr ": မမှန်တဲ့ ဖိုင်အမျိုးအစား။"
 
+#: import/Import.cpp:162
+#: import/ImportMP3.cpp:47
+msgid "MP3 files"
+msgstr "MP3 ဖိုင်များ"
+
 #: import/ImportOGG.cpp:44
 msgid "Ogg Vorbis files"
 msgstr "အော့ဂျ် ဝေါဘီးစ် ဖိုင်များ"
@@ -7929,6 +8460,42 @@ msgstr "အတွင်းပိုင်း ယုတ္တိဗေဒ အမ�
 #: import/ImportPCM.cpp:66
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, နဲ့ အခြား ဖိသိပ်မထားတဲ့ အမျိုးအစားများ"
+
+#: import/ImportPCM.cpp:225
+#, c-format
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+"\n"
+"Your current preference is set to %s.\n"
+"\n"
+"Reading the files directly allows you to play or edit them almost immediately.  This is less safe than copying in, because you must retain the files with their original names in their original location.\n"
+"File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
+"\n"
+"How do you want to import the current file(s)?"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "copy in"
+msgstr ""
+
+#: import/ImportPCM.cpp:235
+msgid "read directly"
+msgstr ""
+
+#: import/ImportPCM.cpp:240
+msgid "Choose an import method"
+msgstr ""
+
+#: import/ImportPCM.cpp:243
+msgid "Make a &copy of the files before editing (safer)"
+msgstr ""
+
+#: import/ImportPCM.cpp:246
+msgid "Read the files &directly from the original (faster)"
+msgstr ""
+
+#: import/ImportPCM.cpp:249
+msgid "Don't &warn again and always use my choice above"
+msgstr ""
 
 #: import/ImportPlugin.h:135
 #: import/ImportRaw.cpp:210
@@ -8189,6 +8756,10 @@ msgstr "ဖိုင်တွဲ %s ကို ရေးလို့မရဘူ�
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "ယာယီ ဖိုင်တွဲမှာ ပြင်ဆင်မှုများဟာ အိုဒေးစီးတီးကို ပြန်မဖွင့်မှီတိုင်အောင် သက်ရောက်မှု ရှိမှာ မဟုတ်ဘူး"
 
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr ""
+
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
 msgstr ""
@@ -8243,6 +8814,74 @@ msgstr ""
 
 #: prefs/EffectsPrefs.cpp:114
 msgid "&Rescan VST effects next time Audacity is started"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:59
+msgid "Extended Import"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:92
+msgid "Attempt to use filter in OpenFile dialog first"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:95
+msgid "Rules to choose import filters"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:114
+msgid "File extensions"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:116
+msgid "Mime-types"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:134
+msgid "Importer order"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:150
+msgid "Move rule &up"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:152
+msgid "Move rule &down"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:154
+msgid "Move f&ilter up"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:156
+msgid "Move &filter down"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:161
+msgid "&Add new rule"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:162
+msgid "De&lete selected rule"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:419 prefs/ExtImportPrefs.cpp:436
+msgid "Unused filters:"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:484
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:488
+msgid "Spaces detected"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:573
+msgid "Do you really want to delete selected rule?"
+msgstr ""
+
+#: prefs/ExtImportPrefs.cpp:574
+msgid "Rule deletion confirmation"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:49
@@ -8307,12 +8946,12 @@ msgstr "-၁၄၅ dB (၂၄ ဘစ် နမူနာများရဲ့ PCM
 msgid "Display"
 msgstr "ပြသပါ"
 
-#: prefs/GUIPrefs.cpp:96
-msgid "&Ergonomic order of audio I/O buttons"
+#: prefs/GUIPrefs.cpp:87
+msgid "&Ergonomic order of Transport Toolbar buttons"
 msgstr ""
 
-#: prefs/GUIPrefs.cpp:99
-msgid "S&how 'How to get Help' message at program start up"
+#: prefs/GUIPrefs.cpp:90
+msgid "S&how 'How to Get Help' dialog box at program start up"
 msgstr ""
 
 #: prefs/GUIPrefs.cpp:107
@@ -8328,13 +8967,13 @@ msgstr ""
 msgid "Location of &Manual:"
 msgstr ""
 
-#: prefs/GUIPrefs.cpp:134
-msgid "Closing last window &quits Audacity"
-msgstr ""
-
 #: prefs/GUIPrefs.cpp:139
 msgid "&Beep on completion of longer activities"
 msgstr "ကြာရှည်တဲ့ လှုပ်ရှားမှုများကို ပြီးစီးမှုအတွက် မြည်သံ"
+
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
+msgstr ""
 
 #: prefs/GUIPrefs.cpp:145
 msgid "Modes"
@@ -8389,6 +9028,18 @@ msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
 msgstr "မှတ်ချက် - တင်ပို့မှု အရည်အသွေး ရွေးစရာများကို တင်ပို့မှု အညွှန်းစာမျက်နှာထဲမှ\n"
 " ရွေးစရာများ ခလုတ်ကို နှိုပ်ခြင်းဖြင့် ရွေးချယ်နိုင်တယ်။"
+
+#: prefs/ImportExportPrefs.cpp:88
+msgid "When exporting track to an Allegro (.gro) file"
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:92
+msgid "Represent times and durations in &seconds"
+msgstr ""
+
+#: prefs/ImportExportPrefs.cpp:94
+msgid "Represent times and durations in &beats"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:71
 msgid "Keyboard"
@@ -8447,17 +9098,17 @@ msgstr "ပြန်ပြင်ပါ"
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "အိုဒေးစီးတီး ကီးဘုတ် ဖြတ်လမ်းများ ပါရှိတဲ့ XML ဖိုင်တခုကို ရွေးပါ..."
 
-#: prefs/KeyConfigPrefs.cpp:242
-msgid "Error loading keyboard shortcuts"
-msgstr "ကီးဘုတ် ဖြတ်လမ်းများ ဖွင့်ပြမှု အမှားအယွင်း"
+#: prefs/KeyConfigPrefs.cpp:287
+msgid "Error Loading Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:255
 msgid "Export Keyboard Shortcuts As:"
 msgstr "ကီးဘုတ် ဖြတ်လမ်းများကို တင်ပို့မဲ့ ပုံစံ -"
 
-#: prefs/KeyConfigPrefs.cpp:281
-msgid "Error saving keyboard shortcuts"
-msgstr "ကီးဘုတ် ဖြတ်လမ်းများကို သိမ်းဆည်းမှု အမှားအယွင်း"
+#: prefs/KeyConfigPrefs.cpp:326
+msgid "Error Saving Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:331
 #, c-format
@@ -8536,76 +9187,20 @@ msgstr ""
 msgid "Host"
 msgstr "အခြေစိုက်စခန်း"
 
-#: prefs/MidiIOPrefs.cpp:140
-#: prefs/RecordingPrefs.cpp:57
-msgid "Playthrough"
-msgstr "ဆက်လက်ဖွင့်ပြချက်"
-
-#: prefs/MidiIOPrefs.cpp:142
-msgid "&Play other tracks while recording new one"
-msgstr "အသစ်တခုကို အသံသွင်းနေတုန်း အခြား အသံကြောများကို ဖွင့်ပြပါ"
+#: prefs/MidiIOPrefs.cpp:129
+msgid "Using: PortMidi"
+msgstr ""
 
 #: prefs/MidiIOPrefs.cpp:145
-msgid "&Hardware Playthrough (Play new track while recording it)"
-msgstr "ဟားဒ်ဝဲ ဆက်လက်ဖွင့်ပြချက် (အသံကြောသစ်ကို အသံသွင်းနေတုန်း ဖွင့်ပြပါ)"
-
-#: prefs/MidiIOPrefs.cpp:148
-msgid "&Software Playthrough (Play new track while recording it)"
-msgstr "ဟားဒ်ဝဲ ဆက်လက်ဖွင့်ပြချက် (အသံကြောသစ်ကို အသံသွင်းနေတုန်း ဖွင့်ပြပါ)"
-
-#: prefs/MidiIOPrefs.cpp:153
-#: prefs/PlaybackPrefs.cpp:68
-msgid "Cut Preview"
-msgstr "အစမ်းမြင်ကွင်းကို ဖြတ်ယူပါ"
-
-#: prefs/MidiIOPrefs.cpp:156
-msgid "Play before cut region:"
-msgstr "နယ်ပယ်ကို မဖြတ်ယူခင် ဖွင့်ပြပါ -"
-
-#: prefs/MidiIOPrefs.cpp:158
-msgid "Play after cut region:"
-msgstr "နယ်ပယ်ကို ဖြတ်ယူပြီးနောက် ဖွင့်ပြပါ -"
-
-#: prefs/MidiIOPrefs.cpp:163
-#: prefs/RecordingPrefs.cpp:76
-msgid "Latency"
-msgstr "ငုပ်အောင်းနေမှု"
-
-#: prefs/MidiIOPrefs.cpp:168
-#: prefs/RecordingPrefs.cpp:82
-msgid "Audio to buffer:"
-msgstr "အသံမှာ ဘာဖာသို့ -"
-
-#: prefs/MidiIOPrefs.cpp:170
-#: prefs/RecordingPrefs.cpp:88
-msgid "Latency correction:"
-msgstr "ငုပ်အောင်နေတဲ့ ပြင်ဆင်ချက် -"
-
-#: prefs/MidiIOPrefs.cpp:177
-msgid "Seek Time"
-msgstr "အချိန်ကို ရွေးပါ"
-
-#: prefs/MidiIOPrefs.cpp:180
-#: prefs/PlaybackPrefs.cpp:92
-msgid "Short period:"
-msgstr "တိုတောင်းတဲ့အချိန် -"
-
-#: prefs/MidiIOPrefs.cpp:182
-#: prefs/PlaybackPrefs.cpp:98
-msgid "Long period:"
-msgstr "ကြာမြင့်တဲ့ အချိန် -"
-
-#: prefs/MidiIOPrefs.cpp:187
-#: prefs/PlaybackPrefs.cpp:54
-msgid "Effects Preview"
-msgstr "သက်ရောက်ချက်များ အစမ်းမြင်ကွင်း"
-
-#: prefs/MidiIOPrefs.cpp:190
-msgid "Play when previewing:"
-msgstr "အစမ်းကြည့်ရှုရင် ဖွင့်ပြပါ -"
+msgid "MIDI Synthesizer Latency (ms):"
+msgstr ""
 
 #: prefs/MidiIOPrefs.cpp:256
 msgid "No MIDI interfaces"
+msgstr ""
+
+#: prefs/MidiIOPrefs.cpp:280
+msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
 #: prefs/MousePrefs.cpp:57
@@ -8843,10 +9438,20 @@ msgstr "Ctrl-ဘီး-လည်ပတ်ပါ"
 msgid "Zoom in or out"
 msgstr "ချဲ့ကား (သို့) ကျုံ့ပါ"
 
+#: prefs/MidiIOPrefs.cpp:187
+#: prefs/PlaybackPrefs.cpp:54
+msgid "Effects Preview"
+msgstr "သက်ရောက်ချက်များ အစမ်းမြင်ကွင်း"
+
 #: prefs/PlaybackPrefs.cpp:61
 #, fuzzy
 msgid "&Length of preview:"
 msgstr "အစမ်းမြင်ကွင်း အရှည် -"
+
+#: prefs/MidiIOPrefs.cpp:153
+#: prefs/PlaybackPrefs.cpp:68
+msgid "Cut Preview"
+msgstr "အစမ်းမြင်ကွင်းကို ဖြတ်ယူပါ"
 
 #: prefs/PlaybackPrefs.cpp:76
 #, fuzzy
@@ -8868,6 +9473,10 @@ msgstr ""
 
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
+msgstr ""
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
 msgstr ""
 
 #: prefs/PrefsDialog.cpp:72
@@ -8893,24 +9502,6 @@ msgstr ""
 #: prefs/ProjectsPrefs.cpp:67
 msgid "As&k user"
 msgstr ""
-
-#: prefs/ProjectsPrefs.cpp:71
-msgid "Auto save"
-msgstr "အလို​အလျှောက် သိမ်းဆည်းမှု"
-
-#: prefs/ProjectsPrefs.cpp:76
-#, fuzzy
-msgid "Auto &save a copy of the project in a separate folder"
-msgstr "သီးခြား ဖိုင်တွဲတခုထဲ စီမံချက်ရဲ့ မိတ္တူတခုကို အလိုအလျှောက် သိမ်းဆည်းပါ"
-
-#: prefs/ProjectsPrefs.cpp:82
-#, fuzzy
-msgid "Auto save in&terval:"
-msgstr "အလိုအလျှောက် သိမ်းဆည်းမှု ကြားကာလ -"
-
-#: prefs/ProjectsPrefs.cpp:83
-msgid "minutes"
-msgstr "မိနစ်"
 
 #: prefs/QualityPrefs.cpp:75
 msgid "Rectangle"
@@ -8964,6 +9555,11 @@ msgstr "နမူနာ နှုန်းထား အသွင်ပြော�
 msgid "Dit&her:"
 msgstr ""
 
+#: prefs/MidiIOPrefs.cpp:140
+#: prefs/RecordingPrefs.cpp:57
+msgid "Playthrough"
+msgstr "ဆက်လက်ဖွင့်ပြချက်"
+
 #: prefs/RecordingPrefs.cpp:59
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr "အိုဗာဒုတ် -အသစ်တခုကို အသံသွင်းနေတုန်း အခြား အသံကြောများကို ဖွင့်ပြပါ"
@@ -8979,6 +9575,11 @@ msgstr ""
 #: prefs/RecordingPrefs.cpp:71
 msgid "(uncheck when recording \"stereo mix\")"
 msgstr "(\"စတီရီယို ပေါင်းစပ်မှု\" ကို အသံသွင်းနေစဉ် ပြန်ရုပ်ပါ)"
+
+#: prefs/MidiIOPrefs.cpp:163
+#: prefs/RecordingPrefs.cpp:76
+msgid "Latency"
+msgstr "ငုပ်အောင်းနေမှု"
 
 #: prefs/RecordingPrefs.cpp:88
 msgid "Audio to &buffer:"
@@ -9098,10 +9699,6 @@ msgstr "၁၆၃၈၄"
 msgid "32768 - most narrowband"
 msgstr "၃၂၇၆၈ - အကျဉ်းမြောင်းဆုံး အဖွဲ့"
 
-#: prefs/SpectrumPrefs.cpp:56
-msgid "4096 - most narrowband"
-msgstr "၄၀၉၆ - အကျဉ်းမြောင်းဆုံး အဖွဲ့"
-
 #: prefs/SpectrumPrefs.cpp:82
 msgid "FFT Window"
 msgstr "FFT ၀င်းဒိုး"
@@ -9178,9 +9775,9 @@ msgstr "မှတ်စုများကို တိုင်းတာပါ"
 msgid "The maximum frequency must be an integer"
 msgstr "အများဆုံး ကြိမ်နှုန်းဟာ ကိန်းပြည့်ဖြစ်ရမယ်"
 
-#: prefs/SpectrumPrefs.cpp:198
-msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-msgstr "အများဆုံး ကြိမ်နှုန်းဟာ ၁၀၀ Hz - ၁၀၀,၀၀၀ Hz အတိုင်းအတာထဲ ရှိရမယ်"
+#: prefs/SpectrumPrefs.cpp:212
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr ""
 
 #: prefs/SpectrumPrefs.cpp:204
 msgid "The minimum frequency must be an integer"
@@ -9239,6 +9836,7 @@ msgid "Info"
 msgstr "အချက်အလက်"
 
 #: prefs/ThemePrefs.cpp:91
+#, fuzzy
 msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
@@ -9246,8 +9844,8 @@ msgid "Themability is an experimental feature.\n"
 "\n"
 "Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"[Only the control toolbar and the colors on the wavetrack are currently affected, even\n"
-"though the image file shows other icons too.]"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
+"though the image file shows other icons too.)"
 msgstr "အဓိကကျစေခြင်းဟာ စမ်းသပ်နေဆဲ အင်္ဂါရပ်တခု ဖြစ်တယ်။\n"
 "\n"
 "၄င်းကို စမ်းကြည့်ပါ၊\"အဓိက သိမ်းဆည်းချက်ကို သိမ်းဆည်းပါ\" ကို နှိုပ်ပြီး Gimp လို ရုပ်ပုံ တည်းဖြတ်\n"
@@ -9375,6 +9973,10 @@ msgstr ""
 msgid "Mixing down to &mono during export"
 msgstr ""
 
+#: prefs/WarningsPrefs.cpp:72
+msgid "&Importing uncompressed audio files"
+msgstr ""
+
 #: toolbars/ControlToolBar.cpp:170
 #: toolbars/ControlToolBar.cpp:205
 msgid "Pause"
@@ -9412,6 +10014,10 @@ msgstr "အသံကြော တခု၊ (သို့) စီမံချက�
 msgid "Recording not permitted"
 msgstr "အသံသွင်းခြင်းကို ခွင့်မပြုဘူး"
 
+#: toolbars/DeviceToolBar.cpp:102 toolbars/DeviceToolBar.cpp:351
+msgid "Audio Host"
+msgstr ""
+
 #: toolbars/DeviceToolBar.cpp:109
 #: toolbars/DeviceToolBar.cpp:205
 msgid "Output Device"
@@ -9422,6 +10028,38 @@ msgstr "ရလဒ် ကိရိယာ"
 msgid "Input Device"
 msgstr "ထည့်သွင်း ကိရိယာ"
 
+#: toolbars/DeviceToolBar.cpp:137 toolbars/DeviceToolBar.cpp:352
+msgid "Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:613
+msgid "1 (Mono) Input Channel"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:616
+msgid "2 (Stereo) Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:740
+msgid "Select Input Device"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:744
+msgid "Select Output Device"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:748
+msgid "Select Audio Host"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:752
+msgid "Select Input Channels"
+msgstr ""
+
+#: toolbars/DeviceToolBar.cpp:758
+msgid "Device information is not available."
+msgstr ""
+
 #: toolbars/EditToolBar.cpp:136
 msgid "Trim outside selection"
 msgstr "ရွေးချယ်ချက် ပြင်ပကို တိဖြတ်ပါ"
@@ -9430,10 +10068,9 @@ msgstr "ရွေးချယ်ချက် ပြင်ပကို တိဖ�
 msgid "Silence selection"
 msgstr "ရွေးချယ်ချက်ကို ငြိမ်သက်စေပါ"
 
-#: toolbars/EditToolBar.cpp:150
-#: toolbars/EditToolBar.cpp:197
-msgid "Link Tracks"
-msgstr "အသံကြောများကို ချိတ်ဆက်ပါ"
+#: toolbars/EditToolBar.cpp:152 toolbars/EditToolBar.cpp:203
+msgid "Sync-Lock Tracks"
+msgstr ""
 
 #: toolbars/EditToolBar.cpp:155
 #: toolbars/EditToolBar.cpp:198
@@ -9502,36 +10139,20 @@ msgstr "ထည့်သွင်းချက် ထုထည်"
 msgid "Slider Input"
 msgstr "စလိုင်ဒါ ထည့်သွင်းချက်"
 
-#: toolbars/MixerToolBar.cpp:134
-msgid "Input Source"
-msgstr "ထည့်သွင်းချက် အရင်းအမြစ်"
-
-#: toolbars/MixerToolBar.cpp:299
-msgid "Input source information is not available."
-msgstr "ထည့်သွင်းချက် အရင်းအမြစ် အချက်အလက် မရနိုင်ဘူး။"
-
-#: toolbars/MixerToolBar.cpp:306
-msgid "Select Input Source"
-msgstr "ထည့်သွင်းချက် အရင်းအမြစ်ကို ရွေးပါ"
-
-#: toolbars/MixerToolBar.cpp:338
-msgid "Input Source:"
+#: toolbars/MixerToolBar.cpp:286
+msgid "Input Volume Slider"
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:388
-msgid "Input Level Slider"
+#: toolbars/MixerToolBar.cpp:290
+msgid "Cannot control input volume; use system mixer."
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:392
-msgid "Cannot control input level; use system mixer."
+#: toolbars/MixerToolBar.cpp:294
+msgid "Output Volume Slider"
 msgstr ""
 
-#: toolbars/MixerToolBar.cpp:396
-msgid "Output Level Slider"
-msgstr ""
-
-#: toolbars/MixerToolBar.cpp:400
-msgid "Cannot control output level; use system mixer."
+#: toolbars/MixerToolBar.cpp:298
+msgid "Cannot control output volume; use system mixer."
 msgstr ""
 
 #: toolbars/SelectionBar.cpp:86
@@ -9677,11 +10298,6 @@ msgstr "အသံသော့ချက်ကို စံကိုက်ချ�
 msgid "Adjust Sensitivity"
 msgstr "အာရုံခံနိုင်မှုကို ချိန်ညှိပါ"
 
-#: toolbars/TranscriptionToolBar.cpp:219
-#: toolbars/TranscriptionToolBar.cpp:275
-msgid "Sensitivity"
-msgstr "အာရုံခံနိုင်မှု"
-
 #: toolbars/TranscriptionToolBar.cpp:224
 msgid "Energy"
 msgstr "အင်အား"
@@ -9785,9 +10401,9 @@ msgstr "ဘယ်ဖက်"
 msgid "Right"
 msgstr "ညာဖက်"
 
-#: widgets/ErrorDialog.cpp:96
-msgid "Help"
-msgstr "အကူအညီ"
+#: widgets/ASlider.cpp:932
+msgid "+"
+msgstr ""
 
 #: widgets/ErrorDialog.cpp:166
 msgid "<"
@@ -9885,6 +10501,10 @@ msgstr "လှုပ်ရှားမှုတခုကို ရွေးခ�
 msgid "Please select an action"
 msgstr "လှုပ်ရှားမှုတခုကို ရွေးချယ်ပါ"
 
+#: widgets/MultiDialog.cpp:104
+msgid "Show Log for Details"
+msgstr ""
+
 #: widgets/ProgressDialog.cpp:1060
 msgid "Elapsed Time:"
 msgstr "ကုန်လွန်သွားတဲ့ အချိန် -"
@@ -9933,12 +10553,6 @@ msgstr "dd:hh:mm:ss"
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 ​ရက်စွဲများ 024 နာရီ 060 မိနစ် 060 စက္ကန့်"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
-#: widgets/TimeTextCtrl.cpp:289
-msgid "hh:mm:ss + hundredths"
-msgstr "hh:mm:ss + ရာပြည့်များ"
-
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -9962,12 +10576,6 @@ msgstr "hh:mm:ss + မီလီမီတာများ"
 #: widgets/TimeTextCtrl.cpp:304
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 နာရီ 060 မိနစ် 060.01000 စက္ကန့်"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
-#: widgets/TimeTextCtrl.cpp:307
-msgid "hh:mm:ss + samples"
-msgstr "hh:mm:ss + နမူနာများ"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -10142,15 +10750,15 @@ msgstr "အမှားအယွင်း - %2$lu လိုင်းမှ %1$hs
 msgid "Could not load file: \"%s\""
 msgstr "မဖွင့်နိုင်တဲ့ ဖိုင် - \"%s\""
 
-#: xml/XMLWriter.cpp:325
-msgid "Error flushing file"
-msgstr "ဖော်ထုတ်နေတဲ့ ဖိုင် အမှားအယွင်း"
+#: xml/XMLWriter.cpp:348
+msgid "Error Flushing File"
+msgstr ""
 
-#: xml/XMLWriter.cpp:330
-msgid "Error closing file"
-msgstr "ပိတ်ပင်နေတဲ့ ဖိုင် အမှားအယွင်း "
+#: xml/XMLWriter.cpp:353
+msgid "Error Closing File"
+msgstr ""
 
-#: xml/XMLWriter.cpp:340
-msgid "Error writing to file"
-msgstr "ရေးသားနေတဲ့ ဖိုင် အမှားအယွင်း "
+#: xml/XMLWriter.cpp:363
+msgid "Error Writing to File"
+msgstr ""
 

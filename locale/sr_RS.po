@@ -4,8 +4,7 @@
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2011.
 msgid ""
-msgstr ""
-"Project-Id-Version: Audacity 2.0.0\n"
+msgstr "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-08-31 04:02+0100\n"
 "PO-Revision-Date: 2011-10-20 14:33-0000\n"
@@ -48,8 +47,7 @@ msgstr "Ово је стабилно, завршено издање програ
 #: AboutDialog.cpp:214
 #: AboutDialog.cpp:216
 msgid "translator_credits"
-msgstr ""
-"Превод на српски језик:\n"
+msgstr "Превод на српски језик:\n"
 "Мирослав Николић <miroslavnikolic@rocketmail.com>"
 
 #: AboutDialog.cpp:229
@@ -222,27 +220,23 @@ msgstr "ОЈЛ лиценца"
 
 #: AudacityApp.cpp:785
 #, c-format
-msgid ""
-"%s could not be found.\n"
+msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr ""
-"Не могу да пронађем „%s“.\n"
+msgstr "Не могу да пронађем „%s“.\n"
 "\n"
 "Уклоњена је са списка недавних датотека."
 
 #: AudacityApp.cpp:846
 #, c-format
-msgid ""
-"One or more external audio files could not be found.\n"
+msgid "One or more external audio files could not be found.\n"
 "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
 "Silence is being substituted for the affected audio.\n"
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
 "Choose File > Check Dependencies to view a list of locations of the missing files."
-msgstr ""
-"Не могу да пронађем једну или више спољних датотека звука.\n"
+msgstr "Не могу да пронађем једну или више спољних датотека звука.\n"
 "Могуће је да су премештене, обрисане, или да је уређај на коме се налазе демонтиран.\n"
 "Тишина је заменила тражени звук.\n"
 "Прва откривена недостајућа датотека је:\n"
@@ -302,36 +296,29 @@ msgid "Unknown command line option: %s\n"
 msgstr "Непозната опција линије наредби: %s\n"
 
 #: AudacityApp.cpp:1531
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Одважност не може да нађе место за складиштење\n"
+msgstr "Одважност не може да нађе место за складиштење\n"
 "привремених датотека. Молим унесите одговарајући\n"
 "директоријум у прозорчету поставки."
 
 #: AudacityApp.cpp:1537
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr ""
-"Одважност ће сада да изађе. Молим поново\n"
+msgstr "Одважност ће сада да изађе. Молим поново\n"
 "покрените Одважност да бисте користили\n"
 "нови привремени директоријум."
 
 #: AudacityApp.cpp:1569
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"Рад са два примерка Одважности истовремено може довести до губитка података или урушавања система.\n"
+msgstr "Рад са два примерка Одважности истовремено може довести до губитка података или урушавања система.\n"
 "\n"
 
 #: AudacityApp.cpp:1576
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Одважност није у могућности да закључа\n"
+msgstr "Одважност није у могућности да закључа\n"
 "директоријум привремених датотека.\n"
 "\n"
 "Овај директоријум можда користи други примерак Одважности.\n"
@@ -340,22 +327,19 @@ msgstr ""
 msgid "Do you still want to start Audacity?"
 msgstr "Да ли још увек желите да покренете Одважност?"
 
-#: AudacityApp.cpp:1580
-msgid "Error locking temporary folder"
-msgstr "Грешка приликом закључавања привремене фасцикле"
+#: AudacityApp.cpp:1581
+msgid "Error Locking Temporary Folder"
+msgstr ""
 
 #: AudacityApp.cpp:1618
 msgid "The system has detected that another copy of Audacity is running.\n"
-msgstr ""
-"Систем је открио да други\n"
+msgstr "Систем је открио да други\n"
 "примерак Одважности ради.\n"
 
 #: AudacityApp.cpp:1620
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"Користите наредбе „Ново“ или „Отвори“\n"
+msgstr "Користите наредбе „Ново“ или „Отвори“\n"
 "у тренутном радном процесу Одважности\n"
 "да отворите више пројеката истовремено.\n"
 
@@ -398,13 +382,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "Као додатак, одредите назив звучне датотеке или пројекта Одважности за отварање."
 
 #: AudacityApp.cpp:1964
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"Датотеке пројекта Одважности (.AUP) нису тренутно \n"
+msgstr "Датотеке пројекта Одважности (.AUP) нису тренутно \n"
 "придружене Одважности. \n"
 "\n"
 "Да их придружим, тако да се отварају на двоклик?"
@@ -418,11 +400,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "Не могу да пронађем ниједан звучни уређај.\n"
 
 #: AudioIO.cpp:551
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"Нећете бити у могућности да пуштате или снимате звук.\n"
+msgstr "Нећете бити у могућности да пуштате или снимате звук.\n"
 "\n"
 
 #: AudioIO.cpp:554
@@ -439,11 +419,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "Дошло је до грешке приликом започињања у/и слоја мидија.\n"
 
 #: AudioIO.cpp:571
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"Нећете бити у могућности да пуштате миди.\n"
+msgstr "Нећете бити у могућности да пуштате миди.\n"
 "\n"
 
 #: AudioIO.cpp:577
@@ -456,12 +434,10 @@ msgid "Out of memory!"
 msgstr "Нема више меморије!"
 
 #: AudioIO.cpp:1764
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"Подешавање исправљања притајености је проузроковало да снимљени звук буде скривен пре нуле.\n"
+msgstr "Подешавање исправљања притајености је проузроковало да снимљени звук буде скривен пре нуле.\n"
 "Одважност га је вратила назад да започне од нуле.\n"
 "Мораћете да користите алат померања времена (<———> или Ф5) да превучете нумеру на одговарајуће место."
 
@@ -505,11 +481,9 @@ msgid "Automatic Crash Recovery"
 msgstr "Самосталние опоравак после пада"
 
 #: AutoRecovery.cpp:75
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"Неки пројекти нису правилно сачувани од последњег покретања Одважности.\n"
+msgstr "Неки пројекти нису правилно сачувани од последњег покретања Одважности.\n"
 "На срећу, следећи пројекти могу бити аутоматски опорављени:"
 
 #: AutoRecovery.cpp:77
@@ -537,11 +511,9 @@ msgid "Recover Projects"
 msgstr "Опорави пројекат"
 
 #: AutoRecovery.cpp:129
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"Да ли сте сигурни да не желите да опоравите ниједан пројекат?\n"
+msgstr "Да ли сте сигурни да не желите да опоравите ниједан пројекат?\n"
 "Можете их опоравити касније."
 
 #: AutoRecovery.cpp:130
@@ -620,11 +592,9 @@ msgstr "Наредба „%s“ још увек није примењена"
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:120
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"Не могу да подесим параметре ефекта „%s“\n"
+msgstr "Не могу да подесим параметре ефекта „%s“\n"
 " у „%s“."
 
 #: BatchCommands.cpp:557
@@ -634,12 +604,10 @@ msgstr "Ваша групна „%s“ наредба није препозна�
 
 #: BatchCommands.cpp:676
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"Примените „%s“ са параметром\n"
+msgstr "Примените „%s“ са параметром\n"
 "\n"
 "%s"
 
@@ -836,21 +804,17 @@ msgid "Project Depends on Other Audio Files"
 msgstr "Пројекат зависи од других датотека звука"
 
 #: Dependencies.cpp:324
-msgid ""
-"Copying these files into your project will remove this dependency.\n"
+msgid "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
-msgstr ""
-"Умножавање ових датотека у ваш пројекат ће уклонити ове зависности.\n"
+msgstr "Умножавање ових датотека у ваш пројекат ће уклонити ове зависности.\n"
 "Тако је безбедније, али захтева више простора на диску."
 
 #: Dependencies.cpp:328
-msgid ""
-"\n"
+msgid "\n"
 "\n"
 "Files shown as MISSING have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
-msgstr ""
-"\n"
+msgstr "\n"
 "\n"
 "Датотеке приказане као НЕДОСТАЈУЋЕ су премештене или обрисане и не могу бити умножене.\n"
 "Повратите их на њихова претходна места да бисте их умножили у пројекат."
@@ -914,12 +878,10 @@ msgid "If you proceed, your project will not be saved to disk. Is this what you 
 msgstr "Ако наставите, ваш пројекат неће бити сачуван на диск. Да ли је то оно што желите?"
 
 #: Dependencies.cpp:549
-msgid ""
-"Your project is currently self-contained; it does not depend on any external audio files. \n"
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
 "\n"
 "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
-msgstr ""
-"Ваш пројекат је тренутно самосадржећи; не зависи ни од једне спољне звучне датотеке. \n"
+msgstr "Ваш пројекат је тренутно самосадржећи; не зависи ни од једне спољне звучне датотеке. \n"
 "\n"
 "Ако измените пројекат у стање које има спољне зависности на увежене датотеке, он више неће бити самосадржећи. Ако затим сачувате без умножавања тих датотека, можете изгубити податке."
 
@@ -935,11 +897,9 @@ msgid "Progress"
 msgstr "Напредак"
 
 #: DirManager.cpp:349
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"На овом уређају је преостало врло мало слободног простора.\n"
+msgstr "На овом уређају је преостало врло мало слободног простора.\n"
 "Молим изаберите другу привремену датотеку у поставкама."
 
 #: DirManager.cpp:381
@@ -954,18 +914,17 @@ msgstr "Чувам датотеке података пројекта"
 msgid "Cleaning up cache directories"
 msgstr "Чистим директоријуме оставе"
 
-#: DirManager.cpp:569
-msgid "mkdir in DirManager::MakeBlockFilePath failed.\n"
-msgstr "Наредба „mkdir“ у „УправникуДиректоријума::НаправиПутањуБлокДатотеке“ није успела.\n"
-
-#: DirManager.cpp:599
-#, c-format
-msgid ""
-"Audacity found an orphan blockfile: %s. \n"
-"Please consider saving and reloading the project to perform a complete project check.\n"
+#: DirManager.cpp:584
+msgid "mkdir in DirManager::MakeBlockFilePath failed."
 msgstr ""
-"Одважност је пронашла напуштену блок датотеку: %s. \n"
-"Молим размотрите чување и поновно учитавање пројекта зарад извршавања потпуне провере пројекта.\n"
+
+#: DirManager.cpp:614
+#, c-format
+#, fuzzy
+msgid "Audacity found an orphan block file: %s. \n"
+"Please consider saving and reloading the project to perform a complete project check."
+msgstr "Одважност је пронашла напуштену блок датотеку: %s. \n"
+"Молим размотрите чување и поновно учитавање пројекта зарад извршавања потпуне провере пројекта."
 
 #. i18n-hint: This is the pattern for filenames that are created
 #. when a file needs to be backed up to a different name.  For
@@ -999,16 +958,32 @@ msgstr "Не могу да преименујем „%s“ у „%s“."
 msgid "Changed block %s to new alias name\n"
 msgstr "Измених блок „%s“ у нови назив алијаса\n"
 
+#: DirManager.cpp:1370
+msgid "Project check read faulty Sequence tags."
+msgstr ""
+
+#: DirManager.cpp:1386
+msgid "Close project immediately with no changes"
+msgstr "Одмах затвори пројекат без измена"
+
+#: DirManager.cpp:1373
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr ""
+
+#: DirManager.cpp:1376
+msgid "Warning - Problems Reading Sequence Tags"
+msgstr ""
+
 #: DirManager.cpp:1344
 #: DirManager.cpp:1750
 msgid "Inspecting project file data"
 msgstr "Надгледам податке датотеке пројекта"
 
-#: DirManager.cpp:1375
+#: DirManager.cpp:1410
 #, c-format
-msgid ""
-"Project check detected %d missing external audio \n"
-"file(s) ('aliased files'). There is no way for Audacity \n"
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing external audio file(s) \n"
+"('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -1016,32 +991,21 @@ msgid ""
 "to their previous location. \n"
 "\n"
 "Note that for the second option, the waveform \n"
-"may not show silence."
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
 msgstr ""
-"Провера пројекта је открила %d недостајуће спољне звучне \n"
-"датотеке („алијазоване датотеке“). Не постоји начин да \n"
-"Одважност спаси те датотеке самостално. \n"
-"\n"
-"Ако изаберете прву или другу опцију испод, \n"
-"можете да покушате да пронађете и повратите недостајуће \n"
-"датотеке на њихова претходна места. \n"
-"\n"
-"Знајте да за другу опцију, таласни облик \n"
-"неће приказати тишине."
-
-#: DirManager.cpp:1386
-msgid "Close project immediately with no changes"
-msgstr "Одмах затвори пројекат без измена"
 
 #: DirManager.cpp:1387
 #: DirManager.cpp:1504
 msgid "Treat missing audio as silence (this session only)"
 msgstr "Сматрај недостајући звук као тишине (само ова сесија)"
 
-#: DirManager.cpp:1388
-#: DirManager.cpp:1505
-msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Замени недостајући звук тишинама (стално одмах)"
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
 
 #: DirManager.cpp:1391
 msgid "Warning - Missing Aliased File(s)"
@@ -1051,16 +1015,13 @@ msgstr "Упозорење — Недостајуће алијазоване д�
 msgid "   Project check replaced missing aliased file(s) with silence."
 msgstr "   Провера пројекта је заменила недостајуће алијазоване датотеке тишинама."
 
-#: DirManager.cpp:1441
+#: DirManager.cpp:1480
 #, c-format
-msgid ""
-"Project check detected %d missing alias (.auf) \n"
-"blockfile(s). Audacity can fully regenerate these \n"
-"files from the current audio in the project."
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing alias (.auf) blockfile(s). \n"
+"Audacity can fully regenerate these files \n"
+"from the current audio in the project."
 msgstr ""
-"Провера пројекта је открила %d недостајуће алијас (.auf) \n"
-"блок датотеке. Одважност може у потпуности да поново\n"
-"створи те датотеке из текућег звука у пројекту."
 
 #: DirManager.cpp:1446
 msgid "Regenerate alias summary files (safe and recommended)"
@@ -1084,13 +1045,13 @@ msgstr "Упозорење — Недостаје датотека сажетк�
 msgid "   Project check regenerated missing alias summary file(s)."
 msgstr "   Провера пројекта је поново створила недостајућу датотеку сажетка алијаса."
 
-#: DirManager.cpp:1491
+#: DirManager.cpp:1531
 #, c-format
-msgid ""
-"Project check detected %d missing audio data \n"
-"(.au) blockfile(s), probably due to a bug, system \n"
-"crash, or accidental deletion. There is no way for \n"
-"Audacity to recover these missing files automatically. \n"
+msgid "Project check of \"%s\" folder \n"
+"detected %d missing audio data (.au) blockfile(s), \n"
+"probably due to a bug, system crash, or accidental \n"
+"deletion. There is no way for Audacity to recover \n"
+"these missing files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
 "you can try to find and restore the missing files \n"
@@ -1099,54 +1060,45 @@ msgid ""
 "Note that for the second option, the waveform \n"
 "may not show silence."
 msgstr ""
-"Провера пројекта је открила %d недостајуће блок датотеке \n"
-"(.au) податка звука, вероватно услед грешке, урушавања \n"
-"система, или немарног брисања. Не постоји начин да \n"
-"Одважност опорави те недостајуће датотеке самостално. \n"
-"\n"
-"Ако изаберете прву или другу опцију испод, можете покушати \n"
-"да пронађете и да повратите недостајуће датотеке \n"
-"на њихове претходне путање. \n"
-"\n"
-"Знајте да за другу опцију, таласни облик можда \n"
-"неће приказивати тишине."
 
-#: DirManager.cpp:1508
-msgid "Warning - Missing Audio Data Blockfile(s)"
-msgstr "Упозорење — Недостаје блок датотека података звука"
+#: DirManager.cpp:1388
+#: DirManager.cpp:1505
+msgid "Replace missing audio with silence (permanent immediately)"
+msgstr "Замени недостајући звук тишинама (стално одмах)"
 
-#: DirManager.cpp:1530
-msgid "   Project check replaced missing audio data blockfile(s) with silence."
+#: DirManager.cpp:1549
+msgid "Warning - Missing Audio Data Block File(s)"
+msgstr ""
+
+#: DirManager.cpp:1571
+#, fuzzy
+msgid "   Project check replaced missing audio data block file(s) with silence."
 msgstr "   Провера пројекта је заменила недостајућу блок датотеку података звука тишинама."
 
-#: DirManager.cpp:1546
-msgid "   Project check ignored orphan blockfile(s). They will be deleted when project is saved."
+#: DirManager.cpp:1587
+#, fuzzy
+msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
 msgstr "   Провера пројекта је занемарила напуштену блок датотеку. Биће обрисана када пројекат буде био сачуван."
 
-#: DirManager.cpp:1552
+#: DirManager.cpp:1593
 #, c-format
-msgid ""
-"Project check found %d orphan blockfile(s). These files are \n"
-"unused and probably left over from a crash or some other bug. \n"
-"\n"
-"They should be deleted to avoid disk contention."
+msgid "Project check of \"%s\" folder \n"
+"found %d orphan block file(s). These files are \n"
+"unused by this project, but might belong to other projects. \n"
+"They are doing no harm and are small."
 msgstr ""
-"Провера пројекта је пронашла %d напуштене блок датотеке. Те датотеке су \n"
-"некоришћене и вероватно остављене након урушавања или услед неке друге грешке. \n"
-"\n"
-"Требају бити обрисане како би се избегао раздор диска."
 
 #: DirManager.cpp:1559
 msgid "Continue without deleting; ignore the extra files this session"
 msgstr "Настави без брисања; занемари допунске датотеке ове сесије"
 
-#: DirManager.cpp:1560
-msgid "Delete orphan files immediately"
-msgstr "Одмах обриши напуштене датотеке"
+#: DirManager.cpp:1604
+msgid "Delete orphan files (permanent immediately)"
+msgstr ""
 
-#: DirManager.cpp:1563
-msgid "Warning - Orphan Blockfile(s)"
-msgstr "Упозорење — Напуштена блок датотека"
+#: DirManager.cpp:1607
+msgid "Warning - Orphan Block File(s)"
+msgstr ""
 
 #: DirManager.cpp:1587
 msgid "Cleaning up unused directories in project data"
@@ -1157,12 +1109,10 @@ msgid "Project check found file inconsistencies inspecting the loaded project da
 msgstr "Провера пројекта је пронашла недоследности датотеке проверавајући учитане податке пројекта"
 
 #: DirManager.cpp:1607
-msgid ""
-"Project check found file inconsistencies during automatic recovery.\n"
+msgid "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Show Log...' in the Help menu to see details."
-msgstr ""
-"Провера пројекта је пронашла недоследности датотеке за време самосталног опоравка.\n"
+msgstr "Провера пројекта је пронашла недоследности датотеке за време самосталног опоравка.\n"
 "\n"
 "Изаберите „Прикажи дневник...“ у изборнику помоћи да видите детаље."
 
@@ -1175,19 +1125,22 @@ msgstr "Упозорење: Проблем у самосталном опора�
 msgid "Missing aliased audio file: '%s'"
 msgstr "Недостаје алијазована звучна датотека: „%s“"
 
-#: DirManager.cpp:1670
+#: DirManager.cpp:1713
 #, c-format
-msgid "Missing alias (.auf) blockfile: '%s'"
+#, fuzzy
+msgid "Missing alias (.auf) block file: '%s'"
 msgstr "Недостајућа блок датотека алијаса (.auf): „%s“"
 
-#: DirManager.cpp:1694
+#: DirManager.cpp:1737
 #, c-format
-msgid "Missing data blockfile: '%s'"
+#, fuzzy
+msgid "Missing data block file: '%s'"
 msgstr "Недостаје блок датотека података: „%s“"
 
-#: DirManager.cpp:1736
+#: DirManager.cpp:1779
 #, c-format
-msgid "Orphan blockfile: '%s'"
+#, fuzzy
+msgid "Orphan block file: '%s'"
 msgstr "Напуштена блок датотека: „%s“"
 
 #: DirManager.cpp:1791
@@ -1215,13 +1168,11 @@ msgid "FFmpeg support not compiled in"
 msgstr "ФФмпег подршка није састављена"
 
 #: FFmpeg.cpp:110
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
 "but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"ФФмпег је подешен у поставкама и успешно се учитао раније,                         \n"
+msgstr "ФФмпег је подешен у поставкама и успешно се учитао раније,                         \n"
 "али овог пута Одважност није успела да га учита при покретању.                         \n"
 "\n"
 "Мораћете да се вратите назад у „Поставке > Библиотеке“ и да га поново подесите"
@@ -1285,14 +1236,12 @@ msgid "FFmpeg not found"
 msgstr "Нисам нашао ФФмпег"
 
 #: FFmpeg.h:112
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"Одважност је покушала да користи ФФмпег да увезе звучну датотеку,\n"
+msgstr "Одважност је покушала да користи ФФмпег да увезе звучну датотеку,\n"
 "али није пронашла библиотеке.\n"
 "\n"
 "Да користите ФФмпег увоз, идите на „Поставке > Библиотеке“\n"
@@ -1500,12 +1449,10 @@ msgid "GStreamer %s: %s"
 msgstr "Гстример %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"Гстример је подешен у поставкама и успешно се учитао раније,\n"
+msgstr "Гстример је подешен у поставкама и успешно се учитао раније,\n"
 "                      али овог пута Одважност није успела да га учита при покретању.\n"
 "                      Мораћете да се вратите назад у „Поставке > Библиотеке“ и да га поново подесите"
 
@@ -1711,13 +1658,11 @@ msgid "New..."
 msgstr "Ново..."
 
 #: LabelDialog.cpp:356
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"Нисте испунили називе натписа.  Исти ће бити\n"
+msgstr "Нисте испунили називе натписа.  Исти ће бити\n"
 "прескочени при поновном испису натписа нумере.\n"
 "\n"
 "Да ли желите да се вратите назад и да обезбедите називе?"
@@ -1792,11 +1737,9 @@ msgstr "Језик који сте изабрали, %s (%s), није исти 
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"Преобратих датотеку пројекта 1.0 у нови формат.\n"
+msgstr "Преобратих датотеку пројекта 1.0 у нови формат.\n"
 "Стара датотека је сачувана као „%s“ "
 
 #: Legacy.cpp:373
@@ -2453,8 +2396,8 @@ msgid "&Run Benchmark..."
 msgstr "Покрени &оцењивање..."
 
 #: Menus.cpp:1045
-msgid "&Audio Device Info..."
-msgstr "Подаци о &звучном уређају..."
+msgid "Au&dio Device Info..."
+msgstr ""
 
 #: Menus.cpp:1046
 msgid "Show &Log..."
@@ -2805,11 +2748,9 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "МИДИ датотека (*.mid)|*.mid|Алегро датотека (*.gro)|*.gro"
 
 #: Menus.cpp:3012
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr ""
-"Изабрали сте назив датотеке са непрепознатљивим проширењем датотеке.\n"
+msgstr "Изабрали сте назив датотеке са непрепознатљивим проширењем датотеке.\n"
 "Да ли желите да наставите?"
 
 #: Menus.cpp:3013
@@ -3012,10 +2953,6 @@ msgstr "Подели ново"
 #: Menus.cpp:4110
 msgid "Split to new track"
 msgstr "Поделите на нову нумеру"
-
-#: Menus.cpp:4192
-msgid "Split at labels"
-msgstr "Подели при натпису"
 
 #: Menus.cpp:4529
 msgid "Frequency Analysis"
@@ -3358,15 +3295,13 @@ msgid "Save changes before closing?"
 msgstr "Да сачувам измене пре затварања?"
 
 #: Project.cpp:1879
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "Ако сачувате, пројекат неће имати нумере.\n"
 "\n"
 "Да сачувате све претходно отворене нумере:\n"
@@ -3386,12 +3321,9 @@ msgstr "Изаберите једну или више звучних датот�
 msgid "%s is already open in another window."
 msgstr "%s је већ отворено у другом прозору."
 
-#: Project.cpp:2185
-#: Project.cpp:2345
-#: Project.cpp:2546
-#: Project.cpp:2722
-msgid "Error opening project"
-msgstr "Грешка приликом отварања пројекта"
+#: Project.cpp:2191 Project.cpp:2356 Project.cpp:2576 Project.cpp:2755
+msgid "Error Opening Project"
+msgstr ""
 
 #. i18n-hint: This string is a label in the file type filter in the open
 #. * and save dialogues, for the option that only shows project files created
@@ -3402,51 +3334,44 @@ msgstr "Грешка приликом отварања пројекта"
 msgid "Audacity projects"
 msgstr "Пројекти Одважности"
 
-#: Project.cpp:2251
-#: Project.cpp:2799
+#: Project.cpp:2256
 #, c-format
-msgid ""
-"This file was saved by Audacity %s, a much\n"
-"older version.  The format has changed.\n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
-"Audacity could corrupt the file in opening\n"
-"it, so you must back it up first.\n"
+"Audacity can try to open and save this file, but saving it in this \n"
+"version will then prevent any 1.2 or earlier version opening it. \n"
+"\n"
+"Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
 msgstr ""
-"Ова датотека је сачувана Одважношћу %s, много\n"
-"старијим издањем.  Формат је измењен.\n"
-"\n"
-"Одважност може да оштети датотеку при отварању,\n"
-"зато направите резервни примерак пре тога.\n"
-"\n"
-"Да отворим ову датотеку сада?"
 
 #: Project.cpp:2252
 msgid "1.0 or earlier"
 msgstr "1.0 или раније"
 
-#: Project.cpp:2258
-#: Project.cpp:2811
-msgid "Opening old project file"
-msgstr "Отварам датотеку старог пројекта"
+#: Project.cpp:2271 Project.cpp:2837
+msgid "Warning - Opening Old Project File"
+msgstr ""
 
 #: Project.cpp:2294
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"Покушавате да отворите самостално направљену датотеку резерве.\n"
+msgstr "Покушавате да отворите самостално направљену датотеку резерве.\n"
 "\n"
 "То може да проузрокује озбиљно губљење података.\n"
 "\n"
 "Уместо тога отворите тренутну датотеку пројекта Одважности."
 
-#: Project.cpp:2295
-msgid "Backup file detected"
-msgstr "Откривена је датотека резерве"
+#: Project.cpp:2306
+msgid "Warning - Backup File Detected"
+msgstr ""
+
+#: Project.cpp:2320 xml/XMLWriter.cpp:329
+msgid "Error Opening File"
+msgstr ""
 
 #: Project.cpp:2309
 #: Project.cpp:2317
@@ -3456,16 +3381,14 @@ msgstr "Грешка приликом отварања датотеке"
 
 #: Project.cpp:2323
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"Датотека може бити неисправна или оштећена: \n"
+msgstr "Датотека може бити неисправна или оштећена: \n"
 "%s"
 
-#: Project.cpp:2324
-msgid "Error opening file or project"
-msgstr "Грешка приликом отварања датотеке или пројекта"
+#: Project.cpp:2335
+msgid "Error Opening File or Project"
+msgstr ""
 
 #: Project.cpp:2344
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
@@ -3495,37 +3418,17 @@ msgstr "Не могу да пронађем фасциклу података п
 
 #: Project.cpp:2768
 #, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr ""
-"Ова датотека је сачувана употребом Одважности %s.\n"
+msgstr "Ова датотека је сачувана употребом Одважности %s.\n"
 "Ви користите Одважност %s. Морате да надоградите на новије издање да бисте отворили ову датотеку."
 
 #: Project.cpp:2772
 msgid "Can't open project file"
 msgstr "Не могу да отворим датотеку пројекта"
 
-#: Project.cpp:2806
-#, c-format
-msgid ""
-"This file was saved by Audacity %s.\n"
-"\n"
-"Audacity can open and save this file, but saving it in this version\n"
-"will then prevent any 1.2 or earlier version opening it.\n"
-"\n"
-"Open this file now?"
-msgstr ""
-"Ова датотека је счувана Одважношћу %s.\n"
-"\n"
-"Одважност може да отвори и да сачува ову датотеку, али чување овим издањем\n"
-"ће спречити сва 1.2 или ранија издања да је отворе.\n"
-"\n"
-"Да отворим ову датотеку сада?"
-
 #: Project.cpp:3023
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3533,8 +3436,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"Ваш пројекат је сада празан.\n"
+msgstr "Ваш пројекат је сада празан.\n"
 "Ако сачувате, пројекат неће имати нумере.\n"
 "\n"
 "Да сачувате све претходно отворене нумере:\n"
@@ -3543,32 +3445,26 @@ msgstr ""
 "\n"
 "Да ипак сачувам?"
 
-#: Project.cpp:3024
-msgid "Warning empty project"
-msgstr "Упозорење празног пројекта"
+#: Project.cpp:3050
+msgid "Warning - Empty Project"
+msgstr ""
 
 #: Project.cpp:3095
 #, c-format
-msgid ""
-"Could not save project. Path not found.  Try creating \n"
+msgid "Could not save project. Path not found.  Try creating \n"
 "directory \"%s\" before saving project with this name."
-msgstr ""
-"Не могу да сачувам пројекат. Нисам пронашао путању.  Покушајте да \n"
+msgstr "Не могу да сачувам пројекат. Нисам пронашао путању.  Покушајте да \n"
 "направите директоријум „%s“ пре чувања пројекта под овим називом."
 
-#: Project.cpp:3097
-#: Project.cpp:3134
-#: Project.cpp:3157
-msgid "Error saving project"
-msgstr "Грешка приликом чувања пројекта"
+#: Project.cpp:3520
+msgid "Error Saving Project"
+msgstr "Грешка чувања пројекта"
 
 #: Project.cpp:3132
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"Не могу да сачувам пројекат. Можда %s \n"
+msgstr "Не могу да сачувам пројекат. Можда %s \n"
 "није уписив или је диск попуњен."
 
 #: Project.cpp:3155
@@ -3593,8 +3489,9 @@ msgstr "Увезох „%s“"
 msgid "Import"
 msgstr "Увези"
 
-#: Project.cpp:3427
-msgid "Error importing"
+#: Project.cpp:3453
+#, fuzzy
+msgid "Error Importing"
 msgstr "Грешка приликом увоза"
 
 #: Project.cpp:3475
@@ -3606,16 +3503,14 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Виндоуз ПЦМ звучна датотека (*.wav)|*.wav"
 
 #: Project.cpp:3486
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"Сажете датотеке пројекта Одважности (.aup) чувају ваш рад у мањем, сажетом (.ogg) облику. \n"
+msgstr "Сажете датотеке пројекта Одважности (.aup) чувају ваш рад у мањем, сажетом (.ogg) облику. \n"
 "Сажете датотеке пројекта јесу добар начин за пренос вашег пројекта на мрежи, зато што су много мање. \n"
 "Отварање сажетог пројекта траје дуже него обично, јер увози сваку сажету нумеру. \n"
 "\n"
@@ -3628,14 +3523,12 @@ msgid "Save Compressed Project As..."
 msgstr "Сачувај сажети пројекат као..."
 
 #: Project.cpp:3492
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"Желите да сачувате датотеку пројекта Одважности (.aup).\n"
+msgstr "Желите да сачувате датотеку пројекта Одважности (.aup).\n"
 "\n"
 "Приликом чувања пројекта бива створена датотека коју само Одважност може да отвори.\n"
 "\n"
@@ -3646,15 +3539,9 @@ msgid "Save Project As..."
 msgstr "Сачувај пројекат као..."
 
 #: Project.cpp:3520
-msgid "Error Saving Project"
-msgstr "Грешка чувања пројекта"
-
-#: Project.cpp:3520
-msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
-msgstr ""
-"Пројекат није сачуван зато што ће дати назив пројекта преписати други пројекат.\n"
+msgstr "Пројекат није сачуван зато што ће дати назив пројекта преписати други пројекат.\n"
 "Покушајте поново и изаберите неки други назив."
 
 #: Project.cpp:3561
@@ -3712,9 +3599,9 @@ msgstr "Увоз је обављен. Покрећем прорачун тала
 msgid "New Project"
 msgstr "Нови пројекат"
 
-#: Project.cpp:4373
-msgid "Error writing autosave file"
-msgstr "Грешка записивања самочувајуће датотеке"
+#: Project.cpp:4401
+msgid "Error Writing Autosave File"
+msgstr ""
 
 #: Project.cpp:4388
 msgid "Could not create autosave file: "
@@ -3955,11 +3842,15 @@ msgstr "Дуге нумере"
 msgid "Choose a location to save screenshot images"
 msgstr "Изаберите место за чување слика снимака екрана"
 
-#: Sequence.cpp:832
-#: Sequence.cpp:842
-#: Sequence.cpp:849
-msgid "Gap detected in project file\n"
-msgstr "Јаз је откривен у датотеци пројекта\n"
+#: Sequence.cpp:1032
+#, c-format
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
+"Truncating to mMaxSamples."
+msgstr ""
+
+#: Sequence.cpp:1035
+msgid "Warning - Length in Writing Sequence"
+msgstr ""
 
 #: Sequence.cpp:1335
 msgid "Memory allocation failed -- NewSamples"
@@ -4022,8 +3913,7 @@ msgstr "Примедбе"
 
 #: Tags.cpp:757
 msgid "Use arrow keys (or RETURN key after editing) to navigate fields."
-msgstr ""
-"Користите тастере стрелица (или тастер УНЕСИ након уређивања)\n"
+msgstr "Користите тастере стрелица (или тастер УНЕСИ након уређивања)\n"
 "за пребацивање међу пољима."
 
 #: Tags.cpp:781
@@ -4098,115 +3988,95 @@ msgid "Load Metadata As:"
 msgstr "Учитај метаподатке као:"
 
 #: Tags.cpp:1089
-msgid "Error loading metadata"
-msgstr "Грешка приликом учитавања метаподатака"
+msgid "Error Loading Metadata"
+msgstr ""
 
 #: Tags.cpp:1118
 msgid "Save Metadata As:"
 msgstr "Сачувај метаподатке као:"
 
 #: Tags.cpp:1173
-msgid "Error saving tags file"
-msgstr "Грешка при чувању датотеке ознака"
+msgid "Error Saving Tags File"
+msgstr ""
 
 #: Theme.cpp:637
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
-msgstr ""
-"Одважност не може да запише датотеку:\n"
+msgstr "Одважност не може да запише датотеку:\n"
 "  %s."
 
 #: Theme.cpp:655
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr ""
-"Одважност не може да отвори датотеку:\n"
+msgstr "Одважност не може да отвори датотеку:\n"
 "  %s\n"
 "за писање."
 
 #: Theme.cpp:663
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
-msgstr ""
-"Одважност не може да запише слике у датотеку:\n"
+msgstr "Одважност не може да запише слике у датотеку:\n"
 "  %s."
 
 #: Theme.cpp:798
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"Одважност не може да пронађе датотеку:\n"
+msgstr "Одважност не може да пронађе датотеку:\n"
 "  %s.\n"
 "Тема није учитана."
 
 #: Theme.cpp:806
 #: Theme.cpp:895
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"Одважност не може да учита датотеку:\n"
+msgstr "Одважност не може да учита датотеку:\n"
 "  %s.\n"
 "Можда је лош пнг формат?"
 
 #: Theme.cpp:822
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"Одважност не може да прочита своју основну тему.\n"
+msgstr "Одважност не може да прочита своју основну тему.\n"
 "Молим пријавите проблем."
 
 #: Theme.cpp:917
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr ""
-"Ниједна од садржаних датотека очекиване теме\n"
+msgstr "Ниједна од садржаних датотека очекиване теме\n"
 " није пронађена у:\n"
 "  %s."
 
 #: Theme.cpp:941
 #: effects/NoiseRemoval.cpp:182
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"Не могу да направим директоријум:\n"
+msgstr "Не могу да направим директоријум:\n"
 "  %s"
 
 #: Theme.cpp:962
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"Одважност не може да сачува датотеку:\n"
+msgstr "Одважност не може да сачува датотеку:\n"
 "  %s."
 
 #: Theme.cpp:974
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"Све захтеване датотеке у:\n"
+msgstr "Све захтеване датотеке у:\n"
 "  %s\n"
 "бејаху већ присутне."
 
@@ -4786,29 +4656,23 @@ msgid "Plugins %i to %i"
 msgstr "Додаци %i до %i"
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Дошло је до проблема са вашом\n"
+msgstr "Дошло је до проблема са вашом\n"
 "последњом радњом. Ако мислите\n"
 "да је ово грешка, реците нам\n"
 "где се тачно догодила."
 
 #: commands/CommandManager.cpp:953
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped. (Pausing is not sufficient.)"
-msgstr ""
-"Ово можете да радите само када су пуштање и снимање\n"
+msgstr "Ово можете да радите само када су пуштање и снимање\n"
 " заустављени. (Паузирање није довољно.)"
 
 #: commands/CommandManager.cpp:955
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
-msgstr ""
-"Морате прво да изаберете неки стерео звук да ово\n"
+msgstr "Морате прво да изаберете неки стерео звук да ово\n"
 " користите. (Ово не можете користити уз моно.)"
 
 #: commands/CommandManager.cpp:957
@@ -4816,11 +4680,9 @@ msgid "You must first select some audio for this to use."
 msgstr "Морате прво да изаберете неки звук да ово користите."
 
 #: commands/CommandManager.cpp:959
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. (Selecting other kinds of track won't work.)"
-msgstr ""
-"Морате прво да изаберете неки звук да ово користите.\n"
+msgstr "Морате прво да изаберете неки звук да ово користите.\n"
 "(Бирањем других врста нумера неће радити.)"
 
 #: commands/CommandManager.cpp:964
@@ -5365,20 +5227,29 @@ msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr "Анализирање супротности (ВЦАГ 2 сагласност)"
 
 #: effects/Contrast.cpp:105
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
-msgstr ""
-"Почетно време након након крајњег времена!\n"
+msgstr "Почетно време након након крајњег времена!\n"
 "Молим унесите смислена времена."
 
 #: effects/Contrast.cpp:115
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"Времена нису смислена!\n"
+msgstr "Времена нису смислена!\n"
 "Молим унесите смислена времена."
+
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
 
 #: effects/Contrast.cpp:217
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
@@ -5735,13 +5606,11 @@ msgstr "Уједначавање"
 
 #: effects/Equalization.cpp:995
 #, c-format
-msgid ""
-"EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
 "Please press 'help' to visit the download page.\n"
 "\n"
 "Save the curves at %s"
-msgstr ""
-"Нисам пронашао на вашем систему „ЕКуКриве.xml“ и „ЕКуОсновнеКриве.xml“.\n"
+msgstr "Нисам пронашао на вашем систему „ЕКуКриве.xml“ и „ЕКуОсновнеКриве.xml“.\n"
 "Молим притисните „помоћ“ да посетите страну за преузимање.\n"
 "\n"
 "Сачуваћу криве у %s"
@@ -5756,13 +5625,13 @@ msgstr "Недостају ЕКуКриве.xml и ЕКуОсновнеКрив�
 msgid "unnamed"
 msgstr "неименована"
 
-#: effects/Equalization.cpp:1023
-msgid "Error loading EQ curve"
-msgstr "Грешка приликом учитавања ЕКу криве"
+#: effects/Equalization.cpp:1024
+msgid "Error Loading EQ Curve"
+msgstr ""
 
-#: effects/Equalization.cpp:1088
-msgid "Error saving equalization curves"
-msgstr "Грешка приликом чувања кривих уједначавања"
+#: effects/Equalization.cpp:1089
+msgid "Error Saving Equalization Curves"
+msgstr ""
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
@@ -5843,11 +5712,9 @@ msgid "Select Curve"
 msgstr "Изабери криву"
 
 #: effects/Equalization.cpp:1382
-msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"Да користите ову ЕКу криву у групном ланцу, молим изаберите нови назив за њ.\n"
+msgstr "Да користите ову ЕКу криву у групном ланцу, молим изаберите нови назив за њ.\n"
 "Изаберите „Сачувај/управљај кривама...“ и промените назив „неименоване“ криве, и након тога употребите ово."
 
 #: effects/Equalization.cpp:1383
@@ -5897,11 +5764,9 @@ msgid "Help"
 msgstr "Помоћ"
 
 #: effects/Equalization.cpp:2876
-msgid ""
-"Rename 'unnamed' to save a new entry.\n"
+msgid "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
-msgstr ""
-"Преименујте „неименована“ да сачувате нову ставку.\n"
+msgstr "Преименујте „неименована“ да сачувате нову ставку.\n"
 "„У реду“ ће сачувати све измене, „Откажи“ неће."
 
 #: effects/Equalization.cpp:2911
@@ -6325,11 +6190,9 @@ msgstr "Стварам буку"
 
 #: effects/NoiseRemoval.cpp:201
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"Не могу да отворим датотеку:\n"
+msgstr "Не могу да отворим датотеку:\n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:295
@@ -6341,11 +6204,9 @@ msgid "Step 1"
 msgstr "Корак 1"
 
 #: effects/NoiseRemoval.cpp:879
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"Изаберите неколико секунди чисте буке тако да Одважност зна шта да избаци,\n"
+msgstr "Изаберите неколико секунди чисте буке тако да Одважност зна шта да избаци,\n"
 "затим кликните „Добави профил буке“."
 
 #: effects/NoiseRemoval.cpp:880
@@ -6353,11 +6214,9 @@ msgid "Step 2"
 msgstr "Корак 2"
 
 #: effects/NoiseRemoval.cpp:881
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Изаберите сав звук који желите да филтрирате, изаберите колико буке желите\n"
+msgstr "Изаберите сав звук који желите да филтрирате, изаберите колико буке желите\n"
 "да избаците, а затим кликните „У реду“ да уклоните буку.\n"
 
 #: effects/NoiseRemoval.cpp:886
@@ -6545,26 +6404,22 @@ msgid "Applying Phaser"
 msgstr "Примењујем фазника"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Ефекат поправке је намењен за коришћење\n"
+msgstr "Ефекат поправке је намењен за коришћење\n"
 "на врло кратким одељцима оштећеног звука\n"
 "(највише до 128 узорака).\n"
 "\n"
 "Увећајте и изаберите узани део секунде за поправку."
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"Поправка ради коришћењем података звука изван области избора.\n"
+msgstr "Поправка ради коришћењем података звука изван области избора.\n"
 "\n"
 "Молим изаберите област која има звук који додирује барем једну његову страну.\n"
 "\n"
@@ -6739,11 +6594,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "Чистача шиљка је приредио Лин Алан"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"Највеће трајање шиљка (у милисекундама): \n"
+msgstr "Највеће трајање шиљка (у милисекундама): \n"
 "(99999 или више је искључено)"
 
 #: effects/SpikeCleaner.cpp:178
@@ -6939,11 +6792,9 @@ msgid "Threshold for silence:"
 msgstr "Осетљивост за тишину:"
 
 #: effects/TruncSilence.cpp:920
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"   Трајање мора бити најмање 1 милисекунда\n"
+msgstr "   Трајање мора бити најмање 1 милисекунда\n"
 "   Однос сажимања мора бити најмање 1:1"
 
 #: effects/TruncSilence.h:37
@@ -6989,8 +6840,8 @@ msgid "Load VST Program:"
 msgstr "Учитај ВСТ програм:"
 
 #: effects/VST/VSTEffect.cpp:613
-msgid "Error loading program"
-msgstr "Грешка приликом учитавања програма"
+msgid "Error Loading VST Program"
+msgstr ""
 
 #: effects/VST/VSTEffect.cpp:629
 msgid "Save VST Program As:"
@@ -7113,11 +6964,9 @@ msgstr "[Упозорење: Никвист је вратио неисправн
 
 #: effects/nyquist/Nyquist.cpp:305
 #, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
 "Control not created."
-msgstr ""
-"Лоша одредница врсте „контроле“ Никвиста: „%s“ у датотеци прикључка „%s“.\n"
+msgstr "Лоша одредница врсте „контроле“ Никвиста: „%s“ у датотеци прикључка „%s“.\n"
 "Контрола није направљена"
 
 #: effects/nyquist/Nyquist.cpp:431
@@ -7133,14 +6982,12 @@ msgid "Error in Nyquist code"
 msgstr "Грешка у коду Никвиста"
 
 #: effects/nyquist/Nyquist.cpp:488
-msgid ""
-"Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
 "for SAL, or begin with an open parenthesis such as\n"
 "\t(mult s 0.1)\n"
 " for LISP."
-msgstr ""
-"Ваш код изгледа као САЛ синтакса, али нема повратног исказа. Или користите повратни исказ као што је\n"
+msgstr "Ваш код изгледа као САЛ синтакса, али нема повратног исказа. Или користите повратни исказ као што је\n"
 "        return s * 0.1\n"
 "за САЛ, или почните са отвореном заградом као што је\n"
 "\t(mult s 0.1)\n"
@@ -7231,27 +7078,23 @@ msgstr "Упозорење"
 
 #: export/Export.cpp:621
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to save the file under this name?"
-msgstr ""
-"Желите да сачувате %s датотеку са називом „%s“.\n"
+msgstr "Желите да сачувате %s датотеку са називом „%s“.\n"
 "\n"
 "Обично се те датотеке завршавају на „.%s“, а неки програми неће отворити датотеке са неуобичајеним проширењима.\n"
 "\n"
 "Да ли сте сигурни да желите да сачувате датотеку под овим називом?"
 
 #: export/Export.cpp:654
-msgid ""
-"You are attempting to overwrite an aliased file that is missing.\n"
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the original audio to the project.\n"
 "Choose File > Check Dependencies to view the locations of all missing files.\n"
 "If you still wish to export, please choose a different filename or folder."
-msgstr ""
-"Покушавате да препишете алијазовану датотеку која недостаје.\n"
+msgstr "Покушавате да препишете алијазовану датотеку која недостаје.\n"
 "Датотека не може бити записана зато што је потребна путања за повраћај оригиналног звука у пројекат.\n"
 "Изаберите „Датотека > Провери зависности“ да погледате места свих недостајућих датотека.\n"
 "Ако још увек желите да извезете, молим изаберите другачији назив датотеке или фасциклу."
@@ -7315,8 +7158,7 @@ msgstr "Прикажи излаз"
 #: export/ExportCL.cpp:115
 #, c-format
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
-msgstr ""
-"Подаци ће бити припојени на стандардни улаз.\n"
+msgstr "Подаци ће бити припојени на стандардни улаз.\n"
 "„%f“ користи назив датотеке у прозору извоза."
 
 #: export/ExportCL.cpp:161
@@ -7346,20 +7188,16 @@ msgid "Command Output"
 msgstr "Излаз наредбе"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
-msgstr ""
-"Исправно подешени ФФмпег је потрбан за наставак.\n"
+msgstr "Исправно подешени ФФмпег је потрбан за наставак.\n"
 "Можете да га подесите у „Поставке > Библиотеке“."
 
 #: export/ExportFFmpeg.cpp:457
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
-msgstr ""
-"ФФмпег не може да пронађе кодек звука 0x%x.\n"
+msgstr "ФФмпег не може да пронађе кодек звука 0x%x.\n"
 "Подршка за овај кодек вероватно није састављена."
 
 #: export/ExportFFmpeg.cpp:686
@@ -7384,20 +7222,16 @@ msgstr "Неисправан проток узорка"
 
 #: export/ExportFFmpeg.cpp:805
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
-msgstr ""
-"Проток узорка пројекта (%d) није подржан текућим форматом\n"
+msgstr "Проток узорка пројекта (%d) није подржан текућим форматом\n"
 "датотеке излаза."
 
 #: export/ExportFFmpeg.cpp:808
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
-msgstr ""
-"Текући облик излазне датотеке не подржава комбинацију протока узорка\n"
+msgstr "Текући облик излазне датотеке не подржава комбинацију протока узорка\n"
 "пројекта (%d) и битског протока (%d kb/s)."
 
 #: export/ExportFFmpeg.cpp:811
@@ -7602,12 +7436,10 @@ msgid "Language:"
 msgstr "Језик:"
 
 #: export/ExportFFmpegDialogs.cpp:1354
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"3-словни ИСО 639 код језика\n"
+msgstr "3-словни ИСО 639 код језика\n"
 "Опционално\n"
 "празно — самостално"
 
@@ -7624,35 +7456,29 @@ msgid "Tag:"
 msgstr "Ознака:"
 
 #: export/ExportFFmpegDialogs.cpp:1368
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"Ознака кодека (ФОУРЦЦ)\n"
+msgstr "Ознака кодека (ФОУРЦЦ)\n"
 "Опционално\n"
 "празно - самостално"
 
 #: export/ExportFFmpegDialogs.cpp:1371
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
-msgstr ""
-"Битски проток (битова/секунди) — утиче на крајњу величину датотеке и квалитет\n"
+msgstr "Битски проток (битова/секунди) — утиче на крајњу величину датотеке и квалитет\n"
 "Неки кодеци могу прихватити само одређене вредности (128k, 192k, 256k итд.)\n"
 "0 — самостално\n"
 "Препоручено — 192000"
 
 #: export/ExportFFmpegDialogs.cpp:1374
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
-msgstr ""
-"Уопштени квалитет, коришћен другачије од другачијих кодека\n"
+msgstr "Уопштени квалитет, коришћен другачије од другачијих кодека\n"
 "Неопходан за ворбис\n"
 "0 — самостално\n"
 "-1 — искључено (користи битски проток)"
@@ -7662,11 +7488,9 @@ msgid "Sample Rate:"
 msgstr "Проток узорка:"
 
 #: export/ExportFFmpegDialogs.cpp:1377
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
-msgstr ""
-"Проток узорка (Hz)\n"
+msgstr "Проток узорка (Hz)\n"
 "0 — не мења проток узорка"
 
 #: export/ExportFFmpegDialogs.cpp:1379
@@ -7674,12 +7498,10 @@ msgid "Cutoff:"
 msgstr "Прекид:"
 
 #: export/ExportFFmpegDialogs.cpp:1380
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
-msgstr ""
-"Пропусни опсег прекида звука (Hz)\n"
+msgstr "Пропусни опсег прекида звука (Hz)\n"
 "Опционално\n"
 "0 — самостално"
 
@@ -7688,12 +7510,10 @@ msgid "Profile:"
 msgstr "Профил:"
 
 #: export/ExportFFmpegDialogs.cpp:1385
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
-msgstr ""
-"ААЦ профил\n"
+msgstr "ААЦ профил\n"
 "Ниска сложеност -основно\n"
 "Већина програма не жели да пушта ништа осим ЛЦ-а"
 
@@ -7706,14 +7526,12 @@ msgid "Compression:"
 msgstr "Сажимање:"
 
 #: export/ExportFFmpegDialogs.cpp:1396
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr ""
-"Ниво сажимања\n"
+msgstr "Ниво сажимања\n"
 "потребан за ФЛАЦ\n"
 "-1 — самостално\n"
 "min — 0 (брзо кодирање, велика излазна датотека)\n"
@@ -7724,14 +7542,12 @@ msgid "Frame:"
 msgstr "Кадар:"
 
 #: export/ExportFFmpegDialogs.cpp:1399
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr ""
-"Величина кадра\n"
+msgstr "Величина кадра\n"
 "Опционално\n"
 "0 — основно\n"
 "min — 16\n"
@@ -7742,14 +7558,12 @@ msgid "LPC"
 msgstr "ЛПЦ"
 
 #: export/ExportFFmpegDialogs.cpp:1402
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr ""
-"Тачност ЛПЦ коефицијнта\n"
+msgstr "Тачност ЛПЦ коефицијнта\n"
 "Опционално\n"
 "0 — основно\n"
 "min — 1\n"
@@ -7760,13 +7574,11 @@ msgid "PdO Method:"
 msgstr "Начин ППд:"
 
 #: export/ExportFFmpegDialogs.cpp:1407
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
-msgstr ""
-"Начин поретка предвиђања\n"
+msgstr "Начин поретка предвиђања\n"
 "Процењено — најбрже, ниже сажимање\n"
 "Претрага дневника — најспорије, најбоље сажимање\n"
 "Пуна претрага — основно"
@@ -7776,14 +7588,12 @@ msgid "Min. PdO"
 msgstr "Најмањи ППд"
 
 #: export/ExportFFmpegDialogs.cpp:1410
-msgid ""
-"Minimal prediction order\n"
+msgid "Minimal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Најмањи поредак предвиђања\n"
+msgstr "Најмањи поредак предвиђања\n"
 "Опционално\n"
 "-1 — основно\n"
 "min — 0\n"
@@ -7794,14 +7604,12 @@ msgid "Max. PdO"
 msgstr "Највећии ППд"
 
 #: export/ExportFFmpegDialogs.cpp:1413
-msgid ""
-"Maximal prediction order\n"
+msgid "Maximal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"Највећи поредак предвиђања\n"
+msgstr "Највећи поредак предвиђања\n"
 "Опционално\n"
 "-1 — основно\n"
 "min — 0\n"
@@ -7812,14 +7620,12 @@ msgid "Min. PtO"
 msgstr "Најмањи ППл"
 
 #: export/ExportFFmpegDialogs.cpp:1416
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Најмањи поредак поделе\n"
+msgstr "Најмањи поредак поделе\n"
 "Опционално\n"
 "-1 — основно\n"
 "min — 0\n"
@@ -7830,14 +7636,12 @@ msgid "Max. PtO"
 msgstr "Највећии ППл"
 
 #: export/ExportFFmpegDialogs.cpp:1419
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"Највећи поредак поделе\n"
+msgstr "Највећи поредак поделе\n"
 "Опционално\n"
 "-1 — основно\n"
 "min — 0\n"
@@ -7856,12 +7660,10 @@ msgid "Mux Rate:"
 msgstr "Мукс проток:"
 
 #: export/ExportFFmpegDialogs.cpp:1433
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Највећи битски проток вишеструког тока\n"
+msgstr "Највећи битски проток вишеструког тока\n"
 "Опционално\n"
 "0 — основно"
 
@@ -7870,12 +7672,10 @@ msgid "Packet Size:"
 msgstr "Величина пакета:"
 
 #: export/ExportFFmpegDialogs.cpp:1436
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"Величина пакета\n"
+msgstr "Величина пакета\n"
 "Опционално\n"
 "0 — основно"
 
@@ -7986,11 +7786,9 @@ msgstr "ФЛАЦ извоз не може да отвори %s"
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
-msgstr ""
-"ФЛАЦ шифрер није успео да започне\n"
+msgstr "ФЛАЦ шифрер није успео да започне\n"
 "Стање: %d"
 
 #: export/ExportFLAC.cpp:324
@@ -8151,11 +7949,9 @@ msgstr "Где се налази „%s“?"
 
 #: export/ExportMP3.cpp:1111
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
-msgstr ""
-"Ви указујете на „lame_enc.dll v%d.%d“. Ово издање није сагласно са Одважношћу %d.%d.%d.\n"
+msgstr "Ви указујете на „lame_enc.dll v%d.%d“. Ово издање није сагласно са Одважношћу %d.%d.%d.\n"
 "Молим преузмите најновије издање ЛАМЕ МП3 библиотеке."
 
 #: export/ExportMP3.cpp:1375
@@ -8223,18 +8019,15 @@ msgstr "МП3 кодер је вратио грешку „%d“"
 
 #: export/ExportMP3.cpp:1839
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
 msgstr "МП3 облик датотеке не подржава проток узорка пројекта (%d)."
 
 #: export/ExportMP3.cpp:1842
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
-msgstr ""
-"МП3 облик датотеке не подржава комбинацију протока узорка\n"
+msgstr "МП3 облик датотеке не подржава комбинацију протока узорка\n"
 "пројекта (%d) и битског протока (%d kb/s)."
 
 #: export/ExportMP3.cpp:2013
@@ -8248,8 +8041,7 @@ msgid "Export Multiple"
 msgstr "Извези неколико"
 
 #: export/ExportMultiple.cpp:175
-msgid ""
-"If you have more than one Audio Track, you can\n"
+msgid "If you have more than one Audio Track, you can\n"
 "export each track as a separate audio file.\n"
 "\n"
 "If you have a Label Track, you can export a separate\n"
@@ -8259,8 +8051,7 @@ msgid ""
 "\n"
 "This Project does not meet the above criteria for\n"
 "exporting multiple files."
-msgstr ""
-"Ако имате више од једне звучне нумере, можете да\n"
+msgstr "Ако имате више од једне звучне нумере, можете да\n"
 "извезете сваку нумеру као засебну звучну датотеку.\n"
 "\n"
 "Ако имате натписну нумеру, можете да извезете\n"
@@ -8377,12 +8168,10 @@ msgstr "Нешто је стварно пошло наопако након из
 
 #: export/ExportMultiple.cpp:572
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr ""
-"„%s“ не постоји.\n"
+msgstr "„%s“ не постоји.\n"
 "\n"
 "Да ли желите да направите?"
 
@@ -8398,11 +8187,9 @@ msgstr "Уредите метаподатке"
 
 #: export/ExportMultiple.cpp:927
 #, c-format
-msgid ""
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
-msgstr ""
-"Натпис или нумера „%s“ није правилан назив датотеке. Не можете да користите ништа од: %s\n"
+msgstr "Натпис или нумера „%s“ није правилан назив датотеке. Не можете да користите ништа од: %s\n"
 "Користи..."
 
 #: export/ExportMultiple.cpp:928
@@ -8485,11 +8272,9 @@ msgstr "Извозим читав пројекат као %s"
 #. * error"
 #: export/ExportPCM.cpp:556
 #, c-format
-msgid ""
-"Error while writing %s file (disk full?).\n"
+msgid "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
-msgstr ""
-"Грешка приликом записивања %s датотеке (диск је пун?).\n"
+msgstr "Грешка приликом записивања %s датотеке (диск је пун?).\n"
 "Библиотека датотеке звука каже „%s“"
 
 #. i18n-hint: %s will be the error message from libsndfile
@@ -8533,13 +8318,11 @@ msgstr "Ово издање Одважности није састављено �
 
 #: import/Import.cpp:567
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"„%s“ \n"
+msgstr "„%s“ \n"
 "је МИДИ датотека, а не звучна датотека. \n"
 "Одважност не може да отвори ову врсту датотеке за пуштање, али можете\n"
 "да је уређујете кликом на „Датотека > Увези > МИДИ“."
@@ -8547,60 +8330,50 @@ msgstr ""
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:577
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"„%s“ је нумера звучног ЦД-а. \n"
+msgstr "„%s“ је нумера звучног ЦД-а. \n"
 "Одважност не може да отвори звучни ЦД директно. \n"
 "Извуците (ишчупајте) нумере са ЦД-а у формат звука који \n"
 "Одважност може да увезе, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:583
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr ""
-"„%s“ је датотека листе нумера. \n"
+msgstr "„%s“ је датотека листе нумера. \n"
 "Одважност не може да отвори ову датотеку зато што садржи само везице до других датотека. \n"
 "Можете бити у могућности да је отворите у уређивачу текста и да преузмете стварне звучне датотеке."
 
 #: import/Import.cpp:588
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је датотека звука Виндоуз медија (WMA). \n"
+msgstr "„%s“ је датотека звука Виндоуз медија (WMA). \n"
 "Одважност не може да отвори ову врсту датотеке због ограничења патента. \n"
 "Морате да је претворите у подржани формат звука, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:593
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је датотека Напредног кодирања звука (AAC). \n"
+msgstr "„%s“ је датотека Напредног кодирања звука (AAC). \n"
 "Одважност не може да отвори ову врсту датотеке. \n"
 "Морате да је претворите у подржани формат звука, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:598
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
-msgstr ""
-"„%s“ је шифрована звучна датотека. \n"
+msgstr "„%s“ је шифрована звучна датотека. \n"
 "Оне су уобичајено са музичке радње на мрежи. \n"
 "Одважност не може да отвори ову врсту датотеке због шифровања. \n"
 "Покушајте да снимите датотеку у Одважности, или је нарежите на звучни ЦД \n"
@@ -8608,38 +8381,32 @@ msgstr ""
 
 #: import/Import.cpp:603
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је медијска датотека РилПлејера. \n"
+msgstr "„%s“ је медијска датотека РилПлејера. \n"
 "Одважност не може да отвори овај власнички формат. \n"
 "Морате да је претворите у подржани формат звука, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:609
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr ""
-"„%s“ је датотека заснована на нотама, а не звучна датотека. \n"
+msgstr "„%s“ је датотека заснована на нотама, а не звучна датотека. \n"
 "Одважност не може да отвори ову врсту датотеке. \n"
 "Покушајте да је претворите у звучну датотеку као што је ВАВ или АИФФ \n"
 "и да је затим увезете, или је снимите у Одважности."
 
 #: import/Import.cpp:615
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је Мјузпак звучна датотека. \n"
+msgstr "„%s“ је Мјузпак звучна датотека. \n"
 "Одважност не може да отвори ову врсту датотеке. \n"
 "Ако мислите да је то можда мп3 датотека, преименујте је да се завршава на „.mp3“ \n"
 "и покушајте опет да је увезете. У супротном мораћете да је претворите у подржани формат \n"
@@ -8647,66 +8414,54 @@ msgstr ""
 
 #: import/Import.cpp:621
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је Вејвпак звучна датотека. \n"
+msgstr "„%s“ је Вејвпак звучна датотека. \n"
 "Одважност не може да отвори ову врсту датотеке. \n"
 "Морате да је претворите у подржани формат звука, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:627
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је Долби дигитал звучна датотека. \n"
+msgstr "„%s“ је Долби дигитал звучна датотека. \n"
 "Одважност не може тренутно да отвори ову врсту датотеке. \n"
 "Морате да је претворите у подржани формат звука, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:633
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је Огг Спикс звучна датотека. \n"
+msgstr "„%s“ је Огг Спикс звучна датотека. \n"
 "Одважност не може тренутно да отвори ову врсту датотеке. \n"
 "Морате да је претворите у подржани формат звука, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:639
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr ""
-"„%s“ је видео датотека. \n"
+msgstr "„%s“ је видео датотека. \n"
 "Одважност не може тренутно да отвори ову врсту датотеке. \n"
 "Морате да извучете звук у подржани формат, као што је ВАВ или АИФФ."
 
 #: import/Import.cpp:644
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
-msgstr ""
-"Одважност не препознаје врсту датотеке „%s“.\n"
+msgstr "Одважност не препознаје врсту датотеке „%s“.\n"
 "Ако је несажета, покушајте да је увезете користећи „Увези сирову“."
 
 #: import/Import.cpp:662
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+msgid "Audacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr ""
-"Одважност је препознала врсту датотеке „%s“.\n"
+msgstr "Одважност је препознала врсту датотеке „%s“.\n"
 "Увозници који наводно подржавају такве датотеке су:\n"
 "%s,\n"
 "али ниједан од њих не разуме овај формат датотеке."
@@ -8809,8 +8564,7 @@ msgstr "ВАВ, АИФФ, и остале несажете врсте"
 
 #: import/ImportPCM.cpp:211
 #, c-format
-msgid ""
-"When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
 "\n"
 "Your current preference is set to %s.\n"
 "\n"
@@ -8818,8 +8572,7 @@ msgid ""
 "File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
-msgstr ""
-"Када увозите несажете звучне датотеке можете или да их умножите у пројекат, или да их читате са њихових тренутних места (без умножавања).\n"
+msgstr "Када увозите несажете звучне датотеке можете или да их умножите у пројекат, или да их читате са њихових тренутних места (без умножавања).\n"
 "\n"
 "Ваше тренутне поставке су подешене на „%s“.\n"
 "\n"
@@ -9077,11 +8830,9 @@ msgid "Mi&nimum Free Memory (MB):"
 msgstr "&Најмање слободне меморије (MB):"
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
-msgstr ""
-"Ако доступна меморија система падне испод ове вредности, звук неће\n"
+msgstr "Ако доступна меморија система падне испод ове вредности, звук неће\n"
 "више бити смештан у меморију већ ће бити записиван на диск."
 
 #: prefs/DirectoriesPrefs.cpp:126
@@ -9109,6 +8860,10 @@ msgstr "Директоријум „%s“ није уписив"
 #: prefs/DirectoriesPrefs.cpp:226
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Измене у привременом директроријуму неће ступити на снагу све док поново не покренете Одважност"
+
+#: prefs/DirectoriesPrefs.cpp:227
+msgid "Temp Directory Update"
+msgstr ""
 
 #: prefs/EffectsPrefs.cpp:32
 msgid "Effects"
@@ -9321,6 +9076,10 @@ msgstr "&Упутство се налази:"
 msgid "&Beep on completion of longer activities"
 msgstr "&Запишти након завршетка дужих активности"
 
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
+msgstr ""
+
 #: prefs/GUIPrefs.cpp:132
 msgid "Modes"
 msgstr "Режими"
@@ -9370,11 +9129,9 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr "&Прикажи уређивач метаподатака пред корак извожења "
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
-msgstr ""
-"Напомена: Опције квалитета извоза могу бити изабране\n"
+msgstr "Напомена: Опције квалитета извоза могу бити изабране\n"
 "кликом на дугме „Опције“ у прозорчету за извоз."
 
 #: prefs/ImportExportPrefs.cpp:88
@@ -9449,25 +9206,23 @@ msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Изаберите ХМЛ датотеку која садржи пречице тастатуре Одважности..."
 
 #: prefs/KeyConfigPrefs.cpp:287
-msgid "Error loading keyboard shortcuts"
-msgstr "Грешка у учитавању пречица тастатуре"
+msgid "Error Loading Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:300
 msgid "Export Keyboard Shortcuts As:"
 msgstr "Извези пречице тастатуре као:"
 
 #: prefs/KeyConfigPrefs.cpp:326
-msgid "Error saving keyboard shortcuts"
-msgstr "Грешка у чувању пречица тастатуре"
+msgid "Error Saving Keyboard Shortcuts"
+msgstr ""
 
 #: prefs/KeyConfigPrefs.cpp:404
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
-msgstr ""
-"Пречица тастатуре „%s“ је већ додељена:\n"
+msgstr "Пречица тастатуре „%s“ је већ додељена:\n"
 "\n"
 "„%s“"
 
@@ -9525,11 +9280,9 @@ msgid "Dow&nload"
 msgstr "Преуз&ми"
 
 #: prefs/LibraryPrefs.cpp:186
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
-msgstr ""
-"Одважност је самостално открио исправне ФФмпег библиотеке.\n"
+msgstr "Одважност је самостално открио исправне ФФмпег библиотеке.\n"
 "Да ли још увек желите да их пронађете ручно?"
 
 #: prefs/MidiIOPrefs.cpp:58
@@ -9822,6 +9575,10 @@ msgstr "&Кратак период:"
 #: prefs/PlaybackPrefs.cpp:105
 msgid "Lo&ng period:"
 msgstr "&Дуги период:"
+
+#: prefs/PrefsDialog.cpp:97
+msgid "Preferences: "
+msgstr ""
 
 #: prefs/PrefsDialog.cpp:105
 msgid "Audacity Preferences"
@@ -10170,8 +9927,7 @@ msgid "Info"
 msgstr "Подаци"
 
 #: prefs/ThemePrefs.cpp:91
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -10180,8 +9936,7 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr ""
-"Темовитост је експериментална функција.\n"
+msgstr "Темовитост је експериментална функција.\n"
 "\n"
 "Да је испробате, кликните „Сачувај оставу теме“ затим пронађите и измените слике и боје у\n"
 "ImageCacheVxx.png користећи уређивач слика као што је Гимп.\n"
@@ -10192,27 +9947,21 @@ msgstr ""
 "и ако датотека слике приказује друге иконице такође.)"
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
-msgstr ""
-"Саставили сте Одважност са додатним дугметом, „Излазно чаробњаштво“.  То ће сачувати\n"
+msgstr "Саставили сте Одважност са додатним дугметом, „Излазно чаробњаштво“.  То ће сачувати\n"
 "Ц издање оставе слике која може бити састављена као основна."
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
-msgstr ""
-"Ако је изабрано „Учитај оставу теме при покретању“, онда ће остава теме бити учитана\n"
+msgstr "Ако је изабрано „Учитај оставу теме при покретању“, онда ће остава теме бити учитана\n"
 "приликом покретања програма."
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr ""
-"Чување и учитавање појединачних датотека тема користи одвојену датотеку за сваку слику, али је\n"
+msgstr "Чување и учитавање појединачних датотека тема користи одвојену датотеку за сваку слику, али је\n"
 "уосталом иста идеја."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -10820,12 +10569,10 @@ msgid "Automated Input Level Adjustment stopped as requested by user."
 msgstr "Осамостаљено дотеривање улазног нивоа је заустављено као што је и затражио корисник."
 
 #: widgets/Meter.cpp:1286
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"Виши протоци освежавања чине да мерач чешће приказује\n"
+msgstr "Виши протоци освежавања чине да мерач чешће приказује\n"
 "промене. Проток од 30 у секунди или мање ће спречити\n"
 "да мерач утиче на квалитет звука на споријим рачунарима."
 
@@ -11095,14 +10842,14 @@ msgid "Could not load file: \"%s\""
 msgstr "Не могу да учитам датотеку: „%s“"
 
 #: xml/XMLWriter.cpp:348
-msgid "Error flushing file"
-msgstr "Грешка приликом испуњавања датотеке"
+msgid "Error Flushing File"
+msgstr ""
 
 #: xml/XMLWriter.cpp:353
-msgid "Error closing file"
-msgstr "Грешка приликом затварања датотеке"
+msgid "Error Closing File"
+msgstr ""
 
 #: xml/XMLWriter.cpp:363
-msgid "Error writing to file"
-msgstr "Грешка приликом уписа у датотеку"
+msgid "Error Writing to File"
+msgstr ""
 

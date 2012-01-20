@@ -4,8 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: \n"
+msgstr "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-11-28 06:52+0000\n"
 "PO-Revision-Date: 2011-12-13 02:44-0000\n"
@@ -233,27 +232,23 @@ msgstr "GPLライセンス"
 
 #: AudacityApp.cpp:785
 #, c-format
-msgid ""
-"%s could not be found.\n"
+msgid "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr ""
-"%s は存在しません. \n"
+msgstr "%s は存在しません. \n"
 "\n"
 "最近のファイルから削除されています. "
 
 #: AudacityApp.cpp:846
 #, c-format
-msgid ""
-"One or more external audio files could not be found.\n"
+msgid "One or more external audio files could not be found.\n"
 "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
 "Silence is being substituted for the affected audio.\n"
 "The first detected missing file is:\n"
 "%s\n"
 "There may be additional missing files.\n"
 "Choose File > Check Dependencies to view a list of locations of the missing files."
-msgstr ""
-"外部オーディオファイルが見つかりませんでした．\n"
+msgstr "外部オーディオファイルが見つかりませんでした．\n"
 "それらは移動されたか, 消去されたか保存されているドライブが外れている可能性があります．\n"
 "影響するオーディオ部分は無音で置き換えられました．\n"
 "最初に検出された欠落ファイル:\n"
@@ -313,11 +308,9 @@ msgid "Unknown command line option: %s\n"
 msgstr "不明なコマンドラインオプションです: %s\n"
 
 #: AudacityApp.cpp:1532
-msgid ""
-"Audacity could not find a place to store temporary files.\n"
+msgid "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr ""
-"Audacity はテンポラリファイルを保存する場所を見つけられませんでした.\n"
+msgstr "Audacity はテンポラリファイルを保存する場所を見つけられませんでした.\n"
 "設定メニューでテンポラリファイルを保存するディレクトリ名を入力してください."
 
 #: AudacityApp.cpp:1538
@@ -325,21 +318,17 @@ msgid "Audacity is now going to exit. Please launch Audacity again to use the ne
 msgstr "Audacity を終了させます. 新しいテンポラリディレクトリを使うために, Audacity を再起動して下さい."
 
 #: AudacityApp.cpp:1570
-msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+msgid "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr ""
-"Audacity を二つ同時に動作させることは, データを喪失したり, \n"
+msgstr "Audacity を二つ同時に動作させることは, データを喪失したり, \n"
 "システムを停止させたりすることがあります. \n"
 "\n"
 
 #: AudacityApp.cpp:1577
-msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
+msgid "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr ""
-"Audacity はテンポラリファイルのあるフォルダをロックできません.\n"
+msgstr "Audacity はテンポラリファイルのあるフォルダをロックできません.\n"
 "このフォルダは別に起動されたAudacityが使用しているようです.\n"
 
 #: AudacityApp.cpp:1579
@@ -355,11 +344,9 @@ msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "システムは別の Audacity が動作していることを検知しました. \n"
 
 #: AudacityApp.cpp:1621
-msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+msgid "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr ""
-"複数のプロジェクトを同時に開いて作業するためには, 新規　あるいは開くコマンドを, \n"
+msgstr "複数のプロジェクトを同時に開いて作業するためには, 新規　あるいは開くコマンドを, \n"
 "今動作している Audacity において使ってください. \n"
 
 #: AudacityApp.cpp:1622
@@ -404,13 +391,11 @@ msgid "In addition, specify the name of an audio file or Audacity project to ope
 msgstr "加えて, オーディオファイルの名前あるいは Audacity プロジェクトが開く名前を指定してください. "
 
 #: AudacityApp.cpp:1965
-msgid ""
-"Audacity project (.AUP) files are not currently \n"
+msgid "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr ""
-"Audacity プロジェクト (.AUP) ファイルは現在 Audacity に\n"
+msgstr "Audacity プロジェクト (.AUP) ファイルは現在 Audacity に\n"
 "関連付けられていません.\n"
 "\n"
 "ダブルクリックで開くために関連付けを行いますか？"
@@ -424,11 +409,9 @@ msgid "Could not find any audio devices.\n"
 msgstr "オーディオデバイスが見つかりません. \n"
 
 #: AudioIO.cpp:551
-msgid ""
-"You will not be able to play or record audio.\n"
+msgid "You will not be able to play or record audio.\n"
 "\n"
-msgstr ""
-"再生もしくは録音することができないでしょう.\n"
+msgstr "再生もしくは録音することができないでしょう.\n"
 "\n"
 
 #: AudioIO.cpp:554
@@ -445,11 +428,9 @@ msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "MIDI I/Oレイヤ初期化でエラーが発生しました\n"
 
 #: AudioIO.cpp:571
-msgid ""
-"You will not be able to play midi.\n"
+msgid "You will not be able to play midi.\n"
 "\n"
-msgstr ""
-"MIDIの再生はできません.\n"
+msgstr "MIDIの再生はできません.\n"
 "\n"
 
 #: AudioIO.cpp:577
@@ -462,12 +443,10 @@ msgid "Out of memory!"
 msgstr "メモリ不足です！"
 
 #: AudioIO.cpp:1766
-msgid ""
-"Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
+msgid "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
 "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
-msgstr ""
-"レイテンシー補正設定により録音されたオーディオの時間ゼロ以前が隠れてしまいました.\n"
+msgstr "レイテンシー補正設定により録音されたオーディオの時間ゼロ以前が隠れてしまいました.\n"
 "Audacityは開始点を時間ゼロに戻しました.\n"
 "タイムシフトツール(<---> またはF5)によりトラックを正しい位置に動かすことができます."
 
@@ -511,11 +490,9 @@ msgid "Automatic Crash Recovery"
 msgstr "クラッシュからの自動回復"
 
 #: AutoRecovery.cpp:75
-msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
+msgid "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can automatically be recovered:"
-msgstr ""
-"いくつかのプロジェクトはAudacityの最後の動作状態が保存されていませんでした. \n"
+msgstr "いくつかのプロジェクトはAudacityの最後の動作状態が保存されていませんでした. \n"
 "以下のプロジェクトは自動的に回復できる可能性があります. "
 
 #: AutoRecovery.cpp:77
@@ -528,8 +505,7 @@ msgstr "名前"
 
 #: AutoRecovery.cpp:86
 msgid "Recovering a project will not change any files on disk before you save it."
-msgstr ""
-"プロジェクトの自動回復では, そのプロジェクトを保存するまでは, ディスク上のいかなる\n"
+msgstr "プロジェクトの自動回復では, そのプロジェクトを保存するまでは, ディスク上のいかなる\n"
 "ファイルへも変更を加えることはありません. "
 
 #: AutoRecovery.cpp:90
@@ -545,11 +521,9 @@ msgid "Recover Projects"
 msgstr "プロジェクトを回復"
 
 #: AutoRecovery.cpp:129
-msgid ""
-"Are you sure you don't want to recover any projects?\n"
+msgid "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
-msgstr ""
-"どのプロジェクトも回復することを望まない, でよろしいですか?\n"
+msgstr "どのプロジェクトも回復することを望まない, でよろしいですか?\n"
 "それらは後で回復させることはできません. "
 
 #: AutoRecovery.cpp:130
@@ -628,11 +602,9 @@ msgstr "コマンド %s はまだ実装されていません"
 #: BatchCommands.cpp:507
 #: effects/Effect.cpp:120
 #, c-format
-msgid ""
-"Could not set parameters of effect %s\n"
+msgid "Could not set parameters of effect %s\n"
 " to %s."
-msgstr ""
-"エフェクト %s のパラメータが \n"
+msgstr "エフェクト %s のパラメータが \n"
 "%s に設定できません"
 
 #: BatchCommands.cpp:557
@@ -642,12 +614,10 @@ msgstr "自動実行コマンド %s は認識されません. "
 
 #: BatchCommands.cpp:676
 #, c-format
-msgid ""
-"Apply %s with parameter(s)\n"
+msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr ""
-"%s はパラメータを付けて適用してください. \n"
+msgstr "%s はパラメータを付けて適用してください. \n"
 "\n"
 "%s"
 
@@ -846,21 +816,17 @@ msgid "Project Depends on Other Audio Files"
 msgstr "プロジェクトは別のオーディオファイルに依存しています"
 
 #: Dependencies.cpp:324
-msgid ""
-"Copying these files into your project will remove this dependency.\n"
+msgid "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
-msgstr ""
-"以下のファイルからオーディオをコピーするとプロジェクトは自己完結になります\n"
+msgstr "以下のファイルからオーディオをコピーするとプロジェクトは自己完結になります\n"
 "この作業はより多くのディスク領域を必要としますが, より安全です. "
 
 #: Dependencies.cpp:328
-msgid ""
-"\n"
+msgid "\n"
 "\n"
 "Files shown as MISSING have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
-msgstr ""
-"\n"
+msgstr "\n"
 "\n"
 "行方不明と表示されたファイルは移動または消去されたもので, コピーすることはできません.\n"
 "これらを元に戻すことでプロジェクトにコピーすることができます."
@@ -924,12 +890,10 @@ msgid "If you proceed, your project will not be saved to disk. Is this what you 
 msgstr "もし続行すると, プロジェクトはディスクに保存されません. 続行しますか？"
 
 #: Dependencies.cpp:549
-msgid ""
-"Your project is currently self-contained; it does not depend on any external audio files. \n"
+msgid "Your project is currently self-contained; it does not depend on any external audio files. \n"
 "\n"
 "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
-msgstr ""
-"このプロジェクトは現時点では自己完結型であり、外部オーディオファイルとの依存関係はありません．\n"
+msgstr "このプロジェクトは現時点では自己完結型であり、外部オーディオファイルとの依存関係はありません．\n"
 "\n"
 "もし外部と依存関係があるファイルを取り込んだ場合、このプロジェクトはもはや自己完結型ではなくなります．したがってコピーせずに保存するとデータを失う可能性があります．"
 
@@ -945,11 +909,9 @@ msgid "Progress"
 msgstr "進行"
 
 #: DirManager.cpp:364
-msgid ""
-"There is very little free disk space left on this volume.\n"
+msgid "There is very little free disk space left on this volume.\n"
 "Please select another temporary directory in Preferences."
-msgstr ""
-"ディスクの空き容量がわずかしか残っていません. \n"
+msgstr "ディスクの空き容量がわずかしか残っていません. \n"
 "設定にて他のテンポラリディレクトリを選択してください."
 
 #: DirManager.cpp:396
@@ -970,11 +932,9 @@ msgstr "DirManager::MakeBlockFilePathにてmkdirが失敗しました."
 
 #: DirManager.cpp:614
 #, c-format
-msgid ""
-"Audacity found an orphan block file: %s. \n"
+msgid "Audacity found an orphan block file: %s. \n"
 "Please consider saving and reloading the project to perform a complete project check."
-msgstr ""
-"Audacity は無用なブロックファイル %s を見つけました. \n"
+msgstr "Audacity は無用なブロックファイル %s を見つけました. \n"
 "プロジェクトを全チェックするために, プロジェクトを保存して再読み込みすることを検討してください. "
 
 #  i18n-hint: This is the pattern for filenames that are created
@@ -1039,8 +999,7 @@ msgstr "プロジェクトファイルを精査しています"
 
 #: DirManager.cpp:1410
 #, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "detected %d missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
@@ -1050,28 +1009,21 @@ msgid ""
 "to their previous location. \n"
 "\n"
 "Note that for the second option, the waveform \n"
-"may not show silence."
+"may not show silence. \n"
+"\n"
+"If you choose the third option, this will save the \n"
+"project in its current state, unless you \"Close \n"
+"project immediately\" on further error alerts."
 msgstr ""
-" \"%s\" フォルダのプロジェクトチェックは\n"
-"使用中の%d 個の外部ファイル (`エイリアスファイル')が\n"
-"の不足を検出しました. Audacity はそれらのファイルを自動的\n"
-"に復元することはできません．\n"
-"\n"
-"下記のオプションのいずれかにより，\n"
-"それらのファイルを見つけ出し元の場所\n"
-"への回復を試みることができます．\n"
-"\n"
-"2つ目のオプションの場合は波形ファイルが\n"
-"無音を表示しないこともあります．"
 
 #: DirManager.cpp:1423
 #: DirManager.cpp:1542
 msgid "Treat missing audio as silence (this session only)"
 msgstr "欠落したオーディオを無音として扱う (このセッションのみ)"
 
-#: DirManager.cpp:1424
-msgid "Replace missing audio with silence (permanent immediately). This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "欠損したオーディオを無音で置き換えます.  \"すぐにプロジェクトを閉じる\" を選択しない限りプロジェクトは現在の状態に保たれます."
+#: DirManager.cpp:1427
+msgid "Replace missing audio with silence (permanent immediately)."
+msgstr ""
 
 #: DirManager.cpp:1427
 msgid "Warning - Missing Aliased File(s)"
@@ -1083,13 +1035,11 @@ msgstr "プロジェクトチェックは欠落したエイリアスファイル
 
 #: DirManager.cpp:1477
 #, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "detected %d missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
-msgstr ""
-"\"%s\"フォルダのプロジェクトチェックは\n"
+msgstr "\"%s\"フォルダのプロジェクトチェックは\n"
 " %d 個の欠落エイリアス　(.auf)　ブロックファイルを検出しました．\n"
 "Audacity は, それらのファイルをプロジェクト中の元の\n"
 "オーディオから復元することができます."
@@ -1118,8 +1068,7 @@ msgstr "プロジェクトチェックは欠落したエイリアス要約ファ
 
 #: DirManager.cpp:1528
 #, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "detected %d missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
@@ -1131,8 +1080,7 @@ msgid ""
 "\n"
 "Note that for the second option, the waveform \n"
 "may not show silence."
-msgstr ""
-"\"%s\"フォルダのプロジェクトチェックは\n"
+msgstr "\"%s\"フォルダのプロジェクトチェックは\n"
 "バグかシステムクラッシュあるいは偶発的な削除によって\n"
 "オーディオデータのブロックファイル(.au)%d 個が行方不明\n"
 "であることを検出しました．Audacity はそれらの失われた\n"
@@ -1163,13 +1111,11 @@ msgstr "プロジェクトチェックは無効なブロックファイルを無
 
 #: DirManager.cpp:1590
 #, c-format
-msgid ""
-"Project check of \"%s\" folder \n"
+msgid "Project check of \"%s\" folder \n"
 "found %d orphan block file(s). These files are \n"
 "unused by this project, but might belong to other projects. \n"
 "They are doing no harm and are small."
-msgstr ""
-" \"%s\"フォルダのプロジェクトチェックは\n"
+msgstr " \"%s\"フォルダのプロジェクトチェックは\n"
 " %d 個の無用なブロックファイルを見つけました. これらのファイルは\n"
 "使われておらず, なんらかのバグかクラッシュ時に残されたものと思われます.\n"
 "これらはサイズも小さく無害です."
@@ -1195,12 +1141,10 @@ msgid "Project check found file inconsistencies inspecting the loaded project da
 msgstr "プロジェクトチェックは読み込まれたプロジェクトデータに不整合性を見つけました．"
 
 #: DirManager.cpp:1647
-msgid ""
-"Project check found file inconsistencies during automatic recovery.\n"
+msgid "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Show Log...' in the Help menu to see details."
-msgstr ""
-"プロジェクトチェックは自動復旧中にファイルの不整合性を見つけました．\n"
+msgstr "プロジェクトチェックは自動復旧中にファイルの不整合性を見つけました．\n"
 "\n"
 "ヘルプメニューの 'ログの表示...' により詳細表示できます．"
 
@@ -1253,13 +1197,11 @@ msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg 対応はコンパイルされていません"
 
 #: FFmpeg.cpp:110
-msgid ""
-"FFmpeg was configured in Preferences and successfully loaded before,                         \n"
+msgid "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
 "but this time Audacity failed to load it at startup.                         \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"FFmpegは設定されており以前は正常に読み込まれていましたが                       \n"
+msgstr "FFmpegは設定されており以前は正常に読み込まれていましたが                       \n"
 "今回Audacity起動時に読み込み失敗しました.                        \n"
 "\n"
 "設定 > ライブラリで再設定してください. "
@@ -1326,14 +1268,12 @@ msgid "FFmpeg not found"
 msgstr "FFmpeg が見つかりません"
 
 #: FFmpeg.h:112
-msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+msgid "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr ""
-"AudacityはFFmpegによりオーディオを取り込もうとしましたが,\n"
+msgstr "AudacityはFFmpegによりオーディオを取り込もうとしましたが,\n"
 "必要なライブラリが見つかりませんでした.\n"
 "\n"
 "FFmpeg取り込みのためには, 設定 > ライブラリ\n"
@@ -1555,12 +1495,10 @@ msgid "GStreamer %s: %s"
 msgstr "GStreamer %s: %s"
 
 #: GStreamerLoader.cpp:212
-msgid ""
-"GStreamer was configured in preferences and successfully loaded before,\n"
+msgid "GStreamer was configured in preferences and successfully loaded before,\n"
 "                      but this time Audacity failed to load it at startup.\n"
 "                      You may want to go back to Preferences > Libraries and re-configure it."
-msgstr ""
-"GStreamerはすでに設定され以前は正常にロードされましたが,\n"
+msgstr "GStreamerはすでに設定され以前は正常にロードされましたが,\n"
 "                      今回Audacityが立ち上げ時のロードに失敗しました.\n"
 "                      設定 > ライブラリに戻って再設定してください."
 
@@ -1766,13 +1704,11 @@ msgid "New..."
 msgstr "新規..."
 
 #: LabelDialog.cpp:359
-msgid ""
-"You have left blank label names.  These will be\n"
+msgid "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
 "\n"
 "Would you like to go back and provide names?"
-msgstr ""
-"ラベル名が空白のままです. これはラベルトラックを\n"
+msgstr "ラベル名が空白のままです. これはラベルトラックを\n"
 "集合させるときにスキップさせることになります. \n"
 "戻って名前を付けてやりますか？"
 
@@ -1846,11 +1782,9 @@ msgstr "選択された言語, %s (%s), はシステム言語, %s (%s)と異な�
 
 #: Legacy.cpp:372
 #, c-format
-msgid ""
-"Converted a 1.0 project file to the new format.\n"
+msgid "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr ""
-"バージョン 1.0 のプロジェクトファイルを新しいフォーマットへ変換します.\n"
+msgstr "バージョン 1.0 のプロジェクトファイルを新しいフォーマットへ変換します.\n"
 "古いファイルは '%s' という名前で保存されました."
 
 #: Legacy.cpp:373
@@ -2513,8 +2447,8 @@ msgid "&Run Benchmark..."
 msgstr "ベンチマーク(&R)..."
 
 #: Menus.cpp:1045
-msgid "&Audio Device Info..."
-msgstr "オーディオデイバイス情報(&A)..."
+msgid "Au&dio Device Info..."
+msgstr ""
 
 #: Menus.cpp:1046
 msgid "Show &Log..."
@@ -2870,8 +2804,7 @@ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI ファイル (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 
 #: Menus.cpp:3014
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
+msgid "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
 msgstr "識別できない拡張子のファイル名を選びました.つづけますか?"
 
@@ -3075,10 +3008,6 @@ msgstr "新しく分離"
 #: Menus.cpp:4111
 msgid "Split to new track"
 msgstr "新しいトラックに分離"
-
-#: Menus.cpp:4193
-msgid "Split at labels"
-msgstr "ラベルを分離"
 
 #: Menus.cpp:4530
 msgid "Frequency Analysis"
@@ -3425,15 +3354,13 @@ msgid "Save changes before closing?"
 msgstr "閉じる前に変更を保存しますか？"
 
 #: Project.cpp:1881
-msgid ""
-"\n"
+msgid "\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr ""
-"\n"
+msgstr "\n"
 "\n"
 "保存により, プロジェクトのトラックは消去されます.\n"
 "\n"
@@ -3472,8 +3399,7 @@ msgstr "Audacity プロジェクト"
 
 #: Project.cpp:2252
 #, c-format
-msgid ""
-"This file was saved by Audacity version %s. The format has changed. \n"
+msgid "This file was saved by Audacity version %s. The format has changed. \n"
 "\n"
 "Audacity can try to open and save this file, but saving it in this \n"
 "version will then prevent any 1.2 or earlier version opening it. \n"
@@ -3481,8 +3407,7 @@ msgid ""
 "Audacity might corrupt the file in opening it, so you should back it up first. \n"
 "\n"
 "Open this file now?"
-msgstr ""
-"このファイルはAudacity バージョン%sにより保存されました.データフォーマットは変わっています.\n"
+msgstr "このファイルはAudacity バージョン%sにより保存されました.データフォーマットは変わっています.\n"
 "\n"
 "Audacityはこのファイルを開いたり保存することができますが, このバージョンで保存すると\n"
 "1.2以前のバージョンでは開くことができなくなります.\n"
@@ -3501,13 +3426,11 @@ msgid "Warning - Opening Old Project File"
 msgstr "古いプロジェクトファイルを開いています"
 
 #: Project.cpp:2301
-msgid ""
-"You are trying to open an automatically created backup file.\n"
+msgid "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr ""
-"自動作成されたバックアップファイルを開こうとしています.\n"
+msgstr "自動作成されたバックアップファイルを開こうとしています.\n"
 "これは深刻なデータ喪失を起こす可能性があります.\n"
 "\n"
 "代わりに実際のAudacityプロジェクトファイルを開いてください."
@@ -3527,11 +3450,9 @@ msgstr "ファイルを開く際にエラーが発生しました"
 
 #: Project.cpp:2330
 #, c-format
-msgid ""
-"File may be invalid or corrupted: \n"
+msgid "File may be invalid or corrupted: \n"
 "%s"
-msgstr ""
-"ファイルは不正か壊れているでしょう. \n"
+msgstr "ファイルは不正か壊れているでしょう. \n"
 "%s"
 
 #: Project.cpp:2331
@@ -3566,11 +3487,9 @@ msgstr "プロジェクトデータフォルダーが見つかりません: \"%s
 
 #: Project.cpp:2797
 #, c-format
-msgid ""
-"This file was saved using Audacity %s.\n"
+msgid "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr ""
-"このファイルは Audacity %s を用いて保存されました. \n"
+msgstr "このファイルは Audacity %s を用いて保存されました. \n"
 "あなたは Audacity %s を使用しています - このファイルを開くには, 新しいバージョンにアップグレードする必要があります. "
 
 #: Project.cpp:2801
@@ -3578,8 +3497,7 @@ msgid "Can't open project file"
 msgstr "プロジェクトファイルを開けません"
 
 #: Project.cpp:3045
-msgid ""
-"Your project is now empty.\n"
+msgid "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
 "\n"
 "To save any previously open tracks:\n"
@@ -3587,8 +3505,7 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr ""
-"プロジェクトは空です. \n"
+msgstr "プロジェクトは空です. \n"
 "もし保存済みであれば, そのプロジェクトにはトラックがありません. \n"
 "\n"
 "以前開いていたトラックを保存するには:\n"
@@ -3603,11 +3520,9 @@ msgstr "警告：プロジェクトは空です. "
 
 #: Project.cpp:3117
 #, c-format
-msgid ""
-"Could not save project. Path not found.  Try creating \n"
+msgid "Could not save project. Path not found.  Try creating \n"
 "directory \"%s\" before saving project with this name."
-msgstr ""
-"プロジェクトを保存できませんでした． パスが不明です． \n"
+msgstr "プロジェクトを保存できませんでした． パスが不明です． \n"
 "ディレクトリ \"%s\"を作成してからやり直してください．"
 
 #: Project.cpp:3119
@@ -3619,11 +3534,9 @@ msgstr "プロジェクトファイルの保存時にエラーが発生しまし
 
 #: Project.cpp:3154
 #, c-format
-msgid ""
-"Could not save project. Perhaps %s \n"
+msgid "Could not save project. Perhaps %s \n"
 "is not writable or the disk is full."
-msgstr ""
-"プロジェクトファイルが保存できません. %s は書き込みできないか,\n"
+msgstr "プロジェクトファイルが保存できません. %s は書き込みできないか,\n"
 "ディスクが一杯です."
 
 #: Project.cpp:3177
@@ -3661,16 +3574,14 @@ msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM オーディオファイル (*.wav)|*.wav"
 
 #: Project.cpp:3508
-msgid ""
-"Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
+msgid "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
 "To open a compressed project takes longer than usual, as it imports each compressed track. \n"
 "\n"
 "Most other programs can't open Audacity project files.\n"
 "When you want to save a file that can be opened by other programs, select one of the\n"
 "Export commands."
-msgstr ""
-"Audacity の圧縮されたプロジェクトファイル (.aup) は作業結果をよりサイズの小さな圧縮された (.ogg)フォー\n"
+msgstr "Audacity の圧縮されたプロジェクトファイル (.aup) は作業結果をよりサイズの小さな圧縮された (.ogg)フォー\n"
 "マットで保存します. 圧縮されたプロジェクトファイルはサイズが小さいため, オンラインでプロジェクトをやりとりする\n"
 "場合に適しています. 圧縮されたプロジェクトファイルを開くには, それぞれの圧縮されたトラックを読み込むため, \n"
 "通常より時間がかかります.\n"
@@ -3683,14 +3594,12 @@ msgid "Save Compressed Project As..."
 msgstr "圧縮されたプロジェクトを別名で保存..."
 
 #: Project.cpp:3514
-msgid ""
-"You are saving an Audacity project file (.aup).\n"
+msgid "You are saving an Audacity project file (.aup).\n"
 "\n"
 "Saving a project creates a file that only Audacity can open.\n"
 "\n"
 "To save an audio file for other programs, use one of the \"File > Export\" commands.\n"
-msgstr ""
-"Audacity のプロジェクトファイル (.aup)を保存しようとしています.\n"
+msgstr "Audacity のプロジェクトファイル (.aup)を保存しようとしています.\n"
 "\n"
 "プロジェクトの保存では, Audacity のみが開くことのできるファイルが作成されます.\n"
 "\n"
@@ -3702,11 +3611,9 @@ msgid "Save Project As..."
 msgstr "プロジェクトを別名で保存... "
 
 #: Project.cpp:3544
-msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+msgid "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
-msgstr ""
-"指定されたファイル名は他プロジェクトを上書きする可能性があるのでプロジェクトは保存されませんでした.\n"
+msgstr "指定されたファイル名は他プロジェクトを上書きする可能性があるのでプロジェクトは保存されませんでした.\n"
 "別のファイル名でやりなおしてください."
 
 #: Project.cpp:3587
@@ -4012,11 +3919,9 @@ msgstr "ファイルの保存場所を選んでください"
 
 #: Sequence.cpp:968
 #, c-format
-msgid ""
-"Sequence has block file with length %s > mMaxSamples %s.\n"
+msgid "Sequence has block file with length %s > mMaxSamples %s.\n"
 "Truncating to mMaxSamples."
-msgstr ""
-"長さ %s > mMaxSamples %sのブロックファイルがシーケンス中にあります.\n"
+msgstr "長さ %s > mMaxSamples %sのブロックファイルがシーケンス中にあります.\n"
 "長さ mMaxSamplesに切りそろえます."
 
 #: Sequence.cpp:971
@@ -4171,61 +4076,51 @@ msgstr "タグファイル保存エラー"
 
 #: Theme.cpp:637
 #, c-format
-msgid ""
-"Audacity could not write file:\n"
+msgid "Audacity could not write file:\n"
 "  %s."
 msgstr "ファイル %s が書き込めません"
 
 #: Theme.cpp:655
 #, c-format
-msgid ""
-"Audacity could not open file:\n"
+msgid "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
 msgstr "書き込むためのファイル %s を開けません"
 
 #: Theme.cpp:663
 #, c-format
-msgid ""
-"Audacity could not write images to file:\n"
+msgid "Audacity could not write images to file:\n"
 "  %s."
 msgstr "イメージをファイル %s に書き込めません:"
 
 #: Theme.cpp:798
 #, c-format
-msgid ""
-"Audacity could not find file:\n"
+msgid "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr ""
-"ファイル %s \n"
+msgstr "ファイル %s \n"
 "が見つかりません. \n"
 "テーマはロードされません. "
 
 #: Theme.cpp:806
 #: Theme.cpp:895
 #, c-format
-msgid ""
-"Audacity could not load file:\n"
+msgid "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr ""
-"ファイル %s \n"
+msgstr "ファイル %s \n"
 "がロードできません. \n"
 "png フォーマットが不正である可能性があります？"
 
 #: Theme.cpp:822
-msgid ""
-"Audacity could not read its default theme.\n"
+msgid "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr ""
-"既定のテーマを読み取ることができません. \n"
+msgstr "既定のテーマを読み取ることができません. \n"
 "問題を報告してください. "
 
 #: Theme.cpp:917
 #, c-format
-msgid ""
-"None of the expected theme component files\n"
+msgid "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
 msgstr "テーマを構成するファイルが　%s の中に見つかりません. "
@@ -4233,30 +4128,24 @@ msgstr "テーマを構成するファイルが　%s の中に見つかりませ
 #: Theme.cpp:941
 #: effects/NoiseRemoval.cpp:182
 #, c-format
-msgid ""
-"Could not create directory:\n"
+msgid "Could not create directory:\n"
 "  %s"
-msgstr ""
-"ディレクトを作れません: \n"
+msgstr "ディレクトを作れません: \n"
 " %s"
 
 #: Theme.cpp:962
 #, c-format
-msgid ""
-"Audacity could not save file:\n"
+msgid "Audacity could not save file:\n"
 "  %s"
-msgstr ""
-"ファイルに保存できません:\n"
+msgstr "ファイルに保存できません:\n"
 "%s"
 
 #: Theme.cpp:974
 #, c-format
-msgid ""
-"All required files in:\n"
+msgid "All required files in:\n"
 "  %s\n"
 "were already present."
-msgstr ""
-"%s\n"
+msgstr "%s\n"
 "にあるすべての要求されたファイルは\n"
 "既に存在しています. "
 
@@ -4837,27 +4726,21 @@ msgid "Plugins %i to %i"
 msgstr "プラグイン %i から %i"
 
 #: commands/CommandManager.cpp:949
-msgid ""
-"There was a problem with your last action. If you think\n"
+msgid "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"最後の操作に問題がありました. もしこれがバグであると\n"
+msgstr "最後の操作に問題がありました. もしこれがバグであると\n"
 "お思いの場合は, 正確にどこで起こったかお知らせください. "
 
 #: commands/CommandManager.cpp:953
-msgid ""
-"You can only do this when playing and recording are\n"
+msgid "You can only do this when playing and recording are\n"
 " stopped. (Pausing is not sufficient.)"
-msgstr ""
-"録音と再生が停止しているときのみ, この作業は可能です. \n"
+msgstr "録音と再生が停止しているときのみ, この作業は可能です. \n"
 "(一時停止状態でも不可）"
 
 #: commands/CommandManager.cpp:955
-msgid ""
-"You must first select some stereo audio for this\n"
+msgid "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
-msgstr ""
-"ステレオのオーディオを最初に選んでください．\n"
+msgstr "ステレオのオーディオを最初に選んでください．\n"
 "(モノラルのオーディオには利用できません)"
 
 #: commands/CommandManager.cpp:957
@@ -4865,11 +4748,9 @@ msgid "You must first select some audio for this to use."
 msgstr "最初にオーディオを選択してください."
 
 #: commands/CommandManager.cpp:959
-msgid ""
-"You must first select some audio for this\n"
+msgid "You must first select some audio for this\n"
 " to use. (Selecting other kinds of track won't work.)"
-msgstr ""
-"最初にオーディオを選んでください. \n"
+msgstr "最初にオーディオを選んでください. \n"
 "(オーディオ以外のトラックには利用できません)"
 
 #: commands/CommandManager.cpp:964
@@ -5422,20 +5303,29 @@ msgid "Contrast Analysis (WCAG 2 compliance)"
 msgstr "コントラスト解析(WCAG 2準拠)"
 
 #: effects/Contrast.cpp:105
-msgid ""
-"Start time after after end time!\n"
+msgid "Start time after after end time!\n"
 "Please enter reasonable times."
-msgstr ""
-"開始時間が終了時間より後になっています！\n"
+msgstr "開始時間が終了時間より後になっています！\n"
 "正しい時間を入力してください. "
 
 #: effects/Contrast.cpp:115
-msgid ""
-"Times are not reasonable!\n"
+msgid "Times are not reasonable!\n"
 "Please enter reasonable times."
-msgstr ""
-"時間が正しくありません！\n"
+msgstr "時間が正しくありません！\n"
 "正しい時間を入力してください. "
+
+#: effects/Contrast.cpp:121
+msgid "Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+
+#: effects/Contrast.cpp:131
+msgid "You can only measure one track at a time."
+msgstr ""
+
+#: effects/Contrast.cpp:151
+msgid "Please select something to be measured."
+msgstr ""
 
 #: effects/Contrast.cpp:217
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
@@ -5792,13 +5682,11 @@ msgstr "イコライゼーション"
 
 #: effects/Equalization.cpp:996
 #, c-format
-msgid ""
-"EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
+msgid "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
 "Please press 'help' to visit the download page.\n"
 "\n"
 "Save the curves at %s"
-msgstr ""
-"EQCurves.xmlとEQDefaultCurves.xmlが見つかりません.\n"
+msgstr "EQCurves.xmlとEQDefaultCurves.xmlが見つかりません.\n"
 "'ヘルプ'を押してダウンロードページへ行って下さい.\n"
 "\n"
 "カーブは%sに保存されます"
@@ -5904,11 +5792,9 @@ msgid "Select Curve"
 msgstr "カーブを選択"
 
 #: effects/Equalization.cpp:1383
-msgid ""
-"To use this EQ curve in a batch chain, please choose a new name for it.\n"
+msgid "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"EQカーブをバッチ・チェインの中で使うには, 新しい名前を選択してください. \n"
+msgstr "EQカーブをバッチ・チェインの中で使うには, 新しい名前を選択してください. \n"
 "'カーブの保存/管理...'ボタンを選択し'無名'カーブをリネームしてからご使用ください．"
 
 #: effects/Equalization.cpp:1384
@@ -5959,11 +5845,9 @@ msgid "Help"
 msgstr "ヘルプ"
 
 #: effects/Equalization.cpp:2877
-msgid ""
-"Rename 'unnamed' to save a new entry.\n"
+msgid "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
-msgstr ""
-"新しいカーブを保存するには'無名'をリネームしてください.\n"
+msgstr "新しいカーブを保存するには'無名'をリネームしてください.\n"
 "'OK' で変更を保存, 'キャンセル' で取り消します."
 
 #: effects/Equalization.cpp:2912
@@ -6387,11 +6271,9 @@ msgstr "ノイズの作成"
 
 #: effects/NoiseRemoval.cpp:201
 #, c-format
-msgid ""
-"Could not open file:\n"
+msgid "Could not open file:\n"
 "  %s"
-msgstr ""
-"ファイルが開けません:\n"
+msgstr "ファイルが開けません:\n"
 "  %s"
 
 #: effects/NoiseRemoval.cpp:295
@@ -6403,11 +6285,9 @@ msgid "Step 1"
 msgstr "ステップ 1"
 
 #: effects/NoiseRemoval.cpp:880
-msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+msgid "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr ""
-"Audacity が除去すべき対象を判断するために, ノイズのみの区間（数秒間）を\n"
+msgstr "Audacity が除去すべき対象を判断するために, ノイズのみの区間（数秒間）を\n"
 "選択し, 次にクリックすることでノイズプロファイルを獲得します:"
 
 #: effects/NoiseRemoval.cpp:881
@@ -6415,11 +6295,9 @@ msgid "Step 2"
 msgstr "ステップ 2"
 
 #: effects/NoiseRemoval.cpp:882
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
+msgid "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"フィルタリングしたいオーディオをすべて選択し, 除去の程度を選択し, 次に'OK'をクリック\n"
+msgstr "フィルタリングしたいオーディオをすべて選択し, 除去の程度を選択し, 次に'OK'をクリック\n"
 "することでノイズを除去します.\n"
 
 #: effects/NoiseRemoval.cpp:887
@@ -6607,25 +6485,21 @@ msgid "Applying Phaser"
 msgstr "フェーザーエフェクトを適用"
 
 #: effects/Repair.cpp:99
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+msgid "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"修復エフェクトは, 損傷したオーディオデータのとても短い領域(128サンプルまで)\n"
+msgstr "修復エフェクトは, 損傷したオーディオデータのとても短い領域(128サンプルまで)\n"
 "に対して使用することが意図されています. \n"
 "\n"
 "ズームして, 1秒よりずっと短い修復したい部分を選んでください. "
 
 #: effects/Repair.cpp:105
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
+msgid "Repair works by using audio data outside the selection region.\n"
 "\n"
 "Please select a region that has audio touching at least one side of it.\n"
 "\n"
 "The more surrounding audio, the better it performs."
-msgstr ""
-"選択範囲外のオーディオデータを使って修復します.\n"
+msgstr "選択範囲外のオーディオデータを使って修復します.\n"
 "\n"
 "オーディオデータが接続する最低片方側のデータ領域を選択してください\n"
 "\n"
@@ -6800,11 +6674,9 @@ msgid "SpikeCleaner by Lynn Allan"
 msgstr "Lynn Allan の突発音除去"
 
 #: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
+msgid "Max Spike Duration (milliseconds): \n"
 "(99999 or greater is off)"
-msgstr ""
-"突発音の最大の持続時間(ミリ秒): \n"
+msgstr "突発音の最大の持続時間(ミリ秒): \n"
 "(99999 かそれ以上はオフ）"
 
 #: effects/SpikeCleaner.cpp:178
@@ -7000,11 +6872,9 @@ msgid "Threshold for silence:"
 msgstr "無音のための閾値:"
 
 #: effects/TruncSilence.cpp:920
-msgid ""
-"   Duration must be at least 1 millisecond\n"
+msgid "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
-msgstr ""
-"時間間隔は最低1ミリ秒である必要があります. \n"
+msgstr "時間間隔は最低1ミリ秒である必要があります. \n"
 "圧縮レシオは最低1:1である必要があります"
 
 #: effects/TruncSilence.h:37
@@ -7174,11 +7044,9 @@ msgstr "[警告：Nyquistは不正なUTF-8文字列を返しましたので,　L
 
 #: effects/nyquist/Nyquist.cpp:305
 #, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
+msgid "Bad Nyquist 'control' type specification: '%s' in plugin file '%s'.\n"
 "Control not created."
-msgstr ""
-"不正なNyquist 'control' タイプ: '%s' －　プラグインファイル　'%s'.\n"
+msgstr "不正なNyquist 'control' タイプ: '%s' －　プラグインファイル　'%s'.\n"
 "Controlは作成できませんでした．"
 
 #: effects/nyquist/Nyquist.cpp:429
@@ -7194,14 +7062,12 @@ msgid "Error in Nyquist code"
 msgstr "Nyquistコードのエラー"
 
 #: effects/nyquist/Nyquist.cpp:486
-msgid ""
-"Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
+msgid "Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n"
 "\treturn s * 0.1\n"
 "for SAL, or begin with an open parenthesis such as\n"
 "\t(mult s 0.1)\n"
 " for LISP."
-msgstr ""
-"このコードはSALに似ていますがリターン文がありません．SALであれば\n"
+msgstr "このコードはSALに似ていますがリターン文がありません．SALであれば\n"
 "\treturn s * 0.1　\n"
 "のようなリターン文,　あるいはLISPであれば\n"
 "\t(mult s 0.1)\n"
@@ -7292,25 +7158,21 @@ msgstr "警告"
 
 #: export/Export.cpp:621
 #, c-format
-msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+msgid "You are about to save a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to save the file under this name?"
-msgstr ""
-"%s ファイルを拡張子 %s で保存しようとしています.\n"
+msgstr "%s ファイルを拡張子 %s で保存しようとしています.\n"
 "この拡張子 %s は標準的な拡張子ではないため, 他のプログラムでは開けないでしょう.\n"
 "本当にこの拡張子でファイルを保存しますか？"
 
 #: export/Export.cpp:654
-msgid ""
-"You are attempting to overwrite an aliased file that is missing.\n"
+msgid "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the original audio to the project.\n"
 "Choose File > Check Dependencies to view the locations of all missing files.\n"
 "If you still wish to export, please choose a different filename or folder."
-msgstr ""
-"欠落したエイリアスファイルを上書きしようとしています.\n"
+msgstr "欠落したエイリアスファイルを上書きしようとしています.\n"
 "元のオーディオを復元するためのパス情報がないためこのファイルを書き込むことができません.\n"
 "ファイル > 依存性のチェックを選び欠損したファイルの場所を確認してください.\n"
 "異なるファイル名やフォルダを指定すれば書き出すことができます."
@@ -7403,20 +7265,16 @@ msgid "Command Output"
 msgstr "コマンド出力"
 
 #: export/ExportFFmpeg.cpp:61
-msgid ""
-"Properly configured FFmpeg is required to proceed.\n"
+msgid "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
-msgstr ""
-"続けるには正しく設定されたFFmpegが必要です. \n"
+msgstr "続けるには正しく設定されたFFmpegが必要です. \n"
 "設定 > ライブラリにて設定できます. "
 
 #: export/ExportFFmpeg.cpp:457
 #, c-format
-msgid ""
-"FFmpeg cannot find audio codec 0x%x.\n"
+msgid "FFmpeg cannot find audio codec 0x%x.\n"
 "Support for this codec is probably not compiled in."
-msgstr ""
-"FFmpegはオーディオコーデック 0x%x を発見できませんでした. \n"
+msgstr "FFmpegはオーディオコーデック 0x%x を発見できませんでした. \n"
 "このコーデックの対応はおそらくコンパイルされていません. "
 
 #: export/ExportFFmpeg.cpp:686
@@ -7441,20 +7299,16 @@ msgstr "無効なレートです"
 
 #: export/ExportFFmpeg.cpp:805
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the current output\n"
+msgid "The project sample rate (%d) is not supported by the current output\n"
 "file format.  "
-msgstr ""
-"プロジェクトのサンプリング周波数 (%d)　は現在の出力ファイル形式では\n"
+msgstr "プロジェクトのサンプリング周波数 (%d)　は現在の出力ファイル形式では\n"
 "サポートされていません."
 
 #: export/ExportFFmpeg.cpp:808
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
-msgstr ""
-"プロジェクトのサンプリング周波数 (%d) とビットレート (%d kbps)　の組み合わせは\n"
+msgstr "プロジェクトのサンプリング周波数 (%d) とビットレート (%d kbps)　の組み合わせは\n"
 "現在のファイル形式ではサポートされていません. "
 
 #: export/ExportFFmpeg.cpp:811
@@ -7666,12 +7520,10 @@ msgid "Language:"
 msgstr "言語:"
 
 #: export/ExportFFmpegDialogs.cpp:1354
-msgid ""
-"ISO 639 3-letter language code\n"
+msgid "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"ISO 639 3文字言語コード\n"
+msgstr "ISO 639 3文字言語コード\n"
 "オプション\n"
 "空 - 自動"
 
@@ -7688,35 +7540,29 @@ msgid "Tag:"
 msgstr "タグ:"
 
 #: export/ExportFFmpegDialogs.cpp:1368
-msgid ""
-"Codec tag (FOURCC)\n"
+msgid "Codec tag (FOURCC)\n"
 "Optional\n"
 "empty - automatic"
-msgstr ""
-"コーデックタグ (FOURCC)\n"
+msgstr "コーデックタグ (FOURCC)\n"
 "オプション\n"
 "空 - 自動"
 
 #: export/ExportFFmpegDialogs.cpp:1371
-msgid ""
-"Bit Rate (bits/second) - influences the resulting file size and quality\n"
+msgid "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
 "0 - automatic\n"
 "Recommended - 192000"
-msgstr ""
-"ビットレート (bits/秒) - 生成されるファイルのファイルサイズと品質に影響\n"
+msgstr "ビットレート (bits/秒) - 生成されるファイルのファイルサイズと品質に影響\n"
 "いくつかのコーデックは特定の値(128k, 192k, 256k など)のみ可能\n"
 "0 - 自動\n"
 "推奨 - 192000"
 
 #: export/ExportFFmpegDialogs.cpp:1374
-msgid ""
-"Overall quality, used differently by different codecs\n"
+msgid "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
-msgstr ""
-"全体の品質, 異なるコーデックによって異なる\n"
+msgstr "全体の品質, 異なるコーデックによって異なる\n"
 "vorbis に要求される\n"
 "0 - 自動\n"
 "-1 - オフ (ビットレートが代わりに使用される)"
@@ -7726,11 +7572,9 @@ msgid "Sample Rate:"
 msgstr "サンプリング周波数:"
 
 #: export/ExportFFmpegDialogs.cpp:1377
-msgid ""
-"Sample rate (Hz)\n"
+msgid "Sample rate (Hz)\n"
 "0 - don't change sample rate"
-msgstr ""
-"サンプリング周波数 (Hz)\n"
+msgstr "サンプリング周波数 (Hz)\n"
 "0 - サンプリング周波数を変更しないでください."
 
 #: export/ExportFFmpegDialogs.cpp:1379
@@ -7738,12 +7582,10 @@ msgid "Cutoff:"
 msgstr "カットオフ帯域幅:"
 
 #: export/ExportFFmpegDialogs.cpp:1380
-msgid ""
-"Audio cutoff bandwidth (Hz)\n"
+msgid "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
 "0 - automatic"
-msgstr ""
-"カットオフ帯域幅 (Hz)\n"
+msgstr "カットオフ帯域幅 (Hz)\n"
 "オプション\n"
 "0 - 自動"
 
@@ -7752,12 +7594,10 @@ msgid "Profile:"
 msgstr "プロファイル:"
 
 #: export/ExportFFmpegDialogs.cpp:1385
-msgid ""
-"AAC Profile\n"
+msgid "AAC Profile\n"
 "Low Complexity -default\n"
 "Most players won't play anything other than LC"
-msgstr ""
-"AAC プロファイル\n"
+msgstr "AAC プロファイル\n"
 "Low Complexity (LC)低複雑度 既定値\n"
 "ほとんどのプレーヤは, LC以外のものを再生できません"
 
@@ -7770,14 +7610,12 @@ msgid "Compression:"
 msgstr "圧縮:"
 
 #: export/ExportFFmpegDialogs.cpp:1396
-msgid ""
-"Compression level\n"
+msgid "Compression level\n"
 "Required for FLAC\n"
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr ""
-"圧縮レベル\n"
+msgstr "圧縮レベル\n"
 "FLACを必要とします\n"
 "-1 -自動\n"
 "最小 - 0 (高速なエンコード, 大きい出力ファイル)\n"
@@ -7788,14 +7626,12 @@ msgid "Frame:"
 msgstr "フレーム:"
 
 #: export/ExportFFmpegDialogs.cpp:1399
-msgid ""
-"Frame size\n"
+msgid "Frame size\n"
 "Optional\n"
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr ""
-"フレームサイズ\n"
+msgstr "フレームサイズ\n"
 "オプション\n"
 "0 - 既定値\n"
 "最小 - 16\n"
@@ -7806,14 +7642,12 @@ msgid "LPC"
 msgstr "LPC"
 
 #: export/ExportFFmpegDialogs.cpp:1402
-msgid ""
-"LPC coefficients precision\n"
+msgid "LPC coefficients precision\n"
 "Optional\n"
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr ""
-"LPC係数の精度\n"
+msgstr "LPC係数の精度\n"
 "オプション\n"
 "0 - 既定値\n"
 "最小 - 1\n"
@@ -7824,13 +7658,11 @@ msgid "PdO Method:"
 msgstr "PdO法:"
 
 #: export/ExportFFmpegDialogs.cpp:1407
-msgid ""
-"Prediction Order Method\n"
+msgid "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
 "Log search - slowest, best compression\n"
 "Full search - default"
-msgstr ""
-"予測次数の方法\n"
+msgstr "予測次数の方法\n"
 "評価 - 高速で低い圧縮\n"
 "長い探索 - 低速で高度な圧縮\n"
 "全探索 - 既定値"
@@ -7840,14 +7672,12 @@ msgid "Min. PdO"
 msgstr "最小PdO"
 
 #: export/ExportFFmpegDialogs.cpp:1410
-msgid ""
-"Minimal prediction order\n"
+msgid "Minimal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"最小予測次数\n"
+msgstr "最小予測次数\n"
 "オプション\n"
 "-1 - 既定値\n"
 "最小 - 0\n"
@@ -7858,14 +7688,12 @@ msgid "Max. PdO"
 msgstr "最大PdO"
 
 #: export/ExportFFmpegDialogs.cpp:1413
-msgid ""
-"Maximal prediction order\n"
+msgid "Maximal prediction order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 32 (with LPC) or 4 (without LPC)"
-msgstr ""
-"最大予測次数オプション\n"
+msgstr "最大予測次数オプション\n"
 "1 - 既定値\n"
 "最小 - 0\n"
 "最大 - 32 (LPCあり) あるいは 4 (LPCなし)"
@@ -7875,14 +7703,12 @@ msgid "Min. PtO"
 msgstr "最小PtO"
 
 #: export/ExportFFmpegDialogs.cpp:1416
-msgid ""
-"Minimal partition order\n"
+msgid "Minimal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"最小分割次数\n"
+msgstr "最小分割次数\n"
 "オプション\n"
 "-1 - 既定値\n"
 "最小 - 0\n"
@@ -7893,14 +7719,12 @@ msgid "Max. PtO"
 msgstr "最大PtO"
 
 #: export/ExportFFmpegDialogs.cpp:1419
-msgid ""
-"Maximal partition order\n"
+msgid "Maximal partition order\n"
 "Optional\n"
 "-1 - default\n"
 "min - 0\n"
 "max - 8"
-msgstr ""
-"最大分割次数\n"
+msgstr "最大分割次数\n"
 "オプション\n"
 "-1 - 既定値\n"
 "最小 - 0\n"
@@ -7919,12 +7743,10 @@ msgid "Mux Rate:"
 msgstr "最大レート:"
 
 #: export/ExportFFmpegDialogs.cpp:1433
-msgid ""
-"Maximum bit rate of the multiplexed stream\n"
+msgid "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"複数ストリームの最大ビットレート\n"
+msgstr "複数ストリームの最大ビットレート\n"
 "オプション\n"
 "0 - 既定値"
 
@@ -7933,12 +7755,10 @@ msgid "Packet Size:"
 msgstr "パケットサイズ:"
 
 #: export/ExportFFmpegDialogs.cpp:1436
-msgid ""
-"Packet size\n"
+msgid "Packet size\n"
 "Optional\n"
 "0 - default"
-msgstr ""
-"パケット サイズ\n"
+msgstr "パケット サイズ\n"
 "オプション\n"
 "0 - 既定値"
 
@@ -8049,11 +7869,9 @@ msgstr "FLAC書き出しが %sを開くことができませんでした."
 
 #: export/ExportFLAC.cpp:297
 #, c-format
-msgid ""
-"FLAC encoder failed to initialize\n"
+msgid "FLAC encoder failed to initialize\n"
 "Status: %d"
-msgstr ""
-"FLACエンコーダが初期化に失敗しました\n"
+msgstr "FLACエンコーダが初期化に失敗しました\n"
 "ステータス: %d"
 
 #: export/ExportFLAC.cpp:324
@@ -8218,11 +8036,9 @@ msgstr "%s はどこにありますか？"
 
 #: export/ExportMP3.cpp:1111
 #, c-format
-msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+msgid "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
-msgstr ""
-"lame_enc.dll v%d.%d とリンクしようとしています.  このバージョンはAudacity %d.%d.%dとはコンパチブルではありません. \n"
+msgstr "lame_enc.dll v%d.%d とリンクしようとしています.  このバージョンはAudacity %d.%d.%dとはコンパチブルではありません. \n"
 "LAME MP3ライブラリの最新版をダウンロードしてください. "
 
 #: export/ExportMP3.cpp:1375
@@ -8290,18 +8106,15 @@ msgstr "MP3エンコーダにおいて, エラー %d が返されました. "
 
 #: export/ExportMP3.cpp:1839
 #, c-format
-msgid ""
-"The project sample rate (%d) is not supported by the MP3\n"
+msgid "The project sample rate (%d) is not supported by the MP3\n"
 "file format.  "
 msgstr "プロジェクトのサンプリング周波数 (%d)　はMP3ではサポートされていません. "
 
 #: export/ExportMP3.cpp:1842
 #, c-format
-msgid ""
-"The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
+msgid "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format.  "
-msgstr ""
-"プロジェクトのサンプリング周波数 (%d) とビットレート (%d kbps)　の組み合わせは\n"
+msgstr "プロジェクトのサンプリング周波数 (%d) とビットレート (%d kbps)　の組み合わせは\n"
 "MP3ファイル形式ではサポートされていません. "
 
 #: export/ExportMP3.cpp:2013
@@ -8315,8 +8128,7 @@ msgid "Export Multiple"
 msgstr "複数ファイルの書き出し"
 
 #: export/ExportMultiple.cpp:175
-msgid ""
-"If you have more than one Audio Track, you can\n"
+msgid "If you have more than one Audio Track, you can\n"
 "export each track as a separate audio file.\n"
 "\n"
 "If you have a Label Track, you can export a separate\n"
@@ -8326,8 +8138,7 @@ msgid ""
 "\n"
 "This Project does not meet the above criteria for\n"
 "exporting multiple files."
-msgstr ""
-"もし複数のオーディオトラックがある場合, それぞれのトラックを別々のファイルに書き出し可能です.\n"
+msgstr "もし複数のオーディオトラックがある場合, それぞれのトラックを別々のファイルに書き出し可能です.\n"
 "あるいは, もしラベルトラックがある場合, それぞれのラベル\n"
 "ごとに個別のオーディオファイルとして書き出し可能です.\n"
 "複数のラベルトラックがある場合は、最上段のラベルトラック\n"
@@ -8441,12 +8252,10 @@ msgstr "次の %ld ファイルの書き出し後, 重大な異常が発生し�
 
 #: export/ExportMultiple.cpp:572
 #, c-format
-msgid ""
-"\"%s\" doesn't exist.\n"
+msgid "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr ""
-"\"%s\"　は存在しません. .\n"
+msgstr "\"%s\"　は存在しません. .\n"
 "\n"
 "作成しますか？"
 
@@ -8462,11 +8271,9 @@ msgstr "メタデータを編集"
 
 #: export/ExportMultiple.cpp:927
 #, c-format
-msgid ""
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
+msgid "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
-msgstr ""
-"ラベルまたはトラック \"%s\"  は正当なファイル名ではありません. %s を使うことはできません.\n"
+msgstr "ラベルまたはトラック \"%s\"  は正当なファイル名ではありません. %s を使うことはできません.\n"
 "以下をお使いください..."
 
 #: export/ExportMultiple.cpp:928
@@ -8549,11 +8356,9 @@ msgstr "プロジェクト全体を %s というファイル名で書き出し"
 #. * error"
 #: export/ExportPCM.cpp:556
 #, c-format
-msgid ""
-"Error while writing %s file (disk full?).\n"
+msgid "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
-msgstr ""
-"ファイル%sの書き込み中にエラーが発生しました(disk fullの可能性もあります).\n"
+msgstr "ファイル%sの書き込み中にエラーが発生しました(disk fullの可能性もあります).\n"
 "Libsndfileメッセージ \"%s\""
 
 #. i18n-hint: %s will be the error message from libsndfile
@@ -8597,73 +8402,61 @@ msgstr "この Audacity のバージョンは %s サポート機能と一緒に�
 
 #: import/Import.cpp:567
 #, c-format
-msgid ""
-"\"%s\" \n"
+msgid "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" は MIDI ファイルであり, オーディオファイルではありません. \n"
+msgstr "\"%s\" は MIDI ファイルであり, オーディオファイルではありません. \n"
 "Audacity はこの種のファイルを, 再生のため開くことはできませんが, \n"
 "ファイル > 取り込み > MIDI をクリックすることにより, 編集はできます. "
 
 #. i18n-hint: %s will be the filename
 #: import/Import.cpp:577
 #, c-format
-msgid ""
-"\"%s\" is an audio CD track. \n"
+msgid "\"%s\" is an audio CD track. \n"
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr ""
-"\"%s\" はオーディオＣＤトラックです.\n"
+msgstr "\"%s\" はオーディオＣＤトラックです.\n"
 "Audacity はこの形式のファイルをオープンできません.\n"
 "CDトラックをリップ(抽出)して, Audacity での取り込みが可能な形式\n"
 "WAV や AIFF にしてみてください."
 
 #: import/Import.cpp:583
 #, c-format
-msgid ""
-"\"%s\" is a playlist file. \n"
+msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr ""
-"\"%s\" はプレイリストファイルです. \n"
+msgstr "\"%s\" はプレイリストファイルです. \n"
 "他のファイルへのリンクを含んでいるため, Audacity はこのファイルを開くことができません. \n"
 "テキストエディタで開くか, 本来のオーディオファイルをダウンロードして開くことは可能でしょう. "
 
 #: import/Import.cpp:588
 #, c-format
-msgid ""
-"\"%s\" is a Windows Media Audio file. \n"
+msgid "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" は Windows Media Audioファイルです. \n"
+msgstr "\"%s\" は Windows Media Audioファイルです. \n"
 "特許上の制限により, Audacity はこの形式のファイルを開くことはできません. \n"
 "サポートしているオーディオファイル形式, WAV や AIFF などに変換する必要があります. "
 
 #: import/Import.cpp:593
 #, c-format
-msgid ""
-"\"%s\" is an Advanced Audio Coding file. \n"
+msgid "\"%s\" is an Advanced Audio Coding file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"  はAdvanced Audio Coding のファイルです.\n"
+msgstr "\"%s\"  はAdvanced Audio Coding のファイルです.\n"
 "Audacity はこの形式のファイルをオープンできません.\n"
 "サポートしているオーディオファイル形式, WAV や AIFF などに変換する必要があります. "
 
 #: import/Import.cpp:598
 #, c-format
-msgid ""
-"\"%s\" is an encrypted audio file. \n"
+msgid "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
 "Audacity cannot open this type of file due to the encryption. \n"
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
-msgstr ""
-"\"%s\" は, 暗号化されたオーディオファイルです.\n"
+msgstr "\"%s\" は, 暗号化されたオーディオファイルです.\n"
 "これらは典型的にはオンライン音楽ショップからのものです.\n"
 "暗号化のため Audacity はこの形式のファイルを開くことができません.\n"
 "Audacity で録音を試みるか, 音楽CDとして作成した後, \n"
@@ -8671,38 +8464,32 @@ msgstr ""
 
 #: import/Import.cpp:603
 #, c-format
-msgid ""
-"\"%s\" is a RealPlayer media file. \n"
+msgid "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" は RealPlayer 用のメディアファイルです. \n"
+msgstr "\"%s\" は RealPlayer 用のメディアファイルです. \n"
 "この形式を Audacity は開くことができません. \n"
 "サポートされている WAV や AIFF などのオーディオファイル形式に変換する必要があります. "
 
 #: import/Import.cpp:609
 #, c-format
-msgid ""
-"\"%s\" is a notes-based file, not an audio file. \n"
+msgid "\"%s\" is a notes-based file, not an audio file. \n"
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr ""
-"\"%s\"  は音符に基づくファイルであり, オーディオファイルでありません.\n"
+msgstr "\"%s\"  は音符に基づくファイルであり, オーディオファイルでありません.\n"
 "Audacity はこの形式のファイルをオープンできません.\n"
 "このファイルをWAV や AIFF などのオーディオファイルに変換して\n"
 "からAudacityで取り込むか録音してみてください. "
 
 #: import/Import.cpp:615
 #, c-format
-msgid ""
-"\"%s\" is a Musepack audio file. \n"
+msgid "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr ""
-"\"%s\" は Musepack オーディオファイルです. \n"
+msgstr "\"%s\" は Musepack オーディオファイルです. \n"
 "Audacity はこの形式のファイルを開くことはできません. \n"
 "もし, これが mp3 かもしれないと思うなら，最後が\".mp3\" で終わるよう\n"
 "ファイル名を書き換えてから再度取り込みを試してください. \n"
@@ -8710,66 +8497,54 @@ msgstr ""
 
 #: import/Import.cpp:621
 #, c-format
-msgid ""
-"\"%s\" is a Wavpack audio file. \n"
+msgid "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"  は Wavpackオーディオファイルです.\n"
+msgstr "\"%s\"  は Wavpackオーディオファイルです.\n"
 "Audacity はこの形式のファイルを開くことはできません.\n"
 "サポートしているオーディオファイル形式, WAV や AIFF などに変換する必要があります. "
 
 #: import/Import.cpp:627
 #, c-format
-msgid ""
-"\"%s\" is a Dolby Digital audio file. \n"
+msgid "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"  は Dolby Digital オーディオファイルです.\n"
+msgstr "\"%s\"  は Dolby Digital オーディオファイルです.\n"
 "Audacity はこの形式のファイルを開くことはできません.\n"
 "サポートしているオーディオファイル形式, WAV や AIFF などに変換する必要があります. "
 
 #: import/Import.cpp:633
 #, c-format
-msgid ""
-"\"%s\" is an Ogg Speex audio file. \n"
+msgid "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"  は Ogg Speex オーディオファイルです.\n"
+msgstr "\"%s\"  は Ogg Speex オーディオファイルです.\n"
 "Audacity はこの形式のファイルを開くことはできません.\n"
 "サポートしているオーディオファイル形式, WAV や AIFF などに変換する必要があります. "
 
 #: import/Import.cpp:639
 #, c-format
-msgid ""
-"\"%s\" is a video file. \n"
+msgid "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr ""
-"\"%s\"  は映像ファイルです.\n"
+msgstr "\"%s\"  は映像ファイルです.\n"
 "Audacity はこの形式のファイルを開くことはできません.\n"
 "サポートしているオーディオファイル形式, たとえば WAV や AIFF などを抽出する必要があります."
 
 #: import/Import.cpp:644
 #, c-format
-msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+msgid "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
-msgstr ""
-"Audacity はこのファイル'%s'の種類を認識できませんでした.\n"
+msgstr "Audacity はこのファイル'%s'の種類を認識できませんでした.\n"
 "このファイルが非圧縮ファイルの場合, \"ロー(Raw)データの取り込み\" を試してみて下さい."
 
 #: import/Import.cpp:662
 #, c-format
-msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+msgid "Audacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr ""
-"Audacityは'%s'のファイル形式を認識しました.\n"
+msgstr "Audacityは'%s'のファイル形式を認識しました.\n"
 "ファイル:%sとして取り込もうとしましたが失敗しました."
 
 #: import/ImportFFmpeg.cpp:35
@@ -8878,8 +8653,7 @@ msgstr "WAV, AIFF と他の非圧縮形式"
 
 #: import/ImportPCM.cpp:211
 #, c-format
-msgid ""
-"When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
+msgid "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
 "\n"
 "Your current preference is set to %s.\n"
 "\n"
@@ -8887,8 +8661,7 @@ msgid ""
 "File > Check Dependencies will show the original names and location of any files that you are reading directly.\n"
 "\n"
 "How do you want to import the current file(s)?"
-msgstr ""
-"非圧縮オーディオファイルを取り込むには、そのファイルをプロジェクトにコピーする方法とそのファイルを直接読み込む(コピーせずに)方法とがあります.\n"
+msgstr "非圧縮オーディオファイルを取り込むには、そのファイルをプロジェクトにコピーする方法とそのファイルを直接読み込む(コピーせずに)方法とがあります.\n"
 "\n"
 "現在の設定は %s.\n"
 "\n"
@@ -9158,11 +8931,9 @@ msgid "Mi&nimum Free Memory (MB):"
 msgstr "メモリの最低値 (MB)(&n):"
 
 #: prefs/DirectoriesPrefs.cpp:118
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
+msgid "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
-msgstr ""
-"使用可能なシステムメモリのサイズがこの値を下回った場合, オーディオは\n"
+msgstr "使用可能なシステムメモリのサイズがこの値を下回った場合, オーディオは\n"
 "メモリにキャッシュされず, ディスクに書き込まれます."
 
 #: prefs/DirectoriesPrefs.cpp:126
@@ -9406,6 +9177,10 @@ msgstr "マニュアルの場所(&M):"
 msgid "&Beep on completion of longer activities"
 msgstr "長い処理が完了したときにビープを鳴らす(&B)"
 
+#: prefs/GUIPrefs.cpp:128
+msgid "&Show track name in waveform display"
+msgstr ""
+
 #: prefs/GUIPrefs.cpp:132
 msgid "Modes"
 msgstr "モード"
@@ -9455,11 +9230,9 @@ msgid "S&how Metadata Editor prior to export step"
 msgstr "メタデータエディタを書き出しの前に表示(&h)"
 
 #: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
+msgid "Note: Export quality options can be chosen by clicking the Options\n"
 "button in the Export dialog."
-msgstr ""
-"注意: 書き出し品質オプションは書き出し画面でオプションボタンをクリックして\n"
+msgstr "注意: 書き出し品質オプションは書き出し画面でオプションボタンをクリックして\n"
 "選ぶことができます. "
 
 #: prefs/ImportExportPrefs.cpp:88
@@ -9547,12 +9320,10 @@ msgstr "キーボードショートカットの保存時にエラーが発生し
 
 #: prefs/KeyConfigPrefs.cpp:404
 #, c-format
-msgid ""
-"The keyboard shortcut '%s' is already assigned to:\n"
+msgid "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
 "'%s'"
-msgstr ""
-"キーボードショートカット `%s' は既に \n"
+msgstr "キーボードショートカット `%s' は既に \n"
 "\n"
 "`%s'　に割り当てられています. "
 
@@ -9610,11 +9381,9 @@ msgid "Dow&nload"
 msgstr "ダウンロード(&n)"
 
 #: prefs/LibraryPrefs.cpp:186
-msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+msgid "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
-msgstr ""
-"Audacityは有効なFFmpegライブラリを自動検出しました.\n"
+msgstr "Audacityは有効なFFmpegライブラリを自動検出しました.\n"
 "それにもかかわらず手動で設定しますか?"
 
 #: prefs/MidiIOPrefs.cpp:58
@@ -10259,8 +10028,7 @@ msgid "Info"
 msgstr "情報"
 
 #: prefs/ThemePrefs.cpp:91
-msgid ""
-"Themability is an experimental feature.\n"
+msgid "Themability is an experimental feature.\n"
 "\n"
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
@@ -10269,8 +10037,7 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr ""
-"テーマは実験的な機能です. \n"
+msgstr "テーマは実験的な機能です. \n"
 "\n"
 "お試しになるには, \"テーマキャッシュを保存\" をクリックして ImageCacheVxx.pngファイル\n"
 "を探し，Gimpなどの画像エディタで画像や色など修正してください．\n"
@@ -10282,28 +10049,22 @@ msgstr ""
 "表示していてもそれらは反映されません.)"
 
 #: prefs/ThemePrefs.cpp:96
-msgid ""
-"You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
+msgid "You have compiled Audacity with an extra button, 'Output Sourcery'.  This will save a\n"
 "C version of the image cache that can be compiled in as a default."
-msgstr ""
-"Audacity を'Sourcery出力'外部ボタンつきでコンパイルしています. \n"
+msgstr "Audacity を'Sourcery出力'外部ボタンつきでコンパイルしています. \n"
 "これは最初から含まれているCバージョンのイメージキャッシュを\n"
 "保存することになります."
 
 #: prefs/ThemePrefs.cpp:101
-msgid ""
-"If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
+msgid "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 "when the program starts up."
-msgstr ""
-"もし「起動時にテーマキャッシュを読み込む」 がチェックされていた場合, テーマキャッシュはプログラム開\n"
+msgstr "もし「起動時にテーマキャッシュを読み込む」 がチェックされていた場合, テーマキャッシュはプログラム開\n"
 "始時に読み込まれます."
 
 #: prefs/ThemePrefs.cpp:104
-msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+msgid "Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
-msgstr ""
-"テーマファイルの保存と読み込みではそれぞれの画像に別々のファイルを使いますが, それ以外は同じ\n"
+msgstr "テーマファイルの保存と読み込みではそれぞれの画像に別々のファイルを使いますが, それ以外は同じ\n"
 "考え方です."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -10919,12 +10680,10 @@ msgid "Automated Input Level Adjustment stopped as requested by user."
 msgstr "ユーザーの要請により自動音量機能が停止しました."
 
 #: widgets/Meter.cpp:1286
-msgid ""
-"Higher refresh rates make the meter show more frequent\n"
+msgid "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
-msgstr ""
-"リフレッシュレートを高くするとメータはより頻繁な変化を表示します. \n"
+msgstr "リフレッシュレートを高くするとメータはより頻繁な変化を表示します. \n"
 "低性能なコンピューターの場合, メータ表示がオーディオ品質に影響す\n"
 "るのを防ぐためレートを毎秒30回以下にしてください."
 
@@ -11220,186 +10979,3 @@ msgstr "ファイルを閉じる際にエラーが発生しました"
 msgid "Error Writing to File"
 msgstr "ファイルへの書き込みでエラー発生"
 
-#~ msgid "Continue with repairs noted in log, and check for more errors"
-#~ msgstr "ログに記載のとおり修復を続け, 更なるエラーをチェックします."
-
-#~ msgid ""
-#~ "This file was saved by Audacity %s, a much\n"
-#~ "older version.  The format has changed.\n"
-#~ "\n"
-#~ "Audacity could corrupt the file in opening\n"
-#~ "it, so you must back it up first.\n"
-#~ "\n"
-#~ "Open this file now?"
-#~ msgstr ""
-#~ "このファイルは, とても古いバージョンの　Audacity %s　\n"
-#~ "によって保存されました. ファイルフォーマットは\n"
-#~ "当時から変更されました. \n"
-#~ "Audacity はそのファイルを開こうとして破壊してしまうでしょう. \n"
-#~ "安全のために最初にプロジェクトをバックアップすべきです. \n"
-#~ "\n"
-#~ "それでも今このファイルを開きたいですか？ "
-
-#~ msgid "Error saving project"
-#~ msgstr "Audacity プロジェクトファイルの保存時にエラーが発生しました"
-
-#~ msgid "Gap detected in project file\n"
-#~ msgstr "プロジェクトファイルに空白が検知されました. \n"
-
-#~ msgid "Audacity"
-#~ msgstr "Audacity"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "AMR support is not distributable"
-#~ msgstr "AMRサポートは配布不可です"
-
-#~ msgid ""
-#~ "Properly configured FFmpeg is required to proceed.\n"
-#~ "You can configure it at Preferences > Libraries.\n"
-#~ "\n"
-#~ "Note that AMR support is not available with our FFmpeg\n"
-#~ "installer, but requires you compile FFmpeg yourself."
-#~ msgstr ""
-#~ "実行するためには適切に設定されたFFmpegが必要です. \n"
-#~ "設定 > ライブラリにて設定することができます. \n"
-#~ "\n"
-#~ "このFFmpegインストーラではAMRはサポートされていません\n"
-#~ "ので, ご自分でFFmpegをコンパイルすることが必要です."
-
-#~ msgid "Specify AMR-WB Options"
-#~ msgstr "AMR-WB オプションを指定"
-
-#~ msgid "AMR-WB Export Setup"
-#~ msgstr "AMR-WB 書き出しセットアップ"
-
-#~ msgid "AMR (wide band) Files (FFmpeg)"
-#~ msgstr "AMR (広帯域) ファイル (FFmpeg)"
-
-#~ msgid "Filter chosen in OpenFile dialog overrides any rules"
-#~ msgstr "「開く」ダイアログで選ばれたフィルタはこれらのルールより優先します"
-
-#~ msgid "4096 - most narrowband"
-#~ msgstr "4096 - 狭いバンド幅"
-
-#~ msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-#~ msgstr "最高周波数は 100 Hz から 100,000 Hz の間でなくてはいけません"
-
-#~ msgid " Rec Channels:"
-#~ msgstr "録音チャンネル:"
-
-#~ msgid "Missing summary blockfile: %s.auf"
-#~ msgstr "行方不明の要約ブロックファイル: %s.auf"
-
-#~ msgid "&Control Toolbar"
-#~ msgstr "コントロールツールバー (&C)"
-
-#~ msgid "Adjust input source"
-#~ msgstr "入力ソース調整"
-
-#~ msgid "Alignment completed."
-#~ msgstr "整列が完了しました."
-
-#~ msgid "Project Repair"
-#~ msgstr "プロジェクトの修復"
-
-#~ msgid "Control"
-#~ msgstr "コントロール"
-
-#~ msgid "Numbering after Label/Track Name"
-#~ msgstr "ラベル/トラック名の後に番号付加"
-
-#~ msgid "&Play other tracks while recording new one"
-#~ msgstr "録音しながら他のトラックを再生 (&P)"
-
-#~ msgid "&Hardware Playthrough (Play new track while recording it)"
-#~ msgstr ""
-#~ "ハードウェアによるスルー再生 (録音中にその新しいトラックを再生) (&H)"
-
-#~ msgid "&Software Playthrough (Play new track while recording it)"
-#~ msgstr ""
-#~ "ソフトウェアによるスルー再生 (録音中にその新しいトラックを再生) (&S)"
-
-#~ msgid "Play before cut region:"
-#~ msgstr "切り取り領域の前を再生:"
-
-#~ msgid "Play after cut region:"
-#~ msgstr "切り取り領域の後を再生:"
-
-#~ msgid "Audio to buffer:"
-#~ msgstr "オーディオからバッファへ:"
-
-#~ msgid "Latency correction:"
-#~ msgstr "レイテンシー補正:"
-
-#~ msgid "Seek Time"
-#~ msgstr "時刻の探索"
-
-#~ msgid "Short period:"
-#~ msgstr "短い期間:"
-
-#~ msgid "Long period:"
-#~ msgstr "長い期間:"
-
-#~ msgid "Play when previewing:"
-#~ msgstr "プレビュー時に再生:"
-
-#~ msgid "Input Source"
-#~ msgstr "入力ソース"
-
-#~ msgid "Input Source:"
-#~ msgstr "入力ソース:"
-
-#~ msgid "Input Level Slider"
-#~ msgstr "入力レベルスライダー"
-
-#~ msgid "Output Level Slider"
-#~ msgstr "出力レベルスライダー"
-
-#~ msgid ""
-#~ "Your project is self-contained; it does not depend on any external audio "
-#~ "files."
-#~ msgstr ""
-#~ "このプロジェクトは自分自身でオーディオを含んでいます；　別の外部オーディオ"
-#~ "ファイルに依存していません. "
-
-#~ msgid "Replace missing data with silence [permanent upon save]"
-#~ msgstr "欠損したデータファイルを無音で置換する [保存するにあたって恒久的に]"
-
-#~ msgid "&Link Audio and Label Tracks"
-#~ msgstr "オーディオとラベルトラックをリンク (&L)"
-
-#~ msgid ""
-#~ "The version of Audacity you are using does not support multiple time "
-#~ "tracks."
-#~ msgstr ""
-#~ "この Audacity のバージョンではマルチプルタイムトラックをサポートしていませ"
-#~ "ん."
-
-#~ msgid "custom"
-#~ msgstr "カスタム"
-
-#~ msgid "Enter the desired name of the curve"
-#~ msgstr "カーブに付ける名前を入力"
-
-#~ msgid "Initial Tempo Change (%):"
-#~ msgstr "テンポ変更の初期値 (%):"
-
-#~ msgid "Final Tempo Change (%):"
-#~ msgstr "テンポ変更の最終値 (%):"
-
-#~ msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
-#~ msgstr "ピッチ変更の初期値（半音） [-12 to 12]:"
-
-#~ msgid "Closing last window &quits Audacity"
-#~ msgstr "最後のウィンドウを閉じると Audacity を終了します (&q)"
-
-#~ msgid "Auto save"
-#~ msgstr "自動保存"
-
-#~ msgid "Auto &save a copy of the project in a separate folder"
-#~ msgstr "別フォルダにプロジェクトのコピーを自動保存(&s)"
-
-#~ msgid "Auto save in&terval:"
-#~ msgstr "自動保存頻度(&t)"
