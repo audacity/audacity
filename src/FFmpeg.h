@@ -39,6 +39,7 @@ extern "C" {
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
    #include <libavutil/fifo.h>
+   #include <libavutil/mathematics.h>
 
    #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 102, 0)
    #define AVIOContext ByteIOContext
@@ -47,6 +48,21 @@ extern "C" {
    #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(52, 94, 1)
    #define AVSampleFormat SampleFormat
    #endif
+
+   #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 120, 0)
+   #define CodecType AVMediaType
+   #define CODEC_TYPE_UNKNOWN    AVMEDIA_TYPE_UNKNOWN
+   #define CODEC_TYPE_VIDEO      AVMEDIA_TYPE_VIDEO
+   #define CODEC_TYPE_AUDIO      AVMEDIA_TYPE_AUDIO
+   #define CODEC_TYPE_DATA       AVMEDIA_TYPE_DATA
+   #define CODEC_TYPE_SUBTITLE   AVMEDIA_TYPE_SUBTITLE
+   #define CODEC_TYPE_ATTACHMENT AVMEDIA_TYPE_ATTACHMENT
+   #define CODEC_TYPE_NB         AVMEDIA_TYPE_NB
+   #endif
+
+   #ifndef PKT_FLAG_KEY
+   #define PKT_FLAG_KEY          AV_PKT_FLAG_KEY
+   #endif  
 }
 #endif
 
@@ -505,18 +521,21 @@ extern "C" {
       (AVCodecContext *avctx, AVCodec *codec),
       (avctx, codec);
    );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      avcodec_decode_audio2,
-      (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, const uint8_t *buf, int buf_size),
-      (avctx, samples, frame_size_ptr, buf, buf_size)
-   );
+#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_decode_audio3,
       (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, AVPacket *avpkt),
       (avctx, samples, frame_size_ptr, avpkt)
    );
+#else
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_decode_audio2,
+      (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, const uint8_t *buf, int buf_size),
+      (avctx, samples, frame_size_ptr, buf, buf_size)
+   );
+#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_encode_audio,
@@ -556,12 +575,21 @@ extern "C" {
       (void),
       ()
    );
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(53, 0, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       void*,
       av_fast_realloc,
       (void *ptr, unsigned int *size, unsigned int min_size),
       (ptr, size, min_size)
    );
+#else
+   FFMPEG_FUNCTION_WITH_RETURN(
+      void*,
+      av_fast_realloc,
+      (void *ptr, unsigned int *size, size_t min_size),
+      (ptr, size, min_size)
+   );
+#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       av_open_input_stream,
@@ -744,12 +772,21 @@ extern "C" {
       (AVFifoBuffer *f),
       (f)
    );
+#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 0, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       void*,
       av_malloc,
       (unsigned int size),
       (size)
    );
+#else
+   FFMPEG_FUNCTION_WITH_RETURN(
+      void*,
+      av_malloc,
+      (size_t size),
+      (size)
+   );
+#endif
    FFMPEG_FUNCTION_NO_RETURN(
       av_freep,
       (void *ptr),
@@ -761,11 +798,16 @@ extern "C" {
       (int64_t a, AVRational bq, AVRational cq),
       (a, bq, cq)
    );
+
+#if LIBAVFORMAT_VERSION_INT > AV_VERSION_INT(52, 31, 0)
    FFMPEG_FUNCTION_NO_RETURN(
       av_free_packet,
       (AVPacket *pkt),
       (pkt)
    );
+#endif
+
+#if LIBAVUTIL_VERSION_INT > AV_VERSION_INT(49, 15, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       AVFifoBuffer*,
       av_fifo_alloc,
@@ -778,6 +820,20 @@ extern "C" {
       (AVFifoBuffer *f, void *buf, int buf_size, void (*func)(void*, void*, int)),
       (f, buf, buf_size, func)
    );
+#else
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_fifo_init,
+      (AVFifoBuffer *f, unsigned int size),
+      (f, size)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_fifo_generic_read,
+      (AVFifoBuffer *f, int buf_size, void (*func)(void*, void*, int), void* dest),
+      (f, buf_size, func, dest)
+   );
+#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       av_fifo_realloc2,

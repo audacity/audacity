@@ -186,9 +186,15 @@ static int ufile_open(URLContext *h, const char *filename, int flags)
       return AVERROR(ENOMEM);
    }
 
-   if (flags & URL_RDWR) {
+   // LLL:  These really should be logical AND tests, but on 2011/04/28, the URL_ open flags
+   //       changed in the FFmpeg source to values that were not compatible with previous
+   //       values.
+   //
+   //       Since Audacity doesn't use any other open flags (there aren't any others defined
+   //       anyway), making equality tests works for older and new FFmpeg headers.
+   if (flags == URL_RDWR) {
       mode = wxFile::read_write;
-   } else if (flags & URL_WRONLY) {
+   } else if (flags == URL_WRONLY) {
       mode = wxFile::write;
    } else {
       mode = wxFile::read;
@@ -221,6 +227,10 @@ static int ufile_write(URLContext *h, const unsigned char *buf, int size)
 static int64_t ufile_seek(URLContext *h, int64_t pos, int whence)
 {
    wxSeekMode mode = wxFromStart;
+
+#if !defined(AVSEEK_FORCE)
+#define AVSEEK_FORCE 0
+#endif
 
    switch (whence & ~AVSEEK_FORCE)
    {
@@ -316,7 +326,7 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
    pd.buf_size = 0;
    pd.buf = (unsigned char *) av_malloc(PROBE_BUF_MAX + AVPROBE_PADDING_SIZE);
    if (pd.buf == NULL) {
-      err = AVERROR_NOMEM;
+      err = AVERROR(ENOMEM);
       goto fail;
    }
 
@@ -381,7 +391,7 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
 
    // Didn't find a suitable format, so bail
    if (!fmt) {
-      err = AVERROR_NOFMT;
+      err = AVERROR(EILSEQ);
       goto fail;
    }
 
@@ -847,39 +857,53 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    FFMPEG_INITALT(avformat, av_guess_format, guess_format);
    FFMPEG_INITALT(avformat, av_match_ext, match_ext);
 
-   FFMPEG_INITDYN(codec, av_init_packet);
-   FFMPEG_INITDYN(codec, av_free_packet);
-   FFMPEG_INITDYN(codec, avcodec_init);
-   FFMPEG_INITDYN(codec, avcodec_find_encoder);
-   FFMPEG_INITDYN(codec, avcodec_find_encoder_by_name);
-   FFMPEG_INITDYN(codec, avcodec_find_decoder);
-   FFMPEG_INITDYN(codec, avcodec_get_context_defaults);
-   FFMPEG_INITDYN(codec, avcodec_open);
-   FFMPEG_INITDYN(codec, avcodec_decode_audio2);
-   FFMPEG_INITDYN(codec, avcodec_decode_audio3);
-   FFMPEG_INITDYN(codec, avcodec_encode_audio);
-   FFMPEG_INITDYN(codec, avcodec_close);
-   FFMPEG_INITDYN(codec, avcodec_register_all);
-   FFMPEG_INITDYN(codec, avcodec_version);
-   FFMPEG_INITDYN(codec, av_fast_realloc);
-   FFMPEG_INITDYN(codec, av_codec_next);
-   FFMPEG_INITDYN(codec, av_get_bits_per_sample_format);
+#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 58, 0)
+   FFMPEG_INITDYN(avcodec, av_init_packet);
+#else
+   FFMPEG_INITDYN(avformat, av_init_packet);
+#endif
+
+#if LIBAVFORMAT_VERSION_INT > AV_VERSION_INT(52, 31, 0)
+   FFMPEG_INITDYN(avcodec, av_free_packet);
+#endif
+   FFMPEG_INITDYN(avcodec, avcodec_init);
+   FFMPEG_INITDYN(avcodec, avcodec_find_encoder);
+   FFMPEG_INITDYN(avcodec, avcodec_find_encoder_by_name);
+   FFMPEG_INITDYN(avcodec, avcodec_find_decoder);
+   FFMPEG_INITDYN(avcodec, avcodec_get_context_defaults);
+   FFMPEG_INITDYN(avcodec, avcodec_open);
+#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
+   FFMPEG_INITDYN(avcodec, avcodec_decode_audio3);
+#else
+   FFMPEG_INITDYN(avcodec, avcodec_decode_audio2);
+#endif
+   FFMPEG_INITDYN(avcodec, avcodec_encode_audio);
+   FFMPEG_INITDYN(avcodec, avcodec_close);
+   FFMPEG_INITDYN(avcodec, avcodec_register_all);
+   FFMPEG_INITDYN(avcodec, avcodec_version);
+   FFMPEG_INITDYN(avcodec, av_fast_realloc);
+   FFMPEG_INITDYN(avcodec, av_codec_next);
+   FFMPEG_INITDYN(avcodec, av_get_bits_per_sample_format);
 
    FFMPEG_INITALT(avcodec, av_get_bits_per_sample_fmt, av_get_bits_per_sample_format);
 
-   FFMPEG_INITDYN(util, av_free);
-   FFMPEG_INITDYN(util, av_log_set_callback);
-   FFMPEG_INITDYN(util, av_log_default_callback);
-   FFMPEG_INITDYN(util, av_fifo_alloc);
-   FFMPEG_INITDYN(util, av_fifo_generic_read);
-   FFMPEG_INITDYN(util, av_fifo_realloc2);
-   FFMPEG_INITDYN(util, av_fifo_free);
-   FFMPEG_INITDYN(util, av_fifo_size);
-   FFMPEG_INITDYN(util, av_malloc);
-   FFMPEG_INITDYN(util, av_fifo_generic_write);
-   FFMPEG_INITDYN(util, av_freep);
-   FFMPEG_INITDYN(util, av_rescale_q);
-   FFMPEG_INITDYN(util, avutil_version);
+   FFMPEG_INITDYN(avutil, av_free);
+   FFMPEG_INITDYN(avutil, av_log_set_callback);
+   FFMPEG_INITDYN(avutil, av_log_default_callback);
+#if LIBAVUTIL_VERSION_INT > AV_VERSION_INT(49, 15, 0)
+   FFMPEG_INITDYN(avutil, av_fifo_alloc);
+#else
+   FFMPEG_INITDYN(avutil, av_fifo_init);
+#endif
+   FFMPEG_INITDYN(avutil, av_fifo_generic_read);
+   FFMPEG_INITDYN(avutil, av_fifo_realloc2);
+   FFMPEG_INITDYN(avutil, av_fifo_free);
+   FFMPEG_INITDYN(avutil, av_fifo_size);
+   FFMPEG_INITDYN(avutil, av_malloc);
+   FFMPEG_INITDYN(avutil, av_fifo_generic_write);
+   FFMPEG_INITDYN(avutil, av_freep);
+   FFMPEG_INITDYN(avutil, av_rescale_q);
+   FFMPEG_INITDYN(avutil, avutil_version);
 
    //FFmpeg initialization
    wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));

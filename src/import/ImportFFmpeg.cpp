@@ -808,9 +808,12 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
       }
    }
 
+
+   sc->m_decodedAudioSamplesValidSiz = sc->m_decodedAudioSamplesSiz;
+
+#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    // avcodec_decode_audio3() expects the size of the output buffer as the 3rd parameter but
    // also returns the number of bytes it decoded in the same parameter.
-   sc->m_decodedAudioSamplesValidSiz = sc->m_decodedAudioSamplesSiz;
    AVPacket avpkt;
    av_init_packet(&avpkt);
    avpkt.data = pDecode;
@@ -820,7 +823,16 @@ int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
                             (int16_t *)sc->m_decodedAudioSamples,    // out
                             &sc->m_decodedAudioSamplesValidSiz,      // in/out
                             &avpkt);                                 // in
-
+#else
+   // avcodec_decode_audio2() expects the size of the output buffer as the 3rd parameter but
+   // also returns the number of bytes it decoded in the same parameter.
+   nBytesDecoded =
+      avcodec_decode_audio2(sc->m_codecCtx, 
+                            (int16_t *) sc->m_decodedAudioSamples,   // out
+                            &sc->m_decodedAudioSamplesValidSiz,      // in/out
+                            pDecode,                                 // in
+                            nDecodeSiz);                             // in
+#endif
    if (nBytesDecoded < 0)
    {
       // Decoding failed. Don't stop.
