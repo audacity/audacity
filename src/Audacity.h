@@ -32,10 +32,10 @@
 // to 1.
 #define IS_ALPHA 1
 
-// Increment as appropriate every time you release a new version
-#define AUDACITY_VERSION   1
-#define AUDACITY_RELEASE   3
-#define AUDACITY_REVISION  15
+// Increment as appropriate every time we release a new version.
+#define AUDACITY_VERSION   2
+#define AUDACITY_RELEASE   0
+#define AUDACITY_REVISION  0
 #define AUDACITY_MODLEVEL  0
 
 #if IS_ALPHA
