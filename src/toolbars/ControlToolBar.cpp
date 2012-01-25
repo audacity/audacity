@@ -539,7 +539,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
       int token;
       if (cutpreview) {
          double beforeLen, afterLen;
-         gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 1.0);
+         gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
          gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
          double tcp0 = t0-beforeLen;
          double tcp1 = (t1+afterLen) - (t1-t0);

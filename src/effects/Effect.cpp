@@ -415,7 +415,7 @@ void Effect::Preview()
       return;
 
    // Mix a few seconds of audio from all of the tracks
-   double previewLen = 3.0;
+   double previewLen = 6.0;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
    
    WaveTrack *mixLeft = NULL;
