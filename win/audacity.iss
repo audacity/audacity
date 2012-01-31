@@ -3,7 +3,7 @@
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-1.3.13
+OutputBaseFilename=audacity-win-2.0-ANSI
 SetupIconFile=audacity.ico
 
 WizardImageFile=audacity_InnoWizardImage.bmp
@@ -12,8 +12,8 @@ WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
 SolidCompression=yes
 
 ; installer-related directives
-AppName=Audacity 1.3 Beta 
-AppVerName=Audacity 1.3.13
+AppName=Audacity 2.0 ANSI (unsupported) 
+AppVerName=Audacity 2.0 ANSI (unsupported)
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -22,7 +22,7 @@ ChangesAssociations=yes
 
 ; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta 
 ; For a stable release:   DefaultDirName={pf}\Audacity
-DefaultDirName={pf}\Audacity 1.3 Beta
+DefaultDirName={pf}\Audacity 2.0 ANSI (unsupported)
 
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
@@ -103,8 +103,8 @@ Source: "..\win\Release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "anal
 
 
 [Icons]
-Name: "{commonprograms}\Audacity 1.3 Beta"; Filename: "{app}\audacity.exe"
-Name: "{userdesktop}\Audacity 1.3 Beta"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
+Name: "{commonprograms}\Audacity 2.0 ANSI"; Filename: "{app}\audacity.exe"
+Name: "{userdesktop}\Audacity 2.0 ANSI"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
@@ -144,5 +144,5 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
 
 [Run]
-Filename: "{app}\audacity.exe"; Description: "Launch Audacity"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\audacity.exe"; Description: "Launch Audacity (ANSI, unsupported)"; Flags: nowait postinstall skipifsilent
 
