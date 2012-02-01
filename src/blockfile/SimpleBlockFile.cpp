@@ -74,10 +74,6 @@ to get its definition, rather than rolling our own.
 #include "sndfile.h"
 #include "../Internat.h"
 
-//#define DEBUG_OUTPUT(s) printf("[SimpleBlockFile] %s\n", s)
-#define DEBUG_OUTPUT(s)
-
-
 
 wxUint32 SwapUintEndianess(wxUint32 in)
 {
@@ -110,15 +106,16 @@ SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
 {
    mCache.active = false;
    
-   DEBUG_OUTPUT("SimpleBlockFile created based on sample data");
-
    bool useCache = GetCache() && (!bypassCache);
 
    if (!(allowDeferredWrite && useCache) && !bypassCache)
-      WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
+   {
+      bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
+      wxASSERT(bSuccess); // TO-DO: Handle failure here by alert to user and undo partial op. 
+   }
       
    if (useCache) {
-      DEBUG_OUTPUT("Caching block file data");
+      //wxLogDebug("SimpleBlockFile::SimpleBlockFile(): Caching block file data.");
       mCache.active = true;
       mCache.needWrite = true;
       mCache.format = format;
@@ -141,8 +138,6 @@ SimpleBlockFile::SimpleBlockFile(wxFileName existingFile, sampleCount len,
                                  float min, float max, float rms):
    BlockFile(existingFile, len)
 {
-   DEBUG_OUTPUT("SimpleBlockFile based on existing file created");
-   
    mMin = min;
    mMax = max;
    mRMS = rms;
@@ -165,14 +160,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
     sampleFormat format,
     void* summaryData)
 {
-   // Now checked in the DirManager
-   //wxASSERT( !wxFileExists(FILENAME(mFileName.GetFullPath())) );
-   
-   DEBUG_OUTPUT("Writing simple block file");
-
-   // Open and write the file
    wxFFile file(mFileName.GetFullPath(), wxT("wb"));
-
    if( !file.IsOpened() ){
       // Can't do anything else.
       return false;
@@ -218,8 +206,21 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    if (!summaryData)
       summaryData = /*BlockFile::*/CalcSummary(sampleData, sampleLen, format); //mchinen:allowing virtual override of calc summary for ODDecodeBlockFile.
    
-   file.Write(&header, sizeof(header));
-   file.Write(summaryData, mSummaryInfo.totalSummaryBytes);
+   size_t nBytesToWrite = sizeof(header);
+   size_t nBytesWritten = file.Write(&header, nBytesToWrite);
+   if (nBytesWritten != nBytesToWrite)
+   {
+      wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+      return false;
+   }
+
+   nBytesToWrite = mSummaryInfo.totalSummaryBytes;
+   nBytesWritten = file.Write(summaryData, nBytesToWrite);
+   if (nBytesWritten != nBytesToWrite)
+   {
+      wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+      return false;
+   }
 
    if( format == int24Sample )
    {
@@ -229,20 +230,32 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       int *int24sampleData = (int*)sampleData;
 
       for( int i = 0; i < sampleLen; i++ )
-#if wxBYTE_ORDER == wxBIG_ENDIAN
-         file.Write((char*)&int24sampleData[i] + 1, 3);
-#else
-         file.Write((char*)&int24sampleData[i], 3);
-#endif
+      {
+         nBytesWritten = 
+            #if wxBYTE_ORDER == wxBIG_ENDIAN
+               file.Write((char*)&int24sampleData[i] + 1, 3);
+            #else
+               file.Write((char*)&int24sampleData[i], 3);
+            #endif
+         if (nBytesWritten != nBytesToWrite)
+         {
+            wxLogDebug(wxT("Wrote %d bytes, expected 3."), nBytesWritten);
+            return false;
+         }
+      }
    }
    else
    {
       // for all other sample formats we can write straight from the buffer
       // to disk
-      file.Write(sampleData, sampleLen * SAMPLE_SIZE(format));
-    }
-    
-    DEBUG_OUTPUT("Wrote simple block file");
+      nBytesToWrite = sampleLen * SAMPLE_SIZE(format);
+      nBytesWritten = file.Write(sampleData, nBytesToWrite);
+      if (nBytesWritten != nBytesToWrite)
+      {
+         wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+         return false;
+      }
+   }
     
     return true;
 }
@@ -252,8 +265,6 @@ void SimpleBlockFile::FillCache()
    if (mCache.active)
       return; // cache is already filled
 
-   DEBUG_OUTPUT("Reading simple block file into cache");
-   
    // Check sample format
    wxFFile file(mFileName.GetFullPath(), wxT("rb"));
    if (!file.IsOpened())
@@ -311,7 +322,7 @@ void SimpleBlockFile::FillCache()
    mCache.active = true;
    mCache.needWrite = false;
    
-   DEBUG_OUTPUT("Succesfully read simple block file into cache");
+   //wxLogDebug("SimpleBlockFile::FillCache(): Succesfully read simple block file into cache.");
 }
 
 /// Read the summary section of the disk file.
@@ -322,12 +333,12 @@ bool SimpleBlockFile::ReadSummary(void *data)
 {
    if (mCache.active)
    {
-      DEBUG_OUTPUT("ReadSummary: Summary is already in cache");
+      //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
       memcpy(data, mCache.summaryData, (size_t)mSummaryInfo.totalSummaryBytes);
       return true;
    } else
    {
-      DEBUG_OUTPUT("ReadSummary: Reading summary from disk");
+      //wxLogDebug("SimpleBlockFile::ReadSummary(): Reading summary from disk.");
       
       wxFFile file(mFileName.GetFullPath(), wxT("rb"));
 
@@ -372,7 +383,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
 {
    if (mCache.active)
    {
-      DEBUG_OUTPUT("ReadData: Data is already in cache");
+      //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
       
       if (len > mLen - start)
          len = mLen - start;
@@ -383,7 +394,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       return len;
    } else
    {
-      DEBUG_OUTPUT("ReadData: Reading data from disk");
+      //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
       
       SF_INFO info;
       wxLogNull *silence=0;
@@ -572,8 +583,6 @@ void SimpleBlockFile::WriteCacheToDisk()
    if (!GetNeedWriteCacheToDisk())
       return;
    
-   DEBUG_OUTPUT("WriteCacheToDisk");
-
    if (WriteSimpleBlockFile(mCache.sampleData, mLen, mCache.format,
                             mCache.summaryData))
       mCache.needWrite = false;
