@@ -330,11 +330,13 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
    //the summary is also calculated here.
    mFileNameMutex.Lock();
    //TODO: we may need to write a version of WriteSimpleBlockFile that uses threadsafe FILE vs wxFile
-   WriteSimpleBlockFile(
-    sampleData,
-    mLen,
-    mFormat,
-     NULL);//summaryData);
+   bool bSuccess = 
+      WriteSimpleBlockFile(
+         sampleData,
+         mLen,
+         mFormat,
+         NULL);//summaryData);
+   wxASSERT(bSuccess); // TO-DO: Handle failure here by alert to user and undo partial op. 
 
    mFileNameMutex.Unlock();
    
