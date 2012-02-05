@@ -237,7 +237,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
             #else
                file.Write((char*)&int24sampleData[i], 3);
             #endif
-         if (nBytesWritten != nBytesToWrite)
+         if (nBytesWritten != 3)
          {
             wxLogDebug(wxT("Wrote %d bytes, expected 3."), nBytesWritten);
             return false;
