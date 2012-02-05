@@ -106,6 +106,9 @@ Erik de Castro Lopo's uncompressed audio file I/O library. Core and essential
 to Audacity.
 Version in Audacity SVN: 1.0.24
 Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
+         id3.patch: already in upstream 1.0.26 (git 41da64d9270b2fa10c93ce74dea014fe8f0bd303)
+                    fixes crash when importing mp3s that have duplicated tags
+
 Upstream Version: 1.0.24
 
 libvamp

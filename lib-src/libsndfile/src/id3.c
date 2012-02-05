@@ -40,11 +40,16 @@ id3_skip (SF_PRIVATE * psf)
 		offset = (offset << 7) | (buf [8] & 0x7f) ;
 		offset = (offset << 7) | (buf [9] & 0x7f) ;
 
-		psf_binheader_readf (psf, "j", make_size_t (offset)) ;
-
 		psf_log_printf (psf, "ID3 length : %d\n--------------------\n", offset) ;
 
-		psf->fileoffset = 10 + offset ;
+		/* Never want to jump backwards in a file. */
+		if (offset < 0)
+			return 0 ;
+
+		/* Calculate new file offset and position ourselves there. */
+		psf->fileoffset += offset + 10 ;
+		psf_binheader_readf (psf, "p", psf->fileoffset) ;
+
 		return 1 ;
 		} ;
 
