@@ -76,7 +76,13 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // Dereference sample pointer and convert to float sample
 #define FROM_INT16(ptr) (*((short*)(ptr)) / CONVERT_DIV16)
 #define FROM_INT24(ptr) (*((  int*)(ptr)) / CONVERT_DIV24)
-#define FROM_FLOAT(ptr) (*((float*)(ptr)))
+
+// For float, we internally allow values greater than 1.0, which
+// would blow up the dithering to int values.  FROM_FLOAT is
+// only used to dither to int, so clip here.
+#define FROM_FLOAT(ptr) (*((float*)(ptr)) >  1.0 ?  1.0 : \
+                         *((float*)(ptr)) < -1.0 ? -1.0 : \
+                         *((float*)(ptr)))
 
 // Promote sample to range of specified type, keep it float, though
 #define PROMOTE_TO_INT16(sample) ((sample) * CONVERT_DIV16)
@@ -106,9 +112,16 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // Implement a dithering loop
 // Note: The variable 'x' is needed for the STORE_... macros
 #define DITHER_LOOP(dither, store, load, dst, dstFormat, src, srcFormat, len, stride) \
-    do { char *d, *s; unsigned int i; int x; for (d = (char*)dst, s = (char*)src, i = 0; i < len; \
-            i++, d += SAMPLE_SIZE(dstFormat), s += SAMPLE_SIZE(srcFormat) * stride) \
-            DITHER_STEP(dither, store, load, d, s); } while (0)
+    do { \
+       char *d, *s; \
+       unsigned int i; \
+       int x; \
+       for (d = (char*)dst, s = (char*)src, i = 0; \
+            i < len; \
+            i++, d += SAMPLE_SIZE(dstFormat), \
+                 s += SAMPLE_SIZE(srcFormat) * stride) \
+          DITHER_STEP(dither, store, load, d, s); \
+   } while (0)
 
 // Shortcuts to dithering loops
 #define DITHER_INT24_TO_INT16(dither, dst, src, len, stride) \
