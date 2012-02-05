@@ -321,8 +321,9 @@ void TrackArtist::DrawTracks(TrackList * tracks,
    dc.DrawRectangle(clip);
 #endif
 
-   wxFont labelFont(8, wxSWISS, wxNORMAL, wxNORMAL);
+   wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
    dc.SetFont(labelFont);
+   dc.SetTextForeground(wxColour(255, 255, 0));
    gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), &mbShowTrackNameInWaveform, false);
 
    t = iter.StartWith(start);
