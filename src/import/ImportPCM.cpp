@@ -127,9 +127,13 @@ ImportFileHandle *PCMImportPlugin::Open(wxString filename)
 
    wxFile f;   // will be closed when it goes out of scope
 
+#ifdef __WXGTK__
    if (filename.Lower().EndsWith(wxT("mp3"))) {
       // There is a bug in libsndfile where mp3s with duplicated metadata tags
       // will crash libsndfile and thus audacity.
+      // We have patched the lib-src version of libsndfile, but
+      // for linux the user can build against the system libsndfile which
+      // still has this bug.
       // This happens in sf_open_fd, which is the very first point of
       // interaction with libsndfile, so the only workaround is to hardcode
       // ImportPCM to not handle .mp3.  Of couse, this will still fail for mp3s
@@ -137,6 +141,7 @@ ImportFileHandle *PCMImportPlugin::Open(wxString filename)
       // So, in the future we may want to write a simple parser to detect mp3s here.
       return NULL;
    }
+#endif
 
 
    if (f.Open(filename)) {
