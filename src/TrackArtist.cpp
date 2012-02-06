@@ -404,8 +404,6 @@ void TrackArtist::DrawTrack(const Track * t,
       case WaveTrack::WaveformDisplay:
          DrawWaveform(wt, dc, r, viewInfo,
                       drawEnvelope, drawSamples, drawSliders, false, muted);
-         if (mbShowTrackNameInWaveform && wt->GetChannel() != Track::RightChannel)    // so left or mono only
-            dc.DrawText (wt->GetName(), r.x+10, r.y);  // move right 10 pixels to avoid overwriting <- symbol
          break;
       case WaveTrack::WaveformDBDisplay:
          DrawWaveform(wt, dc, r, viewInfo,
@@ -421,6 +419,8 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawSpectrum(wt, dc, r, viewInfo, true, false);
          break;
       }
+      if (mbShowTrackNameInWaveform && wt->GetChannel() != Track::RightChannel)    // so left or mono only
+         dc.DrawText (wt->GetName(), r.x+10, r.y);  // move right 10 pixels to avoid overwriting <- symbol
       break;              // case Wave
    }
    #ifdef USE_MIDI
