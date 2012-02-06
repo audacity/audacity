@@ -231,15 +231,16 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
 
       for( int i = 0; i < sampleLen; i++ )
       {
+         nBytesToWrite = 3;
          nBytesWritten = 
             #if wxBYTE_ORDER == wxBIG_ENDIAN
-               file.Write((char*)&int24sampleData[i] + 1, 3);
+               file.Write((char*)&int24sampleData[i] + 1, nBytesToWrite);
             #else
-               file.Write((char*)&int24sampleData[i], 3);
+               file.Write((char*)&int24sampleData[i], nBytesToWrite);
             #endif
-         if (nBytesWritten != 3)
+         if (nBytesWritten != nBytesToWrite)
          {
-            wxLogDebug(wxT("Wrote %d bytes, expected 3."), nBytesWritten);
+            wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
             return false;
          }
       }
