@@ -388,7 +388,7 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
    for (size_t ndx = 1; ndx < cnt; ndx++) {
       wxMenuItemList list = menu->GetMenuItems();
       size_t lcnt = list.GetCount();
-      wxString label = names[ndx];
+      wxString label = wxMenuItem::GetLabelText(names[ndx]);
 
       for (size_t lndx = 0; lndx < lcnt; lndx++) {
          item = list.Item(lndx)->GetData();
