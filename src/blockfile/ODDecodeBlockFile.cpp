@@ -336,7 +336,7 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
          mLen,
          mFormat,
          NULL);//summaryData);
-   wxASSERT(bSuccess); // TO-DO: Handle failure here by alert to user and undo partial op. 
+   wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op. 
 
    mFileNameMutex.Unlock();
    

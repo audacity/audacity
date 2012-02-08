@@ -1220,6 +1220,8 @@ void LabelStruct::AdjustEdge( int iEdge, double fNewTime)
 // We're moving the label.  Adjust both left and right edge.
 void LabelStruct::MoveLabel( int iEdge, double fNewTime)
 {
+   // ANSWER-ME: Vigilant Sentry notes this "width" shadows the member var of same name. 
+   //    Is that what we actually want? 
    double width = getDuration();
 
    if( iEdge < 0 )

@@ -524,7 +524,7 @@ void FreqWindow::DrawPlot()
       xMax = mRate / 2;
       xRatio = xMax / xMin;
       xPos = xMin;
-      xLast = xPos / 2.0;
+      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       if (mLogAxis)
       {
          xStep = pow(2.0f, (log(xRatio) / log(2.0f)) / width);
@@ -540,7 +540,7 @@ void FreqWindow::DrawPlot()
       xMin = 0;
       xMax = mProcessedSize / mRate;
       xPos = xMin;
-      xLast = xPos / 2.0;
+      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       xStep = (xMax - xMin) / width;
       hRuler->ruler.SetLog(false);
       hRuler->ruler.SetUnits(_("s"));
@@ -787,7 +787,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
       xMax = mRate / 2;
       xRatio = xMax / xMin;
       xPos = xMin;
-      xLast = xPos / 2.0;
+      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       if (mLogAxis)
          xStep = pow(2.0f, (log(xRatio) / log(2.0f)) / width);
       else
@@ -796,7 +796,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
       xMin = 0;
       xMax = mProcessedSize / mRate;
       xPos = xMin;
-      xLast = xPos / 2.0;
+      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       xStep = (xMax - xMin) / width;
    }
 

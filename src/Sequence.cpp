@@ -181,10 +181,10 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       if (pOldBlockFile->IsAlias()) 
       {
          // No conversion of aliased data. 
-         //vvvvv Should the user be alerted, as we're not actually converting the aliased file? 
+         //v Should the user be alerted, as we're not actually converting the aliased file? 
          //   James (2011-12-01, offlist) believes this is okay because we are assuring 
          //   the user we'll do the format conversion if we turn this into a non-aliased block.
-         //   TO-DO: Confirm that.
+         //   TODO: Confirm that.
          pNewBlockArray->Add(pOldSeqBlock);
       }
       else
@@ -511,6 +511,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       return ConsistencyCheck(wxT("Paste branch one"));
    }
 
+   // FIX-ME: "b" is unsigned, so it's pointless to check that it's >= 0.
    if (b >= 0 && b < numBlocks
        && ((mBlock->Item(b)->f->GetLength() + addedLen) < mMaxSamples)) {
       // Special case: we can fit all of the new samples inside of
@@ -626,8 +627,10 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
 
          insertBlock->f = mDirManager->CopyBlockFile(srcBlock->Item(i)->f);
          if (!insertBlock->f) {
-            // TODO error: Could not paste!  (Out of disk space?)
-            wxASSERT(false);
+            wxASSERT(false); // TODO: Handle this better, alert the user of failure.
+            delete insertBlock;
+            newBlock->Clear();
+            delete newBlock;
             return false;
          }
 
@@ -772,6 +775,8 @@ bool Sequence::AppendBlock(SeqBlock * b)
    newBlock->f = mDirManager->CopyBlockFile(b->f);
    if (!newBlock->f) {
       /// \todo Error Could not paste!  (Out of disk space?)
+      wxASSERT(false); // TODO: Handle this better, alert the user of failure.
+      delete newBlock;
       return false;
    }
 

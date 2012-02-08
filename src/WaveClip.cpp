@@ -997,7 +997,7 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format)
    bool bResult = mSequence->ConvertToSampleFormat(format, &bChanged);
    if (bResult && bChanged)
       MarkChanged();
-   wxASSERT(bResult); // TO-DO: Throw an actual error.
+   wxASSERT(bResult); // TODO: Throw an actual error.
 }
 
 void WaveClip::UpdateEnvelopeTrackLen()

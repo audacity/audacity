@@ -640,10 +640,9 @@ bool Exporter::GetFilename()
       // This causes problems for the exporter, so we don't allow it.
       // Overwritting non-missing aliased files is okay.
       // Also, this can only happen for uncompressed audio.
-      size_t i;
       bool overwritingMissingAlias;
       overwritingMissingAlias = false;
-      for (i = 0; i < gAudacityProjects.GetCount(); i++) {
+      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
          AliasedFileArray aliasedFiles;
          FindDependencies(gAudacityProjects[i], &aliasedFiles);
          size_t j;

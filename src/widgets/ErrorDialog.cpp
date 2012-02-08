@@ -301,6 +301,8 @@ void ShowModelessErrorDialog(wxWindow *parent,
    ErrorDialog *dlog = new ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
    dlog->CentreOnParent();
    dlog->Show();
+   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak. 
+   // ANSWER-ME: This is unused. Delete it or are there plans for it?
 }
 
 void ShowAliasMissingDialog(AudacityProject *parent,
@@ -321,8 +323,10 @@ void ShowAliasMissingDialog(AudacityProject *parent,
       point.y = 100;
    dlog->SetPosition(point);
    dlog->CentreOnParent(wxHORIZONTAL);
-   
+
    dlog->Show();
+   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak. 
+   // ANSWER-ME: Why is this modeless? Shouldn't it require user action before proceeding?
 }
 
 /// Mostly we use this so that we have the code for resizability

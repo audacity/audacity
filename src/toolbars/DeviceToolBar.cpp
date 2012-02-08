@@ -717,7 +717,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       // set AudioIONotBusyFlag/AudioIOBusyFlag according to monitoring, as well. 
       // Instead allow it because unlike recording, for example, monitoring 
       // is not clearly something that should prohibit changing device. 
-      // TO-DO: We *could* be smarter in this method and call HandleDeviceChange()  
+      // TODO: We *could* be smarter in this method and call HandleDeviceChange()  
       // only when the device choices actually changed. True of lots of prefs!
       // As is, we always stop monitoring before handling the device change.
       if (gAudioIO->IsMonitoring()) 

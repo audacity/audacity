@@ -436,6 +436,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
       }
    }
 
+   delete[] buf;
    return cancel;
 }
 
@@ -954,6 +955,7 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent &evt)
          else
             dist = abs(evt.GetX() -
                mMoveStartControlPoints[mCurrentControlPoint].x);
+         // TODO: Get rid of unused 'dist' var within this scope?
 
          float newValue;
          

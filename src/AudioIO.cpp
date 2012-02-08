@@ -978,7 +978,10 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       playbackDeviceInfo = Pa_GetDeviceInfo( playbackParameters->device );
       
       if( playbackDeviceInfo == NULL )
+      {
+         delete playbackParameters;
          return false;
+      }
       
       // regardless of source formats, we always mix to float
       playbackParameters->sampleFormat = paFloat32;
@@ -1005,7 +1008,11 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
       captureDeviceInfo = Pa_GetDeviceInfo( captureParameters->device );
 
       if( captureDeviceInfo == NULL )
+      {
+         delete captureParameters;
+         delete playbackParameters;
          return false;
+      }
 
       captureParameters->sampleFormat =
          AudacityToPortAudioSampleFormat(mCaptureFormat);
@@ -1087,6 +1094,7 @@ void AudioIO::StartMonitoring(double sampleRate)
    success = StartPortAudioStream(sampleRate, (unsigned int)playbackChannels,
                                   (unsigned int)captureChannels,
                                   captureFormat);
+   // TODO: Check return value of success.
 
    // Now start the PortAudio stream!
    mLastPaError = Pa_StartStream( mPortStreamV19 );

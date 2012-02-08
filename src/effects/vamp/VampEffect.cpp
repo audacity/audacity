@@ -221,7 +221,7 @@ bool VampEffect::Process()
 
       mTracks->Add(ltrack);
 
-      float **data = new float*[channels];
+      float **data = new float*[channels]; // ANSWER-ME: Vigilant Sentry marks this as memory leak, var "data" not deleted.
       for (int c = 0; c < channels; ++c) data[c] = new float[block];
 
       sampleCount originalLen = len;

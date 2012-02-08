@@ -53,6 +53,7 @@ bool ImportMIDI(wxString fName, NoteTrack * dest)
    if(new_seq->get_read_error() == alg_error_open){
       wxMessageBox( _("Could not open file ") + fName + wxT("."));
       mf.Close();
+      delete new_seq;
       return false;
    }
 

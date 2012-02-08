@@ -2056,7 +2056,11 @@ void EqualizationDialog::LayoutEQSliders()
 
 void EqualizationDialog::GraphicEQ(Envelope *env)
 {
-   double value, dist, span, s;
+   // Vigilant Sentry noted this "value" var had not previously been initialized, 
+   // so there must be some path to lines 2133 and 2179 that do not get a setting. 
+   // ANSWER-ME: Is this a good default value? 
+   double value = 0.0; 
+   double dist, span, s;
 
    env->Flatten(0.);
    env->SetTrackLen(1.0);
@@ -2981,7 +2985,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent &event)
 {
    wxString name;
    int numCurves = mEditCurves.GetCount();
-   int curve;
+   int curve = 0;
 
    // Setup list of characters that aren't allowed
    wxArrayString exclude;
@@ -3052,6 +3056,11 @@ void EditCurvesDialog::OnRename(wxCommandEvent &event)
          {
             if(overwrite)
             {  // Overwrite another curve with 'unnamed'
+               // ANSWER-ME: What is the expected value of "curve" here? 
+               // It was not previously initialized at declaration. 
+               // And if we expect it to have been through the above loop, 
+               // it will be numCurves, which is a bad index, right?
+               // I've initialized it to zero, so we at least know what value it has.
                mEditCurves[ curve ].Name = name;
                mList->SetItem(curve, 0, name);
                mEditCurves[ curve ].points = mEditCurves[ item ].points;
@@ -3070,6 +3079,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent &event)
          {
             if(overwrite)
             {  // Overwrite another curve with this one, then delete this one
+               // ANSWER-ME: Same question as above, i.e., what's the expected value of "curve" here?
                mEditCurves[ curve ].Name = name;
                mEditCurves[ curve ].points = mEditCurves[ item ].points;
                mEditCurves.RemoveAt( item );

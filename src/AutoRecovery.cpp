@@ -220,7 +220,8 @@ static bool RecoverAllProjects(AudacityProject** pproj)
 bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
                                     bool *didRecoverAnything)
 {
-   *didRecoverAnything = false;
+   if (didRecoverAnything)
+      *didRecoverAnything = false;
    if (HaveFilesToRecover())
    {
       AutoRecoveryDialog dlg(*pproj);

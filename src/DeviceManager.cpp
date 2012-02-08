@@ -270,12 +270,11 @@ void DeviceManager::Rescan()
    }
 
    int nDevices = Pa_GetDeviceCount();
-   int i;
 
    //The heirarchy for devices is Host/device/source.
    //Some newer systems aggregate this.
    //So we need to call port mixer for every device to get the sources
-   for (i = 0; i < nDevices; i++) {
+   for (int i = 0; i < nDevices; i++) {
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info->maxOutputChannels > 0) {
          AddSources(i, info->defaultSampleRate, &mOutputDeviceSourceMaps, 0);

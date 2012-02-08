@@ -5573,6 +5573,8 @@ void AudacityProject::OnExportCleanSpeechPresets()
 
          int lenPreset = sizeof(preset);
          int count = presetsFile.Write(preset, lenPreset);
+         // ANSWER-ME: Vigilant Sentry notes "count" is unused after this assignment. 
+         //    Should be checked against expectedCount -- but CleanSpeech is going away!!! ;-)
          count = presetsFile.Write(pNoiseGate, expectedCount);
 
          presetsFile.Close();
@@ -5628,6 +5630,8 @@ void AudacityProject::OnImportCleanSpeechPresets()
          }
          int expectedCount = wxGetApp().GetCleanSpeechNoiseGateExpectedCount();
          float* pNoiseGate = wxGetApp().GetCleanSpeechNoiseGate();
+         // ANSWER-ME: Vigilant Sentry notes "count" is unused after this assignment. 
+         //    Should be checked against expectedCount -- but CleanSpeech is going away!!! ;-)
          count = presetsFile.Read(pNoiseGate, expectedCount);
 
          gPrefs->Write(wxT("/CsPresets/ClickThresholdLevel"), preset[2]);

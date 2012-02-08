@@ -467,13 +467,16 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
    useOD=true;
 #endif
 
-#ifdef LEGACY_FLAC
-   bool res = (mFile->process_until_end_of_file() != 0);
-#else
-   bool res = true;
-   if(!useOD)
-      res = (mFile->process_until_end_of_stream() != 0);
-#endif
+   // ANSWER-ME: Vigilant Sentry: Variable res unused after assignment (error code DA1)
+   //    Plus, it's not even declared in the LEGACY_FLAC clause
+   //#ifdef LEGACY_FLAC
+   //   bool res = (mFile->process_until_end_of_file() != 0);
+   //#else
+   //   bool res = true;
+   //   if(!useOD)
+   //      res = (mFile->process_until_end_of_stream() != 0);
+   //#endif
+
    //add the task to the ODManager
    if(useOD)
    { 

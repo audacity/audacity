@@ -282,7 +282,11 @@ void Importer::WriteImportItems()
       gPrefs->Write (name, val);
    }
    /* If we had more items than we have now, delete the excess */
-   for (i = this->mExtImportItems->Count(); i >= 0; i++)
+   // ANSWER-ME: Vigilant Sentry notes i is unsigned so (i >= 0) is always true. 
+   //    If that's what you want, why not make the condition just be "true"? Or should it be an int?
+   //    But also, it looks like it's supposed to be a down-counting loop, so is i++ correct?
+   //    Rather, shouldn't i be set to this->mExtImportItems->Count() each time?
+   for (i = this->mExtImportItems->Count(); i >= 0; i++) 
    {
      name.Printf (wxT("/ExtImportItems/Item%d"), i);
      if (gPrefs->Read(name, &val))
