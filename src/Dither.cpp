@@ -76,13 +76,7 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // Dereference sample pointer and convert to float sample
 #define FROM_INT16(ptr) (*((short*)(ptr)) / CONVERT_DIV16)
 #define FROM_INT24(ptr) (*((  int*)(ptr)) / CONVERT_DIV24)
-
-// For float, we internally allow values greater than 1.0, which
-// would blow up the dithering to int values.  FROM_FLOAT is
-// only used to dither to int, so clip here.
-#define FROM_FLOAT(ptr) (*((float*)(ptr)) >  1.0 ?  1.0 : \
-                         *((float*)(ptr)) < -1.0 ? -1.0 : \
-                         *((float*)(ptr)))
+#define FROM_FLOAT(ptr) (*((float*)(ptr)))
 
 // Promote sample to range of specified type, keep it float, though
 #define PROMOTE_TO_INT16(sample) ((sample) * CONVERT_DIV16)
@@ -283,7 +277,7 @@ inline float Dither::TriangleDither(float sample)
 // Shaped dither
 inline float Dither::ShapedDither(float sample)
 {
-   // Generate triangular dither, +-1 LSB, flat psd
+    // Generate triangular dither, +-1 LSB, flat psd
     float r = DITHER_NOISE + DITHER_NOISE;
 
     // Run FIR
@@ -298,7 +292,7 @@ inline float Dither::ShapedDither(float sample)
 
     // Roll buffer and store last error
     mPhase = (mPhase + 1) & BUF_MASK;
-    mBuffer[mPhase] = xe - lrintf(result);
+    mBuffer[mPhase] = xe - llrintf(result);
 
     return result;
 }
