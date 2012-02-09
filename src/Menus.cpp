@@ -5809,6 +5809,9 @@ void AudacityProject::OnManual()
 void AudacityProject::OnShowLog()
 {
    wxLogWindow* pLogger = wxGetApp().mLogger;
+   // It's possible a log window was not created.
+   if( !pLogger )
+      return;
    wxFrame* pLoggerFrame = pLogger->GetFrame();
    if (!pLoggerFrame->IsShown())
    {
