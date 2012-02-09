@@ -517,14 +517,12 @@ void FreqWindow::DrawPlot()
 
    int width = r.width - 2;
 
-   float xMin, xMax, xPos, xRatio, xLast, xStep;
+   float xMin, xMax, xRatio, xStep;
 
    if (alg == 0) {
       xMin = mRate / mWindowSize;
       xMax = mRate / 2;
       xRatio = xMax / xMin;
-      xPos = xMin;
-      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       if (mLogAxis)
       {
          xStep = pow(2.0f, (log(xRatio) / log(2.0f)) / width);
@@ -539,8 +537,6 @@ void FreqWindow::DrawPlot()
    } else {
       xMin = 0;
       xMax = mProcessedSize / mRate;
-      xPos = xMin;
-      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       xStep = (xMax - xMin) / width;
       hRuler->ruler.SetLog(false);
       hRuler->ruler.SetUnits(_("s"));
@@ -549,13 +545,12 @@ void FreqWindow::DrawPlot()
    hRuler->Refresh(false);
 
    // Draw the plot
-
    if (alg == 0)
       memDC.SetPen(wxPen(theTheme.Colour( clrHzPlot ), 1, wxSOLID));
    else
       memDC.SetPen(wxPen(theTheme.Colour( clrWavelengthPlot), 1, wxSOLID));
 
-   xPos = xMin;
+   float xPos = xMin;
 
    for (i = 0; i < width; i++) {
       float y;
