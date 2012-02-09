@@ -2056,9 +2056,8 @@ void EqualizationDialog::LayoutEQSliders()
 
 void EqualizationDialog::GraphicEQ(Envelope *env)
 {
-   // Vigilant Sentry noted this "value" var had not previously been initialized, 
-   // so there must be some path to lines 2133 and 2179 that do not get a setting. 
-   // ANSWER-ME: Is this a good default value? 
+   // JKC: 'value' is for height of curve.  
+   // The 0.0 initial value would only get used if NUM_PTS were 0.  
    double value = 0.0; 
    double dist, span, s;
 
@@ -2083,11 +2082,10 @@ void EqualizationDialog::GraphicEQ(Envelope *env)
                s = dist/span;
                if( s < -1.5 )
                   value = 0.;
+               else if( s < -.5 )
+                  value = m_EQVals[0]*(s + 1.5)*(s + 1.5)/2.;
                else
-                  if( s < -.5 )
-                     value = m_EQVals[0]*(s + 1.5)*(s + 1.5)/2.;
-                  else
-                     value = m_EQVals[0]*(.75 - s*s) + m_EQVals[1]*(s + .5)*(s + .5)/2.;
+                  value = m_EQVals[0]*(.75 - s*s) + m_EQVals[1]*(s + .5)*(s + .5)/2.;
             }
             else
             {
@@ -2098,12 +2096,11 @@ void EqualizationDialog::GraphicEQ(Envelope *env)
                   s = dist/span;
                   if( s > 1.5 )
                      value = 0.;
+                  else if( s > .5 )
+                     value = m_EQVals[bandsInUse-1]*(s - 1.5)*(s - 1.5)/2.;
                   else
-                     if( s > .5 )
-                        value = m_EQVals[bandsInUse-1]*(s - 1.5)*(s - 1.5)/2.;
-                     else
-                        value = m_EQVals[bandsInUse-1]*(.75 - s*s) +
-                                 m_EQVals[bandsInUse-2]*(s - .5)*(s - .5)/2.;
+                     value = m_EQVals[bandsInUse-1]*(.75 - s*s) +
+                             m_EQVals[bandsInUse-2]*(s - .5)*(s - .5)/2.;
                }
                else  //normal case
                {
@@ -3028,10 +3025,10 @@ void EditCurvesDialog::OnRename(wxCommandEvent &event)
             wxString temp = mEditCurves[ curve ].Name;
             if( name.IsSameAs( mEditCurves[ curve ].Name )) // case sensitive
             {
+               bad = true;
                if( curve == item )  // trying to rename a curve with the same name
                {
                   wxMessageBox( _("Name is the same as the original one"), _("Same name"), wxOK );
-                  bad = true;
                   break;
                }
                int answer = wxMessageBox( _("Overwrite existing curve '") + name +_("'?"),
@@ -3042,55 +3039,44 @@ void EditCurvesDialog::OnRename(wxCommandEvent &event)
                   overwrite = true; // we are going to overwrite the one with this name
                   break;
                }
-               else
-                  bad = true;
             }
          }
          if( name == wxT("") || name == wxT("unnamed") )
             bad = true;
       }
 
-      if( bad != true ) // user didn't cancel this one
+      // if bad, we cancelled the rename dialog, so nothing to do.
+      if( bad == true ) 
+         ;
+      else if(overwrite){
+         // Overwrite another curve.
+         // JKC: because 'overwrite' is true, 'curve' is the number of the curve that
+         // we are about to overwrite.
+         mEditCurves[ curve ].Name = name;
+         mEditCurves[ curve ].points = mEditCurves[ item ].points;
+         // if renaming the unnamed item, then select it,
+         // otherwise get rid of the item we've renamed.
+         if( item == (numCurves-1) ) 
+            mList->SetItem(curve, 0, name);
+         else
+         {
+            mEditCurves.RemoveAt( item );
+            numCurves--;
+         }
+      }
+      else if( item == (numCurves-1) ) // renaming 'unnamed'
+      {  // Create a new entry
+         mEditCurves.Add( EQCurve( wxT("unnamed") ) );
+         // Copy over the points
+         mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
+         // Give the original unnamed entry the new name
+         mEditCurves[ numCurves - 1 ].Name = name;
+         numCurves++;
+      }
+      else  // just rename (the 'normal' case)
       {
-         if( item == numCurves-1 ) // renaming 'unnamed'
-         {
-            if(overwrite)
-            {  // Overwrite another curve with 'unnamed'
-               // ANSWER-ME: What is the expected value of "curve" here? 
-               // It was not previously initialized at declaration. 
-               // And if we expect it to have been through the above loop, 
-               // it will be numCurves, which is a bad index, right?
-               // I've initialized it to zero, so we at least know what value it has.
-               mEditCurves[ curve ].Name = name;
-               mList->SetItem(curve, 0, name);
-               mEditCurves[ curve ].points = mEditCurves[ item ].points;
-            }
-            else
-            {  // Create a new entry
-               mEditCurves.Add( EQCurve( wxT("unnamed") ) );
-               // Copy over the points
-               mEditCurves[ numCurves ].points = mEditCurves[ numCurves - 1 ].points;
-               // Give the original unnamed entry the new name
-               mEditCurves[ numCurves - 1 ].Name = name;
-               numCurves++;
-            }
-         }
-         else  // renaming a curve other than 'unnamed'
-         {
-            if(overwrite)
-            {  // Overwrite another curve with this one, then delete this one
-               // ANSWER-ME: Same question as above, i.e., what's the expected value of "curve" here?
-               mEditCurves[ curve ].Name = name;
-               mEditCurves[ curve ].points = mEditCurves[ item ].points;
-               mEditCurves.RemoveAt( item );
-               numCurves--;
-            }
-            else  // just rename (the 'normal' case)
-            {
-               mEditCurves[ item ].Name = name;
-               mList->SetItem(item, 0, name);
-            }
-         }
+         mEditCurves[ item ].Name = name;
+         mList->SetItem(item, 0, name);
       }
       // get next selected item
       item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
