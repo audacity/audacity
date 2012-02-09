@@ -22,7 +22,7 @@ ChangesAssociations=yes
 
 ; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta (Unicode)
 ; For a stable release:   DefaultDirName={pf}\Audacity
-DefaultDirName={pf}\Audacity 2.0
+DefaultDirName={pf}\Audacity
 
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
@@ -125,6 +125,10 @@ Type: filesandordirs; Name: "{app}\help"
 Type: files; Name: "{commonprograms}\Audacity\audacity.exe"
 Type: files; Name: "{commonprograms}\Audacity\unins000.exe"
 Type: dirifempty; Name: "{commonprograms}\Audacity"
+
+;Get rid of previous uninstall item
+Type: files; Name: "{app}\unins000.exe"
+Type: files; Name: "{app}\unins000.dat"
 
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
