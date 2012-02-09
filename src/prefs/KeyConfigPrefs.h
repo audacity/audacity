@@ -55,7 +55,7 @@ class KeyConfigPrefs:public PrefsPanel
    wxListCtrl *mList;
 
    CommandManager *mManager;
-   size_t mCommandSelected;
+   int mCommandSelected;
 
    wxArrayString mCats;
    wxArrayString mNames;

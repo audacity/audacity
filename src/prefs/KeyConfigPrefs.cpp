@@ -391,9 +391,7 @@ void KeyConfigPrefs::SetKeyForSelected( const wxString & key )
 
 void KeyConfigPrefs::OnSet(wxCommandEvent & e)
 {
-   // ANSWER-ME: mCommandSelected is unsigned, so there's no point checking whether it's < 0. 
-   //    Should it be a signed int instead or remove that check?
-   if (mCommandSelected < 0 || mCommandSelected >= mNames.GetCount())
+   if ( mCommandSelected >= (int)mNames.GetCount())
       return;
 
    wxString newKey = mKey->GetValue();
@@ -416,9 +414,8 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & e)
 void KeyConfigPrefs::OnClear(wxCommandEvent& event)
 {
    mKey->Clear();
-   // ANSWER-ME: mCommandSelected is unsigned, so there's no point checking whether it's < 0. 
-   //    Should it be a signed int instead or remove that check?
-   if (mCommandSelected < 0 || mCommandSelected >= mNames.GetCount()) {
+
+   if (mCommandSelected < 0 || mCommandSelected >= (int)mNames.GetCount()) {
       return;
    }
    SetKeyForSelected( wxT("") );
@@ -504,9 +501,8 @@ void KeyConfigPrefs::OnCategory(wxCommandEvent & e)
 void KeyConfigPrefs::OnItemSelected(wxListEvent & e)
 {
    mCommandSelected = e.GetIndex();
-   // ANSWER-ME: mCommandSelected is unsigned, so there's no point checking whether it's < 0. 
-   //    Should it be a signed int instead or remove that check?
-   if (mCommandSelected < 0 || mCommandSelected >= mNames.GetCount()) {
+
+   if (mCommandSelected < 0 || mCommandSelected >= (int)mNames.GetCount()) {
       mKey->SetLabel(wxT(""));
       return;
    }
