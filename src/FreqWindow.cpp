@@ -775,14 +775,12 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
 
    int width = r.width - 2;
 
-   float xMin, xMax, xPos, xRatio, xLast, xStep;
+   float xMin, xMax, xRatio, xStep;
 
    if (alg == 0) {
       xMin = mRate / mWindowSize;
       xMax = mRate / 2;
       xRatio = xMax / xMin;
-      xPos = xMin;
-      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       if (mLogAxis)
          xStep = pow(2.0f, (log(xRatio) / log(2.0f)) / width);
       else
@@ -790,13 +788,12 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
    } else {
       xMin = 0;
       xMax = mProcessedSize / mRate;
-      xPos = xMin;
-      xLast = xPos / 2.0; // ANSWER-ME: Vigilant Sentry notes this var is unused after this assignment. Delete it and the var decl?
       xStep = (xMax - xMin) / width;
    }
 
-   // Find the peak nearest the cursor and plot it
+   float xPos = xMin;
 
+   // Find the peak nearest the cursor and plot it
    float bestpeak = float(0.0);
    if ( r.Contains(mMouseX, mMouseY) & (mMouseX!=0) & (mMouseX!=r.width-1) ) {
       if (mLogAxis)
