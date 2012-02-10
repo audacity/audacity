@@ -248,6 +248,7 @@ void Dither::Apply(enum DitherType ditherType,
             DITHER(TriangleDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         case shaped:
+            Reset(); // reset shaped dither filter for this new conversion
             DITHER(ShapedDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         default:
@@ -285,6 +286,8 @@ inline float Dither::ShapedDither(float sample)
 {
     // Generate triangular dither, +-1 LSB, flat psd
     float r = DITHER_NOISE + DITHER_NOISE;
+    if(sample != sample)  // test for NaN
+       sample = 0; // and do the best we can with it
 
     // Run FIR
     float xe = sample + mBuffer[mPhase] * SHAPED_BS[0]
