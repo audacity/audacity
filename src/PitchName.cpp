@@ -1,13 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   License: GPL v2.  See License.txt.
 
   PitchName.cpp
+  Vaughan Johnson and Dominic Mazzoni. 
 
-  Copyright 2005-9, Vaughan Johnson and Dominic Mazzoni. 
-  All rights reserved.
-
-*******************************************************************//*!
+******************************************************************//**
 
 \file PitchName.cpp
 \brief   Utilities for converting from frequency to pitch  
@@ -128,8 +128,9 @@ wxChar * PitchName(double pitchNum, bool bWantFlats /* = false */)
 }
 
 // PitchName_Absolute does the same thing as PitchName, but appends 
-// the register number, e.g., instead of "C" it will return "C4" 
-// if the pitchNum corresonds to middle C.
+// the octave number, e.g., instead of "C" it will return "C4" 
+// if the pitchNum corresonds to middle C, i.e., is 60. 
+// ("Scientific Pitch Notation")
 // Sharps are the default, unless, bWantFlats is true.
 wxChar * PitchName_Absolute(double pitchNum, bool bWantFlats /* = false */)
 {
@@ -137,20 +138,9 @@ wxChar * PitchName_Absolute(double pitchNum, bool bWantFlats /* = false */)
 
 	// PitchName sets pPitchName to the next available char in gPitchName, 
 	// so it's ready to append the register number.
-   wxSnprintf(pPitchName, 8, wxT("%d"), (((int)(pitchNum + 0.5) / 12) - 1));
+   int octaveNum = ((int)((pitchNum + 0.5) / 12) - 1);
+   wxSnprintf(pPitchName, 8, wxT("%d"), octaveNum);
 
    return gPitchName;
 }
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 71a57231-e6fd-4e65-8839-08451f7b4dff
 
