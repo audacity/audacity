@@ -988,8 +988,7 @@ void FreqWindow::Recalc()
       wss = 1.0;
 
    //Progress dialog over FFT operation
-   //wxLogDebug(wxT("Starting progress dialogue in FreqWindow::Recalc()"));
-   ProgressDialog *mProgress = new ProgressDialog(_("FreqWindow"),_("Drawing Spectrum"));
+   ProgressDialog *mProgress = new ProgressDialog(_("Plot Spectrum"),_("Drawing Spectrum"));
 
    int start = 0;
    int windows = 0;
