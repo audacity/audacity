@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-08-17 22:57+0100\n"
-"PO-Revision-Date: 2012-02-01 16:22-0000\n"
-"Last-Translator: Gale <gale@audacityteam.org>\n"
+"PO-Revision-Date: 2012-02-12 16:19-0000\n"
+"Last-Translator: Cleber Tavano <clebertavano@gmail.com>\n"
 "Language-Team: Cleber Tavano <clebertavano@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "O Audacity é baseado em código fonte dos seguintes projetos:"
 
 #: AboutDialog.cpp:265
 msgid "Special thanks:"
-msgstr "Agradecimentos + q Especiais:"
+msgstr "Agradecimentos + que especiais:"
 
 #: AboutDialog.cpp:270
 msgid "<b>Audacity&reg;</b> software is copyright"
@@ -241,14 +241,14 @@ msgid ""
 "Choose File > Check Dependencies to view a list of locations of the missing files."
 msgstr ""
 "Um ou mais arquivos de áudio externos não puderam ser encontrados.\n"
-"Estess arquivos podem ter sido movidos, apagados, ou o drive onde estavam \n"
-"os arquivos foi desmontado. \n"
+"Estes arquivos podem ter sido movidos, apagados, ou o disco onde\n"
+"estavam os arquivos foi desmontado. \n"
 "Foi inserido silêncio no lugar dos arquivos faltantes.\n"
 "O primeiro arquivo faltante foi: \n"
 "%s\n"
 "Podem haver outros arquivos faltantes.\n"
-"Selecione Arquivo > Verificar dependências para visualizar a lista com a \n"
-"localização dos arquivos faltantes."
+"Selecione Arquivo > Verificar dependências para visualizar a lista\n"
+"com a localização dos arquivos faltantes."
 
 #: AudacityApp.cpp:860
 msgid "Files Missing"
@@ -6436,7 +6436,7 @@ msgstr ""
 
 #: effects/NoiseRemoval.cpp:885
 msgid "Noise Removal by Dominic Mazzoni"
-msgstr "Remoção de ruídos de Dominic Mazzoni"
+msgstr "Remoção de ruídos por Dominic Mazzoni"
 
 #: effects/NoiseRemoval.cpp:893
 msgid "&Get Noise Profile"
@@ -7146,7 +7146,7 @@ msgstr "Executando efeito: %s"
 #: effects/ladspa/LadspaEffect.cpp:198
 #: effects/lv2/LV2Effect.cpp:213
 msgid "Sorry, Plug-in Effects cannot be performed on stereo tracks where the individual channels of the track do not match."
-msgstr "Desculpe, os efeitos VST não podem ser executados em faixas estéreo onde cada canal tem um conteúdo diferente do outro."
+msgstr "Desculpe, os efeitos VST não podem ser executados em faixas estéreo com conteúdo diferente em cada canal."
 
 #: effects/ladspa/LadspaEffect.cpp:557
 #: effects/lv2/LV2Effect.cpp:773
@@ -7166,7 +7166,6 @@ msgstr "Tamanho (segundos)"
 msgid "Note length (seconds)"
 msgstr "Tamanho da nota (segundos)"
 
-# este 'note'  eu não entendi se quer dizer 'anotação' ou 'perceber'. :(
 #: effects/lv2/LV2Effect.cpp:835
 #: effects/lv2/LV2Effect.cpp:838
 msgid "Note velocity"
@@ -7316,9 +7315,11 @@ msgid ""
 "\n"
 "Are you sure you want to save the file under this name?"
 msgstr ""
-"O Audacity salvará o arquivo do tipo %s com o nome %s.\n"
-"Normalmente estes arquivos terminam com a extensão %s e alguns programas podem não reconhecer\n"
-"este arquivo como válido.\n"
+"O Audacity salvará o arquivo do tipo %s com o nome \"%s\".\n"
+"\n"
+"Normalmente estes arquivos terminam com a extensão \".%s\", e alguns programas podem\n"
+"não reconhecer este arquivo como válido.\n"
+"\n"
 "Deseja salvar o arquivo com este nome?"
 
 #: export/Export.cpp:654
@@ -7329,7 +7330,7 @@ msgid ""
 "If you still wish to export, please choose a different filename or folder."
 msgstr ""
 "Você está tentado sobregravar um arquivo de atalho não encontrado.\n"
-"O arquivo não pode ser escrito pois o caminho é necessário para \n"
+"O arquivo não pôde ser escrito pois o caminho é necessário para \n"
 "restaurar o áudio original do projeto.\n"
 "Selecione Arquivo > Verificar dependência para visualizar a localização\n"
 "dos arquivos faltantes.\n"
@@ -8912,7 +8913,8 @@ msgstr ""
 "\n"
 "Sua preferência atual está configurada para %s.\n"
 "\n"
-"Ler os arquivos diretamente permite tocar ou editá-los diretamente. É mais seguro copiá-los, já que assim os arquivos originais continuam em seus lugares originais e podem ser restaurados caso necessário. \n"
+"Ler os arquivos diretamente permite tocar ou editá-los diretamente. É mais seguro copiá-los, já que assim os arquivos originais continuam em seus \n"
+"lugares e podem ser restaurados caso necessário. \n"
 "Ao acessar Arquivo > Verificar dependências serão mostrados os nomes e a localização dos arquivos originais que estão sendo editados diretamente.\n"
 "\n"
 "Como gostaria de importar os arquivos atuais?"
@@ -9164,7 +9166,7 @@ msgstr "Cache de áudio"
 
 #: prefs/DirectoriesPrefs.cpp:105
 msgid "Play and/or record using &RAM (useful for slow drives)"
-msgstr "Reproduzir e gravar utilizando memória RAM (útil em drives lentos)"
+msgstr "Reproduzir e gravar utilizando memória RAM (útil em sistemas lentos)"
 
 #: prefs/DirectoriesPrefs.cpp:111
 msgid "Mi&nimum Free Memory (MB):"
@@ -9175,8 +9177,8 @@ msgid ""
 "If the available system memory falls below this value, audio will no longer\n"
 "be cached in memory and will be written to disk."
 msgstr ""
-"Se a memória do sistema estiver abaixo do valor especificado, não será\n"
-"possível guardar mais áudio na memória e os dados serão gravados em disco."
+"Se a memória do sistema estiver abaixo do valor especificado, não será possível \n"
+"guardar mais áudio na memória e os dados serão gravados em disco."
 
 #: prefs/DirectoriesPrefs.cpp:126
 msgid "Choose a location to place the temporary directory"
@@ -9443,7 +9445,7 @@ msgstr "Importar / Exportar"
 
 #: prefs/ImportExportPrefs.cpp:53
 msgid "When importing audio files"
-msgstr "Ao importar arquivos de áudio"
+msgstr "Importar arquivos de áudio"
 
 #: prefs/ImportExportPrefs.cpp:57
 msgid "&Make a copy of uncompressed audio files before editing (safer)"
@@ -9632,7 +9634,9 @@ msgstr "&Baixar"
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
-msgstr "O Audacity detectou automaticamente bibliotecas FFmpeg válidas. Você ainda deseja localizá-las manualmente?"
+msgstr ""
+"O Audacity detectou automaticamente bibliotecas FFmpeg válidas. \n"
+"Você ainda deseja localizá-las manualmente?"
 
 #: prefs/MidiIOPrefs.cpp:58
 msgid "MIDI Devices"
@@ -10992,7 +10996,7 @@ msgstr "Régua Vertical"
 #. * on the end to the word for seconds. Don't change the numbers.
 #: widgets/TimeTextCtrl.cpp:277
 msgid "01000,01000 seconds"
-msgstr "01000,01000 segundos"
+msgstr "01000.01000 segundos"
 
 #. i18n-hint: Format string for displaying time in hours, minutes and
 #. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -11134,7 +11138,7 @@ msgstr "quadros NTSC"
 #. * rate!
 #: widgets/TimeTextCtrl.cpp:371
 msgid "01000,01000 frames|29.97002997"
-msgstr "01000,01000 quadros|29.97002997"
+msgstr "01000.01000 quadros|29.97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at PAL TV frame rate (used for European TV)
