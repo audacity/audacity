@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-01-26 21:57-0000\n"
-"Last-Translator: Kaya Zeren\n"
+"PO-Revision-Date: 2012-02-13 06:28-0000\n"
+"Last-Translator: Kaya Zeren <kaya.zeren@zeron.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr "Tamam... Audaharika!"
 
 #: AboutDialog.cpp:197
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
-msgstr "Audacity, tüm Dünya'dan gönüllü <a href=\"http://audacity.sourceforge.net/community/developers\">geliştiricilerden</a> oluşan bir grup tarafından hazırlanmış ücretsiz bir programdır. <a href=\"http://sourceforge.net\">SourceForge.net</a> ve <a href=\"http://code.google.com\">Google Code</a>'a projemizi destekledikleri için teşekkür ederiz. Audacity Windows 98 ve sonrası ile Mac OS X, Linux ve diğer Unix benzeri sistemlerde çalıştırılabilir. Mac OS 9 için, 1.0.0 sürümünü kullanın."
+msgstr "Audacity, tüm Dünya'dan gönüllü <a href=\"http://audacity.sourceforge.net/community/developers\">geliştiricilerden</a> oluşan bir grup tarafından hazırlanmış özgür bir yazılımdır. <a href=\"http://sourceforge.net\">SourceForge.net</a> ve <a href=\"http://code.google.com\">Google Code</a>'a projemizi destekledikleri için teşekkür ederiz. Audacity Windows 98 ve sonrası ile Mac OS X, Linux ve diğer Unix benzeri sistemlerde çalıştırılabilir. Mac OS 9 için, 1.0.0 sürümünü kullanın."
 
 #: AboutDialog.cpp:201
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
@@ -48,7 +48,7 @@ msgstr "Çevirmenler"
 
 #: AboutDialog.cpp:229
 msgid "A Free Digital Audio Editor<br>"
-msgstr "Ücretsiz Sayısal Ses Düzenleyicisi<br>"
+msgstr "Özgür Sayısal Ses Düzenleyicisi<br>"
 
 #: AboutDialog.cpp:233
 msgid "Credits"
@@ -1279,7 +1279,7 @@ msgstr "Gözat..."
 
 #: FFmpeg.cpp:472
 msgid "To get a free copy of FFmpeg, click here -->"
-msgstr "Ücretsiz FFmpeg edinmek için şuraya tıklayın -->"
+msgstr "Ücretsiz FFmpeg kopyasını indirmek için şuraya tıklayın -->"
 
 #: FFmpeg.cpp:473
 #: export/ExportMP3.cpp:608
@@ -1976,7 +1976,7 @@ msgstr "Bö&l"
 
 #: Menus.cpp:361
 msgid "Split Ne&w"
-msgstr "Ayır Ye&ni"
+msgstr "Ayır ve Ye&ni"
 
 #: Menus.cpp:365
 #: Menus.cpp:423
@@ -2328,7 +2328,7 @@ msgstr "İzleri &Kaldır"
 
 #: Menus.cpp:695
 msgid "&Mute All Tracks"
-msgstr "Tü&m İzlerin Sesini Kıs"
+msgstr "Tü&m İzlerin Sesini Sustur"
 
 #: Menus.cpp:696
 msgid "&UnMute All Tracks"
@@ -3691,17 +3691,17 @@ msgstr "Disk alanından fazla"
 
 #: Project.cpp:4028
 msgid "On-demand import and waveform calculation complete."
-msgstr "İstek üzerine alma ve dalga şekli hesaplaması tamamlandı."
+msgstr "İsteğe göre alma ve dalga şekli hesaplaması tamamlandı."
 
 #: Project.cpp:4033
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
-msgstr "Alma işlemi tamamlandı. İstek üzerine %d dalga şekli hesaplaması yapılıyor.Genel olarak %2.0f%% tamamlandı."
+msgstr "Alma işlemi tamamlandı. İsteğe göre %d dalga şekli hesaplaması yapılıyor.Genel olarak %2.0f%% tamamlandı."
 
 #: Project.cpp:4036
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
-msgstr "Alma işlemi tamamlandı. İstek üzerine dalga şekli hesaplaması yürütülüyor. %2.0f%% tamamlandı."
+msgstr "Alma işlemi tamamlandı. İsteğe göre dalga şekli hesaplaması yürütülüyor. %2.0f%% tamamlandı."
 
 #: Project.cpp:4371
 msgid "New Project"
@@ -4849,7 +4849,7 @@ msgstr "Uygulanmış etki: %s %.1f dB"
 
 #: effects/Amplify.cpp:136
 msgid "Amplify"
-msgstr "Yükselt"
+msgstr "Yükseltici"
 
 #: effects/Amplify.cpp:152
 #: effects/Compressor.cpp:610
@@ -4970,11 +4970,11 @@ msgstr "Ön izleme yapılamaz"
 
 #: effects/AutoDuck.h:98
 msgid "Auto Duck..."
-msgstr "Kendiliğinden Kısma..."
+msgstr "Kendiliğinden Kıs..."
 
 #: effects/AutoDuck.h:115
 msgid "Processing Auto Duck..."
-msgstr "Kendiliğinden kısma uygulanıyor..."
+msgstr "Kendiliğinden kısılıyor..."
 
 #: effects/AvcCompressor.cpp:738
 #: effects/audiounits/AudioUnitEffect.cpp:882
@@ -4991,7 +4991,7 @@ msgstr "Uygulanmış etki: %s frekansı = %.0f Hz, güçlendirme = %.0f dB"
 
 #: effects/BassBoost.cpp:169
 msgid "Bass Boost"
-msgstr "Bas Güçlendirme"
+msgstr "Bas Güçlendir"
 
 #: effects/BassBoost.cpp:182
 #: effects/Phaser.cpp:221
@@ -5018,7 +5018,7 @@ msgstr "Güçlendirme dB"
 
 #: effects/BassBoost.h:35
 msgid "BassBoost..."
-msgstr "Bas Güçlendirme..."
+msgstr "Bas Güçlendir..."
 
 #: effects/BassBoost.h:49
 msgid "Boosting Bass Frequencies"
@@ -5220,7 +5220,7 @@ msgstr "Tempoyu Değiştirme"
 
 #: effects/ClickRemoval.cpp:314
 msgid "Click Removal"
-msgstr "Tıklama Kaldırma"
+msgstr "Tıklama Kaldır"
 
 #: effects/ClickRemoval.cpp:327
 msgid "Click and Pop Removal by Craig DeForest"
@@ -5244,7 +5244,7 @@ msgstr "En büyük iğne genişliği"
 
 #: effects/ClickRemoval.h:42
 msgid "Click Removal..."
-msgstr "Tıklama Kaldırma..."
+msgstr "Tıklama Kaldır..."
 
 #: effects/ClickRemoval.h:56
 msgid "Removing clicks and pops..."
@@ -5745,7 +5745,7 @@ msgstr "Kübik"
 #: effects/Equalization.cpp:276
 #: effects/Equalization.cpp:330
 msgid "Equalization"
-msgstr "Dengeleme"
+msgstr "Dengele"
 
 #: effects/Equalization.cpp:996
 #, c-format
@@ -6028,7 +6028,7 @@ msgstr "Hiç bir eğri verilmedi"
 
 #: effects/Equalization.h:85
 msgid "Equalization..."
-msgstr "Dengeleme..."
+msgstr "Dengele..."
 
 #: effects/Equalization.h:99
 msgid "Performing Equalization"
@@ -6148,7 +6148,7 @@ msgstr "Gürültü Eşiği:"
 
 #: effects/Leveller.h:28
 msgid "Leveller..."
-msgstr "Düzeyleyici..."
+msgstr "Düzeyle..."
 
 #: effects/Leveller.h:42
 msgid "Applying Leveller..."
@@ -6197,7 +6197,7 @@ msgstr "Reverb"
 #: effects/LoadEffects.cpp:125
 #: effects/Phaser.cpp:209
 msgid "Phaser"
-msgstr "Fazlayıcı"
+msgstr "Fazla"
 
 #: effects/LoadEffects.cpp:127
 msgid "Flanger"
@@ -6286,7 +6286,7 @@ msgstr "Geçit"
 #: effects/LoadEffects.cpp:200
 #: effects/NoiseRemoval.cpp:778
 msgid "Noise Removal"
-msgstr "Gürültü Kaldırma"
+msgstr "Gürültü Kaldır"
 
 #: effects/LoadEffects.cpp:202
 msgid "Pitch and Tempo"
@@ -6371,7 +6371,7 @@ msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
 msgstr ""
-"Süzmek istediğiniz tüm sesi seçin, ne kadar gürültünün süzülmesini istediğinizi\n"
+"Süzmek istediğiniz tüm sesi seçin, ne kadar gürültünün süzülmesini istiyorsanız\n"
 "seçin ve gürültüyü kaldırmak için 'Tamam' düğmesine tıklayın.\n"
 
 #: effects/NoiseRemoval.cpp:887
@@ -6430,7 +6430,7 @@ msgstr "Ya&lıt"
 
 #: effects/NoiseRemoval.h:37
 msgid "Noise Removal..."
-msgstr "Gürültü Kaldırma..."
+msgstr "Gürültü Kaldır..."
 
 #: effects/NoiseRemoval.h:52
 msgid "Creating Noise Profile"
@@ -6552,11 +6552,11 @@ msgstr "Yüzde olarak geri besleme"
 
 #: effects/Phaser.h:45
 msgid "Phaser..."
-msgstr "Fazlayıcı..."
+msgstr "Fazla..."
 
 #: effects/Phaser.h:59
 msgid "Applying Phaser"
-msgstr "Fazlayıcı Uygulanıyor"
+msgstr "Fazlama Uygulanıyor"
 
 #: effects/Repair.cpp:99
 msgid ""
@@ -8148,7 +8148,7 @@ msgstr " %s dosyasını bulmak için, buraya tıklayın -->"
 
 #: export/ExportMP3.cpp:607
 msgid "To get a free copy of Lame, click here -->"
-msgstr "Ücretsiz Lame kopyasını indirmek için, buraya tıklayın -->"
+msgstr "Ücretsiz Lame kopyasını indirmek için, şuraya tıklayın -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
@@ -10289,7 +10289,7 @@ msgstr "&Seçili ses yoksa, projedeki tüm sesleri seç"
 
 #: prefs/TracksPrefs.cpp:106
 msgid "Enable cu&t lines"
-msgstr "Kesim ha&tlarını etkinleştir"
+msgstr "Kesme çizgilerini e&tkinleştir"
 
 #: prefs/TracksPrefs.cpp:109
 msgid "Enable &dragging of left and right selection edges"
@@ -10361,7 +10361,7 @@ msgstr "Oynat (Sürekli Oynatma için Shift)"
 
 #: toolbars/ControlToolBar.cpp:216
 msgid "Record (Shift for Append Record)"
-msgstr "Kayıt (sona eklemek için Shift)"
+msgstr "Kayıt (Sona Eklemek için Shift)"
 
 #: toolbars/ControlToolBar.cpp:590
 #: toolbars/ControlToolBar.cpp:932
@@ -10689,7 +10689,7 @@ msgstr "Tuş tipi"
 
 #: toolbars/TranscriptionToolBar.cpp:262
 msgid "Play-at-speed"
-msgstr "Şu hızda oynat"
+msgstr "Seçili hızda oynat"
 
 #: toolbars/TranscriptionToolBar.cpp:266
 msgid "Left-to-On"
@@ -11091,7 +11091,7 @@ msgstr "01000,01000 kare|75"
 
 #: widgets/TimeTextCtrl.cpp:496
 msgid "Use right mouse button or context key to change format"
-msgstr "Biçimi değiştirmek için sağ fare tuşunu ya da tuş takkımındaki kısa yol menü tuşunu kullanın"
+msgstr "Biçimi değiştirmek için sağ fare tuşunu ya da kısa yol menü tuşunu kullanın"
 
 #: widgets/TimeTextCtrl.cpp:1597
 msgid "centiseconds"
