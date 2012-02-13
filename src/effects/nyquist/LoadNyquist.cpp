@@ -51,6 +51,9 @@ void LoadNyquistPlugins()
    }
 
    wxGetApp().FindFilesInPathList(wxT("*.ny"), pathList, files);
+#ifndef  __WXMSW__
+   wxGetApp().FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
+#endif
 
    for(i=0; i<files.GetCount(); i++)
       LoadNyquistEffect(files[i]);
