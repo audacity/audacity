@@ -4,8 +4,9 @@ Authors:
   Dominic Mazzoni
 
 ================================================================
-This version is currently accurate for Audacity version 1.3.1.
-Last Updated: February 3, 2006
+This version was last updated February 13, 2012. 
+Audacity 2.0.0 requires wxMac 2.8.12.  
+
 If the advice here is inaccurate or incomplete, please
 email audacity-devel@lists.sourceforge.net.
 ================================================================
@@ -40,14 +41,14 @@ wxWindows is available from http://www.wxwindows.org.
 Similar to the Linux kernel, wxWindows is available as
 stable and development branches.  
 
-The best way to compile Audacity is to download wxMac 2.8.10.
+The best way to compile Audacity is to download wxMac 2.8.12.
 
-For step 1, just download wxMac 2.8.10 from:
+For step 1, just download wxMac 2.8.12 from:
   http://www.wxwindows.org/downloads/ 
 
 Uncompress wxMac from the command line by typing:
 
-  tar xvzf wxMac-2.8.10.tar.gz
+  tar xvzf wxMac-2.8.12.tar.gz
 
 --------------------------
 STEP 2:  Download Audacity
@@ -61,11 +62,18 @@ command:
 svn checkout http://audacity.googlecode.com/svn/audacity-src/trunk/ audacity-read-only
 
 
-----------------------------------
-STEP 3:  Compile and install wxMac
-----------------------------------
+-----------------------------------------
+STEP 3:  Patch, compile and install wxMac
+-----------------------------------------
 
-cd wxMac-2.8.10
+* Apply "wxMac_bug_2_10.5.8_PPC.patch" in the 
+  "mac/wxMac_additions" folder in the Audacity sources.  
+  This has to be applied until we drop support for OS X 10.5.
+   
+* Apply any other wxMac patches in the "mac" directory that
+  are relevant to the version of wxMac you are compiling. 
+
+cd wxMac-2.8.12
 mkdir macbuild
 cd macbuild
 ../configure --disable-shared
