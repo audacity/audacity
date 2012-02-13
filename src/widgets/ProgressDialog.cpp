@@ -1175,6 +1175,17 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
       }
    }
 #endif
+
+#if defined(__WXMSW__)
+   // See Bug #334
+   // LL:  On Windows, the application message loop is still active even though
+   //      all of the windows have been disabled.  So, keyboard shortcuts still
+   //      work in windows not related to the progress diawhich allows interaction 
+   //      when it should be blocked.
+   //      This disabled the application message loop so keyboard shortcuts will
+   //      no longer be processed.
+   wxTheApp->SetEvtHandlerEnabled(false);
+#endif
 }
 
 //
@@ -1188,6 +1199,11 @@ ProgressDialog::~ProgressDialog()
 
       Beep();
    }
+
+#if defined(__WXMSW__)
+   // Undo above fix for bug 334.
+   wxTheApp->SetEvtHandlerEnabled(true);
+#endif
 
 #if defined(__WXMAC__)
    wxWindow *w = wxTheApp->GetTopWindow();
