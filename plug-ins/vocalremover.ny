@@ -84,6 +84,11 @@ error-msg
 (setf lower (min (first range) (second range)))
 (setf upper (max (first range) (second range)))
 
+;; Temporary fix to keep frequencies within valid range (see bug 152)
+;; ToDo - fix this properly SD
+(setf lower (min (truncate (/ *sound-srate* 2.0)) lower))
+(setf upper (min (truncate (/ *sound-srate* 2.0)) upper))
+
 
 (cond
 ((= bc 1) ; invert [delete] band of frequencies inside range
