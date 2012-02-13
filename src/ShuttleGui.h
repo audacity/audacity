@@ -354,6 +354,7 @@ public:
    ~ShuttleGui(void);
 public:
    ShuttleGui & Id(int id );
+   // Prop() sets the proportion value, defined as in wxSizer::Add().
    ShuttleGui & Prop( int iProp ){ ShuttleGuiBase::Prop(iProp); return *this;}; // Has to be here too, to return a ShuttleGui and not a ShuttleGuiBase.
    GuiWaveTrack * AddGuiWaveTrack( const wxString & Name);
    AdornedRulerPanel * AddAdornedRuler( ViewInfo *pViewInfo );
