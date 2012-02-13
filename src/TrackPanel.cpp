@@ -4609,7 +4609,7 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
    }
 }
 
-/// Handle mouse wheel rotation (for zoom in/out and vertical scrolling)
+/// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
    double steps = event.m_wheelRotation /
