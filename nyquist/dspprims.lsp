@@ -342,9 +342,11 @@
 
 ; convenient biquad: normalize a0, and use zero initial conditions.
 (defun nyq:biquad (x b0 b1 b2 a0 a1 a2)
-  (let ((a0r (/ 1.0 a0)))
-    (snd-biquad x (* a0r b0) (* a0r b1) (* a0r b2) 
-                             (* a0r a1) (* a0r a2) 0 0)))
+  (if (< a0 1.0) 
+    (error (format T "a0 < 1 in biquad~%"))
+    (let ((a0r (/ 1.0 a0)))
+      (snd-biquad x (* a0r b0) (* a0r b1) (* a0r b2) 
+                               (* a0r a1) (* a0r a2) 0 0))))
 
 
 (defun biquad (x b0 b1 b2 a0 a1 a2)
