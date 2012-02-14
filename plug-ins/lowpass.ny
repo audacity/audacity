@@ -64,23 +64,27 @@
 (= (check q 0.1 20) 1))
 (strcat error-msg (format nil
 "q value ~a lies outside valid range 0.1 to 20     
-for your chosen rolloff of 12 dB per octave.
+for your chosen rolloff of 12 dB per octave.~%
 " q))
 error-msg))
 
-; check for erroneous frequency cutoff value
-(setf error-msg (if 
-(= (check f 1 20000) 0)
-error-msg
-(strcat error-msg (format nil
-"Cutoff frequency ~a Hz lies outside valid range 1 to 20000.     
-" f))))
+;; check for erroneous frequency cutoff value
+(cond ((< f 1)
+       (setf error-msg
+          (strcat error-msg (format nil
+            "Cutoff frequency is set at ~a Hz~%but must be at least 1 Hz." f))))
+      ((> f (truncate (/ *sound-srate* 2.0)))
+       (setf error-msg
+          (strcat error-msg (format nil
+            "Cutoff frequency is set at ~a Hz but must not~%~
+            be greater than ~a Hz (half of the track sample rate)."
+            f (truncate (/ *sound-srate* 2.0)))))))
 
 
 (cond
 ((> (length error-msg) 0)
 (setf error-msg (strcat (format nil
-"Error - \n\nYou have entered at least one invalid value:
+"Error.~%You have entered at least one invalid value:~%
 ") error-msg))
 (format nil "~a" error-msg)) 
 ;
