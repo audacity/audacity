@@ -223,6 +223,16 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     time_type t0 = s->t0;
     time_type t0_min = t0;
 
+    /* ASSUME 32-BIT INTS */
+    /* Later, we will compute togo, the number of input samples to process
+       for one block of output. We read stepsize of input for each sample
+       of output, so the total is stepsize * max_sample_block_len, but 
+       this could be very big and cause integer overflow, so here, we
+       prevent the overflow by limiting stepsize */
+    if (stepsize > (0x7FFFFFFF / max_sample_block_len)) {
+        xlerror("In SND-AVG, stepsize is too big", s_unbound);
+    }
+
     falloc_generic(susp, avg_susp_node, "snd_make_avg");
     susp->susp.fetch = avg_s_fetch;
     susp->terminate_cnt = UNKNOWN;
@@ -233,9 +243,9 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = ROUND((t0 - t0_min) * sr);
     if (susp->susp.toss_cnt > 0) {
-    susp->susp.keep_fetch = susp->susp.fetch;
-    susp->susp.fetch = avg_toss_fetch;
-    t0 = t0_min;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = avg_toss_fetch;
+        t0 = t0_min;
     }
 
     /* initialize susp state */
@@ -252,11 +262,17 @@ sound_type snd_make_avg(sound_type s, long blocksize, long stepsize, long op)
     susp->s_cnt = 0;
     susp->blocksize = blocksize;
     susp->stepsize = stepsize;
-    /* We need at least blocksize samples in buffer, but if stepsize > blocksize,
+    /* We need at least blocksize samples in buffer, 
+       but if stepsize > blocksize,
        it is convenient to put stepsize samples in buffer. This allows us to
        step ahead by stepsize samples just by flushing the buffer. */
     buffersize = MAX(blocksize, stepsize);
     susp->buffer = (sample_type *) malloc(buffersize * sizeof(sample_type));
+    if (!susp->buffer) {
+        sound_unref(susp->s);
+        ffree_generic(susp, sizeof(avg_susp_node), "avg_free");
+        xlerror("memory allocation failed in SND-AVG", s_unbound);
+    }
     susp->fillptr = susp->buffer;
     susp->endptr = susp->buffer + buffersize;
     susp->process_block = average_block;
