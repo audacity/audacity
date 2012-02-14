@@ -127,8 +127,7 @@ Type: files; Name: "{commonprograms}\Audacity\unins000.exe"
 Type: dirifempty; Name: "{commonprograms}\Audacity"
 
 ;Get rid of previous uninstall item
-Type: files; Name: "{app}\unins000.exe"
-Type: files; Name: "{app}\unins000.dat"
+Type: files; Name: "{app}\unins*.*"
 
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
