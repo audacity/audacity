@@ -1650,6 +1650,14 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    if (event.GetKeyCode() == WXK_CONTROL)
       mTrackPanel->HandleControlKey(true);
 
+   // Allow PageUp and PageDown keys to 
+   //scroll the Track Panel left and right
+   if (event.GetKeyCode() == WXK_PAGEUP)
+      mTrackPanel->HandlePageUpKey();
+   
+   if (event.GetKeyCode() == WXK_PAGEDOWN)
+      mTrackPanel->HandlePageDownKey();
+
    // If a window has captured the keyboard, then allow it
    // first dibs at the event.  If it does an event.Skip(false)
    // then allow the event to process as normal, bypassing the

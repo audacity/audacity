@@ -1375,6 +1375,16 @@ void TrackPanel::HandleControlKey(bool down)
    HandleCursorForLastMouseEvent();
 }
 
+void TrackPanel::HandlePageUpKey()
+{
+   mListener->TP_ScrollWindow(mViewInfo->h + mViewInfo->screen);
+}
+
+void TrackPanel::HandlePageDownKey()
+{
+   mListener->TP_ScrollWindow(mViewInfo->h - mViewInfo->screen);
+}
+
 void TrackPanel::HandleCursorForLastMouseEvent()
 {
    HandleCursor(mLastMouseEvent);
