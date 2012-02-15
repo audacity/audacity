@@ -51,7 +51,7 @@ void LoadNyquistPlugins()
    }
 
    wxGetApp().FindFilesInPathList(wxT("*.ny"), pathList, files);
-#ifndef  __WXMSW__
+#ifndef  __WXGTK__
    wxGetApp().FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
 #endif
 
