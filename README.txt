@@ -4,28 +4,29 @@ Audacity(R): A Free, Cross-Platform Digital Audio Editor
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
 bug reports and patches at:
-  feedback@audacityteam.org
+  feedback@audacityteam.org .
 
 Personal support with Audacity is not provided by e-mail, but on our Forum:
-  http://audacityteam.org/forum/
+  http://audacityteam.org/forum/ .
 
-Audacity is copyright (c) 1999-2011 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2012 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
 The documentation for Audacity is licensed under the Creative Commons
 Attribution 3.0 license:
-http://creativecommons.org/licenses/by/3.0/legalcode
+http://creativecommons.org/licenses/by/3.0/legalcode .
 
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 1.3.14 Beta
+Version 2.0.0 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes in version 1.3.14 Beta 
+2.1 Changes since version 1.3.14 Beta 
+2.2 Summary of bug fixes and new features between 1.2.6 and 2.0.0
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -56,69 +57,86 @@ to http://www.gnu.org/copyleft/gpl.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes in version 1.3.14 Beta: 
+2.1 Changes since version 1.3.14 Beta 
 
 Bug fixes for:
 
- * Interface:
-   * Excessive delay occurred when typing into labels in long projects. 
-   * Last digit of TimeText controls could not be manipulated in some formats.
-   * (Windows, OS X) Play and Record shortcuts did not work after clicking in
-      Device Toolbar. 
-   * (OS X, Linux) Crash occurred if Toolbars were reset during playback or
-      recording. 
+ * Interface: (Windows) Removed a crash risk where shortcuts could be
+    used to record or import in one project while importing or 
+    exporting in another.    
 
  * Imports and Exports:
-   * MP2 files were not importable without FFmpeg library or an import rule. 
-   * Files that could only be imported using FFmpeg imported as noise with
-      no error message if FFmpeg was not available. 
-   * Files containing PCM audio but an incorrect extension (such as MP3) 
-      caused a freeze. 
+   * Fix a crash importing MP3 files that had duplicate metadata tags 
+      (this is a bug in current libsndfile which has been patched in 
+       Audacity; MP3 files mislabeled as WAV which have duplicate tags
+       will still crash Audacity on Linux if Audacity has been compiled 
+       against an affected version of system libsndfile).
+   * Fixed an issue where excessively high or corrupted sample values in
+      the audio could corrupt exports from the start of the problem for
+      the rest of the file, and could corrupt the rest of the project.  
+   * (Linux) Fixed Audacity could not be compiled against FFmpeg
+      0.7.x and 0.8.x. 
 
  * Effects and Analysis:
-   * An empty command could be added to a Chain which then displayed a 
-      Nyquist error message when run.  
-   * Plot Spectrum didn't preserve signal level if multiple tracks were 
-      analyzed.  
-
- * Other bug fixes:
-   * Audacity has been provisionally fixed so that it can no longer create 
-      block files longer than the sample format or project format allows, 
-      and can no longer delete these, which led to data loss. Any overlong 
-      blocks found are preserved but "orphaned", so will appear as silence.
-   * Orphan block files were wrongly reported if cutting or copying to 
-      the clipboard then reopening the project in the same session. 
-   * Fixed some crashes and incorrect movement of audio when dragging tracks.
-   * (Windows) Data loss is now prevented when encountering a corrupted
-      .aup file created in ANSI builds. 
-   * (Linux) Restore building if USE_PORTMIXER is not defined. 
+   * Fixed crash on launch when using "Ambisonic Decoders (PC)" VST  
+      plug-ins and other plug-ins that enable additional floating point
+      exceptions. 
+   * Fixed Plot Spectrum background could be transparent on some machines. 
+   * Bug fixes for Click Track, High Pass, Low Pass and Vocal Remover.  
+   * Chirp, Tone and Silence generators now remember their settings.
  
+ * Other miscellaneous bug fixes.  
+
+
 Changes and Improvements:
 
- * Normalize: Faster processing and improved interface. Left-right balance 
-    in unsplit stereo tracks is now preserved by default, with a checkbox 
-    option provided to process stereo channels independently.   
- * Spectrograms now allow window sizes up to 32768 and frequencies up to
-    half the sample rate (the maximum possible).
- * Mix and Render now preserves clip length by not rendering white space 
-    between time zero and first audio, and preserves audio before time zero.
-    To retain silence before the audio starts, generate silence after render.     
- * Grouped some Edit Menu items into "Remove Audio" and "Clip Boundaries".  
- * CleanSpeech Mode removed from Interface Preferences (it still runs if it
-    was enabled in a previous Audacity but can only be turned off there). 
- * (OS X) Added support for AudioUnit MusicEffects (but no MIDI support). 
- * (Linux) Set the per-user files directory per the program name set in 
-    configure.
- * (Linux) Changed the default location of the Audacity temporary directory
-    to be in /var/tmp not /tmp, so preserving the directory between reboots. 
+ * New Interface preference to show the track name in the display (this
+    is off by default). 
+ * Longer default Playback preference for effects preview and preview 
+    before cut. 
+ * Restored use of Page Up and Page Down to scroll horizontally.  
+
+
+2.2 Summary of bug fixes and new features between 1.2.6 and 2.0.0
+
+ * Bug Fixes:
+
+   * Labels now accept lower case "z".
+   * (Windows Vista/7) Pressing Stop after recording could cause a crash.
+   * (Mac OS X) Fixed shortcut keys activating when typing in file open or
+      save windows.
+   * (Mac OS X) Audacity 2.0.0 fully supports Unicode, which fixes an
+      issue where Audacity could not work with folders having non-English
+      characters in their name. 
+   * (Linux) Playing existing tracks while recording in mono could cause
+      recordings to be distorted or low-pitched. 
+
+ * New features: There are dozens of new features in 2.0.0, including: 
+
+   * Many effects significantly improved, especially Equalization, Noise
+      Removal and Normalize. Vocal Remover now included plus GVerb on 
+      Windows and Mac. VAMP analysis plug-ins now supported.  
+   * Improved label tracks with Sync-Lock Tracks feature in the Tracks Menu.
+      Multiple clips per track. Tracks and selections can be fully 
+      manipulated using the keyboard. Many more keyboard shortcuts. 
+   * New Device Toolbar to manage inputs and outputs. Timer Record feature.
+      New Mixer Board view with per-track VU meters. 
+   * Automatic Crash Recovery in the event of abnormal program termination.  
+   * Fast "On-Demand" import of WAV/AIFF files if read directly from source. 
+      FLAC now fully supported. Added support for optional FFmpeg library 
+      for import/export of AC3/M4A/WMA and import of audio from video files. 
+
+   Please visit http://audacity.sourceforge.net/about/features for a full
+   list of features in 2.0.0. You can click Help > Manual (in web browser) 
+   in the program to read more. 
 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 1.3.14 Beta:
+3. Known Issues in 2.0.0 Beta:
 
-For known issues at release of 1.3.14, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_1.3.14#known
+For known issues at release of 2.0.0, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.0#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -275,7 +293,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 1.3.14 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.0 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/
@@ -299,8 +317,8 @@ and header dependencies:
   ./configure -C
   make dep
 
-To compile on Windows using MSVC++, please follow the instructions found in
-compile.txt in the "win" subdirectory.
+To compile on Windows using MSVC++, please follow the instructions in
+win\compile.txt in the source code. 
 
 To compile using Xcode on Mac OS X, see the instructions in mac/compile.txt.
 
@@ -315,6 +333,63 @@ or e-mail us at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 1.3.14 Beta: 
+
+Bug fixes for:
+
+ * Interface:
+   * Excessive delay occurred when typing into labels in long projects. 
+   * Last digit of TimeText controls could not be manipulated in some formats.
+   * (Windows, OS X) Play and Record shortcuts did not work after clicking in
+      Device Toolbar. 
+   * (OS X, Linux) Crash occurred if Toolbars were reset during playback or
+      recording. 
+
+ * Imports and Exports:
+   * MP2 files were not importable without FFmpeg library or an import rule. 
+   * Files that could only be imported using FFmpeg imported as noise with
+      no error message if FFmpeg was not available. 
+   * Files containing PCM audio but an incorrect extension (such as MP3) 
+      caused a freeze. 
+
+ * Effects and Analysis:
+   * An empty command could be added to a Chain which then displayed a 
+      Nyquist error message when run.  
+   * Plot Spectrum didn't preserve signal level if multiple tracks were 
+      analyzed.  
+
+ * Other bug fixes:
+   * Audacity has been provisionally fixed so that it can no longer create 
+      block files longer than the sample format or project format allows, 
+      and can no longer delete these, which led to data loss. Any overlong 
+      blocks found are preserved but "orphaned", so will appear as silence.
+   * Orphan block files were wrongly reported if cutting or copying to 
+      the clipboard then reopening the project in the same session. 
+   * Fixed some crashes and incorrect movement of audio when dragging tracks.
+   * (Windows) Data loss is now prevented when encountering a corrupted
+      .aup file created in ANSI builds. 
+   * (Linux) Restore building if USE_PORTMIXER is not defined. 
+ 
+Changes and Improvements:
+
+ * Normalize: Faster processing and improved interface. Left-right balance 
+    in unsplit stereo tracks is now preserved by default, with a checkbox 
+    option provided to process stereo channels independently.   
+ * Spectrograms now allow window sizes up to 32768 and frequencies up to
+    half the sample rate (the maximum possible).
+ * Mix and Render now preserves clip length by not rendering white space 
+    between time zero and first audio, and preserves audio before time zero.
+    To retain silence before the audio starts, generate silence after render.     
+ * Grouped some Edit Menu items into "Remove Audio" and "Clip Boundaries".  
+ * CleanSpeech Mode removed from Interface Preferences (it still runs if it
+    was enabled in a previous Audacity but can only be turned off there). 
+ * (OS X) Added support for AudioUnit MusicEffects (but no MIDI support). 
+ * (Linux) Set the per-user files directory per the program name set in 
+    configure.
+ * (Linux) Changed the default location of the Audacity temporary directory
+    to be in /var/tmp not /tmp, so preserving the directory between reboots. 
+
 
 Changes in version 1.3.13 Beta: 
 
