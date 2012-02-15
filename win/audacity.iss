@@ -3,7 +3,7 @@
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-2.0-ANSI
+OutputBaseFilename=audacity-win-2.0
 SetupIconFile=audacity.ico
 
 WizardImageFile=audacity_InnoWizardImage.bmp
@@ -12,17 +12,17 @@ WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
 SolidCompression=yes
 
 ; installer-related directives
-AppName=Audacity 2.0 ANSI (unsupported) 
-AppVerName=Audacity 2.0 ANSI (unsupported)
+AppName=Audacity 2.0
+AppVerName=Audacity 2.0
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
 AppUpdatesURL=http://audacity.sourceforge.net
 ChangesAssociations=yes
 
-; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta 
+; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta (Unicode)
 ; For a stable release:   DefaultDirName={pf}\Audacity
-DefaultDirName={pf}\Audacity 2.0 ANSI (unsupported)
+DefaultDirName={pf}\Audacity
 
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
@@ -68,9 +68,10 @@ Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Add
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\Release\audacity.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\unicode release\audacity.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
+; //FIX-ME    Why mandatory? I thought we were avoiding that. And if mandatory, why not automatic, or in code repository (SVN)? "should be got" is a step one should not have to do.  
 Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
 
 Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
@@ -79,32 +80,29 @@ Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\win\Release\wxbase28_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\Release\wxbase28_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\Release\wxmsw28_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\Release\wxmsw28_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\Release\wxmsw28_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\unicode release\wxbase28u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\unicode release\wxbase28u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\unicode release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\unicode release\wxmsw28u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\unicode release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
 ; This is not an ideal solution, but should need the least tech support.
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
-; Subject to having resources available to do this, we build the executable with
-; VS8, so need the VS8 runtime DLLs.  
-Source: "C:\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\Microsoft.VC80.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\msvcp80.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT\msvcr80.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\win\Release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
-Source: "..\win\Release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: "..\win\Release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
-Source: "..\win\Release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
-
+Source: "..\win\unicode release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
+Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
+Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
 
 [Icons]
-Name: "{commonprograms}\Audacity 2.0 ANSI"; Filename: "{app}\audacity.exe"
-Name: "{userdesktop}\Audacity 2.0 ANSI"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
+Name: "{commonprograms}\Audacity 2.0"; Filename: "{app}\audacity.exe"
+Name: "{userdesktop}\Audacity 2.0"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
@@ -113,7 +111,6 @@ Type: files; Name: "{app}\audacity-1.2-help.htb"
 
 ; Get rid of previous versions of MSVC runtimes.
 Type: files; Name: "{app}\Microsoft.VC80.CRT.manifest"
-Type: files; Name: "{app}\msvcm80.dll"
 Type: files; Name: "{app}\msvcp80.dll"
 Type: files; Name: "{app}\msvcr80.dll"
 
@@ -128,6 +125,9 @@ Type: filesandordirs; Name: "{app}\help"
 Type: files; Name: "{commonprograms}\Audacity\audacity.exe"
 Type: files; Name: "{commonprograms}\Audacity\unins000.exe"
 Type: dirifempty; Name: "{commonprograms}\Audacity"
+
+;Get rid of previous uninstall item
+Type: files; Name: "{app}\unins*.*"
 
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
@@ -144,5 +144,5 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
 
 [Run]
-Filename: "{app}\audacity.exe"; Description: "Launch Audacity (ANSI, unsupported)"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\audacity.exe"; Description: "Launch Audacity"; Flags: nowait postinstall skipifsilent
 
