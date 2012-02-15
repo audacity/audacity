@@ -1272,6 +1272,21 @@ ProgressDialog::Show(bool show)
       if (!mDisable)
       {
          mDisable = new wxWindowDisabler(this);
+
+         #if defined(__WXMAC__)
+            // LL:  On the Mac, the parent windows get disabled, but they still respond
+            //      to the close button being clicked and the application quit menu item
+            //      is still enabled.  We do not want the parent window to be destroyed
+            //      while we're active, so we have to kludge around a bit to keep this
+            //      from happening.
+            WindowRef windowRef = (WindowRef) MacGetWindowRef();
+            SetWindowModality( windowRef, kWindowModalityAppModal, NULL ) ;
+            BeginAppModalStateForWindow(windowRef);
+
+            wxMenuBar *bar = wxStaticCast(wxGetTopLevelParent(wxTheApp->GetTopWindow()), wxFrame)->GetMenuBar();
+            bar->Enable(wxID_PREFERENCES, false);
+            bar->Enable(wxID_EXIT, false);
+         #endif
       }
    }
 
