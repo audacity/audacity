@@ -129,6 +129,15 @@ Type: dirifempty; Name: "{commonprograms}\Audacity"
 ;Get rid of previous uninstall item
 Type: files; Name: "{app}\unins*.*"
 
+; Get rid of no longer used test.lsp.
+Type: files; Name: "{app}\Nyquist\test.lsp"
+
+; Get rid of specific LADSPA plug-ins that we now ship with different names.
+Type: files; Name: "{app}\Plug-Ins\GVerb.dll"
+Type: files; Name: "{app}\Plug-Ins\Hard Limiter.dll"
+Type: files; Name: "{app}\Plug-Ins\sc4.dll"
+
+
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Leaving this one commented out example of the old way.
