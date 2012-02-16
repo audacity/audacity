@@ -12,8 +12,8 @@ WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
 SolidCompression=yes
 
 ; installer-related directives
-AppName=Audacity 2.0 ANSI (unsupported) 
-AppVerName=Audacity 2.0 ANSI (unsupported)
+AppName=Audacity 2.0 ANSI
+AppVerName=Audacity 2.0 ANSI
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -22,7 +22,7 @@ ChangesAssociations=yes
 
 ; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta 
 ; For a stable release:   DefaultDirName={pf}\Audacity
-DefaultDirName={pf}\Audacity 2.0 ANSI (unsupported)
+DefaultDirName={pf}\Audacity 2.0 ANSI
 
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
@@ -156,5 +156,5 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
 
 [Run]
-Filename: "{app}\audacity.exe"; Description: "Launch Audacity (ANSI, unsupported)"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\audacity.exe"; Description: "Launch Audacity 2.0 ANSI"; Flags: nowait postinstall skipifsilent
 
