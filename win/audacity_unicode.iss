@@ -12,7 +12,7 @@ WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
 SolidCompression=yes
 
 ; installer-related directives
-AppName=Audacity 2.0
+AppName=Audacity
 AppVerName=Audacity 2.0
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
@@ -20,7 +20,7 @@ AppSupportURL=http://audacity.sourceforge.net
 AppUpdatesURL=http://audacity.sourceforge.net
 ChangesAssociations=yes
 
-; For a beta release, e.g.:   DefaultDirName={pf}\Audacity 1.3 Beta (Unicode)
+; For a beta release, e.g.:   DefaultDirName={pf}\Audacity Beta
 ; For a stable release:   DefaultDirName={pf}\Audacity
 DefaultDirName={pf}\Audacity
 
@@ -71,7 +71,6 @@ Source: "..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\unicode release\audacity.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
-; //FIX-ME    Why mandatory? I thought we were avoiding that. And if mandatory, why not automatic, or in code repository (SVN)? "should be got" is a step one should not have to do.  
 Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
 
 Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
@@ -101,8 +100,8 @@ Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ig
 Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
 
 [Icons]
-Name: "{commonprograms}\Audacity 2.0"; Filename: "{app}\audacity.exe"
-Name: "{userdesktop}\Audacity 2.0"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
+Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
+Name: "{userdesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
