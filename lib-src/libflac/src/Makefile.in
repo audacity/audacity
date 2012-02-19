@@ -220,6 +220,7 @@ target_alias = @target_alias@
 
 SUBDIRS = \
 	libFLAC \
+	flac \
 	share \
 	$(CPPLIBS_DIRS)
 
@@ -240,7 +241,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive pdf-recursive \
 	installdirs-recursive install-recursive uninstall-recursive \
 	check-recursive installcheck-recursive
 DIST_COMMON = $(srcdir)/Makefile.in Makefile.am
-DIST_SUBDIRS = libFLAC share libFLAC++
+DIST_SUBDIRS = libFLAC share libFLAC++ flac
 all: all-recursive
 
 .SUFFIXES:
