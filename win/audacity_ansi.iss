@@ -6,6 +6,11 @@
 ;   Vaughan Johnson, Leland Lucius, Martyn Shaw, Richard Ash, & others
 ;
 
+[UninstallRun]
+; Uninstall prior installations.
+Filename: "{app}\unins*.*"; 
+
+
 [Setup]
 ; compiler-related directives
 OutputBaseFilename=audacity-win-2.0-ansi
