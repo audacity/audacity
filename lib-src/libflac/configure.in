@@ -323,7 +323,6 @@ AC_CONFIG_FILES([ \
 	src/libFLAC/include/protected/Makefile \
 	src/libFLAC++/Makefile \
 	src/libFLAC++/flac++.pc \
-	src/flac/Makefile \
 	src/share/Makefile \
 	include/Makefile \
 	include/FLAC/Makefile \

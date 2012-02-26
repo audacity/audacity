@@ -25,7 +25,6 @@ endif
 
 SUBDIRS = \
 	libFLAC \
-	flac \
 	share \
 	$(CPPLIBS_DIRS)
 
