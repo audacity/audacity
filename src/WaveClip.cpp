@@ -1255,7 +1255,7 @@ bool WaveClip::Paste(double t0, WaveClip* other)
    if (mSequence->Paste(s0, pastedClip->mSequence))
    {
       MarkChanged();
-      mEnvelope->Paste((double)s0/mRate, pastedClip->mEnvelope);
+      mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope);
       mEnvelope->RemoveUnneededPoints();
       OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
       
