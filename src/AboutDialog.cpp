@@ -194,7 +194,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    
 
    wxString par1Str = _(
-     "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and Linux (and other Unix-like systems).");
+     "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    #if IS_BETA // Is this beta or not?
    wxString par2Str = _(
