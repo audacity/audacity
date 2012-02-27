@@ -1081,6 +1081,12 @@ void TimeTextCtrl::OnCaptureKey(wxCommandEvent &event)
 
 void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
 {
+   if (mDigits.GetCount() == 0)
+   {
+      mFocusedDigit = 0;
+      return;
+   }
+
    event.Skip(false);
    int keyCode = event.GetKeyCode();
    int digit = mFocusedDigit;
@@ -1180,6 +1186,11 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
 void TimeTextCtrl::SetFieldFocus(int digit)
 {
 #if wxUSE_ACCESSIBILITY
+   if (mDigits.GetCount() == 0)
+   {
+      mFocusedDigit = 0;
+      return;
+   }
    mFocusedDigit = digit;
    mLastField = mDigits[mFocusedDigit].field + 1;
 
@@ -1549,7 +1560,10 @@ wxAccStatus TimeTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 {
    rect = mCtrl->GetRect();
 
-   if (elementId != wxACC_SELF) {
+   if ((elementId != wxACC_SELF) && 
+         // We subtract 1, below, and need to avoid neg index to mDigits.
+         (elementId > 0)) 
+   {
 //      rect.x += mCtrl->mFields[elementId - 1].fieldX;
 //      rect.width =  mCtrl->mFields[elementId - 1].fieldW;
         rect = mCtrl->mDigits[elementId - 1].digitBox;
@@ -1572,7 +1586,11 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
    // Return the entire time string including the control label
    // when the requested child ID is wxACC_SELF.  (Mainly when
    // the control gets the focus.)
-   if (childId == wxACC_SELF) {
+   if ((childId == wxACC_SELF) || 
+         // We subtract 1 from childId in the other cases below, and 
+         // need to avoid neg index to mDigits, so funnel into this clause.
+         (childId < 1)) 
+   {
       *name = mCtrl->GetName();
       if (name->IsEmpty()) {
          *name = mCtrl->GetLabel();
@@ -1623,7 +1641,8 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
    }
    // The user has updated the value of a field, so report the field's
    // value only.
-   else {
+   else if (field > 0)
+   {
       *name = mFields[field - 1].str;
    }
 
