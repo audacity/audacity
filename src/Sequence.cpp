@@ -1795,9 +1795,14 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr)
    bool bError = false;
 
    for (i = 0; i < numBlocks; i++) {
-      if (pos != mBlock->Item(i)->start)
+      SeqBlock* pSeqBlock = mBlock->Item(i);
+      if (pos != pSeqBlock->start)
          bError = true;
-      pos += mBlock->Item(i)->f->GetLength();
+
+      if (pSeqBlock->f)
+         pos += mBlock->Item(i)->f->GetLength();
+      else
+         bError = true;
    }
    if (pos != mNumSamples)
       bError = true;
@@ -1820,18 +1825,26 @@ void Sequence::DebugPrintf(wxString *dest)
    int pos = 0;
 
    for (i = 0; i < mBlock->GetCount(); i++) {
+      SeqBlock* pSeqBlock = mBlock->Item(i);
       *dest += wxString::Format
-         (wxT("   Block %3d: start %8d len %8d refs %d %s"),
+         (wxT("   Block %3d: start %8d, len %8d, refs %d, "),
           i,
-          mBlock->Item(i)->start,
-          mBlock->Item(i)->f->GetLength(),
-          mDirManager->GetRefCount(mBlock->Item(i)->f),
-          mBlock->Item(i)->f->GetFileName().GetFullName().c_str());
-      if (pos != mBlock->Item(i)->start)
+          pSeqBlock->start,
+          pSeqBlock->f ? pSeqBlock->f->GetLength() : 0,
+          pSeqBlock->f ? mDirManager->GetRefCount(pSeqBlock->f) : 0);
+
+      if (pSeqBlock->f)
+         *dest += pSeqBlock->f->GetFileName().GetFullName();
+      else
+         *dest += wxT("<missing block file>");
+
+      if ((pos != pSeqBlock->start) || !pSeqBlock->f)
          *dest += wxT("      ERROR\n");
       else
          *dest += wxT("\n");
-      pos += mBlock->Item(i)->f->GetLength();
+
+      if (pSeqBlock->f)
+         pos += pSeqBlock->f->GetLength();
    }
    if (pos != mNumSamples)
       *dest += wxString::Format
