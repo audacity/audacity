@@ -229,12 +229,16 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
 
    if (bSuccess)
    {
-      // Invalidate all the old block files.
+      // Invalidate all the old, non-aliased block files.
+      // Aliased files will be converted at save, per comment above.
       for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++) 
       {
          SeqBlock* pOldSeqBlock = mBlock->Item(i);
-         mDirManager->Deref(pOldSeqBlock->f);
-         pOldSeqBlock->f = NULL; //vvvvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
+         if (!pOldSeqBlock->f->IsAlias())
+         {
+            mDirManager->Deref(pOldSeqBlock->f);
+            pOldSeqBlock->f = NULL; //vvvvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
+         }
       }
       delete mBlock;
 
