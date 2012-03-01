@@ -247,6 +247,15 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    }
    else
    {
+      /* vvvvv We *should do the following, but TrackPanel::OnFormatChange() doesn't actually check the conversion results, 
+         it just assumes the conversion was successful. 
+         TODO: Uncomment this section when TrackPanel::OnFormatChange() is upgraded to check the results.
+
+         // Conversion failed. Revert these member vars.
+         mSampleFormat = oldFormat;
+         mMaxSamples = oldMaxSamples;
+         */
+
       delete pNewBlockArray; // Failed. Throw out the scratch array. 
       *pbChanged = false;  // Revert overall change flag, in case we had some partial success in the loop.
    }
@@ -1034,7 +1043,10 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
       SeqBlock *bb = mBlock->Item(b);
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
-      if (bb->f->GetLength() > mMaxSamples)
+      // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,  
+      // mMaxSample gets changed to match the format, but the number of samples in the aliased file 
+      // has not changed (because sample format conversion was not actually done in the aliased file.
+      if (!bb->f->IsAlias() && (bb->f->GetLength() > mMaxSamples))
       {
          wxString sMsg = 
             wxString::Format(
