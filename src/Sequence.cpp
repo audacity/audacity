@@ -177,54 +177,42 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    {
       SeqBlock* pOldSeqBlock = mBlock->Item(i);
       BlockFile* pOldBlockFile = pOldSeqBlock->f;
-
-      if (pOldBlockFile->IsAlias()) 
+      
+      sampleCount len = pOldSeqBlock->f->GetLength();
+      samplePtr bufferOld = NewSamples(len, oldFormat);
+      samplePtr bufferNew = NewSamples(len, mSampleFormat);
+      
+      bSuccess = (pOldBlockFile->ReadData(bufferOld, oldFormat, 0, len) > 0);
+      if (!bSuccess)
+         break;
+      
+      CopySamples(bufferOld, oldFormat, bufferNew, mSampleFormat, len);
+      
+      // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451, 
+      // using Blockify, allows (len < mMinSamples).
+      // This will happen consistently when going from more bytes per sample to fewer...
+      // This will create a block that's smaller than mMinSamples, which 
+      // shouldn't be allowed, but we agreed it's okay for now.
+      //vvvvv ANSWER-ME: Does this cause any bugs, or failures on write, elsewhere?
+      //    If so, need to special-case (len < mMinSamples) and start combining data 
+      //    from the old blocks... Oh no!
+      
+      // Using Blockify will handle the cases where len > the new mMaxSamples. Previous code did not.
+      BlockArray* pSplitBlockArray = Blockify(bufferNew, len);
+      bSuccess = (pSplitBlockArray->GetCount() > 0);
+      if (bSuccess)
       {
-         // No conversion of aliased data. 
-         //v Should the user be alerted, as we're not actually converting the aliased file? 
-         //   James (2011-12-01, offlist) believes this is okay because we are assuring 
-         //   the user we'll do the format conversion if we turn this into a non-aliased block.
-         //   TODO: Confirm that.
-         pNewBlockArray->Add(pOldSeqBlock);
-      }
-      else
-      {
-         sampleCount len = pOldSeqBlock->f->GetLength();
-         samplePtr bufferOld = NewSamples(len, oldFormat);
-         samplePtr bufferNew = NewSamples(len, mSampleFormat);
-
-         bSuccess = (pOldBlockFile->ReadData(bufferOld, oldFormat, 0, len) > 0);
-         if (!bSuccess)
-            break;
-
-         CopySamples(bufferOld, oldFormat, bufferNew, mSampleFormat, len);
-
-         // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451, 
-         // using Blockify, allows (len < mMinSamples).
-         // This will happen consistently when going from more bytes per sample to fewer...
-         // This will create a block that's smaller than mMinSamples, which 
-         // shouldn't be allowed, but we agreed it's okay for now.
-         //vvvvv ANSWER-ME: Does this cause any bugs, or failures on write, elsewhere?
-         //    If so, need to special-case (len < mMinSamples) and start combining data 
-         //    from the old blocks... Oh no!
-
-         // Using Blockify will handle the cases where len > the new mMaxSamples. Previous code did not.
-         BlockArray* pSplitBlockArray = Blockify(bufferNew, len);
-         bSuccess = (pSplitBlockArray->GetCount() > 0);
-         if (bSuccess)
+         for (size_t j = 0; j < pSplitBlockArray->GetCount(); j++)
          {
-            for (size_t j = 0; j < pSplitBlockArray->GetCount(); j++)
-            {
-               pSplitBlockArray->Item(j)->start += mBlock->Item(i)->start;
-               pNewBlockArray->Add(pSplitBlockArray->Item(j));
-            }
-            *pbChanged = true;
+            pSplitBlockArray->Item(j)->start += mBlock->Item(i)->start;
+            pNewBlockArray->Add(pSplitBlockArray->Item(j));
          }
-         delete pSplitBlockArray;
-
-         DeleteSamples(bufferNew);
-         DeleteSamples(bufferOld);
+         *pbChanged = true;
       }
+      delete pSplitBlockArray;
+      
+      DeleteSamples(bufferNew);
+      DeleteSamples(bufferOld);
    }
 
    if (bSuccess)
@@ -234,11 +222,8 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++) 
       {
          SeqBlock* pOldSeqBlock = mBlock->Item(i);
-         if (!pOldSeqBlock->f->IsAlias())
-         {
-            mDirManager->Deref(pOldSeqBlock->f);
-            pOldSeqBlock->f = NULL; //vvvvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
-         }
+         mDirManager->Deref(pOldSeqBlock->f);
+         pOldSeqBlock->f = NULL; //vvvvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
       }
       delete mBlock;
 
