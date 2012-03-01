@@ -435,7 +435,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       blocklen = (mBlock->Item(b0)->start + mBlock->Item(b0)->f->GetLength() - s0);
       if (blocklen > (s1 - s0))
          blocklen = s1 - s0;
-      wxASSERT(blocklen <= mMaxSamples); // Vaughan, 2011-10-19
+      wxASSERT(mBlock->Item(b0)->f->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       Get(buffer, mSampleFormat, s0, blocklen);
 
       (*dest)->Append(buffer, mSampleFormat, blocklen);
@@ -451,7 +451,7 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
    // Do the last block
    if (b1 > b0 && b1 < numBlocks) {
       blocklen = (s1 - mBlock->Item(b1)->start);
-      wxASSERT(blocklen <= mMaxSamples); // Vaughan, 2011-10-19
+      wxASSERT(mBlock->Item(b0)->f->IsAlias() || (blocklen <= mMaxSamples)); // Vaughan, 2012-02-29
       Get(buffer, mSampleFormat, mBlock->Item(b1)->start, blocklen);
       (*dest)->Append(buffer, mSampleFormat, blocklen);
    }
