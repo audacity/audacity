@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-01-23 07:46-0000\n"
+"PO-Revision-Date: 2012-03-02 16:21-0000\n"
 "Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
@@ -28,16 +28,16 @@ msgid "OK... Audacious!"
 msgstr "Гаразд… Круто!"
 
 #: AboutDialog.cpp:197
-msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is available for Windows 98 and later, Mac OS X, Linux and other Unix-like systems. For Mac OS 9, use version 1.0.0."
-msgstr "Audacity — вільна програма, створена командою добровольців, <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. Ми вдячні <a href=\"http://sourceforge.net\">SourceForge.net</a> та <a href=\"http://code.google.com\">Google Code</a> за надання майданчика для нашого проекту. Audacity можна користуватися у Windows 98 та пізніших версіях, Mac OS X, Linux та інших подібних до Unix системах. Якщо ви працюєте у Mac OS 9, скористайтеся версією 1.0.0."
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "Audacity — вільна програма, створена командою добровольців, <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. Ми вдячні <a href=\"http://sourceforge.net\">SourceForge.net</a> та <a href=\"http://code.google.com\">Google Code</a> за надання майданчика для нашого проекту. Audacity <a href=\"http://audacity.sourceforge.net/download/\">можна користуватися</a> у Windows, Mac OS X, GNU/Linux та інших подібних до Unix системах."
 
 #: AboutDialog.cpp:201
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr "Це — тестова версія програми. Вона може містити помилки та нереалізовану функціональність. Продуктивність нашої роботи залежить від ваших відгуків, тому вам слід надсилати ваші повідомлення про усі знайдені помилки та запити на реалізацію функціональності за адресою <a href=\"mailto:feedback@audacityteam.org\">для відгуків</a>. Щоб отримати додаткові відомості щодо програми, переглянути підказки і настанови, ви можете відвідати нашу <a href=\"http://wiki.audacityteam.org/\">Вікі</a> або наш <a href=\"http://forum.audacityteam.org/\">форум</a>."
 
 #: AboutDialog.cpp:204
-msgid "This is a stable, completed release of the program. However, if you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-msgstr "Це — стабільна, завершена версія Audacity. Проте, якщо ви знайдете помилку або маєте пропозицію надішліть ваше повідомлення за адресою <a href=\"mailto:feedback@audacityteam.org\">для відгуків</a>. Додаткові відомості, підказки і настанови можна знайти на нашій <a href=\"http://wiki.audacityteam.org/\">Вікі</a> або на нашому <a href=\"http://forum.audacityteam.org/\">форумі</a>."
+msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
+msgstr "Якщо ви знайдете помилку або у вас виникне пропозиція, надішліть ваше повідомлення за адресою <a href=\"mailto:feedback@audacityteam.org\">для відгуків</a>. Додаткові відомості, підказки і настанови можна знайти на нашій <a href=\"http://wiki.audacityteam.org/\">Вікі</a> або на нашому <a href=\"http://forum.audacityteam.org/\">форумі</a>."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. in the credits in the About Audacity window.  Use this to add
@@ -1489,11 +1489,11 @@ msgstr "Курсор: %.4f сек (%d Гц) (%s) = %f,    Пік: %.4f сек (%
 
 #: FreqWindow.cpp:1000
 msgid "Drawing Spectrum"
-msgstr "Креслення спектру"
+msgstr "Креслення спектра"
 
-#: FreqWindow.cpp:1000
-msgid "FreqWindow"
-msgstr "Вікно частоти"
+#: FreqWindow.cpp:991
+msgid "Plot Spectrum"
+msgstr "Побудова спектра"
 
 #: FreqWindow.cpp:1216
 msgid "spectrum.txt"
@@ -2450,7 +2450,7 @@ msgstr "Контрастність…"
 
 #: Menus.cpp:948
 msgid "Plot Spectrum..."
-msgstr "Побудувати графік спектру…"
+msgstr "Побудувати графік спектра…"
 
 #: Menus.cpp:1015
 #: Menus.cpp:1018
@@ -3615,6 +3615,10 @@ msgstr "Зберегти промову як:"
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Файл звуку Windows PCM (*.wav)|*.wav"
 
+#: Project.cpp:3519
+msgid "<untitled>"
+msgstr "<без назви>"
+
 #: Project.cpp:3512
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
@@ -3633,9 +3637,10 @@ msgstr ""
 "Якщо ви бажаєте зберегти результат роботи у файл, який підтримується іншими\n"
 "програмами, скористайтеся пунктом меню «Експорт»."
 
-#: Project.cpp:3513
-msgid "Save Compressed Project As..."
-msgstr "Зберегти стиснений проект як…"
+#: Project.cpp:3525
+#, c-format
+msgid "Save Compressed Project \"%s\" As..."
+msgstr "Зберегти стиснений проект «%s» як…"
 
 #: Project.cpp:3518
 msgid ""
@@ -3651,9 +3656,10 @@ msgstr ""
 "\n"
 "Для того, щоб створити звуковий файл, який можна буде використовувати у інших програмах, скористайтеся пунктом меню «Файл > Експорт».\n"
 
-#: Project.cpp:3519
-msgid "Save Project As..."
-msgstr "Зберегти проект як…"
+#: Project.cpp:3531
+#, c-format
+msgid "Save Project \"%s\" As..."
+msgstr "Зберегти проект «%s» як…"
 
 #: Project.cpp:3548
 msgid ""
@@ -6254,7 +6260,7 @@ msgstr "Багатосмуговий"
 
 #: effects/LoadEffects.cpp:149
 msgid "Spectral Processor"
-msgstr "Обробка спектру"
+msgstr "Обробка спектра"
 
 #: effects/LoadEffects.cpp:151
 msgid "Pitch Shifter"
@@ -11137,15 +11143,3 @@ msgstr "Помилка під час закриття файла"
 msgid "Error Writing to File"
 msgstr "Помилка під час спроби запису файла"
 
-#~ msgid ""
-#~ "Replace missing audio with silence (permanent immediately). This will "
-#~ "save the project in its current state, unless you \"Close project "
-#~ "immediately\" on further error alerts."
-#~ msgstr ""
-#~ "Замінити звукові фрагменти, яких не вистачає, тишею (негайно і "
-#~ "остаточно). Проект буде збережено у поточному стані, якщо ви не натиснете "
-#~ "кнопку «Закрити проект негайно» у відповідь на подальші сповіщення про "
-#~ "помилки."
-
-#~ msgid "Split at labels"
-#~ msgstr "Розділити за позначками"
