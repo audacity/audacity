@@ -453,7 +453,7 @@ void Effect::Preview()
    CountWaveTracks();
 
    // Reset times
-   t0 = 0.0;
+   t0 = mixLeft->GetStartTime();
    t1 = mixLeft->GetEndTime();
 
    double t0save = mT0;
@@ -507,7 +507,7 @@ void Effect::Preview()
 
          while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
             ::wxMilliSleep(100);
-            previewing = mProgress->Update(gAudioIO->GetStreamTime(), t1);
+            previewing = mProgress->Update(gAudioIO->GetStreamTime() - t0, t1 - t0);
          }
          gAudioIO->StopStream();
 
