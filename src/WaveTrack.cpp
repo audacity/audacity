@@ -1852,11 +1852,9 @@ void WaveTrack::MoveClipToTrack(WaveClip *clip, WaveTrack* dest)
 {
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext()) {
       if (it->GetData() == clip) {
-         WaveClip* clip = it->GetData(); // ANSWER-ME: Why declare and assign this to another variable, when we just verified the 'clip' parameter is the right value?!
+         WaveClip* clip = it->GetData(); //vvv ANSWER-ME: Why declare and assign this to another variable, when we just verified the 'clip' parameter is the right value?!
          mClips.DeleteNode(it);
          dest->mClips.Append(clip);
-         clip->Resample(dest->GetRate());
-         clip->MarkChanged();
          return; // JKC iterator is now 'defunct' so better return straight away.
       }
    }

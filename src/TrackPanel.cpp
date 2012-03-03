@@ -2553,6 +2553,17 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
       DoSlide(event);
 
    if (event.LeftUp()) {
+      if (mDidSlideVertically && mCapturedTrack) 
+         // Now that user has dropped the clip into a different track, 
+         // make sure the sample rate matches the destination track.
+         for (size_t i = 0; i < mCapturedClipArray.GetCount(); i++) 
+            if (mCapturedTrack->GetKind() == Track::Wave) // Should always be true here, but make sure.
+            {
+               WaveTrack* pWaveTrack = (WaveTrack*)mCapturedTrack;
+               mCapturedClipArray[i].clip->Resample(pWaveTrack->GetRate());
+               mCapturedClipArray[i].clip->MarkChanged();
+            }
+
       SetCapturedTrack( NULL );
 
       if (mSnapManager) {
