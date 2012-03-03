@@ -49,7 +49,7 @@ License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program (in a file called LICENSE.txt); if not, go
-to http://www.gnu.org/copyleft/gpl.html or write to
+to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
   Free Software Foundation, Inc.
   59 Temple Place - Suite 330
@@ -61,12 +61,17 @@ to http://www.gnu.org/copyleft/gpl.html or write to
 
 Bug fixes for:
 
- * Interface: (Windows) Removed a crash risk where shortcuts could be
-    used to record or import in one project while importing or 
-    exporting in another.    
+ * Interface:
+   * Fixed playback speed and synchronization problems when dragging  
+      clips or tracks between tracks having different sample rates.
+   * (Windows) Removed a crash risk where shortcuts could be
+      used to record or import in one project while importing or 
+      exporting in another.    
 
  * Imports and Exports:
-   * Fix a crash importing MP3 files that had duplicate metadata tags 
+   * Fixed crashes when changing the sample format of read-directly WAV
+      or AIFF files using the Track Drop-Down Menu. 
+   * Fixed a crash importing MP3 files that had duplicate metadata tags 
       (this is a bug in current libsndfile which has been patched in 
        Audacity; MP3 files mislabeled as WAV which have duplicate tags
        will still crash Audacity on Linux if Audacity has been compiled 
