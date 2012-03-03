@@ -1242,14 +1242,9 @@ bool WaveClip::Paste(double t0, WaveClip* other)
    sampleCount s0;
    TimeToSamplesClip(t0, &s0);
 
-   // Check whether sample formats match.
+   // Force sample formats to match.
    if (pastedClip->mSequence->GetSampleFormat() != mSequence->GetSampleFormat())
-   {
-      // In debug mode, fail because that's probably a bad call to this method.
-      // In release, adjust the source to match the destination, so we don't do a bad paste.
-      wxASSERT(false);
       pastedClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
-   }
 
    bool result = false;
    if (mSequence->Paste(s0, pastedClip->mSequence))

@@ -317,7 +317,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // Move a clip into a new track. This will remove the clip
    // in this cliplist and add it to the cliplist of the
    // other clip. No fancy additional stuff is done.
-   void MoveClipToTrack(int clipIndex, WaveTrack* dest);
+   // unused   void MoveClipToTrack(int clipIndex, WaveTrack* dest);
    void MoveClipToTrack(WaveClip *clip, WaveTrack* dest);
    
    // Remove the clip from the track and return a pointer to it.
