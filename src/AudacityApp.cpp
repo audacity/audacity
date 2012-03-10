@@ -406,7 +406,6 @@ void SaveWindowSize()
  * Happily we can avoid the hack, as we only need some of the headers, not
  * the full GTK headers
  */
-#include <glib/gtypes.h>
 #include <glib-object.h>
 
 typedef struct _GnomeProgram GnomeProgram;
