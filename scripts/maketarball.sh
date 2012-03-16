@@ -3,7 +3,7 @@
 # Copyright 2003, 2004, 2005 Dominic Mazzoni and Matt Brubeck
 # Distributed under the GNU General Public License 2.0.
 # See the file LICENSE.txt for details.
-# Re-written in Bash by Richard Ash 2006
+# Re-written in Bash by Richard Ash 2006 - 2012
 
 function myrmrvf {
 	# a replacement for rm -rvf that has it's output controlled
@@ -105,16 +105,6 @@ function cleanfulltree {
 	myfindrm $1 aclocal.m4
 	printf "Done\n"
 
-	printf "removing executable bit from source files... ";
-	if [ $1 -eq 1 ]; then
-		find . -name '*.cpp' -executable -execdir chmod ugo-x '{}' ';' -print
-		find . -name '*.h' -executable -execdir chmod ugo-x '{}' ';' -print
-	else
-		find . -name '*.cpp' -executable -execdir chmod ugo-x '{}' ';'
-		find . -name '*.h' -executable -execdir chmod ugo-x '{}' ';'
-	fi
-	printf "Done\n"
-
 	printf "removing orphaned symlinks in lib-src/ ... ";
 	myrmvf $1 lib-src/*.a 
 	printf "Done\n"
@@ -125,8 +115,8 @@ function cleanfulltree {
 
 	printf "removing unused libraries from SVN tree ..."
 	myrmrvf $1 lib-src/iAVC lib-src/id3lib ;
-	myrmrvf $1 lib-src/portaudio lib-src/portburn lib-src/rtaudio; 
-	myrmrvf $1 lib-src/wave++ lib-src/taglib;
+	myrmrvf $1 lib-src/portburn lib-src/rtaudio; 
+	myrmrvf $1 lib-src/taglib;
 	printf "Done\n"
 }
 
