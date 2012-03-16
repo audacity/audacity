@@ -17,18 +17,6 @@ Residual things still in the file from 2003 but not yet done:
   be the only way to do it, since not everyone has a
   mousewheel.  When should it be used, then?
 
-
-* Automatic Vertical resizing of tracks.
-
-  I think that tracks should expand proportionally (vertically) on
-  a resize.
-  I think that when you open a project, auto-vertical-track-resizing 
-  should be on by default.  It only goes off if you specifically 
-  drag the _bottommost_ track and make it bigger or smaller.  (Then, 
-  how should you turn it back on again?) 
-
-* Add an Audio menu with items like Play, Stop, Record, Pause,
-  Loop, etc.?
 * When a selection is readjusted by grab&drag, the release of the
 button at outside of the track panel could mean "undo".
 Similar for all other operations.
@@ -62,19 +50,6 @@ Then various tools would change function of some of the mouse
 buttons. Without the multitool the Audacity is very annoying to
 use, IMHO.   JS]
 
-* When drag selecting the tracks out of track window, the window should
-scroll and reveal more tracks.
-
-
-* Maybe post 1.2 we also need multiple projects in the same window
-feature: either by (i) subwindows inside the main window, a common
-toolbars, (ii) no subwindows but the project is technically behind
-a pointer which can be changed from a "projects" menu, (iii) different
-projects are in tabbed windows, as commonly used in 3D graphics
-software. Tabbed windows could also contain preferences/controls for
-Audacity and for all plug-ins. That requires a way to build the tab
-pages on-the-fly. Certainly post-1.2 stuff.
-
 * More built in code for automated testing, not sure exactly what,
 ideas for how to do this would be welcome.
 [ It is more like continuous research job. Leave to post-1.2 version. ]
@@ -87,11 +62,6 @@ documentation much easier.
 via a named pipe, say. Audacity would then have a way to send one
 command only and a way to send commands repeatedly (n times per
 minute). ]
-
-* Half a dozen nyquist scripts, annotated and explained in the
-Audacity documentation.  Nyquist looks an incredibly powerful
-feature, but I (JKC) haven't a clue how to do some of the simplest 
-things with it.
 
 * Track label could be changed to look like what is in commercial
 multitrack software. More compact, that is.  JS.
@@ -226,8 +196,4 @@ Future:
 - visualization window: VU meters, equalizer, continuous waveform, oscilloscope
 - Mouse scroller should vertically scroll project (Um, isn't it assigned
   to zoom-in/-out now?)
-- User-adjustable fonts so I don't have to recompile just to get the
-  ruler looking decent and the track label fitting.
-
-arch-tag: 391c81dc-d7dc-48ea-9aec-98f4c9728be7
 
