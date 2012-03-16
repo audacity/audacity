@@ -161,6 +161,10 @@ function slimtree {
 	myrmvf $1 plug-ins/analyze.ny plug-ins/fadein.ny plug-ins/fadeout.ny
 	myrmvf $1 plug-ins/undcbias.ny
 	printf "Done\n"
+	
+	printf "Removing developer scripts not needed to build audacity ..."
+	myrmrvf $1 scripts/mw2html_audacity 
+	printf "Done\n"
 }
 
 # fix Windows being fussy about line endings
