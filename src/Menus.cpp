@@ -193,10 +193,12 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("&File"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
+   /*i18n-hint: "New" is an action (verb) to create a new project*/
    c->AddItem(wxT("New"), _("&New"), FN(OnNew), wxT("Ctrl+N"),
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
 
+   /*i18n-hint: (verb)*/
    c->AddItem(wxT("Open"), _("&Open..."), FN(OnOpen), wxT("Ctrl+O"),
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
