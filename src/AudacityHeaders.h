@@ -72,3 +72,18 @@
 #include "widgets/ProgressDialog.h"
 #include "widgets/Ruler.h"
 
+//#ifdef __WXMSW__
+// Enable this to diagnose memory leaks too!
+//    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
+//#endif
+
+#if 0
+#define _DEBUG
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+#endif

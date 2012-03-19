@@ -101,12 +101,14 @@ It handles initialization and termination by subclassing wxApp.
 #include "effects/ScoreAlignDialog.h"
 #endif
 
+#if 0
 #ifdef _DEBUG
     #ifdef _MSC_VER
         #undef THIS_FILE
         static char*THIS_FILE= __FILE__;
         #define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
     #endif
+#endif
 #endif
 
 // Windows specific linker control...only needed once so
@@ -1005,12 +1007,16 @@ bool AudacityApp::OnInit()
    }
 #endif
 
+   // JKC: On windows, we only want a logger in release builds.
+   mLogger=NULL;
    #ifndef __WXMAC__
-      mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
-      mLogger->SetActiveTarget(mLogger);
-      mLogger->EnableLogging(true);
-      mLogger->SetLogLevel(wxLOG_Max);
-      wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
+      #ifndef _DEBUG
+         mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
+         mLogger->SetActiveTarget(mLogger);
+         mLogger->EnableLogging(true);
+         mLogger->SetLogLevel(wxLOG_Max);
+         wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
+      #endif
    #endif
 
    // Unused strings that we want to be translated, even though
