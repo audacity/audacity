@@ -99,6 +99,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
                                      mManager->GetCurrentState() - 1,
                                      0);
             S.AddWindow(mLevels);
+            /* i18n-hint: (verb)*/
             mDiscard = S.Id(ID_DISCARD).AddButton(_("&Discard"));
          }
          S.EndMultiColumn();

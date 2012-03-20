@@ -1164,6 +1164,7 @@ void AudacityProject::SetProjectTitle()
    if (mIsRecovered)
    {
       name += wxT(" ");
+      /* i18n-hint: E.g this is recovered audio that had been lost.*/
       name += _("(Recovered)");
    }
 
@@ -2125,6 +2126,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
          all;
 #endif
 
+   /* i18n-hint: The vertical bars and * are essential here.*/
    wxString mask = _("All files|*|All supported files|") +
                    all + wxT("|"); // "all" and "all supported" entries
    if (extraformat != wxEmptyString)
@@ -2807,6 +2809,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          (fileVersion > wxT(AUDACITY_FILE_FORMAT_VERSION)))
    {
       wxString msg;
+      /* i18n-hint: %s will be replaced by the version number.*/
       msg.Printf(_("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file."),
                  audacityVersion.c_str(),
                  AUDACITY_VERSION_STRING);
@@ -3509,6 +3512,7 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    {
       fName = FileSelector(_("Save Speech As:"),
                   path, fName, wxT(""),
+                  /* i18n-hint: Do not translate PCM.*/
                   _("Windows PCM Audio file (*.wav)|*.wav"),  //lda
                   wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER, this);
    }

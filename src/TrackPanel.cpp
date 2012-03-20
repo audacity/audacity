@@ -2420,7 +2420,9 @@ void TrackPanel::HandleEnvelope(wxMouseEvent & event)
    if (event.LeftUp()) {
       mCapturedTrack = NULL;
       MakeParentPushState(
+         /* i18n-hint: (verb) Audacity has just adjusted the envelope .*/
          _("Adjusted envelope."),
+         /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
          _("Envelope")
          );
    }
@@ -2585,7 +2587,11 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
          consolidate = false;
       }
       else {
-         wxString direction = mHSlideAmount>0 ? _("right") : _("left");
+         wxString direction = mHSlideAmount>0 ? 
+            /* i18n-hint: a direction as in left or right.*/
+            _("right") : 
+            /* i18n-hint: a direction as in left or right.*/
+            _("left");
          /* i18n-hint: %s is a direction like left or right */
          msg.Printf(_("Time shifted tracks/clips %s %.02f seconds"),
                     direction.c_str(), fabs(mHSlideAmount));
@@ -4291,6 +4297,7 @@ void TrackPanel::HandleRearrange(wxMouseEvent & event)
    }
    else if (event.m_y > mMoveDownThreshold || event.m_y > GetRect().GetHeight()) {
       mTracks->MoveDown(mCapturedTrack);
+      /* i18n-hint: a direction as in up or down.*/
       dir = _("down");
 #ifdef EXPERIMENTAL_MIDI_OUT
       if (pMixerBoard && (mCapturedTrack->GetKind() == Track::Wave ||
@@ -7317,11 +7324,18 @@ void TrackPanel::OnMoveTrack(wxCommandEvent & event)
       if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave))
          pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, bUp);
 
-      MakeParentPushState(wxString::Format(_("Moved '%s' %s"),
+      MakeParentPushState(wxString::Format(
+      /* i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
+       * If the word order is different in your language ask on the translators list about what 
+       * to do.*/
+         _("Moved '%s' %s"),
                                            mPopupMenuTarget->GetName().
                                            c_str(),
                                            event.GetId() ==
-                                           OnMoveUpID ? _("up") :
+                                           OnMoveUpID ?
+      /* i18n-hint: a direction as in up or down.*/
+                                           _("up") :
+      /* i18n-hint: a direction as in up or down.*/
                                            _("down")),
                           _("Move Track"));
       Refresh(false);
@@ -8030,7 +8044,11 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    dc->DrawRectangle(bev);
 
    long textWidth, textHeight;
-   wxString str = (solo) ? _("Solo") : _("Mute");
+   wxString str = (solo) ?
+      /* i18n-hint: This is on a button that will silence this track.*/
+      _("Solo") : 
+      /* i18n-hint: This is on a button that will silence all the other tracks.*/
+      _("Mute");
 
    SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);

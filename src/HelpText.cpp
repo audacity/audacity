@@ -122,42 +122,52 @@ wxString TitleText( const wxString & Key )
 
    if(Key ==wxT("play") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Playing Audio");
    }
    if((Key ==wxT("record") ) || (Key ==wxT("norecord") ))
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Recording Audio");
    }
    if(Key ==wxT("inputdevice") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Recording - Choosing the Input Device");
    }
    if(Key ==wxT("inputsource") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Recording - Choosing the Input Source");
    }
    if(Key ==wxT("inputlevel") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Recording - Setting the Input Level");
    }
    if((Key ==wxT("edit") ) || (Key==wxT("grey")))
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Editing and greyed out Menus");
    }
    if(Key ==wxT("export") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Exporting an Audio File");
    }
    if(Key ==wxT("save") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Saving an Audacity Project");
    }
    if(Key ==wxT("wma-proprietary") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Support for Other Formats");
    }
    if(Key ==wxT("burncd") )
    {
+      /* i18n-hint: Title for a topic.*/
       return _("Burn to CD" );
    }
    if(Key ==  wxT("remotehelp") )
@@ -171,6 +181,7 @@ wxString HelpTextBuiltIn( const wxString & Key )
 {
    if(Key==wxT("welcome"))
    {
+      /* i18n-hint: Preserve [[file:quick_help.html as it’s the name of a file.*/
       return WrapText(
          wxString(wxT("")) +
          _("<center><h3>How to Get Help</h3></center>") +

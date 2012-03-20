@@ -173,7 +173,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
       PopulateLicensePage( S );
    }
    S.EndNotebook();
-   /*i18n-hint: "OK... Audacious" appears on a button at the 
+   /* i18n-hint: "OK... Audacious" appears on a button at the 
     * foot of the 'About Audacity' dialog box, after some text to read.
     * In English it is slightly humorous alternative to an 'OK' button.  
     * If the humour doesn't work in your language, then just use whatever 
@@ -239,11 +239,13 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       + translatorCredits +
       wxT("<p><center><b>") +
 
+      /* i18n-hint: %s will be replaced by the version number.*/
       wxString::Format(_("Audacity %s Development Team"), versionStr.c_str()) +
       wxT("</b><br>") +
       GetCreditsByRole(roleTeamDeveloper) +
       wxT("<p><br><b>") +
 
+      /* i18n-hint: %s will be replaced by the version number.*/
       wxString::Format(_("Audacity %s Support Team"), versionStr.c_str()) +
       wxT("</b><br>") +
       GetCreditsByRole(roleTeamSupport) +

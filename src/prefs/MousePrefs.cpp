@@ -116,7 +116,10 @@ void MousePrefs::CreateList()
    AddItem(_("Shift-Left-Drag"),  _("Time-Shift"),_("Time shift all clips in track"));
    AddItem(_("Ctrl-Left-Drag"),   _("Time-Shift"),_("Move clip up/down between tracks"));
    
-   AddItem(_("Left-Drag"),        _("Envelope"),  _("Change Amplification Envelope"));
+   AddItem(_("Left-Drag"),       
+   /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
+      _("Envelope"),  
+      _("Change Amplification Envelope"));
 
    AddItem(_("Left-Click"),       _("Pencil"),    _("Change Sample"));
    AddItem(_("Alt-Left-Click"),   _("Pencil"),    _("Smooth at Sample"));

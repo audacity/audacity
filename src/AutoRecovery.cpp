@@ -77,6 +77,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(_("Recoverable projects"));
       {  
          mFileList = S.Id(ID_FILE_LIST).AddListControlReportMode();
+         /*i18n-hint: (noun).  It's the name of the project to recover.*/
          mFileList->InsertColumn(0, _("Name"));
          mFileList->SetColumnWidth(0, 220);
          PopulateList();

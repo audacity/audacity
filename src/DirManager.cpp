@@ -442,6 +442,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
       saved version of the old project must not be moved,
       otherwise the old project would not be safe.) */
 
+   /*i18n-hint: This title appears on a dialog that indicates the progress in doing something.*/
    ProgressDialog *progress = new ProgressDialog(_("Progress"),
                                                  _("Saving project data files"));
 
@@ -1200,8 +1201,8 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
    do {
       i++;
       /* i18n-hint: This is the pattern for filenames that are created
-         when a file needs to be backed up to a different name.  For
-         example, mysong would become mysong-old1, mysong-old2, etc. */
+       * when a file needs to be backed up to a different name.  For
+       * example, mysong would become mysong-old1, mysong-old2, etc. */
       renamedFileName.SetName(wxString::Format(_("%s-old%d"), fName.GetName().c_str(), i));
    } while (renamedFileName.FileExists());
 
@@ -1219,6 +1220,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
    testFile.Close();
 
    if (!wxRemoveFile(renamedFileName.GetFullPath())) {
+      /* i18n-hint: %s is the name of a file.*/
       wxLogSysError(_("Unable to remove '%s'."),
                     renamedFileName.GetFullPath().c_str());
       return false;

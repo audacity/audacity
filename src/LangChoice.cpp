@@ -55,6 +55,8 @@ wxString ChooseLanguage(wxWindow *parent)
 {
    wxString returnVal;
 
+   /* i18n-hint: Title on a dialog indicating that this is the first 
+    * time Audacity has been run. */
    LangChoiceDialog dlog(parent, -1, _("Audacity First Run"));
    dlog.CentreOnParent();
    dlog.ShowModal();
@@ -122,6 +124,8 @@ void LangChoiceDialog::OnOk(wxCommandEvent & event)
    
    if (mLang.Left(2) != slang.Left(2)) {
       wxString msg;
+      /* i18n-hint; The %s’s are replaced by translated and untranslated 
+       * versions of language names. */
       msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
                  mLangNames[ndx].c_str(),
                  mLang.c_str(),

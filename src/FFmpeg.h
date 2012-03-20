@@ -207,6 +207,7 @@ public:
 
    wxString GetLibraryTypeString()
    {
+      /* i18n-hint: do not translate avformat.  Preserve the computer gibberish.*/
       return _("Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files (*.*)|*");
    }
 

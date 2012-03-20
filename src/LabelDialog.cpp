@@ -51,9 +51,13 @@ enum Column
 
 static const wxChar *headers[Col_Max] =
 {
+   /* i18n-hint: (noun).  A track contains waves, audio etc.*/
    _("Track"),
+   /* i18n-hint: (noun)*/
    _("Label"),
+   /* i18n-hint: (noun) of a label*/
    _("Start Time"),
+   /* i18n-hint: (noun) of a label*/
    _("End Time")
 };
 
@@ -704,6 +708,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent &event, int row, RowData *rd)
       wxTextEntryDialog d(this,
                           _("New Label Track"),
                           _("Enter track name"),
+                          /* i18n-hint: (noun) it's the name of a kind of track.*/
                           _("Label Track"));
 
       // User canceled so repopulating the grid will set the track

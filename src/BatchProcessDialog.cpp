@@ -66,6 +66,9 @@ BatchProcessDialog::BatchProcessDialog(wxWindow * parent):
    AudacityProject * p = GetActiveProject();
    if (p->GetCleanSpeechMode())
    {
+      /*i18n-hint: CleanSpeech is the name of a mode Audacity can operate 
+       * in that was invented to process lots of sermons, remove long 
+       * pauses and background noise.*/
       SetTitle(_("CleanSpeech Batch Processing"));
    }
 
@@ -93,6 +96,8 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.StartVerticalLay(true);
    {
+      /*i18n-hint: A chain is a sequence of commands that can be applied 
+       * to one or more audio files.*/
       S.StartStatic(_("&Select chain"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
@@ -544,7 +549,7 @@ void EditChainsDialog::PopulateList()
       AddItem(mBatchCommands.GetCommand(i),
               mBatchCommands.GetParams(i));
    }
-
+   /*i18n-hint: This is the last item in a list.*/
    AddItem(_("- END -"), wxT(""));
 
    // Select the name in the list...this will fire an event.
@@ -681,6 +686,7 @@ void EditChainsDialog::OnAdd(wxCommandEvent &event)
 
       if (name.Contains(wxFILE_SEP_PATH) ||
           name.Contains(wxFILE_SEP_PATH_UNIX)) {
+         /*i18n-hint: The %c will be replaced with ‘forbidden characters’, like ‘/’ and ‘\’.*/
          wxMessageBox(wxString::Format(_("Names may not contain '%c' and '%c'"),
                       wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
                       GetTitle(),
@@ -711,6 +717,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent &event)
 
    wxString name = mChains->GetItemText(item);
    wxMessageDialog m(this,
+   /*i18n-hint: %s will be replaced by the name of a file.*/
                      wxString::Format(_("Are you sure you want to delete %s?"), name.c_str()),
                      GetTitle(),
                      wxYES_NO | wxICON_QUESTION);

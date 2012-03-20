@@ -378,6 +378,8 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartHorizontalLay(wxALIGN_LEFT);
          {
             wxArrayString choices;
+            /*i18n-hint: One of the choices of what you want Audacity to do when 
+            * Audacity finds a project depends on another file.*/
             choices.Add(_("Ask me"));
             choices.Add(_("Always copy all files (safest)"));
             choices.Add(_("Never copy any files"));

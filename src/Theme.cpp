@@ -801,6 +801,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
       }
       if( !ImageCache.LoadFile( FileName, wxBITMAP_TYPE_PNG ))
       {
+         /* i18n-hint: Do not translate png.  It is the name of a file format.*/
          wxMessageBox(
             wxString::Format( 
             _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
@@ -890,6 +891,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
          {
             if( !mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
             {
+               /* i18n-hint: Do not translate png.  It is the name of a file format.*/
                wxMessageBox(
                   wxString::Format( 
                   _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),

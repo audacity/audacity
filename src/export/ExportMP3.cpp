@@ -597,6 +597,7 @@ public:
          S.SetStretchyCol(0);
          {
             if (mLibPath.GetFullPath().IsEmpty()) {
+               /* i18n-hint: There is a  button to the right of the arrow.*/
                text.Printf(_("To find %s, click here -->"), mName.c_str());
                mPathText = S.AddTextBox(wxT(""), text, 0);
             }
@@ -604,7 +605,9 @@ public:
                mPathText = S.AddTextBox(wxT(""), mLibPath.GetFullPath(), 0);
             }
             S.Id(ID_BROWSE).AddButton(_("Browse..."), wxALIGN_RIGHT);
+            /* i18n-hint: There is a  button to the right of the arrow.*/
             S.AddVariableText(_("To get a free copy of Lame, click here -->"), true);
+            /* i18n-hint: (verb)*/
             S.Id(ID_DLOAD).AddButton(_("Download"), wxALIGN_RIGHT);
          }
          S.EndMultiColumn();
@@ -625,8 +628,8 @@ public:
    {
       wxString question;
       /* i18n-hint: It's asking for the location of a file, for
-         example, "Where is lame_enc.dll?" - you could translate
-         "Where would I find the file %s" instead if you want. */
+       * example, "Where is lame_enc.dll?" - you could translate
+       * "Where would I find the file %s" instead if you want. */
       question.Printf(_("Where is %s?"), mName.c_str());
 
       wxString path = FileSelector(question, 

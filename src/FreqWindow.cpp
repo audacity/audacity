@@ -148,8 +148,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       _("Cuberoot Autocorrelation"),
       _("Enhanced Autocorrelation"),
      /* i18n-hint: This is a technical term, derived from the word
-        "spectrum".  Do not translate it unless you are sure you
-        know the correct technical word in your language. */
+      * "spectrum".  Do not translate it unless you are sure you
+      * know the correct technical word in your language. */
       _("Cepstrum")
    };
 
@@ -186,8 +186,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    wxString *funcChoiceStrings = new wxString[f];
    for (int i = 0; i < f; i++) {
       /* i18n-hint: This refers to a "window function", used in the
-         Frequency analyze dialog box. */
-      funcChoiceStrings[i] = WindowFuncName(i) + wxString(_(" window"));
+       * Frequency analyze dialog box. */
+      funcChoiceStrings[i] = wxString( WindowFuncName(i)) + wxT(" ") + wxString(_("window"));
    }
 
    wxStaticText *funcLabel = new wxStaticText(this, wxID_ANY,
@@ -223,6 +223,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
                                 _("&Replot"));
    mReplotButton->SetName(_("Replot"));
 
+   /* i18n-hint: (verb)*/
    mCloseButton = new wxButton(this, wxID_CANCEL,
                                _("Close"));
    mCloseButton->SetName(_("Close"));
@@ -866,7 +867,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
          peakpitch = PitchName_Absolute(FreqToMIDInoteNumber(bestpeak));
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
-
+         /* i18n-hint: The %d’s are replaced by numbers, the %s by musical notes, e.g. A#*/
          info.Printf(_("Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"),
                int (xPos + 0.5), xp,
                int (value + 0.5), int (bestpeak + 0.5),
@@ -876,6 +877,8 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
          peakpitch = PitchName_Absolute(FreqToMIDInoteNumber(1.0 / bestpeak));
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
+         /* i18n-hint: The %d’s are replaced by numbers, the %s by musical notes, e.g. A#
+          * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          info.Printf(_("Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"),
                      xPos,
                      int (1.0 / xPos + 0.5),

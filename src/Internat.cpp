@@ -150,12 +150,15 @@ wxString Internat::FormatSize(double size)
       if (size < 1024.0)
          sizeStr = ToDisplayString(size) + wxT(" ") + _("bytes");
       else if (size < 1024.0 * 1024.0) {
+         /* i18n-hint: Abbreviation for Kilo bytes */
          sizeStr = ToDisplayString(size / 1024.0, 1) + wxT(" ") + _("KB");
       }
       else if (size < 1024.0 * 1024.0 * 1024.0) {
+         /* i18n-hint: Abbreviation for Mega bytes */
          sizeStr = ToDisplayString(size / (1024.0 * 1024.0), 1) + wxT(" ") + _("MB");
       }
       else {
+         /* i18n-hint: Abbreviation for Giga bytes */
          sizeStr = ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1) + wxT(" ") + _("GB");
       }
    }

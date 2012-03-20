@@ -117,6 +117,7 @@ ToolBar::~ToolBar()
 //
 wxString ToolBar::GetTitle()
 {
+   /* i18n-hint: %s will be replaced by the version number.*/
    return wxString::Format( _("Audacity %s ToolBar"), GetLabel().c_str() );
 }
 

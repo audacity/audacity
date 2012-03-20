@@ -813,9 +813,11 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& evt)
          valueStr += wxT(" ");
          
          if (cp == duckAmount)
-            valueStr += _("dB"); // i18n-hint: short form of 'decibels'
+            /* i18n-hint: short form of 'decibels'.*/
+            valueStr += _("dB"); 
          else
-            valueStr += _("s"); // i18n-hint: short form of 'seconds'
+            /* i18n-hint: short form of 'seconds'.*/
+            valueStr += _("s"); 
    
          int textWidth = 0, textHeight = 0;
          GetTextExtent(valueStr, &textWidth, &textHeight);
