@@ -867,7 +867,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
          peakpitch = PitchName_Absolute(FreqToMIDInoteNumber(bestpeak));
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
-         /* i18n-hint: The %d’s are replaced by numbers, the %s by musical notes, e.g. A#*/
+         /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
          info.Printf(_("Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"),
                int (xPos + 0.5), xp,
                int (value + 0.5), int (bestpeak + 0.5),
@@ -877,7 +877,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
          peakpitch = PitchName_Absolute(FreqToMIDInoteNumber(1.0 / bestpeak));
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
-         /* i18n-hint: The %d’s are replaced by numbers, the %s by musical notes, e.g. A#
+         /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
           * the %.4f are numbers, and 'sec' should be an abbreviation for seconds */
          info.Printf(_("Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"),
                      xPos,

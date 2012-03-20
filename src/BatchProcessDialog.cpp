@@ -686,7 +686,7 @@ void EditChainsDialog::OnAdd(wxCommandEvent &event)
 
       if (name.Contains(wxFILE_SEP_PATH) ||
           name.Contains(wxFILE_SEP_PATH_UNIX)) {
-         /*i18n-hint: The %c will be replaced with ‘forbidden characters’, like ‘/’ and ‘\’.*/
+         /*i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.*/
          wxMessageBox(wxString::Format(_("Names may not contain '%c' and '%c'"),
                       wxFILE_SEP_PATH, wxFILE_SEP_PATH_UNIX),
                       GetTitle(),

@@ -345,7 +345,7 @@ void XMLFileWriter::CloseWithoutEndingTags()
    if (!wxFFile::Flush())
    {
       wxFFile::Close();
-      /* i18n-hint: ’flushing’ means writing any remaining queued up changes 
+      /* i18n-hint: 'flushing' means writing any remaining queued up changes 
        * to disk that have not yet been written.*/
       throw new XMLFileWriterException(_("Error Flushing File"));
    }

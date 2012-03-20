@@ -228,8 +228,8 @@ void SelectionBar::Populate()
                                    wxLI_VERTICAL),
                   0,  wxRIGHT, 5);
    /* i18n-hint: The snap-to mode, when enabled, means for example that selections 
-    * are always at whole second boundaries.  You can’t select a range 4.5s to 7.9s 
-    * because the boundaries ‘snap to’ the nearest whole number.*/
+    * are always at whole second boundaries.  You can't select a range 4.5s to 7.9s 
+    * because the boundaries 'snap to' the nearest whole number.*/
    mSnapTo = new wxCheckBox(this, OnSnapToID, _("Snap To"),
                             wxDefaultPosition, wxDefaultSize,
                             wxALIGN_RIGHT);

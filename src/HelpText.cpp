@@ -181,7 +181,7 @@ wxString HelpTextBuiltIn( const wxString & Key )
 {
    if(Key==wxT("welcome"))
    {
-      /* i18n-hint: Preserve [[file:quick_help.html as it’s the name of a file.*/
+      /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) +
          _("<center><h3>How to Get Help</h3></center>") +

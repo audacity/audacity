@@ -654,7 +654,7 @@ void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
                                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
          /* i18n-hint: Particularly in percussion, sounds can be regarded as having 
-          * an ‘attack’ phase where the sound builds up and a ‘decay’ where the 
+          * an 'attack' phase where the sound builds up and a 'decay' where the 
           * sound dies away.  So this means 'onset duration'.  */
          mAttackLabel = S.AddVariableText(_("Attack Time:"), true,
                                          wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);

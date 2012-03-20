@@ -311,7 +311,7 @@ END_EVENT_TABLE()
 
 ChangeSpeedDialog::ChangeSpeedDialog(EffectChangeSpeed *effect, wxWindow *parent)
 :  EffectDialog(parent, 
-   /* i18n-hint: Audacity’s change speed effect changes the speed and pitch.*/
+   /* i18n-hint: Audacity's change speed effect changes the speed and pitch.*/
    _("Change Speed"), 
    PROCESS_EFFECT),
    mEffect(effect)
