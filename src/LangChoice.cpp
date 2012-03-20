@@ -124,7 +124,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & event)
    
    if (mLang.Left(2) != slang.Left(2)) {
       wxString msg;
-      /* i18n-hint; The %s's are replaced by translated and untranslated 
+      /* i18n-hint: The %s's are replaced by translated and untranslated 
        * versions of language names. */
       msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
                  mLangNames[ndx].c_str(),
