@@ -102,6 +102,7 @@ void LoadEffects()
    CatPtr gen = em.AddCategory(wxT(LV2PREFIX) wxT("GeneratorPlugin"),
                                _("Generator"));
    CatPtr inst = em.AddCategory(wxT(LV2PREFIX) wxT("InstrumentPlugin"),
+   /* i18n-hint: (noun).*/
                                 _("Instrument"));
    CatPtr osc = em.AddCategory(wxT(LV2PREFIX) wxT("OscillatorPlugin"),
                                _("Oscillator"));

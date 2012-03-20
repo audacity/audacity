@@ -203,8 +203,11 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
    wxArrayString numPasses;
 
    numPasses.Add(_("None-Skip"));
+
+   /* i18n-hint: Of strength of an effect.  Not strongly.*/
    numPasses.Add(_("Light"));
    numPasses.Add(_("Moderate"));
+   /* i18n-hint: Of strength of an effect.  Strongly.*/
    numPasses.Add(_("Heavy"));
    numPasses.Add(_("Heavier"));
    numPasses.Add(_("Heaviest"));

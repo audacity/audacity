@@ -310,7 +310,10 @@ BEGIN_EVENT_TABLE(ChangeSpeedDialog, EffectDialog)
 END_EVENT_TABLE()
 
 ChangeSpeedDialog::ChangeSpeedDialog(EffectChangeSpeed *effect, wxWindow *parent)
-:  EffectDialog(parent, _("Change Speed"), PROCESS_EFFECT),
+:  EffectDialog(parent, 
+   /* i18n-hint: Audacity’s change speed effect changes the speed and pitch.*/
+   _("Change Speed"), 
+   PROCESS_EFFECT),
    mEffect(effect)
 {
    mbLoopDetect = false;

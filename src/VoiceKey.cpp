@@ -841,6 +841,7 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
 
 
    wxString text =   wxString::Format(_("Calibration Results\n"));
+   /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
    text +=           wxString::Format(_("Energy                  -- mean: %1.4f  sd: (%1.4f)\n"),mEnergyMean,mEnergySD);
    text+=            wxString::Format(_("Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"),mSignChangesMean,mSignChangesSD);
    text+=            wxString::Format(_("Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"),mDirectionChangesMean,mDirectionChangesSD);

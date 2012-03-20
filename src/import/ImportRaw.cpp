@@ -209,6 +209,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
 
    msg.Printf(_("Importing %s"), wxFileName::FileName(fileName).GetFullName().c_str());
 
+   /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.*/
    ProgressDialog progress(_("Import Raw"), msg);
 
    long block;
@@ -389,6 +390,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
       S.StartMultiColumn(3);
       {
          // Offset text
+         /* i18n-hint: (noun)*/
          mOffsetText = S.AddTextBox(_("Start offset:"),
                                     wxString::Format(wxT("%d"), mOffset),
                                     12);
@@ -401,6 +403,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          S.AddUnits(wxT("%"));
          
          // Rate text
+         /* i18n-hint: (noun)*/
          mRateText = S.AddTextBox(_("Sample rate:"),
                                   wxString::Format(wxT("%d"), (int)mRate),
                                   12);

@@ -179,6 +179,7 @@ void BassBoostDialog::PopulateOrExchange(ShuttleGui & S)
 
    S.StartHorizontalLay(wxCENTER, false);
    {
+      /* i18n-hint: Nasca Octavian Paul is a person's name.*/
       S.AddTitle(_("by Nasca Octavian Paul"));
    }
    S.EndHorizontalLay();

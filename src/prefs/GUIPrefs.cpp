@@ -49,12 +49,12 @@ void GUIPrefs::Populate()
    mHtmlHelpChoices.Add(_("Local"));
    mHtmlHelpChoices.Add(_("From Internet"));
 
-   mRangeCodes.Add(_("36"));
-   mRangeCodes.Add(_("48"));
-   mRangeCodes.Add(_("60"));
-   mRangeCodes.Add(_("96"));
-   mRangeCodes.Add(_("120"));
-   mRangeCodes.Add(_("145"));
+   mRangeCodes.Add(wxT("36"));
+   mRangeCodes.Add(wxT("48"));
+   mRangeCodes.Add(wxT("60"));
+   mRangeCodes.Add(wxT("96"));
+   mRangeCodes.Add(wxT("120"));
+   mRangeCodes.Add(wxT("145"));
 
    mRangeChoices.Add(_("-36 dB (shallow range for high-amplitude editing)"));
    mRangeChoices.Add(_("-48 dB (PCM range of 8 bit samples)"));

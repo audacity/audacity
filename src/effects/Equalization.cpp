@@ -227,6 +227,7 @@ EffectEqualization::EffectEqualization()
 
    mPrompting = false;
 
+   /* i18n-hint: Technical term for a kind of curve.*/
    interpChoiceStrings[0] = _("B-spline");
    interpChoiceStrings[1] = _("Cosine");
    interpChoiceStrings[2] = _("Cubic");
@@ -1021,6 +1022,7 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
    {
       // Inform user of load failure
       wxMessageBox( reader.GetErrorStr(),
+      /* i18n-hint: EQ stands for 'Equalization'.*/
                     _("Error Loading EQ Curve"),
                     wxOK | wxCENTRE,
                     this );

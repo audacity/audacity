@@ -157,6 +157,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.AddWindow(mKey);
 
+         /* i18n-hint: (verb)*/
          S.Id(SetButtonID).AddButton(_("Set"));
          S.Id(ClearButtonID).AddButton(_("Cl&ear"));
       }

@@ -102,7 +102,7 @@ float ContrastDialog::GetDB()
    Track *t = iter.First();
    if(mT0 > mT1)
    {
-      wxMessageDialog m(NULL, _("Start time after after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
+      wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
       m.ShowModal();
       return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
    }
@@ -473,6 +473,7 @@ void ContrastDialog::results()
          mPassFailText->ChangeValue(_("WCAG2 Pass"));
       else
          mPassFailText->ChangeValue(_("WCAG2 Fail"));
+      /* i18n-hint: i.e. difference in loudness at the moment. */
       mDiffText->SetName(_("Current difference"));
       float diffdB = foregrounddB - backgrounddB;
       if( diffdB != diffdB )  // test for NaN, reliant on IEEE implementation

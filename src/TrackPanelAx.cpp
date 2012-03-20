@@ -297,6 +297,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
          *name = t->GetName();
          if( *name == t->GetDefaultName() )
          {
+            /* i18n-hint: The %d is replaced by th enumber of the track.*/
             name->Printf(_("Track %d"), TrackNum( t ) );
          }
 

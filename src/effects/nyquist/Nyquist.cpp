@@ -1404,6 +1404,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
 
    hSizer = new wxBoxSizer(wxHORIZONTAL);
 
+   /* i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.*/
    button = new wxButton(this, wxID_OK, _("OK"));
    button->SetDefault();
    hSizer->Add(button, 0, wxALIGN_CENTRE | wxALL, 5);

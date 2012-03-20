@@ -7307,6 +7307,8 @@ void TrackPanel::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          MakeParentPushState(wxString::Format(_("Set range to '%d' - '%d'"),
                                               lower,
                                               upper),
+      /* i18n-hint: (verb)*/
+
                              _("Set Range"));
          Refresh(false);
       }
@@ -7451,6 +7453,7 @@ void TrackPanel::OnSetFont(wxCommandEvent &event)
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
    long fontsize = gPrefs->Read(wxT("/GUI/LabelFontSize"), 12);
 
+   /* i18n-hint: (noun) This is the font for the label track.*/
    wxDialog dlg(this, wxID_ANY, wxString(_("Label Track Font")));
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;
@@ -7463,16 +7466,19 @@ void TrackPanel::OnSetFont(wxCommandEvent &event)
          S.SetStretchyRow(0);
          S.SetStretchyCol(1);
 
+         /* i18n-hint: (noun) The name of the typeface*/
          S.AddPrompt(_("Face name"));
          lb = new wxListBox(&dlg, wxID_ANY,
                             wxDefaultPosition,
                             wxDefaultSize,
                             facenames,
                             wxLB_SINGLE);
+
          lb->SetName(_("Face name"));
          lb->SetSelection(facenames.Index(facename));
          S.AddWindow(lb, wxALIGN_LEFT | wxEXPAND | wxALL);
 
+         /* i18n-hint: (noun) The size of the typeface*/
          S.AddPrompt(_("Face size"));
          sc = new wxSpinCtrl(&dlg, wxID_ANY,
                              wxString::Format(wxT("%d"), fontsize),

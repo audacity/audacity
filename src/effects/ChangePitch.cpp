@@ -277,7 +277,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    //
    S.StartMultiColumn(6, wxCENTER);
    {
-      //
+      /* i18n-hint: (noun) Musical pitch.*/
       S.AddUnits(_("Pitch:"));
 
       S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL);

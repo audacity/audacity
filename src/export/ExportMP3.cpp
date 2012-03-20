@@ -249,6 +249,7 @@ void InitMP3_Statics()
 
    for (size_t i=0; i < WXSIZEOF(setRates); i++)
       setRates[i].name = wxT("");
+   /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
    setRates[0].name << _("Insane"  ) << wxT(", ") << 320;
    setRates[1].name << _("Extreme" ) << wxT(", ") << 220 << wxT("-") << 260;
    setRates[2].name << _("Standard") << wxT(", ") << 170 << wxT("-") << 210;
@@ -562,7 +563,9 @@ class FindDialog : public wxDialog
 public:
 
    FindDialog(wxWindow *parent, wxString path, wxString name, wxString type)
-   :  wxDialog(parent, wxID_ANY, wxString(_("Locate Lame")))
+   :  wxDialog(parent, wxID_ANY, 
+   /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
+   wxString(_("Locate Lame")))
    {
       ShuttleGui S(this, eIsCreating);
 

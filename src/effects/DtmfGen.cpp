@@ -87,7 +87,9 @@ bool EffectDtmf::Init()
 
 bool EffectDtmf::PromptUser()
 {
-   DtmfDialog dlog(this, mParent, _("DTMF Tone Generator"));
+   DtmfDialog dlog(this, mParent,
+      /* i18n-hint: DTMF stands for 'Dial Tone Modulation Format'.  Leave as is.*/      
+      _("DTMF Tone Generator"));
 
    Init();
 
