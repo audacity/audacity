@@ -29,7 +29,9 @@ handling.
 ////////////////////////////////////////////////////////////////////////////////
 
 ProjectsPrefs::ProjectsPrefs(wxWindow * parent)
-:   PrefsPanel(parent, _("Projects"))
+:   PrefsPanel(parent,
+   /* i18n-hint: (noun) i.e Audacity projects. */
+               _("Projects"))
 {
    Populate();
 }

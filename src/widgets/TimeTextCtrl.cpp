@@ -379,7 +379,7 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
     * for seconds and translate 'frames'. Nice simple time code! */
    BuiltinFormatStrings[12].formatStr = _("0100 h 060 m 060 s+.25 frames");
    /* i18n-hint: Name of time display format that shows time in frames at PAL
-    * TV frame rate (used for European TV */
+    * TV frame rate (used for European TV) */
    BuiltinFormatStrings[13].name = _("PAL frames (25 fps)");
    /* i18n-hint: Format string for displaying time in frames with NTSC frames.
     * Translate 'frames' and leave the rest alone. */

@@ -119,6 +119,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.StartMultiColumn(2);
       {
          S.Id(HostID);
+         /* i18n-hint: (noun) */
          mHost = S.TieChoice(_("Host") + wxString(wxT(":")),
                              wxT("/MidiIO/Host"), 
                              wxT(""),

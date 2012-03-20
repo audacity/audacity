@@ -69,6 +69,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+   /* i18n-hint: (noun) this is a preview of the cut */
    S.StartStatic(_("Cut Preview"));
    {
       S.StartThreeColumn();

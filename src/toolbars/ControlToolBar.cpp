@@ -192,6 +192,7 @@ void ControlToolBar::Populate()
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
 
+   /* i18n-hint: (verb)*/
    mBatch = MakeButton(bmpCleanSpeech, bmpCleanSpeech, bmpCleanSpeechDisabled,
       ID_BATCH_BUTTON, false, _("Clean Speech"));
 

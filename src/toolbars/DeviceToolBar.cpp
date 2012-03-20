@@ -113,6 +113,7 @@ void DeviceToolBar::Populate()
                                wxID_ANY,
                                wxDefaultPosition,
                                wxDefaultSize);
+   /* i18n-hint: (noun) It's the device used for output.*/
    mOutput->SetName(_("Output Device"));
    Add(mOutput, 0, wxALIGN_CENTER);
 
@@ -127,6 +128,7 @@ void DeviceToolBar::Populate()
                          wxID_ANY,
                          wxDefaultPosition,
                          wxDefaultSize);
+   /* i18n-hint: (noun) It's the device used for input.*/
    mInput->SetName(_("Input Device"));
    Add(mInput, 0, wxALIGN_CENTER);
 

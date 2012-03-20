@@ -103,6 +103,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Select all audio in project, if none selected"),    
                     wxT("/GUI/SelectAllOnNone"),
                     true);
+      /* i18n-hint: cut-lines are a lines indicating where to cut.*/
 	   S.TieCheckBox(_("Enable cu&t lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
