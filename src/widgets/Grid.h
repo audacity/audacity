@@ -293,6 +293,11 @@ class GridAx
    // or child.
    virtual wxAccStatus GetValue(int childId, wxString* strValue);
 
+#if defined(__WXMAC__)
+   // Selects the object or child.
+   virtual wxAccStatus Select(int childId, wxAccSelectionFlags selectFlags);
+#endif
+
    Grid *mGrid;
    int mLastId;
 

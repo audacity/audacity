@@ -60,15 +60,15 @@ Track *TrackPanelAx::GetFocus()
 // Changes focus to a specified track
 void TrackPanelAx::SetFocus( Track *track )
 {
+#if wxUSE_ACCESSIBILITY
    if( mFocusedTrack != NULL )
    {
-#if wxUSE_ACCESSIBILITY
       NotifyEvent( wxACC_EVENT_OBJECT_SELECTIONREMOVE,
                    mTrackPanel,
                    wxOBJID_CLIENT,
                    TrackNum( mFocusedTrack ) );
-#endif
    }
+#endif
 
    if( track == NULL )
    {
@@ -280,6 +280,7 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
 // Gets the name of the specified object.
 wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
 {
+#if defined(__WXMSW__)
    if( childId == wxACC_SELF )
    {
       *name = _( "TrackView" );
@@ -319,11 +320,17 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
    }
 
    return wxACC_OK;
+#endif
+
+#if defined(__WXMAC__)
+   return wxACC_NOT_IMPLEMENTED;
+#endif
 }
 
 // Returns a role constant.
 wxAccStatus TrackPanelAx::GetRole( int childId, wxAccRole* role )
 {
+#if defined(__WXMSW__)
    if( childId == wxACC_SELF )
    {
       *role = wxROLE_SYSTEM_TABLE;
@@ -332,6 +339,18 @@ wxAccStatus TrackPanelAx::GetRole( int childId, wxAccRole* role )
    {
       *role = wxROLE_SYSTEM_ROW;
    }
+#endif
+
+#if defined(__WXMAC__)
+   if( childId == wxACC_SELF )
+   {
+      *role = wxROLE_SYSTEM_PANE;
+   }
+   else
+   {
+      *role = wxROLE_SYSTEM_STATICTEXT;
+   }
+#endif
 
    return wxACC_OK;
 }
@@ -379,7 +398,49 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
 // or child.
 wxAccStatus TrackPanelAx::GetValue( int childId, wxString* strValue )
 {
-   return wxACC_NOT_SUPPORTED;
+#if defined(__WXMSW__)
+   return wxACC_NOT_IMPLEMENTED;
+#endif
+
+#if defined(__WXMAC__)
+   if( childId == wxACC_SELF )
+   {
+      *strValue = _( "TrackView" );
+   }
+   else
+   {
+      Track *t = FindTrack( childId );
+
+      if( t == NULL )
+      {
+         return wxACC_FAIL;
+      }
+      else
+      {
+         *strValue = t->GetName();
+         if( *strValue == t->GetDefaultName() )
+         {
+            strValue->Printf(_("Track %d"), TrackNum( t ) );
+         }
+
+         // LLL: Remove these during "refactor"
+         if( t->GetMute() )
+         {
+            strValue->Append( _( " Mute On" ) );
+         }
+         
+         if( t->GetSolo() )
+         {
+            strValue->Append( _( " Solo On" ) );
+         }
+         if( t->GetSelected() )
+         {
+            strValue->Append( _( " Select On" ) );
+         }
+      }
+   }
+   return wxACC_OK;
+#endif
 }
 
 // Gets the window with the keyboard focus.
@@ -388,6 +449,7 @@ wxAccStatus TrackPanelAx::GetValue( int childId, wxString* strValue )
 // If this object has the focus, child should be 'this'.
 wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
 {
+#if defined(__WXMSW__)
    if( *childId == wxACC_SELF )
    {
       if( mFocusedTrack )
@@ -401,7 +463,27 @@ wxAccStatus TrackPanelAx::GetFocus( int *childId, wxAccessible **child )
    }
 
    return wxACC_OK;
+#endif
+
+#if defined(__WXMAC__)
+   if( GetWindow() == wxWindow::FindFocus() )
+   {
+      if( mFocusedTrack )
+      {
+         *childId = TrackNum( mFocusedTrack );
+      }
+      else
+      {
+         *childId = wxACC_SELF;
 }
+
+      return wxACC_OK;
+   }
+
+   return wxACC_NOT_IMPLEMENTED;
+#endif
+}
+
 #endif // wxUSE_ACCESSIBILITY
 
 // Indentation settings for Vim and Emacs.

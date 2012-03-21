@@ -49,6 +49,9 @@ public:
 
    void OnMouseEvent(wxMouseEvent & event);
 
+   void OnFocus(wxFocusEvent &event);
+   void OnCaptureKey(wxCommandEvent& event);
+
 protected:
    bool mIsPan;
 
@@ -107,6 +110,7 @@ private:
    void OnButton_Mute(wxCommandEvent& event);
    void OnButton_Solo(wxCommandEvent& event);
    //v void OnSliderScroll_Gain(wxScrollEvent& event);
+
 
 public:
 #ifdef EXPERIMENTAL_MIDI_OUT

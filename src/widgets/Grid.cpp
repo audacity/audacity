@@ -765,7 +765,13 @@ wxAccStatus GridAx::GetParent(wxAccessible **parent)
 wxAccStatus GridAx::GetRole(int childId, wxAccRole *role)
 {
    if (childId == wxACC_SELF) {
+#if defined(__WXMSW__)
       *role = wxROLE_SYSTEM_TABLE;
+#endif
+
+#if defined(__WXMAC__)
+      *role = wxROLE_SYSTEM_GROUPING;
+#endif
    }
    else {
       *role = wxROLE_SYSTEM_TEXT;
@@ -791,17 +797,37 @@ wxAccStatus GridAx::GetSelections(wxVariant *selections)
 wxAccStatus GridAx::GetState(int childId, long *state)
 {
    int flag = wxACC_STATE_SYSTEM_FOCUSABLE |
-              wxACC_STATE_SYSTEM_SELECTABLE |
-              wxACC_STATE_SYSTEM_FOCUSED |
-              wxACC_STATE_SYSTEM_SELECTED;
+              wxACC_STATE_SYSTEM_SELECTABLE;
    int col;
    int row;
 
-   if (GetRowCol(childId, row, col)) {
+   if (!GetRowCol(childId, row, col)) {
+      *state = 0;
+      return wxACC_FAIL;
+   }
+
+#if defined(__WXMSW__)
+   flag |= wxACC_STATE_SYSTEM_FOCUSED |
+           wxACC_STATE_SYSTEM_SELECTED;
+
       if (mGrid->IsReadOnly(row, col)) {
          flag = wxACC_STATE_SYSTEM_UNAVAILABLE;
       }
+#endif
+
+#if defined(__WXMAC__)
+   if (mGrid->IsInSelection(row, col)) {
+      flag |= wxACC_STATE_SYSTEM_SELECTED;
    }
+
+   if (mGrid->GetGridCursorRow() == row && mGrid->GetGridCursorCol() == col) {
+       flag |= wxACC_STATE_SYSTEM_FOCUSED;
+   }
+
+   if (mGrid->IsReadOnly(row, col)) {
+      flag |= wxACC_STATE_SYSTEM_UNAVAILABLE;
+   }
+#endif
 
    *state = flag;
 
@@ -814,8 +840,34 @@ wxAccStatus GridAx::GetValue(int childId, wxString *strValue)
 {
    strValue->Clear();
 
+#if defined(__WXMSW__)
+   return wxACC_OK;
+#endif
+
+#if defined(__WXMAC__)
+   return GetName(childId, strValue);
+#endif
+}
+
+#if defined(__WXMAC__)
+// Selects the object or child.
+wxAccStatus GridAx::Select(int childId, wxAccSelectionFlags selectFlags)
+{
+   int row;
+   int col;
+
+   if (GetRowCol(childId, row, col)) {
+
+      if (selectFlags & wxACC_SEL_TAKESELECTION) {
+         mGrid->SetGridCursor(row, col);
+      }
+
+      mGrid->SelectBlock(row, col, row, col, selectFlags & wxACC_SEL_ADDSELECTION);
+   }
+
    return wxACC_OK;
 }
+#endif
 
 // Gets the window with the keyboard focus.
 // If childId is 0 and child is NULL, no object in

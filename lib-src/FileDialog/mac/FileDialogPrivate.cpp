@@ -55,6 +55,7 @@ static ControlID kButtonID = { kCustom, kButton };
 
 struct CustomData {
    FileDialog     *me;
+   NavDialogRef   context;
    WindowRef      window;
    Rect           bounds;
    ControlRef     userpane;
@@ -122,63 +123,11 @@ static void HandleCustomMouseDown(NavCBRecPtr callBackParms, CustomData *data)
 	GlobalToLocal(&where);
    
 	ControlRef control = FindControlUnderMouse(where, callBackParms->window, NULL);
-   
 	if (control != NULL)
    {
-      ControlID cid;
-      GetControlID(control, &cid);
-      
       HandleControlClick(control, where, evt->modifiers, (ControlActionUPP)-1L);
-      
-      if (cid.signature == kCustom)
-      {
-         switch (cid.id)
-         {
-            case kChoice:
-            {
-               MenuRef menu;
-               UInt32 v;
-               menu = GetControlPopupMenuRef(control);
-               v = GetControl32BitValue(control) - 1;
-               const size_t numFilters = data->extensions.GetCount();
-               
-               if (v < numFilters)
-               {
-                  data->currentfilter = v;
-                  if (data->saveMode)
-                  {
-                     int i = data->currentfilter;
-                     
-                     wxString extension =  data->extensions[i].AfterLast('.') ;
-                     extension.MakeLower() ;
-                     wxString sfilename ;
-                     
-                     wxMacCFStringHolder cfString(NavDialogGetSaveFileName(callBackParms->context), false);
-                     sfilename = cfString.AsString() ;
-#if 0
-                     int pos = sfilename.Find('.', true) ;
-                     if (pos != wxNOT_FOUND)
-                     {
-                        sfilename = sfilename.Left(pos + 1) + extension;
-                        cfString.Assign(sfilename, wxFONTENCODING_DEFAULT);
-                        NavDialogSetSaveFileName(callBackParms->context, cfString);
-                     }
-#endif
-                  }
                   NavCustomControl(callBackParms->context, kNavCtlBrowserRedraw, NULL);
                }
-               
-               break;
-            }
-               
-            case kButton:
-            {
-               data->me->ClickButton(GetControl32BitValue(data->choice) - 1);
-               break;
-            }
-         }
-      }
-   }
 }
 
 static void HandleNormalEvents(NavCBRecPtr callBackParms, CustomData *data)
@@ -196,6 +145,7 @@ static void HandleNormalEvents(NavCBRecPtr callBackParms, CustomData *data)
 static const EventTypeSpec namedAttrsList[] =
 {
     { kEventClassAccessibility , kEventAccessibleGetNamedAttribute },
+   { kEventClassControl       , kEventControlHit },
 };
 
 // ----------------------------------------------------------------------------
@@ -208,7 +158,8 @@ static OSStatus SetElement(wxMacCarbonEvent & event, HIObjectRef objectRef,
     AXUIElementRef elem;
 
     elem = AXUIElementCreateWithHIObjectAndIdentifier(objectRef, id);
-    if (elem) {
+   if (elem)
+   {
         result = event.SetParameter(parm,
                                     typeCFTypeRef,
                                     sizeof(elem),
@@ -225,6 +176,53 @@ static pascal OSStatus HandlePaneEvents(EventHandlerCallRef handlerRef, EventRef
     CustomData *dt = (CustomData *) data;
     OSStatus result = eventNotHandledErr;
 
+   switch (event.GetClass())
+   {
+      case kEventClassControl:
+      {
+         ControlRef control;
+         ControlID cid;
+
+         control = event.GetParameter<ControlRef>(kEventParamDirectObject, typeControlRef);
+         if (control == NULL)
+         {
+            break;
+         }
+
+         GetControlID(control, &cid);
+         if (cid.signature != kCustom)
+         {
+            break;
+         }
+
+         switch (cid.id)
+         {
+            case kChoice:
+            {
+               MenuRef menu = GetControlPopupMenuRef(control);
+               UInt32 v = GetControl32BitValue(control) - 1;
+               const size_t numFilters = dt->extensions.GetCount();
+                   
+               if (v < (UInt32) dt->extensions.GetCount())
+               {
+                  dt->currentfilter = v;
+
+                  NavCustomControl(dt->context, kNavCtlBrowserRedraw, NULL);
+               }
+            }
+            break;
+                  
+            case kButton:
+            {
+               dt->me->ClickButton(GetControl32BitValue(dt->choice) - 1);
+            }
+            break;
+         }
+      }
+      break;
+
+      case kEventClassAccessibility:
+      {
     switch (event.GetKind())
     {
         case kEventAccessibleGetNamedAttribute:
@@ -239,7 +237,8 @@ static pascal OSStatus HandlePaneEvents(EventHandlerCallRef handlerRef, EventRef
             if (false)
             {
             }
-            else if (CFStringCompare(attr, kAXRoleAttribute, 0) == kCFCompareEqualTo) {
+               else if (CFStringCompare(attr, kAXRoleAttribute, 0) == kCFCompareEqualTo)
+               {
                 CFStringRef role = kAXGroupRole;
         
                 result = event.SetParameter(kEventParamAccessibleAttributeValue,
@@ -249,12 +248,14 @@ static pascal OSStatus HandlePaneEvents(EventHandlerCallRef handlerRef, EventRef
         
                 require_noerr(result, ParameterError);
             }
-            else if (CFStringCompare(attr, kAXRoleDescriptionAttribute, 0) == kCFCompareEqualTo) {
+               else if (CFStringCompare(attr, kAXRoleDescriptionAttribute, 0) == kCFCompareEqualTo)
+               {
                 CFStringRef role = kAXGroupRole;
                 CFStringRef desc;
         
                 desc = HICopyAccessibilityRoleDescription(role, NULL);
-                if (desc) {
+                  if (desc)
+                  {
                     result = event.SetParameter(kEventParamAccessibleAttributeValue,
                                                 typeCFStringRef,
                                                 sizeof(desc),
@@ -265,39 +266,49 @@ static pascal OSStatus HandlePaneEvents(EventHandlerCallRef handlerRef, EventRef
                     require_noerr(result, ParameterError);
                 }
             }
-            else if (CFStringCompare(attr, kAXParentAttribute, 0) == kCFCompareEqualTo) {
+               else if (CFStringCompare(attr, kAXParentAttribute, 0) == kCFCompareEqualTo)
+               {
                 HIViewRef viewRef = HIViewGetSuperview(dt->userpane);
-                if (viewRef) {
+                  if (viewRef)
+                  {
                     result = SetElement(event, (HIObjectRef) viewRef, 0,
                                         kEventParamAccessibleAttributeValue);
             
                     require_noerr(result, ParameterError);
                 }
             }
-            else if (CFStringCompare(attr, kAXWindowAttribute, 0) == kCFCompareEqualTo) {
+               else if (CFStringCompare(attr, kAXWindowAttribute, 0) == kCFCompareEqualTo)
+               {
                 WindowRef winRef = HIViewGetWindow((HIViewRef) dt->userpane);
         
-                if (winRef) {
+                  if (winRef)
+                  {
                     result = SetElement(event, (HIObjectRef) winRef, 0,
                                         kEventParamAccessibleAttributeValue);
         
                     require_noerr(result, ParameterError);
                 }
             }
-            else if (CFStringCompare(attr, kAXTopLevelUIElementAttribute, 0) == kCFCompareEqualTo) {
-                if (dt->window) {
+               else if (CFStringCompare(attr, kAXTopLevelUIElementAttribute, 0) == kCFCompareEqualTo)
+               {
+                  if (dt->window)
+                  {
                     result = SetElement(event, (HIObjectRef) dt->window, 0,
                                         kEventParamAccessibleAttributeValue);
         
                     require_noerr(result, ParameterError);
                 }
             }
-            else {
+               else
+               {
                 result = eventNotHandledErr;
             }
         }
         break;
     }
+      }
+      break;
+   }
 
 ParameterError:
     return result;
@@ -307,6 +318,8 @@ DEFINE_ONE_SHOT_HANDLER_GETTER(HandlePaneEvents);
 
 static void HandleStartEvent(NavCBRecPtr callBackParms, CustomData *data)
 {
+   data->context = callBackParms->context;
+
    CreateUserPaneControl(callBackParms->window, &data->bounds, kControlSupportsEmbedding, &data->userpane);
 
    InstallControlEventHandler(data->userpane,

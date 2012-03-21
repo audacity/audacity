@@ -40,6 +40,11 @@
 
 BEGIN_EVENT_TABLE(MixerTrackSlider, ASlider)
    EVT_MOUSE_EVENTS(MixerTrackSlider::OnMouseEvent)
+
+   EVT_SET_FOCUS(MixerTrackSlider::OnFocus)
+   EVT_KILL_FOCUS(MixerTrackSlider::OnFocus)
+   EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, MixerTrackSlider::OnCaptureKey)
+
 END_EVENT_TABLE()
 
 MixerTrackSlider::MixerTrackSlider(wxWindow * parent,
@@ -72,6 +77,39 @@ void MixerTrackSlider::OnMouseEvent(wxMouseEvent &event)
       }
    }
 }
+
+void MixerTrackSlider::OnFocus(wxFocusEvent &event)
+{
+   wxCommandEvent e(EVT_CAPTURE_KEYBOARD);
+
+   if (event.GetEventType() == wxEVT_KILL_FOCUS) {
+      e.SetEventType(EVT_RELEASE_KEYBOARD);
+   }
+   e.SetEventObject(this);
+   GetParent()->GetEventHandler()->ProcessEvent(e);
+
+   Refresh(false);
+
+   event.Skip();
+}
+
+void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)
+{
+   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   int keyCode = kevent->GetKeyCode();
+
+   // Pass LEFT/RIGHT/UP/DOWN/PAGEUP/PAGEDOWN through for input/output sliders
+   if (keyCode == WXK_LEFT || keyCode == WXK_RIGHT ||
+       keyCode == WXK_UP || keyCode == WXK_DOWN ||
+       keyCode == WXK_PAGEUP || keyCode == WXK_PAGEDOWN) {
+      return;
+   }
+
+   event.Skip();
+
+   return;
+}
+
 
 
 // class MixerTrackCluster
@@ -136,6 +174,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
 #endif
    mRightTrack = pRightTrack;
 
+   SetName(mLeftTrack->GetName());
+
    this->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)); 
 
    // Not sure why, but sizers weren't getting offset vertically, 
@@ -182,6 +222,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
             _("Gain"), 
             ctrlPos, ctrlSize, DB_SLIDER, true, 
             true, 0.0, wxVERTICAL);
+   mSlider_Gain->SetName(_("Gain"));
+
    this->UpdateGain();
 
 
@@ -201,6 +243,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                            ctrlPos, ctrlSize, 
                            wxBU_AUTODRAW, wxDefaultValidator, 
                            _("Musical Instrument"));
+   mBitmapButton_MusicalInstrument->SetName(_("Musical Instrumnet"));
 
 
    // pan slider
@@ -218,6 +261,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
             /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
             _("Pan"), 
             ctrlPos, ctrlSize, PAN_SLIDER, true); 
+   mSlider_Pan->SetName(_("Pan"));
 
    this->UpdatePan();
 
@@ -230,6 +274,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver), 
                   *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled), 
                   true); // toggle button
+   mToggleButton_Mute->SetName(_("Mute"));
    mToggleButton_Mute->SetAlternateImages(
       *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver), 
       *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled));
@@ -242,6 +287,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloUp), *(mMixerBoard->mImageSoloOver), 
                   *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDisabled), 
                   true); // toggle button
+   mToggleButton_Solo->SetName(_("Solo"));
    this->UpdateSolo();
    bool bSoloNone = mProject->IsSoloNone();
    mToggleButton_Solo->Show(!bSoloNone);
@@ -263,6 +309,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                 false, // bool isInput
                 ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
                 Meter::MixerTrackCluster); // Style style = HorizontalStereo, 
+   mMeter->SetName(_("Signal Level Meter"));
 #ifdef EXPERIMENTAL_MIDI_OUT
    } else {
       mMeter = NULL;
@@ -395,6 +442,7 @@ void MixerTrackCluster::UpdateName()
 #else
    const wxString newName = mLeftTrack->GetName();
 #endif
+   SetName(newName);
    mStaticText_TrackName->SetLabel(newName); 
    #if wxUSE_TOOLTIPS
       mStaticText_TrackName->SetToolTip(newName);

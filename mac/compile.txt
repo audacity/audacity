@@ -67,8 +67,14 @@ STEP 3:  Patch, compile and install wxMac
 -----------------------------------------
 
 * Apply "wxMac_bug_2_10.5.8_PPC.patch" in the 
-  "mac/wxMac_additions" folder in the Audacity sources.  
+  "mac/wxMac_additions" folder in the Audacity sources.
   This has to be applied until we drop support for OS X 10.5.
+   
+* Apply "wxMac-2.8.12-wxaccessible.patch" in the 
+  "mac/wxMac_additions" folder in the Audacity sources.
+  This will add accessibility support (VoiceOver) to wxMac.
+  It is not absolutely required, but to be compatible with
+  released versions of Audacity, it should be applied.
    
 * Apply any other wxMac patches in the "mac" directory that
   are relevant to the version of wxMac you are compiling. 
@@ -76,7 +82,7 @@ STEP 3:  Patch, compile and install wxMac
 cd wxMac-2.8.12
 mkdir macbuild
 cd macbuild
-../configure --disable-shared
+../configure --disable-shared --enable-unicode --enable-accessibility
 make
 sudo make install
 

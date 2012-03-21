@@ -65,6 +65,10 @@ private:
       none = 99,
    };
 
+#if defined(__WXMAC__) && wxUSE_ACCESSIBILITY
+   virtual bool AcceptsFocus() const {return false;}
+#endif
+
    void OnPaint(wxPaintEvent& evt);
    void OnMouseCaptureChanged(wxMouseCaptureChangedEvent &evt);
    void OnMouseCaptureLost(wxMouseCaptureLostEvent &evt);

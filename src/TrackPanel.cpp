@@ -6105,6 +6105,9 @@ void TrackPanel::OnToggle()
 
    mTracks->Select( t, !t->GetSelected() );
    EnsureVisible( t );
+
+   mAx->Updated();
+
    return;
 }
 

@@ -60,6 +60,7 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
    mPressed = false;
 
    SetLabel(_("Grabber"));
+   SetName(_("Grabber"));
 }
 
 //
