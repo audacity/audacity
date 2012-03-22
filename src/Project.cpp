@@ -4463,7 +4463,7 @@ void AudacityProject::MayStartMonitoring()
 {
 #ifdef EXPERIMENTAL_EXTRA_MONITORING
    bool bAlwaysMonitor;
-   gPrefs->Read( "GUI/AlwaysMonitor", &bAlwaysMonitor, true );
+   gPrefs->Read( wxT("GUI/AlwaysMonitor"), &bAlwaysMonitor, true );
    if( !bAlwaysMonitor )
       return;
 

@@ -1007,16 +1007,13 @@ bool AudacityApp::OnInit()
    }
 #endif
 
-   // JKC: On windows, we only want a logger in release builds.
    mLogger=NULL;
    #ifndef __WXMAC__
-      #ifndef _DEBUG
-         mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
-         mLogger->SetActiveTarget(mLogger);
-         mLogger->EnableLogging(true);
-         mLogger->SetLogLevel(wxLOG_Max);
-         wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
-      #endif
+      mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
+      mLogger->SetActiveTarget(mLogger);
+      mLogger->EnableLogging(true);
+      mLogger->SetLogLevel(wxLOG_Max);
+      wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
    #endif
 
    // Unused strings that we want to be translated, even though
