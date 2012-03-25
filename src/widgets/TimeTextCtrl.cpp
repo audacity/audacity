@@ -1327,12 +1327,13 @@ void TimeTextCtrl::ValueToControls()
 
 void TimeConverter::ValueToControls( double RawTime )
 {
+   //RawTime = 4.9995f; Only for testing!
    RawTime = (double)((sampleCount)floor(RawTime * mSampleRate + 0.5)) / mSampleRate; // put on a sample
    double theValue = RawTime * mScalingFactor + .000001; // what's this .000001 for?
    int t_int;
    bool round = true;
-   // If we have a fractional field further on then we will be using t_frac, and will round there.
-   // Otherwise round t_int to the nearest value
+   // We round on the last field.  If we have a fractional field we round using it.
+   // Otherwise we round to nearest integer.
    for(unsigned int i=0; i<mFields.GetCount(); i++) {
       if (mFields[i].frac)
          round = false;
@@ -1340,7 +1341,11 @@ void TimeConverter::ValueToControls( double RawTime )
    if(round)
       t_int = int(theValue + 0.5);
    else
+   {  
+      wxASSERT( mFields[mFields.GetCount()-1].frac );
+      theValue += 0.5f / mFields[mFields.GetCount()-1].base;
       t_int = int(theValue);
+   }
    double t_frac = (theValue - t_int);
    unsigned int i;
    int tenMins;
@@ -1380,16 +1385,24 @@ void TimeConverter::ValueToControls( double RawTime )
 
    for(i=0; i<mFields.GetCount(); i++) {
       int value;
+
       if (mFields[i].frac) {
-         value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
-         if (mFields[i].range > 0)
-            value = value % mFields[i].range;
+         // JKC: This old code looks bogus to me.
+         // The rounding is not propogating to earlier fields in the frac case.
+         //value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
+         // I did the rounding earlier.
+         value = (int)(t_frac * mFields[i].base); 
+         // JKC: TODO: Find out what the range is supposed to do.
+         // It looks bogus too.
+         //if (mFields[i].range > 0)
+         //   value = value % mFields[i].range;
       }
       else {
          value = (t_int / mFields[i].base);
          if (mFields[i].range > 0)
             value = value % mFields[i].range;
       }
+
       wxString field = wxString::Format(mFields[i].formatStr, value);
       mValueString += field;
       mValueString += mFields[i].label;
