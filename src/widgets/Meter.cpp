@@ -286,6 +286,10 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
    mRuler.SetFonts(GetFont(), GetFont(), GetFont());
 
    mTimer.SetOwner(this, OnMeterUpdateID);
+   // TODO: Yikes.  Hard coded sample rate.
+   // JKC: I've looked at this, and it's benignish.  It just means that the meter
+   // balistics are right for 44KHz and a bit more frisky than they should be
+   // for higher sample rates.
    Reset(44100.0, true);
    for(i=0; i<kMaxMeterBars; i++) {
       mBar[i].clipping = false;
