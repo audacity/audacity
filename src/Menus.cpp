@@ -2638,7 +2638,7 @@ double AudacityProject::NearestZeroCrossing(double t0)
 
    // Find minimum
    int argmin = 0;
-   float min = 1.0;
+   float min = 3.0;
    for(i=0; i<windowSize; i++) {
       if (dist[i] < min) {
          argmin = i;
