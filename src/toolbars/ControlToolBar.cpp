@@ -94,7 +94,8 @@ ControlToolBar::ControlToolBar()
    mCutPreviewTracks = NULL;
 
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
-   gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
+// gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
+   mCleanSpeechMode = false;
 }
 
 ControlToolBar::~ControlToolBar()
@@ -193,8 +194,8 @@ void ControlToolBar::Populate()
       ID_RECORD_BUTTON, true, _("Record"));
 
    /* i18n-hint: (verb)*/
-   mBatch = MakeButton(bmpCleanSpeech, bmpCleanSpeech, bmpCleanSpeechDisabled,
-      ID_BATCH_BUTTON, false, _("Clean Speech"));
+//   mBatch = MakeButton(bmpCleanSpeech, bmpCleanSpeech, bmpCleanSpeechDisabled,
+//      ID_BATCH_BUTTON, false, _("Clean Speech"));
 
 #if wxUSE_TOOLTIPS
    RegenerateToolsTooltips();
@@ -215,7 +216,7 @@ void ControlToolBar::RegenerateToolsTooltips()
    mRewind->SetToolTip(_("Skip to Start"));
    mFF->SetToolTip(_("Skip to End"));
    mRecord->SetToolTip(_("Record (Shift for Append Record)"));
-   mBatch->SetToolTip(_("Clean Speech"));
+//   mBatch->SetToolTip(_("Clean Speech"));
 #endif
 }
 
@@ -233,7 +234,8 @@ void ControlToolBar::UpdatePrefs()
       updated = true;
    }
 
-   gPrefs->Read( wxT("/Batch/CleanSpeechMode"), &active, false );
+   //gPrefs->Read( wxT("/Batch/CleanSpeechMode"), &active, false );
+   active = false;
    if( mCleanSpeechMode != active )
    {
       mCleanSpeechMode = active;
@@ -302,8 +304,8 @@ void ControlToolBar::ArrangeButtons()
    }
 
    // Add and possible hide the CleanSpeech button
-   mSizer->Add( mBatch,  0, flags | wxLEFT, 5 );
-   mSizer->Show( mBatch, mCleanSpeechMode );
+//   mSizer->Add( mBatch,  0, flags | wxLEFT, 5 );
+//   mSizer->Show( mBatch, mCleanSpeechMode );
 
    // Layout the sizer
    mSizer->Layout();
@@ -349,7 +351,8 @@ void ControlToolBar::EnableDisableButtons()
    AudacityProject *p = GetActiveProject();
    size_t numProjects = gAudacityProjects.Count();
    bool tracks = false;
-   bool cleaningSpeech = mBatch->IsDown();
+//   bool cleaningSpeech = mBatch->IsDown();
+   bool cleaningSpeech = false;
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
    bool busy = gAudioIO->IsBusy() || playing || recording;
@@ -378,7 +381,7 @@ void ControlToolBar::EnableDisableButtons()
        canRecord &= !busy;
        canRecord &= ((numProjects == 0) || ((numProjects == 1) && !tracks));
        mRecord->SetEnabled(canRecord);
-       mBatch->SetEnabled(!busy && !recording);
+       //mBatch->SetEnabled(!busy && !recording);
    }
 
    mStop->SetEnabled(busy && !cleaningSpeech);
@@ -751,8 +754,8 @@ void ControlToolBar::OnBatch(wxCommandEvent &evt)
    mRewind->Enable();
    mFF->Enable();
    mPause->Disable();
-   mBatch->Enable();
-   mBatch->PopUp();
+   //mBatch->Enable();
+   //mBatch->PopUp();
 }
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)

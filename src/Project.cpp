@@ -1016,7 +1016,8 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
 
-   gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
+   //gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
+   mCleanSpeechMode = false;
 
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );

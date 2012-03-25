@@ -78,8 +78,8 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
       S.TieCheckBox( _("&Don't apply effects in batch mode"),  
          wxT("/Batch/Debug"), false);
 #endif
-      S.TieCheckBox( _("Cl&eanSpeech Mode (Customized GUI)"), 
-         wxT("/Batch/CleanSpeechMode"), false);
+//      S.TieCheckBox( _("Cl&eanSpeech Mode (Customized GUI)"), 
+//         wxT("/Batch/CleanSpeechMode"), false);
    }
    S.EndStatic();
    S.EndHorizontalLay();
@@ -105,7 +105,8 @@ bool BatchPrefs::Apply()
    PopulateOrExchange( S );
 
    unsigned mode;
-   mode = gPrefs->Read(wxT("/Batch/CleanSpeechMode"), 1L);
+   //mode = gPrefs->Read(wxT("/Batch/CleanSpeechMode"), 1L);
+   mode = 0;
    for(unsigned i=0; i<gAudacityProjects.GetCount(); i++)
       if(gAudacityProjects[i])
       {

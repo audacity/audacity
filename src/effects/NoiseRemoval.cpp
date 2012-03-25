@@ -122,7 +122,8 @@ void EffectNoiseRemoval::CleanSpeechMayReadNoisegate()
    // and it exists
    AudacityProject * project = GetActiveProject();
    if (project == NULL) {
-      int mode = gPrefs->Read(wxT("/Batch/CleanSpeechMode"), 0L);
+      //int mode = gPrefs->Read(wxT("/Batch/CleanSpeechMode"), 0L);
+      int mode = 0;
       if (mode == 0) {
          return;
       }

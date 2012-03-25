@@ -110,7 +110,7 @@ class ControlToolBar:public ToolBar {
 
    AButton *mRewind;
    AButton *mPlay;
-   AButton *mBatch;
+   //AButton *mBatch;
    AButton *mRecord;
    AButton *mPause;
    AButton *mStop;
@@ -126,7 +126,7 @@ class ControlToolBar:public ToolBar {
    // Show/hide cleanspeech button
    bool mCleanSpeechMode;
 
-   wxBoxSizer *mBatchGroup;
+   //wxBoxSizer *mBatchGroup;
    wxBoxSizer *mSizer;
 
    TrackList* mCutPreviewTracks;
