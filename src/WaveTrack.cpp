@@ -1607,10 +1607,10 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
 }
 
 bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
-                    sampleCount start, sampleCount len)
+                    sampleCount start, sampleCount len, fillFormat fill )
 {
    // Simple optimization: When this buffer is completely contained within one clip,
-   // don't clear anything (because we never won't have to). Otherwise, just clear
+   // don't clear anything (because we won't have to). Otherwise, just clear
    // everything to be on the safe side.
    WaveClipList::compatibility_iterator it;
    
@@ -1625,7 +1625,23 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       }
    }
    if (doClear)
-      ClearSamples(buffer, format, 0, len);
+   {
+      // Usually we fill in empty sapce with zero
+      if( fill == fillZero )
+         ClearSamples(buffer, format, 0, len);
+      // but we don't have to.
+      else if( fill==fillTwo )
+      {
+         wxASSERT( format==floatSample );
+         float * pBuffer = (float*)buffer;
+         for(int i=0;i<len;i++)
+            pBuffer[i]=2.0f;
+      }
+      else
+      {
+         wxFAIL_MSG(wxT("Invalid fill format"));
+      }
+   }
 
    for (it=GetClipIterator(); it; it=it->GetNext())
    {

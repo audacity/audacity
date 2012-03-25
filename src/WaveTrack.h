@@ -214,7 +214,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len);
+                   sampleCount start, sampleCount len, fillFormat fill=fillZero);
    bool Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
    void GetEnvelopeValues(double *buffer, int bufferLen,

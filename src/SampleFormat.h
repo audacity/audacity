@@ -24,6 +24,12 @@ typedef enum {
    floatSample = 0x0004000F
 } sampleFormat;
 
+// Used to determine how to fill in empty areas of audio.
+typedef enum {
+   fillZero = 0,
+   fillTwo = 2
+}fillFormat;
+
 /** \brief Return the size (in memory) of one sample (bytes) */
 #define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
 /** \brief Return the size on disk of one uncompressed sample (bytes) */

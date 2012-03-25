@@ -2574,6 +2574,7 @@ void AudacityProject::OnPlaySpeedDec()
 
 double AudacityProject::NearestZeroCrossing(double t0)
 {
+   // Window is 1/100th of a second.
    int windowSize = (int)(GetRate() / 100);
    float *dist = new float[windowSize];
    int i, j;
@@ -2592,8 +2593,10 @@ double AudacityProject::NearestZeroCrossing(double t0)
       int oneWindowSize = (int)(one->GetRate() / 100);
       float *oneDist = new float[oneWindowSize];
       sampleCount s = one->TimeToLongSamples(t0);
+      // fillTwo to ensure that missing values are treated as 2, and hence do not
+      // get used as zero crossings.
       one->Get((samplePtr)oneDist, floatSample,
-               s - oneWindowSize/2, oneWindowSize);
+               s - oneWindowSize/2, oneWindowSize, fillTwo);
 
       // Start by penalizing downward motion.  We prefer upward
       // zero crossings.
@@ -2615,6 +2618,9 @@ double AudacityProject::NearestZeroCrossing(double t0)
       oneDist[oneWindowSize-1] = fabs(.25 * oldVal +
             .75 * oneDist[oneWindowSize-1]);
 
+      // TODO: The mixed rate zero crossing code is broken,
+      // if oneWindowSize > windowSize we'll miss out some
+      // samples - so they will still be zero, so we'll use them.
       for(i=0; i<windowSize; i++) {
          if (windowSize != oneWindowSize)
             j = i * (oneWindowSize-1) / (windowSize-1);
