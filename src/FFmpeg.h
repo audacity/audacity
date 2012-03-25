@@ -246,7 +246,7 @@ public:
 
    wxString GetLibAVFormatPath()
    {
-      return wxT("/usr/local/lib/audacity");
+      return wxT("/Library/Application Support/audacity/libs");
    }
 
    wxString GetLibAVFormatName()

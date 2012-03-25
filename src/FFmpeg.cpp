@@ -644,6 +644,19 @@ bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
          mLibAVFormatPath = path;
       }
    }
+   
+#if defined(__WXMAC__)
+   // If not successful, try loading it from legacy path
+   if (!mLibsLoaded && !GetLibAVFormatPath().IsEmpty()) {
+      wxFileName fn(wxT("/usr/local/lib/audacity"), GetLibAVFormatName());
+      wxString path = fn.GetFullPath();
+      wxLogMessage(wxT("Trying to load FFmpeg libraries from legacy path, '%s'."), path.c_str());
+      mLibsLoaded = InitLibs(path,showerr);
+      if (mLibsLoaded) {
+         mLibAVFormatPath = path;
+      }
+   }
+#endif
 
    // If not successful, try loading using system search paths
    if (!ValidLibsLoaded()) {
