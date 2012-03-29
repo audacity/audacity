@@ -221,7 +221,14 @@ void KeyConfigPrefs::RepopulateBindingsList()
       mDefaultKeys,
       Labels, 
       Categories,
-      true ); // JKC change to true to include effects (list items).
+// True to include effects (list items), false otherwise.
+// Hotkeys for effects not yet supported on Linux/Mac.
+#ifdef __WXMSW__  
+      true 
+#else
+      false
+#endif
+      );
 
    bool save = (mKeys.GetCount() == 0);
 
