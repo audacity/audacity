@@ -13,7 +13,7 @@ Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-2.0
+OutputBaseFilename=audacity-win-2.0.1
 
 WizardImageFile=audacity_InnoWizardImage.bmp
 WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
@@ -47,7 +47,6 @@ MinVersion=4.0,5.0
 ; costmetic-related directives
 SetupIconFile=audacity.ico
 
-
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "basque"; MessagesFile: "compiler:Languages\Basque.isl"
@@ -62,19 +61,22 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 Name: "hebrew"; MessagesFile: "compiler:Languages\Hebrew.isl"
 Name: "hungarian"; MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "SerbianCyrillic"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
 Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
 Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [Tasks]
 Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
+Name: resetPrefs; Description:  "Reset Preferences"; Flags: unchecked
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Name: associate_aup; Description: "&Associate Audacity project files"; GroupDescription: "Other tasks:"; Flags: checkedonce
-
 
 [Files]
 ; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
@@ -112,11 +114,18 @@ Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ig
 Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
 
+; File that acts as a markers to reset prefs.
+; Needs the 'Permissions' so that Audacity can delete it
+Source: "resetPrefs.txt"; DestDir: "{app}"; Permissions: users-modify; Tasks: resetPrefs  
+
 [Icons]
 Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
 Name: "{userdesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
+; Get rid of previous 'reset prefs' file, in case somebody want to reinstall without the reset option after they installed with it
+Type: files; Name: "{app}\resetPrefs.txt" 
+
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
 Type: files; Name: "{app}\audacity-help.htb"
 Type: files; Name: "{app}\audacity-1.2-help.htb"

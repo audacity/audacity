@@ -59,6 +59,7 @@
 #include <wx/intl.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
+#include <wx/stdpaths.h>
 
 #include "FileNames.h"
 
@@ -146,6 +147,30 @@ void InitPreferences()
                              wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
       
    wxConfigBase::Set(gPrefs);
+
+   static wxString resourcesDir;
+   resourcesDir = wxStandardPaths::Get().GetResourcesDir();
+   wxFileName fn;
+   fn = wxFileName( resourcesDir, wxT("resetPrefs.txt") );
+   if( fn.FileExists() )   // it will exist if the (win) installer put it there on request
+   {
+      // pop up a dialogue
+      wxString prompt = _("Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset");
+      int action = wxMessageBox(prompt, _("Reset Audacity Preferences"),
+                                wxYES_NO, NULL);
+      if(action == wxYES)   // reset
+      {
+         gPrefs->DeleteAll();
+         gPrefs->Write(wxT("/NewPrefsInitialized"), true);
+         gPrefs->Flush();
+      }
+      bool gone = wxRemoveFile(fn.GetFullPath());  // remove resetPrefs.txt
+      if(!gone)
+      {
+         wxString fileName = fn.GetFullPath();
+         wxMessageBox(_("Failed to remove %s", fileName), _("Failed!"));
+      }
+   }
 
    // We introduced new file-based preferences in version 1.3.1; the
    // first time this version of Audacity is run we try to migrate
