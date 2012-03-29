@@ -59,6 +59,7 @@ class KeyConfigPrefs:public PrefsPanel
 
    wxArrayString mCats;
    wxArrayString mNames;
+   wxArrayString mDefaultKeys;
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.
 

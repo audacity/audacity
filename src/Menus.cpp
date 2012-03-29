@@ -1212,7 +1212,7 @@ void AudacityProject::CreateMenusAndCommands()
    mSel1save = 0;
 
 #if defined(__WXDEBUG__)
-   c->CheckDups();
+//   c->CheckDups();
 #endif
 }
 

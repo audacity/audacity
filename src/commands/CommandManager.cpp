@@ -665,7 +665,10 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
 #endif
 
    tmpEntry->defaultKey = tmpEntry->key;
+   if( multi )
+      name= name + wxString::Format(wxT("%d"),index ); 
    tmpEntry->name = name;
+
    tmpEntry->label = label;
    tmpEntry->labelPrefix = labelPrefix;
    tmpEntry->labelTop = wxMenuItem::GetLabelFromText(mCurrentMenuName);
@@ -839,6 +842,13 @@ void CommandManager::SetKeyFromName(wxString name, wxString key)
       entry->key = KeyStringNormalize(key);
    }
 }
+
+void CommandManager::SetKeyFromIndex(int i, wxString key)
+{
+   CommandListEntry *entry = mCommandList[i];
+   entry->key = KeyStringNormalize(key);
+}
+
 
 void CommandManager::HandleMenuOpen(wxMenuEvent &evt)
 {
@@ -1098,11 +1108,51 @@ void CommandManager::GetAllCommandNames(wxArrayString &names,
    unsigned int i;
 
    for(i=0; i<mCommandList.GetCount(); i++) {
-      if (includeMultis || !mCommandList[i]->multi)
+      if (!mCommandList[i]->multi)
          names.Add(mCommandList[i]->name);
+      else if( includeMultis )
+         names.Add(mCommandList[i]->name + wxT(":")/*+ mCommandList[i]->label*/);
    }
 }
 
+void CommandManager::GetAllCommandLabels(wxArrayString &names,
+                                        bool includeMultis)
+{
+   unsigned int i;
+
+   for(i=0; i<mCommandList.GetCount(); i++) {
+      if (!mCommandList[i]->multi)
+         names.Add(mCommandList[i]->label);
+      else if( includeMultis )
+         names.Add(mCommandList[i]->label);
+   }
+}
+
+void CommandManager::GetAllCommandData(
+   wxArrayString &names, wxArrayString &keys, wxArrayString &default_keys, wxArrayString &labels, wxArrayString & categories,
+   bool includeMultis)
+{
+   unsigned int i;
+
+   for(i=0; i<mCommandList.GetCount(); i++) {
+      if (!mCommandList[i]->multi)
+      {
+         names.Add(mCommandList[i]->name);
+         keys.Add(mCommandList[i]->key);
+         default_keys.Add( mCommandList[i]->defaultKey);
+         labels.Add(mCommandList[i]->label);
+         categories.Add(mCommandList[i]->labelTop);
+      }
+      else if( includeMultis )
+      {
+         names.Add(mCommandList[i]->name);
+         keys.Add(mCommandList[i]->key);
+         default_keys.Add( mCommandList[i]->defaultKey);
+         labels.Add(mCommandList[i]->label);
+         categories.Add(mCommandList[i]->labelTop);
+      }
+   }
+}
 wxString CommandManager::GetLabelFromName(wxString name)
 {
    CommandListEntry *entry = mCommandNameHash[name];

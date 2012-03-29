@@ -212,14 +212,24 @@ void KeyConfigPrefs::RepopulateBindingsList()
 
    mList->DeleteAllItems(); // Delete contents, but not the column headers.
    mNames.Clear();
-   mManager->GetAllCommandNames(mNames, false);
+   mDefaultKeys.Clear();
+   wxArrayString Keys,Labels,Categories;
+
+   mManager->GetAllCommandData(
+      mNames, 
+      Keys, 
+      mDefaultKeys,
+      Labels, 
+      Categories,
+      true ); // JKC change to true to include effects (list items).
+
    bool save = (mKeys.GetCount() == 0);
 
    size_t ndx = 0;
    int color = 0;
    for (size_t i = 0; i < mNames.GetCount(); i++) {
       wxString name = mNames[i];
-      wxString key = KeyStringDisplay(mManager->GetKeyFromName(name));
+      wxString key =  KeyStringDisplay(Keys[i]);
 
       // Save the original key value to support canceling
       if (save) {
@@ -228,10 +238,10 @@ void KeyConfigPrefs::RepopulateBindingsList()
          mNewKeys.Add(key);
       }
 
-      if (cat != _("All") && mManager->GetCategoryFromName(name) != cat) {
+//      if (cat != _("All") && ! Categories[i].StartsWith(cat)) {
+      if (cat != _("All") && ! (Categories[i]== cat)) {
          continue;
       }
-
       wxString label;
 
       // Labels for undo and redo change according to the last command
@@ -244,7 +254,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
          label = _("Redo");
       }
       else {
-         label = mManager->GetPrefixedLabelFromName(name);
+         label = Labels[i];//mManager->GetPrefixedLabelFromName(name);
       }
 
       label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
@@ -334,8 +344,7 @@ void KeyConfigPrefs::OnSave(wxCommandEvent & e)
 void KeyConfigPrefs::OnDefaults(wxCommandEvent & e)
 {
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      mManager->SetKeyFromName(mNames[i],
-                               mManager->GetDefaultKeyFromName(mNames[i]));
+      mManager->SetKeyFromIndex(i,mDefaultKeys[i]);
    }
    RepopulateBindingsList();
 }
@@ -379,14 +388,20 @@ wxString KeyConfigPrefs::NameFromKey( const wxString & key )
 // This is not yet a committed change, which will happen on a save.
 void KeyConfigPrefs::SetKeyForSelected( const wxString & key )
 {
-   wxString name = mNames[mList->GetItemData(mCommandSelected)];
+   int i = mList->GetItemData(mCommandSelected);
+   wxString name = mNames[i];
 
    mList->SetItem(mCommandSelected, KeyComboColumn, key);
-   mManager->SetKeyFromName(name, key);
+   mManager->SetKeyFromIndex(i, key);
 
+#if 0
    int i=mNames.Index( name );
    if( i!=wxNOT_FOUND ) 
       mNewKeys[i]=key;
+#endif
+
+   mNewKeys[i]=key;
+
 }
 
 
@@ -521,9 +536,11 @@ void KeyConfigPrefs::OnItemSelected(wxListEvent & e)
 bool KeyConfigPrefs::Apply()
 {
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      wxString dkey = KeyStringNormalize(mManager->GetDefaultKeyFromName(mNames[i]));
+//    wxString dkey = KeyStringNormalize(mManager->GetDefaultKeyFromName(mNames[i]));
+      wxString dkey = KeyStringNormalize(mDefaultKeys[i]);
       wxString name = wxT("/NewKeys/") + mNames[i];
-      wxString key = KeyStringNormalize(mManager->GetKeyFromName(mNames[i]));
+//    wxString key = KeyStringNormalize(mManager->GetKeyFromName(mNames[i]));
+      wxString key = KeyStringNormalize(mNewKeys[i]);
 
       if (gPrefs->HasEntry(name)) {
          if (key != KeyStringNormalize(gPrefs->Read(name, key))) {
@@ -547,7 +564,7 @@ void KeyConfigPrefs::Cancel()
 {
    // Restore original key values
    for (size_t i = 0; i < mNames.GetCount(); i++) {
-      mManager->SetKeyFromName(mNames[i], mKeys[i]);
+      mManager->SetKeyFromIndex(i, mKeys[i]);
    }
 
    return;

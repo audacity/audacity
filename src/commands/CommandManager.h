@@ -169,6 +169,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    // Modifying accelerators
    //
    void SetKeyFromName(wxString name, wxString key);
+   void SetKeyFromIndex(int i, wxString key);
 
    //
    // Displaying menus
@@ -191,6 +192,11 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
 
    void GetCategories(wxArrayString &cats);
    void GetAllCommandNames(wxArrayString &names, bool includeMultis);
+   void GetAllCommandLabels(wxArrayString &labels, bool includeMultis);
+   void CommandManager::GetAllCommandData(
+      wxArrayString &names, wxArrayString &keys, wxArrayString &default_keys,
+      wxArrayString &labels, wxArrayString & categories,
+      bool includeMultis);
 
    wxString GetLabelFromName(wxString name);
    wxString GetPrefixedLabelFromName(wxString name);
