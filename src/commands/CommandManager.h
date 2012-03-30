@@ -193,7 +193,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    void GetCategories(wxArrayString &cats);
    void GetAllCommandNames(wxArrayString &names, bool includeMultis);
    void GetAllCommandLabels(wxArrayString &labels, bool includeMultis);
-   void CommandManager::GetAllCommandData(
+   void GetAllCommandData(
       wxArrayString &names, wxArrayString &keys, wxArrayString &default_keys,
       wxArrayString &labels, wxArrayString & categories,
       bool includeMultis);
