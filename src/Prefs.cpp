@@ -168,7 +168,7 @@ void InitPreferences()
       if(!gone)
       {
          wxString fileName = fn.GetFullPath();
-         wxMessageBox(_("Failed to remove %s", fileName), _("Failed!"));
+         wxMessageBox(wxString::Format( _("Failed to remove %s"), fileName), _("Failed!"));
       }
    }
 
