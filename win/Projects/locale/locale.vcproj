@@ -290,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\locale\sr_RS@latin.po"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\locale\sv.po"
 				>
 			</File>
