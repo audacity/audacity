@@ -53,6 +53,10 @@ XARGS=xargs
 #             -F: sort by file
 XGETTEXT_ARGS=-F -C -k_ -k_NoAcc -kwxTRANSLATE \
 	--add-comments="i18n-hint" \
+	--msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
+	--package-name="${AUDACITY_NAME}" \
+	--package-version="2.0.0" \
+	--copyright-holder="Audacity Development Team" \
 	--msgid-bugs-address="audacity-translation@lists.sourceforge.net"
 
 # implicit rules
@@ -73,19 +77,16 @@ updatepo: $(POTFILE)
 	    fi; \
 	done
 
-$(POTFILE):
+$(POTFILE): Makefile
 	touch $@
 	cd ../src && find . -name "*.cpp" -or -name "*.h" \
 	  | $(XARGS) $(XGETTEXT) $(XGETTEXT_ARGS) \
 	  -o ../locale/$(POTFILE).template
 	cd ../locale && sed \
-	  -e 's/PACKAGE VERSION/Audacity 2.0.0/' \
 	  -e 's/SOME DESCRIPTIVE TITLE/Audacity Strings for Translation/' \
 	  -e 's/YEAR-MO-DA HO:MI+ZONE/1999 and beyond/' \
-	  -e 's/THE PACKAGE.S COPYRIGHT HOLDER/Audacity Development Team/' \
-	  -e 's/the PACKAGE package/Audacity/' \
 	  -e 's/FIRST AUTHOR/Audacity Team/' \
-	  -e 's/EMAIL@ADDRESS/audacity-translation@lists.sourceforge.net/' \
+	  -e 's/PACKAGE/${AUDACITY_NAME}/' \
 	  $(POTFILE).template > $(POTFILE)
 	rm -f $(POTFILE).template
 
