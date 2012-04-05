@@ -327,6 +327,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
+      /* i18n-hint: This string is used to configure the controls for times when the recording is
+	   * started and stopped. As such it is important that only the alphabetic parts of the string
+	   * are translated, with the numbers left exactly as they are.
+	   * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
+	   * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
+	   */
       wxString strFormat = _("099 h 060 m 060 s");
       S.StartStatic(_("Start Date and Time"), true);
       {
@@ -368,6 +374,14 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartStatic(_("Duration"), true);
       {
+        /* i18n-hint: This string is used to configure the controls which shows the recording 
+		 * duration. As such it is important that only the alphabetic parts of the string
+         * are translated, with the numbers left exactly as they are.
+         * The string 'days' indicates that the first number in the control will be the number of days,
+		 * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
+		 * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+		 * seconds.
+         */
          wxString strFormat1 = _("099 days 024 h 060 m 060 s");
          m_pTimeTextCtrl_Duration = new TimeTextCtrl(this, ID_TIMETEXT_DURATION, strFormat1);
          m_pTimeTextCtrl_Duration->SetName(_("Duration"));
