@@ -352,6 +352,7 @@ void KeyConfigPrefs::OnDefaults(wxCommandEvent & e)
 {
    for (size_t i = 0; i < mNames.GetCount(); i++) {
       mManager->SetKeyFromIndex(i,mDefaultKeys[i]);
+      mNewKeys[i]=mDefaultKeys[i];
    }
    RepopulateBindingsList();
 }

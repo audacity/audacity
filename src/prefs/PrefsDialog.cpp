@@ -273,6 +273,7 @@ void PrefsDialog::OnOK(wxCommandEvent & event)
       gAudacityProjects[i]->UpdatePrefs();
    }
 
+   gPrefs->Flush();
    EndModal(true);
 }
 
