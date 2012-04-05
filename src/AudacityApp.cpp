@@ -1008,8 +1008,11 @@ bool AudacityApp::OnInit()
 #endif
 
    mLogger=NULL;
+   /* i18n-hint: We translate the title of the log window, but
+    * we're not translating its contents, since the contents will be read by
+    * English speaking engineers */
    #ifndef __WXMAC__
-      mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
+      mLogger = new wxLogWindow(NULL, _("Audacity Log"), false, false);
       mLogger->SetActiveTarget(mLogger);
       mLogger->EnableLogging(true);
       mLogger->SetLogLevel(wxLOG_Max);
@@ -1226,7 +1229,7 @@ bool AudacityApp::OnInit()
    project->MayStartMonitoring();
 
    #ifdef __WXMAC__
-      mLogger = new wxLogWindow(NULL, wxT("Audacity Log"), false, false);
+      mLogger = new wxLogWindow(NULL, _("Audacity Log"), false, false);
       mLogger->SetActiveTarget(mLogger);
       mLogger->EnableLogging(true);
       mLogger->SetLogLevel(wxLOG_Max);

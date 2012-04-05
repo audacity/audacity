@@ -43,18 +43,18 @@ EffectLeveller::EffectLeveller()
    Init();
 }
 
-#define NUM_PASSES_CHOICES 6
+#define NUM_PASSES_CHOICES 5
 
 bool EffectLeveller::Init()
 {
-   mLevellerNumPasses = gPrefs->Read(wxT("/CsPresets/LevellerNumPasses"), 2L);
-   if ((mLevellerNumPasses < 0) || (mLevellerNumPasses >= NUM_PASSES_CHOICES)) {  // corrupted Prefs?
-      mLevellerNumPasses = 0;
-      gPrefs->Write(wxT("/CsPresets/LevellerNumPasses"), 0);
+   mLevellerNumPasses = gPrefs->Read(wxT("/CsPresets/LevellerNumPasses"), 2L) ;
+   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses >= NUM_PASSES_CHOICES)) {  // corrupted Prefs?
+      mLevellerNumPasses = 1;
+      gPrefs->Write(wxT("/CsPresets/LevellerNumPasses"), 1);
    }
    mLevellerDbChoiceIndex = gPrefs->Read(wxT("/CsPresets/LevellerDbChoiceIndex"), 10L);
    if ((mLevellerDbChoiceIndex < 0) || (mLevellerDbChoiceIndex >= Enums::NumDbChoices)) {  // corrupted Prefs?
-      mLevellerDbChoiceIndex = (Enums::NumDbChoices - 1);  //Off-skip
+      mLevellerDbChoiceIndex = 0;  //Least dB
       gPrefs->Write(wxT("/CsPresets/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
    }
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
@@ -66,7 +66,7 @@ bool EffectLeveller::Init()
 
 bool EffectLeveller::CheckWhetherSkipEffect()
 {
-   return ((mLevellerDbChoiceIndex >= (Enums::NumDbChoices - 1)) || (mLevellerNumPasses == 0));
+   return mLevellerNumPasses == 0;
 }
 
 void EffectLeveller::End()
@@ -116,7 +116,7 @@ bool EffectLeveller::PromptUser()
 {
    LevellerDialog dlog(this, mParent);
    dlog.mLevellerDbChoiceIndex = mLevellerDbChoiceIndex;
-   dlog.mLevellerNumPasses = mLevellerNumPasses;
+   dlog.mLevellerNumPassesChoicIndex = mLevellerNumPasses-1;
    dlog.TransferDataToWindow();
 
    dlog.CentreOnParent();
@@ -126,7 +126,7 @@ bool EffectLeveller::PromptUser()
       return false;
    }
 
-   mLevellerNumPasses = dlog.mLevellerNumPasses;
+   mLevellerNumPasses = dlog.mLevellerNumPassesChoicIndex+1;
    mLevellerDbChoiceIndex = dlog.mLevellerDbChoiceIndex;
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
    gPrefs->Write(wxT("/CsPresets/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
@@ -192,7 +192,7 @@ LevellerDialog::LevellerDialog(EffectLeveller *effect, wxWindow *parent)
 :  EffectDialog(parent, _("Leveller"), PROCESS_EFFECT),
    mEffect(effect)
 {
-   mLevellerNumPasses = 0;
+   mLevellerNumPassesChoicIndex = 0;// 
    mLevellerDbChoiceIndex = 0;
    Init();
 }
@@ -201,8 +201,6 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxArrayString db(Enums::NumDbChoices, Enums::GetDbChoices());
    wxArrayString numPasses;
-
-   numPasses.Add(_("None-Skip"));
 
    /* i18n-hint: Of strength of an effect.  Not strongly.*/
    numPasses.Add(_("Light"));
@@ -229,7 +227,7 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay();
       {
          S.TieChoice(_("Degree of Leveling:"),
-                     mLevellerNumPasses,
+                     mLevellerNumPassesChoicIndex,
                      &numPasses);
       }
       S.EndHorizontalLay();
@@ -258,7 +256,7 @@ void LevellerDialog::OnPreview(wxCommandEvent &event)
    int oldLevellerNumPasses = mEffect->mLevellerNumPasses;
 
    mEffect->mLevellerDbChoiceIndex = mLevellerDbChoiceIndex;
-   mEffect->mLevellerNumPasses = mLevellerNumPasses;
+   mEffect->mLevellerNumPasses = mLevellerNumPassesChoicIndex+1;
 
    mEffect->Preview();
    

@@ -1500,6 +1500,12 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
    if (format != mSampleFormat) {
       temp = NewSamples(mMaxSamples, mSampleFormat);
       wxASSERT(temp);
+      // TODO: Make error message clearer?
+      /* i18n-hint: Error message shown when Audacity was trying to allocate
+         memory to hold audio, and didn't have enough.  'New Samples' is
+         the name of the C++ function that failed, for use by a developer,
+         and should not be translated - though you could say 
+         'in function "NewSamples()"' to be clearer.*/
       if (!temp) {
          wxMessageBox(_("Memory allocation failed -- NewSamples"));
          return false;

@@ -158,6 +158,10 @@ bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
     Local variables are declared inside respective branch, globals are declared up.
    */
 
+   bool bLogInterpolation = mbLogInterpolation;
+   if( abs( frequency[1]-frequency[0] ) < 0.000000001 )
+      bLogInterpolation = true;
+
    // this for log interpolation
    if( mbLogInterpolation )
    {

@@ -304,8 +304,11 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND);
       {
          S.SetStyle(wxSL_HORIZONTAL);
+         /* i18n-hint: Transients are sounds like the onset of cymbals or drums.
+            They can get 'blurred' by sound stretching.  This checkbox option
+            may make them sharper again. */
          m_pCheckBox_PreAnalyze = S.Id(ID_CHECKBOX_PREANALYZE)
-            .AddCheckBox(wxT("Dynamic Transient Sharpening"), wxT("Dynamic Transient Sharpening"));
+            .AddCheckBox(_("Dynamic Transient Sharpening"), wxT("false"));
       }
       S.EndHorizontalLay();
    }

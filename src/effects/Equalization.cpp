@@ -1705,7 +1705,7 @@ void EqualizationDialog::setCurve(wxString curveName)
          break;
    if( i == mCurves.GetCount())
    {
-      wxMessageBox( wxT("Requested curve not found, using 'unnamed'"), wxT("Curve not found"), wxOK|wxICON_ERROR );
+      wxMessageBox( _("Requested curve not found, using 'unnamed'"), _("Curve not found"), wxOK|wxICON_ERROR );
       setCurve((int) mCurves.GetCount()-1);
    }
    else

@@ -865,6 +865,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mMainPanel = Factory.AddPanel( 
       this, wxPoint( left, top ), wxSize( width, height ) );
    pNotebook  = Factory.AddNotebook( mMainPanel );
+   /* i18n-hint: This is an experiemental feature where the main panel in
+      Audacity is put on a notebook tab, and this is the name on that tab.
+      Other tabs in that notebook may have instruments, patch panels etc.*/
    pPage = Factory.AddPage( pNotebook, _("Main Mix"));
 #else
    // Not using a notebook, so we place the track panel inside another panel, 

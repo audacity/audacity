@@ -4074,7 +4074,9 @@ void AudacityProject::OnDisjoinLabels()
   EditByLabel( &WaveTrack::Disjoin, false );
   
   PushState( 
-   /* i18n-hint: (verb) Audacity has just detached the labeled regions*/
+   /* i18n-hint: (verb) Audacity has just detached the labeled regions.
+      This message appears in history and tells you about something 
+      Audacity has done.*/
    _( "Detached labeled regions" ),
    /* i18n-hint: (verb)*/     
      _( "Detach Labels" ) );

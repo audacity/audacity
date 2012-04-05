@@ -305,15 +305,21 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
          // LLL: Remove these during "refactor"
          if( t->GetMute() )
          {
+            /* i18n-hint: This is for screen reader software and indicates that
+               on this track mute is on.*/
             *name->Append( _( " Mute On" ) );
          }
          
          if( t->GetSolo() )
          {
+            /* i18n-hint: This is for screen reader software and indicates that
+               on this track solo is on.*/
             *name->Append( _( " Solo On" ) );
          }
          if( t->GetSelected() )
          {
+            /* i18n-hint: This is for screen reader software and indicates that
+               this track is selected.*/
             *name->Append( _( " Select On" ) );
          }
       }

@@ -1369,6 +1369,12 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
    
    if (bForceError && !bAutoRecoverMode)
    {
+      // TODO: Replace with more user friendly error message?
+      /* i18n-hint: The audacity project file is XML and has 'tags' in it,
+         rather like html tags <something>some stuff</something>.
+         This error message is about the tags that hold the sequence information.
+         The error message is confusing to users in English, and could just say
+         "Found problems with <sequence> when checking project file." */
       wxString msg = _("Project check read faulty Sequence tags.");
       const wxChar *buttons[] = 
          {_("Close project immediately with no changes"),

@@ -327,7 +327,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
-      wxString strFormat = wxT("099 h 060 m 060 s");
+      wxString strFormat = _("099 h 060 m 060 s");
       S.StartStatic(_("Start Date and Time"), true);
       {
          m_pDatePickerCtrl_Start = 
@@ -368,7 +368,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartStatic(_("Duration"), true);
       {
-         wxString strFormat1 = wxT("099 days 024 h 060 m 060 s");
+         wxString strFormat1 = _("099 days 024 h 060 m 060 s");
          m_pTimeTextCtrl_Duration = new TimeTextCtrl(this, ID_TIMETEXT_DURATION, strFormat1);
          m_pTimeTextCtrl_Duration->SetName(_("Duration"));
          m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());

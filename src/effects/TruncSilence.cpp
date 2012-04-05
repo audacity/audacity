@@ -891,7 +891,6 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
                    10);
       /* i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1*/
       S.AddUnits( _(":1") );
-      //S.AddUnits(_("(9999999 or greater is off)"));
       S.TieChoice(_("Threshold for silence:"),
                   mEffect->mTruncDbChoiceIndex,
                   &choices);
