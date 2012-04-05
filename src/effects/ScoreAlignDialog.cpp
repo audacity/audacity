@@ -96,7 +96,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
    S.StartMultiColumn(3, wxEXPAND | wxALIGN_CENTER_VERTICAL);
    S.SetStretchyCol(1);
 
-   mFramePeriodLabel = S.AddVariableText(_("Frame Period")+wxT(":"), true,
+   mFramePeriodLabel = S.AddVariableText(_("Frame Period")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
    mFramePeriodSlider = S.Id(ID_FRAMEPERIOD).AddSlider(wxT(""), 
@@ -106,7 +106,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
    mFramePeriodText = S.AddVariableText(SA_DFT_FRAME_PERIOD_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   mWindowSizeLabel = S.AddVariableText(_("Window Size")+wxT(":"), true,
+   mWindowSizeLabel = S.AddVariableText(_("Window Size")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
    mWindowSizeSlider = S.Id(ID_WINDOWSIZE).AddSlider(wxT(""), 
@@ -140,7 +140,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
       This is a new experiemtnal effect, and until we have it documented in the user 
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
-   mPresmoothLabel = S.AddVariableText(_("Presmooth Time")+wxT(":"), true,
+   mPresmoothLabel = S.AddVariableText(_("Presmooth Time")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
    mPresmoothSlider = S.Id(ID_PRESMOOTH).AddSlider(wxT(""), 
@@ -153,7 +153,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
       This is a new experiemtnal effect, and until we have it documented in the user 
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
-   mLineTimeLabel = S.AddVariableText(_("Line Time")+wxT(":"), true,
+   mLineTimeLabel = S.AddVariableText(_("Line Time")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
    mLineTimeSlider = S.Id(ID_LINETIME).AddSlider(wxT(""), 
@@ -166,7 +166,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
       This is a new experiemtnal effect, and until we have it documented in the user 
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
-   mSmoothTimeLabel = S.AddVariableText(_("Smooth Time")+wxT(":"), true,
+   mSmoothTimeLabel = S.AddVariableText(_("Smooth Time")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
    mSmoothTimeSlider = S.Id(ID_SMOOTHTIME).AddSlider(wxT(""), 
