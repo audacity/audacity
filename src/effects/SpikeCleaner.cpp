@@ -14,6 +14,7 @@
 This is a simple version, Audacity could do with
 a more sophisticated approach to this.
 
+
 *//****************************************************************//**
 
 \class SpikeCleanerDialog
@@ -22,6 +23,14 @@ a more sophisticated approach to this.
 *//*******************************************************************/
 
 
+
+
+// JKC: This effect is not yet good enough to be included in Audacity.
+// To save translators from translating it the transaltable strings
+// are marked by _TRANSLATABLE( which is not recognised by gettext and so
+// won't appear in the .pot file.
+// gettext isn't smart enough to ignore commented out code.
+#ifdef NOT_READY_FOR_PRIME_TIME
 
 #include "../Audacity.h"
 
@@ -66,7 +75,7 @@ void EffectSpikeCleaner::End()
 
 bool EffectSpikeCleaner::PromptUser()
 {
-   SpikeCleanerDialog dlog(mParent, -1, _("Spike Cleaner"));
+   SpikeCleanerDialog dlog(mParent, -1, _TRANSLATABLE("Spike Cleaner"));
    dlog.mSpikeMaxDurationMs = mSpikeMaxDurationMs;
    dlog.mSpikeDbChoiceIndex = mSpikeDbChoiceIndex;
    dlog.TransferDataToWindow();
@@ -157,12 +166,12 @@ SpikeCleanerDialog::SpikeCleanerDialog(wxWindow *parent, wxWindowID id,
 {
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxStaticText *statText = new wxStaticText(this, -1,
-                           _("SpikeCleaner by Lynn Allan"));
+                           _TRANSLATABLE("SpikeCleaner by Lynn Allan"));
    mainSizer->Add(statText, 0, wxALIGN_CENTRE | wxALL, 5);
 
    wxBoxSizer *hSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   statText = new wxStaticText(this, -1, _("Max Spike Duration (milliseconds): \n(99999 or greater is off)"));
+   statText = new wxStaticText(this, -1, _TRANSLATABLE("Max Spike Duration (milliseconds):"));
    hSizer->Add(statText, 0, wxALIGN_CENTRE | wxALL, 5);
 
    wxString spikeMaxDurationMsStr;
@@ -175,7 +184,7 @@ SpikeCleanerDialog::SpikeCleanerDialog(wxWindow *parent, wxWindowID id,
    mainSizer->Add(hSizer, 0, wxALIGN_CENTRE | wxALL, 5);
    hSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   statText = new wxStaticText(this, -1, _("Theshold for silence: "));
+   statText = new wxStaticText(this, -1, _TRANSLATABLE("Theshold for silence: "));
    hSizer->Add(statText, 0, wxALIGN_CENTRE | wxALL, 5);
 
    mSpikeDbSilenceThresholdChoice = new wxChoice(this, ID_DB_SILENCE_THRESHOLD_CHOICE,
@@ -185,10 +194,10 @@ SpikeCleanerDialog::SpikeCleanerDialog(wxWindow *parent, wxWindowID id,
    mainSizer->Add(hSizer, 0, wxALIGN_CENTRE | wxALL, 5);
    hSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   wxButton *cancel = new wxButton(this, wxID_CANCEL, _("&Cancel"));
+   wxButton *cancel = new wxButton(this, wxID_CANCEL, _TRANSLATABLE("&Cancel"));
    hSizer->Add(cancel, 0, wxALIGN_CENTRE|wxALL, 5);
 
-   wxButton *ok = new wxButton(this, wxID_OK, _("&OK"));
+   wxButton *ok = new wxButton(this, wxID_OK, _TRANSLATABLE("&OK"));
    ok->SetDefault();
    hSizer->Add(ok, 0, wxALIGN_CENTRE|wxALL, 5);
 
@@ -230,3 +239,5 @@ void SpikeCleanerDialog::OnCancel(wxCommandEvent &event)
 {
    EndModal(false);
 }
+
+#endif
