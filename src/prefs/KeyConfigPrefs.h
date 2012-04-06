@@ -39,8 +39,8 @@ class KeyConfigPrefs:public PrefsPanel
    void SetKeyForSelected( const wxString & key );
 
    void OnDefaults(wxCommandEvent & e);
-   void OnLoad(wxCommandEvent & e);
-   void OnSave(wxCommandEvent & e);
+   void OnImport(wxCommandEvent & e);
+   void OnExport(wxCommandEvent & e);
    void OnSet(wxCommandEvent & e);
    void OnClear(wxCommandEvent & e);
    void OnCategory(wxCommandEvent & e);

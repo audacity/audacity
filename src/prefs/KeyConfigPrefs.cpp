@@ -46,8 +46,8 @@ KeyConfigPrefs and MousePrefs use.
 #define SetButtonID             17003
 #define ClearButtonID           17004
 #define CommandsListID          17005
-#define SaveButtonID            17006
-#define LoadButtonID            17007
+#define ExportButtonID          17006
+#define ImportButtonID          17007
 #define CategoryID              17008
 
 // The numbers of the columns of the mList.
@@ -61,8 +61,8 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_BUTTON(AssignDefaultsButtonID, KeyConfigPrefs::OnDefaults)
    EVT_BUTTON(SetButtonID, KeyConfigPrefs::OnSet)
    EVT_BUTTON(ClearButtonID, KeyConfigPrefs::OnClear)
-   EVT_BUTTON(SaveButtonID, KeyConfigPrefs::OnSave)
-   EVT_BUTTON(LoadButtonID, KeyConfigPrefs::OnLoad)
+   EVT_BUTTON(ExportButtonID, KeyConfigPrefs::OnExport)
+   EVT_BUTTON(ImportButtonID, KeyConfigPrefs::OnImport)
    EVT_CHOICE(CategoryID, KeyConfigPrefs::OnCategory)
    EVT_LIST_ITEM_SELECTED(CommandsListID, KeyConfigPrefs::OnItemSelected)
    EVT_LIST_KEY_DOWN(CommandsListID, KeyConfigPrefs::OnKeyDown)
@@ -169,8 +169,8 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.StartThreeColumn();
       {
-         S.Id(LoadButtonID).AddButton(_("&Load..."));
-         S.Id(SaveButtonID).AddButton(_("&Save..."));
+         S.Id(ImportButtonID).AddButton(_("&Import..."));
+         S.Id(ExportButtonID).AddButton(_("&Export..."));
          S.Id(AssignDefaultsButtonID).AddButton(_("&Defaults"));
       }
       S.EndThreeColumn();
@@ -278,7 +278,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
 //   mList->SortItems(SortCallback, (long) &mNames);
 }
 
-void KeyConfigPrefs::OnLoad(wxCommandEvent & e)
+void KeyConfigPrefs::OnImport(wxCommandEvent & e)
 {
    wxString file = wxT("Audacity-keys.xml");
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),
@@ -302,14 +302,14 @@ void KeyConfigPrefs::OnLoad(wxCommandEvent & e)
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
       wxMessageBox(reader.GetErrorStr(),
-                   _("Error Loading Keyboard Shortcuts"),
+                   _("Error Importing Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
    }
 
    RepopulateBindingsList();
 }
 
-void KeyConfigPrefs::OnSave(wxCommandEvent & e)
+void KeyConfigPrefs::OnExport(wxCommandEvent & e)
 {
    wxString file = wxT("Audacity-keys.xml");
    wxString path = gPrefs->Read(wxT("/DefaultExportPath"),
@@ -341,7 +341,7 @@ void KeyConfigPrefs::OnSave(wxCommandEvent & e)
    catch (XMLFileWriterException* pException)
    {
       wxMessageBox(_("Couldn't write to file: ") + file,
-                   _("Error Saving Keyboard Shortcuts"),
+                   _("Error Exporting Keyboard Shortcuts"),
                    wxOK | wxCENTRE, this);
 
       delete pException;
