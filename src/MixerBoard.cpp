@@ -243,7 +243,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                            ctrlPos, ctrlSize, 
                            wxBU_AUTODRAW, wxDefaultValidator, 
                            _("Musical Instrument"));
-   mBitmapButton_MusicalInstrument->SetName(_("Musical Instrumnet"));
+   mBitmapButton_MusicalInstrument->SetName(_("Musical Instrument"));
 
 
    // pan slider
