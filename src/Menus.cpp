@@ -651,7 +651,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
    /* i18n-hint: (verb) Start playing audio*/
-   c->AddItem(wxT("Play"), _("Play"), FN(OnPlayStop));
+   c->AddItem(wxT("Play"), _("Pl&ay"), FN(OnPlayStop));
    c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"));
    c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
               AudioIOBusyFlag,
@@ -660,29 +660,29 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("Stop"), _("&Stop"), FN(OnStop),
               AudioIOBusyFlag,
               AudioIOBusyFlag);
-   c->AddItem(wxT("SkipStart"), _("Skip to Start"), FN(OnSkipStart), wxT("Home"));
-   c->AddItem(wxT("SkipEnd"), _("Skip to End"), FN(OnSkipEnd), wxT("End"));
+   c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"));
+   c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"));
 
    c->AddSeparator();
 
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
    c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-   c->AddItem(wxT("RecordAppend"), _("Append Record"), FN(OnRecordAppend), wxT("Shift+R"));
+   c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"));
 
    c->AddSeparator();
 
-   c->AddCheck(wxT("Duplex"), _("Overdub (on/off)"), FN(OnTogglePlayRecording), 0);
-   c->AddCheck(wxT("SWPlaythrough"), _("Software Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0);
+   c->AddCheck(wxT("Duplex"), _("&Overdub (on/off)"), FN(OnTogglePlayRecording), 0);
+   c->AddCheck(wxT("SWPlaythrough"), _("So&ftware Playthrough (on/off)"), FN(OnToggleSWPlaythrough), 0);
 
    // Sound Activated recording options
-   c->AddCheck(wxT("SoundActivation"), _("Sound Activated Recording (on/off)"), FN(OnToggleSoundActivated), 0);
-   c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Level..."), FN(OnSoundActivated));
+   c->AddCheck(wxT("SoundActivation"), _("Sound A&ctivated Recording (on/off)"), FN(OnToggleSoundActivated), 0);
+   c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
 
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("Automated Input Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
+   c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Input Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
 #endif
-   c->AddItem(wxT("RescanDevices"), _("Rescan Audio Devices"), FN(OnRescanDevices));
+   c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
    if (!mCleanSpeechMode) {
 
