@@ -1,147 +1,190 @@
+#include "config.h"
 #include "sbsms.h"
 #include "real.h"
 #include "subband.h"
-#include "track.h"
-#include "utils.h"
-#include <stdlib.h>
-#include <string.h>
-#include "config.h"
 #ifdef MULTITHREADED
-#ifdef _WIN32
-#include <windows.h>
-#include <winbase.h>
-#else
-#include <unistd.h>
-#endif
 #include <pthread.h>
 #endif
+#include <stdlib.h>
+#include <string.h>
+#include <algorithm>
+using namespace std;
 
 namespace _sbsms_ {
 
-const sbsms_quality sbsms_quality_standard = {
-  512,6400,0.08f,12.5f,7,64,
-  {6,8,8,8,12},
-  {384,384,576,480,384,288,336,NULL},
-  {4,4,4,4,4,4,4,NULL},
-  {1,1,2,2,1,2,1,NULL},
-  {2.00f,2.00f,4.00f,4.00f,4.00f,4.00f,6.00f,NULL},
-  {2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,NULL},
-  {0.75f,0.75f,0.75f,0.75f,0.75f,0.75f,0.75f,NULL}
+const SBSMSQualityParams SBSMSQualityStandard = {
+  8,3,
+  {512,512,384,384,384,384,384,384,0,0},
+  {168,144,128,96,64,36,24,14,0,0},
+  {384,288,256,168,128,84,52,28,0,0},
+  {512,448,360,288,192,128,84,44,0,0},
+  {1,1,2,1,1,2,1,1,0,0}
 };
 
-const sbsms_quality sbsms_quality_fast = {
-  512,6400,0.08f,12.5f,7,64,
-  {6,8,8,8,12},
-  {192,192,288,240,192,144,168,NULL},
-  {4,4,4,4,4,4,4,NULL},
-  {1,1,2,2,1,2,1,NULL},
-  {2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,3.00f,NULL},
-  {2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,2.00f,NULL},
-  {0.50f,0.50f,0.75f,0.75f,0.75f,0.75f,0.75f,NULL}
+
+SBSMSQuality :: SBSMSQuality(const SBSMSQualityParams *params)
+{
+  this->params = *params;
+}
+
+long SBSMSQuality :: getFrameSize()
+{
+  return (1<<(params.bands-1)) * params.H;
+}
+
+long SBSMSQuality :: getMaxPresamples()
+{
+  long prepad = 0;
+  for(int i=0; i<params.bands; i++) {
+    prepad = max(prepad,(long)((1<<i) * (params.N2[i]>>1)));
+  }
+  prepad += ((1<<(params.bands-1)) - 1) * (NDownSample>>1);
+  long framesize = (1<<(params.bands-1)) * params.H;
+  long frames = prepad / framesize;
+  if(prepad%framesize) frames++;
+  frames++;
+  prepad = frames * framesize;
+  return prepad;
+}
+
+#ifdef MULTITHREADED
+class ThreadInterface;
+#endif
+
+class SBSMSImp {
+public:
+  SBSMSImp(int channels, SBSMSQuality *quality, bool bSynthesize);
+  ~SBSMSImp();
+  inline long read(SBSMSInterface *iface, audio *buf, long n);
+  inline void addRenderer(SBSMSRenderer *renderer);
+  inline void removeRenderer(SBSMSRenderer *renderer);
+  inline long renderFrame(SBSMSInterface *iface);
+  SubBand *top;  
+#ifdef MULTITHREADED
+  friend class ThreadInterface;
+  ThreadInterface *threadInterface;
+#endif
+  friend class SBSMS;
+protected:
+  inline void reset();
+  float getInputTime(SBSMSInterface *iface);
+  long write(SBSMSInterface *);
+  FILE *fpIn;  
+  FILE *fpOut;
+  SBSMSError error;
+  long nPrepad;
+  long nPrepadDone;
+  long nPresamplesDone;
+  SampleCountType nSamplesInputed;
+  SampleCountType nSamplesOutputed;
+  int channels;
+  SBSMSQuality *quality;
+  audio *ina;
 };
 
 #ifdef MULTITHREADED
 
-struct assign_data {
-  sbsms *sbsmser;
+struct channel_thread_data {
   int c;
-  bool bFirst;
-  bool bLast;
+  ThreadInterface *threadInterface;
 };
 
-struct thread_data {
-  pthread_mutex_t writeMutex;
-  pthread_cond_t writeCond;
+struct analyze_thread_data {
+  int i;
+  ThreadInterface *threadInterface;
+};
 
-  pthread_t addThread;
-  pthread_mutex_t addMutex;
-  pthread_cond_t addCond;
-  bool bAddThread;
-
+class ThreadInterface {
+public:
+  friend class SBSMSImp;
+  ThreadInterface(SBSMSImp *sbsms, bool bSynthesize);  
+  ~ThreadInterface();
+  void signalReadWrite();
+  void signalAnalyze();
+  void signalExtract(int c);
+  void signalMark(int c);
+  void signalAssign(int c);
+  void signalTrial2(int c);
+  void signalAdjust2();
+  void signalTrial1(int c);
+  void signalAdjust1();
+  void signalRender(int c);
+  void waitReadWrite();
+  void waitAnalyze(int i);
+  void waitExtract(int c);
+  void waitAssign(int c);
+  void waitTrial2(int c);
+  void waitAdjust2();
+  void waitTrial1(int c);
+  void waitAdjust1();
+  void waitRender(int c);
+  SubBand *top;
+  int channels;
+  pthread_mutex_t readWriteMutex;
+  pthread_cond_t readWriteCond;
+  pthread_t analyzeThread[3];
+  pthread_mutex_t analyzeMutex[3];
+  pthread_cond_t analyzeCond[3];
+  pthread_t extractThread[2];
+  pthread_mutex_t extractMutex[2];
+  pthread_cond_t extractCond[2];
   pthread_t assignThread[2];
-  pthread_mutex_t assignMutex;
-  pthread_cond_t assignCond;
-  bool bAssignThread;
-  assign_data assignData[2];
-
-  pthread_t synthThread;
-  pthread_mutex_t synthMutex;
-  pthread_cond_t synthCond;
-  bool bSynthThread;
-
-  // hack to break out of possible (but very rare) deadlocks caused by checking 
-  // condition predicates after broadcasting conditions
-  pthread_t pollThread;
-  
+  pthread_mutex_t assignMutex[2];
+  pthread_cond_t assignCond[2];
+  pthread_t trial2Thread[2];
+  pthread_mutex_t trial2Mutex[2];
+  pthread_cond_t trial2Cond[2];
+  pthread_t adjust2Thread;
+  pthread_mutex_t adjust2Mutex;
+  pthread_cond_t adjust2Cond;
+  pthread_t trial1Thread[2];
+  pthread_mutex_t trial1Mutex[2];
+  pthread_cond_t trial1Cond[2];
+  pthread_t adjust1Thread;
+  pthread_mutex_t adjust1Mutex;
+  pthread_cond_t adjust1Cond;
+  bool bRenderThread;
+  pthread_t renderThread[2];
+  pthread_mutex_t renderMutex[2];
+  pthread_cond_t renderCond[2];
+  channel_thread_data channelData[2];
+  analyze_thread_data analyzeData[3];
   bool bActive;
 };
 
-void *pollThreadCB(void *data) {
-  sbsms *sbsmser = (sbsms*)data;
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-  subband *top = sbsmser->top;
-  
-  while(threadData->bActive) {
-    if(top->isWriteReady()) {
-      pthread_mutex_lock(&threadData->writeMutex);
-      pthread_cond_broadcast(&threadData->writeCond);    
-      pthread_mutex_unlock(&threadData->writeMutex);
-    }
-    if(top->isAddReady()) {
-      pthread_mutex_lock(&threadData->addMutex);
-      pthread_cond_broadcast(&threadData->addCond);
-      pthread_mutex_unlock(&threadData->addMutex);
-    } 
-    if(top->isMarkReady()) {
-      pthread_mutex_lock(&threadData->assignMutex);
-      pthread_cond_broadcast(&threadData->assignCond);
-      pthread_mutex_unlock(&threadData->assignMutex);
-    }
-    if(top->isSynthReady()) {
-      if(threadData->bSynthThread) {
-	pthread_mutex_lock(&threadData->synthMutex);
-	pthread_cond_broadcast(&threadData->synthCond);
-	pthread_mutex_unlock(&threadData->synthMutex);
+void *analyzeThreadCB(void *data) {
+  analyze_thread_data *analyzeData = (analyze_thread_data*)data;
+  ThreadInterface *threadInterface = analyzeData->threadInterface;
+  SubBand *top = threadInterface->top;
+  int i = analyzeData->i;
+  int channels = threadInterface->channels;
+  while(threadInterface->bActive) {
+    threadInterface->waitAnalyze(i);
+    if(top->analyzeInit(i,true)) {
+      top->analyze(i);
+      top->stepAnalyzeFrame(i);
+      threadInterface->signalReadWrite();
+      for(int c=0; c<channels; c++) {
+        threadInterface->signalExtract(c);
       }
-      pthread_mutex_lock(&threadData->writeMutex);
-      pthread_cond_broadcast(&threadData->writeCond);
-      pthread_mutex_unlock(&threadData->writeMutex);
     }
-#ifdef _WIN32
-    Sleep(100);
-#else
-    usleep(100000);
-#endif
   }
-  
   pthread_exit(NULL);
   return NULL;
 }
 
-void *addThreadCB(void *data) {
-  sbsms *sbsmser = (sbsms*)data;
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-  subband *top = sbsmser->top;
-
-  while(threadData->bActive) {
-    if(!top->isAddReady()) {
-      pthread_mutex_lock(&threadData->addMutex);
-      pthread_cond_wait(&threadData->addCond,&threadData->addMutex);
-      pthread_mutex_unlock(&threadData->addMutex);
-    }
-    while(top->addInit(true)) {
-      top->addTrackPoints();
-      top->stepAddFrame();
-      if(top->isMarkReady()) {
-	pthread_mutex_lock(&threadData->assignMutex);
-	pthread_cond_broadcast(&threadData->assignCond);
-	pthread_mutex_unlock(&threadData->assignMutex);
-      }
-      if(top->isWriteReady()) {
-	pthread_mutex_lock(&threadData->writeMutex);
-	pthread_cond_broadcast(&threadData->writeCond);
-	pthread_mutex_unlock(&threadData->writeMutex);
-      }
+void *extractThreadCB(void *data) {
+  channel_thread_data *channelData = (channel_thread_data*)data;
+  ThreadInterface *threadInterface = channelData->threadInterface;
+  SubBand *top = threadInterface->top;
+  int c = channelData->c;
+  while(threadInterface->bActive) {
+    threadInterface->waitExtract(c);
+    if(top->extractInit(c,true)) {
+      top->extract(c);
+      top->stepExtractFrame(c);
+      threadInterface->signalAnalyze();
+      threadInterface->signalMark(c);        
     }
   }
   pthread_exit(NULL);
@@ -149,598 +192,596 @@ void *addThreadCB(void *data) {
 }
 
 void *assignThreadCB(void *data) {
-  assign_data *assignData = (assign_data*)data;
-  sbsms *sbsmser = assignData->sbsmser;
-  int c = assignData->c;
-  bool bFirst = assignData->bFirst;
-  bool bLast = assignData->bLast;
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-  subband *top = sbsmser->top;
-
-  while(threadData->bActive) {
-    if(!top->markInit(false,c)) {
-      pthread_mutex_lock(&threadData->assignMutex);
-      pthread_cond_wait(&threadData->assignCond,&threadData->assignMutex);
-      pthread_mutex_unlock(&threadData->assignMutex);
-    }
-    while(top->markInit(true,c)) {
-      top->markDuplicates(c);
+  channel_thread_data *channelData = (channel_thread_data*)data;
+  ThreadInterface *threadInterface = channelData->threadInterface;
+  SubBand *top = threadInterface->top;
+  int c = channelData->c;
+  while(threadInterface->bActive) {
+    threadInterface->waitAssign(c);
+    if(top->markInit(c,true)) {
+      top->mark(c);
       top->stepMarkFrame(c);      
-      if(top->isAddReady()) {
-	pthread_mutex_lock(&threadData->addMutex);
-	pthread_cond_broadcast(&threadData->addCond);
-	pthread_mutex_unlock(&threadData->addMutex);
-      }
-    }      
-    while(top->assignInit(true,c)) {
-      top->assignTrackPoints(c);
-      top->advanceTrackPoints(c);
+      threadInterface->signalExtract(c);
+    }
+    if(top->assignInit(c,true)) {
+      top->assign(c);
+      top->advance(c);
       top->stepAssignFrame(c);
-      if(top->isSynthReady()) {
-	if(threadData->bSynthThread) {
-	  pthread_mutex_lock(&threadData->synthMutex);
-	  pthread_cond_broadcast(&threadData->synthCond);
-	  pthread_mutex_unlock(&threadData->synthMutex);
-	}
-	pthread_mutex_lock(&threadData->writeMutex);
-	pthread_cond_broadcast(&threadData->writeCond);
-	pthread_mutex_unlock(&threadData->writeMutex);
-      }
-    }	
-  }
-  pthread_exit(NULL);
-  return NULL;
-}
-
-void *synthThreadCB(void *data) {
-  sbsms *sbsmser = (sbsms*)data;
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-  subband *top = sbsmser->top;
-
-  while(threadData->bActive) {
-    if(!top->isSynthReady()) {
-      pthread_mutex_lock(&threadData->synthMutex);
-      pthread_cond_wait(&threadData->synthCond,&threadData->synthMutex);
-      pthread_mutex_unlock(&threadData->synthMutex);
-    }
-    while(top->synthInit(true)) {
-      top->synthTracks();
-      top->stepSynthFrame();
-      if(top->isAssignReady()) {
-	pthread_mutex_lock(&threadData->assignMutex);
-	pthread_cond_wait(&threadData->assignCond,&threadData->assignMutex);
-	pthread_mutex_unlock(&threadData->assignMutex);		
-      }
+      threadInterface->signalTrial2(c);
     }
   }
   pthread_exit(NULL);
   return NULL;
 }
 
-void sbsms_init_threads(sbsms *sbsmser, bool bAnalyze, bool bSynthesize)
-{
-  thread_data *threadData = (thread_data*)calloc(1,sizeof(thread_data));
-  sbsmser->threadData = threadData;
-  threadData->bActive = true;
-
-  pthread_cond_init(&threadData->writeCond, NULL);
-  pthread_mutex_init(&threadData->writeMutex, NULL);
-
-  if(bAnalyze) {
-    pthread_cond_init(&threadData->addCond, NULL);
-    pthread_mutex_init(&threadData->addMutex, NULL);
-    threadData->bAddThread = true;
-
-    pthread_cond_init(&threadData->assignCond, NULL);    
-    pthread_mutex_init(&threadData->assignMutex, NULL);
-    threadData->bAssignThread = true;
-
-    for(int c=0;c<sbsmser->channels;c++) {
-      threadData->assignData[c].sbsmser = sbsmser;
-      threadData->assignData[c].c = c;
-      threadData->assignData[c].bFirst = (c==0);
-      threadData->assignData[c].bLast = (c==sbsmser->channels-1);
-    }
-  } else {
-    threadData->bAddThread = false;
-    threadData->bAssignThread = false;
-  }
-
-  if(!bAnalyze) bSynthesize = false;
-
-  if(bSynthesize) {
-    pthread_cond_init(&threadData->synthCond, NULL);
-    pthread_mutex_init(&threadData->synthMutex, NULL);
-    threadData->bSynthThread = true;
-  } else {
-    threadData->bSynthThread = false;
-  }
-
-  if(bAnalyze) {
-    pthread_create(&threadData->addThread, NULL, addThreadCB, (void*)sbsmser);
-    for(int c=0;c<sbsmser->channels;c++) {
-      pthread_create(&threadData->assignThread[c], NULL, assignThreadCB, (void*)(&threadData->assignData[c]));
+void *trial2ThreadCB(void *data) {
+  channel_thread_data *channelData = (channel_thread_data*)data;
+  ThreadInterface *threadInterface = channelData->threadInterface;
+  SubBand *top = threadInterface->top;
+  int c = channelData->c;
+  while(threadInterface->bActive) {
+    threadInterface->waitTrial2(c);
+    if(top->trial2Init(c,true)) {
+      top->trial2(c);
+      top->stepTrial2Frame(c);
+      threadInterface->signalAssign(c);
+      threadInterface->signalAdjust2();
     }
   }
-  if(bSynthesize) {
-    pthread_create(&threadData->synthThread, NULL, synthThreadCB, (void*)sbsmser);
-  }
-
-  pthread_create(&threadData->pollThread, NULL, pollThreadCB, (void*)sbsmser);
+  pthread_exit(NULL);
+  return NULL;
 }
 
-void sbsms_destroy_threads(sbsms *sbsmser)
-{
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-  threadData->bActive = false;
-  if(threadData->bAddThread) {
-    pthread_mutex_lock(&threadData->addMutex);
-    pthread_cond_broadcast(&threadData->addCond);
-    pthread_mutex_unlock(&threadData->addMutex);
-    pthread_join(threadData->addThread,NULL);
-  }
-  if(threadData->bAssignThread) {
-    pthread_mutex_lock(&threadData->assignMutex);
-    pthread_cond_broadcast(&threadData->assignCond);
-    pthread_mutex_unlock(&threadData->assignMutex);
-    for(int c=0;c<sbsmser->channels;c++) {
-      pthread_join(threadData->assignThread[c],NULL);
-    }
-  }
-  if(threadData->bSynthThread) {
-    pthread_mutex_lock(&threadData->synthMutex);
-    pthread_cond_broadcast(&threadData->synthCond);
-    pthread_mutex_unlock(&threadData->synthMutex);
-    pthread_join(threadData->synthThread,NULL);
-  }
-  pthread_join(threadData->pollThread,NULL);
-}
-#else
-void sbsms_init_threads(sbsms *sbsmser, bool bAnalyze, bool bSynthesize)
-{
-  sbsmser->threadData = NULL;
-}
-void sbsms_destroy_threads(sbsms *sbsmser)
-{
-}
-#endif
-
-void sbsms_init(int n) {
-  cosinit(n);
-}
-
-void sbsms_private_init(sbsms *sbsmser, bool bAnalyze, bool bSynthesize)
-{
-  sbsmser->ina = make_audio_buf(sbsmser->quality.maxoutframesize);
-  sbsms_init_threads(sbsmser,bAnalyze,bSynthesize);
-}
-
-void sbsms_reset(sbsms *sbsmser)
-{
-  sbsmser->ta->init();
-  sbsmser->n_processed = 0;
-  sbsmser->bWritingComplete = false;
-  
-  if(sbsmser->getSamplesCB) {
-    sbsmser->n_prepad = sbsmser->quality.N[sbsmser->quality.bands-1] * sbsmser->quality.M_MAX;
-    sbsmser->n_prespent = sbsmser->quality.N[sbsmser->quality.bands-1] / sbsmser->quality.H[2] / 2;
-  } else {
-    sbsmser->n_prepad = 0;
-    sbsmser->n_prespent = 0;
-  }
-  sbsmser->top->reset();
-}
-
-void sbsms_seek(sbsms *sbsmser, long framePos, long samplePos)
-{
-  sbsmser->n_processed = samplePos;
-  sbsmser->top->seek(framePos);
-}
-
-sbsms* sbsms_create(FILE *fp, sbsms_rate_cb getRateCB, sbsms_pitch_cb getPitchCB)
-{
-  sbsms *sbsmser = (sbsms*) calloc(1,sizeof(sbsms));
-  // samples, frames
-  fseek(fp,0,SEEK_SET);
-  long samples, frames;
-  fread(&samples,sizeof(long),1,fp);
-  fread(&frames,sizeof(long),1,fp);
-  fread(&(sbsmser->channels),sizeof(int),1,fp);
-  fread(&(sbsmser->quality),sizeof(sbsms_quality),1,fp);
-  unsigned short maxtrackindex;
-  fread(&maxtrackindex,sizeof(unsigned short),1,fp);
-  sbsmser->fp = fp;
-  sbsmser->getSamplesCB = NULL;
-  sbsmser->getRateCB = getRateCB;
-  sbsmser->getPitchCB = getPitchCB;
-  sbsmser->ta = new TrackAllocator(false,maxtrackindex);
-  sbsmser->pa = new PeakAllocator();
-  sbsmser->top = new subband(NULL,1,sbsmser->channels,&sbsmser->quality,2,false,sbsmser->ta,sbsmser->pa);
-  sbsmser->top->setFramesInFile(frames);
-  sbsms_private_init(sbsmser,false,false);
-  sbsms_reset(sbsmser);
-  return sbsmser;
-}
-
-sbsms* sbsms_create(sbsms_cb getSamplesCB, sbsms_rate_cb getRateCB, sbsms_pitch_cb getPitchCB, int channels, sbsms_quality *quality, bool bPreAnalyze, bool bSynthesize)
-{
-  sbsms *sbsmser = (sbsms*) calloc(1,sizeof(sbsms));
-  sbsmser->channels = channels;
-  sbsmser->quality = *quality;
-  sbsmser->getSamplesCB = getSamplesCB;
-  sbsmser->getRateCB = getRateCB;
-  sbsmser->getPitchCB = getPitchCB;
-  sbsmser->ta = new TrackAllocator(true);
-  sbsmser->pa = new PeakAllocator();
-  sbsmser->top = new subband(NULL,1,sbsmser->channels,&sbsmser->quality,6,bPreAnalyze,sbsmser->ta,sbsmser->pa);
-  sbsms_private_init(sbsmser,true,bSynthesize);
-  sbsms_reset(sbsmser);
-  return sbsmser;
-}
-
-void sbsms_destroy(sbsms* sbsmser)
-{
-  free_audio_buf((audio*)sbsmser->ina);
-  sbsms_destroy_threads(sbsmser);
-  if(sbsmser->threadData)
-    free(sbsmser->threadData);
-  delete sbsmser->top;
-  delete sbsmser->ta;
-  delete sbsmser->pa;
-  free(sbsmser);
-}
-
-void sbsms_pre_analyze_complete(sbsms *sbsmser) 
-{
-  sbsmser->top->preAnalyzeComplete();
-}
-
-long sbsms_pre_analyze(sbsms_cb getSamplesCB, void *data, sbsms *sbsmser)
-{
-  long n_towrite = 0;
-  real rate = (sbsmser->getRateCB)(sbsmser->n_processed,data);
-  real pitch = (sbsmser->getPitchCB)(sbsmser->n_processed,data);
-  real a = 1.0f/rate;
-
-  if(sbsmser->n_prepad) {
-    a = 1.0;
-    n_towrite = min(sbsmser->quality.inframesize,sbsmser->n_prepad);
-    memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-    sbsmser->n_prepad -= n_towrite;
-  } else {
-    n_towrite = getSamplesCB(sbsmser->ina,sbsmser->quality.inframesize,data);
-    sbsmser->n_processed += n_towrite;
-    if(n_towrite == 0) {
-      n_towrite = sbsmser->quality.inframesize;
-      memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-    }
-  }
-  return sbsmser->top->preAnalyze(sbsmser->ina, n_towrite, a, pitch);
-}
-
-long sbsms_read_frame(audio *buf, void *data, sbsms *sbsmser, real *pitch0, real *pitch1)
-{
-  long n_read = 0;
-  long n_write = 0;
-#ifdef MULTITHREADED
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-#endif
-
-  do {
-    real rate = (sbsmser->getRateCB)(sbsmser->n_processed,data);
-    real pitch = (sbsmser->getPitchCB)(sbsmser->n_processed,data);
-    real a = 1.0f/rate;    
-
-    if(sbsmser->n_prespent) {
-      n_read = sbsmser->top->read(NULL, pitch0, pitch1);
-      if(n_read) sbsmser->n_prespent--;
-      n_read = 0;
-    } else {
-      n_read = sbsmser->top->read(buf, pitch0, pitch1);
-    }
-
-    n_write = 0;    
-#ifdef MULTITHREADED
-    if(threadData->bAddThread && sbsmser->top->isAddReady()) {
-      pthread_mutex_lock(&threadData->addMutex);
-      pthread_cond_broadcast(&threadData->addCond);
-      pthread_mutex_unlock(&threadData->addMutex);
-    }
-#endif
-    if(n_read == 0) {
-#ifdef MULTITHREADED
-      if(!sbsmser->top->isWriteReady()) {
-        pthread_mutex_lock(&threadData->writeMutex);
-        pthread_cond_wait(&threadData->writeCond,&threadData->writeMutex);
-        pthread_mutex_unlock(&threadData->writeMutex);
+void *adjust2ThreadCB(void *data) {
+  ThreadInterface *threadInterface = (ThreadInterface*)data;
+  int channels = threadInterface->channels;
+  SubBand *top = threadInterface->top;
+  while(threadInterface->bActive) {
+    threadInterface->waitAdjust2();
+    if(top->adjust2Init(true)) {
+      top->adjust2();
+      top->stepAdjust2Frame();
+      for(int c=0; c<channels; c++) {
+        threadInterface->signalTrial2(c);
       }
-#endif
-      long n_towrite = 0;
-      if(sbsmser->getSamplesCB) {
-        if(sbsmser->n_prepad) {
-          a = 1.0;
-          n_towrite = min(sbsmser->quality.inframesize,sbsmser->n_prepad);
-          memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-          sbsmser->n_prepad -= n_towrite;
-        } else {
-          n_towrite = (sbsmser->getSamplesCB)(sbsmser->ina,sbsmser->quality.inframesize,data);
-          sbsmser->n_processed += n_towrite;
-          if(n_towrite == 0) {
-            n_towrite = sbsmser->quality.inframesize;
-            memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-          }
+      for(int c=0; c<channels; c++) {
+        threadInterface->signalTrial1(c);
+      }
+    }
+  }
+  pthread_exit(NULL);
+  return NULL;
+}
+
+void *trial1ThreadCB(void *data) {
+  channel_thread_data *channelData = (channel_thread_data*)data;
+  ThreadInterface *threadInterface = channelData->threadInterface;
+  SubBand *top = threadInterface->top;
+  int c = channelData->c;
+  while(threadInterface->bActive) {
+    threadInterface->waitTrial1(c);
+    if(top->trial1Init(c,true)) {
+      top->trial1(c);
+      top->stepTrial1Frame(c);
+      threadInterface->signalAdjust2();
+      threadInterface->signalAdjust1();
+    }
+  }
+  pthread_exit(NULL);
+  return NULL;
+}
+
+void *adjust1ThreadCB(void *data) {
+  ThreadInterface *threadInterface = (ThreadInterface*)data;
+  int channels = threadInterface->channels;
+  SubBand *top = threadInterface->top;
+  while(threadInterface->bActive) {
+    threadInterface->waitAdjust1();
+    if(top->adjust1Init(true)) {
+      top->adjust1();
+      top->stepAdjust1Frame();
+      for(int c=0; c<channels; c++) {
+        threadInterface->signalTrial1(c);
+      }
+      if(threadInterface->bRenderThread) {
+        for(int c=0; c<channels; c++) {
+          threadInterface->signalRender(c);
         }
-        n_write = sbsmser->top->write(sbsmser->ina, n_towrite, a, pitch);
       } else {
-        n_write = sbsmser->top->readFromFile(sbsmser->fp, a, pitch);
-        sbsmser->n_processed += n_write;
-        if(n_write == 0) {
-          sbsmser->bWritingComplete = true;
-          sbsmser->top->writingComplete();
-        }
+        threadInterface->signalReadWrite();
       }
     }
-#ifdef MULTITHREADED
-    if(threadData->bSynthThread && sbsmser->top->isSynthReady()) {
-      pthread_mutex_lock(&threadData->synthMutex);
-      pthread_cond_broadcast(&threadData->synthCond);
-      pthread_mutex_unlock(&threadData->synthMutex);
-    }
-#endif
-    bool bProcess = true;
-    bool bSynth = true;
-#ifdef MULTITHREADED
-    if(threadData->bAddThread && threadData->bAssignThread) bProcess = false;
-    if(threadData->bSynthThread) bSynth = false;
-#endif
-    if(bProcess) sbsmser->top->process();
-    if(bSynth) sbsmser->top->synth();
-#ifdef MULTITHREADED
-    if(threadData->bAssignThread && sbsmser->top->isAssignReady()) {
-      pthread_mutex_lock(&threadData->assignMutex);
-      pthread_cond_broadcast(&threadData->assignCond);
-      pthread_mutex_unlock(&threadData->assignMutex);
-    }
-#endif
-    
-    if(sbsmser->bWritingComplete && 
-       !sbsmser->top->isframe_readable() && 
-       sbsmser->top->getFramesAtBack() == 0) {
-      n_write = sbsmser->top->zeroPad();
-    }
-  } while(!n_read);
-  return n_read;
-}
-
-long sbsms_write_frame(FILE *fp, void *data, sbsms *sbsmser)
-{
-  long n_tofile = 0;
-  long n_write = 0;
-#ifdef MULTITHREADED
-  thread_data *threadData = (thread_data*)sbsmser->threadData;
-#endif
-
-  do {
-    real rate = (sbsmser->getRateCB)(sbsmser->n_processed,data);
-    real pitch = (sbsmser->getPitchCB)(sbsmser->n_processed,data);
-    real a = 1.0f/rate;
-
-    n_tofile = sbsmser->top->getFramesWrittenToFile();
-
-    n_write = 0;
-#ifdef MULTITHREADED
-    if(threadData->bAddThread && sbsmser->top->isAddReady()) {
-      pthread_mutex_lock(&threadData->addMutex);
-      pthread_cond_broadcast(&threadData->addCond);
-      pthread_mutex_unlock(&threadData->addMutex);
-    }
-#endif
-    if(n_tofile == 0) {
-#ifdef MULTITHREADED
-      if(!sbsmser->top->isWriteReady()) {
-        pthread_mutex_lock(&threadData->writeMutex);
-        pthread_cond_wait(&threadData->writeCond,&threadData->writeMutex);
-        pthread_mutex_unlock(&threadData->writeMutex);
-      }
-#endif
-      if(sbsmser->top->isWriteReady()) {
-        long n_towrite = 0;
-        if(sbsmser->n_prepad) {
-          a = 1.0;
-          n_towrite = min(sbsmser->quality.inframesize,sbsmser->n_prepad);
-          memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-          sbsmser->n_prepad -= n_towrite;
-        } else {
-          n_towrite = (sbsmser->getSamplesCB)(sbsmser->ina,sbsmser->quality.inframesize,data);
-          sbsmser->n_processed += n_towrite;
-          if(n_towrite == 0) {
-            n_towrite = sbsmser->quality.inframesize;
-            memset(sbsmser->ina,0,n_towrite*sizeof(audio));
-          }
-        }
-        n_write = sbsmser->top->write(sbsmser->ina, n_towrite, a, pitch);
-      }
-    }
-#ifdef MULTITHREADED
-    if(threadData->bAddThread && sbsmser->top->isAddReady()) {
-      pthread_mutex_lock(&threadData->addMutex);
-      pthread_cond_broadcast(&threadData->addCond);
-      pthread_mutex_unlock(&threadData->addMutex);
-    }
-#endif    
-#ifndef MULTITHREADED
-    sbsmser->top->process();	
-#endif
-    long n_written = 0;
-    if(sbsmser->n_prespent) {
-      n_written = sbsmser->top->writeToFile(NULL);
-      if(n_written) sbsmser->n_prespent--;
-      n_written = 0;
-    } else {
-      n_written = sbsmser->top->writeToFile(fp);
-    }
-#ifdef MULTITHREADED
-    if(threadData->bAssignThread && sbsmser->top->isAssignReady()) {
-      pthread_mutex_lock(&threadData->assignMutex);
-      pthread_cond_broadcast(&threadData->assignCond);
-      pthread_mutex_unlock(&threadData->assignMutex);
-    }
-#endif
-  } while(!n_tofile);
-  return n_tofile;
-}
-
-FILE *sbsms_open_read(const char *fileName)
-{
-  FILE *fp = fopen(fileName,"rb");
-  return fp;
-}
-
-void sbsms_close_read(FILE *fp)
-{
-  fclose(fp);
-}
-
-FILE *sbsms_open_write(const char *fileName, sbsms *sbsmser, long samples_to_process)
-{
-  FILE *fp = fopen(fileName,"wb");
-  if(!fp)
-    return NULL;
-  fwrite(&samples_to_process,sizeof(long),1,fp);
-  long nframes = 0;
-  fwrite(&nframes,sizeof(long),1,fp);
-  fwrite(&(sbsmser->channels),sizeof(int),1,fp);
-  fwrite(&(sbsmser->quality),sizeof(sbsms_quality),1,fp);
-  unsigned short maxtrackindex = 0;
-  fwrite(&maxtrackindex,sizeof(unsigned short),1,fp);
-  return fp;
-}
-
-void sbsms_close_write(FILE *fp, sbsms *sbsmser)
-{
-  sbsmser->top->writeFramePositionsToFile(fp);
-  fclose(fp);
-}
-
-long sbsms_get_samples_to_process(FILE *fp)
-{
-  fseek(fp,0,SEEK_SET);
-  long samples;
-  fread(&samples,sizeof(long),1,fp);
-  return samples;
-}
-
-long sbsms_get_frames_to_process(FILE *fp)
-{
-  // samples
-  long offset = sizeof(long);
-  fseek(fp,offset,SEEK_SET);
-  long frames;
-  fread(&frames,sizeof(long),1,fp);
-  return frames;
-}
-
-long sbsms_get_channels(FILE *fp)
-{
-  //samples, frames
-  long offset = 2*sizeof(long);
-  fseek(fp,offset,SEEK_SET);
-  int channels;
-  fread(&channels,sizeof(int),1,fp);
-  return channels;
-}
-
-
-void sbsms_get_quality(FILE *fp, sbsms_quality *quality)
-{
-  //samples, frames, channels
-  long offset = 2*sizeof(long) + sizeof(int);
-  fseek(fp,offset,SEEK_SET);
-  fread(quality,sizeof(sbsms_quality),1,fp);
-}
-
-void sbsms_seek_start_data(FILE *fp)
-{
-  // samples, frames, channels, quality, maxtrackindex
-  long offset = 2*sizeof(long) + sizeof(int) + sizeof(sbsms_quality) + sizeof(unsigned short);
-  fseek(fp,offset,SEEK_SET);
-}
-
-long sbsms_samples_processed(sbsms *sbsmser)
-{
-  return sbsmser->n_processed;
-}
-
-long sbsms_get_samples_queued(sbsms *sbsmser)
-{
-  return sbsmser->top->getSamplesQueued();
-}
-
-long sbsms_get_frames_queued(sbsms *sbsmser)
-{
-  return sbsmser->top->getFramesQueued();
-}
-
-long sbsms_get_last_input_frame_size(sbsms *sbsmser)
-{
-  return sbsmser->top->getLastInputFrameSize();
-}
-
-long sbsms_get_frame_pos(sbsms *sbsmser)
-{
-  return sbsmser->top->getFramePos();
-}
-
-real rateCBLinear(long nProcessed, void *userData)
-{
-  sbsmsInfo *si = (sbsmsInfo*) userData;
-  real t0 = (real)nProcessed/(real)si->samplesToProcess;
-  if(t0 > 1.0) t0 = 1.0;
-  real rate = si->rate0 + (si->rate1-si->rate0)*t0;
-  return rate;
-}
-
-real rateCBConstant(long nProcessed, void *userData)
-{
-  sbsmsInfo *si = (sbsmsInfo*) userData;
-  return si->rate0;
-}
-
-long getLinearOutputSamples(sbsmsInfo *si)
-{
-  real s;
-  if(si->rate0 == si->rate1) {
-    s = 1.0f / si->rate0;
-  } else {
-    s = log(si->rate1/si->rate0)/(si->rate1-si->rate0);
   }
-  return (long) (s * si->samplesToProcess);
+  pthread_exit(NULL);
+  return NULL;
 }
 
-real pitchCBLinear(long nProcessed, void *userData)
-{
-  sbsmsInfo *si = (sbsmsInfo*) userData;
-
-  real t0 = (real)nProcessed/(real)si->samplesToProcess;
-  if(t0 > 1.0f) t0 = 1.0f;
-
-  real rate = si->rate0 + (si->rate1-si->rate0)*t0;
-  real stretch;
-  if(rate == si->rate0)
-    stretch = 1.0f/rate;
-  else
-    stretch = log(rate/si->rate0)/(rate-si->rate0);
-  real t1 = stretch * (real)nProcessed/(real)si->samplesToGenerate;
-  if(t1 > 1.0f) t1 = 1.0f;
-
-  real pitch = si->pitch0 + (si->pitch1-si->pitch0)*t1;
-  return pitch;
+void *renderThreadCB(void *data) {
+  channel_thread_data *channelData = (channel_thread_data*)data;
+  ThreadInterface *threadInterface = channelData->threadInterface;
+  SubBand *top = threadInterface->top;
+  int c = channelData->c;
+  while(threadInterface->bActive) {
+    threadInterface->waitRender(c);
+    if(top->renderInit(c,true)) {
+      top->render(c);
+      top->stepRenderFrame(c);
+      threadInterface->signalAdjust1();
+      threadInterface->signalReadWrite();
+    }
+  }
+  pthread_exit(NULL);
+  return NULL;
 }
 
-real pitchCBConstant(long nProcessed, void *userData)
+ThreadInterface :: ThreadInterface(SBSMSImp *sbsms, bool bSynthesize) 
 {
-  sbsmsInfo *si = (sbsmsInfo*) userData;
-  return si->pitch0;
+  this->top = sbsms->top;
+  this->channels = sbsms->channels;
+  bActive = true;
+  pthread_cond_init(&readWriteCond, NULL);
+  pthread_mutex_init(&readWriteMutex, NULL);
+  if(bSynthesize) {
+    bRenderThread = true;
+  } else {
+    bRenderThread = false;
+  }
+  for(int i=0; i<3; i++) {
+    analyzeData[i].i = i;
+    analyzeData[i].threadInterface = this;
+    pthread_cond_init(&analyzeCond[i], NULL);
+    pthread_mutex_init(&analyzeMutex[i], NULL);
+  }
+  for(int c=0; c<channels; c++) {
+    channelData[c].c = c;
+    channelData[c].threadInterface = this;
+    pthread_cond_init(&extractCond[c], NULL);
+    pthread_mutex_init(&extractMutex[c], NULL);
+    pthread_cond_init(&assignCond[c], NULL);    
+    pthread_mutex_init(&assignMutex[c], NULL);
+    pthread_cond_init(&trial2Cond[c], NULL);    
+    pthread_mutex_init(&trial2Mutex[c], NULL);
+    pthread_cond_init(&trial1Cond[c], NULL);    
+    pthread_mutex_init(&trial1Mutex[c], NULL);
+    if(bRenderThread) {
+      pthread_cond_init(&renderCond[c], NULL);
+      pthread_mutex_init(&renderMutex[c], NULL);
+    }
+  }
+  for(int i=0; i<3; i++) {
+    pthread_create(&analyzeThread[i], NULL, analyzeThreadCB, (void*)&analyzeData[i]);
+  }
+  for(int c=0; c<channels; c++) {
+    pthread_create(&extractThread[c], NULL, extractThreadCB, (void*)&channelData[c]);
+    pthread_create(&assignThread[c], NULL, assignThreadCB, (void*)&channelData[c]);
+    pthread_create(&trial2Thread[c], NULL, trial2ThreadCB, (void*)&channelData[c]);
+    pthread_create(&trial1Thread[c], NULL, trial1ThreadCB, (void*)&channelData[c]);
+    if(bRenderThread) {
+      pthread_create(&renderThread[c], NULL, renderThreadCB, (void*)&channelData[c]);
+    }
+  }
+  pthread_cond_init(&adjust2Cond, NULL);    
+  pthread_mutex_init(&adjust2Mutex, NULL);
+  pthread_create(&adjust2Thread, NULL, adjust2ThreadCB, this);
+  pthread_cond_init(&adjust1Cond, NULL);    
+  pthread_mutex_init(&adjust1Mutex, NULL);
+  pthread_create(&adjust1Thread, NULL, adjust1ThreadCB, this);
+}
+
+ThreadInterface :: ~ThreadInterface() 
+{
+  bActive = false;
+  for(int i=0; i<3; i++) {
+    pthread_mutex_lock(&analyzeMutex[i]);
+    pthread_cond_broadcast(&analyzeCond[i]);
+    pthread_mutex_unlock(&analyzeMutex[i]);
+    pthread_join(analyzeThread[i],NULL);
+  }
+  for(int c=0; c<channels; c++) {
+    pthread_mutex_lock(&extractMutex[c]);
+    pthread_cond_broadcast(&extractCond[c]);
+    pthread_mutex_unlock(&extractMutex[c]);
+    pthread_join(extractThread[c],NULL);
+    pthread_mutex_lock(&assignMutex[c]);
+    pthread_cond_broadcast(&assignCond[c]);
+    pthread_mutex_unlock(&assignMutex[c]);
+    pthread_join(assignThread[c],NULL);
+    pthread_mutex_lock(&trial2Mutex[c]);
+    pthread_cond_broadcast(&trial2Cond[c]);
+    pthread_mutex_unlock(&trial2Mutex[c]);
+    pthread_join(trial2Thread[c],NULL);
+    pthread_mutex_lock(&adjust2Mutex);
+    pthread_cond_broadcast(&adjust2Cond);
+    pthread_mutex_unlock(&adjust2Mutex);
+    pthread_join(adjust2Thread,NULL);
+    pthread_mutex_lock(&trial1Mutex[c]);
+    pthread_cond_broadcast(&trial1Cond[c]);
+    pthread_mutex_unlock(&trial1Mutex[c]);
+    pthread_join(trial1Thread[c],NULL);
+    pthread_mutex_lock(&adjust1Mutex);
+    pthread_cond_broadcast(&adjust1Cond);
+    pthread_mutex_unlock(&adjust1Mutex);
+    pthread_join(adjust1Thread,NULL);
+    if(bRenderThread) {
+      pthread_mutex_lock(&renderMutex[c]);
+      pthread_cond_broadcast(&renderCond[c]);
+      pthread_mutex_unlock(&renderMutex[c]);
+      pthread_join(renderThread[c],NULL);
+    }
+  }
+}
+
+void ThreadInterface :: signalReadWrite() 
+{
+  pthread_mutex_lock(&readWriteMutex);
+  bool bReady;
+  if(bRenderThread) {
+    bReady = (top->writeInit() || top->readInit());
+  } else {
+    if(top->writeInit()) {
+      bReady = true;  
+    } else {
+      bReady = true;
+      for(int c=0; c<channels; c++) {
+        if(!top->renderInit(c,false)) {
+          bReady = false;
+          break;
+        }
+      }
+    }
+  }
+  if(bReady) {
+    pthread_cond_broadcast(&readWriteCond);
+  }
+  pthread_mutex_unlock(&readWriteMutex);
+}
+
+void ThreadInterface :: signalAnalyze() 
+{
+  for(int i=0; i<3; i++) {
+    pthread_mutex_lock(&analyzeMutex[i]);
+    if(top->analyzeInit(i,false)) {
+      pthread_cond_broadcast(&analyzeCond[i]);
+    }
+    pthread_mutex_unlock(&analyzeMutex[i]);
+  }
+}
+
+void ThreadInterface :: signalExtract(int c) {
+  pthread_mutex_lock(&extractMutex[c]);
+  if(top->extractInit(c,false)) {
+    pthread_cond_broadcast(&extractCond[c]);
+  }
+  pthread_mutex_unlock(&extractMutex[c]);
+}
+
+void ThreadInterface :: signalMark(int c) {
+  pthread_mutex_lock(&assignMutex[c]);
+  if(top->markInit(c,false)) {
+    pthread_cond_broadcast(&assignCond[c]);
+  }
+  pthread_mutex_unlock(&assignMutex[c]);
+}
+
+void ThreadInterface :: signalAssign(int c) {
+  pthread_mutex_lock(&assignMutex[c]);
+  if(top->assignInit(c,false)) {
+    pthread_cond_broadcast(&assignCond[c]);
+  }
+  pthread_mutex_unlock(&assignMutex[c]);
+}
+
+void ThreadInterface :: signalTrial2(int c) {
+  pthread_mutex_lock(&trial2Mutex[c]);
+  if(top->trial2Init(c,false)) {
+    pthread_cond_broadcast(&trial2Cond[c]);
+  }
+  pthread_mutex_unlock(&trial2Mutex[c]);
+}
+
+void ThreadInterface :: signalAdjust2() {
+  pthread_mutex_lock(&adjust2Mutex);
+  if(top->adjust2Init(false)) {
+    pthread_cond_broadcast(&adjust2Cond);
+  }
+  pthread_mutex_unlock(&adjust2Mutex);
+}
+
+void ThreadInterface :: signalTrial1(int c) {
+  pthread_mutex_lock(&trial1Mutex[c]);
+  if(top->trial1Init(c,false)) {
+    pthread_cond_broadcast(&trial1Cond[c]);
+  }
+  pthread_mutex_unlock(&trial1Mutex[c]);
+}
+
+void ThreadInterface :: signalAdjust1() {
+  pthread_mutex_lock(&adjust1Mutex);
+  if(top->adjust1Init(false)) {
+    pthread_cond_broadcast(&adjust1Cond);
+  }
+  pthread_mutex_unlock(&adjust1Mutex);
+}
+
+void ThreadInterface :: signalRender(int c) {
+  pthread_mutex_lock(&renderMutex[c]);
+  if(top->renderInit(c,false)) {
+    pthread_cond_broadcast(&renderCond[c]);
+  }
+  pthread_mutex_unlock(&renderMutex[c]);
+}
+
+void ThreadInterface :: waitReadWrite() {
+  pthread_mutex_lock(&readWriteMutex);
+  bool bReady;
+  if(bRenderThread) {
+    bReady = (top->writeInit() || top->readInit());
+  } else {
+    if(top->writeInit()) {
+      bReady = true;  
+    } else {
+      bReady = true;
+      for(int c=0; c<channels; c++) {
+        if(!top->renderInit(c,false)) {
+          bReady = false;
+          break;
+        }
+      }
+    }
+  }
+  if(!bReady) {
+    pthread_cond_wait(&readWriteCond,&readWriteMutex);
+  }
+  pthread_mutex_unlock(&readWriteMutex);
+}
+
+void ThreadInterface :: waitAnalyze(int i) {
+  pthread_mutex_lock(&analyzeMutex[i]);
+  if(!top->analyzeInit(i,false)) {
+    pthread_cond_wait(&analyzeCond[i],&analyzeMutex[i]);
+  }
+  pthread_mutex_unlock(&analyzeMutex[i]);
+}
+
+void ThreadInterface :: waitExtract(int c) {
+  pthread_mutex_lock(&extractMutex[c]);
+  if(!top->extractInit(c,false)) {
+    pthread_cond_wait(&extractCond[c],&extractMutex[c]);
+  }
+  pthread_mutex_unlock(&extractMutex[c]);
+}
+
+void ThreadInterface :: waitAssign(int c) {
+  pthread_mutex_lock(&assignMutex[c]);
+  if(!top->markInit(c,false) && !top->assignInit(c,false)) {
+    pthread_cond_wait(&assignCond[c],&assignMutex[c]);
+  }
+  pthread_mutex_unlock(&assignMutex[c]);
+}
+
+void ThreadInterface :: waitTrial2(int c) {
+  pthread_mutex_lock(&trial2Mutex[c]);
+  if(!top->trial2Init(c,false)) {
+    pthread_cond_wait(&trial2Cond[c],&trial2Mutex[c]);
+  }
+  pthread_mutex_unlock(&trial2Mutex[c]);
+}
+
+void ThreadInterface :: waitAdjust2() {
+  pthread_mutex_lock(&adjust2Mutex);
+  if(!top->adjust2Init(false)) {
+    pthread_cond_wait(&adjust2Cond,&adjust2Mutex);
+  }
+  pthread_mutex_unlock(&adjust2Mutex);
+}
+
+void ThreadInterface :: waitTrial1(int c) {
+  pthread_mutex_lock(&trial1Mutex[c]);
+  if(!top->trial1Init(c,false)) {
+    pthread_cond_wait(&trial1Cond[c],&trial1Mutex[c]);
+  }
+  pthread_mutex_unlock(&trial1Mutex[c]);
+}
+
+void ThreadInterface :: waitAdjust1() {
+  pthread_mutex_lock(&adjust1Mutex);
+  if(!top->adjust1Init(false)) {
+    pthread_cond_wait(&adjust1Cond,&adjust1Mutex);
+  }
+  pthread_mutex_unlock(&adjust1Mutex);
+}
+
+void ThreadInterface :: waitRender(int c) {
+  pthread_mutex_lock(&renderMutex[c]);
+  if(!top->renderInit(c,false)) {
+    pthread_cond_wait(&renderCond[c],&renderMutex[c]);
+  }
+  pthread_mutex_unlock(&renderMutex[c]);
+}
+
+#endif
+
+void SBSMSImp :: reset()
+{
+  nSamplesInputed = 0;
+  nSamplesOutputed = 0;
+  nPrepadDone = 0;
+  nPresamplesDone = 0;
+}
+
+SBSMS :: SBSMS(int channels, SBSMSQuality *quality, bool bSynthesize)
+{ imp = new SBSMSImp(channels,quality,bSynthesize); }
+SBSMSImp :: SBSMSImp(int channels, SBSMSQuality *quality, bool bSynthesize)
+{
+  this->channels = channels;
+  this->quality = new SBSMSQuality(&quality->params);
+  error = SBSMSErrorNone;
+  top = new SubBand(NULL,0,channels,quality,bSynthesize);
+  ina = (audio*)malloc(quality->getFrameSize()*sizeof(audio));
+  nPrepad = quality->getMaxPresamples();
+  reset();
+#ifdef MULTITHREADED
+  threadInterface = new ThreadInterface(this,bSynthesize);
+#endif
+}
+
+SBSMS :: ~SBSMS() { delete imp; }
+SBSMSImp :: ~SBSMSImp()
+{
+#ifdef MULTITHREADED
+  if(threadInterface) delete threadInterface;
+#endif
+  if(top) delete top;
+  if(ina) free(ina);
+  if(quality) delete quality;
+}
+
+void SBSMS :: addRenderer(SBSMSRenderer *renderer) { imp->addRenderer(renderer); }
+void SBSMSImp :: addRenderer(SBSMSRenderer *renderer)
+{
+  top->addRenderer(renderer);
+}
+
+void SBSMS :: removeRenderer(SBSMSRenderer *renderer) { imp->removeRenderer(renderer); }
+void SBSMSImp :: removeRenderer(SBSMSRenderer *renderer)
+{
+  top->removeRenderer(renderer);
+}
+
+SBSMSError SBSMS :: getError()
+{
+  return imp->error;
+}
+
+float SBSMSImp :: getInputTime(SBSMSInterface *iface)
+{
+  return (float)nSamplesInputed / (float)iface->getSamplesToInput();
+}
+
+long SBSMSImp :: write(SBSMSInterface *iface)
+{
+  long nWrite = 0;
+
+  float t = getInputTime(iface);
+  float stretch = iface->getStretch(t);
+  float pitch = iface->getPitch(t);
+
+  long nPresamples = iface->getPresamples();
+  if(nPrepadDone < nPrepad - nPresamples) {
+    stretch = 1.0f;
+    nWrite = min(quality->getFrameSize(),nPrepad - nPresamples - nPrepadDone);
+    memset(ina,0,nWrite*sizeof(audio));
+    nPrepadDone += nWrite;
+  } else if(nPresamplesDone < nPresamples) {
+    stretch = 1.0f;
+    nWrite = min(quality->getFrameSize(),nPresamples - nPresamplesDone);
+    nWrite = iface->samples(ina,nWrite);
+    if(nWrite == 0) {
+      nWrite = quality->getFrameSize();
+      memset(ina,0,nWrite*sizeof(audio));
+    } else {
+      nPresamplesDone += nWrite;
+    }
+  } else {
+    nWrite = iface->samples(ina,quality->getFrameSize());
+    nSamplesInputed += nWrite;
+    if(nWrite == 0) {
+      nWrite = quality->getFrameSize();
+      memset(ina,0,nWrite*sizeof(audio));
+    }
+  }
+  nWrite = top->write(ina, nWrite, stretch, pitch);
+  return nWrite;
+}
+
+long SBSMS :: read(SBSMSInterface *iface, audio *buf, long n) { return imp->read(iface,buf,n); }
+long SBSMSImp :: read(SBSMSInterface *iface, audio *buf, long n)
+{
+  long nReadTotal = 0;
+  while(nReadTotal < n) {
+    long nRead;
+    nRead = n - nReadTotal;
+    nRead = top->read(buf+nReadTotal,nRead);
+    nReadTotal += nRead;
+    if(nRead) {
+#ifdef MULTITHREADED
+      if(threadInterface->bRenderThread) {
+        for(int c=0; c<channels; c++) {
+          threadInterface->signalRender(c);
+        }
+      }
+#endif
+    } else {
+#ifdef MULTITHREADED
+      threadInterface->waitReadWrite();
+#endif
+      if(top->writeInit()) {
+        write(iface);
+#ifdef MULTITHREADED
+        threadInterface->signalAnalyze();
+#endif
+      }
+    }
+#ifdef MULTITHREADED
+    if(!threadInterface->bRenderThread) {
+      for(int c=0; c<channels; c++) {     
+        threadInterface->signalRender(c);
+      }
+    }
+#else
+    top->process(true);
+#endif
+    nSamplesOutputed += nRead;
+  }
+  return nReadTotal;
+}
+
+long SBSMS :: renderFrame(SBSMSInterface *iface) { return imp->renderFrame(iface); }
+long SBSMSImp :: renderFrame(SBSMSInterface *iface)
+{
+  long nRendered = 0;
+  while(!nRendered) {
+    bool bReady = true;
+    for(int c=0; c<channels; c++) {
+      if(!top->renderInit(c,false)) {
+        bReady = false;
+        break;
+      }
+    }
+    if(bReady) {
+      nRendered = top->renderSynchronous();
+    }
+    if(nRendered) {
+#ifdef MULTITHREADED
+      threadInterface->signalAdjust1();
+#endif
+    } else {
+#ifdef MULTITHREADED
+      threadInterface->waitReadWrite();  
+#endif      
+      if(top->writeInit()) {
+        write(iface);
+      }
+      
+#ifdef MULTITHREADED
+      threadInterface->signalAnalyze();
+#endif
+    }
+#ifdef MULTITHREADED
+#else
+    top->process(false);
+#endif
+    if(nSamplesOutputed >= iface->getSamplesToOutput()) {
+      top->renderComplete(iface->getSamplesToOutput());
+    }
+    nSamplesOutputed += nRendered;
+  }
+  return nRendered;
+}
+
+long SBSMS :: getInputFrameSize()
+{
+  return imp->top->getInputFrameSize();
 }
 
 }

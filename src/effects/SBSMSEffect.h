@@ -21,22 +21,23 @@
 #include "sbsms.h"
 using namespace _sbsms_;
 
-class WaveTrack;
-
 class EffectSBSMS : public Effect {
  public:
-   static bool bInit;
    virtual bool Process();
-   void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd, bool bPreAnalyze);
+   void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
+                      SlideType rateSlideType, SlideType pitchSlideType,
+                      bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
 
  private:
    bool ProcessLabelTrack(Track *track);
    double rateStart, rateEnd, pitchStart, pitchEnd;
-   bool bPreAnalyze;
+   bool bLinkRatePitch, bRateReferenceInput, bPitchReferenceInput;
+   SlideType rateSlideType;
+   SlideType pitchSlideType;
    int mCurTrackNum;
    double mCurT0;
    double mCurT1;
-   real mTotalStretch;
+   float mTotalStretch;
 };
 
 #endif

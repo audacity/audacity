@@ -1,90 +1,81 @@
+// -*- mode: c++ -*-
 #ifndef TRACK_H
 #define TRACK_H
 
-#include "buffer.h"
 #include "trackpoint.h"
 #include "config.h"
+
 #ifdef MULTITHREADED
 #include "pthread.h"
 #endif
-#include <stack>
+
 #include <vector>
 using namespace std;
 
 namespace _sbsms_ {
 
-class sms;
-class renderer;
-
-class track {
-  friend class renderer;
- public:
-  void endTrack(bool bTail);
-  bool isEnded();
-  bool isDone();
-  void startTrack(trackpoint *p, bool bTail);
-  void push_back(trackpoint *p);
-  void push_back_tpoint(tpoint *p);
-  long size();
-  void synth(SampleBuf *out,
-             long writePos,
-             int c,
-             long synthtime,
-             int steps,
-             real fScale0,
-             real fScale1,
-             real mScale);
-  trackpoint *getTrackPoint(long time);
-  bool isStart(long synthtime);
-  bool isEnd(long synthtime);
-  trackpoint *back();
-
-  vector<tpoint*> point;
-
-  unsigned short index;
-  bool bEnd;
-  track *descendant;
-  track *precursor;
-  long tailEnd;
-  long tailStart;
-  long currtime;
-  real rise;
-  real fall;
-  long start;
-  long end;
-  real m_p;
-  real m_pDescendant;
-  int res;
-  sms *owner;
-
- protected:
-  friend class TrackAllocator;
-  track(track *precursor,sms *owner,int res);
-  ~track();
+enum {
+  trackIndexNone = 0
 };
 
-class TrackAllocator {
- public:
-  TrackAllocator(bool bManageIndex);
-  TrackAllocator(bool bManageIndex, unsigned short maxtrackindex);
-  void init();
-  int size();
-  ~TrackAllocator();
+#define PhShift 5
+#define WShift 21
+#define Ph1 65535
+#define WPI 536870912
+#define W2PI 1073741824
+#define W2PIMask 1073741823
+#define WScale 1.708913188941079e8f
+#define MScale 4.656683928435187e-10f
 
-  track *getTrack(unsigned short index);
-  track *create(track *precursor,sms *owner, int res, unsigned short index);
-  track *create(track *precursor,sms *owner, int res);
-  void destroy(track *t);
+enum SynthMode {
+  synthModeOutput = 0,
+  synthModeTrial2,
+  synthModeTrial1
+};
+
+class SMS;
+
+class Track : public SBSMSTrack {
+public:
+  Track(float h, TrackIndexType index, TrackPoint *p, const TimeType &time, bool bStitch);
+  ~Track();
+
+  SBSMSTrackPoint *getSBSMSTrackPoint(const TimeType &time);
+  TrackIndexType getIndex();
+  bool isFirst(const TimeType &synthtime);
+  bool isLast(const TimeType &synthtime);
+
+protected:
+  void push_back(TrackPoint *p);
+  TrackPoint *back();
+  void endTrack(bool bStitch);
+  TrackPoint *getTrackPoint(const TimeType &time);
+  TimeType size();
+  TrackPoint *updateFPH(const TimeType &time, int mode, int n, float f0, float f1);
+  void updateM(const TimeType &time, int mode);
+  void step(const TimeType &time);
+  void synth(float *out, const TimeType &synthtime, int n, int mode, int c);
+  bool jump(TrackPoint *tp0, TrackPoint *tp1);
+
+  friend class SMS;
+  friend class SynthRenderer;
+  friend class TrackPoint;
 
  protected:
-#ifdef MULTITHREADED
-  pthread_mutex_t taMutex;
-#endif
-  long gIdCount;
-  stack<unsigned short> gTrackIndex;
-  vector<track*> gTrack;
-  bool bManageIndex;
-
+  vector<TrackPoint*> point;
+  float h;
+  float jumpThresh;
+  TrackIndexType index;
+  TimeType start;
+  TimeType first;
+  TimeType end;
+  TimeType last;
+  bool bEnd;
+  bool bEnded;
+  bool bRender;
+  bool bStitch;
+  bool bSplit;
+  bool bMerge;
 };
 
 }

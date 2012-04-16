@@ -828,9 +828,7 @@
 		28884969131B6CF600B59735 /* ro.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884938131B6CF600B59735 /* ro.po */; };
 		2888496A131B6CF600B59735 /* ru.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884939131B6CF600B59735 /* ru.po */; };
 		2888496B131B6CF600B59735 /* sk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493A131B6CF600B59735 /* sk.po */; };
-		2888496C131B6CF600B59735 /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sl.po */; };
-		2888496D131B6CF600B59735 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493C131B6CF600B59735 /* sr_RS.po */; };
-		2888496D131B6CF600B59735 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493C131B6CF600B59735 /* sr_RS@latin.po */; };
+		2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
 		2888496D131B6CF600B59735 /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493C131B6CF600B59735 /* sv.po */; };
 		2888496E131B6CF600B59735 /* tg.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493D131B6CF600B59735 /* tg.po */; };
 		2888496F131B6CF600B59735 /* tr.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493E131B6CF600B59735 /* tr.po */; };
@@ -1151,20 +1149,17 @@
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
 		28FE4A3A0ABF58360056F5C4 /* soundtouch_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FE4A390ABF58360056F5C4 /* soundtouch_config.h */; };
+		82FF185213CF01A600C1B664 /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
+		82FF185313CF01A600C1B664 /* slide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184F13CF01A600C1B664 /* slide.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
-		ED2707240EF9C51D007D4FFD /* audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707020EF9C51D007D4FFD /* audio.cpp */; };
-		ED2707250EF9C51D007D4FFD /* audio.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707030EF9C51D007D4FFD /* audio.h */; };
 		ED2707260EF9C51D007D4FFD /* buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707040EF9C51D007D4FFD /* buffer.cpp */; };
 		ED2707270EF9C51D007D4FFD /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707050EF9C51D007D4FFD /* buffer.h */; };
-		ED2707280EF9C51D007D4FFD /* defs.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707060EF9C51D007D4FFD /* defs.h */; };
 		ED2707290EF9C51D007D4FFD /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707070EF9C51D007D4FFD /* fft.cpp */; };
 		ED27072A0EF9C51D007D4FFD /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707080EF9C51D007D4FFD /* fft.h */; };
 		ED27072B0EF9C51D007D4FFD /* grain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707090EF9C51D007D4FFD /* grain.cpp */; };
 		ED27072C0EF9C51D007D4FFD /* grain.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070A0EF9C51D007D4FFD /* grain.h */; };
-		ED27072D0EF9C51D007D4FFD /* peak.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070B0EF9C51D007D4FFD /* peak.cpp */; };
-		ED27072E0EF9C51D007D4FFD /* peak.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070C0EF9C51D007D4FFD /* peak.h */; };
 		ED2707300EF9C51D007D4FFD /* real.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070E0EF9C51D007D4FFD /* real.h */; };
 		ED2707310EF9C51D007D4FFD /* resample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070F0EF9C51D007D4FFD /* resample.cpp */; };
 		ED2707320EF9C51D007D4FFD /* sbsms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707100EF9C51D007D4FFD /* sbsms.cpp */; };
@@ -1177,7 +1172,6 @@
 		ED2707390EF9C51D007D4FFD /* track.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707170EF9C51D007D4FFD /* track.h */; };
 		ED27073A0EF9C51D007D4FFD /* trackpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707180EF9C51D007D4FFD /* trackpoint.cpp */; };
 		ED27073B0EF9C51D007D4FFD /* trackpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707190EF9C51D007D4FFD /* trackpoint.h */; };
-		ED27073C0EF9C51D007D4FFD /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27071A0EF9C51D007D4FFD /* utils.cpp */; };
 		ED27073D0EF9C51D007D4FFD /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27071B0EF9C51D007D4FFD /* utils.h */; };
 		ED2707460EF9C550007D4FFD /* liblibsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* liblibsbsms.a */; };
 		ED2707500EF9C64F007D4FFD /* SBSMSEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */; };
@@ -2453,8 +2447,6 @@
 		28884938131B6CF600B59735 /* ro.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = ro.po; path = ../locale/ro.po; sourceTree = SOURCE_ROOT; };
 		28884939131B6CF600B59735 /* ru.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = ru.po; path = ../locale/ru.po; sourceTree = SOURCE_ROOT; };
 		2888493A131B6CF600B59735 /* sk.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sk.po; path = ../locale/sk.po; sourceTree = SOURCE_ROOT; };
-		2888493B131B6CF600B59735 /* sl.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sl.po; path = ../locale/sl.po; sourceTree = SOURCE_ROOT; };
-		2888493B131B6CF600B59735 /* sr_RS.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sr_RS.po; path = ../locale/sr_RS.po; sourceTree = SOURCE_ROOT; };
 		2888493B131B6CF600B59735 /* sr_RS@latin.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = "sr_RS@latin.po"; path = "../locale/sr_RS@latin.po"; sourceTree = SOURCE_ROOT; };
 		2888493C131B6CF600B59735 /* sv.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
 		2888493D131B6CF600B59735 /* tg.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = tg.po; path = ../locale/tg.po; sourceTree = SOURCE_ROOT; };
@@ -2824,6 +2816,11 @@
 		28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = mmx_optimized.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = sse_optimized.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28FE4A390ABF58360056F5C4 /* soundtouch_config.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = soundtouch_config.h; path = "../lib-src/soundtouch/include/soundtouch_config.h"; sourceTree = SOURCE_ROOT; tabWidth = 3; };
+		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
+		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
+		82FF184F13CF01A600C1B664 /* slide.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slide.cpp; path = sbsms/src/slide.cpp; sourceTree = "<group>"; };
+		82FF185013CF01A600C1B664 /* sse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sse.h; path = sbsms/src/sse.h; sourceTree = "<group>"; };
+		82FF185113CF01A600C1B664 /* synthTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = synthTable.h; path = sbsms/src/synthTable.h; sourceTree = "<group>"; };
 		8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EQDefaultCurves.xml; path = ../presets/EQDefaultCurves.xml; sourceTree = SOURCE_ROOT; };
 		8484F31213086237002DF7F0 /* DeviceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		8484F31313086237002DF7F0 /* DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = DeviceManager.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2851,17 +2848,12 @@
 		ED05D12A0E50AD5700CC4BD3 /* scorealign.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = scorealign.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2706F40EF9C3C6007D4FFD /* liblibsbsms.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibsbsms.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED2706FE0EF9C47E007D4FFD /* sbsms.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sbsms.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED2707020EF9C51D007D4FFD /* audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = audio.cpp; path = sbsms/src/audio.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		ED2707030EF9C51D007D4FFD /* audio.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = audio.h; path = sbsms/src/audio.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707040EF9C51D007D4FFD /* buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = buffer.cpp; path = sbsms/src/buffer.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707050EF9C51D007D4FFD /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = buffer.h; path = sbsms/src/buffer.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED2707060EF9C51D007D4FFD /* defs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = defs.h; path = sbsms/src/defs.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707070EF9C51D007D4FFD /* fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = fft.cpp; path = sbsms/src/fft.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707080EF9C51D007D4FFD /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = fft.h; path = sbsms/src/fft.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707090EF9C51D007D4FFD /* grain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = grain.cpp; path = sbsms/src/grain.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED27070A0EF9C51D007D4FFD /* grain.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = grain.h; path = sbsms/src/grain.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED27070B0EF9C51D007D4FFD /* peak.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = peak.cpp; path = sbsms/src/peak.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		ED27070C0EF9C51D007D4FFD /* peak.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = peak.h; path = sbsms/src/peak.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED27070E0EF9C51D007D4FFD /* real.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = real.h; path = sbsms/src/real.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED27070F0EF9C51D007D4FFD /* resample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = resample.cpp; path = sbsms/src/resample.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707100EF9C51D007D4FFD /* sbsms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = sbsms.cpp; path = sbsms/src/sbsms.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2874,7 +2866,6 @@
 		ED2707170EF9C51D007D4FFD /* track.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = track.h; path = sbsms/src/track.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707180EF9C51D007D4FFD /* trackpoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = trackpoint.cpp; path = sbsms/src/trackpoint.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707190EF9C51D007D4FFD /* trackpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = trackpoint.h; path = sbsms/src/trackpoint.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED27071A0EF9C51D007D4FFD /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = utils.cpp; path = sbsms/src/utils.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED27071B0EF9C51D007D4FFD /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = utils.h; path = sbsms/src/utils.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SBSMSEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED27074C0EF9C64F007D4FFD /* SBSMSEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SBSMSEffect.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4845,9 +4836,9 @@
 				28884938131B6CF600B59735 /* ro.po */,
 				28884939131B6CF600B59735 /* ru.po */,
 				2888493A131B6CF600B59735 /* sk.po */,
-				2888493B131B6CF600B59735 /* sl.po */,
-				2888493C131B6CF600B59735 /* sr_RS.po */,
-				2888493C131B6CF600B59735 /* sr_RS@latin.po */,
+				2888493B131B6CF600B59735 /* sr_RS@latin.po */,
+				2888493C131B6CF600B59735 /* sv.po */,
+				2888493C131B6CF600B59735 /* sv.po */,
 				2888493C131B6CF600B59735 /* sv.po */,
 				2888493D131B6CF600B59735 /* tg.po */,
 				2888493E131B6CF600B59735 /* tr.po */,
@@ -5227,21 +5218,21 @@
 		ED2707000EF9C489007D4FFD /* src */ = {
 			isa = PBXGroup;
 			children = (
-				ED2707020EF9C51D007D4FFD /* audio.cpp */,
-				ED2707030EF9C51D007D4FFD /* audio.h */,
+				82FF184D13CF01A600C1B664 /* dBTable.cpp */,
+				82FF184E13CF01A600C1B664 /* dBTable.h */,
+				82FF184F13CF01A600C1B664 /* slide.cpp */,
+				82FF185013CF01A600C1B664 /* sse.h */,
+				82FF185113CF01A600C1B664 /* synthTable.h */,
+				ED2707110EF9C51D007D4FFD /* sincCoeffs.h */,
 				ED2707040EF9C51D007D4FFD /* buffer.cpp */,
 				ED2707050EF9C51D007D4FFD /* buffer.h */,
-				ED2707060EF9C51D007D4FFD /* defs.h */,
 				ED2707070EF9C51D007D4FFD /* fft.cpp */,
 				ED2707080EF9C51D007D4FFD /* fft.h */,
 				ED2707090EF9C51D007D4FFD /* grain.cpp */,
 				ED27070A0EF9C51D007D4FFD /* grain.h */,
-				ED27070B0EF9C51D007D4FFD /* peak.cpp */,
-				ED27070C0EF9C51D007D4FFD /* peak.h */,
 				ED27070E0EF9C51D007D4FFD /* real.h */,
 				ED27070F0EF9C51D007D4FFD /* resample.cpp */,
 				ED2707100EF9C51D007D4FFD /* sbsms.cpp */,
-				ED2707110EF9C51D007D4FFD /* sincCoeffs.h */,
 				ED2707120EF9C51D007D4FFD /* sms.cpp */,
 				ED2707130EF9C51D007D4FFD /* sms.h */,
 				ED2707140EF9C51D007D4FFD /* subband.cpp */,
@@ -5250,7 +5241,6 @@
 				ED2707170EF9C51D007D4FFD /* track.h */,
 				ED2707180EF9C51D007D4FFD /* trackpoint.cpp */,
 				ED2707190EF9C51D007D4FFD /* trackpoint.h */,
-				ED27071A0EF9C51D007D4FFD /* utils.cpp */,
 				ED27071B0EF9C51D007D4FFD /* utils.h */,
 			);
 			name = src;
@@ -5777,12 +5767,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */,
-				ED2707250EF9C51D007D4FFD /* audio.h in Headers */,
 				ED2707270EF9C51D007D4FFD /* buffer.h in Headers */,
-				ED2707280EF9C51D007D4FFD /* defs.h in Headers */,
 				ED27072A0EF9C51D007D4FFD /* fft.h in Headers */,
 				ED27072C0EF9C51D007D4FFD /* grain.h in Headers */,
-				ED27072E0EF9C51D007D4FFD /* peak.h in Headers */,
 				ED2707300EF9C51D007D4FFD /* real.h in Headers */,
 				ED2707330EF9C51D007D4FFD /* sincCoeffs.h in Headers */,
 				ED2707350EF9C51D007D4FFD /* sms.h in Headers */,
@@ -6203,7 +6190,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */;
 			compatibilityVersion = "Xcode 2.4";
-			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -7132,8 +7118,8 @@
 				28884969131B6CF600B59735 /* ro.po in Sources */,
 				2888496A131B6CF600B59735 /* ru.po in Sources */,
 				2888496B131B6CF600B59735 /* sk.po in Sources */,
-				2888496C131B6CF600B59735 /* sl.po in Sources */,
-				2888496C131B6CF600B59735 /* sr_RS.po in Sources */,
+				2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */,
+				2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */,
 				2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */,
 				2888496D131B6CF600B59735 /* sv.po in Sources */,
 				2888496E131B6CF600B59735 /* tg.po in Sources */,
@@ -7142,6 +7128,8 @@
 				28884971131B6CF600B59735 /* vi.po in Sources */,
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				28884973131B6CF600B59735 /* zh.po in Sources */,
+				82FF185213CF01A600C1B664 /* dBTable.cpp in Sources */,
+				82FF185313CF01A600C1B664 /* slide.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7256,18 +7244,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED2707240EF9C51D007D4FFD /* audio.cpp in Sources */,
 				ED2707260EF9C51D007D4FFD /* buffer.cpp in Sources */,
 				ED2707290EF9C51D007D4FFD /* fft.cpp in Sources */,
 				ED27072B0EF9C51D007D4FFD /* grain.cpp in Sources */,
-				ED27072D0EF9C51D007D4FFD /* peak.cpp in Sources */,
 				ED2707310EF9C51D007D4FFD /* resample.cpp in Sources */,
 				ED2707320EF9C51D007D4FFD /* sbsms.cpp in Sources */,
 				ED2707340EF9C51D007D4FFD /* sms.cpp in Sources */,
 				ED2707360EF9C51D007D4FFD /* subband.cpp in Sources */,
 				ED2707380EF9C51D007D4FFD /* track.cpp in Sources */,
 				ED27073A0EF9C51D007D4FFD /* trackpoint.cpp in Sources */,
-				ED27073C0EF9C51D007D4FFD /* utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7613,6 +7598,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.4;
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -7804,6 +7790,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.4;
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8126,6 +8113,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.4;
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8747,6 +8735,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.4;
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8793,8 +8782,14 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "$(WX_CFLAGS)";
-				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_CFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CXXFLAGS)",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = libsbsms;
 			};
@@ -8808,8 +8803,14 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "$(WX_CFLAGS)";
-				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_CFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CXXFLAGS)",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = libsbsms;
 			};
@@ -8823,8 +8824,14 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "$(WX_CFLAGS)";
-				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_CFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CXXFLAGS)",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = libsbsms;
 			};
@@ -8838,8 +8845,14 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "$(WX_CFLAGS)";
-				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
+				OTHER_CFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(SSE_CPPFLAGS)",
+					"$(WX_CXXFLAGS)",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = libsbsms;
 			};
