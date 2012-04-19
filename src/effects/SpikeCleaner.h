@@ -24,7 +24,7 @@ public:
    EffectSpikeCleaner();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Spike Cleaner..."));
+      return wxString(_TRANSLATABLE("Spike Cleaner..."));
    }
 
    virtual wxString GetEffectIdentifier() {
@@ -32,7 +32,7 @@ public:
    }
 
    virtual wxString GetEffectAction() {
-      return wxString(_("Applying Spike Cleaner..."));
+      return wxString(_TRANSLATABLE("Applying Spike Cleaner..."));
    }
    virtual bool Init();
    virtual bool CheckWhetherSkipEffect();
