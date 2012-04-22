@@ -345,7 +345,6 @@
 		1790B14D09883BFD008A330A /* SimpleMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04409883BFD008A330A /* SimpleMono.cpp */; };
 		1790B14E09883BFD008A330A /* SimplePairedTwoTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */; };
 		1790B14F09883BFD008A330A /* SoundTouchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04809883BFD008A330A /* SoundTouchEffect.cpp */; };
-		1790B15009883BFD008A330A /* SpikeCleaner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04A09883BFD008A330A /* SpikeCleaner.cpp */; };
 		1790B15109883BFD008A330A /* StereoToMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04C09883BFD008A330A /* StereoToMono.cpp */; };
 		1790B15209883BFD008A330A /* ToneGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04E09883BFD008A330A /* ToneGen.cpp */; };
 		1790B15309883BFD008A330A /* TruncSilence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B05009883BFD008A330A /* TruncSilence.cpp */; };
@@ -1787,8 +1786,6 @@
 		1790B04709883BFD008A330A /* SimplePairedTwoTrack.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SimplePairedTwoTrack.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04809883BFD008A330A /* SoundTouchEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SoundTouchEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04909883BFD008A330A /* SoundTouchEffect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SoundTouchEffect.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B04A09883BFD008A330A /* SpikeCleaner.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SpikeCleaner.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B04B09883BFD008A330A /* SpikeCleaner.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SpikeCleaner.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04C09883BFD008A330A /* StereoToMono.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = StereoToMono.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04D09883BFD008A330A /* StereoToMono.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = StereoToMono.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04E09883BFD008A330A /* ToneGen.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ToneGen.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3922,8 +3919,6 @@
 				1790B04709883BFD008A330A /* SimplePairedTwoTrack.h */,
 				1790B04809883BFD008A330A /* SoundTouchEffect.cpp */,
 				1790B04909883BFD008A330A /* SoundTouchEffect.h */,
-				1790B04A09883BFD008A330A /* SpikeCleaner.cpp */,
-				1790B04B09883BFD008A330A /* SpikeCleaner.h */,
 				1790B04C09883BFD008A330A /* StereoToMono.cpp */,
 				1790B04D09883BFD008A330A /* StereoToMono.h */,
 				ED27074D0EF9C64F007D4FFD /* TimeScale.cpp */,
@@ -6190,6 +6185,7 @@
 			isa = PBXProject;
 			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -6877,7 +6873,6 @@
 				1790B14D09883BFD008A330A /* SimpleMono.cpp in Sources */,
 				1790B14E09883BFD008A330A /* SimplePairedTwoTrack.cpp in Sources */,
 				1790B14F09883BFD008A330A /* SoundTouchEffect.cpp in Sources */,
-				1790B15009883BFD008A330A /* SpikeCleaner.cpp in Sources */,
 				1790B15109883BFD008A330A /* StereoToMono.cpp in Sources */,
 				1790B15209883BFD008A330A /* ToneGen.cpp in Sources */,
 				1790B15309883BFD008A330A /* TruncSilence.cpp in Sources */,
