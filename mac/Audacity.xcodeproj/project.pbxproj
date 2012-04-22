@@ -827,8 +827,6 @@
 		28884969131B6CF600B59735 /* ro.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884938131B6CF600B59735 /* ro.po */; };
 		2888496A131B6CF600B59735 /* ru.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884939131B6CF600B59735 /* ru.po */; };
 		2888496B131B6CF600B59735 /* sk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493A131B6CF600B59735 /* sk.po */; };
-		2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
-		2888496D131B6CF600B59735 /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493C131B6CF600B59735 /* sv.po */; };
 		2888496E131B6CF600B59735 /* tg.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493D131B6CF600B59735 /* tg.po */; };
 		2888496F131B6CF600B59735 /* tr.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493E131B6CF600B59735 /* tr.po */; };
 		28884970131B6CF600B59735 /* uk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493F131B6CF600B59735 /* uk.po */; };
@@ -1180,6 +1178,10 @@
 		ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
 		ED64C82512456831007CF2FC /* ScoreAlignParams.h in Headers */ = {isa = PBXBuildFile; fileRef = ED64C82412456831007CF2FC /* ScoreAlignParams.h */; };
 		ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
+		EDAD326B1544452E009C6220 /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325515444371009C6220 /* sl.po */; };
+		EDAD326C1544452E009C6220 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
+		EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
+		EDAD326E1544452E009C6220 /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325715444372009C6220 /* sv.po */; };
 		EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
 		EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */; };
 /* End PBXBuildFile section */
@@ -2445,7 +2447,6 @@
 		28884939131B6CF600B59735 /* ru.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = ru.po; path = ../locale/ru.po; sourceTree = SOURCE_ROOT; };
 		2888493A131B6CF600B59735 /* sk.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sk.po; path = ../locale/sk.po; sourceTree = SOURCE_ROOT; };
 		2888493B131B6CF600B59735 /* sr_RS@latin.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = "sr_RS@latin.po"; path = "../locale/sr_RS@latin.po"; sourceTree = SOURCE_ROOT; };
-		2888493C131B6CF600B59735 /* sv.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
 		2888493D131B6CF600B59735 /* tg.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = tg.po; path = ../locale/tg.po; sourceTree = SOURCE_ROOT; };
 		2888493E131B6CF600B59735 /* tr.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = tr.po; path = ../locale/tr.po; sourceTree = SOURCE_ROOT; };
 		2888493F131B6CF600B59735 /* uk.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = uk.po; path = ../locale/uk.po; sourceTree = SOURCE_ROOT; };
@@ -2877,6 +2878,9 @@
 		ED64C82412456831007CF2FC /* ScoreAlignParams.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ScoreAlignParams.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExtImportPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
+		EDAD325515444371009C6220 /* sl.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sl.po; path = ../locale/sl.po; sourceTree = SOURCE_ROOT; };
+		EDAD325615444371009C6220 /* sr_RS.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sr_RS.po; path = ../locale/sr_RS.po; sourceTree = SOURCE_ROOT; };
+		EDAD325715444372009C6220 /* sv.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
 		EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportExportCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		EDD94EDA103CB520000873F1 /* ImportExportCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportExportCommands.h; sourceTree = "<group>"; tabWidth = 3; };
 		EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = CaptureEvents.cpp; path = ../src/CaptureEvents.cpp; sourceTree = SOURCE_ROOT; tabWidth = 3; };
@@ -4831,10 +4835,10 @@
 				28884938131B6CF600B59735 /* ro.po */,
 				28884939131B6CF600B59735 /* ru.po */,
 				2888493A131B6CF600B59735 /* sk.po */,
+				EDAD325515444371009C6220 /* sl.po */,
+				EDAD325615444371009C6220 /* sr_RS.po */,
 				2888493B131B6CF600B59735 /* sr_RS@latin.po */,
-				2888493C131B6CF600B59735 /* sv.po */,
-				2888493C131B6CF600B59735 /* sv.po */,
-				2888493C131B6CF600B59735 /* sv.po */,
+				EDAD325715444372009C6220 /* sv.po */,
 				2888493D131B6CF600B59735 /* tg.po */,
 				2888493E131B6CF600B59735 /* tr.po */,
 				2888493F131B6CF600B59735 /* uk.po */,
@@ -7113,10 +7117,10 @@
 				28884969131B6CF600B59735 /* ro.po in Sources */,
 				2888496A131B6CF600B59735 /* ru.po in Sources */,
 				2888496B131B6CF600B59735 /* sk.po in Sources */,
-				2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */,
-				2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */,
-				2888496C131B6CF600B59735 /* sr_RS@latin.po in Sources */,
-				2888496D131B6CF600B59735 /* sv.po in Sources */,
+				EDAD326B1544452E009C6220 /* sl.po in Sources */,
+				EDAD326C1544452E009C6220 /* sr_RS.po in Sources */,
+				EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */,
+				EDAD326E1544452E009C6220 /* sv.po in Sources */,
 				2888496E131B6CF600B59735 /* tg.po in Sources */,
 				2888496F131B6CF600B59735 /* tr.po in Sources */,
 				28884970131B6CF600B59735 /* uk.po in Sources */,
