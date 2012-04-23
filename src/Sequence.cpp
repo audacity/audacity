@@ -254,8 +254,8 @@ bool Sequence::GetMinMax(sampleCount start, sampleCount len,
                          float * outMin, float * outMax) const
 {
    if (len == 0 || mBlock->GetCount() == 0) {
-      *outMin = float(0.0);
-      *outMax = float(0.0);
+      *outMin = float(0.0);   // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
+      *outMax = float(0.0);   // -FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
       return true;
    }
 

@@ -1538,8 +1538,8 @@ double WaveTrack::GetEndTime()
 bool WaveTrack::GetMinMax(float *min, float *max,
                           double t0, double t1)
 {
-   *min = float(0.0);
-   *max = float(0.0);
+   *min = FLT_MAX;
+   *max = -FLT_MAX;
 
    if (t0 > t1)
       return false;

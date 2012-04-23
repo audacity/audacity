@@ -955,8 +955,8 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
 bool WaveClip::GetMinMax(float *min, float *max,
                           double t0, double t1)
 {
-   *min = float(0.0);
-   *max = float(0.0);
+   *min = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
+   *max = float(0.0);   // harmless, but unused since Sequence::GetMinMax does not use these values
 
    if (t0 > t1)
       return false;
