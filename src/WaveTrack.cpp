@@ -31,6 +31,7 @@ Track classes.
 #include <wx/intl.h>
 #include <wx/debug.h>
 
+#include <float.h>
 #include <math.h>
 #include <algorithm>
 
