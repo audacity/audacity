@@ -173,7 +173,6 @@ OBJS = \
 	effects/Repeat.o \
 	effects/Reverse.o \
 	effects/Silence.o \
-	effects/SpikeCleaner.o \
 	effects/StereoToMono.o \
 	effects/TimeWarper.o \
 	effects/ToneGen.o \
