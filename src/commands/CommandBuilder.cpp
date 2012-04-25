@@ -151,7 +151,7 @@ void CommandBuilder::BuildCommand(const wxString &cmdName,
       wxString paramName = cmdParams.Left(splitAt);
       if (params.find(paramName) == params.end())
       {
-         Failure(wxT("Unrecognised parameter: '") + paramName + wxT("'"));
+         Failure(wxT("Unrecognized parameter: '") + paramName + wxT("'"));
          return;
       }
       cmdParams = cmdParams.Mid(splitAt+1);
