@@ -740,7 +740,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mAudioIOToken(-1),
      mIsDeleting(false),
      mTracksFitVerticallyZoomed(false),  //lda
+#ifdef CLEANSPEECH
      mCleanSpeechMode(false),            //lda
+#endif   // CLEANSPEECH
      mShowId3Dialog(true),               //lda
      mLastFocusedWindow(NULL),
      mKeyboardCaptured(false),
@@ -1019,8 +1021,10 @@ void AudacityProject::UpdatePrefsVariables()
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
 
+#ifdef CLEANSPEECH
    //gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
    mCleanSpeechMode = false;
+#endif   // CLEANSPEECH
 
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo.bUpdateTrackIndicator, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true );
@@ -1162,7 +1166,11 @@ void AudacityProject::SetProjectTitle()
    wxString name = GetName();
    if( name.IsEmpty() )
    {
+#ifdef CLEANSPEECH
       name = mCleanSpeechMode ? wxT("Audacity CleanSpeech") : wxT("Audacity");
+#else
+      name = wxT("Audacity");
+#endif   // CLEANSPEECH
    }
    
    if (mIsRecovered)
@@ -3085,6 +3093,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          mImportedDependencies = false; // do not show again
       }
 
+#ifdef CLEANSPEECH
       //TIDY-ME: CleanSpeechMode could be split into a number of prefs?
       // For example, this could be a preference to only work
       // with wav files.
@@ -3096,6 +3105,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
          Exporter e;
          return e.Process(this, false, 0.0, mTracks->GetEndTime());
       }
+#endif   // CLEANSPEECH
    }
 
    //
@@ -3509,9 +3519,16 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
    wxString path = wxPathOnly(mFileName);
    wxString fName;
+
+#ifdef CLEANSPEECH
    wxString ext = mCleanSpeechMode ? wxT(".wav") : wxT(".aup");
+#else   // CLEANSPEECH
+   wxString ext = wxT(".aup");
+#endif   // CLEANSPEECH
 
    fName = GetName().Len()? GetName() + ext : wxString(wxT(""));
+
+#ifdef CLEANSPEECH
    if( mCleanSpeechMode )
    {
       fName = FileSelector(_("Save Speech As:"),
@@ -3549,6 +3566,34 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
          // smaller files too, or prompt to move them.
          wxFD_SAVE |  wxRESIZE_BORDER, this);
    }
+#else   // CLEANSPEECH
+   wxString sProjName = this->GetName();
+   if (sProjName.IsEmpty())
+      sProjName = _("<untitled>");
+   wxString sDialogTitle;
+   if (bWantSaveCompressed)
+   {
+      ShowWarningDialog(this, wxT("FirstProjectSave"),
+                        _("Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \nCompressed project files are a good way to transmit your project online, because they are much smaller. \nTo open a compressed project takes longer than usual, as it imports each compressed track. \n\nMost other programs can't open Audacity project files.\nWhen you want to save a file that can be opened by other programs, select one of the\nExport commands."));
+      sDialogTitle.Printf(_("Save Compressed Project \"%s\" As..."), sProjName.c_str());
+   }
+   else
+   {
+      ShowWarningDialog(this, wxT("FirstProjectSave"),
+                        _("You are saving an Audacity project file (.aup).\n\nSaving a project creates a file that only Audacity can open.\n\nTo save an audio file for other programs, use one of the \"File > Export\" commands.\n"));
+      sDialogTitle.Printf(_("Save Project \"%s\" As..."), sProjName.c_str());
+   }
+
+   fName = FileSelector(
+      sDialogTitle,
+      path, fName, wxT(""),
+      _("Audacity projects") + static_cast<wxString>(wxT(" (*.aup)|*.aup")),
+      // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking 
+      // for overwrite ourselves later, and we disallow it.
+      // We disallow overwrite because we would have to delete the many
+      // smaller files too, or prompt to move them.
+      wxFD_SAVE |  wxRESIZE_BORDER, this);
+#endif   // CLEANSPEECH
 
    if (fName == wxT(""))
       return false;

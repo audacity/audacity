@@ -29,7 +29,6 @@ class BatchCommands {
    bool ApplyCommandInBatchMode(const wxString & command, const wxString &params);
    bool ApplySpecialCommand(int iCommand, const wxString command,const wxString params);
    bool ApplyEffectCommand(Effect * f, const wxString command, const wxString params);
-   bool ApplyMenuCommand(const wxString command, const wxString params);
    bool ReportAndSkip( const wxString command, const wxString params );
    void AbortBatch();
 
@@ -62,7 +61,9 @@ class BatchCommands {
    int GetCount();
 
    void SetWavToMp3Chain();
+#ifdef CLEANSPEECH
    void SetCleanSpeechChain();
+#endif   // CLEANSPEECH
 
    bool IsFixed(const wxString & name);
 

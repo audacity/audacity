@@ -64,6 +64,8 @@ BatchProcessDialog::BatchProcessDialog(wxWindow * parent):
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    AudacityProject * p = GetActiveProject();
+
+#ifdef CLEANSPEECH
    if (p->GetCleanSpeechMode())
    {
       /*i18n-hint: CleanSpeech is the name of a mode Audacity can operate 
@@ -71,6 +73,7 @@ BatchProcessDialog::BatchProcessDialog(wxWindow * parent):
        * pauses and background noise.*/
       SetTitle(_("CleanSpeech Batch Processing"));
    }
+#endif   // CLEANSPEECH
 
    SetLabel(_("Apply Chain"));         // Provide visual label
    SetName(_("Apply Chain"));          // Provide audible label
@@ -124,7 +127,12 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
    }
 
    // Get and validate the currently active chain
+#ifdef CLEANSPEECH
    wxString name = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT("CleanSpeech"));
+#else
+   wxString name = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
+#endif   // CLEANSPEECH
+
    int item = mChains->FindItem(-1, name);
    if (item == -1) {
       item = 0;
@@ -207,10 +215,14 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent &event)
    }
 
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
+#ifdef CLEANSPEECH
    wxString prompt =  project->GetCleanSpeechMode() ? 
       _("Select vocal file(s) for batch CleanSpeech Chain...") :
       _("Select file(s) for batch processing...");
    // CleanSpeech used to hard-code a restricted file type list here
+#else
+   wxString prompt =  _("Select file(s) for batch processing...");
+#endif   // CLEANSPEECH
    
    FormatList l;
    wxString filter;
@@ -425,7 +437,11 @@ void EditChainsDialog::Populate()
    // ----------------------- End of main section --------------
 
    // Get and validate the currently active chain
+#ifdef CLEANSPEECH
    mActiveChain = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT("CleanSpeech"));
+#else
+   mActiveChain = gPrefs->Read(wxT("/Batch/ActiveChain"), wxT(""));
+#endif   // CLEANSPEECH
 
    // Go populate the chains list.
    PopulateChains();

@@ -49,7 +49,8 @@ See also BatchCommandDialog and BatchProcessDialog.
 enum eCommandType { CtEffect, CtMenu, CtSpecial };
 
 // TIDY-ME: Not currently translated, 
-// but there are issues to address if we do.  
+// but there are issues to address if we do.
+// CLEANSPEECH remnant
 wxString SpecialCommands[] = {
    wxT("NoAction"),
    wxT("Import"),
@@ -61,8 +62,11 @@ wxString SpecialCommands[] = {
    wxT("ExportOgg"),
    wxT("ExportWav")
 };
+// end CLEANSPEECH remnant
 
+#ifdef CLEANSPEECH
 static const wxString CleanSpeech = wxT("CleanSpeech");
+#endif   // CLEANSPEECH
 static const wxString MP3Conversion = wxT("MP3 Conversion");
 
 BatchCommands::BatchCommands()
@@ -70,11 +74,13 @@ BatchCommands::BatchCommands()
    ResetChain();
 
    wxArrayString names = GetNames();
+#ifdef CLEANSPEECH   // possibly the rest of this fn
    if (names.Index(CleanSpeech) == wxNOT_FOUND) {
       AddChain(CleanSpeech);
       RestoreChain(CleanSpeech);
       WriteChain(CleanSpeech);
    }
+#endif   // CLEANSPEECH
 
    if (names.Index(MP3Conversion) == wxNOT_FOUND) {
       AddChain(MP3Conversion);
@@ -222,6 +228,7 @@ bool BatchCommands::RenameChain(const wxString & oldchain, const wxString & newc
    return wxRenameFile(oname.GetFullPath(), nname.GetFullPath());
 }
 
+#ifdef CLEANSPEECH
 void BatchCommands::SetCleanSpeechChain()
 {
    ResetChain();
@@ -239,8 +246,9 @@ void BatchCommands::SetCleanSpeechChain()
    AddToChain( wxT("Normalize") );
    AddToChain( wxT("ExportMp3") );
 }
+#endif   // CLEANSPEECH
 
-void BatchCommands::SetWavToMp3Chain()
+void BatchCommands::SetWavToMp3Chain() // a function per default chain?  This is flawed design!  MJS
 {
    ResetChain();
  
@@ -262,14 +270,19 @@ wxArrayString BatchCommands::GetAllCommands()
    EffectArray * effects;
    unsigned int i;
 
+   // CLEANSPEECH remnant
    for(i=0;i<sizeof(SpecialCommands)/sizeof(SpecialCommands[0]);i++)
    {
       commands.Add( SpecialCommands[i] );
    }
+   // end CLEANSPEECH remnant
    
    int additionalEffects=ADVANCED_EFFECT;
+#ifdef CLEANSPEECH
    if( project->GetCleanSpeechMode() )
        additionalEffects = 0;
+#endif   // CLEANSPEECH
+
    effects = EffectManager::Get().GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | additionalEffects);
    for(i=0; i<effects->GetCount(); i++) {
       command=(*effects)[i]->GetEffectIdentifier();
@@ -410,6 +423,7 @@ bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
 // If you find yourself adding lots of existing commands from the menus here, STOP
 // and think again.  
 // ======= IMPORTANT ========
+// CLEANSPEECH remnant
 bool BatchCommands::ApplySpecialCommand(int iCommand, const wxString command,const wxString params)
 {
    if (ReportAndSkip(command, params))
@@ -491,6 +505,7 @@ bool BatchCommands::ApplySpecialCommand(int iCommand, const wxString command,con
    wxMessageBox(wxString::Format(_("Command %s not implemented yet"),command.c_str()));
    return false;
 }
+// end CLEANSPEECH remnant
 
 bool BatchCommands::SetCurrentParametersFor( Effect * f, const wxString command, const wxString params)
 {
@@ -528,30 +543,24 @@ bool BatchCommands::ApplyEffectCommand(   Effect * f, const wxString command, co
    return project->OnEffect(ALL_EFFECTS | CONFIGURED_EFFECT , f, params, false);
 }
 
-bool BatchCommands::ApplyMenuCommand(const wxString command, const wxString params)
-{
-   if( ReportAndSkip(command, params))
-      return true;
-   return true;
-}
-
 bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
 {
 
    unsigned int i;
    // Test for a special command.
+   // CLEANSPEECH remnant
    for(i=0;i<sizeof(SpecialCommands)/sizeof(SpecialCommands[0]);i++)
    {
       if( command == SpecialCommands[i] )
          return ApplySpecialCommand( i, command, params );
    }
+   // end CLEANSPEECH remnant
    
    // Test for an effect.
    Effect * f = EffectManager::Get().GetEffectByIdentifier( command );
    if( f!=NULL )
       return ApplyEffectCommand( f, command, params );
 
-//   return ApplyMenuCommand( command, params );
    wxMessageBox(
       wxString::Format(
       _("Your batch command of %s was not recognised."), command.c_str() ));
@@ -701,10 +710,14 @@ wxArrayString BatchCommands::GetNames()
 
 bool BatchCommands::IsFixed(const wxString & name)
 {
+#ifdef CLEANSPEECH   // probably the rest of this fn as well
    if (name == CleanSpeech || name == MP3Conversion) {
       return true;
    }
-
+#else
+   if (name == MP3Conversion)
+      return true;
+#endif   // CLEANSPEECH
    return false;
 }
 
@@ -713,6 +726,7 @@ void BatchCommands::RestoreChain(const wxString & name)
 // TIDY-ME: Effects change their name with localisation.
 // Commands (at least currently) don't.  Messy.
 
+#ifdef CLEANSPEECH
 /* i18n-hint: Effect name translations must agree with those used elsewhere, or batch won't find them */
 
    if (name == CleanSpeech) {
@@ -721,6 +735,10 @@ void BatchCommands::RestoreChain(const wxString & name)
    else if (name == MP3Conversion) {
       SetWavToMp3Chain();
    }
+#else
+   if (name == MP3Conversion)
+      SetWavToMp3Chain();
+#endif   // CLEANSPEECH
 }
 
 void BatchCommands::Split(const wxString & str, wxString & command, wxString & param)

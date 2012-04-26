@@ -123,8 +123,10 @@ class ControlToolBar:public ToolBar {
    // Activate ergonomic order for transport buttons
    bool mErgonomicTransportButtons;
 
+#ifdef CLEANSPEECH
    // Show/hide cleanspeech button
    bool mCleanSpeechMode;
+#endif   // CLEANSPEECH
 
    //wxBoxSizer *mBatchGroup;
    wxBoxSizer *mSizer;

@@ -94,8 +94,10 @@ ControlToolBar::ControlToolBar()
    mCutPreviewTracks = NULL;
 
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
+#ifdef CLEANSPEECH
 // gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
    mCleanSpeechMode = false;
+#endif   // CLEANSPEECH
 }
 
 ControlToolBar::~ControlToolBar()
@@ -193,9 +195,11 @@ void ControlToolBar::Populate()
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
 
+#ifdef CLEANSPEECH
    /* i18n-hint: (verb)*/
 //   mBatch = MakeButton(bmpCleanSpeech, bmpCleanSpeech, bmpCleanSpeechDisabled,
 //      ID_BATCH_BUTTON, false, _("Clean Speech"));
+#endif   // CLEANSPEECH
 
 #if wxUSE_TOOLTIPS
    RegenerateToolsTooltips();
@@ -216,7 +220,6 @@ void ControlToolBar::RegenerateToolsTooltips()
    mRewind->SetToolTip(_("Skip to Start"));
    mFF->SetToolTip(_("Skip to End"));
    mRecord->SetToolTip(_("Record (Shift for Append Record)"));
-//   mBatch->SetToolTip(_("Clean Speech"));
 #endif
 }
 
@@ -234,13 +237,16 @@ void ControlToolBar::UpdatePrefs()
       updated = true;
    }
 
+#ifdef CLEANSPEECH
    //gPrefs->Read( wxT("/Batch/CleanSpeechMode"), &active, false );
+
    active = false;
    if( mCleanSpeechMode != active )
    {
       mCleanSpeechMode = active;
       updated = true;
    }
+#endif   // CLEANSPEECH
 
    if( updated )
    {
@@ -303,9 +309,11 @@ void ControlToolBar::ArrangeButtons()
       mSizer->Add( mFF,     0, flags, 5 );
    }
 
+#ifdef CLEANSPEECH
    // Add and possible hide the CleanSpeech button
 //   mSizer->Add( mBatch,  0, flags | wxLEFT, 5 );
 //   mSizer->Show( mBatch, mCleanSpeechMode );
+#endif   // CLEANSPEECH
 
    // Layout the sizer
    mSizer->Layout();
@@ -351,8 +359,6 @@ void ControlToolBar::EnableDisableButtons()
    AudacityProject *p = GetActiveProject();
    size_t numProjects = gAudacityProjects.Count();
    bool tracks = false;
-//   bool cleaningSpeech = mBatch->IsDown();
-   bool cleaningSpeech = false;
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
    bool busy = gAudioIO->IsBusy() || playing || recording;
@@ -372,19 +378,20 @@ void ControlToolBar::EnableDisableButtons()
       }
    }
 
-   mPlay->SetEnabled((!recording) || (tracks && !busy && !cleaningSpeech));
+   mPlay->SetEnabled((!recording) || (tracks && !busy));
    mRecord->SetEnabled(!busy && !playing);
 
+#ifdef CLEANSPEECH
    if (p && GetActiveProject()->GetCleanSpeechMode()) {
        bool canRecord = !tracks;
-       canRecord &= !cleaningSpeech;
        canRecord &= !busy;
        canRecord &= ((numProjects == 0) || ((numProjects == 1) && !tracks));
        mRecord->SetEnabled(canRecord);
        //mBatch->SetEnabled(!busy && !recording);
    }
+#endif   // CLEANSPEECH
 
-   mStop->SetEnabled(busy && !cleaningSpeech);
+   mStop->SetEnabled(busy);
    mRewind->SetEnabled(tracks && !busy);
    mFF->SetEnabled(tracks && !busy);
    mPause->SetEnabled(true);
@@ -765,6 +772,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       return;
    }
    AudacityProject *p = GetActiveProject();
+#ifdef CLEANSPEECH
    if (p && p->GetCleanSpeechMode()) {
       size_t numProjects = gAudacityProjects.Count();
       if (!p->GetTracks()->IsEmpty() || (numProjects > 1)) {
@@ -777,6 +785,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          return;
       }
    }
+#endif   // CLEANSPEECH
 
    if( evt.GetInt() == 1 ) // used when called by keyboard shortcut. Default (0) ignored.
       mRecord->SetShift(true);

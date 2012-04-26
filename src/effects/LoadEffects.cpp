@@ -237,7 +237,6 @@ void LoadEffects()
    const int SIMPLE_EFFECT = BUILTIN_EFFECT | PROCESS_EFFECT;
    // In this list, designating an effect as 'SIMPLE_EFFECT' just means
    // that it should be included in even the most basic of menus.
-   // This was introduced for CleanSpeech mode.
    
    em.RegisterEffect(new EffectAutoDuck());
    em.RegisterEffect(new EffectBassBoost());

@@ -27,6 +27,7 @@
 
 #include "widgets/FileHistory.h"
 #include "ondemand/ODTaskThread.h"
+#include "Experimental.h"
 
 class IPCServ;
 class Importer;
@@ -97,12 +98,14 @@ class AudacityApp:public wxApp {
    virtual int OnExit(void);
    virtual void OnFatalException();
 
+#ifdef CLEANSPEECH
 //LDA - Until we have a better way to save/restore binary data.
    float* GetCleanSpeechNoiseGate() { return mCleanSpeechNoiseGate; }
    int    GetCleanSpeechNoiseGateExpectedCount() { return mCleanSpeechNoiseGateExpectedCount; }
    void   SetCleanSpeechNoiseGate(float* pNG) { mCleanSpeechNoiseGate = pNG; }
    void   SetCleanSpeechNoiseGateExpectedCount(int count) { mCleanSpeechNoiseGateExpectedCount = count; }
-   
+#endif   // CLEANSPEECH
+
    void InitLang( const wxString & lang );
 
    // These are currently only used on Mac OS, where it's
@@ -224,6 +227,7 @@ class AudacityApp:public wxApp {
    /* utility method for printing the command line help message */
    void PrintCommandLineHelp(void);
 
+#ifdef CLEANSPEECH
 //LDA - Until we have a better way to save/restore binary data.
 //      ToDo: ... look into how wxConfig works.
 //      ToDo: NoiseGate is an array of 1024 floats that is the "persistent result" 
@@ -232,12 +236,15 @@ class AudacityApp:public wxApp {
    float* mCleanSpeechNoiseGate;
    int    mCleanSpeechNoiseGateExpectedCount;
    bool InitCleanSpeech();
+#endif   // CLEANSPEECH
 
 //LDA - Keep track of where Presets are stored ... for app, not just project
 //      ... ToDo: flawed for Linux/unix with restricted end-user privilege
 //      ....      depends on whether [AudacityDir]\presets can be written
+#ifdef CLEANSPEECH
    wxString mAppHomeDir;
    wxString mPresetsDir;
+#endif   // CLEANSPEECH
    bool mWindowRectAlreadySaved;
 
 #if defined(__WXMSW__)

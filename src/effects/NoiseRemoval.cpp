@@ -81,6 +81,7 @@ EffectNoiseRemoval::EffectNoiseRemoval()
    mWindowSize = 2048;
    mSpectrumSize = 1 + mWindowSize / 2;
 
+#ifdef CLEANSPEECH
    gPrefs->Read(wxT("/CsPresets/NoiseSensitivity"),
                 &mSensitivity, 0.0);
    gPrefs->Read(wxT("/CsPresets/NoiseGain"),
@@ -91,6 +92,18 @@ EffectNoiseRemoval::EffectNoiseRemoval()
                 &mAttackDecayTime, 0.15);
    gPrefs->Read(wxT("/CsPresets/NoiseLeaveNoise"),
                 &mbLeaveNoise, false);
+#else   // CLEANSPEECH
+   gPrefs->Read(wxT("/Effects/NoiseRemoval/NoiseSensitivity"),
+                &mSensitivity, 0.0);
+   gPrefs->Read(wxT("/Effects/NoiseRemoval/NoiseGain"),
+                &mNoiseGain, -24.0);
+   gPrefs->Read(wxT("/Effects/NoiseRemoval/NoiseFreqSmoothing"),
+                &mFreqSmoothingHz, 150.0);
+   gPrefs->Read(wxT("/Effects/NoiseRemoval/NoiseAttackDecayTime"),
+                &mAttackDecayTime, 0.15);
+   gPrefs->Read(wxT("/Effects/NoiseRemoval/NoiseLeaveNoise"),
+                &mbLeaveNoise, false);
+#endif   // CLEANSPEECH
 //   mbLeaveNoise = false;
 
 
@@ -100,11 +113,13 @@ EffectNoiseRemoval::EffectNoiseRemoval()
 
    mNoiseThreshold = new float[mSpectrumSize];
 
+#ifdef CLEANSPEECH
    // This sequence is safe, even if not in CleanSpeechMode
    wxGetApp().SetCleanSpeechNoiseGate(mNoiseThreshold);
    wxGetApp().SetCleanSpeechNoiseGateExpectedCount(
       mSpectrumSize * sizeof(float));
    CleanSpeechMayReadNoisegate();
+#endif   // CLEANSPEECH
 
    Init();
 }
@@ -114,6 +129,7 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
    delete [] mNoiseThreshold;
 }
 
+#ifdef CLEANSPEECH
 void EffectNoiseRemoval::CleanSpeechMayReadNoisegate()
 {
    int halfWindowSize = mWindowSize / 2;
@@ -204,14 +220,24 @@ void EffectNoiseRemoval::CleanSpeechMayWriteNoiseGate()
    }
 }
 
+#endif   // CLEANSPEECH
+
 #define MAX_NOISE_LEVEL  30
 bool EffectNoiseRemoval::Init()
 {
+#ifdef CLEANSPEECH
    mLevel = gPrefs->Read(wxT("/CsPresets/Noise_Level"), 3L);
    if ((mLevel < 0) || (mLevel > MAX_NOISE_LEVEL)) {  // corrupted Prefs?
       mLevel = 0;  //Off-skip
       gPrefs->Write(wxT("/CsPresets/Noise_Level"), mLevel);
    }
+#else   // CLEANSPEECH
+   mLevel = gPrefs->Read(wxT("/Effects/NoiseRemoval/Noise_Level"), 3L);
+   if ((mLevel < 0) || (mLevel > MAX_NOISE_LEVEL)) {  // corrupted Prefs?
+      mLevel = 0;  //Off-skip
+      gPrefs->Write(wxT("/Effects/NoiseRemoval/Noise_Level"), mLevel);
+   }
+#endif   // CLEANSPEECH
    return true;
 }
 
@@ -232,12 +258,14 @@ bool EffectNoiseRemoval::PromptUser()
    dlog.mKeepSignal->SetValue(!mbLeaveNoise);
    dlog.mKeepNoise->SetValue(mbLeaveNoise);
 
+#ifdef CLEANSPEECH
    if( !mHasProfile )
    {
       AudacityProject * p = GetActiveProject();
       if (p->GetCleanSpeechMode())
          CleanSpeechMayReadNoisegate();
    }
+#endif   // CLEANSPEECH
 
    // We may want to twiddle the levels if we are setting
    // from an automation dialog, the only case in which we can
@@ -266,11 +294,19 @@ bool EffectNoiseRemoval::PromptUser()
    mFreqSmoothingHz = dlog.mFreq;
    mAttackDecayTime = dlog.mTime;
    mbLeaveNoise = dlog.mbLeaveNoise;
+#ifdef CLEANSPEECH
    gPrefs->Write(wxT("/CsPresets/NoiseSensitivity"), mSensitivity);
    gPrefs->Write(wxT("/CsPresets/NoiseGain"), mNoiseGain);
    gPrefs->Write(wxT("/CsPresets/NoiseFreqSmoothing"), mFreqSmoothingHz);
    gPrefs->Write(wxT("/CsPresets/NoiseAttackDecayTime"), mAttackDecayTime);
    gPrefs->Write(wxT("/CsPresets/NoiseLeaveNoise"), mbLeaveNoise);
+#else   // CLEANSPEECH
+   gPrefs->Write(wxT("/Effects/NoiseRemoval/NoiseSensitivity"), mSensitivity);
+   gPrefs->Write(wxT("/Effects/NoiseRemoval/NoiseGain"), mNoiseGain);
+   gPrefs->Write(wxT("/Effects/NoiseRemoval/NoiseFreqSmoothing"), mFreqSmoothingHz);
+   gPrefs->Write(wxT("/Effects/NoiseRemoval/NoiseAttackDecayTime"), mAttackDecayTime);
+   gPrefs->Write(wxT("/Effects/NoiseRemoval/NoiseLeaveNoise"), mbLeaveNoise);
+#endif   // CLEANSPEECH
 
    mDoProfile = (dlog.GetReturnCode() == 1);
    return true;
@@ -286,6 +322,7 @@ bool EffectNoiseRemoval::TransferParameters( Shuttle & shuttle )
 
 bool EffectNoiseRemoval::Process()
 {
+#ifdef CLEANSPEECH
    if (!mDoProfile && !mHasProfile)
       CleanSpeechMayReadNoisegate();
    
@@ -296,6 +333,7 @@ bool EffectNoiseRemoval::Process()
         _("Attempt to run Noise Removal without a noise profile.\n"));
       return false;
    }
+#endif   // CLEANSPEECH
 
    Initialize();
 
@@ -329,7 +367,9 @@ bool EffectNoiseRemoval::Process()
    }
 
    if (bGoodResult && mDoProfile) {
+#ifdef CLEANSPEECH
       CleanSpeechMayWriteNoiseGate();
+#endif   // CLEANSPEECH
       mHasProfile = true;
       mDoProfile = false;
    }
@@ -850,6 +890,7 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
    wxString step2Label;
    wxString step2Prompt;
 
+#ifdef CLEANSPEECH
    bool bCleanSpeechMode = false;
 
    AudacityProject * project = GetActiveProject();
@@ -882,6 +923,12 @@ void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
       step2Label = _("Step 2");
       step2Prompt = _("Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to remove noise.\n");
    }
+#else
+   step1Label = _("Step 1");
+   step1Prompt = _("Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:");
+   step2Label = _("Step 2");
+   step2Prompt = _("Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to remove noise.\n");
+#endif   // CLEANSPEECH
 
    S.StartHorizontalLay(wxCENTER, false);
    {

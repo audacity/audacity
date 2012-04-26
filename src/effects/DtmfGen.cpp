@@ -75,7 +75,6 @@ bool EffectDtmf::Init()
       gPrefs->Read(wxT("/Effects/DtmfGen/SequenceDuration"), &mDuration, 1L);
       mIsSelection = false;
    }
-   /// \todo this code shouldn't be using /CsPresets - need to review its use
    gPrefs->Read(wxT("/Effects/DtmfGen/String"), &dtmfString, wxT("audacity"));
    gPrefs->Read(wxT("/Effects/DtmfGen/DutyCycle"), &dtmfDutyCycle, 550L);
    gPrefs->Read(wxT("/Effects/DtmfGen/Amplitude"), &dtmfAmplitude, 0.8f);
