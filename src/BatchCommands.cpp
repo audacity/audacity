@@ -563,7 +563,7 @@ bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
 
    wxMessageBox(
       wxString::Format(
-      _("Your batch command of %s was not recognised."), command.c_str() ));
+      _("Your batch command of %s was not recognized."), command.c_str() ));
    return false;
 }
 
