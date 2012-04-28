@@ -191,42 +191,45 @@ void TranscriptionToolBar::Populate()
                  this);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
+// If we need these strings translated, then search and replace  
+// TRANSLATBLE by _ and remove this #define.
+#define TRANSLATABLE( x ) wxT( x )
    AddButton(bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
-      _("Adjust left selection to next onset"));
+      TRANSLATABLE("Adjust left selection to next onset"));
    AddButton(bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,
-      _("Adjust right selection to previous offset"));
+      TRANSLATABLE("Adjust right selection to previous offset"));
    AddButton(bmpTnStartOff,    bmpTnStartOffDisabled,  TTB_StartOff,
-      _("Adjust left selection to next offset"));
+      TRANSLATABLE("Adjust left selection to next offset"));
    AddButton(bmpTnEndOff,      bmpTnEndOffDisabled,    TTB_EndOff,
-      _("Adjust right selection to previous onset"));
+      TRANSLATABLE("Adjust right selection to previous onset"));
    AddButton(bmpTnSelectSound, bmpTnSelectSoundDisabled, TTB_SelectSound,
-      _("Select region of sound around cursor"));
+      TRANSLATABLE("Select region of sound around cursor"));
    AddButton(bmpTnSelectSilence, bmpTnSelectSilenceDisabled, TTB_SelectSilence,
-      _("Select region of silence around cursor"));
+      TRANSLATABLE("Select region of silence around cursor"));
    AddButton(bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
-      _("Automatically make labels from words"));
+      TRANSLATABLE("Automatically make labels from words"));
    AddButton(bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,  
-      _("Add label at selection"));
+      TRANSLATABLE("Add label at selection"));
    AddButton(bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
-      _("Calibrate voicekey"));
+      TRANSLATABLE("Calibrate voicekey"));
  
    mSensitivitySlider = new ASlider(this,
                                     TTB_SensitivitySlider,
-                                    _("Adjust Sensitivity"),
+                                    TRANSLATABLE("Adjust Sensitivity"),
                                     wxDefaultPosition,
                                     wxSize(SliderWidth,25),
                                     SPEED_SLIDER);
    mSensitivitySlider->Set(.5);
-   mSensitivitySlider->SetLabel(_("Sensitivity"));
+   mSensitivitySlider->SetLabel(TRANSLATABLE("Sensitivity"));
    Add( mSensitivitySlider, 0, wxALIGN_CENTER );
 
    wxString choices[] =
    {
-      _("Energy"),
-      _("Sign Changes (Low Threshold)"),
-      _("Sign Changes (High Threshold)"),
-      _("Direction Changes (Low Threshold)"),
-      _("Direction Changes (High Threshold)")
+      TRANSLATABLE("Energy"),
+      TRANSLATABLE("Sign Changes (Low Threshold)"),
+      TRANSLATABLE("Sign Changes (High Threshold)"),
+      TRANSLATABLE("Direction Changes (Low Threshold)"),
+      TRANSLATABLE("Direction Changes (High Threshold)")
    };
    
    mKeyTypeChoice = new wxChoice(this, TTB_KeyType,
@@ -234,7 +237,7 @@ void TranscriptionToolBar::Populate()
                                  wxDefaultSize,
                                  5,
                                  choices );
-   mKeyTypeChoice->SetName(_("Key type"));
+   mKeyTypeChoice->SetName(TRANSLATABLE("Key type"));
    mKeyTypeChoice->SetSelection(0);
    Add( mKeyTypeChoice, 0, wxALIGN_CENTER );
 #endif
@@ -263,18 +266,18 @@ void TranscriptionToolBar::RegenerateTooltips()
    mPlaySpeedSlider->SetToolTip(_("Playback Speed"));
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-   mButtons[TTB_StartOn]->SetToolTip(_("Left-to-On"));
-   mButtons[TTB_EndOn]->SetToolTip(   _("Right-to-Off"));
-   mButtons[TTB_StartOff]->SetToolTip(   _("Left-to-Off"));
-   mButtons[TTB_EndOff]->SetToolTip(   _("Right-to-On"));
-   mButtons[TTB_SelectSound]->SetToolTip(   _("Select-Sound"));
-   mButtons[TTB_SelectSilence]->SetToolTip(   _("Select-Silence"));
-   mButtons[TTB_AutomateSelection]->SetToolTip(   _("Make Labels"));
-   mButtons[TTB_MakeLabel]->SetToolTip(   _("Add Label"));
-   mButtons[TTB_Calibrate]->SetToolTip(   _("Calibrate"));
+   mButtons[TTB_StartOn]->SetToolTip(TRANSLATABLE("Left-to-On"));
+   mButtons[TTB_EndOn]->SetToolTip(   TRANSLATABLE("Right-to-Off"));
+   mButtons[TTB_StartOff]->SetToolTip(   TRANSLATABLE("Left-to-Off"));
+   mButtons[TTB_EndOff]->SetToolTip(   TRANSLATABLE("Right-to-On"));
+   mButtons[TTB_SelectSound]->SetToolTip(   TRANSLATABLE("Select-Sound"));
+   mButtons[TTB_SelectSilence]->SetToolTip(   TRANSLATABLE("Select-Silence"));
+   mButtons[TTB_AutomateSelection]->SetToolTip(   TRANSLATABLE("Make Labels"));
+   mButtons[TTB_MakeLabel]->SetToolTip(   TRANSLATABLE("Add Label"));
+   mButtons[TTB_Calibrate]->SetToolTip(   TRANSLATABLE("Calibrate"));
  
-   mSensitivitySlider->SetToolTip(_("Sensitivity"));
-   mKeyTypeChoice->SetToolTip(_("Key type"));
+   mSensitivitySlider->SetToolTip(TRANSLATABLE("Sensitivity"));
+   mKeyTypeChoice->SetToolTip(TRANSLATABLE("Key type"));
 #endif
 #endif
 }
