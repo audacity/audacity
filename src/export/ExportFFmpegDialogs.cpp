@@ -1429,9 +1429,14 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
            {
               S.StartMultiColumn(4, wxALIGN_LEFT);
               {
+                 /* i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
+                   'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG 
+                   it has a hard to predict effect on the degree of compression */
                  mMuxRate = S.Id(FEMuxRateID).TieSpinCtrl(_("Mux Rate:"), wxT("/FileFormats/FFmpegMuxRate"), 0, 10000000, 0);
                  mMuxRate->SetToolTip(_("Maximum bit rate of the multiplexed stream\nOptional\n0 - default"));
 
+                 /* i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG 
+                   compression.  It measures how big a chunk of audio is compressed in one piece. */
                  mPacketSize = S.Id(FEPacketSizeID).TieSpinCtrl(_("Packet Size:"), wxT("/FileFormats/FFmpegPacketSize"), 0, 10000000, 0);
                  mPacketSize->SetToolTip(_("Packet size\nOptional\n0 - default"));
               }

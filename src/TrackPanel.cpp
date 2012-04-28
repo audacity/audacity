@@ -2062,7 +2062,14 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       mStretching = true;
       mStretched = false;
 
-      MakeParentPushState(_("Stretch Note Track"), _("Stretch"));
+      /* i18n-hint: (noun) The track that is used for MIDI notes which can be 
+      dragged to change their duration.*/
+      MakeParentPushState(_("Stretch Note Track"), 
+      /* i18n-hint: In the history list, indicates a MIDI note has 
+      been dragged to change its duration (stretch it). Using either past 
+      or present tense is fine here.  If unsure, go for whichever is 
+      shorter.*/
+      _("Stretch"));
 
       // Full refresh since the label area may need to indicate
       // newly selected tracks. (I'm really not sure if the label area

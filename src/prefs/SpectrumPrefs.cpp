@@ -98,6 +98,8 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+// Search and replace with _ if you want translation.
+#define TRANSLATABLE( x ) wxT(x)
    wxArrayString wskipn;
    wxArrayInt wskipv;
 
@@ -106,12 +108,13 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       wskipv.Add((1 << i) - 1);
    }
 
-   S.StartStatic(_("FFT Skip Points"));
+   /* /////i18n-hint: (noun) Experimental.  Don't know what it does.  Don't translate.*/
+   S.StartStatic(TRANSLATABLE("FFT Skip Points"));
    {
       S.StartMultiColumn(2);
       {
-         /* i18n-hint: (noun) here the user chooses points to skip.*/
-         S.TieChoice(_("Skip Points") + wxString(wxT(":")),
+         /* /////i18n-hint: (noun) here the user chooses points to skip.*/
+         S.TieChoice(TRANSLATABLE("Skip Points") + wxString(wxT(":")),
                      wxT("/Spectrum/FFTSkipPoints"),
                      0,
                      wskipn,

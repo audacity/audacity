@@ -322,7 +322,9 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
     * unless there aren't 60 seconds in a minute in your locale */
    BuiltinFormatStrings[5].formatStr = _("0100 h 060 m 060 s+.# samples");
    /* i18n-hint: Name of time display format that shows time in samples (at the
-    * current project sample rate) */
+    * current project sample rate).  For example the number of a sample at 1 
+    * second into a recording at 4410KHz would be 4,410,000.
+    */
    BuiltinFormatStrings[6].name = _("samples");
    /* i18n-hint: Format string for displaying time in samples (lots of samples).
     * Change the ',' to the 1000s separator for your locale, and translate

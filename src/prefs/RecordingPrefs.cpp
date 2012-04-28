@@ -135,6 +135,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             S.SetStretchyCol(1);
 
+            /* i18n-hint: Desired maximum (peak) volume for sound */
             S.TieSlider(_("Target Peak:"),
                         wxT("/AudioIO/TargetPeak"),
                         AILA_DEF_TARGET_PEAK,
