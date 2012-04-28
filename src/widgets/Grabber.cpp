@@ -59,6 +59,11 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
    mOver = false;
    mPressed = false;
 
+   /* i18n-hint: A 'Grabber' is a region you can click and drag on
+   It's used to drag a track around (when in multi-tool mode) rather 
+   than requiring that you use the drag tool.  It's shown as a series
+   of horizontal bumps */
+   
    SetLabel(_("Grabber"));
    SetName(_("Grabber"));
 }
