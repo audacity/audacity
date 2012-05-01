@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-04-30 01:19+0100\n"
-"PO-Revision-Date: 2012-04-30 19:05-0000\n"
+"PO-Revision-Date: 2012-05-01 19:19-0000\n"
 "Last-Translator: Michele Giacomoli\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -6175,11 +6175,11 @@ msgstr "La curva EQ necessita di un nuovo nome"
 
 #: effects/Equalization.cpp:1708
 msgid "Curve not found"
-msgstr "Curve non trovato"
+msgstr "Curva non trovata"
 
 #: effects/Equalization.cpp:1708
 msgid "Requested curve not found, using 'unnamed'"
-msgstr ""
+msgstr "Curva richiesta non trovata, utilizzo 'senza nome'"
 
 #: effects/Equalization.cpp:2820
 #: effects/Equalization.cpp:2825
