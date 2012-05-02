@@ -1539,7 +1539,9 @@ double WaveTrack::GetEndTime()
 bool WaveTrack::GetMinMax(float *min, float *max,
                           double t0, double t1)
 {
-   *min = FLT_MAX;
+   bool clipFound = false;
+
+   *min = FLT_MAX;   // we need these at extremes to make sure we find true min and max
    *max = -FLT_MAX;
 
    if (t0 > t1)
@@ -1556,6 +1558,7 @@ bool WaveTrack::GetMinMax(float *min, float *max,
 
       if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       {
+         clipFound = true;
          float clipmin, clipmax;
          if (it->GetData()->GetMinMax(&clipmin, &clipmax, t0, t1))
          {
@@ -1568,6 +1571,12 @@ bool WaveTrack::GetMinMax(float *min, float *max,
             result = false;
          }
       }
+   }
+
+   if(!clipFound)
+   {
+      *min = float(0.0);   // sensible defaults if no clips found
+      *max = float(0.0);
    }
 
    return result;
