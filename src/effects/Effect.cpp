@@ -166,9 +166,9 @@ bool Effect::TotalProgress(double frac)
    return (updateResult != eProgressSuccess);
 }
 
-bool Effect::TrackProgress(int whichTrack, double frac)
+bool Effect::TrackProgress(int whichTrack, double frac, wxString msg)
 {
-   int updateResult = mProgress->Update(whichTrack + frac, (double) mNumTracks);
+   int updateResult = mProgress->Update(whichTrack + frac, (double) mNumTracks, msg);
    return (updateResult != eProgressSuccess);
 }
 

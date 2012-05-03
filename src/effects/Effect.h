@@ -220,7 +220,7 @@ class AUDACITY_DLL_API Effect {
    
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac);
+   bool TrackProgress(int whichTrack, double frac, wxString = wxT(""));
  
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
