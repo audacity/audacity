@@ -60,13 +60,10 @@ class EffectNormalize: public Effect
    virtual bool Process();
    
  private:
-   bool ProcessOne(WaveTrack * t,
-                   sampleCount start, sampleCount end);
-
-   virtual void StartAnalysis();
+   bool ProcessOne(WaveTrack * t);
+   virtual void AnalyseTrack(WaveTrack * track);
    virtual void AnalyzeData(float *buffer, sampleCount len);
-
-   virtual void StartProcessing();
+   bool AnalyseDC(WaveTrack * track);
    virtual void ProcessData(float *buffer, sampleCount len);
 
    bool   mGain;
@@ -75,16 +72,14 @@ class EffectNormalize: public Effect
    bool   mStereoInd;
 
    int    mCurTrackNum;
-   double mCurRate;
    double mCurT0;
    double mCurT1;
-   int    mCurChannel;
    float  mMult;
    float  mOffset;
    float  mMin;
    float  mMax;
    double mSum;
-   int    mCount;
+   sampleCount    mCount;
 };
 
 //----------------------------------------------------------------------------

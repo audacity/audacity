@@ -143,16 +143,16 @@ bool EffectNormalize::PromptUser()
 
 bool EffectNormalize::Process()
 {
-   bool wasLinked = false; // set when a track has a linked (stereo) track
-
-   if (mGain == false &&
-       mDC == false)
+   if (mGain == false && mDC == false)
       return true;
+
+   float ratio = pow(10.0,TrapDouble(mLevel, // same value used for all tracks
+                               NORMALIZE_DB_MIN,
+                               NORMALIZE_DB_MAX)/20.0);
 
    //Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
-
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
    mCurTrackNum = 0;
@@ -168,42 +168,54 @@ bool EffectNormalize::Process()
 
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
-
-         //Transform the marker timepoints to samples
-         sampleCount start = track->TimeToLongSamples(mCurT0);
-         sampleCount end = track->TimeToLongSamples(mCurT1);
-         
-         //Get the track rate and samples
-         mCurRate = track->GetRate();
-         mCurChannel = track->GetChannel();
-
-         if(mStereoInd) // do stereo tracks independently (the easy way)
-            track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1);
+         AnalyseTrack(track);  // sets mOffset and offset-adjusted mMin and mMax
+         if(!track->GetLinked() || mStereoInd) {   // mono or 'stereo tracks independently'
+            float extent = wxMax(fabs(mMax), fabs(mMin));
+            if (extent > 0)
+               mMult = ratio / extent;
+            else
+               mMult = 1.0;
+            if (!ProcessOne(track))
+            {
+               bGoodResult = false;
+               break;
+            }
+         }
          else
          {
-            if(!wasLinked) // new mono track or first of a stereo pair
-            {
-               track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1);
-               if(track->GetLinked())
-               {
-                  wasLinked = true; // so we use these values for the next (linked) track
-                  track = (WaveTrack *) iter.Next();  // get the next one for the max/min
-                  float min, max;
-                  track->GetMinMax(&min, &max, mCurT0, mCurT1);
-                  mMin = min < mMin ? min : mMin;
-                  mMax = max > mMax ? max : mMax;
-                  track = (WaveTrack *) iter.Prev();  // back to the one we are on
-               }
-            }
+            // we have a linked stereo track
+            // so we need to find it's min, max and offset
+            // as they are needed to calc the multiplier for both tracks
+            float offset1 = mOffset;   // remember ones from first track
+            float min1 = mMin;
+            float max1 = mMax;
+            track = (WaveTrack *) iter.Next();  // get the next one
+            AnalyseTrack(track);  // sets mOffset and offset-adjusted mMin and mMax
+            float offset2 = mOffset;   // ones for second track
+            float min2 = mMin;
+            float max2 = mMax;
+            float extent = wxMax(fabs(min1), fabs(max1));
+            extent = wxMax(extent, fabs(min2));
+            extent = wxMax(extent, fabs(max2));
+            if (extent > 0)
+               mMult = ratio / extent; // we need to use this for both linked tracks
             else
-               wasLinked = false;   // second of the stereo pair, next one is mono or first
-         }
-
-         //ProcessOne() (implemented below) processes a single track
-         if (!ProcessOne(track, start, end))
-         {
-            bGoodResult = false;
-            break;
+               mMult = 1.0;
+            track = (WaveTrack *) iter.Prev();  // go back to the first linked one
+            mOffset = offset1;
+            if (!ProcessOne(track))
+            {
+               bGoodResult = false;
+               break;
+            }
+            mCurTrackNum++;   // keeps progress bar correct
+            track = (WaveTrack *) iter.Next();  // go to the second linked one
+            mOffset = offset2;
+            if (!ProcessOne(track))
+            {
+               bGoodResult = false;
+               break;
+            }
          }
       }
       
@@ -216,16 +228,40 @@ bool EffectNormalize::Process()
    return bGoodResult;
 }
 
-//ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
-//and executes AnalyzeData, then ProcessData, on it...
-bool EffectNormalize::ProcessOne(WaveTrack * track,
-                                  sampleCount start, sampleCount end)
+void EffectNormalize::AnalyseTrack(WaveTrack * track)
+{
+         if(mGain)
+            track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1); // set mMin, mMax
+         else
+            mMin = -1.0, mMax = 1.0;   // sensible defaults?
+         if(mDC) {
+            AnalyseDC(track); // sets mOffset
+            mMin += mOffset;
+            mMax += mOffset;
+         }
+         else
+            mOffset = 0.0;
+}
+
+//AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
+//and executes AnalyzeData on it...
+// sets mOffset
+bool EffectNormalize::AnalyseDC(WaveTrack * track)
 {
    bool rc = true;
-   
    sampleCount s;
+
+   mOffset = 0.0; // we might just return
+
+   if(!mDC)  // don't do analysis if not doing dc removal
+      return(rc);
+
+   //Transform the marker timepoints to samples
+   sampleCount start = track->TimeToLongSamples(mCurT0);
+   sampleCount end = track->TimeToLongSamples(mCurT1);
+         
    //Get the length of the buffer (as double). len is
-   //used simple to calculate a progress meter, so it is easier
+   //used simply to calculate a progress meter, so it is easier
    //to make it a double now than it is to do it later 
    double len = (double)(end - start);
 
@@ -233,53 +269,95 @@ bool EffectNormalize::ProcessOne(WaveTrack * track,
    //be shorter than the length of the track being processed.
    float *buffer = new float[track->GetMaxBlockSize()];
 
-   int pass;
+   mSum = 0.0; // dc offset inits
+   mCount = 0;
 
-   for(pass=0; pass<2; pass++)
-   {
-      if(pass==0 && !mDC)  // we don't need an analysis pass if not doing dc removal
-         continue;
-      if (pass==0)
-         StartAnalysis();  // dc offset only.  Max/min done in Process().
-      if (pass==1)
-         StartProcessing();
+   //Go through the track one buffer at a time. s counts which
+   //sample the current buffer starts at.
+   s = start;
+   while (s < end) {
+      //Get a block of samples (smaller than the size of the buffer)
+      sampleCount block = track->GetBestBlockSize(s);
+      
+      //Adjust the block size if it is the final block in the track
+      if (s + block > end)
+         block = end - s;
+      
+      //Get the samples from the track and put them in the buffer
+      track->Get((samplePtr) buffer, floatSample, s, block);
+      
+      //Process the buffer.
+      AnalyzeData(buffer, block);
+         
+      //Increment s one blockfull of samples
+      s += block;
+      
+      //Update the Progress meter
+		if (TrackProgress(mCurTrackNum, 
+                        ((double)(s - start) / (len*2)))) {
+         rc = false; //lda .. break, not return, so that buffer is deleted
+         break;
+      }
+   }
 
-      //Go through the track one buffer at a time. s counts which
-      //sample the current buffer starts at.
-      s = start;
-      while (s < end) {
-         //Get a block of samples (smaller than the size of the buffer)
-         sampleCount block = track->GetBestBlockSize(s);
-         
-         //Adjust the block size if it is the final block in the track
-         if (s + block > end)
-            block = end - s;
-         
-         //Get the samples from the track and put them in the buffer
-         track->Get((samplePtr) buffer, floatSample, s, block);
-         
-         //Process the buffer.
+   //Clean up the buffer
+   delete[] buffer;
 
-         if (pass==0)
-            AnalyzeData(buffer, block);
+   mOffset = (float)(-mSum / mCount);  // calculate actual offset (amount that needs to be added on)
 
-         if (pass==1) {
-            ProcessData(buffer, block);
+   //Return true because the effect processing succeeded ... unless cancelled
+   return rc;
+}
+
+//ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
+//and executes ProcessData, on it...
+// uses mMult and mOffset to normalize a track.  Needs to have them set before being called
+bool EffectNormalize::ProcessOne(WaveTrack * track)
+{
+   bool rc = true;
+   sampleCount s;
+
+   //Transform the marker timepoints to samples
+   sampleCount start = track->TimeToLongSamples(mCurT0);
+   sampleCount end = track->TimeToLongSamples(mCurT1);
          
-            //Copy the newly-changed samples back onto the track.
-            track->Set((samplePtr) buffer, floatSample, s, block);
-         }
-            
-         //Increment s one blockfull of samples
-         s += block;
+   //Get the length of the buffer (as double). len is
+   //used simply to calculate a progress meter, so it is easier
+   //to make it a double now than it is to do it later 
+   double len = (double)(end - start);
+
+   //Initiate a processing buffer.  This buffer will (most likely)
+   //be shorter than the length of the track being processed.
+   float *buffer = new float[track->GetMaxBlockSize()];
+
+   //Go through the track one buffer at a time. s counts which
+   //sample the current buffer starts at.
+   s = start;
+   while (s < end) {
+      //Get a block of samples (smaller than the size of the buffer)
+      sampleCount block = track->GetBestBlockSize(s);
+      
+      //Adjust the block size if it is the final block in the track
+      if (s + block > end)
+         block = end - s;
+      
+      //Get the samples from the track and put them in the buffer
+      track->Get((samplePtr) buffer, floatSample, s, block);
+      
+      //Process the buffer.
+      ProcessData(buffer, block);
+   
+      //Copy the newly-changed samples back onto the track.
+      track->Set((samplePtr) buffer, floatSample, s, block);
          
-         //Update the Progress meter
-			if (TrackProgress(mCurTrackNum, 
-									((double)(pass)*0.5) + // Approximate each pass as half.
-                           ((double)(s - start) / (len*2)))) {
-            rc = false; //lda .. break, not return, so that buffer is deleted
-            break;
-         }
+      //Increment s one blockfull of samples
+      s += block;
+      
+      //Update the Progress meter
+		if (TrackProgress(mCurTrackNum, 
+                        ((double)(s - start) / (len*2)))) {
+         rc = false; //lda .. break, not return, so that buffer is deleted
+         break;
       }
    }
    //Clean up the buffer
@@ -289,47 +367,18 @@ bool EffectNormalize::ProcessOne(WaveTrack * track,
    return rc;
 }
 
-void EffectNormalize::StartAnalysis()
-{
-   mSum = 0.0;
-   mCount = 0;
-}
-
 void EffectNormalize::AnalyzeData(float *buffer, sampleCount len)
 {
-   int i;
+   sampleCount i;
 
    for(i=0; i<len; i++)
       mSum += (double)buffer[i];
    mCount += len;
 }
 
-void EffectNormalize::StartProcessing()
-{
-   mMult = 1.0;
-   mOffset = 0.0;
-   
-   float ratio = pow(10.0,TrapDouble(mLevel,
-                                     NORMALIZE_DB_MIN,
-                                     NORMALIZE_DB_MAX)/20.0);
-
-   if (mDC) {
-      mOffset = (float)(-mSum / mCount);
-   }
-
-   if (mGain) {
-      float extent = fabs(mMax + mOffset);
-      if (fabs(mMin + mOffset) > extent)
-         extent = fabs(mMin + mOffset);
-
-      if (extent > 0)
-         mMult = ratio / extent;
-   }
-}
-
 void EffectNormalize::ProcessData(float *buffer, sampleCount len)
 {
-   int i;
+   sampleCount i;
 
    for(i=0; i<len; i++) {
       float adjFrame = (buffer[i] + mOffset) * mMult;
@@ -499,15 +548,3 @@ void NormalizeDialog::OnPreview(wxCommandEvent &event)
    mEffect->mLevel = oldLevel;
    mEffect->mStereoInd = oldStereoInd;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 0e9ab1c7-3cb3-4864-8f30-876218bea476
-
