@@ -4659,16 +4659,16 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
          50.0 * -steps / mViewInfo->zoom);
    } else if (event.CmdDown())
    {
-      // MM: Zoom in/out when used with Control key down
-      // MM: I don't understand what trackLeftEdge does
-      int trackLeftEdge = GetLeftOffset();
-      
-      double center_h = PositionToTime(event.m_x, trackLeftEdge);
-      mViewInfo->zoom = wxMin(mViewInfo->zoom * pow(2.0, steps), gMaxZoom);
+      // JKC: Now using AudacityProject zooming, which is smarter,
+      // it keeps selections on screen and centred if it can,
+      // also this ensures mousewheel and zoom buttons give same result.
+      double ZoomFactor = pow(2.0, steps);
+      AudacityProject *p = GetProject();
+      if( steps > 0 )
+         p->ZoomInByFactor( ZoomFactor );
+      else 
+         p->ZoomOutByFactor( ZoomFactor );
 
-      double new_center_h = PositionToTime(event.m_x, trackLeftEdge);
-      mViewInfo->h += (center_h - new_center_h);
-      
       MakeParentRedrawScrollbars();
       Refresh(false);
    } else

@@ -4758,9 +4758,14 @@ void AudacityProject::OnSelectAllTracks()
 
 void AudacityProject::OnZoomIn()
 {
+   ZoomInByFactor( 2.0 );
+}
+
+void AudacityProject::ZoomInByFactor( double ZoomFactor )
+{
    // LLL: Handling positioning differently when audio is active
    if (gAudioIO->IsStreamActive(GetAudioIOToken()) != 0) {
-      Zoom(mViewInfo.zoom * 2.0);
+      Zoom(mViewInfo.zoom * ZoomFactor);
       mTrackPanel->ScrollIntoView(gAudioIO->GetStreamTime());
       mTrackPanel->Refresh(false);
       return;
@@ -4791,7 +4796,7 @@ void AudacityProject::OnZoomIn()
             (mViewInfo.h + mViewInfo.screen - mViewInfo.sel0) / 2;
          
       // Zoom in
-      Zoom(mViewInfo.zoom *= 2.0);
+      Zoom(mViewInfo.zoom *= ZoomFactor);
 
       // Recenter on selCenter
       TP_ScrollWindow(selCenter - mViewInfo.screen / 2);
@@ -4801,7 +4806,7 @@ void AudacityProject::OnZoomIn()
 
    double origLeft = mViewInfo.h;
    double origWidth = mViewInfo.screen;
-   Zoom(mViewInfo.zoom *= 2.0);
+   Zoom(mViewInfo.zoom *= ZoomFactor);
    
    double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
    
@@ -4823,11 +4828,17 @@ void AudacityProject::OnZoomIn()
 
 void AudacityProject::OnZoomOut()
 {  
+   ZoomOutByFactor( 1 /2.0 );
+}
+
+
+void AudacityProject::ZoomOutByFactor( double ZoomFactor )
+{
    //Zoom() may change these, so record original values:
    double origLeft = mViewInfo.h;
    double origWidth = mViewInfo.screen;
 
-   Zoom(mViewInfo.zoom /= 2.0);
+   Zoom(mViewInfo.zoom *=ZoomFactor);
 
    double newh = origLeft + (origWidth - mViewInfo.screen) / 2;
    // newh = (newh > 0) ? newh : 0;

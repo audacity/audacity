@@ -275,6 +275,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void HandleResize();
    void UpdateLayout();
+   void ZoomInByFactor( double ZoomFactor );
+   void ZoomOutByFactor( double ZoomFactor );
 
    // Other commands
    static TrackList *GetClipboardTracks();
