@@ -245,9 +245,10 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
       summary256[i * 3 + 2] = rms;
    }
    for (i = sumLen; i < mSummaryInfo.frames256; i++) {
-      summary256[i * 3] = 0.0f;
-      summary256[i * 3 + 1] = 0.0f;
-      summary256[i * 3 + 2] = 0.0f;
+      // filling in the remaining bits with non-harming/contributing values
+      summary256[i * 3] = FLT_MAX;  // min
+      summary256[i * 3 + 1] = -FLT_MAX;   // max
+      summary256[i * 3 + 2] = 0.0f; // rms
    }
 
    // Recalc 64K summaries
@@ -258,8 +259,7 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
       max = summary256[3 * i * 256 + 1];
       sumsq = (float)summary256[3 * i * 256 + 2];
       sumsq *= sumsq;
-
-      for (j = 1; j < 256; j++) {
+      for (j = 1; j < 256; j++) {   // we can overflow the useful summary256 values here, but have put non-harmful values in them
          if (summary256[3 * (i * 256 + j)] < min)
             min = summary256[3 * (i * 256 + j)];
          if (summary256[3 * (i * 256 + j) + 1] > max)
@@ -268,15 +268,15 @@ void *BlockFile::CalcSummary(samplePtr buffer, sampleCount len,
          sumsq += r1*r1;
       }
 
-      float rms = (float)sqrt(sumsq / 256);
+      float rms = (float)sqrt(sumsq / 256);  // the '256' is not quite right at the edges as not all summary256 entries will be filled with useful values
 
       summary64K[i * 3] = min;
       summary64K[i * 3 + 1] = max;
       summary64K[i * 3 + 2] = rms;
    }
    for (i = sumLen; i < mSummaryInfo.frames64K; i++) {
-      summary64K[i * 3] = 0.0f;
-      summary64K[i * 3 + 1] = 0.0f;
+      summary64K[i * 3] = 0.0f;  // probably should be FLT_MAX, need a test case
+      summary64K[i * 3 + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
       summary64K[i * 3 + 2] = 0.0f;
    }
 
