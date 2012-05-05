@@ -519,9 +519,10 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    }
    
    for (i = sumLen; i < mSummaryInfo.frames256; i++) {
-      summary256[i * 3] = 0.0f;
-      summary256[i * 3 + 1] = 0.0f;
-      summary256[i * 3 + 2] = 0.0f;
+      // filling in the remaining bits with non-harming/contributing values
+      summary256[i * 3] = FLT_MAX;  // min
+      summary256[i * 3 + 1] = -FLT_MAX;   // max
+      summary256[i * 3 + 2] = 0.0f; // rms
    }
 
    // Recalc 64K summaries
