@@ -2945,8 +2945,8 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    //If the mouse is over a track that isn't the captured track,
    //drag the clip to the mousetrack
-   if (mCapturedClip && mouseTrack != mCapturedTrack &&
-       !mCapturedClipIsSelection)
+   if (mCapturedClip && mouseTrack != mCapturedTrack /*&&
+       !mCapturedClipIsSelection*/)
    {
       // Make sure we always have the first linked track of a stereo track
       if (!mouseTrack->GetLinked() && mTracks->GetLink(mouseTrack))
@@ -2962,6 +2962,12 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
                           (WaveTrack*)mouseTrack)) {
          mCapturedTrack = mouseTrack;
          mDidSlideVertically = true;
+
+         if (mCapturedClipIsSelection) {
+            // Slide the selection, too
+            mViewInfo->sel0 += desiredSlideAmount;
+            mViewInfo->sel1 += desiredSlideAmount;
+         }
 
          // Make the offset permanent; start from a "clean slate"
          mHSlideAmount = 0.0;
