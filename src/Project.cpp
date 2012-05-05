@@ -1360,7 +1360,8 @@ void AudacityProject::FixScrollbars()
 
    // Add 1/4 of a screen of blank space to the end of the longest track
    mViewInfo.screen = ((double) panelWidth) / mViewInfo.zoom;
-   mViewInfo.total = mTracks->GetEndTime() + mViewInfo.screen / 4;
+   double LastTime = wxMax( mTracks->GetEndTime(), mViewInfo.sel1 );
+   mViewInfo.total = LastTime + mViewInfo.screen / 4;
 
    // Don't remove time from total that's still on the screen 
    if (mViewInfo.h > mViewInfo.total - mViewInfo.screen) {
