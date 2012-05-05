@@ -294,7 +294,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track)
       
       //Update the Progress meter
 		if (TrackProgress(mCurTrackNum, 
-                        ((double)(s - start) / (len*2)), wxT("Analysing DC offset..."))) {
+                        ((double)(s - start) / (len*2)), wxT("Analyzing DC offset..."))) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
@@ -319,11 +319,11 @@ bool EffectNormalize::ProcessOne(WaveTrack * track)
 
    wxString msg;
    if(mDC & mGain)
-      msg = _("Removing offset and Normalizing...");
+      msg = _("Removing DC offset and Normalizing...");
    else if(mDC & !mGain)
-      msg = _("Removing offset...");
+      msg = _("Removing DC offset...");
    else if(!mDC & mGain)
-      msg = _("Normalizing without removing offset...");
+      msg = _("Normalizing without removing DC offset...");
    else if(!mDC & !mGain)
       msg = wxT("Not doing anything)...");   // shouldn't get here
 
