@@ -4678,11 +4678,28 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
          p->ZoomOutByFactor( ZoomFactor );
 #endif
       // MM: Zoom in/out when used with Control key down
-      // MM: I don't understand what trackLeftEdge does
+      // We're converting pixel positions to times, 
+      // counting pixels from the left edge of the track.
       int trackLeftEdge = GetLeftOffset();
 
+      // Time corresponding to mouse position
       double center_h = PositionToTime(event.m_x, trackLeftEdge);
-      mViewInfo->zoom = wxMin(mViewInfo->zoom * pow(2.0, steps), gMaxZoom);
+      // Time corresponding to last (most far right) audio.
+      double audioEndTime = mTracks->GetEndTime();
+
+      // When zooming in in empty space, it's easy to 'lose' the waveform.
+      // This prevents it.
+      // IF zooming in
+      if( steps > 0) 
+      {
+         // IF mouse is to right of audio
+         if( center_h > audioEndTime )
+            // Zooming brings far right of audio to mouse.
+            center_h = audioEndTime;
+      }
+      
+      // Constrain maximum as well as minimum zoom.
+      mViewInfo->zoom = wxMax( gMinZoom, wxMin(mViewInfo->zoom * pow(2.0, steps), gMaxZoom));
 
       double new_center_h = PositionToTime(event.m_x, trackLeftEdge);
       mViewInfo->h += (center_h - new_center_h);
