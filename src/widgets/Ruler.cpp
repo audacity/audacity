@@ -1047,7 +1047,9 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
       // Major ticks
       double d = mMin - UPP/2;
       double lastD = d;
-      int majorInt = (int)floor(sg * d / mMajor);
+      // using ints for majorint doesn't work, as 
+      // majorint will overflow and be negative at high zoom.
+      double majorInt = floor(sg * d / mMajor);
       i = -1;
       while(i <= mLength) {
          double warpfactor;
@@ -1060,8 +1062,8 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          lastD = d;
          d += UPP/warpfactor;
          
-         if ((int)floor(sg * d / mMajor) > majorInt) {
-            majorInt = (int)floor(sg * d / mMajor);
+         if (floor(sg * d / mMajor) > majorInt) {
+            majorInt = floor(sg * d / mMajor);
             Tick(i, sg * majorInt * mMajor, true, false);
          }
       }
