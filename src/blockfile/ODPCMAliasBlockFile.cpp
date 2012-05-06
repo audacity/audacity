@@ -16,6 +16,7 @@ The summary is eventually computed and written to a file in a background thread.
 
 *//*******************************************************************/
 
+#include <float.h>
 #ifdef _WIN32
    #include <windows.h>
 #endif
