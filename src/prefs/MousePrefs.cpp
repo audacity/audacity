@@ -133,7 +133,7 @@ void MousePrefs::CreateList()
 
    AddItem(_("Wheel-Rotate"),      _("Any"),      _("Scroll up or down"));
    AddItem(_("Shift-Wheel-Rotate"),_("Any"),      _("Scroll left or right"));
-   AddItem(_("Ctrl-Wheel-Rotate"), _("Any"),      _("Zoom in or out"));
+   AddItem(_("Ctrl-Wheel-Rotate"), _("Any"),      _("Zoom in or out on Mouse Pointer"));
 
    mList->SetColumnWidth(BlankColumn, 0);
    mList->SetColumnWidth(ToolColumn, wxLIST_AUTOSIZE);
