@@ -620,7 +620,7 @@ void TrackPanel::BuildMenus(void)
    mRateMenu->AppendCheckItem(OnRate44ID, wxT("44100 Hz"));
    mRateMenu->AppendCheckItem(OnRate48ID, wxT("48000 Hz"));
    mRateMenu->AppendCheckItem(OnRate96ID, wxT("96000 Hz"));
-   mRateMenu->AppendCheckItem(OnRateOtherID, _("Other..."));
+   mRateMenu->AppendCheckItem(OnRateOtherID, _("&Other..."));
 
    mFormatMenu = new wxMenu();
    mFormatMenu->AppendCheckItem(On16BitID, GetSampleFormatStr(int16Sample));
@@ -628,53 +628,53 @@ void TrackPanel::BuildMenus(void)
    mFormatMenu->AppendCheckItem(OnFloatID, GetSampleFormatStr(floatSample));
 
    mWaveTrackMenu = new wxMenu();
-   mWaveTrackMenu->Append(OnSetNameID, _("Name..."));
+   mWaveTrackMenu->Append(OnSetNameID, _("N&ame..."));
    mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->Append(OnMoveUpID, _("Move Track Up"));
-   mWaveTrackMenu->Append(OnMoveDownID, _("Move Track Down"));
+   mWaveTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
+   mWaveTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
    mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->Append(OnWaveformID, _("Waveform"));
-   mWaveTrackMenu->Append(OnWaveformDBID, _("Waveform (dB)"));
-   mWaveTrackMenu->Append(OnSpectrumID, _("Spectrogram"));
+   mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
+   mWaveTrackMenu->Append(OnWaveformDBID, _("Waveform (d&B)"));
+   mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
    /* i18n-hint: short form of 'logarithm'*/
-   mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram log(f)")); 
-   mWaveTrackMenu->Append(OnPitchID, _("Pitch (EAC)"));
+   mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)")); 
+   mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
    mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->AppendCheckItem(OnChannelMonoID, _("Mono"));
-   mWaveTrackMenu->AppendCheckItem(OnChannelLeftID, _("Left Channel"));
-   mWaveTrackMenu->AppendCheckItem(OnChannelRightID, _("Right Channel"));
-   mWaveTrackMenu->Append(OnMergeStereoID, _("Make Stereo Track"));
-   mWaveTrackMenu->Append(OnSplitStereoID, _("Split Stereo Track"));
-   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mono"));
+   mWaveTrackMenu->AppendCheckItem(OnChannelMonoID, _("&Mono"));
+   mWaveTrackMenu->AppendCheckItem(OnChannelLeftID, _("&Left Channel"));
+   mWaveTrackMenu->AppendCheckItem(OnChannelRightID, _("&Right Channel"));
+   mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
+   mWaveTrackMenu->Append(OnSplitStereoID, _("Spli&t Stereo Track"));
+   mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->Append(0, _("Set Sample Format"), mFormatMenu);
+   mWaveTrackMenu->Append(0, _("Set Sample &Format"), mFormatMenu);
    mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->Append(0, _("Set Rate"), mRateMenu);
+   mWaveTrackMenu->Append(0, _("Set Rat&e"), mRateMenu);
 
    mNoteTrackMenu = new wxMenu();
-   mNoteTrackMenu->Append(OnSetNameID, _("Name..."));
+   mNoteTrackMenu->Append(OnSetNameID, _("N&ame..."));
    mNoteTrackMenu->AppendSeparator();
-   mNoteTrackMenu->Append(OnMoveUpID, _("Move Track Up"));
-   mNoteTrackMenu->Append(OnMoveDownID, _("Move Track Down"));
+   mNoteTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
+   mNoteTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
    mNoteTrackMenu->AppendSeparator();
-   mNoteTrackMenu->Append(OnUpOctaveID, _("Up Octave"));
-   mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octave"));
+   mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
+   mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
 
    mLabelTrackMenu = new wxMenu();
-   mLabelTrackMenu->Append(OnSetNameID, _("Name..."));
+   mLabelTrackMenu->Append(OnSetNameID, _("N&ame..."));
    mLabelTrackMenu->AppendSeparator();
-   mLabelTrackMenu->Append(OnSetFontID, _("Font..."));
+   mLabelTrackMenu->Append(OnSetFontID, _("&Font..."));
    mLabelTrackMenu->AppendSeparator();
-   mLabelTrackMenu->Append(OnMoveUpID, _("Move Track Up"));
-   mLabelTrackMenu->Append(OnMoveDownID, _("Move Track Down"));
+   mLabelTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
+   mLabelTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
 
    mTimeTrackMenu = new wxMenu();
-   mTimeTrackMenu->Append(OnSetNameID, _("Name..."));
+   mTimeTrackMenu->Append(OnSetNameID, _("N&ame..."));
    mTimeTrackMenu->AppendSeparator();
-   mTimeTrackMenu->Append(OnMoveUpID, _("Move Track Up"));
-   mTimeTrackMenu->Append(OnMoveDownID, _("Move Track Down"));
+   mTimeTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
+   mTimeTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
    mTimeTrackMenu->AppendSeparator();
-   mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set Range..."));
+   mTimeTrackMenu->Append(OnSetTimeTrackRangeID, _("Set Ra&nge..."));
 
    mLabelTrackInfoMenu = new wxMenu();
    mLabelTrackInfoMenu->Append(OnCutSelectedTextID, _("Cut"));
