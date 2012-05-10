@@ -241,7 +241,7 @@ private:
 struct wav_header {
    /* RIFF header */
    char riffID[4];            /* "RIFF" */
-   wxUint32 lenAfterRiff;     /* basically the file len - 8, or samples len + 32 */
+   wxUint32 lenAfterRiff;     /* basically the file len - 8, or samples len + 36 */
    char riffType[4];          /* "WAVE" */
    
    /* format chunk */
@@ -376,11 +376,11 @@ int ExportCL::Export(AudacityProject *project,
    header.riffID[1]        = 'I';
    header.riffID[2]        = 'F';
    header.riffID[3]        = 'F';
+   header.lenAfterRiff     = wxUINT32_SWAP_ON_BE(sampleBytes + 36);
    header.riffType[0]      = 'W';
    header.riffType[1]      = 'A';
    header.riffType[2]      = 'V';
    header.riffType[3]      = 'E';
-   header.lenAfterRiff     = wxUINT32_SWAP_ON_BE(sampleBytes + 32);
 
    header.fmtID[0]         = 'f';
    header.fmtID[1]         = 'm';
@@ -391,7 +391,7 @@ int ExportCL::Export(AudacityProject *project,
    header.channels         = wxUINT16_SWAP_ON_BE(channels);
    header.sampleRate       = wxUINT32_SWAP_ON_BE(rate);
    header.bitsPerSample    = wxUINT16_SWAP_ON_BE(SAMPLE_SIZE(int16Sample) * 8);
-   header.blockAlign       = wxUINT16_SWAP_ON_BE(header.bitsPerSample * header.channels);
+   header.blockAlign       = wxUINT16_SWAP_ON_BE(header.bitsPerSample * header.channels / 8);
    header.avgBytesPerSec   = wxUINT32_SWAP_ON_BE(header.sampleRate * header.blockAlign);
    header.dataID[0]        = 'd';
    header.dataID[1]        = 'a';
