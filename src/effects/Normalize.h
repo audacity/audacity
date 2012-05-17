@@ -60,10 +60,10 @@ class EffectNormalize: public Effect
    virtual bool Process();
    
  private:
-   bool ProcessOne(WaveTrack * t);
-   virtual void AnalyseTrack(WaveTrack * track);
+   bool ProcessOne(WaveTrack * t, wxString msg);
+   virtual void AnalyseTrack(WaveTrack * track, wxString msg);
    virtual void AnalyzeData(float *buffer, sampleCount len);
-   bool AnalyseDC(WaveTrack * track);
+   bool AnalyseDC(WaveTrack * track, wxString msg);
    virtual void ProcessData(float *buffer, sampleCount len);
 
    bool   mGain;

@@ -1451,7 +1451,13 @@ ProgressDialog::SetMessage(const wxString & message)
 {
    if (!message.IsEmpty())
    {
+      wxSize sizeBefore = this->GetClientSize();
       mMessage->SetLabel(message);
+      wxSize sizeAfter = this->GetBestSize();
+      wxSize sizeNeeded;
+      sizeNeeded.x = wxMax(sizeBefore.x, sizeAfter.x);
+      sizeNeeded.y = wxMax(sizeBefore.y, sizeAfter.y);
+      this->SetClientSize(sizeNeeded);
       wxYieldIfNeeded();
    }
 }

@@ -155,7 +155,19 @@ bool EffectNormalize::Process()
    bool bGoodResult = true;
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
+   WaveTrack *prevTrack;
+   prevTrack = track;
    mCurTrackNum = 0;
+   wxString topMsg;
+   if(mDC & mGain)
+      topMsg = _("Removing DC offset and Normalizing...\n");
+   else if(mDC & !mGain)
+      topMsg = _("Removing DC offset...\n");
+   else if(!mDC & mGain)
+      topMsg = _("Normalizing without removing DC offset...\n");
+   else if(!mDC & !mGain)
+      topMsg = wxT("Not doing anything)...\n");   // shouldn't get here
+
    while (track) {
       //Get start and end times from track
       double trackStart = track->GetStartTime();
@@ -168,14 +180,21 @@ bool EffectNormalize::Process()
 
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
-         AnalyseTrack(track);  // sets mOffset and offset-adjusted mMin and mMax
+         wxString msg, trackName;
+         trackName = wxString::Format(track->GetName().c_str());
+
+         msg = topMsg + _("Analyzing: ") + trackName;
+         AnalyseTrack(track, msg);  // sets mOffset and offset-adjusted mMin and mMax
          if(!track->GetLinked() || mStereoInd) {   // mono or 'stereo tracks independently'
             float extent = wxMax(fabs(mMax), fabs(mMin));
             if (extent > 0)
                mMult = ratio / extent;
             else
                mMult = 1.0;
-            if (!ProcessOne(track))
+            msg = topMsg + _("Normalizing: ") + trackName;
+            if(track->GetLinked() || prevTrack->GetLinked())  // only get here if there is a linked track but we are processing independently
+               msg += wxT("\nProcessing stereo channels independently");
+            if (!ProcessOne(track, msg))
             {
                bGoodResult = false;
                break;
@@ -190,7 +209,8 @@ bool EffectNormalize::Process()
             float min1 = mMin;
             float max1 = mMax;
             track = (WaveTrack *) iter.Next();  // get the next one
-            AnalyseTrack(track);  // sets mOffset and offset-adjusted mMin and mMax
+            msg = topMsg + _("Analyzing second track of stereo pair: ") + trackName;
+            AnalyseTrack(track, msg);  // sets mOffset and offset-adjusted mMin and mMax
             float offset2 = mOffset;   // ones for second track
             float min2 = mMin;
             float max2 = mMax;
@@ -203,7 +223,8 @@ bool EffectNormalize::Process()
                mMult = 1.0;
             track = (WaveTrack *) iter.Prev();  // go back to the first linked one
             mOffset = offset1;
-            if (!ProcessOne(track))
+            msg = topMsg + _("Normalizing first track of stereo pair: ") + trackName;
+            if (!ProcessOne(track, msg))
             {
                bGoodResult = false;
                break;
@@ -211,7 +232,8 @@ bool EffectNormalize::Process()
             mCurTrackNum++;   // keeps progress bar correct
             track = (WaveTrack *) iter.Next();  // go to the second linked one
             mOffset = offset2;
-            if (!ProcessOne(track))
+            msg = topMsg + _("Normalizing second track of stereo pair: ") + trackName;
+            if (!ProcessOne(track, msg))
             {
                bGoodResult = false;
                break;
@@ -220,6 +242,7 @@ bool EffectNormalize::Process()
       }
       
       //Iterate to the next track
+      prevTrack = track;
       track = (WaveTrack *) iter.Next();
       mCurTrackNum++;
    }
@@ -228,14 +251,14 @@ bool EffectNormalize::Process()
    return bGoodResult;
 }
 
-void EffectNormalize::AnalyseTrack(WaveTrack * track)
+void EffectNormalize::AnalyseTrack(WaveTrack * track, wxString msg)
 {
          if(mGain)
-            track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1); // set mMin, mMax
+            track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1); // set mMin, mMax.  No progress bar here as it's fast.
          else
             mMin = -1.0, mMax = 1.0;   // sensible defaults?
          if(mDC) {
-            AnalyseDC(track); // sets mOffset
+            AnalyseDC(track, msg); // sets mOffset
             mMin += mOffset;
             mMax += mOffset;
          }
@@ -246,7 +269,7 @@ void EffectNormalize::AnalyseTrack(WaveTrack * track)
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
 //and executes AnalyzeData on it...
 // sets mOffset
-bool EffectNormalize::AnalyseDC(WaveTrack * track)
+bool EffectNormalize::AnalyseDC(WaveTrack * track, wxString msg)
 {
    bool rc = true;
    sampleCount s;
@@ -294,7 +317,7 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track)
       
       //Update the Progress meter
 		if (TrackProgress(mCurTrackNum, 
-                        ((double)(s - start) / (len*2)), wxT("Analyzing DC offset..."))) {
+                        ((double)(s - start) / len), msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
@@ -312,21 +335,10 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track)
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessData, on it...
 // uses mMult and mOffset to normalize a track.  Needs to have them set before being called
-bool EffectNormalize::ProcessOne(WaveTrack * track)
+bool EffectNormalize::ProcessOne(WaveTrack * track, wxString msg)
 {
    bool rc = true;
    sampleCount s;
-
-   wxString msg;
-   if(mDC & mGain)
-      msg = _("Removing DC offset and Normalizing...");
-   else if(mDC & !mGain)
-      msg = _("Removing DC offset...");
-   else if(!mDC & mGain)
-      msg = _("Normalizing without removing DC offset...");
-   else if(!mDC & !mGain)
-      msg = wxT("Not doing anything)...");   // shouldn't get here
-
 
    //Transform the marker timepoints to samples
    sampleCount start = track->TimeToLongSamples(mCurT0);
@@ -366,7 +378,7 @@ bool EffectNormalize::ProcessOne(WaveTrack * track)
       
       //Update the Progress meter
 		if (TrackProgress(mCurTrackNum, 
-                        ((double)(s - start) / (len*2)), msg)) {
+                        ((double)(s - start) / len), msg)) {
          rc = false; //lda .. break, not return, so that buffer is deleted
          break;
       }
