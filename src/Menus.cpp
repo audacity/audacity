@@ -859,7 +859,7 @@ void AudacityProject::CreateMenusAndCommands()
                  wxT("Ctrl+M"), 
 #endif
                  0, AudioIONotBusyFlag);
-      c->AddItem(wxT("EditLabels"), _("&Edit Labels"), FN(OnEditLabels));
+      c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
 
       c->AddSeparator();   
 
@@ -1059,7 +1059,7 @@ void AudacityProject::CreateMenusAndCommands()
               wxT("Ctrl+M"), 
 #endif
               0, AudioIONotBusyFlag);
-   c->AddItem(wxT("EditLabels"), _("&Edit Labels"), FN(OnEditLabels));
+   c->AddItem(wxT("EditLabels"), _("&Edit Labels..."), FN(OnEditLabels));
 
    c->AddSeparator();   
 
