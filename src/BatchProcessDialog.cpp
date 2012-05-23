@@ -737,7 +737,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent &event)
                      wxString::Format(_("Are you sure you want to delete %s?"), name.c_str()),
                      GetTitle(),
                      wxYES_NO | wxICON_QUESTION);
-   if (m.ShowModal() == wxNO) {
+   if (m.ShowModal() == wxID_NO) {
       return;
    }
 
