@@ -261,17 +261,27 @@ bool EffectNormalize::Process()
 
 void EffectNormalize::AnalyseTrack(WaveTrack * track, wxString msg)
 {
-         if(mGain)
-            track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1); // set mMin, mMax.  No progress bar here as it's fast.
-         else
-            mMin = -1.0, mMax = 1.0;   // sensible defaults?
-         if(mDC) {
-            AnalyseDC(track, msg); // sets mOffset
-            mMin += mOffset;
-            mMax += mOffset;
-         }
-         else
-            mOffset = 0.0;
+   if(mGain) {
+      // Since we need complete summary data, we need to block until the OD tasks are done for this track
+      // TODO: should we restrict the flags to just the relevant block files (for selections)
+      while (track->GetODFlags()) {
+         // update the gui
+         mProgress->Update(0, wxT("Waiting for waveform to finish computing..."));
+         wxMilliSleep(100);
+      }
+
+      track->GetMinMax(&mMin, &mMax, mCurT0, mCurT1); // set mMin, mMax.  No progress bar here as it's fast.
+   } else {
+      mMin = -1.0, mMax = 1.0;   // sensible defaults?
+   }
+
+   if(mDC) {
+      AnalyseDC(track, msg); // sets mOffset
+      mMin += mOffset;
+      mMax += mOffset;
+   } else {
+      mOffset = 0.0;
+   }
 }
 
 //AnalyseDC() takes a track, transforms it to bunch of buffer-blocks,
