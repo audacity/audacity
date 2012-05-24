@@ -32,7 +32,7 @@ id3_skip (SF_PRIVATE * psf)
 {	unsigned char	buf [10] ;
 
 	memset (buf, 0, sizeof (buf)) ;
-	psf_binheader_readf (psf, "pb", 0, buf, 10) ;
+	psf_binheader_readf (psf, "pb", (size_t)0, buf, 10) ;
 
 	if (buf [0] == 'I' && buf [1] == 'D' && buf [2] == '3')
 	{	int	offset = buf [6] & 0x7f ;
@@ -48,7 +48,7 @@ id3_skip (SF_PRIVATE * psf)
 
 		/* Calculate new file offset and position ourselves there. */
 		psf->fileoffset += offset + 10 ;
-		psf_binheader_readf (psf, "p", psf->fileoffset) ;
+		psf_binheader_readf (psf, "p", (size_t)psf->fileoffset) ;
 
 		return 1 ;
 		} ;
