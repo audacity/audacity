@@ -32,9 +32,8 @@ static void hexdump (void *data, int len) ;
 
 int
 psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
-{	static char lsf_name [] = PACKAGE "-" VERSION ;
-	static char bracket_name [] = " (" PACKAGE "-" VERSION ")" ;
-	int		k, str_len, len_remaining, str_flags ;
+{	size_t	len_remaining, str_len ;
+	int		k, str_flags ;
 
 	if (str == NULL)
 		return SFE_STR_BAD_STRING ;
@@ -97,27 +96,31 @@ psf_store_string (SF_PRIVATE *psf, int str_type, const char *str)
 	{	case SF_STR_SOFTWARE :
 				/* In write mode, want to append libsndfile-version to string. */
 				if (psf->file.mode == SFM_WRITE || psf->file.mode == SFM_RDWR)
-				{	psf->strings [k].type = str_type ;
+				{	char new_str [128] ;
+
+					if (strstr (str, PACKAGE) == NULL)
+					{	/*
+						** If the supplied string does not already contain a
+						** libsndfile-X.Y.Z component, then add it.
+						*/
+						if (strlen (str) == 0)
+							snprintf (new_str, sizeof (new_str), "%s-%s", PACKAGE, VERSION) ;
+						else
+							snprintf (new_str, sizeof (new_str), "%s (%s-%s)", str, PACKAGE, VERSION) ;
+						}
+					else
+						snprintf (new_str, sizeof (new_str), "%s", str) ;
+
+					str = new_str ;
+					str_len = strlen (str) ;
+
+					psf->strings [k].type = str_type ;
 					psf->strings [k].str = psf->str_end ;
 					psf->strings [k].flags = str_flags ;
 
 					memcpy (psf->str_end, str, str_len + 1) ;
-					psf->str_end += str_len ;
-
-					/*
-					** If the supplied string does not already contain a
-					** libsndfile-X.Y.Z component, then add it.
-					*/
-					if (strstr (str, PACKAGE) == NULL && len_remaining > (int) (strlen (bracket_name) + str_len + 2))
-					{	if (strlen (str) == 0)
-							psf_strlcat (psf->str_end, sizeof (psf->str_storage), lsf_name) ;
-						else
-							psf_strlcat (psf->str_end, sizeof (psf->str_storage), bracket_name) ;
-						psf->str_end += strlen (psf->str_end) ;
-						} ;
-
 					/* Plus one to catch string terminator. */
-					psf->str_end += 1 ;
+					psf->str_end += str_len + 1 ;
 					break ;
 					} ;
 
