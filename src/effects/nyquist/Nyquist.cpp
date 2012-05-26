@@ -85,6 +85,11 @@ EffectNyquist::EffectNyquist(wxString fName)
    mBreak = false;
    mCont = false;
 
+   if (!SetXlispPath()) {
+      wxLogWarning(wxT("Critical Nyquist files could not be found. Nyquist effects will not work."));
+      return;
+   }
+
    if (fName == wxT("")) {
       // Interactive Nyquist
       mOK = true;
@@ -418,12 +423,84 @@ bool EffectNyquist::SetXlispPath()
    return ::wxFileExists(fname);
 }
 
-bool EffectNyquist::PromptUser()
+bool EffectNyquist::SupportsChains()
 {
-   if (!SetXlispPath()) {
-      return false;
+   return (GetEffectFlags() & PROCESS_EFFECT) != 0;
+}
+
+bool EffectNyquist::TransferParameters( Shuttle & shuttle )
+{
+   for (size_t i = 0; i < mControls.GetCount(); i++) {
+      NyqControl *ctrl = &mControls[i];
+      double d = ctrl->val;
+      bool good = false;
+
+      if (d == UNINITIALIZED_CONTROL) {
+         if (ctrl->type != NYQ_CTRL_STRING) {
+            if (!shuttle.mbStoreInClient) {
+               d = GetCtrlValue(ctrl->valStr);
+            }
+         }
+      }
+
+      if (ctrl->type == NYQ_CTRL_REAL) {
+         good = shuttle.TransferDouble(ctrl->var, d, 0.0);
+      }
+      else if (ctrl->type == NYQ_CTRL_INT) {
+         int val = (int) d;
+         good = shuttle.TransferInt(ctrl->var, val, 0);
+         d = (double) val;
+      }
+      else if (ctrl->type == NYQ_CTRL_CHOICE) {
+         //str is coma separated labels for each choice
+         wxString str = ctrl->label;
+         wxArrayString choices;
+         
+         while (1) {
+            int ci = str.Find( ',' ); //coma index
+
+            if (ci == -1) {
+               choices.Add( str );
+               break;
+            }
+            else {
+               choices.Add(str.Left(ci));
+            }
+            
+            str = str.Right(str.length() - ci - 1);
+         }
+
+         int cnt = choices.GetCount();
+         if (choices.GetCount() > 0) {
+            wxString *array = NULL;
+            array = new wxString[cnt];
+            for (int j = 0; j < cnt; j++ ) {
+               array[j] = choices[j];
+            }
+
+            int val = (int) d;
+            good = shuttle.TransferEnum(ctrl->var, val, cnt, array);
+            d = (double) val;
+
+            delete [] array;
+         }
+      }
+      else if (ctrl->type == NYQ_CTRL_STRING) {
+         good = shuttle.TransferString(ctrl->var, ctrl->valStr, wxEmptyString);
+      }
+
+      if (ctrl->type != NYQ_CTRL_STRING) {
+         if (shuttle.mbStoreInClient && good) {
+            ctrl->val = d;
+         }
+      }
    }
 
+   return true;
+}
+
+bool EffectNyquist::PromptUser()
+{
    if (mInteractive) {
       NyquistInputDialog dlog(wxGetTopLevelParent(NULL), -1,
                               _("Nyquist Prompt"),

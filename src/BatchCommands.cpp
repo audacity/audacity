@@ -283,11 +283,13 @@ wxArrayString BatchCommands::GetAllCommands()
        additionalEffects = 0;
 #endif   // CLEANSPEECH
 
-   effects = EffectManager::Get().GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | additionalEffects);
+   effects = EffectManager::Get().GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | additionalEffects);
    for(i=0; i<effects->GetCount(); i++) {
-      command=(*effects)[i]->GetEffectIdentifier();
-      if (!command.IsEmpty()) {
-         commands.Add( command);
+      if ((*effects)[i]->SupportsChains()) {
+         command=(*effects)[i]->GetEffectIdentifier();
+         if (!command.IsEmpty()) {
+            commands.Add( command);
+         }
       }
    }
    delete effects;

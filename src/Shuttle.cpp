@@ -204,10 +204,15 @@ bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
       iValue = 0;// default index if none other selected.
       if( ExchangeWithMaster( Name ))
       {
-         int i;
-         for(i=0;i<nChoices;i++)
+         wxString str = mValueString;
+         if( str.Left( 1 ) == wxT('"') && str.Right( 1 ) == wxT('"') )
          {
-            if( mValueString.IsSameAs( pFirstStr[i] ))
+            str = str.Mid( 2, str.Length() - 2 );
+         }
+
+         for( int i = 0; i < nChoices; i++ )
+         {
+            if( str.IsSameAs( pFirstStr[i] ))
             {
                iValue = i;
                break;
@@ -223,6 +228,10 @@ bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
       if( iValue < 0 )
          iValue = 0;
       mValueString = pFirstStr[iValue];
+      if( mValueString.Find( wxT(' ') ) != wxNOT_FOUND )
+      {
+         mValueString = wxT('"') + pFirstStr[iValue] + wxT('"');  //strings have quotes around them
+      }
       return ExchangeWithMaster( Name );
    }
    return true;

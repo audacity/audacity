@@ -108,7 +108,14 @@ class AUDACITY_DLL_API Effect {
       return mFlags;
    }
 
-   virtual bool TransferParameters( Shuttle & shuttle ){
+   // Return true if the effect supports processing via batch chains.
+   virtual bool SupportsChains() {
+      // All builtin effect support chains (???)
+      return (mFlags & BUILTIN_EFFECT) != 0;
+   }
+
+   // Called to set or retrieve parameter values.  Return true if successful.
+   virtual bool TransferParameters( Shuttle & shuttle ) {
       return true;
    }
 

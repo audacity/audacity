@@ -111,11 +111,15 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    virtual wxString GetEffectAction() {
       return mAction;
    }
-   
+
    virtual bool PromptUser();
    
    virtual bool Process();
 
+   // Batch chain support
+   virtual bool SupportsChains();  
+   virtual bool TransferParameters( Shuttle & shuttle );
+   
  private:
 
    static wxString NyquistToWxString(const char *nyqString);
