@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-03-18 21:50+0000\n"
-"PO-Revision-Date: 2012-04-05 21:02-0000\n"
-"Last-Translator: Andreas Klug <andreas.klug--at--mediensyndikat.de>\n"
+"PO-Revision-Date: 2012-05-29 23:50-0000\n"
+"Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: Andreas Klug, Edgar M. Franke, Pennywize, Heiko Abler <andreas.klug@mediensyndikat.de>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr "OK... Audacious!"
 
 #: AboutDialog.cpp:197
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Audacity ist freie Software written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "Audacity ist a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 
 #: AboutDialog.cpp:201
 msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
@@ -183,7 +183,7 @@ msgstr "Unterstützung des Soundkarten-Mixers"
 #: AboutDialog.cpp:483
 #: AboutDialog.cpp:486
 msgid "Pitch and Tempo Change support"
-msgstr "Unterstützung der Änderung von Tonhöhe und Geschwindigkeit"
+msgstr "Unterstützung der Änderung von Tonhöhe und Tempo"
 
 #: AboutDialog.cpp:498
 msgid "Program build date: "
@@ -3385,7 +3385,7 @@ msgstr "Audio aufgezeichnet"
 
 #: Project.cpp:1886
 msgid "Save changes before closing?"
-msgstr "Änderungen vor dem Schließen speichern?"
+msgstr "Wollen Sie Ihre Änderungen vor dem Schließen speichern?"
 
 #: Project.cpp:1889
 msgid ""
@@ -3397,10 +3397,10 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 "\n"
-"Das gespeicherte Projekt wird keine Spuren haben.\n"
+"Andernfalls wird das gespeicherte Projekt keine Spuren haben.\n"
 "\n"
-"Um vorherige Spuren zu speichern:\n"
-"Abbrechen, Bearbeiten > Rückgängig, bis alle Spuren\n"
+"Um Ihre vorherige Spuren zu speichern klicken Sie auf\n"
+"Abbrechen, dann Bearbeiten > Rückgängig, bis all Ihre Spuren\n"
 "zu sehen sind, dann Datei > Projekt speichern."
 
 #: Project.cpp:1892
@@ -3552,13 +3552,13 @@ msgid ""
 "\n"
 "Save anyway?"
 msgstr ""
-"Ihr Projekt ist leer.\n"
+"Ihr Projekt ist leer, das bedeutet:\n"
 "Das gespeicherte Projekt wird keine Spuren haben.\n"
 "\n"
-"Um vorherige Spuren zu speichern:\n"
-"'Nein' klicken, Bearbeiten > Rückgängig, bis alle Spuren\n"
-"zu sehen sind, dann Datei > Projekt speichern.\n"
-"Dennoch speichern?"
+"Um Spuren zu speichern, die evtl. vorher vorhanden waren\n"
+"klicken Sie 'Nein', dann Bearbeiten > Rückgängig, bis alle Spuren\n"
+"zu sehen sind. Und dann Datei > Projekt speichern.\n"
+"Oder wollen Sie dennoch jetzt speichern?"
 
 #: Project.cpp:3059
 msgid "Warning - Empty Project"
@@ -5069,7 +5069,7 @@ msgstr "Tonhöhe ändern"
 
 #: effects/ChangePitch.cpp:268
 msgid "Change Pitch without Changing Tempo"
-msgstr "Änderung der Tonhöhe ohne Auswirkung auf die Laufzeit"
+msgstr "Tonhöhe ändern (ohne Auswirkung auf das Tempo)"
 
 #: effects/ChangePitch.cpp:270
 #: effects/ChangeSpeed.cpp:341
@@ -5084,7 +5084,7 @@ msgstr "SoundTouch (Olli Parviainen)"
 
 #: effects/ChangePitch.cpp:281
 msgid "Pitch:"
-msgstr "Pitch:"
+msgstr "Tonhöhe:"
 
 #: effects/ChangePitch.cpp:286
 msgid "From:"
@@ -5092,7 +5092,7 @@ msgstr "Von:"
 
 #: effects/ChangePitch.cpp:287
 msgid "From Pitch"
-msgstr "Pitch von"
+msgstr "Von Tonhöhe"
 
 #: effects/ChangePitch.cpp:298
 msgid "Up"
@@ -5108,7 +5108,7 @@ msgstr "bis"
 
 #: effects/ChangePitch.cpp:312
 msgid "To Pitch"
-msgstr "Pitch bis"
+msgstr "nach Tonhöhe"
 
 #: effects/ChangePitch.cpp:323
 msgid "Semitones (half-steps):"
@@ -5169,11 +5169,11 @@ msgstr "Effekt angewandt: %s %.1f %%"
 
 #: effects/ChangeSpeed.cpp:313
 msgid "Change Speed"
-msgstr "Geschwindigkeit ändern"
+msgstr "Tempo/Tonhöhe ändern"
 
 #: effects/ChangeSpeed.cpp:339
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Geschwindigkeit ändern (Tonhöhe und Geschwindigkeit)"
+msgstr "Tempo und Tonhöhe ändern"
 
 #: effects/ChangeSpeed.cpp:343
 msgid "using SampleRate, by Erik de Castro Lopo"
@@ -5198,7 +5198,7 @@ msgstr "Bis Umdrehungen"
 
 #: effects/ChangeSpeed.h:32
 msgid "Change Speed..."
-msgstr "&Geschwindigkeit ändern..."
+msgstr "&Tempo/Tonhöhe ändern..."
 
 #: effects/ChangeSpeed.h:46
 msgid "Changing Speed"
@@ -6276,7 +6276,7 @@ msgstr "Spektral-Prozessor"
 
 #: effects/LoadEffects.cpp:151
 msgid "Pitch Shifter"
-msgstr "Pitch"
+msgstr "Tonhöhe"
 
 #: effects/LoadEffects.cpp:153
 msgid "Amplifier"
@@ -6317,7 +6317,7 @@ msgstr "Rauschentfernung"
 
 #: effects/LoadEffects.cpp:202
 msgid "Pitch and Tempo"
-msgstr "Pitch und Tempo"
+msgstr "Tonhöhe und Tempo"
 
 #: effects/LoadEffects.cpp:204
 msgid "Timeline Changer"
@@ -6450,7 +6450,7 @@ msgstr "Ansprech-/Abkling-Zeit"
 
 #: effects/NoiseRemoval.cpp:947
 msgid "Noise:"
-msgstr "Geräusch:"
+msgstr "Rauschen:"
 
 #: effects/NoiseRemoval.cpp:949
 msgid "Re&move"
@@ -6458,7 +6458,7 @@ msgstr "&Entfernen"
 
 #: effects/NoiseRemoval.cpp:951
 msgid "&Isolate"
-msgstr ""
+msgstr "&Freistellen (zu Testzwecken)"
 
 #: effects/NoiseRemoval.h:37
 msgid "Noise Removal..."
@@ -6824,11 +6824,11 @@ msgstr "nutzt SBSMS von Clayton Ote"
 
 #: effects/TimeScale.cpp:229
 msgid "Initial Tempo Change (%)"
-msgstr "Tempoänderung am Anfang (%)"
+msgstr "Tempo am Anfang (Änderung in %)"
 
 #: effects/TimeScale.cpp:248
 msgid "Final Tempo Change (%)"
-msgstr "Tempoänderung am Ende (%)"
+msgstr "Tempo am Ende (Änderung in %)"
 
 #: effects/TimeScale.cpp:268
 msgid "Initial Pitch Shift"
@@ -6854,11 +6854,11 @@ msgstr "Optionen"
 
 #: effects/TimeScale.h:33
 msgid "Sliding Time Scale/Pitch Shift..."
-msgstr "Geschwindigkeit gleitend ändern..."
+msgstr "Tempo/Tonhöhe gleitend ändern..."
 
 #: effects/TimeScale.h:47
 msgid "Changing Tempo/Pitch"
-msgstr "Geschwindigkeit ändern"
+msgstr "Tempo/Tonhöhe ändern"
 
 #: effects/ToneGen.cpp:62
 #, c-format
@@ -8299,10 +8299,19 @@ msgid ""
 "This Project does not meet the above criteria for\n"
 "exporting multiple files."
 msgstr ""
+"Wenn Sie mehr als eine Audiospur haben können Sie\n"
+"jede Spur in eine einzelne Datei exportieren.\n"
+"\n"
+"Wenn Sie eine Textspur haben können Sie mehrere\n"
+"Audiodateiein erzeugen, die jeweils an der Textmarke beginnen.\n"
+"(Sollten Sie mehrere Textspuren haben wird nur die oberste\n"
+"verwendet.)\n"
+"\n"
+"In diesem Projekt ist beides nicht der Fall ..."
 
 #: export/ExportMultiple.cpp:180
 msgid "Can't export multiple files"
-msgstr "Kann Mehrfach-Dateien nicht exportieren."
+msgstr "So geht das nicht."
 
 #: export/ExportMultiple.cpp:245
 msgid "Export format:"
@@ -8322,7 +8331,7 @@ msgstr "Erzeugen"
 
 #: export/ExportMultiple.cpp:266
 msgid "Split files based on:"
-msgstr "Teile Dateien anhand von"
+msgstr "Erzeuge Dateien anhand von"
 
 #: export/ExportMultiple.cpp:275
 #: export/ExportMultiple.cpp:277
@@ -8343,19 +8352,19 @@ msgstr "Erster Datei-Name"
 
 #: export/ExportMultiple.cpp:310
 msgid "Name files:"
-msgstr "Benennung der Dateien:"
+msgstr "Erzeuge Dateinamen aus:"
 
 #: export/ExportMultiple.cpp:316
 msgid "Using Label/Track Name"
-msgstr "Textmarken/Spurnamen verwenden"
+msgstr "Textmarken bzw. Spurnamen"
 
 #: export/ExportMultiple.cpp:319
 msgid "Numbering before Label/Track Name"
-msgstr "Nummerierung vor Dateinamen"
+msgstr "Nummerierung plus Textmarker/Spurname"
 
 #: export/ExportMultiple.cpp:322
 msgid "Numbering after File name prefix"
-msgstr "Nummerierung nach gewünschtem Dateiname"
+msgstr "Gewünschtem Dateiname plus Nummerierung"
 
 #: export/ExportMultiple.cpp:328
 msgid "File name prefix:"
@@ -8381,7 +8390,7 @@ msgstr "Wählen Sie einen Ort für das Export-Verzeichnis aus"
 #: export/ExportMultiple.cpp:533
 #, c-format
 msgid "Successfully exported the following %ld file(s)."
-msgstr "Die folgende/n %ld Datei/en wurde/n erfolgreich exportiert."
+msgstr "%ld Datei/en wurde/n erfolgreich exportiert:"
 
 #: export/ExportMultiple.cpp:534
 #, c-format
@@ -9318,11 +9327,11 @@ msgstr "-60 dB (Dynamik von 10-bit-Samples)"
 
 #: prefs/GUIPrefs.cpp:62
 msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (Dynamik von 16-Bit Samples, \"CD-Qualität\")"
+msgstr "-96 dB (16-Bit-Dynamik, \"CD-Qualität\")"
 
 #: prefs/GUIPrefs.cpp:63
 msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (Dynamik des menschlichen Gehörs)"
+msgstr "-120 dB-Dynamik, menschliches Gehör)"
 
 #: prefs/GUIPrefs.cpp:64
 msgid "-145 dB (PCM range of 24 bit samples)"
@@ -9344,7 +9353,7 @@ msgstr "&Den 'Willkommen'-Dialog beim Programmstart anzeigen"
 
 #: prefs/GUIPrefs.cpp:98
 msgid "Meter/Waveform dB &range:"
-msgstr "&dB-Bereich bei Aussteuerung/Wellenform:"
+msgstr "&dB-Bereich (Aussteuerung/Wellenform):"
 
 #: prefs/GUIPrefs.cpp:105
 msgid "&Language:"
@@ -10375,7 +10384,7 @@ msgstr "Clean-Speech"
 
 #: toolbars/ControlToolBar.cpp:212
 msgid "Play (Shift for Loop Play)"
-msgstr "Wiedergabe (Großbuchstabentaste für Loop-Wiedergabe)"
+msgstr "Wiedergabe (Großbuchstabentaste für Loop-Wiedergabe, Strg [oder Taste c] um Schnitt vorzuhören)"
 
 #: toolbars/ControlToolBar.cpp:216
 msgid "Record (Shift for Append Record)"
