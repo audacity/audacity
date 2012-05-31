@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-03-02 16:21-0000\n"
+"PO-Revision-Date: 2012-05-31 05:49-0000\n"
 "Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
@@ -17,7 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: AboutDialog.cpp:60
+#: AboutDialog.cpp:81
+msgid "co-founder"
+msgstr "співзасновник"
+
+#: AboutDialog.cpp:64
+msgid "quality assurance"
+msgstr "контроль якості"
 
 #: AboutDialog.cpp:162
 msgid "About Audacity..."
@@ -30,10 +39,6 @@ msgstr "Гаразд… Круто!"
 #: AboutDialog.cpp:197
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr "Audacity — вільна програма, створена командою добровольців, <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. Ми вдячні <a href=\"http://sourceforge.net\">SourceForge.net</a> та <a href=\"http://code.google.com\">Google Code</a> за надання майданчика для нашого проекту. Audacity <a href=\"http://audacity.sourceforge.net/download/\">можна користуватися</a> у Windows, Mac OS X, GNU/Linux та інших подібних до Unix системах."
-
-#: AboutDialog.cpp:201
-msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-msgstr "Це — тестова версія програми. Вона може містити помилки та нереалізовану функціональність. Продуктивність нашої роботи залежить від ваших відгуків, тому вам слід надсилати ваші повідомлення про усі знайдені помилки та запити на реалізацію функціональності за адресою <a href=\"mailto:feedback@audacityteam.org\">для відгуків</a>. Щоб отримати додаткові відомості щодо програми, переглянути підказки і настанови, ви можете відвідати нашу <a href=\"http://wiki.audacityteam.org/\">Вікі</a> або наш <a href=\"http://forum.audacityteam.org/\">форум</a>."
 
 #: AboutDialog.cpp:204
 msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
@@ -253,6 +258,11 @@ msgstr ""
 #: AudacityApp.cpp:860
 msgid "Files Missing"
 msgstr "Не вистачає файлів"
+
+#: AudacityApp.cpp:1017
+#: AudacityApp.cpp:1239
+msgid "Audacity Log"
+msgstr "Журнал Audacity"
 
 #: AudacityApp.cpp:1019
 msgid "Master Gain Control"
@@ -623,9 +633,9 @@ msgstr ""
 "Не вдалося встановити параметри ефекту %s\n"
 " у значення %s."
 
-#: BatchCommands.cpp:557
+#: BatchCommands.cpp:568
 #, c-format
-msgid "Your batch command of %s was not recognised."
+msgid "Your batch command of %s was not recognized."
 msgstr "Вашу пакетну команду %s не було розпізнано."
 
 #: BatchCommands.cpp:676
@@ -1374,10 +1384,10 @@ msgid "Size"
 msgstr "Розмір"
 
 #. i18n-hint: This refers to a "window function", used in the
-#. Frequency analyze dialog box.
+#. * Frequency analyze dialog box.
 #: FreqWindow.cpp:190
-msgid " window"
-msgstr " вікно"
+msgid "window"
+msgstr "вікно"
 
 #: FreqWindow.cpp:194
 #: FreqWindow.cpp:198
@@ -1690,6 +1700,26 @@ msgstr "Вказану назву файла неможливо перетвор
 msgid "Specify New Filename:"
 msgstr "Вкажіть нову назву файла:"
 
+#: LabelDialog.cpp:101
+msgid "Edit Labels"
+msgstr "Редагувати позначки"
+
+#: LabelDialog.cpp:117
+msgid "Press F2 or double click to edit cell contents."
+msgstr "Натисніть F2 або двічі клацніть, щоб відредагувати вміст комірки."
+
+#: LabelDialog.cpp:128
+msgid "Insert &After"
+msgstr "Вставити &після"
+
+#: LabelDialog.cpp:129
+msgid "Insert &Before"
+msgstr "Вставити &до"
+
+#: LabelDialog.cpp:131
+msgid "&Import..."
+msgstr "&Імпорт…"
+
 #: LabelDialog.cpp:54
 msgid "Track"
 msgstr "Доріжка"
@@ -1710,26 +1740,6 @@ msgstr "Час початку"
 #: TimerRecordDialog.cpp:357
 msgid "End Time"
 msgstr "Час закінчення"
-
-#: LabelDialog.cpp:101
-msgid "Edit Labels"
-msgstr "Редагувати позначки"
-
-#: LabelDialog.cpp:117
-msgid "Press F2 or double click to edit cell contents."
-msgstr "Натисніть F2 або двічі клацніть, щоб відредагувати вміст комірки."
-
-#: LabelDialog.cpp:128
-msgid "Insert &After"
-msgstr "Вставити &після"
-
-#: LabelDialog.cpp:129
-msgid "Insert &Before"
-msgstr "Вставити &до"
-
-#: LabelDialog.cpp:131
-msgid "&Import..."
-msgstr "&Імпорт…"
 
 #: LabelDialog.cpp:159
 msgid "New..."
@@ -2230,10 +2240,10 @@ msgstr "!Спрощений перегляд"
 msgid "T&ransport"
 msgstr "Пе&ренесення"
 
-#: Menus.cpp:617
-#: toolbars/ControlToolBar.cpp:179
-msgid "Play"
-msgstr "Відтворити"
+#. i18n-hint: (verb) Start playing audio
+#: Menus.cpp:716
+msgid "Pl&ay"
+msgstr "Ві&дтворити"
 
 #: Menus.cpp:618
 msgid "&Loop Play"
@@ -2247,15 +2257,13 @@ msgstr "П&ризупинити"
 msgid "&Stop"
 msgstr "З&упинити"
 
-#: Menus.cpp:625
-#: toolbars/ControlToolBar.cpp:214
-msgid "Skip to Start"
-msgstr "Перейти на початок доріжки"
+#: Menus.cpp:725
+msgid "S&kip to Start"
+msgstr "Пе&рейти на початок доріжки"
 
-#: Menus.cpp:626
-#: toolbars/ControlToolBar.cpp:215
-msgid "Skip to End"
-msgstr "Перейти на кінець доріжки"
+#: Menus.cpp:726
+msgid "Skip to E&nd"
+msgstr "Перейти на &кінець"
 
 #: Menus.cpp:630
 msgid "&Record"
@@ -2265,33 +2273,33 @@ msgstr "&Запис"
 msgid "&Timer Record..."
 msgstr "Запис за &таймером…"
 
-#: Menus.cpp:632
-msgid "Append Record"
-msgstr "Долучення запису"
+#: Menus.cpp:733
+msgid "Appen&d Record"
+msgstr "До&лучити запис"
 
-#: Menus.cpp:636
-msgid "Overdub (on/off)"
-msgstr "Накладення (увімкн./вимкн.)"
+#: Menus.cpp:737
+msgid "&Overdub (on/off)"
+msgstr "&Накладення (увімкн./вимкн.)"
 
-#: Menus.cpp:637
-msgid "Software Playthrough (on/off)"
-msgstr "Програмне відтворення (увімкн./вимкн.)"
+#: Menus.cpp:738
+msgid "So&ftware Playthrough (on/off)"
+msgstr "&Програмне відтворення (увімкн./вимкн.)"
 
-#: Menus.cpp:640
-msgid "Sound Activated Recording (on/off)"
-msgstr "Запис з активацією звуком (увімкн./вимкн.)"
+#: Menus.cpp:741
+msgid "Sound A&ctivated Recording (on/off)"
+msgstr "Запис з &активацією звуком (увімкн./вимкн.)"
 
-#: Menus.cpp:641
-msgid "Sound Activation Level..."
-msgstr "Рівень активізації звуку…"
+#: Menus.cpp:742
+msgid "Sound Activation Le&vel..."
+msgstr "&Рівень активізації звуку…"
 
-#: Menus.cpp:644
-msgid "Automated Input Level Adjustment (on/off)"
-msgstr "Автоматичне виправлення рівня (увімкн./вимкн.)"
+#: Menus.cpp:745
+msgid "A&utomated Input Level Adjustment (on/off)"
+msgstr "А&втоматичне виправлення рівня (увімкн./вимкн.)"
 
-#: Menus.cpp:646
-msgid "Rescan Audio Devices"
-msgstr "Повторно виявити звукові пристрої"
+#: Menus.cpp:747
+msgid "R&escan Audio Devices"
+msgstr "П&овторно виявити звукові пристрої"
 
 #: Menus.cpp:654
 msgid "&Tracks"
@@ -2398,9 +2406,10 @@ msgstr "Додати позначку до ви&браної області"
 msgid "Add Label At &Playback Position"
 msgstr "Додати позначку на позицію &відтворення"
 
-#: Menus.cpp:760
-msgid "&Edit Labels"
-msgstr "Р&едагувати позначки"
+#: Menus.cpp:862
+#: Menus.cpp:1062
+msgid "&Edit Labels..."
+msgstr "Р&едагувати позначки…"
 
 #: Menus.cpp:766
 msgid "S&ort tracks"
@@ -2874,7 +2883,7 @@ msgstr "Вставка фрагментів доріжок одного типу
 
 #: Menus.cpp:3384
 msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Копіювання стерео-звуку у моно-доріжку неприпустиме."
+msgstr "Копіювання стереозвуку у монодоріжку неприпустиме."
 
 #: Menus.cpp:3503
 #: Menus.cpp:3526
@@ -2954,12 +2963,12 @@ msgid "Duplicated"
 msgstr "Продубльовано"
 
 #: Menus.cpp:3900
-msgid "Cut Labels"
-msgstr "Вирізати позначки"
-
-#: Menus.cpp:3900
 msgid "Cut labeled regions to the clipboard"
 msgstr "Вирізати позначені області до буферу"
+
+#: Menus.cpp:3900
+msgid "Cut Labels"
+msgstr "Вирізати позначки"
 
 #: Menus.cpp:3914
 msgid "SplitCut labeled regions to the clipboard"
@@ -2978,52 +2987,52 @@ msgid "Copy Labels"
 msgstr "Копіювати позначки"
 
 #: Menus.cpp:3943
-msgid "Delete Labels"
-msgstr "Вилучити позначки"
-
-#: Menus.cpp:3943
 msgid "Deleted labeled regions"
 msgstr "Вилучені позначені області"
 
-#: Menus.cpp:3955
-msgid "Split Delete Labels"
-msgstr "Розділити визначенням за позначками"
+#: Menus.cpp:3943
+msgid "Delete Labels"
+msgstr "Вилучити позначки"
 
 #: Menus.cpp:3955
 msgid "Split Deleted labeled regions"
 msgstr "Вилучені розділенням позначені області"
 
-#: Menus.cpp:3967
-msgid "Silence Labels"
-msgstr "Заповнити тишею позначені області"
+#: Menus.cpp:3955
+msgid "Split Delete Labels"
+msgstr "Розділити визначенням за позначками"
 
 #: Menus.cpp:3967
 msgid "Silenced labeled regions"
 msgstr "Заповнені тишею позначені області"
 
-#: Menus.cpp:3976
-msgid "Split Labels"
-msgstr "Розділити за позначками"
+#: Menus.cpp:3967
+msgid "Silence Labels"
+msgstr "Заповнити тишею позначені області"
 
 #: Menus.cpp:3976
 msgid "Split labeled regions"
 msgstr "Відокремити позначені області"
 
-#: Menus.cpp:3988
-msgid "Join Labels"
-msgstr "З'єднати позначки"
+#: Menus.cpp:3976
+msgid "Split Labels"
+msgstr "Розділити за позначками"
 
 #: Menus.cpp:3988
 msgid "Joined labeled regions"
 msgstr "З'єднати позначені області"
 
-#: Menus.cpp:4000
-msgid "Detach Labels"
-msgstr "Від’єднати позначки"
+#: Menus.cpp:3988
+msgid "Join Labels"
+msgstr "З'єднати позначки"
 
 #: Menus.cpp:4000
 msgid "Detached labeled regions"
 msgstr "Від’єднані позначені області"
+
+#: Menus.cpp:4000
+msgid "Detach Labels"
+msgstr "Від’єднати позначки"
 
 #: Menus.cpp:4022
 #: TrackPanel.cpp:6987
@@ -3184,7 +3193,7 @@ msgstr "Нова доріжка"
 
 #: Menus.cpp:5337
 msgid "Created new stereo audio track"
-msgstr "Створено нову стерео-доріжку"
+msgstr "Створено нову стереодоріжку"
 
 #: Menus.cpp:5352
 msgid "Created new label track"
@@ -3341,6 +3350,29 @@ msgstr "Панель мікшера Audacity%s"
 #: NoteTrack.cpp:107
 msgid "Note Track"
 msgstr "Доріжка приміток"
+
+#: Prefs.cpp:158
+msgid ""
+"Reset Preferences?\n"
+"\n"
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset"
+msgstr ""
+"Відновити початкові значення параметрів?\n"
+"\n"
+"Це питання буде задано лише один раз, після встановлення, де програма запитувала вас щодо відновлення початкових значень налаштувань."
+
+#: Prefs.cpp:159
+msgid "Reset Audacity Preferences"
+msgstr "Відновити налаштування Audacity"
+
+#: Prefs.cpp:171
+#, c-format
+msgid "Failed to remove %s"
+msgstr "Не вдалося вилучити «%s»"
+
+#: Prefs.cpp:171
+msgid "Failed!"
+msgstr "Помилка!"
 
 #: Printing.cpp:160
 msgid "There was a problem printing."
@@ -4269,6 +4301,16 @@ msgstr "Кінець запису"
 msgid "Audacity Timer Record Progress"
 msgstr "Поступ запису за таймером Audacity"
 
+#. i18n-hint: This string is used to configure the controls for times when the recording is
+#. * started and stopped. As such it is important that only the alphabetic parts of the string
+#. * are translated, with the numbers left exactly as they are.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
+#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
+#.
+#: TimerRecordDialog.cpp:336
+msgid "099 h 060 m 060 s"
+msgstr "099 г 060 хв 060 с"
+
 #: TimerRecordDialog.cpp:326
 msgid "Start Date and Time"
 msgstr "Дата та час початку"
@@ -4285,6 +4327,18 @@ msgstr "Дата і час кінця"
 msgid "End Date"
 msgstr "Дата закінчення"
 
+#. i18n-hint: This string is used to configure the controls which shows the recording
+#. * duration. As such it is important that only the alphabetic parts of the string
+#. * are translated, with the numbers left exactly as they are.
+#. * The string 'days' indicates that the first number in the control will be the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+#. * seconds.
+#.
+#: TimerRecordDialog.cpp:385
+msgid "099 days 024 h 060 m 060 s"
+msgstr "099 днів 024 г 060 хв 060 с"
+
 #. i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
 #. * but hopefully translated by wxwidgets will be inserted into this
 #: TimerRecordDialog.cpp:438
@@ -4297,109 +4351,98 @@ msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Запис за таймером Audacity — Очікування початку"
 
 #: TrackPanel.cpp:623
-#: prefs/QualityPrefs.cpp:99
-msgid "Other..."
-msgstr "Інша…"
+msgid "&Other..."
+msgstr "&Інше…"
 
 #: TrackPanel.cpp:631
-#: TrackPanel.cpp:654
-#: TrackPanel.cpp:663
-#: TrackPanel.cpp:671
-msgid "Name..."
-msgstr "Назва…"
+#: TrackPanel.cpp:655
+#: TrackPanel.cpp:664
+#: TrackPanel.cpp:672
+msgid "N&ame..."
+msgstr "Н&азва…"
 
 #: TrackPanel.cpp:633
-#: TrackPanel.cpp:656
-#: TrackPanel.cpp:667
-#: TrackPanel.cpp:673
-msgid "Move Track Up"
-msgstr "Перемістити доріжку вгору"
-
-#: TrackPanel.cpp:634
 #: TrackPanel.cpp:657
 #: TrackPanel.cpp:668
 #: TrackPanel.cpp:674
-msgid "Move Track Down"
-msgstr "Перемістити доріжку вниз"
+msgid "Move Track U&p"
+msgstr "Перемістити доріжку в&гору"
+
+#: TrackPanel.cpp:634
+#: TrackPanel.cpp:658
+#: TrackPanel.cpp:669
+#: TrackPanel.cpp:675
+msgid "Move Track &Down"
+msgstr "Перемістити доріжку в&низ"
 
 #: TrackPanel.cpp:636
-#: effects/ToneGen.cpp:285
-#: prefs/TracksPrefs.cpp:58
-msgid "Waveform"
-msgstr "Хвиля"
+msgid "Wa&veform"
+msgstr "&Хвиля"
 
 #: TrackPanel.cpp:637
-#: prefs/TracksPrefs.cpp:59
-msgid "Waveform (dB)"
-msgstr "Хвиля (дБ)"
+msgid "Waveform (d&B)"
+msgstr "Хвиля (д&Б)"
 
 #: TrackPanel.cpp:638
-#: prefs/TracksPrefs.cpp:60
-msgid "Spectrogram"
-msgstr "Спектрограма"
-
-#: TrackPanel.cpp:639
-#: prefs/TracksPrefs.cpp:61
-msgid "Spectrogram log(f)"
-msgstr "Спектрограма ln(f)"
+msgid "&Spectrogram"
+msgstr "Спек&трограма"
 
 #. i18n-hint: short form of 'logarithm'
 #: TrackPanel.cpp:640
-#: prefs/TracksPrefs.cpp:62
-msgid "Pitch (EAC)"
-msgstr "Висота тону (EAC)"
+msgid "Spectrogram l&og(f)"
+msgstr "Сп&ектрограма ln(f)"
 
-#: TrackPanel.cpp:642
-#: TrackPanel.cpp:6930
-msgid "Mono"
-msgstr "Моно"
+#: TrackPanel.cpp:641
+msgid "Pitc&h (EAC)"
+msgstr "&Висота тону (EAC)"
 
 #: TrackPanel.cpp:643
-#: TrackPanel.cpp:6929
-msgid "Left Channel"
-msgstr "Лівий канал"
+msgid "&Mono"
+msgstr "&Моно"
 
 #: TrackPanel.cpp:644
-#: TrackPanel.cpp:6929
-msgid "Right Channel"
-msgstr "Правий канал"
+msgid "&Left Channel"
+msgstr "&Лівий канал"
 
 #: TrackPanel.cpp:645
-msgid "Make Stereo Track"
-msgstr "Зробити доріжку стереофонічною"
+msgid "&Right Channel"
+msgstr "&Правий канал"
 
 #: TrackPanel.cpp:646
-msgid "Split Stereo Track"
-msgstr "Розділити стерео-доріжку"
+msgid "Ma&ke Stereo Track"
+msgstr "З&робити доріжку стереофонічною"
 
 #: TrackPanel.cpp:647
-msgid "Split Stereo to Mono"
-msgstr "Поділити стерео на моно"
+msgid "Spli&t Stereo Track"
+msgstr "Роз&ділити стереодоріжку"
 
-#: TrackPanel.cpp:649
-msgid "Set Sample Format"
-msgstr "Встановити формат семплу"
+#: TrackPanel.cpp:648
+msgid "Split Stereo to Mo&no"
+msgstr "Поділити стерео на &моно"
 
-#: TrackPanel.cpp:651
-#: TrackPanel.cpp:7198
-msgid "Set Rate"
-msgstr "Встановити частоту дискретизації"
+#: TrackPanel.cpp:650
+msgid "Set Sample &Format"
+msgstr "Встановити &формат семплу"
 
-#: TrackPanel.cpp:659
-msgid "Up Octave"
-msgstr "Октавою вище"
+#: TrackPanel.cpp:652
+msgid "Set Rat&e"
+msgstr "Встановити &частоту"
 
 #: TrackPanel.cpp:660
-msgid "Down Octave"
-msgstr "Октавою нижче"
+msgid "Up &Octave"
+msgstr "Октаво&ю вище"
 
-#: TrackPanel.cpp:665
-msgid "Font..."
-msgstr "Шрифт…"
+#: TrackPanel.cpp:661
+msgid "Down Octa&ve"
+msgstr "О&ктавою нижче"
 
-#: TrackPanel.cpp:676
-msgid "Set Range..."
-msgstr "Встановити діапазон…"
+#: TrackPanel.cpp:666
+msgid "&Font..."
+msgstr "&Шрифт…"
+
+#: TrackPanel.cpp:677
+msgid "Set Ra&nge..."
+msgstr "Встановити ді&апазон…"
 
 #: TrackPanel.cpp:680
 #: toolbars/EditToolBar.cpp:133
@@ -4421,7 +4464,7 @@ msgstr "Щоб змінити порядок представлення дорі
 
 #: TrackPanel.cpp:1479
 msgid "Click and drag to adjust relative size of stereo tracks."
-msgstr "Клацніть та перетягніть позначку для коригування відносного розміру стерео-доріжок."
+msgstr "Клацніть та перетягніть позначку для коригування відносного розміру стереодоріжок."
 
 #: TrackPanel.cpp:1482
 msgid "Click and drag to resize the track."
@@ -4484,13 +4527,13 @@ msgstr "Редагування мітки"
 
 #: TrackPanel.cpp:2054
 #: TrackPanel.cpp:2279
-msgid "Stretch"
-msgstr "Розтягнути"
+msgid "Stretch Note Track"
+msgstr "Розтягнути нотну доріжку"
 
 #: TrackPanel.cpp:2054
 #: TrackPanel.cpp:2279
-msgid "Stretch Note Track"
-msgstr "Розтягнути нотну доріжку"
+msgid "Stretch"
+msgstr "Розтягнути"
 
 #: TrackPanel.cpp:2413
 msgid "Adjusted envelope."
@@ -4506,12 +4549,12 @@ msgid "Moved clip to another track"
 msgstr "Область переміщено до іншої доріжки"
 
 #: TrackPanel.cpp:2567
-msgid "left"
-msgstr "лівий"
-
-#: TrackPanel.cpp:2567
 msgid "right"
 msgstr "правий"
+
+#: TrackPanel.cpp:2567
+msgid "left"
+msgstr "лівий"
 
 #. i18n-hint: %s is a direction like left or right
 #: TrackPanel.cpp:2569
@@ -4628,6 +4671,21 @@ msgstr "Лівий, "
 msgid "Right, "
 msgstr "Правий, "
 
+#: TrackPanel.cpp:643
+#: TrackPanel.cpp:6929
+msgid "Left Channel"
+msgstr "Лівий канал"
+
+#: TrackPanel.cpp:644
+#: TrackPanel.cpp:6929
+msgid "Right Channel"
+msgstr "Правий канал"
+
+#: TrackPanel.cpp:642
+#: TrackPanel.cpp:6930
+msgid "Mono"
+msgstr "Моно"
+
 #: TrackPanel.cpp:6939
 #: TrackPanel.cpp:7108
 #, c-format
@@ -4641,7 +4699,7 @@ msgstr "Канал"
 #: TrackPanel.cpp:6983
 #, c-format
 msgid "Split stereo track '%s'"
-msgstr "Розділити стерео-доріжку «%s»"
+msgstr "Розділити стереодоріжку «%s»"
 
 #: TrackPanel.cpp:6985
 #, c-format
@@ -4651,7 +4709,7 @@ msgstr "Поділити стерео на моно «%s»"
 #: TrackPanel.cpp:7017
 #, c-format
 msgid "Made '%s' a stereo track"
-msgstr "Зробити «%s» стерео-доріжку"
+msgstr "Зробити «%s» стереодоріжку"
 
 #: TrackPanel.cpp:7020
 msgid "Make Stereo"
@@ -4669,6 +4727,11 @@ msgstr "Змінити частоту"
 #: TrackPanel.cpp:7112
 msgid "Format Change"
 msgstr "Зміна формату"
+
+#: TrackPanel.cpp:651
+#: TrackPanel.cpp:7198
+msgid "Set Rate"
+msgstr "Встановити частоту дискретизації"
 
 #: TrackPanel.cpp:7262
 msgid "Change lower speed limit (%) to:"
@@ -4822,7 +4885,7 @@ msgstr ""
 msgid ""
 "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
-msgstr "Спочатку слід виділити область стерео-звуку. Цю дію не можна використовувати для моно."
+msgstr "Спочатку слід виділити область стереозвуку. Цю дію не можна використовувати для моно."
 
 #: commands/CommandManager.cpp:957
 msgid "You must first select some audio for this to use."
@@ -5379,7 +5442,7 @@ msgstr "Аналіз контрастності (сумісний з WCAG 2)"
 
 #: effects/Contrast.cpp:105
 msgid ""
-"Start time after after end time!\n"
+"Start time after end time!\n"
 "Please enter reasonable times."
 msgstr ""
 "Час початку розташовано після часу завершення!\n"
@@ -5883,6 +5946,14 @@ msgstr ""
 msgid "EQ Curve needs a different name"
 msgstr "Слід вказати іншу назву кривої еквалайзера"
 
+#: effects/Equalization.cpp:1708
+msgid "Curve not found"
+msgstr "Криву не знайдено"
+
+#: effects/Equalization.cpp:1708
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "Потрібну вам криву не знайдено, використовуємо криву «без назви»"
+
 #: effects/Equalization.cpp:2817
 #: effects/Equalization.cpp:2822
 msgid "Manage Curves List"
@@ -6116,10 +6187,6 @@ msgstr "Триває інвертування"
 #: effects/Leveller.cpp:192
 msgid "Leveller"
 msgstr "Вирівнювач"
-
-#: effects/Leveller.cpp:205
-msgid "None-Skip"
-msgstr "Без-втрат"
 
 #: effects/Leveller.cpp:206
 msgid "Light"
@@ -6475,6 +6542,46 @@ msgstr "так"
 msgid ", maximum amplitude = %.1f dB"
 msgstr ", максимальна амплітуда = %.1f дБ"
 
+#: effects/Normalize.cpp:167
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "Вилучення зміщення сталої складової та нормалізація…\n"
+
+#: effects/Normalize.cpp:169
+msgid "Removing DC offset...\n"
+msgstr "Вилучення зміщення сталої складової…\n"
+
+#: effects/Normalize.cpp:171
+msgid "Normalizing without removing DC offset...\n"
+msgstr "Нормалізація без вилучення зміщення сталої складової…\n"
+
+#: effects/Normalize.cpp:191
+msgid "Analyzing: "
+msgstr "Аналіз: "
+
+#: effects/Normalize.cpp:193
+msgid "Analyzing first track of stereo pair: "
+msgstr "Аналіз першої доріжки стереопари: "
+
+#: effects/Normalize.cpp:201
+msgid "Processing: "
+msgstr "Обробка: "
+
+#: effects/Normalize.cpp:203
+msgid "Processing stereo channels independently: "
+msgstr "Обробка стереоканалів окремо: "
+
+#: effects/Normalize.cpp:220
+msgid "Analyzing second track of stereo pair: "
+msgstr "Аналіз другої доріжки стереопари: "
+
+#: effects/Normalize.cpp:234
+msgid "Processing first track of stereo pair: "
+msgstr "Обробка першої доріжки стереопари: "
+
+#: effects/Normalize.cpp:243
+msgid "Processing second track of stereo pair: "
+msgstr "Обробка другої доріжки стереопари: "
+
 #: effects/Normalize.cpp:358
 msgid "Normalize"
 msgstr "Нормалізація"
@@ -6658,17 +6765,9 @@ msgstr "Застосовується реверс"
 msgid "Align MIDI to Audio"
 msgstr "Вирівняти MIDI за звуковою доріжкою"
 
-#: effects/ScoreAlignDialog.cpp:99
-msgid "Frame Period:"
-msgstr "Проміжок фрейма:"
-
 #: effects/ScoreAlignDialog.cpp:105
 msgid "Frame Period"
 msgstr "Проміжок фрейма"
-
-#: effects/ScoreAlignDialog.cpp:109
-msgid "Window Size:"
-msgstr "Розмір вікна:"
 
 #: effects/ScoreAlignDialog.cpp:114
 msgid "Window Size"
@@ -6690,25 +6789,13 @@ msgstr "Поріг тиші:"
 msgid "Silence Threshold"
 msgstr "Поріг тиші"
 
-#: effects/ScoreAlignDialog.cpp:139
-msgid "Presmooth Time:"
-msgstr "Тривалість попер. згладжування:"
-
 #: effects/ScoreAlignDialog.cpp:144
 msgid "Presmooth Time"
 msgstr "Тривалість попереднього згладжування"
 
-#: effects/ScoreAlignDialog.cpp:148
-msgid "Line Time:"
-msgstr "Тривалість рядка:"
-
 #: effects/ScoreAlignDialog.cpp:153
 msgid "Line Time"
 msgstr "Тривалість рядка"
-
-#: effects/ScoreAlignDialog.cpp:157
-msgid "Smooth Time:"
-msgstr "Тривалість згладжування:"
 
 #: effects/ScoreAlignDialog.cpp:162
 msgid "Smooth Time"
@@ -6757,34 +6844,6 @@ msgstr "Застосовано ефект: Створення тиші, %.6lf с
 msgid "Sorry, this effect cannot be performed on stereo tracks where the individual channels of the track do not match."
 msgstr "Цей ефект не можна виконувати на стерео доріжках, для яких окремі канали доріжки не відповідають один одному."
 
-#: effects/SpikeCleaner.cpp:69
-msgid "Spike Cleaner"
-msgstr "Вилучення піків"
-
-#: effects/SpikeCleaner.cpp:160
-msgid "SpikeCleaner by Lynn Allan"
-msgstr "Вилучення піків від Lynn Allan"
-
-#: effects/SpikeCleaner.cpp:165
-msgid ""
-"Max Spike Duration (milliseconds): \n"
-"(99999 or greater is off)"
-msgstr ""
-"Максимальна тривалість піку (мілісекунд): \n"
-"(99999 або більше − вимикає)"
-
-#: effects/SpikeCleaner.cpp:178
-msgid "Theshold for silence: "
-msgstr "Поріг для тиші: "
-
-#: effects/SpikeCleaner.h:27
-msgid "Spike Cleaner..."
-msgstr "Вилучення піків…"
-
-#: effects/SpikeCleaner.h:35
-msgid "Applying Spike Cleaner..."
-msgstr "Застосування ефекту «Вилучення піків…»"
-
 #: effects/StereoToMono.h:23
 msgid "Stereo to Mono"
 msgstr "Стерео на моно"
@@ -6831,10 +6890,6 @@ msgstr "(у %) [від -50 до 100]:"
 msgid "Final Pitch Shift"
 msgstr "Остаточний зсув тону"
 
-#: effects/TimeScale.cpp:302
-msgid "Options"
-msgstr "Параметри"
-
 #: effects/TimeScale.h:33
 msgid "Sliding Time Scale/Pitch Shift..."
 msgstr "Зсув часової шкали/тону…"
@@ -6880,6 +6935,12 @@ msgstr "Зубцеподібна"
 #: effects/ToneGen.cpp:76
 msgid "Square, no alias"
 msgstr "Квадратична, без переходів"
+
+#: TrackPanel.cpp:636
+#: effects/ToneGen.cpp:285
+#: prefs/TracksPrefs.cpp:58
+msgid "Waveform"
+msgstr "Хвиля"
 
 #: effects/ToneGen.cpp:291
 #: effects/ToneGen.cpp:332
@@ -7034,11 +7095,11 @@ msgstr "Застосовується ефект: "
 
 #: effects/VST/VSTEffect.cpp:1253
 msgid "Both channels of a stereo track must be the same sample rate."
-msgstr "Обидва канали стерео-доріжки повинні мати однакову частоту дискретизації."
+msgstr "Обидва канали стереодоріжки повинні мати однакову частоту дискретизації."
 
 #: effects/VST/VSTEffect.cpp:1258
 msgid "Both channels of a stereo track must be the same length."
-msgstr "Обидва канали стерео-доріжки повинні мати однакову тривалість."
+msgstr "Обидва канали стереодоріжки повинні мати однакову тривалість."
 
 #: effects/VST/VSTEffect.cpp:1789
 msgid "Scanning VST Plugins"
@@ -7175,7 +7236,7 @@ msgstr ""
 
 #: effects/nyquist/Nyquist.cpp:599
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr "Ефект неможливо застосувати до стерео-доріжок з невідповідними індивідуальним каналами."
+msgstr "Ефект неможливо застосувати до стереодоріжок з невідповідними індивідуальним каналами."
 
 #: effects/nyquist/Nyquist.cpp:660
 msgid "Nyquist"
@@ -7205,7 +7266,7 @@ msgstr "Отримання параметрів: %s"
 
 #: effects/vamp/VampEffect.cpp:107
 msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
-msgstr "Вибачте, додатки Vamp неможливо виконувати на стерео-доріжках, де окремі канали доріжки відрізняються один від одного."
+msgstr "Вибачте, додатки Vamp неможливо виконувати на стереодоріжках, де окремі канали доріжки відрізняються один від одного."
 
 #: effects/vamp/VampEffect.cpp:121
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -9003,10 +9064,6 @@ msgstr "Поведінка"
 msgid "&Don't apply effects in batch mode"
 msgstr "&Не застосовувати ефекти у пакетному режимі"
 
-#: prefs/BatchPrefs.cpp:81
-msgid "Cl&eanSpeech Mode (Customized GUI)"
-msgstr "Режим Cl&eanSpeech (Змінений GUI)"
-
 #: prefs/DevicePrefs.cpp:56
 msgid "Devices"
 msgstr "Пристрої"
@@ -9151,22 +9208,6 @@ msgstr "Увімкнути ефекти"
 msgid "Audio Unit"
 msgstr "Звуковий модуль"
 
-#: prefs/EffectsPrefs.cpp:66
-msgid "&LADSPA"
-msgstr "&LADSPA"
-
-#: prefs/EffectsPrefs.cpp:72
-msgid "N&yquist"
-msgstr "На&йквіст"
-
-#: prefs/EffectsPrefs.cpp:78
-msgid "&VAMP"
-msgstr "&VAMP"
-
-#: prefs/EffectsPrefs.cpp:84
-msgid "V&ST"
-msgstr "V&ST"
-
 #: prefs/EffectsPrefs.cpp:89
 msgid "Restart Audacity to apply changes."
 msgstr "Перезапустіть Audacity, щоб зміни набули чинності."
@@ -9271,30 +9312,6 @@ msgstr "На цьому комп’ютері"
 #: prefs/GUIPrefs.cpp:50
 msgid "From Internet"
 msgstr "У інтернеті"
-
-#: prefs/GUIPrefs.cpp:52
-msgid "36"
-msgstr "36"
-
-#: prefs/GUIPrefs.cpp:53
-msgid "48"
-msgstr "48"
-
-#: prefs/GUIPrefs.cpp:54
-msgid "60"
-msgstr "60"
-
-#: prefs/GUIPrefs.cpp:55
-msgid "96"
-msgstr "96"
-
-#: prefs/GUIPrefs.cpp:56
-msgid "120"
-msgstr "120"
-
-#: prefs/GUIPrefs.cpp:57
-msgid "145"
-msgstr "145"
 
 #: prefs/GUIPrefs.cpp:59
 msgid "-36 dB (shallow range for high-amplitude editing)"
@@ -9481,17 +9498,17 @@ msgstr "Повторити"
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Виберіть XML-файл, що містить комбінації клавіш Audacity…"
 
-#: prefs/KeyConfigPrefs.cpp:287
-msgid "Error Loading Keyboard Shortcuts"
-msgstr "Помилка при завантаженні комбінацій клавіш"
+#: prefs/KeyConfigPrefs.cpp:305
+msgid "Error Importing Keyboard Shortcuts"
+msgstr "Помилка під час імпортування клавіатурних скорочень"
 
 #: prefs/KeyConfigPrefs.cpp:300
 msgid "Export Keyboard Shortcuts As:"
 msgstr "Експортувати комбінації клавіш як:"
 
-#: prefs/KeyConfigPrefs.cpp:326
-msgid "Error Saving Keyboard Shortcuts"
-msgstr "Помилка при збереженні комбінацій клавіш"
+#: prefs/KeyConfigPrefs.cpp:344
+msgid "Error Exporting Keyboard Shortcuts"
+msgstr "Помилка під час експортування клавіатурних скорочень"
 
 #: prefs/KeyConfigPrefs.cpp:404
 #, c-format
@@ -9820,9 +9837,9 @@ msgstr "Shift-Прокручування-коліщатка"
 msgid "Ctrl-Wheel-Rotate"
 msgstr "Ctrl-Прокручування-коліщатка"
 
-#: prefs/MousePrefs.cpp:133
-msgid "Zoom in or out"
-msgstr "Масштабувати перегляд"
+#: prefs/MousePrefs.cpp:136
+msgid "Zoom in or out on Mouse Pointer"
+msgstr "Збільшення або зменшення за вказівником миші"
 
 #: prefs/PlaybackPrefs.cpp:57
 msgid "Effects Preview"
@@ -9895,6 +9912,11 @@ msgstr "Трикутне"
 #: prefs/QualityPrefs.cpp:77
 msgid "Shaped"
 msgstr "За формою"
+
+#: TrackPanel.cpp:623
+#: prefs/QualityPrefs.cpp:99
+msgid "Other..."
+msgstr "Інша…"
 
 #: prefs/QualityPrefs.cpp:125
 msgid "Sampling"
@@ -10026,49 +10048,9 @@ msgstr "Спектрограми"
 msgid "8 - most wideband"
 msgstr "8 — найширший"
 
-#: prefs/SpectrumPrefs.cpp:42
-msgid "16"
-msgstr "16"
-
-#: prefs/SpectrumPrefs.cpp:43
-msgid "32"
-msgstr "32"
-
-#: prefs/SpectrumPrefs.cpp:44
-msgid "64"
-msgstr "64"
-
-#: prefs/SpectrumPrefs.cpp:45
-msgid "128"
-msgstr "128"
-
 #: prefs/SpectrumPrefs.cpp:46
 msgid "256 - default"
 msgstr "256 — типовий"
-
-#: prefs/SpectrumPrefs.cpp:47
-msgid "512"
-msgstr "512"
-
-#: prefs/SpectrumPrefs.cpp:48
-msgid "1024"
-msgstr "1024"
-
-#: prefs/SpectrumPrefs.cpp:49
-msgid "2048"
-msgstr "2048"
-
-#: prefs/SpectrumPrefs.cpp:50
-msgid "4096"
-msgstr "4096"
-
-#: prefs/SpectrumPrefs.cpp:51
-msgid "8192"
-msgstr "8192"
-
-#: prefs/SpectrumPrefs.cpp:52
-msgid "16384"
-msgstr "16384"
 
 #: prefs/SpectrumPrefs.cpp:53
 msgid "32768 - most narrowband"
@@ -10085,14 +10067,6 @@ msgstr "&Розмір вікна"
 #: prefs/SpectrumPrefs.cpp:89
 msgid "Window &type"
 msgstr "&Тип вікна"
-
-#: prefs/SpectrumPrefs.cpp:109
-msgid "FFT Skip Points"
-msgstr "Ігноровані точки FFT"
-
-#: prefs/SpectrumPrefs.cpp:113
-msgid "Skip Points"
-msgstr "Ігнорувати точки"
 
 #: prefs/SpectrumPrefs.cpp:130
 msgid "Mi&nimum Frequency (Hz):"
@@ -10286,6 +10260,27 @@ msgstr "Завантажити файли"
 msgid "Simple"
 msgstr "Проста"
 
+#: TrackPanel.cpp:637
+#: prefs/TracksPrefs.cpp:59
+msgid "Waveform (dB)"
+msgstr "Хвиля (дБ)"
+
+#: TrackPanel.cpp:638
+#: prefs/TracksPrefs.cpp:60
+msgid "Spectrogram"
+msgstr "Спектрограма"
+
+#: TrackPanel.cpp:639
+#: prefs/TracksPrefs.cpp:61
+msgid "Spectrogram log(f)"
+msgstr "Спектрограма ln(f)"
+
+#. i18n-hint: short form of 'logarithm'
+#: TrackPanel.cpp:640
+#: prefs/TracksPrefs.cpp:62
+msgid "Pitch (EAC)"
+msgstr "Висота тону (EAC)"
+
 #: prefs/TracksPrefs.cpp:79
 msgid "&Update display while playing"
 msgstr "&Оновлювати відображення під час відтворення"
@@ -10359,20 +10354,30 @@ msgstr "&Імпортування нестиснених звукових фай
 msgid "Pause"
 msgstr "Призупинити"
 
+#: Menus.cpp:617
+#: toolbars/ControlToolBar.cpp:179
+msgid "Play"
+msgstr "Відтворити"
+
 #: toolbars/ControlToolBar.cpp:184
 #: toolbars/ControlToolBar.cpp:213
 #: widgets/ProgressDialog.cpp:1112
 msgid "Stop"
 msgstr "Зупинити"
 
-#: toolbars/ControlToolBar.cpp:196
-#: toolbars/ControlToolBar.cpp:217
-msgid "Clean Speech"
-msgstr "Clean Speech"
-
 #: toolbars/ControlToolBar.cpp:212
 msgid "Play (Shift for Loop Play)"
 msgstr "Відтворити (з Shift — у циклі)"
+
+#: Menus.cpp:625
+#: toolbars/ControlToolBar.cpp:214
+msgid "Skip to Start"
+msgstr "Перейти на початок доріжки"
+
+#: Menus.cpp:626
+#: toolbars/ControlToolBar.cpp:215
+msgid "Skip to End"
+msgstr "Перейти на кінець доріжки"
 
 #: toolbars/ControlToolBar.cpp:216
 msgid "Record (Shift for Append Record)"
@@ -10637,110 +10642,9 @@ msgstr "Відтворити на вибраній швидкості"
 msgid "Playback Speed"
 msgstr "Швидкість програвання"
 
-#: toolbars/TranscriptionToolBar.cpp:195
-msgid "Adjust left selection to next onset"
-msgstr "Узгодити вибрану область ліворуч з початком наступного"
-
-#: toolbars/TranscriptionToolBar.cpp:197
-msgid "Adjust right selection to previous offset"
-msgstr "Узгодити вибрану область праворуч з виступом попереднього"
-
-#: toolbars/TranscriptionToolBar.cpp:199
-msgid "Adjust left selection to next offset"
-msgstr "Узгодити вибрану область ліворуч з виступом наступного"
-
-#: toolbars/TranscriptionToolBar.cpp:201
-msgid "Adjust right selection to previous onset"
-msgstr "Узгодити вибрану область праворуч з початком попереднього"
-
-#: toolbars/TranscriptionToolBar.cpp:203
-msgid "Select region of sound around cursor"
-msgstr "Вибрати область звуку навколо курсора"
-
-#: toolbars/TranscriptionToolBar.cpp:205
-msgid "Select region of silence around cursor"
-msgstr "Вибрати область тиші навколо курсора"
-
-#: toolbars/TranscriptionToolBar.cpp:207
-msgid "Automatically make labels from words"
-msgstr "Автоматично робити позначки з слів"
-
-#: toolbars/TranscriptionToolBar.cpp:209
-msgid "Add label at selection"
-msgstr "Додати позначку до вибраної області"
-
-#: toolbars/TranscriptionToolBar.cpp:211
-msgid "Calibrate voicekey"
-msgstr "Калібрувати ключ голосу"
-
-#: toolbars/TranscriptionToolBar.cpp:215
-msgid "Adjust Sensitivity"
-msgstr "Налаштувати чутливість"
-
-#: toolbars/TranscriptionToolBar.cpp:225
-msgid "Energy"
-msgstr "Енергія"
-
-#: toolbars/TranscriptionToolBar.cpp:226
-msgid "Sign Changes (Low Threshold)"
-msgstr "Зміни знаку (нижній поріг)"
-
-#: toolbars/TranscriptionToolBar.cpp:227
-msgid "Sign Changes (High Threshold)"
-msgstr "Зміни знаку (верхній поріг)"
-
-#: toolbars/TranscriptionToolBar.cpp:228
-msgid "Direction Changes (Low Threshold)"
-msgstr "Зміни напрямку (нижній поріг)"
-
-#: toolbars/TranscriptionToolBar.cpp:229
-msgid "Direction Changes (High Threshold)"
-msgstr "Зміни напрямку (верхній поріг)"
-
-#: toolbars/TranscriptionToolBar.cpp:237
-#: toolbars/TranscriptionToolBar.cpp:277
-msgid "Key type"
-msgstr "Тип ключа"
-
 #: toolbars/TranscriptionToolBar.cpp:262
 msgid "Play-at-speed"
 msgstr "Відтворити-на-швидкості"
-
-#: toolbars/TranscriptionToolBar.cpp:266
-msgid "Left-to-On"
-msgstr "Ліве-до-початку"
-
-#: toolbars/TranscriptionToolBar.cpp:267
-msgid "Right-to-Off"
-msgstr "Праве-до-виступу"
-
-#: toolbars/TranscriptionToolBar.cpp:268
-msgid "Left-to-Off"
-msgstr "Ліве-до-виступу"
-
-#: toolbars/TranscriptionToolBar.cpp:269
-msgid "Right-to-On"
-msgstr "Праве-до-початку"
-
-#: toolbars/TranscriptionToolBar.cpp:270
-msgid "Select-Sound"
-msgstr "Вибрати-звук"
-
-#: toolbars/TranscriptionToolBar.cpp:271
-msgid "Select-Silence"
-msgstr "Вибрати-тишу"
-
-#: toolbars/TranscriptionToolBar.cpp:272
-msgid "Make Labels"
-msgstr "Зробити позначки"
-
-#: toolbars/TranscriptionToolBar.cpp:273
-msgid "Add Label"
-msgstr "Додати позначку"
-
-#: toolbars/TranscriptionToolBar.cpp:274
-msgid "Calibrate"
-msgstr "Калібрувати"
 
 #: widgets/AButton.cpp:300
 msgid " (disabled)"
