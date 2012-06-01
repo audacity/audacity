@@ -151,7 +151,6 @@ bool ODFFmpegDecoder::SeekingAllowed()
    //we can seek if the following checks pass:
    //-sample rate is less than the reciprocal of the time_base of the seeking stream.  
    //-a seek test has been made and dts updates as expected.
-   streamContext** scs = (streamContext** )mScs;
    //we want to clone this to run a seek test.
    AVFormatContext* ic = (AVFormatContext*)mFormatContext;
    bool  audioStreamExists = false;
@@ -309,7 +308,6 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
             if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
                //find out the dts we've seekd to.  
                sampleCount actualDecodeStart = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
-               double actualDecodeStartDouble = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
                
                mCurrentPos = actualDecodeStart;
                //if the seek was past our desired position, rewind a bit.  
@@ -336,7 +334,6 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
          nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
                //find out the dts we've seekd to.  can't use the stream->cur_dts because it is faulty.  also note that until we do the first seek, pkt.dts can be false and will change for the same samples after the initial seek.
                sampleCount actualDecodeStart = 0.52 + sc->m_stream->codec->sample_rate * sc->m_pkt.dts  * ((double)sc->m_stream->time_base.num/sc->m_stream->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
-               double actualDecodeStartdouble = 0.52 + sc->m_stream->codec->sample_rate * sc->m_pkt.dts  * ((double)sc->m_stream->time_base.num/sc->m_stream->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
 
                //hack to get rounding to work to neareset frame size since dts isn't exact
                if (sc->m_stream->codec->frame_size) {
