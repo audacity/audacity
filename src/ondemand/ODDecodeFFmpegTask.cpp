@@ -199,7 +199,6 @@ mNumStreams(numStreams),
 mScs(scs),
 mFormatContext(formatContext),
 mNumSamplesInCache(0),
-mCurrentPos(0),
 mCurrentLen(0),
 mSeekingAllowedStatus(ODFFMPEG_SEEKING_TEST_UNKNOWN),
 mStreamIndex(streamIndex)
@@ -218,6 +217,13 @@ mStreamIndex(streamIndex)
          mChannels[s][c] = channels[s][c];
       }
    }
+   // get the current stream start time.
+   int64_t stream_delay = 0;
+   if (mScs[streamIndex]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) &&
+       mScs[streamIndex]->m_stream->start_time > 0) {
+      stream_delay = mScs[streamIndex]->m_stream->start_time;
+   }
+   mCurrentPos = double(stream_delay) / AV_TIME_BASE;
    
    //TODO: add a ref counter to scs?  This will be necessary if we want to allow copy and paste of not-yet decoded 
    //ODDecodeBlockFiles that point to FFmpeg files.
@@ -281,7 +287,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       FillDataFromCache(bufStart, format, start,len,channel);
    }
    
-   
+   bool seeking = false;
    //look at the decoding timestamp and see if the next sample that will be decoded is not the next sample we need.
    if(len && (mCurrentPos > start + len  || mCurrentPos + kDecodeSampleAllowance < start ) && SeekingAllowed()) {
       sc = mScs[mStreamIndex];
@@ -310,6 +316,8 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
                sampleCount actualDecodeStart = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
                
                mCurrentPos = actualDecodeStart;
+               seeking = true;
+
                //if the seek was past our desired position, rewind a bit.  
                //printf("seek ok to %llu samps, float: %f\n",actualDecodeStart,actualDecodeStartDouble);
             } else
@@ -333,13 +341,23 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       {
          nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
          //find out the dts we've seekd to.  can't use the stream->cur_dts because it is faulty.  also note that until we do the first seek, pkt.dts can be false and will change for the same samples after the initial seek.
-         sampleCount actualDecodeStart = 0.52 + sc->m_stream->codec->sample_rate * sc->m_pkt.dts  * ((double)sc->m_stream->time_base.num/sc->m_stream->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
+         sampleCount actualDecodeStart = mCurrentPos;
 
-         //hack to get rounding to work to neareset frame size since dts isn't exact
-         if (sc->m_stream->codec->frame_size) {
-            actualDecodeStart = ((actualDecodeStart + sc->m_stream->codec->frame_size/2) / sc->m_stream->codec->frame_size) * sc->m_stream->codec->frame_size;
+         // we need adjacent samples, so don't use dts most of the time which will leave gaps between frames
+         // for some formats
+         // The only other case for inserting silence is for initial offset and ImportFFmpeg.cpp does this for us
+         if (seeking) {
+            actualDecodeStart = 0.52 + (sc->m_stream->codec->sample_rate * sc->m_pkt.dts 
+                                        * ((double)sc->m_stream->time_base.num / sc->m_stream->time_base.den));
+            //this is mostly safe because den is usually 1 or low number but check for high values.
+
+            //hack to get rounding to work to neareset frame size since dts isn't exact
+            if (sc->m_stream->codec->frame_size) {
+               actualDecodeStart = ((actualDecodeStart + sc->m_stream->codec->frame_size/2) / sc->m_stream->codec->frame_size) * sc->m_stream->codec->frame_size;
+            }
+            // reset for the next one
+            seeking = false;
          }
-
          if(actualDecodeStart != mCurrentPos)
             printf("ts not matching - now:%llu , last:%llu, lastlen:%llu, start %llu, len %llu\n",actualDecodeStart, mCurrentPos, mCurrentLen, start, len);
             //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
