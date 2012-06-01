@@ -297,7 +297,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
    
    int nChannels;
    
-   printf("start %llu len %llu\n", start, len);   
+   // printf("start %llu len %llu\n", start, len);   
    //TODO update this to work with seek - this only works linearly now.
    if(mCurrentPos > start && mCurrentPos  <= start+len + kDecodeSampleAllowance)
    {
@@ -313,7 +313,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       int stindex = -1;
       uint64_t targetts;
       
-      printf("attempting seek to %llu\n", start);   
+      //printf("attempting seek to %llu\n", start);   
       //we have to find the index for this stream.
       for (unsigned int i = 0; i < mFormatContext->nb_streams; i++) {
          if (mFormatContext->streams[i] == sc->m_stream )
@@ -330,7 +330,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
             if(targetts<0) 
                targetts=0;
 
-            printf("attempting seek to %llu, attempts %d\n", targetts, numAttempts);   
+            //printf("attempting seek to %llu, attempts %d\n", targetts, numAttempts);   
             if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
                //find out the dts we've seekd to.  
                sampleCount actualDecodeStart = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
