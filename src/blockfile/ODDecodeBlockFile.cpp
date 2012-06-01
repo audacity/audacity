@@ -46,8 +46,10 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName baseFileName,wxFileName audioFil
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
+   mDecoder = NULL;
    mDataAvailable=false;
    mAudioFileName = audioFileName;
+   mFormat = int16Sample;
 }
    
 /// Create the memory structure to refer to the given block file
@@ -60,8 +62,10 @@ ODDecodeBlockFile::ODDecodeBlockFile(wxFileName existingFile, wxFileName audioFi
    mAliasStart(aliasStart),
    mAliasChannel(aliasChannel)
 {
+   mDecoder = NULL;
    mDataAvailable=dataAvailable;
    mAudioFileName = audioFileName;
+   mFormat = int16Sample;
 }
 
 
@@ -324,8 +328,10 @@ int ODDecodeBlockFile::WriteODDecodeBlockFile()
    ret = mDecoder->Decode(sampleData, mFormat, mAliasStart, mLen, mAliasChannel);
    
    mDecoderMutex.Unlock();
-   if(ret < 0)
+   if(ret < 0) {
+      printf("ODDecodeBlockFile Decode failure\n");
       return ret; //failure
+   }
 
    //the summary is also calculated here.
    mFileNameMutex.Lock();
@@ -559,7 +565,7 @@ bool ODDecodeBlockFile::ReadSummary(void *data)
 void ODDecodeBlockFile::SetODFileDecoder(ODFileDecoder* decoder)
 {
    //since this is the only place that writes to mdecoder, it is totally thread-safe to read check without the mutex
-   if(decoder==mDecoder)
+   if(decoder == mDecoder)
       return;
    mDecoderMutex.Lock();
    mDecoder = decoder;

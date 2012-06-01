@@ -105,6 +105,7 @@ void FFmpegStartup();
 
 bool LoadFFmpeg(bool showerror);
 
+
 /// If Audacity failed to load libav*, this dialog
 /// shows up and tells user about that. It will pop-up
 /// again and again until it is disabled.
@@ -330,8 +331,6 @@ void        DropFFmpegLibs();
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
 int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
 
-//moving from ImportFFmpeg.cpp to FFMpeg.h so other cpp files can use this struct.
-#ifdef EXPERIMENTAL_OD_FFMPEG
 typedef struct _streamContext
 {
    bool                 m_use;                           // TRUE = this stream will be loaded into Audacity
@@ -359,7 +358,14 @@ typedef struct _streamContext
    sampleFormat         m_osamplefmt;                    // output sample format
 
 } streamContext;
-#endif
+
+// common utility functions
+// utility calls that are shared with ImportFFmpeg and ODDecodeFFmpegTask
+streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
+                                             streamContext** streams,
+                                             unsigned int numStreams);
+
+int import_ffmpeg_decode_frame(streamContext *sc, bool flushing);
 
 extern "C" {
    // A little explanation of what's going on here.
