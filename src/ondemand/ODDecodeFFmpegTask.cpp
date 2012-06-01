@@ -387,7 +387,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
    }
 
    // Flush the decoders if we're done.
-   if(!sc && len>0)
+   if((!sc || sc == (streamContext*) 1)&& len>0)
    {
       for (int i = 0; i < mNumStreams; i++)
       {
@@ -405,10 +405,13 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
    //this next call takes data, start and len as reference variables and updates them to reflect the new area that is needed.
    FillDataFromCache(bufStart, format, start, len, channel);
    
+   // CHECK: not sure if we need this.  In any case it has to be updated for the new float case (not just int16)
    //if for some reason we couldn't get the samples, fill them with silence
+   /*
    int16_t* outBuf = (int16_t*) bufStart;
    for(int i=0;i<len;i++)
       outBuf[i]=0;
+   */
    return 1;
 }
 
