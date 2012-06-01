@@ -155,6 +155,7 @@ bool ODFFmpegDecoder::SeekingAllowed()
    AVFormatContext* ic = (AVFormatContext*)mFormatContext;
    bool  audioStreamExists = false;
    AVStream* st;
+
    //test the audio stream(s)
    for (unsigned int i = 0; i < ic->nb_streams; i++)
    {
@@ -177,14 +178,31 @@ bool ODFFmpegDecoder::SeekingAllowed()
       goto test_failed;
    //TODO: now try a seek and see if dts/pts (decode/presentation timestamp) is updated as we expected it to be.  
    //This should be done using a new AVFormatContext clone so that we don't ruin the file pointer if we fail.
-//   url_fseek(mFormatContext->pb,0,SEEK_SET);                              
+//   url_fseek(mFormatContext->pb,0,SEEK_SET); 
+
    
-   if(av_seek_frame(mFormatContext,st->index,0,0) >= 0) {
-   
+   AVFormatContext* tempContext;
+   int err;
+   err = ufile_fopen_input(&tempContext, mFName);
+   if (err < 0)
+   {
+      goto test_failed;
+   }
+
+   err = av_find_stream_info(tempContext);
+   if (err < 0)
+   {
+      goto test_failed;
+   }
+
+   if(av_seek_frame(tempContext, st->index, 0, 0) >= 0) {
       mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_SUCCESS;
+      if (tempContext) av_close_input_file(tempContext);
       return SeekingAllowed();
    }
-   
+
+   if (tempContext) av_close_input_file(tempContext);
+
 test_failed:
    mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
    return SeekingAllowed();
@@ -279,7 +297,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
    
    int nChannels;
    
-   
+   printf("start %llu len %llu\n", start, len);   
    //TODO update this to work with seek - this only works linearly now.
    if(mCurrentPos > start && mCurrentPos  <= start+len + kDecodeSampleAllowance)
    {
@@ -302,7 +320,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
             stindex =i;
       }
       
-      if(stindex >=0) {         
+      if(stindex >=0) {
          int numAttempts = 0;
          //reset mCurrentPos to a bogus value
          mCurrentPos = start+len +1;
@@ -311,6 +329,8 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
             targetts = (start-kDecodeSampleAllowance*numAttempts/kMaxSeekRewindAttempts)  * ((double)st->time_base.den/(st->time_base.num * st->codec->sample_rate ));
             if(targetts<0) 
                targetts=0;
+
+            printf("attempting seek to %llu, attempts %d\n", targetts, numAttempts);   
             if(av_seek_frame(mFormatContext,stindex,targetts,0) >= 0){
                //find out the dts we've seekd to.  
                sampleCount actualDecodeStart = 0.5 + st->codec->sample_rate * st->cur_dts  * ((double)st->time_base.num/st->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
@@ -320,8 +340,10 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
 
                //if the seek was past our desired position, rewind a bit.  
                //printf("seek ok to %llu samps, float: %f\n",actualDecodeStart,actualDecodeStartDouble);
-            } else
+            } else {
+               printf("seek failed");
                break;
+            }
          }
          if(mCurrentPos>start){
             mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
