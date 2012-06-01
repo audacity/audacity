@@ -283,7 +283,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
    
    
    //look at the decoding timestamp and see if the next sample that will be decoded is not the next sample we need.
-   if(len && SeekingAllowed() && (mCurrentPos > start + len  || mCurrentPos + kDecodeSampleAllowance < start )) {
+   if(len && (mCurrentPos > start + len  || mCurrentPos + kDecodeSampleAllowance < start ) && SeekingAllowed()) {
       sc = mScs[mStreamIndex];
       AVStream* st = sc->m_stream;
       int stindex = -1;
