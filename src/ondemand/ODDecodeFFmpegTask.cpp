@@ -11,7 +11,6 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #ifdef EXPERIMENTAL_OD_FFMPEG
 
-
 #include "../Audacity.h"	// needed before FFmpeg.h
 #include "../FFmpeg.h"		// which brings in avcodec.h, avformat.h
 #ifndef WX_PRECOMP
@@ -561,7 +560,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       //\warning { for some reason using the following macro call right in the function call
       // causes Audacity to crash in some unknown place. With "newsize" it works fine }
       int newsize = FFMAX(sc->m_pkt.size*sizeof(*sc->m_decodedAudioSamples), AVCODEC_MAX_AUDIO_FRAME_SIZE);
-      sc->m_decodedAudioSamples = (int16_t*)av_fast_realloc(sc->m_decodedAudioSamples, 
+      sc->m_decodedAudioSamples = (uint8_t*)av_fast_realloc(sc->m_decodedAudioSamples, 
          &sc->m_decodedAudioSamplesSiz,
          newsize
          );
@@ -576,10 +575,29 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
    // avcodec_decode_audio2() expects the size of the output buffer as the 3rd parameter but
    // also returns the number of bytes it decoded in the same parameter.
    sc->m_decodedAudioSamplesValidSiz = sc->m_decodedAudioSamplesSiz;
-   nBytesDecoded = avcodec_decode_audio2(sc->m_codecCtx, 
-      sc->m_decodedAudioSamples,		      // out
-      &sc->m_decodedAudioSamplesValidSiz,	// in/out
-      pDecode, nDecodeSiz);				   // in
+
+#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
+   // avcodec_decode_audio3() expects the size of the output buffer as the 3rd parameter but
+   // also returns the number of bytes it decoded in the same parameter.
+   AVPacket avpkt;
+   av_init_packet(&avpkt);
+   avpkt.data = pDecode;
+   avpkt.size = nDecodeSiz;
+   nBytesDecoded =
+      avcodec_decode_audio3(sc->m_codecCtx,
+                            (int16_t *)sc->m_decodedAudioSamples,    // out
+                            &sc->m_decodedAudioSamplesValidSiz,      // in/out
+                            &avpkt);                                 // in
+#else
+   // avcodec_decode_audio2() expects the size of the output buffer as the 3rd parameter but
+   // also returns the number of bytes it decoded in the same parameter.
+   nBytesDecoded =
+      avcodec_decode_audio2(sc->m_codecCtx, 
+                            (int16_t *) sc->m_decodedAudioSamples,   // out
+                            &sc->m_decodedAudioSamplesValidSiz,      // in/out
+                            pDecode,                                 // in
+                            nDecodeSiz);                             // in
+#endif
 
    if (nBytesDecoded < 0)
    {
@@ -606,8 +624,8 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       FFMpegDecodeCache* cache = new FFMpegDecodeCache;
       //len is number of samples per channel
       cache->numChannels = sc->m_stream->codec->channels;
-
-      cache->len = (sc->m_decodedAudioSamplesValidSiz/sizeof(int16_t) )/cache->numChannels;
+      // Here we convert to 16 bit stero frame length
+      cache->len = (sc->m_decodedAudioSamplesValidSiz/sizeof(int16_t) ) / cache->numChannels;
       cache->start=mCurrentPos;
       cache->samplePtr = (int16_t*) malloc(sc->m_decodedAudioSamplesValidSiz);
       memcpy(cache->samplePtr,sc->m_decodedAudioSamples,sc->m_decodedAudioSamplesValidSiz);
