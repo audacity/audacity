@@ -289,7 +289,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       int stindex = -1;
       uint64_t targetts;
       
-      //printf("attempting seek to %llu\n", start);   
+      printf("attempting seek to %llu\n", start);   
       //we have to find the index for this stream.
       for (unsigned int i = 0; i < mFormatContext->nb_streams; i++) {
          if (mFormatContext->streams[i] == sc->m_stream )
@@ -332,44 +332,44 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       if (sc != (streamContext*)1)
       {
          nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
-               //find out the dts we've seekd to.  can't use the stream->cur_dts because it is faulty.  also note that until we do the first seek, pkt.dts can be false and will change for the same samples after the initial seek.
-               sampleCount actualDecodeStart = 0.52 + sc->m_stream->codec->sample_rate * sc->m_pkt.dts  * ((double)sc->m_stream->time_base.num/sc->m_stream->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
+         //find out the dts we've seekd to.  can't use the stream->cur_dts because it is faulty.  also note that until we do the first seek, pkt.dts can be false and will change for the same samples after the initial seek.
+         sampleCount actualDecodeStart = 0.52 + sc->m_stream->codec->sample_rate * sc->m_pkt.dts  * ((double)sc->m_stream->time_base.num/sc->m_stream->time_base.den);      //this is mostly safe because den is usually 1 or low number but check for high values.
 
-               //hack to get rounding to work to neareset frame size since dts isn't exact
-               if (sc->m_stream->codec->frame_size) {
-                  actualDecodeStart = ((actualDecodeStart + sc->m_stream->codec->frame_size/2) / sc->m_stream->codec->frame_size) * sc->m_stream->codec->frame_size;
-               }
+         //hack to get rounding to work to neareset frame size since dts isn't exact
+         if (sc->m_stream->codec->frame_size) {
+            actualDecodeStart = ((actualDecodeStart + sc->m_stream->codec->frame_size/2) / sc->m_stream->codec->frame_size) * sc->m_stream->codec->frame_size;
+         }
 
-               if(actualDecodeStart != mCurrentPos)
-                  //printf("ts not matching - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
-               //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
-               if(actualDecodeStart>start && firstpass) {
-                  // find the number of samples for the leading silence
-                  int amt = actualDecodeStart - start;
-                  FFMpegDecodeCache* cache = new FFMpegDecodeCache;
+         if(actualDecodeStart != mCurrentPos)
+            printf("ts not matching - now:%llu , last:%llu, lastlen:%llu, start %llu, len %llu\n",actualDecodeStart, mCurrentPos, mCurrentLen, start, len);
+            //if we've skipped over some samples, fill the gap with silence.  This could happen often in the beginning of the file.
+         if(actualDecodeStart>start && firstpass) {
+            // find the number of samples for the leading silence
+            int amt = actualDecodeStart - start;
+            FFMpegDecodeCache* cache = new FFMpegDecodeCache;
 
-                  //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
+            //printf("skipping/zeroing %i samples. - now:%llu (%f), last:%llu, lastlen:%llu, start %llu, len %llu\n",amt,actualDecodeStart, actualDecodeStartdouble, mCurrentPos, mCurrentLen, start, len);
                   
-                  //put it in the cache so the other channels can use it.
-                  cache->numChannels = sc->m_stream->codec->channels;                  
-                  cache->len = amt;
-                  cache->start=start;
-                  // 8 bit and 16 bit audio output from ffmpeg means
-                  // 16 bit int out.
-                  // 32 bit int, float, double mean float out.
-                  if (format == int16Sample)
-                     cache->samplefmt = SAMPLE_FMT_S16;
-                  else
-                     cache->samplefmt = SAMPLE_FMT_FLT;
+            //put it in the cache so the other channels can use it.
+            cache->numChannels = sc->m_stream->codec->channels;                  
+            cache->len = amt;
+            cache->start=start;
+            // 8 bit and 16 bit audio output from ffmpeg means
+            // 16 bit int out.
+            // 32 bit int, float, double mean float out.
+            if (format == int16Sample)
+               cache->samplefmt = SAMPLE_FMT_S16;
+            else
+               cache->samplefmt = SAMPLE_FMT_FLT;
 
-                  cache->samplePtr = (uint8_t*) malloc(amt * cache->numChannels * SAMPLE_SIZE(format));
+            cache->samplePtr = (uint8_t*) malloc(amt * cache->numChannels * SAMPLE_SIZE(format));
 
-                  memset(cache->samplePtr, 0, amt * cache->numChannels * SAMPLE_SIZE(format));
+            memset(cache->samplePtr, 0, amt * cache->numChannels * SAMPLE_SIZE(format));
                   
-                  InsertCache(cache);
-               }
-               firstpass=false;
-               mCurrentPos = actualDecodeStart;
+            InsertCache(cache);
+         }
+         firstpass=false;
+         mCurrentPos = actualDecodeStart;
          //decode the entire packet (unused bits get saved in cache, so as long as cache size limit is bigger than the
          //largest packet size, we're ok.
          while (sc->m_pktRemainingSiz > 0)
