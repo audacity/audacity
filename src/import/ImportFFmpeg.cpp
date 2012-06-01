@@ -554,63 +554,61 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    int res = eProgressSuccess;
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
-   mUsingOD = true; //TODO: for now just use it - later use a prefs 
+   mUsingOD = false;
+   gPrefs->Read(wxT("/Library/FFmpegOnDemand"), &mUsingOD);
    //at this point we know the file is good and that we have to load the number of channels in mScs[s]->m_stream->codec->channels;
    //so for OD loading we create the tracks and releasee the modal lock after starting the ODTask.
-   std::vector<ODDecodeFFmpegTask*> tasks;
-   //append blockfiles to each stream and add an individual ODDecodeTask for each one.
-   for (int s = 0; s < mNumStreams; s++)
-   {
-      ODDecodeFFmpegTask* odTask=new ODDecodeFFmpegTask(mScs,mNumStreams,mChannels,mFormatContext, s);
-      ODFileDecoder* odDecoder = (ODFileDecoder*)odTask->CreateFileDecoder(mFilename);
+   if (mUsingOD) {
+      std::vector<ODDecodeFFmpegTask*> tasks;
+      //append blockfiles to each stream and add an individual ODDecodeTask for each one.
+      for (int s = 0; s < mNumStreams; s++) {
+         ODDecodeFFmpegTask* odTask=new ODDecodeFFmpegTask(mScs,mNumStreams,mChannels,mFormatContext, s);
+         ODFileDecoder* odDecoder = odTask->CreateFileDecoder(mFilename);
 
-      //each stream has different duration.  We need to know it if seeking is to be allowed.
-      sampleCount sampleDuration = 0;
-      if (mScs[s]->m_stream->duration > 0)
-         sampleDuration = ((sampleCount)mScs[s]->m_stream->duration * mScs[s]->m_stream->time_base.num) *mScs[s]->m_stream->codec->sample_rate / mScs[s]->m_stream->time_base.den;
-      else
-         sampleDuration = ((sampleCount)mFormatContext->duration *mScs[s]->m_stream->codec->sample_rate) / AV_TIME_BASE;
+         //each stream has different duration.  We need to know it if seeking is to be allowed.
+         sampleCount sampleDuration = 0;
+         if (mScs[s]->m_stream->duration > 0)
+            sampleDuration = ((sampleCount)mScs[s]->m_stream->duration * mScs[s]->m_stream->time_base.num) *mScs[s]->m_stream->codec->sample_rate / mScs[s]->m_stream->time_base.den;
+         else
+            sampleDuration = ((sampleCount)mFormatContext->duration *mScs[s]->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
-//      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)mScs[s]->m_stream->codec->sample_rate,(int)sampleDuration/mScs[s]->m_stream->codec->sample_rate);
+         //      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)mScs[s]->m_stream->codec->sample_rate,(int)sampleDuration/mScs[s]->m_stream->codec->sample_rate);
          
-      //for each wavetrack within the stream add coded blockfiles
-      for (int c = 0; c < mScs[s]->m_stream->codec->channels; c++)
-      {
-         WaveTrack *t = mChannels[s][c];
-         odTask->AddWaveTrack(t);
+         //for each wavetrack within the stream add coded blockfiles
+         for (int c = 0; c < mScs[s]->m_stream->codec->channels; c++) {
+            WaveTrack *t = mChannels[s][c];
+            odTask->AddWaveTrack(t);
          
-         sampleCount maxBlockSize = t->GetMaxBlockSize();
-         //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
-         for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) 
-         {
-            sampleCount blockLen = maxBlockSize;
-            if (i + blockLen > sampleDuration)
-               blockLen = sampleDuration - i;
+            sampleCount maxBlockSize = t->GetMaxBlockSize();
+            //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
+            for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) {
+               sampleCount blockLen = maxBlockSize;
+               if (i + blockLen > sampleDuration)
+                  blockLen = sampleDuration - i;
             
-            t->AppendCoded(mFilename, i, blockLen, c,ODTask::eODFFMPEG);
+               t->AppendCoded(mFilename, i, blockLen, c,ODTask::eODFFMPEG);
             
-            // This only works well for single streams since we assume 
-            // each stream is of the same duration and channels
-            res = mProgress->Update(i+sampleDuration*c+ sampleDuration*mScs[s]->m_stream->codec->channels*s, 
-                                 sampleDuration*mScs[s]->m_stream->codec->channels*mNumStreams);
-            if (res != eProgressSuccess)
-               break;
+               // This only works well for single streams since we assume 
+               // each stream is of the same duration and channels
+               res = mProgress->Update(i+sampleDuration*c+ sampleDuration*mScs[s]->m_stream->codec->channels*s, 
+                                       sampleDuration*mScs[s]->m_stream->codec->channels*mNumStreams);
+               if (res != eProgressSuccess)
+                  break;
+            }
          }
+         tasks.push_back(odTask);
       }
-      tasks.push_back(odTask);
-   }
-   //Now we add the tasks and let them run, or delete them if the user cancelled
-   for(int i=0; i < (int)tasks.size(); i++)
-   {
-      if(res==eProgressSuccess)
-         ODManager::Instance()->AddNewTask(tasks[i]);
-      else
-      {
-         delete tasks[i];
+      //Now we add the tasks and let them run, or delete them if the user cancelled
+      for(int i=0; i < (int)tasks.size(); i++) {
+         if(res==eProgressSuccess)
+            ODManager::Instance()->AddNewTask(tasks[i]);
+         else
+            {
+               delete tasks[i];
+            }
       }
-   }
-#else //ifndef EXPERIMENTAL_OD_FFMPEG   
-
+   } else {
+#endif
    streamContext *sc = NULL;
 
    // Read next frame.
@@ -656,6 +654,8 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          }
       }
    }
+#ifdef EXPERIMENTAL_OD_FFMPEG
+   } // else -- !mUsingOD == true
 #endif   //EXPERIMENTAL_OD_FFMPEG
 
    // Something bad happened - destroy everything!
