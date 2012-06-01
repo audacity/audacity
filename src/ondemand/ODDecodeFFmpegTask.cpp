@@ -564,7 +564,7 @@ int ODFFmpegDecoder::DecodeFrame(streamContext *sc, bool flushing)
       
       InsertCache(cache);
    }
-   return 0;
+   return ret;
 }
 
 void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
