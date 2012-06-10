@@ -27,7 +27,7 @@ class EffectPaulstretch:public Effect{
       }
 
       virtual wxString GetEffectAction() {
-         return wxString(_("Paulstretch"));
+         return wxString(_("Stretching with Paulstretch"));
       }
 
       // Useful only after PromptUser values have been set. 

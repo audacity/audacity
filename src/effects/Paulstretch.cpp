@@ -5,7 +5,7 @@ Audacity: A Digital Audio Editor
 Paulstretch.cpp
 
 Nasca Octavian Paul
-Some GUI code was took from Echo effect
+Some GUI code was taken from the Echo effect
 
  *******************************************************************/
 
@@ -52,7 +52,7 @@ EffectPaulstretch::EffectPaulstretch(){
 
 wxString EffectPaulstretch::GetEffectDescription(){
    // Note: This is useful only after values have been set. 
-   return wxString::Format(_("Applied effect: %s  amount= %f times, time resolution = %f seconds"), 
+   return wxString::Format(_("Applied effect: %s stretch factor = %f times, time resolution = %f seconds"), 
          this->GetEffectName().c_str(), amount,time_resolution); 
 
 };
@@ -74,7 +74,7 @@ bool EffectPaulstretch::PromptUser(){
 };
 
 bool EffectPaulstretch::TransferParameters(Shuttle &shuttle){
-   shuttle.TransferFloat(wxT("Amount"),amount,10.0);
+   shuttle.TransferFloat(wxT("Stretch Factor"),amount,10.0);
    shuttle.TransferFloat(wxT("Time Resolution"),time_resolution,0.25);
 
    return true;
@@ -163,7 +163,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    m_t1=mT1;
 
    if (len<=(stretch_buf_size*2+1)){//error because the selection is too short
-      ::wxMessageBox(_("Error on Paulstretch:\nThe selection is too small.\n It must be much larger than Time Resolution value."));
+      ::wxMessageBox(_("Error on Paulstretch:\nThe selection is too short.\n It must be much longer than the Time Resolution."));
       return false;
    };
 
@@ -423,10 +423,10 @@ void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S){
    S.EndHorizontalLay();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      m_pTextCtrl_Amount = S.AddTextBox(_("Stretch amount:"),wxT("10.0"),10);
+      m_pTextCtrl_Amount = S.AddTextBox(_("Stretch Factor:"),wxT("10.0"),10);
       m_pTextCtrl_Amount->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
 
-      m_pTextCtrl_TimeResolution= S.AddTextBox(_("Time resolution(seconds):"), wxT("0.25"),10);
+      m_pTextCtrl_TimeResolution= S.AddTextBox(_("Time Resolution (seconds):"), wxT("0.25"),10);
       m_pTextCtrl_TimeResolution->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
    }
    S.EndMultiColumn();
