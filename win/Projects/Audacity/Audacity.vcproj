@@ -1268,6 +1268,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\effects\Paulstretch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\Paulstretch.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\effects\Phaser.cpp"
 				>
 			</File>
