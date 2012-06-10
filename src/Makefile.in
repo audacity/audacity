@@ -168,6 +168,7 @@ OBJS = \
 	effects/Noise.o \
 	effects/NoiseRemoval.o \
 	effects/Normalize.o \
+	effects/Paulstretch.o \
 	effects/Phaser.o \
 	effects/Repair.o \
 	effects/Repeat.o \

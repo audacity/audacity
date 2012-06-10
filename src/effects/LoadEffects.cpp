@@ -24,6 +24,7 @@
 #include "Compressor.h"
 #include "DtmfGen.h"
 #include "Echo.h"
+#include "Paulstretch.h"
 #include "Equalization.h"
 #include "Fade.h"
 #include "Invert.h"
@@ -248,6 +249,7 @@ void LoadEffects()
    em.RegisterEffect(new EffectClickRemoval());
    em.RegisterEffect(new EffectCompressor());
    em.RegisterEffect(new EffectEcho());
+   em.RegisterEffect(new EffectPaulstretch());
    em.RegisterEffect(new EffectEqualization());
    em.RegisterEffect(new EffectFadeIn(), SIMPLE_EFFECT);
    em.RegisterEffect(new EffectFadeOut(), SIMPLE_EFFECT);
