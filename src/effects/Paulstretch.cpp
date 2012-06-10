@@ -163,7 +163,10 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    m_t1=mT1;
 
    if (len<=(stretch_buf_size*2+1)){//error because the selection is too short
-      ::wxMessageBox(_("Error on Paulstretch:\nThe selection is too short.\n It must be much longer than the Time Resolution."));
+      /* i18n-hint: This is an effect error message, for the effect named Paulstretch.
+       * Time Resolution is a parameter of the effect, the translation should match
+       */
+      ::wxMessageBox(_("Error in Paulstretch:\nThe selection is too short.\n It must be much longer than the Time Resolution."));
       return false;
    };
 
@@ -423,6 +426,10 @@ void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S){
    S.EndHorizontalLay();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
+      /* i18n-hint: This is how many times longer the sound will be, e.g. applying 
+       * the effect to a 1-second sample, with the default Stretch Factor of 10.0
+       * will give an (approximately) 10 second sound
+       */
       m_pTextCtrl_Amount = S.AddTextBox(_("Stretch Factor:"),wxT("10.0"),10);
       m_pTextCtrl_Amount->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
 

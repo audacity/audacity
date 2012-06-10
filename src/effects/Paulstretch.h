@@ -23,10 +23,19 @@ class EffectPaulstretch:public Effect{
       EffectPaulstretch();
 
       virtual wxString GetEffectName() {
+         /* i18n-hint: This is the name of the effect, i.e. a proper noun, which
+          * wouldn't normally get translated. It's the combination of the author's
+          * name (Paul) with what it does (stretch sound)
+          */
          return wxString(_("Paulstretch..."));
       }
 
       virtual wxString GetEffectAction() {
+         /* i18n-hint: This is the text that is shown whilst the effect is being
+          * processed. The effect stretches the input in time, making the sound
+          * much longer and spread out whilst at the same pitch. Paulstretch is the
+          * name of the effect (it's also translated on it's own).
+          */
          return wxString(_("Stretching with Paulstretch"));
       }
 
