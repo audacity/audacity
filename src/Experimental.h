@@ -84,7 +84,7 @@
 // 2.0 release
 //#define EXPERIMENTAL_OD_FLAC
 // similarly for FFmpeg:
-//#define EXPERIMENTAL_OD_FFMPEG
+#define EXPERIMENTAL_OD_FFMPEG 1
 
 // Philip Van Baren 01 July 2009
 // Replace RealFFT() and PowerSpectrum function to use (faster) RealFFTf function
