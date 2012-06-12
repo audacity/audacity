@@ -65,7 +65,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Christian Brochec"), roleTeamSupport);
    AddCredit(wxT("Steve Daulton"), roleTeamSupport);
    AddCredit(wxT("Greg Kozikowski"), roleTeamSupport);
-   AddCredit(wxT("Alexandre Prokoudine"), roleTeamSupport);
    AddCredit(wxT("Peter Sampson"), roleTeamSupport);
    AddCredit(wxT("Bill Wharrie"), roleTeamSupport);
 
@@ -83,6 +82,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Monty Montgomery"), roleEmeritusDeveloper);
    AddCredit(wxT("Shane Mueller"), roleEmeritusDeveloper);
    AddCredit(wxT("Tony Oetzmann"), roleEmeritusSupport);
+   AddCredit(wxT("Alexandre Prokoudine"), roleEmeritusSupport);
 
    // All other contributors
    
