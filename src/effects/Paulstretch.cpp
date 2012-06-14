@@ -85,7 +85,7 @@ bool EffectPaulstretch::Process(){
    CopyInputTracks(); 
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
-   m_t1=0.0;
+   m_t1=mT1;
    int count=0;
    while (track) {
       double trackStart = track->GetStartTime();
