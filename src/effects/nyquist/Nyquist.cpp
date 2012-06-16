@@ -917,6 +917,13 @@ bool EffectNyquist::ProcessOne()
       return false;
    }
 
+   if (outChannels == -1) {
+      wxMessageBox(_("Nyquist returned one audio channel as an array.\n"),
+                   wxT("Nyquist"),
+                   wxOK | wxCENTRE, mParent);
+      return false;
+   }
+
    double rate = mCurTrack[0]->GetRate();
    for (i = 0; i < outChannels; i++) {
       sampleFormat format = mCurTrack[i]->GetSampleFormat();

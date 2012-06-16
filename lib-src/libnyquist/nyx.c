@@ -875,7 +875,11 @@ int nyx_get_audio_num_channels()
    }
 
    if (vectorp(nyx_result)) {
-      return getsize(nyx_result);
+      if (getsize(nyx_result) == 1) {
+        return -1; // invalid number of channels in array
+      } else {
+        return getsize(nyx_result);
+      }
    }
 
    return 1;

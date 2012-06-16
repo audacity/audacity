@@ -64,6 +64,12 @@ extern "C"
    
    nyx_rval    nyx_eval_expression(const char *expr);
    
+   /** @brief Get the number of channels in the Nyquist audio object
+    *
+    * @return The positive integer number of audio channels in the
+    * Nyquist audio object, 0 if not an audio object, -1 one if
+    * Nyquist returns an array of samples (which we can't handle)
+    */
    int         nyx_get_audio_num_channels();
    int         nyx_get_audio(nyx_audio_callback callback,
                              void *userdata);
