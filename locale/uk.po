@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-05-31 05:49-0000\n"
+"PO-Revision-Date: 2012-06-16 23:09-0000\n"
 "Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
@@ -6614,6 +6614,53 @@ msgstr "Нормалізація…"
 msgid "Normalizing..."
 msgstr "Нормалізація…"
 
+#: effects/Paulstretch.cpp:55
+#, c-format
+msgid "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
+msgstr "Застосований ефект: %s, коефіцієнт видовження = %f, роздільність за часом = %f с"
+
+#. i18n-hint: This is an effect error message, for the effect named Paulstretch.
+#. * Time Resolution is a parameter of the effect, the translation should match
+#.
+#: effects/Paulstretch.cpp:169
+msgid ""
+"Error in Paulstretch:\n"
+"The selection is too short.\n"
+" It must be much longer than the Time Resolution."
+msgstr ""
+"Помилка у Paulstretch:\n"
+"Позначено надто короткий фрагмент.\n"
+" Тривалість фрагмента має перевищувати роздільність за часом."
+
+#. i18n-hint: This is how many times longer the sound will be, e.g. applying
+#. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
+#. * will give an (approximately) 10 second sound
+#.
+#: effects/Paulstretch.cpp:433
+msgid "Stretch Factor:"
+msgstr "Коефіцієнт видовження:"
+
+#: effects/Paulstretch.cpp:436
+msgid "Time Resolution (seconds):"
+msgstr "Роздільність за часом (у секундах):"
+
+#. i18n-hint: This is the name of the effect, i.e. a proper noun, which
+#. * wouldn't normally get translated. It's the combination of the author's
+#. * name (Paul) with what it does (stretch sound)
+#.
+#: effects/Paulstretch.h:30
+msgid "Paulstretch..."
+msgstr "Paulstretch…"
+
+#. i18n-hint: This is the text that is shown whilst the effect is being
+#. * processed. The effect stretches the input in time, making the sound
+#. * much longer and spread out whilst at the same pitch. Paulstretch is the
+#. * name of the effect (it's also translated on it's own).
+#.
+#: effects/Paulstretch.h:39
+msgid "Stretching with Paulstretch"
+msgstr "Видовження за допомогою Paulstretch"
+
 #: effects/Phaser.cpp:66
 #, c-format
 msgid "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start phase = %.0f deg, depth = %d, feedback = %.0f%%"
@@ -9573,6 +9620,10 @@ msgstr "В&казати…."
 #: prefs/LibraryPrefs.cpp:130
 msgid "Dow&nload"
 msgstr "Зва&нтажити"
+
+#: prefs/LibraryPrefs.cpp:139
+msgid "Allow &background on-demand loading"
+msgstr "Дозволити завантаження &тла на вимогу"
 
 #: prefs/LibraryPrefs.cpp:186
 msgid ""
