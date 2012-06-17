@@ -85,7 +85,7 @@ sampleCount VoiceKey::OnForward (WaveTrack & t, sampleCount start, sampleCount l
 
    if((mWindowSize) >= len+10){
 
-      /* i18n-hint: Voice key is an experiemental/incomplete feature that 
+      /* i18n-hint: Voice key is an experimental/incomplete feature that 
          is used to navigate in vocal recordings, to move forwards and
          backwards by words.  So 'key' is being used in the sense of an index.
          This error message means that you've selected too short 

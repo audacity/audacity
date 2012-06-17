@@ -137,7 +137,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
                               true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-      This is a new experiemtnal effect, and until we have it documented in the user 
+      This is a new experimental effect, and until we have it documented in the user 
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
    mPresmoothLabel = S.AddVariableText(_("Presmooth Time")+wxString(wxT(":")), true,
@@ -150,7 +150,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-      This is a new experiemtnal effect, and until we have it documented in the user 
+      This is a new experimental effect, and until we have it documented in the user 
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
    mLineTimeLabel = S.AddVariableText(_("Line Time")+wxString(wxT(":")), true,
@@ -163,7 +163,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-      This is a new experiemtnal effect, and until we have it documented in the user 
+      This is a new experimental effect, and until we have it documented in the user 
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
    mSmoothTimeLabel = S.AddVariableText(_("Smooth Time")+wxString(wxT(":")), true,
