@@ -145,7 +145,7 @@ class PaulStretch{
 bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int count){
 
    int stretch_buf_size;//must be power of 2 (because Audacity's fft requires it)
-   if (time_resolution<0.001) time_resolution=0.001;
+   if (time_resolution<0.001) time_resolution=0.001f;
    {
       float tmp=track->GetRate()*time_resolution*0.5;
       tmp=log(tmp)/log(2.0);
@@ -328,7 +328,7 @@ void PaulStretch::process(float *smps,int nsmps){
 
 
    //put randomize phases to frequencies and do a IFFT
-   float inv_2p15_2pi=1.0/16384.0*M_PI;
+   float inv_2p15_2pi=1.0/16384.0*(float)M_PI;
    for (int i=1;i<poolsize/2;i++){
       unsigned int random=(rand())&0x7fff;
       float phase=random*inv_2p15_2pi;
@@ -356,7 +356,7 @@ void PaulStretch::process(float *smps,int nsmps){
 
    //make the output buffer
    float tmp=1.0/(float) out_bufsize*M_PI;
-   float hinv_sqrt2=0.853553390593;//(1.0+1.0/sqrt(2))*0.5;
+   float hinv_sqrt2=0.853553390593f;//(1.0+1.0/sqrt(2))*0.5;
 
    float ampfactor=1.0;
    if (rap<1.0) ampfactor=rap*0.707;
