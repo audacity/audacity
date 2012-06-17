@@ -1038,7 +1038,7 @@ MixerBoard::~MixerBoard()
 //
 void MixerBoard::UpdateTrackClusters() 
 {
-   if (mImageMuteUp == NULL) 
+   if (!mImageMuteUp) 
       this->CreateMuteSoloImages();
 
    const int nClusterHeight = mScrolledWindow->GetClientSize().GetHeight() - kDoubleInset;
@@ -1110,10 +1110,11 @@ void MixerBoard::UpdateTrackClusters()
    else if (nClusterIndex < nClusterCount)
    {
       // We've got too many clusters. 
-      // This can only on things like Undo New Audio Track or Undo Import
+      // This can happen only on things like Undo New Audio Track or Undo Import
       // that don't call RemoveTrackCluster explicitly. 
-      // We've already updated the track pointers for the clusters to the left, so just remove these.
-      for (; nClusterIndex < nClusterCount; nClusterIndex++)
+      // We've already updated the track pointers for the clusters to the left, so just remove all the rest.
+      // Keep nClusterIndex constant and successively delete from left to right.
+      for (unsigned int nCounter = nClusterIndex; nCounter < nClusterCount; nCounter++)
 #ifdef EXPERIMENTAL_MIDI_OUT
          this->RemoveTrackCluster(mMixerTrackClusters[nClusterIndex]->mTrack);
 #else
