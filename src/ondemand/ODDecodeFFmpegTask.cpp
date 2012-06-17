@@ -145,6 +145,8 @@ ODFileDecoder* ODDecodeFFmpegTask::CreateFileDecoder(const wxString & fileName)
 /// seeking will be enabled once this is true.
 bool ODFFmpegDecoder::SeekingAllowed() 
 {
+   return false;
+   /*
    if(ODFFMPEG_SEEKING_TEST_UNKNOWN != mSeekingAllowedStatus)
       return mSeekingAllowedStatus == ODFFMPEG_SEEKING_TEST_SUCCESS;
 
@@ -206,6 +208,7 @@ bool ODFFmpegDecoder::SeekingAllowed()
 test_failed:
    mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
    return SeekingAllowed();
+   */
 }
 
 
