@@ -666,7 +666,8 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
 
    tmpEntry->defaultKey = tmpEntry->key;
    if( multi )
-      name= name + wxString::Format(wxT("%d"),index ); 
+      name= wxString::Format( wxT("%s:%s"), name.c_str(), label.c_str() );
+   // + ":" + label;//wxString::Format(wxT("%d"),index ); 
    tmpEntry->name = name;
 
    tmpEntry->label = label;
