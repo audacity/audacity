@@ -665,9 +665,10 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
 #endif
 
    tmpEntry->defaultKey = tmpEntry->key;
+   // For key bindings for commands with a list, such as effects, 
+   // the name in prefs is the category name plus the effect name.
    if( multi )
       name= wxString::Format( wxT("%s:%s"), name.c_str(), label.c_str() );
-   // + ":" + label;//wxString::Format(wxT("%d"),index ); 
    tmpEntry->name = name;
 
    tmpEntry->label = label;

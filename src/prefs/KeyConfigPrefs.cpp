@@ -222,12 +222,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
       Labels, 
       Categories,
 // True to include effects (list items), false otherwise.
-// Hotkeys for effects not yet supported on Linux/Mac.
-#ifdef __WXMSW__  
       true 
-#else
-      false
-#endif
       );
 
    bool save = (mKeys.GetCount() == 0);
