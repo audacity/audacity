@@ -1548,7 +1548,7 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
         }
         slice->top = p;
         prev = p;
-        p->xtn2 = maxK;
+        p->xtn2 = (float)maxK;
         bTroughN1 = true;
         bTroughN2 = true;
         p->xtp2 = xt2;
@@ -1594,10 +1594,10 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
     */
   }
   if(bTroughN2) {
-    prev->xtn2 = kEnd;
+    prev->xtn2 = (float)kEnd;
   }
   if(!bX1 && !hi) {
-    x1 = kEnd;
+    x1 = (float)kEnd;
     y1 = mag2[kEnd];
     bX1 = true;
   }

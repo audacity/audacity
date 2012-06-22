@@ -59,7 +59,7 @@ long RingBuffer<T> :: write(T a)
   if(writePos >= 2*length) {
     length *= 2;
     T *newBuf = (T*) calloc(2*length,sizeof(T));
-    memcpy(newBuf,buf+readPos,(writePos-readPos)*sizeof(T));
+    memmove(newBuf,buf+readPos,(writePos-readPos)*sizeof(T));
     free(buf);
     buf = newBuf;
     writePos -= readPos;
@@ -92,7 +92,7 @@ void RingBuffer<T> :: advance(long n)
 {
   readPos += n;
   if(readPos >= length) {
-    memcpy(buf,buf+readPos,(writePos-readPos)*sizeof(T));
+    memmove(buf,buf+readPos,(writePos-readPos)*sizeof(T));
     writePos = writePos - readPos;
     readPos = 0;
   }
@@ -161,7 +161,7 @@ template<class T>
 void ArrayRingBuffer<T> :: write(T *in, long n)
 {
   grow(n);
-  if(in) memcpy(buf+writePos,in,n*sizeof(T));
+  if(in) memmove(buf+writePos,in,n*sizeof(T));
   writePos += n;
 }
 
@@ -172,7 +172,7 @@ void ArrayRingBuffer<T> :: grow(long n)
   while(pos >= 2*length) {
     length *= 2;
     T *newBuf = (T*)calloc(2*length,sizeof(T));
-    memcpy(newBuf,buf+readPos,(length-readPos)*sizeof(T));
+    memmove(newBuf,buf+readPos,(length-readPos)*sizeof(T));
     free(buf);
     buf = newBuf;
     writePos -= readPos;
@@ -185,7 +185,7 @@ template<class T>
 void ArrayRingBuffer<T> :: read(T *outBuf, long n)
 {
   n = max(0L,min(n,nReadable()));
-  memcpy(outBuf,buf+readPos,n*sizeof(T));
+  memmove(outBuf,buf+readPos,n*sizeof(T));
   advance(n);
 }
 
@@ -202,7 +202,7 @@ void ArrayRingBuffer<T> :: advance(long n) {
   if(readPos >= length) {
     long endPos;
     endPos = writePos+N;
-    memcpy(buf,buf+readPos,(endPos-readPos)*sizeof(T));
+    memmove(buf,buf+readPos,(endPos-readPos)*sizeof(T));
     memset(buf+readPos,0,((length<<1)-readPos)*sizeof(T));
     writePos -= readPos;
     readPos = 0;

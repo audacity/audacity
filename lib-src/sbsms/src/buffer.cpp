@@ -66,22 +66,22 @@ long GrainBuf :: write(audio *buf2, long n)
     nToCopy = min((n-bufReadPos),N2-iBufWritePos);
     if(nToCopy+iBufWritePos == N2) {
       if(buf2) {
-        memcpy(iBuf+iBufWritePos, buf2+bufReadPos, nToCopy*sizeof(audio));
+        memmove(iBuf+iBufWritePos, buf2+bufReadPos, nToCopy*sizeof(audio));
       } else {
         memset(iBuf+iBufWritePos, 0, nToCopy*sizeof(audio));
       }
       grain *g = grainAllocator.create();
-      memcpy(g->x+xOffset,iBuf,N2*sizeof(audio));
+      memmove(g->x+xOffset,iBuf,N2*sizeof(audio));
       write(g);
       ng++;
-      memcpy(iBuf,iBuf+h,overlap*sizeof(audio));
+      memmove(iBuf,iBuf+h,overlap*sizeof(audio));
       iBufWritePos = overlap;
       bufReadPos += nToCopy;
     } else break;
   }
   nToCopy = min((n-bufReadPos),N2-iBufWritePos);
   if(buf2) {
-    memcpy(iBuf+iBufWritePos, buf2+bufReadPos, nToCopy*sizeof(audio));
+    memmove(iBuf+iBufWritePos, buf2+bufReadPos, nToCopy*sizeof(audio));
   } else {
     memset(iBuf+iBufWritePos, 0, nToCopy*sizeof(audio));
   }
@@ -98,7 +98,7 @@ void GrainBuf :: advance(long n)
   }
   readPos += n;
   if(readPos >= length) {
-    memcpy(buf,buf+readPos,(writePos-readPos)*sizeof(grain*));
+    memmove(buf,buf+readPos,(writePos-readPos)*sizeof(grain*));
     writePos = writePos - readPos;
     readPos = 0;
   }
@@ -119,7 +119,7 @@ void GrainBuf :: write(grain *g)
   if(writePos >= length<<1) {
     length <<= 1;
     grain **newBuf = (grain**)calloc((length<<1),sizeof(grain*));
-    memcpy(newBuf,buf+readPos,(writePos-readPos)*sizeof(grain*));
+    memmove(newBuf,buf+readPos,(writePos-readPos)*sizeof(grain*));
     free(buf);
     buf = newBuf;
     writePos -= readPos;
