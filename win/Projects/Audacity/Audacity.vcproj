@@ -2496,6 +2496,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\plug-ins\sample-data-export.ny"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\plug-ins\SilenceMarker.ny"
 				>
 			</File>
