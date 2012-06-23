@@ -598,7 +598,13 @@ void nyx_set_audio_params(double rate, long len)
 
    /* Bind the sample rate to the "*sound-srate*" global */
    flo = cvflonum(rate);
+   setvalue(xlenter("*DEFAULT-SOUND-SRATE*"), flo);
    setvalue(xlenter("*SOUND-SRATE*"), flo);
+
+   /* Bind the control sample rate to "*control-srate*" globals */
+   flo = cvflonum((double) rate / 20.0);
+   setvalue(xlenter("*DEFAULT-CONTROL-SRATE*"), flo);
+   setvalue(xlenter("*CONTROL-SRATE*"), flo);
 
    /* Bind selection len to "len" global */
    nyx_input_length = len;
