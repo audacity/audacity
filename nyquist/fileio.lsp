@@ -292,10 +292,10 @@
   `(let ((ny:fname (soundfilename ,filename))
          (ny:peak 0.0)
          ny:input ny:rslt ny:offset)
-    (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
+    (format t "Overwriting ~A at offset ~A~%" ny:fname ,time-offset)
     (setf ny:offset (s-read-byte-offset ny:rslt))
-    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname time-offset
-                   0, 0, 0, 0.0, 0))
+    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ,time-offset
+                   0, 0, 0, 0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
