@@ -215,14 +215,12 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    }
    wxString localeStr = wxLocale::GetSystemEncodingName();
 
-   wxString csetStr = wxUSE_UNICODE ? wxT("(Unicode)") : wxT("(ANSI)");
-
    wxString creditStr = 
       wxT("<html><head><META http-equiv=\"Content-Type\" content=\"text/html; charset=") + 
          localeStr + 
          wxT("\"></head>") + 
       wxT("<body bgcolor=\"#ffffff\"><center>") + 
-      wxT("<h3>Audacity &reg; ") + versionStr + wxT(" " ) + csetStr + wxT("</h3>")+ 
+      wxT("<h3>Audacity ") + versionStr + wxT("</h3>")+ 
       _("A Free Digital Audio Editor<br>") + 
 	  wxT("<a href=\"http://audacity.sourceforge.net/\">http://audacity.sourceforge.net/</a>") +
       wxT("</center><p>") + par1Str +
@@ -429,8 +427,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // wxWidgets version:
    informationStr += wxVERSION_STRING;
    informationStr += wxT("</td><td/><td>");
-   /* unicode or not? */
-   informationStr += wxUSE_UNICODE ? wxT("(Unicode)") : wxT("(ANSI)");
    informationStr += wxT("</td></tr>\n");   // end of row
 
    informationStr += wxT("</table>\n");  //end table of libraries
@@ -896,15 +892,3 @@ void AboutDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(wxID_OK);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: a8955864-40e2-47aa-923b-cace3994493a
-

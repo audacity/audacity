@@ -412,12 +412,8 @@ bool EffectNyquist::SetXlispPath()
       }
    }
 
-#ifdef _UNICODE
    /* set_xlisp_path doesn't handle fn_Str() in Unicode build. May or may not actually work. */
    nyx_set_xlisp_path(mXlispPath.mb_str());
-#else // ANSI
-   nyx_set_xlisp_path(mXlispPath.fn_str());
-#endif // Unicode/ANSI
 
    fname = mXlispPath + wxFILE_SEP_PATH + wxT("nyinit.lsp");
    return ::wxFileExists(fname);
