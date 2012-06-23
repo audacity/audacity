@@ -251,7 +251,8 @@ bool TimerRecordDialog::RunWaitDialog()
       TimerProgressDialog 
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(), 
                   _("Audacity Timer Record Progress"), 
-                  strMsg); 
+                  strMsg, 
+                  pdlgHideCancelButton); 
 
       // Make sure that start and end time are updated, so we always get the full 
       // duration, even if there's some delay getting here.
