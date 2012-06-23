@@ -20,13 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.0 
+Version 2.0.1 
 
 Contents of this README:
 
 1.  Licensing
-2.1 Changes since version 1.3.14 Beta 
-2.2 Summary of bug fixes and new features between 1.2.6 and 2.0.0
+2.  Changes since version 2.0.0 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,91 +56,69 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2.1 Changes since version 1.3.14 Beta 
+2. Changes since version 2.0.0: 
 
 Bug fixes for:
 
  * Interface:
-   * Fixed playback speed and synchronization problems when dragging  
-      clips or tracks between tracks having different sample rates.
-   * (Windows) Removed a crash risk where shortcuts could be
-      used to record or import in one project while importing or 
-      exporting in another.    
+   * Selection Toolbar: a value for the previous whole second 
+      displayed if the value was close to a whole second. 
+   * Finding zero crossings could cause the selection to expand into
+      white space at either side of the clip. 
+   * Clips did not drag to another track if mouse was over a selection.
+   * Mixer Board: Rendering four tracks resulted in a redundant Track
+      Strip followed by a crash. 
 
  * Imports and Exports:
-   * Fixed crashes when changing the sample format of read-directly WAV
-      or AIFF files using the Track Drop-Down Menu. 
-   * Fixed a crash importing MP3 files that had duplicate metadata tags 
-      (this is a bug in current libsndfile which has been patched in 
-       Audacity; MP3 files mislabeled as WAV which have duplicate tags
-       will still crash Audacity on Linux if Audacity has been compiled 
-       against an affected version of system libsndfile).
-   * Fixed an issue where excessively high or corrupted sample values in
-      the audio could corrupt exports from the start of the problem for
-      the rest of the file, and could corrupt the rest of the project.  
-   * (Linux) Fixed Audacity could not be compiled against FFmpeg
-      0.7.x and 0.8.x. 
+   * Exporting to WAV or AIFF led to a "Libsndfile says" error or
+      corrupted output due to order of metadata in imported files. 
+   * (Mac) Fixed crashes importing MP3 files on PPC machines.    
 
  * Effects and Analysis:
-   * Fixed crash on launch when using "Ambisonic Decoders (PC)" VST  
-      plug-ins and other plug-ins that enable additional floating point
-      exceptions. 
-   * Fixed Plot Spectrum background could be transparent on some machines. 
-   * Bug fixes for Click Track, High Pass, Low Pass and Vocal Remover.  
-   * Chirp, Tone and Silence generators now remember their settings.
+   * Normalize: Fixed issues where normalization could be to wrong
+      value if applied with DC offset correction, or if applied to 
+      "read-directly" WAV and AIFF files before On-Demand completed. 
+   * Sliding Time Scale: fixed an audible discontinuity at the 
+      beginning of the processed selection; fixed a serious quality
+      problem on Linux 64-bit. 
  
- * Other miscellaneous bug fixes.  
+ * Other miscellaneous bug fixes, including fix to prevent zooming
+    with mouse wheel or ball scrolling the content off-screen, 
 
 
 Changes and Improvements:
 
- * New Interface preference to show the track name in the display (this
-    is off by default). 
- * Longer default Playback preference for effects preview and preview 
-    before cut. 
- * Restored use of Page Up and Page Down to scroll horizontally.  
+ * Shortcuts can now be added in Keyboard Preferences to items in the
+    Generate, Effect or Analyze menus, including user-added plug-ins.   
 
+ * Nyquist Effect plug-ins can now be added to Chains. 
 
-2.2 Summary of bug fixes and new features between 1.2.6 and 2.0.0
+ * New "Paulstretch" effect for extreme slowdown without pitch change. 
 
- * Bug Fixes:
+ * New "Sample Data Export" Analyze effect for exporting a file 
+    containing amplitude values for each sample in the selection. 
 
-   * Labels now accept lower case "z".
-   * (Windows Vista/7) Pressing Stop after recording could cause a crash.
-   * (Mac OS X) Fixed shortcut keys activating when typing in file open or
-      save windows.
-   * (Mac OS X) Audacity 2.0.0 fully supports Unicode, which fixes an
-      issue where Audacity could not work with folders having non-English
-      characters in their name. 
-   * (Linux) Playing existing tracks while recording in mono could cause
-      recordings to be distorted or low-pitched. 
+ * New Preference to import files On-Demand (without seeking ability) 
+    when using the optional FFmpeg library. 
 
- * New features: There are dozens of new features in 2.0.0, including: 
+ * (Windows installer) New option to reset Preferences on next launch. 
 
-   * Many effects significantly improved, especially Equalization, Noise
-      Removal and Normalize. Vocal Remover now included plus GVerb on 
-      Windows and Mac. VAMP analysis plug-ins now supported.  
-   * Improved label tracks with Sync-Lock Tracks feature in the Tracks Menu.
-      Multiple clips per track. Tracks and selections can be fully 
-      manipulated using the keyboard. Many more keyboard shortcuts. 
-   * New Device Toolbar to manage inputs and outputs. Timer Record feature.
-      New Mixer Board view with per-track VU meters. 
-   * Automatic Crash Recovery in the event of abnormal program termination.  
-   * Fast "On-Demand" import of WAV/AIFF files if read directly from source. 
-      FLAC now fully supported. Added support for optional FFmpeg library 
-      for import/export of AC3/M4A/WMA and import of audio from video files. 
+ * (Mac) Audacity now has excellent compatibility with the VoiceOver
+     screen reader. For details, please see:
+     http://manual.audacityteam.org/help/manual/man/accessibility.html#mac .  
 
-   Please visit http://audacity.sourceforge.net/about/features for a full
-   list of features in 2.0.0. You can click Help > Manual (in web browser) 
-   in the program to read more. 
+ * CleanSpeech Mode (no longer supported) will not now be enabled 
+    even if it was enabled by an earlier version of Audacity.  
 
+ * Added Serbian (Latin and Cyrillic) translations.   
+    
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.0 Beta:
+3. Known Issues in 2.0.1:
 
-For known issues at release of 2.0.0, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.0#known
+For known issues at release of 2.0.1, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.1#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -298,7 +275,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.0 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.1 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/
@@ -331,13 +308,92 @@ For more information on compilation, please visit:
 
   http://audacityteam.org/wiki/index.php?title=Developer_Guide#Platform_Specific_Guides
 
-or e-mail us at:
+or ask at:
+   http://forum.audacityteam.org/viewforum.php?f=19 .
 
-  audacity-devel@lists.sourceforge.net
 
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes between version 1.3.14 Beta and 2.0.0:
+
+Bug fixes for:
+
+ * Interface:
+   * Fixed playback speed and synchronization problems when dragging  
+      clips or tracks between tracks having different sample rates.
+   * (Windows) Removed a crash risk where shortcuts could be
+      used to record or import in one project while importing or 
+      exporting in another.    
+
+ * Imports and Exports:
+   * Fixed crashes when changing the sample format of read-directly WAV
+      or AIFF files using the Track Drop-Down Menu. 
+   * Fixed a crash importing MP3 files that had duplicate metadata tags 
+      (this is a bug in current libsndfile which has been patched in 
+       Audacity; MP3 files mislabeled as WAV which have duplicate tags
+       will still crash Audacity on Linux if Audacity has been compiled 
+       against an affected version of system libsndfile).
+   * Fixed an issue where excessively high or corrupted sample values in
+      the audio could corrupt exports from the start of the problem for
+      the rest of the file, and could corrupt the rest of the project.  
+   * (Linux) Fixed Audacity could not be compiled against FFmpeg
+      0.7.x and 0.8.x. 
+
+ * Effects and Analysis:
+   * Fixed crash on launch when using "Ambisonic Decoders (PC)" VST  
+      plug-ins and other plug-ins that enable additional floating point
+      exceptions. 
+   * Fixed Plot Spectrum background could be transparent on some machines. 
+   * Bug fixes for Click Track, High Pass, Low Pass and Vocal Remover.  
+   * Chirp, Tone and Silence generators now remember their settings.
+ 
+ * Other miscellaneous bug fixes.  
+
+
+Changes and Improvements:
+
+ * New Interface preference to show the track name in the display (this
+    is off by default). 
+ * Longer default Playback preference for effects preview and preview 
+    before cut. 
+ * Restored use of Page Up and Page Down to scroll horizontally.  
+
+
+Summary of bug fixes and new features between 1.2.6 and 2.0.0:
+
+ * Bug Fixes:
+
+   * Labels now accept lower case "z".
+   * (Windows Vista/7) Pressing Stop after recording could cause a crash.
+   * (Mac OS X) Fixed shortcut keys activating when typing in file open or
+      save windows.
+   * (Mac OS X) Audacity 2.0.0 fully supports Unicode, which fixes an
+      issue where Audacity could not work with folders having non-English
+      characters in their name. 
+   * (Linux) Playing existing tracks while recording in mono could cause
+      recordings to be distorted or low-pitched. 
+
+ * New features: There are dozens of new features in 2.0.0, including: 
+
+   * Many effects significantly improved, especially Equalization, Noise
+      Removal and Normalize. Vocal Remover now included plus GVerb on 
+      Windows and Mac. VAMP analysis plug-ins now supported.  
+   * Improved label tracks with Sync-Lock Tracks feature in the Tracks Menu.
+      Multiple clips per track. Tracks and selections can be fully 
+      manipulated using the keyboard. Many more keyboard shortcuts. 
+   * New Device Toolbar to manage inputs and outputs. Timer Record feature.
+      New Mixer Board view with per-track VU meters. 
+   * Automatic Crash Recovery in the event of abnormal program termination.  
+   * Fast "On-Demand" import of WAV/AIFF files if read directly from source. 
+      FLAC now fully supported. Added support for optional FFmpeg library 
+      for import/export of AC3/M4A/WMA and import of audio from video files. 
+
+   Please visit http://audacity.sourceforge.net/about/features for a full
+   list of features in 2.0.0. You can click Help > Manual (in web browser) 
+   in the program to read more. 
+
 
 Changes in version 1.3.14 Beta: 
 
