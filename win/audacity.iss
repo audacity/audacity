@@ -41,8 +41,12 @@ UninstallDisplayIcon="{app}\audacity.exe"
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=audacity_InnoWizard_InfoBefore.rtf
 InfoAfterFile=..\README.txt
-; min versions: Win 95, Win 2000 - allow to run on non-Unicode Windows versions in case we ever support this.
-MinVersion=4.0,5.0
+
+; We no longer produce new ANSI builds. 
+; As we use Inno Setup (u), the Unicode version, to build this script, 
+; the MinVersion will automatically be set to what we need. 
+; We no longer explicitly set it.
+;   MinVersion=4.0,5.0
 
 ; costmetic-related directives
 SetupIconFile=audacity.ico
