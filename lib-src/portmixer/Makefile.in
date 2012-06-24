@@ -9,8 +9,11 @@ AR       = @AR@
 RANLIB   = @RANLIB@
 
 DEFS    += @DEFS@
+CFLAGS  += @CFLAGS@
 CFLAGS  += @cflags@
 CFLAGS  += @include@
+
+CPPFLAGS = @CPPFLAGS@
 
 all : $(LIBRARY)
 
@@ -22,7 +25,7 @@ $(LIBRARY): $(OBJECTS)
 	$(RANLIB) $(LIBRARY)
 
 %.o : src/%.c
-	$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEFS) -c $(<) -o $@
 
 clean : 
 	-rm -f $(LIBRARY)
