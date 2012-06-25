@@ -69,10 +69,12 @@ Bug fixes for:
    * Mixer Board: Rendering four tracks resulted in a redundant Track
       Strip followed by a crash. 
 
- * Imports and Exports:
+ * Imports, Exports and Files:
    * Exporting to WAV or AIFF led to a "Libsndfile says" error or
       corrupted output due to order of metadata in imported files. 
    * (Mac) Fixed crashes importing MP3 files on PPC machines.    
+   * (Linux Ubuntu) .Aup files could not be associated with Audacity
+      (they opened in the web browser instead).
 
  * Effects and Analysis:
    * Normalize: Fixed issues where normalization could be to wrong
@@ -98,8 +100,11 @@ Changes and Improvements:
  * New "Sample Data Export" Analyze effect for exporting a file 
     containing amplitude values for each sample in the selection. 
 
- * New Preference to import files On-Demand (without seeking ability) 
-    when using the optional FFmpeg library. 
+ * New Preference (off by default) to import files On-Demand (without 
+    seek ability) when using the optional FFmpeg library. 
+
+ * New Preference (off by default) to retain labels when deleting a
+    selection that snaps to the label without extending past it.
 
  * (Windows installer) New option to reset Preferences on next launch. 
 
