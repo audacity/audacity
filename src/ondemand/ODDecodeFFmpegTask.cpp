@@ -349,7 +349,7 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
             }
          }
          if(mCurrentPos>start){
-            mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
+            mSeekingAllowedStatus = (bool)ODFFMPEG_SEEKING_TEST_FAILED;
             //               url_fseek(mFormatContext->pb,sc->m_pkt.pos,SEEK_SET);                              
             printf("seek fail, reverting to previous pos\n");
             return -1;

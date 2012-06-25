@@ -1,0 +1,41 @@
+dnl Todo: Add Audacity / LAME license
+dnl
+dnl Please increment the serial number below whenever you alter this macro
+dnl for the benefit of automatic macro update systems
+# audacity_checklib_lame.m4 serial 1
+
+dnl Check for a copy of lame, whoose headers we will use for the importer
+AC_DEFUN([AUDACITY_CHECKLIB_LAME], [
+   AC_ARG_WITH(lame,
+               [AS_HELP_STRING([--with-lame],
+                               [use lame for import and export support])],
+               LAME_ARGUMENT=$withval,
+               LAME_ARGUMENT="unspecified")
+
+   dnl See if LAME is installed in the system
+
+   AC_CHECK_LIB(mp3lame,
+                lame_set_VBR_q,
+                lib_found="yes",
+                lib_found="no")
+
+   AC_CHECK_HEADER(lame/lame.h,
+                   header_found="yes",
+                   header_found="no")
+
+   if test "x$lib_found" = "xyes" && test "x$header_found" = "xyes" ; then
+      LAME_SYSTEM_AVAILABLE="yes"
+      AC_MSG_NOTICE([LAME library is available as system library.])
+      if test "x$dynamic_loading" = "xno"; then
+         LAME_SYSTEM_LIBS="-lmp3lame"
+         LAME_SYSTEM_CPPSYMBOLS="DISABLE_DYNAMIC_LOADING_LAME"
+      fi
+   else
+      LAME_SYSTEM_AVAILABLE="no"
+      AC_MSG_NOTICE([LAME library is NOT available as system library.])
+   fi
+
+   dnl see if LAME is available in the source dir
+
+   LAME_LOCAL_AVAILABLE="yes"
+])

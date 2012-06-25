@@ -89,13 +89,17 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(_("MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_MP3_FIND_BUTTON).AddButton(_("&Locate..."),
+         wxButton *locate_button = S.Id(ID_MP3_FIND_BUTTON).AddButton(_("&Locate..."),
                                             wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          S.AddVariableText(_("LAME MP3 Library:"),
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_MP3_DOWN_BUTTON).AddButton(_("&Download"),
+         wxButton *download_button = S.Id(ID_MP3_DOWN_BUTTON).AddButton(_("&Download"),
                                             wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+#ifdef DISABLE_DYNAMIC_LOADING_LAME
+         locate_button->Enable(FALSE);
+         download_button->Enable(FALSE);
+#endif // DISABLE_DYNAMIC_LOADING_LAME
       }
       S.EndTwoColumn();
    }

@@ -131,7 +131,9 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
          w = new ImportExportPrefs(mCategories);mCategories->AddPage(w, w->GetName(), false, 0);
          w = new ExtImportPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
          w = new ProjectsPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
          w = new LibraryPrefs(mCategories);     mCategories->AddPage(w, w->GetName(), false, 0);
+#endif
          w = new SpectrumPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
          w = new DirectoriesPrefs(mCategories); mCategories->AddPage(w, w->GetName(), false, 0);
          w = new WarningsPrefs(mCategories);    mCategories->AddPage(w, w->GetName(), false, 0);
