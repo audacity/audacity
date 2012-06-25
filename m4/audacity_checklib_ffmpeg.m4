@@ -72,5 +72,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_FFMPEG], [
    if test "x$FFMPEG_LOCAL_AVAILABLE" = "xno" ; then
       AC_MSG_NOTICE([ffmpeg library is NOT available in the local tree])
    fi
+   
+   FFMPEG_MIMETYPES="audio/aac;audio/mp4;audio/x-ms-wma;"
 ])
 
