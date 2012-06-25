@@ -14,7 +14,7 @@ Icon=@AUDACITY_NAME@
 Type=Application
 Categories=AudioVideo;Audio;AudioVideoEditing;
 
-Exec=@AUDACITY_NAME@
+Exec=@AUDACITY_NAME@ %F
 StartupNotify=false
 Terminal=false
 MimeType=application/ogg;audio/basic;audio/mpeg;audio/x-aiff;audio/x-mp3;audio/x-wav;application/x-audacity-project;
