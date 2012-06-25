@@ -1238,36 +1238,64 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
 LabelStruct::TimeRelations LabelStruct::RegionRelation(
       double reg_t0, double reg_t1, LabelTrack *parent)
 {
-    wxASSERT(reg_t0 <= reg_t1);
+   bool retainLabels = false;
 
-    // AWD: Desired behavior for edge cases: point labels bordered by the
-    // selection are included within it. Region labels are included in the
-    // selection to the extent that the selection covers them; specifically,
-    // they're not included at all if the selection borders them, and they're
-    // fully included if the selection covers them fully, even if it just
-    // borders their endpoints. This is just one of many possible schemes.
+   wxASSERT(reg_t0 <= reg_t1);
+   gPrefs->Read(wxT("/GUI/RetainLabels"), &retainLabels);
 
-    // The first test catches bordered point-labels and selected-through
-    // region-labels; move it to third and selection edges become inclusive WRT
-    // point-labels.
-    if (reg_t0 <= t && reg_t1 >= t1)
-        return SURROUNDS_LABEL;
-    else if (reg_t1 <= t)
-        return BEFORE_LABEL;
-    else if (reg_t0 >= t1)
-        return AFTER_LABEL;
+   if(retainLabels) {
 
-    // At this point, all point labels should have returned.
+      // Desired behavior for edge cases: The length of the selection is smaller
+      // than the length of the label if the selection is within the label.
+      // Selections matching exactly a (region) label surround the label.
 
-    else if (reg_t0 > t && reg_t0 < t1 && reg_t1 > t && reg_t1 < t1)
-        return WITHIN_LABEL;
-    
-    // Knowing that none of the other relations match simplifies remaining
-    // tests
-    else if (reg_t0 > t && reg_t0 < t1)
-        return BEGINS_IN_LABEL;
-    else
-        return ENDS_IN_LABEL;
+      if ((reg_t0 < t && reg_t1 > t1) || (reg_t0 == t && reg_t1 == t1))
+         return SURROUNDS_LABEL;
+      else if (reg_t1 < t)
+         return BEFORE_LABEL;
+      else if (reg_t0 > t1)
+         return AFTER_LABEL;
+
+      else if (reg_t0 >= t && reg_t0 <= t1 && reg_t1 >= t && reg_t1 <= t1)
+         return WITHIN_LABEL;
+
+      else if (reg_t0 >= t && reg_t0 <= t1)
+         return BEGINS_IN_LABEL;
+      else
+         return ENDS_IN_LABEL;
+
+   } else {
+
+      // AWD: Desired behavior for edge cases: point labels bordered by the
+      // selection are included within it. Region labels are included in the
+      // selection to the extent that the selection covers them; specifically,
+      // they're not included at all if the selection borders them, and they're
+      // fully included if the selection covers them fully, even if it just
+      // borders their endpoints. This is just one of many possible schemes.
+
+      // The first test catches bordered point-labels and selected-through
+      // region-labels; move it to third and selection edges become inclusive
+      // WRT point-labels.
+      if (reg_t0 <= t && reg_t1 >= t1)
+         return SURROUNDS_LABEL;
+      else if (reg_t1 <= t)
+         return BEFORE_LABEL;
+      else if (reg_t0 >= t1)
+         return AFTER_LABEL;
+
+      // At this point, all point labels should have returned.
+
+      else if (reg_t0 > t && reg_t0 < t1 && reg_t1 > t && reg_t1 < t1)
+         return WITHIN_LABEL;
+
+      // Knowing that none of the other relations match simplifies remaining
+      // tests
+      else if (reg_t0 > t && reg_t0 < t1)
+         return BEGINS_IN_LABEL;
+      else
+         return ENDS_IN_LABEL;
+
+   }
 }
 
 /// If the index is for a real label, adjust its left or right boundary.
