@@ -563,10 +563,10 @@ ul {
 <tr>
 <th>Sample #</th>
 <th>Seconds </th>
-<th>Left (dB)</th>
-<th>Right (dB)</th>
 <th>Left (linear)</th>
 <th>Right (linear)</th>
+<th>Left (dB)</th>
+<th>Right (dB)</th>
 </tr>")
 
 
