@@ -103,7 +103,7 @@
 #endif
 
 // experimental features
-#define EXPERIMENTAL_FEATURES
+#define EXPERIMENTAL_FEATURES // ANSWER ME: EXPERIMENTAL within EXPERIMENTAL?
 #ifdef EXPERIMENTAL_FEATURES
    // The first experimental feature is a notebook that adds
    // a tabbed divider to the project.
