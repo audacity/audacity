@@ -77,9 +77,6 @@ void LoadModule(wxString fname)
    wxLogNull logNo; // Don't show wxWidgets Error if cannot load within this method. (Fix bug 544.)
 
    tModuleInit mainFn = NULL;
-#if defined(__WXMAC__)
-   wxLogNull logNo;
-#endif
 
    // As a courtesy to some modules that might be bridges to
    // open other modules, we set the current working
