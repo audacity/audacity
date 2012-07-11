@@ -1752,15 +1752,15 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
 
          if (rt0 < clip->GetStartTime())
          {
-            int dx = (int) floor((clip->GetStartTime() - rt0) / tstep + 0.5);
-            rbuf += dx;
-            rlen -= dx;
+            sampleCount start = clip->GetStartSample();
+            rbuf += start;
+            rlen -= start;
             rt0 = clip->GetStartTime();
          }
 
          if (rt0+rlen*tstep > clip->GetEndTime())
          {
-            rlen = (int) ((clip->GetEndTime()-rt0) / tstep);
+            rlen = clip->GetEndSample() - clip->GetStartSample();
          }
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
