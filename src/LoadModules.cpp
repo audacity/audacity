@@ -74,6 +74,8 @@ tpRegScriptServerFunc scriptFn;
 void LoadModule(wxString fname)
 {
    wxLogDebug(wxT("About to load module %s"), fname.c_str());
+   wxLogNull logNo; // Don't show wxWidgets Error if cannot load within this method. (Fix bug 544.)
+
    tModuleInit mainFn = NULL;
 #if defined(__WXMAC__)
    wxLogNull logNo;
