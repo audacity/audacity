@@ -1676,6 +1676,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\prefs\ModulePrefs.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\prefs\ModulePrefs.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\prefs\MousePrefs.cpp"
 				>
 			</File>

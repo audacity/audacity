@@ -51,6 +51,7 @@
 #include "KeyConfigPrefs.h"
 #include "LibraryPrefs.h"
 #include "MousePrefs.h"
+#include "ModulePrefs.h"
 #include "PlaybackPrefs.h"
 #include "ProjectsPrefs.h"
 #include "QualityPrefs.h"
@@ -146,6 +147,7 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
 //       w = new BatchPrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
          w = new KeyConfigPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
          w = new MousePrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
+         w = new ModulePrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
       }
       S.EndHorizontalLay();
    }
