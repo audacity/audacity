@@ -1178,6 +1178,7 @@
 		ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
 		ED64C82512456831007CF2FC /* ScoreAlignParams.h in Headers */ = {isa = PBXBuildFile; fileRef = ED64C82412456831007CF2FC /* ScoreAlignParams.h */; };
 		ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
+		ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */; };
 		EDAD326B1544452E009C6220 /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325515444371009C6220 /* sl.po */; };
 		EDAD326C1544452E009C6220 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
 		EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
@@ -2879,6 +2880,8 @@
 		ED64C82412456831007CF2FC /* ScoreAlignParams.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ScoreAlignParams.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExtImportPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
+		ED920CAD15B19F61008CA12C /* ModulePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModulePrefs.h; sourceTree = "<group>"; };
+		ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModulePrefs.cpp; sourceTree = "<group>"; };
 		EDAD325515444371009C6220 /* sl.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sl.po; path = ../locale/sl.po; sourceTree = SOURCE_ROOT; };
 		EDAD325615444371009C6220 /* sr_RS.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sr_RS.po; path = ../locale/sr_RS.po; sourceTree = SOURCE_ROOT; };
 		EDAD325715444372009C6220 /* sv.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
@@ -4071,6 +4074,8 @@
 				284B27930FC66863005EAC96 /* LibraryPrefs.h */,
 				2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */,
 				2800FE360FF32566005CA9E5 /* MidiIOPrefs.h */,
+				ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */,
+				ED920CAD15B19F61008CA12C /* ModulePrefs.h */,
 				1790B0C309883BFD008A330A /* MousePrefs.cpp */,
 				1790B0C409883BFD008A330A /* MousePrefs.h */,
 				1790B0C509883BFD008A330A /* PrefsDialog.cpp */,
@@ -7135,6 +7140,7 @@
 				82FF185213CF01A600C1B664 /* dBTable.cpp in Sources */,
 				82FF185313CF01A600C1B664 /* slide.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
+				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
