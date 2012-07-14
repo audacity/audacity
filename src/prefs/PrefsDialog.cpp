@@ -195,7 +195,8 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
    // The magic number 7 was determined by Ed's experimentation. 
    // Frankly, this is a hack to work around a bug in wxTreebook, and 
    // will have to be revisited if we add another category to mCategories.
-   SetSizeHints(sz.x, sz.y + 7, 800, 600);
+   // JKC later added a category and 20 onto the 7.
+   SetSizeHints(sz.x, sz.y + 7 + 20, 800, 600);
 
    // Center after all that resizing, but make sure it doesn't end up
    // off-screen

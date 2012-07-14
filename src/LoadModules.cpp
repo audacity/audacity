@@ -71,8 +71,30 @@ wxWindow * MakeHijackPanel()
 // starts a thread and reads script commands.
 tpRegScriptServerFunc scriptFn;
 
+bool IsAllowedModule( wxString fname )
+{
+   bool bLoad = false;
+   wxString ShortName = wxFileName( fname ).GetName();
+   if( (ShortName.CmpNoCase( wxT("mod-script-pipe")) == 0 ))
+   {
+      gPrefs->Read(wxT("/Module/mod-script-pipe"), &bLoad, false);
+   }
+   else if( (ShortName.CmpNoCase( wxT("mod-nyq-bench")) == 0 ))
+   {
+      gPrefs->Read(wxT("/Module/mod-nyq-bench"), &bLoad, false);
+   }
+   else if( (ShortName.CmpNoCase( wxT("mod-track-panel")) == 0 ))
+   {
+      gPrefs->Read(wxT("/Module/mod-track-panel"), &bLoad, false);
+   }
+   return bLoad;
+}
+
 void LoadModule(wxString fname)
 {
+   if( !IsAllowedModule( fname ) )
+      return;
+
    wxLogDebug(wxT("About to load module %s"), fname.c_str());
    wxLogNull logNo; // Don't show wxWidgets Error if cannot load within this method. (Fix bug 544.)
 
