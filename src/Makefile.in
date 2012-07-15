@@ -213,6 +213,7 @@ OBJS = \
    prefs/KeyConfigPrefs.o \
    prefs/LibraryPrefs.o \
    prefs/MidiIOPrefs.o \
+   prefs/ModulePrefs.o \
    prefs/MousePrefs.o \
    prefs/PlaybackPrefs.o \
    prefs/PrefsDialog.o \
