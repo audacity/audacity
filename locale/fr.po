@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-05-31 02:04+0100\n"
-"PO-Revision-Date: 2012-06-10 21:57-0000\n"
-"Last-Translator: Christian Brochec <christian@audacityteam.org>\n"
+"POT-Creation-Date: 2012-06-15 21:40+0100\n"
+"PO-Revision-Date: 2012-07-15 10:14-0000\n"
+"Last-Translator: Christian Brochec\n"
 "Language-Team: Christian Brochec <christian@audacityteam.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-Country: FRANCE\n"
 
 #: AboutDialog.cpp:60
-#: AboutDialog.cpp:81
+#: AboutDialog.cpp:80
 msgid "co-founder"
 msgstr "co-fondateur"
 
@@ -1294,37 +1294,37 @@ msgstr "Echec du lancement de FFmpeg"
 msgid "FFmpeg library not found"
 msgstr "La bibliothèque FFmpeg est absente"
 
-#: FFmpeg.cpp:440
+#: FFmpeg.cpp:570
 msgid "Locate FFmpeg"
 msgstr "Localiser FFmpeg"
 
-#: FFmpeg.cpp:460
+#: FFmpeg.cpp:590
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "Audacity requiert le fichier  '%s' pour importer et exporter de l'audio par FFmpeg."
 
-#: FFmpeg.cpp:466
+#: FFmpeg.cpp:596
 #, c-format
 msgid "Location of '%s':"
 msgstr "Localisation de '%s':"
 
-#: FFmpeg.cpp:475
+#: FFmpeg.cpp:605
 #, c-format
 msgid "To find '%s', click here -->"
 msgstr "Pour trouver '%s', cliquer ici -->"
 
-#: FFmpeg.cpp:481
+#: FFmpeg.cpp:611
 #: export/ExportCL.cpp:106
 #: export/ExportMP3.cpp:610
 msgid "Browse..."
 msgstr "Parcourir..."
 
-#: FFmpeg.cpp:482
+#: FFmpeg.cpp:612
 msgid "To get a free copy of FFmpeg, click here -->"
 msgstr "Pour obtenir une copie gratuite de FFmpeg, cliquer ici -->"
 
 #. i18n-hint: (verb)
-#: FFmpeg.cpp:483
+#: FFmpeg.cpp:613
 #: export/ExportMP3.cpp:614
 msgid "Download"
 msgstr "Téléchargement"
@@ -1332,20 +1332,20 @@ msgstr "Téléchargement"
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
-#: FFmpeg.cpp:505
+#: FFmpeg.cpp:635
 #, c-format
 msgid "Where is '%s'?"
 msgstr "Où se trouve '%s' ?"
 
-#: FFmpeg.cpp:689
+#: FFmpeg.cpp:819
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Impossible de trouver des bibliothèques FFmpeg compatibles"
 
-#: FFmpeg.h:114
+#: FFmpeg.h:117
 msgid "FFmpeg not found"
 msgstr "FFmpeg absent"
 
-#: FFmpeg.h:128
+#: FFmpeg.h:131
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -1358,20 +1358,20 @@ msgstr ""
 "Si vous voulez utiliser les fonction d'import FFmpeg, allez dans Préférences->Bibliothèques\n"
 "pour télécharger les bibliothèques FFmpeg ou indiquer leur emplacement ."
 
-#: FFmpeg.h:136
+#: FFmpeg.h:139
 msgid "Do not show this warning again"
 msgstr "Ne plus montrer cet avertissement."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: FFmpeg.h:211
+#: FFmpeg.h:214
 msgid "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files (*.*)|*"
 msgstr "Seulement avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files (*.*)|*"
 
-#: FFmpeg.h:244
+#: FFmpeg.h:247
 msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 msgstr "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 
-#: FFmpeg.h:271
+#: FFmpeg.h:274
 msgid "Only libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr "Seulement libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
 
@@ -1486,7 +1486,7 @@ msgstr "Grilles"
 #: effects/Equalization.cpp:1218
 #: effects/Equalization.cpp:1449
 #: effects/Equalization.cpp:1460
-#: effects/Normalize.cpp:490
+#: effects/Normalize.cpp:492
 #: widgets/Meter.cpp:440
 msgid "dB"
 msgstr "dB"
@@ -4089,7 +4089,7 @@ msgid "Transport"
 msgstr "Transport"
 
 #: Screenshot.cpp:384
-#: effects/LoadEffects.cpp:116
+#: effects/LoadEffects.cpp:117
 #: toolbars/MixerToolBar.cpp:59
 #: toolbars/MixerToolBar.cpp:199
 msgid "Mixer"
@@ -5151,7 +5151,7 @@ msgstr "Amplification"
 
 #: effects/Amplify.cpp:152
 #: effects/Compressor.cpp:610
-#: effects/Normalize.cpp:465
+#: effects/Normalize.cpp:467
 msgid "by Dominic Mazzoni"
 msgstr "par Dominic Mazzoni"
 
@@ -5297,6 +5297,7 @@ msgstr "Amplification des basses"
 
 #. i18n-hint: Nasca Octavian Paul is a person's name.
 #: effects/BassBoost.cpp:183
+#: effects/Paulstretch.cpp:420
 #: effects/Phaser.cpp:221
 #: effects/Wahwah.cpp:216
 msgid "by Nasca Octavian Paul"
@@ -6478,154 +6479,154 @@ msgstr "Niveleur..."
 msgid "Applying Leveller..."
 msgstr "Application du niveleur..."
 
-#: effects/LoadEffects.cpp:103
+#: effects/LoadEffects.cpp:104
 msgid "Generator"
 msgstr "Générateur"
 
 #. i18n-hint: (noun).
-#: effects/LoadEffects.cpp:106
+#: effects/LoadEffects.cpp:107
 msgid "Instrument"
 msgstr "Instrument"
 
-#: effects/LoadEffects.cpp:108
+#: effects/LoadEffects.cpp:109
 msgid "Oscillator"
 msgstr "Oscillateur"
 
-#: effects/LoadEffects.cpp:110
+#: effects/LoadEffects.cpp:111
 msgid "Utility"
 msgstr "Utilitaires"
 
-#: effects/LoadEffects.cpp:112
+#: effects/LoadEffects.cpp:113
 msgid "Converter"
 msgstr "Convertisseur"
 
-#: effects/LoadEffects.cpp:114
+#: effects/LoadEffects.cpp:115
 msgid "Analyser"
 msgstr "Analyseur"
 
-#: effects/LoadEffects.cpp:118
+#: effects/LoadEffects.cpp:119
 msgid "Simulator"
 msgstr "Simulateur"
 
-#: effects/LoadEffects.cpp:120
+#: effects/LoadEffects.cpp:121
 msgid "Delay"
 msgstr "Délai "
 
-#: effects/LoadEffects.cpp:122
+#: effects/LoadEffects.cpp:123
 msgid "Modulator"
 msgstr "Modulateur"
 
-#: effects/LoadEffects.cpp:124
+#: effects/LoadEffects.cpp:125
 msgid "Reverb"
 msgstr "Réverbération"
 
-#: effects/LoadEffects.cpp:126
+#: effects/LoadEffects.cpp:127
 #: effects/Phaser.cpp:209
 msgid "Phaser"
 msgstr "Phaser"
 
-#: effects/LoadEffects.cpp:128
+#: effects/LoadEffects.cpp:129
 msgid "Flanger"
 msgstr "Flanger"
 
-#: effects/LoadEffects.cpp:130
+#: effects/LoadEffects.cpp:131
 msgid "Chorus"
 msgstr "Chorus"
 
-#: effects/LoadEffects.cpp:132
+#: effects/LoadEffects.cpp:133
 msgid "Filter"
 msgstr "Filtre"
 
-#: effects/LoadEffects.cpp:134
+#: effects/LoadEffects.cpp:135
 msgid "Lowpass"
 msgstr "Passe-bas"
 
-#: effects/LoadEffects.cpp:136
+#: effects/LoadEffects.cpp:137
 msgid "Bandpass"
 msgstr "Passe-bande"
 
-#: effects/LoadEffects.cpp:138
+#: effects/LoadEffects.cpp:139
 msgid "Highpass"
 msgstr "Passe-haut"
 
-#: effects/LoadEffects.cpp:140
+#: effects/LoadEffects.cpp:141
 msgid "Comb"
 msgstr "Peigne"
 
-#: effects/LoadEffects.cpp:142
+#: effects/LoadEffects.cpp:143
 msgid "Allpass"
 msgstr "Passe-tout"
 
-#: effects/LoadEffects.cpp:144
+#: effects/LoadEffects.cpp:145
 msgid "Equaliser"
 msgstr "Egaliseur"
 
-#: effects/LoadEffects.cpp:146
+#: effects/LoadEffects.cpp:147
 msgid "Parametric"
 msgstr "Paramétrique"
 
-#: effects/LoadEffects.cpp:148
+#: effects/LoadEffects.cpp:149
 msgid "Multiband"
 msgstr "Multibande"
 
-#: effects/LoadEffects.cpp:150
+#: effects/LoadEffects.cpp:151
 msgid "Spectral Processor"
 msgstr "Processeur spectral"
 
-#: effects/LoadEffects.cpp:152
+#: effects/LoadEffects.cpp:153
 msgid "Pitch Shifter"
 msgstr "Ajusteur de hauteur"
 
-#: effects/LoadEffects.cpp:154
+#: effects/LoadEffects.cpp:155
 msgid "Amplifier"
 msgstr "Amplification"
 
-#: effects/LoadEffects.cpp:156
+#: effects/LoadEffects.cpp:157
 msgid "Distortion"
 msgstr "Distortion"
 
-#: effects/LoadEffects.cpp:158
+#: effects/LoadEffects.cpp:159
 msgid "Waveshaper"
 msgstr "Onduleur"
 
-#: effects/LoadEffects.cpp:160
+#: effects/LoadEffects.cpp:161
 msgid "Dynamics Processor"
 msgstr "Processeur dynamique"
 
-#: effects/LoadEffects.cpp:162
+#: effects/LoadEffects.cpp:163
 msgid "Compressor"
 msgstr "Compresseur"
 
-#: effects/LoadEffects.cpp:164
+#: effects/LoadEffects.cpp:165
 msgid "Expander"
 msgstr "Expanseur"
 
-#: effects/LoadEffects.cpp:166
+#: effects/LoadEffects.cpp:167
 msgid "Limiter"
 msgstr "Limiteur"
 
-#: effects/LoadEffects.cpp:168
+#: effects/LoadEffects.cpp:169
 msgid "Gate"
 msgstr "Seuil"
 
-#: effects/LoadEffects.cpp:201
+#: effects/LoadEffects.cpp:202
 #: effects/NoiseRemoval.cpp:819
 msgid "Noise Removal"
 msgstr "Réduction du bruit"
 
-#: effects/LoadEffects.cpp:203
+#: effects/LoadEffects.cpp:204
 msgid "Pitch and Tempo"
 msgstr "Hauteur et tempo"
 
-#: effects/LoadEffects.cpp:205
+#: effects/LoadEffects.cpp:206
 msgid "Timeline Changer"
 msgstr "Changeur de piste temporelle"
 
-#: effects/LoadEffects.cpp:207
+#: effects/LoadEffects.cpp:208
 msgid "Time"
 msgstr "Temps"
 
-#: effects/LoadEffects.cpp:209
+#: effects/LoadEffects.cpp:210
 msgid "Onsets"
 msgstr "Débuts"
 
@@ -6817,39 +6818,39 @@ msgstr "Traitement :"
 msgid "Processing stereo channels independently: "
 msgstr "Traiter indépendamment les canaux stéréo  :"
 
-#: effects/Normalize.cpp:220
+#: effects/Normalize.cpp:221
 msgid "Analyzing second track of stereo pair: "
 msgstr "Analyse de la seconde piste d'une paire stéréo :"
 
-#: effects/Normalize.cpp:234
+#: effects/Normalize.cpp:236
 msgid "Processing first track of stereo pair: "
 msgstr "Traitement de la première piste d'une paire stéréo :"
 
-#: effects/Normalize.cpp:243
+#: effects/Normalize.cpp:245
 msgid "Processing second track of stereo pair: "
 msgstr "Traitement de la seconde piste d'une paire stéréo :"
 
-#: effects/Normalize.cpp:448
+#: effects/Normalize.cpp:450
 msgid "Normalize"
 msgstr "Normaliser"
 
-#: effects/Normalize.cpp:479
+#: effects/Normalize.cpp:481
 msgid "Remove any DC offset (center on 0.0 vertically)"
 msgstr "Supprimer tout décalage CC (centrer verticalement à 0.0)"
 
-#: effects/Normalize.cpp:482
+#: effects/Normalize.cpp:484
 msgid "Normalize maximum amplitude to:"
 msgstr "Normaliser l'amplitude maximale à :"
 
-#: effects/Normalize.cpp:489
+#: effects/Normalize.cpp:491
 msgid "Maximum amplitude dB"
 msgstr "Amplitude maximale dB"
 
-#: effects/Normalize.cpp:496
+#: effects/Normalize.cpp:498
 msgid "Normalize stereo channels independently"
 msgstr "Normaliser des canaux stéréo indépendemment"
 
-#: effects/Normalize.cpp:564
+#: effects/Normalize.cpp:566
 msgid ".  Maximum 0dB."
 msgstr ".  Maximum 0dB."
 
@@ -6860,6 +6861,53 @@ msgstr "Normaliser..."
 #: effects/Normalize.h:49
 msgid "Normalizing..."
 msgstr "Normalisation"
+
+#: effects/Paulstretch.cpp:55
+#, c-format
+msgid "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
+msgstr "Effet appliqué : %s facteur d'étirement = %f fois, résolution = %f"
+
+#. i18n-hint: This is an effect error message, for the effect named Paulstretch.
+#. * Time Resolution is a parameter of the effect, the translation should match
+#.
+#: effects/Paulstretch.cpp:169
+msgid ""
+"Error in Paulstretch:\n"
+"The selection is too short.\n"
+" It must be much longer than the Time Resolution."
+msgstr ""
+"Erreur dans  Paulstretch:\n"
+"La sélection est trop courte.\n"
+" Elle doit être plus longue que la Résolution."
+
+#. i18n-hint: This is how many times longer the sound will be, e.g. applying
+#. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
+#. * will give an (approximately) 10 second sound
+#.
+#: effects/Paulstretch.cpp:433
+msgid "Stretch Factor:"
+msgstr "Facteur d'étirement :"
+
+#: effects/Paulstretch.cpp:436
+msgid "Time Resolution (seconds):"
+msgstr "Résolution (secondes) :"
+
+#. i18n-hint: This is the name of the effect, i.e. a proper noun, which
+#. * wouldn't normally get translated. It's the combination of the author's
+#. * name (Paul) with what it does (stretch sound)
+#.
+#: effects/Paulstretch.h:30
+msgid "Paulstretch..."
+msgstr "Paulstretch..."
+
+#. i18n-hint: This is the text that is shown whilst the effect is being
+#. * processed. The effect stretches the input in time, making the sound
+#. * much longer and spread out whilst at the same pitch. Paulstretch is the
+#. * name of the effect (it's also translated on it's own).
+#.
+#: effects/Paulstretch.h:39
+msgid "Stretching with Paulstretch"
+msgstr "Etirement avec Paulstretch"
 
 #: effects/Phaser.cpp:66
 #, c-format
@@ -9080,7 +9128,7 @@ msgstr ""
 msgid "FFmpeg-compatible files"
 msgstr "Fichiers compatibles - FFmpeg"
 
-#: import/ImportFFmpeg.cpp:471
+#: import/ImportFFmpeg.cpp:442
 #, c-format
 msgid "Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
 msgstr "Index[%02x] Codec[%S], Langage[%S], Débit[%S], Canaux[%d], Durée[%d]"
@@ -9861,7 +9909,11 @@ msgstr "Locali&ser..."
 msgid "Dow&nload"
 msgstr "Téléc&hargement"
 
-#: prefs/LibraryPrefs.cpp:186
+#: prefs/LibraryPrefs.cpp:139
+msgid "Allow &background on-demand loading"
+msgstr "Autoriser le chargement en arrière-plan à la demande"
+
+#: prefs/LibraryPrefs.cpp:191
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
