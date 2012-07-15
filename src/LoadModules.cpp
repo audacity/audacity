@@ -22,6 +22,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/list.h>
 #include <wx/log.h>
 #include <wx/string.h>
+#include <wx/filename.h>
 
 #include "Audacity.h"
 #include "AudacityApp.h"
@@ -30,6 +31,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "commands/ScriptCommandRelay.h"
 #include <NonGuiThread.h>  // header from libwidgetextra
 
+#include "Prefs.h"
 #include "LoadModules.h"
 
 #define initFnName      "ExtensionModuleInit"
