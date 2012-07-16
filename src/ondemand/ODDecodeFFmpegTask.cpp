@@ -646,7 +646,7 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
    {
       int dropindex;
       //drop which ever index is further from our newly added one.
-      dropindex = (guess > mDecodeCache.size()/2) ? 0 : (mDecodeCache.size()-1);
+      dropindex = (guess > (int)mDecodeCache.size()/2) ? 0 : (mDecodeCache.size()-1);
       mNumSamplesInCache-=mDecodeCache[dropindex]->len;
       free(mDecodeCache[dropindex]->samplePtr);
       delete mDecodeCache[dropindex];
