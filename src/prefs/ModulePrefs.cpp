@@ -54,7 +54,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Enable these Modules (if present)"));
    {
-      S.AddFixedText(_("These are experimental.  Only enable them if you've read the manual\nand know what you are doing") );
+      S.AddFixedText(_("These are experimental. Enable them only if you've read the manual\nand know what you are doing.") );
       S.TieCheckBox(_("mod-script-pipe"),
                     wxT("/Module/mod-script-pipe"),
                     false);
