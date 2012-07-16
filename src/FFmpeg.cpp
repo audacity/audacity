@@ -433,7 +433,7 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
    }
 
    // Find a stream to which this frame belongs to
-   for (int i = 0; i < numStreams; i++)
+   for (unsigned int i = 0; i < numStreams; i++)
    {
       if (streams[i]->m_stream->index == pkt.stream_index)
          sc = streams[i];

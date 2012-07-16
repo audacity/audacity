@@ -3579,18 +3579,13 @@ void AudacityProject::OnCut()
    while (n) {
       if (n->GetSelected()) {
          dest = NULL;
-         switch (n->GetKind())
-         {
 #if defined(USE_MIDI)
-            case Track::Note:
-               // Since portsmf has a built-in cut operator, we use that instead
-               n->Cut(mViewInfo.sel0, mViewInfo.sel1, &dest);
-            break;
+         if (n->GetKind() == Track::Note)
+            // Since portsmf has a built-in cut operator, we use that instead
+            n->Cut(mViewInfo.sel0, mViewInfo.sel1, &dest);
+         else
 #endif
-            default:
-               n->Copy(mViewInfo.sel0, mViewInfo.sel1, &dest);
-            break;
-         }
+            n->Copy(mViewInfo.sel0, mViewInfo.sel1, &dest);
 
          if (dest) {
             dest->SetChannel(n->GetChannel());
