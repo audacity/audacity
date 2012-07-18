@@ -128,7 +128,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Show track name in waveform display"),
                     wxT("/GUI/ShowTrackNameInWaveform"),
                     false);
-      S.TieCheckBox(_("&Retain labels when they define the edge of a selection"),
+      S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
                     wxT("/GUI/RetainLabels"),
                     false);
    }
