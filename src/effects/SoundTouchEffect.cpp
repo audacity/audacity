@@ -35,6 +35,7 @@ bool EffectSoundTouch::ProcessLabelTrack(Track *track)
    return true;
 }
 
+#ifdef USE_MIDI
 bool EffectSoundTouch::ProcessNoteTrack(Track *track)
 {
    NoteTrack *nt = (NoteTrack *) track;
@@ -42,6 +43,7 @@ bool EffectSoundTouch::ProcessNoteTrack(Track *track)
    nt->WarpAndTransposeNotes(mCurT0, mCurT1, *GetTimeWarper(), mSemitones);
    return true;
 }
+#endif
 
 bool EffectSoundTouch::Process()
 {

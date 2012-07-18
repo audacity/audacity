@@ -2950,7 +2950,11 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    {
       // Make sure we always have the first linked track of a stereo track
       if (!mouseTrack->GetLinked() && mTracks->GetLink(mouseTrack))
-         mouseTrack = mTracks->GetLink(mouseTrack);
+         mouseTrack = 
+#ifndef USE_MIDI
+                      (WaveTrack *)
+#endif
+                                    mTracks->GetLink(mouseTrack);
 
       // Temporary apply the offset because we want to see if the
       // track fits with the desired offset

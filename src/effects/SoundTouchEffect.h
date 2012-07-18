@@ -48,7 +48,9 @@ class EffectSoundTouch:public Effect {
 
  private:
    bool ProcessLabelTrack(Track *track);
+#ifdef USE_MIDI
    bool ProcessNoteTrack(Track *track);
+#endif
    bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
    bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack, 
                         sampleCount start, sampleCount end);
