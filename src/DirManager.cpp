@@ -1812,6 +1812,8 @@ void DirManager::RemoveOrphanBlockfiles()
 
 void DirManager::FillBlockfilesCache()
 {
+#ifdef DEPRECATED_AUDIO_CACHE 
+   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    bool cacheBlockFiles = false;
    gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
 
@@ -1856,6 +1858,7 @@ void DirManager::FillBlockfilesCache()
       iter++;
       current++;
    }
+#endif // DEPRECATED_AUDIO_CACHE
 }
 
 void DirManager::WriteCacheToDisk()

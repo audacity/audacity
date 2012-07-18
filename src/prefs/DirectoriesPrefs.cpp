@@ -101,9 +101,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
 #ifdef DEPRECATED_AUDIO_CACHE 
-   //vvvvv If confirmed deprecated by version 2.0.2 release, remove this code and the code it affects, 
-   //      i.e., anyplace that uses "/Directories/CacheBlockFiles" or "/Directories/CacheLowMem".
-   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545
+   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    S.StartStatic(_("Audio cache"));
    {
       S.TieCheckBox(_("Play and/or record using &RAM (useful for slow drives)"),

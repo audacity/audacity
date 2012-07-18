@@ -4575,7 +4575,10 @@ void AudacityProject::OnAudioIONewBlockFiles(const wxString& blockFileLog)
 bool AudacityProject::GetCacheBlockFiles()
 {  
    bool cacheBlockFiles = false;
+#ifdef DEPRECATED_AUDIO_CACHE 
+   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
+#endif
    return cacheBlockFiles;
 }
 

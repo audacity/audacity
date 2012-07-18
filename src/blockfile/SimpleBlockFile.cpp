@@ -596,6 +596,8 @@ bool SimpleBlockFile::GetNeedWriteCacheToDisk()
 
 bool SimpleBlockFile::GetCache()
 {  
+#ifdef DEPRECATED_AUDIO_CACHE 
+   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    bool cacheBlockFiles = false;
    gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
    if (!cacheBlockFiles) 
@@ -607,6 +609,9 @@ bool SimpleBlockFile::GetCache()
    }
    lowMem <<= 20;
    return (GetFreeMemory() > lowMem);
+#else
+   return false;
+#endif
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
