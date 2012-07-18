@@ -33,12 +33,12 @@
 
 (when (not (boundp 'LR-prefix))(setq LR-prefix nil))
 
-(setq default-filename "sample-data")   ; default filename
-(setq err "")                           ; initialise error mesaage
+(setq default-filename "sample-data")       ; default filename
+(setq err "")                               ; initialise error mesaage
 
-(setq *float-format* "%1.5f")           ; 5 decimal places
+(setq *float-format* "%1.5f")               ; 5 decimal places
 (when (equal (string-trim " .,\/" number) "")
-      (setq number "100"))              ; default=100
+      (setq number "100"))                  ; default=100
 
 
 (defun add-error (e-string)
@@ -59,10 +59,10 @@
              (sqr (mult (aref s 1)(aref s 1)))
              (avgsq (mult 0.5 (sum sql sqr)))
              (avgsq (snd-avg avgsq number number op-average)))
-        (linear-to-db (peak (snd-sqrt avgsq) 1)))
+        (lin-to-db (peak (snd-sqrt avgsq) 1)))
       (let* ((sndsq (mult snd snd))
              (avgsq (snd-avg sndsq number number op-average)))
-        (linear-to-db (peak (snd-sqrt avgsq) 1)))))
+        (lin-to-db (peak (snd-sqrt avgsq) 1)))))
       
 
 ;;; dc off-set mono
@@ -79,9 +79,9 @@
   (if (arrayp sig)
       (let ((lin0 (dc-off-mon (aref sig 0) number))
             (lin1 (dc-off-mon (aref sig 1) number)))
-        (list lin0 (linear-to-db (abs lin0)) lin1 (linear-to-db (abs lin1))))
+        (list lin0 (lin-to-db (abs lin0)) lin1 (lin-to-db (abs lin1))))
       (let ((lin (dc-off-mon sig number)))
-        (list lin (linear-to-db (abs lin))))))
+        (list lin (lin-to-db (abs lin))))))
 
 
 (defun checknumber ()
@@ -96,13 +96,21 @@
 ;;; home directory
 (defun home ()
   (if (windowsp)
-      (get-env "UserProfile")             ; Windows
-      (get-env "HOME")))                  ; Mac / Linux
+      (get-env "UserProfile")               ; Windows
+      (get-env "HOME")))                    ; Mac / Linux
       
 
 ;;; Check if Windows
 (defun windowsp ()
   (char= #\\ *file-separator*))
+
+
+;;; Windows safe linear-to-db
+(setf ln10over20 (/ (log 10.0) 20))
+(defun lin-to-db (val)
+  (if (= val 0)
+    "[-inf]"
+    (/ (log val) ln10over20)))
 
 
 ;;; Check if Mac
@@ -127,9 +135,9 @@
 
 ;;; get sample and convert to dB if required
 (defun snd-get (snd &optional (dB 0))
-  (if (= dB 0)                            ; dB scale
-      (linear-to-db (abs (snd-fetch snd)))
-      (snd-fetch snd)))                   ; linear scale
+  (if (= dB 0)                              ; dB scale
+      (lin-to-db (abs (snd-fetch snd)))
+      (snd-fetch snd)))                     ; linear scale
 
 
 ;; fileformat  0=Text List, 1=Indexed List, 2=Time Indexed, 3=CSV, 
@@ -137,18 +145,18 @@
 ;; Optional 'same' [line] argument is either 'true' or 'nil'
 (defun formatprint (val snd &optional same)
   (case fileformat
-    (0 (format fp "~a~a"                  ; text list
+    (0 (format fp "~a~a"                    ; text list
                   (snd-get snd units)
                   (if same "\t" "\n")))
-    (1 (format fp "~a\t~a~a"              ; indexed list
+    (1 (format fp "~a\t~a~a"                ; indexed list
                   val 
                   (snd-get snd units)
                   (if same "\t" "\n")))
-    (2 (format fp "~a\t~a~a"              ; time index
+    (2 (format fp "~a\t~a~a"                ; time index
                   (/ (1- val) *sound-srate*)
                   (snd-get snd units)
                   (if same "\t" "\n")))
-    (3 (format fp "~a~a"                   ; csv
+    (3 (format fp "~a~a"                    ; csv
                   (snd-get snd units)
                   (if (or (= chan 2) same) "," "\n")))))
   
@@ -157,13 +165,13 @@
 (defun print-text (s-in)
   (do ((n 1 (1+ n)))
       ((> n number))
-    (if (arrayp s-in)                     ; Stereo (alternate lines)
+    (if (arrayp s-in)                       ; Stereo (alternate lines)
         (progn
           ;; option to prefix alternate lines with L/R 
           (when LR-prefix
             (unless (or (= header 0)(= fileformat 3))
               (format fp "~a" (first LR-prefix))))
-          (if (= chan 0)                  ; IF 'Same Line' then "True"
+          (if (= chan 0)                    ; IF 'Same Line' then "True"
             (formatprint n (aref s-in 0) T)
             (formatprint n (aref s-in 0)))
           (when LR-prefix
@@ -235,12 +243,12 @@
   ;; if file name not set use default
   (if (string-equal filename "")
       (setq filename default-filename))
-  (setdir (strcat path fileseparator))        ; set target directory
+  (setdir (strcat path fileseparator))      ; set target directory
   ;; set file pointer or error
   (let ((realdir (string-right-trim fileseparator (setdir "."))))
     (if (or (string= path realdir)
-            (and  (or (windowsp)              ; case insensitive
-                      (macp))                 ; assume case insensitive
+            (and  (or (windowsp)            ; case insensitive
+                      (macp))               ; assume case insensitive
                   (string-equal path realdir)))
         ;; makefilename or error
         (setq filename (makefilename filename FileExt))
@@ -278,19 +286,31 @@
 
 
 (defun normhead ()
-  (format nil
+  (if (= fileformat 4)                      ; html
+    (format nil
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a" 
+      filename                              ; file name
+      (get 'info 'channels)                 ; mono/stereo
+      (get 'info 'chan-order)               ; Channel Order
+      (get 'info 'srate)                    ; sample rate
+      number                                ; number of samples
+      (get 'info 'duration)                 ; duration (seconds)
+      (if (> (length optext)0)
+          (format nil "~%~a~%~%~%" optext)  ; optional text
+          (format nil "~%~%~%")))           ; no optional text
+    (format nil
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
 Length processed: ~a samples ~a seconds.~a" 
-  filename                                  ; file name
-  (get 'info 'channels)                     ; mono/stereo
-  (get 'info 'chan-order)                   ; Channel Order
-  (get 'info 'srate)                        ; sample rate
-  (get 'info 'units)                        ; units
-  number                                    ; number of samples
-  (get 'info 'duration)                     ; duration (seconds)
-  (if (> (length optext)0)
-      (format nil "~%~a~%~%~%" optext)      ; optional text
-      (format nil "~%~%~%"))))              ; no optional text
+      filename                              ; file name
+      (get 'info 'channels)                 ; mono/stereo
+      (get 'info 'chan-order)               ; Channel Order
+      (get 'info 'srate)                    ; sample rate
+      (get 'info 'units)                    ; units
+      number                                ; number of samples
+      (get 'info 'duration)                 ; duration (seconds)
+      (if (> (length optext)0)
+          (format nil "~%~a~%~%~%" optext)  ; optional text
+          (format nil "~%~%~%")))))         ; no optional text
 
 
 (defun fullhead ()
@@ -306,7 +326,7 @@ DC offset: ~a~a"
   number                                    ; number of samples
   (get 'info 'duration)                     ; duration (seconds)
   (setq smax (stereomax s))                 ; peak amplitude linear
-  (linear-to-db smax)                       ; peak amplitude dB
+  (lin-to-db smax)                          ; peak amplitude dB
   (srms s)                                  ; rms
   (let ((vals (dc-off s)))                  ; DC offset
     (if (= (length vals) 2) ; mono
@@ -425,15 +445,15 @@ ul {
 </ul>
 "
   (string-right-trim ".html" filename)
-  (format nil "<h2>~a</h2>" optext)       ; Optional heading
-  (get 'info 'channels)                   ; mono/stereo
-  number                                  ; number of samples
-  (get 'info 'duration)                   ; duration (seconds)
-  (get 'info 'srate)                      ; sample rate
-  (setq smax (stereomax s))               ; peak amplitude linear
-  (linear-to-db smax)                     ; peak amplitude dB
-  (srms s)                                ; rms
-  (let ((vals (dc-off s)))                ; DC offset
+  (format nil "<h2>~a</h2>" optext)         ; Optional heading
+  (get 'info 'channels)                     ; mono/stereo
+  number                                    ; number of samples
+  (get 'info 'duration)                     ; duration (seconds)
+  (get 'info 'srate)                        ; sample rate
+  (setq smax (stereomax s))                 ; peak amplitude linear
+  (lin-to-db smax)                          ; peak amplitude dB
+  (srms s)                                  ; rms
+  (let ((vals (dc-off s)))                  ; DC offset
     (if (= (length vals) 2) ; mono
         (format nil "~a linear, &nbsp;&nbsp;~a dB." 
                 (first vals)(second vals))
@@ -480,15 +500,15 @@ Daulton (<a href=
   (if val2
       ;; stereo
       (let ((time (/ (1- id) *sound-srate*))
-            (db1 (linear-to-db (abs val1)))
-            (db2 (linear-to-db (abs val2))))
+            (db1 (lin-to-db (abs val1)))
+            (db2 (lin-to-db (abs val2))))
         (format fp 
           "<tr>~%<td>~a</td>~%<td>~a</td>~%<td>~a</td>~%<td>~a</td>~%~
           <td>~a</td>~%<td>~a</td>~%</tr>~%" 
           id time val1 val2 db1 db2))
       ;; mono
       (let ((time (/ (1- id) *sound-srate*))
-            (db (linear-to-db (abs val1))))
+            (db (lin-to-db (abs val1))))
         (format fp 
           "<tr>~%<td>~a</td>~%<td>~a</td>~%<td>~a</td>~%<td>~a</td>~%</tr>~%" 
           id time val1 db))))
@@ -534,11 +554,11 @@ Daulton (<a href=
   ;; stereo sample order
   (putprop 'info
     (cond
-      ((and (= fileformat 3)(= chan 0))   ; csv, channel in column
+      ((and (= fileformat 3)(= chan 0))     ; csv, channel in column
         "One column per channel.\n")
-      ((and (= fileformat 3)(= chan 2))   ; csv, channel in row
+      ((and (= fileformat 3)(= chan 2))     ; csv, channel in row
         "One row per channel.\n")
-      ((or (soundp s)(= fileformat 4))    ; mono soundor HTML
+      ((or (soundp s)(= fileformat 4))      ; mono soundor HTML
         "")
       ((= chan 0) "Left channel then Right channel on same line.\n")
       ((= chan 1) "Left and right channels on alternate lines.\n")
@@ -557,11 +577,11 @@ Daulton (<a href=
 (if (> (length err) 0)
   ;; output error message if enabled
   (if (= messages 2)
-    (s-rest 0)                            ; return nul sound
-    (format nil "Error.~%~a" err))        ; return errors
+    (s-rest 0)                              ; return nul sound
+    (format nil "Error.~%~a" err))          ; return errors
   ;; else print to file
   (progn
-    (put-head-info)                       ; put basic info for headers
+    (put-head-info)                         ; put basic info for headers
     (if (= fileformat 4)
-        (printhtml)                       ; html output
-        (printdata))))                    ; text output
+        (printhtml)                         ; html output
+        (printdata))))                      ; text output
