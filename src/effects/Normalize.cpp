@@ -184,8 +184,8 @@ bool EffectNormalize::Process()
 
       // Process only if the right marker is to the right of the left marker
       if (mCurT1 > mCurT0) {
-         wxString msg, trackName;
-         trackName = wxString::Format(track->GetName().c_str());
+         wxString msg;
+         wxString trackName = track->GetName();
 
          if(!track->GetLinked() || mStereoInd)
             msg = topMsg + _("Analyzing: ") + trackName;
