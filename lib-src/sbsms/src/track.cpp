@@ -41,7 +41,12 @@ Track :: ~Track() {
       i != point.end();
       ++i) {
     TrackPoint *tp = (*i);
-    if(tp) tp->destroy();
+    if(tp) {
+       if(tp->owner == this) {
+          tp->owner = NULL;
+       }
+       tp->destroy();
+    }
   }
 }
 
@@ -243,7 +248,7 @@ void Track :: synth(float *out,
 {
   float m0, m1;
   float w0, w1;
-  float dw;
+  // unused   float dw;
   float ph0, ph1;
   bool bTailStart;
   bool bTailEnd;
