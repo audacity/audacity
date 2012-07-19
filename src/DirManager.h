@@ -188,7 +188,7 @@ class DirManager: public XMLTagHandler {
    sampleFormat mLoadingFormat;
    sampleCount mLoadingBlockLen;
 
-   sampleCount mMaxSamples;
+   sampleCount mMaxSamples; // max samples per block
 
    static wxString globaltemp;
    wxString mytemp;

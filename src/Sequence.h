@@ -184,8 +184,8 @@ class Sequence: public XMLTagHandler {
    sampleFormat  mSampleFormat;
    sampleCount   mNumSamples;
 
-   sampleCount   mMinSamples;
-   sampleCount   mMaxSamples;
+   sampleCount   mMinSamples; // min samples per block
+   sampleCount   mMaxSamples; // max samples per block
 
    bool          mErrorOpening;
    
