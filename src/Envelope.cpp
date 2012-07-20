@@ -1105,7 +1105,7 @@ void Envelope::GetValues(double *buffer, int bufferLen,
          t += tstep;
          continue;
       }
-      // IF after after THEN last value
+      // IF after envelope THEN last value
       if (t >= mEnv[len - 1]->t) {
          buffer[b] = mEnv[len - 1]->val;
          t += tstep;
