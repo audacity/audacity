@@ -1,16 +1,16 @@
-# Audacity Strings for Translation.
-# Copyright (C) YEAR Audacity Development Team
+# Audacity Ukrainian translation
+# Copyright (C) 2000-2012 Audacity Development Team
 # This file is distributed under the same license as Audacity.
 #
-# Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
+# Audacity Team <audacity-translation@lists.sourceforge.net>, 2007.
 # Yuri Chornoivan <yurchor@ukr.net>, 2010, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-06-16 23:09-0000\n"
-"Last-Translator: Yuri Chornoivan\n"
+"PO-Revision-Date: 2012-07-24 03:59-0000\n"
+"Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
 "MIME-Version: 1.0\n"
@@ -54,9 +54,10 @@ msgstr "Якщо ви знайдете помилку або у вас вини�
 #: AboutDialog.cpp:216
 msgid "translator_credits"
 msgstr ""
-"Максим Дзюманенко <dziumanenko@gmail.com>\n"
-"Андрій Лагуш <Andrew Lahush alahush@yahoo.com>\n"
-"Юрій Чорноіван <yurchor@ukr.net>"
+"Переклад українською:<br />\n"
+"<a href=\"mailto:dziumanenko@gmail.com\">Максим Дзюманенко</a>,<br />\n"
+"<a href=\"mailto:alahush@yahoo.com\">Андрій Лагуш</a>,<br />\n"
+"<a href=\"mailto:yurchor@ukr.net\">Юрій Чорноіван</a>"
 
 #: AboutDialog.cpp:229
 msgid "A Free Digital Audio Editor<br>"
@@ -7306,6 +7307,10 @@ msgstr "Модуль Nyquist не повернув звукові дані.\n"
 msgid "Nyquist returned too many audio channels.\n"
 msgstr "Модуль Nyquist повернув занадто багато звукових каналів.\n"
 
+#: effects/nyquist/Nyquist.cpp:917
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nyquist повернуто один звуковий канал у форматі масиву.\n"
+
 #: effects/vamp/VampEffect.cpp:81
 #, c-format
 msgid "Extracting features: %s"
@@ -8306,6 +8311,10 @@ msgstr "Лише libmp3lame.so|libmp3lame.so|Первинні спільні б�
 #: export/ExportMP3.cpp:1549
 msgid "MP3 Files"
 msgstr "Файли MP3"
+
+#: export/ExportMP3.cpp:1627
+msgid "Could not initialize MP3 encoding library!"
+msgstr "Не вдалося ініціалізувати бібліотеку кодування MP3!"
 
 #: export/ExportMP3.cpp:1573
 msgid "Could not open MP3 encoding library!"
@@ -9418,6 +9427,10 @@ msgstr "&Гудок після завершення довготривалих �
 msgid "&Show track name in waveform display"
 msgstr "&Показувати назву доріжки на панелі показу форм хвиль"
 
+#: prefs/GUIPrefs.cpp:131
+msgid "Re&tain labels if selection snaps to a label edge"
+msgstr "З&берігати мітки, якщо позначення прилипає до краю мітки"
+
 #: prefs/GUIPrefs.cpp:135
 msgid "Modes"
 msgstr "Режими"
@@ -9656,6 +9669,34 @@ msgstr "MIDI-інтерфейсів немає"
 #: prefs/MidiIOPrefs.cpp:280
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr "Латентність синтезатора MIDI має бути визначено цілим числом"
+
+#: prefs/ModulePrefs.cpp:31
+msgid "Modules"
+msgstr "Модулі"
+
+#: prefs/ModulePrefs.cpp:55
+msgid "Enable these Modules (if present)"
+msgstr "Увімкнути ці модулі (якщо їх встановлено)"
+
+#: prefs/ModulePrefs.cpp:57
+msgid ""
+"These are experimental. Enable them only if you've read the manual\n"
+"and know what you are doing."
+msgstr ""
+"Ці модулі є недостатньо перевіреними. Вмикайте їх, лише якщо ви ознайомилися\n"
+"з підручником, і вам відомі наслідки ваших дій."
+
+#: prefs/ModulePrefs.cpp:58
+msgid "mod-script-pipe"
+msgstr "mod-script-pipe"
+
+#: prefs/ModulePrefs.cpp:61
+msgid "mod-nyq-bench"
+msgstr "mod-nyq-bench"
+
+#: prefs/ModulePrefs.cpp:64
+msgid "mod-track-panel"
+msgstr "mod-track-panel"
 
 #: prefs/MousePrefs.cpp:57
 msgid "Mouse"
