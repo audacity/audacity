@@ -1734,7 +1734,12 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
    if( bufferLen <= 0 )
       return;
 
-   memset(buffer, 0, sizeof(double)*bufferLen);
+   // This is useful in debugging, to easily find null envelope settings, but 
+   // should not be necessary in release build. 
+   // If we were going to set it to failsafe values, better to set each element to 1.0.
+   #ifdef __WXDEBUG__
+      memset(buffer, 0, sizeof(double)*bufferLen);
+   #endif
 
    double startTime = t0;
    double endTime = t0+tstep*bufferLen;
@@ -1744,30 +1749,30 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
       WaveClip *clip = it->GetData();
       
       // IF clip intersects startTime..endTime THEN...
-      if (clip->GetStartTime() < endTime && clip->GetEndTime() > startTime)
+      double dClipStartTime = clip->GetStartTime();
+      double dClipEndTime = clip->GetEndTime();
+      if ((dClipStartTime < endTime) && (dClipEndTime > startTime))
       {
          double* rbuf = buffer;
          int rlen = bufferLen;
          double rt0 = t0;
 
-         if (rt0 < clip->GetStartTime())
+         if (rt0 < dClipStartTime)
          {
-            sampleCount start = clip->GetStartSample();
-            rbuf += start;
-            rlen -= start;
-            rt0 = clip->GetStartTime();
+            sampleCount nDiff = (sampleCount)floor((dClipStartTime - rt0) * mRate + 0.5);
+            rbuf += nDiff;
+            rlen -= nDiff;
+            rt0 = dClipStartTime;
          }
 
-         if (rt0 + rlen*tstep > clip->GetEndTime())
+         if (rt0 + rlen*tstep > dClipEndTime)
          {
             int nClipLen = clip->GetEndSample() - clip->GetStartSample();
 
             // This check prevents problem cited in http://bugzilla.audacityteam.org/show_bug.cgi?id=528#c11, 
             // Gale's cross_fade_out project, which was already corrupted by bug 528.
-            //vvv Should really be checked earlier, in reading the project, and/or determining bufferLen 
-            // passed in.  But that needs much more debugging, and this conditional prevents the previous 
-            // write past the buffer end, in clip->GetEnvelope() call.
-            if (nClipLen < rlen)
+            // This conditional prevents the previous write past the buffer end, in clip->GetEnvelope() call.
+            if (nClipLen < rlen) // Never increase rlen here. 
                rlen = nClipLen;
          }
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
