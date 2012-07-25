@@ -1,11 +1,16 @@
-/*
- *  ODDecodeFFmpegTask.cpp
- *  Audacity
- *
- *  Created by apple on 3/8/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+/**********************************************************************
+
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   License: GPL v2.  See License.txt.
+
+   ODDecodeFFmpegTask.cpp
+   Michael Chinen
+
+******************************************************************/
+
+#ifdef USE_FFMPEG
+
 #include <wx/wxprec.h>
  #include "../Experimental.h" 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -655,4 +660,4 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
 }
 #endif
 
-
+#endif // USE_FFMPEG

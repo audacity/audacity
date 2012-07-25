@@ -1,14 +1,19 @@
-/*
- *  ODDecodeFFmpegTask.h
- *  Audacity
- *
- *  Created by apple on 3/8/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
- #include "../Experimental.h"
- 
- #ifdef EXPERIMENTAL_OD_FFMPEG
+/**********************************************************************
+
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   License: GPL v2.  See License.txt.
+
+   ODDecodeFFmpegTask.h
+   Michael Chinen
+
+******************************************************************/
+
+#ifdef USE_FFMPEG
+
+#include "../Experimental.h"
+
+#ifdef EXPERIMENTAL_OD_FFMPEG
 
 #ifndef __ODDECODEFFMPEGTASK__
 #define __ODDECODEFFMPEGTASK__
@@ -46,3 +51,5 @@ class ODDecodeFFmpegTask:public ODDecodeTask
 #endif //__ODDECODEFFMPEGTASK__
 
 #endif //EXPERIMENTAL_OD_FFMPEG
+
+#endif // USE_FFMPEG
