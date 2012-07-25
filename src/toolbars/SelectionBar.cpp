@@ -237,6 +237,9 @@ void SelectionBar::Populate()
                   0, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
    mSnapTo->SetValue(gPrefs->Read(wxT("/SnapTo"), 0L)!=0);
+   #if wxUSE_TOOLTIPS
+      mSnapTo->SetToolTip(wxString::Format(_("Snap clicks/selections to %s"), formatName));
+   #endif
 
    mSnapTo->Connect(wxEVT_SET_FOCUS,
                     wxFocusEventHandler(SelectionBar::OnFocus),
@@ -363,6 +366,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    TimeTextCtrl *ttc = new TimeTextCtrl(this, wxID_ANY, wxT(""), 0.0, mRate);
    wxString formatName(ttc->GetBuiltinName(index));
    gPrefs->Write(wxT("/SelectionFormat"), formatName);
+   #if wxUSE_TOOLTIPS
+      mSnapTo->SetToolTip(wxString::Format(_("Snap clicks/selections to %s"), formatName));
+   #endif
    delete ttc;
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
