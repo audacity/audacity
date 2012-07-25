@@ -9,8 +9,6 @@
 
 ******************************************************************/
 
-#ifdef USE_FFMPEG
-
 #include <wx/wxprec.h>
  #include "../Experimental.h" 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -660,4 +658,4 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
 }
 #endif
 
-#endif // USE_FFMPEG
+

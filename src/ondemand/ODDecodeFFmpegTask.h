@@ -9,8 +9,6 @@
 
 ******************************************************************/
 
-#ifdef USE_FFMPEG
-
 #include "../Experimental.h"
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
@@ -51,5 +49,3 @@ class ODDecodeFFmpegTask:public ODDecodeTask
 #endif //__ODDECODEFFMPEGTASK__
 
 #endif //EXPERIMENTAL_OD_FFMPEG
-
-#endif // USE_FFMPEG
