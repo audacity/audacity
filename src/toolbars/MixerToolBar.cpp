@@ -283,19 +283,19 @@ void MixerToolBar::SetToolTips()
 {
 #if wxUSE_TOOLTIPS
    if (mInputSlider->IsEnabled()) {
-      mInputSlider->SetToolTip(_("Input Volume Slider"));
+      mInputSlider->SetToolTip(_("Input Volume"));
    }
    else {
       mInputSlider->SetToolTip(
-            _("Cannot control input volume; use system mixer."));
+            _("Input Volume (Unavailable; use system mixer.)"));
    }
 
    if (mOutputSlider->IsEnabled()) {
-      mOutputSlider->SetToolTip(_("Output Volume Slider"));
+      mOutputSlider->SetToolTip(_("Output Volume"));
    }
    else {
       mOutputSlider->SetToolTip(
-            _("Cannot control output volume; use system mixer."));
+            _("Output Volume (Unavailable; use system mixer.)"));
    }
 #endif
 }

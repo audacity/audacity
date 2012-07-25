@@ -495,7 +495,7 @@ void TimeTextCtrl::Decrement()
 void TimeTextCtrl::EnableMenu(bool enable)
 {
 #if wxUSE_TOOLTIPS
-   wxString tip(_("Use right mouse button or context key to change format"));
+   wxString tip(_("(Use context menu to change format.)"));
    if (enable)
       SetToolTip(tip);
    else {

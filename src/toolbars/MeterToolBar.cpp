@@ -126,8 +126,8 @@ void MeterToolBar::UpdatePrefs()
 void MeterToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   mPlayMeter->SetToolTip( _("Output level meter") );
-   mRecordMeter->SetToolTip( _("Input level meter - click to monitor input") );
+   mPlayMeter->SetToolTip( _("Output Level") );
+   mRecordMeter->SetToolTip( _("Input Level (Click to monitor.)") );
 #endif
 }
 

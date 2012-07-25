@@ -238,7 +238,7 @@ void SelectionBar::Populate()
    mSnapTo->SetName(_("Snap To"));
    mSnapTo->SetValue(gPrefs->Read(wxT("/SnapTo"), 0L)!=0);
    #if wxUSE_TOOLTIPS
-      mSnapTo->SetToolTip(wxString::Format(_("Snap clicks/selections to %s"), formatName.c_str()));
+      mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
    #endif
 
    mSnapTo->Connect(wxEVT_SET_FOCUS,
@@ -367,7 +367,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    wxString formatName(ttc->GetBuiltinName(index));
    gPrefs->Write(wxT("/SelectionFormat"), formatName);
    #if wxUSE_TOOLTIPS
-      mSnapTo->SetToolTip(wxString::Format(_("Snap clicks/selections to %s"), formatName.c_str()));
+      mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
    #endif
    delete ttc;
 
