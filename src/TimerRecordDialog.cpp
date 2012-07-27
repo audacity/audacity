@@ -165,6 +165,8 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& event)
    // need to implement it for the TimeTextCtrls.
    if (m_DateTime_End < m_DateTime_Start) {
       m_DateTime_End = m_DateTime_Start;
+      m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
+      m_pDatePickerCtrl_End->Refresh();
       m_pTimeTextCtrl_End->SetTimeValue(wxDateTime_to_AudacityTime(m_DateTime_End));
    }
 
