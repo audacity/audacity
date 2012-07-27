@@ -4,20 +4,24 @@
 ;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
 ;name "Vocoder..."
 ;action "Processing Vocoder..."
-;info "by Edgar-RFT and David R. Sky\nReleased under terms of the GNU General Public License version 2\nVocoder only works on unsplit stereo tracks. For best results, the voice\nshould be in the left channel and white noise (from Generate > Noise)\nor some other carrier wave should be in the right channel." 
+;info "by Edgar-RFT and David R. Sky\nReleased under GPL v2.\n"
 
-;control dst "Distance: [1 to 120, default = 20]" real "" 20 1 120
-;control mst "Output choice:" choice "both channels, right only" 0
+;; vocoder.ny by Edgar-RFT
+;; a bit of code added by David R. Sky
+;; GUI update by Steve Daulton July 2012.
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+;control dst "Distance: (1 to 120, default = 20)" real "" 20 1 120
+;control mst "Output choice" choice "both channels, right only" 0
 ;control bands "Number of vocoder bands" int "" 40 10 240
-;control track-vl "Amplitude of original audio [percent]" real "" 100 0 100
-;control noise-vl "Amplitude of white noise [percent]" real "" 0 0 100
-;control radar-vl "Amplitude of Radar Needles [percent]" real "" 0 0 100
-;control radar-f "Frequency of Radar Needles [Hz]" real "" 30 1 100
-
-; vocoder by Edgar-RFT
-; a bit of code added by David R. Sky
-; Released under terms of the GNU Public License version 2
-; http://www.opensource.org/licenses/gpl-license.php
+;control track-vl "Amplitude of original audio (percent)" real "" 100 0 100
+;control noise-vl "Amplitude of white noise (percent)" real "" 0 0 100
+;control radar-vl "Amplitude of Radar Needles (percent)" real "" 0 0 100
+;control radar-f "Frequency of Radar Needles (Hz)" real "" 30 1 100
 
 ; maybe the code once again has to be changed into _one_ local let-binding
 ; if you have lots of nyquist "[gc:" messages try this:
