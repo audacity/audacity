@@ -52,7 +52,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.StartStatic(_("Enable these Modules (if present)"));
+   S.StartStatic(_("Enable these Modules (if present), next time Audacity is started"));
    {
       S.AddFixedText(_("These are experimental. Enable them only if you've read the manual\nand know what you are doing.") );
       S.TieCheckBox(_("mod-script-pipe"),
