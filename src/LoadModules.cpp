@@ -273,6 +273,7 @@ void ModuleManager::Initialize()
    wxString pathVar;
    size_t i;
 
+   // JKC: Is this code duplicating LoadModules() ????
    // Code from LoadLadspa that might be useful in load modules.
    pathVar = wxGetenv(wxT("AUDACITY_MODULES_PATH"));
    if (pathVar != wxT("")) {
@@ -294,13 +295,16 @@ void ModuleManager::Initialize()
    #endif
 
    for (i = 0; i < files.GetCount(); i++) {
-      Module *module = new Module(files[i]);
+      if( IsAllowedModule( files[i] ) )
+      {
+         Module *module = new Module(files[i]);
 
-      if (module->Load()) {
-         mInstance->mModules.Add(module);
-      }
-      else {
-         delete module;
+         if (module->Load()) {
+            mInstance->mModules.Add(module);
+         }
+         else {
+            delete module;
+         }
       }
    }
 }
