@@ -3296,10 +3296,14 @@ void AudacityProject::OnExportLabels()
 
    TrackListIterator iter(mTracks);
 
+   wxString fName = _("labels.txt");
    t = iter.First();
    while (t) {
       if (t->GetKind() == Track::Label)
+      {
          numLabelTracks++;
+         fName = t->GetName();
+      }
       t = iter.Next();
    }
 
@@ -3307,8 +3311,6 @@ void AudacityProject::OnExportLabels()
       wxMessageBox(_("There are no label tracks to export."));
       return;
    }
-
-   wxString fName = _("labels.txt");
 
    fName = FileSelector(_("Export Labels As:"),
                         NULL,

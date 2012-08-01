@@ -564,11 +564,12 @@ void LabelDialog::OnExport(wxCommandEvent &event)
       return;
    }
 
-   wxString fName;
+   // Extract the actual name.
+   wxString fName = mTrackNames[mTrackNames.GetCount() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileSelector(_("Export Labels As:"),
                         NULL,
-                        _("labels.txt"),
+                        fName.c_str(),
                         wxT("txt"),
                         wxT("*.txt"),
                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
