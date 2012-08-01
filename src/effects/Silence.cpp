@@ -41,7 +41,7 @@ bool EffectSilence::PromptUser()
    } else {
       // Retrieve last used values
       gPrefs->Read(wxT("/Effects/SilenceGen/Duration"), &mDuration, 30L);
-      dlog.SetFormatString(_("seconds"));
+      dlog.SetFormatString(_("hh:mm:ss + milliseconds"));
    }
    dlog.SetTimeValue(mDuration);
 
