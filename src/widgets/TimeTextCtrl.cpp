@@ -559,7 +559,7 @@ wxString TimeTextCtrl::GetBuiltinFormat(const int index)
 
 wxString TimeTextCtrl::GetBuiltinFormat(const wxString &name)
 {
-   int ndx = 1;
+   int ndx = 4; // Default to "hh:mm:ss + milliseconds".
    int i;
 
    for (i=0; i<TimeTextCtrl::GetNumBuiltins(); i++) {
