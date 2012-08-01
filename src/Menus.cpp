@@ -5133,6 +5133,9 @@ void AudacityProject::OnImportLabels()
       }
 
       LabelTrack *newTrack = new LabelTrack(mDirManager);
+      wxString sTrackName;
+      wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
+      newTrack->SetName(sTrackName);
 
       newTrack->Import(f);
 
