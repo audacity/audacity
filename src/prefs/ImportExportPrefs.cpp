@@ -80,7 +80,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 
       S.TieCheckBox(_("S&how Metadata Editor prior to export step"),
                     wxT("/AudioFiles/ShowId3Dialog"),
-                    true);
+                    false);
       S.AddFixedText(_("Note: Export quality options can be chosen by clicking the Options\nbutton in the Export dialog."));
    }
    S.EndStatic();
