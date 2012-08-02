@@ -53,9 +53,9 @@ enum eCommandType { CtEffect, CtMenu, CtSpecial };
 // CLEANSPEECH remnant
 wxString SpecialCommands[] = {
    wxT("NoAction"),
-   wxT("Import"),
-   wxT("SaveHqMaster1"),
-   wxT("SaveHqMaster2"),
+   // wxT("Import"),   // non-functioning
+   wxT("SaveMP3_56k_before"),
+   wxT("SaveMP3_56k_after"),
    wxT("StereoToMono"),
    wxT("ExportFlac"),
    wxT("ExportMp3"),
@@ -239,7 +239,7 @@ void BatchCommands::SetCleanSpeechChain()
 /* i18n-hint: Effect name translations must agree with those used elsewhere, or batch won't find them */
    AddToChain( wxT("StereoToMono") );
    AddToChain( wxT("Normalize") );
-   AddToChain( wxT("SaveHqMaster1") );
+   AddToChain( wxT("SaveMP3_56k_before") );
    AddToChain( wxT("NoiseRemoval") );
    AddToChain( wxT("TruncateSilence") );
    AddToChain( wxT("Leveller") );
@@ -456,10 +456,10 @@ bool BatchCommands::ApplySpecialCommand(int iCommand, const wxString command,con
    } else if (!mFileName.IsEmpty() && command == wxT("Import")) {
       // historically this was in use, now ignored if there
       return true;
-   } else if (command == wxT("SaveHqMaster1")) {
+   } else if (command == wxT("SaveMP3_56k_before")) {
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterBefore_"), false);
       return WriteMp3File(filename, 56);
-   } else if (command == wxT("SaveHqMaster2")) {
+   } else if (command == wxT("SaveMP3_56k_after")) {
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterAfter_"), false);
       return WriteMp3File(filename, 56);
    } else if (command == wxT("StereoToMono")) {
