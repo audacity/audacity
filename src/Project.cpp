@@ -1018,7 +1018,7 @@ AudacityProject::~AudacityProject()
 
 void AudacityProject::UpdatePrefsVariables()
 {
-   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, false);
+   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/AudioFiles/NormalizeOnLoad"),&mNormalizeOnLoad, false);
 
 #ifdef CLEANSPEECH
