@@ -136,6 +136,7 @@ void ExportCLOptions::OnOK(wxCommandEvent& event)
    wxString cmd = mCmd->GetValue();
 
    gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
+   gPrefs->Flush();
 
    PopulateOrExchange(S);
 

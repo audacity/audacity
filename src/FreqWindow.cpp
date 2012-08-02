@@ -908,6 +908,7 @@ void FreqWindow::OnCloseButton(wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/FreqWindow/AlgChoice"), mAlgChoice->GetSelection());
    gPrefs->Write(wxT("/FreqWindow/FuncChoice"), mFuncChoice->GetSelection());
    gPrefs->Write(wxT("/FreqWindow/AxisChoice"), mAxisChoice->GetSelection());
+   gPrefs->Flush();
    this->Show(FALSE);
 }
 

@@ -313,6 +313,7 @@ ImportFileHandle *FFmpegImportPlugin::Open(wxString filename)
          if (dontShowDlg == 0 && newsession)
          {
             gPrefs->Write(wxT("/NewImportingSession"), false);
+            gPrefs->Flush();
             dlg = new FFmpegNotFoundDialog(NULL);
             dlg->ShowModal();
             delete dlg;

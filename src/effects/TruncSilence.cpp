@@ -78,7 +78,7 @@ bool EffectTruncSilence::Init()
       mSilenceCompressRatio = 4.0;
       gPrefs->Write(wxT("/Effects/TruncateSilence/CompressRatio"), 40L);
    }
-   return true;
+   return gPrefs->Flush();
 }
 
 bool EffectTruncSilence::CheckWhetherSkipEffect()
@@ -105,6 +105,7 @@ bool EffectTruncSilence::PromptUser()
    gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), mTruncLongestAllowedSilentMs);
    gPrefs->Write(wxT("/Effects/TruncateSilence/DbChoiceIndex"), mTruncDbChoiceIndex);
    gPrefs->Write(wxT("/Effects/TruncateSilence/CompressRatio"), (int)floor(10.0*mSilenceCompressRatio+0.5));
+   gPrefs->Flush();
 
    return true;
 }

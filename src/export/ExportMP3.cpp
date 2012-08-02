@@ -444,6 +444,7 @@ void ExportMP3Options::OnOK(wxCommandEvent& event)
    gPrefs->Write(wxT("/FileFormats/MP3VbrRate"), mVbrRate);
    gPrefs->Write(wxT("/FileFormats/MP3AbrRate"), mAbrRate);
    gPrefs->Write(wxT("/FileFormats/MP3CbrRate"), mCbrRate);
+   gPrefs->Flush();
 
    EndModal(wxID_OK);
 
@@ -959,9 +960,8 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
    }
 
    mLibPath = path;
-   gPrefs->Write(wxT("/MP3/MP3LibPath"), mLibPath);
 
-   return true;
+   return (gPrefs->Write(wxT("/MP3/MP3LibPath"), mLibPath) && gPrefs->Flush());
 }
 
 bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
@@ -1626,6 +1626,7 @@ int ExportMP3::Export(AudacityProject *project,
    if (!exporter.InitLibrary(wxT(""))) {
       wxMessageBox(_("Could not initialize MP3 encoding library!"));
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+      gPrefs->Flush();
 
       return false;
    }
@@ -1633,6 +1634,7 @@ int ExportMP3::Export(AudacityProject *project,
    if (!exporter.LoadLibrary(parent, MP3Exporter::Maybe)) {
       wxMessageBox(_("Could not open MP3 encoding library!"));
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+      gPrefs->Flush();
 
       return false;
    }
@@ -1640,6 +1642,7 @@ int ExportMP3::Export(AudacityProject *project,
    if (!exporter.ValidLibraryLoaded()) {
       wxMessageBox(_("Not a valid or supported MP3 encoding library!"));      
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
+      gPrefs->Flush();
       
       return false;
    }

@@ -41,11 +41,13 @@ int Resample::GetBestMethod()
 void Resample::SetFastMethod(int index)
 {
    gPrefs->Write(GetFastMethodKey(), (long)index);
+   gPrefs->Flush();
 }
 
 void Resample::SetBestMethod(int index)
 {
    gPrefs->Write(GetBestMethodKey(), (long)index);
+   gPrefs->Flush();
 }
 
 #if USE_LIBRESAMPLE

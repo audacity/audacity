@@ -131,6 +131,7 @@ void SplashDialog::OnDontShow( wxCommandEvent & Evt )
 {
    bool bShow = !Evt.IsChecked(); 
    gPrefs->Write(wxT("/GUI/ShowSplashScreen"), bShow );
+   gPrefs->Flush();
 }
 
 void SplashDialog::OnOK(wxCommandEvent & WXUNUSED(event))

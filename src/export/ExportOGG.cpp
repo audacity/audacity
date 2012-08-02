@@ -107,6 +107,7 @@ void ExportOGGOptions::OnOK(wxCommandEvent& event)
    PopulateOrExchange(S);
 
    gPrefs->Write(wxT("/FileFormats/OggExportQuality"),mOggQualityUnscaled * 10);
+   gPrefs->Flush();
 
    EndModal(wxID_OK);
 

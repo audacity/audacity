@@ -337,6 +337,7 @@ void SelectionBar::OnRightTime(wxCommandEvent &evt)
 void SelectionBar::OnLengthRadio(wxCommandEvent &evt)
 {
    gPrefs->Write(wxT("/ShowSelectionLength"), true);
+   gPrefs->Flush();
    mRightTime->SetName(wxString(_("Selection Length")));
 
    ValuesToControls();
@@ -366,6 +367,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    TimeTextCtrl *ttc = new TimeTextCtrl(this, wxID_ANY, wxT(""), 0.0, mRate);
    wxString formatName(ttc->GetBuiltinName(index));
    gPrefs->Write(wxT("/SelectionFormat"), formatName);
+   gPrefs->Flush();
    #if wxUSE_TOOLTIPS
       mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
    #endif

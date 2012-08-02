@@ -215,6 +215,8 @@ void EffectEqualization::ReadPrefs()
    gPrefs->Read(wxT("/Effects/Equalization/DrawMode"), &mDrawMode, true);
    gPrefs->Read(wxT("/Effects/Equalization/Interp"), &mInterp, 0);
    gPrefs->Read(wxT("/Effects/Equalization/DrawGrid"), &mDrawGrid, true);
+
+   gPrefs->Flush();
 }
 
 EffectEqualization::EffectEqualization()
@@ -312,6 +314,7 @@ bool EffectEqualization::PromptUser()
       gPrefs->Write(wxT("/Effects/Equalization/DrawMode"),mDrawMode);
       gPrefs->Write(wxT("/Effects/Equalization/Interp"), mInterp);
       gPrefs->Write(wxT("/Effects/Equalization/DrawGrid"), mDrawGrid);
+      gPrefs->Flush();
    }
 
    return true;

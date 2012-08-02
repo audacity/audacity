@@ -2191,6 +2191,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
    }
    gPrefs->Write(wxT("/DefaultOpenType"), mask.BeforeFirst(wxT('|')));
    gPrefs->Write(wxT("/LastOpenType"), mask.BeforeFirst(wxT('|')));
+   gPrefs->Flush();
 
    if (dialogResult == wxID_OK) {
       // Return the selected files
@@ -2229,9 +2230,9 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    wxArrayString selectedFiles = ShowOpenDialog(_("Audacity projects"), wxT("*.aup"));
    if (selectedFiles.GetCount() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
+      gPrefs->Flush();
       return;
    }
-   
    
    //sort selected files by OD status.  
    //For the open menu we load OD first so user can edit asap.
@@ -2247,6 +2248,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
          continue; // Skip ones that are already open.
 
       gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fileName));
+      gPrefs->Flush();
       
       // DMM: If the project is dirty, that means it's been touched at
       // all, and it's not safe to open a new project directly in its
@@ -2269,7 +2271,8 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
    }
    
    gPrefs->Write(wxT("/LastOpenType"),wxT(""));
-   
+   gPrefs->Flush();
+
    ODManager::Resume();
 
 }
@@ -4587,6 +4590,7 @@ void AudacityProject::SetSnapTo(bool state)
    mSnapTo = state;
    mCommandManager.Check(wxT("Snap"), mSnapTo);
    gPrefs->Write(wxT("/SnapTo"), mSnapTo);
+   gPrefs->Flush();
 
    if (GetSelectionBar()) {
       GetSelectionBar()->SetSnapTo(state);

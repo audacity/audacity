@@ -98,7 +98,7 @@ bool EffectClickRemoval::Init()
       gPrefs->Write(wxT("/Effects/ClickRemoval/ClickWidth"), mClickWidth);
    }
 #endif   // CLEANSPEECH
-   return true;
+   return gPrefs->Flush();
 }
 
 bool EffectClickRemoval::CheckWhetherSkipEffect()
@@ -131,7 +131,7 @@ bool EffectClickRemoval::PromptUser()
    gPrefs->Write(wxT("/Effects/ClickRemoval/ClickWidth"), mClickWidth);
 #endif   // CLEANSPEECH
 
-   return true;
+   return gPrefs->Flush();
 }
 bool EffectClickRemoval::TransferParameters( Shuttle & shuttle )
 {  

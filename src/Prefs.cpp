@@ -162,7 +162,6 @@ void InitPreferences()
       {
          gPrefs->DeleteAll();
          gPrefs->Write(wxT("/NewPrefsInitialized"), true);
-         gPrefs->Flush();
       }
       bool gone = wxRemoveFile(fn.GetFullPath());  // remove resetPrefs.txt
       if(!gone)
@@ -233,7 +232,9 @@ void InitPreferences()
   
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE); 
-   gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);   
+   gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
+   
+   gPrefs->Flush();
 }
 
 void FinishPreferences()

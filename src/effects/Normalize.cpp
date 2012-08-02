@@ -111,6 +111,7 @@ void EffectNormalize::End()
       gPrefs->Write(wxT("/Validate/Norm_Multiplier"), checkMultiplier);
       int checkFrameSum = (int)gFrameSum;
       gPrefs->Write(wxT("/Validate/Norm_FrameSum"), checkFrameSum);
+      gPrefs->Flush();
 	}
 }
 
@@ -138,7 +139,7 @@ bool EffectNormalize::PromptUser()
    gPrefs->Write(wxT("/Effects/Normalize/Level"), mLevel);
    gPrefs->Write(wxT("/Effects/Normalize/StereoIndependent"), mStereoInd);
 
-   return true;
+   return gPrefs->Flush();
 }
 
 bool EffectNormalize::Process()

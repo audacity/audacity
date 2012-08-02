@@ -769,6 +769,7 @@ void ToolManager::WriteConfig()
 
    // Restore original config path
    gPrefs->SetPath( oldpath );
+   gPrefs->Flush();
 }
 
 //

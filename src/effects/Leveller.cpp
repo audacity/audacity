@@ -70,6 +70,8 @@ bool EffectLeveller::Init()
       gPrefs->Write(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
    }
 #endif   // CLEANSPEECH
+   gPrefs->Flush();
+
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
 
    CalcLevellerFactors();
@@ -86,6 +88,7 @@ void EffectLeveller::End()
 {
    int frameSum = (int)mFrameSum;
    gPrefs->Write(wxT("/Validate/LevellerFrameSum"), frameSum);
+   gPrefs->Flush();
 }
 
 #define LEVELER_FACTORS 6
@@ -149,6 +152,7 @@ bool EffectLeveller::PromptUser()
    gPrefs->Write(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
    gPrefs->Write(wxT("/Effects/Leveller/LevellerNumPasses"), mLevellerNumPasses);
 #endif   // CLEANSPEECH
+   gPrefs->Flush();
 
    CalcLevellerFactors();
 

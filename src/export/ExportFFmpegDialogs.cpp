@@ -1900,6 +1900,7 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& event)
    int selfmt = mFormatList->GetSelection();
    if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),(long)avcodec_find_encoder_by_name(mCodecList->GetString(selcdc).ToUTF8())->id);
    if (selfmt > -1) gPrefs->Write(wxT("/FileFormats/FFmpegFormat"),mFormatList->GetString(selfmt));
+   gPrefs->Flush();
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 

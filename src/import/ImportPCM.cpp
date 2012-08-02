@@ -229,6 +229,7 @@ static wxString AskCopyOrEdit()
          oldCopyPref = wxT("copy");
       }
       gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataFirstAsk"), (long) false);
+      gPrefs->Flush();
    }
 
    // check the current preferences for whether or not we should ask the user about this.
@@ -284,6 +285,7 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
          }
          if (dontAskNextTimeBox->IsChecked()) {
             gPrefs->Write(wxT("/Warnings/CopyOrEditUncompressedDataAsk"), (long) false);
+            gPrefs->Flush();
          }
       } else {
          return wxT("cancel");
@@ -292,6 +294,7 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
       // if the preference changed, save it.
       if (newCopyPref != oldCopyPref) {
          gPrefs->Write(wxT("/FileFormats/CopyOrEditUncompressedData"), newCopyPref);
+         gPrefs->Flush();
       }
       oldCopyPref = newCopyPref;
    }

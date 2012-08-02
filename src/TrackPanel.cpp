@@ -7553,6 +7553,7 @@ void TrackPanel::OnSetFont(wxCommandEvent &event)
    
    gPrefs->Write(wxT("/GUI/LabelFontFacename"), lb->GetStringSelection());
    gPrefs->Write(wxT("/GUI/LabelFontSize"), sc->GetValue());
+   gPrefs->Flush();
 
    LabelTrack::ResetFont();
 

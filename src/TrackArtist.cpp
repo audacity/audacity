@@ -2843,6 +2843,8 @@ void TrackArtist::UpdatePrefs()
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    mFftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
+   gPrefs->Flush();
 }
 
 // Get various preference values

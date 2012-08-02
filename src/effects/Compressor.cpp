@@ -143,7 +143,7 @@ bool EffectCompressor::PromptUser()
    gPrefs->Write(wxT("/Effects/Compressor/Normalize"), mNormalize);
    gPrefs->Write(wxT("/Effects/Compressor/UsePeak"), mUsePeak);
 
-   return true;
+   return gPrefs->Flush();
 }
 
 bool EffectCompressor::NewTrackPass1()

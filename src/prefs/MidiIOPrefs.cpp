@@ -271,7 +271,7 @@ bool MidiIOPrefs::Apply()
                                      wxString(info->name, wxConvLocal).c_str()));
    }
 #endif
-   return true;
+   return gPrefs->Flush();
 }
 
 bool MidiIOPrefs::Validate()

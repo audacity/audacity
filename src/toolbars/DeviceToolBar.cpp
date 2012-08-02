@@ -560,6 +560,7 @@ void DeviceToolBar::FillHostDevices()
          if (host == wxT("")) {
             host = outMaps[i].hostString;
             gPrefs->Write(wxT("/AudioIO/Host"), host);
+            gPrefs->Flush();
             mHost->SetStringSelection(host);
          }
       }
@@ -584,6 +585,8 @@ int DeviceToolBar::ChangeHost()
    
    //change the host and switch to correct devices.
    gPrefs->Write(wxT("/AudioIO/Host"), newHost);
+   gPrefs->Flush();
+
    // populate the devices
    FillHostDevices();
 
@@ -646,6 +649,8 @@ void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap 
       } else {
          gPrefs->Write(wxT("/AudioIO/RecordingSource"), wxT(""));
       }
+      gPrefs->Flush();
+
       FillInputChannels();
    }
 
@@ -656,6 +661,7 @@ void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap 
       } else {
          gPrefs->Write(wxT("/AudioIO/PlaybackSource"), wxT(""));
       }
+      gPrefs->Flush();
    }
 }
 

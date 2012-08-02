@@ -122,8 +122,11 @@ bool EffectToneGen::PromptUser()
    /* Save last used values.
       Save duration unless value was got from selection, so we save only
       when user explicitly set up a value */
-   if (mT1 == mT0)
-      gPrefs->Write(wxT("/Effects/ToneGen/Duration"), mDuration);
+   if (mT1 == mT0) // ANSWER ME: Only if end time equals start time?
+   {
+      return (gPrefs->Write(wxT("/Effects/ToneGen/Duration"), mDuration) && 
+               gPrefs->Flush());
+   }
    return true;
 }
 

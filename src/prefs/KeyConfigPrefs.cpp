@@ -293,6 +293,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & e)
 
    path = wxPathOnly(file);
    gPrefs->Write(wxT("/DefaultOpenPath"), path);
+   gPrefs->Flush();
 
    XMLFileReader reader;
    if (!reader.Parse(mManager, file)) {
@@ -324,6 +325,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & e)
 
    path = wxPathOnly(file);
    gPrefs->Write(wxT("/DefaultExportPath"), path);
+   gPrefs->Flush();
 
    XMLFileWriter prefFile;
    
@@ -558,9 +560,10 @@ bool KeyConfigPrefs::Apply()
             gPrefs->Write(name, key);
          }
       }
+      gPrefs->Flush();
    }
 
-   return true;
+   return gPrefs->Flush();
 }
 
 void KeyConfigPrefs::Cancel()

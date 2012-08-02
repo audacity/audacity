@@ -519,6 +519,7 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & e)
       wxString path = tmpDirPath.GetPath(wxPATH_GET_VOLUME|wxPATH_GET_SEPARATOR);
       mDirectoryTextBox->SetValue(path);
       gPrefs->Write(wxT("/ScreenshotPath"), path);
+      gPrefs->Flush();
    }
 }
 

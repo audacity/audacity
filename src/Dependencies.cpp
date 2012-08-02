@@ -532,6 +532,7 @@ void DependencyDialog::SaveFutureActionChoice()
       }
       gPrefs->Write(wxT("/FileFormats/SaveProjectWithDependencies"),
                     savePref);
+      gPrefs->Flush();
    }
 }
 

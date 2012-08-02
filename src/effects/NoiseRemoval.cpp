@@ -238,7 +238,7 @@ bool EffectNoiseRemoval::Init()
       gPrefs->Write(wxT("/Effects/NoiseRemoval/Noise_Level"), mLevel);
    }
 #endif   // CLEANSPEECH
-   return true;
+   return gPrefs->Flush();
 }
 
 bool EffectNoiseRemoval::CheckWhetherSkipEffect()
@@ -309,7 +309,7 @@ bool EffectNoiseRemoval::PromptUser()
 #endif   // CLEANSPEECH
 
    mDoProfile = (dlog.GetReturnCode() == 1);
-   return true;
+   return gPrefs->Flush();
 }
    
 bool EffectNoiseRemoval::TransferParameters( Shuttle & shuttle )

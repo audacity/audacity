@@ -701,6 +701,7 @@ bool Exporter::CheckFilename()
 
    gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
    gPrefs->Write(wxT("/Export/Path"), mFilename.GetPath());
+   gPrefs->Flush();
 
    //
    // To be even safer, return a temporary file name based

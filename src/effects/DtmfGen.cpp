@@ -380,6 +380,7 @@ void EffectDtmf::Success()
    gPrefs->Write(wxT("/Effects/DtmfGen/String"), dtmfString);
    gPrefs->Write(wxT("/Effects/DtmfGen/DutyCycle"), dtmfDutyCycle);
    gPrefs->Write(wxT("/Effects/DtmfGen/Amplitude"), dtmfAmplitude);
+   gPrefs->Flush();
 }
 
 //----------------------------------------------------------------------------

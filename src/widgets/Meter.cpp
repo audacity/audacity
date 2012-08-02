@@ -1215,7 +1215,7 @@ void Meter::OnDisableMeter(wxCommandEvent &evt)
       {
       gPrefs->Write(wxT("/Meter/MeterOutputDisabled"), mMeterDisabled);
       }
-
+   gPrefs->Flush();
 }
 
 void Meter::OnHorizontal(wxCommandEvent &evt)
@@ -1309,21 +1309,8 @@ void Meter::OnPreferences(wxCommandEvent &evt)
    if (d.ShowModal() == wxID_OK) {
       mMeterRefreshRate = d.GetValue();
       gPrefs->Write(wxT("/Meter/MeterRefreshRate"), mMeterRefreshRate);
+      gPrefs->Flush();
    }
    
    mTimer.Start(1000 / mMeterRefreshRate);
 }
-
-// Indentation settings for Vim and Emacs.
-// Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// 
-
-
-

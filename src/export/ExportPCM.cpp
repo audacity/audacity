@@ -67,6 +67,7 @@ static int ReadExportFormatPref()
 static void WriteExportFormatPref(int format)
 {
    gPrefs->Write(wxT("/FileFormats/ExportFormat_SF1"), (long int)format);
+   gPrefs->Flush();
 }
 
 //----------------------------------------------------------------------------

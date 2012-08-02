@@ -389,6 +389,7 @@ void ShowHelpDialog(wxWindow *parent,
          HelpMode = wxT("Local");
          pProj->mHelpPref = HelpMode;
          gPrefs->Write(wxT("/GUI/Help"), HelpMode);
+         gPrefs->Flush();
       }
    }
 

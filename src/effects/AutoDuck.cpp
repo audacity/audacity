@@ -207,6 +207,7 @@ bool EffectAutoDuck::PromptUser()
    gPrefs->Write(wxT("/Effects/AutoDuck/InnerFadeUpLen"), mInnerFadeUpLen);
    gPrefs->Write(wxT("/Effects/AutoDuck/ThresholdDb"), mThresholdDb);
    gPrefs->Write(wxT("/Effects/AutoDuck/MaximumPause"), mMaximumPause);
+   gPrefs->Flush();
 
    return true;
 }

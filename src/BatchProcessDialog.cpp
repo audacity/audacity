@@ -188,6 +188,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent &event)
    wxWindowDisabler wd;
 
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
+   gPrefs->Flush();
 
    mBatchCommands.ReadChain(name);
    if (!mBatchCommands.ApplyChain()) {
@@ -207,6 +208,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent &event)
 
    wxString name = mChains->GetItemText(item);
    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
+   gPrefs->Flush();
 
    AudacityProject *project = GetActiveProject();
    if (!project->GetIsEmpty()) {
@@ -901,6 +903,7 @@ void EditChainsDialog::OnDefaults(wxCommandEvent &event)
 void EditChainsDialog::OnOK(wxCommandEvent &event)
 {
    gPrefs->Write(wxT("/Batch/ActiveChain"), mActiveChain);
+   gPrefs->Flush();
 
    if (mChanged) {
       if (!mBatchCommands.WriteChain(mActiveChain)) {

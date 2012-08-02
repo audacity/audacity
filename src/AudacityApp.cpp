@@ -390,6 +390,7 @@ void SaveWindowSize()
          gPrefs->Write(wxT("/Window/Iconized"), FALSE);
       }
    }
+   gPrefs->Flush();
    wxGetApp().SetWindowRectAlreadySaved(TRUE);
 }
 
@@ -754,7 +755,9 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
       // verify that the file exists 
       if (wxFile::Exists(fullPathStr)) 
       {
-         gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr));
+         if (!gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr)) || 
+               !gPrefs->Flush())
+            return false;
          
          // Make sure it isn't already open.
          // Test here even though AudacityProject::OpenFile() also now checks, because 
@@ -1486,8 +1489,7 @@ bool AudacityApp::InitCleanSpeech()
    chmod(OSFILENAME(presets), 0755);
    #endif
 
-   gPrefs->Write(wxT("/Directories/PresetsDir"), presets);
-   return true;
+   return (gPrefs->Write(wxT("/Directories/PresetsDir"), presets) && gPrefs->Flush());
 }
 #endif   // CLEANSPEECH
 
@@ -1558,14 +1560,14 @@ bool AudacityApp::InitTempDir()
    chmod(OSFILENAME(temp), 0755);
    #endif
 
-   gPrefs->Write(wxT("/Directories/TempDir"), temp);
+   bool bSuccess = gPrefs->Write(wxT("/Directories/TempDir"), temp) && gPrefs->Flush();
    DirManager::SetTempDir(temp);
 
    // Make sure the temp dir isn't locked by another process.
    if (!CreateSingleInstanceChecker(temp))
       return false;
 
-   return true;
+   return bSuccess;
 }
 
 // Return true if there are no other instances of Audacity running,
@@ -1826,6 +1828,7 @@ int AudacityApp::OnExit()
       {
          gPrefs->DeleteEntry(wxT("/QDeleteCmdCfgLocation"));
          gPrefs->Write(wxT("/DeleteCmdCfgLocation"), true);
+         gPrefs->Flush();
       }
    }
 
@@ -1980,6 +1983,7 @@ void AudacityApp::AssociateFileTypes()
                wxYES_NO | wxICON_QUESTION);
          if (wantAssoc == wxYES) {
             gPrefs->Write(wxT("/WantAssociateFiles"), true);
+            gPrefs->Flush();
 
             wxString root_key;
 
@@ -2053,6 +2057,7 @@ void AudacityApp::AssociateFileTypes()
          } else {
             // User said no. Set a pref so we don't keep asking.
             gPrefs->Write(wxT("/WantAssociateFiles"), false);
+            gPrefs->Flush();
          }
       }
    }

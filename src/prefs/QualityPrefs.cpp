@@ -226,6 +226,7 @@ bool QualityPrefs::Apply()
    // value in prefs comes from the second field.
    if (mOtherSampleRate->IsEnabled()) {
       gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mOtherSampleRateValue);
+      gPrefs->Flush();
    }
 
    // Tell CopySamples() to use these ditherers now

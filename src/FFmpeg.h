@@ -155,6 +155,7 @@ to download or locate the FFmpeg libraries."
       if (mDontShow->GetValue())
       {
          gPrefs->Write(wxT("/FFmpeg/NotFoundDontShow"),1);
+         gPrefs->Flush();
       }
       this->EndModal(0);
    }

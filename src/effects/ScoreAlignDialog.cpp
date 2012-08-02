@@ -205,6 +205,8 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
                      p.mPresmoothTime);
        gPrefs->Write(wxT("/Tracks/Synchronize/LineTime"), p.mLineTime);
        gPrefs->Write(wxT("/Tracks/Synchronize/SmoothTime"), p.mSmoothTime);
+       gPrefs->Flush();
+
        params = p; // return all parameters through params
    }
 }

@@ -528,6 +528,7 @@ void LabelDialog::OnImport(wxCommandEvent &event)
    if (fileName != wxT("")) {
       path =::wxPathOnly(fileName);
       gPrefs->Write(wxT("/DefaultOpenPath"), path);
+      gPrefs->Flush();
 
       wxTextFile f;
 

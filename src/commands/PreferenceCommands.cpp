@@ -74,7 +74,7 @@ bool SetPreferenceCommand::Apply(CommandExecutionContext context)
 {
    wxString prefName = GetString(wxT("PrefName"));
    wxString prefValue = GetString(wxT("PrefValue"));
-   return gPrefs->Write(prefName, prefValue);
+   return (gPrefs->Write(prefName, prefValue) && gPrefs->Flush());
 }
 
 SetPreferenceCommand::~SetPreferenceCommand()

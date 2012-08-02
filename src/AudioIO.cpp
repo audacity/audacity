@@ -470,6 +470,8 @@ void InitAudioIO()
          gPrefs->Write(wxT("/AudioIO/Host"), HostName(info));
       }
    }
+
+   gPrefs->Flush();
 }
 
 void DeinitAudioIO()
@@ -1146,6 +1148,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    {
       silenceLevelDB = -dBRange + 3;   // meter range was made smaller than SilenceLevel
       gPrefs->Write(wxT("/GUI/EnvdBRange"), dBRange); // so set SilenceLevel reasonable
+      gPrefs->Flush();
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
 

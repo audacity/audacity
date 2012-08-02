@@ -216,6 +216,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& event)
    wxLongLong duration = m_TimeSpan_Duration.GetSeconds();
    // this will assert if the duration won't fit in a long
    gPrefs->Write(wxT("/TimerRecord/LastDuration"), duration.ToLong());
+   gPrefs->Flush();
 }
 
 ///Runs the wait for start dialog.  Returns false if the user clicks stop while we are recording

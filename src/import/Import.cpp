@@ -280,6 +280,7 @@ void Importer::WriteImportItems()
       }
       name.Printf (wxT("/ExtImportItems/Item%d"), i);
       gPrefs->Write (name, val);
+      gPrefs->Flush();
    }
    /* If we used to have more items than we have now, delete the excess items.
    We just keep deleting items and incrementing until we find there aren't any 

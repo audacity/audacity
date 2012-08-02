@@ -161,6 +161,7 @@ void EffectNoise::Success()
 
    gPrefs->Write(wxT("/Effects/Noise/Type"), noiseType);
    gPrefs->Write(wxT("/Effects/Noise/Amplitude"), noiseAmplitude);
+   gPrefs->Flush();
 }
 
 //----------------------------------------------------------------------------

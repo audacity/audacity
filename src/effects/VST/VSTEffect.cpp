@@ -76,6 +76,7 @@ void RegisterVSTEffects()
    if (gPrefs->Read(wxT("/VST/Rescan"), (long) false) != false) {
       pm.PurgeType(VSTPLUGINTYPE);
       gPrefs->Write(wxT("/VST/Rescan"), false);
+      gPrefs->Flush();
    }
 
    if (!pm.HasType(VSTPLUGINTYPE)) {

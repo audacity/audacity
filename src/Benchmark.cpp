@@ -324,6 +324,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
    bool editClipCanMove = true;
    gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove);
    gPrefs->Write(wxT("/GUI/EditClipCanMove"), false);
+   gPrefs->Flush();
 
    // Rememebr the old blocksize, so that we can restore it later.
    int oldBlockSize = Sequence::GetMaxDiskBlockSize();
@@ -538,6 +539,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent &event )
    HoldPrint(false);
 
    gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
+   gPrefs->Flush();
 }
 
 

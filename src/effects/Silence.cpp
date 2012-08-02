@@ -53,7 +53,10 @@ bool EffectSilence::PromptUser()
       Save duration unless value was got from selection, so we save only
       when user explicitly set up a value */
    if (mT1 == mT0)
+   {
       gPrefs->Write(wxT("/Effects/SilenceGen/Duration"), mDuration);
+      gPrefs->Flush();
+   }
 
    return true;
 }

@@ -88,11 +88,13 @@ bool LoadFFmpeg(bool showerror)
    {
       DropFFmpegLibs();
       gPrefs->Write(wxT("/FFmpeg/Enabled"), false);
+      gPrefs->Flush();
       return false;
    }
    else
    {
       gPrefs->Write(wxT("/FFmpeg/Enabled"), true);
+      gPrefs->Flush();
       return true;
    }
 }
@@ -745,6 +747,7 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    wxLogMessage(wxT("User-specified FFmpeg file exists. Success."));
    mLibAVFormatPath = path;
    gPrefs->Write(wxT("/FFmpeg/FFmpegLibPath"), mLibAVFormatPath);
+   gPrefs->Flush();
 
    return true;
 }

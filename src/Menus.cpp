@@ -2359,6 +2359,7 @@ void AudacityProject::OnToggleSoundActivated()
    bool pause;
    gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &pause, false);
    gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
+   gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
 }
 
@@ -2367,6 +2368,7 @@ void AudacityProject::OnTogglePlayRecording()
    bool Duplex;
    gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, false);
    gPrefs->Write(wxT("/AudioIO/Duplex"), !Duplex);
+   gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
 }
 
@@ -2375,6 +2377,7 @@ void AudacityProject::OnToggleSWPlaythrough()
    bool SWPlaythrough;
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &SWPlaythrough, false);
    gPrefs->Write(wxT("/AudioIO/SWPlaythrough"), !SWPlaythrough);
+   gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
 }
 
@@ -2384,6 +2387,7 @@ void AudacityProject::OnToogleAutomatedInputLevelAdjustment()
    bool AVEnabled;
    gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
    gPrefs->Write(wxT("/AudioIO/AutomatedInputLevelAdjustment"), !AVEnabled);
+   gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
 }
 #endif
@@ -4950,6 +4954,7 @@ void AudacityProject::OnShowClipping()
 {
    bool checked = !gPrefs->Read(wxT("/GUI/ShowClipping"), 0L);
    gPrefs->Write(wxT("/GUI/ShowClipping"), checked);
+   gPrefs->Flush();
    mCommandManager.Check(wxT("ShowClipping"), checked);
    mTrackPanel->UpdatePrefs();
    mTrackPanel->Refresh(false);
@@ -5084,10 +5089,12 @@ void AudacityProject::OnImport()
    wxArrayString selectedFiles = ShowOpenDialog(wxT(""));
    if (selectedFiles.GetCount() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
+      gPrefs->Flush();
       return;
    }
 
    gPrefs->Write(wxT("/NewImportingSession"), true);
+
    //sort selected files by OD status.  Load non OD first so user can edit asap.
    //first sort selectedFiles.
    selectedFiles.Sort(CompareNoCaseFileName);
@@ -5103,6 +5110,9 @@ void AudacityProject::OnImport()
    }
 
    gPrefs->Write(wxT("/LastOpenType"),wxT(""));
+
+   gPrefs->Flush();
+
    HandleResize(); // Adjust scrollers for new track sizes.
    ODManager::Resume();
 }
@@ -5123,6 +5133,7 @@ void AudacityProject::OnImportLabels()
    if (fileName != wxT("")) {
       path =::wxPathOnly(fileName);
       gPrefs->Write(wxT("/DefaultOpenPath"), path);
+      gPrefs->Flush();
 
       wxTextFile f;
 
@@ -5167,6 +5178,7 @@ void AudacityProject::OnImportMIDI()
    if (fileName != wxT("")) {
       path =::wxPathOnly(fileName);
       gPrefs->Write(wxT("/DefaultOpenPath"), path);
+      gPrefs->Flush();
 
       NoteTrack *newTrack = new NoteTrack(mDirManager);
 
@@ -5204,7 +5216,8 @@ void AudacityProject::OnImportRaw()
 
    path =::wxPathOnly(fileName);
    gPrefs->Write(wxT("/DefaultOpenPath"), path);
-   
+   gPrefs->Flush();
+
    Track **newTracks;
    int numTracks;
 
@@ -5939,6 +5952,7 @@ void AudacityProject::OnSyncLock()
    bool bSyncLockTracks;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);
    gPrefs->Write(wxT("/GUI/SyncLockTracks"), !bSyncLockTracks);
+   gPrefs->Flush();
 
    // Toolbar, project sync-lock handled within
    ModifyAllProjectToolbarMenus();
@@ -6046,6 +6060,7 @@ void AudacityProject::OnExportCleanSpeechPresets()
          int noiseCheckSum = abs((int)noiseGateSum);
          preset[13] = noiseCheckSum;
          gPrefs->Write(wxT("/Validate/NoiseGateSum"), noiseCheckSum);
+         gPrefs->Flush();
 
          int lenPreset = sizeof(preset);
          int count = presetsFile.Write(preset, lenPreset);
@@ -6123,6 +6138,7 @@ void AudacityProject::OnImportCleanSpeechPresets()
          gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), preset[12]);
 //         gPrefs->Write(wxT("/GUI/Save128HqMasterAfter"), preset[14]);
 //         gPrefs->Write(wxT("/GUI/Save128HqMasterBefore"), preset[15]);
+         gPrefs->Flush();
 
          double noiseGateSum = 0.0;
          int lenNoiseGate = expectedCount / sizeof(float);

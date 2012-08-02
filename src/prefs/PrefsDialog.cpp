@@ -245,6 +245,7 @@ void PrefsDialog::OnOK(wxCommandEvent & event)
    }
 
    gPrefs->Write(wxT("/Prefs/PrefsCategory"), (long)mCategories->GetSelection());
+   gPrefs->Flush();
 
 #if USE_PORTMIXER
    if (gAudioIO) {
