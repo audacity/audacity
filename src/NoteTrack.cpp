@@ -770,6 +770,9 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("minimized")) && 
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mMinimized = (nValue != 0);
+         else if (!wxStrcmp(attr, wxT("isSelected")) && 
+                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+            this->SetSelected(nValue != 0);
 #ifdef EXPERIMENTAL_MIDI_OUT
          else if (!wxStrcmp(attr, wxT("velocity")) && 
                   XMLValueChecker::IsGoodString(strValue) && 
@@ -824,6 +827,8 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("visiblechannels"), saveme->mVisibleChannels);
    xmlFile.WriteAttr(wxT("height"), saveme->GetActualHeight());
    xmlFile.WriteAttr(wxT("minimized"), saveme->GetMinimized());
+   xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    xmlFile.WriteAttr(wxT("velocity"), (double) saveme->mGain);
 #endif

@@ -1355,6 +1355,9 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("minimized")) && 
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mMinimized = (nValue != 0);
+         else if (!wxStrcmp(attr, wxT("isSelected")) && 
+                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+            this->SetSelected(nValue != 0);
          else if (!wxStrcmp(attr, wxT("gain")) && 
                   XMLValueChecker::IsGoodString(strValue) && 
                   Internat::CompatibleToDouble(strValue, &dblValue))
@@ -1437,6 +1440,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("solo"), mSolo);
    xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
    xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
+   xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("gain"), (double)mGain);
    xmlFile.WriteAttr(wxT("pan"), (double)mPan);
