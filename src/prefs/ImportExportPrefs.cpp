@@ -81,7 +81,9 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("S&how Metadata Editor prior to export step"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
-      S.AddFixedText(_("Note: Export quality options can be chosen by clicking the Options\nbutton in the Export dialog."));
+      // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog. 
+      // It's only clutter in this Prefs tab, so removed. 
+      //    S.AddFixedText(_("Note: Export quality options can be chosen by clicking the Options\nbutton in the Export dialog."));
    }
    S.EndStatic();
 #ifdef USE_MIDI
