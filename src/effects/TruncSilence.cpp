@@ -582,6 +582,7 @@ bool EffectTruncSilence::Process()
 
       delete [] buffer;
 
+      // Buffer has been freed, so we're OK to return if cancelled
       if (cancelled) 
       {
          ReplaceProcessedTracks(false);
