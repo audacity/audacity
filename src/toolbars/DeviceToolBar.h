@@ -45,8 +45,8 @@ class DeviceToolBar:public ToolBar {
 
    /// When the prefs don't exist this value is used.
    /// It should be small enough to work on tiny screens
-   int GetInitialWidth() {return 520;}
-   virtual int GetMinToolbarWidth() {return 200;}
+   int GetInitialWidth() { return 620; }
+   virtual int GetMinToolbarWidth() { return 200; }
 
    void ShowInputDialog();
    void ShowOutputDialog();
