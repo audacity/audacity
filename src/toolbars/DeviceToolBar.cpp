@@ -419,6 +419,9 @@ void DeviceToolBar::RepositionCombos()
    // if the toolbar is docked then the width we should use is the project width.
    // as the toolbar's with can extend past this.
    GetClientSize(&w, &h);
+
+   // FIX-ME: Note that there's some bug in here, in that even if the prefs show the toolbar 
+   // docked, on initialization, this call to IsDocked() returns false.
    if (IsDocked()) {
       // If the toolbar is docked its width can be larger than what is actually viewable
       // So take the min.  We don't need to worry about having another toolbar to the left off us
