@@ -459,16 +459,10 @@ void DeviceToolBar::RepositionCombos()
    // limit the amount of times we solve contraints to 5
    while (constrained && ratioUnused > 0.01f && i < 5) {
       i++;
-      constrained = false;
-
-      constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused,
-				    0, true) || constrained;
-      constrained = RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused,
-				    mRecordBitmap->GetWidth(), true) || constrained;
-      constrained = RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused,
-				    mPlayBitmap->GetWidth(), true) || constrained;      
-      constrained = RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused,
-				    0, true) || constrained;
+      constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true);
+      constrained |= RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, mRecordBitmap->GetWidth(), true);
+      constrained |= RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, mPlayBitmap->GetWidth(), true);      
+      constrained |= RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused, 0, true);
    }
 
    Update();
