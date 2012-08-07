@@ -348,10 +348,10 @@ void DeviceToolBar::EnableDisableButtons()
 void DeviceToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   mOutput->SetToolTip(_("Output Device"));
-   mInput->SetToolTip(_("Input Device"));
-   mHost->SetToolTip(_("Audio Host"));
-   mInputChannels->SetToolTip(_("Input Channels"));
+   mOutput->SetToolTip(mOutput->GetName() + wxT(" - ") + mOutput->GetStringSelection());
+   mInput->SetToolTip(mInput->GetName() + wxT(" - ") + mInput->GetStringSelection());
+   mHost->SetToolTip(mHost->GetName() + wxT(" - ") + mHost->GetStringSelection());
+   mInputChannels->SetToolTip(mInputChannels->GetName() + wxT(" - ") + mInputChannels->GetStringSelection());
 #endif
 }
 

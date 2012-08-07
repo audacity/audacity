@@ -193,7 +193,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       // This will happen consistently when going from more bytes per sample to fewer...
       // This will create a block that's smaller than mMinSamples, which 
       // shouldn't be allowed, but we agreed it's okay for now.
-      //vvvvv ANSWER-ME: Does this cause any bugs, or failures on write, elsewhere?
+      //vvv ANSWER-ME: Does this cause any bugs, or failures on write, elsewhere?
       //    If so, need to special-case (len < mMinSamples) and start combining data 
       //    from the old blocks... Oh no!
       
@@ -223,7 +223,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       {
          SeqBlock* pOldSeqBlock = mBlock->Item(i);
          mDirManager->Deref(pOldSeqBlock->f);
-         pOldSeqBlock->f = NULL; //vvvvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
+         pOldSeqBlock->f = NULL; //vvv ...so we don't delete the file when we delete mBlock, next. ANSWER-ME: Right, or delete?
       }
       delete mBlock;
 
