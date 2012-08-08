@@ -20,16 +20,16 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.1 
+Version 2.0.2 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.0 
+2.  Changes since version 2.0.1 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
-6.  Previous Changes going back to version 1.1.0
+6.  Previous Changes going back to version 1.1.0.
 
 --------------------------------------------------------------------------------
 
@@ -56,74 +56,58 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.0: 
+2. Changes since version 2.0.1: 
 
 Bug fixes for:
 
  * Interface:
-   * Selection Toolbar: a value for the previous whole second 
-      displayed if the value was close to a whole second. 
-   * Finding zero crossings could cause the selection to expand into
-      white space at either side of the clip. 
-   * Clips did not drag to another track if mouse was over a selection.
-   * Mixer Board: Rendering four tracks resulted in a redundant Track
-      Strip followed by a crash. 
+   * "Retain labels" Interface Preference did not retain labels for
+      a region that snapped exactly to both label edges.
+   * Projects did not save the track selected state.
+   * (OS X, Linux) Timer Record: Interlinking of the Start, End and 
+      Duration controls was broken.
+   * (Windows) JAWS screen-reader did not read the "Draw curves" and 
+      "Graphic EQ" radio buttons in Equalization correctly. . 
 
- * Imports, Exports and Files:
-   * Exporting to WAV or AIFF led to a "Libsndfile says" error or
-      corrupted output due to order of metadata in imported files. 
-   * (Mac) Fixed crashes importing MP3 files on PPC machines.    
-   * (Linux Ubuntu) .Aup files could not be associated with Audacity
-      (they opened in the web browser instead).
+ * Envelopes and Clips: 
+   * Exporting (or any render operation) on a track containing 
+      split lines could create clicks at the split lines. 
 
  * Effects and Analysis:
-   * Normalize: Fixed issues where normalization could be to wrong
-      value if applied with DC offset correction, or if applied to 
-      "read-directly" WAV and AIFF files before On-Demand completed. 
-   * Sliding Time Scale: fixed an audible discontinuity at the 
-      beginning of the processed selection; fixed a serious quality
-      problem on Linux 64-bit. 
- 
- * Other miscellaneous bug fixes, including fix to prevent zooming
-    with mouse wheel or ball scrolling the content off-screen, 
+   * Normalize could crash if the track name contained "%". 
 
 
 Changes and Improvements:
 
- * Shortcuts can now be added in Keyboard Preferences to items in the
-    Generate, Effect or Analyze menus, including user-added plug-ins.   
-
- * Nyquist Effect plug-ins can now be added to Chains. 
-
- * New "Paulstretch" effect for extreme slowdown without pitch change. 
-
- * New "Sample Data Export" Analyze effect for exporting a file 
-    containing amplitude values for each sample in the selection. 
-
- * New Preference (off by default) to import files On-Demand (without 
-    seek ability) when using the optional FFmpeg library. 
-
- * New Preference (off by default) to retain labels when deleting a
-    selection that snaps to the label without extending past it.
-
- * (Windows installer) New option to reset Preferences on next launch. 
-
- * (Mac) Audacity now has excellent compatibility with the VoiceOver
-     screen reader. For details, please see:
-     http://manual.audacityteam.org/help/manual/man/accessibility.html#mac .  
-
- * CleanSpeech Mode (no longer supported) will not now be enabled 
-    even if it was enabled by an earlier version of Audacity.  
-
- * Added Serbian (Latin and Cyrillic) translations.   
-    
+ * Duration controls when generating at a point now default to 
+    hh:mm:ss + milliseconds format. Selection Toolbar also defaults
+    to that format on first installation or resetting preferences. 
+ * Toolbars visual improvements:
+   * "Snap To" in Selection Toolbar now has an explanatory tooltip.  
+   * Device Toolbar tooltips now display the selected device. 
+   * Increased default width of Device Toolbar and Meter Toolbar.   
+ * Improvements and some bug fixes to Nyquist effects, including:
+   * Delay (new option to prevent duration change)
+   * Sample Data Export (new "L-R on Same Line" layout option)
+   * Risset Drum (new "Amplitude" slider). 
+ * Importing a labels file writes the file name to the name of the 
+    Label Track, and exporting a labels file offers the name of the
+    last Label Track in the project.
+ * Removed the "Audio cache" option from Directories Preferences 
+    due to frequent crash reports. All data operations will now 
+    be written to disk and not to RAM. 
+ * Removed the FFmpeg "On-Demand" option from Libraries Preferences
+    (this fixes Audacity not building if configured --without-ffmpeg). 
+ * Compilation: Progress on making the Modules feature mainstream. 
+    Modules can now be individually enabled and disabled in Preferences.
+ 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.1:
+3. Known Issues in 2.0.2:
 
-For known issues at release of 2.0.1, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.1#known
+For known issues at release of 2.0.2, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.2#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -280,7 +264,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.1 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.2 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/
@@ -320,6 +304,68 @@ or ask at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 2.0.1: 
+
+Bug fixes for:
+
+ * Interface:
+   * Selection Toolbar: a value for the previous whole second 
+      displayed if the value was close to a whole second. 
+   * Finding zero crossings could cause the selection to expand into
+      white space at either side of the clip. 
+   * Clips did not drag to another track if mouse was over a selection.
+   * Mixer Board: Rendering four tracks resulted in a redundant Track
+      Strip followed by a crash. 
+
+ * Imports, Exports and Files:
+   * Exporting to WAV or AIFF led to a "Libsndfile says" error or
+      corrupted output due to order of metadata in imported files. 
+   * (Mac) Fixed crashes importing MP3 files on PPC machines.    
+   * (Linux Ubuntu) .Aup files could not be associated with Audacity
+      (they opened in the web browser instead).
+
+ * Effects and Analysis:
+   * Normalize: Fixed issues where normalization could be to wrong
+      value if applied with DC offset correction, or if applied to 
+      "read-directly" WAV and AIFF files before On-Demand completed. 
+   * Sliding Time Scale: fixed an audible discontinuity at the 
+      beginning of the processed selection; fixed a serious quality
+      problem on Linux 64-bit. 
+ 
+ * Other miscellaneous bug fixes, including fix to prevent zooming
+    with mouse wheel or ball scrolling the content off-screen. 
+
+
+Changes and Improvements:
+
+ * Shortcuts can now be added in Keyboard Preferences to items in the
+    Generate, Effect or Analyze menus, including user-added plug-ins.   
+
+ * Nyquist Effect plug-ins can now be added to Chains. 
+
+ * New "Paulstretch" effect for extreme slowdown without pitch change. 
+
+ * New "Sample Data Export" Analyze effect for exporting a file 
+    containing amplitude values for each sample in the selection. 
+
+ * New Preference (off by default) to import files On-Demand (without 
+    seek ability) when using the optional FFmpeg library. 
+
+ * New Preference (off by default) to retain labels when deleting a
+    selection that snaps to the label without extending past it.
+
+ * (Windows installer) New option to reset Preferences on next launch. 
+
+ * (Mac) Audacity now has excellent compatibility with the VoiceOver
+     screen reader. For details, please see:
+     http://manual.audacityteam.org/help/manual/man/accessibility.html#mac .  
+
+ * CleanSpeech Mode (no longer supported) will not now be enabled 
+    even if it was enabled by an earlier version of Audacity.  
+
+ * Added Serbian (Latin and Cyrillic) translations.   
+
 
 Changes between version 1.3.14 Beta and 2.0.0:
 
