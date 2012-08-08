@@ -957,6 +957,7 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
    // since we need float values anyway to apply the gain.
+   // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to be set to floatSample below. 
    if (captureFormat == int24Sample)
       captureFormat = floatSample;
 
