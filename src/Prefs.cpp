@@ -155,7 +155,7 @@ void InitPreferences()
    if( fn.FileExists() )   // it will exist if the (win) installer put it there on request
    {
       // pop up a dialogue
-      wxString prompt = _("Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset");
+      wxString prompt = _("Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
       int action = wxMessageBox(prompt, _("Reset Audacity Preferences"),
                                 wxYES_NO, NULL);
       if(action == wxYES)   // reset
