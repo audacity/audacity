@@ -31,8 +31,6 @@ AppSupportURL=http://audacity.sourceforge.net
 AppUpdatesURL=http://audacity.sourceforge.net
 ChangesAssociations=yes
 
-; For a beta release, e.g.:   DefaultDirName={pf}\Audacity Beta
-; For a stable release:   DefaultDirName={pf}\Audacity
 DefaultDirName={pf}\Audacity
 
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
