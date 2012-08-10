@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-07-24 03:59-0000\n"
-"Last-Translator: gale <gale@audacityteam.org>\n"
+"PO-Revision-Date: 2012-08-09 21:24-0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
 "MIME-Version: 1.0\n"
@@ -1789,11 +1789,6 @@ msgstr "Відсутні позначок для експорту."
 msgid "Export Labels As:"
 msgstr "Експортувати позначки як:"
 
-#: LabelDialog.cpp:573
-#: Menus.cpp:2885
-msgid "labels.txt"
-msgstr "labels.txt"
-
 #: LabelDialog.cpp:705
 msgid "New Label Track"
 msgstr "Нова доріжка позначок"
@@ -2827,6 +2822,11 @@ msgstr "Встановити праву точку обмеження вибра
 msgid "You must select a track first."
 msgstr "Спочатку виберіть доріжку."
 
+#: LabelDialog.cpp:573
+#: Menus.cpp:2885
+msgid "labels.txt"
+msgstr "labels.txt"
+
 #: Menus.cpp:2881
 msgid "There are no label tracks to export."
 msgstr "Немає доріжок з позначками для експорту."
@@ -3356,7 +3356,7 @@ msgstr "Доріжка приміток"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset"
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr ""
 "Відновити початкові значення параметрів?\n"
 "\n"
@@ -5711,6 +5711,12 @@ msgstr "Амплітуда (0-1)"
 #: effects/DtmfGen.cpp:454
 msgid "Duration:"
 msgstr "Тривалість:"
+
+#. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: widgets/TimeTextCtrl.cpp:308
+msgid "hh:mm:ss + milliseconds"
+msgstr "гг:хх:сс + мілісекунд"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -9479,14 +9485,6 @@ msgstr "&Використовувати особливе мікшування (�
 msgid "S&how Metadata Editor prior to export step"
 msgstr "По&казувати редактор метаданих перед кроком експорту"
 
-#: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
-"button in the Export dialog."
-msgstr ""
-"Зауваження: параметри якості експорту можна вибрати після натискання кнопки «Параметри»\n"
-"у діалоговому вікні експорту."
-
 #: prefs/ImportExportPrefs.cpp:88
 msgid "When exporting track to an Allegro (.gro) file"
 msgstr "Коли експортуються доріжки до файла Allegro (.gro)"
@@ -9675,8 +9673,8 @@ msgid "Modules"
 msgstr "Модулі"
 
 #: prefs/ModulePrefs.cpp:55
-msgid "Enable these Modules (if present)"
-msgstr "Увімкнути ці модулі (якщо їх встановлено)"
+msgid "Enable these Modules (if present), next time Audacity is started"
+msgstr "Увімкнути ці модулі (якщо їх встановлено) під час наступного запуску Audacity"
 
 #: prefs/ModulePrefs.cpp:57
 msgid ""
@@ -10591,13 +10589,13 @@ msgstr "Індикатор запису"
 msgid "Meter-Record"
 msgstr "Індикатор запису"
 
-#: toolbars/MeterToolBar.cpp:121
-msgid "Output level meter"
-msgstr "Індикатор рівня на виході"
+#: toolbars/MeterToolBar.cpp:129
+msgid "Output Level"
+msgstr "Рівень виведення"
 
-#: toolbars/MeterToolBar.cpp:122
-msgid "Input level meter - click to monitor input"
-msgstr "Індикатор рівня входу. Клацніть, щоб запустити контроль входу."
+#: toolbars/MeterToolBar.cpp:130
+msgid "Input Level (Click to monitor.)"
+msgstr "Вхідний рівень (натисніть, щоб спостерігати)"
 
 #: toolbars/MixerToolBar.cpp:89
 msgid "Output Volume"
@@ -10615,21 +10613,13 @@ msgstr "Рівень на вході"
 msgid "Slider Input"
 msgstr "Повзунок вводу"
 
-#: toolbars/MixerToolBar.cpp:286
-msgid "Input Volume Slider"
-msgstr "Повзунок гучності вхідного сигналу"
-
 #: toolbars/MixerToolBar.cpp:290
-msgid "Cannot control input volume; use system mixer."
-msgstr "Керування гучністю вхідного сигналу неможливе; використовуємо мікшер системи."
-
-#: toolbars/MixerToolBar.cpp:294
-msgid "Output Volume Slider"
-msgstr "Повзунок гучності вихідного сигналу"
+msgid "Input Volume (Unavailable; use system mixer.)"
+msgstr "Рівень вхідного сигналу (недоступний, скористайтеся мікшером системи)"
 
 #: toolbars/MixerToolBar.cpp:298
-msgid "Cannot control output volume; use system mixer."
-msgstr "Керування гучністю вихідного сигналу неможливе; використовуємо мікшер системи."
+msgid "Output Volume (Unavailable; use system mixer.)"
+msgstr "Рівень виідного сигналу (недоступний, скористайтеся мікшером системи)"
 
 #: toolbars/SelectionBar.cpp:86
 #: toolbars/SelectionBar.cpp:287
@@ -10665,6 +10655,12 @@ msgstr "Позиція у аудіо:"
 #: toolbars/SelectionBar.cpp:236
 msgid "Snap To"
 msgstr "Прив'язка"
+
+#: toolbars/SelectionBar.cpp:241
+#: toolbars/SelectionBar.cpp:372
+#, c-format
+msgid "Snap Clicks/Selections to %s"
+msgstr "Прив’язувати клацання/позначення до %s"
 
 #: toolbars/SelectionBar.cpp:255
 msgid "Selection "
@@ -10939,12 +10935,6 @@ msgstr "0100 днів 024 г 060 хв 060 с"
 msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 г 060 хв 060.0100 с"
 
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: widgets/TimeTextCtrl.cpp:308
-msgid "hh:mm:ss + milliseconds"
-msgstr "гг:хх:сс + мілісекунд"
-
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
@@ -11100,9 +11090,9 @@ msgstr "CDDA кадри (75 кд/с)"
 msgid "01000,01000 frames|75"
 msgstr "01000,01000 кадри|75"
 
-#: widgets/TimeTextCtrl.cpp:496
-msgid "Use right mouse button or context key to change format"
-msgstr "Використовуйте праву кнопку миші або контекстну клавішу для зміни формату"
+#: widgets/TimeTextCtrl.cpp:498
+msgid "(Use context menu to change format.)"
+msgstr "(Скористайтеся контекстним меню, щоб змінити формат.)"
 
 #: widgets/TimeTextCtrl.cpp:1597
 msgid "centiseconds"
