@@ -45,6 +45,7 @@ class MeterToolBar:public ToolBar {
    virtual void OnSize(wxSizeEvent & event);
 
    int GetInitialWidth() {return 338;}
+   int GetMinToolbarWidth() { return 255; }
 
  private:
    void RegenerateTooltips();
