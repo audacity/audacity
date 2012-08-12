@@ -78,50 +78,40 @@ TrackPoint :: TrackPoint(Slice *slice, float *peak, audio *gx, float *mag, float
   phSynth = ph;
 }
 
+void TrackPoint :: absorb()
+{
+  if(pp && pn) {
+    if(pp->y * peak[lrintf(pp->x - x)] > pn->y * peak[lrintf(pn->x - x)]) {
+      pp->m2 += m2;
+    } else {
+      pn->m2 += m2;
+    }
+  } else if(pp) {
+    if(y01 == 0.0f || y01 * peak[lrintf(x01 - x)] < pp->y * peak[lrintf(pp->x - x)]) {      
+      pp->m2 += m2;
+    }
+  } else if(pn) {
+    if(y01 == 0.0f || y01 * peak[lrintf(x01 - x)] < pn->y * peak[lrintf(pn->x - x)]) {      
+      pn->m2 += m2;
+    }
+  }
+}
+
 TrackPoint :: ~TrackPoint()
 {
   for(int d=0;d<3;d++) {
     if(dup[d]) {
-      m2 = 0.0f;
       dup[d]->dup[2-d] = NULL;
     }
   }
-  m2 = 0;
   if(slice) slice->remove(this);
   if(pp && pn) {
     pp->pn = pn;
     pn->pp = pp;
-    if(!(owner && owner->bRender)) {
-      if(pp->y * peak[lrintf(pp->x - x)] > pn->y * peak[lrintf(pn->x - x)]) {
-        pp->m2 += m2;
-        pp->xtn2 = xtn2;
-        pn->xtp2 = xtn2;
-      } else {
-        pn->m2 += m2;
-        pp->xtn2 = xtp2;
-        pn->xtp2 = xtp2;
-      }
-    }
   } else if(pp) {
-    pp->pn = NULL;
-    if(!(owner && owner->bRender)) {
-      if(y01 == 0.0f || y01 * peak[lrintf(x01 - x)] < pp->y * peak[lrintf(pp->x - x)]) {      
-        pp->x01 = x01;
-        pp->y01 = y01;
-        pp->m2 += m2;
-        pp->xtn2 = xtn2;
-      }
-    }
+    pp->pn = NULL;  
   } else if(pn) {
     pn->pp = NULL;
-    if(!(owner && owner->bRender)) {
-      if(y01 == 0.0f || y01 * peak[lrintf(x01 - x)] < pn->y * peak[lrintf(pn->x - x)]) {      
-        pn->x01 = x01;
-        pn->y01 = y01;
-        pn->m2 += m2;
-        pn->xtp2 = xtp2;
-      }
-    }
   }
 }
 

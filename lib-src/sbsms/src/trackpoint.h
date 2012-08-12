@@ -19,6 +19,7 @@ public:
   float getF();
   float getM();
   float getPhase();
+  void absorb();
 protected:
   TrackPoint *pp;
   TrackPoint *pn;

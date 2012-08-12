@@ -41,10 +41,7 @@ Track :: ~Track() {
       i != point.end();
       ++i) {
     TrackPoint *tp = (*i);
-    if(tp) {
-       if(tp->owner == this) {
-          tp->owner = NULL;
-       }
+    if(tp) {    
        tp->destroy();
     }
   }
@@ -345,6 +342,16 @@ void Track :: synth(float *out,
       m0 += dm;
       out++;
     }
+  }
+}
+
+void Track :: absorb()
+{
+  for(vector<TrackPoint*>::iterator i = point.begin();
+      i != point.end();
+      ++i) {
+    TrackPoint *tp = (*i);
+    tp->absorb();
   }
 }
 

@@ -56,6 +56,7 @@ protected:
   void step(const TimeType &time);
   void synth(float *out, const TimeType &synthtime, int n, int mode, int c);
   bool jump(TrackPoint *tp0, TrackPoint *tp1);
+  void absorb();
 
   friend class SMS;
   friend class SynthRenderer;

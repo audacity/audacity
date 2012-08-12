@@ -618,11 +618,9 @@ void SMS :: render(int c, list<SBSMSRenderer*> &renderers)
     } else if(time >= t->start) {
       if(time <= t->last) {
         t->updateM(time,synthModeOutput);
-        if(band == 4 || band != 4) {
         for(list<SBSMSRenderer*>::iterator i = renderers.begin(); i != renderers.end(); ++i) {
           SBSMSRenderer *renderer = *i;
           renderer->render(c,t);
-        }
         }
         t->step(time);
       }
@@ -659,13 +657,6 @@ TrackPoint *SMS :: nearestForward(TrackPoint **begin, TrackPoint *tp0, float *mi
     if(df2 > maxDF2) break;
     float dM2 = dBApprox(tp1->m2,tp0->m2);
     float cost2 = (df2+dMCoeff2*dM2);
-    if(0 && dNCoeff2 != 0.0f) {
-      if(tp0->owner) {
-        cost2 += dNCoeff2 * (tp0->owner->size()<minTrackSize?1.0f:0.0f);
-      } else {
-        cost2 += dNCoeff2 * (tp1->owner->size()<minTrackSize?1.0f:0.0f);
-      }
-    }
     if(cost2 > maxCost2) continue;
     if(cost2 < (*minCost2)) {
       (*minCost2) = cost2;
@@ -693,13 +684,6 @@ TrackPoint *SMS :: nearestReverse(TrackPoint **begin, TrackPoint *tp0, float *mi
     if(df2 > maxDF2) break;
     float dM2 = dBApprox(tp1->m2,tp0->m2);
     float cost2 = (df2+dMCoeff2*dM2);
-    if(0 &&dNCoeff2 != 0.0f) {
-      if(tp0->owner) {
-        cost2 += dNCoeff2 * (tp0->owner->size()<minTrackSize?1.0f:0.0f);
-      } else {
-        cost2 += dNCoeff2 * (tp1->owner->size()<minTrackSize?1.0f:0.0f);
-      }
-    }
     if(cost2 > maxCost2) continue;
     if(cost2 < (*minCost2)) {
       (*minCost2) = cost2;
@@ -1267,6 +1251,7 @@ void SMS :: start(long offset, int c)
         ++tt;
         assignTracks[c].erase(eraseMe);
         returnTrackIndex(c,t);
+        t->absorb();
         delete t;
         continue;
       }
@@ -1357,7 +1342,7 @@ void SMS :: splitMerge(int c)
         tp->cont = minH;
       }
     }
-    if(1&&tp->cont) {
+    if(tp->cont) {
       tp->owner->point.insert(tp->owner->point.begin(),tp->cont);
       tp->owner->first--;
       tp->owner->bStitch = true;
@@ -1393,7 +1378,7 @@ void SMS :: splitMerge(int c)
         tp->cont = minH;
       }
     }
-    if(1&&tp->cont) {
+    if(tp->cont) {
       tp->owner->point.insert(tp->owner->point.end(),tp->cont);
       tp->owner->last++;
       tp->owner->bStitch = true;
@@ -1482,20 +1467,6 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
   bool bX1 = false;
   TrackPoint *prev = NULL;
 
-  /*
-  float xt2sum = 1.0f;
-  bool bTroughN1sum = false;
-  bool bTroughN2sum = false;
-  float x0sum = 1.0f;
-  float y0sum = mag2[1];
-  float x1sum = 0.0f;
-  float y1sum = 0.0f;
-  bool bX0sum = !lo;
-  bool bX1sum = false;
-  TrackPoint *prevsum = NULL;
-  TrackPoint *psum = NULL;
-  */
-
   Slice *slice = new Slice(band,addtime[c]);
 
   for(int k=1; k<=kEnd; k++) {
@@ -1514,31 +1485,6 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
         }
       } else {
         TrackPoint *p = new TrackPoint(slice,peak2N,x2[c],mag2,mag2,k,N,band);
-
-        /*
-        if(psum) {
-          if(p->x - psum->x > peakWidth2) {
-            if(prev) {
-              prev->pn = psum;
-              psum->pp = prev;
-            } else {
-              slice->bottom = psum;
-            }
-            slice->top = psum;
-            prev = psum;
-            prevsum = psum;
-            psum->xtn2 = maxK;
-            bTroughN1sum = true;
-            bTroughN2sum = true;
-            psum->xtp2 = xt2sum;
-            psum->x01 = x0sum;
-            psum->y01 = y0sum;
-          } else {
-            delete psum;
-          }
-        }
-        psum = NULL;
-        */
 
         if(prev) {
           prev->pn = p;
@@ -1564,34 +1510,6 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
         bTroughN2 = false;
       }
     }
-
-    /*
-    if(mag2sum[k] > mag2sum[k-1] && mag2sum[k] >= mag2sum[k+1]) {
-      if(k < kLo) {
-        x0sum = findExtremum(mag2sum,mag2,k,&y0sum);
-        bX0sum = true;
-      } else if(k > kHi) {
-        if(!bX1sum) {
-          x1sum = findExtremum(mag2sum,mag2,k,&y1sum);
-          if(prevsum) {
-            prevsum->x01 = x1sum;
-            prevsum->y01 = y1sum;
-          }
-          bX1sum = true;
-        }
-      } else {
-        if(!prev || k - prev->x > peakWidth2) {
-          psum = new TrackPoint(slice,peak2N,x2[c],mag2sum,mag2,k,N,band);
-        }
-      }
-    } else if(mag2sum[k] <= mag2sum[k-1] && mag2sum[k] <= mag2sum[k+1]) {
-      xt2sum = findExtremum(mag2sum,mag2,k,NULL);
-      if(bTroughN2sum) {
-        prevsum->xtn2 = xt2;
-        bTroughN2sum = false;
-      }
-    }
-    */
   }
   if(bTroughN2) {
     prev->xtn2 = (float)kEnd;
@@ -1749,6 +1667,7 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
       p; ) {
     TrackPoint *pn = p->pn;
     if(p->m2 < m2min) {
+      p->absorb();
       delete p;
     }
     p = pn;
