@@ -1322,13 +1322,6 @@
 			remoteGlobalIDString = 28501EAF0CEED1F00029ABAA;
 			remoteInfo = libvamp;
 		};
-		28ABC8E90FD6441D00F9992A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2880527D0DEA694100671EA4;
-			remoteInfo = "mod-script-pipe";
-		};
 		28E237260E515E1300281398 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1790ABE309883346008A330A /* Project object */;
@@ -6071,7 +6064,6 @@
 				17C99D45098970800041B1BC /* PBXTargetDependency */,
 				2840CF800AEB822100F49FC3 /* PBXTargetDependency */,
 				ED2707480EF9C55A007D4FFD /* PBXTargetDependency */,
-				28ABC8EA0FD6441D00F9992A /* PBXTargetDependency */,
 			);
 			name = Audacity;
 			productName = Audacity;
@@ -7354,11 +7346,6 @@
 			isa = PBXTargetDependency;
 			target = 28501EAF0CEED1F00029ABAA /* libvamp */;
 			targetProxy = 28501F520CEED9A80029ABAA /* PBXContainerItemProxy */;
-		};
-		28ABC8EA0FD6441D00F9992A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2880527D0DEA694100671EA4 /* mod-script-pipe */;
-			targetProxy = 28ABC8E90FD6441D00F9992A /* PBXContainerItemProxy */;
 		};
 		28E237270E515E1300281398 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
