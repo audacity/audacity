@@ -1667,6 +1667,7 @@ void SMS :: add(grain *g0, grain *g1, grain *g2, int c)
       p; ) {
     TrackPoint *pn = p->pn;
     if(p->m2 < m2min) {
+      if(p->m2 < 0) { p->m2 = 0; }
       p->absorb();
       delete p;
     }
