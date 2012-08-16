@@ -3884,8 +3884,16 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
       }
       SetCapturedTrack( NULL );
    }
-   // BG: There are no more tracks on screen
-   if (mTracks->IsEmpty()) {
+
+   this->UpdateViewIfNoTracks();
+   this->Refresh(false);
+}
+
+void TrackPanel::UpdateViewIfNoTracks()
+{
+   if (mTracks->IsEmpty()) 
+   {
+      // BG: There are no more tracks on screen
       //BG: Set zoom to normal
       mViewInfo->zoom = 44100.0 / 512.0;
 
@@ -3895,8 +3903,6 @@ void TrackPanel::HandleClosing(wxMouseEvent & event)
 
       mListener->TP_RedrawScrollbars();
       mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
-      
-      Refresh(false);
    }
 }
 

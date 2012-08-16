@@ -6264,7 +6264,9 @@ void AudacityProject::OnRemoveTracks()
 
    PushState(_("Removed audio track(s)"), _("Remove Track"));
 
+   mTrackPanel->UpdateViewIfNoTracks();
    mTrackPanel->Refresh(false);
+
    if (mMixerBoard)
       mMixerBoard->Refresh(true);
 }

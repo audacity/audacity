@@ -200,6 +200,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnTrackListResized(wxCommandEvent & event);
    virtual void OnTrackListUpdated(wxCommandEvent & event);
+   virtual void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
    virtual double GetMostRecentXPos();
 
