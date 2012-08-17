@@ -1231,7 +1231,7 @@ void TagsEditor::OnRemove(wxCommandEvent & event)
    else if (!mEditTrack && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TRACK) == 0) {
       return;
    }
-   else if (row < STATICCNT - 1) {
+   else if (row < STATICCNT) {
       mGrid->SetCellValue(row, 1, wxEmptyString);
    }
    else if (row >= STATICCNT) {
