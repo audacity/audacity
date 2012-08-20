@@ -67,11 +67,13 @@ Bug fixes for:
    * (OS X, Linux) Timer Record: Interlinking of the Start, End and 
       Duration controls was broken.
    * (Windows) JAWS screen-reader did not read the "Draw curves" and 
-      "Graphic EQ" radio buttons in Equalization correctly. . 
+      "Graphic EQ" radio buttons in Equalization correctly.  
 
  * Envelopes and Clips: 
    * Exporting (or any render operation) on a track containing 
       split lines could create clicks at the split lines. 
+   * Dragging a clip into another track caused a crash if Sync-Lock
+      Tracks was enabled and there was also a label track. 
 
  * Effects and Analysis:
    * Normalize could crash if the track name contained "%". 
