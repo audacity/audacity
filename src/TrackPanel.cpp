@@ -2570,8 +2570,17 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
             if (mCapturedTrack->GetKind() == Track::Wave) // Should always be true here, but make sure.
             {
                WaveTrack* pWaveTrack = (WaveTrack*)mCapturedTrack;
-               mCapturedClipArray[i].clip->Resample(pWaveTrack->GetRate());
-               mCapturedClipArray[i].clip->MarkChanged();
+               WaveClip* pWaveClip = mCapturedClipArray[i].clip;
+               //vvvvv FIX-ME: I think that at this point, mCapturedClipArray has 
+               //      the wrong clips if we're dragging a clip to another track, per bug 367.
+               //      Probably, mCapturedClipArray does not match mCapturedTrack.
+               //      Then if the mCapturedClipArray.GetCount() is wrong, pWaveClip can be NULL.
+               //      This conditional is just a failsafe against crash on NULL deref.
+               if (pWaveClip) 
+               {
+                  pWaveClip->Resample(pWaveTrack->GetRate());
+                  pWaveClip->MarkChanged();
+               }
             }
 
       SetCapturedTrack( NULL );
