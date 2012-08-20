@@ -2950,6 +2950,9 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
       desiredSlideAmount = 0.0;
    }
 
+   // Scroll during vertical drag.
+   EnsureVisible(mouseTrack);
+
    //If the mouse is over a track that isn't the captured track,
    //drag the clip to the mousetrack
    if (mCapturedClip && mouseTrack != mCapturedTrack /*&&
