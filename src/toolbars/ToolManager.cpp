@@ -602,7 +602,7 @@ void ToolManager::ReadConfig()
             bar->Layout();
          }
 #else
-         // note that this section is here because if you had been using linking and now you aren't,
+         // note that this section is here because if you had been using sync-lock and now you aren't,
          // the space for the extra button is stored in audacity.cfg, and so you get an extra space
          // in the EditToolbar.
          // It is needed so that the meterToolbar size gets preserved.

@@ -3830,7 +3830,7 @@ void AudacityProject::OnPaste()
             ((LabelTrack *)n)->Clear(t0, t1);
 
             // To be (sort of) consistent with Clear behavior, we'll only shift
-            // them if linking is on
+            // them if sync-lock is on.
             if (IsSyncLocked())
                ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipT1 - msClipT0, t0);
 
@@ -3908,7 +3908,7 @@ void AudacityProject::OnPaste()
          {
             ((LabelTrack *)n)->Clear(t0, t1);
 
-            // As above, only shift labels if linking is on
+            // As above, only shift labels if sync-lock is on.
             if (IsSyncLocked())
                ((LabelTrack *)n)->ShiftLabelsOnInsert(msClipT1 - msClipT0, t0);
          }
@@ -5330,6 +5330,9 @@ void AudacityProject::OnSelectionSave()
 
 void AudacityProject::OnSelectionRestore()
 {
+   if ((mSel0save == 0.0) && (mSel1save == 0.0))
+      return;
+
    mViewInfo.sel0 = mSel0save;
    mViewInfo.sel1 = mSel1save;
 

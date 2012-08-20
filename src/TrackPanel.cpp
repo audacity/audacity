@@ -2565,20 +2565,18 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
    if (event.LeftUp()) {
       if (mDidSlideVertically && mCapturedTrack) 
          // Now that user has dropped the clip into a different track, 
-         // make sure the sample rate matches the destination track.
+         // make sure the sample rate matches the destination track (mCapturedTrack).
          for (size_t i = 0; i < mCapturedClipArray.GetCount(); i++) 
             if (mCapturedTrack->GetKind() == Track::Wave) // Should always be true here, but make sure.
             {
-               WaveTrack* pWaveTrack = (WaveTrack*)mCapturedTrack;
                WaveClip* pWaveClip = mCapturedClipArray[i].clip;
-               //vvvvv FIX-ME: I think that at this point, mCapturedClipArray has 
-               //      the wrong clips if we're dragging a clip to another track, per bug 367.
-               //      Probably, mCapturedClipArray does not match mCapturedTrack.
-               //      Then if the mCapturedClipArray.GetCount() is wrong, pWaveClip can be NULL.
-               //      This conditional is just a failsafe against crash on NULL deref.
+               // Note that per TrackPanel::AddClipsToCaptured(Track *t, double t0, double t1), 
+               // in the non-WaveTrack case, the code adds a NULL clip to mCapturedClipArray, 
+               // so we have to check for that any time we're going to deref it. 
+               // Previous code did not check it here, and that caused bug 367 crash.
                if (pWaveClip) 
                {
-                  pWaveClip->Resample(pWaveTrack->GetRate());
+                  pWaveClip->Resample(((WaveTrack*)mCapturedTrack)->GetRate());
                   pWaveClip->MarkChanged();
                }
             }
@@ -2700,12 +2698,12 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          }
       }
 
-      // Now, if linking is enabled, capture any clip that's linked to a
-      // captured clip
+      // Now, if sync-lock is enabled, capture any clip that's linked to a
+      // captured clip.
       if (GetProject()->IsSyncLocked()) {
          // AWD: mCapturedClipArray expands as the loop runs, so newly-added
          // clips are considered (the effect is like recursion and terminates
-         // because AddClipsToCapture doesn't add duplicate clips); to remove
+         // because AddClipsToCaptured doesn't add duplicate clips); to remove
          // this behavior just store the array size beforehand.
          for (unsigned int i = 0; i < mCapturedClipArray.GetCount(); ++i) {
             // Capture based on tracks that have clips -- that means we

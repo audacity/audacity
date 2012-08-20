@@ -184,7 +184,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual double GetStartTime() { return 0.0; }
    virtual double GetEndTime() { return 0.0; }
 
-   // Checks if linking is on and any track in its sync-lock group is selected.
+   // Checks if sync-lock is on and any track in its sync-lock group is selected.
    bool IsSyncLockSelected();
 };
 
