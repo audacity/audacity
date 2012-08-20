@@ -89,6 +89,8 @@ dnl List of libraries in lib-src that need to be compiled before building
 dnl audacity. Each name in the list should be a _target_ in lib-src/Makefile
 AC_SUBST(LIBSRC_BUILD)
 
+AC_SUBST(MIMETYPES)
+
 dnl allow the user to specify options to configure that change the
 dnl name "audacity" anywhere it appears in a pathname.   This allows
 dnl multiple versions of Audacity to be installed concurrently
@@ -476,6 +478,9 @@ dnl Based on the optional lib selections, modify LOCAL_LIBS, CXXFLAGS, etc
 for lib in $LIBRARIES ; do
    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL
    eval LIB_USE_SYSTEM=\$${lib}_USE_SYSTEM
+   if test "$LIB_USE_LOCAL" = yes -o "$LIB_USE_SYSTEM" = yes; then
+      eval MIMETYPES=\"${MIMETYPES}\$${lib}_MIMETYPES\"
+   fi
    if test "x$LIB_USE_LOCAL" = "xyes" ; then
       eval LIBSRC_BUILD=\"$LIBSRC_BUILD \$${lib}_LOCAL_BUILD\"
       eval LOCAL_LIBS=\"$LOCAL_LIBS \$${lib}_LOCAL_LIBS\"

@@ -17,4 +17,4 @@ Categories=AudioVideo;Audio;AudioVideoEditing;
 Exec=@AUDACITY_NAME@ %F
 StartupNotify=false
 Terminal=false
-MimeType=application/ogg;audio/basic;audio/mpeg;audio/x-aiff;audio/x-mp3;audio/x-wav;application/x-audacity-project;
+MimeType=application/x-audacity-project;@MIMETYPES@
