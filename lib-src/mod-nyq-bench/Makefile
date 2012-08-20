@@ -12,7 +12,7 @@ AUDACITY_DIR ?=
 # NOTE: Set to the names of your objects and final module name
 #
 OBJS = NyqBench.o
-MOD = NyqBench.so
+MOD = mod-nyq-bench.so
 
 # -----------------------------------------------------------------------------
 # NOTE: Set any custom flags you may need
