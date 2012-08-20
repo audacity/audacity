@@ -68,5 +68,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
    else
       AC_MSG_NOTICE([FLAC libraries are NOT available in this source tree])
    fi
+
+   LIBFLAC_MIMETYPES="audio/flac;audio/x-flac;"
 ])
 

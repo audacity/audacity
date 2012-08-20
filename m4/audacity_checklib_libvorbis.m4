@@ -64,5 +64,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
    else
       AC_MSG_NOTICE([Vorbis libraries are NOT available in this source tree])
    fi
+   LIBVORBIS_MIMETYPES="application/ogg;audio/x-vorbis+ogg;"
 ])
 

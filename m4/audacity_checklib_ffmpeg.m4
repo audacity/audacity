@@ -73,6 +73,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_FFMPEG], [
       AC_MSG_NOTICE([ffmpeg library is NOT available in the local tree])
    fi
    
-   FFMPEG_MIMETYPES="audio/aac;audio/mp4;audio/x-ms-wma;"
+   FFMPEG_MIMETYPES="audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;video/mpeg;"
 ])
 

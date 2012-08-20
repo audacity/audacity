@@ -59,5 +59,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBMAD], [
       LIBMAD_LOCAL_AVAILABLE="no"
       AC_MSG_NOTICE([libmad libraries are NOT available in the local tree])
    fi
+   LIBMAD_MIMETYPES="audio/mpeg;"
 ])
 

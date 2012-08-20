@@ -50,6 +50,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSNDFILE], [
       LIBSNDFILE_LOCAL_AVAILABLE="no"
       AC_MSG_NOTICE([libsndfile libraries are NOT available in this source tree])
    fi
-
+   LIBSNDFILE_MIMETYPES="audio/basic;audio/x-aiff;audio/x-wav;"
 ])
 
