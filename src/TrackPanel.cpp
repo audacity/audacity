@@ -2951,7 +2951,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
 
    // Scroll during vertical drag.
-   EnsureVisible(mouseTrack);
+   // EnsureVisible(mouseTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
 
    //If the mouse is over a track that isn't the captured track,
    //drag the clip to the mousetrack
