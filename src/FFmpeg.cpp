@@ -754,6 +754,10 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
 
 bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
 {
+#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
+   mLibsLoaded = InitLibs(wxEmptyString, showerr);
+   return mLibsLoaded;
+#endif
 
    wxLogMessage(wxT("Trying to load FFmpeg libraries..."));
    if (ValidLibsLoaded()) {
@@ -837,6 +841,7 @@ bool FFmpegLibs::ValidLibsLoaded()
 
 bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
 {
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
    FreeLibs();
 
 #if defined(__WXMSW__)
@@ -1050,8 +1055,10 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    FFMPEG_INITDYN(avutil, av_rescale_q);
    FFMPEG_INITDYN(avutil, avutil_version);
 
-   //FFmpeg initialization
    wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));
+#endif
+
+   //FFmpeg initialization
    avcodec_init();
    avcodec_register_all();
    av_register_all();
@@ -1090,7 +1097,11 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
       return false;
    }
 
+#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG) && (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 69, 0))
+   av_register_protocol(&ufile_protocol);
+#else
    av_register_protocol2(&ufile_protocol, sizeof(ufile_protocol));
+#endif
 
    return true;
 }

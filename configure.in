@@ -180,6 +180,12 @@ AC_ARG_ENABLE(sse, [AC_HELP_STRING([--enable-sse],[enable SSE optimizations])], 
 
 AC_ARG_ENABLE(universal_binary,[  --enable-universal_binary enable universal binary build: (default: disable)],[enable_universal_binary=$enableval],[enable_universal_binary=no])
 
+AC_ARG_ENABLE(dynamic-loading,
+            [AS_HELP_STRING([--enable-dynamic-loading],
+                            [enable dynamic loading of lame and FFmpeg [default=yes]])],
+            [dynamic_loading="$enableval"],
+            [dynamic_loading="yes"])
+
 dnl AC_ARG_WITH(wx-version,
 dnl            [AS_HELP_STRING([--with-wx-version],
 dnl                            [select wxWidgets version (if both installed) [2.8,]])],

@@ -368,6 +368,18 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
 
 int import_ffmpeg_decode_frame(streamContext *sc, bool flushing);
 
+#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
+   // Use the preprocessor to rename old function names instead of checking the
+   // function names with FFMPEG_INITALT when loading the library.
+
+   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 60, 0)
+   #define av_match_ext match_ext
+   #endif
+
+   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 64, 0)
+   #define av_guess_format guess_format
+   #endif
+#else
 extern "C" {
    // A little explanation of what's going on here.
    //
@@ -900,6 +912,7 @@ extern "C" {
       (protocol, size)
    );
 };
+#endif
 
 #endif // USE_FFMPEG
 #endif // __AUDACITY_FFMPEG__

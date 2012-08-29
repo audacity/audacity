@@ -87,6 +87,9 @@
 /* Use system LAME library and disable dynamic loading of it. */
 #undef DISABLE_DYNAMIC_LOADING_LAME
 
+/* Use system FFmpeg library and disable dynamic loading of it. */
+#undef DISABLE_DYNAMIC_LOADING_FFMPEG
+
 /* Define if LADSPA plug-ins are enabled */
 #undef USE_LADSPA
 

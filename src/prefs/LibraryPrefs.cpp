@@ -133,7 +133,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
          S.Id(ID_FFMPEG_DOWN_BUTTON);
          wxButton *bdwn = S.AddButton(_("Dow&nload"),
                                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-#if !defined(USE_FFMPEG)
+#if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
          bdwn->Enable(FALSE);
          bfnd->Enable(FALSE);
 #endif

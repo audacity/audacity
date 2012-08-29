@@ -35,6 +35,10 @@ AC_DEFUN([AUDACITY_CHECKLIB_FFMPEG], [
       FFMPEG_SYSTEM_AVAILABLE="yes"
       FFMPEG_SYSTEM_CXXFLAGS="$AVCODEC_CFLAGS $AVFORMAT_CFLAGS $AVUTIL_CFLAGS"
       FFMPEG_SYSTEM_CPPSYMBOLS="USE_FFMPEG"
+      if test "x$dynamic_loading" = "xno"; then
+         FFMPEG_SYSTEM_LIBS="$AVCODEC_LIBS $AVFORMAT_LIBS $AVUTIL_LIBS"
+         AC_DEFINE(DISABLE_DYNAMIC_LOADING_FFMPEG, 1, [Use system FFmpeg library and disable dynamic loading of it.])
+      fi
       dnl build the extra object files needed to use FFmpeg. Paths inside
       dnl the audacity src/ dir, as this is subsitiuted into src/Makefile.in
       FFMPEG_SYSTEM_OPTOBJS="import/ImportFFmpeg.o export/ExportFFmpeg.o \
