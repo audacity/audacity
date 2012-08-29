@@ -89,7 +89,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
 
-   S.TieCheckBox(_("Attempt to use filter in OpenFile dialog first"),
+   S.TieCheckBox(_("A&ttempt to use filter in OpenFile dialog first"),
          wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"),
          true);
    S.StartStatic(_("Rules to choose import filters"), 1);

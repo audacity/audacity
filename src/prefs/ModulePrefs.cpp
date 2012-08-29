@@ -55,13 +55,13 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_("Enable these Modules (if present), next time Audacity is started"));
    {
       S.AddFixedText(_("These are experimental. Enable them only if you've read the manual\nand know what you are doing.") );
-      S.TieCheckBox(_("mod-script-pipe"),
+      S.TieCheckBox(_("mod-&script-pipe"),
                     wxT("/Module/mod-script-pipe"),
                     false);
-      S.TieCheckBox(_("mod-nyq-bench"),    
+      S.TieCheckBox(_("mod-&nyq-bench"),    
                     wxT("/Module/mod-nyq-bench"),
                     false);
-      S.TieCheckBox(_("mod-track-panel"),
+      S.TieCheckBox(_("mod-&track-panel"),
                     wxT("/Module/mod-track-panel"),
                     false);
    }
