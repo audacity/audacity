@@ -483,7 +483,7 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    }
 
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
-   sc->m_samplesize = av_get_bits_per_sample_fmt(sc->m_samplefmt) / 8;
+   sc->m_samplesize = av_get_bits_per_sample_format(sc->m_samplefmt) / 8;
 
    unsigned int newsize = FFMAX(sc->m_pkt.size * sc->m_samplesize, AVCODEC_MAX_AUDIO_FRAME_SIZE);
    // Reallocate the audio sample buffer if it's smaller than the frame size.
@@ -1029,9 +1029,8 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool showerr)
    FFMPEG_INITDYN(avcodec, avcodec_version);
    FFMPEG_INITDYN(avcodec, av_fast_realloc);
    FFMPEG_INITDYN(avcodec, av_codec_next);
-   FFMPEG_INITDYN(avcodec, av_get_bits_per_sample_format);
 
-   FFMPEG_INITALT(avcodec, av_get_bits_per_sample_fmt, av_get_bits_per_sample_format);
+   FFMPEG_INITALT(avcodec, av_get_bits_per_sample_format, av_get_bits_per_sample_fmt);
 
    FFMPEG_INITDYN(avutil, av_free);
    FFMPEG_INITDYN(avutil, av_log_set_callback);
