@@ -280,7 +280,7 @@ void AudacityProject::CreateMenusAndCommands()
    /////////////////////////////////////////////////////////////////////////////
 
    // Enable Export commands only when there are tracks
-   c->AddItem(wxT("Export"), _("&Export..."), FN(OnExport),
+   c->AddItem(wxT("Export"), _("&Export..."), FN(OnExport), wxT("Ctrl+Shift+E"),
               AudioIONotBusyFlag | WaveTracksExistFlag,
               AudioIONotBusyFlag | WaveTracksExistFlag);
 
@@ -296,7 +296,7 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ExportLabels"), _("Export &Labels..."), FN(OnExportLabels),
                  AudioIONotBusyFlag | LabelTracksExistFlag,
                  AudioIONotBusyFlag | LabelTracksExistFlag);
-      c->AddItem(wxT("ExportMultiple"), _("Export &Multiple..."), FN(OnExportMultiple),
+      c->AddItem(wxT("ExportMultiple"), _("Export &Multiple..."), FN(OnExportMultiple), wxT("Ctrl+Shift+L"),
                  AudioIONotBusyFlag | TracksExistFlag,
                  AudioIONotBusyFlag | TracksExistFlag);
 #if defined(USE_MIDI)
@@ -311,7 +311,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("ExportLabels"), _("Export &Labels..."), FN(OnExportLabels),
               AudioIONotBusyFlag | LabelTracksExistFlag,
               AudioIONotBusyFlag | LabelTracksExistFlag);
-   c->AddItem(wxT("ExportMultiple"), _("Export &Multiple..."), FN(OnExportMultiple),
+   c->AddItem(wxT("ExportMultiple"), _("Export &Multiple..."), FN(OnExportMultiple), wxT("Ctrl+Shift+L"),
               AudioIONotBusyFlag | TracksExistFlag,
               AudioIONotBusyFlag | TracksExistFlag);
 #if defined(USE_MIDI)
