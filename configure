@@ -728,6 +728,7 @@ enable_debug
 with_lib_preference
 enable_sse
 enable_universal_binary
+enable_dynamic_loading
 with_libsndfile
 with_expat
 with_libsamplerate
@@ -1418,6 +1419,9 @@ Optional Features:
   --enable-debug          enable debug support [default=no]
   --enable-sse            enable SSE optimizations
   --enable-universal_binary enable universal binary build: (default: disable)
+  --enable-dynamic-loading
+                          enable dynamic loading of lame and FFmpeg
+                          [default=yes]
   --enable-nyquist        enable Nyquist plug-in support [default=yes]
   --enable-audiounits     enable audio unit plug-in support (Mac OS X only)
                           [default=auto]
@@ -4578,6 +4582,14 @@ if test "${enable_universal_binary+set}" = set; then :
   enableval=$enable_universal_binary; enable_universal_binary=$enableval
 else
   enable_universal_binary=no
+fi
+
+
+# Check whether --enable-dynamic-loading was given.
+if test "${enable_dynamic_loading+set}" = set; then :
+  enableval=$enable_dynamic_loading; dynamic_loading="$enableval"
+else
+  dynamic_loading="yes"
 fi
 
 
@@ -7871,6 +7883,12 @@ fi
       FFMPEG_SYSTEM_AVAILABLE="yes"
       FFMPEG_SYSTEM_CXXFLAGS="$AVCODEC_CFLAGS $AVFORMAT_CFLAGS $AVUTIL_CFLAGS"
       FFMPEG_SYSTEM_CPPSYMBOLS="USE_FFMPEG"
+      if test "x$dynamic_loading" = "xno"; then
+         FFMPEG_SYSTEM_LIBS="$AVCODEC_LIBS $AVFORMAT_LIBS $AVUTIL_LIBS"
+
+$as_echo "#define DISABLE_DYNAMIC_LOADING_FFMPEG 1" >>confdefs.h
+
+      fi
                   FFMPEG_SYSTEM_OPTOBJS="import/ImportFFmpeg.o export/ExportFFmpeg.o \
          export/ExportFFmpegDialogs.o"
       { $as_echo "$as_me:${as_lineno-$LINENO}: FFmpeg library available as system library" >&5
