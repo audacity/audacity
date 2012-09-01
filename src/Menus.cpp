@@ -865,7 +865,7 @@ void AudacityProject::CreateMenusAndCommands()
 
       //////////////////////////////////////////////////////////////////////////
 
-      c->BeginSubMenu(_("S&ort tracks"));
+      c->BeginSubMenu(_("S&ort Tracks"));
 
       c->AddItem(wxT("SortByTime"), _("by &Start time"), FN(OnSortTime),
                  TracksExistFlag,
@@ -1065,7 +1065,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    //////////////////////////////////////////////////////////////////////////
 
-   c->BeginSubMenu(_("S&ort tracks"));
+   c->BeginSubMenu(_("S&ort Tracks"));
 
    c->AddItem(wxT("SortByTime"), _("by &Start time"), FN(OnSortTime),
               TracksExistFlag,
