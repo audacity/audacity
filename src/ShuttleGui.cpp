@@ -699,7 +699,7 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
    wxStaticBox * pBox = new wxStaticBox(mpParent, miId, 
       Str );
    pBox->SetLabel( Str );
-   pBox->SetName( Str );
+   pBox->SetName(wxStripMenuCodes(Str));
    mpSubSizer = new wxStaticBoxSizer( 
       pBox,
       wxVERTICAL );
