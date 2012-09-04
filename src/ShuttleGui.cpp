@@ -268,7 +268,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const wxString &Prompt, const wxString
    mpWind = pCheckBox = new wxCheckBox(mpParent, miId, Prompt, wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
    pCheckBox->SetValue(Selected == wxT("true"));
-   pCheckBox->SetName(Prompt);
+   pCheckBox->SetName(wxStripMenuCodes(Prompt));
    UpdateSizers();
    return pCheckBox;
 }
@@ -287,7 +287,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBoxOnRight( const wxString &Prompt, const w
    mpWind = pCheckBox = new wxCheckBox(mpParent, miId, wxT(""), wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
    pCheckBox->SetValue(Selected==wxT("true"));
-   pCheckBox->SetName(Prompt);
+   pCheckBox->SetName(wxStripMenuCodes(Prompt));
    UpdateSizers();
    return pCheckBox;
 }
@@ -300,7 +300,7 @@ wxButton * ShuttleGuiBase::AddButton(const wxString &Text, int PositionFlags)
    wxButton * pBtn;
    mpWind = pBtn = new wxButton( mpParent, miId, Text, wxDefaultPosition, wxDefaultSize,
       Style( 0 ) );
-   mpWind->SetName(Text);
+   mpWind->SetName(wxStripMenuCodes(Text));
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
    return pBtn;
@@ -340,7 +340,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt, const wxString &Se
       Style( 0 ) );
 
    pChoice->SetSizeHints( 180,-1);// Use -1 for 'default size' - Platform specific.
-   pChoice->SetName( Prompt );
+   pChoice->SetName(wxStripMenuCodes(Prompt));
    pChoice->SetStringSelection( Selected );
 
    UpdateSizers();
@@ -409,7 +409,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 
    mpWind = pCombo = new wxComboBox(mpParent, miId, Selected, wxDefaultPosition, wxDefaultSize, 
       n, Choices, Style( 0 ));
-   mpWind->SetName(Prompt);
+   mpWind->SetName(wxStripMenuCodes(Prompt));
 
    UpdateSizers();
    return pCombo;
@@ -426,7 +426,7 @@ wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
    wxRadioButton * pRad;
    mpWind = pRad = new wxRadioButton( mpParent, miId, Prompt,
       wxDefaultPosition, wxDefaultSize, Style( wxRB_GROUP ) );
-   mpWind->SetName(Prompt);
+   mpWind->SetName(wxStripMenuCodes(Prompt));
    pRad->SetValue(true );
    UpdateSizers();
    return pRad;
@@ -440,7 +440,7 @@ wxRadioButton * ShuttleGuiBase::AddRadioButtonToGroup(const wxString &Prompt)
    wxRadioButton * pRad;
    mpWind = pRad = new wxRadioButton( mpParent, miId, Prompt,
       wxDefaultPosition, wxDefaultSize, Style( 0 ) );
-   mpWind->SetName(Prompt);
+   mpWind->SetName(wxStripMenuCodes(Prompt));
    UpdateSizers();
    return pRad;
 }
@@ -457,7 +457,7 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
       wxDefaultPosition, wxDefaultSize,
       Style( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
       );
-   mpWind->SetName(Prompt);
+   mpWind->SetName(wxStripMenuCodes(Prompt));
    miProp=1;
    UpdateSizers();
    return pSlider;
@@ -476,7 +476,7 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(const wxString &Prompt, int Value, int 
       Style( wxSP_VERTICAL | wxSP_ARROW_KEYS ),
       Min, Max, Value
       );
-   mpWind->SetName(Prompt);
+   mpWind->SetName(wxStripMenuCodes(Prompt));
    miProp=1;
    UpdateSizers();
    return pSpinCtrl;
@@ -505,7 +505,7 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(const wxString &Caption, const wxString 
 
    mpWind = pTextCtrl = new wxTextCtrl(mpParent, miId, Value,
       wxDefaultPosition, Size, Style( flags ));
-   mpWind->SetName( Caption );
+   mpWind->SetName(wxStripMenuCodes(Caption));
    UpdateSizers();
    return pTextCtrl;
 }
@@ -1338,7 +1338,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
             wxDefaultPosition, wxDefaultSize, 
             (mRadioCount==1)?wxRB_GROUP:0);
          pRadioButton->SetValue(WrappedRef.ValuesMatch( mRadioValue ));
-         pRadioButton->SetName(Prompt);
+         pRadioButton->SetName(wxStripMenuCodes(Prompt));
          UpdateSizers();
       }
       break;
