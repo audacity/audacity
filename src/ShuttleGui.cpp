@@ -535,7 +535,7 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(const wxString &Caption, const wx
       wxDefaultPosition, Size, Style( flags ),
       Validator // It's OK to pass this.  It will be cloned.
       );
-   mpWind->SetName( Caption );
+   mpWind->SetName(wxStripMenuCodes(Caption));
    UpdateSizers();
    return pTextCtrl;
 }
