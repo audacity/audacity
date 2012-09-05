@@ -1,6 +1,6 @@
 /* XPM */
-static char * gnome_mime_application_bluefish_project_xpm[] = {
-"48 52 714 2",
+static char * gnome_mime_application_x_audacity_project_xpm[] = {
+"48 48 714 2",
 "  	c None",
 ". 	c #000000",
 "+ 	c #232323",
@@ -762,8 +762,4 @@ static char * gnome_mime_application_bluefish_project_xpm[] = {
 ". $ n&o&$ p&$ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ 3@$ $ $ $ $ $ $ 3@V$$ /%.       ",
 ". $ p&v#$ 1#q&)+)+3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@3@V$$ /%.       ",
 ". # 1#$ 1#r&'+L%L%s&3@3@3@3@5&3@3@X#l&l&t&u&v&p&v&1#w&o$r&x&U$y&z&A&B&C&C&C&C&C&C&$ C&/%.       ",
-". R K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K D&E&.       ",
-"  . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       ",
-"                                                                                                ",
-"                                                                                                ",
-"                                                                                                "};
+". R K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K K D&E&.       "};
