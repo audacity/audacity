@@ -93,7 +93,11 @@ void AButton::Init(wxWindow * parent,
                    ImageRoll dis,
                    bool toggle)
 {
-   Create(parent, id, pos, size);
+   // Bug in wxWidgets 2.8.12: by default pressing Enter on an AButton is interpreted as
+   // a navigation event - move to next control. As a workaround, the style wxWANTS_CHARS
+   // results in all characters being available in the OnKeyDown function below. Note
+   // that OnKeyDown now has to handle navigation.
+   Create(parent, id, pos, size, wxWANTS_CHARS);
 
    mWasShiftDown = false;
    mWasControlDown = false;
@@ -316,18 +320,33 @@ void AButton::OnCaptureLost(wxMouseCaptureLostEvent & event)
    OnMouseEvent(e);
 }
 
+// Note that OnKeyDown has to handle navigation because wxWANTS_CHARS
+// flag was set - see above.
 void AButton::OnKeyDown(wxKeyEvent & event)
 {
    switch( event.GetKeyCode() )
    {
-      case WXK_RETURN:
-         mWasShiftDown = event.ShiftDown();
-         mWasControlDown = event.ControlDown();
-         Click();
+   case WXK_RIGHT:
+      Navigate();
       break;
+   case WXK_LEFT:
+      Navigate(wxNavigationKeyEvent::IsBackward);
+      break;
+   case WXK_TAB:
+      if (event.ShiftDown())
+         Navigate(wxNavigationKeyEvent::IsBackward);
+      else
+         Navigate();
+      break;
+   case WXK_RETURN:
+   case WXK_NUMPAD_ENTER:
+      mWasShiftDown = event.ShiftDown();
+      mWasControlDown = event.ControlDown();
+      Click();
+      break;
+   default:
+      event.Skip();
    }
-
-   event.Skip();
 }
 
 void AButton::OnSetFocus(wxFocusEvent & event)
