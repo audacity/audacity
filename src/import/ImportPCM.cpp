@@ -252,21 +252,26 @@ File > Check Dependencies will show the original names and location of any files
 \
 How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
       message->Wrap(500);
+      message->SetName(message->GetLabel());
                                
       vbox->Add(message, 1, wxALL | wxEXPAND, 10);
       
       wxStaticBox *box = new wxStaticBox(&dialog, -1, _("Choose an import method"));
+      box->SetName(box->GetLabel());
       wxStaticBoxSizer *boxsizer = new wxStaticBoxSizer(box, wxVERTICAL);
 
       wxRadioButton *copyRadio  = new wxRadioButton(&dialog, -1, _("Make a &copy of the files before editing (safer)"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
       boxsizer->Add(copyRadio, 0, wxALL);
+      copyRadio->SetName(wxStripMenuCodes(copyRadio->GetLabel()));
 
       wxRadioButton *aliasRadio = new wxRadioButton(&dialog, -1, _("Read the files &directly from the original (faster)"));
       boxsizer->Add(aliasRadio, 0, wxALL);
+      aliasRadio->SetName(wxStripMenuCodes(aliasRadio->GetLabel()));
 
       wxCheckBox *dontAskNextTimeBox = new wxCheckBox(&dialog, -1, _("Don't &warn again and always use my choice above"));
       boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
       vbox->Add(boxsizer, 0, wxALL, 10);
+      dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
       
 
       wxRadioButton *prefsRadio = oldCopyPref == wxT("copy") ? copyRadio : aliasRadio;
