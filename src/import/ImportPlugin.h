@@ -128,6 +128,7 @@ public:
       if (mProgress != NULL)
       {
          delete mProgress;
+         mProgress = NULL;
       }
    }
 

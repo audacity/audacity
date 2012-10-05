@@ -1983,8 +1983,13 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 
    // Destroy the TrackPanel early so it's not around once we start
    // deleting things like tracks and such out from underneath it.
-   mTrackPanel->Destroy();
-   mTrackPanel = NULL;              // Make sure this gets set...see HandleResize()
+   // Check validity of mTrackPanel per bug 584 Comment 1. 
+   // Deeper fix is in the Import code, but this failsafes against crash.
+   if (mTrackPanel)
+   {
+      mTrackPanel->Destroy();
+      mTrackPanel = NULL;              // Make sure this gets set...see HandleResize()
+   }
 
    // Delete the tool manager before the children since it needs
    // to save the state of the toolbars.
