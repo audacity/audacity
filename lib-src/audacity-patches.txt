@@ -14,9 +14,9 @@ Version in Audacity SVN: 1.2
 Patches: None
 Upstream version: 2.0.1
 
-FileDialogue
+FileDialog
 ------------
-The customised file saving dialogues for wxwidgets to provide the options
+The customised file saving dialogs for wxwidgets to provide the options
 button for format preferences. This is written and maintained by us so doesn't
 have an upstream at the moment.
 
@@ -112,6 +112,14 @@ Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
                     fixes crash when importing mp3s that have duplicated tags
 
 Upstream Version: 1.0.24
+
+libsoxr
+-------
+The SoX Resampler library performs one-dimensional sample-rate conversion, 
+by Rob Sykes.
+Version in Audacity SVN: <?> (latest as of 2012-10-09)
+No patches, used as is, with modified .vcproj file in win\Projects\libsoxr.
+
 
 libvamp
 -------

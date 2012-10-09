@@ -112,6 +112,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("LAME"), roleLibrary);
    AddCredit(wxT("libmad"), roleLibrary);
    AddCredit(wxT("libsndfile"), roleLibrary);
+   AddCredit(wxT("libsoxr"), roleLibrary);
    AddCredit(wxT("Nyquist"), roleLibrary);
    AddCredit(wxT("Ogg Vorbis"), roleLibrary);
    AddCredit(wxT("PortAudio"), roleLibrary);
