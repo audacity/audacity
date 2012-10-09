@@ -1,0 +1,66 @@
+SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+
+1. Prerequisites:
+
+    Before you can build this library, you need to have available on your
+    system:
+
+    * A C-compiler with 64-bit integer support and, optionally, OpenMP, SIMD.
+
+    * A 'make' utility (most compiler installations already have one of these).
+
+    * CMake: http://www.cmake.org/cmake/resources/software.html
+
+
+2. Build:
+
+    At a command prompt, change directory (`cd') to the one containing this
+    file, then enter:
+
+        go                          (on MS-Windows with nmake)
+    or
+        ./go                        (on unix-like systems)
+
+    This should build the library and run a few sanity tests.
+
+
+3. Installation:
+
+    Note that this step may need to be performed by a system
+    adminstrator.  Enter:
+
+        nmake install               (on MS-Windows)
+    or
+        cd Release; make install    (on unix)
+
+
+4. Configuration:
+
+    To use the library you may need to set up appropriate paths to the
+    library and its header file in your development environment.
+
+
+5. Installation test
+
+    To test the installation, build and run the first example programme (see
+    examples/README).
+
+
+If it is necessary to customise the build, then steps 2 and 3 above may be
+substituted as follows.  Change directory to the one containing this file,
+then enter commands along the lines of:
+
+    mkdir build
+    cd build
+    cmake [OPTIONS] ..
+    make
+    make test
+    sudo make install
+
+To list help on the available options, enter:
+
+    cmake -LH ..
+
+Options, if given, should be preceded with '-D', e.g.
+
+    cmake -DWITH_SIMD:BOOL=OFF ..

@@ -150,6 +150,10 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "libsamplerate")
 #  endif
 
+#  if defined(USE_LIBSOXR)
+#     pragma comment(lib, "libsoxr")
+#  endif
+
 #  if defined(USE_LIBTWOLAME)
 #     pragma comment(lib, "twolame")
 #  endif

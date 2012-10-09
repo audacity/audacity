@@ -1,0 +1,46 @@
+SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+
+The SoX Resampler library performs one-dimensional sample-rate conversion.
+It may be used, for example, to resample PCM-encoded audio.  For higher-
+dimensional resampling, such as for visual-image processing, you should look
+elsewhere.
+
+Its aim is to provide fast, high-quality resampling.  At its highest quality
+settings, it can produce 32-bit-perfect results with signal occupied-
+bandwidths of up to 98%.¹  Resampling ratios can be any (floating point)
+value between +/- 8 octaves.
+
+Depending on how the resampler is configured, quality may be traded for
+speed, but only to a certain extent: there may be faster, average-quality
+resamplers available.  Multi-channel resampling can be configured to use
+multiple CPU-cores, thus reducing execution time (with a slight expense of
+CPU-cycles).
+
+The resampler is currently available either as part of `libsox' (the audio
+file-format and effect library), or stand-alone as `libsoxr' (this package).
+
+The APIs of libsox and libsoxr are slightly different, with that of libsoxr
+designed specifically for resampling.  An application requiring support for
+other effects, or for reading-from or writing-to audio files or devices, can
+use libsox (or other libraries such as libsndfile or libavformat).
+
+Applications may use either floating-point or integer sample formats, and,
+in the case of multiple channels, either channel-interleaved, or split-
+channels.
+
+The libsoxr API is currently documented in the header file `soxr.h' and by
+example code in the 'examples' directory.
+
+For compatibility with the popular `libsamplerate' library, the header file
+`soxr-lsr.h' is provided and may be used as an alternative API. For details
+of that API, see http://www.mega-nerd.com/SRC/api.html.  Note however, that
+libsoxr does not provide a full emulation of libsamplerate; in particular,
+`vari-speeding' is not currently supported.
+
+For build and installation instructions, see the file `INSTALL'; for
+copyright and licensing information, see the file `copyright'.
+
+The resampler was inspired by Laurent De Soras' paper `The Quest For The
+Perfect Resampler', http://ldesoras.free.fr/doc/articles/resampler-en.pdf.
+
+¹ Note that no practical resampler can be bit-perfect to 100% bandwidth.

@@ -1,0 +1,2 @@
+set(TARGET_LIBS "@TARGET_LIBS@")
+

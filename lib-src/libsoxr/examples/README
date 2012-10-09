@@ -1,0 +1,18 @@
+SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+
+These simple examples show the different ways that an application may
+interface with libsoxr.  Note that real-world applications may also have to
+deal with file-formats, codecs, (more sophisticated) dithering, etc., which
+are not covered here.
+
+With libsoxr installed, the examples may be built using commands similar to
+the following.  On unix-like systems:
+
+    cc 1-single-block.c -lsoxr
+
+or, on MS-Windows:
+
+    cl 1-single-block.c -I"C:/Program Files/soxr/include" "C:/Program Files/soxr/lib/soxr.lib"
+
+IDEs may hide such commands behind configuration screens and build menus --
+where applicable, consult your IDE's user-manual.

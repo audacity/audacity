@@ -1,0 +1,8 @@
+The C source and header files in this directory have been copied from
+the `libsamplerate' project and are copyrighted by its authors -- see
+the notices within the files and the file `COPYING' for details.
+
+They are used here to test libsoxr's optional libsamplerate-like
+wrapper.  The only modifications made are to the file `snr_bw_test.c' to
+remove reliance on certain frequency response troughs that are specific
+to libsamplerate.

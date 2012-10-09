@@ -413,10 +413,15 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    #elif USE_LIBSAMPLERATE
    AddBuildinfoRow(&informationStr, wxT("libsamplerate"),
          _("Sample rate conversion"), enabled);
+   #elif USE_LIBSOXR
+   AddBuildinfoRow(&informationStr, wxT("libsoxr"),
+         _("Sample rate conversion"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libresample"),
          _("Sample rate conversion"), disabled);
    AddBuildinfoRow(&informationStr, wxT("libsamplerate"),
+         _("Sample rate conversion"), disabled);
+   AddBuildinfoRow(&informationStr, wxT("libsoxr"),
          _("Sample rate conversion"), disabled);
    #endif
 

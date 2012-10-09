@@ -21,8 +21,12 @@
 #define USE_LIBID3TAG 1
 // #define USE_LIBLRDF 1
 #define USE_LIBMAD 1
-#define USE_LIBRESAMPLE 1
+
+// Resampling -- should build only one of these.
+#undef USE_LIBRESAMPLE
 #undef USE_LIBSAMPLERATE
+#define USE_LIBSOXR 1
+
 #define USE_LIBTWOLAME 1
 #define USE_LIBVORBIS 1
 #define USE_NYQUIST 1

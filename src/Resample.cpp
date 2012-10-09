@@ -7,7 +7,7 @@
 *******************************************************************//*!
 
 \class Resample
-\brief Combined interface to libresample and libsamplerate.
+\brief Combined interface to libresample and libsamplerate (which libsoxr emulates).
 
   This class abstracts the interface to two different resampling
   libraries:
@@ -129,7 +129,7 @@ Resample::~Resample()
    resample_close(mHandle);
 }
 
-#elif USE_LIBSAMPLERATE
+#elif USE_LIBSAMPLERATE || USE_LIBSOXR
 
 #include <samplerate.h>
 
@@ -140,7 +140,13 @@ bool Resample::ResamplingEnabled()
 
 wxString Resample::GetResamplingLibraryName()
 {
+#ifdef USE_LIBSAMPLERATE
    return _("Libsamplerate by Erik de Castro Lopo");
+#elif USE_LIBSOXR
+   return _("Libsoxr by Rob Sykes");
+#else
+   return _("Unknown");
+#endif
 }
 
 int Resample::GetNumMethods()
