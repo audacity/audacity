@@ -26,6 +26,9 @@ class TimeDialog:public wxDialog
 
    TimeDialog(wxWindow *parent,
               const wxString &title,
+              const wxString &format,
+              double rate,
+              double time,
               const wxString &prompt = _("Duration"));
 
    void SetFormatString(wxString formatString);

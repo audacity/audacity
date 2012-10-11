@@ -30,12 +30,15 @@ END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
                        const wxString &title,
+                       const wxString &format,
+                       double rate,
+                       double time,
                        const wxString &prompt)
 :  wxDialog(parent, wxID_ANY, title),
+   mFormat(format),
+   mRate(rate),
+   mTime(time),
    mPrompt(prompt),
-   mFormat(wxT("seconds")),
-   mRate(44100),
-   mTime(0.0),
    mTimeCtrl(NULL)
 {
    ShuttleGui S(this, eIsCreating);

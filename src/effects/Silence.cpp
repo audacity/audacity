@@ -30,20 +30,20 @@
 
 bool EffectSilence::PromptUser()
 {
-   TimeDialog dlog(mParent, _("Silence Generator"));
-
-   dlog.SetSampleRate(mProjectRate);
+   wxString fmt;
 
    if (mT1 > mT0) {
       // there is a selection: let's fit in there...
       mDuration = mT1 - mT0;
-      dlog.SetFormatString(_("hh:mm:ss + samples"));
+      fmt = _("hh:mm:ss + samples");
    } else {
       // Retrieve last used values
       gPrefs->Read(wxT("/Effects/SilenceGen/Duration"), &mDuration, 30L);
-      dlog.SetFormatString(_("hh:mm:ss + milliseconds"));
+      fmt = _("hh:mm:ss + milliseconds");
    }
-   dlog.SetTimeValue(mDuration);
+
+   TimeDialog dlog(mParent, _("Silence Generator"), fmt, mProjectRate,
+      mDuration );
 
    if (dlog.ShowModal() == wxID_CANCEL)
       return false;

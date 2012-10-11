@@ -2659,11 +2659,10 @@ void AudacityProject::OnSetLeftSelection()
    }
    else
    {
-      TimeDialog dlg(this, _("Set Left Selection Boundary"), _("Position"));
       wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
-      dlg.SetFormatString(fmt);
-      dlg.SetSampleRate(mRate);
-      dlg.SetTimeValue(mViewInfo.sel0);
+      TimeDialog dlg(this, _("Set Left Selection Boundary"),
+         fmt, mRate, mViewInfo.sel0, _("Position"));
+
       if (wxID_OK == dlg.ShowModal())
       {
          //Get the value from the dialog
@@ -2702,11 +2701,10 @@ void AudacityProject::OnSetRightSelection()
    }
    else
    {
-      TimeDialog dlg(this, _("Set Right Selection Boundary"), _("Position"));
       wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
-      dlg.SetFormatString(fmt);
-      dlg.SetSampleRate(mRate);
-      dlg.SetTimeValue(mViewInfo.sel1);
+      TimeDialog dlg(this, _("Set Right Selection Boundary"),
+         fmt, mRate, mViewInfo.sel1, _("Position"));
+
       if (wxID_OK == dlg.ShowModal())
       {
          //Get the value from the dialog
