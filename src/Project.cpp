@@ -1181,6 +1181,7 @@ void AudacityProject::SetProjectTitle()
    }
 
    SetTitle( name );
+   SetName(name);       // to make the nvda screen reader read the correct title
 }
 
 void AudacityProject::AS_SetSnapTo(bool state)
