@@ -539,7 +539,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && mScs[s]->m_stream->start_time > 0)
       {
          stream_delay = mScs[s]->m_stream->start_time;
-         wxLogError(wxT("Stream %d start_time = %d, that would be %f milliseconds."), s, mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
+         wxLogDebug(wxT("Stream %d start_time = %d, that would be %f milliseconds."), s, mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
       }
       if (stream_delay != 0)
       {
