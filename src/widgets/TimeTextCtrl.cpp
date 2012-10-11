@@ -1546,7 +1546,8 @@ wxAccStatus TimeTextCtrlAx::GetFocus(int *childId, wxAccessible **child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus TimeTextCtrlAx::GetHelpText(int childId, wxString *helpText)
 {
-#if wxUSE_TOOLTIPS
+// removed help text, as on balance it's more of an irritation than useful
+#if 0    // was #if wxUSE_TOOLTIPS
    wxToolTip *pTip = mCtrl->GetToolTip();
    if (pTip) {
       *helpText = pTip->GetTip();
@@ -1573,8 +1574,6 @@ wxAccStatus TimeTextCtrlAx::GetKeyboardShortcut(int childId, wxString *shortcut)
 // rect is in screen coordinates.
 wxAccStatus TimeTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 {
-   rect = mCtrl->GetRect();
-
    if ((elementId != wxACC_SELF) && 
          // We subtract 1, below, and need to avoid neg index to mDigits.
          (elementId > 0)) 
@@ -1582,9 +1581,13 @@ wxAccStatus TimeTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 //      rect.x += mCtrl->mFields[elementId - 1].fieldX;
 //      rect.width =  mCtrl->mFields[elementId - 1].fieldW;
         rect = mCtrl->mDigits[elementId - 1].digitBox;
+        rect.SetPosition(mCtrl->ClientToScreen(rect.GetPosition()));
    }
-
-   rect.SetPosition(mCtrl->GetParent()->ClientToScreen(rect.GetPosition()));
+   else
+   {
+      rect = mCtrl->GetRect();
+      rect.SetPosition(mCtrl->GetParent()->ClientToScreen(rect.GetPosition()));
+   }
 
    return wxACC_OK;
 }
@@ -1643,7 +1646,7 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
       *name = mFields[field - 1].str +
               wxT(" ") +
               label +
-              wxT(" ") +
+              wxT(", ") +     // comma inserts a slight pause
               mCtrl->GetTimeString().at(mCtrl->mDigits[childId - 1].pos);
       mLastField = field;
       mLastDigit = childId;
