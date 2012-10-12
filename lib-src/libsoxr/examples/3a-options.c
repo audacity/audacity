@@ -4,20 +4,19 @@
 /* Example 3a: extends example 2a with multiple channels, multiple datatypes,
  * and other options.
  *
- * The seven arguments are:
+ * The eight arguments are:
  *   INPUT-RATE       As example 2a
  *   OUTPUT-RATE      Ditto
  *   NUM-CHANNELS     Number of interleaved channels
  *   IN-DATATYPE#     0:float32 1:float64 2:int32 3:int16
  *   OUT-DATATYPE#    Ditto
- *   Q#               Quality-recipe | (quality-flags << 16) (in hex) See soxr.h
+ *   Q-RECIPE         Quality recipe (in hex) See soxr.h
+ *   Q-FLAGS          Quality flags  (in hex) See soxr.h
  *   USE-THREADS      1 to use multi-threading
  */
 
-#include "util.h"
 #include <soxr.h>
-
-
+#include "examples-common.h"
 
 int main(int n, char const * arg[])
 {
@@ -28,6 +27,7 @@ int main(int n, char const * arg[])
   soxr_datatype_t itype = n? --n, (soxr_datatype_t)atoi(*arg++) :SOXR_FLOAT32_I;
   soxr_datatype_t otype = n? --n, (soxr_datatype_t)atoi(*arg++) :SOXR_FLOAT32_I;
   unsigned long q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
+  unsigned long q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
   int       use_threads = n? --n, atoi(*arg++) : 1;
 
   size_t isize = soxr_datatype_size(itype) * chans;
@@ -35,16 +35,15 @@ int main(int n, char const * arg[])
   size_t clips = 0;
   soxr_error_t error;
 
-  soxr_quality_spec_t q_spec = soxr_quality_spec(q_recipe &65535, q_recipe>>16);
+  soxr_quality_spec_t q_spec = soxr_quality_spec(q_recipe, q_flags);
   soxr_io_spec_t     io_spec = soxr_io_spec(itype, otype);
   soxr_runtime_spec_t runtime_spec = soxr_runtime_spec(!use_threads);
 
   soxr_t resampler = soxr_create(
       irate, orate, chans, &error, &io_spec, &q_spec, &runtime_spec);
 
-  STD_STDIO;
   if (!error) {
-    #define  buf_total_len 15000
+    #define  buf_total_len 15000 /* In samples. */
 
     /* Allocate resampling input and output buffers in proportion to the input
      * and output rates: */
@@ -56,15 +55,20 @@ int main(int n, char const * arg[])
     size_t iavailable = 0;
     size_t idone, odone, written;
 
-    do {
-      if (!iavailable && ibuf)        /* If ibuf empty, try to fill it: */
-        if (!(iavailable = fread(iptr = ibuf, isize, ibuflen, stdin)))
-          free(ibuf), ibuf = 0;       /* If none available, don't retry. */
+    USE_STD_STDIO;
+    do { /* Resample in blocks: */
+      if (!iavailable && ibuf) {      /* If ibuf is empty, try to fill it: */
+        iavailable = fread(ibuf, isize, ibuflen, stdin);
+        if (!iavailable)        /* If none available, don't retry.  Pass NULL */
+          free(ibuf), ibuf = 0;/* ibuf to resampler to indicate end-of-input. */
+        iptr = ibuf;               /* Reset input to the start of the buffer. */
+      }
 
       error = soxr_process(resampler,
           iptr, iavailable, &idone, obuf, obuflen, &odone);
 
-      iptr += idone * isize, iavailable -= idone;  /* Consumed input. */
+      iptr += idone * isize;          /* Update input buffer according to how */
+      iavailable -= idone;                /* much the resampler has consumed. */
 
       written = fwrite(obuf, osize, odone, stdout);  /* Consume output. */
     } while (!error && (ibuf || written));
@@ -73,7 +77,7 @@ int main(int n, char const * arg[])
     clips = *soxr_num_clips(resampler); /* Can occur only with integer output.*/
     soxr_delete(resampler);
   }
-  fprintf(stderr, "%s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
+  fprintf(stderr, "%-26s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
       (long unsigned)clips, errno? strerror(errno) : "no error");
   return error || errno;
 }

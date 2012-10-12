@@ -4,18 +4,14 @@
 #if !defined soxr_config_included
 #define soxr_config_included
 
-#define SOXR_VERSION_MAJOR @VERSION_MAJOR@
-#define SOXR_VERSION_MINOR @VERSION_MINOR@
-#define SOXR_VERSION_PATCH @VERSION_PATCH@
-#define SOXR_VERSION "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@"
-
+#define SOXR_VERSION         "@PROJECT_VERSION@"
 #define HAVE_SINGLE_PRECISION @HAVE_SINGLE_PRECISION@
 #define HAVE_DOUBLE_PRECISION @HAVE_DOUBLE_PRECISION@
-#define HAVE_AVFFT      @HAVE_AVFFT@
-#define HAVE_SIMD       @HAVE_SIMD@
-#define HAVE_FENV_H     @HAVE_FENV_H@
-#define HAVE_LRINT      @HAVE_LRINT@
-#define WORDS_BIGENDIAN @WORDS_BIGENDIAN@
+#define HAVE_AVFFT            @HAVE_AVFFT@
+#define HAVE_SIMD             @HAVE_SIMD@
+#define HAVE_FENV_H           @HAVE_FENV_H@
+#define HAVE_LRINT            @HAVE_LRINT@
+#define WORDS_BIGENDIAN       @WORDS_BIGENDIAN@
 
 #include <limits.h>
 
@@ -40,7 +36,7 @@
 #error this library requires that 'long int' has at least 32-bits
 #else
   #define int32_t long
-  #if defined(_MSC_VER)
+  #if defined _MSC_VER
     #define int64_t __int64
   #else
     #define int64_t long long

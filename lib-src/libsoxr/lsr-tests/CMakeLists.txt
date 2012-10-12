@@ -1,19 +1,19 @@
 # SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
 # Licence for this file: LGPL v2.1                  See LICENCE for details.
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+list (APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
-find_package(FFTW)
+find_package (FFTW)
 if (FFTW_FOUND)
-  include_directories(${FFTW_INCLUDE_DIRS})
-  link_libraries(${FFTW_LIBRARIES})
+  include_directories (${FFTW_INCLUDE_DIRS})
+  link_libraries (${FFTW_LIBRARIES})
   set (HAVE_FFTW3 1)
 endif ()
 
-find_package(sndfile)
+find_package (sndfile)
 if (SNDFILE_FOUND)
-  include_directories(${SNDFILE_INCLUDE_DIRS})
-  link_libraries(${SNDFILE_LIBRARIES})
+  include_directories (${SNDFILE_INCLUDE_DIRS})
+  link_libraries (${SNDFILE_LIBRARIES})
   set (HAVE_SNDFILE 1)
 endif ()
 
@@ -31,7 +31,7 @@ add_library (tests_lib SHARED util calc_snr)
 
 link_libraries (tests_lib ${PROJECT_NAME}-lsr)
 
-enable_testing()
+enable_testing ()
 
 set (tests
   callback_hang_test callback_test downsample_test
@@ -40,8 +40,8 @@ set (tests
 
 foreach (test ${tests})
   add_executable (${test} ${test})
-  add_test (lsr-${test} ${bin}${test})
-  set_property(TEST lsr-${test} PROPERTY ENVIRONMENT "SOXR_LSR_STRICT=1")
+  add_test (lsr-${test} ${BIN}${test})
+  set_property (TEST lsr-${test} PROPERTY ENVIRONMENT "SOXR_LSR_STRICT=1")
 endforeach ()
 
 add_executable (multichan_throughput_test multichan_throughput_test)

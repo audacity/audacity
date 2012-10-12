@@ -55,7 +55,7 @@ typedef void (* deinterleave_t)(sample_t * * dest,
 typedef size_t (* interleave_t)(soxr_datatype_t data_type, void * * dest,
     sample_t const * const * src, size_t, unsigned, unsigned long *);
 
-struct soxr_t {
+struct soxr {
   unsigned num_channels;
   double oi_ratio;
   soxr_error_t error;
@@ -405,7 +405,7 @@ void soxr_delete(soxr_t p)
 soxr_error_t soxr_clear(soxr_t p) /* TODO: this, properly. */
 {
   if (p) {
-    struct soxr_t tmp = *p;
+    struct soxr tmp = *p;
     soxr_delete0(p);
     memset(p, 0, sizeof(*p));
     p->input_fn = tmp.input_fn;
@@ -464,9 +464,9 @@ static size_t soxr_output_1ch(soxr_t p, unsigned i, soxr_buf_t dest, size_t len,
   resampler_process(p->resamplers[i]);
   src = resampler_output(p->resamplers[i], NULL, &len);
   if (separated)
-  p->clips += (p->interleave)(p->io_spec.otype, &dest, &src,
+    p->clips += (p->interleave)(p->io_spec.otype, &dest, &src,
       len, 1, (p->io_spec.flags & SOXR_NO_DITHER)? 0 : &p->seed);
-  else p->channel_ptrs[i] = (void /* const */ *)src;;
+  else p->channel_ptrs[i] = (void /* const */ *)src;
   return len;
 }
 
@@ -502,6 +502,7 @@ size_t soxr_output(soxr_t p, void * out, size_t len0)
 {
   size_t odone, odone0 = 0, olen = len0, osize, idone;
   void const * in = out; /* Set to !=0, so that caller may leave unset. */
+  bool was_flushing;
 
   if (!p || p->error) return 0;
   if (!out && len0) {p->error = "null output buffer pointer"; return 0;}
@@ -516,10 +517,11 @@ size_t soxr_output(soxr_t p, void * out, size_t len0)
     out = (char *)out + osize * odone;
     olen -= odone;
     idone = p->input_fn(p->input_fn_state, &in, (size_t)ceil((double)olen /p->oi_ratio));
+    was_flushing = p->flushing;
     if (!in)
       p->error = "input function reported failure";
     else soxr_input(p, in, idone);
-  } while (in && (odone || idone));
+  } while (odone || idone || (!was_flushing && p->flushing));
   return odone0;
 }
 
@@ -561,7 +563,7 @@ soxr_error_t soxr_process(soxr_t p,
     flush_requested = true, ilen = ilen0 = 0;
   else {
     if ((ptrdiff_t)ilen0 < 0)
-      flush_requested = true, ilen0 = 1 + ~ilen0;
+      flush_requested = true, ilen0 = ~ilen0;
     if (1 || flush_requested)
       ilen = soxr_i_for_o(p, olen, ilen0);
     else
@@ -592,7 +594,7 @@ soxr_error_t soxr_process(soxr_t p,
     idone = ilen;
   }
   else {
-    idone = soxr_input (p, in , ilen);
+    idone = ilen? soxr_input (p, in , ilen) : 0;
     odone = soxr_output(p, out, olen);
   }
   if (idone0) *idone0 = idone;
@@ -621,8 +623,7 @@ soxr_error_t soxr_oneshot(
         &error, io_spec, q_spec, runtime_spec);
   }
   if (!error) {
-    ilen = 1 + ~ilen;
-    error = soxr_process(resampler, in, ilen, idone, out, olen, odone);
+    error = soxr_process(resampler, in, ~ilen, idone, out, olen, odone);
     soxr_delete(resampler);
   }
   return error;

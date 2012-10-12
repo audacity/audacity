@@ -11,7 +11,7 @@
 typedef struct io_t {
   float *in,*out; long ilen,olen,idone,odone; int eoi; double oi_ratio;} io_t;
 #define SRC_DATA io_t
-typedef struct  soxr_t SRC_STATE;
+typedef struct  soxr SRC_STATE;
 #define src_callback_t soxr_input_fn_t
 #define SRC_ERROR soxr_error_t
 #define SRC_SRCTYPE unsigned
@@ -62,10 +62,8 @@ soxr_error_t src_process(soxr_t p, io_t * io)
   soxr_set_error(p, soxr_set_oi_ratio(p, io->oi_ratio));
 
   { size_t idone , odone;
-  if (io->eoi)
-    io->ilen = -io->ilen; /* hack */
-  soxr_process(p,
-      io->in, (size_t)io->ilen, &idone, io->out, (size_t)io->olen, &odone);
+  soxr_process(p, io->in, (size_t)(io->eoi? ~io->ilen : io->ilen), /* hack */
+      &idone, io->out, (size_t)io->olen, &odone);
   io->idone = (long)idone, io->odone = (long)odone;
   return soxr_error(p); }
 }

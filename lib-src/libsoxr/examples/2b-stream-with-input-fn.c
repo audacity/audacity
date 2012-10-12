@@ -8,10 +8,10 @@
  * Arguments are: INPUT-RATE OUTPUT-RATE
  */
 
-#include "util.h"
 #include <soxr.h>
+#include "examples-common.h"
 
-
+#define iolen 10000
 
 static size_t input_fn(
     void * p,           /* Generic pointer to any state variables neded here. */
@@ -20,22 +20,24 @@ static size_t input_fn(
 {
   static float * ibuf;    /* Static context; this could be changed using `p'. */
   size_t actual;
+  size_t len = min(requested_len, iolen);
 
   /* Allocate the input buffer memory; check for errors: */
-  *buf = ibuf = realloc(ibuf, sizeof(float) * requested_len);
+  *buf = ibuf = (float *)realloc(ibuf, sizeof(float) * len);
   if (!ibuf)
     return 0;                           /* Indicate failure (*buf is also 0). */
 
   /* Read samples from the input stream; check for errors: */
-  actual = fread(ibuf, sizeof(float), requested_len, stdin);
-  if (!actual && ferror(stdin))
-    *buf = 0;                         /* Indicate failure (actual is also 0). */
+  actual = fread(ibuf, sizeof(float), len, stdin);
+  if (!actual) {
+    if (ferror(stdin))
+      *buf = 0;                       /* Indicate failure (actual is also 0). */
+    free(ibuf), ibuf = 0;
+  }
 
   return actual;
   (void)p;                                       /* Not used in this example. */
 }
-
-
 
 int main(int argc, char const * arg[])
 {
@@ -47,20 +49,19 @@ int main(int argc, char const * arg[])
   if (!error)                        /* Register input_fn with the resampler: */
     error = soxr_set_input_fn(resampler, input_fn, 0);
 
-  STD_STDIO;
   if (!error) {                         /* If all is good, run the resampler: */
-    #define olen 1000
-    float resampled[olen];
+    float resampled[iolen];
     size_t actual;
                                                        /* Resample in blocks: */
-    do actual = soxr_output(resampler, resampled, olen);
+    USE_STD_STDIO;
+    do actual = soxr_output(resampler, resampled, iolen);
     while (fwrite(resampled, sizeof(float), actual, stdout));
 
     error = soxr_error(resampler);    /* Note: before deleting the resampler! */
     soxr_delete(resampler);
   }
                                                               /* Diagnostics: */
-  fprintf(stderr, "resampler: %s; I/O: %s\n",
+  fprintf(stderr, "%-26s %s; I/O: %s\n", arg[0],
       soxr_strerror(error), errno? strerror(errno) : "no error");
   return error || errno;
 }

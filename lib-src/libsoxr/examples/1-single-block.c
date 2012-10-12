@@ -6,10 +6,18 @@
  * N.B. See example 2 for how to resample a stream (of blocks).
  *
  * Optional arguments are: INPUT-RATE OUTPUT-RATE
+ *
+ * With the default arguments, the output should produce lines similar to the
+ * following:
+ *
+ *  0.00  0.71  1.00  0.71 -0.00 -0.71 -1.00 -0.71
+ *
+ * Gibbs effect may be seen at the ends of the resampled signal; this is because
+ * unlike a `real-world' signal, the synthetic input signal is not band-limited.
  */
 
-#include "util.h"
 #include <soxr.h>
+#include "examples-common.h"
 
 const float in[] = {  /* Input: 12 cycles of a sine wave with freq. = irate/4 */
   0,1,0,-1, 0,1,0,-1, 0,1,0,-1, 0,1,0,-1, 0,1,0,-1, 0,1,0,-1,

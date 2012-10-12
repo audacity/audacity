@@ -8,7 +8,7 @@ if x%build% == x set build=Release
 mkdir %build%
 cd %build%
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%build% ..
+cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%build% -DBUILD_TESTS=ON ..
 if errorlevel 1 goto end
 
 nmake

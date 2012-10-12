@@ -7,7 +7,6 @@
 #include "aliases.h"
 
 double lsx_bessel_I_0(double x);
-int lsx_set_dft_length(int num_taps, int min, int large);
 void lsx_init_fft_cache(void);
 void lsx_clear_fft_cache(void);
 void lsx_init_fft_cache_f(void);
@@ -17,10 +16,10 @@ void lsx_safe_rdft(int len, int type, double * d);
 void lsx_safe_cdft(int len, int type, double * d);
 void lsx_safe_rdft_f(int len, int type, float * d);
 void lsx_safe_cdft_f(int len, int type, float * d);
-void _soxr_ordered_convolve(int n, void * not_used, double * a, const double * b);
-void _soxr_ordered_convolve_f(int n, void * not_used, float * a, const float * b);
-void _soxr_ordered_partial_convolve(int n, double * a, const double * b);
-void _soxr_ordered_partial_convolve_f(int n, float * a, const float * b);
+void lsx_ordered_convolve(int n, void * not_used, double * a, const double * b);
+void lsx_ordered_convolve_f(int n, void * not_used, float * a, const float * b);
+void lsx_ordered_partial_convolve(int n, double * a, const double * b);
+void lsx_ordered_partial_convolve_f(int n, float * a, const float * b);
 
 double lsx_kaiser_beta(double att, double tr_bw);
 double * lsx_make_lpf(int num_taps, double Fc, double beta, double rho,

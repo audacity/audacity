@@ -1,10 +1,22 @@
 /* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
-/* Example 4a: variant of example 3a demonstrating I/O with split channels.  */
+/* Example 4: variant of example 3a; demonstrates I/O with split channels.
+ *
+ * Note that, for convenience of the demonstration, split-channel data is
+ * made available by deinterleaving data sourced from and sent to
+ * interleaved file-streams; this adds a lot of code to the example that,
+ * for purposes of understanding how to use split-channels, may safely be
+ * ignored.  In a real application, the channel-data might never be
+ * interleaved; for example, the split-channel data output from the
+ * resampler might be sent directly to digital-to-analogue converters.
+ *
+ * Note also (not shown in the examples) that split/interleaved channels may
+ * be used for input and output independently.
+ */
 
 #include <soxr.h>
-#include "util.h"
+#include "examples-common.h"
 
 
 
@@ -63,6 +75,7 @@ int main(int n, char const * arg[])
   soxr_datatype_t itype = n? --n, (soxr_datatype_t)atoi(*arg++) :SOXR_FLOAT32_I;
   soxr_datatype_t otype = n? --n, (soxr_datatype_t)atoi(*arg++) :SOXR_FLOAT32_I;
   unsigned long q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
+  unsigned long q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
   int       use_threads = n? --n, atoi(*arg++) : 1;
 
   size_t isize = soxr_datatype_size(itype) * chans;
@@ -70,16 +83,15 @@ int main(int n, char const * arg[])
   size_t clips = 0;
   soxr_error_t error;
 
-  soxr_quality_spec_t q_spec = soxr_quality_spec(q_recipe &65535, q_recipe>>16);
+  soxr_quality_spec_t q_spec = soxr_quality_spec(q_recipe, q_flags);
   soxr_io_spec_t io_spec = soxr_io_spec(itype|SOXR_SPLIT, otype|SOXR_SPLIT);
   soxr_runtime_spec_t runtime_spec = soxr_runtime_spec(!use_threads);
 
   soxr_t resampler = soxr_create(
       irate, orate, chans, &error, &io_spec, &q_spec, &runtime_spec);
 
-  STD_STDIO;
   if (!error) {
-    #define  buf_total_len 15000
+    #define  buf_total_len 14000
 
     /* Allocate resampling input and output buffers in proportion to the input
      * and output rates: */
@@ -108,6 +120,7 @@ int main(int n, char const * arg[])
       optr += obuflen * soxr_datatype_size(otype);
     }
 
+    USE_STD_STDIO;
     do {
       if (!iavailable && ibuf_offset_ptrs) {     /* If ibuf empty, try to fill it: */
         if (!(iavailable = fread(ibuf, isize, ibuflen, stdin)))
@@ -134,7 +147,7 @@ int main(int n, char const * arg[])
     clips = *soxr_num_clips(resampler);
     soxr_delete(resampler);
   }
-  fprintf(stderr, "%s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
+  fprintf(stderr, "%-26s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
       (long unsigned)clips, errno? strerror(errno) : "no error");
   return error || errno;
 }

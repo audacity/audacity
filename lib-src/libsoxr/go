@@ -8,6 +8,6 @@ test x$build = x && build=Release
 mkdir -p $build
 cd $build
 
-cmake -DCMAKE_BUILD_TYPE=$build .. &&
+cmake -DCMAKE_BUILD_TYPE=$build -DBUILD_TESTS=ON .. &&
   make &&
     (make test || echo "FAILURE details in $build/Testing/Temporary/LastTest.log")

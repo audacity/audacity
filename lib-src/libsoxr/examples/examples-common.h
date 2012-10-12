@@ -12,6 +12,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+  /* Work-around for broken file-I/O on MS-Windows: */
+  #include <io.h>
+  #include <fcntl.h>
+  #define USE_STD_STDIO _setmode(_fileno(stdout), _O_BINARY), \
+                        _setmode(_fileno(stdin ), _O_BINARY);
+  /* Sometimes missing, so ensure that it is defined: */
+  #undef M_PI
+  #define M_PI 3.14159265358979323846
+#else
+  #define USE_STD_STDIO
+#endif
+
 #undef int16_t
 #define int16_t short
 
@@ -28,16 +41,3 @@
 #define min(x,y) ((x)<(y)?(x):(y))
 
 #define AL(a) (sizeof(a)/sizeof((a)[0]))  /* Array Length */
-
-#ifdef _WIN32
-  #undef M_PI
-  #define M_PI 3.14159265358979323846
-
-  /* Work-around for broken file-I/O on MS-Windows: */
-  #include <io.h>
-  #include <fcntl.h>
-  #define STD_STDIO _setmode(_fileno(stdout), _O_BINARY), \
-                    _setmode(_fileno(stdin ), _O_BINARY);
-#else
-  #define STD_STDIO
-#endif

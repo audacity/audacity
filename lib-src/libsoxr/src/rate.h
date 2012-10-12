@@ -9,6 +9,8 @@
 #include "filter.h"
 #include "internal.h"
 
+#if defined SOXR_LIB
+
 extern struct {
   void * (* forward_setup)(int);
   void * (* backward_setup)(int);
@@ -34,6 +36,8 @@ extern struct {
 #define rdft_convolve_portion (*RDFT_CB.convolve_portion)
 #define rdft_multiplier (*RDFT_CB.multiplier)
 #define rdft_reorder_back (*RDFT_CB.reorder_back)
+
+#endif
 
 #if RATE_SIMD /* Align for SIMD: */
   #include "simd.h"
@@ -606,9 +610,8 @@ static void rate_process(rate_t * p)
 
 static sample_t * rate_input(rate_t * p, sample_t const * samples, size_t n)
 {
-  fifo_t * fifo = &p->stages[0].fifo;
   p->samples_in += n;
-  return fifo_write(fifo, (int)n, samples);
+  return fifo_write(&p->stages[0].fifo, (int)n, samples);
 }
 
 static sample_t const * rate_output(rate_t * p, sample_t * samples, size_t * n)
@@ -626,13 +629,12 @@ static void rate_flush(rate_t * p)
 #else
   uint64_t samples_out = (uint64_t)((double)p->samples_in / p->factor + .5);
 #endif
-  size_t remaining = (size_t)(samples_out - p->samples_out), idone;
+  size_t remaining = (size_t)(samples_out - p->samples_out);
   sample_t * buff = calloc(1024, sizeof(*buff));
 
   if ((int)remaining > 0) {
     while ((size_t)fifo_occupancy(fifo) < remaining) {
-      idone = 1024;
-      rate_input(p, buff, idone);
+      rate_input(p, buff, 1024);
       rate_process(p);
     }
     fifo_trim_to(fifo, (int)remaining);

@@ -15,7 +15,7 @@ Patches: None
 Upstream version: 2.0.1
 
 FileDialog
-------------
+----------
 The customised file saving dialogs for wxwidgets to provide the options
 button for format preferences. This is written and maintained by us so doesn't
 have an upstream at the moment.
@@ -84,7 +84,8 @@ Upstream Version: 1.1.3
 
 libresample
 -----------
-Audio sample rate conversion library. Maintained by Audacity project
+Audio sample rate conversion library. Maintained by Audacity project. 
+(Not currently used, in favor of libsoxr.)
 
 libsamplerate
 -------------
@@ -117,7 +118,7 @@ libsoxr
 -------
 The SoX Resampler library performs one-dimensional sample-rate conversion, 
 by Rob Sykes.
-Version in Audacity SVN: <?> (latest as of 2012-10-09)
+Version in Audacity SVN: 0.0.2
 No patches, used as is, with modified .vcproj file in win\Projects\libsoxr.
 
 

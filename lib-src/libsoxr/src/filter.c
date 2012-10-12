@@ -48,17 +48,17 @@
 #include "fft4g_cache.h"
 #endif
 
-#if HAVE_DOUBLE_PRECISION
+#if HAVE_DOUBLE_PRECISION || !SOXR_LIB
 #define DFT_FLOAT double
-#define ORDERED_CONVOLVE _soxr_ordered_convolve
-#define ORDERED_PARTIAL_CONVOLVE _soxr_ordered_partial_convolve
+#define ORDERED_CONVOLVE lsx_ordered_convolve
+#define ORDERED_PARTIAL_CONVOLVE lsx_ordered_partial_convolve
 #include "rdft.h"
 #endif
 
 #if HAVE_SINGLE_PRECISION
 #define DFT_FLOAT float
-#define ORDERED_CONVOLVE _soxr_ordered_convolve_f
-#define ORDERED_PARTIAL_CONVOLVE _soxr_ordered_partial_convolve_f
+#define ORDERED_CONVOLVE lsx_ordered_convolve_f
+#define ORDERED_PARTIAL_CONVOLVE lsx_ordered_partial_convolve_f
 #include "rdft.h"
 #endif
 

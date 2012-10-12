@@ -8,9 +8,7 @@ len=8
 f=3k
 f=0+48k
 g=48k+0
-ex=../examples/4-split-channels
-#vg="valgrind --leak-check=full --show-reachable=yes "
-ex="$vg../examples/3b-options-with-input-fn"
+ex=../examples/3b-options-with-input-fn
 
 types=(f32 f64 s32 s16)
 

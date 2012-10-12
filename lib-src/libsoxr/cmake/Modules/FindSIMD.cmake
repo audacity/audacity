@@ -7,17 +7,17 @@
 include (CheckCSourceCompiles)
 include (FindPackageHandleStandardArgs)
 
-set(SIMD_C_FLAG_CANDIDATES
+set (SIMD_C_FLAG_CANDIDATES
   #Microsoft Visual Studio
   "/arch:SSE /fp:fast -D__SSE__"
   #Gnu
   "-msse -mfpmath=sse"
 )
 
-set(SIMD_C_TEST_SOURCE
+set (SIMD_C_TEST_SOURCE
 "
 #include <xmmintrin.h>
-int main ()
+int main()
 {
   __m128 a, b;
   float vals[4] = {0};
@@ -38,7 +38,7 @@ foreach (FLAG ${SIMD_C_FLAG_CANDIDATES})
   set (CMAKE_REQUIRED_FLAGS "${FLAG}")
   unset (SIMD_FLAG_DETECTED CACHE)
   message (STATUS "Try SIMD C flag = [${FLAG}]")
-  check_c_source_compiles("${SIMD_C_TEST_SOURCE}" SIMD_FLAG_DETECTED)
+  check_c_source_compiles ("${SIMD_C_TEST_SOURCE}" SIMD_FLAG_DETECTED)
   set (CMAKE_REQUIRED_FLAGS "${SAFE_CMAKE_REQUIRED_FLAGS}")
   if (SIMD_FLAG_DETECTED)
     set (SIMD_C_FLAGS_INTERNAL "${FLAG}")

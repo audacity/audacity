@@ -2,12 +2,12 @@
 # Licence for this file: LGPL v2.1                  See LICENCE for details.
 
 if (${bits} STREQUAL 24)
-  set (quality A0045)
+  set (quality 45)
 else ()
-  set (quality A0044)
+  set (quality 44)
 endif ()
 
-execute_process(COMMAND ${obin}3b-options-with-input-fn ${from} ${to} 1 2 2 ${quality}
+execute_process(COMMAND ${EXAMPLES_BIN}3b-options-with-input-fn ${from} ${to} 1 2 2 ${quality} a
   INPUT_FILE ref-${from}.s32
   OUTPUT_FILE ${from}-${to}.s32
   ERROR_VARIABLE test_error
@@ -19,7 +19,7 @@ if (test_result)
   #message (STATUS ${test_error})
 endif ()
 
-execute_process(COMMAND ${bin}vector-cmp ref-${to}.s32 ${from}-${to}.s32 ${to} ${leader} ${len} ${bits} 98
+execute_process(COMMAND ${BIN}vector-cmp ref-${to}.s32 ${from}-${to}.s32 ${to} ${leader} ${len} ${bits} 98
   OUTPUT_VARIABLE test_output
   RESULT_VARIABLE test_result)
 

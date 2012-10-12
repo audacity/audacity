@@ -1,46 +1,50 @@
 SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
 
-The SoX Resampler library performs one-dimensional sample-rate conversion.
-It may be used, for example, to resample PCM-encoded audio.  For higher-
-dimensional resampling, such as for visual-image processing, you should look
-elsewhere.
+The SoX Resampler library `libsoxr' performs one-dimensional sample-rate
+conversion - it may be used, for example, to resample PCM-encoded audio.
+For higher-dimensional resampling, such as for visual-image processing, you
+should look elsewhere.
 
-Its aim is to provide fast, high-quality resampling.  At its highest quality
-settings, it can produce 32-bit-perfect results with signal occupied-
-bandwidths of up to 98%.¹  Resampling ratios can be any (floating point)
-value between +/- 8 octaves.
-
-Depending on how the resampler is configured, quality may be traded for
-speed, but only to a certain extent: there may be faster, average-quality
-resamplers available.  Multi-channel resampling can be configured to use
-multiple CPU-cores, thus reducing execution time (with a slight expense of
-CPU-cycles).
+It aims to be fast (e.g. multi-channel resampling can utilise multiple
+CPU-cores), high-quality (i.e. bit-perfect up to 32-bits, for occupied-
+bandwidths up to 98%¹), and to allow any rational or irrational resampling
+ratio.  Phase-response, preserved bandwidth, aliasing, and rejection level
+parameters are all configurable; alternatively, simple `preset'
+configurations may be selected.
 
 The resampler is currently available either as part of `libsox' (the audio
 file-format and effect library), or stand-alone as `libsoxr' (this package).
+The interfaces to libsox and libsoxr are slightly different, with that of
+libsoxr designed specifically for resampling.  An application requiring
+support for other effects, or for reading-from or writing-to audio files or
+devices, should use libsox (or other libraries such as libsndfile or
+libavformat).
 
-The APIs of libsox and libsoxr are slightly different, with that of libsoxr
-designed specifically for resampling.  An application requiring support for
-other effects, or for reading-from or writing-to audio files or devices, can
-use libsox (or other libraries such as libsndfile or libavformat).
-
-Applications may use either floating-point or integer sample formats, and,
-in the case of multiple channels, either channel-interleaved, or split-
-channels.
-
-The libsoxr API is currently documented in the header file `soxr.h' and by
-example code in the 'examples' directory.
+Libsoxr provides a simple API that allows interfacing using any commonly-
+used sample format or buffering scheme: clients may use either floating-
+point or integer sample formats, and, in the case of multiple channels,
+either channel-interleaved, or split channels.  The API is currently
+documented in the header file `soxr.h' and by example code in the 'examples'
+directory.
 
 For compatibility with the popular `libsamplerate' library, the header file
-`soxr-lsr.h' is provided and may be used as an alternative API. For details
+`soxr-lsr.h' is provided and may be used as an alternative API.  For details
 of that API, see http://www.mega-nerd.com/SRC/api.html.  Note however, that
 libsoxr does not provide a full emulation of libsamplerate; in particular,
-`vari-speeding' is not currently supported.
+`vari-speeding' is not supported.
 
 For build and installation instructions, see the file `INSTALL'; for
-copyright and licensing information, see the file `copyright'.
+copyright and licensing information, see the file `LICENCE'.
 
 The resampler was inspired by Laurent De Soras' paper `The Quest For The
-Perfect Resampler', http://ldesoras.free.fr/doc/articles/resampler-en.pdf.
+Perfect Resampler', http://ldesoras.free.fr/doc/articles/resampler-en.pdf;
+it combines Julius O. Smith's `Bandlimited Interpolation' technique
+(https://ccrma.stanford.edu/~jos/resample/resample.pdf) with FFT-based
+over-sampling.
+
+Its use of FFTs means that, for real-time resampling, libsoxr may have a
+higher latency than non-FFT based resamplers.  E.g. when using the `High
+Quality' configuration to resample between 44100Hz and 48kHz, the latency is
+around 1000 output samples, i.e. roughly 20 ms.
 
 ¹ Note that no practical resampler can be bit-perfect to 100% bandwidth.

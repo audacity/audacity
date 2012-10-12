@@ -32,17 +32,17 @@
 
 #if defined SOXR_DLL
   #if defined soxr_EXPORTS
-    #define _ __declspec(dllexport)
+    #define SOXR __declspec(dllexport)
   #else
-    #define _ __declspec(dllimport)
+    #define SOXR __declspec(dllimport)
   #endif
 #else
-  #define _
+  #define SOXR
 #endif
 
-typedef struct soxr_io_spec_t soxr_io_spec_t;
-typedef struct soxr_quality_spec_t soxr_quality_spec_t;
-typedef struct soxr_runtime_spec_t soxr_runtime_spec_t;
+typedef struct soxr_io_spec soxr_io_spec_t;
+typedef struct soxr_quality_spec soxr_quality_spec_t;
+typedef struct soxr_runtime_spec soxr_runtime_spec_t;
 
 
 
@@ -60,8 +60,8 @@ input or output (e.g. ilen, olen).                                            */
 
 /* --------------------------- Type declarations ---------------------------- */
 
-typedef struct soxr_t * soxr_t;        /* A resampler for 1 or more channels. */
-typedef char const    * soxr_error_t;  /* 0:no-error; non-0:error. */
+typedef struct soxr * soxr_t;        /* A resampler for 1 or more channels. */
+typedef char const * soxr_error_t;     /* 0:no-error; non-0:error. */
 
 typedef void       * soxr_buf_t;  /* 1 buffer of channel-interleaved samples. */
 typedef void const * soxr_cbuf_t;                        /* Ditto; read-only. */
@@ -78,7 +78,7 @@ typedef void       * soxr_out_t;     /* Either a soxr_buf_t or soxr_bufs_t,
 
 /* --------------------------- API main functions --------------------------- */
 
-_ char const    * soxr_version(void);  /* Query library version: "x.y.z". */
+SOXR char const    * soxr_version(void);  /* Query library version: "x.y.z". */
 
 #define soxr_strerror(e)               /* Soxr counterpart to strerror. */     \
     ((e)?(e):"no error")
@@ -86,7 +86,7 @@ _ char const    * soxr_version(void);  /* Query library version: "x.y.z". */
 
 /* Create a stream resampler: */
 
-_ soxr_t soxr_create(
+SOXR soxr_t soxr_create(
     double      input_rate,      /* Input sample-rate. */
     double      output_rate,     /* Output sample-rate. */
     unsigned    num_channels,    /* Number of channels to be used. */
@@ -101,16 +101,20 @@ _ soxr_t soxr_create(
 /* If not using an app-supplied input function, after creating a stream
  * resampler, repeatedly call: */
 
-_ soxr_error_t soxr_process(
+SOXR soxr_error_t soxr_process(
     soxr_t      resampler,      /* As returned by soxr_create. */
                             /* Input (to be resampled): */
-    soxr_in_t   in,             /* Interleaved or split input buffer(s). */
+    soxr_in_t   in,             /* Input buffer(s); may be NULL (see below). */
     size_t      ilen,           /* Input buf. length (samples per channel). */
     size_t      * idone,        /* To return actual # samples used (<= ilen). */
                             /* Output (resampled): */
-    soxr_out_t  out,            /* Interleaved or split output buffer(s).*/
+    soxr_out_t  out,            /* Output buffer(s).*/
     size_t      olen,           /* Output buf. length (samples per channel). */
-    size_t      * odone);       /* To return actual # samples out (<= olen). */
+    size_t      * odone);       /* To return actual # samples out (<= olen).
+
+    Note that no special meaning is associated with ilen or olen equal to
+    zero.  End-of-input (i.e. no data is available nor shall be available)
+    may be indicated by seting in to zero.                                    */
 
 
 
@@ -118,7 +122,7 @@ _ soxr_error_t soxr_process(
 
 typedef size_t /* data_len */
   (* soxr_input_fn_t)(         /* Supply data to be resampled. */
-    void * input_fn_state,     /* As given to soxr_set_input_fn. */
+    void * input_fn_state,     /* As given to soxr_set_input_fn (below). */
     soxr_in_t * data,          /* Returned data; see below. N.B. ptr to ptr(s)*/
     size_t requested_len);     /* Samples per channel, >= returned data_len.
 
@@ -133,14 +137,14 @@ typedef size_t /* data_len */
 
 /* and be registered with a previously created stream resampler using: */
 
-_ soxr_error_t soxr_set_input_fn(/* Set (or reset) an input function.*/
+SOXR soxr_error_t soxr_set_input_fn(/* Set (or reset) an input function.*/
     soxr_t resampler,            /* As returned by soxr_create. */
     soxr_input_fn_t,             /* Function to supply data to be resampled.*/
     void * input_fn_state);      /* If needed by the input function. */
 
 /* then repeatedly call: */
 
-_ size_t /*odone*/ soxr_output(/* Resample and output a portion of the signal.*/
+SOXR size_t /*odone*/ soxr_output(/* Resample and output a block of data.*/
     soxr_t resampler,            /* As returned by soxr_create. */
     soxr_out_t data,             /* App-supplied buffer(s) for resampled data.*/
     size_t olen);                /* Amount of data to output; >= odone. */
@@ -149,20 +153,20 @@ _ size_t /*odone*/ soxr_output(/* Resample and output a portion of the signal.*/
 
 /* Common stream resampler operations: */
 
-_ soxr_error_t soxr_error(soxr_t);   /* Query error status. */
-_ size_t     * soxr_num_clips(soxr_t); /* Query int. clip counter (for R/W). */
-_ double       soxr_delay(soxr_t);   /* Query current delay in output samples.*/
-_ char const * soxr_engine(soxr_t p);/* Query resampling engine name. */
+SOXR soxr_error_t soxr_error(soxr_t);   /* Query error status. */
+SOXR size_t     * soxr_num_clips(soxr_t); /* Query int. clip counter (for R/W). */
+SOXR double       soxr_delay(soxr_t);   /* Query current delay in output samples.*/
+SOXR char const * soxr_engine(soxr_t p);/* Query resampling engine name. */
 
-_ soxr_error_t soxr_clear(soxr_t);   /* Ready for fresh signal, same config. */
-_ void         soxr_delete(soxr_t);  /* Free resources. */
+SOXR soxr_error_t soxr_clear(soxr_t);   /* Ready for fresh signal, same config. */
+SOXR void         soxr_delete(soxr_t);  /* Free resources. */
 
 
 
 /* `Short-cut', single call to resample a (probably short) signal held entirely
  * in memory.  See soxr_create and soxr_process above for parameter details. */
 
-_ soxr_error_t soxr_oneshot(
+SOXR soxr_error_t soxr_oneshot(
     double         input_rate,
     double         output_rate,
     unsigned       num_channels,
@@ -193,7 +197,7 @@ typedef enum {          /* Datatypes supported for I/O to/from the resampler: */
 
 
 
-struct soxr_io_spec_t {                                          /* Typically */
+struct soxr_io_spec {                                            /* Typically */
   soxr_datatype_t itype;     /* Input datatype.                SOXR_FLOAT32_I */
   soxr_datatype_t otype;     /* Output datatype.               SOXR_FLOAT32_I */
   double scale;              /* Linear gain to apply during resampling.  1    */
@@ -206,7 +210,7 @@ struct soxr_io_spec_t {                                          /* Typically */
 
 
 
-struct soxr_quality_spec_t {                                     /* Typically */
+struct soxr_quality_spec {                                       /* Typically */
   double bits;               /* Required bit-accuracy (pass + stop).    20    */
   double phase;              /* Linear/minimum etc. phase. [0,100]      50    */
   double bw_pc;              /* Pass-band % (0dB pt.) to preserve.     91.3   */
@@ -225,7 +229,7 @@ struct soxr_quality_spec_t {                                     /* Typically */
 
 
 
-struct soxr_runtime_spec_t {                                     /* Typically */
+struct soxr_runtime_spec {                                       /* Typically */
   unsigned log2_min_dft_size;/* For DFT efficiency. [8,15]              10    */
   unsigned log2_large_dft_size;/* For DFT efficiency. [16,20]           17    */
   unsigned coef_size_kbytes; /* For SOXR_COEF_INTERP_AUTO (below).      400   */
@@ -249,7 +253,7 @@ struct soxr_runtime_spec_t {                                     /* Typically */
  * parameters, with other parameters being given default values.  The default
  * values may then be overridden, directly in the structure, if needed.  */
 
-_ soxr_quality_spec_t soxr_quality_spec(
+SOXR soxr_quality_spec_t soxr_quality_spec(
     unsigned long recipe,       /* Per the #defines immediately below. */
     unsigned long flags);       /* As soxr_quality_spec_t.flags. */
 
@@ -278,12 +282,12 @@ _ soxr_quality_spec_t soxr_quality_spec(
 
 
 
-_ soxr_runtime_spec_t soxr_runtime_spec(
+SOXR soxr_runtime_spec_t soxr_runtime_spec(
     unsigned num_threads);
 
 
 
-_ soxr_io_spec_t soxr_io_spec(
+SOXR soxr_io_spec_t soxr_io_spec(
     soxr_datatype_t itype,
     soxr_datatype_t otype);
 
@@ -291,14 +295,14 @@ _ soxr_io_spec_t soxr_io_spec(
 
 /* --------------------------- Internal use only ---------------------------- */
 
-_ soxr_error_t soxr_set_error(soxr_t, soxr_error_t);
-_ soxr_error_t soxr_set_num_channels(soxr_t, unsigned);
-_ soxr_error_t soxr_set_oi_ratio(soxr_t, double);
-_ soxr_error_t soxr_set_pitch(soxr_t, long);
+SOXR soxr_error_t soxr_set_error(soxr_t, soxr_error_t);
+SOXR soxr_error_t soxr_set_num_channels(soxr_t, unsigned);
+SOXR soxr_error_t soxr_set_oi_ratio(soxr_t, double);
+SOXR soxr_error_t soxr_set_pitch(soxr_t, long);
 
 
 
-#undef _
+#undef SOXR
 
 #if defined __cplusplus
 }

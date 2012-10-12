@@ -44,7 +44,9 @@ static bool UPDATE_FFT_CACHE(int len)
       LSX_FFT_SC = realloc(LSX_FFT_SC, dft_sc_len(FFT_LEN) * sizeof(*LSX_FFT_SC));
       if (!old_n) {
         LSX_FFT_BR[0] = 0;
+#if SOXR_LIB
         atexit(LSX_CLEAR_FFT_CACHE);
+#endif
       }
       return true;
     }
