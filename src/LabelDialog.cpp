@@ -109,7 +109,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
    wxStaticText *instruct = 
       new wxStaticText(this,
                        wxID_ANY,
-                       _("Press F2 or double click to edit cell contents.")),
+                       _("Press F2 or double click to edit cell contents."));
    instruct->SetName(instruct->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    vs->Add(instruct,
            0,
