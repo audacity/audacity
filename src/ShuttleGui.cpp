@@ -218,6 +218,7 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
    miProp=1;
    mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize, 
       Style( wxALIGN_RIGHT ));
+   mpWind->SetName(wxStripMenuCodes(Prompt)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL );
 }
 
@@ -231,6 +232,7 @@ void ShuttleGuiBase::AddUnits(const wxString &Prompt)
    miProp=1;
    mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize, 
       Style( wxALIGN_LEFT ));
+   mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL );
 }
 
@@ -243,6 +245,7 @@ void ShuttleGuiBase::AddTitle(const wxString &Prompt)
       return;
    mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize, 
       Style( wxALIGN_CENTRE ));
+   mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
 }
 
@@ -354,6 +357,7 @@ void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter)
       return;
    mpWind = new wxStaticText(mpParent, miId, Str, wxDefaultPosition, wxDefaultSize, 
       Style( wxALIGN_LEFT ));
+   mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
    {
       miProp=1;
@@ -372,6 +376,7 @@ wxStaticText * ShuttleGuiBase::AddVariableText(const wxString &Str, bool bCenter
    wxStaticText *pStatic;
    mpWind = pStatic = new wxStaticText(mpParent, miId, Str, wxDefaultPosition, wxDefaultSize, 
       Style( wxALIGN_LEFT ));
+   mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
    {
       miProp=1;
@@ -570,6 +575,7 @@ void ShuttleGuiBase::AddConstTextBox(const wxString &Prompt, const wxString &Val
    miProp=0;
    mpWind = new wxStaticText(mpParent, miId, Value, wxDefaultPosition, wxDefaultSize,
       Style( 0 ));
+   mpWind->SetName(Value); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
 }
 

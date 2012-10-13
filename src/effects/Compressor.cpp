@@ -723,9 +723,11 @@ bool CompressorDialog::TransferDataFromWindow()
    mThresholdLabel->SetName(wxString::Format(_("Threshold %d dB"), (int)threshold));
    /* i18n-hint: usually leave this as is as dB doesn't get translated*/
    mThresholdText->SetLabel(wxString::Format(_("%3d dB"), (int)threshold));
+   mThresholdText->SetName(mThresholdText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    mNoiseFloorLabel->SetName(wxString::Format(_("Noise Floor %d dB"), (int)noisefloor));
    mNoiseFloorText->SetLabel(wxString::Format(_("%3d dB"), (int)noisefloor));
+   mNoiseFloorText->SetName(mNoiseFloorText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    if (mRatioSlider->GetValue()%2 == 0) {
       mRatioLabel->SetName(wxString::Format(_("Ratio %.0f to 1"), ratio));
@@ -739,12 +741,15 @@ bool CompressorDialog::TransferDataFromWindow()
        * like 8:1, leave as is.*/
       mRatioText->SetLabel(wxString::Format(_("%.1f:1"), ratio));
    }
+   mRatioText->SetName(mRatioText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    mAttackLabel->SetName(wxString::Format(_("Attack Time %.1f secs"), attack));
    mAttackText->SetLabel(wxString::Format(_("%.1f secs"), attack));
+   mAttackText->SetName(mAttackText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    mDecayLabel->SetName(wxString::Format(_("Decay Time %.1f secs"), decay));
    mDecayText->SetLabel(wxString::Format(_("%.1f secs"), decay));
+   mDecayText->SetName(mDecayText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    mPanel->Refresh(false);
 

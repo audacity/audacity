@@ -566,8 +566,11 @@ void DtmfDialog::Recalculate(void) {
      }
 
    mDtmfDutyT->SetLabel(wxString::Format(wxT("%.1f %%"), (float)dDutyCycle/DUTY_SCALE));
+   mDtmfDutyT->SetName(mDtmfDutyT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mDtmfSilenceT->SetLabel(wxString::Format(wxString(wxT("%d ")) + _("ms"),  (int) (dTone * 1000)));
+   mDtmfSilenceT->SetName(mDtmfSilenceT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mDtmfToneT->SetLabel(wxString::Format(wxString(wxT("%d ")) + _("ms"),  (int) (dSilence * 1000)));
+   mDtmfToneT->SetName(mDtmfToneT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
 void DtmfDialog::OnDutyCycleSlider(wxCommandEvent & event) {

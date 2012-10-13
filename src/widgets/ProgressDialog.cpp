@@ -1046,6 +1046,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                wxDefaultPosition,
                                wxDefaultSize,                                  
                                wxALIGN_LEFT);
+   mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    v->Add(mMessage, 0, wxEXPAND | wxALL, 10);
    ds.y += mMessage->GetSize().y + 20;
 
@@ -1072,6 +1073,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                         wxDefaultPosition,
                         wxDefaultSize,                                  
                         wxALIGN_RIGHT);
+   w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(w, 0, wxALIGN_RIGHT);
 
    mElapsed = new wxStaticText(this,
@@ -1080,6 +1082,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                wxDefaultPosition,
                                wxDefaultSize,                                  
                                wxALIGN_LEFT);
+   mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(mElapsed, 0, wxALIGN_LEFT);
    ds.y += mElapsed->GetSize().y + 10;
    
@@ -1092,6 +1095,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                         wxDefaultPosition,
                         wxDefaultSize,                                  
                         wxALIGN_RIGHT);
+   w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(w, 0, wxALIGN_RIGHT);
 
    mRemaining = new wxStaticText(this,
@@ -1100,6 +1104,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                  wxDefaultPosition,
                                  wxDefaultSize,                                  
                                  wxALIGN_LEFT);
+   mRemaining->SetName(mRemaining->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(mRemaining, 0, wxALIGN_LEFT);
 
    v->Add(g, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, 10);
@@ -1344,7 +1349,9 @@ ProgressDialog::Update(int value, const wxString & message)
       wxTimeSpan tsRemains(0, 0, 0, remains);
 
       mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")));
+      mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")));
+      mRemaining->SetName(mRemaining->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
       mLastUpdate = now;
    }

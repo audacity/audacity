@@ -278,6 +278,7 @@ void RepeatDialog::DisplayNewTime()
    str += tt.GetTimeString();
 
    mTotalTime->SetLabel(str);
+   mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
 void RepeatDialog::OnRepeatTextChange(wxCommandEvent & event)

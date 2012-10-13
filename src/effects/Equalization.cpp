@@ -1276,6 +1276,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    wxString label;
    label.Printf( wxT("%d"), M );
    mMText = new wxStaticText(this, wxID_ANY, label);
+   mMText->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szrH->Add( mMText, 0 );
 
    // Add the length / graphic / draw grouping
@@ -1487,6 +1488,7 @@ bool EqualizationDialog::TransferDataFromWindow()
       M = m;
       mPanel->M = M;
       mMText->SetLabel(wxString::Format(wxT("%d"), M));
+      mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 #if wxUSE_TOOLTIPS
       tip.Printf(wxT("%d"), M);
       MSlider->SetToolTip(tip);

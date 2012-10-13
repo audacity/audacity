@@ -74,6 +74,7 @@ MultiDialog::MultiDialog(wxString message,
    iconAndTextSizer->Add( icon, 0, wxCENTER );
 
    wxStaticText *statText = new wxStaticText(this, -1, message);
+   statText->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    iconAndTextSizer->Add(statText, 1, wxCENTER|wxLEFT,15 );
 
    vSizer->Add(iconAndTextSizer, 0, wxALIGN_LEFT|wxALL, 5);

@@ -182,6 +182,7 @@ void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & e)
 
    if( mFreeSpace != NULL ) {
       mFreeSpace->SetLabel(label);
+      mFreeSpace->SetName(label); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    }
 }
 
