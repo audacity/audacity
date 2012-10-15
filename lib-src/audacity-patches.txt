@@ -122,6 +122,7 @@ Version in Audacity SVN: 0.0.2
 Patches: 
    * "libsoxr/configure" file: modified cmake params
    * modified .vcproj file in win\Projects\libsoxr
+   * modified src/samplerate.h (hopefully only until this change is made in master libsoxr source)
 
 
 libvamp
