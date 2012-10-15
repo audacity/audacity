@@ -328,7 +328,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                this track is shown with a sync-locked icon.*/
             // The absence of a dash between Sync and Locked is deliberate -
             // if present, Jaws reads it as "dash".
-            *name->Append( _( " Sync Lock On" ) );
+            *name->Append( _( " Sync Lock Selected" ) );
          }
       }
    }
