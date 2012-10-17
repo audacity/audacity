@@ -637,8 +637,6 @@ SBSMS_LIBS
 SBSMS_CFLAGS
 LIBMAD_LIBS
 LIBMAD_CFLAGS
-SAMPLERATE_LIBS
-SAMPLERATE_CFLAGS
 SNDFILE_LIBS
 SNDFILE_CFLAGS
 WIDGETEXTRA_LIBS
@@ -730,9 +728,8 @@ enable_sse
 enable_universal_binary
 enable_dynamic_loading
 with_libsndfile
+with_libsoxr
 with_expat
-with_libsamplerate
-with_libresample
 with_libvorbis
 with_libmad
 with_libflac
@@ -768,8 +765,6 @@ WIDGETEXTRA_CFLAGS
 WIDGETEXTRA_LIBS
 SNDFILE_CFLAGS
 SNDFILE_LIBS
-SAMPLERATE_CFLAGS
-SAMPLERATE_LIBS
 LIBMAD_CFLAGS
 LIBMAD_LIBS
 SBSMS_CFLAGS
@@ -1435,12 +1430,9 @@ Optional Packages:
   --with-lib-preference   whether to use local and/or system libraries, in
                           order of preference (default="system local")
   --with-libsndfile       which libsndfile to use (required): [system,local]
+  --with-libsoxr          use libsoxr for sample rate conversion: [yes,no]
   --with-expat            which expat to use for XML file support:
                           [system,local]
-  --with-libsamplerate    use libsamplerate instead of libresample for sample
-                          rate conversion. Do not use in conjunction with VST
-                          plug-in support!
-  --with-libresample      use libresample for sample rate conversion: [yes,no]
   --with-libvorbis        use libvorbis for Ogg Vorbis support
   --with-libmad           use libmad for mp2/3 decoding support
   --with-libflac          use libFLAC for FLAC support
@@ -1475,10 +1467,6 @@ Some influential environment variables:
               C compiler flags for SNDFILE, overriding pkg-config
   SNDFILE_LIBS
               linker flags for SNDFILE, overriding pkg-config
-  SAMPLERATE_CFLAGS
-              C compiler flags for SAMPLERATE, overriding pkg-config
-  SAMPLERATE_LIBS
-              linker flags for SAMPLERATE, overriding pkg-config
   LIBMAD_CFLAGS
               C compiler flags for LIBMAD, overriding pkg-config
   LIBMAD_LIBS linker flags for LIBMAD, overriding pkg-config
@@ -5825,7 +5813,7 @@ BUILD_LDFLAGS="$BUILD_LDFLAGS $WIDGETEXTRA_LIBS"
 CXXFLAGS="$CXXFLAGS $WIDGETEXTRA_CFLAGS"
 LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
 
-LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSAMPLERATE LIBRESAMPLE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
+LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -5967,6 +5955,73 @@ $as_echo "$as_me: libsndfile libraries are NOT available in this source tree" >&
 
 
 
+# Check whether --with-libsoxr was given.
+if test "${with_libsoxr+set}" = set; then :
+  withval=$with_libsoxr; LIBSOXR_ARGUMENT=$withval
+else
+  LIBSOXR_ARGUMENT="unspecified"
+fi
+
+
+   if true ; then
+
+$as_echo "#define USE_LIBSOXR 1" >>confdefs.h
+
+   fi
+
+
+
+   LIBSOXR_SYSTEM_AVAILABLE="no"
+
+
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libsoxr/src/soxr-lsr.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libsoxr/src/soxr-lsr.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/libsoxr/src/soxr-lsr.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/libsoxr/src/soxr-lsr.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  soxr_h_found="yes"
+else
+  soxr_h_found="no"
+fi
+
+
+   if test "x$soxr_h_found" = "xyes" ; then
+      LIBSOXR_LOCAL_AVAILABLE="yes"
+      LIBSOXR_LOCAL_LIBS="libsoxr-lsr.a libsoxr.a"
+      LIBSOXR_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsoxr/src'
+      LIBSOXR_LOCAL_CPPSYMBOLS="USE_LIBSOXR"
+
+      if test ! -f lib-src/libsoxr/Makefile ; then
+         LIBSOXR_LOCAL_CONFIG_SUBDIRS="lib-src/libsoxr"
+
+         # Breaks other other libraries in Audacity tree; but why is ./configure
+         # passing options specific to this library to other libraries?
+         #LIBSOXR_LOCAL_CONFIGURE_ARGS="\"-DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF\""
+      fi
+      { $as_echo "$as_me:${as_lineno-$LINENO}: libsoxr libraries are available in the local tree" >&5
+$as_echo "$as_me: libsoxr libraries are available in the local tree" >&6;}
+   else
+      LIBSOXR_LOCAL_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: libsoxr libraries are NOT available in the local tree" >&5
+$as_echo "$as_me: libsoxr libraries are NOT available in the local tree" >&6;}
+   fi
+
+
+
+
 # Check whether --with-expat was given.
 if test "${with_expat+set}" = set; then :
   withval=$with_expat; LIBEXPAT_ARGUMENT=$withval
@@ -6079,210 +6134,6 @@ $as_echo "$as_me: Expat libraries are available in the local tree" >&6;}
       LIBEXPAT_LOCAL_AVAILABLE="no"
       { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are NOT available in the local tree" >&5
 $as_echo "$as_me: Expat libraries are NOT available in the local tree" >&6;}
-   fi
-
-
-
-
-# Check whether --with-libsamplerate was given.
-if test "${with_libsamplerate+set}" = set; then :
-  withval=$with_libsamplerate; LIBSAMPLERATE_ARGUMENT=$withval
-else
-  LIBSAMPLERATE_ARGUMENT="unspecified"
-fi
-
-
-   if false ; then
-
-$as_echo "#define USE_LIBSAMPLERATE 1" >>confdefs.h
-
-   fi
-
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SAMPLERATE" >&5
-$as_echo_n "checking for SAMPLERATE... " >&6; }
-
-if test -n "$SAMPLERATE_CFLAGS"; then
-    pkg_cv_SAMPLERATE_CFLAGS="$SAMPLERATE_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"samplerate >= 0.1.2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "samplerate >= 0.1.2") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_SAMPLERATE_CFLAGS=`$PKG_CONFIG --cflags "samplerate >= 0.1.2" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$SAMPLERATE_LIBS"; then
-    pkg_cv_SAMPLERATE_LIBS="$SAMPLERATE_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"samplerate >= 0.1.2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "samplerate >= 0.1.2") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_SAMPLERATE_LIBS=`$PKG_CONFIG --libs "samplerate >= 0.1.2" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        SAMPLERATE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "samplerate >= 0.1.2" 2>&1`
-        else
-	        SAMPLERATE_PKG_ERRORS=`$PKG_CONFIG --print-errors "samplerate >= 0.1.2" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$SAMPLERATE_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-                samplerate_available_system="no"
-elif test $pkg_failed = untried; then
-	samplerate_available_system="no"
-else
-	SAMPLERATE_CFLAGS=$pkg_cv_SAMPLERATE_CFLAGS
-	SAMPLERATE_LIBS=$pkg_cv_SAMPLERATE_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	samplerate_available_system="yes"
-fi
-
-   if test "x$samplerate_available_system" = "xyes" ; then
-      LIBSAMPLERATE_SYSTEM_AVAILABLE="yes"
-      LIBSAMPLERATE_SYSTEM_LIBS=$SAMPLERATE_LIBS
-      LIBSAMPLERATE_SYSTEM_CXXFLAGS=$SAMPLERATE_CFLAGS
-      LIBSAMPLERATE_SYSTEM_CPPSYMBOLS="USE_LIBSAMPLERATE"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Libsamplerate libraries are available as system libraries" >&5
-$as_echo "$as_me: Libsamplerate libraries are available as system libraries" >&6;}
-   else
-      LIBSAMPLERATE_SYSTEM_AVAILABLE="no"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Libsamplerate libraries are NOT available as system libraries" >&5
-$as_echo "$as_me: Libsamplerate libraries are NOT available as system libraries" >&6;}
-   fi
-
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libsamplerate/src/samplerate.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libsamplerate/src/samplerate.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libsamplerate/src/samplerate.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libsamplerate/src/samplerate.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  samplerate_h_found="yes"
-else
-  samplerate_h_found="no"
-fi
-
-
-   if test "x$samplerate_h_found" = "xyes" ; then
-      LIBSAMPLERATE_LOCAL_AVAILABLE="yes"
-      LIBSAMPLERATE_LOCAL_LIBS="libsamplerate.a"
-      LIBSAMPLERATE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsamplerate/src'
-      LIBSAMPLERATE_LOCAL_CPPSYMBOLS="USE_LIBSAMPLERATE"
-
-      if test ! -f lib-src/libsamplerate/Makefile ; then
-         LIBSAMPLERATE_LOCAL_CONFIG_SUBDIRS="lib-src/libsamplerate"
-      fi
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libsamplerate libraries are available in the local tree" >&5
-$as_echo "$as_me: libsamplerate libraries are available in the local tree" >&6;}
-   else
-      LIBSAMPLERATE_LOCAL_AVAILABLE="no"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libsamplerate libraries are NOT available in the local tree" >&5
-$as_echo "$as_me: libsamplerate libraries are NOT available in the local tree" >&6;}
-   fi
-
-
-
-
-# Check whether --with-libresample was given.
-if test "${with_libresample+set}" = set; then :
-  withval=$with_libresample; LIBRESAMPLE_ARGUMENT=$withval
-else
-  LIBRESAMPLE_ARGUMENT="unspecified"
-fi
-
-
-   if false ; then
-
-$as_echo "#define USE_LIBRESAMPLE 1" >>confdefs.h
-
-   fi
-
-
-
-   LIBRESAMPLE_SYSTEM_AVAILABLE="no"
-
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libresample/include/libresample.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libresample/include/libresample.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libresample/include/libresample.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libresample/include/libresample.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  resample_h_found="yes"
-else
-  resample_h_found="no"
-fi
-
-
-   if test "x$resample_h_found" = "xyes" ; then
-      LIBRESAMPLE_LOCAL_AVAILABLE="yes"
-      LIBRESAMPLE_LOCAL_LIBS="libresample.a"
-      LIBRESAMPLE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libresample/include'
-      LIBRESAMPLE_LOCAL_CPPSYMBOLS="USE_LIBRESAMPLE"
-
-      if test ! -f lib-src/libresample/Makefile ; then
-         LIBRESAMPLE_LOCAL_CONFIG_SUBDIRS="lib-src/libresample"
-      fi
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libresample libraries are available in the local tree" >&5
-$as_echo "$as_me: libresample libraries are available in the local tree" >&6;}
-   else
-      LIBRESAMPLE_LOCAL_AVAILABLE="no"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: libresample libraries are NOT available in the local tree" >&5
-$as_echo "$as_me: libresample libraries are NOT available in the local tree" >&6;}
    fi
 
 
@@ -8391,7 +8242,6 @@ done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have libsndfile one way or another
-#   * we can only use one of libsamplerate and libresample
 #   * we should not use the local Redland if we're not using local SLV2 or
 #     liblrdf
 
@@ -8411,24 +8261,6 @@ fi
 
 if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes" ; then
    as_fn_error $? "Audacity requires portaudio to be enabled" "$LINENO" 5
-fi
-
-if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Both libresample and libsamplerate are available" >&5
-$as_echo "$as_me: Both libresample and libsamplerate are available" >&6;}
-   { $as_echo "$as_me:${as_lineno-$LINENO}: deciding which to use based on arguments ..." >&5
-$as_echo "$as_me: deciding which to use based on arguments ..." >&6;}
-   if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
-            LIBSAMPLERATE_USE_LOCAL="no"
-      LIBSAMPLERATE_USE_SYSTEM="no"
-            { $as_echo "$as_me:${as_lineno-$LINENO}: Libsamplerate not explicity requested, using libresample" >&5
-$as_echo "$as_me: Libsamplerate not explicity requested, using libresample" >&6;}
-   else
-                        LIBRESAMPLE_USE_LOCAL="no"
-      LIBRESAMPLE_USE_SYSTEM="no"
-            { $as_echo "$as_me:${as_lineno-$LINENO}: Using libsamplerate as requested" >&5
-$as_echo "$as_me: Using libsamplerate as requested" >&6;}
-   fi
 fi
 
 
