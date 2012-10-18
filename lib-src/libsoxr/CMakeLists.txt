@@ -12,7 +12,7 @@ set (DESCRIPTION_SUMMARY "One-dimensional sample-rate conversion library")
 
 set (PROJECT_VERSION_MAJOR 0)
 set (PROJECT_VERSION_MINOR 0)
-set (PROJECT_VERSION_PATCH 2)
+set (PROJECT_VERSION_PATCH 3)
 
 # For shared-object; if, since the last public release:
 #  * library code changed at all: ++revision
@@ -103,6 +103,10 @@ if (WITH_AVFFT)
   endif ()
 endif ()
 
+if (EXISTS ${PROJECT_SOURCE_DIR}/src/vr32.c)
+  set (HAVE_VR 1)
+endif ()
+
 check_function_exists (lrint HAVE_LRINT)
 check_include_files (fenv.h HAVE_FENV_H)
 test_big_endian (WORDS_BIGENDIAN)
@@ -115,7 +119,7 @@ macro (make_exist)
   endforeach ()
 endmacro ()
 
-make_exist (HAVE_LRINT HAVE_FENV_H WORDS_BIGENDIAN HAVE_SIMD)
+make_exist (HAVE_LRINT HAVE_FENV_H WORDS_BIGENDIAN HAVE_SIMD HAVE_VR)
 make_exist (HAVE_SINGLE_PRECISION HAVE_DOUBLE_PRECISION HAVE_AVFFT)
 
 
@@ -246,7 +250,7 @@ if (UNIX)
   set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 
   set (CPACK_SOURCE_GENERATOR "TBZ2")
-  set (CPACK_SOURCE_IGNORE_FILES "/Debug/;/Release/;/cpack/;\\\\.swp$;\\\\.gitignore")
+  set (CPACK_SOURCE_IGNORE_FILES "/Debug/;/Release/;/cpack/;\\\\.swp$;\\\\.gitignore;.*vr32\\\\.c")
 
   include (CPack)
 

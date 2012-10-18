@@ -226,6 +226,7 @@ struct soxr_quality_spec {                                       /* Typically */
 #define SOXR_MAINTAIN_3DB_PT   4u  /* Reserved for internal use. */
 #define SOXR_HI_PREC_CLOCK     8u  /* Increase `irrational' ratio accuracy. */
 #define SOXR_DOUBLE_PRECISION 16u  /* Use double prec. even @ bitdepths <= 20.*/
+#define SOXR_VR               32u  /* Reserved for future use. */
 
 
 
@@ -298,7 +299,6 @@ SOXR soxr_io_spec_t soxr_io_spec(
 SOXR soxr_error_t soxr_set_error(soxr_t, soxr_error_t);
 SOXR soxr_error_t soxr_set_num_channels(soxr_t, unsigned);
 SOXR soxr_error_t soxr_set_oi_ratio(soxr_t, double);
-SOXR soxr_error_t soxr_set_pitch(soxr_t, long);
 
 
 

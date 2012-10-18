@@ -24,6 +24,10 @@ if (WITH_SINGLE_PRECISION)
   set (SP_SOURCES rate32 ${RDFT32})
 endif ()
 
+if (HAVE_VR)
+  set (VR_SOURCES vr32)
+endif ()
+
 if (HAVE_SIMD)
   set (SIMD_SOURCES rate32s ${RDFT32S} simd)
   foreach (source ${SIMD_SOURCES})
@@ -36,7 +40,7 @@ endif ()
 # Libsoxr:
 
 add_library (${PROJECT_NAME} ${LIB_TYPE} ${PROJECT_NAME}.c data-io dbesi0 filter fft4g64
-  ${SP_SOURCES} ${DP_SOURCES} ${SIMD_SOURCES})
+  ${SP_SOURCES} ${VR_SOURCES} ${DP_SOURCES} ${SIMD_SOURCES})
 set_target_properties (${PROJECT_NAME} PROPERTIES
   VERSION "${SO_VERSION}"
   SOVERSION ${SO_VERSION_MAJOR}

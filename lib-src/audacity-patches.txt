@@ -85,7 +85,7 @@ Upstream Version: 1.1.3
 libresample
 -----------
 Audio sample rate conversion library. Maintained by Audacity project. 
-(Not currently used, in favor of libsoxr.)
+(Currently used only for Time Tracks, in favor of libsoxr elsewhere.)
 
 libsamplerate
 -------------
@@ -118,11 +118,10 @@ libsoxr
 -------
 The SoX Resampler library performs one-dimensional sample-rate conversion, 
 by Rob Sykes.
-Version in Audacity SVN: 0.0.2
+Version in Audacity SVN: 0.0.3
 Patches: 
    * "libsoxr/configure" file: modified cmake params
    * modified .vcproj file in win\Projects\libsoxr
-   * modified src/samplerate.h (hopefully only until this change is made in master libsoxr source)
 
 
 libvamp

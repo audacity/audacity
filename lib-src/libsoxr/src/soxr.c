@@ -23,7 +23,7 @@ typedef void sample_t; /* float or double */
 
 typedef struct {
   sample_t * (*  input)(void *, sample_t * samples, size_t   n);
-  void (* process)(void *);
+  void (* process)(void *, size_t);
   sample_t const * (* output)(void *, sample_t * samples, size_t * n);
   void (* flush)(void *);
   void (* close)(void *);
@@ -205,7 +205,7 @@ static bool cpu_has_simd(void)
 }
 #endif
 
-extern control_block_t _soxr_rate32s_cb, _soxr_rate32_cb, _soxr_rate64_cb;
+extern control_block_t _soxr_rate32s_cb, _soxr_rate32_cb, _soxr_rate64_cb, _soxr_vr32_cb;
 
 
 
@@ -243,10 +243,17 @@ soxr_t soxr_create(
     p->seed = (unsigned long)time(0) ^ (unsigned long)p;
 
 #if HAVE_SINGLE_PRECISION
-    if (!HAVE_DOUBLE_PRECISION || (p->q_spec.bits <= 20 && !(p->q_spec.flags & SOXR_DOUBLE_PRECISION))) {
+    if (!HAVE_DOUBLE_PRECISION || (p->q_spec.bits <= 20 && !(p->q_spec.flags & SOXR_DOUBLE_PRECISION))
+#if HAVE_VR
+        || (p->q_spec.flags & SOXR_VR)
+#endif
+        ) {
       p->deinterleave = (deinterleave_t)_soxr_deinterleave_f;
       p->interleave = (interleave_t)_soxr_interleave_f;
       memcpy(&p->control_block,
+#if HAVE_VR
+          (p->q_spec.flags & SOXR_VR)? &_soxr_vr32_cb :
+#endif
 #if HAVE_SIMD
           cpu_has_simd()? &_soxr_rate32s_cb :
 #endif
@@ -385,15 +392,6 @@ soxr_error_t soxr_set_oi_ratio(soxr_t p, double oi_ratio)
 
 
 
-#if 0
-soxr_error_t soxr_set_pitch(soxr_t p, long pitch)
-{
-  return soxr_set_oi_ratio(p, pow(2, -(double)pitch / OCTAVE_MULT));
-}
-#endif
-
-
-
 void soxr_delete(soxr_t p)
 {
   if (p)
@@ -432,7 +430,8 @@ static void soxr_input_1ch(soxr_t p, unsigned i, soxr_cbuf_t src, size_t len)
 
 
 
-static size_t soxr_input(soxr_t p, void const * in, size_t len)
+size_t soxr_input(soxr_t p, void const * in, size_t len);
+size_t soxr_input(soxr_t p, void const * in, size_t len)
 {
   bool separated = !!(p->io_spec.itype & SOXR_SPLIT);
   unsigned i;
@@ -461,7 +460,7 @@ static size_t soxr_output_1ch(soxr_t p, unsigned i, soxr_buf_t dest, size_t len,
   sample_t const * src;
   if (p->flushing)
     resampler_flush(p->resamplers[i]);
-  resampler_process(p->resamplers[i]);
+  resampler_process(p->resamplers[i], len);
   src = resampler_output(p->resamplers[i], NULL, &len);
   if (separated)
     p->clips += (p->interleave)(p->io_spec.otype, &dest, &src,

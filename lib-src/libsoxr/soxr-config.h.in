@@ -7,6 +7,7 @@
 #define SOXR_VERSION         "@PROJECT_VERSION@"
 #define HAVE_SINGLE_PRECISION @HAVE_SINGLE_PRECISION@
 #define HAVE_DOUBLE_PRECISION @HAVE_DOUBLE_PRECISION@
+#define HAVE_VR               @HAVE_VR@
 #define HAVE_AVFFT            @HAVE_AVFFT@
 #define HAVE_SIMD             @HAVE_SIMD@
 #define HAVE_FENV_H           @HAVE_FENV_H@
