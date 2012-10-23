@@ -102,6 +102,9 @@
 /* Define if mp3 support is implemented with the libmad library */
 #undef USE_LIBMAD
 
+/* Define if libresample support should be enabled */
+#undef USE_LIBRESAMPLE
+
 /* Define if libsoxr support should be enabled */
 #undef USE_LIBSOXR
 
