@@ -423,7 +423,6 @@
 		17C99D5A098971390041B1BC /* libid3tag.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073F620988E121008541CC /* libid3tag.a */; };
 		17C99D5B098971390041B1BC /* libmad.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073FC40988E561008541CC /* libmad.a */; };
 		17C99D5C098971390041B1BC /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073FFE0988EA60008541CC /* libogg.a */; };
-		17C99D5D098971390041B1BC /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
 		17C99D5E098971390041B1BC /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707401E0988EEAA008541CC /* libsndfile.a */; };
 		17C99D5F098971390041B1BC /* libsoundtouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707407A0988F1BB008541CC /* libsoundtouch.a */; };
 		17C99D60098971390041B1BC /* libportmixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 170740960988F2F7008541CC /* libportmixer.a */; };
@@ -1150,6 +1149,24 @@
 		82FF185313CF01A600C1B664 /* slide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184F13CF01A600C1B664 /* slide.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
+		ED15214D163C22F000451B5F /* lsr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152123163C220300451B5F /* lsr.c */; };
+		ED152151163C232500451B5F /* soxr-config.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152150163C232500451B5F /* soxr-config.h */; };
+		ED152161163C244200451B5F /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
+		ED152162163C244200451B5F /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
+		ED15216C163C249500451B5F /* data-io.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15216A163C249500451B5F /* data-io.c */; };
+		ED15216D163C249500451B5F /* data-io.h in Headers */ = {isa = PBXBuildFile; fileRef = ED15216B163C249500451B5F /* data-io.h */; };
+		ED152177163C24D900451B5F /* rate.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152174163C24D800451B5F /* rate.h */; };
+		ED152178163C24D900451B5F /* rate32.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152175163C24D900451B5F /* rate32.c */; };
+		ED152179163C24D900451B5F /* rate64.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152176163C24D900451B5F /* rate64.c */; };
+		ED15218E163C267500451B5F /* fft4g.h in Headers */ = {isa = PBXBuildFile; fileRef = ED15218C163C267500451B5F /* fft4g.h */; };
+		ED15218F163C267500451B5F /* fft4g32.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15218D163C267500451B5F /* fft4g32.c */; };
+		ED152195163C26BC00451B5F /* fft4g64.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152194163C26BC00451B5F /* fft4g64.c */; };
+		ED15219C163C26E400451B5F /* filter.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15219A163C26E400451B5F /* filter.c */; };
+		ED15219D163C26E400451B5F /* filter.h in Headers */ = {isa = PBXBuildFile; fileRef = ED15219B163C26E400451B5F /* filter.h */; };
+		ED1521BC163C284600451B5F /* dbesi0.c in Sources */ = {isa = PBXBuildFile; fileRef = ED1521BB163C284600451B5F /* dbesi0.c */; };
+		ED1521C5163C28EA00451B5F /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
+		ED1521CE163C29DA00451B5F /* samplerate.h in Headers */ = {isa = PBXBuildFile; fileRef = ED1521CD163C29DA00451B5F /* samplerate.h */; };
+		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
 		ED2707260EF9C51D007D4FFD /* buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707040EF9C51D007D4FFD /* buffer.cpp */; };
 		ED2707270EF9C51D007D4FFD /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707050EF9C51D007D4FFD /* buffer.h */; };
@@ -1335,6 +1352,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 28E67F510A3A160D0021D89F;
 			remoteInfo = "portaudio-v19";
+		};
+		ED1521FE163C2D3200451B5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ED15212F163C227C00451B5F;
+			remoteInfo = libsoxr;
 		};
 		ED2707470EF9C55A007D4FFD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2839,6 +2863,23 @@
 		ED05D1280E50AD5700CC4BD3 /* scorealign-glue.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = "scorealign-glue.h"; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1290E50AD5700CC4BD3 /* scorealign.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = scorealign.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D12A0E50AD5700CC4BD3 /* scorealign.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = scorealign.h; sourceTree = "<group>"; tabWidth = 3; };
+		ED152123163C220300451B5F /* lsr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsr.c; sourceTree = "<group>"; };
+		ED152130163C227C00451B5F /* libsoxr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsoxr.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED152150163C232500451B5F /* soxr-config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "soxr-config.h"; path = "libsoxr/soxr-config.h"; sourceTree = "<group>"; };
+		ED15215F163C244200451B5F /* soxr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = soxr.c; sourceTree = "<group>"; };
+		ED152160163C244200451B5F /* soxr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soxr.h; sourceTree = "<group>"; };
+		ED15216A163C249500451B5F /* data-io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "data-io.c"; sourceTree = "<group>"; };
+		ED15216B163C249500451B5F /* data-io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "data-io.h"; sourceTree = "<group>"; };
+		ED152174163C24D800451B5F /* rate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rate.h; sourceTree = "<group>"; };
+		ED152175163C24D900451B5F /* rate32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rate32.c; sourceTree = "<group>"; };
+		ED152176163C24D900451B5F /* rate64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rate64.c; sourceTree = "<group>"; };
+		ED15218C163C267500451B5F /* fft4g.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft4g.h; sourceTree = "<group>"; };
+		ED15218D163C267500451B5F /* fft4g32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft4g32.c; sourceTree = "<group>"; };
+		ED152194163C26BC00451B5F /* fft4g64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft4g64.c; sourceTree = "<group>"; };
+		ED15219A163C26E400451B5F /* filter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = filter.c; sourceTree = "<group>"; };
+		ED15219B163C26E400451B5F /* filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filter.h; sourceTree = "<group>"; };
+		ED1521BB163C284600451B5F /* dbesi0.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dbesi0.c; sourceTree = "<group>"; };
+		ED1521CD163C29DA00451B5F /* samplerate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = samplerate.h; sourceTree = "<group>"; };
 		ED2706F40EF9C3C6007D4FFD /* liblibsbsms.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibsbsms.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED2706FE0EF9C47E007D4FFD /* sbsms.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sbsms.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707040EF9C51D007D4FFD /* buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = buffer.cpp; path = sbsms/src/buffer.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2898,9 +2939,10 @@
 				17CBAE4A098B85CD00575C58 /* libnyquist.a in Frameworks */,
 				17C99D5C098971390041B1BC /* libogg.a in Frameworks */,
 				17C99D60098971390041B1BC /* libportmixer.a in Frameworks */,
-				17C99D5D098971390041B1BC /* libresample.a in Frameworks */,
+				ED1521C5163C28EA00451B5F /* libresample.a in Frameworks */,
 				17C99D5E098971390041B1BC /* libsndfile.a in Frameworks */,
 				17C99D5F098971390041B1BC /* libsoundtouch.a in Frameworks */,
+				ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */,
 				28E67FEE0A3A2B150021D89F /* libFLAC++.a in Frameworks */,
 				28E67FEF0A3A2B160021D89F /* libFLAC.a in Frameworks */,
 				28E67FF00A3A2B190021D89F /* libportaudio.a in Frameworks */,
@@ -2926,6 +2968,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED15212E163C227C00451B5F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -2943,6 +2992,7 @@
 				170733DB0988D6AC008541CC /* libresample */,
 				ED05D0FF0E50AD5600CC4BD3 /* libscorealign */,
 				170733FC0988D6AC008541CC /* libsndfile */,
+				ED151F3F163BFD0400451B5F /* libsoxr */,
 				28501EAC0CEED0740029ABAA /* libvamp */,
 				1707357C0988D6AD008541CC /* libvorbis */,
 				2844B48E0DEA66900087C656 /* mod-script-pipe */,
@@ -3634,6 +3684,7 @@
 				1707400D0988EB90008541CC /* libresample.a */,
 				1707401E0988EEAA008541CC /* libsndfile.a */,
 				1707407A0988F1BB008541CC /* libsoundtouch.a */,
+				ED152130163C227C00451B5F /* libsoxr.a */,
 				2840CF220AEB803C00F49FC3 /* libtwolame.a */,
 				28501F060CEED1F00029ABAA /* libvamp.a */,
 				170740D40988F820008541CC /* libvorbis.a */,
@@ -5199,6 +5250,38 @@
 			path = fft3;
 			sourceTree = "<group>";
 		};
+		ED151F3F163BFD0400451B5F /* libsoxr */ = {
+			isa = PBXGroup;
+			children = (
+				ED152150163C232500451B5F /* soxr-config.h */,
+				ED151F4B163BFE9800451B5F /* src */,
+			);
+			name = libsoxr;
+			sourceTree = "<group>";
+		};
+		ED151F4B163BFE9800451B5F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				ED15216A163C249500451B5F /* data-io.c */,
+				ED15216B163C249500451B5F /* data-io.h */,
+				ED1521BB163C284600451B5F /* dbesi0.c */,
+				ED15218D163C267500451B5F /* fft4g32.c */,
+				ED152194163C26BC00451B5F /* fft4g64.c */,
+				ED15218C163C267500451B5F /* fft4g.h */,
+				ED15219A163C26E400451B5F /* filter.c */,
+				ED15219B163C26E400451B5F /* filter.h */,
+				ED152123163C220300451B5F /* lsr.c */,
+				ED152175163C24D900451B5F /* rate32.c */,
+				ED152176163C24D900451B5F /* rate64.c */,
+				ED152174163C24D800451B5F /* rate.h */,
+				ED1521CD163C29DA00451B5F /* samplerate.h */,
+				ED152160163C244200451B5F /* soxr.h */,
+				ED15215F163C244200451B5F /* soxr.c */,
+			);
+			name = src;
+			path = libsoxr/src;
+			sourceTree = "<group>";
+		};
 		ED2706FA0EF9C436007D4FFD /* sbsms */ = {
 			isa = PBXGroup;
 			children = (
@@ -5764,6 +5847,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED15212C163C227C00451B5F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED152151163C232500451B5F /* soxr-config.h in Headers */,
+				ED152162163C244200451B5F /* soxr.h in Headers */,
+				ED15216D163C249500451B5F /* data-io.h in Headers */,
+				ED152177163C24D900451B5F /* rate.h in Headers */,
+				ED15218E163C267500451B5F /* fft4g.h in Headers */,
+				ED15219D163C26E400451B5F /* filter.h in Headers */,
+				ED1521CE163C29DA00451B5F /* samplerate.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ED2706F00EF9C3C6007D4FFD /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -6056,6 +6153,7 @@
 				17C99D49098970800041B1BC /* PBXTargetDependency */,
 				28E237270E515E1300281398 /* PBXTargetDependency */,
 				17C99D47098970800041B1BC /* PBXTargetDependency */,
+				ED1521FF163C2D3200451B5F /* PBXTargetDependency */,
 				28501F530CEED9A80029ABAA /* PBXTargetDependency */,
 				17C99D3F098970800041B1BC /* PBXTargetDependency */,
 				28E67F640A3A16AA0021D89F /* PBXTargetDependency */,
@@ -6168,6 +6266,23 @@
 			productReference = 28E67F5F0A3A160D0021D89F /* libportaudio.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		ED15212F163C227C00451B5F /* libsoxr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED152148163C22A700451B5F /* Build configuration list for PBXNativeTarget "libsoxr" */;
+			buildPhases = (
+				ED15212C163C227C00451B5F /* Headers */,
+				ED15212D163C227C00451B5F /* Sources */,
+				ED15212E163C227C00451B5F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libsoxr;
+			productName = libsoxr;
+			productReference = ED152130163C227C00451B5F /* libsoxr.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		ED2706F30EF9C3C6007D4FFD /* libsbsms */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ED2706F90EF9C3E4007D4FFD /* Build configuration list for PBXNativeTarget "libsbsms" */;
@@ -6216,6 +6331,7 @@
 				17073FFD0988EA60008541CC /* libogg */,
 				1707400C0988EB90008541CC /* libresample */,
 				1707401D0988EEAA008541CC /* libsndfile */,
+				ED15212F163C227C00451B5F /* libsoxr */,
 				28501EAF0CEED1F00029ABAA /* libvamp */,
 				2880527D0DEA694100671EA4 /* mod-script-pipe */,
 				28E67F510A3A160D0021D89F /* portaudio-v19 */,
@@ -7243,6 +7359,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED15212D163C227C00451B5F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED15216C163C249500451B5F /* data-io.c in Sources */,
+				ED1521BC163C284600451B5F /* dbesi0.c in Sources */,
+				ED15218F163C267500451B5F /* fft4g32.c in Sources */,
+				ED152195163C26BC00451B5F /* fft4g64.c in Sources */,
+				ED15219C163C26E400451B5F /* filter.c in Sources */,
+				ED15214D163C22F000451B5F /* lsr.c in Sources */,
+				ED152178163C24D900451B5F /* rate32.c in Sources */,
+				ED152179163C24D900451B5F /* rate64.c in Sources */,
+				ED152161163C244200451B5F /* soxr.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ED2706F10EF9C3C6007D4FFD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7356,6 +7488,11 @@
 			isa = PBXTargetDependency;
 			target = 28E67F510A3A160D0021D89F /* portaudio-v19 */;
 			targetProxy = 28E67F630A3A16AA0021D89F /* PBXContainerItemProxy */;
+		};
+		ED1521FF163C2D3200451B5F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ED15212F163C227C00451B5F /* libsoxr */;
+			targetProxy = ED1521FE163C2D3200451B5F /* PBXContainerItemProxy */;
 		};
 		ED2707480EF9C55A007D4FFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8772,6 +8909,58 @@
 			};
 			name = "Debug Static";
 		};
+		ED152131163C227C00451B5F /* Debug Static */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+			};
+			name = "Debug Static";
+		};
+		ED152132163C227C00451B5F /* Debug Shared */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+			};
+			name = "Debug Shared";
+		};
+		ED152133163C227C00451B5F /* Release Static */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+			};
+			name = "Release Static";
+		};
+		ED152134163C227C00451B5F /* Release Shared */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = soxr;
+			};
+			name = "Release Shared";
+		};
 		ED2706F50EF9C3C6007D4FFD /* Debug Static */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
@@ -9119,6 +9308,17 @@
 				288052D90DEA74F100671EA4 /* Debug Shared */,
 				28E5DA360AC4CBA200E7F64C /* Release Static */,
 				288052EE0DEA74FD00671EA4 /* Release Shared */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug Static";
+		};
+		ED152148163C22A700451B5F /* Build configuration list for PBXNativeTarget "libsoxr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED152131163C227C00451B5F /* Debug Static */,
+				ED152132163C227C00451B5F /* Debug Shared */,
+				ED152133163C227C00451B5F /* Release Static */,
+				ED152134163C227C00451B5F /* Release Shared */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";
