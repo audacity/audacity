@@ -1164,7 +1164,6 @@
 		ED15219C163C26E400451B5F /* filter.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15219A163C26E400451B5F /* filter.c */; };
 		ED15219D163C26E400451B5F /* filter.h in Headers */ = {isa = PBXBuildFile; fileRef = ED15219B163C26E400451B5F /* filter.h */; };
 		ED1521BC163C284600451B5F /* dbesi0.c in Sources */ = {isa = PBXBuildFile; fileRef = ED1521BB163C284600451B5F /* dbesi0.c */; };
-		ED1521C5163C28EA00451B5F /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
 		ED1521CE163C29DA00451B5F /* samplerate.h in Headers */ = {isa = PBXBuildFile; fileRef = ED1521CD163C29DA00451B5F /* samplerate.h */; };
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
@@ -1275,13 +1274,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1707401D0988EEAA008541CC;
 			remoteInfo = libsndfile;
-		};
-		17C99D48098970800041B1BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1707400C0988EB90008541CC;
-			remoteInfo = libresample;
 		};
 		17C99D4A098970800041B1BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2939,7 +2931,6 @@
 				17CBAE4A098B85CD00575C58 /* libnyquist.a in Frameworks */,
 				17C99D5C098971390041B1BC /* libogg.a in Frameworks */,
 				17C99D60098971390041B1BC /* libportmixer.a in Frameworks */,
-				ED1521C5163C28EA00451B5F /* libresample.a in Frameworks */,
 				17C99D5E098971390041B1BC /* libsndfile.a in Frameworks */,
 				17C99D5F098971390041B1BC /* libsoundtouch.a in Frameworks */,
 				ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */,
@@ -6150,7 +6141,6 @@
 				17C99D4D098970800041B1BC /* PBXTargetDependency */,
 				176A1B6E098B7C7200DC73B4 /* PBXTargetDependency */,
 				17C99D4B098970800041B1BC /* PBXTargetDependency */,
-				17C99D49098970800041B1BC /* PBXTargetDependency */,
 				28E237270E515E1300281398 /* PBXTargetDependency */,
 				17C99D47098970800041B1BC /* PBXTargetDependency */,
 				ED1521FF163C2D3200451B5F /* PBXTargetDependency */,
@@ -7433,11 +7423,6 @@
 			isa = PBXTargetDependency;
 			target = 1707401D0988EEAA008541CC /* libsndfile */;
 			targetProxy = 17C99D46098970800041B1BC /* PBXContainerItemProxy */;
-		};
-		17C99D49098970800041B1BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1707400C0988EB90008541CC /* libresample */;
-			targetProxy = 17C99D48098970800041B1BC /* PBXContainerItemProxy */;
 		};
 		17C99D4B098970800041B1BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
