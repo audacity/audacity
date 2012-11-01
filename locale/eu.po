@@ -2,20 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2006.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity.eu\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-08-09 07:29+0100\n"
-"PO-Revision-Date: 2012-08-21 01:07-0000\n"
-"Last-Translator: Xabier Aramendi (Azpidatziak) <azpidatziak@gmail.com>\n"
-"Language-Team: (EUS_Xabier Aramendi) <azpidatziak@gmail.com>\n"
+"PO-Revision-Date: 2012-11-01 22:16-0000\n"
+"Last-Translator: (EUS_Xabier Aramendi)\n"
+"Language-Team: (EUS_Xabier Aramendi)\n"
 "Language: Basque (Basque Country-Navarre)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.2\n"
+"X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: AboutDialog.cpp:60
@@ -2093,7 +2092,7 @@ msgstr "&Itsatsi"
 
 #: Menus.cpp:450
 msgid "Paste Te&xt to New Label"
-msgstr "It&satsi Idazki Etiketa Berrian"
+msgstr "It&satsi Idazkia Etiketa Berrian"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:456
@@ -2323,7 +2322,7 @@ msgstr "Ga&rraio Tresnabarra"
 #. i18n-hint: (verb)
 #: Menus.cpp:690
 msgid "&Reset Toolbars"
-msgstr "&Berrezarpen Tresnabarrak"
+msgstr "&Berrezarri Tresnabarrak"
 
 #. i18n-hint: Usually keep the ! at the start.  It means this option is hidden.
 #. * Simplified View toggles the showing and hiding of 'hidden' menu items that start
@@ -2461,7 +2460,7 @@ msgstr "&Mututu Bide Guztiak"
 #: Menus.cpp:798
 #: Menus.cpp:998
 msgid "&UnMute All Tracks"
-msgstr "&Desmututu Bide Guztiak"
+msgstr "&DesMututu Bide Guztiak"
 
 #: Menus.cpp:803
 #: Menus.cpp:1003
@@ -6217,7 +6216,7 @@ msgstr "Bihurgune Izena"
 
 #: effects/Equalization.cpp:2871
 msgid "&Rename..."
-msgstr "&Berrizendatu..."
+msgstr "B&errizendatu..."
 
 #: effects/Equalization.cpp:2872
 msgid "D&elete..."
@@ -6259,7 +6258,7 @@ msgstr "'izengabea' berezia da"
 
 #: effects/Equalization.cpp:3012
 msgid "' to..."
-msgstr "' hona..."
+msgstr "' honela..."
 
 #: effects/Equalization.cpp:3012
 #: effects/Equalization.cpp:3015
