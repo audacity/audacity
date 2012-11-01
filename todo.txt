@@ -1,21 +1,22 @@
 todo.txt
 
-See the release checklist on the wiki:
-  http://www.audacityteam.org/wiki/index.php?title=Release_Checklist
+See also the Audacity Bugzilla for some logged enhancement issues:
+http://tinyurl.com/32udrem
 
-Residual things still in the file from 2003 but not yet done:
+and ideas on Feature Requests:
+http://wiki.audacityteam.org/wiki/Feature_Requests
 
-* Allow the user to create keyboard shortcuts for Effects
+Some other useful ideas may still be be found on:
+http://wiki.audacityteam.org/wiki/Release_checklist_not_aiming_for_1.4
+
+Residual things from the past still undone as at end-2012:
+
+* Allow the user to create keyboard shortcuts to run an effect 
+  using particular parameters.
 
 * Support custom cursors on Mac.
 
 * A master gain control, if at all possible
-
-  - Exporting should take into account mute and solo?
-
-* Zooming using mousewheel - obviously this shouldn't
-  be the only way to do it, since not everyone has a
-  mousewheel.  When should it be used, then?
 
 * When a selection is readjusted by grab&drag, the release of the
 button at outside of the track panel could mean "undo".
@@ -24,15 +25,6 @@ Similar for all other operations.
 * dragging the selection edge out of display starts moving the
 wave, but moving could start 100 or so pixels before the display
 edge so that the coming wave can be seen
-
-
-* "Smart Record"
-
-  Includes higher-quality recording (because of extremely limited
-  GUI operations), timed recording, large VU meters, and more.
-  All of the recording options that are too complicated to do
-  with the normal record button (in the future: volume-triggered
-  recording, record directly to MP3/Ogg, etc.)
 
 * A bars/beats time ruler and snap-to bars/beats.
 
@@ -50,9 +42,9 @@ Then various tools would change function of some of the mouse
 buttons. Without the multitool the Audacity is very annoying to
 use, IMHO.   JS]
 
-* More built in code for automated testing, not sure exactly what,
+* More built-in code for automated testing, not sure exactly what,
 ideas for how to do this would be welcome.
-[ It is more like continuous research job. Leave to post-1.2 version. ]
+[ It is more like continuous research job.]
 
 * Related to this, a self-image-capture class. This puts the gui through
 its paces, capturing .pngs of toolbars, sliders, dialogs according to
@@ -99,19 +91,21 @@ even just to view a waveform without background mains hum.
 components which sum to the original.
 
 
-[JKC] Sound-diff: Ability to compare waveforms and have this 
-displayed graphically.
+[JKC] Audio Diff: Ability to compare waveforms and have this 
+displayed graphically. 
+See http://wiki.audacityteam.org/wiki/Proposal_Audio_Diff .
 [JS] Can a plug-in operate on two tracks and generate preview to
 third track? Or replace the second track with the result.
 It would be essential that the subtraction between two tracks
 is made interactively so that user may time-shift the waveforms
 and manually find the alignment between the tracks.
-This may go post-1.2 if it requires changes to plug-in system.
+This may go far future if it requires changes to plug-in system.
 [JKC] I have in mind something more like Unix diff that compares 
 and aligns waveforms.  Useful when you have several takes of 
 the same track.
 
-* Allow UI while importing 
+* Extend "On-Demand" importing of audio with UI to 
+  compressed audio formats  
 
 -----------------------------------------------------------
 Here's an older list of items.  Things we've already done
@@ -124,29 +118,31 @@ have been removed, so these are all still valid ideas.
 - Do "preflight" check of disk space before editing
   operations.
 
-- Check for existence of project _folder_ when opening
-  a project - help the user find it if it's not there.
+- Help the user find missing project _folder.
 
-- Smart Record dialog
+- Smart Record features:
   - Control latency
   - Use as little CPU power as possible
   - Detect dropped samples using many different methods
   - Visually show buffer sizes
   - Multi-channel record
   - Show remaining disk space
+  - Includes higher-quality recording (because of extremely limited
+  GUI operations), timed recording, large VU meters, and more.
+  All of the recording options that are too complicated to do
+  with the normal record button (in the future: record directly to 
+  MP3/Ogg, and add pre-roll and post-roll to volume-triggered 
+  recording). 
 
-- Pre-roll and post-roll: amount to play before and after
-  a selection (see DG Malham email - Please add date so can
-  check the archives for it.)
+* For pre- and post-roll (amount to play before and after a selection),
+  see DG Malham email - Please add date so can check the archives for it.
 
 UI::
 - Turn off autoscrolling if the user manually hits the scroll bar.
 - Label the "Left" and "Right" channels!
-- Select None
 - Small toolbar option
 - Create our own progress dialog:
   - Improved time estimate
-  - Stop and cancel buttons (not the same!)
 - A "mini view" of the whole project, which shows what part
   you're working on, etc. like a lot of other programs have
 - Visual track dragging
@@ -157,7 +153,6 @@ UI::
   and the export doesn't require any mixing, mark the project
   as not dirty (i.e. don't ask if they want to save it).
 - Put close box in toolbar.
-- Make ID3 tag dialog optional when saving MP3s
 - Import... should be able to import Audacity projects
   and Audacity project files
 - Adapt text color - should be white by default if
@@ -165,12 +160,12 @@ UI::
 - Invert selection (for now, until we allow discontiguous selections,
                     this should mean two options: select up to selection,
                     and select after selection)
-- Legend (Ruler) for pitch and spectrum
+- Legend (Ruler) for Pitch 
 - A way to turn a track into a loop.  It would be cool if the
   display showed the "real" waveform once, and then "ghosts" of
   that waveform repeating forever...  (We now have a loop-play
   using shift-play which goes some way to answering this request).
-- Scrubbing, where you here the track speeded up as you drag 
+- Scrubbing, where you hear the track speeded up as you drag 
   the play marker.
    
 Import/Export::
@@ -179,10 +174,10 @@ Import/Export::
 
 Effects::
 - Add real-time effects directly to tracks (see Ezequiel 5/10/2002)
-- Freeverb 3.0 (and better interface)
+- Freeverb 3.0 (and better interface), or native port of it or
+  otherwise improve reverb.
 - Smart Mix (like Quick Mix but guarantees no clipping)
-- Cross-fade (smooth between two tracks)
-- Native port of Freeverb (ideally optimized)
+- Cross-fade (smooth between two tracks) 
 - Save VST plug-in parameters to a file, or at least
   remember the last settings
 
@@ -190,10 +185,9 @@ Effects::
 Future:
 -----------------------------------------------------------
 
-- Speed issues when you have a project of 5 or more tracks
-- Edit markers
+- Speed issues especially with longer projects: http://tinyurl.com/c6qcehm 
+- Edit markers on waveform (as distinct from cut and split lines)
 - discontiguous selection
 - visualization window: VU meters, equalizer, continuous waveform, oscilloscope
-- Mouse scroller should vertically scroll project (Um, isn't it assigned
-  to zoom-in/-out now?)
-
+- Configurable mouse bindings and investigate horizontal-scrolling-
+   without-SHIFT-modifier support in wxWidgets 2.9
