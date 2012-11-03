@@ -35,8 +35,6 @@
 
 #include "Resample.h"
 
-#include <wx/intl.h>
-
 //v Currently unused.
 //void Resample::SetFastMethod(int index)
 //{
@@ -64,9 +62,8 @@
 
    ConstRateResample::~ConstRateResample()
    {
-      delete mHandle;
-      mHandle = NULL;
       soxr_delete((soxr_t)mHandle);
+      mHandle = NULL;
    }
 
    //v Currently unused. 
@@ -128,211 +125,186 @@
 #endif
 
 
-
-
-
-
-
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+// variable-rate resampler(s)
 
 #if USE_LIBRESAMPLE
 
 #include "libresample.h"
 
-bool Resample::ResamplingEnabled()
-{
-   return true;
-}
+   VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
+   {
+      if (useBestMethod)
+         mMethod = GetBestMethod();
+      else
+         mMethod = GetFastMethod();
 
-//v Currently unused. 
-//wxString Resample::GetResamplingLibraryName()
-//{
-//   return _("Libresample by Dominic Mazzoni and Julius Smith");
-//}
-
-int Resample::GetNumMethods()
-{
-   return 2;
-}
-
-wxString Resample::GetMethodName(int index)
-{
-   if (index == 1)
-      return _("High-quality Sinc Interpolation");
-
-   return _("Fast Sinc Interpolation");
-}
-
-const wxString Resample::GetFastMethodKey()
-{
-   return wxT("/Quality/LibresampleSampleRateConverter");
-}
-
-const wxString Resample::GetBestMethodKey()
-{
-   return wxT("/Quality/LibresampleHQSampleRateConverter");
-}
-
-int Resample::GetFastMethodDefault()
-{
-   return 0;
-}
-
-int Resample::GetBestMethodDefault()
-{
-   return 1;
-}
-
-Resample::Resample(bool useBestMethod, double minFactor, double maxFactor)
-{
-   if (useBestMethod)
-      mMethod = GetBestMethod();
-   else
-      mMethod = GetFastMethod();
-
-   mHandle = resample_open(mMethod, minFactor, maxFactor);
-}
-
-bool Resample::Ok()
-{
-   return (mHandle != NULL);
-}
-
-int Resample::Process(double  factor,
-                      float  *inBuffer,
-                      int     inBufferLen,
-                      bool    lastFlag,
-                      int    *inBufferUsed,
-                      float  *outBuffer,
-                      int     outBufferLen)
-{
-   return resample_process(mHandle, factor, inBuffer, inBufferLen,
-									(int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
-}
-
-Resample::~Resample()
-{
-   resample_close(mHandle);
-}
-
-#elif USE_LIBSAMPLERATE 
-
-#include <samplerate.h>
-
-bool Resample::ResamplingEnabled()
-{
-   return true;
-}
-
-//v Currently unused. 
-//wxString Resample::GetResamplingLibraryName()
-//{
-//#ifdef USE_LIBSAMPLERATE
-//   return _("Libsamplerate by Erik de Castro Lopo");
-//#elif USE_LIBSOXR
-//   return _("Libsoxr by Rob Sykes");
-//#else
-//   return _("Unknown");
-//#endif
-//}
-
-int Resample::GetNumMethods()
-{
-   int i = 0;
-
-   while(src_get_name(i))
-      i++;
-
-   return i;
-}
-
-wxString Resample::GetMethodName(int index)
-{
-   return wxString(wxString::FromAscii(src_get_name(index)));
-}
-
-const wxString Resample::GetFastMethodKey()
-{
-   return wxT("/Quality/SampleRateConverter");
-}
-
-const wxString Resample::GetBestMethodKey()
-{
-   return wxT("/Quality/HQSampleRateConverter");
-}
-
-int Resample::GetFastMethodDefault()
-{
-   return SRC_SINC_FASTEST;
-}
-
-int Resample::GetBestMethodDefault()
-{
-   return SRC_SINC_BEST_QUALITY;
-}
-
-Resample::Resample(bool useBestMethod, double minFactor, double maxFactor)
-{
-   if (!src_is_valid_ratio (minFactor) || !src_is_valid_ratio (maxFactor)) {
-      fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
-      // FIX-ME: Audacity will hang after this if branch.
-      mHandle = NULL;
-      return;
+      mHandle = resample_open(mMethod, minFactor, maxFactor);
    }
 
-   if (useBestMethod)
-      mMethod = GetBestMethod();
-   else
-      mMethod = GetFastMethod();
-
-   int err;
-   SRC_STATE *state = src_new(mMethod, 1, &err);
-   mHandle = (void *)state;
-   mInitial = true;
-}
-
-bool Resample::Ok()
-{
-   return (mHandle != NULL);
-}
-
-int Resample::Process(double  factor,
-                      float  *inBuffer,
-                      int     inBufferLen,
-                      bool    lastFlag,
-                      int    *inBufferUsed,
-                      float  *outBuffer,
-                      int     outBufferLen)
-{
-   if (mInitial) {
-      src_set_ratio((SRC_STATE *)mHandle, factor);
-      mInitial = false;
+   VarRateResample::~VarRateResample()
+   {
+      resample_close(mHandle);
    }
 
-   SRC_DATA data;
+   //v Currently unused. 
+   //wxString VarRateResample::GetResamplingLibraryName()
+   //{
+   //   return _("Libresample by Dominic Mazzoni and Julius Smith");
+   //}
 
-   data.data_in = inBuffer;
-   data.data_out = outBuffer;
-   data.input_frames = inBufferLen;
-   data.output_frames = outBufferLen;
-   data.input_frames_used = 0;
-   data.output_frames_gen = 0;
-   data.end_of_input = (int)lastFlag;
-   data.src_ratio = factor;
+   int VarRateResample::GetNumMethods() { return 2; }
 
-   int err = src_process((SRC_STATE *)mHandle, &data);
-   if (err) {
-      wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
+   wxString VarRateResample::GetMethodName(int index)
+   {
+      if (index == 1)
+         return _("High-quality Sinc Interpolation");
+
+      return _("Fast Sinc Interpolation");
+   }
+
+   const wxString VarRateResample::GetFastMethodKey()
+   {
+      return wxT("/Quality/LibresampleSampleRateConverter");
+   }
+
+   const wxString VarRateResample::GetBestMethodKey()
+   {
+      return wxT("/Quality/LibresampleHQSampleRateConverter");
+   }
+
+   int VarRateResample::GetFastMethodDefault()
+   {
       return 0;
    }
 
-   *inBufferUsed = (int)data.input_frames_used;
-   return (int)data.output_frames_gen;
-}
+   int VarRateResample::GetBestMethodDefault()
+   {
+      return 1;
+   }
 
-Resample::~Resample()
-{
-   src_delete((SRC_STATE *)mHandle);
-}
+   int VarRateResample::Process(double  factor,
+                         float  *inBuffer,
+                         int     inBufferLen,
+                         bool    lastFlag,
+                         int    *inBufferUsed,
+                         float  *outBuffer,
+                         int     outBufferLen)
+   {
+      return resample_process(mHandle, factor, inBuffer, inBufferLen,
+									   (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
+   }
 
+#elif USE_LIBSAMPLERATE 
+
+   #include <samplerate.h>
+
+   VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
+   {
+      if (!src_is_valid_ratio (dMinFactor) || !src_is_valid_ratio (dMaxFactor)) {
+         fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
+         // FIX-ME: Audacity will hang after this if branch.
+         mHandle = NULL;
+         return;
+      }
+
+      if (useBestMethod)
+         mMethod = GetBestMethod();
+      else
+         mMethod = GetFastMethod();
+
+      int err;
+      SRC_STATE *state = src_new(mMethod, 1, &err);
+      mHandle = (void *)state;
+      mInitial = true;
+   }
+
+   VarRateResample::~VarRateResample()
+   {
+      src_delete((SRC_STATE *)mHandle);
+   }
+
+   //v Currently unused. 
+   //wxString Resample::GetResamplingLibraryName()
+   //{
+   //   return _("Libsamplerate by Erik de Castro Lopo");
+   //}
+
+   int VarRateResample::GetNumMethods()
+   {
+      int i = 0;
+
+      while(src_get_name(i))
+         i++;
+
+      return i;
+   }
+
+   wxString VarRateResample::GetMethodName(int index)
+   {
+      return wxString(wxString::FromAscii(src_get_name(index)));
+   }
+
+   const wxString VarRateResample::GetFastMethodKey()
+   {
+      return wxT("/Quality/SampleRateConverter");
+   }
+
+   const wxString VarRateResample::GetBestMethodKey()
+   {
+      return wxT("/Quality/HQSampleRateConverter");
+   }
+
+   int VarRateResample::GetFastMethodDefault()
+   {
+      return SRC_SINC_FASTEST;
+   }
+
+   int VarRateResample::GetBestMethodDefault()
+   {
+      return SRC_SINC_BEST_QUALITY;
+   }
+
+   int VarRateResample::Process(double  factor,
+                         float  *inBuffer,
+                         int     inBufferLen,
+                         bool    lastFlag,
+                         int    *inBufferUsed,
+                         float  *outBuffer,
+                         int     outBufferLen)
+   {
+      if (mInitial) {
+         src_set_ratio((SRC_STATE *)mHandle, factor);
+         mInitial = false;
+      }
+
+      SRC_DATA data;
+
+      data.data_in = inBuffer;
+      data.data_out = outBuffer;
+      data.input_frames = inBufferLen;
+      data.output_frames = outBufferLen;
+      data.input_frames_used = 0;
+      data.output_frames_gen = 0;
+      data.end_of_input = (int)lastFlag;
+      data.src_ratio = factor;
+
+      int err = src_process((SRC_STATE *)mHandle, &data);
+      if (err) {
+         wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
+         return 0;
+      }
+
+      *inBufferUsed = (int)data.input_frames_used;
+      return (int)data.output_frames_gen;
+   }
+
+#else // no var-rate resampler
+   VarRateResample::VarRateResample(const bool useBestMethod, const double dFactor)
+      : Resample()
+   {
+   }
+
+   VarRateResample::~VarRateResample()
+   {
+   }
 #endif

@@ -14,6 +14,7 @@
 
 #include "Audacity.h"
 
+#include <wx/intl.h>
 #include <wx/string.h>
 
 #include "Prefs.h"
@@ -122,6 +123,32 @@ class ConstRateResample : public Resample
 
    // Override base class methods only if we actually have a const-rate library.
    #if USE_LIBSOXR
+      static int GetNumMethods();
+      static wxString GetMethodName(int index);
+
+      static const wxString GetFastMethodKey();
+      static const wxString GetBestMethodKey();
+      static int GetFastMethodDefault();
+      static int GetBestMethodDefault();
+
+      virtual int Process(double  factor,
+                           float  *inBuffer,
+                           int     inBufferLen,
+                           bool    lastFlag,
+                           int    *inBufferUsed,
+                           float  *outBuffer,
+                           int     outBufferLen);
+   #endif
+};
+
+class VarRateResample : public Resample
+{
+ public:
+   VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
+   virtual ~VarRateResample();
+
+   // Override base class methods only if we actually have a var-rate library.
+   #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE
       static int GetNumMethods();
       static wxString GetMethodName(int index);
 
