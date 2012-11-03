@@ -38,7 +38,7 @@
 class AudioIO;
 class RingBuffer;
 class Mixer;
-class Resample;
+class ConstRateResample;
 class TimeTrack;
 class AudioThread;
 class Meter;
@@ -474,7 +474,7 @@ private:
 #ifdef EXPERIMENTAL_MIDI_OUT
    AudioThread         *mMidiThread;
 #endif
-   Resample          **mResample;
+   ConstRateResample **mResample;
    RingBuffer        **mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
    RingBuffer        **mPlaybackBuffers;

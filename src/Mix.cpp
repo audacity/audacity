@@ -281,7 +281,7 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    mQueueStart = new int[mNumInputTracks];
    mQueueLen = new int[mNumInputTracks];
    mSampleQueue = new float *[mNumInputTracks];
-   mSRC = new Resample*[mNumInputTracks];
+   mSRC = new Resample*[mNumInputTracks]; //vvvvv
    for(i=0; i<mNumInputTracks; i++) {
       double factor = (mRate / mInputTrack[i]->GetRate());
       double lowFactor = factor, highFactor = factor;
@@ -289,7 +289,7 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
          highFactor /= timeTrack->GetRangeLower() / 100.0;
          lowFactor /= timeTrack->GetRangeUpper() / 100.0;
       }
-      mSRC[i] = new Resample(highQuality, lowFactor, highFactor);
+      mSRC[i] = new Resample(); //vvvvv
       mSampleQueue[i] = new float[mQueueMaxLen];
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;

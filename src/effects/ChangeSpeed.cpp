@@ -209,7 +209,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    float * outBuffer = new float[outBufferSize]; 
 
    // Set up the resampling stuff for this track.
-   Resample resample(true, mFactor, mFactor);
+   ConstRateResample resample(true, mFactor);
 
    //Go through the track one buffer at a time. samplePos counts which
    //sample the current buffer starts at.

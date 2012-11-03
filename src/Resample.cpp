@@ -1,54 +1,139 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  Dominic Mazzoni
+   Resample.cpp
+   Dominic Mazzoni, Rob Sykes, Vaughan Johnson
 
-*******************************************************************//*!
+******************************************************************//**
 
 \class Resample
-\brief Combined interface to libresample and libsamplerate (which libsoxr emulates).
+\brief Combined interface to libresample, libsamplerate, and libsoxr.
 
-  This class abstracts the interface to two different resampling
-  libraries:
+   This class abstracts the interface to two different variable-rate
+   resampling libraries:
 
-    libresample, written by Dominic Mazzoni based on Resample-1.7
-    by Julius Smith.  LGPL.
+      libresample, written by Dominic Mazzoni based on Resample-1.7
+      by Julius Smith.  LGPL.
 
-    libsamplerate, written by Erik de Castro Lopo.  GPL.  The author
-    of libsamplerate requests that you not distribute a binary version
-    of Audacity that links to libsamplerate and also has plug-in support.
+      libsamplerate, written by Erik de Castro Lopo.  GPL.  The author
+      of libsamplerate requests that you not distribute a binary version
+      of Audacity that links to libsamplerate and also has plug-in support.
 
+      Since Audacity always does resampling on mono streams that are
+      contiguous in memory, this class doesn't support multiple channels
+      or some of the other optional features of some of these resamplers.
+
+   and the fixed-rate resampling library:
+
+      libsoxr, written by Rob Sykes. LGPL.
 
 *//*******************************************************************/
 
 
 #include "Resample.h"
-#include "Prefs.h"
 
 #include <wx/intl.h>
 
-int Resample::GetFastMethod()
-{
-   return gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
-}
+//v Currently unused.
+//void Resample::SetFastMethod(int index)
+//{
+//   gPrefs->Write(GetFastMethodKey(), (long)index);
+//   gPrefs->Flush();
+//}
+//
+//void Resample::SetBestMethod(int index)
+//{
+//   gPrefs->Write(GetBestMethodKey(), (long)index);
+//   gPrefs->Flush();
+//}
 
-int Resample::GetBestMethod()
-{
-   return gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
-}
+// constant-rate resampler(s)
+#ifdef USE_LIBSOXR
 
-void Resample::SetFastMethod(int index)
-{
-   gPrefs->Write(GetFastMethodKey(), (long)index);
-   gPrefs->Flush();
-}
+   #include <soxr.h>
 
-void Resample::SetBestMethod(int index)
-{
-   gPrefs->Write(GetBestMethodKey(), (long)index);
-   gPrefs->Flush();
-}
+   ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
+      : Resample()
+   {
+      soxr_quality_spec_t q_spec = soxr_quality_spec("\0\1\4\6"[mMethod], 0);
+      mHandle = (void *)soxr_create(1, dFactor, 1, 0, 0, &q_spec, 0);
+   }
+
+   ConstRateResample::~ConstRateResample()
+   {
+      delete mHandle;
+      mHandle = NULL;
+      soxr_delete((soxr_t)mHandle);
+   }
+
+   //v Currently unused. 
+   //wxString ConstRateResample::GetResamplingLibraryName()
+   //{
+   //   return _("Libsoxr by Rob Sykes");
+   //}
+
+   int ConstRateResample::GetNumMethods() { return 4; }
+
+   static char const * const soxr_method_names[] = {
+      "Quick & dirty", "Basic quality", "High quality", "Very high quality"
+   };
+
+   wxString ConstRateResample::GetMethodName(int index)
+   {
+      return wxString(wxString::FromAscii(soxr_method_names[index]));
+   }
+
+   const wxString ConstRateResample::GetFastMethodKey()
+   {
+      return wxT("/Quality/SampleRateConverter");
+   }
+
+   const wxString ConstRateResample::GetBestMethodKey()
+   {
+      return wxT("/Quality/HQSampleRateConverter");
+   }
+
+   int ConstRateResample::GetFastMethodDefault() {return 1;}
+   int ConstRateResample::GetBestMethodDefault() {return 3;}
+
+   int ConstRateResample::Process(double  factor,
+                                  float  *inBuffer,
+                                  int     inBufferLen,
+                                  bool    lastFlag,
+                                  int    *inBufferUsed,
+                                  float  *outBuffer,
+                                  int     outBufferLen)
+   {
+      size_t idone , odone;
+      soxr_set_oi_ratio((soxr_t)mHandle, factor);
+      soxr_process((soxr_t)mHandle,
+            inBuffer , (size_t)(lastFlag? ~inBufferLen : inBufferLen), &idone,
+            outBuffer, (size_t)                          outBufferLen, &odone);
+      *inBufferUsed = (int)idone;
+      return (int)odone;
+   }
+
+#else // no const-rate resampler
+   ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
+      : Resample()
+   {
+   }
+
+   ConstRateResample::~ConstRateResample()
+   {
+   }
+#endif
+
+
+
+
+
+
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 #if USE_LIBRESAMPLE
 
@@ -59,10 +144,11 @@ bool Resample::ResamplingEnabled()
    return true;
 }
 
-wxString Resample::GetResamplingLibraryName()
-{
-   return _("Libresample by Dominic Mazzoni and Julius Smith");
-}
+//v Currently unused. 
+//wxString Resample::GetResamplingLibraryName()
+//{
+//   return _("Libresample by Dominic Mazzoni and Julius Smith");
+//}
 
 int Resample::GetNumMethods()
 {
@@ -129,7 +215,7 @@ Resample::~Resample()
    resample_close(mHandle);
 }
 
-#elif USE_LIBSAMPLERATE || USE_LIBSOXR
+#elif USE_LIBSAMPLERATE 
 
 #include <samplerate.h>
 
@@ -138,16 +224,17 @@ bool Resample::ResamplingEnabled()
    return true;
 }
 
-wxString Resample::GetResamplingLibraryName()
-{
-#ifdef USE_LIBSAMPLERATE
-   return _("Libsamplerate by Erik de Castro Lopo");
-#elif USE_LIBSOXR
-   return _("Libsoxr by Rob Sykes");
-#else
-   return _("Unknown");
-#endif
-}
+//v Currently unused. 
+//wxString Resample::GetResamplingLibraryName()
+//{
+//#ifdef USE_LIBSAMPLERATE
+//   return _("Libsamplerate by Erik de Castro Lopo");
+//#elif USE_LIBSOXR
+//   return _("Libsoxr by Rob Sykes");
+//#else
+//   return _("Unknown");
+//#endif
+//}
 
 int Resample::GetNumMethods()
 {
@@ -248,96 +335,4 @@ Resample::~Resample()
    src_delete((SRC_STATE *)mHandle);
 }
 
-#else // No resampling support
-
-bool Resample::ResamplingEnabled()
-{
-   return false;
-}
-
-wxString Resample::GetResamplingLibraryName()
-{
-   return _("Resampling disabled.");
-}
-
-int Resample::GetNumMethods()
-{
-   return 1;
-}
-
-wxString Resample::GetMethodName(int index)
-{
-   return _("Resampling disabled.");
-}
-
-const wxString Resample::GetFastMethodKey()
-{
-   return wxT("/Quality/DisabledConverter");
-}
-
-const wxString Resample::GetBestMethodKey()
-{
-   return wxT("/Quality/DisabledConverter");
-}
-
-int Resample::GetFastMethodDefault()
-{
-   return 0;
-}
-
-int Resample::GetBestMethodDefault()
-{
-   return 0;
-}
-
-Resample::Resample(bool, double, double)
-{
-}
-
-bool Resample::Ok()
-{
-   return false;
-}
-
-int Resample::Process(double  factor,
-                      float  *inBuffer,
-                      int     inBufferLen,
-                      bool    lastFlag,
-                      int    *inBufferUsed,
-                      float  *outBuffer,
-                      int     outBufferLen)
-{
-   int i;
-   int len = inBufferLen;
-
-   if (len > outBufferLen)
-      len = outBufferLen;
-
-   for(i=0; i<len; i++)
-      outBuffer[i] = inBuffer[i];
-
-   return len;
-}
-
-Resample::~Resample()
-{
-}
-
 #endif
-
-
-
-
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ceb8c6d0-3df6-4b6f-b763-100fe856f6fb
-

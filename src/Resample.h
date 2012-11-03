@@ -1,22 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   License: GPL v2.  See License.txt.
 
-  Dominic Mazzoni
-
-  This class abstracts the interface to two different resampling
-  libraries:
-
-    libresample, written by Dominic Mazzoni based on Resample-1.7
-    by Julius Smith.  LGPL.
-
-    libsamplerate, written by Erik de Castro Lopo.  GPL.  The author
-    of libsamplerate requests that you not distribute a binary version
-    of Audacity that links to libsamplerate and also has plug-in support.
-
-  Since Audacity always does resampling on mono streams that are
-  contiguous in memory, this class doesn't support multiple channels
-  or some of the other optional features of some of these resamplers.
+   Resample.cpp
+   Dominic Mazzoni, Rob Sykes, Vaughan Johnson
 
 **********************************************************************/
 
@@ -27,51 +16,54 @@
 
 #include <wx/string.h>
 
+#include "Prefs.h"
 #include "SampleFormat.h"
 
 class Resample
 {
  public:
-
-   /// This will return true if Audacity is being compiled with
-   /// resampling support.
-   static bool ResamplingEnabled();
+   /// The first parameter lets you select either the best method or
+   /// the fast method. 
+   //v (The particular method used was previously set by
+   /// SetFastMethod or SetBestMethod.)  
+   // minFactor and maxFactor
+   /// specify the range of factors that will be used, if you plan
+   /// to vary the factor over time.  Otherwise set minFactor and
+   /// maxFactor to the same value for optimized performance.
+   Resample() 
+   { 
+      mMethod = 0; 
+      mHandle = NULL;
+      mInitial = false;
+   };
+   virtual ~Resample() {};
 
    /// Returns the name of the library used for resampling
    /// (long format, may include author name and version number).
-   static wxString GetResamplingLibraryName();
+   //v Currently unused. 
+   // virtual wxString GetResamplingLibraryName() { return _("Resampling disabled."); };
 
    /// Resamplers may have more than one method, offering a
    /// tradeoff between speed and quality.  This lets you query
    /// the various methods available.
-   static int GetNumMethods();
-   static wxString GetMethodName(int index);
+   static int GetNumMethods() { return 1; };
+   static wxString GetMethodName(int index) { return _("Resampling disabled."); };
 
    /// Audacity identifies two methods out of all of the choices:
    /// a Fast method intended for real-time audio I/O, and a Best
-   /// method intended for mixing and exporting.  These are saved
-   /// in the preferences when you call Set[Best,Fast]Method.
-   static int GetFastMethod();
-   static int GetBestMethod();
-   static void SetFastMethod(int index);
-   static void SetBestMethod(int index);
+   /// method intended for mixing and exporting. 
+   //v (These were previously saved
+   /// in the preferences when you call Set[Best,Fast]Method.)
+   int GetFastMethod() { return gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault()); };
+   int GetBestMethod() { return gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault()); };
+   //v Currently unused.
+   //static void SetFastMethod(int index);
+   //static void SetBestMethod(int index);
 
-   static const wxString GetFastMethodKey();
-   static const wxString GetBestMethodKey();
-   static int GetFastMethodDefault();
-   static int GetBestMethodDefault();
-
-   /// Constructor.
-   /// The first parameter lets you select either the best method or
-   /// the fast method - the particular method used was set by
-   /// SetFastMethod or SetBestMethod, above.  minFactor and maxFactor
-   /// specify the range of factors that will be used, if you plan
-   /// to vary the factor over time.  Otherwise set minFactor and
-   /// maxFactor to the same value for optimized performance.
-   Resample(bool useBestMethod, double minFactor, double maxFactor);
-
-   /// Returns true if the constructor succeeded.
-   bool Ok();
+   static const wxString GetFastMethodKey() { return wxT("/Quality/DisabledConverter"); };
+   static const wxString GetBestMethodKey() { return wxT("/Quality/DisabledConverter"); };
+   static int GetFastMethodDefault() { return 0; };
+   static int GetBestMethodDefault() { return 0; };
 
    /** @brief Main processing function. Resamples from the input buffer to the 
     * output buffer.
@@ -95,33 +87,57 @@ class Resample
     @param outBufferLen How big outBuffer is.
     @return Number of output samples created by this call
    */
-   int Process(double  factor,
-               float  *inBuffer,
-               int     inBufferLen,
-               bool    lastFlag,
-               int    *inBufferUsed,
-               float  *outBuffer,
-               int     outBufferLen);
+   virtual int Process(double  factor,
+                        float  *inBuffer,
+                        int     inBufferLen,
+                        bool    lastFlag,
+                        int    *inBufferUsed,
+                        float  *outBuffer,
+                        int     outBufferLen) 
+   {
+      // Base class method just copies data with no change. 
+      int i;
+      int len = inBufferLen;
 
-   // Destructor
-   ~Resample();
+      if (len > outBufferLen)
+         len = outBufferLen;
 
- private:
-   int   mMethod;
-   void *mHandle;
+      for(i=0; i<len; i++)
+         outBuffer[i] = inBuffer[i];
+
+      return len;
+   };
+
+ protected:
+   int   mMethod; // resampler-specific enum for resampling method
+   void* mHandle; // constant-rate or variable-rate resampler (XOR per instance)
    bool  mInitial;
 };
 
+class ConstRateResample : public Resample
+{
+ public:
+   ConstRateResample(const bool useBestMethod, const double dFactor);
+   virtual ~ConstRateResample();
+
+   // Override base class methods only if we actually have a const-rate library.
+   #if USE_LIBSOXR
+      static int GetNumMethods();
+      static wxString GetMethodName(int index);
+
+      static const wxString GetFastMethodKey();
+      static const wxString GetBestMethodKey();
+      static int GetFastMethodDefault();
+      static int GetBestMethodDefault();
+
+      virtual int Process(double  factor,
+                           float  *inBuffer,
+                           int     inBufferLen,
+                           bool    lastFlag,
+                           int    *inBufferUsed,
+                           float  *outBuffer,
+                           int     outBufferLen);
+   #endif
+};
+
 #endif // __AUDACITY_RESAMPLE_H__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: bffbe34c-3029-47dc-af4c-f83d9a26002c
-
