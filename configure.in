@@ -418,6 +418,7 @@ done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have libsndfile one way or another
+#   * we can only use one of libsamplerate and libresample
 #   * we should not use the local Redland if we're not using local SLV2 or 
 #     liblrdf
 
