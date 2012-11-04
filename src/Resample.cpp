@@ -74,12 +74,12 @@
 
    int ConstRateResample::GetNumMethods() { return 4; }
 
-   static char const * const soxr_method_names[] = {
-      "Quick & dirty", "Basic quality", "High quality", "Very high quality"
-   };
-
    wxString ConstRateResample::GetMethodName(int index)
    {
+      static char const * const soxr_method_names[] = {
+         "Low Quality (Fastest)", "Basic Quality", "High Quality", "Best Quality (Slowest)"
+      };
+
       return wxString(wxString::FromAscii(soxr_method_names[index]));
    }
 
