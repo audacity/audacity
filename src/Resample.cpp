@@ -56,6 +56,11 @@
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
       : Resample()
    {
+      if (useBestMethod)
+         mMethod = GetBestMethod();
+      else
+         mMethod = GetFastMethod();
+
       soxr_quality_spec_t q_spec = soxr_quality_spec("\0\1\4\6"[mMethod], 0);
       mHandle = (void *)soxr_create(1, dFactor, 1, 0, 0, &q_spec, 0);
    }
@@ -131,6 +136,7 @@
 #include "libresample.h"
 
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
+      : Resample()
    {
       if (useBestMethod)
          mMethod = GetBestMethod();
@@ -198,6 +204,7 @@
    #include <samplerate.h>
 
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
+      : Resample()
    {
       if (!src_is_valid_ratio (dMinFactor) || !src_is_valid_ratio (dMaxFactor)) {
          fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
