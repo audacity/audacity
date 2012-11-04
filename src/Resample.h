@@ -31,9 +31,13 @@ class Resample
    /// specify the range of factors that will be used, if you plan
    /// to vary the factor over time.  Otherwise set minFactor and
    /// maxFactor to the same value for optimized performance.
-   Resample() 
+   Resample(const bool useBestMethod) 
    { 
-      mMethod = 0; 
+      if (useBestMethod)
+         mMethod = GetBestMethod();
+      else
+         mMethod = GetFastMethod();
+
       mHandle = NULL;
       mInitial = false;
    };
