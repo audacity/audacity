@@ -7,7 +7,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSAMPLERATE], [
 
    AC_ARG_WITH(libsamplerate,
                [AS_HELP_STRING([--with-libsamplerate],
-                               [use libsamplerate instead of libresample for sample rate conversion. Do not use in conjunction with VST plug-in support!])],
+                               [use libsamplerate instead of libresample for variable-rate resampling. Do not use in conjunction with VST plug-in support!])],
                LIBSAMPLERATE_ARGUMENT=$withval,
                LIBSAMPLERATE_ARGUMENT="unspecified")
 

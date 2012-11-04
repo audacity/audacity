@@ -7,7 +7,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRESAMPLE], [
 
    AC_ARG_WITH(libresample,
                [AS_HELP_STRING([--with-libresample],
-                               [use libresample for sample rate conversion: [yes,no]])],
+                               [use libresample for variable-rate resampling: [yes,no]])],
                LIBRESAMPLE_ARGUMENT=$withval,
                LIBRESAMPLE_ARGUMENT="unspecified")
 

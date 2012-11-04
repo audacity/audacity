@@ -105,8 +105,12 @@ libsoxr-recursive:
 	$(MAKE) -C libsoxr
 libsoxr.a: libsoxr-recursive
 	ln -sf libsoxr/src/libsoxr.a
-libsoxr-lsr.a: libsoxr-recursive
-	ln -sf libsoxr/src/libsoxr-lsr.a
+
+# libresample
+libresample-recursive:
+	$(MAKE) -C libresample libresample.a
+libresample.a: libresample-recursive
+	ln -sf libresample/libresample.a libresample.a
 
 # libsndfile
 libsndfile-recursive:

@@ -339,14 +339,16 @@ dnl-------------------------------------------------------------
 dnl Optional library support. Lots of things we could use, but 
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
-dnl LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG LIBLRDF SLV2 REDLAND PORTSMF TAGLIB"
+dnl LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG LIBLRDF SLV2 REDLAND PORTSMF TAGLIB"
 dnl disable plugin categorisation and LV2 libs for 1.3.7 release
-LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
+LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
 AUDACITY_CHECKLIB_LIBSNDFILE
 AUDACITY_CHECKLIB_LIBSOXR
+AUDACITY_CHECKLIB_LIBRESAMPLE
+AUDACITY_CHECKLIB_LIBSAMPLERATE
 AUDACITY_CHECKLIB_LIBEXPAT
 AUDACITY_CHECKLIB_LIBVORBIS
 AUDACITY_CHECKLIB_LIBMAD
@@ -436,6 +438,32 @@ fi
 
 if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes" ; then
    AC_MSG_ERROR([Audacity requires portaudio to be enabled])
+fi
+
+dnl we can only have one variable-rate resampling library used.
+dnl by now we will have both enabled if they are present, regardless of whether
+dnl they were requested, unless one was specifically disabled.
+dnl we would like to honour requests at this stage, so need to know about
+dnl the original options, not just which LIB_USE variables have been set.
+if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
+   dnl if we get here, both libraries are available to us.
+   AC_MSG_NOTICE([Both libresample and libsamplerate are available])
+   AC_MSG_NOTICE([deciding which to use based on arguments ...])
+   if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
+      dnl they didn't ask for libsamplerate, they don't get it
+      LIBSAMPLERATE_USE_LOCAL="no"
+      LIBSAMPLERATE_USE_SYSTEM="no"
+      dnl done - we are using libresample
+      AC_MSG_NOTICE([Libsamplerate not explicity requested, using libresample])
+   else
+      dnl if we get here, then libsample rate has been explicity specified.
+      dnl could that be disabling it? No, because it wouldn't then have been
+      dnl enabled above.
+      LIBRESAMPLE_USE_LOCAL="no"
+      LIBRESAMPLE_USE_SYSTEM="no"
+      dnl done - we are using libsamplerate
+      AC_MSG_NOTICE([Using libsamplerate as requested])
+   fi
 fi
 
 dnl if ( test "$SLV2_USE_LOCAL" != "yes" && test "$LIBLRDF_USE_LOCAL" != "yes") && test "$REDLAND_USE_LOCAL" = "yes" ; then
