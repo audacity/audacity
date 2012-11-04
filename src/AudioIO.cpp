@@ -1319,7 +1319,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
             // Set everything to zero in case we have to delete these due to a memory exception.
             memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks.GetCount());
-            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks.GetCount());
+            memset(mResample, 0, sizeof(ConstRateResample*)*mCaptureTracks.GetCount());
 
             for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
             {

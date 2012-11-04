@@ -346,7 +346,10 @@ WaveClip::WaveClip(WaveClip& orig, DirManager *projDirManager)
 WaveClip::~WaveClip()
 {
    delete mSequence;
+   
    delete mEnvelope;
+   mEnvelope = NULL;
+
    delete mWaveCache;
    delete mSpecCache;
    delete mSpecPxCache;

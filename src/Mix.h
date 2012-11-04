@@ -122,7 +122,7 @@ class AUDACITY_DLL_API Mixer {
    sampleCount MixVariableRates(int *channelFlags, WaveTrack *track,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
-                                Resample *SRC);
+                                Resample * pResample);
 
  private:
    // Input
@@ -136,7 +136,7 @@ class AUDACITY_DLL_API Mixer {
    double           mT;  // Current time
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)   
-   Resample       **mSRC;
+   Resample       **mResample;
    float          **mSampleQueue;
    int             *mQueueStart;
    int             *mQueueLen;

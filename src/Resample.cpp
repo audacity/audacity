@@ -126,7 +126,6 @@
 
 
 // variable-rate resampler(s)
-
 #if USE_LIBRESAMPLE
 
 #include "libresample.h"
@@ -138,7 +137,7 @@
       else
          mMethod = GetFastMethod();
 
-      mHandle = resample_open(mMethod, minFactor, maxFactor);
+      mHandle = resample_open(mMethod, dMinFactor, dMaxFactor);
    }
 
    VarRateResample::~VarRateResample()
@@ -265,12 +264,12 @@
    }
 
    int VarRateResample::Process(double  factor,
-                         float  *inBuffer,
-                         int     inBufferLen,
-                         bool    lastFlag,
-                         int    *inBufferUsed,
-                         float  *outBuffer,
-                         int     outBufferLen)
+                                  float  *inBuffer,
+                                  int     inBufferLen,
+                                  bool    lastFlag,
+                                  int    *inBufferUsed,
+                                  float  *outBuffer,
+                                  int     outBufferLen)
    {
       if (mInitial) {
          src_set_ratio((SRC_STATE *)mHandle, factor);
@@ -299,7 +298,7 @@
    }
 
 #else // no var-rate resampler
-   VarRateResample::VarRateResample(const bool useBestMethod, const double dFactor)
+   VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
       : Resample()
    {
    }

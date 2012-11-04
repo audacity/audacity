@@ -89,6 +89,8 @@ void TimeTrack::Init(const TimeTrack &orig)
 TimeTrack::~TimeTrack()
 {
    delete mEnvelope;
+   mEnvelope = NULL;
+   
    delete mRuler;
 }
 

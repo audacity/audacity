@@ -22,13 +22,13 @@
 // #define USE_LIBLRDF 1
 #define USE_LIBMAD 1
 
-// Resamplers
+// Resamplers.
+// Only one of each type of resampler (constant or variable rate) should be defined.
 // libsoxr is used for constant-rate resampling.
 #define USE_LIBSOXR 1
 // Should build only one of libresample or libsamplerate for variable-rate resampling, 
 // but if both are defined, USE_LIBRESAMPLE is used and USE_LIBSAMPLERATE is not.
-//vvvvv Turn back on after completing refactoring.
-#undef USE_LIBRESAMPLE 
+#define USE_LIBRESAMPLE 1
 #undef USE_LIBSAMPLERATE
 
 #define USE_LIBTWOLAME 1

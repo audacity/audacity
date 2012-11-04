@@ -97,6 +97,7 @@ TranscriptionToolBar::~TranscriptionToolBar()
 #endif
    if (mTimeTrack) {
       delete mTimeTrack;
+      mTimeTrack = NULL;
    }
 }
 

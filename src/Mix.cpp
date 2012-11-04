@@ -281,15 +281,17 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    mQueueStart = new int[mNumInputTracks];
    mQueueLen = new int[mNumInputTracks];
    mSampleQueue = new float *[mNumInputTracks];
-   mSRC = new Resample*[mNumInputTracks]; //vvvvv
+   mResample = new Resample*[mNumInputTracks];
    for(i=0; i<mNumInputTracks; i++) {
       double factor = (mRate / mInputTrack[i]->GetRate());
       double lowFactor = factor, highFactor = factor;
       if (timeTrack) {
          highFactor /= timeTrack->GetRangeLower() / 100.0;
          lowFactor /= timeTrack->GetRangeUpper() / 100.0;
+         mResample[i] = new VarRateResample(highQuality, lowFactor, highFactor);
+      } else {
+         mResample[i] = new ConstRateResample(highQuality, factor);
       }
-      mSRC[i] = new Resample(); //vvvvv
       mSampleQueue[i] = new float[mQueueMaxLen];
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
@@ -318,10 +320,10 @@ Mixer::~Mixer()
 	delete[] mSamplePos;
 
    for(i=0; i<mNumInputTracks; i++) {
-      delete mSRC[i];
+      delete mResample[i];
       delete[] mSampleQueue[i];
    }
-	delete[] mSRC;
+	delete[] mResample;
    delete[] mSampleQueue;
    delete[] mQueueStart;
    delete[] mQueueLen;
@@ -371,7 +373,7 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
 sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
                                     sampleCount *pos, float *queue,
                                     int *queueStart, int *queueLen,
-                                    Resample *SRC)
+                                    Resample * pResample)
 {
    double trackRate = track->GetRate();
    double initialWarp = mRate / trackRate;
@@ -436,12 +438,17 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
       }
 
       double factor = initialWarp;
-      if (mTimeTrack) {
-         double warpFactor = mTimeTrack->GetEnvelope()->GetValue(t);
-         warpFactor = (mTimeTrack->GetRangeLower() * (1.0 - warpFactor) +
-                       warpFactor * mTimeTrack->GetRangeUpper()) / 100.0;
+      if (mTimeTrack) 
+      {
+         Envelope* pEnvelope = mTimeTrack->GetEnvelope();
+         if (pEnvelope)
+         {
+            double warpFactor = pEnvelope->GetValue(t);
+            warpFactor = (mTimeTrack->GetRangeLower() * (1.0 - warpFactor) +
+                          warpFactor * mTimeTrack->GetRangeUpper()) / 100.0;
 
-         factor /= warpFactor;
+            factor /= warpFactor;
+         }
       }
 
       sampleCount thisProcessLen = mProcessLen;
@@ -451,13 +458,13 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
       }
 
       int input_used;
-      int outgen = SRC->Process(factor,
-                                &queue[*queueStart],
-                                thisProcessLen,
-                                last,
-                                &input_used,
-                                &mFloatBuffer[out],
-                                mMaxOut - out);
+      int outgen = pResample->Process(factor,
+                                      &queue[*queueStart],
+                                      thisProcessLen,
+                                      last,
+                                      &input_used,
+                                      &mFloatBuffer[out],
+                                      mMaxOut - out);
 
       if (outgen < 0) {
          return 0;
@@ -577,7 +584,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
           track->GetRate() != mRate)
          out = MixVariableRates(channelFlags, track,
                                 &mSamplePos[i], mSampleQueue[i],
-                                &mQueueStart[i], &mQueueLen[i], mSRC[i]);
+                                &mQueueStart[i], &mQueueLen[i], mResample[i]);
       else
          out = MixSameRate(channelFlags, track, &mSamplePos[i]);
 
