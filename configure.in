@@ -456,7 +456,7 @@ if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "
       dnl done - we are using libresample
       AC_MSG_NOTICE([Libsamplerate not explicitly requested, using libresample])
    else
-      dnl If we get here, then libsamplerate has been explicity specified.
+      dnl If we get here, then libsamplerate has been explicitly specified.
       dnl Could that be disabling it? No, because it wouldn't then have been enabled above.
       LIBRESAMPLE_USE_LOCAL="no"
       LIBRESAMPLE_USE_SYSTEM="no"
