@@ -1189,6 +1189,7 @@
 		ED2707460EF9C550007D4FFD /* liblibsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* liblibsbsms.a */; };
 		ED2707500EF9C64F007D4FFD /* SBSMSEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */; };
 		ED2707510EF9C64F007D4FFD /* TimeScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074D0EF9C64F007D4FFD /* TimeScale.cpp */; };
+		ED309AAA164E850500D21825 /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
 		ED3D7FF00DF73889000F43E3 /* EffectCategory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEC0DF73889000F43E3 /* EffectCategory.cpp */; };
 		ED3D7FF10DF73889000F43E3 /* EffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */; };
 		ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
@@ -1358,6 +1359,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = ED2706F30EF9C3C6007D4FFD;
 			remoteInfo = libsbsms;
+		};
+		ED309AA8164E84F600D21825 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1707400C0988EB90008541CC /* libresample */;
+			remoteInfo = libresample;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2931,6 +2939,7 @@
 				17CBAE4A098B85CD00575C58 /* libnyquist.a in Frameworks */,
 				17C99D5C098971390041B1BC /* libogg.a in Frameworks */,
 				17C99D60098971390041B1BC /* libportmixer.a in Frameworks */,
+				ED309AAA164E850500D21825 /* libresample.a in Frameworks */,
 				17C99D5E098971390041B1BC /* libsndfile.a in Frameworks */,
 				17C99D5F098971390041B1BC /* libsoundtouch.a in Frameworks */,
 				ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */,
@@ -6141,6 +6150,7 @@
 				17C99D4D098970800041B1BC /* PBXTargetDependency */,
 				176A1B6E098B7C7200DC73B4 /* PBXTargetDependency */,
 				17C99D4B098970800041B1BC /* PBXTargetDependency */,
+				ED309AA9164E84F600D21825 /* PBXTargetDependency */,
 				28E237270E515E1300281398 /* PBXTargetDependency */,
 				17C99D47098970800041B1BC /* PBXTargetDependency */,
 				ED1521FF163C2D3200451B5F /* PBXTargetDependency */,
@@ -7483,6 +7493,11 @@
 			isa = PBXTargetDependency;
 			target = ED2706F30EF9C3C6007D4FFD /* libsbsms */;
 			targetProxy = ED2707470EF9C55A007D4FFD /* PBXContainerItemProxy */;
+		};
+		ED309AA9164E84F600D21825 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1707400C0988EB90008541CC /* libresample */;
+			targetProxy = ED309AA8164E84F600D21825 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
