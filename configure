@@ -5978,7 +5978,7 @@ else
 fi
 
 
-   if true ; then
+   if false ; then
 
 $as_echo "#define USE_LIBSOXR 1" >>confdefs.h
 

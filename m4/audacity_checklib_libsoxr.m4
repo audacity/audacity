@@ -11,7 +11,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
                LIBSOXR_ARGUMENT=$withval,
                LIBSOXR_ARGUMENT="unspecified")
 
-   if true ; then
+   if false ; then
       AC_DEFINE(USE_LIBSOXR, 1,
                 [Define if libsoxr support should be enabled])
    fi
