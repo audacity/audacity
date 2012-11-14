@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-08-09 07:29+0100\n"
-"PO-Revision-Date: 2012-09-23 23:43-0000\n"
+"PO-Revision-Date: 2012-11-14 19:08-0000\n"
 "Last-Translator: filmsi\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
 "MIME-Version: 1.0\n"
@@ -19,9 +19,8 @@ msgstr ""
 
 #: AboutDialog.cpp:60
 #: AboutDialog.cpp:80
-#, fuzzy
 msgid "co-founder"
-msgstr "S~tolpci"
+msgstr "Soustanovitelj"
 
 #: AboutDialog.cpp:64
 msgid "quality assurance"
@@ -42,11 +41,11 @@ msgstr "Audaciozno!"
 
 #: AboutDialog.cpp:199
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr ""
+msgstr "Audacity je brezplačen program, ki so ga napisali prostovoljni <a href=\"http://audacity.sourceforge.net/community/developers\">razvijalci</a> s celega sveta. Zahvaljujemo se <a href=\"http://sourceforge.net\">SourceForge.net</a> in <a href=\"http://code.google.com\">Google Code</a> za gostovanje našega projekta. Audacity je <a href=\"http://audacity.sourceforge.net/download/\">na voljo</a> za Windows, Mac in GNU/Linux (ter druge Unixu podobne sisteme)."
 
 #: AboutDialog.cpp:203
 msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-msgstr ""
+msgstr "Če opazite napako ali imate predlog, nam pišite na naš naslov za <a href=\"mailto:feedback@audacityteam.org\">odziv</a> (v angl.). Če iščete pomoč, si oglejte namige in trike na našem <a href=\"http://wiki.audacityteam.org/\">wikiju</a> ali obiščite naš <a href=\"http://forum.audacityteam.org/\">forum</a>."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -257,9 +256,8 @@ msgstr "Manjkajo datoteke"
 
 #: AudacityApp.cpp:1020
 #: AudacityApp.cpp:1242
-#, fuzzy
 msgid "Audacity Log"
-msgstr "Log (Število)"
+msgstr "Zapisnik Audacity"
 
 #: AudacityApp.cpp:1029
 msgid "Master Gain Control"
@@ -1028,14 +1026,14 @@ msgid "Continue with repairs noted in log, and check for more errors. This will 
 msgstr ""
 
 #: DirManager.cpp:1384
+#, fuzzy
 msgid "Warning - Problems Reading Sequence Tags"
-msgstr ""
+msgstr "Opozorilo - težave pri branju oznak zaporedja"
 
 #: DirManager.cpp:1399
 #: DirManager.cpp:1801
-#, fuzzy
 msgid "Inspecting project file data"
-msgstr "Shranjevanje projektnih datotek"
+msgstr "Proučevanje podatkov projektne datoteke"
 
 #: DirManager.cpp:1418
 #, c-format
@@ -1060,16 +1058,16 @@ msgstr ""
 #: DirManager.cpp:1434
 #: DirManager.cpp:1553
 msgid "Treat missing audio as silence (this session only)"
-msgstr ""
+msgstr "Obravnavaj manjkajoči zvok kot tišino (samo v tej seji)"
 
 #: DirManager.cpp:1435
 msgid "Replace missing audio with silence (permanent immediately)."
-msgstr ""
+msgstr "Nadomesti manjkajoči zvok s tišino (velja takoj in nepovratno)."
 
 #: DirManager.cpp:1438
 #, fuzzy
 msgid "Warning - Missing Aliased File(s)"
-msgstr "Opozorilo: '%s' je starejša oblika datoteke."
+msgstr "Opozorilo - manjkajo nadimne datoteke"
 
 #: DirManager.cpp:1468
 msgid "   Project check replaced missing aliased file(s) with silence."
@@ -1125,7 +1123,7 @@ msgstr ""
 
 #: DirManager.cpp:1554
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr ""
+msgstr "Nadomesti manjkajoči zvok s tišino (velja takoj in nepovratno)"
 
 #: DirManager.cpp:1557
 msgid "Warning - Missing Audio Data Block File(s)"
@@ -1150,16 +1148,15 @@ msgstr ""
 
 #: DirManager.cpp:1610
 msgid "Continue without deleting; ignore the extra files this session"
-msgstr ""
+msgstr "Nadaljuj brez brisanja; prezri odvečne datoteke v tej seji"
 
 #: DirManager.cpp:1612
 msgid "Delete orphan files (permanent immediately)"
-msgstr ""
+msgstr "Izbriši osirotele datoteke (velja takoj in je nepovratno)"
 
 #: DirManager.cpp:1615
-#, fuzzy
 msgid "Warning - Orphan Block File(s)"
-msgstr "Opozorilo: '%s' je starejša oblika datoteke."
+msgstr "Opozorilo - osirotele bločne datoteke"
 
 #: DirManager.cpp:1638
 msgid "Cleaning up unused directories in project data"
@@ -1183,7 +1180,7 @@ msgstr "Opozorilo: težave s samodejnim obnavljanjem"
 #: DirManager.cpp:1698
 #, fuzzy, c-format
 msgid "Missing aliased audio file: '%s'"
-msgstr "AIFF - zvočna datoteka"
+msgstr "Manjka nadimna zvočna datoteka: '%s'"
 
 #: DirManager.cpp:1721
 #, c-format
@@ -1191,14 +1188,14 @@ msgid "Missing alias (.auf) block file: '%s'"
 msgstr ""
 
 #: DirManager.cpp:1745
-#, fuzzy, c-format
+#, c-format
 msgid "Missing data block file: '%s'"
-msgstr "Piše podatke na sekvenčno datoteko."
+msgstr "Manjka podatkovna bločna datoteka: '%s'"
 
 #: DirManager.cpp:1787
-#, fuzzy, c-format
+#, c-format
 msgid "Orphan block file: '%s'"
-msgstr "Uredi konkordančno datoteko"
+msgstr "Osirotela bločna datoteka: '%s'"
 
 #: DirManager.cpp:1844
 msgid "Caching audio"
@@ -1365,7 +1362,7 @@ msgstr "Velikost"
 #: FreqWindow.cpp:190
 #, fuzzy
 msgid "window"
-msgstr "~Okno"
+msgstr "Okno"
 
 #: FreqWindow.cpp:194
 #: FreqWindow.cpp:198
@@ -1378,7 +1375,7 @@ msgstr "Linearna frekvenca"
 
 #: FreqWindow.cpp:204
 msgid "Log frequency"
-msgstr "Frekvenca zapisovanja"
+msgstr "Logaritemska frekvenca"
 
 #: FreqWindow.cpp:208
 #: FreqWindow.cpp:212
@@ -2415,7 +2412,7 @@ msgstr "&Odtišaj vse sledi"
 #: Menus.cpp:803
 #: Menus.cpp:1003
 msgid "Align with &Zero"
-msgstr "&Združi z ničlo"
+msgstr "Poravnaj z ni&člo"
 
 #: Menus.cpp:804
 #: Menus.cpp:1004
@@ -3280,7 +3277,7 @@ msgstr "Usklajevanje zvočnih in MIDI- sledi"
 #: Menus.cpp:5770
 #, c-format
 msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr ""
+msgstr "Poravnava dokončana: MIDI od %.2f do %.2f s, zvok od %.2f do %.2f s."
 
 #: Menus.cpp:5773
 msgid "Sync MIDI with Audio"
@@ -3293,7 +3290,7 @@ msgstr ""
 
 #: Menus.cpp:5788
 msgid "Internal error reported by alignment process."
-msgstr ""
+msgstr "Postopek poravnave je javil notranjo napako."
 
 #: Menus.cpp:5802
 msgid "Created new audio track"
@@ -3316,7 +3313,7 @@ msgstr "Ustvarjena nova datoteka z oznakami"
 
 #: Menus.cpp:5848
 msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
+msgstr "Ta različica Audacity dovoljuje le eno časovno sled za vsako projektno okno."
 
 #: Menus.cpp:5859
 msgid "Created new time track"
@@ -3708,6 +3705,8 @@ msgid ""
 "Could not save project. Path not found.  Try creating \n"
 "directory \"%s\" before saving project with this name."
 msgstr ""
+"Projekta ni mogoče shraniti. Poti ni mogoče najti. Poskusite \n"
+"ustvariti mapo \"%s\", preden shranite projekt s tem imenom."
 
 #: Project.cpp:3153
 #: Project.cpp:3190
@@ -3816,6 +3815,8 @@ msgid ""
 "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
+"Projekt ni shranjen, ker bi z imenom datoteke, ki ste ga podali, prepisali drug projekt.\n"
+"Poskusite znova in izberite izvirno ime."
 
 #: Project.cpp:3660
 msgid "Created new project"
@@ -4124,12 +4125,12 @@ msgstr ""
 
 #: Sequence.cpp:1033
 msgid "Warning - Length in Writing Sequence"
-msgstr ""
+msgstr "Opozorilo - Dolžina pri pisanju zaporedja"
 
 #: Sequence.cpp:1502
 #, fuzzy
 msgid "Memory allocation failed -- NewSamples"
-msgstr "napaka med pridobivanjem pomnilnika"
+msgstr "Dodelitev pomnilnika je spodletela - NewSamples"
 
 #: ShuttleGui.cpp:2175
 #: effects/Effect.cpp:408
@@ -4268,9 +4269,8 @@ msgid "Save Metadata As:"
 msgstr "Shrani metapodatke kot:"
 
 #: Tags.cpp:1173
-#, fuzzy
 msgid "Error Saving Tags File"
-msgstr "Napaka pri shranjevanju datoteke XCF: %s"
+msgstr "Napaka pri shranjevanju datoteke značk"
 
 #: Theme.cpp:637
 #, c-format
@@ -4490,14 +4490,12 @@ msgid "Move Track &Down"
 msgstr "Premakni sled navz&dol"
 
 #: TrackPanel.cpp:636
-#, fuzzy
 msgid "Wa&veform"
-msgstr "Belgija/Valonsko (wa_BE)"
+msgstr "Si&gnalna oblika"
 
 #: TrackPanel.cpp:637
-#, fuzzy
 msgid "Waveform (d&B)"
-msgstr "Signalna oblika"
+msgstr "Signalna o&blika (dB)"
 
 #: TrackPanel.cpp:638
 msgid "&Spectrogram"
@@ -4507,12 +4505,11 @@ msgstr "&Spektrogram"
 #: TrackPanel.cpp:640
 #, fuzzy
 msgid "Spectrogram l&og(f)"
-msgstr "pes/_es/p/c/s"
+msgstr "L&ogaritem(f) spektrograma"
 
 #: TrackPanel.cpp:641
-#, fuzzy
 msgid "Pitc&h (EAC)"
-msgstr "Višina tona (EAC)"
+msgstr "Vi&šina tona (EAC)"
 
 #: TrackPanel.cpp:643
 msgid "&Mono"
@@ -4527,29 +4524,24 @@ msgid "&Right Channel"
 msgstr "&Desni kanal"
 
 #: TrackPanel.cpp:646
-#, fuzzy
 msgid "Ma&ke Stereo Track"
-msgstr "Ustvarjena nova stereo zvočna sled"
+msgstr "Naredi stereo zvo&čno sled"
 
 #: TrackPanel.cpp:647
-#, fuzzy
 msgid "Spli&t Stereo Track"
-msgstr "Naredi stereo sled"
+msgstr "Razdeli s&tereo sled"
 
 #: TrackPanel.cpp:648
-#, fuzzy
 msgid "Split Stereo to Mo&no"
-msgstr "Razdvoji stereo v mono"
+msgstr "Razdvoji stereo v mo&no"
 
 #: TrackPanel.cpp:650
-#, fuzzy
 msgid "Set Sample &Format"
-msgstr "Nastavi obliko vzorcev"
+msgstr "Nastavi o&bliko vzorcev"
 
 #: TrackPanel.cpp:652
-#, fuzzy
 msgid "Set Rat&e"
-msgstr "Nabor znakov"
+msgstr "Nastavi &hitrost"
 
 #: TrackPanel.cpp:660
 msgid "Up &Octave"
@@ -4574,9 +4566,8 @@ msgid "Copy"
 msgstr "Kopiraj"
 
 #: TrackPanel.cpp:1459
-#, fuzzy
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
-msgstr "Kliknite za navpično povečavo, kliknite z dvigalko za pomanjšanje, povlecite za ustvarjanje določenega področja za povečavo."
+msgstr "Kliknite za navpično približanje, kliknite z dvigalko za odmik, povlecite za ustvarjanje določenega področja za povečavo."
 
 #: TrackPanel.cpp:1464
 msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
@@ -5043,6 +5034,8 @@ msgid ""
 "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
 msgstr ""
+"Najprej morate izbrati stereo zvok za\n"
+" izvedbo. (Tega ne morete izvesti na mono posnetku.)"
 
 #: commands/CommandManager.cpp:969
 msgid "You must first select some audio for this to use."
@@ -5630,14 +5623,16 @@ msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
+"Nič ni za meriti.\n"
+"Izberite odsek sledi."
 
 #: effects/Contrast.cpp:131
 msgid "You can only measure one track at a time."
-msgstr ""
+msgstr "Merite lahko le eno sled naenkrat."
 
 #: effects/Contrast.cpp:151
 msgid "Please select something to be measured."
-msgstr ""
+msgstr "Izberite nekaj, kar je mogoče izmeriti."
 
 #: effects/Contrast.cpp:241
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
@@ -6014,10 +6009,14 @@ msgid ""
 "\n"
 "Save the curves at %s"
 msgstr ""
+"EQCurves.xml in EQDefaultCurves.xml v vašem sistemu ni mogoče najti.\n"
+"Pritisnite 'Pomoč', da obiščete stran prenosov.\n"
+"\n"
+"Shranite krivulje pri %s"
 
 #: effects/Equalization.cpp:1001
 msgid "EQCurves.xml and EQDefaultCurves.xml missing"
-msgstr ""
+msgstr "Manjkata EQCurves.xml in EQDefaultCurves.xml"
 
 #: effects/Equalization.cpp:1007
 #: effects/Equalization.cpp:1033
@@ -6069,13 +6068,14 @@ msgid "Graphic EQ"
 msgstr "Grafični izenačevalnik"
 
 #: effects/Equalization.cpp:1257
+#, fuzzy
 msgid "Li&near Frequency Scale"
-msgstr ""
+msgstr "Merilo li&nearne frekvence"
 
 #: effects/Equalization.cpp:1258
 #, fuzzy
 msgid "Linear Frequency Scale"
-msgstr "Dodatni faktor povečave"
+msgstr "Merilo linearne frekvence"
 
 #: effects/Equalization.cpp:1267
 msgid "Length of &Filter:"
@@ -6129,7 +6129,7 @@ msgstr "Krivulje ni mogoče najti"
 
 #: effects/Equalization.cpp:1711
 msgid "Requested curve not found, using 'unnamed'"
-msgstr ""
+msgstr "Zahtevane krivulje ni mogoče najti, uporabljena bo 'neimenovana'"
 
 #: effects/Equalization.cpp:2823
 #: effects/Equalization.cpp:2828
@@ -6165,9 +6165,8 @@ msgid "E&xport..."
 msgstr "I&zvozi ..."
 
 #: effects/Equalization.cpp:2875
-#, fuzzy
 msgid "&Get More..."
-msgstr "Več razširitev s spleta ..."
+msgstr "&Več razširitev s spleta ..."
 
 #: effects/Equalization.cpp:2882
 #: widgets/ErrorDialog.cpp:139
@@ -6179,14 +6178,15 @@ msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
+"Preimenujte 'neimenovano', da shranite nov vnos.\n"
+"'V redu' shrani vse spremembe, 'Prekliči' pač ne."
 
 #: effects/Equalization.cpp:2918
 msgid "'unnamed' always stays at the bottom of the list"
-msgstr ""
+msgstr "'neimenovano' vedno ostane na dnu seznama"
 
 #: effects/Equalization.cpp:2918
 #: effects/Equalization.cpp:3219
-#, fuzzy
 msgid "'unnamed' is special"
 msgstr "'neimenovano' je nekaj posebnega"
 
@@ -6205,7 +6205,7 @@ msgstr "Preimenuj ..."
 
 #: effects/Equalization.cpp:3036
 msgid "Name is the same as the original one"
-msgstr ""
+msgstr "Ime je enako kot v izvirniku"
 
 #: effects/Equalization.cpp:3036
 msgid "Same name"
@@ -6258,7 +6258,7 @@ msgstr "elementov?"
 
 #: effects/Equalization.cpp:3160
 msgid "You cannot delete the 'unnamed' curve, it is special."
-msgstr ""
+msgstr "Krivulje 'neimenovano' ne morete izbrisati, je nekaj posebnega."
 
 #: effects/Equalization.cpp:3177
 msgid "Choose an EQ curve file"
@@ -6725,17 +6725,19 @@ msgid ", maximum amplitude = %.1f dB"
 msgstr ", največja amplituda = %.1f dB"
 
 #: effects/Normalize.cpp:168
+#, fuzzy
 msgid "Removing DC offset and Normalizing...\n"
-msgstr ""
+msgstr "Odstranjevanje odmika DC in normaliziranje ...\n"
 
 #: effects/Normalize.cpp:170
 #, fuzzy
 msgid "Removing DC offset...\n"
-msgstr "Odmik sence Stavca X"
+msgstr "Odstranjevanje odmika DC ...\n"
 
 #: effects/Normalize.cpp:172
+#, fuzzy
 msgid "Normalizing without removing DC offset...\n"
-msgstr ""
+msgstr "Normaliziranje brez odstranjevanja odmika DC ...\n"
 
 #: effects/Normalize.cpp:192
 msgid "Analyzing: "
@@ -6786,9 +6788,8 @@ msgid "Normalize stereo channels independently"
 msgstr "Stereo kanala normaliziraj neodvisno"
 
 #: effects/Normalize.cpp:567
-#, fuzzy
 msgid ".  Maximum 0dB."
-msgstr "Največja vrednost"
+msgstr ".  Največja vrednost je 0dB."
 
 #: effects/Normalize.h:33
 msgid "Normalize..."
@@ -6801,7 +6802,7 @@ msgstr "Normalizacija poteka ..."
 #: effects/Paulstretch.cpp:55
 #, fuzzy, c-format
 msgid "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
-msgstr "Uporabljen učinek: zamuda %s = %f sekund, faktor razkroja = %f"
+msgstr "Uporabljen učinek: %s, faktor raztezanja = %f-krat, časovna ločljivost = %f s"
 
 #. i18n-hint: This is an effect error message, for the effect named Paulstretch.
 #. * Time Resolution is a parameter of the effect, the translation should match
@@ -6822,7 +6823,6 @@ msgid "Stretch Factor:"
 msgstr "Faktor raztega:"
 
 #: effects/Paulstretch.cpp:436
-#, fuzzy
 msgid "Time Resolution (seconds):"
 msgstr "Časovna ločljivost (sekunde):"
 
@@ -6991,15 +6991,13 @@ msgid "Reversing"
 msgstr "Izpeljujem vzvratno"
 
 #: effects/ScoreAlignDialog.cpp:61
-#, fuzzy
 msgid "Align MIDI to Audio"
 msgstr "Poravnaj MIDI na zvok"
 
 #: effects/ScoreAlignDialog.cpp:99
 #: effects/ScoreAlignDialog.cpp:105
-#, fuzzy
 msgid "Frame Period"
-msgstr "Prvo obdobje"
+msgstr ""
 
 #: effects/ScoreAlignDialog.cpp:109
 #: effects/ScoreAlignDialog.cpp:114
@@ -7007,13 +7005,12 @@ msgid "Window Size"
 msgstr "Veikost okna"
 
 #: effects/ScoreAlignDialog.cpp:121
-#, fuzzy
 msgid "Force Final Alignment"
 msgstr "Vsili končno poravnavo"
 
 #: effects/ScoreAlignDialog.cpp:126
 msgid "Ignore Silence at Beginnings and Endings"
-msgstr ""
+msgstr "Prezri tišino na začetku in koncu"
 
 #: effects/ScoreAlignDialog.cpp:130
 msgid "Silence Threshold:"
@@ -7031,7 +7028,7 @@ msgstr "Prag tišine"
 #: effects/ScoreAlignDialog.cpp:148
 #, fuzzy
 msgid "Presmooth Time"
-msgstr " Čas urejanja:"
+msgstr "Trajanje pred-glajenja"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a new experimental effect, and until we have it documented in the user
@@ -7039,9 +7036,8 @@ msgstr " Čas urejanja:"
 #. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:156
 #: effects/ScoreAlignDialog.cpp:161
-#, fuzzy
 msgid "Line Time"
-msgstr " Čas urejanja:"
+msgstr ""
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
 #. This is a new experimental effect, and until we have it documented in the user
@@ -7125,9 +7121,8 @@ msgid "Final Tempo Change (%)"
 msgstr "Končna sprememba tempa (%)"
 
 #: effects/TimeScale.cpp:260
-#, fuzzy
 msgid "Initial Pitch Shift"
-msgstr "Drsno časovno raztegovanje/sprememba višine tona"
+msgstr "Začetni zamik višine tona"
 
 #: effects/TimeScale.cpp:265
 #: effects/TimeScale.cpp:282
@@ -7140,9 +7135,8 @@ msgid "(%) [-50 to 100]:"
 msgstr "(%) [-50 do 100]:"
 
 #: effects/TimeScale.cpp:277
-#, fuzzy
 msgid "Final Pitch Shift"
-msgstr "Drsno časovno raztegovanje/sprememba višine tona"
+msgstr "Končni zamik višine tona"
 
 #: effects/TimeScale.h:33
 msgid "Sliding Time Scale/Pitch Shift..."
@@ -7451,7 +7445,7 @@ msgstr "Pozornik Nyquist ..."
 
 #: effects/nyquist/Nyquist.cpp:119
 msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr ""
+msgstr "[Opozorilo: Nyquist je vrnil neveljaven niz UTF-8, tukaj je pretvorjen kot Latin-1]"
 
 #: effects/nyquist/Nyquist.cpp:310
 #, c-format
@@ -7653,9 +7647,8 @@ msgid "Data will be piped to standard in. \"%f\" uses the file name in the expor
 msgstr "Podatki bodo podani v cevovod na standardni vhod. \"%f\" uporablja ime datoteke v oknu izvoza."
 
 #: export/ExportCL.cpp:162
-#, fuzzy
 msgid "Find path to command"
-msgstr "Ni mogoče najti podprtega ssh ukaza"
+msgstr "Najdi pot do ukaza"
 
 #: export/ExportCL.cpp:292
 msgid "(external program)"
@@ -7824,8 +7817,9 @@ msgid "Preset '%s' does not exist."
 msgstr "Prednastavitev '%s' ne obstaja."
 
 #: export/ExportFFmpegDialogs.cpp:1104
+#, fuzzy
 msgid "LC"
-msgstr ""
+msgstr "LC"
 
 #: export/ExportFFmpegDialogs.cpp:1105
 #, fuzzy
@@ -7918,7 +7912,7 @@ msgstr "Kodek:"
 
 #: export/ExportFFmpegDialogs.cpp:1331
 msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
-msgstr ""
+msgstr "Vsi zapisi in kodeki med seboj niso združljivi. Tudi vse kombinacije možnosti niso združljive z vsemi kodeki."
 
 #: export/ExportFFmpegDialogs.cpp:1337
 msgid "Show All Formats"
@@ -7947,13 +7941,12 @@ msgstr ""
 "prazno - samodejno"
 
 #: export/ExportFFmpegDialogs.cpp:1357
-#, fuzzy
 msgid "Bit Reservoir"
-msgstr "1-bitno razpršeno"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:1361
 msgid "VBL"
-msgstr ""
+msgstr "VBL"
 
 #: export/ExportFFmpegDialogs.cpp:1367
 msgid "Tag:"
@@ -8006,7 +7999,6 @@ msgstr ""
 "0 - ne spreminjaj mere vzorčenja"
 
 #: export/ExportFFmpegDialogs.cpp:1379
-#, fuzzy
 msgid "Cutoff:"
 msgstr "Porezava:"
 
@@ -8057,9 +8049,8 @@ msgstr ""
 "največje - 10 (počasno kodiranje, majhna izhodna datoteka)"
 
 #: export/ExportFFmpegDialogs.cpp:1398
-#, fuzzy
 msgid "Frame:"
-msgstr "Okvir:"
+msgstr "Sličica:"
 
 #: export/ExportFFmpegDialogs.cpp:1399
 msgid ""
@@ -8076,9 +8067,8 @@ msgstr ""
 "največja - 65535"
 
 #: export/ExportFFmpegDialogs.cpp:1401
-#, fuzzy
 msgid "LPC"
-msgstr "Uporabi LPC"
+msgstr "LPC"
 
 #: export/ExportFFmpegDialogs.cpp:1402
 msgid ""
@@ -8095,9 +8085,8 @@ msgstr ""
 "največ - 15"
 
 #: export/ExportFFmpegDialogs.cpp:1404
-#, fuzzy
 msgid "PdO Method:"
-msgstr "Metoda overovitve"
+msgstr "Metoda zap. napovedi:"
 
 #: export/ExportFFmpegDialogs.cpp:1407
 msgid ""
@@ -8112,9 +8101,8 @@ msgstr ""
 "Polno iskanje - privzeto"
 
 #: export/ExportFFmpegDialogs.cpp:1409
-#, fuzzy
 msgid "Min. PdO"
-msgstr "Najmanjši datum"
+msgstr "Najkr. zap. napovedi"
 
 #: export/ExportFFmpegDialogs.cpp:1410
 msgid ""
@@ -8131,9 +8119,8 @@ msgstr ""
 "najdaljše - 32 (z LPC) ali 4 (brez LPC)"
 
 #: export/ExportFFmpegDialogs.cpp:1412
-#, fuzzy
 msgid "Max. PdO"
-msgstr "(maks.) vrstic"
+msgstr "Najd. zap. napovedi"
 
 #: export/ExportFFmpegDialogs.cpp:1413
 msgid ""
@@ -8150,9 +8137,8 @@ msgstr ""
 "najdaljše - 32 (z LPC) ali 4 (brez LPC)"
 
 #: export/ExportFFmpegDialogs.cpp:1415
-#, fuzzy
 msgid "Min. PtO"
-msgstr "Najmanjši datum"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:1416
 msgid ""
@@ -8169,9 +8155,8 @@ msgstr ""
 "najdaljše - 8"
 
 #: export/ExportFFmpegDialogs.cpp:1418
-#, fuzzy
 msgid "Max. PtO"
-msgstr "(maks.) vrstic"
+msgstr ""
 
 #: export/ExportFFmpegDialogs.cpp:1419
 msgid ""
@@ -8669,11 +8654,11 @@ msgstr "Z uporabo oznake/imena sledi"
 
 #: export/ExportMultiple.cpp:319
 msgid "Numbering before Label/Track Name"
-msgstr ""
+msgstr "Oštevilčevanje pred oznako/imenom posnetka"
 
 #: export/ExportMultiple.cpp:322
 msgid "Numbering after File name prefix"
-msgstr ""
+msgstr "Oštevilčevanje po predponi imena datoteke"
 
 #: export/ExportMultiple.cpp:328
 msgid "File name prefix:"
@@ -8748,6 +8733,8 @@ msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
 "Use..."
 msgstr ""
+"Oznaka ali sled \"%s\" ni veljavno ime datoteke. Uporabiti ne smete nič od: %s\n"
+"Uporabite ..."
 
 #: export/ExportMultiple.cpp:928
 msgid "Save As..."
@@ -8833,6 +8820,8 @@ msgid ""
 "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
 msgstr ""
+"Napaka pri pisanju datoteke %s (poln disk?).\n"
+"Libsndfile pravi: \"%s\""
 
 #. i18n-hint: %s will be the error message from libsndfile
 #: export/ExportPCM.cpp:581
@@ -9596,7 +9585,7 @@ msgstr "&Ergonomsko zaporedje gumbov v Vrstici transporta"
 
 #: prefs/GUIPrefs.cpp:90
 msgid "S&how 'How to Get Help' dialog box at program start up"
-msgstr ""
+msgstr "Po&kaži pogovorno okno 'Kako do pomoči' ob zagonu"
 
 #: prefs/GUIPrefs.cpp:98
 msgid "Meter/Waveform dB &range:"
@@ -9620,7 +9609,7 @@ msgstr "&Pokaži ime sledi v prikazu zvočne krivulje"
 
 #: prefs/GUIPrefs.cpp:131
 msgid "Re&tain labels if selection snaps to a label edge"
-msgstr ""
+msgstr "O&bdrži oznake, če se izbor pripne na rob oznake"
 
 #: prefs/GUIPrefs.cpp:138
 msgid "Modes"
@@ -9679,7 +9668,6 @@ msgid "Represent times and durations in &seconds"
 msgstr "Predstavi časovne vrednosti in trajanje v &sekundah"
 
 #: prefs/ImportExportPrefs.cpp:96
-#, fuzzy
 msgid "Represent times and durations in &beats"
 msgstr "Predstavi časovne vrednosti in trajanje v &dobah"
 
@@ -9828,6 +9816,8 @@ msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
 msgstr ""
+"Audacity je samodejno zaznal veljavne knjižnice FFmpeg.\n"
+"Jih še vedno želite poiskati ročno?"
 
 #: prefs/MidiIOPrefs.cpp:58
 msgid "MIDI Devices"
@@ -9867,18 +9857,23 @@ msgid ""
 "These are experimental. Enable them only if you've read the manual\n"
 "and know what you are doing."
 msgstr ""
+"Ta so poskusna. Omogočite jih le, če ste prebrali priročnik\n"
+"in veste, kaj počnete."
 
 #: prefs/ModulePrefs.cpp:58
+#, fuzzy
 msgid "mod-script-pipe"
-msgstr ""
+msgstr "mod-script-pipe"
 
 #: prefs/ModulePrefs.cpp:61
+#, fuzzy
 msgid "mod-nyq-bench"
-msgstr ""
+msgstr "mod-nyq-bench"
 
 #: prefs/ModulePrefs.cpp:64
+#, fuzzy
 msgid "mod-track-panel"
-msgstr ""
+msgstr "mod-track-panel"
 
 #: prefs/MousePrefs.cpp:57
 msgid "Mouse"
@@ -11319,9 +11314,8 @@ msgstr "Napaka pri odpiranju datoteke: \"%s\""
 #. i18n-hint: 'flushing' means writing any remaining queued up changes
 #. * to disk that have not yet been written.
 #: xml/XMLWriter.cpp:350
-#, fuzzy
 msgid "Error Flushing File"
-msgstr "Napaka pri odpiranju datoteke"
+msgstr "Napaka pri izpisovanju v datoteko"
 
 #: xml/XMLWriter.cpp:355
 msgid "Error Closing File"
@@ -11331,202 +11325,3 @@ msgstr "Napaka pri zapiranju datoteke"
 msgid "Error Writing to File"
 msgstr "Napaka pri pisanju v datoteko"
 
-#~ msgid "FreqWindow"
-#~ msgstr "Okno frekvence"
-
-#~ msgid "None-Skip"
-#~ msgstr "Brez-preskoči"
-
-#~ msgid "Spike Cleaner"
-#~ msgstr "Čistilec konic"
-
-#~ msgid "SpikeCleaner by Lynn Allan"
-#~ msgstr "Čistilec konic avtorja Lynna Allana"
-
-#~ msgid ""
-#~ "Max Spike Duration (milliseconds): \n"
-#~ "(99999 or greater is off)"
-#~ msgstr ""
-#~ "Največje trajanje konice (v milisekundah): \n"
-#~ "(99999 ali več pomeni izključeno)"
-
-#~ msgid "Theshold for silence: "
-#~ msgstr "Prag tišine: "
-
-#~ msgid "Spike Cleaner..."
-#~ msgstr "Čistilec konic ..."
-
-#~ msgid "Applying Spike Cleaner..."
-#~ msgstr "Izvajanje Čistilca konic ..."
-
-#~ msgid "Options"
-#~ msgstr "Možnosti"
-
-#~ msgid "Cl&eanSpeech Mode (Customized GUI)"
-#~ msgstr "Način Po&čistiGovor (prilagojen vmesnik)"
-
-#~ msgid "&LADSPA"
-#~ msgstr "&LADSPA"
-
-#~ msgid "N&yquist"
-#~ msgstr "N&yquist"
-
-#~ msgid "&VAMP"
-#~ msgstr "&VAMP"
-
-#~ msgid "V&ST"
-#~ msgstr "V&ST"
-
-#~ msgid "36"
-#~ msgstr "36"
-
-#~ msgid "48"
-#~ msgstr "48"
-
-#~ msgid "60"
-#~ msgstr "60"
-
-#~ msgid "96"
-#~ msgstr "96"
-
-#~ msgid "120"
-#~ msgstr "120"
-
-#~ msgid "145"
-#~ msgstr "145"
-
-#~ msgid ""
-#~ "Note: Export quality options can be chosen by clicking the Options\n"
-#~ "button in the Export dialog."
-#~ msgstr ""
-#~ "Opomba: Možnosti kakovosti izvoza lahko izberete s klikom gumba\n"
-#~ "Možnosti v pogovornem oknu Izvozi."
-
-#~ msgid "Error Saving Keyboard Shortcuts"
-#~ msgstr "Napaka pri shranjevanju tipk za bližnjice"
-
-#~ msgid "Zoom in or out"
-#~ msgstr "Povečaj ali pomanjšaj"
-
-#~ msgid "16"
-#~ msgstr "16"
-
-#~ msgid "32"
-#~ msgstr "32"
-
-#~ msgid "64"
-#~ msgstr "64"
-
-#~ msgid "128"
-#~ msgstr "128"
-
-#~ msgid "512"
-#~ msgstr "512"
-
-#~ msgid "1024"
-#~ msgstr "1024"
-
-#~ msgid "2048"
-#~ msgstr "2048"
-
-#~ msgid "4096"
-#~ msgstr "4096"
-
-#~ msgid "8192"
-#~ msgstr "8192"
-
-#~ msgid "16384"
-#~ msgstr "16384"
-
-#~ msgid "FFT Skip Points"
-#~ msgstr "Točke preskoka FFT"
-
-#~ msgid "Skip Points"
-#~ msgstr "Točke preskoka"
-
-#~ msgid "Clean Speech"
-#~ msgstr "Počisti govor"
-
-#~ msgid "Output level meter"
-#~ msgstr "Merilnik nivoja izhoda"
-
-#~ msgid "Input Volume Slider"
-#~ msgstr "Drsnik vhodne jakosti"
-
-#~ msgid "Output Volume Slider"
-#~ msgstr "Drsnik izhodne jakosti"
-
-#~ msgid "Adjust left selection to next onset"
-#~ msgstr "Prilagodi levi izbor naslednjemu primiku"
-
-#~ msgid "Adjust right selection to previous offset"
-#~ msgstr "Prilagodi desni izbor prejšnjemu odmiku"
-
-#~ msgid "Adjust left selection to next offset"
-#~ msgstr "Prilagodi levi izbor naslednjemu odmiku"
-
-#~ msgid "Adjust right selection to previous onset"
-#~ msgstr "Prilagodi desni izbor prejšnjemu primiku"
-
-#~ msgid "Select region of sound around cursor"
-#~ msgstr "Izberi področje zvoka okoli kazalca"
-
-#~ msgid "Select region of silence around cursor"
-#~ msgstr "Izberi področje tišine okoli kazalca"
-
-#~ msgid "Automatically make labels from words"
-#~ msgstr "Samodejno naredi oznake iz besed"
-
-#~ msgid "Add label at selection"
-#~ msgstr "Dodaj oznako pri izbiri"
-
-#~ msgid "Calibrate voicekey"
-#~ msgstr "Umeri ključni glas"
-
-#~ msgid "Adjust Sensitivity"
-#~ msgstr "Prilagodi občutljivost"
-
-#~ msgid "Energy"
-#~ msgstr "Energija"
-
-#~ msgid "Sign Changes (Low Threshold)"
-#~ msgstr "Spremembe predznaka (nizek prag)"
-
-#~ msgid "Sign Changes (High Threshold)"
-#~ msgstr "Spremembe predznaka (visok prag)"
-
-#~ msgid "Direction Changes (Low Threshold)"
-#~ msgstr "Spremembe smeri (nizki prag)"
-
-#~ msgid "Direction Changes (High Threshold)"
-#~ msgstr "Spremembe smeri (visoki prag)"
-
-#~ msgid "Key type"
-#~ msgstr "Vrsta tipke"
-
-#~ msgid "Left-to-On"
-#~ msgstr "Levo-na-vključeno"
-
-#~ msgid "Right-to-Off"
-#~ msgstr "Desno-na-izključeno"
-
-#~ msgid "Left-to-Off"
-#~ msgstr "Levo-na-izključeno"
-
-#~ msgid "Right-to-On"
-#~ msgstr "Desno-na-vključeno"
-
-#~ msgid "Select-Sound"
-#~ msgstr "Izberi-Zvok"
-
-#~ msgid "Select-Silence"
-#~ msgstr "Izberi-Tišina"
-
-#~ msgid "Make Labels"
-#~ msgstr "Naredi oznake"
-
-#~ msgid "Add Label"
-#~ msgstr "Dodaj oznako"
-
-#~ msgid "Calibrate"
-#~ msgstr "Kalibriraj"
