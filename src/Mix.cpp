@@ -378,7 +378,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
    double trackRate = track->GetRate();
    double initialWarp = mRate / trackRate;
    double tstep = 1.0 / trackRate;
-   double t = *pos / trackRate;
+   double t = (*pos - *queueLen) / trackRate;
    int sampleSize = SAMPLE_SIZE(floatSample);
 
    sampleCount out = 0;
@@ -580,8 +580,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
          }
       }
 
-      if (mTimeTrack ||
-          track->GetRate() != mRate)
+      if (mTimeTrack || track->GetRate() != mRate)
          out = MixVariableRates(channelFlags, track,
                                 &mSamplePos[i], mSampleQueue[i],
                                 &mQueueStart[i], &mQueueLen[i], mResample[i]);
