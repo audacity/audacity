@@ -39,7 +39,6 @@ class Resample
          mMethod = GetFastMethod();
 
       mHandle = NULL;
-      mInitial = false;
    };
    virtual ~Resample() {};
 
@@ -116,7 +115,6 @@ class Resample
  protected:
    int   mMethod; // resampler-specific enum for resampling method
    void* mHandle; // constant-rate or variable-rate resampler (XOR per instance)
-   bool  mInitial;
 };
 
 class ConstRateResample : public Resample

@@ -206,7 +206,6 @@
       int err;
       SRC_STATE *state = src_new(mMethod, 1, &err);
       mHandle = (void *)state;
-      mInitial = true;
    }
 
    VarRateResample::~VarRateResample()
@@ -263,10 +262,7 @@
                                   float  *outBuffer,
                                   int     outBufferLen)
    {
-      if (mInitial) {
-         src_set_ratio((SRC_STATE *)mHandle, factor);
-         mInitial = false;
-      }
+      src_set_ratio((SRC_STATE *)mHandle, factor);
 
       SRC_DATA data;
 
