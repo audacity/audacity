@@ -1023,12 +1023,16 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
    XMLFileReader reader;
    if( !reader.Parse( this, fn.GetFullPath() ) )
    {
-      // Inform user of load failure
-      wxMessageBox( reader.GetErrorStr(),
+      wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-                    _("Error Loading EQ Curve"),
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath(), reader.GetErrorStr());
+      // Inform user of load failure
+      wxMessageBox( msg,
+                    _("Error Loading EQ Curves"),
                     wxOK | wxCENTRE,
                     this );
+      mCurves.Add( _("unnamed") );  // we always need a default curve to use
+      return;
    }
    if( mCurves.Last().Name != _("unnamed") )
       mCurves.Add( _("unnamed") );   // we always need a default curve to use
