@@ -1025,7 +1025,7 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
    {
       wxString msg;
       /* i18n-hint: EQ stands for 'Equalization'.*/
-      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath(), reader.GetErrorStr());
+      msg.Printf(_("Error Loading EQ Curves from file:\n%s\nError message says:\n%s"), fn.GetFullPath().c_str(), reader.GetErrorStr().c_str());
       // Inform user of load failure
       wxMessageBox( msg,
                     _("Error Loading EQ Curves"),
