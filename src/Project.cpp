@@ -4154,7 +4154,7 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
    {
       Region *cur = regions.Item( selected );
       Region *last = regions.Item( selected - 1 );
-      if( cur->start <= last->end )
+      if( cur->start < last->end )
       {
          if( cur->end > last->end )
             last->end = cur->end;
