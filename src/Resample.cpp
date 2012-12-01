@@ -105,7 +105,6 @@
                                   int     outBufferLen)
    {
       size_t idone , odone;
-      soxr_set_oi_ratio((soxr_t)mHandle, factor);
       soxr_process((soxr_t)mHandle,
             inBuffer , (size_t)(lastFlag? ~inBufferLen : inBufferLen), &idone,
             outBuffer, (size_t)                          outBufferLen, &odone);
