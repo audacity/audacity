@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-08-09 21:24-0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"PO-Revision-Date: 2012-12-02 09:18-0000\n"
+"Last-Translator:Yuri Chornoivan"\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
 "MIME-Version: 1.0\n"
@@ -2341,8 +2341,9 @@ msgstr "В&илучити доріжки"
 msgid "&Mute All Tracks"
 msgstr "&Вимкнути звук на всіх доріжках"
 
-#: Menus.cpp:696
-msgid "&UnMute All Tracks"
+#: Menus.cpp:798
+#: Menus.cpp:998
+msgid "&Unmute All Tracks"
 msgstr "&Увімкнути звук на всіх доріжках"
 
 #: Menus.cpp:701
@@ -2407,8 +2408,9 @@ msgstr "Додати позначку на позицію &відтворенн�
 msgid "&Edit Labels..."
 msgstr "Р&едагувати позначки…"
 
-#: Menus.cpp:766
-msgid "S&ort tracks"
+#: Menus.cpp:868
+#: Menus.cpp:1068
+msgid "S&ort Tracks"
 msgstr "Вп&орядкувати доріжки"
 
 #: Menus.cpp:768
@@ -2806,13 +2808,13 @@ msgid "Tracks sorted by name"
 msgstr "Доріжки впорядковані за назвою"
 
 #: Menus.cpp:2240
+msgid "Set Left Selection Boundary"
+msgstr "Встановити лівий обмежувач вибраної області"
+
+#: Menus.cpp:2240
 #: Menus.cpp:2283
 msgid "Position"
 msgstr "Розташування"
-
-#: Menus.cpp:2240
-msgid "Set Left Selection Boundary"
-msgstr "Встановити лівий обмежувач вибраної області"
 
 #: Menus.cpp:2283
 msgid "Set Right Selection Boundary"
@@ -3774,10 +3776,6 @@ msgstr "Не вдалося вилучити старий файл автозб�
 msgid "Actual Rate: %d"
 msgstr "Фактична частота %d"
 
-#: Resample.cpp:62
-msgid "Libresample by Dominic Mazzoni and Julius Smith"
-msgstr "Libresample — Домінік Маццоні та Юліус Сміт"
-
 #: Resample.cpp:73
 msgid "High-quality Sinc Interpolation"
 msgstr "Високоякісна синхр. інтерполяція"
@@ -3785,10 +3783,6 @@ msgstr "Високоякісна синхр. інтерполяція"
 #: Resample.cpp:75
 msgid "Fast Sinc Interpolation"
 msgstr "Швидка синхр. інтерполяція"
-
-#: Resample.cpp:141
-msgid "Libsamplerate by Erik de Castro Lopo"
-msgstr "Libresample — Erik de Castro Lopo"
 
 #: Resample.cpp:230
 #, c-format
@@ -4816,6 +4810,14 @@ msgstr " Соло увімкнено"
 #: TrackPanelAx.cpp:315
 msgid " Select On"
 msgstr " Вибір увімкнено"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this track is shown with a sync-locked icon.
+#. The absence of a dash between Sync and Locked is deliberate -
+#. if present, Jaws reads it as "dash".
+#: TrackPanelAx.cpp:331
+msgid " Sync Lock Selected"
+msgstr " Вибрано фіксування синхронізації"
 
 #: VoiceKey.cpp:88
 #: VoiceKey.cpp:238
@@ -5855,9 +5857,23 @@ msgstr "Не вистачає EQCurves.xml і EQDefaultCurves.xml"
 msgid "unnamed"
 msgstr "Без назви"
 
-#: effects/Equalization.cpp:1024
-msgid "Error Loading EQ Curve"
-msgstr "Помилка під час завантаження кривої EQ"
+#. i18n-hint: EQ stands for 'Equalization'.
+#: effects/Equalization.cpp:1028
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Помилка під час завантаження кривих EQ з файла\n"
+"%s\n"
+"Повідомлення про помилку:\n"
+"%s"
+
+#: effects/Equalization.cpp:1031
+msgid "Error Loading EQ Curves"
+msgstr "Помилка під час завантаження кривих EQ"
 
 #: effects/Equalization.cpp:1089
 msgid "Error Saving Equalization Curves"
@@ -9303,8 +9319,8 @@ msgid "Extended Import"
 msgstr "Розш. імпортування"
 
 #: prefs/ExtImportPrefs.cpp:92
-msgid "Attempt to use filter in OpenFile dialog first"
-msgstr "Спробуйте спочатку скористатися фільтром у вікні відкриття файлів"
+msgid "A&ttempt to use filter in OpenFile dialog first"
+msgstr "&Намагатися спочатку скористатися фільтром у вікні відкриття файлів"
 
 #: prefs/ExtImportPrefs.cpp:95
 msgid "Rules to choose import filters"
@@ -9685,16 +9701,16 @@ msgstr ""
 "з підручником, і вам відомі наслідки ваших дій."
 
 #: prefs/ModulePrefs.cpp:58
-msgid "mod-script-pipe"
-msgstr "mod-script-pipe"
+msgid "mod-&script-pipe"
+msgstr "mod-&script-pipe"
 
 #: prefs/ModulePrefs.cpp:61
-msgid "mod-nyq-bench"
-msgstr "mod-nyq-bench"
+msgid "mod-&nyq-bench"
+msgstr "mod-&nyq-bench"
 
 #: prefs/ModulePrefs.cpp:64
-msgid "mod-track-panel"
-msgstr "mod-track-panel"
+msgid "mod-&track-panel"
+msgstr "mod-&track-panel"
 
 #: prefs/MousePrefs.cpp:57
 msgid "Mouse"
