@@ -6451,7 +6451,12 @@ void AudacityProject::OnResample()
       rates.Add(wxT("32000"));
       rates.Add(wxT("44100"));
       rates.Add(wxT("48000"));
+      rates.Add(wxT("88200"));
       rates.Add(wxT("96000"));
+      rates.Add(wxT("176400"));
+      rates.Add(wxT("192000"));
+      rates.Add(wxT("352800"));
+      rates.Add(wxT("384000"));
 
       S.StartVerticalLay(true);
       {

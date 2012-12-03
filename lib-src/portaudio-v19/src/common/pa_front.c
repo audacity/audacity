@@ -960,7 +960,7 @@ static PaError ValidateOpenStreamParameters(
     
     
     /* Check for absurd sample rates. */
-    if( (sampleRate < 1000.0) || (sampleRate > 200000.0) )
+    if( (sampleRate < 1000.0) || (sampleRate > 384000.0) )
         return paInvalidSampleRate;
 
     if( ((streamFlags & ~paPlatformSpecificFlags) & ~(paClipOff | paDitherOff | paNeverDropInput | paPrimeOutputBuffersUsingStreamCallback ) ) != 0 )

@@ -342,7 +342,12 @@ const int AudioIO::StandardRates[] = {
    32000,
    44100,
    48000,
-   96000
+   88200,
+   96000,
+   176400,
+   192000,
+   352800,
+   384000
 };
 const int AudioIO::NumStandardRates = sizeof(AudioIO::StandardRates) /
                                       sizeof(AudioIO::StandardRates[0]);
@@ -360,7 +365,10 @@ const int AudioIO::RatesToTry[] = {
    48000,
    88200,
    96000,
-   192000
+   176400,
+   192000,
+   352800,
+   384000
 };
 const int AudioIO::NumRatesToTry = sizeof(AudioIO::RatesToTry) /
                                       sizeof(AudioIO::RatesToTry[0]);

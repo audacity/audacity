@@ -292,7 +292,12 @@ enum {
    OnRate22ID,             //    |
    OnRate44ID,             //    |
    OnRate48ID,             //    | Leave these in order
-   OnRate96ID,             //    | see OnTrackMenu()
+   OnRate88ID,             //    |
+   OnRate96ID,             //    |
+   OnRate176ID,            //    | see OnTrackMenu()
+   OnRate192ID,            //    |
+   OnRate352ID,            //    |
+   OnRate384ID,            //    |
    OnRateOtherID,          //    |
                            //    |
    On16BitID,              //    |
@@ -336,7 +341,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
     EVT_MENU_RANGE(OnWaveformID, OnPitchID, TrackPanel::OnSetDisplay)
-    EVT_MENU_RANGE(OnRate8ID, OnRate96ID, TrackPanel::OnRateChange)
+    EVT_MENU_RANGE(OnRate8ID, OnRate384ID, TrackPanel::OnRateChange)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
     EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
@@ -619,7 +624,12 @@ void TrackPanel::BuildMenus(void)
    mRateMenu->AppendCheckItem(OnRate22ID, wxT("22050 Hz"));
    mRateMenu->AppendCheckItem(OnRate44ID, wxT("44100 Hz"));
    mRateMenu->AppendCheckItem(OnRate48ID, wxT("48000 Hz"));
+   mRateMenu->AppendCheckItem(OnRate88ID, wxT("88200 Hz"));
    mRateMenu->AppendCheckItem(OnRate96ID, wxT("96000 Hz"));
+   mRateMenu->AppendCheckItem(OnRate176ID, wxT("176400 Hz"));
+   mRateMenu->AppendCheckItem(OnRate192ID, wxT("192000 Hz"));
+   mRateMenu->AppendCheckItem(OnRate352ID, wxT("352800 Hz"));
+   mRateMenu->AppendCheckItem(OnRate384ID, wxT("384000 Hz"));
    mRateMenu->AppendCheckItem(OnRateOtherID, _("&Other..."));
 
    mFormatMenu = new wxMenu();
@@ -7244,18 +7254,19 @@ void TrackPanel::SetMenuCheck( wxMenu & menu, int newId )
    }
 }
 
-const int nRates=7;
+const int nRates=12;
 
 ///  gRates MUST CORRESPOND DIRECTLY TO THE RATES AS LISTED IN THE MENU!!
 ///  IN THE SAME ORDER!!
-int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 96000 };
+int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 88200, 96000,
+			 176400, 192000, 352800, 384000 };
 
 /// This method handles the selection from the Rate
 /// submenu of the track menu, except for "Other" (/see OnRateOther).
 void TrackPanel::OnRateChange(wxCommandEvent & event)
 {
    int id = event.GetId();
-   wxASSERT(id >= OnRate8ID && id <= OnRate96ID);
+   wxASSERT(id >= OnRate8ID && id <= OnRate384ID);
    wxASSERT(mPopupMenuTarget
             && mPopupMenuTarget->GetKind() == Track::Wave);
 
@@ -7303,7 +7314,12 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
       rates.Add(wxT("22050"));
       rates.Add(wxT("44100"));
       rates.Add(wxT("48000"));
+      rates.Add(wxT("88200"));
       rates.Add(wxT("96000"));
+      rates.Add(wxT("176400"));
+      rates.Add(wxT("192000"));
+      rates.Add(wxT("352800"));
+      rates.Add(wxT("384000"));
 
       S.StartVerticalLay(true);
       {
