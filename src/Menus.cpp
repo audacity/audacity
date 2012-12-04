@@ -3521,6 +3521,11 @@ void AudacityProject::OnUndo()
       return;
    }
 
+   // can't undo while dragging
+   if (mTrackPanel->IsMouseCaptured()) {
+      return;
+   }
+
    TrackList *l = mUndoManager.Undo(&mViewInfo.sel0, &mViewInfo.sel1);
    PopState(l);
 

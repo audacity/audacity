@@ -3185,6 +3185,13 @@ bool TrackPanel::IsDragZooming()
    return (abs(mZoomEnd - mZoomStart) > DragThreshold);
 }
 
+/// Determines if drag zooming is active
+bool TrackPanel::IsMouseCaptured()
+{
+   return (mMouseCapture != IsUncaptured);
+}
+
+
 ///  This actually sets the Zoom value when you're done doing
 ///  a drag zoom.
 void TrackPanel::DragZoom(wxMouseEvent & event, int trackLeftEdge)

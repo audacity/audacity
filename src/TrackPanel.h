@@ -252,6 +252,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
    virtual Track * GetFirstSelectedTrack();
+   virtual bool IsMouseCaptured();
 
    virtual void EnsureVisible(Track * t);
 
