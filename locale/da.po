@@ -7,13 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-08-09 07:29+0100\n"
-"PO-Revision-Date: 2012-08-20 00:15-0000\n"
-"Last-Translator: Thomas Breinstrup\n"
+"POT-Creation-Date: 2012-11-27 02:03+0000\n"
+"PO-Revision-Date: 2012-12-08 02:06-0000\n"
+"Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.3\n"
 
 #: AboutDialog.cpp:60
 #: AboutDialog.cpp:80
@@ -24,7 +25,7 @@ msgstr "medstifter"
 msgid "quality assurance"
 msgstr "kvalitetskontrol"
 
-#: AboutDialog.cpp:160
+#: AboutDialog.cpp:161
 msgid "About Audacity..."
 msgstr "Om Audacity..."
 
@@ -33,15 +34,15 @@ msgstr "Om Audacity..."
 #. * In English it is slightly humorous alternative to an 'OK' button.
 #. * If the humour doesn't work in your language, then just use whatever
 #. * you would use for a translation for 'OK' on a button.
-#: AboutDialog.cpp:179
+#: AboutDialog.cpp:180
 msgid "OK... Audacious!"
 msgstr "OK"
 
-#: AboutDialog.cpp:199
+#: AboutDialog.cpp:200
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr "Audacity er et gratis program skrevet af et verdensomspændende hold af frivillige <a href=\"http://audacity.sourceforge.net/community/developers\">udviklere</a>. Vi takker <a href=\"http://sourceforge.net\">SourceForge.net</a> og <a href=\"http://code.google.com\">Google Code</a> for at lægge plads til vort projekt. Audacity <a href=\"http://audacity.sourceforge.net/download/\">findes i udgaver</a> til Windows, Mac og GNU/Linux (og andre Unix-lignende systemer)."
 
-#: AboutDialog.cpp:203
+#: AboutDialog.cpp:204
 msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr "Hvis du finder en fejl eller har et forslag til os, skriv da venligst til vor <a href=\"mailto:feedback@audacityteam.org\">Feedback</a>-adresse. For at få hjælp, se tips og tricks på vor <a href=\"http://wiki.audacityteam.org/\">wiki-opslagsside</a>, eller besøg vort <a href=\"http://audacityteam.org/\">forum</a>."
 
@@ -50,182 +51,184 @@ msgstr "Hvis du finder en fejl eller har et forslag til os, skriv da venligst ti
 #. *  your own name(s) to the credits.
 #. *
 #. *  For example:  "English translation by Dominic Mazzoni."
-#: AboutDialog.cpp:211
-#: AboutDialog.cpp:213
+#: AboutDialog.cpp:212
+#: AboutDialog.cpp:214
 msgid "translator_credits"
 msgstr "Dansk oversættelse ved Thomas Breinstrup"
 
-#: AboutDialog.cpp:224
+#: AboutDialog.cpp:225
 msgid "A Free Digital Audio Editor<br>"
 msgstr "Et gratis digitalt lydredigeringsprogram<br>"
 
-#: AboutDialog.cpp:228
+#: AboutDialog.cpp:229
 msgid "Credits"
 msgstr "Anerkendelse"
 
 #. i18n-hint: %s will be replaced by the version number.
-#: AboutDialog.cpp:233
+#: AboutDialog.cpp:234
 #, c-format
 msgid "Audacity %s Development Team"
 msgstr "Audacity %s udviklingshold"
 
 #. i18n-hint: %s will be replaced by the version number.
-#: AboutDialog.cpp:239
+#: AboutDialog.cpp:240
 #, c-format
 msgid "Audacity %s Support Team"
 msgstr "Audacity %s supporthold"
 
-#: AboutDialog.cpp:244
+#: AboutDialog.cpp:245
 msgid "Emeritus Developers"
 msgstr "Ledende udviklere"
 
-#: AboutDialog.cpp:249
+#: AboutDialog.cpp:250
 msgid "Other Emeritus Team Members"
 msgstr "Andre ledende holdmedlemmer"
 
-#: AboutDialog.cpp:254
+#: AboutDialog.cpp:255
 msgid "Other Contributors"
 msgstr "Andre bidragydere"
 
-#: AboutDialog.cpp:259
+#: AboutDialog.cpp:260
 msgid "Audacity is based on code from the following projects:"
 msgstr "Audacity bygger på programkode fra de følgende projekter:"
 
-#: AboutDialog.cpp:264
+#: AboutDialog.cpp:265
 msgid "Special thanks:"
 msgstr "Særlig tak til:"
 
-#: AboutDialog.cpp:269
+#: AboutDialog.cpp:270
 msgid "<b>Audacity&reg;</b> software is copyright"
 msgstr "<b>Audacity&reg;</b>-software er copyright"
 
-#: AboutDialog.cpp:272
+#: AboutDialog.cpp:273
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr "Navnet <b>Audacity&reg;</b> er et registreret varemærke ved Dominic Mazzoni."
 
 #. i18n-hint: Information about when audacity was compiled
-#: AboutDialog.cpp:327
-#: AboutDialog.cpp:340
-#: AboutDialog.cpp:489
+#: AboutDialog.cpp:328
+#: AboutDialog.cpp:341
+#: AboutDialog.cpp:498
 msgid "Build Information"
 msgstr "Versionsoplysninger"
 
-#: AboutDialog.cpp:333
+#: AboutDialog.cpp:334
 #: effects/AvcCompressor.cpp:674
 msgid "Enabled"
 msgstr "Slået til"
 
-#: AboutDialog.cpp:334
+#: AboutDialog.cpp:335
 msgid "Disabled"
 msgstr "Slået fra"
 
-#: AboutDialog.cpp:344
+#: AboutDialog.cpp:345
 msgid "File Format Support"
 msgstr "Filformatunderstøttelse"
 
 #. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: AboutDialog.cpp:354
-#: AboutDialog.cpp:356
+#: AboutDialog.cpp:355
+#: AboutDialog.cpp:357
 msgid "MP3 Importing"
 msgstr "Importerer MP3"
 
-#: AboutDialog.cpp:363
-#: AboutDialog.cpp:366
+#: AboutDialog.cpp:364
+#: AboutDialog.cpp:367
 msgid "Ogg Vorbis Import and Export"
 msgstr "Import og eksport af Ogg Vorbis"
 
-#: AboutDialog.cpp:370
-#: AboutDialog.cpp:373
+#: AboutDialog.cpp:371
+#: AboutDialog.cpp:374
 msgid "ID3 tag support"
 msgstr "Understøttelse af ID3-etiketter"
 
-#: AboutDialog.cpp:380
-#: AboutDialog.cpp:383
+#: AboutDialog.cpp:381
+#: AboutDialog.cpp:384
 msgid "FLAC import and export"
 msgstr "Import og eksport af FLAC"
 
-#: AboutDialog.cpp:388
-#: AboutDialog.cpp:391
+#: AboutDialog.cpp:389
+#: AboutDialog.cpp:392
 msgid "MP2 export"
 msgstr "Eksport af MP2"
 
-#: AboutDialog.cpp:396
-#: AboutDialog.cpp:399
+#: AboutDialog.cpp:397
+#: AboutDialog.cpp:400
 msgid "Import via QuickTime"
 msgstr "Import gennem QuickTime"
 
 #. i18n-hint: Libraries that are essential to audacity
-#: AboutDialog.cpp:406
+#: AboutDialog.cpp:407
 msgid "Core Libraries"
 msgstr "Grundbiblioteker"
 
-#: AboutDialog.cpp:412
-#: AboutDialog.cpp:415
-#: AboutDialog.cpp:418
-#: AboutDialog.cpp:420
+#: AboutDialog.cpp:413
+#: AboutDialog.cpp:416
+#: AboutDialog.cpp:419
+#: AboutDialog.cpp:421
+#: AboutDialog.cpp:426
+#: AboutDialog.cpp:429
 msgid "Sample rate conversion"
 msgstr "Konvertering af lydsamplingshastighed"
 
-#: AboutDialog.cpp:424
+#: AboutDialog.cpp:433
 msgid "Audio playback and recording"
 msgstr "Lydafspilning og -optagelse"
 
-#: AboutDialog.cpp:434
+#: AboutDialog.cpp:443
 msgid "Features"
 msgstr "Funktioner"
 
-#: AboutDialog.cpp:438
-#: AboutDialog.cpp:441
-#: AboutDialog.cpp:446
-#: AboutDialog.cpp:449
-#: AboutDialog.cpp:454
-#: AboutDialog.cpp:457
-#: AboutDialog.cpp:462
-#: AboutDialog.cpp:465
+#: AboutDialog.cpp:447
+#: AboutDialog.cpp:450
+#: AboutDialog.cpp:455
+#: AboutDialog.cpp:458
+#: AboutDialog.cpp:463
+#: AboutDialog.cpp:466
+#: AboutDialog.cpp:471
+#: AboutDialog.cpp:474
 msgid "Plug-in support"
 msgstr "Understøttelse af tillægsprogrammer"
 
-#: AboutDialog.cpp:470
-#: AboutDialog.cpp:473
+#: AboutDialog.cpp:479
+#: AboutDialog.cpp:482
 msgid "Sound card mixer support"
 msgstr "Understøttelse af lydkortmixer"
 
-#: AboutDialog.cpp:478
-#: AboutDialog.cpp:481
+#: AboutDialog.cpp:487
+#: AboutDialog.cpp:490
 msgid "Pitch and Tempo Change support"
 msgstr "Understøttelse af tonehøjde- og temposkift"
 
-#: AboutDialog.cpp:493
+#: AboutDialog.cpp:502
 msgid "Program build date: "
 msgstr "Programversion dato:"
 
-#: AboutDialog.cpp:496
-#: AboutDialog.cpp:498
+#: AboutDialog.cpp:505
+#: AboutDialog.cpp:507
 msgid "Build type:"
 msgstr "Versionstype:"
 
-#: AboutDialog.cpp:496
+#: AboutDialog.cpp:505
 msgid "Debug build"
 msgstr "Fejlfindingsversion"
 
-#: AboutDialog.cpp:498
+#: AboutDialog.cpp:507
 msgid "Release build"
 msgstr "Færdig udgave, version"
 
 #. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: AboutDialog.cpp:503
+#: AboutDialog.cpp:512
 msgid "Installation Prefix: "
 msgstr "Forinstallering: "
 
-#: AboutDialog.cpp:507
+#: AboutDialog.cpp:516
 msgid "Settings folder: "
 msgstr "Mappe til indstillinger:"
 
-#: AboutDialog.cpp:522
+#: AboutDialog.cpp:531
 msgid "GPL License"
 msgstr "GPL-licens"
 
-#: AudacityApp.cpp:789
+#: AudacityApp.cpp:793
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -236,7 +239,7 @@ msgstr ""
 "\n"
 "Den er blevet fjernet fra listen over seneste filer."
 
-#: AudacityApp.cpp:850
+#: AudacityApp.cpp:854
 #, c-format
 msgid ""
 "One or more external audio files could not be found.\n"
@@ -255,66 +258,66 @@ msgstr ""
 "Der kan være andre manglende filer.\n"
 "Vælg Fil > Undersøg sammenkoblinger for at se en liste over, hvor de manglende filer lå."
 
-#: AudacityApp.cpp:864
+#: AudacityApp.cpp:868
 msgid "Files Missing"
 msgstr "Filer mangler"
 
-#: AudacityApp.cpp:1020
-#: AudacityApp.cpp:1242
+#: AudacityApp.cpp:1024
+#: AudacityApp.cpp:1246
 msgid "Audacity Log"
 msgstr "Audacity-logfil"
 
-#: AudacityApp.cpp:1029
+#: AudacityApp.cpp:1033
 msgid "Master Gain Control"
 msgstr "Masterforstærkning"
 
-#: AudacityApp.cpp:1030
+#: AudacityApp.cpp:1034
 msgid "Input Meter"
 msgstr "Indspilningsmåler"
 
-#: AudacityApp.cpp:1031
+#: AudacityApp.cpp:1035
 msgid "Output Meter"
 msgstr "Afspilningsmåler"
 
 #. i18n-hint: "New" is an action (verb) to create a new project
-#: AudacityApp.cpp:1196
+#: AudacityApp.cpp:1200
 #: Menus.cpp:201
 msgid "&New"
 msgstr "&Ny"
 
 #. i18n-hint: (verb)
-#: AudacityApp.cpp:1197
+#: AudacityApp.cpp:1201
 #: Menus.cpp:206
 msgid "&Open..."
 msgstr "&Åbn..."
 
-#: AudacityApp.cpp:1198
+#: AudacityApp.cpp:1202
 msgid "Open &Recent..."
 msgstr "Åbn &Seneste..."
 
-#: AudacityApp.cpp:1199
+#: AudacityApp.cpp:1203
 #: Menus.cpp:1419
 #: Menus.cpp:1422
 msgid "&About Audacity..."
 msgstr "&Om Audacity..."
 
-#: AudacityApp.cpp:1200
+#: AudacityApp.cpp:1204
 msgid "&Preferences..."
 msgstr "&Indstillinger..."
 
-#: AudacityApp.cpp:1294
-#: AudacityApp.cpp:1373
+#: AudacityApp.cpp:1298
+#: AudacityApp.cpp:1377
 #, c-format
 msgid "Using block size of %ld\n"
 msgstr "Bruger blokstørrelse %ld\n"
 
-#: AudacityApp.cpp:1315
-#: AudacityApp.cpp:1388
+#: AudacityApp.cpp:1319
+#: AudacityApp.cpp:1392
 #, c-format
 msgid "Unknown command line option: %s\n"
 msgstr "Ukendt kommandoliniemulighed: %s\n"
 
-#: AudacityApp.cpp:1547
+#: AudacityApp.cpp:1551
 msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -322,11 +325,11 @@ msgstr ""
 "Audacity kunne ikke finde en mappe til midlertidige filer.\n"
 "Indtast venligst en passende mappe i Indstillinger."
 
-#: AudacityApp.cpp:1553
+#: AudacityApp.cpp:1557
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
 msgstr "Audacity vil lukke nu. Start Audacity igen for at bruge den nye midlertidige mappe."
 
-#: AudacityApp.cpp:1585
+#: AudacityApp.cpp:1589
 msgid ""
 "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -336,7 +339,7 @@ msgstr ""
 "datatab eller få systemet til at gå ned.\n"
 "\n"
 
-#: AudacityApp.cpp:1592
+#: AudacityApp.cpp:1596
 msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
@@ -344,19 +347,19 @@ msgstr ""
 "Audacity kunne ikke låse mappen til midlertidige filer.\n"
 "Denne mappe kan være i brug i en anden udgave af Audacity.\n"
 
-#: AudacityApp.cpp:1594
+#: AudacityApp.cpp:1598
 msgid "Do you still want to start Audacity?"
 msgstr "Ønsker du stadig at starte Audacity?"
 
-#: AudacityApp.cpp:1596
+#: AudacityApp.cpp:1600
 msgid "Error Locking Temporary Folder"
 msgstr "Fejl ved låsning af midlertidig mappe"
 
-#: AudacityApp.cpp:1634
+#: AudacityApp.cpp:1638
 msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "Systemet her opdaget, at Audacity allerede kører.\n"
 
-#: AudacityApp.cpp:1636
+#: AudacityApp.cpp:1640
 msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -364,29 +367,29 @@ msgstr ""
 "Brug kommandoerne Ny eller Åbn i denne udgave af Audacity\n"
 "for at åbne flere projekter på samme tid.\n"
 
-#: AudacityApp.cpp:1637
+#: AudacityApp.cpp:1641
 msgid "Audacity is already running"
 msgstr "Audacity kører allerede"
 
-#: AudacityApp.cpp:1654
+#: AudacityApp.cpp:1658
 msgid "Command-line options supported:"
 msgstr "Disse kommandoliniefunktioner understøttes:"
 
 #. i18n-hint: '-help' is the option and needs to stay in
 #. * English. This displays a list of available options
-#: AudacityApp.cpp:1657
+#: AudacityApp.cpp:1661
 msgid "\t-help (this message)"
 msgstr "\t-help (denne besked)"
 
 #. i18n-hint '-version' needs to stay in English.
-#: AudacityApp.cpp:1659
+#: AudacityApp.cpp:1663
 msgid "\t-version (display Audacity version)"
 msgstr "\t-version (vis Audacity-udgave)"
 
 #. i18n-hint '-test' is the option and needs to stay in
 #. * English. This runs a set of automatic tests on audacity
 #. * itself
-#: AudacityApp.cpp:1663
+#: AudacityApp.cpp:1667
 msgid "\t-test (run self diagnostics)"
 msgstr "\t-test (kør selvtest)"
 
@@ -394,15 +397,15 @@ msgstr "\t-test (kør selvtest)"
 #. * English. 'nnn' is any integer number. This controls the
 #. * size pieces that audacity uses when writing files to the
 #. * disk
-#: AudacityApp.cpp:1668
+#: AudacityApp.cpp:1672
 msgid "\t-blocksize nnn (set max disk block size in bytes)"
 msgstr "\t-blocksize nnn (angiv den maksimale diskblokstørrelse i bytes)"
 
-#: AudacityApp.cpp:1669
+#: AudacityApp.cpp:1673
 msgid "In addition, specify the name of an audio file or Audacity project to open it."
 msgstr "Angiv desuden navnet på en lydfil eller et Audacity-projekt for at åbne det."
 
-#: AudacityApp.cpp:1981
+#: AudacityApp.cpp:1985
 msgid ""
 "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
@@ -414,7 +417,7 @@ msgstr ""
 "\n"
 "Vil du rette det, så de kan åbnes med et dobbeltklik?"
 
-#: AudacityApp.cpp:1982
+#: AudacityApp.cpp:1986
 msgid "Audacity Project Files"
 msgstr "Audacity-projektfiler"
 
@@ -561,13 +564,13 @@ msgstr "Kan ikke optælle filer i mappen, hvori de gemmes automatisk."
 
 #: AutoRecovery.cpp:150
 #: AutoRecovery.cpp:187
-#: Menus.cpp:3800
-#: Menus.cpp:3812
-#: Menus.cpp:6481
-#: Project.cpp:2543
-#: Project.cpp:4486
-#: Project.cpp:4505
-#: TrackPanel.cpp:7320
+#: Menus.cpp:3798
+#: Menus.cpp:3810
+#: Menus.cpp:6484
+#: Project.cpp:2549
+#: Project.cpp:4492
+#: Project.cpp:4511
+#: TrackPanel.cpp:7336
 #: WaveTrack.cpp:973
 #: WaveTrack.cpp:992
 #: WaveTrack.cpp:2116
@@ -580,7 +583,7 @@ msgstr "Kan ikke optælle filer i mappen, hvori de gemmes automatisk."
 #: effects/Generator.cpp:54
 #: export/ExportFFmpeg.cpp:714
 #: export/ExportMP2.cpp:234
-#: prefs/DirectoriesPrefs.cpp:217
+#: prefs/DirectoriesPrefs.cpp:218
 #: prefs/KeyConfigPrefs.cpp:428
 #: toolbars/ControlToolBar.cpp:603
 #: toolbars/ControlToolBar.cpp:946
@@ -727,7 +730,7 @@ msgstr "Vælg fil(er) til gentagen behandling..."
 
 #. i18n-hint: The vertical bars and * are essential here.
 #: BatchProcessDialog.cpp:252
-#: Project.cpp:2143
+#: Project.cpp:2149
 msgid "All files|*|All supported files|"
 msgstr "Alle filer|*|Alle understøttede filer|"
 
@@ -755,7 +758,7 @@ msgid "&Add"
 msgstr "&Tilføj"
 
 #: BatchProcessDialog.cpp:500
-#: LabelDialog.cpp:124
+#: LabelDialog.cpp:127
 #: Tags.cpp:795
 msgid "&Remove"
 msgstr "&Fjern"
@@ -793,17 +796,17 @@ msgid "De&lete"
 msgstr "S&let"
 
 #: BatchProcessDialog.cpp:525
-#: effects/Equalization.cpp:2869
+#: effects/Equalization.cpp:2875
 msgid "Move &Up"
 msgstr "Flyt &op"
 
 #: BatchProcessDialog.cpp:526
-#: effects/Equalization.cpp:2870
+#: effects/Equalization.cpp:2876
 msgid "Move &Down"
 msgstr "Flyt &ned"
 
 #: BatchProcessDialog.cpp:527
-#: effects/Equalization.cpp:2876
+#: effects/Equalization.cpp:2882
 msgid "De&faults"
 msgstr "St&andardindstillinger"
 
@@ -953,7 +956,7 @@ msgstr "Kontrol af sammenkoblinger"
 #: DirManager.cpp:446
 #: DirManager.cpp:1637
 msgid "Progress"
-msgstr "Fremskridt"
+msgstr "I arbejde"
 
 #: DirManager.cpp:364
 msgid ""
@@ -1334,7 +1337,7 @@ msgstr "Hent"
 msgid "Where is '%s'?"
 msgstr "Hvor er %s?"
 
-#: FFmpeg.cpp:822
+#: FFmpeg.cpp:826
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "Kunne ikke finde forenelige FFmpeg-biblioteker."
 
@@ -1432,7 +1435,7 @@ msgid "Axis"
 msgstr "Akse"
 
 #: FreqWindow.cpp:219
-#: LabelDialog.cpp:126
+#: LabelDialog.cpp:129
 #: Menus.cpp:283
 #: prefs/KeyConfigPrefs.cpp:173
 msgid "&Export..."
@@ -1462,7 +1465,7 @@ msgstr "Luk"
 
 #: FreqWindow.cpp:231
 #: FreqWindow.cpp:234
-#: effects/Equalization.cpp:1310
+#: effects/Equalization.cpp:1315
 msgid "Grids"
 msgstr "Fastholdelsespunkter"
 
@@ -1474,12 +1477,12 @@ msgstr "Fastholdelsespunkter"
 #: effects/AutoDuck.cpp:821
 #: effects/Compressor.cpp:480
 #: effects/Compressor.cpp:488
-#: effects/Equalization.cpp:1139
-#: effects/Equalization.cpp:1141
-#: effects/Equalization.cpp:1149
-#: effects/Equalization.cpp:1221
-#: effects/Equalization.cpp:1452
-#: effects/Equalization.cpp:1463
+#: effects/Equalization.cpp:1143
+#: effects/Equalization.cpp:1145
+#: effects/Equalization.cpp:1153
+#: effects/Equalization.cpp:1225
+#: effects/Equalization.cpp:1457
+#: effects/Equalization.cpp:1468
 #: effects/Normalize.cpp:493
 #: widgets/Meter.cpp:440
 msgid "dB"
@@ -1489,8 +1492,8 @@ msgstr "dB"
 #. cycles per second.
 #: FreqWindow.cpp:314
 #: FreqWindow.cpp:537
-#: effects/Equalization.cpp:1181
-#: effects/Equalization.cpp:1217
+#: effects/Equalization.cpp:1185
+#: effects/Equalization.cpp:1221
 #: import/ImportRaw.cpp:412
 msgid "Hz"
 msgstr "Hz"
@@ -1544,8 +1547,8 @@ msgid "Export Spectral Data As:"
 msgstr "Eksportér spektrumdata som:"
 
 #: FreqWindow.cpp:1229
-#: LabelDialog.cpp:608
-#: Menus.cpp:3356
+#: LabelDialog.cpp:611
+#: Menus.cpp:3354
 #: effects/Contrast.cpp:516
 #: prefs/KeyConfigPrefs.cpp:340
 msgid "Couldn't write to file: "
@@ -1747,53 +1750,53 @@ msgstr "Angiv nyt filnavn:"
 msgid "Edit Labels"
 msgstr "Redigér etiketter"
 
-#: LabelDialog.cpp:111
+#: LabelDialog.cpp:112
 msgid "Press F2 or double click to edit cell contents."
 msgstr "Tryk F2 eller dobbeltklik for at redigere indholdet af cellerne."
 
-#: LabelDialog.cpp:122
+#: LabelDialog.cpp:125
 msgid "Insert &After"
 msgstr "Indsæt &efter"
 
-#: LabelDialog.cpp:123
+#: LabelDialog.cpp:126
 msgid "Insert &Before"
 msgstr "Indsæt &før"
 
-#: LabelDialog.cpp:125
+#: LabelDialog.cpp:128
 #: prefs/KeyConfigPrefs.cpp:172
 msgid "&Import..."
 msgstr "&Importér..."
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
-#: LabelDialog.cpp:140
+#: LabelDialog.cpp:143
 msgid "Track"
 msgstr "Spor"
 
 #. i18n-hint: (noun)
-#: LabelDialog.cpp:142
+#: LabelDialog.cpp:145
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5941
-#: Menus.cpp:5985
+#: Menus.cpp:5942
+#: Menus.cpp:5986
 msgid "Label"
 msgstr "Etiket"
 
 #. i18n-hint: (noun) of a label
-#: LabelDialog.cpp:144
+#: LabelDialog.cpp:147
 #: TimerRecordDialog.cpp:347
 msgid "Start Time"
 msgstr "Starttid"
 
 #. i18n-hint: (noun) of a label
-#: LabelDialog.cpp:146
+#: LabelDialog.cpp:149
 #: TimerRecordDialog.cpp:366
 msgid "End Time"
 msgstr "Sluttid"
 
-#: LabelDialog.cpp:157
+#: LabelDialog.cpp:160
 msgid "New..."
 msgstr "Ny..."
 
-#: LabelDialog.cpp:357
+#: LabelDialog.cpp:360
 msgid ""
 "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
@@ -1805,54 +1808,54 @@ msgstr ""
 "\n"
 "Ønsker du at gå tilbage og anføre navne på etiketterne?"
 
-#: LabelDialog.cpp:358
+#: LabelDialog.cpp:361
 #: LangChoice.cpp:134
 msgid "Confirm"
 msgstr "Bekræft"
 
-#: LabelDialog.cpp:519
-#: Menus.cpp:5125
+#: LabelDialog.cpp:522
+#: Menus.cpp:5123
 msgid "Select a text file containing labels..."
 msgstr "Vælg en tekstfil, der indeholder etiketter..."
 
-#: LabelDialog.cpp:523
-#: Menus.cpp:5129
+#: LabelDialog.cpp:526
+#: Menus.cpp:5127
 msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
 msgstr "Tekstfiler (*.txt)|*.txt|Alle filer (*.*)|*.*"
 
-#: LabelDialog.cpp:538
-#: Menus.cpp:5142
-#: Project.cpp:2346
-#: Project.cpp:2354
+#: LabelDialog.cpp:541
+#: Menus.cpp:5140
+#: Project.cpp:2352
+#: Project.cpp:2360
 msgid "Could not open file: "
 msgstr "Kunne ikke åbne fil:"
 
-#: LabelDialog.cpp:564
+#: LabelDialog.cpp:567
 msgid "No labels to export."
 msgstr "Ingen etiketter at eksportere."
 
-#: LabelDialog.cpp:571
-#: Menus.cpp:3319
+#: LabelDialog.cpp:574
+#: Menus.cpp:3317
 msgid "Export Labels As:"
 msgstr "Eksportér etiketter som:"
 
-#: LabelDialog.cpp:705
+#: LabelDialog.cpp:708
 msgid "New Label Track"
 msgstr "Nyt &etiketspor"
 
-#: LabelDialog.cpp:706
+#: LabelDialog.cpp:709
 msgid "Enter track name"
 msgstr "Indtast navn på spor"
 
 #. i18n-hint: (noun) it's the name of a kind of track.
-#: LabelDialog.cpp:708
+#: LabelDialog.cpp:711
 #: LabelDialog.h:53
 #: LabelTrack.cpp:96
 msgid "Label Track"
 msgstr "Giv sporet navn"
 
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5941
+#: Menus.cpp:5942
 msgid "Added label"
 msgstr "Etiket tilføjet"
 
@@ -2455,8 +2458,8 @@ msgstr "&Slå alle spor fra"
 
 #: Menus.cpp:798
 #: Menus.cpp:998
-msgid "&UnMute All Tracks"
-msgstr "&Skru op for alle spor"
+msgid "&Unmute All Tracks"
+msgstr "Skr&u op for alle spor"
 
 #: Menus.cpp:803
 #: Menus.cpp:1003
@@ -2510,7 +2513,7 @@ msgstr "Stil på li&nie og flyt markør"
 
 #: Menus.cpp:839
 #: Menus.cpp:1039
-#: Menus.cpp:5603
+#: Menus.cpp:5604
 msgid "Synchronize MIDI with Audio"
 msgstr "Synkronisér MIDI med lyd"
 
@@ -2536,8 +2539,8 @@ msgstr "R&edigér etiketter"
 
 #: Menus.cpp:868
 #: Menus.cpp:1068
-msgid "S&ort tracks"
-msgstr "S&ortér etiketter"
+msgid "S&ort Tracks"
+msgstr "S&ortér lydspor"
 
 #: Menus.cpp:870
 #: Menus.cpp:1070
@@ -2569,7 +2572,7 @@ msgstr "Effe&kt"
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
 #: Menus.cpp:1160
-#: Menus.cpp:3150
+#: Menus.cpp:3148
 #, c-format
 msgid "Repeat %s"
 msgstr "Gentag %s"
@@ -2945,40 +2948,40 @@ msgstr "Sortér efter nvn"
 msgid "Tracks sorted by name"
 msgstr "Lydspor sorteret efter navn"
 
-#: Menus.cpp:2662
-#: Menus.cpp:2705
-msgid "Position"
-msgstr "Placering"
-
-#: Menus.cpp:2662
+#: Menus.cpp:2663
 msgid "Set Left Selection Boundary"
 msgstr "Angiv grænse for markering mod venstre"
+
+#: Menus.cpp:2664
+#: Menus.cpp:2706
+msgid "Position"
+msgstr "Placering"
 
 #: Menus.cpp:2705
 msgid "Set Right Selection Boundary"
 msgstr "Angiv grænse for markering mod højre"
 
-#: Menus.cpp:3125
+#: Menus.cpp:3123
 msgid "You must select a track first."
 msgstr "Du skal vælge et spor først."
 
-#: Menus.cpp:3303
+#: Menus.cpp:3301
 msgid "labels.txt"
 msgstr "labels.txt"
 
-#: Menus.cpp:3315
+#: Menus.cpp:3313
 msgid "There are no label tracks to export."
 msgstr "Der er ingen etiketter at eksportere."
 
-#: Menus.cpp:3410
+#: Menus.cpp:3408
 msgid "Export MIDI As:"
 msgstr "Eksportér MIDI som:"
 
-#: Menus.cpp:3414
+#: Menus.cpp:3412
 msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI-fil (*.mid)|*.mid|Allegro-fil (*.gro)|*.gro"
 
-#: Menus.cpp:3446
+#: Menus.cpp:3444
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
@@ -2986,453 +2989,453 @@ msgstr ""
 "Du har valgt et filnavn med en uigenkendelig filtype.\n"
 "Ønsker du at fortsætte?"
 
-#: Menus.cpp:3447
+#: Menus.cpp:3445
 msgid "Export MIDI"
 msgstr "Eksportér MIDI"
 
-#: Menus.cpp:3522
+#: Menus.cpp:3520
 msgid "Nothing to undo"
 msgstr "Intet at fortryde"
 
-#: Menus.cpp:3543
+#: Menus.cpp:3541
 msgid "Nothing to redo"
 msgstr "Intet at gentage"
 
-#: Menus.cpp:3638
+#: Menus.cpp:3636
 #: TrackPanel.cpp:680
 #: toolbars/EditToolBar.cpp:131
 #: toolbars/EditToolBar.cpp:195
 msgid "Cut"
 msgstr "Klip"
 
-#: Menus.cpp:3638
+#: Menus.cpp:3636
 msgid "Cut to the clipboard"
 msgstr "Klip til udklipsholderen"
 
-#: Menus.cpp:3679
+#: Menus.cpp:3677
 msgid "Split Cut"
 msgstr "Klip og del"
 
-#: Menus.cpp:3679
+#: Menus.cpp:3677
 msgid "Split-cut to the clipboard"
 msgstr "Overfør klippet og delt område til klippebordet"
 
-#: Menus.cpp:3799
+#: Menus.cpp:3797
 msgid "Pasting one type of track into another is not allowed."
 msgstr "Det er ikke tilladt at indsætte en type lydspor i et andet."
 
-#: Menus.cpp:3811
+#: Menus.cpp:3809
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "Det er ikke tilladt at kopiere stereolyd ind i et monolydspor."
 
-#: Menus.cpp:3930
-#: Menus.cpp:3953
-#: Menus.cpp:4056
+#: Menus.cpp:3928
+#: Menus.cpp:3951
+#: Menus.cpp:4054
 #: TrackPanel.cpp:682
 #: toolbars/EditToolBar.cpp:135
 #: toolbars/EditToolBar.cpp:197
 msgid "Paste"
 msgstr "Sæt ind"
 
-#: Menus.cpp:3930
-#: Menus.cpp:4056
-#: Menus.cpp:4131
+#: Menus.cpp:3928
+#: Menus.cpp:4054
+#: Menus.cpp:4129
 msgid "Pasted from the clipboard"
 msgstr "Satte ind fra udklipsholderen"
 
-#: Menus.cpp:3953
+#: Menus.cpp:3951
 msgid "Pasted text from the clipboard"
 msgstr "Indsat tekst fra udklipsholderen"
 
-#: Menus.cpp:4131
+#: Menus.cpp:4129
 msgid "Paste Text to New Label"
 msgstr "Indsæt tekst som ny etikette"
 
-#: Menus.cpp:4179
+#: Menus.cpp:4177
 #: toolbars/EditToolBar.cpp:198
 msgid "Trim"
 msgstr "Beskær"
 
-#: Menus.cpp:4179
+#: Menus.cpp:4177
 msgid "Trim file to selection"
 msgstr "Beskær filen til det markerede"
 
-#: Menus.cpp:4208
+#: Menus.cpp:4206
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
 msgstr "Slettede og delte %.2f sekunder ved t=%.2f"
 
-#: Menus.cpp:4211
+#: Menus.cpp:4209
 msgid "Split Delete"
 msgstr "Slet og del"
 
-#: Menus.cpp:4232
+#: Menus.cpp:4230
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
 msgstr "Frahæftede %.2f sekunder ved t=%.2f"
 
-#: Menus.cpp:4235
+#: Menus.cpp:4233
 msgid "Detach"
 msgstr "Frahæft"
 
-#: Menus.cpp:4256
+#: Menus.cpp:4254
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
 msgstr "Sammenføjede %.2f sekunder ved t=%.2f"
 
-#: Menus.cpp:4259
+#: Menus.cpp:4257
 msgid "Join"
 msgstr "Sammenføj"
 
-#: Menus.cpp:4272
+#: Menus.cpp:4270
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "Lavede stilhed i de valgte spor. %.2f sekunder ved %.2f"
 
-#: Menus.cpp:4274
+#: Menus.cpp:4272
 #: toolbars/EditToolBar.cpp:199
 msgid "Silence"
 msgstr "Stilhed"
 
-#: Menus.cpp:4304
+#: Menus.cpp:4302
 msgid "Duplicate"
 msgstr "Dupliker"
 
-#: Menus.cpp:4304
+#: Menus.cpp:4302
 msgid "Duplicated"
 msgstr "Duplikeret"
 
 #. i18n-hint: (verb) past tense.  Audacity has just cut the labeled regions.
-#: Menus.cpp:4329
+#: Menus.cpp:4327
 msgid "Cut labeled regions to the clipboard"
 msgstr "Klip områder med etiket til klippebordet"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4331
+#: Menus.cpp:4329
 msgid "Cut Labels"
 msgstr "Klip etiketter"
 
 #. i18n-hint: (verb) Audacity has just splitcut the labeled regions
-#: Menus.cpp:4347
+#: Menus.cpp:4345
 msgid "SplitCut labeled regions to the clipboard"
 msgstr "Læg klippede og delte områder med etiketter i klippebordet"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
-#: Menus.cpp:4349
+#: Menus.cpp:4347
 msgid "Split Cut Labels"
 msgstr "Klip og del etiketter"
 
-#: Menus.cpp:4363
+#: Menus.cpp:4361
 msgid "Copied labeled regions to the clipboard"
 msgstr "Kopiér områder med etiketter til udklipsholderen"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4365
+#: Menus.cpp:4363
 msgid "Copy Labels"
 msgstr "Kopiér etiketter"
 
 #. i18n-hint: (verb) Audacity has just deleted the labeled regions
-#: Menus.cpp:4381
+#: Menus.cpp:4379
 msgid "Deleted labeled regions"
 msgstr "Slet områder med etiketter"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4383
+#: Menus.cpp:4381
 msgid "Delete Labels"
 msgstr "Slet etiketter"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled regions
-#: Menus.cpp:4397
+#: Menus.cpp:4395
 msgid "Split Deleted labeled regions"
 msgstr "Slettede og delte områder med etiketter"
 
 #. i18n-hint: (verb) Do a special kind of delete on labels
-#: Menus.cpp:4399
+#: Menus.cpp:4397
 msgid "Split Delete Labels"
 msgstr "Slet og del etiketter"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4413
+#: Menus.cpp:4411
 msgid "Silenced labeled regions"
 msgstr "Områder med etiketter, hvor lyden er slået fra"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4415
+#: Menus.cpp:4413
 msgid "Silence Labels"
 msgstr "Slå lyd fra område med etiket"
 
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled regions
-#: Menus.cpp:4426
+#: Menus.cpp:4424
 msgid "Split labeled regions"
 msgstr "Del områder med etiketter"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4428
+#: Menus.cpp:4426
 msgid "Split Labels"
 msgstr "Del etiketter"
 
 #. i18n-hint: (verb) Audacity has just joined the labeled regions
-#: Menus.cpp:4442
+#: Menus.cpp:4440
 msgid "Joined labeled regions"
 msgstr "Samlede områder med etiketter"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4444
+#: Menus.cpp:4442
 msgid "Join Labels"
 msgstr "Saml områder med etiketter"
 
 #. i18n-hint: (verb) Audacity has just detached the labeled regions.
 #. This message appears in history and tells you about something
 #. Audacity has done.
-#: Menus.cpp:4460
+#: Menus.cpp:4458
 msgid "Detached labeled regions"
 msgstr "Frahæftede områder med etiketter"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4462
+#: Menus.cpp:4460
 msgid "Detach Labels"
 msgstr "Frahæft etiketter"
 
-#: Menus.cpp:4484
-#: TrackPanel.cpp:7065
+#: Menus.cpp:4482
+#: TrackPanel.cpp:7081
 msgid "Split"
 msgstr "Opdel"
 
-#: Menus.cpp:4573
+#: Menus.cpp:4571
 msgid "Split New"
 msgstr "Del og flyt til ny"
 
-#: Menus.cpp:4573
+#: Menus.cpp:4571
 msgid "Split to new track"
 msgstr "Del og flyt til et nyt spor"
 
-#: Menus.cpp:5001
+#: Menus.cpp:4999
 msgid "Frequency Analysis"
 msgstr "Frekvensanalyse"
 
-#: Menus.cpp:5158
+#: Menus.cpp:5156
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Importerede etiketter fra '%s'"
 
-#: Menus.cpp:5159
+#: Menus.cpp:5157
 msgid "Import Labels"
 msgstr "Importér etiketter..."
 
-#: Menus.cpp:5170
+#: Menus.cpp:5168
 msgid "Select a MIDI file..."
 msgstr "Vælg en MIDI-fil..."
 
-#: Menus.cpp:5174
+#: Menus.cpp:5172
 msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
 msgstr "MIDI- og Allegro-filer (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI-filer (*.mid;*.midi)|*.mid;*.midi|Allegro-filer (*.gro)|*.gro|Alle filer (*.*)|*.*"
 
-#: Menus.cpp:5191
+#: Menus.cpp:5189
 #, c-format
 msgid "Imported MIDI from '%s'"
 msgstr "Importerede MIDI fra '%s'"
 
-#: Menus.cpp:5192
+#: Menus.cpp:5190
 msgid "Import MIDI"
 msgstr "Importér MIDI"
 
-#: Menus.cpp:5206
+#: Menus.cpp:5204
 msgid "Select any uncompressed audio file..."
 msgstr "Vælg en ukomprimeret lydfil"
 
-#: Menus.cpp:5210
+#: Menus.cpp:5208
 msgid "All files (*)|*"
 msgstr "Alle filer (*)|*"
 
-#: Menus.cpp:5235
+#: Menus.cpp:5233
 msgid "Edit the metadata tags"
 msgstr "Redigér metadata"
 
-#: Menus.cpp:5236
+#: Menus.cpp:5234
 #: export/Export.cpp:378
 msgid "Edit Metadata"
 msgstr "Redigér metadata"
 
-#: Menus.cpp:5236
+#: Menus.cpp:5234
 msgid "Edit Metadata tags"
 msgstr "Redigér metadata"
 
-#: Menus.cpp:5293
+#: Menus.cpp:5291
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "Samlede al lyd i spor '%s'"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
-#: Menus.cpp:5296
+#: Menus.cpp:5294
 msgid "Render"
 msgstr "Saml"
 
-#: Menus.cpp:5301
+#: Menus.cpp:5299
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
 msgstr "Mixede %d spor ned til et nyt stereolydspor"
 
-#: Menus.cpp:5304
+#: Menus.cpp:5302
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "Mixede %d spor ned til et nyt monolydspor"
 
-#: Menus.cpp:5306
+#: Menus.cpp:5304
 #: Mix.cpp:168
 msgid "Mix and Render"
 msgstr "Mix spor ned"
 
-#: Menus.cpp:5438
+#: Menus.cpp:5439
 msgid "Aligned with zero"
 msgstr "Sæt ved nul"
 
-#: Menus.cpp:5442
+#: Menus.cpp:5443
 msgid "Aligned cursor"
 msgstr "Koordineret med markør"
 
-#: Menus.cpp:5446
+#: Menus.cpp:5447
 msgid "Aligned with selection start"
 msgstr "Koordineret med markeringsstart"
 
-#: Menus.cpp:5450
+#: Menus.cpp:5451
 msgid "Aligned with selection end"
 msgstr "Koordineret med markeringsslut"
 
-#: Menus.cpp:5454
+#: Menus.cpp:5455
 msgid "Aligned end with cursor"
 msgstr "Koordinér slutningen med markøren"
 
-#: Menus.cpp:5458
+#: Menus.cpp:5459
 msgid "Aligned end with selection start"
 msgstr "Koordinér med begyndelsen af markeringen."
 
-#: Menus.cpp:5462
+#: Menus.cpp:5463
 msgid "Aligned end with selection end"
 msgstr "Koordinér med markeringsslutning."
 
-#: Menus.cpp:5466
+#: Menus.cpp:5467
 msgid "Aligned"
 msgstr "Koordineret"
 
-#: Menus.cpp:5501
+#: Menus.cpp:5502
 msgid "Align"
 msgstr "Justér"
 
-#: Menus.cpp:5604
+#: Menus.cpp:5605
 msgid "Synchronizing MIDI and Audio Tracks"
 msgstr "Synkronisér MIDI med lydspor"
 
-#: Menus.cpp:5770
+#: Menus.cpp:5771
 #, c-format
 msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "Opstilling på linie gennemført: MIDI fra %.2f til %.2f sekunder, Audio fra %.2f til %.2f sekunder."
 
-#: Menus.cpp:5773
+#: Menus.cpp:5774
 msgid "Sync MIDI with Audio"
 msgstr "Synkronisér MIDI med lyd"
 
-#: Menus.cpp:5777
+#: Menus.cpp:5778
 #, c-format
 msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "Fejl ved opstilling på linie: Optagelsen er for kort: MIDI fra %.2f til %.2f sekunder, Audio fra %.2f til %.2f sekunder."
 
-#: Menus.cpp:5788
+#: Menus.cpp:5789
 msgid "Internal error reported by alignment process."
 msgstr "Intern fejl rapporteret under forsøg på at opstille på linie."
 
-#: Menus.cpp:5802
+#: Menus.cpp:5803
 msgid "Created new audio track"
 msgstr "Nyt lydspor oprettet"
 
-#: Menus.cpp:5802
-#: Menus.cpp:5824
-#: Menus.cpp:5839
-#: Menus.cpp:5859
+#: Menus.cpp:5803
+#: Menus.cpp:5825
+#: Menus.cpp:5840
+#: Menus.cpp:5860
 msgid "New Track"
 msgstr "Nyt spor"
 
-#: Menus.cpp:5824
+#: Menus.cpp:5825
 msgid "Created new stereo audio track"
 msgstr "Nyt stereo lydspor oprettet"
 
-#: Menus.cpp:5839
+#: Menus.cpp:5840
 msgid "Created new label track"
 msgstr "Nyt etiketspor oprettet"
 
-#: Menus.cpp:5848
+#: Menus.cpp:5849
 msgid "This version of Audacity only allows one time track for each project window."
 msgstr "Denne udgave af Audacity tillader kun en tidslinie for hvert projektvindue."
 
-#: Menus.cpp:5859
+#: Menus.cpp:5860
 msgid "Created new time track"
 msgstr "Nyt tidspor oprettet"
 
-#: Menus.cpp:5985
+#: Menus.cpp:5986
 msgid "Edited labels"
 msgstr "Redigerede etiketter"
 
-#: Menus.cpp:6014
+#: Menus.cpp:6015
 msgid "Save CleanSpeech Preset File As:"
 msgstr "Gem fil med faste CleanSpeech-indstillinger som:"
 
-#: Menus.cpp:6018
+#: Menus.cpp:6019
 msgid "CleanSpeech Presets (*.csp)|*.csp"
 msgstr "Faste CleanSpeech-indstillinger (*.csp)|*.csp"
 
-#: Menus.cpp:6025
+#: Menus.cpp:6026
 #: export/Export.cpp:635
 msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Beklager, stinavnet må maksimalt være 256 karakterer langt."
 
-#: Menus.cpp:6074
+#: Menus.cpp:6075
 msgid "Problem encountered exporting presets."
 msgstr "Der opstod et problem under eksport af faste indstillinger."
 
-#: Menus.cpp:6075
+#: Menus.cpp:6076
 #: export/Export.cpp:503
 msgid "Unable to export"
 msgstr "Eksport mislykkedes"
 
-#: Menus.cpp:6265
+#: Menus.cpp:6266
 msgid "Remove Track"
 msgstr "Fjern spor"
 
-#: Menus.cpp:6265
+#: Menus.cpp:6266
 msgid "Removed audio track(s)"
 msgstr "Fjernede lydspor"
 
-#: Menus.cpp:6340
+#: Menus.cpp:6343
 msgid "Audio Device Info"
 msgstr "Information om lydudstyr"
 
-#: Menus.cpp:6436
-#: Menus.cpp:6492
+#: Menus.cpp:6439
+#: Menus.cpp:6495
 #: export/ExportFFmpeg.cpp:825
 #: export/ExportMP3.cpp:1899
 msgid "Resample"
 msgstr "Ny lydsamplingshastighed"
 
-#: Menus.cpp:6457
-#: TrackPanel.cpp:7296
+#: Menus.cpp:6460
+#: TrackPanel.cpp:7312
 msgid "New sample rate (Hz):"
 msgstr "Ny lydsamplingshastighed (Hz):"
 
-#: Menus.cpp:6481
-#: TrackPanel.cpp:7320
+#: Menus.cpp:6484
+#: TrackPanel.cpp:7336
 msgid "The entered value is invalid"
 msgstr "Den indtastede værdi er ugyldig"
 
-#: Menus.cpp:6490
+#: Menus.cpp:6493
 #, c-format
 msgid "Resampling track %d"
 msgstr "Ændrer lydsamplingshastighed på sporet %d"
 
-#: Menus.cpp:6499
+#: Menus.cpp:6502
 msgid "Resample Track"
 msgstr "Ny lydsamplingshastighed på spor"
 
-#: Menus.cpp:6499
+#: Menus.cpp:6502
 msgid "Resampled audio track(s)"
 msgstr "Lydspor med ny lydsamplingshastighed"
 
@@ -3447,7 +3450,7 @@ msgstr "Mix alle spor ned"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #: MixerBoard.cpp:213
-#: TrackPanel.cpp:4114
+#: TrackPanel.cpp:4130
 #: widgets/ASlider.cpp:373
 msgid "Velocity"
 msgstr "Tonehastighed"
@@ -3457,9 +3460,9 @@ msgstr "Tonehastighed"
 #: MixerBoard.cpp:222
 #: MixerBoard.cpp:225
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4110
-#: TrackPanel.cpp:6703
-#: TrackPanel.cpp:8160
+#: TrackPanel.cpp:4126
+#: TrackPanel.cpp:6719
+#: TrackPanel.cpp:8176
 #: widgets/ASlider.cpp:355
 msgid "Gain"
 msgstr "Forstærkning"
@@ -3473,9 +3476,9 @@ msgstr "Musikinstrument"
 #: MixerBoard.cpp:262
 #: MixerBoard.cpp:264
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4110
-#: TrackPanel.cpp:6648
-#: TrackPanel.cpp:8168
+#: TrackPanel.cpp:4126
+#: TrackPanel.cpp:6664
+#: TrackPanel.cpp:8184
 #: widgets/ASlider.cpp:345
 msgid "Pan"
 msgstr "Panorering"
@@ -3484,7 +3487,7 @@ msgstr "Panorering"
 #: MixerBoard.cpp:277
 #: MixerBoard.cpp:325
 #: MixerBoard.cpp:1436
-#: TrackPanel.cpp:8108
+#: TrackPanel.cpp:8124
 msgid "Mute"
 msgstr "Slå fra"
 
@@ -3492,7 +3495,7 @@ msgstr "Slå fra"
 #: MixerBoard.cpp:290
 #: MixerBoard.cpp:326
 #: MixerBoard.cpp:1486
-#: TrackPanel.cpp:8106
+#: TrackPanel.cpp:8122
 msgid "Solo"
 msgstr "Solo"
 
@@ -3502,12 +3505,12 @@ msgid "Signal Level Meter"
 msgstr "Signalniveau"
 
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4109
+#: TrackPanel.cpp:4125
 msgid "Moved gain slider"
 msgstr "Ændrede på forstærkning"
 
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4109
+#: TrackPanel.cpp:4125
 msgid "Moved pan slider"
 msgstr "Ændrede på panorering"
 
@@ -3568,22 +3571,22 @@ msgstr "Velkommen til Audacity version %s"
 msgid "(Recovered)"
 msgstr "(Genskabt)"
 
-#: Project.cpp:1874
+#: Project.cpp:1875
 #: TrackPanel.cpp:947
 #: toolbars/ControlToolBar.cpp:196
 msgid "Record"
 msgstr "Indspil"
 
-#: Project.cpp:1874
+#: Project.cpp:1875
 #: TrackPanel.cpp:947
 msgid "Recorded Audio"
 msgstr "Indspillet lyd"
 
-#: Project.cpp:1900
+#: Project.cpp:1901
 msgid "Save changes before closing?"
 msgstr "Gem ændringer inden lukning?"
 
-#: Project.cpp:1903
+#: Project.cpp:1904
 msgid ""
 "\n"
 "If saved, the project will have no tracks.\n"
@@ -3599,23 +3602,23 @@ msgstr ""
 "Annullér, Redigér > Fortryd, indtil alle lydspor\n"
 "er åbne. Vælg derefter Filer > Gem projekt"
 
-#: Project.cpp:1906
+#: Project.cpp:1907
 msgid "Save changes?"
 msgstr "Gem ændringer?"
 
-#: Project.cpp:2177
+#: Project.cpp:2183
 msgid "Select one or more audio files..."
 msgstr "Vælg en eller flere lydfiler..."
 
-#: Project.cpp:2213
+#: Project.cpp:2219
 #, c-format
 msgid "%s is already open in another window."
 msgstr "%s er allerede åbent i et andet vindue."
 
-#: Project.cpp:2216
-#: Project.cpp:2383
-#: Project.cpp:2603
-#: Project.cpp:2782
+#: Project.cpp:2222
+#: Project.cpp:2389
+#: Project.cpp:2609
+#: Project.cpp:2788
 msgid "Error Opening Project"
 msgstr "Fejl ved åbning af projekt"
 
@@ -3623,13 +3626,13 @@ msgstr "Fejl ved åbning af projekt"
 #. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
 #. * now be added automatically for the Save Projects dialogues).
-#: Project.cpp:2230
-#: Project.cpp:3566
-#: Project.cpp:3594
+#: Project.cpp:2236
+#: Project.cpp:3572
+#: Project.cpp:3600
 msgid "Audacity projects"
 msgstr "Audacity-projekter"
 
-#: Project.cpp:2283
+#: Project.cpp:2289
 #, c-format
 msgid ""
 "This file was saved by Audacity version %s. The format has changed. \n"
@@ -3651,16 +3654,16 @@ msgstr ""
 "\n"
 "Vil du åbne denne fil nu?"
 
-#: Project.cpp:2293
+#: Project.cpp:2299
 msgid "1.0 or earlier"
 msgstr "1.0 eller tidligere"
 
-#: Project.cpp:2298
-#: Project.cpp:2865
+#: Project.cpp:2304
+#: Project.cpp:2871
 msgid "Warning - Opening Old Project File"
 msgstr "Advarsel - Åbner gammel projektfil"
 
-#: Project.cpp:2332
+#: Project.cpp:2338
 msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
@@ -3672,20 +3675,20 @@ msgstr ""
 "\n"
 "Åbn venligst den egentlige Audacity-projektfil i stedet."
 
-#: Project.cpp:2333
+#: Project.cpp:2339
 msgid "Warning - Backup File Detected"
 msgstr "Advarsel - Sikkerhedskopifil fundet"
 
-#: Project.cpp:2347
+#: Project.cpp:2353
 #: xml/XMLWriter.cpp:329
 msgid "Error Opening File"
 msgstr "Fejl ved åbning af fil"
 
-#: Project.cpp:2355
+#: Project.cpp:2361
 msgid "Error opening file"
 msgstr "Fejl ved åbning af fil"
 
-#: Project.cpp:2361
+#: Project.cpp:2367
 #, c-format
 msgid ""
 "File may be invalid or corrupted: \n"
@@ -3694,38 +3697,38 @@ msgstr ""
 "Filen kan være ufuldstændig eller ødelagt: \n"
 "%s"
 
-#: Project.cpp:2362
+#: Project.cpp:2368
 msgid "Error Opening File or Project"
 msgstr "Fejl under åbning af fil eller projekt"
 
-#: Project.cpp:2382
+#: Project.cpp:2388
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity var ikke i stand til at konvertere dette Audacity 1.0 projekt til det nye format."
 
-#: Project.cpp:2539
+#: Project.cpp:2545
 msgid "Project was recovered"
 msgstr "Projektet blev gendannet"
 
-#: Project.cpp:2539
+#: Project.cpp:2545
 msgid "Recover"
 msgstr "Gendan"
 
-#: Project.cpp:2542
+#: Project.cpp:2548
 msgid "Could not remove old auto save file"
 msgstr "Kunne ikke fjerne gamle, automatisk gemte filer"
 
-#: Project.cpp:2686
-#: Project.cpp:2687
+#: Project.cpp:2692
+#: Project.cpp:2693
 msgid "<unrecognized version -- possibly corrupt project file>"
 msgstr "<ukendt version - måske er projektfilen i stykker>"
 
-#: Project.cpp:2780
+#: Project.cpp:2786
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Kunne ikke finde projektets datamappe: \"%s\""
 
 #. i18n-hint: %s will be replaced by the version number.
-#: Project.cpp:2829
+#: Project.cpp:2835
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3734,11 +3737,11 @@ msgstr ""
 "Denne fil blev gemt i Audacity %s.\n"
 "Du bruger Audacity %s. Du skal måske opgradere til en nyere udgave for at kunne åbne filen."
 
-#: Project.cpp:2833
+#: Project.cpp:2839
 msgid "Can't open project file"
 msgstr "Kan ikke åbne projektfilen"
 
-#: Project.cpp:3077
+#: Project.cpp:3083
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3759,11 +3762,11 @@ msgstr ""
 "\n"
 "Ønsker du at gemme alligevel?"
 
-#: Project.cpp:3078
+#: Project.cpp:3084
 msgid "Warning - Empty Project"
 msgstr "Advarsel - Tomt projekt"
 
-#: Project.cpp:3151
+#: Project.cpp:3157
 #, c-format
 msgid ""
 "Could not save project. Path not found.  Try creating \n"
@@ -3772,14 +3775,14 @@ msgstr ""
 "Kunne ikke gemme projektet. Stien blev ikke fundet. Forsøg at \n"
 "oprette mappen \"%s\", før projektet gemmes med dette navn."
 
-#: Project.cpp:3153
-#: Project.cpp:3190
-#: Project.cpp:3213
-#: Project.cpp:3618
+#: Project.cpp:3159
+#: Project.cpp:3196
+#: Project.cpp:3219
+#: Project.cpp:3624
 msgid "Error Saving Project"
 msgstr "Der opstod en fejl, da projektet blev gemt"
 
-#: Project.cpp:3188
+#: Project.cpp:3194
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -3788,48 +3791,48 @@ msgstr ""
 "Kunne ikke gemme projektet. Måske er \n"
 "%s skrivebeskyttet, eller disken er fuld."
 
-#: Project.cpp:3211
-#: Project.cpp:4468
+#: Project.cpp:3217
+#: Project.cpp:4474
 #: Tags.cpp:1171
-#: effects/Equalization.cpp:1092
+#: effects/Equalization.cpp:1096
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "Kunne ikke skrive til filen \"%s\": %s"
 
-#: Project.cpp:3291
+#: Project.cpp:3297
 #, c-format
 msgid "Saved %s"
 msgstr "%s gemt"
 
-#: Project.cpp:3447
+#: Project.cpp:3453
 #, c-format
 msgid "Imported '%s'"
 msgstr "Importerede '%s'"
 
-#: Project.cpp:3448
+#: Project.cpp:3454
 msgid "Import"
 msgstr "Importér"
 
-#: Project.cpp:3483
+#: Project.cpp:3489
 msgid "Error Importing"
 msgstr "Fejl ved import"
 
-#: Project.cpp:3538
+#: Project.cpp:3544
 msgid "Save Speech As:"
 msgstr "Gem Speech som:"
 
 #. i18n-hint: Do not translate PCM.
-#: Project.cpp:3541
+#: Project.cpp:3547
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM Audio-fil (*.wav)|*.wav"
 
-#: Project.cpp:3548
-#: Project.cpp:3576
+#: Project.cpp:3554
+#: Project.cpp:3582
 msgid "<untitled>"
 msgstr "<uden navn>"
 
-#: Project.cpp:3553
-#: Project.cpp:3581
+#: Project.cpp:3559
+#: Project.cpp:3587
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
@@ -3848,14 +3851,14 @@ msgstr ""
 "Hvis du ønsker at gemme en fil, som kan åbnes af andre programmer, vælg da en af\n"
 "Eksport-kommandoerne."
 
-#: Project.cpp:3554
-#: Project.cpp:3582
+#: Project.cpp:3560
+#: Project.cpp:3588
 #, c-format
 msgid "Save Compressed Project \"%s\" As..."
 msgstr "Gem komprimeret projekt \"%s\" som..."
 
-#: Project.cpp:3559
-#: Project.cpp:3587
+#: Project.cpp:3565
+#: Project.cpp:3593
 msgid ""
 "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3870,13 +3873,13 @@ msgstr ""
 "For at gemme en lydfil, der kan bruges af andre programmer, skal man vælge en af\n"
 "kommandoerne i \"Filer > Eksportér\".\n"
 
-#: Project.cpp:3560
-#: Project.cpp:3588
+#: Project.cpp:3566
+#: Project.cpp:3594
 #, c-format
 msgid "Save Project \"%s\" As..."
 msgstr "Gem projekt \"%s\" som..."
 
-#: Project.cpp:3617
+#: Project.cpp:3623
 msgid ""
 "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
@@ -3884,101 +3887,92 @@ msgstr ""
 "Dette projekt blev ikke gemt, fordi det angivne filnavn ville overskrive et andet projekt.\n"
 "Forsøg venligst igen, og vælg et navn, der ikke er brugt."
 
-#: Project.cpp:3660
+#: Project.cpp:3666
 msgid "Created new project"
 msgstr "Nyt projekt oprettet"
 
-#: Project.cpp:3876
+#: Project.cpp:3882
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Slettede %.2f sekunder ved t=%.2f"
 
-#: Project.cpp:3879
+#: Project.cpp:3885
 msgid "Delete"
 msgstr "Slet"
 
-#: Project.cpp:4063
+#: Project.cpp:4069
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "Der er plads til %d timer og %d minutters optagelse på harddisken."
 
-#: Project.cpp:4066
+#: Project.cpp:4072
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "Der er plads til 1 time og %d minutters optagelse på harddisken."
 
-#: Project.cpp:4069
+#: Project.cpp:4075
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "Der er plads til %d minutters optagelse på harddisken."
 
-#: Project.cpp:4072
+#: Project.cpp:4078
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "Der er plads til %d sekunders optagelse på harddisken."
 
-#: Project.cpp:4075
+#: Project.cpp:4081
 msgid "Out of disk space"
 msgstr "Ikke mere diskplads"
 
-#: Project.cpp:4097
+#: Project.cpp:4103
 msgid "On-demand import and waveform calculation complete."
 msgstr "Ønsket import og beregning af bølgeform fuldendt."
 
-#: Project.cpp:4102
+#: Project.cpp:4108
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
 msgstr "Import fuldendt. Beregner nu %d bølgeform. I alt %2.0f%% fuldendt."
 
-#: Project.cpp:4105
+#: Project.cpp:4111
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "Import fuldendt. Beregner nu bølgeform. %2.0f%% fuldendt."
 
-#: Project.cpp:4440
+#: Project.cpp:4446
 msgid "New Project"
 msgstr "Nyt projekt"
 
-#: Project.cpp:4470
+#: Project.cpp:4476
 msgid "Error Writing Autosave File"
 msgstr "Der opstod en fejl ved sikkerhedskopiering af fil"
 
-#: Project.cpp:4485
+#: Project.cpp:4491
 msgid "Could not create autosave file: "
 msgstr "Kunne ikke oprette sikkerhedskopi af filen: "
 
-#: Project.cpp:4504
+#: Project.cpp:4510
 msgid "Could not remove old autosave file: "
 msgstr "Kunne ikke fjerne tidligere sikkerhedskopi af filen:"
 
-#: Project.cpp:4533
+#: Project.cpp:4539
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Hastighed: %d"
 
-#: Resample.cpp:64
-msgid "Libresample by Dominic Mazzoni and Julius Smith"
-msgstr "Libresample af Dominic Mazzoni og Julius Smith"
-
-#: Resample.cpp:75
+#: Resample.cpp:155
 msgid "High-quality Sinc Interpolation"
 msgstr "Højkvalitet Sinc-interpolation"
 
-#: Resample.cpp:77
+#: Resample.cpp:157
 msgid "Fast Sinc Interpolation"
 msgstr "Hurtig Sinc-interpolation"
 
-#: Resample.cpp:143
-msgid "Libsamplerate by Erik de Castro Lopo"
-msgstr "Libsamplerate af Erik de Castro Lopo"
-
-#: Resample.cpp:232
+#: Resample.cpp:280
 #, c-format
 msgid "Libsamplerate error: %d\n"
 msgstr "Fejl ved Libsamplerate: %d\n"
 
-#: Resample.cpp:254
-#: Resample.cpp:264
+#: Resample.h:54
 msgid "Resampling disabled."
 msgstr "Ny lydsamplingshastighed slået fra."
 
@@ -4113,7 +4107,7 @@ msgstr "Udstyr"
 
 #: Screenshot.cpp:388
 #: toolbars/TranscriptionToolBar.cpp:84
-#: toolbars/TranscriptionToolBar.cpp:256
+#: toolbars/TranscriptionToolBar.cpp:257
 msgid "Transcription"
 msgstr "Hastighed"
 
@@ -4199,13 +4193,13 @@ msgstr "Advarsel: Længde i skrivesekvens"
 msgid "Memory allocation failed -- NewSamples"
 msgstr "Ikke mulighed for nok tildeling af hukommelse i funktionen 'NewSamples()'"
 
-#: ShuttleGui.cpp:2175
+#: ShuttleGui.cpp:2181
 #: effects/Effect.cpp:408
 #: effects/audiounits/AudioUnitEffect.cpp:877
 msgid "Pre&view"
 msgstr "Forhånds&visning"
 
-#: ShuttleGui.cpp:2182
+#: ShuttleGui.cpp:2188
 msgid "&Debug"
 msgstr "Ret &fejl"
 
@@ -4440,7 +4434,7 @@ msgstr ""
 " %s\n"
 "er allerede til stede."
 
-#: TimeDialog.h:29
+#: TimeDialog.h:32
 #: TimerRecordDialog.cpp:246
 #: TimerRecordDialog.cpp:373
 #: TimerRecordDialog.cpp:385
@@ -4689,20 +4683,20 @@ msgid "Click and drag to stretch within selected region."
 msgstr "Klik og træk for at strække inden for det markerede område."
 
 #: TrackPanel.cpp:1990
-#: TrackPanel.cpp:4753
-#: TrackPanel.cpp:4791
-#: TrackPanel.cpp:5065
-#: TrackPanel.cpp:7451
-#: TrackPanel.cpp:7471
+#: TrackPanel.cpp:4769
+#: TrackPanel.cpp:4807
+#: TrackPanel.cpp:5081
+#: TrackPanel.cpp:7467
+#: TrackPanel.cpp:7487
 msgid "Modified Label"
 msgstr "Ændret etiket"
 
 #: TrackPanel.cpp:1991
-#: TrackPanel.cpp:4754
-#: TrackPanel.cpp:4792
-#: TrackPanel.cpp:5066
-#: TrackPanel.cpp:7452
-#: TrackPanel.cpp:7472
+#: TrackPanel.cpp:4770
+#: TrackPanel.cpp:4808
+#: TrackPanel.cpp:5082
+#: TrackPanel.cpp:7468
+#: TrackPanel.cpp:7488
 msgid "Label Edit"
 msgstr "Etiketredigering"
 
@@ -4733,272 +4727,272 @@ msgstr "Justeret niveau."
 msgid "Envelope"
 msgstr "Niveau"
 
-#: TrackPanel.cpp:2594
+#: TrackPanel.cpp:2601
 msgid "Moved clip to another track"
 msgstr "Flyttede klip til et andet spor"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2600
+#: TrackPanel.cpp:2607
 msgid "right"
 msgstr "højre"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2602
+#: TrackPanel.cpp:2609
 msgid "left"
 msgstr "venstre"
 
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2604
+#: TrackPanel.cpp:2611
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "Tidsforskudte lydspor/-klip %s %.02f sekunder"
 
-#: TrackPanel.cpp:2608
+#: TrackPanel.cpp:2615
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "Tidsforskydning"
 
-#: TrackPanel.cpp:3541
+#: TrackPanel.cpp:3551
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "Vælg 'Bølgeform' i menuen på Lydspor for at få adgang til Tegneværktøjet."
 
-#: TrackPanel.cpp:3558
+#: TrackPanel.cpp:3568
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "Zoom ind, indtil du kan se de enkelte datapunkter, så kan du bruge Tegneværktøjet."
 
-#: TrackPanel.cpp:3835
+#: TrackPanel.cpp:3845
 msgid "Moved Sample"
 msgstr "Flyttet datapunkt"
 
-#: TrackPanel.cpp:3836
+#: TrackPanel.cpp:3846
 msgid "Sample Edit"
 msgstr "Redigering af datapunkt"
 
-#: TrackPanel.cpp:3937
+#: TrackPanel.cpp:3953
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "Fjernede spor '%s'."
 
-#: TrackPanel.cpp:3939
+#: TrackPanel.cpp:3955
 msgid "Track Remove"
 msgstr "Fjern spor"
 
-#: TrackPanel.cpp:4114
+#: TrackPanel.cpp:4130
 msgid "Moved velocity slider"
 msgstr "Ændrede tonehastigheden"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4306
-#: TrackPanel.cpp:7389
+#: TrackPanel.cpp:4322
+#: TrackPanel.cpp:7405
 msgid "up"
 msgstr "op"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4319
-#: TrackPanel.cpp:7391
+#: TrackPanel.cpp:4335
+#: TrackPanel.cpp:7407
 msgid "down"
 msgstr "ned"
 
 #. i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
 #. * If the word order is different in your language ask on the translators list about what
 #. * to do.
-#: TrackPanel.cpp:4334
-#: TrackPanel.cpp:7383
+#: TrackPanel.cpp:4350
+#: TrackPanel.cpp:7399
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "Flyttede '%s' %s"
 
-#: TrackPanel.cpp:4337
-#: TrackPanel.cpp:7392
+#: TrackPanel.cpp:4353
+#: TrackPanel.cpp:7408
 msgid "Move Track"
 msgstr "Flyt spor"
 
-#: TrackPanel.cpp:4962
+#: TrackPanel.cpp:4978
 msgid "Expand"
 msgstr "Udvid"
 
-#: TrackPanel.cpp:4962
+#: TrackPanel.cpp:4978
 msgid "Expanded Cut Line"
 msgstr "Udvidede skærelinie"
 
-#: TrackPanel.cpp:4975
+#: TrackPanel.cpp:4991
 msgid "Merge"
 msgstr "Sammenføj"
 
-#: TrackPanel.cpp:4975
+#: TrackPanel.cpp:4991
 msgid "Merged Clips"
 msgstr "Sammenføjede klip"
 
-#: TrackPanel.cpp:4986
+#: TrackPanel.cpp:5002
 msgid "Remove"
 msgstr "Fjern"
 
-#: TrackPanel.cpp:4986
+#: TrackPanel.cpp:5002
 msgid "Removed Cut Line"
 msgstr "Fjernede skærelinie"
 
-#: TrackPanel.cpp:6648
+#: TrackPanel.cpp:6664
 msgid "Adjusted Pan"
 msgstr "Justerede panorering"
 
-#: TrackPanel.cpp:6703
+#: TrackPanel.cpp:6719
 msgid "Adjusted gain"
 msgstr "Justerede forstærkning"
 
-#: TrackPanel.cpp:6838
+#: TrackPanel.cpp:6854
 msgid "Can't delete track with active audio"
 msgstr "Kan ikke slette lydspor med aktiv lyd"
 
-#: TrackPanel.cpp:6988
+#: TrackPanel.cpp:7004
 msgid "Stereo, "
 msgstr "Stereo, "
 
-#: TrackPanel.cpp:6991
+#: TrackPanel.cpp:7007
 msgid "Mono, "
 msgstr "Mono, "
 
-#: TrackPanel.cpp:6993
+#: TrackPanel.cpp:7009
 msgid "Left, "
 msgstr "Venstre,"
 
-#: TrackPanel.cpp:6995
+#: TrackPanel.cpp:7011
 msgid "Right, "
 msgstr "Højre,"
 
-#: TrackPanel.cpp:7007
+#: TrackPanel.cpp:7023
 msgid "Left Channel"
 msgstr "Venstre kanal"
 
-#: TrackPanel.cpp:7007
+#: TrackPanel.cpp:7023
 msgid "Right Channel"
 msgstr "Højre kanal"
 
-#: TrackPanel.cpp:7008
+#: TrackPanel.cpp:7024
 msgid "Mono"
 msgstr "Mono"
 
-#: TrackPanel.cpp:7017
-#: TrackPanel.cpp:7186
+#: TrackPanel.cpp:7033
+#: TrackPanel.cpp:7202
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "Ændrede '%s' til %s"
 
-#: TrackPanel.cpp:7020
+#: TrackPanel.cpp:7036
 msgid "Channel"
 msgstr "Kanal"
 
-#: TrackPanel.cpp:7061
+#: TrackPanel.cpp:7077
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "Opdel stereospor '%s'"
 
-#: TrackPanel.cpp:7063
+#: TrackPanel.cpp:7079
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "Opdel stereo i mono '%s'"
 
-#: TrackPanel.cpp:7095
+#: TrackPanel.cpp:7111
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "Har gjort '%s' til et stereospor"
 
-#: TrackPanel.cpp:7098
+#: TrackPanel.cpp:7114
 msgid "Make Stereo"
 msgstr "Gør til stereo"
 
-#: TrackPanel.cpp:7143
+#: TrackPanel.cpp:7159
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "Ændrede '%s' til %d Hz"
 
-#: TrackPanel.cpp:7145
+#: TrackPanel.cpp:7161
 msgid "Rate Change"
 msgstr "Ændret rate"
 
-#: TrackPanel.cpp:7190
+#: TrackPanel.cpp:7206
 msgid "Format Change"
 msgstr "Formatændring"
 
-#: TrackPanel.cpp:7276
+#: TrackPanel.cpp:7292
 msgid "Set Rate"
 msgstr "Vælg hastighed"
 
-#: TrackPanel.cpp:7340
+#: TrackPanel.cpp:7356
 msgid "Change lower speed limit (%) to:"
 msgstr "Ret nederste hastighedsgrænse (%) til:"
 
-#: TrackPanel.cpp:7341
-#: TrackPanel.cpp:7342
+#: TrackPanel.cpp:7357
+#: TrackPanel.cpp:7358
 msgid "Lower speed limit"
 msgstr "Nedre hastighedsgrænse"
 
-#: TrackPanel.cpp:7347
+#: TrackPanel.cpp:7363
 msgid "Change upper speed limit (%) to:"
 msgstr "Ret øverste hastighedsgrænse (%) til:"
 
-#: TrackPanel.cpp:7348
-#: TrackPanel.cpp:7349
+#: TrackPanel.cpp:7364
+#: TrackPanel.cpp:7365
 msgid "Upper speed limit"
 msgstr "Øvre hastigghedsgrænse"
 
-#: TrackPanel.cpp:7357
+#: TrackPanel.cpp:7373
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "Sæt område til '%d' - '%d'"
 
 #. i18n-hint: (verb)
-#: TrackPanel.cpp:7362
+#: TrackPanel.cpp:7378
 msgid "Set Range"
 msgstr "Vælg område"
 
-#: TrackPanel.cpp:7422
+#: TrackPanel.cpp:7438
 msgid "Change track name to:"
 msgstr "Ændr sporets navn til:"
 
-#: TrackPanel.cpp:7423
+#: TrackPanel.cpp:7439
 msgid "Track Name"
 msgstr "Navn på spor"
 
-#: TrackPanel.cpp:7436
+#: TrackPanel.cpp:7452
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "Omdøbte '%s' til '%s'"
 
-#: TrackPanel.cpp:7439
+#: TrackPanel.cpp:7455
 msgid "Name Change"
 msgstr "Navneændring"
 
 #. i18n-hint: (noun) This is the font for the label track.
-#: TrackPanel.cpp:7507
+#: TrackPanel.cpp:7523
 msgid "Label Track Font"
 msgstr "Skrifttype til etiketspor"
 
 #. i18n-hint: (noun) The name of the typeface
-#: TrackPanel.cpp:7520
-#: TrackPanel.cpp:7527
+#: TrackPanel.cpp:7536
+#: TrackPanel.cpp:7543
 msgid "Face name"
 msgstr "Skriftnavn"
 
 #. i18n-hint: (noun) The size of the typeface
-#: TrackPanel.cpp:7532
-#: TrackPanel.cpp:7539
+#: TrackPanel.cpp:7548
+#: TrackPanel.cpp:7555
 msgid "Face size"
 msgstr "Skriftstørrelse"
 
-#: TrackPanel.cpp:7829
+#: TrackPanel.cpp:7845
 msgid "Stereo, 999999Hz"
 msgstr "Stereo, 999.999 Hz"
 
 #: TrackPanelAx.cpp:286
-#: TrackPanelAx.cpp:414
+#: TrackPanelAx.cpp:422
 msgid "TrackView"
 msgstr "Visning af spor"
 
 #. i18n-hint: The %d is replaced by th enumber of the track.
 #: TrackPanelAx.cpp:302
-#: TrackPanelAx.cpp:429
+#: TrackPanelAx.cpp:437
 #, c-format
 msgid "Track %d"
 msgstr "Spor %d"
@@ -5006,23 +5000,31 @@ msgstr "Spor %d"
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track mute is on.
 #: TrackPanelAx.cpp:310
-#: TrackPanelAx.cpp:435
+#: TrackPanelAx.cpp:443
 msgid " Mute On"
 msgstr " Slå fra aktiveret"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track solo is on.
 #: TrackPanelAx.cpp:317
-#: TrackPanelAx.cpp:440
+#: TrackPanelAx.cpp:448
 msgid " Solo On"
 msgstr " Solo aktiveret"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: TrackPanelAx.cpp:323
-#: TrackPanelAx.cpp:444
+#: TrackPanelAx.cpp:452
 msgid " Select On"
 msgstr " Spor valgt"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this track is shown with a sync-locked icon.
+#. The absence of a dash between Sync and Locked is deliberate -
+#. if present, Jaws reads it as "dash".
+#: TrackPanelAx.cpp:331
+msgid " Sync Lock Selected"
+msgstr " Synkroniseringslås valgt"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5273,7 +5275,7 @@ msgstr "Automatisk reduktion arbejder..."
 #: effects/audiounits/AudioUnitEffect.cpp:882
 #: effects/nyquist/Nyquist.cpp:1488
 #: widgets/ErrorDialog.cpp:142
-#: widgets/MultiDialog.cpp:110
+#: widgets/MultiDialog.cpp:111
 msgid "OK"
 msgstr "OK"
 
@@ -5606,52 +5608,52 @@ msgstr "Tærskel: %d dB"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: effects/Compressor.cpp:725
-#: effects/Compressor.cpp:728
+#: effects/Compressor.cpp:729
 #, c-format
 msgid "%3d dB"
 msgstr "%3d dB"
 
-#: effects/Compressor.cpp:727
+#: effects/Compressor.cpp:728
 #, c-format
 msgid "Noise Floor %d dB"
 msgstr "Grundstøj %d dB"
 
-#: effects/Compressor.cpp:731
+#: effects/Compressor.cpp:733
 #, c-format
 msgid "Ratio %.0f to 1"
 msgstr "Forhold %.0f til 1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
-#: effects/Compressor.cpp:734
+#: effects/Compressor.cpp:736
 #, c-format
 msgid "%.0f:1"
 msgstr "%.0f:1"
 
-#: effects/Compressor.cpp:737
+#: effects/Compressor.cpp:739
 #, c-format
 msgid "Ratio %.1f to 1"
 msgstr "Forhold %.1f til 1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
-#: effects/Compressor.cpp:740
+#: effects/Compressor.cpp:742
 #, c-format
 msgid "%.1f:1"
 msgstr "%.1f:1"
 
-#: effects/Compressor.cpp:743
+#: effects/Compressor.cpp:746
 #, c-format
 msgid "Attack Time %.1f secs"
 msgstr "Reaktionstid %.1f sekunder"
 
-#: effects/Compressor.cpp:744
 #: effects/Compressor.cpp:747
+#: effects/Compressor.cpp:751
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f sekunder"
 
-#: effects/Compressor.cpp:746
+#: effects/Compressor.cpp:750
 #, c-format
 msgid "Decay Time %.1f secs"
 msgstr "Frakoblingstid %.1f sekunder"
@@ -5945,7 +5947,7 @@ msgstr "Varighed:"
 #. * minutes, seconds and milliseconds (1/1000 second)
 #: effects/DtmfGen.cpp:473
 #: effects/Noise.cpp:218
-#: effects/Silence.cpp:44
+#: effects/Silence.cpp:42
 #: effects/ToneGen.cpp:313
 #: effects/ToneGen.cpp:361
 #: widgets/TimeTextCtrl.cpp:308
@@ -5956,7 +5958,7 @@ msgstr "tt:mm:ss + millisekunder"
 #. * minutes, seconds and samples (at the current project sample rate)
 #: effects/DtmfGen.cpp:473
 #: effects/Noise.cpp:218
-#: effects/Silence.cpp:40
+#: effects/Silence.cpp:38
 #: effects/ToneGen.cpp:313
 #: effects/ToneGen.cpp:361
 #: widgets/TimeTextCtrl.cpp:317
@@ -5977,8 +5979,8 @@ msgstr "Varighed af klang:"
 
 #: effects/DtmfGen.cpp:491
 #: effects/DtmfGen.cpp:493
-#: effects/DtmfGen.cpp:569
 #: effects/DtmfGen.cpp:570
+#: effects/DtmfGen.cpp:572
 msgid "ms"
 msgstr "ms."
 
@@ -6085,99 +6087,113 @@ msgid "EQCurves.xml and EQDefaultCurves.xml missing"
 msgstr "EQCurves.xml og EQDefaultCurves.xml mangler"
 
 #: effects/Equalization.cpp:1007
-#: effects/Equalization.cpp:1033
 #: effects/Equalization.cpp:1034
+#: effects/Equalization.cpp:1037
+#: effects/Equalization.cpp:1038
 msgid "unnamed"
 msgstr "unavngivet"
 
 #. i18n-hint: EQ stands for 'Equalization'.
-#: effects/Equalization.cpp:1029
-msgid "Error Loading EQ Curve"
-msgstr "Fejl ved indlæsning af udligningskurve (EQ)"
+#: effects/Equalization.cpp:1028
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Fejl ved indlæsning af udligningskurver (EQ) fra filen:\n"
+"%s\n"
+"Fejlbeskeden lyder:\n"
+"%s"
 
-#: effects/Equalization.cpp:1094
+#: effects/Equalization.cpp:1031
+msgid "Error Loading EQ Curves"
+msgstr "Fejl ved indlæsning af udligningskurver (EQ)"
+
+#: effects/Equalization.cpp:1098
 msgid "Error Saving Equalization Curves"
 msgstr "Fejl, da udligningskurver (EQ) blev forsøgt gemt"
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
-#: effects/Equalization.cpp:1117
+#: effects/Equalization.cpp:1121
 msgid "Equalization, by Martyn Shaw && Mitch Golden"
 msgstr "Udligning (EQ), af Martyn Shaw og Mitch Golden"
 
-#: effects/Equalization.cpp:1138
+#: effects/Equalization.cpp:1142
 msgid "Max dB"
 msgstr "Max. dB"
 
-#: effects/Equalization.cpp:1140
+#: effects/Equalization.cpp:1144
 msgid "Min dB"
 msgstr "Min. dB"
 
-#: effects/Equalization.cpp:1219
+#: effects/Equalization.cpp:1223
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1236
+#: effects/Equalization.cpp:1240
 msgid "&Draw Curves"
 msgstr "&Tegn kurver"
 
-#: effects/Equalization.cpp:1238
+#: effects/Equalization.cpp:1242
 msgid "Draw Curves"
 msgstr "Tegn kurver"
 
-#: effects/Equalization.cpp:1242
+#: effects/Equalization.cpp:1246
 msgid "&Graphic EQ"
 msgstr "&Grafisk modforvrænger (EQ)"
 
-#: effects/Equalization.cpp:1244
+#: effects/Equalization.cpp:1248
 msgid "Graphic EQ"
 msgstr "Grafisk modforvrænger (EQ)"
 
-#: effects/Equalization.cpp:1257
+#: effects/Equalization.cpp:1261
 msgid "Li&near Frequency Scale"
 msgstr "Li&neær frekvensskala"
 
-#: effects/Equalization.cpp:1258
+#: effects/Equalization.cpp:1262
 msgid "Linear Frequency Scale"
 msgstr "Lineær frekvensskala"
 
-#: effects/Equalization.cpp:1267
+#: effects/Equalization.cpp:1271
 msgid "Length of &Filter:"
 msgstr "Længde på &filter:"
 
-#: effects/Equalization.cpp:1273
+#: effects/Equalization.cpp:1277
 msgid "Length of Filter"
 msgstr "Længde på filter"
 
-#: effects/Equalization.cpp:1289
+#: effects/Equalization.cpp:1294
 msgid "&Select Curve:"
 msgstr "Vælg &kurve:"
 
-#: effects/Equalization.cpp:1299
+#: effects/Equalization.cpp:1304
 msgid "S&ave/Manage Curves..."
 msgstr "G&em/håndtér kurver..."
 
-#: effects/Equalization.cpp:1300
+#: effects/Equalization.cpp:1305
 msgid "Save and Manage Curves"
 msgstr "Gem og håndtér kurver"
 
-#: effects/Equalization.cpp:1303
+#: effects/Equalization.cpp:1308
 msgid "Fla&tten"
 msgstr "Gør f&lad"
 
-#: effects/Equalization.cpp:1305
+#: effects/Equalization.cpp:1310
 msgid "&Invert"
 msgstr "Spe&jlvend (lodret)"
 
-#: effects/Equalization.cpp:1307
+#: effects/Equalization.cpp:1312
 msgid "G&rids"
 msgstr "Fastholdelsespunkte&r"
 
-#: effects/Equalization.cpp:1372
+#: effects/Equalization.cpp:1377
 msgid "Select Curve"
 msgstr "Vælg kurve"
 
-#: effects/Equalization.cpp:1388
+#: effects/Equalization.cpp:1393
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
@@ -6185,61 +6201,61 @@ msgstr ""
 "Giv denne udligningskurve (EQ) et nyt navn for at anvende den til en gruppe.\n"
 "Anvend 'Håndtér liste over kurver...'-knappen, omdøb kurven 'unavngiven' og brug den så."
 
-#: effects/Equalization.cpp:1389
+#: effects/Equalization.cpp:1394
 msgid "EQ Curve needs a different name"
 msgstr "Udligningskurven (EQ) skal have et andet navn"
 
-#: effects/Equalization.cpp:1711
+#: effects/Equalization.cpp:1717
 msgid "Curve not found"
 msgstr "Kurven blev ikke fundet"
 
-#: effects/Equalization.cpp:1711
+#: effects/Equalization.cpp:1717
 msgid "Requested curve not found, using 'unnamed'"
 msgstr "Den ønskede kurve findes ikke. I stedet bruges 'Uden navn'"
 
-#: effects/Equalization.cpp:2823
-#: effects/Equalization.cpp:2828
+#: effects/Equalization.cpp:2829
+#: effects/Equalization.cpp:2834
 msgid "Manage Curves List"
 msgstr "Håndtér liste over kurser"
 
-#: effects/Equalization.cpp:2827
+#: effects/Equalization.cpp:2833
 msgid "Manage Curves"
 msgstr "Håndtér kurver"
 
-#: effects/Equalization.cpp:2860
+#: effects/Equalization.cpp:2866
 msgid "&Curves"
 msgstr "&Kurver"
 
-#: effects/Equalization.cpp:2864
+#: effects/Equalization.cpp:2870
 msgid "Curve Name"
 msgstr "Navn på kurve"
 
-#: effects/Equalization.cpp:2871
+#: effects/Equalization.cpp:2877
 msgid "&Rename..."
 msgstr "O&mdøb..."
 
-#: effects/Equalization.cpp:2872
+#: effects/Equalization.cpp:2878
 msgid "D&elete..."
 msgstr "Sl&et..."
 
-#: effects/Equalization.cpp:2873
+#: effects/Equalization.cpp:2879
 msgid "I&mport..."
 msgstr "&Importér..."
 
-#: effects/Equalization.cpp:2874
+#: effects/Equalization.cpp:2880
 msgid "E&xport..."
 msgstr "&Eksportér..."
 
-#: effects/Equalization.cpp:2875
+#: effects/Equalization.cpp:2881
 msgid "&Get More..."
 msgstr "&Hent mere..."
 
-#: effects/Equalization.cpp:2882
+#: effects/Equalization.cpp:2888
 #: widgets/ErrorDialog.cpp:139
 msgid "Help"
 msgstr "Hjælp"
 
-#: effects/Equalization.cpp:2883
+#: effects/Equalization.cpp:2889
 msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
@@ -6247,111 +6263,111 @@ msgstr ""
 "Omdøb 'unavngiven' for at gemme et nyt element.\n"
 "'OK' gemmer alle ændringer, 'Annullér' gør ikke."
 
-#: effects/Equalization.cpp:2918
+#: effects/Equalization.cpp:2924
 msgid "'unnamed' always stays at the bottom of the list"
 msgstr "'unavngiven' vil altid stå i bunden af listen"
 
-#: effects/Equalization.cpp:2918
-#: effects/Equalization.cpp:3219
+#: effects/Equalization.cpp:2924
+#: effects/Equalization.cpp:3225
 msgid "'unnamed' is special"
 msgstr "'unavngiven' er speciel"
 
-#: effects/Equalization.cpp:3012
+#: effects/Equalization.cpp:3018
 msgid "' to..."
 msgstr "' til..."
 
-#: effects/Equalization.cpp:3012
-#: effects/Equalization.cpp:3015
+#: effects/Equalization.cpp:3018
+#: effects/Equalization.cpp:3021
 msgid "Rename '"
 msgstr "Omdøb '"
 
-#: effects/Equalization.cpp:3013
+#: effects/Equalization.cpp:3019
 msgid "Rename..."
 msgstr "Omdøb..."
 
-#: effects/Equalization.cpp:3036
+#: effects/Equalization.cpp:3042
 msgid "Name is the same as the original one"
 msgstr "Navnet er identisk med det oprindelige"
 
-#: effects/Equalization.cpp:3036
+#: effects/Equalization.cpp:3042
 msgid "Same name"
 msgstr "Samme navn"
 
-#: effects/Equalization.cpp:3039
+#: effects/Equalization.cpp:3045
 msgid "'?"
 msgstr "'?"
 
-#: effects/Equalization.cpp:3039
+#: effects/Equalization.cpp:3045
 msgid "Overwrite existing curve '"
 msgstr "Overskriv eksisterende kurve '"
 
-#: effects/Equalization.cpp:3040
+#: effects/Equalization.cpp:3046
 msgid "Curve exists"
 msgstr "Kurve findes allerede"
 
-#: effects/Equalization.cpp:3111
+#: effects/Equalization.cpp:3117
 msgid "You cannot delete the 'unnamed' curve."
 msgstr "En unavngiven kurve kan ikke slettes"
 
-#: effects/Equalization.cpp:3112
-#: effects/Equalization.cpp:3161
+#: effects/Equalization.cpp:3118
+#: effects/Equalization.cpp:3167
 msgid "Can't delete 'unnamed'"
 msgstr "Kan ikke slette 'unavngiven'"
 
-#: effects/Equalization.cpp:3118
-#: effects/Equalization.cpp:3147
+#: effects/Equalization.cpp:3124
+#: effects/Equalization.cpp:3153
 msgid "' ?"
 msgstr "' ?"
 
-#: effects/Equalization.cpp:3118
-#: effects/Equalization.cpp:3147
+#: effects/Equalization.cpp:3124
+#: effects/Equalization.cpp:3153
 msgid "Delete '"
 msgstr "Slet '"
 
-#: effects/Equalization.cpp:3121
-#: effects/Equalization.cpp:3151
+#: effects/Equalization.cpp:3127
+#: effects/Equalization.cpp:3157
 #: export/ExportFFmpegDialogs.cpp:1664
 msgid "Confirm Deletion"
 msgstr "Bekræft sletning"
 
-#: effects/Equalization.cpp:3144
+#: effects/Equalization.cpp:3150
 msgid "Delete "
 msgstr "Slet"
 
-#: effects/Equalization.cpp:3144
+#: effects/Equalization.cpp:3150
 msgid "items?"
 msgstr "elementer?"
 
-#: effects/Equalization.cpp:3160
+#: effects/Equalization.cpp:3166
 msgid "You cannot delete the 'unnamed' curve, it is special."
 msgstr "Du kan ikke slette kurven 'unavngiven', den er speciel."
 
-#: effects/Equalization.cpp:3177
+#: effects/Equalization.cpp:3183
 msgid "Choose an EQ curve file"
 msgstr "Vælg en udligningskurve"
 
-#: effects/Equalization.cpp:3177
+#: effects/Equalization.cpp:3183
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
 msgstr "XML-filer (*.xml;*.XML)|*.xml;*.XML"
 
-#: effects/Equalization.cpp:3197
+#: effects/Equalization.cpp:3203
 msgid "Export EQ curves as..."
 msgstr "Eksportér udligningskurver som..."
 
-#: effects/Equalization.cpp:3219
+#: effects/Equalization.cpp:3225
 msgid "You cannot export 'unnamed' curve"
 msgstr "Du kan ikke eksportere kurven 'unavngiven'"
 
-#: effects/Equalization.cpp:3229
+#: effects/Equalization.cpp:3235
 #, c-format
 msgid "%d curves exported to %s"
 msgstr "%d kurver eksporteret til %s"
 
-#: effects/Equalization.cpp:3230
+#: effects/Equalization.cpp:3236
 msgid "Curves exported"
 msgstr "Kurver eksporteret"
 
-#: effects/Equalization.cpp:3233
+#: effects/Equalization.cpp:3239
 msgid "No curves exported"
 msgstr "Ingen kurver eksporteret"
 
@@ -7101,7 +7117,6 @@ msgstr "Forhåndsudjævningsvarighed"
 #. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:156
 #: effects/ScoreAlignDialog.cpp:161
-#, fuzzy
 msgid "Line Time"
 msgstr "Sluttid"
 
@@ -7136,7 +7151,7 @@ msgstr "%.2f sekunder"
 msgid "%.3f"
 msgstr "%.3f"
 
-#: effects/Silence.cpp:33
+#: effects/Silence.cpp:45
 msgid "Silence Generator"
 msgstr "Stilhedsgenerator"
 
@@ -7304,42 +7319,42 @@ msgid "All tracks must have the same sample rate"
 msgstr "Alle spor skal have den samme lydsamplingshastighed"
 
 #: effects/TruncSilence.cpp:143
-#: effects/TruncSilence.cpp:859
+#: effects/TruncSilence.cpp:861
 msgid "Truncate Silence"
 msgstr "Forkort stilhed"
 
-#: effects/TruncSilence.cpp:869
+#: effects/TruncSilence.cpp:871
 msgid "by Lynn Allan && Philip Van Baren"
 msgstr "af Lynn Allan og Philip van Baren"
 
-#: effects/TruncSilence.cpp:883
+#: effects/TruncSilence.cpp:885
 msgid "Min silence duration:"
 msgstr "Min. varighed af stilhed:"
 
-#: effects/TruncSilence.cpp:886
-#: effects/TruncSilence.cpp:890
-#: widgets/TimeTextCtrl.cpp:1633
+#: effects/TruncSilence.cpp:888
+#: effects/TruncSilence.cpp:892
+#: widgets/TimeTextCtrl.cpp:1636
 msgid "milliseconds"
 msgstr "millisekunder"
 
-#: effects/TruncSilence.cpp:887
+#: effects/TruncSilence.cpp:889
 msgid "Max silence duration:"
 msgstr "Max. varighed af stilhed:"
 
-#: effects/TruncSilence.cpp:891
+#: effects/TruncSilence.cpp:893
 msgid "Silence compression:"
 msgstr "Kompression af stilhed"
 
 #. i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1
-#: effects/TruncSilence.cpp:895
+#: effects/TruncSilence.cpp:897
 msgid ":1"
 msgstr ":1"
 
-#: effects/TruncSilence.cpp:896
+#: effects/TruncSilence.cpp:898
 msgid "Threshold for silence:"
 msgstr "Tærskel for stilhed:"
 
-#: effects/TruncSilence.cpp:922
+#: effects/TruncSilence.cpp:924
 msgid ""
 "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
@@ -9253,23 +9268,23 @@ msgstr "kopiér til"
 msgid "read directly"
 msgstr "læs direkte"
 
-#: import/ImportPCM.cpp:258
+#: import/ImportPCM.cpp:259
 msgid "Choose an import method"
 msgstr "Vælg en måde at importere på"
 
-#: import/ImportPCM.cpp:261
+#: import/ImportPCM.cpp:263
 msgid "Make a &copy of the files before editing (safer)"
 msgstr "Tag en &kopi af filerne før redigering (sikrere)"
 
-#: import/ImportPCM.cpp:264
+#: import/ImportPCM.cpp:267
 msgid "Read the files &directly from the original (faster)"
 msgstr "Læs filerne &direkte fra originalen (hurtigere)"
 
-#: import/ImportPCM.cpp:267
+#: import/ImportPCM.cpp:271
 msgid "Don't &warn again and always use my choice above"
 msgstr "Ad&var mig ikke igen. Brug altid mine valg ovenfor"
 
-#: import/ImportPlugin.h:141
+#: import/ImportPlugin.h:142
 #: import/ImportRaw.cpp:210
 #, c-format
 msgid "Importing %s"
@@ -9508,25 +9523,25 @@ msgstr "Vælg en placering for den midlertidige mappe"
 msgid "unavailable - above location doesn't exist"
 msgstr "utilgængelig - den ovenfor angivne placering findes ikke"
 
-#: prefs/DirectoriesPrefs.cpp:195
+#: prefs/DirectoriesPrefs.cpp:196
 #, c-format
 msgid "Directory %s does not exist. Create it?"
 msgstr "Mappen %s findes ikke. Skal den oprettes?"
 
-#: prefs/DirectoriesPrefs.cpp:197
+#: prefs/DirectoriesPrefs.cpp:198
 msgid "New Temporary Directory"
 msgstr "Ny midlertidig mappe"
 
-#: prefs/DirectoriesPrefs.cpp:215
+#: prefs/DirectoriesPrefs.cpp:216
 #, c-format
 msgid "Directory %s is not writable"
 msgstr "Kan ikke skrive til mappen %s"
 
-#: prefs/DirectoriesPrefs.cpp:229
+#: prefs/DirectoriesPrefs.cpp:230
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Ændringen af den midlertidige mappe træder først i kraft, når Audacity starter næste gang."
 
-#: prefs/DirectoriesPrefs.cpp:230
+#: prefs/DirectoriesPrefs.cpp:231
 msgid "Temp Directory Update"
 msgstr "Opdatering af midlertidig mappe"
 
@@ -9575,8 +9590,8 @@ msgid "Extended Import"
 msgstr " Udvidet import"
 
 #: prefs/ExtImportPrefs.cpp:92
-msgid "Attempt to use filter in OpenFile dialog first"
-msgstr "Forsøg først at bruge OpenFile-filtrene"
+msgid "A&ttempt to use filter in OpenFile dialog first"
+msgstr "Forsøg førs&t at bruge OpenFile-filtrene"
 
 #: prefs/ExtImportPrefs.cpp:95
 msgid "Rules to choose import filters"
@@ -9910,7 +9925,7 @@ msgstr "He&nt"
 msgid "Allow &background on-demand loading"
 msgstr "Tillad indlæsning i &baggrunden"
 
-#: prefs/LibraryPrefs.cpp:195
+#: prefs/LibraryPrefs.cpp:197
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -9960,15 +9975,15 @@ msgstr ""
 "og ved, hvad du har med at gøre."
 
 #: prefs/ModulePrefs.cpp:58
-msgid "mod-script-pipe"
+msgid "mod-&script-pipe"
 msgstr ""
 
 #: prefs/ModulePrefs.cpp:61
-msgid "mod-nyq-bench"
+msgid "mod-&nyq-bench"
 msgstr ""
 
 #: prefs/ModulePrefs.cpp:64
-msgid "mod-track-panel"
+msgid "mod-&track-panel"
 msgstr ""
 
 #: prefs/MousePrefs.cpp:57
@@ -10284,39 +10299,39 @@ msgstr "Formet"
 msgid "Other..."
 msgstr "Andre..."
 
-#: prefs/QualityPrefs.cpp:125
+#: prefs/QualityPrefs.cpp:131
 msgid "Sampling"
 msgstr "Lydsamplingshastighed"
 
-#: prefs/QualityPrefs.cpp:129
+#: prefs/QualityPrefs.cpp:135
 msgid "Default Sample &Rate:"
 msgstr "Standardoptage&hastighed:"
 
-#: prefs/QualityPrefs.cpp:154
+#: prefs/QualityPrefs.cpp:160
 msgid "Default Sample &Format:"
 msgstr "Standardoptage&format:"
 
-#: prefs/QualityPrefs.cpp:165
+#: prefs/QualityPrefs.cpp:171
 msgid "Real-time Conversion"
 msgstr "Realtidskonvertering"
 
-#: prefs/QualityPrefs.cpp:171
+#: prefs/QualityPrefs.cpp:177
 msgid "Sample Rate Con&verter:"
 msgstr "Kon&vertering af lydsamplingshastighed:"
 
-#: prefs/QualityPrefs.cpp:178
+#: prefs/QualityPrefs.cpp:184
 msgid "&Dither:"
 msgstr "U&djævnet støj ('Dither'):"
 
-#: prefs/QualityPrefs.cpp:189
+#: prefs/QualityPrefs.cpp:195
 msgid "High-quality Conversion"
 msgstr "Højkvalitetskonvertering"
 
-#: prefs/QualityPrefs.cpp:193
+#: prefs/QualityPrefs.cpp:199
 msgid "Sample Rate Conver&ter:"
 msgstr "Konver&tering af lydsamplingshastighed:"
 
-#: prefs/QualityPrefs.cpp:200
+#: prefs/QualityPrefs.cpp:206
 msgid "Dit&her:"
 msgstr "Ud&jævnet støj ('Dither'):"
 
@@ -10724,7 +10739,7 @@ msgstr "Afspil"
 
 #: toolbars/ControlToolBar.cpp:187
 #: toolbars/ControlToolBar.cpp:219
-#: widgets/ProgressDialog.cpp:1112
+#: widgets/ProgressDialog.cpp:1117
 msgid "Stop"
 msgstr "Stop"
 
@@ -11003,29 +11018,29 @@ msgstr "Multiværktøjsvisning"
 msgid "Slide Tool"
 msgstr "Justeringsværktøj"
 
-#: toolbars/TranscriptionToolBar.cpp:170
+#: toolbars/TranscriptionToolBar.cpp:171
 msgid "Play at selected speed"
 msgstr "Afspil ved den valgte hastighed"
 
-#: toolbars/TranscriptionToolBar.cpp:176
-#: toolbars/TranscriptionToolBar.cpp:181
-#: toolbars/TranscriptionToolBar.cpp:266
+#: toolbars/TranscriptionToolBar.cpp:177
+#: toolbars/TranscriptionToolBar.cpp:182
+#: toolbars/TranscriptionToolBar.cpp:267
 msgid "Playback Speed"
 msgstr "Afspilningshastighed"
 
-#: toolbars/TranscriptionToolBar.cpp:265
+#: toolbars/TranscriptionToolBar.cpp:266
 msgid "Play-at-speed"
 msgstr "Afspilningshastighed"
 
-#: widgets/AButton.cpp:300
+#: widgets/AButton.cpp:304
 msgid " (disabled)"
 msgstr " (frakoblet)"
 
-#: widgets/AButton.cpp:458
+#: widgets/AButton.cpp:477
 msgid "Press"
 msgstr "Tryk"
 
-#: widgets/AButton.cpp:537
+#: widgets/AButton.cpp:556
 msgid "Button"
 msgstr "Knap"
 
@@ -11154,27 +11169,27 @@ msgstr "Genopfriskningshastighed for måleren pr. sekund [1-100]:"
 msgid "Meter Preferences"
 msgstr "Målerindstillinger"
 
-#: widgets/MultiDialog.cpp:93
+#: widgets/MultiDialog.cpp:94
 msgid " Please select an action "
 msgstr " Vælg en handling "
 
-#: widgets/MultiDialog.cpp:97
+#: widgets/MultiDialog.cpp:98
 msgid "Please select an action"
 msgstr "Vælg en handling"
 
-#: widgets/MultiDialog.cpp:104
+#: widgets/MultiDialog.cpp:105
 msgid "Show Log for Details"
 msgstr "Vis logfil med detailler"
 
-#: widgets/ProgressDialog.cpp:1071
+#: widgets/ProgressDialog.cpp:1072
 msgid "Elapsed Time:"
 msgstr "Tidsforbrug:"
 
-#: widgets/ProgressDialog.cpp:1091
+#: widgets/ProgressDialog.cpp:1094
 msgid "Remaining Time:"
 msgstr "Tilbageværende tid:"
 
-#: widgets/ProgressDialog.cpp:1119
+#: widgets/ProgressDialog.cpp:1124
 msgid "Cancel"
 msgstr "Annullér"
 
@@ -11384,7 +11399,7 @@ msgstr "01000,01000 billedrammer|75"
 msgid "(Use context menu to change format.)"
 msgstr "(Brug højre musetast eller relevant genvejstast for at ændre format.)"
 
-#: widgets/TimeTextCtrl.cpp:1630
+#: widgets/TimeTextCtrl.cpp:1633
 msgid "centiseconds"
 msgstr "centisekunder"
 
@@ -11420,6 +11435,15 @@ msgstr "Fejl ved lukning af fil"
 #: xml/XMLWriter.cpp:365
 msgid "Error Writing to File"
 msgstr "Fejl under skrivning til fil"
+
+#~ msgid "S&ort tracks"
+#~ msgstr "S&ortér etiketter"
+
+#~ msgid "Libresample by Dominic Mazzoni and Julius Smith"
+#~ msgstr "Libresample af Dominic Mazzoni og Julius Smith"
+
+#~ msgid "Libsamplerate by Erik de Castro Lopo"
+#~ msgstr "Libsamplerate af Erik de Castro Lopo"
 
 #~ msgid ""
 #~ "Note: Export quality options can be chosen by clicking the Options\n"
