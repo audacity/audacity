@@ -4278,6 +4278,10 @@ void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
                   delete dest;
                }
             }
+            else  // nothing copied but there is a 'region', so the 'region' must be a 'point label' so offset
+               if (i < (int)regions.GetCount() - 1)
+                  if( merged )
+                     merged->Offset(regions.Item(i+1)->start - regions.Item(i)->end);
          }
          if( merged )
             msClipboard->Add( merged );
