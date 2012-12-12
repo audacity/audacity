@@ -54,14 +54,3 @@ class EffectReverse:public Effect {
 
 #endif
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 99337674-07d6-4291-b855-b0ddf727566f
-

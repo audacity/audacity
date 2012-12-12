@@ -520,14 +520,4 @@ void WahwahDialog::OnPreview(wxCommandEvent &event)
    mEffect->depth = old_depth;
 }
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: b4101b5b-1a18-4f35-9e85-29cc6c1f7f4c
 
