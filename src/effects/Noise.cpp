@@ -57,7 +57,7 @@ bool EffectNoise::PromptUser()
       mDuration = mT1 - mT0;
       dlog.nIsSelection = true;
    } else {
-      gPrefs->Read(wxT("/Effects/Noise/Duration"), &mDuration, 1L);
+      gPrefs->Read(wxT("/Effects/Noise/Duration"), &mDuration, 30L);
       dlog.nIsSelection = false;
    }
 
@@ -249,15 +249,4 @@ void NoiseDialog::OnTimeCtrlUpdate(wxCommandEvent & event) {
    Fit();
 }
 
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 0ca03dc2-c229-44b4-a6eb-1d5d04a3983c
 
