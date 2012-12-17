@@ -5,6 +5,9 @@ rem Licence for this file: LGPL v2.1                  See LICENCE for details.
 set build=%1
 if x%build% == x set build=Release
 
+rem Prevent interference from any in-tree build
+del/f CMakeCache.txt
+
 mkdir %build%
 cd %build%
 

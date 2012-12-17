@@ -10,6 +10,4 @@
 
 # Autotools options should not be passed to this script.
 
-# Configure for Audacity.
-#   cmake $* .
-cmake -DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF .
+cmake $* .

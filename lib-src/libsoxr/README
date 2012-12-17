@@ -1,16 +1,15 @@
 SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
 
 The SoX Resampler library `libsoxr' performs one-dimensional sample-rate
-conversion - it may be used, for example, to resample PCM-encoded audio.
+conversion -- it may be used, for example, to resample PCM-encoded audio.
 For higher-dimensional resampling, such as for visual-image processing, you
 should look elsewhere.
 
-It aims to be fast (e.g. multi-channel resampling can utilise multiple
-CPU-cores), high-quality (i.e. bit-perfect up to 32-bits, for occupied-
-bandwidths up to 98%¹), and to allow any rational or irrational resampling
-ratio.  Phase-response, preserved bandwidth, aliasing, and rejection level
-parameters are all configurable; alternatively, simple `preset'
-configurations may be selected.
+It aims to give fast¹ and very high quality² results for any constant
+(rational or irrational) resampling ratio.  Phase-response, preserved
+bandwidth, aliasing, and rejection level parameters are all configurable;
+alternatively, simple `preset' configurations may be selected.  An
+experimental, variable-rate resampling mode of operation is also included.
 
 The resampler is currently available either as part of `libsox' (the audio
 file-format and effect library), or stand-alone as `libsoxr' (this package).
@@ -20,31 +19,32 @@ support for other effects, or for reading-from or writing-to audio files or
 devices, should use libsox (or other libraries such as libsndfile or
 libavformat).
 
-Libsoxr provides a simple API that allows interfacing using any commonly-
-used sample format or buffering scheme: clients may use either floating-
-point or integer sample formats, and, in the case of multiple channels,
-either channel-interleaved, or split channels.  The API is currently
-documented in the header file `soxr.h' and by example code in the 'examples'
-directory.
+Libsoxr provides a simple API that allows interfacing using the most
+commonly-used sample formats and buffering schemes: sample-formats may be
+either floating-point or integer, and multiple channels either interleaved
+or split in separate buffers.  The API is documented in the header file
+`soxr.h', together with sample code found in the 'examples' directory.
 
 For compatibility with the popular `libsamplerate' library, the header file
-`soxr-lsr.h' is provided and may be used as an alternative API.  For details
-of that API, see http://www.mega-nerd.com/SRC/api.html.  Note however, that
-libsoxr does not provide a full emulation of libsamplerate; in particular,
-`vari-speeding' is not supported.
+`soxr-lsr.h' is provided and may be used as an alternative API.³  Note
+however, that libsoxr does not provide a full emulation of libsamplerate
+and that using this approach, only a sub-set of libsoxr's features are
+available.
+
+The design was inspired by Laurent De Soras' paper `The Quest For The
+Perfect Resampler', http://ldesoras.free.fr/doc/articles/resampler-en.pdf;
+in essence, it combines Julius O. Smith's `Bandlimited Interpolation'
+technique (https://ccrma.stanford.edu/~jos/resample/resample.pdf) with FFT-
+based over-sampling.
+
+Note that for real-time resampling, libsoxr may have a higher latency
+than non-FFT based resamplers.  For example, when using the `High Quality'
+configuration to resample between 44100Hz and 48000Hz, the latency is
+around 1000 output samples, i.e. roughly 20ms.
 
 For build and installation instructions, see the file `INSTALL'; for
 copyright and licensing information, see the file `LICENCE'.
-
-The resampler was inspired by Laurent De Soras' paper `The Quest For The
-Perfect Resampler', http://ldesoras.free.fr/doc/articles/resampler-en.pdf;
-it combines Julius O. Smith's `Bandlimited Interpolation' technique
-(https://ccrma.stanford.edu/~jos/resample/resample.pdf) with FFT-based
-over-sampling.
-
-Its use of FFTs means that, for real-time resampling, libsoxr may have a
-higher latency than non-FFT based resamplers.  E.g. when using the `High
-Quality' configuration to resample between 44100Hz and 48kHz, the latency is
-around 1000 output samples, i.e. roughly 20 ms.
-
-¹ Note that no practical resampler can be bit-perfect to 100% bandwidth.
+________
+¹ For example, multi-channel resampling can utilise multiple CPU-cores.
+² Bit-perfect within practical occupied-bandwidth limits.
+³ For details of that API, see http://www.mega-nerd.com/SRC/api.html.

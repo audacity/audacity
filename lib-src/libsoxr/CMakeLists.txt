@@ -12,7 +12,7 @@ set (DESCRIPTION_SUMMARY "One-dimensional sample-rate conversion library")
 
 set (PROJECT_VERSION_MAJOR 0)
 set (PROJECT_VERSION_MINOR 0)
-set (PROJECT_VERSION_PATCH 3)
+set (PROJECT_VERSION_PATCH 5)
 
 # For shared-object; if, since the last public release:
 #  * library code changed at all: ++revision
@@ -203,10 +203,6 @@ configure_file (
   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.h)
 include_directories (${PROJECT_BINARY_DIR})
 
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-file (COPY doc/logo.png DESTINATION doc)
-add_custom_target (docs doxygen)
-
 if (BUILD_TESTS OR BUILD_LSR_TESTS)
   enable_testing ()
 endif ()
@@ -226,6 +222,30 @@ if (BUILD_LSR_TESTS)
 endif ()
 if (BUILD_EXAMPLES OR BUILD_TESTS)
   add_subdirectory (examples)
+endif ()
+
+
+
+# Rough-and-ready distclean for anyone still doing in-tree builds:
+
+if (UNIX)
+  add_custom_target (distclean
+    COMMAND make clean && rm -rf
+      CMakeCache.txt
+      CMakeFiles
+      cmake_install.cmake
+      CPackConfig.cmake
+      CPackSourceConfig.cmake
+      deinstall.cmake
+      Makefile
+      soxr-config.h
+      src/CMakeFiles
+      src/cmake_install.cmake
+      src/libsoxr-dev.src
+      src/libsoxr-lsr.pc
+      src/libsoxr.pc
+      src/libsoxr.src
+      src/Makefile)
 endif ()
 
 
@@ -250,7 +270,7 @@ if (UNIX)
   set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 
   set (CPACK_SOURCE_GENERATOR "TBZ2")
-  set (CPACK_SOURCE_IGNORE_FILES "/Debug/;/Release/;/cpack/;\\\\.swp$;\\\\.gitignore;.*vr32\\\\.c")
+  set (CPACK_SOURCE_IGNORE_FILES "/Debug/;/Release/;/cpack/;\\\\.swp$;\\\\.gitignore")
 
   include (CPack)
 

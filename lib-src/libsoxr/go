@@ -5,6 +5,8 @@
 build=$1
 test x$build = x && build=Release
 
+rm -f CMakeCache.txt             # Prevent interference from any in-tree build
+
 mkdir -p $build
 cd $build
 
