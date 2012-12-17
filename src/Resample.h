@@ -150,7 +150,7 @@ class VarRateResample : public Resample
    virtual ~VarRateResample();
 
    // Override base class methods only if we actually have a var-rate library.
-   #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE
+   #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE || USE_LIBSOXR
       static int GetNumMethods();
       static wxString GetMethodName(int index);
 
