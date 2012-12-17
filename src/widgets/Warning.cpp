@@ -35,7 +35,8 @@ class WarningDialog : public wxDialog
  public:
    // constructors and destructors
    WarningDialog(wxWindow *parent, 
-                 wxString message);
+                 wxString message,
+                 bool showCancelButton);
    
  private:
    void OnOK(wxCommandEvent& event);
@@ -49,10 +50,10 @@ BEGIN_EVENT_TABLE(WarningDialog, wxDialog)
    EVT_BUTTON(wxID_OK, WarningDialog::OnOK)
 END_EVENT_TABLE()
 
-WarningDialog::WarningDialog(wxWindow *parent, wxString message)
+WarningDialog::WarningDialog(wxWindow *parent, wxString message, bool showCancelButton)
 :  wxDialog(parent, wxID_ANY, (wxString)_("Warning"), 
             wxDefaultPosition, wxDefaultSize, 
-            wxCAPTION | wxSYSTEM_MENU) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
+            (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
    ShuttleGui S(this, eIsCreating);
 
@@ -64,7 +65,7 @@ WarningDialog::WarningDialog(wxWindow *parent, wxString message)
    }
 
    S.SetBorder(0);
-   S.AddStandardButtons(eOkButton);
+   S.AddStandardButtons(showCancelButton ? eOkButton | eCancelButton : eOkButton);
 
    Fit();
    CentreOnParent();
@@ -72,32 +73,26 @@ WarningDialog::WarningDialog(wxWindow *parent, wxString message)
 
 void WarningDialog::OnOK(wxCommandEvent& event)
 {
-   EndModal(mCheckBox->GetValue() == false);
+   EndModal(mCheckBox->GetValue() ? wxID_NO : wxID_YES); // return YES, if message should be shown again
 }
 
-void ShowWarningDialog(wxWindow *parent,
-                       wxString internalDialogName,
-                       wxString message)
+int ShowWarningDialog(wxWindow *parent,
+                      wxString internalDialogName,
+                      wxString message,
+                      bool showCancelButton)
 {
    wxString key(wxT("/Warnings/") + internalDialogName);
    if (!gPrefs->Read(key, (long) true)) {
-      return;
+      return wxID_OK;
    }
 
-   WarningDialog dlog(parent, message);
+   WarningDialog dlog(parent, message, showCancelButton);
 
-   gPrefs->Write(key, dlog.ShowModal());
+   int retCode = dlog.ShowModal();
+   if (retCode == wxID_CANCEL)
+      return retCode;
+
+   gPrefs->Write(key, (retCode == wxID_YES));
    gPrefs->Flush();
+   return wxID_OK;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: b84d77e0-4375-43f0-868e-3130e18c14c8
-

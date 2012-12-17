@@ -373,16 +373,16 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
       return false;
    }
 
+   // Check for down mixing
+   if (!CheckMix()) {
+      return false;
+   }
+
    // Let user edit MetaData 
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!(project->GetTags()->ShowEditDialog(project, _("Edit Metadata"), mProject->GetShowId3Dialog()))) {
          return false;
       }
-   }
-
-   // Check for down mixing
-   if (!CheckMix()) {
-      return false;
    }
 
    // Ensure filename doesn't interfere with project files.
@@ -776,14 +776,18 @@ bool Exporter::CheckMix()
    
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
          if (mChannels == 2) {
-            ShowWarningDialog(mProject,
-                              wxT("MixStereo"),
-                              _("Your tracks will be mixed down to two stereo channels in the exported file."));
+            if (ShowWarningDialog(mProject,
+                                  wxT("MixStereo"),
+                                  _("Your tracks will be mixed down to two stereo channels in the exported file."),
+                                  true) == wxID_CANCEL)
+               return false;
          }
          else {
-            ShowWarningDialog(mProject,
-                              wxT("MixMono"),
-                              _("Your tracks will be mixed down to a single mono channel in the exported file."));
+            if (ShowWarningDialog(mProject,
+                                  wxT("MixMono"),
+                                  _("Your tracks will be mixed down to a single mono channel in the exported file."),
+                                  true) == wxID_CANCEL)
+               return false;
          }
       }
    }
