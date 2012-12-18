@@ -149,7 +149,7 @@
                          float  *outBuffer,
                          int     outBufferLen)
    {
-      //vvvvv Not defined:    soxr_set_io_ratio((soxr_t)mHandle, 1/factor, 0);
+      soxr_set_io_ratio((soxr_t)mHandle, 1/factor, 0);
 
       size_t idone , odone;
       inBufferLen = lastFlag? ~inBufferLen : inBufferLen;
