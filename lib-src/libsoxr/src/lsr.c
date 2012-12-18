@@ -51,7 +51,7 @@ soxr_t src_callback_new(soxr_input_fn_t fn, unsigned id, int channels, SRC_ERROR
     */
   soxr = soxr_create(0, 0, (unsigned)channels, &error, 0, &q_spec, &r_spec);
   if (soxr)
-    error = soxr_set_input_fn(soxr, fn, p);
+    error = soxr_set_input_fn(soxr, fn, p, 0);
   *(int *)error0 = (int)(long)error;
   return soxr;
 }
@@ -59,7 +59,7 @@ soxr_t src_callback_new(soxr_input_fn_t fn, unsigned id, int channels, SRC_ERROR
 soxr_error_t src_process(soxr_t p, io_t * io)
 {
   if (!p || !io) return "null pointer";
-  soxr_set_error(p, soxr_set_oi_ratio(p, io->oi_ratio));
+  soxr_set_error(p, soxr_set_io_ratio(p, 1/io->oi_ratio, (size_t)io->olen));
 
   { size_t idone , odone;
   soxr_process(p, io->in, (size_t)(io->eoi? ~io->ilen : io->ilen), /* hack */
@@ -71,7 +71,7 @@ soxr_error_t src_process(soxr_t p, io_t * io)
 long src_callback_read(soxr_t p, double oi_ratio, long olen, float * obuf)
 {
   if (!p || olen < 0) return -1;
-  soxr_set_error(p, soxr_set_oi_ratio(p, oi_ratio));
+  soxr_set_error(p, soxr_set_io_ratio(p, 1/oi_ratio, (size_t)olen));
   return (long)soxr_output(p, obuf, (size_t)olen);
 }
 
@@ -110,5 +110,5 @@ int src_is_valid_ratio(double oi_ratio)       {return getenv("SOXR_LSR_STRICT")?
 soxr_error_t src_error(soxr_t p)              {return soxr_error(p);}
 soxr_error_t src_reset(soxr_t p)              {return soxr_clear(p);}
 soxr_t src_delete(soxr_t p)                   {soxr_delete(p); return 0;}
-soxr_error_t src_set_ratio(soxr_t p, double oi_ratio) {return soxr_set_oi_ratio(p, oi_ratio);}
+soxr_error_t src_set_ratio(soxr_t p, double oi_ratio) {return soxr_set_io_ratio(p, 1/oi_ratio, 0);}
 soxr_t src_new(unsigned id, int channels, SRC_ERROR * error) {return src_callback_new(0, id, channels, error, 0);}

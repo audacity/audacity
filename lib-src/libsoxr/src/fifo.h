@@ -4,14 +4,11 @@
 #ifndef fifo_included
 #define fifo_included
 
-#include <string.h>
-
 #if !defined FIFO_SIZE_T
 #define FIFO_SIZE_T size_t
 #endif
 
 #if !defined FIFO_REALLOC
-#include <stdlib.h>
   #define FIFO_REALLOC(a,b,c) realloc(a,b)
   #undef FIFO_FREE
   #define FIFO_FREE free
@@ -27,7 +24,9 @@ typedef struct {
   size_t end;          /* 1 + Offset of the last byte byte to read. */
 } fifo_t;
 
-#define FIFO_MIN 0x4000
+#if !defined FIFO_MIN
+  #define FIFO_MIN 0x4000
+#endif
 
 #if !defined UNUSED
   #define UNUSED

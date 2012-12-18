@@ -4,23 +4,22 @@
 
 ir=96000
 or=44100
-len=8
-f=3k
+len=16
 f=0+48k
 g=48k+0
-ex=../examples/3b-options-with-input-fn
+ex=./3-options-input-fn
 
 types=(f32 f64 s32 s16)
 
 do_one() {
   $ex $ir $or $c $1 $2 $3 < $c.${types[$1]} |
-  sox -t ${types[$2]} -r $or -c $c - -n spectrogram -X85 -hwk -z180 -o $n$c.png
+  sox -t ${types[$2]} -r $or -c $c - -n spectrogram -X50 -hwk -z180 -o io$n$c.png
   n=`expr $n + 1`
 }
 
-rm *.png
+rm io??.png
 
-j=1; test z$1 != z && j=$1
+j=2; test z$1 != z && j=$1
 
 for c in `seq 1 $j`; do
   for n in `seq 0 3`; do
@@ -39,5 +38,3 @@ for c in `seq 1 $j`; do
 done
 
 rm ?.[sf][0-9][0-9]
-
-#kv . 2> /dev/null

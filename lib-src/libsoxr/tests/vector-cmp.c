@@ -1,9 +1,10 @@
-/* SoX Resampler Library         Copyright (c) 2012 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+ * Licence for this file: LGPL v2.1                  See LICENCE for details. */
+
+/* Utility used to help test the library; not for general consumption.
  *
- * Utility used to help test the library; not for general consumption.
- *
- * Compare two swept-sine files.
- */
+ * Compare two swept-sine files.  */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

@@ -10,10 +10,11 @@
 #define SOXR_VERSION_MAJOR 0
 #define SOXR_VERSION_MINOR 0
 #define SOXR_VERSION_PATCH 1
-#define SOXR_VERSION "0.0.1"
+#define SOXR_VERSION "0.0.5"
 
 #define HAVE_SINGLE_PRECISION 1
 #define HAVE_DOUBLE_PRECISION 1
+#define HAVE_VR         1
 #define HAVE_AVFFT      0
 #define HAVE_SIMD       1
 #define HAVE_FENV_H     0

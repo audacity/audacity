@@ -5,9 +5,17 @@
 # Warning: the intermediate signal (piped) is 3.2 Gbytes so may slug the
 # system somewhat.
 
-ex=../examples/3b-options-with-input-fn
+ex=./3-options-input-fn
 q=6
+
+rm lr.png
+
 ./vector-gen 1000 0 8 500 .9375 1.s32
+
 $ex 1 1e5 1 2 1 $q < 1.s32 | $ex 1e5 1 1 1 2 $q > 2.s32
-/usr/bin/sox -M -r 1k 1.s32 -r 1k 2.s32 -n spectrogram -hwk -z180 -o 2.png
-display 2.png &
+
+/usr/bin/sox -M -r 1k 1.s32 -r 1k 2.s32 -n spectrogram -hwk -z180 -o lr.png
+
+display lr.png &
+
+rm [12].s32

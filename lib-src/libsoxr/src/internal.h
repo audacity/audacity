@@ -14,7 +14,15 @@
 #define range_limit(x, lower, upper) (min(max(x, lower), upper))
 #define linear_to_dB(x) (log10(x) * 20)
 #define array_length(a) (sizeof(a)/sizeof(a[0]))
+#define AL(a) array_length(a)
+#define iAL(a) (int)AL(a)
 #define sqr(a) ((a) * (a))
+
+#ifdef __GNUC__
+  #define UNUSED __attribute__ ((unused))
+#else
+  #define UNUSED
+#endif
 
 #if defined NDEBUG
   #ifdef __GNUC__
@@ -26,10 +34,7 @@
 #else
   #include <stdarg.h>
   #include <stdio.h>
-  #ifdef __GNUC__
-    __attribute__ ((unused))
-  #endif
-  static void lsx_debug(char const * fmt, ...)
+  UNUSED static void lsx_debug(char const * fmt, ...)
   {
     va_list args;
     va_start(args, fmt);

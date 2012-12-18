@@ -29,9 +29,9 @@ typedef struct {
   void (* close)(void *);
   double (* delay)(void *);
   void (* sizes)(size_t * shared, size_t * channel);
-  char const * (* create)(void * channel, void * shared, double oi_ratio,
+  char const * (* create)(void * channel, void * shared, double io_ratio,
       soxr_quality_spec_t * q_spec, soxr_runtime_spec_t * r_spec, double scale);
-  void (* set_oi_ratio)(void *, double oi_ratio);
+  void (* set_io_ratio)(void *, double io_ratio, size_t len);
   char const * (* id)(void);
 } control_block_t;
 
@@ -43,7 +43,7 @@ typedef struct {
 #define resampler_delay (*p->control_block.delay)
 #define resampler_sizes (*p->control_block.sizes)
 #define resampler_create (*p->control_block.create)
-#define resampler_set_oi_ratio (*p->control_block.set_oi_ratio)
+#define resampler_set_io_ratio (*p->control_block.set_io_ratio)
 #define resampler_id (*p->control_block.id)
 
 
@@ -57,7 +57,7 @@ typedef size_t (* interleave_t)(soxr_datatype_t data_type, void * * dest,
 
 struct soxr {
   unsigned num_channels;
-  double oi_ratio;
+  double io_ratio;
   soxr_error_t error;
   soxr_quality_spec_t q_spec;
   soxr_io_spec_t io_spec;
@@ -65,6 +65,7 @@ struct soxr {
 
   void * input_fn_state;
   soxr_input_fn_t input_fn;
+  size_t max_ilen;
 
   resampler_shared_t shared;
   resampler_t * resamplers;
@@ -217,7 +218,7 @@ soxr_t soxr_create(
   soxr_quality_spec_t const * q_spec,
   soxr_runtime_spec_t const * runtime_spec)
 {
-  double oi_ratio = input_rate? output_rate? output_rate / input_rate : -1 : output_rate? -1 : 0;
+  double io_ratio = output_rate? input_rate? input_rate / output_rate : -1 : input_rate? -1 : 0;
   static const float datatype_full_scale[] = {1, 1, 65536.*32768, 32768};
   soxr_t p = 0;
   soxr_error_t error = 0;
@@ -230,7 +231,7 @@ soxr_t soxr_create(
 
   if (p) {
     p->q_spec = q_spec? *q_spec : soxr_quality_spec(SOXR_HQ, 0);
-    p->oi_ratio = oi_ratio;
+    p->io_ratio = io_ratio;
     p->num_channels = num_channels;
     if (io_spec)
       p->io_spec = *io_spec;
@@ -271,8 +272,8 @@ soxr_t soxr_create(
     }
 #endif
 
-    if (p->num_channels && oi_ratio)
-      error = soxr_set_oi_ratio(p, oi_ratio);
+    if (p->num_channels && io_ratio)
+      error = soxr_set_io_ratio(p, io_ratio, 0);
   }
   if (error)
     soxr_delete(p), p = 0;
@@ -284,10 +285,11 @@ soxr_t soxr_create(
 
 
 soxr_error_t soxr_set_input_fn(soxr_t p,
-    soxr_input_fn_t input_fn, void * input_fn_state)
+    soxr_input_fn_t input_fn, void * input_fn_state, size_t max_ilen)
 {
   p->input_fn_state = input_fn_state;
   p->input_fn = input_fn;
+  p->max_ilen = max_ilen? max_ilen : (size_t)-1;
   return 0;
 }
 
@@ -345,7 +347,7 @@ static soxr_error_t initialise(soxr_t p)
     error = resampler_create(
         p->resamplers[i],
         p->shared,
-        p->oi_ratio,
+        p->io_ratio,
         &p->q_spec,
         &p->runtime_spec,
         p->io_spec.scale);
@@ -364,29 +366,29 @@ soxr_error_t soxr_set_num_channels(soxr_t p, unsigned num_channels)
   if (!num_channels)     return "invalid # of channels";
   if (p->resamplers)     return "# of channels can't be changed";
   p->num_channels = num_channels;
-  return soxr_set_oi_ratio(p, p->oi_ratio);
+  return soxr_set_io_ratio(p, p->io_ratio, 0);
 }
 
 
 
-soxr_error_t soxr_set_oi_ratio(soxr_t p, double oi_ratio)
+soxr_error_t soxr_set_io_ratio(soxr_t p, double io_ratio, size_t slew_len)
 {
   unsigned i;
   soxr_error_t error;
   if (!p)                 return "invalid soxr_t pointer";
   if ((error = p->error)) return error;
   if (!p->num_channels)   return "must set # channels before O/I ratio";
-  if (oi_ratio <= 0)      return "O/I ratio out-of-range";
+  if (io_ratio <= 0)      return "I/O ratio out-of-range";
   if (!p->channel_ptrs) {
-    p->oi_ratio = oi_ratio;
+    p->io_ratio = io_ratio;
     return initialise(p);
   }
-  if (p->control_block.set_oi_ratio) {
+  if (p->control_block.set_io_ratio) {
     for (i = 0; !error && i < p->num_channels; ++i)
-      resampler_set_oi_ratio(p->resamplers[i], oi_ratio);
+      resampler_set_io_ratio(p->resamplers[i], io_ratio, slew_len);
     return error;
   }
-  return fabs(p->oi_ratio - oi_ratio) < 1e-15? 0 :
+  return fabs(p->io_ratio - io_ratio) < 1e-15? 0 :
     "Varying O/I ratio is not supported with this quality level";
 }
 
@@ -430,8 +432,7 @@ static void soxr_input_1ch(soxr_t p, unsigned i, soxr_cbuf_t src, size_t len)
 
 
 
-size_t soxr_input(soxr_t p, void const * in, size_t len);
-size_t soxr_input(soxr_t p, void const * in, size_t len)
+static size_t soxr_input(soxr_t p, void const * in, size_t len)
 {
   bool separated = !!(p->io_spec.itype & SOXR_SPLIT);
   unsigned i;
@@ -500,6 +501,7 @@ static size_t soxr_output_no_callback(soxr_t p, soxr_buf_t out, size_t len)
 size_t soxr_output(soxr_t p, void * out, size_t len0)
 {
   size_t odone, odone0 = 0, olen = len0, osize, idone;
+  size_t ilen = min(p->max_ilen, (size_t)ceil((double)olen *p->io_ratio));
   void const * in = out; /* Set to !=0, so that caller may leave unset. */
   bool was_flushing;
 
@@ -509,13 +511,13 @@ size_t soxr_output(soxr_t p, void * out, size_t len0)
   do {
     odone = soxr_output_no_callback(p, out, olen);
     odone0 += odone;
-    if (odone0 == len0 || !p->input_fn)
+    if (odone0 == len0 || !p->input_fn || p->flushing)
       break;
 
     osize = soxr_datatype_size(p->io_spec.otype) * p->num_channels;
     out = (char *)out + osize * odone;
     olen -= odone;
-    idone = p->input_fn(p->input_fn_state, &in, (size_t)ceil((double)olen /p->oi_ratio));
+    idone = p->input_fn(p->input_fn_state, &in, ilen);
     was_flushing = p->flushing;
     if (!in)
       p->error = "input function reported failure";
@@ -534,17 +536,19 @@ static size_t soxr_i_for_o(soxr_t p, size_t olen, size_t ilen)
     result = rate_i_for_o(p->resamplers[0], olen);
   else
 #endif
-    result = (size_t)ceil((double)olen / p->oi_ratio);
+    result = (size_t)ceil((double)olen * p->io_ratio);
   return min(result, ilen);
 }
 
 
 
+#if 0
 static size_t soxr_o_for_i(soxr_t p, size_t ilen, size_t olen)
 {
-  size_t result = (size_t)ceil((double)ilen * p->oi_ratio);
+  size_t result = (size_t)ceil((double)ilen / p->io_ratio);
   return min(result, olen);
 }
+#endif
 
 
 
@@ -563,10 +567,10 @@ soxr_error_t soxr_process(soxr_t p,
   else {
     if ((ptrdiff_t)ilen0 < 0)
       flush_requested = true, ilen0 = ~ilen0;
-    if (1 || flush_requested)
+    if (idone0 && (1 || flush_requested))
       ilen = soxr_i_for_o(p, olen, ilen0);
     else
-      ilen = ilen0, olen = soxr_o_for_i(p, ilen, olen);
+      ilen = ilen0/*, olen = soxr_o_for_i(p, ilen, olen)*/;
   }
   p->flushing |= ilen == ilen0 && flush_requested;
 

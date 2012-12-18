@@ -1,7 +1,7 @@
 /* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
-/* Example 4: variant of example 3a; demonstrates I/O with split channels.
+/* Example 4: variant of examples 2 & 3, demonstrating I/O with split channels.
  *
  * Note that, for convenience of the demonstration, split-channel data is
  * made available by deinterleaving data sourced from and sent to
@@ -68,85 +68,79 @@ static void interleave(soxr_datatype_t data_type, void * dest0,
 
 int main(int n, char const * arg[])
 {
-  char const *     arg0 = n? --n, *arg++ : "";
-  double          irate = n? --n, atof(*arg++) : 96000.;
-  double          orate = n? --n, atof(*arg++) : 44100.;
-  unsigned        chans = n? --n, (unsigned)atoi(*arg++) : 1;
-  soxr_datatype_t itype = n? --n, (soxr_datatype_t)atoi(*arg++) :SOXR_FLOAT32_I;
-  soxr_datatype_t otype = n? --n, (soxr_datatype_t)atoi(*arg++) :SOXR_FLOAT32_I;
-  unsigned long q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
-  unsigned long q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
-  int       use_threads = n? --n, atoi(*arg++) : 1;
+  char const *     const arg0 = n? --n, *arg++ : "";
+  double          const irate = n? --n, atof(*arg++) : 96000.;
+  double          const orate = n? --n, atof(*arg++) : 44100.;
+  unsigned        const chans = n? --n, (unsigned)atoi(*arg++) : 1;
+  soxr_datatype_t const itype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
+  soxr_datatype_t const otype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
+  unsigned long const q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
+  unsigned long const q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
+  int       const use_threads = n? --n, atoi(*arg++) : 1;
 
-  size_t isize = soxr_datatype_size(itype) * chans;
-  size_t osize = soxr_datatype_size(otype) * chans;
-  size_t clips = 0;
+  soxr_quality_spec_t const q_spec = soxr_quality_spec(q_recipe, q_flags);
+  soxr_io_spec_t const io_spec=soxr_io_spec(itype|SOXR_SPLIT, otype|SOXR_SPLIT);
+  soxr_runtime_spec_t const runtime_spec = soxr_runtime_spec(!use_threads);
+
+  /* Allocate resampling input and output buffers in proportion to the input
+   * and output rates: */
+  #define buf_total_len 15000  /* In samples per channel. */
+  size_t const osize = soxr_datatype_size(otype) * chans;
+  size_t const isize = soxr_datatype_size(itype) * chans;
+  size_t const olen = (size_t)(orate * buf_total_len / (irate + orate) + .5);
+  size_t const ilen = buf_total_len - olen;
+
+  /* For split channels: */
+  void * * const obuf_ptrs = malloc(sizeof(void *) * chans);
+  void * *       ibuf_ptrs = malloc(sizeof(void *) * chans);
+  char * const obufs = malloc(osize * olen), * optr = obufs;
+  char * const ibufs = malloc(isize * ilen), * iptr = ibufs;
+
+  /* For interleaved channels: */
+  char * const obuf = malloc(osize * olen);
+  char * const ibuf = malloc(isize * ilen);
+
+  size_t odone, written, need_input = 1, clips = 0;
   soxr_error_t error;
 
-  soxr_quality_spec_t q_spec = soxr_quality_spec(q_recipe, q_flags);
-  soxr_io_spec_t io_spec = soxr_io_spec(itype|SOXR_SPLIT, otype|SOXR_SPLIT);
-  soxr_runtime_spec_t runtime_spec = soxr_runtime_spec(!use_threads);
-
-  soxr_t resampler = soxr_create(
+  soxr_t soxr = soxr_create(
       irate, orate, chans, &error, &io_spec, &q_spec, &runtime_spec);
 
+  unsigned i;
+  for (i = 0; i < chans; ++i) {
+    ibuf_ptrs[i] = iptr;
+    obuf_ptrs[i] = optr;
+    iptr += ilen * soxr_datatype_size(itype);
+    optr += olen * soxr_datatype_size(otype);
+  }
+
   if (!error) {
-    #define  buf_total_len 14000
-
-    /* Allocate resampling input and output buffers in proportion to the input
-     * and output rates: */
-    size_t ibuflen = (size_t)(irate * buf_total_len / (irate + orate) + .5);
-    size_t obuflen = buf_total_len - ibuflen;
-
-    /* For split channels: */
-    void * * ibuf_ptrs = malloc(sizeof(void *) * chans);
-    void * * obuf_ptrs = malloc(sizeof(void *) * chans);
-    char * * ibuf_offset_ptrs = malloc(sizeof(void *) * chans);
-    char * ibufs = malloc(isize * ibuflen), * iptr = ibufs;
-    char * obufs = malloc(osize * obuflen), * optr = obufs;
-
-    /* For interleaved channels: */
-    char * ibuf = malloc(isize * ibuflen);
-    char * obuf = malloc(osize * obuflen);
-
-    size_t iavailable = 0;
-    size_t idone, odone, written;
-    unsigned i;
-
-    for (i = 0; i < chans; ++i) {
-      ibuf_ptrs[i] = iptr;
-      obuf_ptrs[i] = optr;
-      iptr += ibuflen * soxr_datatype_size(itype);
-      optr += obuflen * soxr_datatype_size(otype);
-    }
-
     USE_STD_STDIO;
+
     do {
-      if (!iavailable && ibuf_offset_ptrs) {     /* If ibuf empty, try to fill it: */
-        if (!(iavailable = fread(ibuf, isize, ibuflen, stdin)))
-          free(ibuf_offset_ptrs), ibuf_offset_ptrs = 0; /* If none available, don't retry. */
-        else {
-          memcpy(ibuf_offset_ptrs, ibuf_ptrs, sizeof(void *) * chans);
-          deinterleave(itype, ibuf_ptrs, ibuf, iavailable, chans);
-        }
+      size_t ilen1 = 0;
+
+      if (need_input) {
+        if (!(ilen1 = fread(ibuf, isize, ilen, stdin)))
+          free(ibuf_ptrs), ibuf_ptrs = 0; /* If none available, don't retry. */
+        else deinterleave(itype, ibuf_ptrs, ibuf, ilen1, chans);
       }
 
-      error = soxr_process(resampler,
-          ibuf_offset_ptrs, iavailable, &idone, obuf_ptrs, obuflen, &odone);
-
-      if (ibuf_offset_ptrs) for (i = 0; i < chans; ++i)  /* Consumed input. */
-        ibuf_offset_ptrs[i] += idone * isize;
-      iavailable -= idone;
-
-      interleave(otype, obuf, obuf_ptrs, odone, chans);  /* Consume output. */
+      error = soxr_process(soxr, ibuf_ptrs, ilen1, NULL, obuf_ptrs, olen, &odone);
+      interleave(otype, obuf, obuf_ptrs, odone, chans);  /* Consume output... */
       written = fwrite(obuf, osize, odone, stdout);
-    } while (!error && (ibuf_offset_ptrs || written));
 
-    free(obuf), free(ibuf), free(obufs), free(ibufs);
-    free(obuf_ptrs), free(ibuf_ptrs), free(ibuf_offset_ptrs);
-    clips = *soxr_num_clips(resampler);
-    soxr_delete(resampler);
+      need_input = odone < olen && ibuf_ptrs;
+
+    } while (!error && (need_input || written));
+
+    clips = *soxr_num_clips(soxr);     /* Can occur only with integer output. */
   }
+                                                                  /* Tidy up: */
+  soxr_delete(soxr);
+  free(obuf), free(ibuf), free(obufs), free(ibufs);
+  free(obuf_ptrs), free(ibuf_ptrs);
+                                                              /* Diagnostics: */
   fprintf(stderr, "%-26s %s; %lu clips; I/O: %s\n", arg0, soxr_strerror(error),
       (long unsigned)clips, errno? strerror(errno) : "no error");
   return error || errno;

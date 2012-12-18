@@ -72,6 +72,7 @@
 			<File RelativePath="../src/rate64.c" />
 			<File RelativePath="../src/simd.c" />
 			<File RelativePath="../src/soxr.c" />
+			<File RelativePath="../src/vr32.c" />
 		</Filter>
 	</Files>
 	<Globals>

@@ -431,9 +431,9 @@ static char const * rate_init(
     double d, epsilon = 0, frac;
     upsample = arbM < 1;
     for (i = (int)(arbM * .5), shift = 0; i >>= 1; arbM *= .5, ++shift);
-    preM = 1 - (arbM > 2);
-    postM = 1 + (arbM > 1 && arbM < 2), arbM /= postM;
-    preL = 1 + (upsample && mode), arbM *= preL;
+    preM = upsample || (arbM > 1.5 && arbM < 2);
+    postM = 1 + (arbM > 1 && preM), arbM /= postM;
+    preL = 1 + (!preM && arbM < 2) + (upsample && mode), arbM *= preL;
     if ((frac = arbM - (int)arbM))
       epsilon = fabs((uint32_t)(frac * MULT32 + .5) / (frac * MULT32) - 1);
     for (i = 1, rational = !frac; i <= maxL && !rational; ++i) {
@@ -632,7 +632,7 @@ static void rate_flush(rate_t * p)
   size_t remaining = (size_t)(samples_out - p->samples_out);
   sample_t * buff = calloc(1024, sizeof(*buff));
 
-  if ((int)remaining > 0) {
+  if (samples_out > p->samples_out) {
     while ((size_t)fifo_occupancy(fifo) < remaining) {
       rate_input(p, buff, 1024);
       rate_process(p);
@@ -690,14 +690,14 @@ static void rate_sizes(size_t * shared, size_t * channel)
 static char const * rate_create(
     void * channel,
     void * shared,
-    double oi_ratio,
+    double io_ratio,
     soxr_quality_spec_t * q_spec,
     soxr_runtime_spec_t * r_spec,
     double scale)
 {
   return rate_init(
       channel, shared,
-      1 / oi_ratio,
+      io_ratio,
       q_spec->bits,
       q_spec->phase,
       q_spec->bw_pc,
@@ -728,7 +728,7 @@ fn_t RATE_CB[] = {
   (fn_t)rate_delay,
   (fn_t)rate_sizes,
   (fn_t)rate_create,
-  0,
+  (fn_t)0,
   (fn_t)id,
 };
 #endif

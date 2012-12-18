@@ -8,7 +8,7 @@ if (${BUILD_EXAMPLES})
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_C_FLAGS}")
   endif ()
 else ()
-  file (GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/3b*.c)
+  file (GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/3*.c)
 endif ()
 
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${PROJECT_C_FLAGS}")

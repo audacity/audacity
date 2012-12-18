@@ -114,7 +114,7 @@ SOXR soxr_error_t soxr_process(
 
     Note that no special meaning is associated with ilen or olen equal to
     zero.  End-of-input (i.e. no data is available nor shall be available)
-    may be indicated by seting in to zero.                                    */
+    may be indicated by seting `in' to NULL.                                  */
 
 
 
@@ -140,7 +140,8 @@ typedef size_t /* data_len */
 SOXR soxr_error_t soxr_set_input_fn(/* Set (or reset) an input function.*/
     soxr_t resampler,            /* As returned by soxr_create. */
     soxr_input_fn_t,             /* Function to supply data to be resampled.*/
-    void * input_fn_state);      /* If needed by the input function. */
+    void * input_fn_state,       /* If needed by the input function. */
+    size_t max_ilen);            /* Maximum value for input fn. requested_len.*/
 
 /* then repeatedly call: */
 
@@ -175,6 +176,13 @@ SOXR soxr_error_t soxr_oneshot(
     soxr_io_spec_t const *,
     soxr_quality_spec_t const *,
     soxr_runtime_spec_t const *);
+
+
+
+/* For variable-rate resampling (experimental). See example # 5 for how to
+ * create a variable-rate resampler and how to use this function. */
+
+SOXR soxr_error_t soxr_set_io_ratio(soxr_t, double io_ratio, size_t slew_len);
 
 
 
@@ -226,7 +234,7 @@ struct soxr_quality_spec {                                       /* Typically */
 #define SOXR_MAINTAIN_3DB_PT   4u  /* Reserved for internal use. */
 #define SOXR_HI_PREC_CLOCK     8u  /* Increase `irrational' ratio accuracy. */
 #define SOXR_DOUBLE_PRECISION 16u  /* Use double prec. even @ bitdepths <= 20.*/
-#define SOXR_VR               32u  /* Reserved for future use. */
+#define SOXR_VR               32u  /* Experimental, variable-rate resampling. */
 
 
 
@@ -244,7 +252,7 @@ struct soxr_runtime_spec {                                       /* Typically */
 #define SOXR_COEF_INTERP_HIGH  2u    /* Man. select: more CPU, less memory. */
 
 #define SOXR_STRICT_BUFFERING  4u  /* Reserved for future use. */
-#define SOXR_NOSMALLINTOPT     8u  /* More CPU, less latency for 3/2, 3/4 etc.*/
+#define SOXR_NOSMALLINTOPT     8u  /* For test purposes only. */
 
 
 
@@ -298,7 +306,6 @@ SOXR soxr_io_spec_t soxr_io_spec(
 
 SOXR soxr_error_t soxr_set_error(soxr_t, soxr_error_t);
 SOXR soxr_error_t soxr_set_num_channels(soxr_t, unsigned);
-SOXR soxr_error_t soxr_set_oi_ratio(soxr_t, double);
 
 
 

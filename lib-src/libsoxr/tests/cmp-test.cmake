@@ -7,7 +7,7 @@ else ()
   set (quality 44)
 endif ()
 
-execute_process(COMMAND ${EXAMPLES_BIN}3b-options-with-input-fn ${from} ${to} 1 2 2 ${quality} a
+execute_process(COMMAND ${EXAMPLES_BIN}3-options-input-fn ${from} ${to} 1 2 2 ${quality} a
   INPUT_FILE ref-${from}.s32
   OUTPUT_FILE ${from}-${to}.s32
   ERROR_VARIABLE test_error
@@ -15,8 +15,6 @@ execute_process(COMMAND ${EXAMPLES_BIN}3b-options-with-input-fn ${from} ${to} 1 
 
 if (test_result)
   message (FATAL_ERROR "Resampling failure: ${test_error}")
-#else ()
-  #message (STATUS ${test_error})
 endif ()
 
 execute_process(COMMAND ${BIN}vector-cmp ref-${to}.s32 ${from}-${to}.s32 ${to} ${leader} ${len} ${bits} 98
