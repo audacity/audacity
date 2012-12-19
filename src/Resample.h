@@ -115,6 +115,10 @@ class Resample
  protected:
    int   mMethod; // resampler-specific enum for resampling method
    void* mHandle; // constant-rate or variable-rate resampler (XOR per instance)
+#if USE_LIBSAMPLERATE 
+   bool mShouldReset; // whether the resampler should be reset because lastFlag has been set previously
+   int  mSamplesLeft; // number of samples left before a reset is needed
+#endif
 };
 
 class ConstRateResample : public Resample

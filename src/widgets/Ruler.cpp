@@ -1045,47 +1045,51 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
       double sg = UPP > 0.0? 1.0: -1.0;
       
       // Major ticks
-      double d = mMin - UPP/2;
-      double lastD = d;
+      double d, warpedD;
+      d = mMin - UPP/2;
+      if(timetrack)
+         warpedD = timetrack->ComputeWarpedLength(0.0, d);
+      else
+         warpedD = d;
       // using ints for majorint doesn't work, as 
       // majorint will overflow and be negative at high zoom.
-      double majorInt = floor(sg * d / mMajor);
+      double majorInt = floor(sg * warpedD / mMajor);
       i = -1;
       while(i <= mLength) {
-         double warpfactor;
-         if( d>0 && timetrack != NULL )
-            warpfactor = timetrack->ComputeWarpFactor( lastD, d );
-         else
-            warpfactor = 1.0;
-         
          i++;
-         lastD = d;
-         d += UPP/warpfactor;
+         if(timetrack)
+            warpedD += timetrack->ComputeWarpedLength(d, d + UPP);
+         else
+            warpedD += UPP;
+         d += UPP;
          
-         if (floor(sg * d / mMajor) > majorInt) {
-            majorInt = floor(sg * d / mMajor);
+         if (floor(sg * warpedD / mMajor) > majorInt) {
+            majorInt = floor(sg * warpedD / mMajor);
             Tick(i, sg * majorInt * mMajor, true, false);
          }
       }
-
+      
       // Minor ticks
       d = mMin - UPP/2;
-      lastD = d;
-      int minorInt = (int)floor(sg * d / mMinor);
+      if(timetrack)
+         warpedD = timetrack->ComputeWarpedLength(0.0, d);
+      else
+         warpedD = d;
+      // using ints for majorint doesn't work, as 
+      // majorint will overflow and be negative at high zoom.
+      // MB: I assume the same applies to minorInt
+      double minorInt = floor(sg * warpedD / mMinor);
       i = -1;
       while(i <= mLength) {
-         double warpfactor;
-         if( d>0 && timetrack != NULL )
-            warpfactor = timetrack->ComputeWarpFactor( lastD, d );
-         else
-            warpfactor = 1.0;
-         
          i++;
-         lastD = d;
-         d += UPP/warpfactor;
+         if(timetrack)
+            warpedD += timetrack->ComputeWarpedLength(d, d + UPP);
+         else
+            warpedD += UPP;
+         d += UPP;
          
-         if ((int)floor(sg * d / mMinor) > minorInt) {
-            minorInt = (int)floor(sg * d / mMinor);
+         if (floor(sg * warpedD / mMinor) > minorInt) {
+            minorInt = floor(sg * warpedD / mMinor);
             Tick(i, sg * minorInt * mMinor, false, true);
          }
       }
@@ -2035,15 +2039,4 @@ void AdornedRulerPanel::GetMaxSize(wxCoord *width, wxCoord *height)
 {
    ruler.GetMaxSize(width, height);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 126e06c2-f0c8-490f-bdd6-12581013f13f
 

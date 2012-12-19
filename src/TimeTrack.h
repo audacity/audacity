@@ -58,26 +58,47 @@ class TimeTrack: public Track {
 
    Envelope *GetEnvelope() { return mEnvelope; }
    
-   //Compute the integral warp factor between two non-warped time points
+   //Note: The meaning of this function has changed (December 2012)
+   //Previously this function did something that was close to the opposite (but not entirely accurate).
+   /** @brief Compute the integral warp factor between two non-warped time points
+    *
+    * Calculate the relative length increase of the chosen segment from the original sound.
+    * So if this time track has a low value (i.e. makes the sound slower), the new warped
+    * sound will be *longer* than the original sound, so the return value of this function
+    * is larger.
+    * @param t0 The starting time to calculate from
+    * @param t1 The ending time to calculate to
+    * @return The relative length increase of the chosen segment from the original sound.
+    */
    double ComputeWarpFactor(double t0, double t1);
+   double ComputeWarpedLength(double t0, double t1);
+   double SolveWarpedLength(double t0, double length);
 
    // Get/Set the speed-warping range, as percentage of original speed (e.g. 90%-110%)
 
-   long GetRangeLower() { return mRangeLower ? mRangeLower : 1; }
-   long GetRangeUpper() { return mRangeUpper ? mRangeUpper : 1; }
+   //TODO-MB: What's a sensible minimum value? Also, TrackPanel already forces a much
+   //         higher minimum value (13%), so what's the point of adding another one here?
+   //         Besides, Envelope should probably handle this, not TimeTrack (or TrackPanel).
+   double GetRangeLower() const { return mRangeLower; }
+   double GetRangeUpper() const { return mRangeUpper; }
 
-   void SetRangeLower(long lower) { mRangeLower = lower; }
-   void SetRangeUpper(long upper) { mRangeUpper = upper; }
+   void SetRangeLower(double lower) { mRangeLower = lower; }
+   void SetRangeUpper(double upper) { mRangeUpper = upper; }
 
-   double warp( double t );
+   bool GetDisplayLog() const { return mDisplayLog; }
+   void SetDisplayLog(bool displayLog) { mDisplayLog = displayLog; }
+   bool GetInterpolateLog() const;
+   void SetInterpolateLog(bool interpolateLog);
 
    void testMe();
 
  private:
    Envelope        *mEnvelope;
    Ruler           *mRuler;
-   long             mRangeLower;
-   long             mRangeUpper;
+   double           mRangeLower;
+   double           mRangeUpper;
+   bool             mDisplayLog;
+   bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
 
    void Init(const TimeTrack &orig);
    virtual Track *Duplicate();
@@ -90,15 +111,4 @@ class TimeTrack: public Track {
 
 
 #endif // __AUDACITY_TIMETRACK__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 58e4cd09-07ee-47d0-bcb9-a37ddcac8483
 

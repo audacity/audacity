@@ -446,11 +446,34 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
 
    // Label and Time tracks do not have a vruler
    // But give it a beveled area
-   if (kind == Track::Label || kind == Track::Time) {
+   if (kind == Track::Label) {
       wxRect bev = r;
       bev.Inflate(-1, -1);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
+
+      return;
+   }
+
+   // Time tracks
+   if (kind == Track::Time) {
+      wxRect bev = r;
+      bev.Inflate(-1, -1);
+      bev.width += 1;
+      AColor::BevelTrackInfo(*dc, true, bev);
+
+      // Right align the ruler
+      wxRect rr = r;
+      rr.width--;
+      if (t->vrulerSize.GetWidth() < r.GetWidth()) {
+         int adj = rr.GetWidth() - t->vrulerSize.GetWidth();
+         rr.x += adj;
+         rr.width -= adj;
+      }
+
+      UpdateVRuler(t, rr);
+
+      vruler->Draw(*dc);
 
       return;
    }
@@ -589,6 +612,22 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
    // Label tracks do not have a vruler
    if (t->GetKind() == Track::Label) {
       return;
+   }
+
+   // Time tracks
+   if (t->GetKind() == Track::Time) {
+      TimeTrack *tt = (TimeTrack *)t;
+      float min, max;
+      min = tt->GetRangeLower() * 100.0;
+      max = tt->GetRangeUpper() * 100.0;
+
+      vruler->SetBounds(r.x, r.y+1, r.x + r.width, r.y + r.height-1);
+      vruler->SetOrientation(wxVERTICAL);
+      vruler->SetRange(max, min);
+      vruler->SetFormat((tt->GetDisplayLog()) ? Ruler::RealLogFormat : Ruler::RealFormat);
+      vruler->SetUnits(wxT(""));
+      vruler->SetLabelEdges(false);
+      vruler->SetLog(tt->GetDisplayLog());
    }
 
    // All waves have a ruler in the info panel
@@ -2808,8 +2847,15 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
    track->Draw(dc, r, viewInfo->h, viewInfo->zoom);
    wxRect envRect = r;
    envRect.height -= 2;
+   double lower = track->GetRangeLower(), upper = track->GetRangeUpper();
+   if(track->GetDisplayLog()) {
+      // MB: silly way to undo the work of GetWaveYPos while still getting a logarithmic scale
+      double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+      lower = 20.0 * log10(std::max(1.0e-7, lower)) / dBRange + 1.0;
+      upper = 20.0 * log10(std::max(1.0e-7, upper)) / dBRange + 1.0;
+   }
    track->GetEnvelope()->DrawPoints(dc, envRect, viewInfo->h, viewInfo->zoom, 
-               false,0.0,1.0);
+               track->GetDisplayLog(), lower, upper);
 }
 
 void TrackArtist::UpdatePrefs()

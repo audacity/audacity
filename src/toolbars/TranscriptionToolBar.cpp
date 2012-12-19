@@ -409,8 +409,9 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & event)
    }
 
    // Set the speed range
-   mTimeTrack->SetRangeUpper((long int)mPlaySpeed);
-   mTimeTrack->SetRangeLower((long int)mPlaySpeed);
+   //mTimeTrack->SetRangeUpper((double)mPlaySpeed / 100.0);
+   //mTimeTrack->SetRangeLower((double)mPlaySpeed / 100.0);
+   mTimeTrack->GetEnvelope()->Flatten((double)mPlaySpeed / 100.0);
 
    // Get the current play region
    double playRegionStart, playRegionEnd;
@@ -889,17 +890,4 @@ void TranscriptionToolBar::AdjustPlaySpeed(float adj)
    wxCommandEvent e;
    OnSpeedSlider(e);
 }
-
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ToDo
 

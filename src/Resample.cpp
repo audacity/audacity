@@ -168,6 +168,12 @@
       : Resample(useBestMethod)
    {
       mHandle = resample_open(mMethod, dMinFactor, dMaxFactor);
+      if(mHandle == NULL) {
+         fprintf(stderr, "libresample doesn't support range %f .. %f.\n", dMinFactor, dMaxFactor);
+         // FIX-ME: Audacity will hang after this if branch.
+         mHandle = NULL;
+         return;
+      }
    }
 
    VarRateResample::~VarRateResample()
@@ -240,6 +246,8 @@
       int err;
       SRC_STATE *state = src_new(mMethod, 1, &err);
       mHandle = (void *)state;
+      mShouldReset = false;
+      mSamplesLeft = 0;
    }
 
    VarRateResample::~VarRateResample()
@@ -299,6 +307,15 @@
       src_set_ratio((SRC_STATE *)mHandle, factor);
 
       SRC_DATA data;
+      
+      if(mShouldReset) {
+         if(inBufferLen > mSamplesLeft) {
+            mShouldReset = false;
+            src_reset((SRC_STATE *)mHandle);
+         } else {
+            mSamplesLeft -= inBufferLen;
+         }
+      }
 
       data.data_in = inBuffer;
       data.data_out = outBuffer;
@@ -313,6 +330,11 @@
       if (err) {
          wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
          return 0;
+      }
+      
+      if(lastFlag) {
+         mShouldReset = true;
+         mSamplesLeft = inBufferLen - (int)data.input_frames_used;
       }
 
       *inBufferUsed = (int)data.input_frames_used;

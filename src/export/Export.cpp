@@ -274,16 +274,10 @@ Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
          double outRate, sampleFormat outFormat,
          bool highQuality, MixerSpec *mixerSpec)
 {
-   double warpedStopTime;
-   double warpFactor = 1.0;
-   if(timeTrack)
-      warpFactor = timeTrack->ComputeWarpFactor(startTime, stopTime);
-
-   warpedStopTime = warpFactor >= 1.0 ? stopTime : (startTime + ((stopTime - startTime) / warpFactor));
-   printf("warpfactor %f, stoptime %f, warpstoptime %f\n",warpFactor, stopTime, warpedStopTime);
+   // MB: the stop time should not be warped, this was a bug.
    return new Mixer(numInputTracks, inputTracks,
                   timeTrack,
-                  startTime, warpedStopTime,
+                  startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,
                   highQuality, mixerSpec);
@@ -1212,15 +1206,4 @@ void ExportMixerDialog::OnCancel(wxCommandEvent &event)
 {
    EndModal( wxID_CANCEL );
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: e6901653-9e2a-4a97-8ba8-377928b8e45a
 

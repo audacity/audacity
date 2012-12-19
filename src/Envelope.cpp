@@ -70,14 +70,6 @@ Envelope::~Envelope()
    WX_CLEAR_ARRAY(mEnv);
 }
 
-// TODO: Move Getters/Setters to Envelope.h and
-// name them consistently Get/Set
-
-void Envelope::SetInterpolateDB(bool db)
-{
-   mDB = db;
-}
-
 void Envelope::Mirror(bool mirror)
 {
    mMirror = mirror;
@@ -1068,13 +1060,12 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
 /// @return value there, or its (safe) log10.
 double Envelope::GetInterpolationStartValueAtPoint( int iPoint ) const
 {
-   double v = mEnv[ iPoint ]->val;
+   //TODO-MB: make minimum value adjustable and apply this consistently
+   double v = std::max(1.0e-7, mEnv[ iPoint ]->val);
    if( !mDB )
       return v;
-   // Special case for the log of zero
-   if (v <= 0.0)
-      return -7.0; // This corresponds to -140 dB
-   return log10( v );
+   else
+      return log10(v);
 }
 
 void Envelope::GetValues(double *buffer, int bufferLen,
@@ -1205,105 +1196,275 @@ double Envelope::Average( double t0, double t1 )
     return Integral( t0, t1 ) / (t1 - t0);
 }
 
+double Envelope::AverageOfInverse( double t0, double t1 )
+{
+  if( t0 == t1 )
+    return 1.0 / GetValue( t0 );
+  else
+    return IntegralOfInverse( t0, t1 ) / (t1 - t0);
+}
+
 //
 // Integration and debugging functions
 //
 // The functions below are used by the TimeTrack and possibly for
 // other debugging.  They do not affect normal amplitude envelopes
 // for waveforms, nor frequency envelopes for equalization.
+// The 'Average' function also uses 'Integral'.
 //
+
+// A few helper functions to make the code below more readable.
+static double InterpolatePoints(double y1, double y2, double factor, bool logarithmic)
+{
+   if(logarithmic)
+      // you can use any base you want, it doesn't change the result
+      return exp(log(y1) * (1.0 - factor) + log(y2) * factor);
+   else
+      return y1 * (1.0 - factor) + y2 * factor;
+}
+static double IntegrateInterpolated(double y1, double y2, double time, bool logarithmic)
+{
+   // Calculates: integral(interpolate(y1, y2, x), x = 0 .. time)
+   // Integrating logarithmic interpolated segments is surprisingly simple. You can check this formula here:
+   // http://www.wolframalpha.com/input/?i=integrate+10%5E%28log10%28y1%29*%28T-x%29%2FT%2Blog10%28y2%29*x%2FT%29+from+0+to+T
+   // Again, the base you use for interpolation is irrelevant, the formula below should always use the natural
+   // logarithm (i.e. 'log' in C/C++). If the denominator is too small, it's better to use linear interpolation
+   // because the rounding errors would otherwise get too large. The threshold value is 1.0e-5 because at that
+   // point the rounding errors become larger than the difference between linear and logarithmic (I tested this in Octave).
+   if(logarithmic)
+   {
+      double l = log(y1 / y2);
+      if(fabs(l) < 1.0e-5) // fall back to linear interpolation
+         return (y1 + y2) * 0.5 * time;
+      return (y1 - y2) / l * time;
+   }
+   else
+   {
+      return (y1 + y2) * 0.5 * time;
+   }
+}
+static double IntegrateInverseInterpolated(double y1, double y2, double time, bool logarithmic)
+{
+   // Calculates: integral(1 / interpolate(y1, y2, x), x = 0 .. time)
+   // This one is a bit harder. Linear:
+   // http://www.wolframalpha.com/input/?i=integrate+1%2F%28y1*%28T-x%29%2FT%2By2*x%2FT%29+from+0+to+T
+   // Logarithmic:
+   // http://www.wolframalpha.com/input/?i=integrate+1%2F%2810%5E%28log10%28y1%29*%28T-x%29%2FT%2Blog10%28y2%29*x%2FT%29%29+from+0+to+T
+   // Here both cases need a special case for y1 == y2. The threshold is 1.0e5 again, this is still the
+   // best value in both cases.
+   double l = log(y1 / y2);
+   if(fabs(l) < 1.0e-5) // fall back to average
+      return 2.0 / (y1 + y2) * time;
+   if(logarithmic)
+      return (y1 - y2) / (l * y1 * y2) * time;
+   else
+      return l / (y1 - y2) * time;
+}
+static double SolveIntegrateInverseInterpolated(double y1, double y2, double time, double area, bool logarithmic)
+{
+   // Calculates: solve (integral(1 / interpolate(y1, y2, x), x = 0 .. res) = area) for res
+   // Don't try to derive these formulas by hand :). The threshold is 1.0e5 again.
+   double a = area / time, res;
+   if(logarithmic)
+   {
+      double l = log(y1 / y2);
+      if(fabs(l) < 1.0e-5) // fall back to average
+         res = a * (y1 + y2) * 0.5;
+      else if(1.0 + a * y1 * l <= 0.0)
+         res = 1.0;
+      else
+         res = log(1.0 + a * y1 * l) / l;
+   }
+   else
+   {
+      if(fabs(y2 - y1) < 1.0e-5) // fall back to average
+         res = a * (y1 + y2) * 0.5;
+      else
+         res = y1 * (exp(a * (y2 - y1)) - 1.0) / (y2 - y1);
+   }
+   return std::max(0.0, std::min(1.0, res)) * time;
+}
 
 // We should be able to write a very efficient memoizer for this
 // but make sure it gets reset when the envelope is changed.
 double Envelope::Integral( double t0, double t1 )
 {
-   //printf( "\n\nIntegral:  t0=%f, t1=%f\n", t0, t1 );
-   double total=0;
-   
-   if( t0 == t1 )
-      return 0;
-   if( t0 > t1 )
+   if(t0 == t1)
+      return 0.0;
+   if(t0 > t1)
    {
-      printf( "Odd things happening in Integral!\n" );
-      return mDefaultValue;
+      return -Integral(t1, t0); // this makes more sense than returning the default value
    }
    
-   unsigned int i = 0;
-   double lastT, lastVal;
+   unsigned int count = mEnv.Count();
+   if(count == 0) // 'empty' envelope
+      return (t1 - t0) * mDefaultValue;
    
-   // t0 is one of three cases:
-
-   // 0) in an 'empty' envelope
-   // 1) preceeding the first point
-   // 2) enclosed by points
-   // 3) following the last point
-
-   if( mEnv.Count() < 1 )                      // 0: 'empty' envelope
+   double total = 0.0, lastT, lastVal;
+   unsigned int i; // this is the next point to check
+   if(t0 < mEnv[0]->t) // t0 preceding the first point
    {
-      return (t1 - t0) * mDefaultValue;  
-   }
-   else if( t0 < mEnv[0]->t )                  // 1: preceeds the first
-   {
-      if( t1 <= mEnv[0]->t ){
+      if(t1 <= mEnv[0]->t)
          return (t1 - t0) * mEnv[0]->val;
-      }
-      total += (mEnv[0]->t - t0) * mEnv[0]->val;
+      i = 1;
       lastT = mEnv[0]->t;
       lastVal = mEnv[0]->val;
+      total += (lastT - t0) * lastVal;
    }
-   else if( t0 >= mEnv[mEnv.Count()-1]->t )    // 3: follows the last
+   else if(t0 >= mEnv[count - 1]->t) // t0 following the last point
    {
-      return (t1 - t0) * mEnv[mEnv.Count()-1]->val;
+      return (t1 - t0) * mEnv[count - 1]->val;
    }
-   else 
-   {                                         // 2: bracketed
+   else // t0 enclosed by points
+   {
       // Skip any points that come before t0 using binary search
-      int lo,hi;
-      BinarySearchForTime( lo, hi, t0 );
-      i = lo;
-      // i is now the point immediately before t0.
-      lastVal = ((mEnv[i]->val * (mEnv[i+1]->t - t0))
-         + (mEnv[i+1]->val *(t0 - mEnv[i]->t)))
-         / (mEnv[i+1]->t - mEnv[i]->t); // value at t0
+      int lo, hi;
+      BinarySearchForTime(lo, hi, t0);
+      lastVal = InterpolatePoints(mEnv[lo]->val, mEnv[hi]->val, (t0 - mEnv[lo]->t) / (mEnv[hi]->t - mEnv[lo]->t), mDB);
       lastT = t0;
+      i = hi; // the point immediately after t0.
    }
-
+   
    // loop through the rest of the envelope points until we get to t1
    while (1)
    {
-
-      if(i >= mEnv.Count()-1)
+      if(i >= count) // the requested range extends beyond the last point
       {
-         // the requested range extends beyond last point
          return total + (t1 - lastT) * lastVal;
       }
-      else if (mEnv[i+1]->t >= t1)
+      else if(mEnv[i]->t >= t1) // this point follows the end of the range
       {
-         // last,i+1 bracket t1
-         double thisVal = ((mEnv[i]->val * (mEnv[i+1]->t - t1))
-            + (mEnv[i+1]->val *(t1 - mEnv[i]->t)))
-            / (mEnv[i+1]->t - mEnv[i]->t); 
-
-         return total + (t1 - lastT) * (thisVal + lastVal) / 2;
+         double thisVal = InterpolatePoints(mEnv[i - 1]->val, mEnv[i]->val, (t1 - mEnv[i - 1]->t) / (mEnv[i]->t - mEnv[i - 1]->t), mDB);
+         return total + IntegrateInterpolated(lastVal, thisVal, t1 - lastT, mDB);
       }
-      else
+      else // this point preceeds the end of the range
       {
-         // t1 still follows last,i+1
-         total += (mEnv[i+1]->t - lastT) *  (mEnv[i+1]->val + lastVal) / 2;
-         lastT = mEnv[i+1]->t;
-         lastVal = mEnv[i+1]->val;
+         total += IntegrateInterpolated(lastVal, mEnv[i]->val, mEnv[i]->t - lastT, mDB);
+         lastT = mEnv[i]->t;
+         lastVal = mEnv[i]->val;
          i++;
       }
    }
 }
 
-// This one scales the y-axis before integrating.
-// To re-scale [0,1] to [minY,maxY] we use the mapping y -> minY + (maxY - minY)y
-// So we want to find the integral of (minY + (maxY - minY)f(t)), where f is our envelope.
-// But that's just (t1 - t0)minY + (maxY - minY)Integral( t0, t1 ).
-double Envelope::Integral( double t0, double t1, double minY, double maxY )
+double Envelope::IntegralOfInverse( double t0, double t1 )
 {
-   return ((t1 - t0) * minY) + ((maxY - minY) * Integral( t0, t1 ));
+   if(t0 == t1)
+      return 0.0;
+   if(t0 > t1)
+   {
+      return -IntegralOfInverse(t1, t0); // this makes more sense than returning the default value
+   }
+   
+   unsigned int count = mEnv.Count();
+   if(count == 0) // 'empty' envelope
+      return (t1 - t0) / mDefaultValue;
+   
+   double total = 0.0, lastT, lastVal;
+   unsigned int i; // this is the next point to check
+   if(t0 < mEnv[0]->t) // t0 preceding the first point
+   {
+      if(t1 <= mEnv[0]->t)
+         return (t1 - t0) / mEnv[0]->val;
+      i = 1;
+      lastT = mEnv[0]->t;
+      lastVal = mEnv[0]->val;
+      total += (lastT - t0) / lastVal;
+   }
+   else if(t0 >= mEnv[count - 1]->t) // t0 following the last point
+   {
+      return (t1 - t0) / mEnv[count - 1]->val;
+   }
+   else // t0 enclosed by points
+   {
+      // Skip any points that come before t0 using binary search
+      int lo, hi;
+      BinarySearchForTime(lo, hi, t0);
+      lastVal = InterpolatePoints(mEnv[lo]->val, mEnv[hi]->val, (t0 - mEnv[lo]->t) / (mEnv[hi]->t - mEnv[lo]->t), mDB);
+      lastT = t0;
+      i = hi; // the point immediately after t0.
+   }
+   
+   // loop through the rest of the envelope points until we get to t1
+   while (1)
+   {
+      if(i >= count) // the requested range extends beyond the last point
+      {
+         return total + (t1 - lastT) / lastVal;
+      }
+      else if(mEnv[i]->t >= t1) // this point follows the end of the range
+      {
+         double thisVal = InterpolatePoints(mEnv[i - 1]->val, mEnv[i]->val, (t1 - mEnv[i - 1]->t) / (mEnv[i]->t - mEnv[i - 1]->t), mDB);
+         return total + IntegrateInverseInterpolated(lastVal, thisVal, t1 - lastT, mDB);
+      }
+      else // this point preceeds the end of the range
+      {
+         total += IntegrateInverseInterpolated(lastVal, mEnv[i]->val, mEnv[i]->t - lastT, mDB);
+         lastT = mEnv[i]->t;
+         lastVal = mEnv[i]->val;
+         i++;
+      }
+   }
+}
+
+double Envelope::SolveIntegralOfInverse( double t0, double area )
+{
+   if(area == 0.0)
+      return t0;
+   if(area < 0.0)
+   {
+      fprintf( stderr, "SolveIntegralOfInverse called with negative area, this is not supported!\n" );
+      return t0;
+   }
+   
+   unsigned int count = mEnv.Count();
+   if(count == 0) // 'empty' envelope
+      return t0 + area * mDefaultValue;
+   
+   double lastT, lastVal;
+   unsigned int i; // this is the next point to check
+   if(t0 < mEnv[0]->t) // t0 preceding the first point
+   {
+      i = 1;
+      lastT = mEnv[0]->t;
+      lastVal = mEnv[0]->val;
+      double added = (lastT - t0) / lastVal;
+      if(added >= area)
+         return t0 + area * mEnv[0]->val;
+      area -= added;
+   }
+   else if(t0 >= mEnv[count - 1]->t) // t0 following the last point
+   {
+      return t0 + area * mEnv[count - 1]->val;
+   }
+   else // t0 enclosed by points
+   {
+      // Skip any points that come before t0 using binary search
+      int lo, hi;
+      BinarySearchForTime(lo, hi, t0);
+      lastVal = InterpolatePoints(mEnv[lo]->val, mEnv[hi]->val, (t0 - mEnv[lo]->t) / (mEnv[hi]->t - mEnv[lo]->t), mDB);
+      lastT = t0;
+      i = hi; // the point immediately after t0.
+   }
+   
+   // loop through the rest of the envelope points until we get to t1
+   while (1)
+   {
+      if(i >= count) // the requested range extends beyond the last point
+      {
+         return lastT + area * lastVal;
+      }
+      else
+      {
+         double added = IntegrateInverseInterpolated(lastVal, mEnv[i]->val, mEnv[i]->t - lastT, mDB);
+         if(added >= area)
+            return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i]->val, mEnv[i]->t - lastT, area, mDB);
+         area -= added;
+         lastT = mEnv[i]->t;
+         lastVal = mEnv[i]->val;
+         i++;
+      }
+   }
 }
 
 void Envelope::print()
@@ -1382,15 +1543,4 @@ void Envelope::testMe()
    checkResult( 18, NextPointAfter( 0 ), 5 );
    checkResult( 19, NextPointAfter( 5 ), 10 );
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 35b619bd-685f-45ee-89f0-bea14839de88
 

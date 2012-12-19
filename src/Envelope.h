@@ -80,7 +80,8 @@ class Envelope : public XMLTagHandler {
 
    virtual ~ Envelope();
 
-   void SetInterpolateDB(bool db);
+   bool GetInterpolateDB() { return mDB; }
+   void SetInterpolateDB(bool db) { mDB = db; }
    void Mirror(bool mirror);
 
    void Flatten(double value);
@@ -129,7 +130,7 @@ class Envelope : public XMLTagHandler {
    // Control
    void SetOffset(double newOffset);
    void SetTrackLen(double trackLen);
-
+   
    // Accessors
    /** \brief Get envelope value at time t */
    double GetValue(double t) const;
@@ -146,8 +147,10 @@ class Envelope : public XMLTagHandler {
    double NextPointAfter(double t);
 
    double Average( double t0, double t1 );
+   double AverageOfInverse( double t0, double t1 );
    double Integral( double t0, double t1 );
-   double Integral( double t0, double t1, double minY, double maxY );
+   double IntegralOfInverse( double t0, double t1 );
+   double SolveIntegralOfInverse( double t0, double area);
 
    void print();
    void testMe();
@@ -230,16 +233,4 @@ private:
 };
 
 #endif
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ab815f84-1f8c-4560-a165-271d3bae377e
 

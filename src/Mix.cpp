@@ -42,6 +42,7 @@
 #include "Resample.h"
 #include "float_cast.h"
 
+//TODO-MB: wouldn't it make more sense to delete the time track after 'mix and render'?
 bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
@@ -244,7 +245,7 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    mTimeTrack = timeTrack;
    mT0 = startTime;
    mT1 = stopTime;
-   mT = startTime;
+   mTime = startTime;
    mNumChannels = numOutChannels;
    mBufferSize = outBufferSize;
    mInterleaved = outInterleaved;
@@ -284,11 +285,10 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    mResample = new Resample*[mNumInputTracks];
    for(i=0; i<mNumInputTracks; i++) {
       double factor = (mRate / mInputTrack[i]->GetRate());
-      double lowFactor = factor, highFactor = factor;
       if (timeTrack) {
-         highFactor /= timeTrack->GetRangeLower() / 100.0;
-         lowFactor /= timeTrack->GetRangeUpper() / 100.0;
-         mResample[i] = new VarRateResample(highQuality, lowFactor, highFactor);
+         mResample[i] = new VarRateResample(highQuality,
+                                            factor / timeTrack->GetRangeUpper(),
+                                            factor / timeTrack->GetRangeLower());
       } else {
          mResample[i] = new ConstRateResample(highQuality, factor);
       }
@@ -437,24 +437,21 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
          }
       }
 
-      double factor = initialWarp;
-      if (mTimeTrack) 
-      {
-         Envelope* pEnvelope = mTimeTrack->GetEnvelope();
-         if (pEnvelope)
-         {
-            double warpFactor = pEnvelope->GetValue(t);
-            warpFactor = (mTimeTrack->GetRangeLower() * (1.0 - warpFactor) +
-                          warpFactor * mTimeTrack->GetRangeUpper()) / 100.0;
-
-            factor /= warpFactor;
-         }
-      }
-
       sampleCount thisProcessLen = mProcessLen;
       bool last = (*queueLen < mProcessLen);
       if (last) {
          thisProcessLen = *queueLen;
+      }
+
+      double factor = initialWarp;
+      if (mTimeTrack) 
+      {
+         //TODO-MB: The end time is wrong when the resampler doesn't use all input samples,
+         //         as a result of this the warp factor may be slightly wrong, so AudioIO will stop too soon
+         //         or too late (resulting in missing sound or inserted silence). This can't be fixed
+         //         without changing the way the resampler works, because the number of input samples that will be used
+         //         is unpredictable. Maybe it can be compensated lated though.
+         factor *= mTimeTrack->ComputeWarpFactor(t, t + (double)thisProcessLen / trackRate);
       }
 
       int input_used;
@@ -540,8 +537,10 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrack *track,
 
 sampleCount Mixer::Process(sampleCount maxToProcess)
 {
-   if (mT >= mT1)
-      return 0;
+   // MB: this is wrong! mT represented warped time, and mTime is too inaccurate to use
+   // it here. It's also unnecessary I think.
+   //if (mT >= mT1)
+   //   return 0;
 
    int i, j;
    sampleCount out;
@@ -589,12 +588,18 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
 
       if (out > maxOut)
          maxOut = out;
+      
+      double t = (double)mSamplePos[i] / (double)track->GetRate();
+      if(t > mTime)
+         mTime = std::min(t, mT1);
+      
    }
    out = mInterleaved ? maxOut * mNumChannels : maxOut;
    for(int c=0; c<mNumBuffers; c++)
       CopySamples(mTemp[c], floatSample, mBuffer[c], mFormat, out);
 
-   mT += (maxOut / mRate);
+   // MB: this doesn't take warping into account, replaced with code based on mSamplePos
+   //mT += (maxOut / mRate);
 
    delete [] channelFlags; 
 
@@ -613,14 +618,14 @@ samplePtr Mixer::GetBuffer(int channel)
 
 double Mixer::MixGetCurrentTime()
 {
-   return mT;
+   return mTime;
 }
 
 void Mixer::Restart()
 {
    int i;
 
-   mT = mT0;
+   mTime = mT0;
 
    for(i=0; i<mNumInputTracks; i++)
       mSamplePos[i] = mInputTrack[i]->TimeToLongSamples(mT0);
@@ -635,14 +640,14 @@ void Mixer::Reposition(double t)
 {
    int i;
 
-   mT = t;
-   if( mT < mT0 )
-      mT = mT0;
-   if( mT > mT1 )
-      mT = mT1;
+   mTime = t;
+   if( mTime < mT0 )
+      mTime = mT0;
+   if( mTime > mT1 )
+      mTime = mT1;
 
    for(i=0; i<mNumInputTracks; i++) {
-      mSamplePos[i] = mInputTrack[i]->TimeToLongSamples(mT);
+      mSamplePos[i] = mInputTrack[i]->TimeToLongSamples(mTime);
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
    }
@@ -733,15 +738,4 @@ MixerSpec& MixerSpec::operator=( const MixerSpec &mixerSpec )
 
    return *this;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: d4e10e74-cdf9-46ac-b309-91b115d2a78f
 

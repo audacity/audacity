@@ -428,6 +428,9 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnChannelChange(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
    virtual void OnSetTimeTrackRange (wxCommandEvent &event);
+   virtual void OnTimeTrackLin(wxCommandEvent &event);
+   virtual void OnTimeTrackLog(wxCommandEvent &event);
+   virtual void OnTimeTrackLogInt(wxCommandEvent &event);
 
    virtual void SetMenuCheck( wxMenu & menu, int newId );
    virtual void SetRate(Track *pTrack, double rate);
@@ -721,13 +724,3 @@ protected:
 
 #endif
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 1f8c3d0e-849e-4f3c-95b5-9ead0789f999
