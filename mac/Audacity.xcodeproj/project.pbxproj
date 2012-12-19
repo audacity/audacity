@@ -1555,6 +1555,7 @@
 		EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
 		EDAD326E1544452E009C6220 /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325715444372009C6220 /* sv.po */; };
 		EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
+		EDE32600168243EF00C19E60 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
 		EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */; };
 		EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */; };
 /* End PBXBuildFile section */
@@ -3480,6 +3481,7 @@
 		EDAD325715444372009C6220 /* sv.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
 		EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportExportCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		EDD94EDA103CB520000873F1 /* ImportExportCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportExportCommands.h; sourceTree = "<group>"; tabWidth = 3; };
+		EDE325FF168243EF00C19E60 /* vr32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vr32.c; sourceTree = "<group>"; };
 		EDF3B7AE1588C0D50032D35F /* Paulstretch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paulstretch.h; path = effects/Paulstretch.h; sourceTree = "<group>"; };
 		EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Paulstretch.cpp; path = effects/Paulstretch.cpp; sourceTree = "<group>"; };
 		EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = CaptureEvents.cpp; path = ../src/CaptureEvents.cpp; sourceTree = SOURCE_ROOT; tabWidth = 3; };
@@ -5865,6 +5867,7 @@
 				ED1521CD163C29DA00451B5F /* samplerate.h */,
 				ED152160163C244200451B5F /* soxr.h */,
 				ED15215F163C244200451B5F /* soxr.c */,
+				EDE325FF168243EF00C19E60 /* vr32.c */,
 			);
 			name = src;
 			path = libsoxr/src;
@@ -8179,6 +8182,7 @@
 				ED152178163C24D900451B5F /* rate32.c in Sources */,
 				ED152179163C24D900451B5F /* rate64.c in Sources */,
 				ED152161163C244200451B5F /* soxr.c in Sources */,
+				EDE32600168243EF00C19E60 /* vr32.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
