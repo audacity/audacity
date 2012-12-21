@@ -125,42 +125,7 @@
 
 
 // variable-rate resampler(s)
-#if USE_LIBSOXR
-
-   #include <soxr.h>
-
-   VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
-      : Resample(useBestMethod)
-   {
-      soxr_quality_spec_t q_spec = soxr_quality_spec(SOXR_HQ, SOXR_VR);
-      mHandle = (void *)soxr_create(1, dMinFactor, 1, 0, 0, &q_spec, 0);
-   }
-
-   VarRateResample::~VarRateResample()
-   {
-      soxr_delete((soxr_t)mHandle);
-   }
-
-   int VarRateResample::Process(double  factor,
-                         float  *inBuffer,
-                         int     inBufferLen,
-                         bool    lastFlag,
-                         int    *inBufferUsed,
-                         float  *outBuffer,
-                         int     outBufferLen)
-   {
-      soxr_set_io_ratio((soxr_t)mHandle, 1/factor, 0);
-
-      size_t idone , odone;
-      inBufferLen = lastFlag? ~inBufferLen : inBufferLen;
-      soxr_process((soxr_t)mHandle,
-            inBuffer , (size_t)inBufferLen , &idone,
-            outBuffer, (size_t)outBufferLen, &odone);
-      *inBufferUsed = (int)idone;
-      return (int)odone;
-   }
-
-#elif USE_LIBRESAMPLE
+#if USE_LIBRESAMPLE
 
 #include "libresample.h"
 
@@ -340,6 +305,45 @@
       *inBufferUsed = (int)data.input_frames_used;
       return (int)data.output_frames_gen;
    }
+
+#elif USE_LIBSOXR
+// Note that as we currently do not distinguish USE_* flags for var-rate vs const-rate, 
+// we need to have USE_LIBSOXR last in the var-rate #if/#elif implementations, because 
+// it's always #defined in standard configuration, for use as the sole const-rate resampler. 
+
+   #include <soxr.h>
+
+   VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
+      : Resample(useBestMethod)
+   {
+      soxr_quality_spec_t q_spec = soxr_quality_spec(SOXR_HQ, SOXR_VR);
+      mHandle = (void *)soxr_create(1, dMinFactor, 1, 0, 0, &q_spec, 0);
+   }
+
+   VarRateResample::~VarRateResample()
+   {
+      soxr_delete((soxr_t)mHandle);
+   }
+
+   int VarRateResample::Process(double  factor,
+                         float  *inBuffer,
+                         int     inBufferLen,
+                         bool    lastFlag,
+                         int    *inBufferUsed,
+                         float  *outBuffer,
+                         int     outBufferLen)
+   {
+      soxr_set_io_ratio((soxr_t)mHandle, 1/factor, 0);
+
+      size_t idone , odone;
+      inBufferLen = lastFlag? ~inBufferLen : inBufferLen;
+      soxr_process((soxr_t)mHandle,
+            inBuffer , (size_t)inBufferLen , &idone,
+            outBuffer, (size_t)outBufferLen, &odone);
+      *inBufferUsed = (int)idone;
+      return (int)odone;
+   }
+
 #else // no var-rate resampler
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
       : Resample(useBestMethod)
