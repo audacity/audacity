@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-11-27 02:03+0000\n"
-"PO-Revision-Date: 2012-12-08 02:11-0000\n"
-"Last-Translator:Antonio Paniagua Navarro\n"
+"PO-Revision-Date: 2012-12-21 20:39-0000\n"
+"Last-Translator: Antonio Paniagua\n"
 "Language-Team: Spanish <audacity-translation@lists.sourceforge.net>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgstr "Equipo de desarrollo de Audacity %s"
 #: AboutDialog.cpp:240
 #, c-format
 msgid "Audacity %s Support Team"
-msgstr "Equipo de asistencia técnica de de Audacity %s"
+msgstr "Equipo de asistencia técnica de Audacity %s"
 
 #: AboutDialog.cpp:245
 msgid "Emeritus Developers"
@@ -200,7 +200,7 @@ msgstr "Compatibilidad con mezclador de tarjeta de sonido"
 #: AboutDialog.cpp:487
 #: AboutDialog.cpp:490
 msgid "Pitch and Tempo Change support"
-msgstr "Posibilidad de de cambio de tono y ritmo"
+msgstr "Posibilidad de cambio de tono y ritmo"
 
 #: AboutDialog.cpp:502
 msgid "Program build date: "
@@ -5486,15 +5486,15 @@ msgstr "Cambiar ritmo sin cambiar tono"
 
 #: effects/ChangeTempo.cpp:210
 msgid "Beats per minute:"
-msgstr "Compases por minuto:"
+msgstr "Pulsos por minuto:"
 
 #: effects/ChangeTempo.cpp:214
 msgid "From beats per minute"
-msgstr "Desde compases por minuto"
+msgstr "Desde pulsos por minuto"
 
 #: effects/ChangeTempo.cpp:219
 msgid "To beats per minute"
-msgstr "A compases por minuto"
+msgstr "A pulsos por minuto"
 
 #: effects/ChangeTempo.cpp:223
 msgid "Length (seconds):"
@@ -7253,7 +7253,7 @@ msgstr "Sinusoide"
 
 #: effects/ToneGen.cpp:74
 msgid "Square"
-msgstr "Cuadrado"
+msgstr "Cuadrada"
 
 #: effects/ToneGen.cpp:75
 msgid "Sawtooth"
@@ -7261,7 +7261,7 @@ msgstr "Diente de sierra"
 
 #: effects/ToneGen.cpp:76
 msgid "Square, no alias"
-msgstr "Cuadrado, sin alias"
+msgstr "Cuadrada, sin alias"
 
 #: effects/ToneGen.cpp:292
 #: prefs/TracksPrefs.cpp:58
@@ -7279,19 +7279,19 @@ msgstr "Forma de onda:"
 
 #: effects/ToneGen.cpp:339
 msgid "Frequency Hertz Start"
-msgstr "Hertzio de comienzo de frecuencia"
+msgstr "Frecuencia de comienzo en hertzios"
 
 #: effects/ToneGen.cpp:340
 msgid "Frequency Hertz End"
-msgstr "Hertzio de fin de frecuencia"
+msgstr "Frecuencia de fin en hertzios"
 
 #: effects/ToneGen.cpp:341
 msgid "Amplitude Start"
-msgstr "Comienzo de amplitud"
+msgstr "Amplitud inicial"
 
 #: effects/ToneGen.cpp:342
 msgid "Amplitude End"
-msgstr "Fin de amplitud"
+msgstr "Amplitud final"
 
 #: effects/ToneGen.cpp:347
 msgid "Interpolation:"
@@ -9784,7 +9784,7 @@ msgstr "Representar tiempos y duraciones en &segundos"
 
 #: prefs/ImportExportPrefs.cpp:96
 msgid "Represent times and durations in &beats"
-msgstr "Representar tiempos y duraciones en &compases"
+msgstr "Representar tiempos y duraciones en &pulsos"
 
 #: prefs/KeyConfigPrefs.cpp:72
 msgid "Keyboard"
