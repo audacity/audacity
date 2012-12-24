@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-11-27 02:03+0000\n"
-"PO-Revision-Date: 2012-12-23 23:59-0000\n"
+"PO-Revision-Date: 2012-12-24 23:32-0000\n"
 "Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -1199,7 +1199,8 @@ msgid ""
 "They are doing no harm and are small."
 msgstr ""
 "Kontrola projektu \"%s\" složka \n"
-"nalezla %d osiřelý blok souboru(ů). Tento projekt je \n"
+"nalezla %d nepřiřazený blokový  souboru (nepřiřazených-osiřelých\n"
+"blokových souborů). Tento projekt je \n"
 "nevyužívá, ale mohou patřit do jiného. \n"
 "Nedělají žádnou škodu a jsou malé."
 
@@ -1446,7 +1447,7 @@ msgstr "Osa"
 #: Menus.cpp:283
 #: prefs/KeyConfigPrefs.cpp:173
 msgid "&Export..."
-msgstr "&Uložit jako MP3, Ogg Vorbis, WAV..."
+msgstr "&Uložit v jiném formátu..."
 
 #: FreqWindow.cpp:220
 #: effects/Contrast.cpp:352
@@ -1917,7 +1918,7 @@ msgstr "&Uložit projekt"
 #: Menus.cpp:225
 #: Menus.cpp:234
 msgid "Save Project &As..."
-msgstr "Uložit projekt &jako..."
+msgstr "Uložit jako projekt &Audacity..."
 
 #: Menus.cpp:227
 #: Menus.cpp:236
@@ -1960,7 +1961,7 @@ msgstr "&Původní data..."
 
 #: Menus.cpp:288
 msgid "Expo&rt Selection..."
-msgstr "&Uložit výběr jako MP3, Ogg Vorbis, WAV..."
+msgstr "&Uložit výběr v jiném formátu..."
 
 #: Menus.cpp:296
 #: Menus.cpp:311
@@ -2547,7 +2548,7 @@ msgstr "&Upravit štítky"
 #: Menus.cpp:868
 #: Menus.cpp:1068
 msgid "S&ort Tracks"
-msgstr "T&řídit skladby"
+msgstr "T&řídit stopy"
 
 #: Menus.cpp:870
 #: Menus.cpp:1070
@@ -2853,11 +2854,11 @@ msgstr "Zavřít vybranou stopu"
 
 #: Menus.cpp:1549
 msgid "Snap To On"
-msgstr "Zapnout zapadávání"
+msgstr "Zapnout přichytávání"
 
 #: Menus.cpp:1550
 msgid "Snap To Off"
-msgstr "Vypnout zapadávání"
+msgstr "Vypnout přichytávání"
 
 #: Menus.cpp:1554
 msgid "Full screen on/off"
@@ -3021,11 +3022,11 @@ msgstr "Vyjmout a vložit do schránky"
 
 #: Menus.cpp:3677
 msgid "Split Cut"
-msgstr "Rozdělit a vyjmout"
+msgstr "Vyjmout a rozdělit"
 
 #: Menus.cpp:3677
 msgid "Split-cut to the clipboard"
-msgstr "Rozdělit a vyjmout do schránky"
+msgstr "Vyjmout a rozdělit a zkopírovat do schránky"
 
 #: Menus.cpp:3797
 msgid "Pasting one type of track into another is not allowed."
@@ -3074,7 +3075,7 @@ msgstr "Rozděleno a smazáno %.2f sekund v t=%.2f"
 
 #: Menus.cpp:4209
 msgid "Split Delete"
-msgstr "Rozdělit a smazat"
+msgstr "Smazat a rozdělit"
 
 #: Menus.cpp:4230
 #, c-format
@@ -3125,12 +3126,12 @@ msgstr "Vyjmout štítky"
 #. i18n-hint: (verb) Audacity has just splitcut the labeled regions
 #: Menus.cpp:4345
 msgid "SplitCut labeled regions to the clipboard"
-msgstr "Rozdělit a vyjmout oblasti se štítky do schránky"
+msgstr "Rozdělit a vyjmout oblasti se štítky a zkopírovat do schránky"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
 #: Menus.cpp:4347
 msgid "Split Cut Labels"
-msgstr "Rozdělit a vyjmout štítky"
+msgstr "Rozdělit a vyjmout na štítcích"
 
 #: Menus.cpp:4361
 msgid "Copied labeled regions to the clipboard"
@@ -3852,7 +3853,7 @@ msgstr ""
 "Otevření zkomprimovaného projektu zabere více času než obvykle, protože se nahrává každá zkomprimovaná stopa.\n"
 "\n"
 "Většina programů zkomprimované soubory Audacity otevřít nedokáže.\n"
-"Když chcete uložit soubor, který lze otevřít v jiných programech, vyberte jeden z příkazů pro Uložení jako..."
+"Když chcete uložit soubor, který lze otevřít v jiných programech, vyberte jeden z příkazů pro uložení v jiném formátu."
 
 #: Project.cpp:3560
 #: Project.cpp:3588
@@ -3873,13 +3874,13 @@ msgstr ""
 "\n"
 "Při uložení projektu je vytvořen soubor, který dokáže otevřít jen Audacity.\n"
 "\n"
-"Pro uložení zvukového souboru pro jiné programy, použijte jeden z příkazů v nabídce Soubor -> Uložit (jako).\n"
+"Pro uložení zvukového souboru pro jiné programy, použijte jeden z příkazů v nabídce Soubor -> Uložit v jiném formátu.\n"
 
 #: Project.cpp:3566
 #: Project.cpp:3594
 #, c-format
 msgid "Save Project \"%s\" As..."
-msgstr "Uložit projekt \"%s\" jako..."
+msgstr "Uložit \"%s\" jako projekt Audacity..."
 
 #: Project.cpp:3623
 msgid ""
@@ -3991,7 +3992,7 @@ msgstr "24 bit PCM"
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: SampleFormat.cpp:72
 msgid "32-bit float"
-msgstr "32 bit poh. řád. čárka"
+msgstr "32 bit float"
 
 #: Screenshot.cpp:266
 msgid "Screen Capture Frame"
@@ -6383,7 +6384,7 @@ msgstr "Provádí se ekvalizace"
 
 #: effects/Fade.h:24
 msgid "Fade In"
-msgstr "Postupný náběh (Fade In)"
+msgstr "Fade In (postupný náběh)"
 
 #: effects/Fade.h:38
 msgid "Fading In"
@@ -6391,7 +6392,7 @@ msgstr "Vytváří se postupný náběh (postupné zesilování)"
 
 #: effects/Fade.h:54
 msgid "Fade Out"
-msgstr "Do ztracena (Fade Out)"
+msgstr "Fade Out (do ztracena)"
 
 #: effects/Fade.h:68
 msgid "Fading Out"
@@ -10935,7 +10936,7 @@ msgstr "skrytý"
 #: toolbars/SelectionBar.cpp:179
 #: toolbars/SelectionBar.cpp:272
 msgid "Audio Position:"
-msgstr "Poloha zvuku"
+msgstr "Poloha zvuku:"
 
 #. i18n-hint: The snap-to mode, when enabled, means for example that selections
 #. * are always at whole second boundaries.  You can't select a range 4.5s to 7.9s
@@ -10943,7 +10944,7 @@ msgstr "Poloha zvuku"
 #: toolbars/SelectionBar.cpp:233
 #: toolbars/SelectionBar.cpp:238
 msgid "Snap To"
-msgstr "Zapadnout"
+msgstr "Přichytávat"
 
 #: toolbars/SelectionBar.cpp:241
 #: toolbars/SelectionBar.cpp:372
