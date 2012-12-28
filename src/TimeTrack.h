@@ -15,6 +15,8 @@
 #include <wx/brush.h>
 #include <wx/pen.h>
 
+#include <algorithm>
+
 class wxRect;
 class wxDC;
 class Envelope;

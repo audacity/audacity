@@ -12,6 +12,7 @@
 #define __AUDACITY_ENVELOPE__
 
 #include <stdlib.h>
+#include <algorithm>
 
 #include <wx/dynarray.h>
 #include <wx/brush.h>
