@@ -137,8 +137,6 @@ class AUDACITY_DLL_API Mixer {
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)   
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
-//   double           mWarpedTime; // current time after warping, starting at zero (unlike mTime)
-//   double           mWarpedLength; // total length after warping
    Resample       **mResample;
    float          **mSampleQueue;
    int             *mQueueStart;
