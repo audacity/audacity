@@ -504,7 +504,6 @@ private:
    unsigned int        mNumCaptureChannels;
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
-   float              *mTempFloats;
    int                 mLostSamples;
    volatile bool       mAudioThreadShouldCallFillBuffersOnce;
    volatile bool       mAudioThreadFillBuffersLoopRunning;

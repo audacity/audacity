@@ -541,7 +541,6 @@ AudioIO::AudioIO()
 
    mStreamToken = 0;
    mStopStreamCount = 0;
-   mTempFloats = new float[65536]; // TODO: out channels * PortAudio buffer size
 
    mLastPaError = paNoError;
 
@@ -635,7 +634,6 @@ AudioIO::~AudioIO()
    if(mSilentBuf) 
       DeleteSamples(mSilentBuf);
 
-   delete [] mTempFloats;
    delete mThread;
 }
 
