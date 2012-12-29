@@ -830,7 +830,7 @@ void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
    }
 
    if (mEnvelope->MouseEvent(event, mEnvRect, 0.0, mEnvRect.width, false,
-            dBMin, dBMax, dBMin, dBMax))
+            dBMin, dBMax))
    {
       mParent->EnvelopeUpdated();
       RecalcRequired = true;
@@ -918,10 +918,12 @@ EqualizationDialog::EqualizationDialog(EffectEqualization * effect,
    mLogEnvelope = new Envelope();
    mLogEnvelope->SetInterpolateDB(false);
    mLogEnvelope->Mirror(false);
+   mLogEnvelope->SetRange(-120.0, 60.0); // MB: this is the highest possible range
 
    mLinEnvelope = new Envelope();
    mLinEnvelope->SetInterpolateDB(false);
    mLinEnvelope->Mirror(false);
+   mLinEnvelope->SetRange(-120.0, 60.0); // MB: this is the highest possible range
 
    mLoFreq = loFreq;
    mHiFreq = hiFreq;

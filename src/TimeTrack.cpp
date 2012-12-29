@@ -43,6 +43,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
+   mEnvelope->SetRange(0.1, 10.0); //TODO-MB: are these sensible values?
 
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
@@ -65,8 +66,9 @@ TimeTrack::TimeTrack(TimeTrack &orig):
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);
-   mEnvelope->Paste(0.0, orig.mEnvelope);
    mEnvelope->SetOffset(0);
+   mEnvelope->SetRange(0.1, 10.0);
+   mEnvelope->Paste(0.0, orig.mEnvelope);
 
    mRuler = new Ruler();
    mRuler->SetLabelEdges(false);
@@ -260,7 +262,6 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps)
 
 void TimeTrack::testMe()
 {
-   GetEnvelope()->SetDefaultValue(0.5);
    GetEnvelope()->Flatten(0.0);
    GetEnvelope()->Insert( 0.0, 0.2 );
    GetEnvelope()->Insert( 5.0 - 0.001, 0.2 );

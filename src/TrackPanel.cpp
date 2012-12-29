@@ -7394,22 +7394,23 @@ void TrackPanel::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
       long lower = (long) (t->GetRangeLower() * 100.0 + 0.5);
       long upper = (long) (t->GetRangeUpper() * 100.0 + 0.5);
       
+      // MB: these lower/upper limits match the maximum allowed range of the time track
+      // envelope, but this is not strictly required
       lower = wxGetNumberFromUser(_("Change lower speed limit (%) to:"),
                                   _("Lower speed limit"),
                                   _("Lower speed limit"),
                                   lower,
-                                  13,
-                                  1200);
+                                  10,
+                                  1000);
 
       upper = wxGetNumberFromUser(_("Change upper speed limit (%) to:"),
                                   _("Upper speed limit"),
                                   _("Upper speed limit"),
                                   upper,
                                   lower+1,
-                                  1200);
+                                  1000);
 
-      //TODO-MB: what's the meaning of these values?
-      if( lower >= 13 && upper <= 1200 && lower < upper ) {
+      if( lower >= 10 && upper <= 1000 && lower < upper ) {
          t->SetRangeLower((double)lower / 100.0);
          t->SetRangeUpper((double)upper / 100.0);
          MakeParentPushState(wxString::Format(_("Set range to '%d' - '%d'"),
