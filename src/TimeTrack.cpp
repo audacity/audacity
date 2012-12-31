@@ -67,7 +67,7 @@ TimeTrack::TimeTrack(TimeTrack &orig):
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
-   mEnvelope->SetRange(orig.GetMinValue(), orig.GetMaxValue());
+   mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
    mEnvelope->Paste(0.0, orig.mEnvelope);
 
    mRuler = new Ruler();
