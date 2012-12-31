@@ -57,10 +57,6 @@ to get its definition, rather than rolling our own.
 
 *//*******************************************************************/
 
-#ifdef _WIN32
-   #include <windows.h>
-#endif
-
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/utils.h>

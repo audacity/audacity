@@ -42,7 +42,6 @@
 
 #if defined(__WXMSW__)
    #include <wx/msw/seh.h>
-   #include <windows.h>
    #include <shlwapi.h>
    #pragma comment(lib, "shlwapi")
 #endif

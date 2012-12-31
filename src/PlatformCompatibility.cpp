@@ -16,10 +16,6 @@
 *//*******************************************************************/
 
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
