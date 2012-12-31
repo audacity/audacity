@@ -14,6 +14,7 @@
 
 #include "SimpleMono.h"
 
+
 class WaveTrack;
 
 class EffectTwoPassSimpleMono:public Effect {
@@ -40,16 +41,16 @@ class EffectTwoPassSimpleMono:public Effect {
    virtual bool NewTrackPass2();
 
    // Override this method to actually process audio
-   virtual bool ProcessPass1(float *buffer, sampleCount len) { return false; }
-   virtual bool ProcessPass2(float *buffer, sampleCount len) { return false; }
+   virtual bool ProcessPass1(float * WXUNUSED(buffer), sampleCount WXUNUSED(len)) { return false; }
+   virtual bool ProcessPass2(float * WXUNUSED(buffer), sampleCount WXUNUSED(len)) { return false; }
    
    // Override this method to actually process audio with access to 2 sequential buffers at a time
    // Either buffer1 or buffer2 may be modified as needed
    // This allows implementation of processing with delays
    // The default just calls the one-buffer-at-a-time method
-   virtual bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2)
+   virtual bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float * WXUNUSED(buffer2), sampleCount WXUNUSED(len2))
    { if(buffer1 != NULL) return ProcessPass1(buffer1, len1); else return true; }
-   virtual bool TwoBufferProcessPass2(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2)
+   virtual bool TwoBufferProcessPass2(float *buffer1, sampleCount len1, float * WXUNUSED(buffer2), sampleCount WXUNUSED(len2))
    { if(buffer1 != NULL) return ProcessPass2(buffer1, len1); else return true; }
 
    // Call this if you know in advance that no second pass will be needed.
