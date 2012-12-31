@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-07-22 10:39+0100\n"
-"PO-Revision-Date: 2012-08-05 21:59-0000\n"
-"Last-Translator: bashishtha narayan singh\n"
+"POT-Creation-Date: 2012-11-27 02:03+0000\n"
+"PO-Revision-Date: 2012-12-30 23:59-0000\n"
+"Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: bashishtha narayan singh <bashishtha.singh@gmail.com>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "सह-संस्थापक"
 msgid "quality assurance"
 msgstr "गुणवत्ता परख"
 
-#: AboutDialog.cpp:160
+#: AboutDialog.cpp:161
 msgid "About Audacity..."
 msgstr "Audacity के बारे में..."
 
@@ -39,15 +39,15 @@ msgstr "Audacity के बारे में..."
 #. * In English it is slightly humorous alternative to an 'OK' button.
 #. * If the humour doesn't work in your language, then just use whatever
 #. * you would use for a translation for 'OK' on a button.
-#: AboutDialog.cpp:179
+#: AboutDialog.cpp:180
 msgid "OK... Audacious!"
 msgstr "अच्छा... संगीत सुनें!"
 
-#: AboutDialog.cpp:199
+#: AboutDialog.cpp:200
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr "स्वयंसेवियों के विश्वव्यापी दल द्वारा रचित Audacity, एक अमुल्य प्रोग्राम है <a href=\"http://audacity.sourceforge.net/community/developers\">विकासकर्ता</a>. इस परियोजना को वेब पर उपलब्ध कराने के लिए हम <a href=\"http://sourceforge.net\">SourceForge.net</a> और <a href=\"http://code.google.com\">गूगल कोड</a> के आभारी हैं. Audacity Windows, Mac और GNU/Linux (तथा दूसरे यूनिक्स-समान ऑपरेटिंग सिस्टम्स  )के लिए <a href=\"http://audacity.sourceforge.net/download/\">उपलब्ध</a> है."
 
-#: AboutDialog.cpp:203
+#: AboutDialog.cpp:204
 msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 msgstr "यदि आप कोई त्रुटि पातें हैं या हमें सलाह देना चाहते हैं, तो कृपया हमारे इस <a href=\"mailto:feedback@audacityteam.org\">प्रतिक्रिया</a> पते पर लिखें. मदद के लिए, हमारे <a href=\"http://wiki.audacityteam.org/\">विकी</a> पेज़ पर टिप्स और ट्रिक्स देखें,  या हमारे <a href=\"http://forum.audacityteam.org/\">फ़ोरम</a> पर जाएं."
 
@@ -58,184 +58,186 @@ msgstr "यदि आप कोई त्रुटि पातें हैं 
 #. *  your own name(s) to the credits.
 #. *
 #. *  For example:  "English translation by Dominic Mazzoni."
-#: AboutDialog.cpp:211
-#: AboutDialog.cpp:213
+#: AboutDialog.cpp:212
+#: AboutDialog.cpp:214
 msgid "translator_credits"
-msgstr "Hindi translation - Bashishtha Singh"
+msgstr "Hindi translation : Bashishtha Singh"
 
-#: AboutDialog.cpp:224
+#: AboutDialog.cpp:225
 msgid "A Free Digital Audio Editor<br>"
 msgstr "एक अमुल्य डिजिटल ध्वनि संपादक<br>"
 
-#: AboutDialog.cpp:228
+#: AboutDialog.cpp:229
 msgid "Credits"
 msgstr "श्रेयसूची"
 
 #. i18n-hint: %s will be replaced by the version number.
-#: AboutDialog.cpp:233
+#: AboutDialog.cpp:234
 #, c-format
 msgid "Audacity %s Development Team"
 msgstr "Audacity %s डेवलपमेंट टीम"
 
 #. i18n-hint: %s will be replaced by the version number.
-#: AboutDialog.cpp:239
+#: AboutDialog.cpp:240
 #, c-format
 msgid "Audacity %s Support Team"
 msgstr "Audacity %s सहायक दल"
 
-#: AboutDialog.cpp:244
+#: AboutDialog.cpp:245
 msgid "Emeritus Developers"
 msgstr "Emeritus डेवलपर्स"
 
-#: AboutDialog.cpp:249
+#: AboutDialog.cpp:250
 msgid "Other Emeritus Team Members"
 msgstr "अन्य Emeritus दल के सदस्य"
 
-#: AboutDialog.cpp:254
+#: AboutDialog.cpp:255
 msgid "Other Contributors"
 msgstr "अन्य योगदानकर्ता"
 
-#: AboutDialog.cpp:259
+#: AboutDialog.cpp:260
 msgid "Audacity is based on code from the following projects:"
 msgstr "Audacity आगे दिए गए परियोजनाओं के कोड पर आधारित है:"
 
-#: AboutDialog.cpp:264
+#: AboutDialog.cpp:265
 msgid "Special thanks:"
 msgstr "विशेष आभार:"
 
-#: AboutDialog.cpp:269
+#: AboutDialog.cpp:270
 msgid "<b>Audacity&reg;</b> software is copyright"
 msgstr "<b>Audacity&reg;</b> कॉपीराइट साफ़्टवेयर है"
 
-#: AboutDialog.cpp:272
+#: AboutDialog.cpp:273
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
 msgstr "ये <b>Audacity&reg;</b> नाम Dominic Mazzoni का एक पंजीकृत ट्रेडमार्क है."
 
 #. i18n-hint: Information about when audacity was compiled
-#: AboutDialog.cpp:327
-#: AboutDialog.cpp:340
-#: AboutDialog.cpp:489
+#: AboutDialog.cpp:328
+#: AboutDialog.cpp:341
+#: AboutDialog.cpp:498
 msgid "Build Information"
 msgstr "निर्माण जानकारी"
 
-#: AboutDialog.cpp:333
+#: AboutDialog.cpp:334
 #: effects/AvcCompressor.cpp:674
 msgid "Enabled"
 msgstr "सक्रिय"
 
-#: AboutDialog.cpp:334
+#: AboutDialog.cpp:335
 msgid "Disabled"
 msgstr "निष्क्रिय"
 
-#: AboutDialog.cpp:344
+#: AboutDialog.cpp:345
 msgid "File Format Support"
 msgstr "फ़ाईल प्रारुप समर्थन"
 
 #. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: AboutDialog.cpp:354
-#: AboutDialog.cpp:356
+#: AboutDialog.cpp:355
+#: AboutDialog.cpp:357
 msgid "MP3 Importing"
 msgstr "MP3 आयात जारी"
 
-#: AboutDialog.cpp:363
-#: AboutDialog.cpp:366
+#: AboutDialog.cpp:364
+#: AboutDialog.cpp:367
 msgid "Ogg Vorbis Import and Export"
 msgstr "Ogg Vorbis आयात और निर्यात"
 
-#: AboutDialog.cpp:370
-#: AboutDialog.cpp:373
+#: AboutDialog.cpp:371
+#: AboutDialog.cpp:374
 msgid "ID3 tag support"
-msgstr "ID3 टैग समर्थन"
+msgstr "ID3  टैग समर्थन"
 
-#: AboutDialog.cpp:380
-#: AboutDialog.cpp:383
+#: AboutDialog.cpp:381
+#: AboutDialog.cpp:384
 msgid "FLAC import and export"
 msgstr "FLAC आयात और निर्यात"
 
-#: AboutDialog.cpp:388
-#: AboutDialog.cpp:391
+#: AboutDialog.cpp:389
+#: AboutDialog.cpp:392
 msgid "MP2 export"
 msgstr "MP2 निर्यात"
 
-#: AboutDialog.cpp:396
-#: AboutDialog.cpp:399
+#: AboutDialog.cpp:397
+#: AboutDialog.cpp:400
 msgid "Import via QuickTime"
 msgstr "QuickTime से आयात"
 
 #. i18n-hint: Libraries that are essential to audacity
-#: AboutDialog.cpp:406
+#: AboutDialog.cpp:407
 msgid "Core Libraries"
 msgstr "कोर लाइब्रेरी"
 
-#: AboutDialog.cpp:412
-#: AboutDialog.cpp:415
-#: AboutDialog.cpp:418
-#: AboutDialog.cpp:420
+#: AboutDialog.cpp:413
+#: AboutDialog.cpp:416
+#: AboutDialog.cpp:419
+#: AboutDialog.cpp:421
+#: AboutDialog.cpp:426
+#: AboutDialog.cpp:429
 msgid "Sample rate conversion"
-msgstr "नमूना आवृति दर बदलना"
+msgstr "नमूना दर परिवर्तन"
 
 # "ध्वनि प्रसारण एवं अंकन"
-#: AboutDialog.cpp:424
+#: AboutDialog.cpp:433
 msgid "Audio playback and recording"
-msgstr "ऑडियो प्लेबैक एवं रिकारडिंग"
+msgstr "ऑडियो प्लेबैक एवं रिकार्डिंग"
 
-#: AboutDialog.cpp:434
+#: AboutDialog.cpp:443
 msgid "Features"
 msgstr "विशेषताएं"
 
-#: AboutDialog.cpp:438
-#: AboutDialog.cpp:441
-#: AboutDialog.cpp:446
-#: AboutDialog.cpp:449
-#: AboutDialog.cpp:454
-#: AboutDialog.cpp:457
-#: AboutDialog.cpp:462
-#: AboutDialog.cpp:465
+#: AboutDialog.cpp:447
+#: AboutDialog.cpp:450
+#: AboutDialog.cpp:455
+#: AboutDialog.cpp:458
+#: AboutDialog.cpp:463
+#: AboutDialog.cpp:466
+#: AboutDialog.cpp:471
+#: AboutDialog.cpp:474
 msgid "Plug-in support"
 msgstr "प्लग-इन समर्थन"
 
-#: AboutDialog.cpp:470
-#: AboutDialog.cpp:473
+#: AboutDialog.cpp:479
+#: AboutDialog.cpp:482
 msgid "Sound card mixer support"
 msgstr "ध्वनि कार्ड मिश्रक समर्थन"
 
-#: AboutDialog.cpp:478
-#: AboutDialog.cpp:481
+#: AboutDialog.cpp:487
+#: AboutDialog.cpp:490
 msgid "Pitch and Tempo Change support"
-msgstr "पिच और टेम्पो बदलने का समर्थन"
+msgstr "पिच और टेम्पो परिवर्तन का समर्थन"
 
 # "प्रोग्राम निर्माण तिथि: "
-#: AboutDialog.cpp:493
+#: AboutDialog.cpp:502
 msgid "Program build date: "
-msgstr "शब्दकूट निर्माण तिथि: "
+msgstr "प्रोग्राम निर्माण तिथि: "
 
-#: AboutDialog.cpp:496
-#: AboutDialog.cpp:498
+#: AboutDialog.cpp:505
+#: AboutDialog.cpp:507
 msgid "Build type:"
 msgstr "निर्माण प्रकार:"
 
-#: AboutDialog.cpp:496
+#: AboutDialog.cpp:505
 msgid "Debug build"
-msgstr "त्रुटिमुक्त करने के लिए निर्माण"
+msgstr "त्रुटिसुधार निर्माण"
 
-#: AboutDialog.cpp:498
+#: AboutDialog.cpp:507
 msgid "Release build"
 msgstr "निर्माण संस्करण"
 
 #. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: AboutDialog.cpp:503
+#: AboutDialog.cpp:512
 msgid "Installation Prefix: "
 msgstr "स्थापना उपसर्ग: "
 
-#: AboutDialog.cpp:507
+#: AboutDialog.cpp:516
 msgid "Settings folder: "
 msgstr "सेटिग्स फोल्डर: "
 
-#: AboutDialog.cpp:522
+#: AboutDialog.cpp:531
 msgid "GPL License"
 msgstr "GPL लाइसेंस"
 
-#: AudacityApp.cpp:786
+#: AudacityApp.cpp:793
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -246,7 +248,7 @@ msgstr ""
 "\n"
 "इसे हाल की फ़ाइलों की सूची से हटा दिया गया है."
 
-#: AudacityApp.cpp:847
+#: AudacityApp.cpp:854
 #, c-format
 msgid ""
 "One or more external audio files could not be found.\n"
@@ -265,66 +267,66 @@ msgstr ""
 "और भी फ़ाइलें गुम  हो सकती हैं.\n"
 "चुनें फ़ाइल > लापता फाइलों का मूल स्थान देखने के लिए निर्भरता जांच करें."
 
-#: AudacityApp.cpp:861
+#: AudacityApp.cpp:868
 msgid "Files Missing"
 msgstr "लापता फ़ाईलें"
 
-#: AudacityApp.cpp:1017
-#: AudacityApp.cpp:1239
+#: AudacityApp.cpp:1024
+#: AudacityApp.cpp:1246
 msgid "Audacity Log"
 msgstr "Audacity लॉग"
 
-#: AudacityApp.cpp:1026
+#: AudacityApp.cpp:1033
 msgid "Master Gain Control"
 msgstr "मास्टर गेन कंट्रोल"
 
-#: AudacityApp.cpp:1027
+#: AudacityApp.cpp:1034
 msgid "Input Meter"
 msgstr "इनपुट मीटर"
 
-#: AudacityApp.cpp:1028
+#: AudacityApp.cpp:1035
 msgid "Output Meter"
 msgstr "आउटपुट मीटर"
 
 #. i18n-hint: "New" is an action (verb) to create a new project
-#: AudacityApp.cpp:1193
+#: AudacityApp.cpp:1200
 #: Menus.cpp:201
 msgid "&New"
 msgstr "नई(&N)"
 
 #. i18n-hint: (verb)
-#: AudacityApp.cpp:1194
+#: AudacityApp.cpp:1201
 #: Menus.cpp:206
 msgid "&Open..."
 msgstr "खोलें...(&O)"
 
-#: AudacityApp.cpp:1195
+#: AudacityApp.cpp:1202
 msgid "Open &Recent..."
 msgstr "खोलें हाल की फ़ाइलें (&R)..."
 
-#: AudacityApp.cpp:1196
+#: AudacityApp.cpp:1203
 #: Menus.cpp:1419
 #: Menus.cpp:1422
 msgid "&About Audacity..."
 msgstr "Audacity के बारे में...(&A)"
 
-#: AudacityApp.cpp:1197
+#: AudacityApp.cpp:1204
 msgid "&Preferences..."
 msgstr "वरीयतायें...(&P)"
 
-#: AudacityApp.cpp:1291
-#: AudacityApp.cpp:1370
+#: AudacityApp.cpp:1298
+#: AudacityApp.cpp:1377
 #, c-format
 msgid "Using block size of %ld\n"
 msgstr "उपयोग में है %ld का ब्लाक साइज\n"
 
-#: AudacityApp.cpp:1312
-#: AudacityApp.cpp:1385
+#: AudacityApp.cpp:1319
+#: AudacityApp.cpp:1392
 #, c-format
 msgid "Unknown command line option: %s\n"
 msgstr "अंजान आदेश-पंक्ति विकल्प: %s\n"
 
-#: AudacityApp.cpp:1545
+#: AudacityApp.cpp:1551
 msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -332,11 +334,11 @@ msgstr ""
 "Audacity को अस्थायी फ़ाइलों को संचित करने के लिए जगह नहीं मिली.\n"
 "कृपया वरीयताएँ संवादपत्र में एक उचित निर्देशिका दर्ज करें."
 
-#: AudacityApp.cpp:1551
+#: AudacityApp.cpp:1557
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
 msgstr "Audacity अभी बंद हो रहा है. कृपया नए अस्थायी निर्देशिका का उपयोग करने के लिए ऑडेसिटी फिर से शुरु करें."
 
-#: AudacityApp.cpp:1583
+#: AudacityApp.cpp:1589
 msgid ""
 "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -345,27 +347,27 @@ msgstr ""
 "Audacity की दो प्रतियां एक साथ चलने से डाटा की गलती या सिस्टम क्षतिग्रस्त हो सकता है.\n"
 "\n"
 
-#: AudacityApp.cpp:1590
+#: AudacityApp.cpp:1596
 msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
 msgstr ""
-"Audacity अस्थायी फाइल निर्देशिका में ताला बंद नहीं कर पा रहा था.\n"
-"हो सकता है कि यह निर्देशिका (फ़ोल्डर) ऑडेसिटी की एक और प्रति द्वारा उपयोग में हो\n"
+"Audacity अस्थायी फाइल निर्देशिका को ताला-बंद नहीं कर पाया.\n"
+"हो सकता है कि यह निर्देशिका (फ़ोल्डर) Audacity की एक और प्रति द्वारा उपयोग में हो\n"
 
-#: AudacityApp.cpp:1592
+#: AudacityApp.cpp:1598
 msgid "Do you still want to start Audacity?"
 msgstr "आप अब भी Audacity शुरू करना चाहते हैं?"
 
-#: AudacityApp.cpp:1594
+#: AudacityApp.cpp:1600
 msgid "Error Locking Temporary Folder"
 msgstr "अस्थायी निर्देशिका(फ़ोल्डर)को तालाबंद करने में त्रुटि"
 
-#: AudacityApp.cpp:1632
+#: AudacityApp.cpp:1638
 msgid "The system has detected that another copy of Audacity is running.\n"
 msgstr "इस प्रणाली को पता चला है कि Audacity की एक और प्रति चल रही है.\n"
 
-#: AudacityApp.cpp:1634
+#: AudacityApp.cpp:1640
 msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -373,29 +375,29 @@ msgstr ""
 "एक साथ कई परियोजनाओं को खोलने के लिए.\n"
 "वर्तमान Audacity में नई या खोलें आदेश का प्रयोग करें.\n"
 
-#: AudacityApp.cpp:1635
+#: AudacityApp.cpp:1641
 msgid "Audacity is already running"
 msgstr "Audacity पहले से चल रहा है"
 
-#: AudacityApp.cpp:1652
+#: AudacityApp.cpp:1658
 msgid "Command-line options supported:"
-msgstr "समर्थित आदेश-पंक्ति विकल्प :"
+msgstr "आदेश-पंक्ति विकल्प समर्थित :"
 
 #. i18n-hint: '-help' is the option and needs to stay in
 #. * English. This displays a list of available options
-#: AudacityApp.cpp:1655
+#: AudacityApp.cpp:1661
 msgid "\t-help (this message)"
 msgstr "\t-help (यह संदेश)"
 
 #. i18n-hint '-version' needs to stay in English.
-#: AudacityApp.cpp:1657
+#: AudacityApp.cpp:1663
 msgid "\t-version (display Audacity version)"
 msgstr "\t-version (Audacity संस्करण दिखाएं)"
 
 #. i18n-hint '-test' is the option and needs to stay in
 #. * English. This runs a set of automatic tests on audacity
 #. * itself
-#: AudacityApp.cpp:1661
+#: AudacityApp.cpp:1667
 msgid "\t-test (run self diagnostics)"
 msgstr "\t-test (आत्म-निदान चलाएं)"
 
@@ -403,15 +405,15 @@ msgstr "\t-test (आत्म-निदान चलाएं)"
 #. * English. 'nnn' is any integer number. This controls the
 #. * size pieces that audacity uses when writing files to the
 #. * disk
-#: AudacityApp.cpp:1666
+#: AudacityApp.cpp:1672
 msgid "\t-blocksize nnn (set max disk block size in bytes)"
 msgstr "\t-blocksize nnn ( बाइट्स में अधिकतम डिस्क ब्लॉक आकार निर्धारित करें)"
 
-#: AudacityApp.cpp:1667
+#: AudacityApp.cpp:1673
 msgid "In addition, specify the name of an audio file or Audacity project to open it."
 msgstr "इसके अलावा, एक ऑडियो फ़ाइल या Audacity परियोजना का नाम खोलने के लिए निर्दिष्ट करें."
 
-#: AudacityApp.cpp:1978
+#: AudacityApp.cpp:1985
 msgid ""
 "Audacity project (.AUP) files are not currently \n"
 "associated with Audacity. \n"
@@ -423,15 +425,15 @@ msgstr ""
 "\n"
 "उन्हें Audacity के साथ जोड़ें, ताकि वे दोहरे क्लिक पर खुले?"
 
-#: AudacityApp.cpp:1979
+#: AudacityApp.cpp:1986
 msgid "Audacity Project Files"
 msgstr "Audacity परियोजना फ़ाईलें"
 
-#: AudioIO.cpp:550
+#: AudioIO.cpp:552
 msgid "Could not find any audio devices.\n"
 msgstr "कोई भी ध्वनि-यंत्र (ऑडियो डिवाइस) नहीं मिला.\n"
 
-#: AudioIO.cpp:551
+#: AudioIO.cpp:553
 msgid ""
 "You will not be able to play or record audio.\n"
 "\n"
@@ -439,20 +441,20 @@ msgstr ""
 "आप ऑडियो रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
-#: AudioIO.cpp:554
-#: AudioIO.cpp:574
+#: AudioIO.cpp:556
+#: AudioIO.cpp:576
 msgid "Error: "
 msgstr "त्रुटि: "
 
-#: AudioIO.cpp:557
+#: AudioIO.cpp:559
 msgid "Error Initializing Audio"
 msgstr "ध्वनि शुरू करने में त्रुटि"
 
-#: AudioIO.cpp:570
+#: AudioIO.cpp:572
 msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "MIDI i/o परत की शुरुआत में एक त्रुटि हुई.\n"
 
-#: AudioIO.cpp:571
+#: AudioIO.cpp:573
 msgid ""
 "You will not be able to play midi.\n"
 "\n"
@@ -460,16 +462,16 @@ msgstr ""
 "आप midi रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
-#: AudioIO.cpp:577
+#: AudioIO.cpp:579
 msgid "Error Initializing Midi"
 msgstr "Midi शुरू करने में त्रुटि"
 
-#: AudioIO.cpp:1274
-#: AudioIO.cpp:1308
+#: AudioIO.cpp:1278
+#: AudioIO.cpp:1312
 msgid "Out of memory!"
 msgstr "स्मॄति की कमी!"
 
-#: AudioIO.cpp:1774
+#: AudioIO.cpp:1778
 msgid ""
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -479,37 +481,37 @@ msgstr ""
 "Audacity शून्य से शुरू करने के लिए इसे वापस लाया है.\n"
 "आप इसे बाद में समयांतर औजार (<---> या F5) का उपयोग करके ट्रैक को सही जगह पर खींच कर वापस ला सकते हैं."
 
-#: AudioIO.cpp:1775
+#: AudioIO.cpp:1779
 msgid "Latency problem"
 msgstr "विलंबता की समस्या"
 
-#: AudioIO.cpp:3085
+#: AudioIO.cpp:3089
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. इससे और अधिक सही नहीं किया जा सकता था. अभी बहुत ऊँचा है."
 
-#: AudioIO.cpp:3093
+#: AudioIO.cpp:3097
 #, c-format
 msgid "Automated Input Level Adjustment decreased the volume to %f."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन ने वाल्यूम घटा कर %f कर दिया है."
 
-#: AudioIO.cpp:3108
+#: AudioIO.cpp:3112
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. इससे और अधिक सही नहीं किया जा सकता था. अभी बहुत नीचा है."
 
-#: AudioIO.cpp:3120
+#: AudioIO.cpp:3124
 #, c-format
 msgid "Automated Input Level Adjustment increased the volume to %.2f."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन ने वाल्यूम बढ़ा कर %f कर दिया है."
 
-#: AudioIO.cpp:3154
+#: AudioIO.cpp:3158
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. स्वीकार्य वाल्यूम मिले बिना ही विश्लेशण की कुल संख्या सीमा पार हो गई. अभी बहुत ऊँचा है."
 
-#: AudioIO.cpp:3156
+#: AudioIO.cpp:3160
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. स्वीकार्य वाल्यूम मिले बिना ही विश्लेशण की कुल संख्या सीमा पार हो गई. अभी बहुत नीचा है."
 
-#: AudioIO.cpp:3159
+#: AudioIO.cpp:3163
 #, c-format
 msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. %.2f एक स्वीकार्य वाल्यूम लगता है."
@@ -570,16 +572,16 @@ msgstr "स्वयं-संचयन निर्देशिका में
 
 #: AutoRecovery.cpp:150
 #: AutoRecovery.cpp:187
-#: Menus.cpp:3794
-#: Menus.cpp:3806
-#: Menus.cpp:6460
-#: Project.cpp:2540
-#: Project.cpp:4483
-#: Project.cpp:4502
-#: TrackPanel.cpp:7320
+#: Menus.cpp:3798
+#: Menus.cpp:3810
+#: Menus.cpp:6484
+#: Project.cpp:2549
+#: Project.cpp:4492
+#: Project.cpp:4511
+#: TrackPanel.cpp:7336
 #: WaveTrack.cpp:973
 #: WaveTrack.cpp:992
-#: WaveTrack.cpp:2107
+#: WaveTrack.cpp:2116
 #: effects/Contrast.cpp:105
 #: effects/Contrast.cpp:115
 #: effects/Contrast.cpp:121
@@ -589,8 +591,8 @@ msgstr "स्वयं-संचयन निर्देशिका में
 #: effects/Generator.cpp:54
 #: export/ExportFFmpeg.cpp:714
 #: export/ExportMP2.cpp:234
-#: prefs/DirectoriesPrefs.cpp:217
-#: prefs/KeyConfigPrefs.cpp:426
+#: prefs/DirectoriesPrefs.cpp:218
+#: prefs/KeyConfigPrefs.cpp:428
 #: toolbars/ControlToolBar.cpp:603
 #: toolbars/ControlToolBar.cpp:946
 msgid "Error"
@@ -618,24 +620,24 @@ msgstr "परिमाण(&P)"
 msgid "C&hoose command"
 msgstr "आदेश चुनें"
 
-#: BatchCommands.cpp:471
+#: BatchCommands.cpp:472
 msgid "Stereo to Mono Effect not found"
 msgstr "स्टीरियो से मोनो प्रभाव नहीं मिला"
 
-#: BatchCommands.cpp:491
+#: BatchCommands.cpp:492
 msgid "Ogg Vorbis support is not included in this build of Audacity"
 msgstr "Ogg Vorbis समर्थन Audacity के इस निर्माण में नहीं है."
 
-#: BatchCommands.cpp:503
+#: BatchCommands.cpp:504
 msgid "FLAC support is not included in this build of Audacity"
 msgstr "FLAC समर्थन Audacity के इस निर्माण में शामिल नहीं है"
 
-#: BatchCommands.cpp:507
+#: BatchCommands.cpp:508
 #, c-format
 msgid "Command %s not implemented yet"
 msgstr "आदेश %s अभी तक कार्यान्वित नहीं हुआ"
 
-#: BatchCommands.cpp:524
+#: BatchCommands.cpp:525
 #: effects/Effect.cpp:120
 #, c-format
 msgid ""
@@ -645,12 +647,12 @@ msgstr ""
 "%s प्रभाव के मापदंडों को %s में लागू नहीं\n"
 "किया जा सका"
 
-#: BatchCommands.cpp:568
+#: BatchCommands.cpp:569
 #, c-format
 msgid "Your batch command of %s was not recognized."
 msgstr "आपके बैच आदेश %s  को समझा नहीं जा सका."
 
-#: BatchCommands.cpp:687
+#: BatchCommands.cpp:688
 #, c-format
 msgid ""
 "Apply %s with parameter(s)\n"
@@ -661,12 +663,12 @@ msgstr ""
 "\n"
 "%s"
 
-#: BatchCommands.cpp:688
-#: BatchCommands.cpp:693
+#: BatchCommands.cpp:689
+#: BatchCommands.cpp:694
 msgid "Test Mode"
 msgstr "परीक्षण मोड"
 
-#: BatchCommands.cpp:692
+#: BatchCommands.cpp:693
 #, c-format
 msgid "Apply %s"
 msgstr "लागू %s"
@@ -703,7 +705,7 @@ msgid "Apply to &Files..."
 msgstr "फ़ाइलों पर लागू करें..."
 
 #: BatchProcessDialog.cpp:118
-#: BatchProcessDialog.cpp:305
+#: BatchProcessDialog.cpp:307
 #: UploadDialog.cpp:180
 #: effects/AvcCompressor.cpp:732
 #: effects/ChangeLength.cpp:183
@@ -712,7 +714,7 @@ msgid "&Cancel"
 msgstr "निरस्त(&C)"
 
 #: BatchProcessDialog.cpp:161
-#: BatchProcessDialog.cpp:204
+#: BatchProcessDialog.cpp:205
 msgid "No chain selected"
 msgstr "कड़ी नहीं चुना गया"
 
@@ -721,131 +723,131 @@ msgstr "कड़ी नहीं चुना गया"
 msgid "Applying '%s' to current project"
 msgstr "'%s' को वर्तमान परियोजना पर लागू करते हैं"
 
-#: BatchProcessDialog.cpp:213
+#: BatchProcessDialog.cpp:215
 msgid "Please save and close the current project first."
 msgstr "कृपया पहले वर्तमान परियोजना को सहेजें और बंद करें "
 
-#: BatchProcessDialog.cpp:220
+#: BatchProcessDialog.cpp:222
 msgid "Select vocal file(s) for batch CleanSpeech Chain..."
 msgstr "स्वच्छवार्ता बैच कड़ियों के लिए संवाद फ़ाइल(/लें) चुनें ..."
 
-#: BatchProcessDialog.cpp:221
-#: BatchProcessDialog.cpp:224
+#: BatchProcessDialog.cpp:223
+#: BatchProcessDialog.cpp:226
 msgid "Select file(s) for batch processing..."
 msgstr "बैच प्रक्रिया के लिए फ़ाइल(/लें) चुनें..."
 
 #. i18n-hint: The vertical bars and * are essential here.
-#: BatchProcessDialog.cpp:250
-#: Project.cpp:2143
+#: BatchProcessDialog.cpp:252
+#: Project.cpp:2149
 msgid "All files|*|All supported files|"
 msgstr "सभी फ़ाइलें|*|सभी समर्थित फ़ाइलें|"
 
-#: BatchProcessDialog.cpp:289
+#: BatchProcessDialog.cpp:291
 msgid "Applying..."
 msgstr "लगा रहे हैं..."
 
-#: BatchProcessDialog.cpp:299
+#: BatchProcessDialog.cpp:301
 msgid "File"
 msgstr "फ़ाइल"
 
-#: BatchProcessDialog.cpp:414
-#: BatchProcessDialog.cpp:418
-#: BatchProcessDialog.cpp:419
+#: BatchProcessDialog.cpp:416
+#: BatchProcessDialog.cpp:420
+#: BatchProcessDialog.cpp:421
 msgid "Edit Chains"
 msgstr "कड़ी संपादन"
 
-#: BatchProcessDialog.cpp:478
+#: BatchProcessDialog.cpp:480
 msgid "&Chains"
 msgstr "कड़ियाँ(&C)"
 
-#: BatchProcessDialog.cpp:497
+#: BatchProcessDialog.cpp:499
 #: Tags.cpp:794
 msgid "&Add"
 msgstr "जोड़ें"
 
-#: BatchProcessDialog.cpp:498
-#: LabelDialog.cpp:124
+#: BatchProcessDialog.cpp:500
+#: LabelDialog.cpp:127
 #: Tags.cpp:795
 msgid "&Remove"
 msgstr "हटाएं(&R)"
 
-#: BatchProcessDialog.cpp:499
+#: BatchProcessDialog.cpp:501
 msgid "Re&name"
 msgstr "पुन: नामकरण"
 
-#: BatchProcessDialog.cpp:505
+#: BatchProcessDialog.cpp:507
 msgid "C&hain (Double-Click or press SPACE to edit)"
 msgstr "कड़ी(संपादन के लिए दोहरी-क्लिक या स्पेस दबाएं) "
 
 #. i18n-hint: This is the number of the command in the list
-#: BatchProcessDialog.cpp:515
+#: BatchProcessDialog.cpp:517
 msgid "Num"
 msgstr "क्रमांक"
 
-#: BatchProcessDialog.cpp:516
+#: BatchProcessDialog.cpp:518
 #: commands/CommandManager.cpp:108
 #: prefs/KeyConfigPrefs.cpp:185
 msgid "Command"
 msgstr "आदेश"
 
-#: BatchProcessDialog.cpp:517
+#: BatchProcessDialog.cpp:519
 #: effects/Contrast.cpp:244
 msgid "Parameters"
 msgstr "परिमाण"
 
-#: BatchProcessDialog.cpp:521
+#: BatchProcessDialog.cpp:523
 msgid "&Insert"
 msgstr "डालें(&I)"
 
-#: BatchProcessDialog.cpp:522
+#: BatchProcessDialog.cpp:524
 msgid "De&lete"
 msgstr "मिटाएं"
 
-#: BatchProcessDialog.cpp:523
-#: effects/Equalization.cpp:2866
+#: BatchProcessDialog.cpp:525
+#: effects/Equalization.cpp:2875
 msgid "Move &Up"
 msgstr "ऊपर जाएं"
 
-#: BatchProcessDialog.cpp:524
-#: effects/Equalization.cpp:2867
+#: BatchProcessDialog.cpp:526
+#: effects/Equalization.cpp:2876
 msgid "Move &Down"
 msgstr "नीचे जाएं"
 
-#: BatchProcessDialog.cpp:525
-#: effects/Equalization.cpp:2873
+#: BatchProcessDialog.cpp:527
+#: effects/Equalization.cpp:2882
 msgid "De&faults"
 msgstr "डिफ़ाल्ट"
 
 #. i18n-hint: This is the last item in a list.
-#: BatchProcessDialog.cpp:569
+#: BatchProcessDialog.cpp:571
 msgid "- END -"
 msgstr "- समाप्त -"
 
-#: BatchProcessDialog.cpp:602
+#: BatchProcessDialog.cpp:604
 #, c-format
 msgid "%s changed"
 msgstr "%s परिवर्तित"
 
-#: BatchProcessDialog.cpp:603
+#: BatchProcessDialog.cpp:605
 msgid "Do you want to save the changes?"
 msgstr "क्या आप परिवर्तनों को सहेजना चाहते हैं?"
 
-#: BatchProcessDialog.cpp:685
+#: BatchProcessDialog.cpp:687
 msgid "Enter name of new chain"
 msgstr "नई कड़ी का नाम"
 
-#: BatchProcessDialog.cpp:696
+#: BatchProcessDialog.cpp:698
 msgid "Name must not be blank"
 msgstr "नाम रिक्त नहीं होना चाहिए"
 
 #. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
-#: BatchProcessDialog.cpp:706
+#: BatchProcessDialog.cpp:708
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
 msgstr "नामों में '%c' और '%c' नहीं हो सकता"
 
 #. i18n-hint: %s will be replaced by the name of a file.
-#: BatchProcessDialog.cpp:737
+#: BatchProcessDialog.cpp:739
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "क्या आप सचमुच %s मिटाना चाहते हैं?"
@@ -942,7 +944,7 @@ msgstr "लापता "
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "यदि आप आगे बढ़ते हैं, तो आपकी परियोजना को डिस्क पर सहेजा नहीं जाएगा. क्या आप यही चाहते हैं?"
 
-#: Dependencies.cpp:551
+#: Dependencies.cpp:552
 msgid ""
 "Your project is currently self-contained; it does not depend on any external audio files. \n"
 "\n"
@@ -952,7 +954,7 @@ msgstr ""
 "\n"
 "यदि आप परियोजना में आयातित फ़ाइलों का उपयोग कर लेते हैं, तो यह आत्म-निर्भर नहीं रह जाता. इसके बाद यदि आप बिना इन फ़ाइलों की प्रति के संचय करते हैं तो आप डाटा खो सकते हैं."
 
-#: Dependencies.cpp:556
+#: Dependencies.cpp:557
 msgid "Dependency Check"
 msgstr "निर्भरता निरीक्षण"
 
@@ -1277,7 +1279,7 @@ msgstr "आयताकार"
 msgid "FFmpeg support not compiled in"
 msgstr "FFmpeg समर्थन यहाँ समायोजित नहीं"
 
-#: FFmpeg.cpp:110
+#: FFmpeg.cpp:112
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before,                         \n"
 "but this time Audacity failed to load it at startup.                         \n"
@@ -1289,46 +1291,46 @@ msgstr ""
 "\n"
 "आप चाहें तो वरीयता > पुस्तकालय में  जाकर फिर से विन्यास करें."
 
-#: FFmpeg.cpp:113
+#: FFmpeg.cpp:115
 msgid "FFmpeg startup failed"
 msgstr "FFmpeg शुरुआत विफल"
 
-#: FFmpeg.cpp:122
+#: FFmpeg.cpp:124
 msgid "FFmpeg library not found"
 msgstr "FFmpeg लाईब्रेरी नहीं मिला"
 
-#: FFmpeg.cpp:570
+#: FFmpeg.cpp:572
 msgid "Locate FFmpeg"
 msgstr "FFmpeg ढूंढें"
 
-#: FFmpeg.cpp:590
+#: FFmpeg.cpp:592
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "FFmpeg द्वारा ऑडियो आयात-निर्यात हेतु Audacity को  '%s' फ़ाइल की जरूरत है."
 
-#: FFmpeg.cpp:596
+#: FFmpeg.cpp:598
 #, c-format
 msgid "Location of '%s':"
 msgstr "'%s' का स्थान :"
 
-#: FFmpeg.cpp:605
+#: FFmpeg.cpp:607
 #, c-format
 msgid "To find '%s', click here -->"
 msgstr " '%s' को ढूंढ़ने के लिए, यहाँ क्लिक करें -->"
 
-#: FFmpeg.cpp:611
+#: FFmpeg.cpp:613
 #: export/ExportCL.cpp:106
-#: export/ExportMP3.cpp:616
+#: export/ExportMP3.cpp:617
 msgid "Browse..."
 msgstr "ब्राऊज़..."
 
-#: FFmpeg.cpp:612
+#: FFmpeg.cpp:614
 msgid "To get a free copy of FFmpeg, click here -->"
 msgstr "FFmpeg की मुफ़्त प्रति के लिए, यहाँ क्लिक करें -->"
 
 #. i18n-hint: (verb)
-#: FFmpeg.cpp:613
-#: export/ExportMP3.cpp:620
+#: FFmpeg.cpp:615
+#: export/ExportMP3.cpp:621
 msgid "Download"
 msgstr "डाउनलोड"
 
@@ -1336,12 +1338,12 @@ msgstr "डाउनलोड"
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
-#: FFmpeg.cpp:635
+#: FFmpeg.cpp:637
 #, c-format
 msgid "Where is '%s'?"
 msgstr "'%s' कहाँ है?"
 
-#: FFmpeg.cpp:819
+#: FFmpeg.cpp:826
 msgid "Failed to find compatible FFmpeg libraries."
 msgstr "संगत FFmpeg लाइब्रेरी को नहीं ढूंढ पाया."
 
@@ -1368,15 +1370,15 @@ msgid "Do not show this warning again"
 msgstr "यह चेतावनी फिर न दिखाएँ"
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: FFmpeg.h:214
+#: FFmpeg.h:215
 msgid "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files (*.*)|*"
 msgstr "केवल avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|सभी फ़ाइलें (*.*)|*"
 
-#: FFmpeg.h:247
+#: FFmpeg.h:248
 msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 msgstr "डाइनामिक लाईब्रेरी (*.dylib)|*.dylib|सभी फ़ाइलें (*)|*"
 
-#: FFmpeg.h:274
+#: FFmpeg.h:275
 msgid "Only libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
 msgstr "सिर्फ libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|सभी फ़ाइलें (*)|*"
 
@@ -1439,7 +1441,7 @@ msgid "Axis"
 msgstr "धुरी"
 
 #: FreqWindow.cpp:219
-#: LabelDialog.cpp:126
+#: LabelDialog.cpp:129
 #: Menus.cpp:283
 #: prefs/KeyConfigPrefs.cpp:173
 msgid "&Export..."
@@ -1447,7 +1449,7 @@ msgstr "निर्यात...(&E)"
 
 #: FreqWindow.cpp:220
 #: effects/Contrast.cpp:352
-#: export/ExportCL.cpp:429
+#: export/ExportCL.cpp:430
 #: export/ExportMultiple.cpp:351
 msgid "Export"
 msgstr "निर्यात"
@@ -1469,25 +1471,25 @@ msgstr "बंद करें"
 
 #: FreqWindow.cpp:231
 #: FreqWindow.cpp:234
-#: effects/Equalization.cpp:1307
+#: effects/Equalization.cpp:1315
 msgid "Grids"
 msgstr "ग्रिड"
 
 #. i18n-hint: short form of 'decibels'.
 #: FreqWindow.cpp:298
 #: FreqWindow.cpp:499
-#: effects/AutoDuck.cpp:509
-#: effects/AutoDuck.cpp:549
-#: effects/AutoDuck.cpp:820
+#: effects/AutoDuck.cpp:510
+#: effects/AutoDuck.cpp:550
+#: effects/AutoDuck.cpp:821
 #: effects/Compressor.cpp:480
 #: effects/Compressor.cpp:488
-#: effects/Equalization.cpp:1136
-#: effects/Equalization.cpp:1138
-#: effects/Equalization.cpp:1146
-#: effects/Equalization.cpp:1218
-#: effects/Equalization.cpp:1449
-#: effects/Equalization.cpp:1460
-#: effects/Normalize.cpp:492
+#: effects/Equalization.cpp:1143
+#: effects/Equalization.cpp:1145
+#: effects/Equalization.cpp:1153
+#: effects/Equalization.cpp:1225
+#: effects/Equalization.cpp:1457
+#: effects/Equalization.cpp:1468
+#: effects/Normalize.cpp:493
 #: widgets/Meter.cpp:440
 msgid "dB"
 msgstr "dB"
@@ -1496,8 +1498,8 @@ msgstr "dB"
 #. cycles per second.
 #: FreqWindow.cpp:314
 #: FreqWindow.cpp:537
-#: effects/Equalization.cpp:1178
-#: effects/Equalization.cpp:1214
+#: effects/Equalization.cpp:1185
+#: effects/Equalization.cpp:1221
 #: import/ImportRaw.cpp:412
 msgid "Hz"
 msgstr "Hz"
@@ -1517,7 +1519,7 @@ msgstr "समुचित डाटा नहीं चुना गया."
 
 #. i18n-hint: short form of 'seconds'.
 #: FreqWindow.cpp:543
-#: effects/AutoDuck.cpp:823
+#: effects/AutoDuck.cpp:824
 msgid "s"
 msgstr "s"
 
@@ -1534,35 +1536,35 @@ msgstr "Cursor: %d Hz (%s) = %d dB    शिखर: %d Hz (%s) = %.1f dB"
 msgid "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
 msgstr "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
 
-#: FreqWindow.cpp:994
+#: FreqWindow.cpp:995
 msgid "Drawing Spectrum"
 msgstr "वर्णक्रम चित्रण"
 
-#: FreqWindow.cpp:994
+#: FreqWindow.cpp:995
 msgid "Plot Spectrum"
 msgstr "वर्णक्रम बनाएं"
 
-#: FreqWindow.cpp:1210
+#: FreqWindow.cpp:1211
 msgid "spectrum.txt"
 msgstr "spectrum.txt"
 
-#: FreqWindow.cpp:1212
+#: FreqWindow.cpp:1213
 msgid "Export Spectral Data As:"
 msgstr "Spectral डेटा निर्यात इस तरह:"
 
-#: FreqWindow.cpp:1228
-#: LabelDialog.cpp:606
-#: Menus.cpp:3350
+#: FreqWindow.cpp:1229
+#: LabelDialog.cpp:611
+#: Menus.cpp:3354
 #: effects/Contrast.cpp:516
-#: prefs/KeyConfigPrefs.cpp:338
+#: prefs/KeyConfigPrefs.cpp:340
 msgid "Couldn't write to file: "
 msgstr "फ़ाइल में लिख नहीं सका: "
 
-#: FreqWindow.cpp:1233
+#: FreqWindow.cpp:1234
 msgid "Frequency (Hz)\tLevel (dB)"
 msgstr "फ्रीकवेंसी(Hz)\tतीव्रता (dB)"
 
-#: FreqWindow.cpp:1239
+#: FreqWindow.cpp:1240
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "देरी(सेकेंड)\tआवृति (Hz)\tस्तर"
 
@@ -1697,18 +1699,19 @@ msgstr "इतिहास पहले जैसा"
 msgid "Manage History"
 msgstr "इतिहास प्रबंध"
 
+# कार्य
 #: HistoryWindow.cpp:77
 msgid "Action"
-msgstr "ऐक्शन"
+msgstr "कर्म"
 
 # "उपलब्ध सतहें पूर्ववत करने के लिए"
 #: HistoryWindow.cpp:85
 msgid "&Undo Levels Available"
-msgstr "यथावत उपलब्ध तल(&U)"
+msgstr "पूर्ववत हेतु उपलब्ध चरण(&U)"
 
 #: HistoryWindow.cpp:91
 msgid "Levels To Discard"
-msgstr "तल, जो रद्द करने हैं"
+msgstr "चरण, जो रद्द करने हैं"
 
 #. i18n-hint: (verb)
 #: HistoryWindow.cpp:103
@@ -1717,7 +1720,7 @@ msgstr "अस्वीकार करें"
 
 #: HistoryWindow.cpp:112
 #: effects/ChangeLength.cpp:186
-#: export/ExportCL.cpp:504
+#: export/ExportCL.cpp:505
 msgid "&OK"
 msgstr "ठीक(&O)"
 
@@ -1758,53 +1761,53 @@ msgstr "नए फ़ाइल का नाम बताएं:"
 msgid "Edit Labels"
 msgstr "नामपट्ट सुधारें"
 
-#: LabelDialog.cpp:111
+#: LabelDialog.cpp:112
 msgid "Press F2 or double click to edit cell contents."
 msgstr "सेल सामग्री के संपादन के लिए F2 दबाएं या डबल क्लिक करें."
 
-#: LabelDialog.cpp:122
+#: LabelDialog.cpp:125
 msgid "Insert &After"
 msgstr "बाद में डालें(&A)"
 
-#: LabelDialog.cpp:123
+#: LabelDialog.cpp:126
 msgid "Insert &Before"
 msgstr "पहले डालें(&B)"
 
-#: LabelDialog.cpp:125
+#: LabelDialog.cpp:128
 #: prefs/KeyConfigPrefs.cpp:172
 msgid "&Import..."
 msgstr "आयात...(&I)"
 
 #. i18n-hint: (noun).  A track contains waves, audio etc.
-#: LabelDialog.cpp:140
+#: LabelDialog.cpp:143
 msgid "Track"
 msgstr "ट्रैक"
 
 #. i18n-hint: (noun)
-#: LabelDialog.cpp:142
+#: LabelDialog.cpp:145
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5923
-#: Menus.cpp:5966
+#: Menus.cpp:5942
+#: Menus.cpp:5986
 msgid "Label"
 msgstr "नाम-पट्टी"
 
 #. i18n-hint: (noun) of a label
-#: LabelDialog.cpp:144
-#: TimerRecordDialog.cpp:350
+#: LabelDialog.cpp:147
+#: TimerRecordDialog.cpp:347
 msgid "Start Time"
 msgstr "शुरुआत समय"
 
 #. i18n-hint: (noun) of a label
-#: LabelDialog.cpp:146
-#: TimerRecordDialog.cpp:369
+#: LabelDialog.cpp:149
+#: TimerRecordDialog.cpp:366
 msgid "End Time"
 msgstr "समापन समय"
 
-#: LabelDialog.cpp:157
+#: LabelDialog.cpp:160
 msgid "New..."
-msgstr "नई..."
+msgstr "नया..."
 
-#: LabelDialog.cpp:357
+#: LabelDialog.cpp:360
 msgid ""
 "You have left blank label names.  These will be\n"
 "skipped when repopulating the Label Tracks.\n"
@@ -1816,61 +1819,57 @@ msgstr ""
 "\n"
 "क्या आप वापस जाकर नाम देना चाहेंगे?"
 
-#: LabelDialog.cpp:358
+#: LabelDialog.cpp:361
 #: LangChoice.cpp:134
 msgid "Confirm"
 msgstr "संपुष्टी दें"
 
-#: LabelDialog.cpp:519
-#: Menus.cpp:5113
+#: LabelDialog.cpp:522
+#: Menus.cpp:5123
 msgid "Select a text file containing labels..."
 msgstr "एक पाठ फ़ाइल चुनें जिसमें नाम हो..."
 
-#: LabelDialog.cpp:523
-#: Menus.cpp:5117
+# पाठ्य फ़ाइलें(*.txt)|*.txt|सभी फ़ाइलें (*.*)|*.*
+#: LabelDialog.cpp:526
+#: Menus.cpp:5127
 msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
 msgstr "टेक्सट फ़ाइलें(*.txt)|*.txt|सभी फ़ाइलें (*.*)|*.*"
 
-#: LabelDialog.cpp:537
-#: Menus.cpp:5129
-#: Project.cpp:2343
-#: Project.cpp:2351
+#: LabelDialog.cpp:541
+#: Menus.cpp:5140
+#: Project.cpp:2352
+#: Project.cpp:2360
 msgid "Could not open file: "
 msgstr "फ़ाइल को खोला नहीं जा सका: "
 
-#: LabelDialog.cpp:563
+#: LabelDialog.cpp:567
 msgid "No labels to export."
 msgstr "निर्यात के लिए कोई नामपट्ट नहीं."
 
-#: LabelDialog.cpp:569
-#: Menus.cpp:3313
+#: LabelDialog.cpp:574
+#: Menus.cpp:3317
 msgid "Export Labels As:"
 msgstr "नामपट्टी का इस नाम से निर्यात:"
 
-#: LabelDialog.cpp:571
-#: Menus.cpp:3311
-msgid "labels.txt"
-msgstr "labels.txt"
-
 # "नया नामपट्ट ट्रैक"
-#: LabelDialog.cpp:703
+#: LabelDialog.cpp:708
 msgid "New Label Track"
 msgstr "नया नाम ट्रैक"
 
-#: LabelDialog.cpp:704
+#: LabelDialog.cpp:709
 msgid "Enter track name"
 msgstr "ट्रैक का नाम बताएं"
 
 # "लेबल ट्रैक"
 #. i18n-hint: (noun) it's the name of a kind of track.
-#: LabelDialog.cpp:706
+#: LabelDialog.cpp:711
 #: LabelDialog.h:53
 #: LabelTrack.cpp:96
 msgid "Label Track"
 msgstr "नाम ट्रैक"
 
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5923
+#: Menus.cpp:5942
 msgid "Added label"
 msgstr "नाम-पट्ट लगाया"
 
@@ -1882,7 +1881,7 @@ msgstr "Audacity की पहली चाल"
 
 #: LangChoice.cpp:92
 msgid "Choose Language for Audacity to use:"
-msgstr "Audacity के उपयोग के लिए भाषा चुनें:"
+msgstr "Audacity के उपयोग की भाषा चुनें:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
 #. * versions of language names.
@@ -2028,10 +2027,11 @@ msgstr "बाहर(&x)"
 msgid "&Edit"
 msgstr "संपादन(&E)"
 
+# पहले जैसा(&U)
 #: Menus.cpp:388
 #: Menus.cpp:1716
 msgid "&Undo"
-msgstr "पहले जैसा(&U)"
+msgstr "पूर्ववत(&U)"
 
 #: Menus.cpp:400
 #: Menus.cpp:1731
@@ -2302,7 +2302,7 @@ msgstr "औजार-पट्टी"
 #. i18n-hint: Clicking this menu item shows the toolbar that manages devices
 #: Menus.cpp:671
 msgid "&Device Toolbar"
-msgstr "डिवाइस औजार-पट्टी"
+msgstr "यंत्र-प्रबन्ध औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: Menus.cpp:673
@@ -2353,6 +2353,7 @@ msgstr "औजार-पट्टी यथावत"
 msgid "!Simplified View"
 msgstr "!सरल दृश्य"
 
+# आवागमन(&r)
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
 #: Menus.cpp:712
@@ -2483,7 +2484,7 @@ msgstr "सभी ट्रैक चुप करें"
 
 #: Menus.cpp:798
 #: Menus.cpp:998
-msgid "&UnMute All Tracks"
+msgid "&Unmute All Tracks"
 msgstr "सभी ट्रैकों की चुप्पी हटाएं(&U)"
 
 #: Menus.cpp:803
@@ -2538,7 +2539,7 @@ msgstr "एकरेखीय (&g) करके कर्सर खिसका�
 
 #: Menus.cpp:839
 #: Menus.cpp:1039
-#: Menus.cpp:5585
+#: Menus.cpp:5604
 msgid "Synchronize MIDI with Audio"
 msgstr "MIDI को आडियो के साथ-साथ"
 
@@ -2563,10 +2564,11 @@ msgstr "बजाने की जगह नाम-पट्ट लगाएं(
 msgid "&Edit Labels..."
 msgstr "नाम सुधारें... (&E)"
 
+# ट्रैक क्रमवार लगाएं
 #: Menus.cpp:868
 #: Menus.cpp:1068
-msgid "S&ort tracks"
-msgstr "ट्रैक छाँटें"
+msgid "S&ort Tracks"
+msgstr "ट्रैक छाँटें (&o)"
 
 #: Menus.cpp:870
 #: Menus.cpp:1070
@@ -2598,7 +2600,7 @@ msgstr "प्रभाव (&c) "
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
 #: Menus.cpp:1160
-#: Menus.cpp:3146
+#: Menus.cpp:3148
 #, c-format
 msgid "Repeat %s"
 msgstr "%s दुहराएं"
@@ -2638,7 +2640,7 @@ msgstr "त्वरित मदद(संजाल ब्राउज़र �
 
 #: Menus.cpp:1426
 msgid "&Manual (in web browser)"
-msgstr "मैनुअल(संजाल ब्राउज़र में)(&M)"
+msgstr "दस्तावेज़ (वेब ब्राउज़र में)(&M)"
 
 #: Menus.cpp:1433
 #: Menus.cpp:1451
@@ -2648,7 +2650,7 @@ msgstr "स्क्रीनशॉट औजार...(&S)"
 #: Menus.cpp:1440
 #: Menus.cpp:1458
 msgid "&Run Benchmark..."
-msgstr "बेंच-मार्क(मान-दंड) बनाएं..."
+msgstr "मान-दंड बनाएं...(&R)"
 
 #: Menus.cpp:1445
 #: Menus.cpp:1463
@@ -2680,11 +2682,12 @@ msgstr "चयन औजार"
 msgid "Envelope Tool"
 msgstr "लिफ़ाफ़ा औजार"
 
+# ध्वनि-चित्र खींचें
 #: Menus.cpp:1480
 #: toolbars/ToolsToolBar.cpp:150
 #: toolbars/ToolsToolBar.cpp:187
 msgid "Draw Tool"
-msgstr "ध्वनि-चित्र खींचें"
+msgstr "पेंसिल औजार"
 
 #: Menus.cpp:1481
 #: toolbars/ToolsToolBar.cpp:149
@@ -2949,62 +2952,67 @@ msgstr "हाल की फ़ाइल खोलें"
 msgid "Recent &Files"
 msgstr "हाल की फ़ाइलें"
 
+# पहले जैसा(&U)%s
 #: Menus.cpp:1690
 #, c-format
 msgid "&Undo %s"
-msgstr "पहले जैसा(&U)%s"
+msgstr "पूर्ववत(&U)%s"
 
 #: Menus.cpp:1725
 #, c-format
 msgid "&Redo %s"
 msgstr "दोहराएं (&R)%s"
 
-#: Menus.cpp:2499
+#: Menus.cpp:2503
 msgid "Sort By Time"
 msgstr "सजाएं, समय से"
 
-#: Menus.cpp:2499
+#: Menus.cpp:2503
 msgid "Tracks sorted by time"
 msgstr "ट्रैकों का समय से समायोजन"
 
-#: Menus.cpp:2508
+#: Menus.cpp:2512
 msgid "Sort By Name"
 msgstr "सजाएं, नाम से"
 
-#: Menus.cpp:2508
+#: Menus.cpp:2512
 msgid "Tracks sorted by name"
 msgstr "ट्रैकों का नाम से समायोजन"
 
-#: Menus.cpp:2658
-#: Menus.cpp:2701
-msgid "Position"
-msgstr "स्थिति"
-
-#: Menus.cpp:2658
+#: Menus.cpp:2663
 msgid "Set Left Selection Boundary"
 msgstr "बाईं ओर चयन सीमा सेट करें"
 
-#: Menus.cpp:2701
+#: Menus.cpp:2664
+#: Menus.cpp:2706
+msgid "Position"
+msgstr "स्थिति"
+
+#: Menus.cpp:2705
 msgid "Set Right Selection Boundary"
 msgstr "दाईं ओर चयन सीमा सेट करें"
 
-#: Menus.cpp:3121
+#: Menus.cpp:3123
 msgid "You must select a track first."
 msgstr "आप पहले एक ट्रैक चुनें."
 
-#: Menus.cpp:3307
+#: Menus.cpp:3301
+msgid "labels.txt"
+msgstr "labels.txt"
+
+#: Menus.cpp:3313
 msgid "There are no label tracks to export."
 msgstr "निर्यात के लिए कोई नाम ट्रैक नहीं है."
 
-#: Menus.cpp:3404
+#: Menus.cpp:3408
 msgid "Export MIDI As:"
 msgstr "MIDI निर्यात ऐसे :"
 
-#: Menus.cpp:3408
+#: Menus.cpp:3412
 msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI फ़ाईल (*.mid)|*.mid|Allegro फ़ाईल (*.gro)|*.gro"
 
-#: Menus.cpp:3440
+#: Menus.cpp:3444
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
@@ -3012,198 +3020,198 @@ msgstr ""
 "आपने एक अनजाने फ़ाइल एक्सटेंशन के साथ फ़ाइल नाम चुना है.\n"
 "क्या आप जारी रखना चाहते हैं?"
 
-#: Menus.cpp:3441
+#: Menus.cpp:3445
 msgid "Export MIDI"
 msgstr "MIDI निर्यात"
 
-#: Menus.cpp:3516
+#: Menus.cpp:3520
 msgid "Nothing to undo"
 msgstr "पूर्ववत करने को कुछ नहीं"
 
-#: Menus.cpp:3537
+#: Menus.cpp:3541
 msgid "Nothing to redo"
 msgstr "दुहराने के लिए कुछ नहीं"
 
-#: Menus.cpp:3632
+#: Menus.cpp:3636
 #: TrackPanel.cpp:680
 #: toolbars/EditToolBar.cpp:131
 #: toolbars/EditToolBar.cpp:195
 msgid "Cut"
 msgstr "काटें"
 
-#: Menus.cpp:3632
+#: Menus.cpp:3636
 msgid "Cut to the clipboard"
 msgstr "क्लिपबोर्ड में प्रतिलिपि बनायी गई"
 
-#: Menus.cpp:3673
+#: Menus.cpp:3677
 msgid "Split Cut"
 msgstr "तोड़कर काटें"
 
-#: Menus.cpp:3673
+#: Menus.cpp:3677
 msgid "Split-cut to the clipboard"
 msgstr "क्लिपबोर्ड में कतरन की प्रतिलिपि बनायी गई"
 
-#: Menus.cpp:3793
+#: Menus.cpp:3797
 msgid "Pasting one type of track into another is not allowed."
 msgstr "एक प्रकार के ट्रैक को दूसरे में चिपकाने की अनुमति नहीं है."
 
-#: Menus.cpp:3805
+#: Menus.cpp:3809
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "स्टीरियो ऑडियो की नकल एक मोनो ट्रैक में करने की अनुमति नहीं है."
 
-#: Menus.cpp:3924
-#: Menus.cpp:3947
-#: Menus.cpp:4050
+#: Menus.cpp:3928
+#: Menus.cpp:3951
+#: Menus.cpp:4054
 #: TrackPanel.cpp:682
 #: toolbars/EditToolBar.cpp:135
 #: toolbars/EditToolBar.cpp:197
 msgid "Paste"
 msgstr "चिपकाएं"
 
-#: Menus.cpp:3924
-#: Menus.cpp:4050
-#: Menus.cpp:4125
+#: Menus.cpp:3928
+#: Menus.cpp:4054
+#: Menus.cpp:4129
 msgid "Pasted from the clipboard"
 msgstr "क्लिपबोर्ड से चिपकाया गया"
 
-#: Menus.cpp:3947
+#: Menus.cpp:3951
 msgid "Pasted text from the clipboard"
 msgstr "क्लिपबोर्ड से लेख चिपकाया गया"
 
-#: Menus.cpp:4125
+#: Menus.cpp:4129
 msgid "Paste Text to New Label"
 msgstr "नए नामपट्ट में पाठ चिपकाएं"
 
-#: Menus.cpp:4173
+#: Menus.cpp:4177
 #: toolbars/EditToolBar.cpp:198
 msgid "Trim"
 msgstr "काटें"
 
-#: Menus.cpp:4173
+#: Menus.cpp:4177
 msgid "Trim file to selection"
 msgstr "फ़ाईल को चयन तक छाँटें"
 
-#: Menus.cpp:4202
+#: Menus.cpp:4206
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
 msgstr "विभाजन मिटाया %.2f सेकेंड जहाँ t=%.2f"
 
-#: Menus.cpp:4205
+#: Menus.cpp:4209
 msgid "Split Delete"
 msgstr "अलग कर मिटाएं"
 
-#: Menus.cpp:4226
+#: Menus.cpp:4230
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
 msgstr "अलग किया %.2f सेकंड जहाँ t=%.2f"
 
-#: Menus.cpp:4229
+#: Menus.cpp:4233
 msgid "Detach"
 msgstr "अलग करें"
 
-#: Menus.cpp:4250
+#: Menus.cpp:4254
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
 msgstr "जुड़ा %.2f सेकेंड जहाँ t=%.2f"
 
-#: Menus.cpp:4253
+#: Menus.cpp:4257
 msgid "Join"
 msgstr "जोड़ें"
 
-#: Menus.cpp:4266
+#: Menus.cpp:4270
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "चयनित ट्रैकों को मौन किया %.2f सेकेंड के लिए %.2f पर"
 
-#: Menus.cpp:4268
+#: Menus.cpp:4272
 #: toolbars/EditToolBar.cpp:199
 msgid "Silence"
 msgstr "शांति"
 
-#: Menus.cpp:4298
+#: Menus.cpp:4302
 msgid "Duplicate"
 msgstr "नकल बनाएं"
 
-#: Menus.cpp:4298
+#: Menus.cpp:4302
 msgid "Duplicated"
 msgstr "नकल बनाया गया"
 
 #. i18n-hint: (verb) past tense.  Audacity has just cut the labeled regions.
-#: Menus.cpp:4323
+#: Menus.cpp:4327
 msgid "Cut labeled regions to the clipboard"
 msgstr "नामित क्षेत्रों को काटें और क्लिपबोर्ड में डालें"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4325
+#: Menus.cpp:4329
 msgid "Cut Labels"
 msgstr "नाम काटें"
 
 #. i18n-hint: (verb) Audacity has just splitcut the labeled regions
-#: Menus.cpp:4341
+#: Menus.cpp:4345
 msgid "SplitCut labeled regions to the clipboard"
 msgstr "नामित क्षेत्रों को अलग काटकर क्लिपबोर्ड में डालें"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
-#: Menus.cpp:4343
+#: Menus.cpp:4347
 msgid "Split Cut Labels"
 msgstr "नाम का टुकड़ा काटें"
 
-#: Menus.cpp:4357
+#: Menus.cpp:4361
 msgid "Copied labeled regions to the clipboard"
 msgstr "नामित क्षेत्रों की प्रतिलिपि क्लिपबोर्ड में  बनायी गई"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4359
+#: Menus.cpp:4363
 msgid "Copy Labels"
 msgstr "नाम की प्रतियाँ बनाएं"
 
 #. i18n-hint: (verb) Audacity has just deleted the labeled regions
-#: Menus.cpp:4375
+#: Menus.cpp:4379
 msgid "Deleted labeled regions"
 msgstr "नामित क्षेत्रों को मिटाया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4377
+#: Menus.cpp:4381
 msgid "Delete Labels"
 msgstr "नाम मिटाएं"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled regions
-#: Menus.cpp:4391
+#: Menus.cpp:4395
 msgid "Split Deleted labeled regions"
 msgstr "नामित क्षेत्रों को तोड़कर मिटाया"
 
 #. i18n-hint: (verb) Do a special kind of delete on labels
-#: Menus.cpp:4393
+#: Menus.cpp:4397
 msgid "Split Delete Labels"
 msgstr "नाम-पट्टी अलग कर मिटाएं"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4407
+#: Menus.cpp:4411
 msgid "Silenced labeled regions"
 msgstr "नामित क्षेत्रों को चुप्पी में बदल दिया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4409
+#: Menus.cpp:4413
 msgid "Silence Labels"
 msgstr "नामों को शांत करें"
 
 #. i18n-hint: (verb) past tense.  Audacity has just split the labeled regions
-#: Menus.cpp:4420
+#: Menus.cpp:4424
 msgid "Split labeled regions"
 msgstr "नामित क्षेत्रों को अलग करें"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4422
+#: Menus.cpp:4426
 msgid "Split Labels"
 msgstr "नामपट्टी तोड़ें"
 
 #. i18n-hint: (verb) Audacity has just joined the labeled regions
-#: Menus.cpp:4436
+#: Menus.cpp:4440
 msgid "Joined labeled regions"
 msgstr "नामित क्षेत्रों को जोड़ा गया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4438
+#: Menus.cpp:4442
 msgid "Join Labels"
 msgstr "लेबल जोड़ें"
 
@@ -3211,257 +3219,257 @@ msgstr "लेबल जोड़ें"
 #. i18n-hint: (verb) Audacity has just detached the labeled regions.
 #. This message appears in history and tells you about something
 #. Audacity has done.
-#: Menus.cpp:4454
+#: Menus.cpp:4458
 msgid "Detached labeled regions"
 msgstr "अलग हुआ नामित क्षेत्र"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4456
+#: Menus.cpp:4460
 msgid "Detach Labels"
 msgstr "नाम-पट्टी अलग करें"
 
-#: Menus.cpp:4478
-#: TrackPanel.cpp:7065
+#: Menus.cpp:4482
+#: TrackPanel.cpp:7081
 msgid "Split"
 msgstr "तोड़ें"
 
 # "नया अलग टुकड़ा"
-#: Menus.cpp:4567
+#: Menus.cpp:4571
 msgid "Split New"
 msgstr "भाजित नया"
 
-#: Menus.cpp:4567
+#: Menus.cpp:4571
 msgid "Split to new track"
 msgstr "अलग नया ट्रैक बनाएं"
 
-#: Menus.cpp:4994
+#: Menus.cpp:4999
 msgid "Frequency Analysis"
 msgstr "आवृति विश्लेशन"
 
-#: Menus.cpp:5142
+#: Menus.cpp:5156
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "'%s' से नाम-पट्टियाँ आयात किया"
 
-#: Menus.cpp:5143
+#: Menus.cpp:5157
 msgid "Import Labels"
 msgstr "नाम आयात करें"
 
-#: Menus.cpp:5154
+#: Menus.cpp:5168
 msgid "Select a MIDI file..."
 msgstr "एक MIDI फ़ाइल चुनें..."
 
-#: Menus.cpp:5158
+#: Menus.cpp:5172
 msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
 msgstr "MIDI और Allegro फ़ाइलें (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI फ़ाइलें (*.mid;*.midi)|*.mid;*.midi|Allegro फ़ाइलें (*.gro)|*.gro|सभी फ़ाइलें (*.*)|*.*"
 
-#: Menus.cpp:5174
+#: Menus.cpp:5189
 #, c-format
 msgid "Imported MIDI from '%s'"
 msgstr "MIDI आयात '%s' से"
 
-#: Menus.cpp:5175
+#: Menus.cpp:5190
 msgid "Import MIDI"
 msgstr "MIDI आयात"
 
-#: Menus.cpp:5189
+#: Menus.cpp:5204
 msgid "Select any uncompressed audio file..."
 msgstr "चुनें किसी असंपीड़ित ऑडियो फ़ाइल को..."
 
-#: Menus.cpp:5193
+#: Menus.cpp:5208
 msgid "All files (*)|*"
 msgstr "सभी फ़ाइलें (*)|*"
 
-#: Menus.cpp:5217
+#: Menus.cpp:5233
 msgid "Edit the metadata tags"
 msgstr "मेटाडाटा टैग को संपादित करें"
 
-#: Menus.cpp:5218
+#: Menus.cpp:5234
 #: export/Export.cpp:378
 msgid "Edit Metadata"
 msgstr "मेटाडाटा संपादित करें"
 
-#: Menus.cpp:5218
+#: Menus.cpp:5234
 msgid "Edit Metadata tags"
 msgstr "मेटाडाटा टैग संपादित करें"
 
 # '%s' ट्रैक्स की सभी ऑडियो का प्रतिपादन
-#: Menus.cpp:5275
+#: Menus.cpp:5291
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "'%s' ट्रैक्स की सभी ऑडियो का निर्माण"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
-#: Menus.cpp:5278
+#: Menus.cpp:5294
 msgid "Render"
 msgstr "प्रतिपादन"
 
-#: Menus.cpp:5283
+#: Menus.cpp:5299
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
 msgstr "%d ट्रैक से मिश्रित कर एक नए स्टीरियो ट्रैक का निर्माण किया"
 
-#: Menus.cpp:5286
+#: Menus.cpp:5302
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "%d ट्रैक से मिश्रित कर एक नए मोनो ट्रैक का निर्माण किया"
 
-#: Menus.cpp:5288
+#: Menus.cpp:5304
 #: Mix.cpp:168
 msgid "Mix and Render"
 msgstr "मिश्रण और प्रतिपादन"
 
-#: Menus.cpp:5420
+#: Menus.cpp:5439
 msgid "Aligned with zero"
 msgstr "शून्य से मिलाया गया"
 
-#: Menus.cpp:5424
+#: Menus.cpp:5443
 msgid "Aligned cursor"
 msgstr "कर्सर मिलाया गया"
 
-#: Menus.cpp:5428
+#: Menus.cpp:5447
 msgid "Aligned with selection start"
 msgstr "चयन आरंभ से मिलाया गया"
 
-#: Menus.cpp:5432
+#: Menus.cpp:5451
 msgid "Aligned with selection end"
 msgstr "चयन समाप्ति पर लाएं"
 
-#: Menus.cpp:5436
+#: Menus.cpp:5455
 msgid "Aligned end with cursor"
 msgstr "अंत को कर्सर से मिलाएं"
 
-#: Menus.cpp:5440
+#: Menus.cpp:5459
 msgid "Aligned end with selection start"
 msgstr "अंत को चयन आरंभ से मिलाएं"
 
-#: Menus.cpp:5444
+#: Menus.cpp:5463
 msgid "Aligned end with selection end"
 msgstr "अंत को चयन समाप्ति से मिलाएं"
 
-#: Menus.cpp:5448
+#: Menus.cpp:5467
 msgid "Aligned"
 msgstr "साथ मिलाया"
 
-#: Menus.cpp:5483
+#: Menus.cpp:5502
 msgid "Align"
 msgstr "मिलाएं"
 
-#: Menus.cpp:5586
+#: Menus.cpp:5605
 msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "मि़डी और ऑडियो ट्रैक में ताल-मेल बिठा रहे हैं"
+msgstr "मिडी और ऑडियो ट्रैक में ताल-मेल बिठा रहे हैं"
 
-#: Menus.cpp:5752
+#: Menus.cpp:5771
 #, c-format
 msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "संरेखण पूरा हुआ: मिडी %.2f  से %.2f सेकेंड तक, ऑडियो %.2f से %.2f सेकेंड तक."
 
-#: Menus.cpp:5755
+#: Menus.cpp:5774
 msgid "Sync MIDI with Audio"
 msgstr "MIDI का ऑडियो से ताल-मेल"
 
-#: Menus.cpp:5759
+#: Menus.cpp:5778
 #, c-format
 msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "संरेखण त्रुटि: इनपुट बहुत कम : मिडी %.2f से %.2f सेकेंड, ऑडियो %.2f  से %.2f सेकेंड तक."
 
-#: Menus.cpp:5770
+#: Menus.cpp:5789
 msgid "Internal error reported by alignment process."
 msgstr "संरेखण प्रक्रिया द्वारा आंतरिक त्रुटि की सूचना दी गई."
 
-#: Menus.cpp:5784
+#: Menus.cpp:5803
 msgid "Created new audio track"
 msgstr "नया ऑडियो ट्रैक बनाया गया"
 
-#: Menus.cpp:5784
-#: Menus.cpp:5806
-#: Menus.cpp:5821
-#: Menus.cpp:5841
+#: Menus.cpp:5803
+#: Menus.cpp:5825
+#: Menus.cpp:5840
+#: Menus.cpp:5860
 msgid "New Track"
 msgstr "नया ट्रैक"
 
-#: Menus.cpp:5806
+#: Menus.cpp:5825
 msgid "Created new stereo audio track"
 msgstr "नया स्टिरियो ट्रैक बनाया"
 
-#: Menus.cpp:5821
+#: Menus.cpp:5840
 msgid "Created new label track"
 msgstr "नया नाम ट्रैक बनाया गया"
 
-#: Menus.cpp:5830
+#: Menus.cpp:5849
 msgid "This version of Audacity only allows one time track for each project window."
 msgstr "Audacity का यह संस्करण प्रत्येक परियोजना विंडो के लिए केवल एक समय ट्रैक की अनुमति देता है."
 
-#: Menus.cpp:5841
+#: Menus.cpp:5860
 msgid "Created new time track"
 msgstr "नया समय ट्रैक बनाया गया"
 
-#: Menus.cpp:5966
+#: Menus.cpp:5986
 msgid "Edited labels"
 msgstr "संपादित नाम-पट्टी"
 
-#: Menus.cpp:5995
+#: Menus.cpp:6015
 msgid "Save CleanSpeech Preset File As:"
 msgstr "स्वच्छवार्ता प्रीसेट फ़ाइल सहेजें, इस नाम से:"
 
-#: Menus.cpp:5999
+#: Menus.cpp:6019
 msgid "CleanSpeech Presets (*.csp)|*.csp"
 msgstr "स्वच्छवार्ता प्रीसेट्स (*.csp)|*.csp"
 
-#: Menus.cpp:6006
+#: Menus.cpp:6026
 #: export/Export.cpp:635
 msgid "Sorry, pathnames longer than 256 characters not supported."
-msgstr "क्षमा करें, 256 वर्णों से अधिक लंबा पथनाम समर्थित नहीं है."
+msgstr "क्षमा करें, 256 अक्षरों से अधिक लंबा पथनाम समर्थित नहीं है."
 
-#: Menus.cpp:6054
+#: Menus.cpp:6075
 msgid "Problem encountered exporting presets."
 msgstr "प्रिसेट निर्यात में समस्या आई."
 
-#: Menus.cpp:6055
+#: Menus.cpp:6076
 #: export/Export.cpp:503
 msgid "Unable to export"
 msgstr "निर्यात नहीं कर सका"
 
-#: Menus.cpp:6244
+#: Menus.cpp:6266
 msgid "Remove Track"
 msgstr "ट्रैक मिटाएं"
 
-#: Menus.cpp:6244
+#: Menus.cpp:6266
 msgid "Removed audio track(s)"
 msgstr "ऑडियो ट्रैक (ट्रैक्स)को हटाया"
 
-#: Menus.cpp:6319
+#: Menus.cpp:6343
 msgid "Audio Device Info"
 msgstr "ऑडियो यंत्र सूचना"
 
-#: Menus.cpp:6415
-#: Menus.cpp:6471
+#: Menus.cpp:6439
+#: Menus.cpp:6495
 #: export/ExportFFmpeg.cpp:825
-#: export/ExportMP3.cpp:1896
+#: export/ExportMP3.cpp:1899
 msgid "Resample"
 msgstr "पुन: नमूना लें"
 
-#: Menus.cpp:6436
-#: TrackPanel.cpp:7296
+#: Menus.cpp:6460
+#: TrackPanel.cpp:7312
 msgid "New sample rate (Hz):"
 msgstr "नया नमूना आवृति दर(Hz):"
 
-#: Menus.cpp:6460
-#: TrackPanel.cpp:7320
+#: Menus.cpp:6484
+#: TrackPanel.cpp:7336
 msgid "The entered value is invalid"
 msgstr "प्रविष्टि अमान्य है"
 
-#: Menus.cpp:6469
+#: Menus.cpp:6493
 #, c-format
 msgid "Resampling track %d"
 msgstr "ट्रैक %d का नया नमूना ले रहे हैं"
 
-#: Menus.cpp:6478
+#: Menus.cpp:6502
 msgid "Resample Track"
 msgstr "ट्रैक का नया नमूना"
 
-#: Menus.cpp:6478
+#: Menus.cpp:6502
 msgid "Resampled audio track(s)"
 msgstr "नये नमूने का ऑडियो ट्रैक"
 
@@ -3476,7 +3484,7 @@ msgstr "मिश्रण द्वारा ट्रैक निर्मा
 
 #. i18n-hint: title of the MIDI Velocity slider
 #: MixerBoard.cpp:213
-#: TrackPanel.cpp:4114
+#: TrackPanel.cpp:4130
 #: widgets/ASlider.cpp:373
 msgid "Velocity"
 msgstr "गति"
@@ -3486,9 +3494,9 @@ msgstr "गति"
 #: MixerBoard.cpp:222
 #: MixerBoard.cpp:225
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4110
-#: TrackPanel.cpp:6703
-#: TrackPanel.cpp:8159
+#: TrackPanel.cpp:4126
+#: TrackPanel.cpp:6719
+#: TrackPanel.cpp:8176
 #: widgets/ASlider.cpp:355
 msgid "Gain"
 msgstr "गेन"
@@ -3502,9 +3510,9 @@ msgstr "वाद्य यंत्र"
 #: MixerBoard.cpp:262
 #: MixerBoard.cpp:264
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4110
-#: TrackPanel.cpp:6648
-#: TrackPanel.cpp:8167
+#: TrackPanel.cpp:4126
+#: TrackPanel.cpp:6664
+#: TrackPanel.cpp:8184
 #: widgets/ASlider.cpp:345
 msgid "Pan"
 msgstr "दाँए-बाँए"
@@ -3513,7 +3521,7 @@ msgstr "दाँए-बाँए"
 #: MixerBoard.cpp:277
 #: MixerBoard.cpp:325
 #: MixerBoard.cpp:1436
-#: TrackPanel.cpp:8107
+#: TrackPanel.cpp:8124
 msgid "Mute"
 msgstr "मौन"
 
@@ -3521,7 +3529,7 @@ msgstr "मौन"
 #: MixerBoard.cpp:290
 #: MixerBoard.cpp:326
 #: MixerBoard.cpp:1486
-#: TrackPanel.cpp:8105
+#: TrackPanel.cpp:8122
 msgid "Solo"
 msgstr "एकल"
 
@@ -3531,12 +3539,12 @@ msgid "Signal Level Meter"
 msgstr "सिगनल स्तर मीटर"
 
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4109
+#: TrackPanel.cpp:4125
 msgid "Moved gain slider"
 msgstr "गेन स्लाइडर स्थानांतरित"
 
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4109
+#: TrackPanel.cpp:4125
 msgid "Moved pan slider"
 msgstr "पैन स्लाइडर स्थानांतरित"
 
@@ -3553,22 +3561,22 @@ msgstr "सुर ट्रैक"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset"
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr ""
 "वरीयताएँ रीसेट करें?\n"
 "\n"
-"यह प्रश्न केवल एक बार 'स्थापना' के बाद पूछा जाएगा, जहां आप वरीयताएँ पहली बार संचित करते हैं"
+"यह प्रश्न केवल एक बार 'स्थापना' के बाद पूछा जाएगा, जहां आप वरीयताएँ पहली बार संचित करते हैं."
 
 #: Prefs.cpp:159
 msgid "Reset Audacity Preferences"
 msgstr "Audacity वरीयताएं रिसेट करें"
 
-#: Prefs.cpp:171
+#: Prefs.cpp:170
 #, c-format
 msgid "Failed to remove %s"
 msgstr "%s को हटाने में असफ़ल"
 
-#: Prefs.cpp:171
+#: Prefs.cpp:170
 msgid "Failed!"
 msgstr "असफ़ल!"
 
@@ -3597,22 +3605,22 @@ msgstr "Audacity के %s संस्करण में आपका स्�
 msgid "(Recovered)"
 msgstr "(बरामद हुआ)"
 
-#: Project.cpp:1874
+#: Project.cpp:1875
 #: TrackPanel.cpp:947
 #: toolbars/ControlToolBar.cpp:196
 msgid "Record"
 msgstr "ध्वन्यांकन"
 
-#: Project.cpp:1874
+#: Project.cpp:1875
 #: TrackPanel.cpp:947
 msgid "Recorded Audio"
 msgstr "अंकित आडियो"
 
-#: Project.cpp:1900
+#: Project.cpp:1901
 msgid "Save changes before closing?"
 msgstr "बंद करने से पहले परिवर्तन संचित करूँ?"
 
-#: Project.cpp:1903
+#: Project.cpp:1904
 msgid ""
 "\n"
 "If saved, the project will have no tracks.\n"
@@ -3628,23 +3636,23 @@ msgstr ""
 "निरस्त, संपादित करें > पूर्ववत जब सभी ट्रैक\n"
 "खुल जाएं तो फ़ाइल > सहेजें परियोजना."
 
-#: Project.cpp:1906
+#: Project.cpp:1907
 msgid "Save changes?"
 msgstr "फ़ाइलों को सहेजें?"
 
-#: Project.cpp:2177
+#: Project.cpp:2183
 msgid "Select one or more audio files..."
 msgstr "एक या अधिक ऑडियो फ़ाइल चुनें..."
 
-#: Project.cpp:2212
+#: Project.cpp:2219
 #, c-format
 msgid "%s is already open in another window."
-msgstr "%s is already open in another window."
+msgstr "%s पहले से ही अन्य विंडो में खुला है."
 
-#: Project.cpp:2215
-#: Project.cpp:2380
-#: Project.cpp:2600
-#: Project.cpp:2779
+#: Project.cpp:2222
+#: Project.cpp:2389
+#: Project.cpp:2609
+#: Project.cpp:2788
 msgid "Error Opening Project"
 msgstr "परियोजना खोलने में त्रुटि"
 
@@ -3652,13 +3660,13 @@ msgstr "परियोजना खोलने में त्रुटि"
 #. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
 #. * now be added automatically for the Save Projects dialogues).
-#: Project.cpp:2229
-#: Project.cpp:3563
-#: Project.cpp:3591
+#: Project.cpp:2236
+#: Project.cpp:3572
+#: Project.cpp:3600
 msgid "Audacity projects"
 msgstr "Audacity परियोजनाएं"
 
-#: Project.cpp:2280
+#: Project.cpp:2289
 #, c-format
 msgid ""
 "This file was saved by Audacity version %s. The format has changed. \n"
@@ -3679,16 +3687,16 @@ msgstr ""
 "\n"
 "क्या इस फ़ाइल को अभी खोलें?"
 
-#: Project.cpp:2290
+#: Project.cpp:2299
 msgid "1.0 or earlier"
 msgstr "1.0 या पूर्व"
 
-#: Project.cpp:2295
-#: Project.cpp:2862
+#: Project.cpp:2304
+#: Project.cpp:2871
 msgid "Warning - Opening Old Project File"
 msgstr "चेतावनी - पुरानी परियोजना फ़ाइल खोल रहे हैं"
 
-#: Project.cpp:2329
+#: Project.cpp:2338
 msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
@@ -3700,20 +3708,20 @@ msgstr ""
 "\n"
 "कृपया इसके बदले वास्तविक Audacity परियोजना फ़ाइल खोलें."
 
-#: Project.cpp:2330
+#: Project.cpp:2339
 msgid "Warning - Backup File Detected"
 msgstr "चेतावनी - ये बैकअप फ़ाइल है"
 
-#: Project.cpp:2344
+#: Project.cpp:2353
 #: xml/XMLWriter.cpp:329
 msgid "Error Opening File"
 msgstr "फ़ाइल खोलने में त्रुटि"
 
-#: Project.cpp:2352
+#: Project.cpp:2361
 msgid "Error opening file"
 msgstr "फ़ाइल खोलने में त्रुटि"
 
-#: Project.cpp:2358
+#: Project.cpp:2367
 #, c-format
 msgid ""
 "File may be invalid or corrupted: \n"
@@ -3722,38 +3730,38 @@ msgstr ""
 "फ़ाइल अमान्य या भ्रष्ट हो सकता है: \n"
 "%s"
 
-#: Project.cpp:2359
+#: Project.cpp:2368
 msgid "Error Opening File or Project"
 msgstr "फ़ाइल या परियोजना खोलने में त्रुटि"
 
-#: Project.cpp:2379
+#: Project.cpp:2388
 msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 msgstr "Audacity के लिए Audacity 1.0 परियोजना को नई परियोजना प्रारूप में परिवर्तित करना संभव नहीं था."
 
-#: Project.cpp:2536
+#: Project.cpp:2545
 msgid "Project was recovered"
 msgstr "परियोजना बरामद किया गया"
 
-#: Project.cpp:2536
+#: Project.cpp:2545
 msgid "Recover"
 msgstr "बरामद करें"
 
-#: Project.cpp:2539
+#: Project.cpp:2548
 msgid "Could not remove old auto save file"
 msgstr "पुराने स्वत:-संचित फाइल को हटाया नहीं जा सका "
 
-#: Project.cpp:2683
-#: Project.cpp:2684
+#: Project.cpp:2692
+#: Project.cpp:2693
 msgid "<unrecognized version -- possibly corrupt project file>"
 msgstr "<अपरिचित संस्करण -- संभवतः भ्रष्ट परियोजना फ़ाइल>"
 
-#: Project.cpp:2777
+#: Project.cpp:2786
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "परियोजना डाटा फ़ोल्डर नहीं मिला : \"%s\""
 
 #. i18n-hint: %s will be replaced by the version number.
-#: Project.cpp:2826
+#: Project.cpp:2835
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
@@ -3762,11 +3770,11 @@ msgstr ""
 "इस फाइल को Audacity %s  से संचित किया गया था\n"
 "आप Audacity %s का प्रयोग कर रहे हैं. इस फ़ाइल को खोलने के लिए Audacity के एक नए उन्नत संस्करण की जरूरत है."
 
-#: Project.cpp:2830
+#: Project.cpp:2839
 msgid "Can't open project file"
 msgstr "परियोजना फ़ाइल को खोल नहीं सका"
 
-#: Project.cpp:3074
+#: Project.cpp:3083
 msgid ""
 "Your project is now empty.\n"
 "If saved, the project will have no tracks.\n"
@@ -3786,11 +3794,11 @@ msgstr ""
 "\n"
 "फ़िर भी परियोजना सहेजें?"
 
-#: Project.cpp:3075
+#: Project.cpp:3084
 msgid "Warning - Empty Project"
 msgstr "चेतावनी - खाली परियोजना"
 
-#: Project.cpp:3148
+#: Project.cpp:3157
 #, c-format
 msgid ""
 "Could not save project. Path not found.  Try creating \n"
@@ -3799,14 +3807,14 @@ msgstr ""
 "परियोजना संचित नहीं किया जा सका. पथ नहीं मिला. इस नाम से \n"
 "परियोजना सहेजने से पहले \"%s\" नामक फोल्डर बनाने का प्रयास करें."
 
-#: Project.cpp:3150
-#: Project.cpp:3187
-#: Project.cpp:3210
-#: Project.cpp:3615
+#: Project.cpp:3159
+#: Project.cpp:3196
+#: Project.cpp:3219
+#: Project.cpp:3624
 msgid "Error Saving Project"
 msgstr "परियोजना सहेजने में त्रुटि"
 
-#: Project.cpp:3185
+#: Project.cpp:3194
 #, c-format
 msgid ""
 "Could not save project. Perhaps %s \n"
@@ -3815,48 +3823,48 @@ msgstr ""
 "परियोजना को संचित नहीं किया जा सका. शायद  %s \n"
 "डिस्क लिखने योग्य नहीं है या पूरी तरह भरा है."
 
-#: Project.cpp:3208
-#: Project.cpp:4465
+#: Project.cpp:3217
+#: Project.cpp:4474
 #: Tags.cpp:1171
-#: effects/Equalization.cpp:1089
+#: effects/Equalization.cpp:1096
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "फ़ाइल में लिख नहीं सका \"%s\": %s"
 
-#: Project.cpp:3288
+#: Project.cpp:3297
 #, c-format
 msgid "Saved %s"
 msgstr "सुरक्षित किया %s"
 
-#: Project.cpp:3444
+#: Project.cpp:3453
 #, c-format
 msgid "Imported '%s'"
 msgstr "आयातित '%s'"
 
-#: Project.cpp:3445
+#: Project.cpp:3454
 msgid "Import"
 msgstr "आयात"
 
-#: Project.cpp:3480
+#: Project.cpp:3489
 msgid "Error Importing"
 msgstr "आयात में त्रुटि"
 
-#: Project.cpp:3535
+#: Project.cpp:3544
 msgid "Save Speech As:"
 msgstr "संवाद ऐसे सहेजें :"
 
 #. i18n-hint: Do not translate PCM.
-#: Project.cpp:3538
+#: Project.cpp:3547
 msgid "Windows PCM Audio file (*.wav)|*.wav"
 msgstr "Windows PCM ऑडियो फ़ाइल (*.wav)|*.wav"
 
-#: Project.cpp:3545
-#: Project.cpp:3573
+#: Project.cpp:3554
+#: Project.cpp:3582
 msgid "<untitled>"
 msgstr "<बेनामी>"
 
-#: Project.cpp:3550
-#: Project.cpp:3578
+#: Project.cpp:3559
+#: Project.cpp:3587
 msgid ""
 "Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \n"
 "Compressed project files are a good way to transmit your project online, because they are much smaller. \n"
@@ -3873,14 +3881,14 @@ msgstr ""
 "यदि आप चाहते हैं कि संचित फ़ाइल अन्य प्रोग्रामों द्वारा भी खुल सके, तो उपयोग करें किसी\n"
 "निर्यात आदेश का."
 
-#: Project.cpp:3551
-#: Project.cpp:3579
+#: Project.cpp:3560
+#: Project.cpp:3588
 #, c-format
 msgid "Save Compressed Project \"%s\" As..."
 msgstr "संपीड़ित परियोजना \"%s\" ऐसे संचित करें..."
 
-#: Project.cpp:3556
-#: Project.cpp:3584
+#: Project.cpp:3565
+#: Project.cpp:3593
 msgid ""
 "You are saving an Audacity project file (.aup).\n"
 "\n"
@@ -3893,13 +3901,13 @@ msgstr ""
 "\n"
 "ऑडियो फ़ाइल संचित करने के लिए \"फ़ाइल > निर्यात\" आदेश का प्रयोग करें, जिसका अन्य प्रोग्राम भी उपयोग कर सकते हैं.\n"
 
-#: Project.cpp:3557
-#: Project.cpp:3585
+#: Project.cpp:3566
+#: Project.cpp:3594
 #, c-format
 msgid "Save Project \"%s\" As..."
 msgstr "परियोजना \"%s\" ऐसे सहेजें..."
 
-#: Project.cpp:3614
+#: Project.cpp:3623
 msgid ""
 "The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
@@ -3907,106 +3915,97 @@ msgstr ""
 "परियोजना संचित नहीं हुआ, क्योंकि दिया गया फ़ाइल नाम दूसरी परियोजना को मिटा देगा.\n"
 "कृपया एक मौलिक नाम के साथ दुबारा कोशिश करें."
 
-#: Project.cpp:3657
+#: Project.cpp:3666
 msgid "Created new project"
 msgstr "नई परियोजना निर्मित"
 
 # %.2f सेकंड मिटाया t= %.2f पर
 # This hindi translation is to be reviewed. The parameter should be reversed to have a better translation in hindi as:
 # t= %2$.2f पर %1$.2f सेकंड मिटाया गया
-#: Project.cpp:3873
+#: Project.cpp:3882
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "t= %2$.2f पर %1$.2f सेकंड मिटाया गया"
 
-#: Project.cpp:3876
+#: Project.cpp:3885
 msgid "Delete"
 msgstr "मिटाएँ"
 
 # डिस्क में %d घंटे और %d मिनट के ध्वन्यांकन का स्थान रिक्त है.
-#: Project.cpp:4060
+#: Project.cpp:4069
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
 msgstr "डिस्क में %d घंटे और %d मिनट की रिकार्डिंग के लिए स्थान बचा है."
 
-#: Project.cpp:4063
+#: Project.cpp:4072
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
 msgstr "डिस्क में 1 घंटे और %d मिनट की रिकार्डिंग के लिए जगह है."
 
-#: Project.cpp:4066
+#: Project.cpp:4075
 #, c-format
 msgid "Disk space remains for recording %d minutes."
 msgstr "डिस्क में %d मिनट की रिकार्डिंग के लिए जगह है."
 
-#: Project.cpp:4069
+#: Project.cpp:4078
 #, c-format
 msgid "Disk space remains for recording %d seconds."
 msgstr "डिस्क में %d सेकेंड की रिकार्डिंग के लिए जगह है."
 
-#: Project.cpp:4072
+#: Project.cpp:4081
 msgid "Out of disk space"
 msgstr "डिस्क में स्थान नहीं है"
 
-#: Project.cpp:4094
+#: Project.cpp:4103
 msgid "On-demand import and waveform calculation complete."
 msgstr "मांग-पर आयात और तरंग-रूप गणना पूरी हुई."
 
-#: Project.cpp:4099
+#: Project.cpp:4108
 #, c-format
 msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
 msgstr "आयात संपूर्ण. मांग-पर %d तरंग-रूप की गणनाएं चल रही है. कुल मिलाकर %2.0f%% संपूर्ण."
 
-#: Project.cpp:4102
+#: Project.cpp:4111
 #, c-format
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "आयात संपूर्ण. मांग-पर तरंगरूप की गणना चल रही है. कुल %2.0f%% संपूर्ण."
 
-#: Project.cpp:4437
+#: Project.cpp:4446
 msgid "New Project"
 msgstr "नई परियोजना"
 
-#: Project.cpp:4467
+#: Project.cpp:4476
 msgid "Error Writing Autosave File"
 msgstr "स्वसंचयन फ़ाइल लिखने में त्रुटि"
 
-#: Project.cpp:4482
+#: Project.cpp:4491
 msgid "Could not create autosave file: "
 msgstr "स्वसंचयन फ़ाइल नहीं बन सका: "
 
-#: Project.cpp:4501
+#: Project.cpp:4510
 msgid "Could not remove old autosave file: "
 msgstr "स्वत:-संचित पुराना फ़ाइल हटा नहीं सका : "
 
-#: Project.cpp:4530
+#: Project.cpp:4539
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "वास्तविक आवृति दर: %d"
 
-#: Resample.cpp:62
-msgid "Libresample by Dominic Mazzoni and Julius Smith"
-msgstr "डोमिनिक Mazzoni और जूलियस स्मिथ द्वारा Libresample"
-
 # उच्च-गुणवत्ता Sinc क्षेपक
-#: Resample.cpp:73
+#: Resample.cpp:155
 msgid "High-quality Sinc Interpolation"
 msgstr "उच्च-गुणवत्ता Sinc Interpolation"
 
-#: Resample.cpp:75
+#: Resample.cpp:157
 msgid "Fast Sinc Interpolation"
 msgstr "त्वरित Sinc Interpolation"
 
-#: Resample.cpp:141
-msgid "Libsamplerate by Erik de Castro Lopo"
-msgstr "Libsamplerate सौजन्य Erik de Castro Lopo"
-
-#: Resample.cpp:230
+#: Resample.cpp:280
 #, c-format
 msgid "Libsamplerate error: %d\n"
 msgstr "Lib-नमूना-आवृति-दर त्रुटि: %d\n"
 
-#: Resample.cpp:252
-#: Resample.cpp:262
+#: Resample.h:54
 msgid "Resampling disabled."
 msgstr "पुनर्नमूना निष्क्रिय."
 
@@ -4080,8 +4079,9 @@ msgstr "पूर्ण स्क्रीन का कतरन बनाए�
 
 #: Screenshot.cpp:364
 msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "5 सेकंड रुककर सबसे ऊपरी झरोखे/डायलॉग को कैद करें"
+msgstr "5 सेकंड रुककर सबसे ऊपरी झरोखे/संवाद को कैद करें"
 
+# नहीं
 #: Screenshot.cpp:365
 #: effects/Normalize.cpp:78
 #: effects/Normalize.cpp:79
@@ -4141,7 +4141,7 @@ msgstr "यंत्र"
 
 #: Screenshot.cpp:388
 #: toolbars/TranscriptionToolBar.cpp:84
-#: toolbars/TranscriptionToolBar.cpp:256
+#: toolbars/TranscriptionToolBar.cpp:257
 msgid "Transcription"
 msgstr "श्रुतिलेखन"
 
@@ -4227,13 +4227,13 @@ msgstr "चेतावनी - क्रमादेश की लंबाई"
 msgid "Memory allocation failed -- NewSamples"
 msgstr "स्मृति में जगह रखने में असफ़ल -- नये-नमूने"
 
-#: ShuttleGui.cpp:2175
+#: ShuttleGui.cpp:2181
 #: effects/Effect.cpp:408
 #: effects/audiounits/AudioUnitEffect.cpp:877
 msgid "Pre&view"
 msgstr "पुर्वालोकन"
 
-#: ShuttleGui.cpp:2182
+#: ShuttleGui.cpp:2188
 msgid "&Debug"
 msgstr "त्रुटिखोज(&D)"
 
@@ -4468,17 +4468,17 @@ msgstr ""
 " %s\n"
 "में पहले से ही मौजूद थीं."
 
-#: TimeDialog.h:29
-#: TimerRecordDialog.cpp:249
-#: TimerRecordDialog.cpp:376
-#: TimerRecordDialog.cpp:388
-#: effects/DtmfGen.cpp:471
-#: effects/Noise.cpp:200
-#: effects/Noise.cpp:216
-#: effects/ToneGen.cpp:297
-#: effects/ToneGen.cpp:309
-#: effects/ToneGen.cpp:345
-#: effects/ToneGen.cpp:357
+#: TimeDialog.h:32
+#: TimerRecordDialog.cpp:246
+#: TimerRecordDialog.cpp:373
+#: TimerRecordDialog.cpp:385
+#: effects/DtmfGen.cpp:472
+#: effects/Noise.cpp:201
+#: effects/Noise.cpp:217
+#: effects/ToneGen.cpp:300
+#: effects/ToneGen.cpp:312
+#: effects/ToneGen.cpp:348
+#: effects/ToneGen.cpp:360
 msgid "Duration"
 msgstr "अवधि"
 
@@ -4490,23 +4490,23 @@ msgstr "समय ट्रैक"
 msgid "Audacity Timer Record"
 msgstr "Audacity घड़ी से अंकन"
 
-#: TimerRecordDialog.cpp:213
+#: TimerRecordDialog.cpp:209
 msgid "Duration is zero. Nothing will be recorded."
 msgstr "अवधि शून्य है. कुछ भी अंकित नहीं होगा."
 
-#: TimerRecordDialog.cpp:214
+#: TimerRecordDialog.cpp:210
 msgid "Error in Duration"
 msgstr "अवधि में त्रुटि"
 
-#: TimerRecordDialog.cpp:246
+#: TimerRecordDialog.cpp:243
 msgid "Recording start"
 msgstr "ध्वन्यांकन आरंभ"
 
-#: TimerRecordDialog.cpp:247
+#: TimerRecordDialog.cpp:244
 msgid "Recording end"
 msgstr "ध्वन्यांकन समाप्ति"
 
-#: TimerRecordDialog.cpp:253
+#: TimerRecordDialog.cpp:250
 msgid "Audacity Timer Record Progress"
 msgstr "Audacity टाइमर रिकार्ड प्रगति"
 
@@ -4516,23 +4516,23 @@ msgstr "Audacity टाइमर रिकार्ड प्रगति"
 #. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
 #. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
 #.
-#: TimerRecordDialog.cpp:337
+#: TimerRecordDialog.cpp:334
 msgid "099 h 060 m 060 s"
 msgstr "099 घं 060 मि 060 से"
 
-#: TimerRecordDialog.cpp:338
+#: TimerRecordDialog.cpp:335
 msgid "Start Date and Time"
 msgstr "शुरूआत तारीख और समय"
 
-#: TimerRecordDialog.cpp:345
+#: TimerRecordDialog.cpp:342
 msgid "Start Date"
 msgstr "आरंभ तिथि"
 
-#: TimerRecordDialog.cpp:357
+#: TimerRecordDialog.cpp:354
 msgid "End Date and Time"
 msgstr "समाप्ति तारीख और समय"
 
-#: TimerRecordDialog.cpp:365
+#: TimerRecordDialog.cpp:362
 msgid "End Date"
 msgstr "समापन तिथि"
 
@@ -4544,18 +4544,18 @@ msgstr "समापन तिथि"
 #. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
 #. * seconds.
 #.
-#: TimerRecordDialog.cpp:386
+#: TimerRecordDialog.cpp:383
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 दिन 024 घं 060 मि 060 से"
 
 #. i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
 #. * but hopefully translated by wxwidgets will be inserted into this
-#: TimerRecordDialog.cpp:460
+#: TimerRecordDialog.cpp:455
 #, c-format
 msgid "Waiting to start recording at %s.\n"
 msgstr "%s  को रिकॉर्डिंग शुरू करने की प्रतीक्षा हो रही है.\n"
 
-#: TimerRecordDialog.cpp:466
+#: TimerRecordDialog.cpp:461
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity टाइमर रिकार्ड - शुरूआत की प्रतीक्षा"
 
@@ -4718,20 +4718,20 @@ msgid "Click and drag to stretch within selected region."
 msgstr "चयनित क्षेत्र के अंदर विस्तार के लिए क्लिक कर खींचें."
 
 #: TrackPanel.cpp:1990
-#: TrackPanel.cpp:4753
-#: TrackPanel.cpp:4791
-#: TrackPanel.cpp:5065
-#: TrackPanel.cpp:7451
-#: TrackPanel.cpp:7471
+#: TrackPanel.cpp:4769
+#: TrackPanel.cpp:4807
+#: TrackPanel.cpp:5081
+#: TrackPanel.cpp:7467
+#: TrackPanel.cpp:7487
 msgid "Modified Label"
 msgstr "परिवर्तित नाम"
 
 #: TrackPanel.cpp:1991
-#: TrackPanel.cpp:4754
-#: TrackPanel.cpp:4792
-#: TrackPanel.cpp:5066
-#: TrackPanel.cpp:7452
-#: TrackPanel.cpp:7472
+#: TrackPanel.cpp:4770
+#: TrackPanel.cpp:4808
+#: TrackPanel.cpp:5082
+#: TrackPanel.cpp:7468
+#: TrackPanel.cpp:7488
 msgid "Label Edit"
 msgstr "नाम संपादन"
 
@@ -4762,273 +4762,273 @@ msgstr "ऐडजस्टेड लिफ़ाफ़ा."
 msgid "Envelope"
 msgstr "लिफ़ाफ़ा"
 
-#: TrackPanel.cpp:2594
+#: TrackPanel.cpp:2601
 msgid "Moved clip to another track"
 msgstr "कतरन को दूसरे ट्रैक पर भेजा गया"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2600
+#: TrackPanel.cpp:2607
 msgid "right"
 msgstr "दायाँ"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2602
+#: TrackPanel.cpp:2609
 msgid "left"
 msgstr "बायाँ"
 
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2604
+#: TrackPanel.cpp:2611
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "ट्रैक/कतरन को %s ओर %.02f सेकंड के समय से स्थानांतरित किया"
 
-#: TrackPanel.cpp:2608
+#: TrackPanel.cpp:2615
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "समय आगे-पीछे करें"
 
-#: TrackPanel.cpp:3541
+#: TrackPanel.cpp:3551
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "चित्र खींचने के लिए, ट्रैक ड्रॉप-डाउन मेनू से 'तरंगरूप' चुनें."
 
-#: TrackPanel.cpp:3558
+#: TrackPanel.cpp:3568
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "रेखाचित्र खींचने के लिए, छवि को प्रत्येक नमूना स्पष्ट दिखने तक बड़ा करें."
 
-#: TrackPanel.cpp:3835
+#: TrackPanel.cpp:3845
 msgid "Moved Sample"
 msgstr "खिसकाई हुआ नमूना"
 
-#: TrackPanel.cpp:3836
+#: TrackPanel.cpp:3846
 msgid "Sample Edit"
 msgstr "संपादन नमूना"
 
-#: TrackPanel.cpp:3937
+#: TrackPanel.cpp:3953
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "हटाया गया ट्रैक '%s.'"
 
-#: TrackPanel.cpp:3939
+#: TrackPanel.cpp:3955
 msgid "Track Remove"
 msgstr "ट्रैक मिटाएं"
 
-#: TrackPanel.cpp:4114
+#: TrackPanel.cpp:4130
 msgid "Moved velocity slider"
 msgstr "गति स्लाइडर स्थानांतरित"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4306
-#: TrackPanel.cpp:7389
+#: TrackPanel.cpp:4322
+#: TrackPanel.cpp:7405
 msgid "up"
 msgstr "ऊपर"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4319
-#: TrackPanel.cpp:7391
+#: TrackPanel.cpp:4335
+#: TrackPanel.cpp:7407
 msgid "down"
 msgstr "नीचे"
 
 #. i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
 #. * If the word order is different in your language ask on the translators list about what
 #. * to do.
-#: TrackPanel.cpp:4334
-#: TrackPanel.cpp:7383
+#: TrackPanel.cpp:4350
+#: TrackPanel.cpp:7399
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "'%s' %s खिसकाया"
 
-#: TrackPanel.cpp:4337
-#: TrackPanel.cpp:7392
+#: TrackPanel.cpp:4353
+#: TrackPanel.cpp:7408
 msgid "Move Track"
 msgstr "ट्रैक खिसकाएं"
 
-#: TrackPanel.cpp:4962
+#: TrackPanel.cpp:4978
 msgid "Expand"
 msgstr "विस्तार"
 
-#: TrackPanel.cpp:4962
+#: TrackPanel.cpp:4978
 msgid "Expanded Cut Line"
 msgstr "विस्तृत काट-रेखा"
 
-#: TrackPanel.cpp:4975
+#: TrackPanel.cpp:4991
 msgid "Merge"
 msgstr "विलय"
 
-#: TrackPanel.cpp:4975
+#: TrackPanel.cpp:4991
 msgid "Merged Clips"
 msgstr "जुड़ी कतरन"
 
-#: TrackPanel.cpp:4986
+#: TrackPanel.cpp:5002
 msgid "Remove"
 msgstr "हटाएं"
 
-#: TrackPanel.cpp:4986
+#: TrackPanel.cpp:5002
 msgid "Removed Cut Line"
 msgstr "काट-रेखा हटाई गई"
 
-#: TrackPanel.cpp:6648
+#: TrackPanel.cpp:6664
 msgid "Adjusted Pan"
 msgstr "ऐडजस्टेड पैन"
 
-#: TrackPanel.cpp:6703
+#: TrackPanel.cpp:6719
 msgid "Adjusted gain"
 msgstr "दुरुस्त गेन"
 
-#: TrackPanel.cpp:6838
+#: TrackPanel.cpp:6854
 msgid "Can't delete track with active audio"
 msgstr "सक्रिय ऑडियो वाली ट्रैक को नष्ट नहीं कर सकते"
 
-#: TrackPanel.cpp:6988
+#: TrackPanel.cpp:7004
 msgid "Stereo, "
 msgstr "स्टिरियो, "
 
-#: TrackPanel.cpp:6991
+#: TrackPanel.cpp:7007
 msgid "Mono, "
 msgstr "मोनो, "
 
-#: TrackPanel.cpp:6993
+#: TrackPanel.cpp:7009
 msgid "Left, "
 msgstr "बायाँ, "
 
-#: TrackPanel.cpp:6995
+#: TrackPanel.cpp:7011
 msgid "Right, "
 msgstr "दायाँ, "
 
-#: TrackPanel.cpp:7007
+#: TrackPanel.cpp:7023
 msgid "Left Channel"
 msgstr "बायाँ चैनल"
 
-#: TrackPanel.cpp:7007
+#: TrackPanel.cpp:7023
 msgid "Right Channel"
 msgstr "दायां चैनल"
 
-#: TrackPanel.cpp:7008
+#: TrackPanel.cpp:7024
 msgid "Mono"
 msgstr "मोनो"
 
-#: TrackPanel.cpp:7017
-#: TrackPanel.cpp:7186
+#: TrackPanel.cpp:7033
+#: TrackPanel.cpp:7202
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "परिवर्तित '%s' से %s"
 
-#: TrackPanel.cpp:7020
+#: TrackPanel.cpp:7036
 msgid "Channel"
 msgstr "चैनल"
 
-#: TrackPanel.cpp:7061
+#: TrackPanel.cpp:7077
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "स्टिरियो ट्रैक '%s' अलग करें"
 
-#: TrackPanel.cpp:7063
+#: TrackPanel.cpp:7079
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "स्टिरियो को मोनो '%s' में विभाजित करें"
 
-#: TrackPanel.cpp:7095
+#: TrackPanel.cpp:7111
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "'%s' को स्टिरियो ट्रैक बनाया"
 
-#: TrackPanel.cpp:7098
+#: TrackPanel.cpp:7114
 msgid "Make Stereo"
 msgstr "स्टिरियो बनाएं"
 
-#: TrackPanel.cpp:7143
+#: TrackPanel.cpp:7159
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "परिवर्तित '%s' से %d Hz"
 
-#: TrackPanel.cpp:7145
+#: TrackPanel.cpp:7161
 msgid "Rate Change"
 msgstr "आवृति दर परिवर्तन"
 
-#: TrackPanel.cpp:7190
+#: TrackPanel.cpp:7206
 msgid "Format Change"
 msgstr "स्वरुप परिवर्तन"
 
-#: TrackPanel.cpp:7276
+#: TrackPanel.cpp:7292
 msgid "Set Rate"
 msgstr "आवृति दर निर्धारित करें"
 
-#: TrackPanel.cpp:7340
+#: TrackPanel.cpp:7356
 msgid "Change lower speed limit (%) to:"
 msgstr "न्यूनतम गति सीमा (%) बदलें :"
 
-#: TrackPanel.cpp:7341
-#: TrackPanel.cpp:7342
+#: TrackPanel.cpp:7357
+#: TrackPanel.cpp:7358
 msgid "Lower speed limit"
 msgstr "न्यूनतम गति-सीमा"
 
-#: TrackPanel.cpp:7347
+#: TrackPanel.cpp:7363
 msgid "Change upper speed limit (%) to:"
 msgstr "बदलें अधिकतम गति सीमा (%) :"
 
-#: TrackPanel.cpp:7348
-#: TrackPanel.cpp:7349
+#: TrackPanel.cpp:7364
+#: TrackPanel.cpp:7365
 msgid "Upper speed limit"
 msgstr "अधिकतम गति-सीमा"
 
-#: TrackPanel.cpp:7357
+#: TrackPanel.cpp:7373
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "सीमा निर्धारित करें '%d' - '%d'"
 
 #. i18n-hint: (verb)
-#: TrackPanel.cpp:7362
+#: TrackPanel.cpp:7378
 msgid "Set Range"
 msgstr "सीमा निर्धारित करें"
 
-#: TrackPanel.cpp:7422
+#: TrackPanel.cpp:7438
 msgid "Change track name to:"
 msgstr "ट्रैक नाम बदलकर यह करें :"
 
-#: TrackPanel.cpp:7423
+#: TrackPanel.cpp:7439
 msgid "Track Name"
 msgstr "ट्रैक का नाम"
 
-#: TrackPanel.cpp:7436
+#: TrackPanel.cpp:7452
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "नामकरण '%s' to '%s'"
 
-#: TrackPanel.cpp:7439
+#: TrackPanel.cpp:7455
 msgid "Name Change"
 msgstr "नाम परिवर्तन"
 
 # नाम ट्रैक मुद्रलिपि
 #. i18n-hint: (noun) This is the font for the label track.
-#: TrackPanel.cpp:7507
+#: TrackPanel.cpp:7523
 msgid "Label Track Font"
 msgstr "नाम ट्रैक फ़ान्ट"
 
 #. i18n-hint: (noun) The name of the typeface
-#: TrackPanel.cpp:7520
-#: TrackPanel.cpp:7527
+#: TrackPanel.cpp:7536
+#: TrackPanel.cpp:7543
 msgid "Face name"
 msgstr "मुखनाम"
 
 #. i18n-hint: (noun) The size of the typeface
-#: TrackPanel.cpp:7532
-#: TrackPanel.cpp:7539
+#: TrackPanel.cpp:7548
+#: TrackPanel.cpp:7555
 msgid "Face size"
 msgstr "मुखाकार"
 
-#: TrackPanel.cpp:7828
+#: TrackPanel.cpp:7845
 msgid "Stereo, 999999Hz"
 msgstr "स्टिरियो, 999999Hz"
 
 #: TrackPanelAx.cpp:286
-#: TrackPanelAx.cpp:414
+#: TrackPanelAx.cpp:422
 msgid "TrackView"
 msgstr "ट्रैक दृश्य"
 
 #. i18n-hint: The %d is replaced by th enumber of the track.
 #: TrackPanelAx.cpp:302
-#: TrackPanelAx.cpp:429
+#: TrackPanelAx.cpp:437
 #, c-format
 msgid "Track %d"
 msgstr "ट्रैक %d"
@@ -5036,23 +5036,31 @@ msgstr "ट्रैक %d"
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track mute is on.
 #: TrackPanelAx.cpp:310
-#: TrackPanelAx.cpp:435
+#: TrackPanelAx.cpp:443
 msgid " Mute On"
 msgstr " मौन चालू"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. on this track solo is on.
 #: TrackPanelAx.cpp:317
-#: TrackPanelAx.cpp:440
+#: TrackPanelAx.cpp:448
 msgid " Solo On"
 msgstr " एकल चालू"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is selected.
 #: TrackPanelAx.cpp:323
-#: TrackPanelAx.cpp:444
+#: TrackPanelAx.cpp:452
 msgid " Select On"
 msgstr " चयन चालू"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this track is shown with a sync-locked icon.
+#. The absence of a dash between Sync and Locked is deliberate -
+#. if present, Jaws reads it as "dash".
+#: TrackPanelAx.cpp:331
+msgid " Sync Lock Selected"
+msgstr "ट्रैकों को गठबंधन में रखा है"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5095,7 +5103,7 @@ msgstr "आडियो ट्रैक"
 msgid "There is not enough room available to paste the selection"
 msgstr "चयनित भाग चिपकाने के लिए पर्याप्त जगह नहीं है"
 
-#: WaveTrack.cpp:2106
+#: WaveTrack.cpp:2115
 msgid "There is not enough room available to expand the cut line"
 msgstr "काट-रेखा के विस्तार के लिए पर्याप्त जगह नहीं है"
 
@@ -5175,7 +5183,7 @@ msgstr "प्रवर्धन करें"
 
 #: effects/Amplify.cpp:152
 #: effects/Compressor.cpp:610
-#: effects/Normalize.cpp:467
+#: effects/Normalize.cpp:468
 msgid "by Dominic Mazzoni"
 msgstr "Dominic Mazzoni द्वारा"
 
@@ -5218,8 +5226,8 @@ msgstr "आपने एक ऐसा ट्रैक चुना है जि
 #. * in 'Donald-Duck'!
 #: effects/AutoDuck.cpp:145
 #: effects/AutoDuck.cpp:157
-#: effects/AutoDuck.cpp:472
-#: effects/AutoDuck.cpp:597
+#: effects/AutoDuck.cpp:473
+#: effects/AutoDuck.cpp:598
 msgid "Auto Duck"
 msgstr "ऑटो डक"
 
@@ -5227,29 +5235,24 @@ msgstr "ऑटो डक"
 msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
 msgstr "ऑटो डक को एक नियंत्रक ट्रैक चाहिए जो कि चुने हुए ट्रैक (ट्रैकों)के ठीक नीचे रखा गया हो."
 
-#: effects/AutoDuck.cpp:485
+#: effects/AutoDuck.cpp:486
 msgid "Auto Duck by Markus Meyer"
 msgstr "ऑटो डक Markus Meyer के सौजन्य से"
 
-#: effects/AutoDuck.cpp:507
+#: effects/AutoDuck.cpp:508
 msgid "Duck amount:"
 msgstr "डक परिमाण:"
 
-#: effects/AutoDuck.cpp:513
+#: effects/AutoDuck.cpp:514
 msgid "Maximum pause:"
 msgstr "अधिकतम ठहरना:"
 
 #. i18n-hint: Name of time display format that shows time in seconds
-#: effects/AutoDuck.cpp:515
-#: effects/AutoDuck.cpp:521
-#: effects/AutoDuck.cpp:527
-#: effects/AutoDuck.cpp:533
-#: effects/AutoDuck.cpp:539
-#: effects/DtmfGen.cpp:472
-#: effects/Noise.cpp:217
-#: effects/Silence.cpp:44
-#: effects/ToneGen.cpp:310
-#: effects/ToneGen.cpp:358
+#: effects/AutoDuck.cpp:516
+#: effects/AutoDuck.cpp:522
+#: effects/AutoDuck.cpp:528
+#: effects/AutoDuck.cpp:534
+#: effects/AutoDuck.cpp:540
 #: prefs/PlaybackPrefs.cpp:65
 #: prefs/PlaybackPrefs.cpp:66
 #: prefs/PlaybackPrefs.cpp:81
@@ -5264,33 +5267,33 @@ msgstr "अधिकतम ठहरना:"
 msgid "seconds"
 msgstr "सेकेंड"
 
-#: effects/AutoDuck.cpp:519
+#: effects/AutoDuck.cpp:520
 msgid "Outer fade down length:"
-msgstr "बाहरी फीका नीचे लंबाई :"
+msgstr "बाहरी फीका लंबाई घटाएं:"
 
-#: effects/AutoDuck.cpp:525
+#: effects/AutoDuck.cpp:526
 msgid "Outer fade up length:"
-msgstr "बाहरी फीका ऊपर लंबाई :"
+msgstr "बाहरी फीका लंबाई बढ़ाएं:"
 
-#: effects/AutoDuck.cpp:531
+#: effects/AutoDuck.cpp:532
 msgid "Inner fade down length:"
-msgstr "अंदरुनी फीका नीचे लंबाई :"
+msgstr "अंदरुनी फीका लंबाई घटाएं:"
 
-#: effects/AutoDuck.cpp:537
+#: effects/AutoDuck.cpp:538
 msgid "Inner fade up length:"
-msgstr "अंदरुनी फीका ऊपर लंबाई :"
+msgstr "अंदरुनी फीका लंबाई बढ़ाएं:"
 
-#: effects/AutoDuck.cpp:547
+#: effects/AutoDuck.cpp:548
 #: effects/Compressor.cpp:632
 msgid "Threshold:"
 msgstr "पठार:"
 
 # कृपया मान्य मुल्य लिखें.
-#: effects/AutoDuck.cpp:597
+#: effects/AutoDuck.cpp:598
 msgid "Please enter valid values."
 msgstr "कृपया मान्य मुल्य लिखें."
 
-#: effects/AutoDuck.cpp:732
+#: effects/AutoDuck.cpp:733
 msgid "Preview not available"
 msgstr "पुर्वालोकन नहीं मिलेगा"
 
@@ -5307,7 +5310,7 @@ msgstr "ऑटो डक प्रक्रिया जारी..."
 #: effects/audiounits/AudioUnitEffect.cpp:882
 #: effects/nyquist/Nyquist.cpp:1488
 #: widgets/ErrorDialog.cpp:142
-#: widgets/MultiDialog.cpp:110
+#: widgets/MultiDialog.cpp:111
 msgid "OK"
 msgstr "ठीक"
 
@@ -5640,52 +5643,52 @@ msgstr "सीमा %d dB"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: effects/Compressor.cpp:725
-#: effects/Compressor.cpp:728
+#: effects/Compressor.cpp:729
 #, c-format
 msgid "%3d dB"
 msgstr "%3d dB"
 
-#: effects/Compressor.cpp:727
+#: effects/Compressor.cpp:728
 #, c-format
 msgid "Noise Floor %d dB"
 msgstr "शोर तल %d dB"
 
-#: effects/Compressor.cpp:731
+#: effects/Compressor.cpp:733
 #, c-format
 msgid "Ratio %.0f to 1"
 msgstr "अनुपात %.0f to 1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
-#: effects/Compressor.cpp:734
+#: effects/Compressor.cpp:736
 #, c-format
 msgid "%.0f:1"
 msgstr "%.0f:1"
 
-#: effects/Compressor.cpp:737
+#: effects/Compressor.cpp:739
 #, c-format
 msgid "Ratio %.1f to 1"
 msgstr "अनुपात %.1f to 1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
-#: effects/Compressor.cpp:740
+#: effects/Compressor.cpp:742
 #, c-format
 msgid "%.1f:1"
 msgstr "%.1f:1"
 
-#: effects/Compressor.cpp:743
+#: effects/Compressor.cpp:746
 #, c-format
 msgid "Attack Time %.1f secs"
 msgstr "उठान समय %.1f सेकेंड"
 
-#: effects/Compressor.cpp:744
 #: effects/Compressor.cpp:747
+#: effects/Compressor.cpp:751
 #, c-format
 msgid "%.1f secs"
 msgstr "%.1f सेकेंड"
 
-#: effects/Compressor.cpp:746
+#: effects/Compressor.cpp:750
 #, c-format
 msgid "Decay Time %.1f secs"
 msgstr "क्षय समय %.1f सेकेंड"
@@ -5739,17 +5742,17 @@ msgid "Contrast Analyzer, for measuring rms volume differences between two selec
 msgstr "कॉनट्रास्ट विश्लेषक, दो चुने हुए ऑडियो के बीच rms वाल्यूम में अंतर मापने के लिए."
 
 #: effects/Contrast.cpp:251
-#: effects/ToneGen.cpp:330
+#: effects/ToneGen.cpp:333
 #: toolbars/ControlToolBar.cpp:190
 msgid "Start"
 msgstr "आरंभ"
 
 #: effects/Contrast.cpp:252
-#: effects/ToneGen.cpp:331
+#: effects/ToneGen.cpp:334
 #: toolbars/ControlToolBar.cpp:193
 #: toolbars/SelectionBar.cpp:151
 #: toolbars/SelectionBar.cpp:154
-#: toolbars/SelectionBar.cpp:259
+#: toolbars/SelectionBar.cpp:262
 msgid "End"
 msgstr "अंत"
 
@@ -5928,7 +5931,7 @@ msgstr "परिणाम"
 
 #: effects/Contrast.cpp:566
 msgid "Difference is indeterminate."
-msgstr "अंतर अनिर्धारित है."
+msgstr "अंतर अनिर्धार्य है."
 
 #: effects/Contrast.cpp:569
 #, c-format
@@ -5949,65 +5952,76 @@ msgstr "WCAG 2.0 के सफलता मानदंड 1.4.7 पर : अस
 
 #: effects/Contrast.cpp:578
 msgid "Data gathered"
-msgstr "डाटा इकट्ठा किया"
+msgstr "डेटा इकट्ठा किया"
 
 #. i18n-hint: DTMF stands for 'Dial Tone Modulation Format'.  Leave as is.
 #: effects/DtmfGen.cpp:91
 msgid "DTMF Tone Generator"
-msgstr "DTMF स्वर सृजन"
+msgstr "DTMF स्वर उत्पादक"
 
-#: effects/DtmfGen.cpp:443
+#: effects/DtmfGen.cpp:444
 msgid "by Salvo Ventura"
 msgstr "Salvo Ventura द्वारा"
 
-#: effects/DtmfGen.cpp:447
+#: effects/DtmfGen.cpp:448
 msgid "DTMF sequence:"
 msgstr "DTMF क्रम:"
 
-#: effects/DtmfGen.cpp:453
-#: effects/Noise.cpp:199
-#: effects/ToneGen.cpp:296
-#: effects/ToneGen.cpp:338
+#: effects/DtmfGen.cpp:454
+#: effects/Noise.cpp:200
+#: effects/ToneGen.cpp:299
+#: effects/ToneGen.cpp:341
 msgid "Amplitude (0-1)"
 msgstr "तीव्रता (0-1)"
 
-#: effects/DtmfGen.cpp:455
+#: effects/DtmfGen.cpp:456
 msgid "Duration:"
 msgstr "अंतराल:"
 
 #. i18n-hint: Name of time display format that shows time in hours,
+#. * minutes, seconds and milliseconds (1/1000 second)
+#: effects/DtmfGen.cpp:473
+#: effects/Noise.cpp:218
+#: effects/Silence.cpp:42
+#: effects/ToneGen.cpp:313
+#: effects/ToneGen.cpp:361
+#: widgets/TimeTextCtrl.cpp:308
+msgid "hh:mm:ss + milliseconds"
+msgstr "घंटे:मिनट:सेकेंड + मिलिसेकेंड"
+
+#. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
-#: effects/DtmfGen.cpp:472
-#: effects/Noise.cpp:217
-#: effects/Silence.cpp:40
-#: effects/ToneGen.cpp:310
-#: effects/ToneGen.cpp:358
+#: effects/DtmfGen.cpp:473
+#: effects/Noise.cpp:218
+#: effects/Silence.cpp:38
+#: effects/ToneGen.cpp:313
+#: effects/ToneGen.cpp:361
 #: widgets/TimeTextCtrl.cpp:317
 msgid "hh:mm:ss + samples"
 msgstr "घंटे:मिनट:सेकेंड + नमूने"
 
-#: effects/DtmfGen.cpp:477
+#: effects/DtmfGen.cpp:478
 msgid "Tone/silence ratio:"
 msgstr "स्वर/मौन अनुपात :"
 
-#: effects/DtmfGen.cpp:487
+#: effects/DtmfGen.cpp:488
 msgid "Duty cycle:"
 msgstr "कर्तव्य चक्र :"
 
-#: effects/DtmfGen.cpp:489
+#: effects/DtmfGen.cpp:490
 msgid "Tone duration:"
 msgstr "स्वर समय:"
 
-#: effects/DtmfGen.cpp:490
-#: effects/DtmfGen.cpp:492
-#: effects/DtmfGen.cpp:568
-#: effects/DtmfGen.cpp:569
+#: effects/DtmfGen.cpp:491
+#: effects/DtmfGen.cpp:493
+#: effects/DtmfGen.cpp:570
+#: effects/DtmfGen.cpp:572
 msgid "ms"
 msgstr "ms"
 
-#: effects/DtmfGen.cpp:491
+#: effects/DtmfGen.cpp:492
 msgid "Silence duration:"
-msgstr "मौन समय:"
+msgstr "मौन अंतराल:"
 
 #: effects/DtmfGen.h:40
 msgid "DTMF Tones..."
@@ -6073,24 +6087,24 @@ msgid "Applied effect: %s"
 msgstr "लागू प्रभाव : %s"
 
 #. i18n-hint: Technical term for a kind of curve.
-#: effects/Equalization.cpp:231
+#: effects/Equalization.cpp:233
 msgid "B-spline"
 msgstr "बी-स्पलाइन"
 
-#: effects/Equalization.cpp:232
+#: effects/Equalization.cpp:234
 msgid "Cosine"
 msgstr "Cosine"
 
-#: effects/Equalization.cpp:233
+#: effects/Equalization.cpp:235
 msgid "Cubic"
 msgstr "घन"
 
-#: effects/Equalization.cpp:277
-#: effects/Equalization.cpp:331
+#: effects/Equalization.cpp:279
+#: effects/Equalization.cpp:334
 msgid "Equalization"
 msgstr "इक्वलाइज़ेशन"
 
-#: effects/Equalization.cpp:997
+#: effects/Equalization.cpp:1000
 #, c-format
 msgid ""
 "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
@@ -6103,104 +6117,118 @@ msgstr ""
 "\n"
 "वक्र को %s पर संचित करें"
 
-#: effects/Equalization.cpp:998
+#: effects/Equalization.cpp:1001
 msgid "EQCurves.xml and EQDefaultCurves.xml missing"
 msgstr "EQCurves.xml और EQDefaultCurves.xml गायब हैं "
 
-#: effects/Equalization.cpp:1004
-#: effects/Equalization.cpp:1030
-#: effects/Equalization.cpp:1031
+#: effects/Equalization.cpp:1007
+#: effects/Equalization.cpp:1034
+#: effects/Equalization.cpp:1037
+#: effects/Equalization.cpp:1038
 msgid "unnamed"
 msgstr "बेनाम"
 
 #. i18n-hint: EQ stands for 'Equalization'.
-#: effects/Equalization.cpp:1026
-msgid "Error Loading EQ Curve"
+#: effects/Equalization.cpp:1028
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"EQ वक्र निम्नलिखित फ़ाइल से लोड करने में त्रुटि :\n"
+"%s\n"
+"त्रुटि संदेश है :\n"
+"%s"
+
+#: effects/Equalization.cpp:1031
+msgid "Error Loading EQ Curves"
 msgstr "EQ वक्र लोड करने में त्रुटि"
 
-#: effects/Equalization.cpp:1091
+#: effects/Equalization.cpp:1098
 msgid "Error Saving Equalization Curves"
 msgstr "इक्वालाइज़ेशन वक्र संचित करने में त्रुटि"
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
-#: effects/Equalization.cpp:1114
+#: effects/Equalization.cpp:1121
 msgid "Equalization, by Martyn Shaw && Mitch Golden"
 msgstr "इक्वलाइजे़शन, Martyn Shaw && Mitch Golden के द्वारा"
 
-#: effects/Equalization.cpp:1135
+#: effects/Equalization.cpp:1142
 msgid "Max dB"
 msgstr "अधिकतम dB"
 
-#: effects/Equalization.cpp:1137
+#: effects/Equalization.cpp:1144
 msgid "Min dB"
 msgstr "न्यूनतम dB"
 
-#: effects/Equalization.cpp:1216
+#: effects/Equalization.cpp:1223
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1233
+#: effects/Equalization.cpp:1240
 msgid "&Draw Curves"
 msgstr "वक्र खींचें (&D)"
 
-#: effects/Equalization.cpp:1235
+#: effects/Equalization.cpp:1242
 msgid "Draw Curves"
 msgstr "वक्र खींचें"
 
-#: effects/Equalization.cpp:1239
+#: effects/Equalization.cpp:1246
 msgid "&Graphic EQ"
 msgstr "ग्राफ़िक EQ (&G)"
 
-#: effects/Equalization.cpp:1241
+#: effects/Equalization.cpp:1248
 msgid "Graphic EQ"
 msgstr "ग्राफ़िक EQ"
 
-#: effects/Equalization.cpp:1254
+#: effects/Equalization.cpp:1261
 msgid "Li&near Frequency Scale"
 msgstr "रेखीय आवृति मापदंड"
 
-#: effects/Equalization.cpp:1255
+#: effects/Equalization.cpp:1262
 msgid "Linear Frequency Scale"
 msgstr "रैखिक आवृति मापदंड"
 
-#: effects/Equalization.cpp:1264
+#: effects/Equalization.cpp:1271
 msgid "Length of &Filter:"
 msgstr "फ़िल्टर की लंबाई:"
 
-#: effects/Equalization.cpp:1270
+#: effects/Equalization.cpp:1277
 msgid "Length of Filter"
 msgstr "फ़िल्टर की लंबाई"
 
-#: effects/Equalization.cpp:1286
+#: effects/Equalization.cpp:1294
 msgid "&Select Curve:"
 msgstr "वक्र चुनें :(&S)"
 
-#: effects/Equalization.cpp:1296
+#: effects/Equalization.cpp:1304
 msgid "S&ave/Manage Curves..."
 msgstr "वक्र संचित/प्रबंध करें..."
 
-#: effects/Equalization.cpp:1297
+#: effects/Equalization.cpp:1305
 msgid "Save and Manage Curves"
 msgstr "वक्र प्रबंध एवं संचय करें"
 
-#: effects/Equalization.cpp:1300
+#: effects/Equalization.cpp:1308
 msgid "Fla&tten"
 msgstr "समतल करें (&t)"
 
-#: effects/Equalization.cpp:1302
+#: effects/Equalization.cpp:1310
 msgid "&Invert"
 msgstr "उलटें (&I)"
 
-#: effects/Equalization.cpp:1304
+#: effects/Equalization.cpp:1312
 msgid "G&rids"
 msgstr "ग्रिड (&r)"
 
-#: effects/Equalization.cpp:1369
+#: effects/Equalization.cpp:1377
 msgid "Select Curve"
 msgstr "वक्र चुनें"
 
-#: effects/Equalization.cpp:1385
+#: effects/Equalization.cpp:1393
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
@@ -6208,61 +6236,61 @@ msgstr ""
 "इस EQ वक्र का उपयोग एक बैच श्रृंखला में करने के लिए, कृपया एक नया नाम चुनें.\n"
 "'वक्र सूची संचय/प्रबंध...' बटन चुनें और 'बेनाम' वक्र का नामकरण करें, उसके बाद उसका प्रयोग करें."
 
-#: effects/Equalization.cpp:1386
+#: effects/Equalization.cpp:1394
 msgid "EQ Curve needs a different name"
 msgstr "EQ वक्र को एक अलग नाम की जरूरत है"
 
-#: effects/Equalization.cpp:1708
+#: effects/Equalization.cpp:1717
 msgid "Curve not found"
 msgstr "वक्र नहीं मिला"
 
-#: effects/Equalization.cpp:1708
+#: effects/Equalization.cpp:1717
 msgid "Requested curve not found, using 'unnamed'"
 msgstr "मांगा गया वक्र नहीं मिला, 'बेनामी' का प्रयोग करते हैं"
 
-#: effects/Equalization.cpp:2820
-#: effects/Equalization.cpp:2825
+#: effects/Equalization.cpp:2829
+#: effects/Equalization.cpp:2834
 msgid "Manage Curves List"
 msgstr "वक्र सूची प्रबंध"
 
-#: effects/Equalization.cpp:2824
+#: effects/Equalization.cpp:2833
 msgid "Manage Curves"
 msgstr "वक्र प्रबंधन"
 
-#: effects/Equalization.cpp:2857
+#: effects/Equalization.cpp:2866
 msgid "&Curves"
 msgstr "वक्र (&C)"
 
-#: effects/Equalization.cpp:2861
+#: effects/Equalization.cpp:2870
 msgid "Curve Name"
 msgstr "वक्र का नाम"
 
-#: effects/Equalization.cpp:2868
+#: effects/Equalization.cpp:2877
 msgid "&Rename..."
 msgstr "पुनःनामकरण (&R)..."
 
-#: effects/Equalization.cpp:2869
+#: effects/Equalization.cpp:2878
 msgid "D&elete..."
 msgstr "मिटाएं... (&e)"
 
-#: effects/Equalization.cpp:2870
+#: effects/Equalization.cpp:2879
 msgid "I&mport..."
 msgstr "आयात (&m)करें..."
 
-#: effects/Equalization.cpp:2871
+#: effects/Equalization.cpp:2880
 msgid "E&xport..."
 msgstr "निर्यात(&x)करें..."
 
-#: effects/Equalization.cpp:2872
+#: effects/Equalization.cpp:2881
 msgid "&Get More..."
 msgstr "और पाएं...(&G)"
 
-#: effects/Equalization.cpp:2879
+#: effects/Equalization.cpp:2888
 #: widgets/ErrorDialog.cpp:139
 msgid "Help"
 msgstr "सहायता"
 
-#: effects/Equalization.cpp:2880
+#: effects/Equalization.cpp:2889
 msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
@@ -6270,111 +6298,111 @@ msgstr ""
 "'बेनाम' को नाम दें ताकि नई प्रविष्टि को संचित कर सकें.\n"
 "'ठीक' बटन सभी परिवर्तनों को संचित करता है,  जबकि 'रद्द करें'  कुछ भी नहीं."
 
-#: effects/Equalization.cpp:2915
+#: effects/Equalization.cpp:2924
 msgid "'unnamed' always stays at the bottom of the list"
 msgstr "'बेनाम' हमेशा सूची में सबसे नीचे रहता है"
 
-#: effects/Equalization.cpp:2915
-#: effects/Equalization.cpp:3216
+#: effects/Equalization.cpp:2924
+#: effects/Equalization.cpp:3225
 msgid "'unnamed' is special"
 msgstr "'बेनाम' विशिष्ट है"
 
-#: effects/Equalization.cpp:3009
+#: effects/Equalization.cpp:3018
 msgid "' to..."
 msgstr "' तक..."
 
-#: effects/Equalization.cpp:3009
-#: effects/Equalization.cpp:3012
+#: effects/Equalization.cpp:3018
+#: effects/Equalization.cpp:3021
 msgid "Rename '"
-msgstr "पुनःनामकरण '"
+msgstr "पुनः नामकरण '"
 
-#: effects/Equalization.cpp:3010
+#: effects/Equalization.cpp:3019
 msgid "Rename..."
 msgstr "पुनः नामकरण ..."
 
-#: effects/Equalization.cpp:3033
+#: effects/Equalization.cpp:3042
 msgid "Name is the same as the original one"
 msgstr "नाम मूल नाम के समान है"
 
-#: effects/Equalization.cpp:3033
+#: effects/Equalization.cpp:3042
 msgid "Same name"
 msgstr "वही नाम"
 
-#: effects/Equalization.cpp:3036
+#: effects/Equalization.cpp:3045
 msgid "'?"
 msgstr "'?"
 
-#: effects/Equalization.cpp:3036
+#: effects/Equalization.cpp:3045
 msgid "Overwrite existing curve '"
 msgstr "उपस्थित वक्र को मिटाकर लिखें '"
 
-#: effects/Equalization.cpp:3037
+#: effects/Equalization.cpp:3046
 msgid "Curve exists"
 msgstr "वक्र मौजूद है"
 
-#: effects/Equalization.cpp:3108
+#: effects/Equalization.cpp:3117
 msgid "You cannot delete the 'unnamed' curve."
 msgstr "आप 'बेनाम' वक्र को मिटा नहीं सकते."
 
-#: effects/Equalization.cpp:3109
-#: effects/Equalization.cpp:3158
+#: effects/Equalization.cpp:3118
+#: effects/Equalization.cpp:3167
 msgid "Can't delete 'unnamed'"
 msgstr "'बेनाम' को मिटाया नहीं जा सकता"
 
-#: effects/Equalization.cpp:3115
-#: effects/Equalization.cpp:3144
+#: effects/Equalization.cpp:3124
+#: effects/Equalization.cpp:3153
 msgid "' ?"
 msgstr "' ?"
 
-#: effects/Equalization.cpp:3115
-#: effects/Equalization.cpp:3144
+#: effects/Equalization.cpp:3124
+#: effects/Equalization.cpp:3153
 msgid "Delete '"
 msgstr "मिटाएँ '"
 
-#: effects/Equalization.cpp:3118
-#: effects/Equalization.cpp:3148
+#: effects/Equalization.cpp:3127
+#: effects/Equalization.cpp:3157
 #: export/ExportFFmpegDialogs.cpp:1664
 msgid "Confirm Deletion"
 msgstr "मिटाने के लिए संपुष्टी दें"
 
-#: effects/Equalization.cpp:3141
+#: effects/Equalization.cpp:3150
 msgid "Delete "
 msgstr "मिटाएँ"
 
-#: effects/Equalization.cpp:3141
+#: effects/Equalization.cpp:3150
 msgid "items?"
 msgstr "चीजें?"
 
-#: effects/Equalization.cpp:3157
+#: effects/Equalization.cpp:3166
 msgid "You cannot delete the 'unnamed' curve, it is special."
 msgstr "आप 'बेनाम' वक्र को मिटा नहीं सकते, यह विशिष्ट है."
 
-#: effects/Equalization.cpp:3174
+#: effects/Equalization.cpp:3183
 msgid "Choose an EQ curve file"
 msgstr "EQ वक्र फ़ाइल चुनें"
 
-#: effects/Equalization.cpp:3174
+#: effects/Equalization.cpp:3183
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
 msgstr "xml फ़ाइलें (*.xml;*.XML)|*.xml;*.XML"
 
-#: effects/Equalization.cpp:3194
+#: effects/Equalization.cpp:3203
 msgid "Export EQ curves as..."
 msgstr "EQ वक्रों का निर्यात इस नाम से..."
 
-#: effects/Equalization.cpp:3216
+#: effects/Equalization.cpp:3225
 msgid "You cannot export 'unnamed' curve"
 msgstr "आप 'बेनाम' वक्र का निर्यात नहीं कर सकते"
 
-#: effects/Equalization.cpp:3226
+#: effects/Equalization.cpp:3235
 #, c-format
 msgid "%d curves exported to %s"
 msgstr "%d वक्र %s को निर्यात किया"
 
-#: effects/Equalization.cpp:3227
+#: effects/Equalization.cpp:3236
 msgid "Curves exported"
 msgstr "वक्र निर्यातित"
 
-#: effects/Equalization.cpp:3230
+#: effects/Equalization.cpp:3239
 msgid "No curves exported"
 msgstr "किसी वक्र का निर्यात नहीं हुआ"
 
@@ -6450,49 +6478,49 @@ msgstr "उलटें"
 msgid "Inverting"
 msgstr "अपवर्तन"
 
-#: effects/Leveller.cpp:210
+#: effects/Leveller.cpp:214
 msgid "Leveller"
 msgstr "लेवलर"
 
 #. i18n-hint: Of strength of an effect.  Not strongly.
-#: effects/Leveller.cpp:224
+#: effects/Leveller.cpp:228
 msgid "Light"
 msgstr "थोड़ा"
 
-#: effects/Leveller.cpp:225
+#: effects/Leveller.cpp:229
 msgid "Moderate"
 msgstr "साधारण"
 
 #. i18n-hint: Of strength of an effect.  Strongly.
-#: effects/Leveller.cpp:227
+#: effects/Leveller.cpp:231
 msgid "Heavy"
 msgstr "अधिक"
 
-#: effects/Leveller.cpp:228
+#: effects/Leveller.cpp:232
 msgid "Heavier"
 msgstr "अत्यधिक"
 
-#: effects/Leveller.cpp:229
+#: effects/Leveller.cpp:233
 msgid "Heaviest"
 msgstr "अधिकतम"
 
-#: effects/Leveller.cpp:233
+#: effects/Leveller.cpp:237
 msgid "by Lynn Allan"
 msgstr "Lynn Allan रचित"
 
-#: effects/Leveller.cpp:243
+#: effects/Leveller.cpp:247
 msgid "Degree of Leveling"
 msgstr "एकसार का स्तर"
 
-#: effects/Leveller.cpp:247
+#: effects/Leveller.cpp:251
 msgid "Degree of Leveling:"
 msgstr "एकसार का स्तर :"
 
-#: effects/Leveller.cpp:255
+#: effects/Leveller.cpp:259
 msgid "Noise Threshold (Hiss/Hum/Ambient Noise)"
 msgstr "शोर शिखर (हिस्स/हम/वातावरणीय शोर-गुल)"
 
-#: effects/Leveller.cpp:259
+#: effects/Leveller.cpp:263
 msgid "Threshold for Noise:"
 msgstr "शोर परिसीमा:"
 
@@ -6672,7 +6700,7 @@ msgstr "भूरा"
 msgid "Noise Generator"
 msgstr "शोर उत्पादक"
 
-#: effects/Noise.cpp:198
+#: effects/Noise.cpp:199
 msgid "Noise type"
 msgstr "शोर प्रकार"
 
@@ -6814,67 +6842,67 @@ msgstr "true"
 msgid ", maximum amplitude = %.1f dB"
 msgstr ", महत्तम ध्वनि तीव्रता = %.1f dB"
 
-#: effects/Normalize.cpp:167
+#: effects/Normalize.cpp:168
 msgid "Removing DC offset and Normalizing...\n"
 msgstr "DC ऑफसेट को हटाते हुए सामान्य कर रहे हैं...\n"
 
-#: effects/Normalize.cpp:169
+#: effects/Normalize.cpp:170
 msgid "Removing DC offset...\n"
 msgstr "DC offset हटा रहे हैं...\n"
 
-#: effects/Normalize.cpp:171
+#: effects/Normalize.cpp:172
 msgid "Normalizing without removing DC offset...\n"
 msgstr "DC ऑफसेट हटाए बिना सामान्य कर रहे हैं...\n"
 
-#: effects/Normalize.cpp:191
+#: effects/Normalize.cpp:192
 msgid "Analyzing: "
 msgstr "विश्लेषण कर रहे हैं: "
 
-#: effects/Normalize.cpp:193
+#: effects/Normalize.cpp:194
 msgid "Analyzing first track of stereo pair: "
 msgstr "स्टीरियो युगल के पहले ट्रैक का विश्लेषण चल रहा है: "
 
-#: effects/Normalize.cpp:201
+#: effects/Normalize.cpp:202
 msgid "Processing: "
 msgstr "प्रक्रिया चल रही है:"
 
-#: effects/Normalize.cpp:203
+#: effects/Normalize.cpp:204
 msgid "Processing stereo channels independently: "
 msgstr "स्टीरियो चैनल को स्वतंत्र रूप से सामान्य कर रहे हैं : "
 
-#: effects/Normalize.cpp:221
+#: effects/Normalize.cpp:222
 msgid "Analyzing second track of stereo pair: "
 msgstr "स्टीरियो युगल के दूसरे ट्रैक का विश्लेषण चल रहा है: "
 
-#: effects/Normalize.cpp:236
+#: effects/Normalize.cpp:237
 msgid "Processing first track of stereo pair: "
 msgstr "स्टीरियो युगल के पहले ट्रैक को बनाने की प्रक्रिया चल रही हैं: "
 
-#: effects/Normalize.cpp:245
+#: effects/Normalize.cpp:246
 msgid "Processing second track of stereo pair: "
 msgstr "स्टीरियो युगल के दूसरे ट्रैक को बनाने की प्रक्रिया चल रही हैं: "
 
-#: effects/Normalize.cpp:450
+#: effects/Normalize.cpp:451
 msgid "Normalize"
 msgstr "नॉरमलाइज़"
 
-#: effects/Normalize.cpp:481
+#: effects/Normalize.cpp:482
 msgid "Remove any DC offset (center on 0.0 vertically)"
 msgstr "DC ऑफसेट हटाएँ(खड़ी दिशा में 0.0 पर केंद्रित करें)"
 
-#: effects/Normalize.cpp:484
+#: effects/Normalize.cpp:485
 msgid "Normalize maximum amplitude to:"
 msgstr "नॉरमलाइज़ के लिए महत्तम आयाम :"
 
-#: effects/Normalize.cpp:491
+#: effects/Normalize.cpp:492
 msgid "Maximum amplitude dB"
 msgstr "महत्तम ध्वनि तीव्रता dB"
 
-#: effects/Normalize.cpp:498
+#: effects/Normalize.cpp:499
 msgid "Normalize stereo channels independently"
 msgstr "स्टीरियो चैनल को स्वतंत्र रूप से सामान्य करें"
 
-#: effects/Normalize.cpp:566
+#: effects/Normalize.cpp:567
 msgid ".  Maximum 0dB."
 msgstr ".  अधिकतम 0dB."
 
@@ -6926,7 +6954,7 @@ msgstr "समय पैमाना(सेकेंड):"
 #.
 #: effects/Paulstretch.h:30
 msgid "Paulstretch..."
-msgstr "Paulstretch..."
+msgstr "पॉलस्ट्रेच..."
 
 #. i18n-hint: This is the text that is shown whilst the effect is being
 #. * processed. The effect stretches the input in time, making the sound
@@ -6935,7 +6963,7 @@ msgstr "Paulstretch..."
 #.
 #: effects/Paulstretch.h:39
 msgid "Stretching with Paulstretch"
-msgstr "पॉलस्ट्रेच से खींचें"
+msgstr "पॉलस्ट्रेच से विस्तृत करते हैं"
 
 #: effects/Phaser.cpp:66
 #, c-format
@@ -7149,21 +7177,21 @@ msgstr "डिफ़ाल्ट का प्रयोग करें"
 msgid "Restore Defaults"
 msgstr "डिफ़ाल्ट पर लाएं"
 
-#: effects/ScoreAlignDialog.cpp:260
 #: effects/ScoreAlignDialog.cpp:262
-#: effects/ScoreAlignDialog.cpp:266
-#: effects/ScoreAlignDialog.cpp:269
+#: effects/ScoreAlignDialog.cpp:264
+#: effects/ScoreAlignDialog.cpp:268
 #: effects/ScoreAlignDialog.cpp:271
+#: effects/ScoreAlignDialog.cpp:273
 #, c-format
 msgid "%.2f secs"
 msgstr "%.2f सेकेंड"
 
-#: effects/ScoreAlignDialog.cpp:263
+#: effects/ScoreAlignDialog.cpp:265
 #, c-format
 msgid "%.3f"
 msgstr "%.3f"
 
-#: effects/Silence.cpp:33
+#: effects/Silence.cpp:45
 msgid "Silence Generator"
 msgstr "मौन रचनाकार"
 
@@ -7277,37 +7305,37 @@ msgstr "आरीदाँत"
 msgid "Square, no alias"
 msgstr "वर्ग, बिना उपनाम"
 
-#: effects/ToneGen.cpp:289
+#: effects/ToneGen.cpp:292
 #: prefs/TracksPrefs.cpp:58
 msgid "Waveform"
 msgstr "तरंगरूप"
 
-#: effects/ToneGen.cpp:295
-#: effects/ToneGen.cpp:336
+#: effects/ToneGen.cpp:298
+#: effects/ToneGen.cpp:339
 msgid "Frequency (Hz)"
 msgstr "आवृति(Hz)"
 
-#: effects/ToneGen.cpp:323
+#: effects/ToneGen.cpp:326
 msgid "Waveform:"
 msgstr "तरंगरूप:"
 
-#: effects/ToneGen.cpp:336
+#: effects/ToneGen.cpp:339
 msgid "Frequency Hertz Start"
 msgstr "आरंभिक आवृति हर्टज़"
 
-#: effects/ToneGen.cpp:337
+#: effects/ToneGen.cpp:340
 msgid "Frequency Hertz End"
 msgstr "अंतिम आवृति हर्टज़"
 
-#: effects/ToneGen.cpp:338
+#: effects/ToneGen.cpp:341
 msgid "Amplitude Start"
 msgstr "आरंभिक आयाम"
 
-#: effects/ToneGen.cpp:339
+#: effects/ToneGen.cpp:342
 msgid "Amplitude End"
 msgstr "अंतिम आयाम"
 
-#: effects/ToneGen.cpp:344
+#: effects/ToneGen.cpp:347
 msgid "Interpolation:"
 msgstr "अंतर्गणना :"
 
@@ -7327,47 +7355,47 @@ msgstr "सीटी की उत्पत्ती "
 msgid "Generating Tone"
 msgstr "स्वर उत्पन्न कर रहा है"
 
-#: effects/TruncSilence.cpp:142
+#: effects/TruncSilence.cpp:143
 msgid "All tracks must have the same sample rate"
 msgstr "सभी ट्रैकों का नमूना दर एक बराबर होगा"
 
-#: effects/TruncSilence.cpp:142
-#: effects/TruncSilence.cpp:857
+#: effects/TruncSilence.cpp:143
+#: effects/TruncSilence.cpp:861
 msgid "Truncate Silence"
 msgstr "चुप्पी हटाएं"
 
-#: effects/TruncSilence.cpp:867
+#: effects/TruncSilence.cpp:871
 msgid "by Lynn Allan && Philip Van Baren"
 msgstr "सौजन्य Lynn Allan && Philip Van Baren"
 
-#: effects/TruncSilence.cpp:881
+#: effects/TruncSilence.cpp:885
 msgid "Min silence duration:"
 msgstr "लघुत्तम मौन अंतराल:"
 
-#: effects/TruncSilence.cpp:884
 #: effects/TruncSilence.cpp:888
-#: widgets/TimeTextCtrl.cpp:1633
+#: effects/TruncSilence.cpp:892
+#: widgets/TimeTextCtrl.cpp:1636
 msgid "milliseconds"
 msgstr "मिली सेकेंड"
 
-#: effects/TruncSilence.cpp:885
+#: effects/TruncSilence.cpp:889
 msgid "Max silence duration:"
 msgstr "महत्तम मौन अंतराल:"
 
-#: effects/TruncSilence.cpp:889
+#: effects/TruncSilence.cpp:893
 msgid "Silence compression:"
 msgstr "मौन संपीड़न:"
 
 #. i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1
-#: effects/TruncSilence.cpp:893
+#: effects/TruncSilence.cpp:897
 msgid ":1"
 msgstr ":1"
 
-#: effects/TruncSilence.cpp:894
+#: effects/TruncSilence.cpp:898
 msgid "Threshold for silence:"
 msgstr "मौन शिखर:"
 
-#: effects/TruncSilence.cpp:920
+#: effects/TruncSilence.cpp:924
 msgid ""
 "   Duration must be at least 1 millisecond\n"
 "   Compress ratio must be at least 1:1"
@@ -7383,13 +7411,13 @@ msgstr "मौन हटाएं..."
 msgid "Truncating Silence..."
 msgstr "मौन हटा रहे हैं..."
 
-#: effects/VST/VSTEffect.cpp:388
+#: effects/VST/VSTEffect.cpp:389
 #: effects/ladspa/LadspaEffect.cpp:590
 #: effects/lv2/LV2Effect.cpp:798
 msgid "Effect Settings"
 msgstr "प्रभाव सेटिग्स"
 
-#: effects/VST/VSTEffect.cpp:468
+#: effects/VST/VSTEffect.cpp:469
 #: effects/ladspa/LadspaEffect.cpp:555
 #: effects/ladspa/LadspaEffect.cpp:563
 #: prefs/QualityPrefs.cpp:74
@@ -7397,56 +7425,56 @@ msgstr "प्रभाव सेटिग्स"
 msgid "None"
 msgstr "कुछ नहीं"
 
-#: effects/VST/VSTEffect.cpp:479
+#: effects/VST/VSTEffect.cpp:480
 msgid "Presets:"
 msgstr "पूर्व-निर्धारण:"
 
-#: effects/VST/VSTEffect.cpp:489
+#: effects/VST/VSTEffect.cpp:490
 msgid "Presets"
 msgstr "पूर्व-निर्धारण"
 
-#: effects/VST/VSTEffect.cpp:492
+#: effects/VST/VSTEffect.cpp:493
 msgid "Load"
 msgstr "लागू करें"
 
-#: effects/VST/VSTEffect.cpp:495
+#: effects/VST/VSTEffect.cpp:496
 msgid "Save"
 msgstr "सुरक्षित करें"
 
-#: effects/VST/VSTEffect.cpp:595
+#: effects/VST/VSTEffect.cpp:596
 msgid "Load VST Program:"
 msgstr "VST कार्यक्रम लोड करें :"
 
-#: effects/VST/VSTEffect.cpp:613
+#: effects/VST/VSTEffect.cpp:614
 msgid "Error Loading VST Program"
 msgstr "VST प्रोग्राम लोड करने में त्रुटि"
 
-#: effects/VST/VSTEffect.cpp:629
+#: effects/VST/VSTEffect.cpp:630
 msgid "Save VST Program As:"
 msgstr "VST प्रोग्राम सहेजें, इस नाम से:"
 
-#: effects/VST/VSTEffect.cpp:768
+#: effects/VST/VSTEffect.cpp:769
 #, c-format
 msgid "This parameter file was saved from %s.  Continue?"
 msgstr "यह पैरामीटर फाइल %s से सहेजा गया था. जारी रखें?"
 
-#: effects/VST/VSTEffect.cpp:1222
+#: effects/VST/VSTEffect.cpp:1223
 msgid "Performing Effect: "
 msgstr "प्रभाव लागू करते हैं :"
 
-#: effects/VST/VSTEffect.cpp:1253
+#: effects/VST/VSTEffect.cpp:1254
 msgid "Both channels of a stereo track must be the same sample rate."
 msgstr "स्टीरियो ट्रैक के दोनों चैनलों का नमूना दर एक समान होना चाहिए."
 
-#: effects/VST/VSTEffect.cpp:1258
+#: effects/VST/VSTEffect.cpp:1259
 msgid "Both channels of a stereo track must be the same length."
 msgstr "स्टीरियो ट्रैक के दोनों चैनलों को  लंबाई एक बराबर होनी चाहिए."
 
-#: effects/VST/VSTEffect.cpp:1789
+#: effects/VST/VSTEffect.cpp:1790
 msgid "Scanning VST Plugins"
 msgstr "VST प्लग-इन ढूंढ रहे हैं"
 
-#: effects/VST/VSTEffect.cpp:1805
+#: effects/VST/VSTEffect.cpp:1806
 #, c-format
 msgid "Checking %s"
 msgstr "%s जाँच जारी"
@@ -7657,7 +7685,7 @@ msgstr "क्या आप इस नाम से फ़ाइल सहेज
 #: export/Export.cpp:606
 #: export/Export.cpp:627
 #: export/Export.cpp:671
-#: import/ImportPCM.cpp:237
+#: import/ImportPCM.cpp:238
 #: widgets/Warning.cpp:53
 msgid "Warning"
 msgstr "चेतावनी"
@@ -7694,37 +7722,37 @@ msgstr ""
 msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "\"%s\" नामवाला एक फ़ाइल पहले से मौजूद है. इसे बदल दें?"
 
-#: export/Export.cpp:780
+#: export/Export.cpp:781
 msgid "Your tracks will be mixed down to two stereo channels in the exported file."
 msgstr "आपके ट्रैकों को मिश्रित करके निर्यातित फ़ाइल में केवल दो स्टिरियो चैनल मिलेगा."
 
-#: export/Export.cpp:785
+#: export/Export.cpp:786
 msgid "Your tracks will be mixed down to a single mono channel in the exported file."
 msgstr "आपके ट्रैकों को मिश्रित करके निर्यातित फ़ाइल में केवल एक मोनो चैनल मिलेगा."
 
-#: export/Export.cpp:796
+#: export/Export.cpp:797
 msgid "Advanced Mixing Options"
 msgstr "उच्चतर मिक्सिंग विकल्प निर्धारण"
 
-#: export/Export.cpp:1004
+#: export/Export.cpp:1005
 #, c-format
 msgid "Channel: %2d"
 msgstr "चैनल : %2d"
 
-#: export/Export.cpp:1119
+#: export/Export.cpp:1120
 msgid " - Left"
 msgstr " - बायाँ"
 
-#: export/Export.cpp:1121
+#: export/Export.cpp:1122
 msgid " - Right"
 msgstr " - दायाँ"
 
-#: export/Export.cpp:1143
+#: export/Export.cpp:1144
 msgid "Mixer Panel"
 msgstr "मिक्सर पैनल"
 
-#: export/Export.cpp:1149
-#: export/Export.cpp:1196
+#: export/Export.cpp:1150
+#: export/Export.cpp:1197
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "आउटपुट चैनल: %2d"
@@ -7750,29 +7778,29 @@ msgstr "आउटपुट दिखाएं"
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr "डेटा मानक इनपुट को पहुँचेगा. \"%f\" निर्यात विंडो के फ़ाइल नाम का उपयोग करता है."
 
-#: export/ExportCL.cpp:161
+#: export/ExportCL.cpp:162
 msgid "Find path to command"
 msgstr "आदेश पथ को ढूंढ़ें"
 
-#: export/ExportCL.cpp:291
+#: export/ExportCL.cpp:292
 msgid "(external program)"
 msgstr "(बाहरी कार्यक्रम)"
 
-#: export/ExportCL.cpp:357
-#: export/ExportPCM.cpp:494
+#: export/ExportCL.cpp:358
+#: export/ExportPCM.cpp:495
 #, c-format
 msgid "Cannot export audio to %s"
 msgstr "ऑडियो %s में निर्यात नहीं कर सकते."
 
-#: export/ExportCL.cpp:431
+#: export/ExportCL.cpp:432
 msgid "Exporting the selected audio using command-line encoder"
 msgstr "कमांड लाइन एनकोडर उपयोग करके चयनित ऑडियो का निर्यात"
 
-#: export/ExportCL.cpp:432
+#: export/ExportCL.cpp:433
 msgid "Exporting the entire project using command-line encoder"
 msgstr "कमांड-लाइन एनकोडर का प्रयोग करके पूरी परियोजना का निर्यात"
 
-#: export/ExportCL.cpp:495
+#: export/ExportCL.cpp:496
 msgid "Command Output"
 msgstr "आदेश आउटपुट"
 
@@ -7809,7 +7837,7 @@ msgid "Exporting entire file as %s"
 msgstr "पूरी परियोजना %s के नाम से निर्यात कर रहे हैं"
 
 #: export/ExportFFmpeg.cpp:817
-#: export/ExportMP3.cpp:1888
+#: export/ExportMP3.cpp:1891
 msgid "Invalid sample rate"
 msgstr "अमान्य सैंपल रेट"
 
@@ -7832,12 +7860,12 @@ msgstr ""
 "मौजूदा आउटपुट फ़ाइल स्वरूप द्वारा समर्थित  नहीं है."
 
 #: export/ExportFFmpeg.cpp:836
-#: export/ExportMP3.cpp:1907
+#: export/ExportMP3.cpp:1910
 msgid "You may resample to one of the rates below."
 msgstr "आप निम्न दरों में से एक पर पुनः नमूना ले सकते हैं."
 
 #: export/ExportFFmpeg.cpp:864
-#: export/ExportMP3.cpp:1930
+#: export/ExportMP3.cpp:1933
 msgid "Sample Rates"
 msgstr "सैंपल रेट"
 
@@ -8336,7 +8364,7 @@ msgstr "आयात के लिए प्रिसेट के साथ XML
 #: export/ExportFFmpegDialogs.cpp:1725
 #: export/ExportFFmpegDialogs.cpp:1745
 #: prefs/KeyConfigPrefs.cpp:286
-#: prefs/KeyConfigPrefs.cpp:317
+#: prefs/KeyConfigPrefs.cpp:318
 msgid "XML files (*.xml)|*.xml|All files (*.*)|*.*"
 msgstr "XML फ़ाइलें (*.xml)|*.xml|सभी फ़ाइलें (*.*)|*.*"
 
@@ -8455,8 +8483,8 @@ msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "इस नमूना दर और बिट दर के साथ MP2 निर्यात नहीं कर सकते"
 
 #: export/ExportMP2.cpp:244
-#: export/ExportMP3.cpp:1730
-#: export/ExportOGG.cpp:184
+#: export/ExportMP3.cpp:1733
+#: export/ExportOGG.cpp:185
 msgid "Unable to open target file for writing"
 msgstr "लिखने के लिए इंगित फ़ाइल को खोलने में असमर्थ"
 
@@ -8558,28 +8586,28 @@ msgid "Stereo"
 msgstr "स्टिरियो"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
-#: export/ExportMP3.cpp:574
+#: export/ExportMP3.cpp:575
 msgid "Locate Lame"
 msgstr "Lame खोजें"
 
-#: export/ExportMP3.cpp:594
+#: export/ExportMP3.cpp:595
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "ऑडेसिटी को MP3 बनाने के लिए %s फ़ाइल की जरूरत है."
 
-#: export/ExportMP3.cpp:600
+#: export/ExportMP3.cpp:601
 #, c-format
 msgid "Location of %s:"
 msgstr "%s का स्थान:"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: export/ExportMP3.cpp:610
+#: export/ExportMP3.cpp:611
 #, c-format
 msgid "To find %s, click here -->"
 msgstr "%s को ढूंढ़ने के लिए यहाँ क्लिक करें -->"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: export/ExportMP3.cpp:618
+#: export/ExportMP3.cpp:619
 msgid "To get a free copy of Lame, click here -->"
 msgstr "Lame की मुफ़्त प्रति के लिए, यहाँ क्लिक करें -->"
 
@@ -8587,7 +8615,7 @@ msgstr "Lame की मुफ़्त प्रति के लिए, यह�
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
 #. * "Where would I find the file %s" instead if you want.
-#: export/ExportMP3.cpp:642
+#: export/ExportMP3.cpp:643
 #, c-format
 msgid "Where is %s?"
 msgstr "%s कहाँ है?"
@@ -8621,54 +8649,54 @@ msgstr "MP3 फ़ाइलें"
 msgid "Could not initialize MP3 encoding library!"
 msgstr "MP3 एनकोडिंग लाइब्रेरी नहीं खोल सका!"
 
-#: export/ExportMP3.cpp:1634
+#: export/ExportMP3.cpp:1635
 msgid "Could not open MP3 encoding library!"
 msgstr "MP3 एनकोडिंग लाइब्रेरी नहीं खोल सका!"
 
-#: export/ExportMP3.cpp:1641
+#: export/ExportMP3.cpp:1643
 msgid "Not a valid or supported MP3 encoding library!"
 msgstr "यह वैध या समर्थित MP3 एनकोडिंग लाइब्रेरी नहीं है!"
 
-#: export/ExportMP3.cpp:1719
+#: export/ExportMP3.cpp:1722
 msgid "Unable to initialize MP3 stream"
 msgstr "MP3 प्रवाह(stream) शुरु नहीं कर सका"
 
-#: export/ExportMP3.cpp:1763
+#: export/ExportMP3.cpp:1766
 #, c-format
 msgid "Exporting selected audio with %s preset"
 msgstr "चयनित ऑडियो का निर्यात  %s प्रिसेट के साथ कर रहे हैं"
 
-#: export/ExportMP3.cpp:1764
+#: export/ExportMP3.cpp:1767
 #, c-format
 msgid "Exporting entire file with %s preset"
 msgstr "पूरी फ़ाइल का निर्यात %s प्रिसेट के साथ कर रहे हैं"
 
-#: export/ExportMP3.cpp:1769
+#: export/ExportMP3.cpp:1772
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
 msgstr "चुने गए ऑडियो का VBR गुणवत्ता %s के साथ निर्यात करते हैं"
 
-#: export/ExportMP3.cpp:1770
+#: export/ExportMP3.cpp:1773
 #, c-format
 msgid "Exporting entire file with VBR quality %s"
 msgstr "पूरी फ़ाइल का VBR गुणवत्ता %s के साथ निर्यात करते हैं"
 
-#: export/ExportMP3.cpp:1775
+#: export/ExportMP3.cpp:1778
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
 msgstr "चयनित ऑडियो का निर्यात %d Kbps पर कर रहे हैं"
 
-#: export/ExportMP3.cpp:1776
+#: export/ExportMP3.cpp:1779
 #, c-format
 msgid "Exporting entire file at %d Kbps"
 msgstr "पूरी फ़ाइल का निर्यात %d Kbps पर कर रहे हैं"
 
-#: export/ExportMP3.cpp:1810
+#: export/ExportMP3.cpp:1813
 #, c-format
 msgid "Error %d returned from MP3 encoder"
 msgstr "MP3 एनकोडर ने त्रुटि संख्या %d  लौटाया"
 
-#: export/ExportMP3.cpp:1901
+#: export/ExportMP3.cpp:1904
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
@@ -8677,7 +8705,7 @@ msgstr ""
 "परियोजना का नमूना दर (%d) MP3 फ़ाइल प्रारूप में समर्थित\n"
 "नहीं है."
 
-#: export/ExportMP3.cpp:1904
+#: export/ExportMP3.cpp:1907
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -8686,7 +8714,7 @@ msgstr ""
 "परियोजना का नमूना दर (%d) और बिट दर (%d kbps) एक साथ में\n"
 "MP3 फ़ाइल प्रारूप द्वारा समर्थित नहीं है."
 
-#: export/ExportMP3.cpp:2075
+#: export/ExportMP3.cpp:2078
 msgid "MP3 export library not found"
 msgstr "MP3 निर्यात लाइब्रेरी नहीं मिला"
 
@@ -8864,65 +8892,65 @@ msgstr "Ogg Vorbis विकल्प निर्धारण"
 msgid "Ogg Vorbis Export Setup"
 msgstr "Ogg Vorbis निर्यात सेटअप"
 
-#: export/ExportOGG.cpp:155
+#: export/ExportOGG.cpp:156
 msgid "Ogg Vorbis Files"
 msgstr "Ogg Vorbis फ़ाईलें"
 
-#: export/ExportOGG.cpp:256
+#: export/ExportOGG.cpp:257
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "चयनित ऑडियो को  Ogg वॉर्बिस  के रूप में निर्यात करते हैं"
 
-#: export/ExportOGG.cpp:257
+#: export/ExportOGG.cpp:258
 msgid "Exporting the entire project as Ogg Vorbis"
 msgstr "पूरी परियोजना Ogg वॉर्बिस के रूप में निर्यात करते हैं"
 
-#: export/ExportPCM.cpp:119
+#: export/ExportPCM.cpp:120
 msgid "Specify Uncompressed Options"
 msgstr "Uncompressed विकल्प निर्धारण"
 
-#: export/ExportPCM.cpp:189
+#: export/ExportPCM.cpp:190
 msgid "Uncompressed Export Setup"
 msgstr "Uncompressed निर्यात सेटअप"
 
-#: export/ExportPCM.cpp:195
+#: export/ExportPCM.cpp:196
 msgid "Header:"
 msgstr "शीर्ष:"
 
-#: export/ExportPCM.cpp:199
+#: export/ExportPCM.cpp:200
 #: import/ImportRaw.cpp:377
 msgid "Encoding:"
 msgstr "एनकोडिंग:"
 
-#: export/ExportPCM.cpp:204
+#: export/ExportPCM.cpp:205
 msgid "(Not all combinations of headers and encodings are possible.)"
 msgstr "(हेडर और एन्कोडिंग के सभी संयोजन संभव नहीं हैं.)"
 
-#: export/ExportPCM.cpp:359
+#: export/ExportPCM.cpp:360
 msgid "Other uncompressed files"
 msgstr "अन्य असंपीड़ित फ़ाइलें"
 
-#: export/ExportPCM.cpp:377
+#: export/ExportPCM.cpp:378
 msgid "AIFF (Apple) signed 16 bit PCM"
 msgstr "AIFF(एप्पल)चिन्हित 16 बिट PCM"
 
-#: export/ExportPCM.cpp:388
+#: export/ExportPCM.cpp:389
 msgid "WAV (Microsoft) signed 16 bit PCM"
 msgstr "WAV (माइक्रोसॉफ़्ट)चिन्हित 16 बिट PCM"
 
-#: export/ExportPCM.cpp:399
+#: export/ExportPCM.cpp:400
 msgid "GSM 6.10 WAV (mobile)"
 msgstr "GSM 6.10 WAV  (मोबाइल )"
 
-#: export/ExportPCM.cpp:476
+#: export/ExportPCM.cpp:477
 msgid "Cannot export audio in this format."
 msgstr "इस प्रारूप में ऑडियो निर्यात नहीं कर सकते."
 
-#: export/ExportPCM.cpp:528
+#: export/ExportPCM.cpp:529
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "चुनी हुई ध्वनी का निर्यात %s नाम से"
 
-#: export/ExportPCM.cpp:530
+#: export/ExportPCM.cpp:531
 #, c-format
 msgid "Exporting the entire project as %s"
 msgstr "पूरी परियोजना %s नाम से निर्यात कर रहे हैं"
@@ -8930,7 +8958,7 @@ msgstr "पूरी परियोजना %s नाम से निर्�
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
 #. * error"
-#: export/ExportPCM.cpp:556
+#: export/ExportPCM.cpp:557
 #, c-format
 msgid ""
 "Error while writing %s file (disk full?).\n"
@@ -8940,12 +8968,12 @@ msgstr ""
 "Libsndfile के अनुसार \"%s\""
 
 #. i18n-hint: %s will be the error message from libsndfile
-#: export/ExportPCM.cpp:580
+#: export/ExportPCM.cpp:581
 #, c-format
 msgid "Error (file may not have been written): %s"
 msgstr "त्रुटि (फ़ाइल शायद लिखा नहीं जा सका): %s"
 
-#: export/ExportPCM.cpp:751
+#: export/ExportPCM.cpp:752
 msgid "There are no options for this format.\n"
 msgstr "इस प्रारूप के लिए कोई विकल्प नहीं हैं.\n"
 
@@ -8953,32 +8981,32 @@ msgstr "इस प्रारूप के लिए कोई विकल्�
 #. * the list. So you should translate the quoted string
 #. * 'Other uncompressed files' exactly the same as you do the same string
 #. * when it comes up on it's own.
-#: export/ExportPCM.cpp:756
+#: export/ExportPCM.cpp:757
 msgid "If you need more control over the export format please use the 'Other uncompressed files' format."
 msgstr "यदि आपको निर्यात प्रारूप पर अधिक नियंत्रण की जरूरत है तो कृपया 'अन्य असंपीड़ित फाइलें'  प्रारूप का उपयोग करें."
 
-#: export/ExportPCM.cpp:761
+#: export/ExportPCM.cpp:762
 msgid "Your file will be exported as a 16-bit AIFF (Apple/SGI) file.\n"
 msgstr "आपकी फ़ाइल का निर्यात एक 16-बिट AIFF (एप्पल / SGI) फ़ाइल के रूप होगा.\n"
 
-#: export/ExportPCM.cpp:766
+#: export/ExportPCM.cpp:767
 msgid "Your file will be exported as a 16-bit WAV (Microsoft) file.\n"
 msgstr "आपकी फ़ाइल का निर्यात एक 16-बिट WAV (माइक्रोसॉफ़्ट) फ़ाइल के रूप में होगा.\n"
 
-#: export/ExportPCM.cpp:771
+#: export/ExportPCM.cpp:772
 msgid "Your file will be exported as a GSM 6.10 WAV file.\n"
 msgstr "आपकी फ़ाइल का निर्यात एक GSM 6.10 WAV फ़ाइल के रूप में होगा.\n"
 
-#: import/Import.cpp:507
+#: import/Import.cpp:508
 msgid "Select stream(s) to import"
 msgstr "आयात के लिए प्रवाह(stream)चुनें"
 
-#: import/Import.cpp:561
+#: import/Import.cpp:562
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
 msgstr "ऑडेसिटी का यह संस्करण %s  समर्थन के साथ तैयार नहीं किया गया."
 
-#: import/Import.cpp:574
+#: import/Import.cpp:575
 #, c-format
 msgid ""
 "\"%s\" \n"
@@ -8992,7 +9020,7 @@ msgstr ""
 "फ़ाइल > आयात > MIDI क्लिक करके इसे संपादित कर सकते हैं."
 
 #. i18n-hint: %s will be the filename
-#: import/Import.cpp:584
+#: import/Import.cpp:585
 #, c-format
 msgid ""
 "\"%s\" is an audio CD track. \n"
@@ -9005,7 +9033,7 @@ msgstr ""
 "सीडी ट्रैक को एक ऐसे स्वरुप में बदलें जिसे ऑडेसिटी \n"
 "आयात कर सके, जैसे कि WAV या AIFF."
 
-#: import/Import.cpp:590
+#: import/Import.cpp:591
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
@@ -9016,7 +9044,7 @@ msgstr ""
 "ऑडेसिटी इस फाइल को खोल नहीं सकता क्योंकि इसमें केवल अन्य फ़ाइलों के लिंक शामिल हैं. \n"
 "आप इसे एक सुलेख संपादक में खोल सकते हैं और वास्तविक ऑडियो फ़ाइलें डाउनलोड कर सकते हैं."
 
-#: import/Import.cpp:595
+#: import/Import.cpp:596
 #, c-format
 msgid ""
 "\"%s\" is a Windows Media Audio file. \n"
@@ -9027,7 +9055,7 @@ msgstr ""
 "ऑडेसिटी पेटेंट प्रतिबंध के कारण इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:600
+#: import/Import.cpp:601
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file. \n"
@@ -9038,7 +9066,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:605
+#: import/Import.cpp:606
 #, c-format
 msgid ""
 "\"%s\" is an encrypted audio file. \n"
@@ -9052,7 +9080,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को एन्क्रिप्शन के कारण नहीं खोल सकता. \n"
 "आप इस फ़ाइल को ऑडेसिटी में रिकॉर्ड कर, या ऑडियो सीडी बनाकर सीडी ट्रैक को एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदल कर प्रयास करें."
 
-#: import/Import.cpp:610
+#: import/Import.cpp:611
 #, c-format
 msgid ""
 "\"%s\" is a RealPlayer media file. \n"
@@ -9063,7 +9091,7 @@ msgstr ""
 "ऑडेसिटी इस मालिकाना प्रारूप को नहीं खोल सकता. \n"
 "आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:616
+#: import/Import.cpp:617
 #, c-format
 msgid ""
 "\"%s\" is a notes-based file, not an audio file. \n"
@@ -9075,7 +9103,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल नहीं खोल सकता. \n"
 "आप इसे ऑडियो फ़ाइल, जैसे WAV या AIFF में बदलने का प्रयास करें और तब ऑडेसिटी में आयात या रिकॉर्ड करें."
 
-#: import/Import.cpp:622
+#: import/Import.cpp:623
 #, c-format
 msgid ""
 "\"%s\" is a Musepack audio file. \n"
@@ -9088,7 +9116,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "यदि आपको लगता है कि यह एक एमपी3 फ़ाइल है, तो नाम बदलकर अंत में \".mp3\" करें और इसे  फिर से आयात करने की कोशिश करें. नहीं तो आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:628
+#: import/Import.cpp:629
 #, c-format
 msgid ""
 "\"%s\" is a Wavpack audio file. \n"
@@ -9099,7 +9127,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:634
+#: import/Import.cpp:635
 #, c-format
 msgid ""
 "\"%s\" is a Dolby Digital audio file. \n"
@@ -9110,7 +9138,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:640
+#: import/Import.cpp:641
 #, c-format
 msgid ""
 "\"%s\" is an Ogg Speex audio file. \n"
@@ -9121,7 +9149,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "आपको इसे एक समर्थित ऑडियो प्रारूप, जैसे WAV या AIFF में बदलने की जरूरत है."
 
-#: import/Import.cpp:646
+#: import/Import.cpp:647
 #, c-format
 msgid ""
 "\"%s\" is a video file. \n"
@@ -9132,7 +9160,7 @@ msgstr ""
 "ऑडेसिटी इस प्रकार की फ़ाइल को नहीं खोल सकता. \n"
 "आपको इससे एक समर्थित ऑडियो प्रारूप , जैसे WAV या AIFF में ऑडियो निकालने की जरूरत है."
 
-#: import/Import.cpp:651
+#: import/Import.cpp:652
 #, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
@@ -9141,7 +9169,7 @@ msgstr ""
 "ऑडेसिटी '%s' फ़ाइल के प्रकार को नहीं पहचान सका.\n"
 "यदि यह असंपीड़ित है, तो \"आयात Raw\" का प्रयोग कर आयात की कोशिश करें."
 
-#: import/Import.cpp:669
+#: import/Import.cpp:670
 #, c-format
 msgid ""
 "Audacity recognized the type of the file '%s'.\n"
@@ -9158,7 +9186,7 @@ msgstr ""
 msgid "FFmpeg-compatible files"
 msgstr "FFmpeg-compatible फ़ाइलें"
 
-#: import/ImportFFmpeg.cpp:442
+#: import/ImportFFmpeg.cpp:443
 #, c-format
 msgid "Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
 msgstr "सूचकांक[%02x] कोडेक[%S], भाषा[%S], बिटदर [%S], चैनल[%d], अवधि[%d]"
@@ -9250,7 +9278,7 @@ msgstr "आंतरिक लॉज़िक त्रुटि"
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, तथा अन्य असंपीड़ित प्रकार"
 
-#: import/ImportPCM.cpp:242
+#: import/ImportPCM.cpp:243
 #, c-format
 msgid ""
 "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
@@ -9271,31 +9299,31 @@ msgstr ""
 "\n"
 "आप वर्तमान फ़ाइल (लों)का आयात किस प्रकार करना चाहते हैं ?"
 
-#: import/ImportPCM.cpp:252
+#: import/ImportPCM.cpp:253
 msgid "copy in"
 msgstr "इसमें प्रतिलिपी बनाएं"
 
-#: import/ImportPCM.cpp:252
+#: import/ImportPCM.cpp:253
 msgid "read directly"
 msgstr "सीधे पढ़ें"
 
-#: import/ImportPCM.cpp:257
+#: import/ImportPCM.cpp:259
 msgid "Choose an import method"
 msgstr "आयात की विधि चुनें"
 
-#: import/ImportPCM.cpp:260
+#: import/ImportPCM.cpp:263
 msgid "Make a &copy of the files before editing (safer)"
 msgstr "संपादन से पहले फ़ाइलों की प्रतिलिपि बनाएँ (सुरक्षित )"
 
-#: import/ImportPCM.cpp:263
+#: import/ImportPCM.cpp:267
 msgid "Read the files &directly from the original (faster)"
 msgstr "सीधे (&d) मूल फ़ाइल से पढ़ें(तेज )"
 
-#: import/ImportPCM.cpp:266
+#: import/ImportPCM.cpp:271
 msgid "Don't &warn again and always use my choice above"
 msgstr "हमेशा मेरी पूर्व पसंद का उपयोग करें और फिर से चेतावनी न दें"
 
-#: import/ImportPlugin.h:141
+#: import/ImportPlugin.h:142
 #: import/ImportRaw.cpp:210
 #, c-format
 msgid "Importing %s"
@@ -9488,7 +9516,7 @@ msgid "2 (Stereo)"
 msgstr "2 (स्टिरियो)"
 
 #: prefs/DirectoriesPrefs.cpp:52
-#: prefs/PrefsDialog.cpp:299
+#: prefs/PrefsDialog.cpp:300
 msgid "Directories"
 msgstr "निर्देशिकाएं"
 
@@ -9518,7 +9546,7 @@ msgstr "रैम का प्रयोग करके बजाना और/
 
 #: prefs/DirectoriesPrefs.cpp:113
 msgid "Mi&nimum Free Memory (MB):"
-msgstr "न्यू&नतम खाली मेमोरी (MB):"
+msgstr "न्यूनतम खाली मेमोरी (MB):"
 
 #: prefs/DirectoriesPrefs.cpp:120
 msgid ""
@@ -9534,26 +9562,26 @@ msgstr "एक अस्थायी निर्देशिका रखने
 msgid "unavailable - above location doesn't exist"
 msgstr "अनुपलब्ध - उपर्युक्त स्थान अस्तित्व में नहीं है"
 
-#: prefs/DirectoriesPrefs.cpp:195
+#: prefs/DirectoriesPrefs.cpp:196
 #, c-format
 msgid "Directory %s does not exist. Create it?"
 msgstr "निर्देशिका %s विद्यमान नहीं है. निर्माण करूँ?"
 
-#: prefs/DirectoriesPrefs.cpp:197
+#: prefs/DirectoriesPrefs.cpp:198
 msgid "New Temporary Directory"
 msgstr "नई अस्थायी निर्देशिका(फ़ोल्डर)"
 
-#: prefs/DirectoriesPrefs.cpp:215
+#: prefs/DirectoriesPrefs.cpp:216
 #, c-format
 msgid "Directory %s is not writable"
 msgstr "निर्देशिका %s लेख्य नहीं है  "
 
-#: prefs/DirectoriesPrefs.cpp:229
+#: prefs/DirectoriesPrefs.cpp:230
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "अस्थायी निर्देशिका में परिवर्तन ऑडेसिटी पुनः आरंभ होने तक लागू नहीं होगा"
 
 # Temp डायरेक्टरी अपडेट
-#: prefs/DirectoriesPrefs.cpp:230
+#: prefs/DirectoriesPrefs.cpp:231
 msgid "Temp Directory Update"
 msgstr "Temp डायरेक्टरी अद्यतन"
 
@@ -9602,8 +9630,8 @@ msgid "Extended Import"
 msgstr "अतिरिक्त आयात"
 
 #: prefs/ExtImportPrefs.cpp:92
-msgid "Attempt to use filter in OpenFile dialog first"
-msgstr "फ़ाईल खोलें संवाद में पहली बार फिल्टर के उपयोग का प्रयास करें"
+msgid "A&ttempt to use filter in OpenFile dialog first"
+msgstr "फ़ाईल खोलें संवाद में पहली बार फिल्टर के उपयोग का प्रयास करें (&t)"
 
 #: prefs/ExtImportPrefs.cpp:95
 msgid "Rules to choose import filters"
@@ -9786,23 +9814,15 @@ msgstr "विशिष्ट मिश्रण का उपयोग कर�
 msgid "S&how Metadata Editor prior to export step"
 msgstr "निर्यात करने से पहले मेटाडेटा संपादक दिखाएं(&h)"
 
-#: prefs/ImportExportPrefs.cpp:84
-msgid ""
-"Note: Export quality options can be chosen by clicking the Options\n"
-"button in the Export dialog."
-msgstr ""
-"ध्यान दें: निर्यात गुणवत्ता के विकल्पों को निर्यात डायलॉग के विकल्प बटन पर क्लिक\n"
-"करके चुना जा सकता है."
-
-#: prefs/ImportExportPrefs.cpp:88
+#: prefs/ImportExportPrefs.cpp:90
 msgid "When exporting track to an Allegro (.gro) file"
 msgstr "ट्रैकों को एक Allegro (.gro) फ़ाइल में निर्यात करते समय"
 
-#: prefs/ImportExportPrefs.cpp:92
+#: prefs/ImportExportPrefs.cpp:94
 msgid "Represent times and durations in &seconds"
 msgstr "सेकेंड मे समय व अवधि बतलाता है"
 
-#: prefs/ImportExportPrefs.cpp:94
+#: prefs/ImportExportPrefs.cpp:96
 msgid "Represent times and durations in &beats"
 msgstr "ताल का समय और अवधि बतलाता है"
 
@@ -9866,19 +9886,19 @@ msgstr "दोहराएं"
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "ऑडेसिटी लघुकुंजी युक्त एक XML फ़ाइल चुनें..."
 
-#: prefs/KeyConfigPrefs.cpp:300
+#: prefs/KeyConfigPrefs.cpp:301
 msgid "Error Importing Keyboard Shortcuts"
 msgstr "लघु कुंजी आयात में त्रुटि"
 
-#: prefs/KeyConfigPrefs.cpp:313
+#: prefs/KeyConfigPrefs.cpp:314
 msgid "Export Keyboard Shortcuts As:"
 msgstr "लघु-कुंजी सूची निर्यात इस नाम से:"
 
-#: prefs/KeyConfigPrefs.cpp:339
+#: prefs/KeyConfigPrefs.cpp:341
 msgid "Error Exporting Keyboard Shortcuts"
 msgstr "लघु कुंजी निर्यात में त्रुटि"
 
-#: prefs/KeyConfigPrefs.cpp:423
+#: prefs/KeyConfigPrefs.cpp:425
 #, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
@@ -9946,7 +9966,7 @@ msgstr "डाउनलोड(&n)"
 msgid "Allow &background on-demand loading"
 msgstr "मांग होने पर पृष्ठभूमि में लोड होने की अनुमति दें"
 
-#: prefs/LibraryPrefs.cpp:195
+#: prefs/LibraryPrefs.cpp:197
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -9984,8 +10004,8 @@ msgid "Modules"
 msgstr "मोड्यूल्स"
 
 #: prefs/ModulePrefs.cpp:55
-msgid "Enable these Modules (if present)"
-msgstr "इन मॉड्यूल को सक्षम करें (यदि वर्तमान हो)"
+msgid "Enable these Modules (if present), next time Audacity is started"
+msgstr "इन मॉड्यूल को सक्षम करें (यदि वर्तमान हो), जब अगली बार Audacity चलाएं"
 
 #: prefs/ModulePrefs.cpp:57
 msgid ""
@@ -9996,16 +10016,16 @@ msgstr ""
 "और आपको पता है आप क्या कर रहे हैं."
 
 #: prefs/ModulePrefs.cpp:58
-msgid "mod-script-pipe"
-msgstr "\"मॉड-स्क्रिप्ट-पाइप"
+msgid "mod-&script-pipe"
+msgstr "मॉड-स्क्रिप्ट-पाइप"
 
 #: prefs/ModulePrefs.cpp:61
-msgid "mod-nyq-bench"
-msgstr "मॉड-nyq-बेंच"
+msgid "mod-&nyq-bench"
+msgstr "मॉड-&nyq-बेंच"
 
 #: prefs/ModulePrefs.cpp:64
-msgid "mod-track-panel"
-msgstr "मॉड-ट्रैक-पैनल"
+msgid "mod-&track-panel"
+msgstr "मॉड-ट्रैक-पैनल (&t)"
 
 #: prefs/MousePrefs.cpp:57
 msgid "Mouse"
@@ -10320,39 +10340,39 @@ msgstr "तराशा"
 msgid "Other..."
 msgstr "अन्य..."
 
-#: prefs/QualityPrefs.cpp:125
+#: prefs/QualityPrefs.cpp:131
 msgid "Sampling"
 msgstr "सैम्पलिंग"
 
-#: prefs/QualityPrefs.cpp:129
+#: prefs/QualityPrefs.cpp:135
 msgid "Default Sample &Rate:"
 msgstr "डिफ़ाल्ट नमूना दर :(&R)"
 
-#: prefs/QualityPrefs.cpp:154
+#: prefs/QualityPrefs.cpp:160
 msgid "Default Sample &Format:"
 msgstr "डिफ़ाल्ट नमूना स्वरुप :(&F)"
 
-#: prefs/QualityPrefs.cpp:165
+#: prefs/QualityPrefs.cpp:171
 msgid "Real-time Conversion"
 msgstr "वास्तविक-समय में बदलना"
 
-#: prefs/QualityPrefs.cpp:171
+#: prefs/QualityPrefs.cpp:177
 msgid "Sample Rate Con&verter:"
 msgstr "नमूना दर परिवर्तक:"
 
-#: prefs/QualityPrefs.cpp:178
+#: prefs/QualityPrefs.cpp:184
 msgid "&Dither:"
 msgstr "डिथर(&D):"
 
-#: prefs/QualityPrefs.cpp:189
+#: prefs/QualityPrefs.cpp:195
 msgid "High-quality Conversion"
 msgstr "ऊच्च-गुणवत्ता परिवर्तन"
 
-#: prefs/QualityPrefs.cpp:193
+#: prefs/QualityPrefs.cpp:199
 msgid "Sample Rate Conver&ter:"
 msgstr "नमूना दर परिवर्तक(&t):"
 
-#: prefs/QualityPrefs.cpp:200
+#: prefs/QualityPrefs.cpp:206
 msgid "Dit&her:"
 msgstr "डिथर:(&h)"
 
@@ -10758,7 +10778,7 @@ msgstr "बजाएं"
 
 #: toolbars/ControlToolBar.cpp:187
 #: toolbars/ControlToolBar.cpp:219
-#: widgets/ProgressDialog.cpp:1112
+#: widgets/ProgressDialog.cpp:1117
 msgid "Stop"
 msgstr "रोकें"
 
@@ -10792,24 +10812,20 @@ msgid "Recording not permitted"
 msgstr "ध्वन्यांकन की अनुमति नहीं है"
 
 #: toolbars/DeviceToolBar.cpp:102
-#: toolbars/DeviceToolBar.cpp:353
 msgid "Audio Host"
 msgstr "मेजबान आडियो"
 
 #. i18n-hint: (noun) It's the device used for output.
 #: toolbars/DeviceToolBar.cpp:117
-#: toolbars/DeviceToolBar.cpp:351
 msgid "Output Device"
 msgstr "आउटपुट उपकरण"
 
 #. i18n-hint: (noun) It's the device used for input.
 #: toolbars/DeviceToolBar.cpp:132
-#: toolbars/DeviceToolBar.cpp:352
 msgid "Input Device"
 msgstr "स्रोत उपकरण"
 
 #: toolbars/DeviceToolBar.cpp:139
-#: toolbars/DeviceToolBar.cpp:354
 msgid "Input Channels"
 msgstr "इनपुट चैनल"
 
@@ -10821,23 +10837,23 @@ msgstr "1 (मोनो) इनपुट चैनल"
 msgid "2 (Stereo) Input Channels"
 msgstr "2 (स्टिरियो) इनपुट चैनल"
 
-#: toolbars/DeviceToolBar.cpp:742
+#: toolbars/DeviceToolBar.cpp:745
 msgid "Select Input Device"
 msgstr "इनपुट यंत्र चुनें"
 
-#: toolbars/DeviceToolBar.cpp:746
+#: toolbars/DeviceToolBar.cpp:749
 msgid "Select Output Device"
 msgstr "आउटपुट यंत्र चुनें"
 
-#: toolbars/DeviceToolBar.cpp:750
+#: toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "ऑडियो मेजबान चुनें"
 
-#: toolbars/DeviceToolBar.cpp:754
+#: toolbars/DeviceToolBar.cpp:757
 msgid "Select Input Channels"
 msgstr "इनपुट चैनलों को चुनें"
 
-#: toolbars/DeviceToolBar.cpp:760
+#: toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
 msgstr "यंत्र की जानकारी उपलब्ध नहीं है."
 
@@ -10906,14 +10922,15 @@ msgid "Meter-Record"
 msgstr "मीटर-ध्वन्यांकन"
 
 #: toolbars/MeterToolBar.cpp:129
-msgid "Output level meter"
-msgstr "आउटपुट स्तर मीटर"
+msgid "Output Level"
+msgstr "आउटपुट स्तर"
 
 #: toolbars/MeterToolBar.cpp:130
-msgid "Input level meter - click to monitor input"
-msgstr "इनपुट स्तर मीटर -  इनपुट की निगरानी के लिए क्लिक करें"
+msgid "Input Level (Click to monitor.)"
+msgstr "इनपुट स्तर ( निगरानी के लिए क्लिक करें.)"
 
 #: toolbars/MixerToolBar.cpp:89
+#: toolbars/MixerToolBar.cpp:294
 msgid "Output Volume"
 msgstr "आउटपुट वाल्यूम"
 
@@ -10922,6 +10939,7 @@ msgid "Slider Output"
 msgstr "स्लाइडर आउटपुट"
 
 #: toolbars/MixerToolBar.cpp:100
+#: toolbars/MixerToolBar.cpp:286
 msgid "Input Volume"
 msgstr "इनपुट वाल्यूम"
 
@@ -10929,26 +10947,16 @@ msgstr "इनपुट वाल्यूम"
 msgid "Slider Input"
 msgstr "स्लाईडर इनपुट"
 
-# "इनपुट स्तर स्लाइडर"
-#: toolbars/MixerToolBar.cpp:286
-msgid "Input Volume Slider"
-msgstr "इनपुट वॉल्यूम स्लाइडर"
-
 #: toolbars/MixerToolBar.cpp:290
-msgid "Cannot control input volume; use system mixer."
-msgstr "इनपुट स्तर का नियंत्रण नहीं हो सकता; सिस्टम मिक्सर का प्रयोग करें."
-
-# "आउटपुट स्तर स्लाइडर"
-#: toolbars/MixerToolBar.cpp:294
-msgid "Output Volume Slider"
-msgstr "आउटपुट वॉल्यूम स्लाइडर"
+msgid "Input Volume (Unavailable; use system mixer.)"
+msgstr "इनपुट वॉल्यूम (अनुपलब्ध; सिस्टम मिक्सर का प्रयोग करें.)"
 
 #: toolbars/MixerToolBar.cpp:298
-msgid "Cannot control output volume; use system mixer."
-msgstr "आउटपुट स्तर नियंत्रण संभव नहीं; सिस्टम मिक्सर का प्रयोग करें."
+msgid "Output Volume (Unavailable; use system mixer.)"
+msgstr "आउटपुट वॉल्यूम (अनुपलब्ध; सिस्टम मिक्सर का प्रयोग करें.)"
 
 #: toolbars/SelectionBar.cpp:86
-#: toolbars/SelectionBar.cpp:289
+#: toolbars/SelectionBar.cpp:292
 msgid "Selection"
 msgstr "चयन"
 
@@ -10958,13 +10966,13 @@ msgid "Project Rate (Hz):"
 msgstr "परियोजना दर (Hz):"
 
 #: toolbars/SelectionBar.cpp:144
-#: toolbars/SelectionBar.cpp:252
+#: toolbars/SelectionBar.cpp:255
 msgid "Selection Start:"
 msgstr "चयन आरंभ:"
 
 #: toolbars/SelectionBar.cpp:158
 #: toolbars/SelectionBar.cpp:159
-#: toolbars/SelectionBar.cpp:258
+#: toolbars/SelectionBar.cpp:261
 msgid "Length"
 msgstr "लंबाई"
 
@@ -10973,7 +10981,7 @@ msgid "hidden"
 msgstr "अदृश्य"
 
 #: toolbars/SelectionBar.cpp:179
-#: toolbars/SelectionBar.cpp:269
+#: toolbars/SelectionBar.cpp:272
 msgid "Audio Position:"
 msgstr "आडियो स्थिति:"
 
@@ -10985,15 +10993,21 @@ msgstr "आडियो स्थिति:"
 msgid "Snap To"
 msgstr "साथ जोड़ें"
 
-#: toolbars/SelectionBar.cpp:257
+#: toolbars/SelectionBar.cpp:241
+#: toolbars/SelectionBar.cpp:372
+#, c-format
+msgid "Snap Clicks/Selections to %s"
+msgstr " क्लिकों/चयनों को %s से मिलाएं"
+
+#: toolbars/SelectionBar.cpp:260
 msgid "Selection "
 msgstr "चयन "
 
-#: toolbars/SelectionBar.cpp:337
+#: toolbars/SelectionBar.cpp:341
 msgid "Selection Length"
 msgstr "चयन लंबाई"
 
-#: toolbars/SelectionBar.cpp:345
+#: toolbars/SelectionBar.cpp:349
 msgid "Selection End"
 msgstr "चयन समाप्त"
 
@@ -11045,29 +11059,29 @@ msgstr "विभिन्न औजार मोड"
 msgid "Slide Tool"
 msgstr "स्लाईड औजार"
 
-#: toolbars/TranscriptionToolBar.cpp:170
+#: toolbars/TranscriptionToolBar.cpp:171
 msgid "Play at selected speed"
 msgstr "बजाएं-चयनित गति पर"
 
-#: toolbars/TranscriptionToolBar.cpp:176
-#: toolbars/TranscriptionToolBar.cpp:181
-#: toolbars/TranscriptionToolBar.cpp:266
+#: toolbars/TranscriptionToolBar.cpp:177
+#: toolbars/TranscriptionToolBar.cpp:182
+#: toolbars/TranscriptionToolBar.cpp:267
 msgid "Playback Speed"
 msgstr "बजाने की गति"
 
-#: toolbars/TranscriptionToolBar.cpp:265
+#: toolbars/TranscriptionToolBar.cpp:266
 msgid "Play-at-speed"
 msgstr "इस-गति-पर-बजाएं"
 
-#: widgets/AButton.cpp:300
+#: widgets/AButton.cpp:304
 msgid " (disabled)"
 msgstr " (निष्क्रीय)"
 
-#: widgets/AButton.cpp:458
+#: widgets/AButton.cpp:477
 msgid "Press"
 msgstr "दबाएं"
 
-#: widgets/AButton.cpp:537
+#: widgets/AButton.cpp:556
 msgid "Button"
 msgstr "बटन"
 
@@ -11117,7 +11131,7 @@ msgstr "आगे"
 msgid "Backwards"
 msgstr "पीछे"
 
-#: widgets/ErrorDialog.cpp:413
+#: widgets/ErrorDialog.cpp:414
 msgid "Help on the Internet"
 msgstr "इंटरनेट पर मदद"
 
@@ -11196,27 +11210,27 @@ msgstr "मीटर रिफ्रेश दर प्रति सेके�
 msgid "Meter Preferences"
 msgstr "मीटर - पसंद"
 
-#: widgets/MultiDialog.cpp:93
+#: widgets/MultiDialog.cpp:94
 msgid " Please select an action "
 msgstr " कृपया एक कार्य का चयन करें "
 
-#: widgets/MultiDialog.cpp:97
+#: widgets/MultiDialog.cpp:98
 msgid "Please select an action"
 msgstr "कृपया एक कार्य का चयन करें"
 
-#: widgets/MultiDialog.cpp:104
+#: widgets/MultiDialog.cpp:105
 msgid "Show Log for Details"
 msgstr "विस्तृत जानकारी के लिए लॉग दिखाएँ"
 
-#: widgets/ProgressDialog.cpp:1071
+#: widgets/ProgressDialog.cpp:1072
 msgid "Elapsed Time:"
-msgstr "बीता हुआ समय :"
+msgstr "बीता समय :"
 
-#: widgets/ProgressDialog.cpp:1091
+#: widgets/ProgressDialog.cpp:1094
 msgid "Remaining Time:"
 msgstr "शेष समय :"
 
-#: widgets/ProgressDialog.cpp:1119
+#: widgets/ProgressDialog.cpp:1124
 msgid "Cancel"
 msgstr "निरस्त"
 
@@ -11264,12 +11278,6 @@ msgstr "0100 दिन 024 घं 060 मि 060 से"
 #: widgets/TimeTextCtrl.cpp:305
 msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 घं 060 मि 060.0100 से"
-
-#. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
-#: widgets/TimeTextCtrl.cpp:308
-msgid "hh:mm:ss + milliseconds"
-msgstr "घंटे:मिनट:सेकेंड + मिलिसेकेंड"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -11429,10 +11437,10 @@ msgid "01000,01000 frames|75"
 msgstr "01000,01000 फ़्रेम्स|75"
 
 #: widgets/TimeTextCtrl.cpp:498
-msgid "Use right mouse button or context key to change format"
-msgstr "स्वरूप बदलने के लिए दाँए माउस बटन या संदर्भ कुंजी का प्रयोग करें"
+msgid "(Use context menu to change format.)"
+msgstr "(स्वरूप बदलने के लिए संदर्भ मेनू का प्रयोग करें)"
 
-#: widgets/TimeTextCtrl.cpp:1630
+#: widgets/TimeTextCtrl.cpp:1633
 msgid "centiseconds"
 msgstr "सेंटी-सेकेंड"
 
@@ -11469,18 +11477,39 @@ msgstr "फ़ाइल बंद करने में त्रुटि"
 msgid "Error Writing to File"
 msgstr "फ़ाइल में लिखने में त्रुटि"
 
+#~ msgid "S&ort tracks"
+#~ msgstr "ट्रैक छाँटें"
+
+#~ msgid "Libresample by Dominic Mazzoni and Julius Smith"
+#~ msgstr "डोमिनिक Mazzoni और जूलियस स्मिथ द्वारा Libresample"
+
+#~ msgid "Libsamplerate by Erik de Castro Lopo"
+#~ msgstr "Libsamplerate सौजन्य Erik de Castro Lopo"
+
+#~ msgid ""
+#~ "Note: Export quality options can be chosen by clicking the Options\n"
+#~ "button in the Export dialog."
+#~ msgstr ""
+#~ "ध्यान दें: निर्यात गुणवत्ता के विकल्पों को निर्यात डायलॉग के विकल्प बटन पर क्लिक\n"
+#~ "करके चुना जा सकता है."
+
+#~ msgid "Output level meter"
+#~ msgstr "आउटपुट स्तर मीटर"
+
+# "इनपुट स्तर स्लाइडर"
+#~ msgid "Input Volume Slider"
+#~ msgstr "इनपुट वॉल्यूम स्लाइडर"
+# "आउटपुट स्तर स्लाइडर"
+#~ msgid "Output Volume Slider"
+#~ msgstr "आउटपुट वॉल्यूम स्लाइडर"
 #~ msgid "&Retain labels when they define the edge of a selection"
 #~ msgstr "नामपट्ट यथावत रखें, जब वे एक चयन के छोर को परिभाषित करते हैं"
-
 #~ msgid "Spike Cleaner..."
 #~ msgstr "स्पाइक हटाना..."
-
 #~ msgid "Applying Spike Cleaner..."
 #~ msgstr "स्पाइक निकालते हुए..."
-
 #~ msgid "Options"
 #~ msgstr "विकल्प"
-
 #, fuzzy
 #~ msgid "Dynamic Transient Sharpening"
 #~ msgstr "गतिशील रेंज कंप्रेसर"
