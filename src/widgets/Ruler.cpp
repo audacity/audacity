@@ -1523,12 +1523,12 @@ RulerPanel::~RulerPanel()
 {
 }
 
-void RulerPanel::OnErase(wxEraseEvent &evt)
+void RulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 {
    // Ignore it to prevent flashing
 }
 
-void RulerPanel::OnPaint(wxPaintEvent &evt)
+void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
 
@@ -1540,7 +1540,7 @@ void RulerPanel::OnPaint(wxPaintEvent &evt)
    ruler.Draw(dc);
 }
 
-void RulerPanel::OnSize(wxSizeEvent &evt)
+void RulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    Refresh(false);
 }
@@ -1622,12 +1622,12 @@ AdornedRulerPanel::~AdornedRulerPanel()
    delete mBuffer;
 }
 
-void AdornedRulerPanel::OnErase(wxEraseEvent &evt)
+void AdornedRulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 {
    // Ignore it to prevent flashing
 }
 
-void AdornedRulerPanel::OnPaint(wxPaintEvent &evt)
+void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
 #if defined(__WXMAC__)
    wxPaintDC dc(this);
@@ -1657,7 +1657,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent &evt)
    DoDrawPlayRegion(&dc);
 }
 
-void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
+void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    mOuter = GetClientRect();
 
@@ -1812,7 +1812,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
 }
 
-void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent &evt)
+void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.m_x = mLastMouseX;

@@ -66,12 +66,12 @@ class AUDACITY_DLL_API XMLTagHandler {
 
    // This method will be called when a closing tag is encountered.
    // It is optional to override this method.
-   virtual void HandleXMLEndTag(const wxChar *tag) {}
+   virtual void HandleXMLEndTag(const wxChar * WXUNUSED(tag)) {}
 
    // This method will be called when element content has been
    // encountered.
    // It is optional to override this method.
-   virtual void HandleXMLContent(const wxString & content) {}
+   virtual void HandleXMLContent(const wxString & WXUNUSED(content)) {}
 
    // If the XML document has children of your tag, this method
    // should be called.  Typically you should construct a new
@@ -89,15 +89,4 @@ class AUDACITY_DLL_API XMLTagHandler {
 };
 
 #endif // define __AUDACITY_XML_TAG_HANDLER__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 7c9a9baa-c546-42de-afaa-d87e5e13bf5a
 

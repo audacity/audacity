@@ -157,17 +157,17 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    // separate from the Track.
    DirManager* GetDirManager() const { return mDirManager; }
 
-   virtual bool Cut  (double t0, double t1, Track ** dest) {return false;}
-   virtual bool Copy (double t0, double t1, Track ** dest) {return false;}
-   virtual bool Clear(double t0, double t1) {return false;}
-   virtual bool Paste(double t, Track * src) {return false;}
+   virtual bool Cut  (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
+   virtual bool Copy (double WXUNUSED(t0), double WXUNUSED(t1), Track ** WXUNUSED(dest)) {return false;}
+   virtual bool Clear(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
+   virtual bool Paste(double WXUNUSED(t), Track * WXUNUSED(src)) {return false;}
 
    // This can be used to adjust a sync-lock selected track when the selection
    // is replaced by one of a different length.
    virtual bool SyncLockAdjust(double oldT1, double newT1);
 
-   virtual bool Silence(double t0, double t1) {return false;}
-   virtual bool InsertSilence(double t, double len) {return false;}
+   virtual bool Silence(double WXUNUSED(t0), double WXUNUSED(t1)) {return false;}
+   virtual bool InsertSilence(double WXUNUSED(t), double WXUNUSED(len)) {return false;}
 
    virtual int GetKind() const { return None; }
 
@@ -446,15 +446,3 @@ class AUDACITY_DLL_API TrackFactory
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 2214d773-8e6c-4117-a03d-36c9722ace52
-

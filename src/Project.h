@@ -106,7 +106,7 @@ class ImportXMLTagHandler : public XMLTagHandler
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; };
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag) { return NULL; };
+   virtual XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; };
    
    // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack. 
    // <import> tags are instead written by AudacityProject::WriteXML.

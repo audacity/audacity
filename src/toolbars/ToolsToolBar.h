@@ -66,7 +66,7 @@ class ToolsToolBar:public ToolBar {
    const wxChar * GetMessageForTool( int ToolNumber );
 
    void Populate();
-   virtual void Repaint(wxDC *dc) {};
+   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
    virtual void EnableDisableButtons() {};
 
  private:
@@ -87,13 +87,3 @@ class ToolsToolBar:public ToolBar {
 
 #endif
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: bb2858b8-2c70-48df-9d72-bcdef94be4e3

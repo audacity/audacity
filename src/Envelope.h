@@ -65,7 +65,7 @@ public:
          return false;
    }
 
-   XMLTagHandler *HandleXMLChild(const wxChar *tag)
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))
    {
       return NULL;
    }

@@ -51,7 +51,7 @@ class Resample
    /// tradeoff between speed and quality.  This lets you query
    /// the various methods available.
    static int GetNumMethods() { return 1; };
-   static wxString GetMethodName(int index) { return _("Resampling disabled."); };
+   static wxString GetMethodName(int WXUNUSED(index)) { return _("Resampling disabled."); };
 
    /// Audacity identifies two methods out of all of the choices:
    /// a Fast method intended for real-time audio I/O, and a Best
@@ -91,11 +91,11 @@ class Resample
     @param outBufferLen How big outBuffer is.
     @return Number of output samples created by this call
    */
-   virtual int Process(double  factor,
+   virtual int Process(double  WXUNUSED(factor),
                         float  *inBuffer,
                         int     inBufferLen,
-                        bool    lastFlag,
-                        int    *inBufferUsed,
+                        bool    WXUNUSED(lastFlag),
+                        int    * WXUNUSED(inBufferUsed),
                         float  *outBuffer,
                         int     outBufferLen) 
    {

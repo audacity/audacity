@@ -82,7 +82,7 @@ class TranscriptionToolBar:public ToolBar {
    virtual void OnSensitivitySlider(wxCommandEvent & event);
 
    virtual void Populate();
-   virtual void Repaint(wxDC *dc) {};
+   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
    virtual void EnableDisableButtons();
    virtual void UpdatePrefs();
 
@@ -135,15 +135,4 @@ class TranscriptionToolBar:public ToolBar {
 
 #define COMMAND_LINE_LOG_TRACE    TRUE
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ToDo
 

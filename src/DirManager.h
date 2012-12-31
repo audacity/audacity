@@ -104,8 +104,8 @@ class DirManager: public XMLTagHandler {
    void SetLoadingBlockLength(sampleCount len) { mLoadingBlockLen = len; }
    void SetMaxSamples(sampleCount max) { mMaxSamples = max; }
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) { return NULL; }
-   void WriteXML(XMLWriter &xmlFile) { wxASSERT(false); }; // This class only reads tags.
+   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
+   void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); }; // This class only reads tags.
    bool AssignFile(wxFileName &filename,wxString value,bool check);
 
    // Clean the temp dir. Note that now where we have auto recovery the temp

@@ -35,7 +35,7 @@ class DeviceToolBar:public ToolBar {
 
    void DeinitChildren();
    virtual void Populate();
-   virtual void Repaint(wxDC *dc) {};
+   virtual void Repaint(wxDC * WXUNUSED(dc)) {};
    virtual void EnableDisableButtons();
    virtual bool Layout();
    void OnFocus(wxFocusEvent &event);
@@ -82,15 +82,4 @@ class DeviceToolBar:public ToolBar {
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 3acba542-52ae-44eb-b0b3-e0645587b5c0
 
