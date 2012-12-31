@@ -27,6 +27,13 @@ class TimeTrack: public Track {
  public:
 
    TimeTrack(DirManager * projDirManager);
+   /** @brief Copy-Constructor - create a new TimeTrack:: which is an independent copy of the original
+    *
+    * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the
+    * Envelope:: and Ruler:: members in order to copy one to the other - unfortunately both lack a
+    * copy-constructor to encapsulate this.
+    * @param orig The original track to copy from
+    */
    TimeTrack(TimeTrack &orig);
 
    virtual ~TimeTrack();
@@ -102,6 +109,11 @@ class TimeTrack: public Track {
    bool             mDisplayLog;
    bool             mRescaleXMLValues; // needed for backward-compatibility with older project files
 
+   /** @brief Copy the metadata from another track but not the points
+    *
+    * Copies the Name, DefaultName, Range and Display data from the source track
+    * @param orig the TimeTrack to copy from
+    */
    void Init(const TimeTrack &orig);
    virtual Track *Duplicate();
 

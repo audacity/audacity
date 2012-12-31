@@ -59,8 +59,9 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
 TimeTrack::TimeTrack(TimeTrack &orig):
    Track(orig)
 {
-   Init(orig);
+   Init(orig);	// this copies the TimeTrack metadata (name, range, etc)
 
+   ///@TODO: Give Envelope:: a copy-constructor instead of this?
    mEnvelope = new Envelope();
    mEnvelope->SetTrackLen(1000000000.0);
    SetInterpolateLog(orig.GetInterpolateLog()); // this calls Envelope::SetInterpolateDB
@@ -70,6 +71,7 @@ TimeTrack::TimeTrack(TimeTrack &orig):
    mEnvelope->SetRange(orig.mEnvelope->GetMinValue(), orig.mEnvelope->GetMaxValue());
    mEnvelope->Paste(0.0, orig.mEnvelope);
 
+   ///@TODO: Give Ruler:: a copy-constructor instead of this?
    mRuler = new Ruler();
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
