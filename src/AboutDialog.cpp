@@ -268,7 +268,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       wxT("<p><br></center>") +
 	  
       _("<b>Audacity&reg;</b> software is copyright")+
-      wxT("&copy; 1999-2012 Audacity Team.<br>") +
+      wxT("&copy; 1999-2013 Audacity Team.<br>") +
      
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") + 
       wxT("</font></body></html>");
