@@ -34,7 +34,7 @@ class EffectBassTreble:public EffectSimpleMono {
    
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#LowpassPlugin"));
+      result.insert(wxT("http://lv2plug.in/ns/lv2core#EQPlugin"));
       return result;
    }
 
@@ -59,9 +59,9 @@ class EffectBassTreble:public EffectSimpleMono {
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
    
    float dB_bass, dB_treble, dB_gain;
- 
-   // filter parameters
-   float Pi, Slope;
+
+ private: 
+   /* filter co-efficent values */
    // Low shelf
    float xn1Bass, xn2Bass, yn1Bass, yn2Bass,
          wBass, swBass, cwBass, aBass, bBass,

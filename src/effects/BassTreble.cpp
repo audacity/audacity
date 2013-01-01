@@ -53,8 +53,7 @@ wxString EffectBassTreble::GetEffectDescription() {
 
 bool EffectBassTreble::NewTrackSimpleMono()
 {
-   Pi = 4 * atan(1.0);
-   Slope = 0.4;   // same slope for both filters
+   const float slope = 0.4;   // same slope for both filters
    //(re)initialise filter parameters for low shelf
    xn1Bass=0;
    xn2Bass=0;
@@ -66,11 +65,11 @@ bool EffectBassTreble::NewTrackSimpleMono()
    yn2Treble=0;
 
    // Compute coefficents of the low shelf biquand IIR filter
-   wBass = 2 * Pi * 250 / mCurRate;   // half gain frequency 250 Hz
+   wBass = 2 * M_PI * 250 / mCurRate;   // half gain frequency 250 Hz
    swBass = sin(wBass);
    cwBass = cos(wBass);
    aBass = exp(log(10.0) * dB_bass / 40);
-   bBass = sqrt((aBass * aBass + 1) / Slope - (pow((aBass - 1), 2)));
+   bBass = sqrt((aBass * aBass + 1) / slope - (pow((aBass - 1), 2)));
    //  Coefficients  for low shelf
    b0Bass = aBass * ((aBass + 1) - (aBass - 1) * cwBass + bBass * swBass);
    b1Bass = 2 * aBass * ((aBass - 1) - (aBass + 1) * cwBass);
@@ -80,11 +79,11 @@ bool EffectBassTreble::NewTrackSimpleMono()
    a2Bass = (aBass + 1) + (aBass - 1) * cwBass - bBass * swBass;
 
    // Compute coefficents of the high shelf biquand IIR filter
-   wTreble = 2 * Pi * 4000 / mCurRate;   // half gain frequency 4000 Hz
+   wTreble = 2 * M_PI * 4000 / mCurRate;   // half gain frequency 4000 Hz
    swTreble = sin(wTreble);
    cwTreble = cos(wTreble);
    aTreble = exp(log(10.0) * dB_treble / 40);
-   bTreble = sqrt((aTreble * aTreble + 1) / Slope - (pow((aTreble - 1), 2)));
+   bTreble = sqrt((aTreble * aTreble + 1) / slope - (pow((aTreble - 1), 2)));
    //  Coefficients for high shelf
    b0Treble = aTreble * ((aTreble + 1) + (aTreble - 1) * cwTreble + bTreble * swTreble);
    b1Treble = -2 * aTreble * ((aTreble - 1) + (aTreble + 1) * cwTreble);
@@ -130,7 +129,7 @@ bool EffectBassTreble::ProcessSimpleMono(float *buffer, sampleCount len)
 
    float out, in = 0;
 
-   for (int i = 0; i < len; i++) {
+   for (sampleCount i = 0; i < len; i++) {
       in = buffer[i];
       // Bass filter
       out = (b0Bass * in + b1Bass * xn1Bass + b2Bass * xn2Bass -
@@ -147,6 +146,7 @@ bool EffectBassTreble::ProcessSimpleMono(float *buffer, sampleCount len)
       xn1Treble = in;
       yn2Treble = yn1Treble;
       yn1Treble = out;
+      // Gain control
       buffer[i] = pow(10.0, dB_gain / 20.0) * out;
    }
 
@@ -268,7 +268,7 @@ bool BassTrebleDialog::TransferDataFromWindow()
 
 // handler implementations for BassTrebleDialog
 
-void BassTrebleDialog::OnBassText(wxCommandEvent & event)
+void BassTrebleDialog::OnBassText(wxCommandEvent & WXUNUSED(event))
 {
    long val;
 
@@ -276,7 +276,7 @@ void BassTrebleDialog::OnBassText(wxCommandEvent & event)
    mBassS->SetValue(TrapLong(val, BASS_MIN, BASS_MAX));
 }
 
-void BassTrebleDialog::OnTrebleText(wxCommandEvent & event)
+void BassTrebleDialog::OnTrebleText(wxCommandEvent & WXUNUSED(event))
 {
    long val;
 
@@ -284,7 +284,7 @@ void BassTrebleDialog::OnTrebleText(wxCommandEvent & event)
    mTrebleS->SetValue(TrapLong(val, TREBLE_MIN, TREBLE_MAX));
 }
 
-void BassTrebleDialog::OnGainText(wxCommandEvent & event)
+void BassTrebleDialog::OnGainText(wxCommandEvent & WXUNUSED(event))
 {
    long val;
 
@@ -292,22 +292,22 @@ void BassTrebleDialog::OnGainText(wxCommandEvent & event)
    mGainS->SetValue(TrapLong(val, GAIN_MIN, GAIN_MAX));
 }
 
-void BassTrebleDialog::OnBassSlider(wxCommandEvent & event)
+void BassTrebleDialog::OnBassSlider(wxCommandEvent & WXUNUSED(event))
 {
    mBassT->SetValue(wxString::Format(wxT("%d"), mBassS->GetValue()));
 }
 
-void BassTrebleDialog::OnTrebleSlider(wxCommandEvent & event)
+void BassTrebleDialog::OnTrebleSlider(wxCommandEvent & WXUNUSED(event))
 {
    mTrebleT->SetValue(wxString::Format(wxT("%d"), mTrebleS->GetValue()));
 }
 
-void BassTrebleDialog::OnGainSlider(wxCommandEvent & event)
+void BassTrebleDialog::OnGainSlider(wxCommandEvent & WXUNUSED(event))
 {
    mGainT->SetValue(wxString::Format(wxT("%d"), mGainS->GetValue()));
 }
 
-void BassTrebleDialog::OnPreview(wxCommandEvent & event)
+void BassTrebleDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
    mEffect->dB_bass = bass;
