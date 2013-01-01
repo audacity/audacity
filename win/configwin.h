@@ -27,8 +27,9 @@
 // libsoxr is used for constant-rate and var-rat resampling.
 // libsoxr currently our only const-rate resampler, so should always be #defined.
 #define USE_LIBSOXR 1
+
 // Should build only one of libsoxr, libresample, or libsamplerate for variable-rate resampling, 
-// but if more than one are defined, priority is libsoxr over libresample over libsamplerate.
+// but if more than one are defined, priority is libresample over libsamplerate over libsoxr.
 // We cannot release builds with libsamplerate, due to licensing. 
 // Standard configuration is to have only USE_LIBSOXR #defined.
 #undef USE_LIBRESAMPLE
