@@ -266,10 +266,25 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    bool CloseLock(); //similar to Lock but should be called when the project closes.
    bool Unlock();
 
-   // Utility functions to convert between times in seconds
-   // and sample positions
-
+   /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.
+    *
+    * This method will not give the correct results if used on a relative time (difference of two 
+    * times). Each absolute time must be converted and the numbers of samples differenced:
+    *    sampleCount start = track->TimeToLongSamples(t0);
+    *    sampleCount end = track->TimeToLongSamples(t1);
+    *    sampleCount len = (sampleCount)(end - start);
+    * NOT the likes of:
+    *    sampleCount len = track->TimeToLongSamples(t1 - t0);
+    * See also WaveTrack::TimeToLongSamples().
+    * @param t0 The time (floating point seconds) to convert
+    * @return The number of samples from the start of the track which lie before the given time.
+    */
    sampleCount TimeToLongSamples(double t0) const;
+   /** @brief Convert correctly between an number of samples and an (absolute) time in seconds.
+    *
+    * @param pos The time number of samples from the start of the track to convert.
+    * @return The time in seconds.
+    */
    double LongSamplesToTime(sampleCount pos);
 
    // Get access to the clips in the tracks. This is used by
