@@ -18,7 +18,7 @@
 #include "Amplify.h"
 // #include "AvcCompressor.h"
 #include "AutoDuck.h"
-#include "BassBoost.h"
+#include "BassTreble.h"
 #include "ChangeSpeed.h"
 #include "ClickRemoval.h"
 #include "Compressor.h"
@@ -240,7 +240,7 @@ void LoadEffects()
    // that it should be included in even the most basic of menus.
    
    em.RegisterEffect(new EffectAutoDuck());
-   em.RegisterEffect(new EffectBassBoost());
+   em.RegisterEffect(new EffectBassTreble());
    em.RegisterEffect(new EffectChangeSpeed());
 	#ifdef USE_SOUNDTOUCH
 		em.RegisterEffect(new EffectChangePitch());

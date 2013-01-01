@@ -3,6 +3,8 @@
   Audacity: A Digital Audio Editor
 
   Bass Boost
+  <As of 2012-12-31, this is deprecated in favor of BassTreble.*. 
+   Retained in code repository for reference.>
 
   Effect programming:
   Nasca Octavian Paul

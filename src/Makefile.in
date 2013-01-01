@@ -151,7 +151,7 @@ OBJS = \
 	effects/LoadEffects.o \
 	effects/Amplify.o \
 	effects/AutoDuck.o \
-	effects/BassBoost.o \
+	effects/BassTreble.o \
 	effects/ChangePitch.o \
 	effects/ChangeSpeed.o \
 	effects/ChangeTempo.o \
