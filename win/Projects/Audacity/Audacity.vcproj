@@ -1092,11 +1092,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\effects\BassBoost.cpp"
+				RelativePath="..\..\..\src\effects\BassTreble.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\effects\BassBoost.h"
+				RelativePath="..\..\..\src\effects\BassTreble.h"
 				>
 			</File>
 			<File
