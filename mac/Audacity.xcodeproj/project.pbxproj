@@ -1554,6 +1554,8 @@
 		EDAD326C1544452E009C6220 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
 		EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
 		EDAD326E1544452E009C6220 /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325715444372009C6220 /* sv.po */; };
+		EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD2431216934A6100D9DEC2 /* BassTreble.cpp */; };
+		EDD2431516934A6100D9DEC2 /* BassTreble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD2431216934A6100D9DEC2 /* BassTreble.cpp */; };
 		EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
 		EDE32600168243EF00C19E60 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
 		EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */; };
@@ -3479,6 +3481,8 @@
 		EDAD325515444371009C6220 /* sl.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sl.po; path = ../locale/sl.po; sourceTree = SOURCE_ROOT; };
 		EDAD325615444371009C6220 /* sr_RS.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sr_RS.po; path = ../locale/sr_RS.po; sourceTree = SOURCE_ROOT; };
 		EDAD325715444372009C6220 /* sv.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
+		EDD2431216934A6100D9DEC2 /* BassTreble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BassTreble.cpp; sourceTree = "<group>"; };
+		EDD2431316934A6100D9DEC2 /* BassTreble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassTreble.h; sourceTree = "<group>"; };
 		EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportExportCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		EDD94EDA103CB520000873F1 /* ImportExportCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportExportCommands.h; sourceTree = "<group>"; tabWidth = 3; };
 		EDE325FF168243EF00C19E60 /* vr32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vr32.c; sourceTree = "<group>"; };
@@ -4503,6 +4507,8 @@
 				28D65C710B97E54B000E001A /* AutoDuck.h */,
 				1790B00809883BFD008A330A /* BassBoost.cpp */,
 				1790B00909883BFD008A330A /* BassBoost.h */,
+				EDD2431216934A6100D9DEC2 /* BassTreble.cpp */,
+				EDD2431316934A6100D9DEC2 /* BassTreble.h */,
 				1790B00A09883BFD008A330A /* ChangeLength.cpp */,
 				1790B00B09883BFD008A330A /* ChangeLength.h */,
 				1790B00C09883BFD008A330A /* ChangePitch.cpp */,
@@ -8059,6 +8065,7 @@
 				82FF185313CF01A600C1B664 /* slide.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
+				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8517,6 +8524,7 @@
 				ED663CB516543647007F53A5 /* slide.cpp in Sources */,
 				ED663CB616543647007F53A5 /* Paulstretch.cpp in Sources */,
 				ED663CB716543647007F53A5 /* ModulePrefs.cpp in Sources */,
+				EDD2431516934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
