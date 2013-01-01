@@ -3193,8 +3193,7 @@ void DoSoftwarePlaythrough(const void *inputBuffer,
                            sampleFormat inputFormat,
                            int inputChannels,
                            float *outputBuffer,
-                           int len,
-                           float gain)
+                           int len)
 {
    float *tempBuffer = (float *)alloca(len * sizeof(float));
    int i, j;
@@ -3219,8 +3218,8 @@ void DoSoftwarePlaythrough(const void *inputBuffer,
 
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
-                          const PaStreamCallbackTimeInfo *timeInfo,
-                          const PaStreamCallbackFlags statusFlags, void *userData )
+                          const PaStreamCallbackTimeInfo * WXUNUSED(timeInfo),
+                          const PaStreamCallbackFlags WXUNUSED(statusFlags), void * WXUNUSED(userData) )
 {
    int numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
    int numPlaybackTracks = gAudioIO->mPlaybackTracks.GetCount();
@@ -3311,7 +3310,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          if (inputBuffer && gAudioIO->mSoftwarePlaythrough) {
             DoSoftwarePlaythrough(inputBuffer, gAudioIO->mCaptureFormat,
                                   numCaptureChannels,
-                                  (float *)outputBuffer, (int)framesPerBuffer, 1.0f);
+                                  (float *)outputBuffer, (int)framesPerBuffer);
          }
       }
 
@@ -3336,7 +3335,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          if (inputBuffer && gAudioIO->mSoftwarePlaythrough) {
             DoSoftwarePlaythrough(inputBuffer, gAudioIO->mCaptureFormat,
                                   numCaptureChannels,
-                                  (float *)outputBuffer, (int)framesPerBuffer, 1.0f);
+                                  (float *)outputBuffer, (int)framesPerBuffer);
          }
 
          // Copy the results to outputMeterFloats if necessary
@@ -3652,7 +3651,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          if (inputBuffer && gAudioIO->mSoftwarePlaythrough) {
             DoSoftwarePlaythrough(inputBuffer, gAudioIO->mCaptureFormat,
                                   numCaptureChannels,
-                                  (float *)outputBuffer, (int)framesPerBuffer, 1.0f);
+                                  (float *)outputBuffer, (int)framesPerBuffer);
          }
 
          // Copy the results to outputMeterFloats if necessary
