@@ -2516,6 +2516,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\plug-ins\StudioFadeOut.ny"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\plug-ins\tremolo.ny"
 				>
 			</File>
