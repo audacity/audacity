@@ -2396,10 +2396,9 @@ wxString AudioIO::GetDeviceInfo()
       }
 
       wxString name = DeviceName(info);
-      wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
       s << wxT("Device ID: ") << j << e;
       s << wxT("Device name: ") << name << e;
-      s << wxT("Host name: ") << hostName << e;
+      s << wxT("Host name: ") << HostName(info) << e;
       s << wxT("Input channels: ") << info->maxInputChannels << e;
       s << wxT("Output channels: ") << info->maxOutputChannels << e;
       s << wxT("Low Input Latency: ") << info->defaultLowInputLatency << e;
