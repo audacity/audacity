@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: audacity.eu\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-11-27 02:03+0000\n"
-"PO-Revision-Date: 2012-11-30 11:54-0000\n"
-"Last-Translator: gale\n"
+"PO-Revision-Date: 2013-01-02 23:48-0000\n"
+"Last-Translator: Xabier Aramendi (Azpidatziak)\n"
 "Language-Team: (EUS_Xabier Aramendi) <azpidatziak@gmail.com>\n"
 "Language: Basque (Basque Country-Navarre)\n"
 "MIME-Version: 1.0\n"
@@ -2041,7 +2041,7 @@ msgstr "E&zabatu"
 #. i18n-hint: (verb) Do a special kind of cut
 #: Menus.cpp:416
 msgid "Spl&it Cut"
-msgstr "&Banaketa Ebaki"
+msgstr "&Bananketa Ebaki"
 
 #. i18n-hint: (verb) Do a special kind of delete
 #: Menus.cpp:418
@@ -2462,7 +2462,7 @@ msgstr "&Mututu Bide Guztiak"
 #: Menus.cpp:798
 #: Menus.cpp:998
 msgid "&Unmute All Tracks"
-msgstr "&DesMututu Bide Guztiak"
+msgstr "&Desmututu Bide Guztiak"
 
 #: Menus.cpp:803
 #: Menus.cpp:1003
@@ -7814,7 +7814,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format.  "
 msgstr ""
-"Egitasmoaren lagin neurria (%d) eta bit neurria (%d kbps) bitarikoa ez dago\n"
+"Egitasmoaren lagin neurria (%d) eta bit neurria (%d kbs-ko) bitarikoa ez dago\n"
 "sostengaturik oraingo irteera agiri heuskarrian."
 
 #: export/ExportFFmpeg.cpp:836
@@ -8133,7 +8133,8 @@ msgstr ""
 "Konpresio maila\n"
 "Beharrezkoa FLAC-rekin\n"
 "-1 - berezgaitasunez\n"
-"gutx. - 0 (kodeaketa azkarra, irteera agiri handia)/ngeh. - 10 (kodeaketa astiora, irteera agiri txikia)"
+"gutx. - 0 (kodeaketa azkarra, irteera agiri handia)\n"
+"geh. - 10 (kodeaketa astiora, irteera agiri txikia)"
 
 #: export/ExportFFmpegDialogs.cpp:1398
 msgid "Frame:"
@@ -8218,8 +8219,8 @@ msgid ""
 "max - 32 (with LPC) or 4 (without LPC)"
 msgstr ""
 "Gehienezko igarpen agindua\n"
-"Aukerazkoal\n"
-"-1 - berezkoat\n"
+"Aukerazkoa\n"
+"-1 - berezkoa\n"
 "gutx. - 0\n"
 "geh. - 32 (LPC-rekin) edo 4 (LPC gabe)"
 
@@ -8236,8 +8237,8 @@ msgid ""
 "max - 8"
 msgstr ""
 "Gutxienezko zatipen agindua\n"
-"Aukerazkoal\n"
-"-1 - berezkoat\n"
+"Aukerazkoa\n"
+"-1 - berezkoa\n"
 "gutx. - 0\n"
 "geh. - 8"
 
@@ -8757,7 +8758,7 @@ msgstr "Zenbakitu Etiketa/Bide Izenaren aurretik"
 
 #: export/ExportMultiple.cpp:322
 msgid "Numbering after File name prefix"
-msgstr "Zenbakitu Agiri izen aurrizkiaren ondoren"
+msgstr "Zenbakitu Agiri izena aurrizkiaren ondoren"
 
 #: export/ExportMultiple.cpp:328
 msgid "File name prefix:"
@@ -11259,7 +11260,7 @@ msgstr "0100 o 060 m 060 s+.# lagin"
 #.
 #: widgets/TimeTextCtrl.cpp:328
 msgid "samples"
-msgstr "lagiinak"
+msgstr "laginak"
 
 #. i18n-hint: Format string for displaying time in samples (lots of samples).
 #. * Change the ',' to the 1000s separator for your locale, and translate
@@ -11273,7 +11274,7 @@ msgstr "01000,01000,01000 laginak|#"
 #. * seconds and frames at 24 frames per second (commonly used for films)
 #: widgets/TimeTextCtrl.cpp:336
 msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "oo:mm:ss + filma frame (24 fp-ko)"
+msgstr "oo:mm:ss + filma frame (24 fs-ko)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
