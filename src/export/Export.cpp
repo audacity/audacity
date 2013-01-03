@@ -592,7 +592,7 @@ bool Exporter::GetFilename()
          // as an extension with no name, like just plain ".wav".
          //
          if (mFilename.GetName().Left(1) == wxT(".")) {
-            wxString prompt = _("Are you sure you want to save the file as \"") +
+            wxString prompt = _("Are you sure you want to export the file as \"") +
                               mFilename.GetFullName() +
                               wxT("\"?\n");
             
@@ -612,7 +612,7 @@ bool Exporter::GetFilename()
       }
       else if (!ext.IsEmpty() && !mPlugins[mFormat]->IsExtension(ext,mSubFormat) && ext.CmpNoCase(defext)) {
          wxString prompt;
-         prompt.Printf(_("You are about to save a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to save the file under this name?"),
+         prompt.Printf(_("You are about to export a %s file with the name \"%s\".\n\nNormally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n\nAre you sure you want to export the file under this name?"),
                        mPlugins[mFormat]->GetFormat(mSubFormat).c_str(),
                        mFilename.GetFullName().c_str(),
                        defext.c_str());
