@@ -53,7 +53,7 @@ wxString EffectBassTreble::GetEffectDescription() {
 
 bool EffectBassTreble::NewTrackSimpleMono()
 {
-   const float slope = 0.4;   // same slope for both filters
+   const float slope = 0.4f;   // same slope for both filters
    //(re)initialise filter parameters for low shelf
    xn1Bass=0;
    xn2Bass=0;

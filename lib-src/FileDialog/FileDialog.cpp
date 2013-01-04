@@ -106,7 +106,7 @@ wxString FileSelector(const wxChar *title,
       {
          if (filters[n].Contains(defaultExtension))
          {
-            filterIndex = n;
+            filterIndex = (int)n; // Convert to int to avoid compiler warning, because we probably do not need many tens of thousands of filters.
             break;
          }
       }
