@@ -205,6 +205,10 @@
 				RelativePath="..\..\..\locale\hi.po"
 				>
 			</File>
+         <File
+				RelativePath="..\..\..\locale\hr.po"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\locale\hu.po"
 				>
