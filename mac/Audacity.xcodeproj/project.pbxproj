@@ -328,7 +328,6 @@
 		1790B12E09883BFD008A330A /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		1790B12F09883BFD008A330A /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
 		1790B13009883BFD008A330A /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
-		1790B13209883BFD008A330A /* BassBoost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00809883BFD008A330A /* BassBoost.cpp */; };
 		1790B13309883BFD008A330A /* ChangeLength.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00A09883BFD008A330A /* ChangeLength.cpp */; };
 		1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
@@ -1243,7 +1242,6 @@
 		ED663B9B16543647007F53A5 /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		ED663B9C16543647007F53A5 /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
 		ED663B9D16543647007F53A5 /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
-		ED663B9E16543647007F53A5 /* BassBoost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00809883BFD008A330A /* BassBoost.cpp */; };
 		ED663B9F16543647007F53A5 /* ChangeLength.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00A09883BFD008A330A /* ChangeLength.cpp */; };
 		ED663BA016543647007F53A5 /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		ED663BA116543647007F53A5 /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
@@ -2299,8 +2297,6 @@
 		1790B00209883BFD008A330A /* AudioUnitEffect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AudioUnitEffect.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00409883BFD008A330A /* LoadAudioUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadAudioUnits.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00509883BFD008A330A /* LoadAudioUnits.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LoadAudioUnits.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B00809883BFD008A330A /* BassBoost.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = BassBoost.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B00909883BFD008A330A /* BassBoost.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = BassBoost.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00A09883BFD008A330A /* ChangeLength.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangeLength.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00B09883BFD008A330A /* ChangeLength.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ChangeLength.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00C09883BFD008A330A /* ChangePitch.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangePitch.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4505,8 +4501,6 @@
 				1790AFFF09883BFD008A330A /* Amplify.h */,
 				28D65C700B97E54B000E001A /* AutoDuck.cpp */,
 				28D65C710B97E54B000E001A /* AutoDuck.h */,
-				1790B00809883BFD008A330A /* BassBoost.cpp */,
-				1790B00909883BFD008A330A /* BassBoost.h */,
 				EDD2431216934A6100D9DEC2 /* BassTreble.cpp */,
 				EDD2431316934A6100D9DEC2 /* BassTreble.h */,
 				1790B00A09883BFD008A330A /* ChangeLength.cpp */,
@@ -7783,7 +7777,6 @@
 				1790B12E09883BFD008A330A /* Amplify.cpp in Sources */,
 				1790B12F09883BFD008A330A /* AudioUnitEffect.cpp in Sources */,
 				1790B13009883BFD008A330A /* LoadAudioUnits.cpp in Sources */,
-				1790B13209883BFD008A330A /* BassBoost.cpp in Sources */,
 				1790B13309883BFD008A330A /* ChangeLength.cpp in Sources */,
 				1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */,
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
@@ -8242,7 +8235,6 @@
 				ED663B9B16543647007F53A5 /* Amplify.cpp in Sources */,
 				ED663B9C16543647007F53A5 /* AudioUnitEffect.cpp in Sources */,
 				ED663B9D16543647007F53A5 /* LoadAudioUnits.cpp in Sources */,
-				ED663B9E16543647007F53A5 /* BassBoost.cpp in Sources */,
 				ED663B9F16543647007F53A5 /* ChangeLength.cpp in Sources */,
 				ED663BA016543647007F53A5 /* ChangePitch.cpp in Sources */,
 				ED663BA116543647007F53A5 /* ChangeSpeed.cpp in Sources */,
