@@ -1060,10 +1060,9 @@ int TrackList::GetNumExportChannels(bool selectionOnly)
 
    for (tr = iter.First(this); tr != NULL; tr = iter.Next()) {
 
-      // Only want wave tracks
-      if (tr->GetKind() != Track::Wave) {
+      // Want only unmuted wave tracks.
+      if ((tr->GetKind() != Track::Wave) || tr->GetMute())
          continue;
-      }
 
       // do we only want selected ones?
       if (selectionOnly && !(tr->GetSelected())) {
@@ -1241,15 +1240,4 @@ double TrackList::GetEndTime() const
 
    return max;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 575d97aa-2da9-476d-a39e-2ccad16b7cdd
 

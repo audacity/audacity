@@ -190,7 +190,7 @@ private:
     * export.
     *
     * We create a set of these during the interactive phase of the export
-    * cycle, then use them when the actual exports are done */
+    * cycle, then use them when the actual exports are done. */
    class ExportKit
    {
    public:
@@ -198,6 +198,7 @@ private:
       wxFileName destfile; /**< The file to export to */
       double t0;           /**< Start time for the export */
       double t1;           /**< End time for the export */
+      int channels;        /**< Number of channels for ExportMultipleByTrack */
    };  // end of ExportKit declaration
    /* we are going to want an set of these kits, and don't know how many until
     * runtime. I would dearly like to use a std::vector, but it seems that
@@ -208,14 +209,3 @@ private:
 
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: d6904b91-a320-4194-8d60-caa9175b6bb4

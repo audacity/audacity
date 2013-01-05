@@ -150,7 +150,7 @@ void ExportMultiple::CountTracksAndLabels()
          // Count WaveTracks, and for linked pairs, count only the second of the pair.
          case Track::Wave:
          {
-            if (pTrack->GetLinked() == false)
+            if (!pTrack->GetMute() && !pTrack->GetLinked()) // Don't count muted tracks.
                mNumWaveTracks++;
             break;
          }
@@ -175,9 +175,17 @@ int ExportMultiple::ShowModal()
       ::wxMessageBox(_("If you have more than one Audio Track, you can\nexport each track \
 as a separate audio file.\n\nIf you have a Label Track, you can export a separate\naudio file \
 for each label in that track. You can have\nmore than one Label Track, but files will only \
-be\nexported for the uppermost Label Track.\n\nThis Project does not meet the above criteria \
-for\nexporting multiple files."),
-                     _("Can't export multiple files"),
+be\nexported for the uppermost Label Track.\n\nMuted tracks will not be exported.\n\nThis \
+Project does not meet the above criteria for\nexporting multiple files."),
+                     _("Cannot Export Multiple Files"),
+                     wxOK | wxCENTRE, this);
+      return wxID_CANCEL;
+   }
+   
+   // Cannot export if all audio tracks are muted.
+   if (mNumWaveTracks == 0) {
+      ::wxMessageBox(_("All the audio is muted."),
+                     _("Cannot Export Multiple Files"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
    }
@@ -591,7 +599,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
    int l = 0;        // counter for files done
    ExportKitArray exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
-   exportSettings.Alloc(numFiles);   // allocated some guessed space to use
+   exportSettings.Alloc(numFiles);   // Allocate some guessed space to use.
 
    // Account for exporting before first label
    if (mFirst->GetValue()) {
@@ -599,8 +607,8 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
       numFiles++;
    }
 
-   // Figure out how many channels we should export
-   int channels = (mTracks->GetNumExportChannels(false));
+   // Figure out how many channels we should export.
+   int channels = mTracks->GetNumExportChannels(false);
    
    wxArrayString otherNames;  // keep track of file names we will use, so we
                               // don't duplicate them
@@ -705,7 +713,6 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    wxASSERT(mProject);
    bool tagsPrompt = mProject->GetShowId3Dialog();
    Track *tr, *tr2;
-   int channels = 0;  // how many channels export?
    int l = 0;     // track counter
    int numTracks = 0;
    int ok = eProgressSuccess;
@@ -714,7 +721,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
                                 selected when we started */
    ExportKitArray exportSettings; // dynamic array we will use to store the
                                   // settings needed to do the exports with in
-   exportSettings.Alloc(mNumLabels);   // allocated some guessed space to use
+   exportSettings.Alloc(mNumWaveTracks);   // Allocate some guessed space to use.
    ExportKit setting;   // the current batch of settings
    setting.destfile.SetPath(mDir->GetValue());
    setting.destfile.SetExt(mPlugins[mPluginIndex]->GetExtension(mSubFormatIndex));
@@ -741,10 +748,9 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    /* Examine all tracks in turn, collecting export information */
    for (tr = mIterator.First(mTracks); tr != NULL; tr = mIterator.Next()) {
 
-      // Only want wave tracks
-      if (tr->GetKind() != Track::Wave) {
+      // Want only non-muted wave tracks.
+      if ((tr->GetKind() != Track::Wave)  || tr->GetMute())
          continue;
-      }
 
       // Get the times for the track
       setting.t0 = tr->GetStartTime();
@@ -768,11 +774,12 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       }
 
       // number of export channels?
+      // Needs to be per track.
       if (tr2 == NULL && tr->GetChannel() == WaveTrack::MonoChannel &&
                  ((WaveTrack *)tr)->GetPan() == 0.0)
-         channels = 1;
+         setting.channels = 1;
       else
-         channels = 2;
+         setting.channels = 2;
 
       // Get name and title
       title = tr->GetName();
@@ -783,7 +790,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
          name = title;
          if (addNumber) {
             name.Prepend(wxString::Format(wxT("%02d-"), l+1));
-         } 
+         }
       }
       else {
          name = (wxString::Format(wxT("%s-%02d"), prefix.c_str(), l+1));
@@ -823,8 +830,8 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
    ExportKit activeSetting;  // pointer to the settings in use for this export
    for (tr = mIterator.First(mTracks); tr != NULL; tr = mIterator.Next()) {
 
-      // Only want wave tracks
-      if (tr->GetKind() != Track::Wave) {
+      // Want only non-muted wave tracks.
+      if ((tr->GetKind() != Track::Wave) || (tr->GetMute() == true)) {
          continue;
       }
 
@@ -843,8 +850,8 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
 
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
-      // export data
-      ok = DoExport(channels, activeSetting.destfile, true, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
+      // Export the data. "channels" are per track.
+      ok = DoExport(activeSetting.channels, activeSetting.destfile, true, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
 
       // Reset selection state
       tr->SetSelected(false);
@@ -959,14 +966,3 @@ void MouseEvtHandler::OnMouse(wxMouseEvent& event)
 {
    event.Skip(false);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: d6904b91-a320-4194-8d60-caa9175b6bb4

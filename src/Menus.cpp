@@ -69,7 +69,7 @@ simplifies construction of menu items.
 #include "MixerBoard.h"
 #include "Internat.h"
 #include "FileFormats.h"
-#include "LoadModules.h"	
+#include "LoadModules.h"
 #include "Prefs.h"
 #include "Printing.h"
 #include "UploadDialog.h"
@@ -279,12 +279,12 @@ void AudacityProject::CreateMenusAndCommands()
 
    /////////////////////////////////////////////////////////////////////////////
 
-   // Enable Export commands only when there are tracks
+   // Enable Export audio commands only when there are audio tracks.
    c->AddItem(wxT("Export"), _("&Export..."), FN(OnExport), wxT("Ctrl+Shift+E"),
               AudioIONotBusyFlag | WaveTracksExistFlag,
               AudioIONotBusyFlag | WaveTracksExistFlag);
 
-   // Enable Export Selection commands only when there's a selection
+   // Enable Export Selection commands only when there's a selection.
    c->AddItem(wxT("ExportSel"), _("Expo&rt Selection..."), FN(OnExportSelection),
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
@@ -296,9 +296,10 @@ void AudacityProject::CreateMenusAndCommands()
       c->AddItem(wxT("ExportLabels"), _("Export &Labels..."), FN(OnExportLabels),
                  AudioIONotBusyFlag | LabelTracksExistFlag,
                  AudioIONotBusyFlag | LabelTracksExistFlag);
+      // Enable Export audio commands only when there are audio tracks.
       c->AddItem(wxT("ExportMultiple"), _("Export &Multiple..."), FN(OnExportMultiple), wxT("Ctrl+Shift+L"),
-                 AudioIONotBusyFlag | TracksExistFlag,
-                 AudioIONotBusyFlag | TracksExistFlag);
+                 AudioIONotBusyFlag | WaveTracksExistFlag,
+                 AudioIONotBusyFlag | WaveTracksExistFlag);
 #if defined(USE_MIDI)
       c->AddItem(wxT("ExportMIDI"),   _("Export MIDI..."), FN(OnExportMIDI),
                  AudioIONotBusyFlag | NoteTracksSelectedFlag,
@@ -311,9 +312,10 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("ExportLabels"), _("Export &Labels..."), FN(OnExportLabels),
               AudioIONotBusyFlag | LabelTracksExistFlag,
               AudioIONotBusyFlag | LabelTracksExistFlag);
+   // Enable Export audio commands only when there are audio tracks.
    c->AddItem(wxT("ExportMultiple"), _("Export &Multiple..."), FN(OnExportMultiple), wxT("Ctrl+Shift+L"),
-              AudioIONotBusyFlag | TracksExistFlag,
-              AudioIONotBusyFlag | TracksExistFlag);
+              AudioIONotBusyFlag | WaveTracksExistFlag,
+              AudioIONotBusyFlag | WaveTracksExistFlag);
 #if defined(USE_MIDI)
    c->AddItem(wxT("ExportMIDI"),   _("Export MIDI..."), FN(OnExportMIDI),
               AudioIONotBusyFlag | NoteTracksSelectedFlag,
@@ -755,17 +757,17 @@ void AudacityProject::CreateMenusAndCommands()
 
       c->BeginMenu(_("&Tracks"));
       c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
-		
+
       //////////////////////////////////////////////////////////////////////////
 
-		c->BeginSubMenu(_("Add &New"));
+      c->BeginSubMenu(_("Add &New"));
 
       c->AddItem(wxT("NewAudioTrack"),  _("&Audio Track"), FN(OnNewWaveTrack), wxT("Ctrl+Shift+N"));
       c->AddItem(wxT("NewStereoTrack"), _("&Stereo Track"), FN(OnNewStereoTrack));
       c->AddItem(wxT("NewLabelTrack"),  _("&Label Track"), FN(OnNewLabelTrack));
       c->AddItem(wxT("NewTimeTrack"),   _("&Time Track"), FN(OnNewTimeTrack));
 
-		c->EndSubMenu();
+      c->EndSubMenu();
 
       //////////////////////////////////////////////////////////////////////////
 
@@ -953,17 +955,17 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->BeginMenu(_("&Tracks"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
-	
+   
    //////////////////////////////////////////////////////////////////////////
 
-	c->BeginSubMenu(_("Add &New"));
+   c->BeginSubMenu(_("Add &New"));
 
    c->AddItem(wxT("NewAudioTrack"),  _("&Audio Track"), FN(OnNewWaveTrack), wxT("Ctrl+Shift+N"));
    c->AddItem(wxT("NewStereoTrack"), _("&Stereo Track"), FN(OnNewStereoTrack));
    c->AddItem(wxT("NewLabelTrack"),  _("&Label Track"), FN(OnNewLabelTrack));
    c->AddItem(wxT("NewTimeTrack"),   _("&Time Track"), FN(OnNewTimeTrack));
 
-	c->EndSubMenu();
+   c->EndSubMenu();
 
    //////////////////////////////////////////////////////////////////////////
 
@@ -1413,7 +1415,7 @@ void AudacityProject::CreateMenusAndCommands()
 
 #ifdef CLEANSPEECH
    if (mCleanSpeechMode) {
-   	c->AddItem(wxT("About"), _("&About Audacity CleanSpeech..."), FN(OnAbout));
+      c->AddItem(wxT("About"), _("&About Audacity CleanSpeech..."), FN(OnAbout));
    }
    else {
       c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
@@ -1988,9 +1990,9 @@ void AudacityProject::ModifyToolbarMenus()
 
 void AudacityProject::UpdateMenus()
 {
-	//ANSWER-ME: Why UpdateMenus only does active project?
-	//JKC: Is this test fixing a bug when multiple projects are open?
-	//so that menu states work even when different in different projects?
+   //ANSWER-ME: Why UpdateMenus only does active project?
+   //JKC: Is this test fixing a bug when multiple projects are open?
+   //so that menu states work even when different in different projects?
    if (this != GetActiveProject())
       return;
 
