@@ -80,7 +80,23 @@ class TimeTrack: public Track {
     * @return The relative length increase of the chosen segment from the original sound.
     */
    double ComputeWarpFactor(double t0, double t1);
+   /** @brief Compute the duration (in seconds at playback) of the specified region of the track.
+    *
+    * Takes a region of the time track (specified by the unwarped time points in the project), and 
+    * calculates how long it will actually take to play this region back, taking the time track's
+    * warping effects into account.
+    * @param t0 unwarped time to start calculation from
+    * @param t1 unwarped time to stop calculation at
+    * @return the warped duration in seconds
+    */
    double ComputeWarpedLength(double t0, double t1);
+   /** @brief Compute how much unwarped time must have elapsed if length seconds of warped time has
+    * elapsed
+    *
+    * @param t0 The unwarped time (seconds from project start) at which to start
+    * @param length How many seconds of warped time went past.
+    * @return The end point (in seconds from project start) as unwarped time
+    */
    double SolveWarpedLength(double t0, double length);
 
    // Get/Set the speed-warping range, as percentage of original speed (e.g. 90%-110%)
