@@ -78,6 +78,31 @@ void Envelope::Mirror(bool mirror)
    mMirror = mirror;
 }
 
+/// Rescale function for time tracks (could also be used for other tracks though).
+/// This is used to load old time track project files where the envelope used a 0 to 1
+/// range instead of storing the actual time track values. This function will change the range of the envelope
+/// and rescale all envelope points accordingly (unlike SetRange, which clamps the envelope points to the new range).
+/// @minValue - the new minimum value
+/// @maxValue - the new maximum value
+void Envelope::Rescale(double minValue, double maxValue)
+{
+   double oldMinValue = mMinValue;
+   double oldMaxValue = mMaxValue;
+   mMinValue = minValue;
+   mMaxValue = maxValue;
+
+   // rescale the default value
+   double factor = (mDefaultValue - oldMinValue) / (oldMaxValue - oldMinValue);
+   mDefaultValue = ClampValue(mMinValue + (mMaxValue - mMinValue) * factor);
+
+   // rescale all points
+   for( unsigned int i = 0; i < mEnv.Count(); i++ ) {
+      factor = (mEnv[i]->GetVal() - oldMinValue) / (oldMaxValue - oldMinValue);
+      mEnv[i]->SetVal(mMinValue + (mMaxValue - mMinValue) * factor);
+   }
+
+}
+
 /// Flatten removes all points from the envelope to 
 /// make it horizontal at a chosen y-value.
 /// @value - the y-value for the flat envelope.

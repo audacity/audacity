@@ -23,6 +23,10 @@
 #include "Internat.h"
 #include "Resample.h"
 
+//TODO-MB: are these sensible values?
+#define TIMETRACK_MIN 0.1
+#define TIMETRACK_MAX 10.0
+
 TimeTrack *TrackFactory::NewTimeTrack()
 {
    return new TimeTrack(mDirManager);
@@ -43,7 +47,7 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
    mEnvelope->Flatten(1.0);
    mEnvelope->Mirror(false);
    mEnvelope->SetOffset(0);
-   mEnvelope->SetRange(0.1, 10.0); //TODO-MB: are these sensible values?
+   mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
 
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
@@ -158,7 +162,7 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("rangeupper")))
          {
             mRangeUpper = Internat::CompatibleToDouble(value);
-            mRescaleXMLValues = false; //TODO-MB: figure out how to rescale after loading
+            mRescaleXMLValues = false;
          }
          else if (!wxStrcmp(attr, wxT("displaylog")) && 
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
@@ -174,10 +178,22 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
          
       } // while
+      if(mRescaleXMLValues)
+         mEnvelope->SetRange(0.0, 1.0); // this will be restored to the actual range later
       return true;
    }
 
    return false;
+}
+
+void TimeTrack::HandleXMLEndTag(const wxChar *tag)
+{
+   if(mRescaleXMLValues)
+   {
+      mRescaleXMLValues = false;
+      mEnvelope->Rescale(mRangeLower, mRangeUpper);
+      mEnvelope->SetRange(TIMETRACK_MIN, TIMETRACK_MAX);
+   }
 }
 
 XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)

@@ -54,6 +54,7 @@ class TimeTrack: public Track {
    // XMLTagHandler callback methods for loading and saving
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
+   virtual void HandleXMLEndTag(const wxChar *tag);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
@@ -101,9 +102,6 @@ class TimeTrack: public Track {
 
    // Get/Set the speed-warping range, as percentage of original speed (e.g. 90%-110%)
 
-   //TODO-MB: What's a sensible minimum value? Also, TrackPanel already forces a much
-   //         higher minimum value (13%), so what's the point of adding another one here?
-   //         Besides, Envelope should probably handle this, not TimeTrack (or TrackPanel).
    double GetRangeLower() const { return mRangeLower; }
    double GetRangeUpper() const { return mRangeUpper; }
 

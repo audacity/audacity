@@ -94,6 +94,7 @@ class Envelope : public XMLTagHandler {
    bool GetInterpolateDB() { return mDB; }
    void SetInterpolateDB(bool db) { mDB = db; }
    void Mirror(bool mirror);
+   void Rescale(double minValue, double maxValue);
 
    void Flatten(double value);
    int GetDragPoint(void)   {return mDragPoint;}
