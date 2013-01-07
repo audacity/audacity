@@ -177,7 +177,7 @@ as a separate audio file.\n\nIf you have a Label Track, you can export a separat
 for each label in that track. You can have\nmore than one Label Track, but files will only \
 be\nexported for the uppermost Label Track.\n\nMuted tracks will not be exported.\n\nThis \
 Project does not meet the above criteria for\nexporting multiple files."),
-                     _("Cannot Export Multiple Files"),
+                     _("Cannot Export"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
    }
@@ -185,7 +185,7 @@ Project does not meet the above criteria for\nexporting multiple files."),
    // Cannot export if all audio tracks are muted.
    if (mNumWaveTracks == 0) {
       ::wxMessageBox(_("All the audio is muted."),
-                     _("Cannot Export Multiple Files"),
+                     _("Cannot Export"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
    }

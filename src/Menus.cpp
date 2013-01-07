@@ -6080,7 +6080,7 @@ void AudacityProject::OnExportCleanSpeechPresets()
       }
       else {
          wxMessageBox(_("Problem encountered exporting presets."),
-                     _("Unable to export"),
+                     _("Unable to Export"),
                      wxOK | wxICON_WARNING);
          fileOkay = false;
          continue;
