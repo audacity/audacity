@@ -471,7 +471,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    /////////////////////////////////////////////////////////////////////////////
 
-   c->BeginSubMenu(_("La&beled Regions"));
+   c->BeginSubMenu(_("La&beled Audio"));
    c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag,
                       AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag);
 
@@ -4330,10 +4330,10 @@ void AudacityProject::OnCutLabels()
   mViewInfo.sel1 = mViewInfo.sel0;
   
   PushState( 
-   /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled regions.*/     
-     _( "Cut labeled regions to the clipboard" ), 
+   /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.*/     
+     _( "Cut labeled audio regions to clipboard" ), 
   /* i18n-hint: (verb)*/     
-     _( "Cut Labels" ) );
+     _( "Cut Labeled Audio" ) );
 
   RedrawProject();
 }
@@ -4348,10 +4348,10 @@ void AudacityProject::OnSplitCutLabels()
   msClipProject = this;
 
   PushState( 
-   /* i18n-hint: (verb) Audacity has just splitcut the labeled regions*/     
-     _( "SplitCut labeled regions to the clipboard" ), 
+   /* i18n-hint: (verb) Audacity has just split cut the labeled audio regions*/     
+     _( "Split Cut labeled audio regions to clipboard" ), 
   /* i18n-hint: (verb) Do a special kind of cut on the labels*/
-        _( "Split Cut Labels" ) );
+        _( "Split Cut Labeled Audio" ) );
 
   RedrawProject();
 }
@@ -4365,9 +4365,9 @@ void AudacityProject::OnCopyLabels()
   
   msClipProject = this;
   
-  PushState( _( "Copied labeled regions to the clipboard" ),
+  PushState( _( "Copied labeled audio regions to clipboard" ),
   /* i18n-hint: (verb)*/     
-     _( "Copy Labels" ) );
+     _( "Copy Labeled Audio" ) );
 
   mTrackPanel->Refresh( false );
 }
@@ -4382,10 +4382,10 @@ void AudacityProject::OnDeleteLabels()
   mViewInfo.sel1 = mViewInfo.sel0;
   
   PushState( 
-   /* i18n-hint: (verb) Audacity has just deleted the labeled regions*/     
-     _( "Deleted labeled regions" ), 
+   /* i18n-hint: (verb) Audacity has just deleted the labeled audio regions*/     
+     _( "Deleted labeled audio regions" ), 
   /* i18n-hint: (verb)*/     
-     _( "Delete Labels" ) );
+     _( "Delete Labeled Audio" ) );
 
   RedrawProject();
 }
@@ -4398,10 +4398,10 @@ void AudacityProject::OnSplitDeleteLabels()
   EditByLabel( &WaveTrack::SplitDelete, false );
   
   PushState( 
-  /* i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled regions */
-     _( "Split Deleted labeled regions" ), 
-  /* i18n-hint: (verb) Do a special kind of delete on labels*/
-     _( "Split Delete Labels" ) );
+  /* i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions */
+     _( "Split Deleted labeled audio regions" ), 
+  /* i18n-hint: (verb) Do a special kind of delete on labeled audio regions*/
+     _( "Split Delete Labeled Audio" ) );
 
   RedrawProject();
 }
@@ -4415,9 +4415,9 @@ void AudacityProject::OnSilenceLabels()
   
   PushState(
    /* i18n-hint: (verb)*/     
-     _( "Silenced labeled regions" ),
+     _( "Silenced labeled audio regions" ),
   /* i18n-hint: (verb)*/     
-     _( "Silence Labels" ) );
+     _( "Silence Labeled Audio" ) );
 
   mTrackPanel->Refresh( false );
 }
@@ -4427,10 +4427,10 @@ void AudacityProject::OnSplitLabels()
   EditByLabel( &WaveTrack::Split, false );
   
   PushState( 
-   /* i18n-hint: (verb) past tense.  Audacity has just split the labeled regions*/     
-     _( "Split labeled regions" ), 
+   /* i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)*/     
+     _( "Split labeled audio (points or regions)" ), 
   /* i18n-hint: (verb)*/
-     _( "Split Labels" ) );
+     _( "Split Labeled Audio" ) );
 
   RedrawProject();
 }
@@ -4443,10 +4443,10 @@ void AudacityProject::OnJoinLabels()
   EditByLabel( &WaveTrack::Join, false );
   
   PushState( 
-   /* i18n-hint: (verb) Audacity has just joined the labeled regions*/     
-     _( "Joined labeled regions" ), 
+   /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)*/     
+     _( "Joined labeled audio (points or regions)" ), 
   /* i18n-hint: (verb)*/     
-     _( "Join Labels" ) );
+     _( "Join Labeled Audio" ) );
 
   RedrawProject();
 }
@@ -4459,12 +4459,12 @@ void AudacityProject::OnDisjoinLabels()
   EditByLabel( &WaveTrack::Disjoin, false );
   
   PushState( 
-   /* i18n-hint: (verb) Audacity has just detached the labeled regions.
+   /* i18n-hint: (verb) Audacity has just detached the labeled audio regions.
       This message appears in history and tells you about something 
       Audacity has done.*/
-   _( "Detached labeled regions" ),
+   _( "Detached labeled audio regions" ),
    /* i18n-hint: (verb)*/     
-     _( "Detach Labels" ) );
+     _( "Detach Labeled Audio" ) );
 
   RedrawProject();
 }
