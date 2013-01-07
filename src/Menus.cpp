@@ -407,7 +407,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
    
-   c->BeginSubMenu(_("R&emove Audio"));
+   c->BeginSubMenu(_("R&emove Audio or Labels"));
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("Cut"), _("Cu&t"), FN(OnCut), wxT("Ctrl+X"),
               AudioIONotBusyFlag | CutCopyAvailableFlag,
@@ -422,7 +422,7 @@ void AudacityProject::CreateMenusAndCommands()
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("Silence"), _("Silence Audi&o"), FN(OnSilence), wxT("Ctrl+L"));
    /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Trim"), _("Tri&m"), FN(OnTrim), wxT("Ctrl+T"));
+   c->AddItem(wxT("Trim"), _("Tri&m Audio"), FN(OnTrim), wxT("Ctrl+T"));
    c->EndSubMenu();
    
    c->BeginSubMenu(_("Clip Boun&daries"));
@@ -4181,7 +4181,7 @@ void AudacityProject::OnTrim()
       n = iter.Next();
    }
 
-   PushState(_("Trim file to selection"), _("Trim"));
+   PushState(_("Trim file to selection"), _("Trim Audio"));
 
    RedrawProject();
 }
