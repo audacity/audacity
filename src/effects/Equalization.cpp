@@ -3224,7 +3224,7 @@ void EditCurvesDialog::OnExport( wxCommandEvent &event )
          i++;
       }
       else
-         wxMessageBox(_("You cannot export 'unnamed' curve"), _("'unnamed' is special"));
+         wxMessageBox(_("You cannot export 'unnamed' curve, it is special."), _("Cannot Export 'unnamed'"));
       // get next selected item
       item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
