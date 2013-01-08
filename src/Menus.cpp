@@ -420,10 +420,14 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"));
    c->AddSeparator();
    /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Silence"), _("Silence Audi&o"), FN(OnSilence), wxT("Ctrl+L"));
-   /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Trim"), _("Tri&m Audio"), FN(OnTrim), wxT("Ctrl+T"));
-   c->EndSubMenu();
+   c->AddItem(wxT("Silence"), _("Silence Audi&o"), FN(OnSilence), wxT("Ctrl+L"),
+      AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+      AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
+    /* i18n-hint: (verb)*/
+   c->AddItem(wxT("Trim"), _("Tri&m Audio"), FN(OnTrim), wxT("Ctrl+T"),
+      AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+      AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
+    c->EndSubMenu();
    
    c->BeginSubMenu(_("Clip Boun&daries"));
    /* i18n-hint: (verb) It's an item on a menu. */
@@ -4181,7 +4185,9 @@ void AudacityProject::OnTrim()
       n = iter.Next();
    }
 
-   PushState(_("Trim file to selection"), _("Trim Audio"));
+   PushState(wxString::Format(_("Trim selected audio tracks from %.2f seconds to %.2f"),
+       mViewInfo.sel0, mViewInfo.sel1),
+       _("Trim Audio"));
 
    RedrawProject();
 }
