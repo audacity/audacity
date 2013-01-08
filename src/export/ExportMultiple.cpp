@@ -171,21 +171,21 @@ void ExportMultiple::CountTracksAndLabels()
 
 int ExportMultiple::ShowModal()
 {
-   if (mNumWaveTracks < 2 && mNumLabels < 1) {
-      ::wxMessageBox(_("If you have more than one Audio Track, you can\nexport each track \
-as a separate audio file.\n\nIf you have a Label Track, you can export a separate\naudio file \
-for each label in that track. You can have\nmore than one Label Track, but files will only \
-be\nexported for the uppermost Label Track.\n\nMuted tracks will not be exported.\n\nThis \
-Project does not meet the above criteria for\nexporting multiple files."),
-                     _("Cannot Export"),
+   // Cannot export if all audio tracks are muted.
+   if (mNumWaveTracks == 0) {
+      ::wxMessageBox(_("All audio is muted."),
+                     _("Cannot Export Multiple"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
    }
-   
-   // Cannot export if all audio tracks are muted.
-   if (mNumWaveTracks == 0) {
-      ::wxMessageBox(_("All the audio is muted."),
-                     _("Cannot Export"),
+
+   if (mNumWaveTracks < 2 && mNumLabels < 1) {
+      ::wxMessageBox(_(
+"You have only one unmuted Audio Track and no applicable \
+\nlabels, so you cannot export to separate audio files. \
+\n\nYou can have more than one Label Track, but files will \
+\nbe exported based only on the uppermost Label Track."),
+                     _("Cannot Export Multiple"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
    }
