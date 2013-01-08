@@ -4185,7 +4185,7 @@ void AudacityProject::OnTrim()
       n = iter.Next();
    }
 
-   PushState(wxString::Format(_("Trim selected audio tracks from %.2f seconds to %.2f"),
+   PushState(wxString::Format(_("Trim selected audio tracks from %.2f seconds to %.2f seconds"),
        mViewInfo.sel0, mViewInfo.sel1),
        _("Trim Audio"));
 
