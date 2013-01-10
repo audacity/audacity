@@ -128,15 +128,15 @@ void EditToolBar::Populate()
 
    /* Buttons */
    AddButton(bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
-      _("Cut"));
+      _("Cut selection"));
    AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
-      _("Copy"));
+      _("Copy selection"));
    AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
       _("Paste"));
    AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
-      _("Trim outside selection"));
+      _("Trim audio outside selection"));
    AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
-      _("Silence selection"));
+      _("Silence audio selection"));
 
    AddSeparator();
 
@@ -195,8 +195,8 @@ void EditToolBar::RegenerateTooltips()
    mButtons[ETBCutID]->SetToolTip(_("Cut"));
    mButtons[ETBCopyID]->SetToolTip(_("Copy"));
    mButtons[ETBPasteID]->SetToolTip(_("Paste"));
-   mButtons[ETBTrimID]->SetToolTip(_("Trim"));
-   mButtons[ETBSilenceID]->SetToolTip(_("Silence"));
+   mButtons[ETBTrimID]->SetToolTip(_("Trim Audio"));
+   mButtons[ETBSilenceID]->SetToolTip(_("Silence Audio"));
    mButtons[ETBUndoID]->SetToolTip(_("Undo"));
    mButtons[ETBRedoID]->SetToolTip(_("Redo"));
    #ifdef EXPERIMENTAL_SYNC_LOCK
