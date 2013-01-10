@@ -141,7 +141,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="AudacityHeaders.h"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 				CompileAs="0"
 				DisableSpecificWarnings="4996"
@@ -2451,6 +2451,10 @@
 		<Filter
 			Name="plug-ins"
 			>
+			<File
+				RelativePath="..\..\..\plug-ins\adjustable-fade.ny"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\plug-ins\analyze.ny"
 				>
