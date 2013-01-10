@@ -189,6 +189,7 @@ def monobook_fix_html(doc, page_url):
     doc = remove_tag(doc, '<div class="portlet" id="p-personal">', '</div>', '<div')
     doc = remove_tag(doc, '<div id="p-search" class="portlet">', '</div>', '<div')
     doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
+    doc = remove_tag(doc, '<div id=\'catlinks\' class=\'catlinks catlinks-allhidden\'>', '</div>', '<div')    
     #James also remove the page/discussion/source/history/ div.
     doc = remove_tag(doc, '<li id="ca-', '</li>', '<li')
 
