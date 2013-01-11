@@ -110,12 +110,10 @@ void QualityPrefs::GetNamesAndLabels()
    // We used to set and get best/fast method via Resample.cpp.
    // Need to ensure that preferences strings in Resample.cpp match.
    // Note that these methods used to be public and static, but are now protected and pure virtual.
-   // int converterHQ = Resample::GetBestMethod();
-   // int converter = Resample::GetFastMethod();
    //
-   //vvvvv Note that we're now using libsoxr for constant-rate resampling 
-   // and either libresample or libsamplerate for variable-rate, 
-   // and currently *not* allowing method choice for variable-rate, 
+   //vvv Note that we're now using libsoxr for constant-rate resampling 
+   // and either libresample, libsamplerate, or libsoxr for variable-rate, 
+   // and currently not allowing prefs method choice for variable-rate, 
    // per discussion on -devel.
    int numConverters = ConstRateResample::GetNumMethods();
    for (int i = 0; i < numConverters; i++) {

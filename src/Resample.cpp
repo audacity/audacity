@@ -54,8 +54,9 @@
    #include <soxr.h>
 
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
-      : Resample(useBestMethod)
+      : Resample()
    {
+      this->SetMethod(useBestMethod);
       soxr_quality_spec_t q_spec = soxr_quality_spec("\0\1\4\6"[mMethod], 0);
       mHandle = (void *)soxr_create(1, dFactor, 1, 0, 0, &q_spec, 0);
    }
@@ -85,12 +86,12 @@
 
    const wxString ConstRateResample::GetFastMethodKey()
    {
-      return wxT("/Quality/SampleRateConverter");
+      return wxT("/Quality/LibsoxrSampleRateConverter");
    }
 
    const wxString ConstRateResample::GetBestMethodKey()
    {
-      return wxT("/Quality/HQSampleRateConverter");
+      return wxT("/Quality/LibsoxrHQSampleRateConverter");
    }
 
    int ConstRateResample::GetFastMethodDefault() {return 1;}
@@ -114,7 +115,7 @@
 
 #else // no const-rate resampler
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
-      : Resample(useBestMethod)
+      : Resample()
    {
    }
 
@@ -130,8 +131,9 @@
 #include "libresample.h"
 
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
-      : Resample(useBestMethod)
+      : Resample()
    {
+      this->SetMethod(useBestMethod);
       mHandle = resample_open(mMethod, dMinFactor, dMaxFactor);
       if(mHandle == NULL) {
          fprintf(stderr, "libresample doesn't support range %f .. %f.\n", dMinFactor, dMaxFactor);
@@ -199,8 +201,9 @@
    #include <samplerate.h>
 
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
-      : Resample(useBestMethod)
+      : Resample()
    {
+      this->SetMethod(useBestMethod);
       if (!src_is_valid_ratio (dMinFactor) || !src_is_valid_ratio (dMaxFactor)) {
          fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
          // FIX-ME: Audacity will hang after this if branch.
@@ -314,8 +317,9 @@
    #include <soxr.h>
 
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
-      : Resample(useBestMethod)
+      : Resample()
    {
+      this->SetMethod(useBestMethod);
       soxr_quality_spec_t q_spec = soxr_quality_spec(SOXR_HQ, SOXR_VR);
       mHandle = (void *)soxr_create(1, dMinFactor, 1, 0, 0, &q_spec, 0);
    }
@@ -324,6 +328,30 @@
    {
       soxr_delete((soxr_t)mHandle);
    }
+
+   int VarRateResample::GetNumMethods() { return 4; }
+
+   wxString VarRateResample::GetMethodName(int index)
+   {
+      static char const * const soxr_method_names[] = {
+         "Low Quality (Fastest)", "Basic Quality", "High Quality", "Best Quality (Slowest)"
+      };
+
+      return wxString(wxString::FromAscii(soxr_method_names[index]));
+   }
+
+   const wxString VarRateResample::GetFastMethodKey()
+   {
+      return wxT("/Quality/LibsoxrSampleRateConverter");
+   }
+
+   const wxString VarRateResample::GetBestMethodKey()
+   {
+      return wxT("/Quality/LibsoxrHQSampleRateConverter");
+   }
+
+   int VarRateResample::GetFastMethodDefault() {return 1;}
+   int VarRateResample::GetBestMethodDefault() {return 3;}
 
    int VarRateResample::Process(double  factor,
                          float  *inBuffer,
@@ -346,7 +374,7 @@
 
 #else // no var-rate resampler
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
-      : Resample(useBestMethod)
+      : Resample()
    {
    }
 

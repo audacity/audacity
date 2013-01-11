@@ -27,17 +27,9 @@ class Resample
    /// the fast method. 
    //v (The particular method used was previously set by
    /// SetFastMethod or SetBestMethod.)  
-   // minFactor and maxFactor
-   /// specify the range of factors that will be used, if you plan
-   /// to vary the factor over time.  Otherwise set minFactor and
-   /// maxFactor to the same value for optimized performance.
-   Resample(const bool useBestMethod) 
-   { 
-      if (useBestMethod)
-         mMethod = GetBestMethod();
-      else
-         mMethod = GetFastMethod();
-
+   Resample() 
+   {
+      mMethod = 0; 
       mHandle = NULL;
    };
    virtual ~Resample() {};
@@ -48,26 +40,16 @@ class Resample
    // virtual wxString GetResamplingLibraryName() { return _("Resampling disabled."); };
 
    /// Resamplers may have more than one method, offering a
-   /// tradeoff between speed and quality.  This lets you query
-   /// the various methods available.
-   static int GetNumMethods() { return 1; };
-   static wxString GetMethodName(int WXUNUSED(index)) { return _("Resampling disabled."); };
-
+   /// tradeoff between speed and quality.  
    /// Audacity identifies two methods out of all of the choices:
    /// a Fast method intended for real-time audio I/O, and a Best
    /// method intended for mixing and exporting. 
    //v (These were previously saved
-   /// in the preferences when you call Set[Best,Fast]Method.)
-   int GetFastMethod() { return gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault()); };
-   int GetBestMethod() { return gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault()); };
-   //v Currently unused.
+   // in the preferences when you call Set[Best,Fast]Method.
+   // Now done with TieChoice() in QualityPrefs. 
+   // Implemented in descendant classes, for class-specificity.)
    //static void SetFastMethod(int index);
    //static void SetBestMethod(int index);
-
-   static const wxString GetFastMethodKey() { return wxT("/Quality/DisabledConverter"); };
-   static const wxString GetBestMethodKey() { return wxT("/Quality/DisabledConverter"); };
-   static int GetFastMethodDefault() { return 0; };
-   static int GetBestMethodDefault() { return 0; };
 
    /** @brief Main processing function. Resamples from the input buffer to the 
     * output buffer.
@@ -144,17 +126,38 @@ class ConstRateResample : public Resample
                            int    *inBufferUsed,
                            float  *outBuffer,
                            int     outBufferLen);
+   #else
+      static int GetNumMethods() { return 1; };
+      static wxString GetMethodName(int WXUNUSED(index)) { return _("Resampling disabled."); };
+      static const wxString GetFastMethodKey() { return wxT("/Quality/DisabledConverter"); };
+      static const wxString GetBestMethodKey() { return wxT("/Quality/DisabledConverter"); };
+      static int GetFastMethodDefault() { return 0; };
+      static int GetBestMethodDefault() { return 0; };
    #endif
+
+ protected:
+   void SetMethod(const bool useBestMethod)
+   {
+      if (useBestMethod)
+         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+      else
+         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+   };
 };
 
 class VarRateResample : public Resample
 {
  public:
+   // dMinFactor and dMaxFactor specify the range of factors for variable-rate resampling.
    VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
    virtual ~VarRateResample();
 
    // Override base class methods only if we actually have a var-rate library.
    #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE || USE_LIBSOXR
+      //vvv Note that we're not actually calling any of these Get* methods 
+      // for var-rate, as the decision was to not allow QualityPrefs for it. 
+      // However the menthods already existed for libresample and libsamplerate, 
+      // so they're now implemented for all, in case we decide to provide prefs. 
       static int GetNumMethods();
       static wxString GetMethodName(int index);
 
@@ -170,7 +173,23 @@ class VarRateResample : public Resample
                            int    *inBufferUsed,
                            float  *outBuffer,
                            int     outBufferLen);
+   #else
+      static int GetNumMethods() { return 1; };
+      static wxString GetMethodName(int WXUNUSED(index)) { return _("Resampling disabled."); };
+      static const wxString GetFastMethodKey() { return wxT("/Quality/DisabledConverter"); };
+      static const wxString GetBestMethodKey() { return wxT("/Quality/DisabledConverter"); };
+      static int GetFastMethodDefault() { return 0; };
+      static int GetBestMethodDefault() { return 0; };
    #endif
+
+ protected:
+   void SetMethod(const bool useBestMethod)
+   {
+      if (useBestMethod)
+         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+      else
+         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+   };
 };
 
 #endif // __AUDACITY_RESAMPLE_H__
