@@ -18,20 +18,15 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
 
    dnl see if libsoxr is installed on the system
 
-   AC_CHECK_LIB(soxr, soxr_create,
-                libsoxr_found="yes",
-                libsoxr_found="no")
+   PKG_CHECK_MODULES(SOXR, soxr >= 0.0.5,
+		     soxr_available_system="yes",
+		     soxr_available_system="no")
 
-   soxr_h_found="no"
-
-   AC_CHECK_HEADER(soxr.h,
-                   soxr_h_found="yes",
-                   soxr_h_found="no")
-
-   if test "x$libsoxr_found" = "xyes" && test "x$soxr_h_found" = "xyes" ; then
+   if test "x$soxr_available_system" = "xyes" ; then
       LIBSOXR_SYSTEM_AVAILABLE="yes"
-      LIBSOXR_SYSTEM_LIBS="-lsoxr"
-      LIBSOXR_SYSTEM_CPPSYMBOLS="USE_SYSTEM_SOXR"
+      LIBSOXR_SYSTEM_LIBS=$SOXR_LIBS
+      LIBSOXR_SYSTEM_CXXFLAGS=$SOXR_CFLAGS
+      LIBSOXR_SYSTEM_CPPSYMBOLS="USE_LIBSOXR"
       AC_MSG_NOTICE([Soxr libraries are available as system libraries])
    else
       LIBSOXR_SYSTEM_AVAILABLE="no"
@@ -40,7 +35,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
 
    dnl see if libsoxr is available locally
 
-   AC_CHECK_FILE(${srcdir}/lib-src/libsoxr/src/soxr-lsr.h,
+   AC_CHECK_FILE(${srcdir}/lib-src/libsoxr/src/soxr.h,
                  soxr_h_found="yes",
                  soxr_h_found="no")
 
