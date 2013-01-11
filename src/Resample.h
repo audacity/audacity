@@ -141,7 +141,7 @@ class ConstRateResample : public Resample
       if (useBestMethod)
          mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
       else
-         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+         mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
    };
 };
 
@@ -188,7 +188,7 @@ class VarRateResample : public Resample
       if (useBestMethod)
          mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
       else
-         mMethod = gPrefs->Read(GetBestMethodKey(), GetBestMethodDefault());
+         mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
    };
 };
 
