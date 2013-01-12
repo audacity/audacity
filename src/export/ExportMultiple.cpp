@@ -184,9 +184,7 @@ int ExportMultiple::ShowModal()
    {
       ::wxMessageBox(_(
 "You have only one unmuted Audio Track and no applicable \
-\nlabels, so you cannot export to separate audio files. \
-\n\nIf you have more than one Label Track, Export Multiple is \
-\nbased only on labels in the uppermost Label Track."),
+\nlabels, so you cannot export to separate audio files."),
                      _("Cannot Export Multiple"),
                      wxOK | wxCENTRE, this);
       return wxID_CANCEL;
