@@ -94,18 +94,20 @@ bool EffectRepair::Process()
       sampleCount repairStart = (sampleCount)(repair0 - s0);
       sampleCount repairLen = (sampleCount)(repair1 - repair0);
       sampleCount len = (sampleCount)(s1 - s0);
+      if (len < 0) 
+         break; // FIX-ME: This failsafes bug 604, but does not account for why it actually happens.
 
       if (repairLen > 128) {
          ::wxMessageBox(_("The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair."));
-            bGoodResult = false;
-            break;
+         bGoodResult = false;
+         break;
       }
       
       if (s0 == repair0 && s1 == repair1) {
          ::wxMessageBox(_("Repair works by using audio data outside the selection region.\n\nPlease select a region that has audio touching at least one side of it.\n\nThe more surrounding audio, the better it performs."));
 ///            The Repair effect needs some data to go on.\n\nPlease select an area to repair with some audio on at least one side (the more the better)."));
-            bGoodResult = false;
-            break;
+         bGoodResult = false;
+         break;
       }
       
       if (!ProcessOne(count, track,
