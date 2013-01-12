@@ -78,7 +78,7 @@
    wxString ConstRateResample::GetMethodName(int index)
    {
       static char const * const soxr_method_names[] = {
-         "Low Quality (Fastest)", "Basic Quality", "High Quality", "Best Quality (Slowest)"
+         "Low Quality (Fastest)", "Medium Quality", "High Quality", "Best Quality (Slowest)"
       };
 
       return wxString(wxString::FromAscii(soxr_method_names[index]));
@@ -334,7 +334,7 @@
    wxString VarRateResample::GetMethodName(int index)
    {
       static char const * const soxr_method_names[] = {
-         "Low Quality (Fastest)", "Basic Quality", "High Quality", "Best Quality (Slowest)"
+         "Low Quality (Fastest)", "Medium Quality", "High Quality", "Best Quality (Slowest)"
       };
 
       return wxString(wxString::FromAscii(soxr_method_names[index]));
