@@ -24,7 +24,7 @@
 
 // Resamplers.
 // Only one of each type of resampler (constant or variable rate) should be defined.
-// libsoxr is used for constant-rate and var-rat resampling.
+// libsoxr is used for constant-rate and var-rate resampling.
 // libsoxr currently our only const-rate resampler, so should always be #defined.
 #define USE_LIBSOXR 1
 
