@@ -1,13 +1,13 @@
 dnl Add Audacity / libsamplerate license?
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_libsamplerate.m4 serial 1
+# audacity_checklib_libsamplerate.m4 serial 2
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBSAMPLERATE], [
 
    AC_ARG_WITH(libsamplerate,
                [AS_HELP_STRING([--with-libsamplerate],
-                               [use libsamplerate instead of libresample for variable-rate resampling. Do not use in conjunction with VST plug-in support!])],
+                               [use libsamplerate for sample rate conversion. Do not use in conjunction with VST plug-in support!])],
                LIBSAMPLERATE_ARGUMENT=$withval,
                LIBSAMPLERATE_ARGUMENT="unspecified")
 

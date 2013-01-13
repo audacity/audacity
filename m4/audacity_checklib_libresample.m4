@@ -1,13 +1,13 @@
 dnl Add Audacity license?
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_libresample.m4 serial 1
+# audacity_checklib_libresample.m4 serial 2
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBRESAMPLE], [
 
    AC_ARG_WITH(libresample,
                [AS_HELP_STRING([--with-libresample],
-                               [use libresample for variable-rate resampling: [yes,no]])],
+                               [use libresample for sample rate conversion])],
                LIBRESAMPLE_ARGUMENT=$withval,
                LIBRESAMPLE_ARGUMENT="unspecified")
 
@@ -33,10 +33,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRESAMPLE], [
       LIBRESAMPLE_LOCAL_LIBS="libresample.a"
       LIBRESAMPLE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libresample/include'
       LIBRESAMPLE_LOCAL_CPPSYMBOLS="USE_LIBRESAMPLE"
-
-      if test ! -f lib-src/libresample/Makefile ; then
-         LIBRESAMPLE_LOCAL_CONFIG_SUBDIRS="lib-src/libresample"
-      fi
+      LIBRESAMPLE_LOCAL_CONFIG_SUBDIRS="lib-src/libresample"
+      
       AC_MSG_NOTICE([libresample libraries are available in the local tree])
    else
       LIBRESAMPLE_LOCAL_AVAILABLE="no"
