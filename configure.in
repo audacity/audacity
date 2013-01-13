@@ -317,10 +317,6 @@ CXXFLAGS="$CXXFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
 dnl-----------------------------------------------------------------
 dnl Pull in library Cflags and so on for the non-optional libraries
 
-dnl TODO enable/disable allegro
-dnl LOCAL_LIBS="$LOCAL_LIBS allegro.a"
-dnl CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/allegro"
-
 dnl Include FileDialog
 AC_CONFIG_SUBDIRS([lib-src/FileDialog])
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
@@ -339,8 +335,6 @@ dnl-------------------------------------------------------------
 dnl Optional library support. Lots of things we could use, but 
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
-dnl LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG LIBLRDF SLV2 REDLAND PORTSMF TAGLIB"
-dnl disable plugin categorisation and LV2 libs for 1.3.7 release
 LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
@@ -360,11 +354,7 @@ AUDACITY_CHECKLIB_LIBNYQUIST
 AUDACITY_CHECKLIB_LIBVAMP
 AUDACITY_CHECKLIB_LIBTWOLAME
 AUDACITY_CHECKLIB_FFMPEG
-dnl AUDACITY_CHECKLIB_REDLAND
-dnl AUDACITY_CHECKLIB_SLV2
-dnl AUDACITY_CHECKLIB_LIBLRDF
 AUDACITY_CHECKLIB_PORTSMF
-dnl AUDACITY_CHECKLIB_TAGLIB
 AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_LAME
 
@@ -413,16 +403,16 @@ for lib in $LIBRARIES ; do
       elif test "$LIB_ARGUMENT" = no ; then
          AC_MSG_NOTICE([disabling $lib at your request])
       else
-         AC_MSG_ERROR(I didn't understand the argument $LIB_ARGUMENT for $lib)
+         AC_MSG_ERROR(I did not understand the argument $LIB_ARGUMENT for $lib)
       fi
    fi
 done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have libsndfile one way or another
-#   * we can only use one of libsamplerate and libresample
-#   * we should not use the local Redland if we're not using local SLV2 or 
-#     liblrdf
+#   * we need to have libexpat one way or another
+#   * we need to have portaudio way or another
+#   * we can only use one of libsoxr, libsamplerate and libresample
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
    AC_MSG_ERROR([Audacity requires libsndfile to be enabled])
@@ -440,9 +430,9 @@ if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes"
    AC_MSG_ERROR([Audacity requires portaudio to be enabled])
 fi
 
-dnl we can only have one alternative variable-rate resampling library used.
-dnl by now we will have both enabled if they are present, regardless of whether
-dnl they were requested, unless one was specifically disabled.
+dnl we can only have one alternative resampling library used.
+dnl by now we will have multiple enabled if they are present, regardless of whether
+dnl they were requested, unless some were specifically disabled.
 dnl we would like to honour requests at this stage, so need to know about
 dnl the original options, not just which LIB_USE variables have been set.
 if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
@@ -455,26 +445,36 @@ if test x"$LIBRESAMPLE_ARGUMENT" = x"unspecified" ; then
    LIBRESAMPLE_USE_LOCAL="no"
    LIBRESAMPLE_USE_SYSTEM="no"
 fi
+dnl The above favours libsoxr (by ommission) if no options are passed
+
+
+dnl favour libsoxr over libresample
+if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSOXR_USE_LOCAL" = "yes" || test "$LIBSOXR_USE_SYSTEM" = "yes"); then
+   dnl if we get here, both libsoxr and libresample available and have been
+   dnl requested: use libsoxr, disable libresample
+   AC_MSG_NOTICE([Both libresample and libsoxr were requested: favouring libsoxr.])
+   LIBRESAMPLE_USE_LOCAL="no"
+   LIBRESAMPLE_USE_SYSTEM="no"
+fi
+
+dnl favour libsamplerate over libresample
 if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
-   dnl if we get here, both libraries are available and have been requested: use libresample.
-   AC_MSG_NOTICE([Both libresample and libsamplerate are requested: using libresample])
-   LIBSAMPLERATE_USE_LOCAL="no"
-   LIBSAMPLERATE_USE_SYSTEM="no"
+   dnl if we get here, both libresample and libsamplerate available and requested:
+   dnl use libsamplerate, disable libresample.
+   AC_MSG_NOTICE([Both libresample and libsamplerate were requested: favouring libsamplerate])
+   LIBRESAMPLE_USE_LOCAL="no"
+   LIBRESAMPLE_USE_SYSTEM="no"
 fi
 
-dnl if ( test "$SLV2_USE_LOCAL" != "yes" && test "$LIBLRDF_USE_LOCAL" != "yes") && test "$REDLAND_USE_LOCAL" = "yes" ; then
-dnl   AC_MSG_NOTICE([Not building local Redland library since we don't use the local SLV2 or liblrdf libraries])
-dnl   REDLAND_USE_LOCAL=no
-dnl   REDLAND_USE_SYSTEM=no
-dnl fi
-
-dnl If we are using a local copy of liblrdf then some extra files need to be
-dnl installed on the system, so we need to add the targets to
-dnl EXTRAINSTALLTARGETS and EXTRAUNINSTALLTARGETS
-if [[ "x$LIBLRDF_USE_LOCAL" = "xyes" ]]; then
-   EXTRAINSTALLTARGETS="$EXTRAINSTALLTARGETS install-lrdf-data"
-   EXTRAUNINSTALLTARGETS="$EXTRAUNINSTALLTARGETS uninstall-lrdf-data"
+dnl by now the only possible combination is libsamplerate and libsoxr: favour libsoxr.
+if ( test "$LIBSOXR_USE_LOCAL" = "yes" || test "$LIBSOXR_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
+   dnl if we get here, both libsoxr and libsamplerate available and requested:
+   dnl use libsoxr, disable libsamplerate.
+   AC_MSG_NOTICE([Both libsoxr and libsamplerate were requested: favouring libsoxr])
+   LIBSOXR_USE_LOCAL="no"
+   LIBSOXR_USE_SYSTEM="no"
 fi
+
 
 dnl-----------------------------------------------------------------
 dnl Based on the optional lib selections, modify LOCAL_LIBS, CXXFLAGS, etc
@@ -743,12 +743,3 @@ echo "otherwise run 'make' to build Audacity."
 
 dnl Indentation settings for Vim and Emacs and unique identifier for Arch, a
 dnl version control system. Please do not modify past this point.
-
-dnl arch-tag: aba52141-47c0-40c6-8629-aa61e7bee0c7
-
-# Local Variables:
-# c-basic-offset: 3
-# indent-tabs-mode: nil
-# End:
-#
-# vim: et sts=3 sw=3
