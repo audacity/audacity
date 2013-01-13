@@ -76,7 +76,13 @@ function cleanfulltree {
 	else
 		make distclean 2>/dev/null > /dev/null;
 	fi
-	printf "Done\n"
+	status=${?}
+	if [[ ${status} -eq 0 ]] ; then
+		printf "Done\n"
+	else
+		echo "Failed to make distclean: exit status was ${status}"
+		exit ${status}
+	fi
 
 	printf "removing SVN directories... ";
 	find . -depth -name '.svn' -execdir rm -rf '{}' ';'
@@ -385,7 +391,7 @@ tar cf "audacity-fullsrc-${version}.tar" "${tarname}"
 printf "Done\n"
 
 printf "Compressing full source tarball in the background .... "
-bzip2 "audacity-fullsrc-${version}.tar" &
+xz "audacity-fullsrc-${version}.tar" &
 cd "${tardir}"
 
 # now we have the full source tarball, lets slim it down to the bits that 
@@ -403,7 +409,7 @@ tar cf "audacity-minsrc-${version}.tar" "${tarname}"
 printf "Done\n"
 
 printf "Compressing minimal source tarball .... "
-bzip2 "audacity-minsrc-${version}.tar" 
+xz "audacity-minsrc-${version}.tar" 
 
 cd "${tardir}"
 printf "Done\n"
