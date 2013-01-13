@@ -639,6 +639,8 @@ LIBMAD_LIBS
 LIBMAD_CFLAGS
 SAMPLERATE_LIBS
 SAMPLERATE_CFLAGS
+SOXR_LIBS
+SOXR_CFLAGS
 SNDFILE_LIBS
 SNDFILE_CFLAGS
 WIDGETEXTRA_LIBS
@@ -769,6 +771,8 @@ WIDGETEXTRA_CFLAGS
 WIDGETEXTRA_LIBS
 SNDFILE_CFLAGS
 SNDFILE_LIBS
+SOXR_CFLAGS
+SOXR_LIBS
 SAMPLERATE_CFLAGS
 SAMPLERATE_LIBS
 LIBMAD_CFLAGS
@@ -1478,6 +1482,8 @@ Some influential environment variables:
               C compiler flags for SNDFILE, overriding pkg-config
   SNDFILE_LIBS
               linker flags for SNDFILE, overriding pkg-config
+  SOXR_CFLAGS C compiler flags for SOXR, overriding pkg-config
+  SOXR_LIBS   linker flags for SOXR, overriding pkg-config
   SAMPLERATE_CFLAGS
               C compiler flags for SAMPLERATE, overriding pkg-config
   SAMPLERATE_LIBS
@@ -5985,64 +5991,79 @@ $as_echo "#define USE_LIBSOXR 1" >>confdefs.h
    fi
 
 
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for soxr_create in -lsoxr" >&5
-$as_echo_n "checking for soxr_create in -lsoxr... " >&6; }
-if ${ac_cv_lib_soxr_soxr_create+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lsoxr  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
 
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char soxr_create ();
-int
-main ()
-{
-return soxr_create ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_soxr_soxr_create=yes
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SOXR" >&5
+$as_echo_n "checking for SOXR... " >&6; }
+
+if test -n "$SOXR_CFLAGS"; then
+    pkg_cv_SOXR_CFLAGS="$SOXR_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"soxr >= 0.0.5\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "soxr >= 0.0.5") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SOXR_CFLAGS=`$PKG_CONFIG --cflags "soxr >= 0.0.5" 2>/dev/null`
 else
-  ac_cv_lib_soxr_soxr_create=no
+  pkg_failed=yes
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+ else
+    pkg_failed=untried
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_soxr_soxr_create" >&5
-$as_echo "$ac_cv_lib_soxr_soxr_create" >&6; }
-if test "x$ac_cv_lib_soxr_soxr_create" = xyes; then :
-  libsoxr_found="yes"
+if test -n "$SOXR_LIBS"; then
+    pkg_cv_SOXR_LIBS="$SOXR_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"soxr >= 0.0.5\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "soxr >= 0.0.5") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SOXR_LIBS=`$PKG_CONFIG --libs "soxr >= 0.0.5" 2>/dev/null`
 else
-  libsoxr_found="no"
+  pkg_failed=yes
 fi
-
-
-   soxr_h_found="no"
-
-   ac_fn_cxx_check_header_mongrel "$LINENO" "soxr.h" "ac_cv_header_soxr_h" "$ac_includes_default"
-if test "x$ac_cv_header_soxr_h" = xyes; then :
-  soxr_h_found="yes"
-else
-  soxr_h_found="no"
+ else
+    pkg_failed=untried
 fi
 
 
 
-   if test "x$libsoxr_found" = "xyes" && test "x$soxr_h_found" = "xyes" ; then
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        SOXR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "soxr >= 0.0.5" 2>&1`
+        else
+	        SOXR_PKG_ERRORS=`$PKG_CONFIG --print-errors "soxr >= 0.0.5" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$SOXR_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                soxr_available_system="no"
+elif test $pkg_failed = untried; then
+	soxr_available_system="no"
+else
+	SOXR_CFLAGS=$pkg_cv_SOXR_CFLAGS
+	SOXR_LIBS=$pkg_cv_SOXR_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	soxr_available_system="yes"
+fi
+
+   if test "x$soxr_available_system" = "xyes" ; then
       LIBSOXR_SYSTEM_AVAILABLE="yes"
-      LIBSOXR_SYSTEM_LIBS="-lsoxr"
-      LIBSOXR_SYSTEM_CPPSYMBOLS="USE_SYSTEM_SOXR"
+      LIBSOXR_SYSTEM_LIBS=$SOXR_LIBS
+      LIBSOXR_SYSTEM_CXXFLAGS=$SOXR_CFLAGS
+      LIBSOXR_SYSTEM_CPPSYMBOLS="USE_LIBSOXR"
       { $as_echo "$as_me:${as_lineno-$LINENO}: Soxr libraries are available as system libraries" >&5
 $as_echo "$as_me: Soxr libraries are available as system libraries" >&6;}
    else
@@ -6052,15 +6073,15 @@ $as_echo "$as_me: Soxr libraries are NOT available as system libraries" >&6;}
    fi
 
 
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libsoxr/src/soxr-lsr.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libsoxr/src/soxr-lsr.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/libsoxr/src/soxr-lsr.h... " >&6; }
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/libsoxr/src/soxr.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/libsoxr/src/soxr.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/libsoxr/src/soxr.h... " >&6; }
 if eval \${$as_ac_File+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   test "$cross_compiling" = yes &&
   as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/libsoxr/src/soxr-lsr.h"; then
+if test -r "${srcdir}/lib-src/libsoxr/src/soxr.h"; then
   eval "$as_ac_File=yes"
 else
   eval "$as_ac_File=no"
@@ -8546,22 +8567,19 @@ if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes"
    as_fn_error $? "Audacity requires portaudio to be enabled" "$LINENO" 5
 fi
 
+if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
+      LIBSAMPLERATE_USE_LOCAL="no"
+   LIBSAMPLERATE_USE_SYSTEM="no"
+fi
+if test x"$LIBRESAMPLE_ARGUMENT" = x"unspecified" ; then
+      LIBRESAMPLE_USE_LOCAL="no"
+   LIBRESAMPLE_USE_SYSTEM="no"
+fi
 if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Both libresample and libsamplerate are available" >&5
-$as_echo "$as_me: Both libresample and libsamplerate are available" >&6;}
-   { $as_echo "$as_me:${as_lineno-$LINENO}: deciding which to use based on arguments ..." >&5
-$as_echo "$as_me: deciding which to use based on arguments ..." >&6;}
-   if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
-            LIBSAMPLERATE_USE_LOCAL="no"
-      LIBSAMPLERATE_USE_SYSTEM="no"
-            { $as_echo "$as_me:${as_lineno-$LINENO}: Libsamplerate not explicitly requested, using libresample" >&5
-$as_echo "$as_me: Libsamplerate not explicitly requested, using libresample" >&6;}
-   else
-                  LIBRESAMPLE_USE_LOCAL="no"
-      LIBRESAMPLE_USE_SYSTEM="no"
-            { $as_echo "$as_me:${as_lineno-$LINENO}: Using libsamplerate as requested" >&5
-$as_echo "$as_me: Using libsamplerate as requested" >&6;}
-   fi
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Both libresample and libsamplerate are requested: using libresample" >&5
+$as_echo "$as_me: Both libresample and libsamplerate are requested: using libresample" >&6;}
+   LIBSAMPLERATE_USE_LOCAL="no"
+   LIBSAMPLERATE_USE_SYSTEM="no"
 fi
 
 
