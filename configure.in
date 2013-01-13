@@ -440,29 +440,26 @@ if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes"
    AC_MSG_ERROR([Audacity requires portaudio to be enabled])
 fi
 
-dnl we can only have one variable-rate resampling library used.
+dnl we can only have one alternative variable-rate resampling library used.
 dnl by now we will have both enabled if they are present, regardless of whether
 dnl they were requested, unless one was specifically disabled.
 dnl we would like to honour requests at this stage, so need to know about
 dnl the original options, not just which LIB_USE variables have been set.
+if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
+   dnl they didn't ask for libsamplerate, they don't get it
+   LIBSAMPLERATE_USE_LOCAL="no"
+   LIBSAMPLERATE_USE_SYSTEM="no"
+fi
+if test x"$LIBRESAMPLE_ARGUMENT" = x"unspecified" ; then
+   dnl they didn't ask for libresample, they don't get it
+   LIBRESAMPLE_USE_LOCAL="no"
+   LIBRESAMPLE_USE_SYSTEM="no"
+fi
 if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
-   dnl if we get here, both libraries are available to us.
-   AC_MSG_NOTICE([Both libresample and libsamplerate are available])
-   AC_MSG_NOTICE([deciding which to use based on arguments ...])
-   if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
-      dnl they didn't ask for libsamplerate, they don't get it
-      LIBSAMPLERATE_USE_LOCAL="no"
-      LIBSAMPLERATE_USE_SYSTEM="no"
-      dnl done - we are using libresample
-      AC_MSG_NOTICE([Libsamplerate not explicitly requested, using libresample])
-   else
-      dnl If we get here, then libsamplerate has been explicitly specified.
-      dnl Could that be disabling it? No, because it wouldn't then have been enabled above.
-      LIBRESAMPLE_USE_LOCAL="no"
-      LIBRESAMPLE_USE_SYSTEM="no"
-      dnl done - we are using libsamplerate
-      AC_MSG_NOTICE([Using libsamplerate as requested])
-   fi
+   dnl if we get here, both libraries are available and have been requested: use libresample.
+   AC_MSG_NOTICE([Both libresample and libsamplerate are requested: using libresample])
+   LIBSAMPLERATE_USE_LOCAL="no"
+   LIBSAMPLERATE_USE_SYSTEM="no"
 fi
 
 dnl if ( test "$SLV2_USE_LOCAL" != "yes" && test "$LIBLRDF_USE_LOCAL" != "yes") && test "$REDLAND_USE_LOCAL" = "yes" ; then
