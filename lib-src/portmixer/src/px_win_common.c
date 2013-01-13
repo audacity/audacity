@@ -72,7 +72,7 @@ static void dprintf(const char *format, ...)
 // so check for it at runtime.  However, post 2.0, this can be deleted
 // since pre-Win2k support will be dropped.
 #define VerSetConditionMask VerSetConditionMaskThunk
-LONGLONG
+ULONGLONG
 VerSetConditionMaskThunk(ULONGLONG ConditionMask,
                          DWORD TypeMask,
                          BYTE Condition)
@@ -80,9 +80,9 @@ VerSetConditionMaskThunk(ULONGLONG ConditionMask,
    // The VerifyVersionInfo() function did not appear until Windows 2000,
    // so check for it at runtime.  However, post 2.0, this can be dropped
    // since pre-Win2k support will be dropped.
-   typedef BOOL (WINAPI *versetconditionask)(ULONGLONG ConditionMask,
-                                             DWORD TypeMask,
-                                             BYTE Condition);
+   typedef ULONGLONG (WINAPI *versetconditionask)(ULONGLONG ConditionMask,
+                                                  DWORD TypeMask,
+                                                  BYTE Condition);
    versetconditionask vscm =
       (versetconditionask) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
                                          "VerSetConditionMask");
