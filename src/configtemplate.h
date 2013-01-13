@@ -7,6 +7,15 @@
 /* Define we are compiling Audacity itself, not an Audacity plug-in */
 #undef BUILDING_AUDACITY
 
+/* Use system FFmpeg library and disable dynamic loading of it. */
+#undef DISABLE_DYNAMIC_LOADING_FFMPEG
+
+/* Define if LAME should be linked at compile time */
+#undef DISABLE_DYNAMIC_LOADING_LAME
+
+/* Define to enable sse */
+#undef ENABLE_SSE
+
 /* Define to 1 if you have the <alloca.h> header file. */
 #undef HAVE_ALLOCA_H
 
@@ -71,6 +80,9 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
@@ -84,12 +96,6 @@
    */
 #undef USE_FFMPEG
 
-/* Use system LAME library and disable dynamic loading of it. */
-#undef DISABLE_DYNAMIC_LOADING_LAME
-
-/* Use system FFmpeg library and disable dynamic loading of it. */
-#undef DISABLE_DYNAMIC_LOADING_FFMPEG
-
 /* Define if LADSPA plug-ins are enabled */
 #undef USE_LADSPA
 
@@ -102,14 +108,14 @@
 /* Define if mp3 support is implemented with the libmad library */
 #undef USE_LIBMAD
 
-/* Define if libsoxr support should be enabled */
-#undef USE_LIBSOXR
-
 /* Define if libresample support should be enabled */
 #undef USE_LIBRESAMPLE
 
 /* Define if libsamplerate support should be enabled */
 #undef USE_LIBSAMPLERATE
+
+/* Define if libsoxr support should be enabled */
+#undef USE_LIBSOXR
 
 /* Define if libtwolame (MP2 export) support should be enabled */
 #undef USE_LIBTWOLAME
@@ -137,9 +143,6 @@
 
 /* Use system Expat library */
 #undef USE_SYSTEM_EXPAT
-
-/* Define if TagLib (metadata export) support should be enabled */
-#undef USE_TAGLIB
 
 /* Define if Vamp analysis plugin support should be enabled */
 #undef USE_VAMP
