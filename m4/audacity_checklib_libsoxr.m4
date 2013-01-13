@@ -1,22 +1,25 @@
 dnl Add Audacity license?
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_libsoxr.m4 serial 1
+# audacity_checklib_libsoxr.m4 serial 2
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
 
-   AC_ARG_WITH(libsoxr,
-               [AS_HELP_STRING([--with-libsoxr],
-                               [use libsoxr for constant-rate resampling: [yes,no]])],
-               LIBSOXR_ARGUMENT=$withval,
-               LIBSOXR_ARGUMENT="unspecified")
-
+   dnl These four lines are never executed, but they document the USE_LIBSOXR
+   dnl pre-processor directive (for configunix.h etc)
    if false ; then
       AC_DEFINE(USE_LIBSOXR, 1,
                 [Define if libsoxr support should be enabled])
    fi
 
-   dnl see if libsoxr is installed on the system
+   AC_ARG_WITH(libsoxr,
+               [AS_HELP_STRING([--with-libsoxr],
+                               [use libsoxr for sample rate conversion])],
+               LIBSOXR_ARGUMENT=$withval,
+               LIBSOXR_ARGUMENT="unspecified")
+
+   dnl see if libsoxr is installed on the system (we need 0.0.5 or
+   dnl more recent)
 
    PKG_CHECK_MODULES(SOXR, soxr >= 0.0.5,
 		     soxr_available_system="yes",
