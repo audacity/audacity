@@ -12,8 +12,7 @@
 \class Resample
 \brief Combined interface to libresample, libsamplerate, and libsoxr.
 
-   This class abstracts the interface to two different variable-rate
-   resampling libraries:
+   This class abstracts the interface to three different resampling libraries:
 
       libresample, written by Dominic Mazzoni based on Resample-1.7
       by Julius Smith.  LGPL.
@@ -22,13 +21,11 @@
       of libsamplerate requests that you not distribute a binary version
       of Audacity that links to libsamplerate and also has plug-in support.
 
-      Since Audacity always does resampling on mono streams that are
-      contiguous in memory, this class doesn't support multiple channels
-      or some of the other optional features of some of these resamplers.
-
-   and the fixed-rate resampling library:
-
       libsoxr, written by Rob Sykes. LGPL.
+
+   Since Audacity always does resampling on mono streams that are
+   contiguous in memory, this class doesn't support multiple channels
+   or some of the other optional features of some of these resamplers.
 
 *//*******************************************************************/
 
@@ -48,11 +45,172 @@
 //   gPrefs->Flush();
 //}
 
-// constant-rate resampler(s)
-#ifdef USE_LIBSOXR
+// constant-rate resamplers
+#if USE_LIBRESAMPLE
 
+   #include "libresample.h"
+	
+   ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
+      : Resample()
+   {
+      this->SetMethod(useBestMethod);
+      mHandle = resample_open(mMethod, dFactor, dFactor);
+   }
+
+   ConstRateResample::~ConstRateResample()
+   {
+      resample_close(mHandle);
+      mHandle = NULL;
+   }
+
+   //v Currently unused. 
+   //wxString ConstRateResample::GetResamplingLibraryName()
+   //{
+   //   return _("Libresample by Dominic Mazzoni and Julius Smith");
+   //}
+
+   int ConstRateResample::GetNumMethods() { return 2; }
+
+   wxString ConstRateResample::GetMethodName(int index)
+   {
+      if (index == 1)
+         return _("High-quality Sinc Interpolation");
+
+      return _("Fast Sinc Interpolation");
+   }
+
+   const wxString ConstRateResample::GetFastMethodKey()
+   {
+      return wxT("/Quality/LibresampleSampleRateConverter");
+   }
+
+   const wxString ConstRateResample::GetBestMethodKey()
+   {
+      return wxT("/Quality/LibresampleHQSampleRateConverter");
+   }
+
+   int ConstRateResample::GetFastMethodDefault() {return 0;}
+   int ConstRateResample::GetBestMethodDefault() {return 1;}
+
+   int ConstRateResample::Process(double  factor,
+                                  float  *inBuffer,
+                                  int     inBufferLen,
+                                  bool    lastFlag,
+                                  int    *inBufferUsed,
+                                  float  *outBuffer,
+                                  int     outBufferLen)
+   {
+   return resample_process(mHandle, factor, inBuffer, inBufferLen,
+      (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
+   }
+
+#elif USE_LIBSAMPLERATE
+
+   #include <samplerate.h>
+	
+   ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
+      : Resample()
+   {
+      this->SetMethod(useBestMethod);
+      if (!src_is_valid_ratio (dFactor) || !src_is_valid_ratio (dFactor)) {
+         fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
+         // FIX-ME: Audacity will hang after this if branch.
+         mHandle = NULL;
+         return;
+      }
+
+	  int err;
+      SRC_STATE *state = src_new(mMethod, 1, &err);
+      mHandle = (void *)state;
+      mShouldReset = false;
+      mSamplesLeft = 0;
+   }
+
+   ConstRateResample::~ConstRateResample()
+   {
+      src_delete((SRC_STATE *)mHandle);
+      mHandle = NULL;
+   }
+
+   //v Currently unused. 
+   //wxString ConstRateResample::GetResamplingLibraryName()
+   //{
+   //   return _("Libsamplerate by Erik de Castro Lopo");
+   //}
+
+   int ConstRateResample::GetNumMethods()
+   {
+      int i = 0;
+
+      while(src_get_name(i))
+         i++;
+
+      return i;
+   }
+
+   wxString ConstRateResample::GetMethodName(int index)
+   {
+      return wxString(wxString::FromAscii(src_get_name(index)));
+   }
+
+   const wxString ConstRateResample::GetFastMethodKey()
+   {
+      return wxT("/Quality/SampleRateConverter");
+   }
+
+   const wxString ConstRateResample::GetBestMethodKey()
+   {
+      return wxT("/Quality/HQSampleRateConverter");
+   }
+
+   int ConstRateResample::GetFastMethodDefault()
+   {
+      return SRC_SINC_FASTEST;
+   }
+
+   int ConstRateResample::GetBestMethodDefault()
+   {
+      return SRC_SINC_BEST_QUALITY;
+   }
+
+   int ConstRateResample::Process(double  factor,
+                                  float  *inBuffer,
+                                  int     inBufferLen,
+                                  bool    lastFlag,
+                                  int    *inBufferUsed,
+                                  float  *outBuffer,
+                                  int     outBufferLen)
+   {
+   if (mInitial) {
+      src_set_ratio((SRC_STATE *)mHandle, factor);
+      mInitial = false;
+   }
+
+   SRC_DATA data;
+
+   data.data_in = inBuffer;
+   data.data_out = outBuffer;
+   data.input_frames = inBufferLen;
+   data.output_frames = outBufferLen;
+   data.input_frames_used = 0;
+   data.output_frames_gen = 0;
+   data.end_of_input = (int)lastFlag;
+   data.src_ratio = factor;
+
+   int err = src_process((SRC_STATE *)mHandle, &data);
+   if (err) {
+      wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
+      return 0;
+   }
+
+   *inBufferUsed = (int)data.input_frames_used;
+   return (int)data.output_frames_gen;  
+   }
+
+
+#elif USE_LIBSOXR
    #include <soxr.h>
-
+	
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
       : Resample()
    {

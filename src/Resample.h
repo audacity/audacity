@@ -109,8 +109,8 @@ class ConstRateResample : public Resample
    ConstRateResample(const bool useBestMethod, const double dFactor);
    virtual ~ConstRateResample();
 
-   // Override base class methods only if we actually have a const-rate library.
-   #if USE_LIBSOXR
+   // Override base class methods only if we actually have a sample rate conversion library.
+   #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE || USE_LIBSOXR
       static int GetNumMethods();
       static wxString GetMethodName(int index);
 
@@ -143,6 +143,8 @@ class ConstRateResample : public Resample
       else
          mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
    };
+ private:
+   bool  mInitial;
 };
 
 class VarRateResample : public Resample
@@ -152,7 +154,7 @@ class VarRateResample : public Resample
    VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
    virtual ~VarRateResample();
 
-   // Override base class methods only if we actually have a var-rate library.
+   // Override base class methods only if we actually have a sample rate conversion library.
    #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE || USE_LIBSOXR
       //vvv Note that we're not actually calling any of these Get* methods 
       // for var-rate, as the decision was to not allow QualityPrefs for it. 
