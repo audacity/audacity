@@ -12,6 +12,13 @@ AC_DEFUN([AUDACITY_CHECKLIB_LAME], [
                LAME_ARGUMENT=$withval,
                LAME_ARGUMENT="unspecified")
 
+   dnl These four lines are never executed, but they document the DISABLE_DYNAMIC_LOADING_LAME
+   dnl pre-processor directive (for configunix.h etc)
+   if false ; then
+      AC_DEFINE(DISABLE_DYNAMIC_LOADING_LAME, 1,
+                [Define if LAME should be linked at compile time])
+   fi
+
    dnl See if LAME is installed in the system
 
    AC_CHECK_LIB(mp3lame,
