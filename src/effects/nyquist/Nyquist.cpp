@@ -1147,6 +1147,7 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
    if (info.Length() > 0) {
       wxControl  *item;
       item = new wxStaticText(this, -1, info);
+      item->SetName(info);    // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 5);
    }
 
@@ -1157,6 +1158,7 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
       NyqControl *ctrl = &((*mControls)[i]);
 
       item = new wxStaticText(this, -1, ctrl->name + wxT(":"));
+      item->SetName(item->GetLabel());    // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
       grid->Add(item, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
       if (ctrl->type == NYQ_CTRL_STRING) {
@@ -1223,6 +1225,7 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
       }
       else {
          item = new wxStaticText(this, -1, ctrl->label);
+         item->SetName(ctrl->label);   // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
          grid->Add(item, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
       }
    }
@@ -1413,6 +1416,7 @@ NyquistInputDialog::NyquistInputDialog(wxWindow * parent, wxWindowID id,
    wxControl  *item;
 
    item = new wxStaticText(this, -1, prompt);
+   item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
    mCommandText = new wxTextCtrl(this, -1, initialCommand,
@@ -1473,6 +1477,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    wxControl  *item;
 
    item = new wxStaticText(this, -1, prompt);
+   item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
 
    // TODO use ShowInfoDialog() instead.
