@@ -111,13 +111,20 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("iAVC"), roleLibrary);
    AddCredit(wxT("LAME"), roleLibrary);
    AddCredit(wxT("libmad"), roleLibrary);
+   #if USE_LIBRESAMPLE
+      AddCredit(wxT("libresample"), roleLibrary);
+   #endif
+   #if USE_LIBSAMPLERATE
+      AddCredit(wxT("libsamplerate"), roleLibrary);
+   #endif
+   #if USE_LIBSOXR
+      AddCredit(wxT("libsoxr"), roleLibrary);
+   #endif
    AddCredit(wxT("libsndfile"), roleLibrary);
-   AddCredit(wxT("libsoxr"), roleLibrary);
    AddCredit(wxT("Nyquist"), roleLibrary);
    AddCredit(wxT("Ogg Vorbis"), roleLibrary);
    AddCredit(wxT("PortAudio"), roleLibrary);
    AddCredit(wxT("portsmf"), roleLibrary);
-   AddCredit(wxT("Resample"), roleLibrary);
    AddCredit(wxT("sbsms"), roleLibrary);
    AddCredit(wxT("SoundTouch"), roleLibrary);
    AddCredit(wxT("TwoLAME"), roleLibrary);
