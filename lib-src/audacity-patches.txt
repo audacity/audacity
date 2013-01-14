@@ -80,12 +80,12 @@ Version in Audacity SVN: 1.1.3
 Patches: None, except docs build disabled in Makefile.am
 /usr/share/aclocal/libtool.m4 copied to acinclude.m4 (working round not having
 an m4 directory in the package for libtool files)
-Upstream Version: 1.1.3
+Upstream Version: 1.3.0
 
 libresample
 -----------
 Audio sample rate conversion library. Maintained by Audacity project. 
-(Currently used only for Time Tracks, in favor of libsoxr elsewhere.)
+(Depreciated in favour of libsoxr)
 
 libsamplerate
 -------------
@@ -97,11 +97,9 @@ Patches: endian.m4, lrint.m4, llrint.m4, lrintf.m4, clip_mode.m4 copied from
 			libsndfile's M4/.
 		 signal.m4 created out of the tail of acinclude.m4 with the remaining
 		 	necessary macro
-       libsndfile-ppc-crash-on-some-id3-mp3s.patch - submitted to libsndfile
-          list on may 22 2012 (mchinen)
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
-Upstream Version: 0.1.7
+Upstream Version: 0.1.8
 
 libsndfile
 ----------
@@ -111,18 +109,22 @@ Version in Audacity SVN: 1.0.24
 Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
          id3.patch: already in upstream 1.0.26 (git 41da64d9270b2fa10c93ce74dea014fe8f0bd303)
                     fixes crash when importing mp3s that have duplicated tags
+       libsndfile-ppc-crash-on-some-id3-mp3s.patch - submitted to libsndfile
+          list on may 22 2012 (mchinen)
 
-Upstream Version: 1.0.24
+Upstream Version: 1.0.25
 
 libsoxr
 -------
 The SoX Resampler library performs one-dimensional sample-rate conversion, 
 by Rob Sykes.
+http://sourceforge.net/p/soxr/wiki/Home/
 Version in Audacity SVN: 0.0.5
 Patches: 
    * "libsoxr/configure" file: modified cmake params
    * modified .vcproj file in win\Projects\libsoxr
 
+Upstream Version: 0.0.5 (although no file downloads are available yet)
 
 libvamp
 -------
@@ -132,7 +134,7 @@ Patches: optional-progs.patch: Make building the Vamp host (and so the
 dependecy on libsndfile) optional rather than mandatory. Accepted upstream.
 		 distclean.patch: ensure that distclean actually works and takes away
 		 auto* droppings. Accepted upstream.
-Upstream Version: 2.0
+Upstream Version: 2.4
 
 libvorbis
 ---------
@@ -143,7 +145,7 @@ Patches: local-libogg.patch: configure patch that lets us build against a
 local libogg if there isn't a system one.
 no-docs-examples.patch: disable building documentation and examples, so we can
 avoid shipping the files in those directories
-Upstream Version: 1.2.0
+Upstream Version: 1.3.3
 
 liblrdf
 -------
@@ -268,7 +270,7 @@ fix-includes.patch: needed for GCC 4.3.1 to include all the headers we use
 directly. In upstream SVN
 Argument ([-Wall foreign]) added to AM_INIT_AUTOMAKE because autoreconf fails
 otherwise
-Upstream Version: 1.3.1
+Upstream Version: 1.7.1
 
 taglib
 ------
@@ -293,7 +295,7 @@ Version in Audacity SVN: 0.3.12
 Patches: None
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
-Upstream Version: 0.3.12
+Upstream Version: 0.3.13
 
 wave++
 ------
