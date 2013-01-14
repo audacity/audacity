@@ -1932,6 +1932,11 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
       return supported;
    }
 
+   // LLL: Remove when a proper method of determining actual supported
+   //      DirectSound rate is devised.
+   const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(devInfo->hostApi);
+   bool isDirectSound = (hostInfo && hostInfo->type == paDirectSound);
+
    PaStreamParameters pars;
 
    pars.device = devIndex;
@@ -1942,12 +1947,18 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
    
    for (i = 0; i < NumRatesToTry; i++)
    {
+      // LLL: Remove when a proper method of determining actual supported
+      //      DirectSound rate is devised.
+      if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(NULL, &pars, RatesToTry[i]) == 0)
          supported.Add(RatesToTry[i]);
    }
 
    if (irate != 0 && supported.Index(irate) == wxNOT_FOUND)
    {
+      // LLL: Remove when a proper method of determining actual supported
+      //      DirectSound rate is devised.
+      if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
          supported.Add(irate);
    }
@@ -1987,6 +1998,11 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
    gPrefs->Read(wxT("/AudioIO/LatencyDuration"), &latencyDuration);
    gPrefs->Read(wxT("/AudioIO/RecordChannels"), &recordChannels);
 
+   // LLL: Remove when a proper method of determining actual supported
+   //      DirectSound rate is devised.
+   const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(devInfo->hostApi);
+   bool isDirectSound = (hostInfo && hostInfo->type == paDirectSound);
+
    PaStreamParameters pars;
 
    pars.device = devIndex;
@@ -1997,12 +2013,18 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
    
    for (i = 0; i < NumRatesToTry; i++)
    {
+      // LLL: Remove when a proper method of determining actual supported
+      //      DirectSound rate is devised.
+      if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(&pars, NULL, RatesToTry[i]) == 0)
          supported.Add(RatesToTry[i]);
    }
 
    if (irate != 0 && supported.Index(irate) == wxNOT_FOUND)
    {
+      // LLL: Remove when a proper method of determining actual supported
+      //      DirectSound rate is devised.
+      if (!(isDirectSound && RatesToTry[i] > 200000))
       if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
          supported.Add(irate);
    }
