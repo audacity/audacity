@@ -29,6 +29,17 @@
 			name = "Configure-libsamplerate";
 			productName = Untitled;
 		};
+		ED85B42716A47329006DA21D /* Configure-libresample */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = ED85B42916A47329006DA21D /* Build configuration list for PBXAggregateTarget "Configure-libresample" */;
+			buildPhases = (
+				ED85B42816A47329006DA21D /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Configure-libresample";
+			productName = Untitled;
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -1199,7 +1210,6 @@
 		ED2707460EF9C550007D4FFD /* libsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* libsbsms.a */; };
 		ED2707500EF9C64F007D4FFD /* SBSMSEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */; };
 		ED2707510EF9C64F007D4FFD /* TimeScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074D0EF9C64F007D4FFD /* TimeScale.cpp */; };
-		ED309AAA164E850500D21825 /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
 		ED3D7FF00DF73889000F43E3 /* EffectCategory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEC0DF73889000F43E3 /* EffectCategory.cpp */; };
 		ED3D7FF10DF73889000F43E3 /* EffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */; };
 		ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
@@ -1532,7 +1542,6 @@
 		ED663CBF16543647007F53A5 /* libportmixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 170740960988F2F7008541CC /* libportmixer.a */; };
 		ED663CC116543647007F53A5 /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707401E0988EEAA008541CC /* libsndfile.a */; };
 		ED663CC216543647007F53A5 /* libsoundtouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707407A0988F1BB008541CC /* libsoundtouch.a */; };
-		ED663CC316543647007F53A5 /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED663CC416543647007F53A5 /* libFLAC++.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEC1E09A2F2DD00188F3B /* libFLAC++.a */; };
 		ED663CC516543647007F53A5 /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEBEA09A2F16200188F3B /* libFLAC.a */; };
 		ED663CC616543647007F53A5 /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E67F5F0A3A160D0021D89F /* libportaudio.a */; };
@@ -1546,6 +1555,340 @@
 		ED663CD416543647007F53A5 /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
 		ED663CD616543647007F53A5 /* Install.txt in Install instructions */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		ED663D0016543835007F53A5 /* libsamplerate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED663B3C16543581007F53A5 /* libsamplerate.a */; };
+		ED85B3DA16A46FC9006DA21D /* hr.po in Sources */ = {isa = PBXBuildFile; fileRef = ED85B3CF16A46DDA006DA21D /* hr.po */; };
+		ED85B3DB16A4702F006DA21D /* hr.po in Sources */ = {isa = PBXBuildFile; fileRef = ED85B3CF16A46DDA006DA21D /* hr.po */; };
+		ED85B45B16A47353006DA21D /* Audacity.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73C9098D516D009CD6E0 /* Audacity.icns */; };
+		ED85B45C16A47353006DA21D /* AudacityAIFF.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73CA098D516D009CD6E0 /* AudacityAIFF.icns */; };
+		ED85B45D16A47353006DA21D /* AudacityAU.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73CB098D516D009CD6E0 /* AudacityAU.icns */; };
+		ED85B45E16A47353006DA21D /* AudacityMP3.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73CC098D516D009CD6E0 /* AudacityMP3.icns */; };
+		ED85B45F16A47353006DA21D /* AudacityOGG.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73CD098D516D009CD6E0 /* AudacityOGG.icns */; };
+		ED85B46016A47353006DA21D /* AudacityProject.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73CE098D516D009CD6E0 /* AudacityProject.icns */; };
+		ED85B46116A47353006DA21D /* AudacityWAV.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73CF098D516D009CD6E0 /* AudacityWAV.icns */; };
+		ED85B46216A47353006DA21D /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
+		ED85B46316A47353006DA21D /* Install.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
+		ED85B46516A47353006DA21D /* AudacityApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFCE09883BFD008A330A /* AudacityApp.cpp */; };
+		ED85B46616A47353006DA21D /* AudioIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFD209883BFD008A330A /* AudioIO.cpp */; };
+		ED85B46716A47353006DA21D /* BatchCommandDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFD409883BFD008A330A /* BatchCommandDialog.cpp */; };
+		ED85B46816A47353006DA21D /* BatchCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFD609883BFD008A330A /* BatchCommands.cpp */; };
+		ED85B46916A47353006DA21D /* BatchProcessDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFD809883BFD008A330A /* BatchProcessDialog.cpp */; };
+		ED85B46A16A47353006DA21D /* Benchmark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFDA09883BFD008A330A /* Benchmark.cpp */; };
+		ED85B46B16A47353006DA21D /* LegacyAliasBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFDE09883BFD008A330A /* LegacyAliasBlockFile.cpp */; };
+		ED85B46C16A47353006DA21D /* LegacyBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFE009883BFD008A330A /* LegacyBlockFile.cpp */; };
+		ED85B46D16A47353006DA21D /* PCMAliasBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFE209883BFD008A330A /* PCMAliasBlockFile.cpp */; };
+		ED85B46E16A47353006DA21D /* SilentBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFE409883BFD008A330A /* SilentBlockFile.cpp */; };
+		ED85B46F16A47353006DA21D /* SimpleBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFE609883BFD008A330A /* SimpleBlockFile.cpp */; };
+		ED85B47016A47353006DA21D /* BlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFE809883BFD008A330A /* BlockFile.cpp */; };
+		ED85B47116A47353006DA21D /* CrossFade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFF409883BFD008A330A /* CrossFade.cpp */; };
+		ED85B47216A47353006DA21D /* DirManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFF709883BFD008A330A /* DirManager.cpp */; };
+		ED85B47316A47353006DA21D /* Dither.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFF909883BFD008A330A /* Dither.cpp */; };
+		ED85B47416A47353006DA21D /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
+		ED85B47516A47353006DA21D /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
+		ED85B47616A47353006DA21D /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
+		ED85B47716A47353006DA21D /* ChangeLength.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00A09883BFD008A330A /* ChangeLength.cpp */; };
+		ED85B47816A47353006DA21D /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
+		ED85B47916A47353006DA21D /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
+		ED85B47A16A47353006DA21D /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
+		ED85B47B16A47353006DA21D /* ClickRemoval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01209883BFD008A330A /* ClickRemoval.cpp */; };
+		ED85B47C16A47353006DA21D /* Compressor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01409883BFD008A330A /* Compressor.cpp */; };
+		ED85B47D16A47353006DA21D /* Echo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01709883BFD008A330A /* Echo.cpp */; };
+		ED85B47E16A47353006DA21D /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01909883BFD008A330A /* Effect.cpp */; };
+		ED85B47F16A47353006DA21D /* Equalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01B09883BFD008A330A /* Equalization.cpp */; };
+		ED85B48016A47353006DA21D /* Fade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01D09883BFD008A330A /* Fade.cpp */; };
+		ED85B48116A47353006DA21D /* Invert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02109883BFD008A330A /* Invert.cpp */; };
+		ED85B48216A47353006DA21D /* LadspaEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02609883BFD008A330A /* LadspaEffect.cpp */; };
+		ED85B48316A47353006DA21D /* LoadLadspa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02809883BFD008A330A /* LoadLadspa.cpp */; };
+		ED85B48416A47353006DA21D /* Leveller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02A09883BFD008A330A /* Leveller.cpp */; };
+		ED85B48516A47353006DA21D /* LoadEffects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02C09883BFD008A330A /* LoadEffects.cpp */; };
+		ED85B48616A47353006DA21D /* Noise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02E09883BFD008A330A /* Noise.cpp */; };
+		ED85B48716A47353006DA21D /* NoiseRemoval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03009883BFD008A330A /* NoiseRemoval.cpp */; };
+		ED85B48816A47353006DA21D /* Normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03209883BFD008A330A /* Normalize.cpp */; };
+		ED85B48916A47353006DA21D /* LoadNyquist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03609883BFD008A330A /* LoadNyquist.cpp */; };
+		ED85B48A16A47353006DA21D /* Nyquist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03809883BFD008A330A /* Nyquist.cpp */; };
+		ED85B48B16A47353006DA21D /* Phaser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03A09883BFD008A330A /* Phaser.cpp */; };
+		ED85B48C16A47353006DA21D /* Repeat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B03E09883BFD008A330A /* Repeat.cpp */; };
+		ED85B48D16A47353006DA21D /* Reverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04009883BFD008A330A /* Reverse.cpp */; };
+		ED85B48E16A47353006DA21D /* Silence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04209883BFD008A330A /* Silence.cpp */; };
+		ED85B48F16A47353006DA21D /* SimpleMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04409883BFD008A330A /* SimpleMono.cpp */; };
+		ED85B49016A47353006DA21D /* SimplePairedTwoTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */; };
+		ED85B49116A47353006DA21D /* SoundTouchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04809883BFD008A330A /* SoundTouchEffect.cpp */; };
+		ED85B49216A47353006DA21D /* StereoToMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04C09883BFD008A330A /* StereoToMono.cpp */; };
+		ED85B49316A47353006DA21D /* ToneGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04E09883BFD008A330A /* ToneGen.cpp */; };
+		ED85B49416A47353006DA21D /* TruncSilence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B05009883BFD008A330A /* TruncSilence.cpp */; };
+		ED85B49516A47353006DA21D /* TwoPassSimpleMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B05209883BFD008A330A /* TwoPassSimpleMono.cpp */; };
+		ED85B49616A47353006DA21D /* Wahwah.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B05C09883BFD008A330A /* Wahwah.cpp */; };
+		ED85B49716A47353006DA21D /* Envelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B05F09883BFD008A330A /* Envelope.cpp */; };
+		ED85B49816A47353006DA21D /* Export.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B06409883BFD008A330A /* Export.cpp */; };
+		ED85B49916A47353006DA21D /* ExportCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B06609883BFD008A330A /* ExportCL.cpp */; };
+		ED85B49A16A47353006DA21D /* ExportMP3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B06809883BFD008A330A /* ExportMP3.cpp */; };
+		ED85B49B16A47353006DA21D /* ExportMultiple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B06A09883BFD008A330A /* ExportMultiple.cpp */; };
+		ED85B49C16A47353006DA21D /* ExportOGG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B06C09883BFD008A330A /* ExportOGG.cpp */; };
+		ED85B49D16A47353006DA21D /* ExportPCM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B06E09883BFD008A330A /* ExportPCM.cpp */; };
+		ED85B49E16A47353006DA21D /* FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B07009883BFD008A330A /* FFT.cpp */; };
+		ED85B49F16A47353006DA21D /* FileFormats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B07209883BFD008A330A /* FileFormats.cpp */; };
+		ED85B4A016A47353006DA21D /* FreqWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B07509883BFD008A330A /* FreqWindow.cpp */; };
+		ED85B4A116A47353006DA21D /* HistoryWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B07909883BFD008A330A /* HistoryWindow.cpp */; };
+		ED85B4A216A47353006DA21D /* ImageManipulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B07B09883BFD008A330A /* ImageManipulation.cpp */; };
+		ED85B4A316A47353006DA21D /* Import.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B07F09883BFD008A330A /* Import.cpp */; };
+		ED85B4A416A47353006DA21D /* ImportFLAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08109883BFD008A330A /* ImportFLAC.cpp */; };
+		ED85B4A516A47353006DA21D /* ImportLOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08309883BFD008A330A /* ImportLOF.cpp */; };
+		ED85B4A616A47353006DA21D /* ImportMIDI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08509883BFD008A330A /* ImportMIDI.cpp */; };
+		ED85B4A716A47353006DA21D /* ImportMP3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08709883BFD008A330A /* ImportMP3.cpp */; };
+		ED85B4A816A47353006DA21D /* ImportOGG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08909883BFD008A330A /* ImportOGG.cpp */; };
+		ED85B4A916A47353006DA21D /* ImportPCM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08B09883BFD008A330A /* ImportPCM.cpp */; };
+		ED85B4AA16A47353006DA21D /* ImportRaw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B08E09883BFD008A330A /* ImportRaw.cpp */; };
+		ED85B4AB16A47353006DA21D /* RawAudioGuess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B09009883BFD008A330A /* RawAudioGuess.cpp */; };
+		ED85B4AC16A47353006DA21D /* Internat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B09909883BFD008A330A /* Internat.cpp */; };
+		ED85B4AD16A47353006DA21D /* LabelTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B09B09883BFD008A330A /* LabelTrack.cpp */; };
+		ED85B4AE16A47353006DA21D /* LangChoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B09F09883BFD008A330A /* LangChoice.cpp */; };
+		ED85B4AF16A47353006DA21D /* Languages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0A109883BFD008A330A /* Languages.cpp */; };
+		ED85B4B016A47353006DA21D /* Legacy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0A309883BFD008A330A /* Legacy.cpp */; };
+		ED85B4B116A47353006DA21D /* Menus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0A709883BFD008A330A /* Menus.cpp */; };
+		ED85B4B216A47353006DA21D /* Mix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0AB09883BFD008A330A /* Mix.cpp */; };
+		ED85B4B316A47353006DA21D /* NoteTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0AF09883BFD008A330A /* NoteTrack.cpp */; };
+		ED85B4B416A47353006DA21D /* PitchName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0B109883BFD008A330A /* PitchName.cpp */; };
+		ED85B4B516A47353006DA21D /* PlatformCompatibility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0B309883BFD008A330A /* PlatformCompatibility.cpp */; };
+		ED85B4B616A47353006DA21D /* BatchPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0B809883BFD008A330A /* BatchPrefs.cpp */; };
+		ED85B4B716A47353006DA21D /* DirectoriesPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0BB09883BFD008A330A /* DirectoriesPrefs.cpp */; };
+		ED85B4B816A47353006DA21D /* GUIPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0BF09883BFD008A330A /* GUIPrefs.cpp */; };
+		ED85B4B916A47353006DA21D /* KeyConfigPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0C109883BFD008A330A /* KeyConfigPrefs.cpp */; };
+		ED85B4BA16A47353006DA21D /* MousePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0C309883BFD008A330A /* MousePrefs.cpp */; };
+		ED85B4BB16A47353006DA21D /* PrefsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0C509883BFD008A330A /* PrefsDialog.cpp */; };
+		ED85B4BC16A47353006DA21D /* QualityPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0C809883BFD008A330A /* QualityPrefs.cpp */; };
+		ED85B4BD16A47353006DA21D /* SpectrumPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0CA09883BFD008A330A /* SpectrumPrefs.cpp */; };
+		ED85B4BE16A47353006DA21D /* Prefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0CC09883BFD008A330A /* Prefs.cpp */; };
+		ED85B4BF16A47353006DA21D /* Printing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0CE09883BFD008A330A /* Printing.cpp */; };
+		ED85B4C016A47353006DA21D /* Project.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0D009883BFD008A330A /* Project.cpp */; };
+		ED85B4C116A47353006DA21D /* Resample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0D209883BFD008A330A /* Resample.cpp */; };
+		ED85B4C216A47353006DA21D /* RingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0D409883BFD008A330A /* RingBuffer.cpp */; };
+		ED85B4C316A47353006DA21D /* SampleFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0D609883BFD008A330A /* SampleFormat.cpp */; };
+		ED85B4C416A47353006DA21D /* Sequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0DA09883BFD008A330A /* Sequence.cpp */; };
+		ED85B4C516A47353006DA21D /* Shuttle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0DC09883BFD008A330A /* Shuttle.cpp */; };
+		ED85B4C616A47353006DA21D /* Spectrum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0DE09883BFD008A330A /* Spectrum.cpp */; };
+		ED85B4C716A47353006DA21D /* Tags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0E009883BFD008A330A /* Tags.cpp */; };
+		ED85B4C816A47353006DA21D /* TimeTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0E209883BFD008A330A /* TimeTrack.cpp */; };
+		ED85B4C916A47353006DA21D /* Track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0E809883BFD008A330A /* Track.cpp */; };
+		ED85B4CA16A47353006DA21D /* TrackArtist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EA09883BFD008A330A /* TrackArtist.cpp */; };
+		ED85B4CB16A47353006DA21D /* TrackPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EC09883BFD008A330A /* TrackPanel.cpp */; };
+		ED85B4CC16A47353006DA21D /* TrackPanelAx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */; };
+		ED85B4CD16A47353006DA21D /* UndoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F209883BFD008A330A /* UndoManager.cpp */; };
+		ED85B4CE16A47353006DA21D /* UploadDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F409883BFD008A330A /* UploadDialog.cpp */; };
+		ED85B4CF16A47353006DA21D /* VoiceKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F709883BFD008A330A /* VoiceKey.cpp */; };
+		ED85B4D016A47353006DA21D /* WaveClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F909883BFD008A330A /* WaveClip.cpp */; };
+		ED85B4D116A47353006DA21D /* WaveTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0FB09883BFD008A330A /* WaveTrack.cpp */; };
+		ED85B4D216A47353006DA21D /* AButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0FE09883BFD008A330A /* AButton.cpp */; };
+		ED85B4D316A47353006DA21D /* ASlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10009883BFD008A330A /* ASlider.cpp */; };
+		ED85B4D416A47353006DA21D /* Meter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10309883BFD008A330A /* Meter.cpp */; };
+		ED85B4D516A47353006DA21D /* MultiDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10509883BFD008A330A /* MultiDialog.cpp */; };
+		ED85B4D616A47353006DA21D /* Ruler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10709883BFD008A330A /* Ruler.cpp */; };
+		ED85B4D716A47353006DA21D /* TimeTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10909883BFD008A330A /* TimeTextCtrl.cpp */; };
+		ED85B4D816A47353006DA21D /* Warning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10B09883BFD008A330A /* Warning.cpp */; };
+		ED85B4D916A47353006DA21D /* XMLFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11009883BFD008A330A /* XMLFileReader.cpp */; };
+		ED85B4DA16A47353006DA21D /* XMLTagHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11209883BFD008A330A /* XMLTagHandler.cpp */; };
+		ED85B4DB16A47353006DA21D /* AColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFC909883BFD008A330A /* AColor.cpp */; };
+		ED85B4DC16A47353006DA21D /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFC709883BFD008A330A /* AboutDialog.cpp */; };
+		ED85B4DD16A47353006DA21D /* CommandManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 174D9026098C78AF00D5909F /* CommandManager.cpp */; };
+		ED85B4DE16A47353006DA21D /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 174D902A098C78AF00D5909F /* Keyboard.cpp */; };
+		ED85B4DF16A47353006DA21D /* ShuttleGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */; };
+		ED85B4E016A47353006DA21D /* Theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A80A2C0E15004372C4 /* Theme.cpp */; };
+		ED85B4E116A47353006DA21D /* ThemePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */; };
+		ED85B4E216A47353006DA21D /* AttachableScrollBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */; };
+		ED85B4E316A47353006DA21D /* ExpandingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */; };
+		ED85B4E416A47353006DA21D /* ImageRoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */; };
+		ED85B4E516A47353006DA21D /* ShuttlePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288217790A35D8730029AF41 /* ShuttlePrefs.cpp */; };
+		ED85B4E616A47353006DA21D /* FileNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F00A900A3E2FF100A3E5F5 /* FileNames.cpp */; };
+		ED85B4E716A47353006DA21D /* WrappedType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FC1AF90A47762C00A188AE /* WrappedType.cpp */; };
+		ED85B4E816A47353006DA21D /* TimeDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 287F9F3C0A69748F00F025FA /* TimeDialog.cpp */; };
+		ED85B4E916A47353006DA21D /* Dependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2849B4600A7444BE00ECF12D /* Dependencies.cpp */; };
+		ED85B4EA16A47353006DA21D /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
+		ED85B4EB16A47353006DA21D /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
+		ED85B4EC16A47353006DA21D /* AutoRecovery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28560C8F0A75E40F00A3429E /* AutoRecovery.cpp */; };
+		ED85B4ED16A47353006DA21D /* Repair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FA0A78FADE00C8BB1F /* Repair.cpp */; };
+		ED85B4EE16A47353006DA21D /* InterpolateAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FD0A78FAF800C8BB1F /* InterpolateAudio.cpp */; };
+		ED85B4EF16A47353006DA21D /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */; };
+		ED85B4F016A47353006DA21D /* ExportFLAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28E3E6E70A7C14CA00AB1361 /* ExportFLAC.cpp */; };
+		ED85B4F116A47353006DA21D /* ControlToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6DC0AB3DB5A003C20C5 /* ControlToolBar.cpp */; };
+		ED85B4F216A47353006DA21D /* EditToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6DE0AB3DB5A003C20C5 /* EditToolBar.cpp */; };
+		ED85B4F316A47353006DA21D /* MeterToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6E00AB3DB5A003C20C5 /* MeterToolBar.cpp */; };
+		ED85B4F416A47353006DA21D /* MixerToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6E20AB3DB5A003C20C5 /* MixerToolBar.cpp */; };
+		ED85B4F516A47353006DA21D /* SelectionBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6E40AB3DB5A003C20C5 /* SelectionBar.cpp */; };
+		ED85B4F616A47353006DA21D /* ToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6E60AB3DB5A003C20C5 /* ToolBar.cpp */; };
+		ED85B4F716A47353006DA21D /* ToolDock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6E80AB3DB5A003C20C5 /* ToolDock.cpp */; };
+		ED85B4F816A47353006DA21D /* ToolManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EA0AB3DB5A003C20C5 /* ToolManager.cpp */; };
+		ED85B4F916A47353006DA21D /* ToolsToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EC0AB3DB5A003C20C5 /* ToolsToolBar.cpp */; };
+		ED85B4FA16A47353006DA21D /* TranscriptionToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6EE0AB3DB5A003C20C5 /* TranscriptionToolBar.cpp */; };
+		ED85B4FB16A47353006DA21D /* Grabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2897F6FC0AB3DCD0003C20C5 /* Grabber.cpp */; };
+		ED85B4FC16A47353006DA21D /* XMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283DE1350AC0D4FD00E8C3AE /* XMLWriter.cpp */; };
+		ED85B4FD16A47353006DA21D /* DeviceToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */; };
+		ED85B4FE16A47353006DA21D /* ExportMP2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */; };
+		ED85B4FF16A47353006DA21D /* AutoDuck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D65C700B97E54B000E001A /* AutoDuck.cpp */; };
+		ED85B50016A47353006DA21D /* DtmfGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D65C740B97E573000E001A /* DtmfGen.cpp */; };
+		ED85B50116A47353006DA21D /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
+		ED85B50216A47353006DA21D /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
+		ED85B50316A47353006DA21D /* FileDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283B3D3F0BC21EBE00FA01D5 /* FileDialog.cpp */; };
+		ED85B50416A47353006DA21D /* FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2809C4B60BCB7E560006010F /* FileIO.cpp */; };
+		ED85B50516A47353006DA21D /* FileDialogPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */; };
+		ED85B50616A47353006DA21D /* Screenshot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */; };
+		ED85B50716A47353006DA21D /* ImportQT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2801A6430BF9268700648258 /* ImportQT.cpp */; };
+		ED85B50816A47353006DA21D /* FindClipping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2891B2850C531D2C0044FBE3 /* FindClipping.cpp */; };
+		ED85B50916A47353006DA21D /* ErrorDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283AA0E90C56ED08002CBD34 /* ErrorDialog.cpp */; };
+		ED85B50A16A47353006DA21D /* HelpText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9D0CEECEF80029ABAA /* HelpText.cpp */; };
+		ED85B50B16A47353006DA21D /* SplashDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9F0CEECEF80029ABAA /* SplashDialog.cpp */; };
+		ED85B50C16A47353006DA21D /* LoadVamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E970CEECE910029ABAA /* LoadVamp.cpp */; };
+		ED85B50D16A47353006DA21D /* VampEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E990CEECE920029ABAA /* VampEffect.cpp */; };
+		ED85B50E16A47353006DA21D /* LoadModules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */; };
+		ED85B50F16A47353006DA21D /* NonGuiThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288052BC0DEA72F300671EA4 /* NonGuiThread.cpp */; };
+		ED85B51016A47353006DA21D /* HtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C480DF2105200555C94 /* HtmlWindow.cpp */; };
+		ED85B51116A47353006DA21D /* ProgressDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C4A0DF2105200555C94 /* ProgressDialog.cpp */; };
+		ED85B51216A47353006DA21D /* EffectCategory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEC0DF73889000F43E3 /* EffectCategory.cpp */; };
+		ED85B51316A47353006DA21D /* EffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */; };
+		ED85B51416A47353006DA21D /* ImportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */; };
+		ED85B51516A47353006DA21D /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135FD0DFBA2E80076D551 /* FFmpeg.cpp */; };
+		ED85B51616A47353006DA21D /* ODComputeSummaryTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841B5000E00AD6E00F386E9 /* ODComputeSummaryTask.cpp */; };
+		ED85B51716A47353006DA21D /* ODManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841B5020E00AD6E00F386E9 /* ODManager.cpp */; };
+		ED85B51816A47353006DA21D /* ODTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841B5040E00AD6E00F386E9 /* ODTask.cpp */; };
+		ED85B51916A47353006DA21D /* ODTaskThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841B5060E00AD6E00F386E9 /* ODTaskThread.cpp */; };
+		ED85B51A16A47353006DA21D /* ODWaveTrackTaskQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841B5080E00AD6E00F386E9 /* ODWaveTrackTaskQueue.cpp */; };
+		ED85B51B16A47353006DA21D /* ODPCMAliasBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1841B50F0E00AD8D00F386E9 /* ODPCMAliasBlockFile.cpp */; };
+		ED85B51C16A47353006DA21D /* SoundActivatedRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */; };
+		ED85B51D16A47353006DA21D /* TimerRecordDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */; };
+		ED85B51E16A47353006DA21D /* ExportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */; };
+		ED85B51F16A47353006DA21D /* LoadLV2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D587C70E264CF3009C7DEA /* LoadLV2.cpp */; };
+		ED85B52016A47353006DA21D /* LV2Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D587C90E264CF4009C7DEA /* LV2Effect.cpp */; };
+		ED85B52116A47353006DA21D /* ExportFFmpegDialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DA07380E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp */; };
+		ED85B52216A47353006DA21D /* ODDecodeBlockFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 186CCE6B0E51F47400659159 /* ODDecodeBlockFile.cpp */; };
+		ED85B52316A47353006DA21D /* ODDecodeFlacTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 186CCE6E0E51F48500659159 /* ODDecodeFlacTask.cpp */; };
+		ED85B52416A47353006DA21D /* ODDecodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 186CCE700E51F48500659159 /* ODDecodeTask.cpp */; };
+		ED85B52516A47353006DA21D /* Profiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 186CCEA30E523C8E00659159 /* Profiler.cpp */; };
+		ED85B52616A47353006DA21D /* LV2PortGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EDC8DD0E5550750034BBE7 /* LV2PortGroup.cpp */; };
+		ED85B52716A47353006DA21D /* Contrast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18D8314C0ED0F56200FD870D /* Contrast.cpp */; };
+		ED85B52816A47353006DA21D /* SBSMSEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */; };
+		ED85B52916A47353006DA21D /* TimeScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074D0EF9C64F007D4FFD /* TimeScale.cpp */; };
+		ED85B52A16A47353006DA21D /* Generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18A2840E0F79BCAB0013A1BE /* Generator.cpp */; };
+		ED85B52B16A47353006DA21D /* FileHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */; };
+		ED85B52C16A47353006DA21D /* VSTEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B97B850FBF771A0076CF28 /* VSTEffect.cpp */; };
+		ED85B52D16A47353006DA21D /* DevicePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B278E0FC66863005EAC96 /* DevicePrefs.cpp */; };
+		ED85B52E16A47353006DA21D /* ImportExportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27900FC66863005EAC96 /* ImportExportPrefs.cpp */; };
+		ED85B52F16A47353006DA21D /* LibraryPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27920FC66863005EAC96 /* LibraryPrefs.cpp */; };
+		ED85B53016A47353006DA21D /* PlaybackPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27940FC66863005EAC96 /* PlaybackPrefs.cpp */; };
+		ED85B53116A47353006DA21D /* ProjectsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27960FC66863005EAC96 /* ProjectsPrefs.cpp */; };
+		ED85B53216A47353006DA21D /* RecordingPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27980FC66863005EAC96 /* RecordingPrefs.cpp */; };
+		ED85B53316A47353006DA21D /* TracksPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27E00FC66CCD005EAC96 /* TracksPrefs.cpp */; };
+		ED85B53416A47353006DA21D /* WarningsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27E20FC66CCD005EAC96 /* WarningsPrefs.cpp */; };
+		ED85B53516A47353006DA21D /* AppCommandEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */; };
+		ED85B53616A47353006DA21D /* CommandBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFE0FD1912A00FA7C75 /* CommandBuilder.cpp */; };
+		ED85B53716A47353006DA21D /* CommandHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D540000FD1912A00FA7C75 /* CommandHandler.cpp */; };
+		ED85B53816A47353006DA21D /* ScriptCommandRelay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D540030FD1912A00FA7C75 /* ScriptCommandRelay.cpp */; };
+		ED85B53916A47353006DA21D /* ResponseQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DB34780FDC2C5D0011F589 /* ResponseQueue.cpp */; };
+		ED85B53A16A47353006DA21D /* RealFFTf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */; };
+		ED85B53B16A47353006DA21D /* MidiIOPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */; };
+		ED85B53C16A47353006DA21D /* ScreenshotCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 181855950FFE916C0026D190 /* ScreenshotCommand.cpp */; };
+		ED85B53D16A47353006DA21D /* Lyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1865A9B41004490400946EE6 /* Lyrics.cpp */; };
+		ED85B53E16A47353006DA21D /* LyricsWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1865A9B61004490500946EE6 /* LyricsWindow.cpp */; };
+		ED85B53F16A47353006DA21D /* MixerBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 289E75081006D0BD00CEF79B /* MixerBoard.cpp */; };
+		ED85B54016A47353006DA21D /* BatchEvalCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */; };
+		ED85B54116A47353006DA21D /* CommandDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */; };
+		ED85B54216A47353006DA21D /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
+		ED85B54316A47353006DA21D /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
+		ED85B54416A47353006DA21D /* EffectsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28948425101DF8FC005B0713 /* EffectsPrefs.cpp */; };
+		ED85B54516A47353006DA21D /* PluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 287E207E102561F300BF47A2 /* PluginManager.cpp */; };
+		ED85B54616A47353006DA21D /* Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851F9C1027F16400152EE1 /* Command.cpp */; };
+		ED85B54716A47353006DA21D /* CommandSignature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851F9D1027F16400152EE1 /* CommandSignature.cpp */; };
+		ED85B54816A47353006DA21D /* CommandType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851F9F1027F16400152EE1 /* CommandType.cpp */; };
+		ED85B54916A47353006DA21D /* CompareAudioCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851FA11027F16400152EE1 /* CompareAudioCommand.cpp */; };
+		ED85B54A16A47353006DA21D /* GetTrackInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851FA31027F16400152EE1 /* GetTrackInfoCommand.cpp */; };
+		ED85B54B16A47353006DA21D /* HelpCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851FA51027F16400152EE1 /* HelpCommand.cpp */; };
+		ED85B54C16A47353006DA21D /* MessageCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851FA71027F16400152EE1 /* MessageCommand.cpp */; };
+		ED85B54D16A47353006DA21D /* SelectCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28851FA91027F16400152EE1 /* SelectCommand.cpp */; };
+		ED85B54E16A47353006DA21D /* PreferenceCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AA10388583007E18EC /* PreferenceCommands.cpp */; };
+		ED85B54F16A47353006DA21D /* SetTrackInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */; };
+		ED85B55016A47353006DA21D /* TimeWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72B0103885AA007E18EC /* TimeWarper.cpp */; };
+		ED85B55116A47353006DA21D /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
+		ED85B55216A47353006DA21D /* CaptureEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */; };
+		ED85B55316A47353006DA21D /* GetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */; };
+		ED85B55416A47353006DA21D /* SetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */; };
+		ED85B55516A47353006DA21D /* ODDecodeFFmpegTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */; };
+		ED85B55616A47353006DA21D /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
+		ED85B55716A47353006DA21D /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
+		ED85B55816A47353006DA21D /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
+		ED85B55916A47353006DA21D /* af.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884912131B6CF500B59735 /* af.po */; };
+		ED85B55A16A47353006DA21D /* ar.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884913131B6CF500B59735 /* ar.po */; };
+		ED85B55B16A47353006DA21D /* be.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884914131B6CF500B59735 /* be.po */; };
+		ED85B55C16A47353006DA21D /* bg.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884915131B6CF500B59735 /* bg.po */; };
+		ED85B55D16A47353006DA21D /* bn.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884916131B6CF500B59735 /* bn.po */; };
+		ED85B55E16A47353006DA21D /* bs.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884917131B6CF500B59735 /* bs.po */; };
+		ED85B55F16A47353006DA21D /* ca.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884918131B6CF500B59735 /* ca.po */; };
+		ED85B56016A47353006DA21D /* ca@valencia.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884919131B6CF500B59735 /* ca@valencia.po */; };
+		ED85B56116A47353006DA21D /* cs.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491A131B6CF500B59735 /* cs.po */; };
+		ED85B56216A47353006DA21D /* cy.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491B131B6CF500B59735 /* cy.po */; };
+		ED85B56316A47353006DA21D /* da.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491C131B6CF500B59735 /* da.po */; };
+		ED85B56416A47353006DA21D /* de.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491D131B6CF500B59735 /* de.po */; };
+		ED85B56516A47353006DA21D /* el.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491E131B6CF500B59735 /* el.po */; };
+		ED85B56616A47353006DA21D /* es.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491F131B6CF500B59735 /* es.po */; };
+		ED85B56716A47353006DA21D /* eu.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884920131B6CF500B59735 /* eu.po */; };
+		ED85B56816A47353006DA21D /* fa.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884921131B6CF500B59735 /* fa.po */; };
+		ED85B56916A47353006DA21D /* fi.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884922131B6CF500B59735 /* fi.po */; };
+		ED85B56A16A47353006DA21D /* fr.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884923131B6CF600B59735 /* fr.po */; };
+		ED85B56B16A47353006DA21D /* ga.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884924131B6CF600B59735 /* ga.po */; };
+		ED85B56C16A47353006DA21D /* gl.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884925131B6CF600B59735 /* gl.po */; };
+		ED85B56D16A47353006DA21D /* he.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884926131B6CF600B59735 /* he.po */; };
+		ED85B56E16A47353006DA21D /* hi.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884927131B6CF600B59735 /* hi.po */; };
+		ED85B56F16A47353006DA21D /* hu.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884928131B6CF600B59735 /* hu.po */; };
+		ED85B57016A47353006DA21D /* hr.po in Sources */ = {isa = PBXBuildFile; fileRef = ED85B3CF16A46DDA006DA21D /* hr.po */; };
+		ED85B57116A47353006DA21D /* id.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884929131B6CF600B59735 /* id.po */; };
+		ED85B57216A47353006DA21D /* it.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888492A131B6CF600B59735 /* it.po */; };
+		ED85B57316A47353006DA21D /* ja.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888492B131B6CF600B59735 /* ja.po */; };
+		ED85B57416A47353006DA21D /* ka.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888492C131B6CF600B59735 /* ka.po */; };
+		ED85B57516A47353006DA21D /* km.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888492D131B6CF600B59735 /* km.po */; };
+		ED85B57616A47353006DA21D /* ko.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888492E131B6CF600B59735 /* ko.po */; };
+		ED85B57716A47353006DA21D /* lt.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888492F131B6CF600B59735 /* lt.po */; };
+		ED85B57816A47353006DA21D /* mk.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884930131B6CF600B59735 /* mk.po */; };
+		ED85B57916A47353006DA21D /* my.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884931131B6CF600B59735 /* my.po */; };
+		ED85B57A16A47353006DA21D /* nb.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884932131B6CF600B59735 /* nb.po */; };
+		ED85B57B16A47353006DA21D /* nl.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884933131B6CF600B59735 /* nl.po */; };
+		ED85B57C16A47353006DA21D /* oc.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884934131B6CF600B59735 /* oc.po */; };
+		ED85B57D16A47353006DA21D /* pl.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884935131B6CF600B59735 /* pl.po */; };
+		ED85B57E16A47353006DA21D /* pt_BR.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884936131B6CF600B59735 /* pt_BR.po */; };
+		ED85B57F16A47353006DA21D /* pt.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884937131B6CF600B59735 /* pt.po */; };
+		ED85B58016A47353006DA21D /* ro.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884938131B6CF600B59735 /* ro.po */; };
+		ED85B58116A47353006DA21D /* ru.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884939131B6CF600B59735 /* ru.po */; };
+		ED85B58216A47353006DA21D /* sk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493A131B6CF600B59735 /* sk.po */; };
+		ED85B58316A47353006DA21D /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325515444371009C6220 /* sl.po */; };
+		ED85B58416A47353006DA21D /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
+		ED85B58516A47353006DA21D /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
+		ED85B58616A47353006DA21D /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325715444372009C6220 /* sv.po */; };
+		ED85B58716A47353006DA21D /* tg.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493D131B6CF600B59735 /* tg.po */; };
+		ED85B58816A47353006DA21D /* tr.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493E131B6CF600B59735 /* tr.po */; };
+		ED85B58916A47353006DA21D /* uk.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493F131B6CF600B59735 /* uk.po */; };
+		ED85B58A16A47353006DA21D /* vi.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884940131B6CF600B59735 /* vi.po */; };
+		ED85B58B16A47353006DA21D /* zh_TW.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884941131B6CF600B59735 /* zh_TW.po */; };
+		ED85B58C16A47353006DA21D /* zh.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884942131B6CF600B59735 /* zh.po */; };
+		ED85B58D16A47353006DA21D /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
+		ED85B58E16A47353006DA21D /* slide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184F13CF01A600C1B664 /* slide.cpp */; };
+		ED85B58F16A47353006DA21D /* Paulstretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */; };
+		ED85B59016A47353006DA21D /* ModulePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */; };
+		ED85B59116A47353006DA21D /* BassTreble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD2431216934A6100D9DEC2 /* BassTreble.cpp */; };
+		ED85B59316A47353006DA21D /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 170740D40988F820008541CC /* libvorbis.a */; };
+		ED85B59416A47353006DA21D /* libportsmf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073EE80988DBDD008541CC /* libportsmf.a */; };
+		ED85B59516A47353006DA21D /* libid3tag.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073F620988E121008541CC /* libid3tag.a */; };
+		ED85B59616A47353006DA21D /* libmad.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073FC40988E561008541CC /* libmad.a */; };
+		ED85B59716A47353006DA21D /* libnyquist.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176A1A5B098B7B8D00DC73B4 /* libnyquist.a */; };
+		ED85B59816A47353006DA21D /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17073FFE0988EA60008541CC /* libogg.a */; };
+		ED85B59916A47353006DA21D /* libportmixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 170740960988F2F7008541CC /* libportmixer.a */; };
+		ED85B59B16A47353006DA21D /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707401E0988EEAA008541CC /* libsndfile.a */; };
+		ED85B59C16A47353006DA21D /* libsoundtouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707407A0988F1BB008541CC /* libsoundtouch.a */; };
+		ED85B59E16A47353006DA21D /* libFLAC++.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEC1E09A2F2DD00188F3B /* libFLAC++.a */; };
+		ED85B59F16A47353006DA21D /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176EEBEA09A2F16200188F3B /* libFLAC.a */; };
+		ED85B5A016A47353006DA21D /* libportaudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E67F5F0A3A160D0021D89F /* libportaudio.a */; };
+		ED85B5A116A47353006DA21D /* libtwolame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2840CF220AEB803C00F49FC3 /* libtwolame.a */; };
+		ED85B5A216A47353006DA21D /* libvamp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28501F060CEED1F00029ABAA /* libvamp.a */; };
+		ED85B5A316A47353006DA21D /* libscorealign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E237080E515D1D00281398 /* libscorealign.a */; };
+		ED85B5A416A47353006DA21D /* libsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* libsbsms.a */; };
+		ED85B5A516A47353006DA21D /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2800FE070FF322D4005CA9E5 /* libportmidi.a */; };
+		ED85B5AB16A47353006DA21D /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
+		ED85B5AD16A47353006DA21D /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
+		ED85B5AE16A47353006DA21D /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
+		ED85B5B016A47353006DA21D /* Install.txt in Install instructions */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
+		ED85B60316A47B80006DA21D /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
 		ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
 		ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */; };
 		EDAD326B1544452E009C6220 /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325515444371009C6220 /* sl.po */; };
@@ -1573,6 +1916,17 @@
 			script = "if [ -n \"`which msgfmt`\" ]\nthen\n   msgfmt -v -o \"${SCRIPT_OUTPUT_FILE_0}\" \"${SCRIPT_INPUT_FILE}\"\n\n   OD=\"${TARGET_BUILD_DIR}/Languages\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   OD=\"${TARGET_BUILD_DIR}/Languages/${INPUT_FILE_BASE}\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   cp \"${SCRIPT_OUTPUT_FILE_0}\" \"${OD}/audacity.mo\"\n   chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/audacity.mo\"\n   chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/audacity.mo\"\n\n   case \"${INPUT_FILE_BASE}\" in\n      gl)\n\t\tINPUT_FILE_BASE=gl_ES\n      ;;\n   esac\n\n   if [ -e \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" ]\n   then\n      cp \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" \"${OD}/wxstd.mo\"\n      chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/wxstd.mo\"\n      chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/wxstd.mo\"\n   fi\n   \nelse\n   echo \"msgfmt not available\"\n   touch \"${SCRIPT_OUTPUT_FILE_0}\"\nfi";
 		};
 		ED663CD816543647007F53A5 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.po";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).mo",
+			);
+			script = "if [ -n \"`which msgfmt`\" ]\nthen\n   msgfmt -v -o \"${SCRIPT_OUTPUT_FILE_0}\" \"${SCRIPT_INPUT_FILE}\"\n\n   OD=\"${TARGET_BUILD_DIR}/Languages\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   OD=\"${TARGET_BUILD_DIR}/Languages/${INPUT_FILE_BASE}\"\n   if [ ! -d \"${OD}\" ]\n   then\n      mkdir -p \"${OD}\"\n      chmod -RH \"${INSTALL_MODE_FLAG}\" \"${OD}\"\n      chown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}\"\n   fi\n\n   cp \"${SCRIPT_OUTPUT_FILE_0}\" \"${OD}/audacity.mo\"\n   chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/audacity.mo\"\n   chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/audacity.mo\"\n\n   case \"${INPUT_FILE_BASE}\" in\n      gl)\n\t\tINPUT_FILE_BASE=gl_ES\n      ;;\n   esac\n\n   if [ -e \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" ]\n   then\n      cp \"${WX_PREFIX}/share/locale/${INPUT_FILE_BASE}/LC_MESSAGES/wxstd.mo\" \"${OD}/wxstd.mo\"\n      chmod \"${INSTALL_MODE_FLAG}\" \"${OD}/wxstd.mo\"\n      chown \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${OD}/wxstd.mo\"\n   fi\n   \nelse\n   echo \"msgfmt not available\"\n   touch \"${SCRIPT_OUTPUT_FILE_0}\"\nfi";
+		};
+		ED85B5B216A47353006DA21D /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.po";
@@ -1726,13 +2080,6 @@
 			remoteGlobalIDString = ED2706F30EF9C3C6007D4FFD;
 			remoteInfo = libsbsms;
 		};
-		ED309AA8164E84F600D21825 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1707400C0988EB90008541CC;
-			remoteInfo = libresample;
-		};
 		ED663B5916543647007F53A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1790ABE309883346008A330A /* Project object */;
@@ -1802,13 +2149,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1707401D0988EEAA008541CC;
 			remoteInfo = libsndfile;
-		};
-		ED663B6F16543647007F53A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ED15212F163C227C00451B5F;
-			remoteInfo = libsoxr;
 		};
 		ED663B7116543647007F53A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1880,6 +2220,146 @@
 			remoteGlobalIDString = ED663B3B16543581007F53A5;
 			remoteInfo = libsamplerate;
 		};
+		ED85B43216A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 17073F470988E04A008541CC;
+			remoteInfo = expat;
+		};
+		ED85B43416A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 176EEBE909A2F16200188F3B;
+			remoteInfo = libFLAC;
+		};
+		ED85B43616A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 176EEC1D09A2F2DD00188F3B;
+			remoteInfo = "libFLAC++";
+		};
+		ED85B43816A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2800FE060FF322D4005CA9E5;
+			remoteInfo = portmidi;
+		};
+		ED85B43A16A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 17073F610988E121008541CC;
+			remoteInfo = libid3tag;
+		};
+		ED85B43C16A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 17073FC30988E561008541CC;
+			remoteInfo = libmad;
+		};
+		ED85B43E16A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 176A1A5A098B7B8D00DC73B4;
+			remoteInfo = libnyquist;
+		};
+		ED85B44016A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 17073FFD0988EA60008541CC;
+			remoteInfo = libogg;
+		};
+		ED85B44216A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28E236F40E515D1D00281398;
+			remoteInfo = libscorealign;
+		};
+		ED85B44616A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1707401D0988EEAA008541CC;
+			remoteInfo = libsndfile;
+		};
+		ED85B44A16A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28501EAF0CEED1F00029ABAA;
+			remoteInfo = libvamp;
+		};
+		ED85B44C16A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 170740D30988F820008541CC;
+			remoteInfo = libvorbis;
+		};
+		ED85B44E16A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28E67F510A3A160D0021D89F;
+			remoteInfo = "portaudio-v19";
+		};
+		ED85B45016A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 170740950988F2F7008541CC;
+			remoteInfo = portmixer;
+		};
+		ED85B45216A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 17073EE70988DBDD008541CC;
+			remoteInfo = allegro;
+		};
+		ED85B45416A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 170740790988F1BB008541CC;
+			remoteInfo = soundtouch;
+		};
+		ED85B45616A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2840CECB0AEB803C00F49FC3;
+			remoteInfo = twolame;
+		};
+		ED85B45816A47353006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ED2706F30EF9C3C6007D4FFD;
+			remoteInfo = libsbsms;
+		};
+		ED85B5BB16A4736E006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ED85B42716A47329006DA21D /* Configure-libresample */;
+			remoteInfo = "Configure-libresample";
+		};
+		ED85B5BD16A47393006DA21D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1707400C0988EB90008541CC /* libresample */;
+			remoteInfo = libresample;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1947,6 +2427,40 @@
 			dstSubfolderSpec = 0;
 			files = (
 				ED663CD616543647007F53A5 /* Install.txt in Install instructions */,
+			);
+			name = "Install instructions";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		ED85B5AA16A47353006DA21D /* Install wrapper */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				ED85B5AB16A47353006DA21D /* Audacity.sh in Install wrapper */,
+			);
+			name = "Install wrapper";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		ED85B5AC16A47353006DA21D /* Install miscellany */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /Audacity;
+			dstSubfolderSpec = 0;
+			files = (
+				ED85B5AD16A47353006DA21D /* LICENSE.txt in Install miscellany */,
+				ED85B5AE16A47353006DA21D /* README.txt in Install miscellany */,
+			);
+			name = "Install miscellany";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		ED85B5AF16A47353006DA21D /* Install instructions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 0;
+			files = (
+				ED85B5B016A47353006DA21D /* Install.txt in Install instructions */,
 			);
 			name = "Install instructions";
 			runOnlyForDeploymentPostprocessing = 1;
@@ -3470,6 +3984,9 @@
 		ED663B3716543556007F53A5 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = libsamplerate/src/config.h; sourceTree = "<group>"; };
 		ED663B3C16543581007F53A5 /* libsamplerate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsamplerate.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED663CDE16543647007F53A5 /* Audacity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Audacity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED85B3CF16A46DDA006DA21D /* hr.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hr.po; path = ../locale/hr.po; sourceTree = SOURCE_ROOT; };
+		ED85B5B816A47353006DA21D /* Audacity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Audacity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED85B5BA16A47353006DA21D /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info copy.plist"; path = "mac/Info copy.plist"; sourceTree = "<group>"; };
 		ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExtImportPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED920CAD15B19F61008CA12C /* ModulePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModulePrefs.h; sourceTree = "<group>"; };
@@ -3500,7 +4017,6 @@
 				17CBAE4A098B85CD00575C58 /* libnyquist.a in Frameworks */,
 				17C99D5C098971390041B1BC /* libogg.a in Frameworks */,
 				17C99D60098971390041B1BC /* libportmixer.a in Frameworks */,
-				ED309AAA164E850500D21825 /* libresample.a in Frameworks */,
 				17C99D5E098971390041B1BC /* libsndfile.a in Frameworks */,
 				17C99D5F098971390041B1BC /* libsoundtouch.a in Frameworks */,
 				ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */,
@@ -3550,7 +4066,6 @@
 				ED663D0016543835007F53A5 /* libsamplerate.a in Frameworks */,
 				ED663CC116543647007F53A5 /* libsndfile.a in Frameworks */,
 				ED663CC216543647007F53A5 /* libsoundtouch.a in Frameworks */,
-				ED663CC316543647007F53A5 /* libsoxr.a in Frameworks */,
 				ED663CC416543647007F53A5 /* libFLAC++.a in Frameworks */,
 				ED663CC516543647007F53A5 /* libFLAC.a in Frameworks */,
 				ED663CC616543647007F53A5 /* libportaudio.a in Frameworks */,
@@ -3559,6 +4074,31 @@
 				ED663CC916543647007F53A5 /* libscorealign.a in Frameworks */,
 				ED663CCA16543647007F53A5 /* libsbsms.a in Frameworks */,
 				ED663CCB16543647007F53A5 /* libportmidi.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED85B59216A47353006DA21D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED85B59316A47353006DA21D /* libvorbis.a in Frameworks */,
+				ED85B59416A47353006DA21D /* libportsmf.a in Frameworks */,
+				ED85B59516A47353006DA21D /* libid3tag.a in Frameworks */,
+				ED85B59616A47353006DA21D /* libmad.a in Frameworks */,
+				ED85B59716A47353006DA21D /* libnyquist.a in Frameworks */,
+				ED85B59816A47353006DA21D /* libogg.a in Frameworks */,
+				ED85B59916A47353006DA21D /* libportmixer.a in Frameworks */,
+				ED85B60316A47B80006DA21D /* libresample.a in Frameworks */,
+				ED85B59B16A47353006DA21D /* libsndfile.a in Frameworks */,
+				ED85B59C16A47353006DA21D /* libsoundtouch.a in Frameworks */,
+				ED85B59E16A47353006DA21D /* libFLAC++.a in Frameworks */,
+				ED85B59F16A47353006DA21D /* libFLAC.a in Frameworks */,
+				ED85B5A016A47353006DA21D /* libportaudio.a in Frameworks */,
+				ED85B5A116A47353006DA21D /* libtwolame.a in Frameworks */,
+				ED85B5A216A47353006DA21D /* libvamp.a in Frameworks */,
+				ED85B5A316A47353006DA21D /* libscorealign.a in Frameworks */,
+				ED85B5A416A47353006DA21D /* libsbsms.a in Frameworks */,
+				ED85B5A516A47353006DA21D /* libportmidi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4232,6 +4772,7 @@
 				28006FFA132C167600BD34D7 /* Install.txt */,
 				178CF4FF0989541C0056CE58 /* configmac.h */,
 				174F73D7098D51AA009CD6E0 /* Info.plist */,
+				ED85B5BA16A47353006DA21D /* Info copy.plist */,
 			);
 			name = mac;
 			path = ..;
@@ -4281,6 +4822,7 @@
 				ED2706F40EF9C3C6007D4FFD /* libsbsms.a */,
 				ED663B3C16543581007F53A5 /* libsamplerate.a */,
 				ED663CDE16543647007F53A5 /* Audacity.app */,
+				ED85B5B816A47353006DA21D /* Audacity.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5460,6 +6002,7 @@
 				28884925131B6CF600B59735 /* gl.po */,
 				28884926131B6CF600B59735 /* he.po */,
 				28884927131B6CF600B59735 /* hi.po */,
+				ED85B3CF16A46DDA006DA21D /* hr.po */,
 				28884928131B6CF600B59735 /* hu.po */,
 				28884929131B6CF600B59735 /* id.po */,
 				2888492A131B6CF600B59735 /* it.po */,
@@ -6781,7 +7324,6 @@
 				17C99D4D098970800041B1BC /* PBXTargetDependency */,
 				176A1B6E098B7C7200DC73B4 /* PBXTargetDependency */,
 				17C99D4B098970800041B1BC /* PBXTargetDependency */,
-				ED309AA9164E84F600D21825 /* PBXTargetDependency */,
 				28E237270E515E1300281398 /* PBXTargetDependency */,
 				17C99D47098970800041B1BC /* PBXTargetDependency */,
 				ED1521FF163C2D3200451B5F /* PBXTargetDependency */,
@@ -6979,7 +7521,6 @@
 				ED663B6A16543647007F53A5 /* PBXTargetDependency */,
 				ED663CEE1654370C007F53A5 /* PBXTargetDependency */,
 				ED663B6C16543647007F53A5 /* PBXTargetDependency */,
-				ED663B6E16543647007F53A5 /* PBXTargetDependency */,
 				ED663B7016543647007F53A5 /* PBXTargetDependency */,
 				ED663B7216543647007F53A5 /* PBXTargetDependency */,
 				ED663B7416543647007F53A5 /* PBXTargetDependency */,
@@ -6992,6 +7533,53 @@
 			name = "Audacity-libsamplerate";
 			productName = Audacity;
 			productReference = ED663CDE16543647007F53A5 /* Audacity.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ED85B42E16A47353006DA21D /* Audacity-libresample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED85B5B316A47353006DA21D /* Build configuration list for PBXNativeTarget "Audacity-libresample" */;
+			buildPhases = (
+				ED85B45916A47353006DA21D /* Rez */,
+				ED85B45A16A47353006DA21D /* Resources */,
+				ED85B46416A47353006DA21D /* Sources */,
+				ED85B59216A47353006DA21D /* Frameworks */,
+				ED85B5A616A47353006DA21D /* Copy nyquist */,
+				ED85B5A716A47353006DA21D /* Copy plug-ins */,
+				ED85B5A816A47353006DA21D /* Install manual */,
+				ED85B5A916A47353006DA21D /* Install plugins */,
+				ED85B5AA16A47353006DA21D /* Install wrapper */,
+				ED85B5AC16A47353006DA21D /* Install miscellany */,
+				ED85B5AF16A47353006DA21D /* Install instructions */,
+				ED85B5B116A47353006DA21D /* Create dist */,
+			);
+			buildRules = (
+				ED85B5B216A47353006DA21D /* PBXBuildRule */,
+			);
+			dependencies = (
+				ED85B5BC16A4736E006DA21D /* PBXTargetDependency */,
+				ED85B43116A47353006DA21D /* PBXTargetDependency */,
+				ED85B43316A47353006DA21D /* PBXTargetDependency */,
+				ED85B43516A47353006DA21D /* PBXTargetDependency */,
+				ED85B43716A47353006DA21D /* PBXTargetDependency */,
+				ED85B43916A47353006DA21D /* PBXTargetDependency */,
+				ED85B43B16A47353006DA21D /* PBXTargetDependency */,
+				ED85B43D16A47353006DA21D /* PBXTargetDependency */,
+				ED85B43F16A47353006DA21D /* PBXTargetDependency */,
+				ED85B5BE16A47393006DA21D /* PBXTargetDependency */,
+				ED85B44116A47353006DA21D /* PBXTargetDependency */,
+				ED85B44516A47353006DA21D /* PBXTargetDependency */,
+				ED85B44916A47353006DA21D /* PBXTargetDependency */,
+				ED85B44B16A47353006DA21D /* PBXTargetDependency */,
+				ED85B44D16A47353006DA21D /* PBXTargetDependency */,
+				ED85B44F16A47353006DA21D /* PBXTargetDependency */,
+				ED85B45116A47353006DA21D /* PBXTargetDependency */,
+				ED85B45316A47353006DA21D /* PBXTargetDependency */,
+				ED85B45516A47353006DA21D /* PBXTargetDependency */,
+				ED85B45716A47353006DA21D /* PBXTargetDependency */,
+			);
+			name = "Audacity-libresample";
+			productName = Audacity;
+			productReference = ED85B5B816A47353006DA21D /* Audacity.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -7016,8 +7604,10 @@
 			targets = (
 				1790AFAF09883B6D008A330A /* Audacity */,
 				ED663B5516543647007F53A5 /* Audacity-libsamplerate */,
+				ED85B42E16A47353006DA21D /* Audacity-libresample */,
 				17072E880988BD39008541CC /* Configure */,
 				ED663CE11654366F007F53A5 /* Configure-libsamplerate */,
+				ED85B42716A47329006DA21D /* Configure-libresample */,
 				17073F470988E04A008541CC /* expat */,
 				176EEBE909A2F16200188F3B /* libFLAC */,
 				176EEC1D09A2F2DD00188F3B /* libFLAC++ */,
@@ -7079,6 +7669,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED85B45A16A47353006DA21D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED85B45B16A47353006DA21D /* Audacity.icns in Resources */,
+				ED85B45C16A47353006DA21D /* AudacityAIFF.icns in Resources */,
+				ED85B45D16A47353006DA21D /* AudacityAU.icns in Resources */,
+				ED85B45E16A47353006DA21D /* AudacityMP3.icns in Resources */,
+				ED85B45F16A47353006DA21D /* AudacityOGG.icns in Resources */,
+				ED85B46016A47353006DA21D /* AudacityProject.icns in Resources */,
+				ED85B46116A47353006DA21D /* AudacityWAV.icns in Resources */,
+				ED85B46216A47353006DA21D /* EQDefaultCurves.xml in Resources */,
+				ED85B46316A47353006DA21D /* Install.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXRezBuildPhase section */
@@ -7090,6 +7696,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		ED663B8016543647007F53A5 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED85B45916A47353006DA21D /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7290,7 +7903,96 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libsamplerate \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Libsamplerate's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsamplerate/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\nif [ \"$ACTION\" = \"install\" ]\nthen\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity.sh'\nelse\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\nfi \n\nexit 0\n";
+			shellScript = "if [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libsamplerate \\\n             --with-libsoxr \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Libsamplerate's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsamplerate/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\nif [ \"$ACTION\" = \"install\" ]\nthen\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity.sh'\nelse\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\nfi \n\nexit 0\n";
+		};
+		ED85B42816A47329006DA21D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TOPLEVEL)/Makefile.in",
+			);
+			outputPaths = (
+				"$(TOPLEVEL)/Makefile",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libresample \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Libsamplerate's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsamplerate/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\nif [ \"$ACTION\" = \"install\" ]\nthen\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity.sh'\nelse\n\techo >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\nfi \n\nexit 0\n";
+		};
+		ED85B5A616A47353006DA21D /* Copy nyquist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TOPLEVEL)/nyquist",
+			);
+			name = "Copy nyquist";
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/nyquist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
+		};
+		ED85B5A716A47353006DA21D /* Copy plug-ins */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TOPLEVEL)/plug-ins",
+			);
+			name = "Copy plug-ins";
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/plug-ins",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
+		};
+		ED85B5A816A47353006DA21D /* Install manual */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install manual";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}/build_manual.sh\"";
+		};
+		ED85B5A916A47353006DA21D /* Install plugins */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install plugins";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}/build_plugins.sh\"";
+		};
+		ED85B5B116A47353006DA21D /* Create dist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Create dist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\"* \"${DMG}\"\n\n# Create and mount the image\nhdiutil create -ov -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nrm \"${DMG}/install.txt\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -8026,6 +8728,7 @@
 				28884957131B6CF600B59735 /* he.po in Sources */,
 				28884958131B6CF600B59735 /* hi.po in Sources */,
 				28884959131B6CF600B59735 /* hu.po in Sources */,
+				ED85B3DA16A46FC9006DA21D /* hr.po in Sources */,
 				2888495A131B6CF600B59735 /* id.po in Sources */,
 				2888495B131B6CF600B59735 /* it.po in Sources */,
 				2888495C131B6CF600B59735 /* ja.po in Sources */,
@@ -8484,6 +9187,7 @@
 				ED663C9516543647007F53A5 /* he.po in Sources */,
 				ED663C9616543647007F53A5 /* hi.po in Sources */,
 				ED663C9716543647007F53A5 /* hu.po in Sources */,
+				ED85B3DB16A4702F006DA21D /* hr.po in Sources */,
 				ED663C9816543647007F53A5 /* id.po in Sources */,
 				ED663C9916543647007F53A5 /* it.po in Sources */,
 				ED663C9A16543647007F53A5 /* ja.po in Sources */,
@@ -8517,6 +9221,314 @@
 				ED663CB616543647007F53A5 /* Paulstretch.cpp in Sources */,
 				ED663CB716543647007F53A5 /* ModulePrefs.cpp in Sources */,
 				EDD2431516934A6100D9DEC2 /* BassTreble.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED85B46416A47353006DA21D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED85B46516A47353006DA21D /* AudacityApp.cpp in Sources */,
+				ED85B46616A47353006DA21D /* AudioIO.cpp in Sources */,
+				ED85B46716A47353006DA21D /* BatchCommandDialog.cpp in Sources */,
+				ED85B46816A47353006DA21D /* BatchCommands.cpp in Sources */,
+				ED85B46916A47353006DA21D /* BatchProcessDialog.cpp in Sources */,
+				ED85B46A16A47353006DA21D /* Benchmark.cpp in Sources */,
+				ED85B46B16A47353006DA21D /* LegacyAliasBlockFile.cpp in Sources */,
+				ED85B46C16A47353006DA21D /* LegacyBlockFile.cpp in Sources */,
+				ED85B46D16A47353006DA21D /* PCMAliasBlockFile.cpp in Sources */,
+				ED85B46E16A47353006DA21D /* SilentBlockFile.cpp in Sources */,
+				ED85B46F16A47353006DA21D /* SimpleBlockFile.cpp in Sources */,
+				ED85B47016A47353006DA21D /* BlockFile.cpp in Sources */,
+				ED85B47116A47353006DA21D /* CrossFade.cpp in Sources */,
+				ED85B47216A47353006DA21D /* DirManager.cpp in Sources */,
+				ED85B47316A47353006DA21D /* Dither.cpp in Sources */,
+				ED85B47416A47353006DA21D /* Amplify.cpp in Sources */,
+				ED85B47516A47353006DA21D /* AudioUnitEffect.cpp in Sources */,
+				ED85B47616A47353006DA21D /* LoadAudioUnits.cpp in Sources */,
+				ED85B47716A47353006DA21D /* ChangeLength.cpp in Sources */,
+				ED85B47816A47353006DA21D /* ChangePitch.cpp in Sources */,
+				ED85B47916A47353006DA21D /* ChangeSpeed.cpp in Sources */,
+				ED85B47A16A47353006DA21D /* ChangeTempo.cpp in Sources */,
+				ED85B47B16A47353006DA21D /* ClickRemoval.cpp in Sources */,
+				ED85B47C16A47353006DA21D /* Compressor.cpp in Sources */,
+				ED85B47D16A47353006DA21D /* Echo.cpp in Sources */,
+				ED85B47E16A47353006DA21D /* Effect.cpp in Sources */,
+				ED85B47F16A47353006DA21D /* Equalization.cpp in Sources */,
+				ED85B48016A47353006DA21D /* Fade.cpp in Sources */,
+				ED85B48116A47353006DA21D /* Invert.cpp in Sources */,
+				ED85B48216A47353006DA21D /* LadspaEffect.cpp in Sources */,
+				ED85B48316A47353006DA21D /* LoadLadspa.cpp in Sources */,
+				ED85B48416A47353006DA21D /* Leveller.cpp in Sources */,
+				ED85B48516A47353006DA21D /* LoadEffects.cpp in Sources */,
+				ED85B48616A47353006DA21D /* Noise.cpp in Sources */,
+				ED85B48716A47353006DA21D /* NoiseRemoval.cpp in Sources */,
+				ED85B48816A47353006DA21D /* Normalize.cpp in Sources */,
+				ED85B48916A47353006DA21D /* LoadNyquist.cpp in Sources */,
+				ED85B48A16A47353006DA21D /* Nyquist.cpp in Sources */,
+				ED85B48B16A47353006DA21D /* Phaser.cpp in Sources */,
+				ED85B48C16A47353006DA21D /* Repeat.cpp in Sources */,
+				ED85B48D16A47353006DA21D /* Reverse.cpp in Sources */,
+				ED85B48E16A47353006DA21D /* Silence.cpp in Sources */,
+				ED85B48F16A47353006DA21D /* SimpleMono.cpp in Sources */,
+				ED85B49016A47353006DA21D /* SimplePairedTwoTrack.cpp in Sources */,
+				ED85B49116A47353006DA21D /* SoundTouchEffect.cpp in Sources */,
+				ED85B49216A47353006DA21D /* StereoToMono.cpp in Sources */,
+				ED85B49316A47353006DA21D /* ToneGen.cpp in Sources */,
+				ED85B49416A47353006DA21D /* TruncSilence.cpp in Sources */,
+				ED85B49516A47353006DA21D /* TwoPassSimpleMono.cpp in Sources */,
+				ED85B49616A47353006DA21D /* Wahwah.cpp in Sources */,
+				ED85B49716A47353006DA21D /* Envelope.cpp in Sources */,
+				ED85B49816A47353006DA21D /* Export.cpp in Sources */,
+				ED85B49916A47353006DA21D /* ExportCL.cpp in Sources */,
+				ED85B49A16A47353006DA21D /* ExportMP3.cpp in Sources */,
+				ED85B49B16A47353006DA21D /* ExportMultiple.cpp in Sources */,
+				ED85B49C16A47353006DA21D /* ExportOGG.cpp in Sources */,
+				ED85B49D16A47353006DA21D /* ExportPCM.cpp in Sources */,
+				ED85B49E16A47353006DA21D /* FFT.cpp in Sources */,
+				ED85B49F16A47353006DA21D /* FileFormats.cpp in Sources */,
+				ED85B4A016A47353006DA21D /* FreqWindow.cpp in Sources */,
+				ED85B4A116A47353006DA21D /* HistoryWindow.cpp in Sources */,
+				ED85B4A216A47353006DA21D /* ImageManipulation.cpp in Sources */,
+				ED85B4A316A47353006DA21D /* Import.cpp in Sources */,
+				ED85B4A416A47353006DA21D /* ImportFLAC.cpp in Sources */,
+				ED85B4A516A47353006DA21D /* ImportLOF.cpp in Sources */,
+				ED85B4A616A47353006DA21D /* ImportMIDI.cpp in Sources */,
+				ED85B4A716A47353006DA21D /* ImportMP3.cpp in Sources */,
+				ED85B4A816A47353006DA21D /* ImportOGG.cpp in Sources */,
+				ED85B4A916A47353006DA21D /* ImportPCM.cpp in Sources */,
+				ED85B4AA16A47353006DA21D /* ImportRaw.cpp in Sources */,
+				ED85B4AB16A47353006DA21D /* RawAudioGuess.cpp in Sources */,
+				ED85B4AC16A47353006DA21D /* Internat.cpp in Sources */,
+				ED85B4AD16A47353006DA21D /* LabelTrack.cpp in Sources */,
+				ED85B4AE16A47353006DA21D /* LangChoice.cpp in Sources */,
+				ED85B4AF16A47353006DA21D /* Languages.cpp in Sources */,
+				ED85B4B016A47353006DA21D /* Legacy.cpp in Sources */,
+				ED85B4B116A47353006DA21D /* Menus.cpp in Sources */,
+				ED85B4B216A47353006DA21D /* Mix.cpp in Sources */,
+				ED85B4B316A47353006DA21D /* NoteTrack.cpp in Sources */,
+				ED85B4B416A47353006DA21D /* PitchName.cpp in Sources */,
+				ED85B4B516A47353006DA21D /* PlatformCompatibility.cpp in Sources */,
+				ED85B4B616A47353006DA21D /* BatchPrefs.cpp in Sources */,
+				ED85B4B716A47353006DA21D /* DirectoriesPrefs.cpp in Sources */,
+				ED85B4B816A47353006DA21D /* GUIPrefs.cpp in Sources */,
+				ED85B4B916A47353006DA21D /* KeyConfigPrefs.cpp in Sources */,
+				ED85B4BA16A47353006DA21D /* MousePrefs.cpp in Sources */,
+				ED85B4BB16A47353006DA21D /* PrefsDialog.cpp in Sources */,
+				ED85B4BC16A47353006DA21D /* QualityPrefs.cpp in Sources */,
+				ED85B4BD16A47353006DA21D /* SpectrumPrefs.cpp in Sources */,
+				ED85B4BE16A47353006DA21D /* Prefs.cpp in Sources */,
+				ED85B4BF16A47353006DA21D /* Printing.cpp in Sources */,
+				ED85B4C016A47353006DA21D /* Project.cpp in Sources */,
+				ED85B4C116A47353006DA21D /* Resample.cpp in Sources */,
+				ED85B4C216A47353006DA21D /* RingBuffer.cpp in Sources */,
+				ED85B4C316A47353006DA21D /* SampleFormat.cpp in Sources */,
+				ED85B4C416A47353006DA21D /* Sequence.cpp in Sources */,
+				ED85B4C516A47353006DA21D /* Shuttle.cpp in Sources */,
+				ED85B4C616A47353006DA21D /* Spectrum.cpp in Sources */,
+				ED85B4C716A47353006DA21D /* Tags.cpp in Sources */,
+				ED85B4C816A47353006DA21D /* TimeTrack.cpp in Sources */,
+				ED85B4C916A47353006DA21D /* Track.cpp in Sources */,
+				ED85B4CA16A47353006DA21D /* TrackArtist.cpp in Sources */,
+				ED85B4CB16A47353006DA21D /* TrackPanel.cpp in Sources */,
+				ED85B4CC16A47353006DA21D /* TrackPanelAx.cpp in Sources */,
+				ED85B4CD16A47353006DA21D /* UndoManager.cpp in Sources */,
+				ED85B4CE16A47353006DA21D /* UploadDialog.cpp in Sources */,
+				ED85B4CF16A47353006DA21D /* VoiceKey.cpp in Sources */,
+				ED85B4D016A47353006DA21D /* WaveClip.cpp in Sources */,
+				ED85B4D116A47353006DA21D /* WaveTrack.cpp in Sources */,
+				ED85B4D216A47353006DA21D /* AButton.cpp in Sources */,
+				ED85B4D316A47353006DA21D /* ASlider.cpp in Sources */,
+				ED85B4D416A47353006DA21D /* Meter.cpp in Sources */,
+				ED85B4D516A47353006DA21D /* MultiDialog.cpp in Sources */,
+				ED85B4D616A47353006DA21D /* Ruler.cpp in Sources */,
+				ED85B4D716A47353006DA21D /* TimeTextCtrl.cpp in Sources */,
+				ED85B4D816A47353006DA21D /* Warning.cpp in Sources */,
+				ED85B4D916A47353006DA21D /* XMLFileReader.cpp in Sources */,
+				ED85B4DA16A47353006DA21D /* XMLTagHandler.cpp in Sources */,
+				ED85B4DB16A47353006DA21D /* AColor.cpp in Sources */,
+				ED85B4DC16A47353006DA21D /* AboutDialog.cpp in Sources */,
+				ED85B4DD16A47353006DA21D /* CommandManager.cpp in Sources */,
+				ED85B4DE16A47353006DA21D /* Keyboard.cpp in Sources */,
+				ED85B4DF16A47353006DA21D /* ShuttleGui.cpp in Sources */,
+				ED85B4E016A47353006DA21D /* Theme.cpp in Sources */,
+				ED85B4E116A47353006DA21D /* ThemePrefs.cpp in Sources */,
+				ED85B4E216A47353006DA21D /* AttachableScrollBar.cpp in Sources */,
+				ED85B4E316A47353006DA21D /* ExpandingToolBar.cpp in Sources */,
+				ED85B4E416A47353006DA21D /* ImageRoll.cpp in Sources */,
+				ED85B4E516A47353006DA21D /* ShuttlePrefs.cpp in Sources */,
+				ED85B4E616A47353006DA21D /* FileNames.cpp in Sources */,
+				ED85B4E716A47353006DA21D /* WrappedType.cpp in Sources */,
+				ED85B4E816A47353006DA21D /* TimeDialog.cpp in Sources */,
+				ED85B4E916A47353006DA21D /* Dependencies.cpp in Sources */,
+				ED85B4EA16A47353006DA21D /* LabelDialog.cpp in Sources */,
+				ED85B4EB16A47353006DA21D /* Grid.cpp in Sources */,
+				ED85B4EC16A47353006DA21D /* AutoRecovery.cpp in Sources */,
+				ED85B4ED16A47353006DA21D /* Repair.cpp in Sources */,
+				ED85B4EE16A47353006DA21D /* InterpolateAudio.cpp in Sources */,
+				ED85B4EF16A47353006DA21D /* Matrix.cpp in Sources */,
+				ED85B4F016A47353006DA21D /* ExportFLAC.cpp in Sources */,
+				ED85B4F116A47353006DA21D /* ControlToolBar.cpp in Sources */,
+				ED85B4F216A47353006DA21D /* EditToolBar.cpp in Sources */,
+				ED85B4F316A47353006DA21D /* MeterToolBar.cpp in Sources */,
+				ED85B4F416A47353006DA21D /* MixerToolBar.cpp in Sources */,
+				ED85B4F516A47353006DA21D /* SelectionBar.cpp in Sources */,
+				ED85B4F616A47353006DA21D /* ToolBar.cpp in Sources */,
+				ED85B4F716A47353006DA21D /* ToolDock.cpp in Sources */,
+				ED85B4F816A47353006DA21D /* ToolManager.cpp in Sources */,
+				ED85B4F916A47353006DA21D /* ToolsToolBar.cpp in Sources */,
+				ED85B4FA16A47353006DA21D /* TranscriptionToolBar.cpp in Sources */,
+				ED85B4FB16A47353006DA21D /* Grabber.cpp in Sources */,
+				ED85B4FC16A47353006DA21D /* XMLWriter.cpp in Sources */,
+				ED85B4FD16A47353006DA21D /* DeviceToolBar.cpp in Sources */,
+				ED85B4FE16A47353006DA21D /* ExportMP2.cpp in Sources */,
+				ED85B4FF16A47353006DA21D /* AutoDuck.cpp in Sources */,
+				ED85B50016A47353006DA21D /* DtmfGen.cpp in Sources */,
+				ED85B50116A47353006DA21D /* Snap.cpp in Sources */,
+				ED85B50216A47353006DA21D /* LinkingHtmlWindow.cpp in Sources */,
+				ED85B50316A47353006DA21D /* FileDialog.cpp in Sources */,
+				ED85B50416A47353006DA21D /* FileIO.cpp in Sources */,
+				ED85B50516A47353006DA21D /* FileDialogPrivate.cpp in Sources */,
+				ED85B50616A47353006DA21D /* Screenshot.cpp in Sources */,
+				ED85B50716A47353006DA21D /* ImportQT.cpp in Sources */,
+				ED85B50816A47353006DA21D /* FindClipping.cpp in Sources */,
+				ED85B50916A47353006DA21D /* ErrorDialog.cpp in Sources */,
+				ED85B50A16A47353006DA21D /* HelpText.cpp in Sources */,
+				ED85B50B16A47353006DA21D /* SplashDialog.cpp in Sources */,
+				ED85B50C16A47353006DA21D /* LoadVamp.cpp in Sources */,
+				ED85B50D16A47353006DA21D /* VampEffect.cpp in Sources */,
+				ED85B50E16A47353006DA21D /* LoadModules.cpp in Sources */,
+				ED85B50F16A47353006DA21D /* NonGuiThread.cpp in Sources */,
+				ED85B51016A47353006DA21D /* HtmlWindow.cpp in Sources */,
+				ED85B51116A47353006DA21D /* ProgressDialog.cpp in Sources */,
+				ED85B51216A47353006DA21D /* EffectCategory.cpp in Sources */,
+				ED85B51316A47353006DA21D /* EffectManager.cpp in Sources */,
+				ED85B51416A47353006DA21D /* ImportFFmpeg.cpp in Sources */,
+				ED85B51516A47353006DA21D /* FFmpeg.cpp in Sources */,
+				ED85B51616A47353006DA21D /* ODComputeSummaryTask.cpp in Sources */,
+				ED85B51716A47353006DA21D /* ODManager.cpp in Sources */,
+				ED85B51816A47353006DA21D /* ODTask.cpp in Sources */,
+				ED85B51916A47353006DA21D /* ODTaskThread.cpp in Sources */,
+				ED85B51A16A47353006DA21D /* ODWaveTrackTaskQueue.cpp in Sources */,
+				ED85B51B16A47353006DA21D /* ODPCMAliasBlockFile.cpp in Sources */,
+				ED85B51C16A47353006DA21D /* SoundActivatedRecord.cpp in Sources */,
+				ED85B51D16A47353006DA21D /* TimerRecordDialog.cpp in Sources */,
+				ED85B51E16A47353006DA21D /* ExportFFmpeg.cpp in Sources */,
+				ED85B51F16A47353006DA21D /* LoadLV2.cpp in Sources */,
+				ED85B52016A47353006DA21D /* LV2Effect.cpp in Sources */,
+				ED85B52116A47353006DA21D /* ExportFFmpegDialogs.cpp in Sources */,
+				ED85B52216A47353006DA21D /* ODDecodeBlockFile.cpp in Sources */,
+				ED85B52316A47353006DA21D /* ODDecodeFlacTask.cpp in Sources */,
+				ED85B52416A47353006DA21D /* ODDecodeTask.cpp in Sources */,
+				ED85B52516A47353006DA21D /* Profiler.cpp in Sources */,
+				ED85B52616A47353006DA21D /* LV2PortGroup.cpp in Sources */,
+				ED85B52716A47353006DA21D /* Contrast.cpp in Sources */,
+				ED85B52816A47353006DA21D /* SBSMSEffect.cpp in Sources */,
+				ED85B52916A47353006DA21D /* TimeScale.cpp in Sources */,
+				ED85B52A16A47353006DA21D /* Generator.cpp in Sources */,
+				ED85B52B16A47353006DA21D /* FileHistory.cpp in Sources */,
+				ED85B52C16A47353006DA21D /* VSTEffect.cpp in Sources */,
+				ED85B52D16A47353006DA21D /* DevicePrefs.cpp in Sources */,
+				ED85B52E16A47353006DA21D /* ImportExportPrefs.cpp in Sources */,
+				ED85B52F16A47353006DA21D /* LibraryPrefs.cpp in Sources */,
+				ED85B53016A47353006DA21D /* PlaybackPrefs.cpp in Sources */,
+				ED85B53116A47353006DA21D /* ProjectsPrefs.cpp in Sources */,
+				ED85B53216A47353006DA21D /* RecordingPrefs.cpp in Sources */,
+				ED85B53316A47353006DA21D /* TracksPrefs.cpp in Sources */,
+				ED85B53416A47353006DA21D /* WarningsPrefs.cpp in Sources */,
+				ED85B53516A47353006DA21D /* AppCommandEvent.cpp in Sources */,
+				ED85B53616A47353006DA21D /* CommandBuilder.cpp in Sources */,
+				ED85B53716A47353006DA21D /* CommandHandler.cpp in Sources */,
+				ED85B53816A47353006DA21D /* ScriptCommandRelay.cpp in Sources */,
+				ED85B53916A47353006DA21D /* ResponseQueue.cpp in Sources */,
+				ED85B53A16A47353006DA21D /* RealFFTf.cpp in Sources */,
+				ED85B53B16A47353006DA21D /* MidiIOPrefs.cpp in Sources */,
+				ED85B53C16A47353006DA21D /* ScreenshotCommand.cpp in Sources */,
+				ED85B53D16A47353006DA21D /* Lyrics.cpp in Sources */,
+				ED85B53E16A47353006DA21D /* LyricsWindow.cpp in Sources */,
+				ED85B53F16A47353006DA21D /* MixerBoard.cpp in Sources */,
+				ED85B54016A47353006DA21D /* BatchEvalCommand.cpp in Sources */,
+				ED85B54116A47353006DA21D /* CommandDirectory.cpp in Sources */,
+				ED85B54216A47353006DA21D /* ExecMenuCommand.cpp in Sources */,
+				ED85B54316A47353006DA21D /* GetAllMenuCommands.cpp in Sources */,
+				ED85B54416A47353006DA21D /* EffectsPrefs.cpp in Sources */,
+				ED85B54516A47353006DA21D /* PluginManager.cpp in Sources */,
+				ED85B54616A47353006DA21D /* Command.cpp in Sources */,
+				ED85B54716A47353006DA21D /* CommandSignature.cpp in Sources */,
+				ED85B54816A47353006DA21D /* CommandType.cpp in Sources */,
+				ED85B54916A47353006DA21D /* CompareAudioCommand.cpp in Sources */,
+				ED85B54A16A47353006DA21D /* GetTrackInfoCommand.cpp in Sources */,
+				ED85B54B16A47353006DA21D /* HelpCommand.cpp in Sources */,
+				ED85B54C16A47353006DA21D /* MessageCommand.cpp in Sources */,
+				ED85B54D16A47353006DA21D /* SelectCommand.cpp in Sources */,
+				ED85B54E16A47353006DA21D /* PreferenceCommands.cpp in Sources */,
+				ED85B54F16A47353006DA21D /* SetTrackInfoCommand.cpp in Sources */,
+				ED85B55016A47353006DA21D /* TimeWarper.cpp in Sources */,
+				ED85B55116A47353006DA21D /* ImportExportCommands.cpp in Sources */,
+				ED85B55216A47353006DA21D /* CaptureEvents.cpp in Sources */,
+				ED85B55316A47353006DA21D /* GetProjectInfoCommand.cpp in Sources */,
+				ED85B55416A47353006DA21D /* SetProjectInfoCommand.cpp in Sources */,
+				ED85B55516A47353006DA21D /* ODDecodeFFmpegTask.cpp in Sources */,
+				ED85B55616A47353006DA21D /* ExtImportPrefs.cpp in Sources */,
+				ED85B55716A47353006DA21D /* ScoreAlignDialog.cpp in Sources */,
+				ED85B55816A47353006DA21D /* DeviceManager.cpp in Sources */,
+				ED85B55916A47353006DA21D /* af.po in Sources */,
+				ED85B55A16A47353006DA21D /* ar.po in Sources */,
+				ED85B55B16A47353006DA21D /* be.po in Sources */,
+				ED85B55C16A47353006DA21D /* bg.po in Sources */,
+				ED85B55D16A47353006DA21D /* bn.po in Sources */,
+				ED85B55E16A47353006DA21D /* bs.po in Sources */,
+				ED85B55F16A47353006DA21D /* ca.po in Sources */,
+				ED85B56016A47353006DA21D /* ca@valencia.po in Sources */,
+				ED85B56116A47353006DA21D /* cs.po in Sources */,
+				ED85B56216A47353006DA21D /* cy.po in Sources */,
+				ED85B56316A47353006DA21D /* da.po in Sources */,
+				ED85B56416A47353006DA21D /* de.po in Sources */,
+				ED85B56516A47353006DA21D /* el.po in Sources */,
+				ED85B56616A47353006DA21D /* es.po in Sources */,
+				ED85B56716A47353006DA21D /* eu.po in Sources */,
+				ED85B56816A47353006DA21D /* fa.po in Sources */,
+				ED85B56916A47353006DA21D /* fi.po in Sources */,
+				ED85B56A16A47353006DA21D /* fr.po in Sources */,
+				ED85B56B16A47353006DA21D /* ga.po in Sources */,
+				ED85B56C16A47353006DA21D /* gl.po in Sources */,
+				ED85B56D16A47353006DA21D /* he.po in Sources */,
+				ED85B56E16A47353006DA21D /* hi.po in Sources */,
+				ED85B56F16A47353006DA21D /* hu.po in Sources */,
+				ED85B57016A47353006DA21D /* hr.po in Sources */,
+				ED85B57116A47353006DA21D /* id.po in Sources */,
+				ED85B57216A47353006DA21D /* it.po in Sources */,
+				ED85B57316A47353006DA21D /* ja.po in Sources */,
+				ED85B57416A47353006DA21D /* ka.po in Sources */,
+				ED85B57516A47353006DA21D /* km.po in Sources */,
+				ED85B57616A47353006DA21D /* ko.po in Sources */,
+				ED85B57716A47353006DA21D /* lt.po in Sources */,
+				ED85B57816A47353006DA21D /* mk.po in Sources */,
+				ED85B57916A47353006DA21D /* my.po in Sources */,
+				ED85B57A16A47353006DA21D /* nb.po in Sources */,
+				ED85B57B16A47353006DA21D /* nl.po in Sources */,
+				ED85B57C16A47353006DA21D /* oc.po in Sources */,
+				ED85B57D16A47353006DA21D /* pl.po in Sources */,
+				ED85B57E16A47353006DA21D /* pt_BR.po in Sources */,
+				ED85B57F16A47353006DA21D /* pt.po in Sources */,
+				ED85B58016A47353006DA21D /* ro.po in Sources */,
+				ED85B58116A47353006DA21D /* ru.po in Sources */,
+				ED85B58216A47353006DA21D /* sk.po in Sources */,
+				ED85B58316A47353006DA21D /* sl.po in Sources */,
+				ED85B58416A47353006DA21D /* sr_RS.po in Sources */,
+				ED85B58516A47353006DA21D /* sr_RS@latin.po in Sources */,
+				ED85B58616A47353006DA21D /* sv.po in Sources */,
+				ED85B58716A47353006DA21D /* tg.po in Sources */,
+				ED85B58816A47353006DA21D /* tr.po in Sources */,
+				ED85B58916A47353006DA21D /* uk.po in Sources */,
+				ED85B58A16A47353006DA21D /* vi.po in Sources */,
+				ED85B58B16A47353006DA21D /* zh_TW.po in Sources */,
+				ED85B58C16A47353006DA21D /* zh.po in Sources */,
+				ED85B58D16A47353006DA21D /* dBTable.cpp in Sources */,
+				ED85B58E16A47353006DA21D /* slide.cpp in Sources */,
+				ED85B58F16A47353006DA21D /* Paulstretch.cpp in Sources */,
+				ED85B59016A47353006DA21D /* ModulePrefs.cpp in Sources */,
+				ED85B59116A47353006DA21D /* BassTreble.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8623,11 +9635,6 @@
 			target = ED2706F30EF9C3C6007D4FFD /* libsbsms */;
 			targetProxy = ED2707470EF9C55A007D4FFD /* PBXContainerItemProxy */;
 		};
-		ED309AA9164E84F600D21825 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1707400C0988EB90008541CC /* libresample */;
-			targetProxy = ED309AA8164E84F600D21825 /* PBXContainerItemProxy */;
-		};
 		ED663B5816543647007F53A5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 17073F470988E04A008541CC /* expat */;
@@ -8678,11 +9685,6 @@
 			target = 1707401D0988EEAA008541CC /* libsndfile */;
 			targetProxy = ED663B6D16543647007F53A5 /* PBXContainerItemProxy */;
 		};
-		ED663B6E16543647007F53A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = ED15212F163C227C00451B5F /* libsoxr */;
-			targetProxy = ED663B6F16543647007F53A5 /* PBXContainerItemProxy */;
-		};
 		ED663B7016543647007F53A5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 28501EAF0CEED1F00029ABAA /* libvamp */;
@@ -8732,6 +9734,106 @@
 			isa = PBXTargetDependency;
 			target = ED663B3B16543581007F53A5 /* libsamplerate */;
 			targetProxy = ED663CED1654370C007F53A5 /* PBXContainerItemProxy */;
+		};
+		ED85B43116A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 17073F470988E04A008541CC /* expat */;
+			targetProxy = ED85B43216A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43316A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 176EEBE909A2F16200188F3B /* libFLAC */;
+			targetProxy = ED85B43416A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43516A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 176EEC1D09A2F2DD00188F3B /* libFLAC++ */;
+			targetProxy = ED85B43616A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43716A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2800FE060FF322D4005CA9E5 /* portmidi */;
+			targetProxy = ED85B43816A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43916A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 17073F610988E121008541CC /* libid3tag */;
+			targetProxy = ED85B43A16A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43B16A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 17073FC30988E561008541CC /* libmad */;
+			targetProxy = ED85B43C16A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43D16A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 176A1A5A098B7B8D00DC73B4 /* libnyquist */;
+			targetProxy = ED85B43E16A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B43F16A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 17073FFD0988EA60008541CC /* libogg */;
+			targetProxy = ED85B44016A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B44116A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28E236F40E515D1D00281398 /* libscorealign */;
+			targetProxy = ED85B44216A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B44516A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1707401D0988EEAA008541CC /* libsndfile */;
+			targetProxy = ED85B44616A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B44916A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28501EAF0CEED1F00029ABAA /* libvamp */;
+			targetProxy = ED85B44A16A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B44B16A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 170740D30988F820008541CC /* libvorbis */;
+			targetProxy = ED85B44C16A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B44D16A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28E67F510A3A160D0021D89F /* portaudio-v19 */;
+			targetProxy = ED85B44E16A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B44F16A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 170740950988F2F7008541CC /* portmixer */;
+			targetProxy = ED85B45016A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B45116A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 17073EE70988DBDD008541CC /* portsmf */;
+			targetProxy = ED85B45216A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B45316A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 170740790988F1BB008541CC /* soundtouch */;
+			targetProxy = ED85B45416A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B45516A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2840CECB0AEB803C00F49FC3 /* twolame */;
+			targetProxy = ED85B45616A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B45716A47353006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ED2706F30EF9C3C6007D4FFD /* libsbsms */;
+			targetProxy = ED85B45816A47353006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B5BC16A4736E006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ED85B42716A47329006DA21D /* Configure-libresample */;
+			targetProxy = ED85B5BB16A4736E006DA21D /* PBXContainerItemProxy */;
+		};
+		ED85B5BE16A47393006DA21D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1707400C0988EB90008541CC /* libresample */;
+			targetProxy = ED85B5BD16A47393006DA21D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -10332,6 +11434,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBSAMPLERATE=1",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -10394,6 +11497,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBSAMPLERATE=1",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				INFOPLIST_FILE = Info.plist;
@@ -10458,6 +11562,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBSAMPLERATE=1",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -10522,6 +11627,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBSAMPLERATE=1",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
 				INFOPLIST_FILE = Info.plist;
@@ -10604,6 +11710,294 @@
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = Untitled;
+			};
+			name = "Release Shared";
+		};
+		ED85B42A16A47329006DA21D /* Debug Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = Untitled;
+			};
+			name = "Debug Static";
+		};
+		ED85B42B16A47329006DA21D /* Debug Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = Untitled;
+			};
+			name = "Debug Shared";
+		};
+		ED85B42C16A47329006DA21D /* Release Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = Untitled;
+			};
+			name = "Release Static";
+		};
+		ED85B42D16A47329006DA21D /* Release Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = Untitled;
+			};
+			name = "Release Shared";
+		};
+		ED85B5B416A47353006DA21D /* Debug Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
+			buildSettings = {
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBRESAMPLE=1",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /Audacity;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_NAME = Audacity;
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+			};
+			name = "Debug Static";
+		};
+		ED85B5B516A47353006DA21D /* Debug Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBRESAMPLE=1",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /Audacity;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_NAME = Audacity;
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+			};
+			name = "Debug Shared";
+		};
+		ED85B5B616A47353006DA21D /* Release Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
+			buildSettings = {
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBRESAMPLE=1",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /Audacity;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_NAME = Audacity;
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+			};
+			name = "Release Static";
+		};
+		ED85B5B716A47353006DA21D /* Release Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"BUILDING_AUDACITY=1",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
+					"USE_LIBRESAMPLE=1",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = /Audacity;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
+				OTHER_CFLAGS = (
+					"$(WX_CFLAGS)",
+					"$(FFMPEG_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(WX_CXXFLAGS)",
+					"$(FFMPEG_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"$(WX_LDFLAGS)",
+					"-framework",
+					OpenGL,
+					"-framework",
+					QuickTime,
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					System,
+					"-framework",
+					WebKit,
+					"-framework",
+					CoreAudio,
+					"-framework",
+					CoreMIDI,
+					"-framework",
+					AudioUnit,
+					"-framework",
+					AudioToolbox,
+					"-lz",
+					"-lpthread",
+					"-liconv",
+					"-lFLAC++",
+					"-lFLAC",
+				);
+				PRODUCT_NAME = Audacity;
+				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Shared";
 		};
@@ -10925,6 +12319,28 @@
 				ED663CE51654366F007F53A5 /* Debug Shared */,
 				ED663CE61654366F007F53A5 /* Release Static */,
 				ED663CE71654366F007F53A5 /* Release Shared */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug Static";
+		};
+		ED85B42916A47329006DA21D /* Build configuration list for PBXAggregateTarget "Configure-libresample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED85B42A16A47329006DA21D /* Debug Static */,
+				ED85B42B16A47329006DA21D /* Debug Shared */,
+				ED85B42C16A47329006DA21D /* Release Static */,
+				ED85B42D16A47329006DA21D /* Release Shared */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug Static";
+		};
+		ED85B5B316A47353006DA21D /* Build configuration list for PBXNativeTarget "Audacity-libresample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED85B5B416A47353006DA21D /* Debug Static */,
+				ED85B5B516A47353006DA21D /* Debug Shared */,
+				ED85B5B616A47353006DA21D /* Release Static */,
+				ED85B5B716A47353006DA21D /* Release Shared */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";
