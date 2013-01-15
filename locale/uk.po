@@ -3,14 +3,14 @@
 # This file is distributed under the same license as Audacity.
 #
 # Audacity Team <audacity-translation@lists.sourceforge.net>, 2007.
-# Yuri Chornoivan <yurchor@ukr.net>, 2010, 2011, 2012.
+# Yuri Chornoivan <yurchor@ukr.net>, 2010, 2011, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2012-12-02 09:18-0000\n"
-"Last-Translator:Yuri Chornoivan\n"
+"PO-Revision-Date: 2013-01-14 02:29-0000\n"
+"Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
 "MIME-Version: 1.0\n"
@@ -1950,9 +1950,9 @@ msgstr "В&ернути"
 msgid "&Redo"
 msgstr "Повт&орити"
 
-#: Menus.cpp:344
-msgid "R&emove Audio"
-msgstr "Ви&лучити звук"
+#: Menus.cpp:410
+msgid "R&emove Audio or Labels"
+msgstr "Ви&лучити звук або мітки"
 
 #: Menus.cpp:345
 msgid "Cu&t"
@@ -1975,9 +1975,10 @@ msgstr "Вилучити без з'є&днання"
 msgid "Silence Audi&o"
 msgstr "Заповнити &тишею"
 
-#: Menus.cpp:354
-msgid "Tri&m"
-msgstr "Обр&ізати"
+#. i18n-hint: (verb)
+#: Menus.cpp:427
+msgid "Tri&m Audio"
+msgstr "О&брізати звук"
 
 #: Menus.cpp:357
 msgid "Clip Boun&daries"
@@ -2022,9 +2023,9 @@ msgstr "Ду&блювати"
 msgid "Stereo Trac&k to Mono"
 msgstr "&Стерео на моно"
 
-#: Menus.cpp:396
-msgid "La&beled Regions"
-msgstr "Обла&сті з позначками"
+#: Menus.cpp:478
+msgid "La&beled Audio"
+msgstr "Звук з м&іткою"
 
 #: Menus.cpp:400
 msgid "&Cut"
@@ -2911,14 +2912,15 @@ msgstr "Текст вставлений з буферу обміну"
 msgid "Paste Text to New Label"
 msgstr "Вставити текст до нової мітки"
 
-#: Menus.cpp:3752
-#: toolbars/EditToolBar.cpp:198
-msgid "Trim"
-msgstr "Обрізати"
+#: Menus.cpp:4188
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "Обрізати позначені звукові доріжки з %.2f секунд до %.2f секунд"
 
-#: Menus.cpp:3752
-msgid "Trim file to selection"
-msgstr "Залишити у файлі лише вибране"
+#: Menus.cpp:4190
+#: toolbars/EditToolBar.cpp:198
+msgid "Trim Audio"
+msgstr "Обрізати звук"
 
 #: Menus.cpp:3781
 #, c-format
@@ -2965,77 +2967,96 @@ msgstr "Дублювати"
 msgid "Duplicated"
 msgstr "Продубльовано"
 
-#: Menus.cpp:3900
-msgid "Cut labeled regions to the clipboard"
-msgstr "Вирізати позначені області до буферу"
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
+#: Menus.cpp:4340
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Ділянки звуку з мітками вирізано до буфера обміну даними"
 
-#: Menus.cpp:3900
-msgid "Cut Labels"
-msgstr "Вирізати позначки"
+#. i18n-hint: (verb)
+#: Menus.cpp:4342
+msgid "Cut Labeled Audio"
+msgstr "Вирізати позначений звук"
 
-#: Menus.cpp:3914
-msgid "SplitCut labeled regions to the clipboard"
-msgstr "Вирізати без склеювання позначені області у буфер"
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
+#: Menus.cpp:4358
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Позначені ділянки вирізано до буфера обміну даними"
 
-#: Menus.cpp:3915
-msgid "Split Cut Labels"
-msgstr "Розділити вирізанням за позначками"
+#. i18n-hint: (verb) Do a special kind of cut on the labels
+#: Menus.cpp:4360
+msgid "Split Cut Labeled Audio"
+msgstr "Вирізати звук з мітками з розрізанням"
 
-#: Menus.cpp:3929
-msgid "Copied labeled regions to the clipboard"
-msgstr "Копіювання позначених областей у буфер"
+#: Menus.cpp:4374
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Ділянки звуку з мітками скопійовано до буфера обміну"
 
-#: Menus.cpp:3929
-msgid "Copy Labels"
-msgstr "Копіювати позначки"
+#. i18n-hint: (verb)
+#: Menus.cpp:4376
+msgid "Copy Labeled Audio"
+msgstr "Копіювати позначений звук"
 
-#: Menus.cpp:3943
-msgid "Deleted labeled regions"
-msgstr "Вилучені позначені області"
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: Menus.cpp:4392
+msgid "Deleted labeled audio regions"
+msgstr "Вилучено позначені ділянки звуку"
 
-#: Menus.cpp:3943
-msgid "Delete Labels"
-msgstr "Вилучити позначки"
+#. i18n-hint: (verb)
+#: Menus.cpp:4394
+msgid "Delete Labeled Audio"
+msgstr "Вилучити позначений звук"
 
-#: Menus.cpp:3955
-msgid "Split Deleted labeled regions"
-msgstr "Вилучені розділенням позначені області"
+#. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions
+#: Menus.cpp:4408
+msgid "Split Deleted labeled audio regions"
+msgstr "Розрізано вилучені ділянки звуку з мітками"
 
-#: Menus.cpp:3955
-msgid "Split Delete Labels"
-msgstr "Розділити визначенням за позначками"
+#. i18n-hint: (verb) Do a special kind of delete on labeled audio regions
+#: Menus.cpp:4410
+msgid "Split Delete Labeled Audio"
+msgstr "Вилучити позначений звук з розрізанням"
 
-#: Menus.cpp:3967
-msgid "Silenced labeled regions"
-msgstr "Заповнені тишею позначені області"
+#. i18n-hint: (verb)
+#: Menus.cpp:4424
+msgid "Silenced labeled audio regions"
+msgstr "Позначений звук замінено тишею"
 
-#: Menus.cpp:3967
-msgid "Silence Labels"
-msgstr "Заповнити тишею позначені області"
+#. i18n-hint: (verb)
+#: Menus.cpp:4426
+msgid "Silence Labeled Audio"
+msgstr "Замінити позначений звук тишею"
 
-#: Menus.cpp:3976
-msgid "Split labeled regions"
-msgstr "Відокремити позначені області"
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
+#: Menus.cpp:4437
+msgid "Split labeled audio (points or regions)"
+msgstr "Позначені ділянки звукових доріжок розрізано (у пунктах або за ділянками)"
 
-#: Menus.cpp:3976
-msgid "Split Labels"
-msgstr "Розділити за позначками"
+#. i18n-hint: (verb)
+#: Menus.cpp:4439
+msgid "Split Labeled Audio"
+msgstr "Розрізати позначений звук"
 
-#: Menus.cpp:3988
-msgid "Joined labeled regions"
-msgstr "З'єднати позначені області"
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
+#: Menus.cpp:4453
+msgid "Joined labeled audio (points or regions)"
+msgstr "Позначені ділянки звукових доріжок з’єднано (у пунктах або за ділянками)"
 
-#: Menus.cpp:3988
-msgid "Join Labels"
-msgstr "З'єднати позначки"
+#. i18n-hint: (verb)
+#: Menus.cpp:4455
+msgid "Join Labeled Audio"
+msgstr "З’єднати позначений звук"
 
-#: Menus.cpp:4000
-msgid "Detached labeled regions"
-msgstr "Від’єднані позначені області"
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. This message appears in history and tells you about something
+#. Audacity has done.
+#: Menus.cpp:4471
+msgid "Detached labeled audio regions"
+msgstr "Позначені ділянки звуку від’єднано"
 
-#: Menus.cpp:4000
-msgid "Detach Labels"
-msgstr "Від’єднати позначки"
+#. i18n-hint: (verb)
+#: Menus.cpp:4473
+msgid "Detach Labeled Audio"
+msgstr "Від’єднати позначений звук"
 
 #: Menus.cpp:4022
 #: TrackPanel.cpp:6987
@@ -3231,9 +3252,8 @@ msgstr "Шляхи, що містять більш ніж 256 символів, 
 msgid "Problem encountered exporting presets."
 msgstr "Помилка при експорті шаблонів."
 
-#: Menus.cpp:5582
-#: export/Export.cpp:503
-msgid "Unable to export"
+#: Menus.cpp:6089
+msgid "Unable to Export"
 msgstr "Не вдалося експортувати"
 
 #: Menus.cpp:5767
@@ -4435,9 +4455,21 @@ msgstr "О&ктавою нижче"
 msgid "&Font..."
 msgstr "&Шрифт…"
 
+#: TrackPanel.cpp:695
+msgid "&Linear"
+msgstr "&Лінійний"
+
+#: TrackPanel.cpp:696
+msgid "L&ogarithmic"
+msgstr "Л&огарифмічний"
+
 #: TrackPanel.cpp:677
 msgid "Set Ra&nge..."
 msgstr "Встановити ді&апазон…"
+
+#: TrackPanel.cpp:699
+msgid "Logarithmic &Interpolation"
+msgstr "Логарифмічна &інтерполяція"
 
 #: TrackPanel.cpp:680
 #: toolbars/EditToolBar.cpp:133
@@ -4755,6 +4787,32 @@ msgstr "Встановити межу як '%d' — '%d'"
 msgid "Set Range"
 msgstr "Встановити діапазон"
 
+#: TrackPanel.cpp:7433
+#: TrackPanel.cpp:7442
+msgid "Set Display"
+msgstr "Встановити режим показу"
+
+#: TrackPanel.cpp:7433
+msgid "Set time track display to linear"
+msgstr "Встановити лінійний режим показу на доріжці"
+
+#: TrackPanel.cpp:7442
+msgid "Set time track display to logarithmic"
+msgstr "Встановити логарифмічний режим показу на доріжці"
+
+#: TrackPanel.cpp:7451
+#: TrackPanel.cpp:7454
+msgid "Set Interpolation"
+msgstr "Встановити режим інтерполяції"
+
+#: TrackPanel.cpp:7451
+msgid "Set time track interpolation to linear"
+msgstr "Встановити лінійний режим інтерполяції"
+
+#: TrackPanel.cpp:7454
+msgid "Set time track interpolation to logarithmic"
+msgstr "Встановити логарифмічний режим інтерполяції"
+
 #: TrackPanel.cpp:7335
 msgid "Change track name to:"
 msgstr "Змінити назву доріжки на:"
@@ -5065,45 +5123,51 @@ msgstr "Приглушення музики…"
 msgid "OK"
 msgstr "Гаразд"
 
-#: effects/BassBoost.cpp:52
+#: effects/BassTreble.cpp:50
 #, c-format
-msgid "Applied effect: %s frequency = %.0f Hz, boost = %.0f dB"
-msgstr "Застосовано ефект : %s частота = %.0f Гц, підвищення = %.0f дБ"
+msgid "Applied effect: %s bass = %.0f dB, treble = %.0f dB, gain = %.0f dB"
+msgstr "Застосований ефект: %s баси = %.0f дБ, високі частоти = %.0f дБ, підсилення = %.0f дБ"
 
-#: effects/BassBoost.cpp:169
-msgid "Bass Boost"
-msgstr "Підсилення басів"
+#: effects/BassTreble.cpp:190
+msgid "Bass and Treble"
+msgstr "Баси і ВЧ"
 
-#: effects/BassBoost.cpp:182
-#: effects/Phaser.cpp:221
-#: effects/Wahwah.cpp:216
-msgid "by Nasca Octavian Paul"
-msgstr "Автор — Nasca Octavian Paul"
+#. i18n-hint: Steve Daulton is a person's name.
+#: effects/BassTreble.cpp:203
+msgid "by Steve Daulton"
+msgstr "автор — Steve Daulton"
 
-#: effects/BassBoost.cpp:196
-#: effects/ChangePitch.cpp:334
-msgid "Frequency (Hz):"
-msgstr "Частота (Гц):"
+#: effects/BassTreble.cpp:217
+msgid "Bass (dB):"
+msgstr "Баси (дБ):"
 
-#: effects/BassBoost.cpp:205
-msgid "Frequency Hertz"
-msgstr "Частота (Гц)"
+#: effects/BassTreble.cpp:222
+msgid "Bass (dB)"
+msgstr "Баси (дБ)"
 
-#: effects/BassBoost.cpp:209
-msgid "Boost (dB):"
-msgstr "Підвищення (дБ):"
+#: effects/BassTreble.cpp:226
+msgid "Treble (dB):"
+msgstr "ВЧ (дБ):"
 
-#: effects/BassBoost.cpp:218
-msgid "Boost dB"
-msgstr "Підвищення (дБ)"
+#: effects/BassTreble.cpp:231
+msgid "Treble (dB)"
+msgstr "ВЧ (дБ)"
 
-#: effects/BassBoost.h:35
-msgid "BassBoost..."
-msgstr "Підсилення низьких частот…"
+#: effects/BassTreble.cpp:235
+msgid "Gain (dB):"
+msgstr "Підсилення (дБ):"
 
-#: effects/BassBoost.h:49
-msgid "Boosting Bass Frequencies"
-msgstr "Підвищення низьких частот"
+#: effects/BassTreble.cpp:240
+msgid "Gain (dB)"
+msgstr "Підсилення (дБ)"
+
+#: effects/BassTreble.h:32
+msgid "Bass and Treble..."
+msgstr "Баси і ВЧ…"
+
+#: effects/BassTreble.h:46
+msgid "Adjusting Bass and Treble"
+msgstr "Коригування басів і високих частот"
 
 #: effects/ChangeLength.h:26
 msgid "Change Length..."
@@ -5172,6 +5236,11 @@ msgstr "Півтонів (half-steps):"
 #: effects/ChangePitch.cpp:328
 msgid "Semitones in half-steps"
 msgstr "Півтонів (у півкроках)"
+
+#: effects/BassBoost.cpp:196
+#: effects/ChangePitch.cpp:334
+msgid "Frequency (Hz):"
+msgstr "Частота (Гц):"
 
 #: effects/ChangePitch.cpp:338
 #: effects/ChangeSpeed.cpp:381
@@ -6118,9 +6187,13 @@ msgstr "файли xml (*.xml;*.XML)|*.xml;*.XML"
 msgid "Export EQ curves as..."
 msgstr "Експортувати криві EQ як…"
 
-#: effects/Equalization.cpp:3218
-msgid "You cannot export 'unnamed' curve"
-msgstr "Не можна експортувати криву «Без назви»"
+#: effects/Equalization.cpp:3227
+msgid "Cannot Export 'unnamed'"
+msgstr "Експортування з назвою «unnamed» неможливе"
+
+#: effects/Equalization.cpp:3227
+msgid "You cannot export 'unnamed' curve, it is special."
+msgstr "Не можна експортувати криву з назвою «unnamed». Цю назву зарезервовано."
 
 #: effects/Equalization.cpp:3228
 #, c-format
@@ -6654,6 +6727,12 @@ msgstr ""
 "Помилка у Paulstretch:\n"
 "Позначено надто короткий фрагмент.\n"
 " Тривалість фрагмента має перевищувати роздільність за часом."
+
+#: effects/BassBoost.cpp:182
+#: effects/Phaser.cpp:221
+#: effects/Wahwah.cpp:216
+msgid "by Nasca Octavian Paul"
+msgstr "Автор — Nasca Octavian Paul"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -7363,13 +7442,19 @@ msgstr "Параметри додатка"
 msgid "Program"
 msgstr "Програма"
 
-#: export/Export.cpp:499
-msgid "All the selected audio is muted."
-msgstr "Весь вибраний звук заглушено."
+#: export/Export.cpp:493
+msgid "All selected audio is muted."
+msgstr "Всі позначені ділянки звукових доріжок замінено тишею."
 
-#: export/Export.cpp:501
-msgid "All the audio is muted."
-msgstr "Весь звук замінено тишею."
+#: export/Export.cpp:495
+#: export/ExportMultiple.cpp:177
+msgid "All audio is muted."
+msgstr "Всі дані звукових доріжок замінено тишею."
+
+#: Menus.cpp:5582
+#: export/Export.cpp:503
+msgid "Unable to export"
+msgstr "Не вдалося експортувати"
 
 #: export/Export.cpp:551
 msgid "Export File"
@@ -7379,9 +7464,9 @@ msgstr "Експорт файла"
 msgid "&Options..."
 msgstr "&Параметри…"
 
-#: export/Export.cpp:601
-msgid "Are you sure you want to save the file as \""
-msgstr "Ви дійсно бажаєте зберегти файл як «"
+#: export/Export.cpp:595
+msgid "Are you sure you want to export the file as \""
+msgstr "Ви справді хочете експортувати дані до файла з назвою «"
 
 #: export/Export.cpp:606
 #: export/Export.cpp:627
@@ -7391,20 +7476,20 @@ msgstr "Ви дійсно бажаєте зберегти файл як «"
 msgid "Warning"
 msgstr "Попередження"
 
-#: export/Export.cpp:621
+#: export/Export.cpp:615
 #, c-format
 msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+"You are about to export a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
-"Are you sure you want to save the file under this name?"
+"Are you sure you want to export the file under this name?"
 msgstr ""
-"Ви збираєтесь зберегти файл %s з назвою «%s».\n"
+"Ви маєте намір експортувати файл %s з назвою «%s».\n"
 "\n"
 "Зазвичай назви таких файлів мають суфікс «.%s», деякі програми не відкриватимуть файли з нестандартними суфіксами назв.\n"
 "\n"
-"Ви справді бажаєте зберегти файл з цією назвою?"
+"Ви справді бажаєте експортувати файл з цією назвою?"
 
 #: export/Export.cpp:654
 msgid ""
@@ -8413,33 +8498,18 @@ msgstr "Не знайдено бібліотеку експорту до MP3"
 msgid "Export Multiple"
 msgstr "Експорт у декілька файлів"
 
-#: export/ExportMultiple.cpp:175
-msgid ""
-"If you have more than one Audio Track, you can\n"
-"export each track as a separate audio file.\n"
-"\n"
-"If you have a Label Track, you can export a separate\n"
-"audio file for each label in that track. You can have\n"
-"more than one Label Track, but files will only be\n"
-"exported for the uppermost Label Track.\n"
-"\n"
-"This Project does not meet the above criteria for\n"
-"exporting multiple files."
-msgstr ""
-"Якщо у вашому проекті декілька звукових доріжок, ви можете\n"
-"експортувати дані кожної доріжки до окремого файла.\n"
-"\n"
-"Якщо у проекті є мічена доріжка, ви можете експортувати\n"
-"дані кожної мітки до окремого файла. Мічених доріжок може\n"
-"бути декілька, але файли буде експортовано лише для\n"
-"найвищої доріжки у списку.\n"
-"\n"
-"Поточний проект не відповідає описаним вище критеріям\n"
-"експорту даних до декількох файлів."
+#: export/ExportMultiple.cpp:178
+#: export/ExportMultiple.cpp:188
+msgid "Cannot Export Multiple"
+msgstr "Експорт до декількох файлів неможливий"
 
-#: export/ExportMultiple.cpp:180
-msgid "Can't export multiple files"
-msgstr "Не можна експортувати декілька файлів"
+#: export/ExportMultiple.cpp:186
+msgid ""
+"You have only one unmuted Audio Track and no applicable \n"
+"labels, so you cannot export to separate audio files."
+msgstr ""
+"У вас є лише одна звукова доріжка з увімкненим звуком і жодних \n"
+"відповідних міток. Отже ви не зможете експортувати дані до декількох окремих файлів."
 
 #: export/ExportMultiple.cpp:245
 msgid "Export format:"
@@ -10550,13 +10620,21 @@ msgstr "Виберіть вхідні канали"
 msgid "Device information is not available."
 msgstr "Не вдалося отримати дані щодо пристрою."
 
+#: toolbars/EditToolBar.cpp:131
+msgid "Cut selection"
+msgstr "Вирізати позначене"
+
+#: toolbars/EditToolBar.cpp:133
+msgid "Copy selection"
+msgstr "Копіювати позначене"
+
 #: toolbars/EditToolBar.cpp:137
-msgid "Trim outside selection"
-msgstr "Відрізати усе поза вибраним"
+msgid "Trim audio outside selection"
+msgstr "Відрізати усе поза позначеним"
 
 #: toolbars/EditToolBar.cpp:139
-msgid "Silence selection"
-msgstr "Заповнити тишею"
+msgid "Silence audio selection"
+msgstr "Замінити позначене тишею"
 
 #: toolbars/EditToolBar.cpp:152
 #: toolbars/EditToolBar.cpp:203
@@ -10580,6 +10658,10 @@ msgstr "Розмістити вибране у вікні"
 #: toolbars/EditToolBar.cpp:165
 msgid "Fit project in window"
 msgstr "Розмістити проект у вікні"
+
+#: toolbars/EditToolBar.cpp:199
+msgid "Silence Audio"
+msgstr "Заповнити тишею"
 
 #: toolbars/EditToolBar.cpp:207
 msgid "Fit Selection"
