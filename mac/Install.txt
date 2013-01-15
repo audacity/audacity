@@ -1,2 +1,8 @@
-To install Audacity, copy the Audacity folder to /Applications
-or any other location of your choosing.
+* To install Audacity, copy the Audacity folder to /Applications or 
+   any other location of your choosing.
+
+* If you are a first-time user of Audacity, security settings on 
+   OS X 10.7 or later may block Audacity being launched. To permanently
+   enable Audacity launch, right-click or control-click on the Audacity 
+   application in Finder, choose "Open", then in the dialog box that 
+   appears, choose "Open". 
