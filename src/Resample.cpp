@@ -304,6 +304,7 @@
    VarRateResample::~VarRateResample()
    {
       resample_close(mHandle);
+      mHandle = NULL;
    }
 
    //v Currently unused. 
@@ -379,6 +380,7 @@
    VarRateResample::~VarRateResample()
    {
       src_delete((SRC_STATE *)mHandle);
+      mHandle = NULL;
    }
 
    //v Currently unused. 
@@ -485,6 +487,7 @@
    VarRateResample::~VarRateResample()
    {
       soxr_delete((soxr_t)mHandle);
+      mHandle = NULL;
    }
 
    int VarRateResample::GetNumMethods() { return 4; }
