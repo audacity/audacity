@@ -9,7 +9,7 @@ bug reports and patches at:
 Personal support with Audacity is not provided by e-mail, but on our Forum:
   http://audacityteam.org/forum/ .
 
-Audacity is copyright (c) 1999-2012 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2013 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.2 
+Version 2.0.3 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.1 
+2.  Changes since version 2.0.2 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -54,62 +54,77 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
   59 Temple Place - Suite 330
   Boston, MA 02111-1307 USA
 
+
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.1: 
+2. Changes since version 2.0.2: 
 
 Bug fixes for:
 
- * Interface:
-   * "Retain labels" Interface Preference did not retain labels for
-      a region that snapped exactly to both label edges.
-   * Projects did not save the track selected state.
-   * (OS X, Linux) Timer Record: Interlinking of the Start, End and 
-      Duration controls was broken.
-   * (Windows) JAWS screen-reader did not read the "Draw curves" and 
-      "Graphic EQ" radio buttons in Equalization correctly.  
+ * Crash using Undo whilst time-shifting a track.
+ * Crash using Repair if the selection extended into an empty track.
+ * Export Multiple didn't prevent export if there was no audio or 
+    all audio was muted. This allowed export of small invalid files. 
 
- * Envelopes and Clips: 
-   * Exporting (or any render operation) on a track containing 
-      split lines could create clicks at the split lines. 
-   * Dragging a clip into another track caused a crash if Sync-Lock
-      Tracks was enabled and there was also a label track. 
+ * Time Track:
+   * Loop Play of a speeded-up track inserted silence.
+   * Playback and rendering was significantly inaccurate, creating 
+      audible and visual glitches. 
 
- * Effects and Analysis:
-   * Normalize could crash if the track name contained "%". 
+ * Accessibility:
+   * The mnemonics character "&" was read out by screen readers in 
+      most of the Preferences choices.
+   * NVDA did not read static text in most dialogs. Text can now be
+      read by using INSERT + B.
+   * JAWS and Window-eyes misread the "Duration" control in Silence 
+      Generator. 
+   * Toolbar buttons could not be pressed by ENTER 	
+
+ * Other interface bug fixes.
 
 
 Changes and Improvements:
 
- * Duration controls when generating at a point now default to 
-    hh:mm:ss + milliseconds format. Selection Toolbar also defaults
-    to that format on first installation or resetting preferences. 
- * Toolbars visual improvements:
-   * "Snap To" in Selection Toolbar now has an explanatory tooltip.  
-   * Device Toolbar tooltips now display the selected device. 
-   * Increased default width of Device Toolbar and Meter Toolbar.   
- * Improvements and some bug fixes to Nyquist effects, including:
-   * Delay (new option to prevent duration change)
-   * Sample Data Export (new "L-R on Same Line" layout option)
-   * Risset Drum (new "Amplitude" slider). 
- * Importing a labels file writes the file name to the name of the 
-    Label Track, and exporting a labels file offers the name of the
-    last Label Track in the project.
- * Removed the "Audio cache" option from Directories Preferences 
-    due to frequent crash reports. All data operations will now 
-    be written to disk and not to RAM. 
- * Removed the FFmpeg "On-Demand" option from Libraries Preferences
-    (this fixes Audacity not building if configured --without-ffmpeg). 
- * Compilation: Progress on making the Modules feature mainstream. 
-    Modules can now be individually enabled and disabled in Preferences.
+ * The SoX Resampler library (libsoxr) has replaced libresample in 
+    Audacity releases, offering both higher quality and greater speed. . 
+
+ * Time Tracks new features:
+   * "Set Range" now changes only the range of the Time Track,
+      preserving the pitch/speed set by any existing warp points.
+   * Vertical scale added with options for linear and logarithmic  
+      display and interpolation.
+   * Upper and lower speed limits will now be remembered when saving 
+      and reopening a project in 2.0.3. Warp points in projects saved 
+      by previous Audacity versions will be correctly restored in 2.0.3.
+   * Warp points saved in a 2.0.3 project will be preserved if opened
+      in previous versions but playback and display will be incorrect.
+
+ * New effects: 
+   * Studio Fade Out (uses a filtered "S" curve).
+   * Adjustable Fade (accessible effect for creating partial fades 
+      and adjustable fade shapes).   
+   * Bass and Treble (replaces Bass Boost).  
  
+ * Real sample rates up to 384000 Hz are now supported for playback 
+    and recording in high resolution devices (the maximum is up to 
+    192000 Hz for Windows DirectSound host).
+ 
+ * Labeled Regions in Edit Menu is renamed to "Labeled Audio" and now 
+    allows splits to be placed at point labels. Labeled audio regions
+    that touch without overlapping are treated as separate regions. 
+    Overlapping labeled audio regions are treated as a single region.
+
+ * Compilation: cmake is required in order to build libsoxr.
+
+ * New Croatian translation of Audacity.
+
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.2:
+3. Known Issues in 2.0.3:
 
-For known issues at release of 2.0.2, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.2#known
+For known issues at release of 2.0.3, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.3#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -165,6 +180,9 @@ GPL-compatible license.  Specifically:
   libsndfile: LGPL
     Reads and writes uncompressed PCM audio files.
     Included with Audacity.
+
+  libsoxr: LGPL
+    The SoX Resampler library performs one-dimensional sample-rate conversion.
 
   libvamp: new-style BSD
     Plug-in interface and support library for audio analysis plug-ins.
@@ -266,7 +284,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.2 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.3 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/
@@ -282,7 +300,7 @@ commands:
   make install  # as root
 
 To see compile-time options you can set, you can type
-"./configure --help".
+  ./configure --help
 
 If you want to do any development, you might want to generate a configure cache
 and header dependencies:
@@ -306,6 +324,55 @@ or ask at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+
+Changes in version 2.0.2: 
+
+Bug fixes for:
+
+ * Interface:
+   * "Retain labels" Interface Preference did not retain labels for
+      a region that snapped exactly to both label edges.
+   * Projects did not save the track selected state.
+   * (OS X, Linux) Timer Record: Interlinking of the Start, End and 
+      Duration controls was broken.
+   * (Windows) JAWS screen-reader did not read the "Draw curves" and 
+      "Graphic EQ" radio buttons in Equalization correctly.  
+
+ * Envelopes and Clips: 
+   * Exporting (or any render operation) on a track containing 
+      split lines could create clicks at the split lines. 
+   * Dragging a clip into another track caused a crash if Sync-Lock
+      Tracks was enabled and there was also a label track. 
+
+ * Effects and Analysis:
+   * Normalize could crash if the track name contained "%". 
+
+
+Changes and Improvements:
+
+ * Duration controls when generating at a point now default to 
+    hh:mm:ss + milliseconds format. Selection Toolbar also defaults
+    to that format on first installation or resetting preferences. 
+ * Toolbars visual improvements:
+   * "Snap To" in Selection Toolbar now has an explanatory tooltip.  
+   * Device Toolbar tooltips now display the selected device. 
+   * Increased default width of Device Toolbar and Meter Toolbar.   
+ * Improvements and some bug fixes to Nyquist effects, including:
+   * Delay (new option to prevent duration change)
+   * Sample Data Export (new "L-R on Same Line" layout option)
+   * Risset Drum (new "Amplitude" slider). 
+ * Importing a labels file writes the file name to the name of the 
+    Label Track, and exporting a labels file offers the name of the
+    last Label Track in the project.
+ * Removed the "Audio cache" option from Directories Preferences 
+    due to frequent crash reports. All data operations will now 
+    be written to disk and not to RAM. 
+ * Removed the FFmpeg "On-Demand" option from Libraries Preferences
+    (this fixes Audacity not building if configured --without-ffmpeg). 
+ * Compilation: Progress on making the Modules feature mainstream. 
+    Modules can now be individually enabled and disabled in Preferences.
+
 
 Changes in version 2.0.1: 
 
