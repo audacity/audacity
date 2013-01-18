@@ -12,7 +12,7 @@
 \class Resample
 \brief Combined interface to libresample, libsamplerate, and libsoxr.
 
-   This class abstracts the interface to three different resampling libraries:
+   This class abstracts the interface to different resampling libraries:
 
       libresample, written by Dominic Mazzoni based on Resample-1.7
       by Julius Smith.  LGPL.
@@ -49,12 +49,17 @@
 #if USE_LIBRESAMPLE
 
    #include "libresample.h"
-	
+
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
       : Resample()
    {
       this->SetMethod(useBestMethod);
       mHandle = resample_open(mMethod, dFactor, dFactor);
+      if(mHandle == NULL) {
+         fprintf(stderr, "libresample doesn't support factor %f.\n", dFactor);
+         // FIX-ME: Audacity will hang after this if branch.
+         return;
+      }
    }
 
    ConstRateResample::~ConstRateResample()
@@ -89,8 +94,8 @@
       return wxT("/Quality/LibresampleHQSampleRateConverter");
    }
 
-   int ConstRateResample::GetFastMethodDefault() {return 0;}
-   int ConstRateResample::GetBestMethodDefault() {return 1;}
+   int ConstRateResample::GetFastMethodDefault() { return 0; }
+   int ConstRateResample::GetBestMethodDefault() { return 1; }
 
    int ConstRateResample::Process(double  factor,
                                   float  *inBuffer,
@@ -100,26 +105,27 @@
                                   float  *outBuffer,
                                   int     outBufferLen)
    {
-   return resample_process(mHandle, factor, inBuffer, inBufferLen,
-      (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
+      return resample_process(mHandle, factor, inBuffer, inBufferLen,
+                              (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
    }
 
 #elif USE_LIBSAMPLERATE
 
    #include <samplerate.h>
-	
+
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
       : Resample()
    {
       this->SetMethod(useBestMethod);
-      if (!src_is_valid_ratio (dFactor) || !src_is_valid_ratio (dFactor)) {
+      if (!src_is_valid_ratio(dFactor)) 
+      {
          fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
          // FIX-ME: Audacity will hang after this if branch.
          mHandle = NULL;
          return;
       }
 
-	  int err;
+      int err;
       SRC_STATE *state = src_new(mMethod, 1, &err);
       mHandle = (void *)state;
       mShouldReset = false;
@@ -174,43 +180,54 @@
    }
 
    int ConstRateResample::Process(double  factor,
-                                  float  *inBuffer,
-                                  int     inBufferLen,
-                                  bool    lastFlag,
-                                  int    *inBufferUsed,
-                                  float  *outBuffer,
-                                  int     outBufferLen)
+                                    float  *inBuffer,
+                                    int     inBufferLen,
+                                    bool    lastFlag,
+                                    int    *inBufferUsed,
+                                    float  *outBuffer,
+                                    int     outBufferLen)
    {
-   if (mInitial) {
       src_set_ratio((SRC_STATE *)mHandle, factor);
-      mInitial = false;
+
+      if(mShouldReset) {
+         if(inBufferLen > mSamplesLeft) {
+            mShouldReset = false;
+            src_reset((SRC_STATE *)mHandle);
+         } else {
+            mSamplesLeft -= inBufferLen;
+         }
+      }
+
+      SRC_DATA data;
+      
+      data.data_in = inBuffer;
+      data.data_out = outBuffer;
+      data.input_frames = inBufferLen;
+      data.output_frames = outBufferLen;
+      data.input_frames_used = 0;
+      data.output_frames_gen = 0;
+      data.end_of_input = (int)lastFlag;
+      data.src_ratio = factor;
+
+      int err = src_process((SRC_STATE *)mHandle, &data);
+      if (err) {
+         wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
+         return 0;
+      }
+      
+      if(lastFlag) {
+         mShouldReset = true;
+         mSamplesLeft = inBufferLen - (int)data.input_frames_used;
+      }
+
+      *inBufferUsed = (int)data.input_frames_used;
+      return (int)data.output_frames_gen;
    }
-
-   SRC_DATA data;
-
-   data.data_in = inBuffer;
-   data.data_out = outBuffer;
-   data.input_frames = inBufferLen;
-   data.output_frames = outBufferLen;
-   data.input_frames_used = 0;
-   data.output_frames_gen = 0;
-   data.end_of_input = (int)lastFlag;
-   data.src_ratio = factor;
-
-   int err = src_process((SRC_STATE *)mHandle, &data);
-   if (err) {
-      wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
-      return 0;
-   }
-
-   *inBufferUsed = (int)data.input_frames_used;
-   return (int)data.output_frames_gen;  
-   }
-
 
 #elif USE_LIBSOXR
+
    #include <soxr.h>
-	
+
    ConstRateResample::ConstRateResample(const bool useBestMethod, const double dFactor)
       : Resample()
    {
@@ -283,10 +300,10 @@
 #endif
 
 
-// variable-rate resampler(s)
+// variable-rate resamplers
 #if USE_LIBRESAMPLE
 
-#include "libresample.h"
+   #include "libresample.h"
 
    VarRateResample::VarRateResample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor)
       : Resample()
@@ -294,9 +311,8 @@
       this->SetMethod(useBestMethod);
       mHandle = resample_open(mMethod, dMinFactor, dMaxFactor);
       if(mHandle == NULL) {
-         fprintf(stderr, "libresample doesn't support range %f .. %f.\n", dMinFactor, dMaxFactor);
+         fprintf(stderr, "libresample doesn't support range of factors %f to %f.\n", dMinFactor, dMaxFactor);
          // FIX-ME: Audacity will hang after this if branch.
-         mHandle = NULL;
          return;
       }
    }
@@ -333,15 +349,8 @@
       return wxT("/Quality/LibresampleHQSampleRateConverter");
    }
 
-   int VarRateResample::GetFastMethodDefault()
-   {
-      return 0;
-   }
-
-   int VarRateResample::GetBestMethodDefault()
-   {
-      return 1;
-   }
+   int VarRateResample::GetFastMethodDefault() { return 0; }
+   int VarRateResample::GetBestMethodDefault() { return 1; }
 
    int VarRateResample::Process(double  factor,
                          float  *inBuffer,
@@ -352,7 +361,7 @@
                          int     outBufferLen)
    {
       return resample_process(mHandle, factor, inBuffer, inBufferLen,
-									   (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
+                              (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
    }
 
 #elif USE_LIBSAMPLERATE 

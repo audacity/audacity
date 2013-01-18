@@ -143,8 +143,6 @@ class ConstRateResample : public Resample
       else
          mMethod = gPrefs->Read(GetFastMethodKey(), GetFastMethodDefault());
    };
- private:
-   bool  mInitial;
 };
 
 class VarRateResample : public Resample
