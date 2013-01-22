@@ -9,13 +9,13 @@ msgstr ""
 "Project-Id-Version: audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-01-10 05:23+0000\n"
-"PO-Revision-Date: 2013-01-12 08:09-0000\n"
+"PO-Revision-Date: 2013-01-22 11:52-0000\n"
 "Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
 "X-Poedit-Language: Čeština\n"
 "X-Poedit-Country: Česká republika\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
@@ -34,7 +34,7 @@ msgstr "zajištění kvality"
 
 #: AboutDialog.cpp:161
 msgid "About Audacity..."
-msgstr "O Audacity"
+msgstr "O programu Audacity..."
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
 #. * foot of the 'About Audacity' dialog box, after some text to read.
@@ -43,15 +43,15 @@ msgstr "O Audacity"
 #. * you would use for a translation for 'OK' on a button.
 #: AboutDialog.cpp:180
 msgid "OK... Audacious!"
-msgstr "OK... Audacious!"
+msgstr "Odvahu!"
 
 #: AboutDialog.cpp:200
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Audacity je svobodný program tvořený lidmi z celého světa, <a href=\"http://audacity.sourceforge.net/community/developers\">dobrovolnými vývojáři</a>. Děkujeme <a href=\"http://sourceforge.net\">SourceForge.net</a> a <a href=\"http://code.google.com\">Google Code</a> za hosting projektu. Audacity je <a href=\"http://audacity.sourceforge.net/download/\">dostupné</a> pro Windows  Mac OS X, Linux a jiné Unixové systémy systémy."
+msgstr "Audacity je svobodný program tvořený lidmi z celého světa, <a href=\"http://audacity.sourceforge.net/community/developers\">dobrovolnými vývojáři</a>. Děkujeme <a href=\"http://sourceforge.net\">SourceForge.net</a> a <a href=\"http://code.google.com\">Google Code</a> za poskytování místa projektu. Audacity je <a href=\"http://audacity.sourceforge.net/download/\">dostupné</a> pro Windows  Mac OS X, Linux a jiné Unixové systémy."
 
 #: AboutDialog.cpp:204
 msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-msgstr "Pokud naleznete chybu nebo pro máte návrh, napište nám na adresu určenou pro zachytávání <a href=\"mailto:feedback@audacityteam.org\">zpětné vazby od uživatelů</a>. Pokud sháníte pomoc, podívejte se na rady a triky na naší <a href=\"http://wiki.audacityteam.org/\">wiki</a> nebo navštivte naše <a href=\"http://forum.audacityteam.org/\">fórum</a>."
+msgstr "Pokud naleznete chybu nebo pro nás máte návrh, napište nám na adresu určenou pro zachytávání <a href=\"mailto:feedback@audacityteam.org\">zpětné vazby od uživatelů</a>. Pokud sháníte pomoc, podívejte se na rady a triky na naší <a href=\"http://wiki.audacityteam.org/\">wiki</a> nebo navštivte naše <a href=\"http://forum.audacityteam.org/\">fórum</a>."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -61,7 +61,7 @@ msgstr "Pokud naleznete chybu nebo pro máte návrh, napište nám na adresu ur�
 #: AboutDialog.cpp:212
 #: AboutDialog.cpp:214
 msgid "translator_credits"
-msgstr "Překladatelé"
+msgstr "Český překlad: Aleš Tošovský, Dominik Joe Pantůček, Vladimír Krupka (Audacity 1.x), Pavel Fric (Audacity 2.x)"
 
 #: AboutDialog.cpp:225
 msgid "A Free Digital Audio Editor<br>"
@@ -105,7 +105,7 @@ msgstr "Zvláštní poděkování:"
 
 #: AboutDialog.cpp:270
 msgid "<b>Audacity&reg;</b> software is copyright"
-msgstr "<b>Audacity&reg;</b> software je chráněn autorskými právy"
+msgstr "<b>Audacity&reg;</b> software je chráněn autorskými právy "
 
 #: AboutDialog.cpp:273
 msgid "The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni."
@@ -1653,31 +1653,31 @@ msgstr "<center><h3>Jak získat pomoc</h3></center>"
 
 #: HelpText.cpp:188
 msgid "Welcome to Audacity "
-msgstr "Vítejte v Audacity"
+msgstr "Vítejte v Audacity "
 
 #: HelpText.cpp:189
 msgid "These are our support methods:"
-msgstr "Toto jsou naše podporované metody:"
+msgstr "Toto jsou námi podporované způsoby:"
 
 #: HelpText.cpp:190
 msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)"
-msgstr " [[file:quick_help.html|Quick Help]] (měla by být nainstalována lokálně, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internetová verze, není-li</a>)"
+msgstr " [[file:quick_help.html|Rychlá nápověda]] (měla by být nainstalována místně, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">internetová verze, když není</a>)"
 
 #: HelpText.cpp:191
 msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)"
-msgstr " [[file:index.html|Manual]] (měla by být nainstalován lokálně, <a href=\"http://manual.audacityteam.org/index.php\">Internetová verze, není-li</a>)"
+msgstr " [[file:index.html|Příručka]] (měla by být nainstalován místně, <a href=\"http://manual.audacityteam.org/index.php\">internetová verze, když není</a>)"
 
 #: HelpText.cpp:192
 msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)"
-msgstr " [[http://wiki.audacityteam.org/index.php|Wiki]] (aktuální tipy, triky and návody, na Internetu)"
+msgstr " [[http://wiki.audacityteam.org/index.php|Wiki]] (aktuální rady, triky a návody, na internetu)"
 
 #: HelpText.cpp:193
 msgid " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)"
-msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (ptejte se přímo na Internetu)"
+msgstr " <a href=\"http://forum.audacityteam.org/\">Fórum</a> (ptejte se přímo na internetu)"
 
 #: HelpText.cpp:194
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
-msgstr " Pro ještě rychlejší odpovědi, všechny výše uvedené internetové zdroje jsou <b>prohledávatelné</b>."
+msgstr " Abyste se k odpovědi dostali ještě rychleji, jsou všechny výše uvedené internetové zdroje <b>prohledávatelné</b>."
 
 #: HelpText.cpp:201
 msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
@@ -1786,7 +1786,7 @@ msgstr "Stopa"
 #: Menus.cpp:5955
 #: Menus.cpp:5999
 msgid "Label"
-msgstr "Šťítek"
+msgstr "Štítek"
 
 #. i18n-hint: (noun) of a label
 #: LabelDialog.cpp:147
@@ -2051,7 +2051,7 @@ msgstr "&Rozdělit a vyjmout"
 #. i18n-hint: (verb) Do a special kind of delete
 #: Menus.cpp:420
 msgid "Split D&elete"
-msgstr "S&mazat a rozdělit"
+msgstr "Rozdělit a s&mazat"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:423
@@ -3075,7 +3075,7 @@ msgstr "Rozděleno a smazáno %.2f sekund v t=%.2f"
 
 #: Menus.cpp:4222
 msgid "Split Delete"
-msgstr "Smazat a rozdělit"
+msgstr "Rozdělit a smazat"
 
 #: Menus.cpp:4243
 #, c-format
@@ -9794,7 +9794,7 @@ msgstr "Při zavádění zvukových souborů"
 
 #: prefs/ImportExportPrefs.cpp:57
 msgid "&Make a copy of uncompressed audio files before editing (safer)"
-msgstr "Před úpravami v&ytvořit kopii nekomprimovaných zvukových souboru (bezpečnější)"
+msgstr "Před úpravami v&ytvořit kopii nekomprimovaných zvukových souborů (bezpečnější)"
 
 #: prefs/ImportExportPrefs.cpp:59
 msgid "&Read uncompressed audio files directly from the original (faster)"
@@ -10018,7 +10018,7 @@ msgid ""
 "These are experimental. Enable them only if you've read the manual\n"
 "and know what you are doing."
 msgstr ""
-"tyto jsou pokusné. Povolte je jen tehdy, když jste si přečetli příručku\n"
+"Tyto jsou pokusné. Povolte je jen tehdy, pokud jste si přečetli příručku,\n"
 "a víte tedy, co děláte."
 
 #: prefs/ModulePrefs.cpp:58
@@ -10368,7 +10368,7 @@ msgstr "Pře&vodník vzorkovacího kmitočtu:"
 
 #: prefs/QualityPrefs.cpp:184
 msgid "&Dither:"
-msgstr "&Náhodný šum (dither):"
+msgstr "&Náhodný šum:"
 
 #: prefs/QualityPrefs.cpp:195
 msgid "High-quality Conversion"
@@ -10380,7 +10380,7 @@ msgstr "Pře&vodník vzorkovacího kmitočtu:"
 
 #: prefs/QualityPrefs.cpp:206
 msgid "Dit&her:"
-msgstr "Náhodný šum (dither):"
+msgstr "Ná&hodný šum:"
 
 #: prefs/RecordingPrefs.cpp:63
 msgid "Playthrough"
@@ -10422,7 +10422,7 @@ msgstr "Oprava &prodlevy:"
 #: prefs/RecordingPrefs.cpp:99
 #: prefs/RecordingPrefs.cpp:100
 msgid "milliseconds (negative = backwards)"
-msgstr "milisekund (záporné = vytváří zpětné přesazení)"
+msgstr "milisekund (záporná hodnota vytváří zpětné přesazení)"
 
 #: prefs/RecordingPrefs.cpp:106
 msgid "Sound Activated Recording"
@@ -10708,7 +10708,7 @@ msgstr "&Aktualizovat zobrazení při přehrávání"
 
 #: prefs/TracksPrefs.cpp:82
 msgid "Automatically &fit tracks vertically zoomed"
-msgstr "Automaticky &přizpůsobit stopy vertikálnímu zvětšení"
+msgstr "Automaticky &přizpůsobit stopy svislému zvětšení"
 
 #: prefs/TracksPrefs.cpp:90
 msgid "Default &View Mode:"
@@ -10745,7 +10745,7 @@ msgstr "Varování"
 
 #: prefs/WarningsPrefs.cpp:55
 msgid "Show Warnings/Prompts for"
-msgstr "Zobrazit Varování/Výzvy pro"
+msgstr "Zobrazit varování/výzvy pro"
 
 #: prefs/WarningsPrefs.cpp:57
 msgid "Saving &projects"
