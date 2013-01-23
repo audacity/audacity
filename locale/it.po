@@ -1,14 +1,9 @@
-# translation of it.po to italiano
-# translation of audacity.po to italiano
-# Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
-# , 2003
-# Aldo Boccacci <zorba_@tin.it>, 2003, 2004, 2005.
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-11-27 02:03+0000\n"
-"PO-Revision-Date: 2012-12-20 20:09-0000\n"
+"POT-Creation-Date: 2013-01-10 05:23+0000\n"
+"PO-Revision-Date: 2013-01-23 10:01-0000\n"
 "Last-Translator: Carmelo Battaglia\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -297,8 +292,8 @@ msgid "Open &Recent..."
 msgstr "Apri &recenti..."
 
 #: AudacityApp.cpp:1203
-#: Menus.cpp:1419
-#: Menus.cpp:1422
+#: Menus.cpp:1425
+#: Menus.cpp:1428
 msgid "&About Audacity..."
 msgstr "Informazioni su &Audacity..."
 
@@ -422,11 +417,11 @@ msgstr ""
 msgid "Audacity Project Files"
 msgstr "File progetto Audacity"
 
-#: AudioIO.cpp:552
+#: AudioIO.cpp:559
 msgid "Could not find any audio devices.\n"
 msgstr "Impossibile trovare dispositivi audio.\n"
 
-#: AudioIO.cpp:553
+#: AudioIO.cpp:560
 msgid ""
 "You will not be able to play or record audio.\n"
 "\n"
@@ -434,20 +429,20 @@ msgstr ""
 "Potresti non essere in grado di riprodurre o registrare audio.\n"
 "\n"
 
-#: AudioIO.cpp:556
-#: AudioIO.cpp:576
+#: AudioIO.cpp:563
+#: AudioIO.cpp:583
 msgid "Error: "
 msgstr "Errore: "
 
-#: AudioIO.cpp:559
+#: AudioIO.cpp:566
 msgid "Error Initializing Audio"
 msgstr "Errore nell'inizializzazione dell'audio"
 
-#: AudioIO.cpp:572
+#: AudioIO.cpp:579
 msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "Vi è stato un errore inizializzando il livello i/o midi.\n"
 
-#: AudioIO.cpp:573
+#: AudioIO.cpp:580
 msgid ""
 "You will not be able to play midi.\n"
 "\n"
@@ -455,16 +450,16 @@ msgstr ""
 "Non è possibile riprodurre file Midi.\n"
 "\n"
 
-#: AudioIO.cpp:579
+#: AudioIO.cpp:586
 msgid "Error Initializing Midi"
 msgstr "Errore di inizializzazione file Midi"
 
-#: AudioIO.cpp:1278
-#: AudioIO.cpp:1312
+#: AudioIO.cpp:1285
+#: AudioIO.cpp:1320
 msgid "Out of memory!"
 msgstr "Memoria esaurita!"
 
-#: AudioIO.cpp:1778
+#: AudioIO.cpp:1786
 msgid ""
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -474,37 +469,37 @@ msgstr ""
 "Audacity ha riportato l'inizio a zero.\n"
 "Potrebbe essere necessario utilizzare lo strumento Spostamento Temporale (<---> o F5) per spostare la traccia nella sede giusta."
 
-#: AudioIO.cpp:1779
+#: AudioIO.cpp:1787
 msgid "Latency problem"
 msgstr "Problema di latenza"
 
-#: AudioIO.cpp:3089
+#: AudioIO.cpp:3101
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."
 msgstr "Il volume automatico è stato interrotto. Non è possibile ottimizzarlo di più. È ancora troppo alto."
 
-#: AudioIO.cpp:3097
+#: AudioIO.cpp:3109
 #, c-format
 msgid "Automated Input Level Adjustment decreased the volume to %f."
 msgstr "Il volume automatico ha diminuito il volume a %f."
 
-#: AudioIO.cpp:3112
+#: AudioIO.cpp:3124
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."
 msgstr "Il volume automatico è stato interrotto. Non è possibile ottimizzarlo di più. È ancora troppo basso. "
 
-#: AudioIO.cpp:3124
+#: AudioIO.cpp:3136
 #, c-format
 msgid "Automated Input Level Adjustment increased the volume to %.2f."
 msgstr "Il volume automatico ha aumentato il volume a %2f."
 
-#: AudioIO.cpp:3158
+#: AudioIO.cpp:3170
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
 msgstr "Il volume automatco è stato disabilitato. Il numero totale di analisi è stato superato senza trovare un volume accettabile. È ancora troppo alto."
 
-#: AudioIO.cpp:3160
+#: AudioIO.cpp:3172
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
 msgstr "Il volume automatico è stato disabilitato. Il numero toale di analisi è stato superato senza trovare un volume accettabile. È ancora troppo basso."
 
-#: AudioIO.cpp:3163
+#: AudioIO.cpp:3175
 #, c-format
 msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "Il volume automatico è stato fermato. %2f sembra un volume accettabile."
@@ -565,13 +560,13 @@ msgstr "Impossibile enumerare i file contenuti nella cartella di salvataggio aut
 
 #: AutoRecovery.cpp:150
 #: AutoRecovery.cpp:187
-#: Menus.cpp:3798
-#: Menus.cpp:3810
-#: Menus.cpp:6484
+#: Menus.cpp:3809
+#: Menus.cpp:3821
+#: Menus.cpp:6502
 #: Project.cpp:2549
-#: Project.cpp:4492
-#: Project.cpp:4511
-#: TrackPanel.cpp:7336
+#: Project.cpp:4496
+#: Project.cpp:4515
+#: TrackPanel.cpp:7377
 #: WaveTrack.cpp:973
 #: WaveTrack.cpp:992
 #: WaveTrack.cpp:2116
@@ -797,17 +792,17 @@ msgid "De&lete"
 msgstr "E&limina"
 
 #: BatchProcessDialog.cpp:525
-#: effects/Equalization.cpp:2875
+#: effects/Equalization.cpp:2877
 msgid "Move &Up"
 msgstr "Sposta &su"
 
 #: BatchProcessDialog.cpp:526
-#: effects/Equalization.cpp:2876
+#: effects/Equalization.cpp:2878
 msgid "Move &Down"
 msgstr "Sposta &giù"
 
 #: BatchProcessDialog.cpp:527
-#: effects/Equalization.cpp:2882
+#: effects/Equalization.cpp:2884
 msgid "De&faults"
 msgstr "Prede&initi"
 
@@ -1445,7 +1440,7 @@ msgstr "&Esporta..."
 #: FreqWindow.cpp:220
 #: effects/Contrast.cpp:352
 #: export/ExportCL.cpp:430
-#: export/ExportMultiple.cpp:351
+#: export/ExportMultiple.cpp:361
 msgid "Export"
 msgstr "Esporta"
 
@@ -1466,7 +1461,7 @@ msgstr "Chiudi"
 
 #: FreqWindow.cpp:231
 #: FreqWindow.cpp:234
-#: effects/Equalization.cpp:1315
+#: effects/Equalization.cpp:1317
 msgid "Grids"
 msgstr "Griglie"
 
@@ -1478,12 +1473,12 @@ msgstr "Griglie"
 #: effects/AutoDuck.cpp:821
 #: effects/Compressor.cpp:480
 #: effects/Compressor.cpp:488
-#: effects/Equalization.cpp:1143
 #: effects/Equalization.cpp:1145
-#: effects/Equalization.cpp:1153
-#: effects/Equalization.cpp:1225
-#: effects/Equalization.cpp:1457
-#: effects/Equalization.cpp:1468
+#: effects/Equalization.cpp:1147
+#: effects/Equalization.cpp:1155
+#: effects/Equalization.cpp:1227
+#: effects/Equalization.cpp:1459
+#: effects/Equalization.cpp:1470
 #: effects/Normalize.cpp:493
 #: widgets/Meter.cpp:440
 msgid "dB"
@@ -1493,8 +1488,8 @@ msgstr "dB"
 #. cycles per second.
 #: FreqWindow.cpp:314
 #: FreqWindow.cpp:537
-#: effects/Equalization.cpp:1185
-#: effects/Equalization.cpp:1221
+#: effects/Equalization.cpp:1187
+#: effects/Equalization.cpp:1223
 #: import/ImportRaw.cpp:412
 msgid "Hz"
 msgstr "Hz"
@@ -1549,7 +1544,7 @@ msgstr "Esporta spettro come:"
 
 #: FreqWindow.cpp:1229
 #: LabelDialog.cpp:611
-#: Menus.cpp:3354
+#: Menus.cpp:3360
 #: effects/Contrast.cpp:516
 #: prefs/KeyConfigPrefs.cpp:340
 msgid "Couldn't write to file: "
@@ -1776,8 +1771,8 @@ msgstr "Traccia"
 #. i18n-hint: (noun)
 #: LabelDialog.cpp:145
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5942
-#: Menus.cpp:5986
+#: Menus.cpp:5955
+#: Menus.cpp:5999
 msgid "Label"
 msgstr "Etichetta"
 
@@ -1815,17 +1810,17 @@ msgid "Confirm"
 msgstr "Conferma"
 
 #: LabelDialog.cpp:522
-#: Menus.cpp:5123
+#: Menus.cpp:5136
 msgid "Select a text file containing labels..."
 msgstr "Seleziona un file contenente etichette..."
 
 #: LabelDialog.cpp:526
-#: Menus.cpp:5127
+#: Menus.cpp:5140
 msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
 msgstr "File di Testo (*.txt)|*.txt|Tutti i file (*.*)|*.*"
 
 #: LabelDialog.cpp:541
-#: Menus.cpp:5140
+#: Menus.cpp:5153
 #: Project.cpp:2352
 #: Project.cpp:2360
 msgid "Could not open file: "
@@ -1836,7 +1831,7 @@ msgid "No labels to export."
 msgstr "Nessuna etichetta da esportare."
 
 #: LabelDialog.cpp:574
-#: Menus.cpp:3317
+#: Menus.cpp:3323
 msgid "Export Labels As:"
 msgstr "Esporta etichette come:"
 
@@ -1856,7 +1851,7 @@ msgid "Label Track"
 msgstr "Traccia etichetta"
 
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5942
+#: Menus.cpp:5955
 msgid "Added label"
 msgstr "Aggiunta etichetta"
 
@@ -1957,370 +1952,370 @@ msgid "Expo&rt Selection..."
 msgstr "Espo&rta selezione..."
 
 #: Menus.cpp:296
-#: Menus.cpp:311
+#: Menus.cpp:312
 msgid "Export &Labels..."
 msgstr "Esporta &etichette..."
 
-#: Menus.cpp:299
-#: Menus.cpp:314
+#: Menus.cpp:300
+#: Menus.cpp:316
 msgid "Export &Multiple..."
 msgstr "Esportazione &multipla..."
 
-#: Menus.cpp:303
-#: Menus.cpp:318
+#: Menus.cpp:304
+#: Menus.cpp:320
 msgid "Export MIDI..."
 msgstr "Esporta MIDI..."
 
-#: Menus.cpp:324
+#: Menus.cpp:326
 msgid "Appl&y Chain..."
 msgstr "Appl&ica concatenazione..."
 
-#: Menus.cpp:327
+#: Menus.cpp:329
 msgid "Edit C&hains..."
 msgstr "Modifica con&catenazioni"
 
-#: Menus.cpp:331
+#: Menus.cpp:333
 msgid "Export CleanSpeech &Presets..."
 msgstr "Esporta &Preset CleanSpeech..."
 
-#: Menus.cpp:332
+#: Menus.cpp:334
 msgid "I&mport CleanSpeech Presets..."
 msgstr "I&mporta Preset CleanSpeech..."
 
-#: Menus.cpp:338
-#: Menus.cpp:354
+#: Menus.cpp:340
+#: Menus.cpp:356
 msgid "&Upload File..."
 msgstr "&Carica File..."
 
-#: Menus.cpp:343
-#: Menus.cpp:359
+#: Menus.cpp:345
+#: Menus.cpp:361
 msgid "Pa&ge Setup..."
 msgstr "Imposta pagina..."
 
 #. i18n-hint: (verb) It's item on a menu.
-#: Menus.cpp:347
-#: Menus.cpp:363
+#: Menus.cpp:349
+#: Menus.cpp:365
 msgid "&Print..."
 msgstr "&Stampa..."
 
 #. i18n-hint: (verb) It's item on a menu.
-#: Menus.cpp:373
+#: Menus.cpp:375
 msgid "E&xit"
 msgstr "E&sci"
 
-#: Menus.cpp:383
+#: Menus.cpp:385
 msgid "&Edit"
 msgstr "&Modifica"
 
-#: Menus.cpp:388
-#: Menus.cpp:1716
+#: Menus.cpp:390
+#: Menus.cpp:1722
 msgid "&Undo"
 msgstr "Ann&ulla"
 
-#: Menus.cpp:400
-#: Menus.cpp:1731
+#: Menus.cpp:402
+#: Menus.cpp:1737
 msgid "&Redo"
 msgstr "&Ripristina"
 
-#: Menus.cpp:408
-msgid "R&emove Audio"
-msgstr "&Elimina audio"
+#: Menus.cpp:410
+msgid "R&emove Audio or Labels"
+msgstr "R&imuovi audio o etichette"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:410
+#: Menus.cpp:412
 msgid "Cu&t"
 msgstr "&Taglia"
 
-#: Menus.cpp:413
-#: Menus.cpp:480
+#: Menus.cpp:415
+#: Menus.cpp:486
 msgid "&Delete"
 msgstr "&Elimina"
 
 #. i18n-hint: (verb) Do a special kind of cut
-#: Menus.cpp:416
+#: Menus.cpp:418
 msgid "Spl&it Cut"
 msgstr "Div&idi e taglia"
 
 #. i18n-hint: (verb) Do a special kind of delete
-#: Menus.cpp:418
+#: Menus.cpp:420
 msgid "Split D&elete"
 msgstr "Dividi ed &elimina"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:421
+#: Menus.cpp:423
 msgid "Silence Audi&o"
 msgstr "Silenzia audi&o"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:423
-msgid "Tri&m"
-msgstr "Ri&taglia"
+#: Menus.cpp:427
+msgid "Tri&m Audio"
+msgstr "&Ritaglia audio"
 
-#: Menus.cpp:426
+#: Menus.cpp:432
 msgid "Clip Boun&daries"
-msgstr "Limiti &della clip"
+msgstr "Limiti &del clip"
 
 #. i18n-hint: (verb) It's an item on a menu.
-#: Menus.cpp:428
+#: Menus.cpp:434
 msgid "Sp&lit"
 msgstr "Div&idi"
 
-#: Menus.cpp:431
+#: Menus.cpp:437
 msgid "Split Ne&w"
 msgstr "Dividi e crea nu&ovo"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:436
-#: Menus.cpp:504
+#: Menus.cpp:442
+#: Menus.cpp:510
 msgid "&Join"
 msgstr "&Unisci"
 
-#: Menus.cpp:437
-#: Menus.cpp:505
+#: Menus.cpp:443
+#: Menus.cpp:511
 msgid "Detac&h at Silences"
 msgstr "Separ&a ai silenzi"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:443
+#: Menus.cpp:449
 msgid "&Copy"
 msgstr "&Copia"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:447
+#: Menus.cpp:453
 msgid "&Paste"
 msgstr "&Incolla"
 
-#: Menus.cpp:450
+#: Menus.cpp:456
 msgid "Paste Te&xt to New Label"
 msgstr "Incolla te&sto in nuova etichetta"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:456
+#: Menus.cpp:462
 msgid "Duplic&ate"
 msgstr "Duplic&a"
 
-#: Menus.cpp:462
-#: Menus.cpp:776
-#: Menus.cpp:976
+#: Menus.cpp:468
+#: Menus.cpp:782
+#: Menus.cpp:982
 msgid "Stereo Trac&k to Mono"
 msgstr "Da trac&cia stereo a mono"
 
-#: Menus.cpp:472
-msgid "La&beled Regions"
-msgstr "Regioni con etich&ette"
+#: Menus.cpp:478
+msgid "La&beled Audio"
+msgstr "Audio con etich&ette"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:477
+#: Menus.cpp:483
 msgid "&Cut"
 msgstr "&Taglia"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
-#: Menus.cpp:487
+#: Menus.cpp:493
 msgid "&Split Cut"
 msgstr "&Dividi e taglia"
 
-#: Menus.cpp:488
+#: Menus.cpp:494
 msgid "Sp&lit Delete"
 msgstr "Div&idi ed elimina"
 
-#: Menus.cpp:493
+#: Menus.cpp:499
 msgid "Silence &Audio"
 msgstr "Silenzia &audio"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:495
+#: Menus.cpp:501
 msgid "Co&py"
 msgstr "Co&pia"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:500
+#: Menus.cpp:506
 msgid "Spli&t"
 msgstr "Div&idi"
 
 #. i18n-hint: (verb) It's an item on a menu.
-#: Menus.cpp:512
+#: Menus.cpp:518
 msgid "&Select"
 msgstr "&Seleziona"
 
-#: Menus.cpp:515
+#: Menus.cpp:521
 msgid "&All"
 msgstr "Tutto"
 
-#: Menus.cpp:516
+#: Menus.cpp:522
 msgid "&None"
 msgstr "&Nulla"
 
-#: Menus.cpp:518
+#: Menus.cpp:524
 msgid "&Left at Playback Position"
 msgstr "Da &sinistra alla posizione di riproduzione"
 
-#: Menus.cpp:519
+#: Menus.cpp:525
 msgid "&Right at Playback Position"
 msgstr "Da &destra alla posizione di riproduzione"
 
-#: Menus.cpp:523
+#: Menus.cpp:529
 msgid "Track &Start to Cursor"
 msgstr "Da &inizio traccia al cursore"
 
-#: Menus.cpp:524
+#: Menus.cpp:530
 msgid "Cursor to Track &End"
 msgstr "Dal cursore a &fine traccia"
 
-#: Menus.cpp:528
+#: Menus.cpp:534
 msgid "In All &Tracks"
 msgstr "In ogni &traccia"
 
-#: Menus.cpp:533
+#: Menus.cpp:539
 msgid "In All S&ync-Locked Tracks"
 msgstr "In tutte le tracce con blocco s&incronizzazione"
 
-#: Menus.cpp:543
+#: Menus.cpp:549
 msgid "Find &Zero Crossings"
 msgstr "Trova incroci con &zero"
 
-#: Menus.cpp:547
+#: Menus.cpp:553
 msgid "Mo&ve Cursor"
 msgstr "Spo&sta cursore"
 
-#: Menus.cpp:549
+#: Menus.cpp:555
 msgid "to Selection Star&t"
 msgstr "A inizi&o selezione"
 
-#: Menus.cpp:550
+#: Menus.cpp:556
 msgid "to Selection En&d"
 msgstr "A fin&e selezione"
 
-#: Menus.cpp:552
+#: Menus.cpp:558
 msgid "to Track &Start"
 msgstr "A &inizio traccia"
 
-#: Menus.cpp:553
+#: Menus.cpp:559
 msgid "to Track &End"
 msgstr "A &fine traccia"
 
-#: Menus.cpp:561
+#: Menus.cpp:567
 msgid "Re&gion Save"
 msgstr "Salva re&gione"
 
-#: Menus.cpp:564
+#: Menus.cpp:570
 msgid "Regio&n Restore"
 msgstr "Ripristina regio&ne"
 
-#: Menus.cpp:572
+#: Menus.cpp:578
 msgid "Pla&y Region"
 msgstr "Ri&produci regione"
 
-#: Menus.cpp:574
+#: Menus.cpp:580
 msgid "&Lock"
 msgstr "&Blocca"
 
-#: Menus.cpp:577
+#: Menus.cpp:583
 msgid "&Unlock"
 msgstr "&Sblocca"
 
-#: Menus.cpp:597
+#: Menus.cpp:603
 msgid "Pre&ferences..."
 msgstr "Pre&ferenze..."
 
-#: Menus.cpp:607
+#: Menus.cpp:613
 msgid "&View"
 msgstr "&Visualizza"
 
-#: Menus.cpp:610
+#: Menus.cpp:616
 msgid "Zoom &In"
 msgstr "Zoom avant&i"
 
-#: Menus.cpp:613
+#: Menus.cpp:619
 msgid "Zoom &Normal"
 msgstr "Zoom &normale"
 
-#: Menus.cpp:614
+#: Menus.cpp:620
 msgid "Zoom &Out"
 msgstr "Zoom indietr&o"
 
-#: Menus.cpp:618
+#: Menus.cpp:624
 msgid "&Fit in Window"
 msgstr "Adatta alla &finestra"
 
-#: Menus.cpp:619
+#: Menus.cpp:625
 msgid "Fit &Vertically"
 msgstr "Adatta &verticalmente"
 
-#: Menus.cpp:620
+#: Menus.cpp:626
 msgid "&Zoom to Selection"
 msgstr "&Zoom sulla selezione"
 
-#: Menus.cpp:624
+#: Menus.cpp:630
 msgid "&Collapse All Tracks"
 msgstr "&Collassa tutte le tracce"
 
-#: Menus.cpp:625
+#: Menus.cpp:631
 msgid "E&xpand All Tracks"
 msgstr "E&spandi tutte le tracce"
 
-#: Menus.cpp:629
+#: Menus.cpp:635
 msgid "&Show Clipping"
 msgstr "&Mostra clipping"
 
 #. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: Menus.cpp:657
+#: Menus.cpp:663
 msgid "&History..."
 msgstr "&Cronologia..."
 
-#: Menus.cpp:661
+#: Menus.cpp:667
 msgid "&Karaoke..."
 msgstr "&Karaoke..."
 
-#: Menus.cpp:662
+#: Menus.cpp:668
 msgid "&Mixer Board..."
 msgstr "Pannello &mixer..."
 
-#: Menus.cpp:668
+#: Menus.cpp:674
 msgid "&Toolbars"
 msgstr "&Barre degli strumenti"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: Menus.cpp:671
+#: Menus.cpp:677
 msgid "&Device Toolbar"
 msgstr "Barra &Dispositivi"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: Menus.cpp:673
+#: Menus.cpp:679
 msgid "&Edit Toolbar"
 msgstr "Barra &Modifica"
 
 #. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#: Menus.cpp:675
+#: Menus.cpp:681
 msgid "&Meter Toolbar"
 msgstr "Barra &Monitor"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: Menus.cpp:677
+#: Menus.cpp:683
 msgid "Mi&xer Toolbar"
 msgstr "Barra Mi&xer"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for selecting audio
-#: Menus.cpp:679
+#: Menus.cpp:685
 msgid "&Selection Toolbar"
 msgstr "Barra &Selezione"
 
 #. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: Menus.cpp:681
+#: Menus.cpp:687
 msgid "T&ools Toolbar"
 msgstr "Barra St&rumenti"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: Menus.cpp:683
+#: Menus.cpp:689
 msgid "Transcri&ption Toolbar"
 msgstr "Barra Trascri&zione"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: Menus.cpp:685
+#: Menus.cpp:691
 msgid "&Transport Toolbar"
 msgstr "&Barra Trascrizione"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:690
+#: Menus.cpp:696
 msgid "&Reset Toolbars"
 msgstr "&Ripristina Barre degli strumenti"
 
@@ -2329,660 +2324,660 @@ msgstr "&Ripristina Barre degli strumenti"
 #. * with !.  If your translation file is for a special use, that is if it is for a
 #. * simplified view with hidden menu items, then leave the ! out here, so that the
 #. * user can show/hide some of the menu items.
-#: Menus.cpp:701
+#: Menus.cpp:707
 msgid "!Simplified View"
 msgstr "!Vista semplificata"
 
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
-#: Menus.cpp:712
+#: Menus.cpp:718
 msgid "T&ransport"
 msgstr "Att&ività"
 
 #. i18n-hint: (verb) Start playing audio
-#: Menus.cpp:716
+#: Menus.cpp:722
 msgid "Pl&ay"
 msgstr "R&iproduci"
 
-#: Menus.cpp:717
+#: Menus.cpp:723
 msgid "&Loop Play"
 msgstr "Riproduci &ciclicamente"
 
-#: Menus.cpp:718
+#: Menus.cpp:724
 msgid "&Pause"
 msgstr "&Pausa"
 
 #. i18n-hint: (verb) Stop playing audio
-#: Menus.cpp:722
+#: Menus.cpp:728
 msgid "&Stop"
 msgstr "&Ferma"
 
-#: Menus.cpp:725
+#: Menus.cpp:731
 msgid "S&kip to Start"
 msgstr "V&ai all'inizio"
 
-#: Menus.cpp:726
+#: Menus.cpp:732
 msgid "Skip to E&nd"
 msgstr "Vai alla f&ine"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:731
+#: Menus.cpp:737
 msgid "&Record"
 msgstr "&Registra"
 
-#: Menus.cpp:732
+#: Menus.cpp:738
 msgid "&Timer Record..."
 msgstr "Programma regis&trazione..."
 
-#: Menus.cpp:733
+#: Menus.cpp:739
 msgid "Appen&d Record"
 msgstr "Aggiun&gi registrazione"
 
-#: Menus.cpp:737
+#: Menus.cpp:743
 msgid "&Overdub (on/off)"
 msgstr "&Sovraregistra (Attivo/Non attivo)"
 
-#: Menus.cpp:738
+#: Menus.cpp:744
 msgid "So&ftware Playthrough (on/off)"
 msgstr "So&ftware Playthrough  (Attivo/Non attivo)"
 
-#: Menus.cpp:741
+#: Menus.cpp:747
 msgid "Sound A&ctivated Recording (on/off)"
 msgstr "Registrazione a&ttivata da audio (Attiva/Non attiva)"
 
-#: Menus.cpp:742
+#: Menus.cpp:748
 msgid "Sound Activation Le&vel..."
 msgstr "Li&vello attivazione audio..."
 
-#: Menus.cpp:745
+#: Menus.cpp:751
 msgid "A&utomated Input Level Adjustment (on/off)"
 msgstr "Volume a&utomatico (Attivo/Non attivo)"
 
-#: Menus.cpp:747
+#: Menus.cpp:753
 msgid "R&escan Audio Devices"
 msgstr "R&ipeti ricerca per dispositivi audio"
 
-#: Menus.cpp:756
-#: Menus.cpp:954
+#: Menus.cpp:762
+#: Menus.cpp:960
 msgid "&Tracks"
 msgstr "&Tracce"
 
-#: Menus.cpp:761
-#: Menus.cpp:959
+#: Menus.cpp:767
+#: Menus.cpp:965
 msgid "Add &New"
 msgstr "Aggiungi &nuova"
 
-#: Menus.cpp:763
-#: Menus.cpp:961
+#: Menus.cpp:769
+#: Menus.cpp:967
 msgid "&Audio Track"
 msgstr "Traccia &audio"
 
-#: Menus.cpp:764
-#: Menus.cpp:962
+#: Menus.cpp:770
+#: Menus.cpp:968
 msgid "&Stereo Track"
 msgstr "Traccia &stereo"
 
-#: Menus.cpp:765
-#: Menus.cpp:963
+#: Menus.cpp:771
+#: Menus.cpp:969
 msgid "&Label Track"
 msgstr "Traccia &etichetta"
 
-#: Menus.cpp:766
-#: Menus.cpp:964
+#: Menus.cpp:772
+#: Menus.cpp:970
 msgid "&Time Track"
 msgstr "Traccia &tempo"
 
-#: Menus.cpp:779
-#: Menus.cpp:979
+#: Menus.cpp:785
+#: Menus.cpp:985
 msgid "Mi&x and Render"
 msgstr "Mi&scela e renderizza"
 
-#: Menus.cpp:782
-#: Menus.cpp:982
+#: Menus.cpp:788
+#: Menus.cpp:988
 msgid "Mix and Render to New Track"
 msgstr "Miscela e renderizza in una nuova traccia"
 
-#: Menus.cpp:785
-#: Menus.cpp:985
+#: Menus.cpp:791
+#: Menus.cpp:991
 msgid "&Resample..."
 msgstr "&Ricampiona..."
 
-#: Menus.cpp:791
-#: Menus.cpp:991
+#: Menus.cpp:797
+#: Menus.cpp:997
 msgid "Remo&ve Tracks"
 msgstr "Rimuo&vi tracce"
 
-#: Menus.cpp:797
-#: Menus.cpp:997
+#: Menus.cpp:803
+#: Menus.cpp:1003
 msgid "&Mute All Tracks"
 msgstr "Rendi &mute tutte le tracce"
 
-#: Menus.cpp:798
-#: Menus.cpp:998
+#: Menus.cpp:804
+#: Menus.cpp:1004
 msgid "&Unmute All Tracks"
 msgstr "Rendi &udibili tutte le tracce"
 
-#: Menus.cpp:803
-#: Menus.cpp:1003
+#: Menus.cpp:809
+#: Menus.cpp:1009
 msgid "Align with &Zero"
 msgstr "Allinea con &zero"
 
-#: Menus.cpp:804
-#: Menus.cpp:1004
+#: Menus.cpp:810
+#: Menus.cpp:1010
 msgid "Align with &Cursor"
 msgstr "Allinea con il &cursore"
 
-#: Menus.cpp:805
-#: Menus.cpp:1005
+#: Menus.cpp:811
+#: Menus.cpp:1011
 msgid "Align with Selection &Start"
 msgstr "Allinea con l'inizio &selezione"
 
-#: Menus.cpp:806
-#: Menus.cpp:1006
+#: Menus.cpp:812
+#: Menus.cpp:1012
 msgid "Align with Selection &End"
 msgstr "Allinea con la fin&e selezione"
 
-#: Menus.cpp:807
-#: Menus.cpp:1007
+#: Menus.cpp:813
+#: Menus.cpp:1013
 msgid "Align End with Cu&rsor"
 msgstr "Allinea la fine con il cursore"
 
-#: Menus.cpp:808
-#: Menus.cpp:1008
+#: Menus.cpp:814
+#: Menus.cpp:1014
 msgid "Align End with Selection Star&t"
 msgstr "Allinea la fine con l'inizio selezione"
 
-#: Menus.cpp:809
-#: Menus.cpp:1009
+#: Menus.cpp:815
+#: Menus.cpp:1015
 msgid "Align End with Selection En&d"
 msgstr "Allinea la fine con la fine selezione"
 
-#: Menus.cpp:810
-#: Menus.cpp:1010
+#: Menus.cpp:816
+#: Menus.cpp:1016
 msgid "Align Tracks To&gether"
 msgstr "Allinea tutte le tracce insie&me"
 
-#: Menus.cpp:812
-#: Menus.cpp:1012
+#: Menus.cpp:818
+#: Menus.cpp:1018
 msgid "&Align Tracks"
 msgstr "&Allinea tracce"
 
-#: Menus.cpp:827
-#: Menus.cpp:1027
+#: Menus.cpp:833
+#: Menus.cpp:1033
 msgid "Ali&gn and Move Cursor"
 msgstr "Alli&nea e sposta cursore"
 
-#: Menus.cpp:839
-#: Menus.cpp:1039
-#: Menus.cpp:5604
+#: Menus.cpp:845
+#: Menus.cpp:1045
+#: Menus.cpp:5617
 msgid "Synchronize MIDI with Audio"
 msgstr "Sincronizza MIDI con l'audio"
 
-#: Menus.cpp:847
-#: Menus.cpp:1047
+#: Menus.cpp:853
+#: Menus.cpp:1053
 msgid "Sync-&Lock Tracks"
 msgstr "B&locca sincronizzazione tracce"
 
-#: Menus.cpp:852
-#: Menus.cpp:1052
+#: Menus.cpp:858
+#: Menus.cpp:1058
 msgid "Add Label At &Selection"
 msgstr "Aggiungi etichetta alla &selezione"
 
-#: Menus.cpp:854
-#: Menus.cpp:1054
+#: Menus.cpp:860
+#: Menus.cpp:1060
 msgid "Add Label At &Playback Position"
 msgstr "Aggiungi etichetta al punto di &riproduzione"
 
-#: Menus.cpp:862
-#: Menus.cpp:1062
+#: Menus.cpp:868
+#: Menus.cpp:1068
 msgid "&Edit Labels..."
 msgstr "&Modifica etichette..."
 
-#: Menus.cpp:868
-#: Menus.cpp:1068
+#: Menus.cpp:874
+#: Menus.cpp:1074
 msgid "S&ort Tracks"
 msgstr "&Ordina tracce"
 
-#: Menus.cpp:870
-#: Menus.cpp:1070
+#: Menus.cpp:876
+#: Menus.cpp:1076
 msgid "by &Start time"
 msgstr "Per tempo di &inizio"
 
-#: Menus.cpp:873
-#: Menus.cpp:1073
+#: Menus.cpp:879
+#: Menus.cpp:1079
 msgid "by &Name"
 msgstr "Per &nome"
 
-#: Menus.cpp:887
-#: Menus.cpp:1087
+#: Menus.cpp:893
+#: Menus.cpp:1093
 msgid "&Generate"
 msgstr "&Genera"
 
-#: Menus.cpp:932
-#: Menus.cpp:1132
-#: Menus.cpp:1243
-#: Menus.cpp:1314
-#: Menus.cpp:1385
+#: Menus.cpp:938
+#: Menus.cpp:1138
+#: Menus.cpp:1249
+#: Menus.cpp:1320
+#: Menus.cpp:1391
 msgid "Unsorted"
 msgstr "Non ordinati"
 
-#: Menus.cpp:1154
+#: Menus.cpp:1160
 msgid "Effe&ct"
 msgstr "Effe&tti"
 
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
-#: Menus.cpp:1160
-#: Menus.cpp:3148
+#: Menus.cpp:1166
+#: Menus.cpp:3154
 #, c-format
 msgid "Repeat %s"
 msgstr "Ripeti %s"
 
-#: Menus.cpp:1163
+#: Menus.cpp:1169
 msgid "Repeat Last Effect"
 msgstr "Ripeti l'ultimo effetto"
 
-#: Menus.cpp:1265
-#: Menus.cpp:1336
+#: Menus.cpp:1271
+#: Menus.cpp:1342
 msgid "&Analyze"
 msgstr "&Analizza"
 
-#: Menus.cpp:1267
-#: Menus.cpp:1338
+#: Menus.cpp:1273
+#: Menus.cpp:1344
 msgid "Contrast..."
 msgstr "Contrasto..."
 
-#: Menus.cpp:1270
-#: Menus.cpp:1341
+#: Menus.cpp:1276
+#: Menus.cpp:1347
 msgid "Plot Spectrum..."
 msgstr "Mostra spettro..."
 
-#: Menus.cpp:1408
-#: Menus.cpp:1411
+#: Menus.cpp:1414
+#: Menus.cpp:1417
 msgid "&Help"
 msgstr "&Aiuto"
 
-#: Menus.cpp:1416
+#: Menus.cpp:1422
 msgid "&About Audacity CleanSpeech..."
 msgstr "&Informazioni su Audacity CleanSpeech..."
 
-#: Menus.cpp:1425
+#: Menus.cpp:1431
 msgid "&Quick Help (in web browser)"
 msgstr "Guida &rapida (nel browser web)"
 
-#: Menus.cpp:1426
+#: Menus.cpp:1432
 msgid "&Manual (in web browser)"
 msgstr "&Manuale (nel browser web)"
 
-#: Menus.cpp:1433
-#: Menus.cpp:1451
+#: Menus.cpp:1439
+#: Menus.cpp:1457
 msgid "&Screenshot Tools..."
 msgstr "Strumenti cattura schermo..."
 
-#: Menus.cpp:1440
-#: Menus.cpp:1458
+#: Menus.cpp:1446
+#: Menus.cpp:1464
 msgid "&Run Benchmark..."
 msgstr "Avvia p&rove di sistema..."
 
-#: Menus.cpp:1445
-#: Menus.cpp:1463
+#: Menus.cpp:1451
+#: Menus.cpp:1469
 msgid "Au&dio Device Info..."
 msgstr "Informazioni su dispositivo au&dio..."
 
-#: Menus.cpp:1446
-#: Menus.cpp:1464
+#: Menus.cpp:1452
+#: Menus.cpp:1470
 msgid "Show &Log..."
 msgstr "Mostra &log..."
 
-#: Menus.cpp:1475
+#: Menus.cpp:1481
 msgid "Move backward from toolbars to tracks"
 msgstr "Vai indietro dalle barre strumenti alle tracce"
 
-#: Menus.cpp:1476
+#: Menus.cpp:1482
 msgid "Move forward from toolbars to tracks"
 msgstr "Vai avanti dalle barre strumenti alle tracce"
 
-#: Menus.cpp:1478
+#: Menus.cpp:1484
 #: toolbars/ToolsToolBar.cpp:146
 #: toolbars/ToolsToolBar.cpp:185
 msgid "Selection Tool"
 msgstr "Strumento Selezione"
 
-#: Menus.cpp:1479
+#: Menus.cpp:1485
 #: toolbars/ToolsToolBar.cpp:147
 #: toolbars/ToolsToolBar.cpp:186
 msgid "Envelope Tool"
 msgstr "Strumento Inviluppo"
 
-#: Menus.cpp:1480
+#: Menus.cpp:1486
 #: toolbars/ToolsToolBar.cpp:150
 #: toolbars/ToolsToolBar.cpp:187
 msgid "Draw Tool"
 msgstr "Strumento Disegno"
 
-#: Menus.cpp:1481
+#: Menus.cpp:1487
 #: toolbars/ToolsToolBar.cpp:149
 #: toolbars/ToolsToolBar.cpp:188
 msgid "Zoom Tool"
 msgstr "Strumento Zoom"
 
-#: Menus.cpp:1482
+#: Menus.cpp:1488
 #: toolbars/ToolsToolBar.cpp:148
 msgid "Time Shift Tool"
 msgstr "Strumento Spostamento Temporale"
 
-#: Menus.cpp:1483
+#: Menus.cpp:1489
 #: toolbars/ToolsToolBar.cpp:190
 msgid "Multi Tool"
 msgstr "Modalità Multi-Strumento"
 
-#: Menus.cpp:1485
+#: Menus.cpp:1491
 msgid "Next Tool"
 msgstr "Strumento successivo"
 
-#: Menus.cpp:1486
+#: Menus.cpp:1492
 msgid "Previous Tool"
 msgstr "Strumento precedente"
 
-#: Menus.cpp:1488
+#: Menus.cpp:1494
 msgid "Play/Stop"
 msgstr "Riproduci/Ferma"
 
-#: Menus.cpp:1489
+#: Menus.cpp:1495
 msgid "Play/Stop and Set Cursor"
 msgstr "Riproduci/Ferma e imposta cursore"
 
-#: Menus.cpp:1490
+#: Menus.cpp:1496
 msgid "Play One Second"
 msgstr "Riproduci un secondo"
 
-#: Menus.cpp:1491
+#: Menus.cpp:1497
 msgid "Play To Selection"
 msgstr "Riproduci fino alla selezione"
 
-#: Menus.cpp:1492
+#: Menus.cpp:1498
 msgid "Play Cut Preview"
 msgstr "Riproduci anteprima di taglio"
 
-#: Menus.cpp:1494
+#: Menus.cpp:1500
 msgid "Selection to Start"
 msgstr "Dalla selezione all'inizio"
 
-#: Menus.cpp:1495
+#: Menus.cpp:1501
 msgid "Selection to End"
 msgstr "Dalla selezione alla fine"
 
-#: Menus.cpp:1497
+#: Menus.cpp:1503
 msgid "DeleteKey"
 msgstr "Tasto Canc"
 
-#: Menus.cpp:1501
+#: Menus.cpp:1507
 msgid "DeleteKey2"
 msgstr "Tasto Canc2"
 
-#: Menus.cpp:1507
+#: Menus.cpp:1513
 msgid "Short seek left during playback"
 msgstr "Breve ricerca a sinistra durante la riproduzione"
 
-#: Menus.cpp:1508
+#: Menus.cpp:1514
 msgid "Short seek right during playback"
 msgstr "Breve ricerca a destra durante la riproduzione"
 
-#: Menus.cpp:1509
+#: Menus.cpp:1515
 msgid "Long seek left during playback"
 msgstr "Lunga ricerca a sinistra durante la riproduzione"
 
-#: Menus.cpp:1510
+#: Menus.cpp:1516
 msgid "Long Seek right during playback"
 msgstr "Lunga ricerca a destra durante la riproduzione"
 
-#: Menus.cpp:1515
+#: Menus.cpp:1521
 msgid "Move Focus to Previous Track"
 msgstr "Sposta l'evidenziazione sulla traccia precedente"
 
-#: Menus.cpp:1516
+#: Menus.cpp:1522
 msgid "Move Focus to Previous and Select"
 msgstr "Sposta l'evidenziazione sul precedente e seleziona"
 
-#: Menus.cpp:1517
+#: Menus.cpp:1523
 msgid "Move Focus to Next Track"
 msgstr "Sposta l'evidenziazione sulla traccia seguente"
 
-#: Menus.cpp:1518
+#: Menus.cpp:1524
 msgid "Move Focus to Next and Select"
 msgstr "Sposta l'evidenziazione sul seguente e seleziona"
 
-#: Menus.cpp:1519
-#: Menus.cpp:1520
+#: Menus.cpp:1525
+#: Menus.cpp:1526
 msgid "Toggle Focused Track"
 msgstr "Commuta la traccia evidenziata"
 
-#: Menus.cpp:1522
+#: Menus.cpp:1528
 msgid "Cursor Left"
 msgstr "Cursore Sinistro"
 
-#: Menus.cpp:1523
+#: Menus.cpp:1529
 msgid "Cursor Right"
 msgstr "Cursore Destro"
 
-#: Menus.cpp:1524
+#: Menus.cpp:1530
 msgid "Cursor Short Jump Left"
 msgstr "Breve spostamento del cursore a sinistra"
 
-#: Menus.cpp:1525
+#: Menus.cpp:1531
 msgid "Cursor Short Jump Right"
 msgstr "Breve spostamento del cursore a destra"
 
-#: Menus.cpp:1526
+#: Menus.cpp:1532
 msgid "Cursor Long Jump Left"
 msgstr "Lungo spostamento del cursore a sinistra"
 
-#: Menus.cpp:1527
+#: Menus.cpp:1533
 msgid "Cursor Long Jump Right"
 msgstr "Lungo spostamento del cursore a destra"
 
-#: Menus.cpp:1529
+#: Menus.cpp:1535
 msgid "Selection Extend Left"
 msgstr "Estendi la selezione a sinistra"
 
-#: Menus.cpp:1530
+#: Menus.cpp:1536
 msgid "Selection Extend Right"
 msgstr "Estendi la selezione a destra"
 
-#: Menus.cpp:1532
+#: Menus.cpp:1538
 msgid "Set (or Extend) Left Selection"
 msgstr "Imposta (o estendi) selezione a sinistra"
 
-#: Menus.cpp:1533
+#: Menus.cpp:1539
 msgid "Set (or Extend) Right Selection"
 msgstr "Imposta (o estendi) selezione a destra"
 
-#: Menus.cpp:1535
+#: Menus.cpp:1541
 msgid "Selection Contract Left"
 msgstr "Contrai la selezione a sinistra"
 
-#: Menus.cpp:1536
+#: Menus.cpp:1542
 msgid "Selection Contract Right"
 msgstr "Contrai la selezione a destra"
 
-#: Menus.cpp:1538
+#: Menus.cpp:1544
 msgid "Change pan on focused track"
 msgstr "Cambia bilanciamento sulla traccia evidenziata"
 
-#: Menus.cpp:1539
+#: Menus.cpp:1545
 msgid "Pan left on focused track"
 msgstr "Bilancia a sinistra sulla traccia evidenziata"
 
-#: Menus.cpp:1540
+#: Menus.cpp:1546
 msgid "Pan right on focused track"
 msgstr "Bilancia a destra sulla traccia evidenziata"
 
-#: Menus.cpp:1541
+#: Menus.cpp:1547
 msgid "Change gain on focused track"
 msgstr "Cambia guadagno sulla traccia evidenziata"
 
-#: Menus.cpp:1542
+#: Menus.cpp:1548
 msgid "Increase gain on focused track"
 msgstr "Aumenta guadagno sulla traccia evidenziata"
 
-#: Menus.cpp:1543
+#: Menus.cpp:1549
 msgid "Decrease gain on focused track"
 msgstr "Diminuisci guadagno sulla traccia evidenziata"
 
-#: Menus.cpp:1544
+#: Menus.cpp:1550
 msgid "Open menu on focused track"
 msgstr "Apri menu sulla traccia evidenziata"
 
-#: Menus.cpp:1545
+#: Menus.cpp:1551
 msgid "Mute/Unmute focused track"
 msgstr "Rendi muta/non muta la traccia evidenziata"
 
-#: Menus.cpp:1546
+#: Menus.cpp:1552
 msgid "Solo/Unsolo focused track"
 msgstr "Rendi sola/non sola la traccia evidenziata"
 
-#: Menus.cpp:1547
+#: Menus.cpp:1553
 msgid "Close focused track"
 msgstr "Chiudi traccia evidenziata"
 
-#: Menus.cpp:1549
+#: Menus.cpp:1555
 msgid "Snap To On"
 msgstr "Ancoraggio attivo"
 
-#: Menus.cpp:1550
+#: Menus.cpp:1556
 msgid "Snap To Off"
 msgstr "Ancoraggio disattivo"
 
-#: Menus.cpp:1554
+#: Menus.cpp:1560
 msgid "Full screen on/off"
 msgstr "Schermo pieno (Attivoi/Non attivo)"
 
-#: Menus.cpp:1561
+#: Menus.cpp:1567
 msgid "Change input device"
 msgstr "Cambia dispositivo di ingresso"
 
-#: Menus.cpp:1564
+#: Menus.cpp:1570
 msgid "Change output device"
 msgstr "Cambia dispositivo di uscita"
 
-#: Menus.cpp:1567
+#: Menus.cpp:1573
 msgid "Change audio host"
 msgstr "Cambia host audio"
 
-#: Menus.cpp:1570
+#: Menus.cpp:1576
 msgid "Change input channels"
 msgstr "Cambia canali di ingresso"
 
-#: Menus.cpp:1574
+#: Menus.cpp:1580
 msgid "Adjust output gain"
 msgstr "Regola guadagno uscita"
 
-#: Menus.cpp:1575
+#: Menus.cpp:1581
 msgid "Increase output gain"
 msgstr "Aumenta guadagno uscita"
 
-#: Menus.cpp:1576
+#: Menus.cpp:1582
 msgid "Decrease output gain"
 msgstr "Diminuisci guadagno uscita"
 
-#: Menus.cpp:1577
+#: Menus.cpp:1583
 msgid "Adjust input gain"
 msgstr "Regola guadagno ingresso"
 
-#: Menus.cpp:1578
+#: Menus.cpp:1584
 msgid "Increase input gain"
 msgstr "Aumenta guadagno ingresso"
 
-#: Menus.cpp:1579
+#: Menus.cpp:1585
 msgid "Decrease input gain"
 msgstr "Diminuisci guadagno ingresso"
 
-#: Menus.cpp:1581
+#: Menus.cpp:1587
 msgid "Play at speed"
 msgstr "Riproduci alla velocità"
 
-#: Menus.cpp:1582
+#: Menus.cpp:1588
 msgid "Adjust playback speed"
 msgstr "Regola velocità di riproduzione"
 
-#: Menus.cpp:1583
+#: Menus.cpp:1589
 msgid "Increase playback speed"
 msgstr "Aumenta velocità di riproduzione"
 
-#: Menus.cpp:1584
+#: Menus.cpp:1590
 msgid "Decrease playback speed"
 msgstr "Diminuisci velocità di riproduzione"
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
-#: Menus.cpp:1669
+#: Menus.cpp:1675
 msgid "Open Recent"
 msgstr "Apri recente"
 
 #. i18n-hint: This is the name of the menu item on Windows and Linux
-#: Menus.cpp:1672
+#: Menus.cpp:1678
 msgid "Recent &Files"
 msgstr "&File recenti"
 
-#: Menus.cpp:1690
+#: Menus.cpp:1696
 #, c-format
 msgid "&Undo %s"
 msgstr "Ann&ulla %s"
 
-#: Menus.cpp:1725
+#: Menus.cpp:1731
 #, c-format
 msgid "&Redo %s"
 msgstr "&Ripristina %s"
 
-#: Menus.cpp:2503
+#: Menus.cpp:2509
 msgid "Sort By Time"
 msgstr "Ordina per tempo"
 
-#: Menus.cpp:2503
+#: Menus.cpp:2509
 msgid "Tracks sorted by time"
 msgstr "Tracce ordinate per tempo"
 
-#: Menus.cpp:2512
+#: Menus.cpp:2518
 msgid "Sort By Name"
 msgstr "Ordina per nome"
 
-#: Menus.cpp:2512
+#: Menus.cpp:2518
 msgid "Tracks sorted by name"
 msgstr "Tracce ordinate per nome"
 
-#: Menus.cpp:2663
+#: Menus.cpp:2669
 msgid "Set Left Selection Boundary"
 msgstr "Imposta il margine sinistro della selezione"
 
-#: Menus.cpp:2664
-#: Menus.cpp:2706
+#: Menus.cpp:2670
+#: Menus.cpp:2712
 msgid "Position"
 msgstr "Posizione"
 
-#: Menus.cpp:2705
+#: Menus.cpp:2711
 msgid "Set Right Selection Boundary"
 msgstr "Imposta il margine destro della selezione"
 
-#: Menus.cpp:3123
+#: Menus.cpp:3129
 msgid "You must select a track first."
 msgstr "Devi prima selezionare una traccia."
 
-#: Menus.cpp:3301
+#: Menus.cpp:3307
 msgid "labels.txt"
 msgstr "etichette.txt"
 
-#: Menus.cpp:3313
+#: Menus.cpp:3319
 msgid "There are no label tracks to export."
 msgstr "Non vi sono tracce etichetta da esportare."
 
-#: Menus.cpp:3408
+#: Menus.cpp:3414
 msgid "Export MIDI As:"
 msgstr "Esporta MIDI come:"
 
-#: Menus.cpp:3412
+#: Menus.cpp:3418
 msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "File MIDI (*.mid)|*.mid|File Allegro (*.gro)|*.gro"
 
-#: Menus.cpp:3444
+#: Menus.cpp:3450
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
@@ -2990,468 +2985,466 @@ msgstr ""
 "Hai selezionato un nome file con una estensione file non riconosciuta.\n"
 "Vuoi continuare?"
 
-#: Menus.cpp:3445
+#: Menus.cpp:3451
 msgid "Export MIDI"
 msgstr "Esporta MIDI"
 
-#: Menus.cpp:3520
+#: Menus.cpp:3526
 msgid "Nothing to undo"
 msgstr "Nulla da annullare"
 
-#: Menus.cpp:3541
+#: Menus.cpp:3552
 msgid "Nothing to redo"
 msgstr "Nulla da ripristinare"
 
-#: Menus.cpp:3636
-#: TrackPanel.cpp:680
-#: toolbars/EditToolBar.cpp:131
+#: Menus.cpp:3647
+#: TrackPanel.cpp:702
 #: toolbars/EditToolBar.cpp:195
 msgid "Cut"
 msgstr "Taglia"
 
-#: Menus.cpp:3636
+#: Menus.cpp:3647
 msgid "Cut to the clipboard"
 msgstr "Taglia nella clipboard"
 
-#: Menus.cpp:3677
+#: Menus.cpp:3688
 msgid "Split Cut"
 msgstr "Dividi e taglia"
 
-#: Menus.cpp:3677
+#: Menus.cpp:3688
 msgid "Split-cut to the clipboard"
 msgstr "Dividi e taglia nella clipboard"
 
-#: Menus.cpp:3797
+#: Menus.cpp:3808
 msgid "Pasting one type of track into another is not allowed."
 msgstr "Non è possibile incollare un tipo di traccia in un altro."
 
-#: Menus.cpp:3809
+#: Menus.cpp:3820
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "Non è possibile copiare audio stereo in una traccia mono."
 
-#: Menus.cpp:3928
-#: Menus.cpp:3951
-#: Menus.cpp:4054
-#: TrackPanel.cpp:682
+#: Menus.cpp:3939
+#: Menus.cpp:3962
+#: Menus.cpp:4065
+#: TrackPanel.cpp:704
 #: toolbars/EditToolBar.cpp:135
 #: toolbars/EditToolBar.cpp:197
 msgid "Paste"
 msgstr "Incolla"
 
-#: Menus.cpp:3928
-#: Menus.cpp:4054
-#: Menus.cpp:4129
+#: Menus.cpp:3939
+#: Menus.cpp:4065
+#: Menus.cpp:4140
 msgid "Pasted from the clipboard"
 msgstr "Incollato dalla clipboard"
 
-#: Menus.cpp:3951
+#: Menus.cpp:3962
 msgid "Pasted text from the clipboard"
 msgstr "Testo incollato dalla clipboard"
 
-#: Menus.cpp:4129
+#: Menus.cpp:4140
 msgid "Paste Text to New Label"
 msgstr "Incolla testo in nuova etichetta"
 
-#: Menus.cpp:4177
+#: Menus.cpp:4188
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "Ritaglia le tracce audio selezionate da %.2f secondi a %.2f"
+
+#: Menus.cpp:4190
 #: toolbars/EditToolBar.cpp:198
-msgid "Trim"
-msgstr "Ritaglia"
+msgid "Trim Audio"
+msgstr "Ritaglia audio"
 
-#: Menus.cpp:4177
-msgid "Trim file to selection"
-msgstr "Ritaglia il file nella selezione"
-
-#: Menus.cpp:4206
+#: Menus.cpp:4219
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
 msgstr "Divisi e tagliati %.2f secondi a t=%.2f"
 
-#: Menus.cpp:4209
+#: Menus.cpp:4222
 msgid "Split Delete"
 msgstr "Dividi ed elimina"
 
-#: Menus.cpp:4230
+#: Menus.cpp:4243
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
 msgstr "Eliminati %.2f secondi a t=%.2f"
 
-#: Menus.cpp:4233
+#: Menus.cpp:4246
 msgid "Detach"
 msgstr "Elimina"
 
-#: Menus.cpp:4254
+#: Menus.cpp:4267
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
 msgstr "Uniti %.2f secondi a t=%.2f"
 
-#: Menus.cpp:4257
+#: Menus.cpp:4270
 msgid "Join"
 msgstr "Unisci"
 
-#: Menus.cpp:4270
+#: Menus.cpp:4283
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "Azzerato il volume delle tracce selezionate per %.2f secondi a %.2f"
 
-#: Menus.cpp:4272
-#: toolbars/EditToolBar.cpp:199
+#: Menus.cpp:4285
 msgid "Silence"
 msgstr "Silenzia"
 
-#: Menus.cpp:4302
+#: Menus.cpp:4315
 msgid "Duplicate"
 msgstr "Duplica"
 
-#: Menus.cpp:4302
+#: Menus.cpp:4315
 msgid "Duplicated"
 msgstr "Duplicata"
 
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled regions.
-#: Menus.cpp:4327
-msgid "Cut labeled regions to the clipboard"
-msgstr "Taglia regioni con etichette nella clipboard"
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
+#: Menus.cpp:4340
+msgid "Cut labeled audio regions to clipboard"
+msgstr "Taglia regioni audio con etichette nella clipboard"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4329
-msgid "Cut Labels"
-msgstr "Taglia etichette"
+#: Menus.cpp:4342
+msgid "Cut Labeled Audio"
+msgstr "Taglia audio con etichette"
 
-#. i18n-hint: (verb) Audacity has just splitcut the labeled regions
-#: Menus.cpp:4345
-msgid "SplitCut labeled regions to the clipboard"
-msgstr "Dividi e taglia regioni con etichette nella clipboard"
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
+#: Menus.cpp:4358
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "Dividi e taglia regioni audio con etichette nella clipboard"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
-#: Menus.cpp:4347
-msgid "Split Cut Labels"
-msgstr "Dividi e taglia etichette"
+#: Menus.cpp:4360
+msgid "Split Cut Labeled Audio"
+msgstr "Dividi e taglia audio con etichette"
 
-#: Menus.cpp:4361
-msgid "Copied labeled regions to the clipboard"
-msgstr "Regioni con etichette copiate nella clipboard"
-
-#. i18n-hint: (verb)
-#: Menus.cpp:4363
-msgid "Copy Labels"
-msgstr "Copia etichette"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled regions
-#: Menus.cpp:4379
-msgid "Deleted labeled regions"
-msgstr "Regioni con etichette eliminate"
+#: Menus.cpp:4374
+msgid "Copied labeled audio regions to clipboard"
+msgstr "Regioni audio con etichette copiate nella clipboard"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4381
-msgid "Delete Labels"
-msgstr "Elimina etichette"
+#: Menus.cpp:4376
+msgid "Copy Labeled Audio"
+msgstr "Copia audio con etichette"
 
-#. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled regions
-#: Menus.cpp:4395
-msgid "Split Deleted labeled regions"
-msgstr "Regioni con etichette divise ed eliminate"
-
-#. i18n-hint: (verb) Do a special kind of delete on labels
-#: Menus.cpp:4397
-msgid "Split Delete Labels"
-msgstr "Dividi ed elimina etichette"
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: Menus.cpp:4392
+msgid "Deleted labeled audio regions"
+msgstr "Regioni audio con etichette eliminate"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4411
-msgid "Silenced labeled regions"
-msgstr "Regioni con etichette messe in silenzio"
+#: Menus.cpp:4394
+msgid "Delete Labeled Audio"
+msgstr "Elimina regioni audio con etichette "
+
+#. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions
+#: Menus.cpp:4408
+msgid "Split Deleted labeled audio regions"
+msgstr "Regioni audio con etichette divise ed eliminate"
+
+#. i18n-hint: (verb) Do a special kind of delete on labeled audio regions
+#: Menus.cpp:4410
+msgid "Split Delete Labeled Audio"
+msgstr "Dividi ed elimina audio con etichette"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4413
-msgid "Silence Labels"
-msgstr "Metti in silenzio etichette"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled regions
 #: Menus.cpp:4424
-msgid "Split labeled regions"
-msgstr "Dividi regioni con etichette"
+msgid "Silenced labeled audio regions"
+msgstr "Regioni audio con etichette messe in silenzio"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:4426
-msgid "Split Labels"
-msgstr "Dividi etichette"
+msgid "Silence Labeled Audio"
+msgstr "Metti in silenzio regioni audio con etichette"
 
-#. i18n-hint: (verb) Audacity has just joined the labeled regions
-#: Menus.cpp:4440
-msgid "Joined labeled regions"
-msgstr "Regioni con etichette unite"
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
+#: Menus.cpp:4437
+msgid "Split labeled audio (points or regions)"
+msgstr "Dividi audio con etichette (punti o regioni)"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4442
-msgid "Join Labels"
-msgstr "Unisci etichette"
+#: Menus.cpp:4439
+msgid "Split Labeled Audio"
+msgstr "Dividi audio con etichette"
 
-#. i18n-hint: (verb) Audacity has just detached the labeled regions.
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
+#: Menus.cpp:4453
+msgid "Joined labeled audio (points or regions)"
+msgstr "Audio con etichette unite (punti o regioni)"
+
+#. i18n-hint: (verb)
+#: Menus.cpp:4455
+msgid "Join Labeled Audio"
+msgstr "Unisci audio con etichette "
+
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
 #. Audacity has done.
-#: Menus.cpp:4458
-msgid "Detached labeled regions"
-msgstr "Regioni con etichette eliminate"
+#: Menus.cpp:4471
+msgid "Detached labeled audio regions"
+msgstr "Regioni audio con etichette separate"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4460
-msgid "Detach Labels"
-msgstr "Elimina etichette"
+#: Menus.cpp:4473
+msgid "Detach Labeled Audio"
+msgstr "Separa audio con etichette"
 
-#: Menus.cpp:4482
-#: TrackPanel.cpp:7081
+#: Menus.cpp:4495
+#: TrackPanel.cpp:7116
 msgid "Split"
 msgstr "Dividi"
 
-#: Menus.cpp:4571
+#: Menus.cpp:4584
 msgid "Split New"
 msgstr "Dividi e crea nuovo"
 
-#: Menus.cpp:4571
+#: Menus.cpp:4584
 msgid "Split to new track"
 msgstr "Dividi in una nuova traccia"
 
-#: Menus.cpp:4999
+#: Menus.cpp:5012
 msgid "Frequency Analysis"
 msgstr "Analisi della frequenza"
 
-#: Menus.cpp:5156
+#: Menus.cpp:5169
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "Etichette importate da '%s'"
 
-#: Menus.cpp:5157
+#: Menus.cpp:5170
 msgid "Import Labels"
 msgstr "Importa etichette"
 
-#: Menus.cpp:5168
+#: Menus.cpp:5181
 msgid "Select a MIDI file..."
 msgstr "Seleziona un file MIDI..."
 
-#: Menus.cpp:5172
+#: Menus.cpp:5185
 msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
 msgstr "File MIDI e Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|File MIDI (*.mid;*.midi)|*.mid;*.midi|File Allegro (*.gro)|*.gro|Tutti i file (*.*)|*.*"
 
-#: Menus.cpp:5189
+#: Menus.cpp:5202
 #, c-format
 msgid "Imported MIDI from '%s'"
 msgstr "MIDI importato da '%s'"
 
-#: Menus.cpp:5190
+#: Menus.cpp:5203
 msgid "Import MIDI"
 msgstr "Importa MIDI"
 
-#: Menus.cpp:5204
+#: Menus.cpp:5217
 msgid "Select any uncompressed audio file..."
 msgstr "Seleziona un file audio non compresso..."
 
-#: Menus.cpp:5208
+#: Menus.cpp:5221
 msgid "All files (*)|*"
 msgstr "Tutti i file (*)|*"
 
-#: Menus.cpp:5233
+#: Menus.cpp:5246
 msgid "Edit the metadata tags"
 msgstr "Modifica i tag metadati"
 
-#: Menus.cpp:5234
-#: export/Export.cpp:378
+#: Menus.cpp:5247
+#: export/Export.cpp:377
 msgid "Edit Metadata"
 msgstr "Modifica metadati"
 
-#: Menus.cpp:5234
+#: Menus.cpp:5247
 msgid "Edit Metadata tags"
 msgstr "Modifica tag metadati"
 
-#: Menus.cpp:5291
+#: Menus.cpp:5304
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "Tutto l'audio renderizzato nella traccia '%s'"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
-#: Menus.cpp:5294
+#: Menus.cpp:5307
 msgid "Render"
 msgstr "Renderizza"
 
-#: Menus.cpp:5299
+#: Menus.cpp:5312
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
 msgstr "Miscelate e renderizzate %d tracce in una nuova traccia stereo"
 
-#: Menus.cpp:5302
+#: Menus.cpp:5315
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "Miscelate e renderizzate %d tracce in una nuova traccia mono"
 
-#: Menus.cpp:5304
-#: Mix.cpp:168
+#: Menus.cpp:5317
+#: Mix.cpp:169
 msgid "Mix and Render"
 msgstr "Miscela e renderizza"
 
-#: Menus.cpp:5439
+#: Menus.cpp:5452
 msgid "Aligned with zero"
 msgstr "Allinea con zero"
 
-#: Menus.cpp:5443
+#: Menus.cpp:5456
 msgid "Aligned cursor"
 msgstr "Cursore allineato"
 
-#: Menus.cpp:5447
+#: Menus.cpp:5460
 msgid "Aligned with selection start"
 msgstr "Allineata con l'inizio della selezione"
 
-#: Menus.cpp:5451
+#: Menus.cpp:5464
 msgid "Aligned with selection end"
 msgstr "Allineata con la fine della selezione"
 
-#: Menus.cpp:5455
+#: Menus.cpp:5468
 msgid "Aligned end with cursor"
 msgstr "Allineata la fine con il cursore"
 
-#: Menus.cpp:5459
+#: Menus.cpp:5472
 msgid "Aligned end with selection start"
 msgstr "Allineata la fine con l'inizio della selezione"
 
-#: Menus.cpp:5463
+#: Menus.cpp:5476
 msgid "Aligned end with selection end"
 msgstr "Allineata la fine con la fine della selezione"
 
-#: Menus.cpp:5467
+#: Menus.cpp:5480
 msgid "Aligned"
 msgstr "Allineato"
 
-#: Menus.cpp:5502
+#: Menus.cpp:5515
 msgid "Align"
 msgstr "Allinea"
 
-#: Menus.cpp:5605
+#: Menus.cpp:5618
 msgid "Synchronizing MIDI and Audio Tracks"
 msgstr "Sincronizza MIDI e tracce audio"
 
-#: Menus.cpp:5771
+#: Menus.cpp:5784
 #, c-format
 msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "Allineamento completato: MIDI da %.2f a %.2f sec, Audio da %.2f a %.2f sec."
 
-#: Menus.cpp:5774
+#: Menus.cpp:5787
 msgid "Sync MIDI with Audio"
 msgstr "Sincronizza Midi con l'audio"
 
-#: Menus.cpp:5778
+#: Menus.cpp:5791
 #, c-format
 msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "Errore di allineamento: input troppo breve: MIDI da %.2f a %.2f sec, Audio da %.2f a %.2f sec."
 
-#: Menus.cpp:5789
+#: Menus.cpp:5802
 msgid "Internal error reported by alignment process."
 msgstr "Errore interno segnalato dal processo di allineamento."
 
-#: Menus.cpp:5803
+#: Menus.cpp:5816
 msgid "Created new audio track"
 msgstr "Creata nuova traccia audio"
 
-#: Menus.cpp:5803
-#: Menus.cpp:5825
-#: Menus.cpp:5840
-#: Menus.cpp:5860
+#: Menus.cpp:5816
+#: Menus.cpp:5838
+#: Menus.cpp:5853
+#: Menus.cpp:5873
 msgid "New Track"
 msgstr "Nuova traccia"
 
-#: Menus.cpp:5825
+#: Menus.cpp:5838
 msgid "Created new stereo audio track"
 msgstr "Creata nuova traccia audio stereo"
 
-#: Menus.cpp:5840
+#: Menus.cpp:5853
 msgid "Created new label track"
 msgstr "Creata nuova traccia etichetta"
 
-#: Menus.cpp:5849
+#: Menus.cpp:5862
 msgid "This version of Audacity only allows one time track for each project window."
 msgstr "Questa versione di Audacity permette solo una traccia tempo per ciascuna finestra progetto."
 
-#: Menus.cpp:5860
+#: Menus.cpp:5873
 msgid "Created new time track"
 msgstr "Creata nuova traccia tempo"
 
-#: Menus.cpp:5986
+#: Menus.cpp:5999
 msgid "Edited labels"
 msgstr "Etichette modificate"
 
-#: Menus.cpp:6015
+#: Menus.cpp:6028
 msgid "Save CleanSpeech Preset File As:"
 msgstr "Salva file preset CleanSpeech come:"
 
-#: Menus.cpp:6019
+#: Menus.cpp:6032
 msgid "CleanSpeech Presets (*.csp)|*.csp"
 msgstr "Preset CleanSpeech (*.csp)|*.csp"
 
-#: Menus.cpp:6026
-#: export/Export.cpp:635
+#: Menus.cpp:6039
+#: export/Export.cpp:629
 msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Spiacente, i nomi di file più lunghi di 256 caratteri non sono supportati."
 
-#: Menus.cpp:6075
+#: Menus.cpp:6088
 msgid "Problem encountered exporting presets."
 msgstr "Riscontrato problema nell'esportazione dei preset."
 
-#: Menus.cpp:6076
-#: export/Export.cpp:503
-msgid "Unable to export"
+#: Menus.cpp:6089
+msgid "Unable to Export"
 msgstr "Impossibile esportare"
 
-#: Menus.cpp:6266
+#: Menus.cpp:6279
 msgid "Remove Track"
 msgstr "Rimuovi traccia"
 
-#: Menus.cpp:6266
+#: Menus.cpp:6279
 msgid "Removed audio track(s)"
 msgstr "Traccia/e audio rimossa/e"
 
-#: Menus.cpp:6343
+#: Menus.cpp:6356
 msgid "Audio Device Info"
 msgstr "Informazioni su dispositivo audio"
 
-#: Menus.cpp:6439
-#: Menus.cpp:6495
+#: Menus.cpp:6452
+#: Menus.cpp:6513
 #: export/ExportFFmpeg.cpp:825
 #: export/ExportMP3.cpp:1899
 msgid "Resample"
 msgstr "Ricampiona"
 
-#: Menus.cpp:6460
-#: TrackPanel.cpp:7312
+#: Menus.cpp:6478
+#: TrackPanel.cpp:7353
 msgid "New sample rate (Hz):"
 msgstr "Nuova frequenza di campionamento (Hz):"
 
-#: Menus.cpp:6484
-#: TrackPanel.cpp:7336
+#: Menus.cpp:6502
+#: TrackPanel.cpp:7377
 msgid "The entered value is invalid"
 msgstr "Il valore inserito non è valido"
 
-#: Menus.cpp:6493
+#: Menus.cpp:6511
 #, c-format
 msgid "Resampling track %d"
 msgstr "Sto ricampionando la traccia %d"
 
-#: Menus.cpp:6502
+#: Menus.cpp:6520
 msgid "Resample Track"
 msgstr "Ricampiona traccia"
 
-#: Menus.cpp:6502
+#: Menus.cpp:6520
 msgid "Resampled audio track(s)"
 msgstr "Traccia (e) audio ricampionata(e)"
 
-#: Mix.cpp:130
-#: Mix.cpp:145
+#: Mix.cpp:131
+#: Mix.cpp:146
 msgid "Mix"
 msgstr "Mixaggio"
 
-#: Mix.cpp:169
+#: Mix.cpp:170
 msgid "Mixing and rendering tracks"
 msgstr "Mixaggio e renderizzazione delle tracce"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #: MixerBoard.cpp:213
-#: TrackPanel.cpp:4130
+#: TrackPanel.cpp:4158
 #: widgets/ASlider.cpp:373
 msgid "Velocity"
 msgstr "Velocità"
@@ -3461,9 +3454,9 @@ msgstr "Velocità"
 #: MixerBoard.cpp:222
 #: MixerBoard.cpp:225
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4126
-#: TrackPanel.cpp:6719
-#: TrackPanel.cpp:8176
+#: TrackPanel.cpp:4154
+#: TrackPanel.cpp:6747
+#: TrackPanel.cpp:8250
 #: widgets/ASlider.cpp:355
 msgid "Gain"
 msgstr "Guadagno"
@@ -3477,9 +3470,9 @@ msgstr "Strumento musicale"
 #: MixerBoard.cpp:262
 #: MixerBoard.cpp:264
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4126
-#: TrackPanel.cpp:6664
-#: TrackPanel.cpp:8184
+#: TrackPanel.cpp:4154
+#: TrackPanel.cpp:6692
+#: TrackPanel.cpp:8258
 #: widgets/ASlider.cpp:345
 msgid "Pan"
 msgstr "Bilanciamento"
@@ -3488,7 +3481,7 @@ msgstr "Bilanciamento"
 #: MixerBoard.cpp:277
 #: MixerBoard.cpp:325
 #: MixerBoard.cpp:1436
-#: TrackPanel.cpp:8124
+#: TrackPanel.cpp:8198
 msgid "Mute"
 msgstr "Muto"
 
@@ -3496,7 +3489,7 @@ msgstr "Muto"
 #: MixerBoard.cpp:290
 #: MixerBoard.cpp:326
 #: MixerBoard.cpp:1486
-#: TrackPanel.cpp:8122
+#: TrackPanel.cpp:8196
 msgid "Solo"
 msgstr "Solo"
 
@@ -3506,12 +3499,12 @@ msgid "Signal Level Meter"
 msgstr "Segnale livello monitor"
 
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4125
+#: TrackPanel.cpp:4153
 msgid "Moved gain slider"
 msgstr "Cursore guadagno spostato"
 
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4125
+#: TrackPanel.cpp:4153
 msgid "Moved pan slider"
 msgstr "Cursore bilanciamento spostato"
 
@@ -3573,13 +3566,13 @@ msgid "(Recovered)"
 msgstr "(Recuperato)"
 
 #: Project.cpp:1875
-#: TrackPanel.cpp:947
+#: TrackPanel.cpp:969
 #: toolbars/ControlToolBar.cpp:196
 msgid "Record"
 msgstr "Registra"
 
 #: Project.cpp:1875
-#: TrackPanel.cpp:947
+#: TrackPanel.cpp:969
 msgid "Recorded Audio"
 msgstr "Audio registrato"
 
@@ -3791,9 +3784,9 @@ msgstr ""
 "non è scrivibile o il disco è pieno."
 
 #: Project.cpp:3217
-#: Project.cpp:4474
+#: Project.cpp:4478
 #: Tags.cpp:1171
-#: effects/Equalization.cpp:1096
+#: effects/Equalization.cpp:1098
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "Impossibile scrivere il file \"%s\": %s"
@@ -3935,36 +3928,36 @@ msgstr "Importazione completa. Esecuzione di %d dei calcoli della forma d'onda a
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "Importazione completa. Esecuzione dei calcoli della forma d'onda a richiesta. %2.0f%% completati."
 
-#: Project.cpp:4446
+#: Project.cpp:4450
 msgid "New Project"
 msgstr "Nuovo progetto"
 
-#: Project.cpp:4476
+#: Project.cpp:4480
 msgid "Error Writing Autosave File"
 msgstr "Errore nella scrittura del file di salvataggio automatico"
 
-#: Project.cpp:4491
+#: Project.cpp:4495
 msgid "Could not create autosave file: "
 msgstr "Impossibile creare file di salvataggio automatico"
 
-#: Project.cpp:4510
+#: Project.cpp:4514
 msgid "Could not remove old autosave file: "
 msgstr "Impossibile eliminare vecchio file di salvataggio automatico:"
 
-#: Project.cpp:4539
+#: Project.cpp:4543
 #, c-format
 msgid "Actual Rate: %d"
 msgstr "Frequenza effettiva: %d"
 
-#: Resample.cpp:155
+#: Resample.cpp:160
 msgid "High-quality Sinc Interpolation"
 msgstr "Interpolazione Sinc di alta qualità"
 
-#: Resample.cpp:157
+#: Resample.cpp:162
 msgid "Fast Sinc Interpolation"
 msgstr "Interpolazione Sinc veloce"
 
-#: Resample.cpp:280
+#: Resample.cpp:296
 #, c-format
 msgid "Libsamplerate error: %d\n"
 msgstr "Errore nella modifica del campionamento: %d\n"
@@ -4001,7 +3994,7 @@ msgid "Save images to:"
 msgstr "Salva immagini in:"
 
 #: Screenshot.cpp:320
-#: export/ExportMultiple.cpp:258
+#: export/ExportMultiple.cpp:268
 msgid "Choose..."
 msgstr "Scegli..."
 
@@ -4109,8 +4102,8 @@ msgid "Transcription"
 msgstr "Trascrizione"
 
 #: Screenshot.cpp:394
-#: TrackPanel.cpp:455
-#: TrackPanel.cpp:456
+#: TrackPanel.cpp:468
+#: TrackPanel.cpp:469
 msgid "Track Panel"
 msgstr "Pannello traccia"
 
@@ -4119,8 +4112,8 @@ msgid "Ruler"
 msgstr "Linea temporale"
 
 #: Screenshot.cpp:396
-#: export/ExportMultiple.cpp:301
-#: export/ExportMultiple.cpp:303
+#: export/ExportMultiple.cpp:311
+#: export/ExportMultiple.cpp:313
 #: prefs/TracksPrefs.cpp:31
 msgid "Tracks"
 msgstr "Tracce"
@@ -4445,7 +4438,7 @@ msgstr ""
 msgid "Duration"
 msgstr "Durata"
 
-#: TimeTrack.cpp:44
+#: TimeTrack.cpp:52
 msgid "Time Track"
 msgstr "Traccia tempo"
 
@@ -4522,185 +4515,196 @@ msgstr "In attesa di inziare a registrare a %s.\n"
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Timer di registrazione di Audacity - In attesa dell'inizio"
 
-#: TrackPanel.cpp:623
+#: TrackPanel.cpp:641
 msgid "&Other..."
 msgstr "&Altro..."
 
-#: TrackPanel.cpp:631
-#: TrackPanel.cpp:655
-#: TrackPanel.cpp:664
-#: TrackPanel.cpp:672
+#: TrackPanel.cpp:649
+#: TrackPanel.cpp:673
+#: TrackPanel.cpp:682
+#: TrackPanel.cpp:690
 msgid "N&ame..."
 msgstr "N&ome..."
 
-#: TrackPanel.cpp:633
-#: TrackPanel.cpp:657
-#: TrackPanel.cpp:668
-#: TrackPanel.cpp:674
+#: TrackPanel.cpp:651
+#: TrackPanel.cpp:675
+#: TrackPanel.cpp:686
+#: TrackPanel.cpp:692
 msgid "Move Track U&p"
 msgstr "Sposta la traccia in a&lto"
 
-#: TrackPanel.cpp:634
-#: TrackPanel.cpp:658
-#: TrackPanel.cpp:669
-#: TrackPanel.cpp:675
+#: TrackPanel.cpp:652
+#: TrackPanel.cpp:676
+#: TrackPanel.cpp:687
+#: TrackPanel.cpp:693
 msgid "Move Track &Down"
 msgstr "Sposta la traccia in &basso"
 
-#: TrackPanel.cpp:636
+#: TrackPanel.cpp:654
 msgid "Wa&veform"
 msgstr "Fo&rma d'onda"
 
-#: TrackPanel.cpp:637
+#: TrackPanel.cpp:655
 msgid "Waveform (d&B)"
 msgstr "Forma d'onda (d&B)"
 
-#: TrackPanel.cpp:638
+#: TrackPanel.cpp:656
 msgid "&Spectrogram"
 msgstr "&Spettro"
 
 #. i18n-hint: short form of 'logarithm'
-#: TrackPanel.cpp:640
+#: TrackPanel.cpp:658
 msgid "Spectrogram l&og(f)"
 msgstr "L&og(f) dello spettro"
 
-#: TrackPanel.cpp:641
+#: TrackPanel.cpp:659
 msgid "Pitc&h (EAC)"
 msgstr "Intonaz&ione (EAC)"
 
-#: TrackPanel.cpp:643
+#: TrackPanel.cpp:661
 msgid "&Mono"
 msgstr "&Mono"
 
-#: TrackPanel.cpp:644
+#: TrackPanel.cpp:662
 msgid "&Left Channel"
 msgstr "Canale &sinistro"
 
-#: TrackPanel.cpp:645
+#: TrackPanel.cpp:663
 msgid "&Right Channel"
 msgstr "Canale &destro"
 
-#: TrackPanel.cpp:646
+#: TrackPanel.cpp:664
 msgid "Ma&ke Stereo Track"
 msgstr "Cr&ea una traccia stereo"
 
-#: TrackPanel.cpp:647
+#: TrackPanel.cpp:665
 msgid "Spli&t Stereo Track"
 msgstr "Divi&di traccia stereo"
 
-#: TrackPanel.cpp:648
+#: TrackPanel.cpp:666
 msgid "Split Stereo to Mo&no"
 msgstr "Dividi stereo in due mo&no"
 
-#: TrackPanel.cpp:650
+#: TrackPanel.cpp:668
 msgid "Set Sample &Format"
 msgstr "Imposta &formato di campionamento"
 
-#: TrackPanel.cpp:652
+#: TrackPanel.cpp:670
 msgid "Set Rat&e"
 msgstr "Imposta fr&equenza di campionamento"
 
-#: TrackPanel.cpp:660
+#: TrackPanel.cpp:678
 msgid "Up &Octave"
 msgstr "Una &ottava sopra"
 
-#: TrackPanel.cpp:661
+#: TrackPanel.cpp:679
 msgid "Down Octa&ve"
 msgstr "Una otta&va sotto"
 
-#: TrackPanel.cpp:666
+#: TrackPanel.cpp:684
 msgid "&Font..."
 msgstr "&Carattere..."
 
-#: TrackPanel.cpp:677
+#: TrackPanel.cpp:695
+msgid "&Linear"
+msgstr "&Lineare"
+
+#: TrackPanel.cpp:696
+msgid "L&ogarithmic"
+msgstr "L&ogaritmica"
+
+#: TrackPanel.cpp:698
 msgid "Set Ra&nge..."
 msgstr "Imposta in&tervallo..."
 
-#: TrackPanel.cpp:681
-#: toolbars/EditToolBar.cpp:133
+#: TrackPanel.cpp:699
+msgid "Logarithmic &Interpolation"
+msgstr "&Interpolazione logaritmica"
+
+#: TrackPanel.cpp:703
 #: toolbars/EditToolBar.cpp:196
 msgid "Copy"
 msgstr "Copia"
 
-#: TrackPanel.cpp:1459
+#: TrackPanel.cpp:1472
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "Clic per ingrandire verticalmente, Maiusc-clic per rimpicciolire. Trascina per specificare una particolare regione d'ingrandimento."
 
-#: TrackPanel.cpp:1464
+#: TrackPanel.cpp:1477
 msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "Clic per ingrandire verticalmente, Maiusc-clic per rimpicciolire. Trascina per creare una particolare regione d'ingrandimento."
 
-#: TrackPanel.cpp:1470
+#: TrackPanel.cpp:1483
 msgid "Drag the track vertically to change the order of the tracks."
 msgstr "Trascina verticalmente l'etichetta per cambiare l'ordine delle tracce."
 
-#: TrackPanel.cpp:1490
+#: TrackPanel.cpp:1503
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr "Fai clic e trascina per regolare la dimensione relativa delle tracce stereo."
 
-#: TrackPanel.cpp:1493
+#: TrackPanel.cpp:1506
 msgid "Click and drag to resize the track."
 msgstr "Fai clic e trascina per ridimensionare la traccia."
 
-#: TrackPanel.cpp:1524
+#: TrackPanel.cpp:1537
 msgid "Drag one or more label boundaries"
 msgstr "Trascina uno o più margini dell'etichetta"
 
-#: TrackPanel.cpp:1525
+#: TrackPanel.cpp:1538
 msgid "Drag label boundary"
 msgstr "Trascina margine etichetta"
 
 #. i18n-hint: This string is for the Mac OS, which uses Command-, as the shortcut for Preferences
-#: TrackPanel.cpp:1541
+#: TrackPanel.cpp:1554
 msgid "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
 msgstr "Modalità Multi-Strumento: Cmd-, per le Preferenze Mouse e Tastiera"
 
 #. i18n-hint: This string is for Windows and Linux, which uses Control-P as the shortcut for Preferences
-#: TrackPanel.cpp:1544
+#: TrackPanel.cpp:1557
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "Modalità Multi-Strumento: Ctrl-P per le Preferenze Mouse e Tastiera"
 
-#: TrackPanel.cpp:1592
-#: TrackPanel.cpp:1604
-#: TrackPanel.cpp:2025
-#: TrackPanel.cpp:2032
+#: TrackPanel.cpp:1605
+#: TrackPanel.cpp:1617
+#: TrackPanel.cpp:2038
+#: TrackPanel.cpp:2045
 msgid "Click and drag to stretch selected region."
 msgstr "Fai clic e trascina per allungare la regione selezionata."
 
-#: TrackPanel.cpp:1597
+#: TrackPanel.cpp:1610
 msgid "Click and drag to move left selection boundary."
 msgstr "Fai clic e trascina per muovere il margine sinistro della selezione."
 
-#: TrackPanel.cpp:1609
+#: TrackPanel.cpp:1622
 msgid "Click and drag to move right selection boundary."
 msgstr "Fai clic e trascina per modificare il margine destro della selezione."
 
-#: TrackPanel.cpp:1614
+#: TrackPanel.cpp:1627
 msgid "Click and drag to stretch within selected region."
 msgstr "Fai clic e trascina per per allungare all'interno della regione selezionata."
 
-#: TrackPanel.cpp:1990
-#: TrackPanel.cpp:4769
-#: TrackPanel.cpp:4807
-#: TrackPanel.cpp:5081
-#: TrackPanel.cpp:7467
-#: TrackPanel.cpp:7487
+#: TrackPanel.cpp:2003
+#: TrackPanel.cpp:4797
+#: TrackPanel.cpp:4835
+#: TrackPanel.cpp:5109
+#: TrackPanel.cpp:7541
+#: TrackPanel.cpp:7561
 msgid "Modified Label"
 msgstr "Etichetta modificata"
 
-#: TrackPanel.cpp:1991
-#: TrackPanel.cpp:4770
-#: TrackPanel.cpp:4808
-#: TrackPanel.cpp:5082
-#: TrackPanel.cpp:7468
-#: TrackPanel.cpp:7488
+#: TrackPanel.cpp:2004
+#: TrackPanel.cpp:4798
+#: TrackPanel.cpp:4836
+#: TrackPanel.cpp:5110
+#: TrackPanel.cpp:7542
+#: TrackPanel.cpp:7562
 msgid "Label Edit"
 msgstr "Modifica etichetta"
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
-#: TrackPanel.cpp:2067
-#: TrackPanel.cpp:2297
+#: TrackPanel.cpp:2080
+#: TrackPanel.cpp:2310
 msgid "Stretch Note Track"
 msgstr "Allunga traccia nota"
 
@@ -4708,277 +4712,303 @@ msgstr "Allunga traccia nota"
 #. been dragged to change its duration (stretch it). Using either past
 #. or present tense is fine here.  If unsure, go for whichever is
 #. shorter.
-#: TrackPanel.cpp:2072
-#: TrackPanel.cpp:2297
+#: TrackPanel.cpp:2085
+#: TrackPanel.cpp:2310
 msgid "Stretch"
 msgstr "Allunga"
 
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
-#: TrackPanel.cpp:2432
+#: TrackPanel.cpp:2445
 msgid "Adjusted envelope."
 msgstr "Inviluppo regolato."
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: TrackPanel.cpp:2434
+#: TrackPanel.cpp:2447
 #: prefs/MousePrefs.cpp:121
 msgid "Envelope"
 msgstr "Inviluppo"
 
-#: TrackPanel.cpp:2601
+#: TrackPanel.cpp:2621
 msgid "Moved clip to another track"
 msgstr "Clip spostato in un'altra traccia"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2607
+#: TrackPanel.cpp:2627
 msgid "right"
 msgstr "destra"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2609
+#: TrackPanel.cpp:2629
 msgid "left"
 msgstr "sinistra"
 
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2611
+#: TrackPanel.cpp:2631
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "Tracce/clip spostati temporalmente %s %.02f secondi"
 
-#: TrackPanel.cpp:2615
+#: TrackPanel.cpp:2635
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "Spostamento Temporale"
 
-#: TrackPanel.cpp:3551
+#: TrackPanel.cpp:3579
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "Per usare Disegna, scegli 'Forma d'onda' nel menu a scomparsa Traccia."
 
-#: TrackPanel.cpp:3568
+#: TrackPanel.cpp:3596
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "Per usare Disegna, applica Zoom avanti finché non vedi i singoli campioni."
 
-#: TrackPanel.cpp:3845
+#: TrackPanel.cpp:3873
 msgid "Moved Sample"
 msgstr "Campione spostato"
 
-#: TrackPanel.cpp:3846
+#: TrackPanel.cpp:3874
 msgid "Sample Edit"
 msgstr "Modifica campione"
 
-#: TrackPanel.cpp:3953
+#: TrackPanel.cpp:3981
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "Rimossa traccia %s"
 
-#: TrackPanel.cpp:3955
+#: TrackPanel.cpp:3983
 msgid "Track Remove"
 msgstr "Rimuovi traccia"
 
-#: TrackPanel.cpp:4130
+#: TrackPanel.cpp:4158
 msgid "Moved velocity slider"
 msgstr "Cursore velocità spostato"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4322
-#: TrackPanel.cpp:7405
+#: TrackPanel.cpp:4350
+#: TrackPanel.cpp:7479
 msgid "up"
 msgstr "su"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4335
-#: TrackPanel.cpp:7407
+#: TrackPanel.cpp:4363
+#: TrackPanel.cpp:7481
 msgid "down"
 msgstr "giù"
 
 #. i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
 #. * If the word order is different in your language ask on the translators list about what
 #. * to do.
-#: TrackPanel.cpp:4350
-#: TrackPanel.cpp:7399
+#: TrackPanel.cpp:4378
+#: TrackPanel.cpp:7473
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "Spostato '%s' %s"
 
-#: TrackPanel.cpp:4353
-#: TrackPanel.cpp:7408
+#: TrackPanel.cpp:4381
+#: TrackPanel.cpp:7482
 msgid "Move Track"
 msgstr "Sposta traccia"
 
-#: TrackPanel.cpp:4978
+#: TrackPanel.cpp:5006
 msgid "Expand"
 msgstr "Espandi"
 
-#: TrackPanel.cpp:4978
+#: TrackPanel.cpp:5006
 msgid "Expanded Cut Line"
 msgstr "Linea di taglio espansa"
 
-#: TrackPanel.cpp:4991
+#: TrackPanel.cpp:5019
 msgid "Merge"
 msgstr "Unisci"
 
-#: TrackPanel.cpp:4991
+#: TrackPanel.cpp:5019
 msgid "Merged Clips"
 msgstr "Clip uniti"
 
-#: TrackPanel.cpp:5002
+#: TrackPanel.cpp:5030
 msgid "Remove"
 msgstr "Elimina"
 
-#: TrackPanel.cpp:5002
+#: TrackPanel.cpp:5030
 msgid "Removed Cut Line"
 msgstr "Linea di taglio eliminata"
 
-#: TrackPanel.cpp:6664
+#: TrackPanel.cpp:6692
 msgid "Adjusted Pan"
 msgstr "Bilanciamento regolato"
 
-#: TrackPanel.cpp:6719
+#: TrackPanel.cpp:6747
 msgid "Adjusted gain"
 msgstr "Guadagno regolato"
 
-#: TrackPanel.cpp:6854
+#: TrackPanel.cpp:6889
 msgid "Can't delete track with active audio"
 msgstr "Impossibile eliminare la traccia con l'audio attivo"
 
-#: TrackPanel.cpp:7004
+#: TrackPanel.cpp:7039
 msgid "Stereo, "
 msgstr "Stereo, "
 
-#: TrackPanel.cpp:7007
+#: TrackPanel.cpp:7042
 msgid "Mono, "
 msgstr "Mono, "
 
-#: TrackPanel.cpp:7009
+#: TrackPanel.cpp:7044
 msgid "Left, "
 msgstr "Sinistro,"
 
-#: TrackPanel.cpp:7011
+#: TrackPanel.cpp:7046
 msgid "Right, "
 msgstr "Destro, "
 
-#: TrackPanel.cpp:7023
+#: TrackPanel.cpp:7058
 msgid "Left Channel"
 msgstr "Canale sinistro"
 
-#: TrackPanel.cpp:7023
+#: TrackPanel.cpp:7058
 msgid "Right Channel"
 msgstr "Canale destro"
 
-#: TrackPanel.cpp:7024
+#: TrackPanel.cpp:7059
 msgid "Mono"
 msgstr "Mono"
 
-#: TrackPanel.cpp:7033
-#: TrackPanel.cpp:7202
+#: TrackPanel.cpp:7068
+#: TrackPanel.cpp:7237
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "Modificato '%s' in %s"
 
-#: TrackPanel.cpp:7036
+#: TrackPanel.cpp:7071
 msgid "Channel"
 msgstr "Canale"
 
-#: TrackPanel.cpp:7077
+#: TrackPanel.cpp:7112
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "Dividi la traccia stereo '%s'"
 
-#: TrackPanel.cpp:7079
+#: TrackPanel.cpp:7114
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "Dividi Stereo in Mono '%s'"
 
-#: TrackPanel.cpp:7111
+#: TrackPanel.cpp:7146
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "Creata '%s' una traccia stereo"
 
-#: TrackPanel.cpp:7114
+#: TrackPanel.cpp:7149
 msgid "Make Stereo"
 msgstr "Crea stereo"
 
-#: TrackPanel.cpp:7159
+#: TrackPanel.cpp:7194
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "Modificato %s in %d Hz"
 
-#: TrackPanel.cpp:7161
+#: TrackPanel.cpp:7196
 msgid "Rate Change"
 msgstr "Cambiamento frequenza"
 
-#: TrackPanel.cpp:7206
+#: TrackPanel.cpp:7241
 msgid "Format Change"
 msgstr "Cambiamento formato"
 
-#: TrackPanel.cpp:7292
+#: TrackPanel.cpp:7328
 msgid "Set Rate"
 msgstr "Imposta frequenza di campionamento"
 
-#: TrackPanel.cpp:7356
+#: TrackPanel.cpp:7399
 msgid "Change lower speed limit (%) to:"
 msgstr "Cambia il limite inferiore della velocità (%) a:"
 
-#: TrackPanel.cpp:7357
-#: TrackPanel.cpp:7358
+#: TrackPanel.cpp:7400
+#: TrackPanel.cpp:7401
 msgid "Lower speed limit"
 msgstr "Limite inferiore della velocità"
 
-#: TrackPanel.cpp:7363
+#: TrackPanel.cpp:7406
 msgid "Change upper speed limit (%) to:"
 msgstr "Cambia il limite superiore della velocità (%) a:"
 
-#: TrackPanel.cpp:7364
-#: TrackPanel.cpp:7365
+#: TrackPanel.cpp:7407
+#: TrackPanel.cpp:7408
 msgid "Upper speed limit"
 msgstr "Limite superiore della velocità"
 
-#: TrackPanel.cpp:7373
+#: TrackPanel.cpp:7416
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "Imposta intervallo a '%d' - '%d'"
 
 #. i18n-hint: (verb)
-#: TrackPanel.cpp:7378
+#: TrackPanel.cpp:7421
 msgid "Set Range"
 msgstr "Imposta intervallo"
 
-#: TrackPanel.cpp:7438
+#: TrackPanel.cpp:7433
+#: TrackPanel.cpp:7442
+msgid "Set Display"
+msgstr "Imposta visualizzazione"
+
+#: TrackPanel.cpp:7433
+msgid "Set time track display to linear"
+msgstr "Imposta visualizzazione traccia tempo a lineare"
+
+#: TrackPanel.cpp:7442
+msgid "Set time track display to logarithmic"
+msgstr "Imposta visualizzazione traccia tempo a logaritmica"
+
+#: TrackPanel.cpp:7451
+#: TrackPanel.cpp:7454
+msgid "Set Interpolation"
+msgstr "Imposta interpolazione"
+
+#: TrackPanel.cpp:7451
+msgid "Set time track interpolation to linear"
+msgstr "Imposta interpolazione traccia tempo a lineare"
+
+#: TrackPanel.cpp:7454
+msgid "Set time track interpolation to logarithmic"
+msgstr "Imposta interpolazione traccia tempo a logaritmica"
+
+#: TrackPanel.cpp:7512
 msgid "Change track name to:"
 msgstr "Cambia nome traccia in:"
 
-#: TrackPanel.cpp:7439
+#: TrackPanel.cpp:7513
 msgid "Track Name"
 msgstr "Nome traccia"
 
-#: TrackPanel.cpp:7452
+#: TrackPanel.cpp:7526
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "Rinominato %s' in %s'"
 
-#: TrackPanel.cpp:7455
+#: TrackPanel.cpp:7529
 msgid "Name Change"
 msgstr "Cambio nome"
 
 #. i18n-hint: (noun) This is the font for the label track.
-#: TrackPanel.cpp:7523
+#: TrackPanel.cpp:7597
 msgid "Label Track Font"
 msgstr "Carattere Traccia etichetta"
 
 #. i18n-hint: (noun) The name of the typeface
-#: TrackPanel.cpp:7536
-#: TrackPanel.cpp:7543
+#: TrackPanel.cpp:7610
+#: TrackPanel.cpp:7617
 msgid "Face name"
 msgstr "Nome faccia"
 
 #. i18n-hint: (noun) The size of the typeface
-#: TrackPanel.cpp:7548
-#: TrackPanel.cpp:7555
+#: TrackPanel.cpp:7622
+#: TrackPanel.cpp:7629
 msgid "Face size"
 msgstr "Dimensione faccia"
 
-#: TrackPanel.cpp:7845
+#: TrackPanel.cpp:7919
 msgid "Stereo, 999999Hz"
 msgstr "Stereo, 999999Hz"
 
@@ -5276,47 +5306,51 @@ msgstr "Riduci volume automaticamente in elaborazione..."
 msgid "OK"
 msgstr "OK"
 
-#: effects/BassBoost.cpp:52
+#: effects/BassTreble.cpp:50
 #, c-format
-msgid "Applied effect: %s frequency = %.0f Hz, boost = %.0f dB"
-msgstr "Effetto applicato: %s frequenza = %.0f, esaltazione = %.0f dB"
+msgid "Applied effect: %s bass = %.0f dB, treble = %.0f dB, gain = %.0f dB"
+msgstr "Effetto applicato: %s basso = %.0f, alti = %.0f dB, guadagno = %.0f dB"
 
-#: effects/BassBoost.cpp:169
-msgid "Bass Boost"
-msgstr "Esalta i bassi"
+#: effects/BassTreble.cpp:190
+msgid "Bass and Treble"
+msgstr "Bassi e alti"
 
-#. i18n-hint: Nasca Octavian Paul is a person's name.
-#: effects/BassBoost.cpp:183
-#: effects/Paulstretch.cpp:420
-#: effects/Phaser.cpp:221
-#: effects/Wahwah.cpp:216
-msgid "by Nasca Octavian Paul"
-msgstr "di Nasca Octavian Paul"
+#. i18n-hint: Steve Daulton is a person's name.
+#: effects/BassTreble.cpp:203
+msgid "by Steve Daulton"
+msgstr "di Steve Daulton"
 
-#: effects/BassBoost.cpp:197
-#: effects/ChangePitch.cpp:334
-msgid "Frequency (Hz):"
-msgstr "Frequenza (Hz):"
+#: effects/BassTreble.cpp:217
+msgid "Bass (dB):"
+msgstr "Basso (dB):"
 
-#: effects/BassBoost.cpp:206
-msgid "Frequency Hertz"
-msgstr "Hertz della frequenza"
+#: effects/BassTreble.cpp:222
+msgid "Bass (dB)"
+msgstr "Basso (dB):"
 
-#: effects/BassBoost.cpp:210
-msgid "Boost (dB):"
-msgstr "Esaltazione (dB):"
+#: effects/BassTreble.cpp:226
+msgid "Treble (dB):"
+msgstr "Alti (dB)"
 
-#: effects/BassBoost.cpp:219
-msgid "Boost dB"
-msgstr "Esaltazione dB"
+#: effects/BassTreble.cpp:231
+msgid "Treble (dB)"
+msgstr "Alti (dB)"
 
-#: effects/BassBoost.h:35
-msgid "BassBoost..."
-msgstr "Esalta i bassi..."
+#: effects/BassTreble.cpp:235
+msgid "Gain (dB):"
+msgstr "Guadagno (dB):"
 
-#: effects/BassBoost.h:49
-msgid "Boosting Bass Frequencies"
-msgstr "Sto esaltando le basse frequenze"
+#: effects/BassTreble.cpp:240
+msgid "Gain (dB)"
+msgstr "Guadagno (dB):"
+
+#: effects/BassTreble.h:32
+msgid "Bass and Treble..."
+msgstr "Bassi e alti..."
+
+#: effects/BassTreble.h:46
+msgid "Adjusting Bass and Treble"
+msgstr "Regolazione bassi e alti"
 
 #: effects/ChangeLength.h:26
 msgid "Change Length..."
@@ -5386,6 +5420,10 @@ msgstr "Semitoni:"
 #: effects/ChangePitch.cpp:328
 msgid "Semitones in half-steps"
 msgstr "Semitoni"
+
+#: effects/ChangePitch.cpp:334
+msgid "Frequency (Hz):"
+msgstr "Frequenza (Hz):"
 
 #: effects/ChangePitch.cpp:338
 #: effects/ChangeSpeed.cpp:384
@@ -6066,7 +6104,7 @@ msgstr "Cubico"
 msgid "Equalization"
 msgstr "Equalizzazione"
 
-#: effects/Equalization.cpp:1000
+#: effects/Equalization.cpp:1002
 #, c-format
 msgid ""
 "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
@@ -6079,19 +6117,19 @@ msgstr ""
 "\n"
 "Salva le curve a %s"
 
-#: effects/Equalization.cpp:1001
+#: effects/Equalization.cpp:1003
 msgid "EQCurves.xml and EQDefaultCurves.xml missing"
 msgstr "EQCurves.xml e EQDefaultCurves.xm mancanti"
 
-#: effects/Equalization.cpp:1007
-#: effects/Equalization.cpp:1034
-#: effects/Equalization.cpp:1037
-#: effects/Equalization.cpp:1038
+#: effects/Equalization.cpp:1009
+#: effects/Equalization.cpp:1036
+#: effects/Equalization.cpp:1039
+#: effects/Equalization.cpp:1040
 msgid "unnamed"
 msgstr "senza nome"
 
 #. i18n-hint: EQ stands for 'Equalization'.
-#: effects/Equalization.cpp:1028
+#: effects/Equalization.cpp:1030
 #, c-format
 msgid ""
 "Error Loading EQ Curves from file:\n"
@@ -6104,93 +6142,93 @@ msgstr ""
 "Il messaggio di errore dice:\n"
 "%s"
 
-#: effects/Equalization.cpp:1031
+#: effects/Equalization.cpp:1033
 msgid "Error Loading EQ Curves"
 msgstr "Errore di caricamento curve EQ"
 
-#: effects/Equalization.cpp:1098
+#: effects/Equalization.cpp:1100
 msgid "Error Saving Equalization Curves"
 msgstr "Errore nel salvataggio curve EQ"
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
-#: effects/Equalization.cpp:1121
+#: effects/Equalization.cpp:1123
 msgid "Equalization, by Martyn Shaw && Mitch Golden"
 msgstr "Equalizzazione, di Martyn Shaw && Mitch Golden"
 
-#: effects/Equalization.cpp:1142
+#: effects/Equalization.cpp:1144
 msgid "Max dB"
 msgstr "Max dB"
 
-#: effects/Equalization.cpp:1144
+#: effects/Equalization.cpp:1146
 msgid "Min dB"
 msgstr "Min dB"
 
-#: effects/Equalization.cpp:1223
+#: effects/Equalization.cpp:1225
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1240
+#: effects/Equalization.cpp:1242
 msgid "&Draw Curves"
 msgstr "&Disegna curve"
 
-#: effects/Equalization.cpp:1242
+#: effects/Equalization.cpp:1244
 msgid "Draw Curves"
 msgstr "Disegna curve"
 
-#: effects/Equalization.cpp:1246
+#: effects/Equalization.cpp:1248
 msgid "&Graphic EQ"
 msgstr "EQ &grafico"
 
-#: effects/Equalization.cpp:1248
+#: effects/Equalization.cpp:1250
 msgid "Graphic EQ"
 msgstr "EQ grafico"
 
-#: effects/Equalization.cpp:1261
+#: effects/Equalization.cpp:1263
 msgid "Li&near Frequency Scale"
 msgstr "Scala li&neare frequenza"
 
-#: effects/Equalization.cpp:1262
+#: effects/Equalization.cpp:1264
 msgid "Linear Frequency Scale"
 msgstr "Scala lineare frequenza"
 
-#: effects/Equalization.cpp:1271
+#: effects/Equalization.cpp:1273
 msgid "Length of &Filter:"
 msgstr "Ampiezza &filtro:"
 
-#: effects/Equalization.cpp:1277
+#: effects/Equalization.cpp:1279
 msgid "Length of Filter"
 msgstr "Ampiezza filtro"
 
-#: effects/Equalization.cpp:1294
+#: effects/Equalization.cpp:1296
 msgid "&Select Curve:"
 msgstr "&Seleziona curva:"
 
-#: effects/Equalization.cpp:1304
+#: effects/Equalization.cpp:1306
 msgid "S&ave/Manage Curves..."
 msgstr "S&alva/Gestisci curve..."
 
-#: effects/Equalization.cpp:1305
+#: effects/Equalization.cpp:1307
 msgid "Save and Manage Curves"
 msgstr "Salva e Gestisci curve"
 
-#: effects/Equalization.cpp:1308
+#: effects/Equalization.cpp:1310
 msgid "Fla&tten"
 msgstr "Appia&ttisci"
 
-#: effects/Equalization.cpp:1310
+#: effects/Equalization.cpp:1312
 msgid "&Invert"
 msgstr "&Inverti"
 
-#: effects/Equalization.cpp:1312
+#: effects/Equalization.cpp:1314
 msgid "G&rids"
 msgstr "G&riglie"
 
-#: effects/Equalization.cpp:1377
+#: effects/Equalization.cpp:1379
 msgid "Select Curve"
 msgstr "Seleziona curva"
 
-#: effects/Equalization.cpp:1393
+#: effects/Equalization.cpp:1395
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
@@ -6198,61 +6236,61 @@ msgstr ""
 "Per usare questa curva EQ in una concatenazione batch, si deve scegliere un nuovo nome. \n"
 "Scegli il pulsante 'Salva/Gestisci curve...' e rinomina la curva 'senza nome', poi usala."
 
-#: effects/Equalization.cpp:1394
+#: effects/Equalization.cpp:1396
 msgid "EQ Curve needs a different name"
 msgstr "La curva EQ necessita di un nuovo nome"
 
-#: effects/Equalization.cpp:1717
+#: effects/Equalization.cpp:1719
 msgid "Curve not found"
 msgstr "Curva non trovato"
 
-#: effects/Equalization.cpp:1717
+#: effects/Equalization.cpp:1719
 msgid "Requested curve not found, using 'unnamed'"
 msgstr "Curva necessaria non trovata, usando 'senza nome'"
 
-#: effects/Equalization.cpp:2829
-#: effects/Equalization.cpp:2834
+#: effects/Equalization.cpp:2831
+#: effects/Equalization.cpp:2836
 msgid "Manage Curves List"
 msgstr "Gestisci lista curve"
 
-#: effects/Equalization.cpp:2833
+#: effects/Equalization.cpp:2835
 msgid "Manage Curves"
 msgstr "Gestisci curve"
 
-#: effects/Equalization.cpp:2866
+#: effects/Equalization.cpp:2868
 msgid "&Curves"
 msgstr "&Curve"
 
-#: effects/Equalization.cpp:2870
+#: effects/Equalization.cpp:2872
 msgid "Curve Name"
 msgstr "Nome curva"
 
-#: effects/Equalization.cpp:2877
+#: effects/Equalization.cpp:2879
 msgid "&Rename..."
 msgstr "&Rinomina..."
 
-#: effects/Equalization.cpp:2878
+#: effects/Equalization.cpp:2880
 msgid "D&elete..."
 msgstr "&Elimina"
 
-#: effects/Equalization.cpp:2879
+#: effects/Equalization.cpp:2881
 msgid "I&mport..."
 msgstr "I&mporta..."
 
-#: effects/Equalization.cpp:2880
+#: effects/Equalization.cpp:2882
 msgid "E&xport..."
 msgstr "E&sporta..."
 
-#: effects/Equalization.cpp:2881
+#: effects/Equalization.cpp:2883
 msgid "&Get More..."
 msgstr "&Cronologia..."
 
-#: effects/Equalization.cpp:2888
+#: effects/Equalization.cpp:2890
 #: widgets/ErrorDialog.cpp:139
 msgid "Help"
 msgstr "Aiuto"
 
-#: effects/Equalization.cpp:2889
+#: effects/Equalization.cpp:2891
 msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
@@ -6260,111 +6298,114 @@ msgstr ""
 "Rinomina 'senza nome' per salvare un nuovo elemento.\n"
 "'OK' per salvare tutte le modifiche, 'Annulla' per annullarle."
 
-#: effects/Equalization.cpp:2924
+#: effects/Equalization.cpp:2926
 msgid "'unnamed' always stays at the bottom of the list"
 msgstr "'senza nome' è presente sempre alla fine della lista"
 
-#: effects/Equalization.cpp:2924
-#: effects/Equalization.cpp:3225
+#: effects/Equalization.cpp:2926
 msgid "'unnamed' is special"
 msgstr "'senza nome' è speciale"
 
-#: effects/Equalization.cpp:3018
+#: effects/Equalization.cpp:3020
 msgid "' to..."
 msgstr "' a..."
 
-#: effects/Equalization.cpp:3018
-#: effects/Equalization.cpp:3021
+#: effects/Equalization.cpp:3020
+#: effects/Equalization.cpp:3023
 msgid "Rename '"
 msgstr "Rinomina '"
 
-#: effects/Equalization.cpp:3019
+#: effects/Equalization.cpp:3021
 msgid "Rename..."
 msgstr "Rinomina..."
 
-#: effects/Equalization.cpp:3042
+#: effects/Equalization.cpp:3044
 msgid "Name is the same as the original one"
 msgstr "Il nome è lo stesso dell'originale"
 
-#: effects/Equalization.cpp:3042
+#: effects/Equalization.cpp:3044
 msgid "Same name"
 msgstr "Stesso nome"
 
-#: effects/Equalization.cpp:3045
+#: effects/Equalization.cpp:3047
 msgid "'?"
 msgstr "'?"
 
-#: effects/Equalization.cpp:3045
+#: effects/Equalization.cpp:3047
 msgid "Overwrite existing curve '"
 msgstr "Sovrascrivi curva esistente '"
 
-#: effects/Equalization.cpp:3046
+#: effects/Equalization.cpp:3048
 msgid "Curve exists"
 msgstr "La curva esiste"
 
-#: effects/Equalization.cpp:3117
+#: effects/Equalization.cpp:3119
 msgid "You cannot delete the 'unnamed' curve."
 msgstr "Impossibile eliminare la curva 'senza nome'."
 
-#: effects/Equalization.cpp:3118
-#: effects/Equalization.cpp:3167
+#: effects/Equalization.cpp:3120
+#: effects/Equalization.cpp:3169
 msgid "Can't delete 'unnamed'"
 msgstr "Impossibile eliminare 'senza nome'"
 
-#: effects/Equalization.cpp:3124
-#: effects/Equalization.cpp:3153
+#: effects/Equalization.cpp:3126
+#: effects/Equalization.cpp:3155
 msgid "' ?"
 msgstr "' ?"
 
-#: effects/Equalization.cpp:3124
-#: effects/Equalization.cpp:3153
+#: effects/Equalization.cpp:3126
+#: effects/Equalization.cpp:3155
 msgid "Delete '"
 msgstr "Elimina '"
 
-#: effects/Equalization.cpp:3127
-#: effects/Equalization.cpp:3157
+#: effects/Equalization.cpp:3129
+#: effects/Equalization.cpp:3159
 #: export/ExportFFmpegDialogs.cpp:1664
 msgid "Confirm Deletion"
 msgstr "Conferma eliminazione"
 
-#: effects/Equalization.cpp:3150
+#: effects/Equalization.cpp:3152
 msgid "Delete "
 msgstr "Elimina"
 
-#: effects/Equalization.cpp:3150
+#: effects/Equalization.cpp:3152
 msgid "items?"
 msgstr "elementi?"
 
-#: effects/Equalization.cpp:3166
+#: effects/Equalization.cpp:3168
 msgid "You cannot delete the 'unnamed' curve, it is special."
 msgstr "Impossibile eliminare una curva 'senza nome', è speciale."
 
-#: effects/Equalization.cpp:3183
+#: effects/Equalization.cpp:3185
 msgid "Choose an EQ curve file"
 msgstr "Scegli un file curva EQ"
 
-#: effects/Equalization.cpp:3183
+#: effects/Equalization.cpp:3185
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
 msgstr "file xml (*.xml;*.XML)|*.xml;*.XML"
 
-#: effects/Equalization.cpp:3203
+#: effects/Equalization.cpp:3205
 msgid "Export EQ curves as..."
 msgstr "Esporta curve EQ con nome..."
 
-#: effects/Equalization.cpp:3225
-msgid "You cannot export 'unnamed' curve"
-msgstr "Impossibile esportare una curva 'senza nome'"
+#: effects/Equalization.cpp:3227
+msgid "Cannot Export 'unnamed'"
+msgstr "Impossibile esportare 'senza nome'"
 
-#: effects/Equalization.cpp:3235
+#: effects/Equalization.cpp:3227
+msgid "You cannot export 'unnamed' curve, it is special."
+msgstr "Impossibile esportare una curva 'senza nome', è speciale."
+
+#: effects/Equalization.cpp:3237
 #, c-format
 msgid "%d curves exported to %s"
 msgstr "%d curve esportate in %s"
 
-#: effects/Equalization.cpp:3236
+#: effects/Equalization.cpp:3238
 msgid "Curves exported"
 msgstr "Curve esportate"
 
-#: effects/Equalization.cpp:3239
+#: effects/Equalization.cpp:3241
 msgid "No curves exported"
 msgstr "Nessuna curva esportata"
 
@@ -6893,6 +6934,12 @@ msgstr ""
 "La selezione è troppo corta.\n"
 "Deve essere molto più lunga del Tempo di Risoluzione."
 
+#: effects/Paulstretch.cpp:420
+#: effects/Phaser.cpp:221
+#: effects/Wahwah.cpp:216
+msgid "by Nasca Octavian Paul"
+msgstr "di Nasca Octavian Paul"
+
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -7367,13 +7414,13 @@ msgstr "Tronca silenzio..."
 msgid "Truncating Silence..."
 msgstr "Sto troncando il silenzio..."
 
-#: effects/VST/VSTEffect.cpp:389
+#: effects/VST/VSTEffect.cpp:388
 #: effects/ladspa/LadspaEffect.cpp:590
 #: effects/lv2/LV2Effect.cpp:798
 msgid "Effect Settings"
 msgstr "Impostazioni Effetto"
 
-#: effects/VST/VSTEffect.cpp:469
+#: effects/VST/VSTEffect.cpp:468
 #: effects/ladspa/LadspaEffect.cpp:555
 #: effects/ladspa/LadspaEffect.cpp:563
 #: prefs/QualityPrefs.cpp:74
@@ -7381,56 +7428,56 @@ msgstr "Impostazioni Effetto"
 msgid "None"
 msgstr "Nessuno"
 
-#: effects/VST/VSTEffect.cpp:480
+#: effects/VST/VSTEffect.cpp:479
 msgid "Presets:"
 msgstr "Preset:"
 
-#: effects/VST/VSTEffect.cpp:490
+#: effects/VST/VSTEffect.cpp:489
 msgid "Presets"
 msgstr "Preset"
 
-#: effects/VST/VSTEffect.cpp:493
+#: effects/VST/VSTEffect.cpp:492
 msgid "Load"
 msgstr "Carica"
 
-#: effects/VST/VSTEffect.cpp:496
+#: effects/VST/VSTEffect.cpp:495
 msgid "Save"
 msgstr "Salva"
 
-#: effects/VST/VSTEffect.cpp:596
+#: effects/VST/VSTEffect.cpp:595
 msgid "Load VST Program:"
 msgstr "Carica programma VST:"
 
-#: effects/VST/VSTEffect.cpp:614
+#: effects/VST/VSTEffect.cpp:613
 msgid "Error Loading VST Program"
 msgstr "Errore nel caricamento del programma VST"
 
-#: effects/VST/VSTEffect.cpp:630
+#: effects/VST/VSTEffect.cpp:629
 msgid "Save VST Program As:"
 msgstr "Salva programma VST come:"
 
-#: effects/VST/VSTEffect.cpp:769
+#: effects/VST/VSTEffect.cpp:768
 #, c-format
 msgid "This parameter file was saved from %s.  Continue?"
 msgstr "Questo file parametro è stato salvato da %s. Continuo?"
 
-#: effects/VST/VSTEffect.cpp:1223
+#: effects/VST/VSTEffect.cpp:1222
 msgid "Performing Effect: "
 msgstr "Esecuzione effetto:"
 
-#: effects/VST/VSTEffect.cpp:1254
+#: effects/VST/VSTEffect.cpp:1253
 msgid "Both channels of a stereo track must be the same sample rate."
 msgstr "Ambedue i canali di una traccia stereo devono avere la stessa frequenza di campionamento."
 
-#: effects/VST/VSTEffect.cpp:1259
+#: effects/VST/VSTEffect.cpp:1258
 msgid "Both channels of a stereo track must be the same length."
 msgstr "Ambedue i canali di una traccia stereo devono avere la stessa lunghezza."
 
-#: effects/VST/VSTEffect.cpp:1790
+#: effects/VST/VSTEffect.cpp:1789
 msgid "Scanning VST Plugins"
 msgstr "Analisi plug-in VST"
 
-#: effects/VST/VSTEffect.cpp:1806
+#: effects/VST/VSTEffect.cpp:1805
 #, c-format
 msgid "Checking %s"
 msgstr "Controllo %s"
@@ -7618,50 +7665,55 @@ msgstr "Impostazioni plug-in"
 msgid "Program"
 msgstr "Programma"
 
-#: export/Export.cpp:499
-msgid "All the selected audio is muted."
-msgstr "Tutto l'audio selezionato è muto."
+#: export/Export.cpp:493
+msgid "All selected audio is muted."
+msgstr "Tutto l'audio selezionato è reso muto."
 
-#: export/Export.cpp:501
-msgid "All the audio is muted."
-msgstr "Tutto l'audio è muto."
+#: export/Export.cpp:495
+#: export/ExportMultiple.cpp:177
+msgid "All audio is muted."
+msgstr "Tutto l'audio è stato reso muto."
 
-#: export/Export.cpp:551
+#: export/Export.cpp:497
+msgid "Unable to export"
+msgstr "Impossibile esportare"
+
+#: export/Export.cpp:545
 msgid "Export File"
 msgstr "Esporta file"
 
-#: export/Export.cpp:560
+#: export/Export.cpp:554
 msgid "&Options..."
 msgstr "&Opzioni..."
 
-#: export/Export.cpp:601
-msgid "Are you sure you want to save the file as \""
-msgstr "Sei sicuro di voler salvare il file come \""
+#: export/Export.cpp:595
+msgid "Are you sure you want to export the file as \""
+msgstr "Sei sicuro di voler esportare il file come \""
 
-#: export/Export.cpp:606
-#: export/Export.cpp:627
-#: export/Export.cpp:671
+#: export/Export.cpp:600
+#: export/Export.cpp:621
+#: export/Export.cpp:665
 #: import/ImportPCM.cpp:238
-#: widgets/Warning.cpp:53
+#: widgets/Warning.cpp:54
 msgid "Warning"
 msgstr "Avvertimento"
 
-#: export/Export.cpp:621
+#: export/Export.cpp:615
 #, c-format
 msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+"You are about to export a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
-"Are you sure you want to save the file under this name?"
+"Are you sure you want to export the file under this name?"
 msgstr ""
-"Stai per salvare un %s file con il nome \"%s\".\n"
+"Stai per esportare un %s file con il nome \"%s\".\n"
 "\n"
 "Normalmente questi file terminano in \".%s\", e alcuni programmi non apriranno i file con estensioni non standard.\n"
 "\n"
-"Sei sicuro di volere salvare il file con questo nome?"
+"Sei sicuro di volere esportare il file con questo nome?"
 
-#: export/Export.cpp:653
+#: export/Export.cpp:647
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the original audio to the project.\n"
@@ -7673,42 +7725,42 @@ msgstr ""
 "Scegli File > Controlla dipendenze la sede dei file persi.\n"
 "Se vorrai esportare,scegli un differente nome di file o cartella."
 
-#: export/Export.cpp:667
+#: export/Export.cpp:661
 #, c-format
 msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "Un file con il nome \"%s\" esiste già.  Lo sovrascrivo?"
 
-#: export/Export.cpp:781
+#: export/Export.cpp:775
 msgid "Your tracks will be mixed down to two stereo channels in the exported file."
 msgstr "Nel file esportato le tracce saranno miscelate in due canali stereo."
 
-#: export/Export.cpp:786
+#: export/Export.cpp:782
 msgid "Your tracks will be mixed down to a single mono channel in the exported file."
 msgstr "Nel file esportato le tracce saranno miscelate in un singolo canale mono."
 
-#: export/Export.cpp:797
+#: export/Export.cpp:795
 msgid "Advanced Mixing Options"
 msgstr "Opzioni avanzate di mixaggio"
 
-#: export/Export.cpp:1005
+#: export/Export.cpp:1003
 #, c-format
 msgid "Channel: %2d"
 msgstr "Canale: %2d"
 
-#: export/Export.cpp:1120
+#: export/Export.cpp:1118
 msgid " - Left"
 msgstr " - Sinistro"
 
-#: export/Export.cpp:1122
+#: export/Export.cpp:1120
 msgid " - Right"
 msgstr " - Destro"
 
-#: export/Export.cpp:1144
+#: export/Export.cpp:1142
 msgid "Mixer Panel"
 msgstr "Pannello Mixer"
 
-#: export/Export.cpp:1150
-#: export/Export.cpp:1197
+#: export/Export.cpp:1148
+#: export/Export.cpp:1195
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "Canali di uscita: %2d"
@@ -8672,139 +8724,130 @@ msgid "MP3 export library not found"
 msgstr "Libreria esportazione MP3 non trovata"
 
 #: export/ExportMultiple.cpp:105
-#: export/ExportMultiple.cpp:431
-#: export/ExportMultiple.cpp:549
+#: export/ExportMultiple.cpp:441
+#: export/ExportMultiple.cpp:559
 msgid "Export Multiple"
 msgstr "Esportazione multipla"
 
-#: export/ExportMultiple.cpp:175
+#: export/ExportMultiple.cpp:178
+#: export/ExportMultiple.cpp:190
+msgid "Cannot Export Multiple"
+msgstr "Impossibile l'esportazione multipla"
+
+#: export/ExportMultiple.cpp:186
 msgid ""
-"If you have more than one Audio Track, you can\n"
-"export each track as a separate audio file.\n"
+"You have only one unmuted Audio Track and no applicable \n"
+"labels, so you cannot export to separate audio files. \n"
 "\n"
-"If you have a Label Track, you can export a separate\n"
-"audio file for each label in that track. You can have\n"
-"more than one Label Track, but files will only be\n"
-"exported for the uppermost Label Track.\n"
-"\n"
-"This Project does not meet the above criteria for\n"
-"exporting multiple files."
+"If you have more than one Label Track, Export Multiple is \n"
+"based only on labels in the uppermost Label Track."
 msgstr ""
-"Se hai più tracce audio,è possibile \n"
-"esportarle come file distinti.\n"
+"Hai una sola traccia audio non muta e nessuna etichetta \n"
+"applicabile, pertanto non puoi esportare file audio separati.\n"
 "\n"
-"Se hai una traccia etichetta, è possibile esportare un separato \n"
-"file audio per ciascuna etichetta in questa traccia. È possibile avere\n"
-"più di una traccia etichetta, ma i verranno esportati \n"
-"solo per l'etichetta superiore. \n"
-"\n"
-"Questo progetto non non soddisfa i precedenti criteri per \n"
-"l'esportazione di file multipli."
+"Se hai più di una traccia Etichetta, l'esportazione multipla è \n"
+"basata solo sulle etichette nella traccia etichetta più in alto."
 
-#: export/ExportMultiple.cpp:180
-msgid "Can't export multiple files"
-msgstr "Impossibile esportare file multipli"
-
-#: export/ExportMultiple.cpp:245
+#: export/ExportMultiple.cpp:255
 msgid "Export format:"
 msgstr "Formato di esportazione:"
 
-#: export/ExportMultiple.cpp:250
+#: export/ExportMultiple.cpp:260
 msgid "Options..."
 msgstr "Opzioni..."
 
-#: export/ExportMultiple.cpp:254
+#: export/ExportMultiple.cpp:264
 msgid "Export location:"
 msgstr "Percorso del file da esportare:"
 
-#: export/ExportMultiple.cpp:259
+#: export/ExportMultiple.cpp:269
 msgid "Create"
 msgstr "Crea"
 
-#: export/ExportMultiple.cpp:266
+#: export/ExportMultiple.cpp:276
 msgid "Split files based on:"
 msgstr "Dividi i file sulla base di:"
 
-#: export/ExportMultiple.cpp:275
-#: export/ExportMultiple.cpp:277
+#: export/ExportMultiple.cpp:285
+#: export/ExportMultiple.cpp:287
 msgid "Labels"
 msgstr "Etichette"
 
-#: export/ExportMultiple.cpp:282
+#: export/ExportMultiple.cpp:292
 msgid "Include audio before first label"
 msgstr "Includi audio davanti alla prima etichetta"
 
-#: export/ExportMultiple.cpp:288
+#: export/ExportMultiple.cpp:298
 msgid "First file name:"
 msgstr "Nome del primo file:"
 
-#: export/ExportMultiple.cpp:293
+#: export/ExportMultiple.cpp:303
 msgid "First file name"
 msgstr "Nome primo file"
 
-#: export/ExportMultiple.cpp:310
+#: export/ExportMultiple.cpp:320
 msgid "Name files:"
 msgstr "Nomi dei file:"
 
-#: export/ExportMultiple.cpp:316
+#: export/ExportMultiple.cpp:326
 msgid "Using Label/Track Name"
 msgstr "Uso dei nomi delle etichette o dei nomi delle tracce"
 
-#: export/ExportMultiple.cpp:319
+#: export/ExportMultiple.cpp:329
 msgid "Numbering before Label/Track Name"
 msgstr "Numerazione primai del nome etichetta/traccia"
 
-#: export/ExportMultiple.cpp:322
+#: export/ExportMultiple.cpp:332
 msgid "Numbering after File name prefix"
 msgstr "Numerazione dopo prefisso nome file"
 
-#: export/ExportMultiple.cpp:328
+#: export/ExportMultiple.cpp:338
 msgid "File name prefix:"
 msgstr "Prefisso nome file:"
 
-#: export/ExportMultiple.cpp:333
+#: export/ExportMultiple.cpp:343
 msgid "File name prefix"
 msgstr "Prefisso nome file"
 
-#: export/ExportMultiple.cpp:345
+#: export/ExportMultiple.cpp:355
 msgid "Overwrite existing files"
 msgstr "Sovrascrivi i file esistenti"
 
-#: export/ExportMultiple.cpp:429
+#: export/ExportMultiple.cpp:439
 #, c-format
 msgid "\"%s\" successfully created."
 msgstr "\"%s\" creato con successo."
 
-#: export/ExportMultiple.cpp:438
+#: export/ExportMultiple.cpp:448
 msgid "Choose a location to save the exported files"
 msgstr "Scegli dove salvare i file esportati"
 
-#: export/ExportMultiple.cpp:533
+#: export/ExportMultiple.cpp:543
 #, c-format
 msgid "Successfully exported the following %ld file(s)."
 msgstr "Esportati con successo i seguenti %ld file."
 
-#: export/ExportMultiple.cpp:534
+#: export/ExportMultiple.cpp:544
 #, c-format
 msgid "Something went wrong after exporting the following %ld file(s)."
 msgstr "È successo qualcosa di sbagliato dopo l'esportazione dei seguenti %ld file."
 
-#: export/ExportMultiple.cpp:535
+#: export/ExportMultiple.cpp:545
 #, c-format
 msgid "Export canceled after exporting the following %ld file(s)."
 msgstr "Esportazione eliminata dopo l'esportazione dei seguenti %ld file."
 
-#: export/ExportMultiple.cpp:536
+#: export/ExportMultiple.cpp:546
 #, c-format
 msgid "Export stopped after exporting the following %ld file(s)."
 msgstr "Esportazione fermata dopo l'esportazione dei seguenti %ld file."
 
-#: export/ExportMultiple.cpp:537
+#: export/ExportMultiple.cpp:547
 #, c-format
 msgid "Something went really wrong after exporting the following %ld file(s)."
 msgstr "Qualcosa è andata male dopo l'esportazione dei seguenti %ld file."
 
-#: export/ExportMultiple.cpp:572
+#: export/ExportMultiple.cpp:582
 #, c-format
 msgid ""
 "\"%s\" doesn't exist.\n"
@@ -8815,17 +8858,17 @@ msgstr ""
 "\n"
 "Vuoi crearlo?"
 
-#: export/ExportMultiple.cpp:645
-#: export/ExportMultiple.cpp:780
+#: export/ExportMultiple.cpp:655
+#: export/ExportMultiple.cpp:789
 msgid "untitled"
 msgstr "senza titolo"
 
-#: export/ExportMultiple.cpp:674
-#: export/ExportMultiple.cpp:812
+#: export/ExportMultiple.cpp:684
+#: export/ExportMultiple.cpp:821
 msgid "Edit metadata"
 msgstr "Modifica metadati"
 
-#: export/ExportMultiple.cpp:927
+#: export/ExportMultiple.cpp:936
 #, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
@@ -8834,7 +8877,7 @@ msgstr ""
 "L'etichetta o traccia \"%s\" non è un nome file consentito. Impossibile usare una qualsiasi delle: %s\n"
 "Usa..."
 
-#: export/ExportMultiple.cpp:928
+#: export/ExportMultiple.cpp:937
 msgid "Save As..."
 msgstr "Salva con nome..."
 
@@ -10814,13 +10857,21 @@ msgstr "Seleizona canali di ingresso"
 msgid "Device information is not available."
 msgstr "Non sono disponibili informazioni sul dispositivo."
 
+#: toolbars/EditToolBar.cpp:131
+msgid "Cut selection"
+msgstr "Taglia selezione"
+
+#: toolbars/EditToolBar.cpp:133
+msgid "Copy selection"
+msgstr "Copia selezione"
+
 #: toolbars/EditToolBar.cpp:137
-msgid "Trim outside selection"
-msgstr "Elimina fuori dalla selezione"
+msgid "Trim audio outside selection"
+msgstr "Ritaglia audio fuori dalla selezione"
 
 #: toolbars/EditToolBar.cpp:139
-msgid "Silence selection"
-msgstr "Selezione silenzio"
+msgid "Silence audio selection"
+msgstr "Silenzia selezione audio"
 
 #: toolbars/EditToolBar.cpp:152
 #: toolbars/EditToolBar.cpp:203
@@ -10844,6 +10895,10 @@ msgstr "Adatta la selezione alla finestra"
 #: toolbars/EditToolBar.cpp:165
 msgid "Fit project in window"
 msgstr "Adatta l'intero progetto alla finestra"
+
+#: toolbars/EditToolBar.cpp:199
+msgid "Silence Audio"
+msgstr "Silenzia audio"
 
 #: toolbars/EditToolBar.cpp:207
 msgid "Fit Selection"
@@ -11189,8 +11244,8 @@ msgstr "Tempo restante:"
 msgid "Cancel"
 msgstr "Annulla"
 
-#: widgets/Ruler.cpp:1586
-#: widgets/Ruler.cpp:1587
+#: widgets/Ruler.cpp:1590
+#: widgets/Ruler.cpp:1591
 msgid "Vertical Ruler"
 msgstr "Righello verticale"
 
@@ -11399,7 +11454,7 @@ msgstr "(Usa il menu di contesto per cambiare formato)."
 msgid "centiseconds"
 msgstr "centesimi di secondo"
 
-#: widgets/Warning.cpp:63
+#: widgets/Warning.cpp:64
 msgid "Don't show this warning again"
 msgstr "Non mostrare più questo avvertimento"
 
@@ -11432,592 +11487,64 @@ msgstr "Errore nella chiusura del file"
 msgid "Error Writing to File"
 msgstr "Errore nella scrittura del file"
 
-#~ msgid "S&ort tracks"
-#~ msgstr "&Ordina tracce"
+#~ msgid "Bass Boost"
+#~ msgstr "Esalta i bassi"
 
-#~ msgid "Libresample by Dominic Mazzoni and Julius Smith"
-#~ msgstr ""
-#~ "Modifica della frequenza di campionamento di Dominic Mazzoni e Julius "
-#~ "Smith"
+#~ msgid "BassBoost..."
+#~ msgstr "Esalta i bassi..."
 
-#~ msgid "Libsamplerate by Erik de Castro Lopo"
-#~ msgstr "Interpolazione Sinc di Erik de Castro Lopo"
+#~ msgid "Boost dB"
+#~ msgstr "Esaltazione dB"
 
-#~ msgid ""
-#~ "Note: Export quality options can be chosen by clicking the Options\n"
-#~ "button in the Export dialog."
-#~ msgstr ""
-#~ "Nota: Le opzioni qualità di esportazione possono essere scelte facendo "
-#~ "clic sul pulsante\n"
-#~ "Opzioni nel dialogo Esporta."
+#~ msgid "Boosting Bass Frequencies"
+#~ msgstr "Sto esaltando le basse frequenze"
 
-#~ msgid "Output level meter"
-#~ msgstr "Livello di uscita"
+#~ msgid "Can't export multiple files"
+#~ msgstr "Impossibile esportare file multipli"
 
-#~ msgid "Input Volume Slider"
-#~ msgstr "Cursore volume di ingresso"
+#~ msgid "Delete Labels"
+#~ msgstr "Elimina etichette"
 
-#~ msgid "Output Volume Slider"
-#~ msgstr "Cursore volume di uscita"
+#~ msgid "Frequency Hertz"
+#~ msgstr "Hertz della frequenza"
 
 #~ msgid ""
-#~ "This is a Beta version of the program. It may contain bugs and unfinished "
-#~ "features. We depend on your feedback: please send bug reports and feature "
-#~ "requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> "
-#~ "address. For help, use the Help menu in the program, view the tips and "
-#~ "tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit "
-#~ "our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-#~ msgstr ""
-#~ "Questa è una versione Beta del programma. Può contenere errori e funzioni "
-#~ "non completate. Dipendiamo dai tuoi consigli e suggerimenti: invia i "
-#~ "resoconti di errori e richieste di funzioni al nostro indirizzo <a href="
-#~ "\"mailto:feedback@audacityteam.org\">Feedback</a>. Per un aiuto "
-#~ "sull'utilizzo di Audacity, usa il menu Aiuto nel programma, leggi i "
-#~ "suggerimenti e trucchi nel nostro <a href=\"http://wiki.audacityteam.org/"
-#~ "\">Wiki</a> o visita il nostro <a href=\"http://audacityteam.org/forum/"
-#~ "\">Forum</a>."
-
-#~ msgid "FreqWindow"
-#~ msgstr "Finestra frequenza"
-
-#~ msgid "Split at labels"
-#~ msgstr "Dividi come etichette"
-
-#~ msgid ""
-#~ "This file was saved by Audacity %s, a much\n"
-#~ "older version.  The format has changed.\n"
+#~ "If you have more than one Audio Track, you can\n"
+#~ "export each track as a separate audio file.\n"
 #~ "\n"
-#~ "Audacity could corrupt the file in opening\n"
-#~ "it, so you must back it up first.\n"
+#~ "If you have a Label Track, you can export a separate\n"
+#~ "audio file for each label in that track. You can have\n"
+#~ "more than one Label Track, but files will only be\n"
+#~ "exported for the uppermost Label Track.\n"
 #~ "\n"
-#~ "Open this file now?"
+#~ "This Project does not meet the above criteria for\n"
+#~ "exporting multiple files."
 #~ msgstr ""
-#~ "Questo file è stato salvato da Audacity %s, una versione\n"
-#~ "molto vecchia.  Il formato è stato cambiato.\n"
+#~ "Se hai più tracce audio,è possibile \n"
+#~ "esportarle come file distinti.\n"
 #~ "\n"
-#~ "Audacity potrebbe danneggiare il file aprendolo,\n"
-#~ "pertanto è necessario eseguirne prima il backup.\n"
+#~ "Se hai una traccia etichetta, è possibile esportare un separato \n"
+#~ "file audio per ciascuna etichetta in questa traccia. È possibile avere\n"
+#~ "più di una traccia etichetta, ma i verranno esportati \n"
+#~ "solo per l'etichetta superiore. \n"
 #~ "\n"
-#~ "Aprire questo file ora?"
+#~ "Questo progetto non non soddisfa i precedenti criteri per \n"
+#~ "l'esportazione di file multipli."
 
-#~ msgid "Error saving project"
-#~ msgstr "Errore nel salvataggio del progetto"
+#~ msgid "Join Labels"
+#~ msgstr "Unisci etichette"
 
-#~ msgid "Gap detected in project file\n"
-#~ msgstr "Rilevata una lacuna nel file progetto\n"
+#~ msgid "Silence Labels"
+#~ msgstr "Metti in silenzio etichette"
 
-#~ msgid "None-Skip"
-#~ msgstr "Nessuno-Salta"
+#~ msgid "Split Labels"
+#~ msgstr "Dividi etichette"
 
-#~ msgid "Frame Period:"
-#~ msgstr "Dimensione cornice:"
+#~ msgid "Tri&m"
+#~ msgstr "Ri&taglia"
 
-#~ msgid "Window Size:"
-#~ msgstr "Dimensione finestra:"
-
-#~ msgid "Presmooth Time:"
-#~ msgstr "Tempo di presmorzamento:"
-
-#~ msgid "Line Time:"
-#~ msgstr "Linea tempo:"
-
-#~ msgid "Smooth Time:"
-#~ msgstr "Smooth Time:"
-
-#~ msgid "Spike Cleaner"
-#~ msgstr "Pulitore di picco"
-
-#~ msgid "SpikeCleaner by Lynn Allan"
-#~ msgstr "Pulitore di picco di Lynn Allan"
-
-#~ msgid ""
-#~ "Max Spike Duration (milliseconds): \n"
-#~ "(99999 or greater is off)"
-#~ msgstr ""
-#~ "Durata massima picco (millisecondi): \n"
-#~ "(99999 o maggiore è non attivo)"
-
-#~ msgid "Theshold for silence: "
-#~ msgstr "Soglia per il silenzio:"
-
-#~ msgid "Spike Cleaner..."
-#~ msgstr "Pulitore di picco..."
-
-#~ msgid "Applying Spike Cleaner..."
-#~ msgstr "Sto applicano Pulitore di picco..."
-
-#~ msgid "Options"
-#~ msgstr "Opzioni"
-
-#~ msgid "Cl&eanSpeech Mode (Customized GUI)"
-#~ msgstr "Modalità Cl&eanSpeech (GUI personalizzata)"
-
-#~ msgid "&LADSPA"
-#~ msgstr "&LADSPA"
-
-#~ msgid "N&yquist"
-#~ msgstr "N&yquist"
-
-#~ msgid "&VAMP"
-#~ msgstr "&VAMP"
-
-#~ msgid "V&ST"
-#~ msgstr "V&ST"
-
-#~ msgid "36"
-#~ msgstr "36"
-
-#~ msgid "48"
-#~ msgstr "48"
-
-#~ msgid "60"
-#~ msgstr "60"
-
-#~ msgid "96"
-#~ msgstr "96"
-
-#~ msgid "120"
-#~ msgstr "120"
-
-#~ msgid "145"
-#~ msgstr "145"
-
-#~ msgid "Error saving keyboard shortcuts"
-#~ msgstr "Errore nel salvare le scorciatoie da tastiera"
-
-#~ msgid "Zoom in or out"
-#~ msgstr "Zoom avanti o indietro"
-
-#~ msgid "16"
-#~ msgstr "16"
-
-#~ msgid "32"
-#~ msgstr "32"
-
-#~ msgid "64"
-#~ msgstr "64"
-
-#~ msgid "128"
-#~ msgstr "128"
-
-#~ msgid "512"
-#~ msgstr "512"
-
-#~ msgid "1024"
-#~ msgstr "1024"
-
-#~ msgid "2048"
-#~ msgstr "2048"
-
-#~ msgid "4096"
-#~ msgstr "4096"
-
-#~ msgid "8192"
-#~ msgstr "8192"
-
-#~ msgid "16384"
-#~ msgstr "16384"
-
-#~ msgid "FFT Skip Points"
-#~ msgstr "Punti di salto FFT"
-
-#~ msgid "Skip Points"
-#~ msgstr "Punti di salto"
-
-#~ msgid "Clean Speech"
-#~ msgstr "Pulisci parlato"
-
-#~ msgid "Adjust left selection to next onset"
-#~ msgstr "Regola selezione sinistra al prossimo inizio"
-
-#~ msgid "Adjust right selection to previous offset"
-#~ msgstr "Regola selezione destra al precedente offset"
-
-#~ msgid "Adjust left selection to next offset"
-#~ msgstr "Regola selezione sinistra al successivo offset"
-
-#~ msgid "Adjust right selection to previous onset"
-#~ msgstr "Regola selezione destra al prossimo inizio"
-
-#~ msgid "Select region of sound around cursor"
-#~ msgstr "Seleziona regione del suono intorno al cursore"
-
-#~ msgid "Select region of silence around cursor"
-#~ msgstr "Seleziona regione del silenzio intorno al cursore"
-
-#~ msgid "Automatically make labels from words"
-#~ msgstr "Crea automaticamente etichette dalle parole"
-
-#~ msgid "Add label at selection"
-#~ msgstr "Aggiungi etichetta alla selezione"
-
-#~ msgid "Calibrate voicekey"
-#~ msgstr "Calibra chiave vocale"
-
-#~ msgid "Adjust Sensitivity"
-#~ msgstr "Regola sensibilità"
-
-#~ msgid "Energy"
-#~ msgstr "Energia"
-
-#~ msgid "Sign Changes (Low Threshold)"
-#~ msgstr "Cambi di segno (Bassa soglia)"
-
-#~ msgid "Sign Changes (High Threshold)"
-#~ msgstr "Cambi di segno (Alta soglia)"
-
-#~ msgid "Direction Changes (Low Threshold)"
-#~ msgstr "Cambi di direzione (Bassa soglia)"
-
-#~ msgid "Direction Changes (High Threshold)"
-#~ msgstr "Cambi di direzione (Alta soglia)"
-
-#~ msgid "Key type"
-#~ msgstr "Tipo di chiave"
-
-#~ msgid "Left-to-On"
-#~ msgstr "Da sinistra a On"
-
-#~ msgid "Right-to-Off"
-#~ msgstr "Da destra a Off"
-
-#~ msgid "Left-to-Off"
-#~ msgstr "Da sinistra a Off"
-
-#~ msgid "Right-to-On"
-#~ msgstr "Da destra a On"
-
-#~ msgid "Select-Sound"
-#~ msgstr "Seleziona-Audio"
-
-#~ msgid "Select-Silence"
-#~ msgstr "Seleziona-Silenzio"
-
-#~ msgid "Make Labels"
-#~ msgstr "Crea etichette"
-
-#~ msgid "Add Label"
-#~ msgstr "Aggiungi etichetta"
-
-#~ msgid "Calibrate"
-#~ msgstr "Calibra"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "AMR support is not distributable"
-#~ msgstr "Il supporto AMR non può essere distribuito"
-
-#~ msgid ""
-#~ "Properly configured FFmpeg is required to proceed.\n"
-#~ "You can configure it at Preferences > Libraries.\n"
-#~ "\n"
-#~ "Note that AMR support is not available with our FFmpeg\n"
-#~ "installer, but requires you compile FFmpeg yourself."
-#~ msgstr ""
-#~ "Per procedere è necessaria un'adeguata configurazione di FFmpeg.\n"
-#~ "Puoi configurarlo in Preferenze > Librerie."
-
-#~ msgid "Specify AMR-WB Options"
-#~ msgstr "Specifica opzioni AMR-WB "
-
-#~ msgid "AMR-WB Export Setup"
-#~ msgstr "Imposta esportazione AMR-WB "
-
-#~ msgid "AMR (wide band) Files (FFmpeg)"
-#~ msgstr "File AMR (banda stretta) (FFmpeg)"
-
-#~ msgid "Filter chosen in OpenFile dialog overrides any rules"
-#~ msgstr "Il filtro scelto nel dialogo Apri file ignora tutte le regole"
-
-#~ msgid "4096 - most narrowband"
-#~ msgstr "4096 - la banda più stretta"
-
-#~ msgid "Maximum frequency must be in the range 100 Hz - 100,000 Hz"
-#~ msgstr "La frequenza massima deve essere compresa tra 100 e 100.000 Hz"
-
-#~ msgid " Rec Channels:"
-#~ msgstr "Canali Rec:"
-
-#, fuzzy
-#~ msgid "Missing summary blockfile: %s.auf"
-#~ msgstr "Manca file riepilogo: (%s.auf)"
-
-#~ msgid "&Control Toolbar"
-#~ msgstr "Barra &Controlli"
-
-#~ msgid "Adjust input source"
-#~ msgstr "Regola sorgente ingresso"
-
-#~ msgid "Alignment completed."
-#~ msgstr "Allineamento completato"
-
-#, fuzzy
-#~ msgid "Project Repair"
-#~ msgstr "Dipendenze progetto"
-
-#~ msgid "Control"
-#~ msgstr "Controlli"
-
-#~ msgid "Numbering after Label/Track Name"
-#~ msgstr "Numerazione dopo il nome etichetta/traccia"
-
-#~ msgid "&Play other tracks while recording new one"
-#~ msgstr "&Riproduci le altre tracce durante la registrazione di una nuova"
-
-#~ msgid "&Hardware Playthrough (Play new track while recording it)"
-#~ msgstr "Playthrough &hardware (Riproduce nuova traccia mentre registra)"
-
-#~ msgid "&Software Playthrough (Play new track while recording it)"
-#~ msgstr "Playthrough &Software (Riproduce nuova traccia mentre registra)"
-
-#~ msgid "Play before cut region:"
-#~ msgstr "Riproduci prima dell'area di taglio:"
-
-#~ msgid "Play after cut region:"
-#~ msgstr "Riproduci dopo l'area di taglio"
-
-#~ msgid "Audio to buffer:"
-#~ msgstr "Audio nel buffer:"
-
-#~ msgid "Latency correction:"
-#~ msgstr "Correzione latenza:"
-
-#~ msgid "Seek Time"
-#~ msgstr "Seek Time"
-
-#~ msgid "Short period:"
-#~ msgstr "Periodo breve:"
-
-#~ msgid "Long period:"
-#~ msgstr "Periodo lungo:"
-
-#~ msgid "Play when previewing:"
-#~ msgstr "Riproduci durante anteprima:"
-
-#~ msgid "Input Source"
-#~ msgstr "Sorgente di ingresso"
-
-#~ msgid "Input Source:"
-#~ msgstr "Sorgente di ingresso:"
-
-#~ msgid "Input Level Slider"
-#~ msgstr "Cursore livello di ingresso"
-
-#~ msgid "Output Level Slider"
-#~ msgstr "Cursore livello di uscita"
-
-#~ msgid ""
-#~ "Your project is self-contained; it does not depend on any external audio "
-#~ "files."
-#~ msgstr ""
-#~ "Il progetto è autosufficiente; non dipende da alcun file audio esterno."
-
-#~ msgid "Replace missing data with silence [permanent upon save]"
-#~ msgstr ""
-#~ "Sostituisci dati mancanti con il silenzio [permanente fino al salvataggio]"
-
-#~ msgid "In&vert"
-#~ msgstr "In&verti"
-
-#~ msgid "Auto save"
-#~ msgstr "Salvataggio automatico"
-
-#~ msgid "Auto &save a copy of the project in a separate folder"
-#~ msgstr ""
-#~ "&Salva automaticamente una copia del progetto in una cartella separata"
-
-#~ msgid "Auto save in&terval:"
-#~ msgstr "Salva automaticamente &ogni:"
-
-#~ msgid "minutes"
-#~ msgstr "minuti"
-
-#~ msgid "&Link Audio and Label Tracks"
-#~ msgstr "&Collega tracce audio ed etichette"
-
-#~ msgid ""
-#~ "The version of Audacity you are using does not support multiple time "
-#~ "tracks."
-#~ msgstr ""
-#~ "La versione di Audacity che stai usando non supporta le tracce tempo "
-#~ "multiple."
-
-#~ msgid "custom"
-#~ msgstr "personalizza"
-
-#~ msgid "Enter the desired name of the curve"
-#~ msgstr "Inserisci il nome desiderato della curva"
-
-#~ msgid "Initial Tempo Change (%):"
-#~ msgstr "Modifica tempo iniziale (%):"
-
-#~ msgid "Final Tempo Change (%):"
-#~ msgstr "Modifica tempo finale (%):"
-
-#~ msgid "Initial Pitch Shift (semitones) [-12 to 12]:"
-#~ msgstr "Slittamento iniziale intonazione (semitoni) [da -12 a 12]:"
-
-#~ msgid "Closing last window &quits Audacity"
-#~ msgstr "Chiudendo l'ultima finestra &esci da Audacity"
-
-#~ msgid "Numbering consecutively"
-#~ msgstr "Numerazione progressiva"
-
-#~ msgid "Format selector:"
-#~ msgstr "Selettore formato:"
-
-#~ msgid "Codec selector:"
-#~ msgstr "Selettore codec:"
-
-#~ msgid "Cutoff Bandwidth:"
-#~ msgstr "Limite taglio banda:"
-
-#~ msgid "Use Variable Block Length"
-#~ msgstr "Usa lunghezza blocco variabile"
-
-#~ msgid "Compression Level:"
-#~ msgstr "Livello compressione:"
-
-#~ msgid "LPC coefficients precision"
-#~ msgstr "Coefficienti di precisione LPC"
-
-#~ msgid "Minimal prediction order"
-#~ msgstr "Ordine di predizione minimo"
-
-#~ msgid "Maximal prediction order"
-#~ msgstr "Ordine di predizione massimo"
-
-#~ msgid "Minimal partition order"
-#~ msgstr "Ordine partizione minimo"
-
-#~ msgid "Maximal partition order"
-#~ msgstr "Ordine partizione massimo"
-
-#~ msgid "Low Complexity"
-#~ msgstr "Complessità bassa"
-
-#~ msgid "Main profile"
-#~ msgstr "Profilo principale"
-
-#~ msgid "ExportMultiple"
-#~ msgstr "Esportazione multipla"
-
-#~ msgid ""
-#~ "Audacity recognized the type of the file '%s',\n"
-#~ "but was unable to import it."
-#~ msgstr ""
-#~ "Audacity ha riconosciuto il tipo di file '%s',\n"
-#~ "ma non è in grado di importarlo."
-
-#~ msgid ""
-#~ "Vocal files (*.wav;*.mp3)|*.wav;*.mp3|WAV files (*.wav)|*.wav|MP3 files "
-#~ "(*.mp3)|*.mp3"
-#~ msgstr ""
-#~ "File vocali (*.wav;*.mp3)|*.wav;*.mp3|File WAV (*.wav)|*.wav|File MP3 (*."
-#~ "mp3)|*.mp3"
-
-#~ msgid ""
-#~ "All files (*.*)|*.*|WAV files (*.wav)|*.wav|AIFF files (*.aif)|*.aif|AU "
-#~ "files (*.au)|*.au|MP3 files (*.mp3)|*.mp3|Ogg Vorbis files (*.ogg)|*.ogg|"
-#~ "FLAC files (*.flac)|*.flac"
-#~ msgstr ""
-#~ "Tutti i file (*.*)|*.*|File WAV (*.wav)|*.wav|File AIFF (*.aif)|*.aif|"
-#~ "File AU (*.au)|*.au|File MP3 (*.mp3)|*.mp3|File Ogg Vorbis (*.ogg)|*.ogg|"
-#~ "File FLAC (*.flac)|*.flac"
-
-#~ msgid ""
-#~ "Your project currently depends on the presence of other files.\n"
-#~ "Copy audio from the following files into your project to make it self-"
-#~ "contained?\n"
-#~ "This will need more disc space but is safer."
-#~ msgstr ""
-#~ "Il progetto dipende correntemente dalla presenza di altri file.\n"
-#~ "Copio l'audio dai seguenti file nel progetto per renderlo "
-#~ "autosufficiente?\n"
-#~ "Questo richiederà più spazio sul disco ma è più sicuro."
-
-#~ msgid "Audacity projects (*.aup)|*.aup"
-#~ msgstr "Progetti Audacity (*.aup)|*.aup"
-
-#~ msgid "Track Accessible out of sync"
-#~ msgstr "Traccia accessibile fuori sincronizzazione"
-
-#~ msgid "Sile&nce"
-#~ msgstr "Sile&nzio"
-
-#~ msgid "Can't Undo"
-#~ msgstr "Impossibile annullare"
-
-#~ msgid "Can't Redo"
-#~ msgstr "Impossibile ripristinare"
-
-#~ msgid "&Hardware Playthrough: Play new track while recording it"
-#~ msgstr "&hardware Playthrough: Riproduci nuova traccia mentre registri"
-
-#~ msgid "Pre"
-#~ msgstr "Pre"
-
-#~ msgid "Show meter pre/post fade."
-#~ msgstr "Mostra monitor pre/post dissolvenza"
-
-#~ msgid "Enable"
-#~ msgstr "Abilita"
-
-#~ msgid "LADSPA effects"
-#~ msgstr "Effetti LADSPA"
-
-#~ msgid "Nyquist effects"
-#~ msgstr "Effetti Nyquist"
-
-#~ msgid "VAMP effects"
-#~ msgstr "Effetti VAMP"
-
-#~ msgid "Enable Audio Unit effects"
-#~ msgstr "Abilita efetti unità audio"
-
-#~ msgid "When saving &empty project"
-#~ msgstr "Quando si salva un progetto &vuoto"
-
-#~ msgid "When &disk space is getting low"
-#~ msgstr "Quando lo spazio su &disco si sta esaurendo"
-
-#~ msgid "Disjoined %.2f seconds at t=%.2f"
-#~ msgstr "Separati %.2f secondi a t=%.2f"
-
-#~ msgid "Disjoin"
+#~ msgid "Trim"
 #~ msgstr "Ritaglia"
 
-#~ msgid "Disjoin Labels"
-#~ msgstr "Separa etichette"
-
-#~ msgid "Disjoined labeled regions"
-#~ msgstr "Regioni con etichette separate"
-
-#~ msgid "Contrast Tool Foreground"
-#~ msgstr "Strumento di contrasto in primo piano"
-
-#~ msgid ""
-#~ "Foreground times selected.\n"
-#~ "Now select background and use Ctrl+Shift+T or menu again."
-#~ msgstr ""
-#~ "Selezionati tempi in primo piano.\n"
-#~ "Ora seleziona lo sfondo e usa Ctrl+Maiusc+T o di nuovo il menu."
-
-#~ msgid "Contrast Analyzer"
-#~ msgstr "Analizzatore di contrasto"
-
-#~ msgid "Measured"
-#~ msgstr "Misurato"
-
-#~ msgid "Information"
-#~ msgstr "Informazioni"
-
-#~ msgid "Help for WCAG2 Audio Contrast Analyzer"
-#~ msgstr "Aiuto per l'analizzatore di contrasto audio WCAG2"
-
-#~ msgid "Close (keeping times)"
-#~ msgstr "Chiudi (mantenendo i tempi)"
-
-#~ msgid "Measure"
-#~ msgstr "Misura"
+#~ msgid "Trim file to selection"
+#~ msgstr "Ritaglia il file nella selezione"
