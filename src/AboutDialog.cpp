@@ -55,9 +55,9 @@ void AboutDialog::CreateCreditsList()
 {
    // The Audacity 1.3.x and 2.0.x team: developers and support
    AddCredit(wxT("Richard Ash"), roleTeamDeveloper);
-   AddCredit(wxT("Michael Chinen"), roleTeamDeveloper);
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
    AddCredit(wxString(wxT("Roger Dannenberg - ")) + _("co-founder"), roleTeamDeveloper);
+   AddCredit(wxT("Benjamin Drung"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
    AddCredit(wxT("Martyn Shaw"), roleTeamDeveloper);
 
@@ -73,6 +73,7 @@ void AboutDialog::CreateCreditsList()
    // longer active.
  
    AddCredit(wxT("Matt Brubeck"), roleEmeritusDeveloper);
+   AddCredit(wxT("Michael Chinen"), roleEmeritusDeveloper);
    AddCredit(wxT("Al Dimond"), roleEmeritusDeveloper);
    AddCredit(wxT("Joshua Haberman"), roleEmeritusDeveloper);
    AddCredit(wxT("Ruslan Ijbulatov"), roleEmeritusDeveloper);
