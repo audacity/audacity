@@ -55,10 +55,7 @@ class EffectBassTreble:public EffectSimpleMono {
  protected:
 
    virtual bool NewTrackSimpleMono();
-
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
-   
-   float dB_bass, dB_treble, dB_gain;
 
  private: 
    /* filter co-efficent values */
@@ -70,6 +67,8 @@ class EffectBassTreble:public EffectSimpleMono {
    float xn1Treble, xn2Treble, yn1Treble, yn2Treble,
          wTreble, swTreble, cwTreble, aTreble, bTreble,
          b0Treble, b1Treble, b2Treble, a0Treble, a1Treble, a2Treble;
+
+   double dB_bass, dB_treble, dB_gain;
 
    friend class BassTrebleDialog;
 };

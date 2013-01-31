@@ -24,6 +24,7 @@ derived from BassBoost by Nasca Octavian Paul
 
 #include "BassTreble.h"
 #include "../WaveTrack.h"
+#include "../Prefs.h"
 
 #include <wx/button.h>
 #include <wx/msgdlg.h>
@@ -40,9 +41,9 @@ derived from BassBoost by Nasca Octavian Paul
 
 EffectBassTreble::EffectBassTreble()
 {
-   dB_bass = 0;
-   dB_treble = 0;
-   dB_gain = 0;
+   gPrefs->Read(wxT("/Effects/BassTreble/Bass"), &dB_bass, 0.0);
+   gPrefs->Read(wxT("/Effects/BassTreble/Treble"), &dB_treble, 0.0);
+   gPrefs->Read(wxT("/Effects/BassTreble/Gain"), &dB_gain, 0.0);
 }
 
 wxString EffectBassTreble::GetEffectDescription() { 
@@ -112,14 +113,19 @@ bool EffectBassTreble::PromptUser()
    dB_treble = dlog.treble;
    dB_gain = dlog.gain;
 
+   gPrefs->Write(wxT("/Effects/BassTreble/Bass"), dB_bass);
+   gPrefs->Write(wxT("/Effects/BassTreble/Treble"), dB_treble);
+   gPrefs->Write(wxT("/Effects/BassTreble/Gain"), dB_gain);
+   gPrefs->Flush();
+
    return true;
 }
 
 bool EffectBassTreble::TransferParameters( Shuttle & shuttle )
 {  
-   shuttle.TransferFloat(wxT("Bass"),dB_bass,0.0);
-   shuttle.TransferFloat(wxT("Treble"),dB_treble,0.0);
-   shuttle.TransferFloat(wxT("Gain"),dB_gain,0.0);
+   shuttle.TransferDouble(wxT("Bass"),dB_bass,0.0);
+   shuttle.TransferDouble(wxT("Treble"),dB_treble,0.0);
+   shuttle.TransferDouble(wxT("Gain"),dB_gain,0.0);
    return true;
 }
 
@@ -310,8 +316,18 @@ void BassTrebleDialog::OnGainSlider(wxCommandEvent & WXUNUSED(event))
 void BassTrebleDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
+
+   // Save & restore parameters around Preview, because we didn't do OK.
+   double oldBass = mEffect->dB_bass;
+   double oldTreble = mEffect->dB_treble;
+   double oldGain = mEffect->dB_gain;
+
    mEffect->dB_bass = bass;
    mEffect->dB_treble = treble;
    mEffect->dB_gain = gain;
    mEffect->Preview();
+
+   mEffect->dB_bass = oldBass;
+   mEffect->dB_treble = oldTreble;
+   mEffect->dB_gain = oldGain;
 }
