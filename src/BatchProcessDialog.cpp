@@ -101,7 +101,7 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: A chain is a sequence of commands that can be applied 
        * to one or more audio files.*/
-      S.StartStatic(_("&Select chain"), true);
+      S.StartStatic(_("&Select Chain"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                      wxLC_SINGLE_SEL);
