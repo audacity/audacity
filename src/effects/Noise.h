@@ -36,6 +36,7 @@ class EffectNoise : public BlockGenerator {
       SetEffectFlags(BUILTIN_EFFECT | INSERT_EFFECT);
       noiseType = 0;
       noiseAmplitude = 1.0;
+      y = z = buf0 = buf1 = buf2 = buf3 = buf4 = buf5 = buf6 = 0;
    }
    virtual bool Init();
 
@@ -71,9 +72,11 @@ class EffectNoise : public BlockGenerator {
    sampleCount numSamples;
    int noiseType;
    double noiseAmplitude;
+   float y, z, buf0, buf1, buf2, buf3, buf4, buf5, buf6;
 
  protected:
    virtual bool MakeNoise(float *buffer, sampleCount len, float fs, float amplitude);
+   //double mCurRate;
 
  // friendship ...
  friend class NoiseDialog;
@@ -115,16 +118,3 @@ class NoiseDialog:public EffectDialog {
 };
 
 #endif
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 3d52765e-51bb-4f53-8ed8-4239f7b42d16
-

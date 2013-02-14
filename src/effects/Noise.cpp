@@ -20,6 +20,8 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
+#include <math.h>
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846  /* pi */
 #endif
@@ -42,7 +44,7 @@ bool EffectNoise::PromptUser()
 
    noiseTypeList.Add(_("White"));
    noiseTypeList.Add(_("Pink"));
-   noiseTypeList.Add(_("Brown"));
+   noiseTypeList.Add(_("Brownian"));
 
    NoiseDialog dlog(this, mParent, _("Noise Generator"));
 
@@ -94,8 +96,7 @@ bool EffectNoise::TransferParameters( Shuttle & shuttle )
 
 bool EffectNoise::MakeNoise(float *buffer, sampleCount len, float fs, float amplitude)
 {
-   float white, buf0, buf1, buf2, buf3, buf4, buf5;
-   float a0, b1, fc, y;
+   float white;
    sampleCount i;
    float div = ((float)RAND_MAX) / 2.0f;
 
@@ -107,37 +108,39 @@ bool EffectNoise::MakeNoise(float *buffer, sampleCount len, float fs, float ampl
        break;
 
    case 1: // pink
-       white=buf0=buf1=buf2=buf3=buf4=buf5=0;
+      // based on Paul Kellet's "instrumentation grade" algorithm.
+      white=0;
 
-       // 0.55f is an experimental normalization factor: thanks to Martyn
-       amplitude *= 0.55f;
-       for(i=0; i<len; i++) {
-        white=(rand() / div) - 1.0f;
-        buf0=0.997f * buf0 + 0.029591f * white;
-        buf1=0.985f * buf1 + 0.032534f * white;
-        buf2=0.950f * buf2 + 0.048056f * white;
-        buf3=0.850f * buf3 + 0.090579f * white;
-        buf4=0.620f * buf4 + 0.108990f * white;
-        buf5=0.250f * buf5 + 0.255784f * white;
-        buffer[i] = amplitude * (buf0 + buf1 + buf2 + buf3 + buf4 + buf5);
-       };
-       break;
+      // 0.129f is an experimental normalization factor.
+      amplitude *= 0.129f;
+      for(i=0; i<len; i++) {
+      white=(rand() / div) - 1.0f;
+      buf0=0.99886f * buf0 + 0.0555179f * white;
+      buf1=0.99332f * buf1 + 0.0750759f * white;
+      buf2=0.96900f * buf2 + 0.1538520f * white;
+      buf3=0.86650f * buf3 + 0.3104856f * white;
+      buf4=0.55000f * buf4 + 0.5329522f * white;
+      buf5=-0.7616f * buf5 - 0.0168980f * white;
+      buffer[i] = amplitude * 
+         (buf0 + buf1 + buf2 + buf3 + buf4 + buf5 + buf6 + white * 0.5362);
+      buf6 = white * 0.115926; 
+      }
+      break;
 
-   case 2: // brown
-       // fc=100 Hz,
-       // y[n]=a0*x[n] + b1*y[n-1];
-       white=a0=b1=fc=y=0;
-       fc=100; //fs=44100;
-       b1=exp(-2*M_PI*fc/fs);
-       a0=1.0f-b1;
+   case 2: // Brownian
+       white=0;
+       //float leakage=0.997; // experimental value at 44.1kHz
+       //double scaling = 0.05; // experimental value at 44.1kHz
+       // min and max protect against instability at extreme sample rates.
+       float leakage = ((fs-144.0)/fs < 0.9999)? (fs-144.0)/fs : 0.9999;
+       float scaling = (9.0/sqrt(fs) > 0.01)? 9.0/sqrt(fs) : 0.01;
 
-       // 6.2f is an experimental normalization factor: thanks to Martyn
-       amplitude *= 6.2f;
        for(i=0; i<len; i++){
          white=(rand() / div) - 1.0f;
-         y = (a0 * white + b1 * y);
+         z = leakage * y + white * scaling;
+         y = (fabs(z) > 1.0) ? (leakage * y - white * scaling) : z;
          buffer[i] = amplitude * y;
-       };
+       }
        break;
    }
    return true;
@@ -193,10 +196,7 @@ void NoiseDialog::PopulateOrExchange( ShuttleGui & S )
 {
    S.StartMultiColumn(2, wxCENTER);
    {
-      // The added colon to improve visual consistency was placed outside 
-      // the translatable strings to avoid breaking translations close to 2.0. 
-      // TODO: Make colon part of the translatable string after 2.0.
-      S.TieChoice(_("Noise type") + wxString(wxT(":")), nType, nTypeList);
+      S.TieChoice(_("Noise type:"), nType, nTypeList);
       S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), nAmplitude, 10);
       S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mNoiseDurationT == NULL)
@@ -248,5 +248,3 @@ bool NoiseDialog::TransferDataFromWindow()
 void NoiseDialog::OnTimeCtrlUpdate(wxCommandEvent & event) {
    Fit();
 }
-
-
