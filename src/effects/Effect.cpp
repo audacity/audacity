@@ -403,6 +403,11 @@ long TrapLong(long x, long min, long max)
       return x;
 }
 
+double Effect::CalcPreviewInputLength(double previewLength)
+{
+   return previewLength;
+}
+
 wxString Effect::GetPreviewName()
 {
    return _("Pre&view");
@@ -417,12 +422,12 @@ void Effect::Preview()
    // Mix a few seconds of audio from all of the tracks
    double previewLen = 6.0;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
-   
+
    WaveTrack *mixLeft = NULL;
    WaveTrack *mixRight = NULL;
    double rate = mProjectRate;
    double t0 = mT0;
-   double t1 = t0 + previewLen;
+   double t1 = t0 + CalcPreviewInputLength(previewLen);
 
    if (t1 > mT1)
       t1 = mT1;
@@ -487,6 +492,8 @@ void Effect::Preview()
       playbackTracks.Add(mixLeft);
       if (mixRight)
          playbackTracks.Add(mixRight);
+
+      t1 = wxMin(mixLeft->GetEndTime(), t0 + previewLen);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray empty;

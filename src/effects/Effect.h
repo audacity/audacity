@@ -128,6 +128,10 @@ class AUDACITY_DLL_API Effect {
    // Only override it if you need to do preprocessing or cleanup.
    virtual void Preview();
 
+   // Most effects just use the previewLength, but time-stretching/compressing 
+   // effects need to use a different input length, so override this method. 
+   virtual double CalcPreviewInputLength(double previewLength);
+
    // Get an unique ID assigned to each registered effect.
    // The first effect will have ID zero.
    int GetID() {

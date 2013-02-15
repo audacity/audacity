@@ -59,6 +59,8 @@ class EffectChangeTempo : public EffectSoundTouch {
 
    virtual bool CheckWhetherSkipEffect() { return (m_PercentChange == 0.0); }
    virtual bool Process();
+
+   double CalcPreviewInputLength(double previewLength);
   
  private:
    double			m_PercentChange;	// percent change to apply to tempo

@@ -51,6 +51,11 @@ EffectChangeTempo::EffectChangeTempo()
    m_ToLength = 0.0;	
 }
 
+double EffectChangeTempo::CalcPreviewInputLength(double previewLength)
+{
+   return previewLength * (100.0 + m_PercentChange) / 100.0;
+}
+
 wxString EffectChangeTempo::GetEffectDescription() { 
    // Note: This is useful only after change amount has been set. 
    return wxString::Format(_("Applied effect: %s %.1f%%"), 
