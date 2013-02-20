@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-11-27 02:03+0000\n"
-"PO-Revision-Date: 2012-12-30 23:59-0000\n"
-"Last-Translator: gale <gale@audacityteam.org>\n"
+"POT-Creation-Date: 2013-01-10 05:23+0000\n"
+"PO-Revision-Date: 2013-02-20 18:43-0000\n"
+"Last-Translator: bashishtha narayan singh\n"
 "Language-Team: bashishtha narayan singh <bashishtha.singh@gmail.com>\n"
-"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Virtaal 0.6.1\n"
 "X-Poedit-Language: Hindi\n"
@@ -305,8 +305,8 @@ msgid "Open &Recent..."
 msgstr "खोलें हाल की फ़ाइलें (&R)..."
 
 #: AudacityApp.cpp:1203
-#: Menus.cpp:1419
-#: Menus.cpp:1422
+#: Menus.cpp:1425
+#: Menus.cpp:1428
 msgid "&About Audacity..."
 msgstr "Audacity के बारे में...(&A)"
 
@@ -429,11 +429,11 @@ msgstr ""
 msgid "Audacity Project Files"
 msgstr "Audacity परियोजना फ़ाईलें"
 
-#: AudioIO.cpp:552
+#: AudioIO.cpp:559
 msgid "Could not find any audio devices.\n"
 msgstr "कोई भी ध्वनि-यंत्र (ऑडियो डिवाइस) नहीं मिला.\n"
 
-#: AudioIO.cpp:553
+#: AudioIO.cpp:560
 msgid ""
 "You will not be able to play or record audio.\n"
 "\n"
@@ -441,20 +441,20 @@ msgstr ""
 "आप ऑडियो रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
-#: AudioIO.cpp:556
-#: AudioIO.cpp:576
+#: AudioIO.cpp:563
+#: AudioIO.cpp:583
 msgid "Error: "
 msgstr "त्रुटि: "
 
-#: AudioIO.cpp:559
+#: AudioIO.cpp:566
 msgid "Error Initializing Audio"
 msgstr "ध्वनि शुरू करने में त्रुटि"
 
-#: AudioIO.cpp:572
+#: AudioIO.cpp:579
 msgid "There was an error initializing the midi i/o layer.\n"
 msgstr "MIDI i/o परत की शुरुआत में एक त्रुटि हुई.\n"
 
-#: AudioIO.cpp:573
+#: AudioIO.cpp:580
 msgid ""
 "You will not be able to play midi.\n"
 "\n"
@@ -462,16 +462,16 @@ msgstr ""
 "आप midi रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
-#: AudioIO.cpp:579
+#: AudioIO.cpp:586
 msgid "Error Initializing Midi"
 msgstr "Midi शुरू करने में त्रुटि"
 
-#: AudioIO.cpp:1278
-#: AudioIO.cpp:1312
+#: AudioIO.cpp:1285
+#: AudioIO.cpp:1320
 msgid "Out of memory!"
 msgstr "स्मॄति की कमी!"
 
-#: AudioIO.cpp:1778
+#: AudioIO.cpp:1786
 msgid ""
 "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 "Audacity has brought it back to start at zero.\n"
@@ -481,37 +481,37 @@ msgstr ""
 "Audacity शून्य से शुरू करने के लिए इसे वापस लाया है.\n"
 "आप इसे बाद में समयांतर औजार (<---> या F5) का उपयोग करके ट्रैक को सही जगह पर खींच कर वापस ला सकते हैं."
 
-#: AudioIO.cpp:1779
+#: AudioIO.cpp:1787
 msgid "Latency problem"
 msgstr "विलंबता की समस्या"
 
-#: AudioIO.cpp:3089
+#: AudioIO.cpp:3101
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. इससे और अधिक सही नहीं किया जा सकता था. अभी बहुत ऊँचा है."
 
-#: AudioIO.cpp:3097
+#: AudioIO.cpp:3109
 #, c-format
 msgid "Automated Input Level Adjustment decreased the volume to %f."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन ने वाल्यूम घटा कर %f कर दिया है."
 
-#: AudioIO.cpp:3112
+#: AudioIO.cpp:3124
 msgid "Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. इससे और अधिक सही नहीं किया जा सकता था. अभी बहुत नीचा है."
 
-#: AudioIO.cpp:3124
+#: AudioIO.cpp:3136
 #, c-format
 msgid "Automated Input Level Adjustment increased the volume to %.2f."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन ने वाल्यूम बढ़ा कर %f कर दिया है."
 
-#: AudioIO.cpp:3158
+#: AudioIO.cpp:3170
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. स्वीकार्य वाल्यूम मिले बिना ही विश्लेशण की कुल संख्या सीमा पार हो गई. अभी बहुत ऊँचा है."
 
-#: AudioIO.cpp:3160
+#: AudioIO.cpp:3172
 msgid "Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. स्वीकार्य वाल्यूम मिले बिना ही विश्लेशण की कुल संख्या सीमा पार हो गई. अभी बहुत नीचा है."
 
-#: AudioIO.cpp:3163
+#: AudioIO.cpp:3175
 #, c-format
 msgid "Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "स्वचालित इनपुट स्तर अनुकूलन रुक गया. %.2f एक स्वीकार्य वाल्यूम लगता है."
@@ -572,13 +572,13 @@ msgstr "स्वयं-संचयन निर्देशिका में
 
 #: AutoRecovery.cpp:150
 #: AutoRecovery.cpp:187
-#: Menus.cpp:3798
-#: Menus.cpp:3810
-#: Menus.cpp:6484
+#: Menus.cpp:3809
+#: Menus.cpp:3821
+#: Menus.cpp:6502
 #: Project.cpp:2549
-#: Project.cpp:4492
-#: Project.cpp:4511
-#: TrackPanel.cpp:7336
+#: Project.cpp:4496
+#: Project.cpp:4515
+#: TrackPanel.cpp:7377
 #: WaveTrack.cpp:973
 #: WaveTrack.cpp:992
 #: WaveTrack.cpp:2116
@@ -804,17 +804,17 @@ msgid "De&lete"
 msgstr "मिटाएं"
 
 #: BatchProcessDialog.cpp:525
-#: effects/Equalization.cpp:2875
+#: effects/Equalization.cpp:2877
 msgid "Move &Up"
 msgstr "ऊपर जाएं"
 
 #: BatchProcessDialog.cpp:526
-#: effects/Equalization.cpp:2876
+#: effects/Equalization.cpp:2878
 msgid "Move &Down"
 msgstr "नीचे जाएं"
 
 #: BatchProcessDialog.cpp:527
-#: effects/Equalization.cpp:2882
+#: effects/Equalization.cpp:2884
 msgid "De&faults"
 msgstr "डिफ़ाल्ट"
 
@@ -1450,7 +1450,7 @@ msgstr "निर्यात...(&E)"
 #: FreqWindow.cpp:220
 #: effects/Contrast.cpp:352
 #: export/ExportCL.cpp:430
-#: export/ExportMultiple.cpp:351
+#: export/ExportMultiple.cpp:361
 msgid "Export"
 msgstr "निर्यात"
 
@@ -1471,7 +1471,7 @@ msgstr "बंद करें"
 
 #: FreqWindow.cpp:231
 #: FreqWindow.cpp:234
-#: effects/Equalization.cpp:1315
+#: effects/Equalization.cpp:1317
 msgid "Grids"
 msgstr "ग्रिड"
 
@@ -1483,12 +1483,12 @@ msgstr "ग्रिड"
 #: effects/AutoDuck.cpp:821
 #: effects/Compressor.cpp:480
 #: effects/Compressor.cpp:488
-#: effects/Equalization.cpp:1143
 #: effects/Equalization.cpp:1145
-#: effects/Equalization.cpp:1153
-#: effects/Equalization.cpp:1225
-#: effects/Equalization.cpp:1457
-#: effects/Equalization.cpp:1468
+#: effects/Equalization.cpp:1147
+#: effects/Equalization.cpp:1155
+#: effects/Equalization.cpp:1227
+#: effects/Equalization.cpp:1459
+#: effects/Equalization.cpp:1470
 #: effects/Normalize.cpp:493
 #: widgets/Meter.cpp:440
 msgid "dB"
@@ -1498,8 +1498,8 @@ msgstr "dB"
 #. cycles per second.
 #: FreqWindow.cpp:314
 #: FreqWindow.cpp:537
-#: effects/Equalization.cpp:1185
-#: effects/Equalization.cpp:1221
+#: effects/Equalization.cpp:1187
+#: effects/Equalization.cpp:1223
 #: import/ImportRaw.cpp:412
 msgid "Hz"
 msgstr "Hz"
@@ -1554,7 +1554,7 @@ msgstr "Spectral डेटा निर्यात इस तरह:"
 
 #: FreqWindow.cpp:1229
 #: LabelDialog.cpp:611
-#: Menus.cpp:3354
+#: Menus.cpp:3360
 #: effects/Contrast.cpp:516
 #: prefs/KeyConfigPrefs.cpp:340
 msgid "Couldn't write to file: "
@@ -1786,8 +1786,8 @@ msgstr "ट्रैक"
 #. i18n-hint: (noun)
 #: LabelDialog.cpp:145
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5942
-#: Menus.cpp:5986
+#: Menus.cpp:5955
+#: Menus.cpp:5999
 msgid "Label"
 msgstr "नाम-पट्टी"
 
@@ -1825,18 +1825,18 @@ msgid "Confirm"
 msgstr "संपुष्टी दें"
 
 #: LabelDialog.cpp:522
-#: Menus.cpp:5123
+#: Menus.cpp:5136
 msgid "Select a text file containing labels..."
 msgstr "एक पाठ फ़ाइल चुनें जिसमें नाम हो..."
 
 # पाठ्य फ़ाइलें(*.txt)|*.txt|सभी फ़ाइलें (*.*)|*.*
 #: LabelDialog.cpp:526
-#: Menus.cpp:5127
+#: Menus.cpp:5140
 msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
 msgstr "टेक्सट फ़ाइलें(*.txt)|*.txt|सभी फ़ाइलें (*.*)|*.*"
 
 #: LabelDialog.cpp:541
-#: Menus.cpp:5140
+#: Menus.cpp:5153
 #: Project.cpp:2352
 #: Project.cpp:2360
 msgid "Could not open file: "
@@ -1847,7 +1847,7 @@ msgid "No labels to export."
 msgstr "निर्यात के लिए कोई नामपट्ट नहीं."
 
 #: LabelDialog.cpp:574
-#: Menus.cpp:3317
+#: Menus.cpp:3323
 msgid "Export Labels As:"
 msgstr "नामपट्टी का इस नाम से निर्यात:"
 
@@ -1869,7 +1869,7 @@ msgid "Label Track"
 msgstr "नाम ट्रैक"
 
 #: LabelTrack.cpp:1921
-#: Menus.cpp:5942
+#: Menus.cpp:5955
 msgid "Added label"
 msgstr "नाम-पट्ट लगाया"
 
@@ -1971,376 +1971,376 @@ msgid "Expo&rt Selection..."
 msgstr "निर्यात चयन...(&r)"
 
 #: Menus.cpp:296
-#: Menus.cpp:311
+#: Menus.cpp:312
 msgid "Export &Labels..."
 msgstr "नामपट्टी निर्यात...(&L)"
 
-#: Menus.cpp:299
-#: Menus.cpp:314
+#: Menus.cpp:300
+#: Menus.cpp:316
 msgid "Export &Multiple..."
 msgstr "अनेक निर्यात...(&M)"
 
-#: Menus.cpp:303
-#: Menus.cpp:318
+#: Menus.cpp:304
+#: Menus.cpp:320
 msgid "Export MIDI..."
 msgstr "MIDI निर्यात..."
 
-#: Menus.cpp:324
+#: Menus.cpp:326
 msgid "Appl&y Chain..."
 msgstr "कड़ी लागू करें..."
 
-#: Menus.cpp:327
+#: Menus.cpp:329
 msgid "Edit C&hains..."
 msgstr "कड़ी संपादन..."
 
-#: Menus.cpp:331
+#: Menus.cpp:333
 msgid "Export CleanSpeech &Presets..."
 msgstr "निर्यात करें Audacity स्वच्छवार्ता प्रीसेट..."
 
-#: Menus.cpp:332
+#: Menus.cpp:334
 msgid "I&mport CleanSpeech Presets..."
 msgstr "आयात करें Audacity स्वच्छवार्ता प्रीसेट..."
 
-#: Menus.cpp:338
-#: Menus.cpp:354
+#: Menus.cpp:340
+#: Menus.cpp:356
 msgid "&Upload File..."
 msgstr "फ़ाइलें लाएं(&U)"
 
-#: Menus.cpp:343
-#: Menus.cpp:359
+#: Menus.cpp:345
+#: Menus.cpp:361
 msgid "Pa&ge Setup..."
 msgstr "पेज सेटअप..."
 
 # छाप
 #. i18n-hint: (verb) It's item on a menu.
-#: Menus.cpp:347
-#: Menus.cpp:363
+#: Menus.cpp:349
+#: Menus.cpp:365
 msgid "&Print..."
 msgstr "मुद्रण...(&P)"
 
 #. i18n-hint: (verb) It's item on a menu.
-#: Menus.cpp:373
+#: Menus.cpp:375
 msgid "E&xit"
 msgstr "बाहर(&x)"
 
-#: Menus.cpp:383
+#: Menus.cpp:385
 msgid "&Edit"
 msgstr "संपादन(&E)"
 
 # पहले जैसा(&U)
-#: Menus.cpp:388
-#: Menus.cpp:1716
+#: Menus.cpp:390
+#: Menus.cpp:1722
 msgid "&Undo"
 msgstr "पूर्ववत(&U)"
 
-#: Menus.cpp:400
-#: Menus.cpp:1731
+#: Menus.cpp:402
+#: Menus.cpp:1737
 msgid "&Redo"
 msgstr "दोहराएं(&R)"
 
-#: Menus.cpp:408
-msgid "R&emove Audio"
-msgstr "आडियो हटाएं(&e)"
+#: Menus.cpp:410
+msgid "R&emove Audio or Labels"
+msgstr "ऑडियो या लेबल हटाएं"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:410
+#: Menus.cpp:412
 msgid "Cu&t"
 msgstr "काटें(&t)"
 
-#: Menus.cpp:413
-#: Menus.cpp:480
+#: Menus.cpp:415
+#: Menus.cpp:486
 msgid "&Delete"
 msgstr "मिटाएँ(&D)"
 
 #. i18n-hint: (verb) Do a special kind of cut
-#: Menus.cpp:416
+#: Menus.cpp:418
 msgid "Spl&it Cut"
 msgstr "अलग काटें"
 
 #. i18n-hint: (verb) Do a special kind of delete
-#: Menus.cpp:418
+#: Menus.cpp:420
 msgid "Split D&elete"
 msgstr "तोड़कर मिटाएं"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:421
+#: Menus.cpp:423
 msgid "Silence Audi&o"
 msgstr "मौन औडियो"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:423
-msgid "Tri&m"
-msgstr "ट्रिम"
+#: Menus.cpp:427
+msgid "Tri&m Audio"
+msgstr "आडियो छाँटें"
 
-#: Menus.cpp:426
+#: Menus.cpp:432
 msgid "Clip Boun&daries"
 msgstr "कतरन सीमाएं"
 
 # "तोड़ें"
 #. i18n-hint: (verb) It's an item on a menu.
-#: Menus.cpp:428
+#: Menus.cpp:434
 msgid "Sp&lit"
 msgstr "अलग करें"
 
-#: Menus.cpp:431
+#: Menus.cpp:437
 msgid "Split Ne&w"
 msgstr "नया टुकड़ा बनाएं"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:436
-#: Menus.cpp:504
+#: Menus.cpp:442
+#: Menus.cpp:510
 msgid "&Join"
 msgstr "जोड़ें"
 
-#: Menus.cpp:437
-#: Menus.cpp:505
+#: Menus.cpp:443
+#: Menus.cpp:511
 msgid "Detac&h at Silences"
 msgstr "मौन बिंदु से अलग करें"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:443
+#: Menus.cpp:449
 msgid "&Copy"
 msgstr "नकल करें"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:447
+#: Menus.cpp:453
 msgid "&Paste"
 msgstr "चिपकाएं(&P)"
 
-#: Menus.cpp:450
+#: Menus.cpp:456
 msgid "Paste Te&xt to New Label"
 msgstr "नए नामपट्टी पर चिपकाएं"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:456
+#: Menus.cpp:462
 msgid "Duplic&ate"
 msgstr "नकल करें (&a)"
 
-#: Menus.cpp:462
-#: Menus.cpp:776
-#: Menus.cpp:976
+#: Menus.cpp:468
+#: Menus.cpp:782
+#: Menus.cpp:982
 msgid "Stereo Trac&k to Mono"
 msgstr "स्टिरियो ट्रै&क से मोनो(&k)"
 
 # "चिन्हित क्षेत्र(&b)"
-#: Menus.cpp:472
-msgid "La&beled Regions"
-msgstr "नामित क्षेत्र(&b)"
+#: Menus.cpp:478
+msgid "La&beled Audio"
+msgstr "नामित ऑडियो(&b)"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:477
+#: Menus.cpp:483
 msgid "&Cut"
 msgstr "काटें(&C)"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
-#: Menus.cpp:487
+#: Menus.cpp:493
 msgid "&Split Cut"
 msgstr "तोड़कर काटें(&S)"
 
-#: Menus.cpp:488
+#: Menus.cpp:494
 msgid "Sp&lit Delete"
 msgstr "तोड़कर मिटाएं"
 
-#: Menus.cpp:493
+#: Menus.cpp:499
 msgid "Silence &Audio"
 msgstr "मूक ऑडियो(&A)"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:495
+#: Menus.cpp:501
 msgid "Co&py"
 msgstr "नकल करें(&p)"
 
 # "तोड़ें"
 #. i18n-hint: (verb)
-#: Menus.cpp:500
+#: Menus.cpp:506
 msgid "Spli&t"
 msgstr "अलग करें"
 
 #. i18n-hint: (verb) It's an item on a menu.
-#: Menus.cpp:512
+#: Menus.cpp:518
 msgid "&Select"
 msgstr "चुनें(&S)"
 
-#: Menus.cpp:515
+#: Menus.cpp:521
 msgid "&All"
 msgstr "सब(&A)"
 
-#: Menus.cpp:516
+#: Menus.cpp:522
 msgid "&None"
 msgstr "कुछ नहीं(&N)"
 
-#: Menus.cpp:518
+#: Menus.cpp:524
 msgid "&Left at Playback Position"
 msgstr "बाँई (&L) ओर बजाने की स्थिति पर "
 
-#: Menus.cpp:519
+#: Menus.cpp:525
 msgid "&Right at Playback Position"
 msgstr "दाँई (&R) ओर बजाने की स्थिति पर "
 
-#: Menus.cpp:523
+#: Menus.cpp:529
 msgid "Track &Start to Cursor"
 msgstr "ट्रैक शुरुआत से कर्सर तक(&S)"
 
-#: Menus.cpp:524
+#: Menus.cpp:530
 msgid "Cursor to Track &End"
 msgstr "कर्सर से ट्रैक समाप्ति तक(&E)"
 
-#: Menus.cpp:528
+#: Menus.cpp:534
 msgid "In All &Tracks"
 msgstr "सभी ट्रैकों में (&T)"
 
-#: Menus.cpp:533
+#: Menus.cpp:539
 msgid "In All S&ync-Locked Tracks"
 msgstr "सभी गठ-बंधित ट्रैकों में (&y)"
 
-#: Menus.cpp:543
+#: Menus.cpp:549
 msgid "Find &Zero Crossings"
 msgstr "शून्य से गुजरना ढूंढें"
 
-#: Menus.cpp:547
+#: Menus.cpp:553
 msgid "Mo&ve Cursor"
 msgstr "कर्सर घुमाएं"
 
-#: Menus.cpp:549
+#: Menus.cpp:555
 msgid "to Selection Star&t"
 msgstr "चयन आरंभ तक(&t)"
 
-#: Menus.cpp:550
+#: Menus.cpp:556
 msgid "to Selection En&d"
 msgstr "चयन समाप्ति तक(&d)"
 
-#: Menus.cpp:552
+#: Menus.cpp:558
 msgid "to Track &Start"
 msgstr "ट्रैक आरंभ पर"
 
-#: Menus.cpp:553
+#: Menus.cpp:559
 msgid "to Track &End"
 msgstr "ट्रैक समाप्ति तक(&E)"
 
-#: Menus.cpp:561
+#: Menus.cpp:567
 msgid "Re&gion Save"
 msgstr "क्षेत्र सहेजें"
 
-#: Menus.cpp:564
+#: Menus.cpp:570
 msgid "Regio&n Restore"
 msgstr "क्षेत्र बरामद करना"
 
-#: Menus.cpp:572
+#: Menus.cpp:578
 msgid "Pla&y Region"
 msgstr "क्षेत्र बजाएं"
 
-#: Menus.cpp:574
+#: Menus.cpp:580
 msgid "&Lock"
 msgstr "ताला बंद(&L)"
 
-#: Menus.cpp:577
+#: Menus.cpp:583
 msgid "&Unlock"
 msgstr "ताला खोलें"
 
-#: Menus.cpp:597
+#: Menus.cpp:603
 msgid "Pre&ferences..."
 msgstr "वरीयतायें...(&f)"
 
-#: Menus.cpp:607
+#: Menus.cpp:613
 msgid "&View"
 msgstr "दृश्य(&V)"
 
-#: Menus.cpp:610
+#: Menus.cpp:616
 msgid "Zoom &In"
 msgstr "बड़ा करें(&I)"
 
-#: Menus.cpp:613
+#: Menus.cpp:619
 msgid "Zoom &Normal"
 msgstr "सामान्य दृश्य(&N)"
 
-#: Menus.cpp:614
+#: Menus.cpp:620
 msgid "Zoom &Out"
 msgstr "छोटा करें(&O)"
 
 # "विंडो में फ़िट करें(&F)"
-#: Menus.cpp:618
+#: Menus.cpp:624
 msgid "&Fit in Window"
 msgstr "झरोखे में फ़िट करें(&F)"
 
-#: Menus.cpp:619
+#: Menus.cpp:625
 msgid "Fit &Vertically"
 msgstr "लंबवत फ़िट करें"
 
-#: Menus.cpp:620
+#: Menus.cpp:626
 msgid "&Zoom to Selection"
 msgstr "चयनित भाग दिखाएं(&Z)"
 
-#: Menus.cpp:624
+#: Menus.cpp:630
 msgid "&Collapse All Tracks"
 msgstr "सभी ट्रैक न दिखाएं(&C)"
 
-#: Menus.cpp:625
+#: Menus.cpp:631
 msgid "E&xpand All Tracks"
 msgstr "सभी ट्रैक दिखाएं"
 
-#: Menus.cpp:629
+#: Menus.cpp:635
 msgid "&Show Clipping"
 msgstr "कतरन दिखाएँ"
 
 #. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
-#: Menus.cpp:657
+#: Menus.cpp:663
 msgid "&History..."
 msgstr "इतिहास..."
 
-#: Menus.cpp:661
+#: Menus.cpp:667
 msgid "&Karaoke..."
 msgstr "काराओके...(&K)"
 
-#: Menus.cpp:662
+#: Menus.cpp:668
 msgid "&Mixer Board..."
 msgstr "मिक्सर बोर्ड...(&M)"
 
-#: Menus.cpp:668
+#: Menus.cpp:674
 msgid "&Toolbars"
 msgstr "औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar that manages devices
-#: Menus.cpp:671
+#: Menus.cpp:677
 msgid "&Device Toolbar"
 msgstr "यंत्र-प्रबन्ध औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
-#: Menus.cpp:673
+#: Menus.cpp:679
 msgid "&Edit Toolbar"
 msgstr "संपादन औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
-#: Menus.cpp:675
+#: Menus.cpp:681
 msgid "&Meter Toolbar"
 msgstr "मीटर औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the mixer
-#: Menus.cpp:677
+#: Menus.cpp:683
 msgid "Mi&xer Toolbar"
 msgstr "मिक्सर औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for selecting audio
-#: Menus.cpp:679
+#: Menus.cpp:685
 msgid "&Selection Toolbar"
 msgstr "चयन औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
-#: Menus.cpp:681
+#: Menus.cpp:687
 msgid "T&ools Toolbar"
 msgstr "औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
-#: Menus.cpp:683
+#: Menus.cpp:689
 msgid "Transcri&ption Toolbar"
 msgstr "श्रुतिलेख औजार-पट्टी"
 
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
-#: Menus.cpp:685
+#: Menus.cpp:691
 msgid "&Transport Toolbar"
 msgstr "भ्रमण औजार-पट्टी(&T)"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:690
+#: Menus.cpp:696
 msgid "&Reset Toolbars"
 msgstr "औजार-पट्टी यथावत"
 
@@ -2349,670 +2349,670 @@ msgstr "औजार-पट्टी यथावत"
 #. * with !.  If your translation file is for a special use, that is if it is for a
 #. * simplified view with hidden menu items, then leave the ! out here, so that the
 #. * user can show/hide some of the menu items.
-#: Menus.cpp:701
+#: Menus.cpp:707
 msgid "!Simplified View"
 msgstr "!सरल दृश्य"
 
 # आवागमन(&r)
 #. i18n-hint: 'Transport' is the name given to the set of controls that
 #. play, record, pause etc.
-#: Menus.cpp:712
+#: Menus.cpp:718
 msgid "T&ransport"
 msgstr "भ्रमण(&r)"
 
 #. i18n-hint: (verb) Start playing audio
-#: Menus.cpp:716
+#: Menus.cpp:722
 msgid "Pl&ay"
 msgstr "बजाएं (&a)"
 
-#: Menus.cpp:717
+#: Menus.cpp:723
 msgid "&Loop Play"
 msgstr "बार-बार बजाएं(&L)"
 
-#: Menus.cpp:718
+#: Menus.cpp:724
 msgid "&Pause"
 msgstr "ठहरें(&P)"
 
 #. i18n-hint: (verb) Stop playing audio
-#: Menus.cpp:722
+#: Menus.cpp:728
 msgid "&Stop"
 msgstr "रोकें(&S)"
 
-#: Menus.cpp:725
+#: Menus.cpp:731
 msgid "S&kip to Start"
 msgstr "आरंभ पर जाएं "
 
-#: Menus.cpp:726
+#: Menus.cpp:732
 msgid "Skip to E&nd"
 msgstr "समाप्ति पर जाएं (&n)"
 
 # "रिकार्ड(&R)"
 #. i18n-hint: (verb)
-#: Menus.cpp:731
+#: Menus.cpp:737
 msgid "&Record"
 msgstr "ध्वन्यांकन(&R)"
 
 # "टाइमर रिकार्डिंग...(&T)"
-#: Menus.cpp:732
+#: Menus.cpp:738
 msgid "&Timer Record..."
 msgstr "घड़ी से रिकार्डिंग...(&T)"
 
-#: Menus.cpp:733
+#: Menus.cpp:739
 msgid "Appen&d Record"
 msgstr "रिकार्डिंग जोड़ें (&d)"
 
 # ओवर-डबिंग(शुरू/बंद)
-#: Menus.cpp:737
+#: Menus.cpp:743
 msgid "&Overdub (on/off)"
 msgstr "ओवर-डबिंग(चालू/बंद)(&O)"
 
-#: Menus.cpp:738
+#: Menus.cpp:744
 msgid "So&ftware Playthrough (on/off)"
 msgstr "सॉफ़्टवेयर से बजाना(चालू/बंद)(&f)"
 
-#: Menus.cpp:741
+#: Menus.cpp:747
 msgid "Sound A&ctivated Recording (on/off)"
 msgstr "ध्वनि-चालित अंकन(चालू/बंद)(&c)"
 
-#: Menus.cpp:742
+#: Menus.cpp:748
 msgid "Sound Activation Le&vel..."
 msgstr "ध्वनि-चालन स्तर...(&v)"
 
-#: Menus.cpp:745
+#: Menus.cpp:751
 msgid "A&utomated Input Level Adjustment (on/off)"
 msgstr "स्वचालित इनपुट स्तर अनुकूलन (चालू/बंद) (&u)"
 
-#: Menus.cpp:747
+#: Menus.cpp:753
 msgid "R&escan Audio Devices"
 msgstr "ऑडियो यंत्रों को पुन: ढूँढें (&e)"
 
-#: Menus.cpp:756
-#: Menus.cpp:954
+#: Menus.cpp:762
+#: Menus.cpp:960
 msgid "&Tracks"
 msgstr "ट्रैक(&T)"
 
-#: Menus.cpp:761
-#: Menus.cpp:959
+#: Menus.cpp:767
+#: Menus.cpp:965
 msgid "Add &New"
 msgstr "नया जोड़ें(&N)"
 
-#: Menus.cpp:763
-#: Menus.cpp:961
+#: Menus.cpp:769
+#: Menus.cpp:967
 msgid "&Audio Track"
 msgstr "आडियो ट्रैक"
 
-#: Menus.cpp:764
-#: Menus.cpp:962
+#: Menus.cpp:770
+#: Menus.cpp:968
 msgid "&Stereo Track"
 msgstr "स्टिरियो ट्रैक"
 
 # "लेबल ट्रैक"
-#: Menus.cpp:765
-#: Menus.cpp:963
+#: Menus.cpp:771
+#: Menus.cpp:969
 msgid "&Label Track"
 msgstr "नाम ट्रैक"
 
-#: Menus.cpp:766
-#: Menus.cpp:964
+#: Menus.cpp:772
+#: Menus.cpp:970
 msgid "&Time Track"
 msgstr "समय ट्रैक "
 
-#: Menus.cpp:779
-#: Menus.cpp:979
+#: Menus.cpp:785
+#: Menus.cpp:985
 msgid "Mi&x and Render"
 msgstr "मिश्रण और प्रतिपादन"
 
-#: Menus.cpp:782
-#: Menus.cpp:982
+#: Menus.cpp:788
+#: Menus.cpp:988
 msgid "Mix and Render to New Track"
 msgstr "मिश्रित नया ट्रैक बनाएं"
 
-#: Menus.cpp:785
-#: Menus.cpp:985
+#: Menus.cpp:791
+#: Menus.cpp:991
 msgid "&Resample..."
 msgstr "पुन: नमूना लें...(&R)"
 
-#: Menus.cpp:791
-#: Menus.cpp:991
+#: Menus.cpp:797
+#: Menus.cpp:997
 msgid "Remo&ve Tracks"
 msgstr "ट्रैक हटाएं"
 
-#: Menus.cpp:797
-#: Menus.cpp:997
+#: Menus.cpp:803
+#: Menus.cpp:1003
 msgid "&Mute All Tracks"
 msgstr "सभी ट्रैक चुप करें"
 
-#: Menus.cpp:798
-#: Menus.cpp:998
+#: Menus.cpp:804
+#: Menus.cpp:1004
 msgid "&Unmute All Tracks"
 msgstr "सभी ट्रैकों की चुप्पी हटाएं(&U)"
 
-#: Menus.cpp:803
-#: Menus.cpp:1003
+#: Menus.cpp:809
+#: Menus.cpp:1009
 msgid "Align with &Zero"
 msgstr "शून्य से मिलाएं(&Z)"
 
-#: Menus.cpp:804
-#: Menus.cpp:1004
+#: Menus.cpp:810
+#: Menus.cpp:1010
 msgid "Align with &Cursor"
 msgstr "कर्सर से मिलाएं"
 
-#: Menus.cpp:805
-#: Menus.cpp:1005
+#: Menus.cpp:811
+#: Menus.cpp:1011
 msgid "Align with Selection &Start"
 msgstr "चयन आरंभ पर लाएं"
 
-#: Menus.cpp:806
-#: Menus.cpp:1006
+#: Menus.cpp:812
+#: Menus.cpp:1012
 msgid "Align with Selection &End"
 msgstr "चयन समाप्ति "
 
-#: Menus.cpp:807
-#: Menus.cpp:1007
+#: Menus.cpp:813
+#: Menus.cpp:1013
 msgid "Align End with Cu&rsor"
 msgstr "कर्सर को अंत से मिलाएं"
 
-#: Menus.cpp:808
-#: Menus.cpp:1008
+#: Menus.cpp:814
+#: Menus.cpp:1014
 msgid "Align End with Selection Star&t"
 msgstr "चयन आरंभ से अंत मिलाएं"
 
-#: Menus.cpp:809
-#: Menus.cpp:1009
+#: Menus.cpp:815
+#: Menus.cpp:1015
 msgid "Align End with Selection En&d"
 msgstr "चयन समाप्ति पर लाएं"
 
-#: Menus.cpp:810
-#: Menus.cpp:1010
+#: Menus.cpp:816
+#: Menus.cpp:1016
 msgid "Align Tracks To&gether"
 msgstr "ट्रैकों को एक साथ मिलाएं(&g)"
 
-#: Menus.cpp:812
-#: Menus.cpp:1012
+#: Menus.cpp:818
+#: Menus.cpp:1018
 msgid "&Align Tracks"
 msgstr "ट्रैक मिलाएं"
 
-#: Menus.cpp:827
-#: Menus.cpp:1027
+#: Menus.cpp:833
+#: Menus.cpp:1033
 msgid "Ali&gn and Move Cursor"
 msgstr "एकरेखीय (&g) करके कर्सर खिसकाएं"
 
-#: Menus.cpp:839
-#: Menus.cpp:1039
-#: Menus.cpp:5604
+#: Menus.cpp:845
+#: Menus.cpp:1045
+#: Menus.cpp:5617
 msgid "Synchronize MIDI with Audio"
 msgstr "MIDI को आडियो के साथ-साथ"
 
-#: Menus.cpp:847
-#: Menus.cpp:1047
+#: Menus.cpp:853
+#: Menus.cpp:1053
 msgid "Sync-&Lock Tracks"
 msgstr "ट्रैकों को गठबंधन में रखें(&L)"
 
-#: Menus.cpp:852
-#: Menus.cpp:1052
+#: Menus.cpp:858
+#: Menus.cpp:1058
 msgid "Add Label At &Selection"
 msgstr "चयन पर नाम-पट्ट लगाएं (&S)"
 
-#: Menus.cpp:854
-#: Menus.cpp:1054
+#: Menus.cpp:860
+#: Menus.cpp:1060
 msgid "Add Label At &Playback Position"
 msgstr "बजाने की जगह नाम-पट्ट लगाएं(&P)"
 
 # "लेबल सुधारें"
-#: Menus.cpp:862
-#: Menus.cpp:1062
+#: Menus.cpp:868
+#: Menus.cpp:1068
 msgid "&Edit Labels..."
 msgstr "नाम सुधारें... (&E)"
 
 # ट्रैक क्रमवार लगाएं
-#: Menus.cpp:868
-#: Menus.cpp:1068
+#: Menus.cpp:874
+#: Menus.cpp:1074
 msgid "S&ort Tracks"
 msgstr "ट्रैक छाँटें (&o)"
 
-#: Menus.cpp:870
-#: Menus.cpp:1070
+#: Menus.cpp:876
+#: Menus.cpp:1076
 msgid "by &Start time"
 msgstr "शुरूआत समय से"
 
-#: Menus.cpp:873
-#: Menus.cpp:1073
+#: Menus.cpp:879
+#: Menus.cpp:1079
 msgid "by &Name"
 msgstr "नाम से"
 
-#: Menus.cpp:887
-#: Menus.cpp:1087
+#: Menus.cpp:893
+#: Menus.cpp:1093
 msgid "&Generate"
 msgstr "उत्पत्ति (&G)"
 
-#: Menus.cpp:932
-#: Menus.cpp:1132
-#: Menus.cpp:1243
-#: Menus.cpp:1314
-#: Menus.cpp:1385
+#: Menus.cpp:938
+#: Menus.cpp:1138
+#: Menus.cpp:1249
+#: Menus.cpp:1320
+#: Menus.cpp:1391
 msgid "Unsorted"
 msgstr "असंयोजित"
 
-#: Menus.cpp:1154
+#: Menus.cpp:1160
 msgid "Effe&ct"
 msgstr "प्रभाव (&c) "
 
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
-#: Menus.cpp:1160
-#: Menus.cpp:3148
+#: Menus.cpp:1166
+#: Menus.cpp:3154
 #, c-format
 msgid "Repeat %s"
 msgstr "%s दुहराएं"
 
-#: Menus.cpp:1163
+#: Menus.cpp:1169
 msgid "Repeat Last Effect"
 msgstr "पिछला प्रभाव दुहराएं"
 
-#: Menus.cpp:1265
-#: Menus.cpp:1336
+#: Menus.cpp:1271
+#: Menus.cpp:1342
 msgid "&Analyze"
 msgstr "विश्लेषण (&A)"
 
 # "कॉन्ट्रास्ट..."
-#: Menus.cpp:1267
-#: Menus.cpp:1338
+#: Menus.cpp:1273
+#: Menus.cpp:1344
 msgid "Contrast..."
 msgstr "धूप-छाँव..."
 
-#: Menus.cpp:1270
-#: Menus.cpp:1341
+#: Menus.cpp:1276
+#: Menus.cpp:1347
 msgid "Plot Spectrum..."
 msgstr "वर्णक्रम बनाएं"
 
-#: Menus.cpp:1408
-#: Menus.cpp:1411
+#: Menus.cpp:1414
+#: Menus.cpp:1417
 msgid "&Help"
 msgstr "सहायता(&H)"
 
-#: Menus.cpp:1416
+#: Menus.cpp:1422
 msgid "&About Audacity CleanSpeech..."
 msgstr "Audacity स्वच्छवार्ता के बारे में...(&A)"
 
-#: Menus.cpp:1425
+#: Menus.cpp:1431
 msgid "&Quick Help (in web browser)"
 msgstr "त्वरित मदद(संजाल ब्राउज़र में)(&Q)"
 
-#: Menus.cpp:1426
+#: Menus.cpp:1432
 msgid "&Manual (in web browser)"
 msgstr "दस्तावेज़ (वेब ब्राउज़र में)(&M)"
 
-#: Menus.cpp:1433
-#: Menus.cpp:1451
+#: Menus.cpp:1439
+#: Menus.cpp:1457
 msgid "&Screenshot Tools..."
 msgstr "स्क्रीनशॉट औजार...(&S)"
 
-#: Menus.cpp:1440
-#: Menus.cpp:1458
+#: Menus.cpp:1446
+#: Menus.cpp:1464
 msgid "&Run Benchmark..."
 msgstr "मान-दंड बनाएं...(&R)"
 
-#: Menus.cpp:1445
-#: Menus.cpp:1463
+#: Menus.cpp:1451
+#: Menus.cpp:1469
 msgid "Au&dio Device Info..."
 msgstr "ऑडियो यंत्र सूचना...(&d)"
 
-#: Menus.cpp:1446
-#: Menus.cpp:1464
+#: Menus.cpp:1452
+#: Menus.cpp:1470
 msgid "Show &Log..."
 msgstr "लाग दिखाएँ"
 
-#: Menus.cpp:1475
+#: Menus.cpp:1481
 msgid "Move backward from toolbars to tracks"
 msgstr "औजार-पट्टी से ट्रैक्स पर पीछे जाएं"
 
-#: Menus.cpp:1476
+#: Menus.cpp:1482
 msgid "Move forward from toolbars to tracks"
 msgstr "औजार-पट्टी से ट्रैक्स पर आगे जाएं"
 
-#: Menus.cpp:1478
+#: Menus.cpp:1484
 #: toolbars/ToolsToolBar.cpp:146
 #: toolbars/ToolsToolBar.cpp:185
 msgid "Selection Tool"
 msgstr "चयन औजार"
 
-#: Menus.cpp:1479
+#: Menus.cpp:1485
 #: toolbars/ToolsToolBar.cpp:147
 #: toolbars/ToolsToolBar.cpp:186
 msgid "Envelope Tool"
 msgstr "लिफ़ाफ़ा औजार"
 
 # ध्वनि-चित्र खींचें
-#: Menus.cpp:1480
+#: Menus.cpp:1486
 #: toolbars/ToolsToolBar.cpp:150
 #: toolbars/ToolsToolBar.cpp:187
 msgid "Draw Tool"
 msgstr "पेंसिल औजार"
 
-#: Menus.cpp:1481
+#: Menus.cpp:1487
 #: toolbars/ToolsToolBar.cpp:149
 #: toolbars/ToolsToolBar.cpp:188
 msgid "Zoom Tool"
 msgstr "बड़ा-छोटा करें"
 
-#: Menus.cpp:1482
+#: Menus.cpp:1488
 #: toolbars/ToolsToolBar.cpp:148
 msgid "Time Shift Tool"
 msgstr "समय आगे-पीछे करें"
 
-#: Menus.cpp:1483
+#: Menus.cpp:1489
 #: toolbars/ToolsToolBar.cpp:190
 msgid "Multi Tool"
 msgstr "विभिन्न औजार"
 
-#: Menus.cpp:1485
+#: Menus.cpp:1491
 msgid "Next Tool"
 msgstr "अगला औजार"
 
-#: Menus.cpp:1486
+#: Menus.cpp:1492
 msgid "Previous Tool"
 msgstr "पूर्व औज़ार"
 
-#: Menus.cpp:1488
+#: Menus.cpp:1494
 msgid "Play/Stop"
 msgstr "बजाएं/रोकें"
 
-#: Menus.cpp:1489
+#: Menus.cpp:1495
 msgid "Play/Stop and Set Cursor"
 msgstr "बजाएं/रोकें और कर्सर सेट करें"
 
-#: Menus.cpp:1490
+#: Menus.cpp:1496
 msgid "Play One Second"
 msgstr "एक सेकेंड बजाएं"
 
-#: Menus.cpp:1491
+#: Menus.cpp:1497
 msgid "Play To Selection"
 msgstr "चुनी ध्वनि बजाएं"
 
-#: Menus.cpp:1492
+#: Menus.cpp:1498
 msgid "Play Cut Preview"
 msgstr "बजाएं-पुर्वालोकन"
 
-#: Menus.cpp:1494
+#: Menus.cpp:1500
 msgid "Selection to Start"
 msgstr "चयन आरंभ"
 
-#: Menus.cpp:1495
+#: Menus.cpp:1501
 msgid "Selection to End"
 msgstr "चयन समाप्त"
 
-#: Menus.cpp:1497
+#: Menus.cpp:1503
 msgid "DeleteKey"
 msgstr "मिटाएँ"
 
-#: Menus.cpp:1501
+#: Menus.cpp:1507
 msgid "DeleteKey2"
 msgstr "मिटाएँ"
 
-#: Menus.cpp:1507
+#: Menus.cpp:1513
 msgid "Short seek left during playback"
 msgstr "बजाते समय बाँई ओर छोटी तलाश"
 
-#: Menus.cpp:1508
+#: Menus.cpp:1514
 msgid "Short seek right during playback"
 msgstr "बजाते समय दाँई ओर छोटी तलाश"
 
-#: Menus.cpp:1509
+#: Menus.cpp:1515
 msgid "Long seek left during playback"
 msgstr "बजाते समय बाँई ओर बड़ी तलाश"
 
-#: Menus.cpp:1510
+#: Menus.cpp:1516
 msgid "Long Seek right during playback"
 msgstr "बजाते समय दाँई ओर बड़ी तलाश"
 
-#: Menus.cpp:1515
+#: Menus.cpp:1521
 msgid "Move Focus to Previous Track"
 msgstr "पिछले ट्रैक पर केंद्रित करें"
 
-#: Menus.cpp:1516
+#: Menus.cpp:1522
 msgid "Move Focus to Previous and Select"
 msgstr "पिछले ट्रैक पर केंद्रित कर चुनें"
 
-#: Menus.cpp:1517
+#: Menus.cpp:1523
 msgid "Move Focus to Next Track"
 msgstr "अगले ट्रैक पर केंद्रित करें"
 
-#: Menus.cpp:1518
+#: Menus.cpp:1524
 msgid "Move Focus to Next and Select"
 msgstr "अगले ट्रैक पर केंद्रित कर चुनें"
 
-#: Menus.cpp:1519
-#: Menus.cpp:1520
+#: Menus.cpp:1525
+#: Menus.cpp:1526
 msgid "Toggle Focused Track"
 msgstr "ट्रैक केंद्रित/अकेंद्रित करें"
 
-#: Menus.cpp:1522
+#: Menus.cpp:1528
 msgid "Cursor Left"
 msgstr "करसर बाएं"
 
-#: Menus.cpp:1523
+#: Menus.cpp:1529
 msgid "Cursor Right"
 msgstr "करसर दाएं"
 
-#: Menus.cpp:1524
+#: Menus.cpp:1530
 msgid "Cursor Short Jump Left"
 msgstr "कर्सर की लघु कूद बाँई ओर"
 
-#: Menus.cpp:1525
+#: Menus.cpp:1531
 msgid "Cursor Short Jump Right"
 msgstr "कर्सर की लघु कूद दाँई ओर"
 
-#: Menus.cpp:1526
+#: Menus.cpp:1532
 msgid "Cursor Long Jump Left"
 msgstr "कर्सर की लंबी कूद बाँई ओर"
 
-#: Menus.cpp:1527
+#: Menus.cpp:1533
 msgid "Cursor Long Jump Right"
 msgstr "कर्सर की लंबी कूद दाँई ओर"
 
-#: Menus.cpp:1529
+#: Menus.cpp:1535
 msgid "Selection Extend Left"
 msgstr "चयन बाईं ओर बढ़ाएं"
 
-#: Menus.cpp:1530
+#: Menus.cpp:1536
 msgid "Selection Extend Right"
 msgstr "चयन दाईं ओर बढ़ाएं"
 
-#: Menus.cpp:1532
+#: Menus.cpp:1538
 msgid "Set (or Extend) Left Selection"
 msgstr "बाँई ओर चयन करें (या बढ़ाएँ)"
 
-#: Menus.cpp:1533
+#: Menus.cpp:1539
 msgid "Set (or Extend) Right Selection"
 msgstr "दाँई ओर चयन करें (या बढ़ाएँ)"
 
-#: Menus.cpp:1535
+#: Menus.cpp:1541
 msgid "Selection Contract Left"
 msgstr "चयन बाएं सिकोड़ें"
 
-#: Menus.cpp:1536
+#: Menus.cpp:1542
 msgid "Selection Contract Right"
 msgstr "चयन दाएं सिकोड़ें"
 
-#: Menus.cpp:1538
+#: Menus.cpp:1544
 msgid "Change pan on focused track"
 msgstr "केंद्रित ट्रैक पर जाएं"
 
-#: Menus.cpp:1539
+#: Menus.cpp:1545
 msgid "Pan left on focused track"
 msgstr "केंद्रित ट्रैक पर बाएं जाएं"
 
-#: Menus.cpp:1540
+#: Menus.cpp:1546
 msgid "Pan right on focused track"
 msgstr "केंद्रित ट्रैक पर दाएं जाएं"
 
-#: Menus.cpp:1541
+#: Menus.cpp:1547
 msgid "Change gain on focused track"
 msgstr "केंद्रित ट्रैक का गेन बदलें"
 
-#: Menus.cpp:1542
+#: Menus.cpp:1548
 msgid "Increase gain on focused track"
 msgstr "केंद्रित ट्रैक का गेन बढ़ाएं"
 
-#: Menus.cpp:1543
+#: Menus.cpp:1549
 msgid "Decrease gain on focused track"
 msgstr "केंद्रित ट्रैक का गेन घटाएं"
 
-#: Menus.cpp:1544
+#: Menus.cpp:1550
 msgid "Open menu on focused track"
 msgstr "केंद्रित ट्रैक पर मेनू खोलें"
 
-#: Menus.cpp:1545
+#: Menus.cpp:1551
 msgid "Mute/Unmute focused track"
 msgstr "केंद्रित ट्रैक बजाएं/मौन"
 
-#: Menus.cpp:1546
+#: Menus.cpp:1552
 msgid "Solo/Unsolo focused track"
 msgstr "केंद्रित ट्रैक अकेले/साथ"
 
-#: Menus.cpp:1547
+#: Menus.cpp:1553
 msgid "Close focused track"
 msgstr "केंद्रित ट्रैक बंद करें"
 
-#: Menus.cpp:1549
+#: Menus.cpp:1555
 msgid "Snap To On"
 msgstr "ऑन पर"
 
-#: Menus.cpp:1550
+#: Menus.cpp:1556
 msgid "Snap To Off"
 msgstr "ऑफ़ पर"
 
-#: Menus.cpp:1554
+#: Menus.cpp:1560
 msgid "Full screen on/off"
 msgstr "पूर्ण स्क्रीन शुरू/बंद"
 
-#: Menus.cpp:1561
+#: Menus.cpp:1567
 msgid "Change input device"
 msgstr "इनपुट यंत्र बदलें"
 
-#: Menus.cpp:1564
+#: Menus.cpp:1570
 msgid "Change output device"
 msgstr "आउटपुट यंत्र बदलें"
 
-#: Menus.cpp:1567
+#: Menus.cpp:1573
 msgid "Change audio host"
 msgstr "आउटपुट मेजबान बदलें"
 
-#: Menus.cpp:1570
+#: Menus.cpp:1576
 msgid "Change input channels"
 msgstr "आउटपुट चैनल बदलें"
 
-#: Menus.cpp:1574
+#: Menus.cpp:1580
 msgid "Adjust output gain"
 msgstr "आउटपुट गेन ठीक करें"
 
-#: Menus.cpp:1575
+#: Menus.cpp:1581
 msgid "Increase output gain"
 msgstr "आउटपुट का गेन बढ़ाएं"
 
-#: Menus.cpp:1576
+#: Menus.cpp:1582
 msgid "Decrease output gain"
 msgstr "आउटपुट का गेन घटाएं"
 
-#: Menus.cpp:1577
+#: Menus.cpp:1583
 msgid "Adjust input gain"
 msgstr "इनपुट गेन ठीक करें"
 
-#: Menus.cpp:1578
+#: Menus.cpp:1584
 msgid "Increase input gain"
 msgstr "इनपुट का गेन बढ़ाएं"
 
-#: Menus.cpp:1579
+#: Menus.cpp:1585
 msgid "Decrease input gain"
 msgstr "इनपुट का गेन घटाएं"
 
-#: Menus.cpp:1581
+#: Menus.cpp:1587
 msgid "Play at speed"
 msgstr "इस गति पर बजाएं"
 
-#: Menus.cpp:1582
+#: Menus.cpp:1588
 msgid "Adjust playback speed"
 msgstr "बजाने की गति ठीक करें"
 
-#: Menus.cpp:1583
+#: Menus.cpp:1589
 msgid "Increase playback speed"
 msgstr "बजाने की गति बढ़ाएं"
 
-#: Menus.cpp:1584
+#: Menus.cpp:1590
 msgid "Decrease playback speed"
 msgstr "बजाने की गति कम करें"
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
-#: Menus.cpp:1669
+#: Menus.cpp:1675
 msgid "Open Recent"
 msgstr "हाल की फ़ाइल खोलें"
 
 #. i18n-hint: This is the name of the menu item on Windows and Linux
-#: Menus.cpp:1672
+#: Menus.cpp:1678
 msgid "Recent &Files"
 msgstr "हाल की फ़ाइलें"
 
 # पहले जैसा(&U)%s
-#: Menus.cpp:1690
+#: Menus.cpp:1696
 #, c-format
 msgid "&Undo %s"
 msgstr "पूर्ववत(&U)%s"
 
-#: Menus.cpp:1725
+#: Menus.cpp:1731
 #, c-format
 msgid "&Redo %s"
 msgstr "दोहराएं (&R)%s"
 
-#: Menus.cpp:2503
+#: Menus.cpp:2509
 msgid "Sort By Time"
 msgstr "सजाएं, समय से"
 
-#: Menus.cpp:2503
+#: Menus.cpp:2509
 msgid "Tracks sorted by time"
 msgstr "ट्रैकों का समय से समायोजन"
 
-#: Menus.cpp:2512
+#: Menus.cpp:2518
 msgid "Sort By Name"
 msgstr "सजाएं, नाम से"
 
-#: Menus.cpp:2512
+#: Menus.cpp:2518
 msgid "Tracks sorted by name"
 msgstr "ट्रैकों का नाम से समायोजन"
 
-#: Menus.cpp:2663
+#: Menus.cpp:2669
 msgid "Set Left Selection Boundary"
 msgstr "बाईं ओर चयन सीमा सेट करें"
 
-#: Menus.cpp:2664
-#: Menus.cpp:2706
+#: Menus.cpp:2670
+#: Menus.cpp:2712
 msgid "Position"
 msgstr "स्थिति"
 
-#: Menus.cpp:2705
+#: Menus.cpp:2711
 msgid "Set Right Selection Boundary"
 msgstr "दाईं ओर चयन सीमा सेट करें"
 
-#: Menus.cpp:3123
+#: Menus.cpp:3129
 msgid "You must select a track first."
 msgstr "आप पहले एक ट्रैक चुनें."
 
-#: Menus.cpp:3301
+#: Menus.cpp:3307
 msgid "labels.txt"
 msgstr "labels.txt"
 
-#: Menus.cpp:3313
+#: Menus.cpp:3319
 msgid "There are no label tracks to export."
 msgstr "निर्यात के लिए कोई नाम ट्रैक नहीं है."
 
-#: Menus.cpp:3408
+#: Menus.cpp:3414
 msgid "Export MIDI As:"
 msgstr "MIDI निर्यात ऐसे :"
 
-#: Menus.cpp:3412
+#: Menus.cpp:3418
 msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 msgstr "MIDI फ़ाईल (*.mid)|*.mid|Allegro फ़ाईल (*.gro)|*.gro"
 
-#: Menus.cpp:3444
+#: Menus.cpp:3450
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
@@ -3020,471 +3020,470 @@ msgstr ""
 "आपने एक अनजाने फ़ाइल एक्सटेंशन के साथ फ़ाइल नाम चुना है.\n"
 "क्या आप जारी रखना चाहते हैं?"
 
-#: Menus.cpp:3445
+#: Menus.cpp:3451
 msgid "Export MIDI"
 msgstr "MIDI निर्यात"
 
-#: Menus.cpp:3520
+#: Menus.cpp:3526
 msgid "Nothing to undo"
 msgstr "पूर्ववत करने को कुछ नहीं"
 
-#: Menus.cpp:3541
+#: Menus.cpp:3552
 msgid "Nothing to redo"
 msgstr "दुहराने के लिए कुछ नहीं"
 
-#: Menus.cpp:3636
-#: TrackPanel.cpp:680
-#: toolbars/EditToolBar.cpp:131
+#: Menus.cpp:3647
+#: TrackPanel.cpp:702
 #: toolbars/EditToolBar.cpp:195
 msgid "Cut"
 msgstr "काटें"
 
-#: Menus.cpp:3636
+#: Menus.cpp:3647
 msgid "Cut to the clipboard"
 msgstr "क्लिपबोर्ड में प्रतिलिपि बनायी गई"
 
-#: Menus.cpp:3677
+#: Menus.cpp:3688
 msgid "Split Cut"
 msgstr "तोड़कर काटें"
 
-#: Menus.cpp:3677
+#: Menus.cpp:3688
 msgid "Split-cut to the clipboard"
 msgstr "क्लिपबोर्ड में कतरन की प्रतिलिपि बनायी गई"
 
-#: Menus.cpp:3797
+#: Menus.cpp:3808
 msgid "Pasting one type of track into another is not allowed."
 msgstr "एक प्रकार के ट्रैक को दूसरे में चिपकाने की अनुमति नहीं है."
 
-#: Menus.cpp:3809
+#: Menus.cpp:3820
 msgid "Copying stereo audio into a mono track is not allowed."
 msgstr "स्टीरियो ऑडियो की नकल एक मोनो ट्रैक में करने की अनुमति नहीं है."
 
-#: Menus.cpp:3928
-#: Menus.cpp:3951
-#: Menus.cpp:4054
-#: TrackPanel.cpp:682
+#: Menus.cpp:3939
+#: Menus.cpp:3962
+#: Menus.cpp:4065
+#: TrackPanel.cpp:704
 #: toolbars/EditToolBar.cpp:135
 #: toolbars/EditToolBar.cpp:197
 msgid "Paste"
 msgstr "चिपकाएं"
 
-#: Menus.cpp:3928
-#: Menus.cpp:4054
-#: Menus.cpp:4129
+#: Menus.cpp:3939
+#: Menus.cpp:4065
+#: Menus.cpp:4140
 msgid "Pasted from the clipboard"
 msgstr "क्लिपबोर्ड से चिपकाया गया"
 
-#: Menus.cpp:3951
+#: Menus.cpp:3962
 msgid "Pasted text from the clipboard"
 msgstr "क्लिपबोर्ड से लेख चिपकाया गया"
 
-#: Menus.cpp:4129
+#: Menus.cpp:4140
 msgid "Paste Text to New Label"
 msgstr "नए नामपट्ट में पाठ चिपकाएं"
 
-#: Menus.cpp:4177
+#: Menus.cpp:4188
+#, c-format
+msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
+msgstr "चयनित ऑडियो ट्रैकों को छाँटें %.2f सेकेंड से %.2f तक"
+
+# "आडियो रिकार्डिंग"
+#: Menus.cpp:4190
 #: toolbars/EditToolBar.cpp:198
-msgid "Trim"
-msgstr "काटें"
+msgid "Trim Audio"
+msgstr "आडियो छाँटें"
 
-#: Menus.cpp:4177
-msgid "Trim file to selection"
-msgstr "फ़ाईल को चयन तक छाँटें"
-
-#: Menus.cpp:4206
+#: Menus.cpp:4219
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
 msgstr "विभाजन मिटाया %.2f सेकेंड जहाँ t=%.2f"
 
-#: Menus.cpp:4209
+#: Menus.cpp:4222
 msgid "Split Delete"
 msgstr "अलग कर मिटाएं"
 
-#: Menus.cpp:4230
+#: Menus.cpp:4243
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
 msgstr "अलग किया %.2f सेकंड जहाँ t=%.2f"
 
-#: Menus.cpp:4233
+#: Menus.cpp:4246
 msgid "Detach"
 msgstr "अलग करें"
 
-#: Menus.cpp:4254
+#: Menus.cpp:4267
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
 msgstr "जुड़ा %.2f सेकेंड जहाँ t=%.2f"
 
-#: Menus.cpp:4257
+#: Menus.cpp:4270
 msgid "Join"
 msgstr "जोड़ें"
 
-#: Menus.cpp:4270
+#: Menus.cpp:4283
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "चयनित ट्रैकों को मौन किया %.2f सेकेंड के लिए %.2f पर"
 
-#: Menus.cpp:4272
-#: toolbars/EditToolBar.cpp:199
+#: Menus.cpp:4285
 msgid "Silence"
 msgstr "शांति"
 
-#: Menus.cpp:4302
+#: Menus.cpp:4315
 msgid "Duplicate"
 msgstr "नकल बनाएं"
 
-#: Menus.cpp:4302
+#: Menus.cpp:4315
 msgid "Duplicated"
 msgstr "नकल बनाया गया"
 
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled regions.
-#: Menus.cpp:4327
-msgid "Cut labeled regions to the clipboard"
-msgstr "नामित क्षेत्रों को काटें और क्लिपबोर्ड में डालें"
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
+#: Menus.cpp:4340
+msgid "Cut labeled audio regions to clipboard"
+msgstr "नामित ऑडियो को काट कर क्लिपबोर्ड में डाला गया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4329
-msgid "Cut Labels"
-msgstr "नाम काटें"
+#: Menus.cpp:4342
+msgid "Cut Labeled Audio"
+msgstr "नामित ऑडियो को काटें"
 
-#. i18n-hint: (verb) Audacity has just splitcut the labeled regions
-#: Menus.cpp:4345
-msgid "SplitCut labeled regions to the clipboard"
-msgstr "नामित क्षेत्रों को अलग काटकर क्लिपबोर्ड में डालें"
+#. i18n-hint: (verb) Audacity has just split cut the labeled audio regions
+#: Menus.cpp:4358
+msgid "Split Cut labeled audio regions to clipboard"
+msgstr "नामित ऑडियो क्षेत्रों को अलग काटकर क्लिपबोर्ड में डालें"
 
 #. i18n-hint: (verb) Do a special kind of cut on the labels
-#: Menus.cpp:4347
-msgid "Split Cut Labels"
-msgstr "नाम का टुकड़ा काटें"
+#: Menus.cpp:4360
+msgid "Split Cut Labeled Audio"
+msgstr "नामित ऑडियो को काट कर अलग करें"
 
-#: Menus.cpp:4361
-msgid "Copied labeled regions to the clipboard"
-msgstr "नामित क्षेत्रों की प्रतिलिपि क्लिपबोर्ड में  बनायी गई"
-
-#. i18n-hint: (verb)
-#: Menus.cpp:4363
-msgid "Copy Labels"
-msgstr "नाम की प्रतियाँ बनाएं"
-
-#. i18n-hint: (verb) Audacity has just deleted the labeled regions
-#: Menus.cpp:4379
-msgid "Deleted labeled regions"
-msgstr "नामित क्षेत्रों को मिटाया"
+#: Menus.cpp:4374
+msgid "Copied labeled audio regions to clipboard"
+msgstr "नामित ऑडियो क्षेत्रों की प्रतिलिपि क्लिपबोर्ड में  बनायी गई"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4381
-msgid "Delete Labels"
-msgstr "नाम मिटाएं"
+#: Menus.cpp:4376
+msgid "Copy Labeled Audio"
+msgstr "नामित ऑडियो की नकल करें"
 
-#. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled regions
-#: Menus.cpp:4395
-msgid "Split Deleted labeled regions"
-msgstr "नामित क्षेत्रों को तोड़कर मिटाया"
-
-#. i18n-hint: (verb) Do a special kind of delete on labels
-#: Menus.cpp:4397
-msgid "Split Delete Labels"
-msgstr "नाम-पट्टी अलग कर मिटाएं"
+#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#: Menus.cpp:4392
+msgid "Deleted labeled audio regions"
+msgstr "नामित ऑडियो क्षेत्रों को मिटाया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4411
-msgid "Silenced labeled regions"
-msgstr "नामित क्षेत्रों को चुप्पी में बदल दिया"
+#: Menus.cpp:4394
+msgid "Delete Labeled Audio"
+msgstr "नामित ऑडियो मिटाएं"
+
+#. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions
+#: Menus.cpp:4408
+msgid "Split Deleted labeled audio regions"
+msgstr "नामित ऑडियो क्षेत्रों को तोड़कर मिटाया"
+
+#. i18n-hint: (verb) Do a special kind of delete on labeled audio regions
+#: Menus.cpp:4410
+msgid "Split Delete Labeled Audio"
+msgstr "नामित ऑडियो को तोड़कर मिटाया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4413
-msgid "Silence Labels"
-msgstr "नामों को शांत करें"
-
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled regions
 #: Menus.cpp:4424
-msgid "Split labeled regions"
-msgstr "नामित क्षेत्रों को अलग करें"
+msgid "Silenced labeled audio regions"
+msgstr "नामित ऑडियो क्षेत्रों को मूक किया"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:4426
-msgid "Split Labels"
-msgstr "नामपट्टी तोड़ें"
+msgid "Silence Labeled Audio"
+msgstr "नामित ऑडियो को मूक किया"
 
-#. i18n-hint: (verb) Audacity has just joined the labeled regions
-#: Menus.cpp:4440
-msgid "Joined labeled regions"
-msgstr "नामित क्षेत्रों को जोड़ा गया"
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
+#: Menus.cpp:4437
+msgid "Split labeled audio (points or regions)"
+msgstr "नामित ऑडियो को तोड़ा गया(बिंदुओं या क्षेत्रों को)"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4442
-msgid "Join Labels"
-msgstr "लेबल जोड़ें"
+#: Menus.cpp:4439
+msgid "Split Labeled Audio"
+msgstr "नामित ऑडियो को अलग करें"
+
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
+#: Menus.cpp:4453
+msgid "Joined labeled audio (points or regions)"
+msgstr "नामित ऑडियो को जोड़ा गया(बिंदुओं या क्षेत्रों को)"
+
+#. i18n-hint: (verb)
+#: Menus.cpp:4455
+msgid "Join Labeled Audio"
+msgstr "नामित ऑडियो जोड़ें"
 
 # "छूटा हुआ नामित क्षेत्र"
-#. i18n-hint: (verb) Audacity has just detached the labeled regions.
+#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
 #. Audacity has done.
-#: Menus.cpp:4458
-msgid "Detached labeled regions"
-msgstr "अलग हुआ नामित क्षेत्र"
+#: Menus.cpp:4471
+msgid "Detached labeled audio regions"
+msgstr "नामित ऑडियो क्षेत्रों को अलग किया गया"
 
 #. i18n-hint: (verb)
-#: Menus.cpp:4460
-msgid "Detach Labels"
-msgstr "नाम-पट्टी अलग करें"
+#: Menus.cpp:4473
+msgid "Detach Labeled Audio"
+msgstr "नामित ऑडियो अलग करें"
 
-#: Menus.cpp:4482
-#: TrackPanel.cpp:7081
+#: Menus.cpp:4495
+#: TrackPanel.cpp:7116
 msgid "Split"
 msgstr "तोड़ें"
 
 # "नया अलग टुकड़ा"
-#: Menus.cpp:4571
+#: Menus.cpp:4584
 msgid "Split New"
 msgstr "भाजित नया"
 
-#: Menus.cpp:4571
+#: Menus.cpp:4584
 msgid "Split to new track"
 msgstr "अलग नया ट्रैक बनाएं"
 
-#: Menus.cpp:4999
+#: Menus.cpp:5012
 msgid "Frequency Analysis"
 msgstr "आवृति विश्लेशन"
 
-#: Menus.cpp:5156
+#: Menus.cpp:5169
 #, c-format
 msgid "Imported labels from '%s'"
 msgstr "'%s' से नाम-पट्टियाँ आयात किया"
 
-#: Menus.cpp:5157
+#: Menus.cpp:5170
 msgid "Import Labels"
 msgstr "नाम आयात करें"
 
-#: Menus.cpp:5168
+#: Menus.cpp:5181
 msgid "Select a MIDI file..."
 msgstr "एक MIDI फ़ाइल चुनें..."
 
-#: Menus.cpp:5172
+#: Menus.cpp:5185
 msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
 msgstr "MIDI और Allegro फ़ाइलें (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI फ़ाइलें (*.mid;*.midi)|*.mid;*.midi|Allegro फ़ाइलें (*.gro)|*.gro|सभी फ़ाइलें (*.*)|*.*"
 
-#: Menus.cpp:5189
+#: Menus.cpp:5202
 #, c-format
 msgid "Imported MIDI from '%s'"
 msgstr "MIDI आयात '%s' से"
 
-#: Menus.cpp:5190
+#: Menus.cpp:5203
 msgid "Import MIDI"
 msgstr "MIDI आयात"
 
-#: Menus.cpp:5204
+#: Menus.cpp:5217
 msgid "Select any uncompressed audio file..."
 msgstr "चुनें किसी असंपीड़ित ऑडियो फ़ाइल को..."
 
-#: Menus.cpp:5208
+#: Menus.cpp:5221
 msgid "All files (*)|*"
 msgstr "सभी फ़ाइलें (*)|*"
 
-#: Menus.cpp:5233
+#: Menus.cpp:5246
 msgid "Edit the metadata tags"
 msgstr "मेटाडाटा टैग को संपादित करें"
 
-#: Menus.cpp:5234
-#: export/Export.cpp:378
+#: Menus.cpp:5247
+#: export/Export.cpp:377
 msgid "Edit Metadata"
 msgstr "मेटाडाटा संपादित करें"
 
-#: Menus.cpp:5234
+#: Menus.cpp:5247
 msgid "Edit Metadata tags"
 msgstr "मेटाडाटा टैग संपादित करें"
 
 # '%s' ट्रैक्स की सभी ऑडियो का प्रतिपादन
-#: Menus.cpp:5291
+#: Menus.cpp:5304
 #, c-format
 msgid "Rendered all audio in track '%s'"
 msgstr "'%s' ट्रैक्स की सभी ऑडियो का निर्माण"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
-#: Menus.cpp:5294
+#: Menus.cpp:5307
 msgid "Render"
 msgstr "प्रतिपादन"
 
-#: Menus.cpp:5299
+#: Menus.cpp:5312
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
 msgstr "%d ट्रैक से मिश्रित कर एक नए स्टीरियो ट्रैक का निर्माण किया"
 
-#: Menus.cpp:5302
+#: Menus.cpp:5315
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
 msgstr "%d ट्रैक से मिश्रित कर एक नए मोनो ट्रैक का निर्माण किया"
 
-#: Menus.cpp:5304
-#: Mix.cpp:168
+#: Menus.cpp:5317
+#: Mix.cpp:169
 msgid "Mix and Render"
 msgstr "मिश्रण और प्रतिपादन"
 
-#: Menus.cpp:5439
+#: Menus.cpp:5452
 msgid "Aligned with zero"
 msgstr "शून्य से मिलाया गया"
 
-#: Menus.cpp:5443
+#: Menus.cpp:5456
 msgid "Aligned cursor"
 msgstr "कर्सर मिलाया गया"
 
-#: Menus.cpp:5447
+#: Menus.cpp:5460
 msgid "Aligned with selection start"
 msgstr "चयन आरंभ से मिलाया गया"
 
-#: Menus.cpp:5451
+#: Menus.cpp:5464
 msgid "Aligned with selection end"
 msgstr "चयन समाप्ति पर लाएं"
 
-#: Menus.cpp:5455
+#: Menus.cpp:5468
 msgid "Aligned end with cursor"
 msgstr "अंत को कर्सर से मिलाएं"
 
-#: Menus.cpp:5459
+#: Menus.cpp:5472
 msgid "Aligned end with selection start"
 msgstr "अंत को चयन आरंभ से मिलाएं"
 
-#: Menus.cpp:5463
+#: Menus.cpp:5476
 msgid "Aligned end with selection end"
 msgstr "अंत को चयन समाप्ति से मिलाएं"
 
-#: Menus.cpp:5467
+#: Menus.cpp:5480
 msgid "Aligned"
 msgstr "साथ मिलाया"
 
-#: Menus.cpp:5502
+#: Menus.cpp:5515
 msgid "Align"
 msgstr "मिलाएं"
 
-#: Menus.cpp:5605
+#: Menus.cpp:5618
 msgid "Synchronizing MIDI and Audio Tracks"
 msgstr "मिडी और ऑडियो ट्रैक में ताल-मेल बिठा रहे हैं"
 
-#: Menus.cpp:5771
+#: Menus.cpp:5784
 #, c-format
 msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "संरेखण पूरा हुआ: मिडी %.2f  से %.2f सेकेंड तक, ऑडियो %.2f से %.2f सेकेंड तक."
 
-#: Menus.cpp:5774
+#: Menus.cpp:5787
 msgid "Sync MIDI with Audio"
 msgstr "MIDI का ऑडियो से ताल-मेल"
 
-#: Menus.cpp:5778
+#: Menus.cpp:5791
 #, c-format
 msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "संरेखण त्रुटि: इनपुट बहुत कम : मिडी %.2f से %.2f सेकेंड, ऑडियो %.2f  से %.2f सेकेंड तक."
 
-#: Menus.cpp:5789
+#: Menus.cpp:5802
 msgid "Internal error reported by alignment process."
 msgstr "संरेखण प्रक्रिया द्वारा आंतरिक त्रुटि की सूचना दी गई."
 
-#: Menus.cpp:5803
+#: Menus.cpp:5816
 msgid "Created new audio track"
 msgstr "नया ऑडियो ट्रैक बनाया गया"
 
-#: Menus.cpp:5803
-#: Menus.cpp:5825
-#: Menus.cpp:5840
-#: Menus.cpp:5860
+#: Menus.cpp:5816
+#: Menus.cpp:5838
+#: Menus.cpp:5853
+#: Menus.cpp:5873
 msgid "New Track"
 msgstr "नया ट्रैक"
 
-#: Menus.cpp:5825
+#: Menus.cpp:5838
 msgid "Created new stereo audio track"
 msgstr "नया स्टिरियो ट्रैक बनाया"
 
-#: Menus.cpp:5840
+#: Menus.cpp:5853
 msgid "Created new label track"
 msgstr "नया नाम ट्रैक बनाया गया"
 
-#: Menus.cpp:5849
+#: Menus.cpp:5862
 msgid "This version of Audacity only allows one time track for each project window."
 msgstr "Audacity का यह संस्करण प्रत्येक परियोजना विंडो के लिए केवल एक समय ट्रैक की अनुमति देता है."
 
-#: Menus.cpp:5860
+#: Menus.cpp:5873
 msgid "Created new time track"
 msgstr "नया समय ट्रैक बनाया गया"
 
-#: Menus.cpp:5986
+#: Menus.cpp:5999
 msgid "Edited labels"
 msgstr "संपादित नाम-पट्टी"
 
-#: Menus.cpp:6015
+#: Menus.cpp:6028
 msgid "Save CleanSpeech Preset File As:"
 msgstr "स्वच्छवार्ता प्रीसेट फ़ाइल सहेजें, इस नाम से:"
 
-#: Menus.cpp:6019
+#: Menus.cpp:6032
 msgid "CleanSpeech Presets (*.csp)|*.csp"
 msgstr "स्वच्छवार्ता प्रीसेट्स (*.csp)|*.csp"
 
-#: Menus.cpp:6026
-#: export/Export.cpp:635
+#: Menus.cpp:6039
+#: export/Export.cpp:629
 msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "क्षमा करें, 256 अक्षरों से अधिक लंबा पथनाम समर्थित नहीं है."
 
-#: Menus.cpp:6075
+#: Menus.cpp:6088
 msgid "Problem encountered exporting presets."
 msgstr "प्रिसेट निर्यात में समस्या आई."
 
-#: Menus.cpp:6076
-#: export/Export.cpp:503
-msgid "Unable to export"
+#: Menus.cpp:6089
+msgid "Unable to Export"
 msgstr "निर्यात नहीं कर सका"
 
-#: Menus.cpp:6266
+#: Menus.cpp:6279
 msgid "Remove Track"
 msgstr "ट्रैक मिटाएं"
 
-#: Menus.cpp:6266
+#: Menus.cpp:6279
 msgid "Removed audio track(s)"
 msgstr "ऑडियो ट्रैक (ट्रैक्स)को हटाया"
 
-#: Menus.cpp:6343
+#: Menus.cpp:6356
 msgid "Audio Device Info"
 msgstr "ऑडियो यंत्र सूचना"
 
-#: Menus.cpp:6439
-#: Menus.cpp:6495
+#: Menus.cpp:6452
+#: Menus.cpp:6513
 #: export/ExportFFmpeg.cpp:825
 #: export/ExportMP3.cpp:1899
 msgid "Resample"
 msgstr "पुन: नमूना लें"
 
-#: Menus.cpp:6460
-#: TrackPanel.cpp:7312
+#: Menus.cpp:6478
+#: TrackPanel.cpp:7353
 msgid "New sample rate (Hz):"
 msgstr "नया नमूना आवृति दर(Hz):"
 
-#: Menus.cpp:6484
-#: TrackPanel.cpp:7336
+#: Menus.cpp:6502
+#: TrackPanel.cpp:7377
 msgid "The entered value is invalid"
 msgstr "प्रविष्टि अमान्य है"
 
-#: Menus.cpp:6493
+#: Menus.cpp:6511
 #, c-format
 msgid "Resampling track %d"
 msgstr "ट्रैक %d का नया नमूना ले रहे हैं"
 
-#: Menus.cpp:6502
+#: Menus.cpp:6520
 msgid "Resample Track"
 msgstr "ट्रैक का नया नमूना"
 
-#: Menus.cpp:6502
+#: Menus.cpp:6520
 msgid "Resampled audio track(s)"
 msgstr "नये नमूने का ऑडियो ट्रैक"
 
-#: Mix.cpp:130
-#: Mix.cpp:145
+#: Mix.cpp:131
+#: Mix.cpp:146
 msgid "Mix"
 msgstr "मिक्स"
 
-#: Mix.cpp:169
+#: Mix.cpp:170
 msgid "Mixing and rendering tracks"
 msgstr "मिश्रण द्वारा ट्रैक निर्माण"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #: MixerBoard.cpp:213
-#: TrackPanel.cpp:4130
+#: TrackPanel.cpp:4158
 #: widgets/ASlider.cpp:373
 msgid "Velocity"
 msgstr "गति"
@@ -3494,9 +3493,9 @@ msgstr "गति"
 #: MixerBoard.cpp:222
 #: MixerBoard.cpp:225
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4126
-#: TrackPanel.cpp:6719
-#: TrackPanel.cpp:8176
+#: TrackPanel.cpp:4154
+#: TrackPanel.cpp:6747
+#: TrackPanel.cpp:8250
 #: widgets/ASlider.cpp:355
 msgid "Gain"
 msgstr "गेन"
@@ -3510,9 +3509,9 @@ msgstr "वाद्य यंत्र"
 #: MixerBoard.cpp:262
 #: MixerBoard.cpp:264
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4126
-#: TrackPanel.cpp:6664
-#: TrackPanel.cpp:8184
+#: TrackPanel.cpp:4154
+#: TrackPanel.cpp:6692
+#: TrackPanel.cpp:8258
 #: widgets/ASlider.cpp:345
 msgid "Pan"
 msgstr "दाँए-बाँए"
@@ -3521,7 +3520,7 @@ msgstr "दाँए-बाँए"
 #: MixerBoard.cpp:277
 #: MixerBoard.cpp:325
 #: MixerBoard.cpp:1436
-#: TrackPanel.cpp:8124
+#: TrackPanel.cpp:8198
 msgid "Mute"
 msgstr "मौन"
 
@@ -3529,7 +3528,7 @@ msgstr "मौन"
 #: MixerBoard.cpp:290
 #: MixerBoard.cpp:326
 #: MixerBoard.cpp:1486
-#: TrackPanel.cpp:8122
+#: TrackPanel.cpp:8196
 msgid "Solo"
 msgstr "एकल"
 
@@ -3539,12 +3538,12 @@ msgid "Signal Level Meter"
 msgstr "सिगनल स्तर मीटर"
 
 #: MixerBoard.cpp:397
-#: TrackPanel.cpp:4125
+#: TrackPanel.cpp:4153
 msgid "Moved gain slider"
 msgstr "गेन स्लाइडर स्थानांतरित"
 
 #: MixerBoard.cpp:416
-#: TrackPanel.cpp:4125
+#: TrackPanel.cpp:4153
 msgid "Moved pan slider"
 msgstr "पैन स्लाइडर स्थानांतरित"
 
@@ -3606,13 +3605,13 @@ msgid "(Recovered)"
 msgstr "(बरामद हुआ)"
 
 #: Project.cpp:1875
-#: TrackPanel.cpp:947
+#: TrackPanel.cpp:969
 #: toolbars/ControlToolBar.cpp:196
 msgid "Record"
 msgstr "ध्वन्यांकन"
 
 #: Project.cpp:1875
-#: TrackPanel.cpp:947
+#: TrackPanel.cpp:969
 msgid "Recorded Audio"
 msgstr "अंकित आडियो"
 
@@ -3824,9 +3823,9 @@ msgstr ""
 "डिस्क लिखने योग्य नहीं है या पूरी तरह भरा है."
 
 #: Project.cpp:3217
-#: Project.cpp:4474
+#: Project.cpp:4478
 #: Tags.cpp:1171
-#: effects/Equalization.cpp:1096
+#: effects/Equalization.cpp:1098
 #, c-format
 msgid "Couldn't write to file \"%s\": %s"
 msgstr "फ़ाइल में लिख नहीं सका \"%s\": %s"
@@ -3970,37 +3969,37 @@ msgstr "आयात संपूर्ण. मांग-पर %d तरंग-
 msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 msgstr "आयात संपूर्ण. मांग-पर तरंगरूप की गणना चल रही है. कुल %2.0f%% संपूर्ण."
 
-#: Project.cpp:4446
+#: Project.cpp:4450
 msgid "New Project"
 msgstr "नई परियोजना"
 
-#: Project.cpp:4476
+#: Project.cpp:4480
 msgid "Error Writing Autosave File"
 msgstr "स्वसंचयन फ़ाइल लिखने में त्रुटि"
 
-#: Project.cpp:4491
+#: Project.cpp:4495
 msgid "Could not create autosave file: "
 msgstr "स्वसंचयन फ़ाइल नहीं बन सका: "
 
-#: Project.cpp:4510
+#: Project.cpp:4514
 msgid "Could not remove old autosave file: "
 msgstr "स्वत:-संचित पुराना फ़ाइल हटा नहीं सका : "
 
-#: Project.cpp:4539
+#: Project.cpp:4543
 #, c-format
 msgid "Actual Rate: %d"
-msgstr "वास्तविक आवृति दर: %d"
+msgstr "आवृति दर: %d"
 
 # उच्च-गुणवत्ता Sinc क्षेपक
-#: Resample.cpp:155
+#: Resample.cpp:160
 msgid "High-quality Sinc Interpolation"
 msgstr "उच्च-गुणवत्ता Sinc Interpolation"
 
-#: Resample.cpp:157
+#: Resample.cpp:162
 msgid "Fast Sinc Interpolation"
 msgstr "त्वरित Sinc Interpolation"
 
-#: Resample.cpp:280
+#: Resample.cpp:296
 #, c-format
 msgid "Libsamplerate error: %d\n"
 msgstr "Lib-नमूना-आवृति-दर त्रुटि: %d\n"
@@ -4037,7 +4036,7 @@ msgid "Save images to:"
 msgstr "तस्वीरें यहाँ संचित करें :"
 
 #: Screenshot.cpp:320
-#: export/ExportMultiple.cpp:258
+#: export/ExportMultiple.cpp:268
 msgid "Choose..."
 msgstr "चुनें..."
 
@@ -4146,8 +4145,8 @@ msgid "Transcription"
 msgstr "श्रुतिलेखन"
 
 #: Screenshot.cpp:394
-#: TrackPanel.cpp:455
-#: TrackPanel.cpp:456
+#: TrackPanel.cpp:468
+#: TrackPanel.cpp:469
 msgid "Track Panel"
 msgstr "ट्रैक पैनल"
 
@@ -4156,8 +4155,8 @@ msgid "Ruler"
 msgstr "मापक"
 
 #: Screenshot.cpp:396
-#: export/ExportMultiple.cpp:301
-#: export/ExportMultiple.cpp:303
+#: export/ExportMultiple.cpp:311
+#: export/ExportMultiple.cpp:313
 #: prefs/TracksPrefs.cpp:31
 msgid "Tracks"
 msgstr "ट्रैक"
@@ -4482,7 +4481,7 @@ msgstr ""
 msgid "Duration"
 msgstr "अवधि"
 
-#: TimeTrack.cpp:44
+#: TimeTrack.cpp:52
 msgid "Time Track"
 msgstr "समय ट्रैक"
 
@@ -4559,186 +4558,198 @@ msgstr "%s  को रिकॉर्डिंग शुरू करने क�
 msgid "Audacity Timer Record - Waiting for Start"
 msgstr "Audacity टाइमर रिकार्ड - शुरूआत की प्रतीक्षा"
 
-#: TrackPanel.cpp:623
+#: TrackPanel.cpp:641
 msgid "&Other..."
 msgstr "अन्य...(&O)"
 
-#: TrackPanel.cpp:631
-#: TrackPanel.cpp:655
-#: TrackPanel.cpp:664
-#: TrackPanel.cpp:672
+#: TrackPanel.cpp:649
+#: TrackPanel.cpp:673
+#: TrackPanel.cpp:682
+#: TrackPanel.cpp:690
 msgid "N&ame..."
 msgstr "नामकरण...(&a)"
 
-#: TrackPanel.cpp:633
-#: TrackPanel.cpp:657
-#: TrackPanel.cpp:668
-#: TrackPanel.cpp:674
+#: TrackPanel.cpp:651
+#: TrackPanel.cpp:675
+#: TrackPanel.cpp:686
+#: TrackPanel.cpp:692
 msgid "Move Track U&p"
 msgstr "ट्रैक ऊपर खिसकाएं (&p)"
 
-#: TrackPanel.cpp:634
-#: TrackPanel.cpp:658
-#: TrackPanel.cpp:669
-#: TrackPanel.cpp:675
+#: TrackPanel.cpp:652
+#: TrackPanel.cpp:676
+#: TrackPanel.cpp:687
+#: TrackPanel.cpp:693
 msgid "Move Track &Down"
 msgstr "ट्रैक नीचे खिसकाएँ"
 
-#: TrackPanel.cpp:636
+#: TrackPanel.cpp:654
 msgid "Wa&veform"
 msgstr "तरंगरूप (&v)"
 
-#: TrackPanel.cpp:637
+#: TrackPanel.cpp:655
 msgid "Waveform (d&B)"
 msgstr "तरंगरूप (d&B)"
 
-#: TrackPanel.cpp:638
+#: TrackPanel.cpp:656
 msgid "&Spectrogram"
 msgstr "स्पेक्ट्रोग्राम(&S)"
 
 #. i18n-hint: short form of 'logarithm'
-#: TrackPanel.cpp:640
+#: TrackPanel.cpp:658
 msgid "Spectrogram l&og(f)"
 msgstr "स्पेक्ट्रोग्राम लघुगणक(f)"
 
-#: TrackPanel.cpp:641
+#: TrackPanel.cpp:659
 msgid "Pitc&h (EAC)"
 msgstr "पिच (EAC)"
 
-#: TrackPanel.cpp:643
+#: TrackPanel.cpp:661
 msgid "&Mono"
 msgstr "एकल(&M)"
 
-#: TrackPanel.cpp:644
+#: TrackPanel.cpp:662
 msgid "&Left Channel"
 msgstr "बायाँ चैनल(&L)"
 
-#: TrackPanel.cpp:645
+#: TrackPanel.cpp:663
 msgid "&Right Channel"
 msgstr "दायां चैनल(&R)"
 
-#: TrackPanel.cpp:646
+#: TrackPanel.cpp:664
 msgid "Ma&ke Stereo Track"
 msgstr "स्टिरियो ट्रैक बनाएं(&k)"
 
-#: TrackPanel.cpp:647
+#: TrackPanel.cpp:665
 msgid "Spli&t Stereo Track"
 msgstr "स्टिरियो ट्रैक विभाजित करें(&t)"
 
-#: TrackPanel.cpp:648
+#: TrackPanel.cpp:666
 msgid "Split Stereo to Mo&no"
 msgstr "भाजित स्टीरियो से मोनो(&n)"
 
-#: TrackPanel.cpp:650
+#: TrackPanel.cpp:668
 msgid "Set Sample &Format"
 msgstr "नमूना स्वरुप बताएं(&F)"
 
-#: TrackPanel.cpp:652
+#: TrackPanel.cpp:670
 msgid "Set Rat&e"
 msgstr "दर निर्धारित करें(&e)"
 
-#: TrackPanel.cpp:660
+#: TrackPanel.cpp:678
 msgid "Up &Octave"
 msgstr "ऊपरी सप्तक(&O)"
 
-#: TrackPanel.cpp:661
+#: TrackPanel.cpp:679
 msgid "Down Octa&ve"
 msgstr "निम्न सप्तक(&v)"
 
 # मुद्रलिपि
-#: TrackPanel.cpp:666
+#: TrackPanel.cpp:684
 msgid "&Font..."
 msgstr "फ़ान्ट...(&F)"
 
-#: TrackPanel.cpp:677
+#: TrackPanel.cpp:695
+msgid "&Linear"
+msgstr "रेखीय (&L)"
+
+# लॉगरिद्मिक
+#: TrackPanel.cpp:696
+msgid "L&ogarithmic"
+msgstr "लघुगणकीय"
+
+#: TrackPanel.cpp:698
 msgid "Set Ra&nge..."
 msgstr "सीमा सेट करें...(&n)"
 
-#: TrackPanel.cpp:681
-#: toolbars/EditToolBar.cpp:133
+#: TrackPanel.cpp:699
+msgid "Logarithmic &Interpolation"
+msgstr "लघुगणकीय अंतर्वेषण"
+
+#: TrackPanel.cpp:703
 #: toolbars/EditToolBar.cpp:196
 msgid "Copy"
 msgstr "नकल करें"
 
-#: TrackPanel.cpp:1459
+#: TrackPanel.cpp:1472
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "क्लिक करें ऊर्ध्व में ज़ूम के लिए, उच्च-क्लिक ज़ूम-आउट के लिए. ज़ूम-क्षेत्र बताने के लिए क्लिक करते हुए खींचें."
 
-#: TrackPanel.cpp:1464
+#: TrackPanel.cpp:1477
 msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
 msgstr "क्लिक करें ऊर्ध्व में बड़ा दिखाने के लिए, उच्च-क्लिक छोटा दिखाने के लिए, और खींचें एक क्षेत्र विशेष को छोटा-बड़ा दिखाने के लिए."
 
-#: TrackPanel.cpp:1470
+#: TrackPanel.cpp:1483
 msgid "Drag the track vertically to change the order of the tracks."
 msgstr "ट्रैकों को उपर-नीचे करने के लिए उन्हें खड़ी दिशा में खींचें."
 
-#: TrackPanel.cpp:1490
+#: TrackPanel.cpp:1503
 msgid "Click and drag to adjust relative size of stereo tracks."
 msgstr "स्टीरियो ट्रैक के सापेक्षिक आकार समायोजन के लिए क्लिक करके खींचें."
 
-#: TrackPanel.cpp:1493
+#: TrackPanel.cpp:1506
 msgid "Click and drag to resize the track."
 msgstr "ट्रैक को नए आकार के लिए क्लिक कर खींचें."
 
-#: TrackPanel.cpp:1524
+#: TrackPanel.cpp:1537
 msgid "Drag one or more label boundaries"
 msgstr "नाम-पट्टी (या पट्टियों) को किनारे से खींचें."
 
-#: TrackPanel.cpp:1525
+#: TrackPanel.cpp:1538
 msgid "Drag label boundary"
 msgstr "नाम-पट्टी सीमा को खीचें"
 
 #. i18n-hint: This string is for the Mac OS, which uses Command-, as the shortcut for Preferences
-#: TrackPanel.cpp:1541
+#: TrackPanel.cpp:1554
 msgid "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
 msgstr "विभिन्न-औजार मोड :Cmd-, मूषक और कुंजीपटल  वरीयताएँ"
 
 #. i18n-hint: This string is for Windows and Linux, which uses Control-P as the shortcut for Preferences
-#: TrackPanel.cpp:1544
+#: TrackPanel.cpp:1557
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "विभिन्न-औजार मोड :कंट्रोल-P, मूषक और कुंजीपटल  वरीयताएँ"
 
-#: TrackPanel.cpp:1592
-#: TrackPanel.cpp:1604
-#: TrackPanel.cpp:2025
-#: TrackPanel.cpp:2032
+#: TrackPanel.cpp:1605
+#: TrackPanel.cpp:1617
+#: TrackPanel.cpp:2038
+#: TrackPanel.cpp:2045
 msgid "Click and drag to stretch selected region."
 msgstr "चयनित क्षेत्र को विस्तृत करने के लिए क्लिक कर खींचें."
 
-#: TrackPanel.cpp:1597
+#: TrackPanel.cpp:1610
 msgid "Click and drag to move left selection boundary."
 msgstr "बाँई ओर की चयन सीमा को खिसकाने के लिए क्लिक करके खींचें."
 
-#: TrackPanel.cpp:1609
+#: TrackPanel.cpp:1622
 msgid "Click and drag to move right selection boundary."
 msgstr "दाँई ओर की चयन सीमा को खिसकाने के लिए क्लिक करके खींचें."
 
-#: TrackPanel.cpp:1614
+#: TrackPanel.cpp:1627
 msgid "Click and drag to stretch within selected region."
 msgstr "चयनित क्षेत्र के अंदर विस्तार के लिए क्लिक कर खींचें."
 
-#: TrackPanel.cpp:1990
-#: TrackPanel.cpp:4769
-#: TrackPanel.cpp:4807
-#: TrackPanel.cpp:5081
-#: TrackPanel.cpp:7467
-#: TrackPanel.cpp:7487
+#: TrackPanel.cpp:2003
+#: TrackPanel.cpp:4797
+#: TrackPanel.cpp:4835
+#: TrackPanel.cpp:5109
+#: TrackPanel.cpp:7541
+#: TrackPanel.cpp:7561
 msgid "Modified Label"
 msgstr "परिवर्तित नाम"
 
-#: TrackPanel.cpp:1991
-#: TrackPanel.cpp:4770
-#: TrackPanel.cpp:4808
-#: TrackPanel.cpp:5082
-#: TrackPanel.cpp:7468
-#: TrackPanel.cpp:7488
+#: TrackPanel.cpp:2004
+#: TrackPanel.cpp:4798
+#: TrackPanel.cpp:4836
+#: TrackPanel.cpp:5110
+#: TrackPanel.cpp:7542
+#: TrackPanel.cpp:7562
 msgid "Label Edit"
 msgstr "नाम संपादन"
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
 #. dragged to change their duration.
-#: TrackPanel.cpp:2067
-#: TrackPanel.cpp:2297
+#: TrackPanel.cpp:2080
+#: TrackPanel.cpp:2310
 msgid "Stretch Note Track"
 msgstr "स्वर ट्रैक को फैलाएं"
 
@@ -4746,278 +4757,304 @@ msgstr "स्वर ट्रैक को फैलाएं"
 #. been dragged to change its duration (stretch it). Using either past
 #. or present tense is fine here.  If unsure, go for whichever is
 #. shorter.
-#: TrackPanel.cpp:2072
-#: TrackPanel.cpp:2297
+#: TrackPanel.cpp:2085
+#: TrackPanel.cpp:2310
 msgid "Stretch"
 msgstr "विस्तार"
 
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
-#: TrackPanel.cpp:2432
+#: TrackPanel.cpp:2445
 msgid "Adjusted envelope."
 msgstr "ऐडजस्टेड लिफ़ाफ़ा."
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: TrackPanel.cpp:2434
+#: TrackPanel.cpp:2447
 #: prefs/MousePrefs.cpp:121
 msgid "Envelope"
 msgstr "लिफ़ाफ़ा"
 
-#: TrackPanel.cpp:2601
+#: TrackPanel.cpp:2621
 msgid "Moved clip to another track"
 msgstr "कतरन को दूसरे ट्रैक पर भेजा गया"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2607
+#: TrackPanel.cpp:2627
 msgid "right"
 msgstr "दायाँ"
 
 #. i18n-hint: a direction as in left or right.
-#: TrackPanel.cpp:2609
+#: TrackPanel.cpp:2629
 msgid "left"
 msgstr "बायाँ"
 
 #. i18n-hint: %s is a direction like left or right
-#: TrackPanel.cpp:2611
+#: TrackPanel.cpp:2631
 #, c-format
 msgid "Time shifted tracks/clips %s %.02f seconds"
 msgstr "ट्रैक/कतरन को %s ओर %.02f सेकंड के समय से स्थानांतरित किया"
 
-#: TrackPanel.cpp:2615
+#: TrackPanel.cpp:2635
 #: prefs/MousePrefs.cpp:115
 #: prefs/MousePrefs.cpp:116
 #: prefs/MousePrefs.cpp:117
 msgid "Time-Shift"
 msgstr "समय आगे-पीछे करें"
 
-#: TrackPanel.cpp:3551
+#: TrackPanel.cpp:3579
 msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
 msgstr "चित्र खींचने के लिए, ट्रैक ड्रॉप-डाउन मेनू से 'तरंगरूप' चुनें."
 
-#: TrackPanel.cpp:3568
+#: TrackPanel.cpp:3596
 msgid "To use Draw, zoom in further until you can see the individual samples."
 msgstr "रेखाचित्र खींचने के लिए, छवि को प्रत्येक नमूना स्पष्ट दिखने तक बड़ा करें."
 
-#: TrackPanel.cpp:3845
+#: TrackPanel.cpp:3873
 msgid "Moved Sample"
-msgstr "खिसकाई हुआ नमूना"
+msgstr "खिसकाया हुआ नमूना"
 
-#: TrackPanel.cpp:3846
+#: TrackPanel.cpp:3874
 msgid "Sample Edit"
 msgstr "संपादन नमूना"
 
-#: TrackPanel.cpp:3953
+#: TrackPanel.cpp:3981
 #, c-format
 msgid "Removed track '%s.'"
 msgstr "हटाया गया ट्रैक '%s.'"
 
-#: TrackPanel.cpp:3955
+#: TrackPanel.cpp:3983
 msgid "Track Remove"
 msgstr "ट्रैक मिटाएं"
 
-#: TrackPanel.cpp:4130
+#: TrackPanel.cpp:4158
 msgid "Moved velocity slider"
 msgstr "गति स्लाइडर स्थानांतरित"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4322
-#: TrackPanel.cpp:7405
+#: TrackPanel.cpp:4350
+#: TrackPanel.cpp:7479
 msgid "up"
 msgstr "ऊपर"
 
 #. i18n-hint: a direction as in up or down.
-#: TrackPanel.cpp:4335
-#: TrackPanel.cpp:7407
+#: TrackPanel.cpp:4363
+#: TrackPanel.cpp:7481
 msgid "down"
 msgstr "नीचे"
 
 #. i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
 #. * If the word order is different in your language ask on the translators list about what
 #. * to do.
-#: TrackPanel.cpp:4350
-#: TrackPanel.cpp:7399
+#: TrackPanel.cpp:4378
+#: TrackPanel.cpp:7473
 #, c-format
 msgid "Moved '%s' %s"
 msgstr "'%s' %s खिसकाया"
 
-#: TrackPanel.cpp:4353
-#: TrackPanel.cpp:7408
+#: TrackPanel.cpp:4381
+#: TrackPanel.cpp:7482
 msgid "Move Track"
 msgstr "ट्रैक खिसकाएं"
 
-#: TrackPanel.cpp:4978
+#: TrackPanel.cpp:5006
 msgid "Expand"
 msgstr "विस्तार"
 
-#: TrackPanel.cpp:4978
+#: TrackPanel.cpp:5006
 msgid "Expanded Cut Line"
 msgstr "विस्तृत काट-रेखा"
 
-#: TrackPanel.cpp:4991
+#: TrackPanel.cpp:5019
 msgid "Merge"
 msgstr "विलय"
 
-#: TrackPanel.cpp:4991
+#: TrackPanel.cpp:5019
 msgid "Merged Clips"
 msgstr "जुड़ी कतरन"
 
-#: TrackPanel.cpp:5002
+#: TrackPanel.cpp:5030
 msgid "Remove"
 msgstr "हटाएं"
 
-#: TrackPanel.cpp:5002
+#: TrackPanel.cpp:5030
 msgid "Removed Cut Line"
 msgstr "काट-रेखा हटाई गई"
 
-#: TrackPanel.cpp:6664
+#: TrackPanel.cpp:6692
 msgid "Adjusted Pan"
 msgstr "ऐडजस्टेड पैन"
 
-#: TrackPanel.cpp:6719
+#: TrackPanel.cpp:6747
 msgid "Adjusted gain"
 msgstr "दुरुस्त गेन"
 
-#: TrackPanel.cpp:6854
+#: TrackPanel.cpp:6889
 msgid "Can't delete track with active audio"
 msgstr "सक्रिय ऑडियो वाली ट्रैक को नष्ट नहीं कर सकते"
 
-#: TrackPanel.cpp:7004
+#: TrackPanel.cpp:7039
 msgid "Stereo, "
 msgstr "स्टिरियो, "
 
-#: TrackPanel.cpp:7007
+#: TrackPanel.cpp:7042
 msgid "Mono, "
 msgstr "मोनो, "
 
-#: TrackPanel.cpp:7009
+#: TrackPanel.cpp:7044
 msgid "Left, "
 msgstr "बायाँ, "
 
-#: TrackPanel.cpp:7011
+#: TrackPanel.cpp:7046
 msgid "Right, "
 msgstr "दायाँ, "
 
-#: TrackPanel.cpp:7023
+#: TrackPanel.cpp:7058
 msgid "Left Channel"
 msgstr "बायाँ चैनल"
 
-#: TrackPanel.cpp:7023
+#: TrackPanel.cpp:7058
 msgid "Right Channel"
 msgstr "दायां चैनल"
 
-#: TrackPanel.cpp:7024
+#: TrackPanel.cpp:7059
 msgid "Mono"
 msgstr "मोनो"
 
-#: TrackPanel.cpp:7033
-#: TrackPanel.cpp:7202
+#: TrackPanel.cpp:7068
+#: TrackPanel.cpp:7237
 #, c-format
 msgid "Changed '%s' to %s"
 msgstr "परिवर्तित '%s' से %s"
 
-#: TrackPanel.cpp:7036
+#: TrackPanel.cpp:7071
 msgid "Channel"
 msgstr "चैनल"
 
-#: TrackPanel.cpp:7077
+#: TrackPanel.cpp:7112
 #, c-format
 msgid "Split stereo track '%s'"
 msgstr "स्टिरियो ट्रैक '%s' अलग करें"
 
-#: TrackPanel.cpp:7079
+#: TrackPanel.cpp:7114
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "स्टिरियो को मोनो '%s' में विभाजित करें"
 
-#: TrackPanel.cpp:7111
+#: TrackPanel.cpp:7146
 #, c-format
 msgid "Made '%s' a stereo track"
 msgstr "'%s' को स्टिरियो ट्रैक बनाया"
 
-#: TrackPanel.cpp:7114
+#: TrackPanel.cpp:7149
 msgid "Make Stereo"
 msgstr "स्टिरियो बनाएं"
 
-#: TrackPanel.cpp:7159
+#: TrackPanel.cpp:7194
 #, c-format
 msgid "Changed '%s' to %d Hz"
 msgstr "परिवर्तित '%s' से %d Hz"
 
-#: TrackPanel.cpp:7161
+#: TrackPanel.cpp:7196
 msgid "Rate Change"
 msgstr "आवृति दर परिवर्तन"
 
-#: TrackPanel.cpp:7206
+#: TrackPanel.cpp:7241
 msgid "Format Change"
 msgstr "स्वरुप परिवर्तन"
 
-#: TrackPanel.cpp:7292
+#: TrackPanel.cpp:7328
 msgid "Set Rate"
 msgstr "आवृति दर निर्धारित करें"
 
-#: TrackPanel.cpp:7356
+#: TrackPanel.cpp:7399
 msgid "Change lower speed limit (%) to:"
 msgstr "न्यूनतम गति सीमा (%) बदलें :"
 
-#: TrackPanel.cpp:7357
-#: TrackPanel.cpp:7358
+#: TrackPanel.cpp:7400
+#: TrackPanel.cpp:7401
 msgid "Lower speed limit"
 msgstr "न्यूनतम गति-सीमा"
 
-#: TrackPanel.cpp:7363
+#: TrackPanel.cpp:7406
 msgid "Change upper speed limit (%) to:"
 msgstr "बदलें अधिकतम गति सीमा (%) :"
 
-#: TrackPanel.cpp:7364
-#: TrackPanel.cpp:7365
+#: TrackPanel.cpp:7407
+#: TrackPanel.cpp:7408
 msgid "Upper speed limit"
 msgstr "अधिकतम गति-सीमा"
 
-#: TrackPanel.cpp:7373
+#: TrackPanel.cpp:7416
 #, c-format
 msgid "Set range to '%d' - '%d'"
 msgstr "सीमा निर्धारित करें '%d' - '%d'"
 
 #. i18n-hint: (verb)
-#: TrackPanel.cpp:7378
+#: TrackPanel.cpp:7421
 msgid "Set Range"
 msgstr "सीमा निर्धारित करें"
 
-#: TrackPanel.cpp:7438
+#: TrackPanel.cpp:7433
+#: TrackPanel.cpp:7442
+msgid "Set Display"
+msgstr "प्रदर्शन निर्धारित करें"
+
+#: TrackPanel.cpp:7433
+msgid "Set time track display to linear"
+msgstr "समय ट्रैक का प्रदर्शन रेखीय निर्धारित करें"
+
+#: TrackPanel.cpp:7442
+msgid "Set time track display to logarithmic"
+msgstr "समय ट्रैक का प्रदर्शन लघुगणकीय निर्धारित करें"
+
+#: TrackPanel.cpp:7451
+#: TrackPanel.cpp:7454
+msgid "Set Interpolation"
+msgstr "अंतर्वेशन निर्धारित करें"
+
+#: TrackPanel.cpp:7451
+msgid "Set time track interpolation to linear"
+msgstr "समय ट्रैक का अंतर्वेशन रेखीय निर्धारित करें"
+
+#: TrackPanel.cpp:7454
+msgid "Set time track interpolation to logarithmic"
+msgstr "समय ट्रैक का अंतर्वेशन लघुगणकीय निर्धारित करें"
+
+#: TrackPanel.cpp:7512
 msgid "Change track name to:"
 msgstr "ट्रैक नाम बदलकर यह करें :"
 
-#: TrackPanel.cpp:7439
+#: TrackPanel.cpp:7513
 msgid "Track Name"
 msgstr "ट्रैक का नाम"
 
-#: TrackPanel.cpp:7452
+#: TrackPanel.cpp:7526
 #, c-format
 msgid "Renamed '%s' to '%s'"
 msgstr "नामकरण '%s' to '%s'"
 
-#: TrackPanel.cpp:7455
+#: TrackPanel.cpp:7529
 msgid "Name Change"
 msgstr "नाम परिवर्तन"
 
 # नाम ट्रैक मुद्रलिपि
 #. i18n-hint: (noun) This is the font for the label track.
-#: TrackPanel.cpp:7523
+#: TrackPanel.cpp:7597
 msgid "Label Track Font"
 msgstr "नाम ट्रैक फ़ान्ट"
 
 #. i18n-hint: (noun) The name of the typeface
-#: TrackPanel.cpp:7536
-#: TrackPanel.cpp:7543
+#: TrackPanel.cpp:7610
+#: TrackPanel.cpp:7617
 msgid "Face name"
 msgstr "मुखनाम"
 
 #. i18n-hint: (noun) The size of the typeface
-#: TrackPanel.cpp:7548
-#: TrackPanel.cpp:7555
+#: TrackPanel.cpp:7622
+#: TrackPanel.cpp:7629
 msgid "Face size"
 msgstr "मुखाकार"
 
-#: TrackPanel.cpp:7845
+#: TrackPanel.cpp:7919
 msgid "Stereo, 999999Hz"
 msgstr "स्टिरियो, 999999Hz"
 
@@ -5314,47 +5351,52 @@ msgstr "ऑटो डक प्रक्रिया जारी..."
 msgid "OK"
 msgstr "ठीक"
 
-#: effects/BassBoost.cpp:52
+#: effects/BassTreble.cpp:50
 #, c-format
-msgid "Applied effect: %s frequency = %.0f Hz, boost = %.0f dB"
-msgstr "लागू प्रभाव : %s आवृति = %.0f Hz, बूस्ट = %.0f dB"
+msgid "Applied effect: %s bass = %.0f dB, treble = %.0f dB, gain = %.0f dB"
+msgstr "लागू प्रभाव : %s बेस = %.0f dB, ट्रेबल = %.0f dB, गेन = %.0f dB"
 
-#: effects/BassBoost.cpp:169
-msgid "Bass Boost"
-msgstr "बास बूस्ट"
+#: effects/BassTreble.cpp:190
+msgid "Bass and Treble"
+msgstr "बेस और ट्रेबल"
 
-#. i18n-hint: Nasca Octavian Paul is a person's name.
-#: effects/BassBoost.cpp:183
-#: effects/Paulstretch.cpp:420
-#: effects/Phaser.cpp:221
-#: effects/Wahwah.cpp:216
-msgid "by Nasca Octavian Paul"
-msgstr "Nasca Octavian Paul द्वारा"
+#. i18n-hint: Steve Daulton is a person's name.
+#: effects/BassTreble.cpp:203
+msgid "by Steve Daulton"
+msgstr "Steve Daulton द्वारा"
 
-#: effects/BassBoost.cpp:197
-#: effects/ChangePitch.cpp:334
-msgid "Frequency (Hz):"
-msgstr "आवृति(Hz):"
+#: effects/BassTreble.cpp:217
+msgid "Bass (dB):"
+msgstr "बेस(dB):"
 
-#: effects/BassBoost.cpp:206
-msgid "Frequency Hertz"
-msgstr "आवृति हर्टज़"
+#: effects/BassTreble.cpp:222
+msgid "Bass (dB)"
+msgstr "बेस(dB)"
 
-#: effects/BassBoost.cpp:210
-msgid "Boost (dB):"
-msgstr "बढ़ाएं(dB):"
+#: effects/BassTreble.cpp:226
+msgid "Treble (dB):"
+msgstr "ट्रेबल (dB):"
 
-#: effects/BassBoost.cpp:219
-msgid "Boost dB"
-msgstr "बढ़ाएं dB"
+#: effects/BassTreble.cpp:231
+msgid "Treble (dB)"
+msgstr "ट्रेबल (dB)"
 
-#: effects/BassBoost.h:35
-msgid "BassBoost..."
-msgstr "बासबूस्ट..."
+#: effects/BassTreble.cpp:235
+msgid "Gain (dB):"
+msgstr "गेन (dB):"
 
-#: effects/BassBoost.h:49
-msgid "Boosting Bass Frequencies"
-msgstr "बेस आवृतियों को प्रबल करते हैं"
+#: effects/BassTreble.cpp:240
+msgid "Gain (dB)"
+msgstr "गेन (dB)"
+
+# भारी और तीखी...
+#: effects/BassTreble.h:32
+msgid "Bass and Treble..."
+msgstr "बेस और ट्रेबल..."
+
+#: effects/BassTreble.h:46
+msgid "Adjusting Bass and Treble"
+msgstr "बास और ट्रेबल समायोजित कर रहे हैं"
 
 #: effects/ChangeLength.h:26
 msgid "Change Length..."
@@ -5424,6 +5466,10 @@ msgstr "अर्धस्वर(दुगुण) :"
 #: effects/ChangePitch.cpp:328
 msgid "Semitones in half-steps"
 msgstr "अर्धस्वर दुगुन में"
+
+#: effects/ChangePitch.cpp:334
+msgid "Frequency (Hz):"
+msgstr "आवृति(Hz):"
 
 #: effects/ChangePitch.cpp:338
 #: effects/ChangeSpeed.cpp:384
@@ -6104,7 +6150,7 @@ msgstr "घन"
 msgid "Equalization"
 msgstr "इक्वलाइज़ेशन"
 
-#: effects/Equalization.cpp:1000
+#: effects/Equalization.cpp:1002
 #, c-format
 msgid ""
 "EQCurves.xml and EQDefaultCurves.xml were not found on your system.\n"
@@ -6117,19 +6163,19 @@ msgstr ""
 "\n"
 "वक्र को %s पर संचित करें"
 
-#: effects/Equalization.cpp:1001
+#: effects/Equalization.cpp:1003
 msgid "EQCurves.xml and EQDefaultCurves.xml missing"
 msgstr "EQCurves.xml और EQDefaultCurves.xml गायब हैं "
 
-#: effects/Equalization.cpp:1007
-#: effects/Equalization.cpp:1034
-#: effects/Equalization.cpp:1037
-#: effects/Equalization.cpp:1038
+#: effects/Equalization.cpp:1009
+#: effects/Equalization.cpp:1036
+#: effects/Equalization.cpp:1039
+#: effects/Equalization.cpp:1040
 msgid "unnamed"
 msgstr "बेनाम"
 
 #. i18n-hint: EQ stands for 'Equalization'.
-#: effects/Equalization.cpp:1028
+#: effects/Equalization.cpp:1030
 #, c-format
 msgid ""
 "Error Loading EQ Curves from file:\n"
@@ -6142,93 +6188,93 @@ msgstr ""
 "त्रुटि संदेश है :\n"
 "%s"
 
-#: effects/Equalization.cpp:1031
+#: effects/Equalization.cpp:1033
 msgid "Error Loading EQ Curves"
 msgstr "EQ वक्र लोड करने में त्रुटि"
 
-#: effects/Equalization.cpp:1098
+#: effects/Equalization.cpp:1100
 msgid "Error Saving Equalization Curves"
 msgstr "इक्वालाइज़ेशन वक्र संचित करने में त्रुटि"
 
 #. i18n-hint: && in here is an escape character to get a single &
 #. * on screen, so keep it as is
-#: effects/Equalization.cpp:1121
+#: effects/Equalization.cpp:1123
 msgid "Equalization, by Martyn Shaw && Mitch Golden"
 msgstr "इक्वलाइजे़शन, Martyn Shaw && Mitch Golden के द्वारा"
 
-#: effects/Equalization.cpp:1142
+#: effects/Equalization.cpp:1144
 msgid "Max dB"
 msgstr "अधिकतम dB"
 
-#: effects/Equalization.cpp:1144
+#: effects/Equalization.cpp:1146
 msgid "Min dB"
 msgstr "न्यूनतम dB"
 
-#: effects/Equalization.cpp:1223
+#: effects/Equalization.cpp:1225
 msgid "kHz"
 msgstr "kHz"
 
-#: effects/Equalization.cpp:1240
+#: effects/Equalization.cpp:1242
 msgid "&Draw Curves"
 msgstr "वक्र खींचें (&D)"
 
-#: effects/Equalization.cpp:1242
+#: effects/Equalization.cpp:1244
 msgid "Draw Curves"
 msgstr "वक्र खींचें"
 
-#: effects/Equalization.cpp:1246
+#: effects/Equalization.cpp:1248
 msgid "&Graphic EQ"
 msgstr "ग्राफ़िक EQ (&G)"
 
-#: effects/Equalization.cpp:1248
+#: effects/Equalization.cpp:1250
 msgid "Graphic EQ"
 msgstr "ग्राफ़िक EQ"
 
-#: effects/Equalization.cpp:1261
+#: effects/Equalization.cpp:1263
 msgid "Li&near Frequency Scale"
 msgstr "रेखीय आवृति मापदंड"
 
-#: effects/Equalization.cpp:1262
+#: effects/Equalization.cpp:1264
 msgid "Linear Frequency Scale"
 msgstr "रैखिक आवृति मापदंड"
 
-#: effects/Equalization.cpp:1271
+#: effects/Equalization.cpp:1273
 msgid "Length of &Filter:"
 msgstr "फ़िल्टर की लंबाई:"
 
-#: effects/Equalization.cpp:1277
+#: effects/Equalization.cpp:1279
 msgid "Length of Filter"
 msgstr "फ़िल्टर की लंबाई"
 
-#: effects/Equalization.cpp:1294
+#: effects/Equalization.cpp:1296
 msgid "&Select Curve:"
 msgstr "वक्र चुनें :(&S)"
 
-#: effects/Equalization.cpp:1304
+#: effects/Equalization.cpp:1306
 msgid "S&ave/Manage Curves..."
 msgstr "वक्र संचित/प्रबंध करें..."
 
-#: effects/Equalization.cpp:1305
+#: effects/Equalization.cpp:1307
 msgid "Save and Manage Curves"
 msgstr "वक्र प्रबंध एवं संचय करें"
 
-#: effects/Equalization.cpp:1308
+#: effects/Equalization.cpp:1310
 msgid "Fla&tten"
 msgstr "समतल करें (&t)"
 
-#: effects/Equalization.cpp:1310
+#: effects/Equalization.cpp:1312
 msgid "&Invert"
 msgstr "उलटें (&I)"
 
-#: effects/Equalization.cpp:1312
+#: effects/Equalization.cpp:1314
 msgid "G&rids"
 msgstr "ग्रिड (&r)"
 
-#: effects/Equalization.cpp:1377
+#: effects/Equalization.cpp:1379
 msgid "Select Curve"
 msgstr "वक्र चुनें"
 
-#: effects/Equalization.cpp:1393
+#: effects/Equalization.cpp:1395
 msgid ""
 "To use this EQ curve in a batch chain, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
@@ -6236,61 +6282,61 @@ msgstr ""
 "इस EQ वक्र का उपयोग एक बैच श्रृंखला में करने के लिए, कृपया एक नया नाम चुनें.\n"
 "'वक्र सूची संचय/प्रबंध...' बटन चुनें और 'बेनाम' वक्र का नामकरण करें, उसके बाद उसका प्रयोग करें."
 
-#: effects/Equalization.cpp:1394
+#: effects/Equalization.cpp:1396
 msgid "EQ Curve needs a different name"
 msgstr "EQ वक्र को एक अलग नाम की जरूरत है"
 
-#: effects/Equalization.cpp:1717
+#: effects/Equalization.cpp:1719
 msgid "Curve not found"
 msgstr "वक्र नहीं मिला"
 
-#: effects/Equalization.cpp:1717
+#: effects/Equalization.cpp:1719
 msgid "Requested curve not found, using 'unnamed'"
 msgstr "मांगा गया वक्र नहीं मिला, 'बेनामी' का प्रयोग करते हैं"
 
-#: effects/Equalization.cpp:2829
-#: effects/Equalization.cpp:2834
+#: effects/Equalization.cpp:2831
+#: effects/Equalization.cpp:2836
 msgid "Manage Curves List"
 msgstr "वक्र सूची प्रबंध"
 
-#: effects/Equalization.cpp:2833
+#: effects/Equalization.cpp:2835
 msgid "Manage Curves"
 msgstr "वक्र प्रबंधन"
 
-#: effects/Equalization.cpp:2866
+#: effects/Equalization.cpp:2868
 msgid "&Curves"
 msgstr "वक्र (&C)"
 
-#: effects/Equalization.cpp:2870
+#: effects/Equalization.cpp:2872
 msgid "Curve Name"
 msgstr "वक्र का नाम"
 
-#: effects/Equalization.cpp:2877
+#: effects/Equalization.cpp:2879
 msgid "&Rename..."
 msgstr "पुनःनामकरण (&R)..."
 
-#: effects/Equalization.cpp:2878
+#: effects/Equalization.cpp:2880
 msgid "D&elete..."
 msgstr "मिटाएं... (&e)"
 
-#: effects/Equalization.cpp:2879
+#: effects/Equalization.cpp:2881
 msgid "I&mport..."
 msgstr "आयात (&m)करें..."
 
-#: effects/Equalization.cpp:2880
+#: effects/Equalization.cpp:2882
 msgid "E&xport..."
 msgstr "निर्यात(&x)करें..."
 
-#: effects/Equalization.cpp:2881
+#: effects/Equalization.cpp:2883
 msgid "&Get More..."
 msgstr "और पाएं...(&G)"
 
-#: effects/Equalization.cpp:2888
+#: effects/Equalization.cpp:2890
 #: widgets/ErrorDialog.cpp:139
 msgid "Help"
 msgstr "सहायता"
 
-#: effects/Equalization.cpp:2889
+#: effects/Equalization.cpp:2891
 msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
@@ -6298,111 +6344,114 @@ msgstr ""
 "'बेनाम' को नाम दें ताकि नई प्रविष्टि को संचित कर सकें.\n"
 "'ठीक' बटन सभी परिवर्तनों को संचित करता है,  जबकि 'रद्द करें'  कुछ भी नहीं."
 
-#: effects/Equalization.cpp:2924
+#: effects/Equalization.cpp:2926
 msgid "'unnamed' always stays at the bottom of the list"
 msgstr "'बेनाम' हमेशा सूची में सबसे नीचे रहता है"
 
-#: effects/Equalization.cpp:2924
-#: effects/Equalization.cpp:3225
+#: effects/Equalization.cpp:2926
 msgid "'unnamed' is special"
 msgstr "'बेनाम' विशिष्ट है"
 
-#: effects/Equalization.cpp:3018
+#: effects/Equalization.cpp:3020
 msgid "' to..."
 msgstr "' तक..."
 
-#: effects/Equalization.cpp:3018
-#: effects/Equalization.cpp:3021
+#: effects/Equalization.cpp:3020
+#: effects/Equalization.cpp:3023
 msgid "Rename '"
 msgstr "पुनः नामकरण '"
 
-#: effects/Equalization.cpp:3019
+#: effects/Equalization.cpp:3021
 msgid "Rename..."
 msgstr "पुनः नामकरण ..."
 
-#: effects/Equalization.cpp:3042
+#: effects/Equalization.cpp:3044
 msgid "Name is the same as the original one"
 msgstr "नाम मूल नाम के समान है"
 
-#: effects/Equalization.cpp:3042
+#: effects/Equalization.cpp:3044
 msgid "Same name"
 msgstr "वही नाम"
 
-#: effects/Equalization.cpp:3045
+#: effects/Equalization.cpp:3047
 msgid "'?"
 msgstr "'?"
 
-#: effects/Equalization.cpp:3045
+#: effects/Equalization.cpp:3047
 msgid "Overwrite existing curve '"
 msgstr "उपस्थित वक्र को मिटाकर लिखें '"
 
-#: effects/Equalization.cpp:3046
+#: effects/Equalization.cpp:3048
 msgid "Curve exists"
 msgstr "वक्र मौजूद है"
 
-#: effects/Equalization.cpp:3117
+#: effects/Equalization.cpp:3119
 msgid "You cannot delete the 'unnamed' curve."
 msgstr "आप 'बेनाम' वक्र को मिटा नहीं सकते."
 
-#: effects/Equalization.cpp:3118
-#: effects/Equalization.cpp:3167
+#: effects/Equalization.cpp:3120
+#: effects/Equalization.cpp:3169
 msgid "Can't delete 'unnamed'"
 msgstr "'बेनाम' को मिटाया नहीं जा सकता"
 
-#: effects/Equalization.cpp:3124
-#: effects/Equalization.cpp:3153
+#: effects/Equalization.cpp:3126
+#: effects/Equalization.cpp:3155
 msgid "' ?"
 msgstr "' ?"
 
-#: effects/Equalization.cpp:3124
-#: effects/Equalization.cpp:3153
+#: effects/Equalization.cpp:3126
+#: effects/Equalization.cpp:3155
 msgid "Delete '"
 msgstr "मिटाएँ '"
 
-#: effects/Equalization.cpp:3127
-#: effects/Equalization.cpp:3157
+#: effects/Equalization.cpp:3129
+#: effects/Equalization.cpp:3159
 #: export/ExportFFmpegDialogs.cpp:1664
 msgid "Confirm Deletion"
 msgstr "मिटाने के लिए संपुष्टी दें"
 
-#: effects/Equalization.cpp:3150
+#: effects/Equalization.cpp:3152
 msgid "Delete "
 msgstr "मिटाएँ"
 
-#: effects/Equalization.cpp:3150
+#: effects/Equalization.cpp:3152
 msgid "items?"
 msgstr "चीजें?"
 
-#: effects/Equalization.cpp:3166
+#: effects/Equalization.cpp:3168
 msgid "You cannot delete the 'unnamed' curve, it is special."
 msgstr "आप 'बेनाम' वक्र को मिटा नहीं सकते, यह विशिष्ट है."
 
-#: effects/Equalization.cpp:3183
+#: effects/Equalization.cpp:3185
 msgid "Choose an EQ curve file"
 msgstr "EQ वक्र फ़ाइल चुनें"
 
-#: effects/Equalization.cpp:3183
+#: effects/Equalization.cpp:3185
 msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
 msgstr "xml फ़ाइलें (*.xml;*.XML)|*.xml;*.XML"
 
-#: effects/Equalization.cpp:3203
+#: effects/Equalization.cpp:3205
 msgid "Export EQ curves as..."
 msgstr "EQ वक्रों का निर्यात इस नाम से..."
 
-#: effects/Equalization.cpp:3225
-msgid "You cannot export 'unnamed' curve"
-msgstr "आप 'बेनाम' वक्र का निर्यात नहीं कर सकते"
+#: effects/Equalization.cpp:3227
+msgid "Cannot Export 'unnamed'"
+msgstr "'बेनाम' वक्र का निर्यात संभव नहीं"
 
-#: effects/Equalization.cpp:3235
+#: effects/Equalization.cpp:3227
+msgid "You cannot export 'unnamed' curve, it is special."
+msgstr "आप 'बेनाम' वक्र को मिटा नहीं सकते, यह विशिष्ट है."
+
+#: effects/Equalization.cpp:3237
 #, c-format
 msgid "%d curves exported to %s"
 msgstr "%d वक्र %s को निर्यात किया"
 
-#: effects/Equalization.cpp:3236
+#: effects/Equalization.cpp:3238
 msgid "Curves exported"
 msgstr "वक्र निर्यातित"
 
-#: effects/Equalization.cpp:3239
+#: effects/Equalization.cpp:3241
 msgid "No curves exported"
 msgstr "किसी वक्र का निर्यात नहीं हुआ"
 
@@ -6933,6 +6982,12 @@ msgstr ""
 "अभी चयन बहुत कम है.\n"
 " इसे समय के न्यूनतम माप की तुलना में ज्यादा लंबा होना चाहिए."
 
+#: effects/Paulstretch.cpp:420
+#: effects/Phaser.cpp:221
+#: effects/Wahwah.cpp:216
+msgid "by Nasca Octavian Paul"
+msgstr "Nasca Octavian Paul द्वारा"
+
 # i18n-hint: कितनी बार तक ज्यादा देर आवाज आएगी, उदाहरण के लिए-
 # * 1-सेकेंड नमूने पर, 10.0  के विस्तार गुणक को लागू
 # * करने पर 10 सेकेंड तक आवाज आएगी (लगभग)
@@ -7411,13 +7466,13 @@ msgstr "मौन हटाएं..."
 msgid "Truncating Silence..."
 msgstr "मौन हटा रहे हैं..."
 
-#: effects/VST/VSTEffect.cpp:389
+#: effects/VST/VSTEffect.cpp:388
 #: effects/ladspa/LadspaEffect.cpp:590
 #: effects/lv2/LV2Effect.cpp:798
 msgid "Effect Settings"
 msgstr "प्रभाव सेटिग्स"
 
-#: effects/VST/VSTEffect.cpp:469
+#: effects/VST/VSTEffect.cpp:468
 #: effects/ladspa/LadspaEffect.cpp:555
 #: effects/ladspa/LadspaEffect.cpp:563
 #: prefs/QualityPrefs.cpp:74
@@ -7425,56 +7480,56 @@ msgstr "प्रभाव सेटिग्स"
 msgid "None"
 msgstr "कुछ नहीं"
 
-#: effects/VST/VSTEffect.cpp:480
+#: effects/VST/VSTEffect.cpp:479
 msgid "Presets:"
 msgstr "पूर्व-निर्धारण:"
 
-#: effects/VST/VSTEffect.cpp:490
+#: effects/VST/VSTEffect.cpp:489
 msgid "Presets"
 msgstr "पूर्व-निर्धारण"
 
-#: effects/VST/VSTEffect.cpp:493
+#: effects/VST/VSTEffect.cpp:492
 msgid "Load"
 msgstr "लागू करें"
 
-#: effects/VST/VSTEffect.cpp:496
+#: effects/VST/VSTEffect.cpp:495
 msgid "Save"
 msgstr "सुरक्षित करें"
 
-#: effects/VST/VSTEffect.cpp:596
+#: effects/VST/VSTEffect.cpp:595
 msgid "Load VST Program:"
 msgstr "VST कार्यक्रम लोड करें :"
 
-#: effects/VST/VSTEffect.cpp:614
+#: effects/VST/VSTEffect.cpp:613
 msgid "Error Loading VST Program"
 msgstr "VST प्रोग्राम लोड करने में त्रुटि"
 
-#: effects/VST/VSTEffect.cpp:630
+#: effects/VST/VSTEffect.cpp:629
 msgid "Save VST Program As:"
 msgstr "VST प्रोग्राम सहेजें, इस नाम से:"
 
-#: effects/VST/VSTEffect.cpp:769
+#: effects/VST/VSTEffect.cpp:768
 #, c-format
 msgid "This parameter file was saved from %s.  Continue?"
 msgstr "यह पैरामीटर फाइल %s से सहेजा गया था. जारी रखें?"
 
-#: effects/VST/VSTEffect.cpp:1223
+#: effects/VST/VSTEffect.cpp:1222
 msgid "Performing Effect: "
 msgstr "प्रभाव लागू करते हैं :"
 
-#: effects/VST/VSTEffect.cpp:1254
+#: effects/VST/VSTEffect.cpp:1253
 msgid "Both channels of a stereo track must be the same sample rate."
 msgstr "स्टीरियो ट्रैक के दोनों चैनलों का नमूना दर एक समान होना चाहिए."
 
-#: effects/VST/VSTEffect.cpp:1259
+#: effects/VST/VSTEffect.cpp:1258
 msgid "Both channels of a stereo track must be the same length."
 msgstr "स्टीरियो ट्रैक के दोनों चैनलों को  लंबाई एक बराबर होनी चाहिए."
 
-#: effects/VST/VSTEffect.cpp:1790
+#: effects/VST/VSTEffect.cpp:1789
 msgid "Scanning VST Plugins"
 msgstr "VST प्लग-इन ढूंढ रहे हैं"
 
-#: effects/VST/VSTEffect.cpp:1806
+#: effects/VST/VSTEffect.cpp:1805
 #, c-format
 msgid "Checking %s"
 msgstr "%s जाँच जारी"
@@ -7662,50 +7717,55 @@ msgstr "प्लगइन सेटिग्स"
 msgid "Program"
 msgstr "कार्यक्रम"
 
-#: export/Export.cpp:499
-msgid "All the selected audio is muted."
+#: export/Export.cpp:493
+msgid "All selected audio is muted."
 msgstr "सभी चयनित ऑडियो मौन है."
 
-#: export/Export.cpp:501
-msgid "All the audio is muted."
-msgstr "सभी ध्वनियाँ मौन हैं"
+#: export/Export.cpp:495
+#: export/ExportMultiple.cpp:177
+msgid "All audio is muted."
+msgstr "सभी ध्वनियाँ मौन हैं."
 
-#: export/Export.cpp:551
+#: export/Export.cpp:497
+msgid "Unable to export"
+msgstr "निर्यात नहीं कर सका"
+
+#: export/Export.cpp:545
 msgid "Export File"
 msgstr "फ़ाइल निर्यात"
 
-#: export/Export.cpp:560
+#: export/Export.cpp:554
 msgid "&Options..."
 msgstr "विकल्प...(&O)"
 
-#: export/Export.cpp:601
-msgid "Are you sure you want to save the file as \""
-msgstr "क्या आप इस नाम से फ़ाइल सहेजना चाहते हैं \""
+#: export/Export.cpp:595
+msgid "Are you sure you want to export the file as \""
+msgstr "क्या आप फ़ाइल का निर्यात इस नाम से करना चाहते हैं \""
 
-#: export/Export.cpp:606
-#: export/Export.cpp:627
-#: export/Export.cpp:671
+#: export/Export.cpp:600
+#: export/Export.cpp:621
+#: export/Export.cpp:665
 #: import/ImportPCM.cpp:238
-#: widgets/Warning.cpp:53
+#: widgets/Warning.cpp:54
 msgid "Warning"
 msgstr "चेतावनी"
 
-#: export/Export.cpp:621
+#: export/Export.cpp:615
 #, c-format
 msgid ""
-"You are about to save a %s file with the name \"%s\".\n"
+"You are about to export a %s file with the name \"%s\".\n"
 "\n"
 "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
-"Are you sure you want to save the file under this name?"
+"Are you sure you want to export the file under this name?"
 msgstr ""
-"आप एक %s फाइल \"%s\" के नाम से सहेजने जा रहे हैं.\n"
+"आप एक %s फाइल का निर्यात \"%s\" के नाम से करने जा रहे हैं.\n"
 "\n"
-"इन फ़ाइलों का नाम अधिकतर अंत में \".%s\" होता है, और इन गैरमानक विस्तार वाले फ़ाइलों को कुछ प्रोग्राम नहीं खोल सकेंगे.\n"
+"इन फ़ाइलों  के नाम का अंत प्राय: \".%s\"  से होता है, और इन गैरमानक विस्तार वाले फ़ाइलों को कुछ प्रोग्राम नहीं खोल सकेंगे.\n"
 "\n"
-"क्या आप इस नाम से फ़ाइल सहेजना चाहते हैं? "
+"क्या आप इस नाम से फ़ाइल का निर्यात करना चाहते हैं? "
 
-#: export/Export.cpp:653
+#: export/Export.cpp:647
 msgid ""
 "You are attempting to overwrite an aliased file that is missing.\n"
 "The file cannot be written because the path is needed to restore the original audio to the project.\n"
@@ -7717,42 +7777,42 @@ msgstr ""
 "चुनें फ़ाइल > सभी गुम फ़ाइलें के मूल स्थानों को देखने के लिए निर्भरता जाँच करें.\n"
 "यदि आप अभी भी निर्यात करना चाहते हैं, तो कृपया एक अलग फ़ाइल नाम या फ़ोल्डर का चयन करें."
 
-#: export/Export.cpp:667
+#: export/Export.cpp:661
 #, c-format
 msgid "A file named \"%s\" already exists.  Replace?"
 msgstr "\"%s\" नामवाला एक फ़ाइल पहले से मौजूद है. इसे बदल दें?"
 
-#: export/Export.cpp:781
+#: export/Export.cpp:775
 msgid "Your tracks will be mixed down to two stereo channels in the exported file."
 msgstr "आपके ट्रैकों को मिश्रित करके निर्यातित फ़ाइल में केवल दो स्टिरियो चैनल मिलेगा."
 
-#: export/Export.cpp:786
+#: export/Export.cpp:782
 msgid "Your tracks will be mixed down to a single mono channel in the exported file."
 msgstr "आपके ट्रैकों को मिश्रित करके निर्यातित फ़ाइल में केवल एक मोनो चैनल मिलेगा."
 
-#: export/Export.cpp:797
+#: export/Export.cpp:795
 msgid "Advanced Mixing Options"
 msgstr "उच्चतर मिक्सिंग विकल्प निर्धारण"
 
-#: export/Export.cpp:1005
+#: export/Export.cpp:1003
 #, c-format
 msgid "Channel: %2d"
 msgstr "चैनल : %2d"
 
-#: export/Export.cpp:1120
+#: export/Export.cpp:1118
 msgid " - Left"
 msgstr " - बायाँ"
 
-#: export/Export.cpp:1122
+#: export/Export.cpp:1120
 msgid " - Right"
 msgstr " - दायाँ"
 
-#: export/Export.cpp:1144
+#: export/Export.cpp:1142
 msgid "Mixer Panel"
 msgstr "मिक्सर पैनल"
 
-#: export/Export.cpp:1150
-#: export/Export.cpp:1197
+#: export/Export.cpp:1148
+#: export/Export.cpp:1195
 #, c-format
 msgid "Output Channels: %2d"
 msgstr "आउटपुट चैनल: %2d"
@@ -8719,138 +8779,130 @@ msgid "MP3 export library not found"
 msgstr "MP3 निर्यात लाइब्रेरी नहीं मिला"
 
 #: export/ExportMultiple.cpp:105
-#: export/ExportMultiple.cpp:431
-#: export/ExportMultiple.cpp:549
+#: export/ExportMultiple.cpp:441
+#: export/ExportMultiple.cpp:559
 msgid "Export Multiple"
 msgstr "अनेक निर्यात"
 
-#: export/ExportMultiple.cpp:175
+#: export/ExportMultiple.cpp:178
+#: export/ExportMultiple.cpp:190
+msgid "Cannot Export Multiple"
+msgstr "अनेकों निर्यात नहीं हो सकता"
+
+#: export/ExportMultiple.cpp:186
 msgid ""
-"If you have more than one Audio Track, you can\n"
-"export each track as a separate audio file.\n"
+"You have only one unmuted Audio Track and no applicable \n"
+"labels, so you cannot export to separate audio files. \n"
 "\n"
-"If you have a Label Track, you can export a separate\n"
-"audio file for each label in that track. You can have\n"
-"more than one Label Track, but files will only be\n"
-"exported for the uppermost Label Track.\n"
-"\n"
-"This Project does not meet the above criteria for\n"
-"exporting multiple files."
+"If you have more than one Label Track, Export Multiple is \n"
+"based only on labels in the uppermost Label Track."
 msgstr ""
-"यदि आपके पास एक से अधिक ऑडियो ट्रैक है, तो आप\n"
-"प्रत्येक ट्रैक को एक अलग फ़ाइल में निर्यात कर सकते हैं.\n"
+"आपके पास केवल एक अमूक ऑडियो ट्रैक और कोई सक्रिय \n"
+"लेबल नहीं है, इसलिए आप अलग-अलग ऑडियो फ़ाइलों का निर्यात नहीं कर सकते. \n"
 "\n"
-"और यदि आपके पास एक लेबल ट्रैक है, तो आप प्रत्येक लेबल के\n"
-"लिए एक नई फ़ाइल का निर्यात कर सकते हैं.\n"
-"आप के पास अनेक लेबल ट्रैक हो सकते हैं\n"
-"लेकिन फ़ाइलों का निर्यात केवल सबसे ऊच्चतम ट्रैक के लिए ही होगा.\n"
-"\n"
-"यह परियोजना अनेक फ़ाइलों के निर्यात के लिए उपरोक्त शर्तें पूरा नहीं करता."
+"यदि आपके पास एक से अधिक लेबल ट्रैक है, तो अनेक निर्यात \n"
+"ऊपरवाले लेबल ट्रैक पर ही आधारित है."
 
-#: export/ExportMultiple.cpp:180
-msgid "Can't export multiple files"
-msgstr "अनेक फ़ाइलें का निर्यात नहीं हो सकता"
-
-#: export/ExportMultiple.cpp:245
+#: export/ExportMultiple.cpp:255
 msgid "Export format:"
 msgstr "निर्यात फ़ॉरमैट:"
 
-#: export/ExportMultiple.cpp:250
+#: export/ExportMultiple.cpp:260
 msgid "Options..."
 msgstr "विकल्प..."
 
-#: export/ExportMultiple.cpp:254
+#: export/ExportMultiple.cpp:264
 msgid "Export location:"
 msgstr "निर्यात स्थान:"
 
-#: export/ExportMultiple.cpp:259
+#: export/ExportMultiple.cpp:269
 msgid "Create"
 msgstr "बनाएं"
 
-#: export/ExportMultiple.cpp:266
+#: export/ExportMultiple.cpp:276
 msgid "Split files based on:"
 msgstr "विभाजित फ़ाईलें आधारित हैं:"
 
-#: export/ExportMultiple.cpp:275
-#: export/ExportMultiple.cpp:277
+#: export/ExportMultiple.cpp:285
+#: export/ExportMultiple.cpp:287
 msgid "Labels"
 msgstr "लेबल"
 
-#: export/ExportMultiple.cpp:282
+#: export/ExportMultiple.cpp:292
 msgid "Include audio before first label"
 msgstr "प्रथम लेबल से पहले के ऑडियो को शामिल करें"
 
-#: export/ExportMultiple.cpp:288
+#: export/ExportMultiple.cpp:298
 msgid "First file name:"
 msgstr "प्रथम फ़ाइल नाम:"
 
-#: export/ExportMultiple.cpp:293
+#: export/ExportMultiple.cpp:303
 msgid "First file name"
 msgstr "प्रथम फ़ाइल नाम"
 
-#: export/ExportMultiple.cpp:310
+#: export/ExportMultiple.cpp:320
 msgid "Name files:"
 msgstr "फ़ाइलों का नामकरण:"
 
-#: export/ExportMultiple.cpp:316
+#: export/ExportMultiple.cpp:326
 msgid "Using Label/Track Name"
 msgstr "लेबल/ट्रैक नाम यह रखें"
 
-#: export/ExportMultiple.cpp:319
+#: export/ExportMultiple.cpp:329
 msgid "Numbering before Label/Track Name"
 msgstr "लेबल/ट्रैक नाम के पहले क्रमांक बिठाना"
 
-#: export/ExportMultiple.cpp:322
+#: export/ExportMultiple.cpp:332
 msgid "Numbering after File name prefix"
 msgstr "फ़ाइल-नाम उपसर्गानुसार क्रमांक बिठाना"
 
-#: export/ExportMultiple.cpp:328
+#: export/ExportMultiple.cpp:338
 msgid "File name prefix:"
 msgstr "फ़ाइल नाम उपसर्ग:"
 
-#: export/ExportMultiple.cpp:333
+#: export/ExportMultiple.cpp:343
 msgid "File name prefix"
 msgstr "फ़ाइल नाम उपसर्ग"
 
-#: export/ExportMultiple.cpp:345
+#: export/ExportMultiple.cpp:355
 msgid "Overwrite existing files"
 msgstr "उपस्थित फ़ाइलों को मिटाकर लिखें"
 
-#: export/ExportMultiple.cpp:429
+#: export/ExportMultiple.cpp:439
 #, c-format
 msgid "\"%s\" successfully created."
 msgstr "\"%s\" सफलतापूर्वक निर्मित हुई."
 
-#: export/ExportMultiple.cpp:438
+#: export/ExportMultiple.cpp:448
 msgid "Choose a location to save the exported files"
 msgstr "निर्यातित फ़ाइलों को सहेजने का स्थान चुनें"
 
-#: export/ExportMultiple.cpp:533
+#: export/ExportMultiple.cpp:543
 #, c-format
 msgid "Successfully exported the following %ld file(s)."
 msgstr "सफलतापूर्वक निम्नलिखित %ld फ़ाइलों का निर्यात किया."
 
-#: export/ExportMultiple.cpp:534
+#: export/ExportMultiple.cpp:544
 #, c-format
 msgid "Something went wrong after exporting the following %ld file(s)."
 msgstr "निम्नलिखित %ld फ़ाइलों के निर्यात के बाद कुछ गड़बड़ी हो गई है."
 
-#: export/ExportMultiple.cpp:535
+#: export/ExportMultiple.cpp:545
 #, c-format
 msgid "Export canceled after exporting the following %ld file(s)."
 msgstr "निम्नलिखित %ld फ़ाइलों के निर्यात के बाद निर्यात रद्द कर दिया गया."
 
-#: export/ExportMultiple.cpp:536
+#: export/ExportMultiple.cpp:546
 #, c-format
 msgid "Export stopped after exporting the following %ld file(s)."
 msgstr "निम्नलिखित %ld फ़ाइलों के निर्यात करने के बाद निर्यात बंद हो गया."
 
-#: export/ExportMultiple.cpp:537
+#: export/ExportMultiple.cpp:547
 #, c-format
 msgid "Something went really wrong after exporting the following %ld file(s)."
 msgstr "निम्नलिखित %ld फ़ाइल निर्यात करने के बाद कुछ गड़बड़ी हो गई है."
 
-#: export/ExportMultiple.cpp:572
+#: export/ExportMultiple.cpp:582
 #, c-format
 msgid ""
 "\"%s\" doesn't exist.\n"
@@ -8861,17 +8913,17 @@ msgstr ""
 "\n"
 "क्या आप इसे बनाना चाहते हैं?"
 
-#: export/ExportMultiple.cpp:645
-#: export/ExportMultiple.cpp:780
+#: export/ExportMultiple.cpp:655
+#: export/ExportMultiple.cpp:789
 msgid "untitled"
 msgstr "अनाम"
 
-#: export/ExportMultiple.cpp:674
-#: export/ExportMultiple.cpp:812
+#: export/ExportMultiple.cpp:684
+#: export/ExportMultiple.cpp:821
 msgid "Edit metadata"
 msgstr "मेटाडाटा संपादन"
 
-#: export/ExportMultiple.cpp:927
+#: export/ExportMultiple.cpp:936
 #, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
@@ -8880,7 +8932,7 @@ msgstr ""
 "लेबल या ट्रैक \"%s\" फ़ाइल नाम वैध नहीं है. आप %s में से किसी का प्रयोग नहीं कर सकते\n"
 "प्रयोग करें..."
 
-#: export/ExportMultiple.cpp:928
+#: export/ExportMultiple.cpp:937
 msgid "Save As..."
 msgstr "जैसा सुरक्षित करें..."
 
@@ -10857,13 +10909,21 @@ msgstr "इनपुट चैनलों को चुनें"
 msgid "Device information is not available."
 msgstr "यंत्र की जानकारी उपलब्ध नहीं है."
 
+#: toolbars/EditToolBar.cpp:131
+msgid "Cut selection"
+msgstr "चयन काटें"
+
+#: toolbars/EditToolBar.cpp:133
+msgid "Copy selection"
+msgstr "चयन की प्रतिलिपि बनाएँ"
+
 #: toolbars/EditToolBar.cpp:137
-msgid "Trim outside selection"
-msgstr "काटें ,जो चयनित नहीं"
+msgid "Trim audio outside selection"
+msgstr "चयन से बाहर ऑडियो छाँटें"
 
 #: toolbars/EditToolBar.cpp:139
-msgid "Silence selection"
-msgstr "चुप्पी चयन"
+msgid "Silence audio selection"
+msgstr "मूक ऑडियो को चुनना"
 
 #: toolbars/EditToolBar.cpp:152
 #: toolbars/EditToolBar.cpp:203
@@ -10888,6 +10948,10 @@ msgstr "चयन झरोखे में फ़िट करें"
 #: toolbars/EditToolBar.cpp:165
 msgid "Fit project in window"
 msgstr "परियोजना झरोखे में फ़िट करें"
+
+#: toolbars/EditToolBar.cpp:199
+msgid "Silence Audio"
+msgstr "मूक ऑडियो"
 
 #: toolbars/EditToolBar.cpp:207
 msgid "Fit Selection"
@@ -11234,8 +11298,8 @@ msgstr "शेष समय :"
 msgid "Cancel"
 msgstr "निरस्त"
 
-#: widgets/Ruler.cpp:1586
-#: widgets/Ruler.cpp:1587
+#: widgets/Ruler.cpp:1590
+#: widgets/Ruler.cpp:1591
 msgid "Vertical Ruler"
 msgstr "लंबवत मापक"
 
@@ -11444,7 +11508,7 @@ msgstr "(स्वरूप बदलने के लिए संदर्भ 
 msgid "centiseconds"
 msgstr "सेंटी-सेकेंड"
 
-#: widgets/Warning.cpp:63
+#: widgets/Warning.cpp:64
 msgid "Don't show this warning again"
 msgstr "यह चेतावनी दुबारा न दिखाएँ"
 
@@ -11476,6 +11540,73 @@ msgstr "फ़ाइल बंद करने में त्रुटि"
 #: xml/XMLWriter.cpp:365
 msgid "Error Writing to File"
 msgstr "फ़ाइल में लिखने में त्रुटि"
+
+#~ msgid "Tri&m"
+#~ msgstr "ट्रिम"
+
+#~ msgid "Trim"
+#~ msgstr "काटें"
+
+#~ msgid "Trim file to selection"
+#~ msgstr "फ़ाईल को चयन तक छाँटें"
+
+#~ msgid "Delete Labels"
+#~ msgstr "नाम मिटाएं"
+
+#~ msgid "Split Delete Labels"
+#~ msgstr "नाम-पट्टी अलग कर मिटाएं"
+
+#~ msgid "Silence Labels"
+#~ msgstr "नामों को शांत करें"
+
+#~ msgid "Split Labels"
+#~ msgstr "नामपट्टी तोड़ें"
+
+#~ msgid "Join Labels"
+#~ msgstr "लेबल जोड़ें"
+
+#~ msgid "Detach Labels"
+#~ msgstr "नाम-पट्टी अलग करें"
+
+#~ msgid "Bass Boost"
+#~ msgstr "बास बूस्ट"
+
+#~ msgid "Frequency Hertz"
+#~ msgstr "आवृति हर्टज़"
+
+#~ msgid "Boost dB"
+#~ msgstr "बढ़ाएं dB"
+
+#~ msgid "BassBoost..."
+#~ msgstr "बासबूस्ट..."
+
+#~ msgid "Boosting Bass Frequencies"
+#~ msgstr "बेस आवृतियों को प्रबल करते हैं"
+
+#~ msgid ""
+#~ "If you have more than one Audio Track, you can\n"
+#~ "export each track as a separate audio file.\n"
+#~ "\n"
+#~ "If you have a Label Track, you can export a separate\n"
+#~ "audio file for each label in that track. You can have\n"
+#~ "more than one Label Track, but files will only be\n"
+#~ "exported for the uppermost Label Track.\n"
+#~ "\n"
+#~ "This Project does not meet the above criteria for\n"
+#~ "exporting multiple files."
+#~ msgstr ""
+#~ "यदि आपके पास एक से अधिक ऑडियो ट्रैक है, तो आप\n"
+#~ "प्रत्येक ट्रैक को एक अलग फ़ाइल में निर्यात कर सकते हैं.\n"
+#~ "\n"
+#~ "और यदि आपके पास एक लेबल ट्रैक है, तो आप प्रत्येक लेबल के\n"
+#~ "लिए एक नई फ़ाइल का निर्यात कर सकते हैं.\n"
+#~ "आप के पास अनेक लेबल ट्रैक हो सकते हैं\n"
+#~ "लेकिन फ़ाइलों का निर्यात केवल सबसे ऊच्चतम ट्रैक के लिए ही होगा.\n"
+#~ "\n"
+#~ "यह परियोजना अनेक फ़ाइलों के निर्यात के लिए उपरोक्त शर्तें पूरा नहीं करता."
+
+#~ msgid "Can't export multiple files"
+#~ msgstr "अनेक फ़ाइलें का निर्यात नहीं हो सकता"
 
 #~ msgid "S&ort tracks"
 #~ msgstr "ट्रैक छाँटें"
