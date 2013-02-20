@@ -2117,11 +2117,11 @@ AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
    AttachableScrollBar * pAttachableScrollBar;
    miProp=0;
    mpWind = pAttachableScrollBar = new AttachableScrollBar(
-      mpParent, 
+      mpParent,
       miId,
       wxDefaultPosition,
       wxDefaultSize,
-	  style
+      style
       );
    mpWind->SetMinSize(wxSize(10,20));
    UpdateSizers();

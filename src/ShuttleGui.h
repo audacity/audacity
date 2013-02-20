@@ -25,7 +25,7 @@ const int nMaxNestedSizers = 20;
 
 enum teShuttleMode
 {
-	eIsCreating,
+   eIsCreating,
    eIsGettingFromDialog,
    eIsSettingToDialog,
    eIsSavingViaShuttle,
@@ -84,10 +84,10 @@ public:
    wxSlider * AddSlider(const wxString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const wxString &Prompt, int pos, int Max);
    wxSpinCtrl * AddSpinCtrl(const wxString &Prompt, int Value, int Max, int Min);
-	wxTreeCtrl * AddTree();
-	wxRadioButton * AddRadioButton( const wxString & Prompt );
-	wxRadioButton * AddRadioButtonToGroup( const wxString & Prompt);
-	wxButton * AddButton( const wxString & Text, int PositionFlags = wxALIGN_CENTRE );
+   wxTreeCtrl * AddTree();
+   wxRadioButton * AddRadioButton( const wxString & Prompt );
+   wxRadioButton * AddRadioButtonToGroup( const wxString & Prompt);
+   wxButton * AddButton( const wxString & Text, int PositionFlags = wxALIGN_CENTRE );
    wxBitmapButton * AddBitmapButton(const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE);
    wxStaticText * AddVariableText(const wxString &Str, bool bCenter = false, int PositionFlags = 0);
    wxTextCtrl * AddTextBox(const wxString &Caption, const wxString &Value, const int nChars);
@@ -103,9 +103,9 @@ public:
    wxChoice   * AddChoice( const wxString &Prompt, const wxString &Selected, const wxArrayString * pChoices );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
-	void AddIcon( wxBitmap * pBmp);
-	void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
-	void AddFixedText( const wxString & Str, bool bCenter = false );
+   void AddIcon( wxBitmap * pBmp);
+   void AddIconButton( const wxString & Command, const wxString & Params,wxBitmap * pBmp );
+   void AddFixedText( const wxString & Str, bool bCenter = false );
    void AddConstTextBox( const wxString &Caption, const wxString & Value );
 
 //-- Start and end functions.  These are used for sizer, or other window containers
@@ -166,9 +166,9 @@ public:
 
    wxCheckBox * TieCheckBox( const wxString &Prompt, WrappedType & WrappedRef );
    wxCheckBox * TieCheckBox( const wxString &Prompt, const wxString &Selected );
-	wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
-	wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
-	wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
+   wxCheckBox * TieCheckBox( const wxString &Prompt, bool & Var );
+   wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, WrappedType & WrappedRef );
+   wxCheckBox * TieCheckBoxOnRight( const wxString & Prompt, bool & Var );
 
    wxChoice * TieChoice( const wxString &Prompt, WrappedType & WrappedRef, const wxArrayString * pChoices );
    wxChoice * TieChoice( const wxString &Prompt, wxString &Selected, const wxArrayString * pChoices );
@@ -262,9 +262,9 @@ public:
 protected:
    void SetProportions( int Default );
    void PushSizer();
-	void PopSizer();
+   void PopSizer();
 
-	void UpdateSizersCore( bool bPrepend, int Flags );
+   void UpdateSizersCore( bool bPrepend, int Flags );
    void UpdateSizers();
    void UpdateSizersC();
    void UpdateSizersAtStart();
@@ -272,8 +272,8 @@ protected:
    long Style( long Style );
 
    wxWindow * mpLastWind;
-	wxWindow * mpDlg;
-	wxSizer * pSizerStack[ nMaxNestedSizers ];
+   wxWindow * mpDlg;
+   wxSizer * pSizerStack[ nMaxNestedSizers ];
    wxString mBoxName;
 
    Shuttle * mpShuttle; /*! Controls source/destination of shuttled data.  You can 

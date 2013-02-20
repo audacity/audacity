@@ -103,7 +103,7 @@ Matrix ScalarMultiply(const Matrix &left, const Matrix &right);
 Matrix MatrixMultiply(const Matrix &left, const Matrix &right);
 
 Matrix MatrixSubset(const Matrix &M,
-		    int startRow, int numRows, int startCol, int numCols);
+                    int startRow, int numRows, int startCol, int numCols);
 
 Matrix MatrixConcatenateCols(const Matrix& left, const Matrix& right);
 

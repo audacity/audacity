@@ -269,7 +269,7 @@ public:
    }
 #else
    /* Library names and file filters for other platforms, basically Linux and
-	* other *nix platforms */
+    * other *nix platforms */
    wxString GetLibraryTypeString()
    {
       return _("Only libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*");

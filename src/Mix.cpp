@@ -317,13 +317,13 @@ Mixer::~Mixer()
    delete[] mEnvValues;
    delete[] mFloatBuffer;
    delete[] mGains;
-	delete[] mSamplePos;
+   delete[] mSamplePos;
 
    for(i=0; i<mNumInputTracks; i++) {
       delete mResample[i];
       delete[] mSampleQueue[i];
    }
-	delete[] mResample;
+   delete[] mResample;
    delete[] mSampleQueue;
    delete[] mQueueStart;
    delete[] mQueueLen;

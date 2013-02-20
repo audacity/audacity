@@ -161,9 +161,9 @@ class AudacityApp:public wxApp {
     void OnMacOpenFile(wxCommandEvent & event);
    #endif
 
-	#if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
-   void AssociateFileTypes(); 
-	#endif
+   #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
+    void AssociateFileTypes();
+   #endif
 
    /** \brief A list of directories that should be searched for Audacity files
     * (plug-ins, help files, etc.). 

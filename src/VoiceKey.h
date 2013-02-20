@@ -31,63 +31,63 @@ enum VoiceKeyTypes
 class VoiceKey {
 
  public:
-	VoiceKey();
-	~VoiceKey();
-	sampleCount OnForward   (WaveTrack & t, sampleCount start, sampleCount len);
-	sampleCount OnBackward  (WaveTrack & t, sampleCount start, sampleCount len);
-	sampleCount OffForward  (WaveTrack & t, sampleCount start, sampleCount len);
-	sampleCount OffBackward (WaveTrack & t, sampleCount start, sampleCount len);
+   VoiceKey();
+   ~VoiceKey();
+   sampleCount OnForward   (WaveTrack & t, sampleCount start, sampleCount len);
+   sampleCount OnBackward  (WaveTrack & t, sampleCount start, sampleCount len);
+   sampleCount OffForward  (WaveTrack & t, sampleCount start, sampleCount len);
+   sampleCount OffBackward (WaveTrack & t, sampleCount start, sampleCount len);
 
-	void CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len);
-	void AdjustThreshold(double t);
+   void CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len);
+   void AdjustThreshold(double t);
 
 
-	bool AboveThreshold(WaveTrack & t, sampleCount start,sampleCount len);
+   bool AboveThreshold(WaveTrack & t, sampleCount start,sampleCount len);
 
-	void SetKeyType(bool erg, bool scLow, bool scHigh,
-			bool dcLow, bool dcHigh);
+   void SetKeyType(bool erg, bool scLow, bool scHigh,
+                   bool dcLow, bool dcHigh);
 
  private:
-	
-	double mWindowSize;                 //Size of analysis window, in milliseconds
-	
-	double mThresholdAdjustment;               //User-accessible sensitivity calibration variable
 
-	double mEnergyMean;
-	double mEnergySD;
-	double mSignChangesMean;
-	double mSignChangesSD;
-	double mDirectionChangesMean;
-	double mDirectionChangesSD;
+   double mWindowSize;                 //Size of analysis window, in milliseconds
 
-	double mThresholdEnergy;                   // Threshold[*] is equal to [*]Mean + [*]SD * ThresholdAdjustment
-	double mThresholdSignChangesLower;        
-	double mThresholdSignChangesUpper;        
-	double mThresholdDirectionChangesLower;   
-	double mThresholdDirectionChangesUpper;   
+   double mThresholdAdjustment;               //User-accessible sensitivity calibration variable
 
-	//These determine which statistics should be used.
-	bool mUseEnergy;
-	bool mUseSignChangesLow;
-	bool mUseSignChangesHigh;
-	bool mUseDirectionChangesLow;
-	bool mUseDirectionChangesHigh;
+   double mEnergyMean;
+   double mEnergySD;
+   double mSignChangesMean;
+   double mSignChangesSD;
+   double mDirectionChangesMean;
+   double mDirectionChangesSD;
+
+   double mThresholdEnergy;                   // Threshold[*] is equal to [*]Mean + [*]SD * ThresholdAdjustment
+   double mThresholdSignChangesLower;
+   double mThresholdSignChangesUpper;
+   double mThresholdDirectionChangesLower;
+   double mThresholdDirectionChangesUpper;
+
+   //These determine which statistics should be used.
+   bool mUseEnergy;
+   bool mUseSignChangesLow;
+   bool mUseSignChangesHigh;
+   bool mUseDirectionChangesLow;
+   bool mUseDirectionChangesHigh;
 
 
-	double mSilentWindowSize;           //Time in milliseconds of below-threshold windows required for silence
-	double mSignalWindowSize;           //Time in milliseconds of above-threshold windows required for speech
-	
-	double TestEnergy (WaveTrack & t, sampleCount start,sampleCount len);
-	double TestSignChanges (WaveTrack & t, sampleCount start, sampleCount len);
-	double TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCount len);	
-	
-	void TestEnergyUpdate (double & prevErg, int length, const sampleFormat & drop, const sampleFormat & add);
-	void TestSignChangesUpdate(double & currentsignchanges,int length, const sampleFormat & a1,
-				   const sampleFormat & a2,   const sampleFormat & z1, const sampleFormat & z2);
-	void TestDirectionChangesUpdate(double & currentdirectionchanges,int length, 
-					int & atrend, const sampleFormat & a1, const sampleFormat & a2,
-					int & ztrend, const sampleFormat & z1, const sampleFormat & z2);
-	
+   double mSilentWindowSize;           //Time in milliseconds of below-threshold windows required for silence
+   double mSignalWindowSize;           //Time in milliseconds of above-threshold windows required for speech
+
+   double TestEnergy (WaveTrack & t, sampleCount start,sampleCount len);
+   double TestSignChanges (WaveTrack & t, sampleCount start, sampleCount len);
+   double TestDirectionChanges(WaveTrack & t, sampleCount start, sampleCount len);
+
+   void TestEnergyUpdate (double & prevErg, int length, const sampleFormat & drop, const sampleFormat & add);
+   void TestSignChangesUpdate(double & currentsignchanges,int length, const sampleFormat & a1,
+                              const sampleFormat & a2,   const sampleFormat & z1, const sampleFormat & z2);
+   void TestDirectionChangesUpdate(double & currentdirectionchanges,int length,
+                                   int & atrend, const sampleFormat & a1, const sampleFormat & a2,
+                                   int & ztrend, const sampleFormat & z1, const sampleFormat & z2);
+
 };
 
 

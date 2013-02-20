@@ -72,7 +72,7 @@ private:
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
    void PopulateChains();
-	void PopulateList();
+   void PopulateList();
    void AddItem(const wxString &command, wxString const &params);
    bool ChangeOK();
 

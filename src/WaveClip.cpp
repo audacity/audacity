@@ -625,12 +625,12 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          int i;
 
          sampleFormat seqFormat = mSequence->GetSampleFormat();
-		 bool didUpdate = false;
+         bool didUpdate = false;
          for(i=a; i<p1; i++) {
             sampleCount left;
-			left = mWaveCache->where[i] - numSamples;
+            left = mWaveCache->where[i] - numSamples;
             sampleCount right;
-			right = mWaveCache->where[i+1] - numSamples;
+            right = mWaveCache->where[i+1] - numSamples;
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
@@ -672,16 +672,16 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
 
                if (seqFormat != floatSample)
                   delete[] b;
-				
-			  didUpdate=true;
+
+               didUpdate=true;
             }
-         }         
+         }
 
          // So that the sequence doesn't try to write any
          // of these values
          //mchinen: but only do this if we've updated pixels in the cache.
          if(didUpdate)
-			p1 = a;
+            p1 = a;
       }
 
       if (p1 > p0) {

@@ -978,7 +978,7 @@ void TrackPanel::OnTimer()
       MakeParentRedrawScrollbars();
       p->SetAudioIOToken(0);
       p->RedrawProject();
-		//ANSWER-ME: Was DisplaySelection added to solve a repaint problem?        
+      //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
       DisplaySelection();
    }
 
@@ -3459,7 +3459,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       }
       else {
          if(spectrumLog)
-		   {
+         {
             float p1;
             p1 = (mZoomStart - ypos) / (float)height;
             c = 1.0-p1;
@@ -3616,7 +3616,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
    t = FindTrack(event.m_x, event.m_y, false, false, &r);
 
    if (!t || (t->GetKind() != Track::Wave))
-	   return;
+      return;
 
    if( !IsSampleEditingPossible( event, t ) )
    {
@@ -7284,7 +7284,7 @@ const int nRates=12;
 ///  gRates MUST CORRESPOND DIRECTLY TO THE RATES AS LISTED IN THE MENU!!
 ///  IN THE SAME ORDER!!
 int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 88200, 96000,
-			 176400, 192000, 352800, 384000 };
+                       176400, 192000, 352800, 384000 };
 
 /// This method handles the selection from the Rate
 /// submenu of the track menu, except for "Other" (/see OnRateOther).

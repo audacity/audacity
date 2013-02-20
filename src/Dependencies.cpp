@@ -45,13 +45,13 @@
 WX_DEFINE_OBJARRAY( AliasedFileArray );
 
 WX_DECLARE_HASH_MAP(wxString, AliasedFile *,
-		               wxStringHash, wxStringEqual, AliasedFileHash);
+                    wxStringHash, wxStringEqual, AliasedFileHash);
 
 WX_DECLARE_HASH_MAP(BlockFile *, BlockFile *,
-		               wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
+                    wxPointerHash, wxPointerEqual, ReplacedBlockFileHash);
 
 WX_DECLARE_HASH_MAP(BlockFile *, bool,
-		               wxPointerHash, wxPointerEqual, BoolBlockFileHash);
+                    wxPointerHash, wxPointerEqual, BoolBlockFileHash);
 
 // Given a project, returns a single array of all SeqBlocks
 // in the current set of tracks.  Enumerating that array allows
@@ -86,7 +86,7 @@ void GetAllSeqBlocks(AudacityProject *project,
 // Note that this code respects reference-counting and thus the
 // process of making a project self-contained is actually undoable.
 void ReplaceBlockFiles(AudacityProject *project,
-		                 ReplacedBlockFileHash &hash)
+                       ReplacedBlockFileHash &hash)
 {
    DirManager *dirManager = project->GetDirManager();
    BlockArray blocks;
@@ -158,7 +158,7 @@ void FindDependencies(AudacityProject *project,
 // longer be external dependencies (selected by the user), replace
 // all of those alias block files with disk block files.
 void RemoveDependencies(AudacityProject *project,
-			               AliasedFileArray *aliasedFiles)
+                        AliasedFileArray *aliasedFiles)
 {
    DirManager *dirManager = project->GetDirManager();
 

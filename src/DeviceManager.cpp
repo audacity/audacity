@@ -37,7 +37,7 @@ DeviceManager DeviceManager::dm;
 /// Gets the singleton instance 
 DeviceManager* DeviceManager::Instance()
 {
-	return &dm;
+   return &dm;
 }
    
 /// Releases memory assosiated with the singleton
@@ -294,13 +294,13 @@ void DeviceManager::Rescan()
          dt->RefillCombos();
       }
    }
-	m_inited = true;
+   m_inited = true;
 }
 
 //private constructor - Singleton.
 DeviceManager::DeviceManager()
 {
-	m_inited = false;
+   m_inited = false;
 }
 
 DeviceManager::~DeviceManager()

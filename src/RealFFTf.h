@@ -3,9 +3,9 @@
 
 #define fft_type float
 typedef struct FFTParamType {
-	int *BitReversed;
-	fft_type *SinTable;
-	int Points;
+   int *BitReversed;
+   fft_type *SinTable;
+   int Points;
 } FFTParam;
 #define HFFT FFTParam *
 

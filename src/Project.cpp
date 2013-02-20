@@ -2702,8 +2702,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       if (!value || !XMLValueChecker::IsGoodString(value))
          break;
 
-      if (!wxStrcmp(attr, wxT("datadir"))) 
-	  {
+      if (!wxStrcmp(attr, wxT("datadir")))
+      {
          //
          // This is an auto-saved version whose data is in another directory
          //
@@ -2718,8 +2718,8 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
       }
 
-      if (!wxStrcmp(attr, wxT("version"))) 
-	  {
+      if (!wxStrcmp(attr, wxT("version")))
+      {
          fileVersion = value;
          bFileVersionFound = true;
          requiredTags++;

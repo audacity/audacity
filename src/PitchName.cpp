@@ -39,7 +39,7 @@ double FreqToMIDInoteNumber(double freq)
 // of the integer part of (pitchNum + 0.5), so 0=C, 1=C#, etc.
 unsigned int PitchIndex(double pitchNum)
 {
-	return ((int)(pitchNum + 0.5) % 12);
+   return ((int)(pitchNum + 0.5) % 12);
 }
 
 
@@ -122,7 +122,7 @@ wxChar * PitchName(double pitchNum, bool bWantFlats /* = false */)
       break;
    }
 
-	*pPitchName = wxT('\0');
+   *pPitchName = wxT('\0');
 
    return gPitchName;
 }
@@ -134,10 +134,10 @@ wxChar * PitchName(double pitchNum, bool bWantFlats /* = false */)
 // Sharps are the default, unless, bWantFlats is true.
 wxChar * PitchName_Absolute(double pitchNum, bool bWantFlats /* = false */)
 {
-   PitchName(pitchNum, bWantFlats); 
+   PitchName(pitchNum, bWantFlats);
 
-	// PitchName sets pPitchName to the next available char in gPitchName, 
-	// so it's ready to append the register number.
+   // PitchName sets pPitchName to the next available char in gPitchName,
+   // so it's ready to append the register number.
    int octaveNum = ((int)((pitchNum + 0.5) / 12) - 1);
    wxSnprintf(pPitchName, 8, wxT("%d"), octaveNum);
 

@@ -583,7 +583,7 @@ AudioIO::AudioIO()
          errStr += _("Error: ") + pmErrStr;
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-	  wxMessageBox(errStr, _("Error Initializing Midi"), wxICON_ERROR|wxOK);
+      wxMessageBox(errStr, _("Error Initializing Midi"), wxICON_ERROR|wxOK);
 
       // Same logic for PortMidi as described above for PortAudio
    }

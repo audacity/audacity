@@ -129,15 +129,15 @@ public:
    Sequence* GetSequence() { return mSequence; }
 
    /** WaveTrack calls this whenever data in the wave clip changes. It is
-	* called automatically when WaveClip has a chance to know that something
-	* has changed, like when member functions SetSamples() etc. are called. */
+    * called automatically when WaveClip has a chance to know that something
+    * has changed, like when member functions SetSamples() etc. are called. */
    void MarkChanged() { mDirty++; }
 
    /// Create clip from copy, discarding previous information in the clip
    bool CreateFromCopy(double t0, double t1, WaveClip* other);
 
    /** Getting high-level data from the for screen display and clipping
-	* calculations and Contrast */
+    * calculations and Contrast */
    bool GetWaveDisplay(float *min, float *max, float *rms,int* bl, sampleCount *where,
                        int numPixels, double t0, double pixelsPerSecond, bool &isLoadingOD);
    bool GetSpectrogram(float *buffer, sampleCount *where,
@@ -154,8 +154,8 @@ public:
    void GetDisplayRect(wxRect* r);
 
    /** Whenever you do an operation to the sequence that will change the number
-	* of samples (that is, the length of the clip), you will want to call this
-	* function to tell the envelope about it. */
+    * of samples (that is, the length of the clip), you will want to call this
+    * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
    /// You must call Flush after the last Append
@@ -182,22 +182,22 @@ public:
    bool Paste(double t0, WaveClip* other);
 
    /** Insert silence - note that this is an efficient operation for large
-	* amounts of silence */
+    * amounts of silence */
    bool InsertSilence(double t, double len);
 
    /// Get access to cut lines list
    WaveClipList* GetCutLines() { return &mCutLines; }
    
    /** Find cut line at (approximately) this position. Returns true and fills
-	* in cutLineStart and cutLineEnd (if specified) if a cut line at this
-	* position could be found. Return false otherwise. */
+    * in cutLineStart and cutLineEnd (if specified) if a cut line at this
+    * position could be found. Return false otherwise. */
    bool FindCutLine(double cutLinePosition,
                     double* cutLineStart = NULL,
                     double *cutLineEnd = NULL);
 
    /** Expand cut line (that is, re-insert audio, then delete audio saved in
-	* cut line). Returns true if a cut line could be found and sucessfully
-	* expanded, false otherwise */
+    * cut line). Returns true if a cut line could be found and sucessfully
+    * expanded, false otherwise */
    bool ExpandCutLine(double cutLinePosition);
 
    /// Remove cut line, without expanding the audio in it

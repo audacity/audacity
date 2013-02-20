@@ -944,12 +944,12 @@ BlockFile *DirManager::CopyBlockFile(BlockFile *b)
 {
    if (!b->IsLocked()) {
       b->Ref();
-		//mchinen:July 13 2009 - not sure about this, but it needs to be added to the hash to be able to save if not locked.
-		//note that this shouldn't hurt mBlockFileHash's that already contain the filename, since it should just overwrite.
-		//but it's something to watch out for.
+      //mchinen:July 13 2009 - not sure about this, but it needs to be added to the hash to be able to save if not locked.
+      //note that this shouldn't hurt mBlockFileHash's that already contain the filename, since it should just overwrite.
+      //but it's something to watch out for.
       //
       // LLL: Except for silent block files which have uninitialized filename.
-      if (b->GetFileName().IsOk()) 
+      if (b->GetFileName().IsOk())
          mBlockFileHash[b->GetFileName().GetName()]=b;
       return b;
    }

@@ -84,7 +84,7 @@ class AUDACITY_DLL_API TrackArtist {
    void SetSpectrumLogMaxFreq(int freq);
 
    void SetBackgroundBrushes(wxBrush unselectedBrush, wxBrush selectedBrush,
-			     wxPen unselectedPen, wxPen selectedPen) {
+                             wxPen unselectedPen, wxPen selectedPen) {
      this->unselectedBrush = unselectedBrush;
      this->selectedBrush = selectedBrush;
      this->unselectedPen = unselectedPen;
@@ -239,8 +239,8 @@ class AUDACITY_DLL_API TrackArtist {
 };
 
 extern int GetWaveYPos(float value, float min, float max,
-			  int height, bool dB, bool outer, float dBr, 
-			  bool clip);
+                       int height, bool dB, bool outer, float dBr,
+                       bool clip);
 
 #endif                          // define __AUDACITY_TRACKARTIST__
 

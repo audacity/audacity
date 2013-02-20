@@ -21,11 +21,11 @@
 
 
 enum FadeType
-  {
-	FT_MIX,
-	FT_TRIANGULAR,
-	FT_EXPONENTIAL
-  };
+{
+   FT_MIX,
+   FT_TRIANGULAR,
+   FT_EXPONENTIAL
+};
 
 class CrossFader
 {
@@ -44,7 +44,7 @@ class CrossFader
   void ClearClips();
   //Produces samples according to crossfading rules.
   bool  GetSamples(samplePtr buffer, sampleFormat format, 
-				   sampleCount start, sampleCount len);
+                   sampleCount start, sampleCount len);
   
  protected:
   WaveClipList mClips;

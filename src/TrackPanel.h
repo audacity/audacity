@@ -317,8 +317,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    // AS: Selection handling
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
-   virtual void SelectionHandleClick(wxMouseEvent &event, 
-			     Track* pTrack, wxRect r);
+   virtual void SelectionHandleClick(wxMouseEvent &event,
+                                     Track* pTrack, wxRect r);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
    virtual void ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
                         Track *pTrack);

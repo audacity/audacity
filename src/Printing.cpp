@@ -78,7 +78,7 @@ bool AudacityPrintout::OnPrintPage(int page)
 
    TrackArtist artist;
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
-			       *wxWHITE_PEN, *wxWHITE_PEN);
+                               *wxWHITE_PEN, *wxWHITE_PEN);
    ViewInfo viewInfo;
    viewInfo.sel0 = viewInfo.sel1 = 0;
    viewInfo.vpos = 0;

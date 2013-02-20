@@ -39,23 +39,23 @@ CrossFader::~CrossFader()
 
 
 bool CrossFader::GetSamples(samplePtr buffer, sampleFormat format,
-							sampleCount start, sampleCount len)
+                            sampleCount start, sampleCount len)
 {
-  switch (mType)
-	{
-	case FT_MIX:
-	  return CrossFadeMix(buffer,format, start,len);
-	  break;
-	case FT_TRIANGULAR:
-	  return CrossFadeMix(buffer,format, start,len);
-	  break;
-	case FT_EXPONENTIAL:
-	default:
-	  return CrossFadeMix(buffer,format, start,len);
-	  break;
-	  
-	}
-  
+   switch (mType)
+   {
+   case FT_MIX:
+      return CrossFadeMix(buffer,format, start,len);
+      break;
+   case FT_TRIANGULAR:
+      return CrossFadeMix(buffer,format, start,len);
+      break;
+   case FT_EXPONENTIAL:
+   default:
+      return CrossFadeMix(buffer,format, start,len);
+      break;
+
+   }
+
 }
 
 bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, sampleCount len)

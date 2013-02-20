@@ -299,7 +299,7 @@ Matrix MatrixMultiply(const Matrix &left, const Matrix &right)
 }
 
 Matrix MatrixSubset(const Matrix &input,
-		    int startRow, int numRows, int startCol, int numCols)
+                    int startRow, int numRows, int startCol, int numCols)
 {
    Matrix M(numRows, numCols);
    int i, j;

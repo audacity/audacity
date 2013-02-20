@@ -27,11 +27,11 @@ public:
    // originally an ExportMultiple method. Append suffix if newName appears in otherNames.
    static void MakeNameUnique(wxArrayString &otherNames, wxFileName &newName);
 
-   /** \brief Audacity user data directory 
-	*
-	* Where audacity keeps it's settings and other user data squirreled away,
-	* by default ~/.audacity-data/ on Unix, Application Data/Audacity on 
-	* windows system */
+   /** \brief Audacity user data directory
+    *
+    * Where audacity keeps it's settings and other user data squirreled away,
+    * by default ~/.audacity-data/ on Unix, Application Data/Audacity on
+    * windows system */
    static wxString DataDir();
    static wxString AutoSaveDir();
    static wxString HtmlHelpDir();
@@ -42,10 +42,10 @@ public:
    static wxString PluginsCache();
 
    /** \brief The user plug-in directory (not a system one)
-	*
-	* This returns the string path to where the user may have put plug-ins
-	* if they don't have system admin rights. Under default settings, it's 
-	* <DataDir>/Plug-Ins/ */
+    *
+    * This returns the string path to where the user may have put plug-ins
+    * if they don't have system admin rights. Under default settings, it's
+    * <DataDir>/Plug-Ins/ */
    static wxString PlugInDir();
    static wxString ThemeDir();
    static wxString ThemeComponentsDir();

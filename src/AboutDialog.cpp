@@ -231,7 +231,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       wxT("<body bgcolor=\"#ffffff\"><center>") + 
       wxT("<h3>Audacity ") + versionStr + wxT("</h3>")+ 
       _("A Free Digital Audio Editor<br>") + 
-	  wxT("<a href=\"http://audacity.sourceforge.net/\">http://audacity.sourceforge.net/</a>") +
+      wxT("<a href=\"http://audacity.sourceforge.net/\">http://audacity.sourceforge.net/</a>") +
       wxT("</center><p>") + par1Str +
       wxT("<p>") + par2Str +
       wxT("<p><center><b>") + _("Credits") + wxT("</b></center>")
@@ -274,7 +274,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
       wxT("<p><br></center>") +
-	  
+
       _("<b>Audacity&reg;</b> software is copyright")+
       wxT("&copy; 1999-2013 Audacity Team.<br>") +
      

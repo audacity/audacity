@@ -89,15 +89,15 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    virtual void SetOffset (double o);
 
    /** @brief Get the time at which the first clip in the track starts
-	*
-	* @return time in seconds, or zero if there are no clips in the track
-	*/
+    *
+    * @return time in seconds, or zero if there are no clips in the track
+    */
    double GetStartTime();
 
    /** @brief Get the time at which the last clip in the track ends, plus
     * recorded stuff
-	*
-	* @return time in seconds, or zero if there are no clips in the track.
+    *
+    * @return time in seconds, or zero if there are no clips in the track.
     */
    double GetEndTime();
 
@@ -375,7 +375,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       WaveformDisplay,
       WaveformDBDisplay,
       SpectrumDisplay,
-		SpectrumLogDisplay,
+      SpectrumLogDisplay,
       PitchDisplay
    } WaveTrackDisplay;
 

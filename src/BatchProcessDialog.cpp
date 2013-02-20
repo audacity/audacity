@@ -266,11 +266,11 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent &event)
       }
    }
 
-   FileDialog dlog(this, 
-	               prompt,
-                   path, 
-				   wxT(""), 
-				   mask,
+   FileDialog dlog(this,
+                   prompt,
+                   path,
+                   wxT(""),
+                   mask,
                    wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
 
    dlog.SetFilterIndex(index);

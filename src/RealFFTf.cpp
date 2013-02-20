@@ -58,8 +58,8 @@ HFFT InitializeFFT(int fftlen)
 
    if((h=(HFFT)malloc(sizeof(FFTParam)))==NULL)
    {
-	   fprintf(stderr,"Error allocating memory for FFT\n");
-	   exit(8);
+      fprintf(stderr,"Error allocating memory for FFT\n");
+      exit(8);
    }
    /*
     *  FFT size is only half the number of data points
@@ -101,12 +101,12 @@ HFFT InitializeFFT(int fftlen)
  */
 void EndFFT(HFFT h)
 {
-	if(h->Points>0) {
-		free(h->BitReversed);
-		free(h->SinTable);
-	}
-	h->Points=0;
-	free(h);
+   if(h->Points>0) {
+      free(h->BitReversed);
+      free(h->SinTable);
+   }
+   h->Points=0;
+   free(h);
 }
 
 #define MAX_HFFT 10
@@ -210,13 +210,13 @@ void RealFFTf(fft_type *buffer,HFFT h)
          {
             v1=*B*cos + *(B+1)*sin;
             v2=*B*sin - *(B+1)*cos;
-			*B=(*A+v1);
-			*(A++)=*(B++)-2*v1;
-			*B=(*A-v2);
-			*(A++)=*(B++)+2*v2;
-		 }
-		 A=B;
-		 B+=ButterfliesPerGroup*2;
+            *B=(*A+v1);
+            *(A++)=*(B++)-2*v1;
+            *B=(*A-v2);
+            *(A++)=*(B++)+2*v2;
+         }
+         A=B;
+         B+=ButterfliesPerGroup*2;
          sptr+=2;
       }
       ButterfliesPerGroup >>= 1;
@@ -228,7 +228,7 @@ void RealFFTf(fft_type *buffer,HFFT h)
    while(br1<br2)
    {
       sin=h->SinTable[*br1];
-		cos=h->SinTable[*br1+1];
+      cos=h->SinTable[*br1+1];
       A=buffer+*br1;
       B=buffer+*br2;
       HRplus = (HRminus = *A     - *B    ) + (*B     * 2);
@@ -346,13 +346,13 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
          while(A<endptr2)
          {
             v1=*B*cos - *(B+1)*sin;
-			v2=*B*sin + *(B+1)*cos;
-			*B=(*A+v1)*(fft_type)0.5;
-			*(A++)=*(B++)-v1;
-			*B=(*A+v2)*(fft_type)0.5;
-			*(A++)=*(B++)-v2;
+            v2=*B*sin + *(B+1)*cos;
+            *B=(*A+v1)*(fft_type)0.5;
+            *(A++)=*(B++)-v1;
+            *B=(*A+v2)*(fft_type)0.5;
+            *(A++)=*(B++)-v2;
          }
-	     A=B;
+         A=B;
          B+=ButterfliesPerGroup*2;
       }
       ButterfliesPerGroup >>= 1;
@@ -362,9 +362,9 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
 void ReorderToFreq(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *ImagOut)
 {
    // Copy the data into the real and imaginary outputs
-	for(int i=1;i<hFFT->Points;i++) {
-		RealOut[i]=buffer[hFFT->BitReversed[i]  ];
-		ImagOut[i]=buffer[hFFT->BitReversed[i]+1];
+   for(int i=1;i<hFFT->Points;i++) {
+      RealOut[i]=buffer[hFFT->BitReversed[i]  ];
+      ImagOut[i]=buffer[hFFT->BitReversed[i]+1];
    }
    RealOut[0] = buffer[0]; // DC component
    ImagOut[0] = 0;
@@ -375,8 +375,8 @@ void ReorderToFreq(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *Ima
 void ReorderToTime(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
 {
    // Copy the data into the real outputs
-	for(int i=0;i<hFFT->Points;i++) {
-	   TimeOut[i*2  ]=buffer[hFFT->BitReversed[i]  ];
-	   TimeOut[i*2+1]=buffer[hFFT->BitReversed[i]+1];
+   for(int i=0;i<hFFT->Points;i++) {
+      TimeOut[i*2  ]=buffer[hFFT->BitReversed[i]  ];
+      TimeOut[i*2+1]=buffer[hFFT->BitReversed[i]+1];
    }
 }

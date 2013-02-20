@@ -40,14 +40,14 @@ class BatchCommandDialog:public wxDialog {
  public:
    // constructors and destructors
    BatchCommandDialog(wxWindow *parent, wxWindowID id);
-	void SetCommandAndParams(const wxString &Command, const wxString &Params);
+   void SetCommandAndParams(const wxString &Command, const wxString &Params);
  public:
    wxString   mSelectedCommand;
    wxString   mSelectedParameters;
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
-	void OnEditParams(wxCommandEvent &event);
+   void OnEditParams(wxCommandEvent &event);
    void OnChoice(wxCommandEvent &event);
    void OnOk(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
