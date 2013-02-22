@@ -85,8 +85,8 @@ static void GetAllSeqBlocks(AudacityProject *project,
 // tracks and replace each aliased block file with its replacement.
 // Note that this code respects reference-counting and thus the
 // process of making a project self-contained is actually undoable.
-void ReplaceBlockFiles(AudacityProject *project,
-                       ReplacedBlockFileHash &hash)
+static void ReplaceBlockFiles(AudacityProject *project,
+                              ReplacedBlockFileHash &hash)
 {
    DirManager *dirManager = project->GetDirManager();
    BlockArray blocks;
@@ -157,8 +157,8 @@ void FindDependencies(AudacityProject *project,
 // Given a project and a list of aliased files that should no
 // longer be external dependencies (selected by the user), replace
 // all of those alias block files with disk block files.
-void RemoveDependencies(AudacityProject *project,
-                        AliasedFileArray *aliasedFiles)
+static void RemoveDependencies(AudacityProject *project,
+                                 AliasedFileArray *aliasedFiles)
 {
    DirManager *dirManager = project->GetDirManager();
 
