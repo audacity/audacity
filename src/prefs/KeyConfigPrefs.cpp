@@ -191,7 +191,7 @@ void KeyConfigPrefs::CreateList()
    mList->SetColumnWidth(KeyComboColumn, 250);
 }
 
-int wxCALLBACK SortCallback(long item1, long item2, long sortData)
+static int wxCALLBACK SortCallback(long item1, long item2, long sortData)
 {
    wxArrayString *names = (wxArrayString *) sortData;
 

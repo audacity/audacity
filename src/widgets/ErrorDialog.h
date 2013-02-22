@@ -48,8 +48,9 @@ void ShowInfoDialog( wxWindow *parent,
 
 /// Displays a new window with wxHTML help.
 void ShowHtmlText( wxWindow * pParent, 
-                  const wxString &Title, 
-                  const wxString &HtmlText );
+                   const wxString &Title,
+                   const wxString &HtmlText,
+                   bool bIsFile, bool bModal);
 
 /// Displays a file in your browser, if it's available locally,
 /// OR else links to the internet.

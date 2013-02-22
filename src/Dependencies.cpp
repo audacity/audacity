@@ -56,8 +56,8 @@ WX_DECLARE_HASH_MAP(BlockFile *, bool,
 // Given a project, returns a single array of all SeqBlocks
 // in the current set of tracks.  Enumerating that array allows
 // you to process all block files in the current set.
-void GetAllSeqBlocks(AudacityProject *project,
-                     BlockArray *outBlocks)
+static void GetAllSeqBlocks(AudacityProject *project,
+                            BlockArray *outBlocks)
 {
    TrackList *tracks = project->GetTracks();
    TrackListIterator iter(tracks);

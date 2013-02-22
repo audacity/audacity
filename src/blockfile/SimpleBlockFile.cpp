@@ -71,7 +71,7 @@ to get its definition, rather than rolling our own.
 #include "../Internat.h"
 
 
-wxUint32 SwapUintEndianess(wxUint32 in)
+static wxUint32 SwapUintEndianess(wxUint32 in)
 {
   wxUint32 out;
   unsigned char *p_in = (unsigned char *) &in;

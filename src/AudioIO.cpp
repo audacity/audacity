@@ -928,7 +928,7 @@ void AudioIO::HandleDeviceChange()
 #endif   // USE_PORTMIXER
 }
 
-PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
+static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
 {
    switch(format) {
    case int16Sample:
@@ -3210,11 +3210,11 @@ void AudioIO::AILAProcess(double maxPeak) {
 
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 
-void DoSoftwarePlaythrough(const void *inputBuffer,
-                           sampleFormat inputFormat,
-                           int inputChannels,
-                           float *outputBuffer,
-                           int len)
+static void DoSoftwarePlaythrough(const void *inputBuffer,
+                                  sampleFormat inputFormat,
+                                  int inputChannels,
+                                  float *outputBuffer,
+                                  int len)
 {
    float *tempBuffer = (float *)alloca(len * sizeof(float));
    int i, j;

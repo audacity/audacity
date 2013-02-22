@@ -79,7 +79,7 @@ wxFileConfig *gPrefs = NULL;
 int gMenusDirty = 0;
 
 // Copy one entry from one wxConfig object to another
-void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString entry)
+static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString entry)
 {
    switch(src->GetEntryType(entry)) {
    case wxConfigBase::Type_Unknown:
@@ -110,7 +110,7 @@ void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString ent
 }
 
 // Recursive routine to copy all groups and entries from one wxConfig object to another
-void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase *dst)
+static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase *dst)
 {
    wxString entryName;
    long entryIndex;

@@ -745,7 +745,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 #endif   // CLEANSPEECH
      mShowId3Dialog(true),               //lda
      mLastFocusedWindow(NULL),
-     mKeyboardCaptured(false),
+     mKeyboardCaptured(NULL),
      mImportXMLTagHandler(NULL),
      mAutoSaving(false),
      mIsRecovered(false),

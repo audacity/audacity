@@ -30,7 +30,7 @@
 static FILE *g_raw_debug_file = NULL;
 #endif
 
-float AmpStat(float *data, int len)
+static float AmpStat(float *data, int len)
 {
    float sum, sumofsquares, avg, variance, dev;
    int i;
@@ -57,7 +57,7 @@ float AmpStat(float *data, int len)
    return dev;
 }
 
-float JumpStat(float *data, int len)
+static float JumpStat(float *data, int len)
 {
    float avg;
    int i;
@@ -74,7 +74,7 @@ float JumpStat(float *data, int len)
    return avg;
 }
 
-float SecondDStat(float *data, int len)
+static float SecondDStat(float *data, int len)
 {
    int i;
    float v1=0, v2=0, v3=0;
@@ -93,7 +93,7 @@ float SecondDStat(float *data, int len)
    return sum/len;
 }
 
-float RedundantStereo(float *data, int len)
+static float RedundantStereo(float *data, int len)
 {
    int i;
    int c = 0;
@@ -106,12 +106,12 @@ float RedundantStereo(float *data, int len)
    return ((c * 2.0) / (len - 2));
 }
 
-void ExtractFloats(bool doublePrec,
-                   bool bigendian,
-                   bool stereo,
-                   int offset,
-                   char *rawData, int dataSize,
-                   float *data1, float *data2, int *len1, int *len2)
+static void ExtractFloats(bool doublePrec,
+                          bool bigendian,
+                          bool stereo,
+                          int offset,
+                          char *rawData, int dataSize,
+                          float *data1, float *data2, int *len1, int *len2)
 {
    int rawCount = 0;
    int dataCount1 = 0;
@@ -183,13 +183,13 @@ void ExtractFloats(bool doublePrec,
    *len2 = dataCount2;   
 }
 
-void Extract(bool bits16,
-             bool sign,
-             bool stereo,
-             bool bigendian,
-             bool offset,
-             char *rawData, int dataSize,
-             float *data1, float *data2, int *len1, int *len2)
+static void Extract(bool bits16,
+                    bool sign,
+                    bool stereo,
+                    bool bigendian,
+                    bool offset,
+                    char *rawData, int dataSize,
+                    float *data1, float *data2, int *len1, int *len2)
 {
    int rawCount = 0;
    int dataCount1 = 0;
@@ -284,8 +284,8 @@ void Extract(bool bits16,
    *len2 = dataCount2;
 }
 
-int GuessFloatFormats(int numTests, char **rawData, int dataSize,
-                      int *out_offset, int *out_channels)
+static int GuessFloatFormats(int numTests, char **rawData, int dataSize,
+                             int *out_offset, int *out_channels)
 {
    int format;
    int bestOffset = 0;
@@ -519,7 +519,7 @@ int GuessFloatFormats(int numTests, char **rawData, int dataSize,
    return format;
 }
 
-int Guess8Bit(int numTests, char **rawData, int dataSize, int *out_channels)
+static int Guess8Bit(int numTests, char **rawData, int dataSize, int *out_channels)
 {
    bool guessSigned = false;
    bool guessStereo = false;
@@ -677,9 +677,9 @@ int Guess8Bit(int numTests, char **rawData, int dataSize, int *out_channels)
       return SF_FORMAT_RAW | SF_FORMAT_PCM_U8;
 }
 
-int Guess16Bit(int numTests, char **rawData,
-               int dataSize, bool evenMSB,
-               int *out_offset, int *out_channels)
+static int Guess16Bit(int numTests, char **rawData,
+                      int dataSize, bool evenMSB,
+                      int *out_offset, int *out_channels)
 {
    int format;
    bool guessSigned = false;
@@ -953,8 +953,8 @@ int Guess16Bit(int numTests, char **rawData,
    return format;
 }
 
-int GuessIntFormats(int numTests, char **rawData, int dataSize,
-                    int *out_offset, int *out_channels)
+static int GuessIntFormats(int numTests, char **rawData, int dataSize,
+                           int *out_offset, int *out_channels)
 {
    int format = SF_FORMAT_RAW;
    bool guess16bit = false;

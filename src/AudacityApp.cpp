@@ -214,7 +214,7 @@ DEFINE_EVENT_TYPE(EVT_RELEASE_KEYBOARD);
 DEFINE_EVENT_TYPE(EVT_CAPTURE_KEY);
 
 #ifdef __WXGTK__
-void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
+static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg)
 {
    if (msg)
       printf("ASSERTION FAILED: %s\n%s: %d\n", (const char *)wxString(msg).mb_str(), (const char *)wxString(fileName).mb_str(), lineNumber);
@@ -461,10 +461,10 @@ typedef void (*_gnome_interaction_key_return_fn)(gint, gboolean);
 static _gnome_client_request_interaction_fn gnome_client_request_interaction;
 static _gnome_interaction_key_return_fn gnome_interaction_key_return;
 
-void interact_cb(GnomeClient *client,
-                 gint key,
-                 GnomeDialogType type,
-                 gpointer data)
+static void interact_cb(GnomeClient *client,
+                        gint key,
+                        GnomeDialogType type,
+                        gpointer data)
 {
    wxCloseEvent e(wxEVT_QUERY_END_SESSION, wxID_ANY);
    e.SetEventObject(&wxGetApp());
@@ -475,13 +475,13 @@ void interact_cb(GnomeClient *client,
    gnome_interaction_key_return(key, e.GetVeto());
 }
 
-gboolean save_yourself_cb(GnomeClient *client,
-                          gint phase,
-                          GnomeSaveStyle style,
-                          gboolean shutdown,
-                          GnomeInteractStyle interact,
-                          gboolean fast,
-                          gpointer user_data)
+static gboolean save_yourself_cb(GnomeClient *client,
+                                 gint phase,
+                                 GnomeSaveStyle style,
+                                 gboolean shutdown,
+                                 GnomeInteractStyle interact,
+                                 gboolean fast,
+                                 gpointer user_data)
 {
    if (!shutdown || interact != GNOME_INTERACT_ANY) {
       return TRUE;

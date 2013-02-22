@@ -221,7 +221,7 @@ static CHOICES sampRates[] =
 #define ID_CBR 7003
 #define ID_QUALITY 7004
 
-void InitMP3_Statics()
+static void InitMP3_Statics()
 {
    for (size_t i=0; i < WXSIZEOF(fixRates); i++)
    {

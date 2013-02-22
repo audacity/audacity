@@ -3195,7 +3195,7 @@ bool TrackPanel::IsDragZooming()
    return (abs(mZoomEnd - mZoomStart) > DragThreshold);
 }
 
-/// Determines if drag zooming is active
+/// Determines if the a modal tool is active
 bool TrackPanel::IsMouseCaptured()
 {
    return (mMouseCapture != IsUncaptured);
