@@ -332,9 +332,9 @@ void AmplifyDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	// Save & restore parameters around Preview, because we didn't do OK.
-	float oldRatio = mEffect->ratio;
-	float oldPeak = mEffect->peak;
+   // Save & restore parameters around Preview, because we didn't do OK.
+   float oldRatio = mEffect->ratio;
+   float oldPeak = mEffect->peak;
 
    mEffect->ratio = ratio;
    if (noclip && ratio*peak > 1.0)

@@ -104,7 +104,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/GUI/SelectAllOnNone"),
                     true);
       /* i18n-hint: cut-lines are a lines indicating where to cut.*/
-	   S.TieCheckBox(_("Enable cu&t lines"),
+      S.TieCheckBox(_("Enable cu&t lines"),
                     wxT("/GUI/EnableCutLines"),
                     false);
       S.TieCheckBox(_("Enable &dragging of left and right selection edges"),

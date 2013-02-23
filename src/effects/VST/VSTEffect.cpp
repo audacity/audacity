@@ -949,19 +949,19 @@ wxString VSTEffectDialog::b64encode(const void *in, int len)
    unsigned char *p = (unsigned char *) in;
    wxString out;
    
-	unsigned long temp;
-	for (int i = 0; i < len / 3; i++) {
-		temp  = (*p++) << 16; //Convert to big endian
-		temp += (*p++) << 8;
-		temp += (*p++);
-		out += cset[(temp & 0x00FC0000) >> 18];
-		out += cset[(temp & 0x0003F000) >> 12];
-		out += cset[(temp & 0x00000FC0) >> 6];
-		out += cset[(temp & 0x0000003F)];
-	}
+   unsigned long temp;
+   for (int i = 0; i < len / 3; i++) {
+      temp  = (*p++) << 16; //Convert to big endian
+      temp += (*p++) << 8;
+      temp += (*p++);
+      out += cset[(temp & 0x00FC0000) >> 18];
+      out += cset[(temp & 0x0003F000) >> 12];
+      out += cset[(temp & 0x00000FC0) >> 6];
+      out += cset[(temp & 0x0000003F)];
+   }
 
-	switch (len % 3)
-	{
+   switch (len % 3)
+   {
       case 1:
          temp  = (*p++) << 16; //Convert to big endian
          out += cset[(temp & 0x00FC0000) >> 18];
@@ -978,9 +978,9 @@ wxString VSTEffectDialog::b64encode(const void *in, int len)
          out += cset[(temp & 0x00000FC0) >> 6];
          out += padc;
          break;
-	}
+   }
 
-	return out;
+   return out;
 }
 
 int VSTEffectDialog::b64decode(wxString in, void *out)
@@ -988,8 +988,8 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
    int len = in.Length();
    unsigned char *p = (unsigned char *) out;
 
-	if (len % 4) { //Sanity check
-		return 0;
+   if (len % 4) { //Sanity check
+      return 0;
    }
 
    int padding = 0;
@@ -1004,7 +1004,7 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
    }
 
    const char *a = in.mb_str();
-	//Setup a vector to hold the result
+   //Setup a vector to hold the result
    unsigned long temp = 0; //Holds decoded quanta
    int i = 0;
    while (i < len) {
@@ -1040,7 +1040,7 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
             }
          }
          i++;
-		}
+      }
       *p++ = (temp >> 16) & 0x000000FF;
       *p++ = (temp >> 8) & 0x000000FF;
       *p++ = temp & 0x000000FF;

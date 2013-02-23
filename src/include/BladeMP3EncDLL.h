@@ -8,12 +8,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -32,8 +32,8 @@ extern "C" {
 
 /* encoding formats */
 
-#define		BE_CONFIG_MP3			0										
-#define		BE_CONFIG_LAME			256		
+#define		BE_CONFIG_MP3			0
+#define		BE_CONFIG_LAME			256
 
 /* type definitions */
 
@@ -85,7 +85,7 @@ typedef enum
 	VBR_METHOD_ABR			=  4
 } VBRMETHOD;
 
-typedef enum 
+typedef enum
 {
 	LQP_NOPRESET			=-1,
 
@@ -130,7 +130,7 @@ typedef struct	{
 			DWORD	dwSampleRate;		// 48000, 44100 and 32000 allowed
 			BYTE	byMode;			// BE_MP3_MODE_STEREO, BE_MP3_MODE_DUALCHANNEL, BE_MP3_MODE_MONO
 			WORD	wBitrate;		// 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256 and 320 allowed
-			BOOL	bPrivate;		
+			BOOL	bPrivate;
 			BOOL	bCRC;
 			BOOL	bCopyright;
 			BOOL	bOriginal;
@@ -140,12 +140,12 @@ typedef struct	{
 			struct
 			{
 			// STRUCTURE INFORMATION
-			DWORD			dwStructVersion;	
+			DWORD			dwStructVersion;
 			DWORD			dwStructSize;
 
 			// BASIC ENCODER SETTINGS
 			DWORD			dwSampleRate;		// SAMPLERATE OF INPUT FILE
-			DWORD			dwReSampleRate;		// DOWNSAMPLERATE, 0=ENCODER DECIDES  
+			DWORD			dwReSampleRate;		// DOWNSAMPLERATE, 0=ENCODER DECIDES
 			LONG			nMode;				// BE_MP3_MODE_STEREO, BE_MP3_MODE_DUALCHANNEL, BE_MP3_MODE_MONO
 			DWORD			dwBitrate;			// CBR bitrate, VBR min bitrate
 			DWORD			dwMaxBitrate;		// CBR ignored, VBR Max bitrate
@@ -159,7 +159,7 @@ typedef struct	{
 			BOOL			bCRC;				// Insert CRC (TRUE/FALSE)
 			BOOL			bCopyright;			// Set Copyright Bit (TRUE/FALSE)
 			BOOL			bOriginal;			// Set Original Bit (TRUE/FALSE)
-			
+
 			// VBR STUFF
 			BOOL			bWriteVBRHeader;	// WRITE XING VBR HEADER (TRUE/FALSE)
 			BOOL			bEnableVBR;			// USE VBR ENCODING (TRUE/FALSE)
@@ -169,7 +169,7 @@ typedef struct	{
 			BOOL			bNoRes;				// Disable Bit resorvoir (TRUE/FALSE)
 
 			BOOL			bStrictIso;			// Use strict ISO encoding rules (TRUE/FALSE)
-				
+
 			BYTE			btReserved[255-4*sizeof(DWORD)];	// FUTURE USE, SET TO 0
 
 			} LHV1;					// LAME header version 1
@@ -184,7 +184,7 @@ typedef struct	{
 		} aac;
 
 	} format;
-		
+
 } BE_CONFIG, *PBE_CONFIG;
 
 
@@ -208,7 +208,7 @@ typedef struct	{
 
 	// BladeEnc	Homepage URL
 
-	CHAR	zHomepage[BE_MAX_HOMEPAGE + 1];	
+	CHAR	zHomepage[BE_MAX_HOMEPAGE + 1];
 
 	BYTE	byAlphaLevel;
 	BYTE	byBetaLevel;
@@ -217,7 +217,7 @@ typedef struct	{
 	BYTE	btReserved[125];
 
 
-} BE_VERSION, *PBE_VERSION;			
+} BE_VERSION, *PBE_VERSION;
 
 #ifndef _BLADEDLL
 

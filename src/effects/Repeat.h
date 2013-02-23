@@ -70,7 +70,7 @@ class RepeatDialog:public EffectDialog {
    bool TransferDataFromWindow();
 
  private:
-	// handlers
+   // handlers
    void OnRepeatTextChange(wxCommandEvent & event);
    void OnPreview( wxCommandEvent &event );
 

@@ -107,7 +107,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
    /* i18n-hint: && in here is an escape character to get a single & on screen,
-	* so keep it as is */
+    * so keep it as is */
    S.StartStatic(		_("Theme Cache - Images && Color"));
    {
       S.StartHorizontalLay(wxALIGN_LEFT);

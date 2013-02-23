@@ -371,7 +371,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       int updateCounter = 0;
 
       for (sampleCount i = 0; i < fileTotalFrames; i += maxBlockSize) {
-	  
+
          sampleCount blockLen = maxBlockSize;
          if (i + blockLen > fileTotalFrames)
             blockLen = fileTotalFrames - i;

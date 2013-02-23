@@ -518,22 +518,22 @@ LadspaEffectDialog::LadspaEffectDialog(LadspaEffect *eff,
    this->mData = data;
    this->inputControls = inputControls;
    this->sampleRate = sampleRate;
-	#ifdef __WXMSW__
-		// On Windows, for some reason, wxWidgets calls OnTextCtrl during creation
-		// of the text control, and LadspaEffectDialog::OnTextCtrl calls HandleText, 
-		// which assumes all the fields have been initialized. 
-		// This can give us a bad pointer crash, so manipulate inSlider to 
-		// no-op HandleText during creation.
-		inSlider = true;
-	#else
-		inSlider = false;
-	#endif
+   #ifdef __WXMSW__
+      // On Windows, for some reason, wxWidgets calls OnTextCtrl during creation
+      // of the text control, and LadspaEffectDialog::OnTextCtrl calls HandleText,
+      // which assumes all the fields have been initialized.
+      // This can give us a bad pointer crash, so manipulate inSlider to
+      // no-op HandleText during creation.
+      inSlider = true;
+   #else
+      inSlider = false;
+   #endif
    inText = false;
 
    toggles = new wxCheckBox*[mData->PortCount];
    sliders = new wxSlider*[mData->PortCount];
    fields = new wxTextCtrl*[mData->PortCount];
-	labels = new wxStaticText*[mData->PortCount];
+   labels = new wxStaticText*[mData->PortCount];
    ports = new unsigned long [mData->PortCount];
 
    unsigned long p;
@@ -695,7 +695,7 @@ LadspaEffectDialog::LadspaEffectDialog(LadspaEffect *eff,
 
    // Set all of the sliders based on the value in the
    // text fields
-	inSlider = false; // Now we're ready for HandleText to actually do something.
+   inSlider = false; // Now we're ready for HandleText to actually do something.
    HandleText();
    
    paramSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
@@ -770,7 +770,7 @@ void LadspaEffectDialog::OnSlider(wxCommandEvent &event)
 
 void LadspaEffectDialog::OnTextCtrl(wxCommandEvent & WXUNUSED(event))
 {
-	HandleText();
+   HandleText();
 }
 
 void LadspaEffectDialog::HandleText()

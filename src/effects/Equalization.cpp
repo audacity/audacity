@@ -418,7 +418,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       lastWindow[i] = 0;
 
    TrackProgress(count, 0.);
-	bool bLoopSuccess = true;
+   bool bLoopSuccess = true;
    int wcopy = 0;
    int offset = (mM - 1)/2;
 
@@ -459,9 +459,9 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
       if (TrackProgress(count, (s-start)/(double)originalLen))
       {
-			bLoopSuccess = false;
-			break;
-		}
+         bLoopSuccess = false;
+         break;
+      }
    }
 
    if(bLoopSuccess)

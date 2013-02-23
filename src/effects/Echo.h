@@ -79,19 +79,19 @@ class EchoDialog:public EffectDialog {
    bool TransferDataFromWindow();
 
  private:
-	// handlers
+   // handlers
    void OnPreview( wxCommandEvent &event );
 
  private:
-	bool				m_bLoopDetect;
-	EffectEcho *	m_pEffect;
+   bool           m_bLoopDetect;
+   EffectEcho *   m_pEffect;
 
    // controls
-   wxTextCtrl *	m_pTextCtrl_Delay;
-   wxTextCtrl *	m_pTextCtrl_Decay;
+   wxTextCtrl *   m_pTextCtrl_Delay;
+   wxTextCtrl *   m_pTextCtrl_Decay;
 
  public:
-	// effect parameters
+   // effect parameters
    float delay;
    float decay;
 

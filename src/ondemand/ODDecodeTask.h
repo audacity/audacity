@@ -102,39 +102,39 @@ public:
    ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
    ODFileDecoder(const wxString& fName);
    virtual ~ODFileDecoder();
-   
+
    ///Read header.  Subclasses must override.  Probably should save the info somewhere.
-   ///Ideally called once per decoding of a file.  This complicates the task because 
-   virtual bool ReadHeader()=0;  
-	virtual bool Init(){return ReadHeader();}
-   
+   ///Ideally called once per decoding of a file.  This complicates the task because
+   virtual bool ReadHeader()=0;
+   virtual bool Init(){return ReadHeader();}
+
    virtual bool SeekingAllowed(){return true;}
-   
-   ///Decodes the samples for this blockfile from the real file into a float buffer.  
+
+   ///Decodes the samples for this blockfile from the real file into a float buffer.
    ///This is file specific, so subclasses must implement this only.
    ///the buffer should be created by the ODFileDecoder implementing this method.
-   ///It should set the format parameter so that the client code can deal with it. 
-   ///This class should call ReadHeader() first, so it knows the length, and can prepare 
-   ///the file object if it needs to. 
+   ///It should set the format parameter so that the client code can deal with it.
+   ///This class should call ReadHeader() first, so it knows the length, and can prepare
+   ///the file object if it needs to.
    ///returns negative value for failure, 0 or positive value for success.
    virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel)=0;
-   
+
    wxString GetFileName(){return mFName;}
 
    bool IsInitialized();
 
-protected:   
+protected:
    ///Derived classes should call this after they have parsed the header.
    void MarkInitialized();
-   
+
    bool     mInited;
    ODLock   mInitedLock;
-   
+
    wxString  mFName;
-	
-	unsigned int mSampleRate;
-	unsigned int mNumSamples;//this may depend on the channel - so TODO: we should probably let the decoder create/modify the track info directly.
-	unsigned int mNumChannels;
+
+   unsigned int mSampleRate;
+   unsigned int mNumSamples;//this may depend on the channel - so TODO: we should probably let the decoder create/modify the track info directly.
+   unsigned int mNumChannels;
 };
 
 #endif

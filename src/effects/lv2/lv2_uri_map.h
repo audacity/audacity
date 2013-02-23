@@ -49,37 +49,37 @@ typedef void* LV2_URI_Map_Callback_Data;
  * and data pointed to an instance of this struct.
  */
 typedef struct {
-	
-	/** Opaque pointer to host data.
-	 *
-	 * The plugin MUST pass this to any call to functions in this struct.
-	 * Otherwise, it must not be interpreted in any way.
-	 */
-	LV2_URI_Map_Callback_Data callback_data;
-	
-	/** Get the numeric ID of a URI from the host.
-	 *
-	 * @param callback_data Must be the callback_data member of this struct.
-	 * @param map The 'context' of this URI.  Certain extensions may define a
-	 *        URI that must be passed here with certain restrictions on the
-	 *        return value (e.g. limited range).  This value may be NULL if
-	 *        the plugin needs an ID for a URI in general.
-	 * @param uri The URI to be mapped to an integer ID.
-	 *
-	 * This function is referentially transparent - any number of calls with
-	 * the same arguments is guaranteed to return the same value over the life
-	 * of a plugin instance (though the same URI may return different values
-	 * with a different map parameter).  However, this function is not
-	 * necessarily very fast: plugins should cache any IDs they might need in
-	 * performance critical situations.
-	 * The return value 0 is reserved and means an ID for that URI could not
-	 * be created for whatever reason.  Extensions may define more precisely
-	 * what this means, but in general plugins should gracefully handle 0
-	 * and consider whatever they wanted the URI for "unsupported".
-	 */
-	uint32_t (*uri_to_id)(LV2_URI_Map_Callback_Data callback_data,
-	                      const char*               map,
-	                      const char*               uri);
+
+   /** Opaque pointer to host data.
+    *
+    * The plugin MUST pass this to any call to functions in this struct.
+    * Otherwise, it must not be interpreted in any way.
+    */
+   LV2_URI_Map_Callback_Data callback_data;
+
+   /** Get the numeric ID of a URI from the host.
+    *
+    * @param callback_data Must be the callback_data member of this struct.
+    * @param map The 'context' of this URI.  Certain extensions may define a
+    *        URI that must be passed here with certain restrictions on the
+    *        return value (e.g. limited range).  This value may be NULL if
+    *        the plugin needs an ID for a URI in general.
+    * @param uri The URI to be mapped to an integer ID.
+    *
+    * This function is referentially transparent - any number of calls with
+    * the same arguments is guaranteed to return the same value over the life
+    * of a plugin instance (though the same URI may return different values
+    * with a different map parameter).  However, this function is not
+    * necessarily very fast: plugins should cache any IDs they might need in
+    * performance critical situations.
+    * The return value 0 is reserved and means an ID for that URI could not
+    * be created for whatever reason.  Extensions may define more precisely
+    * what this means, but in general plugins should gracefully handle 0
+    * and consider whatever they wanted the URI for "unsupported".
+    */
+   uint32_t (*uri_to_id)(LV2_URI_Map_Callback_Data callback_data,
+                         const char*               map,
+                         const char*               uri);
 
 } LV2_URI_Map_Feature;
 

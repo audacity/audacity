@@ -253,11 +253,11 @@ int ExportFLAC::Export(AudacityProject *project,
    
    sampleFormat format;
    if (bitDepthPref == wxT("24")) {
-   	format = int24Sample;
-   	encoder.set_bits_per_sample(24);
+      format = int24Sample;
+      encoder.set_bits_per_sample(24);
    } else { //convert float to 16 bits
-    	format = int16Sample;
-   	encoder.set_bits_per_sample(16);
+      format = int16Sample;
+      encoder.set_bits_per_sample(16);
    }
 
    // Duplicate the flac command line compression levels
@@ -316,7 +316,7 @@ int ExportFLAC::Export(AudacityProject *project,
    int i, j;
    FLAC__int32 **tmpsmplbuf = new FLAC__int32*[numChannels];
    for (i = 0; i < numChannels; i++) {
-   	tmpsmplbuf[i] = (FLAC__int32 *) calloc(SAMPLES_PER_RUN, sizeof(FLAC__int32));
+      tmpsmplbuf[i] = (FLAC__int32 *) calloc(SAMPLES_PER_RUN, sizeof(FLAC__int32));
    }
 
    ProgressDialog *progress = new ProgressDialog(wxFileName(fName).GetName(),
@@ -353,7 +353,7 @@ int ExportFLAC::Export(AudacityProject *project,
    delete progress;
 
    for (i = 0; i < numChannels; i++) {
-   	free(tmpsmplbuf[i]);
+      free(tmpsmplbuf[i]);
    }
    delete mixer;
    

@@ -83,8 +83,8 @@ class AmplifyDialog:public EffectDialog
    bool TransferDataFromWindow();
    bool Validate();
 
- private:
-	// handlers
+private:
+   // handlers
    void OnAmpText(wxCommandEvent & event);
    void OnPeakText(wxCommandEvent & event);
    void OnAmpSlider(wxCommandEvent & event);

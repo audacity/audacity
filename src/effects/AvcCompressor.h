@@ -23,12 +23,12 @@
 class iAVCBufferList
 {
 public:
-	// The following 4 values describe the buffers that still need output values inserted
-	iAVCBufferList *	mpNext;
-	void *				mpLeftBuffer;
-	void *				mpRightBuffer;
-	sampleCount			mnLen;				// number of entries in buffers
-	sampleCount			mnNext;			// next output position in buffers
+   // The following 4 values describe the buffers that still need output values inserted
+   iAVCBufferList *  mpNext;
+   void *            mpLeftBuffer;
+   void *            mpRightBuffer;
+   sampleCount       mnLen;         // number of entries in buffers
+   sampleCount       mnNext;        // next output position in buffers
 };
 
 class wxString;
@@ -47,9 +47,9 @@ class WaveTrack;
 class AvcCompressorDialog;				// defined later in this file
 
 #ifdef IAVC_FLOAT
-	#define AVCCOMPSAMPLETYPE  floatSample
+   #define AVCCOMPSAMPLETYPE  floatSample
 #else
-	#define AVCCOMPSAMPLETYPE  int16Sample
+   #define AVCCOMPSAMPLETYPE  int16Sample
 #endif
 
 //typedef for IAVCSAMPLETYPE is in iAVC.h
@@ -82,18 +82,18 @@ protected:
    virtual bool Init();				// invoked by Effect
 
    // invoked by SimplePairedTwoTrack
-   bool ProcessSimplePairedTwoTrack ( /*IAVCSAMPLETYPE*/ void *bufferLeft, 
-									  /*IAVCSAMPLETYPE*/ void *bufferRight, // may be 0
-									  sampleCount len);
-	AutoVolCtrl  mAutoVolCtrl;	// iAVC class (LGPL license)
-	long  mnChangeWindow;
+   bool ProcessSimplePairedTwoTrack ( /*IAVCSAMPLETYPE*/ void *bufferLeft,
+                                      /*IAVCSAMPLETYPE*/ void *bufferRight, // may be 0
+                                      sampleCount len);
+   AutoVolCtrl  mAutoVolCtrl;	// iAVC class (LGPL license)
+   long  mnChangeWindow;
 
-	iAVCBufferList * mpBufferList;
-	iAVCBufferList * mpBufferPrevious;
+   iAVCBufferList * mpBufferList;
+   iAVCBufferList * mpBufferPrevious;
 
-	long			 mnDelay;		// delay between when sample set and when it got.
+   long			 mnDelay;		// delay between when sample set and when it got.
 
-	AvcCompressorDialog*	mpDialog;
+   AvcCompressorDialog*	mpDialog;
 
 private:
    void OutputSample ( IAVCSAMPLETYPE left, IAVCSAMPLETYPE right );
@@ -134,11 +134,11 @@ public:
                        long style = wxDEFAULT_DIALOG_STYLE );
    ~AvcCompressorDialog();
 
-	long GetAdjusterWindow() { return mnAdjWin; };
-	long GetDelay()          { return mnDelay; };
-	long GetChangeWindow()   { return mnChangeWin; };
-	long GetMinimumPercent() { return mnMinPct; };
-	void GetTransformArray( unsigned short int nTransform[MULTIPLY_PCT_ARRAY_SIZE] );
+   long GetAdjusterWindow() { return mnAdjWin; };
+   long GetDelay()          { return mnDelay; };
+   long GetChangeWindow()   { return mnChangeWin; };
+   long GetMinimumPercent() { return mnMinPct; };
+   void GetTransformArray( unsigned short int nTransform[MULTIPLY_PCT_ARRAY_SIZE] );
    
    //wxButton *mRemoveNoiseButton;
    //wxSlider *mSlider;
@@ -147,46 +147,46 @@ private:
    DECLARE_EVENT_TABLE()
 
 protected:
-	wxSizer *MakeAvcCompressorDialog( wxWindow *parent, bool call_fit = TRUE,
-									bool set_sizer = TRUE );
-    void OnCancel( wxCommandEvent &event );
-    void OnOK(wxCommandEvent &event);
-	void OnRestoreDefaults(wxCommandEvent &event);
-	void OnCheckBox(wxCommandEvent & event);
-	void ReadPrefs();
-	void WritePrefs();
+   wxSizer *MakeAvcCompressorDialog( wxWindow *parent, bool call_fit = TRUE,
+                                     bool set_sizer = TRUE );
+   void OnCancel( wxCommandEvent &event );
+   void OnOK(wxCommandEvent &event);
+   void OnRestoreDefaults(wxCommandEvent &event);
+   void OnCheckBox(wxCommandEvent & event);
+   void ReadPrefs();
+   void WritePrefs();
 
-	bool LongRangeCheck (  wxWindow *window,
-						   const long nValue,
-						   const long nMin,
-						   const long nMax );
+   bool LongRangeCheck (  wxWindow *window,
+                          const long nValue,
+                          const long nMin,
+                          const long nMax );
 
-	// Values for Adjustment Settings
-	wxTextCtrl *mctlAdjWin;
-	wxTextCtrl *mctlDelay;
-	wxTextCtrl *mctlChangeWin;
-	wxTextCtrl *mctlMinPct;
+   // Values for Adjustment Settings
+   wxTextCtrl *mctlAdjWin;
+   wxTextCtrl *mctlDelay;
+   wxTextCtrl *mctlChangeWin;
+   wxTextCtrl *mctlMinPct;
 
-	wxString mstrAdjWin;
-	wxString mstrDelay;
-	wxString mstrChangeWin;
-	wxString mstrMinPct;
+   wxString mstrAdjWin;
+   wxString mstrDelay;
+   wxString mstrChangeWin;
+   wxString mstrMinPct;
 
-	long mnAdjWin;
-	long mnDelay;
-	long mnChangeWin;
-	long mnMinPct;
+   long mnAdjWin;
+   long mnDelay;
+   long mnChangeWin;
+   long mnMinPct;
 
-	// Values for Amplification Settings
-	wxCheckBox *mctlCheckBoxes[NUM_CURVE_POINTS];
-	wxTextCtrl *mctlXAxis[NUM_CURVE_POINTS];
-	wxTextCtrl *mctlYAxis[NUM_CURVE_POINTS];
+   // Values for Amplification Settings
+   wxCheckBox *mctlCheckBoxes[NUM_CURVE_POINTS];
+   wxTextCtrl *mctlXAxis[NUM_CURVE_POINTS];
+   wxTextCtrl *mctlYAxis[NUM_CURVE_POINTS];
 
-	wxString mstrXAxis[NUM_CURVE_POINTS];
-	wxString mstrYAxis[NUM_CURVE_POINTS];
+   wxString mstrXAxis[NUM_CURVE_POINTS];
+   wxString mstrYAxis[NUM_CURVE_POINTS];
 
-	long mnXAxis[NUM_CURVE_POINTS];	
-	long mnYAxis[NUM_CURVE_POINTS];
+   long mnXAxis[NUM_CURVE_POINTS];
+   long mnYAxis[NUM_CURVE_POINTS];
 };
 
 #endif

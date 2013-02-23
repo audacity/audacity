@@ -75,7 +75,7 @@ class LevellerDialog: public EffectDialog
 //   bool TransferDataFromWindow();
 
  private:
-	// handlers
+   // handlers
    void OnPreview( wxCommandEvent &event );
 
  private:

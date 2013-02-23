@@ -837,8 +837,8 @@ bool EffectNyquist::ProcessOne()
    }
 
    int i;
-	for (i = 0; i < mCurNumChannels; i++) {
-		mCurBuffer[i] = NULL;
+   for (i = 0; i < mCurNumChannels; i++) {
+      mCurBuffer[i] = NULL;
    }
 
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));

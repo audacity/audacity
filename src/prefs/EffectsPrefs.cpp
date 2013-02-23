@@ -87,7 +87,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                     true);
 #endif
 
-	  S.AddFixedText(_("Restart Audacity to apply changes."));
+      S.AddFixedText(_("Restart Audacity to apply changes."));
    }
    S.EndStatic();
 

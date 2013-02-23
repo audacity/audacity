@@ -501,7 +501,7 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 #   define mad_f_scale64(hi, lo)  \
     ((((mad_fixed_t)  \
        (((hi) << (32 - (MAD_F_SCALEBITS - 1))) |  \
-	((lo) >> (MAD_F_SCALEBITS - 1)))) + 1) >> 1)
+   ((lo) >> (MAD_F_SCALEBITS - 1)))) + 1) >> 1)
 #  else
 #   define mad_f_scale64(hi, lo)  \
     ((mad_fixed_t)  \

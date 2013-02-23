@@ -19,32 +19,32 @@
   Note: The info below is very outdated and incomplete
 
   Preference field specification:
-  	/
-		Version					- Audacity Version that created these prefs
-		DefaultOpenPath			- Default directory for new file selector
-	/FileFormats
-		CopyOrEditUncompressedData - Copy data from uncompressed files or
-			[ "copy", "edit"]   - edit in place?
-		ExportFormat_SF1		   - Format to export PCM data in
+   /
+      Version					- Audacity Version that created these prefs
+      DefaultOpenPath			- Default directory for new file selector
+   /FileFormats
+      CopyOrEditUncompressedData - Copy data from uncompressed files or
+         [ "copy", "edit"]   - edit in place?
+      ExportFormat_SF1		   - Format to export PCM data in
                              (this number is a libsndfile1.0 format)
-	/SamplingRate
-		DefaultProjectSampleRate- New projects will have this rate
-			[ 8000, 11025, 16000, 22050, 44100, 48000 ]
-	/AudioIO
-		PlaybackDevice			- device to use for playback
-		RecordingDevice			- device to use for recording
-			(these are device names understood by PortAudio)
-	/Display
-		WaveformColor			- 0xRRGGBB  --since it will be stored in
-		ShadowColor				- 			  decimal, it will be somewhat
-		SpectrumLowColor		- 			  non-intuitive to edit, but
-		SpectrumHighColor		- 			  much easier to parse.
-	/Locale
-		Language				- two-letter language code for translations
-
-	(*): wxGTK
-	(+): wxWin
-	($): wxMac
+   /SamplingRate
+      DefaultProjectSampleRate- New projects will have this rate
+         [ 8000, 11025, 16000, 22050, 44100, 48000 ]
+   /AudioIO
+      PlaybackDevice			- device to use for playback
+      RecordingDevice			- device to use for recording
+         (these are device names understood by PortAudio)
+   /Display
+      WaveformColor			- 0xRRGGBB  --since it will be stored in
+      ShadowColor				- 			  decimal, it will be somewhat
+      SpectrumLowColor		- 			  non-intuitive to edit, but
+      SpectrumHighColor		- 			  much easier to parse.
+   /Locale
+      Language				- two-letter language code for translations
+      
+   (*): wxGTK
+   (+): wxWin
+   ($): wxMac
 \endverbatim
 
 *//*******************************************************************/

@@ -703,9 +703,9 @@ void Meter::OnMeterUpdate(wxTimerEvent &evt)
             printf("%f@%f ", msg.peak[j], mT);
          }
          else {
-	         discarded = true;
+            discarded = true;
             printf("%f@%f discarded\n", msg.peak[j], mT);
-	      }
+         }
 #endif
       }
    } // while

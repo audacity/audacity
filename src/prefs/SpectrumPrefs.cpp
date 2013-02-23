@@ -155,10 +155,10 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                                 8);
 
          mFrequencyGain =
-			 S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
-                              wxT("/Spectrum/FrequencyGain"),
-                              0,
-                              4);
+            S.TieNumericTextBox(_("Frequency g&ain (dB/dec):"),
+                                wxT("/Spectrum/FrequencyGain"),
+                                0,
+                                4);
       }
       S.EndTwoColumn();
 

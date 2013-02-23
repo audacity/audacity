@@ -52,14 +52,14 @@ class ErrorDialog : public wxDialog
    virtual ~ErrorDialog(){}
 
 private:
-	wxString dhelpURL;
+   wxString dhelpURL;
    bool dClose;
    bool dModal;
-	
+
    void OnOk( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );
    DECLARE_EVENT_TABLE()
-	   
+
 };
 
 // special case for alias missing dialog because we keep track of if it exists.
@@ -137,14 +137,14 @@ ErrorDialog::ErrorDialog(
    
    wxStaticText *statText = new wxStaticText(this, -1, message);
    mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
-	   
+
    wxButton *help = new wxButton(this, wxID_HELP, _("Help"));
    hSizer->Add(help, 0, wxALIGN_LEFT|wxALL, 5);
-		
+
    wxButton *ok = new wxButton(this, wxID_OK, _("OK"));
    ok->SetDefault();
    ok->SetFocus();
- hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
+   hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
    
    vSizer->Add(hSizer, 0, wxALIGN_CENTER|wxALL, 5);
    
@@ -283,7 +283,7 @@ void ErrorDialog::OnHelp(wxCommandEvent &event)
    }
    OpenInDefaultBrowser( dhelpURL );
    if(dClose)
-	   EndModal(true);
+      EndModal(true);
 }
 
 void ShowErrorDialog(wxWindow *parent,

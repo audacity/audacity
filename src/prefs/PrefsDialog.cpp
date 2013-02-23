@@ -76,28 +76,28 @@ END_EVENT_TABLE()
 class wxTreebookExt : public wxTreebook
 {
 public:
-	wxTreebookExt( wxWindow *parent,
-		wxWindowID id) : wxTreebook( parent, id )
-	{;};
-	~wxTreebookExt(){;};
-	virtual int ChangeSelection(size_t n);
-    virtual int SetSelection(size_t n);
+   wxTreebookExt( wxWindow *parent,
+      wxWindowID id) : wxTreebook( parent, id )
+   {;};
+   ~wxTreebookExt(){;};
+   virtual int ChangeSelection(size_t n);
+   virtual int SetSelection(size_t n);
 };
 
 
 int wxTreebookExt::ChangeSelection(size_t n) { 
-	int i = wxTreebook::ChangeSelection(n); 
-	wxString Temp = GetPageText( n );
-	((wxDialog*)GetParent())->SetTitle( Temp );
-	return i;
+   int i = wxTreebook::ChangeSelection(n);
+   wxString Temp = GetPageText( n );
+   ((wxDialog*)GetParent())->SetTitle( Temp );
+   return i;
 };
 
 int wxTreebookExt::SetSelection(size_t n) 
 {
-	int i = wxTreebook::SetSelection(n);
-	wxString Temp = wxString(_("Preferences: ")) + GetPageText( n );
-	((wxDialog*)GetParent())->SetTitle( Temp );
-	return i;
+   int i = wxTreebook::SetSelection(n);
+   wxString Temp = wxString(_("Preferences: ")) + GetPageText( n );
+   ((wxDialog*)GetParent())->SetTitle( Temp );
+   return i;
 }
 
 

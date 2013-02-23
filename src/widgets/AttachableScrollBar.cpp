@@ -39,14 +39,14 @@ BEGIN_EVENT_TABLE(AttachableScrollBar, wxScrollBar)
 END_EVENT_TABLE()
 
 AttachableScrollBar::AttachableScrollBar(
-	wxWindow* parent, 
-	wxWindowID id, 
-	const wxPoint& pos, 
-	const wxSize& size, 
-	long style) :
-	wxScrollBar( parent, id, pos, size, style )
+   wxWindow* parent,
+   wxWindowID id,
+   const wxPoint& pos,
+   const wxSize& size,
+   long style) :
+   wxScrollBar( parent, id, pos, size, style )
 {
-	mpViewInfo = NULL;
+   mpViewInfo = NULL;
 }
 
 AttachableScrollBar::~AttachableScrollBar(void)
@@ -98,7 +98,7 @@ void AttachableScrollBar::SetViewInfo( ViewInfo * view )
 
 void AttachableScrollBar::OnScroll(wxScrollEvent & event)
 {
-	if( mpViewInfo == NULL )
+   if( mpViewInfo == NULL )
    {
       event.Skip();
       return;

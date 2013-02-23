@@ -298,8 +298,8 @@ int ExportOGG::Export(AudacityProject *project,
             //   so do so (for however many pages are available).
 
             while (!eos) {
-					int result = ogg_stream_pageout(&stream, &page);
-					if (!result) {
+               int result = ogg_stream_pageout(&stream, &page);
+               if (!result) {
                   break;
                }
 
@@ -309,7 +309,7 @@ int ExportOGG::Export(AudacityProject *project,
                if (ogg_page_eos(&page)) {
                   eos = 1;
                }
-				}
+            }
          }
       }
 
@@ -320,11 +320,11 @@ int ExportOGG::Export(AudacityProject *project,
 
    delete mixer;
 
-	ogg_stream_clear(&stream);
+   ogg_stream_clear(&stream);
 
-	vorbis_block_clear(&block);
-	vorbis_dsp_clear(&dsp);
-	vorbis_info_clear(&info);
+   vorbis_block_clear(&block);
+   vorbis_dsp_clear(&dsp);
+   vorbis_info_clear(&info);
    vorbis_comment_clear(&comment);
 
    outFile.Close();

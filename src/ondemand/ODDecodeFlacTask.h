@@ -84,7 +84,7 @@ class ODFLACFile : public FLAC::Decoder::File
    
  protected:
    virtual FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
-							 const FLAC__int32 * const buffer[]);
+                                                         const FLAC__int32 * const buffer[]);
    virtual void metadata_callback(const FLAC__StreamMetadata *metadata);
    virtual void error_callback(FLAC__StreamDecoderErrorStatus status);
 };
@@ -118,7 +118,7 @@ public:
 
 private:
    friend class FLACImportFileHandle;
-	sampleFormat          mFormat;
+   sampleFormat          mFormat;
    ODFLACFile           *mFile;
    ODLock         mFlacFileLock;//for mFile;
    wxFFile               mHandle;

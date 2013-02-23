@@ -31,8 +31,8 @@
 #endif
 
 #include <wx/defs.h>
-#include <wx/intl.h>		// needed for _("translated stings") even if we
-							// don't have libflac available
+#include <wx/intl.h>    // needed for _("translated stings") even if we
+                        // don't have libflac available
 #include "../Audacity.h"
 
 #include "Import.h"
@@ -120,7 +120,7 @@ class MyFLACFile : public FLAC::Decoder::File
    wxArrayString         mComments;
  protected:
    virtual FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
-							 const FLAC__int32 * const buffer[]);
+                                                         const FLAC__int32 * const buffer[]);
    virtual void metadata_callback(const FLAC__StreamMetadata *metadata);
    virtual void error_callback(FLAC__StreamDecoderErrorStatus status);
 };
@@ -207,14 +207,14 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
          }
          mFile->mStreamInfoDone=true;
       break;
-	  // handle the other types we do nothing with to avoid a warning
-	  case FLAC__METADATA_TYPE_PADDING:	// do nothing with padding
-	  case FLAC__METADATA_TYPE_APPLICATION:	// no idea what to do with this
-	  case FLAC__METADATA_TYPE_SEEKTABLE:	// don't need a seektable here
-	  case FLAC__METADATA_TYPE_CUESHEET:	// convert this to labels?
-	  case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
-	  case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
-	  break;
+      // handle the other types we do nothing with to avoid a warning
+      case FLAC__METADATA_TYPE_PADDING:	// do nothing with padding
+      case FLAC__METADATA_TYPE_APPLICATION:	// no idea what to do with this
+      case FLAC__METADATA_TYPE_SEEKTABLE:	// don't need a seektable here
+      case FLAC__METADATA_TYPE_CUESHEET:	// convert this to labels?
+      case FLAC__METADATA_TYPE_PICTURE:		// ignore pictures
+      case FLAC__METADATA_TYPE_UNDEFINED:	// do nothing with this either
+      break;
    }
 }
 
@@ -241,7 +241,7 @@ void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus status)
 }
 
 FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *frame,
-							  const FLAC__int32 * const buffer[])
+                                                          const FLAC__int32 * const buffer[])
 {
    short *tmp=new short[frame->header.blocksize];
 
@@ -277,7 +277,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 
 
 void GetFLACImportPlugin(ImportPluginList *importPluginList,
-			 UnusableImportPluginList *unusableImportPluginList)
+                         UnusableImportPluginList *unusableImportPluginList)
 {
    importPluginList->Append(new FLACImportPlugin);
 }
@@ -430,9 +430,9 @@ int FLACImportFileHandle::GetFileUncompressedBytes()
 
 
 int FLACImportFileHandle::Import(TrackFactory *trackFactory,
-				  Track ***outTracks,
-				  int *outNumTracks,
-              Tags *tags)
+                                 Track ***outTracks,
+                                 int *outNumTracks,
+                                 Tags *tags)
 {
    wxASSERT(mStreamInfoDone);
 

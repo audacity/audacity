@@ -239,11 +239,11 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
             max = nValue;
          else if (!wxStricmp(attr, wxT("rms")) && (nValue >= 0))
             rms = nValue;
-      }      
-		// mchinen: the min/max can be (are?) doubles as well, so handle those cases.
-      // Vaughan: The code to which I added the XMLValueChecker checks 
-      // used wxAtoi to convert the string to an int. 
-      // So it's possible some prior project formats used ints (?), so am keeping 
+      }
+      // mchinen: the min/max can be (are?) doubles as well, so handle those cases.
+      // Vaughan: The code to which I added the XMLValueChecker checks
+      // used wxAtoi to convert the string to an int.
+      // So it's possible some prior project formats used ints (?), so am keeping
       // those above, but yes, we need to handle floats.
       else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
       {  // double parameters

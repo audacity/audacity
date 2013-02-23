@@ -22,24 +22,24 @@
 struct ViewInfo;
 
 class AUDACITY_DLL_API AttachableScrollBar :
-	public wxScrollBar
+   public wxScrollBar
 {
 public:
-	AttachableScrollBar(
-	wxWindow* parent, 
-	wxWindowID id, 
-	const wxPoint& pos = wxDefaultPosition, 
-	const wxSize& size = wxDefaultSize, 
-	long style = wxSB_HORIZONTAL);
+   AttachableScrollBar(
+   wxWindow* parent,
+   wxWindowID id,
+   const wxPoint& pos = wxDefaultPosition,
+   const wxSize& size = wxDefaultSize,
+   long style = wxSB_HORIZONTAL);
 public:
-	~AttachableScrollBar(void);
-	void OnScroll(wxScrollEvent & event);
-	void SetViewInfo( ViewInfo * view );
+   ~AttachableScrollBar(void);
+   void OnScroll(wxScrollEvent & event);
+   void SetViewInfo( ViewInfo * view );
 
    void SetScrollBarFromViewInfo();
    void SetViewInfoFromScrollBar();
 
-	ViewInfo * mpViewInfo;
+   ViewInfo * mpViewInfo;
    DECLARE_EVENT_TABLE();
 };
 

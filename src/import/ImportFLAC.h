@@ -15,7 +15,7 @@ class ImportPluginList;
 class UnusableImportPluginList;
 
 void GetFLACImportPlugin(ImportPluginList *importPluginList,
-			 UnusableImportPluginList *unusableImportPluginList);
+                         UnusableImportPluginList *unusableImportPluginList);
 
 
 #endif

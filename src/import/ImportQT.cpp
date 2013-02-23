@@ -250,8 +250,8 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
    }
 
    err = MovieAudioExtractionSetProperty(maer,
-													  kQTPropertyClass_MovieAudioExtraction_Audio,
-													  kQTMovieAudioExtractionAudioPropertyID_RenderQuality,
+                                         kQTPropertyClass_MovieAudioExtraction_Audio,
+                                         kQTMovieAudioExtractionAudioPropertyID_RenderQuality,
                                          sizeof(quality),
                                          &quality);
    if (err != noErr) {

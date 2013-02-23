@@ -1088,10 +1088,10 @@ found:
 // ExportMixerDialog
 //----------------------------------------------------------------------------
 
-enum 
+enum
 {
-	ID_MIXERPANEL = 10001, 
-	ID_SLIDER_CHANNEL
+   ID_MIXERPANEL = 10001,
+   ID_SLIDER_CHANNEL
 };
 
 BEGIN_EVENT_TABLE( ExportMixerDialog,wxDialog )

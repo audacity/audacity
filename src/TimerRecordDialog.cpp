@@ -235,11 +235,11 @@ bool TimerRecordDialog::RunWaitDialog()
    else 
    {
       // Record for specified time.
-   	AudacityProject* pProject = GetActiveProject();
+      AudacityProject* pProject = GetActiveProject();
       pProject->OnRecord();
       bool bIsRecording = true;
 
-      wxString strMsg = 
+      wxString strMsg =
          _("Recording start") + (wxString)wxT(":\t\t")
          + GetDisplayDate(m_DateTime_Start) + wxT("\n") + _("Recording end")
          + wxT(":\t\t") + GetDisplayDate(m_DateTime_End) + wxT("\n")

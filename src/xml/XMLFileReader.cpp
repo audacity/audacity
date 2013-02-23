@@ -61,7 +61,7 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
       done = (len < bufferSize);
       if (!XML_Parse(mParser, buffer, len, done)) {
          mErrorStr.Printf(_("Error: %hs at line %lu"),
-			  XML_ErrorString(XML_GetErrorCode(mParser)),
+                          XML_ErrorString(XML_GetErrorCode(mParser)),
                           (long unsigned int)XML_GetCurrentLineNumber(mParser));
          theXMLFile.Close();
          return false;

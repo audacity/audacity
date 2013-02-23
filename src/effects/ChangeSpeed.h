@@ -61,18 +61,18 @@ class EffectChangeSpeed : public Effect
    bool ProcessLabelTrack(Track *t);
 
  private:
-	// track related
+   // track related
    int    mCurTrackNum;
    double mMaxNewLength;
    double mCurT0;
    double mCurT1;
 
-	// control values
-   double	mPercentChange;	// percent change to apply to tempo
-										// -100% is meaningless, but sky's the upper limit.
-										// Slider is (-100, 200], but textCtrls can set higher.
-   int		mFromVinyl;		   // from standard vinyl speed (RPM) enum
-   int		mToVinyl;			// to standard vinyl speed (RPM) enum
+   // control values
+   double   mPercentChange;   // percent change to apply to tempo
+                              // -100% is meaningless, but sky's the upper limit.
+                              // Slider is (-100, 200], but textCtrls can set higher.
+   int      mFromVinyl;       // from standard vinyl speed (RPM) enum
+   int      mToVinyl;         // to standard vinyl speed (RPM) enum
    double   mFactor;          // scale factor calculated from percent change
 
 friend class ChangeSpeedDialog;
@@ -83,30 +83,30 @@ class ChangeSpeedDialog : public EffectDialog
 {
  public:
    ChangeSpeedDialog(EffectChangeSpeed * effect,
-							wxWindow * parent);
+                     wxWindow * parent);
 
    void PopulateOrExchange(ShuttleGui& S);
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
 
  private:
-	// handlers
-	void OnText_PercentChange(wxCommandEvent & event);
+   // handlers
+   void OnText_PercentChange(wxCommandEvent & event);
    void OnSlider_PercentChange(wxCommandEvent & event);
-   void OnChoice_FromVinyl(wxCommandEvent & event); 
-   void OnChoice_ToVinyl(wxCommandEvent & event); 
+   void OnChoice_FromVinyl(wxCommandEvent & event);
+   void OnChoice_ToVinyl(wxCommandEvent & event);
 
    void OnPreview(wxCommandEvent &event);
 
-	// helper fns
-	void Update_Text_PercentChange();   // Update control per current mPercentChange.
+   // helper fns
+   void Update_Text_PercentChange();   // Update control per current mPercentChange.
    void Update_Slider_PercentChange(); // Update control per current mPercentChange.
-	void Update_Vinyl();                // Update Vinyl controls for new percent change.
-	void Update_PercentChange();        // Update percent change controls for new Vinyl values.
+   void Update_Vinyl();                // Update Vinyl controls for new percent change.
+   void Update_PercentChange();        // Update percent change controls for new Vinyl values.
 
  private:
-	EffectChangeSpeed * mEffect;
-	bool mbLoopDetect;
+   EffectChangeSpeed * mEffect;
+   bool mbLoopDetect;
 
    // controls
    wxTextCtrl *	mpTextCtrl_PercentChange;
@@ -115,12 +115,12 @@ class ChangeSpeedDialog : public EffectDialog
    wxChoice *		mpChoice_ToVinyl;
 
  public:
-	// effect parameters
-   double	mPercentChange;	// percent change to apply to tempo
-										// -100% is meaningless, but sky's the upper limit.
-										// Slider is (-100, 200], but textCtrls can set higher.
-   int		mFromVinyl;		   // from standard vinyl speed (RPM)
-   int		mToVinyl;			// to standard vinyl speed (RPM)
+   // effect parameters
+   double   mPercentChange;   // percent change to apply to tempo
+                              // -100% is meaningless, but sky's the upper limit.
+                              // Slider is (-100, 200], but textCtrls can set higher.
+   int      mFromVinyl;       // from standard vinyl speed (RPM)
+   int      mToVinyl;         // to standard vinyl speed (RPM)
 
  private:
    DECLARE_EVENT_TABLE()

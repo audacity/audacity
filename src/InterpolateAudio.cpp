@@ -79,7 +79,7 @@ static void LinearInterpolateAudio(float *buffer, int len,
 // Here's the main interpolate function, using
 // Least Squares AutoRegression (LSAR):
 void InterpolateAudio(float *buffer, int len,
-		      int firstBad, int numBad)
+                      int firstBad, int numBad)
 {
    int N = len;
    int i, row, col;

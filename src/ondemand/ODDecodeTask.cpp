@@ -284,7 +284,7 @@ int ODDecodeTask::GetNumFileDecoders()
 ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
 ODFileDecoder::ODFileDecoder(const wxString & fName)
 {
-	mFName = fName;
+   mFName = fName;
    mInited = false;
 }
 

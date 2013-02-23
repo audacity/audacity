@@ -60,10 +60,10 @@ EffectCompressor::EffectCompressor()
    mThresholdDB = -12.0;
    mNoiseFloorDB = -40.0;
    mNoiseFloor = 0.01;
-	mCircle = NULL;
-	mFollow1 = NULL;
-	mFollow2 = NULL;
-	mFollowLen = 0;
+   mCircle = NULL;
+   mFollow1 = NULL;
+   mFollow2 = NULL;
+   mFollowLen = 0;
 }
 
 bool EffectCompressor::Init()
@@ -87,12 +87,12 @@ EffectCompressor::~EffectCompressor()
       mCircle = NULL;
    }
    if(mFollow1!=NULL) {
-	   delete[] mFollow1;
-	   mFollow1 = NULL;
+      delete[] mFollow1;
+      mFollow1 = NULL;
    }
    if(mFollow2!=NULL) {
-	   delete[] mFollow2;
-	   mFollow2 = NULL;
+      delete[] mFollow2;
+      mFollow2 = NULL;
    }
 }
 
@@ -179,31 +179,31 @@ bool EffectCompressor::InitPass1()
 {
    mMax=0.0;
    if (!mNormalize)
-       DisableSecondPass();
+      DisableSecondPass();
 
    // Find the maximum block length required for any track
    sampleCount maxlen=0;
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
    while (track) {
-	  sampleCount len=track->GetMaxBlockSize();
-	  if(len > maxlen)
-		  maxlen = len;
-	  //Iterate to the next track
+      sampleCount len=track->GetMaxBlockSize();
+      if(len > maxlen)
+         maxlen = len;
+      //Iterate to the next track
       track = (WaveTrack *) iter.Next();
    }
    if(mFollow1!=NULL) {
-	   delete[] mFollow1;
-	   mFollow1 = NULL;
+      delete[] mFollow1;
+      mFollow1 = NULL;
    }
    if(mFollow2!=NULL) {
-	   delete[] mFollow2;
-	   mFollow2 = NULL;
+      delete[] mFollow2;
+      mFollow2 = NULL;
    }
    // Allocate buffers for the envelope
    if(maxlen > 0) {
-	   mFollow1 = new float[maxlen];
-	   mFollow2 = new float[maxlen];
+      mFollow1 = new float[maxlen];
+      mFollow2 = new float[maxlen];
    }
    mFollowLen = maxlen;
 
@@ -221,68 +221,68 @@ bool EffectCompressor::InitPass2()
 // buffer2 will be passed as buffer1 on the next call
 bool EffectCompressor::TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2)
 {
-	int i;
+   int i;
 
-	// If buffers are bigger than allocated, then abort
-	// (this should never happen, but if it does, we don't want to crash)
-	if((len1 > mFollowLen) || (len2 > mFollowLen))
-		return false;
+   // If buffers are bigger than allocated, then abort
+   // (this should never happen, but if it does, we don't want to crash)
+   if((len1 > mFollowLen) || (len2 > mFollowLen))
+      return false;
 
-	// This makes sure that the initial value is well-chosen
-	// buffer1 == NULL on the first and only the first call
-	if (buffer1 == NULL) {
-		// Initialize the mLastLevel to the peak level in the first buffer
-		// This avoids problems with large spike events near the beginning of the track
-		mLastLevel = mThreshold;
-		for(i=0; i<len2; i++) {
-			if(mLastLevel < fabs(buffer2[i]))
-				mLastLevel = fabs(buffer2[i]);
-		}
-	}
+   // This makes sure that the initial value is well-chosen
+   // buffer1 == NULL on the first and only the first call
+   if (buffer1 == NULL) {
+      // Initialize the mLastLevel to the peak level in the first buffer
+      // This avoids problems with large spike events near the beginning of the track
+      mLastLevel = mThreshold;
+      for(i=0; i<len2; i++) {
+         if(mLastLevel < fabs(buffer2[i]))
+            mLastLevel = fabs(buffer2[i]);
+      }
+   }
 
-	// buffer2 is NULL on the last and only the last call
-	if(buffer2 != NULL) {
-		Follow(buffer2, mFollow2, len2, mFollow1, len1);
-	}
+   // buffer2 is NULL on the last and only the last call
+   if(buffer2 != NULL) {
+      Follow(buffer2, mFollow2, len2, mFollow1, len1);
+   }
 
-	if(buffer1 != NULL) {
-		for (i = 0; i < len1; i++) {
-			buffer1[i] = DoCompression(buffer1[i], mFollow1[i]);
-		}
-	}
+   if(buffer1 != NULL) {
+      for (i = 0; i < len1; i++) {
+         buffer1[i] = DoCompression(buffer1[i], mFollow1[i]);
+      }
+   }
 
 
 #if 0
-	// Copy the envelope over the track data (for debug purposes)
-	memcpy(buffer1, mFollow1, len1*sizeof(float));
+   // Copy the envelope over the track data (for debug purposes)
+   memcpy(buffer1, mFollow1, len1*sizeof(float));
 #endif
 
-	// Rotate the buffer pointers
-	float *tmpfloat = mFollow1;
-	mFollow1 = mFollow2; 
-	mFollow2 = tmpfloat;
+   // Rotate the buffer pointers
+   float *tmpfloat = mFollow1;
+   mFollow1 = mFollow2;
+   mFollow2 = tmpfloat;
 
-	return true;
+   return true;
 }
 
 bool EffectCompressor::ProcessPass2(float *buffer, sampleCount len)
 {
-    if (mMax != 0)
-    {
-    	for (int i = 0; i < len; i++)
-    		buffer[i] /= mMax;
-    }
-		
-	return true;
+   if (mMax != 0)
+   {
+      for (int i = 0; i < len; i++)
+         buffer[i] /= mMax;
+   }
+
+   return true;
 }
 
 void EffectCompressor::FreshenCircle()
 {
-	// Recompute the RMS sum periodically to prevent accumulation of rounding errors
-	// during long waveforms
-	mRMSSum = 0;
-	for(int i=0; i<mCircleSize; i++)
-		mRMSSum += mCircle[i];
+   // Recompute the RMS sum periodically to prevent accumulation of rounding errors
+   // during long waveforms
+   mRMSSum = 0;
+   for(int i=0; i<mCircleSize; i++)
+      mRMSSum += mCircle[i];
 }
 
 float EffectCompressor::AvgCircle(float value)
@@ -336,82 +336,82 @@ void EffectCompressor::Follow(float *buffer, float *env, int len, float *previou
     The value has a lower limit of floor to make sure value has a
     reasonable positive value from which to begin an attack.
    */
-	int i;
-	double level,last;
+   int i;
+   double level,last;
 
    if(!mUsePeak) {
-	   // Update RMS sum directly from the circle buffer
-	   // to avoid accumulation of rounding errors
-	   FreshenCircle();
+      // Update RMS sum directly from the circle buffer
+      // to avoid accumulation of rounding errors
+      FreshenCircle();
    }
-	// First apply a peak detect with the requested decay rate
-	last = mLastLevel;
-	for(i=0; i<len; i++) {
+   // First apply a peak detect with the requested decay rate
+   last = mLastLevel;
+   for(i=0; i<len; i++) {
       if(mUsePeak)
          level = fabs(buffer[i]);
       else // use RMS
-		   level = AvgCircle(buffer[i]);
+         level = AvgCircle(buffer[i]);
       // Don't increase gain when signal is continuously below the noise floor
       if(level < mNoiseFloor) {
          mNoiseCounter++;
       } else {
          mNoiseCounter = 0;
       }
-		if(mNoiseCounter < 100) {
-			last *= mDecayFactor;
-			if(last < mThreshold)
-				last = mThreshold;
-			if(level > last)
-				last = level;
-		}
-		env[i] = last;
-	}
-	mLastLevel = last;
+      if(mNoiseCounter < 100) {
+         last *= mDecayFactor;
+         if(last < mThreshold)
+            last = mThreshold;
+         if(level > last)
+            last = level;
+      }
+      env[i] = last;
+   }
+   mLastLevel = last;
 
-	// Next do the same process in reverse direction to get the requested attack rate
-	last = mLastLevel;
-	for(i=len-1; i>=0; i--) {
-		last *= mAttackInverseFactor;
-		if(last < mThreshold)
-			last = mThreshold;
-		if(env[i] < last)
-			env[i] = last;
-		else
-			last = env[i];
-	}
+   // Next do the same process in reverse direction to get the requested attack rate
+   last = mLastLevel;
+   for(i=len-1; i>=0; i--) {
+      last *= mAttackInverseFactor;
+      if(last < mThreshold)
+         last = mThreshold;
+      if(env[i] < last)
+         env[i] = last;
+      else
+         last = env[i];
+   }
 
-	if((previous != NULL) && (previous_len > 0)) {
-		// If the previous envelope was passed, propagate the rise back until we intersect
-		for(i=previous_len-1; i>0; i--) {
-			last *= mAttackInverseFactor;
-			if(last < mThreshold)
-				last = mThreshold;
-			if(previous[i] < last)
-				previous[i] = last;
-			else // Intersected the previous envelope buffer, so we are finished
-				return;
-		}
-		// If we can't back up far enough, project the starting level forward
-		// until we intersect the desired envelope
-		last = previous[0];
-		for(i=1; i<previous_len; i++) {
-			last *= mAttackFactor;
-			if(previous[i] > last)
-				previous[i] = last;
-			else // Intersected the desired envelope, so we are finished
-				return;
-		}
-		// If we still didn't intersect, then continue ramp up into current buffer
-		for(i=0; i<len; i++) {
-			last *= mAttackFactor;
-			if(buffer[i] > last)
-				buffer[i] = last;
-			else // Finally got an intersect
-				return;
-		}
-		// If we still didn't intersect, then reset mLastLevel
-		mLastLevel = last;
-	}
+   if((previous != NULL) && (previous_len > 0)) {
+      // If the previous envelope was passed, propagate the rise back until we intersect
+      for(i=previous_len-1; i>0; i--) {
+         last *= mAttackInverseFactor;
+         if(last < mThreshold)
+            last = mThreshold;
+         if(previous[i] < last)
+            previous[i] = last;
+         else // Intersected the previous envelope buffer, so we are finished
+            return;
+      }
+      // If we can't back up far enough, project the starting level forward
+      // until we intersect the desired envelope
+      last = previous[0];
+      for(i=1; i<previous_len; i++) {
+         last *= mAttackFactor;
+         if(previous[i] > last)
+            previous[i] = last;
+         else // Intersected the desired envelope, so we are finished
+            return;
+      }
+      // If we still didn't intersect, then continue ramp up into current buffer
+      for(i=0; i<len; i++) {
+         last *= mAttackFactor;
+         if(buffer[i] > last)
+            buffer[i] = last;
+         else // Finally got an intersect
+            return;
+      }
+      // If we still didn't intersect, then reset mLastLevel
+      mLastLevel = last;
+   }
 }
 
 float EffectCompressor::DoCompression(float value, double env)
@@ -427,7 +427,7 @@ float EffectCompressor::DoCompression(float value, double env)
 
    // Retain the maximum value for use in the normalization pass
    if(mMax < fabs(out))
-	   mMax = fabs(out);
+      mMax = fabs(out);
 
    return out;
 }
@@ -766,7 +766,7 @@ void CompressorDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	// Save & restore parameters around Preview, because we didn't do OK.
+   // Save & restore parameters around Preview, because we didn't do OK.
    double    oldAttackTime = mEffect->mAttackTime;
    double    oldDecayTime = mEffect->mDecayTime;
    double    oldThresholdDB = mEffect->mThresholdDB;

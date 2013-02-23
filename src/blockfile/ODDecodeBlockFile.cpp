@@ -211,7 +211,7 @@ void ODDecodeBlockFile::SaveXML(XMLWriter &xmlFile)
 
       xmlFile.EndTag(wxT("oddecodeblockfile"));
    }
-	UnlockRead();
+   UnlockRead();
 }
 
 /// Constructs a ODPCMAliasBlockFile from the xml output of WriteXML.

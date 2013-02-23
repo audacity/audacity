@@ -290,8 +290,8 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
    S.EndMultiColumn();
-	
-	return;
+
+   return;
 }
 
 bool TimeScaleDialog::TransferDataToWindow()

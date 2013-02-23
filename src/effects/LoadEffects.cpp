@@ -242,10 +242,10 @@ void LoadEffects()
    em.RegisterEffect(new EffectAutoDuck());
    em.RegisterEffect(new EffectBassTreble());
    em.RegisterEffect(new EffectChangeSpeed());
-	#ifdef USE_SOUNDTOUCH
-		em.RegisterEffect(new EffectChangePitch());
-		em.RegisterEffect(new EffectChangeTempo());
-	#endif
+   #ifdef USE_SOUNDTOUCH
+      em.RegisterEffect(new EffectChangePitch());
+      em.RegisterEffect(new EffectChangeTempo());
+   #endif
    em.RegisterEffect(new EffectClickRemoval());
    em.RegisterEffect(new EffectCompressor());
    em.RegisterEffect(new EffectEcho());

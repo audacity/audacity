@@ -743,16 +743,16 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *eff,
    mLength = length;
    this->mData = data;
    this->sampleRate = sampleRate;
-	#ifdef __WXMSW__
-		// On Windows, for some reason, wxWindows calls OnTextCtrl during creation
-		// of the text control, and LV2EffectDialog::OnTextCtrl calls HandleText, 
-		// which assumes all the fields have been initialized. 
-		// This can give us a bad pointer crash, so manipulate inSlider to 
-		// no-op HandleText during creation.
-		inSlider = true;
-	#else
-		inSlider = false;
-	#endif
+   #ifdef __WXMSW__
+      // On Windows, for some reason, wxWindows calls OnTextCtrl during creation
+      // of the text control, and LV2EffectDialog::OnTextCtrl calls HandleText,
+      // which assumes all the fields have been initialized.
+      // This can give us a bad pointer crash, so manipulate inSlider to
+      // no-op HandleText during creation.
+      inSlider = true;
+   #else
+      inSlider = false;
+   #endif
    inText = false;
    
    // Allocate memory for the user parameter controls

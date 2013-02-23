@@ -273,7 +273,7 @@ void LevellerDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	// Save & restore parameters around Preview
+   // Save & restore parameters around Preview
    int oldLevellerDbChoiceIndex = mEffect->mLevellerDbChoiceIndex;
    int oldLevellerNumPasses = mEffect->mLevellerNumPasses;
 
@@ -282,7 +282,7 @@ void LevellerDialog::OnPreview(wxCommandEvent &event)
 
    mEffect->Preview();
    
-	mEffect->mLevellerDbChoiceIndex = oldLevellerDbChoiceIndex;
+   mEffect->mLevellerDbChoiceIndex = oldLevellerDbChoiceIndex;
    mEffect->mLevellerNumPasses = oldLevellerNumPasses;
 }
 

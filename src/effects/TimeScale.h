@@ -74,51 +74,51 @@ class EffectTimeScale : public EffectSBSMS {
 
 class TimeScaleDialog:public EffectDialog {
  public:
-  TimeScaleDialog(EffectTimeScale * effect, 
-		  wxWindow * parent);
+   TimeScaleDialog(EffectTimeScale * effect,
+                   wxWindow * parent);
 
-  void PopulateOrExchange(ShuttleGui & S);
-  bool TransferDataToWindow();
-  bool TransferDataFromWindow();
-
- private:
-  // handlers
-  void OnText_RatePercentChangeStart(wxCommandEvent & event);
-  void OnText_RatePercentChangeEnd(wxCommandEvent & event);
-  void OnText_PitchPercentChangeStart(wxCommandEvent & event);
-  void OnText_PitchPercentChangeEnd(wxCommandEvent & event);
-  void OnText_PitchHalfStepsStart(wxCommandEvent & event);
-  void OnText_PitchHalfStepsEnd(wxCommandEvent & event);
-  void OnSlider_RatePercentChangeStart(wxCommandEvent & event);
-  void OnSlider_RatePercentChangeEnd(wxCommandEvent & event);
-  void OnCheckBox_PreAnalyze(wxCommandEvent & event);
-
-  // helper fns
-  bool CheckParameters();
-  void Update_Text_RatePercentChangeStart();
-  void Update_Text_RatePercentChangeEnd();
-  void Update_Text_PitchPercentChangeStart();
-  void Update_Text_PitchPercentChangeEnd();
-  void Update_Text_PitchHalfStepsStart();
-  void Update_Text_PitchHalfStepsEnd();
-  void Update_Slider_RatePercentChangeStart();
-  void Update_Slider_RatePercentChangeEnd();
-  void Update_CheckBox_PreAnalyze();
+   void PopulateOrExchange(ShuttleGui & S);
+   bool TransferDataToWindow();
+   bool TransferDataFromWindow();
 
  private:
-  EffectTimeScale *mEffect;
-  bool m_bLoopDetect;
-  
-  // controls
-  wxTextCtrl *m_pTextCtrl_RatePercentChangeStart;
-  wxTextCtrl *m_pTextCtrl_RatePercentChangeEnd;
-  wxSlider *m_pSlider_RatePercentChangeStart;
-  wxSlider *m_pSlider_RatePercentChangeEnd;
-  wxTextCtrl *m_pTextCtrl_PitchHalfStepsStart;
-  wxTextCtrl *m_pTextCtrl_PitchHalfStepsEnd;
-  wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
-  wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
-  wxCheckBox *m_pCheckBox_PreAnalyze;
+   // handlers
+   void OnText_RatePercentChangeStart(wxCommandEvent & event);
+   void OnText_RatePercentChangeEnd(wxCommandEvent & event);
+   void OnText_PitchPercentChangeStart(wxCommandEvent & event);
+   void OnText_PitchPercentChangeEnd(wxCommandEvent & event);
+   void OnText_PitchHalfStepsStart(wxCommandEvent & event);
+   void OnText_PitchHalfStepsEnd(wxCommandEvent & event);
+   void OnSlider_RatePercentChangeStart(wxCommandEvent & event);
+   void OnSlider_RatePercentChangeEnd(wxCommandEvent & event);
+   void OnCheckBox_PreAnalyze(wxCommandEvent & event);
+
+   // helper fns
+   bool CheckParameters();
+   void Update_Text_RatePercentChangeStart();
+   void Update_Text_RatePercentChangeEnd();
+   void Update_Text_PitchPercentChangeStart();
+   void Update_Text_PitchPercentChangeEnd();
+   void Update_Text_PitchHalfStepsStart();
+   void Update_Text_PitchHalfStepsEnd();
+   void Update_Slider_RatePercentChangeStart();
+   void Update_Slider_RatePercentChangeEnd();
+   void Update_CheckBox_PreAnalyze();
+
+ private:
+   EffectTimeScale *mEffect;
+   bool m_bLoopDetect;
+
+   // controls
+   wxTextCtrl *m_pTextCtrl_RatePercentChangeStart;
+   wxTextCtrl *m_pTextCtrl_RatePercentChangeEnd;
+   wxSlider *m_pSlider_RatePercentChangeStart;
+   wxSlider *m_pSlider_RatePercentChangeEnd;
+   wxTextCtrl *m_pTextCtrl_PitchHalfStepsStart;
+   wxTextCtrl *m_pTextCtrl_PitchHalfStepsEnd;
+   wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
+   wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
+   wxCheckBox *m_pCheckBox_PreAnalyze;
 
  public:
    double m_RatePercentChangeStart;

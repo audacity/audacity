@@ -558,7 +558,7 @@ void PhaserDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	// Save & restore parameters around Preview, because we didn't do OK.
+   // Save & restore parameters around Preview, because we didn't do OK.
    float old_freq = mEffect->freq;
    float old_startphase = mEffect->startphase;
    float old_fb = mEffect->fb;

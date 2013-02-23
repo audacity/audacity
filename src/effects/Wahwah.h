@@ -167,7 +167,7 @@ class WahwahDialog:public EffectDialog {
    void OnPreview(wxCommandEvent &event);
 
  private:
-	EffectWahwah * mEffect;
+   EffectWahwah * mEffect;
 
  public:
    float freq;

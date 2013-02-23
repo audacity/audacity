@@ -179,7 +179,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      mConverterLabels),
          S.SetSizeHints(mConverterNames);
 
-		 S.TieChoice(_("&Dither:"),
+         S.TieChoice(_("&Dither:"),
                      wxT("/Quality/DitherAlgorithm"),
                      Dither::none,
                      mDitherNames,
@@ -201,7 +201,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      mConverterLabels),
          S.SetSizeHints(mConverterNames);
 
-		 S.TieChoice(_("Dit&her:"),
+         S.TieChoice(_("Dit&her:"),
                      wxT("/Quality/HQDitherAlgorithm"),
                      Dither::shaped,
                      mDitherNames,

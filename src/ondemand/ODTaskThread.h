@@ -77,7 +77,7 @@ class ODTaskThread {
    bool mDestroy;
    pthread_t mThread;
 
-	ODTask* mTask;
+   ODTask* mTask;
 };
 
 class ODLock {
@@ -125,30 +125,30 @@ protected:
 #else
 
 
-class ODTaskThread : public wxThread  
+class ODTaskThread : public wxThread
 {
 public:
    ///Constructs a ODTaskThread
-   ///@param task the task to be launched as an 
-	ODTaskThread(ODTask* task);
-   
-  
+   ///@param task the task to be launched as an
+   ODTaskThread(ODTask* task);
+
+
 protected:
    ///Executes a part of the task
    virtual void* Entry();
-	ODTask* mTask;
-   
+   ODTask* mTask;
+
 };
 
 
 //a wrapper for wxMutex.
-class AUDACITY_DLL_API ODLock : public wxMutex  
+class AUDACITY_DLL_API ODLock : public wxMutex
 {
 public:
    ///Constructs a ODTaskThread
-   ///@param task the task to be launched as an 
-	ODLock(){}
-  virtual ~ODLock(){}   
+   ///@param task the task to be launched as an
+   ODLock(){}
+  virtual ~ODLock(){}
 };
 
 class ODCondition : public wxCondition

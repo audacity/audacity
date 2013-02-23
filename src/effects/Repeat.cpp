@@ -173,10 +173,10 @@ bool EffectRepeat::Process()
    if (bGoodResult)
    {
       // Select the new bits + original bit
-	   mT1 = maxDestLen;
+      mT1 = maxDestLen;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -292,7 +292,7 @@ void RepeatDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	int oldRepeatCount = mEffect->repeatCount;
+   int oldRepeatCount = mEffect->repeatCount;
 
    mEffect->repeatCount = repeatCount;
 

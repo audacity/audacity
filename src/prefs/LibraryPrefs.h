@@ -28,12 +28,12 @@ class LibraryPrefs:public PrefsPanel
    LibraryPrefs(wxWindow * parent);
    ~LibraryPrefs();
    virtual bool Apply();
-   
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void SetMP3VersionText(bool prompt = false);
-	void SetFFmpegVersionText();
+   void SetFFmpegVersionText();
 
    void OnMP3FindButton(wxCommandEvent & e);
    void OnMP3DownButton(wxCommandEvent & e);

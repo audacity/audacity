@@ -219,14 +219,14 @@ void ToolDock::LayoutToolBars()
       stack[ stkcnt ].SetHeight( stack[ stkcnt ].GetHeight() - th );
 
       // Calc the next possible horizontal location.
-		int x = cpos.x + tw;
+      int x = cpos.x + tw;
 
       // Add a new stack entry
       stkcnt++;
       stack[ stkcnt ].SetX( x );
-		stack[ stkcnt ].SetY( cpos.y );
-		stack[ stkcnt ].SetWidth( width - x );
-		stack[ stkcnt ].SetHeight( th );
+      stack[ stkcnt ].SetY( cpos.y );
+      stack[ stkcnt ].SetWidth( width - x );
+      stack[ stkcnt ].SetHeight( th );
 
       // Position the previous toolbar
       if( ndx > 0 )
@@ -373,14 +373,14 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
       stack[ stkcnt ].SetHeight( stack[ stkcnt ].GetHeight() - th );
 
       // Calc the next possible horizontal location.
-		int x = cpos.x + tw;
+      int x = cpos.x + tw;
 
       // Add a new stack entry
       stkcnt++;
       stack[ stkcnt ].SetX( x );
-		stack[ stkcnt ].SetY( cpos.y );
-		stack[ stkcnt ].SetWidth( width - x );
-		stack[ stkcnt ].SetHeight( th );
+      stack[ stkcnt ].SetY( cpos.y );
+      stack[ stkcnt ].SetWidth( width - x );
+      stack[ stkcnt ].SetHeight( th );
 
       // Position the previous toolbar
       if( ndx > 0 )

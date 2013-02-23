@@ -498,10 +498,10 @@ void WahwahDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	// Save & restore parameters around Preview, because we didn't do OK.
+   // Save & restore parameters around Preview, because we didn't do OK.
    float old_freq = mEffect->freq;
    float old_freqofs = mEffect->freqofs;
-	float old_startphase = mEffect->startphase;
+   float old_startphase = mEffect->startphase;
    float old_res = mEffect->res;
    float old_depth = mEffect->depth;
    

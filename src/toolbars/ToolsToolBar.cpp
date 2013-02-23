@@ -135,12 +135,12 @@ void ToolsToolBar::RegenerateToolsTooltips()
 //   to workaround the problem.  The problem is not fully understood though
 //   (as of April 2003).
    
-   //	Vaughan, October 2003: Now we're crashing on Win2K if 
-	// "Quit when closing last window" is unchecked, when we come back 
-	// through here, on either of the wxSafeYield calls.
-	// James confirms that commenting them out does not cause his original problem 
-	// to reappear, so they're commented out now.
-	//		wxSafeYield(); //Deal with some queued up messages...
+   //	Vaughan, October 2003: Now we're crashing on Win2K if
+   // "Quit when closing last window" is unchecked, when we come back
+   // through here, on either of the wxSafeYield calls.
+   // James confirms that commenting them out does not cause his original problem
+   // to reappear, so they're commented out now.
+   //		wxSafeYield(); //Deal with some queued up messages...
 
    #if wxUSE_TOOLTIPS
    mTool[selectTool]->SetToolTip(_("Selection Tool"));
@@ -221,9 +221,9 @@ void ToolsToolBar::SetCurrentTool(int tool, bool show)
       if (show)
          mTool[mCurrentTool]->PushDown();
    }
-	//JKC: ANSWER-ME: Why is this RedrawAllProjects() line required?
-	//msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
-	// we'll see if anyone complains.
+   //JKC: ANSWER-ME: Why is this RedrawAllProjects() line required?
+   //msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
+   // we'll see if anyone complains.
    // RedrawAllProjects();
 
    //msmeyer: But we instruct the projects to handle the cursor shape again

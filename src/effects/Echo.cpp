@@ -174,15 +174,15 @@ EchoDialog::EchoDialog(EffectEcho * effect, wxWindow * parent)
 : EffectDialog(parent, _("Echo"))
 {
    m_bLoopDetect = false;
-	m_pEffect = effect;
+   m_pEffect = effect;
 
-	// NULL out these control members because there are some cases where the 
-	// event table handlers get called during this method, and those handlers that 
-	// can cause trouble check for NULL.
+   // NULL out these control members because there are some cases where the
+   // event table handlers get called during this method, and those handlers that
+   // can cause trouble check for NULL.
    m_pTextCtrl_Delay = NULL;
    m_pTextCtrl_Decay = NULL;
-	
-	// effect parameters
+
+   // effect parameters
    delay = float(1.0);
    decay = float(0.5);
    
@@ -225,34 +225,34 @@ bool EchoDialog::TransferDataToWindow()
 {
    m_bLoopDetect = true;
 
-	wxString str;
-	if (m_pTextCtrl_Delay) {
-		str.Printf(wxT("%g"), delay);
-		m_pTextCtrl_Delay->SetValue(str);
-	}
-	if (m_pTextCtrl_Decay) {
-		str.Printf(wxT("%g"), decay);
-		m_pTextCtrl_Decay->SetValue(str);
-	}
+   wxString str;
+   if (m_pTextCtrl_Delay) {
+      str.Printf(wxT("%g"), delay);
+      m_pTextCtrl_Delay->SetValue(str);
+   }
+   if (m_pTextCtrl_Decay) {
+      str.Printf(wxT("%g"), decay);
+      m_pTextCtrl_Decay->SetValue(str);
+   }
 
-	m_bLoopDetect = false;
-	return true;
+   m_bLoopDetect = false;
+   return true;
 }
 
 bool EchoDialog::TransferDataFromWindow()
 {
    double newValue;
-	wxString str;
+   wxString str;
    if (m_pTextCtrl_Delay) {
       str = m_pTextCtrl_Delay->GetValue();
       str.ToDouble(&newValue);
-		delay = (float)(newValue);
-	}
+      delay = (float)(newValue);
+   }
    if (m_pTextCtrl_Decay) {
       str = m_pTextCtrl_Decay->GetValue();
       str.ToDouble(&newValue);
-		decay = (float)(newValue);
-	}
+      decay = (float)(newValue);
+   }
    return true;
 }
 
@@ -262,9 +262,9 @@ void EchoDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-	// Save & restore parameters around Preview, because we didn't do OK.
-	float oldDelay = m_pEffect->delay;
-	float oldDecay = m_pEffect->decay;
+   // Save & restore parameters around Preview, because we didn't do OK.
+   float oldDelay = m_pEffect->delay;
+   float oldDecay = m_pEffect->decay;
 
    m_pEffect->delay = delay;
    m_pEffect->decay = decay;

@@ -185,7 +185,7 @@ class PhaserDialog:public EffectDialog {
    void OnPreview(wxCommandEvent &event);
 
  private:
-	EffectPhaser * mEffect;
+   EffectPhaser * mEffect;
 
  public:
    float freq;

@@ -98,7 +98,7 @@ class NormalizeDialog: public EffectDialog
    bool TransferDataFromWindow();
 
  private:
-	// handlers
+   // handlers
    void OnUpdateUI(wxCommandEvent& evt);
    void OnPreview(wxCommandEvent &event);
 

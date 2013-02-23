@@ -301,7 +301,7 @@ int ExportMP2::Export(AudacityProject *project,
 
    delete mixer;
 
-	int mp2BufferNumBytes = twolame_encode_flush(
+   int mp2BufferNumBytes = twolame_encode_flush(
       encodeOptions,
       mp2Buffer,
       mp2BufferSize);
