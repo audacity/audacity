@@ -364,7 +364,7 @@ void OnExportCleanSpeechPresets();
 #endif   // CLEANSPEECH
 
 void OnStereoToMono(int index);
-wxString BuildCleanFileName(wxString fileName);
+wxString BuildCleanFileName(wxString fileName, wxString extension);
 
         // Help Menu
 

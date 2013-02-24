@@ -6192,7 +6192,7 @@ void AudacityProject::OnEditChains()
    dlg.ShowModal();
 }
 
-wxString AudacityProject::BuildCleanFileName(wxString fileName)
+wxString AudacityProject::BuildCleanFileName(wxString fileName, wxString extension)
 {
    wxFileName newFileName(fileName);
    wxString justName = newFileName.GetName();
@@ -6216,9 +6216,9 @@ wxString AudacityProject::BuildCleanFileName(wxString fileName)
 //      double startTime = 0.0;
       //OnSelectAll();
       pathName = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
-      ::wxMessageBox(wxString::Format(wxT("Export recording to %s\n/cleaned/%s.mp3"), 
-         pathName.c_str(), justName.c_str()),
-         wxT("Export recording"),
+      ::wxMessageBox(wxString::Format(wxT("Export recording to %s\n/cleaned/%s%s"),
+                                      pathName.c_str(), justName.c_str(), extension.c_str()),
+                     wxT("Export recording"),
                   wxOK | wxCENTRE);
       pathName += wxT("/");
    }
@@ -6233,7 +6233,7 @@ wxString AudacityProject::BuildCleanFileName(wxString fileName)
 
    cleanedName += wxT("/");
    cleanedName += justName;
-   cleanedName += wxT(".mp3");
+   cleanedName += extension;
    wxGetApp().AddFileToHistory(cleanedName);
 
    return cleanedName;

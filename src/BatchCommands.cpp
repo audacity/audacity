@@ -148,13 +148,13 @@ bool BatchCommands::ReadChain(const wxString & chain)
          // Backward compatibility for old Chain scripts
          if (cmd == wxT("SaveMP3_56k_before"))
             cmd = wxT("ExportMP3_56k_before");
-         if (cmd == wxT("SaveMP3_56k_after"))
+         else if (cmd == wxT("SaveMP3_56k_after"))
             cmd = wxT("ExportMP3_56k_after");
-         if (cmd == wxT("ExportFlac"))
+         else if (cmd == wxT("ExportFlac"))
             cmd = wxT("ExportFLAC");
-         if (cmd == wxT("ExportMp3"))
+         else if (cmd == wxT("ExportMp3"))
             cmd = wxT("ExportMP3");
-         if (cmd == wxT("ExportWav"))
+         else if (cmd == wxT("ExportWav"))
             cmd = wxT("ExportWAV");
 
          // Add to lists
@@ -197,6 +197,18 @@ bool BatchCommands::WriteChain(const wxString & chain)
    // Copy over the commands
    int lines = mCommandChain.GetCount();
    for (int i = 0; i < lines; i++) {
+      // restore deprecated commands in chain script
+      if (mCommandChain[i] == wxT("ExportMP3_56k_before"))
+         mCommandChain[i] = wxT("SaveMP3_56k_before");
+      else if (mCommandChain[i] == wxT("ExportMP3_56k_after"))
+         mCommandChain[i] = wxT("SaveMP3_56k_after");
+      else if (mCommandChain[i] == wxT("ExportFLAC"))
+         mCommandChain[i] = wxT("ExportFlac");
+      else if (mCommandChain[i] == wxT("ExportMP3"))
+         mCommandChain[i] = wxT("ExportMp3");
+      else if (mCommandChain[i] == wxT("ExportWAV"))
+         mCommandChain[i] = wxT("ExportWav");
+
       tf.AddLine(mCommandChain[i] + wxT(":") + mParamsChain[ i ]);
    }
 
@@ -454,11 +466,20 @@ bool BatchCommands::ApplySpecialCommand(int iCommand, const wxString command,con
    }
 
    wxString filename;
+   wxString extension; // required for correct message
+   if (command == wxT("ExportWAV"))
+      extension = wxT(".wav");
+   else if (command == wxT("ExportOgg"))
+      extension = wxT(".ogg");
+   else if (command == wxT("ExportFLAC"))
+      extension = wxT(".flac");
+   else extension = wxT(".mp3");
+
    if (mFileName.IsEmpty()) {   
-      filename = project->BuildCleanFileName(project->GetFileName());
+      filename = project->BuildCleanFileName(project->GetFileName(), extension);
    }
    else {
-      filename = project->BuildCleanFileName(mFileName);
+      filename = project->BuildCleanFileName(mFileName, extension);
    }
 
    // We have a command index, but we don't use it!
