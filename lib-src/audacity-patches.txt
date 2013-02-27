@@ -178,6 +178,14 @@ Patches:
 		Integration by upstream in progress. Will need updating as upstream
 		portaudio moves
 
+portaudio-v19/wasapi-fix.patch  Patch to WASAPI hostapi that corrects incorrect
+reporting of stream open/running/closed state.
+
+portaudio-v19/wasapi-loopback.patch  Patch to add loopback devices to the WASAPI
+hostapi.
+
+portaudio-v19/jack.patch  Patch to add JACK support to Windows.
+
 ?portaudio/libtool22.patch	Patch from Gentoo to ensure that static libraries
 are always built, not shared ones, otherwise the assumptions elsewhere in the
 build system break. Not suitable for upstream, what is needed is more

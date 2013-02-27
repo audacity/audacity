@@ -38,11 +38,11 @@
 #define CINTERFACE 1
 #define COBJMACROS 1
 
-#include <initguid.h>
 #include <windows.h>
 #include <tchar.h>
 #include <strsafe.h>
 #include <mmdeviceapi.h>
+#include <initguid.h>
 #include <endpointvolume.h>
 
 #include "portaudio.h"
