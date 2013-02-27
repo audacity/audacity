@@ -5,7 +5,7 @@
 	@author Phil Burk  http://www.softsynth.com
 */
 /*
- * $Id: pa_minlat.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: pa_minlat.c 1612 2011-02-28 23:56:48Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -107,6 +107,7 @@ int main( int argc, char **argv )
     int    framesPerBuffer;
     double sampleRate = 44100.0;
     char   str[256];
+	char  *line;
 
     printf("pa_minlat - Determine minimum latency for your computer.\n");
     printf("  usage:         pa_minlat {userBufferSize}\n");
@@ -157,24 +158,34 @@ int main( int argc, char **argv )
         /* Ask user for a new nlatency. */
         printf("\nMove windows around to see if the sound glitches.\n");
         printf("Latency now %d, enter new number of frames, or 'q' to quit: ", outLatency );
-        fgets( str, 256, stdin );
-        {
-            /* Get rid of newline */
-            size_t l = strlen( str ) - 1;
-            if( str[ l ] == '\n')
-                str[ l ] = '\0';
-        }
-        if( str[0] == 'q' ) go = 0;
-        else
-        {
-            outLatency = atol( str );
-            if( outLatency < minLatency )
-            {
-                printf( "Latency below minimum of %d! Set to minimum!!!\n", minLatency );
-                outLatency = minLatency;
-            }
-        }
-        /* Stop sound until ENTER hit. */
+        line = fgets( str, 256, stdin );
+		if( line == NULL )
+		{
+			go = 0;
+		}
+		else
+		{
+			{
+				/* Get rid of newline */
+				size_t l = strlen( str ) - 1;
+				if( str[ l ] == '\n')
+					str[ l ] = '\0';
+			}
+			
+			
+			if( str[0] == 'q' ) go = 0;
+			else
+			{
+				outLatency = atol( str );
+				if( outLatency < minLatency )
+				{
+					printf( "Latency below minimum of %d! Set to minimum!!!\n", minLatency );
+					outLatency = minLatency;
+				}
+			}
+			
+		}
+		/* Stop sound until ENTER hit. */
         err = Pa_StopStream( stream );
         if( err != paNoError ) goto error;
         err = Pa_CloseStream( stream );

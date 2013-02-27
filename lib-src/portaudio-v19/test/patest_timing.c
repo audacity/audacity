@@ -1,12 +1,12 @@
 /** @file patest_timing.c
 	@ingroup test_src
-	@brief Play a sine wave for several seconds, and spits out a ton of timing info while it's at it. Based on patet_sine.c
+	@brief Play a sine wave for several seconds, and spits out a ton of timing info while it's at it. Based on patest_sine.c
 	@author Bjorn Roche
 	@author Ross Bencina <rossb@audiomulch.com>
     @author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_timing.c,v 1.7 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_timing.c 578 2003-09-02 04:17:38Z rossbencina $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/
@@ -89,7 +89,7 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
             timeInfo->currentTime,
             timeInfo->outputBufferDacTime );
 
-    printf( "getStreamTime() returns: %g\n", Pa_GetStreamTime(data->stream)-data->start );
+    printf( "getStreamTime() returns: %g\n", Pa_GetStreamTime(data->stream) - data->start );
     
     for( i=0; i<framesPerBuffer; i++ )
     {

@@ -1,5 +1,5 @@
 /*
- * $Id: patest_sine_channelmaps.c,v 1.6 2008-12-31 15:38:36 richardash1981 Exp $
+ * patest_sine_channelmaps.c
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/

@@ -8,7 +8,7 @@
     see http://www.portaudio.com/trac/wiki/V19ConvertersStatus for a discussion of this.
 */
 /*
- * $Id: patest_converters.c,v 1.2 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com/
@@ -74,6 +74,9 @@ static const char* sampleFormatNames_[SAMPLE_FORMAT_COUNT] =
 
 static const char* abbreviatedSampleFormatNames_[SAMPLE_FORMAT_COUNT] = 
     { "f32", "i32", "i24", "i16", " i8", "ui8" };
+
+
+PaError My_Pa_GetSampleSize( PaSampleFormat format );
 
 /*
     available flags are paClipOff and paDitherOff

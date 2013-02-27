@@ -193,7 +193,7 @@ SOURCE=..\..\..\..\src\common\pa_process.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\common\pa_skeleton.c
+SOURCE=..\..\..\..\src\hostapi\skeleton\pa_hostapi_skeleton.c
 # End Source File
 # Begin Source File
 

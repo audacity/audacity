@@ -9,7 +9,7 @@
 	@author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_leftright.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_leftright.c 1609 2011-02-27 00:06:07Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -57,15 +57,17 @@
 #define M_PI  (3.14159265)
 #endif
 #define TABLE_SIZE   (200)
+#define BALANCE_DELTA  (0.001)
+
 typedef struct
 {
     float sine[TABLE_SIZE];
     int left_phase;
     int right_phase;
-    int toggle;
-    int countDown;
-}
-paTestData;
+    float targetBalance; // 0.0 = left, 1.0 = right
+    float currentBalance;
+} paTestData;
+
 /* This routine will be called by the PortAudio engine when audio is needed.
 ** It may called at interrupt level on some machines so don't do anything
 ** that could mess up the system like calling malloc() or free().
@@ -86,29 +88,24 @@ static int patestCallback( const void *inputBuffer,
 
     for( i=0; i<framesPerBuffer; i++ )
     {
-        if( data->toggle )
-        {
-            *out++ = data->sine[data->left_phase];  /* left */
-            *out++ = 0;  /* right */
-        }
-        else
-        {
-            *out++ = 0;  /* left */
-            *out++ = data->sine[data->right_phase];  /* right */
-        }
-
+		// Smoothly pan between left and right.
+		if( data->currentBalance < data->targetBalance )
+		{
+			data->currentBalance += BALANCE_DELTA;
+		}
+		else if( data->currentBalance > data->targetBalance )
+		{
+			data->currentBalance -= BALANCE_DELTA;
+		}
+		// Apply left/right balance.
+        *out++ = data->sine[data->left_phase] * (1.0f - data->currentBalance);  /* left */
+		*out++ = data->sine[data->right_phase] * data->currentBalance;  /* right */
+		
         data->left_phase += 1;
         if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
         data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
         if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
     }
-
-    if( data->countDown < 0 )
-    {
-        data->countDown = SAMPLE_RATE;
-        data->toggle = !data->toggle;
-    }
-    data->countDown -= framesPerBuffer;
 
     return finished;
 }
@@ -121,9 +118,7 @@ int main(void)
     PaStreamParameters outputParameters;
     PaError err;
     paTestData data;
-    int i;
-    int timeout;
-    
+    int i;    
     printf("Play different tone sine waves that alternate between left and right channel.\n");
     printf("The low tone should be on the left channel.\n");
     
@@ -132,8 +127,9 @@ int main(void)
     {
         data.sine[i] = (float) sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. );
     }
-    data.left_phase = data.right_phase = data.toggle = 0;
-    data.countDown = SAMPLE_RATE;
+    data.left_phase = data.right_phase = 0;
+    data.currentBalance = 0.0;
+    data.targetBalance = 0.0;
 
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
@@ -162,12 +158,16 @@ int main(void)
     if( err != paNoError ) goto error;
     
     printf("Play for several seconds.\n");
-    timeout = NUM_SECONDS * 4;
-    while( timeout > 0 )
-    {
-        Pa_Sleep( 300 );        /*(Irix very much likes sleeps <= 1000 ms.)*/
-        timeout -= 1;
-    }
+    for( i=0; i<4; i++ )
+	{
+		printf("Hear low sound on left side.\n");
+		data.targetBalance = 0.01;
+        Pa_Sleep( 1000 );
+		
+		printf("Hear high sound on right side.\n");
+		data.targetBalance = 0.99;
+        Pa_Sleep( 1000 ); 
+	}
 
     err = Pa_StopStream( stream );
     if( err != paNoError ) goto error;

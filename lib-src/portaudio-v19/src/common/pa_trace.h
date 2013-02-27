@@ -1,7 +1,7 @@
 #ifndef PA_TRACE_H
 #define PA_TRACE_H
 /*
- * $Id: pa_trace.h,v 1.8 2008-12-31 15:38:33 richardash1981 Exp $
+ * $Id: pa_trace.h 1812 2012-02-14 09:32:57Z robiwan $
  * Portable Audio I/O Library Trace Facility
  * Store trace information in real-time for later printing.
  *
@@ -84,12 +84,28 @@ extern "C"
 void PaUtil_ResetTraceMessages();
 void PaUtil_AddTraceMessage( const char *msg, int data );
 void PaUtil_DumpTraceMessages();
-    
+
+/* Alternative interface */
+
+typedef void* LogHandle;
+
+int PaUtil_InitializeHighSpeedLog(LogHandle* phLog, unsigned maxSizeInBytes);
+void PaUtil_ResetHighSpeedLogTimeRef(LogHandle hLog);
+int PaUtil_AddHighSpeedLogMessage(LogHandle hLog, const char* fmt, ...);
+void PaUtil_DumpHighSpeedLog(LogHandle hLog, const char* fileName);
+void PaUtil_DiscardHighSpeedLog(LogHandle hLog);
+
 #else
 
 #define PaUtil_ResetTraceMessages() /* noop */
 #define PaUtil_AddTraceMessage(msg,data) /* noop */
 #define PaUtil_DumpTraceMessages() /* noop */
+
+#define PaUtil_InitializeHighSpeedLog(phLog, maxSizeInBytes)  (0)
+#define PaUtil_ResetHighSpeedLogTimeRef(hLog)
+#define PaUtil_AddHighSpeedLogMessage(...)   (0)
+#define PaUtil_DumpHighSpeedLog(hLog, fileName)
+#define PaUtil_DiscardHighSpeedLog(hLog)
 
 #endif
 

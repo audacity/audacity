@@ -1,7 +1,7 @@
 #ifndef PA_UTIL_H
 #define PA_UTIL_H
 /*
- * $Id: pa_util.h,v 1.8 2008-12-31 15:38:35 richardash1981 Exp $
+ * $Id: pa_util.h 1584 2011-02-02 18:58:17Z rossb $
  * Portable Audio I/O Library implementation utilities header
  * common implementation utilities and interfaces
  *
@@ -46,9 +46,6 @@
 
     Some functions declared here are defined in pa_front.c while others
     are implemented separately for each platform.
-
-    @todo Document and adhere to the alignment guarantees provided by
-    PaUtil_AllocateMemory().
 */
 
 

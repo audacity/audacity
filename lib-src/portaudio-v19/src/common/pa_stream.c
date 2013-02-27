@@ -1,5 +1,5 @@
 /*
- * $Id: pa_stream.c,v 1.10 2008-12-31 15:38:32 richardash1981 Exp $
+ * $Id: pa_stream.c 1339 2008-02-15 07:50:33Z rossb $
  * Portable Audio I/O Library
  * stream interface
  *
@@ -93,8 +93,6 @@ void PaUtil_InitializeStreamRepresentation( PaUtilStreamRepresentation *streamRe
     streamRepresentation->streamInfo.inputLatency = 0.;
     streamRepresentation->streamInfo.outputLatency = 0.;
     streamRepresentation->streamInfo.sampleRate = 0.;
-
-    streamRepresentation->hostApiType = 0;
 }
 
 

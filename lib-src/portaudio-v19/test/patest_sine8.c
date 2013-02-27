@@ -4,7 +4,7 @@
 	@author Ross Bencina <rossb@audiomulch.com>
 */
 /*
- * $Id: patest_sine8.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_sine8.c 1748 2011-09-01 22:08:32Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -52,8 +52,12 @@
 
 #if TEST_UNSIGNED
 #define TEST_FORMAT   paUInt8
+typedef unsigned char sample_t;
+#define SILENCE       ((sample_t)0x80)
 #else
 #define TEST_FORMAT   paInt8
+typedef char          sample_t;
+#define SILENCE       ((sample_t)0x00)
 #endif
 
 #ifndef M_PI
@@ -62,11 +66,7 @@
 
 typedef struct
 {
-#if TEST_UNSIGNED
-    unsigned char sine[TABLE_SIZE];
-#else
-    char sine[TABLE_SIZE];
-#endif
+    sample_t sine[TABLE_SIZE];
     int left_phase;
     int right_phase;
     unsigned int framesToGo;
@@ -84,7 +84,7 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
                            void *userData )
 {
     paTestData *data = (paTestData*)userData;
-    char *out = (char*)outputBuffer;
+    sample_t *out = (sample_t*)outputBuffer;
     int i;
     int framesToCalc;
     int finished = 0;
@@ -114,14 +114,8 @@ static int patestCallback( const void *inputBuffer, void *outputBuffer,
     /* zero remainder of final buffer */
     for( ; i<(int)framesPerBuffer; i++ )
     {
-#if TEST_UNSIGNED
-        *out++ = (unsigned char) 0x80; /* left */
-        *out++ = (unsigned char) 0x80; /* right */
-#else
-        *out++ = 0; /* left */
-        *out++ = 0; /* right */
-#endif
-
+        *out++ = SILENCE; /* left */
+        *out++ = SILENCE; /* right */
     }
     return finished;
 }
@@ -145,10 +139,7 @@ int main(void)
     /* initialise sinusoidal wavetable */
     for( i=0; i<TABLE_SIZE; i++ )
     {
-        data.sine[i] = (char) (127.0 * sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. ));
-#if TEST_UNSIGNED
-        data.sine[i] += (unsigned char) 0x80;
-#endif
+        data.sine[i] = SILENCE + (char) (127.0 * sin( ((double)i/(double)TABLE_SIZE) * M_PI * 2. ));
     }
     data.left_phase = data.right_phase = 0;
     data.framesToGo = totalSamps =  NUM_SECONDS * SAMPLE_RATE; /* Play for a few seconds. */

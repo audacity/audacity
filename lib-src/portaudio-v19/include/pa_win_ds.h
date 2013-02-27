@@ -1,7 +1,7 @@
 #ifndef PA_WIN_DS_H
 #define PA_WIN_DS_H
 /*
- * $Id: pa_win_ds.h,v 1.8 2009-01-01 22:31:28 martynshaw Exp $
+ * $Id:  $
  * PortAudio Portable Real-Time Audio Library
  * DirectSound specific extensions
  *
@@ -28,13 +28,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however,
+ * The text above constitutes the entire PortAudio license; however, 
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also
- * requested that these non-binding requests be included along with the
+ * they can be incorporated into the canonical version. It is also 
+ * requested that these non-binding requests be included along with the 
  * license above.
  */
 
@@ -42,7 +42,6 @@
  @ingroup public_header
  @brief DirectSound-specific PortAudio API extension header file.
 */
-
 
 #include "portaudio.h"
 #include "pa_win_waveformat.h"
@@ -60,30 +59,25 @@ extern "C"
 typedef struct PaWinDirectSoundStreamInfo{
     unsigned long size;             /**< sizeof(PaWinDirectSoundStreamInfo) */
     PaHostApiTypeId hostApiType;    /**< paDirectSound */
-    unsigned long version;          /**< 1 */
+    unsigned long version;          /**< 2 */
 
-    unsigned long flags;
+    unsigned long flags;            /**< enable other features of this struct */
 
-    /* low-level latency setting support
-        TODO ** NOT IMPLEMENTED **
-        These settings control the number and size of host buffers in order
-        to set latency. They will be used instead of the generic parameters
-        to Pa_OpenStream() if flags contains the paWinDirectSoundUseLowLevelLatencyParameters
-        flag.
+    /** 
+       low-level latency setting support
+       Sets the size of the DirectSound host buffer.
+       When flags contains the paWinDirectSoundUseLowLevelLatencyParameters
+       this size will be used instead of interpreting the generic latency 
+       parameters to Pa_OpenStream(). If the flag is not set this value is ignored.
 
-        If PaWinDirectSoundStreamInfo structures with paWinDirectSoundUseLowLevelLatencyParameters
-        are supplied for both input and output in a full duplex stream, then the
-        input and output framesPerBuffer must be the same, or the larger of the
-        two must be a multiple of the smaller, otherwise a
-        paIncompatibleHostApiSpecificStreamInfo error will be returned from
-        Pa_OpenStream().
-
-    unsigned long framesPerBuffer;
+       If the stream is a full duplex stream the implementation requires that
+       the values of framesPerBuffer for input and output match (if both are specified).
     */
+    unsigned long framesPerBuffer;
 
-    /*
+    /**
         support for WAVEFORMATEXTENSIBLE channel masks. If flags contains
-        paWinDirectSoundUseChannelMask this allows you to specify which speakers
+        paWinDirectSoundUseChannelMask this allows you to specify which speakers 
         to address in a multichannel stream. Constants for channelMask
         are specified in pa_win_waveformat.h
 
@@ -92,25 +86,10 @@ typedef struct PaWinDirectSoundStreamInfo{
 
 }PaWinDirectSoundStreamInfo;
 
-/** Retrieve the GUID of the input device.
-
- @param stream The stream to query.
-
- @return A pointer to the GUID, or NULL if none.
-*/
-LPGUID PaWinDS_GetStreamInputGUID( PaStream* s );
-
-/** Retrieve the GUID of the output device.
-
- @param stream The stream to query.
-
- @return A pointer to the GUID, or NULL if none.
-*/
-LPGUID PaWinDS_GetStreamOutputGUID( PaStream* s );
 
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* PA_WIN_DS_H */
+#endif /* PA_WIN_DS_H */                                  

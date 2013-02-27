@@ -1,5 +1,5 @@
 /*
- * $Id: pa_unix_oss.c 1509 2010-06-06 17:36:33Z dmitrykos $
+ * $Id: pa_unix_oss.c 1668 2011-05-02 17:07:11Z rossb $
  * PortAudio Portable Real-Time Audio Library
  * Latest Version at: http://www.portaudio.com
  * OSS implementation by:
@@ -1121,7 +1121,7 @@ static PaError PaOssStream_Configure( PaOssStream *stream, double sampleRate, un
         assert( component->hostChannelCount > 0 );
         assert( component->hostFrames > 0 );
 
-        *inputLatency = component->hostFrames * (component->numBufs - 1) / sampleRate;
+        *inputLatency = (component->hostFrames * (component->numBufs - 1)) / sampleRate;
     }
     if( stream->playback )
     {
@@ -1132,7 +1132,7 @@ static PaError PaOssStream_Configure( PaOssStream *stream, double sampleRate, un
         assert( component->hostChannelCount > 0 );
         assert( component->hostFrames > 0 );
 
-        *outputLatency = component->hostFrames * (component->numBufs - 1) / sampleRate;
+        *outputLatency = (component->hostFrames * (component->numBufs - 1)) / sampleRate;
     }
 
     if( duplex )
@@ -1241,13 +1241,13 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     {
         inputHostFormat = stream->capture->hostFormat;
         stream->streamRepresentation.streamInfo.inputLatency = inLatency +
-            PaUtil_GetBufferProcessorInputLatency( &stream->bufferProcessor ) / sampleRate;
+            PaUtil_GetBufferProcessorInputLatencyFrames( &stream->bufferProcessor ) / sampleRate;
     }
     if( outputParameters )
     {
         outputHostFormat = stream->playback->hostFormat;
         stream->streamRepresentation.streamInfo.outputLatency = outLatency +
-            PaUtil_GetBufferProcessorOutputLatency( &stream->bufferProcessor ) / sampleRate;
+            PaUtil_GetBufferProcessorOutputLatencyFrames( &stream->bufferProcessor ) / sampleRate;
     }
 
     /* Initialize buffer processor with fixed host buffer size.
@@ -2028,26 +2028,3 @@ error:
 #endif
 }
 
-const char *PaOSS_GetStreamInputDevice( PaStream* s )
-{
-    PaOssStream *stream = (PaOssStream*)s;
-
-    if( stream->capture )
-    {
-      return stream->capture->devName;
-    }
-
-   return NULL;
-}
-
-const char *PaOSS_GetStreamOutputDevice( PaStream* s )
-{
-    PaOssStream *stream = (PaOssStream*)s;
-
-    if( stream->playback )
-    {
-      return stream->playback->devName;
-    }
-
-   return NULL;
-}

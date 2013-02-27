@@ -1,11 +1,12 @@
 /** @file patest_toomanysines.c
 	@ingroup test_src
 	@brief Play more sine waves than we can handle in real time as a stress test.
+    @todo This may not be needed now that we have "patest_out_overflow.c".
 	@author Ross Bencina <rossb@audiomulch.com>
 	@author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_toomanysines.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_toomanysines.c 1609 2011-02-27 00:06:07Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -46,7 +47,7 @@
 #include <math.h>
 #include "portaudio.h"
 
-#define MAX_SINES     (500)
+#define MAX_SINES     (1000)
 #define MAX_LOAD      (1.2)
 #define SAMPLE_RATE   (44100)
 #define FRAMES_PER_BUFFER  (512)
@@ -145,18 +146,32 @@ int main(void)
 
     /* Determine number of sines required to get to 50% */
     do
-    {
-        data.numSines++;
-        Pa_Sleep( 100 );
+    {        Pa_Sleep( 100 );
 
         load = Pa_GetStreamCpuLoad( stream );
         printf("numSines = %d, CPU load = %f\n", data.numSines, load );
+		
+		if( load < 0.3 )
+		{
+			data.numSines += 10;
+		}
+		else if( load < 0.4 )
+		{
+			data.numSines += 2;
+		}
+		else
+		{
+			data.numSines += 1;
+		}
+		
     }
     while( load < 0.5 );
     
     /* Calculate target stress value then ramp up to that level*/
     numStress = (int) (2.0 * data.numSines * MAX_LOAD );
-    for( ; data.numSines < numStress; data.numSines++ )
+    if( numStress > MAX_SINES )
+        numStress = MAX_SINES;	
+    for( ; data.numSines < numStress; data.numSines+=2 )
     {
         Pa_Sleep( 200 );
         load = Pa_GetStreamCpuLoad( stream );

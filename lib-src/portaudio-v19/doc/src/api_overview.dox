@@ -1,6 +1,6 @@
 /** @page api_overview PortAudio API Overview
 
-This page provides a top-down overview of the entire PortAudio API. It shows how all of the PortAudio data types and functions fit together. It provides links to the documentation for each function and data type. You can find all of the detailed documentation for each API function and data type on the portaudio.h page.
+This page provides a top-down overview of the entire PortAudio API. It describes how all of the PortAudio data types and functions fit together. It provides links to the documentation for each function and data type. You can find all of the detailed documentation for each API function and data type on the portaudio.h page.
 
 @section introduction Introduction
 
@@ -14,11 +14,11 @@ PortAudio provides a uniform interface to native audio APIs. However, it doesn't
 
 The PortAudio processing model includes three main abstractions: <i>Host APIs</i>, audio <i>Devices</i> and audio <i>Streams</i>.
 
-<i>Host APIs</i> represent platform-specific native audio APIs. Some examples of Host APIs are Core Audio on Mac OS, WMME and DirectSound on Windows and OSS and ALSA on Linux. The diagram in the previous section shows many of the supported native APIs. Sometimes it's useful to know which Host APIs you're dealing with, but it is easy to use PortAudio without ever interacting directly with the Host API abstraction.
+Host APIs represent platform-specific native audio APIs. Some examples of Host APIs are Core Audio on Mac OS, WMME and DirectSound on Windows and OSS and ALSA on Linux. The diagram in the previous section shows many of the supported native APIs. Sometimes it's useful to know which Host APIs you're dealing with, but it is easy to use PortAudio without ever interacting directly with the Host API abstraction.
 
-<i>Devices</i> represent individual hardware audio interfaces or audio ports on the host platform. Devices have names and certain capabilities such as supported sample rates and the number of supported input and output channels. PortAudio provides functions to enumerate available Devices and to query for Device capabilities.
+Devices represent individual hardware audio interfaces or audio ports on the host platform. Devices have names and certain capabilities such as supported sample rates and the number of supported input and output channels. PortAudio provides functions to enumerate available Devices and to query for Device capabilities.
 
-<i>Streams</i> manage active audio input and output from and to Devices. Streams may be half duplex (input or output) or full duplex (simultaneous input and output). Streams operate at a specific sample rate with particular sample formats, buffer sizes and internal buffering latencies. You specify these parameters when you open the Stream. Audio data is communicated between a Stream and your application via a user provided asynchronous callback function or by invoking synchronous read and write functions.
+Streams manage active audio input and output from and to Devices. Streams may be half duplex (input or output) or full duplex (simultaneous input and output). Streams operate at a specific sample rate with particular sample formats, buffer sizes and internal buffering latencies. You specify these parameters when you open the Stream. Audio data is communicated between a Stream and your application via a user provided asynchronous callback function or by invoking synchronous read and write functions.
 
 PortAudio supports audio input and output in a variety of sample formats: 8, 16, 24 and 32 bit integer formats and 32 bit floating point, irrespective of the formats supported by the native audio API.  PortAudio also supports multichannel buffers in both interleaved and non-interleaved (separate buffer per channel) formats and automatically performs conversion when necessary. If requested, PortAudio can clamp out-of range samples and/or dither to a native format.
 
@@ -32,7 +32,7 @@ The PortAudio API offers the following functionality:
 - Provide Stream timing information to support synchronising audio with other parts of your application
 - Retrieve version and error information.
 
-These functions are described in more detail in the sections that follow.
+These functions are described in more detail below.
 
 
 @section top_level_functions Initialization, termination and utility functions
@@ -148,7 +148,7 @@ Host API-specific extensions are provided in the form of additional functions an
 
 The @ref PaStreamParameters structure passed to Pa_IsFormatSupported() and Pa_OpenStream() has a field named @ref PaStreamParameters::hostApiSpecificStreamInfo that is sometimes used to pass low level information when opening a Stream.
 
-See the documentation for the individual Host API-specific header files for details of the functionality they expose:
+See the documentation for the individual Host API-specific header files for details of the extended functionality they expose:
 
 - pa_asio.h
 - pa_jack.h

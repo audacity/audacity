@@ -1,5 +1,5 @@
 /*
- * $Id: pa_ringbuffer.c 1549 2010-10-24 10:21:35Z rossb $
+ * $Id: pa_ringbuffer.c 1738 2011-08-18 11:47:28Z rossb $
  * Portable Audio I/O Library
  * Ring Buffer utility.
  *
@@ -77,16 +77,14 @@ ring_buffer_size_t PaUtil_InitializeRingBuffer( PaUtilRingBuffer *rbuf, ring_buf
 
 /***************************************************************************
 ** Return number of elements available for reading. */
-ring_buffer_size_t PaUtil_GetRingBufferReadAvailable( PaUtilRingBuffer *rbuf )
+ring_buffer_size_t PaUtil_GetRingBufferReadAvailable( const PaUtilRingBuffer *rbuf )
 {
-    PaUtil_ReadMemoryBarrier();
     return ( (rbuf->writeIndex - rbuf->readIndex) & rbuf->bigMask );
 }
 /***************************************************************************
 ** Return number of elements available for writing. */
-ring_buffer_size_t PaUtil_GetRingBufferWriteAvailable( PaUtilRingBuffer *rbuf )
+ring_buffer_size_t PaUtil_GetRingBufferWriteAvailable( const PaUtilRingBuffer *rbuf )
 {
-    /* Since we are calling PaUtil_GetRingBufferReadAvailable, we don't need an aditional MB */
     return ( rbuf->bufferSize - PaUtil_GetRingBufferReadAvailable(rbuf));
 }
 
@@ -128,6 +126,10 @@ ring_buffer_size_t PaUtil_GetRingBufferWriteRegions( PaUtilRingBuffer *rbuf, rin
         *dataPtr2 = NULL;
         *sizePtr2 = 0;
     }
+
+    if( available )
+        PaUtil_FullMemoryBarrier(); /* (write-after-read) => full barrier */
+
     return elementCount;
 }
 
@@ -136,7 +138,9 @@ ring_buffer_size_t PaUtil_GetRingBufferWriteRegions( PaUtilRingBuffer *rbuf, rin
 */
 ring_buffer_size_t PaUtil_AdvanceRingBufferWriteIndex( PaUtilRingBuffer *rbuf, ring_buffer_size_t elementCount )
 {
-    /* we need to ensure that previous writes are seen before we update the write index */
+    /* ensure that previous writes are seen before we update the write index 
+       (write after write)
+    */
     PaUtil_WriteMemoryBarrier();
     return rbuf->writeIndex = (rbuf->writeIndex + elementCount) & rbuf->bigMask;
 }
@@ -145,14 +149,14 @@ ring_buffer_size_t PaUtil_AdvanceRingBufferWriteIndex( PaUtilRingBuffer *rbuf, r
 ** Get address of region(s) from which we can read data.
 ** If the region is contiguous, size2 will be zero.
 ** If non-contiguous, size2 will be the size of second region.
-** Returns room available to be written or elementCount, whichever is smaller.
+** Returns room available to be read or elementCount, whichever is smaller.
 */
 ring_buffer_size_t PaUtil_GetRingBufferReadRegions( PaUtilRingBuffer *rbuf, ring_buffer_size_t elementCount,
                                 void **dataPtr1, ring_buffer_size_t *sizePtr1,
                                 void **dataPtr2, ring_buffer_size_t *sizePtr2 )
 {
     ring_buffer_size_t   index;
-    ring_buffer_size_t   available = PaUtil_GetRingBufferReadAvailable( rbuf );
+    ring_buffer_size_t   available = PaUtil_GetRingBufferReadAvailable( rbuf ); /* doesn't use memory barrier */
     if( elementCount > available ) elementCount = available;
     /* Check to see if read is not contiguous. */
     index = rbuf->readIndex & rbuf->smallMask;
@@ -172,14 +176,20 @@ ring_buffer_size_t PaUtil_GetRingBufferReadRegions( PaUtilRingBuffer *rbuf, ring
         *dataPtr2 = NULL;
         *sizePtr2 = 0;
     }
+    
+    if( available )
+        PaUtil_ReadMemoryBarrier(); /* (read-after-read) => read barrier */
+
     return elementCount;
 }
 /***************************************************************************
 */
 ring_buffer_size_t PaUtil_AdvanceRingBufferReadIndex( PaUtilRingBuffer *rbuf, ring_buffer_size_t elementCount )
 {
-    /* we need to ensure that previous writes are always seen before updating the index. */
-    PaUtil_WriteMemoryBarrier();
+    /* ensure that previous reads (copies out of the ring buffer) are always completed before updating (writing) the read index. 
+       (write-after-read) => full barrier
+    */
+    PaUtil_FullMemoryBarrier();
     return rbuf->readIndex = (rbuf->readIndex + elementCount) & rbuf->bigMask;
 }
 

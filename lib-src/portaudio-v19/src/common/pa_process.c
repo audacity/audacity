@@ -1,5 +1,5 @@
 /*
- * $Id: pa_process.c 1523 2010-07-10 17:41:25Z dmitrykos $
+ * $Id: pa_process.c 1706 2011-07-21 18:44:58Z philburk $
  * Portable Audio I/O Library
  * streamCallback <-> host buffer processing adapter
  *
@@ -41,41 +41,6 @@
  @ingroup common_src
 
  @brief Buffer Processor implementation.
-    
- The code in this file is not optimised yet - although it's not clear that
- it needs to be. there may appear to be redundancies
- that could be factored into common functions, but the redundanceis are left
- intentionally as each appearance may have different optimisation possibilities.
-
- The optimisations which are planned involve only converting data in-place
- where possible, rather than copying to the temp buffer(s).
-
- Note that in the extreme case of being able to convert in-place, and there
- being no conversion necessary there should be some code which short-circuits
- the operation.
-
-    @todo Consider cache tilings for intereave<->deinterleave.
-
-    @todo specify and implement some kind of logical policy for handling the
-        underflow and overflow stream flags when the underflow/overflow overlaps
-        multiple user buffers/callbacks.
-
-	@todo provide support for priming the buffers with data from the callback.
-        The client interface is now implemented through PaUtil_SetNoInput()
-        which sets bp->hostInputChannels[0][0].data to zero. However this is
-        currently only implemented in NonAdaptingProcess(). It shouldn't be
-        needed for AdaptingInputOnlyProcess() (no priming should ever be
-        requested for AdaptingInputOnlyProcess()).
-        Not sure if additional work should be required to make it work with
-        AdaptingOutputOnlyProcess, but it definitely is required for
-        AdaptingProcess.
-
-    @todo implement PaUtil_SetNoOutput for AdaptingProcess
-
-    @todo don't allocate temp buffers for blocking streams unless they are
-        needed. At the moment they are needed, but perhaps for host APIs
-        where the implementation passes a buffer to the host they could be
-        used.
 */
 
 
@@ -137,6 +102,7 @@ PaError PaUtil_InitializeBufferProcessor( PaUtilBufferProcessor* bp,
     PaError result = paNoError;
     PaError bytesPerSample;
     unsigned long tempInputBufferSize, tempOutputBufferSize;
+    PaStreamFlags tempInputStreamFlags;
 
     if( streamFlags & paNeverDropInput )
     {
@@ -257,8 +223,20 @@ PaError PaUtil_InitializeBufferProcessor( PaUtilBufferProcessor* bp,
             goto error;
         }
 
+        /* Under the assumption that no ADC in existence delivers better than 24bits resolution,
+            we disable dithering when host input format is paInt32 and user format is paInt24, 
+            since the host samples will just be padded with zeros anyway. */
+
+        tempInputStreamFlags = streamFlags;
+        if( !(tempInputStreamFlags & paDitherOff) /* dither is on */
+                && (hostInputSampleFormat & paInt32) /* host input format is int32 */
+                && (userInputSampleFormat & paInt24) /* user requested format is int24 */ ){
+
+            tempInputStreamFlags = tempInputStreamFlags | paDitherOff;
+        }
+
         bp->inputConverter =
-            PaUtil_SelectConverter( hostInputSampleFormat, userInputSampleFormat, streamFlags );
+            PaUtil_SelectConverter( hostInputSampleFormat, userInputSampleFormat, tempInputStreamFlags );
 
         bp->inputZeroer = PaUtil_SelectZeroer( hostInputSampleFormat );
             
@@ -450,13 +428,13 @@ void PaUtil_ResetBufferProcessor( PaUtilBufferProcessor* bp )
 }
 
 
-unsigned long PaUtil_GetBufferProcessorInputLatency( PaUtilBufferProcessor* bp )
+unsigned long PaUtil_GetBufferProcessorInputLatencyFrames( PaUtilBufferProcessor* bp )
 {
     return bp->initialFramesInTempInputBuffer;
 }
 
 
-unsigned long PaUtil_GetBufferProcessorOutputLatency( PaUtilBufferProcessor* bp )
+unsigned long PaUtil_GetBufferProcessorOutputLatencyFrames( PaUtilBufferProcessor* bp )
 {
     return bp->initialFramesInTempOutputBuffer;
 }
@@ -590,6 +568,8 @@ void PaUtil_SetNoOutput( PaUtilBufferProcessor* bp )
     assert( bp->outputChannelCount > 0 );
 
     bp->hostOutputChannels[0][0].data = 0;
+
+    /* note that only NonAdaptingProcess is able to deal with no output at this stage. not implemented for AdaptingProcess */
 }
 
 

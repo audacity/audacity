@@ -1,5 +1,5 @@
 /*
- * $Id: pa_win_hostapis.c 1453 2010-02-16 09:46:08Z dmitrykos $
+ * $Id: pa_win_hostapis.c 1728 2011-08-18 03:31:51Z rossb $
  * Portable Audio I/O Library Windows initialization table
  *
  * Based on the Open Source API proposed by Ross Bencina
@@ -40,13 +40,17 @@
  @ingroup win_src
 
     @brief Win32 host API initialization function table.
-
-    @todo Consider using PA_USE_WMME etc instead of PA_NO_WMME. This is what
-    the Unix version does, we should consider being consistent.
 */
 
+/* This is needed to make this source file depend on CMake option changes
+   and at the same time make it transparent for clients not using CMake.
+*/
+#ifdef PORTAUDIO_CMAKE_GENERATED
+#include "options_cmake.h"
+#endif
 
 #include "pa_hostapi.h"
+
 
 #ifdef __cplusplus
 extern "C"
@@ -68,33 +72,31 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
 PaUtilHostApiInitializer *paHostApiInitializers[] =
     {
 
-#ifndef PA_NO_WMME
+#if PA_USE_WMME
         PaWinMme_Initialize,
 #endif
 
-#ifndef PA_NO_DS
+#if PA_USE_DS
         PaWinDs_Initialize,
 #endif
 
-#ifndef PA_NO_ASIO
+#if PA_USE_ASIO
         PaAsio_Initialize,
 #endif
 
-#ifndef PA_NO_WASAPI
+#if PA_USE_WASAPI
 		PaWasapi_Initialize,
 #endif
 
-/*
-#ifndef PA_NO_WDMKS
-       PaWinWdm_Initialize,
+#if PA_USE_WDMKS
+        PaWinWdm_Initialize,
 #endif
-*/
 
-        //PaSkeleton_Initialize, /* just for testing */
+#if PA_USE_SKELETON
+        PaSkeleton_Initialize, /* just for testing. last in list so it isn't marked as default. */
+#endif
 
         0   /* NULL terminated array */
     };
 
-
-int paDefaultHostApiIndex = 0;
 

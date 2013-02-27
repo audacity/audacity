@@ -13,7 +13,7 @@
 
 */
 /*
- * $Id: patest_wire.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_wire.c 1843 2012-06-22 21:58:10Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -63,6 +63,13 @@ typedef struct WireConfig_s
     int numInputChannels;
     int numOutputChannels;
     int framesPerCallback;
+    /* count status flags */
+    int numInputUnderflows;
+    int numInputOverflows;
+    int numOutputUnderflows;
+    int numOutputOverflows;
+    int numPrimingOutputs;
+    int numCallbacks;
 } WireConfig_t;
 
 #define USE_FLOAT_INPUT        (1)
@@ -124,6 +131,14 @@ static int wireCallback( const void *inputBuffer, void *outputBuffer,
     /* This may get called with NULL inputBuffer during initial setup. */
     if( inputBuffer == NULL) return 0;
 
+    /* Count flags */
+    if( (statusFlags & paInputUnderflow) != 0 ) config->numInputUnderflows += 1;
+    if( (statusFlags & paInputOverflow) != 0 ) config->numInputOverflows += 1;
+    if( (statusFlags & paOutputUnderflow) != 0 ) config->numOutputUnderflows += 1;
+    if( (statusFlags & paOutputOverflow) != 0 ) config->numOutputOverflows += 1;
+    if( (statusFlags & paPrimingOutput) != 0 ) config->numPrimingOutputs += 1;
+    config->numCallbacks += 1;
+    
     inChannel=0, outChannel=0;
     while( !(inDone && outDone) )
     {
@@ -272,6 +287,13 @@ static PaError TestConfiguration( WireConfig_t *config )
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
 
+    config->numInputUnderflows = 0;
+    config->numInputOverflows = 0;
+    config->numOutputUnderflows = 0;
+    config->numOutputOverflows = 0;
+    config->numPrimingOutputs = 0;
+    config->numCallbacks = 0;
+
     err = Pa_OpenStream(
               &stream,
               &inputParameters,
@@ -286,12 +308,21 @@ static PaError TestConfiguration( WireConfig_t *config )
     err = Pa_StartStream( stream );
     if( err != paNoError ) goto error;
     
-    printf("Hit ENTER for next configuration, or 'q' to quit.\n");  fflush(stdout);
+    printf("Now recording and playing. - Hit ENTER for next configuration, or 'q' to quit.\n");  fflush(stdout);
     c = getchar();
     
     printf("Closing stream.\n");
     err = Pa_CloseStream( stream );
     if( err != paNoError ) goto error;
+
+#define CHECK_FLAG_COUNT(member) \
+    if( config->member > 0 ) printf("FLAGS SET: " #member " = %d\n", config->member );
+    CHECK_FLAG_COUNT( numInputUnderflows );
+    CHECK_FLAG_COUNT( numInputOverflows );
+    CHECK_FLAG_COUNT( numOutputUnderflows );
+    CHECK_FLAG_COUNT( numOutputOverflows );
+    CHECK_FLAG_COUNT( numPrimingOutputs );
+    printf("number of callbacks = %d\n", config->numCallbacks );
 
     if( c == 'q' ) return 1;
 

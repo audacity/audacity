@@ -4,7 +4,7 @@
 	@author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_two_rates.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_two_rates.c 1640 2011-03-07 00:52:47Z philburk $
  *
  * Author: Phil Burk  http://www.softsynth.com
  *
@@ -49,7 +49,7 @@
 
 #define OUTPUT_DEVICE       (Pa_GetDefaultOutputDeviceID())
 #define SAMPLE_RATE_1       (44100)
-#define SAMPLE_RATE_2       (44100)
+#define SAMPLE_RATE_2       (48000)
 #define FRAMES_PER_BUFFER   (256)
 #define FREQ_INCR           (0.1)
 
@@ -60,22 +60,23 @@
 typedef struct
 {
     double phase;
-    double numFrames;
+    int    numFrames;
 } paTestData;
 
 /* This routine will be called by the PortAudio engine when audio is needed.
-** It may called at interrupt level on some machines so don't do anything
-** that could mess up the system like calling malloc() or free().
-*/
-static int patestCallback( void *inputBuffer, void *outputBuffer,
-                           unsigned long framesPerBuffer,
-                           PaTimestamp outTime, void *userData )
+ ** It may called at interrupt level on some machines so don't do anything
+ ** that could mess up the system like calling malloc() or free().
+ */
+static int patestCallback( const void *inputBuffer, void *outputBuffer,
+						  unsigned long framesPerBuffer,
+						  const PaStreamCallbackTimeInfo* timeInfo,
+						  PaStreamCallbackFlags statusFlags,
+						  void *userData )
 {
     paTestData *data = (paTestData*)userData;
     float *out = (float*)outputBuffer;
-    int frameIndex, channelIndex;
-    int finished = 0;
-    (void) outTime; /* Prevent unused variable warnings. */
+    int frameIndex;
+    (void) timeInfo; /* Prevent unused variable warnings. */
     (void) inputBuffer;
 
     for( frameIndex=0; frameIndex<(int)framesPerBuffer; frameIndex++ )
@@ -89,7 +90,7 @@ static int patestCallback( void *inputBuffer, void *outputBuffer,
         data->phase += FREQ_INCR;
         if( data->phase >= (2.0 * M_PI) ) data->phase -= (2.0 * M_PI);
     }
-
+	data->numFrames += 1;
     return 0;
 }
 
@@ -98,8 +99,9 @@ int main(void);
 int main(void)
 {
     PaError err;
-    PortAudioStream *stream1;
-    PortAudioStream *stream2;
+    PaStreamParameters outputParameters;
+    PaStream *stream1;
+    PaStream *stream2;
     paTestData data1 = {0};
     paTestData data2 = {0};
     printf("PortAudio Test: two rates.\n" );
@@ -107,24 +109,27 @@ int main(void)
     err = Pa_Initialize();
     if( err != paNoError ) goto error;
     
-    /* Start first stream. **********************/
+    outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
+    if (outputParameters.device == paNoDevice) {
+		fprintf(stderr,"Error: No default output device.\n");
+		goto error;
+    }
+    outputParameters.channelCount = 2;       /* stereo output */
+    outputParameters.sampleFormat = paFloat32; /* 32 bit floating point output */
+    outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
+    outputParameters.hostApiSpecificStreamInfo = NULL;
+
+    /* Start first stream. **********************/	
     err = Pa_OpenStream(
-              &stream1,
-              paNoDevice, /* default input device */
-              0,              /* no input */
-              paFloat32,  /* 32 bit floating point input */
-              NULL,
-              OUTPUT_DEVICE,
-              2,          /* Stereo */
-              paFloat32,  /* 32 bit floating point output */
-              NULL,
-              SAMPLE_RATE_1,
-              FRAMES_PER_BUFFER,  /* frames per buffer */
-              0,    /* number of buffers, if zero then use default minimum */
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data1 );
-    if( err != paNoError ) goto error;
+						&stream1,
+						NULL, /* no input */
+						&outputParameters,
+						SAMPLE_RATE_1,
+						FRAMES_PER_BUFFER,
+						paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+						patestCallback,
+						&data1 );
+	if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream1 );
     if( err != paNoError ) goto error;
@@ -133,21 +138,14 @@ int main(void)
 
     /* Start second stream. **********************/
     err = Pa_OpenStream(
-              &stream2,
-              paNoDevice, /* default input device */
-              0,              /* no input */
-              paFloat32,  /* 32 bit floating point input */
-              NULL,
-              OUTPUT_DEVICE,
-              2,          /* Stereo */
-              paFloat32,  /* 32 bit floating point output */
-              NULL,
-              SAMPLE_RATE_2,
-              FRAMES_PER_BUFFER,  /* frames per buffer */
-              0,    /* number of buffers, if zero then use default minimum */
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              patestCallback,
-              &data2 );
+						&stream2,
+						NULL, /* no input */
+						&outputParameters,
+						SAMPLE_RATE_2,
+						FRAMES_PER_BUFFER,
+						paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+						patestCallback,
+						&data2 );
     if( err != paNoError ) goto error;
 
     err = Pa_StartStream( stream2 );
@@ -167,6 +165,8 @@ int main(void)
     Pa_CloseStream( stream1 );
     
     Pa_Terminate();
+	
+    printf("NumFrames = %d on stream1, %d on stream2.\n", data1.numFrames, data2.numFrames );
     printf("Test finished.\n");
     return err;
 error:

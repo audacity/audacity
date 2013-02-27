@@ -18,7 +18,7 @@ libdir = @libdir@
 includedir = @includedir@
 CC = @CC@
 CXX = @CXX@
-CFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/src/common -I$(top_srcdir)/src/os/unix @CFLAGS@ @DEFS@
+CFLAGS = @CFLAGS@ @DEFS@
 LIBS = @LIBS@
 AR = @AR@
 RANLIB = @RANLIB@
@@ -38,12 +38,13 @@ LT_REVISION=@LT_REVISION@
 LT_AGE=@LT_AGE@
 
 OTHER_OBJS = @OTHER_OBJS@
+INCLUDES = @INCLUDES@
 
 PALIB = libportaudio.la
 PAINC = include/portaudio.h
 
-PA_LDFLAGS = $(LDFLAGS) -rpath $(libdir) -no-undefined \
-	     -export-symbols-regex "(Pa|PaMacCore|PaJack|PaAlsa|PaAsio)_.*" \
+PA_LDFLAGS = $(LDFLAGS) $(SHARED_FLAGS) -rpath $(libdir) -no-undefined \
+	     -export-symbols-regex "(Pa|PaMacCore|PaJack|PaAlsa|PaAsio|PaOSS)_.*" \
 	     -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 COMMON_OBJS = \
@@ -54,13 +55,35 @@ COMMON_OBJS = \
 	src/common/pa_debugprint.o \
 	src/common/pa_front.o \
 	src/common/pa_process.o \
-	src/common/pa_skeleton.o \
 	src/common/pa_stream.o \
-	src/common/pa_trace.o
+	src/common/pa_trace.o \
+	src/hostapi/skeleton/pa_hostapi_skeleton.o
 
-TESTS = \
+LOOPBACK_OBJS = \
+	qa/loopback/src/audio_analyzer.o \
+	qa/loopback/src/biquad_filter.o \
+	qa/loopback/src/paqa_tools.o \
+	qa/loopback/src/test_audio_analyzer.o \
+	qa/loopback/src/write_wav.o \
+	qa/loopback/src/paqa.o
+	
+EXAMPLES = \
+	bin/pa_devs \
+	bin/pa_fuzz \
+	bin/paex_pink \
+	bin/paex_read_write_wire \
+	bin/paex_record \
+	bin/paex_saw \
+	bin/paex_sine \
+	bin/paex_write_sine \
+	bin/paex_write_sine_nonint
+
+SELFTESTS = \
 	bin/paqa_devs \
 	bin/paqa_errs \
+	bin/paqa_latency
+	
+TESTS = \
 	bin/patest1 \
 	bin/patest_buffer \
 	bin/patest_callbackstop \
@@ -73,17 +96,12 @@ TESTS = \
 	bin/patest_longsine \
 	bin/patest_many \
 	bin/patest_maxsines \
+	bin/patest_mono \
 	bin/patest_multi_sine \
 	bin/patest_out_underflow \
-	bin/patest_pink \
 	bin/patest_prime \
-	bin/patest_read_record \
-	bin/patest_read_write_wire \
-	bin/patest_record \
 	bin/patest_ringmix \
-	bin/patest_saw \
 	bin/patest_sine8 \
-	bin/patest_sine \
 	bin/patest_sine_channelmaps \
 	bin/patest_sine_formats \
 	bin/patest_sine_time \
@@ -92,11 +110,9 @@ TESTS = \
 	bin/patest_stop \
 	bin/patest_stop_playout \
 	bin/patest_toomanysines \
+	bin/patest_two_rates \
 	bin/patest_underflow \
 	bin/patest_wire \
-	bin/patest_write_sine \
-	bin/pa_devs \
-	bin/pa_fuzz \
 	bin/pa_minlat
 
 # Most of these don't compile yet.  Put them in TESTS, above, if
@@ -139,10 +155,15 @@ SRC_DIRS = \
 SUBDIRS =
 @ENABLE_CXX_TRUE@SUBDIRS += bindings/cpp
 
-all: lib/$(PALIB) all-recursive tests
+all: lib/$(PALIB) all-recursive tests examples selftests
 
 tests: bin-stamp $(TESTS)
 
+examples: bin-stamp $(EXAMPLES)
+
+selftests: bin-stamp $(SELFTESTS)
+
+loopback: bin-stamp bin/paloopback
 
 # With ASIO enabled we must link libportaudio and all test programs with CXX
 lib/$(PALIB): lib-stamp $(LTOBJS) $(MAKEFILE) $(PAINC)
@@ -153,12 +174,25 @@ $(ALL_TESTS): bin/%: lib/$(PALIB) $(MAKEFILE) $(PAINC) test/%.c
 	@WITH_ASIO_FALSE@ $(LIBTOOL) --mode=link $(CC) -o $@ $(CFLAGS) $(top_srcdir)/test/$*.c lib/$(PALIB) $(LIBS)
 	@WITH_ASIO_TRUE@  $(LIBTOOL) --mode=link --tag=CXX $(CXX) -o $@ $(CXXFLAGS) $(top_srcdir)/test/$*.c lib/$(PALIB) $(LIBS)
 
+$(EXAMPLES): bin/%: lib/$(PALIB) $(MAKEFILE) $(PAINC) examples/%.c
+	@WITH_ASIO_FALSE@ $(LIBTOOL) --mode=link $(CC) -o $@ $(CFLAGS) $(top_srcdir)/examples/$*.c lib/$(PALIB) $(LIBS)
+	@WITH_ASIO_TRUE@  $(LIBTOOL) --mode=link --tag=CXX $(CXX) -o $@ $(CXXFLAGS) $(top_srcdir)/examples/$*.c lib/$(PALIB) $(LIBS)
+
+$(SELFTESTS): bin/%: lib/$(PALIB) $(MAKEFILE) $(PAINC) qa/%.c
+	@WITH_ASIO_FALSE@ $(LIBTOOL) --mode=link $(CC) -o $@ $(CFLAGS) $(top_srcdir)/qa/$*.c lib/$(PALIB) $(LIBS)
+	@WITH_ASIO_TRUE@  $(LIBTOOL) --mode=link --tag=CXX $(CXX) -o $@ $(CXXFLAGS) $(top_srcdir)/qa/$*.c lib/$(PALIB) $(LIBS)
+
+bin/paloopback: lib/$(PALIB) $(MAKEFILE) $(PAINC) $(LOOPBACK_OBJS)
+	@WITH_ASIO_FALSE@ $(LIBTOOL) --mode=link $(CC) -o $@ $(CFLAGS) $(LOOPBACK_OBJS) lib/$(PALIB) $(LIBS)
+	@WITH_ASIO_TRUE@ $(LIBTOOL) --mode=link --tag=CXX $(CXX) -o $@ $(CXXFLAGS)  $(LOOPBACK_OBJS) lib/$(PALIB) $(LIBS)
 
 install: lib/$(PALIB) portaudio-2.0.pc
 	$(INSTALL) -d $(DESTDIR)$(libdir)
 	$(LIBTOOL) --mode=install $(INSTALL) lib/$(PALIB) $(DESTDIR)$(libdir)
 	$(INSTALL) -d $(DESTDIR)$(includedir)
-	$(INSTALL_DATA) -m 644 $(top_srcdir)/$(PAINC) $(DESTDIR)$(includedir)/portaudio.h
+	for include in $(INCLUDES); do \
+		$(INSTALL_DATA) -m 644 $(top_srcdir)/include/$$include $(DESTDIR)$(includedir)/$$include; \
+	done
 	$(INSTALL) -d $(DESTDIR)$(libdir)/pkgconfig
 	$(INSTALL) -m 644 portaudio-2.0.pc $(DESTDIR)$(libdir)/pkgconfig/portaudio-2.0.pc
 	@echo ""
@@ -179,7 +213,7 @@ uninstall:
 	$(MAKE) uninstall-recursive
 
 clean:
-	$(LIBTOOL) --mode=clean rm -f $(LTOBJS) $(ALL_TESTS) lib/$(PALIB)
+	$(LIBTOOL) --mode=clean rm -f $(LTOBJS) $(LOOPBACK_OBJS) $(ALL_TESTS) lib/$(PALIB)
 	$(RM) bin-stamp lib-stamp
 	-$(RM) -r bin lib
 

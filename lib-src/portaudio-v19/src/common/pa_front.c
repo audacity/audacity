@@ -1,5 +1,5 @@
 /*
- * $Id: pa_front.c,v 1.11 2008-12-31 15:38:32 richardash1981 Exp $
+ * $Id: pa_front.c 1880 2012-12-04 18:39:48Z rbencina $
  * Portable Audio I/O Library Multi-Host API front end
  * Validate function parameters and manage multiple host APIs.
  *
@@ -59,18 +59,6 @@
 
  All PortAudio API functions can be conditionally compiled with logging code.
  To compile with logging, define the PA_LOG_API_CALLS precompiler symbol.
-
-    @todo Consider adding host API specific error text in Pa_GetErrorText() for
-    paUnanticipatedHostError
-
-    @todo Consider adding a new error code for when (inputParameters == NULL)
-    && (outputParameters == NULL)
-
-    @todo review whether Pa_CloseStream() should call the interface's
-    CloseStream function if aborting the stream returns an error code.
-
-    @todo Create new error codes if a NULL buffer pointer, or a
-    zero frame count is passed to Pa_ReadStream or Pa_WriteStream.
 */
 
 
@@ -128,6 +116,7 @@ void PaUtil_SetLastHostErrorInfo( PaHostApiTypeId hostApiType, long errorCode,
 
 static PaUtilHostApiRepresentation **hostApis_ = 0;
 static int hostApisCount_ = 0;
+static int defaultHostApiIndex_ = 0;
 static int initializationCount_ = 0;
 static int deviceCount_ = 0;
 
@@ -158,6 +147,7 @@ static void TerminateHostApis( void )
         hostApis_[hostApisCount_]->Terminate( hostApis_[hostApisCount_] );
     }
     hostApisCount_ = 0;
+    defaultHostApiIndex_ = 0;
     deviceCount_ = 0;
 
     if( hostApis_ != 0 )
@@ -184,6 +174,7 @@ static PaError InitializeHostApis( void )
     }
 
     hostApisCount_ = 0;
+    defaultHostApiIndex_ = -1; /* indicates that we haven't determined the default host API yet */
     deviceCount_ = 0;
     baseDeviceIndex = 0;
 
@@ -205,6 +196,16 @@ static PaError InitializeHostApis( void )
             assert( hostApi->info.defaultInputDevice < hostApi->info.deviceCount );
             assert( hostApi->info.defaultOutputDevice < hostApi->info.deviceCount );
 
+            /* the first successfully initialized host API with a default input *or* 
+               output device is used as the default host API.
+            */
+            if( (defaultHostApiIndex_ == -1) &&
+                    ( hostApi->info.defaultInputDevice != paNoDevice 
+                        || hostApi->info.defaultOutputDevice != paNoDevice ) )
+            {
+                defaultHostApiIndex_ = hostApisCount_;
+            }
+
             hostApi->privatePaFrontInfo.baseDeviceIndex = baseDeviceIndex;
 
             if( hostApi->info.defaultInputDevice != paNoDevice )
@@ -219,6 +220,10 @@ static PaError InitializeHostApis( void )
             ++hostApisCount_;
         }
     }
+
+    /* if no host APIs have devices, the default host API is the first initialized host API */
+    if( defaultHostApiIndex_ == -1 )
+        defaultHostApiIndex_ = 0;
 
     return result;
 
@@ -381,7 +386,7 @@ const char *Pa_GetErrorText( PaError errorCode )
     {
     case paNoError:                  result = "Success"; break;
     case paNotInitialized:           result = "PortAudio not initialized"; break;
-    /** @todo could catenate the last host error text to result in the case of paUnanticipatedHostError */
+    /** @todo could catenate the last host error text to result in the case of paUnanticipatedHostError. see: http://www.portaudio.com/trac/ticket/114 */
     case paUnanticipatedHostError:   result = "Unanticipated host error"; break;
     case paInvalidChannelCount:      result = "Invalid number of channels"; break;
     case paInvalidSampleRate:        result = "Invalid sample rate"; break;
@@ -537,7 +542,7 @@ PaHostApiIndex Pa_GetDefaultHostApi( void )
     }
     else
     {
-        result = paDefaultHostApiIndex;
+        result = defaultHostApiIndex_;
 
         /* internal consistency check: make sure that the default host api
          index is within range */
@@ -819,7 +824,7 @@ static int SampleFormatIsValid( PaSampleFormat format )
         - if supplied its hostApi field matches the output device's host Api
  
     double sampleRate
-        - is not an 'absurd' rate (less than 1000. or greater than 200000.)
+        - is not an 'absurd' rate (less than 1000. or greater than 384000.)
         - sampleRate is NOT validated against device capabilities
  
     PaStreamFlags streamFlags
@@ -1211,10 +1216,8 @@ PaError Pa_OpenStream( PaStream** stream,
                                   hostApiInputParametersPtr, hostApiOutputParametersPtr,
                                   sampleRate, framesPerBuffer, streamFlags, streamCallback, userData );
 
-    if( result == paNoError ) {
+    if( result == paNoError )
         AddOpenStream( *stream );
-        PA_STREAM_REP(*stream)->hostApiType = hostApi->info.type;
-    }
 
 
     PA_LOGAPI(("Pa_OpenStream returned:\n" ));
@@ -1345,7 +1348,7 @@ PaError Pa_CloseStream( PaStream* stream )
         else if( result == 0 )
             result = interface->Abort( stream );
 
-        if( result == paNoError )                 /** @todo REVIEW: shouldn't we close anyway? */
+        if( result == paNoError )                 /** @todo REVIEW: shouldn't we close anyway? see: http://www.portaudio.com/trac/ticket/115 */
             result = interface->Close( stream );
     }
 
@@ -1603,7 +1606,7 @@ PaError Pa_ReadStream( PaStream* stream,
     {
         if( frames == 0 )
         {
-            /* XXX: Should we not allow the implementation to signal any overflow condition? */
+            /* @todo Should we not allow the implementation to signal any overflow condition? see: http://www.portaudio.com/trac/ticket/116*/
             result = paNoError;
         }
         else if( buffer == 0 )
@@ -1643,7 +1646,7 @@ PaError Pa_WriteStream( PaStream* stream,
     {
         if( frames == 0 )
         {
-            /* XXX: Should we not allow the implementation to signal any underflow condition? */
+            /* @todo Should we not allow the implementation to signal any underflow condition? see: http://www.portaudio.com/trac/ticket/116*/
             result = paNoError;
         }
         else if( buffer == 0 )
@@ -1726,32 +1729,6 @@ signed long Pa_GetStreamWriteAvailable( PaStream* stream )
     return result;
 }
 
-PaHostApiTypeId Pa_GetStreamHostApiType( PaStream* stream )
-{
-    PaError error = PaUtil_ValidateStreamPointer( stream );
-    PaHostApiTypeId result;
-
-#ifdef PA_LOG_API_CALLS
-    PaUtil_DebugPrint("Pa_GetStreamHostApiType called:\n" );
-    PaUtil_DebugPrint("\tPaStream* stream: 0x%p\n", stream );
-#endif
-
-    if( error == paNoError )
-    {
-        result = PA_STREAM_REP(stream)->hostApiType;
-    }
-    else
-    {
-        result = (PaHostApiTypeId) error;
-    }
-
-#ifdef PA_LOG_API_CALLS
-    PaUtil_DebugPrint("Pa_GetStreamHostApiType returned:\n" );
-    PaUtil_DebugPrint("\tPaError: %d ( %s )\n\n", result, Pa_GetErrorText( result ) );
-#endif
-
-    return result;
-}
 
 PaError Pa_GetSampleSize( PaSampleFormat format )
 {

@@ -146,7 +146,7 @@
 				RelativePath="..\..\..\..\src\common\pa_process.c">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\common\pa_skeleton.c">
+				RelativePath="..\..\..\..\src\hostapi\skeleton\pa_hostapi_skeleton.c">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\common\pa_stream.c">

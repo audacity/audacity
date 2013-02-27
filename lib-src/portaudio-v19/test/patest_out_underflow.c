@@ -6,7 +6,7 @@
 	@author Phil Burk <philburk@softsynth.com>
 */
 /*
- * $Id: patest_out_underflow.c,v 1.8 2008-12-31 15:38:36 richardash1981 Exp $
+ * $Id: patest_out_underflow.c 1609 2011-02-27 00:06:07Z philburk $
  *
  * This program uses the PortAudio Portable Audio Library.
  * For more information see: http://www.portaudio.com
@@ -47,7 +47,7 @@
 #include <math.h>
 #include "portaudio.h"
 
-#define MAX_SINES     (500)
+#define MAX_SINES     (1000)
 #define MAX_LOAD      (1.2)
 #define SAMPLE_RATE   (44100)
 #define FRAMES_PER_BUFFER  (512)
@@ -159,12 +159,25 @@ int main(void)
 
     /* Determine number of sines required to get to 50% */
     do
-    {
-        data.sineCount++;
-        Pa_Sleep( 100 );
+    {        
+		Pa_Sleep( 100 );
 
         load = Pa_GetStreamCpuLoad( stream );
         printf("sineCount = %d, CPU load = %f\n", data.sineCount, load );
+		
+		if( load < 0.3 )
+		{
+			data.sineCount += 10;
+		}
+		else if( load < 0.4 )
+		{
+			data.sineCount += 2;
+		}
+		else
+		{
+			data.sineCount += 1;
+		}
+		
     }
     while( load < 0.5 && data.sineCount < (MAX_SINES-1));
 
@@ -174,7 +187,7 @@ int main(void)
     stressedSineCount = (int) (2.0 * data.sineCount * MAX_LOAD );
     if( stressedSineCount > MAX_SINES )
         stressedSineCount = MAX_SINES;
-    for( ; data.sineCount < stressedSineCount; data.sineCount++ )
+    for( ; data.sineCount < stressedSineCount; data.sineCount+=4 )
     {
         Pa_Sleep( 100 );
         load = Pa_GetStreamCpuLoad( stream );

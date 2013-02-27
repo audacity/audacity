@@ -1,5 +1,5 @@
 /*
- * $Id: pa_memorybarrier.h,v 1.3 2008-12-31 15:38:32 richardash1981 Exp $
+ * $Id: pa_memorybarrier.h 1240 2007-07-17 13:05:07Z bjornroche $
  * Portable Audio I/O Library
  * Memory barrier utilities
  *
@@ -103,6 +103,7 @@
 #   pragma intrinsic(_ReadWriteBarrier)
 #   pragma intrinsic(_ReadBarrier)
 #   pragma intrinsic(_WriteBarrier)
+/* note that MSVC intrinsics _ReadWriteBarrier(), _ReadBarrier(), _WriteBarrier() are just compiler barriers *not* memory barriers */
 #   define PaUtil_FullMemoryBarrier()  _ReadWriteBarrier()
 #   define PaUtil_ReadMemoryBarrier()  _ReadBarrier()
 #   define PaUtil_WriteMemoryBarrier() _WriteBarrier()
