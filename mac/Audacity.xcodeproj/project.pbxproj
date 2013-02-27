@@ -960,7 +960,6 @@
 		28E67F810A3A1A810021D89F /* pa_mac_core_utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E8223B0A39FDB800DCE280 /* pa_mac_core_utilities.h */; };
 		28E67F830A3A1A820021D89F /* pa_process.c in Sources */ = {isa = PBXBuildFile; fileRef = 28E822140A39FD7600DCE280 /* pa_process.c */; };
 		28E67F840A3A1A830021D89F /* pa_process.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E822150A39FD7600DCE280 /* pa_process.h */; };
-		28E67F850A3A1A840021D89F /* pa_skeleton.c in Sources */ = {isa = PBXBuildFile; fileRef = 28E822180A39FD7600DCE280 /* pa_skeleton.c */; };
 		28E67F860A3A1A840021D89F /* pa_stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 28E8221B0A39FD7600DCE280 /* pa_stream.c */; };
 		28E67F870A3A1A850021D89F /* pa_stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E8221C0A39FD7600DCE280 /* pa_stream.h */; };
 		28E67F880A3A1A860021D89F /* pa_trace.c in Sources */ = {isa = PBXBuildFile; fileRef = 28E8221F0A39FD7600DCE280 /* pa_trace.c */; };
@@ -3659,7 +3658,6 @@
 		28E822130A39FD7600DCE280 /* pa_hostapi.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_hostapi.h; sourceTree = "<group>"; tabWidth = 3; };
 		28E822140A39FD7600DCE280 /* pa_process.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_process.c; sourceTree = "<group>"; tabWidth = 3; };
 		28E822150A39FD7600DCE280 /* pa_process.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_process.h; sourceTree = "<group>"; tabWidth = 3; };
-		28E822180A39FD7600DCE280 /* pa_skeleton.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_skeleton.c; sourceTree = "<group>"; tabWidth = 3; };
 		28E8221B0A39FD7600DCE280 /* pa_stream.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_stream.c; sourceTree = "<group>"; tabWidth = 3; };
 		28E8221C0A39FD7600DCE280 /* pa_stream.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_stream.h; sourceTree = "<group>"; tabWidth = 3; };
 		28E8221F0A39FD7600DCE280 /* pa_trace.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_trace.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -6227,7 +6225,6 @@
 				28E822130A39FD7600DCE280 /* pa_hostapi.h */,
 				28E822140A39FD7600DCE280 /* pa_process.c */,
 				28E822150A39FD7600DCE280 /* pa_process.h */,
-				28E822180A39FD7600DCE280 /* pa_skeleton.c */,
 				28E8221B0A39FD7600DCE280 /* pa_stream.c */,
 				28E8221C0A39FD7600DCE280 /* pa_stream.h */,
 				28E8221F0A39FD7600DCE280 /* pa_trace.c */,
@@ -8862,7 +8859,6 @@
 				28E67F7D0A3A1A7E0021D89F /* pa_mac_core_blocking.c in Sources */,
 				28E67F800A3A1A810021D89F /* pa_mac_core_utilities.c in Sources */,
 				28E67F830A3A1A820021D89F /* pa_process.c in Sources */,
-				28E67F850A3A1A840021D89F /* pa_skeleton.c in Sources */,
 				28E67F860A3A1A840021D89F /* pa_stream.c in Sources */,
 				28E67F880A3A1A860021D89F /* pa_trace.c in Sources */,
 				2835062D0A3A88ED00EB1EBD /* pa_unix_util.c in Sources */,

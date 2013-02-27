@@ -1,7 +1,7 @@
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/include/pa_unix_oss.h portaudio-v19/include/pa_unix_oss.h
---- ../../../portaudio/include/pa_unix_oss.h	1970-01-01 01:00:00.000000000 +0100
-+++ portaudio-v19/include/pa_unix_oss.h	2008-03-18 11:39:39.000000000 +0000
-@@ -0,0 +1,104 @@
+diff -wruN portaudio/include/pa_unix_oss.h portaudio-v19/include/pa_unix_oss.h
+--- portaudio/include/pa_unix_oss.h	1969-12-31 18:00:00.000000000 -0600
++++ portaudio-v19/include/pa_unix_oss.h	2012-12-14 22:34:14.290247100 -0600
+@@ -0,0 +1,52 @@
 +#ifndef PA_UNIX_OSS_H
 +#define PA_UNIX_OSS_H
 +
@@ -54,64 +54,12 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 +#endif
 +
 +#endif
-+#ifndef PA_UNIX_OSS_H
-+#define PA_UNIX_OSS_H
-+
-+/*
-+ * $Id: portaudio.patch,v 1.10 2009-06-30 04:52:59 llucius Exp $
-+ * PortAudio Portable Real-Time Audio Library
-+ * OSS-specific extensions
-+ *
-+ * Copyright (c) 1999-2000 Ross Bencina and Phil Burk
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining
-+ * a copy of this software and associated documentation files
-+ * (the "Software"), to deal in the Software without restriction,
-+ * including without limitation the rights to use, copy, modify, merge,
-+ * publish, distribute, sublicense, and/or sell copies of the Software,
-+ * and to permit persons to whom the Software is furnished to do so,
-+ * subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be
-+ * included in all copies or substantial portions of the Software.
-+ *
-+ * Any person wishing to distribute modifications to the Software is
-+ * requested to send the modifications to the original developer so that
-+ * they can be incorporated into the canonical version.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
-+ * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ */
-+
-+/** @file
-+ * OSS-specific PortAudio API extension header file.
-+ */
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+const char *PaOSS_GetStreamInputDevice( PaStream *s );
-+
-+const char *PaOSS_GetStreamOutputDevice( PaStream *s );
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/include/pa_win_ds.h portaudio-v19/include/pa_win_ds.h
---- ../../../portaudio/include/pa_win_ds.h	2008-03-18 11:27:43.000000000 +0000
-+++ portaudio-v19/include/pa_win_ds.h	2008-03-18 11:39:39.000000000 +0000
-@@ -92,6 +92,21 @@
- 
+diff -wruN portaudio/include/pa_win_ds.h portaudio-v19/include/pa_win_ds.h
+--- portaudio/include/pa_win_ds.h	2011-11-24 12:11:33.000000000 -0600
++++ portaudio-v19/include/pa_win_ds.h	2012-12-14 22:35:51.384817600 -0600
+@@ -87,6 +87,22 @@
  }PaWinDirectSoundStreamInfo;
+ 
  
 +/** Retrieve the GUID of the input device.
 +
@@ -128,13 +76,14 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 + @return A pointer to the GUID, or NULL if none.
 +*/
 +LPGUID PaWinDS_GetStreamOutputGUID( PaStream* s );
- 
++
  
  #ifdef __cplusplus
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/include/portaudio.h portaudio-v19/include/portaudio.h
---- ../../../portaudio/include/portaudio.h	2008-03-18 11:27:43.000000000 +0000
-+++ portaudio-v19/include/portaudio.h	2008-03-18 11:39:39.000000000 +0000
-@@ -1106,6 +1106,15 @@
+ }
+diff -wruN portaudio/include/portaudio.h portaudio-v19/include/portaudio.h
+--- portaudio/include/portaudio.h	2012-08-31 19:10:13.000000000 -0500
++++ portaudio-v19/include/portaudio.h	2012-12-14 22:34:14.368247200 -0600
+@@ -1146,6 +1146,15 @@
  signed long Pa_GetStreamWriteAvailable( PaStream* stream );
  
  
@@ -150,10 +99,10 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
  /* Miscellaneous utilities */
  
  
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/common/pa_front.c portaudio-v19/src/common/pa_front.c
---- ../../../portaudio/src/common/pa_front.c	2008-03-18 11:27:45.000000000 +0000
-+++ portaudio-v19/src/common/pa_front.c	2008-03-18 11:39:39.000000000 +0000
-@@ -1211,8 +1211,10 @@
+diff -wruN portaudio/src/common/pa_front.c portaudio-v19/src/common/pa_front.c
+--- portaudio/src/common/pa_front.c	2012-12-04 12:39:48.000000000 -0600
++++ portaudio-v19/src/common/pa_front.c	2012-12-14 09:44:34.604344800 -0600
+@@ -1216,8 +1216,10 @@
                                    hostApiInputParametersPtr, hostApiOutputParametersPtr,
                                    sampleRate, framesPerBuffer, streamFlags, streamCallback, userData );
  
@@ -165,7 +114,7 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
  
  
      PA_LOGAPI(("Pa_OpenStream returned:\n" ));
-@@ -1724,6 +1726,32 @@
+@@ -1729,6 +1731,32 @@
      return result;
  }
  
@@ -198,9 +147,9 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
  
  PaError Pa_GetSampleSize( PaSampleFormat format )
  {
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/common/pa_stream.c portaudio-v19/src/common/pa_stream.c
---- ../../../portaudio/src/common/pa_stream.c	2008-03-18 11:27:45.000000000 +0000
-+++ portaudio-v19/src/common/pa_stream.c	2008-03-18 11:39:39.000000000 +0000
+diff -wruN portaudio/src/common/pa_stream.c portaudio-v19/src/common/pa_stream.c
+--- portaudio/src/common/pa_stream.c	2008-02-15 01:50:33.000000000 -0600
++++ portaudio-v19/src/common/pa_stream.c	2012-12-14 09:44:34.607345000 -0600
 @@ -93,6 +93,8 @@
      streamRepresentation->streamInfo.inputLatency = 0.;
      streamRepresentation->streamInfo.outputLatency = 0.;
@@ -210,9 +159,9 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
  }
  
  
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/common/pa_stream.h portaudio-v19/src/common/pa_stream.h
---- ../../../portaudio/src/common/pa_stream.h	2008-03-18 11:27:45.000000000 +0000
-+++ portaudio-v19/src/common/pa_stream.h	2008-03-18 11:39:39.000000000 +0000
+diff -wruN portaudio/src/common/pa_stream.h portaudio-v19/src/common/pa_stream.h
+--- portaudio/src/common/pa_stream.h	2008-02-15 01:50:33.000000000 -0600
++++ portaudio-v19/src/common/pa_stream.h	2012-12-14 09:44:34.610345200 -0600
 @@ -152,6 +152,7 @@
      PaStreamFinishedCallback *streamFinishedCallback;
      void *userData;
@@ -221,39 +170,77 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
  } PaUtilStreamRepresentation;
  
  
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c portaudio-v19/src/hostapi/coreaudio/pa_mac_core_blocking.c
---- ../../../portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c	2008-03-18 11:27:44.000000000 +0000
-+++ portaudio-v19/src/hostapi/coreaudio/pa_mac_core_blocking.c	2008-03-18 11:39:39.000000000 +0000
-@@ -66,6 +66,9 @@
- #ifdef MOSX_USE_NON_ATOMIC_FLAG_BITS
- # define OSAtomicOr32( a, b ) ( (*(b)) |= (a) )
- # define OSAtomicAnd32( a, b ) ( (*(b)) &= (a) )
-+#elif MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_3
-+# define OSAtomicOr32( a, b ) BitOrAtomic( a, (UInt32 *) b )
-+# define OSAtomicAnd32( a, b ) BitAndAtomic( a, (UInt32 *) b )
- #else
- # include <libkern/OSAtomic.h>
+diff -wruN portaudio/src/hostapi/alsa/pa_linux_alsa.c portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c
+--- portaudio/src/hostapi/alsa/pa_linux_alsa.c	2012-05-18 11:04:30.000000000 -0500
++++ portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c	2012-12-14 10:00:12.133968500 -0600
+@@ -622,6 +622,7 @@
+     StreamDirection streamDir;
+ 
+     snd_pcm_channel_area_t *channelAreas;  /* Needed for channel adaption */
++    int card;
+ } PaAlsaStreamComponent;
+ 
+ /* Implementation specific stream structure */
+@@ -1840,6 +1841,7 @@
+     PaError result = paNoError;
+     PaSampleFormat userSampleFormat = params->sampleFormat, hostSampleFormat = paNoError;
+     assert( params->channelCount > 0 );
++    snd_pcm_info_t* pcmInfo;
+ 
+     /* Make sure things have an initial value */
+     memset( self, 0, sizeof (PaAlsaStreamComponent) );
+@@ -1867,6 +1869,9 @@
+     PA_ENSURE( AlsaOpen( &alsaApi->baseHostApiRep, params, streamDir, &self->pcm ) );
+     self->nfds = alsa_snd_pcm_poll_descriptors_count( self->pcm );
+ 
++    snd_pcm_info_alloca( &pcmInfo );
++    self->card = snd_pcm_info_get_card( pcmInfo );
++
+     PA_ENSURE( hostSampleFormat = PaUtil_SelectClosestAvailableFormat( GetAvailableFormats( self->pcm ), userSampleFormat ) );
+ 
+     self->hostSampleFormat = hostSampleFormat;
+@@ -4559,9 +4564,7 @@
+     /* XXX: More descriptive error? */
+     PA_UNLESS( stream->capture.pcm, paDeviceUnavailable );
+ 
+-    alsa_snd_pcm_info_alloca( &pcmInfo );
+-    PA_ENSURE( alsa_snd_pcm_info( stream->capture.pcm, pcmInfo ) );
+-    *card = alsa_snd_pcm_info_get_card( pcmInfo );
++    *card = stream->capture.card;
+ 
+ error:
+     return result;
+@@ -4578,9 +4581,7 @@
+     /* XXX: More descriptive error? */
+     PA_UNLESS( stream->playback.pcm, paDeviceUnavailable );
+ 
+-    alsa_snd_pcm_info_alloca( &pcmInfo );
+-    PA_ENSURE( alsa_snd_pcm_info( stream->playback.pcm, pcmInfo ) );
+-    *card = alsa_snd_pcm_info_get_card( pcmInfo );
++    *card = stream->capture.card;
+ 
+ error:
+     return result;
+diff -wruN portaudio/src/hostapi/dsound/pa_win_ds.c portaudio-v19/src/hostapi/dsound/pa_win_ds.c
+--- portaudio/src/hostapi/dsound/pa_win_ds.c	2012-11-09 20:55:20.000000000 -0600
++++ portaudio-v19/src/hostapi/dsound/pa_win_ds.c	2012-12-14 10:14:29.062982000 -0600
+@@ -257,6 +257,7 @@
  #endif
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/hostapi/dsound/pa_win_ds.c portaudio-v19/src/hostapi/dsound/pa_win_ds.c
---- ../../../portaudio/src/hostapi/dsound/pa_win_ds.c	2008-03-18 11:27:44.000000000 +0000
-+++ portaudio-v19/src/hostapi/dsound/pa_win_ds.c	2008-03-18 11:39:39.000000000 +0000
-@@ -221,6 +221,7 @@
- /* DirectSound specific data. */
  
  /* Output */
 +    LPGUID               pOutputGuid;
      LPDIRECTSOUND        pDirectSound;
+     LPDIRECTSOUNDBUFFER  pDirectSoundPrimaryBuffer;
      LPDIRECTSOUNDBUFFER  pDirectSoundOutputBuffer;
-     DWORD                outputBufferWriteOffsetBytes;     /* last write position */
-@@ -236,6 +237,7 @@
-     double               dsw_framesWritten;
-     double               framesPlayed;
+@@ -272,6 +273,7 @@
+     INT                  finalZeroBytesWritten; /* used to determine when we've flushed the whole buffer */
+ 
  /* Input */
 +    LPGUID               pInputGuid;
      LPDIRECTSOUNDCAPTURE pDirectSoundCapture;
      LPDIRECTSOUNDCAPTUREBUFFER   pDirectSoundInputBuffer;
-     INT                  bytesPerInputFrame;
-@@ -1544,8 +1546,8 @@
+     INT                  inputFrameSizeBytes;
+@@ -1854,8 +1856,8 @@
      PaWinDsDeviceInfo *inputWinDsDeviceInfo, *outputWinDsDeviceInfo;
      PaDeviceInfo *inputDeviceInfo, *outputDeviceInfo;
      int inputChannelCount, outputChannelCount;
@@ -261,14 +248,41 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 -    PaSampleFormat hostInputSampleFormat, hostOutputSampleFormat;
 +    PaSampleFormat inputSampleFormat = 0, outputSampleFormat = 0;
 +    PaSampleFormat hostInputSampleFormat = 0, hostOutputSampleFormat = 0;
+     int userRequestedHostInputBufferSizeFrames = 0;
+     int userRequestedHostOutputBufferSizeFrames = 0;
      unsigned long suggestedInputLatencyFrames, suggestedOutputLatencyFrames;
-     PaWinDirectSoundStreamInfo *inputStreamInfo, *outputStreamInfo;
-     PaWinWaveFormatChannelMask inputChannelMask, outputChannelMask;
-@@ -1803,6 +1805,13 @@
-                 PA_DS_SET_LAST_DIRECTSOUND_ERROR( hr );
+@@ -2146,6 +2148,13 @@
+                 goto error;
+             }
+ 
++            /* Portmixer support - fill in the GUID of the output stream */
++            stream->pOutputGuid = outputWinDsDeviceInfo->lpGUID;
++            if( stream->pOutputGuid == NULL )
++            {
++               stream->pOutputGuid = (GUID *) &DSDEVID_DefaultPlayback;
++            }
++
+             /* Calculate value used in latency calculation to avoid real-time divides. */
+             stream->secondsPerHostByte = 1.0 /
+                 (stream->bufferProcessor.bytesPerHostOutputSample *
+@@ -2187,6 +2196,13 @@
+                 result = paBufferTooBig;
                  goto error;
              }
 +
++            /* Portmixer support - store the GUID of the input stream */
++            stream->pInputGuid = inputWinDsDeviceInfo->lpGUID;
++            if( stream->pInputGuid == NULL )
++            {
++               stream->pInputGuid = (GUID *)&DSDEVID_DefaultCapture;
++            }
+         }
+ 
+         /* open/create the DirectSound buffers */
+@@ -2230,6 +2246,12 @@
+ 
+         if( outputParameters && !stream->pDirectSoundOutputBuffer )
+         {
 +            stream->pOutputGuid = outputWinDsDeviceInfo->lpGUID;
 +            if( stream->pOutputGuid == NULL )
 +            {
@@ -276,24 +290,11 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 +            }
 +
              hr = InitOutputBuffer( stream,
+                                        (PaWinDsDeviceInfo*)hostApi->deviceInfos[outputParameters->device],
                                         hostOutputSampleFormat,
-                                        (unsigned long) (sampleRate + 0.5),
-@@ -1842,6 +1851,12 @@
-                 goto error;
-             }
- 
-+            stream->pInputGuid = inputWinDsDeviceInfo->lpGUID;
-+            if( stream->pInputGuid == NULL )
-+            {
-+               stream->pInputGuid = (GUID *)&DSDEVID_DefaultCapture;
-+            }
-+
-             hr = paWinDsDSoundEntryPoints.DirectSoundCaptureCreate( 
-                     ((PaWinDsDeviceInfo*)hostApi->deviceInfos[inputParameters->device])->lpGUID,
-                     &stream->pDirectSoundCapture, NULL );
-@@ -2522,4 +2537,19 @@
+@@ -3238,3 +3260,18 @@
+     return 0;
  }
- 
  
 +/***********************************************************************************/
 +LPGUID PaWinDS_GetStreamInputGUID( PaStream* s )
@@ -302,7 +303,6 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 +
 +   return stream->pInputGuid;
 +}
- 
 +
 +/***********************************************************************************/
 +LPGUID PaWinDS_GetStreamOutputGUID( PaStream* s )
@@ -311,11 +311,11 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 +
 +    return stream->pOutputGuid;
 +}
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/hostapi/oss/pa_unix_oss.c portaudio-v19/src/hostapi/oss/pa_unix_oss.c
---- ../../../portaudio/src/hostapi/oss/pa_unix_oss.c	2008-03-18 11:27:43.000000000 +0000
-+++ portaudio-v19/src/hostapi/oss/pa_unix_oss.c	2008-03-18 11:39:39.000000000 +0000
-@@ -1983,3 +1983,26 @@
-     return result;
+diff -wruN portaudio/src/hostapi/oss/pa_unix_oss.c portaudio-v19/src/hostapi/oss/pa_unix_oss.c
+--- portaudio/src/hostapi/oss/pa_unix_oss.c	2011-05-02 12:07:11.000000000 -0500
++++ portaudio-v19/src/hostapi/oss/pa_unix_oss.c	2012-12-14 09:44:34.625346000 -0600
+@@ -2028,3 +2028,26 @@
+ #endif
  }
  
 +const char *PaOSS_GetStreamInputDevice( PaStream* s )
@@ -341,61 +341,3 @@ diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefil
 +
 +   return NULL;
 +}
-diff -ur -N --exclude CVS --exclude .svn --exclude Makefile.in --exclude Makefile --exclude aclocal.m4 --exclude configure --exclude 'config.*' --exclude '*.patch' --exclude ltmain.sh --exclude autom4te.cache ../../../portaudio/src/hostapi/oss/pa_unix_oss.c portaudio-v19/src/hostapi/oss/pa_unix_oss.c
---- ../../../portaudio/src/hostapi/alsa/pa_linux_alsa.c	2008-03-18 11:27:43.000000000 +0000
-+++ portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c	2008-03-18 11:39:39.000000000 +0000
-@@ -1,5 +1,5 @@
- /*
-- * $Id: portaudio.patch,v 1.10 2009-06-30 04:52:59 llucius Exp $
-+ * $Id: portaudio.patch,v 1.10 2009-06-30 04:52:59 llucius Exp $
-  * PortAudio Portable Real-Time Audio Library
-  * Latest Version at: http://www.portaudio.com
-  * ALSA implementation by Joshua Haberman and Arve Knudsen
-@@ -134,6 +134,7 @@
-     StreamDirection streamDir;
- 
-     snd_pcm_channel_area_t *channelAreas;  /* Needed for channel adaption */
-+    int card;
- } PaAlsaStreamComponent;
- 
- /* Implementation specific stream structure */
-@@ -1161,6 +1162,7 @@
- {
-     PaError result = paNoError;
-     PaSampleFormat userSampleFormat = params->sampleFormat, hostSampleFormat;
-+    snd_pcm_info_t* pcmInfo;
-     assert( params->channelCount > 0 );
- 
-     /* Make sure things have an initial value */
-@@ -1181,6 +1183,9 @@
-     self->device = params->device;
- 
-     PA_ENSURE( AlsaOpen( &alsaApi->baseHostApiRep, params, streamDir, &self->pcm ) );
-+
-+    snd_pcm_info_alloca( &pcmInfo );
-+    self->card = snd_pcm_info_get_card( pcmInfo );
-     self->nfds = snd_pcm_poll_descriptors_count( self->pcm );
-     hostSampleFormat = PaUtil_SelectClosestAvailableFormat( GetAvailableFormats( self->pcm ), userSampleFormat );
- 
-@@ -3646,9 +3651,7 @@
-     /* XXX: More descriptive error? */
-     PA_UNLESS( stream->capture.pcm, paDeviceUnavailable );
- 
--    snd_pcm_info_alloca( &pcmInfo );
--    PA_ENSURE( snd_pcm_info( stream->capture.pcm, pcmInfo ) );
--    *card = snd_pcm_info_get_card( pcmInfo );
-+    *card = stream->capture.card;
- 
- error:
-     return result;
-@@ -3664,9 +3667,7 @@
-     /* XXX: More descriptive error? */
-     PA_UNLESS( stream->playback.pcm, paDeviceUnavailable );
- 
--    snd_pcm_info_alloca( &pcmInfo );
--    PA_ENSURE( snd_pcm_info( stream->playback.pcm, pcmInfo ) );
--    *card = snd_pcm_info_get_card( pcmInfo );
-+    *card = stream->playback.card;
- 
- error:
-     return result;

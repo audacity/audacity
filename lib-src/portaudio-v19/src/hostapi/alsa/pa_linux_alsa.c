@@ -622,6 +622,7 @@ typedef struct
     StreamDirection streamDir;
 
     snd_pcm_channel_area_t *channelAreas;  /* Needed for channel adaption */
+    int card;
 } PaAlsaStreamComponent;
 
 /* Implementation specific stream structure */
@@ -1840,6 +1841,7 @@ static PaError PaAlsaStreamComponent_Initialize( PaAlsaStreamComponent *self, Pa
     PaError result = paNoError;
     PaSampleFormat userSampleFormat = params->sampleFormat, hostSampleFormat = paNoError;
     assert( params->channelCount > 0 );
+    snd_pcm_info_t* pcmInfo;
 
     /* Make sure things have an initial value */
     memset( self, 0, sizeof (PaAlsaStreamComponent) );
@@ -1866,6 +1868,9 @@ static PaError PaAlsaStreamComponent_Initialize( PaAlsaStreamComponent *self, Pa
 
     PA_ENSURE( AlsaOpen( &alsaApi->baseHostApiRep, params, streamDir, &self->pcm ) );
     self->nfds = alsa_snd_pcm_poll_descriptors_count( self->pcm );
+
+    snd_pcm_info_alloca( &pcmInfo );
+    self->card = snd_pcm_info_get_card( pcmInfo );
 
     PA_ENSURE( hostSampleFormat = PaUtil_SelectClosestAvailableFormat( GetAvailableFormats( self->pcm ), userSampleFormat ) );
 
@@ -4559,9 +4564,7 @@ PaError PaAlsa_GetStreamInputCard( PaStream* s, int* card )
     /* XXX: More descriptive error? */
     PA_UNLESS( stream->capture.pcm, paDeviceUnavailable );
 
-    alsa_snd_pcm_info_alloca( &pcmInfo );
-    PA_ENSURE( alsa_snd_pcm_info( stream->capture.pcm, pcmInfo ) );
-    *card = alsa_snd_pcm_info_get_card( pcmInfo );
+    *card = stream->capture.card;
 
 error:
     return result;
@@ -4578,9 +4581,7 @@ PaError PaAlsa_GetStreamOutputCard( PaStream* s, int* card )
     /* XXX: More descriptive error? */
     PA_UNLESS( stream->playback.pcm, paDeviceUnavailable );
 
-    alsa_snd_pcm_info_alloca( &pcmInfo );
-    PA_ENSURE( alsa_snd_pcm_info( stream->playback.pcm, pcmInfo ) );
-    *card = alsa_snd_pcm_info_get_card( pcmInfo );
+    *card = stream->capture.card;
 
 error:
     return result;

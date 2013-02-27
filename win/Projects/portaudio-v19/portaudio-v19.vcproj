@@ -25,7 +25,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_DS &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_ASIO &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_NO_WASAPI &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -92,7 +92,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_DS &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_ASIO &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_NO_WASAPI &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -161,7 +161,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_DS &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_ASIO &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_NO_WASAPI &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -230,7 +230,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_DS &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_NO_ASIO &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_NO_WASAPI &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -367,10 +367,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\lib-src\portaudio-v19\src\common\pa_ringbuffer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\lib-src\portaudio-v19\src\common\pa_skeleton.c"
 					>
 				</File>
 				<File
@@ -677,6 +673,14 @@
 			<Filter
 				Name="os"
 				>
+				<File
+					RelativePath="..\..\..\lib-src\portaudio-v19\src\os\win\pa_win_coinitialize.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\lib-src\portaudio-v19\src\os\win\pa_win_coinitialize.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\..\lib-src\portaudio-v19\src\os\win\pa_win_hostapis.c"
 					>

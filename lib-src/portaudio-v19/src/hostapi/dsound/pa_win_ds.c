@@ -257,6 +257,7 @@ typedef struct PaWinDsStream
 #endif
 
 /* Output */
+    LPGUID               pOutputGuid;
     LPDIRECTSOUND        pDirectSound;
     LPDIRECTSOUNDBUFFER  pDirectSoundPrimaryBuffer;
     LPDIRECTSOUNDBUFFER  pDirectSoundOutputBuffer;
@@ -272,6 +273,7 @@ typedef struct PaWinDsStream
     INT                  finalZeroBytesWritten; /* used to determine when we've flushed the whole buffer */
 
 /* Input */
+    LPGUID               pInputGuid;
     LPDIRECTSOUNDCAPTURE pDirectSoundCapture;
     LPDIRECTSOUNDCAPTUREBUFFER   pDirectSoundInputBuffer;
     INT                  inputFrameSizeBytes;
@@ -1854,8 +1856,8 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
     PaWinDsDeviceInfo *inputWinDsDeviceInfo, *outputWinDsDeviceInfo;
     PaDeviceInfo *inputDeviceInfo, *outputDeviceInfo;
     int inputChannelCount, outputChannelCount;
-    PaSampleFormat inputSampleFormat, outputSampleFormat;
-    PaSampleFormat hostInputSampleFormat, hostOutputSampleFormat;
+    PaSampleFormat inputSampleFormat = 0, outputSampleFormat = 0;
+    PaSampleFormat hostInputSampleFormat = 0, hostOutputSampleFormat = 0;
     int userRequestedHostInputBufferSizeFrames = 0;
     int userRequestedHostOutputBufferSizeFrames = 0;
     unsigned long suggestedInputLatencyFrames, suggestedOutputLatencyFrames;
@@ -2146,6 +2148,13 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
                 goto error;
             }
 
+            /* Portmixer support - fill in the GUID of the output stream */
+            stream->pOutputGuid = outputWinDsDeviceInfo->lpGUID;
+            if( stream->pOutputGuid == NULL )
+            {
+               stream->pOutputGuid = (GUID *) &DSDEVID_DefaultPlayback;
+            }
+
             /* Calculate value used in latency calculation to avoid real-time divides. */
             stream->secondsPerHostByte = 1.0 /
                 (stream->bufferProcessor.bytesPerHostOutputSample *
@@ -2186,6 +2195,13 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
             {
                 result = paBufferTooBig;
                 goto error;
+            }
+
+            /* Portmixer support - store the GUID of the input stream */
+            stream->pInputGuid = inputWinDsDeviceInfo->lpGUID;
+            if( stream->pInputGuid == NULL )
+            {
+               stream->pInputGuid = (GUID *)&DSDEVID_DefaultCapture;
             }
         }
 
@@ -2230,6 +2246,12 @@ static PaError OpenStream( struct PaUtilHostApiRepresentation *hostApi,
 
         if( outputParameters && !stream->pDirectSoundOutputBuffer )
         {
+            stream->pOutputGuid = outputWinDsDeviceInfo->lpGUID;
+            if( stream->pOutputGuid == NULL )
+            {
+               stream->pOutputGuid = (GUID *) &DSDEVID_DefaultPlayback;
+            }
+
             hr = InitOutputBuffer( stream,
                                        (PaWinDsDeviceInfo*)hostApi->deviceInfos[outputParameters->device],
                                        hostOutputSampleFormat,
@@ -3238,3 +3260,18 @@ static signed long GetStreamWriteAvailable( PaStream* s )
     return 0;
 }
 
+/***********************************************************************************/
+LPGUID PaWinDS_GetStreamInputGUID( PaStream* s )
+{
+    PaWinDsStream *stream = (PaWinDsStream*)s;
+
+   return stream->pInputGuid;
+}
+
+/***********************************************************************************/
+LPGUID PaWinDS_GetStreamOutputGUID( PaStream* s )
+{
+    PaWinDsStream *stream = (PaWinDsStream*)s;
+
+    return stream->pOutputGuid;
+}

@@ -1146,6 +1146,15 @@ signed long Pa_GetStreamReadAvailable( PaStream* stream );
 signed long Pa_GetStreamWriteAvailable( PaStream* stream );
 
 
+/** Retrieve the host type handling an open stream.
+
+ @return Returns a non-negative value representing the host API type
+ handling an open stream or, a PaErrorCode (which are always negative)
+ if PortAudio is not initialized or an error is encountered.
+*/
+PaHostApiTypeId Pa_GetStreamHostApiType( PaStream* stream );
+
+
 /* Miscellaneous utilities */
 
 
