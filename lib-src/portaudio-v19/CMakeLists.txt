@@ -50,6 +50,8 @@ FIND_PACKAGE(DXSDK)
 # Try to find ASIO SDK (assumes that portaudio and asiosdk folders are side-by-side, see
 # http://www.portaudio.com/trac/wiki/TutorialDir/Compile/WindowsASIOMSVC)
 FIND_PACKAGE(ASIOSDK)
+# Try to find JACK SDK
+FIND_PACKAGE(JACKSDK)
 
 IF(ASIOSDK_FOUND)
 OPTION(PA_USE_ASIO "Enable support for ASIO" ON)
@@ -187,6 +189,23 @@ SOURCE_GROUP("hostapi\\wdmks" FILES
 )
 ENDIF(PA_USE_WDMKS)
 
+IF(PA_USE_JACK)
+
+SET(PA_JACK_INCLUDES
+  include/pa_jack.h
+  src/hostapi/jack/pa_jack_dynload.h
+)
+
+SET(PA_JACK_SOURCES
+  src/hostapi/jack/pa_jack.c
+  src/hostapi/jack/pa_jack_dynload.h
+)
+
+SOURCE_GROUP("hostapi\\jack" FILES
+  ${PA_WASAPI_SOURCES}
+)
+ENDIF(PA_USE_JACK)
+
 SET(PA_SKELETON_SOURCES
   src/hostapi/skeleton/pa_hostapi_skeleton.c
 )
@@ -203,6 +222,7 @@ SET(PA_INCLUDES
   ${PA_WMME_INCLUDES}
   ${PA_WASAPI_INCLUDES}
   ${PA_WDMKS_INCLUDES}
+  ${PA_JACK_INCLUDES}
 )
 ENDIF(WIN32)
 
@@ -216,6 +236,7 @@ SET(PA_COMMON_INCLUDES
   src/common/pa_cpuload.h
   src/common/pa_debugprint.h
   src/common/pa_dither.h
+  src/common/pa_dynload.h
   src/common/pa_endianness.h
   src/common/pa_hostapi.h
   src/common/pa_memorybarrier.h
@@ -233,6 +254,7 @@ SET(PA_COMMON_SOURCES
   src/common/pa_cpuload.c
   src/common/pa_debugprint.c
   src/common/pa_dither.c
+  src/common/pa_dynload.c
   src/common/pa_front.c
   src/common/pa_process.c
   src/common/pa_ringbuffer.c
@@ -282,6 +304,7 @@ SET(SOURCES_LESS_ASIO_SDK
   ${PA_WMME_SOURCES}
   ${PA_WASAPI_SOURCES}
   ${PA_WDMKS_SOURCES}
+  ${PA_JACK_SOURCES}
   ${PA_SKELETON_SOURCES}
   ${PA_PLATFORM_SOURCES}
 )

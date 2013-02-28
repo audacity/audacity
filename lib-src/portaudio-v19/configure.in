@@ -394,7 +394,7 @@ case "${host_os}" in
         if [[ "$have_jack" = "yes" ] && [ "$with_jack" != "no" ]] ; then
            DLL_LIBS="$DLL_LIBS $JACK_LIBS"
            CFLAGS="$CFLAGS $JACK_CFLAGS"
-           OTHER_OBJS="$OTHER_OBJS src/hostapi/jack/pa_jack.o src/common/pa_ringbuffer.o"
+           OTHER_OBJS="$OTHER_OBJS src/hostapi/jack/pa_jack.o src/hostapi/jack/pa_jack_dynload.o src/common/pa_ringbuffer.o"
            INCLUDES="$INCLUDES pa_jack.h"
            AC_DEFINE(PA_USE_JACK,1)
         fi

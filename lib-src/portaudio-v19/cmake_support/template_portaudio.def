@@ -51,3 +51,5 @@ PaUtil_SetDebugPrintFunction        @55
 @DEF_EXCLUDE_WASAPI_SYMBOLS@PaWasapi_GetFramesPerHostBuffer     @60
 @DEF_EXCLUDE_WASAPI_SYMBOLS@PaWasapi_GetJackDescription         @61
 @DEF_EXCLUDE_WASAPI_SYMBOLS@PaWasapi_GetJackCount               @62
+@DEF_EXCLUDE_WASAPI_SYMBOLS@PaJack_SetClientName                @63
+@DEF_EXCLUDE_WASAPI_SYMBOLS@PaJack_GetClientName                @64
