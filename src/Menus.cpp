@@ -624,6 +624,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("FitInWindow"), _("&Fit in Window"), FN(OnZoomFit), wxT("Ctrl+F"));
    c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
    c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
+   c->AddItem(wxT("GoSelStart"), _("&Go to Selection Start"), FN(OnGoSelStart), wxT("Ctrl+4"), TimeSelectedFlag, TimeSelectedFlag);
+   c->AddItem(wxT("GoSelEnd"), _("&Go to Selection End"), FN(OnGoSelEnd), wxT("Ctrl+5"), TimeSelectedFlag, TimeSelectedFlag);
 
    c->AddSeparator();
 
@@ -4959,6 +4961,22 @@ void AudacityProject::OnZoomSel()
    //      found, this will have to work.
    Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) / (mViewInfo.sel1 - mViewInfo.sel0));
    TP_ScrollWindow(mViewInfo.sel0);
+}
+
+void AudacityProject::OnGoSelStart()
+{
+   if (mViewInfo.sel1 <= mViewInfo.sel0)
+      return;
+
+   TP_ScrollWindow(mViewInfo.sel0 - (mViewInfo.screen / 2));
+}
+
+void AudacityProject::OnGoSelEnd()
+{
+   if (mViewInfo.sel1 <= mViewInfo.sel0)
+      return;
+
+   TP_ScrollWindow(mViewInfo.sel1 - (mViewInfo.screen / 2));
 }
 
 void AudacityProject::OnShowClipping()
