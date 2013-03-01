@@ -135,7 +135,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Dave Beydler"), roleThanks);
    AddCredit(wxT("Brian Cameron"), roleThanks);
    AddCredit(wxT("Jason Cohen"), roleThanks);
-   AddCredit(wxT("Benjamin Drung"), roleThanks);
    AddCredit(wxT("Dave Fancella"), roleThanks);
    AddCredit(wxT("Steve Harris"), roleThanks);
    AddCredit(wxT("Daniel James"), roleThanks);
