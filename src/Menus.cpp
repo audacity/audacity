@@ -721,17 +721,25 @@ void AudacityProject::CreateMenusAndCommands()
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
    /* i18n-hint: (verb) Start playing audio*/
-   c->AddItem(wxT("Play"), _("Pl&ay"), FN(OnPlayStop));
-   c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"));
+   c->AddItem(wxT("Play"), _("Pl&ay"), FN(OnPlayStop),  wxT("Space"),
+              WaveTracksExistFlag | AudioIONotBusyFlag,
+              WaveTracksExistFlag | AudioIONotBusyFlag);
+   c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"),
+              WaveTracksExistFlag | AudioIONotBusyFlag,
+              WaveTracksExistFlag | AudioIONotBusyFlag);
    c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
-              AudioIOBusyFlag,
-              AudioIOBusyFlag);
+              AlwaysEnabledFlag,
+              AlwaysEnabledFlag);
    /* i18n-hint: (verb) Stop playing audio*/
-   c->AddItem(wxT("Stop"), _("&Stop"), FN(OnStop),
+   c->AddItem(wxT("Stop"), _("&Stop"), FN(OnStop), wxT("Space"),
               AudioIOBusyFlag,
               AudioIOBusyFlag);
-   c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"));
-   c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"));
+   c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
+              WaveTracksExistFlag | AudioIONotBusyFlag,
+              WaveTracksExistFlag | AudioIONotBusyFlag);
+   c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
+              WaveTracksExistFlag | AudioIONotBusyFlag,
+              WaveTracksExistFlag | AudioIONotBusyFlag);
 
    c->AddSeparator();
 
@@ -800,13 +808,17 @@ void AudacityProject::CreateMenusAndCommands()
                  AudioIONotBusyFlag | TracksSelectedFlag,
                  AudioIONotBusyFlag | TracksSelectedFlag);
 
-      c->AddSeparator();
+   c->AddSeparator();
 
-      c->AddItem(wxT("MuteAllTracks"), _("&Mute All Tracks"), FN(OnMuteAllTracks), wxT("Ctrl+U"));
-      c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"));
+   c->AddItem(wxT("MuteAllTracks"), _("&Mute All Tracks"), FN(OnMuteAllTracks), wxT("Ctrl+U"),
+              WaveTracksExistFlag,
+              WaveTracksExistFlag);
+   c->AddItem(wxT("UnMuteAllTracks"), _("&Unmute All Tracks"), FN(OnUnMuteAllTracks), wxT("Ctrl+Shift+U"),
+              WaveTracksExistFlag,
+              WaveTracksExistFlag);
 
-      c->AddSeparator();
-   
+   c->AddSeparator();
+
       wxArrayString alignLabels;
       alignLabels.Add(_("Align with &Zero"));
       alignLabels.Add(_("Align with &Cursor"));
@@ -814,12 +826,13 @@ void AudacityProject::CreateMenusAndCommands()
       alignLabels.Add(_("Align with Selection &End"));
       alignLabels.Add(_("Align End with Cu&rsor"));
       alignLabels.Add(_("Align End with Selection Star&t"));
-      alignLabels.Add(_("Align End with Selection En&d"));
-      alignLabels.Add(_("Align Tracks To&gether"));
-   
-      c->BeginSubMenu(_("&Align Tracks"));
+   alignLabels.Add(_("Align End with Selection En&d"));
+   alignLabels.Add(_("Align Tracks To&gether"));
 
-      c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
+   c->SetDefaultFlags(WaveTracksExistFlag, WaveTracksExistFlag);
+   c->BeginSubMenu(_("&Align Tracks"));
+
+   c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
       c->SetCommandFlags(wxT("Align"),
                          AudioIONotBusyFlag | TracksSelectedFlag,
                          AudioIONotBusyFlag | TracksSelectedFlag);
@@ -1025,6 +1038,7 @@ void AudacityProject::CreateMenusAndCommands()
                       AudioIONotBusyFlag | TracksSelectedFlag);
 
    c->EndSubMenu();
+   c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
    //////////////////////////////////////////////////////////////////////////
 
@@ -3194,7 +3208,7 @@ void AudacityProject::OnGeneratePlugin(int index)
    OnEffect(PLUGIN_EFFECT | INSERT_EFFECT, index);
 }
 
-void AudacityProject::OnRepeatLastEffect(int index)
+void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
 {
    if (mLastEffect != NULL) {
       // Setting the CONFIGURED_EFFECT bit prevents
@@ -3220,7 +3234,7 @@ void AudacityProject::OnProcessEffect(int index)
    OnEffect(BUILTIN_EFFECT | PROCESS_EFFECT | additionalEffects, index);
 }
 
-void AudacityProject::OnStereoToMono(int index)
+void AudacityProject::OnStereoToMono(int WXUNUSED(index))
 {
    OnEffect(ALL_EFFECTS,
             EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")));
