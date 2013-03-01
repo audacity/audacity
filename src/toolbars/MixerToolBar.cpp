@@ -88,6 +88,7 @@ void MixerToolBar::Populate()
 
    mOutputSlider = new ASlider(this, wxID_ANY, _("Output Volume"),
                                wxDefaultPosition, wxSize(130, 25));
+   mOutputSlider->SetScroll(0.1f, 2.0f);
    mOutputSlider->SetName(_("Slider Output"));
    Add(mOutputSlider, 0, wxALIGN_CENTER);
 
@@ -99,6 +100,7 @@ void MixerToolBar::Populate()
 
    mInputSlider = new ASlider(this, wxID_ANY, _("Input Volume"),
                               wxDefaultPosition, wxSize(130, 25));
+   mInputSlider->SetScroll(0.1f, 2.0f);
    mInputSlider->SetName(_("Slider Input"));
    Add(mInputSlider, 0, wxALIGN_CENTER);
 

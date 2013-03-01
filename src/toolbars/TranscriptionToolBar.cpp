@@ -180,7 +180,8 @@ void TranscriptionToolBar::Populate()
                                   SPEED_SLIDER);
    mPlaySpeedSlider->Set(1.0);
    mPlaySpeedSlider->SetLabel(_("Playback Speed"));
-   mPlaySpeedSlider->SetScroll(0.1f, 0.5f);
+   //  6 steps using page up/down, and 60 using arrow keys
+   mPlaySpeedSlider->SetScroll(0.16667f, 1.6667f);
    Add( mPlaySpeedSlider, 0, wxALIGN_CENTER );
    mPlaySpeedSlider->Connect(wxEVT_SET_FOCUS,
                  wxFocusEventHandler(TranscriptionToolBar::OnFocus),
