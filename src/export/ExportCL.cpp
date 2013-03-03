@@ -18,8 +18,10 @@
 #include <wx/log.h>
 #include <wx/process.h>
 #include <wx/textctrl.h>
+#include <FileDialog.h>
 
 #include "Export.h"
+#include "ExportCL.h"
 
 #include "../Project.h"
 #include "../Mix.h"
@@ -28,7 +30,7 @@
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
 
-#include <FileDialog.h>
+
 
 
 //----------------------------------------------------------------------------
@@ -529,22 +531,8 @@ bool ExportCL::DisplayOptions(wxWindow *parent, int format)
    return true;
 }
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportCL()
 {
    return new ExportCL();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: c1578868-82c5-4f4a-b61b-8d82536a3141
 

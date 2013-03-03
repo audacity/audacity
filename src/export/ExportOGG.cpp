@@ -20,6 +20,7 @@
 #ifdef USE_LIBVORBIS
 
 #include "Export.h"
+#include "ExportOGG.h"
 
 #include <wx/log.h>
 #include <wx/msgdlg.h>
@@ -362,25 +363,10 @@ bool ExportOGG::FillComment(AudacityProject *project, vorbis_comment *comment, T
    return true;
 }
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportOGG()
 {
    return new ExportOGG();
 }
 
 #endif // USE_LIBVORBIS
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 33184ece-e482-44d9-9ff3-b4a11b41112b
 

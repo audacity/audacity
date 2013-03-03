@@ -89,6 +89,7 @@
 #include "FileDialog.h"
 
 #include "Export.h"
+#include "ExportMP3.h"
 
 #if defined(DISABLE_DYNAMIC_LOADING_LAME)
 #include <lame/lame.h>
@@ -2060,9 +2061,6 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportMP3()
 {
    return new ExportMP3();
@@ -2092,13 +2090,3 @@ wxString GetMP3Version(wxWindow *parent, bool prompt)
    return versionString;
 }
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: c6af56b1-37fa-4d95-b982-0a24b3a49c00

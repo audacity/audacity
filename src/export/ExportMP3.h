@@ -16,10 +16,9 @@
 class ExportPlugin;
 class wxString;
 class wxWindow;
-
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
+/** Factory method New_ExportMP3() which creates a new ExportMP3 object and
+ * returns a pointer to it. The rest of the class declaration is in ExportMP3.cpp
+ */
 ExportPlugin *New_ExportMP3();
 
 //----------------------------------------------------------------------------
@@ -28,15 +27,4 @@ ExportPlugin *New_ExportMP3();
 wxString GetMP3Version(wxWindow *parent, bool prompt);
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 697b9941-3e7e-44c1-929e-19d34ed70151
 

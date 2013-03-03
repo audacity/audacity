@@ -47,6 +47,7 @@
 #include <wx/intl.h>
 
 #include "Export.h"
+#include "ExportMP2.h"
 #include "../FileIO.h"
 #include "../Internat.h"
 #include "../Mix.h"
@@ -444,24 +445,10 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
 }
 #endif
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportMP2()
 {
    return new ExportMP2();
 }
 
 #endif // #ifdef USE_LIBTWOLAME
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: c6af56b1-37fa-4d95-b982-0a24b3a49c00
 

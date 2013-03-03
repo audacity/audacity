@@ -13,20 +13,11 @@
 
 class ExportPlugin;
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
+/* The only part of this class which is publically accessible is the
+ * factory method New_ExportFLAC() which creates a new ExportFLAC object and
+ * returns a pointer to it. The rest of the class declaration is in ExportFLAC.cpp
+ */
 ExportPlugin *New_ExportFLAC();
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
 

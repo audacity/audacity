@@ -13,21 +13,10 @@ LRN
 
 class ExportPlugin;
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
+/** The only part of this class which is publically accessible is the
+ * factory method New_ExportFFmpeg() which creates a new ExportFFmpeg object and
+ * returns a pointer to it. The rest of the class declaration is in ExportFFmpeg.cpp
+ */
 ExportPlugin *New_ExportFFmpeg();
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: daa509db-cfa8-4327-9fd4-b572b3dd814a
-

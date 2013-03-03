@@ -36,6 +36,7 @@
 #include "../ondemand/ODManager.h"
 
 #include "Export.h"
+#include "ExportPCM.h"
 
 #ifdef USE_LIBID3TAG 
    #include <id3tag.h>
@@ -792,21 +793,7 @@ wxString ExportPCM::GetExtension(int index)
    }
 }
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportPCM()
 {
    return new ExportPCM();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: c1f32472-520f-4864-8086-3dba0d593e84

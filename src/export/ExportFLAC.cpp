@@ -23,6 +23,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #ifdef USE_LIBFLAC
 
 #include "Export.h"
+#include "ExportFLAC.h"
 
 #include <wx/progdlg.h>
 #include <wx/ffile.h>
@@ -400,24 +401,10 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, Tags *tags)
    return true;
 }
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportFLAC()
 {
    return new ExportFLAC();
 }
 
 #endif // USE_LIBFLAC
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-
 

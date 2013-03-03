@@ -45,6 +45,7 @@ function.
 #include "../WaveTrack.h"
 
 #include "Export.h"
+#include "ExportFFmpeg.h"
 
 #include "ExportFFmpegDialogs.h"
 
@@ -926,22 +927,10 @@ bool ExportFFmpeg::DisplayOptions(wxWindow *parent, int format)
    return false;
 }
 
-//----------------------------------------------------------------------------
-// Constructor
-//----------------------------------------------------------------------------
 ExportPlugin *New_ExportFFmpeg()
 {
    return new ExportFFmpeg();
 }
 
 #endif
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: c1f32472-520f-4864-8086-3dba0d593e84
+
