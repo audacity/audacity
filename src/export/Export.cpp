@@ -1114,12 +1114,13 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
       if( t->GetKind() == Track::Wave && ( t->GetSelected() || !selectedOnly ) && !t->GetMute() )
       {
          numTracks++;
+         wxString sTrackName = (t->GetName()).Left(20);
          if( t->GetChannel() == Track::LeftChannel )
-            mTrackNames.Add( t->GetName() + _( " - Left" ) );
+            mTrackNames.Add(sTrackName + _( " - L" ));
          else if( t->GetChannel() == Track::RightChannel )
-            mTrackNames.Add( t->GetName() + _( " - Right" ) );
+            mTrackNames.Add(sTrackName + _( " - R" ));
          else
-            mTrackNames.Add( t->GetName() );
+            mTrackNames.Add(sTrackName);
       }
    }
 
