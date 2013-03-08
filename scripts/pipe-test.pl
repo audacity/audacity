@@ -372,6 +372,7 @@ sub getEffects{
 
    # (These ones will need special handling)
    # AutoDuck
+   # Bass and Treble
    # Repair
    # NoiseRemoval
 
@@ -379,7 +380,6 @@ sub getEffects{
 
    my @effects = qw(
       Amplify
-      BassBoost
       ChangePitch
       ChangeSpeed
       ChangeTempo
