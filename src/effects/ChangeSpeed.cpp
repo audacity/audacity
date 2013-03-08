@@ -52,7 +52,7 @@ enum {
 EffectChangeSpeed::EffectChangeSpeed()
 {
    // control values
-   mPercentChange = 0.0;
+   m_PercentChange = 0.0;
    mFromVinyl = kVinyl_33AndAThird; 
    mToVinyl = kVinyl_33AndAThird; 
 }
@@ -61,13 +61,18 @@ wxString EffectChangeSpeed::GetEffectDescription() {
    // Note: This is useful only after change amount has been set. 
    return wxString::Format(_("Applied effect: %s %.1f%%"), 
                            this->GetEffectName().c_str(), 
-                           mPercentChange); 
+                           m_PercentChange); 
 } 
+
+double EffectChangeSpeed::CalcPreviewInputLength(double previewLength)
+{
+   return previewLength * (100.0 + m_PercentChange) / 100.0;
+}
 
 bool EffectChangeSpeed::PromptUser()
 {
    ChangeSpeedDialog dlog(this, mParent);
-   dlog.mPercentChange = mPercentChange;
+   dlog.m_PercentChange = m_PercentChange;
    dlog.mFromVinyl = mFromVinyl;
    dlog.mToVinyl = mToVinyl;
    // Don't need to call TransferDataToWindow, although other 
@@ -80,7 +85,7 @@ bool EffectChangeSpeed::PromptUser()
    if (dlog.GetReturnCode() == wxID_CANCEL)
       return false;
 
-   mPercentChange = dlog.mPercentChange;
+   m_PercentChange = dlog.m_PercentChange;
    mFromVinyl = dlog.mFromVinyl;
    mToVinyl = dlog.mToVinyl;
 
@@ -89,7 +94,7 @@ bool EffectChangeSpeed::PromptUser()
 
 bool EffectChangeSpeed::TransferParameters(Shuttle& shuttle)
 {  
-   shuttle.TransferDouble(wxT("Percentage"), mPercentChange, 0.0);
+   shuttle.TransferDouble(wxT("Percentage"), m_PercentChange, 0.0);
    return true;
 }
 
@@ -121,7 +126,7 @@ bool EffectChangeSpeed::Process()
    mCurTrackNum = 0;
    mMaxNewLength = 0.0;
 
-   mFactor = 100.0 / (100.0 + mPercentChange);
+   mFactor = 100.0 / (100.0 + m_PercentChange);
 
    t = iter.First();
    while (t != NULL)
@@ -327,7 +332,7 @@ ChangeSpeedDialog::ChangeSpeedDialog(EffectChangeSpeed *effect, wxWindow *parent
    mpChoice_ToVinyl = NULL;
 
    // effect parameters
-   mPercentChange = 0.0;
+   m_PercentChange = 0.0;
    mFromVinyl = kVinyl_33AndAThird; 
    mToVinyl = kVinyl_33AndAThird; 
 
@@ -423,7 +428,7 @@ bool ChangeSpeedDialog::TransferDataFromWindow()
       double newValue = 0;
       wxString str = mpTextCtrl_PercentChange->GetValue();
       str.ToDouble(&newValue);
-      mPercentChange = newValue;
+      m_PercentChange = newValue;
    }
 
    // from/to Vinyl controls
@@ -448,14 +453,14 @@ void ChangeSpeedDialog::OnText_PercentChange(wxCommandEvent & event)
       double newValue = 0;
       wxString str = mpTextCtrl_PercentChange->GetValue();
       str.ToDouble(&newValue);
-      mPercentChange = newValue;
+      m_PercentChange = newValue;
 
       mbLoopDetect = true;
       this->Update_Slider_PercentChange();
       this->Update_Vinyl();
       mbLoopDetect = false;
 
-      FindWindow(wxID_OK)->Enable(mPercentChange > -100.0);
+      FindWindow(wxID_OK)->Enable(m_PercentChange > -100.0);
    }
 }
 
@@ -465,10 +470,10 @@ void ChangeSpeedDialog::OnSlider_PercentChange(wxCommandEvent & event)
       return;
 
    if (mpSlider_PercentChange) {
-      mPercentChange = (double)(mpSlider_PercentChange->GetValue()); 
+      m_PercentChange = (double)(mpSlider_PercentChange->GetValue()); 
       // Warp positive values to actually go up faster & further than negatives.
-      if (mPercentChange > 0.0)
-         mPercentChange = pow(mPercentChange, PERCENTCHANGE_SLIDER_WARP);
+      if (m_PercentChange > 0.0)
+         m_PercentChange = pow(m_PercentChange, PERCENTCHANGE_SLIDER_WARP);
 
       mbLoopDetect = true;
       this->Update_Text_PercentChange();
@@ -510,15 +515,15 @@ void ChangeSpeedDialog::OnPreview(wxCommandEvent &event)
    TransferDataFromWindow();
 
    // Save & restore parameters around Preview, because we didn't do OK.
-   double oldPercentChange = mEffect->mPercentChange;
-   if( mPercentChange < -99.0)
+   double oldPercentChange = mEffect->m_PercentChange;
+   if( m_PercentChange < -99.0)
    {
-      mPercentChange = -99.0;
+      m_PercentChange = -99.0;
       this->Update_Text_PercentChange();
    }
-   mEffect->mPercentChange = mPercentChange;
+   mEffect->m_PercentChange = m_PercentChange;
    mEffect->Preview();
-   mEffect->mPercentChange = oldPercentChange; 
+   mEffect->m_PercentChange = oldPercentChange; 
 }
 
 // helper fns
@@ -527,19 +532,19 @@ void ChangeSpeedDialog::Update_Text_PercentChange()
 {
    if (mpTextCtrl_PercentChange) {
       wxString str;
-      str.Printf(wxT("%.3f"), mPercentChange);
+      str.Printf(wxT("%.3f"), m_PercentChange);
       mpTextCtrl_PercentChange->SetValue(str);
-      FindWindow(wxID_OK)->Enable(mPercentChange > -100.0);
+      FindWindow(wxID_OK)->Enable(m_PercentChange > -100.0);
    }
 }
 
 void ChangeSpeedDialog::Update_Slider_PercentChange()
 {
    if (mpSlider_PercentChange) {
-      double unwarped = mPercentChange;
+      double unwarped = m_PercentChange;
       if (unwarped > 0.0)
          // Un-warp values above zero to actually go up to PERCENTCHANGE_MAX.
-         unwarped = pow(mPercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
+         unwarped = pow(m_PercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
 
       // Add 0.5 to unwarped so trunc -> round.
       mpSlider_PercentChange->SetValue((int)(unwarped + 0.5)); 
@@ -553,7 +558,7 @@ void ChangeSpeedDialog::Update_Vinyl()
    {
       // Chances are so low that the slider will exactly match a 
       // standard ratio, just turn it "n/a" unless it's 0.0.
-      if ((mPercentChange == 0.0) && mpChoice_FromVinyl)
+      if ((m_PercentChange == 0.0) && mpChoice_FromVinyl)
          mpChoice_ToVinyl->SetSelection(mpChoice_FromVinyl->GetSelection());
       else
          mpChoice_ToVinyl->SetSelection(kVinyl_NA);
@@ -580,7 +585,7 @@ void ChangeSpeedDialog::Update_PercentChange()
       case kVinyl_45:            toRPM = 45.0; break;
       case kVinyl_78:            toRPM = 78; break;
       }
-      mPercentChange = ((toRPM * 100.0) / fromRPM) - 100.0;
+      m_PercentChange = ((toRPM * 100.0) / fromRPM) - 100.0;
 
       this->Update_Text_PercentChange();
       this->Update_Slider_PercentChange();

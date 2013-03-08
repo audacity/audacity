@@ -49,11 +49,13 @@ class EffectChangeSpeed : public Effect
    // Useful only after PromptUser values have been set. 
    virtual wxString GetEffectDescription(); 
 
+   double CalcPreviewInputLength(double previewLength); 
+
  protected:
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
 
-   virtual bool CheckWhetherSkipEffect() { return (mPercentChange == 0.0); }
+   virtual bool CheckWhetherSkipEffect() { return (m_PercentChange == 0.0); }
    virtual bool Process();
 
  private:
@@ -68,7 +70,7 @@ class EffectChangeSpeed : public Effect
    double mCurT1;
 
    // control values
-   double   mPercentChange;   // percent change to apply to tempo
+   double   m_PercentChange;  // percent change to apply to tempo
                               // -100% is meaningless, but sky's the upper limit.
                               // Slider is (-100, 200], but textCtrls can set higher.
    int      mFromVinyl;       // from standard vinyl speed (RPM) enum
@@ -99,8 +101,8 @@ class ChangeSpeedDialog : public EffectDialog
    void OnPreview(wxCommandEvent &event);
 
    // helper fns
-   void Update_Text_PercentChange();   // Update control per current mPercentChange.
-   void Update_Slider_PercentChange(); // Update control per current mPercentChange.
+   void Update_Text_PercentChange();   // Update control per current m_PercentChange.
+   void Update_Slider_PercentChange(); // Update control per current m_PercentChange.
    void Update_Vinyl();                // Update Vinyl controls for new percent change.
    void Update_PercentChange();        // Update percent change controls for new Vinyl values.
 
@@ -116,7 +118,7 @@ class ChangeSpeedDialog : public EffectDialog
 
  public:
    // effect parameters
-   double   mPercentChange;   // percent change to apply to tempo
+   double   m_PercentChange;   // percent change to apply to tempo
                               // -100% is meaningless, but sky's the upper limit.
                               // Slider is (-100, 200], but textCtrls can set higher.
    int      mFromVinyl;       // from standard vinyl speed (RPM)
