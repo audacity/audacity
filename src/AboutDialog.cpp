@@ -196,19 +196,18 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
 void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
-   wxString versionStr = AUDACITY_VERSION_STRING;
-
-
-   creditItems.DeleteContents(true); // switchon automatic deletion of list items
+   creditItems.DeleteContents(true); // Switch on automatic deletion of list items.
    CreateCreditsList();
-   
 
    wxString par1Str = _(
-     "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. \
+We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge.net</a> for hosting our project. \
+Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
-   // No such thing as an official released 'beta' anymore, so keep this string simple.
    wxString par2Str = _(
-     "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>.");
+"If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
+For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
+visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
 
    wxString translatorCredits;
    /* i18n-hint: The translation of "translator_credits" will appear
@@ -216,10 +215,9 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
     *  your own name(s) to the credits.
     *
     *  For example:  "English translation by Dominic Mazzoni." */
-   if (_("translator_credits") != wxString(wxT("translator_credits"))) {
-      translatorCredits += wxT("<p><center>");
-      translatorCredits += _("translator_credits");
-      translatorCredits += wxT("</center>");
+   if (_("translator_credits") != wxString(wxT("translator_credits"))) 
+   {
+      translatorCredits = _("translator_credits");
    }
    wxString localeStr = wxLocale::GetSystemEncodingName();
 
@@ -228,59 +226,41 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
          localeStr + 
          wxT("\"></head>") + 
       wxT("<body bgcolor=\"#ffffff\"><center>") + 
-      wxT("<h3>Audacity ") + versionStr + wxT("</h3>")+ 
-      _("A Free Digital Audio Editor<br>") + 
+      wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</h3>")+ 
+      _("free, open source, cross-platform software for recording and editing sounds<br>") + 
       wxT("<a href=\"http://audacity.sourceforge.net/\">http://audacity.sourceforge.net/</a>") +
-      wxT("</center><p>") + par1Str +
+      wxT("<p><br>") + par1Str +
       wxT("<p>") + par2Str +
-      wxT("<p><center><b>") + _("Credits") + wxT("</b></center>")
-      + translatorCredits +
-      wxT("<p><center><b>") +
+      wxT("<h3>") + _("Credits") + wxT("</h3>") + 
+      wxT("<p>") + translatorCredits +
 
-      /* i18n-hint: %s will be replaced by the version number.*/
-      wxString::Format(_("Audacity %s Development Team"), versionStr.c_str()) +
-      wxT("</b><br>") +
+      wxT("<p><b>") + wxString::Format(_("Audacity Developers")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamDeveloper) +
-      wxT("<p><br><b>") +
 
-      /* i18n-hint: %s will be replaced by the version number.*/
-      wxString::Format(_("Audacity %s Support Team"), versionStr.c_str()) +
-      wxT("</b><br>") +
+      wxT("<p><b>") + wxString::Format(_("Audacity Support Team")) + wxT("</b><br>") +
       GetCreditsByRole(roleTeamSupport) +
-      wxT("<p><br><b>") +
 
-      _("Emeritus Developers") +
-      wxT("</b><br>") +
+      wxT("<p><b>") + _("Emeritus Developers") + wxT("</b><br>") +
       GetCreditsByRole(roleEmeritusDeveloper) +
-      wxT("<p><br><b>") +
-
-      _("Other Emeritus Team Members") +
-      wxT("</b><br>") +
+      
+      wxT("<p><b>") + _(" Emeritus Team Members") + wxT("</b><br>") +
       GetCreditsByRole(roleEmeritusSupport) +
-      wxT("<p><br><b>") +
 
-      _("Other Contributors") +
-      wxT("</b><br>") +
+      wxT("<p><b>") + _("Other Contributors") + wxT("</b><br>") +
       GetCreditsByRole(roleContributor) +
-      wxT("<p><br><b>") +
 
-      _("Audacity is based on code from the following projects:") +
-      wxT("</b><br>") +
+      wxT("<p><b>") +  _("Audacity is based on code from the following projects:") + wxT("</b><br>") +
       GetCreditsByRole(roleLibrary) +
-      wxT("<p><br><b>") +
-
-      _("Special thanks:") +
-      wxT("</b><br>") +
+      
+      wxT("<p><b>") +  _("Special thanks:") + wxT("</b><br>") +
       GetCreditsByRole(roleThanks) +
-      wxT("<p><br></center>") +
-
-      _("<b>Audacity&reg;</b> software is copyright")+
+      
+      wxT("<p><br>") + _("<b>Audacity&reg;</b> software is copyright")+
       wxT("&copy; 1999-2013 Audacity Team.<br>") +
-     
       _("The name <b>Audacity&reg;</b> is a registered trademark of Dominic Mazzoni.") + 
-      wxT("</font></body></html>");
+      wxT("</center></font></body></html>");
 
-   
+
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
 
 
