@@ -236,9 +236,11 @@ void KeyConfigPrefs::RepopulateBindingsList()
       // Save the original key value to support canceling
       if (save) {
          mKeys.Add(key);
-         // mNewKeys is what mKeys will change to
+         // mNewKeys is what mKeys will change to.
          mNewKeys.Add(key);
       }
+      else 
+         mNewKeys[i] = key; // Make sure mNewKeys is updated.
 
 //      if (cat != _("All") && ! Categories[i].StartsWith(cat)) {
       if (cat != _("All") && ! (Categories[i]== cat)) {
