@@ -190,6 +190,13 @@ void Track::SetMinimized(bool isMinimized)
    mList->ResizedEvent(mNode);
 }
 
+void Track::SetLinked(bool l)
+{
+   mLinked = l;
+   mList->RecalcPositions(mNode);
+   mList->ResizedEvent(mNode);
+}
+
 Track *Track::GetLink() const
 {
    if (mNode) {
