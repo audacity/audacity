@@ -77,11 +77,13 @@ private:
    bool ChangeOK();
 
    void OnChainSelected(wxListEvent &event);
+   void OnListSelected(wxListEvent &event);
    void OnChainsBeginEdit(wxListEvent &event);
    void OnChainsEndEdit(wxListEvent &event);
    void OnAdd(wxCommandEvent &event);
    void OnRemove(wxCommandEvent &event);
    void OnRename(wxCommandEvent &event);
+   void OnSize(wxSizeEvent &event);
 
    void OnCommandActivated(wxListEvent &event);
    void OnInsert(wxCommandEvent &event);
@@ -94,6 +96,7 @@ private:
    void OnCancel(wxCommandEvent &event);
 
    void OnKeyDown(wxKeyEvent &event);
+   void FitColumns();
 
    wxListCtrl *mChains; /// List of chains.
    wxListCtrl *mList;   /// List of commands in current command chain.
@@ -111,15 +114,3 @@ private:
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: TBD
-

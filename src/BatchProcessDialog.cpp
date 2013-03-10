@@ -49,8 +49,9 @@
 #include "import/Import.h"
 
 #define ChainsListID       7001
-#define ApplyToProjectID   7002
-#define ApplyToFilesID     7003
+#define CommandsListID     7002
+#define ApplyToProjectID   7003
+#define ApplyToFilesID     7004
 
 BEGIN_EVENT_TABLE(BatchProcessDialog, wxDialog)
    EVT_BUTTON(ApplyToProjectID, BatchProcessDialog::OnApplyToProject)
@@ -296,7 +297,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent &event)
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                     wxLC_SINGLE_SEL);
-         mList = S.AddListControlReportMode();
+         mList = S.Id(CommandsListID).AddListControlReportMode();
          mList->AssignImageList(imageList, wxIMAGE_LIST_SMALL);
          mList->InsertColumn(0, _("File"), wxLIST_FORMAT_LEFT);
       }
@@ -372,7 +373,7 @@ enum {
 // ChainsListID             7005
    AddButtonID = 10000,
    RemoveButtonID,
-   CommandsListID,
+// CommandsListID,       7002
    ImportButtonID,
    ExportButtonID,
    DefaultsButtonID,
@@ -385,11 +386,13 @@ enum {
 
 BEGIN_EVENT_TABLE(EditChainsDialog, wxDialog)
    EVT_LIST_ITEM_SELECTED(ChainsListID, EditChainsDialog::OnChainSelected)
+   EVT_LIST_ITEM_SELECTED(CommandsListID, EditChainsDialog::OnListSelected)
    EVT_LIST_BEGIN_LABEL_EDIT(ChainsListID, EditChainsDialog::OnChainsBeginEdit)
    EVT_LIST_END_LABEL_EDIT(ChainsListID, EditChainsDialog::OnChainsEndEdit)
    EVT_BUTTON(AddButtonID, EditChainsDialog::OnAdd)
    EVT_BUTTON(RemoveButtonID, EditChainsDialog::OnRemove)
    EVT_BUTTON(RenameButtonID, EditChainsDialog::OnRename)
+   EVT_SIZE(EditChainsDialog::OnSize)
 
    EVT_LIST_ITEM_ACTIVATED(CommandsListID, EditChainsDialog::OnCommandActivated)
    EVT_BUTTON(InsertButtonID, EditChainsDialog::OnInsert)
@@ -466,10 +469,7 @@ void EditChainsDialog::Populate()
    mChains->SetColumnWidth(0, sz.x);
 
    // Size columns properly
-   mList->SetColumnWidth(BlankColumn, 0); // First column width is zero, to hide it.
-   mList->SetColumnWidth(ItemNumberColumn,  wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(ActionColumn, wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(ParamsColumn, wxLIST_AUTOSIZE);
+   FitColumns();
 }
 
 /// Defines the dialog and does data exchange with it.
@@ -515,7 +515,7 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
          mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
          /* i18n-hint: This is the number of the command in the list */
          mList->InsertColumn(ItemNumberColumn, _("Num"), wxLIST_FORMAT_RIGHT);
-         mList->InsertColumn(ActionColumn, _("Command"), wxLIST_FORMAT_RIGHT);
+         mList->InsertColumn(ActionColumn, _("Command  "), wxLIST_FORMAT_RIGHT);
          mList->InsertColumn(ParamsColumn, _("Parameters"), wxLIST_FORMAT_LEFT);
 
          S.StartHorizontalLay(wxCENTER, false);
@@ -575,12 +575,6 @@ void EditChainsDialog::PopulateList()
       mSelectedCommand = 0;
    }
    mList->SetItemState(mSelectedCommand, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-
-   // Size columns properly
-   mList->SetColumnWidth(BlankColumn, 0); // First column width is zero, to hide it.
-   mList->SetColumnWidth(ItemNumberColumn,  wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(ActionColumn, wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(ParamsColumn, wxLIST_AUTOSIZE);
 }
 
 /// Add one item into mList
@@ -645,9 +639,64 @@ void EditChainsDialog::OnChainSelected(wxListEvent &event)
    }
 
    PopulateList();
+}
 
-   mList->SetColumnWidth(ItemNumberColumn,  wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(ActionColumn, wxLIST_AUTOSIZE);
+/// An item in the chains list has been selected.
+void EditChainsDialog::OnListSelected(wxListEvent &event)
+{
+   FitColumns();
+}
+
+/// The window has been resized.
+void EditChainsDialog::OnSize(wxSizeEvent &event)
+{
+   // Refrsh the layout and re-fit the columns.
+   Layout();
+   FitColumns();
+}
+
+void EditChainsDialog::FitColumns()
+{
+   mList->SetColumnWidth(0, 0);  // First column width is zero, to hide it.
+
+#if defined(__WXMAC__)
+   // wxMac uses a hard coded width of 150 when wxLIST_AUTOSIZE_USEHEADER
+   // is specified, so we calculate the width ourselves. This method may
+   // work equally well on other platforms.
+   for (size_t c = 1; c < mList->GetColumnCount(); c++) {
+      wxListItem info;
+      int width;
+
+      mList->SetColumnWidth(c, wxLIST_AUTOSIZE);
+      info.Clear();
+      info.SetId(c);
+      info.SetMask(wxLIST_MASK_TEXT | wxLIST_MASK_WIDTH);
+      mList->GetColumn(c, info);
+
+      mList->GetTextExtent(info.GetText(), &width, NULL);
+      width += 2 * 4;    // 2 * kItemPadding - see listctrl_mac.cpp
+      width += 16;       // kIconWidth - see listctrl_mac.cpp
+
+      mList->SetColumnWidth(c, wxMax(width, mList->GetColumnWidth(c)));
+   }
+
+   // Looks strange, but it forces the horizontal scrollbar to get
+   // drawn.  If not done, strange column sizing can occur if the
+   // user attempts to resize the columns.
+   mList->SetClientSize(mList->GetClientSize());
+#else
+   mList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+   mList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
+   mList->SetColumnWidth(3, wxLIST_AUTOSIZE);
+#endif	
+
+   int bestfit = mList->GetColumnWidth(3);
+   int clientsize = mList->GetClientSize().GetWidth();
+   int col1 = mList->GetColumnWidth(1);
+   int col2 = mList->GetColumnWidth(2);
+   bestfit = (bestfit > clientsize-col1-col2)? bestfit : clientsize-col1-col2;
+   mList->SetColumnWidth(3, bestfit);
+
 }
 
 ///
@@ -928,7 +977,7 @@ void EditChainsDialog::OnCancel(wxCommandEvent &event)
 void EditChainsDialog::OnKeyDown(wxKeyEvent &event)
 {
    if (event.GetKeyCode() == WXK_DELETE) {
-      printf("hello\n");
+      wxLogDebug(wxT("wxKeyEvent"));
    }
 
    event.Skip();
