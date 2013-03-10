@@ -1429,8 +1429,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    if(mCaptureBuffers)
    {
-
-         delete mCaptureBuffers;
+      for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
+         delete mCaptureBuffers[i];
       delete [] mCaptureBuffers;
       mCaptureBuffers = NULL;
    }
@@ -1438,7 +1438,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    if(mResample)
    {
       for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
-         delete mResample;
+         delete mResample[i];
       delete [] mResample;
       mResample = NULL;
    }
