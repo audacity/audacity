@@ -130,7 +130,11 @@ void WaveTrack::Init(const WaveTrack &orig)
 void WaveTrack::Merge(const Track &orig)
 {
    if (orig.GetKind() == Wave)
+   {
       mDisplay = ((WaveTrack &)orig).mDisplay;
+      mGain    = ((WaveTrack &)orig).mGain;
+      mPan     = ((WaveTrack &)orig).mPan;
+   }
    Track::Merge(orig);
 }
 
