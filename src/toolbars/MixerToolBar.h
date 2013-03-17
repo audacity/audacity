@@ -50,6 +50,10 @@ class MixerToolBar:public ToolBar {
    void AdjustOutputGain(int adj);
    void AdjustInputGain(int adj);
 
+ protected:
+   float mInputSliderVolume;
+   float mOutputSliderVolume;
+
  private:
 
    void InitializeMixerToolBar();

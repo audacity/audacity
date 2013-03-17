@@ -897,7 +897,7 @@ void LWSlider::FormatPopWin()
 
    switch(mStyle) {
    case FRAC_SLIDER:
-      label.Printf(wxT("%s: %.1f"), mName.c_str(), mCurrentValue);
+      label.Printf(wxT("%s: %.2f"), mName.c_str(), mCurrentValue);
       break;
      
    case DB_SLIDER:
