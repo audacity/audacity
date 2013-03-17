@@ -7106,6 +7106,14 @@ void TrackPanel::SplitStereo(bool stereo)
    }
 
    mPopupMenuTarget->SetLinked(false);
+   //make sure neither track is smaller than its minimum height
+   if (mPopupMenuTarget->GetHeight() < mPopupMenuTarget->GetMinimizedHeight())
+      mPopupMenuTarget->SetHeight(mPopupMenuTarget->GetMinimizedHeight());
+   if (partner)
+   {
+      if (partner->GetHeight() < partner->GetMinimizedHeight())
+         partner->SetHeight(partner->GetMinimizedHeight());
+   }
 
    wxString msg;
    if(stereo)
