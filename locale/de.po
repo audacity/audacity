@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-01-10 05:23+0000\n"
-"PO-Revision-Date: 2013-01-16 19:14-0000\n"
+"PO-Revision-Date: 2013-03-18 20:56-0000\n"
 "Last-Translator: Daniel Winzen\n"
 "Language-Team: Andreas Klug, Edgar M. Franke, Pennywize, Heiko Abler <andreas.klug@mediensyndikat.de>, Daniel Winzen <d@winzen4.de>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #: AboutDialog.cpp:60
 #: AboutDialog.cpp:80
@@ -352,7 +352,7 @@ msgstr ""
 
 #: AudacityApp.cpp:1598
 msgid "Do you still want to start Audacity?"
-msgstr "Wollen Sie Audacity wirklich ein weiteres Mal starten?"
+msgstr "Möchten Sie Audacity wirklich ein weiteres Mal starten?"
 
 #: AudacityApp.cpp:1600
 msgid "Error Locking Temporary Folder"
@@ -406,7 +406,7 @@ msgstr "\t-blocksize nnn (max. Disk-Block-Größe in Bytes)"
 
 #: AudacityApp.cpp:1673
 msgid "In addition, specify the name of an audio file or Audacity project to open it."
-msgstr "Tragen Sie einen Namen ein für die Audio- oder Projektdatei, die Sie öffnen wollen."
+msgstr "Tragen Sie einen Namen für eine Audio- oder Projektdatei ein, die Sie öffnen möchten."
 
 #: AudacityApp.cpp:1985
 msgid ""
@@ -554,7 +554,7 @@ msgid ""
 "Are you sure you don't want to recover any projects?\n"
 "They can't be recovered later."
 msgstr ""
-"Sind Sie sicher, dass Sie wirklich auf die Projektwiederherstellung verzichten wollen?\n"
+"Sind Sie sicher, dass Sie wirklich auf die Projektwiederherstellung verzichten möchten?\n"
 "(Später ist das unmöglich.)"
 
 #: AutoRecovery.cpp:131
@@ -826,7 +826,7 @@ msgstr "%s verändert"
 
 #: BatchProcessDialog.cpp:605
 msgid "Do you want to save the changes?"
-msgstr "Wollen Sie die Änderungen speichern?"
+msgstr "Möchten Sie die Änderungen speichern?"
 
 #: BatchProcessDialog.cpp:687
 msgid "Enter name of new chain"
@@ -846,7 +846,7 @@ msgstr "Namen dürfen weder '%c' noch '%c' enthalten"
 #: BatchProcessDialog.cpp:739
 #, c-format
 msgid "Are you sure you want to delete %s?"
-msgstr "Wollen Sie %s wirklich löschen?"
+msgstr "Möchten Sie %s wirklich löschen?"
 
 #: Dependencies.cpp:166
 msgid "Removing Dependencies"
@@ -1656,11 +1656,11 @@ msgstr "Unsere Unterstützungs-Angebote:"
 
 #: HelpText.cpp:190
 msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)"
-msgstr " [[file:quick_help.html|Schnellhilfe]] (sollte lokal installiert sein, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">hier</a> zur Internet-Version)"
+msgstr " [[file:quick_help.html|Schnellhilfe]] (sollte lokal installiert sein, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help/de\">hier</a> zur Internet-Version)"
 
 #: HelpText.cpp:191
 msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)"
-msgstr " [[file:index.html|Handbuch]] (sollte lokal installiert sein, <a href=\"http://manual.audacityteam.org/index.php\">Internetversion, falls dem nicht so ist</a>)"
+msgstr " [[file:index.html|Handbuch]] (sollte lokal installiert sein, <a href=\"http://manual.audacityteam.org/man/Main_Page/de\">Internetversion, falls dem nicht so ist</a>)"
 
 #: HelpText.cpp:192
 msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)"
@@ -1676,11 +1676,11 @@ msgstr " Um schnell an Ergebnisse gelangen zu können sind alle Online-Quellen <
 
 #: HelpText.cpp:201
 msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
-msgstr "Audacity kann eine Vielzahl von Formaten importieren (etwa M4A und WMA, datenreduzierte WAV-Dateien von Mobilgeräten und Audio aus Videodateien), wenn Sie die <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg-Bibliotheken</a> herunterladen und installieren."
+msgstr "Audacity kann eine Vielzahl von Formaten importieren (etwa M4A und WMA, komprimierte WAV-Dateien von Mobilgeräten und Audio aus Videodateien), wenn Sie die <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files/de#foreign\">FFmpeg-Bibliotheken</a> herunterladen und installieren."
 
 #: HelpText.cpp:205
 msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
-msgstr "Lesen Sie auch unsere Hilfe zum Import von <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI-Dateien</a> sowie Tönen von <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> Audio-CDs</a>."
+msgstr "Lesen Sie auch unsere Hilfe zum Import von <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files/de#midi\">MIDI-Dateien</a> sowie Tönen von <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files/de#fromcd\"> Audio-CDs</a>."
 
 #: HelpText.cpp:218
 msgid "<p>You do not appear to have 'help' installed on your computer.<br> Please <a href=\"*URL*\">view or download it online</a>."
@@ -1809,7 +1809,7 @@ msgstr ""
 "Es gibt noch leere Textfelder. Diese werden\n"
 "künftig übersprungen.\n"
 "\n"
-"Wollen Sie doch noch Namen vergeben?"
+"Möchten Sie doch noch Namen vergeben?"
 
 #: LabelDialog.cpp:361
 #: LangChoice.cpp:134
@@ -2991,7 +2991,7 @@ msgid ""
 "Do you want to continue?"
 msgstr ""
 "Sie haben einen Dateinamen mit unbekannter Dateiendung ausgewählt.\n"
-"Wollen Sie fortfahren?"
+"Möchten Sie fortfahren?"
 
 #: Menus.cpp:3451
 msgid "Export MIDI"
@@ -3586,7 +3586,7 @@ msgstr "Audio aufgezeichnet"
 
 #: Project.cpp:1901
 msgid "Save changes before closing?"
-msgstr "Wollen Sie Ihre Änderungen vor dem Schließen speichern?"
+msgstr "Möchten Sie Ihre Änderungen vor dem Schließen speichern?"
 
 #: Project.cpp:1904
 msgid ""
@@ -3651,7 +3651,7 @@ msgstr ""
 "Im ungünstigsten Fall könnte Audacity die Datei zerstören, bitte erstellen Sie \n"
 "deshalb zunächst eine Sicherheitskopie.\n"
 "\n"
-"Wollen Sie die Datei nun öffnen?"
+"Möchten Sie die Datei nun öffnen?"
 
 #: Project.cpp:2299
 msgid "1.0 or earlier"
@@ -3759,7 +3759,7 @@ msgstr ""
 "Um Spuren zu speichern, die evtl. vorher vorhanden waren\n"
 "klicken Sie 'Nein', dann Bearbeiten > Rückgängig, bis alle Spuren\n"
 "zu sehen sind. Und dann Datei > Projekt speichern.\n"
-"Oder wollen Sie dennoch jetzt speichern?"
+"Oder möchten Sie dennoch jetzt speichern?"
 
 #: Project.cpp:3084
 msgid "Warning - Empty Project"
@@ -4307,7 +4307,7 @@ msgstr "Genre-Datei kann nicht gespeichert werden."
 
 #: Tags.cpp:1014
 msgid "Are you sure you want to reset the genre list to defaults?"
-msgstr "Wollen Sie die Liste der Genres wirklich zurücksetzen?"
+msgstr "Möchten Sie die Liste der Genres wirklich zurücksetzen?"
 
 #: Tags.cpp:1030
 msgid "Unable to open genre file."
@@ -7471,7 +7471,7 @@ msgstr "VST-Programm speichern als:"
 #: effects/VST/VSTEffect.cpp:768
 #, c-format
 msgid "This parameter file was saved from %s.  Continue?"
-msgstr "Diese Parameter-Datei wurde gespeichert von %s. Wollen Sie fortfahren?"
+msgstr "Diese Parameter-Datei wurde gespeichert von %s. Möchten Sie fortfahren?"
 
 #: effects/VST/VSTEffect.cpp:1222
 msgid "Performing Effect: "
@@ -7720,11 +7720,11 @@ msgid ""
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
-"Sie wollen eine %s -Datei mit dem Name \"%s\" exportieren.\n"
+"Sie möchten eine %s -Datei mit dem Name \"%s\" exportieren.\n"
 "\n"
 "Üblicherweise enden solche Dateien mit \".%s\" und einige Programme werden Dateien ohne diese Standard-Endung nicht öffnen können.\n"
 "\n"
-"Wollen Sie die Datei tatsächlich unter diesem Name exportieren?"
+"Möchten Sie die Datei tatsächlich unter diesem Name exportieren?"
 
 #: export/Export.cpp:647
 msgid ""
@@ -7736,7 +7736,7 @@ msgstr ""
 "Sie versuchen eine fehlende verknüpfte Datei zu überschreiben.\n"
 "Die Datei kann jedoch nicht geschrieben werden weil der Pfad benötigt wird für das Original-Audio.\n"
 "Wählen Sie Datei > Abhängigkeiten überprüfen, um sich alle Orte fehlender Dateien anzeigen zu lassen.\n"
-"Wenn Sie weiterhin exportieren wollen, wählen Sie bitte einen anderen Dateiname oder Ordner."
+"Wenn Sie weiterhin exportieren möchten, wählen Sie bitte einen anderen Dateiname oder Ordner."
 
 #: export/Export.cpp:661
 #, c-format
@@ -8644,7 +8644,7 @@ msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of the LAME MP3 library."
 msgstr ""
-"Sie wollen lame_enc.dll v%d.%d einsetzen. Diese Version ist aber nicht kompatibel mit Audacity %d.%d.%d.\n"
+"Sie möchten lame_enc.dll v%d.%d einsetzen. Diese Version ist aber nicht kompatibel mit Audacity %d.%d.%d.\n"
 "Bitte laden Sie die letzte Version der LAME-MP3-Bibliothek herunter."
 
 #: export/ExportMP3.cpp:1426
@@ -9320,7 +9320,7 @@ msgstr ""
 "Die direkte Verwendung geht sehr schnell ist aber weniger sicher, denn Sie müssen die Dateien stets mit ihren Original-Namen am Original-Ort lassen.\n"
 "\"Datei > Abhängigkeiten überprüfen\" zeigt Ihnen eine Liste der direkt verwendeten Dateien.\n"
 "\n"
-"Wie wollen Sie vorgehen?"
+"Wie möchten Sie vorgehen?"
 
 #: import/ImportPCM.cpp:253
 msgid "copy in"
@@ -9336,7 +9336,7 @@ msgstr "Import-Methode wählen"
 
 #: import/ImportPCM.cpp:263
 msgid "Make a &copy of the files before editing (safer)"
-msgstr "Dateien vorher der Bearbeitung kopieren (sicherer)"
+msgstr "Dateien vor der Bearbeitung kopieren (sicherer)"
 
 #: import/ImportPCM.cpp:267
 msgid "Read the files &directly from the original (faster)"
@@ -9710,7 +9710,7 @@ msgstr "Leerzeichen erkannt"
 
 #: prefs/ExtImportPrefs.cpp:573
 msgid "Do you really want to delete selected rule?"
-msgstr "Wollen Sie die gewählte Regel wirklich löschen?"
+msgstr "Möchten Sie die gewählte Regel wirklich löschen?"
 
 #: prefs/ExtImportPrefs.cpp:574
 msgid "Rule deletion confirmation"
@@ -9992,7 +9992,7 @@ msgid ""
 "Do you still want to locate them manually?"
 msgstr ""
 "Audacity hat automatisch geeignete FFmpeg-Bibliotheken gefunden.\n"
-"Wollen Sie sie dennoch manuell suchen?"
+"Möchten Sie sie dennoch manuell suchen?"
 
 #: prefs/MidiIOPrefs.cpp:58
 msgid "MIDI Devices"
@@ -10738,7 +10738,7 @@ msgstr "Standardanzeige (Spuren)"
 
 #: prefs/TracksPrefs.cpp:103
 msgid "&Select all audio in project, if none selected"
-msgstr "Ohne manuelle Auswahl gelten alle Audios als ausgewählt"
+msgstr "Ohne manuelle Auswahl gilt alles Audio als ausgewählt"
 
 #. i18n-hint: cut-lines are a lines indicating where to cut.
 #: prefs/TracksPrefs.cpp:107
@@ -11515,476 +11515,3 @@ msgstr "Fehler beim Schließen der Datei"
 msgid "Error Writing to File"
 msgstr "Fehler beim Speichern"
 
-#~ msgid "R&emove Audio"
-#~ msgstr "Audio &entfernen"
-
-#~ msgid "Tri&m"
-#~ msgstr "Trimmen (&umgekehrt löschen)"
-
-#~ msgid "La&beled Regions"
-#~ msgstr "Ausw&ahl in Textspur"
-
-#~ msgid "Trim"
-#~ msgstr "Zuschneiden (Bereich außerhalb der Auswahl entfernen)"
-
-#~ msgid "Trim file to selection"
-#~ msgstr "Datei auf Auswahl zuschneiden"
-
-#~ msgid "Cut labeled regions to the clipboard"
-#~ msgstr "Ausschneiden und in der Zwischenablage kopieren"
-
-#~ msgid "Cut Labels"
-#~ msgstr "Textmarken ausschneiden"
-
-#~ msgid "SplitCut labeled regions to the clipboard"
-#~ msgstr "Über Textspur ausgeschnittene Bereiche in Zwischenablage kopiert"
-
-#~ msgid "Split Cut Labels"
-#~ msgstr "Trennen und ausschneiden an Textmarken"
-
-#~ msgid "Copied labeled regions to the clipboard"
-#~ msgstr "Die markierten Bereiche sind in die Zwischenablage kopiert worden."
-
-#~ msgid "Copy Labels"
-#~ msgstr "Textmarken kopieren"
-
-#~ msgid "Deleted labeled regions"
-#~ msgstr "Auswahl gelöscht"
-
-#~ msgid "Delete Labels"
-#~ msgstr "Textmarken löschen"
-
-#~ msgid "Split Deleted labeled regions"
-#~ msgstr "In der Textspur markierte Bereiche ausschneiden"
-
-#~ msgid "Split Delete Labels"
-#~ msgstr "Textmarken trennen und löschen"
-
-#~ msgid "Silenced labeled regions"
-#~ msgstr "In Stille umwandeln"
-
-#~ msgid "Silence Labels"
-#~ msgstr "Stille über markiertem Bereich in der Textspur"
-
-#~ msgid "Split labeled regions"
-#~ msgstr "Trennen an Textmarken"
-
-#~ msgid "Split Labels"
-#~ msgstr "Trennen an Textmarken"
-
-#~ msgid "Joined labeled regions"
-#~ msgstr "Mittels Textspur markierte Clips verbunden"
-
-#~ msgid "Join Labels"
-#~ msgstr "Textspurbereiche verbinden"
-
-#~ msgid "Detached labeled regions"
-#~ msgstr "Mittels Textspur markierte Clips getrennt"
-
-#~ msgid "Detach Labels"
-#~ msgstr "Textspurbereiche trennen"
-
-#~ msgid "Applied effect: %s frequency = %.0f Hz, boost = %.0f dB"
-#~ msgstr "Effekt angewandt: %s Frequenz = %.0f Hz, Anhebung = %.0f dB"
-
-#~ msgid "Bass Boost"
-#~ msgstr "Bass-Verstärkung"
-
-#~ msgid "Frequency Hertz"
-#~ msgstr "Frequenz Hertz"
-
-#~ msgid "Boost (dB):"
-#~ msgstr "Anhebung (dB):"
-
-#~ msgid "Boost dB"
-#~ msgstr "Boost dB"
-
-#~ msgid "BassBoost..."
-#~ msgstr "&Bass-Verstärkung..."
-
-#~ msgid "Boosting Bass Frequencies"
-#~ msgstr "Bass Boost Frequenzenanhebung"
-
-#~ msgid "You cannot export 'unnamed' curve"
-#~ msgstr "Die Kurve 'unbenannt' können Sie nicht exportieren"
-
-#~ msgid "All the selected audio is muted."
-#~ msgstr "Alle ausgewählten Audios sind stummgestellt."
-
-#~ msgid "All the audio is muted."
-#~ msgstr "Alle Audios sind stummgestellt."
-
-#~ msgid "Are you sure you want to save the file as \""
-#~ msgstr "Dateien wirklich speichern als: \""
-
-#~ msgid ""
-#~ "You are about to save a %s file with the name \"%s\".\n"
-#~ "\n"
-#~ "Normally these files end in \".%s\", and some programs will not open "
-#~ "files with nonstandard extensions.\n"
-#~ "\n"
-#~ "Are you sure you want to save the file under this name?"
-#~ msgstr ""
-#~ "Sie wollen eine %s -Datei speichern mit dem Name \"%s\".\n"
-#~ "\n"
-#~ "Üblicherweise enden solche Dateien mit \".%s\" und einige Programme "
-#~ "werden Dateien ohne diese Standard-Endung nicht öffnen können.\n"
-#~ "\n"
-#~ "Wollen Sie die Datei tatsächlich unter diesem Name speichern?"
-
-#~ msgid ""
-#~ "If you have more than one Audio Track, you can\n"
-#~ "export each track as a separate audio file.\n"
-#~ "\n"
-#~ "If you have a Label Track, you can export a separate\n"
-#~ "audio file for each label in that track. You can have\n"
-#~ "more than one Label Track, but files will only be\n"
-#~ "exported for the uppermost Label Track.\n"
-#~ "\n"
-#~ "This Project does not meet the above criteria for\n"
-#~ "exporting multiple files."
-#~ msgstr ""
-#~ "Wenn Sie mehr als eine Audiospur haben können Sie\n"
-#~ "jede Spur in eine einzelne Datei exportieren.\n"
-#~ "\n"
-#~ "Wenn Sie eine Textspur haben können Sie mehrere\n"
-#~ "Audiodateien erzeugen, die jeweils an der Textmarke beginnen.\n"
-#~ "(Sollten Sie mehrere Textspuren haben wird nur die oberste\n"
-#~ "verwendet.)\n"
-#~ "\n"
-#~ "In diesem Projekt ist beides nicht der Fall ..."
-
-#~ msgid "Can't export multiple files"
-#~ msgstr "Es können nicht mehrere Dateien exportiert werden"
-
-#~ msgid "Trim outside selection"
-#~ msgstr "Trimmen (umgekehrtes Ausschneiden)"
-
-#~ msgid "Silence selection"
-#~ msgstr "Auswahl in Stille umwandeln"
-
-#~ msgid "S&ort tracks"
-#~ msgstr "Spuren s&ortieren"
-
-#~ msgid "Libresample by Dominic Mazzoni and Julius Smith"
-#~ msgstr "Libresample (Dominic Mazzioni & Julius Smith)"
-
-#~ msgid "Libsamplerate by Erik de Castro Lopo"
-#~ msgstr "Libsamplerate (Erik de Castro Lopo)"
-
-#~ msgid ""
-#~ "Reset Preferences?\n"
-#~ "\n"
-#~ "This is a one-time question, after an 'install' where you asked to have "
-#~ "the Preferences reset"
-#~ msgstr ""
-#~ "Einstellungen zurücksetzen?\n"
-#~ "\n"
-#~ "Dies ist eine einmalige Frage, nach einer 'Installation' wo Sie gefragt "
-#~ "haben die Einstellungen zurückzusetzen."
-
-#~ msgid ""
-#~ "Note: Export quality options can be chosen by clicking the Options\n"
-#~ "button in the Export dialog."
-#~ msgstr ""
-#~ "Hinweis: Einstellungen der Export-Qualität können vorgenommen werden mit "
-#~ "dem\n"
-#~ "Optionen-Button im Export-Dialog."
-
-#~ msgid "Enable these Modules (if present)"
-#~ msgstr "Diese Module aktivieren (falls vorhanden)"
-
-#~ msgid "Output level meter"
-#~ msgstr "Aussteuerungsanzeige Wiedergabe"
-
-#~ msgid "Input level meter - click to monitor input"
-#~ msgstr "Aussteuerungsanzeige Eingang - Anklicken zum aktivieren"
-
-#~ msgid "Input Volume Slider"
-#~ msgstr "Schieberegler für Aufnahmepegel"
-
-#~ msgid "Cannot control input volume; use system mixer."
-#~ msgstr ""
-#~ "Aufnahmepegel kann nicht beeinflusst werden. Bitte benutzen Sie den Mixer "
-#~ "des Betriebssystems."
-
-#~ msgid "Output Volume Slider"
-#~ msgstr "Schieberegler für Wiedergabepegel"
-
-#~ msgid "Cannot control output volume; use system mixer."
-#~ msgstr ""
-#~ "Wiedergabepegel kann nicht beeinflusst werden. Bitte benutzen Sie den "
-#~ "Mixer des Betriebssystems."
-
-#~ msgid "Use right mouse button or context key to change format"
-#~ msgstr "Format ändern mit rechter Maustaste oder Kontext-Taste"
-
-#~ msgid ""
-#~ "This is a Beta version of the program. It may contain bugs and unfinished "
-#~ "features. We depend on your feedback: please send bug reports and feature "
-#~ "requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> "
-#~ "address. For help, use the Help menu in the program, view the tips and "
-#~ "tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit "
-#~ "our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-#~ msgstr ""
-#~ "Sie arbeiten mit einer Beta-Version. Sie kann Fehler und Baustellen "
-#~ "enthalten. Wir benötigen Ihre Rückmeldung: Bitte senden Sie uns Bug-"
-#~ "Reports und Wünsche an die <a href=\"mailto:feedback@audacityteam.org"
-#~ "\">Feedback</a>-Adresse. Hilfe erhalten Sie unter dem entsprechenden "
-#~ "Menüpunkt sowie bei den Tipps und Tricks im <a href=\"http://wiki."
-#~ "audacityteam.org/\">Wiki</a>. Besuchen Sie auch unser  <a href=\"http://"
-#~ "forum.audacityteam.org/\">Forum</a>."
-
-#~ msgid "Your batch command of %s was not recognised."
-#~ msgstr "Der Befehl %s wurde nicht erkannt."
-
-#~ msgid " window"
-#~ msgstr "-Fenster"
-
-#~ msgid "Append Record"
-#~ msgstr "Aufnahme fortsetzen"
-
-#~ msgid "Overdub (on/off)"
-#~ msgstr "Andere Spuren spielen bei Aufnahme"
-
-#~ msgid "Software Playthrough (on/off)"
-#~ msgstr "Aufnahme gleichzeitig wiedergeben"
-
-#~ msgid "Sound Activated Recording (on/off)"
-#~ msgstr "Pegelgesteuerte Aufnahme"
-
-#~ msgid "Sound Activation Level..."
-#~ msgstr "Schwellwert Pegelsteuerung..."
-
-#~ msgid "Automated Input Level Adjustment (on/off)"
-#~ msgstr "Automatische Pegelanpassung (an/aus)"
-
-#~ msgid "Rescan Audio Devices"
-#~ msgstr "Audio-Geräte erneut durchsuchen"
-
-#~ msgid "&Edit Labels"
-#~ msgstr "Te&xtmarken bearbeiten..."
-
-#~ msgid "Name..."
-#~ msgstr "Name der Spur..."
-
-#~ msgid "Move Track Up"
-#~ msgstr "Spur nach oben verschieben"
-
-#~ msgid "Move Track Down"
-#~ msgstr "Spur nach unten verschieben"
-
-#~ msgid "Make Stereo Track"
-#~ msgstr "Stereotonspur erstellen"
-
-#~ msgid "Split Stereo Track"
-#~ msgstr "Stereotonspur trennen"
-
-#~ msgid "Split Stereo to Mono"
-#~ msgstr "Stereo in Monospuren"
-
-#~ msgid "Set Sample Format"
-#~ msgstr "Sampleformat einstellen"
-
-#~ msgid "Up Octave"
-#~ msgstr "Eine Oktave höher"
-
-#~ msgid "Down Octave"
-#~ msgstr "Eine Oktave tiefer"
-
-#~ msgid "Font..."
-#~ msgstr "Zeichensatz..."
-
-#~ msgid "Set Range..."
-#~ msgstr "Bereich der Geschwindigkeitsmanipulation einstellen..."
-
-#~ msgid ""
-#~ "Start time after after end time!\n"
-#~ "Please enter reasonable times."
-#~ msgstr ""
-#~ "Die Startzeit liegt nach der Endzeit!\n"
-#~ "BItte wählen Sie vernünftige Werte."
-
-#~ msgid "None-Skip"
-#~ msgstr "Kein"
-
-#~ msgid "Window Size:"
-#~ msgstr "Fenstergröße:"
-
-#~ msgid "Spike Cleaner"
-#~ msgstr "Spike-Cleaner"
-
-#~ msgid "SpikeCleaner by Lynn Allan"
-#~ msgstr "Spike-Cleaner von Lynn Allan"
-
-#~ msgid ""
-#~ "Max Spike Duration (milliseconds): \n"
-#~ "(99999 or greater is off)"
-#~ msgstr ""
-#~ "Maximale Dauer (in Millisekunden): \n"
-#~ "(99999 oder mehr bedeutet \"aus\")"
-
-#~ msgid "Theshold for silence: "
-#~ msgstr "Grenzwert für Stille:"
-
-#~ msgid "Spike Cleaner..."
-#~ msgstr "Spike-Cleaner..."
-
-#~ msgid "Applying Spike Cleaner..."
-#~ msgstr "Spike-Cleaner anwenden..."
-
-#~ msgid "Options"
-#~ msgstr "Optionen"
-
-#~ msgid "Cl&eanSpeech Mode (Customized GUI)"
-#~ msgstr "Clean-Speech-Modus (Angepasste Oberfläche)"
-
-#~ msgid "&LADSPA"
-#~ msgstr "&LADSPA"
-
-#~ msgid "N&yquist"
-#~ msgstr "N&yquist"
-
-#~ msgid "&VAMP"
-#~ msgstr "&VAMP"
-
-#~ msgid "V&ST"
-#~ msgstr "V&ST"
-
-#~ msgid "36"
-#~ msgstr "36"
-
-#~ msgid "48"
-#~ msgstr "48"
-
-#~ msgid "60"
-#~ msgstr "60"
-
-#~ msgid "96"
-#~ msgstr "96"
-
-#~ msgid "120"
-#~ msgstr "120"
-
-#~ msgid "145"
-#~ msgstr "145"
-
-#~ msgid "Error Loading Keyboard Shortcuts"
-#~ msgstr "Fehler beim Laden der Tastatur-Shortcuts"
-
-#~ msgid "Error Saving Keyboard Shortcuts"
-#~ msgstr "Fehler beim Speichern der Tastatur-Shortcuts"
-
-#~ msgid "Zoom in or out"
-#~ msgstr "Ein-/Auszoomen"
-
-#~ msgid "16"
-#~ msgstr "16"
-
-#~ msgid "32"
-#~ msgstr "32"
-
-#~ msgid "64"
-#~ msgstr "64"
-
-#~ msgid "128"
-#~ msgstr "128"
-
-#~ msgid "512"
-#~ msgstr "512"
-
-#~ msgid "1024"
-#~ msgstr "1024"
-
-#~ msgid "2048"
-#~ msgstr "2048"
-
-#~ msgid "4096"
-#~ msgstr "4096"
-
-#~ msgid "8192"
-#~ msgstr "8192"
-
-#~ msgid "16384"
-#~ msgstr "16384"
-
-#~ msgid "FFT Skip Points"
-#~ msgstr "FFT-Sprung-Punkte"
-
-#~ msgid "Clean Speech"
-#~ msgstr "Clean-Speech"
-
-#~ msgid "Adjust left selection to next onset"
-#~ msgstr "Linke Auswahlgrenze an Beginn der Sprache verschieben"
-
-#~ msgid "Adjust right selection to previous offset"
-#~ msgstr "Rechte Auswahlgrenze an das Ende der Sprache verschieben"
-
-#~ msgid "Adjust left selection to next offset"
-#~ msgstr "Linke Auswahlgrenze an Ende der Sprache verschieben"
-
-#~ msgid "Adjust right selection to previous onset"
-#~ msgstr "Rechte Auswahlgrenze an den Beginn der Sprache verschieben"
-
-#~ msgid "Select region of sound around cursor"
-#~ msgstr "Auswahl erzeugen: Sprache im Bereich des Cursors"
-
-#~ msgid "Select region of silence around cursor"
-#~ msgstr "Auswahl erzeugen: Stille im Bereich des Cursors"
-
-#~ msgid "Automatically make labels from words"
-#~ msgstr "Automatisch Textmarkierungen erzeugen in Bereichen mit Sprache"
-
-#~ msgid "Add label at selection"
-#~ msgstr "Textmarken im Bereich der Auswahl erzeugen"
-
-#~ msgid "Calibrate voicekey"
-#~ msgstr "Voice-Key: Stillepegel festlegen"
-
-#~ msgid "Adjust Sensitivity"
-#~ msgstr "Empfindlichkeit einstellen"
-
-#~ msgid "Energy"
-#~ msgstr "Energie"
-
-#~ msgid "Sign Changes (Low Threshold)"
-#~ msgstr "Vorzeichenwechsel (Niedriger Grenzwert)"
-
-#~ msgid "Sign Changes (High Threshold)"
-#~ msgstr "Vorzeichenwechsel (Hoher Grenzwert)"
-
-#~ msgid "Direction Changes (Low Threshold)"
-#~ msgstr "Richtungswechsel (Niedriger Grenzwert)"
-
-#~ msgid "Direction Changes (High Threshold)"
-#~ msgstr "Richtungswechsel (Hoher Grenzwert)"
-
-#~ msgid "Key type"
-#~ msgstr "Voice-Keytyp"
-
-#~ msgid "Left-to-On"
-#~ msgstr "Links-bis-Beginn"
-
-#~ msgid "Right-to-Off"
-#~ msgstr "Rechts-bis-Ende"
-
-#~ msgid "Left-to-Off"
-#~ msgstr "Links-bis-Ende"
-
-#~ msgid "Right-to-On"
-#~ msgstr "Rechts-bis-Beginn"
-
-#~ msgid "Select-Sound"
-#~ msgstr "Sound auswählen"
-
-#~ msgid "Select-Silence"
-#~ msgstr "Stille auswählen"
-
-#~ msgid "Make Labels"
-#~ msgstr "Textmarken erzeugen"
-
-#~ msgid "Add Label"
-#~ msgstr "Textmarke hinzufügen"
-
-#~ msgid "Calibrate"
-#~ msgstr "Einstellen"
