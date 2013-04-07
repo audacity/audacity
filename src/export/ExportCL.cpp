@@ -12,6 +12,7 @@
 **********************************************************************/
 
 #include "../Audacity.h"
+#include "../Project.h"
 
 #include <wx/button.h>
 #include <wx/combobox.h>
@@ -19,18 +20,14 @@
 #include <wx/process.h>
 #include <wx/textctrl.h>
 #include <FileDialog.h>
-
 #include "Export.h"
 #include "ExportCL.h"
 
-#include "../Project.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../Internat.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
-
-
 
 
 //----------------------------------------------------------------------------

@@ -57,6 +57,7 @@ to get its definition, rather than rolling our own.
 
 *//*******************************************************************/
 
+#include <wx/wx.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/utils.h>
