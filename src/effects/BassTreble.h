@@ -12,20 +12,15 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include "SimpleMono.h"
-
-#include <wx/dialog.h>
-#include <wx/intl.h>
-#include <wx/slider.h>
+#include "TwoPassSimpleMono.h"
 
 class wxSizer;
 class wxTextCtrl;
-
 class WaveTrack;
 
-class EffectBassTreble:public EffectSimpleMono {
+class EffectBassTreble: public EffectTwoPassSimpleMono {
 
- public:
+public:
    EffectBassTreble();
 
    virtual wxString GetEffectName() {
@@ -41,25 +36,32 @@ class EffectBassTreble:public EffectSimpleMono {
    virtual wxString GetEffectIdentifier() {
       return wxString(wxT("Bass and Treble"));
    }
-   
+
    virtual wxString GetEffectAction() {
       return wxString(_("Adjusting Bass and Treble"));
    }
-   
+
    // Useful only after PromptUser values have been set. 
    virtual wxString GetEffectDescription(); 
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
+   virtual bool Init();
+
+protected:
+
+   virtual bool ProcessPass1(float *buffer, sampleCount len);
+   virtual bool ProcessPass2(float *buffer, sampleCount len);
+
+   void Coefficents(double hz, float slope, double gain, int type, 
+                    float& a0, float& a1, float& a2, float& b0, float& b1, float& b2);
+
+private:
+   virtual bool NewTrackPass1();
+   virtual bool InitPass1();
+   virtual bool InitPass2();
+   float  DoFilter(float in);
    
- protected:
-
-   virtual bool NewTrackSimpleMono();
-   virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
-
- private: 
-   /* filter co-efficent values */
-   // Low shelf
    float xn1Bass, xn2Bass, yn1Bass, yn2Bass,
          wBass, swBass, cwBass, aBass, bBass,
          a0Bass, a1Bass, a2Bass, b0Bass, b1Bass, b2Bass;
@@ -68,7 +70,10 @@ class EffectBassTreble:public EffectSimpleMono {
          wTreble, swTreble, cwTreble, aTreble, bTreble,
          b0Treble, b1Treble, b2Treble, a0Treble, a1Treble, a2Treble;
 
-   double dB_bass, dB_treble, dB_gain;
+   double dB_bass, dB_treble, dB_level;
+   double mMax;
+   bool   mbNormalize;
+   double mPreGain;
 
    friend class BassTrebleDialog;
 };
@@ -79,7 +84,7 @@ class EffectBassTreble:public EffectSimpleMono {
 // BassTrebleDialog
 //----------------------------------------------------------------------------
 class BassTrebleDialog:public EffectDialog {
- public:
+public:
    // constructors and destructors
    BassTrebleDialog(EffectBassTreble *effect, wxWindow * parent);
 
@@ -88,33 +93,38 @@ class BassTrebleDialog:public EffectDialog {
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
 
- private:
+private:
    // handler declarations for BassTrebleDialog
    void OnBassText(wxCommandEvent & event);
    void OnTrebleText(wxCommandEvent & event);
-   void OnGainText(wxCommandEvent & event);
+   void OnLevelText(wxCommandEvent & event);
    void OnBassSlider(wxCommandEvent & event);
    void OnTrebleSlider(wxCommandEvent & event);
-   void OnGainSlider(wxCommandEvent & event);
+   void OnLevelSlider(wxCommandEvent & event);
+   void OnNormalize(wxCommandEvent& evt);
+   void UpdateUI();
    void OnPreview(wxCommandEvent & event);
+   void set_properties();
 
- private:
+private:
    wxSlider *mBassS;
    wxSlider *mTrebleS;
-   wxSlider *mGainS;
+   wxSlider *mLevelS;
    wxTextCtrl *mBassT;
    wxTextCtrl *mTrebleT;
-   wxTextCtrl *mGainT;
+   wxTextCtrl *mLevelT;
+   wxCheckBox *mNormalizeCheckBox;
 
    DECLARE_EVENT_TABLE()
+   wxStaticText* mWarning;
 
- public:
+public:
    EffectBassTreble *mEffect;
 
-   float bass;
-   float treble;
-   float gain;
-
+   double bass;
+   double treble;
+   double level;
+   bool mbNormalize;
 };
 
 #endif
