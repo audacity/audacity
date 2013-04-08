@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2013-01-14 02:29-0000\n"
-"Last-Translator: Yuri Chornoivan\n"
+"PO-Revision-Date: 2013-04-06 19:51-0000\n"
+"Last-Translator: gale <gale@audacityteam.org>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: ukX-Generator: Lokalize 1.2\n"
 "MIME-Version: 1.0\n"
@@ -36,13 +36,13 @@ msgstr "Про Audacity…"
 msgid "OK... Audacious!"
 msgstr "Гаразд… Круто!"
 
-#: AboutDialog.cpp:197
-msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://sourceforge.net\">SourceForge.net</a> and <a href=\"http://code.google.com\">Google Code</a> for our project hosting. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Audacity — вільна програма, створена командою добровольців, <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. Ми вдячні <a href=\"http://sourceforge.net\">SourceForge.net</a> та <a href=\"http://code.google.com\">Google Code</a> за надання майданчика для нашого проекту. Audacity <a href=\"http://audacity.sourceforge.net/download/\">можна користуватися</a> у Windows, Mac OS X, GNU/Linux та інших подібних до Unix системах."
+#: AboutDialog.cpp:203
+msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge.net</a> for hosting our project. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "Audacity — вільна програма, створена командою добровольців, <a href=\"http://audacity.sourceforge.net/community/developers\">розробників</a> з усього світу. Ми вдячні <a href=\"http://code.google.com\">Google Code</a> та <a href=\"http://sourceforge.net\">>SourceForge.net</a> за надання майданчика для нашого проекту. Audacity <a href=\"http://audacity.sourceforge.net/download/\">можна користуватися</a> у Windows, Mac OS X, GNU/Linux та інших подібних до Unix системах."
 
-#: AboutDialog.cpp:204
-msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-msgstr "Якщо ви знайдете помилку або у вас виникне пропозиція, надішліть ваше повідомлення за адресою <a href=\"mailto:feedback@audacityteam.org\">для відгуків</a>. Додаткові відомості, підказки і настанови можна знайти на нашій <a href=\"http://wiki.audacityteam.org/\">Вікі</a> або на нашому <a href=\"http://forum.audacityteam.org/\">форумі</a>."
+#: AboutDialog.cpp:208
+msgid "If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">forum</a>."
+msgstr "Якщо ви знайдете помилку або у вас виникне пропозиція, надішліть ваше повідомлення за <a href=\"mailto:feedback@audacityteam.org\">адресою для відгуків</a>. Додаткові відомості, підказки і настанови можна знайти на нашій <a href=\"http://wiki.audacityteam.org/\">Вікі</a> або на нашому <a href=\"http://forum.audacityteam.org/\">форумі</a>."
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. in the credits in the About Audacity window.  Use this to add
@@ -59,31 +59,29 @@ msgstr ""
 "<a href=\"mailto:alahush@yahoo.com\">Андрій Лагуш</a>,<br />\n"
 "<a href=\"mailto:yurchor@ukr.net\">Юрій Чорноіван</a>"
 
-#: AboutDialog.cpp:229
-msgid "A Free Digital Audio Editor<br>"
-msgstr "Вільний редактор цифрового звуку<br>"
+#: AboutDialog.cpp:230
+msgid "free, open source, cross-platform software for recording and editing sounds<br>"
+msgstr "вільне програмне забезпечення з відкритим кодом, здатне працювати на багатьох програмних платформах і призначене для запису і редагування звукових даних<br>"
 
 #: AboutDialog.cpp:233
 msgid "Credits"
 msgstr "Подяки"
 
 #: AboutDialog.cpp:237
-#, c-format
-msgid "Audacity %s Development Team"
-msgstr "Команда розробки Audacity %s"
+msgid "Audacity Developers"
+msgstr "Розробники Audacity"
 
-#: AboutDialog.cpp:242
-#, c-format
-msgid "Audacity %s Support Team"
-msgstr "Команда підтримки Audacity %s"
+#: AboutDialog.cpp:240
+msgid "Audacity Support Team"
+msgstr "Команда підтримки Audacity"
 
 #: AboutDialog.cpp:247
 msgid "Emeritus Developers"
 msgstr "Заслужені розробники"
 
-#: AboutDialog.cpp:252
-msgid "Other Emeritus Team Members"
-msgstr "Інші заслужені члени команди"
+#: AboutDialog.cpp:246
+msgid " Emeritus Team Members"
+msgstr "Заслужені члени команди"
 
 #: AboutDialog.cpp:257
 msgid "Other Contributors"
@@ -670,8 +668,10 @@ msgstr "Застосувати ланцюжок"
 msgid "CleanSpeech Batch Processing"
 msgstr "Пакетна обробка CleanSpeech"
 
-#: BatchProcessDialog.cpp:96
-msgid "&Select chain"
+#. i18n-hint: A chain is a sequence of commands that can be applied
+#. * to one or more audio files.
+#: BatchProcessDialog.cpp:105
+msgid "&Select Chain"
 msgstr "В&ибрати ланцюжок"
 
 #: BatchProcessDialog.cpp:101
@@ -765,11 +765,9 @@ msgstr "Лан&цюжок (Для редагування двічі клацні
 msgid "Num"
 msgstr "№"
 
-#: BatchProcessDialog.cpp:495
-#: commands/CommandManager.cpp:108
-#: prefs/KeyConfigPrefs.cpp:184
-msgid "Command"
-msgstr "Команда"
+#: BatchProcessDialog.cpp:518
+msgid "Command  "
+msgstr "Команда "
 
 #: BatchProcessDialog.cpp:496
 #: effects/Contrast.cpp:244
@@ -2162,6 +2160,14 @@ msgstr "Розмістити по &вертикалі"
 #: Menus.cpp:538
 msgid "&Zoom to Selection"
 msgstr "Мас&штабувати до вибраного"
+
+#: Menus.cpp:627
+msgid "&Go to Selection Start"
+msgstr "Пере&йти до початку позначеного"
+
+#: Menus.cpp:628
+msgid "&Go to Selection End"
+msgstr "Пере&йти до кінця позначеного"
 
 #: Menus.cpp:542
 msgid "&Collapse All Tracks"
@@ -4916,6 +4922,12 @@ msgstr "Не вистачає місця для вставки вибраног�
 msgid "There is not enough room available to expand the cut line"
 msgstr "Недостатньо простору для поширення лінії вирізання"
 
+#: BatchProcessDialog.cpp:495
+#: commands/CommandManager.cpp:108
+#: prefs/KeyConfigPrefs.cpp:184
+msgid "Command"
+msgstr "Команда"
+
 #: commands/CommandManager.cpp:559
 #, c-format
 msgid "Plugins 1 to %i"
@@ -6490,17 +6502,17 @@ msgstr "Білий"
 msgid "Pink"
 msgstr "Рожевий"
 
-#: effects/Noise.cpp:45
-msgid "Brown"
-msgstr "Коричневий"
+#: effects/Noise.cpp:47
+msgid "Brownian"
+msgstr "Випадковий"
 
 #: effects/Noise.cpp:47
 msgid "Noise Generator"
 msgstr "Генератор шумів"
 
-#: effects/Noise.cpp:198
-msgid "Noise type"
-msgstr "Тип шуму"
+#: effects/Noise.cpp:199
+msgid "Noise type:"
+msgstr "Тип шуму:"
 
 #: effects/Noise.h:43
 msgid "Noise..."
@@ -7525,13 +7537,13 @@ msgstr "Додаткові параметри мікшування"
 msgid "Channel: %2d"
 msgstr "Канал: %2d"
 
-#: export/Export.cpp:1120
-msgid " - Left"
-msgstr " — Ліворуч"
+#: export/Export.cpp:1119
+msgid " - L"
+msgstr " - Л"
 
-#: export/Export.cpp:1122
-msgid " - Right"
-msgstr " — Праворуч"
+#: export/Export.cpp:1121
+msgid " - R"
+msgstr " - П"
 
 #: export/Export.cpp:1144
 msgid "Mixer Panel"
@@ -10711,9 +10723,19 @@ msgstr "Рівень на вході"
 msgid "Slider Input"
 msgstr "Повзунок вводу"
 
+#: toolbars/MixerToolBar.cpp:294
+#, c-format
+msgid "Input Volume: %.2f"
+msgstr "Рівень на вході: %.2f"
+
 #: toolbars/MixerToolBar.cpp:290
 msgid "Input Volume (Unavailable; use system mixer.)"
 msgstr "Рівень вхідного сигналу (недоступний, скористайтеся мікшером системи)"
+
+#: toolbars/MixerToolBar.cpp:303
+#, c-format
+msgid "Output Volume: %.2f"
+msgstr "Рівень на виході: %.2f"
 
 #: toolbars/MixerToolBar.cpp:298
 msgid "Output Volume (Unavailable; use system mixer.)"
