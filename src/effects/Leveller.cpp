@@ -49,7 +49,7 @@ bool EffectLeveller::Init()
 {
 #ifdef CLEANSPEECH
    mLevellerNumPasses = gPrefs->Read(wxT("/CsPresets/LevellerNumPasses"), 2L) ;
-   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses >= NUM_PASSES_CHOICES)) {  // corrupted Prefs?
+   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses > NUM_PASSES_CHOICES)) {  // corrupted Prefs?
       mLevellerNumPasses = 1;
       gPrefs->Write(wxT("/CsPresets/LevellerNumPasses"), 1);
    }
@@ -60,7 +60,7 @@ bool EffectLeveller::Init()
    }
 #else   // CLEANSPEECH
    mLevellerNumPasses = gPrefs->Read(wxT("/Effects/Leveller/LevellerNumPasses"), 2L) ;
-   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses >= NUM_PASSES_CHOICES)) {  // corrupted Prefs?
+   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses > NUM_PASSES_CHOICES)) {  // corrupted Prefs?
       mLevellerNumPasses = 1;
       gPrefs->Write(wxT("/Effects/Leveller/LevellerNumPasses"), 1);
    }
