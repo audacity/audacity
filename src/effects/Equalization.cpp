@@ -2613,6 +2613,14 @@ void EqualizationDialog::OnClear(wxCommandEvent &event)
          m_sliders[i]->SetValue(0);
          m_sliders_old[i] = 0;
          m_EQVals[i] = 0.;
+#if wxUSE_TOOLTIPS
+         wxString tip;
+         if( thirdOct[i] < 1000.)
+            tip.Printf( wxT("%dHz\n%.1fdB"), (int)thirdOct[i], 0. );
+         else
+            tip.Printf( wxT("%gkHz\n%.1fdB"), thirdOct[i]/1000., 0. );
+         m_sliders[i]->SetToolTip(tip);
+#endif
       }
    }
    EnvelopeUpdated();
