@@ -2486,6 +2486,7 @@ void EqualizationDialog::ErrMin(void)
    testEnvelope = new Envelope();
    testEnvelope->SetInterpolateDB(false);
    testEnvelope->Mirror(false);
+   testEnvelope->SetRange(-120.0, 60.0);
    testEnvelope->Flatten(0.);
    testEnvelope->SetTrackLen(1.0);
    testEnvelope->CopyFrom(mLogEnvelope, 0.0, 1.0);
