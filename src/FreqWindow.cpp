@@ -212,6 +212,11 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    mAxisChoice->SetName(_("Axis"));
 
    mAxisChoice->SetSelection(mAxis);
+   // Log-frequency axis works for spectrum plots only.
+   if (mAlg != 0) {
+      mAxis = 0;
+      mAxisChoice->Disable();
+   }
 
    mLogAxis = mAxis?true:false;
 
