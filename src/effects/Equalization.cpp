@@ -1031,8 +1031,7 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
       // Inform user of load failure
       wxMessageBox( msg,
                     _("Error Loading EQ Curves"),
-                    wxOK | wxCENTRE,
-                    this );
+                    wxOK | wxCENTRE);
       mCurves.Add( _("unnamed") );  // we always need a default curve to use
       return;
    }
