@@ -2658,10 +2658,10 @@ void LabelTrack::CreateCustomGlyphs()
 /// Returns true for keys we capture to start a label.
 bool LabelTrack::IsGoodLabelFirstKey(int keyCode)
 {
-   // Allow everything before WXK_START except space and delete, the numpad keys
+   // Allow everything before WXK_START except space, return and delete, the numpad keys
    // when numlock is on, and everything after WXK_COMMAND
    return (keyCode < WXK_START
-                  && keyCode != WXK_SPACE && keyCode != WXK_DELETE) ||
+                  && keyCode != WXK_SPACE && keyCode != WXK_DELETE && keyCode != WXK_RETURN) ||
           (keyCode >= WXK_NUMPAD0 && keyCode <= WXK_DIVIDE) ||
           (keyCode >= WXK_NUMPAD_EQUAL && keyCode <= WXK_NUMPAD_DIVIDE) ||
           (keyCode > WXK_COMMAND);
