@@ -154,8 +154,3 @@
 #define EXPERIMENTAL_TRUNC_SILENCE
 
 #endif
-
-//MJS: make the CleanSpeech stuff experimental, rather than deleting it directly
-// Normally disabled, for now.
-// CleanSpeech should be done somehow else and not be polluting the code
-//#define CLEANSPEECH 1

@@ -985,13 +985,6 @@ bool AudacityApp::OnInit()
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
-#ifdef CLEANSPEECH
-//MERGE:
-//Everything now uses Audacity name for preferences.
-//(Audacity and CleanSpeech the same program and use
-//the same preferences file).
-//
-#endif   // CLEANSPEECH
 // LL: Moved here from InitPreferences() to ensure VST effect
 //     discovery writes configuration to the correct directory
 //     on OSX with case-sensitive file systems.
@@ -1053,9 +1046,6 @@ bool AudacityApp::OnInit()
    //
 
    wxString home = wxGetHomeDir();
-#ifdef CLEANSPEECH
-   mAppHomeDir = home;
-#endif   // CLEANSPEECH
    theTheme.EnsureInitialised();
 
    // AColor depends on theTheme.
@@ -1156,18 +1146,6 @@ bool AudacityApp::OnInit()
    if (lang == wxT(""))
       lang = GetSystemLanguageCode();
 
-#ifdef CLEANSPEECH
-#ifdef NOT_RQD
-//TIDY-ME: (CleanSpeech) Language prompt??
-// The prompt for language only happens ONCE on a system.
-// I don't think we should disable it JKC
-   wxString lang = gPrefs->Read(wxT("/Locale/Language"), "en");  //lda
-
-// Pop up a dialog the first time the program is run
-//lda   if (lang == "")
-//lda      lang = ChooseLanguage(NULL);
-#endif
-#endif   // CLEANSPEECH
    mLocale = NULL;
    InitLang( lang );
 
@@ -1180,9 +1158,6 @@ bool AudacityApp::OnInit()
    }
 
    // More initialization
-#ifdef CLEANSPEECH
-   InitCleanSpeech();
-#endif   // CLEANSPEECH
 
    InitDitherers();
    InitAudioIO();
@@ -1446,56 +1421,6 @@ void AudacityApp::OnReceiveCommand(AppCommandEvent &event)
    wxASSERT(NULL != mCmdHandler);
    mCmdHandler->OnReceiveCommand(event);
 }
-
-#ifdef CLEANSPEECH   //is this actually useful?
-bool AudacityApp::InitCleanSpeech()
-{
-   wxString userdatadir = FileNames::DataDir();
-   wxString presetsFromPrefs = gPrefs->Read(wxT("/Directories/PresetsDir"), wxT(""));
-   wxString presets = wxT("");
-
-   #ifdef __WXGTK__
-   if (presetsFromPrefs.Length() > 0 && presetsFromPrefs[0] != wxT('/'))
-      presetsFromPrefs = wxT("");
-   #endif //__WXGTK__
-
-   wxString presetsDefaultLoc =
-      wxFileName(userdatadir, wxT("presets")).GetFullPath();
-
-   // Stop wxWidgets from printing its own error messages (not used ... does this really do anything?)
-   wxLogNull logNo;
-   
-   // Try temp dir that was stored in prefs first
-   if (presetsFromPrefs != wxT("")) {
-      if (wxDirExists(presetsFromPrefs))
-         presets = presetsFromPrefs;
-      else if (wxMkdir(presetsFromPrefs))
-         presets = presetsFromPrefs;
-   }
-
-   // If that didn't work, try the default location
-   if ((presets == wxT("")) && (presetsDefaultLoc != wxT(""))) {
-      if (wxDirExists(presetsDefaultLoc))
-         presets = presetsDefaultLoc;
-      else if (wxMkdir(presetsDefaultLoc))
-         presets = presetsDefaultLoc;
-   }
-
-   if (presets == wxT("")) {
-      // Failed
-      wxMessageBox(wxT("Audacity could not find a place to store\n.csp CleanSpeech preset files\nAudacity is now going to exit. \nInstallation may be corrupt."));
-      return false;
-   }
-
-   // The permissions don't always seem to be set on
-   // some platforms.  Hopefully this fixes it...
-   #ifdef __UNIX__
-   chmod(OSFILENAME(presets), 0755);
-   #endif
-
-   return (gPrefs->Write(wxT("/Directories/PresetsDir"), presets) && gPrefs->Flush());
-}
-#endif   // CLEANSPEECH
 
 bool AudacityApp::InitTempDir()
 {

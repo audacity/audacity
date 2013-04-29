@@ -75,18 +75,6 @@ EffectClickRemoval::~EffectClickRemoval()
 
 bool EffectClickRemoval::Init()
 {
-#ifdef CLEANSPEECH
-   mThresholdLevel = gPrefs->Read(wxT("/CsPresets/ClickThresholdLevel"), 200);
-   if ((mThresholdLevel < MIN_THRESHOLD) || (mThresholdLevel > MAX_THRESHOLD)) {  // corrupted Prefs?
-      mThresholdLevel = 0;  //Off-skip
-      gPrefs->Write(wxT("/CsPresets/ClickThresholdLevel"), mThresholdLevel);
-   }
-   mClickWidth = gPrefs->Read(wxT("/CsPresets/ClickWidth"), 20);
-   if ((mClickWidth < MIN_CLICK_WIDTH) || (mClickWidth > MAX_CLICK_WIDTH)) {  // corrupted Prefs?
-      mClickWidth = 0;  //Off-skip
-      gPrefs->Write(wxT("/CsPresets/ClickWidth"), mClickWidth);
-   }
-#else   // CLEANSPEECH
    mThresholdLevel = gPrefs->Read(wxT("/Effects/ClickRemoval/ClickThresholdLevel"), 200);
    if ((mThresholdLevel < MIN_THRESHOLD) || (mThresholdLevel > MAX_THRESHOLD)) {  // corrupted Prefs?
       mThresholdLevel = 0;  //Off-skip
@@ -97,7 +85,6 @@ bool EffectClickRemoval::Init()
       mClickWidth = 0;  //Off-skip
       gPrefs->Write(wxT("/Effects/ClickRemoval/ClickWidth"), mClickWidth);
    }
-#endif   // CLEANSPEECH
    return gPrefs->Flush();
 }
 
@@ -123,13 +110,8 @@ bool EffectClickRemoval::PromptUser()
    mThresholdLevel = dlog.mThresh;
    mClickWidth = dlog.mWidth;
 
-#ifdef CLEANSPEECH
-   gPrefs->Write(wxT("/CsPresets/ClickThresholdLevel"), mThresholdLevel);
-   gPrefs->Write(wxT("/CsPresets/ClickWidth"), mClickWidth);
-#else   // CLEANSPEECH
    gPrefs->Write(wxT("/Effects/ClickRemoval/ClickThresholdLevel"), mThresholdLevel);
    gPrefs->Write(wxT("/Effects/ClickRemoval/ClickWidth"), mClickWidth);
-#endif   // CLEANSPEECH
 
    return gPrefs->Flush();
 }

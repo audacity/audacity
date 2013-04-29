@@ -354,17 +354,8 @@ void OnProcessEffect(int index);
 void OnProcessPlugin(int index);
 void OnAnalyzeEffect(int index);
 void OnAnalyzePlugin(int index);
-
-        //lda CleanSpeech Menu   //CLEANSPEECH
-
 void OnApplyChain();
 void OnEditChains();
-
-#ifdef CLEANSPEECH
-void OnImportCleanSpeechPresets();
-void OnExportCleanSpeechPresets();
-#endif   // CLEANSPEECH
-
 void OnStereoToMono(int index);
 wxString BuildCleanFileName(wxString fileName, wxString extension);
 

@@ -94,10 +94,6 @@ ControlToolBar::ControlToolBar()
    mCutPreviewTracks = NULL;
 
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
-#ifdef CLEANSPEECH
-// gPrefs->Read(wxT("/Batch/CleanSpeechMode"), &mCleanSpeechMode, false);
-   mCleanSpeechMode = false;
-#endif   // CLEANSPEECH
 }
 
 ControlToolBar::~ControlToolBar()
@@ -195,12 +191,6 @@ void ControlToolBar::Populate()
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
 
-#ifdef CLEANSPEECH
-   /* i18n-hint: (verb)*/
-//   mBatch = MakeButton(bmpCleanSpeech, bmpCleanSpeech, bmpCleanSpeechDisabled,
-//      ID_BATCH_BUTTON, false, _("Clean Speech"));
-#endif   // CLEANSPEECH
-
 #if wxUSE_TOOLTIPS
    RegenerateToolsTooltips();
    wxToolTip::Enable(true);     
@@ -236,17 +226,6 @@ void ControlToolBar::UpdatePrefs()
       mErgonomicTransportButtons = active;
       updated = true;
    }
-
-#ifdef CLEANSPEECH
-   //gPrefs->Read( wxT("/Batch/CleanSpeechMode"), &active, false );
-
-   active = false;
-   if( mCleanSpeechMode != active )
-   {
-      mCleanSpeechMode = active;
-      updated = true;
-   }
-#endif   // CLEANSPEECH
 
    if( updated )
    {
@@ -308,12 +287,6 @@ void ControlToolBar::ArrangeButtons()
       mSizer->Add( mStop,   0, flags, 2 );
       mSizer->Add( mFF,     0, flags, 5 );
    }
-
-#ifdef CLEANSPEECH
-   // Add and possible hide the CleanSpeech button
-//   mSizer->Add( mBatch,  0, flags | wxLEFT, 5 );
-//   mSizer->Show( mBatch, mCleanSpeechMode );
-#endif   // CLEANSPEECH
 
    // Layout the sizer
    mSizer->Layout();
@@ -380,16 +353,6 @@ void ControlToolBar::EnableDisableButtons()
 
    mPlay->SetEnabled((!recording) || (tracks && !busy));
    mRecord->SetEnabled(!busy && !playing);
-
-#ifdef CLEANSPEECH
-   if (p && GetActiveProject()->GetCleanSpeechMode()) {
-       bool canRecord = !tracks;
-       canRecord &= !busy;
-       canRecord &= ((numProjects == 0) || ((numProjects == 1) && !tracks));
-       mRecord->SetEnabled(canRecord);
-       //mBatch->SetEnabled(!busy && !recording);
-   }
-#endif   // CLEANSPEECH
 
    mStop->SetEnabled(busy);
    mRewind->SetEnabled(tracks && !busy);
@@ -772,20 +735,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       return;
    }
    AudacityProject *p = GetActiveProject();
-#ifdef CLEANSPEECH
-   if (p && p->GetCleanSpeechMode()) {
-      size_t numProjects = gAudacityProjects.Count();
-      if (!p->GetTracks()->IsEmpty() || (numProjects > 1)) {
-         wxMessageBox(_("Recording in CleanSpeech mode is not possible when a track, or more than one project, is already open."),
-            _("Recording not permitted"),
-            wxOK | wxICON_INFORMATION,
-            this);
-         mRecord->PopUp();
-         mRecord->Disable();
-         return;
-      }
-   }
-#endif   // CLEANSPEECH
 
    if( evt.GetInt() == 1 ) // used when called by keyboard shortcut. Default (0) ignored.
       mRecord->SetShift(true);

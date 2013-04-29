@@ -47,18 +47,6 @@ EffectLeveller::EffectLeveller()
 
 bool EffectLeveller::Init()
 {
-#ifdef CLEANSPEECH
-   mLevellerNumPasses = gPrefs->Read(wxT("/CsPresets/LevellerNumPasses"), 2L) ;
-   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses > NUM_PASSES_CHOICES)) {  // corrupted Prefs?
-      mLevellerNumPasses = 1;
-      gPrefs->Write(wxT("/CsPresets/LevellerNumPasses"), 1);
-   }
-   mLevellerDbChoiceIndex = gPrefs->Read(wxT("/CsPresets/LevellerDbChoiceIndex"), 10L);
-   if ((mLevellerDbChoiceIndex < 0) || (mLevellerDbChoiceIndex >= Enums::NumDbChoices)) {  // corrupted Prefs?
-      mLevellerDbChoiceIndex = 0;  //Least dB
-      gPrefs->Write(wxT("/CsPresets/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
-   }
-#else   // CLEANSPEECH
    mLevellerNumPasses = gPrefs->Read(wxT("/Effects/Leveller/LevellerNumPasses"), 2L) ;
    if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses > NUM_PASSES_CHOICES)) {  // corrupted Prefs?
       mLevellerNumPasses = 1;
@@ -69,7 +57,6 @@ bool EffectLeveller::Init()
       mLevellerDbChoiceIndex = 0;  //Least dB
       gPrefs->Write(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
    }
-#endif   // CLEANSPEECH
    gPrefs->Flush();
 
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
@@ -145,13 +132,9 @@ bool EffectLeveller::PromptUser()
    mLevellerNumPasses = dlog.mLevellerNumPassesChoicIndex+1;
    mLevellerDbChoiceIndex = dlog.mLevellerDbChoiceIndex;
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
-#ifdef CLEANSPEECH
-   gPrefs->Write(wxT("/CsPresets/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
-   gPrefs->Write(wxT("/CsPresets/LevellerNumPasses"), mLevellerNumPasses);
-#else   // CLEANSPEECH
+
    gPrefs->Write(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
    gPrefs->Write(wxT("/Effects/Leveller/LevellerNumPasses"), mLevellerNumPasses);
-#endif   // CLEANSPEECH
    gPrefs->Flush();
 
    CalcLevellerFactors();

@@ -64,9 +64,6 @@ wxString SpecialCommands[] = {
 };
 // end CLEANSPEECH remnant
 
-#ifdef CLEANSPEECH
-static const wxString CleanSpeech = wxT("CleanSpeech");
-#endif   // CLEANSPEECH
 static const wxString MP3Conversion = wxT("MP3 Conversion");
 
 BatchCommands::BatchCommands()
@@ -74,13 +71,6 @@ BatchCommands::BatchCommands()
    ResetChain();
 
    wxArrayString names = GetNames();
-#ifdef CLEANSPEECH   // possibly the rest of this fn
-   if (names.Index(CleanSpeech) == wxNOT_FOUND) {
-      AddChain(CleanSpeech);
-      RestoreChain(CleanSpeech);
-      WriteChain(CleanSpeech);
-   }
-#endif   // CLEANSPEECH
 
    if (names.Index(MP3Conversion) == wxNOT_FOUND) {
       AddChain(MP3Conversion);
@@ -252,26 +242,6 @@ bool BatchCommands::RenameChain(const wxString & oldchain, const wxString & newc
    return wxRenameFile(oname.GetFullPath(), nname.GetFullPath());
 }
 
-#ifdef CLEANSPEECH
-void BatchCommands::SetCleanSpeechChain()
-{
-   ResetChain();
-
-// TIDY-ME: Effects change their name with localisation.
-// Commands (at least currently) don't.  Messy.
-
-/* i18n-hint: Effect name translations must agree with those used elsewhere, or batch won't find them */
-   AddToChain( wxT("StereoToMono") );
-   AddToChain( wxT("Normalize") );
-   AddToChain( wxT("ExportMP3_56k_before") );
-   AddToChain( wxT("NoiseRemoval") );
-   AddToChain( wxT("TruncateSilence") );
-   AddToChain( wxT("Leveller") );
-   AddToChain( wxT("Normalize") );
-   AddToChain( wxT("ExportMP3") );
-}
-#endif   // CLEANSPEECH
-
 void BatchCommands::SetWavToMp3Chain() // a function per default chain?  This is flawed design!  MJS
 {
    ResetChain();
@@ -302,10 +272,6 @@ wxArrayString BatchCommands::GetAllCommands()
    // end CLEANSPEECH remnant
    
    int additionalEffects=ADVANCED_EFFECT;
-#ifdef CLEANSPEECH
-   if( project->GetCleanSpeechMode() )
-       additionalEffects = 0;
-#endif   // CLEANSPEECH
 
    effects = EffectManager::Get().GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | additionalEffects);
    for(i=0; i<effects->GetCount(); i++) {
@@ -746,14 +712,8 @@ wxArrayString BatchCommands::GetNames()
 
 bool BatchCommands::IsFixed(const wxString & name)
 {
-#ifdef CLEANSPEECH   // probably the rest of this fn as well
-   if (name == CleanSpeech || name == MP3Conversion) {
-      return true;
-   }
-#else
    if (name == MP3Conversion)
       return true;
-#endif   // CLEANSPEECH
    return false;
 }
 
@@ -762,19 +722,8 @@ void BatchCommands::RestoreChain(const wxString & name)
 // TIDY-ME: Effects change their name with localisation.
 // Commands (at least currently) don't.  Messy.
 
-#ifdef CLEANSPEECH
-/* i18n-hint: Effect name translations must agree with those used elsewhere, or batch won't find them */
-
-   if (name == CleanSpeech) {
-      SetCleanSpeechChain();
-   }
-   else if (name == MP3Conversion) {
-      SetWavToMp3Chain();
-   }
-#else
    if (name == MP3Conversion)
       SetWavToMp3Chain();
-#endif   // CLEANSPEECH
 }
 
 void BatchCommands::Split(const wxString & str, wxString & command, wxString & param)

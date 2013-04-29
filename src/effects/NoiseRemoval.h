@@ -62,10 +62,6 @@ public:
    virtual bool Process();
    
 private:
-#ifdef CLEANSPEECH
-   void CleanSpeechMayReadNoisegate();
-   void CleanSpeechMayWriteNoiseGate();
-#endif   // CLEANSPEECH
 
    bool      mDoProfile;
    bool      mHasProfile;

@@ -44,12 +44,6 @@
 BEGIN_EVENT_TABLE(BatchPrefs, wxPanel)
 END_EVENT_TABLE()
 
-#ifdef CLEANSPEECH
-enum { CleanSpeechID,
-   MP3ConversionID,
-};
-#endif   // CLEANSPEECH
-
 /// Constructor
 BatchPrefs::BatchPrefs(wxWindow * parent):
    PrefsPanel(parent, _("Batch"))
@@ -80,10 +74,6 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
       S.TieCheckBox( _("&Don't apply effects in batch mode"),  
          wxT("/Batch/Debug"), false);
 #endif
-#ifdef CLEANSPEECH
-//      S.TieCheckBox( _("Cl&eanSpeech Mode (Customized GUI)"), 
-//         wxT("/Batch/CleanSpeechMode"), false);
-#endif   // CLEANSPEECH
    }
    S.EndStatic();
    S.EndHorizontalLay();
@@ -91,36 +81,12 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
    return;
 }
 
-#ifdef CLEANSPEECH
-// This commented out code might be useful as a first step if we want an immediate response to 
-// switching in and out of CleanSpeech mode.
-// As things currently stand, the batch commands available will NOT reflect changes in
-// CleanSpeech mode until we close and reopen the preferences dialog.
-#if 0
-   int mode;
-   AudacityProject *proj = GetActiveProject();
-   mode = gPrefs->Read(wxT("/Batch/CleanSpeechMode"), 1L);
-   proj->GetControlToolBar()->SetCleanSpeechMode(mode == 1);
-#endif
-#endif   // CLEANSPEECH
-
 /// Send changed values back to Prefs, and update Audacity.
 bool BatchPrefs::Apply()
 {
    ShuttleGui S( this, eIsSavingToPrefs );
    PopulateOrExchange( S );
 
-#ifdef CLEANSPEECH
-   unsigned mode;
-   //mode = gPrefs->Read(wxT("/Batch/CleanSpeechMode"), 1L);
-   mode = 0;
-   for(unsigned i=0; i<gAudacityProjects.GetCount(); i++)
-      if(gAudacityProjects[i])
-      {
-         gAudacityProjects[i]->SetCleanSpeechMode(mode == 1);
-         gAudacityProjects[i]->mToolManager->LayoutToolBars(); // Just to add/remove the CleanSpeech button.
-      }
-#endif   // CLEANSPEECH
    return true;
 }
 

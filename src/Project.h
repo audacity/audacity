@@ -222,11 +222,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool GetShowId3Dialog() { return mShowId3Dialog; } //lda
    void SetShowId3Dialog(bool flag) { mShowId3Dialog = flag; } //lda
 
-#ifdef CLEANSPEECH
-   bool GetCleanSpeechMode() { return mCleanSpeechMode; } //lda
-   void SetCleanSpeechMode(bool flag) { mCleanSpeechMode = flag; } //lda
-#endif   // CLEANSPEECH
-
    bool GetNormalizeOnLoad() { return mNormalizeOnLoad; } //lda
    void SetNormalizeOnLoad(bool flag) { mNormalizeOnLoad = flag; } //lda
 
@@ -516,9 +511,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mIsDeleting;
    bool mTracksFitVerticallyZoomed;  //lda
    bool mNormalizeOnLoad;  //lda
-#ifdef CLEANSPEECH
-   bool mCleanSpeechMode;  //lda
-#endif   // CLEANSPEECH
    bool mShowId3Dialog; //lda
    bool mEmptyCanBeDirty;
    bool mSelectAllOnNone;

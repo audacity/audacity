@@ -61,9 +61,6 @@ class BatchCommands {
    int GetCount();
 
    void SetWavToMp3Chain();
-#ifdef CLEANSPEECH
-   void SetCleanSpeechChain();
-#endif   // CLEANSPEECH
 
    bool IsFixed(const wxString & name);
 
