@@ -61,9 +61,7 @@ public:
  private:
    //ToDo ... put BlendFrames in Effects, Project, or other class
    void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
-#ifdef EXPERIMENTAL_TRUNC_SILENCE
    void Intersect(RegionList &dest, const RegionList &src);
-#endif
 
  private:
    sampleCount mBlendFrameCount;
