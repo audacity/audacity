@@ -35,6 +35,7 @@
 #include "Phaser.h"
 #include "Repair.h"
 #include "Repeat.h"
+#include "Reverb.h"
 #include "Reverse.h"
 #include "Silence.h"
 #include "StereoToMono.h"
@@ -260,6 +261,7 @@ void LoadEffects()
    em.RegisterEffect(new EffectPhaser());
    em.RegisterEffect(new EffectRepair());
    em.RegisterEffect(new EffectRepeat());
+   em.RegisterEffect(new EffectReverb());
    em.RegisterEffect(new EffectReverse());
    em.RegisterEffect(new EffectStereoToMono(), HIDDEN_EFFECT);// NOT in normal effects list.
    em.RegisterEffect(new EffectTruncSilence(), SIMPLE_EFFECT);

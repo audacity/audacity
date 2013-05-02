@@ -1300,6 +1300,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\effects\Reverb.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\Reverb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\Reverb_libSoX.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\effects\Reverse.cpp"
 				>
 			</File>

@@ -393,7 +393,7 @@ wxStaticText * ShuttleGuiBase::AddVariableText(const wxString &Str, bool bCenter
    return pStatic;
 }
 
-wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices )
+wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices, long style )
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -413,7 +413,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
    AddPrompt( Prompt );
 
    mpWind = pCombo = new wxComboBox(mpParent, miId, Selected, wxDefaultPosition, wxDefaultSize, 
-      n, Choices, Style( 0 ));
+      n, Choices, Style( style ));
    mpWind->SetName(wxStripMenuCodes(Prompt));
 
    UpdateSizers();
@@ -2176,16 +2176,28 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
       bs->AddButton( new wxButton( parent, wxID_HELP ) );
    }
 
-   if( buttons & ePreviewButton )
+   if( (buttons & ePreviewButton) && (buttons & ePreviewDryButton) )
+   {
+      bs->Add(new wxButton( parent, ePreviewID, _("Pre&view") ) );
+      bs->Add(new wxButton( parent, ePreviewDryID, _("Dry Previe&w") ) );
+      bs->Add( 20, 0 );
+   }
+   else if( buttons & ePreviewButton )
    {
       b = new wxButton( parent, ePreviewID, _("Pre&view") );
       bs->Add( b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
       bs->Add( 40, 0 );
    }
 
+   if( buttons & eDefaultsButton )
+   {
+      bs->Add(new wxButton( parent, eDefaultsID, _("&Defaults") ) );
+      bs->Add( 20, 0 );
+   }
+
    if( buttons & eDebugButton )
    {
-      b = new wxButton( parent, eDebugID, _("&Debug") );
+      b = new wxButton( parent, eDebugID, _("Debu&g") );
       bs->Add( b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
       bs->Add( 40, 0 );
    }

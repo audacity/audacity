@@ -126,7 +126,7 @@ class AUDACITY_DLL_API Effect {
 
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   virtual void Preview();
+   virtual void Preview(bool dryOnly = false);
 
    // Most effects just use the previewLength, but time-stretching/compressing 
    // effects need to use a different input length, so override this method. 
@@ -312,7 +312,8 @@ public:
    EffectDialog(wxWindow * parent,
                 const wxString & title,
                 int type = PROCESS_EFFECT,
-                int flags = wxDEFAULT_DIALOG_STYLE);
+                int flags = wxDEFAULT_DIALOG_STYLE,
+                int additionalButtons = 0);
 
    void Init();
 
@@ -324,6 +325,7 @@ public:
 
 private:
    int mType;
+   int mAdditionalButtons;
 };
 
 // Utility functions

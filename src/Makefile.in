@@ -172,6 +172,7 @@ OBJS = \
 	effects/Phaser.o \
 	effects/Repair.o \
 	effects/Repeat.o \
+	effects/Reverb.o \
 	effects/Reverse.o \
 	effects/Silence.o \
 	effects/StereoToMono.o \

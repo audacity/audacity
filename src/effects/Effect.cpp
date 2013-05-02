@@ -413,7 +413,7 @@ wxString Effect::GetPreviewName()
    return _("Pre&view");
 }
 
-void Effect::Preview()
+void Effect::Preview(bool dryOnly)
 {
    wxWindow* FocusDialog = wxWindow::FindFocus();
    if (gAudioIO->IsBusy())
@@ -468,16 +468,19 @@ void Effect::Preview()
 
    // Apply effect
 
-   // Effect is already inited; we call Process, End, and then Init
-   // again, so the state is exactly the way it was before Preview
-   // was called.
-   mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
-                                  _("Preparing preview"), 
-                                  pdlgHideCancelButton); // Have only "Stop" button.
-   bool bSuccess = Process();
-   delete mProgress;
-   End();
-   Init();
+   bool bSuccess(true);
+   if (!dryOnly) {
+      // Effect is already inited; we call Process, End, and then Init
+      // again, so the state is exactly the way it was before Preview
+      // was called.
+      mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
+            _("Preparing preview"), 
+            pdlgHideCancelButton); // Have only "Stop" button.
+      bSuccess = Process();
+      delete mProgress;
+      End();
+      Init();
+   }
    if (bSuccess)
    {
       mT0 = t0save;
@@ -546,10 +549,12 @@ void Effect::Preview()
 EffectDialog::EffectDialog(wxWindow * parent,
                            const wxString & title,
                            int type,
-                           int flags)
+                           int flags,
+                           int additionalButtons)
 : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxDefaultSize, flags)
 {
    mType = type;
+   mAdditionalButtons = additionalButtons;
 }
 
 void EffectDialog::Init()
@@ -571,7 +576,7 @@ void EffectDialog::Init()
             buttons |= ePreviewButton;
          }
       }
-      S.AddStandardButtons(buttons);
+      S.AddStandardButtons(buttons|mAdditionalButtons);
    }
    S.EndVerticalLay();
 

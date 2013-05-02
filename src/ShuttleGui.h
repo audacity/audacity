@@ -99,7 +99,7 @@ public:
    wxGrid * AddGrid();
    wxCheckBox * AddCheckBox( const wxString &Prompt, const wxString &Selected);
    wxCheckBox * AddCheckBoxOnRight( const wxString &Prompt, const wxString &Selected);
-   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices );
+   wxComboBox * AddCombo( const wxString &Prompt, const wxString &Selected,const wxArrayString * pChoices, long style = 0 );
    wxChoice   * AddChoice( const wxString &Prompt, const wxString &Selected, const wxArrayString * pChoices );
    wxMenuBar  * AddMenuBar( );
    wxMenu     * AddMenu( const wxString & Title );
@@ -333,13 +333,17 @@ enum
    eNoButton      = 0x0008,
    eHelpButton    = 0x0010,
    ePreviewButton = 0x0020,
-   eDebugButton   = 0x0040
+   eDebugButton   = 0x0040,
+   eDefaultsButton= 0x0080,
+   ePreviewDryButton  = 0x0100
 };
 
 enum
 {
    ePreviewID     = wxID_LOWEST - 1,
-   eDebugID       = wxID_LOWEST - 2
+   eDebugID       = wxID_LOWEST - 2,
+   eDefaultsID    = wxID_LOWEST - 3,
+   ePreviewDryID  = wxID_LOWEST - 4
 };
 
 AUDACITY_DLL_API wxSizer *CreateStdButtonSizer( wxWindow *parent,
