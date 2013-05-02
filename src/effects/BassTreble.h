@@ -22,6 +22,7 @@ class EffectBassTreble: public EffectTwoPassSimpleMono {
 
 public:
    EffectBassTreble();
+   virtual ~EffectBassTreble() {};
 
    virtual wxString GetEffectName() {
       return wxString(_("Bass and Treble..."));
@@ -44,11 +45,10 @@ public:
    // Useful only after PromptUser values have been set. 
    virtual wxString GetEffectDescription(); 
 
+protected:
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
    virtual bool Init();
-
-protected:
 
    virtual bool ProcessPass1(float *buffer, sampleCount len);
    virtual bool ProcessPass2(float *buffer, sampleCount len);
@@ -78,15 +78,13 @@ private:
    friend class BassTrebleDialog;
 };
 
-// class declarations
-
 //----------------------------------------------------------------------------
 // BassTrebleDialog
 //----------------------------------------------------------------------------
 class BassTrebleDialog:public EffectDialog {
 public:
-   // constructors and destructors
    BassTrebleDialog(EffectBassTreble *effect, wxWindow * parent);
+   virtual ~BassTrebleDialog() {};
 
    // method declarations for BassTrebleDialog
    void PopulateOrExchange(ShuttleGui & S);
@@ -114,8 +112,6 @@ private:
    wxTextCtrl *mTrebleT;
    wxTextCtrl *mLevelT;
    wxCheckBox *mNormalizeCheckBox;
-
-   DECLARE_EVENT_TABLE()
    wxStaticText* mWarning;
 
 public:
@@ -125,6 +121,8 @@ public:
    double treble;
    double level;
    bool mbNormalize;
+
+   DECLARE_EVENT_TABLE()
 };
 
 #endif
