@@ -36,7 +36,6 @@
 #include <wx/slider.h>
 #include <wx/sizer.h>
 
-
 // Used to communicate the type of the filter.
 static const int bassType = 0; //Low Shelf
 static const int trebleType = 1;  // High Shelf
@@ -117,13 +116,24 @@ bool EffectBassTreble::InitPass1()
 {
    mMax=0.0;
 
-   // Allow headroom for integer format samples
-   mPreGain = (dB_treble > 0)? (1.4 * dB_treble) : fabs(dB_treble);
-   if (dB_bass > 0)
-      mPreGain = (mPreGain > (1.4 * dB_bass))? mPreGain : (1.4 * dB_bass);
-   else
-      mPreGain = (mPreGain > fabs(dB_bass))? mPreGain : fabs(dB_bass);
-   mPreGain = (mbNormalize)? (exp(log(10.0) * mPreGain / 20)) : 1.0;
+   // Integer format tracks require headroom to avoid clipping
+   // when saved between passes (bug 619)
+
+   if (mbNormalize)  // don't need to calculate this if only doing one pass.
+   {
+      // Up to (gain + 6dB) headroom required for treble boost (experimental).
+      mPreGain = (dB_treble > 0)? (dB_treble + 6.0) : 0.0;
+      if (dB_bass >= 0)
+      {
+         mPreGain = (mPreGain > dB_bass)? mPreGain : dB_bass;
+      } else {
+         // Up to 6 dB headroom reaquired for bass cut (experimental)
+         mPreGain = (mPreGain > 6.0)? mPreGain : 6.0;
+      }
+      mPreGain = (exp (log(10.0) * mPreGain / 20));   // to linear
+   } else {
+      mPreGain = 1.0;   // Unity gain
+   }
 
    if (!mbNormalize)
        DisableSecondPass();
@@ -248,13 +258,15 @@ float EffectBassTreble::DoFilter(float in)
 #define ID_NORMALIZE 10007
 
 // Declare ranges
+// Sliders are integer, so range is x 10
+// to allow 1 decimal place resolution
 
-#define BASS_MIN -150
-#define BASS_MAX 150
-#define TREBLE_MIN -150
-#define TREBLE_MAX 150
-#define LEVEL_MIN -300
-#define LEVEL_MAX 0
+#define BASS_MIN -150      // Corresponds to -15 db
+#define BASS_MAX 150       // Corresponds to +15 dB   
+#define TREBLE_MIN -150    // Corresponds to -15 dB
+#define TREBLE_MAX 150     // Corresponds to +15 dB
+#define LEVEL_MIN -300     // Corresponds to -30 dN
+#define LEVEL_MAX 0        // Corresponds to 0 dB
 
 BEGIN_EVENT_TABLE(BassTrebleDialog, EffectDialog)
    EVT_SLIDER(ID_BASS_SLIDER, BassTrebleDialog::OnBassSlider)
