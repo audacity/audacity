@@ -1348,14 +1348,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\effects\SimplePairedTwoTrack.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\effects\SimplePairedTwoTrack.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\effects\SoundTouchEffect.cpp"
 				>
 			</File>
