@@ -320,38 +320,41 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
    s.StartMultiColumn(3, wxEXPAND); 
    {
       s.SetStretchyCol(2);
-      //vvvvv This one a little tricky so leave it as comment.
-      //#define SLIDER(S,N,W,T,F,U,D,L,H) \
-      //      m ## N ## Text = s.Id(ID_ ## N ## _TEXT).AddSpinCtrl(_(#S " (" #U "):"), 0, H, L); \
-      //vvvvv Rob had this for every slider. It's the default, so I think unnecessary for any of them. 
-      //      s.SetStyle(wxSL_HORIZONTAL); \
-      //      m ## N ## Widget = s.Id(ID_ ## N ## _WIDGET).AddSlider(wxT(""), 0, H, L);
-      //#include "Reverb.sliders.h"
+
       mRoomSizeText = s.Id(ID_RoomSize_TEXT).AddSpinCtrl(_("Room Size (%):"), 0, 100, 0); 
+      s.SetStyle(wxSL_HORIZONTAL);
       mRoomSizeWidget = s.Id(ID_RoomSize_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
       mDelayText = s.Id(ID_Delay_TEXT).AddSpinCtrl(_("Delay (ms):"), 0, 200, 0);
+      s.SetStyle(wxSL_HORIZONTAL);
       mDelayWidget = s.Id(ID_Delay_WIDGET).AddSlider(wxT(""), 0, 200, 0);
 
       mReverberanceText = s.Id(ID_Reverberance_TEXT).AddSpinCtrl(_("Reverberance (%):"), 0, 100, 0);
+      s.SetStyle(wxSL_HORIZONTAL);
       mReverberanceWidget = s.Id(ID_Reverberance_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
       mHfDampingText = s.Id(ID_HfDamping_TEXT).AddSpinCtrl(_("Damping (%):"), 0, 100, 0);
+      s.SetStyle(wxSL_HORIZONTAL);
       mHfDampingWidget = s.Id(ID_HfDamping_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
       mToneLowText = s.Id(ID_ToneLow_TEXT).AddSpinCtrl(_("Tone Low (%):"), 0, 100, 0);
+      s.SetStyle(wxSL_HORIZONTAL);
       mToneLowWidget = s.Id(ID_ToneLow_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
       mToneHighText = s.Id(ID_ToneHigh_TEXT).AddSpinCtrl(_("Tone High (%):"), 0, 100, 0);
+      s.SetStyle(wxSL_HORIZONTAL);
       mToneHighWidget = s.Id(ID_ToneHigh_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
       mWetGainText = s.Id(ID_WetGain_TEXT).AddSpinCtrl(_("Wet Gain (dB):"), 0, 10, -20);
+      s.SetStyle(wxSL_HORIZONTAL);
       mWetGainWidget = s.Id(ID_WetGain_WIDGET).AddSlider(wxT(""), 0, 10, -20);
 
       mDryGainText = s.Id(ID_DryGain_TEXT).AddSpinCtrl(_("Dry Gain (dB):"), 0, 10, -20);
+      s.SetStyle(wxSL_HORIZONTAL);
       mDryGainWidget = s.Id(ID_DryGain_WIDGET).AddSlider(wxT(""), 0, 10, -20);
 
       mStereoWidthText = s.Id(ID_StereoWidth_TEXT).AddSpinCtrl(_("Stereo Width (%):"), 0, 100, 0);
+      s.SetStyle(wxSL_HORIZONTAL);
       mStereoWidthWidget = s.Id(ID_StereoWidth_WIDGET).AddSlider(wxT(""), 0, 100, 0);
    } 
    s.EndMultiColumn();
