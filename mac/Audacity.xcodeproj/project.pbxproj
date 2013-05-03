@@ -364,7 +364,6 @@
 		1790B14B09883BFD008A330A /* Reverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04009883BFD008A330A /* Reverse.cpp */; };
 		1790B14C09883BFD008A330A /* Silence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04209883BFD008A330A /* Silence.cpp */; };
 		1790B14D09883BFD008A330A /* SimpleMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04409883BFD008A330A /* SimpleMono.cpp */; };
-		1790B14E09883BFD008A330A /* SimplePairedTwoTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */; };
 		1790B14F09883BFD008A330A /* SoundTouchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04809883BFD008A330A /* SoundTouchEffect.cpp */; };
 		1790B15109883BFD008A330A /* StereoToMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04C09883BFD008A330A /* StereoToMono.cpp */; };
 		1790B15209883BFD008A330A /* ToneGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04E09883BFD008A330A /* ToneGen.cpp */; };
@@ -1186,6 +1185,9 @@
 		ED1521BC163C284600451B5F /* dbesi0.c in Sources */ = {isa = PBXBuildFile; fileRef = ED1521BB163C284600451B5F /* dbesi0.c */; };
 		ED1521CE163C29DA00451B5F /* samplerate.h in Headers */ = {isa = PBXBuildFile; fileRef = ED1521CD163C29DA00451B5F /* samplerate.h */; };
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
+		ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
+		ED19449B1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
+		ED19449C1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
 		ED2707260EF9C51D007D4FFD /* buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707040EF9C51D007D4FFD /* buffer.cpp */; };
 		ED2707270EF9C51D007D4FFD /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707050EF9C51D007D4FFD /* buffer.h */; };
@@ -1276,7 +1278,6 @@
 		ED663BB516543647007F53A5 /* Reverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04009883BFD008A330A /* Reverse.cpp */; };
 		ED663BB616543647007F53A5 /* Silence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04209883BFD008A330A /* Silence.cpp */; };
 		ED663BB716543647007F53A5 /* SimpleMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04409883BFD008A330A /* SimpleMono.cpp */; };
-		ED663BB816543647007F53A5 /* SimplePairedTwoTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */; };
 		ED663BB916543647007F53A5 /* SoundTouchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04809883BFD008A330A /* SoundTouchEffect.cpp */; };
 		ED663BBA16543647007F53A5 /* StereoToMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04C09883BFD008A330A /* StereoToMono.cpp */; };
 		ED663BBB16543647007F53A5 /* ToneGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04E09883BFD008A330A /* ToneGen.cpp */; };
@@ -1608,7 +1609,6 @@
 		ED85B48D16A47353006DA21D /* Reverse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04009883BFD008A330A /* Reverse.cpp */; };
 		ED85B48E16A47353006DA21D /* Silence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04209883BFD008A330A /* Silence.cpp */; };
 		ED85B48F16A47353006DA21D /* SimpleMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04409883BFD008A330A /* SimpleMono.cpp */; };
-		ED85B49016A47353006DA21D /* SimplePairedTwoTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */; };
 		ED85B49116A47353006DA21D /* SoundTouchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04809883BFD008A330A /* SoundTouchEffect.cpp */; };
 		ED85B49216A47353006DA21D /* StereoToMono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04C09883BFD008A330A /* StereoToMono.cpp */; };
 		ED85B49316A47353006DA21D /* ToneGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B04E09883BFD008A330A /* ToneGen.cpp */; };
@@ -2861,8 +2861,6 @@
 		1790B04309883BFD008A330A /* Silence.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Silence.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04409883BFD008A330A /* SimpleMono.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleMono.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04509883BFD008A330A /* SimpleMono.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SimpleMono.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SimplePairedTwoTrack.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B04709883BFD008A330A /* SimplePairedTwoTrack.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SimplePairedTwoTrack.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04809883BFD008A330A /* SoundTouchEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SoundTouchEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04909883BFD008A330A /* SoundTouchEffect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SoundTouchEffect.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B04C09883BFD008A330A /* StereoToMono.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = StereoToMono.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3937,6 +3935,8 @@
 		ED15219B163C26E400451B5F /* filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filter.h; sourceTree = "<group>"; };
 		ED1521BB163C284600451B5F /* dbesi0.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dbesi0.c; sourceTree = "<group>"; };
 		ED1521CD163C29DA00451B5F /* samplerate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = samplerate.h; sourceTree = "<group>"; };
+		ED1944981733F92800F4F5CA /* Reverb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Reverb.cpp; sourceTree = "<group>"; };
+		ED1944991733F92800F4F5CA /* Reverb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reverb.h; sourceTree = "<group>"; };
 		ED2706F40EF9C3C6007D4FFD /* libsbsms.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsbsms.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED2706FE0EF9C47E007D4FFD /* sbsms.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sbsms.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED2707040EF9C51D007D4FFD /* buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = buffer.cpp; path = sbsms/src/buffer.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5093,6 +5093,8 @@
 				28EBA7FB0A78FADE00C8BB1F /* Repair.h */,
 				1790B03E09883BFD008A330A /* Repeat.cpp */,
 				1790B03F09883BFD008A330A /* Repeat.h */,
+				ED1944981733F92800F4F5CA /* Reverb.cpp */,
+				ED1944991733F92800F4F5CA /* Reverb.h */,
 				1790B04009883BFD008A330A /* Reverse.cpp */,
 				1790B04109883BFD008A330A /* Reverse.h */,
 				ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */,
@@ -5101,8 +5103,6 @@
 				1790B04309883BFD008A330A /* Silence.h */,
 				1790B04409883BFD008A330A /* SimpleMono.cpp */,
 				1790B04509883BFD008A330A /* SimpleMono.h */,
-				1790B04609883BFD008A330A /* SimplePairedTwoTrack.cpp */,
-				1790B04709883BFD008A330A /* SimplePairedTwoTrack.h */,
 				1790B04809883BFD008A330A /* SoundTouchEffect.cpp */,
 				1790B04909883BFD008A330A /* SoundTouchEffect.h */,
 				1790B04C09883BFD008A330A /* StereoToMono.cpp */,
@@ -8501,7 +8501,6 @@
 				1790B14B09883BFD008A330A /* Reverse.cpp in Sources */,
 				1790B14C09883BFD008A330A /* Silence.cpp in Sources */,
 				1790B14D09883BFD008A330A /* SimpleMono.cpp in Sources */,
-				1790B14E09883BFD008A330A /* SimplePairedTwoTrack.cpp in Sources */,
 				1790B14F09883BFD008A330A /* SoundTouchEffect.cpp in Sources */,
 				1790B15109883BFD008A330A /* StereoToMono.cpp in Sources */,
 				1790B15209883BFD008A330A /* ToneGen.cpp in Sources */,
@@ -8759,6 +8758,7 @@
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
+				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8959,7 +8959,6 @@
 				ED663BB516543647007F53A5 /* Reverse.cpp in Sources */,
 				ED663BB616543647007F53A5 /* Silence.cpp in Sources */,
 				ED663BB716543647007F53A5 /* SimpleMono.cpp in Sources */,
-				ED663BB816543647007F53A5 /* SimplePairedTwoTrack.cpp in Sources */,
 				ED663BB916543647007F53A5 /* SoundTouchEffect.cpp in Sources */,
 				ED663BBA16543647007F53A5 /* StereoToMono.cpp in Sources */,
 				ED663BBB16543647007F53A5 /* ToneGen.cpp in Sources */,
@@ -9217,6 +9216,7 @@
 				ED663CB616543647007F53A5 /* Paulstretch.cpp in Sources */,
 				ED663CB716543647007F53A5 /* ModulePrefs.cpp in Sources */,
 				EDD2431516934A6100D9DEC2 /* BassTreble.cpp in Sources */,
+				ED19449B1733F92800F4F5CA /* Reverb.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9267,7 +9267,6 @@
 				ED85B48D16A47353006DA21D /* Reverse.cpp in Sources */,
 				ED85B48E16A47353006DA21D /* Silence.cpp in Sources */,
 				ED85B48F16A47353006DA21D /* SimpleMono.cpp in Sources */,
-				ED85B49016A47353006DA21D /* SimplePairedTwoTrack.cpp in Sources */,
 				ED85B49116A47353006DA21D /* SoundTouchEffect.cpp in Sources */,
 				ED85B49216A47353006DA21D /* StereoToMono.cpp in Sources */,
 				ED85B49316A47353006DA21D /* ToneGen.cpp in Sources */,
@@ -9525,6 +9524,7 @@
 				ED85B58F16A47353006DA21D /* Paulstretch.cpp in Sources */,
 				ED85B59016A47353006DA21D /* ModulePrefs.cpp in Sources */,
 				ED85B59116A47353006DA21D /* BassTreble.cpp in Sources */,
+				ED19449C1733F92800F4F5CA /* Reverb.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

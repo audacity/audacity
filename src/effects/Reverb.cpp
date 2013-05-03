@@ -56,7 +56,7 @@ bool EffectReverb::ProcessOneBlock(sampleCount len0, float * const * chans0)
    size_t c, i, w, len = len0;
    float const dryMult(mParams.mWetOnly? 0 : dB_to_linear(mParams.mDryGain));
    while (len) {
-      size_t len1 = min(len, BLOCK);
+      size_t len1 = min(len, (size_t)BLOCK);
       for (c = 0; c < mP->ichannels; ++c) {
          mP->chan[c].dry = (float *)fifo_write(&mP->chan[c].reverb.input_fifo, len1, chans[c]);
          reverb_process(&mP->chan[c].reverb, len1);
