@@ -302,7 +302,7 @@ BEGIN_EVENT_TABLE(ReverbDialogue, EffectDialog)
 END_EVENT_TABLE()
 
 ReverbDialogue::ReverbDialogue(EffectReverb * effect, wxWindow * parent):
-   EffectDialog(parent, _(""), PROCESS_EFFECT, wxDEFAULT_DIALOG_STYLE, ePreviewDryButton),
+   EffectDialog(parent, _("Reverb"), PROCESS_EFFECT, wxDEFAULT_DIALOG_STYLE, ePreviewDryButton),
    mEffect(*effect), mParams(effect->mParams)
 {
    SetTitle();
