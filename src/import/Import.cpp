@@ -45,6 +45,7 @@ and ImportLOF.cpp.
 #include <wx/listimpl.cpp>
 #include "../ShuttleGui.h"
 #include "../Audacity.h"
+#include "../Project.h"
 
 #include "Import.h"
 #include "ImportPlugin.h"
@@ -718,7 +719,7 @@ ImportStreamDialog::~ImportStreamDialog()
 
 }
 
-void ImportStreamDialog::OnOk(wxCommandEvent &event)
+void ImportStreamDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    wxArrayInt selitems;
    int sels = StreamList->GetSelections(selitems);
@@ -727,19 +728,8 @@ void ImportStreamDialog::OnOk(wxCommandEvent &event)
    EndModal( wxID_OK );
 }
 
-void ImportStreamDialog::OnCancel(wxCommandEvent &event)
+void ImportStreamDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_CANCEL );
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 702e6bd3-b26c-424f-9d6a-c88b565ea143
 
