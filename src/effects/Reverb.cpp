@@ -324,7 +324,11 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
       s.SetStyle(wxSL_HORIZONTAL);
       mRoomSizeWidget = s.Id(ID_RoomSize_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      mDelayText = s.Id(ID_Delay_TEXT).AddSpinCtrl(_("Delay (ms):"), 0, 200, 0);
+      // Rob's original code referred to this param as "Delay". 
+      // Then, May 11, 2013, in a thread on [Audacity-quality], subject "Reverb effect", 
+      // Steve suggested and Gale seconded renaming it "Pre-delay". 
+      // I've changed it only here, in the GUI, and left the rest of the code as *Delay*.
+      mDelayText = s.Id(ID_Delay_TEXT).AddSpinCtrl(_("Pre-delay (ms):"), 0, 200, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mDelayWidget = s.Id(ID_Delay_WIDGET).AddSlider(wxT(""), 0, 200, 0);
 
