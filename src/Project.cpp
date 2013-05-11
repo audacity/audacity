@@ -737,6 +737,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mMixerBoardFrame(NULL),
      mFreqWindow(NULL),
      mToolManager(NULL),
+     mbBusyImporting(false), 
      mAudioIOToken(-1),
      mIsDeleting(false),
      mTracksFitVerticallyZoomed(false),  //lda
@@ -1819,14 +1820,15 @@ void AudacityProject::OnMouseEvent(wxMouseEvent & event)
 //     and/or attempts to delete objects twice.
 void AudacityProject::OnCloseWindow(wxCloseEvent & event)
 {
+   if (event.CanVeto() && (::wxIsBusy() || mbBusyImporting)) 
+   {
+      event.Veto();
+      return;
+   }
+
    if (mFreqWindow) {
       mFreqWindow->Destroy();
       mFreqWindow = NULL;
-   }
-
-   if (wxIsBusy()) {
-      event.Veto();
-      return;
    }
 
    // Check to see if we were playing or recording

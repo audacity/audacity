@@ -327,6 +327,9 @@ int Importer::Import(wxString fName,
                      Tags *tags,
                      wxString &errorMessage)
 {
+   AudacityProject *pProj = GetActiveProject();
+   pProj->mbBusyImporting = true;
+
    ImportFileHandle *inFile = NULL;
    int numTracks = 0;
 
@@ -669,6 +672,8 @@ int Importer::Import(wxString fName,
 
       errorMessage.Printf(_("Audacity recognized the type of the file '%s'.\nImporters supposedly supporting such files are:\n%s,\nbut none of them understood this file format."),fName.c_str(), pluglist.c_str());
    }
+
+   pProj->mbBusyImporting = false;
 
    return 0;
 }

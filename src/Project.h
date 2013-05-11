@@ -492,6 +492,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mShowSplashScreen;
    wxString mHelpPref;
    wxString mSoloPref;
+   bool mbBusyImporting; // used to fix bug 584
 
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
    wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
