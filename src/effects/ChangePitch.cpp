@@ -247,8 +247,23 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextValidator nullvld(wxFILTER_INCLUDE_CHAR_LIST);
    wxTextValidator numvld(wxFILTER_NUMERIC);
-   wxArrayString pitch;
+   
+   wxTextValidator nonNegNumValidator(wxFILTER_INCLUDE_CHAR_LIST); // like wxFILTER_NUMERIC, but disallow negative numbers. 
+   wxArrayString aIncludes; 
+   aIncludes.Add(wxT("0"));
+   aIncludes.Add(wxT("1"));
+   aIncludes.Add(wxT("2"));
+   aIncludes.Add(wxT("3"));
+   aIncludes.Add(wxT("4"));
+   aIncludes.Add(wxT("5"));
+   aIncludes.Add(wxT("6"));
+   aIncludes.Add(wxT("7"));
+   aIncludes.Add(wxT("8"));
+   aIncludes.Add(wxT("9"));
+   aIncludes.Add(wxT("."));
+   nonNegNumValidator.SetIncludes(aIncludes); 
 
+   wxArrayString pitch;
    pitch.Add(wxT("C"));
    pitch.Add(wxT("C#/Db"));
    pitch.Add(wxT("D"));
@@ -326,7 +341,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
          m_pTextCtrl_SemitonesChange = S.Id(ID_TEXT_SEMITONESCHANGE)
             .AddTextBox(wxT(""), wxT(""), 12);
          m_pTextCtrl_SemitonesChange->SetName(_("Semitones in half-steps"));
-         m_pTextCtrl_SemitonesChange->SetValidator(numvld);
+         m_pTextCtrl_SemitonesChange->SetValidator(nonNegNumValidator);
       }
       S.EndHorizontalLay();
 
@@ -342,7 +357,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
          m_pTextCtrl_ToFrequency = S.Id(ID_TEXT_TOFREQUENCY)
             .AddTextBox(_("to"), wxT(""), 12);
          m_pTextCtrl_ToFrequency->SetName(_("To frequency in seconds"));
-         m_pTextCtrl_ToFrequency->SetValidator(numvld);
+         m_pTextCtrl_ToFrequency->SetValidator(nonNegNumValidator);
       }
       S.EndHorizontalLay();
 
@@ -502,7 +517,7 @@ void ChangePitchDialog::Calc_PercentChange()
 
 // handlers
 
-void ChangePitchDialog::OnChoice_FromPitch(wxCommandEvent & event)
+void ChangePitchDialog::OnChoice_FromPitch(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -518,7 +533,7 @@ void ChangePitchDialog::OnChoice_FromPitch(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnRadioButton_PitchUpDown(wxCommandEvent & event)
+void ChangePitchDialog::OnRadioButton_PitchUpDown(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -539,7 +554,7 @@ void ChangePitchDialog::OnRadioButton_PitchUpDown(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnChoice_ToPitch(wxCommandEvent & event)
+void ChangePitchDialog::OnChoice_ToPitch(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -560,7 +575,7 @@ void ChangePitchDialog::OnChoice_ToPitch(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & event)
+void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -589,7 +604,7 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & event)
+void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -616,7 +631,7 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & event)
+void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -647,7 +662,7 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & event)
+void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -680,7 +695,7 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnSlider_PercentChange(wxCommandEvent & event)
+void ChangePitchDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -706,7 +721,7 @@ void ChangePitchDialog::OnSlider_PercentChange(wxCommandEvent & event)
    }
 }
 
-void ChangePitchDialog::OnPreview(wxCommandEvent &event)
+void ChangePitchDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 
