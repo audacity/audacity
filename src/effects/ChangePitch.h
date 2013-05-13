@@ -64,7 +64,6 @@ class EffectChangePitch : public EffectSoundTouch {
 
 private:
    int            m_FromPitchIndex;    // pitch index, per PitchIndex
-   bool           m_bWantPitchDown;    // up to ToPitchNum if false (default), else down
    int            m_ToPitchIndex;      // pitch index, per PitchIndex
 
    double         m_SemitonesChange;   // how many semitones to change pitch
@@ -104,7 +103,6 @@ class ChangePitchDialog:public EffectDialog {
 
    // handlers
    void OnChoice_FromPitch(wxCommandEvent & event);
-   void OnRadioButton_PitchUpDown(wxCommandEvent & event);
    void OnChoice_ToPitch(wxCommandEvent & event);
 
    void OnText_SemitonesChange(wxCommandEvent & event);
@@ -118,7 +116,6 @@ class ChangePitchDialog:public EffectDialog {
    void OnPreview( wxCommandEvent &event );
 
    // helper fns for controls
-   void Update_RadioButton_PitchUpDown();
    void Update_Choice_ToPitch();
 
    void Update_Text_SemitonesChange();
@@ -134,7 +131,6 @@ class ChangePitchDialog:public EffectDialog {
 
    // controls
    wxChoice *     m_pChoice_FromPitch;
-   wxRadioButton *m_pRadioButton_PitchUp;
    wxRadioButton *m_pRadioButton_PitchDown;
    wxChoice *     m_pChoice_ToPitch;
 
@@ -149,7 +145,6 @@ class ChangePitchDialog:public EffectDialog {
  public:
    // effect parameters
    int      m_FromPitchIndex;    // pitch index, per PitchIndex
-   bool     m_bWantPitchDown;    // up to ToPitchNum if false (default), else down
    int      m_ToPitchIndex;      // pitch index, per PitchIndex
 
    double   m_SemitonesChange;   // how many semitones to change pitch
