@@ -4,7 +4,7 @@
 
   ChangePitch.cpp
 
-  Vaughan Johnson, Dominic Mazzoni
+  Vaughan Johnson, Dominic Mazzoni, Steve Daulton
   
   Change Pitch effect provides raising or lowering 
   the pitch without changing the tempo.
@@ -281,39 +281,44 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
    S.SetBorder(5);
 
-   S.StartMultiColumn(6, wxCENTER);
+   /* i18n-hint: (noun) Musical pitch.*/
+   S.StartStatic(wxT("Pitch"));
    {
-      /* i18n-hint: (noun) Musical pitch.*/
-      S.AddUnits(_("Pitch:"));
-
-      S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL);
+      S.StartMultiColumn(6, wxCENTER);
       {
-         m_pChoice_FromPitch = S.Id(ID_CHOICE_FROMPITCH).AddChoice(_("from"), wxT(""), &pitch);
-         m_pChoice_FromPitch->SetName(_("From Pitch"));
-         m_pChoice_FromPitch->SetSizeHints(80, -1);
+         S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL);
+         {
+            m_pChoice_FromPitch = S.Id(ID_CHOICE_FROMPITCH).AddChoice(_("from"), wxT(""), &pitch);
+            m_pChoice_FromPitch->SetName(_("From Pitch"));
+            m_pChoice_FromPitch->SetSizeHints(80, -1);
 
-         m_pChoice_ToPitch = S.Id(ID_CHOICE_TOPITCH).AddChoice(_("to"), wxT(""), &pitch);
-         m_pChoice_ToPitch->SetName(_("To Pitch"));
-         m_pChoice_ToPitch->SetSizeHints(80, -1);
+            m_pChoice_ToPitch = S.Id(ID_CHOICE_TOPITCH).AddChoice(_("to"), wxT(""), &pitch);
+            m_pChoice_ToPitch->SetName(_("To Pitch"));
+            m_pChoice_ToPitch->SetSizeHints(80, -1);
+         }
+         S.EndHorizontalLay();
       }
-      S.EndHorizontalLay();
+      S.EndMultiColumn();
+  
+      S.StartMultiColumn(2, wxCENTER);
+      {
+         S.AddPrompt(_("Semitones (half-steps):"));
+         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, false);
+         {
+            m_pTextCtrl_SemitonesChange = S.Id(ID_TEXT_SEMITONESCHANGE)
+               .AddTextBox(wxT(""), wxT(""), 12);
+            m_pTextCtrl_SemitonesChange->SetName(_("Semitones in half-steps"));
+            m_pTextCtrl_SemitonesChange->SetValidator(numvld);
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndMultiColumn();
    }
-   S.EndMultiColumn();
+   S.EndStatic();
 
-   S.StartMultiColumn(2, wxCENTER);
+   S.StartStatic(wxT("Frequency (Hz)"));
    {
-      S.AddPrompt(_("Semitones (half-steps):"));
-      S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, false);
-      {
-         m_pTextCtrl_SemitonesChange = S.Id(ID_TEXT_SEMITONESCHANGE)
-            .AddTextBox(wxT(""), wxT(""), 12);
-         m_pTextCtrl_SemitonesChange->SetName(_("Semitones in half-steps"));
-         m_pTextCtrl_SemitonesChange->SetValidator(numvld);
-      }
-      S.EndHorizontalLay();
-
-      S.AddPrompt(_("Frequency (Hz):"));
-      S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, false);
+      S.StartHorizontalLay(wxCENTER, false);
       {
          m_pTextCtrl_FromFrequency = S.Id(ID_TEXT_FROMFREQUENCY)
             .AddTextBox(_("from"), wxT(""), 12);
@@ -327,28 +332,23 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndHorizontalLay();
 
-      S.AddPrompt(_("Percent Change:"));
-      S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, false);
+      S.StartHorizontalLay(wxCENTER, false);
       {
-         m_pTextCtrl_PercentChange = S.Id(ID_TEXT_PERCENTCHANGE)
-            .AddTextBox(wxT(""), wxT(""), 12);
-         m_pTextCtrl_PercentChange->SetName(_("Percent Change"));
+         m_pTextCtrl_PercentChange = S.Id(ID_TEXT_PERCENTCHANGE).AddTextBox(wxT("Percent Change:"), wxT(""), 12);
          m_pTextCtrl_PercentChange->SetValidator(numvld);
       }
       S.EndHorizontalLay();
-   }
-   S.EndMultiColumn();
 
-   S.StartHorizontalLay(wxEXPAND);
-   {
-      S.SetStyle(wxSL_HORIZONTAL);
-      m_pSlider_PercentChange = S.Id(ID_SLIDER_PERCENTCHANGE)
-         .AddSlider(wxT(""), 0, (int)PERCENTCHANGE_MAX, (int)PERCENTCHANGE_MIN);
-      m_pSlider_PercentChange->SetName(_("Percent Change"));
+      S.StartHorizontalLay(wxEXPAND);
+      {
+         S.SetStyle(wxSL_HORIZONTAL);
+         m_pSlider_PercentChange = S.Id(ID_SLIDER_PERCENTCHANGE)
+            .AddSlider(wxT(""), 0, (int)PERCENTCHANGE_MAX, (int)PERCENTCHANGE_MIN);
+         m_pSlider_PercentChange->SetName(_("Percent Change"));
+      }
+      S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
-
-   return;
+   S.EndStatic();
 }
 
 bool ChangePitchDialog::TransferDataToWindow()
