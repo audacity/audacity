@@ -432,7 +432,7 @@ bool ChangePitchDialog::TransferDataFromWindow()
       m_PercentChange = newDouble;
    }
 
-   // Ignore Slider_PercentChange because TextCtrl_PercentChange 
+   // No need to update Slider_PercentChange here because TextCtrl_PercentChange 
    // always tracks it & is more precise (decimal points).
 
 
@@ -449,7 +449,9 @@ void ChangePitchDialog::Calc_ToFrequency()
 
 void ChangePitchDialog::Calc_ToPitchIndex()
 {
-   m_ToPitchIndex = (m_FromPitchIndex + (int)m_SemitonesChange) % 12;
+   int nSemitonesChange = 
+      (int)(m_SemitonesChange + ((m_SemitonesChange < 0.0) ? -0.5 : 0.5));
+   m_ToPitchIndex = (m_FromPitchIndex + nSemitonesChange) % 12;
    if (m_ToPitchIndex < 0)
       m_ToPitchIndex += 12;
 }
@@ -605,8 +607,6 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
       this->Update_Slider_PercentChange();
       m_bLoopDetect = false;
 
-      //v Probably better to override wxTextValidator to disallow negative values.
-      // See comment in ChangePitchDialog::ChangePitchDialog.
       this->FindWindow(wxID_OK)->Enable(m_PercentChange > -100.0);
    }
 }
