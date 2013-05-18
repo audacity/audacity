@@ -369,7 +369,7 @@ bool ChangePitchDialog::TransferDataToWindow()
    // from/to frequency controls
    if (m_pTextCtrl_FromFrequency) {
       wxString str;
-      if (m_FromFrequency > 0.0)
+      if ((m_ToFrequency > 0.0) && (m_ToFrequency <= DBL_MAX))
          str.Printf(wxT("%.3f"), m_FromFrequency);
       else
          str = wxT("");
@@ -520,9 +520,14 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_SemitonesChange) {
       wxString str = m_pTextCtrl_SemitonesChange->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_SemitonesChange = newValue;
+      if (str.IsEmpty())
+         m_SemitonesChange = 0.0;
+      else
+      {
+         double newValue = 0;
+         str.ToDouble(&newValue);
+         m_SemitonesChange = newValue;
+      }
 
       this->Calc_PercentChange();
       this->Calc_ToFrequency(); // Call *after* m_PercentChange is updated.
@@ -534,6 +539,13 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
       this->Update_Text_PercentChange();
       this->Update_Slider_PercentChange();
       m_bLoopDetect = false;
+
+      // If m_SemitonesChange is a big enough negative, we can go to or below 0 freq. 
+      // If m_SemitonesChange is a big enough positive, we can go to 1.#INF (Windows) or inf (Linux). 
+      // Prevent processing with either. 
+      bool bWantEnable = (m_ToFrequency > 0.0) && (m_ToFrequency <= DBL_MAX);
+      this->FindWindow(wxID_OK)->Enable(bWantEnable);
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bWantEnable);
    }
 }
 
@@ -544,8 +556,21 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_FromFrequency) {
       wxString str = m_pTextCtrl_FromFrequency->GetValue();
+      // Empty string causes unpredictable results with ToDouble() and later calculations.
+      if (str.IsEmpty())
+      {
+         this->FindWindow(wxID_OK)->Disable();
+         return;
+      }
       double newDouble;
       str.ToDouble(&newDouble);
+      // Zero frequency makes no sense, but user might still be editing, 
+      // so it's not an error, but we do not want to update the values/controls. 
+      if (newDouble == 0.0) 
+      {
+         this->FindWindow(wxID_OK)->Disable();
+         return;
+      }
       m_FromFrequency = newDouble;
 
       m_FromPitchIndex = PitchIndex(FreqToMIDInoteNumber(m_FromFrequency));
@@ -556,6 +581,9 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       this->Update_Choice_ToPitch();
       this->Update_Text_ToFrequency();
       m_bLoopDetect = false;
+
+      // Success. Make sure OK is enabled, in case we disabled it above during editing. 
+      this->FindWindow(wxID_OK)->Enable();
    }
 }
 
@@ -566,8 +594,21 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_ToFrequency) {
       wxString str = m_pTextCtrl_ToFrequency->GetValue();
+      // Empty string causes unpredictable results with ToDouble() and later calculations.
+      if (str.IsEmpty())
+      {
+         this->FindWindow(wxID_OK)->Disable();
+         return;
+      }
       double newDouble;
       str.ToDouble(&newDouble);
+      // Zero frequency makes no sense, but user might still be editing, 
+      // so it's not an error, but we do not want to update the values/controls. 
+      if (newDouble == 0.0) 
+      {
+         this->FindWindow(wxID_OK)->Disable();
+         return;
+      }
       m_ToFrequency = newDouble;
 
       m_PercentChange = (((double)(m_ToFrequency) * 100.0) / 
@@ -582,7 +623,10 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
       this->Update_Text_PercentChange();
       this->Update_Slider_PercentChange();
       m_bLoopDetect = false;
-   }
+   
+      // Success. Make sure OK is enabled, in case we disabled it above during editing. 
+      this->FindWindow(wxID_OK)->Enable();
+}
 }
 
 void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
@@ -592,8 +636,20 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_PercentChange) {
       wxString str = m_pTextCtrl_PercentChange->GetValue();
+      if (str.IsEmpty())
+      {
+         this->FindWindow(wxID_OK)->Disable();
+         return;
+      }
       double newValue = 0;
       str.ToDouble(&newValue);
+      // Zero and negative frequency makes no sense, but user might still be editing, 
+      // so it's not an error, but we do not want to update the values/controls. 
+      if (newValue <= -100.0) 
+      {
+         this->FindWindow(wxID_OK)->Disable();
+         return;
+      }
       m_PercentChange = newValue;
 
       this->Calc_SemitonesChange_fromPercentChange();
@@ -673,7 +729,7 @@ void ChangePitchDialog::Update_Text_ToFrequency()
 {
    if (m_pTextCtrl_ToFrequency) {
       wxString str;
-      if (m_ToFrequency > 0.0)
+      if ((m_ToFrequency > 0.0) && (m_ToFrequency <= DBL_MAX))
          str.Printf(wxT("%.3f"), m_ToFrequency);
       else
          str = wxT("");
@@ -686,7 +742,10 @@ void ChangePitchDialog::Update_Text_PercentChange()
 {
    if (m_pTextCtrl_PercentChange) {
       wxString str;
-      str.Printf(wxT("%.3f"), m_PercentChange);
+      if ((m_ToFrequency > 0.0) && (m_ToFrequency <= DBL_MAX))
+         str.Printf(wxT("%.3f"), m_PercentChange);
+      else
+         str = wxT("");
       m_pTextCtrl_PercentChange->SetValue(str);
       FindWindow(wxID_OK)->Enable(m_PercentChange > -100.0);
    }
@@ -701,21 +760,15 @@ void ChangePitchDialog::Update_Slider_PercentChange()
          unwarped = pow(m_PercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
 
       // Add 0.5 to unwarped so trunc -> round.
-      m_pSlider_PercentChange->SetValue((int)(unwarped + 0.5)); 
+      int newSetting = (int)(unwarped + 0.5);
+      if (newSetting < PERCENTCHANGE_MIN)
+         newSetting = PERCENTCHANGE_MIN;
+      if (newSetting > PERCENTCHANGE_MAX)
+         newSetting = PERCENTCHANGE_MAX;
+      m_pSlider_PercentChange->SetValue(newSetting); 
    }
 }
 
 
 #endif // USE_SOUNDTOUCH
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 0b070f91-579c-4b57-bc29-82ceb6775355
 
