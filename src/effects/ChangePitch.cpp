@@ -23,6 +23,7 @@
 #include "../WaveTrack.h"
 #include "TimeWarper.h"
 
+#include <float.h>
 #include <math.h>
 
 #include <wx/button.h>
