@@ -187,8 +187,8 @@ wxString HelpTextBuiltIn( const wxString & Key )
          _("<center><h3>How to Get Help</h3></center>") +
          _("Welcome to Audacity ") + AUDACITY_VERSION_STRING + wxT("!<p>") +
          _("These are our support methods:") + wxT("</p>") + wxT("<ul><li>") + 
-         _(" [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)") + wxT("</li><li>") +
-         _(" [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)") + wxT("</li><li>") +
+         _(" [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/o/quick_help.html\">Internet version if it isn't</a>)") + wxT("</li><li>") +
+         _(" [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/o/\">Internet version if it isn't</a>)") + wxT("</li><li>") +
          _(" [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)") + wxT("</li><li>") +
          _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)") + wxT("</li></ul></p><p>") +
          _(" For even quicker answers, all the online resources above are <b>searchable</b>.")  + wxT("</p>") 
@@ -200,11 +200,11 @@ wxString HelpTextBuiltIn( const wxString & Key )
          wxString(wxT("<p>"))+
          _("Audacity can import unprotected files in many other formats (such as M4A and WMA, \
 compressed WAV files from portable recorders and audio from video files) if you download and install \
-the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> \
+the optional <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\"> \
 FFmpeg library</a> to your computer.") + wxT("</p><p>") +
          _("You can also read our help on importing \
-<a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> \
-and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> \
+<a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#midi\">MIDI files</a> \
+and tracks from <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#fromcd\"> \
 audio CDs</a>.") + wxT("</p>")
       );
    }
@@ -215,8 +215,10 @@ audio CDs</a>.") + wxT("</p>")
    if(Key ==  wxT("remotehelp") )
    {
 // *URL* will be replaced by whatever URL we are looking for.
-      return WrapText(_("<p>You do not appear to have 'help' installed on your computer.<br> \
-Please <a href=\"*URL*\">view or download it online</a>.")
+      return WrapText(_("You do not appear to have the 'help' folder installed.<br> \
+Please <a href=\"*URL*\">view the content online</a> or \
+<a href=\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\"> \
+download the full Manual</a>.")
          );
    }
    return wxT("");

@@ -167,7 +167,7 @@ void LibraryPrefs::OnMP3FindButton(wxCommandEvent & e)
 /// tell us where the MP3 library is.
 void LibraryPrefs::OnMP3DownButton(wxCommandEvent & e)
 {
-   wxString url = wxT("http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins%23How_do_I_download_and_install_the_LAME_MP3_encoder.3F");
+   wxString url = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#lame");
    ::OpenInDefaultBrowser(url);
 }
 
@@ -216,7 +216,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & e)
 
 void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & e)
 {
-   wxString url = wxT("http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins%23installffmpeg");
+   wxString url = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown");
    ::OpenInDefaultBrowser(url);
 }
 

@@ -658,7 +658,7 @@ public:
 
    void OnDownload(wxCommandEvent & event)
    {
-      wxString page = wxT("http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins%23How_do_I_download_and_install_the_LAME_MP3_encoder.3F");
+      wxString page = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#lame");
       ::OpenInDefaultBrowser(page);
    }
 
