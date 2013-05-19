@@ -415,6 +415,9 @@ wxString Effect::GetPreviewName()
 
 void Effect::Preview(bool dryOnly)
 {
+   if (mNumTracks==0) // nothing to preview
+      return;
+
    wxWindow* FocusDialog = wxWindow::FindFocus();
    if (gAudioIO->IsBusy())
       return;
