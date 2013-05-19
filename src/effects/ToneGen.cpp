@@ -142,6 +142,8 @@ bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
    double throwaway = 0;        //passed to modf but never used
    sampleCount i;
    double f = 0.0;
+   double a,b;
+   int k;
 
    double BlendedFrequency;
    double BlendedAmplitude;
@@ -187,8 +189,17 @@ bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
             case 2:    //sawtooth
                f = (2 * modf(mPositionInCycles/mCurRate+0.5f, &throwaway)) -1.0f;
                break;
-            default:
-               break;
+            case 3:    //square, no alias.  Good down to 110Hz @ 44100Hz sampling.
+               //do fundamental (k=1) outside loop
+               b = (1. + cos((pre2PI * BlendedFrequency)/mCurRate))/pre4divPI;  //scaling
+               f = (float) pre4divPI * sin(pre2PI * mPositionInCycles/mCurRate);
+               for(k=3; (k<200) && (k * BlendedFrequency < mCurRate/2.); k+=2)
+               {
+                  //Hanning Window in freq domain
+                  a = 1. + cos((pre2PI * k * BlendedFrequency)/mCurRate);
+                  //calc harmonic, apply window, scale to amplitude of fundamental
+                  f += (float) a * sin(pre2PI * mPositionInCycles/mCurRate * k)/(b*k);
+               }
          }
          // insert value in buffer
          buffer[i] = BlendedAmplitude * f;
@@ -201,8 +212,6 @@ bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
    } else {
       // this for regular case, linear interpolation
       BlendedFrequency = frequency[0] + frequencyQuantum * mSample;
-      double a,b;
-      int k;
       for (i = 0; i < len; i++)
       {
          switch (waveform) {
@@ -226,10 +235,6 @@ bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
                   //calc harmonic, apply window, scale to amplitude of fundamental
                   f += (float) a * sin(pre2PI * mPositionInCycles/mCurRate * k)/(b*k);
                }
-               break;
-
-            default:
-               break;
          }
          // insert value in buffer
          buffer[i] = BlendedAmplitude * f;
