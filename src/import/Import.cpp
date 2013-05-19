@@ -376,8 +376,8 @@ int Importer::Import(wxString fName,
       }
    }
 
-   wxLogMessage(wxT("File name is %s"),fName.Lower().c_str());
-   wxLogMessage(wxT("Mime type is %s"),mime_type.Lower().c_str());
+   wxLogMessage(wxT("File name is %s"),(const char *) fName.mb_str());
+   wxLogMessage(wxT("Mime type is %s"),(const char *) mime_type.Lower().mb_str());
 
    bool foundItem = false;
    for (size_t i = 0; i < mExtImportItems->Count(); i++)
@@ -387,7 +387,7 @@ int Importer::Import(wxString fName,
       wxLogDebug(wxT("Testing extensions"));
       for (size_t j = 0; j < item->extensions.Count(); j++)
       {
-         wxLogDebug(wxT("%s"),item->extensions[j].Lower().c_str());
+         wxLogDebug(wxT("%s"), (const char *) item->extensions[j].Lower().mb_str());
          if (wxMatchWild (item->extensions[j].Lower(),fName.Lower(), false))
          {
             wxLogDebug(wxT("Match!"));
@@ -505,7 +505,7 @@ int Importer::Import(wxString fName,
       inFile = plugin->Open(fName);
       if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
       {
-         wxLogMessage(wxT("Open(%s) succeeded"), fName.Lower().c_str());
+         wxLogMessage(wxT("Open(%s) succeeded"),(const char *) fName.mb_str());
          // File has more than one stream - display stream selector
          if (inFile->GetStreamCount() > 1)                                                  
          {
