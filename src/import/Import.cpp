@@ -423,6 +423,11 @@ int Importer::Import(wxString fName,
          wxLogDebug(wxT("Complete match!"));
          for (size_t j = 0; j < item->filter_objects.Count() && (item->divider < 0 || (int) j < item->divider); j++)
          {
+            // the filter_object can be NULL if a suitable importer was not found
+            // this happens when we recompile with --without-ffmpeg and there
+            // is still ffmpeg in prefs from previous --with-ffmpeg builds
+            if (!(item->filter_objects[j]))
+               continue;
             wxLogDebug(wxT("Inserting %s"),item->filter_objects[j]->GetPluginStringID().c_str());
             importPlugins.Append(item->filter_objects[j]);
          }
