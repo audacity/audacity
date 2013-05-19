@@ -273,19 +273,17 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       S.SetBorder(5);
       S.StartStatic(_("Split files based on:"), true);
       {
+         // Row 1
+         S.SetBorder(1);            
+         mLabel = S.Id(LabelID).AddRadioButton(wxString(_("Labels")));
+         mLabel->SetName(_("Labels"));
+         S.SetBorder(3);
+
          S.StartMultiColumn(2, false);
          S.SetStretchyCol(1);
          {
-            // Row 1
-            S.SetBorder(1);
-            mLabel = S.Id(LabelID)
-               .AddRadioButton(wxT(""));
-            mLabel->SetName(_("Labels"));
-            S.SetBorder(3);
-            mLabelLabel = S.AddVariableText(_("Labels"), false);
-
-            // Row 2
-            S.AddVariableText(wxT(""), false);
+            // Row 2 (indented)
+            S.AddVariableText(wxT("   "), false);
             mFirst = S.Id(FirstID)
                .AddCheckBox(_("Include audio before first label"), wxT("false"));
 
@@ -301,16 +299,15 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
                mFirstFileName->SetName(_("First file name"));
             }
             S.EndHorizontalLay();
-
-            // Row 4
-            S.SetBorder(1);
-            mTrack = S.Id(TrackID)
-               .AddRadioButtonToGroup(wxT(""));
-            mTrack->SetName(_("Tracks"));
-            S.SetBorder(3);
-            mTrackLabel = S.AddVariableText(_("Tracks"), false);
          }
          S.EndMultiColumn();
+
+         // Row 4
+         S.SetBorder(1);
+         mTrack = S.Id(TrackID)
+            .AddRadioButtonToGroup(wxString(_("Tracks")));
+         mTrack->SetName(_("Tracks"));
+         S.SetBorder(3);
       }
       S.EndStatic();
 
