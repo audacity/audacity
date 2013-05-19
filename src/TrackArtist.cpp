@@ -321,9 +321,6 @@ void TrackArtist::DrawTracks(TrackList * tracks,
    dc.DrawRectangle(clip);
 #endif
 
-   wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
-   dc.SetFont(labelFont);
-   dc.SetTextForeground(wxColour(255, 255, 0));
    gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), &mbShowTrackNameInWaveform, false);
 
    t = iter.StartWith(start);
@@ -419,8 +416,12 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawSpectrum(wt, dc, r, viewInfo, true, false);
          break;
       }
-      if (mbShowTrackNameInWaveform && wt->GetChannel() != Track::RightChannel)    // so left or mono only
+      if (mbShowTrackNameInWaveform && wt->GetChannel() != Track::RightChannel) {   // so left or mono only
+         wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
+         dc.SetFont(labelFont);
+         dc.SetTextForeground(wxColour(255, 255, 0));
          dc.DrawText (wt->GetName(), r.x+10, r.y);  // move right 10 pixels to avoid overwriting <- symbol
+      }
       break;              // case Wave
    }
    #ifdef USE_MIDI
