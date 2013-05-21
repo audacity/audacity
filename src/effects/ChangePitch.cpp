@@ -74,16 +74,35 @@ void EffectChangePitch::DeduceFrequencies()
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
    if (track) {
-      const int windowSize = 1024;
-      const int analyzeSize = 8192;
-      const int numWindows = analyzeSize / windowSize;
+      double rate = track->GetRate();
+
+      // Auto-size window -- high sample rates require larger windowSize.
+      // Aim for around 2048 samples at 44.1 kHz (good down to about 100 Hz).
+      // To detect single notes, analysis period should be about 0.2 seconds.
+      // windowSize must be a power of 2.
+      int windowSize = wxRound(pow(2.0, floor((log(rate / 20.0)/log(2.0)) + 0.5)));
+      // windowSize < 256 too inaccurate
+      windowSize = (windowSize > 256)? windowSize : 256;
+
+      // we want about 0.2 seconds to catch the first note.
+      // number of windows rounded to nearest integer >= 1.
+      int numWindows = wxRound((double)(rate / (5.0f * windowSize)));
+      numWindows = (numWindows > 0)? numWindows : 1;
+      
       double trackStart = track->GetStartTime();
       double t0 = mT0 < trackStart? trackStart: mT0;
       sampleCount start = track->TimeToLongSamples(t0);
-      double rate = track->GetRate();
-      float buffer[analyzeSize];
-      float freq[windowSize/2];
-      float freqa[windowSize/2];
+
+      int analyzeSize = windowSize * numWindows;      
+      float * buffer;
+      buffer = new float[analyzeSize];
+
+      float * freq;
+      freq = new float[windowSize/2];
+
+      float * freqa;
+      freqa = new float[windowSize/2];
+
       int i, j, argmax;
       int lag;
 
