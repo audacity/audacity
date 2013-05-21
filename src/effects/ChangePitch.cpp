@@ -576,19 +576,15 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_FromFrequency) {
       wxString str = m_pTextCtrl_FromFrequency->GetValue();
-      // Empty string causes unpredictable results with ToDouble() and later calculations.
-      if (str.IsEmpty())
-      {
-         this->FindWindow(wxID_OK)->Disable();
-         return;
-      }
       double newDouble;
       str.ToDouble(&newDouble);
-      // Zero frequency makes no sense, but user might still be editing, 
+      // Empty string causes unpredictable results with ToDouble() and later calculations.
+      // Non-positive frequency makes no sense, but user might still be editing, 
       // so it's not an error, but we do not want to update the values/controls. 
-      if (newDouble == 0.0) 
+      if (str.IsEmpty() || (newDouble <= 0.0) )
       {
          this->FindWindow(wxID_OK)->Disable();
+         this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
          return;
       }
       m_FromFrequency = newDouble;
@@ -614,19 +610,15 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_ToFrequency) {
       wxString str = m_pTextCtrl_ToFrequency->GetValue();
-      // Empty string causes unpredictable results with ToDouble() and later calculations.
-      if (str.IsEmpty())
-      {
-         this->FindWindow(wxID_OK)->Disable();
-         return;
-      }
       double newDouble;
       str.ToDouble(&newDouble);
-      // Zero frequency makes no sense, but user might still be editing, 
+      // Empty string causes unpredictable results with ToDouble() and later calculations.
+      // Non-positive frequency makes no sense, but user might still be editing, 
       // so it's not an error, but we do not want to update the values/controls. 
-      if (newDouble == 0.0) 
+      if (str.IsEmpty() || (newDouble <= 0.0) )
       {
          this->FindWindow(wxID_OK)->Disable();
+         this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
          return;
       }
       m_ToFrequency = newDouble;
