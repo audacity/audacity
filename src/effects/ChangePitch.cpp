@@ -562,10 +562,10 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
 
       // If m_SemitonesChange is a big enough negative, we can go to or below 0 freq. 
       // If m_SemitonesChange is a big enough positive, we can go to 1.#INF (Windows) or inf (Linux). 
-      // Prevent processing with either. 
-      bool bWantEnable = (m_ToFrequency > 0.0) && (m_ToFrequency <= DBL_MAX);
-      this->FindWindow(wxID_OK)->Enable(bWantEnable);
-      this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bWantEnable);
+      // But practically, these are best limits for Soundtouch.
+      bool bIsGoodValue = (m_SemitonesChange > -80.0) && (m_SemitonesChange <= 60.0);
+      this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
    }
 }
 
@@ -581,7 +581,7 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       // Empty string causes unpredictable results with ToDouble() and later calculations.
       // Non-positive frequency makes no sense, but user might still be editing, 
       // so it's not an error, but we do not want to update the values/controls. 
-      if (str.IsEmpty() || (newDouble <= 0.0) )
+      if (str.IsEmpty() || (newDouble <= 0.0) || (newDouble > DBL_MAX))
       {
          this->FindWindow(wxID_OK)->Disable();
          this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
@@ -598,9 +598,10 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       this->Update_Text_ToFrequency();
       m_bLoopDetect = false;
 
-      // Success. Make sure OK is enabled, in case we disabled it above during editing. 
+      // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
       this->FindWindow(wxID_OK)->Enable();
-   }
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable();
+}
 }
 
 void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
@@ -636,10 +637,15 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
       this->Update_Slider_PercentChange();
       m_bLoopDetect = false;
    
-      // Success. Make sure OK is enabled, in case we disabled it above during editing. 
+      // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
       this->FindWindow(wxID_OK)->Enable();
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable();
 }
 }
+
+// m_PercentChange -100% makes no sense and Soundtouch is not reasonable above 3000%.
+#define PERCENT_CHANGE_BEYOND_MIN -100.0
+#define PERCENT_CHANGE_MAX 3000.0
 
 void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
@@ -648,18 +654,14 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 
    if (m_pTextCtrl_PercentChange) {
       wxString str = m_pTextCtrl_PercentChange->GetValue();
-      if (str.IsEmpty())
-      {
-         this->FindWindow(wxID_OK)->Disable();
-         return;
-      }
       double newValue = 0;
       str.ToDouble(&newValue);
-      // Zero and negative frequency makes no sense, but user might still be editing, 
-      // so it's not an error, but we do not want to update the values/controls. 
-      if (newValue <= -100.0) 
+      // User might still be editing, so out of bounds is not an error, 
+      // but we do not want to update the values/controls. 
+      if (str.IsEmpty() || (newValue <= PERCENT_CHANGE_BEYOND_MIN) || (newValue > PERCENT_CHANGE_MAX))
       {
          this->FindWindow(wxID_OK)->Disable();
+         this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
          return;
       }
       m_PercentChange = newValue;
@@ -675,7 +677,9 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
       this->Update_Slider_PercentChange();
       m_bLoopDetect = false;
 
-      this->FindWindow(wxID_OK)->Enable(m_PercentChange > -100.0);
+      // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
+      this->FindWindow(wxID_OK)->Enable();
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable();
    }
 }
 
@@ -759,7 +763,10 @@ void ChangePitchDialog::Update_Text_PercentChange()
       else
          str = wxT("");
       m_pTextCtrl_PercentChange->SetValue(str);
-      FindWindow(wxID_OK)->Enable(m_PercentChange > -100.0);
+
+      bool bIsGoodValue = (m_PercentChange > PERCENT_CHANGE_BEYOND_MIN) && (m_PercentChange <= PERCENT_CHANGE_MAX);
+      this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
    }
 }
 
