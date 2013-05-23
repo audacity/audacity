@@ -643,8 +643,8 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
 }
 }
 
-// m_PercentChange -100% makes no sense and Soundtouch is not reasonable above 3000%.
-#define PERCENT_CHANGE_BEYOND_MIN -100.0
+// Soundtouch is not reasonable below -99% or above 3000%.
+#define PERCENT_CHANGE_MIN -99.0
 #define PERCENT_CHANGE_MAX 3000.0
 
 void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
@@ -658,7 +658,7 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
       str.ToDouble(&newValue);
       // User might still be editing, so out of bounds is not an error, 
       // but we do not want to update the values/controls. 
-      if (str.IsEmpty() || (newValue <= PERCENT_CHANGE_BEYOND_MIN) || (newValue > PERCENT_CHANGE_MAX))
+      if (str.IsEmpty() || (newValue < PERCENT_CHANGE_MIN) || (newValue > PERCENT_CHANGE_MAX))
       {
          this->FindWindow(wxID_OK)->Disable();
          this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
@@ -764,7 +764,7 @@ void ChangePitchDialog::Update_Text_PercentChange()
          str = wxT("");
       m_pTextCtrl_PercentChange->SetValue(str);
 
-      bool bIsGoodValue = (m_PercentChange > PERCENT_CHANGE_BEYOND_MIN) && (m_PercentChange <= PERCENT_CHANGE_MAX);
+      bool bIsGoodValue = (m_PercentChange >= PERCENT_CHANGE_MIN) && (m_PercentChange <= PERCENT_CHANGE_MAX);
       this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
       this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
    }
