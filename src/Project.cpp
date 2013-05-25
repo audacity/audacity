@@ -736,6 +736,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mMixerBoard(NULL),
      mMixerBoardFrame(NULL),
      mFreqWindow(NULL),
+     mAliasMissingWarningDialog(NULL),
      mToolManager(NULL),
      mbBusyImporting(false), 
      mAudioIOToken(-1),
@@ -753,8 +754,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mLastEffect(NULL),
      mLastEffectType(0),
      mTimerRecordCanceled(false),
-     mMenuClose(false),
-     mAliasMissingWarningDialog(NULL)
+     mMenuClose(false)
 {
    int widths[] = {-2, -1};
    mStatusBar = CreateStatusBar(2);
