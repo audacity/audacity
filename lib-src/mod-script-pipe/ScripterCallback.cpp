@@ -9,6 +9,9 @@
 // Audacity.  Because it forwards commands
 // rather than handling them itself it can be used in
 // other projects too.  
+//
+// Enabling other programs to connect to Audacity via a pipe is a potential 
+// security risk.  Use at your own risk.
 
 #include <wx/wx.h>
 #include "ScripterCallback.h"
