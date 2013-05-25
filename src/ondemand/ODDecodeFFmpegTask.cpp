@@ -9,19 +9,22 @@
 
 ******************************************************************/
 
-#include <wx/wxprec.h>
- #include "../Experimental.h" 
-// For compilers that support precompilation, includes "wx/wx.h".
-#ifdef EXPERIMENTAL_OD_FFMPEG
-
 #include "../Audacity.h"	// needed before FFmpeg.h
-#include "../FFmpeg.h"		// which brings in avcodec.h, avformat.h
-#include "../import/ImportFFmpeg.h"
 
+#include <wx/wxprec.h>
+// For compilers that support precompilation, includes "wx/wx.h".
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
 #endif
+
+#include "../Experimental.h" 
+
+#ifdef USE_FFMPEG
+#ifdef EXPERIMENTAL_OD_FFMPEG
+
+#include "../FFmpeg.h"		// which brings in avcodec.h, avformat.h
+#include "../import/ImportFFmpeg.h"
 
 
 extern FFmpegLibs *FFmpegLibsInst;
@@ -656,6 +659,6 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
       mDecodeCache.erase(mDecodeCache.begin()+dropindex); 
    }
 }
-#endif
 
-
+#endif	//EXPERIMENTAL_OD_FFMPEG
+#endif //USE_FFMPEG

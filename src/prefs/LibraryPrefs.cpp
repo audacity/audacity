@@ -140,9 +140,12 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndTwoColumn();
 #ifdef EXPERIMENTAL_OD_FFMPEG
-      S.TieCheckBox(_("Allow &background on-demand loading"),
+      wxCheckBox* checkbox = S.TieCheckBox(_("Allow &background on-demand loading"),
                     wxT("/Library/FFmpegOnDemand"),
                     false);
+#if !defined(USE_FFMPEG)
+      checkbox->Enable(FALSE);
+#endif
 #endif
    }
    S.EndStatic();
