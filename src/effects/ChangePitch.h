@@ -95,10 +95,11 @@ class ChangePitchDialog:public EffectDialog {
 
  private:
    // calculations
-   void Calc_ToFrequency(); // Update m_ToFrequency from m_FromFrequency & m_PercentChange.
+   void Calc_FromPitchIndex(); // Update m_FromPitchIndex from new m_ToPitchIndex.
    void Calc_ToPitchIndex(); // Update m_ToPitchIndex from new m_SemitonesChange.
    void Calc_SemitonesChange_fromPitches(); // Update m_SemitonesChange from new m_*PitchIndex-es.
    void Calc_SemitonesChange_fromPercentChange(); // Update m_SemitonesChange from new m_PercentChange.
+   void Calc_ToFrequency(); // Update m_ToFrequency from m_FromFrequency & m_PercentChange.
    void Calc_PercentChange(); // Update m_PercentChange based on new m_SemitonesChange.
 
    // handlers
@@ -116,6 +117,7 @@ class ChangePitchDialog:public EffectDialog {
    void OnPreview( wxCommandEvent &event );
 
    // helper fns for controls
+   void Update_Choice_FromPitch();
    void Update_Choice_ToPitch();
 
    void Update_Text_SemitonesChange();

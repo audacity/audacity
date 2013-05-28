@@ -462,9 +462,11 @@ bool ChangePitchDialog::TransferDataFromWindow()
 
 // calculations
 
-void ChangePitchDialog::Calc_ToFrequency()
+void ChangePitchDialog::Calc_FromPitchIndex()
 {
-   m_ToFrequency = (m_FromFrequency * (100.0 + m_PercentChange)) / 100.0;
+   m_FromPitchIndex = (int)(m_ToPitchIndex - m_SemitonesChange) % 12;
+   if (m_FromPitchIndex < 0)
+      m_FromPitchIndex += 12;
 }
 
 void ChangePitchDialog::Calc_ToPitchIndex()
@@ -486,6 +488,11 @@ void ChangePitchDialog::Calc_SemitonesChange_fromPercentChange()
    // Use m_PercentChange rather than m_FromFrequency & m_ToFrequency, because 
    // they start out uninitialized, but m_PercentChange is always valid.
    m_SemitonesChange = (12.0 * log((100.0 + m_PercentChange) / 100.0)) / log(2.0);
+}
+
+void ChangePitchDialog::Calc_ToFrequency()
+{
+   m_ToFrequency = (m_FromFrequency * (100.0 + m_PercentChange)) / 100.0;
 }
 
 void ChangePitchDialog::Calc_PercentChange()
@@ -593,8 +600,16 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       this->Calc_ToFrequency();
       this->Calc_ToPitchIndex();
 
+      // This is Steve's incremental fix for cross-updating issues related to bug 309. 
+      // It's weird that in prior code (3 lines above this), we set m_FromPitchIndex, 
+      // then call 2 Calc methods for the other members, and then this call to 
+      // recalculate m_FromPitchIndex. Something's wrong there, but I want to figure 
+      // out the overall best scheme, and this is an incremental fix. 
+      this->Calc_FromPitchIndex(); 
+
       m_bLoopDetect = true;
       this->Update_Choice_ToPitch();
+      this->Update_Choice_FromPitch();
       this->Update_Text_ToFrequency();
       m_bLoopDetect = false;
 
@@ -723,14 +738,19 @@ void ChangePitchDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    mEffect->m_SemitonesChange = oldSemitonesChange;
 }
 
-// helper fns
+// helper fns for controls
+
+void ChangePitchDialog::Update_Choice_FromPitch() 
+{
+   if (m_pChoice_FromPitch) 
+      m_pChoice_FromPitch->SetSelection(m_FromPitchIndex);
+}
 
 void ChangePitchDialog::Update_Choice_ToPitch() 
 {
    if (m_pChoice_ToPitch) 
       m_pChoice_ToPitch->SetSelection(m_ToPitchIndex);
 }
-
 
 void ChangePitchDialog::Update_Text_SemitonesChange()
 {
