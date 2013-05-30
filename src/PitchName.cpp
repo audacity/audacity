@@ -31,7 +31,16 @@
 double FreqToMIDInoteNumber(double freq)
 {
    // Make the calculation relative to A440 (A4), note number 69. 
-   return double (69.0 + (12.0 * (log(freq / 440.0) / log(2.0))));
+   double dCalc = 69.0 + (12.0 * (log(freq / 440.0) / log(2.0)));
+   //vvv For freq values in the range (0.0, ~8.2], that calculation 
+   // produces negative dCalc, and as close in frequency as they are, 
+   // their modulo 12 results are different. 
+   // Also, not clear that any of those frequencies is a "pitch", 
+   // so pending further discussion, just enforce a floor.
+   // MIDI numbers are non-negative. 
+   if (dCalc < 0.0)
+      dCalc = 0.0;
+   return dCalc;
 }
 
 // PitchIndex returns the [0,11] index for a double pitchNum, 
