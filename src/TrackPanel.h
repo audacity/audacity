@@ -497,6 +497,9 @@ protected:
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   void UpdateVirtualStereoOrder();
+#endif
    // Accessors...
    virtual bool HasSoloButton(){  return mSoloPref!=wxT("None");};
 

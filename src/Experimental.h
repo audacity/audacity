@@ -150,4 +150,7 @@
    //#define AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 #endif
 
+// John (Thales) work to make the display show the result of the pan and gain sliders, rather than their input.
+// First committed by Martyn, 30th May 2013.
+#define EXPERIMENTAL_OUTPUT_DISPLAY
 #endif

@@ -131,6 +131,12 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Re&tain labels if selection snaps to a label edge"),
                     wxT("/GUI/RetainLabels"),
                     false);
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      S.TieCheckBox(_("&Display a mono channel as virtual stereo"),
+                    wxT("/GUI/MonoAsVirtualStereo"),
+                    false);
+#endif
    }
    S.EndStatic();
 }

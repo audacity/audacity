@@ -55,6 +55,12 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    int            mIndex;
    int            mY;
    int            mHeight;
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   int            mYv;   //For mono a virtual Y value is necessary.
+   int            mHeightv; // For mono a virtual height value is necessary.
+   float          mPerY; //mY as a percent of mYv + mY
+   bool           mVirtualStereo;
+#endif
    wxString       mName;
    wxString       mDefaultName;
 
@@ -73,13 +79,25 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
 
    int GetIndex() const;
    void SetIndex(int index);
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   int GetY(bool vStereo = false) const;
+   void SetY(int y, bool vStereo = false);
+   int GetHeight(bool vStereo = false) const;
+   void SetHeight(int h, bool vStereo = false);
+#else
    int GetY() const;
    void SetY(int y);
    int GetHeight() const;
    void SetHeight(int h);
+#endif
    bool GetMinimized() const;
    void SetMinimized(bool isMinimized);
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   float GetVirtualTrackPercentage() { return mPerY;}
+   void SetVirtualTrackPercentage(float val) { mPerY = val;}
+   bool GetVirtualStereo() { return mVirtualStereo;}
+   void SetVirtualStereo(bool vStereo) { mVirtualStereo = vStereo;}
+#endif
    Track *GetLink() const;
 
    const TrackListNode *GetNode();
@@ -96,6 +114,9 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    mutable DirManager *mDirManager;
 
  public:
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   void ReorderList(bool resize = true);
+#endif
 
    enum
    {

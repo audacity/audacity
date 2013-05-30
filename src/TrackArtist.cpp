@@ -363,6 +363,12 @@ void TrackArtist::DrawTracks(TrackList * tracks,
             stereoTrackRect.height += link->GetHeight();
          }
       }
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if(MONO_WAVE_PAN(t)){
+         stereoTrackRect.height += t->GetHeight(true);
+         t->SetVirtualStereo(false);
+      }
+#endif
 
       if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
          wxRect rr = trackRect;
@@ -373,6 +379,26 @@ void TrackArtist::DrawTracks(TrackList * tracks,
          DrawTrack(t, dc, rr, viewInfo,
                    drawEnvelope, drawSamples, drawSliders, hasSolo);
       }
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      if(MONO_WAVE_PAN(t)){
+         trackRect.y = t->GetY(true) - viewInfo->vpos;
+         trackRect.height = t->GetHeight(true);
+         stereoTrackRect = trackRect;
+         stereoTrackRect.y -= t->GetHeight();
+         stereoTrackRect.height += t->GetHeight();
+         t->SetVirtualStereo(true);
+         if (stereoTrackRect.Intersects(clip) && reg.Contains(stereoTrackRect)) {
+            wxRect rr = trackRect;
+            rr.x += mInsetLeft;
+            rr.y += mInsetTop;
+            rr.width -= (mInsetLeft + mInsetRight);
+            rr.height -= (mInsetTop + mInsetBottom);
+            DrawTrack(t, dc, rr, viewInfo,
+                      drawEnvelope, drawSamples, drawSliders, hasSolo);
+         }
+      }
+#endif
 
       t = iter.Next();
    }
@@ -983,10 +1009,18 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
    }
 }
 
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
+                                float zoomMin, float zoomMax, bool dB,
+                                const float min[], const float max[], const float rms[],
+                                const int bl[], bool showProgress, bool muted, const float gain)
+#else
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                                 float zoomMin, float zoomMax, bool dB,
                                 const float min[], const float max[], const float rms[],
                                 const int bl[], bool showProgress, bool muted)
+#endif
 {
    // Display a line representing the
    // min and max of the samples in this region
@@ -1014,8 +1048,12 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
    for (x = 0; x < r.width; x++) {
       int xx = r.x + x;
       double v;
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+     //JWA: "gain" variable passed to function includes the pan value and is used below 4/14/13
+      v = min[x] * env[x] * gain;
+#else
       v = min[x] * env[x];
+#endif
       if (clipped && mShowClipping && (v <= -MAX_AUDIO)) 
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -1025,7 +1063,11 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
       h1 = GetWaveYPos(v, zoomMin, zoomMax,
                        r.height, dB, true, mdBrange, true);
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      v = max[x] * env[x] * gain;
+#else
       v = max[x] * env[x];
+#endif
       if (clipped && mShowClipping && (v >= MAX_AUDIO)) 
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -1048,11 +1090,17 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
       lasth1 = h1;
       lasth2 = h2;
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      r1[x] = GetWaveYPos(-rms[x] * env[x]*gain, zoomMin, zoomMax,
+                          r.height, dB, true, mdBrange, true);
+      r2[x] = GetWaveYPos(rms[x] * env[x]*gain, zoomMin, zoomMax,
+                          r.height, dB, true, mdBrange, true);
+#else
       r1[x] = GetWaveYPos(-rms[x] * env[x], zoomMin, zoomMax,
                           r.height, dB, true, mdBrange, true);
       r2[x] = GetWaveYPos(rms[x] * env[x], zoomMin, zoomMax,
                           r.height, dB, true, mdBrange, true);
-
+#endif
       // Make sure the rms isn't larger than the waveform min/max
       if (r1[x] > h1 - 1) {
          r1[x] = h1 - 1;
@@ -1505,8 +1553,13 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                           !track->GetSelected());
 
    if (!showIndividualSamples) {
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      DrawMinMaxRMS(dc, mid, envValues, zoomMin, zoomMax, dB,
+                    min, max, rms, bl, isLoadingOD, muted, track->GetChannelGain(track->GetChannel()));
+#else
       DrawMinMaxRMS(dc, mid, envValues, zoomMin, zoomMax, dB,
                     min, max, rms, bl, isLoadingOD, muted);
+#endif
    }
    else {
       DrawIndividualSamples(dc, mid, zoomMin, zoomMax, dB,

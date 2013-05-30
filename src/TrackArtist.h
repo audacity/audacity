@@ -152,12 +152,17 @@ class AUDACITY_DLL_API TrackArtist {
                                const sampleCount where[],
                                sampleCount ssel0, sampleCount ssel1,
                                bool drawEnvelope, bool bIsSyncLockSelected);
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
+                      float zoomMin, float zoomMax, bool dB,
+                      const float min[], const float max[], const float rms[],
+                      const int bl[], bool showProgress, bool muted, const float gain);
+#else
    void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
                       float zoomMin, float zoomMax, bool dB,
                       const float min[], const float max[], const float rms[],
                       const int bl[], bool showProgress, bool muted);
-
+#endif
    void DrawIndividualSamples(wxDC & dc, const wxRect & r,
                               float zoomMin, float zoomMax, bool dB,
                               WaveClip *clip,

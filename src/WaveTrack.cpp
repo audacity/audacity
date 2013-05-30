@@ -56,6 +56,10 @@ Track classes.
 
 using std::max;
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+bool WaveTrack::mMonoAsVirtualStereo;
+#endif
+
 WaveTrack* TrackFactory::DuplicateWaveTrack(WaveTrack &orig)
 {
    return (WaveTrack*)(orig.Duplicate());
@@ -215,6 +219,37 @@ float WaveTrack::GetPan() const
    return mPan;
 }
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+bool WaveTrack::SetPan(float newPan)
+{
+   float p=mPan;
+   bool panZero=false;
+   int temp;
+
+   if (newPan > 1.0)
+      mPan = 1.0;
+   else if (newPan < -1.0)
+      mPan = -1.0;
+   else
+      mPan = newPan;
+
+   if(mDisplay == WaveTrack::WaveformDisplay && mChannel == Track::MonoChannel && (p == 0.0f && newPan != 0.0f || p != 0.0f && newPan == 0.0f) && mMonoAsVirtualStereo)
+   {
+      panZero=true;
+      if(!mPan){
+         mHeight = mHeight + mHeightv;
+      }else{
+         temp = mHeight;
+         mHeight = temp*mPerY;
+         mHeightv = temp - mHeight;      
+      }
+      ReorderList();
+   }
+
+   return panZero;
+}
+
+#else // EXPERIMENTAL_OUTPUT_DISPLAY
 void WaveTrack::SetPan(float newPan)
 {
    if (newPan > 1.0)
@@ -224,11 +259,64 @@ void WaveTrack::SetPan(float newPan)
    else
       mPan = newPan;
 }
+#endif // EXPERIMENTAL_OUTPUT_DISPLAY
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+void WaveTrack::SetVirtualState(bool state, bool half)
+{
+   int temp;
+
+   if(half)
+      mPerY = 0.5;
+
+   if(state){
+      if(mPan){
+         temp = mHeight;
+         mHeight = temp*mPerY;
+         mHeightv = temp - mHeight;
+      }
+      ReorderList();
+   }else{
+      if(mPan){
+         mHeight = mHeight + mHeightv;
+      }
+   }
+}
+
+int WaveTrack::GetMinimizedHeight() const
+{
+   if (GetLink()) {
+      return 20;
+   }
+
+   if(GetChannel() == MonoChannel && GetPan() != 0 && mMonoAsVirtualStereo &&  mDisplay == WaveformDisplay)
+      return 20;
+   else
+      return 40;
+}
+
+void WaveTrack::VirtualStereoInit()
+{
+   int temp;
+
+   if(mChannel == Track::MonoChannel && mPan != 0.0f && mMonoAsVirtualStereo){
+      temp = mHeight;
+      mHeight = temp*mPerY;
+      mHeightv = temp - mHeight; 
+      ReorderList(false);
+   }
+}
+#endif
 
 float WaveTrack::GetChannelGain(int channel)
 {
    float left = 1.0;
    float right = 1.0;
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   if(mVirtualStereo)
+      channel = 3;
+#endif
 
    if (mPan < 0)
       right = (mPan + 1.0);
@@ -1385,6 +1473,9 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             SetLinked(nValue != 0);
          
       } // while
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+      VirtualStereoInit();
+#endif
       return true;
    }
 
@@ -1442,7 +1533,16 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("linked"), mLinked);
    xmlFile.WriteAttr(wxT("mute"), mMute);
    xmlFile.WriteAttr(wxT("solo"), mSolo);
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   int height;
+   if(MONO_PAN)
+      height = mHeight + mHeightv;
+   else
+      height = this->GetActualHeight();
+   xmlFile.WriteAttr(wxT("height"), height);
+#else
    xmlFile.WriteAttr(wxT("height"), this->GetActualHeight());
+#endif
    xmlFile.WriteAttr(wxT("minimized"), this->GetMinimized());
    xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    xmlFile.WriteAttr(wxT("rate"), mRate);

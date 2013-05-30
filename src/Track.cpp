@@ -55,7 +55,13 @@ Track::Track(DirManager * projDirManager)
    mY = 0;
    mHeight = 150;
    mIndex = 0;
-   
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   mYv = mHeight;
+   mHeightv = mHeight;
+   mPerY = 0.5;
+   mVirtualStereo = false;
+#endif
+
    mMinimized = false;
 
    mOffset = 0.0;
@@ -71,7 +77,9 @@ Track::Track(const Track &orig)
    mNode = NULL;
    mY = 0;
    mIndex = 0;
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   mPerY = 0.5;
+#endif
    Init(orig);
    mOffset = orig.mOffset;
 }
@@ -99,6 +107,11 @@ void Track::Init(const Track &orig)
    mHeight = orig.mHeight;
    mMinimized = orig.mMinimized;
    mChannel = orig.mChannel;
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   mVirtualStereo = orig.mVirtualStereo;
+   mHeightv = orig.mHeightv;
+   mYv = orig.mYv;
+#endif
 }
 
 void Track::Merge(const Track &orig)
@@ -152,6 +165,41 @@ void Track::SetIndex(int index)
    mIndex = index;
 }
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+int Track::GetY(bool vStereo) const
+{
+   if(vStereo && mChannel == Track::MonoChannel) return mYv;
+   return mY;
+}
+
+void Track::SetY(int y, bool vStereo)
+{
+   if(vStereo && mChannel == Track::MonoChannel) mYv = y;
+   else mY = y;
+}
+
+int Track::GetHeight(bool vStereo) const
+{
+   if (mMinimized) {
+      return GetMinimizedHeight();
+   }
+
+   if(vStereo && mChannel == Track::MonoChannel) return mHeightv;
+   return mHeight;
+}
+
+void Track::SetHeight(int h, bool vStereo)
+{
+
+   if(vStereo && mChannel == Track::MonoChannel) mHeightv = h;
+   else mHeight = h;
+
+   mList->RecalcPositions(mNode);
+   mList->ResizedEvent(mNode);
+}
+
+#else // EXPERIMENTAL_OUTPUT_DISPLAY
+
 int Track::GetY() const
 {
    return mY;
@@ -177,6 +225,7 @@ void Track::SetHeight(int h)
    mList->RecalcPositions(mNode);
    mList->ResizedEvent(mNode);
 }
+#endif // EXPERIMENTAL_OUTPUT_DISPLAY
 
 bool Track::GetMinimized() const
 {
@@ -211,6 +260,15 @@ Track *Track::GetLink() const
 
    return NULL;
 }
+
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+void Track::ReorderList(bool resize)
+{
+    mList->RecalcPositions(mNode);
+    if(resize)
+      mList->ResizedEvent(mNode);
+}
+#endif
 
 bool Track::IsSyncLockSelected()
 {
@@ -664,6 +722,34 @@ void TrackList::RecalcPositions(const TrackListNode *node)
       return;
    }
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   int cnt = 0;
+   if (node->prev) {
+      t = node->prev->t;
+      i = t->GetIndex() + 1;
+      if(MONO_WAVE_PAN(t))
+         y = t->GetY(true) + t->GetHeight(true);
+      else
+         y = t->GetY() + t->GetHeight();
+   }
+
+   for (const TrackListNode *n = node; n; n = n->next) {
+      t = n->t;
+      if(MONO_WAVE_PAN(t))
+         cnt++;
+
+      if(cnt != 2){
+         t->SetIndex(i++);
+         t->SetY(y);
+         y += t->GetHeight();
+      }
+      if(cnt != 0){
+         t->SetY(y,true);
+         y += t->GetHeight(true);
+      }
+      cnt = 0;
+   }
+#else // EXPERIMENTAL_OUTPUT_DISPLAY
    if (node->prev) {
       t = node->prev->t;
       i = t->GetIndex() + 1;
@@ -676,6 +762,7 @@ void TrackList::RecalcPositions(const TrackListNode *node)
       t->SetY(y);
       y += t->GetHeight();
    }
+#endif // EXPERIMENTAL_OUTPUT_DISPLAY
 }
 
 void TrackList::UpdatedEvent(const TrackListNode *node)
@@ -905,7 +992,11 @@ int TrackList::GetGroupHeight(Track * t) const
    if (t) {
       height += t->GetHeight();
    }
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   else if(MONO_WAVE_PAN(t)){
+      height += t->GetHeight(true);
+   }
+#endif
    return height;
 }
 
@@ -1183,11 +1274,20 @@ int TrackList::GetHeight() const
 {
    int height = 0;
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   if (tail) {
+      const Track *t = tail->t;
+      if(MONO_WAVE_PAN(t))
+         height = t->GetY(true) + t->GetHeight(true);
+      else
+         height = t->GetY() + t->GetHeight();
+   }
+#else
    if (tail) {
       const Track *t = tail->t;
       height = t->GetY() + t->GetHeight();
    }
-
+#endif
    return height;
 }
 
