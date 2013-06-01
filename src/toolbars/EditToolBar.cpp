@@ -241,7 +241,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
          break;
 #ifdef EXPERIMENTAL_SYNC_LOCK
       case ETBSyncLockID:
-         if (!busy) p->OnSyncLock();
+         p->OnSyncLock();
          return;//avoiding the call to SetButton()
 #endif
       case ETBZoomInID:
