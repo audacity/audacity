@@ -31,16 +31,7 @@
 double FreqToMIDInoteNumber(double freq)
 {
    // Make the calculation relative to A440 (A4), note number 69. 
-   double dCalc = 69.0 + (12.0 * (log(freq / 440.0) / log(2.0)));
-   //vvv For freq values in the range (0.0, ~8.2), that calculation 
-   // produces negative dCalc, and as close in frequency as they are, 
-   // their modulo 12 results are different. 
-   // Also, not clear that any of those frequencies is a "pitch", 
-   // so pending further discussion, just enforce a floor.
-   // MIDI numbers are non-negative. 
-   if (dCalc < 0.0)
-      dCalc = 0.0;
-   return dCalc;
+   return (69.0 + (12.0 * (log(freq / 440.0) / log(2.0))));
 }
 
 // PitchIndex returns the [0,11] index for a double pitchNum, 
@@ -48,7 +39,12 @@ double FreqToMIDInoteNumber(double freq)
 // of the integer part of (pitchNum + 0.5), so 0=C, 1=C#, etc.
 unsigned int PitchIndex(double pitchNum)
 {
-   return ((int)(pitchNum + 0.5) % 12);
+   int nPitchIndex = ((int)(pitchNum + 0.5) % 12);
+   // MIDI numbers (pitchNum) can be negative.
+   // Because of the modulo, we know we're within 12 of positive. 
+   if (nPitchIndex < 0)
+      nPitchIndex += 12;
+   return nPitchIndex;
 }
 
 
