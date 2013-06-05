@@ -223,7 +223,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
          wxString msg;
-         msg.Printf(_("Unkown Module \"%s\""), ShortName.c_str());
+         msg.Printf(_("Unknown Module \"%s\""), ShortName.c_str());
          const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file
          int action;
          action = ShowMultiDialog(msg, _("Warning - Unknown Module"), buttons, _("Load this module?"), false);
