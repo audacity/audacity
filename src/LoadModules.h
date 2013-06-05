@@ -17,9 +17,6 @@
 
 class CommandHandler;
 
-void LoadModules(CommandHandler &cmdHandler);
-void LoadModule(wxString fname);
-
 wxWindow *  MakeHijackPanel();
 
 //
@@ -51,6 +48,7 @@ public:
    bool Load();
    void Unload();
    int Dispatch(ModuleDispatchTypes type);
+   void * GetSymbol(wxString name);
 
 private:
    wxString mName;
@@ -67,7 +65,7 @@ public:
    virtual bool OnInit();
    virtual void OnExit();
 
-   static void Initialize();
+   static void Initialize(CommandHandler &cmdHandler);
    static int Dispatch(ModuleDispatchTypes type);
 
 private:
@@ -79,14 +77,3 @@ private:
 };
 
 #endif /* __AUDACITY_LOADMODULES_H__ */
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-

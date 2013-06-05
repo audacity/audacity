@@ -38,7 +38,7 @@ class MultiDialog : public wxDialog
 public:
    MultiDialog(wxString message,
                wxString title,
-               const wxChar **buttons);
+               const wxChar **buttons, wxString boxMsg, bool log);
    ~MultiDialog() {};
    
 private:
@@ -59,7 +59,7 @@ END_EVENT_TABLE()
    
 MultiDialog::MultiDialog(wxString message,
                          wxString title,
-                         const wxChar **buttons)
+                         const wxChar **buttons, wxString boxMsg, bool log)
    : wxDialog(NULL, (wxWindowID)-1, title, 
                wxDefaultPosition, wxDefaultSize, 
                wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU 
@@ -91,24 +91,30 @@ MultiDialog::MultiDialog(wxString message,
    }
 
    mRadioBox = new wxRadioBox(this,-1,
-                         _(" Please select an action "),
+                         boxMsg,
                          wxDefaultPosition, wxDefaultSize,
                          count, buttonLabels,
                          1, wxRA_SPECIFY_COLS);
-   mRadioBox->SetName(_("Please select an action"));
+   mRadioBox->SetName(boxMsg);
    mRadioBox->SetSelection(0);
    vSizer->Add(mRadioBox, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5);
 
 
    wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   wxButton* pButton = new wxButton(this, ID_SHOW_LOG_BUTTON, _("Show Log for Details"));
-   buttonSizer->Add(pButton, 0, wxALIGN_LEFT | wxALL, 5);
-   pButton->SetDefault(); // Encourage user to look at files.
+   wxButton* pButton;
+   if(log)
+   {
+      pButton = new wxButton(this, ID_SHOW_LOG_BUTTON, _("Show Log for Details"));
+      buttonSizer->Add(pButton, 0, wxALIGN_LEFT | wxALL, 5);
+      pButton->SetDefault(); // Encourage user to look at files.
 
-   buttonSizer->AddSpacer(40);
+      buttonSizer->AddSpacer(40);
+   }
 
-   pButton = new wxButton(this, wxID_OK, _("OK"));   
+   pButton = new wxButton(this, wxID_OK, _("OK"));
+   if(!log)
+      pButton->SetDefault();
    buttonSizer->Add(pButton, 0, wxALIGN_RIGHT | wxALL, 5);
 
    vSizer->Add(buttonSizer, 0, wxALIGN_CENTER | wxALL, 5);
@@ -122,12 +128,12 @@ MultiDialog::MultiDialog(wxString message,
    delete[] buttonLabels;
 }
 
-void MultiDialog::OnOK(wxCommandEvent &event)
+void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(mRadioBox->GetSelection());
 }
 
-void MultiDialog::OnShowLog(wxCommandEvent &event)
+void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 {
    GetActiveProject()->OnShowLog();
 }
@@ -135,9 +141,9 @@ void MultiDialog::OnShowLog(wxCommandEvent &event)
 
 int ShowMultiDialog(wxString message,
                     wxString title,
-                    const wxChar **buttons)
+                    const wxChar **buttons, wxString boxMsg, bool log)
 {
-   MultiDialog dlog(message, title, buttons);
+   MultiDialog dlog(message, title, buttons, boxMsg, log);
    dlog.CentreOnParent();
    return dlog.ShowModal();
 }

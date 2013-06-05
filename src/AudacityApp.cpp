@@ -1128,14 +1128,11 @@ bool AudacityApp::OnInit()
    wxFrame *temporarywindow = new wxFrame(NULL, -1, wxT("temporarytopwindow"));
    SetTopWindow(temporarywindow);
 
-   // Initialize the ModuleManager
-   ModuleManager::Initialize();
-
    // Initialize the CommandHandler
    InitCommandHandler();
 
-   // load audacity plug-in modules
-   LoadModules(*mCmdHandler);
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Initialize(*mCmdHandler);
 
    // Locale
    // wxWidgets 2.3 has a much nicer wxLocale API.  We can make this code much

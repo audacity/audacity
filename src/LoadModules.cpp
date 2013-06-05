@@ -33,6 +33,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "Prefs.h"
 #include "LoadModules.h"
+#include "widgets/MultiDialog.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -92,84 +93,6 @@ bool IsAllowedModule( wxString fname )
    return bLoad;
 }
 
-void LoadModule(wxString fname)
-{
-   if( !IsAllowedModule( fname ) )
-      return;
-
-   wxLogDebug(wxT("About to load module %s"), fname.c_str());
-   wxLogNull logNo; // Don't show wxWidgets Error if cannot load within this method. (Fix bug 544.)
-
-   tModuleInit mainFn = NULL;
-
-   // As a courtesy to some modules that might be bridges to
-   // open other modules, we set the current working
-   // directory to be the module's directory.
-
-   wxString saveOldCWD = ::wxGetCwd();
-   wxString prefix = ::wxPathOnly(fname);
-   ::wxSetWorkingDirectory(prefix);
-
-   wxDynamicLibrary* pDLL = new wxDynamicLibrary();
-   if (pDLL && pDLL->Load(fname, wxDL_LAZY)) 
-   {
-      // We've loaded and initialised OK.
-      // So look for special case functions:
-      // (a) for scripting.
-      if( scriptFn == NULL )
-         scriptFn = (tpRegScriptServerFunc)(pDLL->GetSymbol(wxT(scriptFnName)));
-      // (b) for hijacking the entire Audacity panel.
-      if( pPanelHijack==NULL )
-         pPanelHijack = (tPanelFn)(pDLL->GetSymbol(wxT(mainPanelFnName)));
-   }
-
-   ::wxSetWorkingDirectory(saveOldCWD);
-}
-
-void LoadModules(CommandHandler &cmdHandler)
-{
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
-   wxArrayString pathList;
-   wxArrayString files;
-   wxString pathVar;
-   unsigned int i;
-
-#if 0
-   // Code from LoadLadspa that might be useful in load modules.
-   pathVar = wxGetenv(wxT("AUDACITY_MODULES_PATH"));
-   if (pathVar != wxT(""))
-      wxGetApp().AddMultiPathsToPathList(pathVar, pathList);
-
-   #ifdef __WXGTK__
-   wxGetApp().AddUniquePathToPathList(INSTALL_PREFIX wxT("/modules"), pathList);
-   wxGetApp().AddUniquePathToPathList(wxT("/usr/local/lib/modules"), pathList);
-   wxGetApp().AddUniquePathToPathList(wxT("/usr/lib/modules"), pathList);
-   #endif
-#endif
-
-   for(i=0; i<audacityPathList.GetCount(); i++) {
-      wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("modules"),
-                                         pathList);
-   }
-
-   #ifdef __WXMSW__
-   wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files);   
-   #else
-   wxGetApp().FindFilesInPathList(wxT("*.so"), pathList, files);
-   #endif
-
-   for(i=0; i<files.GetCount(); i++)
-      LoadModule(files[i]);
-   // After loading all the modules, we may have a registered scripting function.
-   if(scriptFn)
-   {
-      ScriptCommandRelay::SetCommandHandler(cmdHandler);
-      ScriptCommandRelay::SetRegScriptServerFunc(scriptFn);
-      NonGuiThread::StartChild(&ScriptCommandRelay::Run);
-   }
-}
-
 Module::Module(const wxString & name)
 {
    mName = name;
@@ -184,7 +107,7 @@ Module::~Module()
 
 bool Module::Load()
 {
-   wxLogNull logNo;
+//   wxLogNull logNo;
 
    if (mLib->IsLoaded()) {
       if (mDispatch) {
@@ -243,8 +166,13 @@ int Module::Dispatch(ModuleDispatchTypes type)
    return 0;
 }
 
+void * Module::GetSymbol(wxString name)
+{
+   return mLib->GetSymbol(name);
+}
+
 //
-// Module Manager (using wxPluginManager would be MUCH better)
+// Module Manager
 //
 ModuleManager *ModuleManager::mInstance;
 
@@ -265,7 +193,7 @@ void ModuleManager::OnExit()
    mModules.Clear();
 }
 
-void ModuleManager::Initialize()
+void ModuleManager::Initialize(CommandHandler &cmdHandler)
 {
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
    wxArrayString pathList;
@@ -273,12 +201,10 @@ void ModuleManager::Initialize()
    wxString pathVar;
    size_t i;
 
-   // JKC: Is this code duplicating LoadModules() ????
    // Code from LoadLadspa that might be useful in load modules.
    pathVar = wxGetenv(wxT("AUDACITY_MODULES_PATH"));
-   if (pathVar != wxT("")) {
+   if (pathVar != wxT(""))
       wxGetApp().AddMultiPathsToPathList(pathVar, pathList);
-   }
 
    for (i = 0; i < audacityPathList.GetCount(); i++) {
       wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
@@ -288,24 +214,59 @@ void ModuleManager::Initialize()
 
    #if defined(__WXMSW__)
    wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files);   
-//   #elif defined(__WXMAC__)
-//   wxGetApp().FindFilesInPathList(wxT("*.dylib"), pathList, files);
    #else
    wxGetApp().FindFilesInPathList(wxT("*.so"), pathList, files);
    #endif
 
    for (i = 0; i < files.GetCount(); i++) {
-      if( IsAllowedModule( files[i] ) )
+      if( !IsAllowedModule( files[i] ) )
       {
-         Module *module = new Module(files[i]);
+         wxString ShortName = wxFileName( files[i] ).GetName();
+         wxString msg;
+         msg.Printf(_("Unkown Module \"%s\""), ShortName.c_str());
+         const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file
+         int action;
+         action = ShowMultiDialog(msg, _("Warning - Unknown Module"), buttons, _("Load this module?"), false);
+         if(action == 1)   // "No"
+            continue;
+         wxLogDebug(wxT("Unknown module %s accepted"), ShortName.c_str());
+      }
+      wxLogDebug(wxT("About to load module %s"), wxFileName( files[i] ).GetName().c_str());
 
-         if (module->Load()) {
-            mInstance->mModules.Add(module);
-         }
-         else {
-            delete module;
+      // As a courtesy to some modules that might be bridges to
+      // open other modules, we set the current working
+      // directory to be the module's directory.
+      wxString saveOldCWD = ::wxGetCwd();
+      wxString prefix = ::wxPathOnly(files[i]);
+      ::wxSetWorkingDirectory(prefix);
+
+      Module *module = new Module(files[i]);
+
+      if (module->Load()) {
+         mInstance->mModules.Add(module);
+         // We've loaded and initialised OK.
+         // So look for special case functions:
+         wxLogNull logNo; // Don't show wxWidgets errors if we can't do these. (Was: Fix bug 544.)
+         // (a) for scripting.
+         if( scriptFn == NULL )
+            scriptFn = (tpRegScriptServerFunc)(module->GetSymbol(wxT(scriptFnName)));
+         // (b) for hijacking the entire Audacity panel.
+         if( pPanelHijack==NULL )
+         {
+            pPanelHijack = (tPanelFn)(module->GetSymbol(wxT(mainPanelFnName)));
          }
       }
+      else {
+         delete module;
+      }
+      ::wxSetWorkingDirectory(saveOldCWD);
+   }
+   // After loading all the modules, we may have a registered scripting function.
+   if(scriptFn)
+   {
+      ScriptCommandRelay::SetCommandHandler(cmdHandler);
+      ScriptCommandRelay::SetRegScriptServerFunc(scriptFn);
+      NonGuiThread::StartChild(&ScriptCommandRelay::Run);
    }
 }
 
@@ -322,14 +283,3 @@ int ModuleManager::Dispatch(ModuleDispatchTypes type)
 }
 
 IMPLEMENT_DYNAMIC_CLASS(ModuleManager, wxModule);
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-
-
