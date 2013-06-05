@@ -29,6 +29,12 @@ class TimeWarper;
 //
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+#define MONO_WAVE_PAN(T) (T != NULL && T->GetChannel() == Track::MonoChannel && T->GetKind() == Track::Wave && ((WaveTrack *)T)->GetPan() != 0 && WaveTrack::mMonoAsVirtualStereo && ((WaveTrack *)T)->GetDisplay() == WaveTrack::WaveformDisplay)
+
+#define MONO_PAN  (mPan != 0.0 && mChannel == MonoChannel && mDisplay == WaveformDisplay && mMonoAsVirtualStereo)
+#endif
+
 /// \brief Structure to hold region of a wavetrack and a comparison function
 /// for sortability.
 typedef struct REGION
@@ -62,11 +68,15 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    void Init(const WaveTrack &orig);
    virtual Track *Duplicate();
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   void VirtualStereoInit();
+#endif
    friend class TrackFactory;
 
  public:
- 
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   static bool mMonoAsVirtualStereo;
+#endif
    enum LocationType {
       locationCutLine = 1,
       locationMergePoint
@@ -106,7 +116,9 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    //
 
    virtual int GetKind() const { return Wave; } 
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   virtual int GetMinimizedHeight() const;
+#endif
    //
    // WaveTrack parameters
    //
@@ -120,11 +132,16 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    // -1.0 (left) -> 1.0 (right)
    float GetPan() const;
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   bool SetPan(float newPan);
+#else
    void SetPan(float newPan);
-
+#endif
    // Takes gain and pan into account
    float GetChannelGain(int channel);
-
+#ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   void SetVirtualState(bool state, bool half=false);
+#endif
    sampleFormat GetSampleFormat() { return mFormat; }
    bool ConvertToSampleFormat(sampleFormat format);
 
@@ -427,15 +444,3 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 };
 
 #endif // __AUDACITY_WAVETRACK__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: bf4c1c84-7a1d-4689-86fd-f6926b5d3f9a
-
