@@ -462,14 +462,6 @@ bool ChangePitchDialog::TransferDataFromWindow()
 
 // calculations
 
-//vvvvv Probaly unnecessary with fix to FreqToMIDInoteNumber(), but leave it in until we decide how to handle very low freq values. 
-void ChangePitchDialog::Calc_FromPitchIndex()
-{
-   m_FromPitchIndex = (int)(m_ToPitchIndex - m_SemitonesChange) % 12;
-   if (m_FromPitchIndex < 0)
-      m_FromPitchIndex += 12;
-}
-
 void ChangePitchDialog::Calc_ToPitchIndex()
 {
    int nSemitonesChange = 
@@ -600,14 +592,6 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       m_FromPitchIndex = PitchIndex(FreqToMIDInoteNumber(m_FromFrequency));
       this->Calc_ToFrequency();
       this->Calc_ToPitchIndex();
-
-      //vvvvv Probaly unnecessary with fix to FreqToMIDInoteNumber(), but leave it in until we decide how to handle very low freq values. 
-      // This is Steve's incremental fix for cross-updating issues related to bug 309. 
-      // It's weird that in prior code (3 lines above this), we set m_FromPitchIndex, 
-      // then call 2 Calc methods for the other members, and then this call to 
-      // recalculate m_FromPitchIndex. Something's wrong there, but I want to figure 
-      // out the overall best scheme, and this is an incremental fix. 
-      //   this->Calc_FromPitchIndex(); 
 
       m_bLoopDetect = true;
       this->Update_Choice_FromPitch();

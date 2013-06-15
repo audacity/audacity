@@ -95,7 +95,6 @@ class ChangePitchDialog:public EffectDialog {
 
  private:
    // calculations
-   void Calc_FromPitchIndex(); // Update m_FromPitchIndex from new m_ToPitchIndex.
    void Calc_ToPitchIndex(); // Update m_ToPitchIndex from new m_SemitonesChange.
    void Calc_SemitonesChange_fromPitches(); // Update m_SemitonesChange from new m_*PitchIndex-es.
    void Calc_SemitonesChange_fromPercentChange(); // Update m_SemitonesChange from new m_PercentChange.
