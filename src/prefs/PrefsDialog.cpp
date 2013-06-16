@@ -51,7 +51,9 @@
 #include "KeyConfigPrefs.h"
 #include "LibraryPrefs.h"
 #include "MousePrefs.h"
+#ifdef EXPERIMENTAL_MODULE_PREFS
 #include "ModulePrefs.h"
+#endif
 #include "PlaybackPrefs.h"
 #include "ProjectsPrefs.h"
 #include "QualityPrefs.h"
@@ -147,7 +149,9 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
 //       w = new BatchPrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
          w = new KeyConfigPrefs(mCategories);   mCategories->AddPage(w, w->GetName(), false, 0);
          w = new MousePrefs(mCategories);       mCategories->AddPage(w, w->GetName(), false, 0);
+#ifdef EXPERIMENTAL_MODULE_PREFS
          w = new ModulePrefs(mCategories);      mCategories->AddPage(w, w->GetName(), false, 0);
+#endif
       }
       S.EndHorizontalLay();
    }
@@ -207,7 +211,7 @@ PrefsDialog::~PrefsDialog()
 {
 }
 
-void PrefsDialog::OnCancel(wxCommandEvent & event)
+void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
       ((PrefsPanel *) mCategories->GetPage(i))->Cancel();
@@ -224,7 +228,7 @@ void PrefsDialog::OnTreeKeyDown(wxTreeEvent & event)
       event.Skip(); // Ensure standard behavior when enter is not pressed
 }
 
-void PrefsDialog::OnOK(wxCommandEvent & event)
+void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    // Validate all pages first
    for (size_t i = 0; i < mCategories->GetPageCount(); i++) {

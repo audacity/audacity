@@ -21,6 +21,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
+#include <wx/msgdlg.h>
 #include <wx/string.h>
 #include <wx/filename.h>
 
@@ -31,7 +32,9 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "commands/ScriptCommandRelay.h"
 #include <NonGuiThread.h>  // header from libwidgetextra
 
+#ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
+#endif
 #include "LoadModules.h"
 #include "widgets/MultiDialog.h"
 
@@ -74,6 +77,7 @@ wxWindow * MakeHijackPanel()
 // starts a thread and reads script commands.
 tpRegScriptServerFunc scriptFn;
 
+#ifdef EXPERIMENTAL_MODULE_PREFS
 bool IsAllowedModule( wxString fname )
 {
    bool bLoad = false;
@@ -92,6 +96,7 @@ bool IsAllowedModule( wxString fname )
    }
    return bLoad;
 }
+#endif  // EXPERIMENTAL_MODULE_PREFS
 
 Module::Module(const wxString & name)
 {
@@ -123,19 +128,25 @@ bool Module::Load()
    // Check version string matches.  (For now, they must match exactly)
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
-      wxLogError(wxT("The module %s does not provide a version string. It will not be loaded."), mName.c_str());
+      wxString ShortName = wxFileName( mName ).GetName();
+      wxMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName.c_str()));
+      mLib->Unload();
       return false;
    }
 
    wxString moduleVersion = versionFn();
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
-      wxLogError(wxT("The module %s is designed to work with Audacity version %s; it will not be loaded."), mName.c_str(), moduleVersion.c_str());
+      wxString ShortName = wxFileName( mName ).GetName();
+      wxMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName.c_str(), moduleVersion.c_str()));
+      mLib->Unload();
       return false;
    }
 
    mDispatch = (fnModuleDispatch) mLib->GetSymbol(wxT(ModuleDispatchName));
    if (!mDispatch) {
-      // Module does not provide a dispacth function...
+      // Module does not provide a dispatch function...
       return false;
    }
 
@@ -219,20 +230,6 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    #endif
 
    for (i = 0; i < files.GetCount(); i++) {
-      if( !IsAllowedModule( files[i] ) )
-      {
-         wxString ShortName = wxFileName( files[i] ).GetName();
-         wxString msg;
-         msg.Printf(_("Unknown Module \"%s\""), ShortName.c_str());
-         const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file
-         int action;
-         action = ShowMultiDialog(msg, _("Warning - Unknown Module"), buttons, _("Load this module?"), false);
-         if(action == 1)   // "No"
-            continue;
-         wxLogDebug(wxT("Unknown module %s accepted"), ShortName.c_str());
-      }
-      wxLogDebug(wxT("About to load module %s"), wxFileName( files[i] ).GetName().c_str());
-
       // As a courtesy to some modules that might be bridges to
       // open other modules, we set the current working
       // directory to be the module's directory.
@@ -242,7 +239,23 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
 
       Module *module = new Module(files[i]);
 
-      if (module->Load()) {
+#ifdef EXPERIMENTAL_MODULE_PREFS
+      if( !IsAllowedModule( files[i] ) )  // don't try and check the in-date-ness before this as that means loading the module to call it's GetVersionString, which could do anything.
+#endif EXPERIMENTAL_MODULE_PREFS
+      {
+         wxString ShortName = wxFileName( files[i] ).GetName();
+         wxString msg;
+         msg.Printf(_("Module \"%s\" found."), ShortName.c_str());
+         msg += _("\n\nOnly use modules from trusted sources");
+         const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
+         int action;
+         action = ShowMultiDialog(msg, _("Module Loader"), buttons, _("Try and load this module?"), false);
+         if(action == 1)   // "No"
+            continue;
+      }
+
+      if (module->Load())   // it will get rejected if there  are version problems
+      {
          mInstance->mModules.Add(module);
          // We've loaded and initialised OK.
          // So look for special case functions:
