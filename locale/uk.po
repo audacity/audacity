@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-01-20 18:14+0000\n"
-"PO-Revision-Date: 2013-04-06 19:51-0000\n"
-"Last-Translator: gale <gale@audacityteam.org>\n"
+"PO-Revision-Date: 2013-06-17 07:18-0000\n"
+"Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
-"Language: ukX-Generator: Lokalize 1.2\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -664,10 +664,6 @@ msgstr "Застосувати %s"
 msgid "Apply Chain"
 msgstr "Застосувати ланцюжок"
 
-#: BatchProcessDialog.cpp:69
-msgid "CleanSpeech Batch Processing"
-msgstr "Пакетна обробка CleanSpeech"
-
 #. i18n-hint: A chain is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: BatchProcessDialog.cpp:105
@@ -709,10 +705,6 @@ msgstr "Застосування «%s» до поточного проекту"
 #: BatchProcessDialog.cpp:200
 msgid "Please save and close the current project first."
 msgstr "Спочатку збережіть та закрийте поточний проект."
-
-#: BatchProcessDialog.cpp:206
-msgid "Select vocal file(s) for batch CleanSpeech Chain..."
-msgstr "Оберіть голосові файли для пакетного ланцюжка CleanSpeech…"
 
 #: BatchProcessDialog.cpp:207
 msgid "Select file(s) for batch processing..."
@@ -1607,13 +1599,13 @@ msgstr "Ласкаво просимо до Audacity "
 msgid "These are our support methods:"
 msgstr "Ось перелік підтримуваних методів:"
 
-#: HelpText.cpp:179
-msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">Internet version if it isn't</a>)"
-msgstr " [[file:quick_help.html|Коротка довідка]] (має бути встановлено локально, <a href=\"http://manual.audacityteam.org/index.php?title=Quick_Help\">інтернет-версія, якщо її не встановлено</a>)"
+#: HelpText.cpp:190
+msgid " [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/o/quick_help.html\">Internet version if it isn't</a>)"
+msgstr " [[file:quick_helphtml|Коротка довідка]] (має бути встановлено локально, <a href=\"http://manual.audacityteam.org/o/quick_help.html\">інтернет-версія, якщо її не встановлено</a>)"
 
-#: HelpText.cpp:180
-msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/index.php\">Internet version if it isn't</a>)"
-msgstr " [[file:index.html|Підручник]] (має бути встановлено локально, <a href=\"http://manual.audacityteam.org/index.php\">інтернет-версія, якщо підручник не встановлено</a>)"
+#: HelpText.cpp:191
+msgid " [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/o/\">Internet version if it isn't</a>)"
+msgstr " [[file:indexhtml|Підручник]] (має бути встановлено локально, <a href=\"http://manual.audacityteam.org/o/\">інтернет-версія, якщо підручник не встановлено</a>)"
 
 #: HelpText.cpp:181
 msgid " [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)"
@@ -1627,17 +1619,17 @@ msgstr " <a href=\"http://forum.audacityteam.org/\">Форум</a> (задайт
 msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
 msgstr " Якщо вам потрібна коротка відповідь, ви можете скористатися <b>пошуком</b> на наведених вище ресурсах інтернету."
 
-#: HelpText.cpp:190
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\"> FFmpeg library</a> to your computer."
-msgstr "Audacity зможе імпортувати файли без захисту даних у багатьох інших форматах (зокрема M4A і WMA, файли стиснених даних WAV з портативних записувачів та звукові дані з відеофайлів), якщо ви встановите у вашій системі додаткову <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#foreign\">бібліотеку FFmpeg</a>."
+#: HelpText.cpp:201
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\"> FFmpeg library</a> to your computer."
+msgstr "Audacity зможе імпортувати файли без захисту даних у багатьох інших форматах (зокрема M4A і WMA, файли стиснених даних WAV з портативних записувачів та звукові дані з відеофайлів), якщо ви встановите у вашій системі додаткову <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\">бібліотеку FFmpeg</a>."
 
-#: HelpText.cpp:194
-msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\"> audio CDs</a>."
-msgstr "Ви також можете ознайомитися з нашою довідкою щодо імпортування <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#midi\">файлів MIDI</a> та доріжок з <a href=\"http://manual.audacityteam.org/man/FAQ:Opening_and_Saving_Files#fromcd\">звукових компакт-дисків</a>."
+#: HelpText.cpp:205
+msgid "You can also read our help on importing <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#midi\">MIDI files</a> and tracks from <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#fromcd\"> audio CDs</a>."
+msgstr "Ви також можете ознайомитися з нашою довідкою щодо імпортування <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#midi\">файлів MIDI</a> та доріжок з <a href=\"http://manual.audacityteam.org/o/man/faq_opening_and_saving_files.html#fromcd\">звукових компакт-дисків</a>."
 
-#: HelpText.cpp:207
-msgid "<p>You do not appear to have 'help' installed on your computer.<br> Please <a href=\"*URL*\">view or download it online</a>."
-msgstr "<p>Здається, на вашому комп’ютері не встановлено довідку.<br> Будь ласка, <a href=\"*URL*\">перегляньте або звантажте її з мережі</a>."
+#: HelpText.cpp:218
+msgid "You do not appear to have the 'help' folder installed.<br> Please <a href=\"*URL*\">view the content online</a> or <a href=\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\"> download the full Manual</a>."
+msgstr "У вашій системі не встановлено дані до каталогу «help».<br>Ви можете або <a href=\"*URL*\">переглянути довідку у інтернеті</a>, або <a href=\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\">отримати і встановити підручник локально</a>."
 
 #: HistoryWindow.cpp:52
 msgid "Undo History"
@@ -1832,6 +1824,27 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Відкривається проект Audacity"
 
+#: LoadModules.cpp:226
+#, c-format
+msgid "Unknown Module \"%s\""
+msgstr "Невідомий модуль «%s»"
+
+#: LoadModules.cpp:227
+msgid "No"
+msgstr "Ні"
+
+#: LoadModules.cpp:227
+msgid "Yes"
+msgstr "Так"
+
+#: LoadModules.cpp:229
+msgid "Load this module?"
+msgstr "Завантажити цей модуль?"
+
+#: LoadModules.cpp:229
+msgid "Warning - Unknown Module"
+msgstr "Попередження: невідомий модуль"
+
 #: LyricsWindow.cpp:47
 #, c-format
 msgid "Audacity Karaoke%s"
@@ -1909,14 +1922,6 @@ msgstr "Застос&увати ланцюжок…"
 #: Menus.cpp:282
 msgid "Edit C&hains..."
 msgstr "Редагувати лан&цюжки…"
-
-#: Menus.cpp:285
-msgid "Export CleanSpeech &Presets..."
-msgstr "Експортувати &шаблони CleanSpeech…"
-
-#: Menus.cpp:286
-msgid "I&mport CleanSpeech Presets..."
-msgstr "І&мпортувати шаблони CleanSpeech…"
 
 #: Menus.cpp:292
 msgid "&Upload File..."
@@ -2015,11 +2020,6 @@ msgstr "Вставити те&кст до нової мітки"
 #: Menus.cpp:382
 msgid "Duplic&ate"
 msgstr "Ду&блювати"
-
-#: Menus.cpp:387
-#: Menus.cpp:674
-msgid "Stereo Trac&k to Mono"
-msgstr "&Стерео на моно"
 
 #: Menus.cpp:478
 msgid "La&beled Audio"
@@ -2328,6 +2328,11 @@ msgstr "Доріжку для &позначок"
 msgid "&Time Track"
 msgstr "Доріжку &часу"
 
+#: Menus.cpp:387
+#: Menus.cpp:674
+msgid "Stereo Trac&k to Mono"
+msgstr "&Стерео на моно"
+
 #: Menus.cpp:677
 msgid "Mi&x and Render"
 msgstr "Змі&кшувати і обробити"
@@ -2470,10 +2475,6 @@ msgstr "Побудувати графік спектра…"
 #: Menus.cpp:1018
 msgid "&Help"
 msgstr "&Довідка"
-
-#: Menus.cpp:1022
-msgid "&About Audacity CleanSpeech..."
-msgstr "&Про програму Audacity CleanSpeech…"
 
 #: Menus.cpp:1028
 msgid "&Quick Help (in web browser)"
@@ -3241,27 +3242,6 @@ msgstr "Створено нову доріжку часу"
 msgid "Edited labels"
 msgstr "Змінені позначки"
 
-#: Menus.cpp:5524
-msgid "Save CleanSpeech Preset File As:"
-msgstr "Зберегти файл шаблону CleanSpeech як:"
-
-#: Menus.cpp:5528
-msgid "CleanSpeech Presets (*.csp)|*.csp"
-msgstr "Шаблони CleanSpeech (*.csp)|*.csp"
-
-#: Menus.cpp:5535
-#: export/Export.cpp:635
-msgid "Sorry, pathnames longer than 256 characters not supported."
-msgstr "Шляхи, що містять більш ніж 256 символів, не підтримуються."
-
-#: Menus.cpp:5581
-msgid "Problem encountered exporting presets."
-msgstr "Помилка при експорті шаблонів."
-
-#: Menus.cpp:6089
-msgid "Unable to Export"
-msgstr "Не вдалося експортувати"
-
 #: Menus.cpp:5767
 msgid "Remove Track"
 msgstr "Вилучити доріжку"
@@ -3668,14 +3648,6 @@ msgstr "Імпорт"
 msgid "Error Importing"
 msgstr "Помилка під час спроби імпортування"
 
-#: Project.cpp:3501
-msgid "Save Speech As:"
-msgstr "Зберегти промову як:"
-
-#: Project.cpp:3503
-msgid "Windows PCM Audio file (*.wav)|*.wav"
-msgstr "Файл звуку Windows PCM (*.wav)|*.wav"
-
 #: Project.cpp:3519
 msgid "<untitled>"
 msgstr "<без назви>"
@@ -4044,8 +4016,17 @@ msgid "Pre&view"
 msgstr "&Прослухати"
 
 #: ShuttleGui.cpp:2182
-msgid "&Debug"
-msgstr "&Налагодження"
+msgid "Dry Previe&w"
+msgstr "Прослухати &без застосування"
+
+#: prefs/KeyConfigPrefs.cpp:173
+#: prefs/ThemePrefs.cpp:125
+msgid "&Defaults"
+msgstr "&Типові"
+
+#: ShuttleGui.cpp:2200
+msgid "Debu&g"
+msgstr "Ді&агностика"
 
 #: SoundActivatedRecord.cpp:36
 msgid "Sound Activated Record"
@@ -5135,10 +5116,19 @@ msgstr "Приглушення музики…"
 msgid "OK"
 msgstr "Гаразд"
 
-#: effects/BassTreble.cpp:50
+#: effects/BassTreble.cpp:67
 #, c-format
-msgid "Applied effect: %s bass = %.0f dB, treble = %.0f dB, gain = %.0f dB"
-msgstr "Застосований ефект: %s баси = %.0f дБ, високі частоти = %.0f дБ, підсилення = %.0f дБ"
+msgid "Applied effect: %s bass = %.1f dB, treble = %.1f dB"
+msgstr "Застосований ефект: %s баси = %.1f дБ, ВЧ = %.1f дБ"
+
+#: effects/BassTreble.cpp:71
+#, c-format
+msgid ", level enabled at = %.1f dB"
+msgstr ", увімкнено рівень на = %.1f дБ"
+
+#: effects/BassTreble.cpp:72
+msgid ", level disabled"
+msgstr ", рівень вимкнено"
 
 #: effects/BassTreble.cpp:190
 msgid "Bass and Treble"
@@ -5149,29 +5139,45 @@ msgstr "Баси і ВЧ"
 msgid "by Steve Daulton"
 msgstr "автор — Steve Daulton"
 
+#: effects/BassTreble.cpp:321
+msgid "&Bass (dB):"
+msgstr "&Баси (дБ):"
+
 #: effects/BassTreble.cpp:217
 msgid "Bass (dB):"
 msgstr "Баси (дБ):"
 
-#: effects/BassTreble.cpp:222
-msgid "Bass (dB)"
-msgstr "Баси (дБ)"
+#: effects/BassTreble.cpp:327
+msgid "Bass"
+msgstr "Баси"
 
-#: effects/BassTreble.cpp:226
-msgid "Treble (dB):"
-msgstr "ВЧ (дБ):"
+#: effects/BassTreble.cpp:332
+msgid "&Treble (dB):"
+msgstr "В&Ч (дБ):"
 
-#: effects/BassTreble.cpp:231
-msgid "Treble (dB)"
-msgstr "ВЧ (дБ)"
+#: effects/BassTreble.cpp:337
+msgid "Treble"
+msgstr "Високі частоти"
 
-#: effects/BassTreble.cpp:235
-msgid "Gain (dB):"
-msgstr "Підсилення (дБ):"
+#: effects/BassTreble.cpp:342
+msgid "&Level (dB):"
+msgstr "&Рівень (дБ):"
 
-#: effects/BassTreble.cpp:240
-msgid "Gain (dB)"
-msgstr "Підсилення (дБ)"
+#: effects/BassTreble.cpp:347
+msgid "Level"
+msgstr "Рівень"
+
+#: effects/BassTreble.cpp:358
+msgid "&Enable level control"
+msgstr "&Увімкнути керування рівнем"
+
+#: effects/BassTreble.cpp:422
+msgid "    No change to apply."
+msgstr "    Немає змін для внесення."
+
+#: effects/BassTreble.cpp:431
+msgid ":   Maximum 0 dB."
+msgstr ":   максимум — 0 дБ."
 
 #: effects/BassTreble.h:32
 msgid "Bass and Treble..."
@@ -5213,29 +5219,23 @@ msgstr "Автори — Vaughan Johnson та Dominic Mazzoni"
 msgid "using SoundTouch, by Olli Parviainen"
 msgstr "з використанням SoundTouch, автор Olli Parviainen"
 
-#: effects/ChangePitch.cpp:281
-msgid "Pitch:"
-msgstr "Тональність:"
-
-#: effects/ChangePitch.cpp:286
-msgid "From:"
-msgstr "Від:"
+#: effects/ChangePitch.cpp:338
+#: effects/ChangeSpeed.cpp:381
+#: effects/ChangeTempo.cpp:213
+#: effects/ChangeTempo.cpp:226
+msgid "from"
+msgstr "з"
 
 #: effects/ChangePitch.cpp:287
 msgid "From Pitch"
 msgstr "Від висоти тону"
 
-#: effects/ChangePitch.cpp:298
-msgid "Up"
-msgstr "Вгору"
-
-#: effects/ChangePitch.cpp:301
-msgid "Down"
-msgstr "Вниз"
-
-#: effects/ChangePitch.cpp:311
-msgid "To:"
-msgstr "До:"
+#: effects/ChangePitch.cpp:343
+#: effects/ChangeSpeed.cpp:386
+#: effects/ChangeTempo.cpp:218
+#: effects/ChangeTempo.cpp:231
+msgid "to"
+msgstr "до"
 
 #: effects/ChangePitch.cpp:312
 msgid "To Pitch"
@@ -5249,38 +5249,13 @@ msgstr "Півтонів (half-steps):"
 msgid "Semitones in half-steps"
 msgstr "Півтонів (у півкроках)"
 
-#: effects/BassBoost.cpp:196
-#: effects/ChangePitch.cpp:334
-msgid "Frequency (Hz):"
-msgstr "Частота (Гц):"
-
-#: effects/ChangePitch.cpp:338
-#: effects/ChangeSpeed.cpp:381
-#: effects/ChangeTempo.cpp:213
-#: effects/ChangeTempo.cpp:226
-msgid "from"
-msgstr "з"
-
 #: effects/ChangePitch.cpp:339
 msgid "From frequency in hertz"
 msgstr "З частоти у Герцах"
 
-#: effects/ChangePitch.cpp:343
-#: effects/ChangeSpeed.cpp:386
-#: effects/ChangeTempo.cpp:218
-#: effects/ChangeTempo.cpp:231
-msgid "to"
-msgstr "до"
-
 #: effects/ChangePitch.cpp:344
 msgid "To frequency in seconds"
 msgstr "До частоти у Герцах"
-
-#: effects/ChangePitch.cpp:350
-#: effects/ChangeSpeed.cpp:352
-#: effects/ChangeTempo.cpp:191
-msgid "Percent Change:"
-msgstr "Відсоток змін:"
 
 #: effects/ChangePitch.cpp:355
 #: effects/ChangePitch.cpp:368
@@ -5314,6 +5289,12 @@ msgstr "Змінити швидкість, впливаючи на темп та
 #: effects/ChangeSpeed.cpp:343
 msgid "using SampleRate, by Erik de Castro Lopo"
 msgstr "з використанням бібліотеки SampleRate, автор Erik de Castro Lopo"
+
+#: effects/ChangePitch.cpp:350
+#: effects/ChangeSpeed.cpp:352
+#: effects/ChangeTempo.cpp:191
+msgid "Percent Change:"
+msgstr "Відсоток змін:"
 
 #: effects/ChangeSpeed.cpp:371
 msgid "Standard Vinyl RPM:"
@@ -5855,7 +5836,7 @@ msgstr "Застосовано ефект: %s затримка = %f секунд
 
 #: effects/Echo.cpp:174
 msgid "Echo"
-msgstr "Відлуння"
+msgstr "Луна"
 
 #. i18n-hint: && in here is an escape character to get a single & on
 #. * screen, so keep it as is
@@ -5874,11 +5855,11 @@ msgstr "Коефіцієнт спадання:"
 
 #: effects/Echo.h:34
 msgid "Echo..."
-msgstr "Відлуння…"
+msgstr "Луна…"
 
 #: effects/Echo.h:48
 msgid "Performing Echo"
-msgstr "Застосовується ефект «Відлуння»"
+msgstr "Застосовується ефект «Луна»"
 
 #: effects/Effect.cpp:470
 msgid "Preparing preview"
@@ -6527,19 +6508,6 @@ msgstr "Застосований ефект: Генерувати шум, %.6lf 
 msgid "Generating Noise"
 msgstr "Генерування шуму"
 
-#: effects/NoiseRemoval.cpp:201
-#, c-format
-msgid ""
-"Could not open file:\n"
-"  %s"
-msgstr ""
-"Не вдалося відкрити файл:\n"
-"  %s"
-
-#: effects/NoiseRemoval.cpp:295
-msgid "Attempt to run Noise Removal without a noise profile.\n"
-msgstr "Спроба запустити «Вилучення шуму» без профілю шуму.\n"
-
 #: effects/NoiseRemoval.cpp:879
 msgid "Step 1"
 msgstr "Крок 1"
@@ -6914,6 +6882,189 @@ msgstr "Повтор…"
 msgid "Performing Repeat"
 msgstr "Створюються повтори"
 
+#: effects/Reverb.cpp:196
+#, c-format
+msgid ", Room Size = %.0f"
+msgstr ", розмір зали = %.0f"
+
+#: effects/Reverb.cpp:197
+#, c-format
+msgid ", Delay = %.0fms"
+msgstr ", затримка = %.0f мс"
+
+#: effects/Reverb.cpp:198
+#, c-format
+msgid ", Reverberance = %.0f%%"
+msgstr ", відлуння = %.0f%%"
+
+#: effects/Reverb.cpp:199
+#, c-format
+msgid ", Damping = %.0f%%"
+msgstr ", послаблення = %.0f%%"
+
+#: effects/Reverb.cpp:200
+#, c-format
+msgid ", Tone Low = %.0f%%"
+msgstr ", низькі тони = %.0f%%"
+
+#: effects/Reverb.cpp:201
+#, c-format
+msgid ", Tone High = %.0f%%"
+msgstr ", високі тони = %.0f%%"
+
+#: effects/Reverb.cpp:202
+#, c-format
+msgid ", Wet Gain = %.0fdB"
+msgstr ", рівень відлуння = %.0f дБ"
+
+#: effects/Reverb.cpp:203
+#, c-format
+msgid ", Dry Gain Size = %.0fdB"
+msgstr ", рівень оригінального звуку = %.0f дБ"
+
+#: effects/Reverb.cpp:204
+#, c-format
+msgid ", Stereo Width = %.0f%%"
+msgstr ", ширина стерео = %.0f%%"
+
+#: effects/Reverb.cpp:205
+#, c-format
+msgid ", Wet Only = %s"
+msgstr ", лише відлуння = %s"
+
+#: effects/Reverb.cpp:314
+msgid "by Rob Sykes"
+msgstr "автор — Rob Sykes"
+
+#: effects/Reverb.cpp:323
+msgid "Room Size (%):"
+msgstr "Розмір зали (%):"
+
+#: effects/Reverb.cpp:331
+msgid "Pre-delay (ms):"
+msgstr "Попередня затримка (у мс):"
+
+#: effects/Reverb.cpp:335
+msgid "Reverberance (%):"
+msgstr "Відлуння (%):"
+
+#: effects/Reverb.cpp:339
+msgid "Damping (%):"
+msgstr "Послаблення (%):"
+
+#: effects/Reverb.cpp:343
+msgid "Tone Low (%):"
+msgstr "Низькі тони (%):"
+
+#: effects/Reverb.cpp:347
+msgid "Tone High (%):"
+msgstr "Високі тони (%):"
+
+#: effects/Reverb.cpp:351
+msgid "Wet Gain (dB):"
+msgstr "Рівень відлуння (дБ):"
+
+#: effects/Reverb.cpp:355
+msgid "Dry Gain (dB):"
+msgstr "Рівень оригіналу (дБ):"
+
+#: effects/Reverb.cpp:359
+msgid "Stereo Width (%):"
+msgstr "Ширина стерео (%):"
+
+#: effects/Reverb.cpp:368
+msgid "Wet Only"
+msgstr "Лише відлуння"
+
+#: effects/VST/VSTEffect.cpp:479
+msgid "Presets:"
+msgstr "Шаблони:"
+
+#: effects/VST/VSTEffect.cpp:492
+msgid "Load"
+msgstr "Завантажити"
+
+#: effects/Reverb.cpp:375
+msgid "User settings:"
+msgstr "Параметри користувача:"
+
+#: effects/VST/VSTEffect.cpp:495
+msgid "Save"
+msgstr "Зберегти"
+
+#: effects/Reverb.cpp:379
+msgid "Rename"
+msgstr "Перейменувати"
+
+#: effects/Reverb.cpp:494
+#: effects/Reverb.cpp:526
+msgid "Reverb settings"
+msgstr "Параметри відлуння"
+
+#: effects/Reverb.cpp:495
+msgid "Load preset:"
+msgstr "Завантажити набір:"
+
+#: effects/Reverb.cpp:497
+msgid "Vocal I"
+msgstr "Вокал I"
+
+#: effects/Reverb.cpp:498
+msgid "Vocal II"
+msgstr "Вокал II"
+
+#: effects/Reverb.cpp:499
+msgid "Bathroom"
+msgstr "Ванна кімната"
+
+#: effects/Reverb.cpp:500
+msgid "Small Room Bright"
+msgstr "Мала зала (світлий звук)"
+
+#: effects/Reverb.cpp:501
+msgid "Small Room Dark"
+msgstr "Мала зала (темний звук)"
+
+#: effects/Reverb.cpp:502
+msgid "Medium Room"
+msgstr "Зала середнього розміру"
+
+#: effects/Reverb.cpp:503
+msgid "Large Room"
+msgstr "Велика зала"
+
+#: effects/Reverb.cpp:504
+msgid "Church Hall"
+msgstr "Церква"
+
+#: effects/Reverb.cpp:505
+msgid "Cathedral"
+msgstr "Собор"
+
+#: effects/Reverb.cpp:534
+msgid "Save current settings as:"
+msgstr "Зберегти поточні параметри під назвою:"
+
+#: effects/Reverb.cpp:554
+msgid "Load settings:"
+msgstr "Завантажити параметри:"
+
+#: effects/Reverb.cpp:564
+msgid "Rename settings:"
+msgstr "Перейменувати параметри:"
+
+#: effects/Reverb.cpp:567
+msgid "Change name to:"
+msgstr "Змінити назву на:"
+
+#: effects/Reverb.h:34
+msgid "Reverb..."
+msgstr "Відлуння…"
+
+#: effects/Reverb.h:35
+msgid "Applying Reverb"
+msgstr "Застосовуємо ефект відлуння"
+
 #: effects/Reverse.h:30
 msgid "Reverse"
 msgstr "Реверс"
@@ -7000,10 +7151,6 @@ msgstr "Створення тиші"
 #, c-format
 msgid "Applied effect: Generate Silence, %.6lf seconds"
 msgstr "Застосовано ефект: Створення тиші, %.6lf секунд"
-
-#: effects/SimplePairedTwoTrack.h:113
-msgid "Sorry, this effect cannot be performed on stereo tracks where the individual channels of the track do not match."
-msgstr "Цей ефект не можна виконувати на стерео доріжках, для яких окремі канали доріжки не відповідають один одному."
 
 #: effects/StereoToMono.h:23
 msgid "Stereo to Mono"
@@ -7149,10 +7296,6 @@ msgid "Generating Tone"
 msgstr "Створення хвилі"
 
 #: effects/TruncSilence.cpp:142
-msgid "All tracks must have the same sample rate"
-msgstr "Всі доріжки повинні мати однакову частоту дискретизації"
-
-#: effects/TruncSilence.cpp:142
 #: effects/TruncSilence.cpp:857
 msgid "Truncate Silence"
 msgstr "Обрізати тишу"
@@ -7217,21 +7360,9 @@ msgstr "Параметри ефекту"
 msgid "None"
 msgstr "Немає"
 
-#: effects/VST/VSTEffect.cpp:479
-msgid "Presets:"
-msgstr "Шаблони:"
-
 #: effects/VST/VSTEffect.cpp:489
 msgid "Presets"
 msgstr "Шаблони:"
-
-#: effects/VST/VSTEffect.cpp:492
-msgid "Load"
-msgstr "Завантажити"
-
-#: effects/VST/VSTEffect.cpp:495
-msgid "Save"
-msgstr "Зберегти"
 
 #: effects/VST/VSTEffect.cpp:595
 msgid "Load VST Program:"
@@ -7424,6 +7555,10 @@ msgstr "Модуль Nyquist повернув занадто багато зву
 msgid "Nyquist returned one audio channel as an array.\n"
 msgstr "Nyquist повернуто один звуковий канал у форматі масиву.\n"
 
+#: effects/nyquist/Nyquist.cpp:924
+msgid "Nyquist returned an empty array.\n"
+msgstr "Бібліотекою Nyquist повернуто порожній масив.\n"
+
 #: effects/vamp/VampEffect.cpp:81
 #, c-format
 msgid "Extracting features: %s"
@@ -7502,6 +7637,11 @@ msgstr ""
 "Зазвичай назви таких файлів мають суфікс «.%s», деякі програми не відкриватимуть файли з нестандартними суфіксами назв.\n"
 "\n"
 "Ви справді бажаєте експортувати файл з цією назвою?"
+
+#: Menus.cpp:5535
+#: export/Export.cpp:635
+msgid "Sorry, pathnames longer than 256 characters not supported."
+msgstr "Шляхи, що містять більш ніж 256 символів, не підтримуються."
 
 #: export/Export.cpp:654
 msgid ""
@@ -9535,17 +9675,9 @@ msgstr "&Показувати назву доріжки на панелі пок
 msgid "Re&tain labels if selection snaps to a label edge"
 msgstr "З&берігати мітки, якщо позначення прилипає до краю мітки"
 
-#: prefs/GUIPrefs.cpp:135
-msgid "Modes"
-msgstr "Режими"
-
-#: prefs/GUIPrefs.cpp:137
-msgid "Clea&nSpeech Mode (Customized GUI)"
-msgstr "Ре&жим CleanSpeech (Змінений інтерфейс)"
-
-#: prefs/GUIPrefs.cpp:141
-msgid "Don't a&pply effects in batch mode"
-msgstr "&Не застосовувати ефекти у пакетному режимі"
+#: prefs/GUIPrefs.cpp:136
+msgid "&Display a mono channel as virtual stereo"
+msgstr "&Показувати канал моно як віртуальне стерео"
 
 #: prefs/ImportExportPrefs.cpp:28
 msgid "Import / Export"
@@ -9628,11 +9760,6 @@ msgstr "Встановити"
 #: prefs/KeyConfigPrefs.cpp:166
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
 msgstr "Примітка: натиснення комбінації клавіш Cmd+Q призведе до завершення. Усі інші комбінації є дійсними."
-
-#: prefs/KeyConfigPrefs.cpp:173
-#: prefs/ThemePrefs.cpp:125
-msgid "&Defaults"
-msgstr "&Типові"
 
 #: prefs/KeyConfigPrefs.cpp:185
 msgid "Key Combination"
@@ -10576,14 +10703,6 @@ msgstr "Запис (Shift для додавання запису)"
 msgid "Error while opening sound device. "
 msgstr "Помилка під час відкриття звукового пристрою. "
 
-#: toolbars/ControlToolBar.cpp:767
-msgid "Recording in CleanSpeech mode is not possible when a track, or more than one project, is already open."
-msgstr "Запис у режимі CleanSpeech неможливий, коли вже відкрито доріжку або більше за один проект."
-
-#: toolbars/ControlToolBar.cpp:768
-msgid "Recording not permitted"
-msgstr "Запис не дозволено"
-
 #: toolbars/DeviceToolBar.cpp:102
 #: toolbars/DeviceToolBar.cpp:351
 msgid "Audio Host"
@@ -10986,17 +11105,13 @@ msgstr "Частота оновлення індикатора (разів на 
 msgid "Meter Preferences"
 msgstr "Параметри індикатора"
 
-#: widgets/MultiDialog.cpp:93
-msgid " Please select an action "
-msgstr " Виберіть дію "
+#: widgets/MultiDialog.cpp:104
+msgid "Show Log for Details"
+msgstr "Показувати журнал повідомлень"
 
 #: widgets/MultiDialog.cpp:97
 msgid "Please select an action"
 msgstr "Будь ласка, вкажіть дію"
-
-#: widgets/MultiDialog.cpp:104
-msgid "Show Log for Details"
-msgstr "Показувати журнал повідомлень"
 
 #: widgets/ProgressDialog.cpp:1071
 msgid "Elapsed Time:"
