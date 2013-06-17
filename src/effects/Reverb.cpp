@@ -364,7 +364,7 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
 
    s.StartHorizontalLay(wxCENTER, false); 
    {
-      mWetOnlyWidget = s.Id(ID_WetOnly_WIDGET).AddCheckBox(wxT("Wet Only"), wxT("false"));
+      mWetOnlyWidget = s.Id(ID_WetOnly_WIDGET).AddCheckBox(_("Wet Only"), wxT("false"));
    } 
    s.EndHorizontalLay();
 
