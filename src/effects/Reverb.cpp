@@ -82,7 +82,7 @@ void EffectReverb::Delete()
 }
 
 // Most of what follows should really be provided by Audacity framework classes:
-//vvvvv Not sure what you mean by that, Rob. A la EffectSimpleMono, e.g.?
+//vvv Not sure what you mean by that, Rob. A la EffectSimpleMono, e.g.?
 
 bool EffectReverb::ProcessOneTrack(size_t n, WaveTrack * track, WaveTrack * track2, wxString const & msg)
 {

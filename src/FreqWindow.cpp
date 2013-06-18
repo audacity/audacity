@@ -440,7 +440,7 @@ void FreqWindow::GetAudio()
    //wxLogDebug(wxT("Leaving FreqWindow::GetAudio()"));
 }
 
-void FreqWindow::OnSize(wxSizeEvent & event)
+void FreqWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    Layout();
 
@@ -616,7 +616,7 @@ void FreqWindow::PlotMouseEvent(wxMouseEvent & event)
    }
 }
 
-void FreqWindow::OnAlgChoice(wxCommandEvent & event)
+void FreqWindow::OnAlgChoice(wxCommandEvent & WXUNUSED(event))
 {
    // Log-frequency axis works for spectrum plots only.
    if (mAlgChoice->GetSelection() == 0) {
@@ -630,17 +630,17 @@ void FreqWindow::OnAlgChoice(wxCommandEvent & event)
    Recalc();
 }
 
-void FreqWindow::OnSizeChoice(wxCommandEvent & event)
+void FreqWindow::OnSizeChoice(wxCommandEvent & WXUNUSED(event))
 {
    Recalc();
 }
 
-void FreqWindow::OnFuncChoice(wxCommandEvent & event)
+void FreqWindow::OnFuncChoice(wxCommandEvent & WXUNUSED(event))
 {
    Recalc();
 }
 
-void FreqWindow::OnAxisChoice(wxCommandEvent & event)
+void FreqWindow::OnAxisChoice(wxCommandEvent & WXUNUSED(event))
 {
    mLogAxis = (mAxisChoice->GetSelection())?true:false;
 
@@ -868,8 +868,8 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
       const wxChar *pp;
 
       if (alg == 0) {
-         xpitch = PitchName_Absolute(FreqToMIDInoteNumber(xPos));
-         peakpitch = PitchName_Absolute(FreqToMIDInoteNumber(bestpeak));
+         xpitch = PitchName_Absolute(FreqToMIDInote(xPos));
+         peakpitch = PitchName_Absolute(FreqToMIDInote(bestpeak));
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
@@ -878,8 +878,8 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
                int (value + 0.5), int (bestpeak + 0.5),
                pp, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
-         xpitch = PitchName_Absolute(FreqToMIDInoteNumber(1.0 / xPos));
-         peakpitch = PitchName_Absolute(FreqToMIDInoteNumber(1.0 / bestpeak));
+         xpitch = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
+         peakpitch = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
          xp = xpitch.c_str();
          pp = peakpitch.c_str();
          /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
@@ -1287,7 +1287,7 @@ FreqPlot::FreqPlot(wxWindow * parent, wxWindowID id,
    freqWindow = (FreqWindow *) parent;
 }
 
-void FreqPlot::OnErase(wxEraseEvent &evt)
+void FreqPlot::OnErase(wxEraseEvent & WXUNUSED(event))
 {
    // Ignore it to prevent flashing
 }

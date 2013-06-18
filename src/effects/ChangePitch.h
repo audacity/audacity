@@ -21,6 +21,7 @@
 #include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/slider.h>
+#include <wx/spinctrl.h>
 
 class EffectChangePitch : public EffectSoundTouch {
 
@@ -51,9 +52,8 @@ class EffectChangePitch : public EffectSoundTouch {
 
    virtual bool Init();
 
-   // DeduceFrequencies is Dominic's extremely cool trick (Vaughan sez so!)
-   // to set deduce m_FromFrequency from the samples at the beginning of
-   // the selection. Then we set some other params accordingly.
+   // Deduce m_FromFrequency from the samples at the beginning of 
+   // the selection. Then set some other params accordingly.
    virtual void DeduceFrequencies();
 
    virtual bool PromptUser();
@@ -63,8 +63,8 @@ class EffectChangePitch : public EffectSoundTouch {
    virtual bool Process();
 
 private:
-   int            m_FromPitchIndex;    // pitch index, per PitchIndex
-   int            m_ToPitchIndex;      // pitch index, per PitchIndex
+   int            m_nFromPitch;    // per PitchIndex()
+   int            m_nToPitch;      // per PitchIndex()
 
    double         m_SemitonesChange;   // how many semitones to change pitch
 
@@ -95,15 +95,19 @@ class ChangePitchDialog:public EffectDialog {
 
  private:
    // calculations
-   void Calc_ToPitchIndex(); // Update m_ToPitchIndex from new m_SemitonesChange.
-   void Calc_SemitonesChange_fromPitches(); // Update m_SemitonesChange from new m_*PitchIndex-es.
-   void Calc_SemitonesChange_fromPercentChange(); // Update m_SemitonesChange from new m_PercentChange.
+   void Calc_ToPitch(); // Update m_nToPitch from new m_SemitonesChange.
+   void Calc_ToOctave(); 
+   void Calc_SemitonesChange_fromPitches();
+   void Calc_SemitonesChange_fromOctaveChange();
+   void Calc_SemitonesChange_fromPercentChange();
    void Calc_ToFrequency(); // Update m_ToFrequency from m_FromFrequency & m_PercentChange.
    void Calc_PercentChange(); // Update m_PercentChange based on new m_SemitonesChange.
 
    // handlers
    void OnChoice_FromPitch(wxCommandEvent & event);
+   void OnSpin_FromOctave(wxCommandEvent & event);
    void OnChoice_ToPitch(wxCommandEvent & event);
+   void OnSpin_ToOctave(wxCommandEvent & event);
 
    void OnText_SemitonesChange(wxCommandEvent & event);
 
@@ -117,10 +121,13 @@ class ChangePitchDialog:public EffectDialog {
 
    // helper fns for controls
    void Update_Choice_FromPitch();
+   void Update_Spin_FromOctave();
    void Update_Choice_ToPitch();
+   void Update_Spin_ToOctave();
 
    void Update_Text_SemitonesChange();
 
+   void Update_Text_FromFrequency();
    void Update_Text_ToFrequency();
 
    void Update_Text_PercentChange(); // Update control per current m_PercentChange.
@@ -128,25 +135,26 @@ class ChangePitchDialog:public EffectDialog {
 
  private:
    EffectChangePitch * mEffect;
-   bool m_bLoopDetect;
+   bool m_bLoopDetect; // Used to avoid loops in initialization and in event handling. 
 
    // controls
    wxChoice *     m_pChoice_FromPitch;
-   wxRadioButton *m_pRadioButton_PitchDown;
+   wxSpinCtrl *   m_pSpin_FromOctave;
    wxChoice *     m_pChoice_ToPitch;
-
+   wxSpinCtrl *   m_pSpin_ToOctave;
    wxTextCtrl *   m_pTextCtrl_SemitonesChange;
 
    wxTextCtrl *   m_pTextCtrl_FromFrequency;
    wxTextCtrl *   m_pTextCtrl_ToFrequency;
-
    wxTextCtrl *   m_pTextCtrl_PercentChange;
    wxSlider *     m_pSlider_PercentChange;
 
  public:
    // effect parameters
-   int      m_FromPitchIndex;    // pitch index, per PitchIndex
-   int      m_ToPitchIndex;      // pitch index, per PitchIndex
+   int      m_nFromPitch;    // per PitchIndex()
+   int      m_nFromOctave;   // per PitchOctave()
+   int      m_nToPitch;      // per PitchIndex()
+   int      m_nToOctave;     // per PitchOctave()
 
    double   m_SemitonesChange;   // how many semitones to change pitch
 

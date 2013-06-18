@@ -23,42 +23,36 @@
 #include "PitchName.h"
 
 
-// FreqToMIDInoteNumber takes a frequency in Hz (exponential scale relative to 
-// alphabetic pitch names) and returns a pitch ID number (linear 
-// scale), such that A440 (A4) is 69, middle C (C4) is 60, etc.
-// Each register starts with C (e.g., for middle C and A440, 
-// it's register 4).
-double FreqToMIDInoteNumber(double freq)
+double FreqToMIDInote(const double freq)
 {
    // Make the calculation relative to A440 (A4), note number 69. 
    return (69.0 + (12.0 * (log(freq / 440.0) / log(2.0))));
 }
 
-// PitchIndex returns the [0,11] index for a double pitchNum, 
-// as per result from FreqToMIDInoteNumber, corresponding to modulo 12 
-// of the integer part of (pitchNum + 0.5), so 0=C, 1=C#, etc.
-unsigned int PitchIndex(double pitchNum)
+unsigned int PitchIndex(const double dMIDInote)
 {
-   int nPitchIndex = ((int)(pitchNum + 0.5) % 12);
-   // MIDI numbers (pitchNum) can be negative.
+   int nPitchIndex = ((int)(dMIDInote + 0.5) % 12);
+   // MIDI numbers can be negative.
    // Because of the modulo, we know we're within 12 of positive. 
    if (nPitchIndex < 0)
       nPitchIndex += 12;
    return nPitchIndex;
 }
 
+int PitchOctave(const double dMIDInote)
+{
+   return ((int)((dMIDInote + 0.5) / 12) - 1);
+}
+
 
 wxChar gPitchName[10];
 wxChar * pPitchName;
 
-// PitchName takes pitchNum (as per result from 
-// FreqToMIDInoteNumber) and returns a standard pitch/note name [C, C#, etc.). 
-// Sharps are the default, unless, bWantFlats is true.
-wxChar * PitchName(double pitchNum, bool bWantFlats /* = false */)
+wxChar * PitchName(const double dMIDInote, const bool bWantFlats /* = false */)
 {
    pPitchName = gPitchName;
 
-   switch (PitchIndex(pitchNum)) {
+   switch (PitchIndex(dMIDInote)) {
    case 0:
       *pPitchName++ = wxT('C');
       break;
@@ -132,20 +126,23 @@ wxChar * PitchName(double pitchNum, bool bWantFlats /* = false */)
    return gPitchName;
 }
 
-// PitchName_Absolute does the same thing as PitchName, but appends 
-// the octave number, e.g., instead of "C" it will return "C4" 
-// if the pitchNum corresonds to middle C, i.e., is 60. 
-// ("Scientific Pitch Notation")
-// Sharps are the default, unless, bWantFlats is true.
-wxChar * PitchName_Absolute(double pitchNum, bool bWantFlats /* = false */)
+wxChar * PitchName_Absolute(const double dMIDInote, const bool bWantFlats /* = false */)
 {
-   PitchName(pitchNum, bWantFlats);
+   PitchName(dMIDInote, bWantFlats);
 
    // PitchName sets pPitchName to the next available char in gPitchName,
    // so it's ready to append the register number.
-   int octaveNum = ((int)((pitchNum + 0.5) / 12) - 1);
-   wxSnprintf(pPitchName, 8, wxT("%d"), octaveNum);
+   wxSnprintf(pPitchName, 8, wxT("%d"), PitchOctave(dMIDInote));
 
    return gPitchName;
 }
 
+double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave)
+{
+   return ((double)nPitchIndex + (((double)nPitchOctave + 1.0) * 12.0));
+}
+
+double PitchToFreq(const unsigned int nPitchIndex, const int nPitchOctave)
+{
+   return (440.0 * pow(2.0, (PitchToMIDInote(nPitchIndex, nPitchOctave) - 69) / 12.0));
+}

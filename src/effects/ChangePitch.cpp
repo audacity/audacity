@@ -17,12 +17,6 @@
 
 #include "ChangePitch.h"
 
-#include "../ShuttleGui.h"
-#include "../PitchName.h"
-#include "../Spectrum.h"
-#include "../WaveTrack.h"
-#include "TimeWarper.h"
-
 #include <float.h>
 #include <math.h>
 
@@ -34,25 +28,31 @@
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
 
-//
+#include "../ShuttleGui.h"
+#include "../PitchName.h"
+#include "../Spectrum.h"
+#include "../WaveTrack.h"
+#include "TimeWarper.h"
+
+
 // EffectChangePitch
-//
 
 EffectChangePitch::EffectChangePitch()
 {
-   m_FromPitchIndex = -1;		// -1 => uninitialized
-   m_ToPitchIndex = -1;			// -1 => uninitialized
+   m_nFromPitch = -1; // -1 => uninitialized
+   m_nToPitch = -1;   // -1 => uninitialized
 
    m_SemitonesChange = 0.0;
 
-   m_FromFrequency = 0.0;		// 0.0 => uninitialized
-   m_ToFrequency = 0.0;			// 0.0 => uninitialized
+   m_FromFrequency = 0.0; // 0.0 => uninitialized
+   m_ToFrequency = 0.0;   // 0.0 => uninitialized
 
    m_PercentChange = 0.0;
 }
 
-wxString EffectChangePitch::GetEffectDescription() { 
-   // Note: This is useful only after change amount has been set. 
+wxString EffectChangePitch::GetEffectDescription() 
+{ 
+   // This is useful only after m_SemitonesChange has been set. 
    return wxString::Format(_("Applied effect: %s %.2f semitones"), 
                            this->GetEffectName().c_str(), 
                            m_SemitonesChange); 
@@ -64,9 +64,8 @@ bool EffectChangePitch::Init()
    return true;
 }
 
-// DeduceFrequencies is Dominic's extremely cool trick (Vaughan sez so!) 
-// to set deduce m_FromFrequency from the samples at the beginning of 
-// the selection. Then we set some other params accordingly.
+// Deduce m_FromFrequency from the samples at the beginning of 
+// the selection. Then set some other params accordingly.
 void EffectChangePitch::DeduceFrequencies()
 {
    // As a neat trick, attempt to get the frequency of the note at the
@@ -125,8 +124,8 @@ void EffectChangePitch::DeduceFrequencies()
       m_ToFrequency = (m_FromFrequency * (100.0 + m_PercentChange)) / 100.0;
 
       // Now we can set the pitch control values. 
-      m_FromPitchIndex = PitchIndex(FreqToMIDInoteNumber(m_FromFrequency));
-      m_ToPitchIndex = PitchIndex(FreqToMIDInoteNumber(m_ToFrequency));
+      m_nFromPitch = PitchIndex(FreqToMIDInote(m_FromFrequency));
+      m_nToPitch = PitchIndex(FreqToMIDInote(m_ToFrequency));
    }
 }
 
@@ -135,24 +134,26 @@ bool EffectChangePitch::PromptUser()
    this->DeduceFrequencies(); // Set frequency-related control values based on sample.
 
    ChangePitchDialog dlog(this, mParent);
-   dlog.m_FromPitchIndex = m_FromPitchIndex;
-   dlog.m_ToPitchIndex = m_ToPitchIndex;
+   dlog.m_nFromPitch = m_nFromPitch;
+   dlog.m_nFromOctave = PitchOctave(FreqToMIDInote(m_FromFrequency));
+   dlog.m_nToPitch = m_nToPitch;
+   dlog.m_nToOctave = PitchOctave(FreqToMIDInote(m_ToFrequency));
    dlog.m_SemitonesChange = m_SemitonesChange;
    dlog.m_FromFrequency = m_FromFrequency;
    dlog.m_ToFrequency = m_ToFrequency;
    dlog.m_PercentChange = m_PercentChange;
    // Don't need to call TransferDataToWindow, although other 
-   //	Audacity dialogs (from which I derived this one) do it, because 
-   //	ShowModal calls stuff that eventually calls wxWindowBase::OnInitDialog, 
-   //	which calls dlog.TransferDataToWindow();
+   //   Audacity dialogs (from which I derived this one) do it, because 
+   //   ShowModal calls stuff that eventually calls wxWindowBase::OnInitDialog, 
+   //   which calls dlog.TransferDataToWindow();
    dlog.CentreOnParent();
    dlog.ShowModal();
 
   if (dlog.GetReturnCode() == wxID_CANCEL)
       return false;
 
-   m_FromPitchIndex = dlog.m_FromPitchIndex;
-   m_ToPitchIndex = dlog.m_ToPitchIndex;
+   m_nFromPitch = dlog.m_nFromPitch;
+   m_nToPitch = dlog.m_nToPitch;
    m_SemitonesChange = dlog.m_SemitonesChange;
    m_FromFrequency = dlog.m_FromFrequency;
    m_ToFrequency = dlog.m_ToFrequency;
@@ -162,6 +163,8 @@ bool EffectChangePitch::PromptUser()
 
 bool EffectChangePitch::TransferParameters( Shuttle & shuttle )
 {  
+   // Vaughan: Long lost to history, I don't see why m_PercentChange was chosen to be shuttled. 
+   // Only m_SemitonesChange is used in Process(). 
    shuttle.TransferDouble(wxT("Percentage"),m_PercentChange,0.0);
    m_SemitonesChange = (12.0 * log((100.0 + m_PercentChange) / 100.0)) / log(2.0);
    return true;
@@ -197,7 +200,9 @@ enum {
    ID_TEXT_PERCENTCHANGE = 10001,
    ID_SLIDER_PERCENTCHANGE,
    ID_CHOICE_FROMPITCH,
+   ID_CHOICE_FROMOCTAVE,
    ID_CHOICE_TOPITCH,
+   ID_CHOICE_TOOCTAVE,
    ID_TEXT_SEMITONESCHANGE,
    ID_TEXT_FROMFREQUENCY,
    ID_TEXT_TOFREQUENCY
@@ -207,7 +212,9 @@ enum {
 
 BEGIN_EVENT_TABLE(ChangePitchDialog, EffectDialog)
    EVT_CHOICE(ID_CHOICE_FROMPITCH, ChangePitchDialog::OnChoice_FromPitch)
+   EVT_TEXT(ID_CHOICE_FROMOCTAVE, ChangePitchDialog::OnSpin_FromOctave)
    EVT_CHOICE(ID_CHOICE_TOPITCH, ChangePitchDialog::OnChoice_ToPitch)
+   EVT_TEXT(ID_CHOICE_TOOCTAVE, ChangePitchDialog::OnSpin_ToOctave)
 
    EVT_TEXT(ID_TEXT_SEMITONESCHANGE, ChangePitchDialog::OnText_SemitonesChange)
 
@@ -224,14 +231,15 @@ ChangePitchDialog::ChangePitchDialog(EffectChangePitch *effect, wxWindow *parent
 :  EffectDialog(parent, _("Change Pitch"), PROCESS_EFFECT),
    mEffect(effect)
 {
-   m_bLoopDetect = false;
+   m_bLoopDetect = false; 
 
    // NULL out these control members because there are some cases where the 
    // event table handlers get called during this method, and those handlers that 
    // can cause trouble check for NULL.
    m_pChoice_FromPitch = NULL;
-   m_pRadioButton_PitchDown = NULL;
+   m_pSpin_FromOctave = NULL;
    m_pChoice_ToPitch = NULL;
+   m_pSpin_ToOctave = NULL;
    
    m_pTextCtrl_SemitonesChange = NULL;
 
@@ -242,13 +250,15 @@ ChangePitchDialog::ChangePitchDialog(EffectChangePitch *effect, wxWindow *parent
    m_pSlider_PercentChange = NULL;
 
    // effect parameters
-   m_FromPitchIndex = -1;		// -1 => uninitialized
-   m_ToPitchIndex = -1;			// -1 => uninitialized
+   m_nFromPitch = -1;  // -1 => uninitialized
+   m_nFromOctave = -1; // -1 => uninitialized
+   m_nToPitch = -1;    // -1 => uninitialized
+   m_nToOctave = -1;   // -1 => uninitialized
 
    m_SemitonesChange = 0.0;
 
-   m_FromFrequency = 0.0;		// 0.0 => uninitialized
-   m_ToFrequency = 0.0;			// 0.0 => uninitialized
+   m_FromFrequency = 0.0;      // 0.0 => uninitialized
+   m_ToFrequency = 0.0;         // 0.0 => uninitialized
 
    m_PercentChange = 0.0;
 
@@ -294,7 +304,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddTitle(_("Change Pitch without Changing Tempo") +
                  wxString(wxT("\n\n")) +
-                 _("by Vaughan Johnson && Dominic Mazzoni") +
+                 _("by Vaughan Johnson, Dominic Mazzoni, && Steve Daulton") +
                  wxString(wxT("\n")) +
                  _("using SoundTouch, by Olli Parviainen"));
    }
@@ -312,9 +322,19 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
             m_pChoice_FromPitch->SetName(_("From Pitch"));
             m_pChoice_FromPitch->SetSizeHints(80, -1);
 
+            m_pSpin_FromOctave = 
+               S.Id(ID_CHOICE_FROMOCTAVE).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN); 
+            m_pSpin_FromOctave->SetName(_("From Octave"));
+            m_pSpin_FromOctave->SetSizeHints(50, -1);
+
             m_pChoice_ToPitch = S.Id(ID_CHOICE_TOPITCH).AddChoice(_("to"), wxT(""), &pitch);
             m_pChoice_ToPitch->SetName(_("To Pitch"));
             m_pChoice_ToPitch->SetSizeHints(80, -1);
+
+            m_pSpin_ToOctave = 
+               S.Id(ID_CHOICE_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
+            m_pSpin_ToOctave->SetName(_("From Octave"));
+            m_pSpin_ToOctave->SetSizeHints(50, -1);
          }
          S.EndHorizontalLay();
       }
@@ -377,14 +397,14 @@ bool ChangePitchDialog::TransferDataToWindow()
 
    // from/to pitch controls
    if (m_pChoice_FromPitch) 
-      m_pChoice_FromPitch->SetSelection(m_FromPitchIndex);
-
-   this->Update_Choice_ToPitch();
-
+      m_pChoice_FromPitch->SetSelection(m_nFromPitch);
+   if (m_pSpin_FromOctave)
+      m_pSpin_FromOctave->SetValue(m_nFromOctave); 
+   this->Update_Choice_ToPitch(); 
+   this->Update_Spin_ToOctave(); 
 
    // semitones change control
    this->Update_Text_SemitonesChange();
-
 
    // from/to frequency controls
    if (m_pTextCtrl_FromFrequency) {
@@ -398,11 +418,9 @@ bool ChangePitchDialog::TransferDataToWindow()
 
    this->Update_Text_ToFrequency();
 
-   
    // percent change controls
    this->Update_Text_PercentChange();
    this->Update_Slider_PercentChange();
-
 
    m_bLoopDetect = false;
 
@@ -417,10 +435,12 @@ bool ChangePitchDialog::TransferDataFromWindow()
 
    // from/to pitch controls
    if (m_pChoice_FromPitch) 
-      m_FromPitchIndex = m_pChoice_FromPitch->GetSelection(); 
+      m_nFromPitch = m_pChoice_FromPitch->GetSelection(); 
+   if (m_pSpin_FromOctave) 
+      m_nFromOctave = m_pSpin_FromOctave->GetValue();
 
    if (m_pChoice_ToPitch) 
-      m_ToPitchIndex = m_pChoice_ToPitch->GetSelection();
+      m_nToPitch = m_pChoice_ToPitch->GetSelection();
 
 
    // semitones change control
@@ -462,18 +482,24 @@ bool ChangePitchDialog::TransferDataFromWindow()
 
 // calculations
 
-void ChangePitchDialog::Calc_ToPitchIndex()
+void ChangePitchDialog::Calc_ToPitch() 
 {
    int nSemitonesChange = 
       (int)(m_SemitonesChange + ((m_SemitonesChange < 0.0) ? -0.5 : 0.5));
-   m_ToPitchIndex = (m_FromPitchIndex + nSemitonesChange) % 12;
-   if (m_ToPitchIndex < 0)
-      m_ToPitchIndex += 12;
+   m_nToPitch = (m_nFromPitch + nSemitonesChange) % 12;
+   if (m_nToPitch < 0)
+      m_nToPitch += 12;
+}
+
+void ChangePitchDialog::Calc_ToOctave()
+{
+   m_nToOctave = PitchOctave(FreqToMIDInote(m_ToFrequency));
 }
 
 void ChangePitchDialog::Calc_SemitonesChange_fromPitches()
 {
-   m_SemitonesChange = m_ToPitchIndex - m_FromPitchIndex;
+   m_SemitonesChange = 
+      PitchToMIDInote(m_nToPitch, m_nToOctave) - PitchToMIDInote(m_nFromPitch, m_nFromOctave);
 }
 
 void ChangePitchDialog::Calc_SemitonesChange_fromPercentChange()
@@ -502,12 +528,43 @@ void ChangePitchDialog::OnChoice_FromPitch(wxCommandEvent & WXUNUSED(event))
       return;
 
    if (m_pChoice_FromPitch) {
-      m_FromPitchIndex = m_pChoice_FromPitch->GetSelection();
+      m_nFromPitch = m_pChoice_FromPitch->GetSelection();
+      m_FromFrequency = PitchToFreq(m_nFromPitch, m_nFromOctave);
 
-      this->Calc_ToPitchIndex();
+      this->Calc_ToPitch();
+      this->Calc_ToFrequency();
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
 
       m_bLoopDetect = true;
-      this->Update_Choice_ToPitch();
+      {
+         this->Update_Choice_ToPitch();
+         this->Update_Spin_ToOctave();
+         this->Update_Text_FromFrequency();
+         this->Update_Text_ToFrequency();
+      }
+      m_bLoopDetect = false;
+   }
+}
+
+void ChangePitchDialog::OnSpin_FromOctave(wxCommandEvent & WXUNUSED(event))
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pSpin_FromOctave) 
+   {
+      m_nFromOctave = m_pSpin_FromOctave->GetValue();
+      m_FromFrequency = PitchToFreq(m_nFromPitch, m_nFromOctave);
+
+      this->Calc_ToFrequency();
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
+
+      m_bLoopDetect = true;
+      {
+         this->Update_Spin_ToOctave();
+         this->Update_Text_FromFrequency();
+         this->Update_Text_ToFrequency();
+      }
       m_bLoopDetect = false;
    }
 }
@@ -517,18 +574,55 @@ void ChangePitchDialog::OnChoice_ToPitch(wxCommandEvent & WXUNUSED(event))
    if (m_bLoopDetect)
       return;
 
-   if (m_pChoice_ToPitch) {
-      m_ToPitchIndex = m_pChoice_ToPitch->GetSelection();
+   if (m_pChoice_ToPitch) 
+   {
+      m_nToPitch = m_pChoice_ToPitch->GetSelection();
 
       this->Calc_SemitonesChange_fromPitches();
       this->Calc_PercentChange(); // Call *after* m_SemitonesChange is updated.
       this->Calc_ToFrequency(); // Call *after* m_PercentChange is updated.
 
       m_bLoopDetect = true;
-      this->Update_Text_SemitonesChange();
-      this->Update_Text_ToFrequency();
-      this->Update_Text_PercentChange();
-      this->Update_Slider_PercentChange();
+      {
+         this->Update_Text_SemitonesChange();
+         this->Update_Text_ToFrequency();
+         this->Update_Text_PercentChange();
+         this->Update_Slider_PercentChange();
+      }
+      m_bLoopDetect = false;
+   }
+}
+
+void ChangePitchDialog::OnSpin_ToOctave(wxCommandEvent & WXUNUSED(event))
+{
+   if (m_bLoopDetect)
+      return;
+
+   if (m_pSpin_ToOctave) 
+   {
+      int nNewValue = m_pSpin_ToOctave->GetValue();
+      // Validation: Rather than set a range for octave numbers, enforce a range that 
+      // keeps below 90% m_PercentChange. 
+      if ((nNewValue + 3) < m_nFromOctave)
+      {
+         ::wxBell();
+         m_pSpin_ToOctave->SetValue(m_nFromOctave - 3);
+         return;
+      }
+      m_nToOctave = nNewValue;
+
+      m_ToFrequency = PitchToFreq(m_nToPitch, m_nToOctave);
+
+      this->Calc_SemitonesChange_fromPitches();
+      this->Calc_PercentChange(); // Call *after* m_SemitonesChange is updated.
+
+      m_bLoopDetect = true;
+      {
+         this->Update_Text_SemitonesChange();
+         this->Update_Text_ToFrequency();
+         this->Update_Text_PercentChange();
+         this->Update_Slider_PercentChange();
+      }
       m_bLoopDetect = false;
    }
 }
@@ -551,13 +645,15 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
 
       this->Calc_PercentChange();
       this->Calc_ToFrequency(); // Call *after* m_PercentChange is updated.
-      this->Calc_ToPitchIndex();
+      this->Calc_ToPitch();
 
       m_bLoopDetect = true;
-      this->Update_Choice_ToPitch();
-      this->Update_Text_ToFrequency();
-      this->Update_Text_PercentChange();
-      this->Update_Slider_PercentChange();
+      {
+         this->Update_Choice_ToPitch();
+         this->Update_Text_ToFrequency();
+         this->Update_Text_PercentChange();
+         this->Update_Slider_PercentChange();
+      }
       m_bLoopDetect = false;
 
       // If m_SemitonesChange is a big enough negative, we can go to or below 0 freq. 
@@ -589,14 +685,16 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       }
       m_FromFrequency = newDouble;
 
-      m_FromPitchIndex = PitchIndex(FreqToMIDInoteNumber(m_FromFrequency));
+      m_nFromPitch = PitchIndex(FreqToMIDInote(m_FromFrequency));
       this->Calc_ToFrequency();
-      this->Calc_ToPitchIndex();
+      this->Calc_ToPitch();
 
       m_bLoopDetect = true;
-      this->Update_Choice_FromPitch();
-      this->Update_Choice_ToPitch();
-      this->Update_Text_ToFrequency();
+      {
+         this->Update_Choice_FromPitch();
+         this->Update_Choice_ToPitch();
+         this->Update_Text_ToFrequency();
+      }
       m_bLoopDetect = false;
 
       // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
@@ -629,13 +727,15 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
                            (double)(m_FromFrequency)) - 100.0;
 
       this->Calc_SemitonesChange_fromPercentChange();
-      this->Calc_ToPitchIndex(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_ToPitch(); // Call *after* m_SemitonesChange is updated.
 
       m_bLoopDetect = true;
-      this->Update_Choice_ToPitch();
-      this->Update_Text_SemitonesChange();
-      this->Update_Text_PercentChange();
-      this->Update_Slider_PercentChange();
+      {
+         this->Update_Choice_ToPitch();
+         this->Update_Text_SemitonesChange();
+         this->Update_Text_PercentChange();
+         this->Update_Slider_PercentChange();
+      }
       m_bLoopDetect = false;
    
       // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
@@ -668,14 +768,16 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
       m_PercentChange = newValue;
 
       this->Calc_SemitonesChange_fromPercentChange();
-      this->Calc_ToPitchIndex(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_ToPitch(); // Call *after* m_SemitonesChange is updated.
       this->Calc_ToFrequency();
 
       m_bLoopDetect = true;
-      this->Update_Choice_ToPitch();
-      this->Update_Text_SemitonesChange();
-      this->Update_Text_ToFrequency();
-      this->Update_Slider_PercentChange();
+      {
+         this->Update_Choice_ToPitch();
+         this->Update_Text_SemitonesChange();
+         this->Update_Text_ToFrequency();
+         this->Update_Slider_PercentChange();
+      }
       m_bLoopDetect = false;
 
       // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
@@ -696,14 +798,16 @@ void ChangePitchDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
          m_PercentChange = pow(m_PercentChange, PERCENTCHANGE_SLIDER_WARP);
 
       this->Calc_SemitonesChange_fromPercentChange();
-      this->Calc_ToPitchIndex(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_ToPitch(); // Call *after* m_SemitonesChange is updated.
       this->Calc_ToFrequency();
 
       m_bLoopDetect = true;
-      this->Update_Choice_ToPitch();
-      this->Update_Text_SemitonesChange();
-      this->Update_Text_ToFrequency();
-      this->Update_Text_PercentChange();
+      {
+         this->Update_Choice_ToPitch();
+         this->Update_Text_SemitonesChange();
+         this->Update_Text_ToFrequency();
+         this->Update_Text_PercentChange();
+      }
       m_bLoopDetect = false;
    }
 }
@@ -729,13 +833,25 @@ void ChangePitchDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 void ChangePitchDialog::Update_Choice_FromPitch() 
 {
    if (m_pChoice_FromPitch) 
-      m_pChoice_FromPitch->SetSelection(m_FromPitchIndex);
+      m_pChoice_FromPitch->SetSelection(m_nFromPitch);
+}
+
+void ChangePitchDialog::Update_Spin_FromOctave() 
+{
+   if (m_pSpin_FromOctave) 
+      m_pSpin_FromOctave->SetValue(m_nFromOctave); 
 }
 
 void ChangePitchDialog::Update_Choice_ToPitch() 
 {
    if (m_pChoice_ToPitch) 
-      m_pChoice_ToPitch->SetSelection(m_ToPitchIndex);
+      m_pChoice_ToPitch->SetSelection(m_nToPitch);
+}
+
+void ChangePitchDialog::Update_Spin_ToOctave() 
+{
+   if (m_pSpin_ToOctave) 
+      m_pSpin_ToOctave->SetValue(m_nToOctave); 
 }
 
 void ChangePitchDialog::Update_Text_SemitonesChange()
@@ -744,6 +860,18 @@ void ChangePitchDialog::Update_Text_SemitonesChange()
       wxString str;
       str.Printf(wxT("%.2f"), m_SemitonesChange);
       m_pTextCtrl_SemitonesChange->SetValue(str);
+   }
+}
+
+void ChangePitchDialog::Update_Text_FromFrequency() 
+{
+   if (m_pTextCtrl_FromFrequency) {
+      wxString str;
+      if ((m_FromFrequency > 0.0) && (m_FromFrequency <= DBL_MAX))
+         str.Printf(wxT("%.3f"), m_FromFrequency);
+      else
+         str = wxT("");
+      m_pTextCtrl_FromFrequency->SetValue(str);
    }
 }
 
