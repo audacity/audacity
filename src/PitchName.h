@@ -28,6 +28,8 @@
 // MIDI note number 0 is C-1 in Scientific pitch notation.
 double FreqToMIDInote(const double freq);
 
+double MIDInoteToFreq(const double dMIDInote);
+
 // PitchIndex returns the [0,11] index for a double MIDI note number, 
 // per result from FreqToMIDInote, corresponding to modulo 12 
 // of the integer part of (dMIDInote + 0.5), so 0=C, 1=C#, etc.

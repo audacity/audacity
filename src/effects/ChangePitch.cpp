@@ -1,15 +1,19 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   License: GPL v2.  See License.txt.
 
   ChangePitch.cpp
+  Vaughan Johnson, Dominic Mazzoni, Steve Daulton 
 
-  Vaughan Johnson, Dominic Mazzoni, Steve Daulton
-  
-  Change Pitch effect provides raising or lowering 
-  the pitch without changing the tempo.
+******************************************************************//**
 
-**********************************************************************/
+\file ChangePitch.cpp
+\brief Change Pitch effect provides raising or lowering 
+the pitch without changing the tempo.
+
+*//*******************************************************************/
 
 #include "../Audacity.h" // for USE_SOUNDTOUCH
 
@@ -39,23 +43,17 @@
 
 EffectChangePitch::EffectChangePitch()
 {
-   m_nFromPitch = -1; // -1 => uninitialized
-   m_nToPitch = -1;   // -1 => uninitialized
-
-   m_SemitonesChange = 0.0;
-
-   m_FromFrequency = 0.0; // 0.0 => uninitialized
-   m_ToFrequency = 0.0;   // 0.0 => uninitialized
-
-   m_PercentChange = 0.0;
+   m_dSemitonesChange = 0.0;
+   m_dStartFrequency = 0.0; // 0.0 => uninitialized
+   m_dPercentChange = 0.0;
 }
 
 wxString EffectChangePitch::GetEffectDescription() 
 { 
-   // This is useful only after m_SemitonesChange has been set. 
+   // This is useful only after m_dSemitonesChange has been set. 
    return wxString::Format(_("Applied effect: %s %.2f semitones"), 
                            this->GetEffectName().c_str(), 
-                           m_SemitonesChange); 
+                           m_dSemitonesChange); 
 } 
 
 bool EffectChangePitch::Init()
@@ -120,12 +118,7 @@ void EffectChangePitch::DeduceFrequencies()
          if (freqa[j] > freqa[argmax])
             argmax = j;
       lag = (windowSize/2 - 1) - argmax;
-      m_FromFrequency = rate / lag;
-      m_ToFrequency = (m_FromFrequency * (100.0 + m_PercentChange)) / 100.0;
-
-      // Now we can set the pitch control values. 
-      m_nFromPitch = PitchIndex(FreqToMIDInote(m_FromFrequency));
-      m_nToPitch = PitchIndex(FreqToMIDInote(m_ToFrequency));
+      m_dStartFrequency = rate / lag;
    }
 }
 
@@ -133,40 +126,25 @@ bool EffectChangePitch::PromptUser()
 {
    this->DeduceFrequencies(); // Set frequency-related control values based on sample.
 
-   ChangePitchDialog dlog(this, mParent);
-   dlog.m_nFromPitch = m_nFromPitch;
-   dlog.m_nFromOctave = PitchOctave(FreqToMIDInote(m_FromFrequency));
-   dlog.m_nToPitch = m_nToPitch;
-   dlog.m_nToOctave = PitchOctave(FreqToMIDInote(m_ToFrequency));
-   dlog.m_SemitonesChange = m_SemitonesChange;
-   dlog.m_FromFrequency = m_FromFrequency;
-   dlog.m_ToFrequency = m_ToFrequency;
-   dlog.m_PercentChange = m_PercentChange;
-   // Don't need to call TransferDataToWindow, although other 
-   //   Audacity dialogs (from which I derived this one) do it, because 
-   //   ShowModal calls stuff that eventually calls wxWindowBase::OnInitDialog, 
-   //   which calls dlog.TransferDataToWindow();
+   ChangePitchDialog dlog(this, mParent, m_dSemitonesChange, m_dStartFrequency);
    dlog.CentreOnParent();
    dlog.ShowModal();
 
   if (dlog.GetReturnCode() == wxID_CANCEL)
       return false;
 
-   m_nFromPitch = dlog.m_nFromPitch;
-   m_nToPitch = dlog.m_nToPitch;
-   m_SemitonesChange = dlog.m_SemitonesChange;
-   m_FromFrequency = dlog.m_FromFrequency;
-   m_ToFrequency = dlog.m_ToFrequency;
-   m_PercentChange = dlog.m_PercentChange;
+   m_dSemitonesChange = dlog.m_dSemitonesChange;
+   m_dStartFrequency = dlog.m_FromFrequency;
+   m_dPercentChange = dlog.m_dPercentChange;
    return true;
 }
 
 bool EffectChangePitch::TransferParameters( Shuttle & shuttle )
 {  
-   // Vaughan: Long lost to history, I don't see why m_PercentChange was chosen to be shuttled. 
-   // Only m_SemitonesChange is used in Process(). 
-   shuttle.TransferDouble(wxT("Percentage"),m_PercentChange,0.0);
-   m_SemitonesChange = (12.0 * log((100.0 + m_PercentChange) / 100.0)) / log(2.0);
+   // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled. 
+   // Only m_dSemitonesChange is used in Process(). 
+   shuttle.TransferDouble(wxT("Percentage"),m_dPercentChange,0.0);
+   m_dSemitonesChange = (12.0 * log((100.0 + m_dPercentChange) / 100.0)) / log(2.0);
    return true;
 }
 
@@ -174,16 +152,16 @@ bool EffectChangePitch::Process()
 {
    mSoundTouch = new SoundTouch();
    SetTimeWarper(new IdentityTimeWarper());
-   mSoundTouch->setPitchSemiTones((float)(m_SemitonesChange));
+   mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
 #ifdef USE_MIDI
-   // Note: m_SemitonesChange is private to ChangePitch because it only
+   // Note: m_dSemitonesChange is private to ChangePitch because it only
    // needs to pass it along to mSoundTouch (above). I added mSemitones
    // to SoundTouchEffect (the super class) to convey this value
    // to process Note tracks. This approach minimizes changes to existing 
-   // code, but it would be cleaner to change all m_SemitonesChange to
+   // code, but it would be cleaner to change all m_dSemitonesChange to
    // mSemitones, make mSemitones exist with or without USE_MIDI, and 
    // eliminate the next line:
-   mSemitones = m_SemitonesChange;
+   mSemitones = m_dSemitonesChange;
 #endif
    return this->EffectSoundTouch::Process();
 }
@@ -227,7 +205,8 @@ BEGIN_EVENT_TABLE(ChangePitchDialog, EffectDialog)
    EVT_BUTTON(ID_EFFECT_PREVIEW, ChangePitchDialog::OnPreview)
 END_EVENT_TABLE()
 
-ChangePitchDialog::ChangePitchDialog(EffectChangePitch *effect, wxWindow *parent)
+ChangePitchDialog::ChangePitchDialog(EffectChangePitch *effect, wxWindow *parent, 
+                                       double dSemitonesChange, double dStartFrequency)
 :  EffectDialog(parent, _("Change Pitch"), PROCESS_EFFECT),
    mEffect(effect)
 {
@@ -250,17 +229,18 @@ ChangePitchDialog::ChangePitchDialog(EffectChangePitch *effect, wxWindow *parent
    m_pSlider_PercentChange = NULL;
 
    // effect parameters
-   m_nFromPitch = -1;  // -1 => uninitialized
-   m_nFromOctave = -1; // -1 => uninitialized
-   m_nToPitch = -1;    // -1 => uninitialized
-   m_nToOctave = -1;   // -1 => uninitialized
+   double dFromMIDInote = FreqToMIDInote(dStartFrequency);
+   double dToMIDInote = dFromMIDInote + dSemitonesChange;
+   m_nFromPitch = PitchIndex(dFromMIDInote);
+   m_nFromOctave = PitchOctave(dFromMIDInote);
+   m_nToPitch = PitchIndex(dToMIDInote);
+   m_nToOctave = PitchOctave(dToMIDInote);
 
-   m_SemitonesChange = 0.0;
+   m_dSemitonesChange = dSemitonesChange;
 
-   m_FromFrequency = 0.0;      // 0.0 => uninitialized
-   m_ToFrequency = 0.0;         // 0.0 => uninitialized
-
-   m_PercentChange = 0.0;
+   m_FromFrequency = dStartFrequency;
+   this->Calc_PercentChange();
+   this->Calc_ToFrequency();
 
    Init();
 }
@@ -447,7 +427,7 @@ bool ChangePitchDialog::TransferDataFromWindow()
    if (m_pTextCtrl_SemitonesChange) {
       str = m_pTextCtrl_SemitonesChange->GetValue();
       str.ToDouble(&newDouble);
-      m_SemitonesChange = newDouble;
+      m_dSemitonesChange = newDouble;
    }
 
 
@@ -469,7 +449,7 @@ bool ChangePitchDialog::TransferDataFromWindow()
    if (m_pTextCtrl_PercentChange) {
       str = m_pTextCtrl_PercentChange->GetValue();
       str.ToDouble(&newDouble);
-      m_PercentChange = newDouble;
+      m_dPercentChange = newDouble;
    }
 
    // No need to update Slider_PercentChange here because TextCtrl_PercentChange 
@@ -485,7 +465,7 @@ bool ChangePitchDialog::TransferDataFromWindow()
 void ChangePitchDialog::Calc_ToPitch() 
 {
    int nSemitonesChange = 
-      (int)(m_SemitonesChange + ((m_SemitonesChange < 0.0) ? -0.5 : 0.5));
+      (int)(m_dSemitonesChange + ((m_dSemitonesChange < 0.0) ? -0.5 : 0.5));
    m_nToPitch = (m_nFromPitch + nSemitonesChange) % 12;
    if (m_nToPitch < 0)
       m_nToPitch += 12;
@@ -498,25 +478,25 @@ void ChangePitchDialog::Calc_ToOctave()
 
 void ChangePitchDialog::Calc_SemitonesChange_fromPitches()
 {
-   m_SemitonesChange = 
+   m_dSemitonesChange = 
       PitchToMIDInote(m_nToPitch, m_nToOctave) - PitchToMIDInote(m_nFromPitch, m_nFromOctave);
 }
 
 void ChangePitchDialog::Calc_SemitonesChange_fromPercentChange()
 {
-   // Use m_PercentChange rather than m_FromFrequency & m_ToFrequency, because 
-   // they start out uninitialized, but m_PercentChange is always valid.
-   m_SemitonesChange = (12.0 * log((100.0 + m_PercentChange) / 100.0)) / log(2.0);
+   // Use m_dPercentChange rather than m_FromFrequency & m_ToFrequency, because 
+   // they start out uninitialized, but m_dPercentChange is always valid.
+   m_dSemitonesChange = (12.0 * log((100.0 + m_dPercentChange) / 100.0)) / log(2.0);
 }
 
 void ChangePitchDialog::Calc_ToFrequency()
 {
-   m_ToFrequency = (m_FromFrequency * (100.0 + m_PercentChange)) / 100.0;
+   m_ToFrequency = (m_FromFrequency * (100.0 + m_dPercentChange)) / 100.0;
 }
 
 void ChangePitchDialog::Calc_PercentChange()
 {
-   m_PercentChange = 100.0 * (pow(2.0, (m_SemitonesChange / 12.0)) - 1.0);
+   m_dPercentChange = 100.0 * (pow(2.0, (m_dSemitonesChange / 12.0)) - 1.0);
 }
 
 
@@ -554,6 +534,8 @@ void ChangePitchDialog::OnSpin_FromOctave(wxCommandEvent & WXUNUSED(event))
    if (m_pSpin_FromOctave) 
    {
       m_nFromOctave = m_pSpin_FromOctave->GetValue();
+      //vvv If I change this code to not keep semitones and percent constant, 
+      // will need validation code as in OnSpin_ToOctave.
       m_FromFrequency = PitchToFreq(m_nFromPitch, m_nFromOctave);
 
       this->Calc_ToFrequency();
@@ -579,8 +561,8 @@ void ChangePitchDialog::OnChoice_ToPitch(wxCommandEvent & WXUNUSED(event))
       m_nToPitch = m_pChoice_ToPitch->GetSelection();
 
       this->Calc_SemitonesChange_fromPitches();
-      this->Calc_PercentChange(); // Call *after* m_SemitonesChange is updated.
-      this->Calc_ToFrequency(); // Call *after* m_PercentChange is updated.
+      this->Calc_PercentChange(); // Call *after* m_dSemitonesChange is updated.
+      this->Calc_ToFrequency(); // Call *after* m_dPercentChange is updated.
 
       m_bLoopDetect = true;
       {
@@ -602,7 +584,7 @@ void ChangePitchDialog::OnSpin_ToOctave(wxCommandEvent & WXUNUSED(event))
    {
       int nNewValue = m_pSpin_ToOctave->GetValue();
       // Validation: Rather than set a range for octave numbers, enforce a range that 
-      // keeps below 90% m_PercentChange. 
+      // keeps m_dPercentChange below 90%, per Soundtouch constraints. 
       if ((nNewValue + 3) < m_nFromOctave)
       {
          ::wxBell();
@@ -614,7 +596,7 @@ void ChangePitchDialog::OnSpin_ToOctave(wxCommandEvent & WXUNUSED(event))
       m_ToFrequency = PitchToFreq(m_nToPitch, m_nToOctave);
 
       this->Calc_SemitonesChange_fromPitches();
-      this->Calc_PercentChange(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_PercentChange(); // Call *after* m_dSemitonesChange is updated.
 
       m_bLoopDetect = true;
       {
@@ -635,16 +617,16 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
    if (m_pTextCtrl_SemitonesChange) {
       wxString str = m_pTextCtrl_SemitonesChange->GetValue();
       if (str.IsEmpty())
-         m_SemitonesChange = 0.0;
+         m_dSemitonesChange = 0.0;
       else
       {
          double newValue = 0;
          str.ToDouble(&newValue);
-         m_SemitonesChange = newValue;
+         m_dSemitonesChange = newValue;
       }
 
       this->Calc_PercentChange();
-      this->Calc_ToFrequency(); // Call *after* m_PercentChange is updated.
+      this->Calc_ToFrequency(); // Call *after* m_dPercentChange is updated.
       this->Calc_ToPitch();
 
       m_bLoopDetect = true;
@@ -656,10 +638,10 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
       }
       m_bLoopDetect = false;
 
-      // If m_SemitonesChange is a big enough negative, we can go to or below 0 freq. 
-      // If m_SemitonesChange is a big enough positive, we can go to 1.#INF (Windows) or inf (Linux). 
+      // If m_dSemitonesChange is a big enough negative, we can go to or below 0 freq. 
+      // If m_dSemitonesChange is a big enough positive, we can go to 1.#INF (Windows) or inf (Linux). 
       // But practically, these are best limits for Soundtouch.
-      bool bIsGoodValue = (m_SemitonesChange > -80.0) && (m_SemitonesChange <= 60.0);
+      bool bIsGoodValue = (m_dSemitonesChange > -80.0) && (m_dSemitonesChange <= 60.0);
       this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
       this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
    }
@@ -723,11 +705,11 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
       }
       m_ToFrequency = newDouble;
 
-      m_PercentChange = (((double)(m_ToFrequency) * 100.0) / 
+      m_dPercentChange = (((double)(m_ToFrequency) * 100.0) / 
                            (double)(m_FromFrequency)) - 100.0;
 
       this->Calc_SemitonesChange_fromPercentChange();
-      this->Calc_ToPitch(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
 
       m_bLoopDetect = true;
       {
@@ -765,10 +747,10 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
          this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
          return;
       }
-      m_PercentChange = newValue;
+      m_dPercentChange = newValue;
 
       this->Calc_SemitonesChange_fromPercentChange();
-      this->Calc_ToPitch(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
       this->Calc_ToFrequency();
 
       m_bLoopDetect = true;
@@ -792,13 +774,13 @@ void ChangePitchDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
       return;
 
    if (m_pSlider_PercentChange) {
-      m_PercentChange = (double)(m_pSlider_PercentChange->GetValue()); 
+      m_dPercentChange = (double)(m_pSlider_PercentChange->GetValue()); 
       // Warp positive values to actually go up faster & further than negatives.
-      if (m_PercentChange > 0.0)
-         m_PercentChange = pow(m_PercentChange, PERCENTCHANGE_SLIDER_WARP);
+      if (m_dPercentChange > 0.0)
+         m_dPercentChange = pow(m_dPercentChange, PERCENTCHANGE_SLIDER_WARP);
 
       this->Calc_SemitonesChange_fromPercentChange();
-      this->Calc_ToPitch(); // Call *after* m_SemitonesChange is updated.
+      this->Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
       this->Calc_ToFrequency();
 
       m_bLoopDetect = true;
@@ -817,15 +799,15 @@ void ChangePitchDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    TransferDataFromWindow();
 
    // Save & restore parameters around Preview, because we didn't do OK.
-   double oldSemitonesChange = m_SemitonesChange;
-   if( m_PercentChange < -99.0)
+   double oldSemitonesChange = m_dSemitonesChange;
+   if( m_dPercentChange < -99.0)
    {
-      m_PercentChange = -99.0;
+      m_dPercentChange = -99.0;
       this->Update_Text_PercentChange();
    }
-   mEffect->m_SemitonesChange = m_SemitonesChange;
+   mEffect->m_dSemitonesChange = m_dSemitonesChange;
    mEffect->Preview();
-   mEffect->m_SemitonesChange = oldSemitonesChange;
+   mEffect->m_dSemitonesChange = oldSemitonesChange;
 }
 
 // helper fns for controls
@@ -858,7 +840,7 @@ void ChangePitchDialog::Update_Text_SemitonesChange()
 {
    if (m_pTextCtrl_SemitonesChange) {
       wxString str;
-      str.Printf(wxT("%.2f"), m_SemitonesChange);
+      str.Printf(wxT("%.2f"), m_dSemitonesChange);
       m_pTextCtrl_SemitonesChange->SetValue(str);
    }
 }
@@ -893,12 +875,12 @@ void ChangePitchDialog::Update_Text_PercentChange()
    if (m_pTextCtrl_PercentChange) {
       wxString str;
       if ((m_ToFrequency > 0.0) && (m_ToFrequency <= DBL_MAX))
-         str.Printf(wxT("%.3f"), m_PercentChange);
+         str.Printf(wxT("%.3f"), m_dPercentChange);
       else
          str = wxT("");
       m_pTextCtrl_PercentChange->SetValue(str);
 
-      bool bIsGoodValue = (m_PercentChange >= PERCENT_CHANGE_MIN) && (m_PercentChange <= PERCENT_CHANGE_MAX);
+      bool bIsGoodValue = (m_dPercentChange >= PERCENT_CHANGE_MIN) && (m_dPercentChange <= PERCENT_CHANGE_MAX);
       this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
       this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
    }
@@ -907,10 +889,10 @@ void ChangePitchDialog::Update_Text_PercentChange()
 void ChangePitchDialog::Update_Slider_PercentChange()
 {
    if (m_pSlider_PercentChange) {
-      double unwarped = m_PercentChange;
+      double unwarped = m_dPercentChange;
       if (unwarped > 0.0)
          // Un-warp values above zero to actually go up to PERCENTCHANGE_MAX.
-         unwarped = pow(m_PercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
+         unwarped = pow(m_dPercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
 
       // Add 0.5 to unwarped so trunc -> round.
       int newSetting = (int)(unwarped + 0.5);

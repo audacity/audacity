@@ -29,6 +29,11 @@ double FreqToMIDInote(const double freq)
    return (69.0 + (12.0 * (log(freq / 440.0) / log(2.0))));
 }
 
+double MIDInoteToFreq(const double dMIDInote)
+{
+   return (440.0 * pow(2.0, (dMIDInote - 69.0) / 12.0));
+}
+
 unsigned int PitchIndex(const double dMIDInote)
 {
    int nPitchIndex = ((int)(dMIDInote + 0.5) % 12);
@@ -144,5 +149,5 @@ double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave)
 
 double PitchToFreq(const unsigned int nPitchIndex, const int nPitchOctave)
 {
-   return (440.0 * pow(2.0, (PitchToMIDInote(nPitchIndex, nPitchOctave) - 69) / 12.0));
+   return MIDInoteToFreq(PitchToMIDInote(nPitchIndex, nPitchOctave));
 }

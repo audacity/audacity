@@ -156,7 +156,7 @@ class VarRateResample : public Resample
    #if USE_LIBRESAMPLE || USE_LIBSAMPLERATE || USE_LIBSOXR
       //vvv Note that we're not actually calling any of these Get* methods 
       // for var-rate, as the decision was to not allow QualityPrefs for it. 
-      // However the menthods already existed for libresample and libsamplerate, 
+      // However the methods already existed for libresample and libsamplerate, 
       // so they're now implemented for all, in case we decide to provide prefs. 
       static int GetNumMethods();
       static wxString GetMethodName(int index);

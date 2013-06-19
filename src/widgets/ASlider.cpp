@@ -418,7 +418,7 @@ LWSlider::LWSlider(wxWindow *parent,
       if (orientation == wxHORIZONTAL)
          maxValue = 36.0f;
       else 
-         maxValue = 36.0f; // for MixerBoard //vvv Previously was 6dB for MixerBoard, but identical for now. 
+         maxValue = 36.0f; // for MixerBoard //v Previously was 6dB for MixerBoard, but identical for now. 
       stepValue = 1.0f;
       speed = 0.5;
       break;
