@@ -622,10 +622,12 @@ void ChangePitchDialog::OnText_SemitonesChange(wxCommandEvent & WXUNUSED(event))
       this->Calc_PercentChange();
       this->Calc_ToFrequency(); // Call *after* m_dPercentChange is updated.
       this->Calc_ToPitch();
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
 
       m_bLoopDetect = true;
       {
          this->Update_Choice_ToPitch();
+         this->Update_Spin_ToOctave();
          this->Update_Text_ToFrequency();
          this->Update_Text_PercentChange();
          this->Update_Slider_PercentChange();
@@ -661,14 +663,19 @@ void ChangePitchDialog::OnText_FromFrequency(wxCommandEvent & WXUNUSED(event))
       }
       m_FromFrequency = newDouble;
 
-      m_nFromPitch = PitchIndex(FreqToMIDInote(m_FromFrequency));
-      this->Calc_ToFrequency();
+      double newFromMIDInote = FreqToMIDInote(m_FromFrequency);
+      m_nFromPitch = PitchIndex(newFromMIDInote);
+      m_nFromOctave = PitchOctave(newFromMIDInote);
       this->Calc_ToPitch();
+      this->Calc_ToFrequency();
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
 
       m_bLoopDetect = true;
       {
          this->Update_Choice_FromPitch();
+         this->Update_Spin_FromOctave();
          this->Update_Choice_ToPitch();
+         this->Update_Spin_ToOctave();
          this->Update_Text_ToFrequency();
       }
       m_bLoopDetect = false;
@@ -702,12 +709,14 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
       m_dPercentChange = (((double)(m_ToFrequency) * 100.0) / 
                            (double)(m_FromFrequency)) - 100.0;
 
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
       this->Calc_SemitonesChange_fromPercentChange();
       this->Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
 
       m_bLoopDetect = true;
       {
          this->Update_Choice_ToPitch();
+         this->Update_Spin_ToOctave();
          this->Update_Text_SemitonesChange();
          this->Update_Text_PercentChange();
          this->Update_Slider_PercentChange();
@@ -746,10 +755,12 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
       this->Calc_SemitonesChange_fromPercentChange();
       this->Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
       this->Calc_ToFrequency();
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
 
       m_bLoopDetect = true;
       {
          this->Update_Choice_ToPitch();
+         this->Update_Spin_ToOctave();
          this->Update_Text_SemitonesChange();
          this->Update_Text_ToFrequency();
          this->Update_Slider_PercentChange();
@@ -776,10 +787,12 @@ void ChangePitchDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
       this->Calc_SemitonesChange_fromPercentChange();
       this->Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
       this->Calc_ToFrequency();
+      this->Calc_ToOctave(); // Call after Calc_ToFrequency().
 
       m_bLoopDetect = true;
       {
          this->Update_Choice_ToPitch();
+         this->Update_Spin_ToOctave();
          this->Update_Text_SemitonesChange();
          this->Update_Text_ToFrequency();
          this->Update_Text_PercentChange();
