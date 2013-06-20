@@ -1040,7 +1040,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddItem(wxT("Screenshot"), _("&Screenshot Tools..."), FN(OnScreenshot));
 
-#if IS_BETA
+#if IS_ALPHA
    // TODO: What should we do here?  Make benchmark a plug-in?  
    // Easy enough to do.  We'd call it mod-self-test.
    c->AddSeparator();   
