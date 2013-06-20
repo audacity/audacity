@@ -962,7 +962,7 @@ void ShuttleGuiBase::EndInvisiblePanel()
 ///  - Use wxEXPAND and 0 to expand horizontally but not vertically.
 ///  - Use wxEXPAND and 1 to expand horizontally and vertically.
 ///  - Use wxCENTRE and 1 for no expansion.
-/// @param PositionFlag  Typically wxEXPAND or wxCENTRE.
+/// @param PositionFlag  Typically wxEXPAND or wxALIGN_CENTER.
 /// @param iProp         Proportionality for resizing.  
 void ShuttleGuiBase::StartHorizontalLay( int PositionFlags, int iProp)
 {

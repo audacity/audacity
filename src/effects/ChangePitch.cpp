@@ -279,80 +279,74 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    pitch.Add(wxT("A#/Bb"));
    pitch.Add(wxT("B"));
 
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
+   S.SetBorder(5);
+
+   S.StartVerticalLay();
    {
       S.AddTitle(_("Change Pitch without Changing Tempo") +
                  wxString(wxT("\n\n")) +
                  _("by Vaughan Johnson, Dominic Mazzoni, && Steve Daulton") +
                  wxString(wxT("\n")) +
                  _("using SoundTouch, by Olli Parviainen"));
+
+      S.AddTitle(
+         wxString::Format(_("Estimated Start Pitch: %s%d (%.3f Hz)"), 
+                           pitch[m_nFromPitch], m_nFromOctave, m_FromFrequency));
    }
-   S.EndHorizontalLay();
-   S.SetBorder(5);
+   S.EndVerticalLay();
 
    /* i18n-hint: (noun) Musical pitch.*/
    S.StartStatic(wxT("Pitch"));
    {
-      S.StartMultiColumn(6, wxCENTER);
+      S.StartMultiColumn(6, wxALIGN_CENTER); // 6, because AddChoice adds a wxStaticText and a wxChoice.
       {
-         S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL);
-         {
-            m_pChoice_FromPitch = S.Id(ID_CHOICE_FROMPITCH).AddChoice(_("from"), wxT(""), &pitch);
-            m_pChoice_FromPitch->SetName(_("From Pitch"));
-            m_pChoice_FromPitch->SetSizeHints(80, -1);
+         m_pChoice_FromPitch = S.Id(ID_CHOICE_FROMPITCH).AddChoice(_("from"), wxT(""), &pitch);
+         m_pChoice_FromPitch->SetName(_("From Pitch"));
+         m_pChoice_FromPitch->SetSizeHints(80, -1);
 
-            m_pSpin_FromOctave = 
-               S.Id(ID_CHOICE_FROMOCTAVE).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN); 
-            m_pSpin_FromOctave->SetName(_("From Octave"));
-            m_pSpin_FromOctave->SetSizeHints(50, -1);
+         m_pSpin_FromOctave = S.Id(ID_CHOICE_FROMOCTAVE).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN); 
+         m_pSpin_FromOctave->SetName(_("From Octave"));
+         m_pSpin_FromOctave->SetSizeHints(50, -1);
 
-            m_pChoice_ToPitch = S.Id(ID_CHOICE_TOPITCH).AddChoice(_("to"), wxT(""), &pitch);
-            m_pChoice_ToPitch->SetName(_("To Pitch"));
-            m_pChoice_ToPitch->SetSizeHints(80, -1);
+         m_pChoice_ToPitch = S.Id(ID_CHOICE_TOPITCH).AddChoice(_("to"), wxT(""), &pitch);
+         m_pChoice_ToPitch->SetName(_("To Pitch"));
+         m_pChoice_ToPitch->SetSizeHints(80, -1);
 
-            m_pSpin_ToOctave = 
-               S.Id(ID_CHOICE_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
-            m_pSpin_ToOctave->SetName(_("From Octave"));
-            m_pSpin_ToOctave->SetSizeHints(50, -1);
-         }
-         S.EndHorizontalLay();
+         m_pSpin_ToOctave = 
+            S.Id(ID_CHOICE_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
+         m_pSpin_ToOctave->SetName(_("From Octave"));
+         m_pSpin_ToOctave->SetSizeHints(50, -1);
       }
       S.EndMultiColumn();
   
-      S.StartMultiColumn(2, wxCENTER);
+      S.StartHorizontalLay(wxALIGN_CENTER);
       {
-         S.AddPrompt(_("Semitones (half-steps):"));
-         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, false);
-         {
-            m_pTextCtrl_SemitonesChange = S.Id(ID_TEXT_SEMITONESCHANGE)
-               .AddTextBox(wxT(""), wxT(""), 12);
-            m_pTextCtrl_SemitonesChange->SetName(_("Semitones in half-steps"));
-            m_pTextCtrl_SemitonesChange->SetValidator(numvld);
-         }
-         S.EndHorizontalLay();
+         m_pTextCtrl_SemitonesChange = 
+            S.Id(ID_TEXT_SEMITONESCHANGE).AddTextBox(_("Semitones (half-steps):"), wxT(""), 12);
+         m_pTextCtrl_SemitonesChange->SetName(_("Semitones (half-steps)"));
+         m_pTextCtrl_SemitonesChange->SetValidator(numvld);
       }
-      S.EndMultiColumn();
+      S.EndHorizontalLay();
    }
    S.EndStatic();
 
-   S.StartStatic(wxT("Frequency (Hz)"));
+   S.StartStatic(wxT("Frequency"));
    {
-      S.StartHorizontalLay(wxCENTER, false);
+      S.StartMultiColumn(5, wxALIGN_CENTER); // 5, because AddTextBox adds a wxStaticText and a wxTextCtrl.
       {
-         m_pTextCtrl_FromFrequency = S.Id(ID_TEXT_FROMFREQUENCY)
-            .AddTextBox(_("from"), wxT(""), 12);
-         m_pTextCtrl_FromFrequency->SetName(_("From frequency in hertz"));
+         m_pTextCtrl_FromFrequency = S.Id(ID_TEXT_FROMFREQUENCY).AddTextBox(_("from"), wxT(""), 12);
+         m_pTextCtrl_FromFrequency->SetName(_("From Frequency in Hertz"));
          m_pTextCtrl_FromFrequency->SetValidator(nonNegNumValidator);
 
-         m_pTextCtrl_ToFrequency = S.Id(ID_TEXT_TOFREQUENCY)
-            .AddTextBox(_("to"), wxT(""), 12);
-         m_pTextCtrl_ToFrequency->SetName(_("To frequency in seconds"));
+         m_pTextCtrl_ToFrequency = S.Id(ID_TEXT_TOFREQUENCY).AddTextBox(_("to"), wxT(""), 12);
+         m_pTextCtrl_ToFrequency->SetName(_("To Frequency in Hertz"));
          m_pTextCtrl_ToFrequency->SetValidator(nonNegNumValidator);
-      }
-      S.EndHorizontalLay();
 
-      S.StartHorizontalLay(wxCENTER, false);
+         S.AddUnits(_("Hz"));
+      }
+      S.EndMultiColumn();
+
+      S.StartHorizontalLay(wxALIGN_CENTER);
       {
          m_pTextCtrl_PercentChange = S.Id(ID_TEXT_PERCENTCHANGE).AddTextBox(wxT("Percent Change:"), wxT(""), 12);
          m_pTextCtrl_PercentChange->SetValidator(numvld);

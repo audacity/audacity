@@ -46,7 +46,8 @@ unsigned int PitchIndex(const double dMIDInote)
 
 int PitchOctave(const double dMIDInote)
 {
-   return ((int)((dMIDInote + 0.5) / 12) - 1);
+   double dRound = (dMIDInote < 0.0) ? -0.5 : 0.5;
+   return ((int)((dMIDInote + dRound) / 12.0) - 1);
 }
 
 
