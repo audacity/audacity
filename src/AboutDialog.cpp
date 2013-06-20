@@ -91,6 +91,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
+   AddCredit(wxT("Craig DeForest"), roleContributor);
+   AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
    AddCredit(wxT("Daniel Horgan"), roleContributor);
    AddCredit(wxT("Arun Kishore"), roleContributor);
@@ -99,10 +101,13 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Greg Mekkes"), roleContributor);
    AddCredit(wxT("Abe Milde"), roleContributor);
    AddCredit(wxT("Paul Nasca"), roleContributor);
+   AddCredit(wxT("Clayton Otey"), roleContributor);
    AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
    AddCredit(wxT("Augustus Saunders"), roleContributor);
    AddCredit(wxT("David R. Sky"), roleContributor);
    AddCredit(wxT("Mike Underwood"), roleContributor);
+   AddCredit(wxT("Philip Van Baren"), roleContributor);
+   AddCredit(wxT("Salvo Ventura"), roleContributor);
    AddCredit(wxT("Jun Wan"), roleContributor);
    AddCredit(wxT("Tom Woodhams"), roleContributor);
    AddCredit(wxT("Wing Yu"), roleContributor);
