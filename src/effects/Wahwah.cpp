@@ -210,13 +210,9 @@ WahwahDialog::WahwahDialog(EffectWahwah * effect, wxWindow * parent)
 void WahwahDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextValidator vld(wxFILTER_NUMERIC);
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Nasca Octavian Paul"));
-   }
-   S.EndHorizontalLay();
+
    S.SetBorder(5);
+   S.AddSpace(0, 5);
 
    S.StartMultiColumn(3, wxCENTER);
    {

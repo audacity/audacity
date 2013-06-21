@@ -604,12 +604,6 @@ CompressorDialog::CompressorDialog(EffectCompressor *effect, wxWindow *parent)
 
 void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Dominic Mazzoni"));
-   }
-   S.EndHorizontalLay();
    S.SetBorder(5);
 
    S.StartHorizontalLay(wxEXPAND, true);

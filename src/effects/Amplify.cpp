@@ -147,17 +147,7 @@ void AmplifyDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextValidator vld(wxFILTER_NUMERIC);
 
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Dominic Mazzoni"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
+   S.AddSpace(0, 5);
 
    // Amplitude
    S.StartMultiColumn(2, wxCENTER);

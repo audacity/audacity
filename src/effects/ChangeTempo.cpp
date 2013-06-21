@@ -177,16 +177,8 @@ void ChangeTempoDialog::PopulateOrExchange(ShuttleGui & S)
    wxTextValidator nullvld(wxFILTER_INCLUDE_CHAR_LIST);
    wxTextValidator numvld(wxFILTER_NUMERIC);
 
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("Change Tempo without Changing Pitch") +
-                 wxString(wxT("\n\n")) +
-                 _("by Vaughan Johnson && Dominic Mazzoni") +
-                 wxString(wxT("\n")) + 
-                 _("using SoundTouch, by Olli Parviainen"));
-   }
-   S.EndHorizontalLay();
+   S.AddSpace(0, 5);
+   S.AddTitle(_("Change Tempo without Changing Pitch"));
    S.SetBorder(5);
 
    //

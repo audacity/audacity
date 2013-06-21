@@ -441,8 +441,7 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
    wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST);
    vldDtmf.SetIncludes(wxArrayString(42, dtmfSymbols));
 
-   S.AddTitle(_("by Salvo Ventura"));
-
+   S.AddSpace(0, 5);
    S.StartMultiColumn(2, wxEXPAND);
    {
       mDtmfStringT = S.Id(ID_DTMF_STRING_TEXT).AddTextBox(_("DTMF sequence:"), wxT(""), 10);

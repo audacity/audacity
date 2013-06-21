@@ -290,19 +290,6 @@ BassTrebleDialog::BassTrebleDialog(EffectBassTreble *effect,
 
 void BassTrebleDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      /* i18n-hint: Steve Daulton is a person's name.*/
-      S.AddTitle(_("by Steve Daulton"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
-
    S.StartStatic(wxT(""));
    {
       S.StartMultiColumn(3, wxEXPAND);

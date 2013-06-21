@@ -310,9 +310,6 @@ ReverbDialogue::ReverbDialogue(EffectReverb * effect, wxWindow * parent):
 
 void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
 {
-   s.StartHorizontalLay(wxCENTER, false);
-   s.AddTitle(_("by Rob Sykes")); /* i18n-hint: Rob Sykes is a person's name.*/
-   s.EndHorizontalLay();
    s.StartHorizontalLay(wxCENTER, false);   // Add a little space
    s.EndHorizontalLay();
 

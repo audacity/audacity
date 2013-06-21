@@ -414,16 +414,8 @@ END_EVENT_TABLE()
    };
 
 
-void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S){
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Nasca Octavian Paul"));
-   }
-
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   S.EndHorizontalLay();
+void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S) 
+{
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       /* i18n-hint: This is how many times longer the sound will be, e.g. applying 

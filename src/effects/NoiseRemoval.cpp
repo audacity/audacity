@@ -731,41 +731,22 @@ void NoiseRemovalDialog::OnCancel(wxCommandEvent &event)
 
 void NoiseRemovalDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   wxString step1Label;
-   wxString step1Prompt;
-   wxString step2Label;
-   wxString step2Prompt;
-
-   step1Label = _("Step 1");
-   step1Prompt = _("Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:");
-   step2Label = _("Step 2");
-   step2Prompt = _("Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to remove noise.\n");
-
-   S.StartHorizontalLay(wxCENTER, false);
+   S.StartStatic(_("Step 1"));
    {
-      S.AddTitle(_("Noise Removal by Dominic Mazzoni"));
-   }
-   S.EndHorizontalLay();
-   
-   S.StartStatic(step1Label);
-   {
-      S.AddVariableText(step1Prompt);
-      m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).
-         AddButton(_("&Get Noise Profile"));
+      S.AddVariableText(_("Select a few seconds of just noise so Audacity knows what to filter out,\nthen click Get Noise Profile:"));
+      m_pButton_GetProfile = S.Id(ID_BUTTON_GETPROFILE).AddButton(_("&Get Noise Profile"));
    }
    S.EndStatic();
 
-   S.StartStatic(step2Label);
+   S.StartStatic(_("Step 2"));
    {
-      S.AddVariableText(step2Prompt);
+      S.AddVariableText(_("Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to remove noise.\n"));
 
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
          wxTextValidator vld(wxFILTER_NUMERIC);
-         mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise re&duction (dB):"),
-                                                wxT(""),
-                                                0);
+         mGainT = S.Id(ID_GAIN_TEXT).AddTextBox(_("Noise re&duction (dB):"), wxT(""), 0);
          S.SetStyle(wxSL_HORIZONTAL);
          mGainT->SetValidator(vld);
          mGainS = S.Id(ID_GAIN_SLIDER).AddSlider(wxT(""), 0, GAIN_MAX);

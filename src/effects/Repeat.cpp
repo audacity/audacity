@@ -212,18 +212,6 @@ void RepeatDialog::PopulateOrExchange(ShuttleGui & S)
 
    S.StartHorizontalLay(wxCENTER, false);
    {
-      S.AddTitle(_("by Dominic Mazzoni && Vaughan Johnson"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
       mRepeatCount = S.Id(ID_REPEAT_TEXT).AddTextBox(_("Number of times to repeat:"),
                                                      wxT(""),
                                                      12);

@@ -194,14 +194,6 @@ void EchoDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
-      /* i18n-hint: && in here is an escape character to get a single & on
-       * screen, so keep it as is */
-      S.AddTitle(_("by Dominic Mazzoni && Vaughan Johnson"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
       // Add a little space
    }
    S.EndHorizontalLay();

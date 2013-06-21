@@ -528,17 +528,7 @@ TruncSilenceDialog::TruncSilenceDialog(EffectTruncSilence * effect,
 
 void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Lynn Allan && Philip Van Baren"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
+   S.AddSpace(0, 5);
 
    S.StartThreeColumn();
    {

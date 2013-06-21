@@ -1112,18 +1112,10 @@ void EqualizationDialog::MakeEqualizationDialog()
 
    // Create the base sizer
    szrV = new wxBoxSizer( wxVERTICAL );
+   szrV->AddSpacer(10);
 
    // -------------------------------------------------------------------
-   // ROW 1: Banner
-   // -------------------------------------------------------------------
-   txt = new wxStaticText(this, wxID_ANY,
-         /* i18n-hint: && in here is an escape character to get a single & 
-          * on screen, so keep it as is */
-                          _("Equalization, by Martyn Shaw && Mitch Golden"));
-   szrV->Add( txt, 0, wxALIGN_CENTRE|wxALL, 4 );
-
-   // -------------------------------------------------------------------
-   // ROW 2: EQ panel and sliders for vertical scale
+   // EQ panel and sliders for vertical scale
    // -------------------------------------------------------------------
    szr1 = new wxFlexGridSizer( 4, 0, 0 );
    szr1->AddGrowableCol( 2, 1 );
@@ -1198,7 +1190,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrV->Add( szr1, 1, wxEXPAND|wxALIGN_CENTER|wxALL, 0 );
 
    // -------------------------------------------------------------------
-   // ROW 3: Graphic EQ - this gets laid out horizontally in onSize
+   // Graphic EQ - this gets laid out horizontally in onSize
    // -------------------------------------------------------------------
 
    szrG = new wxBoxSizer( wxHORIZONTAL  );
@@ -1233,7 +1225,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    szr3->SetMinSize(EQsliderSize.x/2, -1);   //extra gap for last slider
 
    // -------------------------------------------------------------------
-   // ROW 4a: Graphic or curve drawing?
+   // Graphic or curve drawing?
    // -------------------------------------------------------------------
    szrH = new wxBoxSizer( wxHORIZONTAL );
 
@@ -1265,7 +1257,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrH->Add(szrL);  // either szrI or szrL are visible, not both.
 
    // -------------------------------------------------------------------
-   // ROW 4b: Filter length grouping
+   // Filter length grouping
    // -------------------------------------------------------------------
 
    // length of filter (M) label
@@ -1288,7 +1280,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrV->Add( szrH, 0, wxALIGN_CENTER | wxALL, 4 );
 
    // -------------------------------------------------------------------
-   // ROW 5: Curve management grouping
+   // Curve management grouping
    // -------------------------------------------------------------------
    szrC = new wxBoxSizer( wxHORIZONTAL );   //szrC is for the curves bits
 
@@ -1319,13 +1311,10 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrV->Add( szrC, 0, wxALIGN_CENTER | wxALL, 0 );
 
    // -------------------------------------------------------------------
-   // ROW 6: Preview, OK, & Cancel buttons
+   // Preview, OK, & Cancel buttons
    // -------------------------------------------------------------------
    szrV->Add(CreateStdButtonSizer(this, ePreviewButton|eCancelButton|eOkButton), 0, wxEXPAND);
 
-   // -------------------------------------------------------------------
-   // Display now
-   // -------------------------------------------------------------------
    SetAutoLayout(false);
 
    szrV->Show(szrG,true);

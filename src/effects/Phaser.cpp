@@ -215,12 +215,7 @@ PhaserDialog::PhaserDialog(EffectPhaser * effect, wxWindow * parent)
 void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextValidator vld(wxFILTER_NUMERIC);
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Nasca Octavian Paul"));
-   }
-   S.EndHorizontalLay();
+
    S.SetBorder(5);
 
    S.StartMultiColumn(3, wxEXPAND);

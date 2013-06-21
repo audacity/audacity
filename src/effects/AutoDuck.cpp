@@ -481,26 +481,12 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
-      S.StartHorizontalLay(wxCENTER, false);
-      {
-         S.AddTitle(_("Auto Duck by Markus Meyer"));
-      }
-      S.EndHorizontalLay();
+      S.AddSpace(0, 5);
 
-      S.StartHorizontalLay(wxCENTER, false);
-      {
-         // Add a little space
-      }
-      S.EndHorizontalLay();
-      
       mPanel = (EffectAutoDuckPanel*)
          S.AddWindow(new EffectAutoDuckPanel(this, ID_PANEL));
 
-      S.StartHorizontalLay(wxCENTER, false);
-      {
-         // Add a little space
-      }
-      S.EndHorizontalLay();
+      S.AddSpace(0, 5);
 
       S.StartMultiColumn(6, wxCENTER);
       {

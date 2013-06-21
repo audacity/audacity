@@ -169,7 +169,7 @@ BEGIN_EVENT_TABLE(TimeScaleDialog, EffectDialog)
 END_EVENT_TABLE()
 
 TimeScaleDialog::TimeScaleDialog(EffectTimeScale *effect, wxWindow *parent)
-   :  EffectDialog(parent, _("Time Scale"), INSERT_EFFECT),
+   :  EffectDialog(parent, _("Sliding Time Scale/Pitch Shift"), INSERT_EFFECT),
       mEffect(effect)
 {
    m_bLoopDetect = false;
@@ -206,16 +206,9 @@ void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
    wxTextValidator nullvld(wxFILTER_INCLUDE_CHAR_LIST);
    wxTextValidator numvld(wxFILTER_NUMERIC);
 
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("Sliding Time Scale/Pitch Shift") +
-                 wxString(wxT("\n")) + 
-                 _("using SBSMS, by Clayton Otey"));
-   }
-   S.EndHorizontalLay();
    S.SetBorder(5);
-   
+   S.AddSpace(0, 5);
+
    S.StartMultiColumn(2, 0);
    // Rate Start
    S.StartStatic(_("Initial Tempo Change (%)"));

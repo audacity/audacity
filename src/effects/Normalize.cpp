@@ -463,30 +463,22 @@ void NormalizeDialog::PopulateOrExchange(ShuttleGui & S)
 {
    wxTextValidator vld(wxFILTER_NUMERIC);
 
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Dominic Mazzoni"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
-
    S.StartTwoColumn();
    {
       S.StartVerticalLay(false);
       {
-         mDCCheckBox = S.Id(ID_DC_REMOVE).AddCheckBox(_("Remove any DC offset (center on 0.0 vertically)"),
-                                     mDC ? wxT("true") : wxT("false"));
-   
-         mGainCheckBox = S.Id(ID_NORMALIZE_AMPLITUDE).AddCheckBox(_("Normalize maximum amplitude to:"),
-                                       mGain ? wxT("true") : wxT("false"));
+         mDCCheckBox = 
+            S.Id(ID_DC_REMOVE).
+               AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
+                           mDC ? wxT("true") : wxT("false"));
    
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
+            mGainCheckBox = 
+               S.Id(ID_NORMALIZE_AMPLITUDE).
+                  AddCheckBox(_("Normalize maximum amplitude to"), 
+                              mGain ? wxT("true") : wxT("false"));
+   
             mLevelTextCtrl = S.Id(ID_LEVEL_TEXT).AddTextBox(wxT(""), wxT(""), 10);
             mLevelTextCtrl->SetValidator(vld);
             mLevelTextCtrl->SetName(_("Maximum amplitude dB"));

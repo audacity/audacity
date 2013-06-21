@@ -341,17 +341,10 @@ ChangeSpeedDialog::ChangeSpeedDialog(EffectChangeSpeed *effect, wxWindow *parent
 
 void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.SetBorder(10);
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("Change Speed, affecting both Tempo and Pitch") +
-                 wxString(wxT("\n\n")) +
-                 _("by Vaughan Johnson && Dominic Mazzoni") +
-                 wxString(wxT("\n")) +
-                 _("using SampleRate, by Erik de Castro Lopo"));
-   }
-   S.EndHorizontalLay();
    S.SetBorder(5);
+
+   S.AddSpace(0, 5);
+   S.AddTitle(_("Change Speed, affecting both Tempo and Pitch"));
 
    //
    S.StartMultiColumn(2, wxCENTER);

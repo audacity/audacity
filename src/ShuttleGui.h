@@ -76,7 +76,7 @@ public:
    ~ShuttleGuiBase(void);
    void Init();
 
-//-- Add functions.  These only add a widget.
+//-- Add functions.  These only add a widget or 2.
    void AddPrompt(const wxString &Prompt);
    void AddUnits(const wxString &Prompt);
    void AddTitle(const wxString &Prompt);

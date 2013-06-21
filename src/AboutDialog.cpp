@@ -87,24 +87,27 @@ void AboutDialog::CreateCreditsList()
 
    // All other contributors
    
-   AddCredit(wxT("Lynn Allan"), roleContributor);
+   AddCredit(wxT("Lynn Allan (Leveller, StereoToMono, TruncSilence)"), roleContributor);
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
-   AddCredit(wxT("Craig DeForest"), roleContributor);
+   AddCredit(wxT("Craig DeForest (Click Removal"), roleContributor);
    AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
    AddCredit(wxT("Daniel Horgan"), roleContributor);
+   AddCredit(wxT("Steve Jolly"), roleContributor);
    AddCredit(wxT("Arun Kishore"), roleContributor);
    AddCredit(wxT("Paul Livesey"), roleContributor);
    AddCredit(wxT("Harvey Lubin"), roleContributor);
    AddCredit(wxT("Greg Mekkes"), roleContributor);
    AddCredit(wxT("Abe Milde"), roleContributor);
-   AddCredit(wxT("Paul Nasca"), roleContributor);
+   AddCredit(wxT("<a href=\"http://www.paulnasca.com/\">Paul Nasca, aka Nasca Octavian Paul</a> (Paulstretch, Phaser, Wahwah)"), roleContributor);
    AddCredit(wxT("Clayton Otey"), roleContributor);
    AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
+   AddCredit(wxT("Mark Phillips"), roleContributor);
    AddCredit(wxT("Augustus Saunders"), roleContributor);
    AddCredit(wxT("David R. Sky"), roleContributor);
+   AddCredit(wxT("Rob Sykes (libsoxr Resample, Reverb)"), roleContributor);
    AddCredit(wxT("Mike Underwood"), roleContributor);
    AddCredit(wxT("Philip Van Baren"), roleContributor);
    AddCredit(wxT("Salvo Ventura"), roleContributor);
@@ -121,7 +124,7 @@ void AboutDialog::CreateCreditsList()
       AddCredit(wxT("libresample"), roleLibrary);
    #endif
    #if USE_LIBSAMPLERATE
-      AddCredit(wxT("libsamplerate"), roleLibrary);
+      AddCredit(wxT("libsamplerate, by Erik de Castro Lopo"), roleLibrary);
    #endif
    #if USE_LIBSOXR
       AddCredit(wxT("libsoxr"), roleLibrary);
@@ -131,8 +134,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Ogg Vorbis"), roleLibrary);
    AddCredit(wxT("PortAudio"), roleLibrary);
    AddCredit(wxT("portsmf"), roleLibrary);
-   AddCredit(wxT("sbsms"), roleLibrary);
-   AddCredit(wxT("SoundTouch"), roleLibrary);
+   AddCredit(wxT("sbsms, by Clayton Otey"), roleLibrary);
+   AddCredit(wxT("<a href=\"http://www.surina.net/soundtouch/\">SoundTouch</a>, by Olli Parviainen"), roleLibrary);
    AddCredit(wxT("TwoLAME"), roleLibrary);
    AddCredit(wxT("Vamp"), roleLibrary);
    AddCredit(wxT("wxWidgets"), roleLibrary);
@@ -148,7 +151,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Logan Lewis"), roleThanks);
    AddCredit(wxT("David Luff"), roleThanks);
    AddCredit(wxT("Jason Pepas"), roleThanks);
-   AddCredit(wxT("Mark Phillips"), roleThanks);
    AddCredit(wxT("Jonathan Ryshpan"), roleThanks);
    AddCredit(wxT("Michael Schwendt"), roleThanks);
    AddCredit(wxT("Patrick Shirkey"), roleThanks);
@@ -206,7 +208,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 
    wxString par1Str = _(
 "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. \
-We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge.net</a> for hosting our project. \
+We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge</a> for hosting our project. \
 Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    wxString par2Str = _(

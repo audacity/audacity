@@ -217,18 +217,6 @@ FindClippingDialog::FindClippingDialog(EffectFindClipping * effect, wxWindow * p
 
 void FindClippingDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Leland Lucius"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
-
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.TieTextBox(_("Start threshold (samples):"),
