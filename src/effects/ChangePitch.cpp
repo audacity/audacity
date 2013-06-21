@@ -283,15 +283,10 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
 
    S.StartVerticalLay();
    {
-      S.AddTitle(_("Change Pitch without Changing Tempo") +
-                 wxString(wxT("\n\n")) +
-                 _("by Vaughan Johnson, Dominic Mazzoni, && Steve Daulton") +
-                 wxString(wxT("\n")) +
-                 _("using SoundTouch, by Olli Parviainen"));
-
+      S.AddTitle(_("Change Pitch without Changing Tempo"));
       S.AddTitle(
          wxString::Format(_("Estimated Start Pitch: %s%d (%.3f Hz)"), 
-                           pitch[m_nFromPitch], m_nFromOctave, m_FromFrequency));
+                           pitch[m_nFromPitch].c_str(), m_nFromOctave, m_FromFrequency));
    }
    S.EndVerticalLay();
 
