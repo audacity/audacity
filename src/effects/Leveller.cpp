@@ -215,17 +215,7 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
    numPasses.Add(_("Heavier"));
    numPasses.Add(_("Heaviest"));
 
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      S.AddTitle(_("by Lynn Allan"));
-   }
-   S.EndHorizontalLay();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
+   S.AddSpace(0, 5);
 
    S.StartStatic(_("Degree of Leveling"));
    {
