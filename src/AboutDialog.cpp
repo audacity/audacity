@@ -101,7 +101,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Harvey Lubin"), roleContributor);
    AddCredit(wxT("Greg Mekkes"), roleContributor);
    AddCredit(wxT("Abe Milde"), roleContributor);
-   AddCredit(wxT("<a href=\"http://www.paulnasca.com/\">Paul Nasca, aka Nasca Octavian Paul</a> (Paulstretch, Phaser, Wahwah)"), roleContributor);
+   AddCredit(wxT("<a href=\"http://www.paulnasca.com/\">Paul Nasca</a> (Paulstretch, Phaser, Wahwah)"), roleContributor);
    AddCredit(wxT("Clayton Otey"), roleContributor);
    AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
    AddCredit(wxT("Mark Phillips"), roleContributor);

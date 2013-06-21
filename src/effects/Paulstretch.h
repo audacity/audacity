@@ -3,7 +3,7 @@
    Audacity: A Digital Audio Editor
    Paulstretch.h
 
-   Nasca Octavian Paul
+   Nasca Octavian Paul (Paul Nasca)
 
  **********************************************************************/
 

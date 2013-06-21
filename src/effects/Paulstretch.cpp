@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 Paulstretch.cpp
 
-Nasca Octavian Paul
+Nasca Octavian Paul (Paul Nasca)
 Some GUI code was taken from the Echo effect
 
  *******************************************************************/

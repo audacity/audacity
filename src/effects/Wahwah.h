@@ -5,7 +5,7 @@
   Wahwah
 
   Effect programming:
-  Nasca Octavian Paul
+  Nasca Octavian Paul (Paul Nasca)
 
   UI programming:
   Dominic Mazzoni (with the help of wxDesigner)
