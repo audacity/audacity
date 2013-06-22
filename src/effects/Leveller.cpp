@@ -119,7 +119,7 @@ bool EffectLeveller::PromptUser()
 {
    LevellerDialog dlog(this, mParent);
    dlog.mLevellerDbChoiceIndex = mLevellerDbChoiceIndex;
-   dlog.mLevellerNumPassesChoicIndex = mLevellerNumPasses-1;
+   dlog.mLevellerNumPassesChoiceIndex = mLevellerNumPasses-1;
    dlog.TransferDataToWindow();
 
    dlog.CentreOnParent();
@@ -129,7 +129,7 @@ bool EffectLeveller::PromptUser()
       return false;
    }
 
-   mLevellerNumPasses = dlog.mLevellerNumPassesChoicIndex+1;
+   mLevellerNumPasses = dlog.mLevellerNumPassesChoiceIndex+1;
    mLevellerDbChoiceIndex = dlog.mLevellerDbChoiceIndex;
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
 
@@ -197,7 +197,7 @@ LevellerDialog::LevellerDialog(EffectLeveller *effect, wxWindow *parent)
 :  EffectDialog(parent, _("Leveller"), PROCESS_EFFECT),
    mEffect(effect)
 {
-   mLevellerNumPassesChoicIndex = 0;// 
+   mLevellerNumPassesChoiceIndex = 0;// 
    mLevellerDbChoiceIndex = 0;
    Init();
 }
@@ -215,58 +215,39 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
    numPasses.Add(_("Heavier"));
    numPasses.Add(_("Heaviest"));
 
-   S.AddSpace(0, 5);
+   S.SetBorder(5);
+   S.AddSpace(5);
 
-   S.StartStatic(_("Degree of Leveling"));
+   S.StartHorizontalLay();
    {
-      S.StartHorizontalLay();
-      {
-         S.TieChoice(_("Degree of Leveling:"),
-                     mLevellerNumPassesChoicIndex,
-                     &numPasses);
-      }
-      S.EndHorizontalLay();
+      S.AddChoice(_("Degree of Leveling:"),
+                  mLevellerNumPassesChoiceIndex,
+                  &numPasses);
    }
-   S.EndStatic();
+   S.EndHorizontalLay();
                                               
-   S.StartStatic(_("Noise Threshold (Hiss/Hum/Ambient Noise)"));
+   S.StartHorizontalLay();
    {
-      S.StartHorizontalLay();
-      {
-         S.TieChoice(_("Threshold for Noise:"),
-                     mLevellerDbChoiceIndex,
-                     &db);
-      }
-      S.EndHorizontalLay();
+      S.AddChoice(_("Noise Threshold:"),
+                  mLevellerDbChoiceIndex,
+                  &db);
    }
-   S.EndStatic();
+   S.EndHorizontalLay();
 }
 
 void LevellerDialog::OnPreview(wxCommandEvent &event)
 {
    TransferDataFromWindow();
 
-   // Save & restore parameters around Preview
+   // Save & restore parameters around Preview.
    int oldLevellerDbChoiceIndex = mEffect->mLevellerDbChoiceIndex;
    int oldLevellerNumPasses = mEffect->mLevellerNumPasses;
 
    mEffect->mLevellerDbChoiceIndex = mLevellerDbChoiceIndex;
-   mEffect->mLevellerNumPasses = mLevellerNumPassesChoicIndex+1;
+   mEffect->mLevellerNumPasses = mLevellerNumPassesChoiceIndex+1;
 
    mEffect->Preview();
    
    mEffect->mLevellerDbChoiceIndex = oldLevellerDbChoiceIndex;
    mEffect->mLevellerNumPasses = oldLevellerNumPasses;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 0e9ab1c7-3cb3-4864-8f30-876218bea476
-

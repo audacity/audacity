@@ -87,7 +87,7 @@ class LevellerDialog: public EffectDialog
 
  public:
    int mLevellerDbChoiceIndex;
-   int mLevellerNumPassesChoicIndex;
+   int mLevellerNumPassesChoiceIndex;
 };
 
 #endif

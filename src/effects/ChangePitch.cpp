@@ -178,9 +178,9 @@ enum {
    ID_TEXT_PERCENTCHANGE = 10001,
    ID_SLIDER_PERCENTCHANGE,
    ID_CHOICE_FROMPITCH,
-   ID_CHOICE_FROMOCTAVE,
+   ID_SPIN_FROMOCTAVE,
    ID_CHOICE_TOPITCH,
-   ID_CHOICE_TOOCTAVE,
+   ID_SPIN_TOOCTAVE,
    ID_TEXT_SEMITONESCHANGE,
    ID_TEXT_FROMFREQUENCY,
    ID_TEXT_TOFREQUENCY
@@ -190,9 +190,9 @@ enum {
 
 BEGIN_EVENT_TABLE(ChangePitchDialog, EffectDialog)
    EVT_CHOICE(ID_CHOICE_FROMPITCH, ChangePitchDialog::OnChoice_FromPitch)
-   EVT_TEXT(ID_CHOICE_FROMOCTAVE, ChangePitchDialog::OnSpin_FromOctave)
+   EVT_TEXT(ID_SPIN_FROMOCTAVE, ChangePitchDialog::OnSpin_FromOctave)
    EVT_CHOICE(ID_CHOICE_TOPITCH, ChangePitchDialog::OnChoice_ToPitch)
-   EVT_TEXT(ID_CHOICE_TOOCTAVE, ChangePitchDialog::OnSpin_ToOctave)
+   EVT_TEXT(ID_SPIN_TOOCTAVE, ChangePitchDialog::OnSpin_ToOctave)
 
    EVT_TEXT(ID_TEXT_SEMITONESCHANGE, ChangePitchDialog::OnText_SemitonesChange)
 
@@ -299,7 +299,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
          m_pChoice_FromPitch->SetName(_("From Pitch"));
          m_pChoice_FromPitch->SetSizeHints(80, -1);
 
-         m_pSpin_FromOctave = S.Id(ID_CHOICE_FROMOCTAVE).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN); 
+         m_pSpin_FromOctave = S.Id(ID_SPIN_FROMOCTAVE).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN); 
          m_pSpin_FromOctave->SetName(_("From Octave"));
          m_pSpin_FromOctave->SetSizeHints(50, -1);
 
@@ -308,7 +308,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
          m_pChoice_ToPitch->SetSizeHints(80, -1);
 
          m_pSpin_ToOctave = 
-            S.Id(ID_CHOICE_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
+            S.Id(ID_SPIN_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
          m_pSpin_ToOctave->SetName(_("From Octave"));
          m_pSpin_ToOctave->SetSizeHints(50, -1);
       }
