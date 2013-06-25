@@ -220,7 +220,7 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
 
    S.StartHorizontalLay();
    {
-      S.AddChoice(_("Degree of Leveling:"),
+      S.TieChoice(_("Degree of Leveling:"),
                   mLevellerNumPassesChoiceIndex,
                   &numPasses);
    }
@@ -228,7 +228,7 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
                                               
    S.StartHorizontalLay();
    {
-      S.AddChoice(_("Noise Threshold:"),
+      S.TieChoice(_("Noise Threshold:"),
                   mLevellerDbChoiceIndex,
                   &db);
    }
