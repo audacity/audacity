@@ -94,7 +94,6 @@ void EffectLeveller::CalcLevellerFactors()
    double prevLimit     = 0.0;
    double limit         = gLimit[0];
    gAddOnValue[0]       = addOnValue;
-   double lowerAdjLimit = 0.0;
    double adjFactor     = gAdjFactor[0];
    double upperAdjLimit = gLimit[0] * adjFactor;
    double prevAdjLimit  = upperAdjLimit;
@@ -103,7 +102,6 @@ void EffectLeveller::CalcLevellerFactors()
    for (int f = 1; f < LEVELER_FACTORS; ++f) {
       prev          = f - 1;
       adjFactor     = gAdjFactor[f];
-      lowerAdjLimit = gAdjLimit[prev];
       prevLimit     = gLimit[prev];
       limit         = gLimit[f];
       prevAdjLimit  = gAdjLimit[prev];
@@ -194,7 +192,7 @@ BEGIN_EVENT_TABLE(LevellerDialog, EffectDialog)
 END_EVENT_TABLE()
 
 LevellerDialog::LevellerDialog(EffectLeveller *effect, wxWindow *parent)
-:  EffectDialog(parent, _("Leveller"), PROCESS_EFFECT),
+:  EffectDialog(parent, _("Leveler"), PROCESS_EFFECT), // Lynn called it "Leveller", but preferred spelling is "Leveler".
    mEffect(effect)
 {
    mLevellerNumPassesChoiceIndex = 0;// 
@@ -235,7 +233,7 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
 }
 
-void LevellerDialog::OnPreview(wxCommandEvent &event)
+void LevellerDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 
