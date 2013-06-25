@@ -1,7 +1,7 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2013 Audacity Team.
    License: GPL v2.  See License.txt.
 
   ChangePitch.cpp
@@ -170,8 +170,11 @@ bool EffectChangePitch::Process()
 // ChangePitchDialog
 //----------------------------------------------------------------------------
 
-#define PERCENTCHANGE_MIN -99
-#define PERCENTCHANGE_MAX 100 // warped above zero to actually go up to 400%
+// Soundtouch is not reasonable below -99% or above 3000%.
+// We warp the slider to go up to 400%, but user can enter up to 3000%
+#define PERCENTCHANGE_MIN -99.0 
+#define PERCENTCHANGE_MAX_SLIDER 100.0 // warped above zero to actually go up to 400%
+#define PERCENTCHANGE_MAX_TEXT 3000.0
 #define PERCENTCHANGE_SLIDER_WARP 1.30105 // warp power takes max from 100 to 400.
 
 enum {
@@ -352,7 +355,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStyle(wxSL_HORIZONTAL);
          m_pSlider_PercentChange = S.Id(ID_SLIDER_PERCENTCHANGE)
-            .AddSlider(wxT(""), 0, (int)PERCENTCHANGE_MAX, (int)PERCENTCHANGE_MIN);
+            .AddSlider(wxT(""), 0, (int)PERCENTCHANGE_MAX_SLIDER, (int)PERCENTCHANGE_MIN);
          m_pSlider_PercentChange->SetName(_("Percent Change"));
       }
       S.EndHorizontalLay();
@@ -573,7 +576,7 @@ void ChangePitchDialog::OnSpin_ToOctave(wxCommandEvent & WXUNUSED(event))
    {
       int nNewValue = m_pSpin_ToOctave->GetValue();
       // Validation: Rather than set a range for octave numbers, enforce a range that 
-      // keeps m_dPercentChange below 90%, per Soundtouch constraints. 
+      // keeps m_dPercentChange above -99%, per Soundtouch constraints. 
       if ((nNewValue + 3) < m_nFromOctave)
       {
          ::wxBell();
@@ -718,15 +721,14 @@ void ChangePitchDialog::OnText_ToFrequency(wxCommandEvent & WXUNUSED(event))
       }
       m_bLoopDetect = false;
    
-      // Success. Make sure OK and Preview are enabled, in case we disabled above during editing. 
-      this->FindWindow(wxID_OK)->Enable();
-      this->FindWindow(ID_EFFECT_PREVIEW)->Enable();
+      // Success. Make sure OK and Preview are disabled if percent change is out of bounds. 
+      // Can happen while editing. 
+      // If the value is good, might also need to re-enable because of above clause. 
+      bool bIsGoodValue = (m_dPercentChange > PERCENTCHANGE_MIN) && (m_dPercentChange <= PERCENTCHANGE_MAX_TEXT);
+      this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
+      this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
+   }
 }
-}
-
-// Soundtouch is not reasonable below -99% or above 3000%.
-#define PERCENT_CHANGE_MIN -99.0
-#define PERCENT_CHANGE_MAX 3000.0
 
 void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
@@ -739,7 +741,7 @@ void ChangePitchDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
       str.ToDouble(&newValue);
       // User might still be editing, so out of bounds is not an error, 
       // but we do not want to update the values/controls. 
-      if (str.IsEmpty() || (newValue < PERCENT_CHANGE_MIN) || (newValue > PERCENT_CHANGE_MAX))
+      if (str.IsEmpty() || (newValue < PERCENTCHANGE_MIN) || (newValue > PERCENTCHANGE_MAX_TEXT))
       {
          this->FindWindow(wxID_OK)->Disable();
          this->FindWindow(ID_EFFECT_PREVIEW)->Disable();
@@ -802,9 +804,9 @@ void ChangePitchDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 
    // Save & restore parameters around Preview, because we didn't do OK.
    double oldSemitonesChange = m_dSemitonesChange;
-   if( m_dPercentChange < -99.0)
+   if( m_dPercentChange < PERCENTCHANGE_MIN)
    {
-      m_dPercentChange = -99.0;
+      m_dPercentChange = PERCENTCHANGE_MIN;
       this->Update_Text_PercentChange();
    }
    mEffect->m_dSemitonesChange = m_dSemitonesChange;
@@ -882,7 +884,7 @@ void ChangePitchDialog::Update_Text_PercentChange()
          str = wxT("");
       m_pTextCtrl_PercentChange->SetValue(str);
 
-      bool bIsGoodValue = (m_dPercentChange >= PERCENT_CHANGE_MIN) && (m_dPercentChange <= PERCENT_CHANGE_MAX);
+      bool bIsGoodValue = (m_dPercentChange >= PERCENTCHANGE_MIN) && (m_dPercentChange <= PERCENTCHANGE_MAX_TEXT);
       this->FindWindow(wxID_OK)->Enable(bIsGoodValue);
       this->FindWindow(ID_EFFECT_PREVIEW)->Enable(bIsGoodValue);
    }
@@ -893,15 +895,15 @@ void ChangePitchDialog::Update_Slider_PercentChange()
    if (m_pSlider_PercentChange) {
       double unwarped = m_dPercentChange;
       if (unwarped > 0.0)
-         // Un-warp values above zero to actually go up to PERCENTCHANGE_MAX.
+         // Un-warp values above zero to actually go up to PERCENTCHANGE_MAX_SLIDER.
          unwarped = pow(m_dPercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
 
       // Add 0.5 to unwarped so trunc -> round.
       int newSetting = (int)(unwarped + 0.5);
       if (newSetting < PERCENTCHANGE_MIN)
-         newSetting = PERCENTCHANGE_MIN;
-      if (newSetting > PERCENTCHANGE_MAX)
-         newSetting = PERCENTCHANGE_MAX;
+         newSetting = (int)PERCENTCHANGE_MIN;
+      if (newSetting > PERCENTCHANGE_MAX_SLIDER)
+         newSetting = (int)PERCENTCHANGE_MAX_SLIDER;
       m_pSlider_PercentChange->SetValue(newSetting); 
    }
 }
