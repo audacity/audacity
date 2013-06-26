@@ -90,12 +90,16 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Lynn Allan (Leveller, StereoToMono, TruncSilence)"), roleContributor);
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
+   AddCredit(wxT("Jeremy R. Brown"), roleContributor);
+   AddCredit(wxT("Alex S. Brown"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
-   AddCredit(wxT("Craig DeForest (Click Removal"), roleContributor);
+   AddCredit(wxT("Craig DeForest (Click Removal)"), roleContributor);
    AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
    AddCredit(wxT("Daniel Horgan"), roleContributor);
+   AddCredit(wxT("David Hostetler"), roleContributor);
    AddCredit(wxT("Steve Jolly"), roleContributor);
+   AddCredit(wxT("Steven Jones"), roleContributor);
    AddCredit(wxT("Arun Kishore"), roleContributor);
    AddCredit(wxT("Paul Livesey"), roleContributor);
    AddCredit(wxT("Harvey Lubin"), roleContributor);
@@ -105,7 +109,10 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Clayton Otey"), roleContributor);
    AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
    AddCredit(wxT("Mark Phillips"), roleContributor);
+   AddCredit(wxT("Jean Claude Risset"), roleContributor);
+   AddCredit(wxT("Edgar-RFT"), roleContributor);
    AddCredit(wxT("Augustus Saunders"), roleContributor);
+   AddCredit(wxT("Benjamin Schwartz"), roleContributor);
    AddCredit(wxT("David R. Sky"), roleContributor);
    AddCredit(wxT("Rob Sykes (libsoxr Resample, Reverb)"), roleContributor);
    AddCredit(wxT("Mike Underwood"), roleContributor);
@@ -117,7 +124,6 @@ void AboutDialog::CreateCreditsList()
    
    AddCredit(wxT("expat"), roleLibrary);
    AddCredit(wxT("FLAC"), roleLibrary);
-   AddCredit(wxT("iAVC"), roleLibrary);
    AddCredit(wxT("LAME"), roleLibrary);
    AddCredit(wxT("libmad"), roleLibrary);
    #if USE_LIBRESAMPLE
