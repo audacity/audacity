@@ -36,11 +36,14 @@ double MIDInoteToFreq(const double dMIDInote)
 
 unsigned int PitchIndex(const double dMIDInote)
 {
-   int nPitchIndex = ((int)(dMIDInote + 0.5) % 12);
-   // MIDI numbers can be negative.
-   // Because of the modulo, we know we're within 12 of positive. 
+   // MIDI numbers can be negative. Round in the right direction.
+   double dRound = (dMIDInote < 0.0) ? -0.5 : 0.5;
+   int nPitchIndex = ((int)(dMIDInote + dRound) % 12);
+
+   // Because of the modulo, we know we're within 12 of positive, if dMIDInote is negative. 
    if (nPitchIndex < 0)
       nPitchIndex += 12;
+
    return nPitchIndex;
 }
 
