@@ -4,7 +4,9 @@
 ;categories "http://audacityteam.org/namespace#OnsetDetector"
 ;name "Beat Finder..."
 ;action "Finding beats..."
-;info "Released under terms of the GNU General Public License version 2"
+
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 
 
 ;control thresval "Threshold Percentage" int "" 65 5 100
 (setf s1 (if (arrayp s) (snd-add (aref s 0) (aref s 1)) s))
@@ -17,6 +19,3 @@
  (setq p (< v thres))
  (setq c (+ c 0.001))
  (setq v (snd-fetch s2)))
-
-; arch-tag: 2204686b-2dcc-4891-964a-2749ac30661b
-

@@ -4,7 +4,6 @@
 ;categories "http://lv2plug.in/ns/lv2core/#FilterPlugin"
 ;name "Notch Filter..."
 ;action "Performing Notch Filter..."
-;info "By Steve Daulton and Bill Wharrie. Released under GPL v2."
 
 ;control freq "Frequency" real "Hz" 60 0 10000
 ;control q "Q (higher value reduces width)" real "" 1 0.1 20

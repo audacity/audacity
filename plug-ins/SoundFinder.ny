@@ -4,7 +4,14 @@
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
 ;name "Sound Finder..."
 ;action "Finding sound..."
-;info "Written by Jeremy R. Brown (http://www.jeremy-brown.com/) \nbased on the Silence Finder script by\nAlex S. Brown, PMP (http://www.alexsbrown.com) \n\Released under terms of the GNU General Public License version 2\nAdds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration."
+;info "Adds region labels for areas of sound according to the specified level\nand duration of surrounding silence. If too many labels are produced,\nincrease the silence level and duration; if too few are produced,\nreduce the level and duration."
+
+
+;; by Jeremy R. Brown (http://www.jeremy-brown.com/)
+;; based on the Silence Finder script by Alex S. Brown (http://www.alexsbrown.com)
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
 ;control sil-lev "Treat audio below this level as silence [ -dB]" real "" 26 0 100
 ;control sil-dur "Minimum duration of silence between sounds [seconds]" real "" 1.0 0.1 5.0
 ;control labelbeforedur "Label starting point [seconds before sound starts]" real "" 0.1 0.0 1.0

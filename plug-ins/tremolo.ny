@@ -4,9 +4,9 @@
 ;categories "http://lv2plug.in/ns/lv2core#ModulatorPlugin"
 ;name "Tremolo..."
 ;action "Applying Tremolo..."
-;info "by Steve Daulton. Released under GPL v2.\nBased on Tremolo by Dominic Mazzoni and David R. Sky.\n"
 
 ;; tremolo.ny by Steve Daulton (www.easyspacepro.com) July 2012.
+;; Based on Tremolo by Dominic Mazzoni and David R. Sky."
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;

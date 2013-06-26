@@ -4,7 +4,6 @@
 ;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
 ;name "Vocoder..."
 ;action "Processing Vocoder..."
-;info "by Edgar-RFT and David R. Sky\nReleased under GPL v2.\n"
 
 ;; vocoder.ny by Edgar-RFT
 ;; a bit of code added by David R. Sky

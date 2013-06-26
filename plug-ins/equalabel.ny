@@ -3,10 +3,11 @@
 ;type analyze
 ;name "Regular Interval Labels..."
 ;action "Adding equally-spaced labels to the label track..."
-;info "By David R. Sky (http://www.garyallendj.com/davidsky/), after Alex S.Brown.\nModified by Steve Daulton (http://easyspacepro.com).\nReleased under GPL v2." 
 
-;; Regular interval labels by David R. Sky, June-October 2007.
+;; by David R. Sky (http://www.garyallendj.com/davidsky/), June-October 2007.
 ;; Code for label placement based on silencemarker.ny by Alex S.Brown.
+;; Updated by Steve Daulton (http://easyspacepro.com)
+
 ;; Released under terms of the GNU General Public License version 2
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 ;; Thanks Sami Jumppanen for plug-in suggestion.

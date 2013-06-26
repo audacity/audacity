@@ -4,8 +4,9 @@
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;name "Click Track..."
 ;action "Generating Click Track..."
-;info "by Dominic Mazzoni, modified by David R. Sky and Steve Daulton.\nReleased under terms of the GNU General Public License version 2.\nFor help, select one of two help screens in 'Action choice' below."
+;info "For help, select one of two help screens in 'Action choice' below."
 
+;; by Dominic Mazzoni, modified by David R. Sky and Steve Daulton.
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 ;; original clicktrack.ny by Dominic Mazzoni,

@@ -4,7 +4,6 @@
 ;categories "http://lv2plug.in/ns/lv2core#DelayPlugin"
 ;name "Delay..."
 ;action "Applying Delay Effect..."
-;info "by Steve Daulton. Based on an effect by David R. Sky.\nReleased under GPL v2.\n"
 
 ;; by Steve Daulton, July 2012.
 ;; based on 'Delay' by David R. Sky

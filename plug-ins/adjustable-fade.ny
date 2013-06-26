@@ -4,7 +4,6 @@
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
 ;name "Adjustable Fade..."
 ;action "Applying Fade..."
-;info "by Steve Daulton (www.easyspacepro.com).\nReleased under GPL v2.\n"
 
 ;; adjustable-fade.ny by Steve Daulton Dec 2012
 ;; Released under terms of the GNU General Public License version 2:

@@ -4,7 +4,12 @@
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
 ;name "Silence Finder..."
 ;action "Finding silence..."
-;info "Written by Alex S. Brown, PMP (http://www.alexsbrown.com) \nReleased under terms of the GNU General Public License version 2\nAdds point labels in areas of silence according to the specified\nlevel and duration of silence. If too many silences are detected,\nincrease the silence level and duration; if too few are detected,\nreduce the level and duration."
+;info Adds point labels in areas of silence according to the specified\nlevel and duration of silence. If too many silences are detected,\nincrease the silence level and duration; if too few are detected,\nreduce the level and duration."
+
+;; by Alex S. Brown, PMP (http://www.alexsbrown.com)
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
 ;control sil-lev "Treat audio below this level as silence [ -dB]" real "" 26 0 100
 ;control sil-dur "Minimum duration of silence [seconds]" real "" 1.0 0.1 5.0
 ;control labelbeforedur "Label placement [seconds before silence ends]" real "" 0.3 0.0 1.0

@@ -4,7 +4,6 @@
 ;categories "http://lv2plug.in/ns/lv2core#HighpassPlugin"
 ;name "High Pass Filter..."
 ;action "Performing High Pass Filter..."
-;info "by Dominic Mazzoni, modified by David R. Sky\nReleased under GPL v2.\n"
 
 ;; highpass.ny by Dominic Mazzoni
 ;; Modified by David R. Sky

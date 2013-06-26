@@ -5,7 +5,10 @@
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;name "Pluck..."
 ;action "Generating pluck sound..."
-;info "modified by David R. Sky\nReleased under terms of the GNU General Public License version 2 \nMIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+;info "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
+
+;; Released under terms of the GNU General Public License version 2:
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 ;control p "Pluck MIDI pitch" int "" 60 1 127
 ;control fade "Fade-out type" choice "abrupt,gradual" 0
@@ -29,6 +32,3 @@
 (let* ((pluck-sound (snd-pluck *sound-srate* (step-to-hz p) 0 dur final-amp))
        (max-peak (peak pluck-sound ny:all)))
   (scale (/ 0.8 max-peak) pluck-sound))  
-  
-  
-;arch-tag: bebc6cb8-3bb0-42d5-a467-df6bd1a7f1e4
