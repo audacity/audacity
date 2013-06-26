@@ -920,12 +920,11 @@ BEGIN_EVENT_TABLE(InvisiblePanel, wxPanel)
      EVT_ERASE_BACKGROUND( InvisiblePanel::OnErase)
 END_EVENT_TABLE()
 
-void InvisiblePanel::OnPaint( wxPaintEvent &event )
+void InvisiblePanel::OnPaint( wxPaintEvent & WXUNUSED(event))
 {
-   // Don't repaint my background...
+   // Don't repaint my background.
    wxPaintDC dc(this);
-// event.Skip();
-   ;// swallow the paint event.
+   // event.Skip(); // swallow the paint event.
 }
 
 wxPanel * ShuttleGuiBase::StartInvisiblePanel()
@@ -2041,7 +2040,7 @@ ShuttleGui & ShuttleGui::Id(int id )
    return *this;
 }
 
-GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & Name)
+GuiWaveTrack * ShuttleGui::AddGuiWaveTrack( const wxString & WXUNUSED(Name))
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL
    UseUpId();
@@ -2179,6 +2178,7 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
    if( (buttons & ePreviewButton) && (buttons & ePreviewDryButton) )
    {
       bs->Add(new wxButton( parent, ePreviewID, _("Pre&view") ) );
+      bs->Add(8, 0);
       bs->Add(new wxButton( parent, ePreviewDryID, _("Dry Previe&w") ) );
       bs->Add( 20, 0 );
    }
