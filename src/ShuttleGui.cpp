@@ -2178,11 +2178,10 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
    if (buttons & ePreviewButton)
    {
       bs->Add( new wxButton( parent, ePreviewID, _("Pre&view") ), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
-      bs->Add( 5, 0 );
    }
    if (buttons & ePreviewDryButton)
    {
-      bs->Add(new wxButton( parent, ePreviewDryID, _("Dry Previe&w") ) );
+      bs->Add(new wxButton( parent, ePreviewDryID, _("Dry Previe&w") ), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
       bs->Add( 20, 0 );
    }
 

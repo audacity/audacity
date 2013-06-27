@@ -310,8 +310,7 @@ ReverbDialogue::ReverbDialogue(EffectReverb * effect, wxWindow * parent):
 
 void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
 {
-   s.StartHorizontalLay(wxCENTER, false);   // Add a little space
-   s.EndHorizontalLay();
+   s.AddSpace(0, 5);
 
    s.StartMultiColumn(3, wxEXPAND); 
    {
