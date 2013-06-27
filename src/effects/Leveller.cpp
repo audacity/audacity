@@ -216,21 +216,16 @@ void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(5);
    S.AddSpace(5);
 
-   S.StartHorizontalLay();
+   S.StartMultiColumn(2);
    {
       S.TieChoice(_("Degree of Leveling:"),
                   mLevellerNumPassesChoiceIndex,
                   &numPasses);
-   }
-   S.EndHorizontalLay();
-                                              
-   S.StartHorizontalLay();
-   {
       S.TieChoice(_("Noise Threshold:"),
                   mLevellerDbChoiceIndex,
                   &db);
    }
-   S.EndHorizontalLay();
+   S.EndMultiColumn();
 }
 
 void LevellerDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
