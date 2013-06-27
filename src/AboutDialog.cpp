@@ -87,13 +87,13 @@ void AboutDialog::CreateCreditsList()
 
    // All other contributors
    
-   AddCredit(wxT("Lynn Allan (Leveller, StereoToMono, TruncSilence)"), roleContributor);
+   AddCredit(wxT("Lynn Allan"), roleContributor);
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), roleContributor);
    AddCredit(wxT("Alex S. Brown"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
-   AddCredit(wxT("Craig DeForest (Click Removal)"), roleContributor);
+   AddCredit(wxT("Craig DeForest"), roleContributor);
    AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
    AddCredit(wxT("Daniel Horgan"), roleContributor);
@@ -105,7 +105,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Harvey Lubin"), roleContributor);
    AddCredit(wxT("Greg Mekkes"), roleContributor);
    AddCredit(wxT("Abe Milde"), roleContributor);
-   AddCredit(wxT("<a href=\"http://www.paulnasca.com/\">Paul Nasca</a> (Paulstretch, Phaser, Wahwah)"), roleContributor);
+   AddCredit(wxT("<a href=\"http://www.paulnasca.com/\">Paul Nasca</a>"), roleContributor);
    AddCredit(wxT("Clayton Otey"), roleContributor);
    AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
    AddCredit(wxT("Mark Phillips"), roleContributor);
@@ -114,7 +114,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Augustus Saunders"), roleContributor);
    AddCredit(wxT("Benjamin Schwartz"), roleContributor);
    AddCredit(wxT("David R. Sky"), roleContributor);
-   AddCredit(wxT("Rob Sykes (libsoxr Resample, Reverb)"), roleContributor);
+   AddCredit(wxT("Rob Sykes"), roleContributor);
    AddCredit(wxT("Mike Underwood"), roleContributor);
    AddCredit(wxT("Philip Van Baren"), roleContributor);
    AddCredit(wxT("Salvo Ventura"), roleContributor);
