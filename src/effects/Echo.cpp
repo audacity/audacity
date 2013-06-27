@@ -192,11 +192,7 @@ EchoDialog::EchoDialog(EffectEcho * effect, wxWindow * parent)
 
 void EchoDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      // Add a little space
-   }
-   S.EndHorizontalLay();
+   S.AddSpace(0, 5); 
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
