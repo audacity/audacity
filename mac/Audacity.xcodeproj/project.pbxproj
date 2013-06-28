@@ -1891,6 +1891,8 @@
 		EDAD326C1544452E009C6220 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
 		EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
 		EDAD326E1544452E009C6220 /* sv.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325715444372009C6220 /* sv.po */; };
+		EDBFAD16177E541E004CC1C1 /* NyqBench.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDBFAD14177E541E004CC1C1 /* NyqBench.cpp */; };
+		EDBFAD17177E541E004CC1C1 /* NyqBench.h in Headers */ = {isa = PBXBuildFile; fileRef = EDBFAD15177E541E004CC1C1 /* NyqBench.h */; };
 		EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD2431216934A6100D9DEC2 /* BassTreble.cpp */; };
 		EDD2431516934A6100D9DEC2 /* BassTreble.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD2431216934A6100D9DEC2 /* BassTreble.cpp */; };
 		EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
@@ -3987,6 +3989,9 @@
 		EDAD325515444371009C6220 /* sl.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sl.po; path = ../locale/sl.po; sourceTree = SOURCE_ROOT; };
 		EDAD325615444371009C6220 /* sr_RS.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sr_RS.po; path = ../locale/sr_RS.po; sourceTree = SOURCE_ROOT; };
 		EDAD325715444372009C6220 /* sv.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
+		EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "mod-nyq-bench.so"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDBFAD14177E541E004CC1C1 /* NyqBench.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NyqBench.cpp; path = "mod-nyq-bench/NyqBench.cpp"; sourceTree = "<group>"; };
+		EDBFAD15177E541E004CC1C1 /* NyqBench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NyqBench.h; path = "mod-nyq-bench/NyqBench.h"; sourceTree = "<group>"; };
 		EDD2431216934A6100D9DEC2 /* BassTreble.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BassTreble.cpp; sourceTree = "<group>"; };
 		EDD2431316934A6100D9DEC2 /* BassTreble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BassTreble.h; sourceTree = "<group>"; };
 		EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportExportCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4095,6 +4100,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EDBFAD0D177E5399004CC1C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -4116,6 +4128,7 @@
 				ED151F3F163BFD0400451B5F /* libsoxr */,
 				28501EAC0CEED0740029ABAA /* libvamp */,
 				1707357C0988D6AD008541CC /* libvorbis */,
+				EDBFAD18177E5424004CC1C1 /* mod-nyq-bench */,
 				2844B48E0DEA66900087C656 /* mod-script-pipe */,
 				28E821F50A39FC1300DCE280 /* portaudio-v19 */,
 				2800FDF00FF321DA005CA9E5 /* portmidi */,
@@ -4816,6 +4829,7 @@
 				ED663B3C16543581007F53A5 /* libsamplerate.a */,
 				ED663CDE16543647007F53A5 /* Audacity.app */,
 				ED85B5B816A47353006DA21D /* Audacity.app */,
+				EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6481,6 +6495,15 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		EDBFAD18177E5424004CC1C1 /* mod-nyq-bench */ = {
+			isa = PBXGroup;
+			children = (
+				EDBFAD14177E541E004CC1C1 /* NyqBench.cpp */,
+				EDBFAD15177E541E004CC1C1 /* NyqBench.h */,
+			);
+			name = "mod-nyq-bench";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -7043,6 +7066,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EDBFAD08177E5399004CC1C1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDBFAD17177E541E004CC1C1 /* NyqBench.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXLegacyTarget section */
@@ -7572,6 +7603,23 @@
 			productReference = ED85B5B816A47353006DA21D /* Audacity.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EDBFAD07177E5399004CC1C1 /* mod-nyq-bench */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDBFAD0E177E5399004CC1C1 /* Build configuration list for PBXNativeTarget "mod-nyq-bench" */;
+			buildPhases = (
+				EDBFAD08177E5399004CC1C1 /* Headers */,
+				EDBFAD0A177E5399004CC1C1 /* Sources */,
+				EDBFAD0D177E5399004CC1C1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mod-nyq-bench";
+			productName = "mod-script-pipe";
+			productReference = EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -7611,6 +7659,7 @@
 				1707401D0988EEAA008541CC /* libsndfile */,
 				ED15212F163C227C00451B5F /* libsoxr */,
 				28501EAF0CEED1F00029ABAA /* libvamp */,
+				EDBFAD07177E5399004CC1C1 /* mod-nyq-bench */,
 				2880527D0DEA694100671EA4 /* mod-script-pipe */,
 				28E67F510A3A160D0021D89F /* portaudio-v19 */,
 				2800FE060FF322D4005CA9E5 /* portmidi */,
@@ -9515,6 +9564,14 @@
 				ED85B59016A47353006DA21D /* ModulePrefs.cpp in Sources */,
 				ED85B59116A47353006DA21D /* BassTreble.cpp in Sources */,
 				ED19449C1733F92800F4F5CA /* Reverb.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EDBFAD0A177E5399004CC1C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDBFAD16177E541E004CC1C1 /* NyqBench.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11987,6 +12044,150 @@
 			};
 			name = "Release Shared";
 		};
+		EDBFAD0F177E5399004CC1C1 /* Debug Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /Audacity/modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				ZERO_LINK = YES;
+			};
+			name = "Debug Static";
+		};
+		EDBFAD10177E5399004CC1C1 /* Debug Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /Audacity/modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				ZERO_LINK = YES;
+			};
+			name = "Debug Shared";
+		};
+		EDBFAD11177E5399004CC1C1 /* Release Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /Audacity/modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				ZERO_LINK = YES;
+			};
+			name = "Release Static";
+		};
+		EDBFAD12177E5399004CC1C1 /* Release Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = so;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = CC_HASVISIBILITY;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /Audacity/modules;
+				KEEP_PRIVATE_EXTERNS = NO;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CFLAGS)",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-I",
+					../src,
+					"$(WX_CXXFLAGS)",
+				);
+				OTHER_LDFLAGS = (
+					"-flat_namespace",
+					"-undefined",
+					suppress,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "mod-nyq-bench";
+				SKIP_INSTALL = NO;
+				ZERO_LINK = YES;
+			};
+			name = "Release Shared";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -12327,6 +12528,17 @@
 				ED85B5B516A47353006DA21D /* Debug Shared */,
 				ED85B5B616A47353006DA21D /* Release Static */,
 				ED85B5B716A47353006DA21D /* Release Shared */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug Static";
+		};
+		EDBFAD0E177E5399004CC1C1 /* Build configuration list for PBXNativeTarget "mod-nyq-bench" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EDBFAD0F177E5399004CC1C1 /* Debug Static */,
+				EDBFAD10177E5399004CC1C1 /* Debug Shared */,
+				EDBFAD11177E5399004CC1C1 /* Release Static */,
+				EDBFAD12177E5399004CC1C1 /* Release Shared */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";
