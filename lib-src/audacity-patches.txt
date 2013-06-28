@@ -20,10 +20,6 @@ The customised file saving dialogs for wxwidgets to provide the options
 button for format preferences. This is written and maintained by us so doesn't
 have an upstream at the moment.
 
-iAVC
-----
-disused?
-
 id3lib
 ------
 disused?

@@ -155,10 +155,6 @@ GPL-compatible license.  Specifically:
     Provides decoding/encoding of additional formats. Optional separate
     download.
 
-  iAVC: LGPL
-    Part of the code to the AVC Compressor effect.
-    Included with Audacity.
-
   libid3tag: GPL
     Reads/writes ID3 tags in MP3 files.  Optional
     separate download as part of libmad.

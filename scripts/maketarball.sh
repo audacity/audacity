@@ -120,7 +120,7 @@ function cleanfulltree {
 	printf "Done\n"
 
 	printf "removing unused libraries from SVN tree ..."
-	myrmrvf $1 lib-src/iAVC lib-src/id3lib ;
+	myrmrvf $1 lib-src/id3lib ;
 	myrmrvf $1 lib-src/portburn lib-src/rtaudio; 
 	myrmrvf $1 lib-src/taglib;
 	printf "Done\n"
