@@ -65,8 +65,8 @@ class EffectChangeTempo : public EffectSoundTouch {
  private:
    double         m_PercentChange;  // percent change to apply to tempo
                                     // -100% is meaningless, but sky's the upper limit
-   unsigned int   m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
-   unsigned int   m_ToBPM;          // Zero value means not yet set.
+   double         m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
+   double         m_ToBPM;          // Zero value means not yet set.
    double         m_FromLength;     // starting length of selection
    double         m_ToLength;       // target length of selection
 
@@ -119,8 +119,8 @@ class ChangeTempoDialog:public EffectDialog {
    double         m_PercentChange;  // percent change to apply to tempo
                                     // -100% is meaningless, but sky's the upper limit.
                                     // Slider is (-100, 200], but textCtrls can set higher.
-   unsigned int   m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
-   unsigned int   m_ToBPM;          // Zero value means not yet set.
+   double         m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
+   double         m_ToBPM;          // Zero value means not yet set.
    double         m_FromLength;     // starting length of selection
    double         m_ToLength;       // target length of selection
 

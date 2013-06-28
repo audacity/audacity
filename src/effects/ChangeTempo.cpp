@@ -45,8 +45,8 @@
 EffectChangeTempo::EffectChangeTempo()
 {
    m_PercentChange = 0.0;
-   m_FromBPM = 0; // indicates not yet set
-   m_ToBPM = 0; // indicates not yet set
+   m_FromBPM = 0.0; // indicates not yet set
+   m_ToBPM = 0.0; // indicates not yet set
    m_FromLength = 0.0;
    m_ToLength = 0.0;
 }
@@ -164,8 +164,8 @@ ChangeTempoDialog::ChangeTempoDialog(EffectChangeTempo *effect, wxWindow *parent
 
    // effect parameters
    m_PercentChange = 0.0;
-   m_FromBPM = 0; // indicates not yet set
-   m_ToBPM = 0; // indicates not yet set
+   m_FromBPM = 0.0; // indicates not yet set
+   m_ToBPM = 0.0; // indicates not yet set
    m_FromLength = 0.0;
    m_ToLength = 0.0;
 
@@ -245,15 +245,15 @@ bool ChangeTempoDialog::TransferDataToWindow()
    // from/to BPM controls
    wxString str;
    if (m_pTextCtrl_FromBPM) {
-      if (m_FromBPM != 0)
-         str.Printf(wxT("%d"), m_FromBPM);
+      if (m_FromBPM != 0.0)
+         str.Printf(wxT("%.3f"), m_FromBPM);
       else
          str = wxT("");
       m_pTextCtrl_FromBPM->SetValue(str);
    }
    if (m_pTextCtrl_ToBPM) {
-      if (m_ToBPM != 0)
-         str.Printf(wxT("%d"), m_ToBPM);
+      if (m_ToBPM != 0.0)
+         str.Printf(wxT("%.3f"), m_ToBPM);
       else
          str = wxT("");
       m_pTextCtrl_ToBPM->SetValue(str);
@@ -291,24 +291,24 @@ bool ChangeTempoDialog::TransferDataFromWindow()
    // always tracks it & is more precise (decimal points).
 
    // from/to BPM controls
-   long newLong;
+   double newValue;
    if (m_pTextCtrl_FromBPM) {
       str = m_pTextCtrl_FromBPM->GetValue();
-      str.ToLong(&newLong);
-      m_FromBPM = (unsigned int)(newLong);
+      str.ToDouble(&newValue);
+      m_FromBPM = newValue;
    }
    if (m_pTextCtrl_ToBPM) {
       str = m_pTextCtrl_ToBPM->GetValue();
-      str.ToLong(&newLong);
-      m_ToBPM = (unsigned int)(newLong);
+      str.ToDouble(&newValue);
+      m_ToBPM = newValue;
    }
 
    // from/to Length controls
    // Don't do m_pTextCtrl_ToLength. It's disabled.
    if (m_pTextCtrl_ToLength) {
       str = m_pTextCtrl_ToLength->GetValue();
-      str.ToLong(&newLong);
-      m_ToLength = (int)(newLong);
+      str.ToDouble(&newValue);
+      m_ToLength = newValue;
    }
 
    return true;
@@ -316,7 +316,7 @@ bool ChangeTempoDialog::TransferDataFromWindow()
 
 // handler implementations for ChangeTempoDialog
 
-void ChangeTempoDialog::OnText_PercentChange(wxCommandEvent & event)
+void ChangeTempoDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -337,7 +337,7 @@ void ChangeTempoDialog::OnText_PercentChange(wxCommandEvent & event)
    }
 }
 
-void ChangeTempoDialog::OnSlider_PercentChange(wxCommandEvent & event)
+void ChangeTempoDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -356,16 +356,16 @@ void ChangeTempoDialog::OnSlider_PercentChange(wxCommandEvent & event)
    }
 }
 
-void ChangeTempoDialog::OnText_FromBPM(wxCommandEvent & event)
+void ChangeTempoDialog::OnText_FromBPM(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
 
    if (m_pTextCtrl_FromBPM) {
       wxString str = m_pTextCtrl_FromBPM->GetValue();
-      long newValue;
-      str.ToLong(&newValue);
-      m_FromBPM = (unsigned int)(newValue);
+      double newValue;
+      str.ToDouble(&newValue);
+      m_FromBPM = newValue;
 
       m_bLoopDetect = true;
 
@@ -375,22 +375,22 @@ void ChangeTempoDialog::OnText_FromBPM(wxCommandEvent & event)
    }
 }
 
-void ChangeTempoDialog::OnText_ToBPM(wxCommandEvent & event)
+void ChangeTempoDialog::OnText_ToBPM(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
 
    if (m_pTextCtrl_ToBPM) {
       wxString str = m_pTextCtrl_ToBPM->GetValue();
-      long newValue;
-      str.ToLong(&newValue);
-      m_ToBPM = (unsigned int)(newValue);
+      double newValue;
+      str.ToDouble(&newValue);
+      m_ToBPM = newValue;
 
       m_bLoopDetect = true;
 
       // If FromBPM has already been set, then there's a new percent change.
-      if (m_FromBPM != 0) {
-         m_PercentChange = (((double)(m_ToBPM) * 100.0) / (double)(m_FromBPM)) - 100.0;
+      if (m_FromBPM != 0.0) {
+         m_PercentChange = ((m_ToBPM * 100.0) / m_FromBPM) - 100.0;
 
          this->Update_Text_PercentChange();
          this->Update_Slider_PercentChange();
@@ -402,7 +402,7 @@ void ChangeTempoDialog::OnText_ToBPM(wxCommandEvent & event)
    }
 }
 
-void ChangeTempoDialog::OnText_ToLength(wxCommandEvent & event)
+void ChangeTempoDialog::OnText_ToLength(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -426,7 +426,7 @@ void ChangeTempoDialog::OnText_ToLength(wxCommandEvent & event)
    }
 }
 
-void ChangeTempoDialog::OnPreview(wxCommandEvent &event)
+void ChangeTempoDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 
@@ -471,15 +471,13 @@ void ChangeTempoDialog::Update_Text_ToBPM()
 // Use m_FromBPM & m_PercentChange to set new m_ToBPM & control.
 {
    // Update ToBPM iff FromBPM has been set.
-   if (m_FromBPM == 0)
+   if (m_FromBPM == 0.0)
       return;
 
-   m_ToBPM = (unsigned int)((((double)(m_FromBPM) *
-                              (100.0 + m_PercentChange)) / 100.0) +
-                            0.5); // Add 0.5 so trunc -> round.
+   m_ToBPM = (((m_FromBPM * (100.0 + m_PercentChange)) / 100.0));
    if (m_pTextCtrl_ToBPM) {
       wxString str;
-      str.Printf(wxT("%d"), m_ToBPM);
+      str.Printf(wxT("%.3f"), m_ToBPM);
       m_pTextCtrl_ToBPM->SetValue(str);
    }
 }
