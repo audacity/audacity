@@ -339,7 +339,6 @@
 		1790B12E09883BFD008A330A /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		1790B12F09883BFD008A330A /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
 		1790B13009883BFD008A330A /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
-		1790B13309883BFD008A330A /* ChangeLength.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00A09883BFD008A330A /* ChangeLength.cpp */; };
 		1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
 		1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
@@ -1253,7 +1252,6 @@
 		ED663B9B16543647007F53A5 /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		ED663B9C16543647007F53A5 /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
 		ED663B9D16543647007F53A5 /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
-		ED663B9F16543647007F53A5 /* ChangeLength.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00A09883BFD008A330A /* ChangeLength.cpp */; };
 		ED663BA016543647007F53A5 /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		ED663BA116543647007F53A5 /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
 		ED663BA216543647007F53A5 /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
@@ -1584,7 +1582,6 @@
 		ED85B47416A47353006DA21D /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		ED85B47516A47353006DA21D /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
 		ED85B47616A47353006DA21D /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
-		ED85B47716A47353006DA21D /* ChangeLength.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00A09883BFD008A330A /* ChangeLength.cpp */; };
 		ED85B47816A47353006DA21D /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		ED85B47916A47353006DA21D /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
 		ED85B47A16A47353006DA21D /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
@@ -2810,8 +2807,6 @@
 		1790B00209883BFD008A330A /* AudioUnitEffect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AudioUnitEffect.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00409883BFD008A330A /* LoadAudioUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadAudioUnits.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00509883BFD008A330A /* LoadAudioUnits.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LoadAudioUnits.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B00A09883BFD008A330A /* ChangeLength.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangeLength.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B00B09883BFD008A330A /* ChangeLength.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ChangeLength.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00C09883BFD008A330A /* ChangePitch.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangePitch.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00D09883BFD008A330A /* ChangePitch.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ChangePitch.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00E09883BFD008A330A /* ChangeSpeed.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangeSpeed.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5043,8 +5038,6 @@
 				28D65C710B97E54B000E001A /* AutoDuck.h */,
 				EDD2431216934A6100D9DEC2 /* BassTreble.cpp */,
 				EDD2431316934A6100D9DEC2 /* BassTreble.h */,
-				1790B00A09883BFD008A330A /* ChangeLength.cpp */,
-				1790B00B09883BFD008A330A /* ChangeLength.h */,
 				1790B00C09883BFD008A330A /* ChangePitch.cpp */,
 				1790B00D09883BFD008A330A /* ChangePitch.h */,
 				1790B00E09883BFD008A330A /* ChangeSpeed.cpp */,
@@ -8476,7 +8469,6 @@
 				1790B12E09883BFD008A330A /* Amplify.cpp in Sources */,
 				1790B12F09883BFD008A330A /* AudioUnitEffect.cpp in Sources */,
 				1790B13009883BFD008A330A /* LoadAudioUnits.cpp in Sources */,
-				1790B13309883BFD008A330A /* ChangeLength.cpp in Sources */,
 				1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */,
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
 				1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */,
@@ -8934,7 +8926,6 @@
 				ED663B9B16543647007F53A5 /* Amplify.cpp in Sources */,
 				ED663B9C16543647007F53A5 /* AudioUnitEffect.cpp in Sources */,
 				ED663B9D16543647007F53A5 /* LoadAudioUnits.cpp in Sources */,
-				ED663B9F16543647007F53A5 /* ChangeLength.cpp in Sources */,
 				ED663BA016543647007F53A5 /* ChangePitch.cpp in Sources */,
 				ED663BA116543647007F53A5 /* ChangeSpeed.cpp in Sources */,
 				ED663BA216543647007F53A5 /* ChangeTempo.cpp in Sources */,
@@ -9242,7 +9233,6 @@
 				ED85B47416A47353006DA21D /* Amplify.cpp in Sources */,
 				ED85B47516A47353006DA21D /* AudioUnitEffect.cpp in Sources */,
 				ED85B47616A47353006DA21D /* LoadAudioUnits.cpp in Sources */,
-				ED85B47716A47353006DA21D /* ChangeLength.cpp in Sources */,
 				ED85B47816A47353006DA21D /* ChangePitch.cpp in Sources */,
 				ED85B47916A47353006DA21D /* ChangeSpeed.cpp in Sources */,
 				ED85B47A16A47353006DA21D /* ChangeTempo.cpp in Sources */,
