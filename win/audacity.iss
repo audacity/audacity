@@ -129,7 +129,7 @@ Source: "resetPrefs.txt"; DestDir: "{app}"; Permissions: users-modify; Tasks: re
 
 [Icons]
 Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
-Name: "{userdesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
+Name: "{commondesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
 ; Get rid of previous 'reset prefs' file, in case somebody want to reinstall without the reset option after they installed with it
