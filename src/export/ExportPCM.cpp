@@ -591,7 +591,7 @@ int ExportPCM::Export(AudacityProject *project,
 
 char *ExportPCM::ConvertTo7bitASCII(const char *pSrc)
 {
-   BYTE c;
+   unsigned char c;
    int  sz = strlen(pSrc);
 
    char *pDest = (char *)malloc(sz+1);
@@ -637,7 +637,7 @@ char *ExportPCM::ConvertTo7bitASCII(const char *pSrc)
    };
 
    do {
-      c = (BYTE) *pSrc++;
+      c = (unsigned char) *pSrc++;
       *pD++ = aASCII7Table[c];
    } while (c);
 
