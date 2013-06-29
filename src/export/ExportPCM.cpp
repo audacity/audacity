@@ -800,7 +800,9 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
       id3_tag_delete(tp);
       return;
    }
-   memset(buffer, 0, len);	// Be clean for ending odd UTF16 content correctly.
+   // Zero all locations, for ending odd UTF16 content 
+   // correctly, i.e., two '\0's at the end.
+   memset(buffer, 0, len);	
 
    id3_tag_render(tp, buffer);
 
