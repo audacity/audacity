@@ -162,21 +162,23 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    mAlgChoice->SetSelection(mAlg);
 
-   wxString sizeChoiceStrings[8] = { wxT("128"),
-      wxT("256"),
-      wxT("512"),
-      wxT("1024"),
-      wxT("2048"),
-      wxT("4096"),
-      wxT("8192"),
-      wxT("16384")
-   };
+   wxArrayString sizeChoiceStrings;
+   sizeChoiceStrings.Add(wxT("128"));
+   sizeChoiceStrings.Add(wxT("256"));
+   sizeChoiceStrings.Add(wxT("512"));
+   sizeChoiceStrings.Add(wxT("1024"));
+   sizeChoiceStrings.Add(wxT("2048"));
+   sizeChoiceStrings.Add(wxT("4096"));
+   sizeChoiceStrings.Add(wxT("8192"));
+   sizeChoiceStrings.Add(wxT("16384"));
+   sizeChoiceStrings.Add(wxT("32768"));
+   sizeChoiceStrings.Add(wxT("65536"));
 
    wxStaticText *sizeLabel = new wxStaticText(this, wxID_ANY,
                                               wxString(_("Size")) + wxT(":"));
    mSizeChoice = new wxChoice(this, FreqSizeChoiceID,
                               wxDefaultPosition, wxDefaultSize,
-                              8, sizeChoiceStrings);
+                              sizeChoiceStrings);
    mSizeChoice->SetName(_("Size"));
 
    mSizeChoice->SetSelection(mSize);
