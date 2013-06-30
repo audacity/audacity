@@ -1236,7 +1236,7 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
 }
 
 LabelStruct::TimeRelations LabelStruct::RegionRelation(
-      double reg_t0, double reg_t1, LabelTrack *parent)
+      double reg_t0, double reg_t1, LabelTrack * WXUNUSED(parent))
 {
    bool retainLabels = false;
 
@@ -1861,7 +1861,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
 
 /// OnChar is called for incoming characters -- that's any keypress not handled
 /// by OnKeyDown.
-bool LabelTrack::OnChar(double & newSel0, double & newSel1, wxKeyEvent & event)
+bool LabelTrack::OnChar(double & WXUNUSED(newSel0), double & WXUNUSED(newSel1), wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
