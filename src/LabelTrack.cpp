@@ -2674,7 +2674,8 @@ bool LabelTrack::IsGoodLabelEditKey(int keyCode)
    // within that range that are usually printable, plus the ones we use for
    // keyboard navigation.
    return keyCode < WXK_START ||
-          (keyCode >= WXK_END && keyCode <= WXK_DOWN) ||
+          (keyCode >= WXK_END && keyCode < WXK_UP) ||
+          (keyCode == WXK_RIGHT) ||
           (keyCode >= WXK_NUMPAD0 && keyCode <= WXK_DIVIDE) ||
           (keyCode >= WXK_NUMPAD_SPACE && keyCode <= WXK_NUMPAD_ENTER) ||
           (keyCode >= WXK_NUMPAD_HOME && keyCode <= WXK_NUMPAD_END) ||
