@@ -12072,6 +12072,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"$(WX_LDFLAGS)",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
@@ -12108,6 +12109,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"$(WX_LDFLAGS)",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
@@ -12144,6 +12146,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"$(WX_LDFLAGS)",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
@@ -12180,6 +12183,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"$(WX_LDFLAGS)",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
