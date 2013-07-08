@@ -4,7 +4,7 @@
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
 ;name "Silence Finder..."
 ;action "Finding silence..."
-;info Adds point labels in areas of silence according to the specified\nlevel and duration of silence. If too many silences are detected,\nincrease the silence level and duration; if too few are detected,\nreduce the level and duration."
+;info "Adds point labels in areas of silence according to the specified\nlevel and duration of silence. If too many silences are detected,\nincrease the silence level and duration; if too few are detected,\nreduce the level and duration."
 
 ;; by Alex S. Brown, PMP (http://www.alexsbrown.com)
 ;; Released under terms of the GNU General Public License version 2:
