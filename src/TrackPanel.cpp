@@ -6476,8 +6476,6 @@ void TrackPanel::ScrollIntoView(int x)
 
 void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
 {
-   Track *t;
-
    // If the last adjustment was very recent, we are
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetLocalTimeMillis();
@@ -6487,9 +6485,6 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
       multiplier = 4;
    }
    mLastSelectionAdjustment = curtime;
-
-   // Get currently focused track if there is one
-   t = GetFocusedTrack();
 
    bool snapToTime = (gPrefs->Read(wxT("/SnapTo"), 0L) != 0);
 
@@ -6585,8 +6580,6 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
 
 void TrackPanel::OnCursorRight( bool shift, bool ctrl )
 {
-   Track *t;
-
    // If the last adjustment was very recent, we are
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetLocalTimeMillis();
@@ -6596,9 +6589,6 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
       multiplier = 4;
    }
    mLastSelectionAdjustment = curtime;
-
-   // Get currently focused track if there is one
-   t = GetFocusedTrack();
 
    bool snapToTime = (gPrefs->Read(wxT("/SnapTo"), 0L) != 0);
 
@@ -6728,8 +6718,6 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
   // left=true: operate on left boundary; left=false: operate on right boundary
   // boundaryContract=true: contract region; boundaryContract=false: expand region.
 
-   Track *t;
-
    // If the last adjustment was very recent, we are
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetLocalTimeMillis();
@@ -6759,9 +6747,6 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
    }
    else
    { 
-      // Get currently focused track if there is one
-      t = GetFocusedTrack();
-
       // BOUNDARY MOVEMENT
       // Contract selection from the right to the left
       if( boundaryContract )
