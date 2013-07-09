@@ -7378,7 +7378,14 @@ void TrackPanel::SplitStereo(bool stereo)
    {
       if (partner->GetHeight() < partner->GetMinimizedHeight())
          partner->SetHeight(partner->GetMinimizedHeight());
-   }
+
+		// Make tracks the same height
+		if (mPopupMenuTarget->GetHeight() != partner->GetHeight())
+		{
+			mPopupMenuTarget->SetHeight(((mPopupMenuTarget->GetHeight())+(partner->GetHeight())) / 2.0);
+			partner->SetHeight(mPopupMenuTarget->GetHeight());
+		}
+	}
 
    wxString msg;
    if(stereo)
@@ -7411,7 +7418,16 @@ void TrackPanel::OnMergeStereo(wxCommandEvent &event)
 
       mPopupMenuTarget->SetChannel(Track::LeftChannel);
       partner->SetChannel(Track::RightChannel);
-      
+		
+		// Set new track heights and minimized state
+		bool bBothMinimizedp=((mPopupMenuTarget->GetMinimized())&&(partner->GetMinimized()));
+		mPopupMenuTarget->SetMinimized(false);
+		partner->SetMinimized(false);
+		int AverageHeight=(mPopupMenuTarget->GetHeight() + partner->GetHeight())/ 2;
+		mPopupMenuTarget->SetHeight(AverageHeight);
+		partner->SetHeight(AverageHeight);
+		mPopupMenuTarget->SetMinimized(bBothMinimizedp);
+		partner->SetMinimized(bBothMinimizedp);
       
       //On Demand - join the queues together.
       if(ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave && mPopupMenuTarget->GetKind() == Track::Wave )
