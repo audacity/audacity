@@ -226,12 +226,6 @@ Version in Audacity SVN: 1.0.8
 Patches:
 audacity_build_tweaks.patch	Patches the configure scripts to turn off parsers, storage models and query languages not used by Audacity as well as using Expat instead of libxml2 for XML parsing. No need to integrate with upstream.
 
-rtaudio
--------
-http://www.music.mcgill.ca/~gary/rtaudio/
-Another cross-platform audio I/O library that was at one point available as an
-alternative to portaudio.
-
 sbsms
 -----
 http://sbsms.sourceforge.net/

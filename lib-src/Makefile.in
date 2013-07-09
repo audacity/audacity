@@ -148,12 +148,6 @@ portmixer-recursive:
 libportmixer.a: portmixer-recursive
 	ln -sf portmixer/libportmixer.a libportmixer.a
 
-# RTAudio not supported 23/08/2007 R.A.
-# librtaudio-recursive:
-#	$(MAKE) -C rtaudio
-#rtaudio/librtaudio.a: librtaudio-recursive
-#	ln -sf rtaudio/librtaudio.a .
-
 # Utility rules
 clean:
 	-$(MAKE) -C portsmf clean
