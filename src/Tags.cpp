@@ -754,7 +754,7 @@ void TagsEditor::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay(wxALIGN_LEFT, false);
       {
-         S.AddUnits(_("Use arrow keys (or RETURN key after editing) to navigate fields."));
+         S.AddUnits(_("Use arrow keys (or ENTER key after editing) to navigate fields."));
       }
       S.EndHorizontalLay();
 

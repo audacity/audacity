@@ -676,7 +676,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
       setting.filetags.SetTag(TAG_TITLE, title);
       setting.filetags.SetTag(TAG_TRACK, l+1);
       // let the user have a crack at editing it, exit if cancelled
-      if (!setting.filetags.ShowEditDialog(mProject,_("Edit metadata"), tagsPrompt))
+      if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata"), tagsPrompt))
          return false;
 
       /* add the settings to the array of settings to be used for export */
@@ -813,7 +813,7 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       setting.filetags.SetTag(TAG_TITLE, title);
       setting.filetags.SetTag(TAG_TRACK, l+1);
       // let the user have a crack at editing it, exit if cancelled
-      if (!setting.filetags.ShowEditDialog(mProject,_("Edit metadata"), tagsPrompt))
+      if (!setting.filetags.ShowEditDialog(mProject,_("Edit Metadata"), tagsPrompt))
          return false;
 
       /* add the settings to the array of settings to be used for export */

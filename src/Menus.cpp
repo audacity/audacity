@@ -224,7 +224,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
-   c->AddItem(wxT("EditMetaData"), _("Open Me&tadata Editor..."), FN(OnEditMetadata));
+   c->AddItem(wxT("EditMetaData"), _("Edit Me&tadata..."), FN(OnEditMetadata));
 
    c->AddSeparator();
 
@@ -4837,9 +4837,8 @@ void AudacityProject::OnImportRaw()
 
 void AudacityProject::OnEditMetadata()
 {
-   if (mTags->ShowEditDialog(this, _("Edit the metadata tags"), true)) {
-      PushState(_("Edit Metadata tags"), _("Edit Metadata"));
-   }
+   if (mTags->ShowEditDialog(this, _("Edit Metadata Tags"), true))
+      PushState(_("Edit Metadata Tags"), _("Edit Metadata"));
 }
 
 void AudacityProject::HandleMixAndRender(bool toNewTrack)
