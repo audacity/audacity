@@ -641,11 +641,39 @@ public:
 
 #endif //__WXMSW__
 
+#ifndef __WXMAC__
 IMPLEMENT_APP(AudacityApp)
 /* make the application class known to wxWidgets for dynamic construction */
+#endif
 
 #ifdef __WXMAC__
+// This should be removed when Lame and FFmpeg support is converted
+// from loadable libraries to commands.mLogger
+//
+// The purpose of this is to give the user more control over where libraries
+// such as Lame and FFmpeg get loaded from.
+//
+// Since absolute pathnames are used when loading these libraries, the normal search
+// path would be DYLD_LIBRARY_PATH, absolute path, DYLD_FALLBACK_LIBRARY_PATH.  This
+// means that DYLD_LIBRARY_PATH can override what the user actually wants.
+//
+// So, we simply clear DYLD_LIBRARY_PATH to allow the users choice to be the first
+// one tried.
+IMPLEMENT_APP_NO_MAIN(AudacityApp)
+IMPLEMENT_WX_THEME_SUPPORT
+int main(int argc, char *argv[])
+{
+   if (getenv("DYLD_LIBRARY_PATH")) {
+      extern char **environ;
 
+      unsetenv("DYLD_LIBRARY_PATH");
+      execve(argv[0], argv, environ);
+   }
+   return wxEntry(argc, argv);
+}
+#endif
+
+#ifdef __WXMAC__
 #include <wx/recguard.h>
 
 // in response of an open-document apple event
