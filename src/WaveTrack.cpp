@@ -1863,6 +1863,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
       {
          double* rbuf = buffer;
          int rlen = bufferLen;
+         if (rlen <= 0)
+            return; // loop completion
          double rt0 = t0;
 
          if (rt0 < dClipStartTime)
@@ -1883,6 +1885,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
             if (nClipLen < rlen) // Never increase rlen here. 
                rlen = nClipLen;
          }
+         if (rlen <= 0) 
+            return; // shortgap fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=641
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
