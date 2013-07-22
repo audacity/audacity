@@ -1886,7 +1886,7 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
                rlen = nClipLen;
          }
          if (rlen <= 0) 
-            return; // shortgap fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=641
+            return; // loop completion
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
