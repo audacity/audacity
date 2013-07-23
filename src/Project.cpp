@@ -497,6 +497,10 @@ AudacityProject *CreateNewAudacityProject()
    //Set the new project as active:
    SetActiveProject(p);
 
+   // Okay, GetActiveProject() is ready. Now we can get its CommandManager, 
+   // and add the shortcut keys to the tooltips. 
+   p->GetControlToolBar()->RegenerateToolsTooltips();
+
    ModuleManager::Dispatch(ProjectInitialized);
 
    p->Show(true);

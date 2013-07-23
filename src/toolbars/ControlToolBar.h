@@ -81,6 +81,7 @@ class ControlToolBar:public ToolBar {
    void SetVUMeters(AudacityProject *p);
 
    virtual void ReCreateButtons();
+   void RegenerateToolsTooltips();
 
  private:
 
@@ -90,22 +91,21 @@ class ControlToolBar:public ToolBar {
       const wxChar *label);
    void MakeLoopImage();
    void ArrangeButtons();
-   void RegenerateToolsTooltips();
    void SetupCutPreviewTracks(double playStart, double cutStart,
                              double cutEnd, double playEnd);
    void ClearCutPreviewTracks();
 
    enum
    {
-      ID_PLAY_BUTTON,
+      ID_PLAY_BUTTON = 11000,
       ID_RECORD_BUTTON,
       ID_PAUSE_BUTTON,
       ID_STOP_BUTTON,
       ID_FF_BUTTON,
       ID_REW_BUTTON,
-      ID_BATCH_BUTTON,
 
-      BUTTON_COUNT
+      // ID_BATCH_BUTTON is not an actual button.
+      ID_BATCH_BUTTON, 
    };
 
    AButton *mRewind;
@@ -135,15 +135,4 @@ class ControlToolBar:public ToolBar {
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: bb2858b8-2c70-48df-9d72-bcdef94be4e3
 

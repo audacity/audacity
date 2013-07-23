@@ -183,10 +183,10 @@ void ControlToolBar::Populate()
       ID_STOP_BUTTON, false, _("Stop"));
 
    mRewind = MakeButton(bmpRewind, bmpRewind, bmpRewindDisabled,
-      ID_REW_BUTTON, false, _("Start"));
+      ID_REW_BUTTON, false, _("Skip to Start"));
 
    mFF = MakeButton(bmpFFwd, bmpFFwd, bmpFFwdDisabled,
-      ID_FF_BUTTON, false, _("End"));
+      ID_FF_BUTTON, false, _("Skip to End"));
 
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
@@ -204,12 +204,42 @@ void ControlToolBar::Populate()
 void ControlToolBar::RegenerateToolsTooltips()
 {
 #if wxUSE_TOOLTIPS
-   mPause->SetToolTip(_("Pause"));
-   mPlay->SetToolTip(_("Play (Shift for Loop Play)"));
-   mStop->SetToolTip(_("Stop"));
-   mRewind->SetToolTip(_("Skip to Start"));
-   mFF->SetToolTip(_("Skip to End"));
-   mRecord->SetToolTip(_("Record (Shift for Append Record)"));
+   // ID_BATCH_BUTTON is not an actual button, so use it as loop bound. 
+   for (long iWinID = ID_PLAY_BUTTON; iWinID < ID_BATCH_BUTTON; iWinID++)
+   {
+      wxWindow* pCtrl = this->FindWindow(iWinID); 
+      wxString strToolTip = pCtrl->GetLabel();
+      AudacityProject* pProj = GetActiveProject();
+      CommandManager* pCmdMgr = (pProj) ? pProj->GetCommandManager() : NULL;
+      if (pCmdMgr)
+      {
+         wxString strKey(wxT(" ("));
+         switch (iWinID)
+         {
+            case ID_PLAY_BUTTON:
+               strKey += pCmdMgr->GetKeyFromName(strToolTip);
+               strKey += _(") / Loop Play (");
+               strKey += pCmdMgr->GetKeyFromName(wxT("PlayLooped"));
+               break;
+            case ID_RECORD_BUTTON:
+               strKey += pCmdMgr->GetKeyFromName(strToolTip);
+               strKey += _(") / Append Record (");
+               strKey += pCmdMgr->GetKeyFromName(wxT("RecordAppend"));
+               break;
+            case ID_FF_BUTTON:
+               strKey += pCmdMgr->GetKeyFromName(wxT("SkipEnd"));
+               break;
+            case ID_REW_BUTTON:
+               strKey += pCmdMgr->GetKeyFromName(wxT("SkipStart"));
+               break;
+            default:
+               strKey += pCmdMgr->GetKeyFromName(strToolTip);
+         }
+         strKey += wxT(")");
+         strToolTip += strKey;
+      }
+      pCtrl->SetToolTip(strToolTip);
+   }
 #endif
 }
 
@@ -330,7 +360,6 @@ void ControlToolBar::EnableDisableButtons()
 {
    //TIDY-ME: Button logic could be neater.
    AudacityProject *p = GetActiveProject();
-   size_t numProjects = gAudacityProjects.Count();
    bool tracks = false;
    bool playing = mPlay->IsDown();
    bool recording = mRecord->IsDown();
@@ -654,7 +683,7 @@ void ControlToolBar::OnKeyUp(wxKeyEvent & event)
    }
 }
 
-void ControlToolBar::OnPlay(wxCommandEvent &evt)
+void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    StopPlaying();
 
@@ -664,7 +693,7 @@ void ControlToolBar::OnPlay(wxCommandEvent &evt)
    PlayDefault();
 }
 
-void ControlToolBar::OnStop(wxCommandEvent &evt)
+void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 {
    StopPlaying();
 }
@@ -713,7 +742,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    }
 }
 
-void ControlToolBar::OnBatch(wxCommandEvent &evt)
+void ControlToolBar::OnBatch(wxCommandEvent & WXUNUSED(evt))
 {
    AudacityProject *proj = GetActiveProject();
    if (proj)
@@ -902,7 +931,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 }
 
 
-void ControlToolBar::OnPause(wxCommandEvent &evt)
+void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 { 
    if(mPaused)
    {
@@ -918,7 +947,7 @@ void ControlToolBar::OnPause(wxCommandEvent &evt)
    gAudioIO->SetPaused(mPaused);
 }
 
-void ControlToolBar::OnRewind(wxCommandEvent &evt)
+void ControlToolBar::OnRewind(wxCommandEvent & WXUNUSED(evt))
 {
    mRewind->PushDown();
    mRewind->PopUp();
@@ -929,7 +958,7 @@ void ControlToolBar::OnRewind(wxCommandEvent &evt)
    }
 }
 
-void ControlToolBar::OnFF(wxCommandEvent &evt)
+void ControlToolBar::OnFF(wxCommandEvent & WXUNUSED(evt))
 {
    mFF->PushDown();
    mFF->PopUp();
@@ -941,8 +970,8 @@ void ControlToolBar::OnFF(wxCommandEvent &evt)
    }
 }
 
-void ControlToolBar::SetupCutPreviewTracks(double playStart, double cutStart,
-                                           double cutEnd, double playEnd)
+void ControlToolBar::SetupCutPreviewTracks(double WXUNUSED(playStart), double cutStart,
+                                           double cutEnd, double  WXUNUSED(playEnd))
 {
    ClearCutPreviewTracks();
    AudacityProject *p = GetActiveProject();
@@ -989,13 +1018,3 @@ void ControlToolBar::ClearCutPreviewTracks()
    }
 }
 
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ebfdc42a-6a03-4826-afa2-937a48c0565b

@@ -1239,7 +1239,7 @@ void CommandManager::HandleXMLEndTag(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
       wxMessageBox(wxString::Format(_("Loaded %d keyboard shortcuts\n"),
                                     mXMLKeysRead),
-                   _("Loading keyboard shortcuts"),
+                   _("Loading Keyboard Shortcuts"),
                    wxOK | wxCENTRE);
    }
 }
