@@ -384,7 +384,7 @@ void ControlToolBar::EnableDisableButtons()
    mRecord->SetEnabled(!busy && !playing);
 
    mStop->SetEnabled(busy);
-   mRewind->SetEnabled(tracks && !busy);
+   mRewind->SetEnabled(!busy);
    mFF->SetEnabled(tracks && !busy);
    mPause->SetEnabled(true);
 }

@@ -648,8 +648,8 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIOBusyFlag,
               AudioIOBusyFlag);
    c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
-              WaveTracksExistFlag | AudioIONotBusyFlag,
-              WaveTracksExistFlag | AudioIONotBusyFlag);
+              AudioIONotBusyFlag,
+              AudioIONotBusyFlag);
    c->AddItem(wxT("SkipEnd"), _("Skip to E&nd"), FN(OnSkipEnd), wxT("End"),
               WaveTracksExistFlag | AudioIONotBusyFlag,
               WaveTracksExistFlag | AudioIONotBusyFlag);
