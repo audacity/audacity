@@ -4691,17 +4691,6 @@ void AudacityProject::OnImport()
    // this serves to track the file if the users zooms in and such.
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
       
-   // bug 307 fix: 
-   // Apparently the shift key-up event gets swallowed by the file open dialog. 
-   // The default shortcut for this command it Ctrl+Shift+I, 
-   // so make sure the loop play button is reset. 
-   if (GetControlToolBar())
-   {
-      wxKeyEvent dummyEvent;
-      dummyEvent.m_keyCode = WXK_SHIFT;
-      GetControlToolBar()->OnKeyUp(dummyEvent);
-   }
-
    wxArrayString selectedFiles = ShowOpenDialog(wxT(""));
    if (selectedFiles.GetCount() == 0) {
       gPrefs->Write(wxT("/LastOpenType"),wxT(""));
