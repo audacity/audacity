@@ -156,6 +156,10 @@ void AButton::SetAlternateImages(ImageRoll up,
 
 void AButton::SetAlternate(bool useAlternateImages)
 {
+   // If alternate-image-state is already correct then 
+   // nothing to do (saves repainting button).
+   if( mAlternate == useAlternateImages )
+      return;
    mAlternate = useAlternateImages;
    Refresh(false);
 }
