@@ -123,6 +123,8 @@ class ControlToolBar:public ToolBar {
    // Activate ergonomic order for transport buttons
    bool mErgonomicTransportButtons;
 
+   wxString mStrLocale; // standard locale abbreviation
+
    //wxBoxSizer *mBatchGroup;
    wxBoxSizer *mSizer;
 

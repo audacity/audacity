@@ -94,6 +94,7 @@ ControlToolBar::ControlToolBar()
    mCutPreviewTracks = NULL;
 
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
+   mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 }
 
 ControlToolBar::~ControlToolBar()
@@ -217,14 +218,20 @@ void ControlToolBar::RegenerateToolsTooltips()
          switch (iWinID)
          {
             case ID_PLAY_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(strToolTip);
+               strKey += pCmdMgr->GetKeyFromName(wxT("Play"));
                strKey += _(") / Loop Play (");
                strKey += pCmdMgr->GetKeyFromName(wxT("PlayLooped"));
                break;
             case ID_RECORD_BUTTON:
-               strKey += pCmdMgr->GetKeyFromName(strToolTip);
+               strKey += pCmdMgr->GetKeyFromName(wxT("Record"));
                strKey += _(") / Append Record (");
                strKey += pCmdMgr->GetKeyFromName(wxT("RecordAppend"));
+               break;
+            case ID_PAUSE_BUTTON:
+               strKey += pCmdMgr->GetKeyFromName(wxT("Pause"));
+               break;
+            case ID_STOP_BUTTON:
+               strKey += pCmdMgr->GetKeyFromName(wxT("Stop"));
                break;
             case ID_FF_BUTTON:
                strKey += pCmdMgr->GetKeyFromName(wxT("SkipEnd"));
@@ -232,8 +239,6 @@ void ControlToolBar::RegenerateToolsTooltips()
             case ID_REW_BUTTON:
                strKey += pCmdMgr->GetKeyFromName(wxT("SkipStart"));
                break;
-            default:
-               strKey += pCmdMgr->GetKeyFromName(strToolTip);
          }
          strKey += wxT(")");
          strToolTip += strKey;
@@ -248,20 +253,30 @@ void ControlToolBar::UpdatePrefs()
    bool updated = false;
    bool active;
 
-   RegenerateToolsTooltips();
-
    gPrefs->Read( wxT("/GUI/ErgonomicTransportButtons"), &active, true );
    if( mErgonomicTransportButtons != active )
    {
       mErgonomicTransportButtons = active;
       updated = true;
    }
+   wxString strLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+   if (mStrLocale != strLocale)
+   {
+      mStrLocale = strLocale;
+      updated = true;
+   }
 
    if( updated )
    {
-      ReCreateButtons();
+      ReCreateButtons(); // side effect: calls RegenerateToolsTooltips()
       Updated();
    }
+   else
+      // The other reason to regenerate tooltips is if keyboard shortcuts for 
+      // transport buttons changed, but that's too much work to check for, so just 
+      // always do it. (Much cheaper than calling ReCreateButtons() in all cases. 
+      RegenerateToolsTooltips();
+
 
    // Set label to pull in language change
    SetLabel(_("Transport"));
