@@ -21,6 +21,8 @@ class wxBoxSizer;
 class wxCommandEvent;
 class wxDC;
 class wxKeyEvent;
+class wxTimer;
+class wxTimerEvent;
 class wxWindow;
 
 class AButton;
@@ -40,6 +42,10 @@ class ControlToolBar:public ToolBar {
 
    void UpdatePrefs();
    virtual void OnKeyEvent(wxKeyEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
+   void OnKeyUp(wxKeyEvent & event);
+
+   void OnTimer(wxTimerEvent & event);
 
    // msmeyer: These are public, but it's far better to
    // call the "real" interface functions like PlayCurrentRegion() and
@@ -75,8 +81,6 @@ class ControlToolBar:public ToolBar {
    void Populate();
    virtual void Repaint(wxDC *dc);
    virtual void EnableDisableButtons();
-   void OnKeyDown(wxKeyEvent & event);
-   void OnKeyUp(wxKeyEvent & event);
 
    void SetVUMeters(AudacityProject *p);
 
@@ -116,7 +120,10 @@ class ControlToolBar:public ToolBar {
    AButton *mStop;
    AButton *mFF;
 
+   wxTimer mShiftKeyTimer;
+
    static AudacityProject *mBusyProject;
+
    // Maybe button state values shouldn't be duplicated in this toolbar?
    bool mPaused;         //Play or record is paused or not paused?
 

@@ -44,6 +44,7 @@
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/intl.h>
+#include <wx/timer.h>
 #endif
 #include <wx/tooltip.h>
 
@@ -71,6 +72,7 @@ AudacityProject *ControlToolBar::mBusyProject = NULL;
 
 BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_CHAR(ControlToolBar::OnKeyEvent)
+   EVT_TIMER(wxID_ANY, ControlToolBar::OnTimer)
    EVT_BUTTON(ID_PLAY_BUTTON,   ControlToolBar::OnPlay)
    EVT_BUTTON(ID_STOP_BUTTON,   ControlToolBar::OnStop)
    EVT_BUTTON(ID_RECORD_BUTTON, ControlToolBar::OnRecord)
@@ -88,13 +90,15 @@ END_EVENT_TABLE()
 ControlToolBar::ControlToolBar()
 : ToolBar(TransportBarID, _("Transport"), wxT("Control"))
 {
-   mPaused = false;
-   mSizer = NULL;
+   mShiftKeyTimer.SetOwner(this);
 
-   mCutPreviewTracks = NULL;
+   mPaused = false;
 
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+
+   mSizer = NULL;
+   mCutPreviewTracks = NULL;
 }
 
 ControlToolBar::~ControlToolBar()
@@ -675,15 +679,16 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
    event.Skip();
 }
 
-
 void ControlToolBar::OnKeyDown(wxKeyEvent & event)
 {
    event.Skip();
 
-   if (event.GetKeyCode() == WXK_SHIFT ) {
+   if (event.GetKeyCode() == WXK_SHIFT) 
+   {
       // Turn the "Play" button into a "Loop" button
       if (!mPlay->IsDown())
          mPlay->SetAlternate(true);
+      mShiftKeyTimer.Start(100);
    }
 }
 
@@ -691,12 +696,30 @@ void ControlToolBar::OnKeyUp(wxKeyEvent & event)
 {
    event.Skip();
 
-   if (event.GetKeyCode() == WXK_SHIFT ) {
+   if (event.GetKeyCode() == WXK_SHIFT) 
+   {
       // Turn the "Loop" button into a "Play" button
       if (!mPlay->IsDown())
          mPlay->SetAlternate(false);
    }
 }
+
+void ControlToolBar::OnTimer(wxTimerEvent & event)
+{
+   event.Skip();
+
+   // bug 307 fix: 
+   // Shift key-up events get swallowed if a command with a Shift in its keyboard 
+   // shortcut opens a dialog, and ControlToolBar::OnKeyUp() doesn't get called. 
+   if (!wxGetKeyState(WXK_SHIFT))
+   {
+      wxKeyEvent dummyEvent;
+      dummyEvent.m_keyCode = WXK_SHIFT;
+      this->OnKeyUp(dummyEvent);
+      mShiftKeyTimer.Stop();
+   }
+}
+
 
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {

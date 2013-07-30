@@ -936,16 +936,6 @@ void TrackPanel::OnTimer()
    wxCommandEvent dummyEvent;
    AudacityProject *p = GetProject();
 
-   // bug 307 fix: 
-   // Apparently Shift key-up events get swallowed if a command with a Shift
-   // in its keyboard accelerator opens a dialog. 
-   if (!wxGetKeyState(WXK_SHIFT) && p->GetControlToolBar())
-   {
-      wxKeyEvent dummyEvent;
-      dummyEvent.m_keyCode = WXK_SHIFT;
-      p->GetControlToolBar()->OnKeyUp(dummyEvent);
-   }
-
    if ((p->GetAudioIOToken() > 0) &&
          gAudioIO->IsStreamActive(p->GetAudioIOToken()))
    {
