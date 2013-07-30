@@ -14,6 +14,8 @@
 #ifndef __AUDACITY_CONTROL_TOOLBAR__
 #define __AUDACITY_CONTROL_TOOLBAR__
 
+#include <wx/timer.h>
+
 #include "ToolBar.h"
 #include "../Theme.h"
 
