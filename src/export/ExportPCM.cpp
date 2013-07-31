@@ -110,7 +110,6 @@ private:
 
 BEGIN_EVENT_TABLE(ExportPCMOptions, wxDialog)
    EVT_CHOICE(ID_HEADER_CHOICE,   ExportPCMOptions::OnHeaderChoice)
-   EVT_CHOICE(ID_ENCODING_CHOICE, ExportPCMOptions::OnChoice)
    EVT_BUTTON(wxID_OK,            ExportPCMOptions::OnOK)
 END_EVENT_TABLE()
 
@@ -258,11 +257,6 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & WXUNUSED(evt))
    ValidatePair(GetFormat());
 }
 
-void ExportPCMOptions::OnChoice(wxCommandEvent & WXUNUSED(event))
-{
-   // ANSWER-ME: Why is this here?
-}
-  
 void ExportPCMOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    WriteExportFormatPref(GetFormat());
@@ -329,7 +323,7 @@ public:
 
 private:
 
-   char *ConvertTo7bitASCII(const char *pSrc);
+   char *ConvertTo7bitASCII(wxString wxStr);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags);
    void AddID3Chunk(wxString fName, Tags *tags, int sf_format);
 
@@ -589,19 +583,39 @@ int ExportPCM::Export(AudacityProject *project,
    return updateResult;
 }
 
-char *ExportPCM::ConvertTo7bitASCII(const char *pSrc)
+char *ExportPCM::ConvertTo7bitASCII(const wxString wxStr)
 {
-   unsigned char c;
-   int  sz = strlen(pSrc);
-
-   char *pDest = (char *)malloc(sz+1);
-   char *pD = pDest;
-
+   size_t  sz = wxStr.length();
+   if(sz == 0)
+      return NULL;
+   // Size for secure malloc in case of local wide char usage
+   size_t  sr = (sz+2) * 2;   
+ 
+   char *pDest = (char *)malloc(sr);
    if (!pDest)
       return NULL;
+   char *pSrc = (char *)malloc(sr);
+   if (!pSrc)
+      return NULL;
+   memset(pDest, 0, sr);
+   memset(pSrc, 0, sr);
+ 
+   if(wxStr.mb_str(wxConvISO8859_1))
+      strncpy(pSrc, wxStr.mb_str(wxConvISO8859_1), sz);
+   else if(wxStr.mb_str())
+      strncpy(pSrc, wxStr.mb_str(), sz);
+   else {
+      free(pDest);
+      free(pSrc);
+      return NULL;
+   }
+
+   char *pD = pDest;
+   char *pS = pSrc;
+   unsigned char c;
 
    // ISO Latin to 7 bit ascii conversion table (best approximation)
-   char aASCII7Table[256] = {
+   static char aASCII7Table[256] = {
       0x00, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f,
       0x5f, 0x09, 0x0a, 0x5f, 0x0d, 0x5f, 0x5f, 0x5f,
       0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f, 0x5f,
@@ -636,10 +650,16 @@ char *ExportPCM::ConvertTo7bitASCII(const char *pSrc)
       0x6f, 0x75, 0x75, 0x75, 0x75, 0x79, 0x70, 0x79 
    };
 
-   do {
-      c = (unsigned char) *pSrc++;
+   size_t i;
+   for(i = 0; i < sr; i++) {
+      c = (unsigned char) *pS++;
       *pD++ = aASCII7Table[c];
-   } while (c);
+      if(c == 0)
+         break;
+   } 
+   *pD = '\0';
+
+   free(pSrc);
 
    return pDest;
 }
@@ -647,7 +667,7 @@ char *ExportPCM::ConvertTo7bitASCII(const char *pSrc)
 bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tags *tags)
 {
    if (tags->HasTag(TAG_TITLE)) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(TAG_TITLE).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_TITLE));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_TITLE, ascii7Str);
          free(ascii7Str);
@@ -655,7 +675,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_ARTIST)) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(TAG_ARTIST).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_ARTIST));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_ARTIST, ascii7Str);
          free(ascii7Str);
@@ -663,7 +683,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_COMMENTS)) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(TAG_COMMENTS).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_COMMENTS));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_COMMENT, ascii7Str);
          free(ascii7Str);
@@ -671,7 +691,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_YEAR)) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(TAG_YEAR).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_YEAR));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_DATE, ascii7Str);
          free(ascii7Str);
@@ -679,7 +699,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_GENRE)) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(TAG_GENRE).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_GENRE));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_GENRE, ascii7Str);
          free(ascii7Str);
@@ -687,7 +707,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(wxT("Copyright"))) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(wxT("Copyright")).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(wxT("Copyright")));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_COPYRIGHT, ascii7Str);
          free(ascii7Str);
@@ -695,7 +715,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(wxT("Software"))) {
-      char * ascii7Str = ConvertTo7bitASCII((const char *)tags->GetTag(wxT("Software")).mb_str());
+      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(wxT("Software")));
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_SOFTWARE, ascii7Str);
          free(ascii7Str);

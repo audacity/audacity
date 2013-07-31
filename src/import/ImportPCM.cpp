@@ -107,8 +107,8 @@ private:
    sampleFormat          mFormat;
 };
 
-void GetPCMImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+void GetPCMImportPlugin(ImportPluginList * importPluginList,
+                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
 {
    importPluginList->Append(new PCMImportPlugin);
 }
@@ -506,7 +506,8 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    }
 
 #if defined(USE_LIBID3TAG)
-   if ((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) {
+   if (((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) || 
+       ((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV)) {
       wxFFile f(mFilename, wxT("rb"));
       if (f.IsOpened()) {
          char id[5];
@@ -522,9 +523,10 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                break;
             }
             f.Read(&len, 4);
-            len = wxUINT32_SWAP_ON_LE(len);
+            if((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)
+               len = wxUINT32_SWAP_ON_LE(len);
 
-            if (strcmp(id, "ID3 ") != 0) {
+            if (Stricmp(id, "ID3 ") != 0) {  // must be case insensitive
                f.Seek(len + (len & 0x01), wxFromCurrent);
                continue;
             }
