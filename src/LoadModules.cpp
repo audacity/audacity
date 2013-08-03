@@ -237,8 +237,6 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       wxString prefix = ::wxPathOnly(files[i]);
       ::wxSetWorkingDirectory(prefix);
 
-      Module *module = new Module(files[i]);
-
 #ifdef EXPERIMENTAL_MODULE_PREFS
       if( !IsAllowedModule( files[i] ) )  // don't try and check the in-date-ness before this as that means loading the module to call it's GetVersionString, which could do anything.
 #endif EXPERIMENTAL_MODULE_PREFS
@@ -254,6 +252,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
             continue;
       }
 
+      Module *module = new Module(files[i]);
       if (module->Load())   // it will get rejected if there  are version problems
       {
          mInstance->mModules.Add(module);

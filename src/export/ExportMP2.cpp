@@ -233,6 +233,7 @@ int ExportMP2::Export(AudacityProject *project,
    {
       wxMessageBox(_("Cannot export MP2 with this sample rate and bit rate"),
          _("Error"), wxICON_STOP);
+      twolame_close(&encodeOptions);
       return false;
    }
 
@@ -243,6 +244,7 @@ int ExportMP2::Export(AudacityProject *project,
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
       wxMessageBox(_("Unable to open target file for writing"));
+      twolame_close(&encodeOptions);
       return false;
    }
 

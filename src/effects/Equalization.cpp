@@ -2675,6 +2675,9 @@ void EqualizationDialog::OnInvert(wxCommandEvent &event) // Inverts any curve
             mLogEnvelope->Move(when[i] , -value[i]);
       }
 
+      delete [] when;
+      delete [] value;
+
       // copy it back to the other one (just in case)
       if(lin)
          EnvLinToLog();

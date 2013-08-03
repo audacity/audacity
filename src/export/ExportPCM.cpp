@@ -596,7 +596,10 @@ char *ExportPCM::ConvertTo7bitASCII(const wxString wxStr)
       return NULL;
    char *pSrc = (char *)malloc(sr);
    if (!pSrc)
+   {
+      free(pDest);
       return NULL;
+   }
    memset(pDest, 0, sr);
    memset(pSrc, 0, sr);
  

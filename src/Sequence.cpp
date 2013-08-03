@@ -184,7 +184,11 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
       
       bSuccess = (pOldBlockFile->ReadData(bufferOld, oldFormat, 0, len) > 0);
       if (!bSuccess)
+      {
+         DeleteSamples(bufferNew);
+         DeleteSamples(bufferOld);
          break;
+      }
       
       CopySamples(bufferOld, oldFormat, bufferNew, mSampleFormat, len);
       
