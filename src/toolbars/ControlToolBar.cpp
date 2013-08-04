@@ -745,8 +745,7 @@ void ControlToolBar::PlayDefault()
    else
       PlayCurrentRegion(false); /* play normal */
 
-   //JKC play button should only pop up AFTER play is complete.
-   //mPlay->PopUp();
+   mPlay->PopUp();
 }
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
