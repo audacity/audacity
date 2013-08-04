@@ -107,17 +107,9 @@ void QualityPrefs::GetNamesAndLabels()
    mSampleFormatNames.Add(wxT("32-bit float")); mSampleFormatLabels.Add(floatSample);
 
    //------------- Converter Names
-   // We used to set and get best/fast method via Resample.cpp.
-   // Need to ensure that preferences strings in Resample.cpp match.
-   // Note that these methods used to be public and static, but are now protected and pure virtual.
-   //
-   //vvv Note that we're now using libsoxr for constant-rate resampling 
-   // and either libresample, libsamplerate, or libsoxr for variable-rate, 
-   // and currently not allowing prefs method choice for variable-rate, 
-   // per discussion on -devel.
-   int numConverters = ConstRateResample::GetNumMethods();
+   int numConverters = Resample::GetNumMethods();
    for (int i = 0; i < numConverters; i++) {
-      mConverterNames.Add(ConstRateResample::GetMethodName(i));
+      mConverterNames.Add(Resample::GetMethodName(i));
       mConverterLabels.Add(i);
    }
 }
@@ -173,8 +165,8 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          S.SetStretchyCol(2);
 
          S.TieChoice(_("Sample Rate Con&verter:"),
-                     ConstRateResample::GetFastMethodKey(),
-                     ConstRateResample::GetFastMethodDefault(),
+                     Resample::GetFastMethodKey(),
+                     Resample::GetFastMethodDefault(),
                      mConverterNames,
                      mConverterLabels),
          S.SetSizeHints(mConverterNames);
@@ -195,8 +187,8 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice(_("Sample Rate Conver&ter:"),
-                     ConstRateResample::GetBestMethodKey(),
-                     ConstRateResample::GetBestMethodDefault(),
+                     Resample::GetBestMethodKey(),
+                     Resample::GetBestMethodDefault(),
                      mConverterNames,
                      mConverterLabels),
          S.SetSizeHints(mConverterNames);
@@ -215,7 +207,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
 
 /// Enables or disables the Edit box depending on
 /// whether we selected 'Other...' or not.
-void QualityPrefs::OnSampleRateChoice(wxCommandEvent & e)
+void QualityPrefs::OnSampleRateChoice(wxCommandEvent & WXUNUSED(e))
 {
    int sel = mSampleRates->GetSelection();
    mOtherSampleRate->Enable(sel == (int)mSampleRates->GetCount() - 1);

@@ -1322,18 +1322,18 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
             }
 
             mCaptureBuffers = new RingBuffer* [mCaptureTracks.GetCount()];
-            mResample = new ConstRateResample* [mCaptureTracks.GetCount()];
+            mResample = new Resample* [mCaptureTracks.GetCount()];
             mFactor = sampleRate / mRate;
 
             // Set everything to zero in case we have to delete these due to a memory exception.
             memset(mCaptureBuffers, 0, sizeof(RingBuffer*)*mCaptureTracks.GetCount());
-            memset(mResample, 0, sizeof(ConstRateResample*)*mCaptureTracks.GetCount());
+            memset(mResample, 0, sizeof(Resample*)*mCaptureTracks.GetCount());
 
             for( unsigned int i = 0; i < mCaptureTracks.GetCount(); i++ )
             {
                mCaptureBuffers[i] = new RingBuffer( mCaptureTracks[i]->GetSampleFormat(),
                                                     captureBufferSize );
-               mResample[i] = new ConstRateResample(true, mFactor);
+               mResample[i] = new Resample(true, mFactor, mFactor); // constant rate resampling
             }
          }
       }

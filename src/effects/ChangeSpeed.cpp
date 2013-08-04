@@ -214,7 +214,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    float * outBuffer = new float[outBufferSize]; 
 
    // Set up the resampling stuff for this track.
-   ConstRateResample resample(true, mFactor);
+   Resample resample(true, mFactor, mFactor); // constant rate resampling
 
    //Go through the track one buffer at a time. samplePos counts which
    //sample the current buffer starts at.
@@ -437,7 +437,7 @@ bool ChangeSpeedDialog::TransferDataFromWindow()
 
 // handler implementations for ChangeSpeedDialog
 
-void ChangeSpeedDialog::OnText_PercentChange(wxCommandEvent & event)
+void ChangeSpeedDialog::OnText_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
    if (mbLoopDetect)
       return;
@@ -457,7 +457,7 @@ void ChangeSpeedDialog::OnText_PercentChange(wxCommandEvent & event)
    }
 }
 
-void ChangeSpeedDialog::OnSlider_PercentChange(wxCommandEvent & event)
+void ChangeSpeedDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
 {
    if (mbLoopDetect)
       return;
@@ -475,7 +475,7 @@ void ChangeSpeedDialog::OnSlider_PercentChange(wxCommandEvent & event)
    }
 }
 
-void ChangeSpeedDialog::OnChoice_FromVinyl(wxCommandEvent & event)
+void ChangeSpeedDialog::OnChoice_FromVinyl(wxCommandEvent & WXUNUSED(event))
 {
    if (mbLoopDetect)
       return;
@@ -489,7 +489,7 @@ void ChangeSpeedDialog::OnChoice_FromVinyl(wxCommandEvent & event)
    }
 }
 
-void ChangeSpeedDialog::OnChoice_ToVinyl(wxCommandEvent & event)
+void ChangeSpeedDialog::OnChoice_ToVinyl(wxCommandEvent & WXUNUSED(event))
 {
    if (mbLoopDetect)
       return;

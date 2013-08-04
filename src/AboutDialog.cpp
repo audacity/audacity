@@ -127,13 +127,13 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("LAME"), roleLibrary);
    AddCredit(wxT("libmad"), roleLibrary);
    #if USE_LIBRESAMPLE
-      AddCredit(wxT("libresample"), roleLibrary);
+      AddCredit(wxT("libresample, by Dominic Mazzoni and Julius Smith"), roleLibrary);
    #endif
    #if USE_LIBSAMPLERATE
       AddCredit(wxT("libsamplerate, by Erik de Castro Lopo"), roleLibrary);
    #endif
    #if USE_LIBSOXR
-      AddCredit(wxT("libsoxr"), roleLibrary);
+      AddCredit(wxT("libsoxr, by Rob Sykes"), roleLibrary);
    #endif
    AddCredit(wxT("libsndfile"), roleLibrary);
    AddCredit(wxT("Nyquist"), roleLibrary);

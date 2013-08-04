@@ -1526,7 +1526,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       return true; // Nothing to do
 
    double factor = (double)rate / (double)mRate;
-   ConstRateResample* resample = new ConstRateResample(true, factor);
+   ::Resample* resample = new ::Resample(true, factor, factor); // constant rate resampling
    
    int bufsize = 65536;
    float* inBuffer = new float[bufsize];
