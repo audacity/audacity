@@ -76,7 +76,6 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_BUTTON(ID_PLAY_BUTTON,   ControlToolBar::OnPlay)
    EVT_BUTTON(ID_STOP_BUTTON,   ControlToolBar::OnStop)
    EVT_BUTTON(ID_RECORD_BUTTON, ControlToolBar::OnRecord)
-   EVT_BUTTON(ID_BATCH_BUTTON,  ControlToolBar::OnBatch)
    EVT_BUTTON(ID_REW_BUTTON,    ControlToolBar::OnRewind)
    EVT_BUTTON(ID_FF_BUTTON,     ControlToolBar::OnFF)
    EVT_BUTTON(ID_PAUSE_BUTTON,  ControlToolBar::OnPause)
@@ -209,8 +208,7 @@ void ControlToolBar::Populate()
 void ControlToolBar::RegenerateToolsTooltips()
 {
 #if wxUSE_TOOLTIPS
-   // ID_BATCH_BUTTON is not an actual button, so use it as loop bound. 
-   for (long iWinID = ID_PLAY_BUTTON; iWinID < ID_BATCH_BUTTON; iWinID++)
+   for (long iWinID = ID_PLAY_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
       wxWindow* pCtrl = this->FindWindow(iWinID); 
       wxString strToolTip = pCtrl->GetLabel();
@@ -778,21 +776,6 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
       project->MayStartMonitoring();
       project->GetMeterToolBar()->Clear();
    }
-}
-
-void ControlToolBar::OnBatch(wxCommandEvent & WXUNUSED(evt))
-{
-   AudacityProject *proj = GetActiveProject();
-   if (proj)
-      proj->OnApplyChain();
-
-   mPlay->Enable();
-   mStop->Enable();
-   mRewind->Enable();
-   mFF->Enable();
-   mPause->Disable();
-   //mBatch->Enable();
-   //mBatch->PopUp();
 }
 
 void ControlToolBar::OnRecord(wxCommandEvent &evt)

@@ -55,7 +55,6 @@ class ControlToolBar:public ToolBar {
    void OnRewind(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
    void OnStop(wxCommandEvent & evt);
-   void OnBatch(wxCommandEvent & evt);
    void OnRecord(wxCommandEvent & evt);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
@@ -109,14 +108,11 @@ class ControlToolBar:public ToolBar {
       ID_STOP_BUTTON,
       ID_FF_BUTTON,
       ID_REW_BUTTON,
-
-      // ID_BATCH_BUTTON is not an actual button.
-      ID_BATCH_BUTTON, 
+      BUTTON_COUNT, 
    };
 
    AButton *mRewind;
    AButton *mPlay;
-   //AButton *mBatch;
    AButton *mRecord;
    AButton *mPause;
    AButton *mStop;
@@ -134,7 +130,6 @@ class ControlToolBar:public ToolBar {
 
    wxString mStrLocale; // standard locale abbreviation
 
-   //wxBoxSizer *mBatchGroup;
    wxBoxSizer *mSizer;
 
    TrackList* mCutPreviewTracks;
