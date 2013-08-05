@@ -950,6 +950,9 @@ static int Guess16Bit(int numTests, char **rawData,
 
    free(rawData2);
 
+   free(data1);
+   free(data2);
+
    return format;
 }
 

@@ -807,6 +807,7 @@ void Meter::HandleLayout()
       else
          mIconPos = wxPoint(mWidth - iconWidth - 1, 1);
       width = intmin(mWidth-(iconWidth+2), mWidth-(menuWidth+3));
+      // No break. Fall-through to MixerTrackCluster is intentional.
    case MixerTrackCluster:
       // Doesn't show menu, icon, or L/R labels,
       // but otherwise like VerticalStereo.
