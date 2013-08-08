@@ -39,11 +39,11 @@ Since the preprocessor definitions are different for each configuration and plat
 
 9) Also in the preprocessor definitions you need to explicitly define the audio APIs you wish to use. For Windows the available API definitions are:
 
-PA_USE_ASIO[[BR]]
-PA_USE_DS (DirectSound)[[BR]]
-PA_USE_WMME (MME)[[BR]]
-PA_USE_WASAPI[[BR]]
-PA_USE_WDMKS[[BR]]
+PA_USE_ASIO<br>
+PA_USE_DS (DirectSound)<br>
+PA_USE_WMME (MME)<br>
+PA_USE_WASAPI<br>
+PA_USE_WDMKS<br>
 PA_USE_SKELETON
 
 For each of these, the value of 0 indicates that support for this API should not be included. The value 1 indicates that support for this API should be included.
