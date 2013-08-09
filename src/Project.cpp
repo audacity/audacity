@@ -1650,6 +1650,9 @@ void AudacityProject::OnScroll(wxScrollEvent & event)
 
 bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
 {
+   if (event.GetKeyCode() == WXK_ALT)
+      mTrackPanel->HandleAltKey(true);
+
    // Allow the zoom cursor to change to a zoom out cursor
    if (event.GetKeyCode() == WXK_SHIFT)
       mTrackPanel->HandleShiftKey(true);
@@ -1689,6 +1692,9 @@ bool AudacityProject::HandleChar(wxKeyEvent & event)
 
 bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
 {
+   if (event.GetKeyCode() == WXK_ALT)
+      mTrackPanel->HandleAltKey(false);
+
    // Allow the Zoom Out cursor back to Zoom In
    if (event.GetKeyCode() == WXK_SHIFT)
       mTrackPanel->HandleShiftKey(false);

@@ -1423,6 +1423,12 @@ void TrackPanel::MakeParentResize()
    mListener->TP_HandleResize();
 }
 
+void TrackPanel::HandleAltKey(bool down)
+{
+   mLastMouseEvent.m_altDown = down;
+   HandleCursorForLastMouseEvent();
+}
+
 void TrackPanel::HandleShiftKey(bool down)
 {
    mLastMouseEvent.m_shiftDown = down;
