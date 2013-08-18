@@ -105,8 +105,13 @@ Version in Audacity SVN: 1.0.24
 Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
          id3.patch: already in upstream 1.0.26 (git 41da64d9270b2fa10c93ce74dea014fe8f0bd303)
                     fixes crash when importing mp3s that have duplicated tags
-       libsndfile-ppc-crash-on-some-id3-mp3s.patch - submitted to libsndfile
-          list on may 22 2012 (mchinen)
+         libsndfile-ppc-crash-on-some-id3-mp3s.patch - submitted to libsndfile
+                    list on may 22 2012 (mchinen)
+         Add-support-for-Album-and-Track-tags-in-RIFF-files.patch 
+                    Add support for Album and Track tags in RIFF files in the LIST chunk of WAV files.
+                    0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.24.patch for libsndfile 1.0.24, and
+                    0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.25.patch for libsndfile 1.0.25,
+                    submitted to libsndfile list on August 19 2012.
 
 Upstream Version: 1.0.25
 

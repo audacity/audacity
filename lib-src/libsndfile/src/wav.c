@@ -89,6 +89,8 @@
 #define ISRC_MARKER	 (MAKE_MARKER ('I', 'S', 'R', 'C'))
 #define ISBJ_MARKER	 (MAKE_MARKER ('I', 'S', 'B', 'J'))
 #define ICMT_MARKER	 (MAKE_MARKER ('I', 'C', 'M', 'T'))
+#define IAUT_MARKER	 (MAKE_MARKER ('I', 'A', 'U', 'T'))
+#define ITRK_MARKER	 (MAKE_MARKER ('I', 'T', 'R', 'K'))
 
 /* Weird WAVPACK marker which can show up at the start of the DATA section. */
 #define wvpk_MARKER (MAKE_MARKER ('w', 'v', 'p', 'k'))
@@ -1208,6 +1210,14 @@ wav_write_strings (SF_PRIVATE *psf, int location)
 				psf_binheader_writef (psf, "ms", IGNR_MARKER, psf->strings [k].str) ;
 				break ;
 
+			case SF_STR_ALBUM :
+				psf_binheader_writef (psf, "ms", IPRD_MARKER, psf->strings [k].str) ;
+				break ;
+
+			case SF_STR_TRACKNUMBER :
+				psf_binheader_writef (psf, "ms", ITRK_MARKER, psf->strings [k].str) ;
+				break ;
+
 			default :
 				break ;
 			} ;
@@ -1338,6 +1348,8 @@ wav_subchunk_parse (SF_PRIVATE *psf, int chunk)
 			case IPRD_MARKER :
 			case ISBJ_MARKER :
 			case ISRC_MARKER :
+			case IAUT_MARKER :
+			case ITRK_MARKER :
 					bytesread += psf_binheader_readf (psf, "4", &dword) ;
 					dword += (dword & 1) ;
 					if (dword >= SIGNED_SIZEOF (psf->u.cbuf))
@@ -1433,6 +1445,12 @@ wav_subchunk_parse (SF_PRIVATE *psf, int chunk)
 					break ;
 			case IGNR_MARKER :
 					psf_store_string (psf, SF_STR_GENRE, psf->u.cbuf) ;
+					break ;
+			case IPRD_MARKER :
+					psf_store_string (psf, SF_STR_ALBUM, psf->u.cbuf) ;
+					break ;
+			case ITRK_MARKER :
+					psf_store_string (psf, SF_STR_TRACKNUMBER, psf->u.cbuf) ;
 					break ;
 			} ;
 		} ;
