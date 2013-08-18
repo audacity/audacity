@@ -316,7 +316,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
 
          m_pSpin_ToOctave = 
             S.Id(ID_SPIN_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
-         m_pSpin_ToOctave->SetName(_("From Octave"));
+         m_pSpin_ToOctave->SetName(_("To Octave"));
          m_pSpin_ToOctave->SetSizeHints(50, -1);
       }
       S.EndMultiColumn();
