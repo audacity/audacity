@@ -693,7 +693,8 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
    mCommandList.Add(tmpEntry);
    mCommandIDHash[tmpEntry->id] = tmpEntry;   
 
-   if (index == 0 || !multi) {
+//   if (index == 0 || !multi) {
+   {
 #if defined(__WXDEBUG__)
       CommandListEntry *prev = mCommandNameHash[name];
       if (prev) {
@@ -1257,7 +1258,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
    for(j=0; j<mCommandList.GetCount(); j++) {
-      if (!mCommandList[j]->multi) {
+      //if (!mCommandList[j]->multi) {
          
          wxString label = mCommandList[j]->label;
          label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
@@ -1267,7 +1268,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile)
          xmlFile.WriteAttr(wxT("label"), label);
          xmlFile.WriteAttr(wxT("key"), mCommandList[j]->key);
          xmlFile.EndTag(wxT("command"));
-      }
+      //}
    }
    
    xmlFile.EndTag(wxT("audacitykeyboard"));
