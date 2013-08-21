@@ -150,7 +150,7 @@ to download or locate the FFmpeg libraries."
       return;
    }
 
-   void OnOk(wxCommandEvent & event)
+   void OnOk(wxCommandEvent & WXUNUSED(event))
    {
       if (mDontShow->GetValue())
       {

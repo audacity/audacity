@@ -246,7 +246,7 @@ void ExportFFmpeg::Destroy()
    delete this;
 }
 
-bool ExportFFmpeg::CheckFileName(wxFileName &filename, int format)
+bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
    bool result = true;
    if (!CheckFFmpegPresence())
@@ -545,7 +545,7 @@ bool ExportFFmpeg::Finalize()
          if ((codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME)
             || codec->id == CODEC_ID_FLAC
             || mEncAudioCodecCtx->frame_size == 1
-            || gPrefs->Read(wxT("/FileFormats/OverrideSmallLastFrame"),(long)1)
+            || gPrefs->Read(wxT("/FileFormats/OverrideSmallLastFrame"), true)
             )
          {
             int nFrameSizeTmp = mEncAudioCodecCtx->frame_size;
