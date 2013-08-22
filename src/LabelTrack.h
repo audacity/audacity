@@ -86,14 +86,15 @@ public:
    bool updated;                  /// flag to tell if the label times were updated
 };
 
-WX_DEFINE_ARRAY(LabelStruct *, LabelArray);
+AUDACITY_DLL_API WX_DEFINE_ARRAY(LabelStruct *, LabelArray);
 
 const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
 
-class LabelTrack:public Track {
+class AUDACITY_DLL_API LabelTrack : public Track 
+{
    friend class LabelStruct;
 
  public:
