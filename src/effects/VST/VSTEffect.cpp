@@ -72,17 +72,22 @@ void RegisterVSTEffects()
 
    pm.Open();
 
-   if (gPrefs->Read(wxT("/VST/Rescan"), (long) false) != false) {
+   bool bScanRequired = false;
+   if (gPrefs->Read(wxT("/VST/Rescan"), (long)true) != false) {
       pm.PurgeType(VSTPLUGINTYPE);
       gPrefs->Write(wxT("/VST/Rescan"), false);
       gPrefs->Flush();
+      bScanRequired = true;
    }
 
    if (!pm.HasType(VSTPLUGINTYPE)) {
+      // rescan.
       pm.Close();
-      VSTEffect::Scan();
+      if( bScanRequired) 
+         VSTEffect::Scan();
       pm.Open();
    }
+
 
    EffectManager & em = EffectManager::Get();
 
