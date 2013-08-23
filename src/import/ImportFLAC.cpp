@@ -467,7 +467,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
    useOD=true;
 #endif
 
-   // TO-DO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
+   // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
    //    Should check the result.
    #ifdef LEGACY_FLAC
       bool res = (mFile->process_until_end_of_file() != 0);

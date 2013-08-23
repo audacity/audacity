@@ -46,6 +46,7 @@ simplifies construction of menu items.
 #include <wx/scrolbar.h>
 #include <wx/ffile.h>
 #include <wx/statusbr.h>
+#include <wx/utils.h>
 
 #include "Project.h"
 #include "effects/EffectManager.h"
@@ -120,14 +121,15 @@ simplifies construction of menu items.
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
 enum {
-   kAlignZero=0,
+   kAlignEndToEnd=0,
+   kAlign,  // FIX-ME: bad name for "Align Together".
+   kAlignZero,
    kAlignCursor,
    kAlignSelStart,
    kAlignSelEnd,
    kAlignEndCursor,
    kAlignEndSelStart,
-   kAlignEndSelEnd,
-   kAlign
+   kAlignEndSelEnd
 };
 
 
@@ -388,11 +390,14 @@ void AudacityProject::CreateMenusAndCommands()
 
    /////////////////////////////////////////////////////////////////////////////
 
+   // FIX-ME: Wave track should be required in this menu.
    c->BeginSubMenu(_("La&beled Audio"));
    c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag,
                       AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag);
 
    /* i18n-hint: (verb)*/
+   // FIX-ME: Most of these command labels are exact duplicates of those in 'Remove Audio or Labels'
+   // which is a problem in keyboard preferences.
    c->AddItem(wxT("CutLabels"), _("&Cut"), FN(OnCutLabels), wxT("Alt+X"),
               AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag,
               AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag);
@@ -724,18 +729,21 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
    wxArrayString alignLabels;
+   alignLabels.Add(_("&Align End to End"));
+   alignLabels.Add(_("Align Tracks To&gether")); // FIX-ME: Visibility of Access Key with descender.
+   // TODO: Add a separator here. How?
    alignLabels.Add(_("Align with &Zero"));
    alignLabels.Add(_("Align with &Cursor"));
-   alignLabels.Add(_("Align with Selection &Start"));
+   alignLabels.Add(_("Align with Selection &Start")); // FIX-ME: Duplicate of 'Align with Cursor'.
    alignLabels.Add(_("Align with Selection &End"));
    alignLabels.Add(_("Align End with Cu&rsor"));
-   alignLabels.Add(_("Align End with Selection Star&t"));
+   alignLabels.Add(_("Align End with Selection Star&t")); // FIX-ME: Duplicate of 'Align End with Cursor'.
    alignLabels.Add(_("Align End with Selection En&d"));
-   alignLabels.Add(_("Align Tracks To&gether"));
 
    c->BeginSubMenu(_("&Align Tracks"));
 
    c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
+   // FIX-ME: These flags don't grey out menu.
    c->SetCommandFlags(wxT("Align"),
                       AudioIONotBusyFlag | TracksSelectedFlag,
                       AudioIONotBusyFlag | TracksSelectedFlag);
@@ -745,7 +753,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    //////////////////////////////////////////////////////////////////////////
 
-   alignLabels.RemoveAt(7); // Can't align together and move cursor
+   alignLabels.RemoveAt(0,2); // Tracks are moving different amounts so it does not make sense to move the selection.
 
    //////////////////////////////////////////////////////////////////////////
 
@@ -769,6 +777,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
+   // FIX-ME: Sync Lock should not be greyed out during AudioIOBusy.
    c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0);
 
    c->AddSeparator();
@@ -5022,24 +5031,49 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    Track *t = iter.First();
    double delta = 0.0;
    double newPos = -1.0;
+   wxArrayDouble trackStartArray;
+   wxArrayDouble trackEndArray;
+   double firstTrackOffset;
 
    while (t) {
-      if (t->GetSelected()) {
-         numSelected++;
-
+      // We only want Wave and Note tracks here.
+#if defined(USE_MIDI)
+      if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
+                               (t->GetKind() == Track::Note))) {
+#else
+      if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+#endif
          offset = t->GetOffset();
          avgOffset += offset;
+         trackStartArray.Add(t->GetStartTime());
+         trackEndArray.Add(t->GetEndTime());
+
+         if (numSelected == 0)
+            firstTrackOffset = offset;
          if (offset < minOffset)
             minOffset = offset;
          if (t->GetEndTime() > maxEndOffset)
             maxEndOffset = t->GetEndTime();
+         numSelected++;
       }
       t = iter.Next();
    }
 
    avgOffset /= numSelected;
 
+   // Slight hack: If moving selection, add 2 to menu index to get to the 
+   // correct command index, because first two elements are not used in the menu.
+   if (moveSel) index += 2;
+
    switch(index) {
+   case kAlignEndToEnd:
+      newPos = firstTrackOffset;
+      action = _("Aligned end to end");
+      break;
+   case kAlign:
+      newPos = avgOffset;
+      action = _("Aligned"); // TODO: Aligned how?
+      break;
    case kAlignZero:
       delta = -minOffset;
       action = _("Aligned with zero");
@@ -5067,24 +5101,84 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    case kAlignEndSelEnd:
       delta = mViewInfo.sel1 - maxEndOffset;
       action = _("Aligned end with selection end");
-      break;
-   case kAlign:
-      newPos = avgOffset;
-      action = _("Aligned");
-      break;
    }
 
-   if (newPos >= 0.0) {
+   // This was supposed to handle Align Together but newPos may be less than 0.0.
+   // if (newPos >= 0.0) {
+   if (index == kAlign){
       TrackListIterator iter(mTracks);
       Track *t = iter.First();
       
       while (t) {
          // This shifts different tracks in different ways, so no sync-lock move.
+         // FIX-ME: We only want to move Wave Tracks and Note Tracks.
+         // FIX-ME: Tracks misaligned if stereo channels have different starts or ends.
          if (t->GetSelected()) {
             t->SetOffset(newPos);
          }
          t = iter.Next();
       }
+   }
+   
+   // TODO: 'Align Together' should be handled here rather than duplicating code.
+   if (index == kAlignEndToEnd) {
+      TrackListIterator iter(mTracks);
+      Track *t = iter.First();
+      double leftChannelStart = 0.0;
+      double leftChannelEnd = 0.0;
+      double rightChannelStart = 0.0;
+      double rightChannelEnd = 0.0;
+      int arrayIndex = 0;
+      while (t) {
+         // This shifts different tracks in different ways, so no sync-lock move.
+         // Only align Wave and Note tracks end to end.
+#if defined(USE_MIDI)
+         if (t->GetSelected() && ((t->GetKind() == Track::Wave) ||
+                                  (t->GetKind() == Track::Note))) {
+#else
+         if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
+#endif
+            t->SetOffset(newPos);   // Move the track
+            if (t->GetLinked()) {
+               // Left channel of stereo track.
+               leftChannelStart = trackStartArray[arrayIndex];
+               leftChannelEnd = trackEndArray[arrayIndex];
+               rightChannelStart = trackStartArray[1+arrayIndex];
+               rightChannelEnd = trackEndArray[1+arrayIndex];
+               // If the start time of the right channel is earlier, we need to shift this track.
+               // If this is the first track then it is already in correct place.
+               if ((rightChannelStart < leftChannelStart) && (arrayIndex > 0)) {
+                  newPos += leftChannelStart - rightChannelStart;
+                  t->SetOffset(newPos);
+               }
+               // Now set newPos for the right channel.
+               newPos += rightChannelStart - leftChannelStart;
+               arrayIndex++;
+            } else {
+               if (rightChannelEnd > 0) {
+               // Right channel of stereo track
+               // If channels may not have the same start or end times.
+               // Align to end of the stereo track.
+               if (leftChannelStart > rightChannelStart) {
+                  // current position is start of stereo track.
+                  newPos += wxMax(leftChannelEnd, rightChannelEnd) - wxMin(leftChannelStart, rightChannelStart);
+               } else {
+                  // current position is offset by difference in channel start times
+                  newPos += ((wxMax(leftChannelEnd, rightChannelEnd) - 
+                               wxMin(leftChannelStart, rightChannelStart)) -
+                            (rightChannelStart - leftChannelStart));
+               }
+               rightChannelEnd = 0.0;  // Reset right channel end to zero.
+               } else {
+                  // Mono track
+                  newPos += (trackEndArray[arrayIndex] - trackStartArray[arrayIndex]);
+               }
+               arrayIndex++;
+            }
+         }
+         t = iter.Next();
+      }
+      OnZoomFit();
    }
 
    if (delta != 0.0) {
@@ -5105,6 +5199,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       mViewInfo.sel1 += delta;
    }
 
+   // TODO: Better if history distinguished between 'Align' and 'Align Move'.
    PushState(action, _("Align"));
 
    RedrawProject();
