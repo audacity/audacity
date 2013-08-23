@@ -480,6 +480,11 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       tags->SetTag(TAG_TITLE, UTF8CTOWX(str));
    }
 
+   str = sf_get_string(mFile, SF_STR_ALBUM);
+   if (str) {
+      tags->SetTag(TAG_ALBUM, UTF8CTOWX(str));
+   }
+
    str = sf_get_string(mFile, SF_STR_ARTIST);
    if (str) {
       tags->SetTag(TAG_ARTIST, UTF8CTOWX(str));
@@ -497,12 +502,22 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
 
    str = sf_get_string(mFile, SF_STR_COPYRIGHT);
    if (str) {
-      tags->SetTag(wxT("Copyright"), UTF8CTOWX(str));
+      tags->SetTag(TAG_COPYRIGHT, UTF8CTOWX(str));
    }
 
    str = sf_get_string(mFile, SF_STR_SOFTWARE);
    if (str) {
-      tags->SetTag(wxT("Software"), UTF8CTOWX(str));
+      tags->SetTag(TAG_SOFTWARE, UTF8CTOWX(str));
+   }
+
+   str = sf_get_string(mFile, SF_STR_TRACKNUMBER);
+   if (str) {
+      tags->SetTag(TAG_TRACK, UTF8CTOWX(str));
+   }
+
+   str = sf_get_string(mFile, SF_STR_GENRE);
+   if (str) {
+      tags->SetTag(TAG_GENRE, UTF8CTOWX(str));
    }
 
 #if defined(USE_LIBID3TAG)
@@ -655,5 +670,3 @@ PCMImportFileHandle::~PCMImportFileHandle()
 {
    sf_close(mFile);
 }
-
-

@@ -86,7 +86,6 @@ public:
    ExportPCMOptions(wxWindow *parent, int format);
    void PopulateOrExchange(ShuttleGui & S);
    void OnHeaderChoice(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & event);
    void OnOK(wxCommandEvent& event);
 
 private:
@@ -323,8 +322,8 @@ public:
 
 private:
 
-   char *ConvertTo7bitASCII(wxString wxStr);
-   bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags);
+   char *AdjustString(wxString wxStr, int sf_format);
+   bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags, int sf_format);
    void AddID3Chunk(wxString fName, Tags *tags, int sf_format);
 
 };
@@ -488,9 +487,14 @@ int ExportPCM::Export(AudacityProject *project,
    if (metadata == NULL)
       metadata = project->GetTags();
 
-   if (!AddStrings(project, sf, metadata)) { // meta data presence check
-      sf_close(sf);
-      return false;
+    // Install the metata at the beginning of the file (except for
+    // WAV and WAVEX formats)
+    if ((sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAV &&
+        (sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAVEX) {
+       if (!AddStrings(project, sf, metadata, sf_format)) { 
+          sf_close(sf);                          
+          return false;
+       }
    }
 
    sampleFormat format;
@@ -557,6 +561,15 @@ int ExportPCM::Export(AudacityProject *project,
 
    delete[] waveTracks;                            
 
+   // Install the WAV metata in a "LIST" chunk at the end of the file
+   if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
+       (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
+      if (!AddStrings(project, sf, metadata, sf_format)) { 
+         sf_close(sf);                          
+         return false;
+      }
+   }
+
    ODManager::LockLibSndFileMutex();
    err = sf_close(sf);
    ODManager::UnlockLibSndFileMutex();
@@ -570,7 +583,7 @@ int ExportPCM::Export(AudacityProject *project,
                     buffer));
    }
 
-	if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
+   if (((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
        ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV))
       AddID3Chunk(fName, metadata, sf_format);
 
@@ -583,13 +596,18 @@ int ExportPCM::Export(AudacityProject *project,
    return updateResult;
 }
 
-char *ExportPCM::ConvertTo7bitASCII(const wxString wxStr)
+char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
 {
+   bool b_aiff = false;
+   if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)
+         b_aiff = true;    // Apple AIFF file
+
+   // We must convert the string to 7 bit ASCII
    size_t  sz = wxStr.length();
    if(sz == 0)
       return NULL;
    // Size for secure malloc in case of local wide char usage
-   size_t  sr = (sz+2) * 2;   
+   size_t  sr = (sz+4) * 2;   
  
    char *pDest = (char *)malloc(sr);
    if (!pDest)
@@ -664,21 +682,37 @@ char *ExportPCM::ConvertTo7bitASCII(const wxString wxStr)
 
    free(pSrc);
 
+   if(b_aiff) {
+      int len = (int)strlen(pDest);
+      if((len % 2) != 0) {
+         // In case of an odd length string, add a space char
+         strcat(pDest, " ");
+      }
+   }
+
    return pDest;
 }
 
-bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tags *tags)
+bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tags *tags, int sf_format)
 {
    if (tags->HasTag(TAG_TITLE)) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_TITLE));
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_TITLE), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_TITLE, ascii7Str);
          free(ascii7Str);
       }
    }
 
+   if (tags->HasTag(TAG_ALBUM)) {
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_ALBUM), sf_format);
+      if (ascii7Str) {
+         sf_set_string(sf, SF_STR_ALBUM, ascii7Str);
+         free(ascii7Str);
+      }
+   }
+
    if (tags->HasTag(TAG_ARTIST)) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_ARTIST));
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_ARTIST), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_ARTIST, ascii7Str);
          free(ascii7Str);
@@ -686,7 +720,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_COMMENTS)) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_COMMENTS));
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_COMMENTS), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_COMMENT, ascii7Str);
          free(ascii7Str);
@@ -694,7 +728,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_YEAR)) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_YEAR));
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_YEAR), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_DATE, ascii7Str);
          free(ascii7Str);
@@ -702,25 +736,33 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
    }
 
    if (tags->HasTag(TAG_GENRE)) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(TAG_GENRE));
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_GENRE), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_GENRE, ascii7Str);
          free(ascii7Str);
       }
    }
 
-   if (tags->HasTag(wxT("Copyright"))) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(wxT("Copyright")));
+   if (tags->HasTag(TAG_COPYRIGHT)) {
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_COPYRIGHT), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_COPYRIGHT, ascii7Str);
          free(ascii7Str);
       }
    }
 
-   if (tags->HasTag(wxT("Software"))) {
-      char * ascii7Str = ConvertTo7bitASCII(tags->GetTag(wxT("Software")));
+   if (tags->HasTag(TAG_SOFTWARE)) {
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_SOFTWARE), sf_format);
       if (ascii7Str) {
          sf_set_string(sf, SF_STR_SOFTWARE, ascii7Str);
+         free(ascii7Str);
+      }
+   }
+
+   if (tags->HasTag(TAG_TRACK)) {
+      char * ascii7Str = AdjustString(tags->GetTag(TAG_TRACK), sf_format);
+      if (ascii7Str) {
+         sf_set_string(sf, SF_STR_TRACKNUMBER, ascii7Str);
          free(ascii7Str);
       }
    }

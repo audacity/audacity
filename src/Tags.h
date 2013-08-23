@@ -59,6 +59,8 @@ WX_DECLARE_STRING_HASH_MAP(wxString, TagMap);
 #define TAG_YEAR     wxT("YEAR")
 #define TAG_GENRE    wxT("GENRE")
 #define TAG_COMMENTS wxT("COMMENTS")
+#define TAG_SOFTWARE wxT("Software")
+#define TAG_COPYRIGHT wxT("Copyright")
 
 class Tags: public XMLTagHandler {
 
