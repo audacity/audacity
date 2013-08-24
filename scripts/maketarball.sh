@@ -285,22 +285,8 @@ else
 	reconf=1
 fi
 
-if [[ -f "lib-src/libsndfile/Makefile" ]] ; then
-	# has a Makefile - is it newer than .am? (this is an automake package)
-	t2=$(date +%s -r "lib-src/libsndfile/Makefile")
-	t1=$(date +%s -r "lib-src/libsndfile/Makefile.am")
-	if [[ $t1 -gt $t2 ]] ; then
-		# not new enough, reconfigure
-		reconf=1
-	fi
-else
-	# if no Makefile, need to configure libsndfile to get it built enough for
-	# Mac systems to complete the job
-	reconf=1
-fi
-
 # these are the arguments we will pass to configure when it is run
-configargs="--enable-maintainer-mode --with-libsndfile=local --with-lib-preference=\"local system\""
+configargs="--enable-maintainer-mode --with-lib-preference=\"system\""
 
 if [[ x"$reconf" = x1 ]] ; then
 	echo "Your Makefiles are out of date or missing. (Re)running configure to"
@@ -384,17 +370,7 @@ cleanfulltree $mode;
 # line endings on the fly
 fixendings $mode;
 
-# Tar up that lot as the full source tarball
-cd "${topdir}"
-printf "Creating full source tarball .... "
-tar cf "audacity-fullsrc-${version}.tar" "${tarname}" 
-printf "Done\n"
-
-printf "Compressing full source tarball in the background .... "
-xz "audacity-fullsrc-${version}.tar" &
-cd "${tardir}"
-
-# now we have the full source tarball, lets slim it down to the bits that 
+# now we have the full source tree, lets slim it down to the bits that 
 # you actually need to build audacity on a shared library system with the
 # relevant libraries installed on the system (e.g. Linux distros)
 slimtree $mode;
