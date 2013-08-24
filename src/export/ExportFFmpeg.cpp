@@ -538,10 +538,11 @@ bool ExportFFmpeg::Finalize()
          memset(mEncAudioFifoOutBuf,0,nAudioFrameSizeOut);
          AVCodec *codec = mEncAudioCodecCtx->codec;
 
+         // We have an incomplete buffer of samples left.  Is it OK to encode it?
          // If codec supports CODEC_CAP_SMALL_LAST_FRAME, we can feed it with smaller frame
-         // If codec is FLAC, feed it anyway (it doesn't have CODEC_CAP_SMALL_LAST_FRAME, but it works)
-         // If frame_size is 1, then it's some kind of PCM codec, they don't have frames
-         // If user configured the exporter to feed the encoder with silence // FIXME: Finish the sentence!
+         // Or if codec is FLAC, feed it anyway (it doesn't have CODEC_CAP_SMALL_LAST_FRAME, but it works)
+         // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
+         // Or if user configured the exporter to pad with silence, then we'll send audio + silence as a frame.
          if ((codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME)
             || codec->id == CODEC_ID_FLAC
             || mEncAudioCodecCtx->frame_size == 1
