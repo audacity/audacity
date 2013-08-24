@@ -5103,8 +5103,6 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       action = _("Aligned end with selection end");
    }
 
-   // This was supposed to handle Align Together but newPos may be less than 0.0.
-   // if (newPos >= 0.0) {
    if (index == kAlign){
       TrackListIterator iter(mTracks);
       Track *t = iter.First();
