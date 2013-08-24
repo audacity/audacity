@@ -34,6 +34,7 @@
 #include <wx/utils.h>
 #include <wx/dcclient.h>
 #include <wx/imaglist.h>
+#include <wx/listctrl.h>
 
 #if defined(__WXMAC__)
 #include <dlfcn.h>

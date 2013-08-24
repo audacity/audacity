@@ -86,7 +86,8 @@ public:
    bool updated;                  /// flag to tell if the label times were updated
 };
 
-AUDACITY_DLL_API WX_DEFINE_ARRAY(LabelStruct *, LabelArray);
+//AUDACITY_DLL_API WX_DEFINE_ARRAY(LabelStruct *, LabelArray);
+WX_DEFINE_USER_EXPORTED_ARRAY(LabelStruct *, LabelArray, class AUDACITY_DLL_API);
 
 const int NUM_GLYPH_CONFIGS = 3;
 const int NUM_GLYPH_HIGHLIGHTS = 4;
