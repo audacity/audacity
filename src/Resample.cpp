@@ -42,7 +42,7 @@
       mHandle = resample_open(mMethod, dMinFactor, dMaxFactor);
       if(mHandle == NULL) {
          fprintf(stderr, "libresample doesn't support range of factors %f to %f.\n", dMinFactor, dMaxFactor);
-         // FIX-ME: Audacity will hang after this if branch.
+         // FIXME: Audacity will hang after this if branch.
          return;
       }
    }
@@ -97,7 +97,7 @@
       this->SetMethod(useBestMethod);
       if (!src_is_valid_ratio (dMinFactor) || !src_is_valid_ratio (dMaxFactor)) {
          fprintf(stderr, "libsamplerate supports only resampling factors between 1/SRC_MAX_RATIO and SRC_MAX_RATIO.\n");
-         // FIX-ME: Audacity will hang after this if branch.
+         // FIXME: Audacity will hang after this if branch.
          mHandle = NULL;
          return;
       }

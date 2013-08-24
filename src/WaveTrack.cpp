@@ -1843,8 +1843,8 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
       return;
 
    // This is useful in debugging, to easily find null envelope settings, but 
-   // should not be necessary in release build. 
-   // If we were going to set it to failsafe values, better to set each element to 1.0.
+   // should not be necessary in Release build. 
+   // If we were going to set it to failsafe values in Release build, better to set each element to 1.0.
    #ifdef __WXDEBUG__
       memset(buffer, 0, sizeof(double)*bufferLen);
    #endif
@@ -1863,8 +1863,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
       {
          double* rbuf = buffer;
          int rlen = bufferLen;
-         if (rlen <= 0)
-            return; // loop completion
          double rt0 = t0;
 
          if (rt0 < dClipStartTime)
@@ -1877,7 +1875,12 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
 
          if (rt0 + rlen*tstep > dClipEndTime)
          {
+            //vvvvv debugging   int nStartSample = clip->GetStartSample();
+            //vvvvv debugging   int nEndSample = clip->GetEndSample();
             int nClipLen = clip->GetEndSample() - clip->GetStartSample();
+
+            if (nClipLen <= 0) // Testing for bug 641, this problem is consistently '== 0', but doesn't hurt to check <. 
+               return; 
 
             // This check prevents problem cited in http://bugzilla.audacityteam.org/show_bug.cgi?id=528#c11, 
             // Gale's cross_fade_out project, which was already corrupted by bug 528.
@@ -1885,8 +1888,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
             if (nClipLen < rlen) // Never increase rlen here. 
                rlen = nClipLen;
          }
-         if (rlen <= 0) 
-            return; // loop completion
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
    }
@@ -2290,7 +2291,7 @@ bool WaveTrack::Resample(int rate, ProgressDialog *progress)
       if (!it->GetData()->Resample(rate, progress))
       {
          wxLogDebug( wxT("Resampling problem!  We're partially resampled") );
-         // FIX-ME: The track is now in an inconsistent state since some
+         // FIXME: The track is now in an inconsistent state since some
          //        clips are resampled and some are not
          return false;
       }

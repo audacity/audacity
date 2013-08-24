@@ -94,7 +94,7 @@ void CloseContrastDialog()
 
 float ContrastDialog::GetDB()
 {
-// FIX-ME: what if more than one track?
+// FIXME: what if more than one track?
    float rms = float(0.0);
 
    AudacityProject *p = GetActiveProject();

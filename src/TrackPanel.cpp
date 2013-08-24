@@ -5175,7 +5175,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
 bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event)
 {
-   // FIX-ME: Disable this and return true when CutLines aren't showing?
+   // FIXME: Disable this and return true when CutLines aren't showing?
    // (Don't use gPerfs-> for the fix as registry access is slow).
 
    if (mMouseCapture == WasOverCutLine)
@@ -5544,7 +5544,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
    } else if( trackKind != Track::Wave) {
       currentTool = selectTool;
    // So we are in a wave track.
-   //FIX-ME: Not necessarily. Haven't checked Track::Note (#if defined(USE_MIDI)).
+   //FIXME: Not necessarily. Haven't checked Track::Note (#if defined(USE_MIDI)).
    // From here on the order in which we hit test determines 
    // which tool takes priority in the rare cases where it
    // could be more than one.

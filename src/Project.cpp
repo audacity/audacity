@@ -2307,7 +2307,7 @@ bool AudacityProject::WarnOfLegacyFile( )
 }
 
 
-// FIX-ME? This should return a result that is checked. 
+// FIXME? This should return a result that is checked. 
 //    See comment in AudacityApp::MRUOpen().
 void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 {
@@ -2394,7 +2394,7 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       }
    }
    
-   //FIX-ME: //v Surely we could be smarter about this, 
+   //FIXME: //v Surely we could be smarter about this, 
    // like checking much earlier that this is a .aup file.
    if (temp.Mid(0, 6) != wxT("<?xml ")) {
       // If it's not XML, try opening it as any other form of audio

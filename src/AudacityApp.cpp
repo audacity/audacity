@@ -737,7 +737,7 @@ void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
    while (ofqueue.GetCount()) {
       wxString name(ofqueue[0]);
       ofqueue.RemoveAt(0);
-      MRUOpen(name); // FIX-ME: Check the return result?
+      MRUOpen(name); // FIXME: Check the return result?
    }
 }
 #endif //__WXMAC__
@@ -794,7 +794,7 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
          // Make sure it isn't already open.
          // Test here even though AudacityProject::OpenFile() also now checks, because 
          // that method does not return the bad result. 
-         // That itself may be a FIX-ME.
+         // That itself may be a FIXME.
          if (AudacityProject::IsAlreadyOpen(fullPathStr))
             return false;
          

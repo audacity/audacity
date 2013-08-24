@@ -505,7 +505,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       return ConsistencyCheck(wxT("Paste branch one"));
    }
 
-   // FIX-ME: "b" is unsigned, so it's pointless to check that it's >= 0.
+   // FIXME: "b" is unsigned, so it's pointless to check that it's >= 0.
    if (b >= 0 && b < numBlocks
        && ((mBlock->Item(b)->f->GetLength() + addedLen) < mMaxSamples)) {
       // Special case: we can fit all of the new samples inside of

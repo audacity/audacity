@@ -856,7 +856,7 @@ wxFileName DirManager::MakeBlockFileName()
          }else break;
       }
    }
-   // FIX-ME: Might we get here without midkey having been set?
+   // FIXME: Might we get here without midkey having been set?
    BalanceFileAdd(midkey);
    return ret;
 }

@@ -420,7 +420,7 @@ void DeviceToolBar::RepositionCombos()
    // as the toolbar's with can extend past this.
    GetClientSize(&w, &h);
 
-   // FIX-ME: Note that there's some bug in here, in that even if the prefs show the toolbar 
+   // FIXME: Note that there's some bug in here, in that even if the prefs show the toolbar 
    // docked, on initialization, this call to IsDocked() returns false.
    if (IsDocked()) {
       // If the toolbar is docked its width can be larger than what is actually viewable

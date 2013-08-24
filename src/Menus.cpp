@@ -122,7 +122,7 @@ simplifies construction of menu items.
 
 enum {
    kAlignEndToEnd=0,
-   kAlign,  // FIX-ME: bad name for "Align Together".
+   kAlign,  // FIXME: bad name for "Align Together".
    kAlignZero,
    kAlignCursor,
    kAlignSelStart,
@@ -390,13 +390,13 @@ void AudacityProject::CreateMenusAndCommands()
 
    /////////////////////////////////////////////////////////////////////////////
 
-   // FIX-ME: Wave track should be required in this menu.
+   // FIXME: Wave track should be required in this menu.
    c->BeginSubMenu(_("La&beled Audio"));
    c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag,
                       AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag);
 
    /* i18n-hint: (verb)*/
-   // FIX-ME: Most of these command labels are exact duplicates of those in 'Remove Audio or Labels'
+   // FIXME: Most of these command labels are exact duplicates of those in 'Remove Audio or Labels'
    // which is a problem in keyboard preferences.
    c->AddItem(wxT("CutLabels"), _("&Cut"), FN(OnCutLabels), wxT("Alt+X"),
               AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag,
@@ -730,20 +730,20 @@ void AudacityProject::CreateMenusAndCommands()
 
    wxArrayString alignLabels;
    alignLabels.Add(_("&Align End to End"));
-   alignLabels.Add(_("Align Tracks To&gether")); // FIX-ME: Visibility of Access Key with descender.
+   alignLabels.Add(_("Align Tracks To&gether")); // FIXME: Visibility of Access Key with descender.
    // TODO: Add a separator here. How?
    alignLabels.Add(_("Align with &Zero"));
    alignLabels.Add(_("Align with &Cursor"));
-   alignLabels.Add(_("Align with Selection &Start")); // FIX-ME: Duplicate of 'Align with Cursor'.
+   alignLabels.Add(_("Align with Selection &Start")); // FIXME: Duplicate of 'Align with Cursor'.
    alignLabels.Add(_("Align with Selection &End"));
    alignLabels.Add(_("Align End with Cu&rsor"));
-   alignLabels.Add(_("Align End with Selection Star&t")); // FIX-ME: Duplicate of 'Align End with Cursor'.
+   alignLabels.Add(_("Align End with Selection Star&t")); // FIXME: Duplicate of 'Align End with Cursor'.
    alignLabels.Add(_("Align End with Selection En&d"));
 
    c->BeginSubMenu(_("&Align Tracks"));
 
    c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
-   // FIX-ME: These flags don't grey out menu.
+   // FIXME: These flags don't grey out menu.
    c->SetCommandFlags(wxT("Align"),
                       AudioIONotBusyFlag | TracksSelectedFlag,
                       AudioIONotBusyFlag | TracksSelectedFlag);
@@ -777,7 +777,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   // FIX-ME: Sync Lock should not be greyed out during AudioIOBusy.
+   // FIXME: Sync Lock should not be greyed out during AudioIOBusy.
    c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0);
 
    c->AddSeparator();
@@ -1346,7 +1346,7 @@ void AudacityProject::RebuildMenuBar()
 // Under Windows we delete the menus, since we will soon recreate them.
 // rather oddly, the menus don't vanish as a result of doing this.
 // Under Linux we can't delete them as this crashes gtk2....
-// FIX-ME: So we have a memory leak of menu items under linux?  Oops.  
+// FIXME: So we have a memory leak of menu items under linux?  Oops.  
 #ifdef __WXMSW__
    wxMenuBar *menuBar = GetMenuBar();
 
@@ -4202,7 +4202,7 @@ void AudacityProject::OnSplitNew()
 //      n = iter.Next();
 //   }
 //
-//   wxASSERT(label); // per Vigilant Sentry report on possible null deref, FIX-ME: Report error or validate?
+//   wxASSERT(label); // per Vigilant Sentry report on possible null deref, FIXME: Report error or validate?
 //   for(int i = 0; i < label->GetNumLabels(); i++) {
 //      wxString name = label->GetLabel(i)->title;
 //      double begin = label->GetLabel(i)->t;
@@ -5109,8 +5109,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       
       while (t) {
          // This shifts different tracks in different ways, so no sync-lock move.
-         // FIX-ME: We only want to move Wave Tracks and Note Tracks.
-         // FIX-ME: Tracks misaligned if stereo channels have different starts or ends.
+         // FIXME: We only want to move Wave Tracks and Note Tracks.
+         // FIXME: Tracks misaligned if stereo channels have different starts or ends.
          if (t->GetSelected()) {
             t->SetOffset(newPos);
          }

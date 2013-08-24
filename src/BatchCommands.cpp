@@ -450,7 +450,7 @@ bool BatchCommands::ApplySpecialCommand(int iCommand, const wxString command,con
 
    // We have a command index, but we don't use it!
    // TODO: Make this special-batch-command code use the menu item code....
-   // FIX-ME: No error reporting on write file failure in batch mode.
+   // FIXME: No error reporting on write file failure in batch mode.
    if (command == wxT("NoAction")) {
       return true;
    } else if (!mFileName.IsEmpty() && command == wxT("Import")) {
@@ -536,7 +536,7 @@ bool BatchCommands::ApplyEffectCommand(   Effect * f, const wxString command, co
 
    AudacityProject *project = GetActiveProject();
 
-   //FIX-ME: for later versions may want to not select-all in batch mode.
+   //FIXME: for later versions may want to not select-all in batch mode.
    //IF nothing selected, THEN select everything 
    // (most effects require that you have something selected).
    project->SelectAllIfNone();
