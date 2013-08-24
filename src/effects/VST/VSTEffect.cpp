@@ -121,6 +121,7 @@ class PluginRegistrationDialog:public wxDialog {
    void OnApply(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
    void OnToggleState( wxListEvent & event );
+   void SetBoldOrRegular( int i );
 
    wxButton *mOK;
    wxButton *mCancel;
@@ -211,7 +212,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    wxSize siz;
    for (int i = 0; i < (int)mFiles.GetCount(); i++) {
       miState.Add( SHOW_CHECKED ); // 1 is selected.
-      mPlugins->InsertItem(i, mFiles[i], SHOW_CHECKED);
+      mPlugins->InsertItem(i, wxString(wxT(" ")) + mFiles[i], SHOW_CHECKED);
+//    SetBoldOrRegular( i );
       siz = dc.GetTextExtent( mFiles[i] );
       if( siz.GetWidth() > iLen )
          iLen = siz.GetWidth();
@@ -226,12 +228,20 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
 }
 
+void PluginRegistrationDialog::SetBoldOrRegular( int i )
+{
+   wxFont Font = mPlugins->GetItemFont( i );
+   Font.SetWeight( (miState[i]==SHOW_CHECKED)? wxFONTWEIGHT_BOLD : wxFONTWEIGHT_NORMAL );
+   mPlugins->SetItemFont( i, Font );
+}
+
 void PluginRegistrationDialog::OnToggleState(wxListEvent & event)
 {
    int i = event.GetIndex();
    miState[ i ] = (miState[ i ]==SHOW_CHECKED) ? SHOW_UNCHECKED : SHOW_CHECKED; // Toggle it.
    mPlugins->SetItemState( i, 0 ,wxLIST_STATE_SELECTED);
    mPlugins->SetItemImage( i, miState[i] );
+// SetBoldOrRegular( i );
 }
 
 void PluginRegistrationDialog::OnApply(wxCommandEvent & event)
