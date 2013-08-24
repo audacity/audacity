@@ -221,7 +221,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    Layout();
    Fit();
    SetSizeHints(GetSize());
-   Center();
+   // Parent window is usually not there yet, so centre on screen rather than on parent.
+   CenterOnScreen();
 
 }
 
