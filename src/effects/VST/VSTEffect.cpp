@@ -32,6 +32,8 @@
 #include <wx/stattext.h>
 #include <wx/stopwatch.h>
 #include <wx/utils.h>
+#include <wx/dcclient.h>
+#include <wx/imaglist.h>
 
 #if defined(__WXMAC__)
 #include <dlfcn.h>
@@ -57,6 +59,8 @@
 #include "../../xml/XMLFileReader.h"
 #include "../../xml/XMLWriter.h"
 #include "../EffectManager.h"
+#include "../../Theme.h"
+#include "../images/Arrow.xpm"
 
 #include "VSTEffect.h"
 
@@ -73,7 +77,7 @@ void RegisterVSTEffects()
    pm.Open();
 
    bool bScanRequired = false;
-   if (gPrefs->Read(wxT("/VST/Rescan"), (long)true) != false) {
+   if ( bScanRequired || gPrefs->Read(wxT("/VST/Rescan"), (long)true) != false) {
       pm.PurgeType(VSTPLUGINTYPE);
       gPrefs->Write(wxT("/VST/Rescan"), false);
       gPrefs->Flush();
@@ -81,13 +85,11 @@ void RegisterVSTEffects()
    }
 
    if (!pm.HasType(VSTPLUGINTYPE)) {
-      // rescan.
       pm.Close();
       if( bScanRequired) 
          VSTEffect::Scan();
       pm.Open();
    }
-
 
    EffectManager & em = EffectManager::Get();
 
@@ -106,6 +108,164 @@ void RegisterVSTEffects()
 
    pm.Close();
 }
+
+class PluginRegistrationDialog:public wxDialog {
+ public:
+   // constructors and destructors
+   PluginRegistrationDialog(wxWindow * parent, const wxArrayString & files);
+   virtual ~PluginRegistrationDialog();
+ public:
+   void Populate();
+   void PopulateOrExchange( ShuttleGui & S );
+
+   void OnApply(wxCommandEvent & event);
+   void OnCancel(wxCommandEvent & event);
+   void OnToggleState( wxListEvent & event );
+
+   wxButton *mOK;
+   wxButton *mCancel;
+   wxListCtrl *mPlugins;
+   wxArrayString mFiles;
+   wxArrayInt miState;
+//   wxListCtrl *mList;
+//   BatchCommands mBatchCommands;
+
+   bool mAbort;
+
+   DECLARE_EVENT_TABLE()
+};
+
+
+#define PluginListID       7001
+
+BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
+   EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnApply)
+   EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
+   EVT_LIST_ITEM_SELECTED( wxID_ANY, PluginRegistrationDialog::OnToggleState )
+END_EVENT_TABLE()
+
+PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxArrayString & files):
+   mFiles( files ),
+   wxDialog(parent, wxID_ANY, _("Install VST Plugins"),
+            wxDefaultPosition, wxDefaultSize,
+            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+{
+   SetLabel(_("Install VST Plugins"));         // Provide visual label
+   SetName(_("Install VST Plugins"));          // Provide audible label
+   Populate();
+
+   mAbort = false;
+}
+
+PluginRegistrationDialog::~PluginRegistrationDialog()
+{
+}
+
+void PluginRegistrationDialog::Populate()
+{
+   //------------------------- Main section --------------------
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+   // ----------------------- End of main section --------------
+}
+
+/// Defines the dialog and does data exchange with it.
+void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
+{
+   wxImageList * pImageList = new wxImageList( 16, 16 );
+
+#define SHOW_UNCHECKED (0)
+#define SHOW_CHECKED (1)
+#define SHOW_ARROW (2)
+
+   pImageList->Add(wxIcon(unchecked_xpm));
+   pImageList->Add(wxIcon(checked_xpm));
+   pImageList->Add(wxIcon(arrow_xpm));
+
+   S.StartVerticalLay(true);
+   {
+      /*i18n-hint: The dialog shows a list of plugins with check-boxes 
+       beside each one.*/
+      S.StartStatic(_("&Select Plugins to Install"), true);
+      {
+         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
+         mPlugins = S.Id(PluginListID).AddListControlReportMode();
+         mPlugins->AssignImageList( pImageList, wxIMAGE_LIST_SMALL );
+         mPlugins->InsertColumn(0, _("Plugin File"), wxLIST_FORMAT_LEFT);
+      }
+      S.EndStatic();
+
+      S.StartHorizontalLay(wxALIGN_RIGHT, false);
+      {
+         S.SetBorder(10);
+         S.Id(wxID_CANCEL).AddButton(_("&Cancel"));
+         S.Id(wxID_OK).AddButton(_("OK"))->SetDefault();
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndVerticalLay();
+
+   wxClientDC dc( this );
+   
+   int iLen = 100;
+   wxSize siz;
+   for (int i = 0; i < (int)mFiles.GetCount(); i++) {
+      miState.Add( SHOW_CHECKED ); // 1 is selected.
+      mPlugins->InsertItem(i, mFiles[i], SHOW_CHECKED);
+      siz = dc.GetTextExtent( mFiles[i] );
+      if( siz.GetWidth() > iLen )
+         iLen = siz.GetWidth();
+   }
+   mPlugins->SetColumnWidth(0, iLen);
+   mPlugins->SetSizeHints( iLen, 200 );
+   Layout();
+   Fit();
+   SetSizeHints(GetSize());
+   Center();
+
+}
+
+void PluginRegistrationDialog::OnToggleState(wxListEvent & event)
+{
+   int i = event.GetIndex();
+   miState[ i ] = (miState[ i ]==SHOW_CHECKED) ? SHOW_UNCHECKED : SHOW_CHECKED; // Toggle it.
+   mPlugins->SetItemState( i, 0 ,wxLIST_STATE_SELECTED);
+   mPlugins->SetItemImage( i, miState[i] );
+}
+
+void PluginRegistrationDialog::OnApply(wxCommandEvent & event)
+{
+
+   size_t cnt = mFiles.GetCount();
+   for (size_t i = 0; i < cnt; i++) {
+      wxString file = mFiles[i];
+#if 0
+      int status = progress->Update(wxLongLong(i),
+                                    wxLongLong(cnt),
+                                    wxString::Format(_("Checking %s"), file.c_str()));
+      if (status != eProgressSuccess) {
+         break;
+      }
+#endif
+      mPlugins->EnsureVisible( i );
+      if( miState[ i ] == SHOW_CHECKED )
+      {
+         mPlugins->SetItemImage( i, SHOW_ARROW );
+         VSTEffect::ScanOnePlugin( file );
+         mPlugins->SetItemImage( i, SHOW_CHECKED );
+      }
+   }
+   EndModal( true );
+}
+
+void PluginRegistrationDialog::OnCancel(wxCommandEvent &event)
+{
+   EndModal(false);
+}
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -1679,6 +1839,47 @@ void VSTEffect::Unload()
    }
 }
 
+void VSTEffect::ScanOnePlugin( const wxString & file )
+{
+   const wxChar * argv[4];
+   argv[0] = PlatformCompatibility::GetExecutablePath().c_str();
+   argv[1] = VSTCMDKEY;
+   argv[2] = file.c_str();
+   argv[3] = NULL;
+   // ToDo: do we need a try--catch around this in case a bad plug-in 
+   // fails? (JKC Nov09)
+   wxExecute((wxChar **) argv, wxEXEC_SYNC | wxEXEC_NODISABLE, NULL);
+}
+
+void VSTEffect::ShowPluginListDialog( const wxArrayString & files )
+{
+   PluginRegistrationDialog d( wxGetApp().GetTopWindow(), files );
+   d.ShowModal();
+}
+
+void VSTEffect::ShowProgressDialog( const wxString & longest, const wxArrayString & files )
+{
+   ProgressDialog *progress = new ProgressDialog(_("Scanning VST Plugins"),
+                                                 longest,
+                                                 pdlgHideStopButton);
+//   progress->SetSize(wxSize(500, -1));
+   progress->CenterOnScreen();
+
+   size_t cnt = files.GetCount();
+   for (size_t i = 0; i < cnt; i++) {
+      wxString file = files[i];
+      int status = progress->Update(wxLongLong(i),
+                                    wxLongLong(cnt),
+                                    wxString::Format(_("Checking %s"), file.c_str()));
+      if (status != eProgressSuccess) {
+         break;
+      }
+      ScanOnePlugin( file );
+   }
+
+   delete progress;   
+}
+
 /* static */
 void VSTEffect::Scan()
 {
@@ -1774,6 +1975,8 @@ void VSTEffect::Scan()
 
 #endif
 
+   files.Sort();
+
    // This is a hack to allow for long paths in the progress dialog.  The
    // progress dialog should really truncate the message if it's too wide
    // for the dialog.
@@ -1790,35 +1993,10 @@ void VSTEffect::Scan()
          longest = files[i];
       }
    }
-
-   ProgressDialog *progress = new ProgressDialog(_("Scanning VST Plugins"),
-                                                 longest,
-                                                 pdlgHideStopButton);
-//   progress->SetSize(wxSize(500, -1));
-   progress->CenterOnScreen();
-
-   const wxChar * argv[4];
-   argv[0] = PlatformCompatibility::GetExecutablePath().c_str();
-   argv[1] = VSTCMDKEY;
-   argv[2] = NULL;
-   argv[3] = NULL;
-
-   for (size_t i = 0; i < cnt; i++) {
-      wxString file = files[i];
-      int status = progress->Update(wxLongLong(i),
-                                    wxLongLong(cnt),
-                                    wxString::Format(_("Checking %s"), file.c_str()));
-      if (status != eProgressSuccess) {
-         break;
-      }
-
-      argv[2] = file.c_str();
-      // ToDo: do we need a try--catch around this in case a bad plug-in 
-      // fails? (JKC Nov09)
-      wxExecute((wxChar **) argv, wxEXEC_SYNC | wxEXEC_NODISABLE, NULL);
-   }
-
-   delete progress;   
+   //Choose the first for the original version which scans them all
+   //The second to selectively scan.
+   //ShowProgressDialog( longest, files );
+   ShowPluginListDialog(  files );
 }
 
 /* static */

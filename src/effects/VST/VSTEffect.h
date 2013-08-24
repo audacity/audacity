@@ -68,6 +68,12 @@ class VSTEffect:public Effect
    static void Scan();
    static void Check(const wxChar *fname);
 
+   static void ScanOnePlugin( const wxString & file );
+   static void ShowPluginListDialog( const wxArrayString & files );
+   static void ShowProgressDialog( const wxString & longest, const wxArrayString & files );
+
+
+
    // Utility methods
 
    int GetChannels();

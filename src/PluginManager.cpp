@@ -185,6 +185,7 @@ void PluginManager::PurgeType(const wxString & type)
 
    path.Printf(wxT("/%s"), type.c_str());
 
+   SetDirty();
    mConfig->DeleteGroup(path);
 }
 
