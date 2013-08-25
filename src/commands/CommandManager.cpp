@@ -448,7 +448,7 @@ void CommandManager::AddCheck(const wxChar *name,
                               CommandFunctor *callback,
                               int checkmark)
 {
-   AddItem(name, label, callback, wxT(""), NoFlagsSpecifed, NoFlagsSpecifed, checkmark);
+   AddItem(name, label, callback, wxT(""), (unsigned int)NoFlagsSpecifed, (unsigned int)NoFlagsSpecifed, checkmark);
 }
 
 void CommandManager::AddCheck(const wxChar *name,
@@ -698,11 +698,17 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
 #if defined(__WXDEBUG__)
       CommandListEntry *prev = mCommandNameHash[name];
       if (prev) {
-         wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
+         if( prev->label != tmpEntry->label )
+         {
+            wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
+                      name.c_str(),
+                      prev->label.BeforeFirst(wxT('\t')).c_str(),
+                      tmpEntry->label.BeforeFirst(wxT('\t')).c_str());
+            wxFAIL_MSG( wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
                    name.c_str(),
                    prev->label.BeforeFirst(wxT('\t')).c_str(),
-                   tmpEntry->label.BeforeFirst(wxT('\t')).c_str());
-         wxASSERT(!prev);
+                   tmpEntry->label.BeforeFirst(wxT('\t')).c_str()));
+         }
       }
 #endif
       mCommandNameHash[name] = tmpEntry;
@@ -1245,7 +1251,7 @@ void CommandManager::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-XMLTagHandler *CommandManager::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
 {
    return this;
 }
