@@ -300,23 +300,23 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    /* i18n-hint: (noun) Musical pitch.*/
    S.StartStatic(wxT("Pitch"));
    {
-      S.StartMultiColumn(6, wxALIGN_CENTER); // 6, because AddChoice adds a wxStaticText and a wxChoice.
+      S.StartMultiColumn(6, wxALIGN_CENTER); // 6 controls, because each AddChoice adds a wxStaticText and a wxChoice.
       {
          m_pChoice_FromPitch = S.Id(ID_CHOICE_FROMPITCH).AddChoice(_("from"), wxT(""), &pitch);
-         m_pChoice_FromPitch->SetName(_("From Pitch"));
+         m_pChoice_FromPitch->SetName(_("from"));
          m_pChoice_FromPitch->SetSizeHints(80, -1);
 
          m_pSpin_FromOctave = S.Id(ID_SPIN_FROMOCTAVE).AddSpinCtrl(wxT(""), m_nFromOctave, INT_MAX, INT_MIN); 
-         m_pSpin_FromOctave->SetName(_("From Octave"));
+         m_pSpin_FromOctave->SetName(_("from Octave"));
          m_pSpin_FromOctave->SetSizeHints(50, -1);
 
          m_pChoice_ToPitch = S.Id(ID_CHOICE_TOPITCH).AddChoice(_("to"), wxT(""), &pitch);
-         m_pChoice_ToPitch->SetName(_("To Pitch"));
+         m_pChoice_ToPitch->SetName(_("to"));
          m_pChoice_ToPitch->SetSizeHints(80, -1);
 
          m_pSpin_ToOctave = 
             S.Id(ID_SPIN_TOOCTAVE).AddSpinCtrl(wxT(""), m_nToOctave, INT_MAX, INT_MIN); 
-         m_pSpin_ToOctave->SetName(_("To Octave"));
+         m_pSpin_ToOctave->SetName(_("to Octave"));
          m_pSpin_ToOctave->SetSizeHints(50, -1);
       }
       S.EndMultiColumn();
@@ -337,11 +337,11 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(5, wxALIGN_CENTER); // 5, because AddTextBox adds a wxStaticText and a wxTextCtrl.
       {
          m_pTextCtrl_FromFrequency = S.Id(ID_TEXT_FROMFREQUENCY).AddTextBox(_("from"), wxT(""), 12);
-         m_pTextCtrl_FromFrequency->SetName(_("From Frequency in Hertz"));
+         m_pTextCtrl_FromFrequency->SetName(_("from (Hz)"));
          m_pTextCtrl_FromFrequency->SetValidator(nonNegNumValidator);
 
          m_pTextCtrl_ToFrequency = S.Id(ID_TEXT_TOFREQUENCY).AddTextBox(_("to"), wxT(""), 12);
-         m_pTextCtrl_ToFrequency->SetName(_("To Frequency in Hertz"));
+         m_pTextCtrl_ToFrequency->SetName(_("to (Hz)"));
          m_pTextCtrl_ToFrequency->SetValidator(nonNegNumValidator);
 
          S.AddUnits(_("Hz"));
