@@ -182,7 +182,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
    pImageList->Add(wxIcon(unchecked_xpm));
    pImageList->Add(wxIcon(checked_xpm));
-   pImageList->Add(wxIcon(arrow_xpm));
+   pImageList->Add(wxIcon(arrow15x15_xpm));
 
    S.StartVerticalLay(true);
    {
