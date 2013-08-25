@@ -144,7 +144,7 @@ BenchmarkDialog::BenchmarkDialog(wxWindow *parent):
 
 // WDR: handler implementations for BenchmarkDialog
 
-void BenchmarkDialog::OnClose(wxCommandEvent &event)
+void BenchmarkDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(0);
 }
@@ -240,7 +240,7 @@ void BenchmarkDialog::MakeBenchmarkDialog()
    SetSizeHints(GetSize());
 }
 
-void BenchmarkDialog::OnSave( wxCommandEvent &event )
+void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
 {
    wxString fName = wxT("benchmark.txt");
 
@@ -253,7 +253,7 @@ void BenchmarkDialog::OnSave( wxCommandEvent &event )
    mText->SaveFile(fName);
 }
 
-void BenchmarkDialog::OnClear(wxCommandEvent &event)
+void BenchmarkDialog::OnClear(wxCommandEvent & WXUNUSED(event))
 {
    mText->Clear();
 }
@@ -290,7 +290,7 @@ void BenchmarkDialog::FlushPrint()
    mToPrint = wxT("");
 }
 
-void BenchmarkDialog::OnRun( wxCommandEvent &event )
+void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
  

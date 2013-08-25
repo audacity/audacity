@@ -246,7 +246,7 @@ bool EchoDialog::TransferDataFromWindow()
 
 // handler implementations for EchoDialog
 
-void EchoDialog::OnPreview(wxCommandEvent &event)
+void EchoDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 

@@ -150,7 +150,7 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportMP2Options::OnOK(wxCommandEvent& event)
+void ExportMP2Options::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -212,7 +212,7 @@ void ExportMP2::Destroy()
 int ExportMP2::Export(AudacityProject *project,
                int channels, wxString fName,
                bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, Tags *metadata,
-               int subformat)
+               int WXUNUSED(subformat))
 {
    bool stereo = (channels == 2);
    long bitrate = gPrefs->Read(wxT("/FileFormats/MP2Bitrate"), 160);
@@ -332,7 +332,7 @@ int ExportMP2::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportMP2::DisplayOptions(wxWindow *parent, int format)
+bool ExportMP2::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
 {
    ExportMP2Options od(parent);
 
@@ -342,7 +342,7 @@ bool ExportMP2::DisplayOptions(wxWindow *parent, int format)
 }
 
 // returns buffer len; caller frees
-int ExportMP2::AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags)
+int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, Tags *tags)
 {
 #ifdef USE_LIBID3TAG 
    struct id3_tag *tp = id3_tag_new();

@@ -33,7 +33,7 @@ Command *HelpCommandType::Create(CommandOutputTarget *target)
    return new HelpCommand(*this, target);
 }
 
-bool HelpCommand::Apply(CommandExecutionContext context)
+bool HelpCommand::Apply(CommandExecutionContext WXUNUSED(context))
 {
    wxString commandName = GetString(wxT("CommandName"));
    CommandType *type = CommandDirectory::Get()->LookUp(commandName);

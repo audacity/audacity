@@ -129,7 +129,7 @@ class PaulStretch{
 
 
    protected:
-      virtual void process_spectrum(float *freq){};
+      virtual void process_spectrum(float *WXUNUSED(freq)){};
       float samplerate;
    private:
       float *in_pool;//de marimea in_bufsize
@@ -464,7 +464,7 @@ bool PaulstretchDialog::TransferDataFromWindow(){
    return true;
 }
 
-void PaulstretchDialog::OnPreview(wxCommandEvent &event){
+void PaulstretchDialog::OnPreview(wxCommandEvent & WXUNUSED(event)){
    TransferDataFromWindow();
 
    // Save & restore parameters around Preview, because we didn't do OK.

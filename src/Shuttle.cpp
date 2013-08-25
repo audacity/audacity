@@ -237,7 +237,7 @@ bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
    return true;
 }
 
-bool Shuttle::TransferString( const wxString & Name, wxString & strValue, const wxString &strDefault )
+bool Shuttle::TransferString( const wxString & Name, wxString & strValue, const wxString & WXUNUSED(strDefault) )
 {
    if( mbStoreInClient )
    {
@@ -272,7 +272,7 @@ bool Shuttle::TransferWrappedType( const wxString & Name, WrappedType & W )
 }
 
 
-bool Shuttle::ExchangeWithMaster(const wxString & Name)
+bool Shuttle::ExchangeWithMaster(const wxString & WXUNUSED(Name))
 {
    // ExchangeWithMaster() will usually be over-ridden
    // in derived classes.  We could have made it an

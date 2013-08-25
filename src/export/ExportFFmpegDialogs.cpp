@@ -194,7 +194,7 @@ void ExportFFmpegAC3Options::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportFFmpegAC3Options::OnOK(wxCommandEvent& event)
+void ExportFFmpegAC3Options::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -247,7 +247,7 @@ void ExportFFmpegAACOptions::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportFFmpegAACOptions::OnOK(wxCommandEvent& event)
+void ExportFFmpegAACOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -317,7 +317,7 @@ void ExportFFmpegAMRNBOptions::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportFFmpegAMRNBOptions::OnOK(wxCommandEvent& event)
+void ExportFFmpegAMRNBOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -389,7 +389,7 @@ void ExportFFmpegWMAOptions::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportFFmpegWMAOptions::OnOK(wxCommandEvent& event)
+void ExportFFmpegWMAOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -1650,7 +1650,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(CodecID id, wxString *selfmt)
 
 ///
 ///
-void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& event)
+void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
 {
    wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString presetname = preset->GetValue();
@@ -1673,7 +1673,7 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& event)
 
 ///
 ///
-void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& event)
+void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& WXUNUSED(event))
 {
    wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString name = preset->GetValue();
@@ -1695,7 +1695,7 @@ void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& event)
 
 ///
 ///
-void ExportFFmpegOptions::OnLoadPreset(wxCommandEvent& event)
+void ExportFFmpegOptions::OnLoadPreset(wxCommandEvent& WXUNUSED(event))
 {
    wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString presetname = preset->GetValue();
@@ -1715,7 +1715,7 @@ void ExportFFmpegOptions::OnLoadPreset(wxCommandEvent& event)
 
 ///
 ///
-void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& event)
+void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
    FileDialog dlg(this,
@@ -1735,7 +1735,7 @@ void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& event)
 
 ///
 ///
-void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& event)
+void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
    FileDialog dlg(this,
@@ -1751,7 +1751,7 @@ void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& event)
 
 ///
 ///
-void ExportFFmpegOptions::OnAllFormats(wxCommandEvent& event)
+void ExportFFmpegOptions::OnAllFormats(wxCommandEvent& WXUNUSED(event))
 {
    mShownFormatNames = mFormatNames;
    mShownFormatLongNames = mFormatLongNames;
@@ -1761,7 +1761,7 @@ void ExportFFmpegOptions::OnAllFormats(wxCommandEvent& event)
 
 ///
 ///
-void ExportFFmpegOptions::OnAllCodecs(wxCommandEvent& event)
+void ExportFFmpegOptions::OnAllCodecs(wxCommandEvent& WXUNUSED(event))
 {
    mShownCodecNames = mCodecNames;
    mShownCodecLongNames = mCodecLongNames;
@@ -1880,21 +1880,21 @@ void ExportFFmpegOptions::DoOnCodecList()
 
 ///
 ///
-void ExportFFmpegOptions::OnFormatList(wxCommandEvent& event)
+void ExportFFmpegOptions::OnFormatList(wxCommandEvent& WXUNUSED(event))
 {
    DoOnFormatList();
 }
 
 ///
 ///
-void ExportFFmpegOptions::OnCodecList(wxCommandEvent& event)
+void ExportFFmpegOptions::OnCodecList(wxCommandEvent& WXUNUSED(event))
 {
    DoOnCodecList();
 }
 
 ///
 ///
-void ExportFFmpegOptions::OnOK(wxCommandEvent& event)
+void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    int selcdc = mCodecList->GetSelection();
    int selfmt = mFormatList->GetSelection();

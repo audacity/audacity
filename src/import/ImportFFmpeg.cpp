@@ -279,7 +279,7 @@ private:
 
 
 void GetFFmpegImportPlugin(ImportPluginList *importPluginList,
-                           UnusableImportPluginList *unusableImportPluginList)
+                           UnusableImportPluginList *WXUNUSED(unusableImportPluginList))
 {
    importPluginList->Append(new FFmpegImportPlugin);
 }

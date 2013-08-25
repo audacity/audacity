@@ -71,7 +71,7 @@ WarningDialog::WarningDialog(wxWindow *parent, wxString message, bool showCancel
    CentreOnParent();
 }
 
-void WarningDialog::OnOK(wxCommandEvent& event)
+void WarningDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    EndModal(mCheckBox->GetValue() ? wxID_NO : wxID_YES); // return YES, if message should be shown again
 }

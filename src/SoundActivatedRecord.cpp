@@ -64,7 +64,7 @@ void SoundActivatedRecord::PopulateOrExchange(ShuttleGui & S)
    S.AddStandardButtons();
 }
 
-void SoundActivatedRecord::OnOK(wxCommandEvent & event)
+void SoundActivatedRecord::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    ShuttleGui S( this, eIsSavingToPrefs );
    PopulateOrExchange( S );

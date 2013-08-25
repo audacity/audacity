@@ -145,7 +145,7 @@ BEGIN_EVENT_TABLE(TipPanel, wxPopupWindow)
    EVT_PAINT(TipPanel::OnPaint)
 END_EVENT_TABLE()
 
-TipPanel::TipPanel(wxWindow *parent, wxWindowID id,
+TipPanel::TipPanel(wxWindow *parent, wxWindowID  WXUNUSED(id),
                    wxString label, const wxPoint &pos):
 wxPopupWindow(TipPanel::sharedDummyParent)
 {
@@ -206,7 +206,7 @@ void TipPanel::SetPos(const wxPoint& pos, wxString maxLabel)
 
 #endif
 
-void TipPanel::OnPaint(wxPaintEvent& event)
+void TipPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
    wxPaintDC dc(this);
    int width, height, textWidth, textHeight;
@@ -591,7 +591,7 @@ void LWSlider::RecreateTipWin()
    CreatePopWin();
 }
 
-void LWSlider::OnPaint(wxDC &dc, bool selected)
+void LWSlider::OnPaint(wxDC &dc, bool  WXUNUSED(selected))
 {
    //thumbPos should be in pixels
    int thumbPos = ValueToPosition(mCurrentValue);
@@ -1487,12 +1487,12 @@ void ASlider::OnSize(wxSizeEvent &event)
    mLWSlider->OnSize( event );
 }
 
-void ASlider::OnErase(wxEraseEvent &event)
+void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 {
    // Ignore it to prevent flashing
 }
 
-void ASlider::OnPaint(wxPaintEvent &event)
+void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
@@ -1518,7 +1518,7 @@ void ASlider::OnMouseEvent(wxMouseEvent &event)
    mLWSlider->OnMouseEvent(event);
 }
 
-void ASlider::OnCaptureLost(wxMouseCaptureLostEvent &event)
+void ASlider::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
    wxMouseEvent e(wxEVT_LEFT_UP);
    mLWSlider->OnMouseEvent(e);
@@ -1529,13 +1529,13 @@ void ASlider::OnKeyEvent(wxKeyEvent &event)
    mLWSlider->OnKeyEvent(event);
 }
 
-void ASlider::OnSetFocus(wxFocusEvent & event)
+void ASlider::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
    mSliderIsFocused = true;
    Refresh();
 }
 
-void ASlider::OnKillFocus(wxFocusEvent & event)
+void ASlider::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
    mSliderIsFocused = false;
    Refresh();

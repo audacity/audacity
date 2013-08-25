@@ -503,7 +503,7 @@ void ChangeSpeedDialog::OnChoice_ToVinyl(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void ChangeSpeedDialog::OnPreview(wxCommandEvent &event)
+void ChangeSpeedDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 

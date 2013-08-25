@@ -383,7 +383,7 @@ bool TimeScaleDialog::CheckParameters()
 
 // handler implementations for TimeScaleDialog
 
-void TimeScaleDialog::OnText_RatePercentChangeStart(wxCommandEvent & event)
+void TimeScaleDialog::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -402,7 +402,7 @@ void TimeScaleDialog::OnText_RatePercentChangeStart(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnText_RatePercentChangeEnd(wxCommandEvent & event)
+void TimeScaleDialog::OnText_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -421,7 +421,7 @@ void TimeScaleDialog::OnText_RatePercentChangeEnd(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnSlider_RatePercentChangeStart(wxCommandEvent & event)
+void TimeScaleDialog::OnSlider_RatePercentChangeStart(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -435,7 +435,7 @@ void TimeScaleDialog::OnSlider_RatePercentChangeStart(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnSlider_RatePercentChangeEnd(wxCommandEvent & event)
+void TimeScaleDialog::OnSlider_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -449,7 +449,7 @@ void TimeScaleDialog::OnSlider_RatePercentChangeEnd(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnText_PitchHalfStepsStart(wxCommandEvent & event)
+void TimeScaleDialog::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -469,7 +469,7 @@ void TimeScaleDialog::OnText_PitchHalfStepsStart(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnText_PitchHalfStepsEnd(wxCommandEvent & event)
+void TimeScaleDialog::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -489,7 +489,7 @@ void TimeScaleDialog::OnText_PitchHalfStepsEnd(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnText_PitchPercentChangeStart(wxCommandEvent & event)
+void TimeScaleDialog::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -509,7 +509,7 @@ void TimeScaleDialog::OnText_PitchPercentChangeStart(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnText_PitchPercentChangeEnd(wxCommandEvent & event)
+void TimeScaleDialog::OnText_PitchPercentChangeEnd(wxCommandEvent & WXUNUSED(event))
 {
    if (m_bLoopDetect)
       return;
@@ -529,7 +529,7 @@ void TimeScaleDialog::OnText_PitchPercentChangeEnd(wxCommandEvent & event)
    }
 }
 
-void TimeScaleDialog::OnCheckBox_PreAnalyze(wxCommandEvent & event)
+void TimeScaleDialog::OnCheckBox_PreAnalyze(wxCommandEvent & WXUNUSED(event))
 {
    if (m_pCheckBox_PreAnalyze) {
       m_PreAnalyze = m_pCheckBox_PreAnalyze->GetValue();

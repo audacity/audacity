@@ -436,7 +436,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportMP3Options::OnOK(wxCommandEvent& event)
+void ExportMP3Options::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -454,7 +454,7 @@ void ExportMP3Options::OnOK(wxCommandEvent& event)
 
 /// 
 /// 
-void ExportMP3Options::OnSET(wxCommandEvent& evt)
+void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(setRates, WXSIZEOF(setRates));
 
@@ -465,7 +465,7 @@ void ExportMP3Options::OnSET(wxCommandEvent& evt)
 
 /// 
 /// 
-void ExportMP3Options::OnVBR(wxCommandEvent& evt)
+void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(varRates, WXSIZEOF(varRates));
 
@@ -476,7 +476,7 @@ void ExportMP3Options::OnVBR(wxCommandEvent& evt)
 
 /// 
 /// 
-void ExportMP3Options::OnABR(wxCommandEvent& evt)
+void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(fixRates, WXSIZEOF(fixRates));
 
@@ -487,7 +487,7 @@ void ExportMP3Options::OnABR(wxCommandEvent& evt)
 
 /// 
 /// 
-void ExportMP3Options::OnCBR(wxCommandEvent& evt)
+void ExportMP3Options::OnCBR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(fixRates, WXSIZEOF(fixRates));
 
@@ -496,7 +496,7 @@ void ExportMP3Options::OnCBR(wxCommandEvent& evt)
    mMode->Enable(false);
 }
 
-void ExportMP3Options::OnQuality(wxCommandEvent& evt)
+void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
 {
    int sel = mRate->GetSelection();
 
@@ -635,7 +635,7 @@ public:
       return;
    }
 
-   void OnBrowse(wxCommandEvent & event)
+   void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
       wxString question;
       /* i18n-hint: It's asking for the location of a file, for
@@ -656,7 +656,7 @@ public:
       }
    }
 
-   void OnDownload(wxCommandEvent & event)
+   void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
       wxString page = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#lame");
       ::OpenInDefaultBrowser(page);
@@ -1614,7 +1614,7 @@ int ExportMP3::Export(AudacityProject *project,
                        double t1,
                        MixerSpec *mixerSpec,
                        Tags *metadata,
-                       int subformat)
+                       int WXUNUSED(subformat))
 {
    int rate = lrint(project->GetRate());
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
@@ -1856,7 +1856,7 @@ int ExportMP3::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportMP3::DisplayOptions(wxWindow *parent, int format)
+bool ExportMP3::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
 {
    ExportMP3Options od(parent);
 
@@ -1956,7 +1956,7 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 }
 
 // returns buffer len; caller frees
-int ExportMP3::AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags)
+int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *endOfFile, Tags *tags)
 {
 #ifdef USE_LIBID3TAG 
    struct id3_tag *tp = id3_tag_new();

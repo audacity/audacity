@@ -30,7 +30,7 @@ bool SilentBlockFile::ReadSummary(void *data)
 }
 
 int SilentBlockFile::ReadData(samplePtr data, sampleFormat format,
-                              sampleCount start, sampleCount len)
+                              sampleCount WXUNUSED(start), sampleCount len)
 {
    ClearSamples(data, format, 0, len);
 
@@ -50,7 +50,7 @@ void SilentBlockFile::SaveXML(XMLWriter &xmlFile)
 // even if the result is flawed (e.g., refers to nonexistent file), 
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
-BlockFile *SilentBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
+BlockFile *SilentBlockFile::BuildFromXML(DirManager & WXUNUSED(dm), const wxChar **attrs)
 {
    long nValue;
    sampleCount len = 0;

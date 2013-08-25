@@ -324,17 +324,17 @@ void SelectionBar::ModifySelection()
    mListener->AS_ModifySelection(mStart, mEnd);
 }
 
-void SelectionBar::OnLeftTime(wxCommandEvent &evt)
+void SelectionBar::OnLeftTime(wxCommandEvent & WXUNUSED(event))
 {
    ModifySelection();
 }
 
-void SelectionBar::OnRightTime(wxCommandEvent &evt)
+void SelectionBar::OnRightTime(wxCommandEvent & WXUNUSED(event))
 {
    ModifySelection();
 }
 
-void SelectionBar::OnLengthRadio(wxCommandEvent &evt)
+void SelectionBar::OnLengthRadio(wxCommandEvent & WXUNUSED(event))
 {
    gPrefs->Write(wxT("/ShowSelectionLength"), true);
    gPrefs->Flush();
@@ -343,7 +343,7 @@ void SelectionBar::OnLengthRadio(wxCommandEvent &evt)
    ValuesToControls();
 }
 
-void SelectionBar::OnEndRadio(wxCommandEvent &evt)
+void SelectionBar::OnEndRadio(wxCommandEvent & WXUNUSED(event))
 {
    gPrefs->Write(wxT("/ShowSelectionLength"), false);
    mRightTime->SetName(wxString(_("Selection End")));
@@ -483,7 +483,7 @@ void SelectionBar::SetRate(double rate)
    }
 }
 
-void SelectionBar::OnRate(wxCommandEvent &evt)
+void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
 {
    if (mRateBox->GetValue().ToDouble(&mRate) && // is a numeric value
          (mRate != 0.0))
@@ -559,7 +559,7 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
    return;
 }
 
-void SelectionBar::OnSnapTo(wxCommandEvent & event)
+void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
 {
    mListener->AS_SetSnapTo(mSnapTo->GetValue());
 

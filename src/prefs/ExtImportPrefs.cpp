@@ -309,7 +309,7 @@ void ExtImportPrefs::SwapRows (int row1, int row2)
    }
 }
 
-void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& event)
+void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& WXUNUSED(event))
 {
    wxDropSource dragSource(this);
    dragtext2->SetText(wxT(""));
@@ -552,7 +552,7 @@ void ExtImportPrefs::AddItemToTable (int index, ExtImportItem *item)
    RuleTable->AutoSizeColumns ();
 }
 
-void ExtImportPrefs::OnAddRule(wxCommandEvent& event)
+void ExtImportPrefs::OnAddRule(wxCommandEvent& WXUNUSED(event))
 {
    ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
    ExtImportItem *item = wxGetApp().mImporter->CreateDefaultImportItem();
@@ -564,7 +564,7 @@ void ExtImportPrefs::OnAddRule(wxCommandEvent& event)
    RuleTable->SetFocus();
 }
 
-void ExtImportPrefs::OnDelRule(wxCommandEvent& event)
+void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
 {
    if (last_selected < 0)
       return;
@@ -587,12 +587,12 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& event)
    }
 }
 
-void ExtImportPrefs::OnRuleMoveUp(wxCommandEvent& event)
+void ExtImportPrefs::OnRuleMoveUp(wxCommandEvent& WXUNUSED(event))
 {
    DoOnRuleTableKeyDown (WXK_UP);
 }
 
-void ExtImportPrefs::OnRuleMoveDown(wxCommandEvent& event)
+void ExtImportPrefs::OnRuleMoveDown(wxCommandEvent& WXUNUSED(event))
 {
    DoOnRuleTableKeyDown (WXK_DOWN);
 }
@@ -607,12 +607,12 @@ void ExtImportPrefs::FakeOnPluginKeyDown (int keycode)
    mFakeKeyEvent = false;
 }
 
-void ExtImportPrefs::OnFilterMoveUp(wxCommandEvent& event)
+void ExtImportPrefs::OnFilterMoveUp(wxCommandEvent& WXUNUSED(event))
 {
    FakeOnPluginKeyDown (WXK_UP);
 }
 
-void ExtImportPrefs::OnFilterMoveDown(wxCommandEvent& event)
+void ExtImportPrefs::OnFilterMoveDown(wxCommandEvent& WXUNUSED(event))
 {
    FakeOnPluginKeyDown (WXK_DOWN);
 }
@@ -658,7 +658,7 @@ void ExtImportPrefsDropTarget::SetPrefs (ExtImportPrefs *prefs)
    mPrefs = prefs;
 }
 
-wxDragResult ExtImportPrefsDropTarget::OnData(wxCoord x, wxCoord y,
+wxDragResult ExtImportPrefsDropTarget::OnData(wxCoord  WXUNUSED(x), wxCoord  WXUNUSED(y),
       wxDragResult def)
 {
    return def;
@@ -721,7 +721,7 @@ wxDragResult ExtImportPrefsDropTarget::OnEnter(wxCoord x, wxCoord y,
 }
 
 wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
-      wxDragResult def)
+      wxDragResult WXUNUSED(def))
 {
    if (mPrefs == NULL)
       return wxDragNone;

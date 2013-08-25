@@ -120,7 +120,7 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportFLACOptions::OnOK(wxCommandEvent& event)
+void ExportFLACOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -221,7 +221,7 @@ int ExportFLAC::Export(AudacityProject *project,
                         double t1,
                         MixerSpec *mixerSpec,
                         Tags *metadata,
-                        int subformat)
+                        int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
    TrackList *tracks = project->GetTracks();
@@ -363,7 +363,7 @@ int ExportFLAC::Export(AudacityProject *project,
    return updateResult;
 }
 
-bool ExportFLAC::DisplayOptions(wxWindow *parent, int format)
+bool ExportFLAC::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
 {
    ExportFLACOptions od(parent);
 

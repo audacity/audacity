@@ -1001,7 +1001,7 @@ int EffectNyquist::StaticGetCallback(float *buffer, int channel,
 }
 
 int EffectNyquist::GetCallback(float *buffer, int ch,
-                               long start, long len, long totlen)
+                               long start, long len, long WXUNUSED(totlen))
 {
    if (mCurBuffer[ch]) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||

@@ -250,7 +250,7 @@ void AmplifyDialog::CheckClip()
    }
 }
 
-void AmplifyDialog::OnAmpText(wxCommandEvent & event)
+void AmplifyDialog::OnAmpText(wxCommandEvent & WXUNUSED(event))
 {
    wxString val = mAmpT->GetValue();
    double r;
@@ -269,7 +269,7 @@ void AmplifyDialog::OnAmpText(wxCommandEvent & event)
    CheckClip();
 }
 
-void AmplifyDialog::OnPeakText(wxCommandEvent & event)
+void AmplifyDialog::OnPeakText(wxCommandEvent & WXUNUSED(event))
 {
    wxString val = mPeakT->GetValue();
    double r;
@@ -288,7 +288,7 @@ void AmplifyDialog::OnPeakText(wxCommandEvent & event)
    CheckClip();
 }
 
-void AmplifyDialog::OnAmpSlider(wxCommandEvent & event)
+void AmplifyDialog::OnAmpSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
 
@@ -313,12 +313,12 @@ void AmplifyDialog::OnAmpSlider(wxCommandEvent & event)
    CheckClip();
 }
 
-void AmplifyDialog::OnClipCheckBox(wxCommandEvent & event)
+void AmplifyDialog::OnClipCheckBox(wxCommandEvent & WXUNUSED(event))
 {
    CheckClip();
 }
 
-void AmplifyDialog::OnPreview(wxCommandEvent &event)
+void AmplifyDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 

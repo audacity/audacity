@@ -120,7 +120,7 @@ bool EffectDtmf::PromptUser()
 }
 
 
-bool EffectDtmf::TransferParameters( Shuttle & shuttle )
+bool EffectDtmf::TransferParameters( Shuttle & WXUNUSED(shuttle) )
 {
    return true;
 }
@@ -572,19 +572,19 @@ void DtmfDialog::Recalculate(void) {
    mDtmfToneT->SetName(mDtmfToneT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void DtmfDialog::OnDutyCycleSlider(wxCommandEvent & event) {
+void DtmfDialog::OnDutyCycleSlider(wxCommandEvent & WXUNUSED(event)) {
    Recalculate();
 }
 
 
-void DtmfDialog::OnDtmfStringText(wxCommandEvent & event) {
+void DtmfDialog::OnDtmfStringText(wxCommandEvent & WXUNUSED(event)) {
    Recalculate();
 }
 
-void DtmfDialog::OnDtmfDurationText(wxCommandEvent & event) {
+void DtmfDialog::OnDtmfDurationText(wxCommandEvent & WXUNUSED(event)) {
    Recalculate();
 }
 
-void DtmfDialog::OnTimeCtrlUpdate(wxCommandEvent & event) {
+void DtmfDialog::OnTimeCtrlUpdate(wxCommandEvent & WXUNUSED(event)) {
    this->Fit();
 }

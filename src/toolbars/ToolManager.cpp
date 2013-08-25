@@ -174,7 +174,7 @@ class ToolFrame:public wxFrame
    //
    // Handle frame paint events
    //
-   void OnPaint( wxPaintEvent & event )
+   void OnPaint( wxPaintEvent & WXUNUSED(event) )
    {
       wxPaintDC dc( this );
       wxSize sz = GetSize();
@@ -264,7 +264,7 @@ class ToolFrame:public wxFrame
       }
    }
 
-   void OnCaptureLost( wxMouseCaptureLostEvent & event )
+   void OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
    {
       if( HasCapture() )
       {
@@ -824,6 +824,7 @@ bool ToolManager::IsVisible( int type )
 
    return t->IsVisible();
 
+#if 0
    // If toolbar is floating
    if( !t->IsDocked() )
    {
@@ -833,6 +834,7 @@ bool ToolManager::IsVisible( int type )
 
    // Return state of docked toolbar
    return t->IsShown();
+#endif
 }
 
 //

@@ -311,7 +311,7 @@ void ImageRoll::DrawBitmap(wxDC &dc, wxBitmap &bitmap,
    }
 }
 
-void ImageRoll::Draw(wxDC &dc, wxRect rect, int logicalFunc)
+void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
 {
    int width = rect.width;
    int height = rect.height;
@@ -439,14 +439,14 @@ void ImageRollPanel::SetLogicalFunction(int func)
    mLogicalFunction = func;
 }
 
-void ImageRollPanel::OnPaint(wxPaintEvent &evt)
+void ImageRollPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
    mImageRoll.Draw(dc, GetClientRect(), mLogicalFunction);
 }
 
-void ImageRollPanel::OnSize(wxSizeEvent &evt)
+void ImageRollPanel::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    Refresh(false);
 }

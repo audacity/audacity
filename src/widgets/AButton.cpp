@@ -212,7 +212,7 @@ AButton::AButtonState AButton::GetState()
    return state;
 }
 
-void AButton::OnPaint(wxPaintEvent & event)
+void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxBufferedPaintDC dc(this);
 
@@ -231,12 +231,12 @@ void AButton::OnPaint(wxPaintEvent & event)
 #endif
 }
 
-void AButton::OnErase(wxEraseEvent & event)
+void AButton::OnErase(wxEraseEvent & WXUNUSED(event))
 {
    // Ignore it to prevent flashing
 }
 
-void AButton::OnSize(wxSizeEvent & event)
+void AButton::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    mFocusRect = GetRect().Deflate( 3, 3 );
    Refresh(false);
@@ -316,7 +316,7 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
    }
 }
 
-void AButton::OnCaptureLost(wxMouseCaptureLostEvent & event)
+void AButton::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.m_x = -1;
@@ -353,13 +353,13 @@ void AButton::OnKeyDown(wxKeyEvent & event)
    }
 }
 
-void AButton::OnSetFocus(wxFocusEvent & event)
+void AButton::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
    mButtonIsFocused = true;
    Refresh( false );
 }
 
-void AButton::OnKillFocus(wxFocusEvent & event)
+void AButton::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
    mButtonIsFocused = false;
    Refresh( false );

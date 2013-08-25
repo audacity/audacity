@@ -60,7 +60,7 @@ END_EVENT_TABLE()
 
 /// 
 /// 
-ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int format)
+ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify Ogg Vorbis Options")))
 {
@@ -102,7 +102,7 @@ void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportOGGOptions::OnOK(wxCommandEvent& event)
+void ExportOGGOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
@@ -170,7 +170,7 @@ int ExportOGG::Export(AudacityProject *project,
                        double t1,
                        MixerSpec *mixerSpec,
                        Tags *metadata,
-                       int subformat)
+                       int WXUNUSED(subformat))
 {
    double    rate    = project->GetRate();
    TrackList *tracks = project->GetTracks();

@@ -103,7 +103,7 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
    Fit();
 }
 
-void LangChoiceDialog::OnOk(wxCommandEvent & event)
+void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    int ndx = mChoice->GetSelection();
    mLang = mLangCodes[ndx];

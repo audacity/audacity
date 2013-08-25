@@ -445,7 +445,7 @@ void Lyrics::OnKeyEvent(wxKeyEvent & event)
    GetActiveProject()->HandleKeyDown(event);
 }
 
-void Lyrics::OnPaint(wxPaintEvent &evt)
+void Lyrics::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    if (!this->GetParent()->IsShown())
       return;
@@ -476,7 +476,7 @@ void Lyrics::OnPaint(wxPaintEvent &evt)
    }
 }
 
-void Lyrics::OnSize(wxSizeEvent &evt)
+void Lyrics::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    GetClientSize(&mWidth, &mHeight);
 

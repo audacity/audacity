@@ -228,7 +228,7 @@ void MixerToolBar::UpdateControls()
 #endif // USE_PORTMIXER
 }
 
-void MixerToolBar::SetMixer(wxCommandEvent &event)
+void MixerToolBar::SetMixer(wxCommandEvent & WXUNUSED(event))
 {
 #if USE_PORTMIXER
    float inputVolume = mInputSlider->Get();

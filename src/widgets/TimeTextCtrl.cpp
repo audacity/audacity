@@ -900,12 +900,12 @@ void TimeTextCtrl::Fit()
    SetInitialSize(sz);
 }
 
-void TimeTextCtrl::OnErase(wxEraseEvent & event)
+void TimeTextCtrl::OnErase(wxEraseEvent & WXUNUSED(event))
 {
    // Ignore it to prevent flashing
 }
 
-void TimeTextCtrl::OnPaint(wxPaintEvent &event)
+void TimeTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
    bool focused = (FindFocus() == this);

@@ -592,7 +592,7 @@ void EffectDialog::Init()
 /// This is a virtual function which will be overridden to
 /// provide the actual parameters that we want for each
 /// kind of dialog.
-void EffectDialog::PopulateOrExchange(ShuttleGui & S)
+void EffectDialog::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
 {
    return;
 }
@@ -618,7 +618,7 @@ bool EffectDialog::Validate()
    return true;
 }
 
-void EffectDialog::OnPreview(wxCommandEvent & event)
+void EffectDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    return;
 }

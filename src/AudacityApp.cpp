@@ -589,10 +589,10 @@ public:
    {
    };
 
-   bool OnExecute(const wxString & topic,
+   bool OnExecute(const wxString & WXUNUSED(topic),
                   wxChar *data,
-                  int size,
-                  wxIPCFormat format)
+                  int WXUNUSED(size),
+                  wxIPCFormat WXUNUSED(format))
    {
       if (!gInited) {
          return false;
@@ -826,7 +826,7 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
    return(true);
 }
 
-void AudacityApp::OnMRUClear(wxCommandEvent& event)
+void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 {
    mRecentFiles->Clear();
 }
@@ -847,7 +847,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
       mRecentFiles->RemoveFileFromHistory(n);
 }
 
-void AudacityApp::OnTimer(wxTimerEvent& event)
+void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    // Check if a warning for missing aliased files should be displayed
    if (ShouldShowMissingAliasedFileWarning()) {

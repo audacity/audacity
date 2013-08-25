@@ -275,7 +275,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
 //   mList->SortItems(SortCallback, (long) &mNames);
 }
 
-void KeyConfigPrefs::OnImport(wxCommandEvent & e)
+void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"),
@@ -307,7 +307,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & e)
    RepopulateBindingsList();
 }
 
-void KeyConfigPrefs::OnExport(wxCommandEvent & e)
+void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
    wxString path = gPrefs->Read(wxT("/DefaultExportPath"),
@@ -347,7 +347,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & e)
    }
 }
 
-void KeyConfigPrefs::OnDefaults(wxCommandEvent & e)
+void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
 {
    for (size_t i = 0; i < mNames.GetCount(); i++) {
       mManager->SetKeyFromIndex(i,mDefaultKeys[i]);
@@ -376,7 +376,7 @@ void KeyConfigPrefs::OnCaptureKeyDown(wxKeyEvent & e)
    t->SetValue(KeyStringDisplay(KeyEventToKeyString(e)));
 }
 
-void KeyConfigPrefs::OnCaptureChar(wxKeyEvent & e)
+void KeyConfigPrefs::OnCaptureChar(wxKeyEvent & WXUNUSED(event))
 {
 }
 
@@ -412,7 +412,7 @@ void KeyConfigPrefs::SetKeyForSelected( const wxString & key )
 }
 
 
-void KeyConfigPrefs::OnSet(wxCommandEvent & e)
+void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 {
    if ( mCommandSelected >= (int)mNames.GetCount())
       return;
@@ -434,7 +434,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & e)
    SetKeyForSelected( newKey );
 }
 
-void KeyConfigPrefs::OnClear(wxCommandEvent& event)
+void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
 {
    mKey->Clear();
 
@@ -444,7 +444,7 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& event)
    SetKeyForSelected( wxT("") );
 }
 
-void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
+void KeyConfigPrefs::OnKeyDown(wxListEvent & WXUNUSED(event))
 {
 // the code in this function allows the user to seek to the next
 // command which begins with the letter that is pressed
@@ -458,8 +458,8 @@ void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
    // Windows seems to have this built-in
    // and does not need the following code
    return;
-#endif
 
+#else 
    // The following code seems to work well on at least some versions of Linux
    int keycode = e.GetKeyCode();
    int selected = mList->GetNextItem(-1, wxLIST_NEXT_ALL,  wxLIST_STATE_SELECTED);
@@ -514,9 +514,10 @@ void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
          }
       }
    }
+#endif
 }
 
-void KeyConfigPrefs::OnCategory(wxCommandEvent & e)
+void KeyConfigPrefs::OnCategory(wxCommandEvent & WXUNUSED(event))
 {
    RepopulateBindingsList();
 }

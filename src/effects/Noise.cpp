@@ -89,7 +89,7 @@ bool EffectNoise::PromptUser()
    return true;
 }
 
-bool EffectNoise::TransferParameters( Shuttle & shuttle )
+bool EffectNoise::TransferParameters( Shuttle & WXUNUSED(shuttle) )
 {
    return true;
 }
@@ -245,6 +245,6 @@ bool NoiseDialog::TransferDataFromWindow()
    return true;
 }
 
-void NoiseDialog::OnTimeCtrlUpdate(wxCommandEvent & event) {
+void NoiseDialog::OnTimeCtrlUpdate(wxCommandEvent & WXUNUSED(event)) {
    Fit();
 }

@@ -207,8 +207,8 @@ void TimeRenderer::Draw(wxGrid &grid,
 }
 
 wxSize TimeRenderer::GetBestSize(wxGrid &grid,
-                                 wxGridCellAttr &attr,
-                                 wxDC &dc,
+                                 wxGridCellAttr & WXUNUSED(attr),
+                                 wxDC & WXUNUSED(dc),
                                  int row,
                                  int col)
 {

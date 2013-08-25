@@ -30,7 +30,7 @@ class CommandSignature
 private:
    ParamValueMap mDefaults;
    ValidatorMap mValidators;
-   explicit CommandSignature(const CommandSignature &other) { }
+   explicit CommandSignature(const CommandSignature & WXUNUSED(other)) { }
 public:
    explicit CommandSignature() { }
    ~CommandSignature();

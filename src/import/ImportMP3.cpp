@@ -137,7 +137,7 @@ public:
 
    wxArrayString *GetStreamInfo(){ return NULL; }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
 private:
    void ImportID3(Tags *tags);
@@ -149,7 +149,7 @@ private:
 };
 
 void GetMP3ImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
 {
    importPluginList->Append(new MP3ImportPlugin);
 }
@@ -466,7 +466,7 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
  * a frame, allowing us to use the decoded data */
 
 enum mad_flow output_cb(void *_data,
-                        struct mad_header const *header,
+                        struct mad_header const * WXUNUSED(header),
                         struct mad_pcm *pcm)
 {
    int channels, samplerate;
@@ -532,8 +532,8 @@ enum mad_flow output_cb(void *_data,
    return MAD_FLOW_CONTINUE;
 }
 
-enum mad_flow error_cb(void *_data, struct mad_stream *stream, 
-                       struct mad_frame *frame)
+enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stream), 
+                       struct mad_frame * WXUNUSED(frame))
 {
 /* enum mad_flow {
      MAD_FLOW_CONTINUE = 0x0000,

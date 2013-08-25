@@ -117,7 +117,7 @@ void FFmpegStartup()
    }
 }
 
-wxString GetFFmpegVersion(wxWindow *parent)
+wxString GetFFmpegVersion(wxWindow * WXUNUSED(parent))
 {
    PickFFmpegLibs();
 
@@ -628,7 +628,7 @@ public:
       return;
    }
 
-   void OnBrowse(wxCommandEvent & event)
+   void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
       wxString question;
       /* i18n-hint: It's asking for the location of a file, for
@@ -649,7 +649,7 @@ public:
       }
    }
 
-   void OnDownload(wxCommandEvent & event)
+   void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
       wxString page = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown");
       ::OpenInDefaultBrowser(page);
@@ -752,7 +752,7 @@ bool FFmpegLibs::FindLibs(wxWindow *parent)
    return true;
 }
 
-bool FFmpegLibs::LoadLibs(wxWindow *parent, bool showerr)
+bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
 {
 #if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
    mLibsLoaded = InitLibs(wxEmptyString, showerr);

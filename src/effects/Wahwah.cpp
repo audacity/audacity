@@ -372,7 +372,7 @@ bool WahwahDialog::TransferDataFromWindow()
 
 // WDR: handler implementations for WahwahDialog
 
-void WahwahDialog::OnResonanceSlider(wxCommandEvent & event)
+void WahwahDialog::OnResonanceSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long res = GetResonanceSlider()->GetValue();
@@ -380,7 +380,7 @@ void WahwahDialog::OnResonanceSlider(wxCommandEvent & event)
    GetResonanceText()->SetValue(str);
 }
 
-void WahwahDialog::OnDepthSlider(wxCommandEvent & event)
+void WahwahDialog::OnDepthSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long depth = GetDepthSlider()->GetValue();
@@ -388,7 +388,7 @@ void WahwahDialog::OnDepthSlider(wxCommandEvent & event)
    GetDepthText()->SetValue(str);
 }
 
-void WahwahDialog::OnPhaseSlider(wxCommandEvent & event)
+void WahwahDialog::OnPhaseSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long phase = GetPhaseSlider()->GetValue();
@@ -397,7 +397,7 @@ void WahwahDialog::OnPhaseSlider(wxCommandEvent & event)
    GetPhaseText()->SetValue(str);
 }
 
-void WahwahDialog::OnFreqSlider(wxCommandEvent & event)
+void WahwahDialog::OnFreqSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long freql = GetFreqSlider()->GetValue();
@@ -405,7 +405,7 @@ void WahwahDialog::OnFreqSlider(wxCommandEvent & event)
    GetFreqText()->SetValue(str);
 }
 
-void WahwahDialog::OnFreqOffSlider(wxCommandEvent & event)
+void WahwahDialog::OnFreqOffSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long freqoff = GetFreqOffSlider()->GetValue();
@@ -413,7 +413,7 @@ void WahwahDialog::OnFreqOffSlider(wxCommandEvent & event)
    GetFreqOffText()->SetValue(str);
 }
 
-void WahwahDialog::OnResonanceText(wxCommandEvent & event)
+void WahwahDialog::OnResonanceText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetResonanceText();
    if (c) {
@@ -429,7 +429,7 @@ void WahwahDialog::OnResonanceText(wxCommandEvent & event)
    }
 }
 
-void WahwahDialog::OnDepthText(wxCommandEvent & event)
+void WahwahDialog::OnDepthText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetDepthText();
    if (c) {
@@ -444,7 +444,7 @@ void WahwahDialog::OnDepthText(wxCommandEvent & event)
    }
 }
 
-void WahwahDialog::OnPhaseText(wxCommandEvent & event)
+void WahwahDialog::OnPhaseText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetPhaseText();
    if (c) {
@@ -459,7 +459,7 @@ void WahwahDialog::OnPhaseText(wxCommandEvent & event)
    }
 }
 
-void WahwahDialog::OnFreqText(wxCommandEvent & event)
+void WahwahDialog::OnFreqText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetFreqText();
    if (c) {
@@ -476,7 +476,7 @@ void WahwahDialog::OnFreqText(wxCommandEvent & event)
    }
 }
 
-void WahwahDialog::OnFreqOffText(wxCommandEvent & event)
+void WahwahDialog::OnFreqOffText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetFreqOffText();
    if (c) {
@@ -490,7 +490,7 @@ void WahwahDialog::OnFreqOffText(wxCommandEvent & event)
    }
 }
 
-void WahwahDialog::OnPreview(wxCommandEvent &event)
+void WahwahDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 

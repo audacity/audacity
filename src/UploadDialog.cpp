@@ -406,14 +406,11 @@ void UploadDialog::OnListRightClick(wxListEvent &event)
     PopupMenu(menu, mousePos.x + 250, mousePos.y + 50);
 }
 
-void UploadDialog::OnActivateSite (wxListEvent &event)
+void UploadDialog::OnActivateSite (wxListEvent & WXUNUSED(event))
 {
-
-
-
 }
 
-void UploadDialog::OnPopupMenu (wxCommandEvent & event)
+void UploadDialog::OnPopupMenu (wxCommandEvent &event)
 {
 
     if (event.GetId() == wxID_POPUP_DOWNLOAD)
@@ -1035,7 +1032,6 @@ void UploadDialog::UploadFile(wxString src, wxString dest)
 
 void UploadDialog::UploadDir (wxString src, wxString dest)
 {
-
     wxDir *dir = new wxDir();
     wxArrayString *files = new wxArrayString();
     wxArrayString *dirs = new wxArrayString();
@@ -1261,7 +1257,7 @@ void UploadDialog::DownloadMultipleItems (void)
 
 }
 
-void UploadDialog::OnCreateDir(wxCommandEvent &event)
+void UploadDialog::OnCreateDir(wxCommandEvent & WXUNUSED(event))
 {
 
     wxString result = wxGetTextFromUser(wxT("Please enter new folder name:"), wxT("New Folder"), wxT(""), this);
@@ -1278,7 +1274,7 @@ void UploadDialog::OnCreateDir(wxCommandEvent &event)
 
 }
 
-void UploadDialog::OnNewSite (wxCommandEvent &event)
+void UploadDialog::OnNewSite (wxCommandEvent & WXUNUSED(event))
 {
     int count;
     int index;
@@ -1303,9 +1299,8 @@ void UploadDialog::OnNewSite (wxCommandEvent &event)
     ftpIndex = tmp;
 }
 
-void UploadDialog::OnDeleteSite (wxCommandEvent &event)
+void UploadDialog::OnDeleteSite (wxCommandEvent & WXUNUSED(event))
 {
-
     wxString debug;
 
 //  debug.Printf("%d", index);
@@ -1331,18 +1326,15 @@ void UploadDialog::OnDeleteSite (wxCommandEvent &event)
     }
 
     UpdateSiteList();
-
 }
 
-void UploadDialog::OnFtpChange (wxCommandEvent &event)
+void UploadDialog::OnFtpChange (wxCommandEvent & WXUNUSED(event))
 {
-
     siteList->SetItemText(ftpIndex, txtFtpName->GetValue());
 }
 
 void UploadDialog::OnSelectSite (wxListEvent &event)
 {
-
     currentFtp = event.m_itemIndex;
     ftpIndex = event.m_itemIndex;
 
@@ -1354,8 +1346,6 @@ void UploadDialog::OnSelectSite (wxListEvent &event)
     //wxString debug;
     //debug.Printf("ftpIndex %d", ftpIndex);
     //wxMessageBox(debug, wxT("FTP Status"), wxOK | wxICON_INFORMATION, NULL);
-
-
 }
 
 bool UploadDialog::SaveFtpSite(wxString name, wxString host, wxString user, wxString pass)

@@ -35,7 +35,7 @@ static inline float todB_a(const float *x){
 
 bool ComputeSpectrum(float * data, int width,
                      int windowSize,
-                     double rate, float *output,
+                     double WXUNUSED(rate), float *output,
                      bool autocorrelation, int windowFunc)
 {
    if (width < windowSize)

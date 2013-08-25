@@ -104,11 +104,11 @@ DeviceSourceMap* DeviceManager::GetDefaultInputDevice(int hostIndex)
 //Port Audio requires we open the stream with a callback or a lot of devices will fail
 //as this means open in blocking mode, so we use a dummy one.
 static int DummyPaStreamCallback(
-    const void *input, void *output,
-    unsigned long frameCount,
-    const PaStreamCallbackTimeInfo* timeInfo,
-    PaStreamCallbackFlags statusFlags,
-    void *userData )
+    const void *WXUNUSED(input), void * WXUNUSED(output),
+    unsigned long WXUNUSED(frameCount),
+    const PaStreamCallbackTimeInfo* WXUNUSED(timeInfo),
+    PaStreamCallbackFlags WXUNUSED(statusFlags),
+    void *WXUNUSED(userData) )
 {
    return 0;
 }

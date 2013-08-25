@@ -160,7 +160,7 @@ public:
 
    wxArrayString *GetStreamInfo(){ return NULL; }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
 private:
    sampleFormat          mFormat;
@@ -218,7 +218,7 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
    }
 }
 
-void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus status)
+void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus WXUNUSED(status))
 {
    mWasError = true;
    
@@ -277,7 +277,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 
 
 void GetFLACImportPlugin(ImportPluginList *importPluginList,
-                         UnusableImportPluginList *unusableImportPluginList)
+                         UnusableImportPluginList *WXUNUSED(unusableImportPluginList))
 {
    importPluginList->Append(new FLACImportPlugin);
 }

@@ -172,7 +172,7 @@ ExpandingToolBar::~ExpandingToolBar()
 {
 }
 
-void ExpandingToolBar::OnSize(wxSizeEvent &evt)
+void ExpandingToolBar::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    if (mFrameParent || mDialogParent || mAreaParent)
       return;
@@ -212,7 +212,7 @@ void ExpandingToolBar::OnSize(wxSizeEvent &evt)
    }
 }
 
-void ExpandingToolBar::OnToggle(wxCommandEvent &evt)
+void ExpandingToolBar::OnToggle(wxCommandEvent & WXUNUSED(event))
 {
    if (mIsExpanded)
       Collapse();
@@ -464,7 +464,7 @@ void ExpandingToolBar::MoveDrawer(wxSize prevSize)
    }
 }
 
-void ExpandingToolBar::OnTimer(wxTimerEvent &evt)
+void ExpandingToolBar::OnTimer(wxTimerEvent & WXUNUSED(event))
 {
    if (mAutoExpand && msNoAutoExpandStack==0 &&
        IsCursorInWindow())
@@ -714,14 +714,14 @@ void ToolBarGrabber::OnMouse(wxMouseEvent &event)
       Refresh(false);
 }
 
-void ToolBarGrabber::OnPaint(wxPaintEvent &evt)
+void ToolBarGrabber::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
    mImageRoll[mState].Draw(dc, GetClientRect());
 }
 
-void ToolBarGrabber::OnSize(wxSizeEvent &evt)
+void ToolBarGrabber::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    Refresh(false);
 }
@@ -1105,7 +1105,7 @@ void ToolBarArea::Fit(bool horizontal, bool vertical)
    }
 }
 
-void ToolBarArea::OnSize(wxSizeEvent &evt)
+void ToolBarArea::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    if (mInOnSize)
       return;

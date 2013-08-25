@@ -53,7 +53,7 @@ PluginManager::~PluginManager()
    }
 }
 
-PluginManager & PluginManager::Get(bool refresh)
+PluginManager & PluginManager::Get(bool WXUNUSED(refresh))
 {
    return mInstance;
 }

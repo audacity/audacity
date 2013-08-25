@@ -450,7 +450,7 @@ CompressorPanel::CompressorPanel( wxWindow *parent, wxWindowID id,
    mHeight = 0;
 }
 
-void CompressorPanel::OnPaint(wxPaintEvent & evt)
+void CompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
@@ -756,7 +756,7 @@ void CompressorDialog::OnSize(wxSizeEvent &event)
    event.Skip();
 }
 
-void CompressorDialog::OnPreview(wxCommandEvent &event)
+void CompressorDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 
@@ -788,7 +788,7 @@ void CompressorDialog::OnPreview(wxCommandEvent &event)
    mEffect->mUsePeak = oldUsePeak;
 }
 
-void CompressorDialog::OnSlider(wxCommandEvent &event)
+void CompressorDialog::OnSlider(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 }

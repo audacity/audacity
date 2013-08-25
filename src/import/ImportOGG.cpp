@@ -153,7 +153,7 @@ private:
 };
 
 void GetOGGImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
 {
    importPluginList->Append(new OggImportPlugin);
 }

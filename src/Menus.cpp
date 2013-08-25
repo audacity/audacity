@@ -5033,7 +5033,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    double newPos = -1.0;
    wxArrayDouble trackStartArray;
    wxArrayDouble trackEndArray;
-   double firstTrackOffset;
+   double firstTrackOffset=0.0f;
 
    while (t) {
       // We only want Wave and Note tracks here.

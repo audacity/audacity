@@ -302,7 +302,7 @@ void Meter::Clear()
    mQueue.Clear();
 }
 
-void Meter::CreateIcon(int aquaOffset)
+void Meter::CreateIcon(int WXUNUSED(aquaOffset))
 {
    /// \todo Remove wasteful delete/new pair.  It is done in every call to layout.
    if (mIcon) {
@@ -346,12 +346,12 @@ void Meter::UpdatePrefs()
       mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterOutputDisabled"), (long)0);
 }
 
-void Meter::OnErase(wxEraseEvent &evt)
+void Meter::OnErase(wxEraseEvent & WXUNUSED(event))
 {
    // Ignore it to prevent flashing
 }
 
-void Meter::OnPaint(wxPaintEvent &evt)
+void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
   #ifdef __WXMAC__
@@ -368,7 +368,7 @@ void Meter::OnPaint(wxPaintEvent &evt)
   #endif 
 }
 
-void Meter::OnSize(wxSizeEvent &evt)
+void Meter::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    delete mBitmap;
    mBitmap = NULL;
@@ -631,7 +631,7 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
 //   mQueue.Put(msg);
 //}
 
-void Meter::OnMeterUpdate(wxTimerEvent &evt)
+void Meter::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 {
    MeterUpdateMsg msg;
    int numChanges = 0;
@@ -1170,7 +1170,7 @@ void Meter::StartMonitoring()
 // Pop-up menu handlers
 //
 
-void Meter::OnDisableMeter(wxCommandEvent &evt)
+void Meter::OnDisableMeter(wxCommandEvent & WXUNUSED(event))
 {
    if (mMeterDisabled) //Enable
       {
@@ -1219,50 +1219,50 @@ void Meter::OnDisableMeter(wxCommandEvent &evt)
    gPrefs->Flush();
 }
 
-void Meter::OnHorizontal(wxCommandEvent &evt)
+void Meter::OnHorizontal(wxCommandEvent & WXUNUSED(event))
 {
    SetStyle(HorizontalStereo);
 }
 
-void Meter::OnVertical(wxCommandEvent &evt)
+void Meter::OnVertical(wxCommandEvent & WXUNUSED(event))
 {
    SetStyle(VerticalStereo);
 }
 
-void Meter::OnMulti(wxCommandEvent &evt)
+void Meter::OnMulti(wxCommandEvent & WXUNUSED(event))
 {
    SetStyle(VerticalMulti);
 }
 
-void Meter::OnEqualizer(wxCommandEvent &evt)
+void Meter::OnEqualizer(wxCommandEvent & WXUNUSED(event))
 {
    SetStyle(Equalizer);
 }
 
-void Meter::OnWaveform(wxCommandEvent &evt)
+void Meter::OnWaveform(wxCommandEvent & WXUNUSED(event))
 {
    SetStyle(Waveform);
 }
 
-void Meter::OnLinear(wxCommandEvent &evt)
+void Meter::OnLinear(wxCommandEvent & WXUNUSED(event))
 {
    mDB = false;
    mLayoutValid = false;
    Refresh(false);
 }
 
-void Meter::OnDB(wxCommandEvent &evt)
+void Meter::OnDB(wxCommandEvent & WXUNUSED(event))
 {
    mDB = true;
    mLayoutValid = false;
    Refresh(false);
 }
 
-void Meter::OnClip(wxCommandEvent &evt)
+void Meter::OnClip(wxCommandEvent & WXUNUSED(event))
 {
 }
 
-void Meter::OnMonitor(wxCommandEvent &evt)
+void Meter::OnMonitor(wxCommandEvent & WXUNUSED(event))
 {
    StartMonitoring();
 }
@@ -1280,11 +1280,11 @@ void Meter::OnAutomatedInputLevelAdjustment(wxCommandEvent &evt)
 }
 #endif
 
-void Meter::OnFloat(wxCommandEvent &evt)
+void Meter::OnFloat(wxCommandEvent & WXUNUSED(event))
 {
 }
 
-void Meter::OnPreferences(wxCommandEvent &evt)
+void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
 {
    wxNumberEntryDialog
       d(this,

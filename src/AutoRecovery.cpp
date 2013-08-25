@@ -119,12 +119,12 @@ void AutoRecoveryDialog::PopulateList()
    mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 }
 
-void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent &evt)
+void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(ID_QUIT_AUDACITY);
 }
 
-void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent &evt)
+void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent & WXUNUSED(event))
 {
    int ret = wxMessageBox(
       _("Are you sure you don't want to recover any projects?\nThey can't be recovered later."),
@@ -134,7 +134,7 @@ void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent &evt)
       EndModal(ID_RECOVER_NONE);
 }
 
-void AutoRecoveryDialog::OnRecoverAll(wxCommandEvent &evt)
+void AutoRecoveryDialog::OnRecoverAll(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(ID_RECOVER_ALL);
 }

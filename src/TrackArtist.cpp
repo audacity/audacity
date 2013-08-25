@@ -1174,7 +1174,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
 void TrackArtist::DrawIndividualSamples(wxDC &dc, const wxRect &r,
                                         float zoomMin, float zoomMax, bool dB,
                                         WaveClip *clip,
-                                        double t0, double pps, double h,
+                                        double t0, double pps, double WXUNUSED(h),
                                         bool drawSamples, bool showPoints, bool muted)
 {
    double rate = clip->GetRate();
@@ -1621,10 +1621,10 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 }
 
 
-void TrackArtist::DrawTimeSlider(WaveTrack *track,
+void TrackArtist::DrawTimeSlider(WaveTrack * WXUNUSED(track),
                                  wxDC & dc,
                                  const wxRect & r,
-                                 const ViewInfo *viewInfo,
+                                 const ViewInfo * WXUNUSED(viewInfo),
                                  bool rightwards)
 {
    const int border = 3; // 3 pixels all round.

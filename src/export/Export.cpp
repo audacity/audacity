@@ -99,7 +99,7 @@ ExportPlugin::~ExportPlugin()
    mFormatInfos.Clear();
 }
 
-bool ExportPlugin::CheckFileName(wxFileName &filename, int format)
+bool ExportPlugin::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))
 {
   return true;
 }
@@ -232,7 +232,7 @@ bool ExportPlugin::IsExtension(wxString & ext, int index)
    return isext;
 }
 
-bool ExportPlugin::DisplayOptions(wxWindow *parent, int format)
+bool ExportPlugin::DisplayOptions(wxWindow * WXUNUSED(parent), int WXUNUSED(format))
 {
    return false;
 }
@@ -244,7 +244,7 @@ int ExportPlugin::Export(AudacityProject *project,
                           double t0,
                           double t1,
                           MixerSpec *mixerSpec,
-                          Tags *metadata,
+                          Tags * WXUNUSED(metadata),
                           int subformat)
 {
    if (project == NULL) {
@@ -254,14 +254,14 @@ int ExportPlugin::Export(AudacityProject *project,
   return DoExport(project, channels, fName, selectedOnly, t0, t1, mixerSpec, subformat);
 }
 
-int ExportPlugin::DoExport(AudacityProject *project,
-                            int channels,
-                            wxString fName,
-                            bool selectedOnly,
-                            double t0,
-                            double t1,
-                            MixerSpec *mixerSpec,
-                            int subformat)
+int ExportPlugin::DoExport(AudacityProject * WXUNUSED(project),
+                            int WXUNUSED(channels),
+                            wxString WXUNUSED(fName),
+                            bool WXUNUSED(selectedOnly),
+                            double WXUNUSED(t0),
+                            double WXUNUSED(t1),
+                            MixerSpec * WXUNUSED(mixerSpec),
+                            int WXUNUSED(subformat))
 {
    return false;
 }
@@ -897,7 +897,7 @@ void ExportMixerPanel::SetFont( wxMemoryDC &memDC, wxString text, int width,
    memDC.SetFont( font );
 }
 
-void ExportMixerPanel::OnPaint(wxPaintEvent & evt)
+void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc( this );
 
@@ -1186,7 +1186,7 @@ void ExportMixerDialog::OnSize(wxSizeEvent &event)
    event.Skip();
 }
 
-void ExportMixerDialog::OnSlider( wxCommandEvent &event )
+void ExportMixerDialog::OnSlider( wxCommandEvent & WXUNUSED(event))
 {
    wxSlider *channels = ( wxSlider* )FindWindow( ID_SLIDER_CHANNEL );
    ExportMixerPanel *pnl = ( ( ExportMixerPanel* ) FindWindow( ID_MIXERPANEL ) );
@@ -1198,12 +1198,12 @@ void ExportMixerDialog::OnSlider( wxCommandEvent &event )
    channels->SetName( label );
 }
 
-void ExportMixerDialog::OnOk(wxCommandEvent &event)
+void ExportMixerDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_OK );
 }
 
-void ExportMixerDialog::OnCancel(wxCommandEvent &event)
+void ExportMixerDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_CANCEL );
 }

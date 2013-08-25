@@ -1482,7 +1482,7 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void WaveTrack::HandleXMLEndTag(const wxChar *tag)
+void WaveTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
 {
    // In case we opened a pre-multiclip project, we need to
    // simulate closing the waveclip tag.

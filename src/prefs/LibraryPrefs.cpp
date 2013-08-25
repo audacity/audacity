@@ -161,14 +161,14 @@ void LibraryPrefs::SetMP3VersionText(bool prompt)
 
 /// Opens a file-finder dialog so that the user can
 /// tell us where the MP3 library is.
-void LibraryPrefs::OnMP3FindButton(wxCommandEvent & e)
+void LibraryPrefs::OnMP3FindButton(wxCommandEvent & WXUNUSED(event))
 {
    SetMP3VersionText(true);
 }
 
 /// Opens a file-finder dialog so that the user can
 /// tell us where the MP3 library is.
-void LibraryPrefs::OnMP3DownButton(wxCommandEvent & e)
+void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 {
    wxString url = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#lame");
    ::OpenInDefaultBrowser(url);
@@ -180,7 +180,7 @@ void LibraryPrefs::SetFFmpegVersionText()
    mFFmpegVersion->SetName(mFFmpegVersion->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & e)
+void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 {
 #ifdef USE_FFMPEG
    FFmpegLibs* FFmpegLibsInst = PickFFmpegLibs();
@@ -217,7 +217,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & e)
 #endif
 }
 
-void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & e)
+void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
 {
    wxString url = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown");
    ::OpenInDefaultBrowser(url);

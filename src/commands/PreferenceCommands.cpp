@@ -35,7 +35,7 @@ Command *GetPreferenceCommandType::Create(CommandOutputTarget *target)
    return new GetPreferenceCommand(*this, target);
 }
 
-bool GetPreferenceCommand::Apply(CommandExecutionContext context)
+bool GetPreferenceCommand::Apply(CommandExecutionContext WXUNUSED(context))
 {
    wxString prefName = GetString(wxT("PrefName"));
    wxString prefValue;
@@ -70,7 +70,7 @@ Command *SetPreferenceCommandType::Create(CommandOutputTarget *target)
    return new SetPreferenceCommand(*this, target);
 }
 
-bool SetPreferenceCommand::Apply(CommandExecutionContext context)
+bool SetPreferenceCommand::Apply(CommandExecutionContext WXUNUSED(context))
 {
    wxString prefName = GetString(wxT("PrefName"));
    wxString prefValue = GetString(wxT("PrefValue"));

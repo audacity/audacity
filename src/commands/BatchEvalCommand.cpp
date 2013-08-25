@@ -35,7 +35,7 @@ Command *BatchEvalCommandType::Create(CommandOutputTarget *target)
    return new BatchEvalCommand(*this, target);
 }
 
-bool BatchEvalCommand::Apply(CommandExecutionContext context)
+bool BatchEvalCommand::Apply(CommandExecutionContext WXUNUSED(context))
 {
 
    wxString chainName = GetString(wxT("ChainName"));

@@ -27,8 +27,8 @@ ApplyAndSendResponse, and CommandImplementation classes
 #include "CommandTargets.h"
 #include "CommandDirectory.h"
 
-bool Command::SetParameter(const wxString &paramName,
-                           const wxVariant &paramValue)
+bool Command::SetParameter(const wxString & WXUNUSED(paramName),
+                           const wxVariant & WXUNUSED(paramValue))
 {
    wxASSERT_MSG(false, wxT("Tried to set parameter for command which doesn't support parameters!"));
    return false;
@@ -211,7 +211,7 @@ bool CommandImplementation::SetParameter(const wxString &paramName, const wxVari
    return true;
 }
 
-bool CommandImplementation::Apply(CommandExecutionContext context)
+bool CommandImplementation::Apply(CommandExecutionContext WXUNUSED(context))
 {
    return true;
 }

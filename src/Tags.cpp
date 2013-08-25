@@ -562,7 +562,7 @@ public:
    {
    }
 
-   virtual void PaintBackground(const wxRect& rectCell, wxGridCellAttr *attr)
+   virtual void PaintBackground(const wxRect& WXUNUSED(rectCell), wxGridCellAttr * WXUNUSED(attr))
    {
       // Ignore it (a must on the Mac as the erasure causes problems.)
    }
@@ -960,7 +960,7 @@ void TagsEditor::OnChange(wxGridEvent & event)
    return;
 }
 
-void TagsEditor::OnEdit(wxCommandEvent & event)
+void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
@@ -1009,7 +1009,7 @@ void TagsEditor::OnEdit(wxCommandEvent & event)
    PopulateGenres();
 }
 
-void TagsEditor::OnReset(wxCommandEvent & event)
+void TagsEditor::OnReset(wxCommandEvent & WXUNUSED(event))
 {
    int id = wxMessageBox(_("Are you sure you want to reset the genre list to defaults?"),
                          _("Reset Genres"),
@@ -1049,14 +1049,14 @@ void TagsEditor::OnReset(wxCommandEvent & event)
    PopulateGenres();
 }
 
-void TagsEditor::OnClear(wxCommandEvent & event)
+void TagsEditor::OnClear(wxCommandEvent & WXUNUSED(event))
 {
    mLocal.Clear();
 
    TransferDataToWindow();
 }
 
-void TagsEditor::OnLoad(wxCommandEvent & event)
+void TagsEditor::OnLoad(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
 
@@ -1107,7 +1107,7 @@ void TagsEditor::OnLoad(wxCommandEvent & event)
    return;
 }
 
-void TagsEditor::OnSave(wxCommandEvent & event)
+void TagsEditor::OnSave(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
 
@@ -1176,7 +1176,7 @@ void TagsEditor::OnSave(wxCommandEvent & event)
    }
 }
 
-void TagsEditor::OnSaveDefaults(wxCommandEvent & event)
+void TagsEditor::OnSaveDefaults(wxCommandEvent & WXUNUSED(event))
 {
    // Refresh tags
    TransferDataFromWindow();
@@ -1216,12 +1216,12 @@ void TagsEditor::OnSaveDefaults(wxCommandEvent & event)
    }
 }
 
-void TagsEditor::OnAdd(wxCommandEvent & event)
+void TagsEditor::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    mGrid->AppendRows();
 }
 
-void TagsEditor::OnRemove(wxCommandEvent & event)
+void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
    size_t row = mGrid->GetCursorRow();
 
@@ -1239,7 +1239,7 @@ void TagsEditor::OnRemove(wxCommandEvent & event)
    }
 }
 
-void TagsEditor::OnOk(wxCommandEvent & event)
+void TagsEditor::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
@@ -1263,7 +1263,7 @@ void TagsEditor::OnOk(wxCommandEvent & event)
    EndModal(wxID_OK);
 }
 
-void TagsEditor::OnCancel(wxCommandEvent & event)
+void TagsEditor::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    if (mGrid->IsCellEditControlShown()) {
       mGrid->GetCellEditor(mGrid->GetGridCursorRow(),

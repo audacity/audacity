@@ -522,7 +522,7 @@ void ToolBar::SetButton( bool down, AButton * button )
 //
 // Handle background erasure
 //
-void ToolBar::OnErase( wxEraseEvent & event )
+void ToolBar::OnErase( wxEraseEvent & WXUNUSED(event) )
 {
    // Ignore it to prevent flashing
 }
@@ -724,7 +724,7 @@ void ToolBar::OnMotion( wxMouseEvent & event )
    }
 }
 
-void ToolBar::OnCaptureLost( wxMouseCaptureLostEvent & event )
+void ToolBar::OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) )
 {
    if( HasCapture() )
    {

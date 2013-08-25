@@ -193,7 +193,7 @@ void HistoryWindow::UpdateLevels()
    mDiscard->Enable(mSelected > 0);
 }
 
-void HistoryWindow::OnDiscard(wxCommandEvent &event)
+void HistoryWindow::OnDiscard(wxCommandEvent & WXUNUSED(event))
 {
    int i = mLevels->GetValue();
 
@@ -237,7 +237,7 @@ void HistoryWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
   this->Show(false);
 }
 
-void HistoryWindow::OnSize(wxSizeEvent & event)
+void HistoryWindow::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    Layout();
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));

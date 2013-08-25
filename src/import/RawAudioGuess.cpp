@@ -139,6 +139,7 @@ static void ExtractFloats(bool doublePrec,
          double d;
       } u;
 
+      u.d = 0.0f;
       while (rawCount + 7 < dataSize) {
          if (swap)
             for(i=0; i<8; i++)
@@ -157,6 +158,7 @@ static void ExtractFloats(bool doublePrec,
          float f;
       } u;
 
+      u.f = 0.0f;
       while (rawCount + 3 < dataSize) {
          if (swap)
             for(i=0; i<4; i++)

@@ -45,54 +45,54 @@ class ScreenFrame:public wxFrame
    ScreenFrame(wxWindow *parent, wxWindowID id);
    virtual ~ScreenFrame();
 
-   virtual bool ProcessEvent(wxEvent & e);
+   virtual bool ProcessEvent(wxEvent & event);
 
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
 
-   void OnCloseWindow(wxCloseEvent & e);
-   void OnUIUpdate(wxUpdateUIEvent & e);
-   void OnDirChoose(wxCommandEvent & e);
+   void OnCloseWindow(wxCloseEvent & event);
+   void OnUIUpdate(wxUpdateUIEvent & event);
+   void OnDirChoose(wxCommandEvent & event);
 
    void SizeMainWindow(int w, int h);
-   void OnMainWindowSmall(wxCommandEvent & e);
-   void OnMainWindowLarge(wxCommandEvent & e);
-   void OnToggleBackgroundBlue(wxCommandEvent & e);
-   void OnToggleBackgroundWhite(wxCommandEvent & e);
+   void OnMainWindowSmall(wxCommandEvent & event);
+   void OnMainWindowLarge(wxCommandEvent & event);
+   void OnToggleBackgroundBlue(wxCommandEvent & event);
+   void OnToggleBackgroundWhite(wxCommandEvent & event);
 
    void DoCapture(wxString captureMode);
-   void OnCaptureWindowContents(wxCommandEvent & e);
-   void OnCaptureFullWindow(wxCommandEvent & e);
-   void OnCaptureWindowPlus(wxCommandEvent & e);
-   void OnCaptureFullScreen(wxCommandEvent & e);
-   void OnCaptureToolbars(wxCommandEvent & e);
-   void OnCaptureSelectionBar(wxCommandEvent & e);
-   void OnCaptureTools(wxCommandEvent & e);
-   void OnCaptureTransport(wxCommandEvent & e);
-   void OnCaptureMixer(wxCommandEvent & e);
-   void OnCaptureMeter(wxCommandEvent & e);
-   void OnCaptureEdit(wxCommandEvent & e);
-   void OnCaptureDevice(wxCommandEvent & e);
-   void OnCaptureTranscription(wxCommandEvent & e);
+   void OnCaptureWindowContents(wxCommandEvent & event);
+   void OnCaptureFullWindow(wxCommandEvent & event);
+   void OnCaptureWindowPlus(wxCommandEvent & event);
+   void OnCaptureFullScreen(wxCommandEvent & event);
+   void OnCaptureToolbars(wxCommandEvent & event);
+   void OnCaptureSelectionBar(wxCommandEvent & event);
+   void OnCaptureTools(wxCommandEvent & event);
+   void OnCaptureTransport(wxCommandEvent & event);
+   void OnCaptureMixer(wxCommandEvent & event);
+   void OnCaptureMeter(wxCommandEvent & event);
+   void OnCaptureEdit(wxCommandEvent & event);
+   void OnCaptureDevice(wxCommandEvent & event);
+   void OnCaptureTranscription(wxCommandEvent & event);
 
    void TimeZoom(double seconds);
-   void OnOneSec(wxCommandEvent & e);
-   void OnTenSec(wxCommandEvent & e);
-   void OnOneMin(wxCommandEvent & e);
-   void OnFiveMin(wxCommandEvent & e);
-   void OnOneHour(wxCommandEvent & e);
+   void OnOneSec(wxCommandEvent & event);
+   void OnTenSec(wxCommandEvent & event);
+   void OnOneMin(wxCommandEvent & event);
+   void OnFiveMin(wxCommandEvent & event);
+   void OnOneHour(wxCommandEvent & event);
 
    void SizeTracks(int h);
-   void OnShortTracks(wxCommandEvent & e);
-   void OnMedTracks(wxCommandEvent & e);
-   void OnTallTracks(wxCommandEvent & e);
+   void OnShortTracks(wxCommandEvent & event);
+   void OnMedTracks(wxCommandEvent & event);
+   void OnTallTracks(wxCommandEvent & event);
 
-   void OnCaptureTrackPanel(wxCommandEvent & e);
-   void OnCaptureRuler(wxCommandEvent & e);
-   void OnCaptureTracks(wxCommandEvent & e);
-   void OnCaptureFirstTrack(wxCommandEvent & e);
-   void OnCaptureSecondTrack(wxCommandEvent & e);
+   void OnCaptureTrackPanel(wxCommandEvent & event);
+   void OnCaptureRuler(wxCommandEvent & event);
+   void OnCaptureTracks(wxCommandEvent & event);
+   void OnCaptureFirstTrack(wxCommandEvent & event);
+   void OnCaptureSecondTrack(wxCommandEvent & event);
 
    ScreenshotCommand *CreateCommand();
 
@@ -135,10 +135,10 @@ class ScreenFrameTimer:public wxTimer
 {
  public:
    ScreenFrameTimer(ScreenFrame *frame,
-                    wxEvent & e)
+                    wxEvent & event)
    {
       screenFrame = frame;
-      evt = e.Clone();
+      evt = event.Clone();
    }
 
    virtual void Notify()
@@ -471,13 +471,13 @@ bool ScreenFrame::ProcessEvent(wxEvent & e)
    return wxFrame::ProcessEvent(e);
 }
 
-void ScreenFrame::OnCloseWindow(wxCloseEvent & e)
+void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 {
    mFrame = NULL;
    Destroy();
 }
 
-void ScreenFrame::OnUIUpdate(wxUpdateUIEvent & e)
+void ScreenFrame::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
 {
 #ifdef __WXMAC__
    wxTopLevelWindow *top = mCommand->GetFrontWindow(mContext.proj);
@@ -504,7 +504,7 @@ void ScreenFrame::OnUIUpdate(wxUpdateUIEvent & e)
 #endif
 }
 
-void ScreenFrame::OnDirChoose(wxCommandEvent & e)
+void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
 {
    wxString current = mDirectoryTextBox->GetValue();
 
@@ -523,14 +523,14 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & e)
    }
 }
 
-void ScreenFrame::OnToggleBackgroundBlue(wxCommandEvent & e)
+void ScreenFrame::OnToggleBackgroundBlue(wxCommandEvent & WXUNUSED(event))
 {
    mWhite->SetValue(false);
    mCommand->SetParameter(wxT("Background"),
          mBlue->GetValue() ? wxT("Blue") : wxT("None"));
 }
 
-void ScreenFrame::OnToggleBackgroundWhite(wxCommandEvent & e)
+void ScreenFrame::OnToggleBackgroundWhite(wxCommandEvent & WXUNUSED(event))
 {
    mBlue->SetValue(false);
    mCommand->SetParameter(wxT("Background"),
@@ -546,12 +546,12 @@ void ScreenFrame::SizeMainWindow(int w, int h)
    mContext.proj->mToolManager->Reset();
 }
 
-void ScreenFrame::OnMainWindowSmall(wxCommandEvent & e)
+void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
 {
    SizeMainWindow(680, 450);
 }
 
-void ScreenFrame::OnMainWindowLarge(wxCommandEvent & e)
+void ScreenFrame::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
 {
    SizeMainWindow(900, 600);
 }
@@ -567,92 +567,92 @@ void ScreenFrame::DoCapture(wxString captureMode)
    Show();
 }
 
-void ScreenFrame::OnCaptureWindowContents(wxCommandEvent & e)
+void ScreenFrame::OnCaptureWindowContents(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("window"));
 }
 
-void ScreenFrame::OnCaptureFullWindow(wxCommandEvent & e)
+void ScreenFrame::OnCaptureFullWindow(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("fullwindow"));
 }
 
-void ScreenFrame::OnCaptureWindowPlus(wxCommandEvent & e)
+void ScreenFrame::OnCaptureWindowPlus(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("windowplus"));
 }
 
-void ScreenFrame::OnCaptureFullScreen(wxCommandEvent & e)
+void ScreenFrame::OnCaptureFullScreen(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("fullscreen"));
 }
 
-void ScreenFrame::OnCaptureToolbars(wxCommandEvent & e)
+void ScreenFrame::OnCaptureToolbars(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("toolbars"));
 }
 
-void ScreenFrame::OnCaptureSelectionBar(wxCommandEvent & e)
+void ScreenFrame::OnCaptureSelectionBar(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("selectionbar"));
 }
 
-void ScreenFrame::OnCaptureTools(wxCommandEvent & e)
+void ScreenFrame::OnCaptureTools(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("tools"));
 }
 
-void ScreenFrame::OnCaptureTransport(wxCommandEvent & e)
+void ScreenFrame::OnCaptureTransport(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("transport"));
 }
 
-void ScreenFrame::OnCaptureMixer(wxCommandEvent & e)
+void ScreenFrame::OnCaptureMixer(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("mixer"));
 }
 
-void ScreenFrame::OnCaptureMeter(wxCommandEvent & e)
+void ScreenFrame::OnCaptureMeter(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("meter"));
 }
 
-void ScreenFrame::OnCaptureEdit(wxCommandEvent & e)
+void ScreenFrame::OnCaptureEdit(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("edit"));
 }
 
-void ScreenFrame::OnCaptureDevice(wxCommandEvent & e)
+void ScreenFrame::OnCaptureDevice(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("device"));
 }
 
-void ScreenFrame::OnCaptureTranscription(wxCommandEvent & e)
+void ScreenFrame::OnCaptureTranscription(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("transcription"));
 }
 
-void ScreenFrame::OnCaptureTrackPanel(wxCommandEvent & e)
+void ScreenFrame::OnCaptureTrackPanel(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("trackpanel"));
 }
 
-void ScreenFrame::OnCaptureRuler(wxCommandEvent & e)
+void ScreenFrame::OnCaptureRuler(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("ruler"));
 }
 
-void ScreenFrame::OnCaptureTracks(wxCommandEvent & e)
+void ScreenFrame::OnCaptureTracks(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("tracks"));
 }
 
-void ScreenFrame::OnCaptureFirstTrack(wxCommandEvent & e)
+void ScreenFrame::OnCaptureFirstTrack(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("firsttrack"));
 }
 
-void ScreenFrame::OnCaptureSecondTrack(wxCommandEvent & e)
+void ScreenFrame::OnCaptureSecondTrack(wxCommandEvent & WXUNUSED(event))
 {
    DoCapture(wxT("secondtrack"));
 }
@@ -665,27 +665,27 @@ void ScreenFrame::TimeZoom(double seconds)
    mContext.proj->RedrawProject();
 }
 
-void ScreenFrame::OnOneSec(wxCommandEvent & e)
+void ScreenFrame::OnOneSec(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(1.0);
 }
 
-void ScreenFrame::OnTenSec(wxCommandEvent & e)
+void ScreenFrame::OnTenSec(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(10.0);
 }
 
-void ScreenFrame::OnOneMin(wxCommandEvent & e)
+void ScreenFrame::OnOneMin(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(60.0);
 }
 
-void ScreenFrame::OnFiveMin(wxCommandEvent & e)
+void ScreenFrame::OnFiveMin(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(300.0);
 }
 
-void ScreenFrame::OnOneHour(wxCommandEvent & e)
+void ScreenFrame::OnOneHour(wxCommandEvent & WXUNUSED(event))
 {
    TimeZoom(3600.0);
 }
@@ -706,7 +706,7 @@ void ScreenFrame::SizeTracks(int h)
    mContext.proj->RedrawProject();
 }
 
-void ScreenFrame::OnShortTracks(wxCommandEvent & e)
+void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
    TrackListIterator iter(mContext.proj->GetTracks());
    for (Track * t = iter.First(); t; t = iter.Next()) {
@@ -717,12 +717,12 @@ void ScreenFrame::OnShortTracks(wxCommandEvent & e)
    mContext.proj->RedrawProject();
 }
 
-void ScreenFrame::OnMedTracks(wxCommandEvent & e)
+void ScreenFrame::OnMedTracks(wxCommandEvent & WXUNUSED(event))
 {
    SizeTracks(60);
 }
 
-void ScreenFrame::OnTallTracks(wxCommandEvent & e)
+void ScreenFrame::OnTallTracks(wxCommandEvent & WXUNUSED(event))
 {
    SizeTracks(85);
 }

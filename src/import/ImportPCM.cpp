@@ -99,7 +99,7 @@ public:
 
    wxArrayString *GetStreamInfo(){ return NULL; }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
 private:
    SNDFILE              *mFile;

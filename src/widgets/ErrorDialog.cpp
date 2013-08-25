@@ -157,7 +157,7 @@ ErrorDialog::ErrorDialog(
 #endif
 }
 
-void ErrorDialog::OnOk(wxCommandEvent &event)
+void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    if (dModal)
       EndModal(true);
@@ -269,7 +269,7 @@ void ShowHtmlText(wxWindow *pParent,
    return;
 }
 
-void ErrorDialog::OnHelp(wxCommandEvent &event)
+void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
    if( dhelpURL.StartsWith(wxT("innerlink:")) )
    {

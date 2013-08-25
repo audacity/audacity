@@ -759,7 +759,7 @@ void MixerTrackCluster::OnMouseEvent(wxMouseEvent& event)
       event.Skip();
 }
 
-void MixerTrackCluster::OnPaint(wxPaintEvent &evt)
+void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 
@@ -789,18 +789,18 @@ void MixerTrackCluster::OnPaint(wxPaintEvent &evt)
 }
 
 
-void MixerTrackCluster::OnButton_MusicalInstrument(wxCommandEvent& event)
+void MixerTrackCluster::OnButton_MusicalInstrument(wxCommandEvent& WXUNUSED(event))
 {
    bool bShiftDown = ::wxGetMouseState().ShiftDown();
    this->HandleSelect(bShiftDown);
 }
 
-void MixerTrackCluster::OnSlider_Gain(wxCommandEvent& event)
+void MixerTrackCluster::OnSlider_Gain(wxCommandEvent& WXUNUSED(event))
 {
    this->HandleSliderGain();
 }
 
-//v void MixerTrackCluster::OnSliderScroll_Gain(wxScrollEvent& event)
+//v void MixerTrackCluster::OnSliderScroll_Gain(wxScrollEvent& WXUNUSED(event))
 //{
    //int sliderValue = (int)(mSlider_Gain->Get()); //v mSlider_Gain->GetValue();
    //#ifdef __WXMSW__
@@ -815,12 +815,12 @@ void MixerTrackCluster::OnSlider_Gain(wxCommandEvent& event)
    //mSlider_Gain->SetToolTip(str);
 //}
 
-void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& event)
+void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& WXUNUSED(event))
 {
    this->HandleSliderPan();
 }
 
-void MixerTrackCluster::OnButton_Mute(wxCommandEvent& event)
+void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
    mProject->HandleTrackMute(mTrack, mToggleButton_Mute->WasShiftDown());
@@ -846,7 +846,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& event)
 #endif
 }
 
-void MixerTrackCluster::OnButton_Solo(wxCommandEvent& event)
+void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
    mProject->HandleTrackSolo(mTrack, mToggleButton_Solo->WasShiftDown());
@@ -1748,7 +1748,7 @@ void MixerBoardFrame::OnMaximize(wxMaximizeEvent &event)
    event.Skip();
 }
 
-void MixerBoardFrame::OnSize(wxSizeEvent &event)
+void MixerBoardFrame::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    mMixerBoard->SetSize(this->GetClientSize());
 }

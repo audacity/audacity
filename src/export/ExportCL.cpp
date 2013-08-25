@@ -129,7 +129,7 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
 
 /// 
 /// 
-void ExportCLOptions::OnOK(wxCommandEvent& event)
+void ExportCLOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    wxString cmd = mCmd->GetValue();
@@ -149,7 +149,7 @@ void ExportCLOptions::OnOK(wxCommandEvent& event)
 
 /// 
 /// 
-void ExportCLOptions::OnBrowse(wxCommandEvent& event)
+void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
    wxString ext;
@@ -303,8 +303,8 @@ int ExportCL::Export(AudacityProject *project,
                       double t0,
                       double t1, 
                       MixerSpec *mixerSpec,
-                      Tags *metadata,
-                      int subformat)
+                      Tags *WXUNUSED(metadata),
+                      int WXUNUSED(subformat))
 {
    ExportCLProcess *p;
    wxString output;
@@ -513,13 +513,13 @@ int ExportCL::Export(AudacityProject *project,
 
    // Clean up
    delete mixer;
-   delete[] waveTracks;                            
+   delete[] waveTracks;
    delete p;
 
    return updateResult;
 }
 
-bool ExportCL::DisplayOptions(wxWindow *parent, int format)
+bool ExportCL::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
 {
    ExportCLOptions od(parent);
 

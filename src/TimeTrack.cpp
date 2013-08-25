@@ -186,7 +186,7 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void TimeTrack::HandleXMLEndTag(const wxChar *tag)
+void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
 {
    if(mRescaleXMLValues)
    {

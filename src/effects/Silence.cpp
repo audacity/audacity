@@ -62,8 +62,8 @@ bool EffectSilence::PromptUser()
 }
 
 bool EffectSilence::GenerateTrack(WaveTrack *tmp,
-                                  const WaveTrack &track,
-                                  int ntrack)
+                                  const WaveTrack & WXUNUSED(track),
+                                  int WXUNUSED(ntrack))
 {
    const bool bResult = tmp->InsertSilence(0.0, mDuration);
    wxASSERT(bResult);

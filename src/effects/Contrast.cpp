@@ -376,7 +376,7 @@ ContrastDialog::~ContrastDialog()
    mDiffText->Disconnect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
 }
 
-void ContrastDialog::OnGetForegroundDB( wxCommandEvent &event )
+void ContrastDialog::OnGetForegroundDB( wxCommandEvent & WXUNUSED(event))
 {
    SetStartTime(mForegroundStartT->GetTimeValue());
    SetEndTime(mForegroundEndT->GetTimeValue());
@@ -385,7 +385,7 @@ void ContrastDialog::OnGetForegroundDB( wxCommandEvent &event )
    results();
 }
 
-void ContrastDialog::OnGetBackgroundDB( wxCommandEvent &event )
+void ContrastDialog::OnGetBackgroundDB( wxCommandEvent & WXUNUSED(event))
 {
    SetStartTime(mBackgroundStartT->GetTimeValue());
    SetEndTime(mBackgroundEndT->GetTimeValue());
@@ -394,13 +394,13 @@ void ContrastDialog::OnGetBackgroundDB( wxCommandEvent &event )
    results();
 }
 
-void ContrastDialog::OnGetURL(wxCommandEvent &event)
+void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    wxString page = wxT("http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm");
    ::OpenInDefaultBrowser(page);
 }
 
-void ContrastDialog::OnClose(wxCommandEvent &event)
+void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
 {
    Show(false);
 }
@@ -492,7 +492,7 @@ void ContrastDialog::results()
    }
 }
 
-void ContrastDialog::OnExport(wxCommandEvent & event)
+void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    AudacityProject * project = GetActiveProject();
    wxString fName = wxT("contrast.txt");
@@ -616,7 +616,7 @@ void ContrastDialog::OnReset(wxCommandEvent & event)
    results();
 }
 
-void ContrastDialog::OnChar(wxKeyEvent &event)
+void ContrastDialog::OnChar(wxKeyEvent & event)
 {
    event.Skip(false);
    return;

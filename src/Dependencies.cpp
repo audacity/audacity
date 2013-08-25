@@ -469,19 +469,19 @@ void DependencyDialog::OnSize(wxSizeEvent &evt)
    wxDialog::OnSize(evt);
 }
 
-void DependencyDialog::OnNo(wxCommandEvent &evt)
+void DependencyDialog::OnNo(wxCommandEvent & WXUNUSED(event))
 {
    SaveFutureActionChoice();
    EndModal(wxID_NO);
 }
 
-void DependencyDialog::OnYes(wxCommandEvent &evt)
+void DependencyDialog::OnYes(wxCommandEvent & WXUNUSED(event))
 {
    SaveFutureActionChoice();
    EndModal(wxID_YES);
 }
 
-void DependencyDialog::OnCopySelectedFiles(wxCommandEvent &evt)
+void DependencyDialog::OnCopySelectedFiles(wxCommandEvent & WXUNUSED(event))
 {
    AliasedFileArray aliasedFilesToDelete;
 
@@ -504,7 +504,7 @@ void DependencyDialog::OnCopySelectedFiles(wxCommandEvent &evt)
    }
 }
 
-void DependencyDialog::OnCancel(wxCommandEvent& evt)
+void DependencyDialog::OnCancel(wxCommandEvent& WXUNUSED(event))
 {
    if (mIsSaving)
    {

@@ -146,18 +146,18 @@ void BatchCommandDialog::ValidateChoices()
 {
 }
 
-void BatchCommandDialog::OnChoice(wxCommandEvent &event)
+void BatchCommandDialog::OnChoice(wxCommandEvent & WXUNUSED(event))
 {
 }
 
-void BatchCommandDialog::OnOk(wxCommandEvent &event)
+void BatchCommandDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    mSelectedCommand = mCommand->GetValue().Strip(wxString::both);
    mSelectedParameters = mParameters->GetValue().Strip(wxString::trailing);
    EndModal(true);
 }
 
-void BatchCommandDialog::OnCancel(wxCommandEvent &event)
+void BatchCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(false);
 }
@@ -173,7 +173,7 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
    mEditParams->Enable( f != NULL );
 }
 
-void BatchCommandDialog::OnEditParams(wxCommandEvent &event)
+void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
    wxString command = mCommand->GetValue();
    wxString params  = mParameters->GetValue();

@@ -793,7 +793,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
 {
    return NULL;
 }

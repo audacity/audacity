@@ -41,7 +41,7 @@ class NullProgressTarget : public CommandProgressTarget
 {
 public:
    virtual ~NullProgressTarget() {}
-   virtual void Update(double completed) {}
+   virtual void Update(double WXUNUSED(completed)) {}
 };
 
 /// Sends command progress information to a ProgressDialog

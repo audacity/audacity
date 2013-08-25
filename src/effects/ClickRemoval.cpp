@@ -387,7 +387,7 @@ bool ClickRemovalDialog::TransferDataFromWindow()
 
 // WDR: handler implementations for ClickRemovalDialog
 
-void ClickRemovalDialog::OnWidthText(wxCommandEvent & event)
+void ClickRemovalDialog::OnWidthText(wxCommandEvent & WXUNUSED(event))
 {
    long val;
 
@@ -395,7 +395,7 @@ void ClickRemovalDialog::OnWidthText(wxCommandEvent & event)
    mWidthS->SetValue(TrapLong(val, MIN_CLICK_WIDTH, MAX_CLICK_WIDTH));
 }
 
-void ClickRemovalDialog::OnThreshText(wxCommandEvent & event)
+void ClickRemovalDialog::OnThreshText(wxCommandEvent & WXUNUSED(event))
 {
    long val;
 
@@ -403,17 +403,17 @@ void ClickRemovalDialog::OnThreshText(wxCommandEvent & event)
    mThreshS->SetValue(TrapLong(val, MIN_THRESHOLD, MAX_THRESHOLD));
 }
 
-void ClickRemovalDialog::OnWidthSlider(wxCommandEvent & event)
+void ClickRemovalDialog::OnWidthSlider(wxCommandEvent & WXUNUSED(event))
 {
    mWidthT->SetValue(wxString::Format(wxT("%d"), mWidthS->GetValue()));
 }
 
-void ClickRemovalDialog::OnThreshSlider(wxCommandEvent & event)
+void ClickRemovalDialog::OnThreshSlider(wxCommandEvent & WXUNUSED(event))
 {
    mThreshT->SetValue(wxString::Format(wxT("%d"), mThreshS->GetValue()));
 }
 
-void ClickRemovalDialog::OnPreview(wxCommandEvent & event)
+void ClickRemovalDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
    mEffect->mThresholdLevel = mThresh;

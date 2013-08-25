@@ -53,7 +53,7 @@ class AudacityPrintout : public wxPrintout
    TrackList *mTracks;
 };
 
-bool AudacityPrintout::OnPrintPage(int page)
+bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
 {
    wxDC *dc = GetDC();
    if (!dc)

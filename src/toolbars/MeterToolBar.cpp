@@ -139,7 +139,7 @@ bool MeterToolBar::DestroyChildren()
    return ToolBar::DestroyChildren();
 }
 
-void MeterToolBar::OnSize( wxSizeEvent & evt )
+void MeterToolBar::OnSize( wxSizeEvent & WXUNUSED(event) )
 {
    int width, height;
 

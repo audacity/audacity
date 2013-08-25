@@ -417,7 +417,7 @@ bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
 // and think again.  
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool BatchCommands::ApplySpecialCommand(int iCommand, const wxString command,const wxString params)
+bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString command,const wxString params)
 {
    if (ReportAndSkip(command, params))
       return true;

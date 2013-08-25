@@ -269,7 +269,7 @@ public:
    {
    }
 
-   bool IsSupportedFormat(const wxDataFormat & format, Direction dir = Get) const
+   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
    {
       if (format.GetType() == wxDF_FILENAME) {
          return true;
@@ -391,7 +391,7 @@ public:
 
 #endif
 
-   bool OnDropFiles(wxCoord x, wxCoord y, const wxArrayString& filenames)
+   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames)
    {
       //sort by OD non OD.  load Non OD first so user can start editing asap.
       wxArrayString sortednames(filenames);
@@ -1600,7 +1600,7 @@ void AudacityProject::AllProjectsDeleteUnlock()
 }
 
 ///Handles the redrawing necessary for tasks as they partially update in the background.
-void AudacityProject::OnODTaskUpdate(wxCommandEvent & event)
+void AudacityProject::OnODTaskUpdate(wxCommandEvent & WXUNUSED(event))
 {
    //todo: add track data to the event - check to see if the project contains it before redrawing.
    if(mTrackPanel)
@@ -1609,13 +1609,13 @@ void AudacityProject::OnODTaskUpdate(wxCommandEvent & event)
 }
 
 //redraws the task and does other book keeping after the task is complete.
-void AudacityProject::OnODTaskComplete(wxCommandEvent & event)
+void AudacityProject::OnODTaskComplete(wxCommandEvent & WXUNUSED(event))
 {
   if(mTrackPanel)
       mTrackPanel->Refresh(false);
  }
 
-void AudacityProject::OnScroll(wxScrollEvent & event)
+void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
    wxInt64 hlast = mViewInfo.sbarH;
 
@@ -1685,7 +1685,7 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
 }
 
-bool AudacityProject::HandleChar(wxKeyEvent & event)
+bool AudacityProject::HandleChar(wxKeyEvent & WXUNUSED(event))
 {
    return false;
 }
@@ -1758,7 +1758,7 @@ void AudacityProject::OnMenu(wxCommandEvent & event)
       event.Skip(true);
 }
 
-void AudacityProject::OnUpdateUI(wxUpdateUIEvent & event)
+void AudacityProject::OnUpdateUI(wxUpdateUIEvent & WXUNUSED(event))
 {
    UpdateMenus();
 }
@@ -3981,7 +3981,7 @@ void AudacityProject::SetStop(bool bStopped)
    mTrackPanel->SetStop(bStopped);
 }
 
-void AudacityProject::OnTimer(wxTimerEvent& event)
+void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    MixerToolBar *mixerToolBar = GetMixerToolBar();
    if( mixerToolBar )

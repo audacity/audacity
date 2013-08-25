@@ -133,7 +133,7 @@ public:
 
    wxArrayString *GetStreamInfo(){ return NULL; }
 
-   void SetStreamUsage(wxInt32 StreamID, bool Use){}
+   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)){}
 
 private:
    // Takes a line of text in lof file and interprets it and opens files
@@ -172,7 +172,7 @@ LOFImportFileHandle::LOFImportFileHandle(const wxString & name, wxTextFile *file
 }
 
 void GetLOFImportPlugin(ImportPluginList *importPluginList,
-                        UnusableImportPluginList *unusableImportPluginList)
+                        UnusableImportPluginList * WXUNUSED(unusableImportPluginList))
 {
    importPluginList->Append(new LOFImportPlugin);
 }
@@ -230,8 +230,8 @@ int LOFImportFileHandle::GetFileUncompressedBytes()
    return 0;
 }
 
-int LOFImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
-                                int *outNumTracks, Tags *tags)
+int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), Track *** WXUNUSED(outTracks),
+                                int * WXUNUSED(outNumTracks), Tags * WXUNUSED(tags))
 {
    wxASSERT(mTextFile->IsOpened());
 

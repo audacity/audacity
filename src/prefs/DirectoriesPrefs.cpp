@@ -162,7 +162,7 @@ void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
    }
 }
 
-void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & e)
+void DirectoriesPrefs::UpdateFreeSpace(wxCommandEvent & WXUNUSED(event))
 {
    wxString tempDir;
    wxString label;

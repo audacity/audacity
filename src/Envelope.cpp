@@ -518,7 +518,7 @@ void Envelope::MarkDragPointForDeletion()
 }
 
 void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
-                               double h, double pps, bool dB,
+                               double WXUNUSED(h), double pps, bool dB,
                                float zoomMin, float zoomMax)
 {
    int clip_y = event.m_y - r.y;
@@ -555,7 +555,8 @@ void Envelope::MoveDraggedPoint( wxMouseEvent & event, wxRect & r,
 
 bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
                                double h, double pps, bool dB,
-                               float zoomMin, float zoomMax, float eMin, float eMax)
+                               float zoomMin, float zoomMax, 
+                               float WXUNUSED(eMin), float WXUNUSED(eMax))
 {
    mDirty = true;
 
@@ -580,9 +581,11 @@ bool Envelope::HandleDragging( wxMouseEvent & event, wxRect & r,
 }
 
 // Exit dragging mode and deletes dragged point if neccessary.
-bool Envelope::HandleMouseButtonUp( wxMouseEvent & event, wxRect & r,
-                                    double h, double pps, bool dB,
-                                    float zoomMin, float zoomMax )
+bool Envelope::HandleMouseButtonUp( wxMouseEvent & WXUNUSED(event), wxRect & WXUNUSED(r),
+                                    double WXUNUSED(h), 
+                                    double WXUNUSED(pps), bool WXUNUSED(dB),
+                                    float WXUNUSED(zoomMin), 
+                                    float WXUNUSED(zoomMax) )
 {
    if (mIsDeleting) {
       delete mEnv[mDragPoint];

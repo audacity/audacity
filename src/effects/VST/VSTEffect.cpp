@@ -245,7 +245,7 @@ void PluginRegistrationDialog::OnToggleState(wxListEvent & event)
 // SetBoldOrRegular( i );
 }
 
-void PluginRegistrationDialog::OnApply(wxCommandEvent & event)
+void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 {
 
    size_t cnt = mFiles.GetCount();
@@ -270,7 +270,7 @@ void PluginRegistrationDialog::OnApply(wxCommandEvent & event)
    EndModal( true );
 }
 
-void PluginRegistrationDialog::OnCancel(wxCommandEvent &event)
+void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(false);
 }
@@ -715,7 +715,7 @@ void VSTEffectDialog::RefreshParameters(int skip)
    }
 }
 
-void VSTEffectDialog::OnIdle(wxIdleEvent & evt)
+void VSTEffectDialog::OnIdle(wxIdleEvent & WXUNUSED(event))
 {
    if (mGui) {
       mEffect->callDispatcher(effEditIdle, 0, 0, NULL, 0.0);
@@ -738,7 +738,7 @@ void VSTEffectDialog::OnProgram(wxCommandEvent & evt)
    RefreshParameters();
 }
 
-void VSTEffectDialog::OnProgramText(wxCommandEvent & evt)
+void VSTEffectDialog::OnProgramText(wxCommandEvent & WXUNUSED(event))
 {
    wxString name = mProgram->GetValue();
    int i = mEffect->callDispatcher(effGetProgram, 0, 0, NULL, 0.0);
@@ -764,7 +764,7 @@ void VSTEffectDialog::OnProgramText(wxCommandEvent & evt)
    RefreshParameters();
 }
 
-void VSTEffectDialog::OnLoad(wxCommandEvent & evt)
+void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 {
    wxString fn;
 
@@ -797,7 +797,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & evt)
    return;
 }
 
-void VSTEffectDialog::OnSave(wxCommandEvent & evt)
+void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 {
    int i = mProgram->GetCurrentSelection();
    wxString fn;
@@ -869,17 +869,17 @@ void VSTEffectDialog::OnSave(wxCommandEvent & evt)
    xmlFile.Close();
 }
 
-void VSTEffectDialog::OnClose(wxCloseEvent & evt)
+void VSTEffectDialog::OnClose(wxCloseEvent & WXUNUSED(event))
 {
    EndModal(false);
 }
 
-void VSTEffectDialog::OnPreview(wxCommandEvent & evt)
+void VSTEffectDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    mEffect->Preview();
 }
 
-void VSTEffectDialog::OnOk(wxCommandEvent & evt)
+void VSTEffectDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
    if (mGui) {
       mEffect->callDispatcher(effEditClose, 0, 0, NULL, 0.0);
@@ -888,7 +888,7 @@ void VSTEffectDialog::OnOk(wxCommandEvent & evt)
    EndModal(true);
 }
 
-void VSTEffectDialog::OnCancel(wxCommandEvent & evt)
+void VSTEffectDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    if (mGui) {
       mEffect->callDispatcher(effEditClose, 0, 0, NULL, 0.0);
@@ -1180,7 +1180,7 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
       }
    }
 
-   const char *a = in.mb_str();
+   //const char *a = in.mb_str();
    //Setup a vector to hold the result
    unsigned long temp = 0; //Holds decoded quanta
    int i = 0;
@@ -1564,7 +1564,7 @@ bool VSTEffect::ProcessStereo(int count,
                               sampleCount len)
 {
    bool rc = true;
-   sampleCount amountLeft = 0;
+   //sampleCount amountLeft = 0;
 
    // Initialize time info
    mTimeInfo.samplePos = 0.0;

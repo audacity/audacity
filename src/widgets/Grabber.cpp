@@ -198,7 +198,7 @@ void Grabber::OnLeftDown(wxMouseEvent & event)
 //
 // Handle mouse enter events
 //
-void Grabber::OnEnter(wxMouseEvent & event)
+void Grabber::OnEnter(wxMouseEvent & WXUNUSED(event))
 {
    // Redraw highlighted
    mOver = true;
@@ -208,7 +208,7 @@ void Grabber::OnEnter(wxMouseEvent & event)
 //
 // Handle mouse leave events
 //
-void Grabber::OnLeave(wxMouseEvent & event)
+void Grabber::OnLeave(wxMouseEvent & WXUNUSED(event))
 {
    if (!GetCapture()) {
       // Redraw plain
@@ -220,7 +220,7 @@ void Grabber::OnLeave(wxMouseEvent & event)
 //
 // Handle the paint events
 //
-void Grabber::OnPaint(wxPaintEvent & event)
+void Grabber::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    wxPaintDC dc(this);
 

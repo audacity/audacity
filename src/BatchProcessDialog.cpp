@@ -64,7 +64,7 @@ BatchProcessDialog::BatchProcessDialog(wxWindow * parent):
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   AudacityProject * p = GetActiveProject();
+   //AudacityProject * p = GetActiveProject();
 
    SetLabel(_("Apply Chain"));         // Provide visual label
    SetName(_("Apply Chain"));          // Provide audible label
@@ -139,7 +139,7 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
    mChains->SetColumnWidth(0, sz.x);
 }
 
-void BatchProcessDialog::OnApplyToProject(wxCommandEvent &event)
+void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 {
    long item = mChains->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
@@ -183,7 +183,7 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent &event)
    }
 }
 
-void BatchProcessDialog::OnApplyToFiles(wxCommandEvent &event)
+void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 {
    long item = mChains->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
@@ -339,7 +339,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent &event)
    project->OnRemoveTracks();
 }
 
-void BatchProcessDialog::OnCancel(wxCommandEvent &event)
+void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal(false);
 }
@@ -590,7 +590,7 @@ bool EditChainsDialog::ChangeOK()
    return true;
 }
 /// An item in the chains list has been selected.
-void EditChainsDialog::OnChainSelected(wxListEvent &event)
+void EditChainsDialog::OnChainSelected(wxListEvent & event)
 {
    if (!ChangeOK()) {
       event.Veto();
@@ -617,13 +617,13 @@ void EditChainsDialog::OnChainSelected(wxListEvent &event)
 }
 
 /// An item in the chains list has been selected.
-void EditChainsDialog::OnListSelected(wxListEvent &event)
+void EditChainsDialog::OnListSelected(wxListEvent & WXUNUSED(event))
 {
    FitColumns();
 }
 
 /// The window has been resized.
-void EditChainsDialog::OnSize(wxSizeEvent &event)
+void EditChainsDialog::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    // Refrsh the layout and re-fit the columns.
    Layout();
@@ -704,7 +704,7 @@ void EditChainsDialog::OnChainsEndEdit(wxListEvent &event)
 }
 
 /// 
-void EditChainsDialog::OnAdd(wxCommandEvent &event)
+void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    while (true) {
       wxTextEntryDialog d(this,
@@ -748,7 +748,7 @@ void EditChainsDialog::OnAdd(wxCommandEvent &event)
 }
 
 ///
-void EditChainsDialog::OnRemove(wxCommandEvent &event)
+void EditChainsDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
    long item = mChains->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
@@ -779,7 +779,7 @@ void EditChainsDialog::OnRemove(wxCommandEvent &event)
 }
 
 ///
-void EditChainsDialog::OnRename(wxCommandEvent &event)
+void EditChainsDialog::OnRename(wxCommandEvent & WXUNUSED(event))
 {
    long item = mChains->GetNextItem(-1,
                                     wxLIST_NEXT_ALL,
@@ -818,7 +818,7 @@ void EditChainsDialog::OnCommandActivated(wxListEvent &event)
 }
 
 ///
-void EditChainsDialog::OnInsert(wxCommandEvent &event)
+void EditChainsDialog::OnInsert(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -847,7 +847,7 @@ void EditChainsDialog::OnInsert(wxCommandEvent &event)
 }
 
 ///
-void EditChainsDialog::OnDelete(wxCommandEvent &event)
+void EditChainsDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -870,7 +870,7 @@ void EditChainsDialog::OnDelete(wxCommandEvent &event)
 }
 
 ///
-void EditChainsDialog::OnUp(wxCommandEvent &event)
+void EditChainsDialog::OnUp(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -892,7 +892,7 @@ void EditChainsDialog::OnUp(wxCommandEvent &event)
 }
 
 ///
-void EditChainsDialog::OnDown(wxCommandEvent &event)
+void EditChainsDialog::OnDown(wxCommandEvent & WXUNUSED(event))
 {
    long item = mList->GetNextItem(-1,
                                   wxLIST_NEXT_ALL,
@@ -914,7 +914,7 @@ void EditChainsDialog::OnDown(wxCommandEvent &event)
 }
 
 /// Select the empty Command chain.
-void EditChainsDialog::OnDefaults(wxCommandEvent &event)
+void EditChainsDialog::OnDefaults(wxCommandEvent & WXUNUSED(event))
 {
    mBatchCommands.RestoreChain(mActiveChain);
 
@@ -924,7 +924,7 @@ void EditChainsDialog::OnDefaults(wxCommandEvent &event)
 }
 
 /// Send changed values back to Prefs, and update Audacity.
-void EditChainsDialog::OnOK(wxCommandEvent &event)
+void EditChainsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    gPrefs->Write(wxT("/Batch/ActiveChain"), mActiveChain);
    gPrefs->Flush();
@@ -939,7 +939,7 @@ void EditChainsDialog::OnOK(wxCommandEvent &event)
 }
 
 ///
-void EditChainsDialog::OnCancel(wxCommandEvent &event)
+void EditChainsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    if (!ChangeOK()) {
       return;

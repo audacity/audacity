@@ -116,7 +116,7 @@ bool ShuttlePrefs::TransferWrappedType( const wxString & Name, WrappedType & W )
    return false;
 }
 
-bool ShuttlePrefs::ExchangeWithMaster(const wxString & Name)
+bool ShuttlePrefs::ExchangeWithMaster(const wxString & WXUNUSED(Name))
 {
    // ShuttlePrefs is unusual in that it overloads ALL the Transfer functions
    // which it supports.  It doesn't do any string conversion, because wxConv will

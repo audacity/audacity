@@ -45,7 +45,7 @@ bool EffectRepair::PromptUser()
    return true;
 }
 
-bool EffectRepair::TransferParameters( Shuttle & shuttle )
+bool EffectRepair::TransferParameters( Shuttle & WXUNUSED(shuttle) )
 { 
    //TODO: pop-click values.
 //   shuttle.TransferInt("",,0);

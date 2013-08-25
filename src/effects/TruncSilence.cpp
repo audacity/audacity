@@ -555,13 +555,13 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
    pWarning = S.AddVariableText( wxT("") );
 }
 
-void TruncSilenceDialog::OnPreview(wxCommandEvent & event)
+void TruncSilenceDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
    mEffect->Preview();
 }
 
-void TruncSilenceDialog::OnDurationChange(wxCommandEvent & event)
+void TruncSilenceDialog::OnDurationChange(wxCommandEvent & WXUNUSED(event))
 {
    // We may even get called during the constructor.
    // This test saves us from calling unsafe functions.

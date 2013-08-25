@@ -1470,14 +1470,14 @@ ProgressDialog::SetMessage(const wxString & message)
 }
 
 void
-ProgressDialog::OnCancel(wxCommandEvent & e)
+ProgressDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    FindWindowById(wxID_CANCEL, this)->Disable();
    mCancel = true;
 }
 
 void
-ProgressDialog::OnStop(wxCommandEvent & e)
+ProgressDialog::OnStop(wxCommandEvent & WXUNUSED(event))
 {
    FindWindowById(wxID_OK, this)->Disable();
    mCancel = false;

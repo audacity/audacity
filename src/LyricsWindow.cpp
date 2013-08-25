@@ -131,12 +131,12 @@ void LyricsWindow::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
   this->Hide();
 }
 
-void LyricsWindow::OnStyle_BouncingBall(wxCommandEvent &evt)
+void LyricsWindow::OnStyle_BouncingBall(wxCommandEvent & WXUNUSED(event))
 {
    mLyricsPanel->SetLyricsStyle(Lyrics::kBouncingBallLyrics);
 }
 
-void LyricsWindow::OnStyle_Highlight(wxCommandEvent &evt)
+void LyricsWindow::OnStyle_Highlight(wxCommandEvent & WXUNUSED(event))
 {
    mLyricsPanel->SetLyricsStyle(Lyrics::kHighlightLyrics);
 }

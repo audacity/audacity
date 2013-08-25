@@ -531,6 +531,8 @@ void Ruler::FindLinearTickSizes(double UPP)
          // More than 10 digit numbers?  Something is badly wrong.
          // Probably units is coming in with too high a value.
          wxASSERT( mDigits >= -10 );
+         if( mDigits < -10 )
+            break;
       }
       mMinor = d;
       mMajor = d * 2.0;
@@ -557,6 +559,8 @@ void Ruler::FindLinearTickSizes(double UPP)
          // More than 10 digit numbers?  Something is badly wrong.
          // Probably units is coming in with too high a value.
          wxASSERT( mDigits >= -10 );
+         if( mDigits < -10 )
+            break;
       }
       mDigits++;
       mMinor = d;

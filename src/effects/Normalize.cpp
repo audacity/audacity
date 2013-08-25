@@ -520,7 +520,7 @@ bool NormalizeDialog::TransferDataFromWindow()
    return true;
 }
 
-void NormalizeDialog::OnUpdateUI(wxCommandEvent& evt)
+void NormalizeDialog::OnUpdateUI(wxCommandEvent& WXUNUSED(event))
 {
    UpdateUI();
 }
@@ -562,7 +562,7 @@ void NormalizeDialog::UpdateUI()
       mWarning->SetLabel(wxT(""));
 }
 
-void NormalizeDialog::OnPreview(wxCommandEvent &event)
+void NormalizeDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 

@@ -99,7 +99,7 @@ TimerRecordDialog::~TimerRecordDialog()
 {
 }
 
-void TimerRecordDialog::OnTimer(wxTimerEvent& event)
+void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    wxDateTime dateTime_UNow = wxDateTime::UNow();
    if (m_DateTime_Start < dateTime_UNow) {
@@ -110,7 +110,7 @@ void TimerRecordDialog::OnTimer(wxTimerEvent& event)
    }
 }
 
-void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& event)
+void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& WXUNUSED(event))
 {
    m_DateTime_Start = m_pDatePickerCtrl_Start->GetValue();
    double dTime = m_pTimeTextCtrl_Start->GetTimeValue();
@@ -132,7 +132,7 @@ void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& event)
    this->UpdateEnd(); 
 }
 
-void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& event)
+void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& WXUNUSED(event))
 {
    //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then 
    // user increments the hours past 23, it rolls over to 0 (although if you increment below 0, it stays at 0).
@@ -150,7 +150,7 @@ void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& event)
    this->OnDatePicker_Start(dummyDateEvent);
 }
  
-void TimerRecordDialog::OnDatePicker_End(wxDateEvent& event)
+void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
 {
    m_DateTime_End = m_pDatePickerCtrl_End->GetValue();
    double dTime = m_pTimeTextCtrl_End->GetTimeValue();
@@ -172,7 +172,7 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& event)
    this->UpdateDuration(); // Keep Start constant and update Duration for changed End.
 }
 
-void TimerRecordDialog::OnTimeText_End(wxCommandEvent& event)
+void TimerRecordDialog::OnTimeText_End(wxCommandEvent& WXUNUSED(event))
 {
    //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then 
    // user increments the hours past 23, it rolls over to 0 (although if you increment below 0, it stays at 0).
@@ -190,7 +190,7 @@ void TimerRecordDialog::OnTimeText_End(wxCommandEvent& event)
    this->OnDatePicker_End(dummyDateEvent);
 }
 
-void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& event)
+void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
 {
    double dTime = m_pTimeTextCtrl_Duration->GetTimeValue();
    long hr = (long)(dTime / 3600.0);
@@ -201,7 +201,7 @@ void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& event)
    this->UpdateEnd(); // Keep Start constant and update End for changed Duration.
 }
 
-void TimerRecordDialog::OnOK(wxCommandEvent& event)
+void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    this->TransferDataFromWindow();
    if (!m_TimeSpan_Duration.IsPositive())

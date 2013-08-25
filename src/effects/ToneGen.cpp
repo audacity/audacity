@@ -130,7 +130,7 @@ bool EffectToneGen::PromptUser()
    return true;
 }
 
-bool EffectToneGen::TransferParameters( Shuttle & shuttle )
+bool EffectToneGen::TransferParameters( Shuttle & WXUNUSED(shuttle) )
 {
 /// \todo this should in time be using ShuttleGui too.
 //   shuttle.TransferInt("",,0);
@@ -148,7 +148,7 @@ bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
    double frequencyQuantum;
    double BlendedFrequency;
    double BlendedAmplitude;
-   double BlendedLogFrequency;
+   double BlendedLogFrequency = 0.0f;
 
    // calculate delta, and reposition from where we left
    double amplitudeQuantum = (amplitude[1]-amplitude[0]) / numSamples;
@@ -222,7 +222,7 @@ void EffectToneGen::BeforeGenerate()
 }
 
 void EffectToneGen::GenerateBlock(float *data,
-                                  const WaveTrack &track,
+                                  const WaveTrack & WXUNUSED(track),
                                   sampleCount block)
 {
    MakeTone(data, block);
@@ -371,7 +371,7 @@ bool ToneGenDialog::TransferDataFromWindow()
    return true;
 }
 
-void ToneGenDialog::OnTimeCtrlUpdate(wxCommandEvent & event) {
+void ToneGenDialog::OnTimeCtrlUpdate(wxCommandEvent & WXUNUSED(event)) {
    Fit();
 }
 

@@ -406,7 +406,7 @@ bool PhaserDialog::TransferDataFromWindow()
 
 // WDR: handler implementations for PhaserDialog
 
-void PhaserDialog::OnStagesSlider(wxCommandEvent & event)
+void PhaserDialog::OnStagesSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long stage = GetStagesSlider()->GetValue();
@@ -414,7 +414,7 @@ void PhaserDialog::OnStagesSlider(wxCommandEvent & event)
    GetStagesText()->SetValue(str);
 }
 
-void PhaserDialog::OnDryWetSlider(wxCommandEvent & event)
+void PhaserDialog::OnDryWetSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long drywet = GetDryWetSlider()->GetValue();
@@ -422,7 +422,7 @@ void PhaserDialog::OnDryWetSlider(wxCommandEvent & event)
    GetDryWetText()->SetValue(str);
 }
 
-void PhaserDialog::OnFeedbackSlider(wxCommandEvent & event)
+void PhaserDialog::OnFeedbackSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long fb = GetFeedbackSlider()->GetValue();
@@ -434,7 +434,7 @@ void PhaserDialog::OnFeedbackSlider(wxCommandEvent & event)
    GetFeedbackText()->SetValue(str);
 }
 
-void PhaserDialog::OnDepthSlider(wxCommandEvent & event)
+void PhaserDialog::OnDepthSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long depth = GetDepthSlider()->GetValue();
@@ -442,7 +442,7 @@ void PhaserDialog::OnDepthSlider(wxCommandEvent & event)
    GetDepthText()->SetValue(str);
 }
 
-void PhaserDialog::OnPhaseSlider(wxCommandEvent & event)
+void PhaserDialog::OnPhaseSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long phase = GetPhaseSlider()->GetValue();
@@ -451,7 +451,7 @@ void PhaserDialog::OnPhaseSlider(wxCommandEvent & event)
    GetPhaseText()->SetValue(str);
 }
 
-void PhaserDialog::OnFreqSlider(wxCommandEvent & event)
+void PhaserDialog::OnFreqSlider(wxCommandEvent & WXUNUSED(event))
 {
    wxString str;
    long freq = GetFreqSlider()->GetValue();
@@ -459,7 +459,7 @@ void PhaserDialog::OnFreqSlider(wxCommandEvent & event)
    GetFreqText()->SetValue(str);
 }
 
-void PhaserDialog::OnStagesText(wxCommandEvent & event)
+void PhaserDialog::OnStagesText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetStagesText();
    if (c) {
@@ -474,7 +474,7 @@ void PhaserDialog::OnStagesText(wxCommandEvent & event)
    }
 }
 
-void PhaserDialog::OnDryWetText(wxCommandEvent & event)
+void PhaserDialog::OnDryWetText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetDryWetText();
    if (c) {
@@ -489,7 +489,7 @@ void PhaserDialog::OnDryWetText(wxCommandEvent & event)
    }
 }
 
-void PhaserDialog::OnFeedbackText(wxCommandEvent & event)
+void PhaserDialog::OnFeedbackText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetFeedbackText();
    if (c) {
@@ -504,7 +504,7 @@ void PhaserDialog::OnFeedbackText(wxCommandEvent & event)
    }
 }
 
-void PhaserDialog::OnDepthText(wxCommandEvent & event)
+void PhaserDialog::OnDepthText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetDepthText();
    if (c) {
@@ -519,7 +519,7 @@ void PhaserDialog::OnDepthText(wxCommandEvent & event)
    }
 }
 
-void PhaserDialog::OnPhaseText(wxCommandEvent & event)
+void PhaserDialog::OnPhaseText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetPhaseText();
    if (c) {
@@ -534,7 +534,7 @@ void PhaserDialog::OnPhaseText(wxCommandEvent & event)
    }
 }
 
-void PhaserDialog::OnFreqText(wxCommandEvent & event)
+void PhaserDialog::OnFreqText(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *c = GetFreqText();
    if (c) {
@@ -549,7 +549,7 @@ void PhaserDialog::OnFreqText(wxCommandEvent & event)
    }
 }
 
-void PhaserDialog::OnPreview(wxCommandEvent &event)
+void PhaserDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
 

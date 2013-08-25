@@ -152,7 +152,7 @@ void TaskProfile::Begin(char* fileName, int lineNum, char* taskDescription)
 }
 
 ///end the task timer.
-void TaskProfile::End(char* fileName, int lineNum, char* taskDescription)
+void TaskProfile::End(char* WXUNUSED(fileName), int WXUNUSED(lineNum), char* WXUNUSED(taskDescription))
 {
    mCumTime += clock() - mLastTime;
    mNumHits++;

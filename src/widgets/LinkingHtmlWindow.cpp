@@ -34,19 +34,19 @@ BEGIN_EVENT_TABLE(BrowserFrame, wxFrame)
 END_EVENT_TABLE()
 
 
-void BrowserFrame::OnForward(wxCommandEvent & event)
+void BrowserFrame::OnForward(wxCommandEvent & WXUNUSED(event))
 {
    mpHtml->HistoryForward();
    UpdateButtons();
 }
 
-void BrowserFrame::OnBackward(wxCommandEvent & event)
+void BrowserFrame::OnBackward(wxCommandEvent & WXUNUSED(event))
 {
    mpHtml->HistoryBack();
    UpdateButtons();
 }
 
-void BrowserFrame::OnClose(wxCommandEvent & event)
+void BrowserFrame::OnClose(wxCommandEvent & WXUNUSED(event))
 {
    Close();
 }

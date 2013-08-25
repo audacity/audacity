@@ -2072,7 +2072,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       // find nearest beat to sel0, sel1
       double minPeriod = 0.05; // minimum beat period
       double qBeat0, qBeat1;
-      double centerBeat;
+      double centerBeat = 0.0f;
       mStretchSel0 = nt->NearestBeatTime(mViewInfo->sel0, &qBeat0);
       mStretchSel1 = nt->NearestBeatTime(mViewInfo->sel1, &qBeat1);
 
@@ -3614,7 +3614,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
 /// Determines if we can edit samples in a wave track.
 /// Also pops up warning messages in certain cases where we can't.
 ///  @return true if we can edit the samples, false otherwise.
-bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & event, Track * t )
+bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track * t )
 {
    //Exit if we don't have a track
    if(!t)
@@ -3914,7 +3914,7 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
    RefreshTrack(mDrawingTrack);
 }
 
-void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & event )
+void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
 {
    //*************************************************
    //***    UP-CLICK  (Finish drawing)             ***
@@ -4253,7 +4253,7 @@ void TrackPanel::OnTrackListUpdated(wxCommandEvent & e)
    e.Skip();
 }
 
-void TrackPanel::OnContextMenu(wxContextMenuEvent & event)
+void TrackPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
    OnTrackMenu();
 }
@@ -4520,7 +4520,7 @@ bool TrackPanel::MuteSoloFunc(Track * t, wxRect r, int x, int y,
    return true;
 }
 
-bool TrackPanel::TrackSelFunc(Track * t, wxRect r, int x, int y)
+bool TrackPanel::TrackSelFunc(Track * WXUNUSED(t), wxRect r, int x, int y)
 {
    // First check the blank space to left of minimize button.
    wxRect selRect;
@@ -4681,7 +4681,7 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
 ///  We also modify the undo state (the action doesn't become
 ///  undo-able, but it gets merged with the previous undo-able
 ///  event).
-void TrackPanel::HandleResizeButtonUp(wxMouseEvent & event)
+void TrackPanel::HandleResizeButtonUp(wxMouseEvent & WXUNUSED(event))
 {
    SetCapturedTrack( NULL );
    MakeParentRedrawScrollbars();
@@ -5068,7 +5068,7 @@ void TrackPanel::OnChar(wxKeyEvent & event)
 }
 
 /// Should handle the case when the mouse capture is lost.
-void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & event)
+void TrackPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
    wxMouseEvent e(wxEVT_LEFT_UP);
 
@@ -5710,7 +5710,7 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
 
 /// method that tells us if the mouse event landed on a 
 /// time-slider that allows us to time shift the sequence.
-bool TrackPanel::HitTestSlide(Track *track, wxRect &r, wxMouseEvent & event)
+bool TrackPanel::HitTestSlide(Track * WXUNUSED(track), wxRect &r, wxMouseEvent & event)
 {
    // Perhaps we should delegate this to TrackArtist as only TrackArtist
    // knows what the real sizes are??
@@ -5829,7 +5829,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 ///  - Fills in space below the tracks. 
 void TrackPanel::DrawEverythingElse(wxDC * dc,
                                     const wxRegion region,
-                                    const wxRect panelRect,
+                                    const wxRect WXUNUSED(panelRect),
                                     const wxRect clip)
 {
    // We draw everything else
@@ -7337,13 +7337,13 @@ void TrackPanel::OnChannelChange(wxCommandEvent & event)
 }
 
 /// Split a stereo track into two tracks...
-void TrackPanel::OnSplitStereo(wxCommandEvent &event)
+void TrackPanel::OnSplitStereo(wxCommandEvent & WXUNUSED(event))
 {
    SplitStereo(true);
 }
 
 /// Split a stereo track into two mono tracks...
-void TrackPanel::OnSplitStereoMono(wxCommandEvent &event)
+void TrackPanel::OnSplitStereoMono(wxCommandEvent & WXUNUSED(event))
 {
    SplitStereo(false);
 }
@@ -7405,7 +7405,7 @@ void TrackPanel::SplitStereo(bool stereo)
 }
 
 /// Merge two tracks into one stereo track ??
-void TrackPanel::OnMergeStereo(wxCommandEvent &event)
+void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
 {
    wxASSERT(mPopupMenuTarget);
    mPopupMenuTarget->SetLinked(true);
@@ -7811,7 +7811,7 @@ void TrackPanel::OnChangeOctave(wxCommandEvent & event)
 #endif
 }
 
-void TrackPanel::OnSetName(wxCommandEvent &event)
+void TrackPanel::OnSetName(wxCommandEvent & WXUNUSED(event))
 {
    Track *t = mPopupMenuTarget;
    if (t) 
@@ -7843,7 +7843,7 @@ void TrackPanel::OnSetName(wxCommandEvent &event)
 }
 
 /// Cut selected text if cut menu item is selected
-void TrackPanel::OnCutSelectedText(wxCommandEvent &event)
+void TrackPanel::OnCutSelectedText(wxCommandEvent & WXUNUSED(event))
 {
    LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
    if (lt->CutSelectedText()) {
@@ -7855,7 +7855,7 @@ void TrackPanel::OnCutSelectedText(wxCommandEvent &event)
 }
 
 /// Copy selected text if copy menu item is selected
-void TrackPanel::OnCopySelectedText(wxCommandEvent &event)
+void TrackPanel::OnCopySelectedText(wxCommandEvent & WXUNUSED(event))
 {
    LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
    lt->CopySelectedText();
@@ -7863,7 +7863,7 @@ void TrackPanel::OnCopySelectedText(wxCommandEvent &event)
 }
 
 /// paste selected text if p`aste menu item is selected
-void TrackPanel::OnPasteSelectedText(wxCommandEvent &event)
+void TrackPanel::OnPasteSelectedText(wxCommandEvent & WXUNUSED(event))
 {
    LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
    if (lt->PasteSelectedText(mViewInfo->sel0, mViewInfo->sel1)) {
@@ -7893,7 +7893,7 @@ private:
    wxArrayString* mFontNames;
 };
 
-void TrackPanel::OnSetFont(wxCommandEvent &event)
+void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 {
    wxArrayString facenames;
    TrackPanelFontEnumerator fontEnumerator(&facenames);
@@ -8217,13 +8217,13 @@ void TrackPanel::SetFocusedTrack( Track *t )
    Refresh( false );
 }
 
-void TrackPanel::OnSetFocus(wxFocusEvent & event)
+void TrackPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
    SetFocusedTrack( GetFocusedTrack() );
    Refresh( false );
 }
 
-void TrackPanel::OnKillFocus(wxFocusEvent & event)
+void TrackPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
    Refresh( false);
 }
@@ -8381,7 +8381,7 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect r, bool bHasMuteSolo)
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
-   bool bHasMuteSolo, const int labelw, const int vrul)
+   bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul))
 {
    // fill in label
    wxRect fill = r;

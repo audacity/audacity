@@ -32,7 +32,7 @@ Command *MessageCommandType::Create(CommandOutputTarget *target)
    return new MessageCommand(*this, target);
 }
 
-bool MessageCommand::Apply(CommandExecutionContext context)
+bool MessageCommand::Apply(CommandExecutionContext WXUNUSED(context))
 {
    wxString message = GetString(wxT("MessageString"));
    Status(message);
