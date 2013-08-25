@@ -693,26 +693,26 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
    mCommandList.Add(tmpEntry);
    mCommandIDHash[tmpEntry->id] = tmpEntry;   
 
-//   if (index == 0 || !multi) {
-   {
 #if defined(__WXDEBUG__)
-      CommandListEntry *prev = mCommandNameHash[name];
-      if (prev) {
-         if( prev->label != tmpEntry->label )
-         {
-            wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
-                      name.c_str(),
-                      prev->label.BeforeFirst(wxT('\t')).c_str(),
-                      tmpEntry->label.BeforeFirst(wxT('\t')).c_str());
-            wxFAIL_MSG( wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
+   CommandListEntry *prev = mCommandNameHash[name];
+   if (prev) {
+      // Under Linux it looks as if we may ask for a newID for the same command
+      // more than once.  So it's only an error if two different commands
+      // have the exact same name.
+      if( prev->label != tmpEntry->label )
+      {
+         wxLogDebug(wxT("Command '%s' defined by '%s' and '%s'"),
                    name.c_str(),
                    prev->label.BeforeFirst(wxT('\t')).c_str(),
-                   tmpEntry->label.BeforeFirst(wxT('\t')).c_str()));
-         }
+                   tmpEntry->label.BeforeFirst(wxT('\t')).c_str());
+         wxFAIL_MSG( wxString::Format(wxT("Command '%s' defined by '%s' and '%s'"),
+                name.c_str(),
+                prev->label.BeforeFirst(wxT('\t')).c_str(),
+                tmpEntry->label.BeforeFirst(wxT('\t')).c_str()));
       }
-#endif
-      mCommandNameHash[name] = tmpEntry;
    }
+#endif
+   mCommandNameHash[name] = tmpEntry;
 
    if (tmpEntry->key != wxT("")) {
       mCommandKeyHash[tmpEntry->key] = tmpEntry;
@@ -1264,17 +1264,14 @@ void CommandManager::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
    for(j=0; j<mCommandList.GetCount(); j++) {
-      //if (!mCommandList[j]->multi) {
-         
-         wxString label = mCommandList[j]->label;
-         label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
-         
-         xmlFile.StartTag(wxT("command"));
-         xmlFile.WriteAttr(wxT("name"), mCommandList[j]->name);
-         xmlFile.WriteAttr(wxT("label"), label);
-         xmlFile.WriteAttr(wxT("key"), mCommandList[j]->key);
-         xmlFile.EndTag(wxT("command"));
-      //}
+      wxString label = mCommandList[j]->label;
+      label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
+      
+      xmlFile.StartTag(wxT("command"));
+      xmlFile.WriteAttr(wxT("name"), mCommandList[j]->name);
+      xmlFile.WriteAttr(wxT("label"), label);
+      xmlFile.WriteAttr(wxT("key"), mCommandList[j]->key);
+      xmlFile.EndTag(wxT("command"));
    }
    
    xmlFile.EndTag(wxT("audacitykeyboard"));
