@@ -444,7 +444,7 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
    SetKeyForSelected( wxT("") );
 }
 
-void KeyConfigPrefs::OnKeyDown(wxListEvent & WXUNUSED(event))
+void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
 {
 // the code in this function allows the user to seek to the next
 // command which begins with the letter that is pressed

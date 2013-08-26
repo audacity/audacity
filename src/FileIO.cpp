@@ -158,7 +158,7 @@ void FileIO::SetCatalogInfo()
    return;
 }
 
-void FileIO::SetCatalogInfo(wxUint32 WXUNUSED(type))
+void FileIO::SetCatalogInfo(wxUint32 type)
 {
 #ifdef __WXMAC__
    if (!mOpen || mFtp != NULL) {
