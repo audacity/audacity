@@ -157,8 +157,8 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxAr
 {
    miSelected = 0;
    mbNextSelectToggles = true;
-   SetLabel(_("Install VST Plugins"));         // Provide visual label
-   SetName(_("Install VST Plugins"));          // Provide audible label
+   SetLabel(_("Install VST Effects"));         // Provide visual label
+   SetName(_("Install VST Effects"));          // Provide audible label
    Populate();
 
    mAbort = false;
