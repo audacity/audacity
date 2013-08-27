@@ -270,11 +270,20 @@ void PluginRegistrationDialog::OnChar( wxListEvent & event  )
       {
          iItem = 0;
       }
+      else if(( iKeyCode == WXK_PAGEUP ) || ( iKeyCode == WXK_PAGEDOWN ))
+      {
+         // ignore page up and page down for now.
+         // At some future date we can calculate where they take the focus to
+         // and extra-toggle that item.
+         event.Veto();
+         return;
+      }
       else
       {
          iItem = -1;
       }
-      // Item must be in range and not the item we are already on.
+      // Item must be in range.
+      // Extra-toggle so that item is toggled back.
       if( (iItem >= 0 ) && (iItem < (int)mFiles.GetCount() ))
          ToggleItem(iItem);
    }
