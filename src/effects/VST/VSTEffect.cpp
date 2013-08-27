@@ -77,19 +77,16 @@ void RegisterVSTEffects()
 
    pm.Open();
 
-   bool bScanRequired = false;
-   if ( bScanRequired || gPrefs->Read(wxT("/VST/Rescan"), (long)true) != false) {
+   if ( gPrefs->Read(wxT("/VST/Rescan"), (long)true) != false) {
       pm.PurgeType(VSTPLUGINTYPE);
-      gPrefs->Write(wxT("/VST/Rescan"), false);
-      gPrefs->Flush();
-      bScanRequired = true;
    }
 
    if (!pm.HasType(VSTPLUGINTYPE)) {
       pm.Close();
-      if( bScanRequired) 
-         VSTEffect::Scan();
+      VSTEffect::Scan();
       pm.Open();
+      gPrefs->Write(wxT("/VST/Rescan"), false);
+      gPrefs->Flush();
    }
 
    EffectManager & em = EffectManager::Get();
@@ -122,17 +119,20 @@ class PluginRegistrationDialog:public wxDialog {
    void OnApply(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
    void OnToggleState( wxListEvent & event );
+   void OnChar( wxListEvent & event );
+
    void SetBoldOrRegular( int i );
+   void ToggleItem(int i);
 
    wxButton *mOK;
    wxButton *mCancel;
    wxListCtrl *mPlugins;
+   int miSelected;
    wxArrayString mFiles;
    wxArrayInt miState;
-//   wxListCtrl *mList;
-//   BatchCommands mBatchCommands;
 
    bool mAbort;
+   bool mbNextSelectToggles;
 
    DECLARE_EVENT_TABLE()
 };
@@ -143,7 +143,10 @@ class PluginRegistrationDialog:public wxDialog {
 BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
    EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnApply)
    EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
-   EVT_LIST_ITEM_SELECTED( wxID_ANY, PluginRegistrationDialog::OnToggleState )
+   EVT_LIST_ITEM_SELECTED( PluginListID, PluginRegistrationDialog::OnToggleState )
+   EVT_LIST_ITEM_ACTIVATED( PluginListID, PluginRegistrationDialog::OnToggleState )
+   //EVT_LIST_ITEM_DESELECTED( wxID_ANY, PluginRegistrationDialog::OnToggleState )
+   EVT_LIST_KEY_DOWN( PluginListID, PluginRegistrationDialog::OnChar )
 END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxArrayString & files):
@@ -152,6 +155,8 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxAr
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+   miSelected = 0;
+   mbNextSelectToggles = true;
    SetLabel(_("Install VST Plugins"));         // Provide visual label
    SetName(_("Install VST Plugins"));          // Provide audible label
    Populate();
@@ -190,7 +195,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
        beside each one.*/
       S.StartStatic(_("&Select Plugins to Install"), true);
       {
-         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES );
+         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES );
          mPlugins = S.Id(PluginListID).AddListControlReportMode();
          mPlugins->AssignImageList( pImageList, wxIMAGE_LIST_SMALL );
          mPlugins->InsertColumn(0, _("Plugin File"), wxLIST_FORMAT_LEFT);
@@ -209,16 +214,19 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
    wxClientDC dc( this );
    
-   int iLen = 100;
+   // The dc is used to compute the text width in pixels.
+   // FIXME: That works fine for PC, but apparently comes out too small for wxMAC.
+   // iLen is minimum width in pixels shown for the file names.  200 is reasonable.
+   int iLen = 200;
    wxSize siz;
    for (int i = 0; i < (int)mFiles.GetCount(); i++) {
-      miState.Add( SHOW_CHECKED ); // 1 is selected.
+      miState.Add( SHOW_CHECKED );
       mPlugins->InsertItem(i, wxString(wxT(" ")) + mFiles[i], SHOW_CHECKED);
-//    SetBoldOrRegular( i );
       siz = dc.GetTextExtent( mFiles[i] );
       if( siz.GetWidth() > iLen )
          iLen = siz.GetWidth();
    }
+   //SetBoldOrRegular( miSelected );
    mPlugins->SetColumnWidth(0, iLen);
    mPlugins->SetSizeHints( iLen, 200 );
    Layout();
@@ -229,6 +237,40 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
 }
 
+void PluginRegistrationDialog::OnChar( wxListEvent & event  )
+{
+   int iKeyCode = event.GetKeyCode();
+   //int iItem = event.GetIndex(); // Grrr doesn't tell us item for key presses.
+   //use this instead:
+   int iItem = mPlugins->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
+   bool bHandleSpecially = iItem != -1;
+
+   if( bHandleSpecially )
+   {
+      // UP and DOWN cause the next item to be selected.
+      // We pre-toggle so that the toggle due to selection 
+      // sets it back!  
+      if( iKeyCode == WXK_UP )
+      {
+         iItem--;
+      }
+      else if( iKeyCode == WXK_DOWN )
+      {
+         iItem++;
+         if( iItem >= (int)mFiles.GetCount())
+            iItem = -1;
+      }
+      else
+      {
+         iItem = -1;
+      }
+      if( iItem >= 0 )
+         ToggleItem(iItem);
+   }
+   event.Skip();
+}
+
+
 void PluginRegistrationDialog::SetBoldOrRegular( int i )
 {
    wxFont Font = mPlugins->GetItemFont( i );
@@ -236,13 +278,26 @@ void PluginRegistrationDialog::SetBoldOrRegular( int i )
    mPlugins->SetItemFont( i, Font );
 }
 
+// We can't capture mouse clicks, only selected and deselected.
+// Clicking on a selected item does not generate any event.
+// Therefore our workaround solution is to NEVER actually select.
+// So whenever the code tries to , we cancel the selection.
+// That way we continue to get events.
+void PluginRegistrationDialog::ToggleItem(int i)
+{
+   miState[ i ] = (miState[ i ]==SHOW_CHECKED) ? SHOW_UNCHECKED : SHOW_CHECKED; // Toggle it.
+   mPlugins->SetItemImage( i, miState[i] );
+   miSelected = i;
+// SetBoldOrRegular( i );
+}
+
+
 void PluginRegistrationDialog::OnToggleState(wxListEvent & event)
 {
    int i = event.GetIndex();
-   miState[ i ] = (miState[ i ]==SHOW_CHECKED) ? SHOW_UNCHECKED : SHOW_CHECKED; // Toggle it.
    mPlugins->SetItemState( i, 0 ,wxLIST_STATE_SELECTED);
-   mPlugins->SetItemImage( i, miState[i] );
-// SetBoldOrRegular( i );
+   //miSelected = i;
+   ToggleItem( i );
 }
 
 void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
@@ -251,14 +306,7 @@ void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
    size_t cnt = mFiles.GetCount();
    for (size_t i = 0; i < cnt; i++) {
       wxString file = mFiles[i];
-#if 0
-      int status = progress->Update(wxLongLong(i),
-                                    wxLongLong(cnt),
-                                    wxString::Format(_("Checking %s"), file.c_str()));
-      if (status != eProgressSuccess) {
-         break;
-      }
-#endif
+
       mPlugins->EnsureVisible( i );
       if( miState[ i ] == SHOW_CHECKED )
       {
