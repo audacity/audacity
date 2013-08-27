@@ -121,15 +121,16 @@ simplifies construction of menu items.
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
 enum {
-   kAlignEndToEnd=0,
-   kAlign,  // FIXME: bad name for "Align Together".
-   kAlignZero,
+   kAlignZero = 0,
    kAlignCursor,
    kAlignSelStart,
    kAlignSelEnd,
    kAlignEndCursor,
    kAlignEndSelStart,
-   kAlignEndSelEnd
+   kAlignEndSelEnd,
+   // The next two are only in one subMenu, so more easily handled at the end.
+   kAlignEndToEnd,
+   kAlignTogether
 };
 
 
@@ -728,10 +729,11 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
+   wxArrayString alignLabelsNoSync;
+   alignLabelsNoSync.Add(_("&Align End to End"));
+   alignLabelsNoSync.Add(_("Align Tracks To&gether")); // FIXME: Visibility of Access Key with descender.
+   
    wxArrayString alignLabels;
-   alignLabels.Add(_("&Align End to End"));
-   alignLabels.Add(_("Align Tracks To&gether")); // FIXME: Visibility of Access Key with descender.
-   // TODO: Add a separator here. How?
    alignLabels.Add(_("Align with &Zero"));
    alignLabels.Add(_("Align with &Cursor"));
    alignLabels.Add(_("Align with Selection &Start")); // FIXME: Duplicate of 'Align with Cursor'.
@@ -739,21 +741,20 @@ void AudacityProject::CreateMenusAndCommands()
    alignLabels.Add(_("Align End with Cu&rsor"));
    alignLabels.Add(_("Align End with Selection Star&t")); // FIXME: Duplicate of 'Align End with Cursor'.
    alignLabels.Add(_("Align End with Selection En&d"));
+   mAlignLabelsCount = alignLabels.GetCount();
+
+   // Calling c->SetCommandFlags() after AddItemList for "Align" and "AlignMove" 
+   // does not correctly set flags for submenus, so do it this way. 
+   c->SetDefaultFlags(AudioIONotBusyFlag | TracksSelectedFlag,
+                      AudioIONotBusyFlag | TracksSelectedFlag);
 
    c->BeginSubMenu(_("&Align Tracks"));
 
+   c->AddItemList(wxT("Align"), alignLabelsNoSync, FN(OnAlignNoSync));
+   c->AddSeparator();
    c->AddItemList(wxT("Align"), alignLabels, FN(OnAlign));
-   // FIXME: These flags don't grey out menu.
-   c->SetCommandFlags(wxT("Align"),
-                      AudioIONotBusyFlag | TracksSelectedFlag,
-                      AudioIONotBusyFlag | TracksSelectedFlag);
 
    c->EndSubMenu();
-   c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
-
-   //////////////////////////////////////////////////////////////////////////
-
-   alignLabels.RemoveAt(0,2); // Tracks are moving different amounts so it does not make sense to move the selection.
 
    //////////////////////////////////////////////////////////////////////////
 
@@ -765,6 +766,8 @@ void AudacityProject::CreateMenusAndCommands()
                       AudioIONotBusyFlag | TracksSelectedFlag);
 
    c->EndSubMenu();
+   c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
+
 
    //////////////////////////////////////////////////////////////////////////
 
@@ -5061,19 +5064,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
 
    avgOffset /= numSelected;
 
-   // Slight hack: If moving selection, add 2 to menu index to get to the 
-   // correct command index, because first two elements are not used in the menu.
-   if (moveSel) index += 2;
-
    switch(index) {
-   case kAlignEndToEnd:
-      newPos = firstTrackOffset;
-      action = _("Aligned end to end");
-      break;
-   case kAlign:
-      newPos = avgOffset;
-      action = _("Aligned"); // TODO: Aligned how?
-      break;
    case kAlignZero:
       delta = -minOffset;
       action = _("Aligned with zero");
@@ -5101,9 +5092,18 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    case kAlignEndSelEnd:
       delta = mViewInfo.sel1 - maxEndOffset;
       action = _("Aligned end with selection end");
+      break;
+   // index set in alignLabelsNoSync
+   case kAlignEndToEnd:
+      newPos = firstTrackOffset;
+      action = _("Aligned end to end");
+      break;
+   case kAlignTogether:
+      newPos = avgOffset;
+      action = _("Aligned"); // TODO: Aligned how?
    }
 
-   if (index == kAlign){
+   if (index == kAlignTogether){
       TrackListIterator iter(mTracks);
       Track *t = iter.First();
       
@@ -5201,6 +5201,12 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    PushState(action, _("Align"));
 
    RedrawProject();
+}
+
+void AudacityProject::OnAlignNoSync(int index)
+{
+   // Add length of alignLabels array so that we can handle this in AudacityProject::HandleAlign.
+   HandleAlign(index + mAlignLabelsCount, false);
 }
 
 void AudacityProject::OnAlign(int index)
