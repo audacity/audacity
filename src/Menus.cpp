@@ -539,20 +539,21 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("ZoomOut"), _("Zoom &Out"), FN(OnZoomOut), wxT("Ctrl+3"),
               ZoomOutAvailableFlag,
               ZoomOutAvailableFlag);
-
-   c->AddItem(wxT("FitInWindow"), _("&Fit in Window"), FN(OnZoomFit), wxT("Ctrl+F"));
-   c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
    c->AddItem(wxT("ZoomSel"), _("&Zoom to Selection"), FN(OnZoomSel), wxT("Ctrl+E"), TimeSelectedFlag, TimeSelectedFlag);
-   c->AddItem(wxT("GoSelStart"), _("&Go to Selection Start"), FN(OnGoSelStart), wxT("Ctrl+4"), TimeSelectedFlag, TimeSelectedFlag);
-   c->AddItem(wxT("GoSelEnd"), _("&Go to Selection End"), FN(OnGoSelEnd), wxT("Ctrl+5"), TimeSelectedFlag, TimeSelectedFlag);
 
    c->AddSeparator();
+   c->AddItem(wxT("FitInWindow"), _("&Fit in Window"), FN(OnZoomFit), wxT("Ctrl+F"));
+   c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
 
+   c->AddSeparator();
+   c->AddItem(wxT("GoSelStart"), _("&Go to Selection Start"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
+   c->AddItem(wxT("GoSelEnd"), _("&Go to Selection End"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
+
+   c->AddSeparator();
    c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
    c->AddItem(wxT("ExpandAllTracks"), _("E&xpand All Tracks"), FN(OnExpandAllTracks), wxT("Ctrl+Shift+X"));
 
    c->AddSeparator();
-
    c->AddCheck(wxT("ShowClipping"), _("&Show Clipping"), FN(OnShowClipping),
                gPrefs->Read(wxT("/GUI/ShowClipping"), 0L), AlwaysEnabledFlag, AlwaysEnabledFlag);
 
