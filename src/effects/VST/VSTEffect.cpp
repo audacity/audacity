@@ -151,7 +151,7 @@ END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxArrayString & files):
    mFiles( files ),
-   wxDialog(parent, wxID_ANY, _("Install VST Plugins"),
+   wxDialog(parent, wxID_ANY, _("Install VST Effects"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
