@@ -229,6 +229,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    //SetBoldOrRegular( miSelected );
    mPlugins->SetColumnWidth(0, iLen);
    mPlugins->SetSizeHints( iLen, 200 );
+   if( mFiles.GetCount() > 0 )
+      mPlugins->SetItemState( 0, wxLIST_STATE_FOCUSED, wxLIST_STATE_FOCUSED);
    Layout();
    Fit();
    SetSizeHints(GetSize());
@@ -260,11 +262,20 @@ void PluginRegistrationDialog::OnChar( wxListEvent & event  )
          if( iItem >= (int)mFiles.GetCount())
             iItem = -1;
       }
+      else if( iKeyCode == WXK_END )
+      {
+         iItem = mFiles.GetCount()-1;
+      }
+      else if( iKeyCode == WXK_HOME )
+      {
+         iItem = 0;
+      }
       else
       {
          iItem = -1;
       }
-      if( iItem >= 0 )
+      // Item must be in range and not the item we are already on.
+      if( (iItem >= 0 ) && (iItem < (int)mFiles.GetCount() ))
          ToggleItem(iItem);
    }
    event.Skip();
