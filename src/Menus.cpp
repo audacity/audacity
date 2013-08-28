@@ -391,20 +391,19 @@ void AudacityProject::CreateMenusAndCommands()
 
    /////////////////////////////////////////////////////////////////////////////
 
-   // FIXME: Wave track should be required in this menu.
    c->BeginSubMenu(_("La&beled Audio"));
-   c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag,
-                      AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag);
+   c->SetDefaultFlags(AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag,
+                      AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag);
 
    /* i18n-hint: (verb)*/
    // FIXME: Most of these command labels are exact duplicates of those in 'Remove Audio or Labels'
    // which is a problem in keyboard preferences.
    c->AddItem(wxT("CutLabels"), _("&Cut"), FN(OnCutLabels), wxT("Alt+X"),
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag,
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag);
+              AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |  TimeSelectedFlag | IsNotSyncLockedFlag,
+              AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |  TimeSelectedFlag | IsNotSyncLockedFlag);
    c->AddItem(wxT("DeleteLabels"), _("&Delete"), FN(OnDeleteLabels), wxT("Alt+K"),
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag,
-              AudioIONotBusyFlag | LabelsSelectedFlag | TimeSelectedFlag | IsNotSyncLockedFlag);
+              AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |  TimeSelectedFlag | IsNotSyncLockedFlag,
+              AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |  TimeSelectedFlag | IsNotSyncLockedFlag);
 
    c->AddSeparator();
 
@@ -423,8 +422,8 @@ void AudacityProject::CreateMenusAndCommands()
 
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("SplitLabels"), _("Spli&t"), FN(OnSplitLabels), wxT("Alt+I"),
-              AudioIONotBusyFlag | LabelsSelectedFlag,
-              AudioIONotBusyFlag | LabelsSelectedFlag);
+              AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag,
+              AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag);
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("JoinLabels"), _("&Join"),  FN(OnJoinLabels), wxT("Alt+J"));
    c->AddItem(wxT("DisjoinLabels"), _("Detac&h at Silences"), FN(OnDisjoinLabels), wxT("Alt+Shift+J"));
@@ -781,8 +780,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
-   // FIXME: Sync Lock should not be greyed out during AudioIOBusy.
-   c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0);
+   c->AddCheck(wxT("SyncLock"), _("Sync-&Lock Tracks"), FN(OnSyncLock), 0,
+               AlwaysEnabledFlag, AlwaysEnabledFlag);
 
    c->AddSeparator();
 #endif
@@ -2102,7 +2101,7 @@ void AudacityProject::OnSortTime()
 {
    SortTracks(kAudacitySortByTime);
 
-   PushState(_("Tracks sorted by time"), _("Sort By Time"));
+   PushState(_("Tracks sorted by time"), _("Sort by Time"));
 
    mTrackPanel->Refresh(false);
 }
@@ -2111,7 +2110,7 @@ void AudacityProject::OnSortName()
 {
    SortTracks(kAudacitySortByName);
   
-   PushState(_("Tracks sorted by name"), _("Sort By Name"));
+   PushState(_("Tracks sorted by name"), _("Sort by Name"));
 
    mTrackPanel->Refresh(false);
 }
@@ -4251,7 +4250,7 @@ void AudacityProject::OnSplitNew()
 //      }
 //   }
 //
-//   PushState(_("Split at labels"), _("Split at labels"));
+//   PushState(_("Split at labels"), _("Split at Labels"));
 //
 //   RedrawProject();
 //}
@@ -5101,7 +5100,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       break;
    case kAlignTogether:
       newPos = avgOffset;
-      action = _("Aligned"); // TODO: Aligned how?
+      action = _("Aligned together");
    }
 
    if (index == kAlignTogether){
@@ -5196,10 +5195,11 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    if (moveSel) {
       mViewInfo.sel0 += delta;
       mViewInfo.sel1 += delta;
+      action = wxString::Format(_("%s/Move"), action.c_str());
+      PushState(action, _("Align and Move"));
+   } else {
+      PushState(action, _("Align"));
    }
-
-   // TODO: Better if history distinguished between 'Align' and 'Align Move'.
-   PushState(action, _("Align"));
 
    RedrawProject();
 }
