@@ -86,7 +86,8 @@ public:
    bool updated;                  /// flag to tell if the label times were updated
 };
 
-//AUDACITY_DLL_API WX_DEFINE_ARRAY(LabelStruct *, LabelArray);
+//You can't stick AUDACITY_DLL_API in front of the WX_DEFINE_ARRAY() macro, you
+//have to use the below macro instead to avoid a warning
 WX_DEFINE_USER_EXPORTED_ARRAY(LabelStruct *, LabelArray, class AUDACITY_DLL_API);
 
 const int NUM_GLYPH_CONFIGS = 3;
