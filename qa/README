@@ -5,7 +5,6 @@ release candidate as downloaded from Google Code,to help
 detect obvious bugs and regressions. 
 
 In addition, check the file structure for missing files
-and folders, especially for missing plug-ins. GVerb, 
-Hard Limiter and SC4 should be present in the "Plug-Ins" 
-folder on Windows and Mac, but are currently not added to
-Linux tarballs.    
+and folders, especially for missing plug-ins. Hard Limiter
+and SC4 should be present in the "Plug-Ins" folder on 
+Windows and Mac, but are currently not added to Linux tarballs.    
