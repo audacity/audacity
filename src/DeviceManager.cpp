@@ -7,6 +7,10 @@
 ******************************************************************/
 
 #include "portaudio.h"
+#ifdef __WXMSW__
+#include "pa_win_wasapi.h"
+#endif
+
 #ifdef USE_PORTMIXER
 #include "portmixer.h"
 #endif
@@ -281,6 +285,10 @@ void DeviceManager::Rescan()
       }
 
       if (info->maxInputChannels > 0) {
+#ifdef __WXMSW__
+         if (Pa_GetHostApiInfo(info->hostApi)->type != paWASAPI ||
+             PaWasapi_IsLoopback(i) > 0)
+#endif
          AddSources(i, info->defaultSampleRate, &mInputDeviceSourceMaps, 1);
       }
    }

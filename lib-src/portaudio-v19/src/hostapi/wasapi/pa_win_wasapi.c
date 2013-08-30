@@ -357,6 +357,9 @@ typedef struct PaWasapiDeviceInfo
 
 	// Formfactor
 	EndpointFormFactor formFactor;
+
+	// Loopback indicator
+	int loopBack;
 }
 PaWasapiDeviceInfo;
 
@@ -1403,6 +1406,8 @@ PaError PaWasapi_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiInd
                 memcpy(&paWasapi->devInfo[i + 1], &paWasapi->devInfo[i], sizeof(*paWasapi->devInfo));
 
                 i++;
+                paWasapi->devInfo[i].loopBack = 1;
+
                 deviceInfo = &deviceInfoArray[i];
 
                 deviceInfo->maxInputChannels		 = deviceInfo->maxOutputChannels;
@@ -1577,6 +1582,29 @@ int PaWasapi_GetDeviceRole( PaDeviceIndex nDevice )
 		return paInvalidDevice;
 
 	return paWasapi->devInfo[ index ].formFactor;
+}
+
+// ------------------------------------------------------------------------------------------
+int PaWasapi_IsLoopback( PaDeviceIndex nDevice )
+{
+	PaError ret;
+	PaDeviceIndex index;
+
+	// Get API
+	PaWasapiHostApiRepresentation *paWasapi = _GetHostApi(&ret);
+	if (paWasapi == NULL)
+		return paNotInitialized;
+
+	// Get device index
+	ret = PaUtil_DeviceIndexToHostApiDeviceIndex(&index, nDevice, &paWasapi->inheritedHostApiRep);
+    if (ret != paNoError)
+        return ret;
+
+	// Validate index
+	if ((UINT32)index >= paWasapi->deviceCount)
+		return paInvalidDevice;
+
+	return paWasapi->devInfo[ index ].loopBack;
 }
 
 // ------------------------------------------------------------------------------------------
