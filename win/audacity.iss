@@ -13,7 +13,7 @@ Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-2.0.3
+OutputBaseFilename=audacity-win-2.0.4
 
 WizardImageFile=audacity_InnoWizardImage.bmp
 WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
@@ -22,9 +22,9 @@ SolidCompression=yes
 
 ; installer-related directives
 AppName=Audacity
-AppVerName=Audacity 2.0.3
+AppVerName=Audacity 2.0.4
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
-AppVersion=2.0.3
+AppVersion=2.0.4
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -48,7 +48,7 @@ InfoAfterFile=..\README.txt
 ; We no longer explicitly set it.
 ;   MinVersion=4.0,5.0
 
-; costmetic-related directives
+; cosmetic-related directives
 SetupIconFile=audacity.ico
 
 [Languages]
