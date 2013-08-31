@@ -225,7 +225,6 @@ void OnSilence();
 
 void OnSplit();
 void OnSplitNew();
-// void OnSplitLabelsToTracks();
 void OnJoin();
 void OnDisjoin();
 void OnDuplicate();

@@ -856,7 +856,8 @@ wxFileName DirManager::MakeBlockFileName()
          }else break;
       }
    }
-   // FIXME: Might we get here without midkey having been set?
+   // FIXME: Might we get here without midkey having been set? 
+   //    Seemed like a possible problem in these changes in .aup directory hierarchy. 
    BalanceFileAdd(midkey);
    return ret;
 }

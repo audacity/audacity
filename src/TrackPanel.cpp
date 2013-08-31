@@ -5176,7 +5176,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxMouseEvent &event)
 {
    // FIXME: Disable this and return true when CutLines aren't showing?
-   // (Don't use gPerfs-> for the fix as registry access is slow).
+   // (Don't use gPrefs-> for the fix as registry access is slow).
 
    if (mMouseCapture == WasOverCutLine)
    {

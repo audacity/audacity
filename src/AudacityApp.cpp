@@ -737,7 +737,7 @@ void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
    while (ofqueue.GetCount()) {
       wxString name(ofqueue[0]);
       ofqueue.RemoveAt(0);
-      MRUOpen(name); // FIXME: Check the return result?
+      wxASSERT(MRUOpen(name)); // FIXME: Check the return result? Meantime, assert it so failure shows in debug build. 
    }
 }
 #endif //__WXMAC__

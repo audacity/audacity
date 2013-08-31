@@ -225,8 +225,7 @@ WaveTrack* ODWaveTrackTaskQueue::GetWaveTrack(size_t x)
 {
    WaveTrack* ret = NULL;
    mTracksMutex.Lock();
-   // FIXME: x is unsigned so there's no point in checking that it's >= 0.
-   if(x>=0&&x<mTracks.size())
+   if (x < mTracks.size())
       ret = mTracks[x];
    mTracksMutex.Unlock();
    return ret;
@@ -257,8 +256,7 @@ ODTask* ODWaveTrackTaskQueue::GetTask(size_t x)
 {
    ODTask* ret = NULL;
    mTasksMutex.Lock();
-   // FIXME: x is unsigned so there's no point in checking that it's >= 0.
-   if(x>=0&&x<mTasks.size())
+   if (x < mTasks.size())
       ret = mTasks[x];
    mTasksMutex.Unlock();
    return ret;

@@ -490,8 +490,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    if (addedLen == 0 || srcNumBlocks == 0)
       return true;
 
-   unsigned int b = FindBlock(s);
-   unsigned int numBlocks = mBlock->GetCount();
+   int b = FindBlock(s);
+   size_t numBlocks = mBlock->GetCount();
 
    if (numBlocks == 0 ||
        (s == mNumSamples && mBlock->Item(numBlocks-1)->f->GetLength() >= mMinSamples)) {
@@ -505,7 +505,6 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       return ConsistencyCheck(wxT("Paste branch one"));
    }
 
-   // FIXME: "b" is unsigned, so it's pointless to check that it's >= 0.
    if (b >= 0 && b < numBlocks
        && ((mBlock->Item(b)->f->GetLength() + addedLen) < mMaxSamples)) {
       // Special case: we can fit all of the new samples inside of

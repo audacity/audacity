@@ -1482,7 +1482,7 @@ TimeTextCtrlAx::~TimeTextCtrlAx()
 // or > 0 (the action for a child).
 // Return wxACC_NOT_SUPPORTED if there is no default action for this
 // window (e.g. an edit control).
-wxAccStatus TimeTextCtrlAx::DoDefaultAction(int childId)
+wxAccStatus TimeTextCtrlAx::DoDefaultAction(int WXUNUSED(childId))
 {
    return wxACC_NOT_SUPPORTED;
 }
@@ -1516,7 +1516,7 @@ wxAccStatus TimeTextCtrlAx::GetChildCount(int *childCount)
 // object, not what the object does as a result. For example, a
 // toolbar button that prints a document has a default action of
 // "Press" rather than "Prints the current document."
-wxAccStatus TimeTextCtrlAx::GetDefaultAction(int childId, wxString *actionName)
+wxAccStatus TimeTextCtrlAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
    actionName->Clear();
 
@@ -1524,7 +1524,7 @@ wxAccStatus TimeTextCtrlAx::GetDefaultAction(int childId, wxString *actionName)
 }
 
 // Returns the description for this object or a child.
-wxAccStatus TimeTextCtrlAx::GetDescription(int childId, wxString *description)
+wxAccStatus TimeTextCtrlAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
    description->Clear();
 
@@ -1544,7 +1544,7 @@ wxAccStatus TimeTextCtrlAx::GetFocus(int *childId, wxAccessible **child)
 }
 
 // Returns help text for this object or a child, similar to tooltip text.
-wxAccStatus TimeTextCtrlAx::GetHelpText(int childId, wxString *helpText)
+wxAccStatus TimeTextCtrlAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
 // removed help text, as on balance it's more of an irritation than useful
 #if 0    // was #if wxUSE_TOOLTIPS
@@ -1563,7 +1563,7 @@ wxAccStatus TimeTextCtrlAx::GetHelpText(int childId, wxString *helpText)
 
 // Returns the keyboard shortcut for this object or child.
 // Return e.g. ALT+K
-wxAccStatus TimeTextCtrlAx::GetKeyboardShortcut(int childId, wxString *shortcut)
+wxAccStatus TimeTextCtrlAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
    shortcut->Clear();
 
@@ -1668,7 +1668,7 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
 }
 
 // Returns a role constant.
-wxAccStatus TimeTextCtrlAx::GetRole(int childId, wxAccRole *role)
+wxAccStatus TimeTextCtrlAx::GetRole(int WXUNUSED(childId), wxAccRole *role)
 {
    *role = wxROLE_SYSTEM_STATICTEXT;
    return wxACC_OK;

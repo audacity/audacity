@@ -356,16 +356,14 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    friend class Track;
    friend class TrackListIterator;
 
-   /// Add this Track or all children of this TrackGroup 
-   // FIXME: What does that comment mean by "TrackGroup"? There was no such class at tag Audacity_1_3_13.
+   /// Add this Track or all children of this TrackList. 
    void Add(Track * t);
    void AddToHead(Track * t);
 
    /// Replace first track with second track
    void Replace(Track * t, Track * with, bool deletetrack = false);
 
-   /// Remove this Track or all children of this TrackGroup
-   // FIXME: What does that comment mean by "TrackGroup"? There was no such class at tag Audacity_1_3_13.
+   /// Remove this Track or all children of this TrackList. 
    void Remove(Track * t, bool deletetrack = false);
 
    /// Make the list empty
