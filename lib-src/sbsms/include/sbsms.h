@@ -4,6 +4,9 @@
 
 #include <stdio.h>
 
+#undef WXUNUSED
+#define WXUNUSED( x ) 
+
 namespace _sbsms_ {
 
 typedef float t_fft[2];
@@ -49,7 +52,7 @@ typedef long (*SBSMSResampleCB)(void *cbData, SBSMSFrame *frame);
 class SBSMSInterface {
  public:
   virtual ~SBSMSInterface() {}
-  virtual long samples(audio *buf, long n) { return 0; }
+  virtual long samples(audio * WXUNUSED(buf), long WXUNUSED(n)) { return 0; }
   virtual float getStretch(float t)=0;
   virtual float getPitch(float t)=0;
   virtual long getPresamples()=0;
@@ -78,11 +81,11 @@ class SBSMSRenderer {
  public:
   virtual ~SBSMSRenderer() {}
   virtual void startFrame() {}
-  virtual void startTime(int c, const TimeType &time, int n) {}
-  virtual void render(int c, SBSMSTrack *t) {}
-  virtual void endTime(int c) {}
+  virtual void startTime(int WXUNUSED(c), const TimeType & WXUNUSED(time), int WXUNUSED(n)) {}
+  virtual void render(int WXUNUSED(c), SBSMSTrack * WXUNUSED(t)) {}
+  virtual void endTime(int WXUNUSED(c)) {}
   virtual void endFrame() {}
-  virtual void end(const SampleCountType &samples) {}
+  virtual void end(const SampleCountType & WXUNUSED(samples)) {}
 };
 
 enum SBSMSError {

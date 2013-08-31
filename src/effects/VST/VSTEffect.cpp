@@ -77,16 +77,21 @@ void RegisterVSTEffects()
 
    pm.Open();
 
+   bool bRescanRequired=false;
    if ( gPrefs->Read(wxT("/VST/Rescan"), (long)true) != false) {
+      bRescanRequired = true;
       pm.PurgeType(VSTPLUGINTYPE);
    }
 
    if (!pm.HasType(VSTPLUGINTYPE)) {
       pm.Close();
-      VSTEffect::Scan();
+      if( bRescanRequired )
+         if( VSTEffect::Scan() != wxID_CANCEL ) 
+         {
+            gPrefs->Write(wxT("/VST/Rescan"), false);
+            gPrefs->Flush();
+         }
       pm.Open();
-      gPrefs->Write(wxT("/VST/Rescan"), false);
-      gPrefs->Flush();
    }
 
    EffectManager & em = EffectManager::Get();
@@ -160,7 +165,7 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxAr
    SetLabel(_("Install VST Effects"));         // Provide visual label
    SetName(_("Install VST Effects"));          // Provide audible label
    Populate();
-
+   SetReturnCode( wxID_OK);
    mAbort = false;
 }
 
@@ -335,12 +340,12 @@ void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
          mPlugins->SetItemImage( i, SHOW_CHECKED );
       }
    }
-   EndModal( true );
+   EndModal(wxID_OK);
 }
 
 void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-   EndModal(false);
+   EndModal(wxID_CANCEL);
 }
 
 
@@ -1931,10 +1936,10 @@ void VSTEffect::ScanOnePlugin( const wxString & file )
    wxExecute((wxChar **) argv, wxEXEC_SYNC | wxEXEC_NODISABLE, NULL);
 }
 
-void VSTEffect::ShowPluginListDialog( const wxArrayString & files )
+int VSTEffect::ShowPluginListDialog( const wxArrayString & files )
 {
    PluginRegistrationDialog d( wxGetApp().GetTopWindow(), files );
-   d.ShowModal();
+   return d.ShowModal();
 }
 
 void VSTEffect::ShowProgressDialog( const wxString & longest, const wxArrayString & files )
@@ -1961,7 +1966,7 @@ void VSTEffect::ShowProgressDialog( const wxString & longest, const wxArrayStrin
 }
 
 /* static */
-void VSTEffect::Scan()
+int VSTEffect::Scan()
 {
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
    wxArrayString pathList;
@@ -2066,7 +2071,7 @@ void VSTEffect::Scan()
    // JKC: Let's not show the progress dialog if there are no 
    // files to test.
    if( cnt <= 0 )
-      return;
+      return wxID_OK;
 
    for (size_t i = 0; i < cnt; i++) {
       if (files[i].Length() > longest.Length()) {
@@ -2076,7 +2081,7 @@ void VSTEffect::Scan()
    //Choose the first for the original version which scans them all
    //The second to selectively scan.
    //ShowProgressDialog( longest, files );
-   ShowPluginListDialog(  files );
+   return ShowPluginListDialog(  files );
 }
 
 /* static */

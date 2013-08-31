@@ -65,11 +65,11 @@ class VSTEffect:public Effect
 
    // Plugin probing
 
-   static void Scan();
+   static int Scan();
    static void Check(const wxChar *fname);
 
    static void ScanOnePlugin( const wxString & file );
-   static void ShowPluginListDialog( const wxArrayString & files );
+   static int ShowPluginListDialog( const wxArrayString & files );
    static void ShowProgressDialog( const wxString & longest, const wxArrayString & files );
 
 
