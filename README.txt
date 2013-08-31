@@ -93,8 +93,10 @@ Changes and Improvements:
     tags and also support ID3 tags.
  * Handle a bug in older iPods or some OS X applications that cause them to 
     refuse AIFF files whose metadata contains an uneven number of characters,   
+ * (Windows) Added support for "Windows WDM-KS" host which can provide very
+    low latencies if you reduce "Audio to Buffer" in Recording Preferences.
  * (Windows Vista and later) You can now record computer playback by choosing
-    "Windows WASAPI" host in Device Toolbar then a "loopback" input.
+    the new "Windows WASAPI" host in Device Toolbar then a "loopback" input.
  * (Windows and Mac OS X): VST scanning dialog now replaced with a dialog
     for choosing which VST effects to load. 
  * (Linux) CTRL + ALT can now be used to smooth samples in Draw Tool. 
