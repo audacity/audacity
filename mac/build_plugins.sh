@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-# This script builds the 3 plugins that are included in the Audacity
+# This script builds the 2 plugins that are included in the Audacity
 # distribution.
 #
 # Since we do not include the plugin source as part of Audacity, we
 # must retrieve it first, followed by configure.  However, we do not
-# use the constructed Makefile since we only need 3 of the plugins and
+# use the constructed Makefile since we only need 2 of the plugins and
 # it is not universal binary friendly.
 #
 # In addition, each plugin has an initialization routine that must be
@@ -56,7 +56,6 @@ function build
 function cleanAction
 {
    [ -d "${TARGET_TEMP_DIR}" ] && rm -rf "${TARGET_TEMP_DIR}"
-   rm -f "${TARGET_BUILD_DIR}/gverb_1216.so"
    rm -f "${TARGET_BUILD_DIR}/hard_limiter_1413.so"
    rm -f "${TARGET_BUILD_DIR}/sc4_1882.so"
 }
@@ -95,8 +94,7 @@ EOF
       ./configure --disable-dependency-tracking --enable-shared --disable-static >/dev/null 2>&1
    fi
     
-   # Build the 3 standard plugins
-   build gverb_1216 gverb_1216.c gverb/gverb.c gverb/gverbdsp.c
+   # Build the 2 standard plugins
    build hard_limiter_1413 hard_limiter_1413.c
    build sc4_1882 sc4_1882.c util/db.c util/rms.c
 } 
