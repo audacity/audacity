@@ -2033,14 +2033,18 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
    id3_ucs4_t *ucs4 =
       id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
 
-   if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
+    if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
       // A hack to get around iTunes not recognizing the comment.  The
       // language defaults to XXX and, since it's not a valid language,
       // iTunes just ignores the tag.  So, either set it to a valid language
       // (which one???) or just clear it.  Unfortunately, there's no supported
       // way of clearing the field, so do it directly.
-      id3_field *f = id3_frame_field(frame, 1);
-      memset(f->immediate.value, 0, sizeof(f->immediate.value));
+      struct id3_frame *frame2 = id3_frame_new(name);
+      id3_field_setfullstring(id3_frame_field(frame2, 3), ucs4);
+      id3_field *f2 = id3_frame_field(frame2, 1);
+      memset(f2->immediate.value, 0, sizeof(f2->immediate.value));
+      id3_tag_attachframe(tp, frame2);
+      // Now install a second frame with the standard default language = "XXX"
       id3_field_setfullstring(id3_frame_field(frame, 3), ucs4);
    }
    else if (strcmp(name, "TXXX") == 0) {
