@@ -55,9 +55,8 @@ XGETTEXT_ARGS=-F -C -k_ -k_NoAcc -kwxTRANSLATE \
 	--add-comments="i18n-hint" \
 	--msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 	--package-name="${AUDACITY_NAME}" \
-	--package-version="2.0.0" \
-	--copyright-holder="Audacity Development Team" \
-	--msgid-bugs-address="audacity-translation@lists.sourceforge.net"
+	--package-version="2.0.4" \
+	--copyright-holder="Audacity Development Team"
 
 # implicit rules
 
