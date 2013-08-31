@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.3 
+Version 2.0.4 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.2 
+2.  Changes since version 2.0.3 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,74 +57,57 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.2: 
+2. Changes since version 2.0.3: 
 
 Bug fixes for:
 
- * Crash using Undo whilst time-shifting a track.
- * Crash using Repair if the selection extended into an empty track.
- * Export Multiple didn't prevent export if there was no audio or 
-    all audio was muted. This allowed export of small invalid files. 
-
- * Time Track:
-   * Loop Play of a speeded-up track inserted silence.
-   * Playback and rendering was significantly inaccurate, creating 
-      audible and visual glitches. 
-
- * Accessibility:
-   * The mnemonics character "&" was read out by screen readers in 
-      most of the Preferences choices.
-   * NVDA did not read static text in most dialogs. Text can now be
-      read by using INSERT + B.
-   * JAWS and Window-eyes misread the "Duration" control in Silence 
-      Generator. 
-   * Toolbar buttons could not be pressed by ENTER 	
-
- * Other interface bug fixes.
+ * Keyboard Preferences: Shortcuts for Generators, Effects and Analyzers 
+    were not exported. All imported shortcut changes were discarded.
+ * Equalization curves were corrupted in Graphic EQ mode after switching 
+    to/from Draw Curves or after	running the effect then reopening it. 
+ * Change Pitch displayed corrupted values when reducing pitch or editing 
+    "from" Frequency. Detection was very inaccurate at high sample rates. 
+ * Bass Boost no longer clips if the track contains 32-bit audio.   
+ * Auto Duck was excessively slow on older machines. 
+ * (Windows) Exported MP3 comments tags were not seen by Windows programs.   
+ * (Windows and OS X) Audacity crashed if you used system quit before
+    file import was complete. 
+ * (Linux) Equalization crashed Audacity if the XML file was corrupted.  
+ * (Linux) When configuring effect parameters in "Edit Chains", "Preview" 
+    (not intended to be functional) caused a crash.
+ * (Linux) LICENSE.txt and README.txt were wrongly installed in
+     /usr/local/share/doc instead of /usr/local/share/doc/audacity/ .
+ * Accessibility: ENTER did not toggle selectedness of a label track unless
+    a label was selected.  
+ * Numerous other interface fixes.  
 
 
 Changes and Improvements:
 
- * The SoX Resampler library (libsoxr) has replaced libresample in 
-    Audacity releases, offering both higher quality and greater speed. . 
-
- * Time Tracks new features:
-   * "Set Range" now changes only the range of the Time Track,
-      preserving the pitch/speed set by any existing warp points.
-   * Vertical scale added with options for linear and logarithmic  
-      display and interpolation.
-   * Upper and lower speed limits will now be remembered when saving 
-      and reopening a project in 2.0.3. Warp points in projects saved 
-      by previous Audacity versions will be correctly restored in 2.0.3.
-   * Warp points saved in a 2.0.3 project will be preserved if opened
-      in previous versions but playback and display will be incorrect.
-
- * New effects: 
-   * Studio Fade Out (uses a filtered "S" curve).
-   * Adjustable Fade (accessible effect for creating partial fades 
-      and adjustable fade shapes).   
-   * Bass and Treble (replaces Bass Boost).  
- 
- * Real sample rates up to 384000 Hz are now supported for playback 
-    and recording in high resolution devices (the maximum is up to 
-    192000 Hz for Windows DirectSound host).
- 
- * Labeled Regions in Edit Menu is renamed to "Labeled Audio" and now 
-    allows splits to be placed at point labels. Labeled audio regions
-    that touch without overlapping are treated as separate regions. 
-    Overlapping labeled audio regions are treated as a single region.
-
- * Compilation: cmake is required in order to build libsoxr.
-
- * New Croatian translation of Audacity.
+ * New "Reverb" effect to replace GVerb, based on the original "Freeverb".
+ * New View > Go to Selection Start and Go to Selection End commands.  
+ * New "Align End to End" command to append existing tracks to each other. 
+ * Change Tempo now supports fractional BPM.    
+ * Plot Spectrum now supports FFT sizes up to 65536.  
+ * WAV files now support "Album Title", "Track Number" and "Genre" LIST INFO 
+    tags and also support ID3 tags.
+ * Handle a bug in older iPods or some OS X applications that cause them to 
+    refuse AIFF files whose metadata contains an uneven number of characters,   
+ * (Windows Vista and later) You can now record computer playback by choosing
+    "Windows WASAPI" host in Device Toolbar then a "loopback" input.
+ * (Windows and Mac OS X): VST scanning dialog now replaced with a dialog
+    for choosing which VST effects to load. 
+ * (Linux) CTRL + ALT can now be used to smooth samples in Draw Tool. 
+ * Modules Preferences replaced with a dialog on launch of Audacity 
+    enabling you to choose which modules to load.  
 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.3:
+3. Known Issues in 2.0.4:
 
-For known issues at release of 2.0.3, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.3#known
+For known issues at release of 2.0.4, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.4#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -280,13 +263,23 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.3 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.4 requires wxWidgets 2.8.12
 from:
 
-   http://www.wxWidgets.org/
+   http://www.wxWidgets.org/ .
 
-If you install the RPM, make sure you install the devel RPM as well, 
-otherwise you won't be able to compile Audacity from source.
+The libsndfile library is also required and is included in Audacity obtained 
+from SVN. 
+ 
+CMake ( http://www.cmake.org/ ) is required to build the local copy of 
+libsoxr (Audacity's default resampling library) unless you install 
+libsoxr-dev and use that system library.
+
+Installation of other libraries is optional, see:
+   http://wiki.audacityteam.org/wiki/Developing_On_Linux#optional . 
+
+If you install libraries using a package management system like Apt or RPM,
+you need to install the "dev" (development) packages for each library.
 
 To compile on Linux, Mac OS X and other Unix systems, execute these 
 commands:
@@ -311,7 +304,7 @@ To compile using Xcode on Mac OS X, see the instructions in mac/compile.txt.
 
 For more information on compilation, please visit:
 
-  http://audacityteam.org/wiki/index.php?title=Developer_Guide#Platform_Specific_Guides
+  http://wiki.audacityteam.org/wiki/Developer_Guide#Platform_Specific_Guides
 
 or ask at:
    http://forum.audacityteam.org/viewforum.php?f=19 .
@@ -320,6 +313,67 @@ or ask at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 2.0.3:
+
+Bug fixes for:
+
+ * Crash using Undo whilst time-shifting a track.
+ * Crash using Repair if the selection extended into an empty track.
+ * Export Multiple didn't prevent export if there was no audio or 
+    all audio was muted. This allowed export of small invalid files. 
+
+ * Time Track:
+   * Loop Play of a speeded-up track inserted silence.
+   * Playback and rendering was significantly inaccurate, creating 
+      audible and visual glitches. 
+
+ * Accessibility:
+   * The mnemonics character "&" was read out by screen readers in 
+      most of the Preferences choices.
+   * NVDA did not read static text in most dialogs. Text can now be
+      read by using INSERT + B.
+   * JAWS and Window-eyes misread the "Duration" control in Silence 
+      Generator. 
+   * Toolbar buttons could not be pressed by ENTER 	
+
+ * Other interface bug fixes.
+
+
+Changes and Improvements:
+
+ * The SoX Resampler library (libsoxr) has replaced libresample in 
+    Audacity releases, offering both higher quality and greater speed. . 
+
+ * Time Tracks new features:
+   * "Set Range" now changes only the range of the Time Track,
+      preserving the pitch/speed set by any existing warp points.
+   * Vertical scale added with options for linear and logarithmic  
+      display and interpolation.
+   * Upper and lower speed limits will now be remembered when saving 
+      and reopening a project in 2.0.3. Warp points in projects saved 
+      by previous Audacity versions will be correctly restored in 2.0.3.
+   * Warp points saved in a 2.0.3 project will be preserved if opened
+      in previous versions but playback and display will be incorrect.
+
+ * New effects: 
+   * Studio Fade Out (uses a filtered "S" curve).
+   * Adjustable Fade (accessible effect for creating partial fades 
+      and adjustable fade shapes).   
+   * Bass and Treble (replaces Bass Boost).  
+ 
+ * Real sample rates up to 384000 Hz are now supported for playback 
+    and recording in high resolution devices (the maximum is up to 
+    192000 Hz for Windows DirectSound host).
+ 
+ * Labeled Regions in Edit Menu is renamed to "Labeled Audio" and now 
+    allows splits to be placed at point labels. Labeled audio regions
+    that touch without overlapping are treated as separate regions. 
+    Overlapping labeled audio regions are treated as a single region.
+
+ * Compilation: cmake is required in order to build libsoxr.
+
+ * New Croatian translation of Audacity.
 
 
 Changes in version 2.0.2: 
