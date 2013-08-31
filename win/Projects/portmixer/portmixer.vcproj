@@ -93,7 +93,6 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
-				ExcludedFromBuild="true"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -150,7 +149,6 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="set BASE=&quot;../../../lib-src/portmixer&quot;&#x0D;&#x0A;set CFLAGS=/Od /I &quot;%BASE%/../portaudio-v19/include&quot; /I &quot;%BASE%/include&quot; /D &quot;WIN32&quot; /D &quot;_DEBUG&quot; /D &quot;_LIB&quot; /D &quot;PX_USE_WIN_MME&quot; /D &quot;_MBCS&quot; /GF /FD /EHsc /RTC1 /MDd /Gy /Fo&quot;$(IntDir)/&quot; /Fd&quot;$(IntDir)/&quot; /W3 /nologo /c /ZI /wd4996 /FI &quot;$(InputDir)/$(ConfigurationName)/config.h&quot; /errorReport:prompt&#x0D;&#x0A;set LIBS=&#x0D;&#x0A;&#x0D;&#x0A;if &quot;%DXSDK_DIR%&quot;==&quot;&quot; goto NoDX&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/px_win_ds.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;set LIBS=&quot;%DXSDK_DIR%/lib/x86/dxguid.lib&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoDX&#x0D;&#x0A;&#x0D;&#x0A;lib /OUT:&quot;$(TargetPath)&quot; &quot;$(IntDir)/*.obj&quot; %LIBS%&#x0D;&#x0A;"
-				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration
