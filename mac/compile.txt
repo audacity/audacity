@@ -4,8 +4,8 @@ Authors:
   Dominic Mazzoni
 
 ================================================================
-This version was last updated February 13, 2012. 
-Audacity 2.0.0 requires wxMac 2.8.12.  
+This version was last updated August 13, 2013. 
+Audacity 2.0.4 requires wxMac 2.8.12.  
 
 If the advice here is inaccurate or incomplete, please
 email audacity-devel@lists.sourceforge.net.
@@ -113,6 +113,12 @@ before building.
 
 Double click "Audacity" in the "Groups & Files" tree.  Go to the "Build"
 page and change the WX_PREFIX setting to the value you used.
+
+--------------------------------------
+Problems?
+--------------------------------------
+
+There is more help at http://wiki.audacityteam.org/wiki/Developing_On_Mac .
 
 
 (This is just a tag identifying this file to Arch)
