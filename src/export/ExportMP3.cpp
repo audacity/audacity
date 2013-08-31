@@ -2033,7 +2033,7 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
    id3_ucs4_t *ucs4 =
       id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) v.mb_str(wxConvUTF8));
 
-    if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
+   if (strcmp(name, ID3_FRAME_COMMENT) == 0) {
       // A hack to get around iTunes not recognizing the comment.  The
       // language defaults to XXX and, since it's not a valid language,
       // iTunes just ignores the tag.  So, either set it to a valid language
