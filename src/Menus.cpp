@@ -2932,13 +2932,7 @@ void AudacityProject::OnExportLabels()
    }
 
    wxTextFile f(fName);
-#ifdef __WXMAC__
-   wxFile *temp = new wxFile();
-   temp->Create(fName);
-   delete temp;
-#else
    f.Create();
-#endif
    f.Open();
    if (!f.IsOpened()) {
       wxMessageBox(_("Couldn't write to file: ") + fName);
@@ -2953,11 +2947,7 @@ void AudacityProject::OnExportLabels()
       t = iter.Next();
    }
 
-#ifdef __WXMAC__
-   f.Write(wxTextFileType_Mac);
-#else
    f.Write();
-#endif
    f.Close();
 }
 
