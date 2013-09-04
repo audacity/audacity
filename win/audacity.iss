@@ -167,7 +167,17 @@ Type: files; Name: "{app}\Plug-Ins\GVerb.dll"
 Type: files; Name: "{app}\Plug-Ins\Hard Limiter.dll"
 Type: files; Name: "{app}\Plug-Ins\sc4.dll"
 
+;Get rid of any modules that we have ever installed
+Type: files; Name: "{app}\Modules\mod-script-pipe.dll"
+Type: files; Name: "{app}\Modules\mod-script-pipe.exp"
+Type: files; Name: "{app}\Modules\mod-script-pipe.lib"
 
+;get rid of the Modules dir, if it is empty
+Type: dirifempty; Name: "{app}\Modules"
+
+; Get rid of gverb that we no longer ship
+Type: files; Name: "{app}\Plug-Ins\gverb_1216.dll"
+                                            
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Leaving this one commented out example of the old way.
