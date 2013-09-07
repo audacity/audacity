@@ -14,7 +14,7 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This version is currently accurate for Audacity version 2.0.4.
+This version is currently accurate for Audacity version 2.0.5.
 If you find the advice here inaccurate or incomplete, please
 e-mail feedback@audacityteam.org .
 ========================================================================
@@ -44,7 +44,7 @@ attempting to compile Audacity, or nothing will work!
 
 wxWidgets is available at "http://www.wxwidgets.org/".
 
-Audacity 2.0.4 requires wxWidgets 2.8.12.
+Audacity 2.0.5 requires wxWidgets 2.8.12.
 
 To build on Windows only, download the wxMSW package
 (installer or zip).
