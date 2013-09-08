@@ -119,7 +119,8 @@ Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC
 Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\win\unicode release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
-Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+; We don't currently ship any modules, so the next line is commented out
+;Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
 
