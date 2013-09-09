@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-08-28 17:18+0100\n"
-"PO-Revision-Date: 2013-08-31 17:24-0000\n"
+"PO-Revision-Date: 2013-09-09 18:21-0000\n"
 "Last-Translator: Antonio Paniagua\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -10412,7 +10412,7 @@ msgstr "Conversor de frecuencia de mues&treo:"
 
 #: prefs/QualityPrefs.cpp:196
 msgid "Dit&her:"
-msgstr "Fu&sión:"
+msgstr "Corrección con ruido &blanco:"
 
 #: prefs/RecordingPrefs.cpp:63
 msgid "Playthrough"
