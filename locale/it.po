@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-08-28 17:18+0100\n"
-"PO-Revision-Date: 2013-08-28 17:43-0000\n"
+"PO-Revision-Date: 2013-09-09 18:09-0000\n"
 "Last-Translator: Carmelo Battaglia\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-Bookmarks: 1308,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: AboutDialog.cpp:59
@@ -2339,7 +2339,7 @@ msgstr "Barra Trascri&zione"
 #. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
 #: Menus.cpp:612
 msgid "&Transport Toolbar"
-msgstr "&Barra Trascrizione"
+msgstr "Barra A&ttività"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:617
@@ -2477,9 +2477,8 @@ msgid "&Unmute All Tracks"
 msgstr "Rendi &udibili tutte le tracce"
 
 #: Menus.cpp:733
-#, fuzzy
 msgid "&Align End to End"
-msgstr "Allinea la fine con la fine selezione"
+msgstr "&Allinea fine con fine"
 
 #: Menus.cpp:734
 msgid "Align Tracks To&gether"
@@ -2921,18 +2920,16 @@ msgid "&Redo %s"
 msgstr "&Ripristina %s"
 
 #: Menus.cpp:2098
-#, fuzzy
 msgid "Sort by Time"
-msgstr "Ordina per tempo"
+msgstr "Ordina per Tempo"
 
 #: Menus.cpp:2098
 msgid "Tracks sorted by time"
 msgstr "Tracce ordinate per tempo"
 
 #: Menus.cpp:2107
-#, fuzzy
 msgid "Sort by Name"
-msgstr "Ordina per nome"
+msgstr "Ordina per Nome"
 
 #: Menus.cpp:2107
 msgid "Tracks sorted by name"
@@ -3303,24 +3300,21 @@ msgid "Aligned end with selection end"
 msgstr "Allineata la fine con la fine della selezione"
 
 #: Menus.cpp:5093
-#, fuzzy
 msgid "Aligned end to end"
-msgstr "Allineata la fine con la fine della selezione"
+msgstr "Allineata fine con fine"
 
 #: Menus.cpp:5097
-#, fuzzy
 msgid "Aligned together"
-msgstr "Allinea con zero"
+msgstr "Allineata insieme"
 
 #: Menus.cpp:5192
 #, c-format
 msgid "%s/Move"
-msgstr ""
+msgstr "%s/Sposta"
 
 #: Menus.cpp:5193
-#, fuzzy
 msgid "Align and Move"
-msgstr "Alli&nea e sposta cursore"
+msgstr "Allinea e sposta"
 
 #: Menus.cpp:5195
 msgid "Align"
@@ -5366,9 +5360,8 @@ msgid "from"
 msgstr "da"
 
 #: effects/ChangePitch.cpp:310
-#, fuzzy
 msgid "from Octave"
-msgstr "Da una ottava"
+msgstr "Da ottava"
 
 #: effects/ChangePitch.cpp:313
 #: effects/ChangePitch.cpp:314
@@ -5380,9 +5373,8 @@ msgid "to"
 msgstr "a"
 
 #: effects/ChangePitch.cpp:319
-#, fuzzy
 msgid "to Octave"
-msgstr "Da una ottava"
+msgstr "a ottava"
 
 #: effects/ChangePitch.cpp:327
 msgid "Semitones (half-steps):"
@@ -5393,13 +5385,12 @@ msgid "Semitones (half-steps)"
 msgstr "Semitoni"
 
 #: effects/ChangePitch.cpp:340
-#, fuzzy
 msgid "from (Hz)"
-msgstr "da"
+msgstr "da (Hz)"
 
 #: effects/ChangePitch.cpp:344
 msgid "to (Hz)"
-msgstr ""
+msgstr "a (Hz)"
 
 #: effects/ChangePitch.cpp:363
 #: effects/ChangeSpeed.cpp:365
@@ -7463,21 +7454,18 @@ msgstr "Sto troncando il silenzio..."
 #: effects/VST/VSTEffect.cpp:154
 #: effects/VST/VSTEffect.cpp:160
 #: effects/VST/VSTEffect.cpp:161
-#, fuzzy
 msgid "Install VST Effects"
-msgstr "Effetti VST"
+msgstr "Installa effetti VST"
 
 #. i18n-hint: The dialog shows a list of plugins with check-boxes
 #. beside each one.
 #: effects/VST/VSTEffect.cpp:196
-#, fuzzy
 msgid "&Select Plugins to Install"
-msgstr "Dalla selezione all'inizio"
+msgstr "&Seleziona plugin da installare"
 
 #: effects/VST/VSTEffect.cpp:201
-#, fuzzy
 msgid "Plugin File"
-msgstr "File audio"
+msgstr "File plugin"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: effects/VST/VSTEffect.cpp:209
