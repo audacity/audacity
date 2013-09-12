@@ -352,8 +352,6 @@ int Importer::Import(wxString fName,
 
    // First, add user-selected filter
    bool usersSelectionOverrides;
-   // False if override filter is not found
-   bool foundOverride = false;
    gPrefs->Read(wxT("/ExtendedImport/OverrideExtendedImportByOpenFileDialogChoice"), &usersSelectionOverrides, false);
 
    wxLogDebug(wxT("LastOpenType is %s"),type.c_str());
@@ -370,7 +368,6 @@ int Importer::Import(wxString fName,
             // This plugin corresponds to user-selected filter, try it first.
             wxLogDebug(wxT("Inserting %s"),plugin->GetPluginStringID().c_str());
             importPlugins.Insert(plugin);
-            foundOverride = true;
          }
          importPluginNode = importPluginNode->GetNext();
       }
@@ -379,7 +376,6 @@ int Importer::Import(wxString fName,
    wxLogMessage(wxT("File name is %s"),(const char *) fName.mb_str());
    wxLogMessage(wxT("Mime type is %s"),(const char *) mime_type.Lower().mb_str());
 
-   bool foundItem = false;
    for (size_t i = 0; i < mExtImportItems->Count(); i++)
    {
       ExtImportItem *item = &(*mExtImportItems)[i];
@@ -431,7 +427,6 @@ int Importer::Import(wxString fName,
             wxLogDebug(wxT("Inserting %s"),item->filter_objects[j]->GetPluginStringID().c_str());
             importPlugins.Append(item->filter_objects[j]);
          }
-         foundItem = true;
       }
    }
 

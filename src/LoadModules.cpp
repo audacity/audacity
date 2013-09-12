@@ -239,7 +239,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
       if( !IsAllowedModule( files[i] ) )  // don't try and check the in-date-ness before this as that means loading the module to call it's GetVersionString, which could do anything.
-#endif EXPERIMENTAL_MODULE_PREFS
+#endif
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
          wxString msg;

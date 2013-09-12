@@ -74,7 +74,6 @@ void AttachableScrollBar::SetViewInfoFromScrollBar()
    ViewInfo & mViewInfo = *mpViewInfo;
 
    int hlast = mViewInfo.sbarH;
-   int hoffset = 0;
 
    mViewInfo.sbarH = GetThumbPosition();
 
@@ -85,7 +84,6 @@ void AttachableScrollBar::SetViewInfoFromScrollBar()
          mViewInfo.h = mViewInfo.total - mViewInfo.screen;
       if (mViewInfo.h < 0.0)
          mViewInfo.h = 0.0;
-      hoffset = (mViewInfo.sbarH - hlast);
    }
 }
 

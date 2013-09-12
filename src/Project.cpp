@@ -1478,9 +1478,7 @@ void AudacityProject::UpdateFirstVisible()
    mViewInfo.track = NULL;
 
    if (t->GetY() > mViewInfo.vpos) {
-      Track *l = NULL;
       while (t && t->GetY() > mViewInfo.vpos) {
-         l = t;
          t = mTracks->GetPrev(t);
       }
    }

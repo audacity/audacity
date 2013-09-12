@@ -75,7 +75,6 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
 
    //Get a pointer to the sequence in each clip.
    WaveClip * tmpclip = NULL;
-   Sequence * tmp = NULL;
 
    WaveClipList::compatibility_iterator  it;
 
@@ -220,13 +219,6 @@ bool CrossFader::CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount
       float *dest = (float *)buffer;
       vector<float*> floatSeq;
 
-      //Copy the sequences over to the new vector, casting as you go.
-      for(int i = 0; i < numclips; i++)
-      {
-         float * tmp;
-         //tmpSequence[i]->GetSamples(tmp,format,0,tmpSequence[i]->GetNumSamples());
-         //floatSeq.push_back(tmp);
-      }
       int clips = 0;
       float f;
 

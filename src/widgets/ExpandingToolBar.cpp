@@ -893,7 +893,6 @@ bool ToolBarArea::ExpandRow(int rowIndex)
    for(i=0; i<(int)mChildArray.GetCount(); i++)
       if (mRowArray[i] == rowIndex) {
          ExpandingToolBar *child = mChildArray[i];
-         wxPoint childPos = child->GetPosition();
          wxSize childMin = child->GetMinSize();
          wxSize childMax = child->GetMaxSize();
 
@@ -943,17 +942,16 @@ void ToolBarArea::LayoutOne(int childIndex)
    wxSize area = GetClientSize();
    ExpandingToolBar *child = mChildArray[childIndex];
    wxSize childMin = child->GetMinSize();
-   wxSize childMax = child->GetMaxSize();
 
    if (childIndex == 0) {
       mRowArray[childIndex] = 0;
       mChildArray[childIndex]->SetSize(0, 0, childMin.x, childMin.y);
       ExpandRow(0);
 
+      #if 0
       wxPoint p = mChildArray[childIndex]->GetPosition();
       wxSize s = mChildArray[childIndex]->GetSize();
 
-      #if 0
       printf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
              childIndex, mRowArray[childIndex],
              p.x, p.y, s.x, s.y);
@@ -1002,10 +1000,10 @@ void ToolBarArea::LayoutOne(int childIndex)
    // allowed to redo the layout.
    mLastLayoutSize = area;
 
+   #if 0
    wxPoint p = mChildArray[childIndex]->GetPosition();
    wxSize s = mChildArray[childIndex]->GetSize();
 
-   #if 0
    printf("ToolBar %d moved to row %d at (%d, %d), size (%d x %d)\n",
           childIndex, mRowArray[childIndex],
           p.x, p.y, s.x, s.y);
