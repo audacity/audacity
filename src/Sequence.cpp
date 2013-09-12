@@ -82,6 +82,7 @@ Sequence::Sequence(const Sequence &orig, DirManager *projDirManager)
 
    bool bResult = Paste(0, &orig);
    wxASSERT(bResult); // TO DO: Actually handle this.
+   (void)bResult;
 }
 
 Sequence::~Sequence()

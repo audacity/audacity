@@ -43,7 +43,7 @@ static const char * empty_9x16_xpm[] = {
 "........."};
 
 /* XPM */
-static char * arrow15x15_xpm[] = {
+static const char * arrow15x15_xpm[] = {
 "15 15 24 1",
 " 	c None",
 ".	c #FFFFFF",
@@ -86,7 +86,7 @@ static char * arrow15x15_xpm[] = {
 "..............."};
 
 /* XPM */
-static char * unchecked_xpm[] = {
+static const char * unchecked_xpm[] = {
 "15 15 56 1",
 " 	c None",
 ".	c #FFFFFF",
@@ -161,7 +161,7 @@ static char * unchecked_xpm[] = {
 "..............."};
 
 /* XPM */
-static char * checked_xpm[] = {
+static const char * checked_xpm[] = {
 "15 15 70 1",
 " 	c #FFFFFF",
 ".	c #8E8F8F",

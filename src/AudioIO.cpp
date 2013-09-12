@@ -1104,6 +1104,7 @@ void AudioIO::StartMonitoring(double sampleRate)
                                   (unsigned int)captureChannels,
                                   captureFormat);
    // TODO: Check return value of success.
+   (void)success;
 
    // Now start the PortAudio stream!
    mLastPaError = Pa_StartStream( mPortStreamV19 );

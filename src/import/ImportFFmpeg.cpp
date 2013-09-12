@@ -35,6 +35,7 @@ Licensed under the GNU General Public License v2 or later
 #define DESC _("FFmpeg-compatible files")
 
 //TODO: remove non-audio extensions
+#if defined(USE_FFMPEG)
 static const wxChar *exts[] =
 {   
    wxT("4xm"),
@@ -145,7 +146,6 @@ static const wxChar *exts[] =
    wxT("wv")
 };
 
-#if defined(USE_FFMPEG)
 // all the includes live here by default
 #include "Import.h"
 #include "ImportFFmpeg.h"

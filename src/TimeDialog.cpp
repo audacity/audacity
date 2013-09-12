@@ -35,10 +35,10 @@ TimeDialog::TimeDialog(wxWindow *parent,
                        double time,
                        const wxString &prompt)
 :  wxDialog(parent, wxID_ANY, title),
+   mPrompt(prompt),
    mFormat(format),
    mRate(rate),
    mTime(time),
-   mPrompt(prompt),
    mTimeCtrl(NULL)
 {
    ShuttleGui S(this, eIsCreating);

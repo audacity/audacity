@@ -131,7 +131,9 @@ static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, i
 
 static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std::vector<DeviceSourceMap> *maps, PaStream *stream)
 {
+#ifdef USE_PORTMIXER
    int i;
+#endif
    DeviceSourceMap map;
 
    map.sourceIndex  = -1;

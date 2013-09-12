@@ -99,6 +99,9 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
          locate_button->Enable(FALSE);
          download_button->Enable(FALSE);
+#else
+        (void)locate_button;
+        (void)download_button;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
       }
       S.EndTwoColumn();
