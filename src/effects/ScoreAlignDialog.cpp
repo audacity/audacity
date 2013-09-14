@@ -10,9 +10,9 @@
 ******************************************************************//**
 
 \class ScoreAlignDialog
-\brief ScoreAlignDialog is <TODO>.
+\brief ScoreAlignDialog is \TODO.
 
-It <TODO: description>
+It \TODO: description
 
 *//*******************************************************************/
 
