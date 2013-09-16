@@ -942,46 +942,45 @@ void AudacityApp::InitLang( const wxString & lang )
    if( mLocale )
       delete mLocale;
 
-   if (lang != wxT("en")) 
-   {
 // LL: I do not know why loading translations fail on the Mac if LANG is not
 //     set, but for some reason it does.  So wrap the creation of wxLocale
 //     with the default translation.
+//
+//     2013-09-13:  I've checked this again and it is still required.  Still
+//                  no idea why.
 #if defined(__WXMAC__)
-      wxString oldval;
-      bool existed;
-      
-      existed = wxGetEnv(wxT("LANG"), &oldval);
-      wxSetEnv(wxT("LANG"), wxT("en_US"));
+   wxString oldval;
+   bool existed;
+
+   existed = wxGetEnv(wxT("LANG"), &oldval);
+   wxSetEnv(wxT("LANG"), wxT("en_US"));
 #endif
 
-      mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
+   mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
 
 #if defined(__WXMAC__)
-      if (existed) {
-         wxSetEnv(wxT("LANG"), oldval);
-      }
-      else {
-         wxUnsetEnv(wxT("LANG"));
-      }
+   if (existed) {
+      wxSetEnv(wxT("LANG"), oldval);
+   }
+   else {
+      wxUnsetEnv(wxT("LANG"));
+   }
 #endif
 
-      for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
-         mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
+   for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
+      mLocale->AddCatalogLookupPathPrefix(audacityPathList[i]);
 
-      // LL:  Must add the wxWidgets catalog manually since the search
-      //      paths were not set up when mLocale was created.  The
-      //      catalogs are search in LIFO order, so add wxstd first.
-      mLocale->AddCatalog(wxT("wxstd"));
+   // LL:  Must add the wxWidgets catalog manually since the search
+   //      paths were not set up when mLocale was created.  The
+   //      catalogs are search in LIFO order, so add wxstd first.
+   mLocale->AddCatalog(wxT("wxstd"));
 
 // AUDACITY_NAME is legitimately used on some *nix configurations. 
 #ifdef AUDACITY_NAME
-      mLocale->AddCatalog(wxT(AUDACITY_NAME));
+   mLocale->AddCatalog(wxT(AUDACITY_NAME));
 #else
-      mLocale->AddCatalog(IPC_APPL);
+   mLocale->AddCatalog(IPC_APPL);
 #endif
-   } else
-      mLocale = NULL;
 
    // Initialize internationalisation (number formats etc.)
    //
