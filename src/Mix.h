@@ -157,6 +157,7 @@ class AUDACITY_DLL_API Mixer {
    samplePtr       *mTemp;
    float           *mFloatBuffer;
    double           mRate;
+   bool             mHighQuality;
 };
 
 #endif

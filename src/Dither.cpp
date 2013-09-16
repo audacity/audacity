@@ -69,6 +69,74 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // except the branches for clipping the sample, and therefore should
 // be quite fast.
 
+#if 0
+// To assist in understanding what the macros are doing, here's an example of what 
+// the result would be for Shaped dither:
+//
+// DITHER(ShapedDither, dest, destFormat, source, sourceFormat, len, stride);
+
+   do {
+      if (sourceFormat == int24Sample && destFormat == int16Sample)
+         do {
+            char *d, *s;
+            unsigned int i; 
+            int x;
+            for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int16Sample >> 16) * stride, s += (int24Sample >> 16) * stride)
+               do {
+                  x = lrintf((ShapedDither((((*(( int*)(s)) / float(1<<23))) * float(1<<15)))));
+                  if (x>(32767))
+                     *((short*)((((d)))))=(32767);
+                  else if (x<(-32768))
+                     *((short*)((((d)))))=(-32768);
+                  else
+                     *((short*)((((d)))))=(short)x;
+               } while (0);
+         } while (0);
+      else if (sourceFormat == floatSample && destFormat == int16Sample)
+         do {
+            char *d, *s;
+            unsigned int i; 
+            int x;
+            for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int16Sample >> 16) * stride, s += (floatSample >> 16) * stride)
+               do {
+                  x = lrintf((ShapedDither((((*((float*)(s)) > 1.0 ? 1.0 :
+                             *((float*)(s)) < -1.0 ? -1.0 : 
+                             *((float*)(s)))) * float(1<<15))))); 
+                  if (x>(32767))
+                     *((short*)((((d)))))=(32767);
+                  else if (x<(-32768))
+                     *((short*)((((d)))))=(-32768);
+                  else
+                     *((short*)((((d)))))=(short)x; 
+               } while (0); 
+         } while (0); 
+      else if (sourceFormat == floatSample && destFormat == int24Sample)
+         do { 
+            char *d, *s;
+            unsigned int i; 
+            int x; 
+            for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int24Sample >> 16) * stride, s += (floatSample >> 16) * stride)
+               do { 
+                  x = lrintf((ShapedDither((((*((float*)(s)) > 1.0 ? 1.0 :
+                             *((float*)(s)) < -1.0 ? -1.0 :
+                             *((float*)(s)))) * float(1<<23)))));
+                  if (x>(8388607))
+                     *((int*)((((d)))))=(8388607);
+                  else if (x<(-8388608)) 
+                     *((int*)((((d)))))=(-8388608); 
+                  else 
+                     *((int*)((((d)))))=(int)x; 
+               } while (0); 
+         } while (0); 
+      else { 
+         if ( false ) 
+            ; 
+         else 
+            wxOnAssert(L"c:\\audacity\\src\\dither.cpp", 252,  __FUNCTION__  , L"false", 0); 
+      } 
+   } while (0);
+#endif
+
 // Defines for sample conversion
 #define CONVERT_DIV16 float(1<<15)
 #define CONVERT_DIV24 float(1<<23)
@@ -118,7 +186,7 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
        int x; \
        for (d = (char*)dst, s = (char*)src, i = 0; \
             i < len; \
-            i++, d += SAMPLE_SIZE(dstFormat), \
+            i++, d += SAMPLE_SIZE(dstFormat) * stride, \
                  s += SAMPLE_SIZE(srcFormat) * stride) \
           DITHER_STEP(dither, store, load, d, s); \
    } while (0)
@@ -196,7 +264,7 @@ void Dither::Apply(enum DitherType ditherType,
             {
                 memcpy(d, s, srcBytes);
                 s += stride * srcBytes;
-                d += srcBytes;
+                d += stride * srcBytes;
             }
         }
 
@@ -210,13 +278,13 @@ void Dither::Apply(enum DitherType ditherType,
         if (sourceFormat == int16Sample)
         {
             short* s = (short*)source;
-            for (i = 0; i < len; i++, d++, s+= stride)
+            for (i = 0; i < len; i++, d += stride, s += stride)
                 *d = FROM_INT16(s);
         } else
         if (sourceFormat == int24Sample)
         {
             int* s = (int*)source;
-            for (i = 0; i < len; i++, d++, s+= stride)
+            for (i = 0; i < len; i++, d += stride, s += stride)
                 *d = FROM_INT24(s);
         } else {
             wxASSERT(false); // source format unknown
@@ -231,7 +299,7 @@ void Dither::Apply(enum DitherType ditherType,
         {
             *d = ((int)*s) << 8;
             s += stride;
-            d++;
+            d += stride;
         }
     } else
     {
@@ -245,10 +313,11 @@ void Dither::Apply(enum DitherType ditherType,
             DITHER(RectangleDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         case triangle:
+            Reset(); // Reset dither filter for this new conversion.
             DITHER(TriangleDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         case shaped:
-            Reset(); // reset shaped dither filter for this new conversion
+            Reset(); // Reset dither filter for this new conversion.
             DITHER(ShapedDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         default:

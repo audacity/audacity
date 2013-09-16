@@ -235,6 +235,7 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
 {
    int i;
 
+   mHighQuality = highQuality;
    mNumInputTracks = numInputTracks;
    mInputTrack = new WaveTrack*[mNumInputTracks];
    mSamplePos = new sampleCount[mNumInputTracks];
@@ -287,11 +288,11 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
       double factor = (mRate / mInputTrack[i]->GetRate());
       if (timeTrack) {
          // variable rate resampling
-         mResample[i] = new Resample(highQuality,
+         mResample[i] = new Resample(mHighQuality,
                                       factor / timeTrack->GetRangeUpper(),
                                       factor / timeTrack->GetRangeLower());
       } else {
-         mResample[i] = new Resample(highQuality, factor, factor); // constant rate resampling
+         mResample[i] = new Resample(mHighQuality, factor, factor); // constant rate resampling
       }
       mSampleQueue[i] = new float[mQueueMaxLen];
       mQueueStart[i] = 0;
@@ -595,10 +596,28 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
          mTime = std::min(t, mT1);
       
    }
-   out = mInterleaved ? maxOut * mNumChannels : maxOut;
-   for(int c=0; c<mNumBuffers; c++)
-      CopySamples(mTemp[c], floatSample, mBuffer[c], mFormat, out);
-
+   if(mInterleaved) {
+      for(int c=0; c<mNumChannels; c++) {
+         CopySamples(mTemp[0] + (c * SAMPLE_SIZE(floatSample)),
+                     floatSample,
+                     mBuffer[0] + (c * SAMPLE_SIZE(mFormat)),
+                     mFormat,
+                     maxOut,
+                     mHighQuality,
+                     mNumChannels);
+      }
+   }
+   else {
+      for(int c=0; c<mNumBuffers; c++) {
+            CopySamples(mTemp[c],
+                        floatSample,
+                        mBuffer[c],
+                        mFormat,
+                        maxOut,
+                        mHighQuality,
+                        1);
+      }
+   }
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
    //mT += (maxOut / mRate);
 
