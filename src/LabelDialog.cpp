@@ -644,10 +644,13 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
       t = iter.Next();
    }
 
-   RowData *rd;
-   rd = mData[event.GetRow()];
-   mViewInfo->sel0 = rd->stime;
-   mViewInfo->sel1 = rd->etime;
+   if (!mData.empty())
+   {
+      RowData *rd;
+      rd = mData[event.GetRow()];
+      mViewInfo->sel0 = rd->stime;
+      mViewInfo->sel1 = rd->etime;
+   }
 
    GetActiveProject()->RedrawProject();
 
