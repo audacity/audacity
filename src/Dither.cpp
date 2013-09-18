@@ -186,7 +186,7 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
        int x; \
        for (d = (char*)dst, s = (char*)src, i = 0; \
             i < len; \
-            i++, d += SAMPLE_SIZE(dstFormat) * stride, \
+            i++, d += SAMPLE_SIZE(dstFormat), \
                  s += SAMPLE_SIZE(srcFormat) * stride) \
           DITHER_STEP(dither, store, load, d, s); \
    } while (0)
@@ -264,7 +264,7 @@ void Dither::Apply(enum DitherType ditherType,
             {
                 memcpy(d, s, srcBytes);
                 s += stride * srcBytes;
-                d += stride * srcBytes;
+                d += srcBytes;
             }
         }
 
@@ -278,13 +278,13 @@ void Dither::Apply(enum DitherType ditherType,
         if (sourceFormat == int16Sample)
         {
             short* s = (short*)source;
-            for (i = 0; i < len; i++, d += stride, s += stride)
+            for (i = 0; i < len; i++, d++, s+= stride)
                 *d = FROM_INT16(s);
         } else
         if (sourceFormat == int24Sample)
         {
             int* s = (int*)source;
-            for (i = 0; i < len; i++, d += stride, s += stride)
+            for (i = 0; i < len; i++, d++, s+= stride)
                 *d = FROM_INT24(s);
         } else {
             wxASSERT(false); // source format unknown
@@ -299,7 +299,7 @@ void Dither::Apply(enum DitherType ditherType,
         {
             *d = ((int)*s) << 8;
             s += stride;
-            d += stride;
+            d++;
         }
     } else
     {
@@ -313,11 +313,11 @@ void Dither::Apply(enum DitherType ditherType,
             DITHER(RectangleDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         case triangle:
-            Reset(); // Reset dither filter for this new conversion.
+            Reset(); // reset dither filter for this new conversion
             DITHER(TriangleDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         case shaped:
-            Reset(); // Reset dither filter for this new conversion.
+            Reset(); // reset dither filter for this new conversion
             DITHER(ShapedDither, dest, destFormat, source, sourceFormat, len, stride);
             break;
         default:
