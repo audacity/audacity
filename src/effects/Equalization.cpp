@@ -1195,10 +1195,8 @@ void EqualizationDialog::MakeEqualizationDialog()
 
    szrG = new wxBoxSizer( wxHORIZONTAL  );
    szrG->Add(0, 0, 0); // horizontal spacer, will be used to position LH EQ slider
-   for (int i = 0; thirdOct[i] <= mHiFreq; ++i)
+   for (int i = 0; (i < NUMBER_OF_BANDS) && (thirdOct[i] <= mHiFreq); ++i)
    {
-      if( i == NUMBER_OF_BANDS )
-         break;
       m_sliders[i] = new wxSliderBugfix(this, ID_SLIDER + i, 0, -20, +20,
                         wxDefaultPosition, wxSize(20, 124), wxSL_VERTICAL|
                          wxSL_INVERSE);
@@ -1965,10 +1963,8 @@ void EqualizationDialog::WriteXML(XMLWriter &xmlFile)
 void EqualizationDialog::OnSlider(wxCommandEvent & event)
 {
    wxSliderBugfix *s = (wxSliderBugfix *)event.GetEventObject();
-   for (int i = 0; thirdOct[i] <= mHiFreq; ++i)
+   for (int i = 0; (i < NUMBER_OF_BANDS) && (thirdOct[i] <= mHiFreq); ++i)
    {
-      if( i == NUMBER_OF_BANDS )
-         break;
       if( s == m_sliders[i])
       {
          int posn = m_sliders[i]->GetValue();
@@ -2041,10 +2037,8 @@ void EqualizationDialog::LayoutEQSliders()
    double loLog = log10(mLoFreq);
    double hiLog = log10(mHiFreq);
    double denom = hiLog - loLog;
-   for (int i = 1; thirdOct[i] <= mHiFreq; ++i)   //go along the spacers
+   for (int i = 1; (i < NUMBER_OF_BANDS) && (thirdOct[i] <= mHiFreq); ++i)   //go along the spacers
    {
-      if( i == NUMBER_OF_BANDS )
-         break;
       float posn = range*(log10(thirdOct[i])-loLog)/denom;   //centre of this slider, from start
       w = start + ((int)(posn+.5)) - EQsliderSize.x/2;   //LH edge of slider, from 0
       w = w - so_far;   //gap needed to put it here
@@ -2618,10 +2612,8 @@ void EqualizationDialog::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts a
 {
    if(!drawMode)   // Graphic (Slider) mode. Invert the sliders.
    {
-      for (int i = 0; thirdOct[i] <= mHiFreq; ++i)
+      for (int i = 0; (i < NUMBER_OF_BANDS) && (thirdOct[i] <= mHiFreq); ++i)
       {
-         if( i == NUMBER_OF_BANDS )
-            break;
          m_EQVals[i] = -m_EQVals[i];
          int newPosn = (int)m_EQVals[i];
          m_sliders[i]->SetValue( newPosn );
