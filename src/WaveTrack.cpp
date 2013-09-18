@@ -892,7 +892,10 @@ bool WaveTrack::SyncLockAdjust(double oldT1, double newT1)
    if (newT1 > oldT1) {
       // Insert space within the track
 
-      if (oldT1 > GetEndTime())
+      // JKC: This is a rare case where using >= rather than > on a float matters.
+      // GetEndTime() looks through the clips and may give us EXACTLY the same
+      // value as T1, when T1 was set to be at the end of one of those clips.
+      if (oldT1 >= GetEndTime())
          return true;
 
       // If track is empty at oldT1 insert whitespace; otherwise, silence
