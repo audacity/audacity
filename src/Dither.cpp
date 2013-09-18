@@ -227,6 +227,28 @@ void Dither::Reset()
 
 // This only decides if we must dither at all, the dithers
 // are all implemented using macros.
+//
+// "source" can contain interleaved or non-interleaved samples.  This is
+// controlled via the "stride" argument.
+//
+// "dest" is always non-interleaved and should be large enough to hold "len"
+// samples in the "destFormat".
+//
+// The "len" argument specifies the number of "sourceFormat" samples to
+// process.
+//
+// In the case of a non-interleaved "source", this will usually equal the
+// number of samples in "source".
+//
+// With an interleaved "source", "source" should contain "stride" times "len"
+// samples.
+//
+// If the "stride" value is 1 then "source" contains non-interleaved samples.
+//
+// If the "stride" value is greater than 1 then "source" contains interleaved
+// samples and they will be processed by skipping every "stride" number of
+// samples.
+
 void Dither::Apply(enum DitherType ditherType,
                    const samplePtr source, sampleFormat sourceFormat,
                    samplePtr dest, sampleFormat destFormat,
