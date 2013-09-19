@@ -604,6 +604,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
                      mFormat,
                      maxOut,
                      mHighQuality,
+                     mNumChannels,
                      mNumChannels);
       }
    }
@@ -614,8 +615,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
                         mBuffer[c],
                         mFormat,
                         maxOut,
-                        mHighQuality,
-                        1);
+                        mHighQuality);
       }
    }
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos

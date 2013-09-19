@@ -32,7 +32,9 @@ public:
     void Apply(DitherType ditherType,
                const samplePtr source, sampleFormat sourceFormat,
                samplePtr dest, sampleFormat destFormat,
-               unsigned int len, unsigned int stride = 1);
+               unsigned int len,
+               unsigned int sourceStride = 1,
+               unsigned int destStride = 1);
 
 private:
     // Dither methods

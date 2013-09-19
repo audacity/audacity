@@ -73,68 +73,60 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // To assist in understanding what the macros are doing, here's an example of what 
 // the result would be for Shaped dither:
 //
-// DITHER(ShapedDither, dest, destFormat, source, sourceFormat, len, stride);
+// DITHER(ShapedDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
 
-   do {
-      if (sourceFormat == int24Sample && destFormat == int16Sample)
-         do {
-            char *d, *s;
-            unsigned int i; 
-            int x;
-            for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int16Sample >> 16) * stride, s += (int24Sample >> 16) * stride)
-               do {
-                  x = lrintf((ShapedDither((((*(( int*)(s)) / float(1<<23))) * float(1<<15)))));
-                  if (x>(32767))
-                     *((short*)((((d)))))=(32767);
-                  else if (x<(-32768))
-                     *((short*)((((d)))))=(-32768);
-                  else
-                     *((short*)((((d)))))=(short)x;
-               } while (0);
-         } while (0);
-      else if (sourceFormat == floatSample && destFormat == int16Sample)
-         do {
-            char *d, *s;
-            unsigned int i; 
-            int x;
-            for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int16Sample >> 16) * stride, s += (floatSample >> 16) * stride)
-               do {
-                  x = lrintf((ShapedDither((((*((float*)(s)) > 1.0 ? 1.0 :
-                             *((float*)(s)) < -1.0 ? -1.0 : 
-                             *((float*)(s)))) * float(1<<15))))); 
-                  if (x>(32767))
-                     *((short*)((((d)))))=(32767);
-                  else if (x<(-32768))
-                     *((short*)((((d)))))=(-32768);
-                  else
-                     *((short*)((((d)))))=(short)x; 
-               } while (0); 
-         } while (0); 
-      else if (sourceFormat == floatSample && destFormat == int24Sample)
-         do { 
-            char *d, *s;
-            unsigned int i; 
-            int x; 
-            for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int24Sample >> 16) * stride, s += (floatSample >> 16) * stride)
-               do { 
-                  x = lrintf((ShapedDither((((*((float*)(s)) > 1.0 ? 1.0 :
-                             *((float*)(s)) < -1.0 ? -1.0 :
-                             *((float*)(s)))) * float(1<<23)))));
-                  if (x>(8388607))
-                     *((int*)((((d)))))=(8388607);
-                  else if (x<(-8388608)) 
-                     *((int*)((((d)))))=(-8388608); 
-                  else 
-                     *((int*)((((d)))))=(int)x; 
-               } while (0); 
-         } while (0); 
-      else { 
-         if ( false ) 
-            ; 
-         else 
-            wxOnAssert(L"c:\\audacity\\src\\dither.cpp", 252,  __FUNCTION__  , L"false", 0); 
-      } 
-   } while (0);
+    do {
+        if (sourceFormat == int24Sample && destFormat == int16Sample)
+            do {
+                char *d, *s;
+                unsigned int i;
+                int x;
+                for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int16Sample >> 16) * destStride, s += (int24Sample >> 16) * sourceStride)
+                    do {
+                        x = lrintf((ShapedDither((((*(( int*)(s)) / float(1<<23))) * float(1<<15)))));
+                        if (x>(32767))
+                            *((short*)((((d)))))=(32767);
+                        else if (x<(-32768))
+                            *((short*)((((d)))))=(-32768);
+                        else *((short*)((((d)))))=(short)x;
+                    } while (0);
+            } while (0);
+        else if (sourceFormat == floatSample && destFormat == int16Sample)
+            do {
+                char *d, *s;
+                unsigned int i;
+                int x;
+                for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int16Sample >> 16) * destStride, s += (floatSample >> 16) * sourceStride)
+                    do {
+                        x = lrintf((ShapedDither((((*((float*)(s)) > 1.0 ? 1.0 : *((float*)(s)) < -1.0 ? -1.0 : *((float*)(s)))) * float(1<<15)))));
+                        if (x>(32767))
+                            *((short*)((((d)))))=(32767);
+                        else if (x<(-32768))
+                            *((short*)((((d)))))=(-32768);
+                        else *((short*)((((d)))))=(short)x;
+                    } while (0);
+            } while (0);
+        else if (sourceFormat == floatSample && destFormat == int24Sample)
+            do {
+                char *d, *s;
+                unsigned int i;
+                int x;
+                for (d = (char*)dest, s = (char*)source, i = 0; i < len; i++, d += (int24Sample >> 16) * destStride, s += (floatSample >> 16) * sourceStride)
+                    do {
+                        x = lrintf((ShapedDither((((*((float*)(s)) > 1.0 ? 1.0 : *((float*)(s)) < -1.0 ? -1.0 : *((float*)(s)))) * float(1<<23)))));
+                        if (x>(8388607))
+                            *((int*)((((d)))))=(8388607);
+                        else if (x<(-8388608))
+                            *((int*)((((d)))))=(-8388608);
+                        else *((int*)((((d)))))=(int)x;
+                    } while (0);
+            } while (0);
+        else {
+            if ( false )
+                ;
+            else wxOnAssert(L"c:\\users\\yam\\documents\\audacity\\mixer\\n\\audacity\\src\\dither.cpp", 348,  __FUNCTION__  , L"false", 0);
+        }
+    } while (0);
 #endif
 
 // Defines for sample conversion
@@ -179,35 +171,35 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 
 // Implement a dithering loop
 // Note: The variable 'x' is needed for the STORE_... macros
-#define DITHER_LOOP(dither, store, load, dst, dstFormat, src, srcFormat, len, stride) \
+#define DITHER_LOOP(dither, store, load, dst, dstFormat, dstStride, src, srcFormat, srcStride, len) \
     do { \
        char *d, *s; \
        unsigned int i; \
        int x; \
        for (d = (char*)dst, s = (char*)src, i = 0; \
             i < len; \
-            i++, d += SAMPLE_SIZE(dstFormat), \
-                 s += SAMPLE_SIZE(srcFormat) * stride) \
+            i++, d += SAMPLE_SIZE(dstFormat) * dstStride, \
+                 s += SAMPLE_SIZE(srcFormat) * srcStride) \
           DITHER_STEP(dither, store, load, d, s); \
    } while (0)
 
 // Shortcuts to dithering loops
-#define DITHER_INT24_TO_INT16(dither, dst, src, len, stride) \
-    DITHER_LOOP(dither, DITHER_TO_INT16, FROM_INT24, dst, int16Sample, src, int24Sample, len, stride)
-#define DITHER_FLOAT_TO_INT16(dither, dst, src, len, stride) \
-    DITHER_LOOP(dither, DITHER_TO_INT16, FROM_FLOAT, dst, int16Sample, src, floatSample, len, stride)
-#define DITHER_FLOAT_TO_INT24(dither, dst, src, len, stride) \
-    DITHER_LOOP(dither, DITHER_TO_INT24, FROM_FLOAT, dst, int24Sample, src, floatSample, len, stride)
+#define DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len) \
+    DITHER_LOOP(dither, DITHER_TO_INT16, FROM_INT24, dst, int16Sample, dstStride, src, int24Sample, srcStride, len)
+#define DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len) \
+    DITHER_LOOP(dither, DITHER_TO_INT16, FROM_FLOAT, dst, int16Sample, dstStride, src, floatSample, srcStride, len)
+#define DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len) \
+    DITHER_LOOP(dither, DITHER_TO_INT24, FROM_FLOAT, dst, int24Sample, dstStride, src, floatSample, srcStride, len)
 
 // Implement a dither. There are only 3 cases where we must dither,
 // in all other cases, no dithering is necessary.
-#define DITHER(dither, dst, dstFormat, src, srcFormat, len, stride) \
+#define DITHER(dither, dst, dstFormat, dstStride, src, srcFormat, srcStride, len) \
     do { if (srcFormat == int24Sample && dstFormat == int16Sample) \
-        DITHER_INT24_TO_INT16(dither, dst, src, len, stride); \
+        DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
     else if (srcFormat == floatSample && dstFormat == int16Sample) \
-        DITHER_FLOAT_TO_INT16(dither, dst, src, len, stride); \
+        DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
     else if (srcFormat == floatSample && dstFormat == int24Sample) \
-        DITHER_FLOAT_TO_INT24(dither, dst, src, len, stride); \
+        DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len); \
     else { wxASSERT(false); } \
     } while (0)
 
@@ -228,31 +220,25 @@ void Dither::Reset()
 // This only decides if we must dither at all, the dithers
 // are all implemented using macros.
 //
-// "source" can contain interleaved or non-interleaved samples.  This is
-// controlled via the "stride" argument.
+// "source" and "dest" can contain either interleaved or non-interleaved
+// samples.  They do not have to be the same...one can be interleaved while
+// the otner non-interleaved.
 //
-// "dest" is always non-interleaved and should be large enough to hold "len"
-// samples in the "destFormat".
+// The "len" argument specifies the number of samples to process.
 //
-// The "len" argument specifies the number of "sourceFormat" samples to
-// process.
+// If either stride value equals 1 then the corresponding buffer contains
+// non-interleaved samples.
 //
-// In the case of a non-interleaved "source", this will usually equal the
-// number of samples in "source".
-//
-// With an interleaved "source", "source" should contain "stride" times "len"
-// samples.
-//
-// If the "stride" value is 1 then "source" contains non-interleaved samples.
-//
-// If the "stride" value is greater than 1 then "source" contains interleaved
-// samples and they will be processed by skipping every "stride" number of
-// samples.
+// If either stride value is greater than 1 then the corresponding buffer
+// contains interleaved samples and they will be processed by skipping every
+// stride number of samples.
 
 void Dither::Apply(enum DitherType ditherType,
                    const samplePtr source, sampleFormat sourceFormat,
                    samplePtr dest, sampleFormat destFormat,
-                   unsigned int len, unsigned int stride /* = 1 */)
+                   unsigned int len,
+                   unsigned int sourceStride /* = 1 */,
+                   unsigned int destStride /* = 1 */)
 {
     unsigned int i;
 
@@ -264,32 +250,47 @@ void Dither::Apply(enum DitherType ditherType,
     wxASSERT(source);
     wxASSERT(dest);
     wxASSERT(len >= 0);
-    wxASSERT(stride > 0);
+    wxASSERT(sourceStride > 0);
+    wxASSERT(destStride > 0);
 
     if (len == 0)
         return; // nothing to do
 
-    if (sourceFormat == destFormat)
+    if (destFormat == sourceFormat)
     {
         // No need to dither, because source and destination
         // format are the same. Just copy samples.
-        unsigned int srcBytes = SAMPLE_SIZE(destFormat);
-
-        if (stride == 1)
-            memcpy(dest, source, len * srcBytes);
+        if (destStride == 1 && sourceStride == 1)
+            memcpy(dest, source, len * SAMPLE_SIZE(destFormat));
         else
         {
-            samplePtr s = source;
-            samplePtr d = dest;
-
-            for (i = 0; i < len; i++)
+            if (sourceFormat == floatSample)
             {
-                memcpy(d, s, srcBytes);
-                s += stride * srcBytes;
-                d += srcBytes;
+                float* d = (float*)dest;
+                float* s = (float*)source;
+
+                for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+                    *d = *s;
+            } else
+            if (sourceFormat == int24Sample)
+            {
+                int* d = (int*)dest;
+                int* s = (int*)source;
+
+                for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+                    *d = *s;
+            } else
+            if (sourceFormat == int16Sample)
+            {
+                short* d = (short*)dest;
+                short* s = (short*)source;
+
+                for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+                    *d = *s;
+            } else {
+                wxASSERT(false); // source format unknown
             }
         }
-
     } else
     if (destFormat == floatSample)
     {
@@ -300,47 +301,43 @@ void Dither::Apply(enum DitherType ditherType,
         if (sourceFormat == int16Sample)
         {
             short* s = (short*)source;
-            for (i = 0; i < len; i++, d++, s+= stride)
+            for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                 *d = FROM_INT16(s);
         } else
         if (sourceFormat == int24Sample)
         {
             int* s = (int*)source;
-            for (i = 0; i < len; i++, d++, s+= stride)
+            for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                 *d = FROM_INT24(s);
         } else {
             wxASSERT(false); // source format unknown
         }
     } else
-    if (sourceFormat == int16Sample && destFormat == int24Sample)
+    if (destFormat == int24Sample && sourceFormat == int16Sample)
     {
         // Special case when promoting 16 bit to 24 bit
-        short* s = (short*)source;
         int* d = (int*)dest;
-        for (i = 0; i < len; i++)
-        {
+        short* s = (short*)source;
+        for (i = 0; i < len; i++, d += destStride, s += sourceStride)
             *d = ((int)*s) << 8;
-            s += stride;
-            d++;
-        }
     } else
     {
         // We must do dithering
         switch (ditherType)
         {
         case none:
-            DITHER(NoDither, dest, destFormat, source, sourceFormat, len, stride);
+            DITHER(NoDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case rectangle:
-            DITHER(RectangleDither, dest, destFormat, source, sourceFormat, len, stride);
+            DITHER(RectangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case triangle:
             Reset(); // reset dither filter for this new conversion
-            DITHER(TriangleDither, dest, destFormat, source, sourceFormat, len, stride);
+            DITHER(TriangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case shaped:
             Reset(); // reset dither filter for this new conversion
-            DITHER(ShapedDither, dest, destFormat, source, sourceFormat, len, stride);
+            DITHER(ShapedDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         default:
             wxASSERT(false); // unknown dither algorithm

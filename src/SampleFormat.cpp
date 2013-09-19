@@ -96,21 +96,23 @@ void CopySamples(samplePtr src, sampleFormat srcFormat,
                  samplePtr dst, sampleFormat dstFormat,
                  unsigned int len,
                  bool highQuality, /* = true */
-                 unsigned int stride /* = 1 */)
+                 unsigned int srcStride /* = 1 */,
+                 unsigned int dstStride /* = 1 */)
 {
    gDitherAlgorithm.Apply(
       highQuality ? gHighQualityDither : gLowQualityDither,
-      src, srcFormat, dst, dstFormat, len, stride);
+      src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
 }
 
 void CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                  samplePtr dst, sampleFormat dstFormat,
                  unsigned int len,
-                 unsigned int stride /* = 1 */)
+                 unsigned int srcStride /* = 1 */,
+                 unsigned int dstStride /* = 1 */)
 {
    gDitherAlgorithm.Apply(
       Dither::none,
-      src, srcFormat, dst, dstFormat, len, stride);
+      src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
 }
 
 // Indentation settings for Vim and Emacs and unique identifier for Arch, a
