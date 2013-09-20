@@ -122,10 +122,8 @@ simplifies construction of menu items.
 
 enum {
    kAlignZero = 0,
-   kAlignCursor,
    kAlignSelStart,
    kAlignSelEnd,
-   kAlignEndCursor,
    kAlignEndSelStart,
    kAlignEndSelEnd,
    // The next two are only in one subMenu, so more easily handled at the end.
@@ -731,15 +729,13 @@ void AudacityProject::CreateMenusAndCommands()
 
    wxArrayString alignLabelsNoSync;
    alignLabelsNoSync.Add(_("&Align End to End"));
-   alignLabelsNoSync.Add(_("Align Tracks To&gether")); // FIXME: Visibility of Access Key with descender.
+   alignLabelsNoSync.Add(_("Align Tracks &Together"));
    
    wxArrayString alignLabels;
    alignLabels.Add(_("Align with &Zero"));
-   alignLabels.Add(_("Align with &Cursor"));
-   alignLabels.Add(_("Align with Selection &Start")); // FIXME: Duplicate of 'Align with Cursor'.
+   alignLabels.Add(_("Align with Selection &Start"));
    alignLabels.Add(_("Align with Selection &End"));
-   alignLabels.Add(_("Align End with Cu&rsor"));
-   alignLabels.Add(_("Align End with Selection Star&t")); // FIXME: Duplicate of 'Align End with Cursor'.
+   alignLabels.Add(_("Align End with Selection Sta&rt"));
    alignLabels.Add(_("Align End with Selection En&d"));
    mAlignLabelsCount = alignLabels.GetCount();
 
@@ -4974,10 +4970,6 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       delta = -minOffset;
       action = _("Aligned with zero");
       break;
-   case kAlignCursor:
-      delta = mViewInfo.sel0 - minOffset;
-      action = _("Aligned cursor");
-      break;
    case kAlignSelStart:
       delta = mViewInfo.sel0 - minOffset;
       action = _("Aligned with selection start");
@@ -4985,10 +4977,6 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    case kAlignSelEnd:
       delta = mViewInfo.sel1 - minOffset;
       action = _("Aligned with selection end");
-      break;
-   case kAlignEndCursor:
-      delta = mViewInfo.sel0 - maxEndOffset;
-      action = _("Aligned end with cursor");
       break;
    case kAlignEndSelStart:
       delta = mViewInfo.sel0 - maxEndOffset;
