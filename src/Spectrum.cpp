@@ -18,21 +18,6 @@
 #include "Spectrum.h"
 #include "FFT.h"
 
-#if 1 //(UGLY_IEEE754_FLOAT32_HACK :-)
-
-static inline float todB_a(const float *x){
-  return (float)((*(wxInt32 *)x)&0x7fffffff) * 7.17711438e-7f -764.6161886f;
-}
-
-#else
-
-static inline float todB_a(const float *x){
-   return (*(x)==0?-400.f:logf(*(x)**(x))*4.34294480f);
-}
-
-#endif
-
-
 bool ComputeSpectrum(float * data, int width,
                      int windowSize,
                      double WXUNUSED(rate), float *output,
@@ -150,15 +135,4 @@ bool ComputeSpectrum(float * data, int width,
 
    return true;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 29527ca5-00d0-442d-afde-d699aee29a31
 
