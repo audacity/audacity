@@ -29,6 +29,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/Ruler.h"
+#include "Printing.h"
 
 // Globals, so that we remember settings from session to session
 wxPrintData *gPrintData = NULL;
