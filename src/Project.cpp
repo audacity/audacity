@@ -2282,7 +2282,7 @@ void AudacityProject::OpenFiles(AudacityProject *proj)
 
 // Most of this string was duplicated 3 places. Made the warning consistent in this global. 
 // The %s is to be filled with the version string.
-wxString gsLegacyFileWarning = 
+static wxString gsLegacyFileWarning = 
 _("This file was saved by Audacity version %s. The format has changed. \
 \n\nAudacity can try to open and save this file, but saving it in this \
 \nversion will then prevent any 1.2 or earlier version opening it. \

@@ -32,8 +32,8 @@
 #include "Printing.h"
 
 // Globals, so that we remember settings from session to session
-wxPrintData *gPrintData = NULL;
-wxPageSetupData *gPageSetupData = NULL;
+static wxPrintData *gPrintData = NULL;
+static wxPageSetupData *gPageSetupData = NULL;
 
 class AudacityPrintout : public wxPrintout
 {

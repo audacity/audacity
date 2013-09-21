@@ -7314,11 +7314,11 @@ wxString TrackPanel::TrackSubText(Track * t)
 
 /// Handle the menu options that change a track between
 /// left channel, right channel, and mono.
-int channels[] = { Track::LeftChannel, Track::RightChannel,
+static int channels[] = { Track::LeftChannel, Track::RightChannel,
    Track::MonoChannel
 };
 
-const wxChar *channelmsgs[] = { _("Left Channel"), _("Right Channel"),
+static const wxChar *channelmsgs[] = { _("Left Channel"), _("Right Channel"),
    _("Mono")
 };
 
@@ -7592,7 +7592,7 @@ const int nRates=12;
 
 ///  gRates MUST CORRESPOND DIRECTLY TO THE RATES AS LISTED IN THE MENU!!
 ///  IN THE SAME ORDER!!
-int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 88200, 96000,
+static int gRates[nRates] = { 8000, 11025, 16000, 22050, 44100, 48000, 88200, 96000,
                        176400, 192000, 352800, 384000 };
 
 /// This method handles the selection from the Rate

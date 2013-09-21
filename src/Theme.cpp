@@ -186,7 +186,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #include "AllThemeResources.h"
 
 // Include the ImageCache...
-unsigned char ImageCacheAsData[] = {
+static unsigned char ImageCacheAsData[] = {
 #include "ThemeAsCeeCode.h"
 };
 

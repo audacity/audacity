@@ -44,9 +44,9 @@
 #include "Prefs.h"
 #include "Dither.h"
 
-Dither::DitherType gLowQualityDither = Dither::none;
-Dither::DitherType gHighQualityDither = Dither::none;
-Dither gDitherAlgorithm;
+static Dither::DitherType gLowQualityDither = Dither::none;
+static Dither::DitherType gHighQualityDither = Dither::none;
+static Dither gDitherAlgorithm;
 
 void InitDitherers()
 {
