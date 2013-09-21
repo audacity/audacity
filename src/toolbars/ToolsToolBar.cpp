@@ -59,7 +59,8 @@ IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 
 // Strings to convert a tool number into a status message
 // These MUST be in the same order as the ids above.
-const wxChar * MessageOfTool[numTools] = { wxTRANSLATE("Click and drag to select audio"),
+static const wxChar * MessageOfTool[numTools] = {
+   wxTRANSLATE("Click and drag to select audio"),
    wxTRANSLATE("Click and drag to edit the amplitude envelope"),
    wxTRANSLATE("Click and drag to edit the samples"),
 #if defined( __WXMAC__ )
