@@ -1707,7 +1707,7 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
    }
 }
 
-float sumFreqValues(float *freq, int x0, float bin0, float bin1)
+static float sumFreqValues(float *freq, int x0, float bin0, float bin1)
 {
    float value;
    if (int(bin1) == int(bin0)) {

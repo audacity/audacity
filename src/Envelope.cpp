@@ -163,7 +163,7 @@ void Envelope::CopyFrom(const Envelope *e, double t0, double t1)
 
 /// Limit() limits a double value to a range.
 /// TODO: Move to a general utilities source file.
-double Limit( double Lo, double Value, double Hi )
+static double Limit( double Lo, double Value, double Hi )
 {
    if( Value < Lo )
       return Lo;
@@ -201,7 +201,7 @@ double Envelope::fromDB(double value) const
 }
 
 /// TODO: This should probably move to track artist.
-void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
+static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 {
    if (y >= 0 && y <= r.height) {
       wxRect circle(r.x + x, r.y + (top ? y - 1: y - 2), 4, 4);
@@ -1495,7 +1495,7 @@ void Envelope::print()
       printf( "(%.2f, %.2f)\n", mEnv[i]->GetT(), mEnv[i]->GetVal() );
 }
 
-void checkResult( int n, double a, double b )
+static void checkResult( int n, double a, double b )
 {
    if( (a-b > 0 ? a-b : b-a) > 0.0000001 )
    {

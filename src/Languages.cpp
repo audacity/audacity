@@ -42,7 +42,7 @@
 
 WX_DECLARE_STRING_HASH_MAP(wxString, LangHash);
 
-bool TranslationExists(wxArrayString &audacityPathList, wxString code)
+static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
 {
    wxArrayString results;   
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/audacity.mo"),

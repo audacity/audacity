@@ -82,7 +82,7 @@ public:
    FILE *mNewFile;
 };
 
-bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
+static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
 {
    wxString line;
    wxString kind;

@@ -263,7 +263,7 @@ public:
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
 #include "FFT.h"
-void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window, int len, float *out)
+static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window, int len, float *out)
 {
    int i;
    if(len > hFFT->Points*2)

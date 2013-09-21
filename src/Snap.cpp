@@ -18,7 +18,7 @@
 #include "WaveTrack.h"
 #include "widgets/TimeTextCtrl.h"
 
-int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
+static int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 {
    return (s1->t - s2->t > 0? 1 : -1);
 }

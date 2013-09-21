@@ -1345,7 +1345,7 @@ void LabelTrack::MayMoveLabel( int iLabel, int iEdge, double fNewTime)
 
 // Constrain function, as in processing/arduino.
 // returned value will be between min and max (inclusive).
-int Constrain( int value, int min, int max )
+static int Constrain( int value, int min, int max )
 {
    wxASSERT( min <= max );
    int result=value;

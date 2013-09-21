@@ -21,7 +21,7 @@
 
 
 
-wxString WrapText( const wxString & Text )
+static wxString WrapText( const wxString & Text )
 {
    return wxString(wxT(""))+
       wxT("<html><head></head>") +
@@ -30,7 +30,7 @@ wxString WrapText( const wxString & Text )
       wxT("</body></html>");
 }
 
-wxString Link( const wxString &Key, const wxString& Text )
+static wxString Link( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='innerlink:") +
@@ -40,7 +40,7 @@ wxString Link( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-wxString WikiLink( const wxString &Key, const wxString& Text )
+static wxString WikiLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='http://www.audacityteam.org/wiki/index.php?title=") +
@@ -50,7 +50,7 @@ wxString WikiLink( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-wxString FileLink( const wxString &Key, const wxString& Text )
+static wxString FileLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='") +
@@ -62,7 +62,7 @@ wxString FileLink( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-wxString HttpLink( const wxString &Key, const wxString& Text )
+static wxString HttpLink( const wxString &Key, const wxString& Text )
 {
    return wxString(wxT("")) +
       wxT("<a href='") +
@@ -73,7 +73,7 @@ wxString HttpLink( const wxString &Key, const wxString& Text )
       wxT("</a>");
 }
 
-wxString LinkExpand( const wxString & Text )
+static wxString LinkExpand( const wxString & Text )
 {
    wxString Temp = Text;
    int i,j,k;
@@ -177,7 +177,7 @@ wxString TitleText( const wxString & Key )
    return Key;
 }
 
-wxString HelpTextBuiltIn( const wxString & Key )
+static wxString HelpTextBuiltIn( const wxString & Key )
 {
    if(Key==wxT("welcome"))
    {
