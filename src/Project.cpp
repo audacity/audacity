@@ -677,7 +677,7 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 }
 
-wxString CreateUniqueName()
+static wxString CreateUniqueName()
 {
    static int count = 0;
    return wxDateTime::Now().Format(wxT("%Y-%m-%d %H-%M-%S")) +

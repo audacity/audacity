@@ -362,7 +362,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
 END_EVENT_TABLE()
 
 /// Makes a cursor from an XPM, uses CursorId as a fallback.
-wxCursor * MakeCursor( int CursorId, const char * pXpm[36],  int HotX, int HotY )
+static wxCursor * MakeCursor( int CursorId, const char * pXpm[36],  int HotX, int HotY )
 {
    wxCursor * pCursor;
 
@@ -8748,7 +8748,7 @@ LWSlider * TrackInfo::PanSlider(int trackIndex)
    return mPans[trackIndex - mSliderOffset];
 }
 
-TrackPanel * TrackPanelFactory(wxWindow * parent,
+static TrackPanel * TrackPanelFactory(wxWindow * parent,
    wxWindowID id,
    const wxPoint & pos,
    const wxSize & size,
