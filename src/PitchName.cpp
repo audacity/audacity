@@ -54,8 +54,8 @@ int PitchOctave(const double dMIDInote)
 }
 
 
-wxChar gPitchName[10];
-wxChar * pPitchName;
+static wxChar gPitchName[10];
+static wxChar * pPitchName;
 
 wxChar * PitchName(const double dMIDInote, const bool bWantFlats /* = false */)
 {

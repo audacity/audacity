@@ -51,7 +51,7 @@ typedef pwxWindow (*tPanelFn)(int);
 
 // This variable will hold the address of a subroutine in 
 // a DLL that can hijack the normal panel.
-tPanelFn pPanelHijack=NULL;
+static tPanelFn pPanelHijack=NULL;
 
 // Next two commented out lines are handy when investigating
 // strange DLL behaviour.  Instead of dynamic linking,
@@ -75,7 +75,7 @@ wxWindow * MakeHijackPanel()
 
 // This variable will hold the address of a subroutine in a DLL that
 // starts a thread and reads script commands.
-tpRegScriptServerFunc scriptFn;
+static tpRegScriptServerFunc scriptFn;
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 bool IsAllowedModule( wxString fname )

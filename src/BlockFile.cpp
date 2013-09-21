@@ -65,8 +65,8 @@ out.
 #define BLOCKFILE_DEBUG_OUTPUT(op, i)
 #endif
 
-const int headerTagLen = 20;
-char headerTag[headerTagLen + 1] = "AudacityBlockFile112";
+static const int headerTagLen = 20;
+static char headerTag[headerTagLen + 1] = "AudacityBlockFile112";
 
 SummaryInfo::SummaryInfo(sampleCount samples)
 {

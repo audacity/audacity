@@ -25,11 +25,11 @@ ODTask requests and internals.
 #include <wx/thread.h>
 #include <wx/event.h>
 
-ODLock gODInitedMutex;
-bool gManagerCreated=false;
-bool gPause=false; //to be loaded in and used with Pause/Resume before ODMan init.
+static ODLock gODInitedMutex;
+static bool gManagerCreated=false;
+static bool gPause=false; //to be loaded in and used with Pause/Resume before ODMan init.
 /// a flag that is set if we have loaded some OD blockfiles from PCM.
-bool sHasLoadedOD=false;
+static bool sHasLoadedOD=false;
 
 ODManager* ODManager::pMan=NULL;
 //init the accessor function pointer - use the first time version of the interface fetcher
@@ -38,7 +38,7 @@ typedef  ODManager* (*pfodman)();
 pfodman ODManager::Instance = &(ODManager::InstanceFirstTime);
 
 //libsndfile is not threadsafe - this deals with it
-ODLock sLibSndFileMutex;
+static ODLock sLibSndFileMutex;
 
 DEFINE_EVENT_TYPE(EVT_ODTASK_UPDATE)
 

@@ -232,7 +232,7 @@ static void wxOnAssert(const wxChar *fileName, int lineNumber, const wxChar *msg
 
 static wxFrame *gParentFrame = NULL;
 
-bool gInited = false;
+static bool gInited = false;
 bool gIsQuitting = false;
 
 void QuitAudacity(bool bForce)

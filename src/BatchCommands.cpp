@@ -51,7 +51,7 @@ enum eCommandType { CtEffect, CtMenu, CtSpecial };
 // TIDY-ME: Not currently translated, 
 // but there are issues to address if we do.
 // CLEANSPEECH remnant
-wxString SpecialCommands[] = {
+static wxString SpecialCommands[] = {
    wxT("NoAction"),
    // wxT("Import"),   // non-functioning
    wxT("ExportMP3_56k_before"),

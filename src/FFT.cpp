@@ -46,8 +46,8 @@
 
 #include "FFT.h"
 
-int **gFFTBitTable = NULL;
-const int MaxFastBits = 16;
+static int **gFFTBitTable = NULL;
+static const int MaxFastBits = 16;
 
 /* Declare Static functions */
 static int IsPowerOfTwo(int x);

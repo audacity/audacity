@@ -175,7 +175,7 @@ int sf_num_simple_formats()
    return count;
 }
 
-SF_FORMAT_INFO g_format_info;
+static SF_FORMAT_INFO g_format_info;
 
 SF_FORMAT_INFO *sf_simple_format(int i)
 {
