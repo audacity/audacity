@@ -3217,25 +3217,19 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
                                   float *outputBuffer,
                                   int len)
 {
-   float *tempBuffer = (float *)alloca(len * sizeof(float));
-   int i, j;
+   for (int i=0; i < inputChannels; i++) {
+      samplePtr inputPtr = ((samplePtr)inputBuffer) + (i * SAMPLE_SIZE(inputFormat));
+      samplePtr outputPtr = ((samplePtr)outputBuffer) + (i * SAMPLE_SIZE(floatSample));
 
-   for(j=0; j<inputChannels; j++) {
-      samplePtr inputPtr = ((samplePtr)inputBuffer) + (j * SAMPLE_SIZE(inputFormat));
-      
       CopySamples(inputPtr, inputFormat,
-                  (samplePtr)tempBuffer, floatSample,
-                  len, true, inputChannels);
-
-      for(i=0; i<len; i++)
-         outputBuffer[2*i + (j%2)] = tempBuffer[i];
-
-      // One mono input channel goes to both output channels...
-      if (inputChannels == 1)
-         for(i=0; i<len; i++)
-            outputBuffer[2*i + 1] = tempBuffer[i];
+                  (samplePtr)outputPtr, floatSample,
+                  len, true, inputChannels, 2);
    }
-   
+
+   // One mono input channel goes to both output channels...
+   if (inputChannels == 1)
+      for (int i=0; i < len; i++)
+         outputBuffer[2*i + 1] = outputBuffer[2*i];
 }
 
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
