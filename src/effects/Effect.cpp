@@ -53,6 +53,8 @@ wxString Effect::StripAmpersand(const wxString& str)
 {
    wxString strippedStr = str;
    strippedStr.Replace(wxT("&"), wxT(""));
+   // ! is used for hiding effects, and should not affect sort order.
+   strippedStr.Replace(wxT("!"), wxT(""));
    return strippedStr;
 }
 
