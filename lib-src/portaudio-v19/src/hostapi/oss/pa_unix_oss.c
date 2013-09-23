@@ -318,6 +318,13 @@ error:
     return result;
 }
 
+static int CalcHigherLogTwo( int n )
+{
+    int log2 = 0;
+    while( (1<<log2) < n ) log2++;
+    return log2;
+}
+
 static PaError QueryDirection( const char *deviceName, StreamMode mode, double *defaultSampleRate, int *maxChannelCount,
         double *defaultLowLatency, double *defaultHighLatency )
 {
@@ -327,6 +334,8 @@ static PaError QueryDirection( const char *deviceName, StreamMode mode, double *
     int devHandle = -1;
     int sr;
     *maxChannelCount = 0;  /* Default value in case this fails */
+    int temp, frgmt;
+    unsigned long fragFrames;
 
     if ( (devHandle = open( deviceName, (mode == StreamMode_In ? O_RDONLY : O_WRONLY) | O_NONBLOCK ))  < 0 )
     {
@@ -354,7 +363,7 @@ static PaError QueryDirection( const char *deviceName, StreamMode mode, double *
     maxNumChannels = 0;
     for( numChannels = 1; numChannels <= 16; numChannels++ )
     {
-        int temp = numChannels;
+        temp = numChannels;
         if( ioctl( devHandle, SNDCTL_DSP_CHANNELS, &temp ) < 0 )
         {
             busy = EAGAIN == errno || EBUSY == errno;
@@ -401,8 +410,8 @@ static PaError QueryDirection( const char *deviceName, StreamMode mode, double *
      * to a supported number of channels. SG20011005 */
     {
         /* use most reasonable default value */
-        int temp = PA_MIN( maxNumChannels, 2 );
-        ENSURE_( ioctl( devHandle, SNDCTL_DSP_CHANNELS, &temp ), paUnanticipatedHostError );
+        numChannels = PA_MIN( maxNumChannels, 2 );
+        ENSURE_( ioctl( devHandle, SNDCTL_DSP_CHANNELS, &numChannels ), paUnanticipatedHostError );
     }
 
     /* Get supported sample rate closest to 44100 Hz */
@@ -415,9 +424,21 @@ static PaError QueryDirection( const char *deviceName, StreamMode mode, double *
     }
 
     *maxChannelCount = maxNumChannels;
-    /* TODO */
-    *defaultLowLatency = 512. / *defaultSampleRate;
-    *defaultHighLatency = 2048. / *defaultSampleRate;
+
+    /* Attempt to set low latency with 4 frags-per-buffer, 128 frames-per-frag (total buffer 512 frames)
+     * since the ioctl sets bytes, multiply by numChannels, and base on 2 bytes-per-sample, */
+    fragFrames = 128;
+    frgmt = (4 << 16) + (CalcHigherLogTwo( fragFrames * numChannels * 2 ) & 0xffff);
+    ENSURE_( ioctl( devHandle, SNDCTL_DSP_SETFRAGMENT, &frgmt ), paUnanticipatedHostError );
+
+    /* Use the value set by the ioctl to give the latency achieved */
+    fragFrames = pow( 2, frgmt & 0xffff ) / (numChannels * 2);
+    *defaultLowLatency = ((frgmt >> 16) - 1) * fragFrames / *defaultSampleRate;
+
+    /* Cannot now try setting a high latency (device would need closing and opening again).  Make
+     * high-latency 4 times the low unless the fragFrames are significantly more than requested 128 */
+    temp = (fragFrames < 256) ? 4 : (fragFrames < 512) ? 2 : 1;
+    *defaultHighLatency = temp * *defaultLowLatency;
 
 error:
     if( devHandle >= 0 )
@@ -962,13 +983,6 @@ static unsigned long PaOssStreamComponent_BufferSize( PaOssStreamComponent *comp
     return PaOssStreamComponent_FrameSize( component ) * component->hostFrames * component->numBufs;
 }
 
-static int CalcHigherLogTwo( int n )
-{
-    int log2 = 0;
-    while( (1<<log2) < n ) log2++;
-    return log2;
-}
-
 /** Configure stream component device parameters.
  */
 static PaError PaOssStreamComponent_Configure( PaOssStreamComponent *component, double sampleRate, unsigned long
@@ -995,8 +1009,9 @@ static PaError PaOssStreamComponent_Configure( PaOssStreamComponent *component, 
          */
         if( framesPerBuffer == paFramesPerBufferUnspecified )
         {
-            bufSz = (unsigned long)(component->latency * sampleRate);
-            fragSz = bufSz / 4;
+            /* Aim for 4 fragments in the complete buffer; the latency comes from 3 of these */
+            fragSz = (unsigned long)(component->latency * sampleRate / 3);
+            bufSz = fragSz * 4;
         }
         else
         {

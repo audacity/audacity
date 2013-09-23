@@ -208,7 +208,7 @@ case "${host_os}" in
         LIBS="-framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon"
 
         if test "x$enable_mac_universal" = "xyes" ; then
-           case "xcodebuild -version | sed -n 's/Xcode \(.*\)/\1/p'" in
+           case `xcodebuild -version | sed -n 's/Xcode \(.*\)/\1/p'` in
 
            [12]*|3.0|3.1)
               dnl In pre-3.2 versions of Xcode, xcodebuild doesn't

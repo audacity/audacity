@@ -238,7 +238,7 @@ PaError PaUtil_InitializeBufferProcessor( PaUtilBufferProcessor* bp,
         bp->inputConverter =
             PaUtil_SelectConverter( hostInputSampleFormat, userInputSampleFormat, tempInputStreamFlags );
 
-        bp->inputZeroer = PaUtil_SelectZeroer( hostInputSampleFormat );
+        bp->inputZeroer = PaUtil_SelectZeroer( userInputSampleFormat );
             
         bp->userInputIsInterleaved = (userInputSampleFormat & paNonInterleaved)?0:1;
 		

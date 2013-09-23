@@ -255,7 +255,7 @@ static int paqaCheckMultipleSuggested( PaDeviceIndex deviceIndex, int isInput )
     {
         numLoops = 1;
     }
-	
+
     for( i=0; i<numLoops; i++ )
     {   
         if( numLoops == 1 )
@@ -361,15 +361,15 @@ static int paqaVerifyDeviceInfoLatency( void )
             printf("  Output defaultHighOutputLatency = %f seconds\n", pdi->defaultHighOutputLatency);
             QA_ASSERT_TRUE( "defaultLowOutputLatency should be > 0", (pdi->defaultLowOutputLatency > 0.0) );
             QA_ASSERT_TRUE( "defaultHighOutputLatency should be > 0", (pdi->defaultHighOutputLatency > 0.0) );
-            //QA_ASSERT_TRUE( "defaultHighOutputLatency should be > Low", (pdi->defaultHighOutputLatency > pdi->defaultLowOutputLatency) );
+            QA_ASSERT_TRUE( "defaultHighOutputLatency should be >= Low", (pdi->defaultHighOutputLatency >= pdi->defaultLowOutputLatency) );
         }
         if( pdi->maxInputChannels > 0 )
         {
-            printf("  Input defaultLowOutputLatency  = %f seconds\n", pdi->defaultLowInputLatency);
-            printf("  Input defaultHighOutputLatency = %f seconds\n", pdi->defaultHighInputLatency);
-            QA_ASSERT_TRUE( "defaultLowOutputLatency should be > 0", (pdi->defaultLowInputLatency > 0.0) );
-            QA_ASSERT_TRUE( "defaultHighOutputLatency should be > 0", (pdi->defaultHighInputLatency > 0.0) );
-            //QA_ASSERT_TRUE( "defaultHighOutputLatency should be > Low", (pdi->defaultHighInputLatency > pdi->defaultLowInputLatency) );
+            printf("  Input defaultLowInputLatency  = %f seconds\n", pdi->defaultLowInputLatency);
+            printf("  Input defaultHighInputLatency = %f seconds\n", pdi->defaultHighInputLatency);
+            QA_ASSERT_TRUE( "defaultLowInputLatency should be > 0", (pdi->defaultLowInputLatency > 0.0) );
+            QA_ASSERT_TRUE( "defaultHighInputLatency should be > 0", (pdi->defaultHighInputLatency > 0.0) );
+            QA_ASSERT_TRUE( "defaultHighInputLatency should be >= Low", (pdi->defaultHighInputLatency >= pdi->defaultLowInputLatency) );
         }
     }
     return 0;
