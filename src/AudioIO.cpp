@@ -3570,44 +3570,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
          if (len > 0) {
             for( t = 0; t < numCaptureChannels; t++) {
-               
-               // dmazzoni:
-               // Un-interleave.  Ugly special-case code required because the
-               // capture channels could be in three different sample formats;
-               // it'd be nice to be able to call CopySamples, but it can't
-               // handle multiplying by the gain and then clipping.  Bummer.
-
-               switch(gAudioIO->mCaptureFormat) {
-               case floatSample: {
-                  float *inputFloats = (float *)inputBuffer;
-                  for( i = 0; i < len; i++)
-                     tempFloats[i] =
-                        inputFloats[numCaptureChannels*i+t];
-               } break;
-               case int24Sample:
-                  // We should never get here. Audacity's int24Sample format
-                  // is different from PortAudio's sample format and so we
-                  // make PortAudio return float samples when recording in
-                  // 24-bit samples.
-                  wxASSERT(false);
-                  break;
-               case int16Sample: {
-                  short *inputShorts = (short *)inputBuffer;
-                  short *tempShorts = (short *)tempBuffer;
-                  for( i = 0; i < len; i++) {
-                     float tmp = inputShorts[numCaptureChannels*i+t];
-                     if (tmp > 32767)
-                        tmp = 32767;
-                     if (tmp < -32768)
-                        tmp = -32768;
-                     tempShorts[i] = (short)(tmp);
-                  }
-               } break;
-               } // switch
-               
-               gAudioIO->mCaptureBuffers[t]->Put((samplePtr)tempBuffer,
+               gAudioIO->mCaptureBuffers[t]->Put(((samplePtr)inputBuffer) + (t * SAMPLE_SIZE(gAudioIO->mCaptureFormat)),
                                                  gAudioIO->mCaptureFormat,
-                                                 len);
+                                                 len,
+                                                 numCaptureChannels);
             }
          }
       }
