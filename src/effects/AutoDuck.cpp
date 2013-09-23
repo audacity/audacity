@@ -939,16 +939,6 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent &evt)
 
       if (mControlPointMoveActivated)
       {
-         int dist;
-         
-         if (mCurrentControlPoint == duckAmount)
-            dist = abs(evt.GetY() -
-               mMoveStartControlPoints[mCurrentControlPoint].y);
-         else
-            dist = abs(evt.GetX() -
-               mMoveStartControlPoints[mCurrentControlPoint].x);
-         // TODO: Get rid of unused 'dist' var within this scope?
-
          float newValue;
          
          switch (mCurrentControlPoint)

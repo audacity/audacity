@@ -30,17 +30,6 @@
 #include "../Menus.h"
 #include "../toolbars/ToolManager.h"
 
-#define ChainsListID             7005
-#define AddButtonID              7006
-#define RemoveButtonID           7007
-#define CommandsListID           7008
-#define ImportButtonID           7009
-#define ExportButtonID           7010
-#define DefaultsButtonID         7011
-#define UpButtonID               7012
-#define DownButtonID             7013
-#define RenameButtonID           7014
-
 BEGIN_EVENT_TABLE(BatchPrefs, wxPanel)
 END_EVENT_TABLE()
 

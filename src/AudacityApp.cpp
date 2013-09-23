@@ -563,8 +563,6 @@ class GnomeShutdown
    GnomeClient *mClient;
 };
 
-GnomeShutdown GnomeShutdownInstance;
-
 #endif
 
 #if defined(__WXMSW__)

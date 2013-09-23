@@ -171,11 +171,6 @@ void EffectNoise::Success()
 // NoiseDialog
 //----------------------------------------------------------------------------
 
-#define FREQ_MIN 1
-#define FREQ_MAX 20000
-#define AMP_MIN 0
-#define AMP_MAX 1
-
 BEGIN_EVENT_TABLE(NoiseDialog, EffectDialog)
     EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, NoiseDialog::OnTimeCtrlUpdate)
 END_EVENT_TABLE()

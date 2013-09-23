@@ -509,7 +509,6 @@ void EffectTruncSilence::BlendFrames(float* buffer, int blendFrameCount, int lef
 #define ID_SHORTEST_SILENCE_TEXT   7000
 #define ID_LONGEST_SILENCE_TEXT   7001
 #define ID_COMPRESS_FACTOR   7002
-#define ID_DB_SILENCE_THRESHOLD_CHOICE 7003
 
 BEGIN_EVENT_TABLE(TruncSilenceDialog, EffectDialog)
     EVT_BUTTON(ID_EFFECT_PREVIEW, TruncSilenceDialog::OnPreview)

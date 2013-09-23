@@ -34,7 +34,6 @@
 #include "Internat.h"
 #include "Prefs.h"
 
-#define MAX_PROG 1000
 #define TIMER_ID 7000
 
 enum { // control IDs

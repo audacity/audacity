@@ -5587,12 +5587,6 @@ void AudacityProject::OnEditLabels()
    }
 }
 
-// #define PRESET_FORMAT 20050501
-#define PRESET_FORMAT 20050428
-// #define PRESET_COUNT  16
-#define PRESET_COUNT  14
-
-
 void AudacityProject::OnApplyChain()
 {
    BatchProcessDialog dlg(this);

@@ -316,8 +316,10 @@ writing audio.
    #include "NoteTrack.h"
 #endif
 
-#define LOWER_BOUND 0.0
-#define UPPER_BOUND 1.0
+#ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   #define LOWER_BOUND 0.0
+   #define UPPER_BOUND 1.0
+#endif
 
 using std::max;
 using std::min;

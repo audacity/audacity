@@ -2366,7 +2366,6 @@ const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def
   }
   return def;
 }
-#endif // USE_MIDI
 
 #define TIME_TO_X(t) (r.x + (int) (((t) - h) * pps))
 #define X_TO_TIME(xx) (((xx) - r.x) / pps + h)
@@ -2387,8 +2386,6 @@ const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def
 #define BLUE(i) ( unsigned char )( ((i) & 0xff) )
 
 //#define PITCH_TO_Y(p) (r.y + r.height - int(pitchht * ((p) + 0.5 - pitch0) + 0.5))
-
-#ifdef USE_MIDI
 
 /*
 int PitchToY(double p, int bottom)

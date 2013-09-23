@@ -75,7 +75,6 @@ static void WriteExportFormatPref(int format)
 // ExportPCMOptions Class
 //----------------------------------------------------------------------------
 
-#define ID_FORMAT_CHOICE           7101
 #define ID_HEADER_CHOICE           7102
 #define ID_ENCODING_CHOICE         7103
 
