@@ -62,15 +62,3 @@ void PasteSubImage( wxImage * pDest, wxImage * pSrc, int x, int y );
 
 // Gets a rectangle from within anothe rimage, INCLUDING the alpha channel
 wxImage GetSubImageWithAlpha( const wxImage & Src,  const wxRect &rect );
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: ed935217-c636-4196-8af8-526e5a831841
-

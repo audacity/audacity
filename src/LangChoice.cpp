@@ -138,15 +138,3 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 
    EndModal(true);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 16ac4580-c6b2-4ba7-bcaf-b026f2d58cdb
-

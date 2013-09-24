@@ -142,14 +142,3 @@ double StepTimeWarper::Warp(double originalTime) const
 {
    return originalTime + ((originalTime > mTStep) ? mOffset : 0.0);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: TBD

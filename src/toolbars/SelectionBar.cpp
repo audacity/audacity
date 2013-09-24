@@ -565,15 +565,3 @@ void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
 
    return;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 147df354-77ae-4620-a8e1-9598a695548b
-

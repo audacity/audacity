@@ -26,16 +26,3 @@
 */
 int RawAudioGuess(const wxString &in_fname,
                   int *out_offset, int *out_channels);
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: e51391e7-bc24-4dc6-84bc-95ac04221a95
-

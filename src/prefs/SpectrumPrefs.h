@@ -62,15 +62,3 @@ class SpectrumPrefs:public PrefsPanel
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: d68b1a74-12e3-49a5-a50b-3ba6fe65b40b
-

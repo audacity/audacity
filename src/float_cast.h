@@ -129,18 +129,3 @@
 	#define	lrintf(flt)		((int)rint(flt))
 
 #endif
-
-
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: eb277b71-5007-4c12-bb35-20f940c50c40
-

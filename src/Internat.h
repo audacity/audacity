@@ -108,15 +108,3 @@ private:
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 14ff0c8a-5ad9-46e2-8162-76f9e9382186
-

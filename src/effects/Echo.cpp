@@ -262,15 +262,3 @@ void EchoDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    m_pEffect->delay = oldDelay;
    m_pEffect->decay = oldDecay;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 1c174e3a-7748-4045-8066-b394189a7ba7
-

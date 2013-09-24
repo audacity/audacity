@@ -322,15 +322,3 @@ private:
 };
 
 #endif //define __AUDACITY_RULER__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 420f6c32-664f-4614-b922-307d9027432c
-

@@ -117,9 +117,3 @@ const wxChar *WindowFuncName(int whichFunction);
 int NumWindowFuncs();
 
 void DeinitFFT();
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3

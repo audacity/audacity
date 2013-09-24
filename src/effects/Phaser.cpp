@@ -577,15 +577,3 @@ void PhaserDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    mEffect->stages = old_stages;
    mEffect->drywet = old_drywet;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 7021285f-5534-4e79-bc47-c60cf4bd0f87
-

@@ -393,15 +393,3 @@ inline float Dither::ShapedDither(float sample)
 
     return result;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 5396bd17-2b4a-4917-96da-b2a89e494336
-

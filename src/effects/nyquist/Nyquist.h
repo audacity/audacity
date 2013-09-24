@@ -261,16 +261,3 @@ class NyquistOutputDialog:public wxDialog
 
 
 #endif
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 869e264a-73b8-4c7b-ad9a-c66168e57ee5
-

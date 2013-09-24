@@ -1202,14 +1202,3 @@ void ToolManager::OnGrabber( GrabberEvent & event )
    mLastState = wxGetKeyState( WXK_SHIFT );
    mTimer.Start( 100 );
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 2f4ec75c-bdb7-4889-96d-5d00abc41027

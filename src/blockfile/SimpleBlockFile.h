@@ -94,16 +94,3 @@ class SimpleBlockFile : public BlockFile {
 };
 
 #endif
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 58e2a052-2894-4c0c-b35d-0a08b3c61cd7
-

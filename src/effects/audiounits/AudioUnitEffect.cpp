@@ -945,14 +945,3 @@ void AudioUnitDialog::OnPreview(wxCommandEvent &event)
 {
    mEffect->Preview();
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 21aef079-ec47-4ff9-a359-7d159e2ba0e6

@@ -44,13 +44,3 @@ public:
 };
 
 #endif // __AUDACITY_ATTACHABLE_SCROLL_BAR__
-
-// Indentation settings for Vim and Emacs
-// Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-
-

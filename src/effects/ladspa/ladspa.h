@@ -601,15 +601,3 @@ typedef const LADSPA_Descriptor *
 #endif /* LADSPA_INCLUDED */
 
 /* EOF */
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 56fbe96a-2746-4896-b96f-51070e7a7842
-

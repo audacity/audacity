@@ -112,15 +112,3 @@ class LadspaEffectDialog:public wxDialog {
    LadspaEffect *effect;
    wxTextCtrl *mSeconds;
 };
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: d8622b59-5c08-4e7f-a170-2502ff8af8e5
-

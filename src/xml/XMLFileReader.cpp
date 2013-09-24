@@ -138,15 +138,3 @@ void XMLFileReader::charHandler(void *userData, const char *s, int len)
    if (This->mHandler[This->mDepth])
       This->mHandler[This->mDepth]->ReadXMLContent(s, len);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 0a51946d-5a9f-46c9-92d9-ee09698a9bc3
-

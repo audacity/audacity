@@ -109,17 +109,3 @@ wxArrayString sf_get_all_extensions();
 
 OSType sf_header_mactype(int format);
 #endif
-
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 3c08a99b-ab07-4f87-bd07-e111a93b7a26
-

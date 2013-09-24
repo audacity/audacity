@@ -610,16 +610,3 @@ bool SimpleBlockFile::GetCache()
    return false;
 #endif
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 606f2b69-1fda-40a3-88e6-06ff91d708c2
-
-

@@ -391,16 +391,3 @@ bool InvertMatrix(const Matrix& input, Matrix& Minv)
 
    return true;
 }
-
-// Indentation settings for Vim and Emacs.
-// Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// 
-
-

@@ -1452,14 +1452,3 @@ void UploadDialog::UpdateSiteList (void)
     }
 
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 4
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=4 sw=4
-

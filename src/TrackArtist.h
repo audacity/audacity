@@ -248,15 +248,3 @@ extern int GetWaveYPos(float value, float min, float max,
                        bool clip);
 
 #endif                          // define __AUDACITY_TRACKARTIST__
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: cb734132-2712-4d57-9644-778dae6d3c50
-

@@ -261,15 +261,3 @@ class AUDACITY_DLL_API LabelTrack : public Track
 };
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: fa157f82-b858-406d-9d4b-120d89410f11
-

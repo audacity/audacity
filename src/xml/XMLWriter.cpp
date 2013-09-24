@@ -381,14 +381,3 @@ void XMLStringWriter::Write(const wxString &data)
 {
    Append(data);
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 391b08e6-61f4-43ea-8431-c835c31ba86d

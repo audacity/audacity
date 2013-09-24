@@ -512,15 +512,3 @@ LOFImportFileHandle::~LOFImportFileHandle()
       delete mLOFFileName;
    }
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: c29bc0ff-c8ca-470d-913e-02a465248052
-

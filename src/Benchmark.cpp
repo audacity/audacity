@@ -541,18 +541,3 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/GUI/EditClipCanMove"), editClipCanMove);
    gPrefs->Flush();
 }
-
-
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 79fba2fd-f170-46cb-a781-8dca643f7cf4
-

@@ -1823,15 +1823,3 @@ wxAccStatus ASliderAx::GetValue(int childId, wxString* strValue)
 }
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 0030c06f-7a62-40eb-b833-0a9fb96d1f55
-

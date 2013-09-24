@@ -104,12 +104,3 @@ void AttachableScrollBar::OnScroll(wxScrollEvent & event)
    SetViewInfoFromScrollBar();
    event.Skip(); // This is so that the parent control can refresh whatever it needs to...
 }
-
-// Indentation settings for Vim and Emacs
-// Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-

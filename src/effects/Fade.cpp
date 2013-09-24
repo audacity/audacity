@@ -62,15 +62,3 @@ bool EffectFadeOut::ProcessSimpleMono(float *buffer, sampleCount len)
 
    return true;
 }
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: cd703234-7ddd-4d78-b878-2847d0f014a4
-

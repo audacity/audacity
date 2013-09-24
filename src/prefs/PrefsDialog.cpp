@@ -303,16 +303,3 @@ void PrefsDialog::ShowTempDirPage()
 {
    SelectPageByName(_("Directories"));   
 }
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: b305b538-1d2e-4acf-a997-95023d10a7bd
-

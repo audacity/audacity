@@ -66,15 +66,3 @@ class EffectSoundTouch:public Effect {
 #endif
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 6f08259e-6cac-4c47-9aa5-1de7b68eb495
-

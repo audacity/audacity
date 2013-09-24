@@ -553,16 +553,3 @@ enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stre
 
 
 #endif                          /* defined(USE_LIBMAD) */
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 7730c4d7-06d3-4c4e-b558-d303a19ee8f0
-

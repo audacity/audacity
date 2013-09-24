@@ -494,15 +494,3 @@ void ChangeTempoDialog::Update_Text_ToLength()
 }
 
 #endif // USE_SOUNDTOUCH
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 1a049a55-47b1-44d3-ba79-bb925f8e7b93
-

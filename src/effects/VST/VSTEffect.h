@@ -125,16 +125,3 @@ class VSTEffect:public Effect
 void RegisterVSTEffects();
 
 #endif // USE_VST
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: a652b5be-4fec-414d-bc04-82cfed5687d9
-
