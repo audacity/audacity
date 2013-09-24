@@ -1922,7 +1922,7 @@ wxArrayLong AudioIO::GetSupportedPlaybackRates(int devIndex, double rate)
 
    // Check if we can use the cached rates
    if (mCachedPlaybackIndex != -1 && devIndex == mCachedPlaybackIndex
-         && rate == 0.0)
+         && (rate == 0.0 || mCachedPlaybackRates.Index(rate) != wxNOT_FOUND))
    {
       return mCachedPlaybackRates;
    }
@@ -1983,7 +1983,7 @@ wxArrayLong AudioIO::GetSupportedCaptureRates(int devIndex, double rate)
 
    // Check if we can use the cached rates
    if (mCachedCaptureIndex != -1 && devIndex == mCachedCaptureIndex
-         && rate == 0.0)
+         && (rate == 0.0 || mCachedCaptureRates.Index(rate) != wxNOT_FOUND))
    {
       return mCachedCaptureRates;
    }
@@ -2054,7 +2054,7 @@ wxArrayLong AudioIO::GetSupportedSampleRates(int playDevice, int recDevice, doub
    if (mCachedPlaybackIndex != -1 && mCachedCaptureIndex != -1 && 
          playDevice == mCachedPlaybackIndex &&
          recDevice == mCachedCaptureIndex &&
-         rate == 0.0)
+         (rate == 0.0 || mCachedSampleRates.Index(rate) != wxNOT_FOUND))
    {
       return mCachedSampleRates;
    }
