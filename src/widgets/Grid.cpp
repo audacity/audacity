@@ -306,8 +306,15 @@ void ChoiceEditor::BeginEdit(int row, int col, wxGrid* grid)
 bool ChoiceEditor::EndEdit(int row, int col,
                            wxGrid* grid)
 {
-   wxString val = mChoices[Choice()->GetSelection()];
+   int sel = Choice()->GetSelection();
 
+   // This can happen if the wxChoice control is displayed and the list of choices get changed
+   if (sel < 0 || sel >= mChoices.GetCount())
+   {
+      return false;
+   }
+
+   wxString val = mChoices[sel];
    if (val == mOld)
       return false;
 

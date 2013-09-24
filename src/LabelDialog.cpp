@@ -336,10 +336,8 @@ bool LabelDialog::TransferDataFromWindow()
          return false;
 
       // Add the label to it
-      if (!rd->title.IsEmpty()) {
-         ((LabelTrack *) t)->AddLabel(rd->stime, rd->etime, rd->title);
-         ((LabelTrack *) t)->Unselect();
-      }
+      ((LabelTrack *) t)->AddLabel(rd->stime, rd->etime, rd->title);
+      ((LabelTrack *) t)->Unselect();
    }
 
    return true;
@@ -355,17 +353,6 @@ bool LabelDialog::Validate()
       mGrid->SaveEditControlValue();
    }
 
-   for (i = 0; i < cnt; i++) {
-      if (mData[i]->title.IsEmpty()) {
-         int id = wxMessageBox(_("You have left blank label names.  These will be\nskipped when repopulating the Label Tracks.\n\nWould you like to go back and provide names?"),
-                               _("Confirm"),
-                               wxYES_NO | wxICON_EXCLAMATION);
-         if (id == wxYES) {
-            return false;
-         }
-      }
-   }
-   
    return true;
 }
 
@@ -500,6 +487,7 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
 
    // Remove the row
    RowData *rd = mData[row];
+   mTrackNames.RemoveAt(rd->index);
    mData.RemoveAt(row);
    delete rd;
 
@@ -511,6 +499,14 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
       row--;
    }
    mGrid->SetGridCursor(row, col);
+
+   // Make sure focus isn't lost
+   if (mData.GetCount() == 0 && wxWindow::FindFocus() == mGrid->GetGridWindow()) {
+      wxWindow *ok = wxWindow::FindWindowById( wxID_OK, this);
+      if (ok) {
+         ok->SetFocus();
+      }
+   }
 }
 
 void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
@@ -650,9 +646,9 @@ void LabelDialog::OnSelectCell(wxGridEvent &event)
       rd = mData[event.GetRow()];
       mViewInfo->sel0 = rd->stime;
       mViewInfo->sel1 = rd->etime;
-   }
 
-   GetActiveProject()->RedrawProject();
+      GetActiveProject()->RedrawProject();
+   }
 
    event.Skip();
 }
