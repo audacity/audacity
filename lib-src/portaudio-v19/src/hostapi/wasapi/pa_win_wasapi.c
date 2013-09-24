@@ -1608,6 +1608,32 @@ int PaWasapi_IsLoopback( PaDeviceIndex nDevice )
 }
 
 // ------------------------------------------------------------------------------------------
+const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s )
+{
+    PaWasapiStream *stream = (PaWasapiStream *)s;
+    if (stream == NULL)
+        return NULL;
+	
+    if (stream->in.params.device_info)
+        return stream->in.params.device_info->szDeviceID;
+
+    return NULL;
+}
+
+// ------------------------------------------------------------------------------------------
+const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s )
+{
+    PaWasapiStream *stream = (PaWasapiStream *)s;
+    if (stream == NULL)
+        return NULL;
+
+    if (stream->out.params.device_info)
+        return stream->out.params.device_info->szDeviceID;
+
+    return NULL;
+}
+
+// ------------------------------------------------------------------------------------------
 PaError PaWasapi_GetFramesPerHostBuffer( PaStream *pStream, unsigned int *nInput, unsigned int *nOutput )
 {
     PaWasapiStream *stream = (PaWasapiStream *)pStream;

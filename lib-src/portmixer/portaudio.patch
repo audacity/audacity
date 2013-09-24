@@ -341,3 +341,58 @@ diff -wruN portaudio/src/hostapi/oss/pa_unix_oss.c portaudio-v19/src/hostapi/oss
 +
 +   return NULL;
 +}
+diff -wruN orig/portaudio-v19/include/pa_win_wasapi.h portaudio-v19/include/pa_win_wasapi.h
+--- orig/portaudio-v19/include/pa_win_wasapi.h	2013-09-23 23:44:18.192843200 -0500
++++ portaudio-v19/include/pa_win_wasapi.h	2013-09-23 23:47:03.705310000 -0500
+@@ -272,6 +272,15 @@
+ */
+ int PaWasapi_IsLoopback( PaDeviceIndex nDevice );
+ 
++/** Returns Windows device ID.
++
++ @param nDevice device index.
++
++ @return 0 = Not loopback, 1 = loopback, < 0 = PaErrorCode
++         if PortAudio is not initialized or an error is encountered.
++*/
++const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s );
++const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s );
+ 
+ /** Boost thread priority of calling thread (MMCSS). Use it for Blocking Interface only for thread
+     which makes calls to Pa_WriteStream/Pa_ReadStream.
+diff -wruN orig/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c
+--- orig/portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c	2013-09-23 23:44:15.266675900 -0500
++++ portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c	2013-09-23 23:47:03.709310200 -0500
+@@ -1608,6 +1608,32 @@
+ }
+ 
+ // ------------------------------------------------------------------------------------------
++const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s )
++{
++    PaWasapiStream *stream = (PaWasapiStream *)s;
++    if (stream == NULL)
++        return NULL;
++	
++    if (stream->in.params.device_info)
++        return stream->in.params.device_info->szDeviceID;
++
++    return NULL;
++}
++
++// ------------------------------------------------------------------------------------------
++const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s )
++{
++    PaWasapiStream *stream = (PaWasapiStream *)s;
++    if (stream == NULL)
++        return NULL;
++
++    if (stream->out.params.device_info)
++        return stream->out.params.device_info->szDeviceID;
++
++    return NULL;
++}
++
++// ------------------------------------------------------------------------------------------
+ PaError PaWasapi_GetFramesPerHostBuffer( PaStream *pStream, unsigned int *nInput, unsigned int *nOutput )
+ {
+     PaWasapiStream *stream = (PaWasapiStream *)pStream;

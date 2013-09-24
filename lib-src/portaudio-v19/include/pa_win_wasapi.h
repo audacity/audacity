@@ -272,6 +272,15 @@ int/*PaWasapiDeviceRole*/ PaWasapi_GetDeviceRole( PaDeviceIndex nDevice );
 */
 int PaWasapi_IsLoopback( PaDeviceIndex nDevice );
 
+/** Returns Windows device ID.
+
+ @param nDevice device index.
+
+ @return 0 = Not loopback, 1 = loopback, < 0 = PaErrorCode
+         if PortAudio is not initialized or an error is encountered.
+*/
+const wchar_t *PaWasapi_GetInputDeviceID( PaStream* s );
+const wchar_t *PaWasapi_GetOutputDeviceID( PaStream* s );
 
 /** Boost thread priority of calling thread (MMCSS). Use it for Blocking Interface only for thread
     which makes calls to Pa_WriteStream/Pa_ReadStream.

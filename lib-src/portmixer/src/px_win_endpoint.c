@@ -240,6 +240,80 @@ fail:
    return cleanup(Px);
 }
 
+int open_ep_mixers_byid(px_mixer *Px, wchar_t *deviceIn, wchar_t *deviceOut)
+{
+   PxEPInfo *info;
+   IMMDeviceEnumerator *denum = NULL;
+   IMMDevice *device = NULL;
+   HRESULT hr;
+   MMRESULT res;
+   LPWSTR idStr;
+   size_t idLen;
+
+   if (!initialize(Px)) {
+      goto fail;
+   }
+
+   info = (PxEPInfo *) Px->info;
+   info->inputEP = NULL;
+   info->outputEP = NULL;
+
+   // Create an audio endpoint device enumerator.
+   hr = CoCreateInstance(&CLSID_MMDeviceEnumerator,
+                         NULL,
+                         CLSCTX_ALL,
+                         &IID_IMMDeviceEnumerator,
+                         &denum);
+   if (FAILED(hr)) {
+      goto fail;
+   }
+
+   if (deviceIn) {
+      hr = IMMDeviceEnumerator_GetDevice(denum, deviceIn, &device);
+      if (SUCCEEDED(hr)) {
+         hr = IMMDevice_Activate(device,
+                                 &IID_IAudioEndpointVolume,
+                                 CLSCTX_ALL,
+                                 NULL,
+                                 &info->inputEP);
+         IUnknown_Release(device);
+      }
+
+      if (FAILED(hr)) {
+         goto fail;
+      }
+   }
+
+   if (deviceOut) {
+      hr = IMMDeviceEnumerator_GetDevice(denum, deviceOut, &device);
+      if (SUCCEEDED(hr)) {
+         hr = IMMDevice_Activate(device,
+                                 &IID_IAudioEndpointVolume,
+                                 CLSCTX_ALL,
+                                 NULL,
+                                 &info->outputEP);
+         IUnknown_Release(device);
+      }
+
+      if (FAILED(hr)) {
+         goto fail;
+      }
+   }
+
+   if (denum) {
+      IUnknown_Release(denum);
+   }
+
+   return TRUE;
+
+fail:
+   if (denum) {
+      IUnknown_Release(denum);
+   }
+
+   return cleanup(Px);
+}
+
 
 static int initialize(px_mixer *Px)
 {
@@ -317,53 +391,15 @@ static const char *get_mixer_name(px_mixer *Px, int i)
    return NULL;
 }
 
-static PxVolume VolumeFunction(HMIXEROBJ hMixer, DWORD controlID, PxVolume volume)
-{
-   MIXERCONTROLDETAILS details;
-   MMRESULT result;
-   MIXERCONTROLDETAILS_UNSIGNED value;
-
-   if (hMixer == NULL) {
-      return -1.0;
-   }
-   
-   memset(&value, 0, sizeof(MIXERCONTROLDETAILS_UNSIGNED));
-   
-   details.cbStruct = sizeof(MIXERCONTROLDETAILS);
-   details.dwControlID = controlID;
-   details.cChannels = 1; /* all channels */
-   details.cMultipleItems = 0;
-   details.cbDetails = sizeof(MIXERCONTROLDETAILS_UNSIGNED);
-   details.paDetails = &value;
-
-   if (volume < 0.0) {
-      result = mixerGetControlDetails(hMixer,
-                                      &details,
-                                      MIXER_GETCONTROLDETAILSF_VALUE);
-      if (result != MMSYSERR_NOERROR)
-         return -1.0;
-      
-      return (PxVolume)(value.dwValue / 65535.0);
-   }
-   
-   value.dwValue = (unsigned short)(volume * 65535.0);
-   result = mixerSetControlDetails(hMixer,
-                                   &details,
-                                   MIXER_GETCONTROLDETAILSF_VALUE);
-   
-   if (result != MMSYSERR_NOERROR)
-      return -1.0;
-   
-   return 0.0;
-}
-
 static PxVolume get_master_volume(px_mixer *Px)
 {
    PxEPInfo *info = (PxEPInfo *)Px->info;
    float volume = 0.0;
 
-   IAudioEndpointVolume_GetMasterVolumeLevelScalar(info->outputEP,
-                                                   &volume);
+   if (info->outputEP) {
+      IAudioEndpointVolume_GetMasterVolumeLevelScalar(info->outputEP,
+                                                      &volume);
+   }
 
    return volume;
 }
@@ -372,9 +408,11 @@ static void set_master_volume(px_mixer *Px, PxVolume volume)
 {
    PxEPInfo *info = (PxEPInfo *)Px->info;
 
-   IAudioEndpointVolume_SetMasterVolumeLevelScalar(info->outputEP,
-                                                   volume, 
-                                                   NULL);
+   if (info->outputEP) {
+      IAudioEndpointVolume_SetMasterVolumeLevelScalar(info->outputEP,
+                                                      volume, 
+                                                      NULL);
+   }
    
    return;
 }
@@ -410,14 +448,14 @@ static int get_num_output_volumes(px_mixer *Px)
 {
    PxEPInfo *info = (PxEPInfo *)Px->info;
 
-   return 1;
+   return (info->outputEP ? 1 : 0);
 }
 
 static const char *get_output_volume_name(px_mixer *Px, int i)
 {
    PxEPInfo *info = (PxEPInfo *)Px->info;
 
-   return "PCM";
+   return (info->outputEP ? "PCM" : NULL);
 }
 
 /*
@@ -473,8 +511,10 @@ static PxVolume get_input_volume(px_mixer *Px)
    PxEPInfo *info = (PxEPInfo *)Px->info;
    float volume = 0.0;
 
-   IAudioEndpointVolume_GetMasterVolumeLevelScalar(info->inputEP,
-                                                   &volume);
+   if (info->inputEP) { 
+      IAudioEndpointVolume_GetMasterVolumeLevelScalar(info->inputEP,
+                                                      &volume);
+   }
 
    return volume;
 }
@@ -483,9 +523,11 @@ static void set_input_volume(px_mixer *Px, PxVolume volume)
 {
    PxEPInfo *info = (PxEPInfo *)Px->info;
 
-   IAudioEndpointVolume_SetMasterVolumeLevelScalar(info->inputEP,
-                                                   volume, 
-                                                   NULL);
+   if (info->inputEP) {
+      IAudioEndpointVolume_SetMasterVolumeLevelScalar(info->inputEP,
+                                                      volume, 
+                                                      NULL);
+   }
    
    return;
 }

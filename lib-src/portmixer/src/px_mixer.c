@@ -56,6 +56,10 @@ int OpenMixer_Win_MME(px_mixer *Px, int index);
 int OpenMixer_Win_DirectSound(px_mixer *Px, int index);
 #endif
 
+#if defined(PX_USE_WIN_WASAPI)
+int OpenMixer_Win_WASAPI(px_mixer *Px, int index);
+#endif
+
 #if defined(PX_USE_MAC_COREAUDIO)
 int OpenMixer_Mac_CoreAudio(px_mixer *Px, int index);
 #endif
@@ -138,6 +142,12 @@ PxMixer *Px_OpenMixer(PaStream *pa_stream, int i)
       break;
 #endif      
 
+#if defined(PX_USE_WIN_WASAPI)
+      case paWASAPI:
+         good = OpenMixer_Win_WASAPI(Px, i);
+      break;
+#endif      
+
 #if defined(PX_USE_MAC_COREAUDIO)
       case paCoreAudio:
          good = OpenMixer_Mac_CoreAudio(Px, i);
@@ -155,6 +165,10 @@ PxMixer *Px_OpenMixer(PaStream *pa_stream, int i)
          good = OpenMixer_Linux_ALSA(Px, i);
       break;
 #endif
+
+      default:
+         good = FALSE;
+      break;
    }
 
    if (!good) {
