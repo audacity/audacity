@@ -30,13 +30,16 @@ class KeyConfigPrefs:public PrefsPanel
    virtual bool Apply();
    virtual void Cancel();
 
- private:
+   int SortItems(long item1, long item2);
+
+private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
    void RepopulateBindingsList();
    wxString NameFromKey( const wxString & key );
    void SetKeyForSelected( const wxString & key );
+   void Sort(int column);
 
    void OnDefaults(wxCommandEvent & e);
    void OnImport(wxCommandEvent & e);
@@ -44,6 +47,7 @@ class KeyConfigPrefs:public PrefsPanel
    void OnSet(wxCommandEvent & e);
    void OnClear(wxCommandEvent & e);
    void OnCategory(wxCommandEvent & e);
+   void OnSort(wxListEvent & e);
    void OnItemSelected(wxListEvent & e);
    void OnKeyDown(wxListEvent & e);
 
@@ -62,6 +66,9 @@ class KeyConfigPrefs:public PrefsPanel
    wxArrayString mDefaultKeys;
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.
+
+   wxArrayString *mSortCol;
+   int mSortDir;
 
    DECLARE_EVENT_TABLE();
 };

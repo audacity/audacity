@@ -64,6 +64,7 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_BUTTON(ExportButtonID, KeyConfigPrefs::OnExport)
    EVT_BUTTON(ImportButtonID, KeyConfigPrefs::OnImport)
    EVT_CHOICE(CategoryID, KeyConfigPrefs::OnCategory)
+   EVT_LIST_COL_CLICK(CommandsListID, KeyConfigPrefs::OnSort)
    EVT_LIST_ITEM_SELECTED(CommandsListID, KeyConfigPrefs::OnItemSelected)
    EVT_LIST_KEY_DOWN(CommandsListID, KeyConfigPrefs::OnKeyDown)
 END_EVENT_TABLE()
@@ -191,19 +192,46 @@ void KeyConfigPrefs::CreateList()
    mList->SetColumnWidth(KeyComboColumn, 250);
 }
 
-static int wxCALLBACK SortCallback(long item1, long item2, long sortData)
+int KeyConfigPrefs::SortItems(long item1, long item2)
 {
-   wxArrayString *names = (wxArrayString *) sortData;
-
-   if (names->Item(item1) < names->Item(item2)) {
-      return -1;
+   if (mSortCol->Item(item1) < mSortCol->Item(item2)) {
+      return -1 * mSortDir;
    }
 
-   if (names->Item(item1) > names->Item(item2)) {
-      return 1;
+   if (mSortCol->Item(item1) > mSortCol->Item(item2)) {
+      return 1 * mSortDir;
    }
 
    return 0;
+}
+
+static int wxCALLBACK SortCallback(long item1, long item2, long sortData)
+{
+   return ((KeyConfigPrefs *)sortData)->SortItems(item1, item2);
+}
+
+void KeyConfigPrefs::Sort(int column)
+{
+   wxArrayString *data = NULL;
+
+   switch(column)
+   {
+      case CommandColumn:
+         data = &mNames;
+      break;
+      case KeyComboColumn:
+         data = &mKeys;
+      break;
+   }
+
+   mSortDir = -mSortDir;
+   if (mSortCol != data) {
+      mSortDir = 1;
+   }
+
+   mSortCol = data;
+
+   mList->SortItems(SortCallback, (long) this);
 }
 
 void KeyConfigPrefs::RepopulateBindingsList()
@@ -272,7 +300,9 @@ void KeyConfigPrefs::RepopulateBindingsList()
       ndx++;
    }
 
-//   mList->SortItems(SortCallback, (long) &mNames);
+   mSortDir = 1;
+   mSortCol = NULL;
+   Sort(CommandColumn);
 }
 
 void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
@@ -520,6 +550,11 @@ void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
 void KeyConfigPrefs::OnCategory(wxCommandEvent & WXUNUSED(event))
 {
    RepopulateBindingsList();
+}
+
+void KeyConfigPrefs::OnSort(wxListEvent & event)
+{
+   Sort(event.GetColumn());
 }
 
 void KeyConfigPrefs::OnItemSelected(wxListEvent & e)
