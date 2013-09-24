@@ -7662,6 +7662,11 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
             cb = S.AddCombo(_("New sample rate (Hz):"),
                             rate,
                             &rates);
+#if defined(__WXMAC__)
+            // As of wxMac-2.8.12, setting manually is required
+            // to handle rates not in the list.  See: Bug #427
+            cb->SetValue(rate);
+#endif
          }
          S.EndHorizontalLay();
          S.AddStandardButtons();
