@@ -2295,41 +2295,6 @@ int AudioIO::GetCommonlyAvailCapture()
    return commonlyAvail;
 }
 
-int AudioIO::getRecordDevIndex(wxString devName)
-{
-   wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
-
-   // if we don't get given a device, look up the preferences
-   if (devName.IsEmpty())
-   {
-      devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
-   }
-
-   int i;
-   for (i = 0; i < Pa_GetDeviceCount(); i++)
-   {
-      const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
-
-      if (info && (DeviceName(info) == devName) &&
-          HostName(info) == hostName && (info->maxInputChannels > 0))
-      {
-         // this device name matches the stored one, and works.
-         // So we say this is the answer and return it
-         return i;
-      }
-   }
-   // landing here, we either don't have a value in the preferences, or 
-   // the stored / supplied value doesn't exist on the system. So we need to
-   // use a default value
-   int recDeviceNum = Pa_GetDefaultInputDevice();
-
-   // Sometimes PortAudio returns -1 if it cannot find a suitable default
-   // device, so we just use the first one available
-   if (recDeviceNum < 0)
-      recDeviceNum = 0;
-   return recDeviceNum;
-}
-
 #if USE_PORTMIXER
 int AudioIO::getRecordSourceIndex(PxMixer *portMixer)
 {
@@ -2344,37 +2309,110 @@ int AudioIO::getRecordSourceIndex(PxMixer *portMixer)
 }
 #endif
 
-int AudioIO::getPlayDevIndex(wxString devName )
+int AudioIO::getPlayDevIndex(wxString devName)
 {
-   wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    // if we don't get given a device, look up the preferences
    if (devName.IsEmpty())
    {
       devName = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
    }
 
-   int i;
-   for (i = 0; i < Pa_GetDeviceCount(); i++)
+   wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   PaHostApiIndex hostCnt = Pa_GetHostApiCount();
+   PaHostApiIndex hostNum;
+   for (hostNum = 0; hostNum < hostCnt; hostNum++)
    {
-      const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
-
-      if (info && (DeviceName(info) == devName) && 
-          HostName(info) == hostName && (info->maxOutputChannels > 0))
+      const PaHostApiInfo *hinfo = Pa_GetHostApiInfo(hostNum);
+      if (hinfo && wxString(hinfo->name, wxConvLocal) == hostName)
       {
-         // this device name matches the stored one, and works.
-         // So we say this is the answer and return it
-         return i;
+         for (PaDeviceIndex hostDevice = 0; hostDevice < hinfo->deviceCount; hostDevice++)
+         {
+            PaDeviceIndex deviceNum = Pa_HostApiDeviceIndexToDeviceIndex(hostNum, hostDevice);
+
+            const PaDeviceInfo *dinfo = Pa_GetDeviceInfo(deviceNum);
+            if (dinfo && DeviceName(dinfo) == devName && dinfo->maxOutputChannels > 0 )
+            {
+               // this device name matches the stored one, and works.
+               // So we say this is the answer and return it
+               return deviceNum;
+            }
+         }
+
+         // The device wasn't found so use the default for this host.
+         // LL:  At this point, preferences and active no longer match.
+         return hinfo->defaultOutputDevice;
       }
    }
-   // landing here, we either don't have a value in the preferences, or 
-   // the stored / supplied value doesn't exist on the system. So we need to
-   // use a default value
-   int DeviceNum = Pa_GetDefaultOutputDevice();
+
+   // The host wasn't found, so use the default output device.
+   PaDeviceIndex deviceNum = Pa_GetDefaultOutputDevice();
+
    // Sometimes PortAudio returns -1 if it cannot find a suitable default
    // device, so we just use the first one available
-   if (DeviceNum < 0)
-      DeviceNum = 0;
-   return DeviceNum;
+   //
+   // LL:  At this point, preferences and active no longer match
+   //
+   //      And I can't imagine how far we'll get specifying an "invalid" index later
+   //      on...are we certain "0" even exists?
+   if (deviceNum < 0) {
+      wxASSERT(false);
+      deviceNum = 0;
+   }
+
+   return deviceNum;
+}
+
+int AudioIO::getRecordDevIndex(wxString devName)
+{
+   // if we don't get given a device, look up the preferences
+   if (devName.IsEmpty())
+   {
+      devName = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
+   }
+
+   wxString hostName = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
+   PaHostApiIndex hostCnt = Pa_GetHostApiCount();
+   PaHostApiIndex hostNum;
+   for (hostNum = 0; hostNum < hostCnt; hostNum++)
+   {
+      const PaHostApiInfo *hinfo = Pa_GetHostApiInfo(hostNum);
+      if (hinfo && wxString(hinfo->name, wxConvLocal) == hostName)
+      {
+         for (PaDeviceIndex hostDevice = 0; hostDevice < hinfo->deviceCount; hostDevice++)
+         {
+            PaDeviceIndex deviceNum = Pa_HostApiDeviceIndexToDeviceIndex(hostNum, hostDevice);
+
+            const PaDeviceInfo *dinfo = Pa_GetDeviceInfo(deviceNum);
+            if (dinfo && DeviceName(dinfo) == devName && dinfo->maxInputChannels > 0 )
+            {
+               // this device name matches the stored one, and works.
+               // So we say this is the answer and return it
+               return deviceNum;
+            }
+         }
+
+         // The device wasn't found so use the default for this host.
+         // LL:  At this point, preferences and active no longer match.
+         return hinfo->defaultInputDevice;
+      }
+   }
+
+   // The host wasn't found, so use the default input device.
+   PaDeviceIndex deviceNum = Pa_GetDefaultInputDevice();
+
+   // Sometimes PortAudio returns -1 if it cannot find a suitable default
+   // device, so we just use the first one available
+   //
+   // LL:  At this point, preferences and active no longer match
+   //
+   //      And I can't imagine how far we'll get specifying an "invalid" index later
+   //      on...are we certain "0" even exists?
+   if (deviceNum < 0) {
+      wxASSERT(false);
+      deviceNum = 0;
+   }
+
+   return deviceNum;
 }
 
 wxString AudioIO::GetDeviceInfo()
