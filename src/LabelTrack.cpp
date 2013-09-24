@@ -1834,16 +1834,32 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
       case WXK_TAB:
       case WXK_NUMPAD_TAB:
          if (!mLabels.IsEmpty()) {
+            int len = (int) mLabels.Count();
             if (event.ShiftDown()) {
-               mSelIndex = (int)mLabels.Count() - 1;
+               mSelIndex = len - 1;
+               if (newSel0 > mLabels[0]->t) {
+                  while (mSelIndex >= 0 && mLabels[mSelIndex]->t >= newSel0) {
+                     mSelIndex--;
+                  }
+               }
             } else {
                mSelIndex = 0;
+               if (newSel0 < mLabels[len - 1]->t) {
+                  while (mSelIndex < len && mLabels[mSelIndex]->t <= newSel0) {
+                     mSelIndex++;
+                  }
+               }
             }
-            
-            mCurrentCursorPos = mLabels[mSelIndex]->title.Length();
-            //Set the selection region to be equal to the selection bounds of the tabbed-to label.
-            newSel0 = mLabels[mSelIndex]->t;
-            newSel1 = mLabels[mSelIndex]->t1;
+
+            if (mSelIndex >= 0 && mSelIndex < len) {
+               mCurrentCursorPos = mLabels[mSelIndex]->title.Length();
+               //Set the selection region to be equal to the selection bounds of the tabbed-to label.
+               newSel0 = mLabels[mSelIndex]->t;
+               newSel1 = mLabels[mSelIndex]->t1;
+            }
+            else {
+               mSelIndex = -1;
+            }
          }
          break;
 
