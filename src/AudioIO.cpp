@@ -707,6 +707,11 @@ bool AudioIO::InputMixerWorks()
    return mInputMixerWorks;
 }
 
+bool AudioIO::OutputMixerEmulated()
+{
+   return mEmulateMixerOutputVol;
+}
+
 wxArrayString AudioIO::GetInputSourceNames()
 {
 #if defined(USE_PORTMIXER)

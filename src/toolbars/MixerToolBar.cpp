@@ -300,7 +300,7 @@ void MixerToolBar::SetToolTips()
 
    if (mOutputSlider->IsEnabled()) {
       mOutputSlider->SetToolTip(wxString::Format(
-            _("Output Volume: %.2f"), mOutputSliderVolume));
+            _("Output Volume: %.2f%s"), mOutputSliderVolume, gAudioIO->OutputMixerEmulated() ? _(" (emulated)") : wxT("")));
    }
    else {
       mOutputSlider->SetToolTip(
