@@ -1019,7 +1019,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                                 float zoomMin, float zoomMax, bool dB,
                                 const float min[], const float max[], const float rms[],
-                                const int bl[], bool showProgress, bool muted)
+                                const int bl[], bool WXUNUSED(showProgress), bool muted)
 #endif
 {
    // Display a line representing the

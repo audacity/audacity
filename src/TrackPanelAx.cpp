@@ -218,7 +218,7 @@ wxAccStatus TrackPanelAx::GetChildCount( int* childCount )
 // The retrieved string describes the action that is performed on an object,
 // not what the object does as a result. For example, a toolbar button that prints
 // a document has a default action of "Press" rather than "Prints the current document."
-wxAccStatus TrackPanelAx::GetDefaultAction( int childId, wxString *actionName )
+wxAccStatus TrackPanelAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
 {
    actionName->Clear();
 
@@ -226,7 +226,7 @@ wxAccStatus TrackPanelAx::GetDefaultAction( int childId, wxString *actionName )
 }
 
 // Returns the description for this object or a child.
-wxAccStatus TrackPanelAx::GetDescription( int childId, wxString *description )
+wxAccStatus TrackPanelAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
    description->Clear();
 
@@ -234,7 +234,7 @@ wxAccStatus TrackPanelAx::GetDescription( int childId, wxString *description )
 }
 
 // Returns help text for this object or a child, similar to tooltip text.
-wxAccStatus TrackPanelAx::GetHelpText( int childId, wxString *helpText )
+wxAccStatus TrackPanelAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
    helpText->Clear();
 
@@ -243,7 +243,7 @@ wxAccStatus TrackPanelAx::GetHelpText( int childId, wxString *helpText )
 
 // Returns the keyboard shortcut for this object or child.
 // Return e.g. ALT+K
-wxAccStatus TrackPanelAx::GetKeyboardShortcut( int childId, wxString *shortcut )
+wxAccStatus TrackPanelAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
    shortcut->Clear();
 
@@ -377,7 +377,7 @@ wxAccStatus TrackPanelAx::GetRole( int childId, wxAccRole* role )
 // - an integer representing the selected child element,
 //   or 0 if this object is selected (GetType() == wxT("long"))
 // - a "void*" pointer to a wxAccessible child object
-wxAccStatus TrackPanelAx::GetSelections( wxVariant *selections )
+wxAccStatus TrackPanelAx::GetSelections( wxVariant * WXUNUSED(selections) )
 {
    return wxACC_NOT_IMPLEMENTED;
 }

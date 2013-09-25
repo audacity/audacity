@@ -665,7 +665,7 @@ wxAccStatus GridAx::GetChildCount(int *childCount)
 // The retrieved string describes the action that is performed on an object,
 // not what the object does as a result. For example, a toolbar button that prints
 // a document has a default action of "Press" rather than "Prints the current document."
-wxAccStatus GridAx::GetDefaultAction(int childId, wxString *actionName)
+wxAccStatus GridAx::GetDefaultAction(int WXUNUSED(childId), wxString *actionName)
 {
    actionName->Clear();
 
@@ -673,7 +673,7 @@ wxAccStatus GridAx::GetDefaultAction(int childId, wxString *actionName)
 }
 
 // Returns the description for this object or a child.
-wxAccStatus GridAx::GetDescription(int childId, wxString *description)
+wxAccStatus GridAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
    description->Clear();
 
@@ -681,7 +681,7 @@ wxAccStatus GridAx::GetDescription(int childId, wxString *description)
 }
 
 // Returns help text for this object or a child, similar to tooltip text.
-wxAccStatus GridAx::GetHelpText(int childId, wxString *helpText)
+wxAccStatus GridAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
    helpText->Clear();
 
@@ -690,7 +690,7 @@ wxAccStatus GridAx::GetHelpText(int childId, wxString *helpText)
 
 // Returns the keyboard shortcut for this object or child.
 // Return e.g. ALT+K
-wxAccStatus GridAx::GetKeyboardShortcut(int childId, wxString *shortcut)
+wxAccStatus GridAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
 {
    shortcut->Clear();
 
@@ -763,7 +763,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
    return wxACC_OK;
 }
 
-wxAccStatus GridAx::GetParent(wxAccessible **parent)
+wxAccStatus GridAx::GetParent(wxAccessible ** WXUNUSED(parent))
 {
    return wxACC_NOT_IMPLEMENTED;
 }
@@ -795,7 +795,7 @@ wxAccStatus GridAx::GetRole(int childId, wxAccRole *role)
 // - an integer representing the selected child element,
 //   or 0 if this object is selected (GetType() == wxT("long"))
 // - a "void*" pointer to a wxAccessible child object
-wxAccStatus GridAx::GetSelections(wxVariant *selections)
+wxAccStatus GridAx::GetSelections(wxVariant * WXUNUSED(selections))
 {
    return wxACC_NOT_IMPLEMENTED;
 }
@@ -880,7 +880,7 @@ wxAccStatus GridAx::Select(int childId, wxAccSelectionFlags selectFlags)
 // If childId is 0 and child is NULL, no object in
 // this subhierarchy has the focus.
 // If this object has the focus, child should be 'this'.
-wxAccStatus GridAx::GetFocus(int *childId, wxAccessible **child)
+wxAccStatus GridAx::GetFocus(int * WXUNUSED(childId), wxAccessible **child)
 {
    *child = this;
 

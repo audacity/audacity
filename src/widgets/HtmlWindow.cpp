@@ -95,7 +95,7 @@ wxAccStatus HtmlWindowAx::GetChildCount(int* childCount)
 // object, not what the object does as a result. For example, a
 // toolbar button that prints a document has a default action of
 // "Press" rather than "Prints the current document."
-wxAccStatus HtmlWindowAx::GetDefaultAction(int childId, wxString* actionName)
+wxAccStatus HtmlWindowAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionName)
 {
    actionName->Clear();
 
@@ -103,7 +103,7 @@ wxAccStatus HtmlWindowAx::GetDefaultAction(int childId, wxString* actionName)
 }
 
 // Returns the description for this object or a child.
-wxAccStatus HtmlWindowAx::GetDescription( int childId, wxString *description )
+wxAccStatus HtmlWindowAx::GetDescription( int WXUNUSED(childId), wxString *description )
 {
    description->Clear();
 
@@ -123,7 +123,7 @@ wxAccStatus HtmlWindowAx::GetFocus(int* childId, wxAccessible** child)
 }
 
 // Returns help text for this object or a child, similar to tooltip text.
-wxAccStatus HtmlWindowAx::GetHelpText( int childId, wxString *helpText )
+wxAccStatus HtmlWindowAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
 {
    helpText->Clear();
 
@@ -132,7 +132,7 @@ wxAccStatus HtmlWindowAx::GetHelpText( int childId, wxString *helpText )
 
 // Returns the keyboard shortcut for this object or child.
 // Return e.g. ALT+K
-wxAccStatus HtmlWindowAx::GetKeyboardShortcut( int childId, wxString *shortcut )
+wxAccStatus HtmlWindowAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
 {
    shortcut->Clear();
 
@@ -141,7 +141,7 @@ wxAccStatus HtmlWindowAx::GetKeyboardShortcut( int childId, wxString *shortcut )
 
 // Returns the rectangle for this object (id = 0) or a child element (id > 0).
 // rect is in screen coordinates.
-wxAccStatus HtmlWindowAx::GetLocation( wxRect& rect, int elementId )
+wxAccStatus HtmlWindowAx::GetLocation( wxRect& rect, int WXUNUSED(elementId) )
 {
    HtmlWindow *hw = wxDynamicCast( GetWindow(), HtmlWindow );
 
@@ -152,7 +152,7 @@ wxAccStatus HtmlWindowAx::GetLocation( wxRect& rect, int elementId )
 }
 
 // Gets the name of the specified object.
-wxAccStatus HtmlWindowAx::GetName(int childId, wxString* name)
+wxAccStatus HtmlWindowAx::GetName(int WXUNUSED(childId), wxString* name)
 {
    HtmlWindow *hw = wxDynamicCast( GetWindow(), HtmlWindow );
 
@@ -166,7 +166,7 @@ wxAccStatus HtmlWindowAx::GetName(int childId, wxString* name)
 }
 
 // Returns a role constant.
-wxAccStatus HtmlWindowAx::GetRole(int childId, wxAccRole* role)
+wxAccStatus HtmlWindowAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
 {
    *role = wxROLE_SYSTEM_STATICTEXT;
 
@@ -181,13 +181,13 @@ wxAccStatus HtmlWindowAx::GetRole(int childId, wxAccRole* role)
 // - an integer representing the selected child element,
 //   or 0 if this object is selected (GetType() == wxT("long"))
 // - a "void*" pointer to a wxAccessible child object
-wxAccStatus HtmlWindowAx::GetSelections( wxVariant *selections )
+wxAccStatus HtmlWindowAx::GetSelections( wxVariant * WXUNUSED(selections) )
 {
    return wxACC_NOT_IMPLEMENTED;
 }
 
 // Returns a state constant.
-wxAccStatus HtmlWindowAx::GetState(int childId, long* state)
+wxAccStatus HtmlWindowAx::GetState(int WXUNUSED(childId), long* state)
 {
    HtmlWindow *hw = wxDynamicCast( GetWindow(), HtmlWindow );
 
@@ -200,7 +200,7 @@ wxAccStatus HtmlWindowAx::GetState(int childId, long* state)
 
 // Returns a localized string representing the value for the object
 // or child.
-wxAccStatus HtmlWindowAx::GetValue(int childId, wxString* strValue)
+wxAccStatus HtmlWindowAx::GetValue(int WXUNUSED(childId), wxString* strValue)
 {
    HtmlWindow *hw = wxDynamicCast( GetWindow(), HtmlWindow );
 
