@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-08-28 17:18+0100\n"
-"PO-Revision-Date: 2013-09-09 18:09-0000\n"
+"PO-Revision-Date: 2013-09-25 05:47-0000\n"
 "Last-Translator: Carmelo Battaglia\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -2853,7 +2853,7 @@ msgstr "Cambia dispositivo di uscita"
 
 #: Menus.cpp:1168
 msgid "Change audio host"
-msgstr "Cambia host audio"
+msgstr "Cambia sistema audio"
 
 #: Menus.cpp:1171
 msgid "Change input channels"
@@ -10837,7 +10837,7 @@ msgstr "Errore nell'apertura di un dispositivo audio"
 
 #: toolbars/DeviceToolBar.cpp:102
 msgid "Audio Host"
-msgstr "Posizione audio"
+msgstr "Sistema audio"
 
 #. i18n-hint: (noun) It's the device used for output.
 #: toolbars/DeviceToolBar.cpp:117
@@ -10871,7 +10871,7 @@ msgstr "Seleziona dispositivo di uscita"
 
 #: toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
-msgstr "Seleziona Host audio"
+msgstr "Seleziona sistema audio"
 
 #: toolbars/DeviceToolBar.cpp:757
 msgid "Select Input Channels"
