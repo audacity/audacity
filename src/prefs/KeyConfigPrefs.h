@@ -63,6 +63,7 @@ private:
 
    wxArrayString mCats;
    wxArrayString mNames;
+   wxArrayString mLabels;
    wxArrayString mDefaultKeys;
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.

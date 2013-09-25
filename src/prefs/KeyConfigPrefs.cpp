@@ -217,7 +217,7 @@ void KeyConfigPrefs::Sort(int column)
    switch(column)
    {
       case CommandColumn:
-         data = &mNames;
+         data = &mLabels;
       break;
       case KeyComboColumn:
          data = &mKeys;
@@ -240,6 +240,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
 
    mList->DeleteAllItems(); // Delete contents, but not the column headers.
    mNames.Clear();
+   mLabels.Clear();
    mDefaultKeys.Clear();
    wxArrayString Keys,Labels,Categories;
 
@@ -270,10 +271,6 @@ void KeyConfigPrefs::RepopulateBindingsList()
       else 
          mNewKeys[i] = key; // Make sure mNewKeys is updated.
 
-//      if (cat != _("All") && ! Categories[i].StartsWith(cat)) {
-      if (cat != _("All") && ! (Categories[i]== cat)) {
-         continue;
-      }
       wxString label;
 
       // Labels for undo and redo change according to the last command
@@ -290,7 +287,12 @@ void KeyConfigPrefs::RepopulateBindingsList()
       }
 
       label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
+      mLabels.Add(label);
 
+//      if (cat != _("All") && ! Categories[i].StartsWith(cat)) {
+      if (cat != _("All") && ! (Categories[i] == cat)) {
+         continue;
+      }
       mList->InsertItem(ndx, label);
       mList->SetItem(ndx, KeyComboColumn, key);
       mList->SetItemData(ndx, i);
