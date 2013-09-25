@@ -747,13 +747,6 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
    double sumsc, sumsc2;
    double sumdc, sumdc2;
    double erg, sc, dc;
-   // sampleFormat a1=0;
-   //   sampleFormat a2=0;
-   //   sampleFormat z1=0;
-   //   sampleFormat z2=0;              // keeps track of initial and final samples of window to enable updating formulae
-   int atrend=0;                             // equals sgn(a2-a1); Keeps track of trend at start of window
-   int ztrend=0;                             // equals sgn(z2-z1); Keeps track of trend at end of window  
-
    //Now, change the millisecond-based parameters into sample-based parameters
    //(This depends on WaveTrack t)
    double rate = t.GetRate();
@@ -775,16 +768,6 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
    //   if(mUseDirectionChanges)
    dc = TestDirectionChanges(t,start,WindowSizeInt);
    
-   //Calculate initial values for the trend trackers--------------------//
-   //Get((samplePtr)a1, floatSample, start,  1);                        
-   // t.Get((samplePtr)a2, floatSample, start+1, 1);                       
-   // t.Get((samplePtr)z1, floatSample, start+WindowSizeInt-1, 1);
-   // t.Get((samplePtr)z2, floatSample, start+WindowSizeInt, 1);
-   atrend = -1;//sgn(a2-a1);                                      
-   ztrend = -1;// sgn(z2-z1);                                      
-   //-------------------------------------------------------------------//
-
-
    sumerg =0.0;
    sumerg2 = 0.0;
    sumsc =0.0;
@@ -827,9 +810,6 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
          dc = TestDirectionChanges(t,i,blocksize);
          sumdc += (double)dc;
          sumdc2 += pow((double)dc,2);
-         
-         
-
       }
 
    mEnergyMean = sumerg / samples;
@@ -840,10 +820,6 @@ void VoiceKey::CalibrateNoise(WaveTrack & t, sampleCount start, sampleCount len)
    
    mDirectionChangesMean = sumdc / samples;
    mDirectionChangesSD =sqrt(sumdc2 / samples - mDirectionChangesMean * mDirectionChangesMean) ;
-
-
-   
-
 
    wxString text =   wxString::Format(_("Calibration Results\n"));
    /* i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'*/
