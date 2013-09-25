@@ -14,9 +14,9 @@
 
   Figure out what translations are installed and return a list
   of language codes (like "es", "fr", or "pt-br") and corresponding
-  language names (like "Español", "Français", and "Português").
+  language names (like "EspaÃ±ol", "FranÃ§ais", and "PortuguÃªs").
   We use our own list of translations of language names (i.e.
-  "Français" instead of "French") but we fallback on the language
+  "FranÃ§ais" instead of "French") but we fallback on the language
   name in wxWidgets if we don't have it listed.
 
   This code is designed to work well with all of the current
