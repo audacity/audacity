@@ -1150,7 +1150,12 @@ void CommandManager::GetAllCommandLabels(wxArrayString &names,
 }
 
 void CommandManager::GetAllCommandData(
-   wxArrayString &names, wxArrayString &keys, wxArrayString &default_keys, wxArrayString &labels, wxArrayString & categories,
+   wxArrayString &names,
+   wxArrayString &keys,
+   wxArrayString &default_keys,
+   wxArrayString &labels,
+   wxArrayString &categories,
+   wxArrayString &prefixes,  
    bool includeMultis)
 {
    unsigned int i;
@@ -1163,6 +1168,7 @@ void CommandManager::GetAllCommandData(
          default_keys.Add( mCommandList[i]->defaultKey);
          labels.Add(mCommandList[i]->label);
          categories.Add(mCommandList[i]->labelTop);
+         prefixes.Add(mCommandList[i]->labelPrefix);
       }
       else if( includeMultis )
       {
@@ -1171,6 +1177,7 @@ void CommandManager::GetAllCommandData(
          default_keys.Add( mCommandList[i]->defaultKey);
          labels.Add(mCommandList[i]->label);
          categories.Add(mCommandList[i]->labelTop);
+         prefixes.Add(mCommandList[i]->labelPrefix);
       }
    }
 }

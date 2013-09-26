@@ -184,12 +184,12 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 void KeyConfigPrefs::CreateList()
 {
    mList->InsertColumn(CommandColumn, _("Command"), wxLIST_FORMAT_LEFT);
-   mList->InsertColumn(KeyComboColumn, _("Key Combination"), wxLIST_FORMAT_LEFT);
+   mList->InsertColumn(KeyComboColumn, _("Combination"), wxLIST_FORMAT_LEFT);
 
    RepopulateBindingsList();
 
    mList->SetColumnWidth(CommandColumn, wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(KeyComboColumn, 250);
+   mList->SetColumnWidth(KeyComboColumn, wxLIST_AUTOSIZE);
 }
 
 int KeyConfigPrefs::SortItems(long item1, long item2)
@@ -242,7 +242,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
    mNames.Clear();
    mLabels.Clear();
    mDefaultKeys.Clear();
-   wxArrayString Keys,Labels,Categories;
+   wxArrayString Keys,Labels,Categories,Prefixes;
 
    mManager->GetAllCommandData(
       mNames, 
@@ -250,6 +250,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
       mDefaultKeys,
       Labels, 
       Categories,
+      Prefixes,
 // True to include effects (list items), false otherwise.
       true 
       );
@@ -287,6 +288,12 @@ void KeyConfigPrefs::RepopulateBindingsList()
       }
 
       label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
+      if (!Prefixes[i].IsEmpty()) {
+         label = wxMenuItem::GetLabelFromText(Prefixes[i]) + wxT(" - ") + label;
+      }
+      if (cat == _("All")) {
+         label = Categories[i] + wxT(" - ") + label;
+      }
       mLabels.Add(label);
 
 //      if (cat != _("All") && ! Categories[i].StartsWith(cat)) {
