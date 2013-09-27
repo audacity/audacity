@@ -345,9 +345,6 @@ bool LabelDialog::TransferDataFromWindow()
 
 bool LabelDialog::Validate()
 {
-   int cnt = mData.GetCount();
-   int i;
-   
    if (mGrid->IsCellEditControlShown()) {
       mGrid->HideCellEditControl();
       mGrid->SaveEditControlValue();
