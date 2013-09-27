@@ -571,9 +571,9 @@ void CommandManager::AddItemList(wxString name, wxArrayString labels,
 
             // Start new sub-menu
             // tmpmax is number of last plugin for this sub-menu
-            tmpmax = wxMax(j + MAX_SUBMENU_LEN, (int)nVisibleEffects);
+            tmpmax = wxMin(j + MAX_SUBMENU_LEN, (int)nVisibleEffects);
             // Submenu titles are 1 to 15, 15 to 30, etc.
-            BeginSubMenu(wxString::Format(_("Plugins %i to %i"),j+1,tmpmax));
+            BeginSubMenu(wxString::Format(_("Plug-ins %i to %i"),j+1,tmpmax));
          }
          // ---- End of code for Plugin sub-menus.
 
