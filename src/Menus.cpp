@@ -624,7 +624,7 @@ void AudacityProject::CreateMenusAndCommands()
     * simplified view with hidden menu items, then leave the ! out here, so that the 
     * user can show/hide some of the menu items. */
    c->AddCheck(wxT("SimplifiedView"), _("!Simplified View"), FN(OnSimplifiedView),
-               mCommandManager.mbHideFlaggedItems ? 1 : 0);
+               mCommandManager.mbHideFlaggedItems ? 1 : 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
 
    c->EndMenu();
 
