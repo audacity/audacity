@@ -407,6 +407,11 @@ void SaveWindowSize()
 // Most of this was taken from nsNativeAppSupportUnix.cpp from Mozilla.
 ///////////////////////////////////////////////////////////////////////////////
 
+// TODO: May need updating.  Is this code too obsolete (relying on Gnome2 so's) to be 
+// worth keeping anymore?  
+// CB suggests we use libSM directly ref:
+// http://www.x.org/archive/X11R7.7/doc/libSM/SMlib.html#The_Save_Yourself_Callback
+
 #include <dlfcn.h>
 /* There is a conflict between the type names used in Glib >= 2.21 and those in
  * wxGTK (http://trac.wxwidgets.org/ticket/10883)
@@ -562,6 +567,10 @@ class GnomeShutdown
    void *mGnome;
    GnomeClient *mClient;
 };
+
+// This variable exists to call the constructor and
+// connect a signal for the 'save-yourself' message.
+GnomeShutdown GnomeShutdownInstance;
 
 #endif
 
