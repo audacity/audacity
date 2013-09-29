@@ -747,8 +747,8 @@ void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
       // TODO: Handle failures better.
       // Some failures are OK, e.g. file not found, just would-be-nices to do better,
       // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
-      if( !MRUOpen(name)){
-         wxFAIL_MSG(wxT("MRUOpen failed") );
+      if (!MRUOpen(name)) {
+         wxFAIL_MSG(wxT("MRUOpen failed"));
       }
    }
 }
