@@ -789,7 +789,6 @@ END_EVENT_TABLE()
 
 // backend for OnMRUFile 
 // TODO: Would be nice to make this handle not opening a file with more panache.
-//  - Actually remove unfound files from the MRU list.
 //  - Inform the user if DefaultOpenPath not set.
 //  - Switch focus to correct instance of project window, if already open.
 bool AudacityApp::MRUOpen(wxString fullPathStr) {
