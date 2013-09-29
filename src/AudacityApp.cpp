@@ -744,7 +744,12 @@ void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
    while (ofqueue.GetCount()) {
       wxString name(ofqueue[0]);
       ofqueue.RemoveAt(0);
-      wxASSERT(MRUOpen(name)); // FIXME: Check the return result? Meantime, assert it so failure shows in debug build. 
+      // TODO: Handle failures better.
+      // Some failures are OK, e.g. file not found, just would-be-nices to do better,
+      // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
+      if( !MRUOpen(name)){
+         wxFAIL_MSG(wxT("MRUOpen failed") );
+      }
    }
 }
 #endif //__WXMAC__
@@ -783,6 +788,10 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
 END_EVENT_TABLE()
 
 // backend for OnMRUFile 
+// TODO: Would be nice to make this handle not opening a file with more panache.
+//  - Actually remove unfound files from the MRU list.
+//  - Inform the user if DefaultOpenPath not set.
+//  - Switch focus to correct instance of project window, if already open.
 bool AudacityApp::MRUOpen(wxString fullPathStr) {
    // Most of the checks below are copied from AudacityProject::OpenFiles.
    // - some rationalisation might be possible.
