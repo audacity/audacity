@@ -1167,8 +1167,19 @@ bool AudacityApp::OnInit()
    #endif //__WXMAC__
 
    // BG: Create a temporary window to set as the top window
-   wxFrame *temporarywindow = new wxFrame(NULL, -1, wxT("temporarytopwindow"));
+   wxFrame *temporarywindow = new wxFrame(NULL, -1, _("Audacity is starting up..."));
    SetTopWindow(temporarywindow);
+
+   // Iconize and 'Show' the temporary window, only so that we have a button on the taskbar
+   // from early on in initialising.
+   // Clicking the taskbar button gives a way for users to find the VST scanning
+   // dialog, if it is present but hidden behind other windows.  They will also 
+   // unfortunately see the 'Audacity is starting up..' dialog.  Better than
+   // thinking nothing is happenning, but not ideal.
+   // TODO: temporary window should perhaps iconize after it 'raises' child window 
+   // to the front, if we care enough about this case.
+   temporarywindow->Iconize( true );
+   temporarywindow->Show(true);
 
    // Initialize the CommandHandler
    InitCommandHandler();
