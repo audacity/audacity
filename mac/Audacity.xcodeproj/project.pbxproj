@@ -554,6 +554,7 @@
 		284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */; };
 		284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */; };
 		28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */; };
+		2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2849A41E17F8BEC2005C653F /* KeyView.cpp */; };
 		2849B4620A7444BE00ECF12D /* Dependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2849B4600A7444BE00ECF12D /* Dependencies.cpp */; };
 		284A7B920F31571C001D7A67 /* nyx.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A7B8F0F31571B001D7A67 /* nyx.c */; };
 		284A7B930F31571C001D7A67 /* nyx.h in Headers */ = {isa = PBXBuildFile; fileRef = 284A7B900F31571B001D7A67 /* nyx.h */; };
@@ -3195,6 +3196,8 @@
 		284249ED10D337CE004330A6 /* SetProjectInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SetProjectInfoCommand.h; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC10A2C180E00C23C1E /* ThemePrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ThemePrefs.h; sourceTree = "<group>"; tabWidth = 3; };
+		2849A41E17F8BEC2005C653F /* KeyView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyView.cpp; sourceTree = "<group>"; };
+		2849A41F17F8BEC2005C653F /* KeyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyView.h; sourceTree = "<group>"; };
 		2849B4600A7444BE00ECF12D /* Dependencies.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Dependencies.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2849B4610A7444BE00ECF12D /* Dependencies.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Dependencies.h; sourceTree = "<group>"; tabWidth = 3; };
 		284A7B8F0F31571B001D7A67 /* nyx.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = nyx.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -5305,6 +5308,8 @@
 				28530C490DF2105200555C94 /* HtmlWindow.h */,
 				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
 				28F1D81C0A2D0019005506A7 /* ImageRoll.h */,
+				2849A41E17F8BEC2005C653F /* KeyView.cpp */,
+				2849A41F17F8BEC2005C653F /* KeyView.h */,
 				2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */,
 				2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */,
 				1790B10309883BFD008A330A /* Meter.cpp */,
@@ -8800,6 +8805,7 @@
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
+				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

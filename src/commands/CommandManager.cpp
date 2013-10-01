@@ -1155,7 +1155,9 @@ void CommandManager::GetAllCommandData(
    wxArrayString &default_keys,
    wxArrayString &labels,
    wxArrayString &categories,
+#if defined(EXPERIMENTAL_KEY_VIEW)
    wxArrayString &prefixes,  
+#endif
    bool includeMultis)
 {
    unsigned int i;
@@ -1168,7 +1170,9 @@ void CommandManager::GetAllCommandData(
          default_keys.Add( mCommandList[i]->defaultKey);
          labels.Add(mCommandList[i]->label);
          categories.Add(mCommandList[i]->labelTop);
+#if defined(EXPERIMENTAL_KEY_VIEW)
          prefixes.Add(mCommandList[i]->labelPrefix);
+#endif
       }
       else if( includeMultis )
       {
@@ -1177,7 +1181,9 @@ void CommandManager::GetAllCommandData(
          default_keys.Add( mCommandList[i]->defaultKey);
          labels.Add(mCommandList[i]->label);
          categories.Add(mCommandList[i]->labelTop);
+#if defined(EXPERIMENTAL_KEY_VIEW)
          prefixes.Add(mCommandList[i]->labelPrefix);
+#endif
       }
    }
 }

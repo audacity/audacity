@@ -1856,6 +1856,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\widgets\KeyView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\widgets\KeyView.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\widgets\LinkingHtmlWindow.cpp"
 				>
 			</File>

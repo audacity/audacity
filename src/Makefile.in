@@ -246,6 +246,7 @@ OBJS = \
 	widgets/Grid.o \
 	widgets/HtmlWindow.o \
 	widgets/ImageRoll.o \
+	widgets/KeyView.o \
 	widgets/LinkingHtmlWindow.o \
 	widgets/Meter.o \
 	widgets/MultiDialog.o \

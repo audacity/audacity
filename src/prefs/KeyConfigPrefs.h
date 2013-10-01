@@ -12,6 +12,70 @@
 #ifndef __AUDACITY_KEY_CONFIG_PREFS__
 #define __AUDACITY_KEY_CONFIG_PREFS__
 
+#if defined(EXPERIMENTAL_KEY_VIEW)
+
+#include <wx/defs.h>
+#include <wx/imaglist.h>
+#include <wx/listctrl.h>
+#include <wx/srchctrl.h>
+#include <wx/textctrl.h>
+#include <wx/string.h>
+
+#include "../ShuttleGui.h"
+#include "../commands/CommandManager.h"
+#include "../widgets/KeyView.h"
+
+#include "PrefsPanel.h"
+
+class KeyConfigPrefs:public PrefsPanel 
+{
+public:
+   KeyConfigPrefs(wxWindow * parent);
+   ~KeyConfigPrefs();
+   virtual bool Apply();
+   virtual void Cancel();
+
+private:
+   void Populate();
+   void PopulateOrExchange(ShuttleGui & S);
+   void RefreshBindings();
+   wxString NameFromKey(const wxString & key);
+   void SetKeyForSelected(const wxString & key);
+
+   void OnViewBy(wxCommandEvent & e);
+   void OnDefaults(wxCommandEvent & e);
+   void OnImport(wxCommandEvent & e);
+   void OnExport(wxCommandEvent & e);
+   void OnSet(wxCommandEvent & e);
+   void OnClear(wxCommandEvent & e);
+   void OnSelected(wxCommandEvent & e);
+
+   void OnHotkeyKeyDown(wxKeyEvent & e);
+   void OnHotkeyChar(wxKeyEvent & e);
+   void OnHotkeyKillFocus(wxFocusEvent & e);
+
+   void OnFilterKeyDown(wxKeyEvent & e);
+   void OnFilterChar(wxKeyEvent & e);
+
+   KeyView *mView;
+   wxTextCtrl *mFilter;
+   wxTextCtrl *mKey;
+
+   ViewByType mViewType;
+
+   CommandManager *mManager;
+   int mCommandSelected;
+
+   wxArrayString mNames;
+   wxArrayString mDefaultKeys;
+   wxArrayString mKeys;
+   wxArrayString mNewKeys; // Used for work in progress.
+
+   DECLARE_EVENT_TABLE();
+};
+
+#else
+
 #include <wx/defs.h>
 #include <wx/listctrl.h>
 #include <wx/textctrl.h>
@@ -30,16 +94,13 @@ class KeyConfigPrefs:public PrefsPanel
    virtual bool Apply();
    virtual void Cancel();
 
-   int SortItems(long item1, long item2);
-
-private:
+ private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
    void RepopulateBindingsList();
    wxString NameFromKey( const wxString & key );
    void SetKeyForSelected( const wxString & key );
-   void Sort(int column);
 
    void OnDefaults(wxCommandEvent & e);
    void OnImport(wxCommandEvent & e);
@@ -47,7 +108,6 @@ private:
    void OnSet(wxCommandEvent & e);
    void OnClear(wxCommandEvent & e);
    void OnCategory(wxCommandEvent & e);
-   void OnSort(wxListEvent & e);
    void OnItemSelected(wxListEvent & e);
    void OnKeyDown(wxListEvent & e);
 
@@ -63,14 +123,12 @@ private:
 
    wxArrayString mCats;
    wxArrayString mNames;
-   wxArrayString mLabels;
    wxArrayString mDefaultKeys;
    wxArrayString mKeys;
    wxArrayString mNewKeys; // Used for work in progress.
 
-   wxArrayString *mSortCol;
-   int mSortDir;
-
    DECLARE_EVENT_TABLE();
 };
+#endif#endif
+
 #endif

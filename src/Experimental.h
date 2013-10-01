@@ -30,6 +30,10 @@
 #ifndef __EXPERIMENTAL__
 #define __EXPERIMENTAL__
 
+// LLL, 22.Nov 2007:
+// new key assignment view for preferences
+// #define EXPERIMENTAL_KEY_VIEW
+
 // feature to link audio tracks to a label track
 #define EXPERIMENTAL_SYNC_LOCK
 
