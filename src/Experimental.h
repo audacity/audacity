@@ -30,7 +30,7 @@
 #ifndef __EXPERIMENTAL__
 #define __EXPERIMENTAL__
 
-// LLL, 22.Nov 2007:
+// LLL, 01 Oct 2013:
 // new key assignment view for preferences
 // #define EXPERIMENTAL_KEY_VIEW
 
