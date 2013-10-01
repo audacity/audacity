@@ -121,9 +121,9 @@ simplifies construction of menu items.
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
 enum {
-   kAlignZero = 0,
-   kAlignSelStart,
-   kAlignSelEnd,
+   kAlignStartZero = 0,
+   kAlignStartSelStart,
+   kAlignStartSelEnd,
    kAlignEndSelStart,
    kAlignEndSelEnd,
    // The next two are only in one subMenu, so more easily handled at the end.
@@ -394,8 +394,6 @@ void AudacityProject::CreateMenusAndCommands()
                       AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag | TimeSelectedFlag);
 
    /* i18n-hint: (verb)*/
-   // FIXME: Most of these command labels are exact duplicates of those in 'Remove Audio or Labels'
-   // which is a problem in keyboard preferences.
    c->AddItem(wxT("CutLabels"), _("&Cut"), FN(OnCutLabels), wxT("Alt+X"),
               AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |  TimeSelectedFlag | IsNotSyncLockedFlag,
               AudioIONotBusyFlag | LabelsSelectedFlag | WaveTracksExistFlag |  TimeSelectedFlag | IsNotSyncLockedFlag);
@@ -543,8 +541,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("FitV"), _("Fit &Vertically"), FN(OnZoomFitV), wxT("Ctrl+Shift+F"));
 
    c->AddSeparator();
-   c->AddItem(wxT("GoSelStart"), _("&Go to Selection Start"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
-   c->AddItem(wxT("GoSelEnd"), _("&Go to Selection End"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
+   c->AddItem(wxT("GoSelStart"), _("Go to Selection Sta&rt"), FN(OnGoSelStart), wxT("Ctrl+["), TimeSelectedFlag, TimeSelectedFlag);
+   c->AddItem(wxT("GoSelEnd"), _("Go to Selection En&d"), FN(OnGoSelEnd), wxT("Ctrl+]"), TimeSelectedFlag, TimeSelectedFlag);
 
    c->AddSeparator();
    c->AddItem(wxT("CollapseAllTracks"), _("&Collapse All Tracks"), FN(OnCollapseAllTracks), wxT("Ctrl+Shift+C"));
@@ -729,14 +727,14 @@ void AudacityProject::CreateMenusAndCommands()
 
    wxArrayString alignLabelsNoSync;
    alignLabelsNoSync.Add(_("&Align End to End"));
-   alignLabelsNoSync.Add(_("Align Tracks &Together"));
+   alignLabelsNoSync.Add(_("Align &Together"));
    
    wxArrayString alignLabels;
-   alignLabels.Add(_("Align with &Zero"));
-   alignLabels.Add(_("Align with Selection &Start"));
-   alignLabels.Add(_("Align with Selection &End"));
-   alignLabels.Add(_("Align End with Selection Sta&rt"));
-   alignLabels.Add(_("Align End with Selection En&d"));
+   alignLabels.Add(_("Start to &Zero"));
+   alignLabels.Add(_("Start to &Cursor/Selection Start"));
+   alignLabels.Add(_("Start to Selection &End"));
+   alignLabels.Add(_("End to Cu&rsor/Selection Start"));
+   alignLabels.Add(_("End to Selection En&d"));
    mAlignLabelsCount = alignLabels.GetCount();
 
    // Calling c->SetCommandFlags() after AddItemList for "Align" and "AlignMove" 
@@ -754,7 +752,8 @@ void AudacityProject::CreateMenusAndCommands()
 
    //////////////////////////////////////////////////////////////////////////
 
-   c->BeginSubMenu(_("Ali&gn and Move Cursor"));
+   // TODO: Can these labels be made clearer? Do we need this sub-menu at all?
+   c->BeginSubMenu(_("Move Sele&ction when Aligning"));
 
    c->AddItemList(wxT("AlignMove"), alignLabels, FN(OnAlignMoveSel));
    c->SetCommandFlags(wxT("AlignMove"),
@@ -4927,6 +4926,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
 {
    TrackListIterator iter(mTracks);
    wxString action;
+   wxString shortAction;
    double offset;
    double minOffset = 1000000000.0;
    double maxEndOffset = 0.0;
@@ -4966,34 +4966,41 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    avgOffset /= numSelected;
 
    switch(index) {
-   case kAlignZero:
+   case kAlignStartZero:
       delta = -minOffset;
-      action = _("Aligned with zero");
+      action = _("start to zero");
+      shortAction = _("Start");
       break;
-   case kAlignSelStart:
+   case kAlignStartSelStart:
       delta = mViewInfo.sel0 - minOffset;
-      action = _("Aligned with selection start");
+      action = _("start to cursor/selection start");
+      shortAction = _("Start");
       break;
-   case kAlignSelEnd:
+   case kAlignStartSelEnd:
       delta = mViewInfo.sel1 - minOffset;
-      action = _("Aligned with selection end");
+      action = _("start to selection end");
+      shortAction = _("Start");
       break;
    case kAlignEndSelStart:
       delta = mViewInfo.sel0 - maxEndOffset;
-      action = _("Aligned end with selection start");
+      action = _("end to cursor/selection start");
+      shortAction = _("End");
       break;
    case kAlignEndSelEnd:
       delta = mViewInfo.sel1 - maxEndOffset;
-      action = _("Aligned end with selection end");
+      action = _("end to selection end");
+      shortAction = _("End");
       break;
    // index set in alignLabelsNoSync
    case kAlignEndToEnd:
       newPos = firstTrackOffset;
-      action = _("Aligned end to end");
+      action = _("end to end");
+      shortAction = _("End to End");
       break;
    case kAlignTogether:
       newPos = avgOffset;
-      action = _("Aligned together");
+      action = _("together");
+      shortAction = _("Together");
    }
 
    if (index == kAlignTogether){
@@ -5088,10 +5095,13 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    if (moveSel) {
       mViewInfo.sel0 += delta;
       mViewInfo.sel1 += delta;
-      action = wxString::Format(_("%s/Move"), action.c_str());
-      PushState(action, _("Align and Move"));
+      action = wxString::Format(_("Aligned/Moved %s"), action.c_str());
+      shortAction = wxString::Format(_("Align %s/Move"),shortAction.c_str());
+      PushState(action, shortAction);
    } else {
-      PushState(action, _("Align"));
+      action = wxString::Format(_("Aligned %s"), action.c_str());
+      shortAction = wxString::Format(_("Align %s"),shortAction.c_str());
+      PushState(action, shortAction);
    }
 
    RedrawProject();
