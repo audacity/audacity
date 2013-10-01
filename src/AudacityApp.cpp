@@ -1178,8 +1178,11 @@ bool AudacityApp::OnInit()
    // thinking nothing is happenning, but not ideal.
    // TODO: temporary window should perhaps iconize after it 'raises' child window 
    // to the front, if we care enough about this case.
+   // Only on Windows, as apparently crashes on MAC! (and not needed on Mac anyway).
+#ifdef __WXMSW__
    temporarywindow->Iconize( true );
-   temporarywindow->Show(true);
+   temporarywindow->Show( true );
+#endif
 
    // Initialize the CommandHandler
    InitCommandHandler();
