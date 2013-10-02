@@ -67,28 +67,16 @@ KeyView::KeyView(wxWindow *parent,
 
    // Create the device context
    wxMemoryDC dc;
-
-   // LLL: I'd really like to figure out the proper colors to use so that
-   //      Windows high contrast themes work properly while also displaying
-   //      properly on the other 2 platforms...thus the #if.
-#if defined(__WXMSW__)
-   wxColour back(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
-   wxColour fore(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNTEXT));
-#else
-   wxColour back(*wxWHITE);
-   wxColour fore(*wxBLACK);
-#endif
-
-   dc.SetBrush(wxBrush(back));
+   dc.SetBrush(*wxWHITE_BRUSH);
 
    // Create the open/expanded bitmap
    mOpen = new wxBitmap(16, 16);
    dc.SelectObject(*mOpen);
 
-   dc.SetPen(wxPen(back));
+   dc.SetPen(*wxWHITE_PEN);
    dc.DrawRectangle(0, 0, 16, 16);
 
-   dc.SetPen(wxPen(fore));
+   dc.SetPen(*wxBLACK_PEN);
    dc.DrawRectangle(3, 4, 9, 9);
    dc.DrawLine(5, 8, 10, 8);
    dc.SelectObject(wxNullBitmap);
@@ -97,10 +85,10 @@ KeyView::KeyView(wxWindow *parent,
    mClosed = new wxBitmap(16, 16);
    dc.SelectObject(*mClosed);
 
-   dc.SetPen(wxPen(back));
+   dc.SetPen(*wxWHITE_PEN);
    dc.DrawRectangle(0, 0, 16, 16);
 
-   dc.SetPen(wxPen(fore));
+   dc.SetPen(*wxBLACK_PEN);
    dc.DrawRectangle(3, 4, 9, 9);
    dc.DrawLine(7, 6, 7, 11);
    dc.DrawLine(5, 8, 10, 8);
@@ -295,6 +283,50 @@ KeyView::SetFilter(const wxString & filter)
 {
    // Save it and refresh to filter the view
    mFilter = filter.Lower();
+   RefreshLineCount();
+}
+
+//
+// Expand all branches
+//
+void
+KeyView::ExpandAll()
+{
+   size_t cnt = mNodes.GetCount();
+
+   // Set all parent nodes to open
+   for (int i = 0; i < cnt; i++)
+   {
+      KeyNode & node = mNodes[i];
+
+      if (node.isparent)
+      {
+         node.isopen = true;
+      }
+   }
+
+   RefreshLineCount();
+}
+
+//
+// Collapse all branches
+//
+void
+KeyView::CollapseAll()
+{
+   size_t cnt = mNodes.GetCount();
+
+   // Set all parent nodes to closed
+   for (int i = 0; i < cnt; i++)
+   {
+      KeyNode & node = mNodes[i];
+
+      if (node.isparent)
+      {
+         node.isopen = false;
+      }
+   }
+
    RefreshLineCount();
 }
 
@@ -913,10 +945,10 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       }
 
       // Indent text
-      x += KV_LEFT_MARGIN + node->depth * KV_BITMAP_SIZE;
+      x += KV_LEFT_MARGIN;
 
       // Draw the command and key columns
-      dc.DrawText(label, x, rect.y);
+      dc.DrawText(label, x + node->depth * KV_BITMAP_SIZE, rect.y);
       dc.DrawText(node->key, x + mCommandWidth + KV_COLUMN_SPACER, rect.y);
    }
    else

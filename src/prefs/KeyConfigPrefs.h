@@ -17,9 +17,11 @@
 #include <wx/defs.h>
 #include <wx/imaglist.h>
 #include <wx/listctrl.h>
+#include <wx/radiobut.h>
 #include <wx/srchctrl.h>
-#include <wx/textctrl.h>
 #include <wx/string.h>
+#include <wx/textctrl.h>
+#include <wx/timer.h>
 
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
@@ -54,14 +56,22 @@ private:
    void OnHotkeyChar(wxKeyEvent & e);
    void OnHotkeyKillFocus(wxFocusEvent & e);
 
+   void OnFilterTimer(wxTimerEvent & e);
    void OnFilterKeyDown(wxKeyEvent & e);
    void OnFilterChar(wxKeyEvent & e);
 
    KeyView *mView;
-   wxTextCtrl *mFilter;
    wxTextCtrl *mKey;
 
+   wxTextCtrl *mFilter;
+   wxStaticText *mFilterLabel;
+   wxTimer mFilterTimer;
+   bool mFilterPending;
+
    ViewByType mViewType;
+   wxRadioButton *mViewByTree;
+   wxRadioButton *mViewByName;
+   wxRadioButton *mViewByKey;
 
    CommandManager *mManager;
    int mCommandSelected;

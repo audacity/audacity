@@ -56,6 +56,7 @@ KeyConfigPrefs and MousePrefs use.
 #define ViewByTreeID            17009
 #define ViewByNameID            17010
 #define ViewByKeyID             17011
+#define FilterTimerID           17012
 
 BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_BUTTON(AssignDefaultsButtonID, KeyConfigPrefs::OnDefaults)
@@ -67,13 +68,16 @@ BEGIN_EVENT_TABLE(KeyConfigPrefs, PrefsPanel)
    EVT_RADIOBUTTON(ViewByTreeID, KeyConfigPrefs::OnViewBy)
    EVT_RADIOBUTTON(ViewByNameID, KeyConfigPrefs::OnViewBy)
    EVT_RADIOBUTTON(ViewByKeyID, KeyConfigPrefs::OnViewBy)
+   EVT_TIMER(FilterTimerID, KeyConfigPrefs::OnFilterTimer)
 END_EVENT_TABLE()
 
 KeyConfigPrefs::KeyConfigPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Keyboard")),
    mView(NULL),
    mFilter(NULL),
-   mKey(NULL)
+   mKey(NULL),
+   mFilterTimer(this, FilterTimerID),
+   mFilterPending(false)
 {
    Populate();
 }
@@ -131,6 +135,16 @@ void KeyConfigPrefs::Populate()
 
    PopulateOrExchange(S);
 
+   if (mViewByTree->GetValue()) {
+      mView->SetView(ViewByTree);
+   }
+   else if (mViewByName->GetValue()) {
+      mView->SetView(ViewByName);
+   }
+   else if (mViewByKey->GetValue()) {
+      mView->SetView(ViewByKey);
+   }
+
    mCommandSelected = -1;
 
    mManager = project->GetCommandManager();
@@ -157,9 +171,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             S.AddTitle(_("View by:"));
             S.StartRadioButtonGroup(wxT("/Prefs/KeyConfig/ViewBy"), wxT("tree"));
             {
-               S.Id(ViewByTreeID).TieRadioButton(_("Tree"), wxT("tree"));
-               S.Id(ViewByNameID).TieRadioButton(_("Name"), wxT("name"));
-               S.Id(ViewByKeyID).TieRadioButton(_("Key"), wxT("key"));
+               mViewByTree = S.Id(ViewByTreeID).TieRadioButton(_("&Tree"), wxT("tree"));
+               mViewByName = S.Id(ViewByNameID).TieRadioButton(_("&Name"), wxT("name"));
+               mViewByKey = S.Id(ViewByKeyID).TieRadioButton(_("&Key"), wxT("key"));
             }
             S.EndRadioButtonGroup();
          }
@@ -173,7 +187,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
          {
-            S.AddTitle(_("Filter:"));
+            mFilterLabel = S.AddVariableText(_("Searc&h:"));
 
             if (!mFilter) {
                mFilter = new wxTextCtrl(this,
@@ -226,7 +240,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 #else
                                   wxSize(210, -1));
 #endif
-            mKey->SetName(_("Hotkey"));
+            mKey->SetName(_("Short cut"));
             mKey->Connect(wxEVT_KEY_DOWN,
                           wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
                           NULL,
@@ -243,7 +257,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
-         S.Id(SetButtonID).AddButton(_("Set"));
+         S.Id(SetButtonID).AddButton(_("&Set"));
          S.Id(ClearButtonID).AddButton(_("Cl&ear"));
       }
       S.EndThreeColumn();
@@ -261,6 +275,10 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndThreeColumn();
    }
    S.EndStatic();
+
+   if (mViewType == ViewByKey) {
+      mFilterLabel->SetLabel(_("&Hotkey:"));
+   }
 }
 
 void KeyConfigPrefs::RefreshBindings()
@@ -283,6 +301,7 @@ void KeyConfigPrefs::RefreshBindings()
                           Prefixes,
                           Labels,
                           mKeys);
+   mView->ExpandAll();
 
    mNewKeys = mKeys;
 }
@@ -409,6 +428,16 @@ void KeyConfigPrefs::OnHotkeyKillFocus(wxFocusEvent & e)
    e.Skip();
 }
 
+void KeyConfigPrefs::OnFilterTimer(wxTimerEvent & e)
+{
+   // The filter timer has expired, so set the filter
+   if (mFilterPending)
+   {
+      // Do not reset mFilterPending here...possible race 
+      mView->SetFilter(mFilter->GetValue());
+   }
+}
+
 void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
 {
    wxTextCtrl *t = (wxTextCtrl *)e.GetEventObject();
@@ -439,9 +468,13 @@ void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
    else
    {
       if (keycode == WXK_RETURN) {
+         mFilterPending = false;
          mView->SetFilter(t->GetValue());
       }
       else {
+         mFilterPending = true;
+         mFilterTimer.Start(500, wxTIMER_ONE_SHOT);
+
          e.Skip();
       }
    }
@@ -521,14 +554,17 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
    {
       case ViewByTreeID:
          mViewType = ViewByTree;
+         mFilterLabel->SetLabel(_("Searc&h:"));
       break;
 
       case ViewByNameID:
          mViewType = ViewByName;
+         mFilterLabel->SetLabel(_("Searc&h:"));
       break;
 
       case ViewByKeyID:
          mViewType = ViewByKey;
+         mFilterLabel->SetLabel(_("&Hotkey:"));
       break;
    }
 
@@ -537,6 +573,9 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
 
 bool KeyConfigPrefs::Apply()
 {
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
    for (size_t i = 0; i < mNames.GetCount(); i++) {
       wxString dkey = KeyStringNormalize(mDefaultKeys[i]);
       wxString name = wxT("/NewKeys/") + mNames[i];

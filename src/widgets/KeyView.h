@@ -95,6 +95,9 @@ public:
    void SetView(ViewByType type);
    void SetFilter(const wxString & filter);
 
+   void ExpandAll();
+   void CollapseAll();
+
 private:
    void OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const;
    void OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const;
